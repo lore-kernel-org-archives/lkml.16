@@ -1,107 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432FF270551;
-	Fri,  9 May 2025 07:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0C046B5;
+	Fri,  9 May 2025 07:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746777319; cv=none; b=L+GdqpWGE/v4OkfAqHIg5jR40n5VERo+/WMItFuuthfmLTY0jY55+60v7p8a0R4iM7LE2ElYCFohX8hKt4Wj7CahOyl6p/R6EAYtUPeb5FFnXnqdUFRlkfbcw5NRcIX9dIFv/8qmxPx+GLZwC5PHuHNZavtiFVtvCKB+uoIcFx0=
+	t=1746777500; cv=none; b=D19i0kAujgPtaBqQkCNWxBE8O26mRKLldCme6DsmCtL0kRpxFuPioEo7mdSqUWCeivrIG27Q3nvjBkKUQW8IK21SkcBdcbWmPdaB+0FrpV2Xms+v9kvDQz/fuszR8EY7yhZrqljtNqhzHwQBd9HPY78r+emJFSVDQNZrO4pi93k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746777319; c=relaxed/simple;
-	bh=bgpV4gvYS06d5h4GkN9ew2nhoSwJx5XDCN/L9U0p7QI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZzHMHIvp8GeiYBFn9V/PaWNMClSUnPqF59cGd530Bzk/iRFFs5cBCI36wTnSSct3PR0sxSNr99kl+FgVNxWiYgB47IiF2m5BMCP9DDxSrqN60PhjU3q/5zxDwenXtdztL0vRR7rQEDogUxPhHPBOdrj8vg7PPkmqGDexuFKTpPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i2m33iuN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i2m33iuN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B47C4CEED;
-	Fri,  9 May 2025 07:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746777318;
-	bh=bgpV4gvYS06d5h4GkN9ew2nhoSwJx5XDCN/L9U0p7QI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i2m33iuNoDyQv0wLy1ADcWqF0d4Z86VJiR3OCaDR8jKJshTbLP9GK0OkdgERBCvsF
-	 v1bWPltH4sedMYafrAdJVlSoBo8ajCBenRjeKsZG5aD//k4I1zVfuPjPCADPa4NUVa
-	 RRwCcoyimE2LnUBPFfBqTWvD9IF25jUBg6FWA3zE=
-Date: Fri, 9 May 2025 09:55:15 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: cve@kernel.org, linux-cve-announce@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-Message-ID: <2025050924-marmalade-overfill-fc5a@gregkh>
-References: <2025040820-REJECTED-6695@gregkh>
- <20250509072033.1335321-1-dvyukov@google.com>
- <2025050940-marrow-roundish-8b98@gregkh>
- <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
+	s=arc-20240116; t=1746777500; c=relaxed/simple;
+	bh=4/tFx454oaABPvxA1f08T02RNw8rZ7Py/jTaY/6o3pE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FcdMCEUSaxqYamQlp6zYnkPaHljTUAw8Vj8g9jmVJEZuu0Vo2Pt+YP8huyLVhl1gjlMLko0t7aaPY9Yr7NP3/eTQwJcILe++/JbN7+NHbnlETeP7mhdP/vMLZ4KGui3YTOvPijMRJNI4GfDuXvucXXaeHFQPtu1rINd1BiFv02M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+	by ni.piap.pl (Postfix) with ESMTPS id 141B5C405A48;
+	Fri,  9 May 2025 09:58:10 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 141B5C405A48
+From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ linux-media@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] i.MX8 ISI crossbar: simplify a couple of error messages
+Sender: khalasa@piap.pl
+Date: Fri, 09 May 2025 09:58:09 +0200
+Message-ID: <m3plgi9pwu.fsf@t19.piap.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 09:47:20AM +0200, Dmitry Vyukov wrote:
-> On Fri, 9 May 2025 at 09:34, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, May 09, 2025 at 09:20:33AM +0200, Dmitry Vyukov wrote:
-> > > > CVE-2025-0927 has now been rejected and is no longer a valid CVE.
-> > >
-> > > > Filesystem bugs due to corrupt images are not considered a CVE for any
-> > > > filesystem that is only mountable by CAP_SYS_ADMIN in the initial user
-> > > > namespace. That includes delegated mounting.
-> > >
-> > > I wonder if this should be the case only if the image is flagged by fsck
-> > > as corrupted? Otherwise I am not sure what's "trusted". It's not about
-> > > somebody's "honest eyes", right. E.g. in the context of insider risks
-> > > the person providing an image may be considered "trusted", or in the
-> > > context of Zero Trust Architecture nothing at all is considered trusted,
-> > > or a trusted image may be tampered with while stored somewhere.
-> > >
-> > > Without any formal means to classify an image as corrupted or not,
-> > > this approach does not look very practical to me. While flagging by fsck
-> > > gives concrete workflow for any context that requires more security.
-> >
-> > And how do we know of fsck can flag anything,
-> 
-> By running fsck on the image. Or what do you mean?
+I guess these messages were split from a single function. Or was it
+for saving memory? :-)
 
-That requires us to attempt to reproduce stuff when assigning CVEs?
+Signed-off-by: Krzysztof Ha=C5=82asa <khalasa@piap.pl>
 
-And what architecture/target?  How do we do this for all of them?
+diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c b/driv=
+ers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+index 93a55c97cd17..b6c7f114f9ed 100644
+--- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
++++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+@@ -352,9 +352,8 @@ static int mxc_isi_crossbar_enable_streams(struct v4l2_=
+subdev *sd,
+ 						 sink_streams);
+ 		if (ret) {
+ 			dev_err(xbar->isi->dev,
+-				"failed to %s streams 0x%llx on '%s':%u: %d\n",
+-				"enable", sink_streams, remote_sd->name,
+-				remote_pad, ret);
++				"failed to enable streams 0x%llx on '%s':%u: %d\n",
++				sink_streams, remote_sd->name, remote_pad, ret);
+ 			mxc_isi_crossbar_gasket_disable(xbar, sink_pad);
+ 			return ret;
+ 		}
+@@ -392,9 +391,8 @@ static int mxc_isi_crossbar_disable_streams(struct v4l2=
+_subdev *sd,
+ 						  sink_streams);
+ 		if (ret)
+ 			dev_err(xbar->isi->dev,
+-				"failed to %s streams 0x%llx on '%s':%u: %d\n",
+-				"disable", sink_streams, remote_sd->name,
+-				remote_pad, ret);
++				"failed to disable streams 0x%llx on '%s':%u: %d\n",
++				sink_streams, remote_sd->name, remote_pad, ret);
+=20
+ 		mxc_isi_crossbar_gasket_disable(xbar, sink_pad);
+ 	}
 
-Remember, we are averaging 13 CVE assignments a day, this has to be
-automated in order for us to be able to manage this with the volunteer
-staff we have.
+--=20
+Krzysztof "Chris" Ha=C5=82asa
 
-> > AND which version of fsck?
-> 
-> This needs to be answered as part of establishing the vulnerability
-> triage process. I would go for a relatively fresh version. That will
-> remove bugs fixed a long time ago, and if users rely on it for
-> security purposes they have to update it.
-
-Remember older kernels are updated but userspace isn't on many
-platforms, so the combinations of userspace tools and the kernel
-versions is not anything we are going to even be aware of.
-
-> > We'll defer to the fs developers as to what they want here, but note, we
-> > do not determine "trusted" or not, that is a use case that is outside of
-> > our scope entirely.
-> 
-> I think classification should be tied to users and use cases in the
-> first place. I, as a developer, wouldn't want any CVEs assigned to my
-> code, if I could just wish so :)
-
-This is open source, we can not, and do not, dictate use.  It is up to
-the users of our software to determine if their use case matches up with
-the reported vulnerability or not.  We can not do it the other way
-around, that is impossible from our side.
-
-thanks,
-
-greg k-h
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
