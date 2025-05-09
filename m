@@ -1,175 +1,165 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0962D28EA45
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D09528D8FD
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795699; cv=none; b=Ujsg0xewO64w6k90ziSaRNwPCZulmzyzPHB0IrdGW3DRqRpaen57Bw7H23NB3mD2pXBCOKzs+9mRfC3FHizeKpvyYCC6j/AXQWCbGTLQneBCXxyGytFgwU8M4VqVEjQL/aW8zLMZ4MIRAQYh6X++IhUslqD87O9xmjzqdHKlYtA=
+	t=1746795730; cv=none; b=S/CX25HDqWF2/l7MydyTHAG65in3BmiCIf1ckzjerH6Au9HV4W0zeH/LK9Ve4FvDy1sUqiExP/tCpo69Og0MIN1z2JPiV/oaDzhdfsS8E6LrQQrwhVNqOk9nA/WX+JxFc+oqvZeo2SQ51knYOSMUNEv/hG/yxKPMSoH+1GqlNFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795699; c=relaxed/simple;
-	bh=Os34QkPsUxapPXKtp4qvwvK+U+l2R7dq6pJu+K/CLyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A8XJGvuFQg9Up6OBlEOhw/6do7g3C7WQBtBPfmwZDp5WcZ50gDGmHbI9lF48h8AEzinE1NKSlBdf+vaS9TssCdHULGg8Q/KIHjy/8GpfwVE1RJp5XYQHVdtoGRRpGdKl/LW0UsmmQVdCwnbV2FEZuJsgGpWkT6DrMVpEHJEKQRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kZwy5Zl7; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kZwy5Zl7"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746795682; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=9s9+fSm3d9sYXbAKKWZ972t50BxpSt+iX1qvnN/E/ls=;
-	b=kZwy5Zl72wux0DWuzEvT9CyBxpOyNOO1xUM9YJGM1MsJt7h0n+TQ96+6d7QHqcRrlOyJV7xR2xM83SdhI/4gqfQmTDupU8fQZnsEtg9ogVrvUqTfdwc19Q5/MRaNChRMJIiz0Qe7b8PJCnNdRerfv/z4DoGWHY7QWh2H5DzIKhk=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wa3fmW9_1746795680 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 09 May 2025 21:01:21 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	willy@infradead.org,
-	david@redhat.com
-Cc: hannes@cmpxchg.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	ziy@nvidia.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] mm: convert do_set_pmd() to take a folio
-Date: Fri,  9 May 2025 21:01:04 +0800
-Message-ID: <87097d3d5ef1d46959d09cfc7e192c4551b87771.1746795452.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <bc3d4638747e8141133676069336d868c2b2d360.1746795452.git.baolin.wang@linux.alibaba.com>
-References: <bc3d4638747e8141133676069336d868c2b2d360.1746795452.git.baolin.wang@linux.alibaba.com>
+	s=arc-20240116; t=1746795730; c=relaxed/simple;
+	bh=Kze0SyEYvQc8SDRBVeNXW/G/mCAizeF6tVAMrvRPVhA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YQm4CjU1rWtteRs43vHoGZaCOIEfy/UPzYlFtIkfxAVUygfhmfZtG2F1Ka2TFVwsjwCjbQ08y2iZ+IzOyg4RKNHFnz5m1tFOHRdlBlB1NDHiOtFCXDAHC2E8aKWtJA+Ty6S9v0rJ+bnwO/27PReWEyxpTY2702rQo/ROlwhEOi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B18BA1595;
+	Fri,  9 May 2025 06:01:56 -0700 (PDT)
+Received: from [10.57.90.222] (unknown [10.57.90.222])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87F603F58B;
+	Fri,  9 May 2025 06:02:05 -0700 (PDT)
+Message-ID: <2ad910f4-6930-4da2-aa2b-f3875f71e001@arm.com>
+Date: Fri, 9 May 2025 14:02:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/9] Merge arm64/riscv hugetlbfs contpte support
+Content-Language: en-GB
+To: Alexandre Ghiti <alexghiti@rivosinc.com>, Will Deacon <will@kernel.org>,
+ Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, Catalin Marinas
+ <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-mm@kvack.org
+References: <20250321130635.227011-1-alexghiti@rivosinc.com>
+ <4dd5d187-f977-4f27-9937-8608991797b5@ghiti.fr>
+ <64409a13-1c07-42cd-b1ec-572042738f1b@arm.com>
+ <84cb893a-46e3-408a-ba0e-2eff0b44d2a1@ghiti.fr>
+ <20250508123046.GA3706@willie-the-truck>
+ <CAHVXubjZB-riBLv+RGis6ErS8NvU4ijVTgvUO06fTxPhbEjXfA@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAHVXubjZB-riBLv+RGis6ErS8NvU4ijVTgvUO06fTxPhbEjXfA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In do_set_pmd(), we always use the folio->page to build PMD mappings for
-the entire folio. Since all callers of do_set_pmd() already hold a stable
-folio, converting do_set_pmd() to take a folio is safe and more straightforward.
+On 09/05/2025 12:09, Alexandre Ghiti wrote:
+> Hi Will,
+> 
+> On Thu, May 8, 2025 at 2:30 PM Will Deacon <will@kernel.org> wrote:
+>>
+>> Hi folks,
+>>
+>> On Mon, May 05, 2025 at 06:08:50PM +0200, Alexandre Ghiti wrote:
+>>> On 29/04/2025 16:09, Ryan Roberts wrote:
+>>>> On 07/04/2025 13:04, Alexandre Ghiti wrote:
+>>>>> Can someone from arm64 review this? I think it's preferable to share the same
+>>>>> implementation between riscv and arm64.
+>>>> I've been thinking about this for a while and had some conversations internally.
+>>>> This patchset has both pros and cons.
+>>>>
+>>>> In the pros column, it increases code reuse in an area that has had quite of few
+>>>> bugs popping up lately; so this would bring more eyes and hopefully higher
+>>>> quality in the long run.
+>>>>
+>>>> But in the cons column, we have seen HW errata in similar areas in the past and
+>>>> I'm nervous that by hoisting this code to mm, we make it harder to workaround
+>>>> any future errata. Additionally I can imagine that this change could make it
+>>>> harder to support future Arm architecture enhancements.
+>>>>
+>>>> I appreciate the cons are not strong *technical* arguments but nevertheless they
+>>>> are winning out in this case; My opinion is that we should keep the arm64
+>>>> implementations of huge_pte_ (and contpte_ too - I know you have a separate
+>>>> series for this) private to arm64.
+>>>>
+>>>> Sorry about that.
+>>>>
+>>>>> The end goal is the support of mTHP using svnapot on riscv, which we want soon,
+>>>>> so if that patchset does not gain any traction, I'll just copy/paste the arm64
+>>>>> implementation into riscv.
+>>>> This copy/paste approach would be my preference.
+>>>
+>>>
+>>> I have to admit that I disagree with this approach, the riscv and arm64
+>>> implementations are *exactly* the same so it sounds weird to duplicate code,
+>>> the pros you mention outweigh the cons.
+>>>
+>>> Unless I'm missing something about the erratas? To me, that's easily fixed
+>>> by providing arch specific overrides no? Can you describe what sort of
+>>> erratas would not fit then?
 
-In addition, to ensure the extensibility of do_set_pmd() for supporting
-larger folios beyond PMD size, we keep the 'page' parameter to specify
-which page within the folio should be mapped.
+One concrete feature is the use of Arm's FEAT_BBM level 2 to avoid having to do
+break-before-make and TLB maintenance when doing a fold or unfold operation.
+There is a series in flight to add this support at [1]. I can see this type of
+approach being extended to the hugetlb helpers in future.
 
-No functional changes expected.
+I also have another series in flight at [2] that tidies up the hugetlb
+implementation and does some optimizations. But the optimizations depend on
+arm64-specific TLB maintenance APIs.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
-Changes from v1:
- - Keep the 'page' parameter of the do_set_pmd().
+[1]
+https://lore.kernel.org/linux-arm-kernel/20250428153514.55772-2-miko.lenczewski@arm.com/
 
-Note: I did mm selftests and built kernel on tmpfs/xfs filesystems, and
-did not find any regression.
----
- include/linux/mm.h |  2 +-
- mm/filemap.c       |  2 +-
- mm/khugepaged.c    |  2 +-
- mm/memory.c        | 11 +++++------
- 4 files changed, 8 insertions(+), 9 deletions(-)
+[2]
+https://lore.kernel.org/linux-arm-kernel/20250422081822.1836315-1-ryan.roberts@arm.com/
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 43748c8f3454..d5f578c91e77 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1237,7 +1237,7 @@ static inline pte_t maybe_mkwrite(pte_t pte, struct vm_area_struct *vma)
- 	return pte;
- }
- 
--vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page);
-+vm_fault_t do_set_pmd(struct vm_fault *vmf, struct folio *folio, struct page *page);
- void set_pte_range(struct vm_fault *vmf, struct folio *folio,
- 		struct page *page, unsigned int nr, unsigned long addr);
- 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 7b90cbeb4a1a..09d005848f0d 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -3533,7 +3533,7 @@ static bool filemap_map_pmd(struct vm_fault *vmf, struct folio *folio,
- 
- 	if (pmd_none(*vmf->pmd) && folio_test_pmd_mappable(folio)) {
- 		struct page *page = folio_file_page(folio, start);
--		vm_fault_t ret = do_set_pmd(vmf, page);
-+		vm_fault_t ret = do_set_pmd(vmf, folio, page);
- 		if (!ret) {
- 			/* The page is mapped successfully, reference consumed. */
- 			folio_unlock(folio);
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index aca66e7f4fd9..c4b5031f3254 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1478,7 +1478,7 @@ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
- 
- 	mmap_assert_locked(vma->vm_mm);
- 
--	if (do_set_pmd(&vmf, &folio->page))
-+	if (do_set_pmd(&vmf, folio, &folio->page))
- 		return SCAN_FAIL;
- 
- 	folio_get(folio);
-diff --git a/mm/memory.c b/mm/memory.c
-index 68c1d962d0ad..9c202c32ca66 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -5176,9 +5176,8 @@ static void deposit_prealloc_pte(struct vm_fault *vmf)
- 	vmf->prealloc_pte = NULL;
- }
- 
--vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
-+vm_fault_t do_set_pmd(struct vm_fault *vmf, struct folio *folio, struct page *page)
- {
--	struct folio *folio = page_folio(page);
- 	struct vm_area_struct *vma = vmf->vma;
- 	bool write = vmf->flags & FAULT_FLAG_WRITE;
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
-@@ -5251,7 +5250,7 @@ vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
- 	return ret;
- }
- #else
--vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
-+vm_fault_t do_set_pmd(struct vm_fault *vmf, struct folio *folio, struct page *page)
- {
- 	return VM_FAULT_FALLBACK;
- }
-@@ -5345,6 +5344,7 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
- 	else
- 		page = vmf->page;
- 
-+	folio = page_folio(page);
- 	/*
- 	 * check even for read faults because we might have lost our CoWed
- 	 * page
-@@ -5356,8 +5356,8 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
- 	}
- 
- 	if (pmd_none(*vmf->pmd)) {
--		if (PageTransCompound(page)) {
--			ret = do_set_pmd(vmf, page);
-+		if (folio_test_pmd_mappable(folio)) {
-+			ret = do_set_pmd(vmf, folio, page);
- 			if (ret != VM_FAULT_FALLBACK)
- 				return ret;
- 		}
-@@ -5368,7 +5368,6 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
- 			return VM_FAULT_OOM;
- 	}
- 
--	folio = page_folio(page);
- 	nr_pages = folio_nr_pages(folio);
- 
- 	/*
--- 
-2.43.5
+As for errata, that's obviously much more fuzzy; there have been a bunch
+relating to the MMU in the recent past, and I wouldn't be shocked if more turned up.
+
+For future architecture enchancements, I'm aware of one potential feature being
+discussed for which this change would likely make it harder to implement.
+
+>>
+>> If we start with the common implementation you have here, nothing
+>> prevents us from forking the code in future if the architectures diverge
+>> so I'd be inclined to merge this series and see how we get on. 
+
+OK if that's your preference, I'm ok with it. I don't have strong opinion, just
+a sense that we will end up with loads of arch-specific overrides. As you say,
+let's see.
+
+Alexandre, I guess this series is quite old now and will need to incorporate the
+hugtelb fixes I did last cycle? And ideally I'd like [2] to land then for that
+to also be incorporated into your next version. (I'm still hopeful we can get
+[2] into v6.16 and have been waiting patiently for Will to pick it up ;) ).
+
+I guess we can worry about [1] later as that is only affected by your other series.
+
+How does that sound?
+
+>> However,
+>> one thing I *do* think we need to ensure is that the relevant folks from
+>> both arm64 (i.e. Ryan) and riscv (i.e. Alexandre) are cc'd on changes to
+>> the common code. Otherwise, it's going to be a step backwards in terms
+>> of maintainability.
+>>>> Could we add something to MAINTAINERS so that the new file picks you both
+>> up as reviewers?
+
+That's fine with me. Lorenzo added me for some parts of MM this cycle anyway.
+
+Thanks,
+Ryan
+
+> 
+> I'm adding Lorenzo as he is cleaning the mm MAINTAINERS entries.
+> 
+> @Lorenzo: should we add a new section "CONTPTE" for this? FYI, hugetlb
+> is the first patchset, I have another patchset to merge THP contpte
+> support [1] as well so the "HUGETLB" section does not seem to be a
+> good fit.
+> 
+> [1] https://lore.kernel.org/linux-riscv/20240508191931.46060-1-alexghiti@rivosinc.com/
+> 
+> Thanks,
+> 
+> Alex
+> 
+>>
+>> Will
 
