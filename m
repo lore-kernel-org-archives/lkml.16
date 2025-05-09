@@ -1,46 +1,39 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.18])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A882A8C1;
-	Fri,  9 May 2025 14:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13712A8C1
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746799545; cv=none; b=DlDwTyIsNXxYFfbqKZClvmTFLIpknBcsJ3DiHxJ1jSPVSXjmbJjCP++Hm6G5THBkAnszXjNIawkIvCkEROrnCsDCW7WPL1oZWPblYfI1sgWyRThDj1ilgLthhe7kfpy8abpQVF4zgrMpUOzc2UFVQEVqrMuK+wv687rYEt77zvM=
+	t=1746799552; cv=none; b=qv9oqXM4L64cGDW/0WUMWRyubCOuaub870kMwxWfyhQoSBHWJZ+k4L/13REM8qTSK9wvccdb4b7bqJhJUouUtwSU/A55K+8Tt2zv+2Y9461pmKl5uo0CtDBNr+z68mkyktSg6uI0NjCS4/9wUgWojZ/riA+153hHbOkBAFJ/2ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746799545; c=relaxed/simple;
-	bh=Ri457AVHzrKMvfqsMFNC3NXuEr7GJmE0E87glzx2AlI=;
+	s=arc-20240116; t=1746799552; c=relaxed/simple;
+	bh=57yrXjniyka9vWidD9DuoDUPGCgZ7kNXE7C9Z5IyI0M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uwm2T8dq8L/YeNgpGHcPqTcYV0tQOZmb3P8d9Gra65uTejuezH2TGSDWLjFG9dv370vQmTtUHk8sUGl3WZFJEMbiqsOo4Il52yXynbJhQo4jyyk1ngWxSWxJo7VkWj46FXPEVj82Q2GpaB57W3U4x4OpV63eE9RPYtieWcCgcjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=l82BzNXk; arc=none smtp.client-ip=220.197.32.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="l82BzNXk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=khh9GkiKSYF8ytE7q9ANWl34TwhOsAHnv4+wLwiqWMg=;
-	b=l82BzNXkCTxWjEoAZgW+8IwakmblZgzJRLkx3jx1WP8S7IbkG/dkkC1uQCG/M6
-	sUclQziMC7ZOJOJrcZkTnv+sah5IjGrlaIkJT7pTeDwwCnUz42rXeU0D3zWTAHHs
-	woN/Ni4jnHOBW6lHjmzMSnj/ash2HiEUFSQaLPwpT9MfY=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgDXTxNxCx5oIsCsAA--.16043S3;
-	Fri, 09 May 2025 22:04:35 +0800 (CST)
-Date: Fri, 9 May 2025 22:04:33 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Martin Schmiedel <Martin.Schmiedel@tq-group.com>,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux@ew.tq-group.com
-Subject: Re: [PATCH v2 1/2] arm64: dts: imx8mp-tqma8mpql-mba8mp-ras314: Add
- LVDS device tree overlay
-Message-ID: <aB4LcS48R/uqSPPO@dragon>
-References: <20250424075000.1263138-1-alexander.stein@ew.tq-group.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IgTUD8UYhHB17sQcuBu4MOSf33naQeyRR4eFVf4vcsmvi+mIU3aHcszvCa0853c0k6963Z+EPTIJCjYBOztHdFyoSV9ptTC8LQJIhMCxy6VZr4C3ZKx4Qozvix4zqOVXdYEXUB+qAoUectuhn5LKDKM/SDoKok9RD8FK0JMRUsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-82-148.bstnma.fios.verizon.net [173.48.82.148])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 549E5bZO019412
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 10:05:37 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 341C82E00E1; Fri, 09 May 2025 10:05:37 -0400 (EDT)
+Date: Fri, 9 May 2025 10:05:37 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org,
+        linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
+ filesystems with manually crafted filesystem
+Message-ID: <20250509140537.GB92783@mit.edu>
+References: <2025040820-REJECTED-6695@gregkh>
+ <20250509072033.1335321-1-dvyukov@google.com>
+ <2025050940-marrow-roundish-8b98@gregkh>
+ <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,21 +42,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424075000.1263138-1-alexander.stein@ew.tq-group.com>
-X-CM-TRANSID:Ms8vCgDXTxNxCx5oIsCsAA--.16043S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUF7KIDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiARdIZWgd+-hNSwAAsL
+In-Reply-To: <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
 
-On Thu, Apr 24, 2025 at 09:49:58AM +0200, Alexander Stein wrote:
-> From: Martin Schmiedel <Martin.Schmiedel@tq-group.com>
+On Fri, May 09, 2025 at 09:47:20AM +0200, Dmitry Vyukov wrote:
+> By running fsck on the image. Or what do you mean?
 > 
-> This adds an overlay for the supported LVDS display tianma tm070jvhg33.
-> The LVDS interface is the same as for MBa8MPxL so the already existing
-> overlay can be reused on this platform.
+> > AND which version of fsck?
 > 
-> Signed-off-by: Martin Schmiedel <Martin.Schmiedel@tq-group.com>
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> This needs to be answered as part of establishing the vulnerability
+> triage process. I would go for a relatively fresh version. That will
+> remove bugs fixed a long time ago, and if users rely on it for
+> security purposes they have to update it.
 
-Applied both, thanks!
+If someone can come up with a fuzzed file system that can cause
+fsck.ext4 to crash, or which fsck.ext4 can't fix said corruption such
+that any kernel in the last 5 years (or heck, I'll be generous,
+*ever*) results in a kernel crash or vulnerability, feel free to file
+the security bug against e2fsprogs.
 
+The last time an image triggered a e2fsck crash was three years ago
+(CVE-2022-1304), and the last time that fsck.ext4 failed to fix a
+corruption which could trigger a kernel issue was six years ago
+(CVE-2019-5094).
+
+My only caveat here is that it needs to be a real crash --- if it's
+some bullsh*t fuzzer that treats e2fsck using more than 6 megabytes as
+a "security vulnerability" that I have to fix in 30 days or "we will
+tell the world", I'll stop engaging with the fuzzer project (i.e.,
+oss-fuzz).  As far as I'm concerned, calling things like this a
+security vulnerability says a lot more about fuzzer project than
+e2fsprogs.  There are security research labs (such as TALOS) that can
+send me security reports for e2fsprogs that doesn't waste my time.
+
+In any case, if fsck can't fix the problem, then it's a e2fsprogs CVE,
+not a kernel CVE --- so it's not something the kernel cVE process
+needs to take into account.  If it's a corrupted file system image,
+then fsck.ext4 should fix it, and if it can't, that's an e2fsprogs issue.
+
+> I think classification should be tied to users and use cases in the
+> first place. I, as a developer, wouldn't want any CVEs assigned to my
+> code, if I could just wish so :)
+
+I think classifications should be tied to what develoeprs say is a
+valid way to use their code.  If users do something irrresponsible,
+that's the user's fault.  And if the product ships the system in an
+insecure default, then it's a security problem with the product.
+
+	 	       	      	       	       - Ted
