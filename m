@@ -1,204 +1,152 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDEB14F98;
-	Fri,  9 May 2025 09:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C7714F98;
+	Fri,  9 May 2025 09:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746781615; cv=none; b=o1EWANTJymePq3OsAQaNgRQEVLDcTdgKIMWsIvEumriAN2ZDtYavDhwPShgyZ4KpwgDs32LoEGVtoHuww8hEUkgkmyrKoNs+/IvSEr7+IlbgvAd8yV80uKWKfXTDQPH3jOR39rHJd4xAKXSemkB+ow4QlqRZtGJW33tS/4ugyq4=
+	t=1746781683; cv=none; b=Mmtn181QdEbZ6l3qZk9e6RZTD2sX7HFyJ8ryIiVqhBHuasfEW2yf6b51PEh0dK3tXK7QgLXl/kYqHQQ6aR7Kygum0+a7qH1MYF1BNKQVepYz2kTlEVyEJMmTd+84pM7tYBAJPn6n27XDGZkeB8voRPCJVAyavS3eWg7H/oecwTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746781615; c=relaxed/simple;
-	bh=sAFkRHh9bzGYnsvmn6RJcgV4uo5APsdL0DD3ImIhGSo=;
+	s=arc-20240116; t=1746781683; c=relaxed/simple;
+	bh=nYCqdvuCwcH7UfwFR+GZ56QnI7ajUuizRTceT6Gaqdc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IUuCtrebEko8lTgRtxj+SJQgfdfg5TXpRpswOLvideecHv1oksYowuvGjLg1eljXKBoktKezhGMXrXGFsBwGDdqv/86b7szjvxEsjD40JScN1yHRLS1D9NuVu33324dknyhh6xJ3ce9UcZhBCpJhoYl7qlg1oeSVMBvf6xCVAdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IoEVEnfR; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=Vj1lZgUMUi9dQhERwBA4jfCbm9nxcadcai+OQUEM8bDUgkBM6BEMjKAN3iTDENzVI/4ACSD0p7lq3NpG9x/+cVwEFv+/dPRt+DOWLho/RTG5USp8mR/GYfrGhsoOs62zymcuO34IpAieDKg4FtGpDWwVwEtFTwfBrxHmByi6k0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoEVEnfR"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ace3b03c043so300645266b.2;
-        Fri, 09 May 2025 02:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746781612; x=1747386412; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ww1C5cskFkFK3cmuMB2ZAcdmwSeUk/Y0atV0njjxmYo=;
-        b=IoEVEnfRrOjx3hvG/XAzT9ujZIzlFlXmFtQTbWCmDzZsGZ4EZsh6kR987yJJWURnKW
-         kWGKSiaVbs9GaVPcDI5YzNZLTJjvZfv9kLwy1y7RoaoRJDU7IThvd5PNRi4WjiitMKwp
-         86ThWhQ3UM/efwHwB2B+JuaZLYcsM0YRqrhRanENsVU5RUzgyEv33bZgaVdMyLsRWBdU
-         /7KUofUa4HIptl94yxzHA3WunSRma0vx/W2I85lEGhwzMNQHp3pEspxJsjIzRxy52PHE
-         Ocaan9XSi8droq8Eq9VC2jo/kfzi9nQNRlA5J3N6puVxDLGGtOHrUOi2iRj1uJjW0fGI
-         3C4g==
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso520064241.2;
+        Fri, 09 May 2025 02:08:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746781612; x=1747386412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ww1C5cskFkFK3cmuMB2ZAcdmwSeUk/Y0atV0njjxmYo=;
-        b=gDsPTezMLKA5oHhgwZUV0nW15ukbBI8xYZ6yTwyCzZbZT6f0q65opL5Ze6Nq9v72z4
-         gA4ZxdZgBSglAHgaPJGxYFyJNh+DYiBz0PLtFFlCSD+r9LWIaSGKTuCLI7yz6zKJ8g6R
-         vFlOtsga2dqdSgeQStSZI0VlXc5Gu7k/MimJCEKMbc7d58ASILSH4AYnIALKptz/KpZX
-         WcpNJlHe3EnBn2KS7ahR1P/FZv1AgI9vV200MBsVqthm+tXEun2F2YJ8d3sEklw0tWFl
-         RosDQVhd7JnZWHFi8d+D6TWqtkLjHefR6Vj2fBJKe/goo6VylouxAAoAzkOZqloEZUpR
-         suqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZR26DfErl4cdLqMGi/Thfbw0yW6BQIF/xjDVehy/5Ts7WKmcflPTBsRqV6R+xDblCmFJlsZ89JFU9ze3z@vger.kernel.org, AJvYcCWvIsr0jtmeW8w/00NV+nBDHcLo35pWI5hxJAZ9qCJoiugJwTuyY7SPzFfBWpzkWOS+KJ8ketEozJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKEENpsFfYFeDEqsp+9yWshRcJNz9rCEaaj7lPQ87aXtdul3rW
-	t1/ypiH0yElo1eiNhSk1XyXdEkNaccKw3/H+GlnTZlFE/fRKCu4fVBQImGcOtSIJrM1BhPMJnsN
-	91G5R/P1EgrWvdr9T+oVIlm3BTK4=
-X-Gm-Gg: ASbGncsTY9x6yvNpdFi9k41j7tBbSDFiZvcG3KNG/GtzMR9AQiTL+BN6zXg0tZv4kAY
-	xyf+w6b38BwvhZhC9Goce4DsiCiaiWybuTgz+DOomI1ybG7cpeN504iqOgRuC4QAg+a5dToc4bT
-	iMG2BEa3qpxAtKz35dz7XxKa8y
-X-Google-Smtp-Source: AGHT+IHIy0jD4deps83mC+BJmknL3Cgj5RJsKo2gQsuaVts0eTtH76HrlAlx5F1MimQi1yke5qB3yYDyvNVQ5fq28rQ=
-X-Received: by 2002:a17:907:940c:b0:ad2:2417:12db with SMTP id
- a640c23a62f3a-ad2241716dfmr90159966b.40.1746781611479; Fri, 09 May 2025
- 02:06:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746781680; x=1747386480;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Apvpj+DVB6htjnL5aEPsZH8q3oREXQCWKiewHBNRw84=;
+        b=kbXLbDxoYKfWe1CKTE1syb+6w3dEqjTFC4kMEfb7o5uKCTSylT0M0pEgWPmP5+EhaX
+         j6HB69qewhYyIdrW4mjWSDCAHVUChJkmKnAF8GmVITBJ3mYSXkElQhFmeyOkzxGuAsAy
+         8sH8pog/vNEw8qg1UHYT/XRr0f0pmOEByhGAIFAHXX1Vq411YyaeJ6vgZAi1bOgREr6/
+         xeKzD/f6jJ+OETHXr0KHbfm/NIWYWop1jgucfGNIvVV5F9/+SmVrKATDCEyxC4WGp7I3
+         /c1UMSkqA17cCFQ/ie6p2zqow6HhXZ4qEhQHiLEK59qPXO6TMs6efSdM5mcghCpFtvqp
+         VFNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVoliYj3a+6WuDSVEjws6N6PwOUI+Kdja3/gxQD6LJMi2v+0XeJ1nHV6jmEXjuW9vF8fCMqFd5/VwSq@vger.kernel.org, AJvYcCXhgnd+Lubn/zIU/II6hbM0oTHS+ZUWtvbmVb0CCf4PRaLQiaxYDVg1AcAeCyRQGoPovb1sO6SsRSociYRQ@vger.kernel.org, AJvYcCXwcBP6G7f3U7TiRZKGhLkNEkcq7zTg67msPoafvpmDhtUrvwYo/Lvr9n8eTRWJZuSS2o4cun0qGM5xqQSpzxJN@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqg4ARXZb2iUinD5MCT4eGTgUh4pdFretajb0pRfVPAZ4v4D+w
+	siJfQvn/A+h+1mfO4nDlvzAJkpaCLGhIlG2yHFD/aKlMMR5up6yKbNQ6pMwK
+X-Gm-Gg: ASbGncu9yPUyPmPJ36a5Uu3YT9YGtyYGkTv4p/bBKMmxsWKwF+13/tClEsyUSPHs6j1
+	Dtixg2iJZIH3/1uEPQFgeGNphclzhfAV13dUvM39puZ05AAx0MaD5Jr4kzcrb/gG8PQTm5jApTk
+	A4XUvoVb3Vqdq9VLuJJlzNHI8otsqeHYjuK/TeCkFyYUHBTSYzvlMIaOLAkEufESkEXkVONboWB
+	tpbaYJFkcBlvemhDjSqNS1oof0jYvV3JCMDg0im4paNSa+ovbbedbJQG60y5fU6yBFyefMbGtb6
+	bzt40tfPddLDCkzTUV+Xw0r2xY3vBy7cSS/+CZoer0rBBriI8Cs6q3WWS85VVsMlkMnwUOUTdDA
+	r2TErmzRj1N0Q2Q==
+X-Google-Smtp-Source: AGHT+IE6CtK+6gR2CjANM5CQ5Hjp0KV2E3EDgqs4E5Ij3PWUcLMoBFBPAPgTjDVyPAOguSjXkkhfkg==
+X-Received: by 2002:a05:6102:3e20:b0:4c3:9b0:9e6b with SMTP id ada2fe7eead31-4deed33f426mr2237228137.10.1746781679693;
+        Fri, 09 May 2025 02:07:59 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f6297d9esm741353241.28.2025.05.09.02.07.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 02:07:59 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso520057241.2;
+        Fri, 09 May 2025 02:07:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOCvQ/IRnezq/Bo8PX/gx0uh+Dcy4nUQxDlVOuRbWVmN49I9V1r/9OgKeYS8KcvaAnvKwkb7hIogLHXHMYzpru@vger.kernel.org, AJvYcCVRdflASqwcX1aynZ+TzzeJI/0m16aHQoU7sFeyUaQ3+WS1kC+9kow8pCFS5LaDHnIM2hnT2up9+/F/@vger.kernel.org, AJvYcCVpHZ8V7HEHMelXcoUAm11dEb93qP4HGqiKeMoL6mqzLJcrmFg79jTJKWyqQBFJ8Jt0P9MHqLreZy70v0Jk@vger.kernel.org
+X-Received: by 2002:a05:6102:3fa9:b0:4c4:f128:3abb with SMTP id
+ ada2fe7eead31-4deed3ea41cmr2037408137.25.1746781679037; Fri, 09 May 2025
+ 02:07:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509013931.47524-1-andrew.lopes@alumni.usp.br>
-In-Reply-To: <20250509013931.47524-1-andrew.lopes@alumni.usp.br>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 9 May 2025 12:06:15 +0300
-X-Gm-Features: AX0GCFuAk1M85duu0X3oWCXjgf2w9d_WEv2IGSuBGytINUPqhfHKLGeCIGOw80w
-Message-ID: <CAHp75Ve7-hMUxrmXQnkMjynhPUbD6R+K=-j+h0zELvcxZdy5nw@mail.gmail.com>
-Subject: Re: [PATCH v3] iio: accel: sca3000: replace usages of internal read
- data helpers by spi helpers
-To: Andrew Ijano <andrew.ijano@gmail.com>
-Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
-	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 9 May 2025 11:07:47 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
+X-Gm-Features: AX0GCFv0zehjSL2ZnfrUxCA3qjPdz0jbQyUNX12OIzNFCKlNDxxmIl4SWZZ8pX0
+Message-ID: <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 4:39=E2=80=AFAM Andrew Ijano <andrew.ijano@gmail.com=
-> wrote:
+Hi Thomas,
+
+On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
+> Export all symbols and create header file for the GPIO forwarder library.
+> It will be used in the next changes.
 >
-> Remove usages of sca3000_read_data() and sca3000_read_data_short()
-> functions, replacing it by spi_w8r8() and spi_w8r16() helpers. Just
-> one case that reads large buffers is left using an internal helper.
->
-> This is an old driver that was not making full use of the newer
-> infrastructure.
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Suggested-by: ? (IIRC Jonathan suggested this, but ignore if I am mistaken)
+Thanks for your patch!
 
-...
-
->         ret =3D sca3000_write_reg(st, SCA3000_REG_CTRL_SEL_ADDR, ctrl_reg=
-);
->         if (ret)
->                 goto error_ret;
-> -       ret =3D sca3000_read_data_short(st, SCA3000_REG_CTRL_DATA_ADDR, 1=
-);
+> --- /dev/null
+> +++ b/include/linux/gpio/forwarder.h
+> @@ -0,0 +1,42 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __LINUX_GPIO_FORWARDER_H
+> +#define __LINUX_GPIO_FORWARDER_H
 > +
-> +       ret =3D spi_w8r8(st->us, SCA3000_READ_REG(SCA3000_REG_CTRL_DATA_A=
-DDR));
->         if (ret)
->                 goto error_ret;
-> -       return st->rx[0];
-
-> +       return ret;
->  error_ret:
->         return ret;
-
-Doesn't feel like a good cleanup. Please, drop this error handling
-completely, just return instead of goto above.
-
-...
-
-> -                       *val =3D sign_extend32(be16_to_cpup((__be16 *)st-=
->rx) >>
-> +                       *val =3D sign_extend32(be16_to_cpu((__be16) ret) =
->>
-
-This doesn't look good, can you define a proper __be16 variable on
-stack and use it instead of ret?
-
->                                              chan->scan_type.shift,
-
-With the above done, move this parameter to the previous line.
-
->                                              chan->scan_type.realbits - 1=
-);
->                 } else {
-
-...
-
-> -                       *val =3D (be16_to_cpup((__be16 *)st->rx) >>
-> +                       *val =3D (be16_to_cpu((__be16) ret) >>
->                                 chan->scan_type.shift) &
->                                 GENMASK(chan->scan_type.realbits - 1, 0);
-
-Ditto.
-
-...
-
->         /* if off and should be on */
-> -       if (state && !(st->rx[0] & SCA3000_REG_MODE_FREE_FALL_DETECT))
-> +       if (state && !(ret & SCA3000_REG_MODE_FREE_FALL_DETECT))
->                 return sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
-> -                                        st->rx[0] | SCA3000_REG_MODE_FRE=
-E_FALL_DETECT);
-> +                                        ret | SCA3000_REG_MODE_FREE_FALL=
-_DETECT);
->         /* if on and should be off */
-> -       else if (!state && (st->rx[0] & SCA3000_REG_MODE_FREE_FALL_DETECT=
-))
-> +       else if (!state && (ret & SCA3000_REG_MODE_FREE_FALL_DETECT))
-
-Remove redundant 'else'
-
->                 return sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
-> -                                        st->rx[0] & ~SCA3000_REG_MODE_FR=
-EE_FALL_DETECT);
-> +                                        ret & ~SCA3000_REG_MODE_FREE_FAL=
-L_DETECT);
->         else
-
-Ditto.
-
->                 return 0;
-
-...
-
->         ret =3D sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
-> -                               (st->rx[0] & SCA3000_MODE_PROT_MASK));
-> +                               (ret & SCA3000_MODE_PROT_MASK));
-
-Remove unneeded parentheses.
-
-...
-
-> -       ret =3D sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1)=
-;
-> +       ret =3D spi_w8r8(st->us, SCA3000_READ_REG(SCA3000_REG_INT_MASK_AD=
-DR));
-
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +
+> +struct gpiochip_fwd;
+> +
+> +struct gpio_chip *gpio_fwd_get_gpiochip(struct gpiochip_fwd *fwd);
+> +
+> +int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset);
 > +
 
-Stray blank line.
+Please drop empty lines between functions that belong together
+logically.
 
->         if (ret)
->                 goto error_ret;
+> +int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset);
+> +
+> +int gpio_fwd_direction_output(struct gpio_chip *chip, unsigned int offset,
+> +                             int value);
+> +
+> +int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset);
+> +
+> +int gpio_fwd_get_multiple_locked(struct gpio_chip *chip, unsigned long *mask,
+> +                                unsigned long *bits);
+> +
+> +int gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value);
+> +
+> +int gpio_fwd_set_multiple_locked(struct gpio_chip *chip, unsigned long *mask,
+> +                                unsigned long *bits);
+> +
+> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
+> +                       unsigned long config);
+> +
+> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
 
-Perhaps you wanted it to be here?
+I would expect all of these to take gpiochip_fwd pointers instead of
+gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
+that does not correspond to a gpiochip_fwd object, causing a crash?
 
->         ret =3D sca3000_write_reg(st, SCA3000_REG_INT_MASK_ADDR,
+> +
+> +struct gpiochip_fwd *devm_gpio_fwd_alloc(struct device *dev,
+> +                                        unsigned int ngpios);
+> +
+> +int gpio_fwd_gpio_add(struct gpiochip_fwd *fwd,
+> +                     struct gpio_desc *desc, unsigned int offset);
+> +
+> +int gpio_fwd_register(struct gpiochip_fwd *fwd);
 
-> -                               (st->rx[0] &
-> +                               (ret &
->                                  ~(SCA3000_REG_INT_MASK_RING_THREE_QUARTE=
-R |
->                                    SCA3000_REG_INT_MASK_RING_HALF |
->                                    SCA3000_REG_INT_MASK_ALL_INTS)));
+Please move these three to the top, as these functions are what the
+user needs first, and drop the empty lines between them.
 
-Remove unneeded parentheses (outer for the last parameter).
+Gr{oetje,eeting}s,
 
---=20
-With Best Regards,
-Andy Shevchenko
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
