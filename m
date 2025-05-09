@@ -1,33 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF68E29372C
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC5A294A0C
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796381; cv=none; b=S0l0npQZGVoapCAWrnkWdu48LmSd+1xjXP0kTrkaFAKKDCvQtcHy79gFZQsdLzdup6ZJu0Wy5drBehAF47kyix9nt0P1ntANg01+hgoUt9V/qEZh3FrUxAd1x4cs4Xj6JGYbHrXqDOfYRX75lhibb/3vEqAVpxDH28jdWP7w6Yo=
+	t=1746796382; cv=none; b=PlzhvfjUUvE9YNLwctjVipoxiPOg+E0IUVzpoYohOAAmTwyzRCus32Hoo1ztvU9t0L0D4xg6QR8M/Yp3sA2L3g1DQj8w+65QDTzZPalBDTj98LVRGzDuPfV2Z4LZ70Jv1N80d7is+6nxnaHTKLRNJHqcsPunbMX/n9npnm9iQh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796381; c=relaxed/simple;
-	bh=3OsHc8XwoJH6dpKHNcBXd6XkR5G+RBAew+FYYhGeYYk=;
+	s=arc-20240116; t=1746796382; c=relaxed/simple;
+	bh=SzPqlg0Eque0YCACbS3nlNWvZVzenw1a+Kzf9qe87js=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MUO1am8iYEGYrCiDArPi4d48oU8dzgNIQTTUPyzMH2/BfA+yh6vGVkKuhEAsAoeUfNO+0bQBWc8dNpAYD6vQLdGlLLzQnmUIM7wkdfm6k94y5ylLkegODu3S+yI+78rGIkqJPVOGjYIWsEEMETtCOu65gmDH00rpIeoLtp1rfBs=
+	 Content-Type; b=MEJWkAC7SIeORjB7P7O3+QThscUnVOkHLmkL7ioe+2iQsCtY4jm0YhRQlT3SkkAu2qPFgaXa+Jvy48ppp374a+r90OlLcuXOwcQXeCpqFuHwIAcTJ9GYiZDJkul8WRE3f42haTyOKhJCkU2+uMMwndFsvNh8SHGStY5SGcrj5/o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B75C4CEF7;
-	Fri,  9 May 2025 13:13:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89F6C4CEEB;
+	Fri,  9 May 2025 13:13:02 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDNXQ-00000002bxH-3Ma2;
-	Fri, 09 May 2025 09:13:16 -0400
-Message-ID: <20250509131316.655384145@goodmis.org>
+	id 1uDNXS-00000002c1o-1SnJ;
+	Fri, 09 May 2025 09:13:18 -0400
+Message-ID: <20250509131318.200556507@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 09:13:08 -0400
+Date: Fri, 09 May 2025 09:13:17 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 19/31] ftrace: Do not disabled function graph based on "disabled" field
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tom Zanussi <zanussi@kernel.org>,
+ Miaoqian Lin <linmq006@gmail.com>
+Subject: [for-next][PATCH 28/31] tracing: Fix error handling in event_trigger_parse()
 References: <20250509131249.340302366@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,108 +39,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Steven Rostedt <rostedt@goodmis.org>
+From: Miaoqian Lin <linmq006@gmail.com>
 
-The per CPU "disabled" value was the original way to disable tracing when
-the tracing subsystem was first created. Today, the ring buffer
-infrastructure has its own way to disable tracing. In fact, things have
-changed so much since 2008 that many things ignore the disable flag.
-
-Do not bother disabling the function graph tracer if the per CPU disabled
-field is set. Just record as normal. If tracing is disabled in the ring
-buffer it will not be recorded.
-
-Also, when tracing is enabled again, it will not drop the return call of
-the function.
+According to trigger_data_alloc() doc, trigger_data_free() should be
+used to free an event_trigger_data object. This fixes a mismatch introduced
+when kzalloc was replaced with trigger_data_alloc without updating
+the corresponding deallocation calls.
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lore.kernel.org/20250505212235.715752008@goodmis.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Tom Zanussi <zanussi@kernel.org>
+Link: https://lore.kernel.org/20250507145455.944453325@goodmis.org
+Link: https://lore.kernel.org/20250318112737.4174-1-linmq006@gmail.com
+Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() implementations use helpers")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+[ SDR: Changed event_trigger_alloc/free() to trigger_data_alloc/free() ]
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_functions_graph.c | 38 +++++++---------------------
- 1 file changed, 9 insertions(+), 29 deletions(-)
+ kernel/trace/trace_events_trigger.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 0c357a89c58e..9234e2c39abf 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -202,12 +202,9 @@ static int graph_entry(struct ftrace_graph_ent *trace,
- {
- 	unsigned long *task_var = fgraph_get_task_var(gops);
- 	struct trace_array *tr = gops->private;
--	struct trace_array_cpu *data;
- 	struct fgraph_times *ftimes;
- 	unsigned int trace_ctx;
--	long disabled;
- 	int ret = 0;
--	int cpu;
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index dac3344ee345..c316badc608b 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -995,7 +995,7 @@ event_trigger_parse(struct event_command *cmd_ops,
  
- 	if (*task_var & TRACE_GRAPH_NOTRACE)
- 		return 0;
-@@ -257,21 +254,14 @@ static int graph_entry(struct ftrace_graph_ent *trace,
- 	if (tracing_thresh)
- 		return 1;
- 
--	preempt_disable_notrace();
--	cpu = raw_smp_processor_id();
--	data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_read(&data->disabled);
--	if (likely(!disabled)) {
--		trace_ctx = tracing_gen_ctx();
--		if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
--		    tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
--			unsigned long retaddr = ftrace_graph_top_ret_addr(current);
--			ret = __trace_graph_retaddr_entry(tr, trace, trace_ctx, retaddr);
--		} else {
--			ret = __graph_entry(tr, trace, trace_ctx, fregs);
--		}
-+	trace_ctx = tracing_gen_ctx();
-+	if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
-+	    tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
-+		unsigned long retaddr = ftrace_graph_top_ret_addr(current);
-+		ret = __trace_graph_retaddr_entry(tr, trace, trace_ctx, retaddr);
-+	} else {
-+		ret = __graph_entry(tr, trace, trace_ctx, fregs);
+ 	if (remove) {
+ 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+-		kfree(trigger_data);
++		trigger_data_free(trigger_data);
+ 		ret = 0;
+ 		goto out;
  	}
--	preempt_enable_notrace();
+@@ -1022,7 +1022,7 @@ event_trigger_parse(struct event_command *cmd_ops,
  
- 	return ret;
- }
-@@ -351,13 +341,10 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- {
- 	unsigned long *task_var = fgraph_get_task_var(gops);
- 	struct trace_array *tr = gops->private;
--	struct trace_array_cpu *data;
- 	struct fgraph_times *ftimes;
- 	unsigned int trace_ctx;
- 	u64 calltime, rettime;
--	long disabled;
- 	int size;
--	int cpu;
- 
- 	rettime = trace_clock_local();
- 
-@@ -376,15 +363,8 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 
- 	calltime = ftimes->calltime;
- 
--	preempt_disable_notrace();
--	cpu = raw_smp_processor_id();
--	data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_read(&data->disabled);
--	if (likely(!disabled)) {
--		trace_ctx = tracing_gen_ctx();
--		__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
--	}
--	preempt_enable_notrace();
-+	trace_ctx = tracing_gen_ctx();
-+	__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
+  out_free:
+ 	event_trigger_reset_filter(cmd_ops, trigger_data);
+-	kfree(trigger_data);
++	trigger_data_free(trigger_data);
+ 	goto out;
  }
  
- static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
 -- 
 2.47.2
 
