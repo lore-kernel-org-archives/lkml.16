@@ -1,95 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F78E1EEF9;
-	Fri,  9 May 2025 16:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90A518DF8D;
+	Fri,  9 May 2025 16:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807148; cv=none; b=MOblTfyaNqrj96GZkLZz3SwSh3Io5z64TCBbxBuYZJAmH7a2Xx6WoiVa/JgJ96UCmuVw+ngLYa8U6Ut8d1p1DLLSTQhE8QAIjNc74A+HPEFXw3//T7F0nmGon5/k5SQU2b2STfVWF/ubf1Cv7xdeGwgCx7yu4a/cfaIWrkYcaO4=
+	t=1746807180; cv=none; b=WqVmGmtd75eM29hDCO40mLx2BY7KguyD8EzqP0ScZIXrao/UzQCIF2MyHly/wm61CY+g6joYOFV4tqjPqrvYt4rYhDUN3hamqbwudgvq1gGRZVcwYUHyYo4r4AYSMFYusQH2Qw1Wj2whM7yKRUN1xQ1dU65KBFNfbdFaoGA8ZZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807148; c=relaxed/simple;
-	bh=Dq5D69yoWswbvYRIjmfWPM2poV9CNK84eRZfBB1U4vU=;
+	s=arc-20240116; t=1746807180; c=relaxed/simple;
+	bh=KvFVbBZKMEEzgkn+ju6i49wV/DSgXVrOXZUutqy3pcM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbvoYvQFqmoK/OAZ4KL4GKMAw+wLmVSTP5BECX1He0lHy5MYqqei4vkrVHXKcbqMbqX+PZSx38JNF3cYnU4J1UGUKmNlQV3EJrHl1VwN3p6itW9MmJ1iWFwd6xbfjec61ptHV5Az7h9fn9K4A/dZymHHUa6APUk6fztomG+xdSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qmoxnkmu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IYtqeInvJeqabOTJCgmYLHdBD/tC9qYWZYtmUzEJ+6Bb+jGv30xZWk2xXty/ED6SXjy94Vr0pDfMXPrIEedUqk3oRyNhXKkTzzicVq360vI6NpGNIjF8ZjBjVxpSuIkwJrWlyVacENHb8LSE9InLi7JD//NldvHXmPHq7kny4go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EfwFHQ75; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qmoxnkmu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24923C4CEE4;
-	Fri,  9 May 2025 16:12:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfwFHQ75"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A19DC4CEE4;
+	Fri,  9 May 2025 16:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746807147;
-	bh=Dq5D69yoWswbvYRIjmfWPM2poV9CNK84eRZfBB1U4vU=;
+	s=k20201202; t=1746807179;
+	bh=KvFVbBZKMEEzgkn+ju6i49wV/DSgXVrOXZUutqy3pcM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QmoxnkmuQ6WEChssh/bpWoWzZjyCkDBCUQAA9nRccmin1od2A+VeV2P6l/dxmF7cO
-	 FQ8qlSv2aMmpQ4OeIN0jh6TN5+o0ALBy23EL3GxFC3dK93TwFw29vG2K6Trcxcq1G8
-	 V6REOtqNkyvTbfiRuJw034xrqLyLtQehzQISrRiU568Wf2pxfSbYE0k4hTd33vtWAq
-	 ofLCQnoFJRUBghfwcIYuteuvXx44KclbZJJtzeooriI7tSdYmzILr7pWkzJMfwqNSV
-	 2gVowfEcZIWWMWRByMUE+FO12Qn4+8SweFxmZLTgXw7nMQDuw2dqQMh7UzYAiyXWtx
-	 wLAASq4jIxAVA==
-Date: Fri, 9 May 2025 17:12:21 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
-	David Lechner <dlechner@baylirbe.com>
-Subject: Re: [PATCH v7 03/12] dt-bindings: iio: adc: ad7768-1: add
- trigger-sources property
-Message-ID: <20250509-unthawed-opossum-ae1888537954@spud>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
- <731196750f27eee0bad5493647edb2f67a05a6e2.1746662899.git.Jonathan.Santos@analog.com>
+	b=EfwFHQ7579tnAf+BucCg+rcQjbXUlAALdMDmVOLpkyb3eNinjFQpm9MQOsFZ3cBzn
+	 dR9ZQuCeFkSv2mMDK8OaSY0e5O2sG1SbRiAKdNcZh0x0MKbD/KBWZKsSMtLoWhw2Wd
+	 w2liSNawXm2C6YIEW5MVcDQR4ErSBw4TKZeqA2Y/S+dR85yHXvvWwpLPr/5qlb6cG5
+	 P/WzUrmIttHGCSHGU/LhJE/szVJNrvqCF6b8614XIUMHYiXW5+T5KP5cwo9XQQqujO
+	 nKZmIiCsiqjtdrqQLnWZ4ESxzVbSv595Ez5OByvAJRY8+rm9Vrm9bTuT4GyEuDN5hW
+	 N5QHBOsyBxatw==
+Date: Fri, 9 May 2025 09:12:57 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-mm@kvack.org,
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 08/12] sysctl: Move tainted ctl_table into kernel/panic.c
+Message-ID: <aB4piT844_bxd9eq@bombadil.infradead.org>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-8-d0ad83f5f4c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jN6WHZCkGBJH0ccQ"
-Content-Disposition: inline
-In-Reply-To: <731196750f27eee0bad5493647edb2f67a05a6e2.1746662899.git.Jonathan.Santos@analog.com>
-
-
---jN6WHZCkGBJH0ccQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-8-d0ad83f5f4c3@kernel.org>
 
-On Thu, May 08, 2025 at 02:03:30PM -0300, Jonathan Santos wrote:
-> In addition to GPIO synchronization, The AD7768-1 also supports
-> synchronization over SPI, which use is recommended when the GPIO
-> cannot provide a pulse synchronous with the base MCLK signal. It
-> consists of looping back the SYNC_OUT to the SYNC_IN pin and send
-> a command via SPI to trigger the synchronization.
->=20
-> Introduce the 'trigger-sources' property to enable SPI-based
-> synchronization via SYNC_OUT pin, along with additional optional
-> entries for GPIO3 and DRDY pins.
->=20
-> Also create #trigger-source-cells property to differentiate the trigger
-> sources provided by the ADC. To improve readability, create a
-> adi,ad7768-1.h header with the macros for the cell values.
->=20
-> While at it, add description to the interrupts property.
->=20
-> Reviewed-by: David Lechner <dlechner@baylirbe.com>
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+On Fri, May 09, 2025 at 02:54:12PM +0200, Joel Granados wrote:
+> Move the ctl_table with the "tainted" proc_name into kernel/panic.c.
+> With it moves the proc_tainted helper function.
+> 
+> This is part of a greater effort to move ctl tables into their
+> respective subsystems which will reduce the merge conflicts in
+> kernel/sysctl.c.
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
---jN6WHZCkGBJH0ccQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaB4pZQAKCRB4tDGHoIJi
-0mNaAQDdL1y/TThdxI7fc/v/G9631xi3DvNyDsHo2KeSIYpxXwEA7CJZC9ZTcIAn
-D3uw/yJWhVle7cB0wkP88O+9Jf1/CQk=
-=rMZV
------END PGP SIGNATURE-----
-
---jN6WHZCkGBJH0ccQ--
+  Luis
