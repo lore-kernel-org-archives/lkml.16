@@ -1,134 +1,178 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B25238143
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0291D2327A3
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806997; cv=none; b=NCcRZ6jN9ZHVsPpydBrzDYwk0KeRBnAchjTrES/oxVeV00qj+wKsricx5EhneS/Z5bccF0lsO/nPDiMoqzaahCz0VlJIqb2Dv8XJ8qLiMMeYnpAmnLMgr117a0Vc9l7sAcGkgcR2U4j9yXZKZlX5+8Mrw5RDijEUk+0/dIxXi08=
+	t=1746807015; cv=none; b=TdQEoeGKfi/XVAR+YdLf9FrGBAHehnVT7Y2AGX4Jw3EpJ2eHlN1ru0L7l8JS24jKgJjq9NoOr0xcQJEO7Q572z9yJ9o/tyy+HpPlNmFGl+LmjX3DgPnoOlqL7vd9p/PXL1SfVL+T08VImPuebOC0G2pS+qbpNPpIFQvTf1CSuwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746806997; c=relaxed/simple;
-	bh=XpdZJNb/572VQuRWSZiwlXcZh7edQDGizIs9BsDnmSs=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=oRkdPjFbCR+PAqHxNaCklupJ/lgTIj9Tl0aNOsAtGrjk+KVLniK092Ru/xsb99r4ps3sC7WMbrJO+DsN8LFe9eg8BX1gyeVBKWgSnk8D0GBkrBd3JKcFn/1l10p/6lLl+5mUMx/ZSgrzLgWQIIdiovZ4NhFlaLceOsvviA6xHgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=gPSq3yrd; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1746807015; c=relaxed/simple;
+	bh=uoSXEquHDqYPEqEkV/ozAUTflYmdGbZaWZR3IgRaHHI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I/qhZqnWBJLmqks8fPoU9fBeFlLOtg2G+anSbmtgYo/yBGc7eV3tLoHLvMQEya7u7YAsJPZK47Of4QJogTLqQSgrpigfWvot1SaC2ukEFVwNvRycplK8Tr5O3+//gHzQWsgwGZiAK60p0dilhieuR1xcZat4sVToD7OGLWa6t6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4LU/6+iP; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="gPSq3yrd"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7376e311086so3365466b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:09:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4LU/6+iP"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47e9fea29easo358231cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1746806995; x=1747411795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QnWvRvLBiox5Bz9Lyem6f8SVAf49ycnR85XD0lPPJ4k=;
-        b=gPSq3yrdCuF7pGYWAkT7v9mUWeG9TC5VVYYAoRGYqnYubfG2J2s4lyyjAciYG/wFIs
-         te2Go4z2hhYxUvqJHhbEI7dI8HIISWWhc0ql03Qvjp4r5N6C4a0NQVqgpGQLmiR2cplX
-         QgF1Ua7VwDqR/gb4ILhgvV9CrqAE081jGhb16kcTiJEKkQoRviKsVdKN2pahQo79kOdB
-         qpdBg6C3N5j35WMFblQHI6srXx3Xb7fbRz3lsmcNhLIkX3a2hR0fkuTkfgvC2oJy3t1P
-         0p0pISUjRW3S1mzfjhZSNkIUb/nDyGYN8rc2cM5f8XOxlaqQCaqAkm1deXdWtqUOYKLS
-         CFGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746806995; x=1747411795;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1746807013; x=1747411813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QnWvRvLBiox5Bz9Lyem6f8SVAf49ycnR85XD0lPPJ4k=;
-        b=L/8rwAQw89YwgLh34NNUTXAUr2EtN2grbGo3+WxA+Z1JEtqB3uyBWFRhDHMpr/8cVD
-         UIy3M2DaNqXUBoQ48aa9DDDNFx5kIoI/S3fiSvoP4ZFhq2bhxZztkjt1QqatWSPbbfnD
-         wVG1Q418L9dd3UJcXStBKINpWRRwN6FbW3oeuDCO4WPgqVXhmwAL0nOZ6vHepHdSmBcU
-         FnyId/FlH5tvh8i34iAq48Xv0ZKSdOVupPKC+RkqHndFrSrN9XJ0SS+M3rW/c22A8bKv
-         sWTxje+AidEpp5O4RTvXEjDcOx/jexJ4w0Esc5e+rx1efoQsUCMwg1gbfI6WLv6vWhq3
-         zO8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUku6gcNzy7wtTJQnByJ+mnGqYhgVmIEhGmsESOMLKsSdgsODyo3qA9kpI6JzQeZCgIUhdPLkzh8NrhAXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym5EvzZ+FxLtLMv5g1gK9Tl5Uq5POAiMySaMw++DwvbXUZ1tZC
-	cdxZKpAcoqLs7YjAJLNGc6rydVbFOkbTu5TbRI/y7H8i0uHT5vHHaCJk0nJ1zcE=
-X-Gm-Gg: ASbGncucpA4YigC8r8RJKw6+Ky4KeHhSvJGSmTFAyNXDw0BxD574eVZPyAFzpsSadyq
-	C1UqUmmllBuub80Cac1hNFcCZb4XWol1SqiWd5zGp54axDCgyTzSx5cxsLMrKxrAOjp1YzZfrij
-	xul+0Dkc2+K/9FTMXbdQ+ZH+duwPrHFVJL7EnDYOolNIYwQ5bJEbYIgkQqqzDs8I/G+k73OvIKu
-	06WakqZ5wFtml3lPzJ2k6PQ2kE5a5r/3LZp6Nq570TKt0OLg19MPpKwB2cHhfqJpf3eBmbcBHLi
-	yKEhuBAO/ESP9khkwA2KymunLENqTHtKmQ==
-X-Google-Smtp-Source: AGHT+IEaZucBNObFCPlL+hxe0V/lS5+Y6rCoZP8rip8WDQP4X8PU+EirWpJnUHe7qNQ+TAoVPn0hPg==
-X-Received: by 2002:a05:6a00:f0b:b0:737:6fdf:bb69 with SMTP id d2e1a72fcca58-7423be92b53mr5075987b3a.13.1746806994709;
-        Fri, 09 May 2025 09:09:54 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a3cfeasm1935720b3a.140.2025.05.09.09.09.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 09:09:54 -0700 (PDT)
-Date: Fri, 09 May 2025 09:09:54 -0700 (PDT)
-X-Google-Original-Date: Fri, 09 May 2025 09:09:50 PDT (-0700)
-Subject:     Re: [PATCH] riscv: Disallow PR_GET_TAGGED_ADDR_CTRL without Supm
-In-Reply-To: <20250507180811.3CKhxtu0@linutronix.de>
-CC: samuel.holland@sifive.com, alex@ghiti.fr, linux-riscv@lists.infradead.org,
-  aou@eecs.berkeley.edu, bodonnel@redhat.com, Charlie Jenkins <charlie@rivosinc.com>,
-  Conor Dooley <conor.dooley@microchip.com>, joel.granados@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-  cuiyunhui@bytedance.com, linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: namcao@linutronix.de
-Message-ID: <mhng-4654dddb-920a-456b-8fc9-2caaa80c4781@palmer-ri-x1c9a>
+        bh=H2oav+qfacpS8QQCmqXiLrV/4p7+2M/TJ6/O5XYWWRg=;
+        b=4LU/6+iPBb1sfOB/W1DH+2waNDVmgc+3DIgIn8/e1VJ0vbU1Hz/sMetheBf0/wky4n
+         3LyppPxsZiK2MSubVs6pete5Sp7r8EXTESzyOcE5upgEwFKodYdW06piqxOTwC5hRxp9
+         UGa0vxOfvaij9hyXwuBzeWi/bKLDDCCmmZC66a8khTHJ4LJUvX/+/iIA6CHs7C75ERxc
+         slKm1Y9RlxLDCLJl4OI8G0HLEspNlejW+pGL4S0Zz5uJhWTei+ZrnLZ1yOluGpkeTzJS
+         cpOWp3h91JeA5SMkIwDGObFeygDMbEBWQYUjpJ0SFlaUxEeK8Z6k+LNQ52x3kw5U8QLB
+         flRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746807013; x=1747411813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H2oav+qfacpS8QQCmqXiLrV/4p7+2M/TJ6/O5XYWWRg=;
+        b=VgpDcuxsNhyprTiOmqB6aPQCRplP/uEZ/deZfuxSoDJWe7qHp64pUbF43/f0LfmpLm
+         8G3E2Yy1lAQkXdQi9g6Ms8xGpIZSFTYzYaEuGPZhqUn2X4X8+i+Cda8XRXJ3IkZA3CBP
+         UJBrXb1M3J0hhuQdI49rzH4tfYfvl/puYxmwIT9k2rHA9XDsGYn7yvvum8+S2ziBkATx
+         Cr06IqsosAtgB2fFAo+OXpioIb4kyucqbNtU+N4OePrZIEYOLDy/7c4ot3EXlXM4zo9b
+         gZdJEM6XD/x3Hhf2G1KLsT4OXsqnDwrCtUIH7mA3jEOFEVLasCHO0sMvM/+W0MhrP+p7
+         I/gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhbsnmrIT/HJLuGb+Ir/UI2Jvd+HWJ86cJ+y/Fqx5mqDITOfGa57I2xoYHyE8Z630JozlNlajYFq0iTMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoJZg2x8IBvdYs2ftDmJqJyYBWMzTThSY+lI3nWSQY5TnQRCF6
+	oRZ1xh7XeXQDEHrc1hbs2sH64w7sETVWEHHVGJf/ZullUgPwiG9y1nsmB10BgJBH6ja7ICdvbs6
+	+IAzFp2Hj28HMDLzGLW35whCHVL00NPvqRx3W
+X-Gm-Gg: ASbGnctcR0V4POjIQxsmae12JLlNnXUosSW8KdafgCgdh0bIM5LJeBnRxHqpH4BblvC
+	d/DOvZfexDIf2ZnNLhoKWhi0JTIm6vDCEQozS0RhyDEdoULU+preBg1KlHyt9z1LrnyklOlNl93
+	9E1+PyxUq3VeujZ7L2Y2o9j5qs15/uruQ=
+X-Google-Smtp-Source: AGHT+IF8kvUu0MzFS0B+zGe6tSSbFanEw8RvuFK5mRodORG/rJW5v25+TMXJ16bIiJrBmdOJD7Hx9yk9hYk+cNNuF4M=
+X-Received: by 2002:a05:622a:353:b0:477:9a4:d7ea with SMTP id
+ d75a77b69052e-49453ca9a50mr3983951cf.13.1746807012477; Fri, 09 May 2025
+ 09:10:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20250507175500.204569-1-00107082@163.com> <20250509055151.922612-1-00107082@163.com>
+In-Reply-To: <20250509055151.922612-1-00107082@163.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 9 May 2025 09:10:01 -0700
+X-Gm-Features: AX0GCFtDnNSP2857-92GN4ciVgg5AMBl8rpJYg0o2yZeBcjMT_lG9rJw6s48zws
+Message-ID: <CAJuCfpHRTGvctcEwXHd1bpfUiFa=A--zKmVBJggB5D9huPEdSA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] alloc_tag: add timestamp to codetag iterator
+To: David Wang <00107082@163.com>
+Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 07 May 2025 11:08:11 PDT (-0700), namcao@linutronix.de wrote:
-> On Wed, May 07, 2025 at 07:52:18AM -0700, Samuel Holland wrote:
->> When the prctl() interface for pointer masking was added, it did not
->> check that the pointer masking ISA extension was supported, only the
->> individual submodes. Userspace could still attempt to disable pointer
->> masking and query the pointer masking state. commit 81de1afb2dd1
->> ("riscv: Fix kernel crash due to PR_SET_TAGGED_ADDR_CTRL") disallowed
->> the former, as the senvcfg write could crash on older systems.
->> PR_GET_TAGGED_ADDR_CTRL state does not crash, because it reads only
->> kernel-internal state and not senvcfg, but it should still be disallowed
->> for consistency.
-
-We talked some in the patchwork meeting about returning success for the 
-flavors of this that could be emulated in the kernel without hardware 
-support (ie, disabling pointer masking on systems that don't have it is 
-trivial).  The general consensus is that didn't really help any, as 
-userspace still needs to deal with systems where these will fail (old 
-kernels, Kconfig disabled, etc).
-
-Happy to reconsider that if someone cares.  Either way this is going up 
-as a fix, as it just keeps the interface sane when taking 7f1c3de1370b 
-("riscv: Disallow PR_GET_TAGGED_ADDR_CTRL without Supm") into account.
-
->> Fixes: 09d6775f503b ("riscv: Add support for userspace pointer masking")
->> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
->> ---
->>
->>  arch/riscv/kernel/process.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
->> index 7c244de77180..f7a1a887ae68 100644
->> --- a/arch/riscv/kernel/process.c
->> +++ b/arch/riscv/kernel/process.c
->> @@ -330,6 +330,9 @@ long get_tagged_addr_ctrl(struct task_struct *task)
->>  	struct thread_info *ti = task_thread_info(task);
->>  	long ret = 0;
->>
->> +	if (!riscv_has_extension_unlikely(RISCV_ISA_EXT_SUPM))
->> +		return -EINVAL;
->> +
->>  	if (is_compat_thread(ti))
->>  		return -EINVAL;
+On Thu, May 8, 2025 at 10:52=E2=80=AFPM David Wang <00107082@163.com> wrote=
+:
 >
-> I think this matches what the man page says:
+> Codetag iterator use <id,address> pair to guarantee the
+> validness. But both id and address can be reused, there is
+> theoretical possibility when module inserted right after
+> another module removed, kmalloc return an address kfree by
+> previous module and IDR key reuse the key recently removed.
 >
-> "If the arguments are invalid or this feature is disabled or unsupported by
-> the kernel, the call fails with EINVAL"
+> Add timestamp to codetag_module and code_iterator, the
+> timestamp is generated by a clock which is strickly
+> incremented whenever a module is loaded. An iterator is
+> valid if and only if its timestamp match codetag_module's.
+>
+> Signed-off-by: David Wang <00107082@163.com>
+> ---
+>  include/linux/codetag.h |  1 +
+>  lib/codetag.c           | 12 ++++++++++--
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/codetag.h b/include/linux/codetag.h
+> index d14dbd26b370..61d43c3fbd19 100644
+> --- a/include/linux/codetag.h
+> +++ b/include/linux/codetag.h
+> @@ -54,6 +54,7 @@ struct codetag_iterator {
+>         struct codetag_module *cmod;
+>         unsigned long mod_id;
+>         struct codetag *ct;
+> +       unsigned long timestamp;
 
-Ya, it's also what we do when the Kconfig is disabled so it seems like 
-the way to go (we talked about that some too).
+The way you implement this, it is not really a timestamp, more like a
+unique id or sequence number. I would suggest calling it mod_seq or
+something similar. Maybe: cttype->next_mod_seq, iter->mod_seq and
+cmod->mod_seq.
 
-> Reviewed-by: Nam Cao <namcao@linutronix.de>
+>  };
+>
+>  #ifdef MODULE
+> diff --git a/lib/codetag.c b/lib/codetag.c
+> index 42aadd6c1454..973bfa5dd5db 100644
+> --- a/lib/codetag.c
+> +++ b/lib/codetag.c
+> @@ -13,6 +13,8 @@ struct codetag_type {
+>         struct idr mod_idr;
+>         struct rw_semaphore mod_lock; /* protects mod_idr */
 
-Thanks!
+The comment above should be expanded to say that mod_lock also
+protects accesses to cttype->clock, iter->timestamp and
+cmod->timestamp.
+
+>         struct codetag_type_desc desc;
+> +       /* generates timestamp for module load */
+> +       unsigned long clock;
+>  };
+>
+>  struct codetag_range {
+> @@ -23,6 +25,7 @@ struct codetag_range {
+>  struct codetag_module {
+>         struct module *mod;
+>         struct codetag_range range;
+> +       unsigned long timestamp;
+>  };
+>
+>  static DEFINE_MUTEX(codetag_lock);
+> @@ -48,6 +51,7 @@ struct codetag_iterator codetag_get_ct_iter(struct code=
+tag_type *cttype)
+>                 .cmod =3D NULL,
+>                 .mod_id =3D 0,
+>                 .ct =3D NULL,
+> +               .timestamp =3D 0,
+>         };
+>
+>         return iter;
+> @@ -91,11 +95,13 @@ struct codetag *codetag_next_ct(struct codetag_iterat=
+or *iter)
+>                 if (!cmod)
+>                         break;
+>
+> -               if (cmod !=3D iter->cmod) {
+> +               if (!iter->cmod || iter->timestamp !=3D cmod->timestamp) =
+{
+>                         iter->cmod =3D cmod;
+> +                       iter->timestamp =3D cmod->timestamp;
+>                         ct =3D get_first_module_ct(cmod);
+> -               } else
+> +               } else {
+>                         ct =3D get_next_module_ct(iter);
+> +               }
+>
+>                 if (ct)
+>                         break;
+> @@ -190,6 +196,8 @@ static int codetag_module_init(struct codetag_type *c=
+ttype, struct module *mod)
+>         cmod->range =3D range;
+>
+>         down_write(&cttype->mod_lock);
+> +       cttype->clock++;
+> +       cmod->timestamp =3D cttype->clock;
+>         err =3D idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
+>         if (err >=3D 0) {
+>                 cttype->count +=3D range_size(cttype, &range);
+> --
+> 2.39.2
+>
