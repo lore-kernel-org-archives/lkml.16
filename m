@@ -1,161 +1,82 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653F928F4;
-	Fri,  9 May 2025 06:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B913A28F4;
+	Fri,  9 May 2025 06:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746772674; cv=none; b=JovIxK2YEwbbs1CSzvWzwnz13hiFeQ2eun0GO1ZDKaZiHIWMAxBSU8NmWTpdffLmXm1Qaol6oxAh3pZKGDwra+e2mUVFLIKKM57tMWVsJme39begHvGCjE8kwImeYX2+pNNLKCDmQjTKcxsKKuQxk+FqmQQ4GC9j5KY5iSJfgmA=
+	t=1746772703; cv=none; b=i57xaurZowQ7yISXcVF7upLvozhsb2aFpPCUkdDfqmoAqN/z4qvvWS2yt7ztfOK0YyES1OgDtwF7tXyOuZxlpgCmQ8vMkxZ2fq6DDLg6Cdr+ISpyFd+/C/ZqIU22XGU/rI4X4LSTCKysxBhjxA960iamcJQ7o6VdKCOKO7sVb8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746772674; c=relaxed/simple;
-	bh=s4pQVEjbJ40eu1L5qoBwYrySDn9uGLHKDWxlDMpxxfI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MsAolH0elgyIXeqTeBXTecA67A2jklwzk/CsoGbwqBSTbPqKSLzUg3auVlAyFdfa2kX746Jsc7584qJ2Wl0REo/JZkyVgEH7gJS7IIfjg6EHjoVtE2sOjn1g1XbMSxlGkMSnc89YiJ/gJ2UsNdlf/DEVdNGWo6J0UhXjHJl8Hqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=md0l8X+l; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746772703; c=relaxed/simple;
+	bh=DijmGR4CReVDiWNuWA3tbBM8VuHHMl+HFeLCqD0jOkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UmaePxg5kWLJDFxonlwTIwxNkvPuuoYg35mogzIla72pY7VVASp8C3772QRxwxe9UJKbWGmm/e2ap/X5VI2jCOIr6pWbBJVw8meLjtL4Y2zYnwMHDZu8k8U65hOsMf80ZhSzgmiQwvKx/YdCizM3g7a+KAcao4zwXw87viEXIwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihBMTySM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="md0l8X+l"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0b9303998so824320f8f.0;
-        Thu, 08 May 2025 23:37:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746772670; x=1747377470; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OqmG3BJjsmTUqEq8AZgWfba3ERYP+7PeG6T0Jf+wIRU=;
-        b=md0l8X+lNNcLI7x1Z/mEodFVk5O0O5Zx0aELUtkcfmq1DHR/ZWcQA3Ud8SfqlwnBLd
-         ExLLnNSTEgIqKngz0RRgoeGT4i8wa1Va2Jigwpgp3f7bnOad3xsYyZgG0ernflH+nn2/
-         Fa3C4QO3x3uKeGhKh7iLpL+ROVvmsv3lOc4/On+qQZqTFCnsCD5/K8t3AwtB2r8k6AzQ
-         veH4IsR27tT3H0QAnnvcZruGuyfst5sjInkBSR4/qubgrVJtCKYq+XPLBs65PKIVl0HN
-         xcEmhPIOImHx+GM86oxcuSnilBOZDKzbBaRZuj1SAYLUnU2AZn8QWYcHprXZRkLmWxLm
-         uf1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746772670; x=1747377470;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OqmG3BJjsmTUqEq8AZgWfba3ERYP+7PeG6T0Jf+wIRU=;
-        b=JJB8axmCp0Nc+t3SylFtnwJRrorsYK6gCavwREJlBatd+HRyhrygDYP+kdvkHOd+7x
-         AsS16NkeMriuGtHTGc8qp8V+/L0w5a2KZTS1UFqVaqTYQrPDSA+qSXwmRXaCTbg7vBN/
-         CTkpOgKKKK2U6PH6J8x1iCNWR/iK+jDlNmdomNBofYgq8xre+OT7K3BDdNnbDVrpzmKN
-         eDH0fw3aXIEjTHEa/I3P7Ezf60DLYeAZ7US5FIWyhgg31YSJfLwtYUsb5mwFPYN75kMn
-         yMzs3xBuWcE/a7PTkEC5WrS23Pz9c53sZfa7M72FPWsOntorXy1pcQVyeTvPuyA8MoZL
-         H1fw==
-X-Forwarded-Encrypted: i=1; AJvYcCXt6s/jwj31tC5t5daSRT+0NnvFLaOW6oeAEnu2Jzk20Q2xJFjpqfUjvYqu5XTfE0jw5hTVvABmc8iUGaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjndE2hOFJ4kLl0bvSjY685P1oT1Cb1RUUmuPRAsUfqS1M4J+B
-	fe1o4CM4LZZEh4mRY0qbEmVrRub/Y3pAiFnSekUpXVcLsJSZ/Opq/Dish/DN
-X-Gm-Gg: ASbGncuPtW9UDOO41lMQ03n7fWsQGDO6QjXwhBpJ0YPkKgIaE2+5VI6+Jpx9DjI+TNx
-	/C6T3sVvy3FPKWeK4OJaTpZu8W8BsPFqroP1Tw199V+2OImRJtR+sdtwaIGbqqpRiVzLoquabUf
-	Vox3gSheEcH5As4OTjkvH9DR+cbVeRC7oDeT3+4DJ6VwSjmS21QC7asxkg7SQ7RC7Db7gpZsQCX
-	VtmJG71lH09E1NtMxBRRaAUpD0riCRcjGS2XdPxkZ9o/80aJZs6ZE6mHHt3d5YoXaa8pdpgV5A5
-	05TY6yDpskWRN62sbGMwbVUPIuKkQXaMhBaEeWgmTW5ztTxhxTZkUO4g9XcsK7uTlw==
-X-Google-Smtp-Source: AGHT+IHw06gGDN3zr31JLWJ1Q/qbSH1hi3YVW8+/TRJJ4XJQ/05RFm9FjdAFuvESuwnntbNjmEV+Mg==
-X-Received: by 2002:a05:6000:2011:b0:3a1:f653:26a with SMTP id ffacd0b85a97d-3a1f6530370mr1712267f8f.16.1746772670183;
-        Thu, 08 May 2025 23:37:50 -0700 (PDT)
-Received: from localhost.localdomain ([213.74.214.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae5asm18325745e9.36.2025.05.08.23.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 23:37:49 -0700 (PDT)
-From: Can Ayberk Demir <ayberkdemir@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Michal Simek <michal.simek@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Can Ayberk DEMIR <ayberkdemir@gmail.com>
-Subject: [PATCH v2] drivers: net: axienet: safely drop oversized RX frames
-Date: Fri,  9 May 2025 09:37:27 +0300
-Message-Id: <20250509063727.35560-1-ayberkdemir@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250508150421.26059-1-ayberkdemir@gmail.com>
-References: <20250508150421.26059-1-ayberkdemir@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihBMTySM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4C24C4CEE4;
+	Fri,  9 May 2025 06:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746772703;
+	bh=DijmGR4CReVDiWNuWA3tbBM8VuHHMl+HFeLCqD0jOkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ihBMTySMNi0Q0hIgKK1LyO0M9lKYu3oaShiHal1xYZ9dkRF2ZaqKOtxsNaX1LNdDe
+	 GjjlJrK14Jwaeovr18Bo17oyM4K+8Dk61NTigpn9+kAEwUdjIOjZzagvlkobf6OHGx
+	 WPiYD/qSkqzYuGZ9nAMx0mXQumZiPJupB6sHdxmKyhVe+UOZXtad7/id4CG11ufHXb
+	 /NRNr01YZ2WaiHBYXtJoOaGMokubxhQXbcQEgMto0C+GLxVGXB3xG8fpigQ2O/rL2F
+	 KkAi3My9wBpLidClSN0PF++VT0kdYO70Px4xpdBPGbk06P0jKlt4rsNV6Y8BCw7dyf
+	 8T7RGPFCa0YOg==
+Date: Fri, 9 May 2025 08:38:18 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: linux-next: manual merge of the drivers-x86 tree with the tip
+ tree
+Message-ID: <aB2i2oVeGwhaauIU@gmail.com>
+References: <20250509162901.79e269a5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509162901.79e269a5@canb.auug.org.au>
 
-From: Can Ayberk DEMIR <ayberkdemir@gmail.com>
 
-This patch addresses style issues pointed out in v1.
+* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-In AXI Ethernet (axienet) driver, receiving an Ethernet frame larger
-than the allocated skb buffer may cause memory corruption or kernel panic,
-especially when the interface MTU is small and a jumbo frame is received.
+> Hi all,
+> 
+> Today's linux-next merge of the drivers-x86 tree got a conflict in:
+> 
+>   drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> 
+> between commit:
+> 
+>   6fa17efe4544 ("x86/msr: Rename 'wrmsrl_safe()' to 'wrmsrq_safe()'")
+> 
+> from the tip tree and commit:
+> 
+>   c935ddfe65da ("platform/x86: ISST: Do Not Restore SST MSRs on CPU Online Operation")
+> 
+> from the drivers-x86 tree.
+> 
+> I fixed it up (the latter removed the code that the former updated) and
+> can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
 
-Signed-off-by: Can Ayberk DEMIR <ayberkdemir@gmail.com>
----
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 46 +++++++++++--------
- 1 file changed, 27 insertions(+), 19 deletions(-)
+LGTM, thanks!
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 1b7a653c1f4e..2b375dd06def 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1223,28 +1223,36 @@ static int axienet_rx_poll(struct napi_struct *napi, int budget)
- 			dma_unmap_single(lp->dev, phys, lp->max_frm_size,
- 					 DMA_FROM_DEVICE);
- 
--			skb_put(skb, length);
--			skb->protocol = eth_type_trans(skb, lp->ndev);
--			/*skb_checksum_none_assert(skb);*/
--			skb->ip_summed = CHECKSUM_NONE;
--
--			/* if we're doing Rx csum offload, set it up */
--			if (lp->features & XAE_FEATURE_FULL_RX_CSUM) {
--				csumstatus = (cur_p->app2 &
--					      XAE_FULL_CSUM_STATUS_MASK) >> 3;
--				if (csumstatus == XAE_IP_TCP_CSUM_VALIDATED ||
--				    csumstatus == XAE_IP_UDP_CSUM_VALIDATED) {
--					skb->ip_summed = CHECKSUM_UNNECESSARY;
-+			if (unlikely(length > skb_tailroom(skb))) {
-+				netdev_warn(ndev,
-+					    "Dropping oversized RX frame (len=%u, tailroom=%u)\n",
-+					    length, skb_tailroom(skb));
-+				dev_kfree_skb(skb);
-+				skb = NULL;
-+			} else {
-+				skb_put(skb, length);
-+				skb->protocol = eth_type_trans(skb, lp->ndev);
-+				/*skb_checksum_none_assert(skb);*/
-+				skb->ip_summed = CHECKSUM_NONE;
-+
-+				/* if we're doing Rx csum offload, set it up */
-+				if (lp->features & XAE_FEATURE_FULL_RX_CSUM) {
-+					csumstatus = (cur_p->app2 &
-+							XAE_FULL_CSUM_STATUS_MASK) >> 3;
-+					if (csumstatus == XAE_IP_TCP_CSUM_VALIDATED ||
-+					    csumstatus == XAE_IP_UDP_CSUM_VALIDATED) {
-+						skb->ip_summed = CHECKSUM_UNNECESSARY;
-+					}
-+				} else if (lp->features & XAE_FEATURE_PARTIAL_RX_CSUM) {
-+					skb->csum = be32_to_cpu(cur_p->app3 & 0xFFFF);
-+					skb->ip_summed = CHECKSUM_COMPLETE;
- 				}
--			} else if (lp->features & XAE_FEATURE_PARTIAL_RX_CSUM) {
--				skb->csum = be32_to_cpu(cur_p->app3 & 0xFFFF);
--				skb->ip_summed = CHECKSUM_COMPLETE;
--			}
- 
--			napi_gro_receive(napi, skb);
-+				napi_gro_receive(napi, skb);
- 
--			size += length;
--			packets++;
-+				size += length;
-+				packets++;
-+			}
- 		}
- 
- 		new_skb = napi_alloc_skb(napi, lp->max_frm_size);
--- 
-2.39.5 (Apple Git-154)
-
+	Ingo
