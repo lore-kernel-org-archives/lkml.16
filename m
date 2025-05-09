@@ -1,129 +1,200 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE65290DA4;
-	Fri,  9 May 2025 12:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF17290DBC;
+	Fri,  9 May 2025 12:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795293; cv=none; b=HrcsQFhHjLI1aJf8f0wPK5H13M5BQG9RZd9nLnuxusKgU3z22ZJA+NNarpd0/0lNX50jXFOwEKDB1LcAxXHlPgVr956LVYsX5iflRcM0nT+OkaT8STg52FQKKkrcV7UAH4ywe4FjR67jW9aKOtn31KwWM7yJjDHW0TRwTBZkFBU=
+	t=1746795306; cv=none; b=YPYxktc7F7OL6XuC4CYKIOR9FDFuT+5eswtgwqLQodk2M7nQ/ImXN9qRe49s6VRAOE925E0bH8NpgQyZlU1vnhJpyRXClAwT6PMDBwompqI3eheWhkVWU/AmIh3VyvjzUuEydYLxf6XQrzq2LMcXwHAlKA9z/Mgtml+2GaQNHXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795293; c=relaxed/simple;
-	bh=mdjay/bt0YQTImzRRyNTf7+nM7Iqt5fpIRc4hBQRXqU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gDWRsP3qi9GezEztZimq+yNWnc+O12xAo4Ox30nQvUpTbd7gw2VmdXF71+zPe72ivQEG5a8cksrNqT0uqfIOYF+GcUVg5et3I//RvF+XKm1I7J6n2tpWMEPyD+6xSpuquAWGnp8g/ibBN61w9b//ZOvEZ1Oay2VJYQlnQo3it8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1B+YBYN; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746795306; c=relaxed/simple;
+	bh=m38oSF1bsk4q8XGkb05UXXsxgbOmuEMD50QR+Uz7CYc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ufj5Hkwj6AlXGv1BZ1A14zJciJWjJU4a+tZcVJcfAp6h8twduv/0s0BKY0U7iZ8rh+C51CiNggwFiLzOJiBG1cX1GI5lx+Q2T1jqo0TXcpXBHKqPPS9iwUi9zfJ8pl78Qz/EXW796CV3ZMdrhNO93zot3e/MttEimw5Kfw9N7/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGIOsJx4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1B+YBYN"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-549963b5551so2368672e87.2;
-        Fri, 09 May 2025 05:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746795290; x=1747400090; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VUkV8BywuFWcK3XlHlfeRzzwdT0Xtem3jQh4BxB4+2M=;
-        b=Z1B+YBYNXVt1LA+Hh6w9jB7h0xJ2UsTL8rSCZVMHD53bt2VZcOGiDOQ9vloHS/Wep0
-         Hl5Z2BvnGAZstrnlTUMYFS+cehwDJVN9I5G4vE59Vg0nLTA9+j5Fm9Rzt+ecRfwZvxQS
-         CGKWR78YyF71XE9md9/QjV3ui4aE5FOw7cudDNI+NJVlnXLL4hstB75VRfjVw313NNji
-         IXO9D81+1BMPLY/nIQPv1gAKRiyxNj4d7PzZ30AQY7D9jQ3Hvq+TZ561JpyssJMpwj0g
-         BxjP4hBgQmuoeqlwNW0kqmhVbl9VMPe2afu8SCdMfnBYj0cNMI0NRk7dIQL61n5hNw5n
-         HCFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746795290; x=1747400090;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VUkV8BywuFWcK3XlHlfeRzzwdT0Xtem3jQh4BxB4+2M=;
-        b=K9+ezftC0MtxQNJ48OAhX1aJX4E0V9xLZsitABtybuz+tBF01rb1UzKoOKJ2yBUAMU
-         SSZqKG1BAegXy6pHrluqk3zqUFC2hRodtkYJfEXZJT1w+h10xRtFtQCoXVuI5Gk4b9i2
-         VXXlsK6QdhJkJxqp/dm4J09fZQl1TtmqBmaJWLSWRIzix28MkjU7HuNHo7C+wy1ormgS
-         mRhIsYdYpMHuUVZjydHcgUsxS9UxbGYx+iK7j9jeypRCRJOLkh54/PN25NKCaMpUe6UT
-         yJe7RTZ3VNgAwiPLKqHqW4mgPzkbiyRXtxwpXzOpENV0WfWo4UzLkDwMyfztxi8dhJpJ
-         pgjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVupWFRF0ncXbWOyM5eWpa+I+MyiwzfgGdBjwV1bpD5wKN2P8wEKRczitRLnmYRLdnWkb9fhXS99/8P4Dad@vger.kernel.org, AJvYcCXA3XcDG+gSu7ah5NrIrkwVb/6FL0ZBoI2D3a89TdaqGd42xtoLc47VZWdOzpOz9oI47uob8ADglLyf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs/0TBDrEYAWrwXG+S2ul9NMJTV/VfYWNoWUCNB/ZkFt48ypj8
-	Zb0VbTvzvCUPm+S+i2ePXAdQtbylzaPxA354sxSFnAqFxklhZWK2
-X-Gm-Gg: ASbGncszHBOo6TL3OdmrDRLdlRPjkD5Aq3uXvsuKHfiRDcUEamuRzga7ejMtIoTvTUr
-	dnsAz2cK/cl2HNLp6hoHAmDiPQvfzg0uBdBLIatYoTPzgP9TzVS7MRXjOA/CQ0MnfQxJ2BQ0vV2
-	+/VF5D3IoIpz3GiY68zXoQrkN1Q5FC9tDJaRAhuJmW4qr/aF+rUo8mrORZGcm10Wuc9d7zY5xfP
-	y5WmVDF3i++FpZ3aa9anHxdNLNRmR3DlYeH3vHovL3BfGKdgpCG9VEfYzb0IVAKGyCxe4uaJu9Y
-	09GRDTBvDByaUhoLtm87agFxSBCHLL6H3lns3TaNqi2rq2CdSoqo4NsNSccVGbgn/ig5Ao72HGm
-	tOb0hiO9QikpUQ80YPoTVPOLUpOQbLud2
-X-Google-Smtp-Source: AGHT+IGB0rBm4Sd2c2ZAuOBq1Wdz7EzM8zgvpzQWNHnTdOFbsdIwxpR9iWs0VxeI4bDlh0fT/50rUQ==
-X-Received: by 2002:a05:6512:6506:b0:54f:c074:f91b with SMTP id 2adb3069b0e04-54fc67c95damr1229451e87.24.1746795289472;
-        Fri, 09 May 2025 05:54:49 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc645cdcbsm270564e87.69.2025.05.09.05.54.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 05:54:48 -0700 (PDT)
-Message-ID: <16e91572-b132-4246-9fa9-8e8bc4c24f40@gmail.com>
-Date: Fri, 9 May 2025 15:54:47 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGIOsJx4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CB96AC4CEEE;
+	Fri,  9 May 2025 12:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746795305;
+	bh=m38oSF1bsk4q8XGkb05UXXsxgbOmuEMD50QR+Uz7CYc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=SGIOsJx42H5Nlud04v6QJtwpQIa+btBJZzPy80+nof8he1otM7798Z6eTanP4WZ7Q
+	 LWcETjTxdplEq8jJxptGlHEFWPvdJkQDCuvaureBHpQCNKS5n7QO3ZhIXXdgE4PHc8
+	 4ivdYewXH6PQp2yWb93BpIP+pjIujmbmzfv5Y8SlfIDvBsS8CHARjXru6ArwJhbnCz
+	 r3fWm3JPMgS5q8i/anreJqrdDlUpObRh/y6h8RksQ3Y2TzzGM7x8/xLlw36OSWQNxx
+	 eM1v7PyTPZzDigqrp/wVeBzl/q+36ELB8i1G+M6XyaF5brdQX0+5+0luolIEyY7M7I
+	 oguGDP7Mld/+A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4DFC3ABCC;
+	Fri,  9 May 2025 12:55:05 +0000 (UTC)
+From: Joel Granados <joel.granados@kernel.org>
+Date: Fri, 09 May 2025 14:54:06 +0200
+Subject: [PATCH 02/12] locking/rtmutex: Move max_lock_depth into rtmutex.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/14] arm64: dts: Add DSPI entries for S32G platforms
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- James Clark <james.clark@linaro.org>, Vladimir Oltean <olteanv@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
- Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, larisa.grigore@nxp.com, arnd@linaro.org,
- andrei.stefanescu@nxp.com, dan.carpenter@linaro.org
-Cc: linux-spi@vger.kernel.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- "Radu Pirea (NXP OSS)" <radu-nicolae.pirea@oss.nxp.com>
-References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-14-32bfcd2fea11@linaro.org>
- <3ddde799-76b5-43f9-971e-a52ec322e9b1@kernel.org>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <3ddde799-76b5-43f9-971e-a52ec322e9b1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-jag-mv_ctltables_iter2-v1-2-d0ad83f5f4c3@kernel.org>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+ Sami Tolvanen <samitolvanen@google.com>, 
+ Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+ Waiman Long <longman@redhat.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+ Joel Fernandes <joel@joelfernandes.org>, 
+ Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, rcu@vger.kernel.org, linux-mm@kvack.org, 
+ linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org, 
+ Joel Granados <joel.granados@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3350;
+ i=joel.granados@kernel.org; h=from:subject:message-id;
+ bh=m38oSF1bsk4q8XGkb05UXXsxgbOmuEMD50QR+Uz7CYc=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGgd+yFGAm/Om5FxfE5IBLkbOWnP5gjnTcP/E
+ wE2pCdoia9aUIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoHfshAAoJELqXzVK3
+ lkFPej4L/3tUO7WMqQqglIlWRHXlqTWnxNRYnKJZsiWhYbMrGWU4eNprXYMvMDxp4JszWCrc+s/
+ dHmZpjlZm84mz3wparfKY41aEWSr7T1OyrvxIHx+unxR9zyRa+ILYevo9846AmVIaP24Eh0rn/3
+ 5Cie9W07x5dm/HcvUcOwFgQ1dv9o41QFMKP2kyAnbmhmXtQeF3w54Sjg1Z0KB8PO4YvSJNUReGL
+ WzaCrJEvSmK2XEzGGrjEeb3FlYKd0OfHShmxh3fnX7xb9CzwgsS+6NNqsuRLVIv0gTZShloGJr7
+ 8uDDxU2WngQ49c6Jb5IDh+QtPUfDul3yqLOkx0XpwzoEmrzVkgrPk6iZV960PvH51ShMRX15ca5
+ ZHZ3neelFOecKdIjeq52ldmUvrYdxZYiv/YeW2hnSDdQQ78uPma7JuRm7RrJ/tGA96vqd00i43Y
+ IE4RlTg9xRQXIFnwXFOWjnTph14ioLpEP8BCgrqaTOB8/JrM47yU5/1EECWiK/lMDwB3lSgRJH6
+ JM=
+X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
+ auth_id=239
 
-On 09/05/2025 14:26, Krzysztof Kozlowski wrote:
-> On 09/05/2025 13:06, James Clark wrote:
->> +&spi1 {
->> +	pinctrl-0 = <&dspi1_pins>;
->> +	pinctrl-names = "default";
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	status = "okay";
->> +
->> +	spidev0: spidev@0 {
-> 
-> 
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-> 
-> 
->> +		compatible = "rohm,dh2228fv";
-> 
-> 
-> Nah, I really doubt. That's not the device you have there. It's
-> possible, though, so can you share schematics?
+Move the max_lock_depth sysctl table element and variable into
+rtmutex.c. Make the variable static as it no longer needs to be
+exported. Removed the rtmutex.h include from sysctl.c.
 
-Actually, not even possible. There is no DH2228FV from ROHM. There is 
-BH2228FV though:
-https://www.rohm.com/products/data-converter/d-a-converters/8bit-d-a/bh2228fv-product
+This is part of a greater effort to move ctl tables into their
+respective subsystems which will reduce the merge conflicts in
+kernel/sysctl.c.
 
-but as you know, it is unlikely this is the part populated on the board.
+Signed-off-by: Joel Granados <joel.granados@kernel.org>
+---
+ include/linux/rtmutex.h      |  2 --
+ kernel/locking/rtmutex.c     | 23 +++++++++++++++++++++++
+ kernel/locking/rtmutex_api.c |  5 -----
+ kernel/sysctl.c              | 12 ------------
+ 4 files changed, 23 insertions(+), 19 deletions(-)
 
-For the author:
-https://lore.kernel.org/linux-rockchip/20250213-calamity-smuggler-5d606993be32@spud/T/
+diff --git a/include/linux/rtmutex.h b/include/linux/rtmutex.h
+index 7d049883a08ace049384d70b4c97e3f4fb0e46f8..dc9a51cda97cdb6ac8e12be5209071744101b703 100644
+--- a/include/linux/rtmutex.h
++++ b/include/linux/rtmutex.h
+@@ -18,8 +18,6 @@
+ #include <linux/rbtree_types.h>
+ #include <linux/spinlock_types_raw.h>
+ 
+-extern int max_lock_depth; /* for sysctl */
+-
+ struct rt_mutex_base {
+ 	raw_spinlock_t		wait_lock;
+ 	struct rb_root_cached   waiters;
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index c80902eacd797c669dedcf10966a8cff38524b50..705a0e0fd72ab8da051e4227a5b89cb3d1539524 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -29,6 +29,29 @@
+ #include "rtmutex_common.h"
+ #include "lock_events.h"
+ 
++/*
++ * Max number of times we'll walk the boosting chain:
++ */
++static int max_lock_depth = 1024;
++
++static const struct ctl_table rtmutex_sysctl_table[] = {
++	{
++		.procname	= "max_lock_depth",
++		.data		= &max_lock_depth,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++};
++
++static int __init init_rtmutex_sysctl(void)
++{
++	register_sysctl_init("kernel", rtmutex_sysctl_table);
++	return 0;
++}
++
++subsys_initcall(init_rtmutex_sysctl);
++
+ #ifndef WW_RT
+ # define build_ww_mutex()	(false)
+ # define ww_container_of(rtm)	NULL
+diff --git a/kernel/locking/rtmutex_api.c b/kernel/locking/rtmutex_api.c
+index 191e4720e546627aed0d7ec715673b1b8753b130..2b5da8af206da6ee72df1234a4db94f5c4f6f882 100644
+--- a/kernel/locking/rtmutex_api.c
++++ b/kernel/locking/rtmutex_api.c
+@@ -8,11 +8,6 @@
+ #define RT_MUTEX_BUILD_MUTEX
+ #include "rtmutex.c"
+ 
+-/*
+- * Max number of times we'll walk the boosting chain:
+- */
+-int max_lock_depth = 1024;
+-
+ /*
+  * Debug aware fast / slowpath lock,trylock,unlock
+  *
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 473133d9651eac4ef44b8b63a44b77189818ac08..a22f35013da0d838ef421fc5d192f00d1e70fb0f 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -59,9 +59,6 @@
+ #include <asm/nmi.h>
+ #include <asm/io.h>
+ #endif
+-#ifdef CONFIG_RT_MUTEXES
+-#include <linux/rtmutex.h>
+-#endif
+ 
+ /* shared constants to be used in various sysctls */
+ const int sysctl_vals[] = { 0, 1, 2, 3, 4, 100, 200, 1000, 3000, INT_MAX, 65535, -1 };
+@@ -1709,15 +1706,6 @@ static const struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dointvec,
+ 	},
+ #endif
+-#ifdef CONFIG_RT_MUTEXES
+-	{
+-		.procname	= "max_lock_depth",
+-		.data		= &max_lock_depth,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+-#endif
+ #ifdef CONFIG_TREE_RCU
+ 	{
+ 		.procname	= "panic_on_rcu_stall",
 
-Yours,
-	-- Matti
+-- 
+2.47.2
+
+
