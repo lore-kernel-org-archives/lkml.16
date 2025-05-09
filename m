@@ -1,121 +1,110 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C9627E7FE
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFCD27FD53
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746780375; cv=none; b=eojNrLUyx8nx8ehm3P41SYZ/5rdccd9thtpagEW642qGmE4yN+ZzsDWUG7y3AXk++xBRWSXtCOLB9/BNhWQIVHoaD6CX3GmMmCaF8UADT1h913zmo4ElyZBhyJPXF7uwkgZKObbv+nQJQ80aJ6jAWXTAvlASM+oShcxSnYPqVLE=
+	t=1746780382; cv=none; b=FckSl9CNH6M8+qg54wVNxiCv+jcfpktlrnX8qQhwOsL4VsYdzbMdZEYc7YbqNC7vFee3TOhJAfkRfSupk4lX05I+y7ClUheDjHTfsA8yM78rdBMqmxFLGWmZWoMenJpU3PR64kN+BuP/tYbkRCx6Z/HMJAp3xuo0Fc+3t3yDtnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746780375; c=relaxed/simple;
-	bh=qsl/joelKwczJ7bi9V1St9WtcC0k/O+XG8627gyNOKE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FHWRfZEjR323xonwBvXNkL2l/hhMF56e4eMiI8pFCY/8Scoy+5LQwqm5lz1PSobZG6HpyZolYEf3sj/DJEf+mmE5yxDEL+Rl6cY+VZywWtso2xJnwd0Qk0xeEly+YmPZVeShIdsFgWNeKU9EfNyjZ2LkJasuVXFJ3RXo6lQqb4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DS8DsYq7; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746780382; c=relaxed/simple;
+	bh=4NVF5+MV/4djn8Pk1xuaXAM/Z2bwawWbmW+j2uP+wb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F3tFJOM4ULnG3G8SLckhNeg/XLOmjPVtewsm6TGD6wg46YPaXzP6cocNLJ9RzpY6+cD4eYpahULIXyPQ/QsRHs6Fc4ymzPGI3hyb/fNYSOmU70Q4vcIlvOAIlhbm32Q7jG7hdWKkdSoDiWPldkImtwE37HQTbD05wM0CLpAiUkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xo0E52rG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DS8DsYq7"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43f251dc364so11641165e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 01:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746780371; x=1747385171; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MGJzbeAPShVS80kaiI20MlTe07Nkf3fvhyjfEiBHmj0=;
-        b=DS8DsYq7AgvGJ74cfgR0vVfM06tnemuI4DcKSKNKxvTu8+FfM6s+nVFBS9kRoQnXyS
-         v8nBuMYX4QP1WY4pEZo+pH22tOdGXe3y8vM81cs6TT2ENESJEdgyrShPQ/f9k2xY9FWZ
-         dimRh1zDWa+le/ldmuUM5MCXknF5TdJGQkfpXp9O5DsQ3R1PGVjSjaQx50Y4kW24wpAe
-         RFw73U4/RLfiE0pExrP1qZ6fQz5+VYfhc1t/Xqbbt5PV1op0uFvkffEtEytsqmxwuSra
-         qipV1Zhwa2hlLiiBc16tqmxdhl3OWIGBIhMR9Axq4XkxPIJ6gD2XXV0PYjd6MXKKRtc/
-         V2Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746780371; x=1747385171;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MGJzbeAPShVS80kaiI20MlTe07Nkf3fvhyjfEiBHmj0=;
-        b=GkRE+5kcnLPfUyYszHB0AjmtSDLmMwZcvsAzxY1X2eg3yDRwuYeqvpI+d805bvjc8D
-         XtJvAx5aj0o+i3kswQLY2kUMv7DFWc17yRPp4gYDZ6g1aQ4YzsORQrob+4vf75L3lAJr
-         bCSa1o7325tF/8jF6hSe6gkHJiNP/GYnMg4RW7NmFtfwIYuhn8CWV8Bq2/kYl4CtRb06
-         LxNH09IExXeAgw8FP87YrQFoPg0KW0J+qQPXV+uow+mHG3/doMQ93Y2doKuW80kpW5Rv
-         w9goT1Adqgbu5SRuz9mT1kQnAniMyFg1es5JGuLj86X6O5Din56uNl7ox0MnQkME8HBH
-         lWTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWT+zqB13k/m/KoNNHVfRdKxqSbJvkKvHgDyLpTn9VY7Z11X3k//XE043fJReY7CO1RRRCc4dUsL3Sb+/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgKNQSfKaN/TNvsOl2AQEn5OCC7Fhy3QWXj4V2ejm+Eq2mcqpy
-	ZnUcY/EChqJf+ghitK0TsF4rXRVZ/+Evumh80ijshVW9gg2FV1FJVtqsMbnYAZRt6LrhUXYyOum
-	v8vSMk4Y4t53mfw==
-X-Google-Smtp-Source: AGHT+IE1g5YyKhENi+6gXRQtJXAWEa/UniZ8LOkUkrGgQNc45EoYtxjXpwi6qJONxZWCOgGv1QUMncVWtyjEBmM=
-X-Received: from wmrm7.prod.google.com ([2002:a05:600c:37c7:b0:440:5f8a:667c])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:608c:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-442d6dbbd6cmr19045605e9.22.1746780371623;
- Fri, 09 May 2025 01:46:11 -0700 (PDT)
-Date: Fri, 9 May 2025 08:46:09 +0000
-In-Reply-To: <CANiq72muSS+NNs5fxp4GPKWWhyXT95spvbGsZz6AJnK8RerUqQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xo0E52rG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746780379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ldm0PwyqH66jO1Mug4aaT3rBzKXZfNBu7VHXn9V5Kxw=;
+	b=Xo0E52rG8i4m8oF6B5tmuD6babAdw9NYxW+4DZ/MXYh9HJJkyWmAKFGeHgx0hNRh/LuTIp
+	20qjMC9sHp1pUVvSQ5juV7qAMeFZSrthIDY6OQT0UKEIcUG+2BjKbG7AlT8wTnpb2KmNn0
+	Ik1L4pD0PWxuCeWsMNpifKJXXQqTgSs=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-oP9NcB4AMfiEs_wRKzwhqQ-1; Fri,
+ 09 May 2025 04:46:16 -0400
+X-MC-Unique: oP9NcB4AMfiEs_wRKzwhqQ-1
+X-Mimecast-MFC-AGG-ID: oP9NcB4AMfiEs_wRKzwhqQ_1746780374
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3FDB31800374;
+	Fri,  9 May 2025 08:46:14 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.140])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 68A8830001A1;
+	Fri,  9 May 2025 08:46:06 +0000 (UTC)
+Date: Fri, 9 May 2025 16:46:00 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 7/8] selftests: ublk: kublk: decouple ublk_queues from
+ ublk server threads
+Message-ID: <aB3AyJdO7-mFzjFf@fedora>
+References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
+ <20250507-ublk_task_per_io-v6-7-a2a298783c01@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250410132649.GE9833@noisy.programming.kicks-ass.net>
- <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
- <20250410133446.GF9833@noisy.programming.kicks-ass.net> <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
- <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
- <20250416202040.GD38216@noisy.programming.kicks-ass.net> <202504161442.66CE2596@keescook>
- <20250417081818.GJ38216@noisy.programming.kicks-ass.net> <CANiq72kjDM0cKALVy4POEzhfdT4nO7tqz0Pm7xM+3=_0+L1t=A@mail.gmail.com>
- <CANiq72muSS+NNs5fxp4GPKWWhyXT95spvbGsZz6AJnK8RerUqQ@mail.gmail.com>
-Message-ID: <aB3A0Qe5WqmxXQJt@google.com>
-Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, "=?utf-8?B?UGF3ZcWC?= Anikiel" <panikiel@google.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Matthew Maurer <mmaurer@google.com>, Ramon de C Valle <rcvalle@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507-ublk_task_per_io-v6-7-a2a298783c01@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, May 07, 2025 at 12:19:11AM +0200, Miguel Ojeda wrote:
-> On Thu, Apr 17, 2025 at 8:40=E2=80=AFPM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > Thanks Peter (and Kees for clarifying) -- not sure how you/others
-> > prefer to route this patch or if you expect a v2, but I got the
-> > following (attached). I converted your Ack.
->=20
-> Applied to `rust-fixes` -- thanks everyone!
->=20
-> (If someone else prefers to carry it, please shout)
->=20
->     [ Rust 1.88.0 (scheduled for 2025-06-26) should have this fixed [1],
->       and thus we relaxed the condition with Rust >=3D 1.88.
->=20
->       When `objtool` lands checking for this with e.g. [2], the plan is
->       to ideally run that in upstream Rust's CI to prevent regressions
->       early [3], since we do not control `core`'s source code.
->=20
->       Alice tested the Rust PR backported to an older compiler.
->=20
->       Peter would like that Rust provides a stable `core` which can be
->       pulled into the kernel: "Relying on that much out of tree code is
->       'unfortunate'".
->=20
->         - Miguel ]
->=20
->     [ Reduced splat. - Miguel ]
+On Wed, May 07, 2025 at 03:49:41PM -0600, Uday Shankar wrote:
+> Add support in kublk for decoupled ublk_queues and ublk server threads.
+> kublk now has two modes of operation:
+> 
+> - (preexisting mode) threads and queues are paired 1:1, and each thread
+>   services all the I/Os of one queue
+> - (new mode) thread and queue counts are independently configurable.
+>   threads service I/Os in a way that balances load across threads even
+>   if load is not balanced over queues. requires passing --round_robin
+> 
+> The new mode of operation is exercised by the new test_generic_08, which
+> issues I/O against a single queue and verifies that each of the 8 ublk
+> server threads handles exactly 1/8 of the total I/O count. Under the old
+> mode of operation (i.e. without --round_robin), all I/O goes to one ublk
+> server thread, and the test fails.
 
-Actually ... I don't think putting it on CFI_AUTO_DEFAULT the right
-approach.
+Hi Uday,
 
-Shouldn't the depends on clause go on `config FINEIBT` instead? After
-all, the current patch just means that you can't make FineIBT the
-default option. But you can still pass kcfi=3Dfineibt on boot to enble
-FineIBT which would result in the same crash.
+I just setup two ublk devices in the following way:
 
-Alice
+[root@ktest-40 ublk]# ./kublk add -t null -q 2  --nthreads=4 --round_robin
+dev id 0: nr_hw_queues 2 queue_depth 128 block size 512 dev_capacity 524288000
+	max rq size 1048576 daemon pid 8516 flags 0x842 state LIVE
+	queue 0: affinity(0 )
+	queue 1: affinity(8 )
+
+[root@ktest-40 ublk]# ./kublk add -t null -q 2
+dev id 1: nr_hw_queues 2 queue_depth 128 block size 512 dev_capacity 524288000
+	max rq size 1048576 daemon pid 8539 flags 0x42 state LIVE
+	queue 0: affinity(0 )
+	queue 1: affinity(8 )
+
+Then run 'fio/t/io_uring -p0 /dev/ublkb[0|1]', and IOPS of /dev/ublkb0 is
+just 1/3 of /dev/ublkb1.
+
+For ublk/loop, '-q 2  --nthreads=4 --round_robin' is still a bit slower
+than '-q 2', but the gap isn't too big(<10%).
+
+
+Thanks,
+Ming
+
