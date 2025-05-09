@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1C821322B;
-	Fri,  9 May 2025 14:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1890B2144DE;
+	Fri,  9 May 2025 14:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800231; cv=none; b=oTowVLRHKtky9pq2MKJN9r9DBbgkTRFGfigOrJXIoAkeY83Vl+zwOdnKnEEENt2JZJo9vWwbG+Z47XmnfzcGSbG78HKTuS33bfdC7Y2P2/R8Xe08e8uFTJvZJkWt5UwpzbD3btdy/P6aKvxNZe6C82STM+r5qMJqI4zIBo8gM0k=
+	t=1746800232; cv=none; b=LlIaHvLhB4FNLMh0RY+LOQAbRBCbBT/WDZJzZrjzNijtGRPLKTMy0hh6XSErhD3q4QnksugbQhiW6sv6X8WmdtO1rEIR7BH7wLoTSsTjfdsWaRmLNJDrcWxpS21umWkIlxDR3QQnOlzyof/TPqZXyztmw05axPHbH7g+0QvDBYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800231; c=relaxed/simple;
-	bh=/PIseCcZUdjenlJfiK9ityerZ5vunYK2BIb4xzakXsY=;
+	s=arc-20240116; t=1746800232; c=relaxed/simple;
+	bh=C2itz+S6tPrdRTXNErSUQmD0CIJnv+xn5PWfAWtHGgA=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=eV+ELn8zMm0RXlCa/eEDnhQ25mxd4kaksEsyiJ+EX+h1+8UgF0YUWN50b8M4DwwS+ss3JT/1Be1g4VaOSOst/MuQumRV2wl6croTynJjdaZKDpKPOmGhHkcU8bZ4vD3z6IaBy1F0tkLMN2rg7LziC6CZ4qfYLtFJ4zqyXVAGspI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNRTj5CO; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=Mp061x4SwIKkSepI+ttmN3KAonU23UFMt8D1L8FcAyKc0VFX9ibUIWzOiJpkk8jOx9rRQeeWaN8z8ilS/7lx71ZbUqGPLum+JsciBL69LOH2KXVhyIZgAuS0ICcNerVfTGyc+egxIfwYU45OQaDiRB8ENOp/Y/u2am6sH6w2U/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGRcYZSp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNRTj5CO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18BA1C4CEEB;
-	Fri,  9 May 2025 14:17:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGRcYZSp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CE7C4CEE4;
+	Fri,  9 May 2025 14:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746800231;
-	bh=/PIseCcZUdjenlJfiK9ityerZ5vunYK2BIb4xzakXsY=;
+	s=k20201202; t=1746800229;
+	bh=C2itz+S6tPrdRTXNErSUQmD0CIJnv+xn5PWfAWtHGgA=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=lNRTj5COI1LxN5vFI2zoyMg5fRwlQKKh3fjA8VOUZUu5J+u3dBR8AwnlA2dm7UURL
-	 olg1CYEwp94CDD3L6ZEA3Z+ujx98/8FsvRw8+bECKFZSxENdXq0S0RE5PXKxRtnmkr
-	 pwbHE5a2PwrTPhEopzFF7hjcGmm52RVloMhH5Fk+ZgQnUH71hJWcH7CcySsLOgWeGP
-	 Koj1/JE1dAequF97dxppbTjei2ZLWgxexZ/QP7odwZHvNE9D0FLmP7g+7UQGVUhTa8
-	 ciEBi2niTEYug5BbnkyYJJ7JwBI6SuilUO1btJuB/OIIoHuf25RB1gg0rY91i82GL/
-	 uOFkan+F91s7w==
-Date: Fri, 09 May 2025 09:17:09 -0500
+	b=tGRcYZSpxo55IxBJrhfzT9uplJbSWhfz+KHCY3evtuJz8Y5j1YJLDL8cr9x3XcL8w
+	 FheP+ALCKZZh4DaaNwi5R6gpCpVZc2HSXoNn0XkozhtpZzenIlrbm1nWMV+eNQZydJ
+	 HhJuvGnsjNdymeaIalQrDvtKQFtFxZq71e6tL7aGpIW88IwwQl9aYX37qkMESjaCsP
+	 wwr5mggIiFNr+0w/+PV0uExN3v8+CAt6e0lak7VeRDF3nazivlti3Pefa3WNktYOmd
+	 3CZotQPcxpNUCvQdxmXJ9/OyIZ0P106KmMpN3My0xLcfNsRIY0LXSIeQv6+SQUqqYp
+	 kUYqb02LfjYmA==
+Date: Fri, 09 May 2025 09:17:07 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,84 +36,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
- Larisa Grigore <Larisa.Grigore@nxp.com>, 
- Ciprian Marian Costea <ciprianmarian.costea@nxp.com>, 
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
+Cc: linux-rockchip@lists.infradead.org, 
  linux-arm-kernel@lists.infradead.org, 
- "Radu Pirea (NXP OSS)" <radu-nicolae.pirea@oss.nxp.com>, arnd@linaro.org, 
- Dan Nica <dan.nica@nxp.com>, linux-spi@vger.kernel.org, imx@lists.linux.dev, 
- linux-kernel@vger.kernel.org, Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>, 
- Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>, 
- NXP S32 Linux Team <s32@nxp.com>, dan.carpenter@linaro.org, 
- Andra-Teodora Ilie <andra.ilie@nxp.com>, 
- Xulin Sun <xulin.sun@windriver.com>, larisa.grigore@nxp.com, 
- Sascha Hauer <s.hauer@pengutronix.de>, andrei.stefanescu@nxp.com, 
- Marius Trifu <marius.trifu@nxp.com>, Chester Lin <chester62515@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>, 
- Matthias Brugger <mbrugger@suse.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Shawn Guo <shawnguo@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Frank Li <Frank.Li@nxp.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
-References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
-Message-Id: <174679985557.3369558.10881468523148413098.robh@kernel.org>
-Subject: Re: [PATCH 00/14] spi: spi-fsl-dspi: DSPI support for NXP S32G
- platforms
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, kernel@collabora.com, 
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+In-Reply-To: <20250509-add-rock5t-v1-0-cff1de74eced@collabora.com>
+References: <20250509-add-rock5t-v1-0-cff1de74eced@collabora.com>
+Message-Id: <174679985488.3369444.8126092781297328766.robh@kernel.org>
+Subject: Re: [PATCH 0/3] Add RADXA ROCK 5T support
 
 
-On Fri, 09 May 2025 12:05:47 +0100, James Clark wrote:
-> DT and driver changes for DSPI on S32G platforms. First 4 commits add
-> new S32G registers and device settings along with restricting userspace
-> register access properly for all devices. Then some DMA mode fixes along
-> with adding support for target mode, which uses DMA. Followed by some
-> other minor bug fixes and then finally add the DT compatibles and
-> binding docs.
+On Fri, 09 May 2025 14:31:40 +0200, Nicolas Frattaroli wrote:
+> This is a small series, depending on Sebastian Reichel's ROCK 5B+
+> series[1], to also add support for the ROCK 5T.
 > 
+> The ROCK 5T is quite similar to the ROCK 5B+ and the ROCK 5B, so to
+> share as much DT boilerplate between them as we can, this series
+> reorganises things a bit and then adds the ROCK 5T .dts.
+> 
+> Link: https://lore.kernel.org/linux-rockchip/20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org/T/ [1]
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > ---
-> Andra-Teodora Ilie (1):
->       spi: spi-fsl-dspi: Enable modified transfer protocol
+> Nicolas Frattaroli (3):
+>       dt-bindings: arm: rockchip: add RADXA ROCK 5T
+>       arm64: dts: rockchip: reorganise common rock5* nodes
+>       arm64: dts: rockchip: add ROCK 5T device tree
 > 
-> Bogdan-Gabriel Roman (1):
->       spi: spi-fsl-dspi: Halt the module after a new message transfer
-> 
-> Ciprian Marian Costea (2):
->       dt-bindings: spi: dspi: Add S32G support
->       spi: spi-fsl-dspi: Enable support for S32G platforms
-> 
-> James Clark (2):
->       spi: spi-fsl-dspi: Define regmaps per device
->       spi: spi-fsl-dspi: Re-use one volatile regmap for both device types
-> 
-> Larisa Grigore (7):
->       spi: spi-fsl-dspi: restrict register range for regmap access
->       spi: spi-fsl-dspi: Add config and regmaps for S32G platforms
->       spi: spi-fsl-dspi: Avoid setup_accel logic for DMA transfers
->       spi: spi-fsl-dspi: Reset SR flags before sending a new message
->       spi: spi-fsl-dspi: Use DMA for S32G controller in target mode
->       spi: spi-fsl-dspi: Reinitialize DSPI regs after resuming for S32G
->       arm64: dts: Add DSPI entries for S32G platforms
-> 
-> Marius Trifu (1):
->       spi: spi-fsl-dspi: Use spi_alloc_target for target
-> 
->  .../devicetree/bindings/spi/fsl,dspi.yaml          |  18 ++
->  arch/arm64/boot/dts/freescale/s32g2.dtsi           |  78 +++++
->  arch/arm64/boot/dts/freescale/s32g3.dtsi           |  78 +++++
->  arch/arm64/boot/dts/freescale/s32gxxxa-evb.dtsi    |  87 +++++
->  arch/arm64/boot/dts/freescale/s32gxxxa-rdb.dtsi    |  77 +++++
->  drivers/spi/Kconfig                                |   4 +-
->  drivers/spi/spi-fsl-dspi.c                         | 356 +++++++++++++++------
->  7 files changed, 592 insertions(+), 106 deletions(-)
+>  .../devicetree/bindings/arm/rockchip.yaml          |    5 +
+>  arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+>  .../boot/dts/rockchip/rk3588-rock-5b-5bp-5t.dtsi   | 1012 ++++++++++++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi   | 1012 +-------------------
+>  arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dts    |  105 ++
+>  5 files changed, 1131 insertions(+), 1004 deletions(-)
 > ---
-> base-commit: 9c69f88849045499e8ad114e5e13dbb3c85f4443
-> change-id: 20250325-james-nxp-spi-caf1e2099231
+> base-commit: 19c541fe872387798a25df947f56a26212aa9a97
+> change-id: 20250509-add-rock5t-fde5927de36b
+> prerequisite-message-id: <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
+> prerequisite-patch-id: 02bf159533bb53d2cb1b6c8c7caf1d3fcfbfa4ea
+> prerequisite-patch-id: fc153d1d48f19d63520086a6eaadfec2db960470
+> prerequisite-patch-id: f445b893edf31ccf3311e146a53e5d24861c2475
+> prerequisite-patch-id: 5dc410a438ad5a7aa8962e380d2733782f5d7d18
+> prerequisite-patch-id: c70ae0e30be2a3385d2f2a09f474ff2b76293843
 > 
 > Best regards,
 > --
-> James Clark <james.clark@linaro.org>
+> Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > 
 > 
 > 
@@ -134,21 +104,23 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: using specified base-commit 9c69f88849045499e8ad114e5e13dbb3c85f4443
+ Base: using specified base-commit 19c541fe872387798a25df947f56a26212aa9a97
+ Deps: looking for dependencies matching 5 patch-ids
+ Deps: Applying prerequisite patch: [PATCH v2 1/5] arm64: dts: rockchip: move rock 5b to include file
+ Deps: Applying prerequisite patch: [PATCH v2 2/5] arm64: dts: rockchip: move rock 5b to include file
+ Deps: Applying prerequisite patch: [PATCH v2 3/5] dt-bindings: arm: rockchip: Add Radxa ROCK 5B+
+ Deps: Applying prerequisite patch: [PATCH v2 4/5] arm64: dts: rockchip: add Rock 5B+
+ Deps: Applying prerequisite patch: [PATCH v2 5/5] arm64: dts: rockchip: add USB-C support for ROCK 5B+
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250509-add-rock5t-v1-0-cff1de74eced@collabora.com:
 
-arch/arm64/boot/dts/freescale/s32g399a-rdb3.dtb: pinctrl@4009c240 (nxp,s32g2-siul2-pinctrl): 'dspi1_pins', 'dspi5_pins' do not match any of the regexes: '-pins$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/nxp,s32g2-siul2-pinctrl.yaml#
-arch/arm64/boot/dts/freescale/s32g274a-evb.dtb: pinctrl@4009c240 (nxp,s32g2-siul2-pinctrl): 'dspi1_pins', 'dspi5_pins' do not match any of the regexes: '-pins$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/nxp,s32g2-siul2-pinctrl.yaml#
-arch/arm64/boot/dts/freescale/s32g274a-evb.dtb: spidev@0 (rohm,dh2228fv): 'fsl,spi-cs-sck-delay', 'fsl,spi-sck-cs-delay' do not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/trivial-devices.yaml#
-arch/arm64/boot/dts/freescale/s32g274a-rdb2.dtb: pinctrl@4009c240 (nxp,s32g2-siul2-pinctrl): 'dspi1_pins', 'dspi5_pins' do not match any of the regexes: '-pins$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/nxp,s32g2-siul2-pinctrl.yaml#
+arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dtb: edp@fded0000 (rockchip,rk3588-edp): clock-names:2: 'grf' was expected
+	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,analogix-dp.yaml#
+arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dtb: edp@fded0000 (rockchip,rk3588-edp): clock-names:2: 'grf' was expected
+	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,analogix-dp.yaml#
 
 
 
