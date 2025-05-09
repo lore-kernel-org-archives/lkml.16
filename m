@@ -1,229 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AE615E96;
-	Fri,  9 May 2025 13:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F472918FD;
+	Fri,  9 May 2025 13:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746798751; cv=none; b=SSKvg+J1fqQDdnSs3Ymthi9YHE+k9du0IftkDJ5r5VDdExvpz2+MfgyyGPenXzoPkB3JmXqIeOqottO3h78XvAt7O7MgCCjoCJ3sFbRNshdymmZavFVkXMlAZhj/RgkaVgmFcMJsL1YyD49Pd9nfnBfm3NaXl2s4cirSqBCxSew=
+	t=1746798758; cv=none; b=slDb2jC8keGhIk9WIIFJyHDWdhMw4odD3GpY7dDAW9jYJ1tduw1Fw50EknEK+9OLoCpaTaE1WBrgtwr75o9ilfpkcdGxXR9HyiRyMsvLPR55g84VWjVkMgpEYnZf2P7zsLm0s+yU7ag6D8P2yYESuBHv1UOv/JcfMoVA7pOLCSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746798751; c=relaxed/simple;
-	bh=08z/fA4ndGXl+5Zu9henL1jr4DrNeoyJNAHGe5fOiKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+f1MX5zqi/SNKrU6f2uGq61oOpNvAkQH4fetWg14Fo+8qsksF/n69KnkVpcsZ1zsHMDvf6X/i+fCcrQ1RDa01Sxzur0TkDQh7tbqVIA2gZvNjPAI3vLYbBphVRLGd900ft1OFBYGDJqkMKjSJVQ8MT9svXLzzEGmKovSGC5k4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPga8wPk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746798758; c=relaxed/simple;
+	bh=ui8gHGkFEjjFF4d8pkE0+iCKIxWUYvN6qZBgiqenwbM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c7SWt1EySPIT5NuSkzWw9XMH/RxHFef4fmOpaCCUsADyzggKx+hIjb9WYxJhyP8GcvnSshioK3ROHjzLVyyH+sS9Ooo1/GiZAFBNAiOE9uTg+qr+Yj5ahi3gVff1bBC+Ts2OTQTF/+FcYZcvJThXAlImWN4U8qClfxKwO7PMIbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eBQBtT9T; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPga8wPk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B3F8C4CEE4;
-	Fri,  9 May 2025 13:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746798750;
-	bh=08z/fA4ndGXl+5Zu9henL1jr4DrNeoyJNAHGe5fOiKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iPga8wPk30SBCjyT2PEUpAYxWoTbCCCa51yC3+AyjqVwUqmbgf8l5BZGzU50nqgKO
-	 T/SbQqEFoNjRGxPWMrUpgxEAUiuavHUVGS9kV4yQEJ/XhIdS89Bc2EN2IArxQcAxwJ
-	 +rcfywS+2pEzDvkl2yjYifY85o+FKATLxPkT6cuVESvyw7VmGs13D6MI7YEVWlcuvc
-	 T99kz01ZuvAObUCGDlslJ4D7PEfNSa98Yw9ZX+FGfp1Eq4BfgUUEg8RBWOD981D2C0
-	 qRZYPd1NmVpZ0b+Enh2uKqfOKs3j90id1gG9RjeCtFUuGpabtO/JLz3TOUX+gre7ja
-	 LB9GEVxkaxeog==
-Date: Fri, 9 May 2025 14:52:24 +0100
-From: Will Deacon <will@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	David Hildenbrand <david@redhat.com>,
-	Dave Chinner <david@fromorbit.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 5/5] mm/filemap: Allow arch to request folio size
- for exec memory
-Message-ID: <20250509135223.GB5707@willie-the-truck>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-6-ryan.roberts@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBQBtT9T"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85b4170f1f5so71588139f.3;
+        Fri, 09 May 2025 06:52:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746798755; x=1747403555; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PtSH5nI+hYw4K91qiMTbyWnP4++Yt+hkpqevJyQzufo=;
+        b=eBQBtT9T4UAJn2PMEqHAlkB/K9NElv3cChFF7LQ6yCb9BjItWnEOj9N2gQQ+bxmCkv
+         fz/uzPHwQX/j73JViZFCmNRVcN6kEECLtM9cNvaxArLECPgfJ0tU2mfpK82OlLlLEBX/
+         K+jLsoezBkWEXj82xfKk91p3eDQGt852/5taz4sWreYWmeOadCbqT0y50HSie/MdP2WE
+         sAkqg9BFsKYpEy9sFy48gS5Us39eN9Yh2mUNzq9Zv00veGCn71K3PcYGO9npcEq2nJFy
+         5CgGpeUOYoW6u2Do4f7jjknnMq/Jf9PaCFNgcXxYKfx3jc4a7X/QJzoLajFaXKgndN5D
+         /hjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746798755; x=1747403555;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PtSH5nI+hYw4K91qiMTbyWnP4++Yt+hkpqevJyQzufo=;
+        b=RVSzMmaMVZJsZ2WljfgMmvKtMdavevS8tbPB/3a3LLwZrUnPNqipwIaY/6fwgU8oNT
+         v4HYra3ZfbfybBb5OsTfKKa/9OX/BHr0qw2WJBiiU2u2EE3hckSiWgPVQwRMDqumK5Xm
+         T0tb8KzpDyavsyQl/9xcQGtgFkYVNp1MOklmZtacBxdx3FJUvSKcLkUOiM+v6lH1SUN0
+         1kBcTaDfUAQqVvpiI9dw4mYPH4Ly9HF4OrH1HvjZmunaZP/CtASeZPyIIcJ7nv+7bL3z
+         vX03jWV2cykEvDQK9M255tMCiybHV7Q5oo/X5ycSuZQDBe+AfTk5AVJlpMm+ZBSXNMpJ
+         eq3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUHqCJAd4PwBDDhYE5vc8s3w0APXJuVqvh6EnunPS6jHgcQpJfQIZMWuIp8QkTrSfouVIQ4pe7Ylbw24Zgd@vger.kernel.org, AJvYcCURSNgoZ/zqoyNxCorCav7m4bFdcMTXmyWGylCQsyqcM8WgDdlO/2TRQxwZjdpq2owfs0Oi4KgQSyw8n6SE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTcalRoJuKaFlbegYHhM3DdCcVUwgPbWDV2k4rqTXu4OR0K/Y9
+	V9O6FFPsSLeDPyk2DrlHj9yMtGcEx4MFc7GUZxLETpfmnCu0RQ+JV1+E6iHGzA11Kd2JJLz2Zti
+	rwS0yACsgkEQ4Fd9E2pHcRszzgfk=
+X-Gm-Gg: ASbGncuXDu4WjJlL0tPfdRYYv4UzCCwZZQ0h0tzY4ZDuWj0eT+0ZQdoL/YU2M2gEvA2
+	A3jwchaIRl4Tc00we9eH1p7VTSCkL8JMg7xlFZBGw4IHKOmGzP28qkqCtvCAgRAxzotcgMYv0bN
+	j8racRHRfNdO++iuxXNSmVgg==
+X-Google-Smtp-Source: AGHT+IEtyWkvkWlkFB/0B7z7ZFqlkBdmXeZzAPAxswbI80SdN2p9eTapIvhC18am+K6cf2EQIuo8FKBK2WLzBA1V15k=
+X-Received: by 2002:a05:6e02:1689:b0:3d0:4b3d:75ba with SMTP id
+ e9e14a558f8ab-3da7e1e1b24mr43129255ab.4.1746798755408; Fri, 09 May 2025
+ 06:52:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430145920.3748738-6-ryan.roberts@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
+ <20250508-topic-ubwc_central-v1-4-035c4c5cbe50@oss.qualcomm.com>
+ <CAF6AEGtcoMZ+WiW5_BA4NFpLZsoOrDbkY4xyvENGoS2FQVwQxw@mail.gmail.com> <5c3d3682-8378-486d-8af1-4b884b81f3d0@oss.qualcomm.com>
+In-Reply-To: <5c3d3682-8378-486d-8af1-4b884b81f3d0@oss.qualcomm.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Fri, 9 May 2025 06:52:23 -0700
+X-Gm-Features: AX0GCFtkuS-MqVFGx1kw13xZjuTaKSplnt5h27l8JKKLHrytJs4ZlOcxEKTw1KU
+Message-ID: <CAF6AEGvmEP4oGytfsCHYDCtOUDYq68y=vS7fu0jzP+=oajeq9g@mail.gmail.com>
+Subject: Re: [PATCH RFT 04/14] drm/msm/a6xx: Get a handle to the common UBWC config
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 03:59:18PM +0100, Ryan Roberts wrote:
-> Change the readahead config so that if it is being requested for an
-> executable mapping, do a synchronous read into a set of folios with an
-> arch-specified order and in a naturally aligned manner. We no longer
-> center the read on the faulting page but simply align it down to the
-> previous natural boundary. Additionally, we don't bother with an
-> asynchronous part.
-> 
-> On arm64 if memory is physically contiguous and naturally aligned to the
-> "contpte" size, we can use contpte mappings, which improves utilization
-> of the TLB. When paired with the "multi-size THP" feature, this works
-> well to reduce dTLB pressure. However iTLB pressure is still high due to
-> executable mappings having a low likelihood of being in the required
-> folio size and mapping alignment, even when the filesystem supports
-> readahead into large folios (e.g. XFS).
-> 
-> The reason for the low likelihood is that the current readahead
-> algorithm starts with an order-0 folio and increases the folio order by
-> 2 every time the readahead mark is hit. But most executable memory tends
-> to be accessed randomly and so the readahead mark is rarely hit and most
-> executable folios remain order-0.
-> 
-> So let's special-case the read(ahead) logic for executable mappings. The
-> trade-off is performance improvement (due to more efficient storage of
-> the translations in iTLB) vs potential for making reclaim more difficult
-> (due to the folios being larger so if a part of the folio is hot the
-> whole thing is considered hot). But executable memory is a small portion
-> of the overall system memory so I doubt this will even register from a
-> reclaim perspective.
-> 
-> I've chosen 64K folio size for arm64 which benefits both the 4K and 16K
-> base page size configs. Crucially the same amount of data is still read
-> (usually 128K) so I'm not expecting any read amplification issues. I
-> don't anticipate any write amplification because text is always RO.
-> 
-> Note that the text region of an ELF file could be populated into the
-> page cache for other reasons than taking a fault in a mmapped area. The
-> most common case is due to the loader read()ing the header which can be
-> shared with the beginning of text. So some text will still remain in
-> small folios, but this simple, best effort change provides good
-> performance improvements as is.
-> 
-> Confine this special-case approach to the bounds of the VMA. This
-> prevents wasting memory for any padding that might exist in the file
-> between sections. Previously the padding would have been contained in
-> order-0 folios and would be easy to reclaim. But now it would be part of
-> a larger folio so more difficult to reclaim. Solve this by simply not
-> reading it into memory in the first place.
-> 
-> Benchmarking
-> ============
-> TODO: NUMBERS ARE FOR V3 OF SERIES. NEED TO RERUN FOR THIS VERSION.
-> 
-> The below shows nginx and redis benchmarks on Ampere Altra arm64 system.
-> 
-> First, confirmation that this patch causes more text to be contained in
-> 64K folios:
-> 
-> | File-backed folios     |   system boot   |      nginx      |      redis      |
-> | by size as percentage  |-----------------|-----------------|-----------------|
-> | of all mapped text mem | before |  after | before |  after | before |  after |
-> |========================|========|========|========|========|========|========|
-> | base-page-4kB          |    26% |     9% |    27% |     6% |    21% |     5% |
-> | thp-aligned-8kB        |     4% |     2% |     3% |     0% |     4% |     1% |
-> | thp-aligned-16kB       |    57% |    21% |    57% |     6% |    54% |    10% |
-> | thp-aligned-32kB       |     4% |     1% |     4% |     1% |     3% |     1% |
-> | thp-aligned-64kB       |     7% |    65% |     8% |    85% |     9% |    72% |
-> | thp-aligned-2048kB     |     0% |     0% |     0% |     0% |     7% |     8% |
-> | thp-unaligned-16kB     |     1% |     1% |     1% |     1% |     1% |     1% |
-> | thp-unaligned-32kB     |     0% |     0% |     0% |     0% |     0% |     0% |
-> | thp-unaligned-64kB     |     0% |     0% |     0% |     1% |     0% |     1% |
-> | thp-partial            |     1% |     1% |     0% |     0% |     1% |     1% |
-> |------------------------|--------|--------|--------|--------|--------|--------|
-> | cont-aligned-64kB      |     7% |    65% |     8% |    85% |    16% |    80% |
-> 
-> The above shows that for both workloads (each isolated with cgroups) as
-> well as the general system state after boot, the amount of text backed
-> by 4K and 16K folios reduces and the amount backed by 64K folios
-> increases significantly. And the amount of text that is contpte-mapped
-> significantly increases (see last row).
-> 
-> And this is reflected in performance improvement:
-> 
-> | Benchmark                                     |          Improvement |
-> +===============================================+======================+
-> | pts/nginx (200 connections)                   |                8.96% |
-> | pts/nginx (1000 connections)                  |                6.80% |
-> +-----------------------------------------------+----------------------+
-> | pts/redis (LPOP, 50 connections)              |                5.07% |
-> | pts/redis (LPUSH, 50 connections)             |                3.68% |
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  arch/arm64/include/asm/pgtable.h |  8 +++++++
->  include/linux/pgtable.h          | 11 +++++++++
->  mm/filemap.c                     | 40 ++++++++++++++++++++++++++------
->  3 files changed, 52 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 2a77f11b78d5..9eb35af0d3cf 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -1537,6 +1537,14 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
->   */
->  #define arch_wants_old_prefaulted_pte	cpu_has_hw_af
->  
-> +/*
-> + * Request exec memory is read into pagecache in at least 64K folios. This size
-> + * can be contpte-mapped when 4K base pages are in use (16 pages into 1 iTLB
-> + * entry), and HPA can coalesce it (4 pages into 1 TLB entry) when 16K base
-> + * pages are in use.
-> + */
-> +#define exec_folio_order() ilog2(SZ_64K >> PAGE_SHIFT)
-> +
->  static inline bool pud_sect_supported(void)
->  {
->  	return PAGE_SIZE == SZ_4K;
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index b50447ef1c92..1dd539c49f90 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -456,6 +456,17 @@ static inline bool arch_has_hw_pte_young(void)
->  }
->  #endif
->  
-> +#ifndef exec_folio_order
-> +/*
-> + * Returns preferred minimum folio order for executable file-backed memory. Must
-> + * be in range [0, PMD_ORDER). Default to order-0.
-> + */
-> +static inline unsigned int exec_folio_order(void)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  #ifndef arch_check_zapped_pte
->  static inline void arch_check_zapped_pte(struct vm_area_struct *vma,
->  					 pte_t pte)
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index e61f374068d4..37fe4a55c00d 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3252,14 +3252,40 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  	if (mmap_miss > MMAP_LOTSAMISS)
->  		return fpin;
->  
-> -	/*
-> -	 * mmap read-around
-> -	 */
->  	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-> -	ra->start = max_t(long, 0, vmf->pgoff - ra->ra_pages / 2);
-> -	ra->size = ra->ra_pages;
-> -	ra->async_size = ra->ra_pages / 4;
-> -	ra->order = 0;
-> +	if (vm_flags & VM_EXEC) {
-> +		/*
-> +		 * Allow arch to request a preferred minimum folio order for
-> +		 * executable memory. This can often be beneficial to
-> +		 * performance if (e.g.) arm64 can contpte-map the folio.
-> +		 * Executable memory rarely benefits from readahead, due to its
-> +		 * random access nature, so set async_size to 0.
+On Fri, May 9, 2025 at 5:31=E2=80=AFAM Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 5/8/25 8:41 PM, Rob Clark wrote:
+> > On Thu, May 8, 2025 at 11:13=E2=80=AFAM Konrad Dybcio <konradybcio@kern=
+el.org> wrote:
+> >>
+> >> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>
+> >> Start the great despaghettification by getting a pointer to the common
+> >> UBWC configuration, which houses e.g. UBWC versions that we need to
+> >> make decisions.
+> >>
+> >> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >> ---
+> >>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 16 ++++++++++++++--
+> >>  drivers/gpu/drm/msm/adreno/adreno_gpu.c |  6 ++++++
+> >>  drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +++
+> >>  3 files changed, 23 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/m=
+sm/adreno/a6xx_gpu.c
+> >> index b161b5cd991fc645dfcd69754b82be9691775ffe..89eb725f0950f3679d6214=
+366cfbd22d5bcf4bc7 100644
+> >> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> >> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> >> @@ -585,8 +585,13 @@ static void a6xx_set_cp_protect(struct msm_gpu *g=
+pu)
+> >>         gpu_write(gpu, REG_A6XX_CP_PROTECT(protect->count_max - 1), pr=
+otect->regs[i]);
+> >>  }
+> >>
+> >> -static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+> >> +static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+> >>  {
+> >> +       /* Inherit the common config and make some necessary fixups */
+> >> +       gpu->common_ubwc_cfg =3D qcom_ubwc_config_get_data();
+> >
+> > This does look a bit funny given the devm_kzalloc() below.. I guess
+> > just so that the ptr is never NULL?
+>
+> Yeah, would you prefer this is changed?
 
-In light of this observation (about randomness of instruction fetch), do
-you think it's worth ignoring VM_RAND_READ for VM_EXEC?
+I think having an all zeros ubwc cfg isn't really going to work
+anyways, so probably drop the kzalloc().  Or if there is a case that
+I'm not thinking of offhand where it makes sense to have an all 0's
+cfg, then add a comment to avoid future head scratching, since
+otherwise it looks like a bug to be fixed.
 
-Either way, I was looking at this because it touches arm64 and it looks
-fine to me:
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+BR,
+-R
