@@ -1,33 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FE6293754
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5AC294A1B
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796382; cv=none; b=cYFFmv2KV3I5tczGcpZnres4+TY86Qe51gbMMujZK8bRjs5IcVubiJXS/uqUkYO1QLOcqApF+IbSS1X03zSt7K8qitjiaBKIt7MrD8G4fSwhZIp8ihejnciSKGm5dim2NNO8/8mVsEl04Mi708T0AbcyF7xuU26GrhSdFgLqZFw=
+	t=1746796383; cv=none; b=SWYWoa+CSFCQC1RgWbMIhPDyUa0IF8AOnnRLe71u6ODnV/EyxSHLg3p1+Q5A2eZcCw2MvvULyi4geLw5oEsHMhwtXYh+yJGW9Qw6I6qAIzhLM9gUWzujuS2Rv/g/PLOxk7nKIC2W5JqbufneArMSsnmTR4A/RoGnFDH6aYIwmRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796382; c=relaxed/simple;
-	bh=PEMsRAkVfHqbpumS0gpvPHxCdF+Z5gl5B8yoDg7XsTU=;
+	s=arc-20240116; t=1746796383; c=relaxed/simple;
+	bh=1zmGiOZSZMjt3Jn6dGwz+xn7J6vCjYuQbICTyk0l8Wc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=UmbPXTw1mwzxSo+4/dPBGVCpgzxNNu7dhrVEV1dmRVQF+QpIkGHbqDkJLWrUBKUj0RYl6tb6Dms0d/HFGBq9ZNCbQFeaOBKNSQdxy+HYyM2+SfNI2wR5cOoe/Cei7rxJCfDpqO3ZGv3IS3NdXTugxkyBKLqpzOHCLuuuxIT3N0E=
+	 Content-Type; b=BdGbBRXkYz9uO2fzGlx5E0ZWeV4hCP+GdDBKXfHQJCEUMuol/PHBTBkfQxkVFkoBVNVy/03NKO2TaKtyCc43L12WxiN4sgiPWvTVuUuep40xi5C+HlrvGbqdTX5yrfDl3pxM7kkZtC17cWtck4eQWg8JMBRuOrJYqIv2vLGBq5U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED586C4CEF0;
-	Fri,  9 May 2025 13:13:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0621EC4CEEE;
+	Fri,  9 May 2025 13:13:03 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDNXR-00000002bzI-23O7;
-	Fri, 09 May 2025 09:13:17 -0400
-Message-ID: <20250509131317.337063144@goodmis.org>
+	id 1uDNXS-00000002c2J-2B6W;
+	Fri, 09 May 2025 09:13:18 -0400
+Message-ID: <20250509131318.371456142@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 09:13:12 -0400
+Date: Fri, 09 May 2025 09:13:18 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 23/31] tracing: Convert the per CPU "disabled" counter to local from atomic
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tom Zanussi <zanussi@kernel.org>
+Subject: [for-next][PATCH 29/31] tracing: Remove unnecessary "goto out" that simply returns ret is
+ trigger code
 References: <20250509131249.340302366@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,250 +41,214 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The per CPU "disabled" counter is used for the latency tracers and stack
-tracers to make sure that their accounting isn't messed up by an NMI or
-interrupt coming in and affecting the same CPU data. But the counter is an
-atomic_t type. As it only needs to synchronize against the current CPU,
-switch it over to local_t type.
+There's several functions that have "goto out;" where the label out is just:
+
+ out:
+	return ret;
+
+Simplify the code by just doing the return in the location and removing
+all the out labels and jumps.
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lore.kernel.org/20250505212236.394925376@goodmis.org
+Cc: Tom Zanussi <zanussi@kernel.org>
+Link: https://lore.kernel.org/20250507145456.121186494@goodmis.org
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.h              |  2 +-
- kernel/trace/trace_functions.c    |  8 ++++----
- kernel/trace/trace_irqsoff.c      | 22 +++++++++++-----------
- kernel/trace/trace_sched_wakeup.c | 18 +++++++++---------
- 4 files changed, 25 insertions(+), 25 deletions(-)
+ kernel/trace/trace_events_trigger.c | 44 +++++++++++------------------
+ 1 file changed, 17 insertions(+), 27 deletions(-)
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 69c1ecfb2290..188032d4ab69 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -183,7 +183,7 @@ struct trace_array;
-  * the trace, etc.)
-  */
- struct trace_array_cpu {
--	atomic_t		disabled;
-+	local_t			disabled;
- 	void			*buffer_page;	/* ring buffer spare */
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index c316badc608b..fdd1112388e9 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -552,16 +552,14 @@ static int register_trigger(char *glob,
+ 	lockdep_assert_held(&event_mutex);
  
- 	unsigned long		entries;
-diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-index bd153219a712..99a90f182485 100644
---- a/kernel/trace/trace_functions.c
-+++ b/kernel/trace/trace_functions.c
-@@ -291,7 +291,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
- 	cpu = raw_smp_processor_id();
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&data->disabled);
-+	disabled = local_inc_return(&data->disabled);
- 
- 	if (likely(disabled == 1)) {
- 		trace_ctx = tracing_gen_ctx_flags(flags);
-@@ -303,7 +303,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 		__trace_stack(tr, trace_ctx, skip);
+ 	list_for_each_entry(test, &file->triggers, list) {
+-		if (test->cmd_ops->trigger_type == data->cmd_ops->trigger_type) {
+-			ret = -EEXIST;
+-			goto out;
+-		}
++		if (test->cmd_ops->trigger_type == data->cmd_ops->trigger_type)
++			return -EEXIST;
  	}
  
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	local_irq_restore(flags);
- }
- 
-@@ -402,7 +402,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
- 	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
- 	cpu = raw_smp_processor_id();
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&data->disabled);
-+	disabled = local_inc_return(&data->disabled);
- 
- 	if (likely(disabled == 1)) {
- 		last_info = per_cpu_ptr(tr->last_func_repeats, cpu);
-@@ -417,7 +417,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (data->ops->init) {
+ 		ret = data->ops->init(data);
+ 		if (ret < 0)
+-			goto out;
++			return ret;
  	}
  
-  out:
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	local_irq_restore(flags);
- }
- 
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 40c39e946940..0b6d932a931e 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -123,12 +123,12 @@ static int func_prolog_dec(struct trace_array *tr,
- 		return 0;
- 
- 	*data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&(*data)->disabled);
-+	disabled = local_inc_return(&(*data)->disabled);
- 
- 	if (likely(disabled == 1))
- 		return 1;
- 
--	atomic_dec(&(*data)->disabled);
-+	local_dec(&(*data)->disabled);
- 
- 	return 0;
- }
-@@ -152,7 +152,7 @@ irqsoff_tracer_call(unsigned long ip, unsigned long parent_ip,
- 
- 	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
- 
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
- #endif /* CONFIG_FUNCTION_TRACER */
- 
-@@ -209,7 +209,7 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
- 
- 	trace_ctx = tracing_gen_ctx_flags(flags);
- 	ret = __trace_graph_entry(tr, trace, trace_ctx);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 
+ 	list_add_rcu(&data->list, &file->triggers);
+@@ -572,7 +570,6 @@ static int register_trigger(char *glob,
+ 		list_del_rcu(&data->list);
+ 		update_cond_flag(file);
+ 	}
+-out:
  	return ret;
  }
-@@ -238,7 +238,7 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
  
- 	trace_ctx = tracing_gen_ctx_flags(flags);
- 	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
+@@ -770,7 +767,7 @@ int event_trigger_separate_filter(char *param_and_filter, char **param,
+ 	if (!param_and_filter) {
+ 		if (param_required)
+ 			ret = -EINVAL;
+-		goto out;
++		return ret;
+ 	}
  
- static struct fgraph_ops fgraph_ops = {
-@@ -408,10 +408,10 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
+ 	/*
+@@ -781,7 +778,7 @@ int event_trigger_separate_filter(char *param_and_filter, char **param,
+ 	 */
+ 	if (!param_required && param_and_filter && !isdigit(param_and_filter[0])) {
+ 		*filter = param_and_filter;
+-		goto out;
++		return ret;
+ 	}
  
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
- 
--	if (unlikely(!data) || atomic_read(&data->disabled))
-+	if (unlikely(!data) || local_read(&data->disabled))
- 		return;
- 
--	atomic_inc(&data->disabled);
-+	local_inc(&data->disabled);
- 
- 	data->critical_sequence = max_sequence;
- 	data->preempt_timestamp = ftrace_now(cpu);
-@@ -421,7 +421,7 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
- 
- 	per_cpu(tracing_cpu, cpu) = 1;
- 
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
- 
- static nokprobe_inline void
-@@ -445,16 +445,16 @@ stop_critical_timing(unsigned long ip, unsigned long parent_ip)
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
- 
- 	if (unlikely(!data) ||
--	    !data->critical_start || atomic_read(&data->disabled))
-+	    !data->critical_start || local_read(&data->disabled))
- 		return;
- 
--	atomic_inc(&data->disabled);
-+	local_inc(&data->disabled);
- 
- 	trace_ctx = tracing_gen_ctx();
- 	__trace_function(tr, ip, parent_ip, trace_ctx);
- 	check_critical_timing(tr, data, parent_ip ? : ip, cpu);
- 	data->critical_start = 0;
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
- 
- /* start and stop critical timings used to for stoppage (in idle) */
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index a0db3404f7f7..bf1cb80742ae 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -83,14 +83,14 @@ func_prolog_preempt_disable(struct trace_array *tr,
- 		goto out_enable;
- 
- 	*data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&(*data)->disabled);
-+	disabled = local_inc_return(&(*data)->disabled);
- 	if (unlikely(disabled != 1))
- 		goto out;
- 
- 	return 1;
- 
- out:
--	atomic_dec(&(*data)->disabled);
-+	local_dec(&(*data)->disabled);
- 
- out_enable:
- 	preempt_enable_notrace();
-@@ -144,7 +144,7 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
- 	*calltime = trace_clock_local();
- 
- 	ret = __trace_graph_entry(tr, trace, trace_ctx);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	preempt_enable_notrace();
- 
+ 	/*
+@@ -799,7 +796,6 @@ int event_trigger_separate_filter(char *param_and_filter, char **param,
+ 		if (!**filter)
+ 			*filter = NULL;
+ 	}
+-out:
  	return ret;
-@@ -173,7 +173,7 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
- 		return;
- 
- 	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 
- 	preempt_enable_notrace();
- 	return;
-@@ -243,7 +243,7 @@ wakeup_tracer_call(unsigned long ip, unsigned long parent_ip,
- 	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
- 	local_irq_restore(flags);
- 
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	preempt_enable_notrace();
  }
  
-@@ -471,7 +471,7 @@ probe_wakeup_sched_switch(void *ignore, bool preempt,
+@@ -991,13 +987,12 @@ event_trigger_parse(struct event_command *cmd_ops,
+ 	ret = -ENOMEM;
+ 	trigger_data = trigger_data_alloc(cmd_ops, cmd, param, file);
+ 	if (!trigger_data)
+-		goto out;
++		return ret;
  
- 	/* disable local data, not wakeup_cpu data */
- 	cpu = raw_smp_processor_id();
--	disabled = atomic_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	disabled = local_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
- 	if (likely(disabled != 1))
- 		goto out;
+ 	if (remove) {
+ 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+ 		trigger_data_free(trigger_data);
+-		ret = 0;
+-		goto out;
++		return 0;
+ 	}
  
-@@ -508,7 +508,7 @@ probe_wakeup_sched_switch(void *ignore, bool preempt,
- 	arch_spin_unlock(&wakeup_lock);
- 	local_irq_restore(flags);
- out:
--	atomic_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	local_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
+ 	ret = event_trigger_parse_num(param, trigger_data);
+@@ -1017,13 +1012,12 @@ event_trigger_parse(struct event_command *cmd_ops,
+ 
+ 	/* Down the counter of trigger_data or free it if not used anymore */
+ 	event_trigger_free(trigger_data);
+- out:
+ 	return ret;
+ 
+  out_free:
+ 	event_trigger_reset_filter(cmd_ops, trigger_data);
+ 	trigger_data_free(trigger_data);
+-	goto out;
++	return ret;
  }
  
- static void __wakeup_reset(struct trace_array *tr)
-@@ -563,7 +563,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
- 	    (!dl_task(p) && (p->prio >= wakeup_prio || p->prio >= current->prio)))
- 		return;
+ /**
+@@ -1057,10 +1051,10 @@ int set_trigger_filter(char *filter_str,
+ 	s = strsep(&filter_str, " \t");
  
--	disabled = atomic_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	disabled = local_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
- 	if (unlikely(disabled != 1))
- 		goto out;
+ 	if (!strlen(s) || strcmp(s, "if") != 0)
+-		goto out;
++		return ret;
  
-@@ -610,7 +610,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
- out_locked:
- 	arch_spin_unlock(&wakeup_lock);
- out:
--	atomic_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	local_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
+ 	if (!filter_str)
+-		goto out;
++		return ret;
+ 
+ 	/* The filter is for the 'trigger' event, not the triggered event */
+ 	ret = create_event_filter(file->tr, file->event_call,
+@@ -1104,7 +1098,6 @@ int set_trigger_filter(char *filter_str,
+ 			ret = -ENOMEM;
+ 		}
+ 	}
+- out:
+ 	return ret;
  }
  
- static void start_wakeup_tracer(struct trace_array *tr)
+@@ -1772,7 +1765,7 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
+ 	ret = -EINVAL;
+ 	event_enable_file = find_event_file(tr, system, event);
+ 	if (!event_enable_file)
+-		goto out;
++		return ret;
+ 
+ #ifdef CONFIG_HIST_TRIGGERS
+ 	hist = ((strcmp(cmd, ENABLE_HIST_STR) == 0) ||
+@@ -1787,7 +1780,7 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
+ 
+ 	enable_data = kzalloc(sizeof(*enable_data), GFP_KERNEL);
+ 	if (!enable_data)
+-		goto out;
++		return ret;
+ 
+ 	enable_data->hist = hist;
+ 	enable_data->enable = enable;
+@@ -1796,7 +1789,7 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
+ 	trigger_data = trigger_data_alloc(cmd_ops, cmd, param, enable_data);
+ 	if (!trigger_data) {
+ 		kfree(enable_data);
+-		goto out;
++		return ret;
+ 	}
+ 
+ 	if (remove) {
+@@ -1804,7 +1797,7 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
+ 		kfree(trigger_data);
+ 		kfree(enable_data);
+ 		ret = 0;
+-		goto out;
++		return ret;
+ 	}
+ 
+ 	/* Up the trigger_data count to make sure nothing frees it on failure */
+@@ -1834,7 +1827,6 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
+ 		goto out_disable;
+ 
+ 	event_trigger_free(trigger_data);
+- out:
+ 	return ret;
+  out_disable:
+ 	trace_event_enable_disable(event_enable_file, 0, 1);
+@@ -1845,7 +1837,7 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
+ 	event_trigger_free(trigger_data);
+ 	kfree(enable_data);
+ 
+-	goto out;
++	return ret;
+ }
+ 
+ int event_enable_register_trigger(char *glob,
+@@ -1865,15 +1857,14 @@ int event_enable_register_trigger(char *glob,
+ 		    (test->cmd_ops->trigger_type ==
+ 		     data->cmd_ops->trigger_type) &&
+ 		    (test_enable_data->file == enable_data->file)) {
+-			ret = -EEXIST;
+-			goto out;
++			return -EEXIST;
+ 		}
+ 	}
+ 
+ 	if (data->ops->init) {
+ 		ret = data->ops->init(data);
+ 		if (ret < 0)
+-			goto out;
++			return ret;
+ 	}
+ 
+ 	list_add_rcu(&data->list, &file->triggers);
+@@ -1884,7 +1875,6 @@ int event_enable_register_trigger(char *glob,
+ 		list_del_rcu(&data->list);
+ 		update_cond_flag(file);
+ 	}
+-out:
+ 	return ret;
+ }
+ 
 -- 
 2.47.2
 
