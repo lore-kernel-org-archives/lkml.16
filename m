@@ -1,167 +1,121 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAB6238C20;
-	Fri,  9 May 2025 10:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63FC28DF5C;
+	Fri,  9 May 2025 10:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785570; cv=none; b=Rkf2gA5ATwKT5zdgXkwqbZmQfGgi8gO+yuXLmgxeo3VrUTBwZxW2q8RiF7aC39d9F3ZByQO8wSx3wSqNwB4x9Iz0RhScADmdcP5adI+Q/oJu/XmUURIA9FpAnYze/PuYCotSxZYbeMK6jArIwnwjT97CbKkqF8Kolbxy0Pe0hkM=
+	t=1746785571; cv=none; b=b/k1vgo8kjjvmeZ7ByzULfhdPka0HKeprzJPnct8BYTLQQ7gPiD1as2Ri9RiBMJGG7kgabhGA6ypDoDRFmKCSPpTDv4xzLZlkSWSKDsPzrlc2P5Q1WLfYTcyEghl2+zkeTnsJh3NtDOyKj4J2k0qpArwu5Te5f3IIlQ8/Dfri70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785570; c=relaxed/simple;
-	bh=wS/6KQNzdpBB3FNLT1Rn8yrmiM3nhwYto5SljUvqwsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z4Tm7w6dYw9N48pc17dyQFZzMC09BRU0qskcwk/ZI2ji6ALMNNKcdL3c9AFJTtEmI2lYhxFZXNc6OnFFmFq46jtaphGgVElKVhJwK4lsA401ZOsatJ0FFEMz6RhBjqWVFBSBH9IIeU7TKknTUvyLxWaOj4Bphl1F1amHXHcQO9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kOEGaUyy; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746785571; c=relaxed/simple;
+	bh=M0yJLi3YltfIlr+h+JY5iRrqytF1C8+FeHZfC+leV/8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=chF0aD8DwxRudho0S8vJ4iB+omO3dpnJV6AwfZWOpldd92knBE68pTN92xmA1PAehjkMtgKyXo8WMkv9GqIqU10ismXJv8ODDBcIUISENt3sqUg1oga3fgJpOi1CGGJ7fVVc+eWF/HHps6ZUaBpIxu02URf4QQExGqXwYuT/ibs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Uhvy36Lo; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kOEGaUyy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0355341C3E;
-	Fri,  9 May 2025 10:12:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746785565;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AUqVDApz6yx09CXMIyoA67EfmMyBcs3zzqshkQzl/vY=;
-	b=kOEGaUyyQUr9oXnGICGvjTZcSLJJ4Pryd018rL3UeEED5FV6IvFzEubMKpLDeY8O4lJCaV
-	JNfvVBfmvwzBygNNw0NUusecj4CN6qiospjlchu7GAtc3CYcTIck3bsTV/XA8ORd6/1jV2
-	jpnD4F9/txhXsahqTwfAelSIlTsYoKIsfL6k/CD7FBupw4n2TOaAoAE7qyZsHYupb3JunU
-	NHDdVpA5YL2gQgMw4Mp+GsOzbiQtM40HrtFgAK8VjvJjYqnAPJyxEMf9nNwJVW59jrcsF0
-	B8XdPv6CBEJf6BQmfbtDiAtjfPFsKrjCqjm2SC8t+DJ9k/tY6YK5LiCvPKFwWw==
-Date: Fri, 9 May 2025 12:12:42 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Shengjiu Wang
- <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam
- <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 2/2] ASoC: fsl: fsl_qmc_audio: Only request completion
- on last channel
-Message-ID: <20250509121242.1f660e7f@bootlin.com>
-In-Reply-To: <bc561703-bf34-4c99-aaad-1b1aad5ced12@csgroup.eu>
-References: <19aa9d8a84c8475c62c42ac886dad0980428c6c0.1746776731.git.christophe.leroy@csgroup.eu>
-	<5cffeb220617584a5e4bc03067cc10e6cdcfc25e.1746776731.git.christophe.leroy@csgroup.eu>
-	<20250509104544.5c375f05@bootlin.com>
-	<bc561703-bf34-4c99-aaad-1b1aad5ced12@csgroup.eu>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Uhvy36Lo"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 1C4AF2098462; Fri,  9 May 2025 03:12:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1C4AF2098462
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746785569;
+	bh=e/tm+t3vcAkUXIvSagvF7PotT61S98sNQtc1m6Q+83g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Uhvy36Lowt7migeLLbpUOqA5gwxEeVXpC6AqBqo3BVEP4Wat/qlwAK1nXZnIIoXR0
+	 u6+DwI4ljiKEOOv1Q/4fvRv7i29zPARyW6z+WtfIwjtpiKgEf3aFEa8ZmVtVVd3oBS
+	 8o8gOMydUHgKVsz6Q4oHrx7ewqn3XgGbvs/mM/CU=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: 
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v3 0/4] Allow dyn MSI-X vector allocation of MANA
+Date: Fri,  9 May 2025 03:12:46 -0700
+Message-Id: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvfeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefflefhieduteegffeifeeggfffvdeuvdeutddvfeduudeukeffleehheffkeetnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopegthhhrihhsthhophhhvgdrlhgvrhhohiestghsghhrohhuphdrvghupdhrtghpthhtohepqhhirghnghdriihhrghosehngihprdgtohhmpdhrtghpthhtohepshhhvghnghhjihhurdifrghnghesghhmrghilhdrtghomhdprhgtphhtthhopegiihhusghordfnvggvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfhgvshhtv
- ghvrghmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhhitgholhgvohhtshhukhgrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Christophe,
+In this patchset we want to enable the MANA driver to be able to
+allocate MSI-X vectors in PCI dynamically
 
-On Fri, 9 May 2025 11:13:12 +0200
-Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+The first patch exports pci_msix_prepare_desc() in PCI to be able to
+correctly prepare descriptors for dynamically added MSI-X vectors
 
-> Hi Hervé,
-> 
-> Le 09/05/2025 à 10:45, Herve Codina a écrit :
-> > On Fri,  9 May 2025 09:48:45 +0200
-> > Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
-> >   
-> >> In non-interleaved mode, several QMC channels are used in sync.
-> >> More details can be found in commit 188d9cae5438 ("ASoC: fsl:
-> >> fsl_qmc_audio: Add support for non-interleaved mode.")
-> >> At the time being, an interrupt is requested on each channel to
-> >> perform capture/playback completion, allthough the completion is
-> >> really performed only once all channels have completed their work.
-> >>
-> >> This leads to a lot more interrupts than really needed. Looking at
-> >> /proc/interrupts shows ~3800 interrupts per second when using
-> >> 4 capture and 4 playback devices with 5ms periods while
-> >> only 1600 (200 x 4 + 200 x 4) periods are processed during one second.
-> >>
-> >> The QMC channels work in sync, the one started first is the one
-> >> finishing first and the one started last is the one finishing last,  
-> > 
-> > How can we be sure about that?
-> > 
-> > The mapping on the TDM bus has to be taken into account.
-> > 
-> > chan 0 -> TDM bits 0..8
-> > chan 1 -> TDM bits 16..23
-> > chan 2 -> TDM bits 9..15  
-> 
-> In interleaved mode, the QMC will not allow that. You can have 
-> TS0-TS1-TS2 or TS1-TS2-TS0 but you can't have TS0-TS2-TS1.
-> 
-> In non-interleaved mode we mimic the interleaved mode so I don't expect 
-> it either.
+The second patch adds the support of dynamic vector allocation in
+pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
+flag and using the pci_msix_prepare_desc() exported in first patch.
 
-I am not so sure that the case shouldn't be handled by QMC.
-Even if it is not possible at QMC level, you can have it at qmc_audio
-level.
+The third patch is a preparation patch for mana changes to support
+dynamic IRQ allocation. It contains changes in irq_setup() to allow
+skipping first sibling CPU sets, in case certain IRQs are already
+affinitized to them.
 
-The qmc_audio driver depends on the DT binding:
-	dai@18 {
-            reg = <18>;
-            /* Non-interleaved mode */
-            fsl,qmc-chan = <&qmc 18>, <&qmc 19>;
-        };
+The fourth patch has the changes in MANA driver to be able to allocate
+MSI-X vectors dynamically. If the support does not exist it defaults to
+older behavior.
 
-but you can have
-	dai@18 {
-            reg = <18>;
-            /* Non-interleaved mode */
-            fsl,qmc-chan = <&qmc 19>, <&qmc 18>;
-        };
+---
+ Changes in v3
+ * split the 3rd patch into preparation patch around irq_setup() and
+   changes in mana driver to allow dynamic IRQ allocation
+ * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
+   controller
+---
+ Changes in v2
+ * split the first patch into two(exporting the preapre_desc
+   func and using the function and flag in pci-hyperv)
+ * replace 'pci vectors' by 'MSI-X vectors'
+ * Change the cover letter description to align with changes made
+---
+Shradha Gupta (4):
+  PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X alloc
+  PCI: hv: Allow dynamic MSI-X vector allocation
+  net: mana: Allow irq_setup() to skip cpus for affinity
+  net: mana: Allocate MSI-X vectors dynamically
 
-> 
-> > 
-> > In that case chan 1 can finish after chan 2.
-> > 
-> > qmc_chan_get_ts_info() could be used to get struct qmc_chan_ts_info
-> > and [rx,tx]_ts_mask field in the struct give the mapping information.
-> > 
-> > The channel that ends last is the one with the highest bit set in the
-> > mask (rx_tx_mask for capture and tx_ts_mask for playback).  
-> 
-> That would be right if the channels were starting all at exactely the 
-> same time. But qmc_audio_pcm_write_submit() and 
-> qmc_audio_pcm_read_submit() are calling resp. qmc_chan_write_submit() 
-> and qmc_chan_read_submit() one by one.
-> 
-> Even if that happens it shouldn't be a problem on its own as there are 
-> only a few microseconds between each Timeslot (a full cycle is 125 µs). 
-> And also because calling snd_pcm_period_elapsed() doesn't have any 
-> destructive effect on ongoing processing.
-> 
-> So I wouldn't make it too complicated. Here the benefit is real and 
-> worth it.
-
-I fully understand the benefit and I am not against the feature.
-Also, I fully agree that it has to be kept as simple as possible.
-
-My point is to avoid some possible regressions.
-
-Maybe during probe, when the channels are parsed [0], the code should take
-of the channel location on TDM to have them in the better order in its
-table.
-
-We can imagine that after filling the array, the driver sorts the array
-using sort() or sort_r() [1] to ensure that the last item in the array
-is the last on the TDM bus.
-
-[0] https://elixir.bootlin.com/linux/v6.15-rc5/source/sound/soc/fsl/fsl_qmc_audio.c#L833
-[1] https://elixir.bootlin.com/linux/v6.15-rc5/source/include/linux/sort.h
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 264 +++++++++++++++---
+ drivers/pci/controller/pci-hyperv.c           |   7 +-
+ drivers/pci/msi/irqdomain.c                   |   5 +-
+ include/linux/msi.h                           |   2 +
+ include/net/mana/gdma.h                       |   8 +-
+ 5 files changed, 235 insertions(+), 51 deletions(-)
 
 -- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
+
