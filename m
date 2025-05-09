@@ -1,34 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B5C292092
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D629029188D
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796380; cv=none; b=W9F7PBGbQUbTv9fTYUFE/6E6VBb/dqYQNMI45dlI6H0PnH7ftHS7guSRd1Romv8bjRW/vjPA9QF6xEFbXFsjOcxfhDCWSFoD+PuJ1ZQDsjbkac4eLUl7zgxrk8w8XEGwcKG2rwOJlWBDOXrsEIhZ2bwx8lvL3oQ7RAZYnQdhLAA=
+	t=1746796379; cv=none; b=h63BbaC3pjj0xpnGLXagiql5ZEebtLnu6ScWVZpknMNswE5C8Ak4VppRLU4HVcn4L2+I88Xv8W/2QYlwUo2Z5muQz5Xjnp4sOsGxxKsrXatit1DdS3rf9OxdB7olLvRq7owSrQCz7MRNzSLIY1ZvDxyENbxLKY5zP7QEdZrGD9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796380; c=relaxed/simple;
-	bh=wJ9ipE6e2LkBVZBuk9cIGc5UX7gHXqIZ5mEVNHd9v7s=;
+	s=arc-20240116; t=1746796379; c=relaxed/simple;
+	bh=FySwLMTTHapApbkpXbk0tTrB6EUHbUQ9d5aoxVDHLMs=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=rIFm3VqVDRn8qKzPgeI29NFYJAr69ubi8RTio9vlm9eNyWO1PfDnHdSm5yhIynNmJtBsGe/zRuXy2it9XqbcOOtrCMlEVd3KquGDbWPeXgwJAYpuEsJJehef2TCjqwWk4FGzDtgKvM4yFRVAHBQfLho3JoCzF4eI+DNKdjYArfY=
+	 Content-Type; b=Jla3xLhd2uY9Hbmeqo7klcwHeCpKWlKCNC9U7RZXyhkYRdhPR5OsmceeIpPj4cMJ3WJzeGmw0qR8jfyulqKQqErf4C1cYSfXVCFiFZWq+aS+rpUsGMwdmcdEKXg2IsNUHUUord3XNDcbV4/R8NC3ombr+cbKvG9LN1A0hwzcpQg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D3EC4CEF1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB4D6C4CEEE;
 	Fri,  9 May 2025 13:12:59 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDNXP-00000002btH-1q1L;
+	id 1uDNXP-00000002bsk-17f0;
 	Fri, 09 May 2025 09:13:15 -0400
-Message-ID: <20250509131315.289970442@goodmis.org>
+Message-ID: <20250509131315.118353893@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 09:13:00 -0400
+Date: Fri, 09 May 2025 09:12:59 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 11/31] ftrace: Comment that ftrace_func_mapper is freed with
- free_ftrace_hash()
+ Andrew Morton <akpm@linux-foundation.org>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [for-next][PATCH 10/31] ftrace: Expose call graph depth as unsigned int
 References: <20250509131249.340302366@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,54 +42,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Steven Rostedt <rostedt@goodmis.org>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-The structure ftrace_func_mapper only contains a single field and that is
-a ftrace_hash. It is used to abstract it out from a normal hash to control
-users of how it gets modified.
-
-The freeing of a ftrace_func_mapper structure is:
-
-  free_ftrace_hash(&mapper->hash);
-
-Without context, this looks like a bug. It should be commented that it is
-not a bug and it is freed this way.
+Depth is stored as int because the code uses negative values to break
+out of iterations. But what is recorded is always zero or positive. So
+expose it as unsigned int instead of int.
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/20250416165420.5c717420@gandalf.local.home
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Link: https://lore.kernel.org/20250412221847.17310-3-iii@linux.ibm.com
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/trace/trace_entries.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 014cd2cedae3..1af952cba48d 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5208,8 +5208,12 @@ struct ftrace_func_map {
- 	void				*data;
- };
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 4ef4df6623a8..de294ae2c5c5 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -97,11 +97,11 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
+ 	F_STRUCT(
+ 		__field_struct(	struct fgraph_retaddr_ent,	graph_ent	)
+ 		__field_packed(	unsigned long,	graph_ent,	func		)
+-		__field_packed(	int,		graph_ent,	depth		)
++		__field_packed(	unsigned int,	graph_ent,	depth		)
+ 		__field_packed(	unsigned long,	graph_ent,	retaddr		)
+ 	),
  
-+/*
-+ * Note, ftrace_func_mapper is freed by free_ftrace_hash(&mapper->hash).
-+ * The hash field must be the first field.
-+ */
- struct ftrace_func_mapper {
--	struct ftrace_hash		hash;
-+	struct ftrace_hash		hash;	/* Must be first! */
- };
+-	F_printk("--> %ps (%d) <- %ps", (void *)__entry->func, __entry->depth,
++	F_printk("--> %ps (%u) <- %ps", (void *)__entry->func, __entry->depth,
+ 		(void *)__entry->retaddr)
+ );
  
- /**
-@@ -5344,6 +5348,7 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
- 			}
- 		}
- 	}
-+	/* This also frees the mapper itself */
- 	free_ftrace_hash(&mapper->hash);
- }
+@@ -124,13 +124,13 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 		__field_struct(	struct ftrace_graph_ret,	ret	)
+ 		__field_packed(	unsigned long,	ret,		func	)
+ 		__field_packed(	unsigned long,	ret,		retval	)
+-		__field_packed(	int,		ret,		depth	)
++		__field_packed(	unsigned int,	ret,		depth	)
+ 		__field_packed(	unsigned int,	ret,		overrun	)
+ 		__field(unsigned long long,	calltime		)
+ 		__field(unsigned long long,	rettime			)
+ 	),
  
+-	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d retval: %lx",
++	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u retval: %lx",
+ 		 (void *)__entry->func, __entry->depth,
+ 		 __entry->calltime, __entry->rettime,
+ 		 __entry->depth, __entry->retval)
+@@ -146,13 +146,13 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 	F_STRUCT(
+ 		__field_struct(	struct ftrace_graph_ret,	ret	)
+ 		__field_packed(	unsigned long,	ret,		func	)
+-		__field_packed(	int,		ret,		depth	)
++		__field_packed(	unsigned int,	ret,		depth	)
+ 		__field_packed(	unsigned int,	ret,		overrun	)
+ 		__field(unsigned long long,	calltime		)
+ 		__field(unsigned long long,	rettime			)
+ 	),
+ 
+-	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d",
++	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u",
+ 		 (void *)__entry->func, __entry->depth,
+ 		 __entry->calltime, __entry->rettime,
+ 		 __entry->depth)
 -- 
 2.47.2
 
