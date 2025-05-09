@@ -1,68 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB4E1802B;
-	Fri,  9 May 2025 00:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7AC38DE1;
+	Fri,  9 May 2025 00:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746751351; cv=none; b=p+l9MzZySmWH6Vun/nkR6H2sB32CE2b1tBB3hEXSkjCVmJpAX9LQb1PunSGXXlCg9ZvFsuaFccKwboe1rUULfWFFfw/UEmz5isnUPf/3Pf46ywOukBZ0mID2JAVrp5LNFQiuRSm8IbENF6L09K/dVpuPWqdyEosmZqI8kQH19F0=
+	t=1746751354; cv=none; b=UZQj7J4A5qZi1Z39tl/AE2mulCE8/laBp5PGJi1U8FQh+eyx6jAxF79cy2HkX+X+k/R2UR3uBrp6fvW2uU5c+SpSx1Aj+zV27/SlJp/M0w8UstCqGi0TtXu7wn/ll7jx3nzQoNdCvmN5wha6avydl9mkPZ0ic5yOWznaul19+9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746751351; c=relaxed/simple;
-	bh=PRRpLihiyKbV/Sfm7nAyauKWja5MC4KYGOEp5dMFOPU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BGx/fRVMknVc7i2WIPZzMK7XjWm20VwL9k38SSbDi14qIOXHbohDJIVHXRO5raiK0PRUj+n2P/BNMM8Y2mlxiHsb/w3e0UQ22gOqeNLMLfWGHfqHI+NY7a1+d3/HmkUCGmyradMCF1gAlfNsNIMEPqwYZMkoCLQEsEVd6UVC8CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GeHURCqy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746751354; c=relaxed/simple;
+	bh=R+IC1SCvxx356jqj5bqy53vEVEdZC6a8kUA28zCXPGQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JPkOosdNbEGNfEGdAxTEOm9tKpJrcftcOzyzEuG8sTUq1k1xx+9IEkGyUzgkqEy1X3ggYkVuBh8y0d03zGIv5oKR20BKlZ6QK6YsMK2dl9TgB4zuYsWEvI4rF6zVrAG5MOzSSkkz1PJ7BEHUwgw5fe12MsA4rllkHuNQ2rZMF0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HFn+2qo+; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GeHURCqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715CEC4CEED;
-	Fri,  9 May 2025 00:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746751351;
-	bh=PRRpLihiyKbV/Sfm7nAyauKWja5MC4KYGOEp5dMFOPU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GeHURCqy78rgaPH336N7O9DR2zC7Dw3upYbA5PXTkE3c9yrNHxYhi+rlndDY1nj01
-	 Cs/isfb6y6BJask44SKtR4DoFzv1HGXitOByXCwXPBESsszgnZ2pSxTUoqw5WdJIJx
-	 yDmSt6Fy7MdG77SX11Re/PiIMGvbjh/GlTUS2YtY=
-Date: Thu, 8 May 2025 17:42:29 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, rppt@kernel.org,
- rafael@kernel.org, lenb@kernel.org, alison.schofield@intel.com,
- rrichter@amd.com, bfaccini@nvidia.com, haibo1.xu@intel.com,
- david@redhat.com, chenhuacai@kernel.org, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 1/1] mm: numa_memblks: introduce
- numa_add_reserved_memblk
-Message-Id: <20250508174229.c310803222405c1b7d60e104@linux-foundation.org>
-In-Reply-To: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
-References: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HFn+2qo+"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 6FA0A234ED;
+	Fri,  9 May 2025 02:42:30 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id GK8D_ypDRo6u; Fri,  9 May 2025 02:42:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746751349; bh=R+IC1SCvxx356jqj5bqy53vEVEdZC6a8kUA28zCXPGQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=HFn+2qo+yH+H+mZfogdOhoocRulrzyRxQw0Ut55j9oNYtGxtT5NpHjSGPwkqUytlB
+	 /fCh3x8M/nEoyxxVp5P16mSEF6fmvoEmJ/RPk5UMmWP9oLqWbQByiw8WRdseRIe8lQ
+	 mkkLZz+Gd4u+tgT/o2xuHGtVLOvv32V46JgdlkhPxUfvknEEAiMQTerZ58xqjjjG3n
+	 GvnEuiQEq05j0Vk2IhxrV7GCV1fYkKgSEbAhJVeCmHMDkcYDQ1gWTBInUl3zQTyumF
+	 PbIoMvmCPdchByM07wpl+uUq9S3LUaHVZbFPYCQJKYB0uPr+VwPE/zKVnfbBNJjc4k
+	 SNf04Oz/rcnLA==
+From: Yao Zi <ziyao@disroot.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Yao Zi <ziyao@disroot.org>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Jonas Karlman <jonas@kwiboo.se>
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v2 1/5] dt-bindings: soc: rockchip: Add RK3528 pipe-phy GRF syscon
+Date: Fri,  9 May 2025 00:41:18 +0000
+Message-ID: <20250509004121.36058-3-ziyao@disroot.org>
+In-Reply-To: <20250509004121.36058-2-ziyao@disroot.org>
+References: <20250509004121.36058-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu,  8 May 2025 10:27:19 +0800 Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+Add compatible string for pipe-phy GRF found on RK3528 SoC, which
+controls misc settings for the integrated naneng-combphy.
 
-> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> with the expectation that numa_cleanup_meminfo moves them to
-> numa_reserved_meminfo. There is no need for that indirection when it is
-> known in advance that these unpopulated ranges are meant for
-> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
-> 
-> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-> ranges directly.
-> 
-> ...
->
->  drivers/acpi/numa/srat.c     |  2 +-
->  include/linux/numa_memblks.h |  1 +
->  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ Documentation/devicetree/bindings/soc/rockchip/grf.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm not sure which tree this best belongs to so I'll add it to mm-git. 
-If it later pops up in another tree, I'll drop it again.
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+index 2f61c1b95fea..7e9321999435 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+@@ -16,6 +16,7 @@ properties:
+           - enum:
+               - rockchip,rk3288-sgrf
+               - rockchip,rk3528-ioc-grf
++              - rockchip,rk3528-pipe-phy-grf
+               - rockchip,rk3528-vo-grf
+               - rockchip,rk3528-vpu-grf
+               - rockchip,rk3566-pipe-grf
+-- 
+2.49.0
+
