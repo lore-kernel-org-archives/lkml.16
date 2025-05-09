@@ -1,127 +1,80 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from email.devuan.org (polpo.devuan.org [65.21.79.241])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705AD239E78
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC62101E6
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.79.241
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746816071; cv=none; b=YBIF1DBWOxFDRDxAuyFUygialOTVC1NGifIxVvxdGRYDw3o0vIhcF0gQsgZ91uax7LPKJK+iC8Kgnov8/Vi40HkYfr9fNrgRYM1iJ8WicwwcmjV2FWzNyn8Ycnt0vJ/bjVyuRXaNrH72gtu/xRvKbD0ZfUFdtpqRaGolkXbYFYs=
+	t=1746816191; cv=none; b=ju5suyAUdueaTf6VWdHz63UN3SQt7JsAHIzR1AXLHc1QFKiszCr3JvhE2KIbRXL9Iu3GB39buXkIO89lqsAbjzNj1zmT/UOy5emKZwN/SWPvQZjwNyv5+jiYOokBtz02Snl7pSzQ0vjepbtP7POGoAP3CQjIMUifZG4TZgMfv74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746816071; c=relaxed/simple;
-	bh=LgF5BtBmfpeEAq5nMJcPYE0NWNHuMEL3cucPPBu6hWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p/kg4RAJal0GOlkZi54ijRfksoTrkTfzAiHFPht753jNqzvg6oCxRqRJRBO1eV1PEtiiFx7y9Zwp8L/1BGs24BHUKM/dJFNayhHijuB67um0gXVTmWFq1OZHntYnbl8M2n63IwjeIVfa/5Z54G9Cs7MtabksKDgoiO5WaP2Erqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=C6Cf05nh; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1746816191; c=relaxed/simple;
+	bh=/JMBen9fhoFqQaivjQ7HgEwBRd7lz6FFv15uUqO4ee0=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=cNkHuTGJ0mti6amSakEra0d93a/9K2kmi9eDpaQxNLSSW4y5uy9BhcsT5XjHn79c0CQcpb7lGSF184ueh54CV5RiYJfuQb5spMoD7+BQJnvLOfWc1YzH6skIeReoYMz9swI9erjQ7qnDz/szgPFNJJmzMAzBmJKC+xEJwiRzXN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=devuan.org; spf=pass smtp.mailfrom=devuan.org; dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b=Jrepk+CO; dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b=pISWYtMo; arc=none smtp.client-ip=65.21.79.241
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=devuan.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=devuan.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="C6Cf05nh"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so12822035e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:41:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1746816068; x=1747420868; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J7xH+8c9IQ/eMw6xixEvFtV7xITokTNj2ogMwiKa5uM=;
-        b=C6Cf05nhNCJjbvEsVYuE5aFzTaeikmpl8ajkagMnTkI5oj7x4jZjQC1xMR1FkikHul
-         u92mm8Jx4qtLBbDUbYqxx4MK1kjM4kkcvUTiYHBQN/G+jYp7PYJ4gkJ0OgLjqE/TArDE
-         vpI9oPB+O5H0+BJsPRAa17z6O3r+Cm6yILTwDbhXpetZdAGInOSlPnO+oxJAlFj9PO4c
-         Bgoj4v7EPMNg8oDl29EWUncW3KmI0gJN3iKHmad7JKYo8aeHiXJWKpYmhnp2UbtiSsOU
-         MBnd9aNPtKxu03jgoG40f45VK8dZHkPwYccLh4SMco+Xay6A/EF1IIy4lflaMhR+UhEx
-         aNIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746816068; x=1747420868;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J7xH+8c9IQ/eMw6xixEvFtV7xITokTNj2ogMwiKa5uM=;
-        b=pZ+X+Xwd9z071VGt7lCoSQ4IFv/+2vH8OEJTWFG9RfA47IJIUdNXTbKesP0vGdmj1U
-         F4TQPvJIyMzOGpC9tdEGFzk28oN6OPMLdA/6J3YTa5q0VxOdum2k1T5oK4WmziYhCx9A
-         xm3SCWELV+ghdRt81p9+Dw7EvoRi8CXUIJoJVPUfLU0MGS6ymaabGs+LUDYBIKkhRNkh
-         nGM/w2LDp926se+XbEmb6eEGa/oX5qbBc+bXZTwIwd6eofX46cGrt3opxD4nfhyj3jHL
-         MZJdWecJpIt4NJh6z7zOmakE8uiLv/dgEcD2E+NpmhIKEjq5Vtq26CFDLZTl6gdF0CH7
-         xm0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtPWNc5DcS1VNZ+umPHRajLeYknHo8ICXkXX2EjRZS9Tfe9KVsL7z3CBRY8KdMlodOEkqImJmkSW6xcZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygdDLg6B+IAJKk67jbDbMlye37OtoeQnh4l6Q5yNAScHeSdMGw
-	T8QGkkevUrQYtgN/5Mentm3VTv9s1XQVmh1VrHl2YjYVCZeHjsYVGvPKLv4uz/M=
-X-Gm-Gg: ASbGncsyLmml8KGnVWz6Yejm/ShXYMUbpF11Teu1KWZtv3t6rweWQ9YHwrt3/VOIvqm
-	RdH8fkU+GuWDt8sUB2ZoppzGa0uU1NmET30Bh74PFnnmwdaeDr3qplZyBypQ7IboHiKqYsitKuc
-	DisdzQtZPECT4fSpBs//LyAmpmQjXSlFyELA5FwqLvI6H8/RyqUJTJ94RcrBvAWFSJi+nH0RzN4
-	uHuA+917oGP3lfNXxQ+uS54t/l19SvnvT08K9qAZ/573T64GEi/xwP6k6R5rph/TNdP4k4xsV9t
-	x5r1nlrZpqxUZ/pg4Mk+K1gNFSpEygyxbpIgqmzAb3ySVXpyYCBwIMIVD7P20wVnBzSTb0cquEP
-	y9UXpFymcmGByhXs02xH4dgbnPDjhYMrSjtmCQdiruRvPTr2VtKjUjAaA7dcAdQ==
-X-Google-Smtp-Source: AGHT+IEzxzujGMd8NyxttjwFQjGc0xzB3QFdRjoydO8AuIWtcO29Kaq/G1I0ZFKFFTLzQq0b8NjSHA==
-X-Received: by 2002:a05:600c:3b85:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-442d6d11fdemr38097465e9.2.1746816067774;
-        Fri, 09 May 2025 11:41:07 -0700 (PDT)
-Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67df5ecsm37756915e9.9.2025.05.09.11.41.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 11:41:07 -0700 (PDT)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: ebiederm@xmission.com,
-	serge@hallyn.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] Documentation/no_new_privs.rst: document dropping effective ids
-Date: Fri,  9 May 2025 20:41:05 +0200
-Message-ID: <20250509184105.840928-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <87h61t7siv.fsf@email.froward.int.ebiederm.org>
-References: <87h61t7siv.fsf@email.froward.int.ebiederm.org>
+	dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b="Jrepk+CO";
+	dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b="pISWYtMo"
+Received: by email.devuan.org (Postfix, from userid 109)
+	id 43E3A46B; Fri,  9 May 2025 18:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=devuan.org;
+	s=default; t=1746815764;
+	bh=/JMBen9fhoFqQaivjQ7HgEwBRd7lz6FFv15uUqO4ee0=;
+	h=Subject:From:To:Cc:Date:From;
+	b=Jrepk+COpsMdjj+w/1DXokeqtd7GLXL5W/GQFyOftj1quh3fnrhwa9qKV3NUQ8qX6
+	 zDjgEDIzesdyyh+PPoLC3Mas9CJZYTos1EfzqPbI1q3Z+U9fSSg1iETR99Bgpuw5SM
+	 X+tpMIfAW74SSNOZ+1TrOR4g23rj1T+ACHqak0GYDeu80JgcIXp73NCa0p++1OmXqk
+	 O9SrOhogeSC9t7CV5Xt679xMiUq6MZwLm9WVgu/7bT8coRrQatjBbvelp+hLJ2OVsS
+	 0bd/SJfPTCJc25cG7fNKLmDIADcYO5yzljjaj1kiOnyGwC3PKNwwWIHgX7jKnILzbP
+	 bTd/yIgZANAHg==
+X-Spam-Level: 
+Received: from [10.14.5.250] (office.ipacct.com [195.85.215.8])
+	by email.devuan.org (Postfix) with ESMTPSA id 5F1F83FA;
+	Fri,  9 May 2025 18:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=devuan.org;
+	s=default; t=1746815760;
+	bh=/JMBen9fhoFqQaivjQ7HgEwBRd7lz6FFv15uUqO4ee0=;
+	h=Subject:From:To:Cc:Date:From;
+	b=pISWYtMot3FQ2zgWtTirZPBq3Q80uI5IhIStedQd4Wy0H6zdHcR+GJTxzwd79xVLg
+	 wYTvb9/nzG9NWPHRnSkUc6TxmNUX2tRjIXfjPkKEPqmdMGFj+kgDg1psMfh9lbVOzc
+	 kjOKrtU5b9E7ePONqw/4OiAQ353ZOgg0ResaTGYnhOLZSpyGXFoDbWEY/vA2THKob/
+	 spcUAbyvQc+FbeCtw///raQ8IqGlO/CKKdm6x+TSzT1rrQL7GPB6GsJPrqFK3i1/Jc
+	 6HPi0gjxyFx/p9WkNZq0Ui4+ol5Q9tRfW0yYbv9bCrjfnnaGLLxTrBMC6WEueoiNFX
+	 GI0jmuHblgO0Q==
+Message-ID: <5c176101cd5fd8e629b18380bf7678ea6c6a5d63.camel@devuan.org>
+Subject: Bug 220102 - struct taskstats breaks backward compatibility since
+ version 15
+From: Boian Bonev <bbonev@devuan.org>
+To: linux-kernel@vger.kernel.org
+Cc: Balbir Singh <bsingharora@gmail.com>, Yang Yang
+ <yang.yang29@zte.com.cn>,  Wang Yaxin <wang.yaxin@zte.com.cn>, Kun Jiang
+ <jiang.kun2@zte.com.cn>, xu xin <xu.xin16@zte.com.cn>,  Andrew Morton
+ <akpm@linux-foundation.org>
+Date: Fri, 09 May 2025 21:35:59 +0300
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Usually, execve() preserves the effective ids.  Many programs rely on
-this to detect setuid/setgid execution and will disable certain
-features (such as rejecting certain user input / environment
-variables).
+Hello!
 
-However, if NO_NEW_PRIVS is set, effective ids are always reset by
-cap_bprm_creds_from_file(), but capabilities are not revoked.  That
-means the process looks like it's not setuid/setgid, but has full
-capabilities, and is effectively a superuser process.  This breaks
-userspace assumptions.
+Since version 15 (TASKSTATS_VERSION=3D15) the new layout of the structure
+adds fields in the middle of the structure, rendering all old software
+incompatible with newer kernels and software compiled against the new
+kernel headers incompatible with older kernels.
 
-It was argued [1] that this surprising behavior must not change
-because programs might rely on it:
+I think that change has to be reverted and the added fields moved to
+the end of the structure. Also bumping the version to 16 after the
+change is a good idea in order for the userspace software to be able to
+distinguish the different formats.
 
-Of course, this leaves many programs vulnerable, but if we decide the
-behavior must remain, we should at least document it with a warning.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220102
 
-[1] https://lore.kernel.org/lkml/87h61t7siv.fsf@email.froward.int.ebiederm.org/
-
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- Documentation/userspace-api/no_new_privs.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/userspace-api/no_new_privs.rst b/Documentation/userspace-api/no_new_privs.rst
-index d060ea217ea1..89b0884991e9 100644
---- a/Documentation/userspace-api/no_new_privs.rst
-+++ b/Documentation/userspace-api/no_new_privs.rst
-@@ -29,6 +29,12 @@ bits will no longer change the uid or gid; file capabilities will not
- add to the permitted set, and LSMs will not relax constraints after
- execve.
- 
-+A successful execve call with ``no_new_privs`` will reset the
-+effective uid/gid to the real uid/gid, but does not drop capabilities.
-+This means that comparing effective and real ids is not a valid method
-+to detect setuid/setgid execution; the proper way to do that is
-+getauxval(AT_SECURE).
-+
- To set ``no_new_privs``, use::
- 
-     prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
--- 
-2.47.2
-
+With best regards,
+b.
