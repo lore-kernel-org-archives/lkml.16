@@ -1,220 +1,104 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C8823C8A1
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1C5239E94;
+	Fri,  9 May 2025 18:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746814952; cv=none; b=Fsegu5eBzJO8N7E0RRsRTeWo+JCnNTu5jx0kOZMuxw78cQdbled5uz6ZAoPTpg4Q6l5kfLSFlzUKMq5yZ3Lqfq5tP8vjWtUfFulHXJ2APdWPF1+xLPF8JDmBSh+qHyq5AINtgc00VP9DwQHtIpHly8nDb4ssjvH+nc4tDPpiq4g=
+	t=1746815009; cv=none; b=bVyn5DsiTUD6EuTPyLdxMJgzhVaMP1w6DVpXKFpt1YJ3+n/DF5/jo5ckDgccR/ffl39QcjWyNNktWs6HtTD+k357+nwRAapzqOOVGfE+4E02xSeZCEFKqdr/un5r12xHApZbs4u+J4o+fvZhtWFzjPBzTjowTOwm8TT7Qmgr3Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746814952; c=relaxed/simple;
-	bh=o0HnRWUOJEFTR1JyaXMLNHbxjezz3ONJkGCb3fLH4P8=;
+	s=arc-20240116; t=1746815009; c=relaxed/simple;
+	bh=/MFu6ju8moPP/xWkCRsJNMnmmlKNJlj4iAhRAzpEzYM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a9D4UaMl6K5YBT3jnhHIY9depamsNX5XDB64CBUdpQmn/CqcPi7bXcUg9FdMC+mnXrTFuB80K9v17rQbB4KtA3O45WVtOj7F8tyt/+REU7EaaGqiZBKlewceveRkM0OIDqxvIhmTwrUWUYqI06uxHq7pXvDQdeQSQECS5fFX9G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=DUbREEMa; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	 To:Cc:Content-Type; b=n4y20mATtZRyK0alHGWm35Wj2KiOMpwqixFhnvesGnP5Yu8ajcRmr5vtr0x/rYJFuuvqjJMeuPIadXsC1z58/etzd6oallKDOBSy6lxfaOoAgZK5cXhMYTDDYQTsh6+TdX5hwZ7zSOiW3ZLJsHtNI+gNUsvWdsruX4OOkK/3pS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kl0A4xnI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DUbREEMa"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70960e0b4d5so19501347b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:22:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1746814950; x=1747419750; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FVdGvQl7I4jzamIx+mGrMWIjkTZGB9PGkkLFZVwWjA4=;
-        b=DUbREEMa3wfHXDpC7zNCTqZx36YMwTKUzPkrH8D+zsq3kt6DHv8Zr0lSrU48pUBmfF
-         xGghqSITeAzkPrr8x88+wHwHzKMwGE/zKdI/prG4SpYUQu1H65d7aNhLqpPuA5u6sysG
-         xWH22xWYS8JFUo5txc8sgUgwAzn+QThv1Er5c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746814950; x=1747419750;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FVdGvQl7I4jzamIx+mGrMWIjkTZGB9PGkkLFZVwWjA4=;
-        b=N4+rD9nZGYJfrzaPJ4BpMS+/aEZK1AaJ/Wp/5fohSkXN8mUv3v8TVo266NgtP7zKfh
-         VKMqh92xM+CcphJEkK33AUakYKw6KNXBhrGi5hEkrnPqZ+5BVnYAZTb2INyaqbjEYXDp
-         Nift6QbHkWnX8I0w/p9FF3C+X+6mLuGhq21vR88idoIn3kp6RR1qQ35mokauvs+jyN16
-         oUCnWH4rFOyUSzMgBOySNBlDBz+S+vLA4Kob/JqJWx+1Wp5UmFPVewyEHJMAn0bRMyIr
-         Rbyf1UrfbyTECnpDq8DlJQvkkNlpo8dVTbZTQRW1LYn5W20kgH+TgWQWOZHnVoyve2sK
-         5EPg==
-X-Gm-Message-State: AOJu0Yz7eZHBTJwN5B6yVrkx1XF1GyO/huekVj+CvXATKU0e0sanAsiD
-	DOMfDGzSelV1lyS9ODfd58p9B/zETggdDag/XyzrEw1tVK8Y1Y/T8339m4VGkW7wS0ohfqCLIon
-	mxrWyFLdzmu1whT6QSqZOxYC11aQuKVTTLCTJuQ==
-X-Gm-Gg: ASbGncuG7TLC4xsHf+tjrELMWJRWicGYgYPEfK8wGiXLYJC7Z5v8U+6JtpWELQ+ezu7
-	JSavPVcWALYkn+VWj+fHh+Lr4anUoKvlPvyEG8e8psGNk9UT2BxktISApCYayWZIF4jFkrhVxiJ
-	rStaXPR6dA9Sty0ylETArXzA3bs+FA
-X-Google-Smtp-Source: AGHT+IFhuGu6cPIv6shqVcKb5yMcaEsKd2xMo/nKwn74VQkFfSO8SSLUGFFj0iY8SWc7yPYKJguYvy3CEdCdcbkRiBw=
-X-Received: by 2002:a05:690c:7007:b0:708:ab81:ec26 with SMTP id
- 00721157ae682-70a3fb75af8mr60732477b3.33.1746814949659; Fri, 09 May 2025
- 11:22:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kl0A4xnI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B4CFC4CEE4;
+	Fri,  9 May 2025 18:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746815008;
+	bh=/MFu6ju8moPP/xWkCRsJNMnmmlKNJlj4iAhRAzpEzYM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Kl0A4xnIhTAmPrcAQu7chaagolhFbeTMBstYbZCmJgYYEus2zHWpAeofahOGEfzfe
+	 ZxgSw/QiOAxo4hwtAADWZo4c8uX+7pohD7S8OpPRmQUKxxP2yb+052pGOfY7Dzv8h4
+	 h7BlgTMdJ6j5gGdYbDNHcEi5B/aVv+AecSqXBDV18Kxuz1+uEMoZJGxft3wk7NTgRh
+	 a6RzBHQxuWKcAYZnANwgWq5rOslZ/wNXcXoFvqt0XaoWQnIowCXF94IQzn8htQ/Zgy
+	 qA/oCILs+th6ZD3AR6vmlbVxfk8cWbHBCXiC+qCRZLgq5dEvxiXlfxcWWK1g/cLHB3
+	 RqK7aMlZXidGA==
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3fa6c54cdb2so2032168b6e.3;
+        Fri, 09 May 2025 11:23:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUlZ68QUoxlg4V4KJGZp7lOh78zfZZcyF/0OjGhfGnE0sNayqk40QoSyo3sAB/1g6jDfxltcWGOfSLg2WDl@vger.kernel.org, AJvYcCXYMnIbrwzQ05fbjN1sFdW3wdIPFAC0E2uN/B+VnsoKLKZa924iIBvUZ7mDLN9Lg8aijDtkEwxqhSkg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym7EqBaTE1nF6kNzRZcUcVesHpTTGH+wTMIb0aDnYJ2pW+bKdq
+	3hA4cbnd+UN2U/eJhvlb/RBc4PjNfecajI5hyVwMzJ+FmaP41cw2cBqyLlgXlTGPlxGQ8INUcx1
+	5p7OID3IoBUlLL/i57iMaPXWCwyE=
+X-Google-Smtp-Source: AGHT+IHHdSrHhC9nZurJ5jir64Cw6L/KQ2nrtB1q2eiU1L/CnnXB3W76wWMYpiPXvV0joiB98chVWF/EyLbX3QrkPOk=
+X-Received: by 2002:a05:6808:148d:b0:3f8:e55c:16ea with SMTP id
+ 5614622812f47-4037fe6ddb8mr2990526b6e.24.1746815007589; Fri, 09 May 2025
+ 11:23:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
- <20250424062154.2999219-17-dario.binacchi@amarulasolutions.com> <20250509162546.GA3704130-robh@kernel.org>
-In-Reply-To: <20250509162546.GA3704130-robh@kernel.org>
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Date: Fri, 9 May 2025 20:22:18 +0200
-X-Gm-Features: AX0GCFudXK-0LsSuEXf0ommGdIrbGEzxESxhBMaUX-8mIu528WIhNrRmopexvqM
-Message-ID: <CABGWkvq4a73hvCWG-P_+arc3R-pnr5NVfcGPDTGEoW1doPt2qg@mail.gmail.com>
-Subject: Re: [PATCH v12 16/19] dt-bindings: clock: imx8m-clock: add PLLs
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	linux-amarula@amarulasolutions.com, Abel Vesa <abelvesa@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+References: <20250422091056.972734-1-zhangzihuan@kylinos.cn>
+In-Reply-To: <20250422091056.972734-1-zhangzihuan@kylinos.cn>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 9 May 2025 20:23:16 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0guh4MGJpaCoh3Guc8BL_37=KHWW10wvK+iD6jZLvZWwg@mail.gmail.com>
+X-Gm-Features: ATxdqUEfYrNyyO0430S5KkW1Ta0YPA3rWiCxp9pZX9Eb9Q1TFcFGnpbAhUn2NuQ
+Message-ID: <CAJZ5v0guh4MGJpaCoh3Guc8BL_37=KHWW10wvK+iD6jZLvZWwg@mail.gmail.com>
+Subject: Re: [PATCH v1] ACPI: battery: Reduce unnecessary calls to acpi_battery_update()
+To: zhangzihuan <zhangzihuan@kylinos.cn>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 6:25=E2=80=AFPM Rob Herring <robh@kernel.org> wrote:
+On Tue, Apr 22, 2025 at 11:11=E2=80=AFAM zhangzihuan <zhangzihuan@kylinos.c=
+n> wrote:
 >
-> On Thu, Apr 24, 2025 at 08:21:46AM +0200, Dario Binacchi wrote:
-> > Though adding the PLLs to clocks and clock-names properties will break
-> > the ABI, it is required to accurately describe the hardware. Indeed,
-> > the Clock Control Module (CCM) receives clocks from the PLLs and
-> > oscillators and generates clocks for on-chip peripherals.
-> >
-> > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >
-> > ---
-> >
-> > (no changes since v11)
-> >
-> > Changes in v11:
-> > - Fix conflict while rebasing on master
-> >
-> > Changes in v7:
-> > - Add 'Reviewed-by' tag of Krzysztof Kozlowski
-> >
-> > Changes in v6:
-> > - New
-> >
-> >  .../bindings/clock/imx8m-clock.yaml           | 27 ++++++++++++++-----
-> >  1 file changed, 21 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml b=
-/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-> > index 4fec55832702..e83f08abd44c 100644
-> > --- a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-> > +++ b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-> > @@ -29,12 +29,12 @@ properties:
-> >      maxItems: 2
-> >
-> >    clocks:
-> > -    minItems: 6
-> > -    maxItems: 7
-> > +    minItems: 7
+> When entering the acpi_mattery_notify function, no matter what the event
+> is, acpi_mattery_update will definitely be called.
+
+I think you mean acpi_battery_update().
+
+> Use the acpi_listen command to listen, sometimes the log looks like this:
 >
-> Increasing the minimum entries looks like an ABI break to me. The .dts
-> files not being in linux-next confirms that (from 0 warnings in
-> mainline):
+> battery xxx:00 00000081 00000001
+> battery xxx:00 00000000 00000001
+> battery xxx:00 00000080 00000001
 >
-> arch/arm64/boot/dts/freescale:859:50
->     122  clock-controller@30380000 (fsl,imx8mm-ccm): clock-names: ['osc_3=
-2k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too shor=
-t
->     120  clock-controller@30380000 (fsl,imx8mp-ccm): clock-names: ['osc_3=
-2k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too shor=
-t
->      61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clocks' is a req=
-uired property
->      61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clock-names' is =
-a required property
->      60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clocks' is a req=
-uired property
->      60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clock-names' is =
-a required property
->      36  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[35], [36],=
- [37], [38], [39], [40]] is too short
->      36  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[24], [25],=
- [26], [27], [28], [29]] is too short
->      32  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[34], [35],=
- [36], [37], [38], [39]] is too short
->      28  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[22], [23],=
- [24], [25], [26], [27]] is too short
->      26  clock-controller@30380000 (fsl,imx8mn-ccm): clock-names: ['osc_3=
-2k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too shor=
-t
->      17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clocks' is a req=
-uired property
->      17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clock-names' is =
-a required property
->      14  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[44], [45],=
- [46], [47], [48], [49]] is too short
->      14  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[23], [24],=
- [25], [26], [27], [28]] is too short
->      13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clocks' is a req=
-uired property
->      13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clock-names' is =
-a required property
->      12  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[26], [27],=
- [28], [29], [30], [31]] is too short
->      10  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[38], [39],=
- [40], [41], [42], [43]] is too short
->       8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[22], [23],=
- [24], [25], [26], [27]] is too short
->       8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[20], [21],=
- [22], [23], [24], [25]] is too short
->       8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[34], [35],=
- [36], [37], [38], [39]] is too short
->       8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[28], [29],=
- [30], [31], [32], [33]] is too short
->       8  bcrmf@1 (brcm,bcm4329-fmac): $nodename:0: 'bcrmf@1' does not mat=
-ch '^wifi(@.*)?$'
->       6  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[41], [42],=
- [43], [44], [45], [46]] is too short
->       6  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[24], [25],=
- [26], [27], [28], [29]] is too short
->       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[43], [44],=
- [45], [46], [47], [48]] is too short
->       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[40], [41],=
- [42], [43], [44], [45]] is too short
->       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[36], [37],=
- [38], [39], [40], [41]] is too short
->       4  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[35], [36],=
- [37], [38], [39], [40]] is too short
+> Firmware manufacturers will customize some events like 0x0, so
+> non-matching events will be ignored.
+
+I don't quite get what you are trying to achieve here.
+
+> Signed-off-by: zhangzihuan <zhangzihuan@kylinos.cn>
+> ---
+>  drivers/acpi/battery.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> Please fix the binding or drop what's been applied so far.
+> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+> index 6760330a8af5..9446c57b77e7 100644
+> --- a/drivers/acpi/battery.c
+> +++ b/drivers/acpi/battery.c
+> @@ -1083,7 +1083,8 @@ static void acpi_battery_notify(acpi_handle handle,=
+ u32 event, void *data)
+>                 msleep(battery_notification_delay_ms);
+>         if (event =3D=3D ACPI_BATTERY_NOTIFY_INFO)
+>                 acpi_battery_refresh(battery);
+> -       acpi_battery_update(battery, false);
+> +       if (event =3D=3D ACPI_BATTERY_NOTIFY_STATUS)
+> +               acpi_battery_update(battery, false);
 
-Abel and Shawn are already aware of the issue:
+So only call acpi_battery_update() for ACPI_BATTERY_NOTIFY_STATUS.
 
-https://lore.kernel.org/all/CABGWkvqfyH=3Ddcuw6EDZaFVVebj8SZhJF0P944+mmzL5Y=
-K3-Pug@mail.gmail.com/
+Why do you think this is the only case in which acpi_battery_update()
+needs to be called?
 
-Thanks and regards,
-Dario
-
->
-> Rob
->
-
-
---=20
-
-Dario Binacchi
-
-Senior Embedded Linux Developer
-
-dario.binacchi@amarulasolutions.com
-
-__________________________________
-
-
-Amarula Solutions SRL
-
-Via Le Canevare 30, 31100 Treviso, Veneto, IT
-
-T. +39 042 243 5310
-info@amarulasolutions.com
-
-www.amarulasolutions.com
+>         acpi_bus_generate_netlink_event(device->pnp.device_class,
+>                                         dev_name(&device->dev), event,
+>                                         acpi_battery_present(battery));
+> --
