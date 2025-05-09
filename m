@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392E0293B42
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF68E29372C
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796382; cv=none; b=jD520gbHMaLCe/evHUmk+mDxTx09TZI4rm5nHnf+h4GAUkc+EHwEsvL9wyMn5LM/vEJtj9jo7Xi6yWZTwJ8sYPPpr7eB84qgc9YuVDATNukUpoOo9eT54Zfgp13PPxlv/fgcxzIVgzyJWn5NjxNGPqnBtmIMmPq3TIqsEhEf4rU=
+	t=1746796381; cv=none; b=S0l0npQZGVoapCAWrnkWdu48LmSd+1xjXP0kTrkaFAKKDCvQtcHy79gFZQsdLzdup6ZJu0Wy5drBehAF47kyix9nt0P1ntANg01+hgoUt9V/qEZh3FrUxAd1x4cs4Xj6JGYbHrXqDOfYRX75lhibb/3vEqAVpxDH28jdWP7w6Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796382; c=relaxed/simple;
-	bh=qPP3CvHK8t4fr7gLX3mL04NCQ8w/oQ01akHffgDkhj8=;
+	s=arc-20240116; t=1746796381; c=relaxed/simple;
+	bh=3OsHc8XwoJH6dpKHNcBXd6XkR5G+RBAew+FYYhGeYYk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=L/1U8flERSuUo/pi6RSAY77dCr4FI9GX6YcNI1K3X8fv2vOZFB55uflFuQnW+KZ6tgAVELYV4qqDqAkcjLqQcGf+fw6WmzZQY225Sspa+6WtBBWfgkdeTvyTijZDFVfuGAhVy5Xl6tz0it8qvTUdS8aifCT1lJfRnDIF1tD5xkk=
+	 Content-Type; b=MUO1am8iYEGYrCiDArPi4d48oU8dzgNIQTTUPyzMH2/BfA+yh6vGVkKuhEAsAoeUfNO+0bQBWc8dNpAYD6vQLdGlLLzQnmUIM7wkdfm6k94y5ylLkegODu3S+yI+78rGIkqJPVOGjYIWsEEMETtCOu65gmDH00rpIeoLtp1rfBs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20324C4CEF1;
-	Fri,  9 May 2025 13:13:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B75C4CEF7;
+	Fri,  9 May 2025 13:13:01 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDNXR-00000002bzn-2nIO;
-	Fri, 09 May 2025 09:13:17 -0400
-Message-ID: <20250509131317.512092358@goodmis.org>
+	id 1uDNXQ-00000002bxH-3Ma2;
+	Fri, 09 May 2025 09:13:16 -0400
+Message-ID: <20250509131316.655384145@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 09:13:13 -0400
+Date: Fri, 09 May 2025 09:13:08 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 24/31] tracing: Use atomic_inc_return() for updating "disabled" counter in
- irqsoff tracer
+Subject: [for-next][PATCH 19/31] ftrace: Do not disabled function graph based on "disabled" field
 References: <20250509131249.340302366@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,86 +39,106 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The irqsoff tracer uses the per CPU "disabled" field to prevent corruption
-of the accounting when it starts to trace interrupts disabled, but there's
-a slight race that could happen if for some reason it was called twice.
-Use atomic_inc_return() instead.
+The per CPU "disabled" value was the original way to disable tracing when
+the tracing subsystem was first created. Today, the ring buffer
+infrastructure has its own way to disable tracing. In fact, things have
+changed so much since 2008 that many things ignore the disable flag.
+
+Do not bother disabling the function graph tracer if the per CPU disabled
+field is set. Just record as normal. If tracing is disabled in the ring
+buffer it will not be recorded.
+
+Also, when tracing is enabled again, it will not drop the return call of
+the function.
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lore.kernel.org/20250505212236.567884756@goodmis.org
+Link: https://lore.kernel.org/20250505212235.715752008@goodmis.org
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_irqsoff.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ kernel/trace/trace_functions_graph.c | 38 +++++++---------------------
+ 1 file changed, 9 insertions(+), 29 deletions(-)
 
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 0b6d932a931e..5496758b6c76 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -397,6 +397,7 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
- 	int cpu;
- 	struct trace_array *tr = irqsoff_trace;
- 	struct trace_array_cpu *data;
-+	long disabled;
- 
- 	if (!tracer_enabled || !tracing_is_enabled())
- 		return;
-@@ -411,15 +412,17 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
- 	if (unlikely(!data) || local_read(&data->disabled))
- 		return;
- 
--	local_inc(&data->disabled);
-+	disabled = local_inc_return(&data->disabled);
- 
--	data->critical_sequence = max_sequence;
--	data->preempt_timestamp = ftrace_now(cpu);
--	data->critical_start = parent_ip ? : ip;
-+	if (disabled == 1) {
-+		data->critical_sequence = max_sequence;
-+		data->preempt_timestamp = ftrace_now(cpu);
-+		data->critical_start = parent_ip ? : ip;
- 
--	__trace_function(tr, ip, parent_ip, tracing_gen_ctx());
-+		__trace_function(tr, ip, parent_ip, tracing_gen_ctx());
- 
--	per_cpu(tracing_cpu, cpu) = 1;
-+		per_cpu(tracing_cpu, cpu) = 1;
-+	}
- 
- 	local_dec(&data->disabled);
- }
-@@ -431,6 +434,7 @@ stop_critical_timing(unsigned long ip, unsigned long parent_ip)
- 	struct trace_array *tr = irqsoff_trace;
- 	struct trace_array_cpu *data;
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 0c357a89c58e..9234e2c39abf 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -202,12 +202,9 @@ static int graph_entry(struct ftrace_graph_ent *trace,
+ {
+ 	unsigned long *task_var = fgraph_get_task_var(gops);
+ 	struct trace_array *tr = gops->private;
+-	struct trace_array_cpu *data;
+ 	struct fgraph_times *ftimes;
  	unsigned int trace_ctx;
-+	long disabled;
+-	long disabled;
+ 	int ret = 0;
+-	int cpu;
  
- 	cpu = raw_smp_processor_id();
- 	/* Always clear the tracing cpu on stopping the trace */
-@@ -448,12 +452,15 @@ stop_critical_timing(unsigned long ip, unsigned long parent_ip)
- 	    !data->critical_start || local_read(&data->disabled))
- 		return;
+ 	if (*task_var & TRACE_GRAPH_NOTRACE)
+ 		return 0;
+@@ -257,21 +254,14 @@ static int graph_entry(struct ftrace_graph_ent *trace,
+ 	if (tracing_thresh)
+ 		return 1;
  
--	local_inc(&data->disabled);
-+	disabled = local_inc_return(&data->disabled);
-+
-+	if (disabled == 1) {
-+		trace_ctx = tracing_gen_ctx();
-+		__trace_function(tr, ip, parent_ip, trace_ctx);
-+		check_critical_timing(tr, data, parent_ip ? : ip, cpu);
-+		data->critical_start = 0;
-+	}
+-	preempt_disable_notrace();
+-	cpu = raw_smp_processor_id();
+-	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+-	disabled = atomic_read(&data->disabled);
+-	if (likely(!disabled)) {
+-		trace_ctx = tracing_gen_ctx();
+-		if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
+-		    tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
+-			unsigned long retaddr = ftrace_graph_top_ret_addr(current);
+-			ret = __trace_graph_retaddr_entry(tr, trace, trace_ctx, retaddr);
+-		} else {
+-			ret = __graph_entry(tr, trace, trace_ctx, fregs);
+-		}
++	trace_ctx = tracing_gen_ctx();
++	if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
++	    tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR)) {
++		unsigned long retaddr = ftrace_graph_top_ret_addr(current);
++		ret = __trace_graph_retaddr_entry(tr, trace, trace_ctx, retaddr);
++	} else {
++		ret = __graph_entry(tr, trace, trace_ctx, fregs);
+ 	}
+-	preempt_enable_notrace();
  
--	trace_ctx = tracing_gen_ctx();
--	__trace_function(tr, ip, parent_ip, trace_ctx);
--	check_critical_timing(tr, data, parent_ip ? : ip, cpu);
--	data->critical_start = 0;
- 	local_dec(&data->disabled);
+ 	return ret;
+ }
+@@ -351,13 +341,10 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
+ {
+ 	unsigned long *task_var = fgraph_get_task_var(gops);
+ 	struct trace_array *tr = gops->private;
+-	struct trace_array_cpu *data;
+ 	struct fgraph_times *ftimes;
+ 	unsigned int trace_ctx;
+ 	u64 calltime, rettime;
+-	long disabled;
+ 	int size;
+-	int cpu;
+ 
+ 	rettime = trace_clock_local();
+ 
+@@ -376,15 +363,8 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
+ 
+ 	calltime = ftimes->calltime;
+ 
+-	preempt_disable_notrace();
+-	cpu = raw_smp_processor_id();
+-	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+-	disabled = atomic_read(&data->disabled);
+-	if (likely(!disabled)) {
+-		trace_ctx = tracing_gen_ctx();
+-		__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
+-	}
+-	preempt_enable_notrace();
++	trace_ctx = tracing_gen_ctx();
++	__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
  }
  
+ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
 -- 
 2.47.2
 
