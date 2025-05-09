@@ -1,84 +1,144 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A5E26FD83;
-	Fri,  9 May 2025 07:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB812701C2;
+	Fri,  9 May 2025 07:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746774461; cv=none; b=O+dRh1tbnQC9LhgsKxCGmq7OWiY0IQn/fYzf9TnK3JAmBm480gslbEOrxgJ4u7qwiLNLI4JYUo6wkmBu86eRvHQB3P1lHLmL0XP+FBVNJPbMi/Lh9WIPrNkFDcG4DbuGZ6gEpQla30rOGECYTC7TwtbA6hDr0p9SuVOFMNCWm0M=
+	t=1746774466; cv=none; b=UkuDLT2PWieLe8pliRCQE8RjtYFXtMFj6Y1RyKmtRWHpu+3vOX5a1B/49pWLZ/0vpyx6HqTiu9PC5sCXy28VrdCqkEDK4OK++Cspv1sxqrZLQEyjs5zwd1QDH+PDAKytgf1A+QuNG2x9iI2z0393RcdTwtDGmh3FVz71PI2vICI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746774461; c=relaxed/simple;
-	bh=q1d4rES5n4/72LB6mNetdqrwKcaJ811NKB0G5vo83gc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G+SWzowITkbmd7qTUcyqBdPERQzEGQLuhTrmeZnGk9VUkneCI1nDWifAhiu/oLhb7kdPuG7VEgqezUY1y8GO4zaH/S92dIzKv84eFu7emisi0fsW+AynLk26f7XFgpMk0HcGBXxwQgZ5cAVcMebvtgaRvXqkaBGLwsBHVXEi5CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=c+b8oXRZ; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1746774466; c=relaxed/simple;
+	bh=SILWPNo+P+95Jq6C6hfiWn96F7bB++jW8DpztCoUBns=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WHZd2O7A56SeDKIDN05IjlOg+HmnSQR4QctRhrQVket0iJACpnk8iujQbFd9uXNqoAiO11Zmk2XEJmEe+v7w/YYyhdpT+hT/LQst8LOTIRoR0LtbCzmilKYK6XHy83ptpWi2RR/XLfJFHhZLn9Z32sv9A3H4RBdSfebpChw3TXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgPo24C9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="c+b8oXRZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1746774440;
-	bh=A4E2WkZBTupHcyT4KzgNgZwpVs0PSeZDi1MEZdWNEIY=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=c+b8oXRZxAzhf8fa64B4b15eIVdZvWAoxvtxARI8Tlz537LXze1aaYksi4YkhgZVW
-	 ZfDv/aClOsYX8IpZ+K8Jjp4ys7+J4A2IzxogxcSyckVJkf8QTQbngEp21qI67J2aok
-	 6luTXJUCFCNbYFcKC0RoekwWog0RR/ICSHR3p90U=
-X-QQ-mid: zesmtpip3t1746774434t01fc51ae
-X-QQ-Originating-IP: fIVEk/qcaQB4lBbnGcMb5v96AIQWxOerCTDhaK7zj0c=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 09 May 2025 15:07:12 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6606146849622476455
-From: raoxu <raoxu@uniontech.com>
-To: mathias.nyman@intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH V6] usb:xhci: Add debugfs support for xHCI port bandwidth
-Date: Fri,  9 May 2025 15:07:12 +0800
-Message-Id: <20250509070712.276578-1-raoxu@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgPo24C9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C913C4CEE4;
+	Fri,  9 May 2025 07:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746774466;
+	bh=SILWPNo+P+95Jq6C6hfiWn96F7bB++jW8DpztCoUBns=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SgPo24C9wtY5Z7J5nSe1zrWHtmzWUq+pM2ucELbLDJYasaQZBT0+3/yBUdJgWPvZK
+	 ddr7qg8Mkal2Sh+aS9orVJv5o1hOGbES1sXDviGOZZoOzX/SQgAxg3EJGh4hp+4WF4
+	 MZStldWkT8pcAS8k6aL99SdKQVZBoV+J2v9XkroturneN1U5SVoRCRcpRQFNVJhrvZ
+	 18XEB0wWMTyPvcs0FEUNZT9noqIaW7eRJeS7dqMHREhJiKeY1ayKsO55D/NwkCAPkg
+	 z1sB7GdIqI0BQ89zO6e/CqyRuYlJTlviHs/81Vbv/98xG098uMWP+W1KYllZ5lh/6V
+	 Fm+441pUMYyVg==
+Message-ID: <881c4ed3-51a1-4859-8417-6a46a4d7de2c@kernel.org>
+Date: Fri, 9 May 2025 09:07:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz7a-0
-X-QQ-XMAILINFO: MfzJ8BZ3qEI38t5aKMquBbk2QEVL9ujIK57Kjc+thNxTrphxbxrHeFg8
-	/D09dvamKLYPMk7Vl3YYLDzrJCyif1f59hfah+lOyZoVQxo28NbQcSoGR3tSN8+xl2FFi5y
-	igPAr2vHkhpCw+PWVcQxViCEzs56iCRhFNJQYDWVnZeO72Dq0lH+4TAEjYTNRG38m6/NOUS
-	OUl7Vwnm5gUg1KR6mQPQH77K+3RhIIOxW2UNfQhxSTbBqtQxLbiKayFEIcbcRygr/Nl7wHs
-	4WWn3CnTb2wkBLnIdqys9xRV4Jaf3vUQPIJZQdjqV8iAcbeUXX/qqiLPrjles3ecWgPX592
-	UcEY7e7dDuj2lLdAXC+HdGJjwDe2azKsRu2cHceCCq2KOkbGFbunQ7S3tBcsXBnfeddK/Fs
-	a1iye9iu7BUti8RY02vnRQoBhOSYu4y3Esp+BWE0R014qqD/8mg8/eHDGyG7uDpQkzqKxLi
-	YWdAV770AHJeCAUxNiXNK+wsVsu29OYk0tY2xlRgVTe6+3CY3Q8Qwbf1D37xFdJ0VvHG6i4
-	IaN48gXOhMxiNNGA09otAC3/pY4isf6GCWhWW/vl5B2+P1WMhGcPMX2x2BFgS4kRStfwBdR
-	v/Fk4d0KXbG7eXFlX847tttSXw2RqKDbeAmjqsj/IRBhraUluSpVXB7ltjWMkHIktb5UM/U
-	bSE0jcxaCdWjnSBKquViXTgqFR8tweMCT1m1tXWqJFBDEL5pLVay1PpW9Jy8ccujp7oKFur
-	+7utqq/TTwaW2d2OLUL3O+O+U/WLo7FORsIv+HCaqmRcWRW+lbzc3N1feZOP8Twap9Adzze
-	SyZFn0mf4pjZWx+NKxQqQGyhhodAdB+t0SpEZK7jlzfIaDOqN7OeaPUWkmWnG3xqlMM5cxs
-	iz4AVtDI+pTqpbVcwTy6RK+Ni34+3fIEBMc5Dzym8W4XVUymxM77FZB7Z67hojtDBX4j2my
-	rvwSb2MTZ0QKx3R5BnML899WibLqaWdW8rvMqfmxFc1vJgTSrCdN/DQ6hG86gRU8pNLVR1s
-	4IWiLSi8supS6ERuS3rg2MTIbYcZ5PFODQDxXMuLutHUPA9AlIXHNKLxJxWFukL0/14pmRt
-	A==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] hwmon: pmbus: mpq8785: Implement VOUT feedback
+ resistor divider ratio configuration
+To: Pawel Dembicki <paweldembicki@gmail.com>, linux-hwmon@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Noah Wang <noahwang.wang@outlook.com>, Michal Simek <michal.simek@amd.com>,
+ Naresh Solanki <naresh.solanki@9elements.com>,
+ Fabio Estevam <festevam@gmail.com>, Grant Peltier
+ <grantpeltier93@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Shen Lichuan <shenlichuan@vivo.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg KH <gregkh@linuxfoundation.org>, Charles Hsu <ythsu0511@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250509065237.2392692-1-paweldembicki@gmail.com>
+ <20250509065237.2392692-5-paweldembicki@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250509065237.2392692-5-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi
+On 09/05/2025 08:51, Pawel Dembicki wrote:
+> Implement support for setting the VOUT_SCALE_LOOP PMBus register
+> based on an optional device tree property
+> "mps,vout-fb-divider-ratio-permille".
+> 
+> This allows the driver to provide the correct VOUT value depending
+> on the feedback voltage divider configuration for chips where the
+> bootloader does not configure the VOUT_SCALE_LOOP register.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> 
+> ---
+> v2:
+>   - rename property to mps,vout-fb-divider-ratio-permille
+>   - add register value range checking
+> ---
+>  drivers/hwmon/pmbus/mpq8785.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
+> index 34245d0d2125..1d0e7ac9daf4 100644
+> --- a/drivers/hwmon/pmbus/mpq8785.c
+> +++ b/drivers/hwmon/pmbus/mpq8785.c
+> @@ -12,6 +12,13 @@
+>  
+>  enum chips { mpq8785, mpm82504, mpm3695, mpm3695_25 };
+>  
+> +static u16 voltage_scale_loop_max_val[] = {
+> +	GENMASK(10, 0), /* mpq8785 */
 
-On 2025/4/2 20:31, Mathias Nyman  wrote:
-> We are currently in the middle of the merge window.
-> I'll try this series out on top of 6.15-rc1 once its released, and
-> then send it forward if everything works as expected
+Drop comments and index the table with enums instead. It makes clear and
+obvious code. Code should be readable and self-documenting instead of
+adding comments as an substitute of non-obvious code.
 
-thanks Mathias Nyman,
-Is there any problems with the patch? If you find any problems
-during testing,please let me know so I can optimize and update
-the patch.
-
-Thanks
-raoxu
+> +	GENMASK(9, 0), /* mpm82504 */
+> +	GENMASK(9, 0), /* mpm3695 */
+> +	GENMASK(11, 0), /* mpm3695_25 */
+> +};
+> +
+Best regards,
+Krzysztof
