@@ -1,291 +1,239 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A110B26C3BD
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05751A239F
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746773087; cv=none; b=rOj2mcUA/tTEEsP3VBNkyjnNDt2khFQ5Wabgc6h0VxQj7525qq2lm7FSFMbhMIas8IKjTfiDqQNzTAWYzRKqWTFNcNWwYMgKW3TS2JnlrtluYjp5b5eEn2OoyXtgFYV5iTg0pZr53tjn0o0aV7HFT5H3YyayPq1oeGfjoREo+0g=
+	t=1746773118; cv=none; b=CLTJveOiDMfA44DhEjaO9e3DDJDLsCyiQxVrZTTetzgPckvjQSbYzrcegXv+M4gQR1+kiX8lklNF7ff1M0DDYCCkwDpCaG3LLfy+26YvrUn5IEQKlcilpubHJcY6DZMtKyhHZXpUih333gGvVOPJl+jAI+bsstt82wKUqfZqIFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746773087; c=relaxed/simple;
-	bh=SzK993gqOEfXbohV3srC6BzfOTlxaqgUypFe3/ZnQz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oLo6eqvIgI2xxq5KupaRWW7p4cBS/V6VVC/PBBBMfW9jeXjvA7M4eRdfNSJv93RfkTNlp3JDvyP63KYgEsl9olps6QmEgV0tBRIzgzQd/4wMAP89txnS7bt3lZyj+MyXTF5zkyV0BkRZ/YSTD08RJ3dR6+GoXk4AvL/FiiIwgp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Ztzss0CYKz2CddN;
-	Fri,  9 May 2025 14:41:05 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 778791A016C;
-	Fri,  9 May 2025 14:44:41 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 9 May 2025 14:44:40 +0800
-Message-ID: <39b5b07e-f1a5-4f90-bb3b-3742bb86f73f@huawei.com>
-Date: Fri, 9 May 2025 14:44:40 +0800
+	s=arc-20240116; t=1746773118; c=relaxed/simple;
+	bh=27kGMBB3C0h9ODtKKrLc1VupFSWATrFKfY3kj/JBugQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bMi3p/mb578RyvV1TGd9BNRi+fzY0EfxspwfcfZYFpunZES8wORYQFw3N6bRtMy/l43ffWFlL8swyr8hvojWFLKqgMeA42gGHZ84i3a8qxopCPa3AOscqH4cjhJ82VBIqg+myeTKuj6GL0Z15iaYNyFXwcX42rGwU7EYNTnc5Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gBKQArXb; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBKQArXb"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a1fb17bb8cso14330f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 23:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746773114; x=1747377914; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UVJ2TuNUBUpO94IHTiYXs30ZxdePvcvCPymvMj2I2OQ=;
+        b=gBKQArXbZYzhy6ncASQWGKwcq4h7+Eags9bxpk5gVSOz2TXAV+OT1chirGqpK9XcNU
+         jhBQ0zsiMDqEQc6yD8NBC0d5J+EHhWiJ+NtywTApGVCrzKmsptuBhuV4QfP5ueTTJv1s
+         eCW8hYB/p3ADp5TeXFdXDVHf2ZjN4ktecvEF3bFXy2GztWSgVeARyMmeEkt6NhhTGKiJ
+         uh80Ns+ZR7mWdwHWzGCQzrDi/UoA2xb8fhMDZrUbZjkxXiWqgdUsMJaoVa+YsWmcBQpr
+         WBMfMG8z9Dj/cfU6Tc3468u9rRMx0FyWSdRniU8hgODh/k7IFaqtSLPtmssWWxylnpTX
+         0ytg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746773114; x=1747377914;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UVJ2TuNUBUpO94IHTiYXs30ZxdePvcvCPymvMj2I2OQ=;
+        b=NnPZ0Z6J01w2qAWiJpEARoYtJOBjdBU4d3v2635K3nlXpNVvQmj0GRgtB+fDRrFV3D
+         EbQb12e8l4BwFY0+rjpsrqhZa6lDwGX3z0FOjI4uvqDCD1oxXL86h/2/QpiEShWtldxX
+         KkuSfJkCdZX3+oTJEyTyaWurLwryjqv8ZsGvdoiWHBZdlViTcgmukTPq5G/O8I+/nNU6
+         S199AuYaEcfuWIopYqrrHxMn1d6C56cnvX4XE5VEnrggFYhXhuVAM3TCybHxucedKbPr
+         +/Sn1c4NQuomE/kg9+Lnv6QxorP5hAJX1QCUjofaJD84JtHHYDH8cSMzDk0Dihm2Gk0z
+         kv/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUcaaoIgVgdqi5MeuSUbPkDv952PchK+awdxXw9Of2esqbbf4Yn88C1U72TJaI7aJowwDDc6Xurm3IbWhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzghIlBYEd0Dl0OxAEE1LoDcZQ0RvVmRvW9B22KTpQaGYIN6fo3
+	xiPYvJZV3pE5DHEyeDmDMaQaGg+ZaAzvcdEys2nym8sIwPUJpo/havsm32DPkrA=
+X-Gm-Gg: ASbGnct9/HoOLsGbbblzhldD7KbGkfMP3MlBvbDb18h3Q5WuXs/jMyi1Sl+OCjp8LTh
+	NhwZHeTTYBPNVHG6Ij1Xgtg+hROKMlOi+ADSCvDYZOvgedNxI5vpyNXhTY2Fnsz4wfmnATI/LBU
+	M+63WB8KNW+CmmoByDSCFeleecLtrx1nl0UDkhB/CSC2wLUd/KbqDuNTH1Rp+M3X5y9ac5TXCNH
+	/kLBG2/nGDs9vWkWrVpxvla02N0uEIv5CGEzyiB37gkrMu1Kn7BuiEb54IqlA8YKhGdmHbdVbcs
+	CbtJ0ZCA0X35b3c3gPklOp63ZRjsqcxCx9AMRnZsllzs
+X-Google-Smtp-Source: AGHT+IH18FSd6kFBMFpH6Tgr5SOpt1kgXIcmqF5vBZmAhp4BLHkkT7JEQaYeI4Zj3eGt5omTIFhStw==
+X-Received: by 2002:a5d:59a7:0:b0:3a0:8325:8090 with SMTP id ffacd0b85a97d-3a1f64374d6mr1856560f8f.18.1746773114003;
+        Thu, 08 May 2025 23:45:14 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddde0sm2302928f8f.14.2025.05.08.23.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 23:45:12 -0700 (PDT)
+Message-ID: <eb8c820c864717d6348cd11f16e6899c744a92ed.camel@linaro.org>
+Subject: Re: [PATCH v9 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
+ Kandagatla <srini@kernel.org>, Kees Cook	 <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker
+ <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
+Date: Fri, 09 May 2025 07:45:11 +0100
+In-Reply-To: <20250508140259.GN3865826@google.com>
+References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
+	 <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
+	 <20250508140259.GN3865826@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.55.2-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] dma-mapping: benchmark: modify the framework to
- adapt to more map modes
-To: Barry Song <21cnbao@gmail.com>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <20250509020238.3378396-1-xiaqinxin@huawei.com>
- <20250509020238.3378396-3-xiaqinxin@huawei.com>
- <CAGsJ_4xmC5wP9ut7X6cj72xq1qNGdVCC==8c9FQpd3SbCQ-iNw@mail.gmail.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <CAGsJ_4xmC5wP9ut7X6cj72xq1qNGdVCC==8c9FQpd3SbCQ-iNw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemj200003.china.huawei.com (7.202.194.15)
 
+Hi Lee,
 
-On 2025/5/9 11:41:31, Barry Song <21cnbao@gmail.com> wrote:
-> On Fri, May 9, 2025 at 2:02 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
->> In some service scenarios, the performance of dma_map_sg needs to be
->> tested to support different map modes for benchmarks. This patch adjusts
->> the DMA map benchmark framework to make the DMA map benchmark framework
->> more flexible and adaptable to other mapping modes in the future.
->> By abstracting the framework into four interfaces:prepare, unprepare,
->> do_map, and do_unmap.The new map schema can be introduced more easily
->> without major modifications to the existing code structure.
->>
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
-> - stable@vger.kernel.org
-> + Marek
-> + Robin,
->
-> Once the minor issues below are addressed, feel free to add:
->
-> Reviewed-by: Barry Song <baohua@kernel.org>
-OK
->> ---
->>   include/linux/map_benchmark.h |   8 ++-
->>   kernel/dma/map_benchmark.c    | 122 +++++++++++++++++++++++++++-------
->>   2 files changed, 106 insertions(+), 24 deletions(-)
->>
->> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
->> index 2ac2fe52f248..5294dfd1870f 100644
->> --- a/include/linux/map_benchmark.h
->> +++ b/include/linux/map_benchmark.h
->> @@ -15,6 +15,11 @@
->>   #define DMA_MAP_TO_DEVICE       1
->>   #define DMA_MAP_FROM_DEVICE     2
->>
->> +enum {
->> +       DMA_MAP_SINGLE_MODE,
->> +       DMA_MAP_MODE_MAX
->> +};
-> Using a more specific namespace—such as DMA_MAP_BENCH_SINGLE_MODE
-> and DMA_MAP_BENCH_MODE_MAX—would help avoid potential naming
-> conflicts.
->
->> +
->>   struct map_benchmark {
->>          __u64 avg_map_100ns; /* average map latency in 100ns */
->>          __u64 map_stddev; /* standard deviation of map latency */
->> @@ -27,6 +32,7 @@ struct map_benchmark {
->>          __u32 dma_dir; /* DMA data direction */
->>          __u32 dma_trans_ns; /* time for DMA transmission in ns */
->>          __u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
->> -       __u8 expansion[76];     /* For future use */
->> +       __u8  map_mode; /* the mode of dma map */
->> +       __u8 expansion[75];     /* For future use */
->>   };
->>   #endif /* _KERNEL_DMA_BENCHMARK_H */
->> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
->> index cc19a3efea89..47a06b891db8 100644
->> --- a/kernel/dma/map_benchmark.c
->> +++ b/kernel/dma/map_benchmark.c
->> @@ -5,6 +5,7 @@
->>
->>   #define pr_fmt(fmt)    KBUILD_MODNAME ": " fmt
->>
->> +#include <linux/cleanup.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/delay.h>
->>   #include <linux/device.h>
->> @@ -31,17 +32,99 @@ struct map_benchmark_data {
->>          atomic64_t loops;
->>   };
->>
->> +struct map_benchmark_ops {
->> +       void *(*prepare)(struct map_benchmark_data *map);
->> +       void (*unprepare)(void *mparam);
->> +       int (*do_map)(void *mparam);
->> +       void (*do_unmap)(void *mparam);
->> +};
->> +
->> +struct dma_single_map_param {
->> +       struct device *dev;
->> +       dma_addr_t addr;
->> +       void *xbuf;
->> +       u32 npages;
->> +       u32 dma_dir;
->> +};
->> +
->> +static void *dma_single_map_benchmark_prepare(struct map_benchmark_data *map)
->> +{
->> +       struct dma_single_map_param *params __free(kfree) = kzalloc(sizeof(*params),
->> +                                                                   GFP_KERNEL);
->> +       if (!params)
->> +               return NULL;
->> +
->> +       params->npages = map->bparam.granule;
->> +       params->dma_dir = map->bparam.dma_dir;
->> +       params->dev = map->dev;
->> +       params->xbuf = alloc_pages_exact(params->npages * PAGE_SIZE, GFP_KERNEL);
->> +       if (!params->xbuf)
->> +               return NULL;
->> +
->> +       /*
->> +        * for a non-coherent device, if we don't stain them in the
->> +        * cache, this will give an underestimate of the real-world
->> +        * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
->> +        * 66 means evertything goes well! 66 is lucky.
->> +        */
->> +       if (params->dma_dir != DMA_FROM_DEVICE)
->> +               memset(params->xbuf, 0x66, params->npages * PAGE_SIZE);
->> +
->> +       return_ptr(params);
->> +}
->> +
->> +static void dma_single_map_benchmark_unprepare(void *mparam)
->> +{
->> +       struct dma_single_map_param *params = mparam;
->> +
->> +       free_pages_exact(params->xbuf, params->npages * PAGE_SIZE);
->> +       kfree(params);
->> +}
->> +
->> +static int dma_single_map_benchmark_do_map(void *mparam)
->> +{
->> +       struct dma_single_map_param *params = mparam;
->> +       int ret = 0;
->> +
->> +       params->addr = dma_map_single(params->dev, params->xbuf,
->> +                                     params->npages * PAGE_SIZE, params->dma_dir);
->> +       if (unlikely(dma_mapping_error(params->dev, params->addr))) {
->> +               pr_err("dma_map_single failed on %s\n", dev_name(params->dev));
->> +               ret = -ENOMEM;
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +static void dma_single_map_benchmark_do_unmap(void *mparam)
->> +{
->> +       struct dma_single_map_param *params = mparam;
->> +
->> +       dma_unmap_single(params->dev, params->addr,
->> +                        params->npages * PAGE_SIZE, params->dma_dir);
->> +}
->> +
->> +static struct map_benchmark_ops dma_single_map_benchmark_ops = {
->> +       .prepare = dma_single_map_benchmark_prepare,
->> +       .unprepare = dma_single_map_benchmark_unprepare,
->> +       .do_map = dma_single_map_benchmark_do_map,
->> +       .do_unmap = dma_single_map_benchmark_do_unmap,
->> +};
->> +
->> +static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX] = {
->> +       [DMA_MAP_SINGLE_MODE] = &dma_single_map_benchmark_ops,
->> +};
->> +
->>   static int map_benchmark_thread(void *data)
->>   {
->> -       void *buf;
->> -       dma_addr_t dma_addr;
->>          struct map_benchmark_data *map = data;
->> -       int npages = map->bparam.granule;
->> -       u64 size = npages * PAGE_SIZE;
->> +       __u8 map_mode = map->bparam.map_mode;
->>          int ret = 0;
->>
->> -       buf = alloc_pages_exact(size, GFP_KERNEL);
->> -       if (!buf)
->> +       struct map_benchmark_ops *mb_ops = dma_map_benchmark_ops[map_mode];
->> +       void *mparam = mb_ops->prepare(map);
->> +
->> +       if (!mparam)
->>                  return -ENOMEM;
->>
->>          while (!kthread_should_stop())  {
->> @@ -49,23 +132,10 @@ static int map_benchmark_thread(void *data)
->>                  ktime_t map_stime, map_etime, unmap_stime, unmap_etime;
->>                  ktime_t map_delta, unmap_delta;
->>
->> -               /*
->> -                * for a non-coherent device, if we don't stain them in the
->> -                * cache, this will give an underestimate of the real-world
->> -                * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
->> -                * 66 means evertything goes well! 66 is lucky.
->> -                */
->> -               if (map->dir != DMA_FROM_DEVICE)
->> -                       memset(buf, 0x66, size);
->> -
->>                  map_stime = ktime_get();
->> -               dma_addr = dma_map_single(map->dev, buf, size, map->dir);
->> -               if (unlikely(dma_mapping_error(map->dev, dma_addr))) {
->> -                       pr_err("dma_map_single failed on %s\n",
->> -                               dev_name(map->dev));
->> -                       ret = -ENOMEM;
->> +               ret = mb_ops->do_map(mparam);
->> +               if (ret)
->>                          goto out;
->> -               }
->>                  map_etime = ktime_get();
->>                  map_delta = ktime_sub(map_etime, map_stime);
->>
->> @@ -73,7 +143,8 @@ static int map_benchmark_thread(void *data)
->>                  ndelay(map->bparam.dma_trans_ns);
->>
->>                  unmap_stime = ktime_get();
->> -               dma_unmap_single(map->dev, dma_addr, size, map->dir);
->> +               mb_ops->do_unmap(mparam);
->> +
->>                  unmap_etime = ktime_get();
->>                  unmap_delta = ktime_sub(unmap_etime, unmap_stime);
->>
->> @@ -108,7 +179,7 @@ static int map_benchmark_thread(void *data)
->>          }
->>
->>   out:
->> -       free_pages_exact(buf, size);
->> +       mb_ops->unprepare(mparam);
->>          return ret;
->>   }
->>
->> @@ -209,6 +280,11 @@ static long map_benchmark_ioctl(struct file *file, unsigned int cmd,
->>
->>          switch (cmd) {
->>          case DMA_MAP_BENCHMARK:
->> +               if (map->bparam.map_mode >= DMA_MAP_MODE_MAX) {
->> +                       pr_err("invalid map mode\n");
->> +                       return -EINVAL;
->> +               }
->> +
->>                  if (map->bparam.threads == 0 ||
->>                      map->bparam.threads > DMA_MAP_MAX_THREADS) {
->>                          pr_err("invalid thread number\n");
->> --
->> 2.33.0
->>
-> Thanks
-> Barry
+On Thu, 2025-05-08 at 15:02 +0100, Lee Jones wrote:
+> On Wed, 30 Apr 2025, Andr=C3=A9 Draszik wrote:
+>=20
+> > The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> > Port Controller (TCPC), NVMEM, and a GPIO expander.
+> >=20
+> > Fuel Gauge and TCPC have separate and independent I2C addresses,
+> > register maps, and interrupt lines and are therefore excluded from the
+> > MFD core device driver here.
+> >=20
+> > The GPIO and NVMEM interfaces are accessed via specific commands to the
+> > built-in microprocessor. This driver implements an API that client
+> > drivers can use for accessing those.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> >=20
+> > ---
+> > v6: really use postinc
+> >=20
+> > v5:
+> > * update all (I hope) of Lee's comments:
+> > * file header C comment (not C++)
+> > * drop references to 'MFD'
+> > * extra indent register bit definitions
+> > * make 'struct max77759' public
+> > * drop comments that were used for visual separation only
+> > * drop MAX77759_*_REG_LAST_REGISTER defines
+> > * add comments to regmap ranges
+> > * use longer lines
+> > * sort local variable in reverse christmas tree order
+> > * update comments in max77759_maxq_command()
+> > * drop BUILD_BUG_ON()
+> > * use dev_err() in max77759_maxq_command()
+> > * reflow max77759_create_i2c_subdev() slightly and update error message=
+s
+> > * drop useless comment in max77759_add_chained_maxq()
+> > * reflow max77759_probe()
+> > * consistent upper-/lower-case in messages
+> >=20
+> > v4:
+> > * add missing build_bug.h include
+> > * update an irq chip comment
+> > * fix a whitespace in register definitions
+> >=20
+> > v2:
+> > * add kernel doc for max77759_maxq_command() and related structs
+> > * fix an msec / usec typo
+> > * add missing error handling of devm_mutex_init() (Christophe)
+> > * align sentinel in max77759_of_id[] with max77759_i2c_id[]
+> > =C2=A0 (Christophe)
+> > * some tidy-ups in max77759_maxq_command() (Christophe)
+> >=20
+> > max77759 Lee's updates
+> > ---
+> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> > =C2=A0drivers/mfd/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 20 ++
+> > =C2=A0drivers/mfd/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0drivers/mfd/max77759.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 690 =
++++++++++++++++++++++++++++++++++++++++++++
+> > =C2=A0include/linux/mfd/max77759.h | 165 +++++++++++
+> > =C2=A05 files changed, 878 insertions(+)
+>=20
+> This looks okay to me now.
 
-Thanks
+Thanks :-)
 
-Qinxin
+> I assume the other patches depend on this one?
+
+Yes, that is correct.
+>=20
+> [...]
+>=20
+> > diff --git a/drivers/mfd/max77759.c b/drivers/mfd/max77759.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..15723ac3ef49771eafd5c2e=
+9984abc550eec7aa1
+> > --- /dev/null
+> > +++ b/drivers/mfd/max77759.c
+> > @@ -0,0 +1,690 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2020 Google Inc
+> > + * Copyright 2025 Linaro Ltd.
+> > + *
+> > + * Core driver for Maxim MAX77759 companion PMIC for USB Type-C
+> > + */
+>=20
+> [...]
+>=20
+> > +int max77759_maxq_command(struct max77759 *max77759,
+> > +			=C2=A0 const struct max77759_maxq_command *cmd,
+> > +			=C2=A0 struct max77759_maxq_response *rsp)
+> > +{
+> > +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
+> > +	struct device *dev =3D regmap_get_device(max77759->regmap_maxq);
+> > +	static const unsigned int timeout_ms =3D 200;
+> > +	int ret;
+> > +
+> > +	if (cmd->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * As a convenience for API users when issuing simple commands, rsp i=
+s
+> > +	 * allowed to be NULL. In that case we need a temporary here to write
+> > +	 * the response to, as we need to verify that the command was indeed
+> > +	 * completed correctly.
+> > +	 */
+> > +	if (!rsp)
+> > +		rsp =3D _rsp;
+> > +
+> > +	if (!rsp->length || rsp->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		return -EINVAL;
+> > +
+> > +	guard(mutex)(&max77759->maxq_lock);
+> > +
+> > +	reinit_completion(&max77759->cmd_done);
+> > +
+> > +	/*
+> > +	 * MaxQ latches the message when the DATAOUT32 register is written. I=
+f
+> > +	 * cmd->length is shorter we still need to write 0 to it.
+> > +	 */
+> > +	ret =3D regmap_bulk_write(max77759->regmap_maxq,
+> > +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
+> > +				cmd->length);
+> > +	if (!ret && cmd->length < MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		ret =3D regmap_write(max77759->regmap_maxq,
+> > +				=C2=A0=C2=A0 MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
+> > +	if (ret) {
+> > +		dev_err(dev, "writing command failed: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* wait for response from MaxQ */
+>=20
+> If you have to respin this patch, please s/wait/Wait/.
+>=20
+> If not, please send a subsequent patch.
+
+I guess I might as well send another version, given this series is still
+waiting for Srini's ACK.
+
+Cheers,
+Andre'
 
