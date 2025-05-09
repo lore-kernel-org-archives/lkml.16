@@ -1,84 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574E223C4FD;
-	Fri,  9 May 2025 17:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD96A22CBF6;
+	Fri,  9 May 2025 17:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746811800; cv=none; b=ixVCT2PcESVuWiDyvH/kIDcoZDZBzNxCwxpVKKN2sXl4Aqj0qvLT/HuefIkfq7SJqQCZrSUvroJ1Eu6FOQZF3tEwmww8nN5mMVDWJ42uv2JfRKgkY0MrDGhR/4391VE+VXmwo5i3C2qV2CdCIdhMrZfwluqVVeS9NhZb3e10mvE=
+	t=1746811819; cv=none; b=Dez0emfn467879TcMhrWVUnYZy5vbCIoF110TZkzBbq19V/N+ChJb5Y1IJagV7AFt9KvPNr/IbZ/Sy42WZk8EPBlblIkADG+qS/vxs62lfLyhDwp8r41VcarjbebMIenbjeuTgC9V7EpURBR2DvQpwS2lYm6qg6C+22FywVubuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746811800; c=relaxed/simple;
-	bh=cPhjasTwI2UlEzhggO3BfP5IeHfjz55rUCtySA1MPZs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KpeRlmGyS+qFkEKXcv2YLGF0Df8J5TV0vkca1MQIdfTC2fifZd+S9nDeDL43cwNRdHJJdw+Kpa0m+2mncmnxeA+nLpsqqeV11qlwYbumQWtPrSGc310voICfZ6xiyp9mEoS8zZMcxmHrvbxwruKKqYrW8WFCQCuUUE6UlzzDk6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1Vzq6pk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746811819; c=relaxed/simple;
+	bh=mW7Q4WOzI5YU1FYLOgmozqSQi3IAzhyUp6jsc2gvljI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GSKfsrOPwMvd90r+WXKIYepS4apUtvi/XRx/qpc/1zE+GLgeoyhugSxa4jNqGqFn2GWW6mJ5IaDRGirpXsj4K6mIpudg3RVCXKnelf5+JQ0NY1pHy/QJObLkF/8ta2PI7IKt7B9l89qSuJX6Wn6txg1Zcl8IDidyRDx5f0xdgeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7G5iLCm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1Vzq6pk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3B86C4CEE9;
-	Fri,  9 May 2025 17:29:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7G5iLCm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7BEC4CEE4;
+	Fri,  9 May 2025 17:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746811799;
-	bh=cPhjasTwI2UlEzhggO3BfP5IeHfjz55rUCtySA1MPZs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S1Vzq6pkJKMtybevOYaVo+IXvGH9iHyt73kURGEzn0tBT7dMlc+WGknIq8ZFywpB/
-	 qXYXmoq0TCaXPzQq6itNVVd3AYUhdZ6RcydeNgRW8raQp/uH/ImxtqUEThp3T6OZPF
-	 3y7ixjn93OgRSmT+QpjQ+pqm9PUFm9evikv6r+mv7q/PXaXOaWYY/n8OqfXWUOvCSO
-	 BRu/6hQTYrWgPOFizXnYvp4jceTcFUn7uVqOZISdsMcKbaIi/b9clf5uH7Eg4O/I8D
-	 RakzsEDIsD7jxW8jgm3Pa7u9Pnb25q19Sfs0Bi4DK/0cgElUkTRjXgeAERyfw+D9M2
-	 MEdKkuCHPBnOw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E4D380DBCB;
-	Fri,  9 May 2025 17:30:38 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1746811818;
+	bh=mW7Q4WOzI5YU1FYLOgmozqSQi3IAzhyUp6jsc2gvljI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j7G5iLCmXAjHqnDymoGSMYCHKt0FGONZ2280C13jjahlcYvubNWIgN9NnDcCqdQnu
+	 AEO58bEaRAqF14/wxZDzBySNJp3+LSN0Y74nNO7YDkmqh7EqPV2ge7s3dXT0BUhSaq
+	 VGZLa6RVkWQv2g+dTRak/4qnig5LDJfO1RV6ibSJdYly7zm6+P0W4xbCfk5vZC+GzO
+	 2m7mL+xResoyVFbcavHB6yjSJYO+FMm+HYOCMjo6ikq2vwh868xV2zec2bzWmTz+D3
+	 0nYEDHor6jzucViInfWQJ32KQ6OdKkkEzpLZt2R+zg3SKxemCNK26WyuLt8ELwxxad
+	 7iqtTUsTqya+w==
+Date: Fri, 9 May 2025 18:30:14 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ozgur Kara <ozgur@goosey.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: ethernet: Fixe issue in nvmem_get_mac_address()
+ where invalid mac addresses
+Message-ID: <20250509173014.GQ3339421@horms.kernel.org>
+References: <01100196adabd19e-0056f10b-0ffb-4076-8a6b-779f87c327b6-000000@eu-north-1.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/3] Drop explicit --hash-style= setting for new
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <174681183698.3697320.7074504502229425253.git-patchwork-notify@kernel.org>
-Date: Fri, 09 May 2025 17:30:36 +0000
-References: <20250224112042.60282-1-xry111@xry111.site>
-In-Reply-To: <20250224112042.60282-1-xry111@xry111.site>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: linux-riscv@lists.infradead.org, guoren@kernel.org, chenhuacai@kernel.org,
- kernel@xen0n.name, palmer@dabbelt.com, i@maskray.me, yangtiezhu@loongson.cn,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01100196adabd19e-0056f10b-0ffb-4076-8a6b-779f87c327b6-000000@eu-north-1.amazonses.com>
 
-Hello:
-
-This series was applied to riscv/linux.git (for-next)
-by Palmer Dabbelt <palmer@rivosinc.com>:
-
-On Mon, 24 Feb 2025 19:20:39 +0800 you wrote:
-> For riscv, csky, and LoongArch, GNU hash had already become the de-facto
-> standard when they borned, so there's no Glibc/Musl releases for them
-> without GNU hash support, and the traditional SysV hash is just wasting
-> space for them.
+On Thu, May 08, 2025 at 02:14:00AM +0000, Ozgur Kara wrote:
+> From: Ozgur Karatas <ozgur@goosey.org>
 > 
-> Remove those settings and follow the distro toolchain default, which is
-> likely --hash-style=gnu.  In the past it could break vDSO self tests,
-> but now the issue has been addressed by commit
-> e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
+> it's necessary to log error returned from
+> fwnode_property_read_u8_array because there is no detailed information
+> when addr returns an invalid mac address.
+
+Maybe "useful" would be better wording than "necessary".
+Logging doesn't seem to be a hard requirement to me.
+
+Moreover, I'm not sure that logging is appropriate.
+E.g. fwnode_get_mac_addr() is called by fwnode_get_mac_address(),
+which is in turn called by acpi_get_mac_address(), which logs if call
+fails.
+
+> kfree(mac) should actually be marked as kfree((void *)mac) because mac
+> pointer is of type const void * and type conversion is required so
+> data returned from nvmem_cell_read() is of same type.
+
+It seems to me that nvmem_cell_read returns void *.
+So a good approach would be to change type of mac to void *.
+In any case I don't think casting away const is the right approach;
+what is the point of const if it is selectively ignored?
+
+Also, I think this should be a separate patch to the logging change:
+one patch per issue. If there is more than one patch then I would
+suggest collecting them together in a patch-set with a cover letter.
+
 > 
-> [...]
+> This patch fixes the issue in nvmem_get_mac_address() where invalid
+> mac addresses could be read due to improper error handling.
 
-Here is the summary with links:
-  - [1/3] riscv: vDSO: Remove --hash-style=both
-    https://git.kernel.org/riscv/c/2940954c1ac5
-  - [2/3] csky: vDSO: Remove --hash-style=both
-    (no matching commit)
-  - [3/3] LoongArch: vDSO: Remove --hash-style=sysv
-    (no matching commit)
+I don't see any changes to the program flow for error handling in this patch.
+It doesn't seem like a fix to me.
 
-You are awesome, thank you!
+> 
+> Signed-off-by: Ozgur Karatas <ozgur@goosey.org>
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+pw-bot: changes-requested
