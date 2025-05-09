@@ -1,135 +1,124 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9485E274674;
-	Fri,  9 May 2025 10:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF543274674;
+	Fri,  9 May 2025 10:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785629; cv=none; b=VgeE8kEj+FEiYSlnS5ti8ARDDECGVj6deXskM0mScxP5P8D6ss9SAU+cmzkH50uR96UtrAD8Om5FB7YPDucCmlNDH1TaKdK8+SHihp56HDzBqg3ZuFut5/ieELS5jn+IOzkEKleCfeEXGICnS0XsW1vSllvPB1A2qI+d1/n5WdE=
+	t=1746785639; cv=none; b=vGpZDpAIS+1mTMT20NycMOHFB1HSDxs17+AJvsgHJt0X/aF+r2Mjlr+UR/nIVam+o+DIaTfhNarb2tOoVwqQdStN37r8wOF/U/MxGLqNUtZoDyFf4j67QPDhiG/CYQZPazbUQFr/8T4VXnJq8oBCCMMBDGCN89EOZz162FVWRh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785629; c=relaxed/simple;
-	bh=BUJ8x0JLhkS7DoHd6lHAsVOFU72/Ls1DqhLRpDoFWOM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=FLTvGYVVtAZj46JS7UYppmjS9YTK1Uko9wZ+UrtGvL49y4sRhFwm7oWUeF61hssRevLwbxTIKQ7rd9vWVnTx4xzXCG1+uylBxuk5aaYG7ZMqusNDGJl3dlOLXodg9RgOMmTuA5rZFAUViSzy+hjZi4LhCYXI69UlyA12wgdbkDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Tkbqnbb3; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746785639; c=relaxed/simple;
+	bh=AU/evyLY36h6heLli8/0jOoKd69aELP0vtO9uBIR2Lg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=swBxGvvuOU/VhLkCgFvNOxB3Rx2tm6y5ODXG5Ly5ElYWwwIzzrNzNruhLcjoQ7kp2p8F5C/TBDriPfMeqk22uBH76FOBvMle/5VrP4jX5rwnxyseZ/hOxaR0kIPq3Bz+3zcXkxq6gGgcQBLirpP9KU2y71YtcUEyi5iZih8V9BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=Yk8uJ4NM; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Tkbqnbb3"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 4972C2098462; Fri,  9 May 2025 03:13:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4972C2098462
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746785627;
-	bh=gEW7wXPmdwYptJzvTzaNmB9Cse5HO3g+2gZnzmwQfaU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tkbqnbb3uFxEnjLH/M27IoWSeGc2Mhez63YAaoeMgyGQfhJ7w2ZOWOusJfZ7sl5K3
-	 DaqwZoH5E96HJXMBfgwMjsjvv4Vq9GnbPmJrZjaQguKKDbqqb+TSLQeHCw2f3gKsK3
-	 LXU3DmiXeD7b5jnhTUTiXLikUNECTMJ5BTYwHlKw=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v3 3/4] net: mana: Allow irq_setup() to skip cpus for affinity
-Date: Fri,  9 May 2025 03:13:45 -0700
-Message-Id: <1746785625-4753-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="Yk8uJ4NM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=nAfoWVNuZUaaIrzJ/KTAH5X5jAijWISwnD0nCOplMzE=; b=Yk8uJ4NMd3wjcpnvWtoeavtXMC
+	NQZkPY7+0+V8Vip0kgom6HDMFU1+vKqHoVMghH4oHNDSmSeP4WSyj5/92H0+XysIUrB2KQaWhI97L
+	ArnKc3Kzn7FqiB40YMPniLv7l83EarqNf+47u9hB0i4qi/tIEet0QKweu6BO0fKvp0nY=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:56672 helo=[127.0.1.1])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1uDKjp-001ghk-L1; Fri, 09 May 2025 12:13:54 +0200
+From: Matthias Fend <matthias.fend@emfend.at>
+Subject: [PATCH v4 0/2] Support for Texas Instruments TPS6131X flash LED
+ driver
+Date: Fri, 09 May 2025 12:13:41 +0200
+Message-Id: <20250509-leds-tps6131x-v4-0-2c9563f5b67c@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAFfVHWgC/2XNTQqDMBCG4atI1k2Z/Gi0q96jdBGTsQZalUSCR
+ bx7o1CkdvkNPO/MJKB3GMglm4nH6ILruzTkKSOm1d0DqbNpEw48B84VfaINdBxCwQSbqFZSqLI
+ UKAFIMoPHxk1b73ZPu3Vh7P17y0e2Xr+l8lCKjAK1DBSzFTQV6iu+GuzsWY9kLUW+a8H+NE+6N
+ lAZpXOoOR612LXk4qhF0kYXygpZaPn7e1mWDxp7Sp0mAQAA
+X-Change-ID: 20250227-leds-tps6131x-a7437883e400
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
+ bsp-development.geo@leica-geosystems.com, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
-In order to prepare the MANA driver to allocate the MSI-X IRQs
-dynamically, we need to prepare the irq_setup() to allow skipping
-affinitizing IRQs to first CPU sibling group.
+The TPS61310/TPS61311 is a flash LED driver with I2C interface. Its power
+stage is capable of supplying a maximum total current of roughly 1500mA.
+The TPS6131x provides three constant-current sinks, capable of sinking up
+to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode. In torch mode
+each sink (LED1, LED2, LED3) supports currents up to 175m
 
-This would be for cases when number of IRQs is less than or equal
-to number of online CPUs. In such cases for dynamically added IRQs
-the first CPU sibling group would already be affinitized with HWC IRQ
-
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
 ---
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Changes in v4:
+- Added/removed/adjusted comments
+- Use defines for register defaults
+- Updated source format
+- Check for error in torch refresh timer
+- Return error from tps6131x_parse_node()
+- Link to v3: https://lore.kernel.org/r/20250423-leds-tps6131x-v3-0-ca67d346a4ea@emfend.at
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 4ffaf7588885..2de42ce43373 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1288,7 +1288,8 @@ void mana_gd_free_res_map(struct gdma_resource *r)
- 	r->size = 0;
- }
- 
--static int irq_setup(unsigned int *irqs, unsigned int len, int node)
-+static int irq_setup(unsigned int *irqs, unsigned int len, int node,
-+		     bool skip_first_cpu)
- {
- 	const struct cpumask *next, *prev = cpu_none_mask;
- 	cpumask_var_t cpus __free(free_cpumask_var);
-@@ -1303,9 +1304,20 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
- 		while (weight > 0) {
- 			cpumask_andnot(cpus, next, prev);
- 			for_each_cpu(cpu, cpus) {
-+				/*
-+				 * if the CPU sibling set is to be skipped we
-+				 * just move on to the next CPUs without len--
-+				 */
-+				if (unlikely(skip_first_cpu)) {
-+					skip_first_cpu = false;
-+					goto next_cpumask;
-+				}
-+
- 				if (len-- == 0)
- 					goto done;
-+
- 				irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
-+next_cpumask:
- 				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
- 				--weight;
- 			}
-@@ -1403,7 +1415,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 		}
- 	}
- 
--	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
-+	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node, false);
- 	if (err)
- 		goto free_irq;
- 
+Changes in v3:
+- Add comment for locking
+- Drop handling based on CONFIG_V4L2_FLASH_LED_CLASS
+- Stop if getting reset GPIO fails
+- Optimize locks
+- Fix type of num_channels (u32 -> int)
+- Convert a remaining return sequence to dev_err_probe
+- Link to v2: https://lore.kernel.org/r/20250318-leds-tps6131x-v2-0-bc09c7a50b2e@emfend.at
+
+Changes in v2:
+- Bindings: Extend device description
+- Bindings: Drop unused address/size cells
+- Bindings: Use fallback compatible 
+- Bindings: Corrected minimum current for 50mA steps
+- Bindings: Drop node label
+- Fix name of REGISTER4 INDC shift define
+- Save device instead i2c_client in private data
+- Add comment for mutex
+- Use macro to convert from uA to mA
+- Use defines to describe initial register values
+- Add safety delay during reset sequence
+- Use fixed value enum to set the mode
+- Renamed some local variables
+- Re-sorted local variables
+- Replaced ifdefs for V4L2_FLASH_LED_CLASS
+- Improved some error messages
+- Link to v1: https://lore.kernel.org/r/20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at
+
+---
+Matthias Fend (2):
+      dt-bindings: leds: add Texas Instruments TPS6131x flash LED driver
+      leds: tps6131x: add support for Texas Instruments TPS6131X flash LED driver
+
+ .../devicetree/bindings/leds/ti,tps61310.yaml      | 120 +++
+ MAINTAINERS                                        |   7 +
+ drivers/leds/flash/Kconfig                         |  11 +
+ drivers/leds/flash/Makefile                        |   1 +
+ drivers/leds/flash/leds-tps6131x.c                 | 815 +++++++++++++++++++++
+ 5 files changed, 954 insertions(+)
+---
+base-commit: 9c69f88849045499e8ad114e5e13dbb3c85f4443
+change-id: 20250227-leds-tps6131x-a7437883e400
+
+Best regards,
 -- 
-2.34.1
+Matthias Fend <matthias.fend@emfend.at>
 
