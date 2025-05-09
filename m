@@ -1,210 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAAB28F520
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 10:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41FE218EB1;
+	Fri,  9 May 2025 11:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746788365; cv=none; b=SuTvxxPRpQZbESbdJrXGXqKYZCAY2dwh+Bwj3ZQHWWLPEE4+R5mOZgBS+q6yEMcGVoWg3qw6gPTwO0g6eCENETc0PD4bTYJrHPtmPd9DrGw1Fl9LHVJPYpSW1DM58CEUne4jOl+2tVHS0MhpysLSGiooZxq3WdZVJq50pL4cClM=
+	t=1746788487; cv=none; b=O3equcl+Z7p7Hl1oomW1a6laCRB9rQB5t6fMqgmZugFLqLohHPS3HsxJXoyn5wwRsCqSwhYpqjfpwZ63Fdq/y9jiB7JXvAQrfbN2SYfY5xAURKfoFcJQpI0Ou6ssIHSh3gE0oxjcCxigZ7/SXidP9WSvSsvZeT87LR8Ub0jq6CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746788365; c=relaxed/simple;
-	bh=QMnylHRb8gVaUhyCPdjCYA4w3j7YIJu3CW/RKmqnP5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lLSQi48vtfkuJ6rjn/hFgh2u4ueh71bTAmIKLEjZWbwQFmDU2OP/C5OSHUSiKYU9LwiIKcggOTRRXOsakZ8mV8ztbM+GrlrPuUWvYKRDbXp8ZJ4OR7EaN8nVbmiIBo+ZV0UzJdoxz0em+H5X5H7xRVLlHgDa568Rn2Av/R8RvVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d7FqJpug; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746788487; c=relaxed/simple;
+	bh=gRgLFX3wudpilZbhg89XKnOTVJhitrzM2EL48kaXQIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fowYU7zsuty+6rnhZEMPrmqXoBqt9qdSOEH1RirsthnqTD9NYoFkSeM8W9zNeBkgHmnnWRs1QntOgG2KJvEAA+ivpml7iLAP9+BgxPWwKByns69vpyK1ffd6kNvyk8qr0YLpj9bAuf9DTHQYMc8QKp/Zoi7u1T3wTCgCYWKPRic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bOQ6qiBt; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7FqJpug"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746788362;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Y10xkQY/yB4xBwq93/OQLm1G4yJYnmq+zMsTVySDiHU=;
-	b=d7FqJpugFS0T/qYJgTSn6izG00AKIidHPYoA7JtfpZfvD88HIdDFTgwDpu0XMPPsP3EutY
-	vzdLfAaVNud1cDOgtHyL0YQ7tjkJVg5QEcddHi7+/lSo98pYKRdyTWysSWCQrf0v7TtPI2
-	YrK5GqQbxJ+x6QMBRuphL7CiCMpL9ic=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-En1w3ALQNdiEUj1rSwEvtA-1; Fri, 09 May 2025 06:59:21 -0400
-X-MC-Unique: En1w3ALQNdiEUj1rSwEvtA-1
-X-Mimecast-MFC-AGG-ID: En1w3ALQNdiEUj1rSwEvtA_1746788360
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442cdf07ad9so8558475e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 03:59:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOQ6qiBt"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a1fb17a9beso178404f8f.3;
+        Fri, 09 May 2025 04:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746788484; x=1747393284; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=r53khiO3ex71dGFIBcMlSGwX4XCBTtxUE+p0BbXkqFo=;
+        b=bOQ6qiBtWmUJBqJUHnTjFVAcT2k1Vr8P2CNv2wxfNgqHRHQl1Ww+zEMhCdRIvYba6s
+         jHPaLyPI+yQbAMeRpN/ItUKP+qa8hlYS6Asrn25FWvuSaGPHc6nuHA2hYtZWymEM7nqK
+         iq8bKrqfRTeHhOzRtjlDdSnt6pAMEen0PiR0dh+e9lPuOqlGag/buFo931kjOVeuLbWF
+         GY0J9/uAJMiLLxOnyvJK7WS0OFv8WPVFPPruBdP9zVxWuoPDOhhSPEPScAoiaOW5FWQC
+         ofJJ9RXhKgHvnQcxGg25fF9ZxQx8otBA6uR4+ZlXrn7rQGTMaN59/A8AXbY+N7kyd9U9
+         HEMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746788360; x=1747393160;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Y10xkQY/yB4xBwq93/OQLm1G4yJYnmq+zMsTVySDiHU=;
-        b=TOzDD1vylAOI27kk3uj9baqwWH/5W1fPJVFbbbuMKPLYv8soHXdU741iGT18YuNZZa
-         VxV06PXwSzYKZJOwWhD0aR7z24Zj2mULEaIcqc9u6GwvM2FEkdwNoI9KWcrr8WaQ6XnU
-         3GIKX0HugafJgjYrMtYSEXYdLsTzhcIS2+c8zfLfYdxcVY2JHrg1Ycnpwk93onQjRt4n
-         dJ8kR2DYZ3CWmoq5ZNdgV4zkQiiZnUzabheF6JsjWHYhVwVMvUW7qDTcThDSh1JAaQsQ
-         7pR83G01ZVirBTsSq8T46O5HPWst0OqFCbpvoX9K48MI+ZRehrCMukgqbAp/o+QoHy24
-         T50w==
-X-Forwarded-Encrypted: i=1; AJvYcCX3y7y06vhjMtGNpEC08xOcrUaJ1J/RXjp/ZtCQXtlwzQwwUnXCsRLQWlth5yHjX3IuVx3u/eJmu187Guw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+WJb5hHQK23n5i3f7puaaDVG307GShPltoNSiHWq3H5a9WYJu
-	YMDPmtr3UmqdysMUF1KKS+jbGci7bcDGp6SGP0hLm3QdD4XIFDjUJK8Jxt2BYhQJ9fdI2QjpmOY
-	078nwNLD3qswVaoFo3oNcJuqU0IySjpzK3d6/ZfjPSU4buFBLJDnt5zYVWSmP9A==
-X-Gm-Gg: ASbGncs4wJcxBZQHho/RsI4lFBiCSzxDJrQ0uz7+Ame+pvFEi7aplE74Z3FKP80kazf
-	hPbK4Nn97TMAbGSbNHw+EgTGNMoNar4GilPL/y26rHThF9E00dvQjEcT3V8eRWwu7aso7oR5vt4
-	xiz1GGHBMHZNE2wSkWccxip4uJDyQS5QpUf1TPxFjOmS4IGZ0iOori6yZ5FJptXcLH8pRHnthGp
-	DZE5higdC3lxXxjoYxXlr9722zobUzgEEcdfiiIzfIRUM4rjfuc3s9ekedEOs4JHWvdqHislDlA
-	QqXDAVGlRn9K+crv6z4VOJIOKOSsg/2KHOhWOwCAovmcYXDKjJ1ajBLG/8i2PHGTSPsW8Ailasq
-	Iia6SKUB7kptLH/SIfi0ClxvojjP58t+tLJpipfU=
-X-Received: by 2002:a05:600c:1550:b0:43c:fabf:9146 with SMTP id 5b1f17b1804b1-442d6d6abfdmr26010845e9.17.1746788359924;
-        Fri, 09 May 2025 03:59:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEa9C6hfO9VHsveOSNGjMF0/uVuCXCExS9GUXXbncTi6ENUgjE4uCm4Jc8Z0rbOqKoSCcqvlg==
-X-Received: by 2002:a05:600c:1550:b0:43c:fabf:9146 with SMTP id 5b1f17b1804b1-442d6d6abfdmr26010595e9.17.1746788359474;
-        Fri, 09 May 2025 03:59:19 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c09sm26141235e9.7.2025.05.09.03.59.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 03:59:19 -0700 (PDT)
-Message-ID: <ac65e657-bfd5-4e6a-a909-79107d23cd1c@redhat.com>
-Date: Fri, 9 May 2025 12:59:17 +0200
+        d=1e100.net; s=20230601; t=1746788484; x=1747393284;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r53khiO3ex71dGFIBcMlSGwX4XCBTtxUE+p0BbXkqFo=;
+        b=DOa687Fxa9qf9iQdhOFVm7m0ObZ5XNol9M+COtcRDDIrvxU81TRXDMVXOmmC0t4hfF
+         PJ8TDzsYAh2ezRXnvkyk6IuvDutz+EIeP68ag8pqHq7AnvRdsevMm1AvD6vCjeYrKuPX
+         JJwHEG8ogWWpx1cVNnq8KKJ3ihUGSIGOGUbVMoMJo8ICEo3ak2SAzOVIO4WoME+NHM8u
+         spBODrDVEXP451LLfPXZFN21bh/yNH4ywrKgAfC6nGR4PwKSYzA3+KGkVA2CxKju2a4G
+         WL3wHtjyQ71GW98nRtz353OWXrXXnb+gpgKH539a9FpyOK3LaccO+KwivPFVx1zhAeJi
+         YNgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfsZe+EE7u1v/yKrgZP8thf9IpcdBPoxLr7pKu6gKa+ucb4Z5d+Cv4FkWqR/7Z4rFF27xL79wBoMSdzf0=@vger.kernel.org, AJvYcCXn0lbPOfVK0Ir7Wz61U95U9HF90659o7eDAZjyPrWAZVShFE8mWhlsuwLuMqJpXh52CLXDl/UilgY4IpLw@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAml8b5CLWST71kuvTeqa9RhYsnKOqU5KRCe5s1N54nTof1M3K
+	zbPP6LrGjX03HnuF3PWmq1TuO3ZL8UZvLJrQSxubKWRN29bHWZCk
+X-Gm-Gg: ASbGncsEsM5jhHfh3OFygnz9yhNHjRJ4Nt0SIEbfN4vK7HBz27l0PaidYthpgaiTIfT
+	1Ips47ZIcWhVBmJYnjpMZLO0p8Wif/1XU+t2dAkT5FP5SLSXcUtJTLw1HqXAQE27Byrnnq+nl/j
+	aWY1Z5GE4NiZH0nI8PwCnWGLcz+l+aaHQQ7jW1i8jHjDc4HhPjv+U3txN+g5b5eZVYCOjoMaEfP
+	33pGQQBgf86lQKBQ9Gd049XfslWWSb2rzuFuQrugp7lZq4pEbp2RWI9IpYAREnL8dDgcgTxkZQi
+	ZCF3EzDaQJUKsPstmfMt6tSeIwfPkXrCvcrEvbJltg==
+X-Google-Smtp-Source: AGHT+IHxdrrT1mXNTg47HWfTSTmmEC51lBLDoX8qYM2Pqx0cEOFChgQ2wd+oIPWDgDsHqFvJei+Rdw==
+X-Received: by 2002:a05:6000:430d:b0:3a0:b9a9:2fd9 with SMTP id ffacd0b85a97d-3a1f64a34c6mr2544261f8f.51.1746788483860;
+        Fri, 09 May 2025 04:01:23 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f57de100sm2871878f8f.2.2025.05.09.04.01.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 04:01:23 -0700 (PDT)
+Date: Fri, 9 May 2025 13:01:21 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
+Message-ID: <aB3ggeQDdaPblUxi@Red>
+References: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
+ <aBsdTJUAcQgW4ink@gondor.apana.org.au>
+ <aBt5Mxq1MeefwXGJ@Red>
+ <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+ <aBw_iC_4okpiKglQ@gondor.apana.org.au>
+ <aBypVwhHHzmqqN5K@Red>
+ <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
+ <aBy06xyzh5kKC48a@Red>
+ <aB10PqZNk0L-ly70@gondor.apana.org.au>
+ <aB24nSeEJKtP1bO_@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm: introduce new .mmap_prepare() file callback
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Wilcox <willy@infradead.org>
-References: <cover.1746615512.git.lorenzo.stoakes@oracle.com>
- <c958ac6932eb8dd9ddbd2363bc2d242ff244341b.1746615512.git.lorenzo.stoakes@oracle.com>
- <2204037e-f0bd-4059-b32a-d0970d96cea3@redhat.com>
- <9f479d46-cf06-4dfe-ac26-21fce0aafa06@lucifer.local>
- <5a489fa9-b2c0-4a7d-aa0e-5a97381e6b33@redhat.com>
- <9b9fd5ce-c303-46c4-acc7-40db1201f70a@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <9b9fd5ce-c303-46c4-acc7-40db1201f70a@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aB24nSeEJKtP1bO_@gondor.apana.org.au>
 
-On 09.05.25 12:57, Lorenzo Stoakes wrote:
-> On Fri, May 09, 2025 at 12:51:14PM +0200, David Hildenbrand wrote:
->>
->>>>> +
->>>>> +static inline int __call_mmap_prepare(struct file *file,
->>>>> +		struct vm_area_desc *desc)
->>>>> +{
->>>>> +	return file->f_op->mmap_prepare(desc);
->>>>> +}
->>>>
->>>> Hm, is there a way avoid a copy of the exact same code from fs.h, and
->>>> essentially test the implementation in fs.h (-> more coverage by using less
->>>> duplciated stubs?).
->>>
->>> Not really, this kind of copying is sadly part of it because we're
->>> intentionally isolating vma.c from everything else, and if we try to bring
->>> in other headers they import yet others and etc. etc. it becomes a
->>> combinatorial explosion potentially.
->>
->> I guess what would work is inlining __call_mmap_prepare() -- again, rather
->> simple wrapper ... and having file_has_valid_mmap_hooks() + call_mmap()
->> reside in vma.c. Hm.
->>
->> As an alternative, we'd really need some separate header that does not allow
->> for any other includes, and is essentially only included in the other header
->> files.
->>
->> Duplicating functions in such a way that they can easily go out of sync and
->> are not getting tested is really suboptimal. :(
+Le Fri, May 09, 2025 at 04:11:09PM +0800, Herbert Xu a écrit :
+> On Fri, May 09, 2025 at 11:19:26AM +0800, Herbert Xu wrote:
+> >
+> > I wonder if the skcipher code is corrupting the ahash state when
+> > run concurrently (and chained together).
 > 
-> This is a problem that already exists, if minimised. Perfect is the enemy of
-> good - if we had make these tests existence depend on being able to isolate
-> _everything_ they'd never happen :)
+> Please try this patch to see if the hashes can work without
+> the skciphers.
 > 
-> But I will definitely try to improve the situation, as I couldn't agree more
-> about de-syncing and it's a concern I share with you.
-> 
-> I think we have a bit of a mess of header files anyway like this, random helpers
-> put in random places etc.
-> 
-> It doesn't help that a random driver/shm reference call_mmap()...
 
-Yes ...
+Hello
 
-> 
-> Anyway, this is somehwat out of scope for this series, as we already have a
-> number of instances like this and this is just symptomatic of an existing
-> problem rather than introducing it.
-> 
-> I think one thing to do might be to have a separate header which is explicitly
-> for functions like these to at least absolutely highlight this case.
+Got http://kernel.montjoie.ovh/478064.log
 
-Yes, and then just include it in the relevant header files.
-
-> 
-> The VMA tests need restructuring anyway, so it can be part of a bigger project
-> to do some work cleaning up there.
-
-Cool!
-
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks
+Regards
