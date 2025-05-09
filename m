@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E91267B9D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E12238D3A;
 	Fri,  9 May 2025 06:34:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746772456; cv=none; b=netm27vRkw+grsh6yjQy8ew3X2b/bWqJK7gmcioSm7Tmj91HwbArsMSswnL65VvTCKYCL7kTxmQ3rcb03Ix5Qwv5RDGNjcwTfoRpKYLEw48Gp6C5h8OiLVTJCIMMqAP7gqCUqfoicJ/6oYMiMyN3RxNGia15NCAXv1+lGwsv7Ps=
+	t=1746772456; cv=none; b=SqAYwrVfe6nnsWYeEcXtvSOfOWdVYt7sIaA9MovsZukriwrihajlx+LL3eo1VjfiCJ+8T9lpg0ZW0IfsQ6/jFDPujix+yihmK2XnFHMoXX+bB6+1uox1t8CU9/fi/Kx8k1yehqFmED13D+mNFAcGZQkV2m48fayzsb8zd+SLYcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746772456; c=relaxed/simple;
-	bh=f/1mOnTVgTLPMHCDttVgoZS1/fOdBKrXOZWrb3T2gE0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oojm0b4LLlpwdhcllhlNMLAvbsTPA1nbHat1j4JKtRBy94Opx2ADngagpkRq16/XzpQJpB1adZ/oVGS2/D2azr6PgB8Be3vtVJGLIluFQjbTX+YXB7SjbmcNwnEobqbw+MU4zZqhpyO/uqnV5ceazKO8ZCPIzcNh0gU5W/K6RvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvdHuVRR; arc=none smtp.client-ip=10.30.226.201
+	bh=WL7UUCkIaxd70i0yTLn1OxmFS6Mp12a6aWHS71LWZB4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QOZvUovbPlPBerPAaHrEKfXpNrARwHV/JaEfRPdFKklkf9xuYPbIsfdbGIDIffmi81l/seXoQnC5zXcIsNrsfluzMBut28TAf/nMCbXZKngEak74hqVMm675SsjOg1ng9Cml4pOu345Cg5giiMQbC5VxEVbHrywrxkxE/qz2Z80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9ny6bHb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvdHuVRR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B8EAC4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9ny6bHb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6CF52C4CEE4;
 	Fri,  9 May 2025 06:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746772455;
-	bh=f/1mOnTVgTLPMHCDttVgoZS1/fOdBKrXOZWrb3T2gE0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=bvdHuVRRCE/L/ZsXFkUf1p4VUD9yrp6xlzYBiK01kl70J0q5t6ODYrUd9mpMYC7qS
-	 4qDhSsSrXsgcE8uJfn5TANzVh17FtJRKGN4HmJ5FoTZGJncr09ff0vrGkmkRVR5HWm
-	 xDnf6oYDZtL9LGxgHwjH15nlYX0nRPv04TU5Gkt8NjTHXt3djYghsg6luCKIe/DiNs
-	 89izwq2dwF9+y85+FKDXM5nQ/CRaUoJvU1cPS5REaPXAeQqUkg0YoH7wrf+hI4Y6yu
-	 JGC2gcoMkuoxphLv2tNYQ6bMwnM6G5/jlbCBiDSEoIiuMakSBI+r1enBeCgCmHhl3l
-	 hlVmZZOawEisw==
+	bh=WL7UUCkIaxd70i0yTLn1OxmFS6Mp12a6aWHS71LWZB4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=S9ny6bHbziB3c2KJb4BK/SHl1cX6cEoQSCh44WPmSKoLLbtkEpu6d6sEQYotQL28r
+	 9Wq1n5MBGFzp+EMbw4uByh6DaYG1U+arHnMXsf33s5Lm3nIiel5KyomBl7/5TxBzZp
+	 xE40gRNA+jYH/ePH0E3BZix1XNpnQvwV2NnzoJjoivpEAiuW9Fqn27Uc1VKoogIvq6
+	 CxUljyoc+qqvM1ILWIgML4SgPh0cVVnC2l+QvGtzc+EURpwkHmV/WJKu1iJPkCPt/N
+	 Hsdp3sMNiGdkYWyhHe7VH2b7kLbp71H6T1QjgU5blcfUvqpm5Ph89Om9WzSdEcJBSE
+	 LGi0i8QyHlbgw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83811C3ABC3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C9C3ABBC;
 	Fri,  9 May 2025 06:34:15 +0000 (UTC)
 From: Chen Linxuan via B4 Relay <devnull+chenlinxuan.uniontech.com@kernel.org>
-Date: Fri, 09 May 2025 14:33:55 +0800
-Subject: [PATCH v3 3/3] fs: fuse: add more information to fdinfo
+Subject: [PATCH v3 0/3] fuse: Expose more information of fuse backing files
+ to userspace
+Date: Fri, 09 May 2025 14:33:52 +0800
+Message-Id: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,28 +41,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-fusectl-backing-files-v3-3-393761f9b683@uniontech.com>
-References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
-In-Reply-To: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+X-B4-Tracking: v=1; b=H4sIANChHWgC/3WOwQqDMBBEf0Vy7kq6aqI99T9KDzauutTGkqhYx
+ H9vFAql0OMbmDezCE+OyYtTtAhHE3vubYDkEAnTlrYh4CqwQImZzGQO9ejJDB3cSnNn20DNHXl
+ Q+VFWWEjSRS5C9+mo5nn3Xq6BW/ZD7177zHTc0o9RywQLVHGitdQKEExLtmM7j6U9jzbcGci0s
+ ekfYhNN+F3+d2dCkKCwzlRKWhV5+mta1/UN8btUiPsAAAA=
+X-Change-ID: 20250508-fusectl-backing-files-6810d290e798
 To: Miklos Szeredi <miklos@szeredi.hu>
 Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Chen Linxuan <chenlinxuan@uniontech.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1981;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1622;
  i=chenlinxuan@uniontech.com; h=from:subject:message-id;
- bh=dLLqMK4ZOcnisnxvwBa6DIUP279E8lmWmNnP/Jp8VBc=;
- b=owEBbQKS/ZANAwAKAXYe5hQ5ma6LAcsmYgBoHaHkSaO7ABqs4yzAz39RKANByQf+JUI3TKu7C
- Sr9++vXnGOJAjMEAAEKAB0WIQTO1VElAk6xdvy0ZVp2HuYUOZmuiwUCaB2h5AAKCRB2HuYUOZmu
- iziaD/9E0shRqgXj6Cql0vx0z76dvfJg9D8CviOBAIAbIP77+gnQNU80+QhM5vnDs5si+GCg8xF
- YFi1lTMhWqrw9yoLI0t9ZgIRlMoEbajlekgbCu8Ha3YMZ2LlmBd2CPgzss9YyZE+0/Jf/e70oLT
- Uo4kHGgMrp0S3vkO6Perze84j+PIRJW1il7OS8RTH9rlpCNOccbx2my0sqeX1/7zbKp65D/C7EO
- UIUt7tkOHUUp+aunG4dVa1LwvqzSjrK0YHPm0Ya7Ge9jqqf6YEVWnuzjqG64PMnDwvGMDRMwa6g
- GTkSmW5XfKAdzIuf2OTmbo7dg9qYVrS3TMmNBKcD/X5pIgk/KKfDZXbEj8VVEpT8qw0eDac8Pjz
- o8xYyNDl288/ewh/wBtwG3UkfnNUn/AUAZV6voraVM7BiNOn35h+XDtM57lY814ZPYt+BdfV8o3
- UQZC2loVcEiS5cSfyMJqfxousd+9ISENfKlV/UUlZLe06b+PZyk8QTfNIzSAtqg5eb4RKodKe5v
- odc4SHWLxpODtLOpZBUB/lEktMukIiHNmEb562gtEKFrFwPCLEcJrf3d6WGBVoh8ePZEXAsgu3M
- OH4zFfPmP5iiOXA+h45xkrWInOA2mpdqGK+aVbJFwn0GzRG46rozfHYvxq8z7/YX0iA1xNxLl8+
- rZ+1NF5Xx+Us3gA==
+ bh=WL7UUCkIaxd70i0yTLn1OxmFS6Mp12a6aWHS71LWZB4=;
+ b=owEBbQKS/ZANAwAKAXYe5hQ5ma6LAcsmYgBoHaHUhMz/8CHmcC875sPKOKvdbx/+8a0mE3ntX
+ 1uteYpfm5yJAjMEAAEKAB0WIQTO1VElAk6xdvy0ZVp2HuYUOZmuiwUCaB2h1AAKCRB2HuYUOZmu
+ i/C/EADTYfQ+L1ZHVLSWskQ/sieLfZTnqYIWmvIOSqOhKQzWQvaW+K2CZLab/QjBK7UUhWSC6JH
+ IT98ORN1w2VAZLjFMdArsvwbTCNyn6kJROHMFxAe1SwVe0c7NKZiQQFUQHisw2N7BaAoolS1cOt
+ +fAEPhvVs2aqbHKMohmURiUiZsWpMKROSd/T/eoNHILalLOXdxv4ijNASBMY6iAEPfBxvVgHgU2
+ icv/BoeA9FgqTgqTZsVcBc1NpXRLG5EVdKYun3fHbBCpQEQgTdMYkQ+6kby7kS9rRrEF+oKhtNp
+ 860gNFycZnK8mCSfkHysaZZWc4wH5ajPsun2mnlxJdzF2mGEWchzyliVfSe/dCjuYreYaJEAshz
+ BdkcK2y6FfOEHokUholgBcmAv71+vq8iGgSW2JnQ2RT4/frvqHPvSd9g7qbEMl1TZSTjqC1MVM0
+ TB8X+ED7B3BCmcobwCB4aUkOQrs+nJCjY//taqJlySG+fmB04UlexH3ku/8QqfVg3c9AFxofBtj
+ 8KwjBQQiWXO5iT0dsarZhebRnAJ3KrSMDL19lJsWjhcE7ihOAj75nuAF9X1MP2eazbIBFCo7vKV
+ XLofIUeFyzw3SnPalN+TJ2jlwIL+gxFiZ3x2RpvsJ+WgmwfqW5hqarXGb0f/HgO5Ec06jxacPuN
+ NJ4PofMv4UWA5pA==
 X-Developer-Key: i=chenlinxuan@uniontech.com; a=openpgp;
  fpr=D818ACDD385CAE92D4BAC01A6269794D24791D21
 X-Endpoint-Received: by B4 Relay for chenlinxuan@uniontech.com/default with
@@ -69,68 +72,47 @@ X-Endpoint-Received: by B4 Relay for chenlinxuan@uniontech.com/default with
 X-Original-From: Chen Linxuan <chenlinxuan@uniontech.com>
 Reply-To: chenlinxuan@uniontech.com
 
-From: Chen Linxuan <chenlinxuan@uniontech.com>
+Please review this patch series carefully. I am new to kernel
+development and I am not quite sure if I have followed the best
+practices, especially in terms of seq_file, error handling and locking.
+I would appreciate any feedback.
 
-This commit add fuse connection device id, open_flags and backing
-files, to fdinfo of opened fuse files.
+I have do some simply testing using libfuse example [1]. It seems to
+work well.
 
-Related discussions can be found at links below.
+[1]: https://github.com/libfuse/libfuse/blob/master/example/passthrough_hp.cc
 
-Link: https://lore.kernel.org/all/CAOQ4uxgS3OUy9tpphAJKCQFRAn2zTERXXa0QN_KvP6ZOe2KVBw@mail.gmail.com/
-Link: https://lore.kernel.org/all/CAOQ4uxgkg0uOuAWO2wOPNkMmD9wqd5wMX+gTfCT-zVHBC8CkZg@mail.gmail.com/
-Cc: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
 ---
- fs/fuse/file.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Changes in v3:
+- Apply some suggestions from Amir Goldstein
+- Link to v2: https://lore.kernel.org/r/20250508-fusectl-backing-files-v2-0-62f564e76984@uniontech.com
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 754378dd9f7159f20fde6376962d45c4c706b868..1e54965780e9d625918c22a3dea48ba5a9a5ed1b 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -8,6 +8,8 @@
- 
- #include "fuse_i.h"
- 
-+#include "linux/idr.h"
-+#include "linux/rcupdate.h"
- #include <linux/pagemap.h>
- #include <linux/slab.h>
- #include <linux/kernel.h>
-@@ -3392,6 +3394,21 @@ static ssize_t fuse_copy_file_range(struct file *src_file, loff_t src_off,
- 	return ret;
- }
- 
-+static void fuse_file_show_fdinfo(struct seq_file *seq, struct file *f)
-+{
-+	struct fuse_file *ff = f->private_data;
-+	struct fuse_conn *fc = ff->fm->fc;
-+	struct file *backing_file = fuse_file_passthrough(ff);
-+
-+	seq_printf(seq, "fuse conn:%u open_flags:%u\n", fc->dev, ff->open_flags);
-+
-+	if (backing_file) {
-+		seq_puts(seq, "fuse backing_file: ");
-+		seq_file_path(seq, backing_file, " \t\n\\");
-+		seq_puts(seq, "\n");
-+	}
-+}
-+
- static const struct file_operations fuse_file_operations = {
- 	.llseek		= fuse_file_llseek,
- 	.read_iter	= fuse_file_read_iter,
-@@ -3411,6 +3428,9 @@ static const struct file_operations fuse_file_operations = {
- 	.poll		= fuse_file_poll,
- 	.fallocate	= fuse_file_fallocate,
- 	.copy_file_range = fuse_copy_file_range,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo	= fuse_file_show_fdinfo,
-+#endif
- };
- 
- static const struct address_space_operations fuse_file_aops  = {
+Changes in v2:
+- Void using seq_file private field as it seems that we can just simply
+  returning fuse_backing_files_seq_state in start() and next()
+- Apply some suggestions from Amir Goldstein:
+  - Use idr_get_next() for iteration
+  - Do fuse_backing_get/put(fb) around dereferencing fb->file
+- Update fdinfo of fuse files
+- Link to v1: https://lore.kernel.org/r/20250507032926.377076-2-chenlinxuan@uniontech.com
 
+---
+Chen Linxuan (3):
+      fs: fuse: add const qualifier to fuse_ctl_file_conn_get()
+      fs: fuse: add backing_files control file
+      fs: fuse: add more information to fdinfo
+
+ fs/fuse/control.c | 157 +++++++++++++++++++++++++++++++++++++++++++++++++-----
+ fs/fuse/file.c    |  20 +++++++
+ fs/fuse/fuse_i.h  |   2 +-
+ 3 files changed, 165 insertions(+), 14 deletions(-)
+---
+base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
+change-id: 20250508-fusectl-backing-files-6810d290e798
+
+Best regards,
 -- 
-2.43.0
+Chen Linxuan <chenlinxuan@uniontech.com>
 
 
