@@ -1,187 +1,203 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECA373477;
-	Fri,  9 May 2025 09:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0562749EA;
+	Fri,  9 May 2025 09:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782055; cv=none; b=nm2iFZBzPapEpejsshRlt6EHr/u3Hr+xVnaAemc+5fBYl/JNSrT/vO1IRmsA5WEdB6LysKbmzgMzugO3rCYcp5qnDvFjBElPeDLIo3EV8skGYR5HrqGNZpgGRzL+HTw/HzX8GHBIxF4GMAqMk9/ZPnd20vDk2iGCIx46w2JBPcs=
+	t=1746782089; cv=none; b=El9cvOBnlMnUSo8KrlRDAQ7l6lz94MywM/u0Yn/6WBxLu//7H9bJgbs8TjOU7WNntC0CInmD+RVdPpuPUKQvA+6yf9t9FStYeqvVdHndKGcdquCEsGvENhl4k7PZWxWDAp5VT26SdMtPoB8VRq2gnZWOB0E1YrGL579sBHeA4Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782055; c=relaxed/simple;
-	bh=vItGlJMuzbxOXtTTMJsjkJgBtkKmyb4sB1UNIvljBeE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MZOZWLrlYcUvxlzRAADsidzDYRjvaAgvueop4kUm+ba6EonFwDxJMjporUFQVpIAQFlEYgcv5XzuHS+XbQhxB/YeTAPy/3K9I4s5Mh/+g5abRwblsPy8LCdgm6iKCCtFd5DYGNhyPtTFLuanm9cNW60NXN0oHsthUB94k9KSuh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aiEFRVrW; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746782089; c=relaxed/simple;
+	bh=Pjl3EREY5LiWOhcSvNDn75zyN/l4OFQm6DQH1t57WZg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RLSZfgwzv1ourLSbgjsVW9kA+fPuGX9AEDoukMGA0Ojw1m7JVnGZlRYIMNoZIUlb/ESqUoI4+kXj4v7E1x30+lGCzKSrtXJZLB5flCgdX4pl4+rYYjMDBreqjO3qjQktNyet+GeyZSp69UYXCODiRIVu124L/I1k1sKyc6viq8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OA5zzACj; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aiEFRVrW"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so3417986a12.0;
-        Fri, 09 May 2025 02:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746782052; x=1747386852; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fhO0hsCpCTctc/RhbxA8mBatB8tQsLopxXqBz5ibW5U=;
-        b=aiEFRVrWezfAnJphKVwc4oNrmx2dmK9wd/NWSX6VE2SR6SX256niI8cgCC3V0Sa3EM
-         h8cmVOD/8STLarZ4wDnKGH19Ftba0Yl7ZcwpOBbDdjUFvrwtNW8RSyPttwSCYgPKUU56
-         y9dC4r+VH0sPsAsD7pfcIFdzrHTA9jWr9RSfwzY86tAKcWbyLJ1/NwE/h+mIPxLnerwP
-         dYUkI6wBgDUUKCN3eH6V5ZlvVeXOXtZq77UOpWbUVZeE2UQdfZXLddt5KISO/O1GD1Mt
-         PiIyFhOsOr+06Co5TWhnExzAswE/fxrg0wrsmlXHsoRccFcDYpxlzP8T6RSdD0XEGTOD
-         VtHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746782052; x=1747386852;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fhO0hsCpCTctc/RhbxA8mBatB8tQsLopxXqBz5ibW5U=;
-        b=cU244V7LaqXPFOgUJtBvtdYF5A/mJwO1u+V+LRnnnvHB6Ns6M165osefvkSI8AxOu2
-         MNrtBcOm1yfrVYjrAY2k74YBOaZemSXferYK57Yrv5OLhMqVyS9Tv+RdoTIa7lTTAQFy
-         NdEcJSb58UDMtXaAFRSajpbN1g1NESLzGdV7Bt9H6o6XOyeAPImW+XFLsbjI3qoDRrc+
-         UHIwtVLO/pQr1qrkDNglsa2kENjyBu06gWiVM2dB2Ao3U7aIB7R15cmovYo+kDTAUPVY
-         sCFUakEHRJnRycJNce1Pf5oREmjOGRStGb9sfb/QtnN9Z7O6Gcd5h0+Ks8H4Fgsrf8BT
-         Z3eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/r1ys8RP8dUmFVzlfNNsOlBFEwKC1inxvVkl+gL31D1TJv8RbcKIXa3Juwa1q4ktVr/7pRKOnXPbK979p@vger.kernel.org, AJvYcCXPepLjniQ8uTobVgA1X3whHZtNhmH9e/t/5hBJEArJq+USzpVvV+//7np8uMJsb4LTPUu2ak+x+A+hxeJe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFT0JPeoqwy5y9B2tUtv0G6krostQ6KbQsgqJtghdHIkGxklcI
-	NxeTXL5hLZfqwBUoZOb512y3yYgr4w4AyAv4rUqB43bny4sDUJap+5xtyuCgwSssOgZZgUAyDR+
-	wXVacJQAY/BvylXs8e7YWufxkrPA=
-X-Gm-Gg: ASbGncsX/Vl0NmwyvsfEXwa4JcS7HHje9RNyasxPwJeWrfWL6HuRSeTNLaldLhgUw6H
-	WRnpMKCzGcK24UMjhBr6EMsOysNP64LFszEYIBSY/Q+a0CB9+/9isdZcDTYfIblJITXAAQ3jAHR
-	c2ik4MbFAF+iaopriQAG1JQg==
-X-Google-Smtp-Source: AGHT+IEVbDuDWTg+KNmf0HXjPEqDqTURkxFsPGThz0tbkN8+U9Hl7RtJUiTPZCOnSqF7ZOlEXdgCzgBUS6IW29pI/JE=
-X-Received: by 2002:a17:907:940f:b0:acb:107c:7aed with SMTP id
- a640c23a62f3a-ad219291ef8mr278897066b.55.1746782051711; Fri, 09 May 2025
- 02:14:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OA5zzACj"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A71A31FCE8;
+	Fri,  9 May 2025 09:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746782084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hVntwzxyBXjpBTpUWsOOR228EJ/vNqlIhJFXSCTCUsI=;
+	b=OA5zzACjhZAzqxCj4VsWpBQ/16ZwXBfKVU7Hcx9Ug7+fWbdGqMDpd0oT3r4hCWtNMTyx2u
+	8jf7MTAQ/0Sx3rgSaI4U0ur1g9+mt9yqkT76ZSB68uHIL7NYhRxaA+sIypWhLlLsJIVX3L
+	S4u8KxQYMWKgYXD6lgiHZRBXnxYY27Muc6lEV9MmHOX34Opf30NYee9GC6kbz9KKEWf0l4
+	yt1eEV3YFXR1eOKVDKwF7W/4s0cqymMtWiqN471/R41e6I9snWrpCNhpp6b32aTFubm9k6
+	BROGJxdjnBCRnQDO/tQLhLo9uSK8VbZvb0awd+mXwWjNceYM+41v995t4FENzg==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: [PATCH v8 00/11] Add support for MAX7360
+Date: Fri, 09 May 2025 11:14:34 +0200
+Message-Id: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
- <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com> <CAC1kPDM5cN9p-Ri1WUEWt6JNiTZukekJyihYRT=qTwawVT3bFA@mail.gmail.com>
-In-Reply-To: <CAC1kPDM5cN9p-Ri1WUEWt6JNiTZukekJyihYRT=qTwawVT3bFA@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 9 May 2025 11:14:00 +0200
-X-Gm-Features: AX0GCFsZkfwnPNQXlghJCMRfEEC4aqhJqH0caqzt3Q4NG2pzyaumtwa_HZiA0XI
-Message-ID: <CAOQ4uxhQu+Gr8Sn5HbZRyOhDd3MBqN5xKFxZru39LGgk5K-ACw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHrHHWgC/33Qy2rDMBAF0F8JWldFmtGzq/5H6UIvN4I6MrZrU
+ oL/vXKgOMV2l3fQHF3pRobU5zSQl9ON9GnKQy6XGszTiYSzu3wkmmPNBBgIDtzSNnrauqtGxej
+ w1XWlHykAOhOSkN4hqZtdn5p8vatv7zWf8zCW/vt+ycSX6f/exCmjJhnkWprl2KsvZfzMl+dQW
+ rKIEzwogPsKVAW1MxEgoEpxq+CvIhnnBwpWxUpuvXDBM7/TRawKcLGviOVFDmVQ0Xur1FaRq4L
+ c7CuyKo0H5l1jdXRsq6hVEezgd1VVtAOJ0miV0G4V/aDAQRddFZGYYiYyp5vmrzLP8w8Z5u0tX
+ AIAAA==
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746782082; l=5604;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=Pjl3EREY5LiWOhcSvNDn75zyN/l4OFQm6DQH1t57WZg=;
+ b=ef8zZbW4m70jesD6XP8nEOXP+q9ThhCvizPmHWlqwtx37AiXgapg+qEYEa3p/wkZIdhcmZB/1
+ nDN7Hm44j+2CBjHFEY+6JZlzNbedAhmI5h8eQeYRyfZboZbRs0whSkN
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhkeffueegvdekiefhfeejueeukeekgeegjeeghefgvdekveevvdekieetkeelveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpddugedqrhgtvddrqdhlihhnkhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Fri, May 9, 2025 at 9:39=E2=80=AFAM Chen Linxuan <chenlinxuan@uniontech.=
-com> wrote:
->
-> On Fri, May 9, 2025 at 2:34=E2=80=AFPM Chen Linxuan via B4 Relay
-> <devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
-> >
-> > From: Chen Linxuan <chenlinxuan@uniontech.com>
-> >
-> > Add a new FUSE control file "/sys/fs/fuse/connections/*/backing_files"
-> > that exposes the paths of all backing files currently being used in
-> > FUSE mount points. This is particularly valuable for tracking and
-> > debugging files used in FUSE passthrough mode.
-> >
-> > This approach is similar to how fixed files in io_uring expose their
-> > status through fdinfo, providing administrators with visibility into
-> > backing file usage. By making backing files visible through the FUSE
-> > control filesystem, administrators can monitor which files are being
-> > used for passthrough operations and can force-close them if needed by
-> > aborting the connection.
-> >
-> > This exposure of backing files information is an important step towards
-> > potentially relaxing CAP_SYS_ADMIN requirements for certain passthrough
-> > operations in the future, allowing for better security analysis of
-> > passthrough usage patterns.
-> >
-> > The control file is implemented using the seq_file interface for
-> > efficient handling of potentially large numbers of backing files.
-> > Access permissions are set to read-only (0400) as this is an
-> > informational interface.
-> >
-> > FUSE_CTL_NUM_DENTRIES has been increased from 5 to 6 to accommodate the
-> > additional control file.
-> >
-> > Some related discussions can be found at links below.
-> >
-> > Link: https://lore.kernel.org/all/4b64a41c-6167-4c02-8bae-3021270ca519@=
-fastmail.fm/T/#mc73e04df56b8830b1d7b06b5d9f22e594fba423e
-> > Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxhAY1m7ubJ3p-A3rSufw_=
-53WuDRMT1Zqe_OC0bP_Fb3Zw@mail.gmail.com/
-> > Cc: Amir Goldstein <amir73il@gmail.com>
-> > Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> > ---
-> >  fs/fuse/control.c | 155 ++++++++++++++++++++++++++++++++++++++++++++++=
-+++-----
-> >  fs/fuse/fuse_i.h  |   2 +-
-> >  2 files changed, 144 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-> > index f0874403b1f7c91571f38e4ae9f8cebe259f7dd1..6333fffec85bd562dc9e86b=
-a7cbf88b8bc2d68ce 100644
-> > --- a/fs/fuse/control.c
-> > +++ b/fs/fuse/control.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/init.h>
-> >  #include <linux/module.h>
-> >  #include <linux/fs_context.h>
-> > +#include <linux/seq_file.h>
-> >
-> >  #define FUSE_CTL_SUPER_MAGIC 0x65735543
-> >
-> > @@ -180,6 +181,135 @@ static ssize_t fuse_conn_congestion_threshold_wri=
-te(struct file *file,
-> >         return ret;
-> >  }
-> >
-> > +struct fuse_backing_files_seq_state {
-> > +       struct fuse_conn *fc;
-> > +       int backing_id;
-> > +};
->
-> As mentioned in the previous v2 related discussion
-> backing_id is maintained in state because
-> show() of seq_file doesn't accept the pos parameter.
-> But actually we can get the pos in the show() function
-> via the index field of struct seq_file.
-> The softnet_seq_show() function in net-procfs.c are doing this.
-> I'm not really sure if it would be better to implement it this way.
->
+This series implements a set of drivers allowing to support the Maxim
+Integrated MAX7360 device.
 
-For better clarity of the code and maintainability,
-I think that storing backing_id in the state as you did is better.
+The MAX7360 is an I2C key-switch and led controller, with following
+functionalities:
+- Keypad controller for a key matrix of up to 8 rows and 8 columns.
+- Rotary encoder support, for a single rotary encoder.
+- Up to 8 PWM outputs.
+- Up to 8 GPIOs with support for interrupts and 6 GPOs.
 
-> > +
-> > +static void fuse_backing_files_seq_state_free(struct fuse_backing_file=
-s_seq_state *state)
-> > +{
-> > +       fuse_conn_put(state->fc);
-> > +       kvfree(state);
-> > +}
-> > +
-> > +static void *fuse_backing_files_seq_start(struct seq_file *seq, loff_t=
- *pos)
-> > +{
-> > +       struct fuse_backing *fb;
-> > +       struct fuse_backing_files_seq_state *state;
-> > +       struct fuse_conn *fc;
-> > +       int backing_id;
-> > +       void *ret;
-> > +
-> > +       fc =3D fuse_ctl_file_conn_get(seq->file);
->
-> I'm not sure if I should get fc in fuse_backing_files_seq_start here
-> and handle fc as (part of) the seq_file iterator.
-> Or should I get the fc in fuse_backing_files_seq_open
-> and store the fc in the private field of the seq_file more appropriately.
-> I guess the difference isn't that big?
+Chipset pins are shared between all functionalities, so all cannot be
+used at the same time.
 
-The simpler the better.
-I think what you did is fine. I see no reason to change it.
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+Changes in v8:
+- Small changes in drivers.
+- Rebased on v6.15-rc5
+- Link to v7: https://lore.kernel.org/r/20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com
 
-Thanks,
-Amir.
+Changes in v7:
+- Add rotary encoder absolute axis support in device tree bindings and
+  driver.
+- Lot of small changes in keypad, rotary encoder and GPIO drivers.
+- Rebased on v6.15-rc4
+- Link to v6: https://lore.kernel.org/r/20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com
+
+Changes in v6:
+- Rebased on v6.15-rc1.
+- Use device_set_of_node_from_dev() instead of creating PWM and Pinctrl
+  on parent device.
+- Various small fixes in all drivers.
+- Fix pins property pattern in pinctrl dt bindings.
+- Link to v5: https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com
+
+Changes in v5:
+- Add pinctrl driver to replace the previous use of request()/free()
+  callbacks for PORT pins.
+- Remove ngpios property from GPIO device tree bindings.
+- Use GPIO valid_mask to mark unusable keypad columns GPOs, instead of
+  changing ngpios.
+- Drop patches adding support for request()/free() callbacks in GPIO
+  regmap and gpio_regmap_get_ngpio().
+- Allow gpio_regmap_register() to create the associated regmap IRQ.
+- Various fixes in MFD, PWM, GPIO and KEYPAD drivers.
+- Link to v4: https://lore.kernel.org/r/20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com
+
+Changes in v4:
+- Modified the GPIO driver to use gpio-regmap and regmap-irq.
+- Add support for request()/free() callbacks in gpio-regmap.
+- Add support for status_is_level in regmap-irq.
+- Switched the PWM driver to waveform callbacks.
+- Various small fixes in MFD, PWM, GPIO drivers and dt bindings.
+- Rebased on v6.14-rc2.
+- Link to v3: https://lore.kernel.org/r/20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com
+
+Changes in v3:
+- Fix MFD device tree binding to add gpio child nodes.
+- Fix various small issues in device tree bindings.
+- Add missing line returns in error messages.
+- Use dev_err_probe() when possible.
+- Link to v2: https://lore.kernel.org/r/20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com
+
+Changes in v2:
+- Removing device tree subnodes for keypad, rotary encoder and pwm
+  functionalities.
+- Fixed dt-bindings syntax and naming.
+- Fixed missing handling of requested period in PWM driver.
+- Cleanup of the code
+- Link to v1: https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com
+
+---
+Kamel Bouhara (2):
+      mfd: Add max7360 support
+      pwm: max7360: Add MAX7360 PWM support
+
+Mathieu Dubois-Briand (9):
+      dt-bindings: mfd: gpio: Add MAX7360
+      pinctrl: Add MAX7360 pinctrl driver
+      regmap: irq: Add support for chips without separate IRQ status
+      gpio: regmap: Allow to allocate regmap-irq device
+      gpio: regmap: Allow to provide init_valid_mask callback
+      gpio: max7360: Add MAX7360 gpio support
+      input: keyboard: Add support for MAX7360 keypad
+      input: misc: Add support for MAX7360 rotary
+      MAINTAINERS: Add entry on MAX7360 driver
+
+ .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++
+ .../devicetree/bindings/mfd/maxim,max7360.yaml     | 191 +++++++++++++
+ MAINTAINERS                                        |  13 +
+ drivers/base/regmap/regmap-irq.c                   |  99 ++++---
+ drivers/gpio/Kconfig                               |  12 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max7360.c                        | 257 +++++++++++++++++
+ drivers/gpio/gpio-regmap.c                         |  22 +-
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/max7360-keypad.c            | 308 +++++++++++++++++++++
+ drivers/input/misc/Kconfig                         |  10 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max7360-rotary.c                | 192 +++++++++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max7360.c                              | 170 ++++++++++++
+ drivers/pinctrl/Kconfig                            |  11 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max7360.c                  | 214 ++++++++++++++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-max7360.c                          | 186 +++++++++++++
+ include/linux/gpio/regmap.h                        |  18 ++
+ include/linux/mfd/max7360.h                        | 109 ++++++++
+ include/linux/regmap.h                             |   3 +
+ 26 files changed, 1907 insertions(+), 33 deletions(-)
+---
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+change-id: 20241219-mdb-max7360-support-223a8ce45ba3
+
+Best regards,
+-- 
+Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+
