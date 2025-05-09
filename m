@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F13021504F;
-	Fri,  9 May 2025 14:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C360D7462;
+	Fri,  9 May 2025 14:17:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800215; cv=none; b=iiyBZV8Lz/h8oZpESztfOlSOUNPhWlq0isThcdXdR/pXkLaVNU3/4wFL7Mx1GaQOMuEjNptrAvqlYdqe1jtTw0fnt2in6x1GzVvJwoo06PLAvwvxSs1x/Fj+TYnCNAA67KFwON0MRaDUDO3H61rfs7ZOAqJJJUcS1O+O5fSG/lA=
+	t=1746800220; cv=none; b=PgXgIVGvetWfDjZYYdtQ7jcOdXdeIM0birwAzYsMIYmioshd5+HG4JRiMVte/WUN2lW1BkH3R7JmEfYB9qdLMBkGXOuqouDw2AM4eZlYYGkdEfpyswyf0brlKlNCaRmszJsXfDCSDqQqbEhcZ7W8ln8VS+xnefUvsqO/xCC9tWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800215; c=relaxed/simple;
-	bh=uRHUJoqNa5K5mWMaXCiU/RiZB7ZiJa/lTWJxiEmFf94=;
+	s=arc-20240116; t=1746800220; c=relaxed/simple;
+	bh=ESz1GNUULayHykHNVsPHqqtOkerGF8/b4C3SuIOTQ8I=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Eet/vSJlv4U2AcjA9PdXMIrLqd/x+6o515sVtC28OhhyZ7+UyTtza7MQavK1AihLAHJc+t44GhTecEHunVLzS6KG7j9HNVkXNBP9U3UZNi7aMXVKuWPOkLGJhyR+557J6B/+P7Ndr9s4PLpA+JFZFjmxIrfGw9KOBGYtnrO5jX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXO7Vzev; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=GHOmD8SDO7dsTVFQD1QvUcJc1hQ6HJbz6WuShNaVMdG4BGT6fbl3Gx08ScIq/iBcr5k+Pbsxa3EFTunxD28Znfg2yfmoYMzO4SfeV8isH25f/MS8U4AKxW1mtpY6iZCjcDlFceSwWKJNd6rRYms/urSqlom9XMnfO2P156SLKi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQLZtBRA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXO7Vzev"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99232C4CEE4;
-	Fri,  9 May 2025 14:16:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQLZtBRA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01D74C4CEEB;
+	Fri,  9 May 2025 14:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746800213;
-	bh=uRHUJoqNa5K5mWMaXCiU/RiZB7ZiJa/lTWJxiEmFf94=;
+	s=k20201202; t=1746800220;
+	bh=ESz1GNUULayHykHNVsPHqqtOkerGF8/b4C3SuIOTQ8I=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=TXO7VzevGMh3xxBVC9HgXjoevh+cWjCoMJFLZOEl9OqNrT8y38ICVKegnJWrkYfiL
-	 GdtKF/w1ArYeG/uWIGlVFYVJkzaFMrsNyGJP48QfyAH0kMkaUjScgmwAR4k/KxNjW5
-	 jxwA2Jondq7N3GTCS3M/kUHhyg+paPcDea8a2v7AYUQgUhTpntQbBNfFC/ncIQbbeT
-	 JranlvwfoqjcAKLmoanKcN7m0mB1bBPZ7JBkvev6aadCnRTRl2pnQXu9CFBe6Zgbu6
-	 5ecSGbcO0EUeEV2z2MLfCaYpN7pk/dYtkwM/+5gBWwTk/VCd8SwkgaYQg2LHIwcocd
-	 /6fZOTP7vA5mg==
-Date: Fri, 09 May 2025 09:16:51 -0500
+	b=kQLZtBRALHAvtEsHr/KEQlQ9wQCdYj6paMyy/rENs1LHGCwgueMv31iE063RTy3fH
+	 e8StGEkrl+vS+RYJ71N5xx0ztoytFoQjzaeGkKcuNOxCb0kfH0VO/WT8AfaBeu6YXR
+	 ROWrJ5p2zEvVVl1Weat51E3zSceCknUDnLRWej/u1mKZy9C/bwXSBZ72/h+2GPZ2Or
+	 jdGlVeJWWdONPDxtfL1MH6Cph/k9Zr2ghM7/W3vww1B7tHNg8mIjjfPK0fFvrxalyb
+	 p4JtEu8lJ6sNeIzfhLg2Repm8I6+0/TiLzBi+x4BQQh5SCo0qL0Gz8EdUlITWt4BrZ
+	 2YgPskyj/oBrg==
+Date: Fri, 09 May 2025 09:16:58 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,49 +36,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: tudor.ambarus@linaro.org, peter.griffin@linaro.org, 
- andre.draszik@linaro.org, badhri@google.com, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, sre@kernel.org, conor+dt@kernel.org, 
- linux-samsung-soc@vger.kernel.org, alim.akhtar@samsung.com, 
- linux-arm-kernel@lists.infradead.org, krzk+dt@kernel.org, 
- dima.fedrau@gmail.com, linux-kernel@vger.kernel.org
-To: Amit Sunil Dhamne <amitsd@google.com>
-In-Reply-To: <20250508050856.674782-1-amitsd@google.com>
-References: <20250508050856.674782-1-amitsd@google.com>
-Message-Id: <174679984823.3368214.18196649123277436565.robh@kernel.org>
-Subject: Re: [PATCH v1 0/2] Add graph connections between tcpc & fg for
- Pixel 6
+Cc: linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, quentin.schulz@cherry.de, 
+ krzk+dt@kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+In-Reply-To: <20250508150955.1897702-1-heiko@sntech.de>
+References: <20250508150955.1897702-1-heiko@sntech.de>
+Message-Id: <174679984943.3368422.9645324507043955723.robh@kernel.org>
+Subject: Re: [PATCH 0/6] Add two board-families from Theobroma-Systems
 
 
-On Wed, 07 May 2025 22:08:50 -0700, Amit Sunil Dhamne wrote:
-> max77759 Type-C controller supplies VBUS into & out of (depending on the
-> charging mode) the battery in Pixel 6. In order to represent this
-> relationship, we use graph to connect tcpc & fuel gauge.
+On Thu, 08 May 2025 17:09:49 +0200, Heiko Stuebner wrote:
+> Both the Cobra and PP1516 boards are based around the PX30 SoC and can be
+> found with a variety of display options.
 > 
-> Link to USB connector binding that this patchset uses:
->  - https://lore.kernel.org/all/20250507-batt_ops-v2-1-8d06130bffe6@google.com/
+> As new boards should not use the deprecated snps,reset-* properties
+> in the gmac node, I also added a core mdio-node for the gmac and
+> converted the Theobroma Ringneck board over.
 > 
-> This patchset depends on the following:
->  - https://lore.kernel.org/all/20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be/
-> 
-> Amit Sunil Dhamne (2):
->   dt-bindings: power: supply: max17201: add port property
->   arm64: dts: exynos: gs101-pixel-common: add graph property to connect
->     tcpc & fg
-> 
->  .../bindings/power/supply/maxim,max17201.yaml      |  5 +++++
->  .../boot/dts/exynos/google/gs101-pixel-common.dtsi | 14 ++++++++++++++
->  2 files changed, 19 insertions(+)
+> Testing with the new node both before and after converting Ringneck
+> showed the board finding its network both when booting locally and
+> from the tftp/nfs.
 > 
 > 
-> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-> prerequisite-patch-id: 74aa0a6fc4a5c56d870bb15375fad1fe41ffc1e9
-> prerequisite-patch-id: 46f968300dcf5442e12d882ca23168494249d378
-> prerequisite-patch-id: 3ad83a2782819bca215bb267d36a1ff04fe557b2
-> prerequisite-patch-id: 86b5207d8f44255c36b1e600ecdf4f948c5da685
-> prerequisite-patch-id: a15532888ff2572696d9fa6a14775e8ebf590391
+> Heiko Stuebner (6):
+>   arm64: dts: rockchip: add basic mdio node to px30
+>   arm64: dts: rockchip: move reset to dedicated eth-phy node on ringneck
+>   dt-bindings: arm: rockchip: add PX30-Cobra boards from Theobroma
+>     Systems
+>   arm64: dts: rockchip: add px30-cobra base dtsi and board variants
+>   dt-bindings: arm: rockchip: add PX30-PP1516 boards from Theobroma
+>     Systems
+>   arm64: dts: rockchip: add px30-pp1516 base dtsi and board variants
+> 
+>  .../devicetree/bindings/arm/rockchip.yaml     |  18 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   6 +
+>  .../rockchip/px30-cobra-ltk050h3146w-a2.dts   |  39 ++
+>  .../dts/rockchip/px30-cobra-ltk050h3146w.dts  |  39 ++
+>  .../dts/rockchip/px30-cobra-ltk050h3148w.dts  |  39 ++
+>  .../dts/rockchip/px30-cobra-ltk500hd1829.dts  |  58 ++
+>  arch/arm64/boot/dts/rockchip/px30-cobra.dtsi  | 570 +++++++++++++++++
+>  .../rockchip/px30-pp1516-ltk050h3146w-a2.dts  |  39 ++
+>  .../dts/rockchip/px30-pp1516-ltk050h3148w.dts |  39 ++
+>  arch/arm64/boot/dts/rockchip/px30-pp1516.dtsi | 601 ++++++++++++++++++
+>  .../boot/dts/rockchip/px30-ringneck.dtsi      |  22 +-
+>  arch/arm64/boot/dts/rockchip/px30.dtsi        |   6 +
+>  12 files changed, 1473 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148w.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd1829.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra.dtsi
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3146w-a2.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3148w.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516.dtsi
+> 
 > --
-> 2.49.0.987.g0cc8ee98dc-goog
+> 2.47.2
 > 
 > 
 > 
@@ -99,31 +114,26 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: using specified base-commit 92a09c47464d040866cf2b4cd052bc60555185fb
- Deps: looking for dependencies matching 5 patch-ids
- Deps: Applying prerequisite patch: [PATCH v3 1/5] power: supply: correct capacity computation
- Deps: Applying prerequisite patch: [PATCH v3 2/5] power: supply: add support for max77759 fuel gauge
- Deps: Applying prerequisite patch: [PATCH v3 3/5] dt-bindings: power: supply: add max77759-fg flavor
- Deps: Applying prerequisite patch: [PATCH v3 4/5] arm64: defconfig: enable Maxim max1720x driver
- Deps: Applying prerequisite patch: [PATCH v3 5/5] arm64: dts: exynos: gs101-oriole: enable Maxim max77759 fuel gauge
+ Base: attempting to guess base-commit...
+ Base: tags/v6.15-rc1-1-g59529bbe642d (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250508050856.674782-1-amitsd@google.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250508150955.1897702-1-heiko@sntech.de:
 
-arch/arm64/boot/dts/exynos/google/gs101-oriole.dtb: fuel-gauge@36 (maxim,max77759-fg): reg: [[54]] is too short
-	from schema $id: http://devicetree.org/schemas/power/supply/maxim,max17201.yaml#
-arch/arm64/boot/dts/exynos/google/gs101-oriole.dtb: fuel-gauge@36 (maxim,max77759-fg): reg-names: ['m5'] is too short
-	from schema $id: http://devicetree.org/schemas/power/supply/maxim,max17201.yaml#
-arch/arm64/boot/dts/exynos/google/gs101-oriole.dtb: fuel-gauge@36 (maxim,max77759-fg): Unevaluated properties are not allowed ('reg-names' was unexpected)
-	from schema $id: http://devicetree.org/schemas/power/supply/maxim,max17201.yaml#
-arch/arm64/boot/dts/exynos/google/gs101-raven.dtb: fuel-gauge@36 (maxim,max77759-fg): reg: [[54]] is too short
-	from schema $id: http://devicetree.org/schemas/power/supply/maxim,max17201.yaml#
-arch/arm64/boot/dts/exynos/google/gs101-raven.dtb: fuel-gauge@36 (maxim,max77759-fg): reg-names: ['m5'] is too short
-	from schema $id: http://devicetree.org/schemas/power/supply/maxim,max17201.yaml#
-arch/arm64/boot/dts/exynos/google/gs101-raven.dtb: fuel-gauge@36 (maxim,max77759-fg): Unevaluated properties are not allowed ('reg-names' was unexpected)
-	from schema $id: http://devicetree.org/schemas/power/supply/maxim,max17201.yaml#
+arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd1829.dtb: panel@0 (leadtek,ltk500hd1829): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk500hd1829.yaml#
+arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148w.dtb: panel@0 (leadtek,ltk050h3148w): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
+arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3148w.dtb: panel@0 (leadtek,ltk050h3148w): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
+arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w.dtb: panel@0 (leadtek,ltk050h3146w): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
+arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3146w-a2.dtb: panel@0 (leadtek,ltk050h3146w-a2): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
+arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dtb: panel@0 (leadtek,ltk050h3146w-a2): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
 
 
 
