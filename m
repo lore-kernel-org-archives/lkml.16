@@ -1,171 +1,225 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9012F23184E
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002B123184E
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795089; cv=none; b=VV98hGKuXEFGoLhx7bCWDy4AxsUA/LX8DufctRGUnyT4cw/b09jAL3IAzYPzJ49+0IcAGSXkQTEW+czvhZIG86WAmR38i+I3zyotq2J/3BXX1E3It04j/y7461nrWpfr/MCnqbNdJUudsA6VBImXYvQv+g3D6+05tjyhfF5jbFA=
+	t=1746795145; cv=none; b=FcUs1a6NAi8IZjDpjEpK0cT0FdeNOISDcSSC1lYpS2zlz9DnXkl7TocWOA+xadfkdGGgpxLMD4bqtQkPWhGEANpvN1apML7kVQ5CzjxMPXxXGZl0ZkQfjE2aqh10XVxIiKiFgGl0j91W5cGUE0ofaVUpViU6HTNHVX5KBIuGPwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795089; c=relaxed/simple;
-	bh=KQr0CIxMUynjnn6HMhNK32temHKAByuymxyW2dFzLxE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tWd62275i3ebeD+iZiPD1e2XKfaGEyfyYfmdjvYiB53Xa4nQf5AsN3g2ODp92DoysDc209Ecw2XNMLBRlh0ZKExSbhLJ+b6t62LwAqUqpb9EUmClekQhd4BJHPxLOgKkeHKLKS7HrUbfP7E7yqZg6BK0wsi1c9zIgznNta8QryM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3da6fe3c8e7so22286185ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:51:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746795086; x=1747399886;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nKYKV/yff+j42RTk2qZcwb9+n6iBZSUwVqOYZn/7YK0=;
-        b=bS64viLXEhSPrZolYlPwJtq2DD2JEyHC0RwEILIMj/EtF6KQPmgh3hpD3i28jPIM4b
-         srTuKTP29SQe32KgA6iVXfDVMch0IztxxM6mbHNcnisrz4esNaB0sbCllbTLuweOlsv8
-         UPt2FEGrqa8pFg93mgYD1kZbawhrlJkeD2NANhV5S8PomP9x0n4fr41DHk0DToKShZtb
-         sWhZSCBHFnYBIk+tjtFqpIPPlv3UulUybFL9vCV0GR4HPzI5Ulix8b7xD35EsSe0dn+2
-         e7JkMhA6R8gibM9FUR/6n2+rw57P08QatKwQEjlXj3FHHxO9E0hHG6OFLUAYFxi53I1n
-         gifw==
-X-Forwarded-Encrypted: i=1; AJvYcCVeiucXL6ZRcUAIE4QHMUAxlDsxGE9DzkNbxcZFhdbQ9OALu9eDcGCl9Ixk8779Hxb5M/RZjt8HJYsdFE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRlFhDy0rZs62HMj602FvGUMpwL+thTVa6KCIwrSCO7H+PYvkL
-	IH4jpjywJGONiUY22oj0gsQ0yy6XCeS8OIWXUQDth9jGkaCRtY+BGTPsf1Dd34/1XxG32sOX/yy
-	lsJ1BwkkSyuZPk6rIU61Vcukzuc/xrGP2JW/HLkUOylZ4EXNB7oTpU8Y=
-X-Google-Smtp-Source: AGHT+IFYT54CJFYDlmecRr9rSz4DarOdIA1mhDXTAdmBbLSjqE4WZorAtiD9t1T3wFZDmZRYb+cqJgK6Nkj+sDyZYG5aBS9iVnlj
+	s=arc-20240116; t=1746795145; c=relaxed/simple;
+	bh=h/N09pbexzYE+qk2m7nfdm7xlx2BYT1NlbACj5xI9lU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=pu89OnF9y7Dk7g5oiDLWal/lGatSDl1Iipr13Rm8UImdNI/MTMob8YX3HhsXX4WGoMfXS+ivoJ3hvmOM1FadzxUNq2Zk54D8z/8JS+D3ENP65V3h8Z2JHO2RlX5UKjM2iTTm/vnnUu58JXqG04A89O5u5Uql7QKyBn2dIq32SrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VM7q8w0D; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VM7q8w0D"
+Message-ID: <8a6fc2de-a2aa-497c-9938-ff66f18ef097@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746795130;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EganV1pOL8M2SSHAnKvcj8ajVnaVjVE4HDPaqbaAc40=;
+	b=VM7q8w0D43/CF/jbWDcht+Wv3+3/IpTgz+yUNA0IOhhYl9Y8HafuY9ddSULS2rP8cNIdxt
+	uZZmH6HJNHSD2B15ib4Ct41LAN9nwVYM3eo5rVI7XiKT2RPd1mmkVuw5HiiIPl7zBeazb0
+	OKk8dgqKyw+0mzWMTeWRORUVJYX7Sss=
+Date: Fri, 9 May 2025 14:52:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2509:b0:3d4:6ff4:261e with SMTP id
- e9e14a558f8ab-3da7e1645b1mr40251325ab.0.1746795086663; Fri, 09 May 2025
- 05:51:26 -0700 (PDT)
-Date: Fri, 09 May 2025 05:51:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681dfa4e.050a0220.a19a9.0131.GAE@google.com>
-Subject: [syzbot] [kvm?] [kvmarm?] BUG: unable to handle kernel paging request
- in vgic_its_save_tables_v0
-From: syzbot <syzbot+4ebd710a879482a93f8f@syzkaller.appspotmail.com>
-To: catalin.marinas@arm.com, joey.gouly@arm.com, kvm@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
-	suzuki.poulose@arm.com, syzkaller-bugs@googlegroups.com, will@kernel.org, 
-	yuzenghui@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH for-next v2 2/2] RDMA/rxe: Enable asynchronous prefetch
+ for ODP MRs
+To: Daisuke Matsuda <dskmtsd@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+References: <20250503134224.4867-1-dskmtsd@gmail.com>
+ <20250503134224.4867-3-dskmtsd@gmail.com>
+ <dbc1bcdf-144d-44d2-8fc8-77bc2ad58b51@linux.dev>
+ <2a6081b8-1772-4064-97d8-70d636b1868e@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <2a6081b8-1772-4064-97d8-70d636b1868e@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On 09.05.25 14:19, Daisuke Matsuda wrote:
+> 
+> 
+> On 2025/05/06 0:25, Zhu Yanjun wrote:
+>> On 03.05.25 15:42, Daisuke Matsuda wrote:
+>>> Calling ibv_advise_mr(3) with flags other than IBV_ADVISE_MR_FLAG_FLUSH
+>>> invokes asynchronous requests. It is best-effort, and thus can safely be
+>>> deferred to the system-wide workqueue.
+>>>
+>>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+>>
+>> I have made tests with rdma-core after applying this patch series. It 
+>> seems that it can work well.
+>> I read through this commit. Other than the following minor problems, I 
+>> am fine with this commit.
+>>
+>> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+>>
+>>> ---
+>>>   drivers/infiniband/sw/rxe/rxe_odp.c | 81 ++++++++++++++++++++++++++++-
+>>>   1 file changed, 80 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c 
+>>> b/drivers/infiniband/sw/rxe/rxe_odp.c
+>>> index e5c60b061d7e..d98b385a18ce 100644
+>>> --- a/drivers/infiniband/sw/rxe/rxe_odp.c
+>>> +++ b/drivers/infiniband/sw/rxe/rxe_odp.c
+>>> @@ -425,6 +425,73 @@ enum resp_states rxe_odp_do_atomic_write(struct 
+>>> rxe_mr *mr, u64 iova, u64 value)
+>>>       return RESPST_NONE;
+>>>   }
+>>> +struct prefetch_mr_work {
+>>> +    struct work_struct work;
+>>> +    u32 pf_flags;
+>>> +    u32 num_sge;
+>>> +    struct {
+>>> +        u64 io_virt;
+>>> +        struct rxe_mr *mr;
+>>> +        size_t length;
+>>> +    } frags[];
+>>> +};
+>>
+>> The struct prefetch_mr_work should be moved into header file? IMO, it 
+>> is better to move this struct to rxe_loc.h?
+> 
+> This struct is not likely to be used in other files.
+> I think leaving it here would be easier for other developers to 
+> understand because relevant codes are gathered.
+> If there is any specific reason to move, I will do so.
+> 
+>>
+>>> +
+>>> +static void rxe_ib_prefetch_mr_work(struct work_struct *w)
+>>> +{
+>>> +    struct prefetch_mr_work *work =
+>>> +        container_of(w, struct prefetch_mr_work, work);
+>>> +    int ret;
+>>> +    u32 i;
+>>> +
+>>> +    /* We rely on IB/core that work is executed if we have num_sge 
+>>> != 0 only. */
+>>> +    WARN_ON(!work->num_sge);
+>>> +    for (i = 0; i < work->num_sge; ++i) {
+>>> +        struct ib_umem_odp *umem_odp;
+>>> +
+>>> +        ret = rxe_odp_do_pagefault_and_lock(work->frags[i].mr, 
+>>> work->frags[i].io_virt,
+>>> +                            work->frags[i].length, work->pf_flags);
+>>> +        if (ret < 0) {
+>>> +            rxe_dbg_mr(work->frags[i].mr, "failed to prefetch the 
+>>> mr\n");
+>>> +            continue;
+>>> +        }
+>>> +
+>>> +        umem_odp = to_ib_umem_odp(work->frags[i].mr->umem);
+>>> +        mutex_unlock(&umem_odp->umem_mutex);
+>>
+>> Obviously this function is dependent on the mutex lock umem_mutex. So 
+>> in the beginning of this function, it is better to  add 
+>> lockdep_assert_held(&umem_odp->umem_mutex)?
+> 
+> The mutex **must not** be locked at the beginning, so
+> perhaps we can add lockdep_assert_not_held() instead at the beginning,
+> but this one is not used frequently, and we can do without that.
+> 
+> umem_mutex is locked in rxe_odp_do_pagefault_and_lock() in the for loop.
+> The function calls ib_umem_odp_map_dma_and_lock(), which locks the mutex 
+> only when pagefault is successful.
 
-syzbot found the following issue on:
+Sure. umem_mutex is locked in other functions. It is not necessary to 
+use lockdep_assert_held at the beginning of this function.
 
-HEAD commit:    c4e91ea0cc7e Merge branch kvm-arm64/misc-6.16 into kvmarm-..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d634f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2f705363127f7638
-dashboard link: https://syzkaller.appspot.com/bug?extid=4ebd710a879482a93f8f
-compiler:       Debian clang version 20.1.3 (++20250415083350+2131242240f7-1~exp1~20250415203523.103), Debian LLD 20.1.3
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1437c4d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f84768580000
+Zhu Yanjun
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/fa3fbcfdac58/non_bootable_disk-c4e91ea0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7ecf29c15547/vmlinux-c4e91ea0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/59a7b6f25d98/Image-c4e91ea0.gz.xz
+> If ib_umem_odp_map_dma_and_lock() fails, an error is returned and then 
+> the mutex is not locked.
+> 
+> Daisuke
+> 
+>>
+>> Zhu Yanjun
+>>
+>>> +    }
+>>> +
+>>> +    kvfree(work);
+>>> +}
+>>> +
+>>> +static int rxe_init_prefetch_work(struct ib_pd *ibpd,
+>>> +                  enum ib_uverbs_advise_mr_advice advice,
+>>> +                  u32 pf_flags, struct prefetch_mr_work *work,
+>>> +                  struct ib_sge *sg_list, u32 num_sge)
+>>> +{
+>>> +    struct rxe_pd *pd = container_of(ibpd, struct rxe_pd, ibpd);
+>>> +    u32 i;
+>>> +
+>>> +    INIT_WORK(&work->work, rxe_ib_prefetch_mr_work);
+>>> +    work->pf_flags = pf_flags;
+>>> +
+>>> +    for (i = 0; i < num_sge; ++i) {
+>>> +        struct rxe_mr *mr;
+>>> +
+>>> +        mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
+>>> +                   sg_list[i].lkey, RXE_LOOKUP_LOCAL);
+>>> +        if (IS_ERR(mr)) {
+>>> +            work->num_sge = i;
+>>> +            return PTR_ERR(mr);
+>>> +        }
+>>> +        work->frags[i].io_virt = sg_list[i].addr;
+>>> +        work->frags[i].length = sg_list[i].length;
+>>> +        work->frags[i].mr = mr;
+>>> +
+>>> +        rxe_put(mr);
+>>> +    }
+>>> +    work->num_sge = num_sge;
+>>> +    return 0;
+>>> +}
+>>> +
+>>>   static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
+>>>                      enum ib_uverbs_advise_mr_advice advice,
+>>>                      u32 pf_flags, struct ib_sge *sg_list,
+>>> @@ -478,6 +545,8 @@ static int rxe_ib_advise_mr_prefetch(struct ib_pd 
+>>> *ibpd,
+>>>                        u32 flags, struct ib_sge *sg_list, u32 num_sge)
+>>>   {
+>>>       u32 pf_flags = RXE_PAGEFAULT_DEFAULT;
+>>> +    struct prefetch_mr_work *work;
+>>> +    int rc;
+>>>       if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH)
+>>>           pf_flags |= RXE_PAGEFAULT_RDONLY;
+>>> @@ -490,7 +559,17 @@ static int rxe_ib_advise_mr_prefetch(struct 
+>>> ib_pd *ibpd,
+>>>           return rxe_ib_prefetch_sg_list(ibpd, advice, pf_flags, 
+>>> sg_list,
+>>>                              num_sge);
+>>> -    /* Asynchronous call is "best-effort" */
+>>> +    /* Asynchronous call is "best-effort" and allowed to fail */
+>>> +    work = kvzalloc(struct_size(work, frags, num_sge), GFP_KERNEL);
+>>> +    if (!work)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    rc = rxe_init_prefetch_work(ibpd, advice, pf_flags, work, 
+>>> sg_list, num_sge);
+>>> +    if (rc) {
+>>> +        kvfree(work);
+>>> +        return rc;
+>>> +    }
+>>> +    queue_work(system_unbound_wq, &work->work);
+>>>       return 0;
+>>>   }
+>>
+> 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4ebd710a879482a93f8f@syzkaller.appspotmail.com
-
-Unable to handle kernel paging request at virtual address ffef800000000001
-KASAN: maybe wild-memory-access in range [0xff00000000000010-0xff0000000000001f]
-Mem abort info:
-  ESR = 0x0000000096000004
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x04: level 0 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[ffef800000000001] address between user and kernel address ranges
-Internal error: Oops: 0000000096000004 [#1]  SMP
-Modules linked in:
-CPU: 0 UID: 0 PID: 3370 Comm: syz-executor338 Not tainted 6.15.0-rc4-syzkaller-gc4e91ea0cc7e #0 PREEMPT 
-Hardware name: linux,dummy-virt (DT)
-pstate: 61402009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-pc : vgic_its_save_ite arch/arm64/kvm/vgic/vgic-its.c:2145 [inline]
-pc : vgic_its_save_itt arch/arm64/kvm/vgic/vgic-its.c:2248 [inline]
-pc : vgic_its_save_device_tables arch/arm64/kvm/vgic/vgic-its.c:2394 [inline]
-pc : vgic_its_save_tables_v0+0x3e0/0xe38 arch/arm64/kvm/vgic/vgic-its.c:2614
-lr : compute_next_eventid_offset arch/arm64/kvm/vgic/vgic-its.c:2061 [inline]
-lr : vgic_its_save_ite arch/arm64/kvm/vgic/vgic-its.c:2142 [inline]
-lr : vgic_its_save_itt arch/arm64/kvm/vgic/vgic-its.c:2248 [inline]
-lr : vgic_its_save_device_tables arch/arm64/kvm/vgic/vgic-its.c:2394 [inline]
-lr : vgic_its_save_tables_v0+0x37c/0xe38 arch/arm64/kvm/vgic/vgic-its.c:2614
-sp : ffff80008ecd7bf0
-x29: ffff80008ecd7c70 x28: 66f00000123bb4f0 x27: 0000000000000000
-x26: 000000000000002e x25: 00000000fffffdfd x24: ccf0000013a2ac40
-x23: 66f00000123bb438 x22: edf0000013a2a4d0 x21: edf0000013a2a4d0
-x20: cdf0000012236600 x19: efff800000000000 x18: 0000000000000000
-x17: 0000000000000032 x16: ffff800080011d9c x15: 0000000020000300
-x14: 0000000000000000 x13: fff0000015703b08 x12: 0ff0000000000001
-x11: 0000000000000010 x10: 0000000000002000 x9 : 0000000000000000
-x8 : 0000000000000000 x7 : ffff80008021fbf4 x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff800080158ffc
-x2 : ffff80008021fc70 x1 : edf0000013a2a4d0 x0 : 0000000000000000
-Call trace:
- vgic_its_save_ite arch/arm64/kvm/vgic/vgic-its.c:2145 [inline] (P)
- vgic_its_save_itt arch/arm64/kvm/vgic/vgic-its.c:2248 [inline] (P)
- vgic_its_save_device_tables arch/arm64/kvm/vgic/vgic-its.c:2394 [inline] (P)
- vgic_its_save_tables_v0+0x3e0/0xe38 arch/arm64/kvm/vgic/vgic-its.c:2614 (P)
- vgic_its_ctrl arch/arm64/kvm/vgic/vgic-its.c:-1 [inline]
- vgic_its_set_attr+0x544/0x828 arch/arm64/kvm/vgic/vgic-its.c:2777
- kvm_device_ioctl_attr virt/kvm/kvm_main.c:4639 [inline]
- kvm_device_ioctl+0x354/0x418 virt/kvm/kvm_main.c:-1
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __arm64_sys_ioctl+0x18c/0x244 fs/ioctl.c:892
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-Code: 9100412b b2481d69 d344fd2c d378fd69 (386c6a6c) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	9100412b 	add	x11, x9, #0x10
-   4:	b2481d69 	orr	x9, x11, #0xff00000000000000
-   8:	d344fd2c 	lsr	x12, x9, #4
-   c:	d378fd69 	lsr	x9, x11, #56
-* 10:	386c6a6c 	ldrb	w12, [x19, x12] <-- trapping instruction
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
