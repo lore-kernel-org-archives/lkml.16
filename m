@@ -1,63 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAF1220F30;
-	Fri,  9 May 2025 21:18:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4796A25FA34;
+	Fri,  9 May 2025 21:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746825500; cv=none; b=Vbh2UP74sFfbE5cA3cxXp1O5ZqPMONmCbqSZS1x5oJKq0nzrO7Mpc0E+3CRUE3UVp8Xc7JBilk63z16L0l5eUwH8LeRALf7njmFJVr3/HIy4yqAyizHBsq9rb5DGywXWcQUnKomK1vVapbh8tmrA/5GD89UYAgWTqyt/MmiY23U=
+	t=1746825566; cv=none; b=hPwXtSYk65WnSGPhsvNW+eDMiKYoGBmPRG/yKUEnqJLIRxuXwT0L9o+uTG0IYvAZL1PVZXIOpeYXgIhF9FGz7/iGuGTOe/MkVWzlsFL8Z2eL4wWo2o+5sYjpL+vSTQEeg75UhhnLz/C14jb+HgnYcCpxTf+EwPGb+RcKrtz16JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746825500; c=relaxed/simple;
-	bh=KklXG3/pmNj7Q72o6zPjuVP/skTgmTtjxrJiU77O/Lw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=A+F8TpmCc7SaI5cYuwJwr9tnxb+zYPJCqO7N/+Q7GRaD6FKkqoGOY2TI4RJHdKDgXU9r7hjBEXq3lUKkASTD68mhELY9/sLx63zCg6yPqgjF+JYQCdU2nnbgdDG2x+1TK6PCPpn4pDgyGJCSLc8gtASy4nc4lsDXR/vtBjWHJ9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8qb40o5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746825566; c=relaxed/simple;
+	bh=vcg5jKA0QZzNkvVa/o7NUqxLYKijZ1UehBCsGJ6Hd6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hh3DLXJKUkQDNvUUguwVWQ54nvD2vHJ4qh0EANdpB5dksBjgkeBrWPNAFG4f9aQSdlaXHBeKAhuFTkTuozcJYqakrI/kot+2tqEhe0ORRDiaCIORN/YA8KnorRHplYtREPuK//ErwAksUrg/D/cqKGQabzThDL+LSHkBULvAw7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gEWNpGaV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8qb40o5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A08C4CEE4;
-	Fri,  9 May 2025 21:18:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gEWNpGaV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F5B0C4CEE4;
+	Fri,  9 May 2025 21:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746825499;
-	bh=KklXG3/pmNj7Q72o6zPjuVP/skTgmTtjxrJiU77O/Lw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=U8qb40o5P1jEZsjZr9saWIkoF4sZCTVFoM9QzIM7a2r3VbC4MkVI+ITIra5OTHiWl
-	 3gS9lkhulMmcOEZsZVkZeapYka/OFvu0tDB5lkoxJeFTVZQhAyD/A4I4ZxfHmUQwF9
-	 mlKfgON1dEQLiZP2m0iFgWWNeaKn+oh9FqvHy6QKhRdZRChTzWw/VU/WG2EtzQPR2x
-	 D7AdDmvOvHrMG3PfAh5aV6CX3XPigA83OH4Y5hXEj//wcFr9fNsecOtJNj6Nxhpf4A
-	 kQ/3uJW0XqE9pZWI8YchgysI43SCf3j1FEk16SA+7H5VdRWZEo0MyNIOFcii6baxpS
-	 64yGvtBXt12VQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFC639D61FF;
-	Fri,  9 May 2025 21:18:58 +0000 (UTC)
-Subject: Re: [GIT PULL] Rust fixes for 6.15 (2nd)
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250509201458.872943-1-ojeda@kernel.org>
-References: <20250509201458.872943-1-ojeda@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250509201458.872943-1-ojeda@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.15-2
-X-PR-Tracked-Commit-Id: 5595c31c370957aabe739ac3996aedba8267603f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0e1329d4045ca3606f9c06a8c47f62e758a09105
-Message-Id: <174682553731.3813529.8350704385191414102.pr-tracker-bot@kernel.org>
-Date: Fri, 09 May 2025 21:18:57 +0000
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=k20201202; t=1746825565;
+	bh=vcg5jKA0QZzNkvVa/o7NUqxLYKijZ1UehBCsGJ6Hd6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gEWNpGaV4/PJPa53z0lW6l0selJErRz2OemA8W0wotl+7x43PbSIFfZ/6Gm60t8be
+	 DVrNEQOr0hKAu8yRxXHBt+46zMQ4Oq4f6PWabAbct+y0+4YDfPenciFgInJwle5/Gq
+	 r33WnbEs1ryLXjJd8FtiMU663Wp5ozxNA9jtm8l9XfcW3OunYDAmwjdZbxZ4tVIsTS
+	 flKDCItNH7d1Qz9Oc2iO+hTaDVIAT+GNVuRlxn1+7DNO7+cD/VDMaJRppUt3BnDMMV
+	 PZVzX/OZF6fgkRowLD32qUOMIjSOiYbUF7P6pvwulKH4SKsYJG1BoMHzMVr5a6TJOz
+	 NpTqFei3QwcMA==
+Date: Fri, 9 May 2025 23:19:22 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: Waiman Long <longman@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Xi Wang <xii@google.com>
+Subject: Re: [PATCH v2] cgroup/cpuset: Extend kthread_is_per_cpu() check to
+ all PF_NO_SETAFFINITY tasks
+Message-ID: <aB5xWuHkwh1iGERu@pavilion.home>
+References: <20250508192413.615512-1-longman@redhat.com>
+ <aB4AmUtEM-qQ1Xoa@localhost.localdomain>
+ <aB47y64qlbsnql07@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aB47y64qlbsnql07@slm.duckdns.org>
 
-The pull request you sent on Fri,  9 May 2025 22:14:57 +0200:
+Le Fri, May 09, 2025 at 07:30:51AM -1000, Tejun Heo a écrit :
+> Hello,
+> 
+> On Fri, May 09, 2025 at 03:18:17PM +0200, Frederic Weisbecker wrote:
+> ...
+> > But this makes me realize I overlooked that when I introduced the unbound kthreads
+> > centralized affinity.
+> > 
+> > cpuset_update_tasks_cpumask() seem to blindly affine to subpartitions_cpus
+> > while unbound kthreads might have their preferences (per-nodes or random cpumasks).
+> > 
+> > So I need to make that pass through kthread API.
+> 
+> I wonder whether it'd be cleaner if all kthread affinity restrictions go
+> through housekeeping instead of cpuset modifying the cpumasks directly so
+> that housekeeping keeps track of where different classes of kthreads can run
+> and tell e.g. workqueue what to do.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.15-2
+Good suggestion. "isolated_cpus" should indeed be handled by housekeeping
+itself. More precisely housekeeping_cpu(HK_TYPE_DOMAIN) should be updated
+through some housekeeping_update() function to union the boot 'isolcpus='
+and the isolated mask of cpusets partition. Waiman tried that at some point.
+This will require some synchronization against the readers of HK_TYPE_DOMAIN.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0e1329d4045ca3606f9c06a8c47f62e758a09105
+It's beyond the scope of the kthreads affinity issue but yes that's all
+planned within the cpusets integration of nohz_full.
 
-Thank you!
+Thanks.
+
+
+> 
+> Thanks.
+> 
+> -- 
+> tejun
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Frederic Weisbecker
+SUSE Labs
