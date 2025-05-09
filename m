@@ -1,68 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43CCA41
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAF1220F30;
+	Fri,  9 May 2025 21:18:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746825449; cv=none; b=JDRiR956WtMwgDXc8ACrt2qo7ioyGNqOkmrHO2kCtPLNI9vibVVpo0MGgOQ7ydK8NGzAAwqpDb0jyFxVhx8iHBFTQ6vN7Nn2bi2bK2b5VZnOVeHiIMbEB1OmCVtJwRHHApd1ZEuT1HMtYXn3p6KLg09gxXeB0k8+fGpDxlElEGc=
+	t=1746825500; cv=none; b=Vbh2UP74sFfbE5cA3cxXp1O5ZqPMONmCbqSZS1x5oJKq0nzrO7Mpc0E+3CRUE3UVp8Xc7JBilk63z16L0l5eUwH8LeRALf7njmFJVr3/HIy4yqAyizHBsq9rb5DGywXWcQUnKomK1vVapbh8tmrA/5GD89UYAgWTqyt/MmiY23U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746825449; c=relaxed/simple;
-	bh=7sC1QN1fMZHI/93BJYZBh6BWm9rOd2/A9fAV0QjBoY4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qhnboN8LhpouPhTwlWCZx3LWsAbq1Al/LZDebtTceDlCM0lIeSW1wVUFLxq9lmzLjxlKvqa2D8Dpyw4Y+TLeg2saJfAtBK9wUdONc4CGdJBS+nsqm4aW7LtHKG1SvWjcCUqjnWd0IP44zo0LGPNZwhnQfozQKpFSBGMQT3AoXCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fhg5n7uM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746825500; c=relaxed/simple;
+	bh=KklXG3/pmNj7Q72o6zPjuVP/skTgmTtjxrJiU77O/Lw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=A+F8TpmCc7SaI5cYuwJwr9tnxb+zYPJCqO7N/+Q7GRaD6FKkqoGOY2TI4RJHdKDgXU9r7hjBEXq3lUKkASTD68mhELY9/sLx63zCg6yPqgjF+JYQCdU2nnbgdDG2x+1TK6PCPpn4pDgyGJCSLc8gtASy4nc4lsDXR/vtBjWHJ9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8qb40o5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fhg5n7uM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2C0DC4CEE4;
-	Fri,  9 May 2025 21:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746825448;
-	bh=7sC1QN1fMZHI/93BJYZBh6BWm9rOd2/A9fAV0QjBoY4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fhg5n7uMeHlZypqQIqYn9U5IRKKz6PBQ24S8zlTDL5Jt901kRzl8jLLjzQEt1UVWq
-	 p3QSsFBI2UzheAnLeH7Y578p0qpOA+NKkpZxHcZtvBNsBewxBM+XkyOm5OtapAHBWj
-	 ya3VWqCu7k4Ben+s2XZfWz3qVr21Zdaj4p8Z8mdY=
-Date: Fri, 9 May 2025 14:17:27 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Boian Bonev <bbonev@devuan.org>
-Cc: linux-kernel@vger.kernel.org, Balbir Singh <bsingharora@gmail.com>, Yang
- Yang <yang.yang29@zte.com.cn>, Wang Yaxin <wang.yaxin@zte.com.cn>, Kun
- Jiang <jiang.kun2@zte.com.cn>, xu xin <xu.xin16@zte.com.cn>
-Subject: Re: Bug 220102 - struct taskstats breaks backward compatibility
- since version 15
-Message-Id: <20250509141727.19b616d1c4a549d01656e5dd@linux-foundation.org>
-In-Reply-To: <5c176101cd5fd8e629b18380bf7678ea6c6a5d63.camel@devuan.org>
-References: <5c176101cd5fd8e629b18380bf7678ea6c6a5d63.camel@devuan.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8qb40o5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A08C4CEE4;
+	Fri,  9 May 2025 21:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746825499;
+	bh=KklXG3/pmNj7Q72o6zPjuVP/skTgmTtjxrJiU77O/Lw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=U8qb40o5P1jEZsjZr9saWIkoF4sZCTVFoM9QzIM7a2r3VbC4MkVI+ITIra5OTHiWl
+	 3gS9lkhulMmcOEZsZVkZeapYka/OFvu0tDB5lkoxJeFTVZQhAyD/A4I4ZxfHmUQwF9
+	 mlKfgON1dEQLiZP2m0iFgWWNeaKn+oh9FqvHy6QKhRdZRChTzWw/VU/WG2EtzQPR2x
+	 D7AdDmvOvHrMG3PfAh5aV6CX3XPigA83OH4Y5hXEj//wcFr9fNsecOtJNj6Nxhpf4A
+	 kQ/3uJW0XqE9pZWI8YchgysI43SCf3j1FEk16SA+7H5VdRWZEo0MyNIOFcii6baxpS
+	 64yGvtBXt12VQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFC639D61FF;
+	Fri,  9 May 2025 21:18:58 +0000 (UTC)
+Subject: Re: [GIT PULL] Rust fixes for 6.15 (2nd)
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250509201458.872943-1-ojeda@kernel.org>
+References: <20250509201458.872943-1-ojeda@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250509201458.872943-1-ojeda@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.15-2
+X-PR-Tracked-Commit-Id: 5595c31c370957aabe739ac3996aedba8267603f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0e1329d4045ca3606f9c06a8c47f62e758a09105
+Message-Id: <174682553731.3813529.8350704385191414102.pr-tracker-bot@kernel.org>
+Date: Fri, 09 May 2025 21:18:57 +0000
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 09 May 2025 21:35:59 +0300 Boian Bonev <bbonev@devuan.org> wrote:
+The pull request you sent on Fri,  9 May 2025 22:14:57 +0200:
 
-> Hello!
-> 
-> Since version 15 (TASKSTATS_VERSION=15) the new layout of the structure
-> adds fields in the middle of the structure, rendering all old software
-> incompatible with newer kernels and software compiled against the new
-> kernel headers incompatible with older kernels.
+> https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.15-2
 
-Yikes.  Yes, we did change the versioning but such an incompatibility
-seems undesirable and unnecessarily disruptive.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0e1329d4045ca3606f9c06a8c47f62e758a09105
 
-> I think that change has to be reverted and the added fields moved to
-> the end of the structure. Also bumping the version to 16 after the
-> change is a good idea in order for the userspace software to be able to
-> distinguish the different formats.
+Thank you!
 
-Yes, please send along the patch.  Include the suitable Fixes: and we
-can backport this into the affected -stable kernels.
-
-> https://bugzilla.kernel.org/show_bug.cgi?id=220102
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
