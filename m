@@ -1,27 +1,27 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C4826FD9E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7911B26FDA8
 	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746774419; cv=none; b=o/9hJypr6n33GL6PYD2DcfGR4ZCwd0+KNLEkqmRt25aerz5dMF7Xq055mxes8f/xXx/fQh87T55h6WtoxGXXw619Z4QdGhfIYpSoUZ4oTXYbphGre+hOvuDrOYusi3Ku0pT/8cQdYtz6AiyF5WFM94i9GEjScdsDJ5/cQ1oy6Jg=
+	t=1746774419; cv=none; b=uwq+7MsQmqOO5NtVJD2X+qvx1ThqK3sg/DKIIq9ifKUzLHcNVkpkHyQKj3O1KDeprwOKLWTwapRrJYmu3sGrtPXftbYCPZsNsNfidjcZNBYWu9XSB6IlrA2azSUXaWHqP1Vtun/Lr2GY86uHBdOM/Ot4eQUR2YMt/4pYNFvZTJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746774419; c=relaxed/simple;
-	bh=EZlt0cvhp3NrCL+YaqANcp2crpQa/wInckL0SK34i5E=;
+	bh=ty5BFu9gW6qxlgzjuzhCGDP4r6MgxNpDMaV/Ale1lok=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GJ10P8EkfCwONKWDBxxo7wTifgu4ELyBsAYlronGgYhZFXb8bgPNFD+mqsYJ8gt2jypTyDhaeTn+P6TenTyyElhoQ66+xchevm47umKsV7E3KazHKH8baHob9epVALC2Vc6NHwLFJRLnXOYq0HWZABxE0JhGzrFMYS1M9Bmox6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=m9T5Z05kSOJWu4tzrLeP072MKA72UYTnvZ9jZbVXsEbFf+03R5XVwNtnVmBBt8U7bFW+wnXNReWITYO42SNv269LdKZcmF7hhsvhiJytSkYEdtJnppYFXYJ/ARuW+r+KZnAqsqGFoRb+pTImbn6Yq/ql1kx+mJHh2497xusiwrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zv0R80RSRz4f3m6t
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:06:28 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zv0R95CXtz4f3jcl
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:06:29 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 246621A07BD
+	by mail.maildlp.com (Postfix) with ESMTP id 41F251A1C25
 	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:06:54 +0800 (CST)
 Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
-	by APP3 (Coremail) with SMTP id _Ch0CgAnesR4qR1ofcXLLg--.60961S9;
+	by APP3 (Coremail) with SMTP id _Ch0CgAnesR4qR1ofcXLLg--.60961S10;
 	Fri, 09 May 2025 15:06:53 +0800 (CST)
 From: Chen Ridong <chenridong@huaweicloud.com>
 To: akpm@linux-foundation.org,
@@ -46,9 +46,9 @@ To: akpm@linux-foundation.org,
 Cc: linux-kernel@vger.kernel.org,
 	lujialin4@huawei.com,
 	chenridong@huaweicloud.com
-Subject: [RFC next 1/5] user_namespace: add children list node
-Date: Fri,  9 May 2025 06:54:13 +0000
-Message-Id: <20250509065417.147515-8-chenridong@huaweicloud.com>
+Subject: [RFC next 2/5] usernamespace: make usernamespace rcu safe
+Date: Fri,  9 May 2025 06:54:14 +0000
+Message-Id: <20250509065417.147515-9-chenridong@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250509065417.147515-1-chenridong@huaweicloud.com>
 References: <20250509065417.147515-1-chenridong@huaweicloud.com>
@@ -59,10 +59,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAnesR4qR1ofcXLLg--.60961S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF1Uur13ZFy8ZFWxtr1kXwb_yoW8uFy3pF
-	ZIyr9xGws3Jr1qkryUWan5u34xWw48JF17Ca4v934rtryagFy0kr4UC3Wj9r15Xr48GrWY
-	qFWjgrs0y3yUW37anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgAnesR4qR1ofcXLLg--.60961S10
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4rKw1DZryrKF43Kr4UJwb_yoW8CFyrpF
+	92kr9xGa1xJr1qkw1UZFs5u34fWr4FqFyUCa1ku3s5tFyagryjyr4xAa48Zr15Gr48G3y3
+	XFWjgrWDKr4UW37anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -81,65 +81,60 @@ X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
 From: Chen Ridong <chenridong@huawei.com>
 
-Add the 'children' and 'ns_node' fields to the user_namespace structure.
-This addition enables the user_namespace to locate all of its nested
-child namespaces efficiently.
+To ensure a safe top-down iteration, the user namespace should be made
+RCU safe. This way, it is safe to iterate over all the child namespaces
+of a root namespace while holding an RCU read lock.
 
 Signed-off-by: Chen Ridong <chenridong@huawei.com>
 ---
- include/linux/user_namespace.h | 2 ++
- kernel/user.c                  | 2 ++
- kernel/user_namespace.c        | 4 ++++
- 3 files changed, 8 insertions(+)
+ include/linux/user_namespace.h |  1 +
+ kernel/user_namespace.c        | 12 ++++++++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
-index a0bb6d012137..7b1e180227c8 100644
+index 7b1e180227c8..d84b2703caab 100644
 --- a/include/linux/user_namespace.h
 +++ b/include/linux/user_namespace.h
-@@ -78,6 +78,8 @@ struct user_namespace {
- 	struct uid_gid_map	gid_map;
- 	struct uid_gid_map	projid_map;
+@@ -80,6 +80,7 @@ struct user_namespace {
  	struct user_namespace	*parent;
-+	struct list_head	ns_node;
-+	struct list_head	children;
+ 	struct list_head	ns_node;
+ 	struct list_head	children;
++	struct rcu_head		rcu;
  	int			level;
  	kuid_t			owner;
  	kgid_t			group;
-diff --git a/kernel/user.c b/kernel/user.c
-index f46b1d41163b..3a712a6894fd 100644
---- a/kernel/user.c
-+++ b/kernel/user.c
-@@ -65,6 +65,8 @@ struct user_namespace init_user_ns = {
- 			.nr_extents = 1,
- 		},
- 	},
-+	.ns_node = LIST_HEAD_INIT(init_user_ns.ns_node),
-+	.children = LIST_HEAD_INIT(init_user_ns.children),
- 	.ns.count = REFCOUNT_INIT(3),
- 	.owner = GLOBAL_ROOT_UID,
- 	.group = GLOBAL_ROOT_GID,
 diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 682f40d5632d..b570536934cc 100644
+index b570536934cc..cbe8f96c3e60 100644
 --- a/kernel/user_namespace.c
 +++ b/kernel/user_namespace.c
-@@ -135,6 +135,9 @@ int create_user_ns(struct cred *new)
- 	ns->level = parent_ns->level + 1;
- 	ns->owner = owner;
- 	ns->group = group;
-+	INIT_LIST_HEAD(&ns->children);
-+	INIT_LIST_HEAD(&ns->ns_node);
-+	list_add_tail_rcu(&ns->ns_node, &parent_ns->children);
- 	INIT_WORK(&ns->work, free_user_ns);
- 	for (i = 0; i < UCOUNT_COUNTS; i++) {
- 		ns->ucount_max[i] = INT_MAX;
-@@ -217,6 +220,7 @@ static void free_user_ns(struct work_struct *work)
+@@ -196,6 +196,15 @@ int unshare_userns(unsigned long unshare_flags, struct cred **new_cred)
+ 	return err;
+ }
+ 
++static void __free_user_ns(struct rcu_head *p)
++{
++	struct user_namespace *ns =
++		container_of(p, struct user_namespace, rcu);
++
++	list_del_rcu(&ns->ns_node);
++	kmem_cache_free(user_ns_cachep, ns);
++}
++
+ static void free_user_ns(struct work_struct *work)
+ {
+ 	struct user_namespace *parent, *ns =
+@@ -220,10 +229,9 @@ static void free_user_ns(struct work_struct *work)
  		kfree(ns->binfmt_misc);
  #endif
  		retire_userns_sysctls(ns);
-+		list_del_rcu(&ns->ns_node);
+-		list_del_rcu(&ns->ns_node);
  		key_free_user_ns(ns);
  		ns_free_inum(&ns->ns);
- 		kmem_cache_free(user_ns_cachep, ns);
+-		kmem_cache_free(user_ns_cachep, ns);
++		call_rcu(&ns->rcu, __free_user_ns);
+ 		dec_user_namespaces(ucounts);
+ 		ns = parent;
+ 	} while (refcount_dec_and_test(&parent->ns.count));
 -- 
 2.34.1
 
