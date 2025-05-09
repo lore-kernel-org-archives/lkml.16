@@ -1,143 +1,101 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF1F1EF1D;
-	Fri,  9 May 2025 15:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1276D22D9F1
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803898; cv=none; b=qdsHMHXq1/Kpt4n86C/WgnPi7mwft3uIsFEhBYi70YCu/H2e1ywFjECe7hu42zcNBSkRaya39GGGCN+ogScr28CMpMnbULQkI8Y0Nc6z/BtUcu2FF52552HvbBwg96IVbICZr8kHMWrawKnZNapLaSh781oTv2Z9VVi2+NMR4Ew=
+	t=1746803904; cv=none; b=JKenmExNfL3AsBtZsxst3neNi5YeOPhew/AQpHXKlHxnjvcPEF71+oL/2Voxp3U7Aw9ae7pd8dzzigx/byfkQF4HvpXyUOt5KS78vBicLeS4PNSp7LN/+tMYboubiz6PPtria6Jgya/BMha3/kExnKeyt9Tkd+TSaYSEVzJg7X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803898; c=relaxed/simple;
-	bh=zFs9FyqSYNWTTOl2FSQqB+1KiLEfeO8gmMhFdqfdMjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ElRAldNSVGsskPFikqQTnhCV+IriLoyH36rzJGvYZWJvkbq2uDXQv45a7chwUFbTjSTw+2fdBmW8HSJOQN2gf5L0zWJx8+nYl47cCrdjsZe7CZ2vSeqqzXKKOwuW0xqw8eFnVRODsDO3fJH4kQ9xc3yrtkFcf82dwvbeI7sBp2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D3YILWaW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746803904; c=relaxed/simple;
+	bh=Ou/2c7O9OYGBPIiwgyVhzmRbde4rIGuem3JOLe7v0rU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OYBP/0Sx3w6Vyc0lkpN15BKHqL4zpqvtzPDvYUdl0NTUZz1JBPXJIwLKp/+fzhGM6goylbDyE0UTNnjVuA2ekxaPH+4pTLXlTA2+P3USyRVCKU9+m+ihw9O8OYLb0HBTV879qiKnySLyLsP+YlPH1gHfQs12DRd6Sa9OQIR3+3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mr3frn6T; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D3YILWaW"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549ECOZ7029546;
-	Fri, 9 May 2025 15:18:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=QpyZyZ
-	hCsh+6/vpeB1guIScXx44e2BHdQWV0S+AgPE8=; b=D3YILWaWy9L68YHZYMBc2f
-	5NbcsEUpxmDZNCKurhTrNURH5VsHcZ3mpMXemvp+LGpk9RY/FqQRnYspBGBMYdox
-	x64CMKN2I8fDSM/UK6vlQH0Bou6AAkPFTUyY/xlxh056ZwlwpUg6ZlO72rWXWy8H
-	OcOBQk+3vOmbOCCHC4yzzwsRJpSgcCEZURyzHsz2DYJ8RSofQzhf8eZA3p1Qjtsd
-	z/VEUKflw9zgBkrwy3hMf1xVFejuooboRUnxruGUtBbstFdQ/2yLgIiERy35r28i
-	QvSF8DZ2sNXuhlm/Z2XlNV9YfheN1FKWBSVTN3alBwvCNcstMioMIeCR1WpvDH1Q
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46h6k0m72r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 15:18:05 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 549CvmYv002738;
-	Fri, 9 May 2025 15:18:04 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46dxfpc1p5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 15:18:04 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 549FI33L55902552
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 9 May 2025 15:18:03 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A5FE58066;
-	Fri,  9 May 2025 15:18:03 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A8FB158062;
-	Fri,  9 May 2025 15:18:01 +0000 (GMT)
-Received: from [9.87.147.183] (unknown [9.87.147.183])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  9 May 2025 15:18:01 +0000 (GMT)
-Message-ID: <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
-Date: Fri, 9 May 2025 17:18:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mr3frn6T"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b170c99aa49so1522390a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746803902; x=1747408702; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ou/2c7O9OYGBPIiwgyVhzmRbde4rIGuem3JOLe7v0rU=;
+        b=mr3frn6TCu4mRa8zW0nkmEP+lhzH9n2PBdYaA34uB1VUx2xzBGrKYE4CZoNisR1kgG
+         TkhL3kAvR6bPMoRfPbPRcQHxGDDzq18jwfe7dZZRRUJiXEsTZL3EuCNMWvHKzJDdvIx+
+         Cl8YAAqls6TvVsB1szhNK4R+Z8Vc/iSAdZJd+DyQ1joJL11GbAt9LFOOJQNeuFHLJMsF
+         KDLni4LwhcUPCE5BFxO/hGS79uyq3Fh6pt/UrP5xuMGdgxmVBu8mOIoL1InN6Vmw7QAm
+         A8rtnYqkVu8W4OBY/eOv2oaAh+azEucIWyWVZRDlHT0jFbCf8c/vidnxVD8vQrt8CB4N
+         WRBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746803902; x=1747408702;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ou/2c7O9OYGBPIiwgyVhzmRbde4rIGuem3JOLe7v0rU=;
+        b=SW5o6dKAgFQ4EIqk4dzXcIYb/OM0a+9OwnnXF4EmxWGUlxFs8q+lxwZZORfFmozD+/
+         8uts6iY63MPfA19GQjAEqLjCBK1NtvU3R8KrO5ASE8llD/UdN2tDVmmp5WAW31lL+G7R
+         oXe0o3ic2NLaHxbdLfie+A7/4+3x15431x6i/npR0EofWhkxNW4J6AZqCcd/HKR82CBU
+         uMUYMRnCkN3FwaC6Vy6IY5Ku/cVH49dbKMe75atCsCdaAKp+5lMbqY9r4h8QF3iZ9Iye
+         TfO43xtKMIMFQ8OjWyY+HM360ihQlvPAfL6NqdKJli/pG5TpV8n1wheMgsYnQBxT81cg
+         ppHg==
+X-Gm-Message-State: AOJu0YwG25dA1aw//ut5XwJLF/i0fsfHII+fU5KyirX52wGwi6RY6Q6X
+	sLV9jo7ZPam/73DDQYyRP0I3Y+JkwWOlzH0Rf/mw5V5cJMibjtaC9nYzdEYSc/0oVNOIp+I+jCe
+	Q58Wo3LFMUphcLIDCN380TGA57Dyvhpmq
+X-Gm-Gg: ASbGncvHVLBHeThfPDktme6mCP7ua77gw0Fgq/tl7CbhHF1tZ+wgb/hSAlTP91MyZCu
+	lqICkOM8ebs9tP+nl1ekIqavVNoE7pw6cAstgRZmhJ8OLmi1dBFO+5ZqLRCRIWYUI+p3vp0UF8M
+	FRtYEakU4eamq7MYjCDS5j4Q==
+X-Google-Smtp-Source: AGHT+IFavTRYJqKP/p79qLIdhsNGre72UoO/i/0KpCkj9eOThDgcoZRUeIOi7XoTXVTZhWIKhYPNnn/KfxiIv4JMnHg=
+X-Received: by 2002:a17:903:2346:b0:215:bc30:c952 with SMTP id
+ d9443c01a7336-22fc8b1b2e4mr48477415ad.6.1746803902226; Fri, 09 May 2025
+ 08:18:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org
-References: <20240902105656.1383858-1-senozhatsky@chromium.org>
- <20240902105656.1383858-11-senozhatsky@chromium.org>
- <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
- <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
-Content-Language: en-US
-From: Zaslonko Mikhail <zaslonko@linux.ibm.com>
-In-Reply-To: <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: YCRMyBXqOj2zZLWo7EFqIn6xcclGi_mQ
-X-Proofpoint-ORIG-GUID: YCRMyBXqOj2zZLWo7EFqIn6xcclGi_mQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE0OSBTYWx0ZWRfX3o+vXU8ldk5O RfrWfi3VdML5/kOaKq/Jl+RwwnF7FGvJR3JC4SBm6ckj3tXQfTckEiETcVMIoIaoloxKwfetr8l C2WT0EkHwhegTFcIBDbkE/JuuwhLExwr+24bONX+IRtKTnHvcP2LKTK680peMmQwRYQX+ki7Xzm
- sROU3X0s8q1vbRcyeWWpI9dB6KXUs59WAvjIitBP3O5uGP2bT9woGCAYjnygg2U2q884+zgGlqA O5+rSN2OtT5wbL5Uaz/5EdqlWMmkXp3WqC+RKjx1zh2l7hkdkpJMrA2aZdXyIF49CaYtEXnwPao qvUfZfuWzwPSTXCGSRpc0nCnbQpK8mQ3AcDNLP+ao0TwmUB5AlF8S7sRxmHTzRz9I537YKlLZMu
- axJABUYiKvLm5C0yRFF6lXzciBiMDhZf7pwK0uOfA+djLB8lTkku8XpjMkBMop3lb6K9asGB
-X-Authority-Analysis: v=2.4 cv=OcCYDgTY c=1 sm=1 tr=0 ts=681e1cad cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UTuKZRxF6MC2NIc7D_4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_06,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 priorityscore=1501 adultscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090149
+References: <CALaQ_hp+TAgH6TFOy_DB0YpRYiDKNYH7LSL4nf03c1XWbrHFxw@mail.gmail.com>
+ <6fca28e476396963581acf511999086b71d2ec4f.camel@perches.com>
+In-Reply-To: <6fca28e476396963581acf511999086b71d2ec4f.camel@perches.com>
+From: Nathan Royce <nroycea+kernel@gmail.com>
+Date: Fri, 9 May 2025 10:17:44 -0500
+X-Gm-Features: ATxdqUEPJMRnIEytEY4XRzctRBogO7mZ18tPNCRM_UKEzoO03OVPscaAtbz7gJ8
+Message-ID: <CALaQ_hopH1XSi_wNMALdq=yzXVeuK+Bm+Qif2yLN2LCTtTWNgg@mail.gmail.com>
+Subject: Re: "scripts/get_maintainer.pl" - "Bad divisor in main::vcs_assign: 0"
+To: Joe Perches <joe@perches.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, May 9, 2025 at 7:12=E2=80=AFAM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2025-05-09 at 03:18 -0500, Nathan Royce wrote:
+> > Commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> >
+> > The result from `./scripts/get_maintainer.pl -f scripts/config `.
+>
+> Dunno
+>
+> :linus current
+> -------------------------
+> $ git log --oneline -1
+> 9c69f8884904 (HEAD -> master, origin/master, origin/HEAD) Merge tag 'bcac=
+hefs-2025-05-08' of git://evilpiepirate.org/bcachefs
+> $ ./scripts/get_maintainer.pl -f scripts/config
+> Seyediman Seyedarab <imandevel@gmail.com> (commit_signer:1/1=3D100%,autho=
+red:1/1=3D100%,added_lines:16/16=3D100%,removed_lines:10/10=3D100%)
+> Masahiro Yamada <masahiroy@kernel.org> (commit_signer:1/1=3D100%)
+> linux-kernel@vger.kernel.org (open list)
+> -------------------------
 
-On 09.05.2025 03:38, Sergey Senozhatsky wrote:
-> Hello,
-> 
-> On (25/05/08 16:19), Zaslonko Mikhail wrote:
-> [..]
->>> +#include "backend_deflate.h"
->>> +
->>> +/* Use the same value as crypto API */
->>> +#define DEFLATE_DEF_WINBITS		11
->>> +#define DEFLATE_DEF_MEMLEVEL		MAX_MEM_LEVEL
->>> +
-> [..]
->> The comment line says 'Use the same value as crypto API'...
->> could you please clarify here? Are there some memory constraints?
-> 
-> When zram transitioned from Crypto API (scomp) to custom compression
-> API I picked the CryptoAPI deflate DEFLATE_DEF_WINBITS value:
-> 
-> crypto/deflate.c: DEFLATE_DEF_WINBITS	11
-> 
-> which is then passed to zlib_deflateInit2() and zlib_inflateInit2().
-> 
->> I tried to build the kernel with DEFLATE_DEF_WINBITS set to 15 and
->> verified that s390 hardware deflate acceleration works for zram devices
->> with a deflate compression.
-> 
-> If we define it as 15 on non-s390 machines, will there be any
-> consequences?  Increased memory usage?  By how much?
-
-On s390, setting windowBits to 15 would lead to zlib workarea size
-increased by 120K (0x24dc8 -> 0x42dc8) per compression stream,
-i.e. per online CPU. 
-On non-s390 machine, that impact will be about 115K per stream. 
-Increasing window size should improve deflate compression,
-although the compression speed might be affected. Couldn't find any
-relevant zlib benchmarks though.
-
-Not sure what other consequences might there be for zram. Do you see any?
-
-> 
-Thanks,
-Mikhail
-
-
-
+Something that came to mind with a subsequent report is that I'm
+working from a shallow/grafted repo, so maybe there's something to
+that?
+I figure maybe there's limited history to query through.
+I think Linus was the one attributed to that script, and I was aiming
+to avoid TO/CC'ing him.
+I ended up looking at the log online to get relevant email targets.
