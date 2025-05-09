@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C77291896
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C80429189A
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796379; cv=none; b=TTd8KOwVy6XcM+fhTJ/l4QYNJWYFkDyiFRg59fPSkSNmtZm98i/nOlVIh5e6aXUmWaWKJa0+yhslnbknmQz/+PaSUEyNoaCW9bhIpvmNShOjIdRslmsnJ2eKjq+hRxwWX+8K+8Nji0Bkp1uFHDk0G0HPu5DMfnUNEjcU4vzpYZ4=
+	t=1746796379; cv=none; b=WWgG8Wupf20StORJco72WaDx4ilvXyojq34wGhCQZ+we392eRvXSIXUWB7oRvKLzplzHoTpQsW/Bi9hpTV/cE5rWQvO7twdunPOkUN8yxm9DEbxVk0C8MBkPKUyLzCIJvRCzOfOcVSvUMh8pVcniAhZcVDICIWigpmcRJhOluEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746796379; c=relaxed/simple;
-	bh=fG5VfAxDzNeQARtxqoK/2gXkOWqg2TdqudyazUO9QW8=;
+	bh=HituxbUAVh1vLtMD8XS8+Wr9KmT3hEqvbhv7vTTM2A0=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=BTTyvozEPEBsgbuTSFpDLoVap83f/AQJ4tP25ulJjKs/M4RxrTW6x9f8cjKuViPKEYynljpvhMxB8kMHJdRWI0iAj+h85xrBEZeLOMcA4H5qUYIl0pNYjE5kjfmbVXixDyAl2CpxrYVqZq3Cc6gdDoLvMdBlixCvtPA/mJxdtjs=
+	 Content-Type; b=cbCLHLvpILkSpMUhDNrRxFObXj+04K8fBUgwbcBGbPe7To5SelNj+SrbhBRcKfRM19w0TNiBpRc7wzZV0foXb1Uvo8Zf5qaPj97fXaCAzuiN93yjQb7oMyRXrM/xmG+WFisuMTlsvAv6zsOo7KjLls93vve+JeJGX5PVeRCSwcE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4A5C4CEEB;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47B3C4CEE4;
 	Fri,  9 May 2025 13:12:58 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDNXO-00000002bpH-0Jto;
+	id 1uDNXO-00000002bqG-1lI8;
 	Fri, 09 May 2025 09:13:14 -0400
-Message-ID: <20250509131313.932699225@goodmis.org>
+Message-ID: <20250509131314.271971264@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 09:12:52 -0400
+Date: Fri, 09 May 2025 09:12:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 03/31] tracing: Only return an adjusted address if it matches the kernel
- address
+Subject: [for-next][PATCH 05/31] tracing: Show preempt and irq events callsites from the offsets in
+ field print
 References: <20250509131249.340302366@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,47 +40,58 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The trace_adjust_address() will take a given address and examine the
-persistent ring buffer to see if the address matches a module that is
-listed there. If it does not, it will just adjust the value to the core
-kernel delta. But if the address was for something that was not part of
-the core kernel text or data it should not be adjusted.
+When the "fields" option is set in a trace instance, it ignores the "print fmt"
+portion of the trace event and just prints the raw fields defined by the
+TP_STRUCT__entry() of the TRACE_EVENT() macro.
 
-Check the result of the adjustment and only return the adjustment if it
-lands in the current kernel text or data. If not, return the original
-address.
+The preempt_disable/enable and irq_disable/enable events record only the
+caller offset from _stext to save space in the ring buffer. Even though
+the "fields" option only prints the fields, it also tries to print what
+they represent too, which includes function names.
+
+Add a check in the output of the event field printing to see if the field
+name is "caller_offs" or "parent_offs" and then print the function at the
+offset from _stext of that field.
+
+Instead of just showing:
+
+  irq_disable: caller_offs=0xba634d (12215117) parent_offs=0x39d10e2 (60625122)
+
+Show:
+
+  irq_disable: caller_offs=trace_hardirqs_off.part.0+0xad/0x130 0xba634d (12215117) parent_offs=_raw_spin_lock_irqsave+0x62/0x70 0x39d10e2 (60625122)
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20250506102300.0ba2f9e0@gandalf.local.home
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Link: https://lore.kernel.org/20250506105131.4b6089a9@gandalf.local.home
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/trace/trace_output.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5b8db27fb6ef..01572ef79802 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6032,6 +6032,7 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
- 	struct trace_module_delta *module_delta;
- 	struct trace_scratch *tscratch;
- 	struct trace_mod_entry *entry;
-+	unsigned long raddr;
- 	int idx = 0, nr_entries;
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index e7ebad177679..0b3db02030a7 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1019,6 +1019,17 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
+ 				}
  
- 	/* If we don't have last boot delta, return the address */
-@@ -6045,7 +6046,9 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
- 	module_delta = READ_ONCE(tr->module_delta);
- 	if (!module_delta || !tscratch->nr_entries ||
- 	    tscratch->entries[0].mod_addr > addr) {
--		return addr + tr->text_delta;
-+		raddr = addr + tr->text_delta;
-+		return __is_kernel(raddr) || is_kernel_core_data(raddr) ||
-+			is_kernel_rodata(raddr) ? raddr : addr;
- 	}
- 
- 	/* Note that entries must be sorted. */
+ 				addr = *(unsigned int *)pos;
++
++				/* Some fields reference offset from _stext. */
++				if (!strcmp(field->name, "caller_offs") ||
++				    !strcmp(field->name, "parent_offs")) {
++					unsigned long ip;
++
++					ip = addr + (unsigned long)_stext;
++					ip = trace_adjust_address(tr, ip);
++					trace_seq_printf(&iter->seq, "%pS ", (void *)ip);
++				}
++
+ 				if (sizeof(long) == 4) {
+ 					addr = trace_adjust_address(tr, addr);
+ 					trace_seq_printf(&iter->seq, "%pS (%d)",
 -- 
 2.47.2
 
