@@ -1,256 +1,201 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC0428D8E9
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419AC28D837
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783829; cv=none; b=s18u1bMnnounByze11BsyyRndRresOdesmvm/iG8FXFXY1DH0FM0xBtPA2Y5c7gvrL5AnCkZlEc91ZJm4Abuitc6WItudmiVtfDW7BSiwSdNR4+ZyxS5EcJvdYW9dG+2eeq+MtVzPCSNa9BqPiSNlklf8Ll1rvvAiiOMpkEIZa8=
+	t=1746783924; cv=none; b=HC6QVjj53yIxzGpZJfo3zr9SwSkTWc7FjFtGoAOIzopAN+VrfQ4uNgJ7cB4PF5rRH+S+tjrN2/Y2UqSK5w58FLUTHqvHTJAyqTQknhCv/i1BiMJfatLQMv62sxDeqz16L2EZA46hS6nIbO1I1r0sq6uetri0AV06zxEqHAuh7F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783829; c=relaxed/simple;
-	bh=ZYcQ/y+hOPkmLKQifSieSLa9dxFfIV8lTeiXdqaWtP0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WsJqJgHALdhRFRjgCroeGDhZSFQjOCq9Z6RMHfuczOtP/CyEOFv5xIHmEOt0U20AXTmK93MaPORgf78DVNHT+Xdm00ssxgJvMK+cGtoBNtJRWGZR00h0ADJ3kp8k02iESTeGP9Cz3xpLLlvo54lM76cmmcHCX7c4Ac31V1MRdfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IKEf6YFF; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746783924; c=relaxed/simple;
+	bh=SuhC9jBT+2frBsE7+oqdlk+rEtLnsAZTJgt9lQXECqM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HhL88ESsb45jzjWSWt1vXAoo0vm+qNSb5vA0P2lR6qNJ6xrrhNRwui513JOdh/wiqs24J4PKYCRHfgEW+4J6fCJK3fR5c9OHTyiJaS7Um3kz4j1uTHeYnxd4JTFkacD/sORYYEk/qRPhIieMtFmCUX6APxHZLLUsy8EI4zQ3BkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KprdP5Td; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKEf6YFF"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f5440fcf81so35248216d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746783827; x=1747388627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NhR1gWtezcRXQ67/UgHQ8+jPhWMCevIttvhiLDz9DMQ=;
-        b=IKEf6YFFcG0EbtF+V9rKTJpqu/NoOp0eOmrfwX610allchRD6RYmBzulB9QPC0ABUN
-         iPRZj2+cziJJ8o/Pgja8WtlZ4BimCWd35vcsyn/gg7sjya6LsZcJDrvmdGaaKjQH5D7n
-         0hXkfmL1JN7HzFeSKiyXz/XfMH8xipOqdWXMj8qpT0+DlPbmb+8YX2KnVZ2QfTJ4aJvY
-         OdQVRTv4YpaMMZUc/caaqGKaijuDBKoPUplkotY9sTjq+9Yt+VGechfYFFXPPWejB0NV
-         iuvuNGtcXn2JFpzcmhyjkGuVn7AXDI9W6KQxogRSYRprlKF3ZNe8tKv429uKttAteNJZ
-         l3fw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KprdP5Td"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746783921;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=YOAa0bozgxCI+CKgyYl1eiLYjIKKrO+Xq6cJ11SS5lc=;
+	b=KprdP5TdTIo7MgCAcHuemxeWEAXst41kldEgLFCDoEHXGbafX4bIMMAozWctbNDLJE2lZ2
+	TuAMQlt8FujdCxW9PviqrJ6GXvSRdAMDddFwTnK/KIbIKTVP8AVrEIJuZzUMmSFgT1VplC
+	gGEXj8TYqAEzeSNm9zYAETbnRXukVfU=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-427--7ZE6bYVNe2VPJUDF6kxCg-1; Fri, 09 May 2025 05:45:19 -0400
+X-MC-Unique: -7ZE6bYVNe2VPJUDF6kxCg-1
+X-Mimecast-MFC-AGG-ID: -7ZE6bYVNe2VPJUDF6kxCg_1746783919
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so13328165e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:45:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746783827; x=1747388627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NhR1gWtezcRXQ67/UgHQ8+jPhWMCevIttvhiLDz9DMQ=;
-        b=KNSMLEScDJaivmsR5n2/pwbrYpjR7q/RYmMJUs6+X0cfDL63Q1mPQ6CbuUZEwgRU/p
-         vwA5AJYl5Gs7KI6aQ3UYkeKkGw5CBSR1Bcwcc1xx3lcHXgaNFmFMlVXjKSrKo3Puqndb
-         oq6BdGQsU5k+QEv5yzZRyHKH4kj3DcGCoYp9n0gDdZSNaw3J6uHQlbhpKd7Gh9ax8JSr
-         ROGljQATWR0u7wET4QAojGIfsg9qHx7lC2DNMNc5lns1VgcXGX8KXp0CTLpXRtguD86C
-         ZbxLoem0ntDM3EB+v3fMTW5dB2AeYIM5hZxRhxtvP404S7bbpJcaQkkRweOkhzOSNkZX
-         TVqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5d3k2BhKlL6+/YB9gf4YGqeKfKsekC84l+sm+iKaCt9HVBDO+KNxPJdGqxkt5uCLF+wp59tED0Axu8Z0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE75VxyQYRZFL+7tOC57sHcx07dMBL+CSA8eFIxyzEtjOHb2u3
-	lqOevmHdbAMIgiCp0OYI3MeUy8RtZg+ghnT1yYLoeWli9Ya0KCcbiwJxs5DdJMYMaAgLaQ1Ay/A
-	GCpxbr4r6jbm2gpIVl2tJ2lQtRek=
-X-Gm-Gg: ASbGncuFM0kCR9YeZj29sJKW8/G2sNMHEwQ/n1Rh4tv01cgKs9jGBi7weZNIOI7tENe
-	lWpJJfhC1r4R87ypJXdTT2qs2FkVyeOjGdc7/Th/qbUK4AVEPJ0HjQlSL2W1Aqic0CvLfopUcFa
-	9QMERQ/t25sSzYVsTsfb93oeo3
-X-Google-Smtp-Source: AGHT+IGOYnEodI+v54u3RasqyHl740kv3Qi26c4ZSH1WOFdI0ZY7fakIuJayT5Adqarq3k8DzU8EnF7o8Tto78b2/FY=
-X-Received: by 2002:a0c:fa85:0:b0:6f6:e7ba:83dc with SMTP id
- 6a1803df08f44-6f6e7ba8454mr9568596d6.32.1746783826848; Fri, 09 May 2025
- 02:43:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746783918; x=1747388718;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YOAa0bozgxCI+CKgyYl1eiLYjIKKrO+Xq6cJ11SS5lc=;
+        b=MxjcdcnCjkIGYGdDtMQsLLWUAJPUV7sHGOGjKgZOnQ1Esy9hLaXRVVfwaS1yPnELsR
+         iBET8308HxwZicpw8F+aeszjM3HRPZcm7Vac7aFtFbFXJL7vA5z8YH1ijWR+3/UGfB9I
+         xkyTcV4C+uYuhOUNbdIfweYqbpYT1eUvX6P4nkdUfJj0kE5lK0fei0pZbgxuoeCusxOy
+         jwohrKrE6IKp9Zoxj3S6rRTE02kUgEtTphWTv5BGK3rZd+gHC02rx/oUN3bS3qL3jlS+
+         DEaV582jT9NytbiM0yY01qXZ9MlSv7nq36F6Pn3sqRsHOVwKVX+2myqsULYhxbdJ2Bcm
+         fiHw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2cjLBmK0MqHd2g0OuCoVZ3oVhQy7Uwhscms0SkBEg0yyz5CISqC87pd9svsLCxyU8/NLd5xQAkAIENMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOuWIORon/mYLR00lk+jNECsRyF32MCe0aLWp/9t2xA68bWTPt
+	VDD8mof+yR6nH6pg7U9aaGmAL7jeYOzcDIszK2SgJpEivone+WEWUpSF6qnUNJBV7aXVmyS8R0+
+	qffbz3TZ/fr43bIit6SZboTZ429IjOdQ1GcoYV1ezZbUmgd70FWuq8SB4ZKSZOw==
+X-Gm-Gg: ASbGncuR3EUm7pBNQTj4ZzaP+H4KG0C53LH+0FhWzyy91NqY2Ly/qd51vVXniStpKq5
+	MrzLyi45Hj7CONUKUUgnnX6Qd9tCDMZ94F3bZg+LVovA2IIi/pBk4SSf8AXdBdh6YZWVJea5won
+	CBLRptneLYW4+Vt223AKeuhWS6YARZwNPINntvcc/JelOBVmhv+CAFDQ1fPFsJ9DlCokfhaMp7R
+	SfJMCCi2YmiQtXtujCeNOOxgP+KHpt9qkocZuzcJbQYvcCMG/e41oPwLHXx75XCrMgw4AY+xMC/
+	HPRRXAvSK8Ru83CzxuJISsAH56nHdCI7zuR5+7EoSpQLmzk/uWE0Dzg8Mm1gsdk6pEOY3nU0gw2
+	hjZv+BFRhMEs/DJBFEnvqB/BfBxn6lnX9H80++uI=
+X-Received: by 2002:a05:600c:46c7:b0:43c:ec28:d31b with SMTP id 5b1f17b1804b1-442d6d3e373mr24938065e9.10.1746783918604;
+        Fri, 09 May 2025 02:45:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7MVL7mZihpcEEvitceu+2xXiJhCmERZKrpRflwNsBVodW0DJCdrtEiUUSzs5CTgr1OXV/hA==
+X-Received: by 2002:a05:600c:46c7:b0:43c:ec28:d31b with SMTP id 5b1f17b1804b1-442d6d3e373mr24937855e9.10.1746783918180;
+        Fri, 09 May 2025 02:45:18 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4d21esm2725998f8f.99.2025.05.09.02.45.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 02:45:17 -0700 (PDT)
+Message-ID: <708b6b1b-54a0-43b8-b6ec-a2dbb089d432@redhat.com>
+Date: Fri, 9 May 2025 11:45:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507141132.2773275-1-usamaarif642@gmail.com>
- <293530AA-1AB7-4FA0-AF40-3A8464DC0198@nvidia.com> <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
- <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com> <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
- <CALOAHbCxhL=VM=E5UzNvQYZsrF4zdcQ1-49iEJ1UYvLsurtxCw@mail.gmail.com>
- <ebfca8f2-40e5-485a-a060-621aa3a22376@gmail.com> <CALOAHbDesDGyokKFSSr3hA1_WnFciQPXe_nboPq9v8OUPLv47g@mail.gmail.com>
- <20250509051328.GF323143@cmpxchg.org> <CALOAHbA617417UtcwMBJ9Zm_8BbAth57=ngN=tknw8h7nvCwNw@mail.gmail.com>
- <41e60fa0-2943-4b3f-ba92-9f02838c881b@redhat.com>
-In-Reply-To: <41e60fa0-2943-4b3f-ba92-9f02838c881b@redhat.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Fri, 9 May 2025 17:43:10 +0800
-X-Gm-Features: AX0GCFt3U8aR4WC3vUVIRMoJX_yTrJnx4LvtJmPJmxo-vRyVig87H26GZeEDOwI
-Message-ID: <CALOAHbAvQDee2=5vsDqj77g5gAGdGpXFBbsC7tpKnCYEDZS3vw@mail.gmail.com>
-Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
-To: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Usama Arif <usamaarif642@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, shakeel.butt@linux.dev, 
-	riel@surriel.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] mm: secretmem: convert to .mmap_prepare() hook
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Wilcox <willy@infradead.org>
+References: <cover.1746615512.git.lorenzo.stoakes@oracle.com>
+ <a196a08a52039ee159c8333d0c6547e78112acb7.1746615512.git.lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <a196a08a52039ee159c8333d0c6547e78112acb7.1746615512.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 9, 2025 at 5:31=E2=80=AFPM David Hildenbrand <david@redhat.com>=
- wrote:
->
-> On 09.05.25 11:24, Yafang Shao wrote:
-> > On Fri, May 9, 2025 at 1:13=E2=80=AFPM Johannes Weiner <hannes@cmpxchg.=
-org> wrote:
-> >>
-> >> On Fri, May 09, 2025 at 10:15:08AM +0800, Yafang Shao wrote:
-> >>> On Fri, May 9, 2025 at 12:04=E2=80=AFAM Usama Arif <usamaarif642@gmai=
-l.com> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 08/05/2025 06:41, Yafang Shao wrote:
-> >>>>> On Thu, May 8, 2025 at 12:09=E2=80=AFAM Usama Arif <usamaarif642@gm=
-ail.com> wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> On 07/05/2025 16:57, Zi Yan wrote:
-> >>>>>>> On 7 May 2025, at 11:12, Usama Arif wrote:
-> >>>>>>>
-> >>>>>>>> On 07/05/2025 15:57, Zi Yan wrote:
-> >>>>>>>>> +Yafang, who is also looking at changing THP config at cgroup/c=
-ontainer level.
-> >>>>>
-> >>>>> Thanks
-> >>>>>
-> >>>>>>>>>
-> >>>>>>>>> On 7 May 2025, at 10:00, Usama Arif wrote:
-> >>>>>>>>>
-> >>>>>>>>>> Allowing override of global THP policy per process allows work=
-loads
-> >>>>>>>>>> that have shown to benefit from hugepages to do so, without re=
-gressing
-> >>>>>>>>>> workloads that wouldn't benefit. This will allow such types of
-> >>>>>>>>>> workloads to be run/stacked on the same machine.
-> >>>>>>>>>>
-> >>>>>>>>>> It also helps in rolling out hugepages in hyperscaler configur=
-ations
-> >>>>>>>>>> for workloads that benefit from them, where a single THP polic=
-y is
-> >>>>>>>>>> likely to be used across the entire fleet, and prctl will help=
- override it.
-> >>>>>>>>>>
-> >>>>>>>>>> An advantage of doing it via prctl vs creating a cgroup specif=
-ic
-> >>>>>>>>>> option (like /sys/fs/cgroup/test/memory.transparent_hugepage.e=
-nabled) is
-> >>>>>>>>>> that this will work even when there are no cgroups present, an=
-d my
-> >>>>>>>>>> understanding is there is a strong preference of cgroups contr=
-ols being
-> >>>>>>>>>> hierarchical which usually means them having a numerical value=
-.
-> >>>>>>>>>
-> >>>>>>>>> Hi Usama,
-> >>>>>>>>>
-> >>>>>>>>> Do you mind giving an example on how to change THP policy for a=
- set of
-> >>>>>>>>> processes running in a container (under a cgroup)?
-> >>>>>>>>
-> >>>>>>>> Hi Zi,
-> >>>>>>>>
-> >>>>>>>> In our case, we create the processes in the cgroup via systemd. =
-The way we will enable THP=3Dalways
-> >>>>>>>> for processes in a cgroup is in the same way we enable KSM for t=
-he cgroup.
-> >>>>>>>> The change in systemd would be very similar to the line in [1], =
-where we would set prctl PR_SET_THP_ALWAYS
-> >>>>>>>> in exec-invoke.
-> >>>>>>>> This is at the start of the process, but you would already know =
-at the start of the process
-> >>>>>>>> whether you want THP=3Dalways for it or not.
-> >>>>>>>>
-> >>>>>>>> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9=
-b28dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
-> >>>>>>>
-> >>>>>>> You also need to add a new systemd.directives, e.g., MemoryTHP, t=
-o
-> >>>>>>> pass the THP enablement or disablement info from a systemd config=
- file.
-> >>>>>>> And if you find those processes do not benefit from using THPs,
-> >>>>>>> you can just change the new "MemoryTHP" config and restart the pr=
-ocesses.
-> >>>>>>>
-> >>>>>>> Am I getting it? Thanks.
-> >>>>>>>
-> >>>>>>
-> >>>>>> Yes, thats right. They would exactly the same as what we (Meta) do
-> >>>>>> for KSM. So have MemoryTHP similar to MemroryKSM [1] and if Memory=
-THP is set,
-> >>>>>> the ExecContext->memory_thp would be set similar to memory_ksm [2]=
-, and when
-> >>>>>> that is set, the prctl will be called at exec_invoke of the proces=
-s [3].
-> >>>>>>
-> >>>>>> The systemd changes should be quite simple to do.
-> >>>>>>
-> >>>>>> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b2=
-8dd4ade7c6ab7be29a/man/systemd.exec.xml#L1978
-> >>>>>> [2] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b2=
-8dd4ade7c6ab7be29a/src/core/dbus-execute.c#L2151
-> >>>>>> [3] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b2=
-8dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
-> >>>>>
-> >>>>> This solution carries a risk: since prctl() does not require any
-> >>>>> capabilities, the task itself could call it and override your memor=
-y
-> >>>>> policy. While we could enforce CAP_SYS_RESOURCE to restrict this, t=
-hat
-> >>>>> capability is typically enabled by default in containers, leaving t=
-hem
-> >>>>> still vulnerable.
-> >>>>>
-> >>>>> This approach might work for Kubernetes/container environments, but=
- it
-> >>>>> would require substantial code changes to implement securely.
-> >>>>>
-> >>>>
-> >>>> You can already change the memory policy with prctl, for e.g. PR_SET=
-_THP_DISABLE
-> >>>> already exists and the someone could use this to slow the process do=
-wn. So the
-> >>>> approach this patch takes shouldn't be anymore of a security fix the=
-n what is already
-> >>>> exposed by the kernel. I think as you mentioned, if prctl is an issu=
-e CAP_SYS_RESOURCE
-> >>>> should be used to restrict this.
-> >>>
-> >>> I believe we should at least require CAP_SYS_RESOURCE to enable THP,
-> >>> since it overrides global system settings. Alternatively,
-> >>> CAP_SYS_ADMIN might be even more appropriate, though I'm not entirely
-> >>> certain.
-> >>
-> >> Hm, could you verbalize a concrete security concern?
-> >>
-> >> I've never really looked at the global settings as a hard policy, more
-> >> as picking a default for the workloads in the system. It's usually
-> >> `madvise' or `always', and MADV_HUGEPAGE and MADV_NOHUGEPAGE have long
-> >> existed to give applications the ability to refine the global choice.
-> >>
-> >> The prctl should probably respect `never' for consistency, but beyond
-> >> that I don't really see the concern, or how this would allow something
-> >> that isn't already possible.
-> >
-> > I would interpret the always, madvise, and never options as follows:
-> > - always
-> >    The sysadmin strongly recommends using THP. If a user does not
-> > want to use it, they must explicitly disable it.
-> > - madvise
-> >   The sysadmin gently encourages the use of THP, but it is only
-> > enabled when explicitly requested by the application.
-> > - never
-> >    The sysadmin discourages the use of THP, and "its use is only permit=
-ted
-> > with explicit approval" .
->
-> "never" so far means "no thps, no exceptions". We've had serious THP
-> issues in the past, where our workaround until we sorted out the issue
-> for affected customers was to force-disable THPs on that system during bo=
-ot.
+On 07.05.25 13:03, Lorenzo Stoakes wrote:
+> Secretmem has a simple .mmap() hook which is easily converted to the new
+> .mmap_prepare() callback.
+> 
+> Importantly, it's a rare instance of an driver that manipulates a VMA which
+> is mergeable (that is, not a VM_SPECIAL mapping) while also adjusting VMA
+> flags which may adjust mergeability, meaning the retry merge logic might
+> impact whether or not the VMA is merged.
+> 
+> By using .mmap_prepare() there's no longer any need to retry the merge
+> later as we can simply set the correct flags from the start.
+> 
+> This change therefore allows us to remove the retry merge logic in a
+> subsequent commit.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>   mm/secretmem.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/secretmem.c b/mm/secretmem.c
+> index 1b0a214ee558..f98cf3654974 100644
+> --- a/mm/secretmem.c
+> +++ b/mm/secretmem.c
+> @@ -120,18 +120,18 @@ static int secretmem_release(struct inode *inode, struct file *file)
+>   	return 0;
+>   }
+>   
+> -static int secretmem_mmap(struct file *file, struct vm_area_struct *vma)
+> +static int secretmem_mmap_prepare(struct vm_area_desc *desc)
+>   {
+> -	unsigned long len = vma->vm_end - vma->vm_start;
+> +	unsigned long len = desc->end - desc->start;
 
-Right, that reflects the current behavior. What we aim to enhance is
-by adding the requirement that "its use is only permitted with
-explicit approval."
+I'd have marked that const while touching it.
 
-This would be a small but meaningful step toward making THP truly
-usable in a transparent way in production environments.
+>   
+> -	if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) == 0)
+> +	if ((desc->vm_flags & (VM_SHARED | VM_MAYSHARE)) == 0)
+>   		return -EINVAL;
+>   
+> -	if (!mlock_future_ok(vma->vm_mm, vma->vm_flags | VM_LOCKED, len))
+> +	if (!mlock_future_ok(desc->mm, desc->vm_flags | VM_LOCKED, len))
+>   		return -EAGAIN;
+>   
+> -	vm_flags_set(vma, VM_LOCKED | VM_DONTDUMP);
+> -	vma->vm_ops = &secretmem_vm_ops;
+> +	desc->vm_flags |= VM_LOCKED | VM_DONTDUMP;
+> +	desc->vm_ops = &secretmem_vm_ops;
 
---=20
-Regards
-Yafang
+Yeah, that looks much better.
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
