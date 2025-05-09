@@ -1,164 +1,134 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F451DE4D8
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F381E32D3
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746817468; cv=none; b=GrNRwuBZJIdj7h0/Wb7KuDfF0FigGnlx+7CwdhEcN6cHHmAjcSkDJNVAQImDKPi2NOIGq+8p5gSSPiz97VtoJl0TbeIEFhW/l5qD+hi7MPIDNgXT2Vpys/7i01mUeJGTYgwyYMfqokl7zCNeUNBVIcv1EAd2r4N4AcLKzrQJ6OM=
+	t=1746817492; cv=none; b=VSHbEdHB4kxcEePHZ+pyTO+xhetsC6wk5zJ9Q9mg5GCn45vTea50fPBV1gSf9bSM3rMZQghmbaHqJjV0kVkXLf8zKYeceLX5UKsOUiwGkP/ikZQ4/lowryAePuDAUb0K6j91+R1CeVJg0LXxnzDyeMfT2yMamJYxT+/6ddrX+T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746817468; c=relaxed/simple;
-	bh=THgDNr9PNvboh5Gv7bSf91/lHKOaEXvmCoefmhxESRU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZuZdS1653LoTT9bEZSvWCUkMqMT7Hw1XD51WQWVQF60s8jpO6fEo6ApwRntvRQcMBhZ6qQFMa6Mw3wqZ9uEZP9jHyU8wz40L4tnnZi/XCIctDRkgxL/6veIcQhhJn4tbf+kGo1qKjcY2VVbFKxhUNcvC3WaArikrdszxr2yEfyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3da7c9e4bcfso21464035ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:04:26 -0700 (PDT)
+	s=arc-20240116; t=1746817492; c=relaxed/simple;
+	bh=nWgYlaUAh79Sqc6Qw9DptNYavPJ+5lJWisuL5f5mFiE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BYAVrtVuRTII9C/THslvQDV4QCsB4dKULiVPE/aozwYzHh60n8b3SzYl2Vz2SUHu2KcHBDom9Bk45KPje9E8e+Z7n+3GVEb8FlzMSEeAw+NxpKj0gVJGtNatbGnxAFFRbq+FSgZwdKLavILcRW+ORUn41h+USPP0p9JIjDilJxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CW85VbNG; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CW85VbNG"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e39fbad5fso26815ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746817490; x=1747422290; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JMyvT74zAz1sECoPmlo7iJrwBqFtzYeDIpnJbJ7I24Q=;
+        b=CW85VbNGGfVP7NVg5GJEbl5AgydcRQEc4efXG/4YV2I8nwHfitSLTtvM77cpe/ElHJ
+         /laxugkQybVhGUpfBLnYP+KGPf+YIuhUo+gH/5DyQ9XsTeA+4yNTPjKQxMYcHdSAxEGZ
+         Isz2myLkSejbwCZ9NRwsYwN3qiuH/8v2conX6YP5hypVqpQwGx0sMIw5UmnZrfH2aZBJ
+         E6ZJLuQsnpaKigTB8gk6rQOLgLevl6wEB0G38eZb9qTuP+rapcs3H5yB1y/WFRCeJABC
+         E225UE1sMmz0wJ8C/r2mIujvd35inPHGjsX8UEQt3AziYul7nvJWa5Oh1iETnmHc+2RJ
+         J5zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746817466; x=1747422266;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VNUNcYv0Ke/2vqZcy7/UF3xFz/CGqB6MR0l8UgL0O5Q=;
-        b=WB0qXO2LgZPZ0z9qhZnUuq4fhJG9+LvzqlVqRg3/IBndHD1hwumAuwyUC1ciQM6skM
-         lMzlRDQYi2Q74Ks2/I74DkHGQmxTqfa4o5iIiSFLkz/imVgoeVUwpvsgL1h1sr6ebtLy
-         4kh2P/TxWUoVGq8EopTdQnfVlHLkIE9NgURBvbdUWtHzUwPCC8g1w3a+8yJDRSa3Vk7h
-         cTH47HBhUh6KkOtVvuvT/IUzIavOtUh1x7QgS1oJMP+391wX75T9sNtplQ7O46spJ5Bx
-         e9yXndoZkkBOAJ8ZirTgF5WN14R86ENmFWbpYtGCZhcxlCosnpWSLBQjEjEfgEN6k/g/
-         5x/A==
-X-Forwarded-Encrypted: i=1; AJvYcCW+xBN14sWtFbUvj8lCQxnNhK3l2qwY/J7IzkDnQbBcMp1RSzcAs0ehBcJo8DX6rpwoekLECb717syoNfU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj5YzVmnmvbYHpVYaqc5G6CVCjvm5a5fRf8mOFkJAJZ+hcm2O8
-	0qRGToIoZaKmSYbWvN0gKteuazfEDV9GjbugP4Kf82iitCG1Dbn3xkIhNSE5qb+SnyNfJZS51oX
-	OEHvGOug4X+MrmQZK4yXtEQlk2V3X8SqzTG1bzQSM/AhvakTYAB9actI=
-X-Google-Smtp-Source: AGHT+IEdbhgGBnDiY1W79Tp3QKZk/O/WEbEDIP471AC3y1To2+WDq+ta0v2fiysy6CtNi9ZWwfNrqK5jA1mnGTOTsktj3sIdg3uI
+        d=1e100.net; s=20230601; t=1746817490; x=1747422290;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JMyvT74zAz1sECoPmlo7iJrwBqFtzYeDIpnJbJ7I24Q=;
+        b=szvLLfc/JtwgMTiOHBUws1D8EMRmZcIlbcs5/gQTwCBIig+IYYo2FyYkTikNCy12b0
+         8AW55+19FYnTBn+924+/UgTN54AtKEYr8/8bqD0gWOJOrjBfiV2nIeG6JDAuPv41gZna
+         RllU87RvZDGrIUhsqElIGoBvuxsDE9h4nVbj49mAPSTXXm9DhAajLCBko5l5SiUtQyPJ
+         SCIE+btORdqtnDbMVB5hU2T7pj5w9zsa5O8ACSel9CF6kzSkg0UwZuYDOdMtH5K20LRc
+         olTqUkIny/eSo/fzUXKq9SQJouticgT6TatIL4StimiEruNVa+Sm0vny54my00ACH9Uo
+         VIyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGwQQVNmJi6LBLUJzDLhBjV+OfpkaV/8P7xbTKIlugGm7LJTlKw8E1j+xJMTYqjbeY82zgO7HkzvQGeTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ1UOHjy/3IUDh57lHk+rAQ2IAJ2+0dF2Grp+Dy5wUCJ18Mh8I
+	Fi8W4eL2NKrKt6yNKi6NtLxU5Z6U90m3DCUNxShNIIs8cCfJZRHCy29wxq15JF6TLqDwOkRRFZw
+	COvbEeRKM6YmLwcTZet7FdfZWG6xBFH91F/Uj
+X-Gm-Gg: ASbGncuz0KicQ1n6Xqu41NhLyOrIo1nlz8PGs3c4ZVpRbE7QR2Bf3G7kH5youioOLzJ
+	GNnCJvV/UVmnpUkx2hDsB2hAWyElLSSruWW0th5UHuFXZPEgH7U/m4NoDh1lNNuv43TinLdSoNO
+	4eAh6wuqSITo09OVrQh5es88qNwJiHBFcMZN1Q/SXZ0NLHIjLH2CP9xFNoxq2zoOc=
+X-Google-Smtp-Source: AGHT+IFAWCrGKlTZz5hXgnqwxzKdNkmnoQMfkFpLk5GzxbOjWpW1DkenulWfbIO+bZgus1bgyylec4pcOX5PaD76Uys=
+X-Received: by 2002:a17:902:ccc5:b0:22e:570f:e25 with SMTP id
+ d9443c01a7336-22ff0b0c3bcmr301505ad.13.1746817489453; Fri, 09 May 2025
+ 12:04:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2611:b0:3da:715a:dde4 with SMTP id
- e9e14a558f8ab-3da7e1e77f5mr53142775ab.9.1746817466141; Fri, 09 May 2025
- 12:04:26 -0700 (PDT)
-Date: Fri, 09 May 2025 12:04:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681e51ba.050a0220.a19a9.013a.GAE@google.com>
-Subject: [syzbot] [cgroups?] general protection fault in cgroup_rstat_flush
-From: syzbot <syzbot+175b931e69c9ad9e1945@syzkaller.appspotmail.com>
-To: cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
-	mkoutny@suse.com, syzkaller-bugs@googlegroups.com, tj@kernel.org
+References: <20250509115126.63190-1-byungchul@sk.com> <20250509115126.63190-20-byungchul@sk.com>
+ <CAHS8izMoS4wwmc363TFJU_XCtOX9vOv5ZQwD_k2oHx40D8hAPA@mail.gmail.com> <aB5FUKRV86Tg92b6@casper.infradead.org>
+In-Reply-To: <aB5FUKRV86Tg92b6@casper.infradead.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 9 May 2025 12:04:37 -0700
+X-Gm-Features: ATxdqUE-1vmZbrvJsQJ5y4vi7u2ndkuLS99kLDwhEEwxYMSvqJXXgCyAw9BFg-s
+Message-ID: <CAHS8izMJx=+229iLt7GphUwioeAK5=CL0Fxi7TVywS2D+c-PKw@mail.gmail.com>
+Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct page
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Byungchul Park <byungchul@sk.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
+	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
+	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, May 9, 2025 at 11:11=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Fri, May 09, 2025 at 10:32:08AM -0700, Mina Almasry wrote:
+> > Currently the only restriction on net_iov is that some of its fields
+> > need to be cache aligned with some of the fields of struct page, but
+>
+> Cache aligned?  Do you mean alias (ie be at the same offset)?
+>
+> > What I would suggest here is, roughly:
+> >
+> > 1. Add a new struct:
+> >
+> >                struct netmem_desc {
+> >                        unsigned long pp_magic;
+> >                        struct page_pool *pp;
+> >                        unsigned long _pp_mapping_pad;
+> >                        unsigned long dma_addr;
+> >                        atomic_long_t pp_ref_count;
+> >                };
+> >
+> > 2. Then update struct page to include this entry instead of the definit=
+ions:
+> >
+> > struct page {
+> > ...
+> >                struct netmem_desc place_holder_1; /* for page pool */
+> > ...
+> > }
+>
+> No, the point is to move these fields out of struct page entirely.
+>
+> At some point (probably this year), we'll actually kmalloc the netmem_des=
+c
+> (and shrink struct page), but for now, it'll overlap the other fields
+> in struct page.
+>
 
-syzbot found the following issue on:
+Right, all I'm saying is that if it's at all possible to keep net_iov
+something that can be extended with fields unrelated to struct page,
+lets do that. net_iov already has fields that should not belong in
+struct page like net_iov_owner and I think more will be added.
 
-HEAD commit:    9c69f8884904 Merge tag 'bcachefs-2025-05-08' of git://evil..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1440acf4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
-dashboard link: https://syzkaller.appspot.com/bug?extid=175b931e69c9ad9e1945
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/062b75278fb3/disk-9c69f888.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/868b31a2cf71/vmlinux-9c69f888.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e773657fdf9c/bzImage-9c69f888.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+175b931e69c9ad9e1945@syzkaller.appspotmail.com
-
-Oops: general protection fault, probably for non-canonical address 0xe7ffed1c349f36f7: 0000 [#1] SMP KASAN PTI
-KASAN: maybe wild-memory-access in range [0x3fff88e1a4f9b7b8-0x3fff88e1a4f9b7bf]
-CPU: 0 UID: 0 PID: 52 Comm: kworker/u8:3 Not tainted 6.15.0-rc5-syzkaller-00136-g9c69f8884904 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-Workqueue: events_unbound flush_memcg_stats_dwork
-RIP: 0010:cgroup_rstat_push_children kernel/cgroup/rstat.c:165 [inline]
-RIP: 0010:cgroup_rstat_updated_list kernel/cgroup/rstat.c:245 [inline]
-RIP: 0010:cgroup_rstat_flush+0x840/0x1e70 kernel/cgroup/rstat.c:325
-Code: 70 74 08 48 89 df e8 ef e6 66 00 4c 8b 23 4b 8d 1c 3c 48 81 c3 a0 00 00 00 49 89 dd 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00 00 74 08 48 89 df e8 c0 e6 66 00 48 8b 03 48 3b 44
-RSP: 0018:ffffc90000bd7920 EFLAGS: 00010003
-RAX: dffffc0000000000 RBX: 3fff88e1a4f9b7bd RCX: 1ffffffff1b2b383
-RDX: 0000000000000000 RSI: ffffffff8bc0fec0 RDI: ffff88806481c5c1
-RBP: ffffc90000bd7b08 R08: ffffffff8f7da777 R09: 1ffffffff1efb4ee
-R10: dffffc0000000000 R11: fffffbfff1efb4ef R12: ffff888126200000
-R13: 07fff11c349f36f7 R14: 0000000000000000 R15: 400000607ed9b71d
-FS:  0000000000000000(0000) GS:ffff888126100000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005598d2923440 CR3: 000000005d74e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- flush_memcg_stats_dwork+0x15/0x60 mm/memcontrol.c:653
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:cgroup_rstat_push_children kernel/cgroup/rstat.c:165 [inline]
-RIP: 0010:cgroup_rstat_updated_list kernel/cgroup/rstat.c:245 [inline]
-RIP: 0010:cgroup_rstat_flush+0x840/0x1e70 kernel/cgroup/rstat.c:325
-Code: 70 74 08 48 89 df e8 ef e6 66 00 4c 8b 23 4b 8d 1c 3c 48 81 c3 a0 00 00 00 49 89 dd 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00 00 74 08 48 89 df e8 c0 e6 66 00 48 8b 03 48 3b 44
-RSP: 0018:ffffc90000bd7920 EFLAGS: 00010003
-RAX: dffffc0000000000 RBX: 3fff88e1a4f9b7bd RCX: 1ffffffff1b2b383
-RDX: 0000000000000000 RSI: ffffffff8bc0fec0 RDI: ffff88806481c5c1
-RBP: ffffc90000bd7b08 R08: ffffffff8f7da777 R09: 1ffffffff1efb4ee
-R10: dffffc0000000000 R11: fffffbfff1efb4ef R12: ffff888126200000
-R13: 07fff11c349f36f7 R14: 0000000000000000 R15: 400000607ed9b71d
-FS:  0000000000000000(0000) GS:ffff888126100000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005598d2923440 CR3: 000000005d74e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	70 74                	jo     0x76
-   2:	08 48 89             	or     %cl,-0x77(%rax)
-   5:	df e8                	fucomip %st(0),%st
-   7:	ef                   	out    %eax,(%dx)
-   8:	e6 66                	out    %al,$0x66
-   a:	00 4c 8b 23          	add    %cl,0x23(%rbx,%rcx,4)
-   e:	4b 8d 1c 3c          	lea    (%r12,%r15,1),%rbx
-  12:	48 81 c3 a0 00 00 00 	add    $0xa0,%rbx
-  19:	49 89 dd             	mov    %rbx,%r13
-  1c:	49 c1 ed 03          	shr    $0x3,%r13
-  20:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  27:	fc ff df
-* 2a:	41 80 7c 05 00 00    	cmpb   $0x0,0x0(%r13,%rax,1) <-- trapping instruction
-  30:	74 08                	je     0x3a
-  32:	48 89 df             	mov    %rbx,%rdi
-  35:	e8 c0 e6 66 00       	call   0x66e6fa
-  3a:	48 8b 03             	mov    (%rbx),%rax
-  3d:	48                   	rex.W
-  3e:	3b                   	.byte 0x3b
-  3f:	44                   	rex.R
+I'm thinking netmem_desc can be the fields that are shared between
+struct net_iov and struct page (but both can have more specific to the
+different memory types). As you say, for now netmem_desc can currently
+overlap fields in struct page and struct net_iov, and a follow up
+change can replace it with something that gets kmalloced and (I
+guess?) there is a pointer in struct page or struct net_iov that
+refers to the netmem_desc that contains the shared fields.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--=20
+Thanks,
+Mina
