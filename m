@@ -1,83 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A0023504C;
-	Fri,  9 May 2025 16:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B84722FF58;
+	Fri,  9 May 2025 16:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807117; cv=none; b=uQkpkOoM7V3cKF7NY5N00WUfLFMPrCY+2NsPnfnEuDbU4i4hIWGAI1XF7cb/bpdEBNedp0r2IpFdkc0xqrseCvvG0ngYwA4uoBIDxq31INmThpJAIwG3Btg/A7fStRkxBt3XoFGoU6lEEDvBisLyx0WkDo+41h9Oa9dekIla5bg=
+	t=1746807128; cv=none; b=jyHkIlNR96hN/AaC9daUMAQZRRSHyPKTko6s3EIf9uB3h7PE+V7aaEnmSXAFHqF9qNnhw2CI9CX1NrR3P9+CvVoLEpHLhma/euu2/vDv5ynYhRAzlS8zfpFTxel3ojQdflSK0hxKNgs25YGUnXR7ByIUly9Uhk4q+H99iXCEhLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807117; c=relaxed/simple;
-	bh=bpNVUwzX/KLB/HdjbVioDgiKXANaTn52rgYDeJ5osuI=;
+	s=arc-20240116; t=1746807128; c=relaxed/simple;
+	bh=FAZbGYBloQLXltv1jVW7+wuf9Nj+qiCN4u3kE549nNI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TvQqQORKoFHaxs+Q/fPBHQ39ZGXWVQXfsV7V89BVCNBohq/neQV4sKiBs8+ock1BWqFGPc3cPOvGnzzsW1jAHWHyANSjuDZbWZDgrpZQagAyAJ8pEBNVQbUGFU3w2fzOc81361LVP/EBpWmInICkSFuuY7WK+hv90IBr78zfkSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir1PEOE6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cP/VJVj0soWStNtLW1E/nAPxAr2TdcDW+iXWNu9YmqgeVTUrDfWLYeGvDYBYLzg6ClL4ioU7eD8Nvh+8GnrDE5AQhnh60zhljou5RTK5GZxh8VTaTT+qG6sEEUBURd9akgKMAWDpD0K/ZPP/aW37bb55jcabPMlk7udoLA//q6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pF1YwsbF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir1PEOE6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D78C4CEE4;
-	Fri,  9 May 2025 16:11:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pF1YwsbF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6EE4C4CEEF;
+	Fri,  9 May 2025 16:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746807116;
-	bh=bpNVUwzX/KLB/HdjbVioDgiKXANaTn52rgYDeJ5osuI=;
+	s=k20201202; t=1746807126;
+	bh=FAZbGYBloQLXltv1jVW7+wuf9Nj+qiCN4u3kE549nNI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ir1PEOE6NRXx99Cv95+SKi9Zmr3GL4q+cUUQ6ACo61GxcHuclOom1BQ/sPtrFIU8p
-	 5LMXHOnsSIAe+nvPrFDd0yCSxiBprXis4n79sI2pdHhEysHwI35W2USx55uU2MxvvA
-	 AxAr/MDNALUSpPe1qIEzDG/pkYoWyt+DOxJGozKT+IvqFhS2c727Ov5LJL9rrxMsZu
-	 uVqJ3G6caDo9wOpv3nc+LMBiFFPsY6kHhWFImwZLYTwlQaGHFuWuByjEE1CZ9kNeTf
-	 mZK/oB4LV7bTxIrwCQL5qLsl3WmZZ5kV8Mm0L5LSmCkkIIVjOiPk8uefgZJsjpss0v
-	 25OivlVSWx2hQ==
-Date: Fri, 9 May 2025 17:11:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
-Subject: Re: [PATCH v7 02/12] dt-bindings: trigger-source: add generic GPIO
- trigger source
-Message-ID: <20250509-quickly-culprit-3334c8ec27aa@spud>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
- <f62bcaabde172e0b2880f7d05dce97d684cc04ca.1746662899.git.Jonathan.Santos@analog.com>
+	b=pF1YwsbFiscNJvBf+oklkmV160BbhXa1LMOkngmGCl5dU0hKYEmiJazHuL/jTniz6
+	 e2n52nh/bTQQ9GeBQeo6k0CZJcGVYnygkBMKIeFUhbdkp1lbSrcdkB6wfkBoWbVX5Q
+	 avwYf9aVHOiGvxTv2bdONIti9QBi7fzS134RAlsqLY7XWcJcsqpTDkhTPp2WeVuM1j
+	 YZLPO6+7kScenSdE6CgnXoyzBZ7Y1WMEn/Wgu1d2WyjdHlalMQIBY6+QDePJ6Q0AHb
+	 vi+ZDVHuFfx+YGm1FJPrQHkfHtFPUcXk1g6BelhYNpDaGEszgPSdeUPdB816Q923XN
+	 LpOugat+O9mcA==
+Date: Fri, 9 May 2025 09:12:04 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-mm@kvack.org,
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 12/12] sysctl: Remove superfluous includes from
+ kernel/sysctl.c
+Message-ID: <aB4pVOsZr4pXz6dH@bombadil.infradead.org>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-12-d0ad83f5f4c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nyVvxJAmvCbunl+H"
-Content-Disposition: inline
-In-Reply-To: <f62bcaabde172e0b2880f7d05dce97d684cc04ca.1746662899.git.Jonathan.Santos@analog.com>
-
-
---nyVvxJAmvCbunl+H
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-12-d0ad83f5f4c3@kernel.org>
 
-On Thu, May 08, 2025 at 02:03:17PM -0300, Jonathan Santos wrote:
-> Inspired by pwm-trigger, create a new binding for using a GPIO
-> line as a trigger source.
->=20
-> Link: https://lore.kernel.org/linux-iio/20250207-dlech-mainline-spi-engin=
-e-offload-2-v8-3-e48a489be48c@baylibre.com/
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+On Fri, May 09, 2025 at 02:54:16PM +0200, Joel Granados wrote:
+> Remove the following headers from the include list in sysctl.c.
+> 
+> * These are removed as the related variables are no longer there.
+>   ===================   ====================
+>   Include               Related Var
+>   ===================   ====================
+>   linux/kmod.h          usermodehelper
+>   asm/nmi.h             nmi_watchdoc_enabled
+>   asm/io.h              io_delay_type
+>   linux/pid.h           pid_max_{,min,max}
+>   linux/sched/sysctl.h  sysctl_{sched_*,numa_*,timer_*}
+>   linux/mount.h         sysctl_mount_max
+>   linux/reboot.h        poweroff_cmd
+>   linux/ratelimit.h     {,printk_}ratelimit_state
+>   linux/printk.h        kptr_restrict
+>   linux/security.h      CONFIG_SECURITY_CAPABILITIES
+>   linux/net.h           net_table
+>   linux/key.h           key_sysctls
+>   linux/nvs_fs.h        acpi_video_flags
+>   linux/acpi.h          acpi_video_flags
+>   linux/fs.h            proc_nr_files
+> 
+> * These are no longer needed as intermediate includes
+>   ==============
+>   Include
+>   ==============
+>   linux/filter.h
+>   linux/binfmts.h
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
---nyVvxJAmvCbunl+H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaB4pRgAKCRB4tDGHoIJi
-0gqtAP9nbXRFuq8u75ysr6luGBqA1gRayOtqphoqvo+HTpRQxQEAzDkebqEPZycd
-XtiM1brQPnJdDp3w5Ef0u3qWs5OfKgM=
-=Ei/f
------END PGP SIGNATURE-----
-
---nyVvxJAmvCbunl+H--
+ Luis
