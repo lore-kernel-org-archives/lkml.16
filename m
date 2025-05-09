@@ -1,166 +1,115 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516DB26AAB8;
-	Fri,  9 May 2025 06:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D41D53C;
+	Fri,  9 May 2025 06:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746772846; cv=none; b=ZVs0Exj1aEcPEoYCuukdV85jxxo55PjuPM+8GHENvZhXtR9yD5VbXIRsIYqevOt5qAItqvV4OBT69cwtbJxo/3UnJqP1QTyp24OQxvVVGLbtyphkvVq+LJ9+dLGQh9yZnQ37t9Uzunv39QyEzzKvRT7JH8/e5Flob+On6WXMSrs=
+	t=1746772913; cv=none; b=S1XvE0zPnsSB4cs3hlzpZqup37lsyx7Hw8DfGc7ruXsLp9BWv3GQWVZYgaGyssZ468zhzva2Y4h3+6krGUGvfTPYPXxVjhcHcg5f+9Iuvy9eA/1k48s0kCEEeJnFLwaINfjpyc1cS2ynslH8bmy3jfwKYAuObx16gJPYIJpWLB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746772846; c=relaxed/simple;
-	bh=fxFHM0v/ka3OQUBI82UzTNhBtodXGXXGvy6pJYC+zm4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eZWtOWMMNYa78s7qaT3ITfvZEgdxnlCDkkQyulWbJIoDVcnxTIhk2sXBmRnr4VE2pyI40IfIQxHIQVMOrn9HwOYzCSuWiZjcKz+7VAVcEQkKGHXwE1/LbnvpDa9WUVrZUAh3NegvO4/ERWJJHB+UtomgXa+xcXBYsmFdCO07ZwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WDrcJGZo; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1746772913; c=relaxed/simple;
+	bh=Kh4wGH228iQlxlwW6s2BagqamPOuOLBEuhUiNjv0IJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s+7HETTZavZxAiyxonh2spew/HT3Moua6h7ESsVXEkhs9l3yZV4lZRn2wKKZ62Cc8fPzAciFvGOca2qM4P5800iAsUGsFnrHM9TGixtfgIY2nGqy+p36jSQ7PZJY1u61zntOCFqKk9fHBop5U9qZ3QFCMWQaOF9TEl3sbLNlYyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqwqfZNd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WDrcJGZo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1746772830;
-	bh=ihh5ov5KNpxuRkZgVS2WL0voYFPXwHmFK1A25R6l4s8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=WDrcJGZoqfFu4BM0j0HqkiUNcfToAXs91ynhU/Rez7iz1gkgvtNjiSrUQPC5hIV/n
-	 3Rlxl6FjQw2RciCFXmwyHPo+g7CdmxV2THVmd/jjtDQSinNh8nEZWTMh9Ubw5jLuRr
-	 IGa51LFdhWOwLqTfbGZpvxsQeRU6IMSOVojnAjlo=
-X-QQ-mid: esmtpsz16t1746772827te5f6ae54
-X-QQ-Originating-IP: xj3l6DJxrjkt4qTlt77TClYLZub6HSSXCznRsEI96bA=
-Received: from mail-yw1-f178.google.com ( [209.85.128.178])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 09 May 2025 14:40:25 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8370490462894577466
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7091d7244e8so17856677b3.3;
-        Thu, 08 May 2025 23:40:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUFHpWh6X22vLYxJwFgU/drslJu6behU+H/h3BhjtiOPBczK/gUqzgPydcnJ2Nw+KH8NBHp+XpeD1UD7k4@vger.kernel.org, AJvYcCVBpor63sNamTkUeKz6BsxJ931/+Fx7vjPKKQeZSVu/jUfe1n6/sFppiGV3NxggGLeU9bqinBbp+6g6s863@vger.kernel.org
-X-Gm-Message-State: AOJu0YyciT3g6/zNh3BmLTWi7QyzXwoSK4iadhlxCZzeC39ooaRTbWnt
-	F9VLKfNWXVH+idWDg38/CwxlOdEDkiIccfNanVya72hf138uEpbQ425DPlcV1pOUabvr+ZqAUWl
-	b90LtE/Kfo8VSmLUGIkP4I6lQR74=
-X-Google-Smtp-Source: AGHT+IFDWb8362FrDmkSJcfKLIT9BCU/J1FTe+b0rRaNN0UQUsLyveoFtB5VWAftvXNt2sd2zZ+lmxNaUm68KNiQXLI=
-X-Received: by 2002:a05:690c:74c5:b0:708:ca91:d583 with SMTP id
- 00721157ae682-70a3fb1461emr30415607b3.25.1746772825216; Thu, 08 May 2025
- 23:40:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqwqfZNd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC77C4CEE4;
+	Fri,  9 May 2025 06:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746772913;
+	bh=Kh4wGH228iQlxlwW6s2BagqamPOuOLBEuhUiNjv0IJw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AqwqfZNdamR2GYB4GLNHfX7UU6YXIxxC3QF6aJ1rfeupgYKD6fCy/Z8xIJy38j24t
+	 eah1cWWOy5JYV4agJX8rM0SuMTHQYVUzDh2VglMsie1zyiiSRDBO9uKNxvBYLx2Q4e
+	 HE4WgSGCNvWuLkCs5Pb7xbR7HjqBcN3iHOlJ+oGKTKAx+uD1l/nRMPucMTPfOHFgti
+	 DoECptxew+UkUaivcndGFrgtmnqZl3rpoizDUVPsOABlDzVeiOWrS7plLWLS5zbs3R
+	 RRwrxpJGXnhsD7DJMiIJ0dKoWmaITZRmKV1ktCn3ZvFvCHKZyBCNkQ1LP7WYSVrxcA
+	 a0aDqWCEdLpjA==
+Message-ID: <b0eada5f-3901-46f5-bca9-87744091448b@kernel.org>
+Date: Fri, 9 May 2025 08:41:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com> <20250509-fusectl-backing-files-v3-3-393761f9b683@uniontech.com>
-In-Reply-To: <20250509-fusectl-backing-files-v3-3-393761f9b683@uniontech.com>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Fri, 9 May 2025 14:40:14 +0800
-X-Gmail-Original-Message-ID: <07F6D6C67DF1D1A0+CAC1kPDOdDdPQVKs0C-LmgT1_MGBWbFqy4F+5TeunYBkA=xq7+Q@mail.gmail.com>
-X-Gm-Features: ATxdqUE25ZeQ5xIHSbFb-ApRFoPgWAHDZSxksRoyReXXX_uje8AZxeHlMjW1Ym8
-Message-ID: <CAC1kPDOdDdPQVKs0C-LmgT1_MGBWbFqy4F+5TeunYBkA=xq7+Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] fs: fuse: add more information to fdinfo
-To: chenlinxuan@uniontech.com
-Cc: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: Np4vjJaFyq9jHr2M3gGr6lOltbJQO+TaSWN8jIZnpdslFFeoOYjHIOcA
-	V8oOtFPrc2XWEmYxmY92t6Xpp7RY9y/lmnN6q4AD/bsYMK32ykR5NBQ+9TSbc09FN6Uu3pt
-	Jx6BfS9mHyqW0rzLf/Rc7ekVvhuLAdpkYkCbMkdC1Kbt1X3LfcWSCfsPeVqa+MWI50BObru
-	N2Z3xyc3O+XbxVjwp7f5GjtoSutBvUBaTApbCJDv6jdWWFiRFmLDTbQeboHNjYIRVufIuIT
-	dFMpL2PUEQEnPM+XtKluR/q8EN55a+x8QrtLJayoRyp0lBSZNn4LXaAiK42mOZ4QrLst9Z4
-	frk50+F9IwFgicFdukgcyECeo+yPJkNRjA2G+rfEMjmD7aQpv/rad6UOaRfnlwCM+ZnRGD5
-	Prii5jl5Qne1jtVCh5lpQDaY9076mYNQKf2ThaRRW4x/thF54vfhgshhWDMQzLmd8t1QKoI
-	+uKAGsl3PoyUB6evvl6kVmxx91c0JddV0O8PdJFmi8su4CmjVgyzUoiY+RZ64PjiQBIMOs2
-	SJA/msakcMtuEk5wcf3YlPLq/xUQKOw/qMzi7Uy/xAQf5Tb7iYq92R36/JpRfj96FJ+pdQ+
-	HCX4mBtV/nwrOzck4xEeDZsotLzCaxjykrt0vBtwhUeDLzl0iOOBVnxGVkiDLeqF2N9GXwX
-	RGUwoZkQh44ugM7UpMMe2Kj2uwmuJREzp9t3hrfYX/DGheDuf9TDq3p2gydEqSvtdUxH7oO
-	U1wqdaRgje2V50TwuOerRV6FH2FG8Xq3QMgzRg07o6+0hfQBS5vxaPFIKw7fQZPilaF2yZL
-	orMxNUrl3W/CGr8T+uMdjaxTV8u0WS+ShZ829heTU1m4mP5D8s5gblm89GWyJZJXlrQI1cv
-	cD0P6A0qo4+qI5xWg7CoMfEQdogYUClAWuS9Jjvy5m1SExOyCqzK5K0Ll6Xxsb/jNFSr5cd
-	Osgft/IH80h+5ZyS7c4tmnRIk8Hxp0QK6VEo5lRUqd9hHtKfnGE6LMQYIo2XongA3wplNcz
-	aVBbQyRyfss0SjWIGTVsCBc3kj4C5ZmRc/8Yn5WxEC1LgGjHDo
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] dt-bindings: clock: qcom: Add missing bindings on
+ gcc-sc8180x
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250509-sc8180x-camcc-support-v3-0-409ca8bfd6b8@quicinc.com>
+ <20250509-sc8180x-camcc-support-v3-1-409ca8bfd6b8@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250509-sc8180x-camcc-support-v3-1-409ca8bfd6b8@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 9, 2025 at 2:34=E2=80=AFPM Chen Linxuan via B4 Relay
-<devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
->
-> From: Chen Linxuan <chenlinxuan@uniontech.com>
->
-> This commit add fuse connection device id, open_flags and backing
-> files, to fdinfo of opened fuse files.
->
-> Related discussions can be found at links below.
->
-> Link: https://lore.kernel.org/all/CAOQ4uxgS3OUy9tpphAJKCQFRAn2zTERXXa0QN_=
-KvP6ZOe2KVBw@mail.gmail.com/
-> Link: https://lore.kernel.org/all/CAOQ4uxgkg0uOuAWO2wOPNkMmD9wqd5wMX+gTfC=
-T-zVHBC8CkZg@mail.gmail.com/
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> ---
->  fs/fuse/file.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 754378dd9f7159f20fde6376962d45c4c706b868..1e54965780e9d625918c22a3d=
-ea48ba5a9a5ed1b 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -8,6 +8,8 @@
->
->  #include "fuse_i.h"
->
-> +#include "linux/idr.h"
-> +#include "linux/rcupdate.h"
->  #include <linux/pagemap.h>
->  #include <linux/slab.h>
->  #include <linux/kernel.h>
-> @@ -3392,6 +3394,21 @@ static ssize_t fuse_copy_file_range(struct file *s=
-rc_file, loff_t src_off,
->         return ret;
->  }
->
-> +static void fuse_file_show_fdinfo(struct seq_file *seq, struct file *f)
-> +{
-> +       struct fuse_file *ff =3D f->private_data;
-> +       struct fuse_conn *fc =3D ff->fm->fc;
-> +       struct file *backing_file =3D fuse_file_passthrough(ff);
-> +
-> +       seq_printf(seq, "fuse conn:%u open_flags:%u\n", fc->dev, ff->open=
-_flags);
+On 09/05/2025 07:56, Satya Priya Kakitapalli wrote:
+> The multi-media AHB clocks are needed to create HW dependency in
+> the multimedia CC dt blocks and avoid any issues. They were not
+> defined in the initial bindings. Add all the missing clock bindings
+> for gcc-sc8180x.
+> 
+> Cc: stable@vger.kernel.org
 
-Note: The fc->dev is already accessible to userspace.
-The mnt_id field in /proc/PID/fdinfo/FD references a mount,
-which can be found in /proc/PID/mountinfo.
+Drop, we already asked for this: you are not fixing any bug.
 
-And this file includes the device ID.
+Read carefully stable kernel rules.
 
-> +
-> +       if (backing_file) {
-> +               seq_puts(seq, "fuse backing_file: ");
-> +               seq_file_path(seq, backing_file, " \t\n\\");
-> +               seq_puts(seq, "\n");
-> +       }
-> +}
-> +
->  static const struct file_operations fuse_file_operations =3D {
->         .llseek         =3D fuse_file_llseek,
->         .read_iter      =3D fuse_file_read_iter,
-> @@ -3411,6 +3428,9 @@ static const struct file_operations fuse_file_opera=
-tions =3D {
->         .poll           =3D fuse_file_poll,
->         .fallocate      =3D fuse_file_fallocate,
->         .copy_file_range =3D fuse_copy_file_range,
-> +#ifdef CONFIG_PROC_FS
-> +       .show_fdinfo    =3D fuse_file_show_fdinfo,
-> +#endif
->  };
->
->  static const struct address_space_operations fuse_file_aops  =3D {
->
-> --
-> 2.43.0
->
->
->
->
+Best regards,
+Krzysztof
