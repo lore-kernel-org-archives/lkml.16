@@ -1,80 +1,123 @@
-Received: from email.devuan.org (polpo.devuan.org [65.21.79.241])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC62101E6
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.79.241
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8C123F403;
+	Fri,  9 May 2025 18:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746816191; cv=none; b=ju5suyAUdueaTf6VWdHz63UN3SQt7JsAHIzR1AXLHc1QFKiszCr3JvhE2KIbRXL9Iu3GB39buXkIO89lqsAbjzNj1zmT/UOy5emKZwN/SWPvQZjwNyv5+jiYOokBtz02Snl7pSzQ0vjepbtP7POGoAP3CQjIMUifZG4TZgMfv74=
+	t=1746816195; cv=none; b=b42C3Tkb/0EWdZz4Yaatct8VnAwaounrdMl4n3kNtEdcg0s4fDTwNv0g64PFJo29keCoUGT5wC4Zc9vX91J1x1/rzPhofGoguMKKSRBpjNVCadI5sAxL/biNrOH1uw5qITTkmhOd7Ecu5mF27Bs32zISg5YIUQ5weuPUbHumu4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746816191; c=relaxed/simple;
-	bh=/JMBen9fhoFqQaivjQ7HgEwBRd7lz6FFv15uUqO4ee0=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=cNkHuTGJ0mti6amSakEra0d93a/9K2kmi9eDpaQxNLSSW4y5uy9BhcsT5XjHn79c0CQcpb7lGSF184ueh54CV5RiYJfuQb5spMoD7+BQJnvLOfWc1YzH6skIeReoYMz9swI9erjQ7qnDz/szgPFNJJmzMAzBmJKC+xEJwiRzXN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=devuan.org; spf=pass smtp.mailfrom=devuan.org; dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b=Jrepk+CO; dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b=pISWYtMo; arc=none smtp.client-ip=65.21.79.241
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=devuan.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=devuan.org
+	s=arc-20240116; t=1746816195; c=relaxed/simple;
+	bh=kTXI392AIWCcX6IwQJjg488ofl6n7uPgIy2BdveO6Rw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AJ3N88c58M4ROaNkDpCQAgP/YlO0jX4XR1iEwdg0hnnfeNemgNbMQaWw48iWLaiuXqG1nway1gy/2YA8pV0n9LjVprUeZORXfCQfae5r0G/8c+srbWJg6z2/iLt2X21SgZoA/h2vB7ZWayfivA8o9/0W5ajHJmCF4Bs8FQRBLbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vm/k/4Ok; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b="Jrepk+CO";
-	dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b="pISWYtMo"
-Received: by email.devuan.org (Postfix, from userid 109)
-	id 43E3A46B; Fri,  9 May 2025 18:36:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=devuan.org;
-	s=default; t=1746815764;
-	bh=/JMBen9fhoFqQaivjQ7HgEwBRd7lz6FFv15uUqO4ee0=;
-	h=Subject:From:To:Cc:Date:From;
-	b=Jrepk+COpsMdjj+w/1DXokeqtd7GLXL5W/GQFyOftj1quh3fnrhwa9qKV3NUQ8qX6
-	 zDjgEDIzesdyyh+PPoLC3Mas9CJZYTos1EfzqPbI1q3Z+U9fSSg1iETR99Bgpuw5SM
-	 X+tpMIfAW74SSNOZ+1TrOR4g23rj1T+ACHqak0GYDeu80JgcIXp73NCa0p++1OmXqk
-	 O9SrOhogeSC9t7CV5Xt679xMiUq6MZwLm9WVgu/7bT8coRrQatjBbvelp+hLJ2OVsS
-	 0bd/SJfPTCJc25cG7fNKLmDIADcYO5yzljjaj1kiOnyGwC3PKNwwWIHgX7jKnILzbP
-	 bTd/yIgZANAHg==
-X-Spam-Level: 
-Received: from [10.14.5.250] (office.ipacct.com [195.85.215.8])
-	by email.devuan.org (Postfix) with ESMTPSA id 5F1F83FA;
-	Fri,  9 May 2025 18:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=devuan.org;
-	s=default; t=1746815760;
-	bh=/JMBen9fhoFqQaivjQ7HgEwBRd7lz6FFv15uUqO4ee0=;
-	h=Subject:From:To:Cc:Date:From;
-	b=pISWYtMot3FQ2zgWtTirZPBq3Q80uI5IhIStedQd4Wy0H6zdHcR+GJTxzwd79xVLg
-	 wYTvb9/nzG9NWPHRnSkUc6TxmNUX2tRjIXfjPkKEPqmdMGFj+kgDg1psMfh9lbVOzc
-	 kjOKrtU5b9E7ePONqw/4OiAQ353ZOgg0ResaTGYnhOLZSpyGXFoDbWEY/vA2THKob/
-	 spcUAbyvQc+FbeCtw///raQ8IqGlO/CKKdm6x+TSzT1rrQL7GPB6GsJPrqFK3i1/Jc
-	 6HPi0gjxyFx/p9WkNZq0Ui4+ol5Q9tRfW0yYbv9bCrjfnnaGLLxTrBMC6WEueoiNFX
-	 GI0jmuHblgO0Q==
-Message-ID: <5c176101cd5fd8e629b18380bf7678ea6c6a5d63.camel@devuan.org>
-Subject: Bug 220102 - struct taskstats breaks backward compatibility since
- version 15
-From: Boian Bonev <bbonev@devuan.org>
-To: linux-kernel@vger.kernel.org
-Cc: Balbir Singh <bsingharora@gmail.com>, Yang Yang
- <yang.yang29@zte.com.cn>,  Wang Yaxin <wang.yaxin@zte.com.cn>, Kun Jiang
- <jiang.kun2@zte.com.cn>, xu xin <xu.xin16@zte.com.cn>,  Andrew Morton
- <akpm@linux-foundation.org>
-Date: Fri, 09 May 2025 21:35:59 +0300
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vm/k/4Ok"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a1f5d2d91eso943389f8f.1;
+        Fri, 09 May 2025 11:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746816192; x=1747420992; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ndxIwpqni0a6tDVrjZprOorINLiqY/weaUCp02laXM=;
+        b=Vm/k/4Ok6HVaxBcG0/spAXYRSx7oIvgBgdHe5R5JQ/Y/atYyKb4PxeP/2QiEuO/b3k
+         0JMSSEtr/3jOZmgDYCQRZBxC38S6xi69zBohaAboVp60wyAf5c4WG9Qc+Ix/VNe/XTn2
+         FB/x7SfcqcDyJ8HrfVCsKR5F/0/5y3Xij9qrSVBI5QBO7OYtdL/u6roX/nrhUYMusqfN
+         /WBBNDoV+zzDRBlYfVyU76P4M2F1f0zf1B7OxzxQbF4qiTUvF4MMEJzBCWbXsoNm9sQS
+         ghITenQIDcVm4LAI+82Gd+eqqlnEOh8ZH/jYWELLdEDNIYLguni+/9Izf610ecMhN31g
+         tIvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746816192; x=1747420992;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3ndxIwpqni0a6tDVrjZprOorINLiqY/weaUCp02laXM=;
+        b=FicPztgK0sgoVhDgB6cD5lLOAdgBuG7cuAI0jai3cQ/o8yR5XA/9DvxpBhnqF+xRzn
+         LBBKwacL2dy1JbjLutvDWCQdL9VvUfwrzdL9AfSqkEKWSq62Z845GDud6cXs0psyyqTX
+         ka1h3BN8E7wkyAJIMlvJ0yjLKe/sjrC+E2l/BnFhdA0D6bBMo2Ugcn0vpE7tGsrO7Ee4
+         aUGFCeoao3X2WnBOU1r0jY43SCF6FLU3ZFrzLu/DBiLoOKIATgwJMtbcxmB9yV5fLeGR
+         IVgimLEY0FOdObEtpsB8qqMU13fkCKD5ZF9HQ0mATXyXT9op8Vdvd9it2zBoa9/S4lyL
+         /frA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3+OR7JLCESADqusVi90HczFYZD4iC55qsh2wnrd+OZ+NbYIX00KMV7Y8E5qkXfzWwYFc=@vger.kernel.org, AJvYcCWm5wxKamZNQx4KEvwc9USEdRKv7aZmnc2JmmDakNAIZaTfBd1nPSDSYgue2PgBHRpWHU2kEAZuQRt5cOcxN6w7@vger.kernel.org, AJvYcCXm7+kGkl8lNwkV8hVcenpMQhnSm9/V+EZjIzvkAz05Diju6EypqXCopKJ4/SoOVSQJz2QMgwOJ2JmD4V+G@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZlQlRLI/a6M30qaM8gnYFPei172lm6yJw9oA0ivJeGehL/qgm
+	H9J/5QiwJgwUp6BiHKpsNB7zW/RFKaZqR4IpKcjSnZvSKd/3mHZ1XqlvB7Te1irLv3/oXjLevT2
+	3Y1bYkI9s73w36TBtVrRmFqa7Zos=
+X-Gm-Gg: ASbGncsAUWW7t9EJ6sJl1RCBFhdYw0u5Sc+3miG+KQK9YtTOBQZyFK7cjxa6o26qFX/
+	8j9iYXWqaZ8baRR1wynVG4pXxbVWMAG5jeo5neEyb2IxwBs7PDIUdcANGgDecpaZLAXAObd/yrv
+	D0MjQRcp511aqWlFavCPxWKApgoOSt/qLYSDLpzeSLfafpRsFN
+X-Google-Smtp-Source: AGHT+IFYnZD9y+hjO9CRH7JbZRqwYwFvCe82Ke5Lt/BeQLTVkbi1WQsCzGbxCZtrM0Gj1TEWNbFMvXBqV8FmzAVdtuA=
+X-Received: by 2002:a05:6000:2506:b0:391:22a9:4408 with SMTP id
+ ffacd0b85a97d-3a1f64386eemr3845245f8f.16.1746816191780; Fri, 09 May 2025
+ 11:43:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250501073603.1402960-1-luis.gerhorst@fau.de> <174681603001.3715348.12288999798860158953.git-patchwork-notify@kernel.org>
+In-Reply-To: <174681603001.3715348.12288999798860158953.git-patchwork-notify@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 9 May 2025 11:43:00 -0700
+X-Gm-Features: AX0GCFvLVth5qvdC1z-BgTiCYbsMNaP7ne4n5tL7wLi4uocO_ruonz0SxGJeZGA
+Message-ID: <CAADnVQJ+=Tip0ocob2aWe4G0BTs4F7veMtM-DD7f-zGKncAa_g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 00/11] bpf: Mitigate Spectre v1 using barriers
+To: patchwork-bot+netdevbpf@kernel.org
+Cc: Luis Gerhorst <luis.gerhorst@fau.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Xu Kuohai <xukuohai@huaweicloud.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Henriette Herzog <henriette.herzog@rub.de>, Saket Kumar Bhaskar <skb99@linux.ibm.com>, 
+	Cupertino Miranda <cupertino.miranda@oracle.com>, Jiayuan Chen <mrpre@163.com>, 
+	Matan Shachnai <m.shachnai@gmail.com>, Dimitar Kanaliev <dimitar.kanaliev@siteground.com>, 
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Daniel Xu <dxu@dxuuu.xyz>, bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	ppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello!
+On Fri, May 9, 2025 at 11:39=E2=80=AFAM <patchwork-bot+netdevbpf@kernel.org=
+> wrote:
+>
+> Hello:
+>
+> This series was applied to bpf/bpf-next.git (master)
+> by Alexei Starovoitov <ast@kernel.org>:
+>
+> On Thu,  1 May 2025 09:35:51 +0200 you wrote:
+> > This improves the expressiveness of unprivileged BPF by inserting
+> > speculation barriers instead of rejecting the programs.
+> >
+> > The approach was previously presented at LPC'24 [1] and RAID'24 [2].
+> >
+> > To mitigate the Spectre v1 (PHT) vulnerability, the kernel rejects
+> > potentially-dangerous unprivileged BPF programs as of
+> > commit 9183671af6db ("bpf: Fix leakage under speculation on mispredicte=
+d
+> > branches"). In [2], we have analyzed 364 object files from open source
+> > projects (Linux Samples and Selftests, BCC, Loxilb, Cilium, libbpf
+> > Examples, Parca, and Prevail) and found that this affects 31% to 54% of
+> > programs.
+> >
+> > [...]
+>
+> Here is the summary with links:
+>   - [bpf-next,v3,01/11] selftests/bpf: Fix caps for __xlated/jited_unpriv
+>     https://git.kernel.org/bpf/bpf-next/c/cf15cdc0f0f3
+>   - [bpf-next,v3,02/11] bpf: Move insn if/else into do_check_insn()
+>     (no matching commit)
 
-Since version 15 (TASKSTATS_VERSION=3D15) the new layout of the structure
-adds fields in the middle of the structure, rendering all old software
-incompatible with newer kernels and software compiled against the new
-kernel headers incompatible with older kernels.
-
-I think that change has to be reverted and the added fields moved to
-the end of the structure. Also bumping the version to 16 after the
-change is a good idea in order for the userspace software to be able to
-distinguish the different formats.
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220102
-
-With best regards,
-b.
+Applied the first patch only.
+Waiting for respin of the rest.
