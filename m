@@ -1,87 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3462367B1;
-	Fri,  9 May 2025 16:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFC42356A4;
+	Fri,  9 May 2025 16:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806981; cv=none; b=Opp37p2/7SSjO2P/3Y0s5t2SRTNg/rCV/ggVQ5cvbeytq5cT5I+tfbMDSTFY7NpvMG3zvdxIaf9GLU1MnmNXJOFtTqnHkj59u1/WYHXTIG/ilXhfjIMptPzmzMJ9N7atPwWcoxjDeRkfhH1x+dVn9MCktLNydY2J+X+qz4fvhWw=
+	t=1746806987; cv=none; b=mLlxBW0gFOECWjDu5DRwxAqCGpfsax0AE20JV4mlv5+thYxshiLpP8owF19o2d943r8//KHThJFKdOmzN2IIKlmpBFJIymtB9J3OQYTqSR+6tglVayYBraIlOKo5jMQ9Jzap8F7ZdVakEMDNJMINrzBBiaN2XqhwwX6hBnkuLKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746806981; c=relaxed/simple;
-	bh=UKE+0RPXtg1WdCPj4nwbiF1vj2IOeaeA5oRzi512CWU=;
+	s=arc-20240116; t=1746806987; c=relaxed/simple;
+	bh=Zx9q53OQA04c5qmcm0DsdpJC9W96D9D2DyB30Y/gQSE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o68Mq+K5qw5R06f/ij7RHTwSOJmKVXkbo5eNZ1LeWZuiOpnG8rFhMC9J6KukHnJk1hEHAl9cVz5QXfrAg/2VWNkscDwtIGwUgkPnMhZWp5UOI5H0jzaWhJcxjFhhfRvgYIB3oYZ3WpQbZwjg7XeiWazm9Br7yrTIqdu9ckEPUvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPC0FmTZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBmYtyEpf6jk6Xcllr0OoP8sLuL6/ddcGkbf8bNmSElppTbezv47it6weZ7DhkJa5iCiH6qbYlOPWQ9RoIqHM38soewUWJrCh9uH8lBbRQC8id+pFGGIfS0W/4v1wArvzug0vyzYo/4cr+gzq3jMnqaCSdxNlUbMSApJqQQ398E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jj9Vh6d8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPC0FmTZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE49C4CEE4;
-	Fri,  9 May 2025 16:09:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jj9Vh6d8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4BCCC4CEE4;
+	Fri,  9 May 2025 16:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746806981;
-	bh=UKE+0RPXtg1WdCPj4nwbiF1vj2IOeaeA5oRzi512CWU=;
+	s=k20201202; t=1746806986;
+	bh=Zx9q53OQA04c5qmcm0DsdpJC9W96D9D2DyB30Y/gQSE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qPC0FmTZSPv2FVwCNKrUkVSSIOAQb7ciEg/NJH3r0zJToSXmZ25/70zo6e5/IUVfD
-	 DNBL5akw+oun8/VLTLGtgv0kRXgc6K1lvfFwpwu57oNjXohFlLXy+RVAQj80QpTYNY
-	 8iwuCW9VBpaMlzDurbxlWpXmpmRDn6ecCB4jI2gxrZl1pSGPlpRzJ3E1xYDKyV76up
-	 Hqo/Gstiq+dfpc36GbisWa/nxSUyL7eKSrJSQhE4UdJD8cjyIKOEOfSIZR7NnFS3pR
-	 PQihPX1gc/8KhHD5CfgAvAQ3IUBj1G5uR+VTVChdK9jcpJdEmwlLsKWl5cLtLkgEhs
-	 z/trChP54b+JQ==
-Date: Fri, 9 May 2025 17:09:35 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jian Hu <jian.hu@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>,
-	Chuan Liu <chuan.liu@amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Dmitry Rokosov <ddrokosov@sberdevices.ru>,
-	robh+dt <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	devicetree <devicetree@vger.kernel.org>,
-	linux-clk <linux-clk@vger.kernel.org>,
-	linux-amlogic <linux-amlogic@lists.infradead.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: clock: add Amlogic T7 PLL clock
- controller
-Message-ID: <20250509-straddle-parish-92306b78486b@spud>
-References: <20250509074825.1933254-1-jian.hu@amlogic.com>
- <20250509074825.1933254-2-jian.hu@amlogic.com>
+	b=jj9Vh6d8aZ3F7OG5lDvoVMttOWKZaPPKIalxI97k/c3EO70+j54kHabw7t/ZrGoNS
+	 zrQteMjPuFQ6I8S8tIpySjMKb3PuIuBtC1BHE4w+ws+84ltQRhnM3QR3LosBoXXZ3H
+	 B6fgLxE2y40MC3ZhcfhRa+pf6qbEi+y38YjqVR1GV1p56MJWu/08UNbehTSA5ky+an
+	 iOu0l0EUXCdZM+8s8zZtK80qZUOfd6PgUInGfEwSU6Am9GvV+QzRyII9EHLDxWRm/A
+	 wmBhOtaea+Ve9EDNILiLlKDlpIqDJ3eumwOOS2UoFgZnZPckifxdwODvxcM1wnrFCG
+	 CgI54YXFKVorw==
+Date: Fri, 9 May 2025 09:09:44 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-mm@kvack.org,
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 01/12] module: Move modprobe_path and modules_disabled
+ ctl_tables into the module subsys
+Message-ID: <aB4oyFBMH4PKjJn0@bombadil.infradead.org>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-1-d0ad83f5f4c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0Fuzjvst7gC5JW8H"
-Content-Disposition: inline
-In-Reply-To: <20250509074825.1933254-2-jian.hu@amlogic.com>
-
-
---0Fuzjvst7gC5JW8H
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-1-d0ad83f5f4c3@kernel.org>
 
-On Fri, May 09, 2025 at 07:48:19AM +0000, Jian Hu wrote:
-> Add DT bindings for the PLL clock controller of the Amlogic T7 SoC family.
->=20
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+On Fri, May 09, 2025 at 02:54:05PM +0200, Joel Granados wrote:
+> diff --git a/kernel/module/kmod.c b/kernel/module/kmod.c
+> index 25f25381251281a390b273cd8a734c92b960113a..5701629adc27b4bb5080db75f0e69f9f55e9d2ad 100644
+> --- a/kernel/module/kmod.c
+> +++ b/kernel/module/kmod.c
+> @@ -60,7 +60,7 @@ static DEFINE_SEMAPHORE(kmod_concurrent_max, MAX_KMOD_CONCURRENT);
+>  /*
+>  	modprobe_path is set via /proc/sys.
+>  */
+> -char modprobe_path[KMOD_PATH_LEN] = CONFIG_MODPROBE_PATH;
+> +static char modprobe_path[KMOD_PATH_LEN] = CONFIG_MODPROBE_PATH;
+>  
+>  static void free_modprobe_argv(struct subprocess_info *info)
+>  {
+> @@ -177,3 +177,33 @@ int __request_module(bool wait, const char *fmt, ...)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(__request_module);
+> +
+> +#ifdef CONFIG_MODULES
 
-Looks like Rob's comments got resolved,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+kernel/Makefile:
 
---0Fuzjvst7gC5JW8H
-Content-Type: application/pgp-signature; name="signature.asc"
+obj-$(CONFIG_MODULES) += module/
 
------BEGIN PGP SIGNATURE-----
+And so you can drop this ifdef.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaB4ovwAKCRB4tDGHoIJi
-0r1NAP9mZrXhZY6WXko9PL6fkCqKeL/fwtgoQwBt3GzCJr/9MQD+LeFD+itCESb7
-ZGtjYJ+O87BFn1X8MeYi+O4FZ6CYMw8=
-=bC3h
------END PGP SIGNATURE-----
+Other than that:
 
---0Fuzjvst7gC5JW8H--
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+
+  Luis
+
