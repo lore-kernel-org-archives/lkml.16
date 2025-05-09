@@ -1,221 +1,96 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8425E21ADAB;
-	Fri,  9 May 2025 21:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827343; cv=pass; b=L7zRzMtIj9BWzKAt2aw47vfjqOhFjv/vctbiy4iB6err+zXQbM3tUQP7fCxPuyFglH/oz7WZGedTR0Zuyn47AIacL6l3b/BQcBf2XiLty6dH4h6GsMjCijsb7wAaut/5+ledNlYCKjyRj2AormRwrZ2AgYGNa6cDQoRCD+ko8LM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827343; c=relaxed/simple;
-	bh=abXm0HE6er68zVYgwFTA1GAphj23JnOBQ9gx5P+1GEo=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=JXphyOvWzEh4x5qQhDk2w/E4otwAY/s0PFqDQXTZBtn04LJa9bMgkg6wmrN0O2d0Fu6G0GuXcjJVSpyZ6xCFc3GPrIEWeAP6P0XCPWOYUIm+SJ1oUEfFPVMGlt1VxW1PBmCDgdavn/G2Ru5ZeH+GkZTCChcYD3pgjAgOFPu/mjA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=G4ko6ZRc; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE88226CF4;
+	Fri,  9 May 2025 21:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746827383; cv=none; b=RForPRk/UVY42WK3FP9PZZejo/pEJ+u66fP5VKO2GErsEh2w/p+PCRwGke2iWyHC4e1AMY+lyvIf7tchDhh32a9YBuJPA2R0ERQGLllA+QfFTy9MzKr6FxmZjg3JDTHosJHkslvnCvhMZolTtS9Pv3cZzhBINvTi6oIfwk+qBfQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746827383; c=relaxed/simple;
+	bh=SiJ264L76W+iNGxah+QR+bqOGeUBSZ7lji/MNG6Rk4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ze/NDB7OKPt5z6kGPUeBiwbQdyhpg20xi0k4z7N88p2o9lSMWxeojCjn72vGJKzOOxZphONEM7Mp6Qg30x/G2zlDtlF89sRlGOlzUvVFcDmFMY+i3bin8qhoPYp5erAh1k/6AXU7SIKdkekTFSG68dd0ZI57r/F3LaPP/JsFJvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYAhK1H/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="G4ko6ZRc"
-ARC-Seal: i=1; a=rsa-sha256; t=1746827286; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=X+ouvPLprLZlDjtU+xaaGX8yzdSw8jQtK38tEW9MWcU2o2blWfZrHoW87C23lA8Px0DMAtquinNVe2nNFXMSjzB+jboi3AdKw5zPTwgaIsrrl/8AfM15FAK38fvb9c+84FqsH30Zhhfn4NhoFxFBwEOT510X0bO/Gp0dkSYzzaM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746827286; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=X6cgvJS2QbWqSUKHmAdDovEvM2ZYY2qcB/moWbYd/XE=; 
-	b=Y3kOhpyuCCyMYr6aqqr11zidXflcatTMIrwGcIM4myD641kpYgS8gqOL/Fso1ij4QaMJKMZp8mDrqS0UglPTj8M4eDUXRXtMdgaUwpwWIjywx+Ecbjir6o3O2I/ECNDosTVduxURjviCUrWyBXL9xlyIgO1tKejzAAhG+5iqX6M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746827286;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=X6cgvJS2QbWqSUKHmAdDovEvM2ZYY2qcB/moWbYd/XE=;
-	b=G4ko6ZRcGZe2Rbx4oMFderu5UzXTUmDUWpl85brNcnSMyv3N8XFRqyPiBC+qttJ2
-	OvP4aUbTRL0AfvUf0Jo1CjmYKvwuohw1s0eP7bX6mMqi13RZAuEG6eAbKMaEHMQDJFj
-	wp927vVWxQrtgckbIWyQnDbmDwW6/DP0e0Quo97U=
-Received: by mx.zohomail.com with SMTPS id 1746827283614312.2088686696102;
-	Fri, 9 May 2025 14:48:03 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYAhK1H/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02004C4CEE4;
+	Fri,  9 May 2025 21:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746827381;
+	bh=SiJ264L76W+iNGxah+QR+bqOGeUBSZ7lji/MNG6Rk4w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uYAhK1H/3ajc/630iBxlSZwFpfs7YQjH28MoAy/PNXdDe5ceNI2Ycnxt1dn+GTZ7d
+	 Q3lsLH2TxYfYHz+IrJ3qB14PQJo3sJspgtFfVNbI8W2CuG4oyBhBZo1LP2UragiUPj
+	 05tToUJo/K4GRvFE3hrbtcl3cCcwJhJZC4jMwKYPF//w+q7XKUk9iIZy2B6/5BbqAG
+	 M+Q4oMqDgbf7hrL7a1JZuLFLOXpo9VdqQytFBt5g+A+xD4/yEJFMVJhJlxUAT4iNI7
+	 afH+/8ACTMWKfAKZI6z5+xaLPzbvrXLxWPccl6Lm0FzuU4aNnm+LbWIiQpfIhxEwsf
+	 i5CWn2npgfs4Q==
+Date: Fri, 9 May 2025 21:49:39 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Juergen Gross <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org, xin@zytor.com,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH 3/6] x86/msr: minimize usage of native_*() msr access
+ functions
+Message-ID: <aB54c5ajYkGZ1sPi@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250506092015.1849-1-jgross@suse.com>
+ <20250506092015.1849-4-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH 4/4] rust: drm: gem: Implement AlwaysRefCounted for all
- gem objects automatically
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250501183717.2058109-5-lyude@redhat.com>
-Date: Fri, 9 May 2025 18:47:46 -0300
-Cc: dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Asahi Lina <lina@asahilina.net>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <53D76D55-81EA-46F5-B125-B85BB9AFE269@collabora.com>
-References: <20250501183717.2058109-1-lyude@redhat.com>
- <20250501183717.2058109-5-lyude@redhat.com>
-To: Lyude Paul <lyude@redhat.com>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506092015.1849-4-jgross@suse.com>
 
-Hi Lyude,
-
-> On 1 May 2025, at 15:33, Lyude Paul <lyude@redhat.com> wrote:
->=20
-> Currently we are requiring AlwaysRefCounted in most trait bounds for =
-gem
-> objects, and implementing it by hand for our only current type of gem
-> object. However, all gem objects use the same functions for reference
-> counting - and all gem objects support reference counting.
->=20
-> We're planning on adding support for shmem gem objects, let's move =
-this
-> around a bit by instead making IntoGEMObject require AlwaysRefCounted =
-as a
-> trait bound, and then provide a blanket AlwaysRefCounted =
-implementation for
-> any object that implements IntoGEMObject so all gem object types can =
-use
-> the same AlwaysRefCounted implementation. This also makes things less
-> verbose by making the AlwaysRefCounted trait bound implicit for any
-> IntoGEMObject bound.
->=20
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+On Tue, May 06, 2025 at 11:20:12AM +0200, Juergen Gross wrote:
+> In order to prepare for some MSR access function reorg work, switch
+> most users of native_{read|write}_msr[_safe]() to the more generic
+> rdmsr*()/wrmsr*() variants.
+> 
+> For now this will have some intermediate performance impact with
+> paravirtualization configured when running on bare metal, but this
+> is a prereq change for the planned direct inlining of the rdmsr/wrmsr
+> instructions with this configuration.
+> 
+> The main reason for this switch is the planned move of the MSR trace
+> function invocation from the native_*() functions to the generic
+> rdmsr*()/wrmsr*() variants. Without this switch the users of the
+> native_*() functions would lose the related tracing entries.
+> 
+> Note that the Xen related MSR access functions will not be switched,
+> as these will be handled after the move of the trace hooks.
+> 
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 > ---
-> rust/kernel/drm/gem/mod.rs | 47 +++++++++++++++++++-------------------
-> 1 file changed, 24 insertions(+), 23 deletions(-)
->=20
-> diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
-> index 55b2f1d056c39..929f6c9718362 100644
-> --- a/rust/kernel/drm/gem/mod.rs
-> +++ b/rust/kernel/drm/gem/mod.rs
-> @@ -10,7 +10,7 @@
->     drm::driver::{AllocImpl, AllocOps},
->     error::{to_result, Result},
->     prelude::*,
-> -    types::{ARef, Opaque},
-> +    types::{ARef, AlwaysRefCounted, Opaque},
-> };
-> use core::{mem, ops::Deref, ptr, ptr::NonNull};
->=20
-> @@ -36,7 +36,7 @@ fn close(
-> }
->=20
-> /// Trait that represents a GEM object subtype
-> -pub trait IntoGEMObject: Sized + super::private::Sealed {
-> +pub trait IntoGEMObject: Sized + super::private::Sealed + =
-AlwaysRefCounted {
->     /// Owning driver for this type
->     type Driver: drm::Driver;
->=20
-> @@ -52,6 +52,26 @@ pub trait IntoGEMObject: Sized + =
-super::private::Sealed {
->     unsafe fn as_ref<'a>(self_ptr: *mut bindings::drm_gem_object) -> =
-&'a Self;
-> }
->=20
-> +// SAFETY: All gem objects are refcounted.
-> +unsafe impl<T: IntoGEMObject> AlwaysRefCounted for T {
-> +    fn inc_ref(&self) {
-> +        // SAFETY: The existence of a shared reference guarantees =
-that the refcount is non-zero.
-> +        unsafe { bindings::drm_gem_object_get(self.as_gem_obj()) };
-> +    }
-> +
-> +    unsafe fn dec_ref(obj: NonNull<Self>) {
-> +        // SAFETY: We either hold the only refcount on `obj`, or one =
-of many - meaning that no one
-> +        // else could possibly hold a mutable reference to `obj` and =
-thus this immutable reference
-> +        // is safe.
-> +        let obj =3D unsafe { obj.as_ref() }.as_gem_obj();
-> +
-> +        // SAFETY:
-> +        // - The safety requirements guarantee that the refcount is =
-non-zero.
-> +        // - We hold no references to `obj` now, making it safe for =
-us to potentially deallocate it.
-> +        unsafe { bindings::drm_gem_object_put(obj) };
-> +    }
-> +}
-> +
-> /// Trait which must be implemented by drivers using base GEM objects.
-> pub trait DriverObject: BaseDriverObject<Object<Self>> {
->     /// Parent `Driver` for this object.
-> @@ -110,10 +130,7 @@ unsafe fn as_ref<'a>(self_ptr: *mut =
-bindings::drm_gem_object) -> &'a Self {
-> }
->=20
-> /// Base operations shared by all GEM object classes
-> -pub trait BaseObject
-> -where
-> -    Self: crate::types::AlwaysRefCounted + IntoGEMObject,
-> -{
-> +pub trait BaseObject: IntoGEMObject {
->     /// Returns the size of the object in bytes.
->     fn size(&self) -> usize {
->         // SAFETY: `self.into_gem_obj()` is guaranteed to be a pointer =
-to a valid `struct
-> @@ -175,7 +192,7 @@ fn create_mmap_offset(&self) -> Result<u64> {
->     }
-> }
->=20
-> -impl<T> BaseObject for T where Self: crate::types::AlwaysRefCounted + =
-IntoGEMObject {}
-> +impl<T: IntoGEMObject> BaseObject for T {}
->=20
-> /// A base GEM object.
-> ///
-> @@ -269,22 +286,6 @@ extern "C" fn free_callback(obj: *mut =
-bindings::drm_gem_object) {
->     }
-> }
->=20
-> -// SAFETY: Instances of `Object<T>` are always reference-counted.
-> -unsafe impl<T: DriverObject> crate::types::AlwaysRefCounted for =
-Object<T> {
-> -    fn inc_ref(&self) {
-> -        // SAFETY: The existence of a shared reference guarantees =
-that the refcount is non-zero.
-> -        unsafe { bindings::drm_gem_object_get(self.as_raw()) };
-> -    }
-> -
-> -    unsafe fn dec_ref(obj: NonNull<Self>) {
-> -        // SAFETY: `obj` is a valid pointer to an `Object<T>`.
-> -        let obj =3D unsafe { obj.as_ref() };
-> -
-> -        // SAFETY: The safety requirements guarantee that the =
-refcount is non-zero.
-> -        unsafe { bindings::drm_gem_object_put(obj.as_raw()) }
-> -    }
-> -}
-> -
-> impl<T: DriverObject> super::private::Sealed for Object<T> {}
->=20
-> impl<T: DriverObject> Deref for Object<T> {
-> --=20
-> 2.48.1
->=20
->=20
+>  arch/x86/hyperv/ivm.c      |  2 +-
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+Acked-by: Wei Liu <wei.liu@kernel.org>
 
+> 
+> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+> index 09a165a3c41e..fe177a6be581 100644
+> --- a/arch/x86/hyperv/ivm.c
+> +++ b/arch/x86/hyperv/ivm.c
+> @@ -319,7 +319,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
+>  	asm volatile("movl %%ds, %%eax;" : "=a" (vmsa->ds.selector));
+>  	hv_populate_vmcb_seg(vmsa->ds, vmsa->gdtr.base);
+>  
+> -	vmsa->efer = native_read_msr(MSR_EFER);
+> +	rdmsrq(MSR_EFER, vmsa->efer);
+>  
