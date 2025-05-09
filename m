@@ -1,189 +1,496 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7BA227581;
-	Fri,  9 May 2025 10:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785918; cv=fail; b=lVFMciaAj1pt6TS1VCaYjbTm4q5AV23XYnSRBC6FbXeD0pduGvX8LsDEq/b2OaWkW7DbcR2VAaNLzaWtYP8RVQP/z2uwwxAH2HpXNJjQ8lkj9IjyL1XVRdRxuN+rJr0qag+CpCZkJ5EuCSsmd4XvXjuF0vtIy6ktb1pGSfQwWhk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785918; c=relaxed/simple;
-	bh=CIULYLGZt0IQKnxK5gysCjSkRBM7cyXmeVuYdszgg+k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kbPKk5PUMcpfA/4elP3HJeG2pTUabvsi+CwcUBnnRmsAXsocha9nJvDZzNkIeepCbesNFhZjoes3hge8lHalixr753EZpFRxyQN26ZlGYvGzcbYJLGX2f7Itw2dli+io813HlyB3nmXA7P0dmfqExheCYXBl3QtPFZ5RHk3SKKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QoouHyLt; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA7E226D04
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 10:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746785944; cv=none; b=e6wJ0nXpg4LiXE9rfOeUlHgvOIpWVbnDhK1nj/2LqME66DNE571qWLBbiSIL16Ds1eK+kCD3rNRiVJXyrWxGax/T8CaPXExT7GXMITkcb0GaxM847k/5U/9JtblkScDNqWqVln3awbK9vCEE9/z44swlhgAAsqBUn4KI0wokHWc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746785944; c=relaxed/simple;
+	bh=jqxYVU6GJTi9RMs4b+s1yk10X+ILJvKnfqth/cu5hZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EMsKgitEZdMlIPwbBBdYXE4UoQ0vCiUiYZDHz/eEIQn5lZ7Fp8oxZlFukmxInWZhH+8tuwNEWkYRCoqdloUlqemufmAIJA06NMlRB+7XuuH5mir3A+4Bc+ExE0gmy5r48SXNJVK3sbQmb9ZFtHQuWllSxwneg36owj4pY2oKqxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XXV3WeeK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QoouHyLt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746785917; x=1778321917;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=CIULYLGZt0IQKnxK5gysCjSkRBM7cyXmeVuYdszgg+k=;
-  b=QoouHyLt//fMcSNdvUVOwd6xIGG4yCmfUVx3dE+RBBqnwC+UUKZMqhDB
-   v1qbyD/UpQ+So0pBe27KR5CzSkNeXWwBmD4dy5G0IdXj11Rd11TpIqVst
-   gAFkWnYwTFki7dQLiWcHBEv8NfJV3WTwkBLoS48bcg/yxZiFWLWtOJxEt
-   npFi9Vjcp9/f4WJkPo4MpTJgIsTXy2Bli0FQolKGLvsfT/XmAuJ2Zi9mb
-   41Br0+vU/2uakidX7ei0tl0UJTM3vcJuitJhXH9v0vyEBNt6mlk+qMBPG
-   ym8h6vjNmLqhL8MdRGYmzrIh2mxiHmcymt/FRFhys9WFdg7lchmQlZvAW
-   w==;
-X-CSE-ConnectionGUID: /7HV79sSTQeRV05gOJu0cA==
-X-CSE-MsgGUID: P1/q26/KQA6X/ldrmnA29g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="47718698"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="47718698"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 03:18:36 -0700
-X-CSE-ConnectionGUID: CQKEUNVITCO0l87uSUVcPQ==
-X-CSE-MsgGUID: qKIKu2ZkS1WxDO2YwcHyyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="136966622"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 03:18:36 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 9 May 2025 03:18:35 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 9 May 2025 03:18:35 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 9 May 2025 03:18:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m0lvIfD+h5y79TDo2GKwQ1eBKS5cMYqV9C93079AD+4sdR3o6E6aRtrBnWjASxDhT8G0rfRsouDYdUvl4QSumvvePXooP2GeKzvxgg2U6tB2G6/lTKuBmSd5iIqu434+KwplQoV2WJoPyo0uJ7dU9S4Xa2p4duX4hYz+qL39t3esaSZVUs7wNuYjF0hljLvxjQ31U3A1E9kyd7bO059tVMF7t3RKjLGClDTlQppM2CQv6Io5qxuffXs3APrUa1Wqu6lbUkUk0WpbkqkhiPi0FbAXNPVfobYe2xKTLvDw1fVXFDeRqBiTqYEXSp7XgqybcT5gE6Jq6y6Tw8zORwUOEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CIULYLGZt0IQKnxK5gysCjSkRBM7cyXmeVuYdszgg+k=;
- b=EQE/CSuc4V3xppgyKu8XsTJ80DJCA+GJzAKIA7rGC75rrYwAPQ89PjdJMYDoKHxdFC/wLIXjUafJWPEn3c69INzKWXWYO+WpuhY4mIqNuaVBWXVLQ1dvYO4yE3xa5XIR7Yn7ANQARSUm4pC4/i3n/a1N+TemOKN6Z6LWM12z6SkzG9T3w/lSVr0xWDMkmbJUp5uviNT+a80N8E3TlP02LlzhTBOIhaF9v3TJdW5uDemNoWXyc8lbnY/8zq52bCRfMzOkQ1o39j3v1ac7OSrl2tuUAaBFcH25UV2PxX4hgWhKsOy0LKoPyJMcSU6HHgm11BuDYVhgPO9TS4q+9Q02lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by MN2PR11MB4614.namprd11.prod.outlook.com (2603:10b6:208:268::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.24; Fri, 9 May
- 2025 10:18:11 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%4]) with mapi id 15.20.8699.019; Fri, 9 May 2025
- 10:18:11 +0000
-Date: Fri, 9 May 2025 18:18:01 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-CC: <pbonzini@redhat.com>, <seanjc@google.com>, <rick.p.edgecombe@intel.com>,
-	<isaku.yamahata@intel.com>, <kai.huang@intel.com>, <yan.y.zhao@intel.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <kvm@vger.kernel.org>, <x86@kernel.org>,
-	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC, PATCH 03/12] x86/virt/tdx: Add wrappers for
- TDH.PHYMEM.PAMT.ADD/REMOVE
-Message-ID: <aB3WWUSESKt9niJV@intel.com>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-4-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250502130828.4071412-4-kirill.shutemov@linux.intel.com>
-X-ClientProxiedBy: SI2PR01CA0020.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::6) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XXV3WeeK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746785940;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XftaH5FzyM09S5RzjEe09GkGUeEVV3zeck5+IqSohtk=;
+	b=XXV3WeeKE80zcQ+sb1rhMEXPmEwRL5ly4dZzK4wtcrxhISggrYrtZit8RA7aAPVvzzjni2
+	/JkfuzIaqcnNVJ+khhrJLOuQMucwdOC562Wq+1o/uFEFi6PEmFwLy+9oU/nPnZlEVKq6qv
+	97OX8c2ivGmM5IrUaEyVd7/GqJCvDxA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-651-23F_yfHkOSKrfFDdpw5gdA-1; Fri, 09 May 2025 06:18:54 -0400
+X-MC-Unique: 23F_yfHkOSKrfFDdpw5gdA-1
+X-Mimecast-MFC-AGG-ID: 23F_yfHkOSKrfFDdpw5gdA_1746785933
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so8095965e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 03:18:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746785933; x=1747390733;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XftaH5FzyM09S5RzjEe09GkGUeEVV3zeck5+IqSohtk=;
+        b=AMT49JIjQT7nOzW1nidM4CaQFpsHHckmefnoG2r0RkJ/wjWt5BV8bgFtJTZWzK4bWr
+         awJOKHMbre3SKKQ/k7k2wXXCAFJzRqepDP3V+bC/9/VMUeHvpqayI9ErI7lwriCtv8g8
+         Vplr0sFerfpwY5nXlDuxSpG2YKX6/Px6NRoyTya7xEce0zbffxla7KnNHUluVDzfm1EU
+         EzU/wZqvPP3mtL+CdOlw820nxE9ELfMIX71JQ6+yeCjpUNfU4uxerV6WvvJu9XJ19goC
+         IEyawXixOv3NFMXJqgestrOOAuN6BIdJat6Na4BaGuv6DyGgl71OmPDh5bmcjmfy2umA
+         X3KQ==
+X-Gm-Message-State: AOJu0YyCfO6K7h7FfLWGJqLdTJzjR4sBdCueKJnpL+A82AmUVMiNU/IZ
+	5FGHi5XLQ+zbEjUGmIrqvWC02dHYtIkKkT66ThEvDeLHxZR0Bbpn1dehHo6xo7//mYKXNRs683F
+	jM9y5+J/gR4DmP6UVEgPwJ4+3YnNldSuII1ByY7CGyewPjJ/1+XPljl07qtebag==
+X-Gm-Gg: ASbGnctHDFmxf4HT082Lj1txmHUggvBQYLxiliZU2V4F60gie1E8p5eGTRJ0ZzbzhPM
+	q/lg/3zqjAMd0Mt3mdm7Vj8tjMhn/2MpqtIZv+i1X36DNTenqyuWQchJLzmbFIL1CMkLWK9JtbJ
+	DaqMsEbicP3W4lH7dEyqpoWQKerIhZVIcQFu+sNO5Vc0WJdynkF+f6RA3iEsS3qWyU3c/nbOFav
+	O2h7Y1BoBwe6lxKpVw+l1RZFQYCWsvXImEoIh2u88R6wbEjjdkmBdAWS6Q0VNmU1Egs+HyEINdR
+	DcFhj2ykOozOTTjMKU9NZgKsHwdHMGRecL1Gowg3/2FPF5tzqslqK7B9WRTyvMzYLkIUoZoO4la
+	CIuxIihM2SEJlNV4b1Usvc6PuU4ex6w00MPohpCg=
+X-Received: by 2002:a05:600c:5344:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-442d0312e08mr49366255e9.12.1746785933140;
+        Fri, 09 May 2025 03:18:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqSJEKsdFSiAMvPUrkU1iyZ1YBftQM/bXhK6JeyEYDfVJdYz7LYXx6vbUhXVTAL2+Dc5eQTQ==
+X-Received: by 2002:a05:600c:5344:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-442d0312e08mr49365945e9.12.1746785932599;
+        Fri, 09 May 2025 03:18:52 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67ee33bsm24482785e9.20.2025.05.09.03.18.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 03:18:52 -0700 (PDT)
+Message-ID: <4efa9948-a523-4597-baa4-c36d18a658b0@redhat.com>
+Date: Fri, 9 May 2025 12:18:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|MN2PR11MB4614:EE_
-X-MS-Office365-Filtering-Correlation-Id: bcb0d95a-d83c-43d6-9bdf-08dd8ee2cd4c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?1zR+6J0Po6X0W8ATeSbQj+5cJTOdNACPGfLGbUUb5aBdi0rNaCrEcnUMiBRA?=
- =?us-ascii?Q?tUz+4A5on1jON5Tl5TLkYc/3iqcLiYvgU1E57qxoWtECiN6pHrul9VhjW48j?=
- =?us-ascii?Q?lUJ28PW+OqRIdmfNvZAGld5GpkNnfJ5X9YkzUnv6bJiCWe2k2lVIxW3w0uWH?=
- =?us-ascii?Q?+dklK4ceCCJl5vLR+BX1oSP2F9JjwjVo+enl75lpTtGVY81uth5g4c9rA4TC?=
- =?us-ascii?Q?RmaRVv8v9j93YV2I/vvp/65RNyY/V1R5449Pb/kbyAxXjuh5YntfCooYI4zy?=
- =?us-ascii?Q?j7yEoTKmPp7MOBEW0IxEXJf9kA/51R0nkuMrOQHOXiTu+bIn76kC8hTzvRZk?=
- =?us-ascii?Q?UHVHW3FBx9w0ssqGT6E4KjW+U7cREQXbTYQk708P5vmyj4sskFG4O1lhCo2+?=
- =?us-ascii?Q?OKyuNaB4Mq3MaanRxF3GjFOK07vWgbquMjxd63Kf9iIDA4gmdJX8DPEdq44A?=
- =?us-ascii?Q?lelSYgyI2c3YX1M+7Y4AJaijKj7dgiYaliUlderB+FpD3lSn4VIuz5nmSU2C?=
- =?us-ascii?Q?0Ws7HKQ0kiIIxlQwwHSlVTjNX/wN43cTIYn9gt8HJ40mll8pIgEGWR84YVGD?=
- =?us-ascii?Q?2eI0yeT6B+nxmzAbN3HSdk2r0uEtq0HDKJd6dUsYBCbCMyeCqzDgH2QDFFSk?=
- =?us-ascii?Q?PhQMdWTKWMZ15ibaRWPTB+eG+1ZG/daZrHyEnAZE7grcRHb+xpsqox3sGhsu?=
- =?us-ascii?Q?lfQU2Xz1VtfD9m1QL+52ZtjAMvlysOOYkSFC9tmZwwmTvCyft68pQm2zpkgw?=
- =?us-ascii?Q?bsi5xli7+ZTINwpZnQygkFL/rKZdZWINfoeqDjnjg6RXhmrs7Wq2W1nnjo6C?=
- =?us-ascii?Q?T7ffJDEpZe7tTR8vXwn5J6jRBa1b0IdksAPn3TECORanbwzMtOleURRpT3VX?=
- =?us-ascii?Q?fihU0vx/yXVqsy/lTN51pMwrxhLeTfsyw8if8aiG/sKoMMxX10hCjHYn4KL8?=
- =?us-ascii?Q?DHnUofh1qGyKNzXtodPO2I7l+MxgoL/QSj3lHnX1Ee3st9jEPrYWOtfudSHF?=
- =?us-ascii?Q?WHrOSNfRs3HEdGdPfyzgI4x0i4h3geBy2mxdBizlrvTxAO2QVSKy+wgsmuN5?=
- =?us-ascii?Q?RiZwgFechJU7UQJxXt+KCE6x/TH4y2lDQhQnc+WlrtKpiaCAt24CyAJwzgPw?=
- =?us-ascii?Q?UnEeQEPjPIFfI4JcW9S5Zokfv58eQGmMfTIBWUGO2MSlxiuYeNyehxi1oV16?=
- =?us-ascii?Q?ozBNhymfTZtanIZFMc7k9JfCoe2HGlJSjM/8/SZYoJLk6hIoyNWuKbpNZ2L8?=
- =?us-ascii?Q?cfR3EoG9SuTMAMRsQ502MstOHxWHSO/gtQDx2ADu6Nj9qQ+ji6+H7xHdi/7s?=
- =?us-ascii?Q?/VBLdL3vEEE0romscbNIb7yrYda6GZerxDrXIID9ACEFSbtBGja21I3bweu3?=
- =?us-ascii?Q?QJrApPs=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H38TyLaXfGrKShS+J9n4D93ly1Pu7wA+h10ke+ToGolW1xBiq05HTGjdLlee?=
- =?us-ascii?Q?nZHoML4CT6buF4UIA7BX1vgaJ5+NjnXJ5C91hApRXrkww8sxkY4rTn/V8Uqi?=
- =?us-ascii?Q?187T4qwxAruiRZKYsJwKC9qMaTJTU++Fuwv8axDgcLojjpJvL62H27B94VWN?=
- =?us-ascii?Q?TSTmPsFwNQZiUtmRmrCIAoEdRks9qaa1VGU+dJYm1Z+HAKBBBV+3e7fDzk0d?=
- =?us-ascii?Q?bLK7DciAqI3VpgEpsvC4vqI5ogA8fZmbBJD1Wmtff3GC9ZCN6D3O3qTvWT+I?=
- =?us-ascii?Q?oY4BlXzcueqdL3VTrNPKPt4LXKzxAAU/e5cAeiDqwYAmhDE/Q8o+3fru+awB?=
- =?us-ascii?Q?7XFjPLtmpzAqF3ukHUFns/YUPYfT3vprMFpd6lgMwwIIL3bbJtlHUpmnXMAG?=
- =?us-ascii?Q?55yk6UIO1H3hoPFtHNuxn6uGwjrtObbqmvAePzin/QgfPnHlxAP6y7bXnfzy?=
- =?us-ascii?Q?HbMrDIIxarjX02/HRgyf+FAvggEvvbVJibMon5HkpANppXm1KRSfvKoAjqOP?=
- =?us-ascii?Q?d/uiYm2ncJrxp7vHLtFWcpNL7dx++Jtdpm/8GOknfTO0D3K6dyEW3CnvnoAH?=
- =?us-ascii?Q?aiqSLTYV6+rY7YewGWRET9F0qjERbAlCc8o7KoSm91+H80wppaGXHgcdAqk3?=
- =?us-ascii?Q?fr7l6ujDPG0ekMF+oeJORu0R4pQ7xTCGPYIe811skVw9AIvlBOfYEBii2zFu?=
- =?us-ascii?Q?aQTM3jSwQCwQ57YZJWlcRsB13p2oD5zqr6HArhdS8lZnOd5AMG+ZNIkZM+t6?=
- =?us-ascii?Q?hd/G5LcusQrlPhAmjlSUAwi9S7leYzd2mS09FJnq0CZkoWeUGRTPmDBz5Gsx?=
- =?us-ascii?Q?TDEq2HGdrpq7DJNDuW1qL/TOObsTDeR/LX9i3ulFVgWd5GmXkJfzwK+xzwRs?=
- =?us-ascii?Q?9CCFPvX7MFdcrTqb42n1IcnG4YFrouRINLDOfiF5h+wmLO2W8Z+Y41YO1Yn2?=
- =?us-ascii?Q?gBn+o3BAU0g40sLrkfaXLc/7SGdsRF8kvuDLOll6ORsxhorASUkZOxPZOweh?=
- =?us-ascii?Q?xu8x0iiIskGIZ9oHf7qfWc81ugc/owCJdZUxgA0Dib3ZHnysWwtLNr4if/RG?=
- =?us-ascii?Q?Yy3V9Xv/x5qUtHHTCwRnvgw9rq5kY92cNZ7SmJ9/xT4EJmwbDLHbwXhpdYwL?=
- =?us-ascii?Q?hreyrRJ48Lp4+Kn8zpNJqmrr+n02qeF8aQr74891df8/Hg9wlbMwPPcmAWl1?=
- =?us-ascii?Q?BIyb/SrfDPEIN63b9pEwQ8h8Zo87nEEOY8V31G+exeowXGmsRlxOyK73Lhe1?=
- =?us-ascii?Q?zXZholDzJwTTKnB3V9zeJBBHB2riOIsgl3QcFNuSzNRChLebO/x+HykrNHB4?=
- =?us-ascii?Q?W3SYNw0ALETv6mXJwa8rn+WnZLVAmKcThTtvqs7PF+Cab2POMTOptThQaQ+x?=
- =?us-ascii?Q?eMWkxQ/VuFVnaW1bDZS4lx9pI69tv6DSzc59jgDC52vEjtjIbQvwgPRxIZ0S?=
- =?us-ascii?Q?4DuxMmlv3Zf8GEObzz0JDEvK0MmuEGIsPcR3DwkKNnebbSLgjPf7ZAORPKOJ?=
- =?us-ascii?Q?IOXo/cKHa0cGqO9Rb3iiXz2bJi8pi9r/aNzRnpwLL441sP9RZrIOkxef/K/N?=
- =?us-ascii?Q?1ceRgwdKXLpdHMcz+YjK8VVjh4tyd8Jl4TbJKng1?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bcb0d95a-d83c-43d6-9bdf-08dd8ee2cd4c
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 10:18:11.6133
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dqxUZb2XQlBJZec8oYalodaVkIq3fxlzmmNITfJlcZABeG/f9Wv6yIcEM7MfZAEBR8AcXh4sdE1NNzsKT0ogmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4614
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] selftests/mm: add simple VM_PFNMAP tests based on
+ mmap'ing /dev/mem
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Peter Xu <peterx@redhat.com>
+References: <20250508222041.1647645-1-david@redhat.com>
+ <8c94faf4-9af9-4d43-a597-6b06dd21be95@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <8c94faf4-9af9-4d43-a597-6b06dd21be95@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> int tdx_guest_keyid_alloc(void);
-> u32 tdx_get_nr_guest_keyids(void);
-> void tdx_guest_keyid_free(unsigned int keyid);
->@@ -197,6 +202,9 @@ u64 tdh_mem_page_remove(struct tdx_td *td, u64 gpa, u64 level, u64 *ext_err1, u6
-> u64 tdh_phymem_cache_wb(bool resume);
-> u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td);
-> u64 tdh_phymem_page_wbinvd_hkid(u64 hkid, struct page *page);
->+u64 tdh_phymem_pamt_add(unsigned long hpa, struct list_head *pamt_pages);
->+u64 tdh_phymem_pamt_remove(unsigned long hpa, struct list_head *pamt_pages);
+On 09.05.25 11:49, Lorenzo Stoakes wrote:
+> On Fri, May 09, 2025 at 12:20:41AM +0200, David Hildenbrand wrote:
+>> Let's test some basic functionality using /dev/mem. These tests will
+>> implicitly cover some PAT (Page Attribute Handling) handling on x86.
+> 
+> Ah this is really nice thanks for this!
 
-When these SEAMCALL wrappers were added, Dave requested that a struct page
-be passed in instead of an HPA [*]. Does this apply to
-tdh_phymem_pamt_add/remove()?
+Thanks for your review!
 
-[*]: https://lore.kernel.org/kvm/30d0cef5-82d5-4325-b149-0e99833b8785@intel.com/
+> 
+>> 	ok 14 mprotect(PROT_NONE)
+>> 	ok 15 SIGSEGV expected
+>> 	ok 16 mprotect(PROT_READ)
+>> 	ok 17 SIGSEGV not expected
+>> 	ok 18 fork()
+>> 	ok 19 SIGSEGV in child not expected
+>> 	# Totals: pass:19 fail:0 xfail:0 xpass:0 skip:0 error:0
+> 
+> It'd be good to assert that merging doesn't work for VM_PFNMAP, though hm
+> one could argue that's not hugely useful as it's trivially implemented.
+> 
+> But I guess anything like that should live in merge.c.
+
+I assume we'd need is_range_mapped() from mremap_tests.c.
+
+Something for another day :)
+
+[...]
+
+>> +static void signal_handler(int sig)
+>> +{
+>> +	if (sig == SIGSEGV)
+>> +		siglongjmp(env, 1);
+>> +	siglongjmp(env, 2);
+>> +}
+> 
+> Hm, wouldn't it be better to only catch these only if you specifically
+> meant to catch a signal?
+
+I had that, but got tired about the repeated register + unregister, 
+after all I really don't want to spend a lot more time on this.
+
+> You can see what I did in guard-regions.c for an example (sorry, I'm sure
+> you know exactly how the thing works, just I mean for an easy reminder :P)
+> 
+
+Again, time is the limit. But let me see if I can get something done in 
+a reasonable timeframe.
+
+>> +
+>> +static void sense_support(void)
+>> +{
+> 
+> See below comment about the kselftest_harness, but with that you can
+> literally declare fixture setups/teardowns very nicely :) You can also
+> mmap() these 2 pages and munmap() them afterwards straightforwardly.
+> 
+>> +	char *addr, tmp;
+>> +	int ret;
+>> +
+>> +	dev_mem_fd = open("/dev/mem", O_RDONLY);
+>> +	if (dev_mem_fd < 0)
+>> +		ksft_exit_skip("Cannot open '/dev/mem': %s\n", strerror(errno));
+> 
+> Hm skip, or failure? Skip implies it's expected right? I suppose it's
+> possible a system might be setup without this...
+
+Try as non-root or on a lockdowned system :)
+
+> 
+>> +
+>> +	/* We'll require the first two pages throughout our tests ... */
+>> +	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+>> +	if (addr == MAP_FAILED)
+>> +		ksft_exit_skip("Cannot mmap '/dev/mem'");
+>> +
+>> +	/* ... and want to be able to read from them. */
+>> +	ret = sigsetjmp(env, 1);
+>> +	if (!ret) {
+>> +		tmp = *addr + *(addr + pagesize);
+>> +		asm volatile("" : "+r" (tmp));
+> 
+> Is this not pretty much equivalent to a volatile read where you're forcing
+> the compiler to not optimise this unused thing away? In guard-regions I set:
+> 
+> #define FORCE_READ(x) (*(volatile typeof(x) *)x)
+> 
+> For this purpose, which would make this:
+> 
+> FORCE_READ(addr);
+> FORCE_READ(&addr[pagesize]);
+
+Hmmm, a compiler might be allowed to optimize out a volatile read.
+
+> 
+>> +	}
+>> +	if (ret)
+>> +		ksft_exit_skip("Cannot read-access mmap'ed '/dev/mem'");
+> 
+> Why are we returning 1 or 2 if we don't differentiate it here?
+
+Copy-and-paste. As we are not registering for SIGBUS, we can just return 1.
+
+> 
+>> +
+>> +	munmap(addr, pagesize * 2);
+>> +}
+>> +
+>> +static void test_madvise(void)
+>> +{
+>> +#define INIT_ADVICE(nr) { nr, #nr}
+>> +	const struct {
+>> +		int nr;
+>> +		const char *name;
+>> +	} advices[] = {
+>> +		INIT_ADVICE(MADV_DONTNEED),
+>> +		INIT_ADVICE(MADV_DONTNEED_LOCKED),
+>> +		INIT_ADVICE(MADV_FREE),
+>> +		INIT_ADVICE(MADV_WIPEONFORK),
+>> +		INIT_ADVICE(MADV_COLD),
+>> +		INIT_ADVICE(MADV_PAGEOUT),
+>> +		INIT_ADVICE(MADV_POPULATE_READ),
+>> +		INIT_ADVICE(MADV_POPULATE_WRITE),
+>> +	};
+>> +	char *addr;
+>> +	int ret, i;
+>> +
+>> +	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> 
+> Nit (same for all mmap() calls) shouldn't this first parameter be NULL, by
+> convention? I mean not a big deal obviously :)
+
+Yes.
+
+> 
+>> +	if (addr == MAP_FAILED)
+>> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+>> +
+>> +	/* All these advices must be rejected. */
+>> +	for (i = 0; i < ARRAY_SIZE(advices); i++) {
+>> +		ret = madvise(addr, pagesize, advices[i].nr);
+>> +		ksft_test_result(ret && errno == EINVAL,
+>> +				 "madvise(%s) should be disallowed\n",
+>> +				 advices[i].name);
+>> +	}
+>> +
+>> +	munmap(addr, pagesize);
+>> +}
+>> +
+>> +static void test_munmap_splitting(void)
+>> +{
+>> +	char *addr1, *addr2;
+>> +	int ret;
+>> +
+>> +	addr1 = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+>> +	if (addr1 == MAP_FAILED)
+>> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+>> +
+>> +	/* Unmap the first pages. */
+> 
+> NIT: pages -> page.
+
+Ack.
+
+> 
+>> +	ret = munmap(addr1, pagesize);
+>> +	ksft_test_result(!ret, "munmap() splitting\n");
+>> +
+>> +	/* Remap the first page while the second page is still mapped. */
+>> +	addr2 = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+>> +	ksft_test_result(addr2 != MAP_FAILED, "mmap() after splitting\n");
+> 
+> Hm not sure what the assertion is here per se, that we can munmap() partial
+> bits of the VMA? It'd be pretty weird if we couldn't though?
+ > > If it's that we don't get a merge when we remap, we're not really 
+checking
+> that, but you actually can, as I added an API to vm_util for this using
+> PROCMAP_QUERY (very handy tool actually - binary version of /proc/smaps).
+
+I don't care about merging tests (I'll leave that to you :P ).
+
+This is a PAT test for upcoming changes where partial unmap can leave 
+the original region reserved. Making sure that re-mapping with the 
+pending reservation still works.
+
+>> +
+>> +	if (addr2 != MAP_FAILED)
+>> +		munmap(addr2, pagesize);
+>> +	if (!ret)
+>> +		munmap(addr1 + pagesize, pagesize);
+>> +	else
+>> +		munmap(addr1, pagesize * 2);
+> 
+> There's no need for this dance, you can just munmap() away, it tolerates
+> gaps and multiple VMAs.
+
+Yeah, I know. I was not sure if the ksft_test_result() in between might 
+allocate memory and consume that area.
+
+> 
+>> +}
+>> +
+>> +static void test_mremap_fixed(void)
+>> +{
+>> +	char *addr, *new_addr, *ret;
+>> +
+>> +	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+>> +	if (addr == MAP_FAILED)
+>> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+>> +
+>> +	/* Reserve a destination area. */
+>> +	new_addr = mmap(0, pagesize * 2, PROT_READ, MAP_ANON | MAP_PRIVATE, -1, 0);
+>> +	if (new_addr == MAP_FAILED)
+>> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+>> +
+>> +	/* mremap() over our destination. */
+>> +	ret = mremap(addr, pagesize * 2, pagesize * 2,
+>> +		     MREMAP_FIXED | MREMAP_MAYMOVE, new_addr);
+>> +	ksft_test_result(ret == new_addr, "mremap(MREMAP_FIXED)\n");
+>> +	if (ret != new_addr)
+>> +		munmap(new_addr, pagesize * 2);
+> 
+> This could only be an error code, and this will fail right?
+> 
+> MREMAP_FIXED is 'do or die' at the new address, not hinting. If there's
+> anything already mapped there it goes a bye bye.
+> 
+> So again, we could just have a standard munmap(), and this lends itself
+> well to a FIXTURE_SETUP()/FIXTURE_TEARDOWN() :P
+
+I'm afraid I cannot spend much more time on these tests :P But let me 
+try for a couple of minutes.
+
+> 
+>> +	munmap(addr, pagesize * 2);
+>> +}
+>> +
+>> +static void test_mremap_shrinking(void)
+>> +{
+>> +	char *addr, *ret;
+>> +
+>> +	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+>> +	if (addr == MAP_FAILED)
+>> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+>> +
+>> +	/* Shrinking is expected to work. */
+>> +	ret = mremap(addr, pagesize * 2, pagesize, 0);
+>> +	ksft_test_result(ret == addr, "mremap() shrinking\n");
+>> +	if (ret != addr)
+>> +		munmap(addr, pagesize * 2);
+>> +	else
+>> +		munmap(addr, pagesize);
+> 
+> I think we're safe to just munmap() as usual here :) (it's nitty but I'm
+> trying to make the case for teardown again of course :P)
+
+Same reasoning as above regarding ksft_test_result().
+
+> 
+>> +}
+>> +
+>> +static void test_mremap_growing(void)
+>> +{
+>> +	char *addr, *ret;
+>> +
+>> +	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+>> +	if (addr == MAP_FAILED)
+>> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+>> +
+>> +	/* Growing is not expected to work. */
+> 
+> God imagine if we did allow it... what hell would it be to figure out how
+> to do this correctly in all cases :P
+
+:)
+
+> 
+>> +	ret = mremap(addr, pagesize, pagesize * 2, MREMAP_MAYMOVE);
+>> +	ksft_test_result(ret == MAP_FAILED,
+>> +			 "mremap() growing should be disallowed\n");
+>> +	if (ret == MAP_FAILED)
+>> +		munmap(addr, pagesize);
+>> +	else
+>> +		munmap(ret, pagesize * 2);
+> 
+> This is a bit cautious, for a world where we do lose our minds and allow
+> this? :)
+
+Yeah, went back and forth with this error cleanup shit.
+
+> 
+>> +}
+>> +
+>> +static void test_mprotect(void)
+>> +{
+>> +	char *addr, tmp;
+>> +	int ret;
+>> +
+>> +	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+>> +	if (addr == MAP_FAILED)
+>> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+>> +
+>> +	/* With PROT_NONE, read access must result in SIGSEGV. */
+>> +	ret = mprotect(addr, pagesize, PROT_NONE);
+>> +	ksft_test_result(!ret, "mprotect(PROT_NONE)\n");
+>> +
+>> +	ret = sigsetjmp(env, 1);
+>> +	if (!ret) {
+>> +		tmp = *addr;
+>> +		asm volatile("" : "+r" (tmp));
+>> +	}
+> 
+> This code is duplicated, we definitely want to abstract it.
+
+Probably yes.
+
+> 
+>> +	ksft_test_result(ret == 1, "SIGSEGV expected\n");
+> 
+> Hmm, what exactly are we testing here though? I mean PROT_NONE will be a
+> failed access for _any_ kind of memory? Is this really worthwhile? Maybe
+> better to mprotect() as PROT_NONE to start then mprotect() to PROT_READ.
+ > > But I'm not sure what that really tests? Is it a PAT-specific thing? It
+> seems if this is broken then the mapping code is more generally broken
+> beyond just VM_PFNMAP mappings right?
+
+Rationale was to test the !vm_normal_folio() code paths that are not 
+covered by "ordinary" mprotect (except the shared zeropage). But there 
+should indeed only be such a check on the prot_numa code path, so I can 
+just drop this test.
+
+[...]
+
+>> +int main(int argc, char **argv)
+>> +{
+>> +	int err;
+>> +
+>> +	ksft_print_header();
+>> +	ksft_set_plan(19);
+> 
+> I know it's kind of nitpicky, but I really hate this sort of magic number
+> and so on. You don't actually need any of this, the kselftest_harness.h is
+> _really_ powerful, and makes for much much more readable and standardised
+> test code.
+> 
+> You can look at guard-regions.c in the test code (though there's some
+> complexity there because I use 'variants') or the merge.c test code
+> (simpler) for straight-forward examples.
+> 
+> I won't block this change on this however, I don't want to be a pain and
+> you're adding very important tests here, but it'd be really nice if you did
+> use that :>)
+
+Yeah, let me explore that real quick, thanks!
+
+-- 
+Cheers,
+
+David / dhildenb
+
