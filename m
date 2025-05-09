@@ -1,63 +1,64 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEABB23C8A4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742B723D280
 	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746815058; cv=none; b=dgCJiAJBAYBwuI1YmZ21v598+dlu6go2S/un5NoTTVi/P4qGnq16oJA+Z3XYRWkJN1RPTdH2vTozgUsQ/rrVuVRGf9pTX2D5n4p3VUTBM4BXJJUUYYdHMkGLecst/TcyMyNIPKp737MhfKLPQ+7xnsaTXadae2x5wLn360QaGh8=
+	t=1746815058; cv=none; b=tx//L3KBw9D3qR4izl/z6cqhLkozwHZoQWsersK77m0gYNfwOPawuWaeZ2vJVk93AWtx+omFLnbXRCzJ4t39J/IIs7WHcbAuaFbW2nox0ora5M2j7Sv7LScpR5FAUqsPTRU+2ttX6veJXZgtNl9kVjM3dydRSKbE7mCCj1dp98o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746815058; c=relaxed/simple;
-	bh=WlqhFERSYY876eu6fXODc3hMDt3fXzrYrhbCeMIHbl0=;
+	bh=zFV4u4xYrdJXQYQST/NOy93iVerYdoMEvRx9i5izrDc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z6yESAJcVWwbvxamLaUVSpEX9H4DsUhApN9lT/CtjamL3Qt0a1d7YVeOvmpdjVAyrmZJfXUFZHfgZ/HZF0T4e+YG7OnhFJWpaBQm5ClNwwn+HXemQaRS3QrIxVNJ1nF3TFa0uG9jXt3+I96pIj+zpSpzOoofk2sXf7oqs/hpEj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VNa/KW0w; arc=none smtp.client-ip=209.85.167.48
+	 In-Reply-To:To:Cc; b=Y16zin0zEXkrzHlLOJOg7nQ3OPaaCAuNUh/FZkyb85YBn6JpSfzdc4gGmkrp5tluzwLvtPfqVKr7pdCWlqbikxJH6eW0L3GuqKkms48nI/aVtO6NA1VJ8+WCZ0wLuYcR8LpNv08kFAZdqxuc0296rHKu06NvXYGXgag4y7wrfnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Kz93+UpO; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VNa/KW0w"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so2763601e87.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kz93+UpO"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso3008245e87.1
         for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:24:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746815055; x=1747419855; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1746815054; x=1747419854; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=z5MuBF0fz+s4ovvaXx6dw9lnVXB5+San6yqV1OmsO2s=;
-        b=VNa/KW0w9vE2OLZY34beiVM3U04EL47LF2lhGqkuoAJS/lLcAQTcCWts95I0cLpmDq
-         jX6qkcchxgXlCyPDvtlyxKoTndssNKttlCTbIIAGcLwsp6Qgi4kBb3aUp+J77hF44ATG
-         1b6kg1OfhUBeyRGAksw2IEyNrAowW80hfs9WA=
+        bh=Yi5XaVNppgwZ+7IG1Lz4V8UPUgu4s/f0SGWRQuuh7uw=;
+        b=Kz93+UpOIxMebqw9iGgAs3Sdq2rhRiybIwuuUew88UCNr5zOFaNTJj73KzLLN0IN1D
+         GJL8WUbMDlwmexHov5u0lXN5ReoDYLB/Xi36I5O7QSDoxUnB8eHWuOJWuj1BxNvmLZWE
+         uSYQJYz5l2yDpdQ9buE+fCupqZY4j2lTD3BCY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746815055; x=1747419855;
+        d=1e100.net; s=20230601; t=1746815054; x=1747419854;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z5MuBF0fz+s4ovvaXx6dw9lnVXB5+San6yqV1OmsO2s=;
-        b=GUFLn3iSO+YAEM6kPugedbAUYpH4muNxW9ZFkvMz8nJ1Vw1fpheAenlIxMxgQw8bhN
-         sHBjK69qUJqBFdnIC1uONUdAOBLJFkygVU9wM6/kk+1WAa6PSVUv11+e2CCERTCiQcG5
-         pyd+kiFlRnQtNDjxE4jNijXgaLKTQNIYs0VZoqX/c6geSVXxZs047HJ+zm6FtxJ6lemG
-         dn/bOhAxYqrL7ox9rB+epKnShuaKVNEG082kEE/1Dx2/Bh5MmH1+xiT39FEWi0Ylc/Vx
-         G5BheS/h/0tkziKPhXkIcgQv01opqwsEQ5rOfbpfIUX4jxl64O48Hg0IgcYXlS81ScNk
-         XFlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqqd8NMBCpqI/heKN4F4DZpbiTKiivMJ0RLcJFZzKk3x4sDDnZ2pYWpmfpE0TAK+U4myHaDJ0PZ8OXnoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2XelGBiANMUfdlkSbMAk6T+QD6JvJ3HcRJ7G2ToK5ekP4cywb
-	qEErwdImIFI7+UtjxJOt80kwLmu19/e6M1g96kKFk+kadGJOkCbd4N9ABMzNzg==
-X-Gm-Gg: ASbGncvLRWd1VPXEQSdTb6pceipMjjzllFDt1bNCUCwASM9yTZx+vdd5dEy7HmJLlys
-	Zyh4orjz3R/QgstdfbW2i4OpWrTilVMl4wyH9c39J2qdvTqM2gZIrVogw4ij3VHBA055HO/VkKj
-	qWjtloDAdIOzZnL5etzpvnxKjS56fEEbR/DNSpgRYjnV9lNNAd2thyJ9ILXqWxGQ2MqB1eyB6Se
-	jnkP+iGGaXScSvEMSTDFfFEmORb4YXv3X9Kk8h+AAhWaqpq4wWSO24Tlz/NPq2cv7TuS3JZeN+4
-	JreYFPzK1FiNiyOdUsEK1TYG08oPOn7HAFOu39+K0MP5sfwQWA7IhiZTG2DJDpaTv2tQrwWPb9R
-	jxK7F+JjwAUN4DsonFrr+BuPABYjN1jPYC+GEWxDzgA==
-X-Google-Smtp-Source: AGHT+IFNM+/aVwpNnZix2AaOhc8ZTeC4nexkneFN7uiQtkM/9+QW6ZoYqnTUOzndZ0VZRK/TUjRmwQ==
-X-Received: by 2002:a05:6512:608b:b0:545:2cb6:af31 with SMTP id 2adb3069b0e04-54fc67b8e2emr1787962e87.15.1746815054930;
+        bh=Yi5XaVNppgwZ+7IG1Lz4V8UPUgu4s/f0SGWRQuuh7uw=;
+        b=r66M22Oqlu2jLS7Vu8xuHeAu3Lwr2hsB13ch8cS3pUWJx+5Ia8BwA/jJRR5VY1RjBX
+         GJ1/hsVHbVMxuFGIqY5OcfuNRArn240qQZOsTFtNbxhe3Z7w3Q+VHj6hexjWYj+cRp88
+         UyP9Bfa5f5D3PKkCsVWOyfyN+dxP99hyYM1R6ynGBSCCbrIJxLfNcj2P0QkSGgYLe/rz
+         JsaMztN5Hp954g6gYVz8GTkvOF72xOXwE8Kngwn6BAnXtGV7QmIxpZNHMIhjdGoIMjpg
+         D9gwQzpoKqpJkMGUUN0AbaPzukB3xaBVawB9+Ml3GKfD9Dv98A1Zlk27Y0EMMjQcH3BB
+         5wgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGo1aVOClbQgEAPPhg1hiAqtpoy06huZH4/KShQ8h0cNhqGHs/4wG8a0UMQOCCMULruEAn7PxOYESo4s8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEuE87NJa9zSz/PnH2Ul3LR3jiK+/Ro0Ks9spuq2zheRDIin6a
+	EFT25z/96vZY1hCq2Fl5+gRfDasvyEcNdwO625+DxPZYrAY3q8C/3LNp+7RCD1BFqPgA5vQAaCE
+	=
+X-Gm-Gg: ASbGncsAguwTPQm0aJ15pli+IwP05NckYu8632jB7bzRX2h3InX1KMsn4GwbPGbGbEo
+	s10cMpWir6vldIGvd0itAFvIqlkvf6lIR1Y7av+7gu/FeKtsXzVcAF/YZKDCBvNFUXt4UvW1qRj
+	RRe1ZufmqptgMX9fjAfK2US1T37k+H/J6Mt+lKM2B+141zVqPNBih9J8gX1gxiNvP5cfeU8UFy8
+	NVrxwby8aiGCpniXrwGq93il1w2hoPc2vTgICrsaJd0G/BR2BrwUHYChvMuKRobO2BYBjkFyHZj
+	PeyyevIiXtVa2b/reWxoH5zk+4W5MlTIFGyKC/5vSiumBEzPJ+dtQ6C34ufMVewSH+4aPG7fiHF
+	V18IlGfEscSzqXZmRwyemFivRLzi4sTU=
+X-Google-Smtp-Source: AGHT+IHPOHJuwzRwwthAHfX0RVaD2nwsVxCj0w/t87pjwfGTdyTLGs9Grg4VR0ctezRgetwQoyhrqg==
+X-Received: by 2002:a05:6512:670b:b0:54e:9038:d835 with SMTP id 2adb3069b0e04-54fc67c4734mr1262503e87.20.1746815054485;
         Fri, 09 May 2025 11:24:14 -0700 (PDT)
 Received: from ribalda.c.googlers.com (228.231.88.34.bc.googleusercontent.com. [34.88.231.228])
         by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64b6bc9sm349410e87.147.2025.05.09.11.24.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 09 May 2025 11:24:14 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 09 May 2025 18:24:14 +0000
-Subject: [PATCH 2/4] media: uvcvideo: Refactor uvc_queue_streamon
+Date: Fri, 09 May 2025 18:24:13 +0000
+Subject: [PATCH 1/4] media: uvcvideo: Refactor uvc_ctrl_set_handle()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,7 +67,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-uvc-followup-v1-2-73bcde30d2b5@chromium.org>
+Message-Id: <20250509-uvc-followup-v1-1-73bcde30d2b5@chromium.org>
 References: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
 In-Reply-To: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -76,40 +77,132 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.14.2
 
-Do uvc_pm_get before we call uvc_queue_streamon. Although the current
-code is correct, uvc_ioctl_streamon is allways called after uvc_pm_get,
-this change makes the code more resiliant to future changes.
+Today uvc_ctrl_set_handle() covers two use-uses: setting the handle and
+clearing the handle. The only common code between the two cases is the
+lockdep_assert_held.
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+The code looks cleaner if we split these two usecases in two functions.
+
+We also take this opportunity to use pending_async_ctrls from ctrl where
+possible.
+
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/usb/uvc/uvc_v4l2.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/media/usb/uvc/uvc_ctrl.c | 65 +++++++++++++++++++++-------------------
+ 1 file changed, 35 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 668a4e9d772c6d91f045ca75e2744b3a6c69da6b..862b4e34e5b629cf324479a9bb59ebe8784ccd5d 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -853,15 +853,16 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
- 	if (handle->is_streaming)
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+index 44b6513c526421943bb9841fb53dc5f8e9f93f02..26be1d0a1891cf3a9a7489f60f9a2931c78d3239 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -1812,48 +1812,53 @@ static void uvc_ctrl_send_slave_event(struct uvc_video_chain *chain,
+ 	uvc_ctrl_send_event(chain, handle, ctrl, mapping, val, changes);
+ }
+ 
+-static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+-			       struct uvc_fh *new_handle)
++static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl)
+ {
+-	lockdep_assert_held(&handle->chain->ctrl_mutex);
+-
+-	if (new_handle) {
+-		int ret;
++	int ret;
+ 
+-		if (ctrl->handle)
+-			dev_warn_ratelimited(&handle->stream->dev->udev->dev,
+-					     "UVC non compliance: Setting an async control with a pending operation.");
++	lockdep_assert_held(&handle->chain->ctrl_mutex);
+ 
+-		if (new_handle == ctrl->handle)
+-			return 0;
++	if (ctrl->handle) {
++		dev_warn_ratelimited(&handle->stream->dev->udev->dev,
++				     "UVC non compliance: Setting an async control with a pending operation.");
+ 
+-		if (ctrl->handle) {
+-			WARN_ON(!ctrl->handle->pending_async_ctrls);
+-			if (ctrl->handle->pending_async_ctrls)
+-				ctrl->handle->pending_async_ctrls--;
+-			ctrl->handle = new_handle;
+-			handle->pending_async_ctrls++;
++		if (ctrl->handle == handle)
+ 			return 0;
+-		}
+-
+-		ret = uvc_pm_get(handle->chain->dev);
+-		if (ret)
+-			return ret;
+ 
+-		ctrl->handle = new_handle;
+-		handle->pending_async_ctrls++;
++		WARN_ON(!ctrl->handle->pending_async_ctrls);
++		if (ctrl->handle->pending_async_ctrls)
++			ctrl->handle->pending_async_ctrls--;
++		ctrl->handle = handle;
++		ctrl->handle->pending_async_ctrls++;
  		return 0;
- 
--	ret = uvc_queue_streamon(&stream->queue, type);
-+	ret = uvc_pm_get(stream->dev);
- 	if (ret)
- 		return ret;
- 
--	ret = uvc_pm_get(stream->dev);
-+	ret = uvc_queue_streamon(&stream->queue, type);
- 	if (ret) {
--		uvc_queue_streamoff(&stream->queue, type);
-+		uvc_pm_put(stream->dev);
- 		return ret;
  	}
-+
- 	handle->is_streaming = true;
  
++	ret = uvc_pm_get(handle->chain->dev);
++	if (ret)
++		return ret;
++
++	ctrl->handle = handle;
++	ctrl->handle->pending_async_ctrls++;
++	return 0;
++}
++
++static int uvc_ctrl_clear_handle(struct uvc_fh *handle,
++				 struct uvc_control *ctrl)
++{
++	lockdep_assert_held(&handle->chain->ctrl_mutex);
++
+ 	/* Cannot clear the handle for a control not owned by us.*/
+ 	if (WARN_ON(ctrl->handle != handle))
+ 		return -EINVAL;
+ 
+-	ctrl->handle = NULL;
+-	if (WARN_ON(!handle->pending_async_ctrls))
++	if (WARN_ON(!ctrl->handle->pending_async_ctrls)) {
++		ctrl->handle = NULL;
+ 		return -EINVAL;
+-	handle->pending_async_ctrls--;
++	}
++
++	ctrl->handle->pending_async_ctrls--;
+ 	uvc_pm_put(handle->chain->dev);
++	ctrl->handle = NULL;
  	return 0;
+ }
+ 
+@@ -1871,7 +1876,7 @@ void uvc_ctrl_status_event(struct uvc_video_chain *chain,
+ 
+ 	handle = ctrl->handle;
+ 	if (handle)
+-		uvc_ctrl_set_handle(handle, ctrl, NULL);
++		uvc_ctrl_clear_handle(handle, ctrl);
+ 
+ 	list_for_each_entry(mapping, &ctrl->info.mappings, list) {
+ 		s32 value;
+@@ -2161,7 +2166,7 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+ 
+ 		if (!rollback && handle && !ret &&
+ 		    ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
+-			ret = uvc_ctrl_set_handle(handle, ctrl, handle);
++			ret = uvc_ctrl_set_handle(handle, ctrl);
+ 
+ 		if (ret < 0 && !rollback) {
+ 			if (err_ctrl)
+@@ -3271,7 +3276,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+ 		for (unsigned int i = 0; i < entity->ncontrols; ++i) {
+ 			if (entity->controls[i].handle != handle)
+ 				continue;
+-			uvc_ctrl_set_handle(handle, &entity->controls[i], NULL);
++			uvc_ctrl_clear_handle(handle, &entity->controls[i]);
+ 		}
+ 	}
+ 
 
 -- 
 2.49.0.1015.ga840276032-goog
