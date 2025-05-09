@@ -1,164 +1,171 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B302609FD
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 22:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5AE22AE7E;
+	Fri,  9 May 2025 22:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746831377; cv=none; b=tWu/AqfR4IVTQCEuFQBJ9DfzFhUIrzeNUygfG3Xp9vpwIlCVgAEmN1lfJ6M/h7hZLkncVyNOd6JhXPr6mBjlUsgli0+5q4qI6BZs7zCEQIIEQlB20lYGADMFDsRlvC12Mes294VeaL5r8rKUgJJtvgevrTQRFET6InIEljf5JGQ=
+	t=1746831554; cv=none; b=TWi79BZHahVJAaG6jkTEY7vk7vWiQJimVM5or3PQ+inIf833ijgb1h50kb+K91ah4qHIfinRD7WzjUeN6x42lA5VHJtSAPvnLKm9WRLuzogrHvhKOl8iRLg4/6l1Fly3ifnrbgs3TUm+PNvt0ILJ/Q0gFrz4lWLMwg9JKtngTm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746831377; c=relaxed/simple;
-	bh=M8ykDxNF0SaPPEMj71mFhnCi5xlu6Dp46bmYjYU3kNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YnZfL7TrUhBTBVizDThiV/rYxocpArhS5nz141aFEZX6g0bQxTLNJSgM1Rk0yWtMMOvy9c/2X8b7egr4KVRgyEBzAw9WKmKiaRXtTjl+hiH/nXRyvHlFK3XENdMUa+myMeSmMdaWNMK8eT2RZT6DS5DPiaYfAZw9aEDqTdZ7QqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SGTKlO/f; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746831554; c=relaxed/simple;
+	bh=6bTn5T9aJ1dG/QcSe0PfmEmuTX2zmPTsXHFZ/Ckvu4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j4/HOq7SzZxbhwOd+rhKro7hhl/IeCJE9tu/ZiYHlK8K1PYpURJYyhZBY17AKtltYZ1KSr9ssSXsAOkYdvr0BlT23yx5YJYSMrXgAMC4F/t9FnOPBB7aXFAQkfx8rEYhz7EiWJfhLUfjkAsUN1IyQ+YY+sUWTqS910HeqVUJPbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BCG8HuXP; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SGTKlO/f"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549C8k8R014286
-	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 22:56:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4Qp1+5iTdYJmiqFoTnH+iBbZITewEjue+EqmZ+z2Viw=; b=SGTKlO/f3dTEr42C
-	84dFkiZ0juK20gdHJPLkLMSir0t9j+staPftSLVJWZiVVpcyB7i72E+9ShH/SxMl
-	UzUnlWWRl7ZBcRwF+eOnCTg4YD7uIWE2+tLdw273IzvxWd+gPxxfXOjQBjmsKGJY
-	Va9vi6j6nuy3IrUFSyH8bpd/gJ/9PITaU2TSRqlDiUUj5SR3dkkJaJISsul12MoH
-	fqXhm9j3dPY12Ajrw+j+f8aHgXWJ7uJfZQ5YsalO4zupJLKxHZiC2+Zg4WaaTo75
-	hkdJIVpGspolJkIpe9TPP5Z6YtJsdQbeKVtgvTnjz9NKgMmrfC5dQoPKfW/EPs5f
-	5yPn2Q==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp4p14x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 22:56:13 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-476783cbdb8so6690731cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 15:56:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746831373; x=1747436173;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Qp1+5iTdYJmiqFoTnH+iBbZITewEjue+EqmZ+z2Viw=;
-        b=ubqGD1qrrbHT444rcSqzOc0zvix0AAlRQJpjDY+aKQxLoKgcsE941FBaSn+WDw4K3B
-         Ua4wZSlkQPhoxH+sviIpImVIshUejfuohpkBD5JkDf56bA3xBgqxxgkIE+UFE1xuNSWB
-         Jv6Q0vbes9QFUjJw2wic0HkTf3N8fbA2lYoDWDo3iMR/i/ghoK/Kj9Jib0OIxmt3Zvj3
-         KvKSlEx7xyWCGPnhMC4e0E0l/dBuFIyTmasQQyJAxKg3OhKleG0pRuml2XCyP6BvkILZ
-         5hMfZk7E9QkVvE/K7KPSHk93tr6bD9UOzD/4L8TiSDYS2qcO29aBYUNULvcfNZCZPOSw
-         6mbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUChjTIKrwqOLzurLAuXgwVY7VpfYF2Fw/a5hxQcSOHmCbTvRksQ4c6hTTQHg1l/ImhbeAcTllf213po8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQD07poIEAqtfrbwHbYdc73pdrDsBmII6c+NKI5tERZa96SI7u
-	grN9iJa4bbGgwPe94wWybKd2iqeGfx385UDa2kG4HfyD/BxyRPXYMqq+kGvwLt+wTmyIPoae6YM
-	9rE1pykXUVPEcvO6z33YOCmhBqEq7yoGbLlaW1t9IF1Y0mtoigu21IPPKP6nQiTY=
-X-Gm-Gg: ASbGncsh7aAFSU8ctaKMn6fg+rkXHsS6XA6MIzQgTLhoMa7Sj5uLE8yMHG+sBrQuUXh
-	HgVm6+p+0XuoWF9T50o8RgB26isMVCcuGTXnjUMiscWbNZpt5USEbcLniI7JEz27uSrGOKYniNo
-	AKoXBo7jphrwjizftGXkxBtp5c88bsuv3CWmY9857rOxAAkKeBEU2loZC/YMKruo9onY6zQRwq/
-	yQ6HNP7hej4kSbsoNNScXBwHt8kuZDc8iloQVQAZPuyRfQK+glpPxZqvDMT8UqoImeeVN9ILsvS
-	lIrY2h/D2oricCn4aLDj/BBDZNZcl2pTeKxItSBMsiN+nwlxCcm5083DBb0xFASJ6Z0=
-X-Received: by 2002:a05:622a:14e:b0:477:5f29:dbc9 with SMTP id d75a77b69052e-4945280128emr26695241cf.13.1746831373250;
-        Fri, 09 May 2025 15:56:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXVP/tivEEn1s6heCPquBwNxnD3dc35bG8Iyd1lz/IHTbO9GahzmvLPBbvd+/AL7RzsvleGA==
-X-Received: by 2002:a05:622a:14e:b0:477:5f29:dbc9 with SMTP id d75a77b69052e-4945280128emr26695071cf.13.1746831372832;
-        Fri, 09 May 2025 15:56:12 -0700 (PDT)
-Received: from [192.168.65.158] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192cc449sm215873266b.20.2025.05.09.15.56.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 15:56:12 -0700 (PDT)
-Message-ID: <5eb8fb45-eec9-4078-85ee-0cfd563e67eb@oss.qualcomm.com>
-Date: Sat, 10 May 2025 00:56:10 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BCG8HuXP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746831550; x=1778367550;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6bTn5T9aJ1dG/QcSe0PfmEmuTX2zmPTsXHFZ/Ckvu4s=;
+  b=BCG8HuXPXOeqx7pfOSOLJuwHs2CnMEHGjUB53Gu2soToC8HAOL/2ZGfu
+   LN3A51m0Mhk1LSZqbBHmMZFTSE8hEIKdQFREU4t+wk9HfSYIPgTLbH70a
+   GNGH4j64FagedBSCW44wygQe8XjKAG149B0PK6/V4NMgLmqlAZen72oKM
+   rcbQ57Rzb2wtFQX1ZVi66kMwpPqwudUC2qtaT7BYME906Ey10qdbC/5WB
+   pktI5S500SyhJjgsdpKZwO/FrzSV5XQMDmhMYNpZN7yVg+2PvNP7PsNoc
+   aeC/S7SzrMOSG0pJ+2YeOJw/4oWejRIrcohp4Jg+auAzhBLO83MWJmgLo
+   g==;
+X-CSE-ConnectionGUID: X46/+JxYQIycECRufFgfqA==
+X-CSE-MsgGUID: Fn2Kzkz+QmSXGaYt91ibjg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="60078282"
+X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
+   d="scan'208";a="60078282"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 15:59:10 -0700
+X-CSE-ConnectionGUID: r6YHvPDuShS0AB1W6ENsDw==
+X-CSE-MsgGUID: 2JJVb3O3TP6jueuAMyjwGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
+   d="scan'208";a="137693712"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 09 May 2025 15:59:07 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDWgK-000CYR-3B;
+	Fri, 09 May 2025 22:59:04 +0000
+Date: Sat, 10 May 2025 06:58:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Ijano <andrew.ijano@gmail.com>, jic23@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, andrew.lopes@alumni.usp.br,
+	gustavobastos@usp.br, dlechner@baylibre.com, nuno.sa@analog.com,
+	andy@kernel.org, jstephan@baylibre.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] iio: accel: sca3000: replace usages of internal read
+ data helpers by spi helpers
+Message-ID: <202505100631.nlBOlbYm-lkp@intel.com>
+References: <20250509013931.47524-1-andrew.lopes@alumni.usp.br>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/6] arm64: dts: qcom: Add support for QCS9075 RB8
-To: Wasim Nazir <quic_wasimn@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@quicinc.com, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20241229152332.3068172-1-quic_wasimn@quicinc.com>
- <20241229152332.3068172-5-quic_wasimn@quicinc.com>
- <vr3q2c47ht5iebf7nvy3qywoxlquwma3p2tffswrefpmxqy24h@wrfecu6mcqcn>
- <aBoAjaI6nDvSyM/v@hu-wasimn-hyd.qualcomm.com>
- <a100a875-4951-40e7-a516-59040649f218@oss.qualcomm.com>
- <aBoLIFCAjWM2QqpX@hu-wasimn-hyd.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <aBoLIFCAjWM2QqpX@hu-wasimn-hyd.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: QuzLaSXuTes-0p72qyoHadqYhPWdn7c_
-X-Authority-Analysis: v=2.4 cv=E5XNpbdl c=1 sm=1 tr=0 ts=681e880d cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=i6E4GqrmrfKDrJ3Qr9QA:9 a=QEXdDO2ut3YA:10
- a=kacYvNCVWA4VmyqE58fU:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDIzMCBTYWx0ZWRfXyrJMagNq9y9M
- zQxPRDwibwReZUwVgOBFCe40ajLMeptTR1I11JnwqfYbn8iK8thyGLlf6dhkKGq6VpF3KI/anHQ
- 1PfZscGANlbTPH+Q6kL2Kq+BVDzQBHf6U9HGNmI7NaNP9/tXer9c8xa3RpyPfn0OLvxbeEx40FG
- 1afw6PtFX6jeCXX+PcByTr+EzwiZoS5OTBHZ3Tszrqd5fnj2sa/hxQWIvl2gOgS3G7QmhZioqto
- WiMt/DBGXnIZpjzBzvrLhY2uNfeWe4eMnxswA8j+wiSko3cY8ibKnFydkDdFdL+wJp9QdNAi1e7
- kcsv0Yc5PyJxuUV1sUka23ZAMT/6CyLQhVevrOjQ9IoXBHQGCryJJYEk4nOxng4NyhLuhazoBkM
- vWeLI6rdGgrPnBYX8+WkPwL/pTgwPM68nOZsfDYVWavxI6LdVXZYiCSQcM7pUwSFNSYdsMU+
-X-Proofpoint-ORIG-GUID: QuzLaSXuTes-0p72qyoHadqYhPWdn7c_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_09,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=784
- lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505090230
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509013931.47524-1-andrew.lopes@alumni.usp.br>
 
-On 5/6/25 3:14 PM, Wasim Nazir wrote:
-> On Tue, May 06, 2025 at 03:30:43PM +0300, Dmitry Baryshkov wrote:
->> On 06/05/2025 15:29, Wasim Nazir wrote:
->>> On Tue, May 06, 2025 at 03:08:17PM +0300, Dmitry Baryshkov wrote:
->>>> On Sun, Dec 29, 2024 at 08:53:30PM +0530, Wasim Nazir wrote:
->>>>> Add initial device tree support for the RB8 board
->>>>> based on Qualcomm's QCS9075 SoC.
->>>>>
->>>>> Basic changes are supported for boot to shell.
->>>>>
->>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
->>>>> ---
->>>>>   arch/arm64/boot/dts/qcom/Makefile        |   1 +
->>>>>   arch/arm64/boot/dts/qcom/qcs9075-rb8.dts | 281 +++++++++++++++++++++++
->>>>>   2 files changed, 282 insertions(+)
->>>>>   create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-rb8.dts
->>>>>
->>>>
->>>> For the next submission please include at least the UFS support. The
->>>> board is pretty useless without the actual storage support.
->>>
->>> We will be adding UFS change once the basic boot-to-shell changes are in
->>> place.
->>> I have already pushed the next submission (v6) here [1].
->>>
->>> [1] https://lore.kernel.org/all/20250429054906.113317-1-quic_wasimn@quicinc.com/
->>
->> Sorry, I missed it because of the rename.
->>
->> If v6 gets resent for whatever reason, please include UFS into v7.
-> 
-> v6 is just split from v5 to separate out evk & ride changes.
-> Currently it only supports boot to shell so UFS change is not added.
-> UFS change will be added in incremental patch after boot to shell is
-> approved.
+Hi Andrew,
 
-Please take this as a general heuristic for the future - if a justified
-change takes less time to perform than typing 3 emails to argue against
-making it, it's not worth typing the emails
+kernel test robot noticed the following build warnings:
 
-Konrad
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on linus/master v6.15-rc5 next-20250509]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrew-Ijano/iio-accel-sca3000-replace-usages-of-internal-read-data-helpers-by-spi-helpers/20250509-094127
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250509013931.47524-1-andrew.lopes%40alumni.usp.br
+patch subject: [PATCH v3] iio: accel: sca3000: replace usages of internal read data helpers by spi helpers
+config: i386-randconfig-r123-20250510 (https://download.01.org/0day-ci/archive/20250510/202505100631.nlBOlbYm-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250510/202505100631.nlBOlbYm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505100631.nlBOlbYm-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iio/accel/sca3000.c:745:46: sparse: sparse: cast to restricted __be16
+   drivers/iio/accel/sca3000.c:756:33: sparse: sparse: cast to restricted __be16
+
+vim +745 drivers/iio/accel/sca3000.c
+
+   720	
+   721	static int sca3000_read_raw(struct iio_dev *indio_dev,
+   722				    struct iio_chan_spec const *chan,
+   723				    int *val,
+   724				    int *val2,
+   725				    long mask)
+   726	{
+   727		struct sca3000_state *st = iio_priv(indio_dev);
+   728		int ret;
+   729		u8 address;
+   730	
+   731		switch (mask) {
+   732		case IIO_CHAN_INFO_RAW:
+   733			mutex_lock(&st->lock);
+   734			if (chan->type == IIO_ACCEL) {
+   735				if (st->mo_det_use_count) {
+   736					mutex_unlock(&st->lock);
+   737					return -EBUSY;
+   738				}
+   739				address = sca3000_addresses[chan->address][0];
+   740				ret = spi_w8r16(st->us, SCA3000_READ_REG(address));
+   741				if (ret < 0) {
+   742					mutex_unlock(&st->lock);
+   743					return ret;
+   744				}
+ > 745				*val = sign_extend32(be16_to_cpu((__be16) ret) >>
+   746						     chan->scan_type.shift,
+   747						     chan->scan_type.realbits - 1);
+   748			} else {
+   749				/* get the temperature when available */
+   750				ret = spi_w8r16(st->us,
+   751							SCA3000_READ_REG(SCA3000_REG_TEMP_MSB_ADDR));
+   752				if (ret < 0) {
+   753					mutex_unlock(&st->lock);
+   754					return ret;
+   755				}
+   756				*val = (be16_to_cpu((__be16) ret) >>
+   757					chan->scan_type.shift) &
+   758					GENMASK(chan->scan_type.realbits - 1, 0);
+   759			}
+   760			mutex_unlock(&st->lock);
+   761			return IIO_VAL_INT;
+   762		case IIO_CHAN_INFO_SCALE:
+   763			*val = 0;
+   764			if (chan->type == IIO_ACCEL)
+   765				*val2 = st->info->scale;
+   766			else /* temperature */
+   767				*val2 = 555556;
+   768			return IIO_VAL_INT_PLUS_MICRO;
+   769		case IIO_CHAN_INFO_OFFSET:
+   770			*val = -214;
+   771			*val2 = 600000;
+   772			return IIO_VAL_INT_PLUS_MICRO;
+   773		case IIO_CHAN_INFO_SAMP_FREQ:
+   774			mutex_lock(&st->lock);
+   775			ret = sca3000_read_raw_samp_freq(st, val);
+   776			mutex_unlock(&st->lock);
+   777			return ret ? ret : IIO_VAL_INT;
+   778		case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+   779			mutex_lock(&st->lock);
+   780			ret = sca3000_read_3db_freq(st, val);
+   781			mutex_unlock(&st->lock);
+   782			return ret;
+   783		default:
+   784			return -EINVAL;
+   785		}
+   786	}
+   787	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
