@@ -1,137 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5F8238C16;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68DF238175;
 	Fri,  9 May 2025 17:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746810272; cv=none; b=ImVILovvjSKdbqHBJVeZe4AKgkzqeICFNK9jbewNexVHGcUG/xGdsZOsMpwKnZP+SAVl2zzuHsgeNz+R3FWpba+ga0O2dxTMTYChzJIknPyTtqzTepYvLmORun0BXuwMzfT6isoZ7xqLNnkFGRubTgtAR458aYdNH3MI6fwdJXw=
+	t=1746810273; cv=none; b=F1uiGjTIs5tjXamUAEnO6U8awZuDfeiSjkf8mcioooaLTGE7aJL4jZGbzs6bxc7d4r6hmWz0I3+XoA/sq7k6GhqddVtPOYX4I515E4xMntheEM/dPhzaKwcjlvhz3b9c+i9jqlr7JUtrf3CMqaiGkOQSrkmBwGmVXm9rlngJec0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746810272; c=relaxed/simple;
-	bh=Nkv6IKHXCYUek8fh7AoYuM8l9DOttVnrkqI5DhG25sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nif6r22FWJDAubvY9ZFPjvbuwXd+XS//18N9KNj9iw/ODSgFfNjcJvwii28/EuRAgjyjJgMj5nFTDiqdwadQWevmjGO1Rqj+GuRK/fgCc/u1wodfvZ97NViWK4HoUNo6M/R+BbpEdraD4w4icLLWqDq9k5P2rU7Uw/84ahqDEH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjzK/3ae; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746810273; c=relaxed/simple;
+	bh=FmqJE5CaWwRF+fvQUgtrkJzaKV7CEKJVosSM6sK0Jwk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DqZitxJAc1Aw2bXN8mLT2Fl8ChlgbBdDx74LnxzseDvGfCk+ed9uXewbnKr9F7Su5zI1KtEAP9ad8bJde5MD7OIMBAoqq5bzNyelcNAanwfhB+oXqS9ekNVJ6NY7dNlorfWNG7SXdKP2EMD59hZGGNioWRUYLSCh3a+Ib3FW7w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YSIuZxOx; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjzK/3ae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CADCC4CEE4;
-	Fri,  9 May 2025 17:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746810271;
-	bh=Nkv6IKHXCYUek8fh7AoYuM8l9DOttVnrkqI5DhG25sw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AjzK/3aeSYXIF8bhlpxZPZO6jjh180oKxg+OAj9qPXFU9ntAY8K6RJWo4P+eHOGpm
-	 Ad7LnN9reiWLrtjB6/mdI8kxzx08pv4GVK84bUjVme/teEOuQTmAPhvKuHLO1Y3g5U
-	 ZI8MTiH5ocNl1R+2CHhv7UODcLpqDb58QMpHzVf0l0+QMDDlaBVtjvYSXsjxDSmJxk
-	 sop16G6oygpTYCfh//O70fepRaRBcBMKXrVSSTcmsovKqa3VlWgxylpbRg4b0cA7UR
-	 2yQdYr50VE7pNPxO2GkB3ogTfl81PHcJSWU/I1zEJCvWuDWEFI1fKr5VrBd9fu9Fx7
-	 iwm4xaR87qRoA==
-Date: Fri, 9 May 2025 10:04:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	rcu@vger.kernel.org, linux-mm@kvack.org,
-	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 10/12] sysctl: Move sysctl_panic_on_stackoverflow to
- kernel/panic.c
-Message-ID: <202505091003.FCBA48E47D@keescook>
-References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
- <20250509-jag-mv_ctltables_iter2-v1-10-d0ad83f5f4c3@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSIuZxOx"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-441c99459e9so15626775e9.3;
+        Fri, 09 May 2025 10:04:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746810270; x=1747415070; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g9FGoOFxXhMGTP5ls91WbfqbKMEzNeTHiP62ZYlEVbw=;
+        b=YSIuZxOxOxCux9JGDbrZehQfglACGaNUOddYVUFA7m5rxIUp/9TXsm7n6LsrDDeQh8
+         KSOJ8+3wdrrhaBrXkcHFrvMucGDfgnE1YuYUwPi4WJxkfIAUlHPuhlYt3I/V354zzUmX
+         ScomsTb/C/M85SC5fLdb0Bmfqn5R2HEO+H1rEZluIeSmkWUpkrijs01cGZqr3VSBW6H1
+         +HlQ28dUr9YQb/HFp8Bjb8TPAL9jydRpy/wlAH5VqaEwWU1Cvrwgo26vdZ4XvC5cOFys
+         FPSbTgobbgupuZuoXYnfvxW1CV82pcghcC6hmKa4VbD2tq6A8JbdREcbE8Wj5TDcqhO3
+         yoxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746810270; x=1747415070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g9FGoOFxXhMGTP5ls91WbfqbKMEzNeTHiP62ZYlEVbw=;
+        b=hUumGZk5NzBPEMGeJGkkpwRGCe58o5xgoZVl9ooqBTEhFb54AuJGumnCZT7iPAhuYi
+         5eDmjYbexSPOqx+tR1rL5C/3wUXFyhQ4ZYD1sqEdq+UO2DTs+mwgfAx1NBElXuu01So9
+         FRVl6764Cf2DGLZIhr5yGI5p5rqsItda4TVelzXCmPNQ2k3DNB+b3T+f69iwsqZekyLo
+         2BPCbhtnLOPUQvWxUrwTm+Csw0GLzPOiYWsZ4mclOZFK6JPXo1YpiE5J5YuFHD9Q06MI
+         r3VkitFyXXspldJlnuIIInl618kWr8G9v94hJGLwr35lsZUiNpG18tX0vI3skvbejoS9
+         GCug==
+X-Forwarded-Encrypted: i=1; AJvYcCWVWwtRhvG0DqAsJul7yj/WS0UgJyKeiuZJgWpw+uizgquPG7T4FPEQDqg0Xc6l/CRtRwSIDUsvAAc/XJcx7Br1@vger.kernel.org, AJvYcCXDePP+B9SCBFhFaYfyNuL0XLDoR3RWKrOXvgCvuL1OXdKsN6xCoKHD1wYcHGYdixCp0NTeboiqrMQLGho=@vger.kernel.org, AJvYcCXapVp/CvNAp+d8ur1o3qUUm0wP4dCoTQb5OEWFmcwtnsuwxlCF5IvQp1vW2+QzJ5lZx/S2fIMvajYEcA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBJq6OasMgy4Pxvp+GMAsqu4EhZxMvqdfPTz9OX2HVXXcRcnT8
+	KR3+ANb603Rx46qRnvEF4z0zoUiiW14RiA3H++KLB4xgF+ddnikIbul6Su/KSgFBdmMYSuOG1u5
+	9zNV6YSABVxDCoykbpEGOUupc0XE=
+X-Gm-Gg: ASbGncsEd6vyiUoiivdqmgt97qX3yNoSaBWxqBfy3e62g10pGyESMjXa47TIBfGpSLR
+	5rrDzkPIoQ0upckPkf1yvbn5e1bQnFjvWUGQLIs0aktC5nz/g3OoPizaXWqwcxmeur4VAj7dbIW
+	GBfOIaNM52tvjG7SAt2+ZceDaQzzFO79MaJ7vS4A==
+X-Google-Smtp-Source: AGHT+IFnBYqhXbjNCF8NTXyLF6urD2/hEu6wcbrtnXUvS6VeJLvXHUVn+vYN/eT8TSsjCML7ULcEftXd3SA1OPWI14w=
+X-Received: by 2002:a05:600c:64c4:b0:43c:fe15:41e1 with SMTP id
+ 5b1f17b1804b1-442d6d18bc6mr39356315e9.4.1746810269524; Fri, 09 May 2025
+ 10:04:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-10-d0ad83f5f4c3@kernel.org>
+References: <20250509122348.649064-1-skb99@linux.ibm.com>
+In-Reply-To: <20250509122348.649064-1-skb99@linux.ibm.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 9 May 2025 10:04:18 -0700
+X-Gm-Features: AX0GCFtGvd38TEcBIzgZXpP366MKGCZNb_SZxydI264Su3mUoJ1EjhzLUKYHED8
+Message-ID: <CAADnVQKBQqur68RdwbDVpRuAZE=8Y=_JaTFo-36d_4vr2DNVyw@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: Fix bpf selftest build error
+To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+Cc: bpf <bpf@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Hari Bathini <hbathini@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Mykola Lysenko <mykolal@fb.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 02:54:14PM +0200, Joel Granados wrote:
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kernel/sysctl.c.
-> 
-> Signed-off-by: Joel Granados <joel.granados@kernel.org>
-
-Another undocumented sysctl. ;) This one should be called
-"panic_on_stack_exhaustion", but so be it. :)
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-
+On Fri, May 9, 2025 at 5:24=E2=80=AFAM Saket Kumar Bhaskar <skb99@linux.ibm=
+.com> wrote:
+>
+> On linux-next, build for bpf selftest displays an error due to
+> mismatch in the expected function signature of bpf_testmod_test_read
+> and bpf_testmod_test_write.
+>
+> Commit 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attri=
+bute::read/write()")
+> changed the required type for struct bin_attribute to const struct bin_at=
+tribute.
+>
+> To resolve the error, update corresponding signature for the callback.
+>
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Closes: https://lore.kernel.org/all/e915da49-2b9a-4c4c-a34f-877f378129f6@=
+linux.ibm.com/
+> Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
 > ---
->  kernel/panic.c  | 10 ++++++++++
->  kernel/sysctl.c | 10 ----------
->  2 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 213c6c9d6a750ff3d17f3cf530b37c619cd816f4..401f0997f654797acc3351040bbbda1845ce00c1 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -183,6 +183,16 @@ static const struct ctl_table kern_panic_table[] = {
->  		.mode           = 0644,
->  		.proc_handler   = proc_douintvec,
->  	},
-> +#if (defined(CONFIG_X86_32) || defined(CONFIG_PARISC)) && \
-> +	defined(CONFIG_DEBUG_STACKOVERFLOW)
-> +	{
-> +		.procname	= "panic_on_stackoverflow",
-> +		.data		= &sysctl_panic_on_stackoverflow,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec,
-> +	},
-> +#endif
->  };
->  
->  static __init int kernel_panic_sysctls_init(void)
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index d5bebdd02cd4f1def7d9dd2b85454a9022b600b7..446d77ec44f57a4929389b64fc23d3b180f550b4 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1552,16 +1552,6 @@ static const struct ctl_table kern_table[] = {
->  		.mode		= 0444,
->  		.proc_handler	= proc_dointvec,
->  	},
-> -#if (defined(CONFIG_X86_32) || defined(CONFIG_PARISC)) && \
-> -	defined(CONFIG_DEBUG_STACKOVERFLOW)
-> -	{
-> -		.procname	= "panic_on_stackoverflow",
-> -		.data		= &sysctl_panic_on_stackoverflow,
-> -		.maxlen		= sizeof(int),
-> -		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec,
-> -	},
-> -#endif
->  #ifdef CONFIG_SYSCTL_ARCH_UNALIGN_NO_WARN
->  	{
->  		.procname	= "ignore-unaligned-usertrap",
-> 
-> -- 
-> 2.47.2
-> 
-> 
+>  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools=
+/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> index 2e54b95ad898..194c442580ee 100644
+> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> @@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
+>
+>  noinline ssize_t
+>  bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+> -                     struct bin_attribute *bin_attr,
+> +                     const struct bin_attribute *bin_attr,
+>                       char *buf, loff_t off, size_t len)
 
--- 
-Kees Cook
+You didn't even compile it :(
+
+Instead of fixing the build, it breaks the build.
+
+pw-bot: cr
