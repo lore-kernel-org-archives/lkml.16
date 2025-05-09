@@ -1,145 +1,226 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7597D22D9ED;
-	Fri,  9 May 2025 10:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5B628ECE5;
+	Fri,  9 May 2025 10:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785843; cv=none; b=K3YSjIAbVKtfirgmHH2UiG0l7bxKGnyD3DxahDgTJ6cGyA8H2urksBs+R1mfKRIcD4TQiv2YN0fPKft3Sv2u8SHgmYnDTJzmwMCv+Yzjl9emavNl6F3t4PWkvidYkXQF4DR8w2MUTDeW8u5zQNrSDS1UEvq5NSaWObFv6lvUqu0=
+	t=1746785847; cv=none; b=ePGGGfAQ967jQMyFXQG2Z5A5t2Xkd6E+TRzMnCdR4ppz8O0rq0fQG7z17H7Lz551mpif/Elz1corLsOX7M5Ik/er6KjYQqqcJFZVHP6s8ZlK9nM+SfEHsO9eXtQ02PEIjGbf54/2rw4KhlgDEiXpeUiw9E52Rn1tYM0Uh0khGCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785843; c=relaxed/simple;
-	bh=vOyuH7zGSKu73KVsMFVFZEZDxKYFIXGQZa3XtLStxUc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DPc4cW9xu/Ybdp4qKScfSFASN9e7rr2u+farcskBQN1Xnj92KOuXX7k7+H9LSMPjmEjiwjuTgUStk561w3BrCEhOiArYgbOXgh3s20p+Z2q9NIOdi4cNhelxlgSYKKGz7Xv5QAo4pta1+IMXaWW6jjmn1UHwkqzlrWP5cknaGtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=ircLDYKA; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1746785847; c=relaxed/simple;
+	bh=ERspbipG51pFX6mV5n2SAd5mBzv3jd1f0WkXC/gFTg0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EKPp5r/AuRpuJ5yXQ6jplYD03qLRwFs4bROiqu6JJ3JmDTOCJooNEvM1sNvJKYJOZ6h0KbXuLkYJS5h9Yi3QPZm2wcWnMTl0c3w42D9axoT5aSdUcJQhZaLLHPZxjBKJtxNMMwx9P5Dounf1uVsGCQWzO+LZ1+45fxp4LYPe6Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxJgE99x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="ircLDYKA"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5499xDeP007329;
-	Fri, 9 May 2025 06:17:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=5Y9R/rN31vvB3epgSv1ADArx1oY
-	BpWR5iYQ/ehgjtXk=; b=ircLDYKA3mVjtk5YXqw0yAjqXhgcdIK2+DfNee91Ez5
-	sJa2NLtSezCVJSnxcaO8WyOtunZcBwszwB9Llf84gC9u58eDEJ503PG/+k2ZAd0g
-	7L6fwJT0D9362Hhv06csf7F5X9262jpN49pDqpHIKrYI68JW7DUTJe34qN1pIhyC
-	hGQqZqKfy9gex+BqMnnmQZRt6H5Ni16CJOH+/hV2IG+aAo6CNicTZWB6sxvhOMDC
-	BgaOKRML5cZtB2WL4Uu6IDzky56TaZm/CTM9v4W/nRsZXyOLrK/6Jdzc8FHOyirp
-	D7800Dqxmkg9GxlWI/Ont7d6E683f+/Ctb11sIkoXMg==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46hc2yh518-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 06:17:15 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 549AHE5P031848
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 9 May 2025 06:17:14 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 9 May 2025 06:17:14 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 9 May 2025 06:17:13 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 9 May 2025 06:17:13 -0400
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.148])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 549AH6sn013060;
-	Fri, 9 May 2025 06:17:08 -0400
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH] iio: adc: ad4851: fix ad4858 chan pointer handling
-Date: Fri, 9 May 2025 13:16:57 +0300
-Message-ID: <20250509101657.6742-1-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxJgE99x"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B03DC4CEE9;
+	Fri,  9 May 2025 10:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746785847;
+	bh=ERspbipG51pFX6mV5n2SAd5mBzv3jd1f0WkXC/gFTg0=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=mxJgE99xSSPrlgt6XY1E9bnAItSskRc9megA7f9M0O8711TeJF4+r4r2KxWIWrKx7
+	 IWUBuwHFuG/rD4C3h9ltWEwzhAy+4eK1O0jl7VOkuLfp0utQ6QBw/27iYnNJmG3RRW
+	 Ml2k31ZhNaVVZSQshv1A2U3TGgyYvUCslXsTgVD4IcnyScxwQea8DvJ9AkxFbnZ8FO
+	 gGGVQsS/AddM0Yaby0sNbBXclmUTpokJuCj5Jjx+B0IGv2Gb7kPmwnPzPDiNEGh73M
+	 VIn2/2JOGuXHi3hK51i90Vl1JOW/AFhtrRsls1EkXGj9C21wSNShGUL7OIYQIiqBXH
+	 qjwkq1mF5AH8g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA12C3ABBC;
+	Fri,  9 May 2025 10:17:26 +0000 (UTC)
+From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
+Date: Fri, 09 May 2025 18:17:04 +0800
+Subject: [PATCH v2] Bluetooth: fix socket matching ambiguity between BIS
+ and CIS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA5OSBTYWx0ZWRfXwr1j4uzGF13z
- gZdSeWKjXhR2on4fVNBxBatailWMYyVn8asrGchwfuCN7SidLLhPN1CKxkF6jhawdN3ExLaPsKY
- P7XK93gglifChMvn53vmPyzN1TJdFHp0Xijjg4eGiUbCSJqKhaOxyRlKqyj9UaeRVJhhN+7Pq/D
- DYByumkLH3M3eSAY2Y5BUz5w42yZk+bEeNB22sxe1KgSSHxGKY7nfPqRdur4R5khfrjv//5Z9vM
- 3u08V1GOYHLnOgIAphuCxZwAi2DARZw91hTMp5T7myoOrjtgOeSi0hobAeAd9vB413mZDjjiGN2
- 35c2JNOw+QLu6+z6IzY4CJg5grFtG6QkPq+D/ttQDnHAoqF6jyYjfdYjOuOCnLiRjs3IKlY1KRu
- 9NbhQI2lorENrHqNfk9B32EA5EpnzyhOFwgrZkg+FqOjfPVLLdlWk8zP4HBlWsC6KFQbAqD1
-X-Proofpoint-ORIG-GUID: MSIXbSbBBYAr1zwLUPJpjOZ47xBR_dzR
-X-Authority-Analysis: v=2.4 cv=UJbdHDfy c=1 sm=1 tr=0 ts=681dd62b cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=EFlIJase3jX5Scr6_QkA:9
-X-Proofpoint-GUID: MSIXbSbBBYAr1zwLUPJpjOZ47xBR_dzR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_04,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 bulkscore=0 suspectscore=0 phishscore=0 adultscore=0
- impostorscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505090099
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-iso-v2-1-da53bd18c193@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAB/WHWgC/zWMyw6CMBBFf4XM2po+bFFX/gdhQcsAkwg1rWkwp
+ P9ubeLy3NxzDogYCCPcmwMCJorktwLy1IBbhm1GRmNhkFxqrrlhFD0zWujrTVltrYLyfAWcaK+
+ Vri+8UHz78KnRJH7r32+rnwQTzEyGj/KikKv2MaxPP5M7O79Cn3P+Ah83fIGYAAAA
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Johan Hedberg <johan.hedberg@gmail.com>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yang Li <yang.li@amlogic.com>
+X-Mailer: b4 0.13-dev-f0463
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746785845; l=5072;
+ i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
+ bh=VjVfZ4Q3GK4UA1LAAiFeOM2PfRNRZQCaap54bHro5Y0=;
+ b=+duwP9MYf9CGYkQ3dquP8kyUihl8OoaF+YWsMEaJkbD4+niMYXCKvUIp+J79RNyDzSajNaMC8
+ TcxAZ2TYNCPBvjqcxsaD93F/itBYSKzFzfG46ydodr2H29obmHEMgob
+X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
+ pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
+X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
+ auth_id=180
+X-Original-From: Yang Li <yang.li@amlogic.com>
+Reply-To: yang.li@amlogic.com
 
-The pointer returned from ad4851_parse_channels_common() is incremented
-internally as each channel is populated. In ad4858_parse_channels(),
-the same pointer was further incremented while setting ext_scan_type
-fields for each channel. This resulted in indio_dev->channels being set
-to a pointer past the end of the allocated array, potentially causing
-memory corruption or undefined behavior.
+From: Yang Li <yang.li@amlogic.com>
 
-Fix this by iterating over the channels using an explicit index instead
-of incrementing the pointer. This preserves the original base pointer
-and ensures all channel metadata is set correctly.
+When the DUT acts as a sink device, and a BIS already exists,
+creating a CIS connection can cause the kernel to incorrectly
+reference the BIS socket. This occurs because the socket
+lookup only checks for state == BT_LISTEN, without
+distinguishing between BIS and CIS socket types.
 
-Fixes: 6250803fe2ec ("iio: adc: ad4851: add ad485x driver")
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To fix this, match the destination address (dst addr) during
+ISO socket lookup to differentiate between BIS and CIS sockets
+properly.
+
+Link: https://github.com/bluez/bluez/issues/1224
+
+Signed-off-by: Yang Li <yang.li@amlogic.com>
 ---
- drivers/iio/adc/ad4851.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Changes in v2:
+- Fix compilation errors
+- Improved the problem description for clarity.
+- Link to v1: https://lore.kernel.org/r/20250507-iso-v1-1-6f60d243e037@amlogic.com
+---
+ net/bluetooth/hci_event.c | 34 +++++++++++++++++++---------------
+ net/bluetooth/iso.c       | 12 +++++++++---
+ 2 files changed, 28 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
-index 98ebc853db79..f1d2e2896f2a 100644
---- a/drivers/iio/adc/ad4851.c
-+++ b/drivers/iio/adc/ad4851.c
-@@ -1034,7 +1034,7 @@ static int ad4858_parse_channels(struct iio_dev *indio_dev)
- 	struct device *dev = &st->spi->dev;
- 	struct iio_chan_spec *ad4851_channels;
- 	const struct iio_chan_spec ad4851_chan = AD4858_IIO_CHANNEL;
--	int ret;
-+	int ret, i = 0;
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 66052d6aaa1d..6b26344ad69f 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -6413,6 +6413,8 @@ static void hci_le_pa_sync_estabilished_evt(struct hci_dev *hdev, void *data,
  
- 	ret = ad4851_parse_channels_common(indio_dev, &ad4851_channels,
- 					   ad4851_chan);
-@@ -1042,15 +1042,15 @@ static int ad4858_parse_channels(struct iio_dev *indio_dev)
- 		return ret;
+ 	conn->sync_handle = le16_to_cpu(ev->handle);
+ 	conn->sid = HCI_SID_INVALID;
++	conn->dst = ev->bdaddr;
++	conn->dst_type = ev->bdaddr_type;
  
- 	device_for_each_child_node_scoped(dev, child) {
--		ad4851_channels->has_ext_scan_type = 1;
-+		ad4851_channels[i].has_ext_scan_type = 1;
- 		if (fwnode_property_read_bool(child, "bipolar")) {
--			ad4851_channels->ext_scan_type = ad4851_scan_type_20_b;
--			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_b);
-+			ad4851_channels[i].ext_scan_type = ad4851_scan_type_20_b;
-+			ad4851_channels[i].num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_b);
- 		} else {
--			ad4851_channels->ext_scan_type = ad4851_scan_type_20_u;
--			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_u);
-+			ad4851_channels[i].ext_scan_type = ad4851_scan_type_20_u;
-+			ad4851_channels[i].num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_u);
+ 	mask |= hci_proto_connect_ind(hdev, &ev->bdaddr, BIS_LINK,
+ 				      &flags);
+@@ -6425,7 +6427,7 @@ static void hci_le_pa_sync_estabilished_evt(struct hci_dev *hdev, void *data,
+ 		goto unlock;
+ 
+ 	/* Add connection to indicate PA sync event */
+-	pa_sync = hci_conn_add_unset(hdev, BIS_LINK, BDADDR_ANY,
++	pa_sync = hci_conn_add_unset(hdev, BIS_LINK, &ev->bdaddr,
+ 				     HCI_ROLE_SLAVE);
+ 
+ 	if (IS_ERR(pa_sync))
+@@ -6456,13 +6458,6 @@ static void hci_le_per_adv_report_evt(struct hci_dev *hdev, void *data,
+ 
+ 	hci_dev_lock(hdev);
+ 
+-	mask |= hci_proto_connect_ind(hdev, BDADDR_ANY, BIS_LINK, &flags);
+-	if (!(mask & HCI_LM_ACCEPT))
+-		goto unlock;
+-
+-	if (!(flags & HCI_PROTO_DEFER))
+-		goto unlock;
+-
+ 	pa_sync = hci_conn_hash_lookup_pa_sync_handle
+ 			(hdev,
+ 			le16_to_cpu(ev->sync_handle));
+@@ -6470,6 +6465,13 @@ static void hci_le_per_adv_report_evt(struct hci_dev *hdev, void *data,
+ 	if (!pa_sync)
+ 		goto unlock;
+ 
++	mask |= hci_proto_connect_ind(hdev, &pa_sync->dst, BIS_LINK, &flags);
++	if (!(mask & HCI_LM_ACCEPT))
++		goto unlock;
++
++	if (!(flags & HCI_PROTO_DEFER))
++		goto unlock;
++
+ 	if (ev->data_status == LE_PA_DATA_COMPLETE &&
+ 	    !test_and_set_bit(HCI_CONN_PA_SYNC, &pa_sync->flags)) {
+ 		/* Notify iso layer */
+@@ -6993,6 +6995,8 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+ 			set_bit(HCI_CONN_PA_SYNC, &bis->flags);
+ 
+ 		bis->sync_handle = conn->sync_handle;
++		bis->dst = conn->dst;
++		bis->dst_type = conn->dst_type;
+ 		bis->iso_qos.bcast.big = ev->handle;
+ 		memset(&interval, 0, sizeof(interval));
+ 		memcpy(&interval, ev->latency, sizeof(ev->latency));
+@@ -7038,13 +7042,6 @@ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
+ 
+ 	hci_dev_lock(hdev);
+ 
+-	mask |= hci_proto_connect_ind(hdev, BDADDR_ANY, BIS_LINK, &flags);
+-	if (!(mask & HCI_LM_ACCEPT))
+-		goto unlock;
+-
+-	if (!(flags & HCI_PROTO_DEFER))
+-		goto unlock;
+-
+ 	pa_sync = hci_conn_hash_lookup_pa_sync_handle
+ 			(hdev,
+ 			le16_to_cpu(ev->sync_handle));
+@@ -7054,6 +7051,13 @@ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
+ 
+ 	pa_sync->iso_qos.bcast.encryption = ev->encryption;
+ 
++	mask |= hci_proto_connect_ind(hdev, &pa_sync->dst, BIS_LINK, &flags);
++	if (!(mask & HCI_LM_ACCEPT))
++		goto unlock;
++
++	if (!(flags & HCI_PROTO_DEFER))
++		goto unlock;
++
+ 	/* Notify iso layer */
+ 	hci_connect_cfm(pa_sync, 0);
+ 
+diff --git a/net/bluetooth/iso.c b/net/bluetooth/iso.c
+index 6e2c752aaa8f..1dc233f04dbe 100644
+--- a/net/bluetooth/iso.c
++++ b/net/bluetooth/iso.c
+@@ -641,11 +641,12 @@ static struct sock *iso_get_sock(bdaddr_t *src, bdaddr_t *dst,
+ 			continue;
+ 
+ 		/* Exact match. */
+-		if (!bacmp(&iso_pi(sk)->src, src)) {
++		if (!bacmp(&iso_pi(sk)->src, src)
++		     && !bacmp(&iso_pi(sk)->dst, dst)
++			){
+ 			sock_hold(sk);
+ 			break;
  		}
--		ad4851_channels++;
-+		i++;
+-
+ 		/* Closest match */
+ 		if (!bacmp(&iso_pi(sk)->src, BDADDR_ANY)) {
+ 			if (sk1)
+@@ -1962,7 +1963,7 @@ static void iso_conn_ready(struct iso_conn *conn)
+ 		}
+ 
+ 		if (!parent)
+-			parent = iso_get_sock(&hcon->src, BDADDR_ANY,
++			parent = iso_get_sock(&hcon->src, &hcon->dst,
+ 					      BT_LISTEN, NULL, NULL);
+ 
+ 		if (!parent)
+@@ -2203,6 +2204,11 @@ int iso_connect_ind(struct hci_dev *hdev, bdaddr_t *bdaddr, __u8 *flags)
+ 	} else {
+ 		sk = iso_get_sock(&hdev->bdaddr, BDADDR_ANY,
+ 				  BT_LISTEN, NULL, NULL);
++		if (!sk)
++			sk = iso_get_sock(&hdev->bdaddr, bdaddr,
++					  BT_LISTEN, NULL, NULL);
++		else
++			iso_pi(sk)->dst = *bdaddr;
  	}
  
- 	indio_dev->channels = ad4851_channels;
+ done:
+
+---
+base-commit: f3daca9b490154fbb0459848cc2ed61e8367bddc
+change-id: 20250506-iso-6515893b5bb3
+
+Best regards,
 -- 
-2.49.0
+Yang Li <yang.li@amlogic.com>
+
 
