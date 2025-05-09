@@ -1,66 +1,65 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A7A26AA86;
-	Fri,  9 May 2025 07:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DED22749EA;
+	Fri,  9 May 2025 07:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776962; cv=none; b=UrsYOvrHif5V3Xfuus0C5dlfQRmbulfkwBc9NmHZJ+mQYgBlRPyS2h41EB+AspToBXyIc4AVRUZoAppJorVQPnFcly3hOTvKA1dG2fVdYkQI0a23IlXZf5SSHpf3X8jUSPpYRbmkvpfJQmbRvVB1jV8I4O2piy4t/Ub0p82PD/I=
+	t=1746776966; cv=none; b=CUDygamxvK1MVAaf/jIGQIsZ5B9cbw8NO8enqu260cSZO42ioQTziLzBzjcjUI38Inv5uW1ErZRZt1S6NHZL57HGenmQOv3krW7kunPvGkr9AKqbfXyfezOYmZYXfnkE4tzNv/G7iQ5rdIpEWKR4uR/G+PDa/geVynD5D033DFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776962; c=relaxed/simple;
-	bh=0mI/bIClotmAIMEue5Uh6KbwoJ+g9tFgZQBd+jg7Spg=;
+	s=arc-20240116; t=1746776966; c=relaxed/simple;
+	bh=ESzEa2XBYeCXCYfZ5PnQ+bede9o4BuhRrBkVwojeH30=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TsUZLbnO9LtLoiCQr5z5d4U03IVR7rZSX9Uv+N0Q1wOmErhIibmmtQDzc+fe+kRyt1sx36dZpQEFillMDxJV/FeI7dsV8HbqPqYXYaqFj+Ug8KPwekvtCUHQoKbr6T0pETIUpQPyOHdYU560F9HNiGugrrszF4kvSa4XWIAcrTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ScPJHkM7; arc=none smtp.client-ip=209.85.221.179
+	 In-Reply-To:To:Cc; b=MusBt2zRi17XrdsQ18kwpH/MeVw68CdTfVVNQBoTtnAjPl5HkNA+EV+qUOGsSErAjCLfgKyu2aVAAEdc6ad0Y6MV6+tf5cKHUal7UfcV+TjSVcxai+clCfE3JTP5gFVV7bH45KU5SQ55gkvtJ8zux7MlPGXfNHDGGgfat2OHTOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g9/p8K8w; arc=none smtp.client-ip=209.85.217.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScPJHkM7"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-523f670ca99so604730e0c.1;
-        Fri, 09 May 2025 00:49:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9/p8K8w"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4c34dcdaf88so611014137.2;
+        Fri, 09 May 2025 00:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746776959; x=1747381759; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746776964; x=1747381764; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=E1RzP8Nae7C+98McQ5BCAJ1tDJLogzrgZIHRK1qrkfg=;
-        b=ScPJHkM7HqMcWWbJw4DRDwIuHq1d7WO91CMBt1o6hsUyl6Xr6szh90kXVW/cbr6hb2
-         nyhGORoQjpK29yzGvPFf0Ld4PfDcNAuay4GmAO73zkl6BBFykC9yXorcsCYhqj9+hpce
-         mpOhp5vTQVSEOD8JFX6lLJy7Hb+2p+92/jbGygcZ6TO/nXYhFLEjc6Om2G7ov4KcB0aq
-         lZHycUfYu4Nce6NFU15MFjyDYPPb1n0/xC9CYJAJoSP4lLi8VIHyjkmlXflxunTs/sI+
-         rANwI4FJum7EhkE2LWPdtpZCiPYbwMDRUo35NWkYTE2PCqRORajhw4LmQUtSP+jL4Kcf
-         U/7g==
+        bh=/phAatFkBAwQ5t8wNBWoDLE6oTpZIJwGQghZ3e9clt4=;
+        b=g9/p8K8w0EHzKZ6KIQf6YD6Oi/pev1bNeuNpZuQ42oK8vfnpQNIOO4hGi+nAcezpBP
+         GLMsgrZ0i+VjSRInf1FRVlmc40tbBToy+dAStiF9AUpe3lH57qkRUH2lV9Qsbw4gKJGf
+         IUyznhx8kuk293bRsBIROrFIdyD0iBTlsA/FxipBFqKSSxz3OVEHqwIUFBL/JaeZA0xx
+         fTQc5zRcElpB/tRJG2M4qGBxWv5sg4UxM4hAw09VAZXQFwtNQEUkG2hUwQFQHkEYUL65
+         0xl8XWOwzH2TUnrWlyQ0EcEs2+g4tOGzILH5ld2yMWUISoE3MIIFJD9ShrIQ9uIcLV8Z
+         5mMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746776959; x=1747381759;
+        d=1e100.net; s=20230601; t=1746776964; x=1747381764;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E1RzP8Nae7C+98McQ5BCAJ1tDJLogzrgZIHRK1qrkfg=;
-        b=RHTIeHCKnB16KhAB+cVP9g9HSr85uDoZB9U2GUoXTRrGALCRFBgTj/xCXZi1xawKOo
-         ByX7t0PJh1o9fh44mKYrehoJxtda1V6Vhm612Q7LCVjA7qrCZYBU5lEA2L+HCSeDPwcf
-         336MMeSGIfg2m7vaZw8BWImTEdORF29tLQGOCmXOknwNYviRqfNT6Brew+CkEttwq9tj
-         hvrgvR3OJZ6wnmjdNLm0fCiE37RwU8HoHBdLDQZiT+9oS8ejr7mRkGu7xt/gyRcLUSMX
-         PWQNhnzxkpqarV0fDO3chm/IBowom8QIXpaEWjVv8lrb61zZZgLlJaeBU2uFUV/+tnR9
-         KpBA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1/1/IkDQj7PmfmcLjmp0NM+wo9OEosVmNA58QEX9eaXssa6znUXwXjTuh9ikUCTNyGlApBLmyJ4tXBvU=@vger.kernel.org, AJvYcCXSsZTayU+HjGV2lgNvM0zzL1NwHr3QrrmJ7wXv/1LuGhKJlDHJT0WZMs5rUKUa+W6FND8Xe42uIVjRvQOWLnr5XSzCgw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNNcHNxEvBAdT0GX+cCnEGb8U2iGLK4ICI5lAtXtm8BUUjreFi
-	NJ65A7SH1PV1mZ/bXumaJN5dPJP49EqM2+ArrLbIL3OQudg/t/HU
-X-Gm-Gg: ASbGnctrPHei/g8bCgh9EV72XrUawLUja96JZiZzXVwZyziyYVdC7kPRjPokQigl1F1
-	djWcJvoBExyPLV4JIE5NeaLhOEnThSRjbfi6AWmasHQ9ETZLSk5trHZtVgJgOo49uU+4pXq8NSC
-	6mvUYrnbIgV3QDEK7eQMCE5g3EWfUNaoBVwXeGG6jkPwnO8HsffkQcXGo5xCjTqow1vXCBb2r1M
-	p8bi6x37SkMBwjQDRxtwOgCWvAkhKPJtNZoMr9mcba2LlSbSkHwufsex6Yes7gkSyF9LQMG5tSS
-	7UkFAy/oLTL/vMfrJNvwBPkncPOQr18RTxk/c0Rz
-X-Google-Smtp-Source: AGHT+IFdh3K8D/AsAmUV7aiJ3n2dUD0gZY0HWzhfepUoUEOQIyN3FiLcjdCcIyhy8JuMkPAR9vx0VQ==
-X-Received: by 2002:a05:6122:45a1:b0:520:af9c:c058 with SMTP id 71dfb90a1353d-52c53b7f396mr2104851e0c.5.1746776959286;
-        Fri, 09 May 2025 00:49:19 -0700 (PDT)
+        bh=/phAatFkBAwQ5t8wNBWoDLE6oTpZIJwGQghZ3e9clt4=;
+        b=OL7isJ2hDWWOBcvUFeKH+aHfYuYeTQ1GvpF6VtMovPxvcGL3q8mWTNFiPlipW0aVfa
+         LlHNzAmiZUV6SHnQ8GcV5a93rn57uIBRSIMJQy6+B/hXWPR9J2gGR3A0f3UhiasoSkok
+         W46AXPTo6nQEzeS2hoaoCCLpEN94TqNMQxlfeL0yQY1J1/pMgMSOmuHe5ikZT4xKdPb9
+         xqtOe+XE7tf3gj9Rf2FFd+E4NMLC6q5jhJbvaOSzHtZBJV4nSHrtlmUSqyQ9es/Z6ZJA
+         cGDruS9wsvb6VdMQveMEHI9NCLEv32WwUJlclz+frk6Rq27sKSTF4uC+L2u2ECRROZt+
+         zyyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzsmmdPzJ5jXX0ITEtOllRwKT7KC8IaYsfDVh+zNczNautI8XmMyQw5DINfl3UiEuIU6pKMEK136ZooN0W/Cc+Jp1S0w==@vger.kernel.org, AJvYcCX6hj5CO4KC4KzWcB/TSng4sATPX0vF9ecVGGqLY69po71DidXAkaO/xd1aKQgjoZWRLcs2rtG6Fpxawgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcEhIPGKSEwm6bI13+Oe+x6IBM2pR7DG3eyxsuweEbPVgqpCUO
+	LMaT0KAzSewj1P0pDdtOKDVHfV6upjEYAseMd61DBg/XSHdExnqQ
+X-Gm-Gg: ASbGnct///1XFkdc0751TFbQ+Em+owYI8LwnF1o1IWhGnBNmm8PpA7aYQfh5twMAN1U
+	jkuFurZjx7eZZsm0QLYV7d6wUl4d3x4iZJGVk2KY5G2qyam7YYeytDnhW0IUjm74R+zktviArXV
+	tLxwErPJN6F8ds4W9rAmRNsHYntQmDoPDVxRotXK3NrMAfFHOjVdX0NG5sq9GANbnZPrvx3WmxG
+	+BHgAvpTvn0gTGAREoMVCeqztctl9i+WxPZ0LJeRTulrUwf1DjnhHEoNdSknKr54ZN5JI6hJX2E
+	sice2o51DI3BEn46FfP2tjK8q8z6ETRSGaAhgezj
+X-Google-Smtp-Source: AGHT+IEV2wUxDT4UZ7wEWbIKRaAtnNbGm5X6GYvdQjajcMwDG6DRQ4uWU/Wuk+dtBnlr2TeUERl47A==
+X-Received: by 2002:a05:6102:8097:b0:4c1:774b:3f7a with SMTP id ada2fe7eead31-4deed3d4b5bmr1629019137.16.1746776963975;
+        Fri, 09 May 2025 00:49:23 -0700 (PDT)
 Received: from [192.168.1.26] ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f62986f3sm678265241.33.2025.05.09.00.49.14
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f62986f3sm678265241.33.2025.05.09.00.49.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 00:49:18 -0700 (PDT)
+        Fri, 09 May 2025 00:49:23 -0700 (PDT)
 From: Kurt Borja <kuurtb@gmail.com>
-Date: Fri, 09 May 2025 04:48:35 -0300
-Subject: [PATCH RFC 3/5] platform/x86: firmware_attributes_class: Add a
- boolean type
+Date: Fri, 09 May 2025 04:48:36 -0300
+Subject: [PATCH RFC 4/5] MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-fw-attrs-api-v1-3-258afed65bfa@gmail.com>
+Message-Id: <20250509-fw-attrs-api-v1-4-258afed65bfa@gmail.com>
 References: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
 In-Reply-To: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>, 
@@ -84,128 +83,40 @@ Cc: Antheas Kapenekakis <lkml@antheas.dev>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4584; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=0mI/bIClotmAIMEue5Uh6KbwoJ+g9tFgZQBd+jg7Spg=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmym3M+q23cdt2n5GiH9IwDKSIVq254Gy39UFHftOPro
- W/mn1pUO0pZGMS4GGTFFFnaExZ9exSV99bvQOh9mDmsTCBDGLg4BWAicyYx/C9acflwYQvLgtbl
- gS4zRbVTNH5EpOsv1nU8ftxH8J0h6xyG/5k8XUYbC65dTz1RuHlW1vNFqWLPztTGimoot18X6xU
- o4AUA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=827; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=ESzEa2XBYeCXCYfZ5PnQ+bede9o4BuhRrBkVwojeH30=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmym3PMjCYfYzsRI/P8btaEEz9+6Dhtf+182i3D3MPza
+ qjgIp2rHaUsDGJcDLJiiiztCYu+PYrKe+t3IPQ+zBxWJpAhDFycAjCRtWsZGXaf5dzGZPla4MPP
+ xKBwvuhH8nHFbrw+C7I1v9nNCTRkm87wP/bIu9JgTdWL/Sw/PuqfkXCT5d+/r8kl/FTQI/n3h2L
+ V+QE=
 X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
  fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-Add a `boolean` attribute type to prevent the use of the `enumeration`
-type for this simple specification.
+Add entry for the FIRMWARE ATTRIBUTES CLASS.
 
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- .../ABI/testing/sysfs-class-firmware-attributes          |  1 +
- drivers/platform/x86/firmware_attributes_class.c         | 16 ++++++++++++++++
- drivers/platform/x86/firmware_attributes_class.h         | 11 +++++++++++
- 3 files changed, 28 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 2713efa509b465a39bf014180794bf487e5b42d6..dc117e694416aed3f1f7ba0ebb1d0c23337b2298 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -21,6 +21,7 @@ Description:
- 			- enumeration: a set of pre-defined valid values
- 			- integer: a range of numerical values
- 			- string
-+			- bool
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f9417b4e9bafd1a4033bba2fdb4a4e6fb68cf219..c4adad420a8ffee7bc7624d3edc8ba36aec5cb40 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9190,6 +9190,13 @@ F:	include/linux/firewire.h
+ F:	include/uapi/linux/firewire*.h
+ F:	tools/firewire/
  
- 		HP specific types
- 		-----------------
-diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
-index 7cfb0f49f235728c7450a82a7e9d00b8963d3dea..13b10a1209be726b00fa1ebad6148778e165101e 100644
---- a/drivers/platform/x86/firmware_attributes_class.c
-+++ b/drivers/platform/x86/firmware_attributes_class.c
-@@ -26,6 +26,7 @@ EXPORT_SYMBOL_GPL(firmware_attributes_class);
- 
- static const char * const fwat_type_labels[] = {
- 	[fwat_type_integer]		= "integer",
-+	[fwat_type_boolean]		= "boolean",
- 	[fwat_type_string]		= "string",
- 	[fwat_type_enumeration]		= "enumeration",
- };
-@@ -72,6 +73,7 @@ fwat_current_value_show(struct device *dev, const struct fwat_attribute *attr, c
- 	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
- 	const struct fwat_attr_config *config = ext->config;
- 	const char *str;
-+	bool bool_val;
- 	long int_val;
- 	int ret;
- 
-@@ -82,6 +84,12 @@ fwat_current_value_show(struct device *dev, const struct fwat_attribute *attr, c
- 			return ret;
- 
- 		return sysfs_emit(buf, "%ld\n", int_val);
-+	case fwat_type_boolean:
-+		ret = config->ops->boolean_read(dev, config->aux, &bool_val);
-+		if (ret)
-+			return ret;
++FIRMWARE ATTRIBUTES CLASS
++M:	Kurt Borja <kuurtb@gmail.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/firmware_attributes_class.*
++K:	(devm_)?fwat_device_(un)?register
 +
-+		return sysfs_emit(buf, "%u\n", bool_val);
- 	case fwat_type_string:
- 		ret = config->ops->string_read(dev, config->aux, &str);
- 		if (ret)
-@@ -105,6 +113,7 @@ fwat_current_value_store(struct device *dev, const struct fwat_attribute *attr,
- {
- 	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
- 	const struct fwat_attr_config *config = ext->config;
-+	bool bool_val;
- 	long int_val;
- 	int ret;
- 
-@@ -116,6 +125,13 @@ fwat_current_value_store(struct device *dev, const struct fwat_attribute *attr,
- 
- 		ret = config->ops->integer_write(dev, config->aux, int_val);
- 		break;
-+	case fwat_type_boolean:
-+		ret = kstrtobool(buf, &bool_val);
-+		if (ret)
-+			return ret;
-+
-+		ret = config->ops->boolean_write(dev, config->aux, bool_val);
-+		break;
- 	case fwat_type_string:
- 		ret = config->ops->string_write(dev, config->aux, buf);
- 		break;
-diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/platform/x86/firmware_attributes_class.h
-index f250875d785c3439682c43c693f98e1c20e9ff54..d95d2024b0d9630ee3750ec26e18874965ec5cff 100644
---- a/drivers/platform/x86/firmware_attributes_class.h
-+++ b/drivers/platform/x86/firmware_attributes_class.h
-@@ -49,6 +49,7 @@ struct fwat_attribute {
- 
- enum fwat_attr_type {
- 	fwat_type_integer,
-+	fwat_type_boolean,
- 	fwat_type_string,
- 	fwat_type_enumeration,
- };
-@@ -77,6 +78,10 @@ struct fwat_attr_config;
-  *                type *integer*.
-  * @integer_write: Callback for writing the current_value of an attribute of
-  *                 type *integer*.
-+ * @boolean_read: Callback for reading the current_value of an attribute of type
-+ *                *boolean*.
-+ * @boolean_write: Callback for writing the current_value of an attribute of
-+ *                 type *boolean*.
-  * @string_read: Callback for reading the current_value of an attribute of type
-  *               *string*.
-  * @string_write: Callback for writing the current_value of an attribute of type
-@@ -96,6 +101,12 @@ struct fwat_attr_ops {
- 			int (*integer_write)(struct device *dev, long aux,
- 					     long val);
- 		};
-+		struct {
-+			int (*boolean_read)(struct device *dev, long aux,
-+					    bool *val);
-+			int (*boolean_write)(struct device *dev, long aux,
-+					     bool val);
-+		};
- 		struct {
- 			int (*string_read)(struct device *dev, long aux,
- 					   const char **str);
+ FIRMWARE FRAMEWORK FOR ARMV8-A
+ M:	Sudeep Holla <sudeep.holla@arm.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 
 -- 
 2.49.0
