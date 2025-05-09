@@ -1,103 +1,108 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66AF28FA88;
-	Fri,  9 May 2025 12:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C520722D9F8;
+	Fri,  9 May 2025 12:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.51.188.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746793166; cv=none; b=YjRabua1mU/bicvCBCHFly5lnXjIIjwfIvqoSuwUdiQ49LlO2Qj1cDZdw4fgkqCXZDKa/RoyW37CW2ExLjZx35gjhDaYJBGDozobCV34Vpt2keBiPAQKuxMUj7Iw1Ggq8arVgkXu3CiSmNrh58yXUpdiQl6CLHLOTCZmLkk2iV4=
+	t=1746793196; cv=none; b=phllemGobOfF5O3H/W0PYN1jQ7ky6zqaMd2YPsv2+GwmOC3ooiFhH7vk4xhyN+yXISO/CEPKNCz5aywudPaBQPWf9xjIan1TMvWySJx/c4Wt7o/vSP2E2VP3/33o2SfXYWb8m1HTPHlBpK2DKGz1+FFtwm67mzKNxZUCTd3qHS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746793166; c=relaxed/simple;
-	bh=NjwdzeI3LIHCeBC02VI8Dq1qSyVjAC9mWwY5oWvAzxU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ko7x9u00gP4U4Cr+OG8gCIPeXIoVP7YCw1HrtVy2zIKjdCX8NwWHDUDYyBwIIp1RzI28fCB317OnqBntxdXR/73lRJyh9Jb+/AFXVJbTUYSXaAxlnP1s3vsp4hlUsEXwfBzV72+deOdPWRMa5mjJ4UYY3ZTkn6GUUM2yHyynlwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f2TzyCl+; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746793196; c=relaxed/simple;
+	bh=+91OYGRy69mtMICQt/vUfYhND/ZGYPeC1wbH0m+Gxvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rxl0MmPqYpLo79rWcwrn7ZdgOEa5W2uSXETvo8RDK7S0bnfg+x4Qb9XHPTN1qZ3jAutLoRQPj+tG6BKBEENZzpP92DBJa8kS2onj++TYqOpMWrHpYrRTL0WmIHkzAHmrKyNRhAwJy+bIIoLf+3dGkkS8YEEUB8YVokkIJkkeNK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org; spf=pass smtp.mailfrom=gnu.org; dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b=EbQobLJG; arc=none smtp.client-ip=209.51.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f2TzyCl+"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 549CJFIX1397284;
-	Fri, 9 May 2025 07:19:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746793155;
-	bh=2jyB6aUOgYfUPr24M21QgvhDyfQjoJzYfN68uPqNe9g=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=f2TzyCl+jENyjpZElnYmwnXctueESgB3m4PLOJmrwjhjD6ldM4rsGqY1idJv2Jhj6
-	 jGM3aJ9t9yI3exQ0echzxkEQptsBHq73cDozKZz2edkbovjZIBWLyCesZ8qflJelsK
-	 xAJVG0jpcNkeYk53tEMdkjHRDrw7WeLGl/358vCE=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 549CJFBL2855990
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 9 May 2025 07:19:15 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 9
- May 2025 07:19:14 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 9 May 2025 07:19:14 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 549CJEF4051801;
-	Fri, 9 May 2025 07:19:14 -0500
-From: Nishanth Menon <nm@ti.com>
-To: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <vigneshr@ti.com>, Prasanth Babu Mantena <p-mantena@ti.com>
-CC: Nishanth Menon <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-j721e-common-proc-board: Enable OSPI1 on J721E
-Date: Fri, 9 May 2025 07:19:12 -0500
-Message-ID: <174679309079.1567113.16838918804275353622.b4-ty@ti.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250507050701.3007209-1-p-mantena@ti.com>
-References: <20250507050701.3007209-1-p-mantena@ti.com>
+	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="EbQobLJG"
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <othacehe@gnu.org>)
+	id 1uDMhe-0000f3-W6; Fri, 09 May 2025 08:19:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+	s=fencepost-gnu-org; h=MIME-Version:Date:Subject:To:From:in-reply-to:
+	references; bh=H139cGEHa3IIp3U0gVnQ9YB0rP5tNLxOUIGuATG7bCo=; b=EbQobLJGIs+IHO
+	G2kjXUJ1gp6egYsaaYANdAMDHmYwk5rqwmsrz6W+sN8K1syABCEsCGE2XK/f0VTHBOTQJafkWf9FI
+	HaRjbkxrA59/SXqGU0CSVo9HWAU5H37MMiXMskCdzZzSWdqb+93uLDV1DjLQ2C9NTHywj4bT+8QTH
+	+VPOts0YlQxLroIdE4GXh3dVTuvAkurABQPx/5gAshgOT4pe5UL8RO/UsaqHtln1YfOa9huRRKSJM
+	w6iKNXEKcDBQJkeCK0CXJ6xPm6nMwjvDPKXmN5aQxu1DBlNjmn3TCkNpxJH9Ro/KUJVeQoxMJPtwB
+	PIOlso5CNcqCFbT08e8A==;
+From: Mathieu Othacehe <othacehe@gnu.org>
+To: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	anton.reding@landisgyr.com,
+	Mathieu Othacehe <othacehe@gnu.org>
+Subject: [PATCH net v2] net: cadence: macb: Fix a possible deadlock in macb_halt_tx.
+Date: Fri,  9 May 2025 14:19:35 +0200
+Message-ID: <20250509121935.16282-1-othacehe@gnu.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Prasanth Babu Mantena,
+There is a situation where after THALT is set high, TGO stays high as
+well. Because jiffies are never updated, as we are in a context with
+interrupts disabled, we never exit that loop and have a deadlock.
 
-On Wed, 07 May 2025 10:37:01 +0530, Prasanth Babu Mantena wrote:
-> J721E SoM has MT25QU512AB Serial NOR flash connected to
-> OSPI1 controller. Enable ospi1 node in device tree.
-> 
-> 
+That deadlock was noticed on a sama5d4 device that stayed locked for days.
 
-I have applied the following to branch ti-k3-dts-next on [1].
-I have done a minor local fixup for Fixes tag as I had responded
-in the thread.
-Thank you!
+Use retries instead of jiffies so that the timeout really works and we do
+not have a deadlock anymore.
 
-[1/1] arm64: dts: ti: k3-j721e-common-proc-board: Enable OSPI1 on J721E
-      commit: 6b8deb2ff0d31848c43a73f6044e69ba9276b3ec
+Fixes: e86cd53afc590 ("net/macb: better manage tx errors")
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
+---
+v2: Use read_poll_timeout_atomic and add a Fixes tag.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+ drivers/net/ethernet/cadence/macb_main.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 1fe8ec37491b1..e1e8bd2ec155b 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -997,22 +997,15 @@ static void macb_update_stats(struct macb *bp)
+ 
+ static int macb_halt_tx(struct macb *bp)
+ {
+-	unsigned long	halt_time, timeout;
+-	u32		status;
++	u32 status;
+ 
+ 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(THALT));
+ 
+-	timeout = jiffies + usecs_to_jiffies(MACB_HALT_TIMEOUT);
+-	do {
+-		halt_time = jiffies;
+-		status = macb_readl(bp, TSR);
+-		if (!(status & MACB_BIT(TGO)))
+-			return 0;
+-
+-		udelay(250);
+-	} while (time_before(halt_time, timeout));
+-
+-	return -ETIMEDOUT;
++	/* Poll TSR until TGO is cleared or timeout. */
++	return read_poll_timeout_atomic(macb_readl, status,
++					!(status & MACB_BIT(TGO)),
++					250, MACB_HALT_TIMEOUT, false,
++					bp, TSR);
+ }
+ 
+ static void macb_tx_unmap(struct macb *bp, struct macb_tx_skb *tx_skb, int budget)
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.49.0
 
