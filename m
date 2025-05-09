@@ -1,229 +1,144 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EE3241697;
-	Fri,  9 May 2025 19:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746817657; cv=fail; b=DMSiIV6KaR1KKyRLeb0zwpPgk8Id0oBu2C6ZRZ1Ke0hkXRpYIyNDq2n3cCeYpXLKDvoxh14UxT/dSolrsSUzY3tP2jEeRE3PvUgR86PTfgM9iV/3RyoG0V2fCTqwOpWVIo49Ylu2Ay2lVHiXyYajZ7ITEB4xR+cZVWwvn8Dn9aw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746817657; c=relaxed/simple;
-	bh=zLHimvalki63b9Ndvyw9bQPjYnWFuWrK9hlFMrUksfQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mcDAJ2zDRNaj4mt0xyPNsNaY9suYdP14OMVAV91FZ3T+WrL+wa6IEOO5zW3SUO4tgGX9ruygZh6I/94C+/LWuVVxSGIW+76yU9RV5qOHbwxY8LvlbVxfZJQozBBNhHDo6yWB3sqH69IKnArVdLqem4hT4l5QD329T2Ln4P1mXA0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=A+tn1j0S; arc=fail smtp.client-ip=40.107.94.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CAD25394B
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746817871; cv=none; b=i3uHD5ngEukdRGnEnZKSjClR3ubi9sjzCaScFvJ05YMEjfqB84Q9Iax6MjuIe8/r5/1soV7SXlahwWx5VIYtCqUr+jOPo8XmIg98gF/vnyTWQ1oHCpfwyGzuz919w18Gj6xh17EUrPHnSgE+4tP+V9TFNNcN7ZnUgTTS7EolFc0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746817871; c=relaxed/simple;
+	bh=3oFbcPq/LmpRi6imEmgZsdbNy/2ZZrBkRnQhQopsbAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ldAR0X766UiUmt7JuM75JNuSRX4VB10Ruen8mFmFFH8Rz3uG/i0TF3cEhcHCwkfZgi96k4g4vlMrdbDQh4Ds56zbpj7m5cRJ5zn7GT0tXs40lj+LPCXXhUooO09H4XEqzBMZeT0MZFixVtkuzxErnkCLdet5WB1BnbkDqYxtdww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=jgjuaADv; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="A+tn1j0S"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OYS9B9GWLuCPGfFrzuHrggezWn5PSAAg1W6TRk+0w7TBvHB94Ss3ynViT42J/bTCb7vpbvuxp6pzBMLTTlwB5ejC4yREv8nQ+D0cXJUhfXvS9rxAeX2xhPKHeTkUqr3AVWS+NmKrfKwhf7jvJpfp2XXcVDekeGyhT5aLjtZP1fIM/QQ+MhIl3ve3eRrdKbmNxCRpG9ri7MgAqGhvnk343koaXGoPWSwXABeF8sq2jvAbKCPK4ckPaDFPJwHgqmzo8iyY3jUsXlIjbzePp5CC1wKZDUMog9tkD9FgDg4p5iecPaqnsYAJHmQrDRKq6XfdbUouTnoEWpcwDwNQf6Jexg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Uvb2ZBeo0Ua8Xtvgqn+JrP6tyMMn7nZPj+v6L/Ov9Cs=;
- b=WCU4ptVwAfXNlX1SyPnIqIuykQQraBjuE9Rd+iqGBoH+LmDWRdHx4dhnFASCs9kuXFnVY/b3mjG+3PYyUmgM5Fvjl0p5srWXMnwlOKXum/f9zWW0qr8fCM7JuNSYioCkSa74op3894hGOwoXab6oLJORYMz7Kzh/7k8IYxu68t7LjEOD6q45PatrhsEFPTL3F2ZhRx9AKrHF8gbwZb+eTUJOxr2SBBQWdeOg2clkCFqzbEBpDKTrlTgknZ5hZ69AA657AaBokN3Dqgc+HyzpupBI6QZPSII2TOGMLqbUF8S+Dstkj2HJEaUOYZWrZOMVoG41waqSajqGaHnR7I7ALQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uvb2ZBeo0Ua8Xtvgqn+JrP6tyMMn7nZPj+v6L/Ov9Cs=;
- b=A+tn1j0SPThBUoRC9L5nEhwpQw5DXsyLLjKX6yQ5n/8s7Iz7gDmtpxfCi0P7zYI/g9e5sTngjlsWNFzH8Ec+kIpZe4Xd6KhGeC9qxJF20x6Dl4liuQYWzeQGn3n61fPDEwlJ8GVkg0RXYvqBGj95655CLLhqJX+N/d+8haYznbXuofCGYWiH1mh6H/6TYwMfM1Ibb4iElmX+ce+zo2MNXGFULZVk0z2aOKgnEAXsNU2QAaELXJivm+k41DjWlV3tvDwAyIF4/Jhst9P2a92KJpXSu3UAeQe45omM5o4A/DRKyFYjim05cmx6Srx0ednuRWJ2jaXuz9fDTcAvnl6Adw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by PH7PR12MB6396.namprd12.prod.outlook.com (2603:10b6:510:1fc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 19:07:32 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8699.035; Fri, 9 May 2025
- 19:07:32 +0000
-Message-ID: <23f488d7-d369-46f2-8da6-c5fd2af0f9d7@nvidia.com>
-Date: Fri, 9 May 2025 15:07:30 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rcu/nocb: Fix possible invalid rdp's->nocb_cb_kthread
- pointer access
-To: Zqiang <qiang.zhang1211@gmail.com>, paulmck@kernel.org,
- frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
- urezki@gmail.com, boqun.feng@gmail.com
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
- <20250507112605.20910-3-qiang.zhang1211@gmail.com>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <20250507112605.20910-3-qiang.zhang1211@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN0P222CA0019.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:208:531::25) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jgjuaADv"
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+	by cmsmtp with ESMTPS
+	id DPB4u9czYiuzSDT7kuaCsT; Fri, 09 May 2025 19:11:08 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id DT7jusesMjrgqDT7juquKe; Fri, 09 May 2025 19:11:07 +0000
+X-Authority-Analysis: v=2.4 cv=PK7E+uqC c=1 sm=1 tr=0 ts=681e534b
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=1XWaLZrsAAAA:8 a=hSkVLCK3AAAA:8 a=dZbOZ2KzAAAA:8 a=stkexhm8AAAA:8
+ a=GZsA4xnBWax8gLnPL8AA:9 a=QEXdDO2ut3YA:10 a=cQPPKAXgyycSBL8etih5:22
+ a=pIW3pCRaVxJDc-hWtpF8:22 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=unaJtBXX3ic/M7Mptke85HD19Mt1Q7wftiHK6u0Qhp0=; b=jgjuaADvBq5PnCf7F7GTxnqZqK
+	TZM3oe/5n40OE1mBxnyCqZQFECwsTY5oe7I3uInDIzJinDph/28wo+bENu1lsvj2ppPwq5rf8Viyo
+	OP1gsh8KmhTmLFIZ6VxZHhjF3YFJSaHpDS9CHZ4zv4c3+R6WReDbO8x44moCxD2zEf7tnTBt87DkJ
+	9U5j15rvWJENBHeeFM+dl9XoKTTP2dM3IjFmTmuNV13FO6MBP3UDYW8CSFL3vJQdOhvoTpDhqEmdC
+	v6U4J3TONYO/yIQQZc9ZyNfr/4Y8S/M4x/yY/Al5s7xUstGMGc4oy881wt1dtX1ImmlaEVsV2N0Uw
+	tEVCyzmA==;
+Received: from [177.238.17.151] (port=60388 helo=[192.168.0.102])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uDT7i-00000004KcA-0hDg;
+	Fri, 09 May 2025 14:11:06 -0500
+Message-ID: <12490f84-6b0c-41c0-9129-f02ccbeaa24c@embeddedor.com>
+Date: Fri, 9 May 2025 13:10:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|PH7PR12MB6396:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf69fed6-e252-4832-71c2-08dd8f2cc058
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WDcxRTVuZ1k2NVhVSGFrYkJPYm5aZWpOZEppZFhEcHdudjEyRi91VXp6cDEr?=
- =?utf-8?B?YzZYUHBoU001SFM3OW8zUXhOSmhHYTIzTklJVWwzMHJhV3puL0ZZK1FZRjRH?=
- =?utf-8?B?bnNqZ0g3ZE5rTUtwZXE1Uy9UaWZCV0pBN0lxWGFLeUpyN1NiZHdqVUVCMUJy?=
- =?utf-8?B?VXNMandZYis2RDVBblZGRVU1WVNxUEhVZlBGb1ZTMWRZV0JURmxyOThTSlBo?=
- =?utf-8?B?Vy9SNmUyTzZqbDJLSkk1bXRNYlNxWFYxbzZNR2hzcG9tK1Z0eDEyNG1hcXFU?=
- =?utf-8?B?QU5MaFhzYllFWnoxTlZSMG9FNGVVMHNiQmNZbXl3bDhicFozQVJOVWZCbWVE?=
- =?utf-8?B?MEhqNEY3VWQ5STduYWI2SjJJbFZ3UE9ENmorc1BtY0ptbW1uUktBT3hsL1B2?=
- =?utf-8?B?c05VeXNLODZpM3dKSFcyMWl3L01zSmdEaG9SQzZOWTFjWmVlU0VKZGRiUHNw?=
- =?utf-8?B?bUpIVTRsZWJLNVhiUXJWUkY0VmlmdEpxUDZRcWhwSXJSSEZWUVdQTFBXYWV6?=
- =?utf-8?B?SnpiTEFGdnUxSGdSQnVZb2pBRjJSb2JUQnFMR2x6L0FFSnlzRmhTQ3FGK0ZU?=
- =?utf-8?B?c2s0THJCelFlY1FFVVpjdzhnWFRDWUNvVWhFbGZlRjlzcGJaWURnQTRDa1NX?=
- =?utf-8?B?bFB0aWdwMGhPL2J4RDRtOVpJejQ5RWhnUHR3Z1RXVW9tWUlvNmVyQWpSWVZt?=
- =?utf-8?B?amVVamVjVWVsM3cwdi9zK2gwaVV2d1VkU2c2aEREQ2p1Nkl3VkNEeGtnTUdr?=
- =?utf-8?B?djVQNWhSVmZKWktvbGU4YnRJWml0UHdKTk04WFUveDhOZkNaL3Q4cTNDL3VP?=
- =?utf-8?B?bG1SSU10MjNPcUVjU0lQaldUSmNaNUY0d2ZlUVNKQlFoUnV4bFYxSDFiUnJW?=
- =?utf-8?B?UmdYbGhkTXAyQjRsV0paQ09iU1l4Qm5LclQ5d1AxT0Jxa1VRUHZZOHk5VDVG?=
- =?utf-8?B?UjZVZ1o0eVRkZzFmcjdicHRIVkFkNk5odG8zTVNpNlA3MnJ1RmNkUHNBckVC?=
- =?utf-8?B?RjFnTEJYQzB5UHErc29zOGc2Wk9aSlNOejd1VTZRMmZQZXVlMVRDRUdLVm5P?=
- =?utf-8?B?OTRFL2tnRVpQYkNxa2VwUEh1Z25JTTdMN3BnbTczMjlJVm16VHczLzlhRDNt?=
- =?utf-8?B?NWowVHNIWmZDTW85dTBNSUJxdklxZjJ1eGh0dllhN242UFhnZUZBWE93K1Np?=
- =?utf-8?B?MVkyeDFWUEpBOGtMd3NXOTlDa0piTmxhdkhzQzcyM2Z3dW10WnZSSUN1NlNU?=
- =?utf-8?B?N01lYXVLQzRhSCtBRHFacm4ySk1tVlIyd1FQeHV5eFU2VjYrWHFvOVFkeHhH?=
- =?utf-8?B?ejh2Q01NdGJFMUlQRXZYdWJ2cW94Q1gvdlhOVmFtSm42TUlrZUhWZkx4ZTNC?=
- =?utf-8?B?TU5ZS1ZjalFlamdZa1g5MHlQMWJvSklZSU15T2NiY2NSc211eXFJc010ZmNw?=
- =?utf-8?B?b3BRdTVOYnRXRHladEIvRldoUXFjTjEwT2lESkt2Mko0dWszNFo2d05iS1Nv?=
- =?utf-8?B?RU0yRm90Q25Jc2o1Skd0bUE4K3o4aWFaaWJyUEFoYWIyZVNYRFR0WGtTSkQv?=
- =?utf-8?B?a1JqcW1TRCtDSllCMEVTMzl2dTl4T1pEM0ZKZmwyWEtJWjZPTlRRczFqVFF5?=
- =?utf-8?B?aUxTbTJ1dndQV0p6U0hDbUtPc1A5N0o0WE9zVjlrZzZYSnRDbzNlbFhLb3VW?=
- =?utf-8?B?cVd1bHZBcldnakJPaGtmYVBZSGgya2JDc2lOMVppeS9EaFZQRHBZV3BYY0E1?=
- =?utf-8?B?ZzU2QW9BR3BUYXE5VUE4VnVXbHRPb01ibHYxMmtneGdsYWFMS21rOXpxbnZW?=
- =?utf-8?B?RzVNVFRBWE5peG12VW1HNXROdlo3YVptaGZ4OTNaS1oyeEIyekgvbXk2YjhB?=
- =?utf-8?B?dXd6bmRWZ2ZLaWJzdVBYamNqVi9PNkQxV2JJY1ZhZXc2T0IxdzFpQWpOVTgz?=
- =?utf-8?Q?b+1wVS/BeCw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RlQrWGpTOHJMWkh6Z3JaejNycDZ3N1FjY29PNzRIci9nREtNZXRKZkx6TE55?=
- =?utf-8?B?UUhUK1djREhxSmY4cVh6d2JFa3Y2SDlTT1h3VzlZcVg2ZjdvTk8veSt1Mjds?=
- =?utf-8?B?ZWlqWE13MHB6eUV4NzdQMXBWZk53amZQc2FmeUY1emNlcjR5aTdBWmZsV3lS?=
- =?utf-8?B?U01vN09ndHl0cUlGZnRVRFpZTlBndzJVSng3WllYTHljNTY5V0FFTFR3TFRm?=
- =?utf-8?B?azhCdUZXVHcwVllvMVJ1QnhyRnU3cHdneWJzamh4bXFYVFJoMmVJSW5wUFU1?=
- =?utf-8?B?VUpPTEpyYWdsSkNRaXh5TlQ1bGpFZk8rRG95TTZCVzF6NkJqSGlON3FSSnJW?=
- =?utf-8?B?bWdqR3U4dk43YTcranVlVU5BNllvZWlPOFpZVVhjZktJWkF3N0pEZmxOakky?=
- =?utf-8?B?MC9yeEw4aXhOUnRBa2E2dFNGUlZndkdab0w0djliMTV1RElCbTNLUm5yb0RN?=
- =?utf-8?B?Vm9HVEtNWm9FWWV1YXpURHg1RDZjMTh2SGpFY3I5eit1WC9xZkxGbGhpOVhn?=
- =?utf-8?B?MDBuWTU5UFJlVjJpME9oSEhyclhEcHhSeGovdW02YVRJQ0pidldwQWhsNm4x?=
- =?utf-8?B?b3haRERvcFo1K1ZkUFNrbmhkcTRxVjRCL3JGUjAwNmczOHFuckV6dDFVNUxn?=
- =?utf-8?B?NktVMm5YUXlIQXo5QUFlQUJ6bHdpMlNYZTNrM3VXL0dhSFdraVJMZmtudmtq?=
- =?utf-8?B?Y3BxMWc3dmF0RnR0ZGh3NytqcVYwcDBORzFRL0paZVNXRDBIcWdNKzVLUWg3?=
- =?utf-8?B?NjgzZXZCbGtNWWIzbGE5ZmlvQjZGTTZqQ1o4OEt6cThEdUo2WXB4MGV5MU11?=
- =?utf-8?B?Wm5zU0QvOXlBdjkzNmNURVRLRXFGemZ3TkNTUFVwUzFkK212YlBOWWVoVE53?=
- =?utf-8?B?Y1hKang4aXF2M0tkS0dPZHFRZmlNZC9kdC9adWNJQjFEcUloRXNDUlJxa2R1?=
- =?utf-8?B?dm5KSEwrRXFxNk9zRWZ0MWlVSmdvVGZ5aVQvVmN1bU1EZm1WYU1mSUwxUkhN?=
- =?utf-8?B?ekljNVB6dmF5KzlPUllveW1xbVEreWNGczZPNmpHajhyc2dtVEIxNnJEdis2?=
- =?utf-8?B?OUVqTkQ3NjhzdkpXSGpjVEVjZm1DcmZnWHg3QjVzVTFvQWNVVHhjNGZ2U3kx?=
- =?utf-8?B?NDFHM3pxQUlzRElnZDFlVnF0Y0ZVMVJiYkNjZ0NLSU9lUG5DcVhGRTBzT3l2?=
- =?utf-8?B?WmZSQzVFWG9SNkJrNjROVlFjMkZQRVV3emdUUmd1d1dhalRPTlpmbTVUa1ds?=
- =?utf-8?B?VkxheTJqa29yUk5KTzFVdzBHZzdRalFvRTdabExaYmhZc09XY0t1bjFPOWJW?=
- =?utf-8?B?a3FnNlRpYVZrdnpjUVNHSzRvVkFNVTJGWW1VSEUzYVcwdEVtVGRKQzZoNnVQ?=
- =?utf-8?B?Sityald2bDE5ME9rVW80amp5aXVzd3hrWUIvYWdXVjV4N2NiZUlCTFIwNVpB?=
- =?utf-8?B?NllTZEpveUd4Q0FhNk9DeisrdktRcWxpTWRwa2llL0hsU2QyL1dEU1Rjcnp1?=
- =?utf-8?B?RWZVbjBpRS9tMVY1eGtPWmVOSFNSNU9mNk1iUVNSV2VlQ1pRTnNaMHhNWXVw?=
- =?utf-8?B?QzlOaFYxVXhDUkRpRkc5VkhLYnJZdWR5Nk42VG1VaUlvTFZSS2krbm16Yk5G?=
- =?utf-8?B?N0ovak0zK0RIS0Vvem1YYW9jME15ajZzbHAyN21yV1ovNzFlZUVTaDNqbUJ1?=
- =?utf-8?B?SDR0T3I3SWlaekk1dm8yT1VXcHhJWE56Mmwyc1hRb0krV2RnbHpmVzE3YjZ6?=
- =?utf-8?B?RmNOK29XNk1IL0g2MDBqeVlVOUZNVDVZdnpxZ2M3Q3ZVTEpTSE1zWVkxSVR6?=
- =?utf-8?B?RHJncCtOWkRTcEJ2cUVvdXp4RjFoMXNINzR0SUZYeStlMWQrUm9xb1lHWWlF?=
- =?utf-8?B?Q3AxVDIyUitPaEZ4Y0ZTS1dxT2o3dGhBc3FkcUxoSjMraTNQYWVGRTNvNkt5?=
- =?utf-8?B?eUFqNHFoZHY0enY3ZHFxMWZnVkFSN3JacndBa3pGZm02aGdlWHo2MnczNjNZ?=
- =?utf-8?B?RWZwdW9OM2lzTzdRcmNMNXpkak5WOVJ5MzRjSE84RVFKM2krSlF3M3R3VlM4?=
- =?utf-8?B?TnljMnhLV1ROUEU2V0xRSVA5bkZraC82cENlYkFFMzhKbng4dFNTbURGZFQr?=
- =?utf-8?Q?Mf9lN+SyUFHEbCbCOvbqafMQj?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf69fed6-e252-4832-71c2-08dd8f2cc058
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 19:07:32.6392
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uiFHAPrECB+evJOm/M0jE/NUNl8NFEqih1okafHtvXr2QRlkTsUE8AIQ8AgxBwM1Lj1GlvWrFyg8T2Ox/GuiRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6396
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: mac80211: Set n_channels after allocating struct
+ cfg80211_scan_request
+To: Kees Cook <kees@kernel.org>, Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com,
+ Johannes Berg <johannes@sipsolutions.net>, linux-wireless@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250509184641.work.542-kees@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250509184641.work.542-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.151
+X-Source-L: No
+X-Exim-ID: 1uDT7i-00000004KcA-0hDg
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.102]) [177.238.17.151]:60388
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAkl9B58Q00DaDpD9EimL/8zj3/zfvwAu/1DxIcCLVkoMML9XjmSQk4My/9K5lulJloYn9qsUXZVEA7bzePwhO/Nxi3G4irPsuyHHxPITv0Y9gu5uq/K
+ bCPDa+nB5eYCUob+Oe2Y68/NMvHctaXjTSONlpEpoVeJ2Elmjc14MQi6ryqxDYmEjCJH20vzHheBhPb7+Ai7cmJJ8G6NM8xWmXIQ/VE7zAJMbolRdcyRMeVB
 
 
 
-On 5/7/2025 7:26 AM, Zqiang wrote:
-> In the preparation stage of CPU online, if the corresponding
-> the rdp's->nocb_cb_kthread does not exist, will be created,
-> there is a situation where the rdp's rcuop kthreads creation fails,
-> and then de-offload this CPU's rdp, does not assign this CPU's
-> rdp->nocb_cb_kthread pointer, but this rdp's->nocb_gp_rdp and
-> rdp's->rdp_gp->nocb_gp_kthread is still valid.
+On 09/05/25 12:46, Kees Cook wrote:
+> Make sure that n_channels is set after allocating the
+> struct cfg80211_registered_device::int_scan_req member. Seen with
+> syzkaller:
 > 
-> This will cause the subsequent re-offload operation of this offline
-> CPU, which will pass the conditional check and the kthread_unpark()
-> will access invalid rdp's->nocb_cb_kthread pointer.
+> UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:1208:5
+> index 0 is out of range for type 'struct ieee80211_channel *[] __counted_by(n_channels)' (aka 'struct ieee80211_channel *[]')
 > 
-> This commit therefore use rdp's->nocb_gp_kthread instead of
-> rdp_gp's->nocb_gp_kthread for safety check.
+> This was missed in the initial conversions because I failed to locate
+> the allocation likely due to the "sizeof(void *)" not matching the
+> "channels" array type.
 > 
-> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+> Reported-by: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/lkml/680fd171.050a0220.2b69d1.045e.GAE@google.com/
+> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Is it possible that rdp_gp->nocb_gp_kthread is valid, but  rdp->nocb_cb_kthread
-is still invalid (because its creation failed?). This seems a bit fragile to me
-to assume that if rdp_gp->nocb_gp_kthread then rdp->nocb_cb_kthread is valid. Or
-is there a path that makes sure this invariant is always satisfied? If so, can
-we add additional warnings for checking this invariant?
-
-Also from the other thread, it sounds like there is more work to do here
-(related patches so I'd like to defer this to 6.17 - feel free to keep posting
-patches for this work though).
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Thanks!
-
- - Joel
+-Gustavo
 
 > ---
->  kernel/rcu/tree_nocb.h | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> Cc: Edward Adam Davis <eadavis@qq.com>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: <linux-wireless@vger.kernel.org>
+> ---
+>   net/mac80211/main.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-> index 1596812f7f12..6679140bb0b5 100644
-> --- a/kernel/rcu/tree_nocb.h
-> +++ b/kernel/rcu/tree_nocb.h
-> @@ -1146,7 +1146,6 @@ static bool rcu_nocb_rdp_offload_wait_cond(struct rcu_data *rdp)
->  static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
->  {
->  	int wake_gp;
-> -	struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
->  
->  	WARN_ON_ONCE(cpu_online(rdp->cpu));
->  	/*
-> @@ -1156,7 +1155,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
->  	if (!rdp->nocb_gp_rdp)
->  		return -EINVAL;
->  
-> -	if (WARN_ON_ONCE(!rdp_gp->nocb_gp_kthread))
-> +	if (WARN_ON_ONCE(!rdp->nocb_gp_kthread))
->  		return -EINVAL;
->  
->  	pr_info("Offloading %d\n", rdp->cpu);
-> @@ -1166,7 +1165,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
->  
->  	wake_gp = rcu_nocb_queue_toggle_rdp(rdp);
->  	if (wake_gp)
-> -		wake_up_process(rdp_gp->nocb_gp_kthread);
-> +		wake_up_process(rdp->nocb_gp_kthread);
->  
->  	swait_event_exclusive(rdp->nocb_state_wq,
->  			      rcu_nocb_rdp_offload_wait_cond(rdp));
+> diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+> index 741e6c7edcb7..6b6de43d9420 100644
+> --- a/net/mac80211/main.c
+> +++ b/net/mac80211/main.c
+> @@ -1354,10 +1354,12 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
+>   	hw->wiphy->software_iftypes |= BIT(NL80211_IFTYPE_MONITOR);
+>   
+>   
+> -	local->int_scan_req = kzalloc(sizeof(*local->int_scan_req) +
+> -				      sizeof(void *) * channels, GFP_KERNEL);
+> +	local->int_scan_req = kzalloc(struct_size(local->int_scan_req,
+> +						  channels, channels),
+> +				      GFP_KERNEL);
+>   	if (!local->int_scan_req)
+>   		return -ENOMEM;
+> +	local->int_scan_req->n_channels = channels;
+>   
+>   	eth_broadcast_addr(local->int_scan_req->bssid);
+>   
 
