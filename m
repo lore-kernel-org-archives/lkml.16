@@ -1,155 +1,273 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED42318C06
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 17:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFF6366;
+	Fri,  9 May 2025 17:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746812739; cv=none; b=fqLgYdTxq9/RS/c6EEGPp0bS2d391JnWBx+6+FidPmtdBH+vFKM+ztNWlBo/ReqNHLVTQQlRDXlPy4F+4LGZAGOmLY/YOwNp/Baz2FXpp4XbyDNd6hyxXgfiNK0ye8dVmGsVBiOiiipL+FrQDmhZXdM1DSaBEqpVEsg5HTtaI8Y=
+	t=1746812919; cv=none; b=ahqKoF0s+KUEOFeXljhwQMuMzH6wqkXH3p3+cEKjcpMKTina4H7Kz+yREsc6tKRIWdwytY+Beg7ZaKNwp/l9sndmj1D6Iv+u3tnckE6HiLeO5c/XsJu9yDE4NoSZn78kNRf+B0nFKlrOxOhTqFFFVw0fI+0f4+9Nq40+cL+PxRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746812739; c=relaxed/simple;
-	bh=iUvMzhzeaAqPZHBZvj2ZxqUiMpiQOXdS0RpkR226DMU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=E3l+lX39ezuoXuoY17MnnrLAkI1V54pwnmUB41XIWIZcUkCU4cXXr8kn2OyWVfWfwntPnjniEj/qAFz+AByo2PRqv66BAWDiTfQzbohsEuBdOh2fXV0a0dzddRs41vcbe7XaM5DDLfHf8p+hDnQKZceXzgmBSKEp3ZAp3zjGJY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=LOp2TlvU reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746812919; c=relaxed/simple;
+	bh=MQL7sM0qJ/BCl8og97nHQu0OUt08G7NLNV1712/Mad4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MPKEToc3ux2Vxpl6obiwNegDI5k19jXC9gGX8rGNEzCs2dVmishW/uv+0B6MrS8biAhPW1p+yhlz2v9d3NGlucecn0t7DcqHq383ivVTqj3VToG/RG1/iwylebjyylDEXVmGfeThzUmbHKsgT51JgWhLuHpOkXasCA5UN0fBq4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=NhoBj1QY; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="LOp2TlvU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=3Db9m1C9yF1t3fY+w7duLvPC2FBWdq/V/1AWjqJykTk=; b=L
-	Op2TlvU5PtBBZRuHhHqzZ/pXTRYHAByMf2BOTvdwuZmrs3DH8nTc41akbdsMo2x/
-	RHxabXMcvl4mDyxPhfFE3T8IMp0hr0VS8QfpXuphk0t2la+ECsz/EBi4aOs0T7ma
-	oZzhq7O58jdmlNOXFk8APtoohVYOEOMDWyY9H0B8rQ=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-125 (Coremail) ; Sat, 10 May 2025 01:45:02 +0800
- (CST)
-Date: Sat, 10 May 2025 01:45:02 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Suren Baghdasaryan" <surenb@google.com>
-Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 2/2] alloc_tag: keep codetag iterator cross read() calls
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <CAJuCfpFVdg5HkW03ZLFTyPHghW7cmYX=mA1TDajqRy8A4as42A@mail.gmail.com>
-References: <20250507175500.204569-1-00107082@163.com>
- <20250509055313.922707-1-00107082@163.com>
- <CAJuCfpFVdg5HkW03ZLFTyPHghW7cmYX=mA1TDajqRy8A4as42A@mail.gmail.com>
-X-NTES-SC: AL_Qu2fBPSavU8r5CWQY+kXn0oTju85XMCzuv8j3YJeN500lCTQ3xIuZ25CM2L10fmFADKmoQmLdClc59lId49xYqiLd3s77babgljdsAXpK9Jr
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="NhoBj1QY"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 31A0B82882C6;
+	Fri,  9 May 2025 12:38:45 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id XzAKUV7nPw7V; Fri,  9 May 2025 12:38:43 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 535B9828862A;
+	Fri,  9 May 2025 12:38:43 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 535B9828862A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1746812323; bh=K9JGrIUKvfc7UEflMqeOE4yQ5MgN2KCyEYjdeSJPyDw=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=NhoBj1QYjxGddnah8Ywra87IPD7gmzlqOZG4eKRWQ1Ji5tClvwcfZKZAPtIz2u7DI
+	 9ABdvqP6YJPf78XMiAz6MfDmX34LbRYETdJGPrwjM9Ym6fszkC45YSS1pJOM60MDs+
+	 SCdRWCPVZr/rBZRadEDA540gdpoP/8UyxT9PXKdg=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id s77b2BAWK_sp; Fri,  9 May 2025 12:38:43 -0500 (CDT)
+Received: from raptor-ewks-026.lan (5.edge.rptsys.com [23.155.224.38])
+	by mail.rptsys.com (Postfix) with ESMTPSA id 16F3982882C6;
+	Fri,  9 May 2025 12:38:41 -0500 (CDT)
+From: Shawn Anastasio <sanastasio@raptorengineering.com>
+To: linux-pci@vger.kernel.org,
+	"Lukas Wunner" <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
+	"Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	"Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+	"Rob Herring" <robh@kernel.o>,
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+	"Conor Dooley" <conor+dt@kernel.org>,
+	"chaitanya chundru" <quic_krichai@quicinc.com>,
+	"Bjorn Andersson" <andersson@kernel.org>,
+	"Konrad Dybcio" <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	"Jingoo Han" <jingoohan1@gmail.com>,
+	"Bartosz Golaszewski" <brgl@bgdev.pl>,
+	quic_vbadigan@quicnic.com,
+	amitk@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	jorge.ramirez@oss.qualcomm.com,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Timothy Pearson <tpearson@raptorengineering.com>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Subject: 
+Date: Fri,  9 May 2025 12:38:33 -0500
+Message-Id: <20250509173833.2197248-1-sanastasio@raptorengineering.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <6a880201.b2c3.196b6268f81.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:fSgvCgD33yYePx5ovgUBAA--.9138W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hZIqmgePWgV5wACs1
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 7bit
 
-CgpBdCAyMDI1LTA1LTEwIDAxOjM0OjUyLCAiU3VyZW4gQmFnaGRhc2FyeWFuIiA8c3VyZW5iQGdv
-b2dsZS5jb20+IHdyb3RlOgo+T24gVGh1LCBNYXkgOCwgMjAyNSBhdCAxMDo1M+KAr1BNIERhdmlk
-IFdhbmcgPDAwMTA3MDgyQDE2My5jb20+IHdyb3RlOgo+Pgo+PiBXaGVuIHJlYWRpbmcgL3Byb2Mv
-YWxsb2NpbmZvLCBmb3IgZWFjaCByZWFkIHN5c2NhbGwsIHNlcV9maWxlIHdvdWxkCj4+IGludm9r
-ZSBzdGFydC9zdG9wIGNhbGxiYWNrcy4gSW4gc3RhcnQgY2FsbGJhY2ssIGEgbWVtb3J5IGlzIGFs
-bG9jZWQKPj4gdG8gc3RvcmUgaXRlcmF0b3IgYW5kIHRoZSBpdGVyYXRvciB3b3VsZCBzdGFydCBm
-cm9tIGJlZ2lubmluZyB0bwo+PiB3YWxrIHRvIGN1cnJlbnQgcmVhZCBwb3NpdGlvbi4KPj4KPj4g
-c2VxX2ZpbGUgcmVhZCgpIHRha2VzIGF0IG1vc3QgNDA5NiBieXRlcywgZXZlbiBpZiByZWFkIHdp
-dGggYSBsYXJnZXIKPj4gdXNlciBzcGFjZSBidWZmZXIsIG1lYW5pbmcgcmVhZCBvdXQgYWxsIG9m
-IC9wcm9jL2FsbG9jaW5mbywgdGVucyBvZiByZWFkCj4+IHN5c2NhbGxzIGFyZSBuZWVkZWQuIEZv
-ciBleGFtcGxlLCBhIDMwNjAzNiBieXRlcyBhbGxvY2luZm8gZmlsZXMgbmVlZAo+PiA3NiByZWFk
-czoKPj4KPj4gICQgc3VkbyBjYXQgL3Byb2MvYWxsb2NpbmZvICB8IHdjCj4+ICAgICAzOTY0ICAg
-MTY2NzggIDMwNjAzNgo+PiAgJCBzdWRvIHN0cmFjZSAtVCAtZSByZWFkIGNhdCAvcHJvYy9hbGxv
-Y2luZm8KPj4gIC4uLgo+PiAgcmVhZCgzLCAiICAgICAgICA0MDk2ICAgICAgICAxIGFyY2gveDg2
-L2siLi4uLCAxMzEwNzIpID0gNDA2MyA8MC4wMDAwNjI+Cj4+ICAuLi4KPj4gIHJlYWQoMywgIiAg
-ICAgICAgICAgMCAgICAgICAgMCBzb3VuZC9jb3JlIi4uLiwgMTMxMDcyKSA9IDQwMjEgPDAuMDAw
-MTUwPgo+PiAgLi4uCj4+IEZvciB0aG9zZSBuPTM5NjQgbGluZXMsIGVhY2ggcmVhZCB0YWtlcyBh
-Ym91dCBtPTM5NjQvNzY9NTIgbGluZXMsCj4+IHNpbmNlIGl0ZXJhdG9yIHJlc3RhcnQgZnJvbSBi
-ZWdpbm5pbmcgZm9yIGVhY2ggcmVhZCgpLAo+PiBpdCB3b3VsZCBtb3ZlIGZvcndhcmQKPj4gICAg
-bSAgc3RlcHMgb24gMXN0IHJlYWQKPj4gIDIqbSAgc3RlcHMgb24gMm5kIHJlYWQKPj4gIDMqbSAg
-c3RlcHMgb24gM3JkIHJlYWQKPj4gIC4uLgo+PiAgICBuICBzdGVwcyBvbiBsYXN0IHJlYWQKPj4g
-QXMgcmVhZCgpIGFsb25nLCBtb3JlIGl0ZXJhdG9yIHN0ZXBzIG1ha2UgcmVhZCgpIGNhbGxzIHNs
-b3dlciBhbmQKPj4gc2xvd2VyLiAgQWRkaW5nIHRob3NlIHVwLCBjb2RldGFnIGl0ZXJhdG9yIG1v
-dmVzIGFib3V0IE8obipuL20pIHN0ZXBzLAo+PiBtYWtpbmcgZGF0YSBzdHJ1Y3R1cmUgdHJhdmVy
-c2FsIHRha2Ugc2lnbmlmaWNhbnQgcGFydCBvZiB0aGUgd2hvbGUgcmVhZGluZy4KPj4gUHJvZmls
-aW5nIHdoZW4gc3RyZXNzIHJlYWRpbmcgL3Byb2MvYWxsb2NpbmZvIGNvbmZpcm1zIGl0Ogo+Pgo+
-PiAgdmZzX3JlYWQoOTkuOTU5JSAxNjc3Mjk5LzE2Nzc5OTUpCj4+ICAgICAgcHJvY19yZWdfcmVh
-ZF9pdGVyKDk5Ljg1NiUgMTY3NDg4MS8xNjc3Mjk5KQo+PiAgICAgICAgICBzZXFfcmVhZF9pdGVy
-KDk5Ljk1OSUgMTY3NDE5MS8xNjc0ODgxKQo+PiAgICAgICAgICAgICAgYWxsb2NpbmZvX3N0YXJ0
-KDc1LjY2NCUgMTI2Njc1NS8xNjc0MTkxKQo+PiAgICAgICAgICAgICAgICAgIGNvZGV0YWdfbmV4
-dF9jdCg3OS4yMTclIDEwMDM0ODcvMTI2Njc1NSkgIDwtLS0KPj4gICAgICAgICAgICAgICAgICBz
-cnNvX3JldHVybl90aHVuaygxLjI2NCUgMTYwMTEvMTI2Njc1NSkKPj4gICAgICAgICAgICAgICAg
-ICBfX2ttYWxsb2NfY2FjaGVfbm9wcm9mKDAuMTAyJSAxMjk2LzEyNjY3NTUpCj4+ICAgICAgICAg
-ICAgICAgICAgLi4uCj4+ICAgICAgICAgICAgICBhbGxvY2luZm9fc2hvdygyMS4yODclIDM1NjM3
-OC8xNjc0MTkxKQo+PiAgICAgICAgICAgICAgYWxsb2NpbmZvX25leHQoMS41MzAlIDI1NjIxLzE2
-NzQxOTEpCj4+IGFsbG9jaW5mb19zdGFydCgpIHRha2VzIGFib3V0IDc1JSBvZiBzZXFfcmVhZCgp
-Lgo+Pgo+PiBBIHByaXZhdGUgZGF0YSBhbGxvY2VkIGF0IG9wZW4oKSB0aW1lIGNhbiBiZSB1c2Vk
-IHRvIGNhcnJ5IGl0ZXJhdG9yCj4+IGFsaXZlIGFjcm9zcyByZWFkKCkgY2FsbHMsIGFuZCBhdm9p
-ZCB0aGUgbWVtb3J5IGFsbG9jYXRpb24gYW5kCj4+IGl0ZXJhdG9yIHJlc2V0IGZvciBlYWNoIHJl
-YWQoKS4gVGhpcyB3YXksIG9ubHkgTygxKSBtZW1vcnkgYWxsb2NhdGlvbgo+PiBhbmQgTyhuKSBz
-dGVwcyBpdGVyYXRpbmcsIGFuZCBgdGltZWAgc2hvd3MgcGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQK
-Pj4gZnJvbSB+N21zIHRvIH40bXMuCj4+IFByb2ZpbGluZyB3aXRoIHRoZSBjaGFuZ2U6Cj4+Cj4+
-ICB2ZnNfcmVhZCg5OS44NjUlIDE1ODEwNzMvMTU4MzIxNCkKPj4gICAgICBwcm9jX3JlZ19yZWFk
-X2l0ZXIoOTkuNDg1JSAxNTcyOTM0LzE1ODEwNzMpCj4+ICAgICAgICAgIHNlcV9yZWFkX2l0ZXIo
-OTkuODQ2JSAxNTcwNTE5LzE1NzI5MzQpCj4+ICAgICAgICAgICAgICBhbGxvY2luZm9fc2hvdyg4
-Ny40MjglIDEzNzMwNzQvMTU3MDUxOSkKPj4gICAgICAgICAgICAgICAgICBzZXFfYnVmX3ByaW50
-Zig4My42OTUlIDExNDkxOTYvMTM3MzA3NCkKPj4gICAgICAgICAgICAgICAgICBzZXFfYnVmX3B1
-dGMoMS45MTclIDI2MzIxLzEzNzMwNzQpCj4+ICAgICAgICAgICAgICAgICAgX2ZpbmRfbmV4dF9i
-aXQoMS41MzElIDIxMDIzLzEzNzMwNzQpCj4+ICAgICAgICAgICAgICAgICAgLi4uCj4+ICAgICAg
-ICAgICAgICAgICAgY29kZXRhZ190b190ZXh0KDAuNDkwJSA2NzI3LzEzNzMwNzQpCj4+ICAgICAg
-ICAgICAgICAgICAgLi4uCj4+ICAgICAgICAgICAgICBhbGxvY2luZm9fbmV4dCg2LjI3NSUgOTg1
-NDMvMTU3MDUxOSkKPj4gICAgICAgICAgICAgIC4uLgo+PiAgICAgICAgICAgICAgYWxsb2NpbmZv
-X3N0YXJ0KDAuMzY5JSA1NzkwLzE1NzA1MTkpCj4+ICAgICAgICAgICAgICAuLi4KPj4gYWxsb2Np
-bmZvX3N0YXJ0IHRha3MgbGVzcyB0aGFuIDElLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBX
-YW5nIDwwMDEwNzA4MkAxNjMuY29tPgo+Cj5JIHRoaW5rIHlvdSB3aWxsIGJlIHBvc3RpbmcgYW5v
-dGhlciB2ZXJzaW9uIHRvIGFkZHJlc3MgY29tbWVudHMgaW4gdGhlCj5maXJzdCBwYXRjaCwgYnV0
-IGZvciB0aGlzIHBhdGNoIGZlZWwgZnJlZSB0byBhZGQ6Cj4KPkFja2VkLWJ5OiBTdXJlbiBCYWdo
-ZGFzYXJ5YW4gPHN1cmVuYkBnb29nbGUuY29tPgo+Cj5UaGFua3MhCj4KCk9vcHMuLi4uIEkganVz
-dCBtYWRlIHNvbWUgY2hhbmdlcyB0byBjb21taXQgbWVzc2FnZS4KKEZvdW5kIHNvbWUgdHlwbywg
-YW5kIG1hZGUgc29tZSByZS13b3JkaW5ncy4uLi4pCj4+IC0tLQo+PiAgbGliL2FsbG9jX3RhZy5j
-IHwgMjkgKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-MCBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2xpYi9h
-bGxvY190YWcuYyBiL2xpYi9hbGxvY190YWcuYwo+PiBpbmRleCAyNWVjYzEzMzRiNjcuLmZkZDU4
-ODc3NjlhNiAxMDA2NDQKPj4gLS0tIGEvbGliL2FsbG9jX3RhZy5jCj4+ICsrKyBiL2xpYi9hbGxv
-Y190YWcuYwo+PiBAQCAtNDUsMjEgKzQ1LDE2IEBAIHN0cnVjdCBhbGxvY2luZm9fcHJpdmF0ZSB7
-Cj4+ICBzdGF0aWMgdm9pZCAqYWxsb2NpbmZvX3N0YXJ0KHN0cnVjdCBzZXFfZmlsZSAqbSwgbG9m
-Zl90ICpwb3MpCj4+ICB7Cj4+ICAgICAgICAgc3RydWN0IGFsbG9jaW5mb19wcml2YXRlICpwcml2
-Owo+PiAtICAgICAgIHN0cnVjdCBjb2RldGFnICpjdDsKPj4gICAgICAgICBsb2ZmX3Qgbm9kZSA9
-ICpwb3M7Cj4+Cj4+IC0gICAgICAgcHJpdiA9IGt6YWxsb2Moc2l6ZW9mKCpwcml2KSwgR0ZQX0tF
-Uk5FTCk7Cj4+IC0gICAgICAgbS0+cHJpdmF0ZSA9IHByaXY7Cj4+IC0gICAgICAgaWYgKCFwcml2
-KQo+PiAtICAgICAgICAgICAgICAgcmV0dXJuIE5VTEw7Cj4+IC0KPj4gLSAgICAgICBwcml2LT5w
-cmludF9oZWFkZXIgPSAobm9kZSA9PSAwKTsKPj4gKyAgICAgICBwcml2ID0gKHN0cnVjdCBhbGxv
-Y2luZm9fcHJpdmF0ZSAqKW0tPnByaXZhdGU7Cj4+ICAgICAgICAgY29kZXRhZ19sb2NrX21vZHVs
-ZV9saXN0KGFsbG9jX3RhZ19jdHR5cGUsIHRydWUpOwo+PiAtICAgICAgIHByaXYtPml0ZXIgPSBj
-b2RldGFnX2dldF9jdF9pdGVyKGFsbG9jX3RhZ19jdHR5cGUpOwo+PiAtICAgICAgIHdoaWxlICgo
-Y3QgPSBjb2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpKSAhPSBOVUxMICYmIG5vZGUpCj4+IC0g
-ICAgICAgICAgICAgICBub2RlLS07Cj4+IC0KPj4gLSAgICAgICByZXR1cm4gY3QgPyBwcml2IDog
-TlVMTDsKPj4gKyAgICAgICBpZiAobm9kZSA9PSAwKSB7Cj4+ICsgICAgICAgICAgICAgICBwcml2
-LT5wcmludF9oZWFkZXIgPSB0cnVlOwo+PiArICAgICAgICAgICAgICAgcHJpdi0+aXRlciA9IGNv
-ZGV0YWdfZ2V0X2N0X2l0ZXIoYWxsb2NfdGFnX2N0dHlwZSk7Cj4+ICsgICAgICAgICAgICAgICBj
-b2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpOwo+PiArICAgICAgIH0KPj4gKyAgICAgICByZXR1
-cm4gcHJpdi0+aXRlci5jdCA/IHByaXYgOiBOVUxMOwo+PiAgfQo+Pgo+PiAgc3RhdGljIHZvaWQg
-KmFsbG9jaW5mb19uZXh0KHN0cnVjdCBzZXFfZmlsZSAqbSwgdm9pZCAqYXJnLCBsb2ZmX3QgKnBv
-cykKPj4gQEAgLTc2LDEyICs3MSw3IEBAIHN0YXRpYyB2b2lkICphbGxvY2luZm9fbmV4dChzdHJ1
-Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKmFyZywgbG9mZl90ICpwb3MpCj4+Cj4+ICBzdGF0aWMgdm9p
-ZCBhbGxvY2luZm9fc3RvcChzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKmFyZykKPj4gIHsKPj4g
-LSAgICAgICBzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUgKnByaXYgPSAoc3RydWN0IGFsbG9jaW5m
-b19wcml2YXRlICopbS0+cHJpdmF0ZTsKPj4gLQo+PiAtICAgICAgIGlmIChwcml2KSB7Cj4+IC0g
-ICAgICAgICAgICAgICBjb2RldGFnX2xvY2tfbW9kdWxlX2xpc3QoYWxsb2NfdGFnX2N0dHlwZSwg
-ZmFsc2UpOwo+PiAtICAgICAgICAgICAgICAga2ZyZWUocHJpdik7Cj4+IC0gICAgICAgfQo+PiAr
-ICAgICAgIGNvZGV0YWdfbG9ja19tb2R1bGVfbGlzdChhbGxvY190YWdfY3R0eXBlLCBmYWxzZSk7
-Cj4+ICB9Cj4+Cj4+ICBzdGF0aWMgdm9pZCBwcmludF9hbGxvY2luZm9faGVhZGVyKHN0cnVjdCBz
-ZXFfYnVmICpidWYpCj4+IEBAIC0yNDksNyArMjM5LDggQEAgc3RhdGljIHZvaWQgX19pbml0IHBy
-b2Nmc19pbml0KHZvaWQpCj4+ICAgICAgICAgaWYgKCFtZW1fcHJvZmlsaW5nX3N1cHBvcnQpCj4+
-ICAgICAgICAgICAgICAgICByZXR1cm47Cj4+Cj4+IC0gICAgICAgaWYgKCFwcm9jX2NyZWF0ZV9z
-ZXEoQUxMT0NJTkZPX0ZJTEVfTkFNRSwgMDQwMCwgTlVMTCwgJmFsbG9jaW5mb19zZXFfb3ApKSB7
-Cj4+ICsgICAgICAgaWYgKCFwcm9jX2NyZWF0ZV9zZXFfcHJpdmF0ZShBTExPQ0lORk9fRklMRV9O
-QU1FLCAwNDAwLCBOVUxMLCAmYWxsb2NpbmZvX3NlcV9vcCwKPj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHNpemVvZihzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUpLCBOVUxM
-KSkgewo+PiAgICAgICAgICAgICAgICAgcHJfZXJyKCJGYWlsZWQgdG8gY3JlYXRlICVzIGZpbGVc
-biIsIEFMTE9DSU5GT19GSUxFX05BTUUpOwo+PiAgICAgICAgICAgICAgICAgc2h1dGRvd25fbWVt
-X3Byb2ZpbGluZyhmYWxzZSk7Cj4+ICAgICAgICAgfQo+PiAtLQo+PiAyLjM5LjIKPj4K
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+
+Date: Sat, 12 Apr 2025 07:19:56 +0530
+Subject: [PATCH v6] PCI: PCI: Add pcie_link_is_active() to determine if the
+ PCIe link is active
+
+Introduce a common API to check if the PCIe link is active, replacing
+duplicate code in multiple locations.
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+---
+This is an updated patch pulled from Krishna's v5 series:
+https://patchwork.kernel.org/project/linux-pci/list/?series=952665
+
+The following changes to Krishna's v5 were made by me:
+  - Revert pcie_link_is_active return type back to int per Lukas' review
+    comments
+  - Handle non-zero error returns at call site of the new function in
+    pci.c/pci_bridge_wait_for_secondary_bus
+
+ drivers/pci/hotplug/pciehp.h      |  1 -
+ drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
+ drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
+ drivers/pci/pci.c                 | 26 +++++++++++++++++++++---
+ include/linux/pci.h               |  4 ++++
+ 5 files changed, 31 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 273dd8c66f4e..acef728530e3 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -186,7 +186,6 @@ int pciehp_query_power_fault(struct controller *ctrl);
+ int pciehp_card_present(struct controller *ctrl);
+ int pciehp_card_present_or_link_active(struct controller *ctrl);
+ int pciehp_check_link_status(struct controller *ctrl);
+-int pciehp_check_link_active(struct controller *ctrl);
+ void pciehp_release_ctrl(struct controller *ctrl);
+
+ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index d603a7aa7483..4bb58ba1c766 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -260,7 +260,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	/* Turn the slot on if it's occupied or link is up */
+ 	mutex_lock(&ctrl->state_lock);
+ 	present = pciehp_card_present(ctrl);
+-	link_active = pciehp_check_link_active(ctrl);
++	link_active = pcie_link_is_active(ctrl->pcie->port);
+ 	if (present <= 0 && link_active <= 0) {
+ 		if (ctrl->state == BLINKINGON_STATE) {
+ 			ctrl->state = OFF_STATE;
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 8a09fb6083e2..278bc21d531d 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -221,33 +221,6 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
+ 	pcie_do_write_cmd(ctrl, cmd, mask, false);
+ }
+
+-/**
+- * pciehp_check_link_active() - Is the link active
+- * @ctrl: PCIe hotplug controller
+- *
+- * Check whether the downstream link is currently active. Note it is
+- * possible that the card is removed immediately after this so the
+- * caller may need to take it into account.
+- *
+- * If the hotplug controller itself is not available anymore returns
+- * %-ENODEV.
+- */
+-int pciehp_check_link_active(struct controller *ctrl)
+-{
+-	struct pci_dev *pdev = ctrl_dev(ctrl);
+-	u16 lnk_status;
+-	int ret;
+-
+-	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+-	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
+-		return -ENODEV;
+-
+-	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+-	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
+-
+-	return ret;
+-}
+-
+ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
+ {
+ 	u32 l;
+@@ -467,7 +440,7 @@ int pciehp_card_present_or_link_active(struct controller *ctrl)
+ 	if (ret)
+ 		return ret;
+
+-	return pciehp_check_link_active(ctrl);
++	return pcie_link_is_active(ctrl_dev(ctrl));
+ }
+
+ int pciehp_query_power_fault(struct controller *ctrl)
+@@ -584,7 +557,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
+ 	 * Synthesize it to ensure that it is acted on.
+ 	 */
+ 	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+-	if (!pciehp_check_link_active(ctrl))
++	if (!pcie_link_is_active(ctrl_dev(ctrl)))
+ 		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
+ 	up_read(&ctrl->reset_lock);
+ }
+@@ -884,7 +857,7 @@ int pciehp_slot_reset(struct pcie_device *dev)
+ 	pcie_capability_write_word(dev->port, PCI_EXP_SLTSTA,
+ 				   PCI_EXP_SLTSTA_DLLSC);
+
+-	if (!pciehp_check_link_active(ctrl))
++	if (!pcie_link_is_active(ctrl_dev(ctrl)))
+ 		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
+
+ 	return 0;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e77d5b53c0ce..3bb8354b14bf 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4926,7 +4926,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		return 0;
+
+ 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+-		u16 status;
+
+ 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+ 		msleep(delay);
+@@ -4942,8 +4941,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		if (!dev->link_active_reporting)
+ 			return -ENOTTY;
+
+-		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
+-		if (!(status & PCI_EXP_LNKSTA_DLLLA))
++		if (pcie_link_is_active(dev) <= 0)
+ 			return -ENOTTY;
+
+ 		return pci_dev_wait(child, reset_type,
+@@ -6247,6 +6245,28 @@ void pcie_print_link_status(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL(pcie_print_link_status);
+
++/**
++ * pcie_link_is_active() - Checks if the link is active or not
++ * @pdev: PCI device to query
++ *
++ * Check whether the link is active or not.
++ *
++ * Return: link state, or -ENODEV if the config read failes.
++ */
++int pcie_link_is_active(struct pci_dev *pdev)
++{
++	u16 lnk_status;
++	int ret;
++
++	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
++	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
++		return -ENODEV;
++
++	pci_dbg(pdev, "lnk_status = %x\n", lnk_status);
++	return !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
++}
++EXPORT_SYMBOL(pcie_link_is_active);
++
+ /**
+  * pci_select_bars - Make BAR mask from the type of resource
+  * @dev: the PCI device for which BAR mask is made
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 51e2bd6405cd..a79a9919320c 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1945,6 +1945,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
+ 			    pci_select_bars(pdev, IORESOURCE_MEM));
+ }
+
++int pcie_link_is_active(struct pci_dev *dev);
+ #else /* CONFIG_PCI is not enabled */
+
+ static inline void pci_set_flags(int flags) { }
+@@ -2093,6 +2094,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+ {
+ 	return -ENOSPC;
+ }
++
++static inline bool pcie_link_is_active(struct pci_dev *dev)
++{ return false; }
+ #endif /* CONFIG_PCI */
+
+ /* Include architecture-dependent settings and functions */
+--
+2.30.2
+
