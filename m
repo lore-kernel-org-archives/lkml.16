@@ -1,70 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F196022424D
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2DA226D16
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746801215; cv=none; b=sBNPDrer2pvxe9wEYIFH28YkRLZ1Jj7RfSd0gPfzu1dlu13SCdnsTzGfmrzDIcMVHi203MSFMYTvAzeuxLup/kitlbco/lmXb/3/ljWXvMJsrMExZzeh3r3vEPFuYvN6jyvGOdgc/5jZyr4V1F+MzWLejZ8xDWg+0mpNguxHh7c=
+	t=1746801217; cv=none; b=s5mFFHEMLkWVXZEHc9/+gFR1j8lTrxto2sLGolvES5KG6lDSdk4k8J9LAgXuMuuJBmJJDhsNRplt1CJhS/PNiy83M31+skDYU7b9oEi0Pv6KoTg6eM88Lw5adWH9RXlzq0T+9Mdyy0Av8Yr8XQDralk4HhCiKtL6W3ZNoCl5zis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746801215; c=relaxed/simple;
-	bh=naf0ZTgkhlpI+qKa6xvqWgk8ol/hCC97goS1SGCaatU=;
+	s=arc-20240116; t=1746801217; c=relaxed/simple;
+	bh=VzQyPkruYWrDZAOkmL/UT3N0xShjKnGR9pQJo0jQ/Qk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BlbHw77gVOnEfSUUHM01R8Yfr+jSXLtI0RQWf1jOMj97fuqaQs6SBtsOTTCm1d930RpZdXxrN9glmZsXnQlMg7o4Ic4Bqi5ELMH1mz8r7lXYUl2d2xirhGDV4X684MJAHLwikX6fkGsZwOFauEa0OXSKg86pZrjEJ/KXaF/JGMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DvRc7B2o; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=SmlMhwTPuF0+mdhRaPyU1VF/z6OQwSoqO521GhN40QcC3yhg6ZmcpgqEuvjiWevBHS4Ns12uVUrEvGuJ7EY5Uv3lR5g/z6xTMjLj5BqZlh7Ihpl+8zg9VXuVN/VoOWxP4XJKTy/H7KInEQ9BeyKozUkVNP1pDr5Q2+2Qb1EOWsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KLrNuHzh; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DvRc7B2o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLrNuHzh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746801213;
+	s=mimecast20190719; t=1746801215;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6L+bu3C5bNo3IB9ZkU52/sTrMkPyP3mUjU6YriIz+Oo=;
-	b=DvRc7B2owQI3WTmdMtGX/wYtUiAJk+8lzM0ymOeFWqJZG/w6DymINaDyRR71D08A66vbnA
-	RtDZs6SpmbZQvZhq7UEuSI4mxocPOfe1Kx1RXALJbterFX2NN7ymCiKxTTOa18zg8c/Wft
-	TodrK4RJmCjS48s0dCmbJClkTFEh0+w=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=AdRsO2Uefrz8JMO751IFZEkS7KH/EcFqwNDUBdHYAOY=;
+	b=KLrNuHzhP6SjJINNdYXQc3Rp+0TXJBemQvCxvhtl2aULaHsBN+hPNCizKnk0ewcGsbJ7mf
+	82BP3i05u2hIXAfZ28Vzkz7eGLxnw34oPT6aO6Srqdiapgio1wTHCZMm0kEJuawAmuAgs6
+	60fOTF/UuiKv/TVmetzAu9mjVdmICSI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-fA1eKH73OtOkQ5RO7L41RA-1; Fri, 09 May 2025 10:33:31 -0400
-X-MC-Unique: fA1eKH73OtOkQ5RO7L41RA-1
-X-Mimecast-MFC-AGG-ID: fA1eKH73OtOkQ5RO7L41RA_1746801211
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so10277225e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:33:31 -0700 (PDT)
+ us-mta-663-_pbh8pkMM8OGlaELteebLw-1; Fri, 09 May 2025 10:33:29 -0400
+X-MC-Unique: _pbh8pkMM8OGlaELteebLw-1
+X-Mimecast-MFC-AGG-ID: _pbh8pkMM8OGlaELteebLw_1746801208
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-442ccf0eb4eso16756365e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:33:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746801210; x=1747406010;
+        d=1e100.net; s=20230601; t=1746801208; x=1747406008;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6L+bu3C5bNo3IB9ZkU52/sTrMkPyP3mUjU6YriIz+Oo=;
-        b=b3ndV+CW8VFptoOvUtjNi4fXFenYUE/8Ibtj5L2ETKemeemHkqeTs2UPaiWbpSRhKr
-         Z6mucy0hSIsnME19tQiv1W60wWJNaXo6jDkp2zwjge8vT2GBfuchLs9lPCU36sV/SgDa
-         RdiSxZHwGKxsEqb/Iy2r82rUWegCf95XVoU5ihkqB2D62BfbkGQcZHUbhCQ2b8eedFSu
-         5Lo2J+4fhY9jwqMOoq0GvHwyxhd6Fjd9aiSU7UxENexdEUN4kkiWFRUJuqORrHPUojKS
-         hkZgE8V/Orvob2Z3hqNi3pitAUBBEHKAUeJCr+8RThkZHme1Ic+jafPcgZ8b8Hupt42J
-         9VCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvjxdX3nLVK61AtU/wvsmKN/8TP1fK2GjyeNirJ6YJdAavnooAPuikQgR+TfoRuwbsI1h1UIgMeKCYGPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM+IT/7HGGanDkNQorvc8XFCl7t7beL5Bzl3k2lXJgIdfb3oE4
-	zLMFuPcW1LxYRmUGfuS5I4ajHVmaG+RyzvE0NFvPZnJcX3Kf+RcCofskcn47XB1ne6xUQGq3vQA
-	ymCrng0cHqzB1OEQN0dR4WF+ADE4geZK6bJSyGTfQ8QhfPT+sX6Dv8EqDE+8zLw==
-X-Gm-Gg: ASbGncsX5IcEKd3zFjwK0+JMHtK6N0QOag97AUnkaFyRFRkn3Kfm+W/+SVQ28vvzQVm
-	8Au8kAiR0ODdouwvU31v2bf5y9uE2cL0QSFpE5Bjh4+w0scv0BtjCQdVTxvrxCg8/xAPM4sOYAb
-	bDv4WotVmIjEfCehEufDnvRTuJ6PQD+4gG8RrwMC+f9Sd6WrwpJ8ENfy/pnJg0Okhchni0GnvtS
-	9jrJcVQHq0WS1ujqYl7blOygHhTV+fcweK9HdxbkEfMC4/Vors21lnDFYIxxE/SmNqSf+1ogeY3
-	dm9omQzSjJ1oJ4Bh/GGE0NXC24TK1r6bgABr1F5YqpUgezm+0oV0axz2MKex9F9iID3vkihEpm4
+        bh=AdRsO2Uefrz8JMO751IFZEkS7KH/EcFqwNDUBdHYAOY=;
+        b=bPADFP0MaJjLHs0d+szU+WUl+LEwa8kstm227AtVr5FTptEbDHl05sR3oUMYPvjBdn
+         oNAiSYWM+fSNQL68/xQjpgSLOlTe/NimVGAGTTzUZz4htOgEW49MGiJo7rE5t3saKl5L
+         Uu9+6yuJYy/aonJ/Ey+36ShK2W9XsAkXqpQoDASeQx3InEbsRIuKqwlbF+8c7GyCG25M
+         gwg6qgGorW3p+cBa9Dz751FH8E4btmj4936y21EATe7+tgFnf+G/T8+i9hljyBW/mDHb
+         CXOz99Q5EqH5FJdNeYSSUEPQ9BboEEYwDh/+nEViLQHH6IUQZvLVfppfNVtj7/gBGsJf
+         HdkA==
+X-Forwarded-Encrypted: i=1; AJvYcCViRbz8eqIRKjpCs2jNEcOJ0TEJ35vW5r0egpkSOMkMtkPoc/93yyyA+YPW5E0DP+9Y1z9lj7wkuxSlMuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNykkvcQTuzcQv5QbkTNwIlCg7Xq0p5Z3mWn3gpEfY4toMETW9
+	YxjlH+4Y++rBxB+q0bMbjDhCRP9Oy5RUHY4VxGf/RP4U4qOUzgIK527jzAbVaS7hraIiNYf1RGE
+	ERVW1ehRO2WoQfI4GN/85PdaGzPtr+B2w/BWpb6Bs2E2UlRRzWmQvwprERIJlmg==
+X-Gm-Gg: ASbGncsdJH9vFC2GP0aPbYCpLoPbk20pMPJQMp/0z9AS4ymmXbCJKIgEC750pMQrjmd
+	oMcf/A23xYvzArl9YOFB8oHsMnpeaFyAhA4xCk02O8fhCL2BpFfHsdr3YLhgCAG9/IKQbrv9g9O
+	4KYNSsHu9E07UVh3UTDz6fRxLpDUJrCBkFDYSddFrz2P8mv4U1L1yyOuRWYMyFNb2+7yxaLjvQt
+	g7/HsYZQf7G3P8adUPl+Rmo2rGoAT6w5+CyOUeUq2Dx/L/ffk3b2tUh7z0JlA9sDKGqDCt3wAHf
+	ZCOD0zn+iLppfRDfFDhOX8+j/k2+AbZ0WZOqVbv7fioRZdi0gZAQA3XCRVKjemHzT3x8cw5hYNA
 	=
-X-Received: by 2002:a05:600c:a42:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-442d6ddcff4mr23932645e9.28.1746801210567;
-        Fri, 09 May 2025 07:33:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFkHBgasEQcr/4ZVQSpWJmPLcvd6o7zSPvgSmEK9zaLE7PuQpFCA6hRhF0NO2Opfzb52f6PlA==
-X-Received: by 2002:a05:600c:a42:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-442d6ddcff4mr23932325e9.28.1746801210127;
-        Fri, 09 May 2025 07:33:30 -0700 (PDT)
+X-Received: by 2002:a05:600c:83ca:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-442d6d18b68mr35853845e9.3.1746801207829;
+        Fri, 09 May 2025 07:33:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHm9MkDy/quubUQsSnalTOipje79m4aFFrG3Bj/W0QEAlm0r1Z0dt5gqWlFblcQZwsloaT3Fw==
+X-Received: by 2002:a05:600c:83ca:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-442d6d18b68mr35853555e9.3.1746801207515;
+        Fri, 09 May 2025 07:33:27 -0700 (PDT)
 Received: from rh.redhat.com (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c7bsm32150775e9.4.2025.05.09.07.33.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c7bsm32150775e9.4.2025.05.09.07.33.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 07:33:29 -0700 (PDT)
+        Fri, 09 May 2025 07:33:27 -0700 (PDT)
 From: Sebastian Ott <sebott@redhat.com>
 To: Marc Zyngier <maz@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>
@@ -79,9 +79,9 @@ Cc: Colton Lewis <coltonlewis@google.com>,
 	linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	Sebastian Ott <sebott@redhat.com>
-Subject: [PATCH 3/3] KVM: arm64: selftests: arch_timer_edge_cases - workaround for AC03_CPU_14
-Date: Fri,  9 May 2025 16:33:12 +0200
-Message-ID: <20250509143312.34224-4-sebott@redhat.com>
+Subject: [PATCH 1/3] KVM: arm64: selftests: fix help text for arch_timer_edge_cases
+Date: Fri,  9 May 2025 16:33:10 +0200
+Message-ID: <20250509143312.34224-2-sebott@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250509143312.34224-1-sebott@redhat.com>
 References: <20250509143312.34224-1-sebott@redhat.com>
@@ -93,49 +93,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-arch_timer_edge_cases currently fails on ampere-one machines with
-the following assertion failure:
+Fix the help text for arch_timer_edge_cases to show the correct
+option for setting the wait time.
 
-==== Test Assertion Failure ====
-  arm64/arch_timer_edge_cases.c:169: timer_condition == istatus
-  pid=11236 tid=11236 errno=4 - Interrupted system call
-     1  0x0000000000404ce7: test_run at arch_timer_edge_cases.c:938
-     2  0x0000000000401ebb: main at arch_timer_edge_cases.c:1053
-     3  0x0000ffff9fa8625b: ?? ??:0
-     4  0x0000ffff9fa8633b: ?? ??:0
-     5  0x0000000000401fef: _start at ??:?
-  0x1 != 0x0 (timer_condition != istatus)
-
-Meaning that the timer condition was met and an interrupt
-was presented but the timer status bit in the control register
-was not set.
-
-This happens due to AC03_CPU_14 "Timer CVAL programming of a delta
-greater than 2^63 will result in incorrect behavior."
-
-Work around this issue by reducing the value that is used to reset
-the counter and thus reduce the delta.
-
-Link: https://lore.kernel.org/kvmarm/ac1de1d2-ef2b-d439-dc48-8615e121b07b@redhat.com
-Link: https://amperecomputing.com/assets/AmpereOne_Developer_ER_v0_80_20240823_28945022f4.pdf
 Signed-off-by: Sebastian Ott <sebott@redhat.com>
 ---
  tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
-index a813b4c6c817..2f0397df0aa6 100644
+index a36a7e2db434..c4716e0c1438 100644
 --- a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
 +++ b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
-@@ -31,7 +31,7 @@ static const int32_t TVAL_MIN = INT32_MIN;
- static const uint32_t TIMEOUT_NO_IRQ_US = 50000;
- 
- /* A nice counter value to use as the starting one for most tests. */
--static const uint64_t DEF_CNT = (CVAL_MAX / 2);
-+static const uint64_t DEF_CNT = (CVAL_MAX / 4);
- 
- /* Number of runs. */
- static const uint32_t NR_TEST_ITERS_DEF = 5;
+@@ -986,7 +986,7 @@ static void test_print_help(char *name)
+ 	pr_info("\t-b: Test both physical and virtual timers (default: true)\n");
+ 	pr_info("\t-l: Delta (in ms) used for long wait time test (default: %u)\n",
+ 	     LONG_WAIT_TEST_MS);
+-	pr_info("\t-l: Delta (in ms) used for wait times (default: %u)\n",
++	pr_info("\t-w: Delta (in ms) used for wait times (default: %u)\n",
+ 		WAIT_TEST_MS);
+ 	pr_info("\t-p: Test physical timer (default: true)\n");
+ 	pr_info("\t-v: Test virtual timer (default: true)\n");
 -- 
 2.49.0
 
