@@ -1,89 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA86E22A80A
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FBA23D2AE;
+	Fri,  9 May 2025 07:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776682; cv=none; b=VbIOT1OKgANNA5F9V7AopZf3SshnHYhveQ/ZtQKBgIIk1carX3dDkK65zwrT7LmQhFUgxHcl8mKpD0TG5jWEzyiFk8/BMNPyz/GWx84+9K+tw3j971uL8q0CCo7qB3zUv/BMUVq5ddA9zb+4LhqOurnsaucylxpICZJVGvJQBMw=
+	t=1746776724; cv=none; b=tjmqIrUK6lCidcLsSMOtprfmjG2gZufzYLm5UuRYGKod6Zzr+d/xtJjY/AMmA0qPseV33VTIFwxrWde4ujIXTNENZz55a9a2f0AbHJvT1eZ9fT5FVU5HPLZCTICZMEgWRq3cPPNT7qkyV/35v9g4zjdUtC6It6kDnfSNqQzYM+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776682; c=relaxed/simple;
-	bh=TAty2NV9PsuMxmoZonWPYrPQIhfitnRzbAtx54JRaxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NeEdc2RsoqgLPBKiIALxdvZQ78cCLV3cdVBipU02pyZabo/nPqtWMIPujF2pFKPBTOOm/9eS71KLV+PjA+/G94kWIZpNE98B0HwZGIDwyT/XXMDH3XJ9Rj1Unx6e8irC/6qKK4hNdlx/mrnhHNJrdHMxRrgIn0l7cbS9XPqo/7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hErbatne; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746776724; c=relaxed/simple;
+	bh=z4C4WONX3TOnzmmaH8eHlIFN6WS75ODbCTdWA15mScE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qwdM13PGvZfOyaI3FETZLhtqtupPkRQP/TTwIlrBQkpQJNzhbLkB/EZo3OImAUBcdy4gwpiuHp6vzkv8gmY4tjqGjkzQWqIvZ/ulIOeWZIwHEW1E2KAQ1idR7VziTUJ5Nej8AsXiDDDZ4kBkfQ6ObE1Bp7zdjcbAxdzFHzmyOFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xZmqCO9B; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hErbatne"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746776678;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=seu2ludiam+HVLe4Ct2xcwi5iBXcFBPfUZ2n7NKG5WQ=;
-	b=hErbatne1r5SBCFlQxo6pthMiCUQBgNd4HxNrew5M8eBK/+Ta/yHjyw4fDjNIFUAKyvc8S
-	YwmQ9Me6REjXdjAghqudFBCSEqLYnDd3q68Og4ZII0p/oqVzEpgBNMtR2JiZFkrqSvWkTG
-	lOz9xO7z21c3HLyBkJ4MWlNAdTohw2w=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-58-8bGUiQmlOrOnCf57PDtyCw-1; Fri,
- 09 May 2025 03:44:34 -0400
-X-MC-Unique: 8bGUiQmlOrOnCf57PDtyCw-1
-X-Mimecast-MFC-AGG-ID: 8bGUiQmlOrOnCf57PDtyCw_1746776672
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 89D0819560B2;
-	Fri,  9 May 2025 07:44:32 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.140])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27A8618004A7;
-	Fri,  9 May 2025 07:44:25 +0000 (UTC)
-Date: Fri, 9 May 2025 15:44:19 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 5/8] selftests: ublk: kublk: lift queue initialization
- out of thread
-Message-ID: <aB2yU5HUYtmKFzol@fedora>
-References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
- <20250507-ublk_task_per_io-v6-5-a2a298783c01@purestorage.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xZmqCO9B"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5497j1ha1337449
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 9 May 2025 02:45:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746776701;
+	bh=7pJtxLJJ+miQ++NXFqYy8TUdT11UyzqqW+ZW0cRbZWw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=xZmqCO9Bk3Mc0tdHYa9F5AFIfSVolMsBr3yLguxR+oYpB0LxvOVVBiOL2sGIBiZA8
+	 bvc4seLQazHXLpoqpNTpb4OI2fjrGX4/rj38g/FwtGTF+ym6o8dAJyw8hBBMPWeNFN
+	 mLftfT8VlhsF5TzVbVpp8kzG2yuEMhTA/M05DVU8=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5497j1AU126579
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 9 May 2025 02:45:01 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 9
+ May 2025 02:45:00 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 9 May 2025 02:45:00 -0500
+Received: from [172.24.19.187] (lt5cd2489kgj.dhcp.ti.com [172.24.19.187])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5497itUM115553;
+	Fri, 9 May 2025 02:44:56 -0500
+Message-ID: <e4fc72ea-ae36-457f-b1a6-0305e06022af@ti.com>
+Date: Fri, 9 May 2025 13:14:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-ublk_task_per_io-v6-5-a2a298783c01@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-
-On Wed, May 07, 2025 at 03:49:39PM -0600, Uday Shankar wrote:
-> Currently, each ublk server I/O handler thread initializes its own
-> queue. However, as we move towards decoupled ublk_queues and ublk server
-> threads, this model does not make sense anymore, as there will no longer
-> be a concept of a thread having "its own" queue. So lift queue
-> initialization out of the per-thread ublk_io_handler_fn and into a loop
-> in ublk_start_daemon (which runs once for each device).
-> 
-> There is a part of ublk_queue_init (ring initialization) which does
-> actually need to happen on the thread that will use the ring; that is
-> separated into a separate ublk_thread_init which is still called by each
-> I/O handler thread.
-> 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] arm64: dts: ti: j722s-evm: Add DT nodes for power
+ regulators
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <vaishnav.a@ti.com>, <r-donadkar@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jai.luthra@linux.dev>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
+References: <20250508155134.2026300-1-y-abhilashchandra@ti.com>
+ <20250508155134.2026300-2-y-abhilashchandra@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250508155134.2026300-2-y-abhilashchandra@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 
-thanks,
-Ming
+On 5/8/2025 9:21 PM, Yemike Abhilash Chandra wrote:
+> Add device tree nodes for two regulators on the J722S-EVM. VSYS_3V3 is the
+> output of LM5141-Q1, and it serves as an input to TPS22990 which produces
+> VSYS_3V3_EXP [1]. VSYS_3V3_EXP serves as vin-supply to CSI RPI Connectors.
+>
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+>
+> [1]: https://www.ti.com/lit/zip/sprr495
+> ---
+>   arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> index 34b9d190800e..0f18fe710929 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> @@ -141,6 +141,17 @@ vsys_5v0: regulator-vsys5v0 {
+>   		regulator-boot-on;
+>   	};
+>   
+> +	vsys_3v3: regulator-vsys3v3 {
+> +		/* output of LM5141-Q1 */
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsys_3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vmain_pd>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+>   	vdd_mmc1: regulator-mmc1 {
+>   		/* TPS22918DBVR */
+>   		compatible = "regulator-fixed";
+> @@ -153,6 +164,17 @@ vdd_mmc1: regulator-mmc1 {
+>   		bootph-all;
+>   	};
+>   
+> +	vcc_3v3_exp: regulator-TPS22990 {
 
+Please align this name with commit message
+
+with change of vcc_3v3_exp to vsys_3v3_exp
+
+Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+
+
+> +		/* output of TPS22990 */
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_3v3_exp";
+
+This name as well, please to vss_3v3_exp
+
+
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vsys_3v3>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+>   	vdd_sd_dv: regulator-TLV71033 {
+>   		compatible = "regulator-gpio";
+>   		regulator-name = "tlv71033";
