@@ -1,46 +1,45 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2043.outbound.protection.outlook.com [40.107.103.43])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2072.outbound.protection.outlook.com [40.107.105.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E435225A24;
-	Fri,  9 May 2025 15:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE518225A2D;
+	Fri,  9 May 2025 15:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.72
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746802989; cv=fail; b=mW6Wvq/9iRRO/0whJA768uTLX079Fo+g7XqS+DlLci0dtDVCYlVGkNwdQ+XMKZWHFopvb7AimAW12wTEGPo7YrFD1+tYLW69N9VwKkVWLaIfVd76IeeSuP9PkuQpymHjX1KTmY8itisRQo60RDsmJK02k2NUzLJOA4tn9B79XM8=
+	t=1746802990; cv=fail; b=YJoc04UyLfjfRM2RVYYy9cnlwubULFFdccVwgao3XO0/IluvpHWfREx8gQFS+iusEwfivtHmOBKTa0Nk5jsiNhOs+9IfWTAWvta5+W6HIp/Oy8cliwZfac6epgLmAVfobCpe7Gb+RmD5GJGYgzEIWGOzV038Zn9px4ofZt1XnnY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746802989; c=relaxed/simple;
-	bh=H6uaLSpgzYmn0ptSIR+MSOV28dGzDFT4xXr6wzB0OUg=;
-	h=From:To:CC:Subject:In-Reply-To:Message-ID:Date:MIME-Version:
-	 Content-Type; b=WEAuOIII+H498ucVFhokD4PTsYU1PpN38hPAqhUoZ2s6tpVOiTgioj3NaIqRdy0CDLwo9HuWgIi0FN/L8wkAffbjxnkhbcmD66MmWHoVzl3Z90Zn3DfwGf7x92Uwdju9ls86bZZ9gv/X1Au2lAszt2wpIYScDwMD0Q6j3d0hENU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=HD8AOkb3; arc=fail smtp.client-ip=40.107.103.43
+	s=arc-20240116; t=1746802990; c=relaxed/simple;
+	bh=0h+6eJh20XdcQYKRfFW6cQN2fw1hUpTOhYeVvLDsEmY=;
+	h=From:To:CC:Subject:Message-ID:Date:MIME-Version:Content-Type; b=RsLiAE5untqmNzOVbWpUs50wwsex9O1Tbig4eFnGHW6ooUOfZBd3g3bNcXlVKZxM8SNJYpxDmY7ktGgY7DsU6y0qIPn2ojI+HXAbyxMPR/Dm0wzbklhw7IrLhUPuMe6hgrnQrD7dUPP/bATnqfd3N0+wK3jQc7SNFCj6ixA2I5Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=DJAFM9iv; arc=fail smtp.client-ip=40.107.105.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="HD8AOkb3"
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="DJAFM9iv"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JFMYQpz7nMFIp9jnn4df7uFP2RnfK95QN3qh9Zde3Z0Ayi2VppvS4qiTO3G5nbHjRANyfISc/fdLobPC9jf5jhXLbbFjxtW3Tpj/X5tvPaBpTKIDTleS/DhddAEBJDD+CFBY/fywbpxfHn1aPcWl1sG9XQWtk/qWX2KnFD2Cs7y7ON1bxDjKRWbnf8RUf9uWUwQ0Z3H31q+mrsTeEkL4FfckJXK/lIlr3YA3q8I6TujfqGnhEqIMiORN3HbaOoAXFU3/wJP5M1cyGdi0h1/VY8/JTJkxq4ibgLx2D3vmBYvZVDG/ZcIgeTMO+t74wC+YnBbT70q7u5jpDmcYAX209A==
+ b=ebEirqKEPo4ROmSLhCY+AVwyN43GWprIyv44lV85cAdydKbmugQ5IrKIu8A8tj1JY2BJFpyMuvZfGK1lrFv07siszHOO9Nj4JyfsN80/a6/8+siKhpdLTNm2sAYe5Bz06F40KwVV+WH/pSSffk9rHhYsDASyyYATI8BXhbaVT/Hd6bwMkbj109GSa36sbtxju4+i4bMK544sA6XGQo9aaPHZg6y1gPoujMAc4U5etEab6HWWk8mHhyptuae5ti6eCD4+sbKxJcCLqATkiQF6WlSoTBFeowAqia6FVHdPuC23b+QQ9kMzkoHutcM9rntkyf3EGU8r5j6xtkYWh3qgRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0tttphWuIhqioKpwSr98inPZMXLsHl/3wBng9IqsvNQ=;
- b=O5ZkaAUgjWykQK8Ko/0C6d3fjDIstDiQnbRnBWrSAMGKwSQFiE9u5zTCD4SRV2KsOp+lhh0SPt6DHy4ZD50fCvr/+/+lNw3JSuvLpLbF0K5v13PTPAfPabrMRQdzfr5bS76cZx7EVWGKxQ9PuZVmGlXakXkCjC6n/C1K9gJguw8CUH0RJFekXC/FKE0SwqEVj4Yl1fU/4tPwi/UCs4fwk/xWyq0YF/M43yGEa2rxFDoMVmX8wl5ZN0ZpDTWNkpqCSjCbsbccfeLbP6gpTsMVQse8QRJxEhCLP+uHKQBoUanXhjAX3seYwpDH3E1gs4PAsvze+DwXzGO3ftL6pjNQ6A==
+ bh=NPJtrdATGnTgqrWLxmSIu87AgkR+O0nhSGWhIVAbM5g=;
+ b=rELIp46Y7ylLQnm5G2oaHwl5KUw+Wywh+cg7HcVQysqQzkHa3xBYx9Sz3Gvckfg4Fk1taL61TtSX+xDpBABI4qX2gq1aYAQNXeFZHA3zKeF/MJKa0dlyHcTntHSsWTgJs9HVXZDPL0vIHuCWGc7NJ6zp7oAqFlj3J81LwgPtduuFhHuJafF5YSwxBPgH0XilpEPzaoXSpLmSq771DkW1VlA31NSsRGk+5A+VwjZEkdBhTfM3kBcErDleGjzZhYV9QZXkc/DhHUtXkAEdiMJkFJdBhggrzsbJixDOdcXsNQygiF1tefWBY/+YjXjBjKtVRaohwk4GvjgEreYzjAGteQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0tttphWuIhqioKpwSr98inPZMXLsHl/3wBng9IqsvNQ=;
- b=HD8AOkb3Zr5Ozcfee4KIqy3R8FdqMEOBPC4HwZN9+ftVMSkWP4OJhet2g0IoV220JsrxRLJ80tEagIpvb1rpRMnsdMQ9l5c0hSA9eh+ViQaFjwJbUn9eLdO+D5sU4+OQzvBRYChOasNA9yQbT1ZEWjmdGjW7yWbSbrmyDmZGMl0=
+ bh=NPJtrdATGnTgqrWLxmSIu87AgkR+O0nhSGWhIVAbM5g=;
+ b=DJAFM9ivtEFmFyBc2Qa5jKJHtpPRtFOtVMH7HbR1+5DAgKZykmVYtU22IOX2zY9cisFJSVTcvz9T7SoBVkgru/TLX9OGYTIB4330Hf9DZN2A5TItBzwLyw6bR+yWHMutaBsnSGk89lfps9msr5HjGYSRH3fgBPZXak781/wehBM=
 Received: from DU7P195CA0028.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::28)
- by GV2PR02MB9422.eurprd02.prod.outlook.com (2603:10a6:150:e3::19) with
+ by VI1PR02MB10060.eurprd02.prod.outlook.com (2603:10a6:800:1c5::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.12; Fri, 9 May
- 2025 15:03:04 +0000
+ 2025 15:03:03 +0000
 Received: from DB1PEPF000509F1.eurprd03.prod.outlook.com
- (2603:10a6:10:54d:cafe::c3) by DU7P195CA0028.outlook.office365.com
+ (2603:10a6:10:54d:cafe::6b) by DU7P195CA0028.outlook.office365.com
  (2603:10a6:10:54d::28) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.23 via Frontend Transport; Fri,
- 9 May 2025 15:03:04 +0000
+ 9 May 2025 15:03:03 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
  smtp.mailfrom=axis.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=axis.com;
@@ -50,20 +49,19 @@ Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
 Received: from mail.axis.com (195.60.68.100) by
  DB1PEPF000509F1.mail.protection.outlook.com (10.167.242.75) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 15:03:04 +0000
+ 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 15:03:03 +0000
 Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 9 May
  2025 17:03:02 +0200
 From: Waqar Hameed <waqar.hameed@axis.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-CC: <kernel@axis.com>, Rob Herring <robh@kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: Add Nicera
-In-Reply-To: <cover.1746802541.git.waqar.hameed@axis.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: <kernel@axis.com>, <linux-kernel@vger.kernel.org>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH 0/3] Add driver for Nicera D3-323-AA PIR sensor
 User-Agent: a.out
-Message-ID: <dea070f1b9acf755a28537a62d91bb224bf5d3b6.1746802541.git.waqar.hameed@axis.com>
+Message-ID: <cover.1746802541.git.waqar.hameed@axis.com>
 Date: Fri, 9 May 2025 17:03:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -72,78 +70,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
  (10.20.40.7)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509F1:EE_|GV2PR02MB9422:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3587dd79-ca24-411c-6d8c-08dd8f0a9967
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509F1:EE_|VI1PR02MB10060:EE_
+X-MS-Office365-Filtering-Correlation-Id: e12233d7-151b-4acf-3a2f-08dd8f0a98df
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?523H+9g4sZg7dkOiuRQK/oYLasEZQJJVPsIZlZTshIVJ2G91MfgBY+GujpwP?=
- =?us-ascii?Q?04Y0rDpVhJ/UzsdDVBZQ+wNtHc+R33f2xvj51VWcurxAYXdQtDzn5Zjy0BSZ?=
- =?us-ascii?Q?b//gM6AeY+pH52fDO6SFOjpg+bzrpGz6kAZmE6E6ig5EnwFnUaEW2LjrEkaf?=
- =?us-ascii?Q?3zsYHiVSYcKbLC4YDGUDRxmyOZo12uRATxC3Yp7eFwFAHEeBgnM43qsGneW/?=
- =?us-ascii?Q?0tIujM/pr8IQuPjGtd+ATSOuBscTeSafMbF9Y9lhGNWIZpW1/v9gciz/E25y?=
- =?us-ascii?Q?s4SH5pKVc1eo5bY5SJTBH20sSgZECz5yeZ17VXKYKuQlRDROpwzz5fIjlhV7?=
- =?us-ascii?Q?aaohmb0ugVD0tQcNvaLe8Pf/36mjufrwOK3OD3mbRzjNsLdt2ArN+K7k/xY1?=
- =?us-ascii?Q?H0qAeKNZ6IxLksFv8vEjOItOMcNNNQIiJN7oRigzrs+d1caGzi9Jv4wxT6jg?=
- =?us-ascii?Q?L0gfqzUk+ZwX9I95Py+ShvjagtAh60xf7PkeoO6921qVvVu7c4b6Q5tavf1m?=
- =?us-ascii?Q?0r2DjLV558QqOUbrMacrEq9cDcUW1JR3OXIPyAT/JNYPd2uJ+FqCI4I0sO7K?=
- =?us-ascii?Q?oERu9fyUaOuRtykytvJhX3wwy9wi728250wgq8Rz4N1WovrsSie3ab9V+IPp?=
- =?us-ascii?Q?RxEKqYowRshBhQLqAMZ9pYtJopI7nM7tonlex/ata4hRV9YQWreIni/Grbm7?=
- =?us-ascii?Q?8i27/L26bVTnsZ1Nl6EJkA+H4LYYlZUAI5rVMf77iUUoGm+OsHqQ+tfTP7ef?=
- =?us-ascii?Q?ZPe0fNPvL1ils4JNLDjGKtNNbs0Txp21y6m0hFa+Yj1Qpl25GofGRAUlXxxK?=
- =?us-ascii?Q?C5RhlAdCZ3z9zdq35yk8TYNhjM5TL+/zYWIYNKY/LvmRPCCXwJcwvAS3GgcK?=
- =?us-ascii?Q?GfHsB9D+53q2cHr+gCiiVgZvxnXy5AxEOy4XhHprnhspHVqd9QQq0XeClB91?=
- =?us-ascii?Q?QiKUiJG0saivOOQS2rNjk416agkl/DK7wH8PT/RvRZ4quX/2D2bP1SfDjeBr?=
- =?us-ascii?Q?+D1vVCn/p5tBDbON06onsSFZ1pG04c48MgMFkkzKSqmz+6sJyTY50zHO4kUP?=
- =?us-ascii?Q?ZQ4571Dfv2mNbDhV7tgzToxFxcq38EH3/CG7dh1mclrmV7EK3fq5GCEXjjy/?=
- =?us-ascii?Q?ehnDk24ra0EMP+62gXXALCj2psyBsq6xBhRt5K+aJcBlSsC7X0pK/018Xyuc?=
- =?us-ascii?Q?GaXNVG6s91DSDHriFNCUmDdru9m5BRqOEzWakEPqFPODZSoeyIbCgExh/klj?=
- =?us-ascii?Q?MGuF3n98+7lWrg/2KvEawcaqjIAfgMyldhupkUIt3MsZ2oLPUOVGTF6Kwk/Q?=
- =?us-ascii?Q?EL4ol+/BeJux4cuaSrjTKwIt/HAmPqEkHYVQ8H8X1IJj+xDqXTBAfLr1rKUk?=
- =?us-ascii?Q?HUDWpMXdkQAr3WMDmQO9zEai7gj0hAi6BC/Ijcw6uh4I78kAu9lsESQ9uXQi?=
- =?us-ascii?Q?9aGvMUpVY0K9mAY2pzw9xchCdnWTSu9kUlCFcXkRpHrGgrekGTFqyZ4qC1+9?=
- =?us-ascii?Q?Z6Y8YHuxvxI5s4BxAkBvucHhpShuX2yOzC7O?=
+	=?us-ascii?Q?KpcDO/XjyJ7hDG+obE6uxIohTmvEcqZrjbOc+SgCxl0kMQo4KeDypDl7ERjo?=
+ =?us-ascii?Q?QLyVpcP363BwjMO6U2JHT3cNiVONmFVYixv7R0IIuwg3DolJ0nWQGdJt9HCp?=
+ =?us-ascii?Q?Hj3yFf6SrrIQoT2q60wy5qNqPbCZJA5g8rzlHqjZvMe7jykmGYJXi4xvodv1?=
+ =?us-ascii?Q?P9fEgjNjhMgbhXRk9UWa3ZjaXe6H2z5gOlprA4CAeKkz17m5lAy1Nmk+RsjM?=
+ =?us-ascii?Q?lHOta/JA/UrJOBHYeUMA4m5EcDjfJ+8YaYyEDiG4Tv3WB4ZgSVPgHIRnA3DQ?=
+ =?us-ascii?Q?Z/2kM5Z2F0SnFP2Ywe2hGUd0hGSPsbW7rOl1cU48Z+kziHuvz+/LNHwbHcZW?=
+ =?us-ascii?Q?yv2oJ830bSPHKcUQ6aHgURSlyEydAL9fKBdmioi+n1fpWuwCJb4ZG7V/SLxm?=
+ =?us-ascii?Q?MMjDRXxD7boHH8DNRP3ggRc8OVplteltZTVhdkEkAdPMZLCaaxZoBObvAW3m?=
+ =?us-ascii?Q?Hq5qZoRGbLTwUYQLenUycpRaMlHSPVxGTMJy6s0q3jMm2lVkBkbgA3t81y50?=
+ =?us-ascii?Q?M5USXnanEe+2+utkAJiH3IBEcWpu0QGPht0m6TEnseKzJvT1hGfD3WLbTYU7?=
+ =?us-ascii?Q?dAGxVVoWADwmy9QmGLGmjHdEq3lcZKkXGiIxU7RIMBFo+BhGx2GvV81psoxy?=
+ =?us-ascii?Q?u57HK+IlhH9k8ZvSI8ngeU2QCp8vJoEmqBrxoH6yaZlDXxEfVb8R+2e+tNR5?=
+ =?us-ascii?Q?oFWPmYJgqzm+AHQ/HF5Zc+HNAF3K0qRmC3c6Cq8pctdF3ajB+z1mk3ttoA4s?=
+ =?us-ascii?Q?VmltuASngRq0Z3iL79GoxkHF36MMkRIxHQfKxRJ4I1ni1BioKDsF/ndnt4Yk?=
+ =?us-ascii?Q?PY2hBK+rMvE6lVXFP+Ks11Yl1fXLIFZs/zSaIOC5CNxjhn3sWu+8kdnDQy/q?=
+ =?us-ascii?Q?EiKCJP5QetHMhV/h71Alp0v3LWHQyBRSo297M8D47/JGO5EDSx38bUh5Em1t?=
+ =?us-ascii?Q?XM3sYrNfipDy/z2lRK9PvxP5MrSfQu4Zf2LuzUpWL4his84NjiKCGciYApXg?=
+ =?us-ascii?Q?1TSdqnss15ggwjwMTA2OV0cWKV3nunWIIqkoeUgvgq5+dAPJpml9rkEvcF0Y?=
+ =?us-ascii?Q?S2New9L29A3pp3/n1NjnzRmNth7s74GczGFHbKWqM/a39yq86C6odgPMOSNy?=
+ =?us-ascii?Q?9clft08KkWa+lkQKEKbC7N1kJTjhOu7IvAdEW2QB48+0AV1lxh/nAiFXujkq?=
+ =?us-ascii?Q?J0CYjRbKamFT1g9mBLCSwtdHsAjlEkppN8mSN0QMCCBdhjoqEa/bwwfwTanJ?=
+ =?us-ascii?Q?ll2tY5n/al46Jry8RvKeqI2dcA8lgyA9sTR7TxUCYQCCf4mQ/7xiRmP6YMC8?=
+ =?us-ascii?Q?+kDf7iV5IIjkah5jEd4OGvtBP+eu7dhp4MwLV8NKdggXsphSzD1NPQckXq6i?=
+ =?us-ascii?Q?L0Ve6uRXyymsuhwamktMSIvKHxdelQxMUoCvJuy3AQtsKSz90OT1zT+At7hC?=
+ =?us-ascii?Q?NkT/+rkxKyyq3KCA/8TTFn4TPDu3/xgAh+dmxxzCYIkG3o0UJnK4Tg=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 15:03:04.2097
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 15:03:03.3168
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3587dd79-ca24-411c-6d8c-08dd8f0a9967
+X-MS-Exchange-CrossTenant-Network-Message-Id: e12233d7-151b-4acf-3a2f-08dd8f0a98df
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DB1PEPF000509F1.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR02MB9422
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB10060
 
-Nicera (Nippon Ceramic Co.) is a manufacturer of a wide range of
-sensors. For example infrared, ultrasonic, gas sensors and much more.
+Nicera D3-323-AA is a PIR sensor for human detection. It has support for
+raw data measurements and detection notification. The communication
+protocol is custom made and therefore needs to be GPIO bit banged.
 
-Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Previously, there has been an attempt to add a driver for this device
+[1]. However, that driver was written for the wrong sub-system. `hwmon`
+is clearly not a suitable framework for a proximity device.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 86f6a19b28ae..e01bb70405a2 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1061,6 +1061,8 @@ patternProperties:
-     description: Next Thing Co.
-   "^ni,.*":
-     description: National Instruments
-+  "^nicera,.*":
-+    description: Nippon Ceramic Co., Ltd.
-   "^nintendo,.*":
-     description: Nintendo
-   "^nlt,.*":
+In this series, we add a driver for support for event notification for
+detections through IIO (the more appropriate sub-system!). The various
+settings have been mapped to existing `sysfs` ABIs in the IIO framework.
+
+The public datasheet [2] is quite sparse. A more detailed version can be
+obtained through the company.
+
+[1] https://lore.kernel.org/lkml/20241212042412.702044-2-Hermes.Zhang@axis.com/
+[2] https://www.endrich.com/Datenbl%C3%A4tter/Sensoren/D3-323-AA_e.pdf
+
+Waqar Hameed (3):
+  dt-bindings: vendor-prefixes: Add Nicera
+  dt-bindings: iio: proximity: Add Nicera D3-323-AA PIR sensor
+  iio: Add driver for Nicera D3-323-AA PIR sensor
+
+ .../iio/proximity/nicera,d3323aa.yaml         |  67 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/iio/proximity/Kconfig                 |   9 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/d3323aa.c               | 868 ++++++++++++++++++
+ 5 files changed, 947 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/nicera,d3323aa.yaml
+ create mode 100644 drivers/iio/proximity/d3323aa.c
+
+
+base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
 -- 
 2.39.5
 
