@@ -1,81 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD5A267F76;
-	Fri,  9 May 2025 23:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8924925F7BF;
+	Fri,  9 May 2025 23:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746834610; cv=none; b=AuLTMAT88r1MWHQNhKAVMIYPD0ajGHO5lfLr1l1r/qnf0VwcVFHAZt3mjbPYAmq7plGeppvig7JHHxOSWQNe9DoaidQ2h62ae/leDYwkpuk5MSFixEPlLRsATGUSxEIoUV+Z8St4SVL3ZP8E+n3lqSGzY8jgExy5oQdGtSQq17k=
+	t=1746835071; cv=none; b=uAInjmZfO4ANJBsTF62I4FGuU2WNbJmbwKYkqgmWXn3Hkn4kypdZK9wutAjP0Gpum4+IiWe7srfJCgyxOaUZTL7RSsXT5f07QilqW49vS7sauKBxs0GCBMm6Q1aXKqM0EfCGzq4wkCB3nkKxGVQhYKZa2F3kcFM7uD6ThAj7qdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746834610; c=relaxed/simple;
-	bh=sg2VawoN7troOvWhpN7BV3yjhjpbGZkgSY0uF9uTijA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=DLdCyrDFNzJv1R2yQrQ+zEis80GfojI07o2YNEZ1ciEtliYRauGRgVMb1Buz690yDnXiYMMUWgkK8QxojO8Igcw8FVq5UmjWjih2m99u56SYfAod+14Zq4820gbee2vgOmOb3y5z4+MOGhGqxxzi1RmR60YwuYoay5qBdaQKCDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWxCxTFR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746835071; c=relaxed/simple;
+	bh=z4bdwxQ4iirtZ/jvJ9eNfsPzh7HLffleNgJOXAIIh2I=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=jOShIMzYUbkpwk88XBPvZvKyfn14HDg271DoZ1BCPbUAUqKqFDsEbahDb/IxeaVzIHFIYh1+7fGS251lS/qjgwG4sfi5h9y98tQtTu6yXUFb8VoKabYOdqppQx6EtM2A2XBxGeg3dOLUyq8+B/ILjVkH7g2xDPDg2G4ac7B3Oxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iITW+Awe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWxCxTFR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D989C4CEEF;
-	Fri,  9 May 2025 23:50:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iITW+Awe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0E8C4CEE4;
+	Fri,  9 May 2025 23:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746834610;
-	bh=sg2VawoN7troOvWhpN7BV3yjhjpbGZkgSY0uF9uTijA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=TWxCxTFRSjR/yFbPbV8CAZ1P8oYfp6aHdNeAolVQMRG+tGjLHlSFL0c8yhtBzvM/5
-	 7j65Rx7ExmNhy+Q90IkvybGhWI8gfJApgvV7PcDu1PqULFvY1xhGHjXt4OUXf1Wnsy
-	 8j3NRpwYHrhB6VFt5IG4b0ARiLwS//rEi7C9xYrdkf3S7uf8VQ/WB+kRzcQP55/KGp
-	 E1W9ap1fef6+2Bf0BdRu42g90pcr+WW5gvuIttMoFVs+ajkaXd22xEKTVhHxRKO1+6
-	 03kNCBJX3/Zq20B4bCXeBFYnbUQTrd2dx5wK6sENVsGgKQDDgsTPDCxk22YVZvv5EV
-	 jBDi5NrIp9B6Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EABA4381091A;
-	Fri,  9 May 2025 23:50:49 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1746835070;
+	bh=z4bdwxQ4iirtZ/jvJ9eNfsPzh7HLffleNgJOXAIIh2I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iITW+AweHByHjGtEP8JyDrHMmaZpMHJIohWHtBshoxEWsyyDp+AT9A0B1UvQ9OEzx
+	 uMxOVY3EMtWi8MAH7eI2fYItYSIYHD1WbUf+FAjFMyyloe/dN2F961uoV5BcVH92gQ
+	 DTsTLmhDDO1gi/89yqaW81URrwaEZBxg5nJNbM3DxUBx3WJkugt37aVT8cqVd0Ibq5
+	 IJziFr9SsKW99/nbTxynkN1lPmjrifPAtVYzTdTbvGO0kf/4/PP7fBcCbrPDiKI5f7
+	 j703su2lMShyhYxS7yf8QA/AUaZu8NbLTUzf1AlWYOJ3I/9pnso7CLM4EP+wyMuFea
+	 eeSqxIH3zjMVw==
+Date: Sat, 10 May 2025 08:57:44 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: paulcacheux@gmail.com, Paul Cacheux via B4 Relay
+ <devnull+paulcacheux.gmail.com@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] tracing: protect trace_probe_log with mutex
+Message-Id: <20250510085744.3dab36f6e314c9e63a673d3e@kernel.org>
+In-Reply-To: <20250510074456.805a16872b591e2971a4d221@kernel.org>
+References: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
+	<20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
+	<20250510074456.805a16872b591e2971a4d221@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: dsa: convert to ndo_hwtstamp_get() and
- ndo_hwtstamp_set()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174683464849.3845363.11079163709570196404.git-patchwork-notify@kernel.org>
-Date: Fri, 09 May 2025 23:50:48 +0000
-References: <20250508095236.887789-1-vladimir.oltean@nxp.com>
-In-Reply-To: <20250508095236.887789-1-vladimir.oltean@nxp.com>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: netdev@vger.kernel.org, kory.maincent@bootlin.com, kurt@linutronix.de,
- andrew@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, woojung.huh@microchip.com, UNGLinuxDriver@microchip.com,
- claudiu.manoil@nxp.com, alexandre.belloni@bootlin.com, horms@kernel.org,
- richardcochran@gmail.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Sat, 10 May 2025 07:44:56 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu,  8 May 2025 12:52:36 +0300 you wrote:
-> New timestamping API was introduced in commit 66f7223039c0 ("net: add
-> NDOs for configuring hardware timestamping") from kernel v6.6. It is
-> time to convert DSA to the new API, so that the ndo_eth_ioctl() path can
-> be removed completely.
+> On Fri, 02 May 2025 15:15:53 +0200
+> Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org> wrote:
 > 
-> Move the ds->ops->port_hwtstamp_get() and ds->ops->port_hwtstamp_set()
-> calls from dsa_user_ioctl() to dsa_user_hwtstamp_get() and
-> dsa_user_hwtstamp_set().
+> > From: Paul Cacheux <paulcacheux@gmail.com>
+> > 
+> > The shared trace_probe_log variable can be accessed and modified
+> > by multiple processes using tracefs at the same time, this new
+> > mutex will guarantee it's always in a coherent state.
 > 
-> [...]
+> Actually that's not happen. For the create part (and currently the
+> event_log is used only in the creation), `dyn_event_ops_mutex` is already
+> held in create_dyn_event(). Thus, it is already serialized.
 
-Here is the summary with links:
-  - [net-next] net: dsa: convert to ndo_hwtstamp_get() and ndo_hwtstamp_set()
-    https://git.kernel.org/netdev/net-next/c/6c14058edfd0
+Oops, if user writes some commands not directly from dynevent,
+(e.g. tracefs/{kprobe_events,uprobe_events} )the mutex is not held.
+Hmm, we need to make another patch.
 
-You are awesome, thank you!
+> 
+> And even if there are multiple events are done in parallel, this
+> is not enough because trace_probe_log::argc/argv can be changed
+> before other user finishs to use the log.
+
+But this is still valid. We need to reroute the creation to
+dynamic_events.
+
+Thank you,
+
+> 
+> Thank you,
+> 
+> > 
+> > There is no guarantee that multiple errors happening at the same
+> > time will each have the correct error message, but at least this
+> > won't crash.
+> > 
+> > Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
+> > 
+> > Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
+> > ---
+> >  kernel/trace/trace_probe.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index 2eeecb6c95eea55502b83af6775b7b6f0cc5ab94..14a7a0b59cd20a8bc43e3e7c653e986081f924c8 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -154,9 +154,11 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
+> >  }
+> >  
+> >  static struct trace_probe_log trace_probe_log;
+> > +static DEFINE_MUTEX(trace_probe_log_lock);
+> >  
+> >  void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+> >  {
+> > +	guard(mutex)(&trace_probe_log_lock);
+> >  	trace_probe_log.subsystem = subsystem;
+> >  	trace_probe_log.argc = argc;
+> >  	trace_probe_log.argv = argv;
+> > @@ -165,11 +167,13 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+> >  
+> >  void trace_probe_log_clear(void)
+> >  {
+> > +	guard(mutex)(&trace_probe_log_lock);
+> >  	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
+> >  }
+> >  
+> >  void trace_probe_log_set_index(int index)
+> >  {
+> > +	guard(mutex)(&trace_probe_log_lock);
+> >  	trace_probe_log.index = index;
+> >  }
+> >  
+> > @@ -178,6 +182,8 @@ void __trace_probe_log_err(int offset, int err_type)
+> >  	char *command, *p;
+> >  	int i, len = 0, pos = 0;
+> >  
+> > +	guard(mutex)(&trace_probe_log_lock);
+> > +
+> >  	if (!trace_probe_log.argv)
+> >  		return;
+> >  
+> > 
+> > -- 
+> > 2.49.0
+> > 
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
