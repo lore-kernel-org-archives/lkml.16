@@ -1,104 +1,92 @@
-Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458A9946C;
-	Fri,  9 May 2025 01:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.154.197.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFC8139D0A
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 01:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746754908; cv=none; b=T7K8RyeOF3XToDSNOjdBeIlCjIBTEw+XlNmYBaB7qzYAChOM0/0tbEYka+/FUgG/tyc+CCmAIFlaHUgFhHZ2QB7RSAlQRkAT0E8MrJhCxbyhSJ4eAuuizNTbs3U4muMS0BxZxrBA3agg3xTzDxKg/U+mbKt+6hY/M1Q2drU2bL4=
+	t=1746755045; cv=none; b=ndR50lQ04heGwZRvt7nKuUOPePqmPSHfiutb0V2484pKu0gksYeD2At3svnXl9QsvZ5scIhaCwRPHKDHKOB5YAYbvgOgmynL8CID9WVDANIFjjGx8F94c/v6ZOgAZi3B4YCXrEYTY/benMnYN1uRH/JSevXAXwxu/XOV4keDQJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746754908; c=relaxed/simple;
-	bh=QPSI/nDUyiW2FjAADn1tIo0LfEblwaUPPvLyUjoQ+YI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uDXpDq2LDhWXMS6f+PN1qsRIG6WdmZsU0t7QKp2gbG3GNV+BlW43kDshuhHgbEYoRViL6ev/MU460PZIsV1qYdq7lvl2nfSMFUNFiz0KUWlM0nGX92aK26mUuDrtY2ADqMiyjmDPlTjxhW8xNntVm1Nezs+s9TRHKu7ZCu0ul5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=43.154.197.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: zesmtpsz7t1746754851t03ce554a
-X-QQ-Originating-IP: HsWACdo/6p+2+Xlv0CaWzUOgRr9FlLvbn1+uFwpn1/U=
-Received: from localhost.localdomain ( [118.249.225.48])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 09 May 2025 09:40:49 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3901934880426052766
-From: Liu Dalin <liudalin@kylinsec.com.cn>
-To: alexandre.belloni@bootlin.com,
-	zhoubinbin@loongson.cn,
-	wangming01@loongson.cn
-Cc: chenhuacai@kernel.org,
-	gaojuxin@loongson.cn,
-	git@xen0n.name,
-	jiaxun.yang@flygoat.com,
-	keguang.zhang@gmail.com,
-	lixuefeng@loongson.cn,
-	linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V1] rtc: loongson: Add missing alarm notifications for ACPI RTC events
-Date: Fri,  9 May 2025 09:40:46 +0800
-Message-Id: <20250509014046.7399-1-liudalin@kylinsec.com.cn>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250429062736.982039-1-liudalin@kylinsec.com.cn>
-References: <20250429062736.982039-1-liudalin@kylinsec.com.cn>
+	s=arc-20240116; t=1746755045; c=relaxed/simple;
+	bh=njVig9ivo+i7YZm6pL5avQT7b85PeWJst1byYA9XM5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLdAuWzyY/Ts7vDNy/E5GtVdfm07Pp3OnKGITMDYY8YlPyY/Z4aQor+vMPqKcXzG1sTPg9/nk4l3AwrrfGLszckmA2f8XibmNHOe8SRADtJ2rVW6dL0TvAozmClF7A9OB2Kwn7FEa+payuxEAeZja2x0/Y4igW1HJR+KyfJDQEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SYL+RuRE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SYL+RuRE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746755042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R1UZqb8T+DJxJnFpIsj/84dkc0Y9kPgWUwdXxP3YPOQ=;
+	b=SYL+RuREbWbwjDmGe7aqTUzQkzXRdhJxdE3nouwPJg7vA2s7I2WJ6bGtk4B5bE0c6eqmGa
+	czLIgCJ7ISEmK2zDIgg0v6bcbhQ7iEn8Kv42pLhfY2ljTZKtzL2AxZLuI7FYkCP57HtG0t
+	jmgfYvk1la7bono3zp6AvdNQKD8DdVU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-512-X1ua77XCO4K_Xsqy8wczjg-1; Thu,
+ 08 May 2025 21:43:58 -0400
+X-MC-Unique: X1ua77XCO4K_Xsqy8wczjg-1
+X-Mimecast-MFC-AGG-ID: X1ua77XCO4K_Xsqy8wczjg_1746755035
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB4F81956094;
+	Fri,  9 May 2025 01:43:54 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.120])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B54BF30001A1;
+	Fri,  9 May 2025 01:43:41 +0000 (UTC)
+Date: Fri, 9 May 2025 09:43:36 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <llong@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org, storagedev@microchip.com,
+	virtualization@lists.linux.dev,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v6 2/9] blk-mq: add number of queue calc helper
+Message-ID: <aB1dyLaThXz8TpOH@fedora>
+References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
+ <20250424-isolcpus-io-queues-v6-2-9a53a870ca1f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz7a-0
-X-QQ-XMAILINFO: M4K5nIxZYv59t91TMkjmmNWmR+c21lQggGOkJLlnptcVQ/mtq1sTHrlX
-	kJb9NqeQK9c0kAs2RGNWGeafEQLRTDVPE1MstE4KhZYQo/uB1j34Mz758Xg3jF6PLUTe/jK
-	D1iH3D0thCIsap37ZYmGxCI0RP2isYgqNhsN11wM4oX3DwX8qHYf3lHuAWmH7B9qId8m+EO
-	tZhiav44UxafTEXKs3pexKiKppTVkr6ffV0d9S+P7CqDJimgz4HKwF6Dy6vXKnEnAgnnTOP
-	lnQ6oWlVGGHfL3MudqVzWMy2pF+PDcv39m1INUA/rrS9xUxISsiiHIJJwm9Nn3l7Y31yl6I
-	dLuaUcksQoMSME1bd0F3/OJUnkGW7LHKmTjJS7O3zMx9fTVqtLlKza6+Av+hEmq14+Sl/WT
-	Dj65ecBTYi8WTu76VuPq2QXAVEkMMTkqRVMcBkUdGWxtG+PO0FFCNEcESSd0y3MbT8oS6dE
-	/eg0kt2Qn7z2ME1pPMEwXx+PentRUy4kWVCv1tsCg4+2SxMxnnVnAUvbnKYIZgdaboZREy2
-	FygPPNTj9ZKqOKsZQXXNR43Y9/EwWSgaO2cIUWLyGX7sH6YVB1l5bQZhTRdQrGLucLXYmdd
-	WlGej3vu0F/6qfgR51SFapH7rQ5Vkd6umkwYps1NXFeQGPM9fX+/kJQ81PlMAGQMKRE9FTP
-	YhZaBF8RS8NLFLk8lkFBUHpK3Yoc2R3HDP7+eXx76KGGA9GlIdt3PiQvaHJurOMEn0d46PK
-	ILM+oAPnp/IQPi7/MoNga4Pkwzu288OsZGBqR3NmqL+fhrVTiPDa4ehXwvyH4Uj18vfkY7X
-	/7EiLFMO7yj4Fy70sNljMLwU4gTP2Sa8pyQF5vCfmQA0K9YwGx0TWYHHio9vAaP8iYjRiyE
-	rRTzS8FBLZlY8hp27CFb/oGamlVJ6iakxMReWf9TY9pin8PKXrBrHJj2NlD6/pQOj0fcnlr
-	FWg0yKQVOqr5QcEXF3uc1DBq03wRr1zng43afs0AZENiaz2FiKH8JdVAa1qn0f40TeAk=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-isolcpus-io-queues-v6-2-9a53a870ca1f@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-When an application sets and enables an alarm on Loongson RTC devices,
-the alarm notification fails to propagate to userspace because the
-ACPI event handler omits calling rtc_update_irq().
+On Thu, Apr 24, 2025 at 08:19:41PM +0200, Daniel Wagner wrote:
+> Multiqueue devices should only allocate queues for the housekeeping CPUs
+> when isolcpus=io_queue is set. This avoids that the isolated CPUs get
+> disturbed with OS workload.
 
-As a result, processes waiting via select() or poll() on RTC device
-files fail to receive alarm notifications.
+io_queue isn't introduced yet, so the commit log needs to be updated.
 
-Fixes: 1b733a9ebc3d ("rtc: Add rtc driver for the Loongson family chips")
-Signed-off-by: Liu Dalin <liudalin@kylinsec.com.cn>
----
- drivers/rtc/rtc-loongson.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Otherwise, looks fine:
 
-diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
-index 97e5625c064c..2ca7ffd5d7a9 100644
---- a/drivers/rtc/rtc-loongson.c
-+++ b/drivers/rtc/rtc-loongson.c
-@@ -129,6 +129,14 @@ static u32 loongson_rtc_handler(void *id)
- {
- 	struct loongson_rtc_priv *priv = (struct loongson_rtc_priv *)id;
- 
-+	rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
-+
-+	/*
-+	 * The TOY_MATCH0_REG should be cleared 0 here,
-+	 * otherwise the interrupt cannot be cleared.
-+	 */
-+	regmap_write(priv->regmap, TOY_MATCH0_REG, 0);
-+
- 	spin_lock(&priv->lock);
- 	/* Disable RTC alarm wakeup and interrupt */
- 	writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
--- 
-2.33.0
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Thanks, 
+Ming
 
