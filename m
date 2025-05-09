@@ -1,41 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3785223906A;
-	Fri,  9 May 2025 18:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16EE238C2F;
+	Fri,  9 May 2025 18:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746814278; cv=none; b=qQb0rUnpLVyLTKvgMu0vU9cVABSCLBYda7OXa/PvC1V7OiRQjQZTV+54dWovEMrM/GVnLXdPvWCEeRIw4jXFcuWJh5cM18CYdj945Nd5gypY3BmMLfterkB2WlPCxy98/r3RjdcdisLUvTLyKNV0ztbvkkrjixmdLyfqJVOoXsU=
+	t=1746814319; cv=none; b=idoJ8Bb5/dXVeNjzvFXRXc9kpsDyjvj9krIgkEIuyDzkItKPsN50q9LLg+bSEX3nn00QMsbjQTCmXKGoWOwD9nusjFyxQNpQtyeobI4+R5liiPdzEY3xshmuYnG7HXXPdVj1Rvu85c0s/OlbQo2dPersA8pOzfpJgCdJXVPvvmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746814278; c=relaxed/simple;
-	bh=VTLaSm3GQYCxJUAqX/0OssZlKJmO1W0tBL876r7AKvY=;
+	s=arc-20240116; t=1746814319; c=relaxed/simple;
+	bh=n7jAX/r3B0uhQeb4UEEWtNNEjzyibyLhe1W3jfz/SV4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GNpZ3CGSaRbO5AHW8vYnFvD2CjK7nMBeqN4EJ8Z4isO2CLJG03gZUI1PKr1EnttXLYoTtedR1doYAQxY0z1D4X+n4wrtX3TgJkzbVmQvB2MlZWiRIKxHU+blofDQlweEFNwMjaKxe8yFRDTyzr4fZ5CHCNCnBg/IIQkOfsEsMx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEl8tBVe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FyWsnZbva+u1YQfl6KGIZe1G+oIUPd2N45luPmTd1p7N+hsApNku5EuF7N2Zov6QooLsoFbvUDaSpWfLMFm9e3psSr0n51Ya605u6z9IK4yJLdDtnKH5heghBjq3rsBWexdqG7QhhE/17+MjStfkSpFYpYSEkyVsb2WqpkKAVvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tPjzhc3v; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEl8tBVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 759FBC4CEE4;
-	Fri,  9 May 2025 18:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746814277;
-	bh=VTLaSm3GQYCxJUAqX/0OssZlKJmO1W0tBL876r7AKvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EEl8tBVeCMFdZ5KZIvdbeV5PRg+wc6+AAq/nzexA0bC7p4XERK1umLkkPsy0QbH/C
-	 nwCDplLJbyN+eWyKwfKNBlnBcRkMNeKsPV8hjiGUB/Dg37TjnZfqLUoCbTLxofIEX1
-	 Dn4u8eFZO+dZSokrxZxYtynPUUJnr/Tj8LSf28jrIwO5CA6e8Yho76Aum259cjrXUA
-	 QLKoI3o21qhK8QzMC8+l/eHnX/jpVEIUuWOvdlhzHJma7hAXAD8SjOB/0cz1WM0KJE
-	 5AxELyzSf2tS1Vz9y+cRsx/+2IcbTuNergMwAUC74c71MIkJLKec+BNdElqtQi1gJq
-	 7ipFV4FyRw6cg==
-Date: Fri, 9 May 2025 13:11:15 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Matthew Gerlach <matthew.gerlach@altera.com>
-Cc: dinguyen@kernel.org, mturquette@baylibre.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	sboyd@kernel.org, conor+dt@kernel.org, krzk+dt@kernel.org,
-	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: clock: socfpga: convert to yaml
-Message-ID: <174681427510.3878879.9476467929074035789.robh@kernel.org>
-References: <20250424144341.45828-1-matthew.gerlach@altera.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tPjzhc3v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cspF8g0wB1UfIi4VlU1VP1raE/nG2FyTs+KY08D+XqM=; b=tPjzhc3vcRS833mSbFJ+ZdUcBj
+	quuCPKO2GsiEeiReDRqPkHH3MczAQ2wRkTiz/ISzztl9+He02NXoUep5QIlmlV6kyaSSVc48dKFTE
+	RLzuvGsm/yyHS9rWKYq0uAgbArYBhgFQQ3Ba5hUrZytSdEll0JwdmoKe9R2SYLGTkTDhANdC0wbel
+	4SzR7A+aYQGPVaviUcxbFtah9arShgkhPvDg4u4bzbAPQ6Ocvh+8kLYfWODUmge8S1nWpgr6lYf/+
+	kMIR6YcQ865znEVuhyv9etq48FnNN99PrHYVYEEQiPxu50X/DrXtF6E6RZ0KtqYh1sjH2Ez7zwOwd
+	/2vUh6dg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uDSC0-0000000DqAm-35Gg;
+	Fri, 09 May 2025 18:11:28 +0000
+Date: Fri, 9 May 2025 19:11:28 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Byungchul Park <byungchul@sk.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net,
+	davem@davemloft.net, john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
+	vishal.moola@gmail.com
+Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct
+ page
+Message-ID: <aB5FUKRV86Tg92b6@casper.infradead.org>
+References: <20250509115126.63190-1-byungchul@sk.com>
+ <20250509115126.63190-20-byungchul@sk.com>
+ <CAHS8izMoS4wwmc363TFJU_XCtOX9vOv5ZQwD_k2oHx40D8hAPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,31 +54,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424144341.45828-1-matthew.gerlach@altera.com>
+In-Reply-To: <CAHS8izMoS4wwmc363TFJU_XCtOX9vOv5ZQwD_k2oHx40D8hAPA@mail.gmail.com>
 
+On Fri, May 09, 2025 at 10:32:08AM -0700, Mina Almasry wrote:
+> Currently the only restriction on net_iov is that some of its fields
+> need to be cache aligned with some of the fields of struct page, but
 
-On Thu, 24 Apr 2025 07:43:41 -0700, Matthew Gerlach wrote:
-> Convert the clock device tree bindings to yaml for the Altera SoCFPGA
-> Cyclone5, Arria5, and Arria10 chip families. Since the clock nodes are
-> subnodes to Altera SOCFPGA Clock Manager, the yaml was added to
-> socfpga-clk-manager.yaml.
+Cache aligned?  Do you mean alias (ie be at the same offset)?
+
+> What I would suggest here is, roughly:
 > 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> ---
-> v3:
->  - Add a properties level to $defs to improve reuse.
+> 1. Add a new struct:
 > 
-> v2:
->  - Fix node name regexs.
->  - Remove redundant type for clocks.
->  - Put repeated properties under '$defs'.
->  - Move reg property after compatible.
-> ---
->  .../arm/altera/socfpga-clk-manager.yaml       | 102 +++++++++++++++++-
->  .../bindings/clock/altr_socfpga.txt           |  30 ------
->  2 files changed, 101 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/altr_socfpga.txt
+>                struct netmem_desc {
+>                        unsigned long pp_magic;
+>                        struct page_pool *pp;
+>                        unsigned long _pp_mapping_pad;
+>                        unsigned long dma_addr;
+>                        atomic_long_t pp_ref_count;
+>                };
 > 
+> 2. Then update struct page to include this entry instead of the definitions:
+> 
+> struct page {
+> ...
+>                struct netmem_desc place_holder_1; /* for page pool */
+> ...
+> }
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+No, the point is to move these fields out of struct page entirely.
 
+At some point (probably this year), we'll actually kmalloc the netmem_desc
+(and shrink struct page), but for now, it'll overlap the other fields
+in struct page.
+
+> 3. And update struct net_iov to also include netmem_desc:
+> 
+> struct net_iov {
+>     struct netmem_desc desc;
+>     struct net_iov_area *owner;
+>     /* More net_iov specific fields in the future */
+> };
+> 
+> And drop patch 1 which does a rename.
+> 
+> Essentially netmem_desc can be an encapsulation of the shared fields
+> between struct page and struct net_iov.
+
+That is not the goal.
