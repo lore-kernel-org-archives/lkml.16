@@ -1,154 +1,115 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C8825FA24;
-	Fri,  9 May 2025 21:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D138525FA10
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827392; cv=none; b=lFMFZx5lZbl7LtUgm5GFngyBM2TGq34iYrFy8QjCXis5sk5CIj6CRjUovG6Ve7z6iHw9MIy5QYXCKC6kcfQTy8pSjsz9vlWWddxC+e+1plF/N151UhAg3LGOWAeg67wr4M8R/lCtQD+0pGU9/hb00PnU0vGmBRb02Idb7hJW3U0=
+	t=1746827439; cv=none; b=f5bUOYGnFHss0rVz9q+o0Bm/+LfH7aQacbYmrmJGOunCwfru/BqhtT56oC16rxGaTkMML9FmuA9F0WuKtFRkwiaB/enaNaC69xkSHUQXr7wL9Ijw4O9olCcxdAfyay+rVeXCnt3bF0mX+WVagDhXqIyJHZ8zQ8jDQaCGZ1MWNxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827392; c=relaxed/simple;
-	bh=ZinlNdkiyCNzwk3CZlDqG9cAdnhvkAgo9icgRAJn/rU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S+urO5OB2IN4cYa4I4F1FId25DUnpn5mrmTDgOrmhjHZ1xLqNgnTdObotKyPngjXX3AOI+A72fRxK88QMuUL/6siwjvIM4QsfzWVO2kUz9LnrNubMhDAY5UpihPkrWFeY/JcraeBdamFsUT/5dVj5nWDaLNYYIJpippMTbDLXDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L9gLSumS; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746827439; c=relaxed/simple;
+	bh=vOxqEgCrICifNtaKDhsZWxwqtUcwlYfTkQ0x/bD3oII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qh8Adm6Su6CvPx0n3Q0AmsRnesKCuwRAuBh+9oE9/fRp24ri1FdWJkOKyFqrxk5JjtKrYRpCyZvs18MbPSwyPnk5NgPbGjgd1Z4q2OrGGJlZot3ccwy9WJOL19UHw9x7W8A3GVyncmaFNdxTU8o6fAYB5801be27Uxz7peS7pbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=qHMxKvjo; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9gLSumS"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso3733933b3a.2;
-        Fri, 09 May 2025 14:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746827390; x=1747432190; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/U9lcKW0lXABVXy+mgpMzNoe/NTD2evxfu2sRExNzas=;
-        b=L9gLSumSx0yIxUYbgEy1stex4IDy6WP+DJVbK/+vJ+R16cxCA/gC86FHIz+/ocy3wW
-         WRL6lfia1kWLvI4ZDVDZMCNGhlfpveRJezzEMOdSbLEeixbAFijAB8jSV0gxcA63ZLMc
-         rz3eK2howQtwj6o1+bYDdtXHNdj4bvnCvaeUR5sphp0reZErAHwm21jtu9q9hTE3izqY
-         2nZoMyeVk3Jslh1jICwDZWlpmUELz/nsIV66tr45ogFdTaKl68qmL8Sh3A0pQCRHkUCn
-         W9If5YXJJogYEdN2Q7UWHSOK5B9nrsBTiOtGTqngqPCKC3qwkV7mtF2Tc/K6gUrLn8E0
-         MdgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746827390; x=1747432190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/U9lcKW0lXABVXy+mgpMzNoe/NTD2evxfu2sRExNzas=;
-        b=BRJ2SWI6Qlr/eljl0TLC2Lo93rafNwqaY1bYhljGCMo2u/gh5/fU5ij26WBjj34PUv
-         OAP5J31Bu/8RI54doMk0juTgkJOWhGAXIX9pvd1JMjVolGeTjdVVslqA0KJ38OKR+gjw
-         qYF3Ix2plsIlGU2+JC3Iw0YqOCIF8SPPQr28tdGcAgJ5eJzfzebqlVXeP+dkCS3XcKlD
-         FLwE0G7HE0WmE2nEVx6kyvsEBmDbXMPmY83+us7tU5wSPk8odV0BgJUF+8ve392mZKqO
-         rVe44eXXw0n83Y27q9J4vR6oZiKacVdazI/Bt/1dkZbyZqT97xjEsWzlY+YghZP4MlSj
-         uP8A==
-X-Forwarded-Encrypted: i=1; AJvYcCV0DEgm8962/El4StREmG/7F28b/vg8wN+bPkBlUyrzB6nqJMcfIubj/ck/pivKLlSrYeQ=@vger.kernel.org, AJvYcCVtBn9NbUeyg/t/LfyNyRW9OebKddzRzqW+sAX7WDkLkWmzNjOutgNb67QJBf06Ds2QZ+ml9VeycihbeAmuf80BMTVS@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAN5urKOOHG8EXGXTk32b0MaWjpxZZfT1mFywDd0oiFXzBmJrs
-	ILPPA40svyNgwEXFiDHiKj53F4H6s4KjOx+iFTXTU+731AvPew8OErPr22wcW83tCU1pMapjITR
-	MLgKOzynqpP17ontc2xF0DsUSYK/NqhDx
-X-Gm-Gg: ASbGncsxzrLSK/s3+ckxG9TcigRsPouIgLmvGc6KxnYFtr6gvJ7/YDxrR9aToqPdMNm
-	5tXOwF0OB9mh0Y6dAb3M+IJy9ffoAz9WkHE7jC6nKwM6vQtnz6oaqY0SeXczUiirmgjmtwPj7Xp
-	EMFOpFoYW3Ch/oXHsRYjH28If1+x53SxMrCCKSrBfPNBenOeOBNvE5k6Rk2x0=
-X-Google-Smtp-Source: AGHT+IHPkwZR/8rn5sjyBGB0IOcQSZZ0Evw9rc/ZNuaIe7vZL0Xarx0Fw1QKpg7ximsYUdfxO7khqTgJocYUArU4xsI=
-X-Received: by 2002:a05:6a21:3182:b0:1f5:8a1d:3904 with SMTP id
- adf61e73a8af0-215abace343mr8147447637.7.1746827389935; Fri, 09 May 2025
- 14:49:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="qHMxKvjo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1746827431;
+ bh=Q/4hTUTysjyHMdWQYAFUoh8JWnAIFyUM8sIjXoykTqA=;
+ b=qHMxKvjocFqI975NhElRqCbaZen3vOTVRat0dmrWZd/W73DGS7x3Q7XSZug2jtb+GdgM43cZ5
+ biCcjP+fK/nUzq9fbPo8yZWLtGeXM8sVpPUUdoxhn0GVIQCPGmchATnxMDqwm1ktiy1LrVqCFUE
+ CgIkxKi6QC/NW199/ZjymQMWka8oNGgVay4pg6kUtrjH43rs7uRpWslcmTUvVIPYxGGv+eekdqN
+ V1/TG7c9ZVyHxuXeapXBF3Xp1wH3uEcaoaAymWR2p1hYjYOhpppKYLnuUp8QhYQGhy26RcNjM/Q
+ C8Ytz+/ysUIDaUBbiGcktLjTP6gm4GfmF6REOY3EBtwg==
+X-Forward-Email-ID: 681e789856028bab66256880
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.2
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <36fb3b11-9a1d-4849-9333-5ef26a217106@kwiboo.se>
+Date: Fri, 9 May 2025 23:50:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509164524.448387100@goodmis.org> <20250509165155.628873521@goodmis.org>
-In-Reply-To: <20250509165155.628873521@goodmis.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 9 May 2025 14:49:37 -0700
-X-Gm-Features: ATxdqUEPWK1bzutKtWy6yxNmKdLWMZCU9skVB9Dn5IFiwho3pByZS297XPGSPQI
-Message-ID: <CAEf4Bzb7MCv87ZEPXvH7APk9yvmtCWvuUO5ShEaLvz_DLfNqpw@mail.gmail.com>
-Subject: Re: [PATCH v8 12/18] unwind deferred: Use SRCU unwind_deferred_task_work()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] rockchip: Enable Ethernet controller on Radxa E20C
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Yao Zi <ziyao@disroot.org>,
+ Chukun Pan <amadeus@jmu.edu.cn>, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250509202402.260038-1-jonas@kwiboo.se>
+ <2728051.BddDVKsqQX@diego>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <2728051.BddDVKsqQX@diego>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 9, 2025 at 9:54=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> Instead of using the callback_mutex to protect the link list of callbacks
-> in unwind_deferred_task_work(), use SRCU instead. This gets called every
-> time a task exits that has to record a stack trace that was requested.
-> This can happen for many tasks on several CPUs at the same time. A mutex
-> is a bottleneck and can cause a bit of contention and slow down performan=
-ce.
->
-> As the callbacks themselves are allowed to sleep, regular RCU can not be
-> used to protect the list. Instead use SRCU, as that still allows the
-> callbacks to sleep and the list can be read without needing to hold the
-> callback_mutex.
->
-> Link: https://lore.kernel.org/all/ca9bd83a-6c80-4ee0-a83c-224b9d60b755@ef=
-ficios.com/
->
-> Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/unwind/deferred.c | 33 +++++++++++++++++++++++++--------
->  1 file changed, 25 insertions(+), 8 deletions(-)
->
-> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-> index 7ae0bec5b36a..5d6976ee648f 100644
-> --- a/kernel/unwind/deferred.c
-> +++ b/kernel/unwind/deferred.c
-> @@ -13,10 +13,11 @@
->
->  #define UNWIND_MAX_ENTRIES 512
->
-> -/* Guards adding to and reading the list of callbacks */
-> +/* Guards adding to or removing from the list of callbacks */
->  static DEFINE_MUTEX(callback_mutex);
->  static LIST_HEAD(callbacks);
->  static unsigned long unwind_mask;
-> +DEFINE_STATIC_SRCU(unwind_srcu);
->
->  /*
->   * Read the task context timestamp, if this is the first caller then
-> @@ -108,6 +109,7 @@ static void unwind_deferred_task_work(struct callback=
-_head *head)
->         struct unwind_work *work;
->         u64 timestamp;
->         struct task_struct *task =3D current;
-> +       int idx;
->
->         if (WARN_ON_ONCE(!info->pending))
->                 return;
-> @@ -133,13 +135,15 @@ static void unwind_deferred_task_work(struct callba=
-ck_head *head)
->
->         timestamp =3D info->timestamp;
->
-> -       guard(mutex)(&callback_mutex);
-> -       list_for_each_entry(work, &callbacks, list) {
-> +       idx =3D srcu_read_lock(&unwind_srcu);
+Hi Heiko,
 
-nit: you could have used guard(srcu)(&unwind_srcu) ?
+On 2025-05-09 23:40, Heiko Stübner wrote:
+> Am Freitag, 9. Mai 2025, 22:23:56 Mitteleuropäische Sommerzeit schrieb Jonas Karlman:
+>> The Rockchip RK3528 has two Ethernet controllers, one 100/10 MAC to be
+>> used with the integrated PHY and a second 1000/100/10 MAC to be used
+>> with an external Ethernet PHY.
+>>
+>> This series add device tree nodes for the Ethernet controllers found in
+>> RK3528 and enable the LAN interface on Radxa E20C.
+>>
+>> This include a gmac0 node for the 100/10 MAC and its related integrated
+>> PHY node that only have recived limited testing. I have no board that
+>> expose an Ethernet port for the gmac0 and the integrated PHY. However,
+>> the PHY can be identified on addr 0x2 as 0044.1400 and in vendor kernel
+>> this relate to the Rockchip RK630 PHY. A proper PHY driver will be
+>> needed to support any real use of gmac0.
+>>
+>> Changes in v3:
+>> - Rebase on top of latest mmind/for-next
+>>
+>> Changes in v2:
+>> - Split from the "Add GMAC support for RK3528" driver series [1]
+> 
+> split from ... was that series merged already?
 
-> +       list_for_each_entry_srcu(work, &callbacks, list,
-> +                                srcu_read_lock_held(&unwind_srcu)) {
->                 if (task->unwind_mask & (1UL << work->bit)) {
->                         work->func(work, &trace, timestamp);
->                         clear_bit(work->bit, &current->unwind_mask);
->                 }
->         }
-> +       srcu_read_unlock(&unwind_srcu, idx);
->  }
->
->  static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *ti=
-mestamp)
+Yes, sorry for not being more clear, the dt-bindings and driver has been
+merged and is already included in v6.15-rc1.
 
-[...]
+https://lore.kernel.org/r/174291544076.609648.8594782943472190694.git-patchwork-notify@kernel.org
+
+Regards,
+Jonas
+
+> 
+> The linked lore-thread only talks about the series needing to be reposted.
+> 
+> 
+> Heiko
+> 
+>> - Add ethernet-phy@2 for the integrated PHY
+>> - Rebase on top of the "Support I2C controllers in RK3528" series [2]
+>>
+>> [1] https://lore.kernel.org/r/20250309232622.1498084-1-jonas@kwiboo.se
+>> [2] https://lore.kernel.org/r/20250309070603.35254-1-ziyao@disroot.org
+>>
+>> Jonas Karlman (2):
+>>   arm64: dts: rockchip: Add GMAC nodes for RK3528
+>>   arm64: dts: rockchip: Enable Ethernet controller on Radxa E20C
+>>
+>>  .../boot/dts/rockchip/rk3528-radxa-e20c.dts   |  30 +++++
+>>  arch/arm64/boot/dts/rockchip/rk3528.dtsi      | 105 ++++++++++++++++++
+>>  2 files changed, 135 insertions(+)
+
+
