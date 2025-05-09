@@ -1,146 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from h5.fbrelay.privateemail.com (h5.fbrelay.privateemail.com [162.0.218.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27FB1E1DE8;
-	Fri,  9 May 2025 19:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE051E1DE8
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746819839; cv=none; b=nUmhIcNWxyTfd+Ct/Pq78H9RW9usYfAq79b0U3hTiu7o+84A4Mx5TnYJxqbKIQ8r7z5A1ZB18LE+zPeYb8/AxFj6cM6IjCvb8Z+lUlNW4qjN9zq0oV6/EWGQsscMNO9aZ4XJQchxhPgQWiAIEYbBuCG3ZFtclhtK/0TVr626RPA=
+	t=1746819850; cv=none; b=mfLrMD3ZdqZggwYQmtjG9WeFoEmXpeOpIePlDFpTkhaEa0W6/JO3AqP3yVirEev55IEd7lyLRcbTCkFdMjgkUdqFJcqXH/ZhBA5n7Q9tMx/H8QfvXoSxolrhOgbQC37B26KEJZhzrzknkxuaQjvuN6sJGlh1+jq4Y26XtSSeKj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746819839; c=relaxed/simple;
-	bh=+ctr+VxutKdvpQrbAZLprliIoOY5xsaFX13IBaOKFYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fs9m1QzIFmX1RwCPzyJlnDH4bQ/4ujieX6E7uPC0JXs7n/cWBTCNAs5FMQyQemsADXL7q7tK0vDKKpEy3kCrLTyHw6QEj1RvzhOY6WlZMaOkRDjUOqO3li7nHvx809UpsbWkqdxsAoct6z2y7cu0eqm6OqBXJAJSnemwfY28w/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3Aqll5P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746819850; c=relaxed/simple;
+	bh=KLLVOUeBCibDY4KhYwgwtIdy91vQuI+qQGgCU3OAQLU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HmgbtJ0GNfxRrLX5Zked9uzgcOEY80ZdyuqpTnNm6Sj8xRCIUEHjkybVdMf78/3IGWFhvOBX3UMde2Doa8BQPxxTVfQEjNRJKrIOSkMGrQaWp53qfvDpdJRMF9bR0+tFwj5/QR+iutHDfk/qRbMiqkZDptcD7O1SQv0LsqfvyUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kenogo.org; spf=pass smtp.mailfrom=kenogo.org; dkim=pass (2048-bit key) header.d=kenogo.org header.i=@kenogo.org header.b=R9G0RMKX; arc=none smtp.client-ip=162.0.218.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kenogo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kenogo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3Aqll5P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D81EC4CEE9;
-	Fri,  9 May 2025 19:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746819839;
-	bh=+ctr+VxutKdvpQrbAZLprliIoOY5xsaFX13IBaOKFYg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3Aqll5PXDGCn1YLqJO5MMfv8hpyctk5XuNbKZCKQo31cb7WU0os1HQ9N0UnecyH0
-	 apbFEGkkWAjd9zIUm1bQnTaf5nST+8Ze7ClKaIIQ6Z2Sh932uRhTcV4G5xHkIOw7OC
-	 lmYc83vAbSNl8ZaJKtm0beQV3RfzyMQ3Q4KLjGRCAjDTGtYp/8zbGDJl9kszhi1RNa
-	 ZhkjUAZDfDEXXSuVJ8h03TMMMECJ2qCUz5r6rAKQNJ3+QTv5VvgaUhYajvSwWoECDS
-	 DbpcEdz0Mq9Bs7+F3VLo5x1jBx5cuN3n4VVowO+P/UBJ9eU7aIY5uN4F74v8AfAG9r
-	 bilj3BncP9TVg==
-Date: Fri, 9 May 2025 21:43:55 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Benjamin Larsson <benjamin.larsson@genexis.eu>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v12] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <pbutokheq6zm4gzjzvhhmxvnse3uudb5obpuyd55z7emlm3pju@7l7hocoktu37>
-References: <20250407173559.29600-1-ansuelsmth@gmail.com>
- <q46vqvt4ebepk47as3vhx24fqfnv2ollatjzjw5hbxtcbaklff@exkozghztvlv>
- <681dfd1e.170a0220.1d9a3f.15ad@mx.google.com>
+	dkim=pass (2048-bit key) header.d=kenogo.org header.i=@kenogo.org header.b="R9G0RMKX"
+Received: from MTA-05-3.privateemail.com (mta-05.privateemail.com [198.54.127.60])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by h5.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4ZvK9f0K6Qz2xMx
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:40:54 +0000 (UTC)
+Received: from mta-05.privateemail.com (localhost [127.0.0.1])
+	by mta-05.privateemail.com (Postfix) with ESMTP id 4ZvK9T5BSDz3hhVp;
+	Fri,  9 May 2025 15:40:45 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=kenogo.org; s=default;
+	t=1746819645; bh=KLLVOUeBCibDY4KhYwgwtIdy91vQuI+qQGgCU3OAQLU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R9G0RMKX+2S8wQK1kSuKHOTc7fdqVFIWbWWmm8VxQp5PpS7R7kjk83Fzng50oFtVO
+	 Cr5olttVRJxKuIEVkS3Cdfw5azpYIBQvNrGWa3m/q/hBAUzMlcHIIVhldM74JKrVZT
+	 w16eI0Douk9siMHCkCEFALfxTqJmpSOPc4AxiTknHQ2pieuH0mk6D6BxErmXJKUpFm
+	 LCeyFInJ8PhOSbtchiRSNeyYqNSPWvoAneS/5oU5AL52FQyrfEqHjkAoBERWBpOIuo
+	 hv2yNV2Qm6beV5dPMO7HEY2MmvzO4G0ZCPsa8InCJ0DcNatNHhD2JHAO87tLuRr63z
+	 6JWVDfAym3ZKw==
+Received: from [IPV6:2a01:599:80c:8378:216:3eff:fe8a:ca6a] (tmo-117-72.customers.d1-online.com [80.187.117.72])
+	by mta-05.privateemail.com (Postfix) with ESMTPA;
+	Fri,  9 May 2025 15:40:34 -0400 (EDT)
+Message-ID: <e598eaa0-3b3b-4c16-9d7c-ff35dd150baa@kenogo.org>
+Date: Fri, 9 May 2025 21:40:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wnvhn7ztzwmbzgi2"
-Content-Disposition: inline
-In-Reply-To: <681dfd1e.170a0220.1d9a3f.15ad@mx.google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: ntp: Adjustment of time_maxerror with 500ppm instead of 15ppm
+To: John Stultz <jstultz@google.com>
+Cc: tglx@linutronix.de, zippel@linux-m68k.org, mingo@elte.hu,
+ linux-kernel@vger.kernel.org, Miroslav Lichvar <mlichvar@redhat.com>
+References: <4a6f1494-c6fe-4f66-a376-b6389538ef9f@kenogo.org>
+ <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com>
+Content-Language: en-US
+From: Keno Goertz <contact@kenogo.org>
+In-Reply-To: <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
+Hey!
 
---wnvhn7ztzwmbzgi2
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v12] pwm: airoha: Add support for EN7581 SoC
-MIME-Version: 1.0
+On 5/8/25 21:45, John Stultz wrote:
+> Have you tried a patch introducing PHI (likely setting it to 15000 as
+> MAXFREQ is represented as nsec/sec) and using it instead of MAXFREQ in
+> the calculation? Do you see any behavioral change in fixing it, or is
+> this just a reporting  correctness issue?
 
-Hello Christian,
+I haven't tried a patch, but I couldn't find any place in the kernel 
+itself that uses time_maxerror.  So I wouldn't expect behavioral changes 
+within the kernel.  Of course, user space applications may depend on the 
+values returned by the adjtimex system call.
 
-On Fri, May 09, 2025 at 03:03:23PM +0200, Christian Marangi wrote:
-> thanks a lot for the review. I was just starting reviewing some patch on
-> patchwork so I could remove some work from you but you were faster...
+In fact, I only noticed this behavior in the first place because I am 
+writing a distributed time-stamping program and the maxerror reported by 
+libc's ntp_gettime (which calls adjtimex on Linux) just felt way too large.
 
-You're still invited to comment ...
-=20
-> On Fri, May 09, 2025 at 12:39:37PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Apr 07, 2025 at 07:35:53PM +0200, Christian Marangi wrote:
-> > > +static void airoha_pwm_get_ticks_from_ns(u64 period_ns, u32 *period_=
-tick,
-> > > +					 u64 duty_ns, u32 *duty_tick)
-> > > +{
-> > > +	u64 tmp_duty_tick;
-> > > +
-> > > +	*period_tick =3D div_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-> > > +
-> > > +	tmp_duty_tick =3D mul_u64_u64_div_u64(duty_ns, AIROHA_PWM_DUTY_FULL,
-> > > +					    period_ns);
-> >=20
-> > So period can be set to multiples of 4 ms. If you request
-> >=20
-> > 	.period_ns =3D 11999 ns
-> > 	.duty_ns =3D 4016 ns
-> >=20
-> > the hardware should configure=20
-> >=20
-> > 	.period =3D 8000 ns
-> > 	.duty_cycle =3D 4015.6862745098038 ns (i.e. 128/255 * period)
-> >=20
-> > corresponding to period_tick =3D 2 and duty_tick =3D 128.
-> >=20
-> > However you calculate duty_tick =3D 85.
-> >=20
-> > I would expect that with having PWM_DEBUG enabled you get a warning when
-> > you do:
-> >=20
-> > 	pwmset -P 8000 -D 4016
-> > 	pwmset -P 11999 -D 4016
-> >=20
->=20
-> I addressed all the other comments but this is the only thing that I'm
-> confused about.
->=20
-> Where 85 comes from?
-
-4016 * 255 / 11999 -> 85. The problem I suspected is that duty_tick is
-calculated using the requested period value instead of the real one.
-
-> I tested your command and I can correctly observe the values getting
-> set to the expected tick.
-
-I didn't recheck in detail and now I'm unsure if that really happens
-because period_ns might be already round to a multiple of 4 ms?
-=20
-> And I don't have the idempotent warning from PWM debug.
->=20
-> With period =3D 8000 and duty to 4016, period tick is set to 0x2 and duty
-> is set to 0x80 (128)
->=20
-> When PWM debug repply the configuration and read the state, it gets
-> period 0x8000 and duty 4015,687.
->=20
-> And those are the expected values. Am I missing something here?
-
-If you don't get the warning, you most probably only miss that I
-misjudged the code :-)
+I'm curious to hear what Miroslav might know about other user space 
+applications that take an interest in this value.
 
 Best regards
-Uwe
-
---wnvhn7ztzwmbzgi2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgeWvgACgkQj4D7WH0S
-/k7ybAgAoC5qkDheAJEB8dWOAQUByinfG0JM9hMhzLzmcJYrkHIFq7BefD0JldS6
-RGHTxqAsWdU0bbbjUY4SU3g1kLYYutqdtb5nrhlPpzVxFhQyRsKEgGj/nLYFOUnB
-ihMfwGGh8puCR/Ghg76K529TeOlPFO3q2iLPpRsfKjRMmY2Lsu7dBg1/NlTefOrj
-alu2nzV/m8Yh18JNw5weSpspr4u1iCjYrMZPI/twYMao6VFPOBg8ARLK/rUo47LF
-cRHCUIu3IrH+fea248J+i0VZp2++Jid/ITspAvL2C5PTBme5mGDoS+oV8S8SGUTl
-nU76C9CE1xuDZ3t/NN5qHakxI4Oosw==
-=cW+x
------END PGP SIGNATURE-----
-
---wnvhn7ztzwmbzgi2--
+Keno
