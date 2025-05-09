@@ -1,121 +1,98 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD10D78F39
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 20:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28B9220F56;
+	Fri,  9 May 2025 20:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746820829; cv=none; b=EPbun8Vi8279YLZ2ytku9y6nk3JGnWlc4MCWGULG0m/LVluIllVwZZbqGiuEjpsx3txdCn+2A13PGBNnNnbqVPyR7KsR+k1cBXJToAiNtbiR+wbfh6uHM/LTouKSz3EhMD2Xz+elnajDx13HB37UFaXOI08DbDF6SqA2RM9o704=
+	t=1746820843; cv=none; b=mxHQEQfzOgPfT3IP2D/p5kKVgHx4IeZyf4QNywyWPQU8DJnqcWGNNire4RA8y5GhJjPf4NKDlNmZ0zjt+LnSSStMk+Ft1htYivtbbzw1+02Zb8IlEDFRk5DEUpwDRLIr1gBM+BtARjWOnOlCMjBSC6JkQyIdE5EFyFev+Ts74QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746820829; c=relaxed/simple;
-	bh=2aZJi90JXyrvmkIK5CBaOEyHjcCKQqsSifXJYutTtDA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Bmrlba1xvN1lpm81aUCv0sw9hp1lhlMRBH4o34O2Svrljzr5IS0Yjyi/eNuD6XlYEv4K8Q7DxeV/8giyF/UDQwK9P1KaOtOjbsMmq3wS6IwtR0UcfGpvfMCxSJdXSihCMtFOaytPCisZEwf6fMaQW63mkK/JqXWnWoiVOic6bMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85db3356bafso434667339f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 13:00:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746820827; x=1747425627;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bCQtphB0FemzCy19IwV6cQERYXbXPlbaTZmPEyFJTGI=;
-        b=jfpFC7q65CfN35Poe1dy0ApI5flXa7/y9fM9hMWNXzY7Tp1odWRT9U3tIrxt2ftxTj
-         7hwe14S0bbZkEpUgqm5O4yuSiXDOvLQih079C7xnzOH2CGVK9VPNxCDh8jVaNLigXxub
-         l4ynGr5o9uft3lzQuZ8i0Hf5yjA4m5PBan8IT+pOwSjt9u0h9WuDlMD01oktZAE4pvzE
-         5O5cXTLqkPIlQDU0D3l3o4In0ynoOTm6Re0+z81cBlbsFbPIdLszR79nS358aCmDiSAH
-         Ty4e3fGMFs4i1uaaVZoQ+xNXxybpOT+QNmj78hRoA4ZdaqaYAUO+XtqsdgTPSGznSN25
-         WbEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVv0qxlqcdDNM0VSeio9bXeEFfhIWV8MAr7nLsi4nk8b4GGvqL4jpSnBSOMN8sTRpXBN6NX3HikjugCk7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiCGzRfeYQFXJ/Fp4NiaisLwCLa0gGx9C66XhxUCkJy+VW0xfd
-	dRRP1sEIlUfSmn0zG2ubjt0T0ZasQJNAo+COztjGr/KY70rjQ7gc45c8rEOkILn31QOaNeBSFkw
-	qJqD3cZgeLwynaoTn2ZqUOlaWoh/jNhdHtp25KYGIZYyq0LHNKImZDow=
-X-Google-Smtp-Source: AGHT+IFS1QqSUbqR7M7CBn7/jSPir9EcUhhf7mriUS+G5//b7VHIh2HGn9UpRPzgIvf03d2pRHHD+iUCvyv3SGjcENr4tG5dY9JM
+	s=arc-20240116; t=1746820843; c=relaxed/simple;
+	bh=s805KXzf1YcWivCU9B8DwY6MQ5X0zCl298WP4agv7us=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uKMw1WiQX5R7YqULPyGDLYfXBzGQ/JuqeUKSvDgTO5LZYzeEDU4Jogx7Izr1H2PigU96iwg6Fia49VpoPQ6Fa1AThHKL5jTjy84zQcO+cR3XIiIAJ4EzBsAL++7OZew0+PyTn9OTt+8NzothwqIran8sAdcQmY1IX2tmKwkWWi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=TYRuy/vq; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="TYRuy/vq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=sUACwQMdDJ75lG0pGjfTnKwjnJF++bZxZNoTnQ2fhcI=; b=TYRuy/vqOjUpiRaH09BEgokIQQ
+	PsFDF5hMwGNEdTqks5SLF/5XSbnIT2Pb2w5I3pqagDPpgG8AF2xjG2m0l9GFNorzEXTunkye/Qejg
+	/w1T/hGQ2kkjtLdE75Na9jKMZHxPaPGdZn2P+Iu4KKNW1IlEpElTszk5x4ax/POSWHPe80cq3sZkl
+	jQPUALICeso7KIr7hcq31YMwJnIH711JlJZgHRQos2Ju5hAKiSdApSD5BzjiSzFvwAT6ELUdrbcm1
+	qiKJN51269Gxllfs8OWjIqsu6BYk5gjEkKkAaJVhimbSKUyhK2Xa3+vMJfyUBGhckcEbSU/kDScAB
+	WI7ZfXlQ==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uDTtb-0004Jo-6g; Fri, 09 May 2025 22:00:35 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH v2 0/5] arm64: dts: rockchip: add ROCK 5B+ support
+Date: Fri,  9 May 2025 22:00:22 +0200
+Message-ID: <174682074870.2029046.8482000655658409755.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
+References: <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3425:b0:867:d48:342b with SMTP id
- ca18e2360f4ac-867636223a2mr517642539f.11.1746820827029; Fri, 09 May 2025
- 13:00:27 -0700 (PDT)
-Date: Fri, 09 May 2025 13:00:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681e5edb.050a0220.a19a9.013e.GAE@google.com>
-Subject: [syzbot] [net?] KMSAN: uninit-value in __ipv6_dev_mc_inc (2)
-From: syzbot <syzbot+3735d5f00e991698985a@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    02ddfb981de8 Merge tag 'scsi-fixes' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=149d2cf4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9dc42c34a3f5c357
-dashboard link: https://syzkaller.appspot.com/bug?extid=3735d5f00e991698985a
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5ca57f5a3f77/disk-02ddfb98.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3f23cbc11e68/vmlinux-02ddfb98.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/73e63afac354/bzImage-02ddfb98.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3735d5f00e991698985a@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in __ipv6_dev_mc_inc+0x4f0/0x1640 net/ipv6/mcast.c:966
- __ipv6_dev_mc_inc+0x4f0/0x1640 net/ipv6/mcast.c:966
- ipv6_dev_mc_inc+0x38/0x50 net/ipv6/mcast.c:997
- addrconf_join_solict net/ipv6/addrconf.c:2242 [inline]
- addrconf_dad_begin net/ipv6/addrconf.c:4100 [inline]
- addrconf_dad_work+0x401/0x1d10 net/ipv6/addrconf.c:4228
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xb97/0x1d90 kernel/workqueue.c:3319
- worker_thread+0xedf/0x1590 kernel/workqueue.c:3400
- kthread+0xd59/0xf00 kernel/kthread.c:464
- ret_from_fork+0x6e/0x90 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Local variable maddr.i.i created at:
- addrconf_join_solict net/ipv6/addrconf.c:2236 [inline]
- addrconf_dad_begin net/ipv6/addrconf.c:4100 [inline]
- addrconf_dad_work+0x244/0x1d10 net/ipv6/addrconf.c:4228
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xb97/0x1d90 kernel/workqueue.c:3319
-
-CPU: 1 UID: 0 PID: 3845 Comm: kworker/u8:19 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8 #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-Workqueue: ipv6_addrconf addrconf_dad_work
-=====================================================
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On Thu, 08 May 2025 19:48:49 +0200, Sebastian Reichel wrote:
+> This series adds support for the ROCK 5B+, which (as the name suggests)
+> is an improved version of the ROCK 5B. It also adds initial USB-C
+> support for both the ROCK 5B and the 5B+.
+> 
+> Changes in PATCHv2:
+>  - Link to v1: https://lore.kernel.org/r/20250324-rock5bp-for-upstream-v1-0-6217edf15b19@kernel.org
+>  - Replaced DT binding patch with the version from NAOKI
+>  - Dropped unused pinctrl for vcc5v0_host_en from the shared DT
+>  - Moved USB-C SBU DC pins to board specific files, since they differ
+>    between Rock 5B and Rock 5B+
+>  - Added pinmux for SBU DC pins
+>  - Rebased to latest version of Heiko's for-next branch
+>  - Disable USB-C on Rock 5B for now
+> 
+> [...]
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Applied, thanks!
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+[1/5] arm64: dts: rockchip: move rock 5b to include file
+      commit: aadfbdcf7e1e7f3892e0e4bdcc3c9c7c9adfb723
+[2/5] arm64: dts: rockchip: move rock 5b to include file
+      commit: aadfbdcf7e1e7f3892e0e4bdcc3c9c7c9adfb723
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+The two above squashed together as intended and talked about
+on IRC.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+[3/5] dt-bindings: arm: rockchip: Add Radxa ROCK 5B+
+      commit: 874c1117621d441e0ef4a609665f228a4b8a1932
+[4/5] arm64: dts: rockchip: add Rock 5B+
+      commit: 376cb9696298df2028afb620a9dc6c4b10a18605
 
-If you want to undo deduplication, reply with:
-#syz undup
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
