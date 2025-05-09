@@ -1,103 +1,189 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D381325F961;
-	Fri,  9 May 2025 21:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746826869; cv=none; b=C6KoyLtscVBtiKlD6FMfkkLsgcvSvYXiW2wCPdYRvj5CIlo67z8LSSdBtj4NOk+AIvDaZ0XS8iXWWC1iXmeWfFleIxKN9pminp8fuzILYgftiesgJC4bnEeff2+D/qtSQgj0OgvxcLan+lrGRipFnBjhpiKgOZHnLlnKw5GZ/RI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746826869; c=relaxed/simple;
-	bh=CeptbMj8Es7NbetOd37wgFr6qLJPRhceR8D9rh79e5s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KsFi/LOukVcmfLyMMkr7UAENOTYw3bH3y8qArtvBL5FhvbX2WAVt/FA7kCJzzATbc3BWdXhq0++whYMMW7k/tei3P0wk7Cin3zpgkVzSxH2bZ0TiTb7wPJlo3rZh5fDifzSxjCAcnCTnLeEbevHP5SA8zz9CcyIQTUWf41hwV1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Rzyaa8sQ; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A896225C82E;
+	Fri,  9 May 2025 21:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746826987; cv=pass; b=DgnK2OS32ftI3iypPJKQjJnJkBw5XiBoW9qRIedcHbSrSixOPYnB9ZaZ5pVa+Zc4fo98iCGixbkRAK+ZxLuOk/LuLLHdvCjeUkdjyPBTR0MUyhUY8Dz/pMLPXA0tTS1nB46XCTchgnT0gcR/b8pX+X9vnAV7VkzSDVeKJkYvK9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746826987; c=relaxed/simple;
+	bh=3hwjDaebYOfFUJ/ZHzCyOJHtNHDwmdFy5WsivJNN/tg=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gtqVOHanKENhZ6u41Mltk8dY74Wdz7z/PDyUXXILnCfDMxb340GFprhd0J/R4wbY8Bl+n8vDob9vddM2MIv3Vo31qmLPZvDB0zLjipnYazyYxaETRs1dIwEsvcIOIl41PpczT6nhra9yE8x5g7y1X2Gxk+DjW/UmleC4eeJGtH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Jucn2dsF; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Rzyaa8sQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=4NnvhEy7eKpv6yWsDNTdTDOS3gwfxi78lgDlzZL6Ozw=; b=Rzyaa8sQrkA51gLAga5MF6OA6C
-	QOyGED9EqCuzTyEvYER4V7TSxNtPA5sBxfNFJhytT6GuGwLJ/cS9/TCsXxMZ9hC/KkZl1+MSuy1RD
-	FNgeAraozsudfuwXEz6m7bVKnBXN2GsBW1tBQ77FseLXglNfzqCcKPe6pnP4zuQiL/uYulYW2sR1E
-	N4d72gCl8sUhivv2Grw2NiQFAaYc1AxJ/aJuEpOfZqKi0AENAygPpbzTX0Mxe3Ik0kHo5RAVog1iz
-	Z8syAbwzL9LnDxSkWl6/C6UKZ2gz4wA8LxZIkfdrlHhrkXJQ8DeSvPXoO7QzsyG9RrVnpQpNk8qxQ
-	8OhbNE3g==;
-Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uDVSj-0006A9-LB; Fri, 09 May 2025 23:40:57 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>
-Cc: Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Jonas Karlman <jonas@kwiboo.se>
-Subject: Re: [PATCH v3 0/2] rockchip: Enable Ethernet controller on Radxa E20C
-Date: Fri, 09 May 2025 23:40:56 +0200
-Message-ID: <2728051.BddDVKsqQX@diego>
-In-Reply-To: <20250509202402.260038-1-jonas@kwiboo.se>
-References: <20250509202402.260038-1-jonas@kwiboo.se>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Jucn2dsF"
+ARC-Seal: i=1; a=rsa-sha256; t=1746826951; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VMGUGMc2VA7dXaFDn98icvQbJGDA45Cvk2SbMdmMorjdfpiEUem9BAceT+MvS5nXTiKJXD+5kdoshfGhKyTolhbdx2f46tDtPEDEbXbmjoPJIX18kFDJ2tmRK1Ugx6oGyKGbRcPfynddbKyyL/ibtqfB7V5fCHGVjtIK7oPXkmk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746826951; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=owVjo58ul/GnTuZG0UmMNti1i3FStOLBCiI8f4mUzlc=; 
+	b=epYErGucFPGTrkSF9PC3xfrnbI7gpmq+sntHtZ4bRPhJxTf/SY2ivg02QhgZAbok7KZ2NHcg1KZptcXeyjKRv+y47RBrObwwQO4qKecHyAm1mb5CVeHxZTooLxyiNcTQJr6tyA3xo7jG97ykKEpzcKIqo0WYTIqgsNxZ1U+rfOY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746826951;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=owVjo58ul/GnTuZG0UmMNti1i3FStOLBCiI8f4mUzlc=;
+	b=Jucn2dsFcUL+5iir6UEK3Ud3Yc+5pMcA43ECvIxdupv7UsaufyePfnYa+Q1bFjfj
+	GhNOKyc1DbjddSAAgDGiJjfvddFp0/tetQT6T2MK3kXoTT1ZL7AvZphmyeOU3EEVI4r
+	kqJM2ikZMQ4bic/RnUW5s/W2w20cCIPoMn/t+oik=
+Received: by mx.zohomail.com with SMTPS id 1746826949914316.9241470000976;
+	Fri, 9 May 2025 14:42:29 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH 3/4] rust: drm: gem: s/into_gem_obj()/as_gem_obj()/
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250501183717.2058109-4-lyude@redhat.com>
+Date: Fri, 9 May 2025 18:42:12 -0300
+Cc: dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Asahi Lina <lina@asahilina.net>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Message-Id: <128B16D7-2E18-440E-A2EE-C7194194D7D3@collabora.com>
+References: <20250501183717.2058109-1-lyude@redhat.com>
+ <20250501183717.2058109-4-lyude@redhat.com>
+To: Lyude Paul <lyude@redhat.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
-Am Freitag, 9. Mai 2025, 22:23:56 Mitteleurop=C3=A4ische Sommerzeit schrieb=
- Jonas Karlman:
-> The Rockchip RK3528 has two Ethernet controllers, one 100/10 MAC to be
-> used with the integrated PHY and a second 1000/100/10 MAC to be used
-> with an external Ethernet PHY.
->=20
-> This series add device tree nodes for the Ethernet controllers found in
-> RK3528 and enable the LAN interface on Radxa E20C.
->=20
-> This include a gmac0 node for the 100/10 MAC and its related integrated
-> PHY node that only have recived limited testing. I have no board that
-> expose an Ethernet port for the gmac0 and the integrated PHY. However,
-> the PHY can be identified on addr 0x2 as 0044.1400 and in vendor kernel
-> this relate to the Rockchip RK630 PHY. A proper PHY driver will be
-> needed to support any real use of gmac0.
->=20
-> Changes in v3:
-> - Rebase on top of latest mmind/for-next
->=20
-> Changes in v2:
-> - Split from the "Add GMAC support for RK3528" driver series [1]
+Hi Lyude,
 
-split from ... was that series merged already?
-
-The linked lore-thread only talks about the series needing to be reposted.
-
-
-Heiko
-
-> - Add ethernet-phy@2 for the integrated PHY
-> - Rebase on top of the "Support I2C controllers in RK3528" series [2]
+> On 1 May 2025, at 15:33, Lyude Paul <lyude@redhat.com> wrote:
 >=20
-> [1] https://lore.kernel.org/r/20250309232622.1498084-1-jonas@kwiboo.se
-> [2] https://lore.kernel.org/r/20250309070603.35254-1-ziyao@disroot.org
+> There's a few changes here:
+> * The rename, of course (this should also let us drop the clippy =
+annotation
+>  here)
+> * Return *mut bindings::drm_gem_object instead of
+>  &Opaque<bindings::drm_gem_object> - the latter doesn't really have =
+any
+>  benefit and just results in conversion from the rust type to the C =
+type
+>  having to be more verbose than necessary.
 >=20
-> Jonas Karlman (2):
->   arm64: dts: rockchip: Add GMAC nodes for RK3528
->   arm64: dts: rockchip: Enable Ethernet controller on Radxa E20C
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+> rust/kernel/drm/gem/mod.rs | 21 +++++++--------------
+> 1 file changed, 7 insertions(+), 14 deletions(-)
 >=20
->  .../boot/dts/rockchip/rk3528-radxa-e20c.dts   |  30 +++++
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi      | 105 ++++++++++++++++++
->  2 files changed, 135 insertions(+)
+> diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
+> index f70531889c21f..55b2f1d056c39 100644
+> --- a/rust/kernel/drm/gem/mod.rs
+> +++ b/rust/kernel/drm/gem/mod.rs
+> @@ -42,8 +42,7 @@ pub trait IntoGEMObject: Sized + =
+super::private::Sealed {
+>=20
+>     /// Returns a reference to the raw `drm_gem_object` structure, =
+which must be valid as long as
+>     /// this owning object is valid.
+> -    #[allow(clippy::wrong_self_convention)]
+> -    fn into_gem_obj(&self) -> &Opaque<bindings::drm_gem_object>;
+> +    fn as_gem_obj(&self) -> *mut bindings::drm_gem_object;
+>=20
+>     /// Converts a pointer to a `struct drm_gem_object` into a =
+reference to `Self`.
+>     ///
+> @@ -99,8 +98,8 @@ extern "C" fn close_callback<T: BaseDriverObject<U>, =
+U: BaseObject>(
+> impl<T: DriverObject> IntoGEMObject for Object<T> {
+>     type Driver =3D T::Driver;
+>=20
+> -    fn into_gem_obj(&self) -> &Opaque<bindings::drm_gem_object> {
+> -        &self.obj
+> +    fn as_gem_obj(&self) -> *mut bindings::drm_gem_object {
+> +        self.obj.get()
+>     }
+>=20
+>     unsafe fn as_ref<'a>(self_ptr: *mut bindings::drm_gem_object) -> =
+&'a Self {
+> @@ -119,7 +118,7 @@ pub trait BaseObject
+>     fn size(&self) -> usize {
+>         // SAFETY: `self.into_gem_obj()` is guaranteed to be a pointer =
+to a valid `struct
+>         // drm_gem_object`.
+> -        unsafe { (*self.into_gem_obj().get()).size }
+> +        unsafe { (*self.as_gem_obj()).size }
+>     }
+>=20
+>     /// Creates a new handle for the object associated with a given =
+`File`
+> @@ -131,11 +130,7 @@ fn create_handle(
+>         let mut handle: u32 =3D 0;
+>         // SAFETY: The arguments are all valid per the type =
+invariants.
+>         to_result(unsafe {
+> -            bindings::drm_gem_handle_create(
+> -                file.as_raw().cast(),
+> -                self.into_gem_obj().get(),
+> -                &mut handle,
+> -            )
+> +            bindings::drm_gem_handle_create(file.as_raw().cast(), =
+self.as_gem_obj(), &mut handle)
+>         })?;
+>         Ok(handle)
+>     }
+> @@ -171,13 +166,11 @@ fn lookup_handle(
+>     /// Creates an mmap offset to map the object from userspace.
+>     fn create_mmap_offset(&self) -> Result<u64> {
+>         // SAFETY: The arguments are valid per the type invariant.
+> -        to_result(unsafe { =
+bindings::drm_gem_create_mmap_offset(self.into_gem_obj().get()) })?;
+> +        to_result(unsafe { =
+bindings::drm_gem_create_mmap_offset(self.as_gem_obj()) })?;
+>=20
+>         // SAFETY: The arguments are valid per the type invariant.
+>         Ok(unsafe {
+> -            bindings::drm_vma_node_offset_addr(ptr::addr_of_mut!(
+> -                (*self.into_gem_obj().get()).vma_node
+> -            ))
+> +            =
+bindings::drm_vma_node_offset_addr(ptr::addr_of_mut!((*self.as_gem_obj()).=
+vma_node))
+
+Hmm, I thought we were on a quest to remove addr_of_mut!() in favor of =
+&raw mut?
+
+Anyways, this is again orthogonal to your patch.
+
+>         })
+>     }
+> }
+> --=20
+> 2.48.1
 >=20
 >=20
 
+This looks good.
 
-
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 
