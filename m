@@ -1,105 +1,146 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7099025DB17;
-	Fri,  9 May 2025 19:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27FB1E1DE8;
+	Fri,  9 May 2025 19:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746819465; cv=none; b=ki58WrVTVVhanzKQAcr9MMBr1X52QPx0r+j26WT+NQXNPAL7xelNIHId7wK+CQYMetA+OnqrZHggnz5F+v2FQcBK0PzTQSuqiIItRi9bfywuzeMVDJtuYzHwN5cs0gI/aSrVQcyCUQlk4jBJBYS8R5ztRX/+nOs2NtJgCnj9hag=
+	t=1746819839; cv=none; b=nUmhIcNWxyTfd+Ct/Pq78H9RW9usYfAq79b0U3hTiu7o+84A4Mx5TnYJxqbKIQ8r7z5A1ZB18LE+zPeYb8/AxFj6cM6IjCvb8Z+lUlNW4qjN9zq0oV6/EWGQsscMNO9aZ4XJQchxhPgQWiAIEYbBuCG3ZFtclhtK/0TVr626RPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746819465; c=relaxed/simple;
-	bh=8ZVz+sM2e38LEUbul09GjJfrj5dzyu8vCUAhuzz5CWk=;
+	s=arc-20240116; t=1746819839; c=relaxed/simple;
+	bh=+ctr+VxutKdvpQrbAZLprliIoOY5xsaFX13IBaOKFYg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bRLtdJ1rHXFkqpei6eRy42nNpM6FeX/e/Kq3Us/YVcwJJcoWUQ7PIohe6jMNrj7uZlELAppKz+bn5URc1yiO1nt4y/TjNC+v5L/64vfMVPEm5/BxQAcpWnl249Ad+OuNRIMhujybtgI9+e1J3YO3+WSy6H2j4wcPTb3IoyLKVs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CGHBQHWe; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fs9m1QzIFmX1RwCPzyJlnDH4bQ/4ujieX6E7uPC0JXs7n/cWBTCNAs5FMQyQemsADXL7q7tK0vDKKpEy3kCrLTyHw6QEj1RvzhOY6WlZMaOkRDjUOqO3li7nHvx809UpsbWkqdxsAoct6z2y7cu0eqm6OqBXJAJSnemwfY28w/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3Aqll5P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CGHBQHWe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 562C940E023E;
-	Fri,  9 May 2025 19:37:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1dJBXWql5nCj; Fri,  9 May 2025 19:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746819455; bh=KZxuyNV+T/kC6I+JBt8h1fqec+RQznGYJxv2+6xlmsk=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3Aqll5P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D81EC4CEE9;
+	Fri,  9 May 2025 19:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746819839;
+	bh=+ctr+VxutKdvpQrbAZLprliIoOY5xsaFX13IBaOKFYg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CGHBQHWeU+grgUNGE19DOAdePgmdRhszVJUUO6w66pAkS/7NPngyEfaj7SvLSSRva
-	 cD5n7eVSVZ7h+h46SLWnGUfCaickXT48zxlik/5NEyUVhOzIhCbB19gJGucfln/Vzf
-	 Inr7FX2Y6JMg9rC/gFWqYL3uNlkM2Zkm7tSO9S04VZwebpazADz2+t4TiBKm+XC3l3
-	 PA2EjIjNVCbB2jkKHeKhqFUBhjKXrOEGDn6M/EdSbZMZ+6sp91AQRkmivnwlNY1JJI
-	 G+XgMYt1sWXcm5b2I2KIgak64p8yc88ffaKuQ0Ao5XIDv698o1sWNH2LWius7Rrj4+
-	 NNmUVajFmqBBtYVxlXbBpiyHE/kr+JZ7om32W+6yEpIZvyRiERDvCtvrEkTudzp4fR
-	 RaBVwpFd4ihgpDpVNH/vS0rVe0J8aYGT0nWgtae1K1GBUD8evjXZElS/oFFqGMIYRa
-	 OYPU3lJyWCYloRZtAeNCzb9Cbcb+vFTEd4NRUb0DhE7sM4j7qupLlUhxzBP54++kZY
-	 oyhA+aemGWarEbkQNgaS7OAa5hgedgJeBrK6m5gbbphZVFEn1MLe1HhykN+aO+8pOU
-	 ECpprSlFAsty8PZ0+qD5J5ACJH3I7LEOEtrt1uFcPCg2UnMUrUXxyhOIAbpvkxjlAW
-	 89x7Q7ohM5zzVbsQGEpD1Y5o=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E151E40E015E;
-	Fri,  9 May 2025 19:37:27 +0000 (UTC)
-Date: Fri, 9 May 2025 21:37:21 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH v3 15/17] x86/mce/amd: Support SMCA Corrected Error
- Interrupt
-Message-ID: <20250509193721.GRaB5ZccvAs9ST_3IM@fat_crate.local>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
- <20250415-wip-mca-updates-v3-15-8ffd9eb4aa56@amd.com>
+	b=g3Aqll5PXDGCn1YLqJO5MMfv8hpyctk5XuNbKZCKQo31cb7WU0os1HQ9N0UnecyH0
+	 apbFEGkkWAjd9zIUm1bQnTaf5nST+8Ze7ClKaIIQ6Z2Sh932uRhTcV4G5xHkIOw7OC
+	 lmYc83vAbSNl8ZaJKtm0beQV3RfzyMQ3Q4KLjGRCAjDTGtYp/8zbGDJl9kszhi1RNa
+	 ZhkjUAZDfDEXXSuVJ8h03TMMMECJ2qCUz5r6rAKQNJ3+QTv5VvgaUhYajvSwWoECDS
+	 DbpcEdz0Mq9Bs7+F3VLo5x1jBx5cuN3n4VVowO+P/UBJ9eU7aIY5uN4F74v8AfAG9r
+	 bilj3BncP9TVg==
+Date: Fri, 9 May 2025 21:43:55 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Benjamin Larsson <benjamin.larsson@genexis.eu>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v12] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <pbutokheq6zm4gzjzvhhmxvnse3uudb5obpuyd55z7emlm3pju@7l7hocoktu37>
+References: <20250407173559.29600-1-ansuelsmth@gmail.com>
+ <q46vqvt4ebepk47as3vhx24fqfnv2ollatjzjw5hbxtcbaklff@exkozghztvlv>
+ <681dfd1e.170a0220.1d9a3f.15ad@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wnvhn7ztzwmbzgi2"
 Content-Disposition: inline
-In-Reply-To: <20250415-wip-mca-updates-v3-15-8ffd9eb4aa56@amd.com>
+In-Reply-To: <681dfd1e.170a0220.1d9a3f.15ad@mx.google.com>
 
-On Tue, Apr 15, 2025 at 02:55:10PM +0000, Yazen Ghannam wrote:
-> @@ -306,6 +306,11 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
->  			high |= BIT(5);
->  		}
 
-Yeah, the above statements explain in comments what they do so that we don't
-have to define the bits but use them straight "naked" with the BIT macro.
-I think you'd need to put something along the lines of that text...
+--wnvhn7ztzwmbzgi2
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v12] pwm: airoha: Add support for EN7581 SoC
+MIME-Version: 1.0
 
-> Check for the feature bit in the MCA_CONFIG register and confirm that
-> the MCA thresholding interrupt handler is already enabled. If successful,
-> set the feature enable bit in the MCA_CONFIG register to indicate to the
-> Platform that the OS is ready for the interrupt.
+Hello Christian,
 
-... here.
+On Fri, May 09, 2025 at 03:03:23PM +0200, Christian Marangi wrote:
+> thanks a lot for the review. I was just starting reviewing some patch on
+> patchwork so I could remove some work from you but you were faster...
 
-<---
+You're still invited to comment ...
+=20
+> On Fri, May 09, 2025 at 12:39:37PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Apr 07, 2025 at 07:35:53PM +0200, Christian Marangi wrote:
+> > > +static void airoha_pwm_get_ticks_from_ns(u64 period_ns, u32 *period_=
+tick,
+> > > +					 u64 duty_ns, u32 *duty_tick)
+> > > +{
+> > > +	u64 tmp_duty_tick;
+> > > +
+> > > +	*period_tick =3D div_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
+> > > +
+> > > +	tmp_duty_tick =3D mul_u64_u64_div_u64(duty_ns, AIROHA_PWM_DUTY_FULL,
+> > > +					    period_ns);
+> >=20
+> > So period can be set to multiples of 4 ms. If you request
+> >=20
+> > 	.period_ns =3D 11999 ns
+> > 	.duty_ns =3D 4016 ns
+> >=20
+> > the hardware should configure=20
+> >=20
+> > 	.period =3D 8000 ns
+> > 	.duty_cycle =3D 4015.6862745098038 ns (i.e. 128/255 * period)
+> >=20
+> > corresponding to period_tick =3D 2 and duty_tick =3D 128.
+> >=20
+> > However you calculate duty_tick =3D 85.
+> >=20
+> > I would expect that with having PWM_DEBUG enabled you get a warning when
+> > you do:
+> >=20
+> > 	pwmset -P 8000 -D 4016
+> > 	pwmset -P 11999 -D 4016
+> >=20
+>=20
+> I addressed all the other comments but this is the only thing that I'm
+> confused about.
+>=20
+> Where 85 comes from?
 
-> +		if ((low & BIT(10)) && data->thr_intr_en) {
-> +			__set_bit(bank, data->thr_intr_banks);
-> +			high |= BIT(8);
-> +		}
-> +
->  		this_cpu_ptr(mce_banks_array)[bank].lsb_in_status = !!(low & BIT(8));
->  
->  		wrmsr(smca_config, low, high);
-> 
-> -- 
-> 2.49.0
-> 
+4016 * 255 / 11999 -> 85. The problem I suspected is that duty_tick is
+calculated using the requested period value instead of the real one.
 
--- 
-Regards/Gruss,
-    Boris.
+> I tested your command and I can correctly observe the values getting
+> set to the expected tick.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I didn't recheck in detail and now I'm unsure if that really happens
+because period_ns might be already round to a multiple of 4 ms?
+=20
+> And I don't have the idempotent warning from PWM debug.
+>=20
+> With period =3D 8000 and duty to 4016, period tick is set to 0x2 and duty
+> is set to 0x80 (128)
+>=20
+> When PWM debug repply the configuration and read the state, it gets
+> period 0x8000 and duty 4015,687.
+>=20
+> And those are the expected values. Am I missing something here?
+
+If you don't get the warning, you most probably only miss that I
+misjudged the code :-)
+
+Best regards
+Uwe
+
+--wnvhn7ztzwmbzgi2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgeWvgACgkQj4D7WH0S
+/k7ybAgAoC5qkDheAJEB8dWOAQUByinfG0JM9hMhzLzmcJYrkHIFq7BefD0JldS6
+RGHTxqAsWdU0bbbjUY4SU3g1kLYYutqdtb5nrhlPpzVxFhQyRsKEgGj/nLYFOUnB
+ihMfwGGh8puCR/Ghg76K529TeOlPFO3q2iLPpRsfKjRMmY2Lsu7dBg1/NlTefOrj
+alu2nzV/m8Yh18JNw5weSpspr4u1iCjYrMZPI/twYMao6VFPOBg8ARLK/rUo47LF
+cRHCUIu3IrH+fea248J+i0VZp2++Jid/ITspAvL2C5PTBme5mGDoS+oV8S8SGUTl
+nU76C9CE1xuDZ3t/NN5qHakxI4Oosw==
+=cW+x
+-----END PGP SIGNATURE-----
+
+--wnvhn7ztzwmbzgi2--
