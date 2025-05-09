@@ -1,80 +1,185 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F7326C380
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CA5D53C;
+	Fri,  9 May 2025 06:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746772761; cv=none; b=vAGuo9cg+7ATTBw1q8+pDEwgYUrn+qj7sbUjhCqA1bvN7wwp+Jd5pLTKDK5MODylWycrBltrpwhF/+r5nJ3gj/reZZiNxV+/EJ6gRsbKNpatetXpt5GrHAXDLcb2+HbPL0ChFQg3FfpbnMx7wVzDt3vJGKnP4YcV8RpsE3nkneQ=
+	t=1746772831; cv=none; b=WDX/fEiVWlODX/cFbFV4ayHoXgbC1w1cjxjf3T7hzshXq2GNDL8Bk3czGFBzB//zKk4l59MwpclQCUIjBhacXefKVJB6dmPDYx7v4RJTVKiAytrqLeo7QoZkm/tp+HfGY21+/RkS1NZnNRUTcEovGLz1gWxgS4+R46nkaCc8II0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746772761; c=relaxed/simple;
-	bh=+3Cx4Rb8aolns0GsK5RoTi+ZhoenOsry2wQ5+MveQS4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZiOCCifz7+LpGWWMnwez0LCfKPI8/zJHlapQSTB52xJYUvsm9rLQVbaDm9h6ok0QUMFa4Pd6pccSTM7k0mjz3kLvJfLXv2a7a4+UaWljgDQ9o+BzCg0AhkUDTtz7/dybM79l4i7c5mPtLX1lhHA3+oojTW402wj1/6EyndHW0h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=HRPH0sdR; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1746772831; c=relaxed/simple;
+	bh=efT4gy3DPSJVddrgV3Coynq8JjHJLhPlxsgqiMB2KA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AtOkGYOlykcErgdrRztF307Oalprbk5FVMGAEdk3ChBA1x8T8C5DFOaDeQfKCAvgv9DJp/78I06lJjAaQNDoI8gxxpO9JOk99rpGEwyESUE+6nFuUMyfmbc4mgWMehrkfSc5xKgk665srgNLdQ0BqpS3aHZSbRG1Iw5tVhmc6Hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7XwOpH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="HRPH0sdR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1746772757;
- bh=RGGUWsD6mE/MPYlXlrelAUBFwk7Si62HhFTya0QjVbo=;
- b=HRPH0sdRWcqEoqOzbCIdHeWVcCrGprThINHV1cWThucwfABNZOhteQKZCrMMmOOr8g903NHhM
- D/pFpcfdVG69AhyRpXRcusHYuILPQTEGNUjxeAyz5XFCVCCoHB4kXrspp5gHVzhA7yBs0udeNxW
- kwPDyICSqF3nude6txsIobps5GXnY0+F4y1HtrL1Lc3vJGNSCfS//TDqrLIM83Neo0WkqC8G9fI
- iq9EnKzCRlRg/MxBTsnAKOag/5nZVHq0UTjWJZ0ibBLJTpUNi+Kyjmh2xV25gd5MtkeEiGdq0D2
- r+tD8dihqaLOPrbpHkFwBBdkPnve422PuYbQjF04weuw==
-X-Forward-Email-ID: 681da3124a62bf69f80b0c57
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <77c35f99-eb71-4d64-a2e1-e9cf9f6ffa4f@kwiboo.se>
-Date: Fri, 9 May 2025 08:39:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7XwOpH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A1BC4CEE4;
+	Fri,  9 May 2025 06:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746772830;
+	bh=efT4gy3DPSJVddrgV3Coynq8JjHJLhPlxsgqiMB2KA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j7XwOpH5E6EltH7WTXdpxVBPYMzno7SRjM/s9++39HRHcEijg1HXhFRtp/yg44q6l
+	 y7dszeimOpth5KQTRYPe2xHrpebYWpiW0cBjvmy3+1iZsqGvpBApip9ax9cgIivGAm
+	 3/K/iZPwmnlnnCvPVp9QmTbgSgWOb2vgiyNuGF2lFt2smO41K4jjEJIrxvcpql5Tvq
+	 i9owDKb8IIt7cuGCYG7shtzr5+Ib/VobAsQI1l+5JsmVevnL8al/+Oe+SbpQGaAZ7v
+	 8M/NYJlJUVNLstW+lw0lDCuJHKjEm4xm7DGNMKfQiSdzcIP4rD3dGoO1z7USZnnAIU
+	 KYUKhfXaCAPFA==
+Date: Fri, 9 May 2025 08:40:28 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nick Hu <nick.hu@sifive.com>
+Cc: Cyan Yang <cyan.yang@sifive.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH] dt-bindings: power: Add SiFive Domain Management
+ controllers
+Message-ID: <20250509-small-graceful-limpet-d0ea41@kuoka>
+References: <20250509021605.26764-1-nick.hu@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] arm64: dts: rockchip: Enable SD-card interface on
- Radxa E20C
-To: Yao Zi <ziyao@disroot.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chukun Pan <amadeus@jmu.edu.cn>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250508234829.27111-2-ziyao@disroot.org>
- <20250508234829.27111-4-ziyao@disroot.org>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250508234829.27111-4-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250509021605.26764-1-nick.hu@sifive.com>
 
-On 2025-05-09 01:48, Yao Zi wrote:
-> SD-card is available on Radxa E20C board.
+On Fri, May 09, 2025 at 10:16:04AM GMT, Nick Hu wrote:
+> SiFive Domain Management controller includes the following components
+> - SiFive Tile Management Controller
+> - SiFive Cluster Management Controller
+> - SiFive Core Complex Management Controller
 > 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-
-This has not changed since v4, so this is still [1]:
-
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
-
-[1] https://lore.kernel.org/r/f19f11f7-c020-44a3-84fa-eb9ca48ed11f@kwiboo.se/
-
-Regards,
-Jonas
-
+> These controllers control the clock and power domain of the
+> corresponding domain.
+> 
+> Signed-off-by: Nick Hu <nick.hu@sifive.com>
+> Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
 > ---
->  .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
+>  .../devicetree/bindings/power/sifive,tmc.yaml | 89 +++++++++++++++++++
 
-[snip]
+Where is a patch with the driver (user of the binding)?
+
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/sifive,tmc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/sifive,tmc.yaml b/Documentation/devicetree/bindings/power/sifive,tmc.yaml
+> new file mode 100644
+> index 000000000000..7ed4f290b94b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/sifive,tmc.yaml
+> @@ -0,0 +1,89 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/sifive,tmc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SiFive Domain Management Controller
+> +
+> +maintainers:
+> +  - Cyan Yang <cyan.yang@sifive.com>
+> +  - Nick Hu <nick.hu@sifive.com>
+> +  - Samuel Holland <samuel.holland@sifive.com>
+> +
+> +description: |
+> +  This is the device tree binding for the following SiFive Domain Management Controllers.
+
+Explain the hardware, not that "binding is a binding for ...".
+
+Also, wrap according to Linux coding style.
+
+
+> +  - Tile Management Controller
+> +      - TMC0
+> +      - TMC1
+> +      - TMC2
+> +      - TMC3
+> +  - Subsystem Management Controller
+> +      - SMC0
+> +      - SMC1
+> +      - SMC2
+> +      - SMC3
+> +  - Cluster Management Controller
+> +      - CMC2
+> +      - CMC3
+> +  SiFive Domain Management Controllers support the SiFive Quiet Interface
+> +  Protocol (SQIP) starting from the Version 1. The control method is
+> +  different from the Version 0, making them incompatible.
+> +
+> +allOf:
+> +  - $ref: power-domain.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - {}
+> +          - pattern: "^sifive,[ts]mc0$"
+> +      - items:
+> +          - {}
+> +          - pattern: "^sifive,[ts]mc3$"
+> +          - pattern: "^sifive,[ts]mc2$"
+> +          - pattern: "^sifive,[ts]mc1$"
+> +      - items:
+> +          - {}
+> +          - pattern: "^sifive,[ts]mc2$"
+> +          - pattern: "^sifive,[ts]mc1$"
+> +      - items:
+> +          - {}
+> +          - pattern: "^sifive,[ts]mc1$"
+> +      - items:
+> +          - {}
+> +          - const: sifive,cmc3
+> +          - const: sifive,cmc2
+> +      - items:
+> +          - {}
+> +          - const: sifive,cmc2
+
+All of this is just unexpected. Why any compatible should come with
+these? You need to use SoC specific compatibles.
+
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  sifive,feature-level:
+> +    description: |
+> +      Supported power features. This property is absent if the full set of features
+> +      is supported
+
+Compatible defines this. Drop.
+
+
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: ["nopg", "ceasepg", "runonlypg"]
+> +
+> +  "#power-domain-cells":
+> +    const: 0
+> +
+> +if:
+> +  not:
+> +    properties:
+> +      compatible:
+> +        contains:
+> +          pattern: "^sifive,[tsc]mc3$"
+> +then:
+> +  properties:
+> +    sifive,feature-level: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+
+Missing example.
+
+Best regards,
+Krzysztof
 
