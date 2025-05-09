@@ -1,141 +1,216 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5B021A434;
-	Fri,  9 May 2025 10:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A696728D841;
+	Fri,  9 May 2025 10:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746786091; cv=none; b=VViw2gTlJcZogrUSoFiRddk4ybMgh3spwMrllKPj9lfhzAYauBzrk4iSgXgX76s+6eFuix4G7A2zK68UQt+qOAK+J4O6ZTzpPSit/9Ia1G3zQyQ+tIg3EV+wrE2Wtq6TDsclMfLOBzks3oskzC13t0ibmk2/dME2ybRf0yskKeE=
+	t=1746786124; cv=none; b=UGmMLcaqgoYgIE0XdhYko55vr/+O5cAUm+LkB5qj0sJZ15Hh7/8/kCLPFqeuYey5oBQ0YdIz7/GDHzcgi7VAeDbA8Rlfb2ZVIYBT5jdSLVx5WdiC7qApTIdm43xWNkhMopNU2HjSdULcW3/RC4M7g7cSqJ8TryUDSHmX++/G1gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746786091; c=relaxed/simple;
-	bh=wBXx2fOBLx6Gi6UVSEZmN4C62Har2S/fqhRp6eO3S8M=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=ioANZ5g3cQSzfhQHEvXKknM5cjN6RUR8kzT7i4bcv8w6qPtS3ATUu5GM9aPiSijAfK0VJvk6TMQUCb1P3RKXiZRYYORUkU2Y00I7k1YO3I3+8xO8sYD7w8qCysyXqKtTONOeOQzMWBX515Wr8SwBNepvz3Hahwj9CjOhCsmDJAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=qNLszmI3; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1746786124; c=relaxed/simple;
+	bh=u0FdmcLCzWAN0OgJO+9XszGN9E14Xi6UpgFN0H7wVRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=poyepx22o2/8HG1pG5J8kB9WPSRUyVPV7hOwRsjEVFqSpvq4j2kmDMFHn5+rwr6hle8GBC/5CweRLcGjVXFUC+lWUjxgA7kLRbowFg+NmeY8+bXvF1yo5ce095Kkg8hpD3zSmZn0oxKlulHxV+wK78QU98/aL/jU1Y7xKjs4I7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OFf/DZvi; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="qNLszmI3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=5shS9aa9wXhOlBT7ksNlLhRZM4K9cenEEVtO8PY9I70=; b=qNLszmI3KfaEVfwHV4511bth5D
-	BUy3yg9rpJXubGWsBsCbDUw+VxDPTk7OQjbj1JAflYE5iBN/GCEzzocg6krSa59K2cI4+mzEU+uil
-	8qI4E6NfEPXfbq3UhItDbucG+CuARqBWyDPRU62BGanVHuFhJ15kgABXjWQgcmUZnaG8Z6sI15Jtk
-	7Ri/Xl9y5Jq2FqjMAUQpXmr4G6l5xDyhJvRsr2KnbyahQFiBrYP90tDUDsNWwy227CZHe2+Y0iPRv
-	Ptv0Ko3ItekA/8Yhh242YHjW1jItnoE0Op/h4/cKSbeg/Qoy7MjDRyuG4jUkGcXLCddQaimMdVF3E
-	SZrFHE7g==;
-Received: from [122.175.9.182] (port=48237 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1uDKqx-000000003Ob-0ndo;
-	Fri, 09 May 2025 15:51:15 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id C16971783FF8;
-	Fri,  9 May 2025 15:51:06 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 9E74B1781E1E;
-	Fri,  9 May 2025 15:51:06 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id d32p2WIoMBEs; Fri,  9 May 2025 15:51:06 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 4DCB51783FF8;
-	Fri,  9 May 2025 15:51:06 +0530 (IST)
-Date: Fri, 9 May 2025 15:51:06 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: pabeni <pabeni@redhat.com>
-Cc: danishanwar <danishanwar@ti.com>, rogerq <rogerq@kernel.org>, 
-	andrew+netdev <andrew+netdev@lunn.ch>, davem <davem@davemloft.net>, 
-	edumazet <edumazet@google.com>, kuba <kuba@kernel.org>, 
-	robh <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>, 
-	conor+dt <conor+dt@kernel.org>, ssantosh <ssantosh@kernel.org>, 
-	tony <tony@atomide.com>, richardcochran <richardcochran@gmail.com>, 
-	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
-	m-karicheri2 <m-karicheri2@ti.com>, s hauer <s.hauer@pengutronix.de>, 
-	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
-	basharath <basharath@couthit.com>, horms <horms@kernel.org>, 
-	jacob e keller <jacob.e.keller@intel.com>, 
-	m-malladi <m-malladi@ti.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>, parvathi <parvathi@couthit.com>
-Message-ID: <1918420534.1246603.1746786066099.JavaMail.zimbra@couthit.local>
-In-Reply-To: <ce36ce0e-ad16-4950-b601-ae1a555f2cfb@redhat.com>
-References: <20250503121107.1973888-1-parvathi@couthit.com> <20250503131139.1975016-5-parvathi@couthit.com> <ce36ce0e-ad16-4950-b601-ae1a555f2cfb@redhat.com>
-Subject: Re: [PATCH net-next v7 04/11] net: ti: prueth: Adds link detection,
- RX and TX support.
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OFf/DZvi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746786123; x=1778322123;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=u0FdmcLCzWAN0OgJO+9XszGN9E14Xi6UpgFN0H7wVRU=;
+  b=OFf/DZviM+d9aQK3G0Nd7zSDVk3krGTOY0SfV3HPmdI9QTe/MBVafH37
+   s+yg6wGmk+jlWcvVPj9oR144HMlQG0iEpRl5QvjpJGGwruT+hWEY6QmiP
+   CvEZeOD8FcNQeyB7pysqclCZPqujubgvO4ZlUgtdaIibhFMrmvR6Fs+CY
+   MP+RTz73uYFcjQKwHImbHs6mpECYM3zVI3fxPEbYgXCLYXO7y1CFL9PF4
+   KI676URhIYyXfy46qHqdXpiWDtM+6nIdTsJ3//GsCIqVjsNMyjEsOGISA
+   Ys1BHzWVilX2/5YOIYK+5rDCmTR5rIKsHS728j1QtJXWA7vj6x+UAoSiQ
+   g==;
+X-CSE-ConnectionGUID: Drz52SWMRsOOv3TPi/SEPA==
+X-CSE-MsgGUID: 4GD/0geGQUWu+IToI6zYzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48725846"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="48725846"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 03:22:02 -0700
+X-CSE-ConnectionGUID: DwlI8GfKRSeoSrKIj+e3mw==
+X-CSE-MsgGUID: LEpLa6rRSGu1qx1TTsl+hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="140631455"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 09 May 2025 03:21:57 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDKra-000Bvn-2Y;
+	Fri, 09 May 2025 10:21:54 +0000
+Date: Fri, 9 May 2025 18:21:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+	Dragos Bogdan <dragos.bogdan@analog.com>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Tobias Sperling <tobias.sperling@softing.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v2 1/4] iio: backend: update
+ iio_backend_oversampling_ratio_set
+Message-ID: <202505091838.a9sKlbJN-lkp@intel.com>
+References: <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: prueth: Adds link detection, RX and TX support.
-Thread-Index: Yo3qDn3AUxHTr12WJKQJ6KqVwLl7QQ==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
 
-Hi,
+Hi Pop,
 
-> On 5/3/25 3:11 PM, Parvathi Pudi wrote:
->> +/**
->> + * icssm_emac_rx_thread - EMAC Rx interrupt thread handler
->> + * @irq: interrupt number
->> + * @dev_id: pointer to net_device
->> + *
->> + * EMAC Rx Interrupt thread handler - function to process the rx frames in a
->> + * irq thread function. There is only limited buffer at the ingress to
->> + * queue the frames. As the frames are to be emptied as quickly as
->> + * possible to avoid overflow, irq thread is necessary. Current implementation
->> + * based on NAPI poll results in packet loss due to overflow at
->> + * the ingress queues. Industrial use case requires loss free packet
->> + * processing. Tests shows that with threaded irq based processing,
->> + * no overflow happens when receiving at ~92Mbps for MTU sized frames and thus
->> + * meet the requirement for industrial use case.
-> 
-> The above statement is highly suspicious. On an non idle system the
-> threaded irq can be delayed for an unbound amount of time. On an idle
-> system napi_poll should be invoked with a latency comparable - if not
-> less - to the threaded irq. Possibly you tripped on some H/W induced
-> latency to re-program the ISR?
-> 
-> In any case I think we need a better argumented statement to
-> intentionally avoid NAPI.
-> 
-> Cheers,
-> 
-> Paolo
+kernel test robot noticed the following build warnings:
 
-The above comment was from the developer to highlight that there is an improvement in
-performance with IRQ compared to NAPI. The improvement in performance was observed due to
-the limited PRU buffer pool (holds only 3 MTU packets). We need to service the queue as
-soon as a packet is written to prevent overflow. To achieve this, IRQs with highest
-priority is used. We will clean up the comments in the next version.
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on linus/master v6.15-rc5 next-20250508]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Pop-Ioan-Daniel/iio-backend-update-iio_backend_oversampling_ratio_set/20250508-203339
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250508123107.3797042-2-pop.ioan-daniel%40analog.com
+patch subject: [PATCH v2 1/4] iio: backend: update iio_backend_oversampling_ratio_set
+config: nios2-randconfig-001-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091838.a9sKlbJN-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091838.a9sKlbJN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505091838.a9sKlbJN-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/iio/adc/ad4851.c: In function 'ad4851_set_oversampling_ratio':
+>> drivers/iio/adc/ad4851.c:324:60: warning: passing argument 2 of 'iio_backend_oversampling_ratio_set' makes integer from pointer without a cast [-Wint-conversion]
+     324 |         ret = iio_backend_oversampling_ratio_set(st->back, chan, osr);
+         |                                                            ^~~~
+         |                                                            |
+         |                                                            const struct iio_chan_spec *
+   In file included from drivers/iio/adc/ad4851.c:26:
+   include/linux/iio/backend.h:212:53: note: expected 'unsigned int' but argument is of type 'const struct iio_chan_spec *'
+     212 |                                        unsigned int chan,
+         |                                        ~~~~~~~~~~~~~^~~~
 
 
-Thanks and Regards,
-Parvathi.
+vim +/iio_backend_oversampling_ratio_set +324 drivers/iio/adc/ad4851.c
+
+   295	
+   296	static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
+   297						 const struct iio_chan_spec *chan,
+   298						 unsigned int osr)
+   299	{
+   300		struct ad4851_state *st = iio_priv(indio_dev);
+   301		int val, ret;
+   302	
+   303		guard(mutex)(&st->lock);
+   304	
+   305		if (osr == 1) {
+   306			ret = regmap_clear_bits(st->regmap, AD4851_REG_OVERSAMPLE,
+   307						AD4851_OS_EN_MSK);
+   308			if (ret)
+   309				return ret;
+   310		} else {
+   311			val = ad4851_osr_to_regval(osr);
+   312			if (val < 0)
+   313				return -EINVAL;
+   314	
+   315			ret = regmap_update_bits(st->regmap, AD4851_REG_OVERSAMPLE,
+   316						 AD4851_OS_EN_MSK |
+   317						 AD4851_OS_RATIO_MSK,
+   318						 FIELD_PREP(AD4851_OS_EN_MSK, 1) |
+   319						 FIELD_PREP(AD4851_OS_RATIO_MSK, val));
+   320			if (ret)
+   321				return ret;
+   322		}
+   323	
+ > 324		ret = iio_backend_oversampling_ratio_set(st->back, chan, osr);
+   325		if (ret)
+   326			return ret;
+   327	
+   328		switch (st->info->resolution) {
+   329		case 20:
+   330			switch (osr) {
+   331			case 0:
+   332				return -EINVAL;
+   333			case 1:
+   334				val = 20;
+   335				break;
+   336			default:
+   337				val = 24;
+   338				break;
+   339			}
+   340			break;
+   341		case 16:
+   342			val = 16;
+   343			break;
+   344		default:
+   345			return -EINVAL;
+   346		}
+   347	
+   348		ret = iio_backend_data_size_set(st->back, val);
+   349		if (ret)
+   350			return ret;
+   351	
+   352		if (osr == 1 || st->info->resolution == 16) {
+   353			ret = regmap_clear_bits(st->regmap, AD4851_REG_PACKET,
+   354						AD4851_PACKET_FORMAT_MASK);
+   355			if (ret)
+   356				return ret;
+   357	
+   358			st->resolution_boost_enabled = false;
+   359		} else {
+   360			ret = regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+   361						 AD4851_PACKET_FORMAT_MASK,
+   362						 FIELD_PREP(AD4851_PACKET_FORMAT_MASK, 1));
+   363			if (ret)
+   364				return ret;
+   365	
+   366			st->resolution_boost_enabled = true;
+   367		}
+   368	
+   369		if (st->osr != osr) {
+   370			ret = ad4851_scale_fill(indio_dev);
+   371			if (ret)
+   372				return ret;
+   373	
+   374			st->osr = osr;
+   375		}
+   376	
+   377		return 0;
+   378	}
+   379	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
