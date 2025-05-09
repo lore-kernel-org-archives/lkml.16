@@ -1,305 +1,91 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F404F23504E
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1566D25C82E;
+	Fri,  9 May 2025 19:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746818382; cv=none; b=Dyw0FiKGbIUO2HMeT2a8+RsTz60dY4F/PHq4Hi9cab6OjQaJU7SW2F0/oJqDGyWoK7SaMBZA46QWJhaBtYfZzEKe/QzBOCIxcopsFfE53rzoCySLGpRttQf3xa/8zZWNEeo/HdXLdwZ0hbRB9mXyQN6JwymsnYs6qEZkTbzrpo4=
+	t=1746818492; cv=none; b=a7SS3lAQRZbNUGoLBEXaKcdjkquDm0jYwm6iXvWfwFL2SPsuiZoGbTVVoEvi79w2rdEG5s44je1ducb/vBMcSnt0dy1GGCxbi86ND0vsA62ORKvNj69ZdzFbya/QEYYKgciB12mu2xKXyMI/Ku9Rf4f/+/n+EgVCJPf0R1W4KLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746818382; c=relaxed/simple;
-	bh=yBkjjrzIAXmNS8sMpgXG7xXdEYsR7PeGPM4i5rm0HoM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hBCO8GznlhELGf+wdJIju7DR9zP+XDIpP5GQQ0TabnJ0ive37JjpV4Vot36RmSZIWKzbU/ZgGPh7oWCBDOEgh3aDpf/HlW6EjQyZD2+0VWn9E42tfO6aY4eCgYA2MLR9X2RcaonOVDzlEQX3yoGvPSXaJuR1k1Rcn33jjB4LJo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MqMcibst; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746818492; c=relaxed/simple;
+	bh=78mBXi9qO6qcRLA4DTbvOKgTYqTpkwc+nO2qiF16nuY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sUXDCGhcxR1Ka813ZsLvHsCs4K7Shq/OSQgpvr93CrAo99K4YTYRneWHz4MzE97vlBhIRzI9P2kkmTfaIzaNFR0gF9tPFLHEuFpL1Udc5yyGPyAAnLJI2ezOuiM25S3p6DcROfWvVx4hOxFt+PxFGJzGszRrf53AuMkzXXoe5Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucxRDLJQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqMcibst"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so344945066b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:19:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746818379; x=1747423179; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VzB/umn34JPN16y9zjrFz51ufK1HJCEqBWxx7qBjw90=;
-        b=MqMcibstHJHOhmhzmLMajM+R9F2VphKFHLDc9G5rMYfBQnzCHgqLwedyQIVTkX0sby
-         upigi7r6MXtXQX1H2IZ5Lu1ydRigBXTeZ9xAloKuwf8ArvOCxTToMnfVzlLDTBh8nJeM
-         61jRwxW+y86/3gBWTvsc/Y0hmrIeYQfY6wNCDd7ZOo/hrx8v4rgfCOHKz+xwKdmuBEzC
-         bqPmS0UdGbt+2nurW2uuZz6+v4ZKxysTve2j6mdwa96B/58Xf0d/qrBSsqHYhaDErDkJ
-         qu9KubT2jsO2A6CwCzCBJa84zr1Vl/dGg2NJdXv7bJDqY91DrJxnptTLpr+SgVIjiq58
-         dmqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746818379; x=1747423179;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VzB/umn34JPN16y9zjrFz51ufK1HJCEqBWxx7qBjw90=;
-        b=qoqAe2hG0CvufwQe/LaGezdIRacbJfZDCFyPN+iy658hyCn5b53vgDgHrnDr/WVTJd
-         IYB2B7L8m7LqBuQJmJ8OJKJAiKyPzToO1DJP09VZoAyvPpNC9dzJkgd22fA61iOqo5rH
-         BY0jxK81iASs+YlUaCOCzfysyADBzObxtxJCP/vw3l72YsldpBvESPoONPKmGWGq2eL8
-         TxfUEp2q/QLYuG0GuklQYQxYtjgN660x6LVcH4RUfQ4n5Dxr7ZXW2EFw0F4Cr76/yB9w
-         W//lk+Lv0lYo6jL3ZOgP8Swxi584cLxH56F4bX/3yp3iN5+K/zrV9htRekbp8kp92zEC
-         Jhdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqpAlrOYic51F9m+8lhkJM34dXv4omWtsGovhI9k25f+0s/AY5KXY+7JZjnWZXcRy4qiipxO9bvcfSPH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD9Sj2fHgThONbr6cW7Qd5XxyWyBZeuL8vdfnScsCuccJHnwKj
-	YBJ6gJY53dsVFLqZKfuY1NNkc7ohHre1MUO9XVJ/kV4U/MUNHyAfmetV2ylQxyBD9M2kZBoUEIw
-	FDXIK4rkEiBTIy7MYtAy+NthnNfA=
-X-Gm-Gg: ASbGncs0TWrPhYDPRUQ57xMn2eBbbNaDmzZSwIDGNzfirmGqURpcgTNaE3vomyZJOaq
-	aeAffEoY9MzW4CL3NuWrhiNhCoz/ZlY6NiDau0C4wKOhYH/G1IdTyYwIb6kqLtVni+Naf81KYe3
-	ccvnOYLqlKeiPQWD4AhcIq3SaE8AXYB4qI1bPY213Yng==
-X-Google-Smtp-Source: AGHT+IGtLeECCuBB7dBInHNDCtrxruOGDXeY+EBwBu8tivOfxkDQ8+JenCtoiPui3aQDf6wEPCIW7EgRwdWt4sgw8hU=
-X-Received: by 2002:a17:907:179a:b0:ad2:2f00:175c with SMTP id
- a640c23a62f3a-ad22f0018dfmr114181866b.50.1746818378698; Fri, 09 May 2025
- 12:19:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucxRDLJQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66092C4CEE4;
+	Fri,  9 May 2025 19:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746818490;
+	bh=78mBXi9qO6qcRLA4DTbvOKgTYqTpkwc+nO2qiF16nuY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ucxRDLJQVF1vTWWDpK0jp0GsHkw4jWOdt7TstoDmotZh/t/rV6tbRAkn5Mb8FboKQ
+	 3Iwnv5XGn1nIO9LkYVnn0W3qJykvXQK2zk3VIrSmDHzjSWcJXcl30EPg7OKG+xdlfr
+	 8YPqIF3C+9/bCi+f8ON2OU835vORi1G8obEMjbvn1iouL3EG/vqkN/YPDslxyk6L1G
+	 pStUVL3Kbpv8ugV6iq0VukxGgWrmbGBI4CiIOMtdrdzVPKQ3088lNd0EqV8qU3KzAV
+	 E6IDocSIsuVpuxia+QiYcuBcFo70KiSfZrTuBVVvB41+EC+/Pxl9D2WCGc0el32P5s
+	 2wGbq7PdRJa8w==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2d54b936ad9so1127027fac.1;
+        Fri, 09 May 2025 12:21:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX2Dl7NTOo8NTI9Y4JkoceznRsAId2AIHxmUBc++x5UFJA1CO1G83NrQUXWHG8uKNyGLMXzmYgwhvYcyjzG@vger.kernel.org, AJvYcCXHfDgkb/YwzhOCINs9VJJiRrdZgmbp773ZPDJg/IqB7WwUpV07BzF2Wbd/6psZE9dlgSTd3Jup/pfE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxllCdCtFhgQlPHTMCUu4gWBNXf4sK/E+KZlFbeH0ux1VdiTngD
+	tOpgkAqvqRhGm40pfq/i+PRpdhX+KlJQ7QrMksnXZICorBLXOIoSCWFjTeHSFYUWuP+pmGGNyZP
+	m1KZ32+tasryRlJDSOkLtnl7EBQU=
+X-Google-Smtp-Source: AGHT+IE06Zct7yQAKfnLNm6gN+Mv2ys68hsbRR1uSoRCw37UOZC5An9uVI/MDRoE8ibL0g5hrkR/qXZ4EQJHYQrpv0Y=
+X-Received: by 2002:a05:6871:80d:b0:2d5:b7b7:2d6e with SMTP id
+ 586e51a60fabf-2dba45e8ce5mr2714795fac.38.1746818489728; Fri, 09 May 2025
+ 12:21:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 10 May 2025 05:19:27 +1000
-X-Gm-Features: ATxdqUEfO0Ap1TmurLlvIj5CRSOldZiSN269hFszSyhtjoKQpcf-yWCkfJoLqCo
-Message-ID: <CAPM=9txyi2mTEZtVzeR71wmaSvXNXrn-TFQbPm5n1_LQqRy8zQ@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.15-rc6
-To: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20250508111625.12149-1-wse@tuxedocomputers.com>
+In-Reply-To: <20250508111625.12149-1-wse@tuxedocomputers.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 9 May 2025 21:21:18 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g+_8LT6YKSuOXHtxE-HLCZ2hxKuT2514HgQ45xyWy76A@mail.gmail.com>
+X-Gm-Features: ATxdqUE0GH5Baf3x4WtsMwgeJqGixifeCFcTJu45KyqyICB0g6atnB_TAXRroN0
+Message-ID: <CAJZ5v0g+_8LT6YKSuOXHtxE-HLCZ2hxKuT2514HgQ45xyWy76A@mail.gmail.com>
+Subject: Re: [PATCH] acpi/ec: Add device to acpi_ec_no_wakeup qurik
+To: Werner Sembach <wse@tuxedocomputers.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hey Linus,
+On Thu, May 8, 2025 at 1:16=E2=80=AFPM Werner Sembach <wse@tuxedocomputers.=
+com> wrote:
+>
+> Add the TUXEDO InfinityBook Pro AMD Gen9 to the acpi_ec_no_wakeup quirk
+> list to prevent spurious wakeups.
+>
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> ---
+>  drivers/acpi/ec.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+> index 8db09d81918fb..de45a5b59effd 100644
+> --- a/drivers/acpi/ec.c
+> +++ b/drivers/acpi/ec.c
+> @@ -2301,6 +2301,12 @@ static const struct dmi_system_id acpi_ec_no_wakeu=
+p[] =3D {
+>                         DMI_MATCH(DMI_PRODUCT_FAMILY, "103C_5336AN HP ZHA=
+N 66 Pro"),
+>                 },
+>         },
+> +       {
+> +               // TUXEDO InfinityBook Pro AMD Gen9
+> +               .matches =3D {
+> +                       DMI_MATCH(DMI_BOARD_NAME, "GXxHRXx"),
+> +               },
+> +       },
+>         { },
+>  };
+>
+> --
 
-Weekly drm fixes, bit bigger than last week, but overall amdgpu/xe
-with some ivpu bits and a random few fixes, and dropping the
-ttm_backup struct which wrapped struct file and was recently frowned
-at.
-
-Thanks,
-Dave.
-
-drm-fixes-2025-05-10:
-drm fixes for 6.15-rc6
-
-drm:
-- Fix overflow when generating wedged event
-
-ttm:
-- Fix documentation
-- Remove struct ttm_backup
-
-panel:
-- simple: Fix timings for AUO G101EVN010
-
-amdgpu:
-- DC FP fixes
-- Freesync fix
-- DMUB AUX fixes
-- VCN fix
-- Hibernation fixes
-- HDP fixes
-
-xe:
-- Prevent PF queue overflow
-- Hold all forcewake during mocs test
-- Remove GSC flush on reset path
-- Fix forcewake put on error path
-- Fix runtime warning when building without svm
-
-i915:
-- Fix oops on resume after disconnecting DP MST sinks during suspend
-- Fix SPLC num_waiters refcounting
-
-ivpu:
-- Increase timeouts
-- Fix deadlock in cmdq ioctl
-- Unlock mutices in correct order
-
-v3d:
-- Avoid memory leak in job handling
-The following changes since commit 92a09c47464d040866cf2b4cd052bc60555185fb=
-:
-
-  Linux 6.15-rc5 (2025-05-04 13:55:04 -0700)
-
-are available in the Git repository at:
-
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-05-10
-
-for you to fetch changes up to c2c64ed09c7b44a893d22c8b8ddb3ba7265494f3:
-
-  Merge tag 'drm-intel-fixes-2025-05-09' of
-https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
-(2025-05-10 05:07:18 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.15-rc6
-
-drm:
-- Fix overflow when generating wedged event
-
-ttm:
-- Fix documentation
-- Remove struct ttm_backup
-
-panel:
-- simple: Fix timings for AUO G101EVN010
-
-amdgpu:
-- DC FP fixes
-- Freesync fix
-- DMUB AUX fixes
-- VCN fix
-- Hibernation fixes
-- HDP fixes
-
-xe:
-- Prevent PF queue overflow
-- Hold all forcewake during mocs test
-- Remove GSC flush on reset path
-- Fix forcewake put on error path
-- Fix runtime warning when building without svm
-
-i915:
-- Fix oops on resume after disconnecting DP MST sinks during suspend
-- Fix SPLC num_waiters refcounting
-
-ivpu:
-- Increase timeouts
-- Fix deadlock in cmdq ioctl
-- Unlock mutices in correct order
-
-v3d:
-- Avoid memory leak in job handling
-
-----------------------------------------------------------------
-Alex Deucher (7):
-      Revert "drm/amd: Stop evicting resources on APUs in suspend"
-      drm/amdgpu: fix pm notifier handling
-      drm/amdgpu/hdp4: use memcfg register to post the write for HDP flush
-      drm/amdgpu/hdp5: use memcfg register to post the write for HDP flush
-      drm/amdgpu/hdp5.2: use memcfg register to post the write for HDP flus=
-h
-      drm/amdgpu/hdp6: use memcfg register to post the write for HDP flush
-      drm/amdgpu/hdp7: use memcfg register to post the write for HDP flush
-
-Alex Hung (1):
-      drm/amd/display: Remove unnecessary DC_FP_START/DC_FP_END
-
-Aurabindo Pillai (1):
-      drm/amd/display: more liberal vmin/vmax update for freesync
-
-Austin Zheng (1):
-      drm/amd/display: Call FP Protect Before Mode Programming/Mode Support
-
-Daniele Ceraolo Spurio (1):
-      drm/xe/gsc: do not flush the GSC worker from the reset path
-
-Dave Airlie (4):
-      Merge tag 'drm-misc-fixes-2025-05-08' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-      Merge tag 'amd-drm-fixes-6.15-2025-05-08' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
-      Merge tag 'drm-xe-fixes-2025-05-09' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-      Merge tag 'drm-intel-fixes-2025-05-09' of
-https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
-
-Feng Jiang (1):
-      drm: Fix potential overflow issue in event_string array
-
-Imre Deak (1):
-      drm/i915/dp: Fix determining SST/MST mode during MTP TU state computa=
-tion
-
-Jacek Lawrynowicz (2):
-      accel/ivpu: Increase state dump msg timeout
-      accel/ivpu: Fix pm related deadlocks in cmdq ioctls
-
-Karol Wachowski (1):
-      accel/ivpu: Correct mutex unlock order in job submission
-
-Kevin Baker (1):
-      drm/panel: simple: Update timings for AUO G101EVN010
-
-Matthew Brost (1):
-      drm/xe: Add page queue multiplier
-
-Ma=C3=ADra Canal (1):
-      drm/v3d: Add job to pending list if the reset was skipped
-
-Roman Li (1):
-      drm/amd/display: Fix invalid context error in dml helper
-
-Ruijing Dong (1):
-      drm/amdgpu/vcn: using separate VCN1_AON_SOC offset
-
-Shuicheng Lin (2):
-      drm/xe: Release force wake first then runtime power
-      drm/xe: Add config control for svm flush work
-
-Tejas Upadhyay (1):
-      drm/xe/tests/mocs: Hold XE_FORCEWAKE_ALL for LNCF regs
-
-Thomas Hellstr=C3=B6m (2):
-      drm/ttm: Fix ttm_backup kerneldoc
-      drm/ttm: Remove the struct ttm_backup abstraction
-
-Vinay Belgaumkar (1):
-      drm/i915/slpc: Balance the inc/dec for num_waiters
-
-Wayne Lin (5):
-      drm/amd/display: Shift DMUB AUX reply command if necessary
-      drm/amd/display: Fix the checking condition in dmub aux handling
-      drm/amd/display: Remove incorrect checking in dmub aux handler
-      drm/amd/display: Copy AUX read reply data whenever length > 0
-      drm/amd/display: Fix wrong handling for AUX_DEFER case
-
- drivers/accel/ivpu/ivpu_hw.c                       |  2 +-
- drivers/accel/ivpu/ivpu_job.c                      | 35 ++++++++++++-----
- drivers/gpu/drm/amd/amdgpu/amdgpu.h                |  2 -
- drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c           | 18 ---------
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c         | 29 ++++----------
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            | 10 +----
- drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.h            |  1 -
- drivers/gpu/drm/amd/amdgpu/hdp_v4_0.c              |  7 +++-
- drivers/gpu/drm/amd/amdgpu/hdp_v5_0.c              |  7 +++-
- drivers/gpu/drm/amd/amdgpu/hdp_v5_2.c              | 12 +++++-
- drivers/gpu/drm/amd/amdgpu/hdp_v6_0.c              |  7 +++-
- drivers/gpu/drm/amd/amdgpu/hdp_v7_0.c              |  7 +++-
- drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c              |  1 +
- drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c              |  1 +
- drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c              |  1 +
- drivers/gpu/drm/amd/amdgpu/vcn_v4_0.c              |  4 +-
- drivers/gpu/drm/amd/amdgpu/vcn_v4_0_3.c            |  1 +
- drivers/gpu/drm/amd/amdgpu/vcn_v4_0_5.c            |  1 +
- drivers/gpu/drm/amd/amdgpu/vcn_v5_0_0.c            |  3 +-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  | 36 +++++++++---------
- .../amd/display/amdgpu_dm/amdgpu_dm_mst_types.c    | 28 ++++++++++++--
- .../drm/amd/display/dc/dml2/dml21/dml21_wrapper.c  |  8 ++--
- .../amd/display/dc/dml2/dml2_translation_helper.c  | 14 +++----
- .../amd/display/dc/resource/dcn32/dcn32_resource.c |  6 ---
- drivers/gpu/drm/drm_drv.c                          |  2 +-
- drivers/gpu/drm/i915/display/intel_dp_mst.c        |  2 +-
- drivers/gpu/drm/i915/gt/intel_rps.c                | 14 +++++--
- drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++------
- drivers/gpu/drm/ttm/ttm_backup.c                   | 44 ++++++------------=
-----
- drivers/gpu/drm/ttm/ttm_pool.c                     |  6 +--
- drivers/gpu/drm/ttm/ttm_tt.c                       |  2 +-
- drivers/gpu/drm/v3d/v3d_sched.c                    | 28 ++++++++++----
- drivers/gpu/drm/xe/tests/xe_mocs.c                 |  7 +++-
- drivers/gpu/drm/xe/xe_gsc.c                        | 22 +++++++++++
- drivers/gpu/drm/xe/xe_gsc.h                        |  1 +
- drivers/gpu/drm/xe/xe_gsc_proxy.c                  | 11 ++++++
- drivers/gpu/drm/xe/xe_gsc_proxy.h                  |  1 +
- drivers/gpu/drm/xe/xe_gt.c                         |  2 +-
- drivers/gpu/drm/xe/xe_gt_debugfs.c                 |  9 +++--
- drivers/gpu/drm/xe/xe_gt_pagefault.c               | 11 +++++-
- drivers/gpu/drm/xe/xe_svm.c                        | 12 ++++++
- drivers/gpu/drm/xe/xe_svm.h                        |  8 ++++
- drivers/gpu/drm/xe/xe_uc.c                         |  8 +++-
- drivers/gpu/drm/xe/xe_uc.h                         |  1 +
- drivers/gpu/drm/xe/xe_vm.c                         |  3 +-
- include/drm/ttm/ttm_backup.h                       | 18 ++++-----
- include/drm/ttm/ttm_tt.h                           |  2 +-
- 47 files changed, 285 insertions(+), 195 deletions(-)
+Applied as 6.16 material, thanks!
