@@ -1,106 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1C225D1FC;
-	Fri,  9 May 2025 21:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D13A25D1FC;
+	Fri,  9 May 2025 21:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827732; cv=none; b=m1zk3ROn6a/xVKA1YsQ0FSe84/ka9MqQtEvxB1C/ptdbxbt1a6vQjAJ5ezk0XKE/9R0aQ+BUHjjlmpvK/9M+9ffROMuqRuwLYESdSw6hnaWLJYuMrfD+FVQRPCRioPkmOXMJIx2RHEH1tFpvwRmVBWStCqRif69h1cBKLdCitNo=
+	t=1746827935; cv=none; b=P7CNXpS8DFzGJ+gDy3ooI2HDKVaMDnmrFsfRe/sBGlRv/4DUyRiKv2YuR5TiqjeHzLPs5aPiRt7LYRqK3ybFRnbJtNlG6i0A1VyFKfPKzX2BydZPQRzcyXLwOKR5hPyo+TpKTd1BU6rnBKBtRyIIuAiuTHruwFHeGlHyT1LmcaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827732; c=relaxed/simple;
-	bh=6bUOYnfeM9YGBmORFUWmmhMKscODaW6xHbQzUzzRfsA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=j/Ze95DP/XAvfPW9yUnnBIldyjV+kHRbputps4g+TqxGX/JiMlqJ3/fQq5UqrpUNM4qcp4vuDY7St1gnrPydN29PR7uhDSJ7YEq0bo4MY6q9fH92u3vuXqRsoUiTRNj+g1bZJ5VqpjwjqetrFuV8e88+06bZia8aKsR3264812A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0caTzXf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746827935; c=relaxed/simple;
+	bh=bod7OgH9FMLNk7FKdLh8z63aV2T+h8TH6ReCA7jp2gc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nT1nuZqvHX1aDgo1g+u7tnHQDC/bZuE3ObN/LGk5AV6V4WAIR++jwPqKnhYpqv+IYW5wONUCFoHW9GAr748wC/unRJ2RfwgxEw4Je4tPJerSUt0vovfxd4eMqdTAndJnHuNTOoUOXDYff1ci+4RdcH6w4B49D6kNYKVo9e714Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wj/Ji3eS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0caTzXf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E439AC4CEE4;
-	Fri,  9 May 2025 21:55:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wj/Ji3eS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E579DC4CEF0;
+	Fri,  9 May 2025 21:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746827732;
-	bh=6bUOYnfeM9YGBmORFUWmmhMKscODaW6xHbQzUzzRfsA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L0caTzXfaYVDYsmlDbAMInMQJd0DrUBqCxzWuz7ARC5KzVumm7tQHq2yERiR6wJNx
-	 bD5RepcINa/ChKivgDP5ZH+r2dveevcpXiXTjEoKLzOGycI0YIElrzd1WwmC+8Hw40
-	 UiFCJblbBpPxoqTU4VihLGJYm3dXnP97RoTgYPMnrh2GPExFyMTD1ii4uJ8psSKWTB
-	 pBHx4HEhTlVn2YeX9iHewZmDXoH0ormRn/u8/7nWTkYjXMplQq6qlAnD2SN+J2Cu7B
-	 2A4JBRUsOKZ6Nm1c1LW1vJaaOfmjqOmVwBnzgnfnrSwQMZLLA8NclhYFOJ9uNnPX9M
-	 GpMSXxjVXn6Yg==
-Date: Sat, 10 May 2025 06:55:28 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-Subject: Re: [PATCH] tracing: fprobe: Fix RCU warning message in list
- traversal
-Message-Id: <20250510065528.d726869719f27145cc69f179@kernel.org>
-In-Reply-To: <bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
-References: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
-	<bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746827934;
+	bh=bod7OgH9FMLNk7FKdLh8z63aV2T+h8TH6ReCA7jp2gc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Wj/Ji3eSP+f9K5/OX8IPyTGVC+hKeww3Yl6QUod6tkbAtAu7U0Wz1PbqtNRVOjwFv
+	 9ihr6xIkNld8R2eg3D/qwKFTzKCB44sM/wo7FZxVdNmFG35vJbswp9WpRB4g9YpQkp
+	 559m5BktWJFZGo4x7zXB4pbEKV/NEhnPJI2p03xGmYJoo/0q9PeX5NKUMQ1D2NrYUd
+	 hD6VA7olwNYII6sChdMP9QvKoVAyyCPZlZ+LN+HGDbh/0tPkMmT8IK/5JM1F/UfEWO
+	 vBcf7l+pLMpJuVSflbkhtlCrXN+JM03dQsJTV8H4aaugOqzs+a7UvfS5j8IFoiCTa6
+	 oIMMaIkNxRk+A==
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47692b9d059so41514821cf.3;
+        Fri, 09 May 2025 14:58:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURDqUH2FtghFfzt3Rf2haB8dz/ZkaS7o1n5bdVx0yGpclf1/jqPgpQYiaiF4wODoS35Q1SCjJV6/a5sdo=@vger.kernel.org, AJvYcCVBpAKD4MoCFRAuOJ8H9Rqi+i7aQHs4hZIzUxJUgPC91+FuFM+ut+VpHw4wrvqHJsP7C4nUkulCiz0wEJXL@vger.kernel.org, AJvYcCVQE25E9K26TKlT2F7rSuTv4qvp/ruijmamJXipLRlJYWt8zIBYTiybocGSWUfVDhX14ag=@vger.kernel.org, AJvYcCXxOgSPrlrOfxuKxLjg6YU3PrRDq/1+QbaNAHHY0BQ02oysOrjoKLhk9Fm5bvB97ovhrJFF2uvqoo0phH8ni8nd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAMwpQJzUVa+8JfjRvbx3oA+oRMmLf8F2xZKjhiXFWMmj+Ekn8
+	1AzZdS6gt8U0mIVm3pGflVjdqhw/vwDTDhxP9ix4tXaqWOJTCXNFuakiFsNAVLF2BlkADzhrV2L
+	OaflshGsQo1qxBXzXslo9FLuxrgM=
+X-Google-Smtp-Source: AGHT+IEgw/OIWDWXmJWHEkTR/5DcaJ04lcLlTsKykO84AozF3RympSmmA4dzDH25HCRL4W/HlqroK6FilrCD1i+wCWA=
+X-Received: by 2002:ad4:5cc7:0:b0:6d4:238e:35b0 with SMTP id
+ 6a1803df08f44-6f6e47bd8a3mr77458376d6.17.1746827933963; Fri, 09 May 2025
+ 14:58:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250508182025.2961555-1-tjmercier@google.com>
+ <20250508182025.2961555-6-tjmercier@google.com> <CAPhsuW5WOmyfPqBc_Hn7ApGWP_2uz_cJwyaDWF_VwiHJu9s_1A@mail.gmail.com>
+ <CABdmKX2h5cGjNbJshGkQ+2XJ7eOnM+VfbmVr5Pj5c0qfxQA-qg@mail.gmail.com>
+In-Reply-To: <CABdmKX2h5cGjNbJshGkQ+2XJ7eOnM+VfbmVr5Pj5c0qfxQA-qg@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Fri, 9 May 2025 14:58:42 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7BM=X06Tr+HURsCbD8LwAO=Fdu+ZfKDy6RNK=UNNC1Rg@mail.gmail.com>
+X-Gm-Features: ATxdqUHtjHO0cnNYi6P788wo4nENW6QfEqucHX0SCFZlWpdcEK8f_Ki_Hjh7ovQ
+Message-ID: <CAPhsuW7BM=X06Tr+HURsCbD8LwAO=Fdu+ZfKDy6RNK=UNNC1Rg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 5/5] selftests/bpf: Add test for open coded dmabuf_iter
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
+	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 9 May 2025 16:30:08 +0200
-Matthieu Baerts <matttbe@kernel.org> wrote:
+On Fri, May 9, 2025 at 2:43=E2=80=AFPM T.J. Mercier <tjmercier@google.com> =
+wrote:
+>
+[...]
+> >
+> > Personally, I would prefer we just merge all the logic of
+> > create_udmabuf() and create_sys_heap_dmabuf()
+> > into create_test_buffers().
+>
+> That's a lot of different stuff to put in one place. How about
+> returning file descriptors from the buffer create functions while
+> having them clean up after themselves:
 
-> Hi Breno,
-> 
-> On 10/04/2025 14:22, Breno Leitao wrote:
-> > When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
-> > warning:
-> > 
-> >     WARNING: suspicious RCU usage
-> >     kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
-> > 
-> >     other info that might help us debug this:
-> > 	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
-> > 
-> >     Call Trace:
-> > 	fprobe_module_callback
-> > 	notifier_call_chain
-> > 	blocking_notifier_call_chain
-> > 
-> > This warning occurs because fprobe_remove_node_in_module() traverses an
-> > RCU list using RCU primitives without holding an RCU read lock. However,
-> > the function is only called from fprobe_module_callback(), which holds
-> > the fprobe_mutex lock that provides sufficient protection for safely
-> > traversing the list.
-> > 
-> > Fix the warning by specifying the locking design to the
-> > CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
-> > hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
-> > provides the required protection.
-> 
-> @Breno: thank you for the patch, I have it applied for a while on a
-> branch dedicated to our CI to avoid false positive reports.
-> 
-> Tested-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+I do like this version better. Some nitpicks though.
 
-Oops, I missed this patch.
+>
+> -static int memfd, udmabuf;
+> +static int udmabuf;
 
-Let me pick it up and send it urgently.
+About this, and ...
 
-Thank you,
+>  static const char udmabuf_test_buffer_name[DMA_BUF_NAME_LEN] =3D
+> "udmabuf_test_buffer_for_iter";
+>  static size_t udmabuf_test_buffer_size;
+>  static int sysheap_dmabuf;
+>  static const char sysheap_test_buffer_name[DMA_BUF_NAME_LEN] =3D
+> "sysheap_test_buffer_for_iter";
+>  static size_t sysheap_test_buffer_size;
+>
+> -static int create_udmabuf(int map_fd)
+> +static int create_udmabuf(void)
+>  {
+>         struct udmabuf_create create;
+> -       int dev_udmabuf;
+> -       bool f =3D false;
+> +       int dev_udmabuf, memfd, udmabuf;
+.. here.
 
-> 
-> 
-> Hopefully this fix can be sent to Linus before the v6.15 release :)
-> 
-> Cheers,
-> Matt
-> -- 
-> Sponsored by the NGI0 Core fund.
-> 
+It is not ideal to have a global udmabuf and a local udmabuf.
+If we want the global version, let's rename the local one.
 
+[...]
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+>  static int create_test_buffers(int map_fd)
+>  {
+> -       int ret;
+> +       bool f =3D false;
+> +
+> +       udmabuf =3D create_udmabuf();
+> +       sysheap_dmabuf =3D create_sys_heap_dmabuf();
+>
+> -       ret =3D create_udmabuf(map_fd);
+> -       if (ret)
+> -               return ret;
+> +       if (udmabuf < 0 || sysheap_dmabuf < 0)
+> +               return -1;
+
+We also need destroy_test_buffers() on the error path here,
+or at the caller.
+
+>
+> -       return create_sys_heap_dmabuf(map_fd);
+> +       return bpf_map_update_elem(map_fd, udmabuf_test_buffer_name,
+> &f, BPF_ANY) ||
+> +              bpf_map_update_elem(map_fd, sysheap_test_buffer_name,
+> &f, BPF_ANY);
+>  }
+>
+>  static void destroy_test_buffers(void)
+>  {
+>         close(udmabuf);
+> -       close(memfd);
+>         close(sysheap_dmabuf);
+
+For the two global fds, let's reset them to -1 right after close().
+
+Thanks,
+Song
