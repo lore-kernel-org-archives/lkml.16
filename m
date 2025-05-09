@@ -1,40 +1,40 @@
-Received: from smtp.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7B422D9F2;
-	Fri,  9 May 2025 06:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C57922D9F2
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746771713; cv=none; b=XmqcoWInYZLBolIohQszGz8JAWMvXG+MZIGv30Ffsl3dhzskTh13p1IBwVyp+3SWjL5wRoli4K7zfFxuQuRP0tgYYXcFD5ucA9psSmNW8uYRLSSe2Z6iKmbx5rT577bOoK0XqeZTwHKqpLKEyAlxvk2Lry0fTb0fz2uilgu5alI=
+	t=1746771724; cv=none; b=SYndv2uO1ds3ak8P+FejMTXNkT57MkVKoMzBbE7EGyVuQw+iaNtuoLvq2w3A1xK7IbICFEZlr80Q+tVM2jfSOrnTxHzo5gyKWiWxF3xCX3wlX90FM1omCtHzh0LHOj0loh+WCyWk1hZunPa4SvcJc5XVJRdy4zYe1+yzPy3I5q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746771713; c=relaxed/simple;
-	bh=eMIbIZO2LNu1ba9vmPFWelJExTJoxfAefdLcbQm2tMo=;
+	s=arc-20240116; t=1746771724; c=relaxed/simple;
+	bh=CmLYtpzwVxAxuk65EfmYjPByyNXJ6YX48p/mpCI6xRs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eYHieh6S85onfy6MSIIn8m8/xZ5YKg3c3G2j13k/Z5+7FwDxtQVI5KPpXUZ4/+NqLqrOW9/ppcphzj70pW2LpKheYi9vsafquwC7kQGpMfaK80Oc7MGRbEPm8knS2L4efMfCl37aTSswP6aM2kYuBEm4Mft9Nqv3eEbvaC3JdGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=OZgC/Hn3; arc=none smtp.client-ip=80.12.242.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 In-Reply-To:Content-Type; b=DmjIwfTEbtoP0nmEP6C19Z+rnAwO9XpWWohAaI7OwPNyr9Qt2HeoQ21vpCAmoqoMLQkIYy7AK9t4dJMfaJRs5fsDPFpntM9aXwccOXUspxY7i0bgngCyaVAar2Qh1GSh8mIpuU5SziTm43RiijBQ7R3k0GjWQli9Pj//cCbNLys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=X/sTh9x9; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OZgC/Hn3"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id DH65uEvkuKbq8DH65ukVB8; Fri, 09 May 2025 08:20:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746771640;
-	bh=5JKgoLO4kNRuFom4Pfd5tvVV/+IdX7PZ3xj8Bm8rDJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=OZgC/Hn39/X/p3DbTI7Cq+n2Y/vEEOgufGvGfZqQElJWXBfGse5SlpmHRJPJobTAJ
-	 37GBaRuT2m+7oaNc2wd5dti3Ns9WxmDBa2oHYrpkFU5Bi11qmn7pFFp0LMk5SO7y2q
-	 urSQggVgZZa/N/JnuyouFN422hV6vQJzEk6Hue9Q8Eur0xiIPbfcOkMfdI8nrn/qOQ
-	 QOBrNwaptoHxFvPEYYigXJrz5Pi0LS86S9RA1xR2WxZRaTaNkg6ySP0tCRar9ZtAL0
-	 wRW02YKUKUrJ2U3Xy5Mod18zXDsLHHvNbeeH6CQirxea0GP50MbULn6IzY/4i4Hp4m
-	 GKb/CikKi5CVQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Fri, 09 May 2025 08:20:40 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <22aaebb7-553b-4571-8a43-58a523241082@wanadoo.fr>
-Date: Fri, 9 May 2025 08:20:37 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="X/sTh9x9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746771720;
+	bh=CmLYtpzwVxAxuk65EfmYjPByyNXJ6YX48p/mpCI6xRs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X/sTh9x9eOpvcPd+3P6n0pKqRI4UEpYZfbxioY2blhJWDq59jiptxpl36q7BYkga0
+	 lXVRt9x2hQPTfi/YvwYlQUnpVp4+FtZtXRe2F18yqPz/mlECxfbcXHQcoZO50fYKcB
+	 5ak4dEzt9mwUVX32rG8P8MGsJh9Kj8YdjIGI21ZRnzEoxbOs/0WHmtcOPqr0WpNqWs
+	 ayeG7DWbXclQiKiypqmp3yBrwmAQjnCbaGyAbNvW8cCSC+i+tjCpfOEH/WJQINetOg
+	 ylQ0u5WVR37FkA//7zra6G/5O2RO16Z+No1693tZJeGjpMhR9eAkMtTon1yW0E7sCA
+	 lyIWSx2bdP6zQ==
+Received: from [192.168.50.250] (unknown [171.76.80.110])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 851FC17E07E5;
+	Fri,  9 May 2025 08:21:58 +0200 (CEST)
+Message-ID: <d966d626-458b-4a29-abe1-b645317e15d2@collabora.com>
+Date: Fri, 9 May 2025 11:51:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,55 +42,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] extcon: adc-jack: Fix wakeup source leaks on
- device unbind
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi
- <cw00.choi@samsung.com>, Hans de Goede <hdegoede@redhat.com>,
- Chen-Yu Tsai <wens@csie.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250501-device-wakeup-leak-extcon-v2-0-7af77802cbea@linaro.org>
- <20250501-device-wakeup-leak-extcon-v2-1-7af77802cbea@linaro.org>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250501-device-wakeup-leak-extcon-v2-1-7af77802cbea@linaro.org>
+Subject: Re: x86: Boot failure on select chromebooks with v6.15-rc5
+To: Ingo Molnar <mingo@kernel.org>
+Cc: dmukhin@ford.com, mingo@redhat.com, andriy.shevchenko@linux.intel.com,
+ x86@kernel.org, daniels <daniels@collabora.com>,
+ Daniel Stone <daniel@fooishbar.org>, robdclark <robdclark@gmail.com>,
+ lumag@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+References: <a8638f85-1cc2-4f51-97ba-7106a4662885@collabora.com>
+ <aB2bStp8efMHPjet@gmail.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <aB2bStp8efMHPjet@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Le 01/05/2025 à 16:33, Krzysztof Kozlowski a écrit :
-> Device can be unbound, so driver must also release memory for the wakeup
-> source.  Do not use devm interface, because it would change the order of
-> cleanup.
+Hi Ingo,
+
+On 09/05/25 11:36, Ingo Molnar wrote:
 > 
-> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->   drivers/extcon/extcon-adc-jack.c | 1 +
->   1 file changed, 1 insertion(+)
+> * Vignesh Raman <vignesh.raman@collabora.com> wrote:
 > 
-> diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
-> index 46c40d85c2ac89599ffbe7b6d11b161b295d5564..557930394abd25771799733a22121d1f8e254918 100644
-> --- a/drivers/extcon/extcon-adc-jack.c
-> +++ b/drivers/extcon/extcon-adc-jack.c
-> @@ -164,6 +164,7 @@ static void adc_jack_remove(struct platform_device *pdev)
->   {
->   	struct adc_jack_data *data = platform_get_drvdata(pdev);
->   
-> +	device_init_wakeup(&pdev->dev, false);
-
-Hi,
-
-Shouldn't this be:
-
-	if (data->wakeup_source)
-		device_init_wakeup(&pdev->dev, false);
-
-to match how things are done in the probe?
-
-CJ
-
->   	free_irq(data->irq, data);
->   	cancel_work_sync(&data->handler.work);
->   }
+>> Hi,
+>>
+>> With v6.15-rc5, the below chromebooks were not booting with the following
+>> message. These tests were run in drm-ci.
+>>
+>> Starting kernel ...
+>> [    1.843801]  ? __pfx_kernel_init+0x10/0x10
+>> [    1.909838]  ? __pfx_kernel_init+0x10/0x10
+>>
+>> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1420485
+>>
+>> Failing jobs:
+>> amdgpu:stoney (AMD Stoney Ridge chipset):
+>> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76000926
+>>
+>> i915:amly (64 bit Intel Whiskey Lake):
+>> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76000929
+>>
+>> i915:whl (64 bit Intel Amber Lake):
+>> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76000931
+>>
+>> These tests were passing till v6.14-rc7, and the issue was seen starting in
+>> v6.15-rc1. This issue is seen only with these 3 boards and does not affect
+>> other chromebooks (the pipeline log shows the other i915 driver tests).
+>>
+>> On bisecting the commits, the commit which introduced this issue is,
+>> 3181424aeac2f6596534bf43021a10eae294a9b0 x86/early_printk: Add support for
+>> MMIO-based UARTs
+>>
+>> After reverting the below commits in v6.15-rc5, the board boots and tests
+>> are executed:
+>> 3181424aeac2 x86/early_printk: Add support for MMIO-based UARTs
+>> 996457176bb7 x86/early_printk: Use 'mmio32' for consistency, fix comments
+>> (this fixes 3181424aeac2)
 > 
+> What boot cmdline does your kernel have? The MMIO-UART patches should
+> only have an effect if the feature is specifically enabled via a boot
+> option:
+> 
+> +               if (!strncmp(buf, "mmio32", 6)) {
+> +			buf += 6;
+> +                       early_mmio_serial_init(buf);
+> +                       early_console_register(&early_serial_console, keep);
+> +                       buf += 4;
+> +               }
+> 
+
+amdgpu:stoney:
+earlyprintk=uart8250,mmio32,0xfedc6000,115200n8  console=ttyS0,115200n8 
+root=/dev/nfs rw 
+nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598802/extract-nfsrootfs-wgn1xjer,tcp,hard,v3 
+init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp 
+tftpserverip=192.168.201.1
+
+i915:amly:
+earlyprintk=uart8250,mmio32,0xde000000,115200n8  console=ttyS0,115200n8 
+root=/dev/nfs rw 
+nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598804/extract-nfsrootfs-5rlm_b6z,tcp,hard,v3 
+init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp 
+tftpserverip=192.168.201.1
+
+i915:whl:
+earlyprintk=uart8250,mmio32,0xde000000,115200n8  console=ttyS0,115200n8 
+root=/dev/nfs rw 
+nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598833/extract-nfsrootfs-3w0w5_mi,tcp,hard,v3 
+init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp 
+tftpserverip=192.168.201.1
+
+Regards,
+Vignesh
+
+> The only other change I can see is the moving of an #if line.
+> 
+> Thanks,
+> 
+> 	Ingo
 
