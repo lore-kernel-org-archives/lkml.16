@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB45C469D;
-	Fri,  9 May 2025 01:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EBD469D;
+	Fri,  9 May 2025 01:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746754262; cv=none; b=d9jl3GpODdGYwC/YUOTlrj3lGNCvA7JfAONye86LtexYm20DOXL5wGl4LIUIxFCsI2Vcbx7sM3F3TeLvEFtX7/GFENXs9PCKYkyT3/4iFdXKGncKlQlR7dTRAqD3nWWZ3PqDY7dFocKi8/OdvUp97jbeD6o8t1mRodIh/I990pI=
+	t=1746754346; cv=none; b=sHyirhce9QZ/MipIx0oXym2vnGRJeI7qW6Sjwdtam2qVdSx/ZtKCn0NIZOw8XiMBriVKlYRUFdDdJ3S08PNgXU5UAf/S2CKDmG1YiH2DlmNDKxuCAqoQL0Ypgf4bttxVe3c7R5fLkt4E6VU0+x47vv+fzKsZygSysgUEoTvB/rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746754262; c=relaxed/simple;
-	bh=+PL22NNieIiKEtfNZ+lv4C0IHgtYlEyfd+uza+Cp+M0=;
+	s=arc-20240116; t=1746754346; c=relaxed/simple;
+	bh=LGBZP+0De5qBKzVYRK91W9sUX+AgvjCJZKczVH5pGZ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQzJyFlOy6hL7aGpqc5HJli6ZLiHBkrppTm0KOGTbLpQPABDFW1BTUcLywQgvRHjqM3YjCKciMU46dvmrEoR2HjsaT8YkiV4VQlirrkib5rmZQ9iEefad/8wFvcOmtoAeuGBcQ+QntxhBl5lhNn6RkChuCJMnFm3hN1ODgx9EVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhqLUs6G; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aD9VyhFW1rI9H8wj11cNrgZNg6SsV5+UCGXs3GA42dfbqrJIQF2ciTikN6zbTnL70hkbQpk10RpPqmqpBi4lRttfglXvxlBt+Q3B0dwH+H+iVU8IgIOO5OLP3SlDvO+B+bHfFZzVDPH6LFJkYpMUbjHgH/4jKwEFF8Qi2wjWwpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHte9XYn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhqLUs6G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A555C4CEE7;
-	Fri,  9 May 2025 01:31:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHte9XYn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB8FEC4CEE7;
+	Fri,  9 May 2025 01:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746754261;
-	bh=+PL22NNieIiKEtfNZ+lv4C0IHgtYlEyfd+uza+Cp+M0=;
+	s=k20201202; t=1746754345;
+	bh=LGBZP+0De5qBKzVYRK91W9sUX+AgvjCJZKczVH5pGZ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MhqLUs6GRKKiUAV6COqL8S9WOmzekLfLb20WVGT8tMENLh0j6eAXEQV8PFdSq/qo5
-	 DF34dJniE4HB6pqQEfTgEY14ZHob3uA9ZT+FsEt1IzqtgNI7ib0yLNil0Ffe5orTeG
-	 GGL4DRBfOIG4pZ+SgMkLWYwK0A08xFwhUUFSolpvhGhZX8PuVQ9vR4kwInjSqyzWSY
-	 qyXlfMuvXZyHrvqPc/YavgMInuWp3xZFR2AfmA/3RLwVZAlJxW4t+SXIMqPcZYdJ/k
-	 Lh+hVqg2Jq3ACnriZz/TIHhhJ/Pb6Yk99p1bN1gREkxmpCBDcOzg6XCJA+E3DC5pnC
-	 /50vIvnhy80TQ==
-Date: Fri, 9 May 2025 10:30:59 +0900
+	b=MHte9XYn6HMHn3ARto3QQ0SiI2s/gKUtic5sjOReVdoJUEYrmAXbfYmpBLanzFHkY
+	 rYJYfhilNgYXMNyPKrJ4j8NQZUClzNdtQAPvht9ya608Hu4DklLd0MLu/H8iETPy0z
+	 F/CzqvMG83/in32TVGBSPUvABDz3VBOaEc7tVB2g0vpiOmbuC27vX3QIllche34tBE
+	 l5luMDCKwqwzplgvZMmcZzLHgcAYSHTMp9+HZuTFnkwh3EfAy9rUKdPxG09czdjnfx
+	 nQ3+K+7Vk51Iw6urIqUjwkr6Wuukt4TD4FC6DA8uhp6jWSdKfuvcNHLCZ3GRRCFFpW
+	 DphVvG24zvBxg==
+Date: Fri, 9 May 2025 10:32:22 +0900
 From: Mark Brown <broonie@kernel.org>
-To: "Colin King (gmail)" <colin.i.king@gmail.com>
-Cc: Oder Chiou <oder_chiou@realtek.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr
-Subject: Re: [PATCH][V2][next] ASoC: rt712-sdca: remove redundant else path
- of if statement
-Message-ID: <aB1a06gKZ4X8Uc2b@finisterre.sirena.org.uk>
-References: <20250508084527.316380-1-colin.i.king@gmail.com>
- <174671514156.7345.16339489109303663127.b4-ty@kernel.org>
- <a1f5fa12-1e0d-429c-bc15-79911c2571d1@gmail.com>
+To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: lgirdwood@gmail.com, linux-sound@vger.kernel.org,
+	kai.vehmanen@linux.intel.com, ranjani.sridharan@linux.intel.com,
+	yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+	guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] ASoC: SOF: Intel: add initial support for WCL
+Message-ID: <aB1bJpLx3aRzYuVQ@finisterre.sirena.org.uk>
+References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
+ <20250508180240.11282-4-peter.ujfalusi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,40 +45,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JbvGtJAmjdaqZG8k"
+	protocol="application/pgp-signature"; boundary="dnbjKym447hVCsoL"
 Content-Disposition: inline
-In-Reply-To: <a1f5fa12-1e0d-429c-bc15-79911c2571d1@gmail.com>
+In-Reply-To: <20250508180240.11282-4-peter.ujfalusi@linux.intel.com>
 X-Cookie: Well begun is half done.
 
 
---JbvGtJAmjdaqZG8k
+--dnbjKym447hVCsoL
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 08, 2025 at 04:17:42PM +0100, Colin King (gmail) wrote:
+On Thu, May 08, 2025 at 09:02:38PM +0300, Peter Ujfalusi wrote:
+> Clone PTL and adjust the number of cores from 5 to 3.
 
-> Looking at your repo I think you applied the V1 of the patch and not the V2.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Please submit an incremental patch with any changes you're looking for.
-
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
-
---JbvGtJAmjdaqZG8k
+--dnbjKym447hVCsoL
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgdWtAACgkQJNaLcl1U
-h9Av2wgAgqgvJq4Bu+T3uFohrNxXlAz+aWszOaoetOK0HfSBfhtPW1DGGkcBhuYY
-Ej25DGgAP+rNuDfqRzbwEIb5fDVMvL9FfYsSBIn0cHtSPvohYC4ArXJYMezorAi3
-dNfr1Oluwx2W2Fog0R69FTNZlbtaxo58JTmZOPBTY/MQHjUJmUjXpaLVcr00hev6
-AzvijQdRbqHiRT5nk/QEvG28VaLzlOoxETa+7V0m8VwBfE/1183IDYOVnbpt22fa
-n4XT/QU5g7YT59ZLy+DCa8/5oMi86zK09sAF9JTDToihJCEG21RSvDbSVbrD+3XD
-I6+wSTeHrco9Vdj3RBFNU4FMtHJY2w==
-=r5Tq
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgdWyUACgkQJNaLcl1U
+h9DsEQf9E7FgyihuxEBw34iVKKDCWsITXVvXK7QQ5sOJyXhhmNvz740PkInXafV2
+D6x8okwIwehLLeZ3BBtbiHsJbaa7a0UWiP0GVO+fLkBjRQBS4utUXb4iXk74vL/C
+3z6pTVi/6ItEmRQNArvKl/ag3RoMrNIP0j5tr25/7P/aQ+Ob4m5FnlC6i1qtR+Ba
+k3u68D5XsWmI+HEWCe5+6Nf5RbNlruv69yMHfJ18NvW2vI/lCMCV6nFvXJ1El1ej
+Q1zAa+sYwbvFimCGbbW3/uejkQmPZyZ1+NXJEmibmOwpSAY9hbop0xyM4zx+a3pG
+Mke5YNuG2wAMsvA394xlEleuUvNNfw==
+=s7Nl
 -----END PGP SIGNATURE-----
 
---JbvGtJAmjdaqZG8k--
+--dnbjKym447hVCsoL--
