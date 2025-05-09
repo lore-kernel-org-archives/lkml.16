@@ -1,148 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5997846F;
-	Fri,  9 May 2025 02:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868B424290D
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 02:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746757174; cv=none; b=th9OhFoGDmCbAPIp2LlnLy+XoiKgsQKrqBBHhNrwZcdIl9zk4je3XQGKngVDaimJD/UBB2JNVKwsPP/amELttiihL3+wXfR1QZIWP/BTWuH9gLWOETrGuGL8AVjDhrw9HP+TfzQyOS2qyqtxua7Ue1bvi7+eGTG/ngacSejkoj4=
+	t=1746757353; cv=none; b=gWD8zZ5/42TvhfOxoZ3zBZs30nGQNjdhUggt/7ELnaV/y/pf/cc7oNnW3CEhamZa2RhPko2AkRXVV7bMmmcEV5Hm1IhwyHywx82hZLBDhi7nqUXXAL7em8XS+Fpil9NIpSF/3rA3BjKECHaBf8qmJWWQ8OE0ByqVmp11N8PGSeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746757174; c=relaxed/simple;
-	bh=WnBpkQV0yq9AWdCpThVf6GUnM7PgMoyjUXtRXm1i0ms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X9k/oySPLN6fFsv9UDO6IyJbvoV0ccufjLDi2ZO6aklJgMOW1JHUU5xh+iQHxmaq8U2BNeKdMxNaza0HeanZ4l7LZ2Ds1Gpa1aPIxx1q7iGW2b/cT/WU2mqCRjZkV1X8/v0ZouAWzqw/ss2G3Fz2Wc8/kIUatOQVjJ7wt+C3kI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3kKUNXo; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746757353; c=relaxed/simple;
+	bh=Lnw5auLArtZOhIatGNwbk3W8GByv+4IzBJQn2/H6EeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jRqD+8DH0tdjChsq319beMbeRIjFqnwA9O1kGYulw9fg1GP1QS/70bJWkn1UckhiP3tQt2bTKsX7sOMaYh8f2DtIHwtpnsya68KP9azl9G9Uevi0I4pRwQxIvVZSKkuk3cawUjcUmNB1FaiUrDvLwKLtNgqN8BOrBQpPThUz3RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qwp793p8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3kKUNXo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746757173; x=1778293173;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WnBpkQV0yq9AWdCpThVf6GUnM7PgMoyjUXtRXm1i0ms=;
-  b=N3kKUNXob5pkND0wfrS03DWdQqSPD+RLFiDeJmy+p5AxX5M9+CJ+OrwK
-   rWSRhUDo2V0cTfndvlyK9aIhFaPEd5560u2S8JlkQoB+Qyw4kdU9eH0P1
-   JDuAR2Z0fMqOPUB101ceV6cHbX8b3AI51fWf9gD2MGPL/+05qEJHpoOA9
-   MCjTyFMXHKOrNCjI3gOOSW+rHG5Symwf2AZSmLzFBxs5XVgYaMSvcGl8I
-   rtTawMe86+CCE90D30dp5GsioOmkBBtrmpYF1Ac+orHPNMD1Hdu568wDO
-   k1wJmVqan8okVlEZ4Uw2X1ATfIrtvokNdNDmyl99fsNqds8jm6GygLFLx
-   w==;
-X-CSE-ConnectionGUID: h9vo4ckqSQeev56iy+z+yw==
-X-CSE-MsgGUID: beakdVgpRdmSseV4tHfDKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48479313"
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="48479313"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 19:19:32 -0700
-X-CSE-ConnectionGUID: hTWXd3trQomq2TdVOhkBlA==
-X-CSE-MsgGUID: 38jSYgSFQSeRnsD7WpelPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="136360142"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.231.84]) ([10.124.231.84])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 19:19:29 -0700
-Message-ID: <a08c7053-26b8-43ae-a036-05ae2c132e4f@linux.intel.com>
-Date: Fri, 9 May 2025 10:19:25 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qwp793p8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746757350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T3wQCin9HeB8txhWwzUBKyex+RK7rsIvnKnnr87lbKI=;
+	b=Qwp793p8hiR21xWekAHoXTBMHwCAgWq2HqrOWkMPd4zPyqIEGpaLxInTMlf07ECBD50o1i
+	gX2gUSH5IpuUgRppbT/k5T3CNpRfKL45JsrB41gYjRn1Ts1URdaWZqp0AV3vpGHQgoJQNU
+	qwxJy+rwj0qaLmBOL3ILYCUCXW8ROFY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-bllVoA_ENB2Ua9YfXuprIA-1; Thu,
+ 08 May 2025 22:22:29 -0400
+X-MC-Unique: bllVoA_ENB2Ua9YfXuprIA-1
+X-Mimecast-MFC-AGG-ID: bllVoA_ENB2Ua9YfXuprIA_1746757346
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6B1DD195608F;
+	Fri,  9 May 2025 02:22:26 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.120])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D8709180045B;
+	Fri,  9 May 2025 02:22:12 +0000 (UTC)
+Date: Fri, 9 May 2025 10:22:07 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <llong@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org, storagedev@microchip.com,
+	virtualization@lists.linux.dev,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v6 7/9] lib/group_cpus: honor housekeeping config when
+ grouping CPUs
+Message-ID: <aB1mz7a8tEZhVNIG@fedora>
+References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
+ <20250424-isolcpus-io-queues-v6-7-9a53a870ca1f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
- with vCPU's value.
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Seth Forshee <sforshee@kernel.org>
-References: <20250426001355.1026530-1-seanjc@google.com>
- <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
- <aBTe6dpaQs6bmFwh@google.com>
- <d78cd913-69eb-415f-ac30-1677642a5f1a@linux.intel.com>
- <aBy2AGIFi34q031x@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aBy2AGIFi34q031x@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-isolcpus-io-queues-v6-7-9a53a870ca1f@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+
+On Thu, Apr 24, 2025 at 08:19:46PM +0200, Daniel Wagner wrote:
+> group_cpus_evenly distributes all present CPUs into groups. This ignores
+> the isolcpus configuration and assigns isolated CPUs into the groups.
+> 
+> Make group_cpus_evenly aware of isolcpus configuration and use the
+> housekeeping CPU mask as base for distributing the available CPUs into
+> groups.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>  lib/group_cpus.c | 82 +++++++++++++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 79 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/group_cpus.c b/lib/group_cpus.c
+> index 016c6578a07616959470b47121459a16a1bc99e5..707997bca55344b18f63ccfa539ba77a89d8acb6 100644
+> --- a/lib/group_cpus.c
+> +++ b/lib/group_cpus.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/sort.h>
+>  #include <linux/group_cpus.h>
+> +#include <linux/sched/isolation.h>
+>  
+>  #ifdef CONFIG_SMP
+>  
+> @@ -330,7 +331,7 @@ static int __group_cpus_evenly(unsigned int startgrp, unsigned int numgrps,
+>  }
+>  
+>  /**
+> - * group_cpus_evenly - Group all CPUs evenly per NUMA/CPU locality
+> + * group_possible_cpus_evenly - Group all CPUs evenly per NUMA/CPU locality
+>   * @numgrps: number of groups
+>   * @nummasks: number of initialized cpumasks
+>   *
+> @@ -346,8 +347,8 @@ static int __group_cpus_evenly(unsigned int startgrp, unsigned int numgrps,
+>   * We guarantee in the resulted grouping that all CPUs are covered, and
+>   * no same CPU is assigned to multiple groups
+>   */
+> -struct cpumask *group_cpus_evenly(unsigned int numgrps,
+> -				  unsigned int *nummasks)
+> +static struct cpumask *group_possible_cpus_evenly(unsigned int numgrps,
+> +						  unsigned int *nummasks)
+>  {
+>  	unsigned int curgrp = 0, nr_present = 0, nr_others = 0;
+>  	cpumask_var_t *node_to_cpumask;
+> @@ -427,6 +428,81 @@ struct cpumask *group_cpus_evenly(unsigned int numgrps,
+>  	*nummasks = nr_present + nr_others;
+>  	return masks;
+>  }
+> +
+> +/**
+> + * group_mask_cpus_evenly - Group all CPUs evenly per NUMA/CPU locality
+> + * @numgrps: number of groups
+> + * @cpu_mask: CPU to consider for the grouping
+> + * @nummasks: number of initialized cpusmasks
+> + *
+> + * Return: cpumask array if successful, NULL otherwise. And each element
+> + * includes CPUs assigned to this group.
+> + *
+> + * Try to put close CPUs from viewpoint of CPU and NUMA locality into
+> + * same group. Allocate present CPUs on these groups evenly.
+> + */
+> +static struct cpumask *group_mask_cpus_evenly(unsigned int numgrps,
+> +					      const struct cpumask *cpu_mask,
+> +					      unsigned int *nummasks)
+> +{
+> +	cpumask_var_t *node_to_cpumask;
+> +	cpumask_var_t nmsk;
+> +	int ret = -ENOMEM;
+> +	struct cpumask *masks = NULL;
+> +
+> +	if (!zalloc_cpumask_var(&nmsk, GFP_KERNEL))
+> +		return NULL;
+> +
+> +	node_to_cpumask = alloc_node_to_cpumask();
+> +	if (!node_to_cpumask)
+> +		goto fail_nmsk;
+> +
+> +	masks = kcalloc(numgrps, sizeof(*masks), GFP_KERNEL);
+> +	if (!masks)
+> +		goto fail_node_to_cpumask;
+> +
+> +	build_node_to_cpumask(node_to_cpumask);
+> +
+> +	ret = __group_cpus_evenly(0, numgrps, node_to_cpumask, cpu_mask, nmsk,
+> +				  masks);
+> +
+> +fail_node_to_cpumask:
+> +	free_node_to_cpumask(node_to_cpumask);
+> +
+> +fail_nmsk:
+> +	free_cpumask_var(nmsk);
+> +	if (ret < 0) {
+> +		kfree(masks);
+> +		return NULL;
+> +	}
+> +	*nummasks = ret;
+> +	return masks;
+> +}
+> +
+> +/**
+> + * group_cpus_evenly - Group all CPUs evenly per NUMA/CPU locality
+> + * @numgrps: number of groups
+> + * @nummasks: number of initialized cpusmasks
+> + *
+> + * Return: cpumask array if successful, NULL otherwise.
+> + *
+> + * group_possible_cpus_evently() is used for distributing the cpus on all
+
+s/evently/evenly/
+
+> + * possible cpus in absence of isolcpus command line argument.
+
+s/isolcpus/isolcpus=io_queue
+
+> + * group_mask_cpu_evenly() is used when the isolcpus command line
+> + * argument is used with managed_irq option. In this case only the
+
+s/managed_irq/io_queue
+
+> + * housekeeping CPUs are considered.
+
+I'd suggest to highlight the difference, which is one fundamental thing,
+originally all CPUs are covered, now only housekeeping CPUs are
+distributed.
+
+Otherwise, looks fine to me:
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 
-On 5/8/2025 9:47 PM, Sean Christopherson wrote:
-> On Tue, May 06, 2025, Dapeng Mi wrote:
->> On 5/2/2025 11:04 PM, Sean Christopherson wrote:
->>> On Sun, Apr 27, 2025, Dapeng Mi wrote:
->>>> On 4/26/2025 8:13 AM, Sean Christopherson wrote:
->>>> Currently we have this Sean's fix, only the guest PEBS event bits of
->>>> IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simply
->>>> change global_ctrl guest value calculation to this.
->>>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index 09d2d66c9f21..5bc56bb616ec 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
->>>> *intel_guest_get_msrs(int *nr, void *data)
->>>>         arr[global_ctrl] = (struct perf_guest_switch_msr){
->>>>                 .msr = MSR_CORE_PERF_GLOBAL_CTRL,
->>>>                 .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
->>>> -               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
->>>> +               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask,
->>>>         };
->>> Hmm, that's not as clear cut.  PEBS needs to be disabled because leaving it enabled
->>> will crash the guest.  For the counter itself, unless leaving it enabled breaks
->>> perf and/or degrades the sampling, I don't think there's an obvious right/wrong
->>> approach.
->>>
->>> E.g. if the host wants to profile host and guest, then keeping the count running
->>> while the guest is active might be a good thing.  It's still far, far from
->>> perfect, as a counter that overflows when the guest is active won't generate a
->>> PEBS record, but without digging further, it's not obvious that even that flaw
->>> is overall worse than always disabling the counter.
->> Hmm, if the host PEBS event only samples host side, whether the HW counter
->> or the PEBS engine would be disabled once VM enters non-root mode, the KVM
->> PEBS implementation is correct. But for the host PEBS events which sampling
->> both host and guest, the implementation seems incorrect.
-> Well, yeah, because there is no correct implementation.
->
->> As the below code shows, as long as there are host PEBS events regardless
->> of the host PEBS events only sample guest or both host and guest, the host
->> PEBS events would be disabled on both HW counters and PEBS engine once VM
->> enters non-root mode.
->>
->>     arr[global_ctrl] = (struct perf_guest_switch_msr){
->>         .msr = MSR_CORE_PERF_GLOBAL_CTRL,
->>         .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
->>         .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
->>     };
->>
->>     if (arr[pebs_enable].host) {
->>         /* Disable guest PEBS if host PEBS is enabled. */
->>         arr[pebs_enable].guest = 0;
->>
->>     }
->>
->> So the host PEBS events which hopes to sample both host and guest only
->> samples host side in fact. This is unexpected.
-> It's only unexpected in the sense that it's probably not well documented.  Because
-> the DS buffer is virtually address, there simply isn't a sane way to enable PEBS
-> (or any feature that utizies the DS buffer) while running a KVM guest that isn't
-> enlightened to explicitly allow profiling via host PEBS (and AFAIK, no such guest
-> exists).
->
-> Even when KVM is using shadowing paging, i.e. fully controls the page tables used
-> while the guest is running, enabling PEBS isn't feasible as KVM has no way to
-> prevent the guest from using the virtual address.  E.g. KVM could shove in mappings
-> for the DS buffer, but that DoS the guest if the guest wants to use the same
-> virtual address range for its own purposes, and would be a massive data leak to
-> the guest since the guest could read host data from the buffer.
+Thanks,
+Ming
 
-Yeah, that's true. Thanks for the explanation.
-
-
->
