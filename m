@@ -1,43 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D42191F77;
-	Fri,  9 May 2025 11:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7BA226D04;
+	Fri,  9 May 2025 11:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746789467; cv=none; b=q+uNlPY68rBWQ9DTWlM70g7T5U9EK0xO0rManJWgMvRyOE4L7Fle+V6FkL9PuOBaCooMAETpj+Pa4ARk5X62MNJB8CoETYxtCBGtTV5PZLg5SsIJRmLuQC6Ti7UI3tQRX8MB7p3lcxoYaZbzfu4CDibpdVMVxeOOJh1HstHt/1c=
+	t=1746789493; cv=none; b=rNFrk8WK+bn7xkoBmE8aTiHnuFMu+Fg9/OkT/dFalPPCzHEmUDqwWQaDQDzY5ou+bedzVYfXoOapVDAI9G+OMs5Q9Zc7Vg6F1DHGF3bJaUzC2nFOy6ksUnWBR0DOUfjCu2kL0Wpzqdo+cnLJkfyiFQF+4H/rdn0+1uoNvjVCzGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746789467; c=relaxed/simple;
-	bh=5toU20lLPcHpFhmH/fo6ZfSW85f0kYgZLq6AuB/xV4w=;
+	s=arc-20240116; t=1746789493; c=relaxed/simple;
+	bh=aiPaYDwSGvN0K0HQK9CDqTSbttoNGl/6tY2Cm6xaBBs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mn6qqFw4ejNlCQJwJ9i4t8ELMdOh6jHcDYk6FQ1f7QWym7Z6FVo60Q0parEnC1ZZc1HeLcTHYEbvkAUb10/tit3Fmh+4osVY5ZYakiAbwyeuUm9cuiuvbB/aSBCjLbLXBvC8VclTug6LennJMOz8O6ducOXA0CSQWFDN9vSft9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qlrnuZbr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zzps36xMJJY+roc+9HgimgmR6EDMXRhpC9Pg8PcwI+VpaLB+I1G0bZr3khLQEFZwMFufoExHBwa6ozOHtyZ4YlV2RW/jERPxfPeUclJ/9uTUMrL8xJioxO7QKuOacE05JziZFEyHwnaWvooIXoffvG5RvNsnwAtMJt9xJ+Pa5Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D+k7tabO; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qlrnuZbr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3774C4CEE4;
-	Fri,  9 May 2025 11:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746789466;
-	bh=5toU20lLPcHpFhmH/fo6ZfSW85f0kYgZLq6AuB/xV4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qlrnuZbrDdMl1LOXEWXmOYAJpjdDqAv6MQvg1k5KaG0HBW1S0JtR/iaFXWXli9wZG
-	 +tUnEtTzgB0O48cwF1QBdw0uV95qWfA1eBSsKhl+PcvSO3RSFfrTBS3un5mc/Jvc3k
-	 aiyBhi2jSDQC0lg6k0BalpwSnd6xgQBgOvOLsWNpASxNeaYMqDvzyPtDCpqkd827ys
-	 brZD5Nd9iPZieQmAHpoycI2B5RcvLPz3KabH5McP0dT71ahCsUm796opsi8c5hHAsp
-	 tRi05iqxUiofNpuc/52QY8+yyNKX7NSYrNr3r6sWd1MxOYJYrnx+EpPZwV2LGpPr5a
-	 9E8lmt76Eb1Lg==
-Date: Fri, 9 May 2025 13:17:39 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Omar Sandoval <osandov@osandov.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, Sentaro Onizuka <sentaro@amazon.com>
-Subject: Re: [PATCH] fs: convert mount flags to enum
-Message-ID: <20250509-hebel-medizin-9e4808c9aece@brauner>
-References: <20250507223402.2795029-1-stephen.s.brennan@oracle.com>
- <20250507230511.GA2023217@ZenIV>
- <aBvo_-Ee7QQtd3YU@telecaster>
- <aBvwX_QaVgBNpedP@telecaster>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D+k7tabO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746789491; x=1778325491;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=aiPaYDwSGvN0K0HQK9CDqTSbttoNGl/6tY2Cm6xaBBs=;
+  b=D+k7tabOKOIL7tJ2NgJbn5avF239nlxYZIix3stzqbyGRByseyGe4uaG
+   ZVFzM9o2U2X3/bXV9w+VXNhmqdrjS7PFMcWbVo5yKxAmY16cQuj85xxd6
+   cDhd/wJgn+ExsG4HqD/5HROsuhZ4ZZFnqnk/CbMuIGf9ui87/0uFuS1G9
+   CRY5HVUdXFPgz0iiKFwjyTqu/Hjg97Q/uiEkqzoT1zvOSYb4eoHfVSTwS
+   ZZqTvaBEIN8kamEeTmXmidTv6jMQsHY29nq6OegwZ540D95RYyEyC+cfa
+   zgJ3TGwNtNSyrTpGcXRHCxicYASTaf5oRLctwX+sr1XUqI4KJIMHEgT0G
+   w==;
+X-CSE-ConnectionGUID: vAKYOpV1TzyszkM8l1uifQ==
+X-CSE-MsgGUID: t7xsvERHQdO1BDMcUc57Tw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52422846"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="52422846"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 04:18:10 -0700
+X-CSE-ConnectionGUID: IO0YruilQeCpWzu6FzjjTw==
+X-CSE-MsgGUID: 19XzKC/dT36Fay078oLWsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="136294670"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa009.jf.intel.com with ESMTP; 09 May 2025 04:18:06 -0700
+Date: Fri, 9 May 2025 19:12:46 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	jgg@nvidia.com, vivek.kasireddy@intel.com, dan.j.williams@intel.com,
+	yilun.xu@intel.com, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aB3jLmlUKKziwdeG@yilunxu-OptiPlex-7050>
+References: <20250107142719.179636-1-yilun.xu@linux.intel.com>
+ <371ab632-d167-4720-8f0d-57be1e3fee84@amd.com>
+ <4b6dc759-86fd-47a7-a206-66b25a0ccc6d@amd.com>
+ <c10bf9c2-e073-479d-ad1c-6796c592d333@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,49 +69,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aBvwX_QaVgBNpedP@telecaster>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c10bf9c2-e073-479d-ad1c-6796c592d333@amd.com>
 
-On Wed, May 07, 2025 at 04:44:31PM -0700, Omar Sandoval wrote:
-> On Wed, May 07, 2025 at 04:13:03PM -0700, Omar Sandoval wrote:
-> > On Thu, May 08, 2025 at 12:05:11AM +0100, Al Viro wrote:
-> > > On Wed, May 07, 2025 at 03:34:01PM -0700, Stephen Brennan wrote:
-> > > > In prior kernel versions (5.8-6.8), commit 9f6c61f96f2d9 ("proc/mounts:
-> > > > add cursor") introduced MNT_CURSOR, a flag used by readers from
-> > > > /proc/mounts to keep their place while reading the file. Later, commit
-> > > > 2eea9ce4310d8 ("mounts: keep list of mounts in an rbtree") removed this
-> > > > flag and its value has since been repurposed.
-> > > > 
-> > > > For debuggers iterating over the list of mounts, cursors should be
-> > > > skipped as they are irrelevant. Detecting whether an element is a cursor
-> > > > can be difficult. Since the MNT_CURSOR flag is a preprocessor constant,
-> > > > it's not present in debuginfo, and since its value is repurposed, we
-> > > > cannot hard-code it. For this specific issue, cursors are possible to
-> > > > detect in other ways, but ideally, we would be able to read the mount
-> > > > flag definitions out of the debuginfo. For that reason, convert the
-> > > > mount flags to an enum.
-> > > 
-> > > Just a warning - there's a bunch of pending changes in that area,
-> > > so debuggers are going to be in trouble anyway.
-> > > 
-> > > Folks, VFS data structures do *NOT* come with any stability warranties.
-> > > Especially if the object in question is not even defined in include/*/*...
-> > > 
-> > > _Anything_ that tries to play with these objects must be version-dependent
-> > > and be ready to be broken by changes in underlying code at zero notice.
-> > 
-> > That's totally fine, we can deal with breakages as long as we can
-> > reliably detect what version we're dealing with. We can see changed enum
-> > values, renamed/removed structure members, etc., so that's why those are
-> > preferable. Macros are invisible at the debug info level (since no one
-> > compiles with -g3), so those are no good for us. We also avoid version
-> > checks as much as possible because backports in RHEL and co. make
-> > version numbers mostly meaningless.
+On Fri, May 09, 2025 at 01:04:58PM +1000, Alexey Kardashevskiy wrote:
+> Ping?
+
+Sorry for late reply from vacation.
+
+> Also, since there is pushback on 01/12 "dma-buf: Introduce dma_buf_get_pfn_unlocked() kAPI", what is the plan now? Thanks,
+
+As disscussed in the thread, this kAPI is not well considered but IIUC
+the concept of "importer mapping" is still valid. We need more
+investigation about all the needs - P2P, CC memory, private bus
+channel, and work out a formal API.
+
+However in last few months I'm focusing on high level TIO flow - TSM
+framework, IOMMUFD based bind/unbind, so no much progress here and is
+still using this temporary kAPI. But as long as "importer mapping" is
+alive, the dmabuf fd for KVM is still valid and we could enable TIO
+based on that.
+
 > 
-> To clarify, we avoid version _number_ checks (i.e., `if (kernel_version
-> >= 6.15)`) as much as possible. "Version checks" in general are
-> unavoidable, but in drgn, we try to base them on the existence of
-> structure members, global variables, types, enum values, etc.
+> 
+> On 29/4/25 17:50, Alexey Kardashevskiy wrote:
+> > 
+> > 
+> > On 29/4/25 16:48, Alexey Kardashevskiy wrote:
+> > > On 8/1/25 01:27, Xu Yilun wrote:
+> > > > This series is based on an earlier kvm-coco-queue version (v6.12-rc2)
+> > > 
+> > > Has this been pushed somewhere public? The patchset does not apply on top of v6.12-rc2, for example (I fixed locally).
 
-Yeah, that should be fine imho. I know that you're aware that we give no
-stability guarantees but drgn is actively used by kernel developers and
-that's a change we can accept without a lot of trouble for ourselves.
+Sorry, not yet. I'm trying to solve this ... same for the QEMU tree.
+
+> > > Also, is there somewhere a QEMU tree using this? I am trying to use this new DMA_BUF feature and this require quite some not so obvious plumbing. Thanks,
+> > 
+> > 
+> > More to the point, to make it work, QEMU needs to register VFIO MMIO BAR with KVM_SET_USER_MEMORY_REGION2 which passes slot->guest_memfd to KVM which essentially comes from VFIORegion->mmaps[0].mem->ram_block->guest_memfd. But since you disabled mmap for private MMIO, there is no MR which QEMU would even try registering as KVM memslot and there are many ways to fix it. I took a shortcut and reenabled mmap() but wonder what exactly you did. Makes sense? Thanks,
+
+Yes, QEMU needs change. 08/12 "vfio/pci: Create host unaccessible dma-buf for private device“
+adds a new flag VFIO_REGION_INFO_FLAG_PRIVATE to indicate user could
+create dmabuf on this region.
+
+I'm also not very serious about QEMU changes now, just FYI:
+
+I use VFIO_REGION_INFO_FLAG_PRIVATE flag to revive region->mmaps.
+
+int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
+	...
+
++        if (region->flags & VFIO_REGION_INFO_FLAG_PRIVATE) {
++            region->nr_mmaps = 1;
++            region->mmaps = g_new0(VFIOMmap, region->nr_mmaps);
++            region->mmaps[0].offset = 0;
++            region->mmaps[0].size = region->size;
++            region->mmaps[0].dmabuf_fd = -1;
+         }
+
+Then in vfio_region_mmap(), use a new memory_region_init_dmabuf() to populate
+the MR.
+
+int vfio_region_mmap(VFIORegion *region)
+
++        if (use_dmabuf) {
++            /* create vfio dmabuf fd */
++            ret = vfio_create_dmabuf(region->vbasedev, region->nr,
++                                     region->mmaps[i].offset,
++                                     region->mmaps[i].size);
++            if (ret < 0) {
++                goto sub_unmap;
++            }
++
++            region->mmaps[i].dmabuf_fd = ret;
++
++            name = g_strdup_printf("%s dmabuf[%d]",
++                                   memory_region_name(region->mem), i);
++            memory_region_init_dmabuf(&region->mmaps[i].mem,
++                                             memory_region_owner(region->mem),
++                                             name, region->mmaps[i].size,
++                                             region->mmaps[i].dmabuf_fd);
++            g_free(name);
++        } else {
+
+Thanks,
+Yilun
