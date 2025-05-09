@@ -1,108 +1,86 @@
-Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F850221555;
-	Fri,  9 May 2025 18:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.104
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F341366;
+	Fri,  9 May 2025 18:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746813850; cv=none; b=T/lGgdby1xjjGc6D+grBjE/FXpX4pVQ5iRMpCA+exDJbEyKzYFTjVc7Q6kef1P2mP5z/SAf1RB70ASd+OswSVCfHTjka4lLR3VP/x35kxdfAKZsyNrQ3316wA+zE7o5dsxN4DGvwQZMkNTLAKOT4CJ1rKOabxCUh0KaboxI0noA=
+	t=1746813917; cv=none; b=Ok+UtGBZXybNdZSxIxCHUyn2X0F20yB0pkAiy3pT7Em2uvbpNyfA9+ZFFrc7j2OpT9keKElUqkEg4PsgfOCkpctA8VFtxmlafhWb/vtoqFgXW5mjFJaDSVsSZiTTw9Miels+YUmM0NK/2IYuPIRYWJ7PyGrefd0iILvgn6Nxd/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746813850; c=relaxed/simple;
-	bh=JCx+YKX27VH7iS35r9Ygz43X7qVTl9DIxDIIM7uqJRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+mXsAzjIES1JwGVVLBeE7RHsBDs95VaXUJurXHBz4Vc3Kg1T87NEtalh0yAUCYPGy3ZocFH/agJ6nZ+Hmhd1BloLBb/npQexKk3u/X5Vmbdkm3silcFgU4mYbarmOVMLkrZHhz/kEYxb624hRpU6agLw44EtrYbQViyq/aHWyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=Ujty/sTB; arc=none smtp.client-ip=148.163.148.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	s=arc-20240116; t=1746813917; c=relaxed/simple;
+	bh=FD2ltmqz6UpEB5QluQuj7xhJcNrbblkV+YuOhTLH20M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ns+lgyI0YXczuZu6ttGiAaFVBdIW6A3d1iSFyTaVHzwUfKJCSXCMQEEDdzvjJwz8MdGdzFFHeX7qw4ghQzcbVbGyJUP9JDvt97I2AOAZ3uCQGfAgE3SP6M6AlWgSQ6kMQKDp32KAxfq6j+NLya4R94LKLiKk7QmwLPv3sDPflJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sXFSSZfu; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="Ujty/sTB"
-Received: from pps.filterd (m0355087.ppops.net [127.0.0.1])
-	by mx0a-00823401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5498qK61031439;
-	Fri, 9 May 2025 18:03:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=DKIM202306; bh=8TqIGxRNcE17sBdZAJDFnb0
-	1+U1SAEShOq+/byms6Ps=; b=Ujty/sTBUEug2fI3PuqWzJFvut+cRB5KIczHX9O
-	3PGajOVOIsW/0p5ce9qncsbK9TfUbw0N9lw27SR0N0FsGMLnHjSjOSKCDXx4cuxt
-	bv6G7/OtdgfhpykPRtXYNlbwydtYltNMKvvWLsPjYWy8CN9eF8fgcgZP70xdHfvf
-	mhpX1KyUaV5Rbd+vC2kb8dzJg/qsF7JcIdp8kMV78pmPRhgN9hq5iRyw+I+63R4K
-	hcEXkH5EtnoedTQyaYq9LNoIS7gWbubrYDfH/xaLjgOcimJLnK0TiQig7ToNlGTz
-	jDD+ObWgb83Nv32gKpFpuaOwCxnwX5ZMBPRqjaAUwWUlx3A==
-Received: from va32lpfpp02.lenovo.com ([104.232.228.22])
-	by mx0a-00823401.pphosted.com (PPS) with ESMTPS id 46gn1y5ax0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 18:03:39 +0000 (GMT)
-Received: from va32lmmrp01.lenovo.com (unknown [10.62.177.113])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4ZvH1Q46Bmzxd6r9;
-	Fri,  9 May 2025 18:03:38 +0000 (UTC)
-Received: from ilclasset02 (ilclasset02.mot.com [100.64.11.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4ZvH1Q1zp1z2VZ18;
-	Fri,  9 May 2025 18:03:38 +0000 (UTC)
-Date: Fri, 9 May 2025 13:03:36 -0500
-From: Maxwell Bland <mbland@motorola.com>
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: bpf@vger.kernel.org, Puranjay Mohan <puranjay@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH bpf-next v9 0/2] Support kCFI + BPF on arm64
-Message-ID: <bxmdpg6frmhdw23ktemguglrdwweyibn2vuauc7gs7txt5jvkv@47en4a643bb3>
-References: <20250505223437.3722164-4-samitolvanen@google.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sXFSSZfu"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 36E2F2115DA9;
+	Fri,  9 May 2025 11:05:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 36E2F2115DA9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746813910;
+	bh=3yOV6BOvMKw3ti/gZ68xUptMLORu1abg5DNjIGVosb4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sXFSSZfukWMf5tU1ljKtlxf5AMt+3EF7A8g587CX3J+xjcKOQNDINH2UVYzsB0PrS
+	 Me7pNTUhMqs/rqcapQD0idcSCxjsQ6PHQZQZ/byD1pVfOh9yxRD9KYutpHFbNIQv5g
+	 YP5Q5KAYy2rz5/Fv7KRRqTOmc0YmC/80oQpN35+Q=
+Message-ID: <30fdc85f-5afc-4591-ab43-1c46c435025c@linux.microsoft.com>
+Date: Fri, 9 May 2025 11:05:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505223437.3722164-4-samitolvanen@google.com>
-X-Proofpoint-GUID: 1xkmKuqKs1BUOucwNZPrkA4H-1kBsQRa
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE4MCBTYWx0ZWRfXwKeEPUGvNJ4j
- z8vD2PD/auKSZS/8nudNn8hS66ir8bE9q5lDa80VfAH4uv4jovG61yxcMf60KjrG501r263Ota5
- TGDAd2WX0n1UdQab9hwHprOCGa1DdIJQKJLzyBSXwhnPmWnQ2g4su6QaG08npfYd8VpD6XZYzeV
- 7ojjM4vxgWgFj0vL+NDzbPi61+RIpFMxlgXukkZH6+wZw3VZ1Y6FeLjODOzK7fLtRPCI8VRLi7Y
- qUNRIlJQe1q4iQzQgBGUU/WWb8iwMwowXCWqucq7l0bAR8kIatWPH5dxq7uhOJnMlS+LV6XyVsa
- I7IKBS6Qm4xRHCvN7FJr3A4dO+hHbcOLz0DpD0DOGeK3k4/GAu5q7+L5jQKDVHPm2zfY/iiCjlC
- opfSrxrqPsTAqgETd0KsVYUc8+bqSDpwjEJ/h4My3/9+0B97O38dkbuyf/HL4sT52S3Nm1/Q
-X-Proofpoint-ORIG-GUID: 1xkmKuqKs1BUOucwNZPrkA4H-1kBsQRa
-X-Authority-Analysis: v=2.4 cv=EMoG00ZC c=1 sm=1 tr=0 ts=681e437b cx=c_pps
- a=7qI18unSaIz3cJfMvNS4Ww==:117 a=7qI18unSaIz3cJfMvNS4Ww==:17
- a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=Id0hMdnY8LVrUxL_22cA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_07,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
- clxscore=1011 adultscore=0 mlxlogscore=950 suspectscore=0 malwarescore=0
- bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
+To: Saurabh Singh Sengar <ssengar@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Cc: Naman Jain <namjain@linux.microsoft.com>,
+ KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Dexuan Cui <decui@microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250506084937.624680-1-namjain@linux.microsoft.com>
+ <KUZP153MB1444858108BDF4B42B81C2A0BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <8f83fbdb-0aee-4602-ad8a-58bbd22dbdc9@linux.microsoft.com>
+ <aBzx8HDwKakGG1tR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+ <KUZP153MB14447CC188576D3A7376CEAABE8AA@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <KUZP153MB14447CC188576D3A7376CEAABE8AA@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 10:34:38PM +0000, Sami Tolvanen wrote:
-> Hi folks,
+
+
+On 5/9/2025 11:02 AM, Saurabh Singh Sengar wrote:
 > 
-> These patches add KCFI types to arm64 BPF JIT output. Puranjay and
-> Maxwell have been working on this for some time now, but I haven't
-> seen any progress since June 2024, so I decided to pick up the latest
-> version[1] posted by Maxwell and fix the few remaining issues I
-> noticed. I confirmed that with these patches applied, I no longer see
-> CFI failures when running BPF self-tests on arm64.
+> 
 
-Bump! Thank you Sami for following up on this, hopefully the maintainers
-will have time to take a look!
+[...]
 
-Regards,
-Maxwell
+>> Yep. We don't rely on user land software doing sane things to maintain
+>> correctness in kernel, so this needs to be fixed.
+>>
+>> Thanks,
+>> Wei.
+> 
+> 
+> How about fixing this for normal x86 for now and put a TODO for CVM to be fixed later, when we bring in CVM support ?
+
+That seems to strike the right balance ihmo :)
+Thanks for coming up with the suggestion!
+
+> 
+> Regards,
+> Saurabh
+
+-- 
+Thank you,
+Roman
+
