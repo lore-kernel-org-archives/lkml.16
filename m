@@ -1,134 +1,119 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7805878F34;
-	Fri,  9 May 2025 11:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F096278F34
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746791391; cv=none; b=SNPcNjYeZaY3Gy8aPboZxSXDd215pW1IXYSMMqvdTo0X4QGXVDg0xQAlyLUWDtvyy4GnZp1LaXEuda31aDsDPI4FKFevYenu5fKSjqt/KR6nyHwEZRgvGqFQeJqrOd/9reOT9wTvXRc2iY+exFljLaxpmRB7F2pHMkYHTMrUfN4=
+	t=1746791433; cv=none; b=uhdKesm+3ChhKwLCcjBJYhg3e7J+9jeayIsQS1YfOwgPr6R97cLAGfbsRdWpPRoVLm2LVc2mBkUbBZFqdVzkzKZ6u5h+igPpcjnt6TPid0NEEnA9NKfj37p97OgZZs6zU8dPb0UEUkq4JJhN5WvLQt9z/dU7k7Vk/P+BxKGsexw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746791391; c=relaxed/simple;
-	bh=LzA23owCl/gLCp+nsdd04SMLeGsi6TsTQ7PdTfr73kM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cUe0nQ/W3denzAoluBy/eGRPpRJOqSImzZCDjEcR6Ri8QjIRHJI2iTNH4DsgK7rJ59RQhsnN+fm972QzkmspEiPdMPiMF0uOycZH//2xqPO+eZ8CSow3RuQPsln3aTHWYs3wHfWr5uo8nYI4M2qZIKWuUCGPl9Z5GEUwt+PNDB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IIK6uLAU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746791433; c=relaxed/simple;
+	bh=6bSX9UNo+ut9uhyeztVWH22aZ+WPLHdTGC7kWwCUCXg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dWhcnopxQ7hUbTCUwYAftTepTwC8kzqLm00FDD/XrIqVRfBE2mvEjK+Vfv3fMBZvYSOcv0a/uDrHDcKigl5MCQUY7Pu96ySGH+vtzBbuzZU9nrTpE9wiaqLAHSffB/G0ZK1fOI/o+bRAjmDHktr/BeXRTT8hDgO9Gwm0eMQpIp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rDMP5Xzr; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IIK6uLAU"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5493oZ2W025020;
-	Fri, 9 May 2025 11:49:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ci3sr02skDu+fz21dgRxpuqvsMKPsA4s4hZNq9rv3x4=; b=IIK6uLAUXPVvw4Mr
-	XXANqvW0OFxGq2JEroUy+KkdaTPxiOKqn7cy7CQixr/qvmYOqNlUHmy+pvCAWDmA
-	lXhWo2ztzouj/lZERB6++piHsCBQxrd4idNaKsDdhKiB3fKTYyqb2XA0fWF5lmNv
-	xKsHoQwhJPhJtr6tW0/4OENlheLz8Lgj6SA8WDPF0ubm5nR66YkEzMHB/ylEQ0N4
-	0bVdYqL0eeNQLRSWBTEPOyk2KC5qo0nAvVjDq5pt9xPxf8Sk/FzNM3phw/L3prz7
-	KTHGXMM9Ly2rMxXGWNfifUWMKQShjXy6+2PwOebqTdFwzfSoz9CX82tYrCa/ULi2
-	1cYgNA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp14kxh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 11:49:27 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549BnQZj008105
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 11:49:26 GMT
-Received: from [10.216.32.234] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
- 04:49:20 -0700
-Message-ID: <be69cd1e-c04c-4976-9be1-390631316d3f@quicinc.com>
-Date: Fri, 9 May 2025 17:19:16 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDMP5Xzr"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54298ec925bso3078422e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746791430; x=1747396230; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6bSX9UNo+ut9uhyeztVWH22aZ+WPLHdTGC7kWwCUCXg=;
+        b=rDMP5XzrQ88umTP+9l67/zJpEOw9Tf5QRqmG8aid0Jm776jOYiSyw2ws4geCLljooS
+         JCnksf09yvbYgNnZrOpyZ4cmJktwmGqdGkqo2vEo5Io5P24KiCjl3aKESEHxnLLWs1NH
+         2lUA37eKUFR5c5QlKodJORWKFRN6wN+LCC8S3RKJcsImFCoknUUjmZiIZOSlyaFI/ftQ
+         iz02M+0jkawlqKfEL0vbGX54kzdzRkX5lP4Sge71epwG0v5DENaKpj/P1FEBxYwk9PeI
+         eRdTUV4XUD5FraSmI5vLEuJ+K5PdCjHH3uAAxFV/2TVnQpF1qz7ZGwUW01bx2ByhIc/c
+         LIFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746791430; x=1747396230;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6bSX9UNo+ut9uhyeztVWH22aZ+WPLHdTGC7kWwCUCXg=;
+        b=VIbfMaH4ZJaWwszcHqonE4UKazVwx/hpE4UY/0/BlZex8TjnTHeXAzrEMYOn25qA+c
+         yQFmzFHhN9tApDcc3KDlvTyZ125FPHbgumIqB9cYMjv8n4G2Iks7hObErhT/3q6OCi/w
+         Ycd6GEF+tAigKsac13jdoaKvqEDYECkZYRsZnN9D+a7iFlok7E0BqjYzdpaqBsPw9OIM
+         K328qzQSueH4A7djcKxg+tX26fJeEExfZlisJDb6RcyjOi/asZLy9mZJLzZ1+griwRvQ
+         FCcQen6Sv050czWdDf/w08APs1UXAOwyt2RIS/5fHyS+ESE3Inw73GLssk70PJqsg7GE
+         sAXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBGakDcaxJbffXLvmc/UFYzmjKveDkbvsgWagUIHSBEzTY8ymTnfo2DWw9+psXWj0r93ulc68P+96JBpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcPQmOHvX5fLsmLG47hhMSe8yFFUuPLl9soOBGcYrI3n2eVlIZ
+	OI0jSFTvGMwwuYogwwxC1A1TlPteiX9ouqRDIqj7NujUT/vrDjIZNaDwp3xhqAV5Byldz5nRCpz
+	Wnj4oSvN1vIwL2698aYGZI7ZfDwoaBjUXdEL6uw==
+X-Gm-Gg: ASbGnctzxXrXadThFRSAU3ua7QNSkhKSJKE2hlkvFrZmY0NGNKZWSepICmw/jGuIKXG
+	SyWPEpixX/rzFaigl6FLCr6knbGKKNNUPAbXWnsek/qDBZDi0WlJtM6hUOO0d/DQUD+UuByaoGQ
+	wh5kjwk2XEvRWrZ2uncD67WsiQ8dv+0zk1
+X-Google-Smtp-Source: AGHT+IE9OA/TgX88UK8wnm39DMsSy6I7xruaMSROXFg88YbOwzBbcaNlmJPRpQ8Ckx3l33XEBcNwePAgT7TtPdM2+0E=
+X-Received: by 2002:a2e:a991:0:b0:300:26bc:4311 with SMTP id
+ 38308e7fff4ca-326c4575642mr10757241fa.18.1746791429976; Fri, 09 May 2025
+ 04:50:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 10/11] scsi: ufs: qcom : Introduce phy_power_on/off
- wrapper function
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <manivannan.sadhasivam@linaro.org>,
-        <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
-        <bvanassche@acm.org>, <andersson@kernel.org>,
-        <neil.armstrong@linaro.org>
-CC: <quic_rdwivedi@quicinc.com>, <quic_cang@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-References: <20250503162440.2954-1-quic_nitirawa@quicinc.com>
- <20250503162440.2954-11-quic_nitirawa@quicinc.com>
- <58d913b8-0715-41b0-883a-423f29cb5a8c@oss.qualcomm.com>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <58d913b8-0715-41b0-883a-423f29cb5a8c@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDExNCBTYWx0ZWRfX9/mdN+QE6sga
- XEGTKXLXL+RNHewJvnuz8QuRTIm6Db0N3vjMZq1luej2RBe7fTqJTY5yntcsmdgujAhTvJC1rMy
- rlPHj9pn2FszkGvusWUF7t/NBgZXT/BmuV+dTDfnp7v/3FSK73eK38TnQ4XCeRhth93GBLhsNiL
- KflQOh5+moN2iQ3UxXiqLRY/H7xpv3bdDVzreJMpvOTUHuGXn2qGQR975LkO+yPlJzMPEA+27Yr
- dmkr9bOAADWAW74Vxkm5J2sH9OwV8l37jWcx0AH0RkGfG/OgwWGlIuGFPaqwnXgTjHeLFitnclq
- 13oCoNd1fnbjXkNwADfX/mwZfvMkcwNa4pNBUYeIPJ9tbnyMqFxjukJzuD1aFA8oKYyWI6tQpMU
- /UuLzzH6qygnTF6qU8BJZV8ZXfF10oeqh9jqdFXrgV4aOUm+2LdpkmCmsKOW6An0nXoJGZX+
-X-Proofpoint-GUID: BV_vMBhyeXkfyLkOd8T8YgUQmo0151il
-X-Proofpoint-ORIG-GUID: BV_vMBhyeXkfyLkOd8T8YgUQmo0151il
-X-Authority-Analysis: v=2.4 cv=W4o4VQWk c=1 sm=1 tr=0 ts=681debc7 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=ih6f6iITNb5_DMHZzIMA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_04,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=712 suspectscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
- clxscore=1015 malwarescore=0 impostorscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505090114
+References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
+ <20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org> <CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
+ <20250425104128.14f953f3@donnerap.manchester.arm.com> <CAGb2v65QUrCjgHXWAb72Sdppqg1AUxXyD_ZcXShtkRSHCQBbOg@mail.gmail.com>
+ <20250425160535.5a18adbb@donnerap.manchester.arm.com>
+In-Reply-To: <20250425160535.5a18adbb@donnerap.manchester.arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 9 May 2025 13:50:18 +0200
+X-Gm-Features: ATxdqUG6U2bPxTcfQiBy-oW1Lju29rGeV9-TYLkpQrHjbRn14HSqGi03f0yvO10
+Message-ID: <CACRpkdZH+NnP0-GkLe+nHK-Oi_Z=FzPaM=k1U-gZddp+P2+DTw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet MAC
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Corentin Labbe <clabbe.montjoie@gmail.com>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 25, 2025 at 5:05=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
+com> wrote:
+> On Fri, 25 Apr 2025 22:35:59 +0800
+> Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> adding LinusW for a more generic pinctrl question ...
 
+OK!
 
-On 5/9/2025 5:07 PM, Konrad Dybcio wrote:
-> On 5/3/25 6:24 PM, Nitin Rawat wrote:
->> Introduce ufs_qcom_phy_power_on and ufs_qcom_phy_power_off wrapper
->> functions with mutex protection to ensure safe usage of is_phy_pwr_on
->> and prevent possible race conditions.
->>
->> Co-developed-by: Can Guo <quic_cang@quicinc.com>
->> Signed-off-by: Can Guo <quic_cang@quicinc.com>
->> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->> ---
-> 
-> The PHY framework does the same thing internally already, this seems
-> unnecessary
+> > There isn't any assumption, as in we were fine with either the reset
+> > default or whatever the bootloader left it in. However in projects at
+> > work I learned that it's better to have explicit settings despite
+> > working defaults.
+>
+> I totally agree, but my point was that this applies basically to every
+> pinctrl user. I usually think of the bias settings as "do we need
+> pull-ups or pull-downs", and if nothing is specified, I somewhat assume
+> bias-disable.
+>
+> So I am fine with this being added here, but was wondering if we should
+> look at a more generic solution.
+>
+> Linus: is bias-disable assumed to be the default, that pinctrl drivers
+> should set in absence of explicit properties? Or is this "whatever is in
+> the registers at boot" the default we have to live with?
 
-Hi Konrad,
+We have never hammered down the semantics of that, so it's a bit
+up to the specific driver how they implement it (yeah a grey area...)
 
-Thanks for the review. There are scenarios where ufshcd_link_startup() 
-can call ufshcd_vops_link_startup_notify() multiple times during 
-retries. This leads to the PHY reference count increasing continuously, 
-preventing proper re-initialization of the PHY.
+There are many drivers that are carful to not touch register boot
+values but others who set them to some default, and people
+have different opinions on that.
 
-Recently, this issue was addressed with patch 7bac65687510 ("scsi: ufs:
-qcom: Power off the PHY if it was already powered on in 
-ufs_qcom_power_up_sequence()"). However, I still want to maintain a 
-reference count (ref_cnt) to safeguard against similar conditions in the 
-code. Additionally, this approach helps avoid unnecessary phy_power_on 
-and phy_power_off calls. Please let me know your thoughts.
-
-Regards,
-Nitin
-
-
-> 
-> Konrad
-
+Yours,
+Linus Walleij
