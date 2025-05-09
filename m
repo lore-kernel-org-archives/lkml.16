@@ -1,138 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE29212B28;
-	Fri,  9 May 2025 18:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DE222D4CE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746816664; cv=none; b=MCO2hnYQy00V3VeoqnUXJLsqC4CxNBeTWJQSduclUZxmLrRBV7csqEHFELYcjm0mF5SJAF95TipJqTBieRCdvZj5EL/cTjWNr2PK8uCq4aIXZlf1fFL7g8NnvYYLweVfSZGeUKqdGNlvfyhbp6RAtUfY2lfMCJghG/qZ0aIZR8o=
+	t=1746816750; cv=none; b=Y2hySdrNRNAUt8eEUbWOMyGadUC8GItWTWRJITeAMDXwgMzf3DSknOIsrj03kAupPtTpYK+hznE0X83HDafjGunps//CYn4sHz0pVkQkwWJbdOGJ/wBHFGAl+7q7XE+ycZS0J9neCxs/E47WlJBB4MU3P+Lmb67asqg239ClO8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746816664; c=relaxed/simple;
-	bh=t3m6be5GBZKdrb2ZBxNNUDmrq2ECraazOtASPCG9dFc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UfqRuI7/OmOOTVOpXVQW50onpigDiPKmAZMMxMhkkyCSNaNEAdolTqQnikVNAbyKncHPgjX3g4inXpHSCP2hir3UIB66r2ud59kzGA/a7Lsi/ujOJiW4HE27hih/FysB0XuCQjCuRN+lbr7SiXMPqBgQSvhHg8AXFLpSEu/Z+MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7l1iPae; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746816750; c=relaxed/simple;
+	bh=jKGp8MUBO3NCfO8hyqxEBHtx/Kan37BD/chEtj65acY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=C7TUDX6EVZB9FCf0EsX7nEfUIdaWH2w5LcaSbZPb7kqEq80ka3eX8rjzFf8XeDdZ+U+fUZ4+A7mKsuz8G11zrH84C4VHTemlL/BAMu0QWPjTObLak/8HpWlgb7B8f2Jb2XtSaBrq2qwn0Vt7Iqr6rr+VJGRVhjiQFbJbFlGdF/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oih4Arcw; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7l1iPae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA4EC4CEF2;
-	Fri,  9 May 2025 18:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746816663;
-	bh=t3m6be5GBZKdrb2ZBxNNUDmrq2ECraazOtASPCG9dFc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m7l1iPaebPB8QpdtDxlJvrG3KsATtIsUwTvEgjfVgiFb3gblXrLyISJH+qQrrNgCP
-	 0uZ4ljcnpDAZvwGeYNKKXp9bru/8418ffz4WgAmkJilx+cf8Ygm4bWpkNkQzp5iTRj
-	 TBTlPEwu0QxAd8epq3hJfqEYiecfrnsTeh5QCYMYWPprnnkNfrBQ2vkOQB7ljcwmzH
-	 EdVlXisW9LiDKm8wRBD05zF3BcCONSQLvz+c3CSCssjXY8PGgPS9g8fe2mioZW9Uhz
-	 KIh9VwNou+LnlevjzAvNBOF4nBx/WJXsXnGd3B5R6RE+In1bkLGwYOaCRFE74pVzhj
-	 sHz/6CEN1NYbw==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2cc36b39545so1175315fac.1;
-        Fri, 09 May 2025 11:51:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCULMq8Nc0Xp824uWoX+mXQmcAfIaTalLcTbon/yajrRztBOxPpKWEpLF7xK0HXp3eRTcH0jzfNtU19x@vger.kernel.org, AJvYcCUV1yMDGW81Q4RPiDjrTbU0BwE7jNXavXRJjP1mMFkcsPitFqBzICk8grfnE/pY7+ryQLbBO+qxoKkWVQLW@vger.kernel.org, AJvYcCXy/9BEnWqp3a59Gw2tRp6QfPEroJyI4rpTAEO342QPk29eVIV4SzSaxWr6iNUg5yzuLAApC1Ck8sfg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUv3oLffckSbd5E4jicWKHqb+GYG5afqjfbTuQYs1zHIf3irUl
-	oT/geaJ6kHQ3rfAMgRVDYuhve7iP1ERY+VlhxoS//5qsQdGbZla9GsqF3V1zxRTcg3KfpYrwVag
-	jlUi5gHIz9vlQmdY73nxAk7ahxbo=
-X-Google-Smtp-Source: AGHT+IF4m7l+X6tZAgUz1gBcgt1P07SQ28/qgwEd1nl2wrew0Ro2n7fDj43fzLHAM5GtUHYRT57r+FiLxNVkwVGsavc=
-X-Received: by 2002:a05:6870:718b:b0:2d5:307f:cc5f with SMTP id
- 586e51a60fabf-2dba588d3acmr2708220fac.12.1746816662921; Fri, 09 May 2025
- 11:51:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oih4Arcw"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso16238695e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746816746; x=1747421546; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4o6noN2eJkk0XdQVCPgCv7nvhvbBSL+3pUlcAtD0d+w=;
+        b=oih4ArcwCTz0noPPL6qr/QuO8XN2Lu4GBbH58Xqt2YF5l7BVWyWGHt5flCyf7bjNiz
+         nPxDNLiTwOLeOEgIFJMwMYUPnlu8UuK71WEMH5RsupOhCRNZ9s9RZHevQCSEErHct1jX
+         yTOfUHZF3lj1T4QdNtgje7gjDtEpVs9yL7hzC8iUb4Xhs5Q+HXa3Kzvy6ou/zyOWJitg
+         KxnTBD+2jMDnkgBWeM49P2e9Li+/7MSzFF0c1qPl0+L4oaApH71/zx+GpeLBoWMJ4WAE
+         F5rs3LTDsfP8+hj5F3Ys1N/F7EQZCnHqGiwjqfpjACNJ4QZ6mJ1ZRjCv46Hsc39xkyof
+         kalg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746816746; x=1747421546;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4o6noN2eJkk0XdQVCPgCv7nvhvbBSL+3pUlcAtD0d+w=;
+        b=QIG7jxMatzIjHlUmy632SjaNwJgxT8UL455FsiuzN2BVGsBkFzuXyI4FY4Co3/emlq
+         Je0fxUdccZcQaKyb9eyw8aL2qjWt3/b5nZ/Szm/4gMWJ2I/j15QmZJlydnhqFFkcc+D5
+         Jji23nibWyYkSc/uSlgaS/kN5xwfDn5MXRfTYJ1n88oYdrBp1L6fRvYY4qTmzvOTgfTk
+         Bv0YzseGM73uQtP89vgbaMkqNRTa36RIweV8Eb+tdX61g+CHsBsa2UwHou8jWrSLT0yj
+         8h8dJszJjJz5g3A1XQqGImTEDgfrK2nM3IZkM9oHQEfcPj0RW0FSAq/sLOzv3bITsJ+f
+         uqHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEUy8f/XY/UxPdWfR9i993ioYNXxAMnu1YqjPTwnTSUsIK9lHjasTwlR80TQ6JSujczPEqWbk0DoVrgDQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwORFQUcpTjXuKzpFb3UKgYbaHKkA6HvNhrVrAiT8dCmVEVGl22
+	tpRkVpLTcJhkCvXJrZrxs4qWjTgVmE4wSOR5e6TWcCZR1G2cuGgN1VNxLyxme2U=
+X-Gm-Gg: ASbGnctKI37trEx0eLXdKGJChELW5p9722TQPiQNSXykQNJ8o075xqR27HgovqUVP48
+	MlEzN9dxWQNYz5c2+pih4WVN3FK6wLvNKlrK5hhlkdeFCj23kE4kHhRbsLlBBKJUdqSMYcIE4zs
+	GfiXehJe0S1DvZloqXz61LRORdIQAfbZ3HUH0HC8KKnzOIYt4R3EJO/5OVPuUdc0kG87TVhpgBk
+	XzSrFGPDDhs+tuvGxFF12DenrNUBeYf2lTpBG7F7CeINo3iPPW8o/Ct9u5MmSrSfBSOji20swgR
+	A2WuqH2S5+/Xu8ndP1JDN2cKclExytDtMQ/eWFHlEtk55UjOErqUj4VKiNiSST/GOF82XpjycHU
+	88iXox1C0r5cnyUzxja6zckrksSnX
+X-Google-Smtp-Source: AGHT+IEkES7QrrP7dWUS3r90TTqs9H9HF3Qrg1w8ITbxBVl4k60rc9jJMmKmLI9AOkx38FcFHuyvrw==
+X-Received: by 2002:a05:6000:2088:b0:3a0:b448:e654 with SMTP id ffacd0b85a97d-3a1f64e7509mr3877389f8f.47.1746816746484;
+        Fri, 09 May 2025 11:52:26 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:5929:59ab:840a:b8f9? ([2a01:e0a:3d9:2080:5929:59ab:840a:b8f9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d2ffsm4085907f8f.66.2025.05.09.11.52.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 11:52:26 -0700 (PDT)
+Message-ID: <8ebe2bc3-dec0-4879-a61c-630b96bc4bec@linaro.org>
+Date: Fri, 9 May 2025 20:52:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430060603.381504-1-qiaozhe@iscas.ac.cn>
-In-Reply-To: <20250430060603.381504-1-qiaozhe@iscas.ac.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 9 May 2025 20:50:52 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iUG01cMG7hqgAh21qobtC_RJEkppbD0fLPZRYCpe=Caw@mail.gmail.com>
-X-Gm-Features: ATxdqUH5P_ScXYpyMAS_V-YgW3i9d9OJ83MtS_D1QA7lk97Ld8GMllF6pNGkutw
-Message-ID: <CAJZ5v0iUG01cMG7hqgAh21qobtC_RJEkppbD0fLPZRYCpe=Caw@mail.gmail.com>
-Subject: Re: [PATCH v3] ACPI: PCI: Release excess memory usage.
-To: Zhe Qiao <qiaozhe@iscas.ac.cn>
-Cc: rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com, will@kernel.org, 
-	sunilvl@ventanamicro.com, Markus.Elfring@web.de, linux-acpi@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v2] drm/meson: Use 1000ULL when operating with mode->clock
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: I Hsin Cheng <richard120310@gmail.com>,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, khilman@baylibre.com,
+ jbrunet@baylibre.com, christophe.jaillet@wanadoo.fr,
+ skhan@linuxfoundation.org, dri-devel@lists.freedesktop.org,
+ linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250505184338.678540-1-richard120310@gmail.com>
+ <6d2f35ee-1b33-40b6-b164-ab4480110e49@linaro.org>
+ <CAFBinCDmHhF7=-dutXT6RE9hVzfN3akLicGkQKw=Arm8bq2NKQ@mail.gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <CAFBinCDmHhF7=-dutXT6RE9hVzfN3akLicGkQKw=Arm8bq2NKQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 30, 2025 at 8:06=E2=80=AFAM Zhe Qiao <qiaozhe@iscas.ac.cn> wrot=
-e:
->
-> In the pci_acpi_scan_root() function, when creating a PCI bus fails,
-> we need to free up the previously allocated memory, which can avoid
-> invalid memory usage and save resources.
->
-> Fixes: 789befdfa389 ("arm64: PCI: Migrate ACPI related functions to pci-a=
-cpi.c")
-> Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
+On 09/05/2025 20:27, Martin Blumenstingl wrote:
+> On Fri, May 9, 2025 at 5:35 PM <neil.armstrong@linaro.org> wrote:
+>>
+>> On 05/05/2025 20:43, I Hsin Cheng wrote:
+>>> Coverity scan reported the usage of "mode->clock * 1000" may lead to
+>>> integer overflow. Use "1000ULL" instead of "1000"
+>>> when utilizing it to avoid potential integer overflow issue.
+>>>
+>>> Link: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1646759
+>>> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+>>
+>> Could you add a Fixes tag ?
+> Fixes: 1017560164b6 ("drm/meson: use unsigned long long / Hz for
+> frequency types")
+> 
+> Neil, can you add this while applying or do we need a v3?
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Will add while applying.
 
-and I'm expecting this to go in via PCI.
+Thanks,
+Neil
 
-> ---
-> V2 -> V3
->     1. Modify commit description.
->     2. Add release operation for ecam mapping resources.
-> ---
->
->  drivers/pci/pci-acpi.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index af370628e583..e00790ecdc0f 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1676,24 +1676,19 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pc=
-i_root *root)
->                 return NULL;
->
->         root_ops =3D kzalloc(sizeof(*root_ops), GFP_KERNEL);
-> -       if (!root_ops) {
-> -               kfree(ri);
-> -               return NULL;
-> -       }
-> +       if (!root_ops)
-> +               goto free_ri;
->
->         ri->cfg =3D pci_acpi_setup_ecam_mapping(root);
-> -       if (!ri->cfg) {
-> -               kfree(ri);
-> -               kfree(root_ops);
-> -               return NULL;
-> -       }
-> +       if (!ri->cfg)
-> +               goto free_root_ops;
->
->         root_ops->release_info =3D pci_acpi_generic_release_info;
->         root_ops->prepare_resources =3D pci_acpi_root_prepare_resources;
->         root_ops->pci_ops =3D (struct pci_ops *)&ri->cfg->ops->pci_ops;
->         bus =3D acpi_pci_root_create(root, root_ops, &ri->common, ri->cfg=
-);
->         if (!bus)
-> -               return NULL;
-> +               goto free_cfg;
->
->         /* If we must preserve the resource configuration, claim now */
->         host =3D pci_find_host_bridge(bus);
-> @@ -1710,6 +1705,14 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci=
-_root *root)
->                 pcie_bus_configure_settings(child);
->
->         return bus;
-> +
-> +free_cfg:
-> +       pci_ecam_free(ri->cfg);
-> +free_root_ops:
-> +       kfree(root_ops);
-> +free_ri:
-> +       kfree(ri);
-> +       return NULL;
->  }
->
->  void pcibios_add_bus(struct pci_bus *bus)
-> --
-> 2.43.0
->
+> 
+> 
+> Best regards,
+> Martin
+
