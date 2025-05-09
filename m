@@ -1,66 +1,66 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8470B27464B;
-	Fri,  9 May 2025 07:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A7A26AA86;
+	Fri,  9 May 2025 07:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776953; cv=none; b=DWEjtjCHeqhbiNoCo3yq6JU88/cZeCowVe45ZVbIUPzpPdqB+0h5PkPpDdh/ChQB1KD6R7OktRN0H52yNrFvbUJIN9vC5VGmGroathrp14WRx/0rD+ueGTqropKGUm43ZLfl8IuOX8wfV9GvXCkpTRmRssBUtJJty1FUtYFPpvU=
+	t=1746776962; cv=none; b=UrsYOvrHif5V3Xfuus0C5dlfQRmbulfkwBc9NmHZJ+mQYgBlRPyS2h41EB+AspToBXyIc4AVRUZoAppJorVQPnFcly3hOTvKA1dG2fVdYkQI0a23IlXZf5SSHpf3X8jUSPpYRbmkvpfJQmbRvVB1jV8I4O2piy4t/Ub0p82PD/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776953; c=relaxed/simple;
-	bh=YCYqXKj8zBvvNVfNZMoHOsi2v4z3PSsjaVp9XyPor6s=;
+	s=arc-20240116; t=1746776962; c=relaxed/simple;
+	bh=0mI/bIClotmAIMEue5Uh6KbwoJ+g9tFgZQBd+jg7Spg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=be9y6/pxSmlVVGIk/9yjoLFYlcbIgDg2q4aGSsQSeQLWWU0n23S90TTNGaJrsGQsmddlh/ZTIr1oGLX087EOipBSUBMf+gIfmgmW4YUh3wWm9WUU+6+1ORM2lZaUvk9uB6hYao4T0lA6dcBP0bNo9jgStg5LhL3TY4haiWWyvpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gY95asV8; arc=none smtp.client-ip=209.85.222.48
+	 In-Reply-To:To:Cc; b=TsUZLbnO9LtLoiCQr5z5d4U03IVR7rZSX9Uv+N0Q1wOmErhIibmmtQDzc+fe+kRyt1sx36dZpQEFillMDxJV/FeI7dsV8HbqPqYXYaqFj+Ug8KPwekvtCUHQoKbr6T0pETIUpQPyOHdYU560F9HNiGugrrszF4kvSa4XWIAcrTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ScPJHkM7; arc=none smtp.client-ip=209.85.221.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gY95asV8"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-875b8e006f8so514904241.0;
-        Fri, 09 May 2025 00:49:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScPJHkM7"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-523f670ca99so604730e0c.1;
+        Fri, 09 May 2025 00:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746776950; x=1747381750; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746776959; x=1747381759; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+eBx27AMGCwqy5ZDp1gOClNdGcPujNcYWbgmiJhO5wI=;
-        b=gY95asV8AfbplobYLJyjIIrySm0dOuLrNZYJPvcR1QP1ZJaSuVVXxOGuWUXqjkQuB3
-         JttdvtwyoMZgEtr8sIOMpRJjPFPluD36TFKAehfv0zIVsqfQ1epEFm8gxVGyAbwOkZng
-         nJ5qSkFjC8dgqu0hKmwXCoDjn2uBVzW+sIKE2JtebXbs9mK2xu3Gj7DbEWjCAoMoFgmN
-         I1zWWLTxhoi4x0y8riE/O8dKbVgst35p/kd3DOJ2zkIMiz6TcFIr48O7Apdd5v/ewney
-         zKWN8BMBT1mx6YY2JuktLRoXo9Cyxb6QAwGR4HRYbqywhyAZy4HRmLfPSiliJzCXoZxw
-         j6yA==
+        bh=E1RzP8Nae7C+98McQ5BCAJ1tDJLogzrgZIHRK1qrkfg=;
+        b=ScPJHkM7HqMcWWbJw4DRDwIuHq1d7WO91CMBt1o6hsUyl6Xr6szh90kXVW/cbr6hb2
+         nyhGORoQjpK29yzGvPFf0Ld4PfDcNAuay4GmAO73zkl6BBFykC9yXorcsCYhqj9+hpce
+         mpOhp5vTQVSEOD8JFX6lLJy7Hb+2p+92/jbGygcZ6TO/nXYhFLEjc6Om2G7ov4KcB0aq
+         lZHycUfYu4Nce6NFU15MFjyDYPPb1n0/xC9CYJAJoSP4lLi8VIHyjkmlXflxunTs/sI+
+         rANwI4FJum7EhkE2LWPdtpZCiPYbwMDRUo35NWkYTE2PCqRORajhw4LmQUtSP+jL4Kcf
+         U/7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746776950; x=1747381750;
+        d=1e100.net; s=20230601; t=1746776959; x=1747381759;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+eBx27AMGCwqy5ZDp1gOClNdGcPujNcYWbgmiJhO5wI=;
-        b=HzROCfukZ+31aoUbRnwy4vehcfzqUIiUDnDuBi5ToVCMz4QCrhOHKJraqyGHDEq3ut
-         NMe50SnNedro25HYLIv+bNfxyRLccqNXCAf1IIdr9L9du4hvbMcTh+jlqDh+taIKhh+b
-         yrv+ZBjhyfGET/XSat//y6fF7ZmTF41Zvd2SxP70lZkU3kf8AZ92NTM69jhKqpvmDVJ6
-         lgOQYzS9NLG+jx2IpTh6ZNxwI2Nzh2oZz729gx0kbMX2CYGxCwVLkOSipg1QjO5cSqSy
-         kME7HJL/JVRbynqN+FXLfV9Rfl/tnn9sjTIuQPxIci5A1VUsA/RJZkN4u9hcgvBHq1v3
-         l44Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWWd1mQ6+hIYVP7Op9tT2aG2F34sIEWjOg7YDBlR9cRdOdTPF9ubviSavtD6C2owMl02xLh6g3n9tPo81BNqnnt743B2A==@vger.kernel.org, AJvYcCXpQ6FIFZjgjPoUZ7tnN0lBI3x5RCTLQ7zZs6eA4qu0e5Z7X+eFsNhkGq7Ee/d+FJUgOiVEqS60lsCbHgw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8DXz//ZdAz9jDpVUCHGmJkAOCWgE+OCY6sqvuEVc1O2Vwtk4D
-	AHOQxmrNyI+GX8M9n2Lp+00bYelQz0sSAswRpe0gXSfJR+Z+zxJgT8McvA==
-X-Gm-Gg: ASbGncuWEhxzPxRrGfRsMf4vb5T4OTS5pC28fVB7dXF+jPNQHBT44XQySBC6vRBbgs2
-	6Tv+pHCsfg/nBbmpEDRjowsL0EBp1JH9YKOk4ZgKsBJWTDL/t7eGcYImozrRBkxCuQXDuhrr4lG
-	cyE2v2/F0bKZw/fqYuesVE/8j8cW2UII6gYF3fuvT+iB5oOybcXL4l9EOS62aqoqV73geHP9umu
-	txFluoB3ysWiol948t6qqIjKKrEmGZDQ5bC5mYiR/FKks0aKUB3m7qTRNZgJ+cQXDkWsyttHDiI
-	gDuMLiMxNFw3d4edRjcbhDiVZ4cyOBd8svpVqdYy
-X-Google-Smtp-Source: AGHT+IFyg2xmtOe/i3sQe/MqyF86NBYm8lH9pBZYHyw+Kbxgfnly1h69GDwzd1eYQB67ELiM/x/wmQ==
-X-Received: by 2002:a05:6102:5e97:b0:4da:e631:a472 with SMTP id ada2fe7eead31-4deed3e3410mr2179824137.20.1746776950293;
-        Fri, 09 May 2025 00:49:10 -0700 (PDT)
+        bh=E1RzP8Nae7C+98McQ5BCAJ1tDJLogzrgZIHRK1qrkfg=;
+        b=RHTIeHCKnB16KhAB+cVP9g9HSr85uDoZB9U2GUoXTRrGALCRFBgTj/xCXZi1xawKOo
+         ByX7t0PJh1o9fh44mKYrehoJxtda1V6Vhm612Q7LCVjA7qrCZYBU5lEA2L+HCSeDPwcf
+         336MMeSGIfg2m7vaZw8BWImTEdORF29tLQGOCmXOknwNYviRqfNT6Brew+CkEttwq9tj
+         hvrgvR3OJZ6wnmjdNLm0fCiE37RwU8HoHBdLDQZiT+9oS8ejr7mRkGu7xt/gyRcLUSMX
+         PWQNhnzxkpqarV0fDO3chm/IBowom8QIXpaEWjVv8lrb61zZZgLlJaeBU2uFUV/+tnR9
+         KpBA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1/1/IkDQj7PmfmcLjmp0NM+wo9OEosVmNA58QEX9eaXssa6znUXwXjTuh9ikUCTNyGlApBLmyJ4tXBvU=@vger.kernel.org, AJvYcCXSsZTayU+HjGV2lgNvM0zzL1NwHr3QrrmJ7wXv/1LuGhKJlDHJT0WZMs5rUKUa+W6FND8Xe42uIVjRvQOWLnr5XSzCgw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNNcHNxEvBAdT0GX+cCnEGb8U2iGLK4ICI5lAtXtm8BUUjreFi
+	NJ65A7SH1PV1mZ/bXumaJN5dPJP49EqM2+ArrLbIL3OQudg/t/HU
+X-Gm-Gg: ASbGnctrPHei/g8bCgh9EV72XrUawLUja96JZiZzXVwZyziyYVdC7kPRjPokQigl1F1
+	djWcJvoBExyPLV4JIE5NeaLhOEnThSRjbfi6AWmasHQ9ETZLSk5trHZtVgJgOo49uU+4pXq8NSC
+	6mvUYrnbIgV3QDEK7eQMCE5g3EWfUNaoBVwXeGG6jkPwnO8HsffkQcXGo5xCjTqow1vXCBb2r1M
+	p8bi6x37SkMBwjQDRxtwOgCWvAkhKPJtNZoMr9mcba2LlSbSkHwufsex6Yes7gkSyF9LQMG5tSS
+	7UkFAy/oLTL/vMfrJNvwBPkncPOQr18RTxk/c0Rz
+X-Google-Smtp-Source: AGHT+IFdh3K8D/AsAmUV7aiJ3n2dUD0gZY0HWzhfepUoUEOQIyN3FiLcjdCcIyhy8JuMkPAR9vx0VQ==
+X-Received: by 2002:a05:6122:45a1:b0:520:af9c:c058 with SMTP id 71dfb90a1353d-52c53b7f396mr2104851e0c.5.1746776959286;
+        Fri, 09 May 2025 00:49:19 -0700 (PDT)
 Received: from [192.168.1.26] ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f62986f3sm678265241.33.2025.05.09.00.49.05
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f62986f3sm678265241.33.2025.05.09.00.49.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 00:49:09 -0700 (PDT)
+        Fri, 09 May 2025 00:49:18 -0700 (PDT)
 From: Kurt Borja <kuurtb@gmail.com>
-Date: Fri, 09 May 2025 04:48:33 -0300
-Subject: [PATCH RFC 1/5] platform/x86: firmware_attributes_class: Add
- device initialization methods
+Date: Fri, 09 May 2025 04:48:35 -0300
+Subject: [PATCH RFC 3/5] platform/x86: firmware_attributes_class: Add a
+ boolean type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,8 +68,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250509-fw-attrs-api-v1-1-258afed65bfa@gmail.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-fw-attrs-api-v1-3-258afed65bfa@gmail.com>
 References: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
 In-Reply-To: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>, 
@@ -84,278 +84,128 @@ Cc: Antheas Kapenekakis <lkml@antheas.dev>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8227; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=Vxr1YLgSfKtW1/Fz3hWql1pRw5necvJXVBfazYuQO4A=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmym3OKToqlJe1sENPQZghUuWIiaTGzo2PD189TZj5i/
- bCSv31CRykLgxgXg6yYIkt7wqJvj6Ly3vodCL0PM4eVCWQIAxenAExkpiwjw/eHm743xqUKXlvs
- +PKX05v/ex6rMb5fE7ZQKq/EOt3NSpmR4UZapUc3Z2+w//Q3/mEvH9lvTnW7LfVg3iQbvwsCqQU
- azAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4584; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=0mI/bIClotmAIMEue5Uh6KbwoJ+g9tFgZQBd+jg7Spg=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmym3M+q23cdt2n5GiH9IwDKSIVq254Gy39UFHftOPro
+ W/mn1pUO0pZGMS4GGTFFFnaExZ9exSV99bvQOh9mDmsTCBDGLg4BWAicyYx/C9acflwYQvLgtbl
+ gS4zRbVTNH5EpOsv1nU8ftxH8J0h6xyG/5k8XUYbC65dTz1RuHlW1vNFqWLPztTGimoot18X6xU
+ o4AUA
 X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
  fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-From: Thomas Weißschuh <linux@weissschuh.net>
+Add a `boolean` attribute type to prevent the use of the `enumeration`
+type for this simple specification.
 
-Currently each user of firmware_attributes_class has to manually set up
-kobjects, devices, etc.
-
-Provide this infrastructure out-of-the-box through the newly introduced
-fwat_device_register().
-
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Co-developed-by: Kurt Borja <kuurtb@gmail.com>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/firmware_attributes_class.c | 165 +++++++++++++++++++++++
- drivers/platform/x86/firmware_attributes_class.h |  44 ++++++
- 2 files changed, 209 insertions(+)
+ .../ABI/testing/sysfs-class-firmware-attributes          |  1 +
+ drivers/platform/x86/firmware_attributes_class.c         | 16 ++++++++++++++++
+ drivers/platform/x86/firmware_attributes_class.h         | 11 +++++++++++
+ 3 files changed, 28 insertions(+)
 
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 2713efa509b465a39bf014180794bf487e5b42d6..dc117e694416aed3f1f7ba0ebb1d0c23337b2298 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -21,6 +21,7 @@ Description:
+ 			- enumeration: a set of pre-defined valid values
+ 			- integer: a range of numerical values
+ 			- string
++			- bool
+ 
+ 		HP specific types
+ 		-----------------
 diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
-index 736e96c186d9dc6d945517f090e9af903e93bbf4..58ab1495ba3bd449cfe17de2827a57a0c5937788 100644
+index 7cfb0f49f235728c7450a82a7e9d00b8963d3dea..13b10a1209be726b00fa1ebad6148778e165101e 100644
 --- a/drivers/platform/x86/firmware_attributes_class.c
 +++ b/drivers/platform/x86/firmware_attributes_class.c
-@@ -2,7 +2,12 @@
+@@ -26,6 +26,7 @@ EXPORT_SYMBOL_GPL(firmware_attributes_class);
  
- /* Firmware attributes class helper module */
- 
-+#include <linux/device.h>
-+#include <linux/device/class.h>
-+#include <linux/kobject.h>
- #include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
- #include "firmware_attributes_class.h"
- 
- const struct class firmware_attributes_class = {
-@@ -10,6 +15,164 @@ const struct class firmware_attributes_class = {
+ static const char * const fwat_type_labels[] = {
+ 	[fwat_type_integer]		= "integer",
++	[fwat_type_boolean]		= "boolean",
+ 	[fwat_type_string]		= "string",
+ 	[fwat_type_enumeration]		= "enumeration",
  };
- EXPORT_SYMBOL_GPL(firmware_attributes_class);
+@@ -72,6 +73,7 @@ fwat_current_value_show(struct device *dev, const struct fwat_attribute *attr, c
+ 	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
+ 	const struct fwat_attr_config *config = ext->config;
+ 	const char *str;
++	bool bool_val;
+ 	long int_val;
+ 	int ret;
  
-+static ssize_t fwat_attrs_kobj_show(struct kobject *kobj, struct attribute *attr,
-+				    char *buf)
-+{
-+	const struct fwat_attribute *fattr = to_fwat_attribute(attr);
-+	struct fwat_device *fadev = to_fwat_device(kobj);
-+
-+	if (!fattr->show)
-+		return -ENOENT;
-+
-+	return fattr->show(fadev->dev, fattr, buf);
-+}
-+
-+static ssize_t fwat_attrs_kobj_store(struct kobject *kobj, struct attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	const struct fwat_attribute *fattr = to_fwat_attribute(attr);
-+	struct fwat_device *fadev = to_fwat_device(kobj);
-+
-+	if (!fattr->store)
-+		return -ENOENT;
-+
-+	return fattr->store(fadev->dev, fattr, buf, count);
-+}
-+
-+static const struct sysfs_ops fwat_attrs_kobj_ops = {
-+	.show	= fwat_attrs_kobj_show,
-+	.store	= fwat_attrs_kobj_store,
-+};
-+
-+static void fwat_attrs_kobj_release(struct kobject *kobj)
-+{
-+	struct fwat_device *fadev = to_fwat_device(kobj);
-+
-+	kfree(fadev);
-+}
-+
-+static const struct kobj_type fwat_attrs_ktype = {
-+	.sysfs_ops	= &fwat_attrs_kobj_ops,
-+	.release	= fwat_attrs_kobj_release,
-+};
-+
-+/**
-+ * fwat_device_register - Create and register a firmware-attributes class
-+ *			  device
-+ * @parent: Parent device
-+ * @name: Name of the class device
-+ * @data: Drvdata of the class device
-+ * @groups: Sysfs groups for the custom `fwat_attrs_ktype` kobj_type
-+ *
-+ * NOTE: @groups are attached to the .attrs_kobj of the new fwat_device which
-+ * has a custom ktype, which makes use of `struct fwat_attribute` to embed
-+ * attributes.
-+ *
-+ * Return: pointer to the new fwat_device on success, ERR_PTR on failure
-+ */
-+struct fwat_device *
-+fwat_device_register(struct device *parent, const char *name, void *data,
-+		     const struct attribute_group **groups)
-+{
-+	struct fwat_device *fadev;
-+	struct device *dev;
-+	int ret;
-+
-+	if (!parent || !name)
-+		return ERR_PTR(-EINVAL);
-+
-+	fadev = kzalloc(sizeof(*fadev), GFP_KERNEL);
-+	if (!fadev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dev = device_create(&firmware_attributes_class, parent, MKDEV(0, 0),
-+			    data, "%s", name);
-+	if (IS_ERR(dev)) {
-+		kfree(fadev);
-+		return ERR_CAST(dev);
-+	}
-+
-+	ret = kobject_init_and_add(&fadev->attrs_kobj, &fwat_attrs_ktype, &dev->kobj,
-+				   "attributes");
-+	if (ret)
-+		goto out_kobj_put;
-+
-+	if (groups) {
-+		ret = sysfs_create_groups(&fadev->attrs_kobj, groups);
+@@ -82,6 +84,12 @@ fwat_current_value_show(struct device *dev, const struct fwat_attribute *attr, c
+ 			return ret;
+ 
+ 		return sysfs_emit(buf, "%ld\n", int_val);
++	case fwat_type_boolean:
++		ret = config->ops->boolean_read(dev, config->aux, &bool_val);
 +		if (ret)
-+			goto out_kobj_unregister;
-+	}
++			return ret;
 +
-+	fadev->dev = dev;
-+	fadev->groups = groups;
-+
-+	kobject_uevent(&fadev->attrs_kobj, KOBJ_ADD);
-+
-+	return fadev;
-+
-+out_kobj_unregister:
-+	kobject_del(&fadev->attrs_kobj);
-+
-+out_kobj_put:
-+	kobject_put(&fadev->attrs_kobj);
-+	device_unregister(dev);
-+
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(fwat_device_register);
-+
-+void fwat_device_unregister(struct fwat_device *fwadev)
-+{
-+	if (fwadev->groups)
-+		sysfs_remove_groups(&fwadev->attrs_kobj, fwadev->groups);
-+	kobject_del(&fwadev->attrs_kobj);
-+	kobject_put(&fwadev->attrs_kobj);
-+	device_unregister(fwadev->dev);
-+}
-+EXPORT_SYMBOL_GPL(fwat_device_unregister);
-+
-+static void devm_fwat_device_release(void *data)
-+{
-+	struct fwat_device *fadev = data;
-+
-+	fwat_device_unregister(fadev);
-+}
-+
-+/**
-+ * devm_fwat_device_register - Create and register a firmware-attributes class
-+ *			       device
-+ * @parent: Parent device
-+ * @name: Name of the class device
-+ * @data: Drvdata of the class device
-+ * @groups: Sysfs groups for the custom `fwat_attrs_ktype` kobj_type
-+ *
-+ * Device managed version of fwat_device_register().
-+ *
-+ * NOTE: @groups are attached to the .attrs_kobj of the new fwat_device which
-+ * has a custom ktype, which makes use of `struct fwat_attribute` to embed
-+ * attributes.
-+ *
-+ * Return: pointer to the new fwat_device on success, ERR_PTR on failure
-+ */
-+struct fwat_device *
-+devm_fwat_device_register(struct device *parent, const char *name, void *data,
-+			  const struct attribute_group **groups)
-+{
-+	struct fwat_device *fadev;
-+	int ret;
-+
-+	fadev = fwat_device_register(parent, name, data, groups);
-+	if (IS_ERR(fadev))
-+		return fadev;
-+
-+	ret = devm_add_action_or_reset(parent, devm_fwat_device_release, fadev);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return fadev;
-+}
-+EXPORT_SYMBOL_GPL(devm_fwat_device_register);
-+
- static __init int fw_attributes_class_init(void)
++		return sysfs_emit(buf, "%u\n", bool_val);
+ 	case fwat_type_string:
+ 		ret = config->ops->string_read(dev, config->aux, &str);
+ 		if (ret)
+@@ -105,6 +113,7 @@ fwat_current_value_store(struct device *dev, const struct fwat_attribute *attr,
  {
- 	return class_register(&firmware_attributes_class);
-@@ -23,5 +186,7 @@ static __exit void fw_attributes_class_exit(void)
- module_exit(fw_attributes_class_exit);
+ 	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
+ 	const struct fwat_attr_config *config = ext->config;
++	bool bool_val;
+ 	long int_val;
+ 	int ret;
  
- MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
-+MODULE_AUTHOR("Thomas Weißschuh <linux@weissschuh.net>");
-+MODULE_AUTHOR("Kurt Borja <kuurtb@gmail.com>");
- MODULE_DESCRIPTION("Firmware attributes class helper module");
- MODULE_LICENSE("GPL");
+@@ -116,6 +125,13 @@ fwat_current_value_store(struct device *dev, const struct fwat_attribute *attr,
+ 
+ 		ret = config->ops->integer_write(dev, config->aux, int_val);
+ 		break;
++	case fwat_type_boolean:
++		ret = kstrtobool(buf, &bool_val);
++		if (ret)
++			return ret;
++
++		ret = config->ops->boolean_write(dev, config->aux, bool_val);
++		break;
+ 	case fwat_type_string:
+ 		ret = config->ops->string_write(dev, config->aux, buf);
+ 		break;
 diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/platform/x86/firmware_attributes_class.h
-index d27abe54fcf9812a2f0868eec5426bbc8e7eb21c..ad94bf91e5af30a2b8feb9abf224ee6f0d17600a 100644
+index f250875d785c3439682c43c693f98e1c20e9ff54..d95d2024b0d9630ee3750ec26e18874965ec5cff 100644
 --- a/drivers/platform/x86/firmware_attributes_class.h
 +++ b/drivers/platform/x86/firmware_attributes_class.h
-@@ -5,8 +5,52 @@
- #ifndef FW_ATTR_CLASS_H
- #define FW_ATTR_CLASS_H
+@@ -49,6 +49,7 @@ struct fwat_attribute {
  
-+#include <linux/container_of.h>
-+#include <linux/device.h>
- #include <linux/device/class.h>
-+#include <linux/kobject.h>
-+#include <linux/sysfs.h>
- 
- extern const struct class firmware_attributes_class;
- 
-+/**
-+ * struct fwat_device - The firmware-attributes device
-+ * @dev: The class device.
-+ * @attrs_kobj: The "attributes" root kobject.
-+ * @groups: Sysfs groups attached to the @attrs_kobj.
-+ */
-+struct fwat_device {
-+	struct device *dev;
-+	struct kobject attrs_kobj;
-+	const struct attribute_group **groups;
-+};
-+
-+#define to_fwat_device(_k)	container_of_const(_k, struct fwat_device, attrs_kobj)
-+
-+/**
-+ * struct fwat_attribute - The firmware-attributes's custom attribute
-+ * @attr: Embedded struct attribute.
-+ * @show: Show method called by the "attributes" kobject's ktype.
-+ * @store: Store method called by the "attributes" kobject's ktype.
-+ */
-+struct fwat_attribute {
-+	struct attribute attr;
-+	ssize_t (*show)(struct device *dev, const struct fwat_attribute *attr,
-+			char *buf);
-+	ssize_t (*store)(struct device *dev, const struct fwat_attribute *attr,
-+			 const char *buf, size_t count);
-+};
-+
-+#define to_fwat_attribute(_a) container_of_const(_a, struct fwat_attribute, attr)
-+
-+struct fwat_device * __must_check
-+fwat_device_register(struct device *parent, const char *name, void *data,
-+		     const struct attribute_group **groups);
-+
-+void fwat_device_unregister(struct fwat_device *fwadev);
-+
-+struct fwat_device * __must_check
-+devm_fwat_device_register(struct device *parent, const char *name, void *data,
-+			  const struct attribute_group **groups);
-+
- #endif /* FW_ATTR_CLASS_H */
+ enum fwat_attr_type {
+ 	fwat_type_integer,
++	fwat_type_boolean,
+ 	fwat_type_string,
+ 	fwat_type_enumeration,
+ };
+@@ -77,6 +78,10 @@ struct fwat_attr_config;
+  *                type *integer*.
+  * @integer_write: Callback for writing the current_value of an attribute of
+  *                 type *integer*.
++ * @boolean_read: Callback for reading the current_value of an attribute of type
++ *                *boolean*.
++ * @boolean_write: Callback for writing the current_value of an attribute of
++ *                 type *boolean*.
+  * @string_read: Callback for reading the current_value of an attribute of type
+  *               *string*.
+  * @string_write: Callback for writing the current_value of an attribute of type
+@@ -96,6 +101,12 @@ struct fwat_attr_ops {
+ 			int (*integer_write)(struct device *dev, long aux,
+ 					     long val);
+ 		};
++		struct {
++			int (*boolean_read)(struct device *dev, long aux,
++					    bool *val);
++			int (*boolean_write)(struct device *dev, long aux,
++					     bool val);
++		};
+ 		struct {
+ 			int (*string_read)(struct device *dev, long aux,
+ 					   const char **str);
 
 -- 
 2.49.0
