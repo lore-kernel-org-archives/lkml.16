@@ -1,100 +1,72 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CD7261399;
-	Fri,  9 May 2025 22:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A7D261574;
+	Fri,  9 May 2025 22:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746828794; cv=none; b=kcIOq6ME8jtzyXD9NdlY/GEPYUXRQ1umFnYDzU4sc2xdnOPbVdXzqmPmQdCRQ5HLxxnRmhkx4kk0EOwEHjsH4mJVmtg0DqqrmpJFmM2fST2tkxRyC4WlJ0ECVaDbCmXbEOnkNfCZXDC9Ard7Hl7W38/MvKIklV+cwlsTowN+h+s=
+	t=1746828811; cv=none; b=ICVt8Td/ZsNv3yZBPklDpWORuIsoZ54PZsxYhNv5MIJ3Ark4OvTkUHYxtaQbkIrZnmARUvTpumc7Zh9eLM8tbMwfQLlHsPKGCACNtlOrRLXvkiIaZMy+hgsDSAYztwbJz8oLmFeMlq7c8/eNFVM4i7kiQY+HatdVzHWEoF+2Xxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746828794; c=relaxed/simple;
-	bh=BfrFfELWW3+UrgSOiH4UXZ9Ta4VUjbwmJzYcDJxUpW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K4IjeoRHWkVUPiSHaTSeKbQKFSgqyc/CF14nfPXlSD47pmzA1LPGOrE1ZZTkX8xEQcF/qXXVg4IFCwQeXtx3TMN9hmXKsMw0Srn7aPkWk8LaoHbmxhje/NTrd5f+EFoEf7xKNQUSn/Y0KWe4y2neBarXrg5773qcmOUxKbVMuUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=LqTS3gBw; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746828811; c=relaxed/simple;
+	bh=YV+KRG/TjnglbjkMeXDUBX/N8s8EIPboNkrM8Rt9aeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RyGFUs5Ug+gtgGiihriZfq2deOUQJ99rN67VXjoMZUVT7nxiaOmpOp5LcIT6OXQrtoLV6/chgl7z3PC7hfd+rMpp/EorZyLpq7mBn7nIOZJEZ4kg2HU6X+y9Q99dFBKj/eK31tTuxo+vt/v5yu8Ju9r92m5J/IyDgd0sDaNjdqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyCb549X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="LqTS3gBw"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E7B4240E023E;
-	Fri,  9 May 2025 22:13:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jgYeXQKVFDsw; Fri,  9 May 2025 22:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746828778; bh=Z3K2BVjA7j2LUuahJEX1B3DgJ/pI+yotAmrKie8D/lE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LqTS3gBwF3ftaNl/LiXXmbo7ugHXLoP9V77GE6e6cI0//ogoIgmZgs1wr0UYKwTDe
-	 0Pp/iXrbZu+UMcTjV0URPAnRme8uxjF9Csf8XbovENRBSAx18Y2xlDffKcpOcD3n1f
-	 H1wTwGRALZDgXPSGi9Yel7i/Z0gHLjxxXAp/it//wA1DsFMx/GsSdThp4VtDbpyXY0
-	 H10Eaoc1exWPxVLaNgVj4vrHC4agj6PvO0ne8C5FU/DOxBkHasQPwO39mXNQ2d3zrv
-	 vhv/W4Coqc3dAmX+T1fH4eyAgtC2h2m4Q5HBbDVa7cNTgdCfbwE3bjaqJ9bSaMrk++
-	 kLr+May4NJ48gRZQyKgP4ll/UbzrH70y5XKVZfXSgFfJb2WhipqJ35E8ZwFsmfUEPu
-	 TrtJ2cRqX9mYK/cQNHzpvsh7F/ElSlR79garces/Y5Ej7rQdvR2atx1PFVeGIOD043
-	 K3klKl7wD9lU/KF6MyY4wDhj4YTB8zCK+5sN2QivUwZ4M2AgVj9oFl71zBz0O2dDCg
-	 kdZYSAHSlydgDtKynjW/0coUuu98y3QJcvSmgUEianVmLAwQS9vaNzvlieVVC2ovkW
-	 jmQeNMah4xDdKXwLcFGiCi/9cckxaREkN8dU1V4vTvv8OUr9QC3urAkG8ByqefjE2d
-	 upUCsFdlR5+g6pw4tyVRUlq0=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 625F940E0238;
-	Fri,  9 May 2025 22:12:43 +0000 (UTC)
-Date: Sat, 10 May 2025 00:12:36 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 43/62] x86/alternative: Define ELF section entry size
- for alternatives
-Message-ID: <20250509221236.GGaB591CVcWMLiMJN5@fat_crate.local>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <68a8126c21f4ee054d6c4d6262d0f465b5babd89.1746821544.git.jpoimboe@kernel.org>
- <20250509213635.GFaB51YzAbFIlC37QS@fat_crate.local>
- <tv2gorcohozg6ppwetgi5qqgoabsrv62qbgsgph6z7zk6vxln2@qmgsjufyenjh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyCb549X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83981C4CEE4;
+	Fri,  9 May 2025 22:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746828810;
+	bh=YV+KRG/TjnglbjkMeXDUBX/N8s8EIPboNkrM8Rt9aeQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LyCb549XovEhF6yFxgtE9C0DZaXSKqMPceBUkE5mF56FzFXFevO5Y424ccJh+ZYZv
+	 lVjRi/1x3NtefhOYw1R9AcuQ2cYfBxbFniooE9AdKanzarKPyvpPcXXfPl1tSfNZ4Z
+	 eizXXIPPNmZZVr6ImioDbAAaG3o8CNWmF4HFda1z5JCpDPojM1gFpjRgZBwTFAMi4s
+	 icc6t3pO359aAblk3jFGzAbB7n6wazXfieTuuCFSsvbioulN7SV3X35hHYixLBfWVP
+	 L+ouavZt0Yaxb312MmPZUflevaMhE+hsBonfG7YklOLjLXf6RiZ7c5blhq4EX74ba/
+	 /gOrN8V7GgdSA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luca Weiss <luca@lucaweiss.eu>
+Subject: Re: (subset) [PATCH 0/2] Fix fallback qcom,ipc parse
+Date: Fri,  9 May 2025 17:13:22 -0500
+Message-ID: <174682880459.49052.12382717694935503808.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250421-fix-qcom-smd-v1-0-574d071d3f27@mainlining.org>
+References: <20250421-fix-qcom-smd-v1-0-574d071d3f27@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <tv2gorcohozg6ppwetgi5qqgoabsrv62qbgsgph6z7zk6vxln2@qmgsjufyenjh>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 09, 2025 at 02:54:00PM -0700, Josh Poimboeuf wrote:
-> On Fri, May 09, 2025 at 11:36:35PM +0200, Borislav Petkov wrote:
-> > On Fri, May 09, 2025 at 01:17:07PM -0700, Josh Poimboeuf wrote:
-> > > +#define ALTINSTR_SIZE		14
-> > 
-> > We have sizeof(struct alt_instr) to offer...
+
+On Mon, 21 Apr 2025 04:04:15 +0200, Barnabás Czémán wrote:
+> mbox_request_channel() returning value was changed in case of error.
+> It uses returning value of of_parse_phandle_with_args().
+> It is returning with -ENOENT instead of -ENODEV when no mboxes property
+> exists.
 > 
-> Right, but IIRC, sizeof(struct alt_instr) isn't available at macro
-> expansion time so it would have to be provided as an input constraint.
+> ENODEV was checked before fallback to parse qcom,ipc property.
 > 
-> That doesn't really work for the ALTERNATIVE macro, where the asm
-> constraints are out of our control because they're set by the caller.
+> [...]
 
-Bah, that doesn't work. And you're enforcing it with BUILD_BUG_ON(). Oh well,
-ignore the noise.
+Applied, thanks!
 
-:-)
+[2/2] soc: qcom: smp2p: Fix fallback to qcom,ipc parse
+      commit: 421777a02bbd9cdabe0ae05a69ee06253150589d
 
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Bjorn Andersson <andersson@kernel.org>
