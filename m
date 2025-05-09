@@ -1,130 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA494296D14;
-	Fri,  9 May 2025 13:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB461296D08;
+	Fri,  9 May 2025 13:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746799039; cv=none; b=gFtoPFsROW4n2OGT+dySm/RhwBnS4uMtfXbg79F6bX6rI++gKh6vuiX17hTolZQYtdo9PJgqkvotrdAUAYetRXK9B44WVXwkLC3/xL0VPhh8/VWJKfC1aH2vCRYlykuMy9SuTfmzTJFA8pv+fHi8+wP7cFek4ICNbTZC9iPYRts=
+	t=1746799040; cv=none; b=QzDg+kld0Ww+2+ccVqHldeBtj6jjpULDbv9n/mQES1rQpkukLCHnch2Kjkub+N4dqvDvayjJTJygZ5Bhd4EupotTdBfw017fNttukR2zwVMDUl+Dh47/NqWpPA8sFIYX6CyMtotjV5oRnzLzyQJB3FugO/+FS5wBnw7iPSbikjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746799039; c=relaxed/simple;
-	bh=eG96Ecaz3EGbtHv71aQ64bQQroLICepbuKl03kCL2Hk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XMSB0apOyn584pYITaUHGrkb8sZymY6ZatkvDO6Y3yT2ZOofLrIaGO2P4rbXlK++kPbtTIvgmma+M/LE9KEyQAi+EKJzwqhUnOz7IGwnNGO69nCPJgAZ1/NAygMvRLVEU6kHaW+goHh6uZPRfk/loLteM+7xDBNRaTlsQQkh8h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0mT9CnF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746799040; c=relaxed/simple;
+	bh=1dytHc3Djh/f1ZiUgTbHvNsKqiqKMFeTjtarSBq5zN8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gx7AZIdFvmU9juOASPZeNS0q+CC6tfTjeGZ5qdWqHwv2lXFTAwhSigw1IYaJpeKQmf9gQwljNL06tFdzfAmiqnm1+hKYc20e3GxC13Kf5zt2NlMPw//6kLlYzHqxXvpFSmD2zYGA7XZ856tbigiaDRpVGCgON9xyFC+Iy5TqqTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Usqh6mMP; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0mT9CnF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B49C4CEF0;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Usqh6mMP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BA81643B50;
 	Fri,  9 May 2025 13:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746799039;
-	bh=eG96Ecaz3EGbtHv71aQ64bQQroLICepbuKl03kCL2Hk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a0mT9CnFzWT/ajfWgesNI3y0bC1QDOwwnqmYbge5zzVDuRoJwuLMxzcgMn0oKskRW
-	 u0Cw1X9C7qJiSCR/2K8XltPcD0NYiViSeSV8C2Ggtj9VbSvxlTv2ruS4cVw82dlUhC
-	 qFHohAPMxZiRJxNXSfPljYy4Q0IJ8+S0gjTCbwCz+Q1S6jg0sQkZvQDfl0ZlrHOd5l
-	 Q/zPdk8hSKcHdzfL56zgNVeoO1eTgd0E0+P/ztubjjo4e7gNBloAdHYDhxqT0g7FP2
-	 DZnYYGJ9b5IBEqcneLXun258id/TeDqJcB4E8X1PNuhCirdST81hH2hgdlwhOLEfH7
-	 E0bMz4dWJKcNA==
-Message-ID: <c8d39184-f98b-4dea-bd32-8948f98ab2d4@kernel.org>
-Date: Fri, 9 May 2025 15:57:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746799036;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hZGU6iOHbHyTiUUkRCME+uIMdoFXKaz/X2Ih0wRVgjk=;
+	b=Usqh6mMP95pCrT0NiiEmhQhuCbKptj0ZtH1s/XrzXx9idGdBrFVrlqJlZzfMJAvFoRMcHJ
+	h4PFKxrZlQnt7ORIp1Iv823ka95zpQi5/alPfta4cChWsI9FyYBg9Avpt1qpEhaWbo18V6
+	Zlk6bTk/km2NhKhIH+Msqt0Lel3GDPM9uO2yX6zz0kHxQr+c3QnwlJbd9V5E7yVNH2Ssgm
+	/OxE2FqYRVKu9hpRHRXARhWT9ly2LoviG+6g7c+M6n5hXHwdR2lPRTWpGkKh+gwe0o9vn7
+	oVq17CQGfv7duymYD6mQ7xH4VbATIHlzNt6dHz7m7vqU/IYG/G/xZ5Tuee/ByA==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Fri, 09 May 2025 15:53:46 +0200
+Subject: [PATCH v3 20/22] drm/bridge: add devm_drm_put_bridge()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/14] arm64: dts: Add DSPI entries for S32G platforms
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
- James Clark <james.clark@linaro.org>, Vladimir Oltean <olteanv@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
- Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, larisa.grigore@nxp.com, arnd@linaro.org,
- andrei.stefanescu@nxp.com, dan.carpenter@linaro.org
-Cc: linux-spi@vger.kernel.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- "Radu Pirea (NXP OSS)" <radu-nicolae.pirea@oss.nxp.com>
-References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-14-32bfcd2fea11@linaro.org>
- <3ddde799-76b5-43f9-971e-a52ec322e9b1@kernel.org>
- <16e91572-b132-4246-9fa9-8e8bc4c24f40@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <16e91572-b132-4246-9fa9-8e8bc4c24f40@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-drm-bridge-convert-to-alloc-api-v3-20-b8bc1f16d7aa@bootlin.com>
+References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedukeenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedruddukegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnu
+ higqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrshhrihhvrghtshesrhgvughhrghtrdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On 09/05/2025 14:54, Matti Vaittinen wrote:
->>
->>
->> Node names should be generic. See also an explanation and list of
->> examples (not exhaustive) in DT specification:
->> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->>
->>
->>> +		compatible = "rohm,dh2228fv";
->>
->>
->> Nah, I really doubt. That's not the device you have there. It's
->> possible, though, so can you share schematics?
-> 
-> Actually, not even possible. There is no DH2228FV from ROHM. There is 
-> BH2228FV though:
-> https://www.rohm.com/products/data-converter/d-a-converters/8bit-d-a/bh2228fv-product
+Bridges obtained via devm_drm_bridge_alloc(dev, ...) will be put when the
+requesting device (@dev) is removed.
 
+However drivers which obtained them may need to put the obtained reference
+explicitly. One such case is if they bind the devm removal action to a
+different device than the one implemented by the driver itself and which
+might be removed at a different time, such as bridge/panel.c.
 
-So that's a totally made up device node.
+Add devm_drm_put_bridge() to manually release a devm-obtained bridge in
+such cases.
 
-Best regards,
-Krzysztof
+This function is considered only a temporary workaround until the panel
+bridge is reworked and should be removed afterwards.
+
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+
+---
+
+Changes in v3:
+- document this function is a temporary workaround, not to be used
+  (in kerneldoc and commit message)
+
+Changes in v2: none
+---
+ drivers/gpu/drm/drm_bridge.c | 17 +++++++++++++++++
+ include/drm/drm_bridge.h     |  4 ++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+index b4c89ec01998b849018ce031c7cd84614e65e710..d0e81639927a73422671b7b43f3e8a946f1d4300 100644
+--- a/drivers/gpu/drm/drm_bridge.c
++++ b/drivers/gpu/drm/drm_bridge.c
+@@ -1392,6 +1392,23 @@ struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+ EXPORT_SYMBOL(of_drm_find_bridge);
+ #endif
+ 
++/**
++ * devm_drm_put_bridge - Release a bridge reference obtained via devm
++ * @dev: device that got the bridge via devm
++ * @bridge: pointer to a struct drm_bridge obtained via devm
++ *
++ * Same as drm_bridge_put() for bridge pointers obtained via devm functions
++ * such as devm_drm_bridge_alloc().
++ *
++ * This function is a temporary workaround and MUST NOT be used. Manual
++ * handling of bridge lifetime is inherently unsafe.
++ */
++void devm_drm_put_bridge(struct device *dev, struct drm_bridge *bridge)
++{
++	devm_release_action(dev, drm_bridge_put_void, bridge);
++}
++EXPORT_SYMBOL(devm_drm_put_bridge);
++
+ static void drm_bridge_debugfs_show_bridge(struct drm_printer *p,
+ 					   struct drm_bridge *bridge,
+ 					   unsigned int idx)
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 4e418a29a9ff9d014d6ac0910a5d9bcf7118195e..6f00a3998ed6d026332b0f1e3bb5bee3cb5158e0 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -1265,6 +1265,8 @@ static inline struct drm_bridge *devm_drm_of_get_bridge(struct device *dev,
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
++static inline void devm_drm_put_bridge(struct device *dev, struct drm_bridge *bridge) {}
++
+ static inline struct drm_bridge *drmm_of_get_bridge(struct drm_device *drm,
+ 						     struct device_node *node,
+ 						     u32 port,
+@@ -1274,6 +1276,8 @@ static inline struct drm_bridge *drmm_of_get_bridge(struct drm_device *drm,
+ }
+ #endif
+ 
++void devm_drm_put_bridge(struct device *dev, struct drm_bridge *bridge);
++
+ void drm_bridge_debugfs_params(struct dentry *root);
+ void drm_bridge_debugfs_encoder_params(struct dentry *root, struct drm_encoder *encoder);
+ 
+
+-- 
+2.49.0
+
