@@ -1,156 +1,203 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA58136672;
-	Fri,  9 May 2025 16:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AE5235073;
+	Fri,  9 May 2025 16:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806858; cv=none; b=CHUKig31N20Fyny9cYlHAE7Z8YqNJTsotHYMoGpRnORxc6vM3iC4LPwM0yjTNzaRSpBkdnEZavvPPCPytvPYyCBkPvg9dpIAksM2ekOnLaMf0K+13nSJoY/tKlYCHCmxCo4BbQji4Tse5nOeNT9MSD9AWVEP7aqRDxx5JagIjD0=
+	t=1746806923; cv=none; b=B8nUh+cMeNKXq14biWRiyATtsETMcP44A7qhSXrXjRe6Vr8qxyxG1mDZklaD2F2ZT6L4BKVlZQcBpifT5hXNSBauzQW+8dRCAnndJrrX9PfDWCqmLPWbTRezLBcyKxeoqPAOW7nR4S0SppTLryaRDKFBuWw9v0dKdfBjDsv9p+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746806858; c=relaxed/simple;
-	bh=+/1IQ2oCinigP5CnNh1S1UQ2fww1RQQZshyDjBgmy6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AO1l/vK+kTQ7pTW0k+HfSb3sBjDuBHAjaPjI3dTYuRHRE+QiZYlnshincjTmuxKlGoWMata5lk/gimc27BbCe/bB+ZynrnSr9K54eFlTMTY0GvF5UsQMf8hXIr2YV2hRKANSWfSFLjIBEiI9p1JdgHLOYaq/AaPwQdKSur798cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O87CAUak; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746806923; c=relaxed/simple;
+	bh=RtOPI/DsxM1LZcAWF42dPpfdNPGAFh8TELrLyWLyS1o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MtgJOGiFZZ2RKOqJN670llg0U6yb7XraLQp+XwGoFwFWL43KtGb1u8/QK4Ja9pJdf+MrudH7dTCaIdKfsVCb/ATXMdeRFc5O8BtOibnOw9yKh+Cp/SiQkUKO+sWQreWSJeeHdwcfnP4ZmdGwTXGHqQJUK1nF2H8eKp7BcmsPV54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F0UnNh9u; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O87CAUak"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac79fa6e1c2so42278466b.1;
-        Fri, 09 May 2025 09:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746806855; x=1747411655; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O1aSEKZ9GPjDBpZIq0+eebFymFhGTQv6JnpJUamgLSU=;
-        b=O87CAUakz8SdLclbOjBaWkkMNqGAV3A3D60cC7CFNALMpEZkApO3vJRFSrgpzG4g4L
-         NY5giBbgAOvZokqmam5ZBO3zWJK+3UcLbzp6V+9ZXdWEDpjg9rXXFNCP6r3Dx779Pi2A
-         VQdAXCryLDUvhN3zbEp9C7/zXlG/8pyScCmKFHCnSsO+Hq2mYgLAjvhwdBXs2933MWZo
-         CSMLVAJ61k1h6tqUPa6WEAF3FhlKxVq8FzYKv7VREGvN/7SxW9wYG/t8A1HjmQRBmf69
-         FeLv5+wXOOfrgbcPVoE8ujThSpLK4Fi1dV6nUZn9FMiWEFrxDVF9mETidClI5GDGewoL
-         QHcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746806855; x=1747411655;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O1aSEKZ9GPjDBpZIq0+eebFymFhGTQv6JnpJUamgLSU=;
-        b=HLllruEOTgHzghjll/E2whEChwyv+DnYaIftLBJ3+Tz51p8dSP1SlGMqe4nyO9ZEvc
-         ZuE1DRi324U5+rveeQzOJO1Vv3OcW51FMDySJnw0gVPK+Wl34cS024a6qwYw9vhLIqxf
-         2gyk2BO853DHS/Ag5VxXhkwAtbRoGYq0QeTv7OHwGXz8xyw/pBobM+JAGd8bVdGD1XXk
-         7hVcq/zTHbDNnkkrt6iSRkqpEHW8V3nT1r3OGU02sxp+s+6IWuhzXMBFXrREb7adygU1
-         m156ZnJU/YEmDnwlHwavoScCKWKRUGoggbHbovko11lyZ5A/tuW6aNKnrrUk1FJ0OXYI
-         Lj0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVuhy6CN3aG0XP4AS8x8DY57NBsP1+vsyxg4Pt77BAzpNz87jZ22uXjb6bVYEc0/PmPb3tIKrBfhxpgcukF@vger.kernel.org, AJvYcCXGpTu37nRWyjELdE4YSd3TT/LfFRuQ0gBH+dA0E5nkXzElF281udghssqcgXlelzf0o2dNQYA2DF3H@vger.kernel.org, AJvYcCXiND/RO1kf627sHNhAva4DU4/3tGkgYtVrzbJXfy0WCiDBkOVgiBuHahHT8xxdDCHdaOd8ymiAbG+O@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEe++tBFPjSZsRawtQ1rUAIKtS7LtIg1gpifHHooWqdYkmuyfk
-	YvS3rlTUP/YohBeXPCkqgswBPXeX5GPo4XjBI3/HvlFfnNGbD8g5
-X-Gm-Gg: ASbGnctqM05zvj8faAX8YjP8bfVdRaLZh9SLmJiJUJBV5cn4gNuNecctUFNWmxavYCC
-	z0xOV6xlgOU9w9JJNFxITxXzpCn2VIBov1amI4AIH+SBiy9xuzFh3RSXCMv1AXK5NiOXIM8sgYX
-	Te+sg9jzvdnTNU6mu75FjfIhBf82saEH2MJDdd94SVorUSZNtzsUBks7LHbG0h/doq6i/6tTOUX
-	VjRluzbB6XYhzBtm9SUfzFL0WwuFMKeXsp9JfL874FbdHwK49SdE/FCgLPXBmkvMf4FUNmoy+17
-	XklLAh5ol+l1ysSFcmiFfJIxLq39
-X-Google-Smtp-Source: AGHT+IFfblZ5zyybW8Zc1JXlu3gaLC6XU1AeC2AshGGFeE3SDeA+ieQda1+l7upR9+VJ3d7Jl2trlg==
-X-Received: by 2002:a17:906:84ef:b0:ad1:e9fb:e78 with SMTP id a640c23a62f3a-ad219121b47mr132183266b.10.1746806854983;
-        Fri, 09 May 2025 09:07:34 -0700 (PDT)
-Received: from skbuf ([188.25.50.178])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad22562ed61sm84950466b.31.2025.05.09.09.07.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 09:07:34 -0700 (PDT)
-Date: Fri, 9 May 2025 19:07:31 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
-	NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, larisa.grigore@nxp.com,
-	arnd@linaro.org, andrei.stefanescu@nxp.com,
-	dan.carpenter@linaro.org, linux-spi@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 02/14] spi: spi-fsl-dspi: Re-use one volatile regmap for
- both device types
-Message-ID: <20250509160731.wibhaumyialjloz3@skbuf>
-References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-2-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-2-32bfcd2fea11@linaro.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F0UnNh9u"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549Bpi3T002461;
+	Fri, 9 May 2025 16:08:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5s1FY5CT9goxhPTr851JPrtvAQnIM6QWFPyD9XtgGJ0=; b=F0UnNh9uSSgTpLcd
+	eWDdR2Sus+u4Yc5Zwt/QMjjo8qpbOtINWI8vCRQD0Xd7F/vZJ76c4UTuqZxoecB1
+	AwK55cAeKsE89/ah2CNSbmbYf4tLbslLGh6jbQifpR9RaFClhvKATovONxb2QDFW
+	2Fwq4jR4fahRi0ZpyD57xAqDeQlKjAUOORqNd1/mpKKotj3NsjkOQlIWqJFgCcRq
+	jntozNpHU2pRTVdzKqjnl9IogaT/XcEA56uqZcA0Zcg5Bzy9O70UtUYBjdoA4pOQ
+	sUXTZOZboxIt3ovQh20sTV+cCTyenctThvQQLhBdJFSAmgng8qT79HUF04M1uf2I
+	i/wa9Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5d5vu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 16:08:17 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549G8GF4029185
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 16:08:16 GMT
+Received: from PHILBER.na.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 9 May 2025 09:08:11 -0700
+From: Peter Hilber <quic_philber@quicinc.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+CC: Trilok Soni <quic_tsoni@quicinc.com>,
+        Peter Hilber
+	<quic_philber@quicinc.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
+        "David
+ Woodhouse" <dwmw2@infradead.org>,
+        "Ridoux, Julien" <ridouxj@amazon.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        Parav Pandit <parav@nvidia.com>,
+        "Matias
+ Ezequiel Vara Larsen" <mvaralar@redhat.com>,
+        Cornelia Huck
+	<cohuck@redhat.com>, Simon Horman <horms@kernel.org>,
+        <virtio-dev@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+        "Richard Cochran" <richardcochran@gmail.com>, <netdev@vger.kernel.org>
+Subject: [PATCH v7 3/4] virtio_rtc: Add Arm Generic Timer cross-timestamping
+Date: Fri, 9 May 2025 18:07:24 +0200
+Message-ID: <20250509160734.1772-4-quic_philber@quicinc.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250509160734.1772-1-quic_philber@quicinc.com>
+References: <20250509160734.1772-1-quic_philber@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509-james-nxp-spi-v1-2-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-2-32bfcd2fea11@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=XL0wSRhE c=1 sm=1 tr=0 ts=681e2871 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=7oUh35WbpK7Jc3m_RqkA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: X0TyMq46uLtEqPJB9-Bf0oQrryMyX-6d
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE1OSBTYWx0ZWRfX1dyLxOnPtdJl
+ ZX3NmqHSswSZ/yAkm5kV5X3GQKs0l7VQF6r1d+5Hnn2Fe80JxKcMWWat8XjuaQ10jsqUbyI1p45
+ EMIsJBXKkBfz7PgqFx7+AQV4nDc73MLqOHKbt4cjyYNQimvOmdWyZUKZW08Pph4VcdUTL6/DQUy
+ HXs8igIncSxOAQq4kiDVrnmyifOrYOhMeirkXsR4ApLR1QeG9hakTRWJEGvAgc2f3dPVySFSddQ
+ 6UdjSG144Xgm73mvY2s5LJoz0ykqC1u+9fh7Wi8i/rYVRXCJE7Zyo6v/IujsaBZDcn8kqu9dvbc
+ g3U3A1orDF9NUZNz0QDeCs5nlsyp7FIaC4oBdkFqVGHyhtIdJN4BGbldM0JYhfPHi/F63L3ro0J
+ xCKcb/Rm8Mr2BIxFymM0R5Lca+VcGJH/sa411VpyY8wPRVEEG3U1Dfk+fTvdJMUrxzu6K56B
+X-Proofpoint-ORIG-GUID: X0TyMq46uLtEqPJB9-Bf0oQrryMyX-6d
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_06,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090159
 
-On Fri, May 09, 2025 at 12:05:49PM +0100, James Clark wrote:
-> max_register overrides anything in the volatile ranges, so we can get
-> away with sharing the same one for both types. In a later commit we'll
-> add more devices and also read/write ranges which also override volatile
-> ranges so this avoids adding even more duplication.
-> 
-> No functional changes.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  drivers/spi/spi-fsl-dspi.c | 15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 31ea8ce81e98..cb0e55a49eea 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -141,6 +141,7 @@ static const struct regmap_range dspi_volatile_ranges[] = {
->  	regmap_reg_range(SPI_MCR, SPI_TCR),
->  	regmap_reg_range(SPI_SR, SPI_SR),
->  	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
-> +	regmap_reg_range(SPI_SREX, SPI_SREX)
+For platforms using the Arm Generic Timer, add precise cross-timestamping
+support to virtio_rtc.
 
-Same idea, don't take the review tag as a sign that I don't have any
-change request here.
+Always report the CP15 virtual counter as the HW counter in use by
+arm_arch_timer, since the Linux kernel's usage of the Arm Generic Timer
+should always be compatible with this.
 
->  };
->  
->  static const struct regmap_access_table dspi_volatile_table = {
-> @@ -148,18 +149,6 @@ static const struct regmap_access_table dspi_volatile_table = {
->  	.n_yes_ranges	= ARRAY_SIZE(dspi_volatile_ranges),
->  };
->  
-> -static const struct regmap_range dspi_xspi_volatile_ranges[] = {
-> -	regmap_reg_range(SPI_MCR, SPI_TCR),
-> -	regmap_reg_range(SPI_SR, SPI_SR),
-> -	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
-> -	regmap_reg_range(SPI_SREX, SPI_SREX),
-> -};
-> -
-> -static const struct regmap_access_table dspi_xspi_volatile_table = {
-> -	.yes_ranges	= dspi_xspi_volatile_ranges,
-> -	.n_yes_ranges	= ARRAY_SIZE(dspi_xspi_volatile_ranges),
-> -};
-> -
->  enum {
->  	DSPI_REGMAP,
->  	DSPI_XSPI_REGMAP,
-> @@ -179,7 +168,7 @@ static const struct regmap_config dspi_regmap_config[] = {
->  		.val_bits	= 32,
->  		.reg_stride	= 4,
->  		.max_register	= 0x13c,
-> -		.volatile_table	= &dspi_xspi_volatile_table
-> +		.volatile_table	= &dspi_volatile_table
->  	},
->  	[DSPI_PUSHR] = {
->  		.name		= "pushr",
-> 
-> -- 
-> 2.34.1
-> 
+Signed-off-by: Peter Hilber <quic_philber@quicinc.com>
+---
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Notes:
+    v4:
+    
+    - Update names and types to spec v6.
+    
+    v2:
+    
+    - Depend on prerequisite patch series "treewide: Use clocksource id for
+      get_device_system_crosststamp()".
+    
+    - Return clocksource id instead of calling dropped arm_arch_timer helpers.
+    
+    - Always report the CP15 virtual counter to be in use by arm_arch_timer,
+      since distinction of Arm physical and virtual counter appears unneeded
+      after discussion with Marc Zyngier.
+
+ drivers/virtio/Kconfig          | 13 +++++++++++++
+ drivers/virtio/Makefile         |  1 +
+ drivers/virtio/virtio_rtc_arm.c | 23 +++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 drivers/virtio/virtio_rtc_arm.c
+
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index a14a2b77e142..3d8b366c0625 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -221,6 +221,19 @@ config VIRTIO_RTC_PTP
+ 
+ 	 If unsure, say Y.
+ 
++config VIRTIO_RTC_ARM
++	bool "Virtio RTC cross-timestamping using Arm Generic Timer"
++	default y
++	depends on VIRTIO_RTC_PTP && ARM_ARCH_TIMER
++	help
++	 This enables Virtio RTC cross-timestamping using the Arm Generic Timer.
++	 It only has an effect if the Virtio RTC device also supports this. The
++	 cross-timestamp is available through the PTP clock driver precise
++	 cross-timestamp ioctl (PTP_SYS_OFFSET_PRECISE2 aka
++	 PTP_SYS_OFFSET_PRECISE).
++
++	 If unsure, say Y.
++
+ endif # VIRTIO_RTC
+ 
+ endif # VIRTIO_MENU
+diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+index 88d6fb8d4731..dbd77f124ba9 100644
+--- a/drivers/virtio/Makefile
++++ b/drivers/virtio/Makefile
+@@ -17,3 +17,4 @@ obj-$(CONFIG_VIRTIO_DEBUG) += virtio_debug.o
+ obj-$(CONFIG_VIRTIO_RTC) += virtio_rtc.o
+ virtio_rtc-y := virtio_rtc_driver.o
+ virtio_rtc-$(CONFIG_VIRTIO_RTC_PTP) += virtio_rtc_ptp.o
++virtio_rtc-$(CONFIG_VIRTIO_RTC_ARM) += virtio_rtc_arm.o
+diff --git a/drivers/virtio/virtio_rtc_arm.c b/drivers/virtio/virtio_rtc_arm.c
+new file mode 100644
+index 000000000000..211299d72870
+--- /dev/null
++++ b/drivers/virtio/virtio_rtc_arm.c
+@@ -0,0 +1,23 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Provides cross-timestamp params for Arm.
++ *
++ * Copyright (C) 2022-2023 OpenSynergy GmbH
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/clocksource_ids.h>
++
++#include <uapi/linux/virtio_rtc.h>
++
++#include "virtio_rtc_internal.h"
++
++/* see header for doc */
++
++int viortc_hw_xtstamp_params(u8 *hw_counter, enum clocksource_ids *cs_id)
++{
++	*hw_counter = VIRTIO_RTC_COUNTER_ARM_VCT;
++	*cs_id = CSID_ARM_ARCH_COUNTER;
++
++	return 0;
++}
+-- 
+2.43.0
+
