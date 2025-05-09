@@ -1,125 +1,83 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCB726A1A4
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AB128F4
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746772726; cv=none; b=KFzNPEgkWLgPrper+ISzFrLF3Cn0QxOaQBnR5Z38oXaE06rtw0kYtzqdLuG6OUd36QrpVKcxdqsx3RWraOkJOWM6s/IwnZ1SScqKJ74ZwMwnRyN+yM9NaqB1CNh2Iyi9DjY4xYZzdpEZznaK6JymvpEUSAIH+p6mmQ+HMMNpQhQ=
+	t=1746772752; cv=none; b=ojZatmRzdJvzR9znIT7J88EbG+DDncBAhFYArHGb+HdgNoQdi2ePnRzD3XAPZobWnrowKylC0/bX5JkQHXq0jmKO5Xw3WLx0yVfJ7EN3Ma1ItiO67fKN/1uEmfPssMm5QWg8MWafOaVtyiE64jF8SX0xvQp6c1pjBkhb8pp2eGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746772726; c=relaxed/simple;
-	bh=tqTfw5w3gBFE81Wq66Z4kvtHMDDPTdQBKyw53km8jyk=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=XPajggEpGglBRcCaodqmJ8PZAfrLGSh0Eqn2NorJscBii4pC71aKRnzfuJO0mkJ2KFaZ3cbWPiKih4mimoF2Jj8UhqF3bYLxOAcCkzHwLh+tD1HopjPlzyQJCGXqzQttOUyEpeSq4oLdX3MMZUOakDld6ql4d+a9mlcHBv24DiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=QIHK+o/X; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QIHK+o/X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1746772416; bh=zcC3iLdUhpaRZBYC6QjDTYzoo+13lttMagIm/kwnQYE=;
-	h=From:To:Cc:Subject:Date;
-	b=QIHK+o/XDxz8g00n9b83XpEqBZ8LFTDkoQctX6WQ9iSegG4yOXO0GH2QRvuJmGk+r
-	 UvbDYW74QzxAe9zmdzH/6kwz5HbnjcGwUeHSZ2gPTsEI5WxITwECKuEkBXc4Qo1vw6
-	 xrLId+9r0GrCNWygVpK35XvYFx2Pxh7KzOwFeTgo=
-Received: from localhost.localdomain ([36.111.64.84])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 8499C82E; Fri, 09 May 2025 14:33:09 +0800
-X-QQ-mid: xmsmtpt1746772389tm243909u
-Message-ID: <tencent_503130C3CD56569191396268CF4D12F09A06@qq.com>
-X-QQ-XMAILINFO: NkHKfw09D6j8wNd9ItXDgQzl8XJUYVRbxokHX2cp8iKyEZpEuxu4VkG/bvyfZt
-	 VCzGUT4QAmxXOGm2Bmnt1NIc72I969xDf8DoVyUCRvPRer8uGLVTk1rdh2dPmC++QNMh2JZ0t9eX
-	 ZvS5I9uNDPE/iRMfvQGQ6mHPC7KnnSy10aoKkX/dAaKzkF6kqZkwK/TcuztpMDWAb0IMkbRP/mjf
-	 McGqg+xKmBw6hOYq9l1vA9ap8QpWJ/Cl2V/T6oTllozAxM4AuqE9Uh5a42tVNNUAh6VpqM8UN+or
-	 /+LibXhjGPnj25Es1eLtGYMU5EKtF+NMrldGEniuJdH6i5x++8X1Eh0ZcRTHVasU2WtZbWAksHF5
-	 yjsk4LjWGtI3YjSPrvFE+v6dLd1ZHS9hEcVqks2fumM6krY9nQWA9c+iGkTKazw25JeJdFsEh6sJ
-	 p6dwq1z1T9OY/4bA41Vvy/FzY3nEDaPJr928PmQ0APnCzF6GX1Avi6fLWT634bWePeLb4bTJuh+s
-	 Lfut5a8E+rSvYsDcbEfMRBU7WoTSoOETxDSdnuJJgEgPNR2Zdz5T37k6Mp7B7bM9eOyHb4LDJg5k
-	 yd/nr81NBRr8+HbqEl9Ggh82qXiNL8U3kHAFWgdq5wlltmDOg+JTRGij/y7ZkP7xlquAFZvJgTlv
-	 XHHe0q3Mh+soFbkb26s1JHY0p4AbsLb4NYyCzYE5GnTv4qccPtSI9YWvZYbk0qs7hcv2GmJFotPN
-	 s24fNMLR1Epijzrqy7dt2fyvpZQWzEI05/s0bOsHvrj4jheYpFjwdpbggfQk6gnayVVrzLuil8ie
-	 nYfeEj5yCzOrljqwoOClYQTEmcnJlm7ov1C7GdhapK7Xstk+hQTbA9tKyFkTfzIt2BmbnRSDUDTC
-	 04BAaPc5XhxpSq850zPBx3NhWWrbOV+1DSrPmaSnxFgrHFs1yuk2G9IcR3UByTemsJHYWnM5BaNd
-	 oLVMr+MxXfG5M1CeWmsxyfAiPzYxl70VV4ARJuQh4/ugYu6w+aB/CEKYoKqXacEwz3POViI8LIm9
-	 /wse2ugrJfdVTHlflDh6LnP5Wd0n0L+kkVqSRL0E3IpcNCVVN+
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Feng Lee <379943137@qq.com>
-To: david@redhat.com,
-	baohua@kernel.org,
-	21cnbao@gmail.com,
-	akpm@linux-foundation.org,
-	mingo@kernel.org,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	peterx@redhat.com
-Cc: maobibo@loongson.cn,
-	trivial@kernel.org,
-	linux-kernel@vger.kernel.org,
-	lance.yang@linux.dev,
-	anshuman.khandual@arm.com,
-	Feng Lee <379943137@qq.com>
-Subject: [PATCH v3] mm: remove obsolete pgd_offset_gate()
-Date: Fri,  9 May 2025 14:32:30 +0800
-X-OQ-MSGID: <20250509063230.1742-1-379943137@qq.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746772752; c=relaxed/simple;
+	bh=clCX27/fIBn0JblGudpRe406eUIho5ef0nUbxHjkW50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f5sqtFOHark2tGS8kCul2QaPREdvacHkF2Pf3B9uEnjyREGFboMUTK6FtHoIkYv5EoEEPKWW7u9xfl5stTqRRi1EOVMfREV5pXaOAvIZwtKogGH10t8j9PC89MpDZcbMAp7z8xcv6c9jIrBTOM77+/vKA+dl+L4ly9h2g/o+oSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uDHNu-00059m-Eq; Fri, 09 May 2025 08:39:02 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uDHNu-001qUP-03;
+	Fri, 09 May 2025 08:39:02 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uDHNt-00CHz5-2t;
+	Fri, 09 May 2025 08:39:01 +0200
+Date: Fri, 9 May 2025 08:39:01 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, kernel@pengutronix.de,
+	Alvin =?iso-8859-15?Q?=A6ipraga?= <alsi@bang-olufsen.dk>
+Subject: Re: [PATCH v4 0/3] clk: add support for TI CDCE6214
+Message-ID: <aB2jBapQ5NdSa6HR@pengutronix.de>
+References: <20250430-clk-cdce6214-v4-0-9f15e7126ac6@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430-clk-cdce6214-v4-0-9f15e7126ac6@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Remove pgd_offset_gate() completely and simply make the single
-caller use pgd_offset().
+On Wed, Apr 30, 2025 at 11:01:33AM +0200, Sascha Hauer wrote:
+> The CDCE6214 is a Ultra-Low Power Clock Generator With One PLL, Four
+> Differential Outputs, Two Inputs, and Internal EEPROM.
+> 
+> This series adds a common clk framework driver for this chip along with
+> the dt-bindings document and a small fix needed for the common clk
+> framework.
 
-It appears that the gate area resides in the kernel-mapped segment
-exclusively on IA64. Therefore, removing pgd_offset_k is safe since
-IA64 is now obsolete.
+As 95% of the comments I received for this series are about the binding
+for the pin configuration and it's still not clear what the preferred
+binding is, I'll drop the pin configuration for the next round to get
+the driver upstream. The pin configuration can be done with the
+integrated EEPROM, so the driver is still useful without it. It can be
+added later when needed.
 
-Signed-off-by: Feng Lee <379943137@qq.com>
+Sascha
 
----
-Changes in v3:
-  - adopt more precise subject descriptions
-Changes in v2:
-  - remove pgd_offset_gate completely
-  - remove pgd_offset_k from the get_gate_page function completely
----
- include/linux/pgtable.h | 4 ----
- mm/gup.c                | 5 +----
- 2 files changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index b50447ef1c92..f1e890b60460 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1164,10 +1164,6 @@ static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
- }
- #endif
- 
--#ifndef __HAVE_ARCH_PGD_OFFSET_GATE
--#define pgd_offset_gate(mm, addr)	pgd_offset(mm, addr)
--#endif
--
- #ifndef __HAVE_ARCH_MOVE_PTE
- #define move_pte(pte, old_addr, new_addr)	(pte)
- #endif
-diff --git a/mm/gup.c b/mm/gup.c
-index f32168339390..0685403fe510 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1101,10 +1101,7 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
- 	/* user gate pages are read-only */
- 	if (gup_flags & FOLL_WRITE)
- 		return -EFAULT;
--	if (address > TASK_SIZE)
--		pgd = pgd_offset_k(address);
--	else
--		pgd = pgd_offset_gate(mm, address);
-+	pgd = pgd_offset(mm, address);
- 	if (pgd_none(*pgd))
- 		return -EFAULT;
- 	p4d = p4d_offset(pgd, address);
 -- 
-2.49.0
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
