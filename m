@@ -1,162 +1,112 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC9A26F477
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D01D26A1B8
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746773400; cv=none; b=n3Dmt/+qHVL3lrsa7dzF8XlgZSn9HO/6cu87xoVnl7xzvgFeUaekAhCYx9g6YTGKq9fIrI8mWPgIW9c0FAei92jmjilS+uz4xQqzaufbiCNe76xeky6uvc5cNcIjMAx5MFMtpmK4I2WilSGmNTscQAPz/oBgrg+/9iY2BIZsWHY=
+	t=1746773471; cv=none; b=kudSpzREcecpPYr2EGixX/lNM37xN29jyP1BIWCw/dpFkH/Vq+q6b/TrgonxWFVpIpO1SN0LqikEvQ5kMhTCy5MJ6e0LgvJmGjyxnISM64VcmcOulu0lRlq+xAS/zQHvg/sQO/kgUfOOnrT3IktGjO4971HCyn3vvvd1yiH+klw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746773400; c=relaxed/simple;
-	bh=s1Tfgan3ZnbxcAc6GqPk3+UE6ol9W4UjsJu4UkoB3sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EvwKgMbo75BmRadmPjDseDhr5c/2Ugjv8YyxJArLPIJ4X76df52ufsQD0wuDk2AnysglYG+LV5oT6F2/2BEwCcIdzSSguZcJZqEGfhYAXfIuMNN2/H35uBKtE7VQhWlduMKOpumzPPrwrTJU4tTh91KQwoSrcnYD3qtDx1zD5yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Ztzz60tNfzyV6y;
-	Fri,  9 May 2025 14:45:38 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5E33F140202;
-	Fri,  9 May 2025 14:49:54 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 9 May 2025 14:49:53 +0800
-Message-ID: <cfe66043-6fe3-4c65-9c7e-e961e8a73971@huawei.com>
-Date: Fri, 9 May 2025 14:49:53 +0800
+	s=arc-20240116; t=1746773471; c=relaxed/simple;
+	bh=wiDZ4xkPtV9BOe7ADj1LbvuGPB4FiUezAyGN2IFKEzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fk+OwyFv7Qcd5lV34Vw4V4vyHvA61jVGPdenB17nVcvcQs2QBNCKxBmA4ehx+cCYIlrJ1BGMJ/uaL6mqIk9+KGPmaobBQjHDMdXgBJG+23T2TUUvrz77D6lGmO4Vduc90O91Fm5yDgiiyVZXbbTIVcRa46c6UgZaM76BY3BvRzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZLhl8vlt; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLhl8vlt"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so18513095e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 23:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746773468; x=1747378268; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
+        b=ZLhl8vltiQyAai1i+3Sn+H0oJQzhx2abSENViGQGEi/dQOBeBEIWkVmHyDe56CHdLt
+         xDKK0g6GDHValO90OKLmhKsHxBC+IQkjHp1xhb8B67gRrfG//1E2UEPij8Lfzkl+ZSmd
+         Ctx4cYNfzv3iaukeZn0YbhpJtLdreKmT2xXwozoLqNnEtS8QL108OPMuH7c+UGaXBK85
+         qeEOFyq2mdQMZEZ4Mv6ZefuHOZtS9d0XdK9YsL9cpJjjxqloitR4iVeGiSavGywOx2TP
+         DqwfefGijEOyPKlA/cjFEaNRW6SAkoeMHd5uup1+sfQ5BP6Av/+V7me1cfS0RnJ+i3nr
+         2tnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746773468; x=1747378268;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
+        b=iEtGVHCWg7vOTYXOqtJ7FNeRZ+fh/Q0F5PkPVmQ5zDd72QqE9Mu1hw1jdYq+QLKpy3
+         LR+ERESIWnzccRbc/6WdifnHgMuA4Xe7eZkFTN9kEPqiOXyPs5FPczFh8KkwclJpLrpu
+         TNzslHKfAEkQvltPK9+iaRB8yLKpdsXVx6gwM4wDHC9lOamnGiuml2TYH5l8hlR0CiHH
+         64ttmGEVvtf8/HRw5dwoxMEcLJRG8Nqh4b9Ttsj/5WbZwQy4gYe6vsZKTPTdJ92XnX0R
+         7yvv8Dt7zFIyd01leUf61F1wzGC6DWZ18k+dE9rznKRlxgv4IJiKqGpaqd4j/ahVNNOY
+         GzZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4oja4sYrCXWUAuKyy3YTY0iB5pLOxkKpPzHcp1S1fk0ngRaPpKh84zi4/KyoyHPgH8EjsKde5hDsaNBg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyihijXxDv4XjUmoF7kkOydWZzIQTA0itf2FCPcU629a5g7ieUH
+	4dtX/ajopEbUzyI7UW6pz4qSdX7fv4L9yqRFTtv9VN8gFBOgF3ZM6vTvwyKb8g==
+X-Gm-Gg: ASbGnctj72ZQWzP1SHpSBVmWNrmVAnUtbPrUqQy23tYnN/5KuCXARNY1NwDHzoPpp+Z
+	dtf12xKKfpIK2XpD3xlPhQwBf3jIOy3UVMvablgi+c2WDXlwLaZ3lXWCERxDwvY3D7waGQ/qusO
+	r6B9ik398wAoWS9ZDCzao/RkLku9mzKA8toiA4lq10YBk1MCZ8l/CjeHoDs3IAPnbdeETmkiL+/
+	a5jXxqibf5CtMlxIF+unK6fl3LAezR14GZ5gyR9Kjvc5H9ncnvms2Tizkq+vaICZ16D3+f1AAbP
+	OzuhfqT4YWqL8Vd4bk2JMjtUdTkco65leUPE4r+m+YutHR29XRlbpy3VHXTPPlrjlj6K8AC8n0R
+	HGnqj7fKBwqz45usxV2PKKI8=
+X-Google-Smtp-Source: AGHT+IEBZ+xyU+mtZq/TJ5fu+6WMLt3/ZEPH5kI6vP9q6SNWA2Tnohwr4qj0xsEIdaPCJ/e8n6vxRA==
+X-Received: by 2002:a05:6000:178e:b0:391:4889:5045 with SMTP id ffacd0b85a97d-3a1f649be24mr1423812f8f.36.1746773468403;
+        Thu, 08 May 2025 23:51:08 -0700 (PDT)
+Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5e1sm2214791f8f.89.2025.05.08.23.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 23:51:07 -0700 (PDT)
+Date: Fri, 9 May 2025 12:21:07 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Ethan Zhao <etzhao1900@gmail.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 1/5] PCI/ERR: Remove misleading TODO regarding kernel
+ panic
+Message-ID: <34nnkgbfkccvxiksjb5qaojppcvnkq4l7rchllsppy7cl4fics@4mwtb3rhko5n>
+References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
+ <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
+ <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] selftests/dma: Add dma_map_sg support
-To: Barry Song <21cnbao@gmail.com>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <20250509020238.3378396-1-xiaqinxin@huawei.com>
- <20250509020238.3378396-5-xiaqinxin@huawei.com>
- <CAGsJ_4zaE6F5Goh9O6ytPA+RekeYiMhsU7dHYAM_sKzXREiQjA@mail.gmail.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <CAGsJ_4zaE6F5Goh9O6ytPA+RekeYiMhsU7dHYAM_sKzXREiQjA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+In-Reply-To: <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
 
+On Fri, May 09, 2025 at 02:11:00PM +0800, Ethan Zhao wrote:
+> 
+> 
+> On 5/8/2025 3:10 PM, Manivannan Sadhasivam wrote:
+> > A PCI device is just another peripheral in a system. So failure to
+> > recover it, must not result in a kernel panic. So remove the TODO which
+> > is quite misleading.
+> > 
+> Could you explain what the result would be if A PCI device failed to
+> recovery from FATAL/NON_FATAL aer error or DPC event ? what else
+> better choice we have as next step ? or just saying "failed" then
+> go ahead ?
+> 
 
-On 2025/5/9 11:59:53, Barry Song <21cnbao@gmail.com> wrote:
-> On Fri, May 9, 2025 at 2:02 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
->> Support for dma_map_sg, add option '-m' to distinguish mode.
->>
->> i) Users can set option '-m' to select mode:
->>     DMA_MAP_SINGLE_MODE=0, DMA_MAP_SG_MODE:=1
->>     (The mode is also show in the test result).
->> ii) Users can set option '-g' to set sg_nents
->>      (total count of entries in scatterlist)
->>      the maximum number is 1024. Each of sg buf size is PAGE_SIZE.
->>      e.g
->>      [root@localhost]# ./dma_map_benchmark -m 1 -g 8 -t 8 -s 30 -d 2
->>      dma mapping mode: DMA_MAP_SG_MODE
->>      dma mapping benchmark: threads:8 seconds:30 node:-1
->>      dir:FROM_DEVICE granule/sg_nents: 8
->>      average map latency(us):1.4 standard deviation:0.3
->>      average unmap latency(us):1.3 standard deviation:0.3
->>      [root@localhost]# ./dma_map_benchmark -m 0 -g 8 -t 8 -s 30 -d 2
->>      dma mapping mode: DMA_MAP_SINGLE_MODE
->>      dma mapping benchmark: threads:8 seconds:30 node:-1
->>      dir:FROM_DEVICE granule/sg_nents: 8
->>      average map latency(us):1.0 standard deviation:0.3
->>      average unmap latency(us):1.3 standard deviation:0.5
->>
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->
-> - stable@vger.kernel.org
-> + Marek
-> + Robin,
->
-> Please also include something like 'DMA map benchmark' in the subject line
-> to make it more specific. Additionally, make sure constants like
-> DMA_MAP_SINGLE_MODE use a more specific namespace, as mentioned in
-> earlier replies. With those changes, feel free to add:
->
-> Reviewed-by: Barry Song <baohua@kernel.org>
-Okay, I'll fix it in the next version.
->> ---
->>   tools/testing/selftests/dma/dma_map_benchmark.c | 16 ++++++++++++++--
->>   1 file changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/dma/dma_map_benchmark.c b/tools/testing/selftests/dma/dma_map_benchmark.c
->> index b12f1f9babf8..036ddb5ac862 100644
->> --- a/tools/testing/selftests/dma/dma_map_benchmark.c
->> +++ b/tools/testing/selftests/dma/dma_map_benchmark.c
->> @@ -27,6 +27,7 @@ int main(int argc, char **argv)
->>          int fd, opt;
->>          /* default single thread, run 20 seconds on NUMA_NO_NODE */
->>          int threads = 1, seconds = 20, node = -1;
->> +       int map_mode = DMA_MAP_SINGLE_MODE;
->>          /* default dma mask 32bit, bidirectional DMA */
->>          int bits = 32, xdelay = 0, dir = DMA_MAP_BIDIRECTIONAL;
->>          /* default granule 1 PAGESIZE */
->> @@ -34,7 +35,7 @@ int main(int argc, char **argv)
->>
->>          int cmd = DMA_MAP_BENCHMARK;
->>
->> -       while ((opt = getopt(argc, argv, "t:s:n:b:d:x:g:")) != -1) {
->> +       while ((opt = getopt(argc, argv, "t:s:n:b:d:x:g:m:")) != -1) {
->>                  switch (opt) {
->>                  case 't':
->>                          threads = atoi(optarg);
->> @@ -57,11 +58,20 @@ int main(int argc, char **argv)
->>                  case 'g':
->>                          granule = atoi(optarg);
->>                          break;
->> +               case 'm':
->> +                       map_mode = atoi(optarg);
->> +                       break;
->>                  default:
->>                          return -1;
->>                  }
->>          }
->>
->> +       if (map_mode >= DMA_MAP_MODE_MAX) {
->> +               fprintf(stderr, "invalid map mode, DMA_MAP_SINGLE_MODE:%d, DMA_MAP_SG_MODE:%d\n",
->> +                       DMA_MAP_SINGLE_MODE, DMA_MAP_SG_MODE);
->> +               exit(1);
->> +       }
->> +
->>          if (threads <= 0 || threads > DMA_MAP_MAX_THREADS) {
->>                  fprintf(stderr, "invalid number of threads, must be in 1-%d\n",
->>                          DMA_MAP_MAX_THREADS);
->> @@ -111,13 +121,15 @@ int main(int argc, char **argv)
->>          map.dma_dir = dir;
->>          map.dma_trans_ns = xdelay;
->>          map.granule = granule;
->> +       map.map_mode = map_mode;
->>
->>          if (ioctl(fd, cmd, &map)) {
->>                  perror("ioctl");
->>                  exit(1);
->>          }
->>
->> -       printf("dma mapping benchmark: threads:%d seconds:%d node:%d dir:%s granule: %d\n",
->> +       printf("dma mapping mode: %d\n", map_mode);
->> +       printf("dma mapping benchmark: threads:%d seconds:%d node:%d dir:%s granule/sg_nents: %d\n",
->>                          threads, seconds, node, dir[directions], granule);
->>          printf("average map latency(us):%.1f standard deviation:%.1f\n",
->>                          map.avg_map_100ns/10.0, map.map_stddev/10.0);
->> --
->> 2.33.0
->>
-> Thanks
-> Barry
+If the recovery is not possible (with device,bus,host reset), then there is
+nothing could be done.
 
-Thanks
+- Mani
 
-Qinxin
-
+-- 
+மணிவண்ணன் சதாசிவம்
