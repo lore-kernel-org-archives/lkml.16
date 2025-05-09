@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC5A294A0C
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458E32951AF
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796382; cv=none; b=PlzhvfjUUvE9YNLwctjVipoxiPOg+E0IUVzpoYohOAAmTwyzRCus32Hoo1ztvU9t0L0D4xg6QR8M/Yp3sA2L3g1DQj8w+65QDTzZPalBDTj98LVRGzDuPfV2Z4LZ70Jv1N80d7is+6nxnaHTKLRNJHqcsPunbMX/n9npnm9iQh8=
+	t=1746796383; cv=none; b=ZrbXhgHMSF91RfXIA9149eKsfC19b+OBwyDLjvnb40iN1/spbkWM/1oHKLFFe7IOg66Y5vaX71U2goIErLysoEfzJ/x4teeYxFqeUgIVBwkKoauavEQVsxbWJ6/MhcTaosIK5cjHSTYjcp1hmyt9iHjUAq0/o/uJPhsZyC6bDjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796382; c=relaxed/simple;
-	bh=SzPqlg0Eque0YCACbS3nlNWvZVzenw1a+Kzf9qe87js=;
+	s=arc-20240116; t=1746796383; c=relaxed/simple;
+	bh=s/f1WOZINXsqbCEyArw9h0+7djiEJThn/JJePbdtQQc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MEJWkAC7SIeORjB7P7O3+QThscUnVOkHLmkL7ioe+2iQsCtY4jm0YhRQlT3SkkAu2qPFgaXa+Jvy48ppp374a+r90OlLcuXOwcQXeCpqFuHwIAcTJ9GYiZDJkul8WRE3f42haTyOKhJCkU2+uMMwndFsvNh8SHGStY5SGcrj5/o=
+	 Content-Type; b=l46GgNxID5HeH1OK4n/dagZ+uskoh+SgDocXkLO9RzelXA+aBoOuK404JjiZmyzRJeMAxr5IhUL9fWtoKJiAXA70FqaHn13ghqiXdLjBZFjS6A4kEe9HblPH3KCGwjIhHr6YgOTrTdSPpPB/JqngvULXuPRHMajVQl4nursfHyE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89F6C4CEEB;
-	Fri,  9 May 2025 13:13:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AA6AC4CEF1;
+	Fri,  9 May 2025 13:13:03 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDNXS-00000002c1o-1SnJ;
+	id 1uDNXS-00000002c2o-2tRf;
 	Fri, 09 May 2025 09:13:18 -0400
-Message-ID: <20250509131318.200556507@goodmis.org>
+Message-ID: <20250509131318.540432016@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 09:13:17 -0400
+Date: Fri, 09 May 2025 09:13:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Tom Zanussi <zanussi@kernel.org>,
- Miaoqian Lin <linmq006@gmail.com>
-Subject: [for-next][PATCH 28/31] tracing: Fix error handling in event_trigger_parse()
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 30/31] tracing: Add a helper function to handle the dereference arg in
+ verifier
 References: <20250509131249.340302366@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,50 +38,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Miaoqian Lin <linmq006@gmail.com>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-According to trigger_data_alloc() doc, trigger_data_free() should be
-used to free an event_trigger_data object. This fixes a mismatch introduced
-when kzalloc was replaced with trigger_data_alloc without updating
-the corresponding deallocation calls.
+Add a helper function called handle_dereference_arg() to replace the logic
+that is identical in two locations of test_event_printk().
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Tom Zanussi <zanussi@kernel.org>
-Link: https://lore.kernel.org/20250507145455.944453325@goodmis.org
-Link: https://lore.kernel.org/20250318112737.4174-1-linmq006@gmail.com
-Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() implementations use helpers")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-[ SDR: Changed event_trigger_alloc/free() to trigger_data_alloc/free() ]
+Link: https://lore.kernel.org/20250507191703.5dd8a61d@gandalf.local.home
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_trigger.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index dac3344ee345..c316badc608b 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -995,7 +995,7 @@ event_trigger_parse(struct event_command *cmd_ops,
- 
- 	if (remove) {
- 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
--		kfree(trigger_data);
-+		trigger_data_free(trigger_data);
- 		ret = 0;
- 		goto out;
- 	}
-@@ -1022,7 +1022,7 @@ event_trigger_parse(struct event_command *cmd_ops,
- 
-  out_free:
- 	event_trigger_reset_filter(cmd_ops, trigger_data);
--	kfree(trigger_data);
-+	trigger_data_free(trigger_data);
- 	goto out;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index fe0ea14d809e..120531268abf 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -400,6 +400,20 @@ static bool process_string(const char *fmt, int len, struct trace_event_call *ca
+ 	return true;
  }
  
++static void handle_dereference_arg(const char *arg_str, u64 string_flags, int len,
++				   u64 *dereference_flags, int arg,
++				   struct trace_event_call *call)
++{
++	if (string_flags & (1ULL << arg)) {
++		if (process_string(arg_str, len, call))
++			*dereference_flags &= ~(1ULL << arg);
++	} else if (process_pointer(arg_str, len, call))
++		*dereference_flags &= ~(1ULL << arg);
++	else
++		pr_warn("TRACE EVENT ERROR: Bad dereference argument: '%.*s'\n",
++			len, arg_str);
++}
++
+ /*
+  * Examine the print fmt of the event looking for unsafe dereference
+  * pointers using %p* that could be recorded in the trace event and
+@@ -563,11 +577,9 @@ static void test_event_printk(struct trace_event_call *call)
+ 			}
+ 
+ 			if (dereference_flags & (1ULL << arg)) {
+-				if (string_flags & (1ULL << arg)) {
+-					if (process_string(fmt + start_arg, e - start_arg, call))
+-						dereference_flags &= ~(1ULL << arg);
+-				} else if (process_pointer(fmt + start_arg, e - start_arg, call))
+-					dereference_flags &= ~(1ULL << arg);
++				handle_dereference_arg(fmt + start_arg, string_flags,
++						       e - start_arg,
++						       &dereference_flags, arg, call);
+ 			}
+ 
+ 			start_arg = i;
+@@ -578,11 +590,9 @@ static void test_event_printk(struct trace_event_call *call)
+ 	}
+ 
+ 	if (dereference_flags & (1ULL << arg)) {
+-		if (string_flags & (1ULL << arg)) {
+-			if (process_string(fmt + start_arg, i - start_arg, call))
+-				dereference_flags &= ~(1ULL << arg);
+-		} else if (process_pointer(fmt + start_arg, i - start_arg, call))
+-			dereference_flags &= ~(1ULL << arg);
++		handle_dereference_arg(fmt + start_arg, string_flags,
++				       i - start_arg,
++				       &dereference_flags, arg, call);
+ 	}
+ 
+ 	/*
 -- 
 2.47.2
 
