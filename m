@@ -1,126 +1,273 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFA522A4D6
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103692900A2
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746789703; cv=none; b=o6E223kcS22b63+oNGnH1HMjUHfHYZ9V37BQCK9DzIERHxYItzzJH9i4+tpPlEJVZyRiU0hZcVYkNlFmBN1cW5XG20Ertnc7SgyaBMQm3dzW3FFyQBtqEV035/O7vfmUHu4rtrLMm9LOiP3PXgYPt6ybp2j6HuI8bdHK9SSNERI=
+	t=1746789710; cv=none; b=dmElaCvU89QioBndkYU/M48c6TIwjmJsznG+P4FWd7Sha50fZHel8ti1KuaQqKiqxPDxyXEMPYi5HKIjSpSa2wxuUnzPz8jjhE37v31Trc070MT+Pry9bvLKf8MJuQog7U5ch7L9w29xnH0HmUsCpi/nhQpI2YfVpqYh159WYRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746789703; c=relaxed/simple;
-	bh=0BuO/miu0FNdGeIwKI4Igcv8UGoaQFfIol3GnMmPqqQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ekPPzkf76Jz0VM1hYakjyeKWm1MjJG8BJ4THg8D0sm9VfDmobte4cvOoIf7p1XekMj2nC9fxSULSAHSEmcJYq0mkM97wkGCpNp4Q8tlxq+j69vqc75yY0XSDl5sETsyfXfFZhCm2Wj+eo+EPU7b9BqHjn3aGj3x0Z74C9c9r9rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pIDfMFGg; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746789710; c=relaxed/simple;
+	bh=BlVflAgMKF1KY+21MKTFM8WI7wi3npy62PkBzFrs1LY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ihBFfK9BTyKb7K+E3A0+glSUYyvmW8uzoDPtA4RV5/0QidbkyC0lK2xOCc9R1IvX/C40bwkIwscQUWWEqTWeIHjsntoRkqkggUNvVHcJ8FNPj+g/g63AqryEVjQy1N+A5u/UTqF1WebSgb+bTxS3wOeAJXdLlSskIa2TEC+fRhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=IjQNX/lC; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pIDfMFGg"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so1880575e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746789700; x=1747394500; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0zvaxLdQ0qhtC7Jg6xocbXcJy/vEo+u7LRWPS1JM5/o=;
-        b=pIDfMFGgO0Hrlt8MMl0kZ9RISa2qcjnwC3tO8RCk6eDiBXdZUcw+0Ar+QyClfzjjZy
-         q7rcmL7awLcC34ICwfPrZeq/wiwJaHqDPX6H/ajLjV466tOFN9TNhpAiOdW3yCwMdSr2
-         rOh36bgF1jWPEXBP+kcLn+mrYhM/1fGrb9R+UQBfyssoShzTwB9LV2LMet077oelBZnP
-         M7ievaT+a/NedGigYAbg8JbMIz2iNJvbcTjP7MJTQ6dWQ4zHRxOecc6PvWo1/s30197N
-         rIQY7W3sO/zbL6+WbkWpVsr3TBrPlskz6WJWPSNjiMYQ/bum8QWKus1rFmZlGJcagngz
-         Av8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746789700; x=1747394500;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0zvaxLdQ0qhtC7Jg6xocbXcJy/vEo+u7LRWPS1JM5/o=;
-        b=JLRhJ6IO084NhLCjjho7MpzSGGt385yxu6PF3uJjqv79kXEuhIMMK6hShe3xaZpYD5
-         hrfNmHTn9lXbDDHzKpftk5HYqpmlaQ+3CfWNArNWzPceBDLfA/aqkdPs3myo0YQMQ0aB
-         t3LSj66eA2ey1bR8EREMMuINnCR8Rb3RBGvp1l97QlrXeD+TKYwKrqMA6MHbi3lrSBcN
-         X4fLET3f5WctmrTwICXapVum3D71IUDLw86IZDsEOzbuYxfi5824zhgswlfnkqA0rLWA
-         T2XTR+JYo8utvgZyx2GUB8U0b0SBsLTmYoqfsVy8rJU7GuLp/n70SrY5/D+/9oGteZel
-         jCQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIspUFd5uqS/KQ8LRvRiAkDLzBsFvAMNvJ3SnQ9bxcp8gWUtujNXDf7EARGD5kaIqQN3I222xg3zKbOQs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmOKyfPY/YJb3pfeBjGbc8o780+VPqNPRWp2LWr3Txb75vyEKq
-	z7mV1IovnGPrJwfkutaFtMPWvA9UO+7RjQlvCTPoqpJ5nVKS74jfb9RRpjWcCig=
-X-Gm-Gg: ASbGnctGqkXS9KwRH2Bfz6pn91g0Hk/3rY3Bz+RfTx7GjHwY6pb0ifWlGSvCiSKaIJ0
-	9nNT2VcxAWnrHMf0koljTu/o6eGQWZhc8RYb6A3ybyI9lkkoA7vK8HEe5oLhJ6W6CSnKCCIqjQh
-	CUyiWay7urc7I76vvi5mMkcY3eg0WoBfhuWTeOTdnsfGv8YHkZ7vDg+I6zAsOwd/mqQEaphKJAD
-	lZSZKilnkHTvCawuWm/7hTT9c3GqGC/RUYelTNQpeCw8jNGtfeDHKzyF3UKJdp/4HFt5DobXO6b
-	YHkiqtpvcVC247lwlwIwbqpaLTcvjqPlDcdwjhovsqTqoNAOZg==
-X-Google-Smtp-Source: AGHT+IEuDuBg93OxIQQoW+nylcXuRFPBeBathaUSkxBNEQ4jD3mR42Jzx1DI1Z0ON8bFZOIloNRtJQ==
-X-Received: by 2002:a05:600c:1382:b0:439:a30f:2e49 with SMTP id 5b1f17b1804b1-442d6dd5413mr8885805e9.5.1746789699803;
-        Fri, 09 May 2025 04:21:39 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd328455sm69946945e9.2.2025.05.09.04.21.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 04:21:39 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Vladimir Oltean <olteanv@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Frank Li <Frank.Li@nxp.com>,
-	linux-spi@vger.kernel.org,
-	imx@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] spi: dt-bindings: nuvoton,wpcm450-fiu: Drop unrelated nodes from DTS example
-Date: Fri,  9 May 2025 13:21:32 +0200
-Message-ID: <20250509112130.123462-4-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250509112130.123462-3-krzysztof.kozlowski@linaro.org>
-References: <20250509112130.123462-3-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="IjQNX/lC"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=869; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=0BuO/miu0FNdGeIwKI4Igcv8UGoaQFfIol3GnMmPqqQ=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHeU9Raekbf2tG03zWC6ko3skitxMRci9RwRJu
- 8slhDM2iNaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaB3lPQAKCRDBN2bmhouD
- 14v3D/9iuwKe4zn277rUfVsmgt/II8fADdf1u/LFF8b+e1VT3f1aiSpH7QsV6sp6QMDJZT/Sjan
- EA5EpUVZRySb6x1OoQPqh9geb8YTnuzu+1mWMxtmBwBzSqNa/ip2dEhYZIkq+zUlobn5dkMP6/N
- z0P5+VQc/vFc6uFcTHXE4h3Ngj/l7NEMSlEJzaV5zdlAJh6LqF1L7x04TAc9S7KqAEwToyaJENd
- LX0+FVaiwpPNKbElXgizKP16egYtBw+RTrZjsUxgOfIccAbaCPDSWQbw5Dd2tsfLhlD56fuQ//U
- bkTV252AgvsA0CBs5BFD1CN7zHWsKzQF6SYkq+LlHWC8dTO8IViLSn09zJnknFgQCsUiYh8y5jE
- xav332eHokzZ/JmqqM1BjdCrVPnlsxrvgaHLhJLu8h3bW4bucGZCs3LNUC+U2deDOeYbrAXE6D6
- 5jqPWdMYxx5FLKVIJkMSJyDtTPV0YiXrqDmFsPJKYUNJAnIZFKGpN0Wpk6VYWZ9rDtepU0781rB
- oO3zGPlWD4Snadvawz9PIqeEAueNplqWUjDezYjF3SvujhiPpmZpXkQ+Q1jV4stqNtnVPNXh3HW
- nSGGYwfk/aaVVWfKANaOQqz0C69xQIXbDORTrC1Ts5aDxeQa4LgzFEkrxuJ4aZyTW7vw1Crk4AP WWtlsOiCaLqiCxg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1746789694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jycqaezhCsooEMLFOB7YGlzrs+SpJfWD5uERxhFzT9w=;
+	b=IjQNX/lCGNU+MTonjMcjwKjBj2i18UbXyRd4mzgOuD/8Pqbj9xH9w3nv1Jyd3tn8PbXrNm
+	fWIVwOKQvpZL9hye+plpkgCiCxABFpmJTxA2+0d1dRqSPldbB3vfYOsOvXuh90Tv96cMh3
+	PD19WdITDHgwDKYJ+RTkRhJ6jjeefPePV/1rQ25feH+F/SutEirtNuULbUjvPoSFmzRGPE
+	ZwT4xnEWsKyBvn9XiNcxCSH1b6K+0qthvDHlraL9f4JkqDXsJ9YUmuEfGD3HyM2FxsU8qX
+	SC62p0PIMKt7DxkT0TJrUYrzdijQJKX/B3C7Morf6mUPHhDTdc25NlYasMqdIA==
+Content-Type: multipart/signed;
+ boundary=76ae7b15ebcac961fb29afb3c1039cc390728cd5d52cfd66bb9894187db4;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Fri, 09 May 2025 13:21:13 +0200
+Message-Id: <D9RL9DZN7PXS.PGSNWKK9J548@cknow.org>
+Subject: Re: [PATCH 4/6] arm64: dts: rockchip: add px30-cobra base dtsi and
+ board variants
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Heiko Stuebner" <heiko@sntech.de>
+Cc: <quentin.schulz@cherry.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+ <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ "Heiko Stuebner" <heiko.stuebner@cherry.de>
+References: <20250508150955.1897702-1-heiko@sntech.de>
+ <20250508150955.1897702-5-heiko@sntech.de>
+In-Reply-To: <20250508150955.1897702-5-heiko@sntech.de>
+X-Migadu-Flow: FLOW_OUT
 
-Binding example should not contain other nodes, including other
-providers like syscon, because this is redundant and only adds
-unnecessary bloat.
+--76ae7b15ebcac961fb29afb3c1039cc390728cd5d52cfd66bb9894187db4
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/spi/nuvoton,wpcm450-fiu.yaml         | 5 -----
- 1 file changed, 5 deletions(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/spi/nuvoton,wpcm450-fiu.yaml b/Documentation/devicetree/bindings/spi/nuvoton,wpcm450-fiu.yaml
-index 4e0d391e1d69..c97bf48b56b4 100644
---- a/Documentation/devicetree/bindings/spi/nuvoton,wpcm450-fiu.yaml
-+++ b/Documentation/devicetree/bindings/spi/nuvoton,wpcm450-fiu.yaml
-@@ -59,8 +59,3 @@ examples:
-         reg = <0>;
-       };
-     };
--
--    shm: syscon@c8001000 {
--      compatible = "nuvoton,wpcm450-shm", "syscon";
--      reg = <0xc8001000 0x1000>;
--    };
--- 
-2.45.2
+On Thu May 8, 2025 at 5:09 PM CEST, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@cherry.de>
+>
+> Cobra are Touchscreen devices built around the PX30 SoC using
+> a variety of display options.
+>
+> The devices feature an EMMC, network port, usb host + OTG ports and
+> a 720x1280 display with a touchscreen.
+>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile         |   4 +
+>  .../rockchip/px30-cobra-ltk050h3146w-a2.dts   |  39 ++
+>  .../dts/rockchip/px30-cobra-ltk050h3146w.dts  |  39 ++
+>  .../dts/rockchip/px30-cobra-ltk050h3148w.dts  |  39 ++
+>  .../dts/rockchip/px30-cobra-ltk500hd1829.dts  |  58 ++
+>  arch/arm64/boot/dts/rockchip/px30-cobra.dtsi  | 570 ++++++++++++++++++
+>  6 files changed, 749 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-=
+a2.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w.=
+dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148w.=
+dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd1829.=
+dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra.dtsi
+>
+> <snip>
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/px30-cobra.dtsi b/arch/arm64/bo=
+ot/dts/rockchip/px30-cobra.dtsi
+> new file mode 100644
+> index 000000000000..92066cbc1a70
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/px30-cobra.dtsi
+> @@ -0,0 +1,570 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2025 Cherry Embedded Solutions GmbH
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/pinctrl/rockchip.h>
+> +#include "px30.dtsi"
+> +
+> +/ {
+> +	aliases {
+> +		mmc0 =3D &emmc;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial5:115200n8";
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible =3D "pwm-backlight";
+> +		power-supply =3D <&vcc5v0_sys>;
+> +		pwms =3D <&pwm0 0 25000 0>;
+> +	};
+> +
+> +	beeper {
+> +		compatible =3D "pwm-beeper";
+> +		pwms =3D <&pwm1 0 1000 0>;
+> +	};
+> +
+> +	emmc_pwrseq: emmc-pwrseq {
+> +		compatible =3D "mmc-pwrseq-emmc";
+> +		pinctrl-0 =3D <&emmc_reset>;
+> +		pinctrl-names =3D "default";
+> +		reset-gpios =3D <&gpio1 RK_PB3 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		led-0 {
+> +			color =3D <LED_COLOR_ID_BLUE>;
+> +			gpios =3D <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
+> +			label =3D "heartbeat";
+> +			linux,default-trigger =3D "heartbeat";
+> +		};
+> +	};
+> +
+> +	pwm-leds {
+> +		compatible =3D "pwm-leds";
+> +
+> +		ring_red: led-0 {
+> +			color =3D <LED_COLOR_ID_RED>;
+> +			default-state =3D "off";
+> +			label =3D "ring_red";
+> +			pwms =3D <&pwm5 0 1000000 0>;
+> +			max-brightness =3D <255>;
+> +		};
+> +
+> +		ring_green: led-1 {
+> +			color =3D <LED_COLOR_ID_GREEN>;
+> +			default-state =3D "off";
+> +			label =3D "ring_green";
+> +			pwms =3D <&pwm6 0 1000000 0>;
+> +			max-brightness =3D <255>;
+> +		};
+> +
+> +		ring_blue: led-2 {
+> +			color =3D <LED_COLOR_ID_BLUE>;
+> +			default-state =3D "off";
+> +			label =3D "ring_blue";
+> +			pwms =3D <&pwm7 0 1000000 0>;
+> +			max-brightness =3D <255>;
+> +		};
+> +	};
+> +
+> +	/* also named 5V_Q7 in schematics */
+> +	vcc5v0_sys: regulator-vccsys {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply =3D <&vdd_arm>;
+> +};
+> +
+> +&cpu1 {
+> +	cpu-supply =3D <&vdd_arm>;
+> +};
+> +
+> +&cpu2 {
+> +	cpu-supply =3D <&vdd_arm>;
+> +};
+> +
+> +&cpu3 {
+> +	cpu-supply =3D <&vdd_arm>;
+> +};
+> +
+> +&display_subsystem {
+> +	status =3D "okay";
+> +};
+> +
+> +&dsi_dphy {
+> +	status =3D "okay";
+> +};
+> +
+> +&emmc {
+> +	bus-width =3D <8>;
+> +	cap-mmc-highspeed;
+> +	/*
+> +	 * For hs200 support, U-Boot would have to set the RK809 DCDC4
+> +	 * rail to 1.8V from the default of 3.0V. It doesn't do that on
+> +	 * devices out in the field, so disable hs200.
+> +	 * mmc-hs200-1_8v;
+> +	 */
+> +	mmc-pwrseq =3D <&emmc_pwrseq>;
+> +	non-removable;
+> +	vmmc-supply =3D <&vcc_3v3>;
+> +	vqmmc-supply =3D <&vcc_emmc>;
+> +	status =3D "okay";
+> +};
+> +
+> +&gmac {
+> +	clock_in_out =3D "output";
+> +	phy-handle =3D <&dp83825>;
+> +	phy-supply =3D <&vcc_3v3>;
+> +	status =3D "okay";
+> +};
+> +
+> +&gpu {
+> +	mali-supply =3D <&vdd_log>;
+> +	status =3D "okay";
+> +};
+> +
+> +/* I2C0 =3D PMIC, STUSB4500, RTC */
+> +&i2c0 {
+> +	status =3D "okay";
+> +
+> +	rk809: pmic@20 {
+> +		compatible =3D "rockchip,rk809";
+> +		reg =3D <0x20>;
+> +		#clock-cells =3D <0>;
+> +		clock-output-names =3D "xin32k";
+> +		interrupt-parent =3D <&gpio0>;
+> +		interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pmic_int>;
+> +		wakeup-source;
+> +		rockchip,system-power-controller;
 
+The "rockchip," prefix is not needed and deprecated, so you can drop it.
+Same issue is present in patch 6 of this series.
+
+Cheers,
+  Diederik
+
+--76ae7b15ebcac961fb29afb3c1039cc390728cd5d52cfd66bb9894187db4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaB3lNwAKCRDXblvOeH7b
+bo/FAQC5JFHh6hf/TaSCesVRR7H5eRQlxvlw731y6nMua5aEMAEAhPjTcmcQNuWH
+SVe21rvMza2bRe8N/MCmB9XPapWzzgU=
+=Hk2D
+-----END PGP SIGNATURE-----
+
+--76ae7b15ebcac961fb29afb3c1039cc390728cd5d52cfd66bb9894187db4--
