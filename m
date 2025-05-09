@@ -1,94 +1,129 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [61.152.208.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5FD2749C1;
-	Fri,  9 May 2025 08:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C5121FF23
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.152.208.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746780852; cv=none; b=dSRY3Wovnj5bCbGSw0dNTofklZbhk5wXbGOojy9rgUw7E+dzHsI0NwnUD7vILNuSQnc7ykhjEQNeHGSr71IKq6bUx/BNgCMzzSAtuwuoIMrEWk16LWCOL6jrDOG2pkQc+MVCi5KWDIv4HdYUZSLrPd1etUjwO+peG87lFcdKlJw=
+	t=1746781002; cv=none; b=GD8MIK10omHFIJ8adh8H9aLJbNAJ96jxyKklEvaREL4FrbGbdjJvADDbU8S7Xa/iHLOI60tIBxb2WCI+Hl74dXClkKYDyvD08EOBzI/XpHt5ZnsM4SStSFQFAuzTqvZScEJiWeRkbmhPIhEoBmjumD8xafpEurNoZKYZqoBYO8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746780852; c=relaxed/simple;
-	bh=dIQ36xNG7rFv+g5+VuGeU2vZCqINIrKTuYD6nYivyQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fATSFO0ZF8m4eo9MHg23gpzNVYrzG/E1qzXD9L9BjYZKFo/9fH5/QdDvaDBVl/yy3lY1esz4tmGZCPLPq3nOH7awmpkpIWWjJqiPUFDaxGluq+8Smwjnzq7py/TAC/W2O2Ib8v3vofs9ekCXDFLmuOm435clBtAHspeXtwN1CpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-52c58804270so341314e0c.0;
-        Fri, 09 May 2025 01:54:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746780848; x=1747385648;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/n8O+daMK9Ya5qhmCoYyLgEWE9aqvg/6xpt2cDxB2CA=;
-        b=d6zRkLEKwOr1x0X1SBoB82wXWSiNBX5S8ANVLt+QkdLlQngn3u/PleVHWbAjX6LM4C
-         ue3q31ub41uGk6PG+ZNQrZkz3fLYgodckjJNXZ3xLXRTwz60uSC+1XHX43r+KORCJ7Zt
-         EJtCbvj79DLSMTUE+8AKmplWnmAVH9xCj0xDC9EiB4ZFJgVbFLZ2cgnBrBNRjjA1T0uc
-         6KNsD+gYsqW2szDynsgYA+vbQmL7XTQpddM36BENqnbe1nFBQTYTigqsf0SnduJpPP/a
-         yEPsCBXyduRb+Tu7OqpTT0gHbHpTggyxuYviooCYTd7DdqC8w2mgAPrArVhUm2eo9Rcm
-         Kl4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWIncINs5HQfLmmi9wcYIMnf5hedxIMBmvbGT79VGm8N+YOQaBuIQrdwmNXZ8LE0flGtxFlOLRY4UREnXNaK/UB@vger.kernel.org, AJvYcCX3QWFjJrcDfjYYvcJylQFHRXArqTduAvpFk9BMEZfN8wAMI1SkDaSBEvVIju4EybRrMXyz1i/2qX5euOyF@vger.kernel.org, AJvYcCXeBgBN0Uepi519XTHZAYqlrOvuD33IFKLDfWQs2uif+pMTs+UbI3XBrcwKyiFs1HaHEK4jPGW+4bNa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3PJyhr0A4m1NQOW+DIJQluUyiE6s5bfkSf2Vsei44t1gsR7QQ
-	Pvt9B65kKMNsFlrdhIYb+0WfJSE7WYkRJtHda84olcMOU0ElHe+QypxHNQUI
-X-Gm-Gg: ASbGncurXDbjtJBux4yWFOUlGvw24GnSL7tIgyuiCo6N9U9MZUmDKIQ0K4jDi3np9GZ
-	VfLfVuUBb8tlYmrEC6mCjR6DZuINquSNdDnHsc59btHtlQuWiOyOi4HBTJhqBuWU5Ft5i9FLb2y
-	rEXCBPQlv+1vz2YPHkIMwQ+ihLdjNm74XBwz0yEUm9uSM8LNVOvOHherG6790j0iNsDrjHm3hjE
-	oMI3HgA+orqvhCVco8tma6aTeLGvzjm8gjhm+P4FSLc7PI0d3VyOOkJlmdKFXcW/sdVsaWg2qR2
-	amf96ICqdLAMSA42eIiJUdZdXHB/MG1Hpmz4XY75Ysl5BMjN8oKpQVPde1G+oag0ZgInfuYqNYL
-	SJ+8=
-X-Google-Smtp-Source: AGHT+IFS1E8zSsASuIslXWr4BY0BpFM3pAJ8PNJL4XM2KV82ovaEovOCTSP1hQwdsX2FxKt3riAn6w==
-X-Received: by 2002:a05:6122:828d:b0:520:62ce:98ed with SMTP id 71dfb90a1353d-52c53d2ff33mr2291528e0c.6.1746780848441;
-        Fri, 09 May 2025 01:54:08 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c538a6e70sm801137e0c.39.2025.05.09.01.54.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 01:54:07 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4c6cf5e4cd5so1712828137.2;
-        Fri, 09 May 2025 01:54:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWTQgetaWgCCXBCpTs/Wjanyr3fELPFCIT5qD6fdej+qELHfpJX3l2mxqUlW5jD9wTADS30QE3dcEvT@vger.kernel.org, AJvYcCWp4F22Drq9LmGwNFsPR0xaeyaA5mfCWnLxuOmJ7kuEPChadirVeK1n1F695NcBhxfE7AGXNgzYU7cbEPLoMV3Z@vger.kernel.org, AJvYcCX0KmnlGX1+co7PtaJ5QV1iTtC0rdYRjIwGo6MyzkYgsQ8yZEsNu42G64YGup5JFOq258eG/1hjQjht358b@vger.kernel.org
-X-Received: by 2002:a05:6102:3e25:b0:4bb:de88:d027 with SMTP id
- ada2fe7eead31-4deed33fb02mr2118228137.7.1746780847314; Fri, 09 May 2025
- 01:54:07 -0700 (PDT)
+	s=arc-20240116; t=1746781002; c=relaxed/simple;
+	bh=dZZ3VPiPFOzf4cQPlWnKeSAeKt/VPUjAUXwbEpsGKjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=El/+kglHdxw2G+/pZBunL6g26HBUM5QomVOtAAJnDncCJexL/Rw4HmtrEywLhXJuHk6281M7KCooB8r2mYicfjQti0Tyd1HKTV1+8vPqq7eTBKWWM21iHqs8KHQS0tsaRr50hRNd44ql1jQ6PbFnnOgvGsb8cqq5iwNoScoNxP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=61.152.208.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1746779891-1eb14e386d11dc50001-xx1T2L
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id lNjwCd9NGm5gCPPo (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Fri, 09 May 2025 16:38:11 +0800 (CST)
+X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from ZXSHMBX3.zhaoxin.com (10.28.252.165) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Fri, 9 May
+ 2025 16:38:10 +0800
+Received: from ZXSHMBX3.zhaoxin.com ([fe80::8cc5:5bc6:24ec:65f2]) by
+ ZXSHMBX3.zhaoxin.com ([fe80::8cc5:5bc6:24ec:65f2%6]) with mapi id
+ 15.01.2507.044; Fri, 9 May 2025 16:38:10 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from [10.32.65.152] (10.32.65.152) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Fri, 9 May
+ 2025 16:31:08 +0800
+Message-ID: <acfbdc87-5146-4c39-831f-70b132f9f4b0@zhaoxin.com>
+Date: Fri, 9 May 2025 16:31:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-7-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-7-3906529757d2@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 9 May 2025 10:53:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV2Y0gSt+6-5eUMusJc5XexDu7yFq6Qw9hrkzVszh=r2w@mail.gmail.com>
-X-Gm-Features: AX0GCFvtlzUj3sVpHR4wgcapabeNrbr0S1wglOu34WYtYWzhq6PCycyr8AITEbE
-Message-ID: <CAMuHMdV2Y0gSt+6-5eUMusJc5XexDu7yFq6Qw9hrkzVszh=r2w@mail.gmail.com>
-Subject: Re: [PATCH v5 07/12] gpio: aggregator: update gpiochip_fwd_setup_delay_line()
- parameters
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1103397: linux-image-amd64: Kernel Panic:
+ copy_fpstate_to_sigframe crashes.
+To: Larry Wei <larryw3i@yeah.net>, Salvatore Bonaccorso <carnil@debian.org>,
+	<1103397@bugs.debian.org>
+X-ASG-Orig-Subj: Re: Bug#1103397: linux-image-amd64: Kernel Panic:
+ copy_fpstate_to_sigframe crashes.
+CC: Ben Hutchings <ben@decadent.org.uk>, "Chang S. Bae"
+	<chang.seok.bae@intel.com>, Lyle Li <LyleLi@zhaoxin.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+	<aruna.ramakrishna@oracle.com>, <pbonzini@redhat.com>,
+	<levymitchell0@gmail.com>, <attofari@amazon.de>,
+	<linux-kernel@vger.kernel.org>, <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>,
+	<LeoLiu-oc@zhaoxin.com>, <GeorgeXue@zhaoxin.com>, <yunshen@zhaoxin.com>,
+	<AlanSong@zhaoxin.com>
+References: <4ac9f677-699e-4ef1-b160-9f1c6fe8e820@yeah.net>
+ <c566339b-d8d3-4f74-a3b8-8f373fbe3f47@yeah.net>
+ <174486226753.86424.3234605951040281675.reportbug@zx2>
+ <8bcebb19-17f6-47e6-976a-0c9560795cd7@yeah.net>
+ <aB0Q8S47iNeD1GOM@eldamar.lan>
+ <6cebe32d-0290-41d8-9629-d80ef3c159c3@yeah.net>
+Content-Language: en-US
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+In-Reply-To: <6cebe32d-0290-41d8-9629-d80ef3c159c3@yeah.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Moderation-Data: 5/9/2025 4:38:09 PM
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1746779891
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1324
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.141129
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
-> Remove useless parameters of gpiochip_fwd_setup_delay_line().
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+On 2025/5/9 11:49, Larry Wei wrote:
+>=20
+>=20
+> [=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E6=9D=A5=E8=87=AA=E5=A4=96=E9=83=A8=
+=E5=8F=91=E4=BB=B6=E4=BA=BA =E8=B0=A8=E9=98=B2=E9=A3=8E=E9=99=A9]
+>=20
+> Salvatore Bonaccorso,
+>=20
+> Yes, let's just consider it as good. But in fact, there are still many
+> problems, such as the one mentioned above (
+> linux-hardware.org/?probe=3D271fabb7a4&log=3Ddmesg ), and almost all lapt=
+ops
+> using Zhaoxin CPUs cannot adjust the backlight brightness, which is
+> **VERY HARMFUL** to the eyes!
 
-                        Geert
+Dear Larry,
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+We are currently investigating the causes of the WARNING messages you=20
+mentioned in this log:
+[    4.141284] ------------[ cut here ]------------
+[    4.141285] alg: self-tests for sha1 using sha1-padlock-nano failed=20
+(rc=3D-22)
+[    4.141302] WARNING: CPU: 2 PID: 657 at crypto/testmgr.c:5865=20
+alg_test.cold+0xb7/0xe0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regarding the inability to adjust the laptop backlight brightness, we=20
+believe this issue is unlikely related to the CPU itself. It is=20
+recommended to contact the laptop manufacturer to confirm whether the=20
+device supports backlight brightness adjustment and inquire about=20
+specific configuration methods, such as installing specific EC=20
+controller drivers or updating graphics card drivers.
+
+BRs!
+TonyWWang-oc
+>=20
+> Regards,
+>=20
+> larryw3i
+>=20
+> On 5/9/25 04:15, Salvatore Bonaccorso wrote:
+>> Did this felt through the cracks?
+>=20
