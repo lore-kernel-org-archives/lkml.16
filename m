@@ -1,73 +1,23 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DF3272E46
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C483622A4FD;
+	Fri,  9 May 2025 08:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746778942; cv=none; b=ARTgreVAp7kv2xjOGe+TjWbkYjp6BbY1naCt0Eyz2S/EaCOVeUDZeJo7aSvDuKCT483YZikCGBiC4Bs+wjqBOIq8Kz6v1TYkMUx581U+jWU1kNu/XS/9LN4hLBgQ1Jo1R/8pqDfD9M01DvNX4Qe2x6xEf48nEOIyOQqNd7rqjHs=
+	t=1746778943; cv=none; b=bIL5uusaPJ1vZfOEvPjkZSKRtgolkE81tc2X5sxQSJ4I6UdhYS5T65qwQRUJwoiHpSJrziFp7aeht0OKEiXAbVICOKhB8CmS3sKO5WwgwK9Z3xmMSlpfH/Zqi1hNmzQ7vf7vfxebGQGW0JnqfmMB3tC3nykaN/f+Q3af49Jlteg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746778942; c=relaxed/simple;
-	bh=1SeUvDPQ9AvKdvNgDnVQHnsGWVwf+mpmx62m39lyudM=;
+	s=arc-20240116; t=1746778943; c=relaxed/simple;
+	bh=LAKDs1Ebf8fsjZwxNzg8Z5v0fBho9WYnJeKznTopoZA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nOPihB07SER6lslsnAcaRyp3xJ5QxqiXxhAQF4kfL9xkBo/VK03ZKEk3igKsdh2+oWEYCiuRYkSaJ5LlRdGDHO755FEgx5/Sr2g4iAVF199Gy2k7QYimWwn4ASPO+xNJZAybDYJxxj7hqjf4ZRsUXy0xqGt2Zmpo3ak/80khh5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B4KcnF42; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B4KcnF42"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746778939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=urSJHDeJh4o2u8qtJI9UoWmLZ2bklT7itdktKGdHXTc=;
-	b=B4KcnF42M5vDVLaeVaKATy0bt4mSZG3atQ1EH+IRBChUmH0sJ4LXsnVujGyqXqwGLWQyWQ
-	60HOsvsl3ai676jSBKlkZQ3s++OS24C+DqO0YJOGRLST4NANFg8Nv7I7VjzeQabRFCcEkR
-	bpJzkMGBXIkCMiZIS+A7Uscqs4Hbv/o=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-26-TnZY4j5fMWekxFmCOVQDvA-1; Fri, 09 May 2025 04:22:17 -0400
-X-MC-Unique: TnZY4j5fMWekxFmCOVQDvA-1
-X-Mimecast-MFC-AGG-ID: TnZY4j5fMWekxFmCOVQDvA_1746778937
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso1279121f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 01:22:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746778936; x=1747383736;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=urSJHDeJh4o2u8qtJI9UoWmLZ2bklT7itdktKGdHXTc=;
-        b=Ly3e6d7Y+IZT2hxusS8iTNK3zf/wLw4R8HdWfM9b8gee3VBkA76wD8/xLDWXWfpqRW
-         anwUBrk9Kt1FZEOYJT9pNZUcSm9Mfugx0evCUi2krXaNfmjpTjkRxvPUeKCUv6jEPfXU
-         Rde/f6Ys8stdcw3WLD3uAeA0Uwbbk7s00kyAKuOpMvjhpyQO8nQHP0GYapocqTC5yw6N
-         pkynWJBRh8CQ6XvfuvAOGBLodnOw4ueAGemgyVHuwnUc7yUSt8VqaHNmVaRsXkugy0X3
-         vkE06l3EW/UzXfjDxLA2Y0eJ5v4HKbyBtr3NNyx3wRQnKVA5jLt/FM9fxb02uJiptRj+
-         gTdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUidifPjx47kR8fm0TRTsk85+CVGRIKr2Q9+rI3JJOC1OExw5U3XglipWTlO4WgUsoVb/qbsFjqqgaRi2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydpYUqGlWnYLt1kp1zof5n+3wJ1z7NwClNTDFgi8fOnBIKpfKr
-	Ym6LGofJs6cROtWqWzRi/noW9g1MfmLDgMDOlnjoDoEig09tnql8FO279jhNbvAyjiLjpvm7QCc
-	pyz2XyHQYEA6LYdrFlYSbaApFGrVUNt1FqfySFU6U4XbgWwo3vJrs0yzT170XZQ==
-X-Gm-Gg: ASbGncsC2qprXOvKYD4eco2j4WOjbsQxYLzRVRtTZqt13OIXD6i5zBwqFI5HTQrPMWN
-	a56WrRSsC7zL0N43wJHL8Qv2uoiUAr2yOmtgW/uHClXUXhTug88XzJBmp+PpnHZF9x8/1euOP76
-	45tMVQFDezUoHhj3n0D2lqYXIZRPLlk7YBlwbXv7ca0TjbrXVSFiV9kfY7enORi+/5jwSDtH6/C
-	S7qc7tXLRQ+tuAcGb+ykL6WcbOI3EnC271AaYTqor6J3tiakHPckHCZ41Mh6FhO7HO8Pob3BWur
-	pXiliUcIw+8wHHyWnMIZZbE9/da78i4d2J+XXpxR+y7yLLniSDm36kG8yY4LqyEBKeq9fNcLYeA
-	X0qms6VhTspSkuRtirZ/9NWBvXCqpy2upBlnBptw=
-X-Received: by 2002:a05:6000:144b:b0:3a0:92d9:dae with SMTP id ffacd0b85a97d-3a0b98fce76mr4865929f8f.5.1746778936604;
-        Fri, 09 May 2025 01:22:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUIQwxze7D6HHqiCRIyhdRZJA3oAzwWyoI1hcOAosHbDs/ZbvCGeLsQKG98fEgH72pSF1tFw==
-X-Received: by 2002:a05:6000:144b:b0:3a0:92d9:dae with SMTP id ffacd0b85a97d-3a0b98fce76mr4865902f8f.5.1746778936228;
-        Fri, 09 May 2025 01:22:16 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ec98dsm2472437f8f.25.2025.05.09.01.22.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 01:22:15 -0700 (PDT)
-Message-ID: <3840b612-bdad-4732-ace1-8416fe9012ae@redhat.com>
-Date: Fri, 9 May 2025 10:22:14 +0200
+	 In-Reply-To:Content-Type; b=buXh/ZXj6qno4O8TmEJ2f6zdZgkXzgt8TVS1w0NJon7gVRSEeW9jK9HPEn9TcG4KUUB/zE5eO+DPtb6LyAe+V9e5F7K5XcyoEXLa5bmT4+ZoTNMKsCwDGt/2HRQsJo01ho+c5KdRNl7v73u6B2NtWsbfclV9lmJRf94yZ8Bt+ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 21DC5433EC;
+	Fri,  9 May 2025 08:22:03 +0000 (UTC)
+Message-ID: <80edd225-046e-4ef4-9e71-7059aa523e3a@ghiti.fr>
+Date: Fri, 9 May 2025 10:22:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,92 +25,733 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: clean up redundant code
-To: Barry Song <21cnbao@gmail.com>, Feng Lee <379943137@qq.com>
-Cc: akpm@linux-foundation.org, mingo@kernel.org, jgg@ziepe.ca,
- jhubbard@nvidia.com, peterx@redhat.com, maobibo@loongson.cn,
- trivial@kernel.org, linux-kernel@vger.kernel.org, lance.yang@linux.dev,
- anshuman.khandual@arm.com
-References: <tencent_0B227ECF6D12D91A3070FE8D41568AD10206@qq.com>
- <CAGsJ_4yLyXefpjycf05MYEnUis1UkEmH+kKVeKDnCsZzgGNUMw@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 5/5] selftests: riscv: add misaligned access testing
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAGsJ_4yLyXefpjycf05MYEnUis1UkEmH+kKVeKDnCsZzgGNUMw@mail.gmail.com>
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Shuah Khan <shuah@kernel.org>,
+ Andrew Jones <ajones@ventanamicro.com>,
+ Samuel Holland <samuel.holland@sifive.com>
+References: <20250422162324.956065-1-cleger@rivosinc.com>
+ <20250422162324.956065-6-cleger@rivosinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250422162324.956065-6-cleger@rivosinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvuddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeetheevfeffgfetkeevleegudelveefleefiedvueffuefgfeejgeegkeejleetgeenucffohhmrghinheptghomhhmohhnrdhssgdpfhhpuhdrshgsnecukfhppedujeeirddugeejrddugeehrdeggeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedujeeirddugeejrddugeehrdeggedphhgvlhhopegludelvddrudeikedruddrudefjegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheptghlvghgvghrsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtp
+ hhtthhopehlihhnuhigqdhkshgvlhhfthgvshhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
 
-On 09.05.25 04:44, Barry Song wrote:
-> On Fri, May 9, 2025 at 1:54 PM Feng Lee <379943137@qq.com> wrote:
->>
->> Remove pgd_offset_gate() completely and simply make the single
->> caller use pgd_offset()
-> 
->   "."
-> 
->>
->> It appears that the gate area resides in the kernel-mapped segment
->> exclusively on IA64. Therefore, removing pgd_offset_k is safe since
->> IA64 is now obsolete.
->>
->> Signed-off-by: Feng Lee <379943137@qq.com>
->>
-> 
-> Better to rename the subject to be more specific, e.g.  "mm: remove
-> obsolete  pgd_offset_gate()" or similar. Otherwise,
+Hi Clément,
 
-With that
+On 22/04/2025 18:23, Clément Léger wrote:
+> This selftest tests (almost) all the currently emulated instruction
+> (except for the RV32 compressed ones which are left as a future
+> exercise for a RV32 user). For the FPU instructions, all the FPU
+> registers are tested.
+>
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> ---
+>   .../selftests/riscv/misaligned/.gitignore     |   1 +
+>   .../selftests/riscv/misaligned/Makefile       |  12 +
+>   .../selftests/riscv/misaligned/common.S       |  33 +++
+>   .../testing/selftests/riscv/misaligned/fpu.S  | 180 +++++++++++++
+>   tools/testing/selftests/riscv/misaligned/gp.S | 103 +++++++
+>   .../selftests/riscv/misaligned/misaligned.c   | 254 ++++++++++++++++++
+>   6 files changed, 583 insertions(+)
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/.gitignore
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/Makefile
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/common.S
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/fpu.S
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/gp.S
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/misaligned.c
+>
+> diff --git a/tools/testing/selftests/riscv/misaligned/.gitignore b/tools/testing/selftests/riscv/misaligned/.gitignore
+> new file mode 100644
+> index 000000000000..5eff15a1f981
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/.gitignore
+> @@ -0,0 +1 @@
+> +misaligned
+> diff --git a/tools/testing/selftests/riscv/misaligned/Makefile b/tools/testing/selftests/riscv/misaligned/Makefile
+> new file mode 100644
+> index 000000000000..1aa40110c50d
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/Makefile
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2021 ARM Limited
+> +# Originally tools/testing/arm64/abi/Makefile
+> +
+> +CFLAGS += -I$(top_srcdir)/tools/include
+> +
+> +TEST_GEN_PROGS := misaligned
+> +
+> +include ../../lib.mk
+> +
+> +$(OUTPUT)/misaligned: misaligned.c fpu.S gp.S
+> +	$(CC) -g3 -static -o$@ -march=rv64imafdc $(CFLAGS) $(LDFLAGS) $^
+> diff --git a/tools/testing/selftests/riscv/misaligned/common.S b/tools/testing/selftests/riscv/misaligned/common.S
+> new file mode 100644
+> index 000000000000..8fa00035bd5d
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/common.S
+> @@ -0,0 +1,33 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +.macro lb_sb temp, offset, src, dst
+> +	lb \temp, \offset(\src)
+> +	sb \temp, \offset(\dst)
+> +.endm
+> +
+> +.macro copy_long_to temp, src, dst
+> +	lb_sb \temp, 0, \src, \dst,
+> +	lb_sb \temp, 1, \src, \dst,
+> +	lb_sb \temp, 2, \src, \dst,
+> +	lb_sb \temp, 3, \src, \dst,
+> +	lb_sb \temp, 4, \src, \dst,
+> +	lb_sb \temp, 5, \src, \dst,
+> +	lb_sb \temp, 6, \src, \dst,
+> +	lb_sb \temp, 7, \src, \dst,
+> +.endm
+> +
+> +.macro sp_stack_prologue offset
+> +	addi sp, sp, -8
+> +	sub sp, sp, \offset
+> +.endm
+> +
+> +.macro sp_stack_epilogue offset
+> +	add sp, sp, \offset
+> +	addi sp, sp, 8
+> +.endm
+> diff --git a/tools/testing/selftests/riscv/misaligned/fpu.S b/tools/testing/selftests/riscv/misaligned/fpu.S
+> new file mode 100644
+> index 000000000000..d008bff58310
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/fpu.S
+> @@ -0,0 +1,180 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +#include "common.S"
+> +
+> +#define CASE_ALIGN		4
+> +
+> +.macro fpu_load_inst fpreg, inst, precision, load_reg
+> +.align CASE_ALIGN
+> +	\inst \fpreg, 0(\load_reg)
+> +	fmv.\precision fa0, \fpreg
+> +	j 2f
+> +.endm
+> +
+> +#define flw(__fpreg) fpu_load_inst __fpreg, flw, s, s1
+> +#define fld(__fpreg) fpu_load_inst __fpreg, fld, d, s1
+> +#define c_flw(__fpreg) fpu_load_inst __fpreg, c.flw, s, s1
+> +#define c_fld(__fpreg) fpu_load_inst __fpreg, c.fld, d, s1
+> +#define c_fldsp(__fpreg) fpu_load_inst __fpreg, c.fldsp, d, sp
+> +
+> +.macro fpu_store_inst fpreg, inst, precision, store_reg
+> +.align CASE_ALIGN
+> +	fmv.\precision \fpreg, fa0
+> +	\inst \fpreg, 0(\store_reg)
+> +	j 2f
+> +.endm
+> +
+> +#define fsw(__fpreg) fpu_store_inst __fpreg, fsw, s, s1
+> +#define fsd(__fpreg) fpu_store_inst __fpreg, fsd, d, s1
+> +#define c_fsw(__fpreg) fpu_store_inst __fpreg, c.fsw, s, s1
+> +#define c_fsd(__fpreg) fpu_store_inst __fpreg, c.fsd, d, s1
+> +#define c_fsdsp(__fpreg) fpu_store_inst __fpreg, c.fsdsp, d, sp
+> +
+> +.macro fp_test_prologue
+> +	move s1, a1
+> +	/*
+> +	 * Compute jump offset to store the correct FP register since we don't
+> +	 * have indirect FP register access (or at least we don't use this
+> +	 * extension so that works on all archs)
+> +	 */
+> +	sll t0, a0, CASE_ALIGN
+> +	la t2, 1f
+> +	add t0, t0, t2
+> +	jr t0
+> +.align	CASE_ALIGN
+> +1:
+> +.endm
+> +
+> +.macro fp_test_prologue_compressed
+> +	/* FP registers for compressed instructions starts from 8 to 16 */
+> +	addi a0, a0, -8
+> +	fp_test_prologue
+> +.endm
+> +
+> +#define fp_test_body_compressed(__inst_func) \
+> +	__inst_func(f8); \
+> +	__inst_func(f9); \
+> +	__inst_func(f10); \
+> +	__inst_func(f11); \
+> +	__inst_func(f12); \
+> +	__inst_func(f13); \
+> +	__inst_func(f14); \
+> +	__inst_func(f15); \
+> +2:
+> +
+> +#define fp_test_body(__inst_func) \
+> +	__inst_func(f0); \
+> +	__inst_func(f1); \
+> +	__inst_func(f2); \
+> +	__inst_func(f3); \
+> +	__inst_func(f4); \
+> +	__inst_func(f5); \
+> +	__inst_func(f6); \
+> +	__inst_func(f7); \
+> +	__inst_func(f8); \
+> +	__inst_func(f9); \
+> +	__inst_func(f10); \
+> +	__inst_func(f11); \
+> +	__inst_func(f12); \
+> +	__inst_func(f13); \
+> +	__inst_func(f14); \
+> +	__inst_func(f15); \
+> +	__inst_func(f16); \
+> +	__inst_func(f17); \
+> +	__inst_func(f18); \
+> +	__inst_func(f19); \
+> +	__inst_func(f20); \
+> +	__inst_func(f21); \
+> +	__inst_func(f22); \
+> +	__inst_func(f23); \
+> +	__inst_func(f24); \
+> +	__inst_func(f25); \
+> +	__inst_func(f26); \
+> +	__inst_func(f27); \
+> +	__inst_func(f28); \
+> +	__inst_func(f29); \
+> +	__inst_func(f30); \
+> +	__inst_func(f31); \
+> +2:
+> +.text
+> +
+> +#define __gen_test_inst(__inst, __suffix) \
+> +.global test_ ## __inst; \
+> +test_ ## __inst:; \
+> +	fp_test_prologue ## __suffix; \
+> +	fp_test_body ## __suffix(__inst); \
+> +	ret
+> +
+> +#define gen_test_inst_compressed(__inst) \
+> +	.option arch,+c; \
+> +	__gen_test_inst(c_ ## __inst, _compressed)
+> +
+> +#define gen_test_inst(__inst) \
+> +	.balign 16; \
+> +	.option push; \
+> +	.option arch,-c; \
+> +	__gen_test_inst(__inst, ); \
+> +	.option pop
+> +
+> +.macro fp_test_prologue_load_compressed_sp
+> +	copy_long_to t0, a1, sp
+> +.endm
+> +
+> +.macro fp_test_epilogue_load_compressed_sp
+> +.endm
+> +
+> +.macro fp_test_prologue_store_compressed_sp
+> +.endm
+> +
+> +.macro fp_test_epilogue_store_compressed_sp
+> +	copy_long_to t0, sp, a1
+> +.endm
+> +
+> +#define gen_inst_compressed_sp(__inst, __type) \
+> +	.global test_c_ ## __inst ## sp; \
+> +	test_c_ ## __inst ## sp:; \
+> +		sp_stack_prologue a2; \
+> +		fp_test_prologue_## __type ## _compressed_sp; \
+> +		fp_test_prologue_compressed; \
+> +		fp_test_body_compressed(c_ ## __inst ## sp); \
+> +		fp_test_epilogue_## __type ## _compressed_sp; \
+> +		sp_stack_epilogue a2; \
+> +		ret
+> +
+> +#define gen_test_load_compressed_sp(__inst) gen_inst_compressed_sp(__inst, load)
+> +#define gen_test_store_compressed_sp(__inst) gen_inst_compressed_sp(__inst, store)
+> +
+> +/*
+> + * float_fsw_reg - Set a FP register from a register containing the value
+> + * a0 = FP register index to be set
+> + * a1 = addr where to store register value
+> + * a2 = address offset
+> + * a3 = value to be store
+> + */
+> +gen_test_inst(fsw)
+> +
+> +/*
+> + * float_flw_reg - Get a FP register value and return it
+> + * a0 = FP register index to be retrieved
+> + * a1 = addr to load register from
+> + * a2 = address offset
+> + */
+> +gen_test_inst(flw)
+> +
+> +gen_test_inst(fsd)
+> +#ifdef __riscv_compressed
+> +gen_test_inst_compressed(fsd)
+> +gen_test_store_compressed_sp(fsd)
+> +#endif
+> +
+> +gen_test_inst(fld)
+> +#ifdef __riscv_compressed
+> +gen_test_inst_compressed(fld)
+> +gen_test_load_compressed_sp(fld)
+> +#endif
+> diff --git a/tools/testing/selftests/riscv/misaligned/gp.S b/tools/testing/selftests/riscv/misaligned/gp.S
+> new file mode 100644
+> index 000000000000..f53f4c6d81dd
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/gp.S
+> @@ -0,0 +1,103 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +#include "common.S"
+> +
+> +.text
+> +
+> +.macro __gen_test_inst inst, src_reg
+> +	\inst a2, 0(\src_reg)
+> +	move a0, a2
+> +.endm
+> +
+> +.macro gen_func_header func_name, rvc
+> +	.option arch,\rvc
+> +	.global test_\func_name
+> +	test_\func_name:
+> +.endm
+> +
+> +.macro gen_test_inst inst
+> +	.option push
+> +	gen_func_header \inst, -c
+> +	__gen_test_inst \inst, a0
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro __gen_test_inst_c name, src_reg
+> +	.option push
+> +	gen_func_header c_\name, +c
+> +	 __gen_test_inst c.\name, \src_reg
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro gen_test_inst_c name
+> + 	__gen_test_inst_c \name, a0
+> +.endm
+> +
+> +
+> +.macro gen_test_inst_load_c_sp name
+> +	.option push
+> +	gen_func_header c_\name\()sp, +c
+> +	sp_stack_prologue a1
+> +	copy_long_to t0, a0, sp
+> +	c.ldsp a0, 0(sp)
+> +	sp_stack_epilogue a1
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro lb_sp_sb_a0 reg, offset
+> +	lb_sb \reg, \offset, sp, a0
+> +.endm
+> +
+> +.macro gen_test_inst_store_c_sp inst_name
+> +	.option push
+> +	gen_func_header c_\inst_name\()sp, +c
+> +	/* Misalign stack pointer */
+> +	sp_stack_prologue a1
+> +	/* Misalign access */
+> +	c.sdsp a2, 0(sp)
+> +	copy_long_to t0, sp, a0
+> +	sp_stack_epilogue a1
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +
+> + /*
+> + * a0 = addr to load from
+> + * a1 = address offset
+> + * a2 = value to be loaded
+> + */
+> +gen_test_inst lh
+> +gen_test_inst lhu
+> +gen_test_inst lw
+> +gen_test_inst lwu
+> +gen_test_inst ld
+> +#ifdef __riscv_compressed
+> +gen_test_inst_c lw
+> +gen_test_inst_c ld
+> +gen_test_inst_load_c_sp ld
+> +#endif
+> +
+> +/*
+> + * a0 = addr where to store value
+> + * a1 = address offset
+> + * a2 = value to be stored
+> + */
+> +gen_test_inst sh
+> +gen_test_inst sw
+> +gen_test_inst sd
+> +#ifdef __riscv_compressed
+> +gen_test_inst_c sw
+> +gen_test_inst_c sd
+> +gen_test_inst_store_c_sp sd
+> +#endif
+> +
+> diff --git a/tools/testing/selftests/riscv/misaligned/misaligned.c b/tools/testing/selftests/riscv/misaligned/misaligned.c
+> new file mode 100644
+> index 000000000000..c66aa87ec03e
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/misaligned.c
+> @@ -0,0 +1,254 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +#include <signal.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <linux/ptrace.h>
+> +#include "../../kselftest_harness.h"
+> +
+> +#include <stdlib.h>
+> +#include <stdio.h>
+> +#include <stdint.h>
+> +#include <float.h>
+> +#include <errno.h>
+> +#include <math.h>
+> +#include <string.h>
+> +#include <signal.h>
+> +#include <stdbool.h>
+> +#include <unistd.h>
+> +#include <inttypes.h>
+> +#include <ucontext.h>
+> +
+> +#include <sys/prctl.h>
+> +
+> +#define stringify(s) __stringify(s)
+> +#define __stringify(s) #s
+> +
+> +#define VAL16	0x1234
+> +#define VAL32	0xDEADBEEF
+> +#define VAL64	0x45674321D00DF789
+> +
+> +#define VAL_float	78951.234375
+> +#define VAL_double	567890.512396965789589290
+> +
+> +static bool float_equal(float a, float b)
+> +{
+> +	float scaled_epsilon;
+> +	float difference = fabsf(a - b);
+> +
+> +	// Scale to the largest value.
+> +	a = fabsf(a);
+> +	b = fabsf(b);
+> +	if (a > b)
+> +		scaled_epsilon = FLT_EPSILON * a;
+> +	else
+> +		scaled_epsilon = FLT_EPSILON * b;
+> +
+> +	return difference <= scaled_epsilon;
+> +}
+> +
+> +static bool double_equal(double a, double b)
+> +{
+> +	double scaled_epsilon;
+> +	double difference = fabsf(a - b);
+> +
+> +	// Scale to the largest value.
+> +	a = fabs(a);
+> +	b = fabs(b);
+> +	if (a > b)
+> +		scaled_epsilon = DBL_EPSILON * a;
+> +	else
+> +		scaled_epsilon = DBL_EPSILON * b;
+> +
+> +	return difference <= scaled_epsilon;
+> +}
+> +
+> +#define fpu_load_proto(__inst, __type) \
+> +extern __type test_ ## __inst(unsigned long fp_reg, void *addr, unsigned long offset, __type value)
+> +
+> +fpu_load_proto(flw, float);
+> +fpu_load_proto(fld, double);
+> +fpu_load_proto(c_flw, float);
+> +fpu_load_proto(c_fld, double);
+> +fpu_load_proto(c_fldsp, double);
+> +
+> +#define fpu_store_proto(__inst, __type) \
+> +extern void test_ ## __inst(unsigned long fp_reg, void *addr, unsigned long offset, __type value)
+> +
+> +fpu_store_proto(fsw, float);
+> +fpu_store_proto(fsd, double);
+> +fpu_store_proto(c_fsw, float);
+> +fpu_store_proto(c_fsd, double);
+> +fpu_store_proto(c_fsdsp, double);
+> +
+> +#define gp_load_proto(__inst, __type) \
+> +extern __type test_ ## __inst(void *addr, unsigned long offset, __type value)
+> +
+> +gp_load_proto(lh, uint16_t);
+> +gp_load_proto(lhu, uint16_t);
+> +gp_load_proto(lw, uint32_t);
+> +gp_load_proto(lwu, uint32_t);
+> +gp_load_proto(ld, uint64_t);
+> +gp_load_proto(c_lw, uint32_t);
+> +gp_load_proto(c_ld, uint64_t);
+> +gp_load_proto(c_ldsp, uint64_t);
+> +
+> +#define gp_store_proto(__inst, __type) \
+> +extern void test_ ## __inst(void *addr, unsigned long offset, __type value)
+> +
+> +gp_store_proto(sh, uint16_t);
+> +gp_store_proto(sw, uint32_t);
+> +gp_store_proto(sd, uint64_t);
+> +gp_store_proto(c_sw, uint32_t);
+> +gp_store_proto(c_sd, uint64_t);
+> +gp_store_proto(c_sdsp, uint64_t);
+> +
+> +#define TEST_GP_LOAD(__inst, __type_size)					\
+> +TEST(gp_load_ ## __inst)							\
+> +{										\
+> +	int offset, ret;							\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (offset = 1; offset < __type_size / 8; offset++) {			\
+> +		uint ## __type_size ## _t val = VAL ## __type_size;		\
+> +		uint ## __type_size ## _t *ptr = (uint ## __type_size ## _t *) (buf + offset); \
+> +		memcpy(ptr, &val, sizeof(val));					\
+> +		val = test_ ## __inst(ptr, offset, val);			\
+> +		EXPECT_EQ(VAL ## __type_size, val);				\
+> +	}									\
+> +}
+> +
+> +TEST_GP_LOAD(lh, 16);
+> +TEST_GP_LOAD(lhu, 16);
+> +TEST_GP_LOAD(lw, 32);
+> +TEST_GP_LOAD(lwu, 32);
+> +TEST_GP_LOAD(ld, 64);
+> +#ifdef __riscv_compressed
+> +TEST_GP_LOAD(c_lw, 32);
+> +TEST_GP_LOAD(c_ld, 64);
+> +TEST_GP_LOAD(c_ldsp, 64);
+> +#endif
+> +
+> +#define TEST_GP_STORE(__inst, __type_size)					\
+> +TEST(gp_load_ ## __inst)							\
+> +{										\
+> +	int offset, ret;							\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (offset = 1; offset < __type_size / 8; offset++) {			\
+> +		uint ## __type_size ## _t val = VAL ## __type_size;		\
+> +		uint ## __type_size ## _t *ptr = (uint ## __type_size ## _t *) (buf + offset); \
+> +		memset(ptr, 0, sizeof(val));					\
+> +		test_ ## __inst(ptr, offset, val);				\
+> +		memcpy(&val, ptr, sizeof(val));					\
+> +		EXPECT_EQ(VAL ## __type_size, val);				\
+> +	}									\
+> +}
+> +TEST_GP_STORE(sh, 16);
+> +TEST_GP_STORE(sw, 32);
+> +TEST_GP_STORE(sd, 64);
+> +#ifdef __riscv_compressed
+> +TEST_GP_STORE(c_sw, 32);
+> +TEST_GP_STORE(c_sd, 64);
+> +TEST_GP_STORE(c_sdsp, 64);
+> +#endif
+> +
+> +#define __TEST_FPU_LOAD(__type, __inst, __reg_start, __reg_end)			\
+> +TEST(fpu_load_ ## __inst)							\
+> +{										\
+> +	int i, ret, offset, fp_reg;						\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (fp_reg = __reg_start; fp_reg < __reg_end; fp_reg++) {		\
+> +		for (offset = 1; offset < 4; offset++) {			\
+> +			void *load_addr = (buf + offset);			\
+> +			__type val = VAL_ ## __type ;				\
+> +										\
+> +			memcpy(load_addr, &val, sizeof(val));			\
+> +			val = test_ ## __inst(fp_reg, load_addr, offset, val);	\
+> +			EXPECT_TRUE(__type ##_equal(val, VAL_## __type));	\
+> +		}								\
+> +	}									\
+> +}
+> +#define TEST_FPU_LOAD(__type, __inst) \
+> +	__TEST_FPU_LOAD(__type, __inst, 0, 32)
+> +#define TEST_FPU_LOAD_COMPRESSED(__type, __inst) \
+> +	__TEST_FPU_LOAD(__type, __inst, 8, 16)
+> +
+> +TEST_FPU_LOAD(float, flw)
+> +TEST_FPU_LOAD(double, fld)
+> +#ifdef __riscv_compressed
+> +TEST_FPU_LOAD_COMPRESSED(double, c_fld)
+> +TEST_FPU_LOAD_COMPRESSED(double, c_fldsp)
+> +#endif
+> +
+> +#define __TEST_FPU_STORE(__type, __inst, __reg_start, __reg_end)		\
+> +TEST(fpu_store_ ## __inst)							\
+> +{										\
+> +	int i, ret, offset, fp_reg;						\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (fp_reg = __reg_start; fp_reg < __reg_end; fp_reg++) {		\
+> +		for (offset = 1; offset < 4; offset++) {			\
+> +										\
+> +			void *store_addr = (buf + offset);			\
+> +			__type val = VAL_ ## __type ;				\
+> +										\
+> +			test_ ## __inst(fp_reg, store_addr, offset, val);	\
+> +			memcpy(&val, store_addr, sizeof(val));			\
+> +			EXPECT_TRUE(__type ## _equal(val, VAL_## __type));	\
+> +		}								\
+> +	}									\
+> +}
+> +#define TEST_FPU_STORE(__type, __inst) \
+> +	__TEST_FPU_STORE(__type, __inst, 0, 32)
+> +#define TEST_FPU_STORE_COMPRESSED(__type, __inst) \
+> +	__TEST_FPU_STORE(__type, __inst, 8, 16)
+> +
+> +TEST_FPU_STORE(float, fsw)
+> +TEST_FPU_STORE(double, fsd)
+> +#ifdef __riscv_compressed
+> +TEST_FPU_STORE_COMPRESSED(double, c_fsd)
+> +TEST_FPU_STORE_COMPRESSED(double, c_fsdsp)
+> +#endif
+> +
+> +TEST_SIGNAL(gen_sigbus, SIGBUS)
+> +{
+> +	uint32_t *ptr;
+> +	uint8_t buf[16] __attribute__((aligned(16)));
+> +	int ret;
+> +
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_SIGBUS);
+> +	ASSERT_EQ(ret, 0);
+> +
+> +	ptr = (uint32_t *)(buf + 1);
+> +	*ptr = 0xDEADBEEFULL;
+> +}
+> +
+> +int main(int argc, char **argv)
+> +{
+> +	int ret, val;
+> +
+> +	ret = prctl(PR_GET_UNALIGN, &val);
+> +	if (ret == -1 && errno == EINVAL)
+> +		ksft_exit_skip("SKIP GET_UNALIGN_CTL not supported\n");
+> +
+> +	exit(test_harness_run(argc, argv));
+> +}
 
-Acked-by: David Hildenbrand <david@redhat.com>
 
-Thanks!
+So I had to add the following to actually compile this selftest along 
+with other riscv tests and fix some warnings:
 
--- 
-Cheers,
+diff --git a/tools/testing/selftests/riscv/Makefile 
+b/tools/testing/selftests/riscv/Makefile
+index 099b8c1f46f89..95a98ceeb3b3a 100644
+--- a/tools/testing/selftests/riscv/Makefile
++++ b/tools/testing/selftests/riscv/Makefile
+@@ -5,7 +5,7 @@
+  ARCH ?= $(shell uname -m 2>/dev/null || echo not)
 
-David / dhildenb
+  ifneq (,$(filter $(ARCH),riscv))
+-RISCV_SUBTARGETS ?= abi hwprobe mm sigreturn vector
++RISCV_SUBTARGETS ?= abi hwprobe mm sigreturn vector misaligned
+  else
+  RISCV_SUBTARGETS :=
+  endif
+diff --git a/tools/testing/selftests/riscv/misaligned/misaligned.c 
+b/tools/testing/selftests/riscv/misaligned/misaligned.c
+index c66aa87ec03ec..8fa5ad1a93d17 100644
+--- a/tools/testing/selftests/riscv/misaligned/misaligned.c
++++ b/tools/testing/selftests/riscv/misaligned/misaligned.c
+@@ -167,7 +167,7 @@ TEST_GP_STORE(c_sdsp, 64);
+  #define __TEST_FPU_LOAD(__type, __inst, __reg_start, 
+__reg_end)                             \
+  TEST(fpu_load_ ## 
+__inst)                                                      \
+  { \
+-       int i, ret, offset, 
+fp_reg;                                             \
++       int ret, offset, 
+fp_reg;                                                \
+         uint8_t buf[16] 
+__attribute__((aligned(16)));                           \
+\
+         ret = prctl(PR_SET_UNALIGN, 
+PR_UNALIGN_NOPRINT);                        \
+@@ -199,7 +199,7 @@ TEST_FPU_LOAD_COMPRESSED(double, c_fldsp)
+  #define __TEST_FPU_STORE(__type, __inst, __reg_start, 
+__reg_end)               \
+  TEST(fpu_store_ ## 
+__inst)                                                     \
+  { \
+-       int i, ret, offset, 
+fp_reg;                                             \
++       int ret, offset, 
+fp_reg;                                                \
+         uint8_t buf[16] 
+__attribute__((aligned(16)));                           \
+\
+         ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);
+
+
+I already merged the first 3 commits of this patchset in fixes, so can 
+you resend only the last 2 patches with the fixes above?
+
+Thanks,
+
+Alex
+
 
