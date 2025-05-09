@@ -1,524 +1,979 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7678C28F51D;
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E693D28E5E4;
 	Fri,  9 May 2025 10:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785642; cv=none; b=NYyj3dSbLhL7O4K/Mw021M8OcafcFyxX5k0IV4OXE4jAZEJIM7G+Jp/aNvq6YBe8732nCsbWyLj+5fD75corWxj+Tr6ntd/49XYxCCj2i8b1ZOeW8SjeRjiGrMYo9ZhuoYyZNZnEtA21zQbN7ukZ8OfNMP5zvL+YPbOaLPsBKeQ=
+	t=1746785642; cv=none; b=NTNfoTDqFm34QIH14Atw7oi/NpViL4HrF4AvdEeWvV5sRyrAYU5Jtv3Pv4aIYSSWsatp7L+PlQevpFzujAuc0n66kHlG1Zm53y3NR0XKN4zcQfdPJalshn3G0DCqUKmA+AJYloXPmg6Z3nYF+WOjpxx6dOb8nH8s4IC3SOGvcFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746785642; c=relaxed/simple;
-	bh=dj2bntkdl7xEPsU3O8kNrVVqiaY9ql9KfTEsUCfgmbQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=D5zuVj1Zn6vgiL6/HloNpDrO3s8RNRDJELlUIkoja9Gltw4VByjlILPA3fsedwarG4ziR74nPRrfjj0PXiZpiMseK/FBbcPKHtmml2HhG9mq80CtoqundJvBPbcQL57+fNZO/6YkqiRDi3CugEeE7Wa6VtQ5BuDQE4dDwmWYvKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=SBTI+6qT; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	bh=AQT6E/gm078D2ahaRhZ48njXj/pg+KO+deMjbCkWTu8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VIAJ9+dV9aNe8BRXx55un/iBx6vP5m7Lfs+JSAp59+SQF1gVcYsi0eP3FD1aS6LvGTQHLXlXMntEmSthIGhDJjchyLRHV2KNJR0fYzraJOgpTzaj6q/v+mCwK18SO85OdT67KmMaO3BwSFC79ulAx2bDeEl6FsrO2HId7re9TC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=THUOCqJK; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SBTI+6qT"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 091A92098462; Fri,  9 May 2025 03:13:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 091A92098462
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746785639;
-	bh=j0hv02lMNf3ygxb/Gu2IuZyCzEMjtz+gbRdiT+OLPPg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SBTI+6qThlS97fRCryGco2kspD3TzuiKHPkm152kXMIQstFup7tonhUeWdp8Wi8aj
-	 xUNjTJoXgr07lzcMF02GNOND9ijoXfFJq6Bup6omNO6Yw6pGDpEifn/mO82NORbeAm
-	 M92uanuJVaxYNsY8rO++MsuOlwiXB0gCOx27044w=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v3 4/4] net: mana: Allocate MSI-X vectors dynamically
-Date: Fri,  9 May 2025 03:13:57 -0700
-Message-Id: <1746785637-4881-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="THUOCqJK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Cc:To:In-Reply-To:References:Message-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=bVFX3hQQKOI3ZU6swD+dwmUGGyBvZETQwAkYZdl/Eso=; b=THUOCqJKoVhBYxZ/Psoy/ALCXU
+	E6t/x7+61K5DaJEffUidwFSXKEc0EO0XEjra2+UBkLE1pQYZzc78fAi24zK6jrhmAnH5YA79yEuxZ
+	D6lwq0zemsKSuXf+w2+6Du5xTnJnw3V77Qpcfqt3Os7Oq6sEzdsBEYFgo9J/HAAXvCBo=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:56672 helo=[127.0.1.1])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1uDKjr-001ghk-EX; Fri, 09 May 2025 12:13:57 +0200
+From: Matthias Fend <matthias.fend@emfend.at>
+Date: Fri, 09 May 2025 12:13:43 +0200
+Subject: [PATCH v4 2/2] leds: tps6131x: add support for Texas Instruments
+ TPS6131X flash LED driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
-Currently, the MANA driver allocates MSI-X vectors statically based on
-MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-up allocating more vectors than it needs. This is because, by this time
-we do not have a HW channel and do not know how many IRQs should be
-allocated.
-
-To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-after getting the value supported by hardware, dynamically add the
-remaining MSI-X vectors.
-
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Changes in v3:
- * implemented irq_contexts as xarrays rather than list
- * split the patch to create a perparation patch around irq_setup()
- * add log when IRQ allocation/setup for remaining IRQs fails
----
- Changes in v2:
- * Use string 'MSI-X vectors' instead of 'pci vectors'
- * make skip-cpu a bool instead of int
- * rearrange the comment arout skip_cpu variable appropriately
- * update the capability bit for driver indicating dynamic IRQ allocation
- * enforced max line length to 80
- * enforced RCT convention
- * initialized gic to NULL, for when there is a possibility of gic
-   not being populated correctly
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 248 +++++++++++++++---
- include/net/mana/gdma.h                       |   8 +-
- 2 files changed, 211 insertions(+), 45 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 2de42ce43373..f07cebffc30d 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -6,6 +6,8 @@
- #include <linux/pci.h>
- #include <linux/utsname.h>
- #include <linux/version.h>
-+#include <linux/msi.h>
-+#include <linux/irqdomain.h>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250509-leds-tps6131x-v4-2-2c9563f5b67c@emfend.at>
+References: <20250509-leds-tps6131x-v4-0-2c9563f5b67c@emfend.at>
+In-Reply-To: <20250509-leds-tps6131x-v4-0-2c9563f5b67c@emfend.at>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
+ bsp-development.geo@leica-geosystems.com
+X-Mailer: b4 0.14.2
+X-Spam-Score: -1.0
+X-Spam-Bar: -
+X-Spam-Report: Spam detection software, running on the system "lx20.hoststar.hosting",
+ has NOT identified this incoming email as spam.  The original
+ message has been attached to this so you can view it or label
+ similar future email.  If you have any questions, see
+ the administrator of that system for details.
  
- #include <net/mana/mana.h>
+ Content preview:  Document Texas Instruments TPS61310/TPS61311 flash LED driver
+    devicetree bindings. Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+    Signed-off-by: Matthias Fend <matthias.fend@emfend.at> --- .../devicetree/bindings/leds/ti,tps61310.yaml
+    | 120 +++++++++++++++++++++ 1 [...] 
  
-@@ -80,8 +82,15 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
- 		return err ? err : -EPROTO;
- 	}
+ Content analysis details:   (-1.0 points, 5.0 required)
  
--	if (gc->num_msix_usable > resp.max_msix)
--		gc->num_msix_usable = resp.max_msix;
-+	if (!pci_msix_can_alloc_dyn(pdev)) {
-+		if (gc->num_msix_usable > resp.max_msix)
-+			gc->num_msix_usable = resp.max_msix;
+  pts rule name              description
+ ---- ---------------------- --------------------------------------------------
+  0.0 URIBL_BLOCKED          ADMINISTRATOR NOTICE: The query to URIBL was
+                             blocked.  See
+                             http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+                              for more information.
+                             [URIs: devicetree.org]
+  0.0 URIBL_DBL_BLOCKED_OPENDNS ADMINISTRATOR NOTICE: The query to
+                             dbl.spamhaus.org was blocked due to usage
+                             of an open resolver. See
+                             https://www.spamhaus.org/returnc/pub/
+                             [URIs: devicetree.org]
+  0.0 URIBL_ZEN_BLOCKED_OPENDNS ADMINISTRATOR NOTICE: The query to
+                             zen.spamhaus.org was blocked due to usage
+                             of an open resolver. See
+                             https://www.spamhaus.org/returnc/pub/
+                             [URIs: devicetree.org]
+ -1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
+  0.0 TVD_RCVD_IP            Message was received from an IP address
+  0.0 Local_hs1_NotHoststar  Sender is not from hoststar.ch|de|com
+  0.0 KAM_SHORT              Use of a URL Shortener for very short URL
+  0.0 KAM_DMARC_STATUS       Test Rule for DKIM or SPF Failure with Strict
+                             Alignment
+
+The TPS61310/TPS61311 is a flash LED driver with I2C interface. Its power
+stage is capable of supplying a maximum total current of roughly 1500mA.
+The TPS6131x provides three constant-current sinks, capable of sinking up
+to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode. In torch mode
+each sink (LED1, LED2, LED3) supports currents up to 175mA.
+
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+---
+ MAINTAINERS                        |   7 +
+ drivers/leds/flash/Kconfig         |  11 +
+ drivers/leds/flash/Makefile        |   1 +
+ drivers/leds/flash/leds-tps6131x.c | 815 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 834 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 183083ead1dae75a056e612292b825cd95a67ca3..05a2f1249e16637014d7fa7cfdb696270e161a2b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24017,6 +24017,13 @@ F:	Documentation/devicetree/bindings/hwmon/ti,tps23861.yaml
+ F:	Documentation/hwmon/tps23861.rst
+ F:	drivers/hwmon/tps23861.c
+ 
++TEXAS INSTRUMENTS TPS6131X FLASH LED DRIVER
++M:	Matthias Fend <matthias.fend@emfend.at>
++L:	linux-leds@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
++F:	drivers/leds/flash/leds-tps6131x.c
++
+ TEXAS INSTRUMENTS' DAC7612 DAC DRIVER
+ M:	Ricardo Ribalda <ribalda@kernel.org>
+ L:	linux-iio@vger.kernel.org
+diff --git a/drivers/leds/flash/Kconfig b/drivers/leds/flash/Kconfig
+index f39f0bfe6eefcd376405d9d35dc36e323a485002..55ca663ca506ad8be627f58f6d6308368ea2b928 100644
+--- a/drivers/leds/flash/Kconfig
++++ b/drivers/leds/flash/Kconfig
+@@ -132,4 +132,15 @@ config LEDS_SY7802
+ 
+ 	  This driver can be built as a module, it will be called "leds-sy7802".
+ 
++config LEDS_TPS6131X
++	tristate "LED support for TI TPS6131x flash LED driver"
++	depends on I2C && OF
++	depends on GPIOLIB
++	select REGMAP_I2C
++	help
++	  This option enables support for Texas Instruments TPS61310/TPS61311
++	  flash LED driver.
++
++	  This driver can be built as a module, it will be called "leds-tps6131x".
++
+ endif # LEDS_CLASS_FLASH
+diff --git a/drivers/leds/flash/Makefile b/drivers/leds/flash/Makefile
+index 48860eeced79513a0ed303e4af3db9bfe9724b7e..712fb737a428e42747e1aa339058dc4306ade9c8 100644
+--- a/drivers/leds/flash/Makefile
++++ b/drivers/leds/flash/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_LEDS_RT4505)	+= leds-rt4505.o
+ obj-$(CONFIG_LEDS_RT8515)	+= leds-rt8515.o
+ obj-$(CONFIG_LEDS_SGM3140)	+= leds-sgm3140.o
+ obj-$(CONFIG_LEDS_SY7802)	+= leds-sy7802.o
++obj-$(CONFIG_LEDS_TPS6131X)	+= leds-tps6131x.o
+diff --git a/drivers/leds/flash/leds-tps6131x.c b/drivers/leds/flash/leds-tps6131x.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..107fcc472cb83e27d7b177420d3cbbc15dd02730
+--- /dev/null
++++ b/drivers/leds/flash/leds-tps6131x.c
+@@ -0,0 +1,815 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Texas Instruments TPS61310/TPS61311 flash LED driver with I2C interface
++ *
++ * Copyright 2025 Matthias Fend <matthias.fend@emfend.at>
++ */
++
++#include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/led-class-flash.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <media/v4l2-flash-led-class.h>
++
++#define TPS6131X_REG_0				0x00
++#define   TPS6131X_REG_0_RESET			BIT(7)
++#define   TPS6131X_REG_0_DCLC13			GENMASK(5, 3)
++#define   TPS6131X_REG_0_DCLC13_SHIFT		3
++#define   TPS6131X_REG_0_DCLC2			GENMASK(2, 0)
++#define   TPS6131X_REG_0_DCLC2_SHIFT		0
++
++#define TPS6131X_REG_1				0x01
++#define   TPS6131X_REG_1_MODE			GENMASK(7, 6)
++#define   TPS6131X_REG_1_MODE_SHIFT		6
++#define   TPS6131X_REG_1_FC2			GENMASK(5, 0)
++#define   TPS6131X_REG_1_FC2_SHIFT		0
++
++#define TPS6131X_REG_2				0x02
++#define   TPS6131X_REG_2_MODE			GENMASK(7, 6)
++#define   TPS6131X_REG_2_MODE_SHIFT		6
++#define   TPS6131X_REG_2_ENVM			BIT(5)
++#define   TPS6131X_REG_2_FC13			GENMASK(4, 0)
++#define   TPS6131X_REG_2_FC13_SHIFT		0
++
++#define TPS6131X_REG_3				0x03
++#define   TPS6131X_REG_3_STIM			GENMASK(7, 5)
++#define   TPS6131X_REG_3_STIM_SHIFT		5
++#define   TPS6131X_REG_3_HPFL			BIT(4)
++#define   TPS6131X_REG_3_SELSTIM_TO		BIT(3)
++#define   TPS6131X_REG_3_STT			BIT(2)
++#define   TPS6131X_REG_3_SFT			BIT(1)
++#define   TPS6131X_REG_3_TXMASK			BIT(0)
++
++#define TPS6131X_REG_4				0x04
++#define   TPS6131X_REG_4_PG			BIT(7)
++#define   TPS6131X_REG_4_HOTDIE_HI		BIT(6)
++#define   TPS6131X_REG_4_HOTDIE_LO		BIT(5)
++#define   TPS6131X_REG_4_ILIM			BIT(4)
++#define   TPS6131X_REG_4_INDC			GENMASK(3, 0)
++#define   TPS6131X_REG_4_INDC_SHIFT		0
++
++#define TPS6131X_REG_5				0x05
++#define   TPS6131X_REG_5_SELFCAL		BIT(7)
++#define   TPS6131X_REG_5_ENPSM			BIT(6)
++#define   TPS6131X_REG_5_STSTRB1_DIR		BIT(5)
++#define   TPS6131X_REG_5_GPIO			BIT(4)
++#define   TPS6131X_REG_5_GPIOTYPE		BIT(3)
++#define   TPS6131X_REG_5_ENLED3			BIT(2)
++#define   TPS6131X_REG_5_ENLED2			BIT(1)
++#define   TPS6131X_REG_5_ENLED1			BIT(0)
++
++#define TPS6131X_REG_6				0x06
++#define   TPS6131X_REG_6_ENTS			BIT(7)
++#define   TPS6131X_REG_6_LEDHOT			BIT(6)
++#define   TPS6131X_REG_6_LEDWARN		BIT(5)
++#define   TPS6131X_REG_6_LEDHDR			BIT(4)
++#define   TPS6131X_REG_6_OV			GENMASK(3, 0)
++#define   TPS6131X_REG_6_OV_SHIFT		0
++
++#define TPS6131X_REG_7				0x07
++#define   TPS6131X_REG_7_ENBATMON		BIT(7)
++#define   TPS6131X_REG_7_BATDROOP		GENMASK(6, 4)
++#define   TPS6131X_REG_7_BATDROOP_SHIFT		4
++#define   TPS6131X_REG_7_REVID			GENMASK(2, 0)
++#define   TPS6131X_REG_7_REVID_SHIFT		0
++
++#define TPS6131X_MAX_CHANNELS			3
++
++#define TPS6131X_FLASH_MAX_I_CHAN13_MA		400
++#define TPS6131X_FLASH_MAX_I_CHAN2_MA		800
++#define TPS6131X_FLASH_STEP_I_MA		25
++
++#define TPS6131X_TORCH_MAX_I_CHAN13_MA		175
++#define TPS6131X_TORCH_MAX_I_CHAN2_MA		175
++#define TPS6131X_TORCH_STEP_I_MA		25
++
++/* The torch watchdog timer must be refreshed within an interval of 13 seconds. */
++#define TPS6131X_TORCH_REFRESH_INTERVAL_JIFFIES msecs_to_jiffies(10000)
++
++#define UA_TO_MA(UA)				((UA) / 1000)
++
++enum tps6131x_mode {
++	TPS6131X_MODE_SHUTDOWN = 0x0,
++	TPS6131X_MODE_TORCH = 0x1,
++	TPS6131X_MODE_FLASH = 0x2,
++};
++
++struct tps6131x {
++	struct device *dev;
++	struct regmap *regmap;
++	struct gpio_desc *reset_gpio;
++	/*
++	 * Registers 0, 1, 2, and 3 control parts of the controller that are not completely
++	 * independent of each other. Since some operations require the registers to be written in
++	 * a specific order to avoid unwanted side effects, they are synchronized with a lock.
++	 */
++	struct mutex lock; /* Hardware access lock for register 0, 1, 2 and 3 */
++	struct delayed_work torch_refresh_work;
++	bool valley_current_limit;
++	bool chan1_en;
++	bool chan2_en;
++	bool chan3_en;
++	struct fwnode_handle *led_node;
++	u32 max_flash_current_ma;
++	u32 step_flash_current_ma;
++	u32 max_torch_current_ma;
++	u32 step_torch_current_ma;
++	u32 max_timeout_us;
++	struct led_classdev_flash fled_cdev;
++	struct v4l2_flash *v4l2_flash;
++};
++
++static struct tps6131x *fled_cdev_to_tps6131x(struct led_classdev_flash *fled_cdev)
++{
++	return container_of(fled_cdev, struct tps6131x, fled_cdev);
++}
++
++/*
++ * Register contents after a power on/reset. These values ​​cannot be changed.
++ */
++
++#define TPS6131X_DCLC2_50MA	     2
++#define TPS6131X_DCLC13_25MA	     1
++#define TPS6131X_FC2_400MA	     16
++#define TPS6131X_FC13_200MA	     8
++#define TPS6131X_STIM_0_579MS_1_37MS 6
++#define TPS6131X_SELSTIM_RANGE0	     0
++#define TPS6131X_INDC_OFF	     0
++#define TPS6131X_OV_4950MV	     9
++#define TPS6131X_BATDROOP_150MV	     4
++
++static const struct reg_default tps6131x_regmap_defaults[] = {
++	{ TPS6131X_REG_0, (TPS6131X_DCLC13_25MA << TPS6131X_REG_0_DCLC13_SHIFT) |
++				  (TPS6131X_DCLC2_50MA << TPS6131X_REG_0_DCLC2_SHIFT) },
++	{ TPS6131X_REG_1, (TPS6131X_MODE_SHUTDOWN << TPS6131X_REG_1_MODE_SHIFT) |
++				  (TPS6131X_FC2_400MA << TPS6131X_REG_1_FC2_SHIFT) },
++	{ TPS6131X_REG_2, (TPS6131X_MODE_SHUTDOWN << TPS6131X_REG_2_MODE_SHIFT) |
++				  (TPS6131X_FC13_200MA << TPS6131X_REG_2_FC13_SHIFT) },
++	{ TPS6131X_REG_3, (TPS6131X_STIM_0_579MS_1_37MS << TPS6131X_REG_3_STIM_SHIFT) |
++				  (TPS6131X_SELSTIM_RANGE0 << TPS6131X_REG_3_SELSTIM_TO) |
++				  TPS6131X_REG_3_TXMASK },
++	{ TPS6131X_REG_4, (TPS6131X_INDC_OFF << TPS6131X_REG_4_INDC_SHIFT) },
++	{ TPS6131X_REG_5, TPS6131X_REG_5_ENPSM | TPS6131X_REG_5_STSTRB1_DIR |
++				  TPS6131X_REG_5_GPIOTYPE | TPS6131X_REG_5_ENLED2 },
++	{ TPS6131X_REG_6, (TPS6131X_OV_4950MV << TPS6131X_REG_6_OV_SHIFT) },
++	{ TPS6131X_REG_7, (TPS6131X_BATDROOP_150MV << TPS6131X_REG_7_BATDROOP_SHIFT) },
++};
++
++/*
++ * These registers contain flags that are reset when read.
++ */
++static bool tps6131x_regmap_precious(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case TPS6131X_REG_3:
++	case TPS6131X_REG_4:
++	case TPS6131X_REG_6:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static const struct regmap_config tps6131x_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = TPS6131X_REG_7,
++	.reg_defaults = tps6131x_regmap_defaults,
++	.num_reg_defaults = ARRAY_SIZE(tps6131x_regmap_defaults),
++	.cache_type = REGCACHE_FLAT,
++	.precious_reg = &tps6131x_regmap_precious,
++};
++
++struct tps6131x_timer_config {
++	u8 val;
++	u8 range;
++	u32 time_us;
++};
++
++static const struct tps6131x_timer_config tps6131x_timer_configs[] = {
++	{ .val = 0, .range = 1, .time_us = 5300 },
++	{ .val = 1, .range = 1, .time_us = 10700 },
++	{ .val = 2, .range = 1, .time_us = 16000 },
++	{ .val = 3, .range = 1, .time_us = 21300 },
++	{ .val = 4, .range = 1, .time_us = 26600 },
++	{ .val = 5, .range = 1, .time_us = 32000 },
++	{ .val = 6, .range = 1, .time_us = 37300 },
++	{ .val = 0, .range = 0, .time_us = 68200 },
++	{ .val = 7, .range = 1, .time_us = 71500 },
++	{ .val = 1, .range = 0, .time_us = 102200 },
++	{ .val = 2, .range = 0, .time_us = 136300 },
++	{ .val = 3, .range = 0, .time_us = 170400 },
++	{ .val = 4, .range = 0, .time_us = 204500 },
++	{ .val = 5, .range = 0, .time_us = 340800 },
++	{ .val = 6, .range = 0, .time_us = 579300 },
++	{ .val = 7, .range = 0, .time_us = 852000 },
++};
++
++static const struct tps6131x_timer_config *tps6131x_find_closest_timer_config(u32 timeout_us)
++{
++	const struct tps6131x_timer_config *timer_config = &tps6131x_timer_configs[0];
++	u32 diff, min_diff = U32_MAX;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(tps6131x_timer_configs); i++) {
++		diff = abs(tps6131x_timer_configs[i].time_us - timeout_us);
++		if (diff < min_diff) {
++			timer_config = &tps6131x_timer_configs[i];
++			min_diff = diff;
++			if (!min_diff)
++				break;
++		}
++	}
++
++	return timer_config;
++}
++
++static int tps6131x_reset_chip(struct tps6131x *tps6131x)
++{
++	int ret;
++
++	if (tps6131x->reset_gpio) {
++		gpiod_set_value_cansleep(tps6131x->reset_gpio, 1);
++		fsleep(10);
++		gpiod_set_value_cansleep(tps6131x->reset_gpio, 0);
++		fsleep(100);
 +	} else {
-+		/* If dynamic allocation is enabled we have already allocated
-+		 * hwc msi
-+		 */
-+		gc->num_msix_usable = min(resp.max_msix, num_online_cpus() + 1);
++		ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0, TPS6131X_REG_0_RESET,
++					 TPS6131X_REG_0_RESET);
++		if (ret)
++			return ret;
++
++		fsleep(100);
++
++		ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0, TPS6131X_REG_0_RESET, 0);
++		if (ret)
++			return ret;
 +	}
- 
- 	if (gc->num_msix_usable <= 1)
- 		return -ENOSPC;
-@@ -482,7 +491,9 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
- 	}
- 
- 	queue->eq.msix_index = msi_index;
--	gic = &gc->irq_contexts[msi_index];
-+	gic = xa_load(&gc->irq_contexts, msi_index);
-+	if (!gic)
-+		return -EINVAL;
- 
- 	spin_lock_irqsave(&gic->lock, flags);
- 	list_add_rcu(&queue->entry, &gic->eq_list);
-@@ -507,7 +518,10 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
- 	if (WARN_ON(msix_index >= gc->num_msix_usable))
- 		return;
- 
--	gic = &gc->irq_contexts[msix_index];
-+	gic = xa_load(&gc->irq_contexts, msix_index);
-+	if (!gic)
++
++	return 0;
++}
++
++static int tps6131x_init_chip(struct tps6131x *tps6131x)
++{
++	u32 val;
++	int ret;
++
++	val = tps6131x->valley_current_limit ? TPS6131X_REG_4_ILIM : 0;
++
++	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_4, val);
++	if (ret)
++		return ret;
++
++	val = TPS6131X_REG_5_ENPSM | TPS6131X_REG_5_STSTRB1_DIR | TPS6131X_REG_5_GPIOTYPE;
++
++	if (tps6131x->chan1_en)
++		val |= TPS6131X_REG_5_ENLED1;
++
++	if (tps6131x->chan2_en)
++		val |= TPS6131X_REG_5_ENLED2;
++
++	if (tps6131x->chan3_en)
++		val |= TPS6131X_REG_5_ENLED3;
++
++	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_5, val);
++	if (ret)
++		return ret;
++
++	val = TPS6131X_REG_6_ENTS;
++
++	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_6, val);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int tps6131x_set_mode(struct tps6131x *tps6131x, enum tps6131x_mode mode, bool force)
++{
++	u8 val = mode << TPS6131X_REG_1_MODE_SHIFT;
++
++	return regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_1, TPS6131X_REG_1_MODE, val,
++				       NULL, false, force);
++}
++
++static void tps6131x_torch_refresh_handler(struct work_struct *work)
++{
++	struct tps6131x *tps6131x = container_of(work, struct tps6131x, torch_refresh_work.work);
++	int ret;
++
++	guard(mutex)(&tps6131x->lock);
++
++	ret = tps6131x_set_mode(tps6131x, TPS6131X_MODE_TORCH, true);
++	if (ret < 0) {
++		dev_err(tps6131x->dev, "Failed to refresh torch watchdog timer\n");
 +		return;
-+
- 	spin_lock_irqsave(&gic->lock, flags);
- 	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
- 		if (queue == eq) {
-@@ -1329,29 +1343,96 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node,
- 	return 0;
- }
- 
--static int mana_gd_setup_irqs(struct pci_dev *pdev)
-+static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
--	unsigned int max_queues_per_port;
- 	struct gdma_irq_context *gic;
--	unsigned int max_irqs, cpu;
--	int start_irq_index = 1;
--	int nvec, *irqs, irq;
-+	bool skip_first_cpu = false;
- 	int err, i = 0, j;
-+	int *irqs, irq;
- 
- 	cpus_read_lock();
--	max_queues_per_port = num_online_cpus();
--	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
--		max_queues_per_port = MANA_MAX_NUM_QUEUES;
- 
--	/* Need 1 interrupt for the Hardware communication Channel (HWC) */
--	max_irqs = max_queues_per_port + 1;
-+	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-+	if (!irqs) {
-+		err = -ENOMEM;
-+		goto free_irq_vector;
 +	}
- 
--	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
--	if (nvec < 0) {
--		cpus_read_unlock();
--		return nvec;
-+	for (i = 0; i < nvec; i++) {
-+		gic = kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
-+		if (!gic) {
-+			err = -ENOMEM;
-+			goto free_irq;
-+		}
-+		gic->handler = mana_gd_process_eq_events;
-+		INIT_LIST_HEAD(&gic->eq_list);
-+		spin_lock_init(&gic->lock);
 +
-+		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
-+			 i, pci_name(pdev));
++	schedule_delayed_work(&tps6131x->torch_refresh_work,
++			      TPS6131X_TORCH_REFRESH_INTERVAL_JIFFIES);
++}
 +
-+		/* one pci vector is already allocated for HWC */
-+		irqs[i] = pci_irq_vector(pdev, i + 1);
-+		if (irqs[i] < 0) {
-+			err = irqs[i];
-+			goto free_current_gic;
-+		}
++static int tps6131x_brightness_set(struct led_classdev *cdev, enum led_brightness brightness)
++{
++	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(cdev);
++	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
++	u32 num_chans, steps_chan13, steps_chan2, steps_remaining;
++	u8 reg0;
++	int ret;
 +
-+		err = request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
-+		if (err)
-+			goto free_current_gic;
-+
-+		xa_store(&gc->irq_contexts, i + 1, gic, GFP_KERNEL);
- 	}
++	cancel_delayed_work_sync(&tps6131x->torch_refresh_work);
 +
 +	/*
-+	 * When calling irq_setup() for dynamically added IRQs, if number of
-+	 * CPUs is more than or equal to allocated MSI-X, we need to skip the
-+	 * first CPU sibling group since they are already affinitized to HWC IRQ
++	 * The brightness parameter uses the number of current steps as the unit (not the current
++	 * value itself). Since the reported step size can vary depending on the configuration,
++	 * this value must be converted into actual register steps.
 +	 */
-+	if (gc->num_msix_usable <= num_online_cpus())
-+		skip_first_cpu = true;
++	steps_remaining = (brightness * tps6131x->step_torch_current_ma) / TPS6131X_TORCH_STEP_I_MA;
 +
-+	err = irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-+	if (err)
-+		goto free_irq;
++	num_chans = tps6131x->chan1_en + tps6131x->chan2_en + tps6131x->chan3_en;
 +
-+	cpus_read_unlock();
-+	kfree(irqs);
++	/*
++	 * The currents are distributed as evenly as possible across the activated channels.
++	 * Since channels 1 and 3 share the same register setting, they always use the same current
++	 * value. Channel 2 supports higher currents and thus takes over the remaining additional
++	 * portion that cannot be covered by the other channels.
++	 */
++	steps_chan13 = min_t(u32, steps_remaining / num_chans,
++			     TPS6131X_TORCH_MAX_I_CHAN13_MA / TPS6131X_TORCH_STEP_I_MA);
++	if (tps6131x->chan1_en)
++		steps_remaining -= steps_chan13;
++	if (tps6131x->chan3_en)
++		steps_remaining -= steps_chan13;
++
++	steps_chan2 = min_t(u32, steps_remaining,
++			    TPS6131X_TORCH_MAX_I_CHAN2_MA / TPS6131X_TORCH_STEP_I_MA);
++
++	guard(mutex)(&tps6131x->lock);
++
++	reg0 = (steps_chan13 << TPS6131X_REG_0_DCLC13_SHIFT) |
++	       (steps_chan2 << TPS6131X_REG_0_DCLC2_SHIFT);
++	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0,
++				 TPS6131X_REG_0_DCLC13 | TPS6131X_REG_0_DCLC2, reg0);
++	if (ret < 0)
++		return ret;
++
++	ret = tps6131x_set_mode(tps6131x, brightness ? TPS6131X_MODE_TORCH : TPS6131X_MODE_SHUTDOWN,
++				true);
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * In order to use both the flash and the video light functions purely via the I2C
++	 * interface, STRB1 must be low. If STRB1 is low, then the video light watchdog timer
++	 * is also active, which puts the device into the shutdown state after around 13 seconds.
++	 * To prevent this, the mode must be refreshed within the watchdog timeout.
++	 */
++	if (brightness)
++		schedule_delayed_work(&tps6131x->torch_refresh_work,
++				      TPS6131X_TORCH_REFRESH_INTERVAL_JIFFIES);
++
 +	return 0;
-+
-+free_current_gic:
-+	kfree(gic);
-+free_irq:
-+	for (j = i; j >= 0; j--) {
-+		irq = pci_irq_vector(pdev, j);
-+		gic = xa_load(&gc->irq_contexts, j);
-+		if (!gic)
-+			continue;
-+
-+		irq_update_affinity_hint(irq, NULL);
-+		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, j);
-+		kfree(gic);
-+	}
-+	kfree(irqs);
-+free_irq_vector:
-+	cpus_read_unlock();
-+	return err;
 +}
 +
-+static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
++static int tps6131x_strobe_set(struct led_classdev_flash *fled_cdev, bool state)
 +{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	struct gdma_irq_context *gic;
-+	int start_irq_index = 1;
-+	unsigned int cpu;
-+	int *irqs, irq;
-+	int err, i = 0, j;
++	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
++	int ret;
 +
-+	cpus_read_lock();
++	guard(mutex)(&tps6131x->lock);
 +
- 	if (nvec <= num_online_cpus())
- 		start_irq_index = 0;
- 
-@@ -1361,15 +1442,13 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 		goto free_irq_vector;
- 	}
- 
--	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
--				   GFP_KERNEL);
--	if (!gc->irq_contexts) {
--		err = -ENOMEM;
--		goto free_irq_array;
--	}
--
- 	for (i = 0; i < nvec; i++) {
--		gic = &gc->irq_contexts[i];
-+		gic = kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
-+		if (!gic) {
-+			err = -ENOMEM;
-+			goto free_irq;
++	ret = tps6131x_set_mode(tps6131x, state ? TPS6131X_MODE_FLASH : TPS6131X_MODE_SHUTDOWN,
++				true);
++	if (ret < 0)
++		return ret;
++
++	if (state) {
++		ret = regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_3, TPS6131X_REG_3_SFT,
++					      TPS6131X_REG_3_SFT, NULL, false, true);
++		if (ret)
++			return ret;
++	}
++
++	ret = regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_3, TPS6131X_REG_3_SFT, 0, NULL,
++				      false, true);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int tps6131x_flash_brightness_set(struct led_classdev_flash *fled_cdev, u32 brightness)
++{
++	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
++	u32 num_chans;
++	u32 steps_chan13, steps_chan2;
++	u32 steps_remaining;
++	int ret;
++
++	steps_remaining = brightness / TPS6131X_FLASH_STEP_I_MA;
++	num_chans = tps6131x->chan1_en + tps6131x->chan2_en + tps6131x->chan3_en;
++	steps_chan13 = min_t(u32, steps_remaining / num_chans,
++			     TPS6131X_FLASH_MAX_I_CHAN13_MA / TPS6131X_FLASH_STEP_I_MA);
++	if (tps6131x->chan1_en)
++		steps_remaining -= steps_chan13;
++	if (tps6131x->chan3_en)
++		steps_remaining -= steps_chan13;
++	steps_chan2 = min_t(u32, steps_remaining,
++			    TPS6131X_FLASH_MAX_I_CHAN2_MA / TPS6131X_FLASH_STEP_I_MA);
++
++	guard(mutex)(&tps6131x->lock);
++
++	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_2, TPS6131X_REG_2_FC13,
++				 steps_chan13 << TPS6131X_REG_2_FC13_SHIFT);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_1, TPS6131X_REG_1_FC2,
++				 steps_chan2 << TPS6131X_REG_1_FC2_SHIFT);
++	if (ret < 0)
++		return ret;
++
++	fled_cdev->brightness.val = brightness;
++
++	return 0;
++}
++
++static int tps6131x_flash_timeout_set(struct led_classdev_flash *fled_cdev, u32 timeout_us)
++{
++	const struct tps6131x_timer_config *timer_config;
++	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
++	u8 reg3;
++	int ret;
++
++	guard(mutex)(&tps6131x->lock);
++
++	timer_config = tps6131x_find_closest_timer_config(timeout_us);
++
++	reg3 = timer_config->val << TPS6131X_REG_3_STIM_SHIFT;
++	if (timer_config->range)
++		reg3 |= TPS6131X_REG_3_SELSTIM_TO;
++
++	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_3,
++				 TPS6131X_REG_3_STIM | TPS6131X_REG_3_SELSTIM_TO, reg3);
++	if (ret < 0)
++		return ret;
++
++	fled_cdev->timeout.val = timer_config->time_us;
++
++	return 0;
++}
++
++static int tps6131x_strobe_get(struct led_classdev_flash *fled_cdev, bool *state)
++{
++	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
++	unsigned int reg3;
++	int ret;
++
++	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_3, &reg3);
++	if (ret)
++		return ret;
++
++	*state = !!(reg3 & TPS6131X_REG_3_SFT);
++
++	return 0;
++}
++
++static int tps6131x_flash_fault_get(struct led_classdev_flash *fled_cdev, u32 *fault)
++{
++	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
++	unsigned int reg3, reg4, reg6;
++	int ret;
++
++	*fault = 0;
++
++	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_3, &reg3);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_4, &reg4);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_6, &reg6);
++	if (ret < 0)
++		return ret;
++
++	if (reg3 & TPS6131X_REG_3_HPFL)
++		*fault |= LED_FAULT_SHORT_CIRCUIT;
++
++	if (reg3 & TPS6131X_REG_3_SELSTIM_TO)
++		*fault |= LED_FAULT_TIMEOUT;
++
++	if (reg4 & TPS6131X_REG_4_HOTDIE_HI)
++		*fault |= LED_FAULT_OVER_TEMPERATURE;
++
++	if (reg6 & (TPS6131X_REG_6_LEDHOT | TPS6131X_REG_6_LEDWARN))
++		*fault |= LED_FAULT_LED_OVER_TEMPERATURE;
++
++	if (!(reg6 & TPS6131X_REG_6_LEDHDR))
++		*fault |= LED_FAULT_UNDER_VOLTAGE;
++
++	if (reg6 & TPS6131X_REG_6_LEDHOT) {
++		ret = regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_6,
++					      TPS6131X_REG_6_LEDHOT, 0, NULL, false, true);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct led_flash_ops flash_ops = {
++	.flash_brightness_set = tps6131x_flash_brightness_set,
++	.strobe_set = tps6131x_strobe_set,
++	.strobe_get = tps6131x_strobe_get,
++	.timeout_set = tps6131x_flash_timeout_set,
++	.fault_get = tps6131x_flash_fault_get,
++};
++
++static int tps6131x_parse_node(struct tps6131x *tps6131x)
++{
++	const struct tps6131x_timer_config *timer_config;
++	struct device *dev = tps6131x->dev;
++	u32 channels[TPS6131X_MAX_CHANNELS];
++	u32 current_step_multiplier;
++	u32 current_ua;
++	u32 max_current_flash_ma, max_current_torch_ma;
++	u32 timeout_us;
++	int num_channels;
++	int i;
++	int ret;
++
++	tps6131x->valley_current_limit = device_property_read_bool(dev, "ti,valley-current-limit");
++
++	tps6131x->led_node = fwnode_get_next_available_child_node(dev->fwnode, NULL);
++	if (!tps6131x->led_node) {
++		dev_err(dev, "Missing LED node\n");
++		return -EINVAL;
++	}
++
++	num_channels = fwnode_property_count_u32(tps6131x->led_node, "led-sources");
++	if (num_channels <= 0) {
++		dev_err(dev, "Failed to read led-sources property\n");
++		return -EINVAL;
++	}
++
++	if (num_channels > TPS6131X_MAX_CHANNELS) {
++		dev_err(dev, "led-sources count %u exceeds maximum channel count %u\n",
++			num_channels, TPS6131X_MAX_CHANNELS);
++		return -EINVAL;
++	}
++
++	ret = fwnode_property_read_u32_array(tps6131x->led_node, "led-sources", channels,
++					     num_channels);
++	if (ret < 0) {
++		dev_err(dev, "Failed to read led-sources property\n");
++		return ret;
++	}
++
++	max_current_flash_ma = 0;
++	max_current_torch_ma = 0;
++	for (i = 0; i < num_channels; i++) {
++		switch (channels[i]) {
++		case 1:
++			tps6131x->chan1_en = true;
++			max_current_flash_ma += TPS6131X_FLASH_MAX_I_CHAN13_MA;
++			max_current_torch_ma += TPS6131X_TORCH_MAX_I_CHAN13_MA;
++			break;
++		case 2:
++			tps6131x->chan2_en = true;
++			max_current_flash_ma += TPS6131X_FLASH_MAX_I_CHAN2_MA;
++			max_current_torch_ma += TPS6131X_TORCH_MAX_I_CHAN2_MA;
++			break;
++		case 3:
++			tps6131x->chan3_en = true;
++			max_current_flash_ma += TPS6131X_FLASH_MAX_I_CHAN13_MA;
++			max_current_torch_ma += TPS6131X_TORCH_MAX_I_CHAN13_MA;
++			break;
++		default:
++			dev_err(dev, "led-source out of range [1-3]\n");
++			return -EINVAL;
 +		}
++	}
 +
- 		gic->handler = mana_gd_process_eq_events;
- 		INIT_LIST_HEAD(&gic->eq_list);
- 		spin_lock_init(&gic->lock);
-@@ -1384,13 +1463,13 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 		irq = pci_irq_vector(pdev, i);
- 		if (irq < 0) {
- 			err = irq;
--			goto free_irq;
-+			goto free_current_gic;
- 		}
- 
- 		if (!i) {
- 			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
- 			if (err)
--				goto free_irq;
-+				goto free_current_gic;
- 
- 			/* If number of IRQ is one extra than number of online CPUs,
- 			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
-@@ -1408,39 +1487,110 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 			}
- 		} else {
- 			irqs[i - start_irq_index] = irq;
--			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
--					  gic->name, gic);
-+			err = request_irq(irqs[i - start_irq_index],
-+					  mana_gd_intr, 0, gic->name, gic);
- 			if (err)
--				goto free_irq;
-+				goto free_current_gic;
- 		}
++	/*
++	 * If only channels 1 and 3 are used, the step size is doubled because the two channels
++	 * share the same current control register.
++	 */
++	current_step_multiplier =
++		(tps6131x->chan1_en && tps6131x->chan3_en && !tps6131x->chan2_en) ? 2 : 1;
++	tps6131x->step_flash_current_ma = current_step_multiplier * TPS6131X_FLASH_STEP_I_MA;
++	tps6131x->step_torch_current_ma = current_step_multiplier * TPS6131X_TORCH_STEP_I_MA;
 +
-+		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
- 	}
- 
- 	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node, false);
- 	if (err)
- 		goto free_irq;
- 
--	gc->max_num_msix = nvec;
--	gc->num_msix_usable = nvec;
- 	cpus_read_unlock();
- 	kfree(irqs);
- 	return 0;
- 
-+free_current_gic:
-+	kfree(gic);
- free_irq:
- 	for (j = i - 1; j >= 0; j--) {
- 		irq = pci_irq_vector(pdev, j);
--		gic = &gc->irq_contexts[j];
-+		gic = xa_load(&gc->irq_contexts, j);
-+		if (!gic)
-+			continue;
- 
- 		irq_update_affinity_hint(irq, NULL);
- 		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, j);
-+		kfree(gic);
- 	}
- 
--	kfree(gc->irq_contexts);
--	gc->irq_contexts = NULL;
--free_irq_array:
- 	kfree(irqs);
- free_irq_vector:
-+	xa_destroy(&gc->irq_contexts);
- 	cpus_read_unlock();
--	pci_free_irq_vectors(pdev);
-+	return err;
++	ret = fwnode_property_read_u32(tps6131x->led_node, "led-max-microamp", &current_ua);
++	if (ret < 0) {
++		dev_err(dev, "Failed to read led-max-microamp property\n");
++		return ret;
++	}
++
++	tps6131x->max_torch_current_ma = UA_TO_MA(current_ua);
++
++	if (!tps6131x->max_torch_current_ma ||
++	    tps6131x->max_torch_current_ma > max_current_torch_ma ||
++	    (tps6131x->max_torch_current_ma % tps6131x->step_torch_current_ma)) {
++		dev_err(dev, "led-max-microamp out of range or not a multiple of %u\n",
++			tps6131x->step_torch_current_ma);
++		return -EINVAL;
++	}
++
++	ret = fwnode_property_read_u32(tps6131x->led_node, "flash-max-microamp", &current_ua);
++	if (ret < 0) {
++		dev_err(dev, "Failed to read flash-max-microamp property\n");
++		return ret;
++	}
++
++	tps6131x->max_flash_current_ma = UA_TO_MA(current_ua);
++
++	if (!tps6131x->max_flash_current_ma ||
++	    tps6131x->max_flash_current_ma > max_current_flash_ma ||
++	    (tps6131x->max_flash_current_ma % tps6131x->step_flash_current_ma)) {
++		dev_err(dev, "flash-max-microamp out of range or not a multiple of %u\n",
++			tps6131x->step_flash_current_ma);
++		return -EINVAL;
++	}
++
++	ret = fwnode_property_read_u32(tps6131x->led_node, "flash-max-timeout-us", &timeout_us);
++	if (ret < 0) {
++		dev_err(dev, "Failed to read flash-max-timeout-us property\n");
++		return ret;
++	}
++
++	timer_config = tps6131x_find_closest_timer_config(timeout_us);
++	tps6131x->max_timeout_us = timer_config->time_us;
++
++	if (tps6131x->max_timeout_us != timeout_us)
++		dev_warn(dev, "flash-max-timeout-us %u not supported (using %u)\n", timeout_us,
++			 tps6131x->max_timeout_us);
++
++	return 0;
 +}
 +
-+static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev)
++static int tps6131x_led_class_setup(struct tps6131x *tps6131x)
 +{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	unsigned int max_irqs, min_irqs;
-+	int max_queues_per_port;
-+	int nvec, err;
++	const struct tps6131x_timer_config *timer_config;
++	struct led_classdev *led_cdev;
++	struct led_flash_setting *setting;
++	struct led_init_data init_data = {};
++	int ret;
 +
-+	if (pci_msix_can_alloc_dyn(pdev)) {
-+		max_irqs = 1;
-+		min_irqs = 1;
-+	} else {
-+		max_queues_per_port = num_online_cpus();
-+		if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-+			max_queues_per_port = MANA_MAX_NUM_QUEUES;
-+		/* Need 1 interrupt for HWC */
-+		max_irqs = max_queues_per_port + 1;
-+		min_irqs = 2;
-+	}
++	tps6131x->fled_cdev.ops = &flash_ops;
 +
-+	nvec = pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX);
-+	if (nvec < 0)
-+		return nvec;
++	setting = &tps6131x->fled_cdev.timeout;
++	timer_config = tps6131x_find_closest_timer_config(0);
++	setting->min = timer_config->time_us;
++	setting->max = tps6131x->max_timeout_us;
++	setting->step = 1; /* Only some specific time periods are supported. No fixed step size. */
++	setting->val = setting->min;
 +
-+	err = mana_gd_setup_irqs(pdev, nvec);
-+	if (err) {
-+		pci_free_irq_vectors(pdev);
-+		return err;
-+	}
++	setting = &tps6131x->fled_cdev.brightness;
++	setting->min = tps6131x->step_flash_current_ma;
++	setting->max = tps6131x->max_flash_current_ma;
++	setting->step = tps6131x->step_flash_current_ma;
++	setting->val = setting->min;
 +
-+	gc->num_msix_usable = nvec;
-+	gc->max_num_msix = nvec;
++	led_cdev = &tps6131x->fled_cdev.led_cdev;
++	led_cdev->brightness_set_blocking = tps6131x_brightness_set;
++	led_cdev->max_brightness = tps6131x->max_torch_current_ma;
++	led_cdev->flags |= LED_DEV_CAP_FLASH;
 +
-+	return err;
++	init_data.fwnode = tps6131x->led_node;
++	init_data.devicename = NULL;
++	init_data.default_label = NULL;
++	init_data.devname_mandatory = false;
++
++	ret = devm_led_classdev_flash_register_ext(tps6131x->dev, &tps6131x->fled_cdev,
++						   &init_data);
++	if (ret)
++		return ret;
++
++	return 0;
 +}
 +
-+static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev)
++static int tps6131x_flash_external_strobe_set(struct v4l2_flash *v4l2_flash, bool enable)
 +{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	int max_irqs, i, err = 0;
-+	struct msi_map irq_map;
++	struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
++	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
 +
-+	if (!pci_msix_can_alloc_dyn(pdev))
-+		/* remain irqs are already allocated with HWC IRQ */
-+		return 0;
++	guard(mutex)(&tps6131x->lock);
 +
-+	/* allocate only remaining IRQs*/
-+	max_irqs = gc->num_msix_usable - 1;
++	return tps6131x_set_mode(tps6131x, enable ? TPS6131X_MODE_FLASH : TPS6131X_MODE_SHUTDOWN,
++				 false);
++}
 +
-+	for (i = 1; i <= max_irqs; i++) {
-+		irq_map = pci_msix_alloc_irq_at(pdev, i, NULL);
-+		if (!irq_map.virq) {
-+			err = irq_map.index;
-+			/* caller will handle cleaning up all allocated
-+			 * irqs, after HWC is destroyed
-+			 */
-+			return err;
-+		}
++static const struct v4l2_flash_ops tps6131x_v4l2_flash_ops = {
++	.external_strobe_set = tps6131x_flash_external_strobe_set,
++};
++
++static int tps6131x_v4l2_setup(struct tps6131x *tps6131x)
++{
++	struct v4l2_flash_config v4l2_cfg = { 0 };
++	struct led_flash_setting *intensity = &v4l2_cfg.intensity;
++
++	intensity->min = tps6131x->step_torch_current_ma;
++	intensity->max = tps6131x->max_torch_current_ma;
++	intensity->step = tps6131x->step_torch_current_ma;
++	intensity->val = intensity->min;
++
++	strscpy(v4l2_cfg.dev_name, tps6131x->fled_cdev.led_cdev.dev->kobj.name,
++		sizeof(v4l2_cfg.dev_name));
++
++	v4l2_cfg.has_external_strobe = true;
++	v4l2_cfg.flash_faults = LED_FAULT_TIMEOUT | LED_FAULT_OVER_TEMPERATURE |
++				LED_FAULT_SHORT_CIRCUIT | LED_FAULT_UNDER_VOLTAGE |
++				LED_FAULT_LED_OVER_TEMPERATURE;
++
++	tps6131x->v4l2_flash = v4l2_flash_init(tps6131x->dev, tps6131x->led_node,
++					       &tps6131x->fled_cdev, &tps6131x_v4l2_flash_ops,
++					       &v4l2_cfg);
++	if (IS_ERR(tps6131x->v4l2_flash)) {
++		dev_err(tps6131x->dev, "Failed to initialize v4l2 flash LED\n");
++		return PTR_ERR(tps6131x->v4l2_flash);
 +	}
 +
-+	err = mana_gd_setup_dyn_irqs(pdev, max_irqs);
-+	if (err)
-+		return err;
++	return 0;
++}
 +
-+	gc->max_num_msix = gc->max_num_msix + max_irqs;
++static int tps6131x_probe(struct i2c_client *client)
++{
++	struct tps6131x *tps6131x;
++	int ret;
 +
- 	return err;
- }
- 
-@@ -1458,19 +1608,22 @@ static void mana_gd_remove_irqs(struct pci_dev *pdev)
- 		if (irq < 0)
- 			continue;
- 
--		gic = &gc->irq_contexts[i];
-+		gic = xa_load(&gc->irq_contexts, i);
-+		if (!gic)
-+			continue;
- 
- 		/* Need to clear the hint before free_irq */
- 		irq_update_affinity_hint(irq, NULL);
- 		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, i);
-+		kfree(gic);
- 	}
- 
- 	pci_free_irq_vectors(pdev);
- 
- 	gc->max_num_msix = 0;
- 	gc->num_msix_usable = 0;
--	kfree(gc->irq_contexts);
--	gc->irq_contexts = NULL;
-+	xa_destroy(&gc->irq_contexts);
- }
- 
- static int mana_gd_setup(struct pci_dev *pdev)
-@@ -1481,9 +1634,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	mana_gd_init_registers(pdev);
- 	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
- 
--	err = mana_gd_setup_irqs(pdev);
-+	err = mana_gd_setup_hwc_irqs(pdev);
- 	if (err) {
--		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
-+		dev_err(gc->dev, "Failed to setup IRQs for HWC creation: %d\n",
-+			err);
- 		return err;
- 	}
- 
-@@ -1499,6 +1653,12 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	if (err)
- 		goto destroy_hwc;
- 
-+	err = mana_gd_setup_remaining_irqs(pdev);
-+	if (err) {
-+		dev_err(gc->dev, "Failed to setup remaining IRQs: %d", err);
-+		goto destroy_hwc;
++	tps6131x = devm_kzalloc(&client->dev, sizeof(*tps6131x), GFP_KERNEL);
++	if (!tps6131x)
++		return -ENOMEM;
++
++	tps6131x->dev = &client->dev;
++	i2c_set_clientdata(client, tps6131x);
++	mutex_init(&tps6131x->lock);
++	INIT_DELAYED_WORK(&tps6131x->torch_refresh_work, tps6131x_torch_refresh_handler);
++
++	ret = tps6131x_parse_node(tps6131x);
++	if (ret)
++		return ret;
++
++	tps6131x->regmap = devm_regmap_init_i2c(client, &tps6131x_regmap);
++	if (IS_ERR(tps6131x->regmap)) {
++		ret = PTR_ERR(tps6131x->regmap);
++		return dev_err_probe(&client->dev, ret, "Failed to allocate register map\n");
 +	}
 +
- 	err = mana_gd_detect_devices(pdev);
- 	if (err)
- 		goto destroy_hwc;
-@@ -1575,6 +1735,7 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	gc->is_pf = mana_is_pf(pdev->device);
- 	gc->bar0_va = bar0_va;
- 	gc->dev = &pdev->dev;
-+	xa_init(&gc->irq_contexts);
- 
- 	if (gc->is_pf)
- 		gc->mana_pci_debugfs = debugfs_create_dir("0", mana_debugfs_root);
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 228603bf03f2..f20d1d1ea5e8 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -373,7 +373,7 @@ struct gdma_context {
- 	unsigned int		max_num_queues;
- 	unsigned int		max_num_msix;
- 	unsigned int		num_msix_usable;
--	struct gdma_irq_context	*irq_contexts;
-+	struct xarray		irq_contexts;
- 
- 	/* L2 MTU */
- 	u16 adapter_mtu;
-@@ -558,12 +558,16 @@ enum {
- /* Driver can handle holes (zeros) in the device list */
- #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
- 
-+/* Driver supports dynamic MSI-X vector allocation */
-+#define GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT BIT(13)
++	tps6131x->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(tps6131x->reset_gpio)) {
++		ret = PTR_ERR(tps6131x->reset_gpio);
++		return dev_err_probe(&client->dev, ret, "Failed to get reset GPIO\n");
++	}
 +
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
- 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
- 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
--	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
-+	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
-+	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
++	ret = tps6131x_reset_chip(tps6131x);
++	if (ret)
++		return dev_err_probe(&client->dev, ret, "Failed to reset LED controller\n");
++
++	ret = tps6131x_init_chip(tps6131x);
++	if (ret)
++		return dev_err_probe(&client->dev, ret, "Failed to initialize LED controller\n");
++
++	ret = tps6131x_led_class_setup(tps6131x);
++	if (ret)
++		return dev_err_probe(&client->dev, ret, "Failed to setup LED class\n");
++
++	ret = tps6131x_v4l2_setup(tps6131x);
++	if (ret)
++		return dev_err_probe(&client->dev, ret, "Failed to setup v4l2 flash\n");
++
++	return 0;
++}
++
++static void tps6131x_remove(struct i2c_client *client)
++{
++	struct tps6131x *tps6131x = i2c_get_clientdata(client);
++
++	v4l2_flash_release(tps6131x->v4l2_flash);
++
++	cancel_delayed_work_sync(&tps6131x->torch_refresh_work);
++}
++
++static const struct of_device_id of_tps6131x_leds_match[] = {
++	{ .compatible = "ti,tps61310" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, of_tps6131x_leds_match);
++
++static struct i2c_driver tps6131x_i2c_driver = {
++	.driver = {
++		.name = "tps6131x",
++		.of_match_table = of_tps6131x_leds_match,
++	},
++	.probe = tps6131x_probe,
++	.remove = tps6131x_remove,
++};
++module_i2c_driver(tps6131x_i2c_driver);
++
++MODULE_DESCRIPTION("Texas Instruments TPS6131X flash LED driver");
++MODULE_AUTHOR("Matthias Fend <matthias.fend@emfend.at>");
++MODULE_LICENSE("GPL");
+
 -- 
 2.34.1
 
