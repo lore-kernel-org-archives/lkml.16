@@ -1,48 +1,40 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409A26FD8B;
-	Fri,  9 May 2025 07:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55636270569
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776278; cv=none; b=sglVY+XkedTygTo9GKVcnyFGP+VxXP8YEKPsUBINazeIdfVQ37tZKUbcUmcr/tX99GqiKMqCaiZNTz2yt5dXw6Elm/AyqPGP0pd6j0jB1fFEl3/ngasq/8/BrYGeOreyj6HSVYDmpKeXg3PBVkMLntgsi7qvrB0iPbbe90e1sJo=
+	t=1746776283; cv=none; b=jZ4EAB8264cmyCr+I6w5GNqCAJrCB7W+P718yAtrUIIJ+d0PWLKcWB3ZGBRhZvlDCKeetTvDgl/Aqff8gxC/mFvPAxoYBykfINClwOQIcgvq5eCrW0FSkJ4/LISqrJ3xMz5ZLWIuWJZLnImN0SkhNWNMzCSlcV07psMhmUlxPpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776278; c=relaxed/simple;
-	bh=39KCW+9pBR2eN/RVPhRiK4XfH27BO+MFKBCvKV4GqIU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=blbKUX/u6vGR14lywyZrn0Gw+UDS55c1W6/q5ISO2mkjxTL9zzd/ffrif1imEcemxOWmli6s13jM9IG/7Hp2bljeaXyE1YRihlEolqRuRSERSpplZsAGHWhHk/67JV9KcWV6KfZnu5V6R7RU+lpWvFetyDB0D0icm3JEanxDlVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ig+5xYKj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746776283; c=relaxed/simple;
+	bh=tNJ4HJu02Ck+PZ/lsKGVR1hENMaJKR0GJvTq5g/OR1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RLGrXNpCcTtnQVL2h9lqEp4F3HYt/buYCvbyfDtIRxhFTjFntmV7Au0Ge4lQuK89gnL38qZVvbjCQY5zxslLMH6zNQg5yNE3yerMx+t+6WGwFmE95ziAJV/qrjFsQKm6gKGk4+KFfm0le/A2XUy/Uly0OTlBPsv3gVgidzxF0RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=M8P6Cw7E; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ig+5xYKj"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5493OC3V002336;
-	Fri, 9 May 2025 07:37:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	glKqJfH2mUu7792floWXbbaGXK7G67kCGTka1XG2P0Y=; b=ig+5xYKjATpVuBz9
-	AlRFQ2/G12uT4l1kzdcqOOtNkK/MQne8MGWKUD7T1XnbPl153eFgdmm1Dc0eKmFF
-	SeP6TmijIC6i0VmwmfDKkFef50I23wz/yXspkVQVwglj7BQZzDi1bxJIMswjEMLV
-	S0+Z6egTLBxhD9NPT5D5yFD133OiJsOwT6ArK9j90kns3q11lhchdij75YTpRG3p
-	RCdx4n7G6EC6nq2H66SdRix00ZSFebJ29miyafUXYPtRDstrhTAM45j9ji+2v7RV
-	YzF1dDYhtkj2uXBmapqkKj/2kbvaGiLwvYX9zOX8vxLsWXdSzdI2b+WA3rZpSFY9
-	V9T4Bw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5bs24-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 07:37:52 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5497borl009455
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 07:37:50 GMT
-Received: from [10.239.132.205] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
- 00:37:43 -0700
-Message-ID: <c0ab504c-2b27-45cd-be8f-1176230b8bfd@quicinc.com>
-Date: Fri, 9 May 2025 15:37:41 +0800
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="M8P6Cw7E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746776279;
+	bh=tNJ4HJu02Ck+PZ/lsKGVR1hENMaJKR0GJvTq5g/OR1g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M8P6Cw7E5GoouWFLX0oGjHGTMGPxTpohCC/NeB6jSTzU45sTvqa1RHq45A7oy6+eF
+	 m78piA/iPK76g/0Male8iZaRoVoe+Cgz0YWqxaGJXdLaOKGkuPu1RH4ULUwBJ5iRWa
+	 251d9tFJo+gdpCimJAofkKG71I0WlKVzw7VxSCziMfK2t9CI/1gH6HOEyg2GojYAAR
+	 MYWj+fEdwp1GDrUaZAALV9PwnzBd1eT5kfwWo2LD6UdOt66uWUp34strMNOgByTv7u
+	 O2G2ws5e+AyRApba9fW8+MyNey36HOLHE6cdPHO2nGqU72VMaCv7RionZPt7MnB4Wr
+	 jLJFhJe0yIENg==
+Received: from [192.168.50.250] (unknown [171.76.80.110])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E0CB117E07E4;
+	Fri,  9 May 2025 09:37:56 +0200 (CEST)
+Message-ID: <45450eeb-1866-4bf6-a83b-1f28e26f311c@collabora.com>
+Date: Fri, 9 May 2025 13:07:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,92 +42,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] arm64: dts: qcom: qcs615: Add IMEM and PIL info
- region
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250507-add_qcs615_remoteproc_support-v2-0-52ac6cb43a39@quicinc.com>
- <20250507-add_qcs615_remoteproc_support-v2-4-52ac6cb43a39@quicinc.com>
- <64893588-544f-4cb0-8c0b-7eef588468d5@oss.qualcomm.com>
-From: Lijuan Gao <quic_lijuang@quicinc.com>
-In-Reply-To: <64893588-544f-4cb0-8c0b-7eef588468d5@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=XL0wSRhE c=1 sm=1 tr=0 ts=681db0d0 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=aGDm3H69ELvACEQWTh4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: dg-70zBiyJu_I-nvZbY9eMTPm0f2_xst
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA3MiBTYWx0ZWRfX2GRUqrUMUg21
- 0tK6EewhDOtelICzhar1+RkpZfXFtK8tnWAo/69JHfuDu/Ay0yFAg2SCqMtfNcvt/O1NOZrd6jz
- 43SPIK18NBl9lG5WKunMTqV+xNXgAhwcX/gkl5AOJZDlRIVMXgmK8t0bNvT1C3q5GbzVa49GHWE
- /S90YVjjPXMso4uFHqpR2fCyeytVbF8YCof7woSLEopNjnBhQdbJzcyTln+N9SvA44kFc4ySgDR
- kxA7x9OQ5nAkb2orSRDPWxs9PlWrcH7J5yU0bdPL71BAta8iOlnPZ7uhDsW7NVgBdvu97xRoRfZ
- LkI7N23Z4MoklVgPXTcVJo9J8AYc+hgFZyIATbOKXnhEaBjf+RcFDXHHInyl4LhWNVdFN1Zy/v0
- 6WjVYugrjfZiNYludAObtRHTb2AReGeB1aA0Sxrnp9Po5onWtftX+i7Cg9UBKIAL+w+9vCYK
-X-Proofpoint-ORIG-GUID: dg-70zBiyJu_I-nvZbY9eMTPm0f2_xst
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_02,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- mlxlogscore=875 malwarescore=0 adultscore=0 priorityscore=1501 bulkscore=0
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090072
+Subject: Re: x86: Boot failure on select chromebooks with v6.15-rc5
+To: Ingo Molnar <mingo@kernel.org>
+Cc: dmukhin@ford.com, mingo@redhat.com, andriy.shevchenko@linux.intel.com,
+ x86@kernel.org, daniels <daniels@collabora.com>,
+ Daniel Stone <daniel@fooishbar.org>, robdclark <robdclark@gmail.com>,
+ lumag@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+References: <a8638f85-1cc2-4f51-97ba-7106a4662885@collabora.com>
+ <aB2bStp8efMHPjet@gmail.com>
+ <d966d626-458b-4a29-abe1-b645317e15d2@collabora.com>
+ <aB2itc2-5h3LEJi6@gmail.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <aB2itc2-5h3LEJi6@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi Ingo,
 
-
-在 5/8/2025 10:41 PM, Konrad Dybcio 写道:
-> On 5/7/25 12:26 PM, Lijuan Gao wrote:
->> Add a simple-mfd representing IMEM on QCS615 and define the PIL
->> relocation info region as its child. The PIL region in IMEM is used to
->> communicate load addresses of remoteproc to post mortem debug tools, so
->> that these tools can collect ramdumps.
->>
->> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qcs615.dtsi | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
->> index 53661e3a852e..fefdb0fd66f7 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
->> @@ -3266,6 +3266,20 @@ sram@c3f0000 {
->>   			reg = <0x0 0x0c3f0000 0x0 0x400>;
->>   		};
->>   
->> +		sram@146aa000 {
->> +			compatible = "qcom,qcs615-imem", "syscon", "simple-mfd";
->> +			reg = <0x0 0x146aa000 0x0 0x1000>;
+On 09/05/25 12:07, Ingo Molnar wrote:
 > 
-> 0x14680000 0x2c000
+> * Vignesh Raman <vignesh.raman@collabora.com> wrote:
+> 
+>>> What boot cmdline does your kernel have? The MMIO-UART patches should
+>>> only have an effect if the feature is specifically enabled via a boot
+>>> option:
+>>>
+>>> +               if (!strncmp(buf, "mmio32", 6)) {
+>>> +			buf += 6;
+>>> +                       early_mmio_serial_init(buf);
+>>> +                       early_console_register(&early_serial_console, keep);
+>>> +                       buf += 4;
+>>> +               }
+>>>
+>>
+>> amdgpu:stoney:
+>> earlyprintk=uart8250,mmio32,0xfedc6000,115200n8  console=ttyS0,115200n8
+>> root=/dev/nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598802/extract-nfsrootfs-wgn1xjer,tcp,hard,v3
+>> init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp
+>> tftpserverip=192.168.201.1
+>>
+>> i915:amly:
+>> earlyprintk=uart8250,mmio32,0xde000000,115200n8  console=ttyS0,115200n8
+>> root=/dev/nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598804/extract-nfsrootfs-5rlm_b6z,tcp,hard,v3
+>> init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp
+>> tftpserverip=192.168.201.1
+>>
+>> i915:whl:
+>> earlyprintk=uart8250,mmio32,0xde000000,115200n8  console=ttyS0,115200n8
+>> root=/dev/nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598833/extract-nfsrootfs-3w0w5_mi,tcp,hard,v3
+>> init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp
+>> tftpserverip=192.168.201.1
+> 
+> Well, if you remove the earlyprintk option then it will boot fine,
+> right?
 
-I checked the latest datasheet, the Shared IMEM address is 0x146aa000 
-and its size is 0x1000, 0x14680000 is the start address of IMEM layout. 
-The shared IMEM is used for debugging purposes, while the others parts 
-are dedicated.
+Yes, it works when mmio32 option is removed.
 
--- 
-Thx and BRs
-Lijuan Gao
+https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76005338
+
+earlyprintk=uart8250,0xde000000,115200n8  console=ttyS0,115200n8 
+root=/dev/nfs rw 
+nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18599938/extract-nfsrootfs-neuejjq0,tcp,hard,v3 
+init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp 
+tftpserverip=192.168.201.1
+
+> 
+> The earlyprintk=mmio32 in v6.15 is a new debugging feature that was
+> tested on a single board by Denis Mukhin AFAIK, and it may or may not
+> work on your particular UART - even assuming that all the parameters
+> are correct.
+
+So the earlyprintk=mmio32 debugging feature is needed only for v6.15 and 
+is not necessary in previous kernels (e.g., v6.14 and earlier). Is my 
+understanding correct?
+
+Regards,
+Vignesh
+
+> 
+> Thanks,
+> 
+> 	Ingo
 
