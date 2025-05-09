@@ -1,102 +1,106 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0036E28E5E5;
-	Fri,  9 May 2025 10:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFABB28F51F;
+	Fri,  9 May 2025 10:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746787514; cv=none; b=nTxuq/QcdnAwT4TqWd6dWvjqLkumGKYmrN9wSpfsa3wQRZkJKIf7Ye0s1NHqLWwU5npY0GTs4gz/NFQ2hRArBnpXiJ2OnxMrKJ1AEIpt1rBjp+wiWCMCFClufJVDRo116ZuYws2e7A5jdBvT0MRGKf8RF+8nsahObxiSefvduJU=
+	t=1746787514; cv=none; b=qEgL9HpN3vDMz+KiMj+CgSdRT1EcFyqXDaBWv1dYJlN+/Iktv4E9rnRvf9OYRRyGQtrq9htkaKVzaH+TG4SrREzdJnCyHnGatL2X95OUGLrOmQI2LsP+az3aVgLMHMHgk/5BOCgDCALmNcCxm4cFB1rHllH08jb3WEwyIYb36bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746787514; c=relaxed/simple;
-	bh=oOlUbRK9DpvwgrkBO+Rn9Cb8aoZaQB0qwhCMzOD/9Vc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LI5WWeI002JsZCuTgK345nlnjsg0KA3emUWyCd80QE5iYsSkIovW0Gnqm/X2iw5mn1Ni2RlVJkJ2Tu5J0dQQZzEJvdhpKgbZiiQhCl2AB8uIZ7qDSvdj8mAHRGxQbHPbzLabqByQ2CmaiLLZUzrRZEiB3hzvHEaoeTVNRQUtRY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jisk4ol7; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=J0R085KxdN2eA0ziT4kp9Pv3r3T+JFpzEc9TfAOlb3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RU1XiSmUwxr+4icL9t9cKOiRwLZeHXUtYJxbdAoSSawGGteeSOk1DfUjE+8vdYYnhG1cL/hL0s/nMmLCYlOv6vCW6D5Fxv+o7KhkMwO65lQs+EZbXmUsb9eYz+OnJ47uolFCnuOWJ4s+9n2SYQ8LOXwGLarj76XvPeQRY+E+pek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=N3fDS+hm; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jisk4ol7"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5fab81d6677so3698802a12.1;
-        Fri, 09 May 2025 03:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746787511; x=1747392311; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CxPInF1T9LVjEkvLtOyhGto+ZvX/qrXq2sR90esUvWw=;
-        b=jisk4ol78Ms8NreIveiRyl/22p9xGNvby2ENr7pbxtr0UMbx+7dKTnK6s/T2Ff6P+b
-         uU2yLrjhL0xtFt1kwdPS97YBIaqqL3P3Vr8oD2QCxI9MbTGvJm0pTzPrn8AuG3e3Ns1E
-         46pLfDvO8zqleO51wD4rLw9mvqIhV5xOGwbNzk2dKQWBVRGsp2m8n5k+37Ya8vp34fI5
-         eOqQuG5/Bak2+uli9OrOGtcGAwyhMLVkiEK5nPtklzlTEsdTz8fif+QD8owPZqFfG2zn
-         u4a3ToprnOVSVgCRFQ8AIey3r2q1c5BmW62E4qDx5ke2KJ2YBDE6Y8S6YI4hYQke4x3B
-         Jb6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746787511; x=1747392311;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CxPInF1T9LVjEkvLtOyhGto+ZvX/qrXq2sR90esUvWw=;
-        b=AwLPdXQXOma3jFZ0xRIP8BJCxGkHpYpEVPSY3ixyczvYlqlvU7sQW80ZrP1qyzrZ7s
-         a/toR4vZI3LYEh34AvZf4T/LYndb4SFl3YHHGoZ4WWYeXuai+U9i5fGfBJRpR+6jP7ID
-         XCVvtaW6qeyjCwrndIYNp+9mZaF1U2ieQekzVIy6kksX2XfuA++jJD2HdSySH3zXofZ0
-         uVrzD2MKH8vxsbYB0/d3dv4NTWkTQYNX3NGrg22XH52qdEGu8v5SG+IrM1bYep5vg9rC
-         oknXzAytG9JPKf2CGpLd1GkdWu4gG8vBEFB/KOBTDmplXaDqW2vzos7OdrHzHUKq+ALD
-         6sMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOfC7G6dNaqhDzTjZDrzAAv670Xxt7O1BBFIuBjSq9r/akTVpvAOmNlJr2eocUSFAvCGvSxV8b9Dxo2sI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2Q+7BeXUblVTOMBRKvRtiBuXi16IAe/nycVl5GgCqkD+Tw6sd
-	0lMJfxgaor+PJWYjxC+eRKihZDlGloOCbM86LWSUnaUk9ZeP1V1uathXUgcL98IsdQ==
-X-Gm-Gg: ASbGnctzciMdPqvQQyvIMAYNLg90qpM6gj9e49OHo9i3ar0nmYORx9Lw1SrcNpSrkNL
-	9BBbAcGHxGKQpAv9iuCd6KaI8F7VfhfXuOGczFCMUSga5GDXMWWwZ9C5o29wRM557l+wv/RZS+2
-	cM6Fsk2pM/Qw7vqJfYkJ++9uoUf2gh8VfARn6Y68MfmRNZZVgJrxLjSO8h9/4Q+VLlJ9dMZ3qeS
-	1j6VTCJLJcvW75jU53/aCG8vh09mISBYYVbxqDMIKBT2BUAOJLdRjEbWx9xcK4Sb2gJHz6MHaJ5
-	r/hGnYauhl+MQkLDuPRcLB3JFQp3m6UuW42lmss=
-X-Google-Smtp-Source: AGHT+IGGLGNvENgsehRHPyd78blj4yJFAdejnjHHmOciST0qvwqR/4gxuUrwFEkkZ1cDCGVf1I/sgg==
-X-Received: by 2002:a17:906:99c2:b0:acb:34b2:851 with SMTP id a640c23a62f3a-ad219170650mr281983666b.44.1746787510903;
-        Fri, 09 May 2025 03:45:10 -0700 (PDT)
-Received: from localhost ([87.254.1.131])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad219853421sm129131466b.165.2025.05.09.03.45.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 03:45:10 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Patrice Chotard <patrice.chotard@foss.st.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] memory: stm32: Fix spelling mistake "resset" -> "reset"
-Date: Fri,  9 May 2025 11:44:58 +0100
-Message-ID: <20250509104459.28167-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="N3fDS+hm"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DFB7040E01FA;
+	Fri,  9 May 2025 10:45:07 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id GdDCXDC1iPDN; Fri,  9 May 2025 10:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746787503; bh=dwE9OGu7iwJrUb/YEJOzLU4pWDCbvE0L6Byfl3N88FU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N3fDS+hm60VcT0Yx5axAUD6WCNxuAy3xmXFWugxtCLlAwvZxBYA79dgYHn8MwTfyB
+	 CheBWQL0E4JGk//ZdyRmfuy9WjF8e/0Z5TfVoz/yYEgHcpGd1UZveRZfN2OgVVshZ5
+	 T2hhD+u0V/ZJOxMDDxMbkHpGjSC6nMeJ+TqyAvsPqNYI13gaS5s130pP1vkqssaXb5
+	 v6mFBXF48G/U+9RE4TpG7635nQvCF6CQ9gJlyzvJ0/p5EIH7GNrYmSPWUB8d6HZeKl
+	 MgeBU9a5tOJoEdJojnb+liu5gtj82xssCw5l0/AHjqlO+o4cvgu7UVm19Ito3Ahlbj
+	 PapZAgTnDLRONcFo9OlTEY/eBdrI/h0CIawgo5ZtTyzbibLbEpTZ8wM0sqh7G09gkb
+	 b34ZfGXybc1yC7kgftqv6TqDl/JQoAKdHEQFeV5qfkSs39GrLW6oYMaZNnuloIgCZW
+	 lI4PqA3cyJA9wwATZWN+0IPoxX5vf0f7uQ4zIStDr66FzcFoHXcQUpxvz+QgCbM/rS
+	 W2jslPZpZ/keJ/Q+AIc32ss4HiEfst4+n6lxh8RCn9t+p2aCts1sb+WcMeJd5UOOp1
+	 vzPO9WWbj9pV32VRQ/28MuXNEnA/VKYThstiQhozJl+A/d9G8V86twx14dUnPUs7FX
+	 3fqm11BJG93clEkUz1t+n0YA=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DB8F440E01CF;
+	Fri,  9 May 2025 10:44:51 +0000 (UTC)
+Date: Fri, 9 May 2025 12:44:45 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Bernhard Kaindl <bk@suse.de>,
+	Andi Kleen <ak@linux.intel.com>, Li Fei <fei1.li@intel.com>,
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mtrr: Check if fixed-range MTRR exists in
+ `mtrr_save_fixed_ranges`
+Message-ID: <20250509104445.GBaB3cnZnqCy-Vv6CR@fat_crate.local>
+References: <20250509085612.2236222-2-jiaqing.zhao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250509085612.2236222-2-jiaqing.zhao@linux.intel.com>
 
-There is a spelling mistake in a dev_err message. Fix it.
+On Fri, May 09, 2025 at 08:56:12AM +0000, Jiaqing Zhao wrote:
+> When suspending, `save_processor_state` calls `mtrr_save_fixed_ranges`
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/memory/stm32_omm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Put () after the function names and drop the ``.
 
-diff --git a/drivers/memory/stm32_omm.c b/drivers/memory/stm32_omm.c
-index 166baed0738a..bef7cf4391d6 100644
---- a/drivers/memory/stm32_omm.c
-+++ b/drivers/memory/stm32_omm.c
-@@ -173,7 +173,7 @@ static int stm32_omm_disable_child(struct device *dev)
- 		ret = reset_control_acquire(reset);
- 		if (ret) {
- 			stm32_omm_toggle_child_clock(dev, false);
--			dev_err(dev, "Can not acquire resset %d\n", ret);
-+			dev_err(dev, "Can not acquire reset %d\n", ret);
- 			return ret;
- 		}
- 
+> to save fixed-range MTRRs. On platforms without MTRR or fixed-range
+> MTRR support, accessing MTRR MSRs triggers unchecked MSR access error.
+> Make sure fixed-range MTRR is supported before access to prevent such
+> error.
+> 
+> Fixes: 3ebad5905609 ("[PATCH] x86: Save and restore the fixed-range MTRRs of the BSP when suspending")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/mtrr/generic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
+> index e2c6b471d230..ca37b374d1b0 100644
+> --- a/arch/x86/kernel/cpu/mtrr/generic.c
+> +++ b/arch/x86/kernel/cpu/mtrr/generic.c
+> @@ -593,7 +593,7 @@ static void get_fixed_ranges(mtrr_type *frs)
+>  
+>  void mtrr_save_fixed_ranges(void *info)
+>  {
+> -	if (boot_cpu_has(X86_FEATURE_MTRR))
+> +	if (boot_cpu_has(X86_FEATURE_MTRR) && mtrr_state.have_fixed)
+
+Does it work too if you check only mtrr_state.have_fixed?
+
+Without the feature check...
+
 -- 
-2.49.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
