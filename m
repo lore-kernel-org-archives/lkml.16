@@ -1,88 +1,106 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0852923506F
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36415A921
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803367; cv=none; b=nWxMeU/KIwh9Aja3V+jMO1e4O6Bjw1Fz/ws6XArt4seylEd+3ijddRyA1Zrw8Q3CEKm3KHfk63/XhgPFV9Q9KZ3KLjr8pm6TlRkwbaCDKTx5D6RcadaRe3e4WcjgppOp2jHzROnyh+Ol/oAswdgVuxja6sFYesDDw/0Th0oz4aE=
+	t=1746803400; cv=none; b=Ats3XMlDSBE5vVBFfFLVpwDOXdN4U7t1J/0nFaO1iUyl15FJZQ1b1wnTq6Ol3QQ9VLLgEnkeEaHAse5T7EDm5wxDjTdiBsK/eIdZGdMfWmPFs98+FijTkLcUIewsrCS2x+He4FyXKlJeqHdnB18VNMW3/4cGG0a4xKogeYW64Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803367; c=relaxed/simple;
-	bh=dA6ZcKfmigQgmyxqYP3SECtdnVaMP7ARcLCY2F5DfrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RToXgJCBFLc2sJGY/zSmh77ZvWp1urefFBK77pi7Ii5FrbryMrlYCgAflCJxOZQl9tExOiAMJjgHxeoWTVc6ozYba8c2rXmzpV2vUZb++DLH+HvxkkQv+4hzGukgaJSJTRtisFGid3apsGUTzoTtWqYrcgygtU3a0nzmSNoX16k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [36.44.121.59])
-	by gateway (Coremail) with SMTP id _____8BxrOKgGh5ot8LbAA--.59435S3;
-	Fri, 09 May 2025 23:09:20 +0800 (CST)
-Received: from [192.168.0.111] (unknown [36.44.121.59])
-	by front1 (Coremail) with SMTP id qMiowMAxzMSeGh5ovNbAAA--.32998S3;
-	Fri, 09 May 2025 23:09:19 +0800 (CST)
-Message-ID: <fccef9c4-da67-c232-7d61-07f2c6cabbd0@loongson.cn>
-Date: Fri, 9 May 2025 23:09:21 +0800
+	s=arc-20240116; t=1746803400; c=relaxed/simple;
+	bh=0raLsyvmspZO8KIh4Qq2YkCiCP1OpO5e3/Ms4xo0uMU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=N2TIKzTJrwl3bCnuyklS15eYSTj9ycUJ7MKzfpPZiYpzsdHti1/9APXYOXLC5ggtilbIreNQ8RxifMhJ9NBlDzqJPCxb513Ua4A2d9AoXZWLqHcvn0ZYL81505ebvdcayNlJXffhvmzsCIYG/GULolFU0m6QTeqzPQPUjKU73LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=M20AqgXm; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="M20AqgXm"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso398646966b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746803396; x=1747408196; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WtXiKhyTTbKRLQNr8fessPI0nm/AMjfgZ5fWE4GnCgU=;
+        b=M20AqgXmsAmCMBOJZvtASPR3Q8vdVZbJ8FJNp7m/ICFs3oQhgRrR330u1nBoRXsJd6
+         VExP9Slac3NC4E1MOWhPDb82G3dyQnKi2YF0yiWMcfw8bI7rBXAPc2t1OrLrocsOEaCN
+         KRFJVSBvJsNzIstgH4RETK6K79GyiZTPfcqkeu1Ns0Wp9IIjxG26s85ZOJhBlav91n7Z
+         BPl9tf3NOHE7/FOL70kmPjGj6NHltgQBH5U5lh7t5bbQtZ0Ez0ntPlwZV2Kb5YifBh7S
+         N91nFHwHX3naykn0fUIDSG5+ucvjst1Wo0HxsC5lxJ7skeXL+vdH3SvYtv0rYYZ3QQ1w
+         ZHQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746803396; x=1747408196;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WtXiKhyTTbKRLQNr8fessPI0nm/AMjfgZ5fWE4GnCgU=;
+        b=HYQIZnQRoCOmxl1UdCftHCjzIR+Cb9QjkotqOwXjaQ9wJAZKy/pVjeJEeVotggYPvi
+         92mrnWUrthmxLCwyVgKfhSdKae5WTSnI/xaiXS+us7xGmsai+LwZWRXZtvdixBpHYkMC
+         o3F4CUyLzTdmSzpBP7d9X09gAL3C2u41G0LQ8gEQA1blMMaDBKtUZiBDV6iWdie+FNfm
+         f7d1cmSMDP5MZ6D7U8SexqWBEgn+moMbeEV+5PFslKvpic0hxis3v7hmMrz0n3dKaSKc
+         QRvorBMc/TbSEU/SzK/OhizLTwHmVuVQeSQlQzZja/MFjteOQYkcuMz3jmOtEUkg4UzC
+         qjHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlJnb6LRvsZOoxMmpKpTHQwTGzGQ6OxUCz6GDK8GBAZkr17VTQ0BTozDr1JUPnq/I0MSLagXUbdr+kwqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9BT/hqhWoh623i8OpHo3xd8m7vaPVxMkDCLNaff+Uq4svhfzM
+	tGrCzgkJh6KuSOPp331XxAAysAdDNTenFCwyv8WShkTp55RceFP55blk7Ci1V1M=
+X-Gm-Gg: ASbGnctoIGLSnMhED++UtbrdezbnfNbyIu1UbQIwC95z4zlj+SS9SHqcq9Npp3E1nDr
+	S32gTuq7HiQrcmfbOuZ995469CDaFQgswsS04Xo/VFQnoEaXlOb3zPRA9Z75yBEPsFB50k3G0cM
+	Z9c1cc3RZ1jytz5RetkbktsOkemkSYPvgm4VhLX7qHcUmg8jBFnekKenls1g/jOf2QlkWm8yeaE
+	B++tOrWH3AyYPclLE63kD/zniCrwIR4Nx/rHdgxrXQqTz+GTM5ibOYsaHpqkWkE/jIJkzP3FAZ9
+	4NTytDfcu9LKtMwniPuOtQzg87YMGZHRHJWh2v6HUn4=
+X-Google-Smtp-Source: AGHT+IHcnFBxME8/PbbpkOaUefPkHynw9shIy4X2lxZw57yC0g7k6KUCMMkKDMKsDoJWYa7NGmZS7Q==
+X-Received: by 2002:a17:906:c102:b0:ad0:688e:57d5 with SMTP id a640c23a62f3a-ad21917102cmr352225766b.44.1746803396346;
+        Fri, 09 May 2025 08:09:56 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192d4a1dsm165870666b.17.2025.05.09.08.09.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 08:09:55 -0700 (PDT)
+Message-ID: <0e82be0f-a305-4aba-b9ab-79596f595277@suse.com>
+Date: Fri, 9 May 2025 17:09:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
+User-Agent: Mozilla Thunderbird
 Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250430131516.24287-1-yangtiezhu@loongson.cn>
- <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
- <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-In-Reply-To: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dmitry Antipov <dmantipov@yandex.ru>
+From: Petr Pavlu <petr.pavlu@suse.com>
+Subject: [GIT PULL] Modules fixes for v6.15-rc6
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMAxzMSeGh5ovNbAAA--.32998S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZr47tr45KFyfuw1xXry7urX_yoW3Jrg_Ca
-	95GF109rykGa9Y93ZIgr4S9rsYgry0gw1kC34UGw1jq3WUWayqyFsxZas7JF15AFZ7Jryx
-	Xr4jqr17CFs8CosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
-	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU
-	=
 
-On 5/7/25 12:24, Huacai Chen wrote:
-...
+The following changes since commit 92a09c47464d040866cf2b4cd052bc60555185fb:
 
-> Have you tried (both OpenSSL)
-> 
-> sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-> sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery openssl speed sm2
-> 
-> or (both Tongsuo)
-> 
-> sudo ./perf probe -x /opt/tongsuo/lib/libcrypto.so BN_mod_mul_montgomery
-> sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
-> /opt/tongsuo/bin/openssl speed sm2
-> 
-> and still success?
-> 
-> I tried, and both got a SIGTRAP or system hang.
+  Linux 6.15-rc5 (2025-05-04 13:55:04 -0700)
 
-I can reproduce it now and have a draft patch to fix it.
+are available in the Git repository at:
 
-I am busy with some emergency stuff recently and will send
-the formal patch as soon as I have some free time to make
-a proper commit message.
+  git://git.kernel.org/pub/scm/linux/kernel/git/modules/linux.git/ tags/modules-6.15-rc6
 
-Thanks,
-Tiezhu
+for you to fetch changes up to a6aeb739974ec73e5217c75a7c008a688d3d5cf1:
 
+  module: ensure that kobject_put() is safe for module type kobjects (2025-05-07 20:24:59 +0200)
+
+----------------------------------------------------------------
+Modules fixes for v6.15-rc6
+
+A single fix to prevent use of an uninitialized completion pointer when
+releasing a module_kobject in specific situations.
+
+This addresses a latent bug exposed by commit f95bbfe18512 ("drivers: base:
+handle module_kobject creation"), which was merged in 6.15-rc5. The fix has
+been on modules-next only since yesterday but should be safe.
+
+----------------------------------------------------------------
+Dmitry Antipov (1):
+      module: ensure that kobject_put() is safe for module type kobjects
+
+ kernel/params.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
