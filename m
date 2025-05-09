@@ -1,226 +1,170 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AC920A5E5
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D5526A1DA
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746775917; cv=none; b=bepj+QjZwKhepEUrtEgeBNMdL13/iPHoyustOwoOqgm6v1LEr2G/SzbH4jGE6Hbq0AjS2ADGtWYKx0sks5sj3iNa/NNIvj4J6Pt/hLLIcOV+7TkBoCsyYlPTmTDKMYoqM5/NpYVIQ7JTS4a0P327kl+i1mqCV7TKZWEvtqxC7dU=
+	t=1746776005; cv=none; b=Cc0ffjUFMbDK/Q7foOFG/i2i0P6ZSxeVsMo27sIL/GQI7IyOgDk8S+GF3m65OwBwxsp7KCIJTu4u0Tu0Qx+uoO0Uqn+F6+a6/T4aSTG+p1drgc4//ra+evsVfGjDtO69zghOs7yICTRmfKo6HnG5dTXYUdRqPNf0vwcnMv8Zjd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746775917; c=relaxed/simple;
-	bh=IYpWmw9D1wZ91hkZi5sTi8f4M3xDQe0S28DvEhKqlT4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=WYnnhtZYhB23gXN+lrU8udfx7KWbeqrNW32M0uTjCItIgWkZ1lR0vje166jQNSPZs58cpx6tO8DTdbOrBqoBadZTjANmlxwDn2GD7iLAPqSBlL9rc0qhVBAz881AV46kqpkd9tG0IVvTBItmUXFPJLRbA7gKq/GPevRInWul1V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YuEmT79N; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YuEmT79N"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2c663a3daso349434566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 00:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746775911; x=1747380711; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tNm4dzYjL0hNtY0TgZJ2Uq8YBkIqeHB8LTvt0QE8KZw=;
-        b=YuEmT79Nr2UDQR9mwjKxzHBAa3TVSs3/9Tw/sXtYdwX7FEdLLMIyff3Ov75o/8xYP2
-         88oIfmXOr3ok2a/JF6HBdOTWHpT3gVL7Jr2fDyilIjfSy1pLQREkvtxzOMT0i29n5FJN
-         B3wkmHCYhxH5ldUdHxRx9rbZG3J7Id1w01Sa1VIPYefEXzXCZI0grmEjsLmzZ5YUh5wH
-         yM4uYEosWeIrxYmFANaX+zl7sKq1AmDZI/2mvs1cyk07OAOkHzLuhBjvyaKGnPQ7OgHj
-         RLlceDexBFEaMNqn+5JDZ0gTy4xlshaKoVjd5QxcgLuqxiZ7NXkbwwyrubGqHD905mJ7
-         QDWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746775911; x=1747380711;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tNm4dzYjL0hNtY0TgZJ2Uq8YBkIqeHB8LTvt0QE8KZw=;
-        b=VKhqWGwEvAXRXw39GKqZf03j/RPwT1oAfu9rf+VraSMVcQTDwO5MPwNS/e45/2LbI3
-         e2EbQRAyY1mgSOGGWTFKTq2jIiwOuoQIu19DrF4MHhGQ/54wHuwUrA3h1E1kD/623aAz
-         RsDa8HyufQ9zoLPmHP00n/zmD+KHzbU+245hji5Rxgh5LMOCaDAtfNJS75lgDi/dzO83
-         wZ+tQKr7SZxNGMdIJOkTWCNRoSy3TSb0GBMgHivhfjSlCg2G4mJn6g3+lttitys85lXr
-         x1viTNBPo09I9S9eqgY4ZIWyP/gPnc5LyBuWdqE8RHqjed9GcgaI0Gnx4BVzOLILw3Mz
-         7fow==
-X-Forwarded-Encrypted: i=1; AJvYcCV6oC6mJh2RQNJCE8ajd+KpTawfustVtS/D3GeNcAsdTwwxlH1ZV0zBKtuEYp+fxfcdzoEc8pux0mEf+6c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT1h9pYnT+q+3f/ybdl4YbTqAvpwhr7dZqLlGXWYiHVFXhxKzc
-	Xc8pi2vSr1T7HvXF4SkV1CNO0MANWDSCtKwvhkA0BtUSVf49sP7pI1ChmifDRl8=
-X-Gm-Gg: ASbGncuQL0+SqlN1xbbZG2I9rfhj+KLJsK7RvRc9iVDr4O3C2ieq8szZ8EdfxQIyWm5
-	SHYc1UwrnI1v2m3MvCR5Mt+XDPwvSGt24pW8SuK0Iwjn0FUKpljGjNkzro2togcDgSGeiQsqhe2
-	FLyyEjgm+Z8PW6rWPIx8f9nZ2DZpnY5Xt9OqWE10jiN9iDtxg8hearKttUyyU/QQtwq5TLwJFv7
-	HjrNxvh5XuunqPR7z0nkKLWyZ46tNQioGYZLAR4G68WVjaXq8Jb8J1dmkffrH88W/z8zqaR55HQ
-	b8C2AJN/gQ+vcRnIm2cAfpcVDI+gxy9ioFnObPlNDwitUg==
-X-Google-Smtp-Source: AGHT+IEBRTCI9kTr2GaMmpOwf42xSL7WvOji9iBJAETgoGhwFplwSkmVArxI7pFy/yaqzpELkNP5Hg==
-X-Received: by 2002:a17:906:4796:b0:ad1:e672:271f with SMTP id a640c23a62f3a-ad218f4ca71mr253684166b.18.1746775911001;
-        Fri, 09 May 2025 00:31:51 -0700 (PDT)
-Received: from localhost ([2001:4090:a244:802a:8179:d45a:7862:147])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad219855beasm107999666b.171.2025.05.09.00.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 00:31:50 -0700 (PDT)
+	s=arc-20240116; t=1746776005; c=relaxed/simple;
+	bh=xuh3+d3PyJHPLx/vRAjNd3dPRlG+l4xvonJuqToDVxA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=M0TSsWWuglTjp1W/VKF8tDK/Ih7nWt/4jVjF+ueq20yRvQ/OtI42stNd4c8pKSmmsw6oGLN16bUy+O9N3HwEUqdJifVa6t5Xuo9AfBkzMH7o35aZDDvAJ9eqSnK9eOw17KxGIUEPJQ7hsX8Qj/oaxXzCzNQpOypeEnq6F9lsBco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zv11n25CXz4f3kJq
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:33:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id A36731A1AD7
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:33:20 +0800 (CST)
+Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
+	by APP3 (Coremail) with SMTP id _Ch0CgCHJsG1rx1oiZnNLg--.58746S5;
+	Fri, 09 May 2025 15:33:20 +0800 (CST)
+From: Chen Ridong <chenridong@huaweicloud.com>
+To: akpm@linux-foundation.org,
+	paulmck@kernel.org,
+	bigeasy@linutronix.de,
+	legion@kernel.org,
+	roman.gushchin@linux.dev,
+	brauner@kernel.org,
+	tglx@linutronix.de,
+	frederic@kernel.org,
+	peterz@infradead.org,
+	oleg@redhat.com,
+	joel.granados@kernel.org,
+	viro@zeniv.linux.org.uk,
+	lorenzo.stoakes@oracle.com,
+	avagin@google.com,
+	mengensun@tencent.com,
+	linux@weissschuh.net,
+	jlayton@kernel.org,
+	ruanjinjie@huawei.com,
+	kees@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	lujialin4@huawei.com,
+	chenridong@huaweicloud.com
+Subject: [RFC next v2 3/5] user_namespace: add user_ns iteration helper
+Date: Fri,  9 May 2025 07:20:52 +0000
+Message-Id: <20250509072054.148257-4-chenridong@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250509072054.148257-1-chenridong@huaweicloud.com>
+References: <20250509072054.148257-1-chenridong@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=06cfbbe9f92dcc8b1f71cc9bc0c83b1518c968538f5e87fe30c24b0e071e;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 09 May 2025 09:31:39 +0200
-Message-Id: <D9RGDM0LGOTW.2X74PNAIA5N3F@baylibre.com>
-Subject: Re: [PATCH 6/7] arm64: dts: ti: k3-am62a7-sk: Set wakeup-source
- system-states
-From: "Markus Schneider-Pargmann" <msp@baylibre.com>
-To: "Kendall Willis" <k-willis@ti.com>, "Nishanth Menon" <nm@ti.com>,
- "Vignesh Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>
-Cc: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Vishal Mahaveer" <vishalm@ti.com>, "Kevin
- Hilman" <khilman@baylibre.com>, "Dhruva Gole" <d-gole@ti.com>, "Sebin
- Francis" <sebin.francis@ti.com>, "Akashdeep Kaur" <a-kaur@ti.com>
-X-Mailer: aerc 0.20.1
-References: <20250421-topic-am62-dt-partialio-v6-15-v1-0-6ced30aafddb@baylibre.com> <20250421-topic-am62-dt-partialio-v6-15-v1-6-6ced30aafddb@baylibre.com> <d4f21cdc-bb0c-4c78-aeea-f6e5c75fa5f1@ti.com>
-In-Reply-To: <d4f21cdc-bb0c-4c78-aeea-f6e5c75fa5f1@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgCHJsG1rx1oiZnNLg--.58746S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF43KFWfZF1Utry7Gw4fGrg_yoW5XFWDpF
+	4Skr9xAw47JrnrKwn8ZFs5u34fWr10vFy8JFyxu3s3tF1agFy5Arn7A3WrZr9xGr4UGrW5
+	XFWUKws8Kr4Uu37anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQ014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxc
+	IEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_ZF0_GFyUMxAIw28IcxkI7VAKI48JMxC2
+	0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUUnmRUUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
---06cfbbe9f92dcc8b1f71cc9bc0c83b1518c968538f5e87fe30c24b0e071e
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+From: Chen Ridong <chenridong@huawei.com>
 
-On Wed May 7, 2025 at 6:56 PM CEST, Kendall Willis wrote:
-> On 4/21/25 03:14, Markus Schneider-Pargmann wrote:
->> The CANUART pins of mcu_mcan0, mcu_mcan1, mcu_uart0 and wkup_uart0 are
->> powered during Partial-IO and IO+DDR and are capable of waking up the
->> system in these states. Specify the states in which these units can do a
->> wakeup on this board.
->>=20
->> Note that the UARTs are not capable of wakeup in Partial-IO because of
->> of a UART mux on the board not being powered during Partial-IO.
->>=20
->> Add pincontrol definitions for mcu_mcan0 and mcu_mcan1 for wakeup from
->> Partial-IO. Add these as wakeup pinctrl entries for both devices.
->>=20
->> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
->> ---
->>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 76 +++++++++++++++++++++++++=
-++++++++
->>   1 file changed, 76 insertions(+)
->>=20
->> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/d=
-ts/ti/k3-am62a7-sk.dts
->> index 1c9d95696c839a51b607839abb9429a8de6fa620..724d9a6f3c575fe35496fdd9=
-e17d6d8e33869f92 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->> @@ -741,3 +741,79 @@ dpi1_out: endpoint {
->>   		};
->>   	};
->>   };
->> +
->> +&mcu_mcan0 {
->> +	pinctrl-names =3D "default", "wakeup";
->> +	pinctrl-0 =3D <&mcu_mcan0_tx_pins_default>, <&mcu_mcan0_rx_pins_defaul=
-t>;
->> +	pinctrl-1 =3D <&mcu_mcan0_tx_pins_default>, <&mcu_mcan0_rx_pins_wakeup=
->;
->> +	wakeup-source =3D <&system_partial_io>,
->> +			<&system_io_ddr>,
->> +			<&system_deep_sleep>,
->> +			<&system_mcu_only>,
->> +			<&system_standby>;
->> +	status =3D "okay";
->> +};
->> +
->> +&mcu_mcan1 {
->> +	pinctrl-names =3D "default", "wakeup";
->> +	pinctrl-0 =3D <&mcu_mcan1_tx_pins_default>, <&mcu_mcan1_rx_pins_defaul=
-t>;
->> +	pinctrl-1 =3D <&mcu_mcan1_tx_pins_default>, <&mcu_mcan1_rx_pins_wakeup=
->;
->> +	wakeup-source =3D <&system_partial_io>,
->> +			<&system_io_ddr>,
->> +			<&system_deep_sleep>,
->> +			<&system_mcu_only>,
->> +			<&system_standby>;
->> +	status =3D "okay";
->> +};
->> +
->> +&mcu_uart0 {
->> +	wakeup-source =3D <&system_io_ddr>,
->> +			<&system_deep_sleep>,
->> +			<&system_mcu_only>,
->> +			<&system_standby>;
->> +};
->> +
->> +&wkup_uart0 {
->> +	wakeup-source =3D <&system_io_ddr>,
->> +			<&system_deep_sleep>,
->> +			<&system_mcu_only>,
->> +			<&system_standby>;
->> +};
-> Hi Markus,
->
-> I noticed wkup_uart0 is already referenced earlier in the dts. Could the=
-=20
-> wakeup-source property be added into the first reference?
->> +
->> +&mcu_pmx0 {
-> Same thing with mcu_pmx0. Is there a reason for separating it from when=
-=20
-> it was referenced originally?
->> +	mcu_mcan0_tx_pins_default: mcu-mcan0-tx-default-pins {
->> +		pinctrl-single,pins =3D <
->> +			AM62X_IOPAD(0x034, PIN_OUTPUT, 0) /* (D6) MCU_MCAN0_TX */
->> +		>;
->> +	};
->> +
->> +	mcu_mcan0_rx_pins_default: mcu-mcan0-rx-default-pins {
->> +		pinctrl-single,pins =3D <
->> +			AM62X_IOPAD(0x038, PIN_INPUT, 0) /* (B3) MCU_MCAN0_RX */
->> +		>;
->> +	};
->> +
->> +	mcu_mcan0_rx_pins_wakeup: mcu-mcan0-rx-wakeup-pins {
->> +		pinctrl-single,pins =3D <
->> +			AM62X_IOPAD(0x038, PIN_INPUT | WKUP_EN, 0) /* (B3) MCU_MCAN0_RX */
->> +		>;
->> +	};
->> +
->> +	mcu_mcan1_tx_pins_default: mcu-mcan1-tx-default-pins {
->> +		pinctrl-single,pins =3D <
->> +			AM62X_IOPAD(0x03c, PIN_OUTPUT, 0) /* (E5) MCU_MCAN1_TX */
->> +		>;
->> +	};
->> +
->> +	mcu_mcan1_rx_pins_default: mcu-mcan1-rx-default-pins {
->> +		pinctrl-single,pins =3D <
->> +			AM62X_IOPAD(0x040, PIN_INPUT, 0) /* (D4) MCU_MCAN1_RX */
->> +		>;
->> +	};
->> +
->> +	mcu_mcan1_rx_pins_wakeup: mcu-mcan1-rx-wakeup-pins {
->> +		pinctrl-single,pins =3D <
->> +			AM62X_IOPAD(0x040, PIN_INPUT | WKUP_EN, 0) /* (D4) MCU_MCAN1_RX */
->> +		>;
->> +	};
->> +};Additionally, this patch does not apply cleanly to linux-next and nee=
-ds=20
-> to be fixed and rebased.
+Add a helper function named 'ns_next_child_pre' that performs
+a pre-order traversal of a namespace's descendants.
 
-Thank you, I will fix your points and rebase once the dt-schema
-idle-state-name question is resolved.
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ include/linux/user_namespace.h |  9 +++++++
+ kernel/user_namespace.c        | 44 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
 
-Best
-Markus
+diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
+index d84b2703caab..823df9267a4a 100644
+--- a/include/linux/user_namespace.h
++++ b/include/linux/user_namespace.h
+@@ -169,6 +169,15 @@ static inline void set_userns_rlimit_max(struct user_namespace *ns,
+ 	ns->rlimit_max[type] = max <= LONG_MAX ? max : LONG_MAX;
+ }
+ 
++struct user_namespace *ns_next_child(struct user_namespace *pos,
++					   struct user_namespace *parent);
++struct user_namespace *ns_next_child_pre(struct user_namespace *pos,
++						    struct user_namespace *root);
++
++#define ns_for_each_child_pre(pos, ns)				\
++	for ((pos) = ns_next_child_pre(NULL, (ns)); (pos);	\
++	     (pos) = ns_next_child_pre((pos), (ns)))
++
+ #ifdef CONFIG_USER_NS
+ 
+ static inline struct user_namespace *get_user_ns(struct user_namespace *ns)
+diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+index cbe8f96c3e60..9a2e77505b97 100644
+--- a/kernel/user_namespace.c
++++ b/kernel/user_namespace.c
+@@ -30,6 +30,50 @@ static bool new_idmap_permitted(const struct file *file,
+ 				struct uid_gid_map *map);
+ static void free_user_ns(struct work_struct *work);
+ 
++struct user_namespace *ns_next_child(struct user_namespace *pos,
++					   struct user_namespace *parent)
++{
++	struct user_namespace *next;
++
++	if (!pos)
++		/* Get the first child of the parent. */
++		next = list_entry_rcu(parent->children.next, struct user_namespace, ns_node);
++	else
++		next = list_entry_rcu(pos->ns_node.next, struct user_namespace, ns_node);
++
++	if (&next->ns_node != &parent->children)
++		return next;
++
++	return NULL;
++}
++
++/* Should be called under rcu_read_lock() */
++struct user_namespace *ns_next_child_pre(struct user_namespace *pos,
++						    struct user_namespace *root)
++{
++	struct user_namespace *next;
++
++
++	/* if first iteration, visit @root */
++	if (!pos)
++		return root;
++
++	/* visit the first child if exists */
++	next = ns_next_child(NULL, pos);
++	if (next)
++		return next;
++
++	/* no child, visit my or the closest ancestor's next ns_node */
++	while (pos != root) {
++		next = ns_next_child(pos, pos->parent);
++		if (next)
++			return next;
++		pos = pos->parent;
++	}
++
++	return NULL;
++}
++
+ static struct ucounts *inc_user_namespaces(struct user_namespace *ns, kuid_t uid)
+ {
+ 	return inc_ucount(ns, uid, UCOUNT_USER_NAMESPACES);
+-- 
+2.34.1
 
---06cfbbe9f92dcc8b1f71cc9bc0c83b1518c968538f5e87fe30c24b0e071e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iIcEABYKAC8WIQSJYVVm/x+5xmOiprOFwVZpkBVKUwUCaB2vXREcbXNwQGJheWxp
-YnJlLmNvbQAKCRCFwVZpkBVKU+IQAP4nYmMI1mFLobgy/oXSnCX2D+tGGACd+6+h
-bR5vzYUiagD8CelMTAx7Q4zlt086hjOX+Nk+R4ub5YtvyvU/1iO8rAc=
-=Do60
------END PGP SIGNATURE-----
-
---06cfbbe9f92dcc8b1f71cc9bc0c83b1518c968538f5e87fe30c24b0e071e--
