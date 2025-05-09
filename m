@@ -1,193 +1,127 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2087.outbound.protection.outlook.com [40.107.105.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A002690E7;
-	Fri,  9 May 2025 06:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746770965; cv=fail; b=cIHMzrBN0kDRyT85hRTvUNa6FN5fi9Y965fKze/bnD3d37EBLTcpJlCnIbqxpya0LfuIvXpig6ILX3MvBnx0hDcevU/Bsoy7u863K12bt63h+jb6pevki7cQMtrt8Xgxe5oCApxVtgELSUimEi0sCjz0NHJcQQyvoGB2K2+1QNY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746770965; c=relaxed/simple;
-	bh=c5Stb/MZLQrk0D5tXIMbBgbCMHNcMbz9xm1ngm7CLCE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Gl/dO4BbdXo/hPuqLObHB5QhOqhdfrC1PkSZU/qWCQSexNuzezN9PVAt9rRrDM4qYVr01ErzvU7LNiA2tWNrIM+W5aVBfCf42so+CpR92cDZ0JfAt3vHvGr6osruPf9yg+B0WOG8YsbCxLcDjDWXyBGx0u6kX/E9pZsGKkhcU7Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=spHC5VxV; arc=fail smtp.client-ip=40.107.105.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B75266599;
+	Fri,  9 May 2025 06:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746771069; cv=none; b=cFRjYRWJyxx2ZmiLWDG6Ws4AXwC9sdQfrKqDdp/WPsDaHfOjPF7ngGzp1/9opF6swINnUYfpyXYi/38/wZsjakh+G8L18bSoaIJYdVsCO++JU40kO+5l3O9f27+yzFyU++LezZ68/Ckwm5EikT4VmOhp0o4/UGgI0zLg8xCVthg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746771069; c=relaxed/simple;
+	bh=9jqZE21+WSs8HvXVZ2Nk/t/5qvfZGOiRoifSYIH6bYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OiI8KEpQiXTWbXdAW1QN8mKa9RZKKNsVPF12Bz1APbHukByIu31f6KPWQl3NcdliOjzS0XKOwhWSJHIBaJhH+lBDWsCqn+TWTaRS6uy093sb2+wEnpqgB1Vb1g+7fdCB/LA52gHwZoO9qKsqqi55SdK/AL5XDWh6G+NEkyc6Eeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsLS+Tml; arc=none smtp.client-ip=209.85.208.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="spHC5VxV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bEthjy/4CGjYK868FexayZjwlWPs+bUFB3rtfh2GmNCi8lOJchTt4AUjHKsL17wcn2D14J9mqPkZKV3I7Z/7CS6XtO9RRJn2O7xJAG16OfbC4/gDUoVoZHNi5bT+FFuc2yYiCclLG4+9AiZsh61ixzeviOJT8F0+SAAcGrRnpJ7V77EDbwo5AfPOktytPeV6zXyDML/ziUS6ZwBl/KCRTSxwrzs14jYash2J1+Xbfmz4jjXEtSCO5ZQoFblgsXiCdCoo/9MuUyNfS4iFbOdlVQ+Xt4cCH5wxzYoXx1+TQ4eDQhwx8CYJLmGSNtfRVHRXlP7DLphVtn2CTM2tbRsDWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DDokrRmhzZu07iw69pPSSMduM6gkmPUFCD5TiMRG250=;
- b=L1eCeE9UOGzeRuKQf9jYS4yYFTQl8q1ns8H5MK6X7UDcxyEpafpPgotDpFfcHPByqRFjZEBuk6mMMw2L/1boizy9WY5tyMOoq3JdRRrhJ73e0qK/Hk0RCRJQddDDSvJuzPZ9gduv/OBJXsfUJmEsF5xeWG9Vu28oehCsl1AkKPSUao2grGby0ebENF/WZPu8f+3psofXPVRY6Y8Vedgb87N7r2+c41RXHfUd6fEugqwbL7uuc86Uyd2fP+WIwxl4OSzmDqAQPIYvUVsv2Qzq1p3ZJBGhGeQxoqeaRScLC8E2V9XVHGw4Pve8R+Tyoy6pWxJN9SsPCT3VoJMe/uzFrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DDokrRmhzZu07iw69pPSSMduM6gkmPUFCD5TiMRG250=;
- b=spHC5VxVBise8h3jUAH+CN0AqM7Cvuz7nVjwqW76cmI0lLbkSIdky676C0VMhk8eerSjIERJqr+PUH2muedR+1QuSpUDzPtjb7p2AEwxS/1aXiVJAonMZmPa0laAKc4yDkV5l/OGJ+9erU/1Cd9IIk9Gon1Wtuu5u8qtE8+R+m5vSLZXa4XvfdPbaKopRQOJlAhgiC6mr2wHLBQF6Z5i1HXTYEPSeCnKEFJE4sz2VAzZDRiSoiPKIe7EggD7WBPyCa16Mg5uH8dsjBxp4uWDWWC/z0JJU8CjvGx3bqbuf7QgAJEqyZROfGuYxfIPH/p1UCtwhU8NDr2h60QeOqoWGg==
-Received: from DU2PR04MB8935.eurprd04.prod.outlook.com (2603:10a6:10:2e2::20)
- by AM0PR04MB6993.eurprd04.prod.outlook.com (2603:10a6:208:17d::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 06:09:19 +0000
-Received: from DU2PR04MB8935.eurprd04.prod.outlook.com
- ([fe80::3a2e:f437:702e:b41d]) by DU2PR04MB8935.eurprd04.prod.outlook.com
- ([fe80::3a2e:f437:702e:b41d%6]) with mapi id 15.20.8722.018; Fri, 9 May 2025
- 06:09:19 +0000
-From: "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>
-CC: =?iso-8859-1?Q?K=F6ry_Maincent?= <kory.maincent@bootlin.com>, Andrew Lunn
-	<andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Richard Cochran
-	<richardcochran@gmail.com>, Russell King <linux@armlinux.org.uk>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next 0/3] dpaa_eth conversion to ndo_hwtstamp_get()
- and ndo_hwtstamp_set()
-Thread-Topic: [PATCH net-next 0/3] dpaa_eth conversion to ndo_hwtstamp_get()
- and ndo_hwtstamp_set()
-Thread-Index: AQHbwBeED8Tb5lZS20eY5NgYnSRZD7PJ0VBA
-Date: Fri, 9 May 2025 06:09:18 +0000
-Message-ID:
- <DU2PR04MB89356DD964DEA8357F3317B6EC8AA@DU2PR04MB8935.eurprd04.prod.outlook.com>
-References: <20250508124753.1492742-1-vladimir.oltean@nxp.com>
-In-Reply-To: <20250508124753.1492742-1-vladimir.oltean@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU2PR04MB8935:EE_|AM0PR04MB6993:EE_
-x-ms-office365-filtering-correlation-id: 4aec6d1c-d957-4b78-2ae7-08dd8ec008e8
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?6Gc9Hakw9cZCn/apLAWqsCkX2Wo9Ajd62N541YxxdgZ0kYoZGzV3DCAPz6?=
- =?iso-8859-1?Q?sqgoGe8PrwBHkSR4ImEDZcQV7eUfEjkTO/eL0IAtl151XIGtNyhl+ku8lg?=
- =?iso-8859-1?Q?Ad4gCIq8o1aaJL+Sy+Vp/sgIU6nvuPl3qLCxdsj9SL1dySHkHX2yG4nj/f?=
- =?iso-8859-1?Q?s6r8IjagQSqsKqlCXt8ck5B1HxGp8fylQ8zvcsD8fkljMrEqmWt52f4Cmm?=
- =?iso-8859-1?Q?XuwG5JsLTuWG9dx6W/2vUWjmL4LxREp8XMed9m2jJRr7l1Z10kA+nCBDl6?=
- =?iso-8859-1?Q?r/Ch+IQVJnpQjleI+uEtffhAQ1x31IlhEiBSZwSgXkuAyKGSGX1e6l923g?=
- =?iso-8859-1?Q?uUTQJ4TN8gmVzYRozoJhMU+fg0kqjDijmF0mEDNeJMPQoeIC/EAzvIL9/H?=
- =?iso-8859-1?Q?EMwmq7MWqdY7Fv/QWf2DfjyUvCPclPYmuO7i3SrPKb9IU6vPWnNV5kIW9e?=
- =?iso-8859-1?Q?Nu0awyVt5uyHF0vi/3cl00snV2RWtk02GimuCh+TT3wqGdO2KrXx5M7EUZ?=
- =?iso-8859-1?Q?plJF0w0ZYkrHR3znP+kBEr/SlteUcQoUbjqBghazKXZVGy8WgMJt7j+u3C?=
- =?iso-8859-1?Q?L3SYDilkYwp2aVkoCuEJTyMxk48135FT6tAlmhi5z//sXs79tgCWY1qv86?=
- =?iso-8859-1?Q?GVXHrVZGEm68PASQspkS0QhZ2IPnpwunC1HkAwJ2uys7pRfkuWJhCB22WF?=
- =?iso-8859-1?Q?E0n9ajwBHWD0iZPK5kFtHCUxucTqPOBiA3s/SxNoxYj4qzVS/gK/EL5GdS?=
- =?iso-8859-1?Q?AjVbDNyOtMOufEwukFl6g9ZrhYoLjNpbk5eQLQ64ec5RozdK/FeBWR8GKY?=
- =?iso-8859-1?Q?77gKhqm+CoveeTJWpfxuEl3EegQDaWawNLGqH64Bi9zlWPo1f0EyxL/Tgr?=
- =?iso-8859-1?Q?dSSGgBVEFAkc/nq4ySugWUHqhGtt2+MI3hpzZ0nDJhROCJUeH7ODrdLs8K?=
- =?iso-8859-1?Q?wyfRbeqnd1W8Ec/WS7qEsMltuS+E6XVRF1g+wICcs6oEkBdZwU+SxZtXkB?=
- =?iso-8859-1?Q?efS3DYaxdW0T7/Uux6zJaPBBAC32r+cXWMoqDTx6c/NQFlrKvNA2Rzr4CS?=
- =?iso-8859-1?Q?M9owOHrYtQXHHXV1u8Bngrq5pk7NZCCQdnTthNhEpqY/V77WC0OD0mtSiI?=
- =?iso-8859-1?Q?RRo5CRE4YPtYrspysV+fs5qWW1ThQTAz6O4TbdO6mFx+ZfaVf621Gt8I41?=
- =?iso-8859-1?Q?bRAThi05muiztz9I/tQ08W0aHprrdIKOPGLB+LlIIYXhuhg6UGqXMgBqCe?=
- =?iso-8859-1?Q?61oLRa+Fvtx2uJsZMGaJ+Ce8tavlSJnjEYMP0pW4/sb6fRraKh83cxhmdN?=
- =?iso-8859-1?Q?nIH5m5uv5LlFEip76gVZpnLDJPIcVdzKx+baUBZuK1XZlae70zWfRrbTAy?=
- =?iso-8859-1?Q?NzyJXRmgSnD/NzIhW9LfsD5ENILCbB7r9Z0nhB1isA5fgjIdD7oLXB7yJN?=
- =?iso-8859-1?Q?nWlGgRfnhSNTSqAg4Q6Mq2PEijtOecE2NMOTA7WA5s4IuCT7XU3HdYTHgv?=
- =?iso-8859-1?Q?RPeyDJjvZN/tjxByyIqhKV45l1Obog8qRDZUp1EeTEiTsy/2qavPUhMXsf?=
- =?iso-8859-1?Q?xI+n6nk=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8935.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?6F9qoKgjpDXUZF5eLkms7FotCUY2exDag9XJGGGFp9qcv8eBVrcz8TMDM8?=
- =?iso-8859-1?Q?WpwjfSbT93XRv6aI3wAzykE0HsqiSXxwkkygqYIys9Klg08aBEsaEB+ayX?=
- =?iso-8859-1?Q?JyXnjxkH99DUgYvu8EjD83fKCDnSKCpXPoggD/iqvVAjxWCrZqW+2EClwk?=
- =?iso-8859-1?Q?ZloMhN3Ok0eaQvuJ4QrE2PBnfa01y5Nh+fenaK/UyZ53sjWUT4pMFR0j9t?=
- =?iso-8859-1?Q?xH7cleXwoXNlJEMdA1Un3e9tBpEy1rjQKjW5H9FWQc3xqrSp/AmJsNFN2+?=
- =?iso-8859-1?Q?5tbl3kkZSylb4eFTUhuxj1JzXiNn+arYBYEs6wiRb64FfroY1JFO0cXpSN?=
- =?iso-8859-1?Q?e9DXrTta616m7EElqkz9vAqIPHj3H3ruhqZTDCBEBKXQRPLloOxsIMmShb?=
- =?iso-8859-1?Q?vejItmGIBb3FscpYnSijyU6Ceg9i5q1eLMb1PQ2qW6+jkEOtFthREpeX/S?=
- =?iso-8859-1?Q?a7AAtsz3geh3g4TjvET+BPmBpInHXcu9vZwz6yWgu4td/7gotyp8WYqGxu?=
- =?iso-8859-1?Q?lgAvsrCjkDghF5IqI2hH7iprdxhcKa4AGpIZ8n8rsChgHyHqbnpEKFKL8h?=
- =?iso-8859-1?Q?H+WgOYnOhtgAsjglaEYXutFYoTrukk2oSKT57bL6GtoCpIY/dD6cNwS2Ul?=
- =?iso-8859-1?Q?ffB0r8Bp7lszDdhmlQp+OHJS8H6+YEScfNGJIxyO0PCbsGpeoYtsa8V7UD?=
- =?iso-8859-1?Q?qYsOyyM4bdUAstQ29tctrZ9iI6+36JeweDDXTFPeRlirBDkY/H4hhs4opO?=
- =?iso-8859-1?Q?294A1vWp8KgpNmwA4XeXUxTvN0unbVTSCuhDRrElrkknLLUcwYvzsv7J9b?=
- =?iso-8859-1?Q?KpMOUzW9eh4t3dBjfKTRecmIWvVKYkgEIGtCyZciGePORtBOO6SL4dcHvy?=
- =?iso-8859-1?Q?jQ1Q6d/ojC6t8ArNO1ytiOwsc7W2FsTbvu5jZKM+VC9Nlqyp5Jnk9iQzKV?=
- =?iso-8859-1?Q?P1lQ2CzM16S+vm3VHsbjuL8Mza/lP3zGfMoDVReID/VqnakXhyt3HrdUXP?=
- =?iso-8859-1?Q?AqTU3X6Kp81GMRt26mre47lX63nkFA5muvMdPKbTlO/zEdIKQC6gMYo6Zp?=
- =?iso-8859-1?Q?GHvpc0IFF86x/BTQbqkiDJroYruV6oEhSlpo4W6YWfQnEe5+vqAuJkOHfi?=
- =?iso-8859-1?Q?aO4yiB6+keiAvpxMnTp6LnnMrKKonl7w0Rb+hltpKVwmtp9q/TS8Cm8rnU?=
- =?iso-8859-1?Q?4WkmGFbv8xDntdnMSsALT2+NKwNo+4IiGXOKxgdYabhZZxLOh7B+pOchqg?=
- =?iso-8859-1?Q?g4tY/FMaCB0tJd8wo2n9I3GzQvREnz6y91GMAXBglETsHM9Heo7AaecLBI?=
- =?iso-8859-1?Q?5+KJahC5oiTk5Qs0XRBbt5uEQXoCo8ZnsDh81QjkWbJqJmm/WiM9IXR+yo?=
- =?iso-8859-1?Q?2x6gHRWacducv642aEUsIBK7aluMfjgoXkQdJxOV2ZNwJ5il6ZAAa0XWKR?=
- =?iso-8859-1?Q?CTgLNNGXz+xs3KJcR+hASU/kYlpEd5M8xCA9MnnDwn5OGF3mQswnGpiboa?=
- =?iso-8859-1?Q?6U5f4nRvds8TQ3O4JHHldurfCvPZ9PcAkwvOfqc0TVC6DqpvzOO03IuacC?=
- =?iso-8859-1?Q?eQy4XaEEJyHcyyP4EtS8bRlSEeiEt7iQtpMrfwmyVv62YkIdkg95im1e7P?=
- =?iso-8859-1?Q?xXGxBzi+j1pbKdGPQ3/oEbsT8uNzIsGBxH?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsLS+Tml"
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5fbf52aad74so4391108a12.1;
+        Thu, 08 May 2025 23:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746771065; x=1747375865; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tT4nmiF3B+9Zf02ngFo5qPxLiB0Cnk6TGo7gdbEV7tc=;
+        b=gsLS+Tml+tSuCMvLdmXt0QcYU9GuCMEmHjxHsBSvwRjhOAUwxAejbdvk0LvnXtw8RC
+         PWv/M1YgAcUR8yl29y5WXTaXltx/T0DIjfIXErU5gjpsJ8aF5rB+obuLAAodTmaVQaRK
+         V9kyc+jr4ap8rCkEDxMnugW+TXWtbf7ZKnbUW73ixNB9MDwf0doBkghhaKMjxBDkbGK+
+         9gA+qj4/DWf0aR90rmPUUnvEsw84sysG7IsyvUKx44WWPfrSegUCmnzxSoF+mH6kv8Ek
+         Ju+Kbr70AF0iW1oJZBR+ABFrA8uSYTapHc5ZmQJa8f17PQlT52YzjoMZFrtOybASKFeS
+         x1tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746771065; x=1747375865;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tT4nmiF3B+9Zf02ngFo5qPxLiB0Cnk6TGo7gdbEV7tc=;
+        b=swc64QgzvWYglM3EcabZt2gwCuHdptThIreMH63izVATzNVR939i54sJ1NYIgo2Jxn
+         Nf4Slg5j+hKaDegURl3GlCdpKQazz5T1bZJdIACdaUcmB43j4muT9SXCLPGZLpDvB7qJ
+         QcrTL0+H7o2onFSn4nSRjzh66DSqZ7gEg0CHPtSThc5RnRZptNP/ZL8vQQkVBIOSOheF
+         mfdAGSr0gwxheWgAWUMkE1ghXmdFowOfulOjHo1n7zCJK01Z87FRqSCQpr5v79H/i+6+
+         9UvU2T5apJQ10YsHy9lG87renU0Dn8OoMev7uUBpHD7pmYY8lKdm/YOtQWz0t5iHBqMl
+         eY+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUagtM27LaJOwJHh+ho9xptMSVmU7V3z0KcV4WkcUSzfBJHl6XmQbFt+1OTq4m8tEE62hbyP8mVH/cBYhFU@vger.kernel.org, AJvYcCVB0rdGr32B1bv3HDzc1yqVo24RdHLHtei+sTst1W1eYdAmrw+cj8tHxL8JlnVQQEBrwX2dG4D98dUd@vger.kernel.org, AJvYcCVLG5rPAeR4aiW/jhVrDikqxCT7WvD+WoIjpRKWgIt62KkEMI19Nf/zwJRhuLN79Qo0IdZnWrOJPBT8KpPp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwt5nwlhhGJNeNHTv8HA3f09BvCKLU1kMvHq8F3Y7i5exmR+B7
+	Is27MYYUoxsX2IojC3RFCaLocDUob7lAyotm9900U8YPBP0hcZwd
+X-Gm-Gg: ASbGncsUQCxePfU+mqhGBxApW5SCJdE8rTPyojlhp1YfJJa+XgF4HhAJNkxwM794678
+	PhK0jz3+mK5N2D5PBLHdKuq3MIgJ1TYDPm5Sov479dLQgch0MEcB+saLbrEBBXGPcBbnrMdxGdr
+	RaiH4OiUEtiSKkJxebpkL2Ng6717iH0PfLkieqtI+AYXBIzTXdtyoOasPiqn1JcaYksgkMJLVu0
+	zoKNqCKEaFggnDRJ0zWD2OHsZme4KGid44ARbIYRVmMuLM/+SNvHbhs6yIQ6SJ6a026IVoHXfwl
+	wdmqQ8cwv3gz7xGP7864az3SAuBm+cg5um4bPR8qX6JRAu8Sib3xzS0zIMzyyjgT4hMa+uHauRt
+	Cryc28WRLmqD1hW/xe/YBEFuoK65cd9kb17aNUwbz2B4GMIeH/I4=
+X-Google-Smtp-Source: AGHT+IHV7Lb+Jz2vAFwguRkPg3xEv8RK1gYxrdSEajyR1uZCyO5I90pymBqse+1L9ASZRUyJgq24dg==
+X-Received: by 2002:a17:906:6a22:b0:ad2:cce:8d5e with SMTP id a640c23a62f3a-ad21b16d4d8mr201457766b.7.1746771065029;
+        Thu, 08 May 2025 23:11:05 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-3-69-236-239.eu-central-1.compute.amazonaws.com. [3.69.236.239])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219343c81sm101663266b.58.2025.05.08.23.11.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 23:11:04 -0700 (PDT)
+Message-ID: <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
+Date: Fri, 9 May 2025 14:11:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8935.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4aec6d1c-d957-4b78-2ae7-08dd8ec008e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2025 06:09:19.0286
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rPk8QATiGF7Hn/aMtRft7yeK+lXV4ATB5tAiwmgD/+0NYHVCVYJVjwd/vwrLhZTdmtn0C9VFvkmANXEw0v0DkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6993
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] PCI/ERR: Remove misleading TODO regarding kernel
+ panic
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+ Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>
+Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
+ <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
+Content-Language: en-US
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> -----Original Message-----
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> Sent: Thursday, May 8, 2025 3:48 PM
-> To: netdev@vger.kernel.org
-> Cc: K=F6ry Maincent <kory.maincent@bootlin.com>; Madalin Bucur
-> <madalin.bucur@nxp.com>; Andrew Lunn <andrew@lunn.ch>; David S. Miller
-> <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub
-> Kicinski <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Simon
-> Horman <horms@kernel.org>; Richard Cochran <richardcochran@gmail.com>;
-> Russell King <linux@armlinux.org.uk>; linux-kernel@vger.kernel.org
-> Subject: [PATCH net-next 0/3] dpaa_eth conversion to ndo_hwtstamp_get()
-> and ndo_hwtstamp_set()
->=20
-> This is part of the effort to finalize the conversion of drivers to the
-> dedicated hardware timestamping API.
->=20
-> In the case of the DPAA1 Ethernet driver, a bit more care is needed,
-> because dpaa_ioctl() looks a bit strange. It handles the "set" IOCTL but
-> not the "get", and even the phylink_mii_ioctl() portion could do with
-> some cleanup.
->=20
-> Vladimir Oltean (3):
->   net: dpaa_eth: convert to ndo_hwtstamp_set()
->   net: dpaa_eth: add ndo_hwtstamp_get() implementation
->   net: dpaa_eth: simplify dpaa_ioctl()
->=20
->  .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 41 ++++++++++---------
->  1 file changed, 21 insertions(+), 20 deletions(-)
->=20
-> --
-> 2.43.0
 
-For the series:
 
-Acked-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+On 5/8/2025 3:10 PM, Manivannan Sadhasivam wrote:
+> A PCI device is just another peripheral in a system. So failure to
+> recover it, must not result in a kernel panic. So remove the TODO which
+> is quite misleading.
+> 
+Could you explain what the result would be if A PCI device failed to
+recovery from FATAL/NON_FATAL aer error or DPC event ? what else
+better choice we have as next step ? or just saying "failed" then
+go ahead ?
 
-Thank you!
+Thanks,
+Ethan
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   drivers/pci/pcie/err.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 31090770fffcc94e15ba6e89f649c6f84bfdf0d5..de6381c690f5c21f00021cdc7bde8d93a5c7db52 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -271,7 +271,6 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   
+>   	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
+>   
+> -	/* TODO: Should kernel panic here? */
+>   	pci_info(bridge, "device recovery failed\n");
+>   
+>   	return status;
+> 
+
