@@ -1,201 +1,280 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021097.outbound.protection.outlook.com [52.101.129.97])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2050.outbound.protection.outlook.com [40.107.96.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F89139D1B;
-	Fri,  9 May 2025 05:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83069139D1B;
+	Fri,  9 May 2025 05:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746769727; cv=fail; b=sckDAN1fcEPDZfs/FU/DQpi4QZ2aLbFZzXQin5PLAlfO93dsPF3DzTOoiQlE8MeTpMu2qvGjjbHIxQ1jmhs7vN6490LV/eapSLNTATi+hqivrGRig0rtM5gCDojTyti8drjR4UWpb7hcpgDsOaoTCyKhVeMO03iphSZKzzihUos=
+	t=1746769781; cv=fail; b=ruYy6jf8q1SQ/qZGywd/riSfwwzyiFsWaOBbdsmUAGmn0zNKjwUOecucoHr7FdowXAeMGP/beDJ38TYfAaWpk6lh0Dd3HisTW8PHwg/+FX67RYbvM6dsHYcPUpqDqnvMC39VgvvRGnUMrV5h+O2pvs5FGKpQJ9PWa5kX6hRSbcw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746769727; c=relaxed/simple;
-	bh=E+xdKIkX59FVW+tSSGI8qOOQlkPbOFR6G+MdKwfVz9s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MGbjIjaVoTccJTZXRPbbB5PY+jxgYUhb2j80KGibXaUfr0L/O1oCiNrky37i/AJ0tESO+kHBq2vl4COfG5Zg6js71pgxIkvXnZB1HG7AwdiEkZAXNNcdSiTzVK/T/35udkvj4pPP2N0I5aCRKpMBGqmb2ooHLBeW9tg0FULaia0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=BDMjuBQ0; arc=fail smtp.client-ip=52.101.129.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	s=arc-20240116; t=1746769781; c=relaxed/simple;
+	bh=6h8cdneUySBWHEKpxrLsV7QfdImOLaouBiT7KsKkt8Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CujgtlH8W9UcwzyEZbhSk2IqT/mVV9YOs1aiN4TLLGgo7fEp9ozI7ViNrjBhq6V3/7nzq5nDDESxgC2aO6x5uonxmendT4q8s2WXUh4R8ejiM/QKvujYOf4upbck/DUDhrZpiHxU4VoAL6MoxA/mnLNI0lwQ1ikWK74E0THTr7Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pFlzMyqe; arc=fail smtp.client-ip=40.107.96.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="BDMjuBQ0"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pFlzMyqe"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tEVuIR/lzK+Ziuw76x9lQJ3iJvHA6rpy2lLAz3JRfZI+JSolpNo8y300nGo1WUW8/WOgAazNvitMOGr68g5BcLZw56ytWJnlMMmF8TeSG/nu4JH0OFq5u/KZUmidT2F4fDOle61Vvhv/+rLZPnkw7Jjwc5MvBfke48OKOTgmM3VBA2DrgQ3iqtoBTYXIEI/Y24x3XZtORgIHPVLvW9wM1dwDRQ18D8CgQOywo18yM2rbqFe2xLte5sCmf3+hHY40GOrCNJDKZsXTux6BhZAYO7D6eLdaMKRv/o7sN9QxW/6YAIkCahHD7BGJ4m6Zisrka10KOyjRamkocod+0PzTwA==
+ b=MH/G+9gB5zJYzrB2gafOhFioodv8/c4IqzV6nD8QhDGc+mqWntGaHoi7X+bYvjAmLWAdeTh7uvPyNno+Nxa3bCtf68ZdmzLpts64DvXcCLxGWMT9DFunV8NWB5GllFbvxaVwSHgYLp4/4EXj7Ejubxvye3OkTVcou1veOpDQfLW41Eg3Ga4/R0eT7w/AzR82M6qY+WBPQ3S3icmhx4zZWZSPx8tZexYGNqijFN3j3O5rs3D1EfzRMpA/+0fQVc1NDSfS/xpUscMD0XRHROgbtAxiAJtz7SZE3PLKgMldmSrJAn+LoTjdvQe0/FX4SBoYcIuNXXw8BKtba5Lr0tVsBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gDidjGTlhUSkVsgqZDgriOEJzWiiY2JPJtzB3gtKfNc=;
- b=MYyRjdf0aawOv4ePy+QAuWYiV9M8E+QOJiJdHpvQtaBt6gC1I3WBbNXo+V9wk0oMZgD7y+gNPXILoXdX6DvunKlTAt3hkiYpqD5lKtFKTJnKhIzqmKx9HqJGuIQWdvfBRi9mq6TiYX4CXufskmPB/FrYt8UFySVEOe9LHU0FAmHMf8+bzXqfOa0c+Tu9aQT/ICIo2y72KKmgMqsRdbYvWdN0oehpZDNVSXYbz9hd7m4MS2F5VOlu4G6Yh3r//63MLhsa9b9uPHyVxT8XAI/l2i/B2v/6k7ROF3KXzQ9UOZjdtkTV2OiUS0LvLfjs4qj+L67IFHX9UVf2KnFqJUo7OA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
+ bh=k99nWHIMtwGug7DDzTcVlgBCkDp5PbIiDpPzu2N2k/o=;
+ b=FniN5jCcZPl+CWEV1gYca4zJ0QdEMkurj8cVqavw6/8nHM7hLNYOVqoZZmVXwQ9r3739tgY3vzTsXhdEjOURVWC1ohB+Ps+G9tl6PNWZAmIirPjScFxiRkYPobeuY+xXN6j2AuTGdy5dhrA6akhp9Hvo0OYNWpRBJRruMMF1IP0P4vfCo1GlpXeWwrAFY7OkVzWEbPelHYAcMS2iVcKj+8ITDGfLz8zg9q4MOzCAW0glLfySaLS4QGxnEE4nUtoAcAeLC0l7zrbIfiuW4FFj9V4P+nQV6DJ+QEi5zFJdRf+G8ZQfkPaHUnOzNqd7gnt+9djYW6zQMXAm7bqbV3yb1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gDidjGTlhUSkVsgqZDgriOEJzWiiY2JPJtzB3gtKfNc=;
- b=BDMjuBQ0/4YsJgCJUJPGpMu5RRolfVF+TBPqDHPfFA7QlanJhPXQOE6vI1zJRNaXkBGg5IEH0Sf0A7kdlpYbFiB+fJ4npWHH98MRW8Vs4QkjkslPcDD/sovZOMiM5/YOmVkWUMNY1Vs7fFiTQxaG6YCyhRPzELS6Hbn+MXtzjMtAbvsIhcLTvjNpXLg/DhVxsPi835O1qPXbobZja0nrjnF5M/egp5nNf/fcFok21k+KV4RHx6X0CGacCWg8q2bh0/StbMffq6i7Q2kq3BzM83d7kEMXUOiPKlq8JpA+qY3ewUAZYfdVoRdRrVeXMH3ZfHfGgkNJbZwwckAa9uhxwg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYSPR03MB8627.apcprd03.prod.outlook.com (2603:1096:405:8a::9)
- by JH0PR03MB8637.apcprd03.prod.outlook.com (2603:1096:990:8f::13) with
+ bh=k99nWHIMtwGug7DDzTcVlgBCkDp5PbIiDpPzu2N2k/o=;
+ b=pFlzMyqeGR5WPDHuR3uXWY9Oe1Nn5K97+ilHQPbuXN6M7EVkkaPtDW9jd7Fk947EqecOwVpHQ1VUzTkZSuWkmZOdoQi2A3jVfx0ke+DZbdlEEtqkfzE36mIToqjACq4buLNpgUvvATKT6BrlJhNs9VIzVF3bJItfMklPhkAZfIMz02AL88v8GXzi1r7+cZr2pzN1+Tza5XEx1D2QPSNl/Cz/VGOJvyZn18+ioRDPsY8T/CHr2nwfKMu4Cit1Ry7/InO7CM1H79YCmQq9vqzyIF+8e1wurPpOnGZuMbnchiu97ANkN4eLE/I+pKmkqhrfH5Xq8+ugDZoFwQ6CuisqDQ==
+Received: from CH2PR04CA0008.namprd04.prod.outlook.com (2603:10b6:610:52::18)
+ by CH2PR12MB4262.namprd12.prod.outlook.com (2603:10b6:610:af::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 05:48:39 +0000
-Received: from TYSPR03MB8627.apcprd03.prod.outlook.com
- ([fe80::cf16:aa54:9bd5:26f]) by TYSPR03MB8627.apcprd03.prod.outlook.com
- ([fe80::cf16:aa54:9bd5:26f%4]) with mapi id 15.20.8699.022; Fri, 9 May 2025
- 05:48:38 +0000
-Message-ID: <e778eaa9-6a41-48fe-a1a4-35aac427f337@amlogic.com>
-Date: Fri, 9 May 2025 13:48:33 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/10] Amlogic C3 ISP support
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kieran.bingham@ideasonboard.com, laurent.pinchart@ideasonboard.com,
- dan.scally@ideasonboard.com, jacopo.mondi@ideasonboard.com,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250427-c3isp-v9-0-e0fe09433d94@amlogic.com>
- <aBzXVdM5GWnpHNvJ@valkosipuli.retiisi.eu>
-Content-Language: en-US
-From: Keke Li <keke.li@amlogic.com>
-In-Reply-To: <aBzXVdM5GWnpHNvJ@valkosipuli.retiisi.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2P153CA0051.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::20)
- To TYSPR03MB8627.apcprd03.prod.outlook.com (2603:1096:405:8a::9)
+ 2025 05:49:28 +0000
+Received: from DS2PEPF00003442.namprd04.prod.outlook.com
+ (2603:10b6:610:52:cafe::d8) by CH2PR04CA0008.outlook.office365.com
+ (2603:10b6:610:52::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.33 via Frontend Transport; Fri,
+ 9 May 2025 05:49:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DS2PEPF00003442.mail.protection.outlook.com (10.167.17.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 05:49:27 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 8 May 2025
+ 22:49:16 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 8 May
+ 2025 22:49:16 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Thu, 8 May
+ 2025 22:49:11 -0700
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: Jiri Pirko <jiri@nvidia.com>, Gal Pressman <gal@nvidia.com>, "Leon
+ Romanovsky" <leonro@nvidia.com>, Donald Hunter <donald.hunter@gmail.com>,
+	"Jiri Pirko" <jiri@resnulli.us>, Jonathan Corbet <corbet@lwn.net>, Saeed
+ Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Tariq Toukan
+	<tariqt@nvidia.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch
+	<mbloch@nvidia.com>, Carolina Jubran <cjubran@nvidia.com>, Cosmin Ratiu
+	<cratiu@nvidia.com>
+Subject: [PATCH net-next V9 0/5] Support rate management on traffic classes in devlink and mlx5
+Date: Fri, 9 May 2025 08:43:04 +0300
+Message-ID: <1746769389-463484-1-git-send-email-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYSPR03MB8627:EE_|JH0PR03MB8637:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0938c073-913d-494b-38ee-08dd8ebd2568
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003442:EE_|CH2PR12MB4262:EE_
+X-MS-Office365-Filtering-Correlation-Id: beef638c-5d1f-4d13-d8d5-08dd8ebd430d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+	BCL:0;ARA:13230040|376014|82310400026|7416014|1800799024|36860700013|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T1pOZCtxaUttZk5XTFRZSGJkRTR4RkR5ZkVqTTdZamp0NEF2bEttMkM3aUNP?=
- =?utf-8?B?emxXL29aYk1qNGVQL2c5UG5yREpLVXpjK1FnOFpoQXhLc1llc1VQenAwb016?=
- =?utf-8?B?TTkvOGE3YkRtVDVHKy9WZzVVcmh5VEhKcnYzaWZpczNVNzUrNGprS2hveUJv?=
- =?utf-8?B?ZGxkeVlFYTJaaTFRT1ZHcVZWM0lndUR0WDFPOTNwTjdWUUNGc0VLaUVrd2hT?=
- =?utf-8?B?azhBNVI0U2pCWmdnQ2pzZUVJNjM0d2x6a3RHQXhianVuMCsvb3ZSMjAzbUlH?=
- =?utf-8?B?SXIwa3dTeVhTbEpiZ0p2QUZYNGtjWmpraUJmMEtMSVpSQ0lSYzVlTDdpTEh0?=
- =?utf-8?B?NXJTVnB4cXJDSXdpSkZpVnQ0S1A5c3hxOU43aUFuQWdlbUJ0RGdrMnZuKy9o?=
- =?utf-8?B?VzFaQU1mZlBHL25WeFNZSktITzNKOU5YQTJaT0lTVjFzdkRHdittd2EwcnY5?=
- =?utf-8?B?SzA0elIyV0VBWVdWcm8yaTJqclljc3hLRUUvc1haNlJzOFZYeS9FTGdRNzJL?=
- =?utf-8?B?dThIOGFtcGZOdTltTHdsalRmT25ZQWExcGdWczNGbGZHWW5mRWZyNXF0aEU2?=
- =?utf-8?B?aVJVbE9RUjNUd1dkSldnR3ZrSUc2SVJNak1RVDBZWnNaYnltdnlZVncxcEZT?=
- =?utf-8?B?UjN4eUlPL05UaXVuVWJhMXp1R0FkbWE3cFJjc1Z0bUIwOWRGZkFZZGZBbHd6?=
- =?utf-8?B?ZlBVaURyam8wWTgwQm9kQXEvRTFjMDV5VnVlbFNzR1EzTlh1UzFkOEs0ejk5?=
- =?utf-8?B?YTZEWFNUclBDQlBMYk9iSkN3S1NpeFV2YUZrUHdwQzNpSjh4WmpuV0cyZU9p?=
- =?utf-8?B?emx2YjN1VjQ4TUNHVWx3bGF2Y3hDaWdKWWlhNC80aVFRV1hiaTREeVhsdUQ0?=
- =?utf-8?B?Uk1QOVZ5d0phN3NaVlpCMllick90d2FlNUNmUUtwMDd3TzlneFJVeFZ0Vkw0?=
- =?utf-8?B?Q0NybVpzN3BwMG5BZVExMWUyOXozYituR2FKQy9UK0FwblhBVExaYjE4aktH?=
- =?utf-8?B?QUdURXpMcnA1TnFKclpGZXZ4RW1BSURNV1cxUXQxaXRweFpHamY5QWxnZnlI?=
- =?utf-8?B?ekh6WVdqZjgrYk96eWM2MnlKMGdOVlgyc1dNNTQrTDRYTEJEMkJ3TG5yRzNT?=
- =?utf-8?B?RTFJbXRSQmUwVXRkWHl0UzZWaXFqOThQajVrOEJ2emtTWVpqUmdRdEVwTjJQ?=
- =?utf-8?B?SXZPNWdOYU5mSG5MK0p2ZE5XeWFjeUEzeTlQc1I5cTZraDdic2p0eWVYamEy?=
- =?utf-8?B?M1RwV2Yxa0trczVRK1hRUlJaclhvekEvaWxxTjE4Q1hHT2VZdmx1TTNyVGZY?=
- =?utf-8?B?S2w1WUR4TkRzdnBjaDQrUytDRTN1YjJRSG1uM0hOZnFXc3BqdHpLNkh5U244?=
- =?utf-8?B?SW5Pby9vMEVzWW10OHBJYyszWTY2ZzNNc0JpQTM3d09obXZ4cFRJdVAyTHJ5?=
- =?utf-8?B?MEtsZkszOG1JL1I0aWVaZUVxdjNTak5qZCsyWEhYRzZGUmtYbGUrR1ZzRmYx?=
- =?utf-8?B?WVhwaE5vODVXaHducHNOa2RVWVY1SVorTnl5aGFNWVJ0T1pxNE43QkMxdmdC?=
- =?utf-8?B?VUJ0TnE3S0kyZ3FMQ1hoa3pkQnBzQ2JWZDZUVGNsOHJEa05qWnp5MHVya05C?=
- =?utf-8?B?bXkrUTcrR3JQZW8yaGNsajl1UVMzLzZhZFVSNTZaTXFzUDkvc2dBRXdZZm1u?=
- =?utf-8?B?NUhKSzNyRGlmVG9UYW5INzY1OWo5ZkV1Y21CUFAyZkdPOEhmbENHalo5bHlz?=
- =?utf-8?B?eWR2YjNmdWsrRXlZU0s3cVNxdkFBMDY3VVc3NVpoUkV1TEV1bTdSTGdRYm9B?=
- =?utf-8?B?V0xUSmtLNEJkWEY3T21jVElUUXFBVXBEaENlTEpBYnM0NVN4QlU4dXRwTFFK?=
- =?utf-8?B?czhBR0xIdVJNcXFkbXZJTTM3eGhYN1dyYm9MWmhkeGFwamc9PQ==?=
+	=?utf-8?B?eDVjaG52RVd3UDFocW92c0tpOXFyL0dKcVd2cTBmcWhCbXRja0YreVRFeXE1?=
+ =?utf-8?B?bHU5bFhSQ252N2FZRGFQKzRDY1pqNXBkcFBWbXIrUXNvVlgrVG90emhBQ2dn?=
+ =?utf-8?B?TnhZOXpnaSsvUXVXY1VkekJha0FReXZ5N1RDd2lZNjQzUmF3eDdzQmNucHBr?=
+ =?utf-8?B?U2F5S1c2SEtWUSs0ZTNoV3p3YTUrVE5qZzNtdTdoWjBieGZ0QzF4U2xWcWNl?=
+ =?utf-8?B?SW9LbkFOSmlaWGc2Y3hCaTBQQTVJNEU4eTh6d3l4THBWcmVsY0dKM0I4blJu?=
+ =?utf-8?B?RUF1aDZsN1F6ZXJZMjlPemExcnY5YVRmdFBVZUMwTDNNRjlvMExHd2t4d01N?=
+ =?utf-8?B?OVVXVGNPTkY2ZHIvdEtCamdvakpXN0FJNGlrZEFXa3JDVUlOY2RlMkZUb1FH?=
+ =?utf-8?B?RlM0Y0NEbmxTZlFiaCt6NGN1VUI3bExmWWVjV0R2TW83Vnh0dlJYakh5UmVi?=
+ =?utf-8?B?VjByOG9YVHNlaUV3bWI5UEFUSzhLeCt3bHBVb2NVeUFOV3Fzai9aRXJ1WTB1?=
+ =?utf-8?B?T2FtdG5UMk5adFlpVVRCajlLalZWQkdTQ0QvTVdrdm1OUmREZ2ZjVGtmdFNw?=
+ =?utf-8?B?YUJaYjJJS3p6Zm5Oam1FVEdManFuRitHZG1QNG4yWjJ4c2oyYjh3K0E5UjRX?=
+ =?utf-8?B?c2dMYTduYkU5dHpGS2tlMnJkUzl3M0hCSlVVZXRUbTRPb1g1TXZjbjc2elMy?=
+ =?utf-8?B?UDFIUHE1OEdsT1dTRmR6NTdDVXZ3NVNUSUw3ampWQXp6bTJ4Y2pUVlFQZFRJ?=
+ =?utf-8?B?emdTUmFrb1NmdzZNMTR6TC9MU2tiK1lkcXBhOWlScEViV0pVdzNlSGtSK0w0?=
+ =?utf-8?B?bGpFMDlsZDdwRzRSTGVGMUd6K3BGYkVuM2ZTVEpIeVVjdGVpVUphNnpHcTV1?=
+ =?utf-8?B?TnVWcUVNM2IxYnM2OE5kQVFxelgrYW5zLzMxa1c1T0ZiQkpxU0tEZGRHWG1v?=
+ =?utf-8?B?a0FKUnJoNlpyNG9Qa0t4MktudHppb0swTElOcXhiRzZhSW0vZUtHRkI1RGJM?=
+ =?utf-8?B?SXJyL1dLem91YVBUc2Zpdmxvb25PbXZFR0N0RVZzN01WMXlJeXFZVE5nWDFm?=
+ =?utf-8?B?S25hUWk0U2U5K2hleVRjUzdZWmNtZENqUVVZUmNFQzNYR01MN3hSLzk2bDBh?=
+ =?utf-8?B?QkhudEF6UkhWWU5jTGZvcmFrQTlPUkNZdWx4NXVVRUNjemR1SitPSGNoK3pi?=
+ =?utf-8?B?bDNCUExVb21Na08vRFk5OWxwNWNDNndGQVk3Y3B1cEVLQ1ZmSTdZeUJ2LzZi?=
+ =?utf-8?B?YTRsY2ZNcnZCV1JZeGJWZUREVUlhaU1ydnJhcmxBdVU5cWNuWnh5Y0hNR2Zn?=
+ =?utf-8?B?ZnBTLys1Tk04KzJ4dzdQWHV6ZEF0WGw0SnV5cmF6cU85bmlPeEsxdFA5SWt4?=
+ =?utf-8?B?TXRFS2VYMy90cHZNSEZ6N2V5ZFI4aWhoYTlZdm5SRGQ3b2FuQ2ljRDBMbTdF?=
+ =?utf-8?B?YytmMWU4K3lmcWU3c3FTbUozT1N1dGtPV1hjaERSTDFnY2dzaWdERVBjMCtr?=
+ =?utf-8?B?UHFUL29SdGJGSzRIUVl1eDNseE02WmhRRWV6dEpYOHRvaDZPSGpxYnpsZGs3?=
+ =?utf-8?B?NmZaOHVrYXdsNHhqc2NpYXl2YUw2TGRXU3FJWXpSdnRwRURMK25WN3JkNElw?=
+ =?utf-8?B?N29oRktHZGZmSFFnaDRlZmZ6dzFsOFQ5cFdNRlJzVTR3RVJocXhDcDJpem5Z?=
+ =?utf-8?B?ai9ReGpDakEzaXROVnVkdkcxcWY1SzVUQ1BuTXZJNk9LdHltbWMyamN3M2ho?=
+ =?utf-8?B?Rk92d0VpVUYvYkZvN2VERGRxcit4Z1NGREU3S2JhMGlDWVN6UVAzQmhIWlBr?=
+ =?utf-8?B?Um1Ueis4NTZxblVnZkszMjJ2ZE9yc3BWYVBBQUE1cVcrYysrOW9saTRUNnRj?=
+ =?utf-8?B?azFwUkszbGFTZnlPbDFid3BWY3E5a2UyMmxKMkRBYVVCNVlPcWpIL3NKYzd3?=
+ =?utf-8?B?RVkxQitNMTdGSElGMzBSTVpTRE9SV3BsemFSdDhrbHprbkZsR3V0WS9CVVVz?=
+ =?utf-8?B?RWppcTk4dkNwZFdlT2NXSEVwSTlwVkxLMVlXZVdoMjZod280VFFXZHhReWNl?=
+ =?utf-8?B?ekFKVDRRREJyUWlPZGdkVUx1eXozYml5VXZ4QT09?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYSPR03MB8627.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N1ZQck04K2x3emN3MzNHVHZuT28xQVdSMHo0TDE2RG9YOHN3Z0RlSlpqQ2cx?=
- =?utf-8?B?Q0NZSDkwcHVzYWtZK2owek5ERXFQcVFuS3RNQjBVN2VGWUYydkI5b2phU2xO?=
- =?utf-8?B?ajFFT0N0Mmt2YlVvY1llMzljT01zeGpsdUhUMXZ3OWFTbWcwY1BSZVBxaXRP?=
- =?utf-8?B?ZFlDeEVtcVB2TkVIdzVQQ0JQK2NkMEdDUnRTWWZoTEtLZlptUWNsN2FqUnkw?=
- =?utf-8?B?dEZMTnYyVmFiNTRiUkdUZE4wcXk0NTFkUEpKU1FBSDYwNVpXM0l6ZEV1Z3pn?=
- =?utf-8?B?L08vVzlweDJHcW9WQ0tHdzBLTGtqU3F5eUZPdnBpN2c0dVRoTDgxbU5UTita?=
- =?utf-8?B?R002TlNCQ054Y2VTVUltNU9tL0QzN1BlVyszSWszM3FDVW1LbnNjM3FJSFYz?=
- =?utf-8?B?TnlNSHA5SndMMm9ETlZsM3BmalRYSjBTSy8rQ3VTSWdFZVBkYnAzZTNKekFV?=
- =?utf-8?B?ZTkvVmpPMFFMNmMrZ2RWRzh4dEVCMTBHUFRVRUpVV3VwL1FlSmlZeGYzMVhz?=
- =?utf-8?B?eXJCdllCVlM2aHM1WCtYSmhvSFFvMzQ1MXRwaW8vT1g0ejFhTmdPZTVwbjJE?=
- =?utf-8?B?YUI4Sm1PK3BlRnRoc1hhYlAyQ01IaGMwbFkyMUtaVHBuTnJuSGJlaUY5dnRZ?=
- =?utf-8?B?bm4zVnN0Q3dNY3JnS0lyb3BoaVIyOFlZdU4zR1Z5Zjl3OGE0cDBML0Q5UGpT?=
- =?utf-8?B?UmwzWDVJSS94M21PTnlUeTMyWWRxYUZlRS9NNlFLL3NHVmdYVVQxZGxaNHBI?=
- =?utf-8?B?WnNjZUR0bUF6cVZnVTRDTUJSTTlDb0I4T04rcm9oSHJIOGY0WlNLZXd3ejFU?=
- =?utf-8?B?YldzYUNxT2JhZEJxTWdVSTR5eHhLUDlLWlpwRmFzNFQ5aTJLZkFvUXdpTnEz?=
- =?utf-8?B?MVh5WUZwU0s0aWVBcEh2L1QyNkVETVRqaEQ5YWpGUmZuT0hSYndmVFJSSTVE?=
- =?utf-8?B?SXlqSExjMSszU3VxajBWQ3JXU0VUdkJPUStselJpTkxHRmhORUx5aGFkMHdO?=
- =?utf-8?B?YlNzL0wrbVBzb1ZNTWVKM1lXaHdpcVpRTjkwLys1NVg0YWI2Ym1wZHJaYkRR?=
- =?utf-8?B?dkJCRWhSZlZLR01vbW9ZT3VkWjdDWVNxMkN3Rlh4cmpEb2xZV0xWeUNscTRO?=
- =?utf-8?B?TG4yRTVaMU5JYWtyQU9RNjd2WTJiRWpSR0dWNkdIV0h3K3hERzA4Y202bEZI?=
- =?utf-8?B?M2U1UWVMa3NSbkM0QlJVbU9rVXBCNVhXeGx4bmhPUDdzTnJFcnZKalg0ZUox?=
- =?utf-8?B?NC9qdWFPNHFFOVRoZ1Vxbk41WENJNnd2b0lmZVlhSk5mMU5nMFZZZ2s0RjNP?=
- =?utf-8?B?NGh2SXVxV09qMGtXbm94RWJVNDlpUmJUcVA1UEZZenlsTTJhYXNZdWZPQTV0?=
- =?utf-8?B?elJqakdjaGh0dk9ncXdxVElTSkExRDNwazBOQnViUEIvSjE5OVd6azNsZTV1?=
- =?utf-8?B?SkZsTHRObWpsaWpyQ1ltOVlCeHdOWE5wbjdieVg4eFVXS1FWUVNBeUdGU2ZR?=
- =?utf-8?B?WE5HbHNidUs3ZmFua20vN09SRjg5RXBZdjgvc0xycHJWb212TmVYUE42cXJR?=
- =?utf-8?B?RS9mQVV1aXF4S0ZubmpnTDNoQU9EenJnM1I2cDVVb0NjazVQek03dHlqV3Qv?=
- =?utf-8?B?VkxGbytmNFFIb0dVajc4TjMvYVdnMUxSVzhjMHltS1crWmRFajFJSW5SeVBN?=
- =?utf-8?B?TjRSZXlTb0Y5NmRiM1FSSWZCVXpmL095blpsbjNGdkRNa3JsK3RPNHZPWTUx?=
- =?utf-8?B?NHdBQ2pjUmNvdDRPVUdSbzVvL2F2U3pneldFTExaUEM5ekpvVTQ5UnIxTnN4?=
- =?utf-8?B?ZnpTWEtjbEF6a2FKWUFFeE5RSTMzZndJSGlWNzUzcjY4SnRwcGR4UFZwcTI0?=
- =?utf-8?B?R0ZOMTBZNitWRXYzS1lKT0lFcWJyeEpvekxBM2F6dndzYmN3dXY1VkdmVlV1?=
- =?utf-8?B?a1RGaDZXRkFnV2hSRzNBeVJmTm1NWHFuWXdWd1BpVGxnaUtGYTU3bXBWaUVB?=
- =?utf-8?B?akJkNENZVzJmSnJYOWdVbmV6WUFpeXZjeVBQa0psSGpDMDBNc0hSb25Kd0VD?=
- =?utf-8?B?YlllaW9SQWUwTUdJZXMwVkNMa01MeEFjZS91QURoZ2hKS3VpbmNzT0JRODYx?=
- =?utf-8?Q?cyuR+Tq51WXL9HerbK17HENhR?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0938c073-913d-494b-38ee-08dd8ebd2568
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR03MB8627.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 05:48:38.6272
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(1800799024)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 05:49:27.9964
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WXPucztbs07HzoiQ13Yq47EPfc9xz852tIjTQ+b+RI6MQAvZGTjlhJAfzaAi9k+8eL275nQpecBnhT1x/NWuFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB8637
+X-MS-Exchange-CrossTenant-Network-Message-Id: beef638c-5d1f-4d13-d8d5-08dd8ebd430d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003442.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4262
 
-Hi Sakari
+Hi,
 
-Thanks for your reply.
+This patch series by Carolina is V9 of the feature that adds rate
+management support on traffic classes in devlink and mlx5, see full
+description by Carolina below [0].
 
-On 2025/5/9 00:09, Sakari Ailus wrote:
-> [You don't often get email from sakari.ailus@iki.fi. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->
-> [ EXTERNAL EMAIL ]
->
-> Hi Keke,
->
-> On Sun, Apr 27, 2025 at 02:27:08PM +0800, Keke Li via B4 Relay wrote:
->> The Amlogic C3 platform integrates an ISP capable of supporting
->> multi-camera, multi-exposure high dynamic range (HDR) imaging with up to
->> 14-bit raw RGB Bayer data.
->>
->> Capturing images on the C3 involves operating the CSI2 receiver and PHY,
->> an adapter layer that integrates the inline processing from the PHY to
->> the ISP, and the ISP driver itself.
->>
->> This implementation consists of several distinct module drivers and
->> is expected to support different platforms in the future.
-> Jacopo has already sent a PR on this and none of my comments address grave
-> issues. Please post further patches on top instead of changing this set.
+V9:
+- Define DEVLINK_RATE_TCS_MAX as 8 in uapi/linux/devlink.h.
+- Replace IEEE_8021QAZ_MAX_TCS with DEVLINK_RATE_TCS_MAX throughout
+  the code.
+- Update devlink-rate-tc-index-max spec to reference the correct UAPI
+  header.
 
-[02/10] and [04/10]:
+V8:
+- Extend the cover letter.
+- Limit line width to 80 characters in mlx5 changes instead of 100.
+- Increase the scheduling node levels to support TC arbitration.
+- Ensure parent nodes are set correctly in all code paths that extend
+  the hierarchy depth for TC arbitration.
+- Extended the cover letter with the ongoing discussion on devlink-rate
+  and net-shapers.
+- Extended the cover letter with the Netdev talk link on this series.
 
-We will address these issues in further patches based on your review 
-feedback.
+Regards,
+Tariq
 
-[08/10]:
 
-We will migrate to the common framework once it becomes available.
+[0]
+This patch series extends the devlink-rate API to support traffic class
+(TC) bandwidth management, enabling more granular control over traffic
+shaping and rate limiting across multiple TCs. The API now allows users
+to specify bandwidth proportions for different traffic classes in a
+single command. This is particularly useful for managing Enhanced
+Transmission Selection (ETS) for groups of Virtual Functions (VFs),
+allowing precise bandwidth allocation across traffic classes.
 
-> --
-> Regards,
->
-> Sakari Ailus
+Additionally the series refines the QoS handling in net/mlx5 to support
+TC arbitration and bandwidth management on vports and rate nodes.
+
+Discussions on traffic class shaping in net-shapers began in V5 [1],
+where we discussed with maintainers whether net-shapers should support
+traffic classes and how this could be implemented.
+
+Later, after further conversations with Paolo Abeni and Simon Horman,
+Cosmin provided an update [2], confirming that net-shapers' tree-based
+hierarchy aligns well with traffic classes when treated as distinct
+subsets of netdev queues. Since mlx5 enforces a 1:1 mapping between TX
+queues and traffic classes, this approach seems feasible, though some
+open questions remain regarding queue reconfiguration and certain mlx5
+scheduling behaviors.
+
+Building on that discussion, Cosmin has now shared a concrete
+implementation plan on the netdev mailing list [3]. The plan, developed
+in collaboration with Paolo and Simon, outlines how net-shapers can be
+extended to support the same use cases currently covered by
+devlink-rate, with the eventual goal of aligning both and simplifying
+the shaping infrastructure in the kernel.
+
+This work was presented at Netdev 0x19 in Zagreb [4].
+There we presented how TC scheduling is enforced in mlx5 hardware,
+which led to discussions on the mailing list.
+
+A summary of how things work:
+
+Classification means labeling a packet with a traffic class based on the
+packet's DSCP or VLAN PCP field, then treating packets with different
+traffic classes differently during transmit processing.
+
+In a virtualized setup, VFs are untrusted and do not control
+classification or shaping.  Classification is done by the hardware using
+a prio-to-TC mapping set by the hypervisor. VFs only select which send
+queue to use and are expected to respect the classification logic by
+sending each traffic class on its dedicated queue. As stated in the
+net-shapers plan [3], each transmit queue should carry only a single
+traffic class. Mixing classes in a single queue can lead to HOL
+blocking.
+
+In the mlx5 implementation, if the queue used does not match the
+classified traffic class, the hardware moves the queue to the correct TC
+scheduler. This movement is not a reclassification; it’s a necessary
+enforcement step to ensure traffic class isolation is maintained.
+
+Extend devlink-rate API to support rate management on TCs:
+- devlink: Extend the devlink rate API to support traffic class
+  bandwidth management
+
+Introduce a no-op implementation:
+- net/mlx5: Add no-op implementation for setting tc-bw on rate objects
+
+Add support for enabling and disabling TC QoS on vports and nodes:
+- net/mlx5: Add support for setting tc-bw on nodes
+- net/mlx5: Add traffic class scheduling support for vport QoS
+
+Support for setting tc-bw on rate objects:
+- net/mlx5: Manage TC arbiter nodes and implement full support for
+  tc-bw
+
+[1]
+https://lore.kernel.org/netdev/20241204220931.254964-1-tariqt@nvidia.com/
+[2]
+https://lore.kernel.org/netdev/67df1a562614b553dcab043f347a0d7c5393ff83.camel@nvidia.com/
+[3]
+https://lore.kernel.org/netdev/d9831d0c940a7b77419abe7c7330e822bbfd1cfb.camel@nvidia.com/T/
+[4]
+https://netdevconf.info/0x19/sessions/talk/optimizing-bandwidth-allocation-with-ets-and-traffic-classes.html
+
+Carolina Jubran (5):
+  devlink: Extend devlink rate API with traffic classes bandwidth
+    management
+  net/mlx5: Add no-op implementation for setting tc-bw on rate objects
+  net/mlx5: Add support for setting tc-bw on nodes
+  net/mlx5: Add traffic class scheduling support for vport QoS
+  net/mlx5: Manage TC arbiter nodes and implement full support for tc-bw
+
+ Documentation/netlink/specs/devlink.yaml      |   36 +-
+ .../networking/devlink/devlink-port.rst       |    7 +
+ .../net/ethernet/mellanox/mlx5/core/devlink.c |    2 +
+ .../net/ethernet/mellanox/mlx5/core/esw/qos.c | 1007 ++++++++++++++++-
+ .../net/ethernet/mellanox/mlx5/core/esw/qos.h |    8 +
+ .../net/ethernet/mellanox/mlx5/core/eswitch.h |   14 +-
+ include/net/devlink.h                         |    6 +
+ include/uapi/linux/devlink.h                  |    7 +
+ net/devlink/netlink_gen.c                     |   15 +-
+ net/devlink/netlink_gen.h                     |    1 +
+ net/devlink/rate.c                            |  127 +++
+ 11 files changed, 1193 insertions(+), 37 deletions(-)
+
+
+base-commit: a9ce2ce1800e04267e6d99016ed0fe132d6049a9
+-- 
+2.31.1
+
