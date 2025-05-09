@@ -1,408 +1,280 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA24D22D796
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400DA22D4CE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746804640; cv=none; b=LGEu3IIwkPfOLqgELfvAxD9UYFvm/Gu6Am6cXWKGLGldpXI9WZR1e05bp2cHfhnFFvL+xv379qwZXrtHkDKR+s9FHY5qVIUV/d/KLC0CkaORqZhPEBELCpIYHYIXcUZ2+I2QwLHVrM2PO694BCD3pfNkoJrp+NU/VGiBIz7J52Y=
+	t=1746804690; cv=none; b=hGMAGrKGa2toW3EJePMxCRYJgQnz0SMiFUUM7T7vs56lmS9BtgTnYCZp8otytOfo29TdkBrhaOsHbTT3OfrFnqT9O8izcgKrS0T85AbcO55smwptV2lNjh7CgtPO7Brovi+DBIn65TID1+eLAp8AvA8L3GVM88YA4bVz16Luj/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746804640; c=relaxed/simple;
-	bh=lfDM9r+JA2hEI0mY/gXRms9eYef9aln2qjiVgIvyzXw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MjL48XWk7XxbZumCzHWJWCBiRRA7BSF0jNggsQepYFln8wcSmqziw/Q+WInsJ/gjcwpS+I02yuz2UQblnc3VR49iNVRzag6sHUrPJnFERmWz2eQMY+B450c5i9uuVdkWlWrzwIM1/hT07uxJMr7FTpgtpYpTJzl4R9169uvAUJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UV77rLRv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746804690; c=relaxed/simple;
+	bh=LeyoQy19KwX5w/3s+KN+FjNq3xzGKW8N9LAzi6r0Kzg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=be2dOYINUtAmOd81rKUXBfx069u+Apdb8vabNVNXzHZTM/DvwUsywr3XtSedO9+weWJi3XytylEJtJIuOd8r2j/GHeoTBs9pw3nCpjcNPFh5YD7g2EqpQp92Gjrg0UCHDMM0C1+Q1omOpIg4btmGehp71Id3yARTz6V9AHXNktE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h6pQFHQS; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UV77rLRv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746804637;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/QETQBLLgywJiVkdBX35qjwYFT1cFvifg3en6u8zZzc=;
-	b=UV77rLRvqAlInWsyrr0e9uOGrFUBeN8K9PhKrkTSpgTDUXUxSy5i7LKCDlMYA+J9PWzVxh
-	Vo4o/pGJA7jAP9x+Bdw7Zb8AYq/E9yeJj6o5GI/1D6g9CaocHrdWOrvjAEe9BNzro2uCfr
-	be3/P2YvkVYi3vyDrg/zA5RcZaxPX5Q=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-378-K7h0lIX_OU2JbzJmLcy38A-1; Fri, 09 May 2025 11:30:36 -0400
-X-MC-Unique: K7h0lIX_OU2JbzJmLcy38A-1
-X-Mimecast-MFC-AGG-ID: K7h0lIX_OU2JbzJmLcy38A_1746804635
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d733063cdso17765405e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:30:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h6pQFHQS"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0b6aa08e5so2008554f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746804686; x=1747409486; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qiDLZJcRrTEljd1YBJA3CvaEsLQWz8K9h4SKN5qriDo=;
+        b=h6pQFHQS5ybSRd5uK/55ptLxMpMb0fUNCkWZbBmru4euBdLFHdzINhNtSQolLdbGrQ
+         llkBE1Oeh4ge/rkJTWKJu9t78xR81TSC0WM4oGgZtrkvtrWZbV0nWfoxQvCqBtavi8TY
+         7jXddhra7jp9VM3GASAt0HXcywypUgUJoMJ6Ld31xptmEz5cbYHOO6lVMGhJR552qsX8
+         nP1VNSenDRrOb3hV7xdOkImqoi9hDskVm8gwqx6JdfT50XWhoMYCYN5Srg/xVdTVqY+R
+         JX8eIWZIKBFGaFbCB6Bnk38bsbAYY1mBb7Hx6tF2Drhlzl55L8tR9l+VTRp41xYgD9ni
+         44zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746804635; x=1747409435;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746804686; x=1747409486;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/QETQBLLgywJiVkdBX35qjwYFT1cFvifg3en6u8zZzc=;
-        b=Z39XuAqJLQRuOG3VinoroX8x6c3MnTN3LH+ucsGjLboy7YqwK1bZcxWWe0JZzMpLs4
-         Vdujs6lMz+ZdQzxh7RZTyoK14UIzCQJLVqfVRbJV+U3qKtHDsUgbQkKEcmLLcVW76d1C
-         kRJ4tfXpnkeqXY4V4gH0SklPyPZmntumPotVbzbdUljDMtjZMablIAHCUA9VbCJPvAEX
-         H+0L7ANxbZBDVNB7r14oCE2UMDJKxqifRc/oDlQzN/sGKNR5uKcPGo0u9IqhjU96cJCf
-         fquY3511hFSWIP70LpeOXuWusDyzHqmhVQSoKUfe4GDeh8EFThZIE3tO8pp5OnvfSn+w
-         RHhA==
-X-Gm-Message-State: AOJu0YzFZBuHevpGYIGsikOQDRcWhq6XPwTuurjiTR2NHseVqPJDOb2c
-	PPknPRB1EdzwexOje1bQhltJeIC3o5r1Uxb09tPxKMZc67d3okWJRI9hbF1dZS0CjrDx/7zJ70I
-	zBLxgAh77ABuJAr03dTG0ECLxUg89IplzVj4nXXFZP+g05OavAcNgBipeMQBnPQCsFeU52zRewN
-	RT+jxz3wT4/ocWWBRms0pRwbsjCAeDjGUQV3M3j+AzWA==
-X-Gm-Gg: ASbGncswxLXQliEcNNCZ0wvIpF/FHr+ArZiwtP+mXPLR3KvR/e2RN+yVwzWe/V2Z9Og
-	VXbNjfPuZUdPbwMnF/E7l20t25hTGYgvdtExjwzFZHK3a8cHNs+2mTFVY0nCTTzuNvpU3Tlixd0
-	3l3+oomde5Jk1vpPfMD5DQR32kOF9G0d9xaUl8VDmFmTMpcG84hy6iUhTixvZhqD78GSuP0Jcwe
-	4ZKECYu0iNzxL7yfyyaaAI/VoFkqX3NPGGBn7FREiVFkWA98Yu+rr91YrRMb9fuoOA/hqoWsu/t
-	f4j7Hv99h4l53iLJYElqeb+b4KAY5ZrwTaJnLZTAnNtnXYJ5j5qSZm5qSjOqsgpf+c+7uB6C
-X-Received: by 2002:a05:600c:6095:b0:43b:c0fa:f9cd with SMTP id 5b1f17b1804b1-442d6d0a9ebmr34901915e9.7.1746804635113;
-        Fri, 09 May 2025 08:30:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE+BxOB6NY2iOaO7FiGmjEOw9RMH7buuCJWOsw4fLTunHCh6Aav62kTXNQTqClatZwokO3a+Q==
-X-Received: by 2002:a05:600c:6095:b0:43b:c0fa:f9cd with SMTP id 5b1f17b1804b1-442d6d0a9ebmr34901495e9.7.1746804634577;
-        Fri, 09 May 2025 08:30:34 -0700 (PDT)
-Received: from localhost (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442d67d5c7bsm33791995e9.4.2025.05.09.08.30.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 08:30:34 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Xu <peterx@redhat.com>,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2] selftests/mm: add simple VM_PFNMAP tests based on mmap'ing /dev/mem
-Date: Fri,  9 May 2025 17:30:32 +0200
-Message-ID: <20250509153033.952746-1-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        bh=qiDLZJcRrTEljd1YBJA3CvaEsLQWz8K9h4SKN5qriDo=;
+        b=ZUqoxez13CZq4Bl79NieMCD2mVXlC/uWb641o2ZDRzo3ymovdwkXVAUwRV3BUOdtoy
+         kLlucgJn/u1bB1cofn4Y1XNMBFikQOpM9tWZcOFU2Ef16+M4Fa5H4L93PmuAkMfCsTpu
+         S+nClfbYbC2Ro2iRqNADIHB9Ifl7PpGo3+BHKYj+BL+JSRTHCAB1qw0Ry+hvr9KzfcXX
+         v10jQ5nH+hy1CJxfLQ46Js+U/CfQ4eZEgLVN+NkiJNdvoD8BVVmx85DaCdcvlu2BbcqK
+         EG8g7krvUKJAEWDE/2Cs5E3g2XNLp8nKXklDgmp8xeVqGfS+B9R8mXUh6XJwMTk1VPGc
+         NRaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4c06Pf0lHCP6yiGPAtvwVuKXM+LZ9JIDSkPxinYWJU67Tob2h1mEVq96mE7bk3RQ3JtTvLq0drKoF9pI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI3QnXvvQOAY3G73R40yLTE2pq4iZIUKmcFgRMZWnkOPP/JERz
+	seFLWJbZw7TTpL5R0HX+dEhw135qOtvP8zbK91QCWTOjvqjzM99sC1Mj2gvWumoLkvpNzcWt199
+	0
+X-Gm-Gg: ASbGncstwM+D5VFbKOCnvb/AJPL/IuuHCBAjOx+CT+mN3pkvkojvkTfwoqmaE45WazH
+	tkpeVzaKhwUNxOelLDqKY01yaAZcQL0zo0Hej/Gzn0WDSVeepY3x1n141ubqww4Hte+mLr92GsZ
+	anenrhUHCDmf6KX6euVV5OL2ogD7HZ3Id7Ag+vCiuhheHHb4L+R0TlnzDnAwfSNl/IJR1+JGQ11
+	GFxMBxsckjZPNVHnG7krtoFUMophyWAY+0lwL7E9xK+m/5pzEGI+7q+HVLl4+R6mdnckkNadr+9
+	PoCCniLw+SMz3Hm5LCvmfxeUsVT49mybOVZbetHwBTNZVQsnlRuuKHDPSMA9gg==
+X-Google-Smtp-Source: AGHT+IFxQZtYDT/4cdnfbZ9+1rwcn+5S/0kQXsA4SYnoPsnyWt96uhiOGnWucMPnfs7HSJj4yEPN+A==
+X-Received: by 2002:a05:6000:2011:b0:3a1:f653:26a with SMTP id ffacd0b85a97d-3a1f6530370mr3495793f8f.16.1746804686390;
+        Fri, 09 May 2025 08:31:26 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddd53sm3576923f8f.1.2025.05.09.08.31.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 08:31:25 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Fri, 09 May 2025 17:31:24 +0200
+Subject: [PATCH v4] arm64: dts: qcom: sm8550: add iris DT node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-topic-sm8x50-upstream-iris-8550-dt-v4-1-22ced9179da3@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAMwfHmgC/5XNTQ6CMBQE4KuYrq0prz8UV97DuGhpgZcIJS0Sj
+ OHuVlYaN5pZzSy+eZDkI/pEjrsHiX7GhGHIRex3pO7M0HqKLncCDCQTrKRTGLGmqdeLZPQ2pil
+ 601OMmKiWeXITBS2UFRX3SgLJ0Bh9g8t2cr7k3mGaQrxvn3PxWv/i54LmNKWxnGneiOp0xcHEc
+ AixJS9/hjez0D+ZkM0KCq24MrV17svkbyaIn0y+mY2yqgLrJHyY67o+AVp7RKl9AQAA
+X-Change-ID: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5329;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=J3kSbuBtI0TRZiQNDbpRyHUO5yIvq0iEmCWmnEFR3ho=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoHh/N08AjjlvyG+fQlqXd6RrGPRD4sV0n7SFha02x
+ cShkXLmJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaB4fzQAKCRB33NvayMhJ0R5uD/
+ 9AKImk26Np00v/Hj4kNGGDgJ0tC9Aes13L0EWchaI5kQao7FZO/BNCIcOAqE5FnvHbLkudLbWp4v8V
+ 5T4Q8L31J74N06OmvefNYnDN9b+8wptAT91nY3+PQaMsth3lC+i4qdRwESb8Rs7L2oNjEmMLeAS8Nq
+ PFcG1psUEcUJ5it1fsizJZZkaQ7EXO2XiYVOUirFl5c8itnd1wHiiIga0so/qhPH9VpOnijOoi8Pzc
+ Wk7K2sMq2CkIWN6Y9ipHGKXyeVczPFhGve3GggIc0+9m9p6ae8TvNGv2ikyy/HXChYKd+3okQ76Y8F
+ paoMVybrJTNlk1R0kyFhL8sQeV0XSf1ZWn4k0o+mR4LCUj0cJwxHvv31ssMTuIuTWYHVvJmbnI3H51
+ UO8cHNuYhv0R2JV3fuI1PVCF3X99FKhFsTUDaY+WlUcUWl2ua/EsAXUfUfcMzACeVY4Z3df9Spo5K6
+ 3RkLWztWNg9NeossBRmpQNf7/20q8k1agGkrKNvcgBG49u9mQpcdhqqZ5EnOjjGCCSBlW+uxAC1LYI
+ KDfoNeMW+mk1ptU0xkcFY/DvKe8FLnFtoLefEQm+qUD2G3NGJ1iJ0XB4iPMo2Fq7tBUaUdVA27h/j0
+ 7pwiHkd5En14uVe1eaRYoxnIvtGp19XvITsqVeh79Opw1gW1/ACKcCRCektA==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Let's test some basic functionality using /dev/mem. These tests will
-implicitly cover some PAT (Page Attribute Handling) handling on x86.
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
 
-These tests will only run when /dev/mem access to the first two pages
-in physical address space is possible and allowed; otherwise, the tests
-are skipped.
+Add DT entries for the sm8550 iris decoder.
 
-On current x86-64 with PAT inside a VM, all tests pass:
+Since the firmware is required to be signed, only enable
+on Qualcomm development boards where the firmware is
+publicly distributed.
 
-	TAP version 13
-	1..6
-	# Starting 6 tests from 1 test cases.
-	#  RUN           pfnmap.madvise_disallowed ...
-	#            OK  pfnmap.madvise_disallowed
-	ok 1 pfnmap.madvise_disallowed
-	#  RUN           pfnmap.munmap_split ...
-	#            OK  pfnmap.munmap_split
-	ok 2 pfnmap.munmap_split
-	#  RUN           pfnmap.mremap_fixed ...
-	#            OK  pfnmap.mremap_fixed
-	ok 3 pfnmap.mremap_fixed
-	#  RUN           pfnmap.mremap_shrink ...
-	#            OK  pfnmap.mremap_shrink
-	ok 4 pfnmap.mremap_shrink
-	#  RUN           pfnmap.mremap_expand ...
-	#            OK  pfnmap.mremap_expand
-	ok 5 pfnmap.mremap_expand
-	#  RUN           pfnmap.fork ...
-	#            OK  pfnmap.fork
-	ok 6 pfnmap.fork
-	# PASSED: 6 / 6 tests passed.
-	# Totals: pass:6 fail:0 xfail:0 xpass:0 skip:0 error:0
-
-However, we are able to trigger:
-
-[   27.888251] x86/PAT: pfnmap:1790 freeing invalid memtype [mem 0x00000000-0x00000fff]
-
-There are probably more things worth testing in the future, such as
-MAP_PRIVATE handling. But this set of tests is sufficient to cover most of
-the things we will rework regarding PAT handling.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Dev Jain <dev.jain@arm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
+Changes in v4:
+- Make list more pretty
+- Make smmu mask more pretty
+- Fix required-opps
+- Remove comment
+- Link to v3: https://lore.kernel.org/r/20250424-topic-sm8x50-upstream-iris-8550-dt-v3-1-92f6b692bd52@linaro.org
 
-Hopefully I didn't miss any review feedback.
+Changes in v3:
+- remove useless firmware-name
+- Link to v2: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8550-dt-v2-1-9218636acbdd@linaro.org
 
-v1 -> v2:
-* Rewrite using kselftest_harness, which simplifies a lot of things
-* Add to .gitignore and run_vmtests.sh
-* Register signal handler on demand
-* Use volatile trick to force a read (not factoring out FORCE_READ just yet)
-* Drop mprotect() test case
-* Add some more comments why we test certain things
-* Use NULL for mmap() first parameter instead of 0
-* Smaller fixes
-
+Changes in v2:
+- Only enable on qcom dev boards
+- Link to v1: https://lore.kernel.org/r/20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org
 ---
- tools/testing/selftests/mm/.gitignore     |   1 +
- tools/testing/selftests/mm/Makefile       |   1 +
- tools/testing/selftests/mm/pfnmap.c       | 196 ++++++++++++++++++++++
- tools/testing/selftests/mm/run_vmtests.sh |   4 +
- 4 files changed, 202 insertions(+)
- create mode 100644 tools/testing/selftests/mm/pfnmap.c
+ arch/arm64/boot/dts/qcom/sm8550-hdk.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8550-qrd.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi    | 81 +++++++++++++++++++++++++++++++++
+ 4 files changed, 93 insertions(+)
 
-diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-index 91db34941a143..824266982aa36 100644
---- a/tools/testing/selftests/mm/.gitignore
-+++ b/tools/testing/selftests/mm/.gitignore
-@@ -20,6 +20,7 @@ mremap_test
- on-fault-limit
- transhuge-stress
- pagemap_ioctl
-+pfnmap
- *.tmp*
- protection_keys
- protection_keys_32
-diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-index ad4d6043a60f0..ae6f994d3add7 100644
---- a/tools/testing/selftests/mm/Makefile
-+++ b/tools/testing/selftests/mm/Makefile
-@@ -84,6 +84,7 @@ TEST_GEN_FILES += mremap_test
- TEST_GEN_FILES += mseal_test
- TEST_GEN_FILES += on-fault-limit
- TEST_GEN_FILES += pagemap_ioctl
-+TEST_GEN_FILES += pfnmap
- TEST_GEN_FILES += thuge-gen
- TEST_GEN_FILES += transhuge-stress
- TEST_GEN_FILES += uffd-stress
-diff --git a/tools/testing/selftests/mm/pfnmap.c b/tools/testing/selftests/mm/pfnmap.c
-new file mode 100644
-index 0000000000000..8a9d19b6020c7
---- /dev/null
-+++ b/tools/testing/selftests/mm/pfnmap.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Basic VM_PFNMAP tests relying on mmap() of '/dev/mem'
-+ *
-+ * Copyright 2025, Red Hat, Inc.
-+ *
-+ * Author(s): David Hildenbrand <david@redhat.com>
-+ */
-+#define _GNU_SOURCE
-+#include <stdlib.h>
-+#include <string.h>
-+#include <stdint.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <signal.h>
-+#include <setjmp.h>
-+#include <linux/mman.h>
-+#include <sys/mman.h>
-+#include <sys/wait.h>
-+
-+#include "../kselftest_harness.h"
-+#include "vm_util.h"
-+
-+static sigjmp_buf sigjmp_buf_env;
-+
-+static void signal_handler(int sig)
-+{
-+	siglongjmp(sigjmp_buf_env, -EFAULT);
-+}
-+
-+static int test_read_access(char *addr, size_t size, size_t pagesize)
-+{
-+	size_t offs;
-+	int ret;
-+
-+	if (signal(SIGSEGV, signal_handler) == SIG_ERR)
-+		return -EINVAL;
-+
-+	ret = sigsetjmp(sigjmp_buf_env, 1);
-+	if (!ret) {
-+		for (offs = 0; offs < size; offs += pagesize)
-+			/* Force a read that the compiler cannot optimize out. */
-+			*((volatile char *)(addr + offs));
-+	}
-+	if (signal(SIGSEGV, signal_handler) == SIG_ERR)
-+		return -EINVAL;
-+
-+	return ret;
-+}
-+
-+FIXTURE(pfnmap)
-+{
-+	size_t pagesize;
-+	int dev_mem_fd;
-+	char *addr1;
-+	size_t size1;
-+	char *addr2;
-+	size_t size2;
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+index 29bc1ddfc7b25f203c9f3b530610e45c44ae4fb2..9dfb248f9ab52b354453cf42c09d93bbee99214f 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+@@ -945,6 +945,10 @@ &ipa {
+ 	status = "okay";
+ };
+ 
++&iris {
++	status = "okay";
 +};
 +
-+FIXTURE_SETUP(pfnmap)
-+{
-+	self->pagesize = getpagesize();
-+
-+	self->dev_mem_fd = open("/dev/mem", O_RDONLY);
-+	if (self->dev_mem_fd < 0)
-+		SKIP(return, "Cannot open '/dev/mem'\n");
-+
-+	/* We'll require the first two pages throughout our tests ... */
-+	self->size1 = self->pagesize * 2;
-+	self->addr1 = mmap(NULL, self->size1, PROT_READ, MAP_SHARED,
-+			   self->dev_mem_fd, 0);
-+	if (self->addr1 == MAP_FAILED)
-+		SKIP(return, "Cannot mmap '/dev/mem'\n");
-+
-+	/* ... and want to be able to read from them. */
-+	if (test_read_access(self->addr1, self->size1, self->pagesize))
-+		SKIP(return, "Cannot read-access mmap'ed '/dev/mem'\n");
-+
-+	self->size2 = 0;
-+	self->addr2 = MAP_FAILED;
-+}
-+
-+FIXTURE_TEARDOWN(pfnmap)
-+{
-+	if (self->addr2 != MAP_FAILED)
-+		munmap(self->addr2, self->size2);
-+	if (self->addr1 != MAP_FAILED)
-+		munmap(self->addr1, self->size1);
-+	if (self->dev_mem_fd >= 0)
-+		close(self->dev_mem_fd);
-+}
-+
-+TEST_F(pfnmap, madvise_disallowed)
-+{
-+	int advices[] = {
-+		MADV_DONTNEED,
-+		MADV_DONTNEED_LOCKED,
-+		MADV_FREE,
-+		MADV_WIPEONFORK,
-+		MADV_COLD,
-+		MADV_PAGEOUT,
-+		MADV_POPULATE_READ,
-+		MADV_POPULATE_WRITE,
-+	};
-+	int i;
-+
-+	/* All these advices must be rejected. */
-+	for (i = 0; i < ARRAY_SIZE(advices); i++) {
-+		EXPECT_LT(madvise(self->addr1, self->pagesize, advices[i]), 0);
-+		EXPECT_EQ(errno, EINVAL);
-+	}
-+}
-+
-+TEST_F(pfnmap, munmap_split)
-+{
-+	/*
-+	 * Unmap the first page. This munmap() call is not really expected to
-+	 * fail, but we might be able to trigger other internal issues.
-+	 */
-+	ASSERT_EQ(munmap(self->addr1, self->pagesize), 0);
-+
-+	/*
-+	 * Remap the first page while the second page is still mapped. This
-+	 * makes sure that any PAT tracking on x86 will allow for mmap()'ing
-+	 * a page again while some parts of the first mmap() are still
-+	 * around.
-+	 */
-+	self->size2 = self->pagesize;
-+	self->addr2 = mmap(NULL, self->pagesize, PROT_READ, MAP_SHARED,
-+			   self->dev_mem_fd, 0);
-+	ASSERT_NE(self->addr2, MAP_FAILED);
-+}
-+
-+TEST_F(pfnmap, mremap_fixed)
-+{
-+	char *ret;
-+
-+	/* Reserve a destination area. */
-+	self->size2 = self->size1;
-+	self->addr2 = mmap(NULL, self->size2, PROT_READ, MAP_ANON | MAP_PRIVATE,
-+			   -1, 0);
-+	ASSERT_NE(self->addr2, MAP_FAILED);
-+
-+	/* mremap() over our destination. */
-+	ret = mremap(self->addr1, self->size1, self->size2,
-+		     MREMAP_FIXED | MREMAP_MAYMOVE, self->addr2);
-+	ASSERT_NE(ret, MAP_FAILED);
-+}
-+
-+TEST_F(pfnmap, mremap_shrink)
-+{
-+	char *ret;
-+
-+	/* Shrinking is expected to work. */
-+	ret = mremap(self->addr1, self->size1, self->size1 - self->pagesize, 0);
-+	ASSERT_NE(ret, MAP_FAILED);
-+}
-+
-+TEST_F(pfnmap, mremap_expand)
-+{
-+	/*
-+	 * Growing is not expected to work, and getting it right would
-+	 * be challenging. So this test primarily serves as an early warning
-+	 * that something that probably should never work suddenly works.
-+	 */
-+	self->size2 = self->size1 + self->pagesize;
-+	self->addr2 = mremap(self->addr1, self->size1, self->size2, MREMAP_MAYMOVE);
-+	ASSERT_EQ(self->addr2, MAP_FAILED);
-+}
-+
-+TEST_F(pfnmap, fork)
-+{
-+	pid_t pid;
-+	int ret;
-+
-+	/* fork() a child and test if the child can access the pages. */
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+
-+	if (!pid) {
-+		EXPECT_EQ(test_read_access(self->addr1, self->size1,
-+					   self->pagesize), 0);
-+		exit(0);
-+	}
-+
-+	wait(&ret);
-+	if (WIFEXITED(ret))
-+		ret = WEXITSTATUS(ret);
-+	else
-+		ret = -EINVAL;
-+	ASSERT_EQ(ret, 0);
-+}
-+
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index 188b125bf1f6b..dddd1dd8af145 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -63,6 +63,8 @@ separated by spaces:
- 	test soft dirty page bit semantics
- - pagemap
- 	test pagemap_scan IOCTL
-+- pfnmap
-+	tests for VM_PFNMAP handling
- - cow
- 	test copy-on-write semantics
- - thp
-@@ -472,6 +474,8 @@ fi
+ &gpi_dma1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+index 5648ab60ba4c4bfaf5baa289969898277ee57cef..fdcecd41297d6ebc81c5088472e4731ca0782fcb 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+@@ -672,6 +672,10 @@ fsa4480_sbu_mux: endpoint {
+ 	};
+ };
  
- CATEGORY="pagemap" run_test ./pagemap_ioctl
- 
-+CATEGORY="pfnmap" run_test ./pfnmap
++&iris {
++	status = "okay";
++};
 +
- # COW tests
- CATEGORY="cow" run_test ./cow
+ &lpass_tlmm {
+ 	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
+ 		pins = "gpio17";
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+index 3a6cb279130489168f8d20a6e27808647debdb41..49438a7e77ceaab9506158855b6262206bca94ec 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+@@ -779,6 +779,10 @@ &ipa {
+ 	status = "okay";
+ };
  
++&iris {
++	status = "okay";
++};
++
+ &gpi_dma1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+index f78d5292c5dd5ec88c8deb0ca6e5078511ac52b7..57c3c92f0f5623c91b37390b340d7777d79c57c0 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+@@ -3220,6 +3220,87 @@ opp-202000000 {
+ 			};
+ 		};
+ 
++		iris: video-codec@aa00000 {
++			compatible = "qcom,sm8550-iris";
++
++			reg = <0 0x0aa00000 0 0xf0000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++
++			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
++					<&videocc VIDEO_CC_MVS0_GDSC>,
++					<&rpmhpd RPMHPD_MXC>,
++					<&rpmhpd RPMHPD_MMCX>;
++			power-domain-names = "venus",
++					     "vcodec0",
++					     "mxc",
++					     "mmcx";
++			operating-points-v2 = <&iris_opp_table>;
++
++			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
++				 <&videocc VIDEO_CC_MVS0C_CLK>,
++				 <&videocc VIDEO_CC_MVS0_CLK>;
++			clock-names = "iface",
++				      "core",
++				      "vcodec0_core";
++
++			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
++					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
++					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
++			interconnect-names = "cpu-cfg",
++					     "video-mem";
++
++			memory-region = <&video_mem>;
++
++			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
++			reset-names = "bus";
++
++			iommus = <&apps_smmu 0x1940 0>,
++				 <&apps_smmu 0x1947 0>;
++			dma-coherent;
++
++			/*
++			 * IRIS firmware is signed by vendors, only
++			 * enable in boards where the proper signed firmware
++			 * is available.
++			 */
++			status = "disabled";
++
++			iris_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-240000000 {
++					opp-hz = /bits/ 64 <240000000>;
++					required-opps = <&rpmhpd_opp_svs>,
++							<&rpmhpd_opp_low_svs>;
++				};
++
++				opp-338000000 {
++					opp-hz = /bits/ 64 <338000000>;
++					required-opps = <&rpmhpd_opp_svs>,
++							<&rpmhpd_opp_svs>;
++				};
++
++				opp-366000000 {
++					opp-hz = /bits/ 64 <366000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>,
++							<&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-444000000 {
++					opp-hz = /bits/ 64 <444000000>;
++					required-opps = <&rpmhpd_opp_nom>,
++							<&rpmhpd_opp_nom>;
++				};
++
++				opp-533333334 {
++					opp-hz = /bits/ 64 <533333334>;
++					required-opps = <&rpmhpd_opp_turbo>,
++							<&rpmhpd_opp_turbo>;
++				};
++			};
++		};
++
+ 		videocc: clock-controller@aaf0000 {
+ 			compatible = "qcom,sm8550-videocc";
+ 			reg = <0 0x0aaf0000 0 0x10000>;
+
+---
+base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+change-id: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
+
+Best regards,
 -- 
-2.49.0
+Neil Armstrong <neil.armstrong@linaro.org>
 
