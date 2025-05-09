@@ -1,118 +1,154 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C808F64
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B82209F5A;
+	Fri,  9 May 2025 07:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746775033; cv=none; b=S3nMq9156KAf7LSyi86CWaKS5yxacR1kII2DLtUlctwU7Na8EgD1c2NFNlAywaJE7wfPqWPlwSqB1zmN1teCcX3aGFGWZVQ1c4Da7PdocDZ9SXLGnYC9Lx3fo5m+7RdccL0pXi1Ge3TKgx9jvwOLidR3gvT/gphvVQOGAEEU5wU=
+	t=1746775071; cv=none; b=TrDsIhpIh9GzXCFZbhP4rvg4mvMKQNpionL7pRQS+Dmw8q3f08H+X0H1IpKOsvUkL3rG3rLhizoyy8fqCDZZu8CQAYz6KNjy9V5zcm29PUVfdOOIfB5bnOZBfJJ032XrZL4UJ/0/FBIErI9JNYri643EfoSS6wJpowl/Cg4PxqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746775033; c=relaxed/simple;
-	bh=9n2x9Ca2geKsxpKo+eTaSVFu9pk9VeUm28tj2BhzkaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p2b/riAcWCOx7Y+1z1YBjnGOQwUfkPmE6JykvRg+JLhBAvtaLqQSAjyZrTX6LPUaulXPXv/CFmBqcSxXfi3tGxZ2N5OepvcS9vlLXXBZ8IQW0aunowBc/yMADNdLdhSt4jmRb43nYVa91YahOyKSAYVza5x5kVWcV0/LojTDPSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FHxX9dih; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746775071; c=relaxed/simple;
+	bh=zJ72h4TX3E2IaJXw3cwS+ga1j5ZKidQHcHHLXSUb8oY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XoycIb9u4WSDVm2EQTKD1af26V8PN6Bwj6Wv+ZxZ2rFvypbJqYzjijLsEYf97U5xN4W4dJJoRzB5jXkuVSaZLwMX8bsRiTmUj5umkpVRxfExg65gASyyNJkF8MEP1bU+XmeTXRmFQDJHSFNmp8/iltcxHkxpgEkENNnl2iwI14w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WWQ5oGKk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FHxX9dih"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0b1808864so167175f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 00:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746775030; x=1747379830; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RlnvF9YC3LzR3snVvWTJ2Xw6crU4GpM6twYqKIMdbfE=;
-        b=FHxX9dihMxRpuANVlUQP4nZ+nIZhe4pmKbRNWn4hpJqabPFe2rBpV5hhRt5WX8FjY6
-         d6Ky9URnbR1aK2yS4orlpuXSqIF/z7thhPYy9LE3BIwH0POLMHjvtc5v0Z1keMZ3Gaul
-         vVv6GNC1OKZB1ZyB9q9vWJ8SGAT3sXKBsoEb7Yrqva0qgSAyZCaMlkxVFaxUOIcKGBjx
-         rAM6SNcZnUubzDnrx2cA/naXpy9AOpf1ixOBBKGa25DRGai1z6G4eoKsSuyKcKWjXToP
-         uMtWeGp1UK2xJFnAl3alCdwBgUdvvAt1QHfKyHPFnY9MJx0Ds4LOXDJ2NfcTmddNfQhI
-         bobQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746775030; x=1747379830;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RlnvF9YC3LzR3snVvWTJ2Xw6crU4GpM6twYqKIMdbfE=;
-        b=eIEy7SnSPw1yAFcSg0leKwGBiOkmWqXEBxr8p5B+vWgpLrCf1cgLiPzClMAp+iVHb1
-         QcnDo+Z8uqEBgael72rNlcabLwvXsSmBcJqAXiBHAjJkfREuf3eCSJVAjtrJsRHnjOii
-         3qJtghPmnTMHwU9sOhknF78ePuQMdcycwuG2KrLJKpGxqecGeq2XH/fPjjhaGvruV+TA
-         M/W6orsWdvhUsD7AeKXEJ5kL5Yh5iSSy9Yw9dj0hb0uStsYwBu7EBwaEH9pUq6C80t0X
-         WxOBgMzizv7w+6PANGbypG25bHOc7fcpDnhM50eh5YlJ6HaaefF3ZUxHTyJSeW8Dl/bl
-         aCuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXh9Vm1qAht0iANwDIN0lsS/l/liYq0JNnvLJfF56Fj6U7kiOcMqcwTXeDDkjHdA3fXEJqA+cq3+hNAskI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd5v4B4LiaHKbTcLE8yLf/pDgKKw/t0J7hkv17b0S/Nf0Hsn84
-	5ZsqN1araNkgJ5VgItdGM/QENINHRZF/3Oe+bmUcEVN5FRl6qyzB2UfnR6WctAg=
-X-Gm-Gg: ASbGncsfILTcwVEzxeoZoCxPpUuCQiiFjXvDWPCCrdpekv9u8qThcQSmaNnZsY2oH0t
-	ptjPgfjhOv9HyF5PiuNHEleq/2d73jWN65Vg/wOXG9MJJGQak87RnOSSAoYyNoyAFJNOqauGbAa
-	Ml67NeTH+ufW0rdjLPvdkZZkbtbfl7WSpEooWpdhECl0u/7NvU2KBJBL6XKNEI2VgvF66FuTI+x
-	tRBsBeJJVJrye/k0KXFhJCQUk77etXxtEs6B7sRmqpH8I5nxwHRS/rW26XKmNs7fz/+lJqgx8IF
-	13sJoPtSjoOPKjMci56lMvV6C2EmINCIznHGz9UEY86QxSkqyb+rGNRFRvKj
-X-Google-Smtp-Source: AGHT+IGa0STf5+TTOTz0wO56H79nQcXBgcB4X0BRuhjYmf21JbPP/4LmpKEfPZXwoK3dIKe1+YClVg==
-X-Received: by 2002:a05:600c:314b:b0:43b:c0fa:f9bf with SMTP id 5b1f17b1804b1-442d6d44b93mr6223785e9.3.1746775029947;
-        Fri, 09 May 2025 00:17:09 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf0esm2329397f8f.79.2025.05.09.00.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 00:17:09 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kernel@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] extcon: adc-jack: Cleanup wakeup source only if it was enabled
-Date: Fri,  9 May 2025 09:17:04 +0200
-Message-ID: <20250509071703.39442-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WWQ5oGKk"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5492GkdU008543;
+	Fri, 9 May 2025 07:17:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lP6YFArRY1BgGGR83r1+KUWUzL4QlWSi/eIRd48gOBw=; b=WWQ5oGKkIzNVSCXd
+	Z2XOmJ9SrSXu/lYO7ma6vXDWFA7BcWLt0Ap50HgVJOg6gLOoNWNq8m9QwHcF7NvS
+	ehQyiD1ElSBhzA8vw+ziXRS3MdpO2nzM1MAhdeR6rXjgZm2gxLvC5In1OpQV6WZw
+	RyEfUT+E2thZzCdkcEXMp/fhu8MXoaFlzRP4Osd7Tr9yGjJ+/YzvNKXbhzJlKPTy
+	8ccOcWHOXCIWDel/P+tZYrfSTTA9fBsPXsSj4RW4zZySpaEEIpk0CeRZEetlvV3i
+	PbJoUxVhdLtz93IIzICj2uFw4oqeLwY0V4nkJhS4UC5sJywfFAwnS/bVOnLWpMhE
+	tcO6YA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5bra6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 07:17:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5497HXmx021592
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 07:17:33 GMT
+Received: from [10.216.57.57] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
+ 00:17:27 -0700
+Message-ID: <047e2d5c-89fd-4638-ba8c-6ed2b759fa20@quicinc.com>
+Date: Fri, 9 May 2025 12:47:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1120; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=9n2x9Ca2geKsxpKo+eTaSVFu9pk9VeUm28tj2BhzkaY=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHavwAIVXCeGSBRM80naUIucx9WfdqyNqTajlD
- OHjBmVH/aaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaB2r8AAKCRDBN2bmhouD
- 1ynPD/0Ues0ub1R7fsjGRi1X6SznnXIaP/t9GsChXHJZPktB/70jJlbUyec40pUhUtm79Lf2+Le
- dAKfcMeaRALmEQhynbc7GYoNXWt83AHtE8gdvGcBhGW9WXJ/4p6cieOf/ecmUNaxoLOJ+Ce6lxQ
- jsXzs3ck3VmElvXb0vueQTfXrgCUnEF0YJClgqyBQCGH+yl24ukX0xz9MdgJELJ5bSsoMm+4PSC
- rYnjOjqZHp3rACB+vogK42K9njOyFTTUbB5nbKWWIOBkXKjqhoqeoVV2ZVxNQrnHOS6VfFUI0MC
- gMmLhrFaanlP44F5ZrdzP8I08GXmwaGPhi9D2YioGmMnUTxSmNEWDiD1zQxRYvJHbsfr6P3vjNL
- r+HbMAz0j0jV9Zzsjo3xvyWTVVcDlAiVgrAD6inmti2vjRMVhdgr6/+fi6Ymn1ebf3oQ5T8H4YT
- TmAMdbaV3SvSI4F0H3Z/kxLwO3JdkeEKBvjjcTYPl5+/iegav3npMQYhZe9Eo0LNj3BiSQO13kH
- 0aj9XMm9YlcsxyIFqy/MI2waqH4ExDNqz98llpJrqq10qbDUcsgz+GIlBjLiReMLrlyfaRI/8np
- VTF1ZwEcbSkKENPRopPIUOr7YE7I2RbStqXdFG46oCRugjroKMy1eBVT0A+o4AO/QbpwTAzoU2J few5jYuotW1pctg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: display/msm/gmu: Add Adreno 623 GMU
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>
+References: <20250508-a623-gpu-support-v3-0-3cb31799d44e@quicinc.com>
+ <20250508-a623-gpu-support-v3-1-3cb31799d44e@quicinc.com>
+ <7b36aa5d-8c81-42c6-a69f-38f9b157a361@linaro.org>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <7b36aa5d-8c81-42c6-a69f-38f9b157a361@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Lu2Symdc c=1 sm=1 tr=0 ts=681dac0f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=KKAkSRfTAAAA:8 a=ZaX90SiD_hMLhUq7ehMA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: lT4GjizFhQpQiE_A3fmILspzYCLOS_dO
+X-Proofpoint-ORIG-GUID: lT4GjizFhQpQiE_A3fmILspzYCLOS_dO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA2OSBTYWx0ZWRfX7WaBzHDy21Xp
+ 3xdKJmvDz1yFWRAoUfSfcKOxJA57/UAprvmzmfx9miFkQMekq0IcmjpZ54xBYb3RJhrEdKGXS1y
+ dc3b4d9uySHOlsM8XbjXMxnlhMJMEt0N0TAolEOQs2H20XdN4c59rYG8WAYo/rFMawmWrxwfoF8
+ O56NnCoLezguA/5xVKdUzklB4in6Npx1J35hskuwTXmvI/PX1DZVAePm9AqM86NEq3qOgde/wrQ
+ m5Gp6YGcMiNmAgbgVfiv0Q9N6NW7DbBa282Xok0oylzOT88vn94Nic/BcA0slk5pp6lxVl/uNV6
+ 2troP9SDioQO1gqM9drB8foPPSrDH1B6NR0rTpl/pTYm1Wa6xfjwZjxGVvTIQ86BvMWGAiUoCe2
+ /qhN/c3VN4aNIVOSwLds8z31f49W4wKmkYmE5iuR9ThXGhLvWiLb4c80Z+cQGdnRyJrwh4jl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_02,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=0 clxscore=1015 adultscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505090069
 
-Driver in the probe enables wakeup source conditionally, so the cleanup
-path should do the same - do not release the wakeup source memory if it
-was not allocated.
+On 5/9/2025 11:12 AM, Krzysztof Kozlowski wrote:
+> On 08/05/2025 18:19, Akhil P Oommen wrote:
+>> From: Jie Zhang <quic_jiezh@quicinc.com>
+>>
+>> Document Adreno 623 GMU in the dt-binding specification.
+>>
+>> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
+>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Drop. You changed patch significantly, like 90%!
 
-Reported-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Closes: https://lore.kernel.org/r/22aaebb7-553b-4571-8a43-58a523241082@wanadoo.fr/
-Fixes: 63c223dcdd49 ("extcon: adc-jack: Fix wakeup source leaks on device unbind")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/extcon/extcon-adc-jack.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Aah! my bad. This is actually a new patch which I mentioned in the cover
+letter: "Update dt-bindings yaml with a new patch#1"
 
-diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
-index 557930394abd..7e3c9f38297b 100644
---- a/drivers/extcon/extcon-adc-jack.c
-+++ b/drivers/extcon/extcon-adc-jack.c
-@@ -164,7 +164,8 @@ static void adc_jack_remove(struct platform_device *pdev)
- {
- 	struct adc_jack_data *data = platform_get_drvdata(pdev);
- 
--	device_init_wakeup(&pdev->dev, false);
-+	if (data->wakeup_source)
-+		device_init_wakeup(&pdev->dev, false);
- 	free_irq(data->irq, data);
- 	cancel_work_sync(&data->handler.work);
- }
--- 
-2.45.2
+I will update the subject and drop the R-b tag.
+
+> 
+>> ---
+>>  .../devicetree/bindings/display/msm/gmu.yaml       | 34 ++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+>> index 4392aa7a4ffe2492d69a21e067be1f42e00016d8..afc1879357440c137cadeb2d9a74ae8459570a25 100644
+>> --- a/Documentation/devicetree/bindings/display/msm/gmu.yaml
+>> +++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+>> @@ -124,6 +124,40 @@ allOf:
+>>            contains:
+>>              enum:
+>>                - qcom,adreno-gmu-623.0
+> 
+> I don't understand. 623 is already here, you document nothing new. This
+> makes no sense, I never, absolutely never reviewed code like this.
+
+The clock list is different for 623. We are removing smmu_clk for 623.
+
+-Akhil
+
+> 
+> NAK
+> 
+> 
+> Best regards,
+> Krzysztof
 
