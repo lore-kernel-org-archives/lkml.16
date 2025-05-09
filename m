@@ -1,113 +1,220 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9BA23717F;
-	Fri,  9 May 2025 18:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C8823C8A1
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746814864; cv=none; b=Pz5Fw7cVSVe+LoGu9vMI3gmVBTqhknzEzYEveO/neQpibMcVClg2DoBzi98cO53tvjqkG0yVe6JGiPG5x0QhLV0nTd+iclQI+wUwLkRMSbPnXNc+dAM+TQX2nAioUVXu4cZDPX7x5utSJdANoP1fbOek13Y1pqsbJq3uoDOmjgI=
+	t=1746814952; cv=none; b=Fsegu5eBzJO8N7E0RRsRTeWo+JCnNTu5jx0kOZMuxw78cQdbled5uz6ZAoPTpg4Q6l5kfLSFlzUKMq5yZ3Lqfq5tP8vjWtUfFulHXJ2APdWPF1+xLPF8JDmBSh+qHyq5AINtgc00VP9DwQHtIpHly8nDb4ssjvH+nc4tDPpiq4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746814864; c=relaxed/simple;
-	bh=4qGf+LVCHq9Re0HaJNst9Sr+cVcbEf1KtVPrSG6+e7U=;
+	s=arc-20240116; t=1746814952; c=relaxed/simple;
+	bh=o0HnRWUOJEFTR1JyaXMLNHbxjezz3ONJkGCb3fLH4P8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bWgA5Pj2kDoLTZtDPioS9ItXcoBFbl0JZnp3GsrG9brlCAWLjMaXwfRJ7n1C3e3oetTbEw/RmNdPi1egTFL+xZLMesPoL4ldXLLV8OcRwSypHyCGO07/tpHIpHy1XtywcdLMabeMTgk/AAhOpJbgr/7B5YQEiv65DtFjqCficRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k29KyEDc; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=a9D4UaMl6K5YBT3jnhHIY9depamsNX5XDB64CBUdpQmn/CqcPi7bXcUg9FdMC+mnXrTFuB80K9v17rQbB4KtA3O45WVtOj7F8tyt/+REU7EaaGqiZBKlewceveRkM0OIDqxvIhmTwrUWUYqI06uxHq7pXvDQdeQSQECS5fFX9G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=DUbREEMa; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k29KyEDc"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30ac55f595fso2401247a91.2;
-        Fri, 09 May 2025 11:21:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DUbREEMa"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70960e0b4d5so19501347b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746814862; x=1747419662; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1746814950; x=1747419750; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X5E5gBHYUotVCXygYJ7CZEIFVsARQjSCRuzkPt94fVY=;
-        b=k29KyEDcWsTabm3nNJL7PdrSTbSKjuTvrdN2nLu2wk0Rx4dT4Vg7Wwrr17mE0M4wsm
-         gZsoFV7PtwDpVbacyleuZCQCBZkL4j3Qs6NNqRZO0qCrMJvMrMkJKK/ljN9fkJI8Mb3D
-         9BeX4ZU1MG6IjVBkvQOUTAXvp0XuMZ2Hf0HcqGjygghtlOfoUaITMH6CX9R4WBZ9X8M5
-         XTLTPpXDc+L1yKiIhXnLz/5o3EOtraE+Mv8XLcPmKKSfAQc72GJWaPqHgLiSmzCfP4g9
-         1HhXOkwdFjHpoUpJwEuWf6i0cfu2XvXxMfJfs0AyrBJBzfh5zj4Bnabpd/Rh60BP8K8c
-         H6Xg==
+        bh=FVdGvQl7I4jzamIx+mGrMWIjkTZGB9PGkkLFZVwWjA4=;
+        b=DUbREEMa3wfHXDpC7zNCTqZx36YMwTKUzPkrH8D+zsq3kt6DHv8Zr0lSrU48pUBmfF
+         xGghqSITeAzkPrr8x88+wHwHzKMwGE/zKdI/prG4SpYUQu1H65d7aNhLqpPuA5u6sysG
+         xWH22xWYS8JFUo5txc8sgUgwAzn+QThv1Er5c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746814862; x=1747419662;
+        d=1e100.net; s=20230601; t=1746814950; x=1747419750;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=X5E5gBHYUotVCXygYJ7CZEIFVsARQjSCRuzkPt94fVY=;
-        b=pAO2SnrYH5bwKb2LI+kB6AIV9g8+PQ1H7D+86LX7dgQZZeVR+3hNDZYZxrochSX8b+
-         F9NGv5sUWusl662rfQnlxywQsEvHw3yyqlvLUd1IHofmo5d225IxDP/a3f7QPRTWJ5RE
-         xIA/fshvvtOJAyb6r+Yn8s9CuQGEZVwtcTaSGSSdMcRa7LJfBlgMiXrS91hnpsZze+4w
-         RzBuXUaQ3uB07GgCwtcXGmqL5k0I8ikmfdLV2qRuFqIY9LWDrbKcSGzE8g2Efk6xHA/E
-         KGKbgE3PEMYC47SbOvLvUFdc+dSPV0zNT1obzV2kzjKg94Z2l7qM9qUGT/KRVmxxSTOd
-         f4Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVcRaSHdQ0huNT/48PVDOK1sf6l4cWLu4zlNd37ffDLVnLo3Sv0SIY6+FcnMC4B40N8OGHMy8DWjhzauPiS@vger.kernel.org, AJvYcCXqY0JUO1SUrSEk43r93hb1EGHqrmZhudKJ+O2YkxGfl3CzdNAUKCUY8oJ5uu2JyPt4bv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwciU7jfLYbTCSLooYDHqrDDkLJm9y/QhxdxWYS9rvLG/1Q3T50
-	8SC6/3lFGKwMIDz0SCwvZ6RMYwI9fmY6HSefp3Qwvs1d8C3hxVNkR0TLvkAAzz3b8m78LbzdDt5
-	xMe9lWgkouzs4DqGGOGMYiFMwrIEJ5qdglL4=
-X-Gm-Gg: ASbGncuzIaI6J5akZqZu3jhKYtj1BLVWEj5lw0pzy01gOHgvjd+ZXI74XDWQ2jXzcHe
-	BzaCU+sOawZ+B5XrlRfeMiLI8vDAiN8GcW8AtjuH8waaQ2R2D3MiQxNDSGZDb5TbaTcyQN/7wjy
-	lLQSVwcvtcHhRIAEeNEl7ja0qyRXo2K1ZvLuuomwGhx/D/G/t7
-X-Google-Smtp-Source: AGHT+IEp8o0jmBeHS6EkmRW9IH2ThKoCdRcI6N4ukVYGmrH04cq4u3PUUlIdplw1/VK6DrAHolZFw/HzQy7XzBcG53E=
-X-Received: by 2002:a17:90b:1fcd:b0:305:5f25:59a5 with SMTP id
- 98e67ed59e1d1-30c3d65e740mr6497432a91.35.1746814862365; Fri, 09 May 2025
- 11:21:02 -0700 (PDT)
+        bh=FVdGvQl7I4jzamIx+mGrMWIjkTZGB9PGkkLFZVwWjA4=;
+        b=N4+rD9nZGYJfrzaPJ4BpMS+/aEZK1AaJ/Wp/5fohSkXN8mUv3v8TVo266NgtP7zKfh
+         VKMqh92xM+CcphJEkK33AUakYKw6KNXBhrGi5hEkrnPqZ+5BVnYAZTb2INyaqbjEYXDp
+         Nift6QbHkWnX8I0w/p9FF3C+X+6mLuGhq21vR88idoIn3kp6RR1qQ35mokauvs+jyN16
+         oUCnWH4rFOyUSzMgBOySNBlDBz+S+vLA4Kob/JqJWx+1Wp5UmFPVewyEHJMAn0bRMyIr
+         Rbyf1UrfbyTECnpDq8DlJQvkkNlpo8dVTbZTQRW1LYn5W20kgH+TgWQWOZHnVoyve2sK
+         5EPg==
+X-Gm-Message-State: AOJu0Yz7eZHBTJwN5B6yVrkx1XF1GyO/huekVj+CvXATKU0e0sanAsiD
+	DOMfDGzSelV1lyS9ODfd58p9B/zETggdDag/XyzrEw1tVK8Y1Y/T8339m4VGkW7wS0ohfqCLIon
+	mxrWyFLdzmu1whT6QSqZOxYC11aQuKVTTLCTJuQ==
+X-Gm-Gg: ASbGncuG7TLC4xsHf+tjrELMWJRWicGYgYPEfK8wGiXLYJC7Z5v8U+6JtpWELQ+ezu7
+	JSavPVcWALYkn+VWj+fHh+Lr4anUoKvlPvyEG8e8psGNk9UT2BxktISApCYayWZIF4jFkrhVxiJ
+	rStaXPR6dA9Sty0ylETArXzA3bs+FA
+X-Google-Smtp-Source: AGHT+IFhuGu6cPIv6shqVcKb5yMcaEsKd2xMo/nKwn74VQkFfSO8SSLUGFFj0iY8SWc7yPYKJguYvy3CEdCdcbkRiBw=
+X-Received: by 2002:a05:690c:7007:b0:708:ab81:ec26 with SMTP id
+ 00721157ae682-70a3fb75af8mr60732477b3.33.1746814949659; Fri, 09 May 2025
+ 11:22:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1746598898.git.vmalik@redhat.com> <39416cac1d011661601caffc6ac38195c82ede86.1746598898.git.vmalik@redhat.com>
- <aByA1wael6H4tMo8@google.com>
-In-Reply-To: <aByA1wael6H4tMo8@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 9 May 2025 11:20:48 -0700
-X-Gm-Features: ATxdqUF9WK-pNGPDCZayEa-Xkx20a9zhOeb-2sf3yHNgsZfGklVmpEfNjfiQrqM
-Message-ID: <CAEf4BzbggjOmEziyLjSRSsEQzLMMXQGoEJ6SODVF2exLR1S9UQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 2/4] uaccess: Define pagefault lock guard
-To: Matt Bobrowski <mattbobrowski@google.com>
-Cc: Viktor Malik <vmalik@redhat.com>, bpf@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
+ <20250424062154.2999219-17-dario.binacchi@amarulasolutions.com> <20250509162546.GA3704130-robh@kernel.org>
+In-Reply-To: <20250509162546.GA3704130-robh@kernel.org>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Fri, 9 May 2025 20:22:18 +0200
+X-Gm-Features: AX0GCFudXK-0LsSuEXf0ommGdIrbGEzxESxhBMaUX-8mIu528WIhNrRmopexvqM
+Message-ID: <CABGWkvq4a73hvCWG-P_+arc3R-pnr5NVfcGPDTGEoW1doPt2qg@mail.gmail.com>
+Subject: Re: [PATCH v12 16/19] dt-bindings: clock: imx8m-clock: add PLLs
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	linux-amarula@amarulasolutions.com, Abel Vesa <abelvesa@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 3:01=E2=80=AFAM Matt Bobrowski <mattbobrowski@google=
-.com> wrote:
+On Fri, May 9, 2025 at 6:25=E2=80=AFPM Rob Herring <robh@kernel.org> wrote:
 >
-> On Wed, May 07, 2025 at 08:40:37AM +0200, Viktor Malik wrote:
-> > Define a pagefault lock guard which allows to simplify functions that
-> > need to disable page faults.
+> On Thu, Apr 24, 2025 at 08:21:46AM +0200, Dario Binacchi wrote:
+> > Though adding the PLLs to clocks and clock-names properties will break
+> > the ABI, it is required to accurately describe the hardware. Indeed,
+> > the Clock Control Module (CCM) receives clocks from the PLLs and
+> > oscillators and generates clocks for on-chip peripherals.
 > >
-> > Signed-off-by: Viktor Malik <vmalik@redhat.com>
+> > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >
 > > ---
-> >  include/linux/uaccess.h | 2 ++
-> >  1 file changed, 2 insertions(+)
 > >
-> > diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> > index 7c06f4795670..1beb5b395d81 100644
-> > --- a/include/linux/uaccess.h
-> > +++ b/include/linux/uaccess.h
-> > @@ -296,6 +296,8 @@ static inline bool pagefault_disabled(void)
-> >   */
-> >  #define faulthandler_disabled() (pagefault_disabled() || in_atomic())
+> > (no changes since v11)
 > >
-> > +DEFINE_LOCK_GUARD_0(pagefault, pagefault_disable(), pagefault_enable()=
-)
+> > Changes in v11:
+> > - Fix conflict while rebasing on master
+> >
+> > Changes in v7:
+> > - Add 'Reviewed-by' tag of Krzysztof Kozlowski
+> >
+> > Changes in v6:
+> > - New
+> >
+> >  .../bindings/clock/imx8m-clock.yaml           | 27 ++++++++++++++-----
+> >  1 file changed, 21 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml b=
+/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
+> > index 4fec55832702..e83f08abd44c 100644
+> > --- a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
+> > +++ b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
+> > @@ -29,12 +29,12 @@ properties:
+> >      maxItems: 2
+> >
+> >    clocks:
+> > -    minItems: 6
+> > -    maxItems: 7
+> > +    minItems: 7
 >
-> I can't help but mention that naming this scope-based cleanup helper
-> `pagefault` just seems overly ambiguous. That's just me though...
+> Increasing the minimum entries looks like an ABI break to me. The .dts
+> files not being in linux-next confirms that (from 0 warnings in
+> mainline):
+>
+> arch/arm64/boot/dts/freescale:859:50
+>     122  clock-controller@30380000 (fsl,imx8mm-ccm): clock-names: ['osc_3=
+2k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too shor=
+t
+>     120  clock-controller@30380000 (fsl,imx8mp-ccm): clock-names: ['osc_3=
+2k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too shor=
+t
+>      61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clocks' is a req=
+uired property
+>      61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clock-names' is =
+a required property
+>      60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clocks' is a req=
+uired property
+>      60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clock-names' is =
+a required property
+>      36  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[35], [36],=
+ [37], [38], [39], [40]] is too short
+>      36  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[24], [25],=
+ [26], [27], [28], [29]] is too short
+>      32  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[34], [35],=
+ [36], [37], [38], [39]] is too short
+>      28  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[22], [23],=
+ [24], [25], [26], [27]] is too short
+>      26  clock-controller@30380000 (fsl,imx8mn-ccm): clock-names: ['osc_3=
+2k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too shor=
+t
+>      17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clocks' is a req=
+uired property
+>      17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clock-names' is =
+a required property
+>      14  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[44], [45],=
+ [46], [47], [48], [49]] is too short
+>      14  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[23], [24],=
+ [25], [26], [27], [28]] is too short
+>      13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clocks' is a req=
+uired property
+>      13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clock-names' is =
+a required property
+>      12  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[26], [27],=
+ [28], [29], [30], [31]] is too short
+>      10  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[38], [39],=
+ [40], [41], [42], [43]] is too short
+>       8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[22], [23],=
+ [24], [25], [26], [27]] is too short
+>       8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[20], [21],=
+ [22], [23], [24], [25]] is too short
+>       8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[34], [35],=
+ [36], [37], [38], [39]] is too short
+>       8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[28], [29],=
+ [30], [31], [32], [33]] is too short
+>       8  bcrmf@1 (brcm,bcm4329-fmac): $nodename:0: 'bcrmf@1' does not mat=
+ch '^wifi(@.*)?$'
+>       6  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[41], [42],=
+ [43], [44], [45], [46]] is too short
+>       6  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[24], [25],=
+ [26], [27], [28], [29]] is too short
+>       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[43], [44],=
+ [45], [46], [47], [48]] is too short
+>       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[40], [41],=
+ [42], [43], [44], [45]] is too short
+>       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[36], [37],=
+ [38], [39], [40], [41]] is too short
+>       4  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[35], [36],=
+ [37], [38], [39], [40]] is too short
+>
+> Please fix the binding or drop what's been applied so far.
 
-I do see the concern, but
+Abel and Shawn are already aware of the issue:
 
-DEFINE_LOCK_GUARD_0(preempt, preempt_disable(), preempt_enable())
-DEFINE_LOCK_GUARD_0(irq, local_irq_disable(), local_irq_enable())
+https://lore.kernel.org/all/CABGWkvqfyH=3Ddcuw6EDZaFVVebj8SZhJF0P944+mmzL5Y=
+K3-Pug@mail.gmail.com/
 
-so we are just staying consistent here? But also "guard (against) the
-pagefault" does (internally) read somewhat meaningfully, no?
+Thanks and regards,
+Dario
+
+>
+> Rob
+>
+
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
