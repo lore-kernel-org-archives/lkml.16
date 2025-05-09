@@ -1,89 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1026826FDA7
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D73B184E
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746775718; cv=none; b=dEeJqYf8G0erHsEt27UnUcEUTs1u/m744QUxBz/nEBgOV0mp1K2acYLFo/PgMRvhWYS7Zw/+XnYp+bOZHejozlcLiwhrPxQ2WunJHuFh5/LijLfphSt1ovP1hemaHy3VXAWynHg84QKJFmONd71kNA7SOKNNiGsWUFkSFafZXCo=
+	t=1746775856; cv=none; b=J78ggnp47oDaSIRIEWBI9hAjYdSq8klLscoI2ivZXmWOmPMNyaCvzxj/5Zb1lqO9Vqc00YLhN/39NGgSD4OLkDF19Z6t7mqs3JeMRrrVhS8c/zcMbTsbnmS4HmuP0Ihv6YWJajRaKBnFt/KUGBIyK8ag2rRxrX1UNZIw3SdCoSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746775718; c=relaxed/simple;
-	bh=vNNJXPmIRRvxQn7lU+GE8zSMS6AYGiBcH1wCP7uFCdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IuAsl/rRm+8z4H6zUkayvpmD50hNWkFidY4EOH155CseKcZIS3TKoZUt6sfhGif+tnUXrjPe4SgbOVjHKqlAvHK4t88WJLmGvA2sqBu3EuijFn5wM8aMpgucjGH2cSbrQURNJwd1zJwgL5f+GU8AsKwcz4kkcP5cwM+CFoMXX2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EXCAlZ4X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXCAlZ4X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746775715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EcVhGEtDDS4MQtb8jcRWSm04VWssJLaR8dtFCxNmpWo=;
-	b=EXCAlZ4XowzxKYOKuuhpoAzh/cnvbSSOm6IZxU503IFi44UcGBOzKR15JMgUupkDunCkIF
-	JNC3Wwu1imiFQq/IVwEK5pfRdzbJGzwQVkMUNPi7nDVuSop4TmDaacQ+OeSibZ7ZuGpKGD
-	Zhy19HN5cxr+KrIqRWcvsHDHitUMPkc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-295-EU_CBs6dOJK-loryusFO3w-1; Fri,
- 09 May 2025 03:28:32 -0400
-X-MC-Unique: EU_CBs6dOJK-loryusFO3w-1
-X-Mimecast-MFC-AGG-ID: EU_CBs6dOJK-loryusFO3w_1746775710
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 961C51800373;
-	Fri,  9 May 2025 07:28:30 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.140])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 130DD19560B3;
-	Fri,  9 May 2025 07:28:22 +0000 (UTC)
-Date: Fri, 9 May 2025 15:28:17 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 3/8] selftests: ublk: kublk: plumb q_id in io_uring
- user_data
-Message-ID: <aB2ukYlUMqPNuKfO@fedora>
-References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
- <20250507-ublk_task_per_io-v6-3-a2a298783c01@purestorage.com>
+	s=arc-20240116; t=1746775856; c=relaxed/simple;
+	bh=oDQtD3vHvOkNsojPdYslmiWDj8VGE6SZ/nNd5XKmHJE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q7HYhIRbpWbHLsJo7rXk4T3CCyfkc6XQ5aUVNii620cfehG2w/P3hltRL8dpd1thSDvCUYtPTySUuhELEa7uUNgIVCc7EF1W7YIb3AX1tuSR1WGJ3i89p3Ux/GOr1t5zScGUoEmyiv2uYtdj/DPREiiENae8a/shXXgU/jSmCr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A42C153B;
+	Fri,  9 May 2025 00:30:41 -0700 (PDT)
+Received: from [10.162.43.14] (K4MQJ0H1H2.blr.arm.com [10.162.43.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C16B3F58B;
+	Fri,  9 May 2025 00:30:49 -0700 (PDT)
+Message-ID: <42ab3f69-82d3-475f-b38d-8e75b2819865@arm.com>
+Date: Fri, 9 May 2025 13:00:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-ublk_task_per_io-v6-3-a2a298783c01@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm: mincore: use pte_batch_bint() to batch process
+ large folios
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ david@redhat.com
+Cc: 21cnbao@gmail.com, ryan.roberts@arm.com, ziy@nvidia.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <99cb00ee626ceb6e788102ca36821815cd832237.1746697240.git.baolin.wang@linux.alibaba.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <99cb00ee626ceb6e788102ca36821815cd832237.1746697240.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 03:49:37PM -0600, Uday Shankar wrote:
-> Currently, when we process CQEs, we know which ublk_queue we are working
-> on because we know which ring we are working on, and ublk_queues and
-> rings are in 1:1 correspondence. However, as we decouple ublk_queues
-> from ublk server threads, ublk_queues and rings will no longer be in 1:1
-> correspondence - each ublk server thread will have a ring, and each
-> thread may issue commands against more than one ublk_queue. So in order
-> to know which ublk_queue a CQE refers to, plumb that information in the
-> associated SQE's user_data.
+
+
+On 09/05/25 6:15 am, Baolin Wang wrote:
+> When I tested the mincore() syscall, I observed that it takes longer with
+> 64K mTHP enabled on my Arm64 server. The reason is the mincore_pte_range()
+> still checks each PTE individually, even when the PTEs are contiguous,
+> which is not efficient.
 > 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Thus we can use pte_batch_hint() to get the batch number of the present
+> contiguous PTEs, which can improve the performance. I tested the mincore()
+> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
+> obvious performance improvement:
+> 
+> w/o patch		w/ patch		changes
+> 6022us			549us			+91%
+> 
+> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
+> see any obvious regression for base pages.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Looks fine,
+Nit: The subject line - s/pte_batch_bint()/pte_batch_hint()
+Otherwise LGTM
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Dev Jain <dev.jain@arm.com>
 
-
-
-Thanks,
-Ming
+> ---
+> Changes from v2:
+> - Re-calculate the max_nr, per Barry.
+> Changes from v1:
+> - Change to use pte_batch_hint() to get the batch number, per Ryan.
+> 
+> Note: I observed the min_t() can introduce a slight performance regression
+> for base pages, so I change to add a batch size check for base pages,
+> which can resolve the performance regression issue.
+> ---
+>   mm/mincore.c | 22 +++++++++++++++++-----
+>   1 file changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/mincore.c b/mm/mincore.c
+> index 832f29f46767..42d6c9c8da86 100644
+> --- a/mm/mincore.c
+> +++ b/mm/mincore.c
+> @@ -21,6 +21,7 @@
+>   
+>   #include <linux/uaccess.h>
+>   #include "swap.h"
+> +#include "internal.h"
+>   
+>   static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long addr,
+>   			unsigned long end, struct mm_walk *walk)
+> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>   	pte_t *ptep;
+>   	unsigned char *vec = walk->private;
+>   	int nr = (end - addr) >> PAGE_SHIFT;
+> +	int step, i;
+>   
+>   	ptl = pmd_trans_huge_lock(pmd, vma);
+>   	if (ptl) {
+> @@ -118,16 +120,26 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>   		walk->action = ACTION_AGAIN;
+>   		return 0;
+>   	}
+> -	for (; addr != end; ptep++, addr += PAGE_SIZE) {
+> +	for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
+>   		pte_t pte = ptep_get(ptep);
+>   
+> +		step = 1;
+>   		/* We need to do cache lookup too for pte markers */
+>   		if (pte_none_mostly(pte))
+>   			__mincore_unmapped_range(addr, addr + PAGE_SIZE,
+>   						 vma, vec);
+> -		else if (pte_present(pte))
+> -			*vec = 1;
+> -		else { /* pte is a swap entry */
+> +		else if (pte_present(pte)) {
+> +			unsigned int batch = pte_batch_hint(ptep, pte);
+> +
+> +			if (batch > 1) {
+> +				unsigned int max_nr = (end - addr) >> PAGE_SHIFT;
+> +
+> +				step = min_t(unsigned int, batch, max_nr);
+> +			}
+> +
+> +			for (i = 0; i < step; i++)
+> +				vec[i] = 1;
+> +		} else { /* pte is a swap entry */
+>   			swp_entry_t entry = pte_to_swp_entry(pte);
+>   
+>   			if (non_swap_entry(entry)) {
+> @@ -146,7 +158,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>   #endif
+>   			}
+>   		}
+> -		vec++;
+> +		vec += step;
+>   	}
+>   	pte_unmap_unlock(ptep - 1, ptl);
+>   out:
 
