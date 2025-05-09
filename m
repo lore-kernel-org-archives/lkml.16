@@ -1,125 +1,76 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from out198-6.us.a.mail.aliyun.com (out198-6.us.a.mail.aliyun.com [47.90.198.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE60290BB8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C26028ECCD;
 	Fri,  9 May 2025 10:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785679; cv=none; b=BeJwBR71s54R9mJruWrnYfAJI1rttb4bl+jNR9sShfm1juLeKlvpWFT416ikZpkpV9VMYyodezEoFKxA7epqA3pwJkMBR4gClV3FwdTXmTzyvhezGeDcw8nsVXWC401CfB6MiQCOw2WH+Sggiii89/4c+cIv3RcXm9066QNILPg=
+	t=1746785680; cv=none; b=UI/xdMI/TM1zAkJf+ORIykEGfAxSNHSHgTLl4rEXhoyQhr5RzFzzX0qHekh1RQeQlC2S5sHmaDwOwO++PakUlkx+mI+1IdBA1j9g7Pz9N4Sjy4OtME+iIWxv/8nZyIvSqclEXGkvL0tVSEtJOrzn5abnN4ahP9AHBdZIiZS9MAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785679; c=relaxed/simple;
-	bh=Nh/3NP0bjRTX7YboruB3JZ2xLOeP0c8eAjI6a96C+Ns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hB8yoWVYLxFfmXWw5sE/fRmJLbl0paUiKyZNrxSRWWM3OJ/8vmVOYytQ5PlxjTm7AwiJbvXn3SvvavKsAHXT0kcGcLyLxRwyMN2HuxF9ME2NxVICiOaX9/OuWOpUV4mk3RjzREA5wzOwgiSoEyEA2NC96d80bxVVARr1L6aSw5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SWmuL2Dk; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746785680; c=relaxed/simple;
+	bh=ugJI5Tobb2IXuI2j4WeUxK3aOe1/tApJ5jT3clQjReQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AdlaJSaeS+sYvtJmlf2AnhIj2IlWMv89IRAyIZALs54SgdV5RpIM7jYGsm0D6A9+KRBUrn/VFLsIFwRPWntrEHOeznpBZywt671L4zATg461KkqT++X8OTYz460EK3swLoaMCUQ/+PwFNzHN+ymjmWO5ONnEMD5msjbZrvnw7pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn; spf=pass smtp.mailfrom=coolkit.cn; dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b=gpDzv7f9; arc=none smtp.client-ip=47.90.198.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coolkit.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SWmuL2Dk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746785675;
-	bh=Nh/3NP0bjRTX7YboruB3JZ2xLOeP0c8eAjI6a96C+Ns=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SWmuL2DkadT8glMPTDJkD0fHkph5ozcxmQp3otwW2hV+Urzlx+jkib0P1Y8sb3oGe
-	 uKCPCpGQ6H9FjoCKG/r2xOWmJcME7cBaeX+8diGKPRYaEWqnpwnWNvNHkIiwiDIiP7
-	 N+AdgLixstcmZuk72b6VF9t0ITdJGRrAFufuzd3GAHmQRqukFYXhYTd6xqpjw+I3Jl
-	 1/FxFzrk9J7gEyjhaMB+VHsCDb4qDiKn50nb8oGA3/AfuRUFfsdJchWHG7Zrw/ZiWa
-	 Ttl8nUMcmFvjQ8viGKfD2E741vtKllWNJlCFELdT1Bai9qGk3qI05BI1SkfZv+r0hx
-	 zupU0gzgvnZlw==
-Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laeyraud)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3792117E05A6;
-	Fri,  9 May 2025 12:14:34 +0200 (CEST)
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Date: Fri, 09 May 2025 12:12:51 +0200
-Subject: [PATCH v6 5/5] arm64: dts: mediatek: mt8370: Enable gpu support
+	dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b="gpDzv7f9"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=coolkit.cn; s=default;
+	t=1746785662; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=Gs19F+1WIkB6GNDNJjv2vHXESzCcZJhcfuVCqnf0BsQ=;
+	b=gpDzv7f9K0KAcUODF93NqLjdg13eD2UZhpaRar4598DP24YA5DhZ959ox6kec5KYHa4VrrDw1F6w5O+YWhMoVes7M7Up8uX1wa0N929mR+q+FPy5w4TJduPP/W+bxNAfhIOx5C5MWfLvPxiMQ48ndTiurT7AVugEH+jlSa6N38w=
+Received: from ubuntu-z.lan(mailfrom:hao.zhang@coolkit.cn fp:SMTPD_---.cjsv3WY_1746785661 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 09 May 2025 18:14:22 +0800
+From: Hao Zhang <hao.zhang@coolkit.cn>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	tim@feathertop.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hao Zhang <hao.zhang@coolkit.cn>
+Subject: [PATCH v2 0/2] arm: dts: rockchip: Adapt to IO domain and SDIO for Sonoff iHost
+Date: Fri,  9 May 2025 18:14:17 +0800
+Message-Id: <20250509101419.460473-1-hao.zhang@coolkit.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-mt8370-enable-gpu-v6-5-2833888cb1d3@collabora.com>
-References: <20250509-mt8370-enable-gpu-v6-0-2833888cb1d3@collabora.com>
-In-Reply-To: <20250509-mt8370-enable-gpu-v6-0-2833888cb1d3@collabora.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Steven Price <steven.price@arm.com>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746785666; l=1948;
- i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
- bh=Nh/3NP0bjRTX7YboruB3JZ2xLOeP0c8eAjI6a96C+Ns=;
- b=eS5XUwVylAb8iDUak8oAOPDL805+h1Snt1WhfhP5/wiMk6RaACqriIaEcPBEjxh/02dQm1DLC
- cEMADU1uaGeA0DdlZO8WNI/tOi61KEvy5ydd1mr83tlCL9GPmWF18Tg
-X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
- pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
+Content-Transfer-Encoding: 8bit
 
-Add a new gpu node in mt8370.dtsi to enable support for the
-ARM Mali G57 MC2 GPU (Valhall-JM) found on the MT8370 SoC, using the
-Panfrost driver.
+Changes since v1:
+- Use full name 'Hao Zhang' instead of login in From and Signed-off-by
 
-On a Mediatek Genio 510 EVK board, the panfrost driver probed with the
-following message:
-```
-panfrost 13000000.gpu: clock rate = 390000000
-panfrost 13000000.gpu: mali-g57 id 0x9093 major 0x0 minor 0x0 status 0x0
-panfrost 13000000.gpu: features: 00000000,000019f7, issues: 00000003,
-   80000400
-panfrost 13000000.gpu: Features: L2:0x08130206 Shader:0x00000000
-   Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
-panfrost 13000000.gpu: shader_present=0x5 l2_present=0x1
-[drm] Initialized panfrost 1.3.0 for 13000000.gpu on minor 0
-```
+This patch series makes two corrections for the RV1126-based 
+Sonoff iHost board:
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt8370.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+- Patch 1 adjusts the SDIO max-frequency to improve WiFi stability.
+- Patch 2 updates the IO domain voltages to match the board schematics.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8370.dtsi b/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-index cf1a3759451ff899ce9e63e5a00f192fb483f6e5..7ac8b8d0349455922a73f35db607b2b27cad23d7 100644
---- a/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-@@ -59,6 +59,22 @@ &cpu_little3_cooling_map0 {
- 				<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- };
- 
-+/*
-+ * Please note that overriding compatibles is a discouraged practice and is a
-+ * clear indication of nodes not being, well, compatible!
-+ *
-+ * This is a special case, where the GPU is the same as MT8188, but with one
-+ * of the cores fused out in this lower-binned SoC.
-+ */
-+&gpu {
-+	compatible = "mediatek,mt8370-mali", "arm,mali-valhall-jm";
-+
-+	power-domains = <&spm MT8188_POWER_DOMAIN_MFG2>,
-+			<&spm MT8188_POWER_DOMAIN_MFG3>;
-+
-+	power-domain-names = "core0", "core1";
-+};
-+
- &ppi_cluster0 {
- 	affinity = <&cpu0 &cpu1 &cpu2 &cpu3>;
- };
+The voltage fix is based on verified schematics and helps avoid potential
+hardware instability due to mismatched IO levels. 
+
+Tested on multiple units with improved long-term WiFi operation.
+
+Tim Lunn is Cc'd as the original board support contributor.
+
+*** BLURB HERE ***
+
+Hao Zhang (2):
+  ARM: dts: rockchip: Sonoff-iHost: adjust SDIO for stability
+  ARM: dts: rockchip: Sonoff-iHost: correct IO domain voltages
+
+ .../arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
 -- 
-2.49.0
+2.34.1
 
