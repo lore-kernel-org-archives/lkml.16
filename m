@@ -1,165 +1,271 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E6028F527
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1669028F939
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746788978; cv=none; b=DhRwyv42oam+9nPJau3XaQ1Ak62oUk+NFh3yb2LcJqTOpyQwxmMptdM2HkxPS7kFrHuNl7ZiMhwcqKY35FM9ShSAm62R2XBTcvDmxl4jqNdqh9r/mlEyxL0/w8XxlvIYfd5Ve9nb09F+VW0f6ZRNUmUxRHsCQuZmGg4ZBXPEfG4=
+	t=1746789026; cv=none; b=cyEm4cIO5Zl1WfwocMowgaho+OHRnWEJfLV+TlgJGPH1QdQiz3N5xIUUE101Ftqp+4tyrY64JxSwFWM4uNiWadem+eLux64vVhfC8fXQLzw5jop/ndE7qc3f/5eDJSEM8//mRW2tPiLH8xYhMO328ki2ZGJN54tgCifzOACz5Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746788978; c=relaxed/simple;
-	bh=IvCseEsNXn2YDR22ofVS1EjuRoUQXxujlI0mWYKfm9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kUjsFdwxB4VcMaqjtA6bPu0A+gfEGvsmKIzRcaEAPeYCnHcDzNUgiEwwkbPbnodsqp4b3H23Ed9zscFJ5a7a51WQQ+uusi5LUDP3EB7xAhkDdK+DY4A3vOY5njF1PKIc5vSXZpRJ0GMQWn5BUv8IUtQ/R0vuA1lRXUvVAUIEpoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=CTZM7qNC; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1746789026; c=relaxed/simple;
+	bh=7dfdnysPwBMKS+82Clp896n3dU2RRsYEI+dYVYgZi0I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M398xC4Jm62rOz3ujmpZlA/TXYaJwTNDksbCJqF53JIrVTewM9vssNmILoO/aQoeGntPNVLx0mqI0/bef3/0uZrzo7hEnvX25jkvDMyzt7lRi3n9w6A+wS5GKsCUCXgNERNP7QChfP9q6PnkFJK1WGfEyx70H/K4NSfbxD25Jt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DEQadB0W; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CTZM7qNC"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso3625592a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746788975; x=1747393775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IvCseEsNXn2YDR22ofVS1EjuRoUQXxujlI0mWYKfm9A=;
-        b=CTZM7qNCzeXCT4ShfG3on48F/uNt8RWhd9zMnE6fTbQaLZFkQOLv5c2Uq8/coaOViW
-         oi1fY/zQsqGHAT0ATZUOeT/kHTZNB1tXEJQQjb1S8QiaKnVOFOboZD/RLTv0/xR0Cutz
-         sm0V5JCnG8ZY1PLu0zLuIU9rfHKAngzx3UgEDSK/DE/te+2rMxApjrZxYtTBZz/EJhc1
-         T4svnDEK346c//j4et3wmo++YW1q+jRRdr4kb8c0kPHkDdPA9XFTqhb5uykN1MOhwf+g
-         3lXAojt/wvkmZqELUbiXHdIDz8Azm4wT/QY/BC2H7n6pwZbG0aj9l+Y4Rof8by5c6i/i
-         lBBw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DEQadB0W"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549350st031336
+	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 11:10:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=WChW6NT2y3bT2Dd/AmO3BGrFqcOhrO0ctaK
+	cTuAnPQ0=; b=DEQadB0Wx4paKl+O0rMDd+e5PkqMSktpxSPzcNt/mHl3boUJZ53
+	X8MpcQFpM3kI4Amx2zppnN2ALw6wj2tDhHmf9t0kSE/NrxEsJ1RnFguC8fX+a8/e
+	TaTCrkQjYe3KoZ+Vb59sOW96igq9eFMQXoQaXKhhMnxP2rpZmZ7EraDnpAcT1s7N
+	KSy3CBtMHZfptPf3tvU1uOeKcvA+W6E2gQB2NGJnCPXLdhq//Cpq+DrJPl+MXdvX
+	5yY8LajqNzU+F4IptUys9BWvEvIRUpGBnzL9xkTA+O47D1zppNDMp8ztAXW2sIep
+	7Grcd0Xn66ldTlLaPKAfK3ctVKDbJgOTmPg==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpgmd96-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:10:22 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7395095a505so1537595b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:10:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746788975; x=1747393775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IvCseEsNXn2YDR22ofVS1EjuRoUQXxujlI0mWYKfm9A=;
-        b=R+whovNvVblkeavPNkvhkIaQvrccLaxLUSUuDi62Gds51mpxDKec4+m27ptC34kiJC
-         HAW1zst1bYocrnj1ZkFL/qKexX4BKIOWh8DTVljKOzUGNxl3P84pDMbHBejzureB4fwG
-         T8D+YXwidH4g2fBlGuxEOKwidZbALSFkKDfjAnQ2XCIBvfwPCFo4IOj18DlcRkyV0LOo
-         Xc+piMSxNjPjaFIG46AlLtDD5cRyG4X0Pi9U6YaciEENjKQh147me05mQ2pL7Lo3PZly
-         C1a3l7q5z84sJMdZQ900C/CtalV7RZcKTcrOV5UJLqMV1YLSw1dohxUam7xzSgNnIE+1
-         jLhg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2G0N6mL294lkw2Js5Ub0AfIgoLdG0Hr/ivMA4d9Y2xfpIX5A2YpgQgiS78Vic1NJ0tBPzAFXPJ3+LSSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzybZn5zfOcNbT43Y+4+Ic143us9dQQScL8+ZVne5dtcFng3m3q
-	4fSCDwDHbHmDcWoHJlS4f2Tzf1SMG5btIc/+cSpQlHDwA+YEbbRRFBssFTMqZyetVBT4NewTj1n
-	BDdaoo9bdpNMjbFBBWAlwYCv2iYnNh3unFfRfqQ==
-X-Gm-Gg: ASbGnctoibRe9IpRyysqAIWhR+xxhOx4TYHuGF0fHjofJKyw/Y5zn6CKiN1MxIilDal
-	T2dtQPzIhHEadXcLLKUUrym6rB5ruWWL1jd79puxCw2YA3tIJLpAGf1pvt1wg4PF3z0amL03Jw0
-	F5m+nEgFTcE04U78Jb76coXs2Qjc0OUvJE5FhEyQCTP8+16nglq6rU2A==
-X-Google-Smtp-Source: AGHT+IHolmFqWEGC4AyYal+IeZ3IwV5YHOWUsjQ6qySOfZum5CD2COEsMayA91FRo6y4k+ibRc9NvWuirdTrS8RhJ24=
-X-Received: by 2002:a17:907:724f:b0:acb:5343:e75 with SMTP id
- a640c23a62f3a-ad2190afc7amr206746066b.34.1746788973864; Fri, 09 May 2025
- 04:09:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746789021; x=1747393821;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WChW6NT2y3bT2Dd/AmO3BGrFqcOhrO0ctaKcTuAnPQ0=;
+        b=aO54Yh2FzRHuhkuCkY1K28sPONMpjt5JfeewPl67STzh69HkYpDlvVJDSP3PvroMEj
+         0A+ne5DZu7Wx0XdbKJjak0X8A1/zND0oGZc12uhcuvKSLEoHajyBpUZqWoWgudduz8Ik
+         CWVWCoqPN+UQ0PRnYenGgtAPdYYVwVVEasr3dTTbrvqdrmQhMPDuk2K0YihIMY2UYznY
+         ZqXeh8W7UBleYHA8i09oub80iRnJZhSxtUNECNSX+o3yfGqxLsFysrsdI8dENmZHlf8E
+         4huYrwcV96gOt2bEg4NZSc47aRmJn+yM0g174xDfw05XwqI9YLYzcqQw+zNtCfBKpf9r
+         FMqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzNDIBJwSDWaLQnlGeTgVf7SEgcRFIFU5VR/CsaMAMu47H3Sc9SkReUNBsgyEFW/RtUgl6eEnSzRv0Ioo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSmsn43Zea/Of9sLis4UkNJL4V7c/rgcPWfp7eUXa3v7WuV/ai
+	AL0lY+YNVOcSx0iLo7d+MEC6twcPwaLrpl3a/naPK7PKo8AlM8SOxOkXXoVyzQH71y4VpEyswSj
+	Bajum6rIYheacEKYY1uKcxVmV5vvwZA+3S8gvRDx8ZHCEXGoGsX20rpTt3sMSAVA=
+X-Gm-Gg: ASbGncunicMY+yAXDKHgUBaYBeIeodabWXX2mZEKvgbTCCkC0mq4QPYPIDX/aqLZOS4
+	IG45N66VJQOapya8EvBWsc0w9PPMQt7KRfD4nSxggykBjUJ2K9iIj2V4UgSt325LijxG7Vs+NxL
+	brPWPCZ3Qz9e/la6YALBoL4E23fnaBBtSekQAxZdw8TyJtM+QCbUIFOPJBJpOiAmmCryOrD4/md
+	dvkP0/6bioonCCjK1Td1s4fkCc+DBow8bFxHlOcDhL2mXkrWrIljSglpDD23zRnUP3JRe3yS2a6
+	+qTZUlGjVkxOAAWSv94g4vSlDPZWUKEafbbTdSzwKybKGoc=
+X-Received: by 2002:a05:6a00:1488:b0:736:5438:ccc with SMTP id d2e1a72fcca58-7423be886d6mr3590864b3a.9.1746789021322;
+        Fri, 09 May 2025 04:10:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6B4hUPZkyN0EguRbayUTn9kR7wQ+X/PQBVDr7XZ2boU57acIR/MEr3SR0hxpbREh4Zp5GUg==
+X-Received: by 2002:a05:6a00:1488:b0:736:5438:ccc with SMTP id d2e1a72fcca58-7423be886d6mr3590816b3a.9.1746789020855;
+        Fri, 09 May 2025 04:10:20 -0700 (PDT)
+Received: from hu-jprakash-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237734c4asm1556223b3a.57.2025.05.09.04.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 04:10:20 -0700 (PDT)
+From: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+To: jic23@kernel.org, robh@kernel.org, krzysztof.kozlowski@linaro.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, agross@kernel.org,
+        andersson@kernel.org, lumag@kernel.org,
+        dmitry.baryshkov@oss.qualcomm.com, konradybcio@kernel.org,
+        daniel.lezcano@linaro.org, sboyd@kernel.org, amitk@kernel.org,
+        thara.gopinath@gmail.com, lee@kernel.org, rafael@kernel.org,
+        subbaraman.narayanamurthy@oss.qualcomm.com,
+        david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+        quic_kamalw@quicinc.com
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        cros-qcom-dts-watchers@chromium.org, jishnu.prakash@oss.qualcomm.com,
+        quic_skakitap@quicinc.com, neil.armstrong@linaro.org,
+        stephan.gerhold@linaro.org
+Subject: [PATCH V6 0/5] Add support for QCOM SPMI PMIC5 Gen3 ADC
+Date: Fri,  9 May 2025 16:39:54 +0530
+Message-Id: <20250509110959.3384306-1-jishnu.prakash@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321130635.227011-1-alexghiti@rivosinc.com>
- <4dd5d187-f977-4f27-9937-8608991797b5@ghiti.fr> <64409a13-1c07-42cd-b1ec-572042738f1b@arm.com>
- <84cb893a-46e3-408a-ba0e-2eff0b44d2a1@ghiti.fr> <20250508123046.GA3706@willie-the-truck>
-In-Reply-To: <20250508123046.GA3706@willie-the-truck>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Fri, 9 May 2025 13:09:22 +0200
-X-Gm-Features: AX0GCFtetDfDezkP8vUdVhHiVYD6YKsFtOYLD7hY4r0bKx1J-4Tcdfpu2fXv07A
-Message-ID: <CAHVXubjZB-riBLv+RGis6ErS8NvU4ijVTgvUO06fTxPhbEjXfA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Merge arm64/riscv hugetlbfs contpte support
-To: Will Deacon <will@kernel.org>, Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Matthew Wilcox <willy@infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=Ao/u3P9P c=1 sm=1 tr=0 ts=681de29e cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
+ a=N0aDCOoQtnTZPCUHnXIA:9 a=2VI0MkxyNR6bbpdq8BZq:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEwNyBTYWx0ZWRfX8P5D3jBsWAm6
+ y62vdN3ll/iqdJ/lqJa/TjdBZjVQYtOSQvA6mi9VvFEm2WgkXPfsWHAOA7cjBBHHBYrOoXAnEnQ
+ nwpF7qLDUdJd53h7RMrAp6W/CxDwId1WUn4aNI8dCMf7oKXWteilVi/7LH6KaqrXwrsLR5+vdMP
+ pJI3bPcCdRyPGvIjjzf3LRVMdf5z+BfCzQptCoDNbG3oG+gBXxU+8MC68YlNwSjizAKTPcexXgQ
+ 4E14inlg4pqVfgYyFZg8T6y7BPfgz8EvL8qIbD5gIoEIAQuPx3OLKMQf8bZBkwLro7e5Cv7EIEs
+ yVg7w8S0xQFlMfEnJoli4yH2OmMI7GyFf5nQzKbh4k2QlZTYDj5JVN/NYvZVO3ieWGnQGTRlu6j
+ Ll+gQCSpuXb1/jc69cpWrjQPTvvscccprUDc2c3xrvm1Ny5WJkmeJ/I0/RR5DMBDlIkiKXAA
+X-Proofpoint-GUID: G_zO90PutfrD7YkQcDCjk5kMP7n0PwlU
+X-Proofpoint-ORIG-GUID: G_zO90PutfrD7YkQcDCjk5kMP7n0PwlU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_04,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090107
 
-Hi Will,
+PMIC5 Gen3 has a similar ADC architecture to that on PMIC5 Gen2,
+with all SW communication to ADC going through PMK8550 which
+communicates with other PMICs through PBS. The major difference is
+that the register interface used here is that of an SDAM present on
+PMK8550, rather than a dedicated ADC peripheral. There may be more than one
+SDAM used for ADC5 Gen3. Each ADC SDAM has eight channels, each of which may
+be used for either immediate reads (same functionality as previous PMIC5 and
+PMIC5 Gen2 ADC peripherals) or recurring measurements (same as PMIC5 and PMIC5
+Gen2 ADC_TM functionality). In this case, we have VADC and ADC_TM functionality
+combined into the same driver.
 
-On Thu, May 8, 2025 at 2:30=E2=80=AFPM Will Deacon <will@kernel.org> wrote:
->
-> Hi folks,
->
-> On Mon, May 05, 2025 at 06:08:50PM +0200, Alexandre Ghiti wrote:
-> > On 29/04/2025 16:09, Ryan Roberts wrote:
-> > > On 07/04/2025 13:04, Alexandre Ghiti wrote:
-> > > > Can someone from arm64 review this? I think it's preferable to shar=
-e the same
-> > > > implementation between riscv and arm64.
-> > > I've been thinking about this for a while and had some conversations =
-internally.
-> > > This patchset has both pros and cons.
-> > >
-> > > In the pros column, it increases code reuse in an area that has had q=
-uite of few
-> > > bugs popping up lately; so this would bring more eyes and hopefully h=
-igher
-> > > quality in the long run.
-> > >
-> > > But in the cons column, we have seen HW errata in similar areas in th=
-e past and
-> > > I'm nervous that by hoisting this code to mm, we make it harder to wo=
-rkaround
-> > > any future errata. Additionally I can imagine that this change could =
-make it
-> > > harder to support future Arm architecture enhancements.
-> > >
-> > > I appreciate the cons are not strong *technical* arguments but nevert=
-heless they
-> > > are winning out in this case; My opinion is that we should keep the a=
-rm64
-> > > implementations of huge_pte_ (and contpte_ too - I know you have a se=
-parate
-> > > series for this) private to arm64.
-> > >
-> > > Sorry about that.
-> > >
-> > > > The end goal is the support of mTHP using svnapot on riscv, which w=
-e want soon,
-> > > > so if that patchset does not gain any traction, I'll just copy/past=
-e the arm64
-> > > > implementation into riscv.
-> > > This copy/paste approach would be my preference.
-> >
-> >
-> > I have to admit that I disagree with this approach, the riscv and arm64
-> > implementations are *exactly* the same so it sounds weird to duplicate =
-code,
-> > the pros you mention outweigh the cons.
-> >
-> > Unless I'm missing something about the erratas? To me, that's easily fi=
-xed
-> > by providing arch specific overrides no? Can you describe what sort of
-> > erratas would not fit then?
->
-> If we start with the common implementation you have here, nothing
-> prevents us from forking the code in future if the architectures diverge
-> so I'd be inclined to merge this series and see how we get on. However,
-> one thing I *do* think we need to ensure is that the relevant folks from
-> both arm64 (i.e. Ryan) and riscv (i.e. Alexandre) are cc'd on changes to
-> the common code. Otherwise, it's going to be a step backwards in terms
-> of maintainability.
->
-> Could we add something to MAINTAINERS so that the new file picks you both
-> up as reviewers?
+Patch 1 is a cleanup, to move the QCOM ADC dt-bindings files from
+dt-bindings/iio to dt-bindings/iio/adc folder, as they are
+specifically for ADC devices. It also fixes all compilation errors
+with this change in driver and devicetree files and similar errors
+in documentation for dtbinding check.
 
-I'm adding Lorenzo as he is cleaning the mm MAINTAINERS entries.
+Patch 2 splits out the common ADC channel properties used on older
+VADC devices, which would also be reused on ADC5 Gen3.
 
-@Lorenzo: should we add a new section "CONTPTE" for this? FYI, hugetlb
-is the first patchset, I have another patchset to merge THP contpte
-support [1] as well so the "HUGETLB" section does not seem to be a
-good fit.
+Patch 3 adds bindings for ADC5 Gen3 peripheral.
 
-[1] https://lore.kernel.org/linux-riscv/20240508191931.46060-1-alexghiti@ri=
-vosinc.com/
+Patch 4 adds the main driver for ADC5 Gen3.
 
-Thanks,
+Patch 5 adds the auxiliary thermal driver which supports the ADC_TM
+functionality of ADC5 Gen3.
 
-Alex
+Changes since v5:
+- Addressed some reviewer comments in documentation and driver patches.
+- Link to v5: https://lore.kernel.org/all/20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com/
 
->
-> Will
+Changes since v4:
+- Split common ADC channel properties out into a separate file to use as 
+  ref for ADC5 Gen3 and moved ADC5 Gen3 documentation into a separate
+  file as suggested by reviewers.
+- Addressed few reviewer comments in driver patches.
+- Link to v4: https://lore.kernel.org/all/20241030185854.4015348-1-quic_jprakash@quicinc.com/
+
+Changes since v3:
+- Updated files affected by adc file path change in /arch/arm folder,
+  which were missed earlier.
+- Added ADC5 Gen3 documentation changes in existing qcom,spmi-vadc.yaml file
+  instead of adding separate file and addressed reviewer comments for all bindings.
+- Addressed review comments in driver patch. Split out TM functionality into
+  auxiliary driver in separate patch and added required changes in main driver.
+- Link to v3: https://lore.kernel.org/all/20231231171237.3322376-1-quic_jprakash@quicinc.com/
+
+Changes since v2:
+- Reordered patches to keep cleanup change for ADC files first.
+- Moved ADC5 Gen3 documentation into a separate file
+
+Changes since v1:
+- Dropped patches 1-5 for changing 'ADC7' peripheral name to 'ADC5 Gen2'.
+- Addressed reviewer comments for binding and driver patches for ADC5 Gen3.
+- Combined patches 8-11 into a single patch as requested by reviewers to make
+  the change clearer and made all fixes required in same patch.
+
+Jishnu Prakash (5):
+  dt-bindings: iio/adc: Move QCOM ADC bindings to iio/adc folder
+  dt-bindings: iio: adc: Split out QCOM VADC channel properties
+  dt-bindings: iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+  iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+  thermal: qcom: add support for PMIC5 Gen3 ADC thermal monitoring
+
+ .../bindings/iio/adc/qcom,spmi-adc5-gen3.yaml | 155 ++++
+ .../iio/adc/qcom,spmi-vadc-common.yaml        |  87 ++
+ .../bindings/iio/adc/qcom,spmi-vadc.yaml      |  81 +-
+ .../bindings/mfd/qcom,spmi-pmic.yaml          |   2 +-
+ .../bindings/thermal/qcom-spmi-adc-tm-hc.yaml |   2 +-
+ .../bindings/thermal/qcom-spmi-adc-tm5.yaml   |   6 +-
+ arch/arm/boot/dts/qcom/pm8226.dtsi            |   2 +-
+ arch/arm/boot/dts/qcom/pm8941.dtsi            |   2 +-
+ arch/arm/boot/dts/qcom/pma8084.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom/pmx55.dtsi             |   2 +-
+ arch/arm64/boot/dts/qcom/pm4125.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm6125.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm6150.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm6150l.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pm660.dtsi           |   2 +-
+ arch/arm64/boot/dts/qcom/pm660l.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm7250b.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pm8150.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pm8916.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8937.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8950.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8953.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8994.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pm8998.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pmi632.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/pmi8950.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pmm8155au_1.dtsi     |   2 +-
+ arch/arm64/boot/dts/qcom/pmp8074.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/pms405.dtsi          |   2 +-
+ .../boot/dts/qcom/qcm6490-fairphone-fp5.dts   |   4 +-
+ .../boot/dts/qcom/qcm6490-shift-otter.dts     |   4 +-
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts  |   4 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dts       |   2 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi    |   4 +-
+ arch/arm64/boot/dts/qcom/sc8180x-pmics.dtsi   |   2 +-
+ .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts |   2 +-
+ .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    |   2 +-
+ .../dts/qcom/sc8280xp-microsoft-blackrock.dts |   2 +-
+ arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi  |   6 +-
+ .../boot/dts/qcom/sm7225-fairphone-fp4.dts    |   2 +-
+ .../boot/dts/qcom/sm7325-nothing-spacewar.dts |   6 +-
+ arch/arm64/boot/dts/qcom/sm8450-hdk.dts       |   8 +-
+ drivers/iio/adc/Kconfig                       |  30 +
+ drivers/iio/adc/Makefile                      |   2 +
+ drivers/iio/adc/qcom-adc5-gen3-common.c       | 104 +++
+ drivers/iio/adc/qcom-spmi-adc5-gen3.c         | 763 ++++++++++++++++++
+ drivers/iio/adc/qcom-spmi-adc5.c              |   2 +-
+ drivers/iio/adc/qcom-spmi-vadc.c              |   2 +-
+ drivers/thermal/qcom/Kconfig                  |   9 +
+ drivers/thermal/qcom/Makefile                 |   1 +
+ drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c | 531 ++++++++++++
+ .../iio/adc/qcom,pm8550-adc5-gen3.h           |  46 ++
+ .../iio/adc/qcom,pm8550b-adc5-gen3.h          |  85 ++
+ .../iio/adc/qcom,pm8550vx-adc5-gen3.h         |  22 +
+ .../iio/adc/qcom,pmk8550-adc5-gen3.h          |  52 ++
+ .../iio/{ => adc}/qcom,spmi-adc7-pm7325.h     |   2 +-
+ .../iio/{ => adc}/qcom,spmi-adc7-pm8350.h     |   2 +-
+ .../iio/{ => adc}/qcom,spmi-adc7-pm8350b.h    |   2 +-
+ .../iio/{ => adc}/qcom,spmi-adc7-pmk8350.h    |   2 +-
+ .../iio/{ => adc}/qcom,spmi-adc7-pmr735a.h    |   2 +-
+ .../iio/{ => adc}/qcom,spmi-adc7-pmr735b.h    |   2 +-
+ .../iio/{ => adc}/qcom,spmi-adc7-smb139x.h    |   2 +-
+ .../iio/{ => adc}/qcom,spmi-vadc.h            |  81 ++
+ include/linux/iio/adc/qcom-adc5-gen3-common.h | 193 +++++
+ 67 files changed, 2231 insertions(+), 139 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5-gen3.yaml
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc-common.yaml
+ create mode 100644 drivers/iio/adc/qcom-adc5-gen3-common.c
+ create mode 100644 drivers/iio/adc/qcom-spmi-adc5-gen3.c
+ create mode 100644 drivers/thermal/qcom/qcom-spmi-adc-tm5-gen3.c
+ create mode 100644 include/dt-bindings/iio/adc/qcom,pm8550-adc5-gen3.h
+ create mode 100644 include/dt-bindings/iio/adc/qcom,pm8550b-adc5-gen3.h
+ create mode 100644 include/dt-bindings/iio/adc/qcom,pm8550vx-adc5-gen3.h
+ create mode 100644 include/dt-bindings/iio/adc/qcom,pmk8550-adc5-gen3.h
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm7325.h (98%)
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm8350.h (98%)
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pm8350b.h (99%)
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmk8350.h (97%)
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmr735a.h (95%)
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-pmr735b.h (95%)
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-adc7-smb139x.h (93%)
+ rename include/dt-bindings/iio/{ => adc}/qcom,spmi-vadc.h (77%)
+ create mode 100644 include/linux/iio/adc/qcom-adc5-gen3-common.h
+
+
+base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+-- 
+2.25.1
+
