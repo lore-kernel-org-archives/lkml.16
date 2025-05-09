@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5BA24166F;
-	Fri,  9 May 2025 22:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73122367D3;
+	Fri,  9 May 2025 22:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746828379; cv=none; b=OquWhTeqc+OSHSD8X/84GlV6K8Ktrpplyx9BEOqcp6In5QJm9f62r2svOEYANotF1vx+iQJmuUnIjI1OrOeTUI7q3CcD94kgB7El47tjoW3R4TtVIJfgdFlnWaQvJ1nDipvxP+R8quW8H/qwDJTmDq3aECGPJ0OM3m5gjND2CeE=
+	t=1746828420; cv=none; b=XKMPmQDMY/eKZDuvpSEDh2OOq0Iwjzn2ZxhIz49WLFiop0pw3pPMHGkbZtxG+Pfe2R50m7tI7DAVM+ufgtO5vIAHNhcnIrz/FtDRNHYRRp5YeEg4A+I0YHG+2QFYfgwYD6plw+JsnhFgzRdEN+GNII3gwm7Nr9LPVB2VUI4YNe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746828379; c=relaxed/simple;
-	bh=RdaNVjYpV0ujRNO1itlb+RPBeLnd/2lTQku3mW7iF3I=;
+	s=arc-20240116; t=1746828420; c=relaxed/simple;
+	bh=oszRhxVYfEHRtBV+CHp12uLdy4JtPX6fvY+8G+/BeAU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hRuGsXpMN5hlFDBb+LFdDv8nwXv+2dudhStAYIR7ak09KwwWwsZiJUWcMhwqcLing60ECXwM5NWevUoV0R4ua+D9x0Xrf+Psdh25gObjVF5bmPs+9tEaGYoYXKN8B+uyK3tbn9P7LarnyjhW6jBD1pKSSGck10dvXn2YXdADuX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YPT3h0fo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BCg24TrKIAqA/Msn8A434NodWBE8cyefR0KFluO+lXQS03Dauwpyi+RM7TLH2jmNLTzhNOdOtbpG5uZyeft62Kc0DTf3XX4ndcJ3TZS0+WASHgMzrtiJd1RnzBjc3y45pS3D2hZQhL+3czCdA1u+lVdvWxTcc8UP7Kgtscz3vlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5xCWK5b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YPT3h0fo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0B2C4CEE4;
-	Fri,  9 May 2025 22:06:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5xCWK5b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFAEC4CEE4;
+	Fri,  9 May 2025 22:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746828378;
-	bh=RdaNVjYpV0ujRNO1itlb+RPBeLnd/2lTQku3mW7iF3I=;
+	s=k20201202; t=1746828420;
+	bh=oszRhxVYfEHRtBV+CHp12uLdy4JtPX6fvY+8G+/BeAU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YPT3h0fotFbVgjyr7ntlydjvZvR7bCnBuS8m3ic4YEiKKkD2Lna1XBoyLzfzWcryo
-	 fi0wBlK+mQWn3zd0bOM//LqQBychZD3OTfbHBihp96keHtkkWgjHn4xoKV9NhmNLQE
-	 6X44wrMVpyi6dTLw16Lekr6VzmXLG0U3IkPQGjkVBb+CHoJ2glmG3bnQfVte5uE5t/
-	 4/dIWlkLAGj0DjC+PvzpvJpMU6jjDnuToBpOEY+Ifb56hDrdl0uLBVByexNtSrFD5Q
-	 +1jguokgXbQTZPDnFaxhs2MCIgoXLn5HUDD9rHI9+3wScsfsecV9tZk9mvIb35b8SC
-	 Sc2yGCunlSxgw==
-Date: Fri, 9 May 2025 17:06:16 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+	b=G5xCWK5bXIaWHQU/7ghsX8ODhbHloc/z5DnH7TSUzlIkuI/Ce3XSv7s3/ckLS2x/Y
+	 Qoio7F6CvV+23CovRsTYWaXddkviC4Um2nS/HbjpLtGoUZS3hDBi+qU6mA7PVEs6x1
+	 zwKtSGDkwisjFChemzA9jfkQHeZph6KIjQ/Y2s+8kdHMACO2bVWvyXPAKbiXbX3CHm
+	 J2F6sGMlY7CJDSzj8inpfbT3kDScbk84UtGgmUvaQfPgBshIbX/tHFsiiEzPjPdRvM
+	 fSfVZLrriQPSlyovpJ4+QPy5VT5bRVJISKswYywjEmu6gH/1bUTiCM+b/W+xLJL/Xw
+	 qlVm/66S4sHOw==
+Date: Fri, 9 May 2025 17:06:58 -0500
+From: Rob Herring <robh@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Sangwon Jee <jeesw@melfas.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-remoteproc@vger.kernel.org,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: remoteproc: qcom,sm8350-pas: Add
- SC8280XP
-Message-ID: <174682837610.74587.5924726541252709205.robh@kernel.org>
-References: <20250503-topic-8280_slpi-v1-0-9400a35574f7@oss.qualcomm.com>
- <20250503-topic-8280_slpi-v1-1-9400a35574f7@oss.qualcomm.com>
+	Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/4] dt-bindings: input: melfas-mip4: document
+ linux,keycodes property
+Message-ID: <20250509220658.GA74742-robh@kernel.org>
+References: <20250503-mip4-touchkey-v1-0-b483cda29a5b@disroot.org>
+ <20250503-mip4-touchkey-v1-1-b483cda29a5b@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,20 +48,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250503-topic-8280_slpi-v1-1-9400a35574f7@oss.qualcomm.com>
+In-Reply-To: <20250503-mip4-touchkey-v1-1-b483cda29a5b@disroot.org>
 
-
-On Sat, 03 May 2025 00:37:59 +0200, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Sat, May 03, 2025 at 02:38:27PM +0530, Kaustabh Chakraborty wrote:
+> Document the linux,keycodes property. The property values are key codes
+> which are used in input key events generated by the touchkey device.
 > 
-> From the software POV, it matches the SM8350's implementation.
-> Describe it as such, with a fallback.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 > ---
->  .../bindings/remoteproc/qcom,sm8350-pas.yaml       | 54 ++++++++++++----------
->  1 file changed, 30 insertions(+), 24 deletions(-)
-> 
+>  Documentation/devicetree/bindings/input/touchscreen/melfas_mip4.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Convert to DT schema if you want to add to this.
 
+Rob
