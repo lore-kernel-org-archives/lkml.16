@@ -1,65 +1,66 @@
 Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C572F28F528
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEF728F95D
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746788820; cv=none; b=Zxipon7R4Lcgq+nZxWUg29CzSXYK6xpvktmwKaqoZgQA+5NWrxGPezvFq83XUrEer6zuUgH0vhqBH+S5Si+gHQyFzqBEn3Nzhf1EtPsP+1UQzLUlVrqPwm/sfg9FALey6ZN9FTlIqT/t8RyDZZccNSbhqzT2teAX7OvdCkzF6po=
+	t=1746788822; cv=none; b=ff9m6+kdIbYc6I52NQFRg0qyJf6MbS3BNVpZ/BBvCgDnqx7AufKJ9ac6qFpzexq1eVTfodisUzaSsUGiKqtY3rVmeEqVYBcR60dvYyLzMqf9D9tQyXAeYedd3a4sd7WZjPBlzUXddwdiK0iUypTFcDsMpJYlRwn5g09UEZTZObI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746788820; c=relaxed/simple;
-	bh=2Me3n9aaBCtjK+qaTkwH9V1pF/7QGlCrjR9j27nmWwE=;
+	s=arc-20240116; t=1746788822; c=relaxed/simple;
+	bh=eEjcZlIDJmLV5/jyvCAjQjBuHpvBbYFjopscg3ocaAU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tpnIc09OPqQUGDHPl4PPVnEdz9BrRI8HWVN8b3+AYEAxJJ+wbhCwbVMm9DeCxi+ercvXHyMgw5Nyth5u0lR3wfnQleow+NF1Hiy+Y9iu0iT+2NbhpEa6PNfS7pXy78+GGpRk9WLc18KEz9QoXXEzcqxTlKK+WJWLKTjeY+EMuiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tFa3SB56; arc=none smtp.client-ip=209.85.221.45
+	 In-Reply-To:To:Cc; b=hHKC6tlbV33M14dSnNzzLFBx7JTaa2g9xnoV/oTsf+Tz0aqgmg9BUzGO1fZ3QEUn6+SI50sLsHXns7JFBifvnqvIyd71tkM5A9sh+rUHHdDIghXLdMmg/CybE27/PTM2qOhu9IAu5ouY9N2y1vC4+q7LfbqzG2J9Jf9PwdrXGOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AmS/r9Y5; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tFa3SB56"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a1d8c0966fso847203f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:06:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmS/r9Y5"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a1f5d2d91eso612566f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746788816; x=1747393616; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746788819; x=1747393619; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SUoeaJOnz98LhxzrB2OQnuTIO89rQsZt/lwrASJetuQ=;
-        b=tFa3SB56OlxIm4M6PvsOZ+b8+1wTH1hlihXXvrJoob9Din6ZUUTPyC1WbCXXdeR76t
-         6DcfLgHbcvsstA1fyD0x7y7mLwUjlvBHtFFmisRlMU2LUyS7MDszZsbtJZ8e9iamRUGy
-         rpqJtTPv2txKtLKDNiJi5hqy1orGtVbRGCZFcuTj5F53DCrRiKWTQXd98a+riZocPcWW
-         Pg498khWnvIc92fKyTCXza2wDUtGpbdW1AxKCQCcuPgHwqUd9diaVJWU3ae37R8lnf64
-         da40gC7wZVzZcE+iDdLw2VUnlDz+tlMNgospItPEAVzyNKxGKW0F3VGqL7UFl+JCPMrn
-         Wlkg==
+        bh=XZ/3VdJhYRpNseu5U9lSFH9HxUE77S8ESF2tbbWAri0=;
+        b=AmS/r9Y5uW7x4VbumhhDXBgwmqEk9OiGrr5gsv9+yhNaM6GKvS4L2f7pz2A9vyNVfd
+         +Jo7dwcmAyU4jQ3l/iTN3w54QIjQ1Y0hRljRrE+rIOkheHYooYuwoTCf6PndC5yJRmfm
+         JXAgvfw9w/GWPesyiiqVT6jg8MihR8PTXYTvw9n+V9oEoVEZdjRhr5rT+6No43r9YUy2
+         0qC2yAl+xwxjfHB+fuJGDLf9A6Pu8bTLqsAeIM1KA9ubHIrjmOLwuilJDQb01N0P4lJs
+         Zm246RiTTi8YaDAzD2NorjuS11zvYnwmdUGhKeXIL3wAWYrhcGqooupHDg6BJO7rJqPS
+         9ESg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746788816; x=1747393616;
+        d=1e100.net; s=20230601; t=1746788819; x=1747393619;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SUoeaJOnz98LhxzrB2OQnuTIO89rQsZt/lwrASJetuQ=;
-        b=QvGJN+LWDtWB5sJKf9Qic9x37ph6lbCpvs6+L9a+8MrgmKVJowH4qmnkiX9FeAlE8t
-         uRpjwZ05t7StJgNvgM3OKOAzjFAdbej4kbyGpKa2yDcVXKnIYKtPtNBH7tGJCGzNoOdR
-         tYiIMpXPV38fSjOUUMsJoqk0wuIaVvmB6pzlMTex7L32r1zQSaUriytVzRUcA+SjlVZa
-         qTCtxMuXAKPrDz+R86DveOhF8bncHKC46rTHnisM6szFSuQoOZApFGlDPcdRkp709BZ4
-         wTR70DplvRpmTylYON6QqyPG3rzymoKb1g0zHKEVaECKyQZZPzaoPPTbY4gy/ST+ZPC1
-         bvuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUvZ5rgi39Q4/6uNF+r9bq4TbTsdjTD/6tKYd55YVgAt1MLEZpr9F6Xl/HHZxg4Urmm6yI6v3bL2zahIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgKdQ7aMEg7kBj6tOVe/kHMKByDJx4aiYsohCXt4wCa11hKXp+
-	usTuBN3+fECvmc8JEpFNAIbNlvuzQpw2MZK6i1ESWSjXJV/GCIiMMFTaEklWpq8=
-X-Gm-Gg: ASbGncsaUuxuJOxN7C5+R6fL6kKtbsPfc1tAnkyFZka2dFDs+USYYsB+woO4WlR1hp2
-	rGSZd+TH7AZmrRRSixE7imFfFE1vFITYRpFy0792r/stSDTsjDm66Kq8FPl2+tMDw25QaSEI0PS
-	2Xpuhs3FPW/g9ST2OEZFvEmrfB/cQo/cEMINUTs8zJcP3mVuCnlcG7Xf9GoGrnrgazc5OWze849
-	VAkU1SiOS27XUkiIcBH3PSWAoQ+a0jSvXaXgsyERqUqZC71JZyoB1qgOIhk4B9vyQ2Yk/V17aKs
-	+hKBsZDBIrYTUIWj1kFZM76/AmekTyawRBtq0zkFz6sh0uM=
-X-Google-Smtp-Source: AGHT+IFJQRyVMr2U93vokfpSUulnWLDfNfE0bAch8J9y68HcjUDSO608e30Saz1ZNqv66Dvdty+TYw==
-X-Received: by 2002:a05:6000:2ab:b0:39f:c05:c220 with SMTP id ffacd0b85a97d-3a0b9941e27mr6449970f8f.22.1746788815916;
-        Fri, 09 May 2025 04:06:55 -0700 (PDT)
+        bh=XZ/3VdJhYRpNseu5U9lSFH9HxUE77S8ESF2tbbWAri0=;
+        b=uQh9vtQ7m+zSS+H6ZW9lPPDpqDKCOtvy8T17vmXHkmDwIN+Y7yoYzJrwVoRciUmG0k
+         WMv0o+dFY6Uqwz74yp/tR4G2btTlDB/jx5DyDRSngBkV6iZhm5pxxKyz0N8/Ug5hVvU5
+         NVNpQdupL0Jhpbnh0oN+QMHGKh/fFD8UPhj9GkIyQBHy9GI7tf9AAhSxjn/GJiPrp8or
+         Xd2mrOJFYJN2KkKOfXhznOn2gYX5eH2dr6chuaCHxNzUpcTu+IVZof5T5s+yPjUZe/R5
+         rTZ0SiUPfWboJyRZss1GueObfkqMno0pQQUORIrE17Kc4Ch2ZTejaUYvHCyHiLmvLaaC
+         0Qkw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5FcTBukfR1zsgOghJGcxdUqCWoOWG6RB8o5XfneepYlVPisF9KJnNaKJDdc/yHa+euHiUVbo6Wa7sSHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3bFd8tTAPhuTVyE2scaUp8JLsVp0bhszfcasXeLW06GDyDzMy
+	J5IPmRqQIeyTd+PNe5/y1oAzzmDJkSmmiHSCmaUcxF8/bTWcNFXC/m2ahuIA5Lk=
+X-Gm-Gg: ASbGncuf+kMNsk0m5N0L35fFZJRkdN/RGy1OU+TpGT5J+yMmoedvvF/I0FemnsHbeFd
+	r7lvsAT1kD6/5HxTpN0yw4qfec7VD5FfvH1p3tM3D/bk07BDfXvX14fVptK2dqelYpe4l21VYeM
+	3u6hT2FTYKoFmJanu/q5E2PNWD1Vh7s82cTkJqc5C4gKAR+sKr4KA835BcDUJK6zTbFlYif+Fb4
+	eIr4nXUvhNTqWYYZzq5STQywC7PlYZFnGUO2yt/qZSLJYkOyb7/eXvBGuP8wqXA8S37n8QtYLcu
+	erzK07eTGHqiu5fPyhNJ9q9ryFnyTfqDBfZPS+4zUK0lUOQ=
+X-Google-Smtp-Source: AGHT+IFbRxA53PsQ6WEpfLOqgfTczthdryRGHNyvPGYt33prnCWmvz5n1DMnzXDap0L0ElCdAiEfKQ==
+X-Received: by 2002:a05:6000:2905:b0:3a0:b9a8:b94c with SMTP id ffacd0b85a97d-3a1f64b5c83mr2393167f8f.50.1746788818691;
+        Fri, 09 May 2025 04:06:58 -0700 (PDT)
 Received: from ho-tower-lan.lan ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecadfsm2914797f8f.22.2025.05.09.04.06.54
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecadfsm2914797f8f.22.2025.05.09.04.06.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 04:06:55 -0700 (PDT)
+        Fri, 09 May 2025 04:06:58 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Fri, 09 May 2025 12:05:48 +0100
-Subject: [PATCH 01/14] spi: spi-fsl-dspi: Define regmaps per device
+Date: Fri, 09 May 2025 12:05:50 +0100
+Subject: [PATCH 03/14] spi: spi-fsl-dspi: restrict register range for
+ regmap access
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-james-nxp-spi-v1-1-32bfcd2fea11@linaro.org>
+Message-Id: <20250509-james-nxp-spi-v1-3-32bfcd2fea11@linaro.org>
 References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
 In-Reply-To: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
 To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -83,241 +84,120 @@ To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
  andrei.stefanescu@nxp.com, dan.carpenter@linaro.org
 Cc: linux-spi@vger.kernel.org, imx@lists.linux.dev, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, James Clark <james.clark@linaro.org>
+ linux-arm-kernel@lists.infradead.org, Xulin Sun <xulin.sun@windriver.com>, 
+ James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Refactor the regmaps so they can be defined per device rather than
-programmatically. This will allow us to add two new regmaps for S32G in
-a later commit.
+From: Larisa Grigore <larisa.grigore@nxp.com>
 
-No functional changes.
+DSPI registers are NOT continuous, some registers are reserved and
+accessing them from userspace will trigger external abort, add regmap
+register access table to avoid below abort:
 
+Internal error: synchronous external abort: 96000210 1 PREEMPT SMP
+Modules linked in: fuse dummy tun hse sch_fq_codel openvswitch nsh
+nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+CPU: 2 PID: 18231 Comm: read_all Not tainted 5.2.33-yocto-standard #1
+Hardware name: Freescale S32G275 (DT)
+pstate: 20000085 (nzCv daIf -PAN -UAO)
+pc : regmap_mmio_read32le+0x24/0x48
+lr : regmap_mmio_read+0x48/0x70
+sp : ffffff801123bb70
+x29: ffffff801123bb70 x28: ffffffc873b5c000
+x27: ffffff8010b408f0 x26: 0000000000000001
+x25: 000000000000013c x24: ffffff801123be40
+x23: 00000000000003ff x22: ffffff801123bcfc
+x21: ffffff801123bcfc x20: ffffffc873a9e500
+x19: 0000000000000024 x18: 0000000000000020
+x17: 0000000000000000 x16: 0000000000000000
+x15: ffffffc876189160 x14: 0000000000000003
+x13: ffffffc873bf73ff x12: ffffffc873bf707e
+x11: 0000000000000000 x10: 0000000000000000
+x9 : 0000000000000000 x8 : ffffffc83fca4e00
+x7 : 000000000000000f x6 : ffffffc873bf7083
+x5 : 00000000fffffff9 x4 : 0000000000000002
+x3 : ffffff801061f058 x2 : ffffff801061ee18
+x1 : 0000000000000024 x0 : ffffff8011490024
+Call trace:
+regmap_mmio_read32le+0x24/0x48
+regmap_mmio_read+0x48/0x70
+_regmap_bus_reg_read+0x38/0x48
+_regmap_read+0x68/0x1b0
+regmap_read+0x50/0x78
+regmap_read_debugfs+0x120/0x338
+regmap_map_read_file+0x44/0x58
+full_proxy_read+0x68/0x98
+__vfs_read+0x48/0x90
+vfs_read+0xb0/0x130
+ksys_read+0x7c/0x108
+__arm64_sys_read+0x24/0x30
+el0_svc_common.constprop.0+0x74/0x168
+el0_svc_handler+0x70/0x90
+el0_svc+0x8/0xc
+
+Co-developed-by: Xulin Sun <xulin.sun@windriver.com>
+Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
+Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 121 ++++++++++++++++++++++++---------------------
- 1 file changed, 66 insertions(+), 55 deletions(-)
+ drivers/spi/spi-fsl-dspi.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 067c954cb6ea..31ea8ce81e98 100644
+index cb0e55a49eea..701cf56d28e7 100644
 --- a/drivers/spi/spi-fsl-dspi.c
 +++ b/drivers/spi/spi-fsl-dspi.c
-@@ -121,6 +121,7 @@ struct fsl_dspi_devtype_data {
- 	enum dspi_trans_mode	trans_mode;
- 	u8			max_clock_factor;
- 	int			fifo_size;
-+	const struct regmap_config *regmap;
- };
- 
- enum {
-@@ -136,60 +137,123 @@ enum {
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ //
+ // Copyright 2013 Freescale Semiconductor, Inc.
+-// Copyright 2020 NXP
++// Copyright 2020-2025 NXP
+ //
+ // Freescale DSPI driver
+ // This file contains a driver for the Freescale DSPI
+@@ -137,6 +137,20 @@ enum {
  	VF610,
  };
  
-+static const struct regmap_range dspi_volatile_ranges[] = {
-+	regmap_reg_range(SPI_MCR, SPI_TCR),
-+	regmap_reg_range(SPI_SR, SPI_SR),
-+	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
-+};
-+
-+static const struct regmap_access_table dspi_volatile_table = {
-+	.yes_ranges	= dspi_volatile_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(dspi_volatile_ranges),
-+};
-+
-+static const struct regmap_range dspi_xspi_volatile_ranges[] = {
-+	regmap_reg_range(SPI_MCR, SPI_TCR),
-+	regmap_reg_range(SPI_SR, SPI_SR),
-+	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
++static const struct regmap_range dspi_yes_ranges[] = {
++	regmap_reg_range(SPI_MCR, SPI_MCR),
++	regmap_reg_range(SPI_TCR, SPI_CTAR(3)),
++	regmap_reg_range(SPI_SR, SPI_TXFR3),
++	regmap_reg_range(SPI_RXFR0, SPI_RXFR3),
++	regmap_reg_range(SPI_CTARE(0), SPI_CTARE(3)),
 +	regmap_reg_range(SPI_SREX, SPI_SREX),
 +};
 +
-+static const struct regmap_access_table dspi_xspi_volatile_table = {
-+	.yes_ranges	= dspi_xspi_volatile_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(dspi_xspi_volatile_ranges),
++static const struct regmap_access_table dspi_access_table = {
++	.yes_ranges	= dspi_yes_ranges,
++	.n_yes_ranges	= ARRAY_SIZE(dspi_yes_ranges),
 +};
 +
-+enum {
-+	DSPI_REGMAP,
-+	DSPI_XSPI_REGMAP,
-+	DSPI_PUSHR
-+};
-+
-+static const struct regmap_config dspi_regmap_config[] = {
-+	[DSPI_REGMAP] = {
-+		.reg_bits	= 32,
-+		.val_bits	= 32,
-+		.reg_stride	= 4,
-+		.max_register	= 0x88,
-+		.volatile_table	= &dspi_volatile_table
-+	},
-+	[DSPI_XSPI_REGMAP] = {
-+		.reg_bits	= 32,
-+		.val_bits	= 32,
-+		.reg_stride	= 4,
-+		.max_register	= 0x13c,
-+		.volatile_table	= &dspi_xspi_volatile_table
-+	},
-+	[DSPI_PUSHR] = {
-+		.name		= "pushr",
-+		.reg_bits	= 16,
-+		.val_bits	= 16,
-+		.reg_stride	= 2,
-+		.max_register	= 0x2
-+	}
-+};
-+
- static const struct fsl_dspi_devtype_data devtype_data[] = {
- 	[VF610] = {
- 		.trans_mode		= DSPI_DMA_MODE,
- 		.max_clock_factor	= 2,
- 		.fifo_size		= 4,
-+		.regmap			= &dspi_regmap_config[DSPI_REGMAP]
+ static const struct regmap_range dspi_volatile_ranges[] = {
+ 	regmap_reg_range(SPI_MCR, SPI_TCR),
+ 	regmap_reg_range(SPI_SR, SPI_SR),
+@@ -161,14 +175,18 @@ static const struct regmap_config dspi_regmap_config[] = {
+ 		.val_bits	= 32,
+ 		.reg_stride	= 4,
+ 		.max_register	= 0x88,
+-		.volatile_table	= &dspi_volatile_table
++		.volatile_table	= &dspi_volatile_table,
++		.wr_table	= &dspi_access_table,
++		.rd_table	= &dspi_access_table
  	},
- 	[LS1021A] = {
- 		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 4,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+ 	[DSPI_XSPI_REGMAP] = {
+ 		.reg_bits	= 32,
+ 		.val_bits	= 32,
+ 		.reg_stride	= 4,
+ 		.max_register	= 0x13c,
+-		.volatile_table	= &dspi_volatile_table
++		.volatile_table	= &dspi_volatile_table,
++		.wr_table	= &dspi_access_table,
++		.rd_table	= &dspi_access_table
  	},
- 	[LS1012A] = {
- 		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 16,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
- 	},
- 	[LS1028A] = {
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 4,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
- 	},
- 	[LS1043A] = {
- 		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 16,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
- 	},
- 	[LS1046A] = {
- 		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 16,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
- 	},
- 	[LS2080A] = {
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 4,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
- 	},
- 	[LS2085A] = {
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 4,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
- 	},
- 	[LX2160A] = {
- 		.trans_mode		= DSPI_XSPI_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 4,
-+		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
- 	},
- 	[MCF5441X] = {
- 		.trans_mode		= DSPI_DMA_MODE,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 16,
-+		.regmap			= &dspi_regmap_config[DSPI_REGMAP]
- 	},
- };
- 
-@@ -1167,54 +1231,6 @@ static int dspi_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(dspi_pm, dspi_suspend, dspi_resume);
- 
--static const struct regmap_range dspi_volatile_ranges[] = {
--	regmap_reg_range(SPI_MCR, SPI_TCR),
--	regmap_reg_range(SPI_SR, SPI_SR),
--	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
--};
--
--static const struct regmap_access_table dspi_volatile_table = {
--	.yes_ranges	= dspi_volatile_ranges,
--	.n_yes_ranges	= ARRAY_SIZE(dspi_volatile_ranges),
--};
--
--static const struct regmap_config dspi_regmap_config = {
--	.reg_bits	= 32,
--	.val_bits	= 32,
--	.reg_stride	= 4,
--	.max_register	= 0x88,
--	.volatile_table	= &dspi_volatile_table,
--};
--
--static const struct regmap_range dspi_xspi_volatile_ranges[] = {
--	regmap_reg_range(SPI_MCR, SPI_TCR),
--	regmap_reg_range(SPI_SR, SPI_SR),
--	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
--	regmap_reg_range(SPI_SREX, SPI_SREX),
--};
--
--static const struct regmap_access_table dspi_xspi_volatile_table = {
--	.yes_ranges	= dspi_xspi_volatile_ranges,
--	.n_yes_ranges	= ARRAY_SIZE(dspi_xspi_volatile_ranges),
--};
--
--static const struct regmap_config dspi_xspi_regmap_config[] = {
--	{
--		.reg_bits	= 32,
--		.val_bits	= 32,
--		.reg_stride	= 4,
--		.max_register	= 0x13c,
--		.volatile_table	= &dspi_xspi_volatile_table,
--	},
--	{
--		.name		= "pushr",
--		.reg_bits	= 16,
--		.val_bits	= 16,
--		.reg_stride	= 2,
--		.max_register	= 0x2,
--	},
--};
--
- static int dspi_init(struct fsl_dspi *dspi)
- {
- 	unsigned int mcr;
-@@ -1272,7 +1288,6 @@ static int dspi_target_abort(struct spi_controller *host)
- static int dspi_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	const struct regmap_config *regmap_config;
- 	struct fsl_dspi_platform_data *pdata;
- 	struct spi_controller *ctlr;
- 	int ret, cs_num, bus_num = -1;
-@@ -1355,11 +1370,7 @@ static int dspi_probe(struct platform_device *pdev)
- 		goto out_ctlr_put;
- 	}
- 
--	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
--		regmap_config = &dspi_xspi_regmap_config[0];
--	else
--		regmap_config = &dspi_regmap_config;
--	dspi->regmap = devm_regmap_init_mmio(&pdev->dev, base, regmap_config);
-+	dspi->regmap = devm_regmap_init_mmio(&pdev->dev, base, dspi->devtype_data->regmap);
- 	if (IS_ERR(dspi->regmap)) {
- 		dev_err(&pdev->dev, "failed to init regmap: %ld\n",
- 				PTR_ERR(dspi->regmap));
-@@ -1370,7 +1381,7 @@ static int dspi_probe(struct platform_device *pdev)
- 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE) {
- 		dspi->regmap_pushr = devm_regmap_init_mmio(
- 			&pdev->dev, base + SPI_PUSHR,
--			&dspi_xspi_regmap_config[1]);
-+			&dspi_regmap_config[DSPI_PUSHR]);
- 		if (IS_ERR(dspi->regmap_pushr)) {
- 			dev_err(&pdev->dev,
- 				"failed to init pushr regmap: %ld\n",
+ 	[DSPI_PUSHR] = {
+ 		.name		= "pushr",
 
 -- 
 2.34.1
