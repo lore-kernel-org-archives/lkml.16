@@ -1,342 +1,83 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972D420C492
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 23:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DA526563B;
+	Fri,  9 May 2025 23:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746834567; cv=none; b=NkDDeSlZN8z68JvybSWgQT0CmGkTH25pfow17C8UAunfFjQCRzq6Fr+DZjLJ9fJYpqUQX8Am/IuE2p1HGsaIzpLiXlQCTTi0IJpAzptNMCXh9j0gbFggxX9k8LG+stCZqslY08zun/J1R2fq4GcJvZEo9Z50ixHkaIayV0tT81o=
+	t=1746834603; cv=none; b=QEQ6mIvXo22Ci7Bikte0RK3eijdt7oqQwfSHNDIbp2EuF2TQtcJhiu/+fEJOamhbvGgdy2Fy+uWNV4NLiw8ljuf0Phzc4xo7rwieX2kiLIUMCmbaSQPg3HMqNN7EXsv7tei2mUxN6W4C9X3Mnbegm7YlStXI4oe2mtsxEQG82U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746834567; c=relaxed/simple;
-	bh=shpgDE2lINRgE7DnUkVakT/XB1hZRKtpk8GLWd57xUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=qB01hfc5CeMVJdtKn8GG2asLdt1JiFCB1Dtc5IOJsPVJHXbjdiJL+BYFecZSKZ5JONn5eKvhVA+1xIAhMc67rk+cFcStkc1SmTkVxBWvtL05ztEWt/qCYULJlYLbQwqIhXgHz15E4mg1uEhW5rduufMXd+MVTKcHzXnJk+RSEIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lRQyn2Df; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1746834603; c=relaxed/simple;
+	bh=YUK/8lertmZS8O8LDqa8gucEQ9D2Gaa3JG0YD/8HGD8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=b49mkRVQOSzABOGnT82wx/ay6/LcK5McHq1EytiKTTJEJZvud9aOWZnCiEeqTaXR+W5KknChib6O8FcwNwBsQ5Npo2pYpPcBNnP/u7Od6FIkJGX6B9RVanhefp3b/AFV8TBkBRhdilvYhKKt/kJhYiZnHXtGTT83VELzshvLa2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3cGrImJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lRQyn2Df"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250509234916euoutp01e6967b7eab4eb86e3035eb1d2e7983e8~_AMYgsYXb1374913749euoutp01X
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 23:49:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250509234916euoutp01e6967b7eab4eb86e3035eb1d2e7983e8~_AMYgsYXb1374913749euoutp01X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1746834556;
-	bh=DKnXcDaqBiRzpDhf+r/dUwH+L1omQz+yCSfgd20SJXc=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=lRQyn2DfpbEn/n9uJnEIQ82FijPiJ8ncn1FOLTcATNBM56iLjCA09TuCq/JOoGjR8
-	 tbyJRxMP3iJMerm4izxNZMy6HauF7pFBF1TcJCqEcoTek+3MZWtiX/pb29yOYHHfkO
-	 RWCGIZhIt1qjW5Tdw8znUGPfGy1R6sP3lm8gpiVw=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0~_AMX6JDE42776827768eucas1p2Z;
-	Fri,  9 May 2025 23:49:15 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250509234913eusmtip1bdcfc7a72d28354fcfe1d78cfac2309c~_AMWMc7rN2442324423eusmtip1B;
-	Fri,  9 May 2025 23:49:13 +0000 (GMT)
-Message-ID: <1bf3df62-0641-459f-99fc-fd511e564b84@samsung.com>
-Date: Sat, 10 May 2025 01:49:13 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3cGrImJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FEF0C4CEE4;
+	Fri,  9 May 2025 23:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746834603;
+	bh=YUK/8lertmZS8O8LDqa8gucEQ9D2Gaa3JG0YD/8HGD8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=E3cGrImJ5XWRPbvM6qEhT4R+SnodIX6BpuNwAQP7WP3wTiNh1rBa/Ea11hnebMbhM
+	 jKefvcePw8Y0x2AQrtDMDxUARUXlh54HH1edITyiaY57Ph+lzH7MxNOiNxYd7lL/ON
+	 9ACS1B5z7+3Lvov400xqfNiQ69dC7z5qiyy1XToRdeRFJSsdcJAMlaL/smnINMIjQ4
+	 42kgRaAYnfbSTmjUHp4XTtM+qmytl0xhERO1+Ouk7MCzsAaw3fM2lKDjGNCHc/B7Au
+	 o1ICjdz6u9iAxbprNlvL0qGlzZiSZKuJ3O+n/8mKu4wFkH/VP1A0LFeBC3uKKhq65o
+	 WSfIH2VRxIk9A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADBD5381091A;
+	Fri,  9 May 2025 23:50:42 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] cpufreq/sched: Move cpufreq-specific EAS checks
- to cpufreq
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
-	<linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada
-	<srinivas.pandruvada@linux.intel.com>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>, Ricardo Neri
-	<ricardo.neri-calderon@linux.intel.com>, Pierre Gondois
-	<pierre.gondois@arm.com>, Christian Loehle <christian.loehle@arm.com>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <2317800.iZASKD2KPV@rjwysocki.net>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0
-X-EPHeader: CA
-X-CMS-RootMailID: 20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0
-References: <2999205.e9J7NaK4W3@rjwysocki.net>
-	<2317800.iZASKD2KPV@rjwysocki.net>
-	<CGME20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0@eucas1p2.samsung.com>
+Subject: Re: [PATCH net-next 0/3] dpaa_eth conversion to ndo_hwtstamp_get() and
+ ndo_hwtstamp_set()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174683464150.3845363.10731862480731202646.git-patchwork-notify@kernel.org>
+Date: Fri, 09 May 2025 23:50:41 +0000
+References: <20250508124753.1492742-1-vladimir.oltean@nxp.com>
+In-Reply-To: <20250508124753.1492742-1-vladimir.oltean@nxp.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: netdev@vger.kernel.org, kory.maincent@bootlin.com, madalin.bucur@nxp.com,
+ andrew@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, richardcochran@gmail.com,
+ linux@armlinux.org.uk, linux-kernel@vger.kernel.org
 
-On 06.05.2025 22:37, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Doing cpufreq-specific EAS checks that require accessing policy
-> internals directly from sched_is_eas_possible() is a bit unfortunate,
-> so introduce cpufreq_ready_for_eas() in cpufreq, move those checks
-> into that new function and make sched_is_eas_possible() call it.
->
-> While at it, address a possible race between the EAS governor check
-> and governor change by doing the former under the policy rwsem.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
-> Tested-by: Christian Loehle <christian.loehle@arm.com>
-> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Hello:
 
-In my tests I've noticed that this patch, merged as commit 4854649b1fb4 
-("cpufreq/sched: Move cpufreq-specific EAS checks to cpufreq"), causes a 
-regression on ARM64 Amlogic Meson SoC based OdroidN2 board. The board 
-finally lockups. Reverting $subject on top of next-20250509 fixes this 
-issue. Here is the lockdep warning observed before the lockup:
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc5-next-20250509-dirty #10335 Tainted: G         C
-cpufreq: cpufreq_policy_online: CPU2: Running at unlisted initial 
-frequency: 999999 kHz, changing to: 1000000 kHz
-------------------------------------------------------
-kworker/3:1/79 is trying to acquire lock:
-ffff00000494b380 (&policy->rwsem){++++}-{4:4}, at: 
-cpufreq_ready_for_eas+0x60/0xbc
+On Thu,  8 May 2025 15:47:50 +0300 you wrote:
+> This is part of the effort to finalize the conversion of drivers to the
+> dedicated hardware timestamping API.
+> 
+> In the case of the DPAA1 Ethernet driver, a bit more care is needed,
+> because dpaa_ioctl() looks a bit strange. It handles the "set" IOCTL but
+> not the "get", and even the phylink_mii_ioctl() portion could do with
+> some cleanup.
+> 
+> [...]
 
-but task is already holding lock:
-ffff8000832887a0 (sched_domains_mutex){+.+.}-{4:4}, at: 
-partition_sched_domains+0x54/0x938
+Here is the summary with links:
+  - [net-next,1/3] net: dpaa_eth: convert to ndo_hwtstamp_set()
+    https://git.kernel.org/netdev/net-next/c/b45bf3f84ec4
+  - [net-next,2/3] net: dpaa_eth: add ndo_hwtstamp_get() implementation
+    https://git.kernel.org/netdev/net-next/c/7bf230556bfa
+  - [net-next,3/3] net: dpaa_eth: simplify dpaa_ioctl()
+    https://git.kernel.org/netdev/net-next/c/c2d0b7da611a
 
-which lock already depends on the new lock.
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (sched_domains_mutex){+.+.}-{4:4}:
-        __mutex_lock+0xa8/0x598
-        mutex_lock_nested+0x24/0x30
-        partition_sched_domains+0x54/0x938
-        rebuild_sched_domains_locked+0x2d4/0x900
-        rebuild_sched_domains+0x2c/0x48
-        rebuild_sched_domains_energy+0x3c/0x58
-        rebuild_sd_workfn+0x10/0x1c
-        process_one_work+0x208/0x604
-        worker_thread+0x244/0x388
-        kthread+0x150/0x228
-        ret_from_fork+0x10/0x20
-
--> #1 (cpuset_mutex){+.+.}-{4:4}:
-        __mutex_lock+0xa8/0x598
-        mutex_lock_nested+0x24/0x30
-        cpuset_lock+0x1c/0x28
-        __sched_setscheduler+0x31c/0x830
-        sched_setattr_nocheck+0x18/0x24
-        sugov_init+0x1b4/0x388
-        cpufreq_init_governor.part.0+0x58/0xd4
-        cpufreq_set_policy+0x2c8/0x3ec
-        cpufreq_online+0x520/0xb20
-        cpufreq_add_dev+0x80/0x98
-        subsys_interface_register+0xfc/0x118
-        cpufreq_register_driver+0x150/0x238
-        dt_cpufreq_probe+0x148/0x488
-        platform_probe+0x68/0xdc
-        really_probe+0xbc/0x298
-        __driver_probe_device+0x78/0x12c
-        driver_probe_device+0xdc/0x164
-        __device_attach_driver+0xb8/0x138
-        bus_for_each_drv+0x80/0xdc
-        __device_attach+0xa8/0x1b0
-        device_initial_probe+0x14/0x20
-        bus_probe_device+0xb0/0xb4
-        deferred_probe_work_func+0x8c/0xc8
-        process_one_work+0x208/0x604
-        worker_thread+0x244/0x388
-        kthread+0x150/0x228
-        ret_from_fork+0x10/0x20
-
--> #0 (&policy->rwsem){++++}-{4:4}:
-        __lock_acquire+0x1408/0x2254
-        lock_acquire+0x1c8/0x354
-        down_read+0x60/0x180
-        cpufreq_ready_for_eas+0x60/0xbc
-        sched_is_eas_possible+0x144/0x170
-        partition_sched_domains+0x504/0x938
-        rebuild_sched_domains_locked+0x2d4/0x900
-        rebuild_sched_domains+0x2c/0x48
-        rebuild_sched_domains_energy+0x3c/0x58
-        rebuild_sd_workfn+0x10/0x1c
-        process_one_work+0x208/0x604
-        worker_thread+0x244/0x388
-        kthread+0x150/0x228
-        ret_from_fork+0x10/0x20
-
-other info that might help us debug this:
-
-Chain exists of:
-   &policy->rwsem --> cpuset_mutex --> sched_domains_mutex
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(sched_domains_mutex);
-                                lock(cpuset_mutex);
-                                lock(sched_domains_mutex);
-   rlock(&policy->rwsem);
-
-  *** DEADLOCK ***
-
-6 locks held by kworker/3:1/79:
-  #0: ffff00000000a748 ((wq_completion)events){+.+.}-{0:0}, at: 
-process_one_work+0x18c/0x604
-  #1: ffff800084a83dd0 (rebuild_sd_work){+.+.}-{0:0}, at: 
-process_one_work+0x1b4/0x604
-  #2: ffff800083288908 (sched_energy_mutex){+.+.}-{4:4}, at: 
-rebuild_sched_domains_energy+0x30/0x58
-  #3: ffff80008327c2d8 (cpu_hotplug_lock){++++}-{0:0}, at: 
-cpus_read_lock+0x10/0x1c
-  #4: ffff80008331b098 (cpuset_mutex){+.+.}-{4:4}, at: 
-rebuild_sched_domains+0x28/0x48
-  #5: ffff8000832887a0 (sched_domains_mutex){+.+.}-{4:4}, at: 
-partition_sched_domains+0x54/0x938
-
-stack backtrace:
-CPU: 3 UID: 0 PID: 79 Comm: kworker/3:1 Tainted: G C          
-6.15.0-rc5-next-20250509-dirty #10335 PREEMPT
-Tainted: [C]=CRAP
-Hardware name: Hardkernel ODROID-N2 (DT)
-Workqueue: events rebuild_sd_workfn
-Call trace:
-  show_stack+0x18/0x24 (C)
-  dump_stack_lvl+0x90/0xd0
-  dump_stack+0x18/0x24
-  print_circular_bug+0x298/0x37c
-  check_noncircular+0x15c/0x170
-  __lock_acquire+0x1408/0x2254
-  lock_acquire+0x1c8/0x354
-  down_read+0x60/0x180
-  cpufreq_ready_for_eas+0x60/0xbc
-  sched_is_eas_possible+0x144/0x170
-  partition_sched_domains+0x504/0x938
-  rebuild_sched_domains_locked+0x2d4/0x900
-  rebuild_sched_domains+0x2c/0x48
-  rebuild_sched_domains_energy+0x3c/0x58
-  rebuild_sd_workfn+0x10/0x1c
-  process_one_work+0x208/0x604
-  worker_thread+0x244/0x388
-  kthread+0x150/0x228
-  ret_from_fork+0x10/0x20
-
-
-> ---
->
-> v1 -> v2:
->     * Add missing newline characters in two places (Christian).
->     * Pick up tags.
->
-> ---
->   drivers/cpufreq/cpufreq.c |   32 ++++++++++++++++++++++++++++++++
->   include/linux/cpufreq.h   |    2 ++
->   kernel/sched/topology.c   |   25 +++++--------------------
->   3 files changed, 39 insertions(+), 20 deletions(-)
->
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -3056,6 +3056,38 @@
->   
->   	return 0;
->   }
-> +
-> +static bool cpufreq_policy_is_good_for_eas(unsigned int cpu)
-> +{
-> +	struct cpufreq_policy *policy __free(put_cpufreq_policy);
-> +
-> +	policy = cpufreq_cpu_get(cpu);
-> +	if (!policy) {
-> +		pr_debug("cpufreq policy not set for CPU: %d\n", cpu);
-> +		return false;
-> +	}
-> +
-> +	guard(cpufreq_policy_read)(policy);
-> +
-> +	return sugov_is_governor(policy);
-> +}
-> +
-> +bool cpufreq_ready_for_eas(const struct cpumask *cpu_mask)
-> +{
-> +	unsigned int cpu;
-> +
-> +	/* Do not attempt EAS if schedutil is not being used. */
-> +	for_each_cpu(cpu, cpu_mask) {
-> +		if (!cpufreq_policy_is_good_for_eas(cpu)) {
-> +			pr_debug("rd %*pbl: schedutil is mandatory for EAS\n",
-> +				 cpumask_pr_args(cpu_mask));
-> +			return false;
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
-> +
->   module_param(off, int, 0444);
->   module_param_string(default_governor, default_governor, CPUFREQ_NAME_LEN, 0444);
->   core_initcall(cpufreq_core_init);
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -1237,6 +1237,8 @@
->   		struct cpufreq_frequency_table *table,
->   		unsigned int transition_latency);
->   
-> +bool cpufreq_ready_for_eas(const struct cpumask *cpu_mask);
-> +
->   static inline void cpufreq_register_em_with_opp(struct cpufreq_policy *policy)
->   {
->   	dev_pm_opp_of_register_em(get_cpu_device(policy->cpu),
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -212,8 +212,6 @@
->   static bool sched_is_eas_possible(const struct cpumask *cpu_mask)
->   {
->   	bool any_asym_capacity = false;
-> -	struct cpufreq_policy *policy;
-> -	bool policy_is_ready;
->   	int i;
->   
->   	/* EAS is enabled for asymmetric CPU capacity topologies. */
-> @@ -248,25 +246,12 @@
->   		return false;
->   	}
->   
-> -	/* Do not attempt EAS if schedutil is not being used. */
-> -	for_each_cpu(i, cpu_mask) {
-> -		policy = cpufreq_cpu_get(i);
-> -		if (!policy) {
-> -			if (sched_debug()) {
-> -				pr_info("rd %*pbl: Checking EAS, cpufreq policy not set for CPU: %d",
-> -					cpumask_pr_args(cpu_mask), i);
-> -			}
-> -			return false;
-> -		}
-> -		policy_is_ready = sugov_is_governor(policy);
-> -		cpufreq_cpu_put(policy);
-> -		if (!policy_is_ready) {
-> -			if (sched_debug()) {
-> -				pr_info("rd %*pbl: Checking EAS, schedutil is mandatory\n",
-> -					cpumask_pr_args(cpu_mask));
-> -			}
-> -			return false;
-> +	if (!cpufreq_ready_for_eas(cpu_mask)) {
-> +		if (sched_debug()) {
-> +			pr_info("rd %*pbl: Checking EAS: cpufreq is not ready\n",
-> +				cpumask_pr_args(cpu_mask));
->   		}
-> +		return false;
->   	}
->   
->   	return true;
->
->
->
->
-Best regards
+You are awesome, thank you!
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
