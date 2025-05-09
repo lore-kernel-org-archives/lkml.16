@@ -1,122 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC162686B1;
-	Fri,  9 May 2025 05:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11674964E;
+	Fri,  9 May 2025 05:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746769173; cv=none; b=Yvspfzsg2IjB2HA4hwDD1WEu67LvCbwEo3VNwsjLundxiBm3wGnbYhNZuxUrXtRGPrk8jCdNbr8s2IRFm15aDHd+XSzPTB88wvkm6pShNhUbc71d7Umou4TlVKfJD7wJsNlkK/L/2MwVAuAKnAlZFwVcxs8rw+NYnfIlASVYE7g=
+	t=1746769348; cv=none; b=RYrA3W02xhhBpOjqZgfZRKjvN0oRWMEJBq2U4MHU905EfrS8L0L+Ghpe4F4z78jOhptPq36tpK9SCvlcCEIiaRNlBHn8PYuCUHYgaY6TMM8swM9C7EWKMdmPdhAUGnMxF3nZxR+TytCfibdyrEjkB7Nxr69nmJCVVdAx86tffAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746769173; c=relaxed/simple;
-	bh=FfcO1bmJ9TwVyGmwWvdOKtV4qaOdRW/kxoyTI2FoTcM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sGykwkdMlqmVJ0tT0k/SaauppVyWTR1ZSRW3UlvRfZNGDXt4rcUYXsqZg4HxcOCFF0GvBA8c5lnwL4YYhDzzXnMCXpZj9sgqETJbF/VUOJPEBPoloHZVwxRCX+glEibYsdjhPOtPKfTqp3O6KZdA09B3xqtAzSbs6nejInxDqhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ENMBgqxV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746769348; c=relaxed/simple;
+	bh=JnHLZWyIXF7v8anMOy/gvri88L+muGqXhg+W/rReqKc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Qnkhn52avbke8iQSrHrKWoSfyKnaZYztYO/5g1eqiIdTiLeKyY1fFHs7/3z0uBsjZtpMAQJtretoY+8gFJnbSo5bY95crMunEwtyOHcMCO2S0RaHFOjxJu6nowinqjtfieBt2E1NETaCAmMME95FQ7ugkzaJxYSSJSoJ6Wemrv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ROH5GC1S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ncJHKtnG; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ENMBgqxV"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5493Hg5p009206;
-	Fri, 9 May 2025 05:39:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=rE1RR5SpAq6CGFJwO2E2zk
-	Hp8UtvOPLpNZiWJ8e/wvE=; b=ENMBgqxV6p9l4mexn3odt9U0Y+dNIc67nQRgTM
-	Vhdqi3s1I4Lwrkn1CpP+fzeaUnmIh8UGDNRlG9/IJFuZ3Olxk6CIQcvx27lSBSpt
-	w47H/XKAT+sD1u2ir3YzAN06CgEofYEa9Nynpa/E+SQo3kYw7X4jVceooZrux14d
-	OjX8px/CAuSfAo9tGG8vu4fc108XwW8g9PMyhjzpGAgFdc7OPK8uwt8Cgl0f9Oo7
-	3fQXddC0UUbiWLkoWOf70xXvXqhpXJh+/BZXyV3rbz27+wwWgaEWYlrOgqf1EZUL
-	Eq5aTU8NR8RBawlUsh6kPPUIKD4jXijnGCag2HvhVGZb3iCQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpeuena-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 05:39:25 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5495dOPw024358
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 05:39:24 GMT
-Received: from maow2-gv.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 8 May 2025 22:39:22 -0700
-From: Kassey Li <quic_yingangl@quicinc.com>
-To: <rostedt@goodmis.org>, <James.Bottomley@HansenPartnership.com>,
-        <martin.petersen@oracle.com>, <mathieu.desnoyers@efficios.com>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-CC: <quic_yingangl@quicinc.com>
-Subject: [PATCH] scsi: trace: change the rtn log in hex format
-Date: Fri, 9 May 2025 13:38:40 +0800
-Message-ID: <20250509053840.2990227-1-quic_yingangl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ROH5GC1S";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ncJHKtnG"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 093701380289;
+	Fri,  9 May 2025 01:42:26 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Fri, 09 May 2025 01:42:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746769346;
+	 x=1746855746; bh=MB3lLFNoiR8mwVWRkKRUkc84kUA8vTg/iA4jkAjD9d8=; b=
+	ROH5GC1SWw0akHZWm3Pzq3H4enCsOR/pXkftFTBNDIVeGZmh97EAGMraNsRH7QYq
+	SP5mRtPHyX7pa1bnmkQ9JJ+iftuJJjXhOSNs3DiLlMLo25Qc/olnsDVdUaKlFk+I
+	bSovqxTVC4kSawOW7HuB51eGuaYH/3uXC14kBf3UeoHGAmerj8vmHTA0gQ+bEuHw
+	u437N95/s1LQ5E9nybIojiSgD1T4ucsav18os1sZHv47K0zfDH59LWMPQmAZwynN
+	G0E3udCGm9pPH9sC/IqJeptnv3Z7f48kHCuhWZFg3zj6e6uiSRUuwDOY82+4CUhC
+	fLvkrOYH+/UcqAuxEnb73g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746769346; x=
+	1746855746; bh=MB3lLFNoiR8mwVWRkKRUkc84kUA8vTg/iA4jkAjD9d8=; b=n
+	cJHKtnGfneB0Vl+4Xi4kMNiWIID7ApTaIke6cGDPZZ+QK7wpDjpLiTArhp+wQK6s
+	SRztqUnDObhn/TTba9bjACI5yPpns8Vo97WS4gHIQ2+wIBPYJo4i5t/zCQaV6vNa
+	xFV773OYguC4lPKP+YaOdU/Bcz/P8Mfjv56cBRQdY7FeDsEWb9mWHL9OsAsGqRT9
+	imY2A9UfmVKamBqAtHirMcTecBMkWziuIgi8bFXlfHN2czbn8XL8SSGWz2pe6ENF
+	675+lJZButysg7tvkTiBZnYNHvpUy6uRqyXamZ6Z8nC+asbzac3gGo7rQVLvz+2V
+	u/E/1+L85oP76jF7OKGRA==
+X-ME-Sender: <xms:wZUdaD-uoZhpLt6Lb1mrTNxG-UrjexeQj0Nc_Ho8TMG-_IrV6LIRUg>
+    <xme:wZUdaPvmbcunVL0yyPnxS3yuY7a43oPQzNdDvQ25ATNdUqvLDfjEW2dvp8elxpdSc
+    Oc2CiDbJA4Dh_8sVTc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledukedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    vdekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghnihgvlhdrrghlmhgvih
+    gurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihl
+    lhdrtghhpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoh
+    eprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopegrlhgvgidrghgrhihn
+    ohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifjhgsrghllhgrnhgtvg
+    esghhmrghilhdrtghomhdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdr
+    tghomhdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:wZUdaBAzFezhfoPmQPXS_oS4_1ahC4L0GwaYKLSb7IQO1CwJ9GxLhg>
+    <xmx:wZUdaPeJisi11crPwsPU4HoSfQSpWCYtGk9qyRPPvqRdt1W7L1akIA>
+    <xmx:wZUdaINs6Hja8YRah1_ViCVCFIENa7I9UyB5gzdf_NcfXLrxcenrTQ>
+    <xmx:wZUdaBmCHnAxug-EbRWeoVulYz1dOJpYzQDAeQ_sos3ldGNUOEm_7A>
+    <xmx:wpUdaJCWafaD1jFVg_sv9mefQ1HVDxBUJN7BP9Oyjsxu9z-QQR_-X9N8>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5AF1D1C20069; Fri,  9 May 2025 01:42:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Tc229d2825b252d63
+Date: Fri, 09 May 2025 07:42:05 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andrew Ballance" <andrewjballance@gmail.com>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Dave Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, bhelgaas@google.com,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Raag Jadav" <raag.jadav@intel.com>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>, me@kloenk.dev,
+ "FUJITA Tomonori" <fujita.tomonori@gmail.com>, daniel.almeida@collabora.com
+Cc: "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+Message-Id: <13e23d59-ca5d-4cc7-83cd-0c3f41b1bedc@app.fastmail.com>
+In-Reply-To: <20250509031524.2604087-7-andrewjballance@gmail.com>
+References: <20250509031524.2604087-1-andrewjballance@gmail.com>
+ <20250509031524.2604087-7-andrewjballance@gmail.com>
+Subject: Re: [PATCH 06/11] io: move PIO_OFFSET to linux/io.h
 Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA1MiBTYWx0ZWRfXxvFD6Oz8Cxdb
- ILwR18aa2E0GULZhSl71E3AR+vsD/t8H+U+zryxYgnZvxQ+zDNJwBl2+6d7sLgn9/gWrFEpvvx3
- FbVV/KKGLm7tpjDE9xWW78qNk/gDOBIxA/bv5YqplRENKQaCkR7cQ3DW2CrCb+W1ByxAev7ScCw
- VLSgv+96lJNpnFP7TvSmcQ41xi3onw8BpI0ZmFBtVBAJpw56sQ8Htxdbnik/1WqSRB+XsQ2gvij
- dKg91W9KIZ38EwcnTDCpYe3JgoGKYhy4/0sirAPc+llbjHVsgX3Pp/t1dXZ3voy3IAXI3Wf45sb
- kDJhBApONbHFaCi9kKb0WtAWsTCjeFSOXD2bt0PACiEOyhjBeDh5XG/4TZB7oJ+Bf1VJACfewMX
- HdQFYHrYZCkcf8USQr1DnPPjeH8p2kr0RwqeBtLBQPh0O9iXo3OQFCkkfJjt5yUo8PtFaCFe
-X-Proofpoint-ORIG-GUID: twzLnnVKHtcYEp0HqzyGlrUiXT8tJREt
-X-Proofpoint-GUID: twzLnnVKHtcYEp0HqzyGlrUiXT8tJREt
-X-Authority-Analysis: v=2.4 cv=Yt4PR5YX c=1 sm=1 tr=0 ts=681d950d cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=BHyZBowvuSOj8lr59awA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_02,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 mlxscore=0 adultscore=0 spamscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505090052
+Content-Transfer-Encoding: 7bit
 
-In default it showed rtn in decimal.
+On Fri, May 9, 2025, at 05:15, Andrew Ballance wrote:
+> From: Fiona Behrens <me@kloenk.dev>
+>
+> Move the non arch specific PIO size to linux/io.h.
+>
+> This allows rust to access `PIO_OFFSET`, `PIO_MASK` and
+> `PIO_RESERVED`. This is required to implement `IO_COND` in rust.
+>
+> Signed-off-by: Fiona Behrens <me@kloenk.dev>
+> Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
 
-kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+This puts an implementation detail of the x86 specific
+iomap() code (unfortunately named "GENERIC_IOMAP" for historic
+reasons) into common code. Please don't do that.
 
-In source code we define these possible value as hexadecimal:
+We still have a couple of users of GENERIC_IOMAP outside of
+x86, but they all work in subtly different ways, and I've
+been thinking about better ways to handle those. Ideally
+the nonstandard iomap variants (x86, uml, powerpc/powernv,
+m68k/q40) should just implement their own ioread/iowrite
+helpers out-of-line like we do on alpha and parisc, while
+everyone else just aliases them to readl/writel.
 
-include/scsi/scsi.h
-
-SCSI_MLQUEUE_HOST_BUSY   0x1055
-SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-SCSI_MLQUEUE_EH_RETRY    0x1057
-SCSI_MLQUEUE_TARGET_BUSY 0x1058
-
-This change converts the rtn in hexadecimal.
-
-Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
----
- include/trace/events/scsi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-index bf6cc98d9122..a4c089ac834c 100644
---- a/include/trace/events/scsi.h
-+++ b/include/trace/events/scsi.h
-@@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
- 
- 	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
- 		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
--		  " rtn=%d",
-+		  " rtn=0x%x",
- 		  __entry->host_no, __entry->channel, __entry->id,
- 		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
- 		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
--- 
-2.34.1
-
+      Arnd
