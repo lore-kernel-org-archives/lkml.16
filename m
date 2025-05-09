@@ -1,83 +1,159 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C887B136672
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2ADD5223;
+	Fri,  9 May 2025 15:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746804224; cv=none; b=MNCU7Pa4RsGY2Pn7PvKDXCyuAYVyXye18Um4+9Q1kBaPp0F+YfhI9AG+6vD4QQr5K9X3ZgyKVJxHfdi0IJp0VEtrkrIwzAvGJPvlUQu61iK0akBrUSrGyT2uycd9hHf68AERnmeZ7CNOYUXHQXJhBdeg5KitdqynyzYkSfDwORc=
+	t=1746804352; cv=none; b=U3SCBs5wihADRzJHdIbfDepxMjxssCpsPyLZVoJG2LEol6gfnLFuPuiueBK89k/dqypxqZkpa9L0j8B7rcGEz130XArwo1oBEcfJVhHAHbiYRTzuBIkNDBCwYwUWb7nkNFGBK/AeFQlRnZd/2Zs9i3l3vb3yAo6jLf859i2BmZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746804224; c=relaxed/simple;
-	bh=eTJS0fq08hkN+Ld0FhSP2cc226T0ey4xQHYNifqulV0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qfZTB5eJOnlI7r4TNFiTXUAEwwGFurn2jXVtJjN+svhwP/lulR0hUZ7aG6ilWwd/ZOXBsAsuWTRMNVM+2646B/gxS0mOzkQkXeKLWXgNbCQBc1TW4qXigRyeJiPz/hVuBFtxUGKDTUmhlRLzBSH4APe+Ltf3rw6uzFp7bTuHKXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=SN5O5y33; arc=none smtp.client-ip=185.11.138.130
+	s=arc-20240116; t=1746804352; c=relaxed/simple;
+	bh=GSEKO7ONcS7sEUMc6GZF8gupBojNjlZ7JhmtxlT8pso=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oPLfwPeWRlBPa1guN18xKnZ7hEXGEcE32IjPxPh+/qN7u2A+pu58hApGxU7qG2fWTZVh2NruCgcMY2GwKlGud3SlFNf+44saMWZu8CXZ4PNdEUP/CMrLJTZpnBjgbhZmGcaqLbE3ifOV/OPUusLQ3N0feG910YbUILvHuGTNA70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=QQOy5EUQ; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="SN5O5y33"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="QQOy5EUQ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=VRcNlZIROkbG0sCWrxKhEWE7NClVs/KiomSYUNRRAb0=; b=SN5O5y33zakZ19sb4IaG/Y8vdy
-	tqV/b9FihN9G8n5yVs6/5n4mIsj5z1cBM5hPU8uCGzwV6mE3YKlSwAeoBXkJlITg7E2fFjObBZJ1+
-	UoS9LoOs+j0QpYnOcjDcyQCDLiCfCv9iqDsDC8zK6to7GUkWP9CDMAxrZsPCbtLPf8UhZmP7dqxBU
-	rN4jYixde5chFIxAZLu3tWFeoQngUIGUPuh4w4VmKfrW10hAUytalukjDsL4TQl8TM0Ufluh+RyNo
-	FiEo6tgQLzGM+AmIBggPT1vbzBJb73Ki4MZ9GWg8ZitNSsxR6U/lhwfz/AX1YgdSEt9HElK4LhEmD
-	lLzGwNoA==;
-Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=1u/9AHjxuF+fL9JbBpUA4QHUKtPHQadXuBIe95ASyiM=; b=QQOy5EUQ6mrW4Y7NTOI6eWoBZW
+	IUrjR9PqGw7X/GJFgcjIYFP+xX1rG8LtZShgCsq93xF9eB00VSxzrgdvhPda2/s2MWlMvuSDKikGE
+	8x+zH4WWBdkCzISTDGavK0qJ3ENnpFeGvd8I4HTz7Qm8Ln5Y++0gn509TNNHWtTlu3KKAcRNqnb93
+	5GkFDOl0oFfMhBtUkPBye/n2CF+i/ICZ0VG6TrfsXWz08NFiDZqs3lFiv0/9iMRLAbPsWiuMgG3/h
+	DMTaXJDguzHf6J2cgwiY0uU0rfDoyovICZLN0iRQu0YaLfxRx0oMedCjjfjAhlxLIRTO006rKRwTa
+	byJNEomA==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1uDPZc-0007v0-VF; Fri, 09 May 2025 17:23:41 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: drop wrong spdif clock from edp1 on rk3588
-Date: Fri,  9 May 2025 17:23:29 +0200
-Message-ID: <20250509152329.2004073-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
+	id 1uDPba-0007vv-RI; Fri, 09 May 2025 17:25:42 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, kernel@collabora.com,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH 0/3] Add RADXA ROCK 5T support
+Date: Fri, 09 May 2025 17:25:41 +0200
+Message-ID: <116456515.nniJfEyVGO@diego>
+In-Reply-To: <174679985488.3369444.8126092781297328766.robh@kernel.org>
+References:
+ <20250509-add-rock5t-v1-0-cff1de74eced@collabora.com>
+ <174679985488.3369444.8126092781297328766.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-As described, the analogix-dp controller on rk3588 only supports 2 clocks
-and the edp0 node handles that correctly.
+Am Freitag, 9. Mai 2025, 16:17:07 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Rob Herring (Arm):
+>=20
+> On Fri, 09 May 2025 14:31:40 +0200, Nicolas Frattaroli wrote:
+> > This is a small series, depending on Sebastian Reichel's ROCK 5B+
+> > series[1], to also add support for the ROCK 5T.
+> >=20
+> > The ROCK 5T is quite similar to the ROCK 5B+ and the ROCK 5B, so to
+> > share as much DT boilerplate between them as we can, this series
+> > reorganises things a bit and then adds the ROCK 5T .dts.
+> >=20
+> > Link: https://lore.kernel.org/linux-rockchip/20250508-rock5bp-for-upstr=
+eam-v2-0-677033cc1ac2@kernel.org/T/ [1]
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> > Nicolas Frattaroli (3):
+> >       dt-bindings: arm: rockchip: add RADXA ROCK 5T
+> >       arm64: dts: rockchip: reorganise common rock5* nodes
+> >       arm64: dts: rockchip: add ROCK 5T device tree
+> >=20
+> >  .../devicetree/bindings/arm/rockchip.yaml          |    5 +
+> >  arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+> >  .../boot/dts/rockchip/rk3588-rock-5b-5bp-5t.dtsi   | 1012 ++++++++++++=
+++++++++
+> >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi   | 1012 +-----------=
+=2D-------
+> >  arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dts    |  105 ++
+> >  5 files changed, 1131 insertions(+), 1004 deletions(-)
+> > ---
+> > base-commit: 19c541fe872387798a25df947f56a26212aa9a97
+> > change-id: 20250509-add-rock5t-fde5927de36b
+> > prerequisite-message-id: <20250508-rock5bp-for-upstream-v2-0-677033cc1a=
+c2@kernel.org>
+> > prerequisite-patch-id: 02bf159533bb53d2cb1b6c8c7caf1d3fcfbfa4ea
+> > prerequisite-patch-id: fc153d1d48f19d63520086a6eaadfec2db960470
+> > prerequisite-patch-id: f445b893edf31ccf3311e146a53e5d24861c2475
+> > prerequisite-patch-id: 5dc410a438ad5a7aa8962e380d2733782f5d7d18
+> > prerequisite-patch-id: c70ae0e30be2a3385d2f2a09f474ff2b76293843
+> >=20
+> > Best regards,
+> > --
+> > Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> >=20
+> >=20
+> >=20
+>=20
+>=20
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+>=20
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
+>=20
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+>=20
+>   pip3 install dtschema --upgrade
+>=20
+>=20
+> This patch series was applied (using b4) to base:
+>  Base: using specified base-commit 19c541fe872387798a25df947f56a26212aa9a=
+97
+>  Deps: looking for dependencies matching 5 patch-ids
+>  Deps: Applying prerequisite patch: [PATCH v2 1/5] arm64: dts: rockchip: =
+move rock 5b to include file
+>  Deps: Applying prerequisite patch: [PATCH v2 2/5] arm64: dts: rockchip: =
+move rock 5b to include file
+>  Deps: Applying prerequisite patch: [PATCH v2 3/5] dt-bindings: arm: rock=
+chip: Add Radxa ROCK 5B+
+>  Deps: Applying prerequisite patch: [PATCH v2 4/5] arm64: dts: rockchip: =
+add Rock 5B+
+>  Deps: Applying prerequisite patch: [PATCH v2 5/5] arm64: dts: rockchip: =
+add USB-C support for ROCK 5B+
+>=20
+> If this is not the correct base, please add 'base-commit' tag
+> (or use b4 which does this automatically)
+>=20
+> New warnings running 'make CHECK_DTBS=3Dy for arch/arm64/boot/dts/rockchi=
+p/' for 20250509-add-rock5t-v1-0-cff1de74eced@collabora.com:
+>=20
+> arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dtb: edp@fded0000 (rockc=
+hip,rk3588-edp): clock-names:2: 'grf' was expected
+> 	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip=
+,analogix-dp.yaml#
+> arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dtb: edp@fded0000 (rockchip,r=
+k3588-edp): clock-names:2: 'grf' was expected
+> 	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip=
+,analogix-dp.yaml#
 
-The edp1 node on the other hand seems to have a dangling 3rd clock called
-spdif, that probably only exists in the vendor-tree.
+=46ixed that in
+https://lore.kernel.org/all/20250509152329.2004073-1-heiko@sntech.de/
 
-As that is not handled at all, remove it for now so that we adhere to the
-binding.
+(edp0 node was correct, edp1 node contained a clock named spdif, that
+probably came from the vendor-tree)
 
-Fixes: a481bb0b1ad9 ("arm64: dts: rockchip: Add eDP1 dt node for rk3588")
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-index 9d81d3b9444e..90414486e466 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-@@ -255,8 +255,8 @@ hdmi1_out: port@1 {
- 	edp1: edp@fded0000 {
- 		compatible = "rockchip,rk3588-edp";
- 		reg = <0x0 0xfded0000 0x0 0x1000>;
--		clocks = <&cru CLK_EDP1_24M>, <&cru PCLK_EDP1>, <&cru CLK_EDP1_200M>;
--		clock-names = "dp", "pclk", "spdif";
-+		clocks = <&cru CLK_EDP1_24M>, <&cru PCLK_EDP1>;
-+		clock-names = "dp", "pclk";
- 		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH 0>;
- 		phys = <&hdptxphy1>;
- 		phy-names = "dp";
--- 
-2.47.2
+
+
 
