@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C41425DD15;
-	Fri,  9 May 2025 19:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08FF25DB08;
+	Fri,  9 May 2025 19:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746819201; cv=none; b=Udum8qA1FOQ5P7ZUBwxRklVmyL9i0UFN4y8PB1nqMHN2T7Z6ToTnswmGh/iODa7FLlek9OKqr34wFPCADKYS4IPPGQZrf1tOftTpaoSqUYMt9TAIvXwb4S1z5rR6qxwagDSjBaonKwsVSf0jEEe1wDakjxny3fjuI+9SCRzxuyU=
+	t=1746819226; cv=none; b=HmZcWf6UQoepaoM+tkoyVvuKkCMs4KagZ0ahEWhP6K8J2xa8yq3knnjqh2wapuJ5jaKVc/FejTZ1zd4J5w8KjRXGTwCcXRXNydkatJYpmws+TP69wp4Cy8SJxMEXwsmfcsgBxLBS9Hthd9Sppca0fpEQZt6YCoNDcmnO2hzpScg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746819201; c=relaxed/simple;
-	bh=cZWsn/WrnUyJlqVoRWFaa3KbmyBy8OY6VZ3uYwdOOwU=;
+	s=arc-20240116; t=1746819226; c=relaxed/simple;
+	bh=MLsIik8rSIZqB0sClKtB3h2tq9mX7qpq35P9Iwah4n0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DWmVYcoHUESPtNihy/h8D5ACsDXTaCwAKL35YPv7g9uBAxnqjTssS4NZ8awJ621WVRyy0ZGsFMLxKlzM5qU+VBGX0Gb5YNVdK9v6XnxpXU3tMMjxiTZMTYHezgmKI/+1FiXhllRAmDNjredqdVMwMTJA/jHV0DZ+NToQOZTYZ6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KroXXuQD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8AHyCcKAlmR3m1qENLXnxahfPhBsje+JV5Mcbeb+Jywh5lcd/2UiKioQFIVOWG8jdHY/MZGnhNL0SErRY7qVxCBRR0ZSF7Psehkj7egBUD4DDRbNrQ8X3lLJMlFJ4dpNf0MHDaWPYnhRvlcxHMjqsCqiymdK7oh/vtKVhGGMRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fu3yVngi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KroXXuQD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE610C4CEE4;
-	Fri,  9 May 2025 19:33:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fu3yVngi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B82CC4CEE4;
+	Fri,  9 May 2025 19:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746819201;
-	bh=cZWsn/WrnUyJlqVoRWFaa3KbmyBy8OY6VZ3uYwdOOwU=;
+	s=k20201202; t=1746819226;
+	bh=MLsIik8rSIZqB0sClKtB3h2tq9mX7qpq35P9Iwah4n0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KroXXuQDolo1Hiahq3uDYvpHeBlb5HGZvzcIL/rS4/z4Im3aDJkNQ7otdc8LQ3Ncl
-	 GqXyu05gzQi36SWoPZRz2XzRnq5+b8cBwwU4LBrr28SKQ3iOAd1b4Q3Q+W5UkXnRjb
-	 fCvKn01YZoDwkwPQrMk3keRhhFvqViA6Jf5aqwEAkGz8lzYWamTj/N2WEKvEg8FK1W
-	 vIlHaiYW33N4pSB0/wUS8YMtxZaWonvaLorNTW21V7Org6BGjbN0jGq33MwPOJQ44s
-	 tbI5/p+zc+lWm7i6KxBNmEi4kpeEOHDmo36tNaX213ZPQpSAgOPpm8/6QIeaL/8i34
-	 p5W8NBv2PCzZQ==
-Date: Fri, 9 May 2025 14:33:19 -0500
+	b=Fu3yVngij9sQfCAnFnga1csQXnECURWQdE69+oWrbrS5uVFpX4vS56O9CiS1IZBf4
+	 87V1btxDtSuI/IbYz+HtjkrrzHC92RVgdhzSULYYqraVnv8+huEThJ0imYWIt6xwt5
+	 wJM2LuJigy6iSJQoeuEGQFUQ/ltk3xxz0lBSM2dMaAgRNAqgIp+/JK1NyI+wqTdfGz
+	 Am9/JBVUc0YZ1YV4sxZ1i0tSvPJ8moC4vJo1ywpDIXFJOgyiTe1xgT5kx/FktpCTDk
+	 lc5Wpj/80uaNRxIxGD8AOljkfn2R1hq6ZsRWoqguf6F3DZFAlp/sF0lS1+HAjQ45qH
+	 SDM32yeAzUboA==
+Date: Fri, 9 May 2025 14:33:44 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-tegra@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	Thierry Reding <thierry.reding@gmail.com>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4] dt-bindings: gpio: tegra186: Add gpio-ranges
-Message-ID: <174681919863.4074988.5888386840789996730.robh@kernel.org>
-References: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com>
- <20250429-tegra186-pinctrl-v1-2-722c7c42394e@gmail.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Frank Rowand <frowand.list@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] of: unittest: Unlock on error in unittest_data_add()
+Message-ID: <174681922265.4075953.2607689432689640869.robh@kernel.org>
+References: <aBHZ1DvXiBcZkWmk@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,17 +45,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250429-tegra186-pinctrl-v1-2-722c7c42394e@gmail.com>
+In-Reply-To: <aBHZ1DvXiBcZkWmk@stanley.mountain>
 
 
-On Tue, 29 Apr 2025 16:33:31 -0500, Aaron Kling wrote:
-> Add optional gpio-ranges property.
+On Wed, 30 Apr 2025 11:05:40 +0300, Dan Carpenter wrote:
+> The of_overlay_mutex_unlock() was accidentally deleted if "of_root" is
+> NULL.  Change this to a goto unlock.
 > 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> Fixes: d1eabd218ede ("of: unittest: treat missing of_root as error instead of fixing up")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/of/unittest.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Applied, thanks!
 
