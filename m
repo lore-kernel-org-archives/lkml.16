@@ -1,100 +1,128 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2F8291176
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C4F291176;
+	Fri,  9 May 2025 12:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795383; cv=none; b=JNrmzoN74cCfrpSyvqdViRbcEXJyPDmbwiPewZoqivUnsFc9qUtOLhJKGCQIS+kMfJ8qpVS9C/XXCR87P5KVipmrsGP5PZarK/v5Y7qxpWmPkqiIrw84xpmD/rgrf1knX3NI+ji2zXtkm3KJO0CkKuFyP23msql1PvMN7Zkm/6M=
+	t=1746795399; cv=none; b=IaRMPFFfn99P3l2Yo/AmN8AhznHgVKBzBFTUa4b59etd+v6Y8tf596rIE7c8IpU+QajNBxSR5tF7W7vqswXkm6eCypAG1zKb3H1NEPp5iBdSvnwWNZdXDf2GAzBs7PW1IFsb0bOA3zdDAel7FC5TmXBWe8W47AixuSc3P2eOScE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795383; c=relaxed/simple;
-	bh=IhVt1QCCLBwbJW2kxZXLV7OpWziutg/GuXr0dlismgA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bAnb6miXTQ0QNx26ZLCjQ2eRnr2vc/U8hAC/DzLw81cnuqzQjjKLAYf3T9vhcf29sII+ylC7OzKDjIJuIDcW6HPRUdW2L3vOQyWHanZFyavTdjbdXBaG3YE2Pa5kPebb12ZZbXuUIiukyv071DAJfQe/oz6BXwSt9seWVWIWgeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XkdnqvVR; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746795399; c=relaxed/simple;
+	bh=eEulgBiddSPX2RK7TdqXaa1VbtpWWvwEmnOnDQcmVnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUByqwgNRPblfSurUWfvdUgWpNF+l5MJdCUSYw4nUMG1jOnwc2D1buV38lwe+l9UXVqdc41+SCnMrG7P30z2aNUabh0UcjKaye8K6ZMa/gD2XlartktEx8ePWizz+DMHrujzCzmhHCaLS4HDWP1W2haMmF3q2DWa7YkVHrOvJLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BS3sxEDZ; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XkdnqvVR"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227b828de00so20597745ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:56:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BS3sxEDZ"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fa828b4836so334775a12.2;
+        Fri, 09 May 2025 05:56:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746795380; x=1747400180; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IhVt1QCCLBwbJW2kxZXLV7OpWziutg/GuXr0dlismgA=;
-        b=XkdnqvVREQFwYARIPlsNWzmRqfq/CVgU1MRPn1nWFRMnZbc7zVBb5FZBH2+hn4wh4d
-         3ToUF9/BtS16SvbHx/n4sX7JhX+t6kemnyDg8S6c4VkHQwPmiDefKezDgOzJg8Yf2GTD
-         KWw4bXcFTY3Hf33rPsCSWc3YeY43UtlBOHca5spDMq8ftDZI3S1EOweJu4mEytUGZKlZ
-         9JixGlHk4tMISp7gJwgu6824doRj5qk9YqBPIAhFq0rtu0GOgdcMjMTKRhPvMdUnRVw1
-         6r5gYWfvF8Ao7CqljDdEvaOyB0A+BEbL6u/6OoChubYjuS7aiG68PiFcCubOrEy9zabI
-         kKKw==
+        d=gmail.com; s=20230601; t=1746795396; x=1747400196; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=evkkZXoj/VhOqVAgoh4F9uXWFeC77YbHlW2Gg+VCwuE=;
+        b=BS3sxEDZSAkyGPoQ7TcBXbUG86HvLcuQz6PkXU6rcQzXU+zIVAqmeHbWU7ZUHGgQ5R
+         C0qtHi0VtT+BpA7MU/1Oa5LJwxyieLh+rWyq3xXJ5Xxtde5kiNrmSwYqBrVqAoaHtERN
+         wMNN1lCKs3h6Kc/lJGjn+9/herVyvx5ZuIq+agtnzwITQ1/5dazcOYObIOYq5gK8ScgW
+         iKt0yaKTDqkcavpRyjlv6RddOTS6gMH501GJqZmB+1J+7sfdJstt2PgAS37DOJQUpbg/
+         qpdobg1cgWM33DqPVAjE7ZUVVr78XjtsVD/tsyFU4ZHSy5M0lG+P1IFP+dvcZ6w/AqJ/
+         ebBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746795380; x=1747400180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IhVt1QCCLBwbJW2kxZXLV7OpWziutg/GuXr0dlismgA=;
-        b=eqa5lo/QdsDMG3+R57cV0XhLtI323YS9N2x2WTiP9s+AX81JyMqmKheN80H0GNm4jx
-         mM1M7trJIcieV2rEnSPcrPqcfyUZlweuXcL6os73DyqKhUbKnIjQEh3dARoD7Vv2GsU8
-         cIAguxj0/feDvE4nTqIAHB1wa3R70hVs+EulO+wsCaKZp2CCKh9uuRNhWIoHPioRWhTI
-         Nw038ntl85wxei9pYNR2H+dmk0rJeP60mfz0GBvQzUYa+Nb2Q//juwYLb3aBWXx2TrEI
-         jp3FrQMyzMBBtQScA8FT4VHuHVyYBgkJc0SNDdnmJ1DL9D15gGd4PCaRUHsoucw7gDcP
-         nHwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbhB5+0aYLkXMyRwUFszcYYFXgfrJueKvK3tEVJPBoxpqWBdoOsRvyLfEpg9ys8JQi8yJhxEecTI34TZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+BBuUgLgVPz2vGF+EQF8ugsSrvQMZOd99LYBiPigTl5iyEjRx
-	mwM72AjL7P1eZeqXftT7iihpzVNfiIBOyTaelNfYng9ziVHHvm3+r0HyegmT5hFC61SFaOJL/iH
-	hhtJHfJBVvL44ixyPtSOFy3Y6H+3wKLJ+YbrJ
-X-Gm-Gg: ASbGncthkqRcb+mH6HELlxBCcmZ/iKnH4/0vyZ8vajHuIggf4Mb0F/ao+JdwyqSozgV
-	LumNQRBupSv3qqvSdFBh2q1myTa6E/r44LqYWhlDGALex0t5I2UVUc3079ttUGV6rLRAmMJSk/B
-	YvoScWXvXIyHagmmotViRUtTv+Gekt8oB+n6lVEPtd4EnLvBvO0AQ=
-X-Google-Smtp-Source: AGHT+IEF3voQQuq3aFOECMAygtEf3hwl6YY0yhW1fQO8wOseEwkI/Dd+gAS06Wo/TKctdBMdVYmR1NU47eAo9Xfgt0M=
-X-Received: by 2002:a17:903:182:b0:22e:6cc6:cf77 with SMTP id
- d9443c01a7336-22fc91cec2bmr56558115ad.53.1746795379720; Fri, 09 May 2025
- 05:56:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746795396; x=1747400196;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=evkkZXoj/VhOqVAgoh4F9uXWFeC77YbHlW2Gg+VCwuE=;
+        b=I2oeU1jcTzpfGmqBTaqrOxLi8v4ar6GN27KYZpcKH/KHfGl2NZp5nvdm/hKMoU5Oed
+         8r9NiJHmpXmPY6rwRRhFBsfKqNIQUafPEHMhouYMvsjSHKlorxKVR0N1oEzyH7S5w+NB
+         JFC7zjraQbCPIcN/zLHW6dRl5oalJt62mIMjfKipO+XmAIqJeIAAmYQWq9uno3vJs/cz
+         bnNVnTPh4lBHw1MxzJTzjFYK35LZuBLe5Hi16j1Ag2FPiLOpDCNdP+/dMsdMYH5FhAq7
+         gXqq/mKLTR99UnAbZFK+ALBs7LFyf91F1rhVyVFqI9tRwxKdwuKrYLZLiwfXOM/RRg9A
+         4u7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU3+M1MwzGRWFvTUFZpd6GaCJ9ljc9XC5PReV7nSPhBDfiGOZM9x1KV3Zplq5htjf2T+0WdRpvzpZ328jA=@vger.kernel.org, AJvYcCXaDEqomnXNcLd/cpYHy86YeOKUb1yzEjn0dmLGKErCQOuwCaCUnuLLa5+m0D82yXGArvWTcMH0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOvoivfszicpdG2ORvZV6b/wP7SfQtqvAkDaS8y0nPHzDd6ewt
+	2qWjP4CfvJLupEv/nPHEqCvWyFEwaKbmJPgUnquJUYynGdORBOY9
+X-Gm-Gg: ASbGncv8L6AUh8ZuxgyeEj4vbf9/sXCcg0WLDfnYIFIP1/GxtFpzt7VqsH9QKs6yoqD
+	oo1mjyvK7UFbCsoLUQUbqil7njxtLxhGUhkxrZC7QGmOwvDsid6aMuLguywrbXg4k1AkoOwL5Tq
+	qSZjwnaP3WPdfouY/oUIa97gQ7cuvNAaOyPBYfxcAewjdiCU9+fqG6csYhhblC2vKoT0d2aFXTj
+	ZOsyMtOiqs7KvnetnR1j+8YSIgYuyZnabMGqH4n0wu34MfklpDGeV7wwnRVSMM7O7siVmK/sCfr
+	3k7CW+53KMNev3/AuWtPFYL5kTYB
+X-Google-Smtp-Source: AGHT+IETJc9VTIe+oklQHEE8vi1Z7BiidfOYztR4qgSvUyJTtTuPqagkaumWxFZ9cXcdOOfvW+M4Ag==
+X-Received: by 2002:a05:6402:4309:b0:5e5:c5f5:f6a with SMTP id 4fb4d7f45d1cf-5fca0735f19mr1031091a12.2.1746795395582;
+        Fri, 09 May 2025 05:56:35 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d70f51esm1326234a12.79.2025.05.09.05.56.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 05:56:34 -0700 (PDT)
+Date: Fri, 9 May 2025 15:56:31 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>, Jakob Unterwurzacher <jakobunt@gmail.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, quentin.schulz@cherry.de,
+	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	George McCollister <george.mccollister@gmail.com>
+Subject: Re: [PATCH] net: dsa: microchip: linearize skb for tail-tagging
+ switches
+Message-ID: <20250509125631.cckfc2ychkyobqqo@skbuf>
+References: <20250509071820.4100022-1-jakob.unterwurzacher@cherry.de>
+ <e76f230c-a513-4185-ae3f-72c033aeeb1e@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com> <20250505-debugfs-rust-v5-2-3e93ce7bb76e@google.com>
-In-Reply-To: <20250505-debugfs-rust-v5-2-3e93ce7bb76e@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 9 May 2025 14:56:05 +0200
-X-Gm-Features: AX0GCFsiweMfJW577uoe_PGY4lTxO5mFT6enSbv3HTbSwAWbXXWKv-S99GFfYLs
-Message-ID: <CAH5fLggovWEOctW2rYnAszSzpUMCammvH2+8-sQ0eypEbhSa3A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] rust: debugfs: Bind file creation for long-lived Display
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e76f230c-a513-4185-ae3f-72c033aeeb1e@lunn.ch>
 
-On Tue, May 6, 2025 at 1:51=E2=80=AFAM Matthew Maurer <mmaurer@google.com> =
-wrote:
->
-> Allows creation of files for references that live forever and lack
-> metadata through the `Display` implementation.
->
-> The reference must live forever because we do not have a maximum
-> lifetime for the file we are creating.
->
-> The `Display` implementation is used because `seq_printf` needs to route
-> through `%pA`, which in turn routes through Arguments. A more generic
-> API is provided later in the series, implemented in terms of this one.
->
-> Signed-off-by: Matthew Maurer <mmaurer@google.com>
+On Fri, May 09, 2025 at 02:31:00PM +0200, Andrew Lunn wrote:
+> On Fri, May 09, 2025 at 09:18:19AM +0200, Jakob Unterwurzacher wrote:
+> > The pointer arithmentic for accessing the tail tag does not
+> > seem to handle nonlinear skbs.
+> > 
+> > For nonlinear skbs, it reads uninitialized memory inside the
+> > skb headroom, essentially randomizing the tag, breaking user
+> > traffic.
+> 
+> Both tag_rtl8_4.c & tag_trailer.c also linearize, so i would say this
+> is correct.
+> 
+> What is interesting is that both xrs700x_rcv() and
+> sja1110_rcv_inband_control_extension() also don't call
+> skb_linearize().
+> 
+> Vladimir? George?
 
-I believe it should be possible to bind owned data to a `File` using a
-signature like this:
+Yes, it should be a more widespread problem.
 
-fn create_file<T>(&self, name: &CStr, data: impl PinInit<T>) -> impl
-PinInit<FileWithData<T>>
+Have non-zero needed_tailroom:
+trailer
+ksz8795
+ksz9477
+ksz9893
+lan937x
+hellcreek
+sja1110
+xrs700x
+
+Call skb_linearize():
+trailer
+rtl8_4t
+
+It should be only a matter of chance that the other taggers haven't come
+across non-linear skbs.
+
+My opinion is that we should let taggers linearize when and if it is
+necessary, rather than doing so in the core. For example, sja1110 only
+needs to do so if (rx_header & SJA1110_RX_HEADER_HAS_TRAILER), which the
+core obviously does not know. Thus, I agree with the proposed fix.
+
+Jakob, when you resend v2 retargeted to "net" and with the Fixes: tag
+added, could you also address xrs700x and sja1110, or should I?
