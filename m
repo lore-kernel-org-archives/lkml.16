@@ -1,211 +1,123 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454B223958A
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263C723958C
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746809537; cv=none; b=KZx++Cp7pBav+Volidz6JgpLjunAMVxy5LDiuAA6P66KPxTDYsMjhJKbl8Mcik4g5wpL4XhkVd94J6YAHlbnDtsQiHvQr1dNLofmNKYi6PzbnYtgsQXd3mN73ng++l0I3imw4Y6GAjuUFjSnK1XioiZ9QCwL51JSJ1g8i4cjxq8=
+	t=1746809607; cv=none; b=AFf7ESt1oJBbYa4QJOttNB+2ZfCrDWIQKswN+jGa6n6u+l7Dd2ahgtTxnlrvWENBE63RQm04+8cL6OvuWQGiuqoQd8iZmBI/98YvjDkVFiQxihKsIVHEOkfb1GHQbTRk1vbavnFgyUWKkCAra1Wasj8rXYZu3t1AVr2G2txL1lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746809537; c=relaxed/simple;
-	bh=MPYhgm6iWVqeKJ5zbCg/gVgBRawAwkQ4rc6APfeAXl8=;
+	s=arc-20240116; t=1746809607; c=relaxed/simple;
+	bh=ovsCpdfdcv5lWd54vzHlEPAEE72CBV3NXgYXZCNXoKY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BaqPefAUPl3sdBJ5nm7bODgQNOfAXtejX4nYqVZi8v8BdcwDErEiZtG0UqjcP8D5S6DMYS3RTZynt6joDmLZsBeJg/+Qa+TXpgnaasfwoe5h/J1vF9tiq3d0bCgI2nrqLM2w6RLc8lkWwlqvzZvt2xwITLMmFL4HNTIrQThQNS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GhFFnxqp; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=j4VDKaDYWNzH/MN1wH8Cfguvqf0KI/iMWw15/Qiy8c2jSg4MyVkd+yw+8I/FXDNiS3VuetVO1wNfzZ9yqWDim3CnL80XJGXuWYTibfLaVYPufBs6O/ZUI2yQ/XcZ0lF4nnHFvkr+Rl4cs0XyEqMZ+9sNy4ypUaHCvkVFL01r7Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=fMnjNRxO; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GhFFnxqp"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so338551766b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:52:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="fMnjNRxO"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad21a5466f6so210556466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746809533; x=1747414333; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1746809603; x=1747414403; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MPYhgm6iWVqeKJ5zbCg/gVgBRawAwkQ4rc6APfeAXl8=;
-        b=GhFFnxqpJA7XA/M7DImGvVQ0XcQGphxLWvfzgqjdBX+bVL8Io4KqEm+4Rjk5mYt67o
-         JtWzFdu+2HOoFfHxbP0yGhLI8+iKyCEFdA5ac5GuSj6IFt3Hxxc23CvJnapYT/cJo3NP
-         avTlY4DyiJHylTsmGV9Ne9yWC8Aq1+7ZgcOkemUucBXxHO3w1+I5hpHtq0ZwxAOIhZx+
-         1dSz4Ne94uF9Q3qGrrKMUnSDJawizn/ZTGJ4HOx0QYgK6e+4n9Qrc4R90fC0qQUREyhI
-         WsAQ5CEM7K9Wclny+dryuPS0zauj3NuyAmjLnEHshuhk4bD1nBfcT8sI6S5PWmuJi5Zp
-         dCXQ==
+        bh=jvftcXXxC+RA38DZ97cxLVbR/d27myTWn86O+uHVzlc=;
+        b=fMnjNRxONLDW6QhnV+6UgAOQW8cqEqG+hyzp0G42OxJIIr5AZmti94+nefIRUttvEB
+         QqoVofvDQA571rT23L+zHlA43bkDu0fYLC51hbUXZhi6jVtyfqRNVOVEpVOm3yqmMPwg
+         iU7WkbybwgU+/J1rlcrD/CPhm2n42NakZudaREId+2p7WCXvarUn24EGvsDqh8B+zNCj
+         w1dYbCXLw4TN1SD6DBFBmacnWSh5e7euIJoVQjEEfevtyx5oGljcswFStoNTLB5ZBV3L
+         HTC62P0Z002Oj79e4nxjvhwJvS5NgSq2ubXGfymFag0Lgw7m/GkK4968GSHx/B+auAU5
+         A6Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746809533; x=1747414333;
+        d=1e100.net; s=20230601; t=1746809603; x=1747414403;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MPYhgm6iWVqeKJ5zbCg/gVgBRawAwkQ4rc6APfeAXl8=;
-        b=OuFHT2D6cjEG1cUoMvDGcu8MMZJGkNTBP4Y7+W6PlQ9Q1RmqBFZCn2S0P9uC8h//oo
-         naAY5bNWdnzKu1ePitUOrOroarTyzvUIEOviky740B8uwC0nnc3/4pM0DdYurnBHiADL
-         bbSvTWGRH4bSMh6E8kYHC49DysqHTBPwVmmJXZ2FPPZTk5v02MZrByan+BYT2MSD87KE
-         zGfkQxY+HYDbIW/1GyRz7MbIAGzMM3P2ZdFanpqUg4p3/IyUx5x/B6uep34Rv24DjGKM
-         D4MtoRWpC/6xG/7iKvymx8fbvgUXHreyJfQXh6dPwvlawO2O8lsSat9MuaUe86cPucgB
-         ASxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKoQTH1Ng9L/B4Gc6e+NtQDMYJMnJtAlZO1FOCHvJc+BHPGmyWmLGjgOdn7J2yYXq60g+VFG+WO5Pb0fs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrGAkfgGk7xL6cS7na6KIk2e3qKFXV7d8j9q/YPcubkNhH4wxU
-	r4LJc+H0S1GJgIx+TnQJ8TxMI2/cmAzxmNAy4hQrOLORJznGyoUZb3r8p6pkEKqY4fFfNyJy+2j
-	U1daO8rDJOXS5SsL2OVCk86HfT/xZ935r+yXh
-X-Gm-Gg: ASbGncv33B8EGoZYTYt/Gfmib47aVuCB3JaXvxtDRya8vYA9YO3HH9lJscb4J8Awq23
-	BrW+aPmr2bIKwnnawrT4JvdHD73kS+pT9Hk369E4bXNy5/8UapKqz8apiYzajd+7RDkA7qVKNAk
-	/8vfwnVrpKRsVvh7mp9HAtVhzzw/7mXDZGlhuEzxHtvJGan1HUzXEjD/BL
-X-Google-Smtp-Source: AGHT+IGNmQDZ3Zs7DCjn3XA55T3gmgFTAE0YeeoKqQyv8kpQZk9x6BYPeAUbrAL1cDPCvsiyga6f3luTtHZOxuwBYJM=
-X-Received: by 2002:a17:907:3e8d:b0:ad2:3555:f535 with SMTP id
- a640c23a62f3a-ad23555f608mr18764466b.5.1746809533397; Fri, 09 May 2025
- 09:52:13 -0700 (PDT)
+        bh=jvftcXXxC+RA38DZ97cxLVbR/d27myTWn86O+uHVzlc=;
+        b=b0bvNDh6U9HO1jXe+vkxMK11q5KDkJu9j+kEOAf2NdG+y+0eytG5LJ9Ldx5JCC4LNd
+         lIULwYGRBaZYAHuKdveTho7u5WO3giRZyTMJbTHT6WXPcJebcF57qIjprEa7Hevfgg3E
+         AQIwsnI3uYWiofg7lMW9lgGvuyRElz0oL9oLHp3cwdG79Mry2STzsrB5WeDniA7xCXTl
+         WLCS4vweVUHodgXXWZfwMAnU/b23visw6nswy+Nlj1WnEOFqJZcfTWFDlzyWHkAd8CYp
+         L0/hOlRjqXnXSvI+sg4eUk5QSkprdl28JV5sYOltOotXgO1uKFAtv10iLBbCIxJmWO+r
+         kGMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWP0d18A2BWNCJXz+ugI/yG7kbXrkoVA6vDf4SYMbj/bVOIRe7IWAjCg8aidyahhHii2rFeRaWAsBo5vmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOniypIL3gVAMmq4wjcwGLpUqEqE8A+dkNyGTJHgu5sEAroJIG
+	oyT1ijGe1N9d5AuzAayaA0HWnQ0a0y+kULY400vxOWxuiyL37YYIGTIdhOC5b0kjlDPn+AqqF9A
+	o83fZnyvsUlKzf1xpcRuZZRTRD/G+ci8KxJhQNtVohwEB4wSrP3NWeg==
+X-Gm-Gg: ASbGncvIpzFV6TbXacVRDsF++8LL/sjc+jVln0eIzPLZPtacC9K6Y/4vGJgdiggGjac
+	yYqqr7HgUB0pgk7fYuGm7LmRH9pDIQe5JSN0oXvRmON8XMHt66ws8Gss6WZPkqGK/I2I4w96+se
+	/QRoloqCVpUFeKiCJUDF9dLzq5xYhnSNPIyArRmoTISbjhDyvWIWU=
+X-Google-Smtp-Source: AGHT+IEhGi2LQFwvFRnaQacV1MVwRNQX6iJFqdq8RTHLH5cJ5UYZlyhVM7R4mWOQ9PxvwUNpMYblc6WfEAt3Ca+JqI4=
+X-Received: by 2002:a17:907:c717:b0:ac7:81b0:62c9 with SMTP id
+ a640c23a62f3a-ad21b42627amr364284266b.20.1746809603331; Fri, 09 May 2025
+ 09:53:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506183533.1917459-1-xii@google.com> <aBqmmtST-_9oM9rF@slm.duckdns.org>
- <CAOBoifh4BY1f4B3EfDvqWCxNSV8zwmJPNoR3bLOA7YO11uGBCQ@mail.gmail.com>
- <aBtp98E9q37FLeMv@localhost.localdomain> <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
- <aBuaN-xtOMs17ers@slm.duckdns.org> <CAOBoifiv2GCeeDjax8Famu7atgkGNV0ZxxG-cfgvC857-dniqA@mail.gmail.com>
- <aBv2AG-VbZ4gcWpi@pavilion.home> <CAOBoifhWNi-j6jbP6B9CofTrT+Kr6TCSYYPMv7SQdbY5s930og@mail.gmail.com>
- <b7aa4b10-1afb-476f-ac5d-d8db7151d866@redhat.com> <CAOBoifjzJ=-siSR=2=3FtKwajSgkXsL40XO2pox0XR4c8vvkzg@mail.gmail.com>
- <9fdad98e-9042-4781-9d73-19f00266711b@redhat.com>
-In-Reply-To: <9fdad98e-9042-4781-9d73-19f00266711b@redhat.com>
-From: Xi Wang <xii@google.com>
-Date: Fri, 9 May 2025 09:52:01 -0700
-X-Gm-Features: ATxdqUGQZI0u5dKFxPdPebOwNGcQTibf5jos_nhRRXIYthHWVUId2xtFCY7q4S8
-Message-ID: <CAOBoifhXFKu-Y7ZtSBErEZTc+Zp_0-VY6o4A1KM5ii1uzN5iqQ@mail.gmail.com>
-Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
-To: Waiman Long <llong@redhat.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org, 
-	cgroups@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
-	David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, Chen Yu <yu.c.chen@intel.com>, 
-	Kees Cook <kees@kernel.org>, Yu-Chun Lin <eleanor15x@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	jiangshanlai@gmail.com
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <20250309151907.GA178120@mail.hallyn.com> <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+ <20250506132158.GA682102@mail.hallyn.com> <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+ <aB0sVcjFZaCVEirH@lei> <CAKPOu+89=+SFk1hKGLheMtPq+K47E9FRCo1DBQo9zGMwW=Tr2w@mail.gmail.com>
+ <87h61t7siv.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <87h61t7siv.fsf@email.froward.int.ebiederm.org>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Fri, 9 May 2025 18:53:11 +0200
+X-Gm-Features: ATxdqUFC9_hHEUoh5M3wGZU19wIBs4HyJyr3wHdymfUQLj3BgYhzKvRJc8bf1HM
+Message-ID: <CAKPOu+8uw6SCO_hhOy_Kc_XihTDvJGoPrC1ujAHPYuiBghUb1g@mail.gmail.com>
+Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are identical
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: sergeh@kernel.org, "Serge E. Hallyn" <serge@hallyn.com>, Andy Lutomirski <luto@kernel.org>, 
+	paul@paul-moore.com, jmorris@namei.org, kees@kernel.org, morgan@kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 5:30=E2=80=AFPM Waiman Long <llong@redhat.com> wrote=
-:
->
-> On 5/8/25 6:39 PM, Xi Wang wrote:
-> > On Thu, May 8, 2025 at 12:35=E2=80=AFPM Waiman Long <llong@redhat.com> =
-wrote:
-> >> On 5/8/25 1:51 PM, Xi Wang wrote:
-> >>> I think our problem spaces are different. Perhaps your problems are c=
-loser to
-> >>> hard real-time systems but our problems are about improving latency o=
-f existing
-> >>> systems while maintaining efficiency (max supported cpu util).
-> >>>
-> >>> For hard real-time systems we sometimes throw cores at the problem an=
-d run no
-> >>> more than one thread per cpu. But if we want efficiency we have to sh=
-are cpus
-> >>> with scheduling policies. Disconnecting the cpu scheduler with isolcp=
-us results
-> >>> in losing too much of the machine capacity. CPU scheduling is needed =
-for both
-> >>> kernel and userspace threads.
-> >>>
-> >>> For our use case we need to move kernel threads away from certain vcp=
-u threads,
-> >>> but other vcpu threads can share cpus with kernel threads. The ratio =
-changes
-> >>> from time to time. Permanently putting aside a few cpus results in a =
-reduction
-> >>> in machine capacity.
-> >>>
-> >>> The PF_NO_SETAFFINTIY case is already handled by the patch. These thr=
-eads will
-> >>> run in root cgroup with affinities just like before.
-> >>>
-> >>> The original justifications for the cpuset feature is here and the re=
-asons are
-> >>> still applicable:
-> >>>
-> >>> "The management of large computer systems, with many processors (CPUs=
-), complex
-> >>> memory cache hierarchies and multiple Memory Nodes having non-uniform=
- access
-> >>> times (NUMA) presents additional challenges for the efficient schedul=
-ing and
-> >>> memory placement of processes."
-> >>>
-> >>> "But larger systems, which benefit more from careful processor and me=
-mory
-> >>> placement to reduce memory access times and contention.."
-> >>>
-> >>> "These subsets, or =E2=80=9Csoft partitions=E2=80=9D must be able to =
-be dynamically adjusted, as
-> >>> the job mix changes, without impacting other concurrently executing j=
-obs."
-> >>>
-> >>> https://docs.kernel.org/admin-guide/cgroup-v1/cpusets.html
-> >>>
-> >>> -Xi
-> >>>
-> >> If you create a cpuset root partition, we are pushing some kthreads
-> >> aways from CPUs dedicated to the newly created partition which has its
-> >> own scheduling domain separate from the cgroup root. I do realize that
-> >> the current way of excluding only per cpu kthreads isn't quite right. =
-So
-> >> I send out a new patch to extend to all the PF_NO_SETAFFINITY kthreads=
-.
-> >>
-> >> So instead of putting kthreads into the dedicated cpuset, we still kee=
-p
-> >> them in the root cgroup. Instead we can create a separate cpuset
-> >> partition to run the workload without interference from the background
-> >> kthreads. Will that functionality suit your current need?
-> >>
-> >> Cheers,
-> >> Longman
-> >>
-> > It's likely a major improvement over a fixed partition but maybe still =
-not fully
-> > flexible. I am not familiar with cpuset partitions but I wonder if the =
-following
-> > case can be supported:
-> >
-> > Starting from
-> > 16 cpus
-> > Root has cpu 0-3, 8-15
-> > Job A has cpu 4-7 exclusive
-> > Kernel threads cannot run on cpu 4-8 which is good.
-> There will still be some kernel threads with PF_NO_SETAFFINITY flag set.
->
-> >
-> > Now adding best effort Job B, which is under SCHED_IDLE and rarely ente=
-rs kernel
-> > mode. As we expect C can be easily preempted we allow it to share cpus =
-with A
-> > and kernel threads to maximize throughput. Is there a layout that suppo=
-rts the
-> > requirements below?
-> >
-> > Job C threads on cpu 0-15
->
-> A task/thread can only be in one cpuset. So it cannot span all the CPUs.
-> However, if there are multiples threads within the process, some of the
-> threads can be moved to a different cpuset as it is threaded. With
-> proper thread setting, you can have a job with threads spanning all the
-> CPUs.
->
-> Cheers,
-> Longman
->
-> > Job A threads on cpu 4-7
-> > No kernel threads on cpu 4-7
-> >
-> > -Xi
-> >
->
+On Fri, May 9, 2025 at 4:45=E2=80=AFPM Eric W. Biederman <ebiederm@xmission=
+.com> wrote:
+> In particular __is_setuid or __is_setgid being true guarantees
+> that has_identical_uids_gids will be false.
 
-Partitions cannot have overlapping cpus but regular cpusets can. This is
-probably where regular cpusets are still more flexible.
+Sorry, no, that's completely wrong!
 
--Xi
+__is_setXid() compares effective with real.
+has_identical_uids_gids() compares effective with effective, real with real=
+ etc.
+
+See the difference?
+
+> Which means has_identical_uids_gids adds nothing, and the patch is
+> pointless.
+
+Also wrong. If that were correct, then my patch would not have an
+observable effect. But it does. Try it, try the small program I
+posted!
+
+It seems your whole email is based on this misunderstanding. Please reconsi=
+der.
+
+> If your concern is LD_PRELOAD and the like please don't play with
+> the uids/gids and instead just make certain bprm->secureexec gets
+> set.
+
+LD_PRELOAD is not my concern at all. I just observed that the current
+kernel behavior can annul the LD_PRELOAD/suid protection as
+implemented in glibc.
+
+> I see no evidence
+> in this conversation that anyone has surveyed the users of NO_NEW_PRIVS
+> and verified how anyone actually uses it.  Without such evidence we
+> have to assume that userspace depends upon the current behavior.
+
+That's fine for me. But this behavior should be documented, because it
+is rather surprising.
+
+(In any case, we will keep the patch in our kernel fork because we
+need this part of the kernel to work properly. Our machines don't run
+any code that depends on the buggy behavior.)
+
+Max
