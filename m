@@ -1,144 +1,282 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9609A224AF0
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4FF2163B2
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746804500; cv=none; b=oq0wOzmHgxIGHL9sF7Rk0B+kQmvNaYaPiThGzNMyeORR1R835SuPoiFu7jeCG775I59KBz255cy5VTOKamUf+81TcHC3ZXz79TrFaHjG+2rq3IwtcfPTCfz/N8B9ECxskAPHgf9+ucPawoFo0nFLGk8hSzJlMBoPgXfqtl2iws8=
+	t=1746804510; cv=none; b=QWGQV2TBw6mFGJkfwlOwTLR/Q/gLAoTUx381RsYNcLga4lpTUhgcafDHZzSDV2dC+MJq/DmI0v8dujOqQBkk4e6kpWEva3zX5NeTvmSNjmVox4s3La2NSXA7bgcL7H+M1/r3Gl2Izz6SL9kzhwwVeOp/speYO63xpg+hLQL0QxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746804500; c=relaxed/simple;
-	bh=2ozwohrkKW6jzyFX4zmg3wCs+LLA1PA5JDo1GxztnMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=tb4WR+Y1NG/G1lzJRXwyrgs1nL5g0M/YS5zABzCpNa+JlNCaT5DO6A9kM4qG0zsnLLoWsqIos9S5470j6eoOjvpditgWhQx4SFaHcVVI1ZU442dWY0m/95Pxnrb+mXxfZSFQb1gz8HjhqEyMtGP9CnIkrzSZwYoX8CFtdQuEsh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RP/ZNErZ; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746804510; c=relaxed/simple;
+	bh=0Zp+4rH5PI+hyXzfoQEydKvkJLlmG0cNFdeKIrnFtsI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uTkqgxy4xRv8fG6CWrIsKsD5PCedcmLjiLX+1PNABtml33eccMgW778ceYlP6qjChYrgRYCS/SF0QvnXm6f3IbYU+poDLCutxzNi8HTv4g4ioQj2rvFtdcPbIo1JJbogICSHsXGi5nAEjg8DUdDcX0Ybn+VRaGW8P3E45X3v/Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X2uNbo/F; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RP/ZNErZ"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47666573242so372081cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:28:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X2uNbo/F"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so11874375e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746804495; x=1747409295; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V311r9l6O55gp0nuzr0djX7scAYmilyGkTeDqrs0OCc=;
-        b=RP/ZNErZ8qBJUGphEvnzVh/NORbobzuaA3qoFx596Y2gx7WeoL5ZfmmnwPQKZtWofe
-         67RS0C5o9W0MpI3m26G1qSZFEhof3YYJqCk4coxRvy3JTfvS+MQF2FRPf94jGqR44Ra5
-         xVlMXrlXhRNQEGx/ai0jPMve9ZgIAEenIvTzPfq4pTevwvB4Pwt6z96Wnn1kikeJ7TSp
-         K0ZOmCgdk778rm0iRNMAyIy0FL4OS2m60koGljvNQxR99bGqrw3GqBKhYjOC2gwmbhW4
-         WKdeFeM6C23wWvKi5esfNh58gC9602vHN6C0Uz/BJra2jv90NfFMgrWsguSLgWCPFKKR
-         VAlQ==
+        d=linaro.org; s=google; t=1746804506; x=1747409306; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tfGizqbq7nuIeZrlu1d/p+687hpoKqn9LANEb6sdVXQ=;
+        b=X2uNbo/FXuzktshQ43nh2Ft4SBisdn/356iYclwcULH853VXei7UkVxzZ3qKKuIsEA
+         4e/sy1sNcnwKPKo7GJyR/tSNTUpGumvqaVOASPAAsSIZlUhRh8wYzbgwDE5zHeHiQ+Vw
+         ojzgp/EUDlTguHYlOEIcvqbicup6ZTE6jaabRdRmT1f8SUNjwCFpQEwJyuTrT8Wd726n
+         vDVpLnFFTJeKyY621Bs5jtq0s+JcDbO3Izi8Uv791C32MBCdEhdG9VTsn5PooIOnIZxc
+         ha8DXEBAPve2AwFN9EkNhX173ZZxuTaty+aWVEtS0YHOfbgIhXJ74ekyxmqCYVfgzkwX
+         37IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746804495; x=1747409295;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V311r9l6O55gp0nuzr0djX7scAYmilyGkTeDqrs0OCc=;
-        b=jyAqfW7ByV5b2vECxZgPYKzQ2rVI0mDj1MiJ5sM0tdIpBFt7mIYrSQPI86bVu6ztEq
-         XHOdw9p+KKNFAct7p7vGc7ZbdUZPMkxy62hxM80D5RDfH5+p1/3lEq/30UEc6nSWQLXg
-         H1O6SQz3+FT5/+KPTJJgyElBbwZS7eGa+oogUT9ne34CPK4HT/rSpoML7a3RnNzK4fGQ
-         gFQKT80v6OyOjJ+zNv6wW9Yki5p0NYoKprcERFmtfAoZYPkNtc5HQhuZnAe/sSU+8tLa
-         MAXpxRRt251ZvfO6hBpljXJka9AmXHApKyfkloECWhmH+CodI3jHgb9mhMXDl+0XGYhs
-         Gjig==
-X-Forwarded-Encrypted: i=1; AJvYcCWrKEV32DxdO+9fMdK5ygvgYJJwy1ZQ+GiUBvjaDrgy/cxRymgvs6aUQuZhMZH6UeRVjdq/ZuXbYM13yRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMO8Os1f4z5vIZSxS01F5OZgQm7IoB2duNV5B3pIV1JHcA+pP0
-	F1oXKtfKJFddl3ZKghI5g4d1N7nRf8lyYPDrzbUj44lzcuR741vdHCZCatFPHDs+eebI50vJV1k
-	8ZwXIeF4sOWrvRghC3hoPV4D2OAucUTmcsRwy
-X-Gm-Gg: ASbGncuLenkd8/pAc8V3Jp6D3fwSsyLK95YZtGOhw9Qwjnz3JZ1+sZXUpVxQzbLJqKa
-	2DFXV2uyzCj3N/i/ucH9ctmCKNsa2Ho7I9ki71AjN7PcM7C0sIqxCUw9fkJeAbu3yzuk8YaH3Gu
-	Df4IHVfn1/r72ZyIeOqjIq
-X-Google-Smtp-Source: AGHT+IEf4rn/YGj/XrmQfH/DUtip6Yk+lqBTTCh9YWRX30erKjKuTXT6Tdc+oQtXqJZ+Nw9ORBlAry0gV3ZCDGnL8Qs=
-X-Received: by 2002:ac8:59cc:0:b0:480:1561:837f with SMTP id
- d75a77b69052e-49452cae732mr5183091cf.8.1746804494901; Fri, 09 May 2025
- 08:28:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746804506; x=1747409306;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tfGizqbq7nuIeZrlu1d/p+687hpoKqn9LANEb6sdVXQ=;
+        b=piEWVPk2i7J4h5nCg/Onh2uVkQrd9KrednbkTReF000yz8fPTN0W4+jjIsPek2R8SF
+         kZ3c8wUj4i/UJ/jKHRgH3eb1O2dTpEP1g0/lkQlPdQ+aGnjBBTOjePo4eJ3Z7l/6MlYi
+         Q3jT0+BqTagpIcCLruiwZUkR1pyX1lDwZYFh+AjaJbQunJF/ugVGQIpP8GLowQGZEvN6
+         ro8AtHINVO9Gvq5vjRIKOJR2A7Le6RhCCir9GMy+2FP0A2qgrR7mrJeaDX525VnuMDyD
+         yeUDS6ZpXdlbcE6muybyi5wjvRNRKGZMXVt8R7JKJz8j7v1XF8sKb3ncGfA2V31kLljR
+         FV3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVNZLfi2OCihQ+YdQ7zXPEO9w04U6jXeypgdQnni2i6TVDfq3LG0jmeq1QMnPl8JeftGzFMms7C2cBVHnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfTQii0fN1B/dMUVFpnorgI73iNV0Ms+CB84RwtueWdSuQ0Smp
+	8EysndCpXqHWOBvNWUfoGQOvitr2IjnH454EApTHEFeX2AA5szlualIo7l1H/2Y=
+X-Gm-Gg: ASbGnctW2qFas5CamHaOrM/NUn3YxEbAWaZ0879kUJQA90q2t/91Nk+X5W4y3jQuXTG
+	NiuWi6PrN/TMSnQ9OSONLpEQ9XMTi8AMYxn5XgfK3LtW/yk5bIdk9QLdQzpb3HFo2TcmSMqiJXg
+	RNEQECdhiV23b+4CMrStktAIDHgx5LM3FeWBcWO+6gXZmmpB8UGuPQg39gbd3a06mFeMkVqmadR
+	Kib2O6YC9Tixsg+2yqsluXEXHzqWkTnRZO8imbANnDldxEh/kYU7I0oqbmcc5Wlo9j+iHue9D4E
+	shTN5ygmUoMjxDyhaf1RRqdKh7IrFdS4MZke6dpp2550Y542PbfbJnKYmGQ1Gw==
+X-Google-Smtp-Source: AGHT+IHexcEAkmuoVCrQnHs327DV7IVAnWdt2iAb3A4HUMvJoyWUf8FVxzA4b2/jnVDLjE6ONY72yA==
+X-Received: by 2002:a05:600c:4e46:b0:442:c993:6f94 with SMTP id 5b1f17b1804b1-442d6d3dafbmr37212485e9.12.1746804506380;
+        Fri, 09 May 2025 08:28:26 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c7bsm33733945e9.4.2025.05.09.08.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 08:28:26 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Fri, 09 May 2025 17:28:22 +0200
+Subject: [PATCH v3] arm64: dts: qcom: sm8650: add iris DT node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429014754.1479118-1-Liam.Howlett@oracle.com>
- <z2hyuganxadlf7guskolgd6epu75jutipt7uwg5sqwew6a7lyv@6fbcue5r745x> <CAJuCfpFXuyg+otnr2uHauGi1-UD2sxxS26ONQNBwuUUisOssQQ@mail.gmail.com>
-In-Reply-To: <CAJuCfpFXuyg+otnr2uHauGi1-UD2sxxS26ONQNBwuUUisOssQQ@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 9 May 2025 08:28:03 -0700
-X-Gm-Features: AX0GCFuOglRGV1A6avdyhNrn378-Ve7Y2mRC2kJuq8A5ZPWpN6wHWrZjijO6HaY
-Message-ID: <CAJuCfpES=9QeDEQLZCt-Cm_Vosz04-nT0WXWjtVOUyutqqzo6w@mail.gmail.com>
-Subject: Re: [RFC PATCH v6.6] maple_tree: Fix MA_STATE_PREALLOC flag in mas_preallocate()
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, maple-tree@lists.infradead.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Zhaoyang Huang <zhaoyang.huang@unisoc.com>, Hailong Liu <hailong.liu@oppo.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
-	"zhangpeng . 00 @ bytedance . com" <zhangpeng.00@bytedance.com>, Steve Kang <Steve.Kang@unisoc.com>, 
-	Matthew Wilcox <willy@infradead.org>, Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-topic-sm8x50-upstream-iris-8650-dt-v3-1-f6842e0a8208@linaro.org>
+X-B4-Tracking: v=1; b=H4sIABUfHmgC/5XNsQ6CMBSF4Vchnb2mrRSLk+9hHApt4SZCSVsbD
+ OHdLUy66fif4TsLCcajCeRSLMSbhAHdmON0KEjbq7EzgDo34ZQLWjIJ0U3YQhjkLCg8pxC9UQO
+ gxwCyypOOoHlblUrUggpLMjR5Y3HeT2733D2G6Pxr/0xsW//iEwMGkqpKGUEby+j1gaPy7uh8R
+ zY/8Q+Tlz+ZPJta14zKxgp5tl/muq5vrRW5BykBAAA=
+X-Change-ID: 20250418-topic-sm8x50-upstream-iris-8650-dt-d2c64a59505f
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5322;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=0Zp+4rH5PI+hyXzfoQEydKvkJLlmG0cNFdeKIrnFtsI=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoHh8ZLhKHUyg6R3B56hlSAmGgpeZYqqUiZIb47iDU
+ 5SYGPHCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaB4fGQAKCRB33NvayMhJ0bp/D/
+ 9xDuitym1ShXZ22g6IyWff1FuxqGYTKDA6RqMRJND7IysG17TFMuLE4MePX9W6fOOn8McFSpNagB4q
+ z3DbB+zO3V0dNKXAtLC9jbFXhyOVGwM2JUW+81aO8lJBD8uaM3xtVFKLdAoRK6BKVWZ8em/ZWkj24C
+ jv17nbNRe3exHjt7BUrcljBu+UiSfte8Lm1urR/gWX8QAhCvijKAy1EIxUJpsXUBf2TZkBFK07JriX
+ 5aFYzcc1jvebNiAU4n6lO3W8N8qUQlqiIR1hwaOo/BKh6tiAooktIHHFuPgu04qE97dVnfViv7xNtC
+ qBxNLsRw/6WxC4pTulcNKnlGiItJWZnX9PZbb0x0c8pmiJr0jbpKpgrwLcYpHFlucYU3uQroRZtSYc
+ FPgDxdRqCcM2fEkBpsi4VVzjzuC3Cv7Ss5FcUm3/txAe8K7d7kb5+Xs35zHwLEZAvLdci+t5wIyEyn
+ mYZ0avDdIdgRRdlsXPSDXs4oWPrdf6MR2ngdo9QziKBej3+yl6hyjqXD6Q/CDssk6cB/48/c8b3nIm
+ OhFUBpX1qSYbwQ3S4FjzHE0tBJRb9M+OXOe/BX7G2uOoeGYc7AJc/K3Y+KYVNJ82tdjgH0aET1VUNf
+ jLL/+f829mtVmxIW/XhhfZskdnB9ZXEAF6tPTWdNmfO+nvMG4K0T8Itci+2g==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Fri, May 9, 2025 at 8:27=E2=80=AFAM Suren Baghdasaryan <surenb@google.co=
-m> wrote:
->
-> On Wed, May 7, 2025 at 8:50=E2=80=AFAM Liam R. Howlett <Liam.Howlett@orac=
-le.com> wrote:
-> >
-> > * Liam R. Howlett <Liam.Howlett@oracle.com> [250428 21:48]:
-> > > Temporarily clear the preallocation flag when explicitly requesting
-> > > allocations.  Pre-existing allocations are already counted against th=
-e
-> > > request through mas_node_count_gfp(), but the allocations will not
-> > > happen if the MA_STATE_PREALLOC flag is set.  This flag is meant to
-> > > avoid re-allocating in bulk allocation mode, and to detect issues wit=
-h
-> > > preallocation calculations.
-> > >
-> > > The MA_STATE_PREALLOC flag should also always be set on zero allocati=
-ons
-> > > so that detection of underflow allocations will print a WARN_ON() dur=
-ing
-> > > consumption.
-> > >
-> > > User visible effect of this flaw is a WARN_ON() followed by a null
-> > > pointer dereference when subsequent requests for larger number of nod=
-es
-> > > is ignored, such as the vma merge retry in mmap_region() caused by
-> > > drivers altering the vma flags.
-> > >
-> > > Reported-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> > > Reported-by: Hailong Liu <hailong.liu@oppo.com>
-> > > Fixes: 54a611b605901 ("Maple Tree: add new data structure")
-> > > Link: https://lore.kernel.org/all/1652f7eb-a51b-4fee-8058-c73af63bacd=
-1@oppo.com/
-> > > Link: https://lore.kernel.org/all/20250428184058.1416274-1-Liam.Howle=
-tt@oracle.com/
-> > > Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > Cc: Suren Baghdasaryan <surenb@google.com>
-> > > Cc: Hailong Liu <hailong.liu@oppo.com>
-> > > Cc: zhangpeng.00@bytedance.com <zhangpeng.00@bytedance.com>
-> > > Cc: Steve Kang <Steve.Kang@unisoc.com>
-> > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-> > > Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-> >
-> > ...
-> >
-> > I have a version of this for mm-new and I'd like to send it out.  Once
-> > this is upstream, it will be backported to the stable kernels with
-> > something that looks a lot like what I sent out here.
-> >
-> > Did this fix the issue in the longer running tests?
->
-> - everyone else
+Add DT entries for the sm8650 iris decoder.
 
-and of course I forgot to remove everyone else :) Sorry for the spam.
+Since the firmware is required to be signed, only enable
+on Qualcomm development boards where the firmware is
+available.
 
->
-> Hi Liam,
-> I think the delay is due to the holidays in China. I requested an
-> update from the partners but they will probably provide it next week.
-> Thanks,
-> Suren.
->
-> >
-> > Thanks,
-> > Liam
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Changes in v3:
+- Removed useless comment
+- Fixed opp required-opps
+- Link to v2: https://lore.kernel.org/r/20250424-topic-sm8x50-upstream-iris-8650-dt-v2-1-dd9108bf587f@linaro.org
+
+Changes in v2:
+- removed useless firmware-name
+- Link to v1: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org
+---
+ arch/arm64/boot/dts/qcom/sm8650-hdk.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8650-mtp.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8650-qrd.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8650.dtsi    | 93 +++++++++++++++++++++++++++++++++
+ 4 files changed, 105 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+index d0912735b54e5090f9f213c2c9341e03effbbbff..259649d7dcd768ecf93c9473adc1738e7d715b6c 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
++++ b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+@@ -894,6 +894,10 @@ &ipa {
+ 	status = "okay";
+ };
+ 
++&iris {
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+index 76ef43c10f77d8329ccf0a05c9d590a46372315f..8a957adbfb383411153506e46d4c9acfb02e3114 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+@@ -585,6 +585,10 @@ vreg_l7n_3p3: ldo7 {
+ 	};
+ };
+ 
++&iris {
++	status = "okay";
++};
++
+ &lpass_tlmm {
+ 	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
+ 		pins = "gpio21";
+diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+index 71033fba21b56bc63620dca3e453c14191739675..7552d5d3fb4020e61d47242b447c9ecbec5f8d55 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
++++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+@@ -824,6 +824,10 @@ &ipa {
+ 	status = "okay";
+ };
+ 
++&iris {
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+index c2937f7217943c4ca91a91eadc8259b2d6a01372..30dc4937acc62df582768403db3ff9c919f11e72 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+@@ -4955,6 +4955,99 @@ opp-202000000 {
+ 			};
+ 		};
+ 
++		iris: video-codec@aa00000 {
++			compatible = "qcom,sm8650-iris";
++			reg = <0 0x0aa00000 0 0xf0000>;
++
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH 0>;
++
++			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
++					<&videocc VIDEO_CC_MVS0_GDSC>,
++					<&rpmhpd RPMHPD_MXC>,
++					<&rpmhpd RPMHPD_MMCX>;
++			power-domain-names = "venus",
++					     "vcodec0",
++					     "mxc",
++					     "mmcx";
++
++			operating-points-v2 = <&iris_opp_table>;
++
++			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
++				 <&videocc VIDEO_CC_MVS0C_CLK>,
++				 <&videocc VIDEO_CC_MVS0_CLK>;
++			clock-names = "iface",
++				      "core",
++				      "vcodec0_core";
++
++			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
++					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
++					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
++			interconnect-names = "cpu-cfg",
++					     "video-mem";
++
++			memory-region = <&video_mem>;
++
++			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>,
++				 <&videocc VIDEO_CC_XO_CLK_ARES>,
++				 <&videocc VIDEO_CC_MVS0C_CLK_ARES>;
++			reset-names = "bus",
++				      "xo",
++				      "core";
++
++			iommus = <&apps_smmu 0x1940 0>,
++				 <&apps_smmu 0x1947 0>;
++
++			dma-coherent;
++
++			/*
++			 * IRIS firmware is signed by vendors, only
++			 * enable in boards where the proper signed firmware
++			 * is available.
++			 */
++			status = "disabled";
++
++			iris_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-196000000 {
++					opp-hz = /bits/ 64 <196000000>;
++					required-opps = <&rpmhpd_opp_low_svs_d1>,
++							<&rpmhpd_opp_low_svs_d1>;
++				};
++
++				opp-300000000 {
++					opp-hz = /bits/ 64 <300000000>;
++					required-opps = <&rpmhpd_opp_low_svs>,
++							<&rpmhpd_opp_low_svs>;
++				};
++
++				opp-380000000 {
++					opp-hz = /bits/ 64 <380000000>;
++					required-opps = <&rpmhpd_opp_svs>,
++							<&rpmhpd_opp_svs>;
++				};
++
++				opp-435000000 {
++					opp-hz = /bits/ 64 <435000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>,
++							<&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-480000000 {
++					opp-hz = /bits/ 64 <480000000>;
++					required-opps = <&rpmhpd_opp_nom>,
++							<&rpmhpd_opp_nom>;
++				};
++
++				opp-533333334 {
++					opp-hz = /bits/ 64 <533333334>;
++					required-opps = <&rpmhpd_opp_turbo>,
++							<&rpmhpd_opp_turbo>;
++				};
++			};
++		};
++
+ 		videocc: clock-controller@aaf0000 {
+ 			compatible = "qcom,sm8650-videocc";
+ 			reg = <0 0x0aaf0000 0 0x10000>;
+
+---
+base-commit: a7dca088884312d607fff89f2666c670cb7073ac
+change-id: 20250418-topic-sm8x50-upstream-iris-8650-dt-d2c64a59505f
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
+
