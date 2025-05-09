@@ -1,201 +1,146 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2065.outbound.protection.outlook.com [40.107.223.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B787E230BC7;
-	Fri,  9 May 2025 02:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746759455; cv=fail; b=rYULaZoCTjaNuIr0ijMpXnH24hKwx9EVvq1Ah0zk36eypYh5pt66Q6MQPFdsZ5EoFrU5yvEdaLfZoFmTKPK0yida34CFhXzt29dV0KhD+HU3/FyPpK8qH0ngDtloxTTCvWoFJiHArnHbjrZfNZCx0Zyb7BMS/Gg8TmUz3qOYO+0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746759455; c=relaxed/simple;
-	bh=bSSoT6yyOyFIwj3QcEjAtFiXaCcwSX45Xb4wWtSlpv4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qMkhNWJzzAxU9D10aL+pGxesNmOoyUL1S6WpdPakfISjV65Yn0zjB2oGtfDd4+o6Y1Ot1S4SRU3rviEgfrJZw14G7bhHrVr1yzryYfpAcUsquBvr3aWl5+a0zAt59hLUTiaPxO7vTcgKgcm47geDdI9D3CCKHRkR04KKQLPYC14=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4LPDxxJG; arc=fail smtp.client-ip=40.107.223.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558A3230BC7
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 02:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746759500; cv=none; b=oXIKiOPRtOh0OOnFUX033vw0bqbXwe6urxkdxnsxHUmtNeRqYHkcDRlUlJIRRtC7zpidTWUCDyC/JyC4IL7c43puUcjNCM0QhzUewZbkTtWYmZR/gEwKZoV9mZpcT3eJ87rA61u36843iyM6dnY1nvKvS/2eIRUbC2plWrKxfY8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746759500; c=relaxed/simple;
+	bh=RoaSOiYy72hJrKlgjpJYlENd5gh6MmuvYpqxrgZegHw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uYUuKFR7+LfsrtTSWzEXXU31uMjDig3V5HZX2Vf7wAk3JXOuzzN5acEvFN6xdpjw7eq++BtNVmzX0smWpdl4fqTitJQ9ORjj+AUw4Fr8XL/XXQYSkhvHokKsFBoKmi+OG1WlbbTxgxulkO+HGBUlgTUc8zwNTl2H11tV/GJM7x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=f5SPd31G; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4LPDxxJG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DJgcp4Q4mpQ9zZu0YptUD6ydDMHLLLvd7/qbzrTbr3Cmtljri2joKD4QH0HXg2pr30OM0CzzPw/YeUeKFaAF9HE34dlUJnvdScOVjZ5QAop1X/+HtkJfDlkcRXZ4+FYyHKRD+o/qAFahggrOgvjU3RuuMOMdNirrwQmDzJzMWKfkd0f4uA/vc8h5IO1U0GSwLtyT6R8i9VbPM/XSYDFVlUiB2GYcCuwZiS2h9SRStWfh62rcG8kiqnQjsx+KlFbrkOes53fZBoI9QtkjutTGzfEu56a0tLnYp+WzZPLbUwcNZ4Fsf+SShlbPgWEESHXy8fwAI0ONGkP621Ng+VF20A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ax5aZo5QvRMAVZzUl06/QJIgZJqREZfPDMCVI30Iamg=;
- b=YF3Lop2KF/131ZiQCetLj+91lOTOjL3nwaqBNJmVPd19qr/q0dWaUMooJtBqXuNC2CjymROC/i80umtdaHFR1ApHwTflmljpy2IptgU20HordCKj3jy47gkOYweF62f9/QsN7EKXxNXNWwdHtbQVMxxAKmHlS0+e9wLb5N/BZmrRaDzwmb3z4lz4dNVI1mj2+tgV9nOVgaHHf9GVunTgefm3CYNJkC3FXoBdhxqhBL6jCpHHEhdRvp1jR2pwxAj4jQvma167WaaSrNVTs/KISFMGnhISKXGreJxZ0eM/PK2BAmXRlFUrwMtOgQzmYEo7w4nY6lg5N0O2Yu+DwXkksw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ax5aZo5QvRMAVZzUl06/QJIgZJqREZfPDMCVI30Iamg=;
- b=4LPDxxJGG0nBjVl0s9o+NplYCD2IjF3VFGodrwMo8u8V5KjRbb66t4IdTHa18udriqcW5O4JmZibya+MVZv2ljLUqVimqLjpnHxOboxGUeZt8ooakzJBqKTrv3p2mt85/lg8N9QITxXY/LcMtnB4MfkSD6Xrx1wZvdk6BlEcats=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by CY1PR12MB9673.namprd12.prod.outlook.com (2603:10b6:930:104::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 9 May
- 2025 02:57:27 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8722.021; Fri, 9 May 2025
- 02:57:27 +0000
-Message-ID: <76ac7908-45d7-4821-b34c-a5d2ee49c7d7@amd.com>
-Date: Fri, 9 May 2025 12:57:18 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 06/19] iommufd/viommu: Add
- IOMMU_VIOMMU_SET/UNSET_VDEV_ID ioctl
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
- will@kernel.org, joro@8bytes.org, suravee.suthikulpanit@amd.com,
- robin.murphy@arm.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- shuah@kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org,
- mshavit@google.com, shameerali.kolothum.thodi@huawei.com,
- smostafa@google.com, yi.l.liu@intel.com
-References: <cover.1724776335.git.nicolinc@nvidia.com>
- <6348cc7a72ce9f2ac0e9caf9737e70177a01eb74.1724776335.git.nicolinc@nvidia.com>
- <35701c5e-030a-4f52-b6f6-ed18368fb2cd@amd.com>
- <20241004114147.GF1365916@nvidia.com>
- <95ab62fa-bb1c-4e4a-a210-b0bdba0d4ad2@amd.com>
- <aBHYN39FcH+NG5Ab@Asurada-Nvidia> <20250505170807.GP2260709@nvidia.com>
- <aBl5uLOFCntuIYYz@nvidia.com> <20250506125847.GA2260709@nvidia.com>
- <8e0182b9-7a8b-4388-9f22-c39bfbaf3df1@amd.com>
- <20250507122411.GA90261@nvidia.com>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20250507122411.GA90261@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0107.namprd11.prod.outlook.com
- (2603:10b6:806:d1::22) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="f5SPd31G"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22c33677183so16825775ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 19:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1746759497; x=1747364297; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qecPSibK/c1TU6GFYHi+5TvLhoag6EshMmObfKr7QKQ=;
+        b=f5SPd31GUEWxA7uO6BrcQfG55SfV1lip0tKYlQVsyubqiSUkLCFJFOZPH1rHKuKXce
+         9mr+vZORLZ4rftSOdnG6BHVO8sWVy8C/o8qdAoGUyTxf/kLSaWCrvXWFHU3C4dDsyVzF
+         XNLSnyE4UkwgDgT+gfyQgBSzaREqIvveOvBWCyxNbPdgIvizJpQKL7itaFa1tIJhm5nt
+         Qme5e7FPC43JpKDyTOhKl2SH4dlsYEu1fndzZQnOCioYCkPgy1WOMaC+GlaBcLcxdzHz
+         32Y4ax5utJZe1CJF7jd3vhiZG0319Lk8/ab0fGQx58qXMSpwkuKBqUNnJnQq29ZY6jDh
+         rAfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746759497; x=1747364297;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qecPSibK/c1TU6GFYHi+5TvLhoag6EshMmObfKr7QKQ=;
+        b=TAWQGODSXmJUZjPTi8xoIAD7JDA+5zQLJIIZsIFAXpgGX7uuf7bBpE380UtWdGtUjo
+         aStTq7xssR1mnsHx/HVTs4oWiFCFWsyDHzfmOpQg6xvJHwN3RVQEMPI+H9292X0zqyw4
+         ExMgcKHnqbCDC+vKv+Eez9lBPf1hJN4TIgtIEnPrTFqerzO4eqGHALqXJriFBCQaQ0A9
+         SEroRkd5fJhE14UiAs3PICTvC2cuy83o4sG4OyfNmjs4S4PPwGSARHT4UkOjf3wlwN9j
+         FZhdxLaHS+s+KF3Dt9rrCCMBpUfDkQbuIY6enNnJx2RK3HcFeMdWGhQ7nY9T3F4wv/T7
+         xzHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUh7c8XkjQHCHg+oVa1FlxdhUCPjdpFkzym/JKWroyHiURn8h6Z7eYxvXeGdChITFag5YS8ioCbinxl5Dk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzF1bpbE0V2N4QtT6hXEFnA4AmiLaqaAs9sV/ViSvDPGTRq9hmh
+	xhh8tQEXAIVg7P9ZMjd0xhuyRwYDN7yxl9HWs4NfbRYD/EeNKjWiqHoe6B1QN6c=
+X-Gm-Gg: ASbGncs9qPoeCFpNjxOfAj0YNRtNy4/NcVFlLM6fNhs2YvX57LlFL5e2PHIH/Nf+Icp
+	A8gw3fwrAgNPEtNYqAC1/jifdODdw87dMkJXBd3bta8Q0WwUKiWSSdmy/Wkj3pAteyPvu0rSKGW
+	cvNCS/nDqRjXPqBSArhqbCvX+liJU77IJAh8ylGJRvUHYEGRMYPWscMCDRvKbDRLv4jqa8QbpXn
+	aNCGxP1ktkIgcDq1qoYaCjcy70oyFrNUAr8/9DqnAZ6LuwphSz8rmZukakCU9nN3KOn1PSQVdfy
+	vKdqFMaUCnGsalmiNzOa6AO6YXRustslMf9BaYg0YT16tV0RdHXSaBdVx4kNCEQWK5HEZCCSk7a
+	x
+X-Google-Smtp-Source: AGHT+IGdfkKPgqdaAPxUdUvMSRpp89jyh7ZWme0I5ZkKT5F4wQlgxnhGNbxcGkoU61GIqvasa+6KVQ==
+X-Received: by 2002:a17:903:1a44:b0:22e:7971:4d30 with SMTP id d9443c01a7336-22fc8e99d4amr21130615ad.39.1746759497517;
+        Thu, 08 May 2025 19:58:17 -0700 (PDT)
+Received: from [10.68.122.90] ([203.208.167.151])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc764a541sm7323065ad.65.2025.05.08.19.58.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 19:58:17 -0700 (PDT)
+Message-ID: <6135bd8b-7198-4186-b020-358cdd1fb9a0@bytedance.com>
+Date: Fri, 9 May 2025 10:58:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|CY1PR12MB9673:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab32da3d-abcc-4ad1-bf97-08dd8ea53b28
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eUNNd1JwTlpUNjlEdTZRTWNyMGdveVA3Z2wydExMbHZWVmhtWC9wKzRmanZU?=
- =?utf-8?B?NUJ3dGsvQmdsUE9SOG9RVFJsaUpZY3VkWTFkY2JJVFFESG9EOFBodG5ObnNG?=
- =?utf-8?B?TDVNWFo5cUxnN1A5bDdNek40MFoxbk12dDBGSDdhU285ajdOQm93NTR6WFp1?=
- =?utf-8?B?MVZ0R3dNc29haWVuVzJPcTJRbmtPVEtrMFYxdkpGN04zSG5jcEFlWDJ1S1BU?=
- =?utf-8?B?SitLTUlRL0NQc1o2aTY0aE5tazNEeTFndXhWVnZiMnFCL0tQM2s4WGF4dlFy?=
- =?utf-8?B?cW1tRWdYTFlaVlpQUDc0Q2c4MXVJaXdVODV0TllzaEdNTnZ4UC9RWkVGMjB6?=
- =?utf-8?B?bXJlRXY5YlZqWlBSOE81R3RwajlRR2JOT3JYOGNFYlJuOTQxbHMxT2dUUlgr?=
- =?utf-8?B?WDl1NkhmQ2JHWnRIRmIrcnV4MjNOdnJWUWNGZEprbGFMTjdkNmwyV1hyRVdt?=
- =?utf-8?B?dG91RDNxTEhwWHZ1TXdtWm4zcVdQVjl0U2syaWZOcUw4VG9pWGdMTWwxK01F?=
- =?utf-8?B?OXVPZ3BCNjI1YkdHZUlYVDFCRStKeTBOaGpkeHBYYTBITWpIZU5IYWlEWnZ0?=
- =?utf-8?B?RFk1eUlhbXR6TnZLaUlmT2w1VmoxK0drSVFEbmkwTnRkRmUvRTJPckJoelox?=
- =?utf-8?B?Vy9RRDZUSkFwNHVWeGxyM0JiQTR6eEJTdlBaT3FUWVJaVXRiMkJ4ZjVhSS9s?=
- =?utf-8?B?MU9hbTJET3YxcTVMdVh3UUdhWVRIV2RzUmlYRzNNQndRNFR6UXoyQ1didUl4?=
- =?utf-8?B?ZUxpaGtBRUFNMXBUZVN5WW90aHhpRWdFMWtWTjd1MUlnR3YvMys1TVlRaGxv?=
- =?utf-8?B?MENOQ0srOWI5dmlqUXZoYjNtQkQ2UWNHSnhTd3lBVUkvTWd2RlAvOGdadWp3?=
- =?utf-8?B?dGlnTTl3QXo3dmZzTkU5UzdZU3NrdGRzZlNoRjdJL2JGYzBhVmFMK0FCbTBQ?=
- =?utf-8?B?djVuSEgvNjhoUWZwMnNiTjJKeFRmU0lZRnpsc090eHRHbzMza0hBYmkxRUJQ?=
- =?utf-8?B?ZmJVTTg5VVpQdWF0UDViMitRTnlhb3RHS005eXNablVXemUvUmlPanFUMWpX?=
- =?utf-8?B?eFZET0xLUmNUZjVvUjRwd2thNUhNN1NrcExYWjBhRE15bWpUNThiV2g1SmlJ?=
- =?utf-8?B?cjdyclFxZ0Q5SjlKSXUremw2dUNZNjV6Z2ZVUHkxMFBwaGxpVnMzM3U3cUZK?=
- =?utf-8?B?YW0vcXRnRUxlbUYwYnRHMlpBWVhBMzlFTGxXQWk2Y1JoRllRbGt3NzNKK1Nt?=
- =?utf-8?B?RkJFdGhVMHl5R2phZGd2cUs5UXlUSWFnOFRGeFpTbzZFamk4TGY4Z2hPRkcw?=
- =?utf-8?B?L3k2SWc0b0g1WXVKNm5OT3REK1p3UWl5aUdXY2xHSnpaQlM3QktNbGJNWWdJ?=
- =?utf-8?B?MDljcVAwRGhvTFVrTDd2bmpMMXJ4ZjNzWXRUZFBxWkp5bkQwa1RWZy9oVGR2?=
- =?utf-8?B?RFBzSGcxQ3ZPZjRiM0d1UXcxMklLVk1wSmVMcWxIcmFCY2xWdEFPUDQvWjJj?=
- =?utf-8?B?YzdOZ2FlbE1NeURjQWVjSDJaRU1RK2luSkg1TEZwZUoxbnZ0NitBdkRsRHFX?=
- =?utf-8?B?UThkL1d1WXV6WDhjQmVCYnQveDBtZDliZE1UN0JhNXFMVlcyTTJCbFVQK0xl?=
- =?utf-8?B?NE9iOHBlY1oxTFpuaFI4d3pPODNPQWZ2OVRrMjRFcXp5U1J0UmtzbjhVdDdY?=
- =?utf-8?B?UXhEL3NxWG5QcVdSaUllOUdiZ250RGMvT2x1QjFUVVlodVRObUcyQStyZkJE?=
- =?utf-8?B?bHlVM2ZqWEhrbVRFNjd5cUI1dUNzMTBpcDFnaHJDeFFqQVYvdkNxUlFXc1cv?=
- =?utf-8?B?bmRseFVoN3ArdWE0eUI4TXU5ZTVMbHNKN3FIM3NkaGV0dVo0Mkpqa0pZaUpM?=
- =?utf-8?B?VjFSVlgyeEErVWNKQ29pQzFpM1Naa1oreEpLVzY2bGg4WmloM1gybnBuUTZ6?=
- =?utf-8?Q?vYWdllGbeeU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WWJyalNBNWMyMi9jWVY4aStZcitPaHZ5WmhMOXoyL2U2dUptY1NiMnQ2aVVr?=
- =?utf-8?B?eGRyT3pXejdwYkE3emlWQTcrd0szbHN6S0RMd3RTTXdFaW41WUJNU1RiTVZI?=
- =?utf-8?B?ZWExMEtwc0VmVEF1Q040aVQxZzJCR3VjM0gzaml3dXp3aHVEeG9aYlZ5SDNB?=
- =?utf-8?B?VXc5NUJLdUlOdi9RekkxclVLU28zQVJwZ2l0eE1zKzhsSnlWSGora3dOWkp3?=
- =?utf-8?B?dWNFWmlvRjAyR05MTUpTdFFKc0N4bXQxNHkxVloxZmJmMGRadUV0SW1xS0ZB?=
- =?utf-8?B?TXFtK3lubG5CdXRYK1RpNVEyTEFscWlJSkdGYWtiandwUnE4LzZ1Y2svK01z?=
- =?utf-8?B?cUZMV0UxM3V6eUxkSFB2RjJab1RhU3UzMVRNTG4waHJ6RlpJL3BReFFTR3dZ?=
- =?utf-8?B?N1NFQnFJYjBGWDR0eDJsalB2NVltSWNHbU40eTIwd0VYTSt0RDl0S3c2TkRB?=
- =?utf-8?B?dWVRQjhLZTlyRWliQjJMS1BGNVAzUTF6TmxPSjIrNmJoWVorMXBqM21ReEJK?=
- =?utf-8?B?N2JXVFlVbDh0WHE2VzJkamRpSkpEN3FkYWJjRlhQamFuZ3haNk9TZFJDZ3F2?=
- =?utf-8?B?Tm5QZUhPMGhaR0puZWp1K21WVFl4S2hDL2lkQW5MTXRIWFNRLzNRTzFJajgy?=
- =?utf-8?B?ZThMZU56WEZuZm5ZRjdnT211QkJIUEtGdW51UkViSmFtckQvV2ZnUEx4QTMr?=
- =?utf-8?B?Y0ZFTGhSUUxJeHFZRjlxc1BCSk45MjlpT05LODB5dndwZE9YSVNJZUFrRXNV?=
- =?utf-8?B?Nno0TFp6eXBxeXV0cWxyVlltQmsvTVh2d2NvU3F5eExnSUFESkpNUFgvRnov?=
- =?utf-8?B?RUdFcmgyNUw1akNrYTc1bCtFdGJmMmN6R09PWEZqOW16UG1Nd3RoYTd3bHRk?=
- =?utf-8?B?YXFCeFhjdHREZEdmczRYeHphckpCbi9Hc1BYT0RhZTdDVVZTdU1YRWNxQzhU?=
- =?utf-8?B?cW9KZU5qVmo3VUp6c1ZYKzlCTnNCWno5cWd3a1VZSXU3NFF1TmdTajVpTFRD?=
- =?utf-8?B?UFppdEtXZWNhUUp4VGlYdjQwRGF3bFdhU1AxcFBKS0hQMTlQU0szNUpmOWNK?=
- =?utf-8?B?Q2tKNzMzUjVjSDFKd1c3OEJmVHNyT1ZWeGNqaFFoZ0JvYlJrNysrSVZDdFo4?=
- =?utf-8?B?YVFFRlFFaG5lQ1g3Zm5PU3dlS0VJK2UySHFDTE10OHY1UVBUTmZnMTNidjRD?=
- =?utf-8?B?VVBzMllZMEZrVFExaHRXUWxwRmc1WGlFZHdkV2RXcHAwdHk3dXlvOXhUVStL?=
- =?utf-8?B?TE50L2VKYnFnbG5sODE5WVJwRU03QlBLa0liZWJINHIvUE5wckplbExoZ3dT?=
- =?utf-8?B?YjA0TzdQNDJxd3l5cnczSUZUVnNFSmFKOWZObHpJZHpaVWU4TGFSSVVNUnE0?=
- =?utf-8?B?bHVXbHB6aHB4ZktQaGJFM1g5RSt6Vm9QRjlEOWRGUEhYKy9rcDFUd0UwMWMy?=
- =?utf-8?B?TXE4cTBNRkdsTUUxNXMrb1A4bDJmYlcwMFRmVXZYQ3M5MFVjeXZXbWs3SFFK?=
- =?utf-8?B?YXJpbzJIdk1rQ1oxQlhYb3dEb2ViN3Y4dWkwL2wwRm9YclVPUitmVWFuSUlx?=
- =?utf-8?B?eWtZTWdBRVh2TjdKV0QzWVZSRTU2Vk0xd3FvLzQ5R2FiaUdoRmc2NDlvMWhY?=
- =?utf-8?B?ak1JaUgwRG5mY05CV2tWNVpBQXRvLzBiaVdBcWlIYnYwb1FocTRxZ1hNMmdP?=
- =?utf-8?B?d3RiMXR0SzljWG9XZllMbHJ2dDduYlAyaGFFTFZMdEdvbitBTjMyUEhEcERl?=
- =?utf-8?B?ekpMOVB5Q1AzcTdFbE4xY3ZCNXRqREdmRS9MUmN5Y1BsOVgrNWowSnpvU1l6?=
- =?utf-8?B?Z1Zxd0xYcEhobHRScE10Ly9VZi9WYk1EV2JlQnlzMTVpcWkwTUF0N01zQ01R?=
- =?utf-8?B?UnFyOFpWT2xZbTdMS1VwWGU5WXB4MXNyTjYvWUM4QUM5NENkSjFGOGthc0pY?=
- =?utf-8?B?MkhkU2t1Kzh2VC9GMDRHWTIvYTZ5OEkyOTVhM2tJNDNVWGZhcEoxRlA2Qy9I?=
- =?utf-8?B?ZkJpZGVQUzNJa3hmYzN0SkVVSHVhdjFjd05Ta3B4NEZtYTRZUWVFemxOZTlq?=
- =?utf-8?B?SDlEcTF2S0NBM1d5Qk5UdWR1anNTYmVmZ2NhdW9ONjM3Y2FnNVBXUjhuVURk?=
- =?utf-8?Q?hiUJmNRAnqmiw5biNY3e4jAe+?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab32da3d-abcc-4ad1-bf97-08dd8ea53b28
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 02:57:27.1919
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WbwnxCg/UCtajkLnvYHDMMbNldQRTKL/058yIG4RRqxbkhmJ02Sr7bNNRO/aq19tc7WLNkbiCca/s2gs9qd+tg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9673
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] MAINTAINERS: add mm reclaim section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, David Hildenbrand
+ <david@redhat.com>, Michal Hocko <mhocko@kernel.org>,
+ Yu Zhao <yuzhao@google.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+References: <20250508173735.173502-1-lorenzo.stoakes@oracle.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <20250508173735.173502-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi Lorenzo,
 
-
-On 7/5/25 22:24, Jason Gunthorpe wrote:
-> On Wed, May 07, 2025 at 09:18:29PM +1000, Alexey Kardashevskiy wrote:
+On 5/9/25 1:37 AM, Lorenzo Stoakes wrote:
+> In furtherance of ongoing efforts to ensure people are aware of who
+> de-facto maintains/has an interest in specific parts of mm, as well trying
+> to avoid get_maintainers.pl listing only Andrew and the mailing list for mm
+> files - establish a reclaim memory management section and add relevant
+> maintainers/reviewers.
 > 
->>> We should not destroy the vdevice for something like that. In a CC
->>> case that would unplug it from the VM which is not right.
->>
->> vdevice is not directly seen by the guest, is not it? The guest will
->> see, for example, an "AMD IOMMU" and assume there is device table
->> for all 64K devices, and so on, it is QEMU which will be
->> reallocating vdevice in the host's IOMMUFD. Did I miss something
->> here? Thanks,
+> This is a key part of memory management so sensibly deserves its own
+> section.
 > 
-> I imagined the vdevice would trigger the CC call to create the vPCI
-> function in the guest attached to the secure iommu.
-
-What is this vPCI going to look like inside the guest? There still be AMD IOMMU PCI function and passed through to-be-trusted PCI function.
-
-> At least some
-> arches will need something like that.
+> This encompasses both 'classical' reclaim and MGLRU and thus reflects this
+> in the reviewers from both, as well as those who have contributed
+> specifically on the memcg side of things.
 > 
-> The "AMD IOMMU" I expected to be created by the viommu object.
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+> REVIEWERS NOTE: If anybody feels they ought not to be here, or if I missed
+> anyone, let me know!
+> 
+>   MAINTAINERS | 14 ++++++++++++++
+>   1 file changed, 14 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ccc45b0ba843..a755b9dbf6cf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15577,6 +15577,20 @@ F:	mm/page_alloc.c
+>   F:	include/linux/gfp.h
+>   F:	include/linux/compaction.h
+> 
+> +MEMORY MANAGEMENT - RECLAIM
+> +M:	Andrew Morton <akpm@linux-foundation.org>
+> +R:	Johannes Weiner <hannes@cmpxchg.org>
+> +R:	David Hildenbrand <david@redhat.com>
+> +R:	Michal Hocko <mhocko@kernel.org>
+> +R:	Yu Zhao <yuzhao@google.com>
+> +R:	Qi Zheng <zhengqi.arch@bytedance.com>
+> +R:	Shakeel Butt <shakeel.butt@linux.dev>
+> +R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +F:	mm/pt_reclaim.c
 
-Right.
+Do we have plan to add mm PGTABLE section (at least should
+contain mm/pgtable-generic.c, include/linux/pgtable.h, etc)?
 
--- 
-Alexey
+I'm not sure which section, RECLAIM or PGTABLE, is more
+appropriate for mm/pt_reclaim.c to be included in, but either of
+them is fine for me.
+
+Acked-by: Qi Zheng <zhengqi.arch@bytedance.com>
+
+Thanks!
+
+> +F:	mm/vmscan.c
+> +
+>   MEMORY MANAGEMENT - RMAP (REVERSE MAPPING)
+>   M:	Andrew Morton <akpm@linux-foundation.org>
+>   M:	David Hildenbrand <david@redhat.com>
+> --
+> 2.49.0
 
