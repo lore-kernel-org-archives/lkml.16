@@ -1,137 +1,186 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677D318E02A;
-	Fri,  9 May 2025 09:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE12277031
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782438; cv=none; b=lrIAN0WXGPOGURlnngY/OQzEZAuzXVm6baw7+mLcjfYNYmITBmBdG25dTZKQga6Z4sC350mzOyigbRfJtFf+G7m2RLUA10/DFfUwOjEdXdl3ziSss1frhV1OaskQvhA9eN5xDqQJPlipXu4qi0IIQ6gRiN/+Zpz1W9S5uijn8v0=
+	t=1746782449; cv=none; b=WheFj1tTNOuAIpIXmcTgTY8rjPb6WEWTq8kjCESgcY4LsNdj/qdrFKa1+7xMjKa/I3PmXBtYLi0W7GgEKiZf+zpmiV0l1Bm9BoDD7QZngFnZ4vG8L7uBa9S1sA6VzZ+H9IAKNVKEEyVweYqv/7q0K4BYweMqjLypMWy/FZrO6ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782438; c=relaxed/simple;
-	bh=HIJLJlaSHblXzW4J68BnNfxMHmJtQylwo1XmckKLjkI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iB8CRdsNVwqf0SWsa5qrNAq5kh+X1MtdVkOV/3Sg204V85cHhBinRvfSN7J7XTqk/UWXHVUhKua0Anlj15odejpyIX9dtJDxxu9V+szIiZ7BSpfQuq7hGMOZzCAi88OT75pWf2IPA9Qj7GvOppdO51OFUnYQZUX68IeCnSJ/hQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4Zv3FQ06s9z9t7B;
-	Fri,  9 May 2025 11:13:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id s8onC-g13dbh; Fri,  9 May 2025 11:13:13 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4Zv3FP6VrMz9t2V;
-	Fri,  9 May 2025 11:13:13 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D63998B776;
-	Fri,  9 May 2025 11:13:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id fVWNjZv3ZZLW; Fri,  9 May 2025 11:13:13 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 21FC18B768;
-	Fri,  9 May 2025 11:13:13 +0200 (CEST)
-Message-ID: <bc561703-bf34-4c99-aaad-1b1aad5ced12@csgroup.eu>
-Date: Fri, 9 May 2025 11:13:12 +0200
+	s=arc-20240116; t=1746782449; c=relaxed/simple;
+	bh=92OJhgzUjFkOtbE9HWjk9mos4q0J9p13l5+gly9O6B4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HHZuEcbtxeKwY+DybwSRpM2WV7iJjQfOZGLGTn5fcTFi7gwx5O0ndnbt2Utsn7rsbrBBxMHKH+LwL2d5RPSPxpeA5u0+3gurfvug+Z5ybQfsz9jbF7CCENxHRlJHAeS767300/rRJeWCDMgBDG/x7IMkH68B9YvNdPcBU5ljW5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gbx46zna; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gbx46zna"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so8679355e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746782445; x=1747387245; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xse/MuumvZWNGL7RhYB2Lqx5Phv6lYmDCP0vNNVPW4s=;
+        b=Gbx46znatBKppDSSJrbY8DcvVYpZjP2il5nvZxjJRfdz74KtY8cHN2nXOj0Wucxgly
+         xEKJfvZ6qKGE3G4+YA74EDnFs/8+HYfNQGSWCGJsgc/J/PYdUEydiDvvPE5wTVBelMT6
+         328zO7eNT/KijI9ZoXzkjtaZZTPlI2UQnFx9hS9nj0TA9qE0y2UUdV3pccmEr+2q2/cd
+         s50fqaDcyQw0TlA3btx3lt1epVONL743LZLrbToLbZx3mKZe76Cqu0eIgJNwnpRvQLTk
+         ul/021zO9eN4gKhFyvpV3qPhFVkdjvLBM9v8M+rQdqVoIUcSSUXPbHylzmpP79MyJOfN
+         8HUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746782445; x=1747387245;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xse/MuumvZWNGL7RhYB2Lqx5Phv6lYmDCP0vNNVPW4s=;
+        b=ZZUACczuRAXbWZ4Hme57cMa9VY79PnBsS8m2yZ6MGXZ7ogR46GJIQ6jiIZkAkMv5PP
+         c8Cfy+4i+t05v0YpIwx6fxd8kYcTs/K8A7u+kb3dlLQ+tcnX3yXhRS+Czog5Ja6CVeXC
+         OyrzVDaqvRxSGWJT6PFZNQHi301peWNyjiFwFw7XEJfQ9qtAXO7Ej8VpyG2Hq9LK5uCW
+         EDgP2AV614olFyYB3DcRGeQmhpv0ZCw/GMwZXLnxdLHb5vcab7NfFe2fyUA8QdDpUOib
+         Yu8VjUswvZjaXnZ6uQe/bf4U8tsTau/JhKHQhxPCjKxQBupS1Bmj+X3eTH5nm19mBQWj
+         Qf/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX7tPS6UuEN3Pb6B/XoMcJIpF3dh1NCbUWPGtMqmuNa2W54tCqKEaSJf57HXvTTLqE2YZIOVAFC+r1u8Gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+czgneBbMWNDRnN2EGIMsFhm6MbUN/W4um6mDduiGdIBY2Cog
+	rUDl7souevaNIzZTh5Vcjpyd5S1Z+d93d7uJpsDSF20vll66fptzD2KNj0QrBVgL2RLzn9NR46V
+	2FPS1U63Y1GFAiQ==
+X-Google-Smtp-Source: AGHT+IEfB4RX5z3hIuO5Du+V62ZdH6yKf3Q/8br7x4OG7oxYICZrWu8v/yGtMoMSgvs+ViJU/R9zsW+6x08prmc=
+X-Received: from wmbfk10.prod.google.com ([2002:a05:600c:cca:b0:440:5d4e:87])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:6612:b0:440:54ef:dfdc with SMTP id 5b1f17b1804b1-442d6d448c9mr18690195e9.8.1746782445453;
+ Fri, 09 May 2025 02:20:45 -0700 (PDT)
+Date: Fri, 9 May 2025 09:20:43 +0000
+In-Reply-To: <aB2aAEELa3253nBh@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] ASoC: fsl: fsl_qmc_audio: Only request completion on
- last channel
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Shengjiu Wang <shengjiu.wang@gmail.com>,
- Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
- Nicolin Chen <nicoleotsuka@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- linux-sound@vger.kernel.org
-References: <19aa9d8a84c8475c62c42ac886dad0980428c6c0.1746776731.git.christophe.leroy@csgroup.eu>
- <5cffeb220617584a5e4bc03067cc10e6cdcfc25e.1746776731.git.christophe.leroy@csgroup.eu>
- <20250509104544.5c375f05@bootlin.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250509104544.5c375f05@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250506045843.51258-1-boqun.feng@gmail.com> <20250506045843.51258-5-boqun.feng@gmail.com>
+ <aB2aAEELa3253nBh@gmail.com>
+Message-ID: <aB3I62o8hWSULGBm@google.com>
+Subject: Re: [PATCH 4/5] sched/core: Add __might_sleep_precision()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+	Tamir Duberstein <tamird@gmail.com>, Kunwu Chan <kunwu.chan@hotmail.com>, 
+	Mitchell Levy <levymitchell0@gmail.com>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+	Borys Tyran <borys.tyran@protonmail.com>, Christian Brauner <brauner@kernel.org>, 
+	Panagiotis Foliadis <pfoliadis@posteo.net>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
+	Daniel Almeida <daniel.almeida@collabora.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="utf-8"
 
-Hi Hervé,
-
-Le 09/05/2025 à 10:45, Herve Codina a écrit :
-> On Fri,  9 May 2025 09:48:45 +0200
-> Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+On Fri, May 09, 2025 at 08:00:32AM +0200, Ingo Molnar wrote:
 > 
->> In non-interleaved mode, several QMC channels are used in sync.
->> More details can be found in commit 188d9cae5438 ("ASoC: fsl:
->> fsl_qmc_audio: Add support for non-interleaved mode.")
->> At the time being, an interrupt is requested on each channel to
->> perform capture/playback completion, allthough the completion is
->> really performed only once all channels have completed their work.
->>
->> This leads to a lot more interrupts than really needed. Looking at
->> /proc/interrupts shows ~3800 interrupts per second when using
->> 4 capture and 4 playback devices with 5ms periods while
->> only 1600 (200 x 4 + 200 x 4) periods are processed during one second.
->>
->> The QMC channels work in sync, the one started first is the one
->> finishing first and the one started last is the one finishing last,
+> * Boqun Feng <boqun.feng@gmail.com> wrote:
 > 
-> How can we be sure about that?
+> > From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > 
+> > Add __might_sleep_precision(), Rust friendly version of
+> > __might_sleep(), which takes a pointer to a string with the length
+> > instead of a null-terminated string.
+> > 
+> > Rust's core::panic::Location::file(), which gives the file name of a
+> > caller, doesn't provide a null-terminated
+> > string. __might_sleep_precision() uses a precision specifier in the
+> > printk format, which specifies the length of a string; a string
+> > doesn't need to be a null-terminated.
+> > 
+> > Modify __might_sleep() to call __might_sleep_precision() but the
+> > impact should be negligible. When printing the error (sleeping
+> > function called from invalid context), the precision string format is
+> > used instead of the simple string format; the precision specifies the
+> > the maximum length of the displayed string.
+> > 
+> > Note that Location::file() providing a null-terminated string for
+> > better C interoperability is under discussion [1].
+> > 
+> > [1]: https://github.com/rust-lang/libs-team/issues/466
+> > 
+> > Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > Link: https://lore.kernel.org/r/20250410225623.152616-2-fujita.tomonori@gmail.com
+> > ---
+> >  include/linux/kernel.h |  2 ++
+> >  kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
+> >  2 files changed, 43 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> > index be2e8c0a187e..086ee1dc447e 100644
+> > --- a/include/linux/kernel.h
+> > +++ b/include/linux/kernel.h
+> > @@ -87,6 +87,7 @@ extern int dynamic_might_resched(void);
+> >  #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+> >  extern void __might_resched(const char *file, int line, unsigned int offsets);
+> >  extern void __might_sleep(const char *file, int line);
+> > +extern void __might_sleep_precision(const char *file, int len, int line);
 > 
-> The mapping on the TDM bus has to be taken into account.
+> Ugh.
 > 
-> chan 0 -> TDM bits 0..8
-> chan 1 -> TDM bits 16..23
-> chan 2 -> TDM bits 9..15
-
-In interleaved mode, the QMC will not allow that. You can have 
-TS0-TS1-TS2 or TS1-TS2-TS0 but you can't have TS0-TS2-TS1.
-
-In non-interleaved mode we mimic the interleaved mode so I don't expect 
-it either.
-
+> Firstly, '_precision' is really ambiguous in this context and suggests 
+> 'precise sleep' or something like that, which this is not about at all. 
+> So the naming here is all sorts of bad already.
 > 
-> In that case chan 1 can finish after chan 2.
+> But more importantly, this is really a Rust problem. Does Rust really 
+> have no NUL-terminated strings? It should hide them in shame and 
+> construct proper, robust strings, instead of spreading this disease to 
+> the rest of the kernel, IMHO ...
+
+Rust does have NUL-terminated strings, but they aren't the default. In
+most circumstances, obtaining a NUL-terminated string is possible, but
+we can't do it in this particular case.
+
+Specifically, it's because we're relying on the #[track_caller] language
+feature. When this annotation is placed on a function, it implicitly
+adds an extra hidden argument to the function signature containing a
+pointer to a location struct that holds the file, line, and column of
+the caller. This works recursively until it hits a function without the
+annotation, so code like this:
+
+#[track_caller]
+fn schedule() {
+     might_sleep();
+     // Call into C implementation of schedule.
+     unsafe { bindings::schedule() };
+}
+
+would report a line number in the *caller* of schedule() rather than
+just reporting the line number inside the schedule() function.
+
+The problem is that the location struct is generated by the compiler,
+and we don't have any control over how its generated. Unfortunately, the
+compiler does not place a NUL terminator in the file name.
+
+> Rust is supposed to be about increased security, right? How does extra, 
+> nonsensical complexity for simple concepts such as strings achieve 
+> that? If the Rust runtime wants to hook into debug facilities of the 
+> Linux kernel then I have bad news: almost all strings used by kernel 
+> debugging facilities are NUL-terminated.
 > 
-> qmc_chan_get_ts_info() could be used to get struct qmc_chan_ts_info
-> and [rx,tx]_ts_mask field in the struct give the mapping information.
-> 
-> The channel that ends last is the one with the highest bit set in the
-> mask (rx_tx_mask for capture and tx_ts_mask for playback).
+> So I really don't like this patch. Is there no other way to do this?
 
-That would be right if the channels were starting all at exactely the 
-same time. But qmc_audio_pcm_write_submit() and 
-qmc_audio_pcm_read_submit() are calling resp. qmc_chan_write_submit() 
-and qmc_chan_read_submit() one by one.
+I filed a proposal to add a NUL-terminator to the file names used by
+rustc-generated location structs:
 
-Even if that happens it shouldn't be a problem on its own as there are 
-only a few microseconds between each Timeslot (a full cycle is 125 µs). 
-And also because calling snd_pcm_period_elapsed() doesn't have any 
-destructive effect on ongoing processing.
+https://github.com/rust-lang/libs-team/issues/466
 
-So I wouldn't make it too complicated. Here the benefit is real and 
-worth it.
+But I have not had success with landing it, unfortunately.
 
-Thanks,
-Christophe
-
-> 
-> Best regards,
-> Hervé
-> 
->> so when the last one finishes it is guaranteed that the other ones are
->> finished as well. Therefore, only request completion processing on the
->> last QMC channel.
->>
->> On my board with the above exemple, on a kernel started with
->> 'threadirqs' option, the QMC irq thread uses 16% CPU time with this
->> patch while it uses 26% CPU time without this patch.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
->> ---
-
+Alice
