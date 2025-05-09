@@ -1,73 +1,90 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
+Received: from out198-21.us.a.mail.aliyun.com (out198-21.us.a.mail.aliyun.com [47.90.198.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D8428DF2C;
-	Fri,  9 May 2025 09:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D8127465C;
+	Fri,  9 May 2025 09:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746784722; cv=none; b=oBPqU7rDGkV4D+sNBVbx6tej67k/cigGJGDQJt353Tgav8sZwfMrnH8fPlwLbLk6qk8cz8ROdc2Cpl0O97t17aX6K26H7kc0WHaiceEonxbWs73V0kyZSAkUHgcSJzgNH4o3I4s+x9qqsOm4iL46zlko3yD8uUZN7U7Tv2Ih93k=
+	t=1746784728; cv=none; b=BjZPl6ng0BIWGJbMX6rS/qXnj7NVTNsQTt5DtQYap6x1m+RS0fRg++nJ0Yg5u1tKFbRueVAnFlykWmKdzgWRBL3h41O5B6vvRFip1g3p2+TrL41kIYSyi4xfLXgnyIDdjCncuossESSfoxY5RF0rHvKWg+OX96OmCcOKT8XRL0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746784722; c=relaxed/simple;
-	bh=/1nUlecFxPkXb5UBTWdjvjhl+OV1lK0qu0WlzJbESDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B9drcw/lO5ymqjvII0RjeA4bWeDUb2q8+SPXci8U7OY/t7uZmV2olb/7+DJQeGNnELUHFuSjIrqkTTrkc4AgArdrVgO8Kpe2blDEEemVNnX6fpj/YQzaMjaOEGog1Rjzl9IB8275h6isQDr6zG7bK8N52ld7O9aecb11sVYvtY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=AA6tle6T; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1746784728; c=relaxed/simple;
+	bh=VWX7G/DVxq26xmeDCflJUO8sJLSsHFqKs/EofwXfRKM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TXf8EVeWPg2Z1M/iY7m/DjBRGm90JpfeXx6jDsHPMm4efKQsOLC7/+zqWvvlXV1KWtTkrvgsccAUi0xbyoBkrLU7eaxGlpKM4Xu7G7eTuHu2uzNiIr96EpU9/Uu6vXafLv3TAodwWQOXVnNuNhSNm09KxDsrSMZI2thg2qsCBDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn; spf=pass smtp.mailfrom=coolkit.cn; dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b=c/OdzP7L; arc=none smtp.client-ip=47.90.198.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coolkit.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="AA6tle6T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=ztpen9DuNRABAlryqI4gdvEyhar1spaRR9YZP2KvAT4=;
-	b=AA6tle6TmM7PdJ4gi8I9yRrcBcdwBcfjsw+8LLrbPNdMruSNojxEqqbLzyrZHS
-	In63wY6UU9QQENgkE8pG+WDACIZiOUlg1EMVCfDSJUkGVcXafB4L/F1mwqi4Y7Ul
-	0AAtRIzN4Eowa/wGUvyGf/Z4+2zsvNFYYpl7maGgPYNh4=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgBHD_Fg0R1o046lAA--.20888S3;
-	Fri, 09 May 2025 17:56:50 +0800 (CST)
-Date: Fri, 9 May 2025 17:56:48 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mp: use 800MHz NoC OPP for nominal drive
- mode
-Message-ID: <aB3RYMONiB4RQdjk@dragon>
-References: <20250422-imx8m-nominal-noc-v1-1-889592ff65a5@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b="c/OdzP7L"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=coolkit.cn; s=default;
+	t=1746784703; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=3ZXjjEkHeGITH9J2fWd0u7vufG50QXwj93RzEehOzDM=;
+	b=c/OdzP7LPWrz+RwL8YwjFdg/VDy6rw5eHCeSPhCXd9rNngdHp6NciMArZBUIiv0AHoXo2RYi8Av9nFlUeEmZudgCiRMgsL8zjVlVoDgGhH4cXN6Ry9Yiq8+dR92YT3o7pEBKB9SCMyRKlz0PNSO99/OwuStFVLvm+bW9GwLQp44=
+Received: from ubuntu-z.lan(mailfrom:hao.zhang@coolkit.cn fp:SMTPD_---.cjnlknc_1746781026 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 09 May 2025 16:57:09 +0800
+From: Hao Zhang <hao.zhang@coolkit.cn>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	tim@feathertop.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"hao.zhang" <hao.zhang@coolkit.cn>
+Subject: [PATCH 2/2] ARM: dts: rockchip: Sonoff-iHost: correct IO domain voltages
+Date: Fri,  9 May 2025 16:56:57 +0800
+Message-Id: <20250509085657.309934-3-hao.zhang@coolkit.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250509085657.309934-1-hao.zhang@coolkit.cn>
+References: <20250509085657.309934-1-hao.zhang@coolkit.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422-imx8m-nominal-noc-v1-1-889592ff65a5@pengutronix.de>
-X-CM-TRANSID:M88vCgBHD_Fg0R1o046lAA--.20888S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrCF1fGr45uF4DZw1UXw4kCrg_yoWxXrc_ur
-	W8WwnrAw1kWr17u34qk3y5Za4fWw4UCF1SgasxXan2qFyfXrZ3Z3s7X3s5XF1UGrWjqwsr
-	AF1DXw48JFy2kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbzVbPUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiARxIZWgduGdhEQAAsq
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 09:12:35AM +0200, Ahmad Fatoum wrote:
-> When running in nominal drive mode, the maximum allowed frequency for
-> the NoC is 800MHz, but the OPP table for the i.MX8MP interconnect device
-> listed the 1GHz operating point for the NoC, regardless of the active
-> mode.
-> 
-> The newly introduced imx8mp-nominal.dtsi header reconfigures the clock
-> controller to observe nominal drive mode limits, so have it modify the
-> maximum NoC OPP as well.
-> 
-> Fixes: 255fbd9eabe7 ("arm64: dts: imx8mp: Add optional nominal drive mode DTSI")
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: "hao.zhang" <hao.zhang@coolkit.cn>
 
-Applied, thanks!
+Modify the corresponding vccio according to the schematic of
+Sonoff iHost. This change aligns the device tree with the actual
+hardware design and improves peripheral stability.
+
+Signed-off-by: hao.zhang <hao.zhang@coolkit.cn>
+---
+ arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi b/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
+index 088a069bb1a8..1aedcd3a2167 100644
+--- a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
++++ b/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
+@@ -323,15 +323,15 @@ wifi_enable_h: wifi-enable-h {
+ };
+ 
+ &pmu_io_domains {
+-	pmuio0-supply = <&vcc1v8_pmu>;
++	pmuio0-supply = <&vcc3v3_sys>;
+ 	pmuio1-supply = <&vcc3v3_sys>;
+ 	vccio1-supply = <&vcc_1v8>;
+ 	vccio2-supply = <&vccio_sd>;
+ 	vccio3-supply = <&vcc3v3_sd>;
+-	vccio4-supply = <&vcc_dovdd>;
+-	vccio5-supply = <&vcc_1v8>;
+-	vccio6-supply = <&vcc_1v8>;
+-	vccio7-supply = <&vcc_dovdd>;
++	vccio4-supply = <&vcc_3v3>;
++	vccio5-supply = <&vcc_3v3>;
++	vccio6-supply = <&vcc_3v3>;
++	vccio7-supply = <&vcc_1v8>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.34.1
 
