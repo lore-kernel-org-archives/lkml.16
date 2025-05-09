@@ -1,175 +1,117 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e240-9.smtp-out.eu-north-1.amazonses.com (e240-9.smtp-out.eu-north-1.amazonses.com [23.251.240.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1D62609DB;
-	Fri,  9 May 2025 20:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68181E25F8;
+	Fri,  9 May 2025 20:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746822891; cv=none; b=JlRoZ35jFkFRG043vkVErtzjbtfXjCGAWIF7jiqkAuzGCsr70rG5ZUwa/fKpk9OVZwDmOnAiHGzv0+Jt5k8gMFaGjZ6pjxWVzT3xuFd6mtzFGYwyal5gTBXnGkyOe8sfYh2WJEqaRX54YXq3BED3XzwvOsm1/7+kufB858aW6RY=
+	t=1746823217; cv=none; b=jW55zAsKBwlQAEnXFgs6EfpE6MVDVyuwm0TBiFkjvtX4fT9ykJroITgllgSEGDejyJ2EXuEEPNLAPbtGBEBlLjY7tSirTyQ2W/EaEJyacrDHnurQGqW687j33YZM04vBHWUxutli8HBBP3IdOgcL3ObP68TdgCbDRZpkiWyBsQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746822891; c=relaxed/simple;
-	bh=dIVFzbgX2H5u7vdg1ihytOKDMoXWZKWEyGDHqrH6o90=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n27kJ0UwlYDcdLMtj3Be95AdRGJYlu+YwPe5f+eE1QSTF3lqTEzadnIX4ynVGJkH7uqrEjQ4CyJpzE4Jm/cfBDx9030ekItlWX1nSMH6m9t0U/dxv/D1/OyiYV430Tt9m5Rb3qomadSPzclcMTpfbyIUxe8xnP/DwS+6O2FJtl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ifCsuh4C; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746823217; c=relaxed/simple;
+	bh=3LomidA6G5RjtKPeXX6J3KBSUJmiCMfwhmYfs3b0Me8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UP2izGiHHa9uEg4CgkA4oSOr+0MuGg/7B6UMLNAH9BroVDx43fT+JiHfepB9PM8kzcmBU51oTV32a4M51z3mtIbRINSkRbg0rj7MIRJq1X5Cfg0vJViIhD99D1S/CYstT9jVbb3fLqyqlxqrpxLsY08uaoOrAay15u41Zx5nNwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=cbqDRNl4; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=zfohqNG4; arc=none smtp.client-ip=23.251.240.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifCsuh4C"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad221e3e5a2so152303666b.1;
-        Fri, 09 May 2025 13:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746822888; x=1747427688; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z8ATbPKvedG0du7nkeOvCtVQy3Ks46Id+Cr/SltFthQ=;
-        b=ifCsuh4COEk1M4Stopl2cUO2I+SW5jKRkvnomWV4B7AtxCrtZpMML0OEU4Bx3yJh03
-         JY5wI1Fg/H5hlQb6zicIihVZgrLxoQMyUVT9xLf2f5p3j7xlSvlE5XahDWm+pk+atxhV
-         vVqxKog7Z6iAvZfTXhRqEKScjoAmCSeucDQdosOZhtG38N9AmLQoWrHelA3IHsJlOEtI
-         bwpSiRoKalaXTbH4ZljTmw7gxL/vfsvKU6TEHmgbWxlb3lXX+i2SLGLsYZHmDVOdcpv7
-         shmIVcg7bdJyrwHySYVYH1TQU/T0UQtFONblU8OLWNNGoLlxoMOM1vR6OLqfnmece1Pg
-         S79g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746822888; x=1747427688;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z8ATbPKvedG0du7nkeOvCtVQy3Ks46Id+Cr/SltFthQ=;
-        b=bcZG17zwETfRoguZihEYKRvEtPNINzkNK3uawLejoekMCriNi1eTgznGnjVmnSxF7R
-         hSaqS6yce5E1wcp9xZaEpfNW03FjHuAE+6calbOme3j0Mcja1vI+Yd+/5No5g/dWJBw+
-         SeYnRWtbVAh4FvIZGyfv8qOj9P1/2xoENj/zR2jMhJvsGEUNZALW5KFKJnELbp0hsQW8
-         VAhp2uPUibjVAC6z3RJQzpfJxCnFas1anBqzTqhSAhZqWJeK+CC3fOFHjFujhcsCo8p6
-         UNJezYtkhchP5vbvh8HxnwOnfumJwPjCdxj24mjgl2P0vL3f3q+1xUNuhC1JgApdB7w8
-         0OBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjJjURVrhwSABbbZJ15GOovyVJh6Qb9FC7as02J8ugTufAaMov75oSH9GKpG4kOK7M6Qvtz+znd8lFzHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk+OwgASuwfTsY7sOH5MyJFstiZ7JOf52YzCdqUpvmdMsnFd+7
-	qC7SXFQqZ2Va0KFBmVZyFU2RzKIr4/kc6e26Q07K3dzmFig7zQw=
-X-Gm-Gg: ASbGncv/+f8dX6beS3zBwcFOCDxc7/iqS0P9/ofkNwhcJpVwkPC0an/t/+VOyP6psWO
-	rWjIoZhQW6AbdgNhtmynJPYs+gndU8//PS8fh5znUeVYtc4DG6/I4GhCd5yB4+rnqfEmKARwmgp
-	km3/2TKLhK0jWkmZeiDDZQHhBjkPdF3lphjjErObbcyNtWEroOzccFxB/Obz2AzgqUCbXT8W4vi
-	WD+465DCIuQXqNM5khwzwobNkAndZ9mhwMw00/i5I/bc1d+6eWdWvihjrqI+2q5wFWonYR/PxDw
-	pOF6Yj4kSliGFDC0STplI3p3OtKZSxhxBvR8ZmjRx5bkVPpBrwhlGxI9Wcy+
-X-Google-Smtp-Source: AGHT+IFKbDxcHsVUqh8XktR9V5/nZEWyoVf1RvAYENE7LFOz0UBa8kT9bZBdoS5lQr56NpYrTq+9/Q==
-X-Received: by 2002:a17:907:97d2:b0:ad1:77aa:503 with SMTP id a640c23a62f3a-ad219124207mr497551366b.36.1746822888088;
-        Fri, 09 May 2025 13:34:48 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.251.33])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd219sm202255066b.141.2025.05.09.13.34.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 13:34:47 -0700 (PDT)
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: corbet@lwn.net
-Cc: workflows@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Dobriyan <adobriyan@gmail.com>
-Subject: [PATCH 9/9] CodingStyle: flip the rule about curlies
-Date: Fri,  9 May 2025 23:34:30 +0300
-Message-ID: <20250509203430.3448-9-adobriyan@gmail.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250509203430.3448-1-adobriyan@gmail.com>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="cbqDRNl4";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="zfohqNG4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746823213;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=3LomidA6G5RjtKPeXX6J3KBSUJmiCMfwhmYfs3b0Me8=;
+	b=cbqDRNl4DvDvKAGP3p+4EthN6EXOeEQwiWcelrmqoTV28jE3az+ghoZtLdXkAwl3
+	YOmO7a5KAAFiyPaoXOoQen7BTapoZaJp+BJYSzZ0gvsDnSQXEw00I9YjFT858w7WhEb
+	8R8M31xmGqvPRnqFo2FHQBQWzh3hRF2EFlqVN/H+po8diKaBJPEoRQKLE+NDUPec+GZ
+	vj9OQjLDGD1WTFsHDGWjsB39BmbsHnSniJu45cIVgODUgsVJhrUx0EuN0h9bAt3Y1B/
+	8ULYeUAe/wXvSklqGCYgNg4lbzuzQP09pNsCEn63I9zLf4hMDDNWhgq/sy7VlvwuSHf
+	UG5AFQPdLw==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746823213;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=3LomidA6G5RjtKPeXX6J3KBSUJmiCMfwhmYfs3b0Me8=;
+	b=zfohqNG4SuN4huP01sOqw4pADGfi6JTYxYu/SOfOD1ccPwQ77E3qTBhuxXJr9f4s
+	Yc+KLaZnnBPk2h7RgVBMFDWvSM/hUo3VpJsCAJNJrDDY0+D4/h8MAM4oE8J3TOmJ/iF
+	uc+VJiTNh5GpkZpFqmIA2a8ZT/2e7sUKp5zH2Fng=
+X-Forwarded-Encrypted: i=1; AJvYcCU3C+mEiKadWL3HKK61EU0ICYUcy64YF3j+pIo1gumnf13VlkgDLTx7jgpwWuDEzpo0x1xsr41Q42fYMh4=@vger.kernel.org, AJvYcCWxDkYgW+5b8XJ0Yni20eHFPPPZYSMjyiqGwT9J9K9QccgYEMHYC+1N3WvRMHgT2+Tpm276UYwEqhNH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXKiq1nqtUwac+PPl0qfbaOmXjsC2y2cEclZJ2JnI5Prn5IrE+
+	tZ+MzYwVnBzepb5BmB1aE2z4ENuBapmgGj6l9WkJuT/TjoG8Izg3z2aZisSTUawAg+ipf7lOicN
+	UCZNDt8yx7GJl6uhhhlNg+U1ba4k=
+X-Google-Smtp-Source: AGHT+IGVq3i239wek8IKLEaNnIbRTcNddfEHFGsWuxwOmrCoyO5WOAU/lEVl5fhrtNsdg19944Y3lfshAfSb24UJ5Io=
+X-Received: by 2002:a17:903:1904:b0:21b:d105:26b8 with SMTP id
+ d9443c01a7336-22fc8affe3fmr61614245ad.7.1746823200851; Fri, 09 May 2025
+ 13:40:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250509203430.3448-1-adobriyan@gmail.com>
+In-Reply-To: <20250509203430.3448-1-adobriyan@gmail.com>
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Fri, 9 May 2025 20:40:13 +0000
+X-Gmail-Original-Message-ID: <CADvZ6ErFnL59beXeXyqHzb4EtztF2N7hxQGEnjV+U-YURZOBhw@mail.gmail.com>
+X-Gm-Features: ATxdqUFulZDgWzdscdTT0SKhmSq-Wu3ATehyZIt9Q7iAbbkGwvQtqwhlXhx5BtE
+Message-ID: <01100196b6c6f293-4e0c53f4-3e50-426c-9519-3040faac2eaa-000000@eu-north-1.amazonses.com>
+Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into symlink
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.09-23.251.240.9
 
-Require set of curlies {} in all if/else branches and all loops
-not matter how simple.
+Alexey Dobriyan <adobriyan@gmail.com>, 9 May 2025 Cum, 23:35 tarihinde
+=C5=9Funu yazd=C4=B1:
+>
+> Every time I open Documentation/CodingStyle it says the party moved
+> somewhere else. :-(
+>
 
-The rationale is that maintaining curlies increases churn and make
-patches bigger when those if/else branches grow and shrink so it is
-easier to always add them.
+Hello,
 
-There are more important things in life than herding curlies.
+I dont understand, this already exists so when you look in
+Documentation/CodingStyle file it will guide you?
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
- Documentation/process/coding-style.rst | 57 +++++++++++++++-----------
- 1 file changed, 32 insertions(+), 25 deletions(-)
+$ cat Documentation/CodingStyle
+This file has moved to process/coding-style.rst
 
-diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-index 494ab3201112..dc18ff40ebf2 100644
---- a/Documentation/process/coding-style.rst
-+++ b/Documentation/process/coding-style.rst
-@@ -280,43 +280,50 @@ supply of new-lines on your screen is not a renewable resource (think
- 25-line terminal screens here), you have more empty lines to put
- comments on.
- 
--Do not unnecessarily use braces where a single statement will do.
-+All ``if``, ``for``, ``do``-``while``, ``switch`` and ``while`` statements
-+use braces even when C grammar allows to omit them:
- 
- .. code-block:: c
- 
--	if (condition)
--		action();
--
--and
--
--.. code-block:: c
--
--	if (condition)
--		do_this();
--	else
--		do_that();
--
--This does not apply if only one branch of a conditional statement is a single
--statement; in the latter case use braces in both branches:
-+	if (cond) {
-+		t();
-+	}
- 
--.. code-block:: c
-+	if (cond) {
-+		t();
-+	} else {
-+		f();
-+	}
- 
--	if (condition) {
--		do_this();
--		do_that();
-+	if (cond1) {
-+		t1();
-+	} else if (cond2) {
-+		t2();
- 	} else {
--		otherwise();
-+		f();
- 	}
- 
--Also, use braces when a loop contains more than a single simple statement:
-+	for (int i = 0; i < N; i += 1) {
-+		f(i);
-+	}
- 
--.. code-block:: c
-+	do {
-+		g();
-+	} while (0);
- 
--	while (condition) {
--		if (test)
--			do_something();
-+	switch (x) {
-+	case X1:
-+		f();
- 	}
- 
-+	while (1) {
-+		f();
-+	}
-+
-+In the future, code will be added and deleted but braces stay untouched.
-+Maitaining them when if branches, loop bodies grow and shrink is useless
-+busywork not even worthy of discussion.
-+
- Spaces
- ******
- 
--- 
-2.49.0
+$ cat Documentation/process/coding-style.rst
 
+This was processed for .rst file.
+
+Regards
+
+Ozgur
+
+> Of course, I forget where it moved to by the next time.
+>
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> ---
+>  Documentation/CodingStyle | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>  mode change 100644 =3D> 120000 Documentation/CodingStyle
+>
+> diff --git a/Documentation/CodingStyle b/Documentation/CodingStyle
+> deleted file mode 100644
+> index 320983ca114e..000000000000
+> --- a/Documentation/CodingStyle
+> +++ /dev/null
+> @@ -1 +0,0 @@
+> -This file has moved to process/coding-style.rst
+> diff --git a/Documentation/CodingStyle b/Documentation/CodingStyle
+> new file mode 120000
+> index 000000000000..b4a9864269eb
+> --- /dev/null
+> +++ b/Documentation/CodingStyle
+> @@ -0,0 +1 @@
+> +process/coding-style.rst
+> \ No newline at end of file
+> --
+> 2.49.0
+>
+>
+>
+>
