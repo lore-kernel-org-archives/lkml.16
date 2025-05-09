@@ -1,102 +1,147 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E367C220F30
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A90226CF4
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746825783; cv=none; b=Qi5KQHMY3fAidN4FkeLuOS081Cwm7oZq2gsFhBdzF9vDq1G5qACKPHu/sn7F3ik9Mluw5reaPENKKIg4/wFh/X4RJD70nyow4/O1/tlg72UEU6dzxjguFlgYeYt0CxgL9OnA6acPbF+WESOno+maH5QbWOHrrxArbkVg2knTeDs=
+	t=1746826185; cv=none; b=cFFVTZcuLhUERMLm3ndg5NZdH+LECFfergZJEBkdMoQF6lH86uad4jTBRXkp3tWWz3/zC9P6EiVEmVP1MURYXhDzfdCKHemklg/T97y7FnvRkdRwor0OAHuISBCgKMYXrxZoLh5rLF33vnWk2GwpMF/Psi1+J0KqvjKyTMMK1EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746825783; c=relaxed/simple;
-	bh=UQ0qlo+cumKX79UwBgG9XqDTrOvjRxyPzj5vvdhGBQU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JVFGCRzwtA6uvuzI5JMvU334yA+G111GPc3+tUVQMg2Eyq+80Q7FXs+KbmAUkz3pAcMjj93ra9Qonvbe8tb8YciT2lTCyp2pXPx4C1fE+Sog6gpkjxtHjgLjSblU9Y8oURkMM/SwYXrNQhcCLGCvFnWh1jN4B5y64ADRerWU5yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Z5mSpz7; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746826185; c=relaxed/simple;
+	bh=TALgcSGJ3eoOeMhnfbPJ1FbEpCzVUh+W7VSWvP2wL4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kiP2tBjqhKf6pfZdKtANmkwfaLVSOs22ShhtbIx4oK5vARX0YNsJOaFghp5laydOWNyu3D7vfN1n9cuiaZId+bqb/FBcLSqeIFnjVjhSHFcH8cPOvmpfHbisI/5oQfMIHzZ93sEikuyn1/suRyWI+RNnbwmXXMjepkm9qkWvtVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3uRw4vh; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Z5mSpz7"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5fc4fc27983so844a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 14:23:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3uRw4vh"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b245ff89c99so936105a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 14:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746825780; x=1747430580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DmMe3vW4lyNfWDou+q4L04WRl287TtyiakNs3hFn5BI=;
-        b=3Z5mSpz74C1GFDy821UDhQ9k1qcoUKkarvTgYgpCT4f5wvCZIukBva8PCQWW0q4342
-         C2/mhKCSMKxiDnx43+5spyX2Ueqr1LByJkL8ptXHXZG7xLDjmernNqNidFVKnIcD9Ex6
-         6bXYbg/1lr6Km9T7vaNuvHVjuEpZLZK5NFoOkSjfz2EBTtEXv3bZYCvh6PDhbDBaju2j
-         VwYY9viKsLQDk7UhaQp9myvhnOLk3vwWQjhYd0HPI5ejUe+gopBngvKQDkzAsePGsChT
-         bNsq4UDZL55xTQyCxHS5kJtK3irkc5fOlYzWpJND0v4qzZPPom1JGIuK0uSHVnGs3+8f
-         zeQA==
+        d=gmail.com; s=20230601; t=1746826182; x=1747430982; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=meqvWLOgNDkKrnW/6AikmkhA6lmFYYhW4IJ5f3/mKsw=;
+        b=W3uRw4vhKAG9e37FOpLLjs2vDvrtFLXCVwK8x74H2p6f54VrrWLyUlR2itczMY7Mb9
+         np5lHTZwbvZVWPAeuhagwewJsV7LLgB+iCvEmxcvqJmz9yNN+7owUUooeDJ8Dz3MOE1R
+         4uUCXNWdObKJJRI8Dp+GHtGYUg8Nc8mamlp0mQRii7c3WxBAB/bpqj8ZIq7icKz7usNF
+         0LINyY7SHmsPwGzSeDnAiiFq+F5HZ6Wsz97vNn71vTE2EyaaQx303og3DH/oK+z3F3vN
+         OdYETpIAQZvnjd70NbHoe+RBQkf404cbkM8C3SmT0xqymClnTduhue2lWHs2aIlBEaQc
+         qtdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746825780; x=1747430580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DmMe3vW4lyNfWDou+q4L04WRl287TtyiakNs3hFn5BI=;
-        b=B//Ikia1JyTgo/cIfXfPpPg/nF6PbxgQMjmmiO/ucrlUWdrZGDCmqd3nm7mbFmt4bQ
-         7pISjcX5id7JCOdE6G/N0tyzkeldqlOg1a+QYLtryTOhN0XT1An4a9BixI7zKJzTEwqa
-         k0PpnoKCw/VAAT0w65W5GEZBw8LXsX/YdT9yO+CIWFO0FDO6jB5EfwEHs1PxUdcqyJUU
-         Smh4i3vPg83N/e6HUlhinI7X5MKL2TJE7W60oITDLWtw1brjpx7F/YppXVnXoJuooyyt
-         3bx9rwwP2uS4PuE5AO4XLnkBdEPomtJL19Bem0nEC5KyO98wQ0HLhfYhE0nuM09QdUq6
-         xawQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/6Xnl/u0FTPAyZ+85gagSJ1TJFOFRO6BtVTPhRLjCdNT7ITKLwO2Gon3kklhZa3N0k4Ivt64YXAm6tjg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/bQoBsl8p4bQy8sHCjuO7fCFL03NneburUUh2psK7OzSjmdpd
-	A5K0k3ATHJqQY0Aq/gyiB6R+iqYr7zpIkKAA+G1SjypmS2pFuGGvN/91l0eyXManvMcB8GDynIE
-	MBopWavhxnMN+3Ud0zWbNBvimM0u9wbPiPUKo
-X-Gm-Gg: ASbGncsmA8nB69KraehNQvA1FTWCeq24HcVHUSehIsjtqQi5CA1xF0Oq1OpgwzE8Zii
-	z+Htvz2YsoLNYaDsZj/HhB73zS+DONWjYjitPUV3Jz+xI6j+HAJxkMHMUxAidxlSu0usX4iboR3
-	VSQV8CAz86upuaTctEoaKz21tmPJiN12oh7ot6UA+XyCAuhml4UXv2M0yvP0nz0fiBq6kuWqg=
-X-Google-Smtp-Source: AGHT+IHPOsOvytyLoZXJ/HaSBzGBFJQlrpcSUA8p8mo1k/cvAVzVFj/B+CSFdZdMT22Ya7LNJGNu3LBrPqnGNFjb6mM=
-X-Received: by 2002:a05:6402:c98:b0:5f8:d6b1:71ba with SMTP id
- 4fb4d7f45d1cf-5fcca38de61mr24137a12.4.1746825779809; Fri, 09 May 2025
- 14:22:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746826182; x=1747430982;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=meqvWLOgNDkKrnW/6AikmkhA6lmFYYhW4IJ5f3/mKsw=;
+        b=RgzuZfW5H6NgSPfgCelboZrX74+v1LU1UFGiqhSOHHABeoa7OK81WlmeThXQV+037l
+         f1ETrDfgWaDhp2QaBd9LiUANpCLB2IxpTVhpCO2jtcKc1riZ1gtrI+o3T8NX/G20HyWu
+         9VECOEc9YZfv0evrq5XmQRQaQDa+xZ17VStmKDYLJH9uehsmEZwATM2HvhTIoZ1GmJA5
+         U0hreR3ikanVPP5tVHUK9/87Wi/0EFtbX94lsTwEXkj4zGFICMy5VWp+PZf2YwdOILOi
+         rLPiPv3UZQRtk6sYihKiCXEJVoEsqnKh1wd5G79UiQlVwRywCw5c+khfpuQTB9Rj+3fa
+         BV8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVIj2/WOP/PRDuyhf9nJiFj7GNW20IiLmEx+08TgGuWq8H1dXoOzEwBfHh0CKjIIdOeCBCBG2qAseDCUpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0hHjcQCuOanViUSKvpB9tNF3InbVFsjlPu/mt8XG51HrkTm47
+	D4CBOzS/iwkPBJub8HJ/xjNQPTpyvtWq/CdpSHt0Ni/D5GmTByjS
+X-Gm-Gg: ASbGncuKfxSpNOwpMhybTVfJCdzv3GSmvgsvUanEXvBi0QcOFm71lprjlSAuuYJJ6NH
+	u49JgLllwdzH4q0hqeJJ85SVXGbnZsUi7nsmwVNHB1E7JNfLI4lHg16YSp1qW2HD/JND5peQff+
+	zqI8X5hoHQIKm3nRBklvMiFVDXnYfKMoOrZGKJ9+BWAq7bZ+Rh+aZZsvaD/d2yR3BptsixxrHsv
+	mss0E2fNEjUvhoZUi0qEXGun4TJ1iJI8X9oCsvrpX3fg3MCuetAo3nobQhTE19hW+65+moFYUlm
+	Su7fIhJkMgpe4lpYELFjvD9aSSnThBHGHMWN3mNK4zykKkdm+Kxq9MONgQzVm5SDNN9qZ00TPs7
+	mfjpVl7hqG7+0D7+CWIgEeJlWJ6RtZNarFFon
+X-Google-Smtp-Source: AGHT+IF+ITeKptIhdcgHoefjVGiD98M1Z4dXIaMfBsSQt0Vu2agyrzMpqT1JrwblQq1fRY7cXkIygw==
+X-Received: by 2002:a17:903:186:b0:224:c46:d162 with SMTP id d9443c01a7336-22fc8b3d8b2mr58540265ad.20.1746826181925;
+        Fri, 09 May 2025 14:29:41 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc764a541sm22276735ad.65.2025.05.09.14.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 14:29:40 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: Rob Clark <robdclark@chromium.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/sched: Fix UAF in drm_sched_fence_get_timeline_name()
+Date: Fri,  9 May 2025 14:29:36 -0700
+Message-ID: <20250509212936.490048-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509065114.GA4188600@rayden> <e5bfb069-6adb-4757-a52c-bb3635990686@app.fastmail.com>
-In-Reply-To: <e5bfb069-6adb-4757-a52c-bb3635990686@app.fastmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 9 May 2025 23:22:23 +0200
-X-Gm-Features: AX0GCFuHNx6MvLb6u653mJm9uz3oiL-dR9aPw7rOMiTgfkX9j4rJTsW5oesdTl4
-Message-ID: <CAG48ez3JEg11GZTzmSHeXEDVz9vN68vWjTH+2sq_6+8eK0zkig@mail.gmail.com>
-Subject: Re: [GIT PULL] TEE updates for 6.16
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, arm <arm@kernel.org>, soc@kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, op-tee@lists.trustedfirmware.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 9, 2025 at 11:14=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
-> On Fri, May 9, 2025, at 08:51, Jens Wiklander wrote:
-> > ----------------------------------------------------------------
-> > Small TEE updates for v6.16
-> >
-> > - Remove an unnecessary NULL check before release_firmware() in the
-> >   OP-TEE driver
-> > - Prevent a size wrap in the TEE subsystem. The wrap would have been ca=
-ught
-> >   later in the code so no security consequences.
-> >
-> > ----------------------------------------------------------------
-> > Chen Ni (1):
-> >       tee: optee: smc: remove unnecessary NULL check before release_fir=
-mware()
-> >
-> > Jann Horn (1):
-> >       tee: Prevent size calculation wraparound on 32-bit kernels
-> >
->
-> The second patch looks like it should be a bugfix for 6.15 instead,
-> any reason to have it only in 6.16?
+From: Rob Clark <robdclark@chromium.org>
 
-FWIW, it's more of a cleanup than a real bugfix; there is an unsigned
-integer wraparound, but if that occurs, we're guaranteed to hit a
-memory allocation bailout pretty much immediately afterwards. So I
-think putting it in 6.16 is reasonable.
+The fence can outlive the sched, so it is not safe to dereference the
+sched in drm_sched_fence_get_timeline_name()
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/scheduler/sched_fence.c |  3 ++-
+ include/drm/gpu_scheduler.h             | 11 +++++++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/scheduler/sched_fence.c b/drivers/gpu/drm/scheduler/sched_fence.c
+index e971528504a5..4e529c3ba6d4 100644
+--- a/drivers/gpu/drm/scheduler/sched_fence.c
++++ b/drivers/gpu/drm/scheduler/sched_fence.c
+@@ -92,7 +92,7 @@ static const char *drm_sched_fence_get_driver_name(struct dma_fence *fence)
+ static const char *drm_sched_fence_get_timeline_name(struct dma_fence *f)
+ {
+ 	struct drm_sched_fence *fence = to_drm_sched_fence(f);
+-	return (const char *)fence->sched->name;
++	return fence->name;
+ }
+ 
+ static void drm_sched_fence_free_rcu(struct rcu_head *rcu)
+@@ -226,6 +226,7 @@ void drm_sched_fence_init(struct drm_sched_fence *fence,
+ 	unsigned seq;
+ 
+ 	fence->sched = entity->rq->sched;
++	fence->name  = fence->sched->name;
+ 	seq = atomic_inc_return(&entity->fence_seq);
+ 	dma_fence_init(&fence->scheduled, &drm_sched_fence_ops_scheduled,
+ 		       &fence->lock, entity->fence_context, seq);
+diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+index 0ae108f6fcaf..d830ffe083f1 100644
+--- a/include/drm/gpu_scheduler.h
++++ b/include/drm/gpu_scheduler.h
+@@ -295,6 +295,9 @@ struct drm_sched_fence {
+         /**
+          * @sched: the scheduler instance to which the job having this struct
+          * belongs to.
++         *
++         * Some care must be taken as to where the sched is derefed, as the
++         * fence can outlive the sched.
+          */
+ 	struct drm_gpu_scheduler	*sched;
+         /**
+@@ -305,6 +308,14 @@ struct drm_sched_fence {
+          * @owner: job owner for debugging
+          */
+ 	void				*owner;
++
++	/**
++	 * @name: the timeline name
++	 *
++	 * This comes from the @sched, but since the fence can outlive the
++	 * sched, we need to keep our own copy.
++	 */
++	const char			*name;
+ };
+ 
+ struct drm_sched_fence *to_drm_sched_fence(struct dma_fence *f);
+-- 
+2.49.0
+
