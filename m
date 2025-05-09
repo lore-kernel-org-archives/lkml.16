@@ -1,67 +1,164 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61228632C;
-	Fri,  9 May 2025 14:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FC423370A;
+	Fri,  9 May 2025 14:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746802350; cv=none; b=ZYRLubSmhcpjEcgfXe/JfglIGU9c3KVHiM9e+PPyUPkLSBHd1eoSJGM7qoEvgKBqverwKD0kG0LuoD9a3xnnJSJftdi41cqjTd7BQ2kIdqIDUQPw+jUc/RCG4cMGph0WnQstpuapaFf1mlg9eY5HOr3DGy+nSZIy3nZQK4Bxvu0=
+	t=1746802354; cv=none; b=lcEMNvCFzV5QDwiNleE0QH7r/xPtTBUEnKOh2W10EJ06kzUcPyxZChMz06E5j8pyXL7r4DFBnsTyvZO1qqZc1h0/KK8jXqKASuk5HO4lbZm+XdqVC9n41C35BnNb1yK5fZBaigQfj7GE02ogTl6awqPkhlvH0x4nEqZ1RsEjNV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746802350; c=relaxed/simple;
-	bh=OTEN1DaOtUjbVq8sprWL2gVWbGZfMrJbFzgeJAqvJaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqTb2d/N2+McoJ3mkPqJ7wLmt4JfQ7VbmeTe0pyUc8E8Xods6ZtWETXVVxf/UHMgCLR7QSGMz1a6rjGBp1G/SbMPH9rLdEAOH0N5A9Y1aD1wPqPmcb6//SIIbdlHtN1WWWLtZdz0gFHGlQkN091OI0kbjXiFDsBaCijMPuJhqR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=ANF7p8rN; arc=none smtp.client-ip=1.95.21.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1746802354; c=relaxed/simple;
+	bh=M71JOYxuwkOpXuaS4Iu5AZ5zNo5wpVYXyJ+VPswlN14=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KWzyKdQJ15OjaDc0myVT0eGdJ5rVWGJ525ShuvmZ6tSjC6A9RRiPS7mOhvNQYtZshk9H2MiDgmvae8NTkErrPfqSpmVU2aq0r3gRQ1MTZNkdQ8oZOot/m0whJIjxim4crQ7JmnollXAKSIqVxxIhOCg1UuD7rmzpkjRZZDQ3DOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2m7OBdo; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="ANF7p8rN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=YuQstWxJDXR/04PVLTbjP9qbMp3yZCsqLaieSEbXh9o=;
-	b=ANF7p8rNE2VTcGJHz/ZlduVP9KN3auIwL60liLPmQLodnIBzBxcx4nTgpNN4Hu
-	FTMWfjc7/1lb/SH3e/Vkse2sbu3y1OdSKxb6CKXcMnXRKA6xNNx61Zl/zWfWqkLE
-	q1eCqk++4HmdwdXB7cW95QOZlmJdbTxdC0aelboymgDp8=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgDXTxNyFh5odDutAA--.16540S3;
-	Fri, 09 May 2025 22:51:32 +0800 (CST)
-Date: Fri, 9 May 2025 22:51:30 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Primoz Fiser <primoz.fiser@norik.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, upstream@lists.phytec.de
-Subject: Re: [PATCH v2 1/2] bindings: arm: fsl: Add PHYTEC
- phyBOARD-Nash-i.MX93 board
-Message-ID: <aB4Wcr0WtASkP0la@dragon>
-References: <20250505075107.2579801-1-primoz.fiser@norik.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2m7OBdo"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22e730c05ddso20958665ad.2;
+        Fri, 09 May 2025 07:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746802352; x=1747407152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ImGiMazoa45oFRSN8yAbHrvyPx09ppUIV2YCRGpQKUU=;
+        b=l2m7OBdodNHtmHGhyeQflbZlvowrfn5Jsbb4lNU/ECywNEc5zYZqgapR97KKSN5hpM
+         3Oac0pX9c1sHGHj48UY9PfQMnEKvuBgTNb7LfFctEqXnNG81E2RgS80ZOV7FFukk1Ivr
+         30MyfOCQq0NDvUdLF+y/oJgfF4w3of7SXkZ2+/FGBHO3aD7VvzhRdlBl3vlKxLHelbr6
+         dSHMhra0O3aiWgg5NbPaHONQyDZSCEhQDSB73Z7lZfsXbq/JMDPHYIrfbjihm88oegC7
+         Cpki+AWHkiCBlt0z8kf2nB15VQUuSWKdYne8wYZtE1YN1Rv8teDGt6Y6iQuyMi+59YCU
+         9ciQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746802352; x=1747407152;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ImGiMazoa45oFRSN8yAbHrvyPx09ppUIV2YCRGpQKUU=;
+        b=ow54d5kig3+hL6m71F1dOcklrLXY5f4vltrPPuY2gyBsDReKgRvhyoNJpTCMP3CNGv
+         tW/NQ0UpFxrTWrzhvs9j9cCjntL7bqtvyMlABcOwRxNd4hXLiTJMvbhx2GDZ3FbKXiRz
+         79hjuJ1qKsgu0/HD/RrJJelpstlxfW/DOjPkqCq4D4yx7G+POO42x/MiuRwF7+/+GoUN
+         4+3Xw1viIAZ7Dp8f2hp8s33DejgzFK1Bt6+HmLfma3E/1MsIPNSGbVmyAiUahy/XVEHP
+         Q/KfpTgH/FQdpTgLr8/RbuonDg6nqNidIVXNVWA3joX75HsfVtnGb3F/1abQCy0jr6Qg
+         dScw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUYZ5MDSJV1W3nn2MkIkqIuvGvFoxLOHQcdx/q0tJkKFYXGed2JXDjYD5ikcdWIyFPVPkFAr2ErK3bxF5X@vger.kernel.org, AJvYcCWrjMwQOubrH/29l96zNT434PDwggyTbd7x9fvHJnbvRAUGRivXrYKBKm0mI9Uykb6ASVE1tyTmKObD@vger.kernel.org
+X-Gm-Message-State: AOJu0YznOQhIiuW7zdtsggzdsUPqEl7F7NIwFPE1acw1GsF+LQJykJYc
+	bWG+zzjcvNsaMcfTr/FdI8Ac7TP+V7tcadpShHz2vF4iqT2/ErHz
+X-Gm-Gg: ASbGnct1CmtAlc8/E/nh4MjBBmFi4SNNTQF9yzNl+HbpR0vhrB6uIxxUzZJqPNhRGwn
+	uVsX+uOvmqUqqkbLZBmCAIYCYf8uPErmS/JkYhvdNNTJQ+wTm9grdqh9xsPif/tH7HaXyeKVkp5
+	SWF8iJw6SIRnaCw9lHk/xiQTm1MR9Ln7uzz7jumhsJZDv/dOGuaUiFJxYRB9m9yLE4UOwHt2J5a
+	OyD04k3EAaICNCbR1o3+SxoaCI3Lh6obr4nfV/HsXM8ksHEpyIhIikP4L11BqIgUzpZX2Ryj3M6
+	NYzYJC8jN4angImONiHFmIQI2COhoRxMlq8s07IM+6iiB2X3GAKNt59l2W1l5i/q1kP8j7w=
+X-Google-Smtp-Source: AGHT+IHYUmxzR1Yu/2w3wevxOB1mOg8Z2DV7RYLUmcLlF7yCewQCTLaElTtIQZX2nGkUjhCQQPz75Q==
+X-Received: by 2002:a17:902:d581:b0:223:3b76:4e22 with SMTP id d9443c01a7336-22fc8b0b618mr48030205ad.6.1746802351691;
+        Fri, 09 May 2025 07:52:31 -0700 (PDT)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:9e12:1c37:6e8f:31af])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc75450b6sm18125355ad.49.2025.05.09.07.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 07:52:31 -0700 (PDT)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: syzbot+b75d75f957975f3d40e3@syzkaller.appspotmail.com
+Cc: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	jserv@ccns.ncku.edu.tw,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [RFC PATCH] ext4: Prevent to write when SB_FREEZE_COMPLETE
+Date: Fri,  9 May 2025 22:52:24 +0800
+Message-ID: <20250509145224.471782-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <6711ae3d.050a0220.1e4b4d.000a.GAE@google.com>
+References: <6711ae3d.050a0220.1e4b4d.000a.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505075107.2579801-1-primoz.fiser@norik.com>
-X-CM-TRANSID:Ms8vCgDXTxNyFh5odDutAA--.16540S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUO7KIDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNBREqWgeFnS9gAAA3k
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05, 2025 at 09:51:06AM +0200, Primoz Fiser wrote:
-> Add devicetree bindings for PHYTEC phyBOARD-Nash-i.MX93 board based on
-> the existing PHYTEC phyCORE-i.MX93 SoM (System-on-Module).
-> 
-> Adjust the compatibles for the existing phyBOARD-Segin-i.MX93 board, to
-> be able to add additional board based on the phyCORE-i.MX93 SoM.
-> 
-> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+When superblock is still in state of SB_FREEZE_COMPLETE, prevent to
+emit actual write operation. Wait until it's unfrozen.
 
-Applied both, thanks!
+Reported-by: syzbot+b75d75f957975f3d40e3@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=b75d75f957975f3d40e3
+Fixes: 0a1b2f5ea987 ("ext4: add ext4_emergency_state() helper function")
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+syzbot reported the following issue. [1]
+
+Write pages got emitted with fs superblock state still
+SB_FREEZE_COMPLETE. Take an early prevention to stop actually emit any
+write operation and return an EIO.
+
+The patch fix the issue and tested against syzbot, however there might
+be deeper cause of this issue, maybe ext4_writepages() shouldn't even be
+called when the state of superblock is SB_FREE_COMPLETE ? if that's the
+case maybe there's memory corruption or something else, I'll be happy to
+help to look into it. Just let me know what is expected and maybe more
+tests should be done ?
+
+[1]:
+WARNING: CPU: 1 PID: 2903 at fs/ext4/ext4_jbd2.c:76 ext4_journal_check_start+0x1f8/0x250 fs/ext4/ext4_jbd2.c:76
+Modules linked in:
+CPU: 1 UID: 0 PID: 2903 Comm: kworker/u8:6 Not tainted 6.12.0-rc3-syzkaller-00087-gc964ced77262 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+Workqueue: writeback wb_workfn (flush-7:2)
+RIP: 0010:ext4_journal_check_start+0x1f8/0x250 fs/ext4/ext4_jbd2.c:76
+Code: 5c 41 5d 41 5e 41 5f e9 c1 ca 97 09 e8 01 71 3c ff 41 bf fb ff ff ff eb e2 e8 f4 70 3c ff 90 0f 0b 90 eb d1 e8 e9 70 3c ff 90 <0f> 0b 90 43 80 7c 25 00 00 0f 85 03 ff ff ff e9 06 ff ff ff 89 d9
+RSP: 0018:ffffc90009d46c40 EFLAGS: 00010293
+RAX: ffffffff82587667 RBX: 0000000000000004 RCX: ffff88802f5a5a00
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000004
+RBP: 0000000000000001 R08: ffffffff82587564 R09: 1ffff1100f968870
+R10: dffffc0000000000 R11: ffffed100f968871 R12: dffffc0000000000
+R13: 1ffff1100f9684c7 R14: ffff88807cb42000 R15: ffff88807cb42638
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f60253c26c0 CR3: 000000007ba9e000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ __ext4_journal_start_sb+0x181/0x600 fs/ext4/ext4_jbd2.c:105
+ __ext4_journal_start fs/ext4/ext4_jbd2.h:326 [inline]
+ ext4_do_writepages+0x112c/0x3d20 fs/ext4/inode.c:2707
+ ext4_writepages+0x213/0x3c0 fs/ext4/inode.c:2813
+ do_writepages+0x35f/0x870 mm/page-writeback.c:2683
+ __writeback_single_inode+0x14f/0x10d0 fs/fs-writeback.c:1658
+ writeback_sb_inodes+0x80c/0x1370 fs/fs-writeback.c:1954
+ wb_writeback+0x41b/0xbd0 fs/fs-writeback.c:2134
+ wb_do_writeback fs/fs-writeback.c:2281 [inline]
+ wb_workfn+0x410/0x1090 fs/fs-writeback.c:2321
+ process_one_work kernel/workqueue.c:3229 [inline]
+ process_scheduled_works+0xa65/0x1850 kernel/workqueue.c:3310
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3391
+ kthread+0x2f2/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+Best regards,
+I Hsin Cheng.
+---
+ fs/ext4/ext4.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 5a20e9cd7184..4ccb417f55b4 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2257,7 +2257,7 @@ static inline int ext4_emergency_ro(struct super_block *sb)
+ 
+ static inline int ext4_emergency_state(struct super_block *sb)
+ {
+-	if (unlikely(ext4_forced_shutdown(sb)))
++	if (unlikely(ext4_forced_shutdown(sb)) || sb->s_writers.frozen == SB_FREEZE_COMPLETE)
+ 		return -EIO;
+ 	if (unlikely(ext4_emergency_ro(sb)))
+ 		return -EROFS;
+-- 
+2.43.0
 
