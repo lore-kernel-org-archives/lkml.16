@@ -1,124 +1,69 @@
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9655B274FDF;
-	Fri,  9 May 2025 08:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ACF274FFE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746778708; cv=none; b=sL6dE0nwolx7hKssAtjDSEwSgw1JjaYouiaGZY1JBb6mE4pApkZjQrRlq01o8qQ74yIT0KSN3I2ZNrCYXXg+2C5dnjgLhe7Iqf+iK9tS+T/l15+0gxFiVLR08ODYZIoV2yIryUh+h+bEednViMNI84BL0+Y4uQLwa9+c/17YQbg=
+	t=1746778723; cv=none; b=WciHHT7uuSgz2Lq/deDOSVLyD95UMHcWetiPe2lD91G/syUVmKfX+TuzG8jgf4/UKhR29k8YrnJsu4OHaLSKqHj1BWS1ESn0naOBi7teNlOg65TQOaP23fMIIqDP3b5EVcRtEUhHJHp1tV9RzQEc7cUbGJkedxlI8vU4Cw1a9ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746778708; c=relaxed/simple;
-	bh=qTDrVslHRModJfH+fXdAa5T/N1RdiaWo/7f1Q1waIYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQtXPtXV3pNj+7nUXMY9pChro/RlzGCEkU0tPEjlx1nUJODWRP8g4ReCy1p6VpM+5ecnsSI2jKyEML88qUp3DC8u8yrVTT3gq4G7zlaGKj4fLzCQz/sVCla2nJkKso03Ik2AiPwbBTdP5zSY2cYblZUtkuhwVho5/AeKfnv+23o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=SJkxpIem; arc=none smtp.client-ip=68.232.139.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1746778723; c=relaxed/simple;
+	bh=Y1RmzuKIGXEzqPbaIwvVs3VwBBfUNgoS1igqKWx8OQM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=C9N/XTxUH1C2U6HRPVtRTgSXjLyC/aCGmMHtrHTLFRvm4MMyq0xcHL2PSkXJ5OmUj/6y0t7dp/uuESJWo7WMNA93wcUzOW4VGxU0npBugE8IYm+tB1eO3KvFJt5MIurW7UVQVMwkjvfuhvwsUcMBEPZ2sEKEy79tIKOmhKHJt+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFAU+r1+; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="SJkxpIem"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1746778706; x=1778314706;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=qTDrVslHRModJfH+fXdAa5T/N1RdiaWo/7f1Q1waIYY=;
-  b=SJkxpIem6rlANQP9VyssKSFirne0riRu0du1smVQy4+b3OIUuzy4/CDz
-   rV3u3eoEanYnO1bnFGqGHgPP3N5jTvPrc0U3PNgt7NY1pAAWijKRli8KZ
-   TK5PAFad97BVM8gBqBnv19/1qsE4c0DyoTDZEz4qXnr8HmCMY/QIq3ml0
-   RLh/68xMggX4spakZgAFixLAW7vlS5xGqTDe/skQkIiTxiZIgeGOcEYNp
-   sKxMB5fSq6fUQSYZqKY+g6F7si5Ce7SggqvtIXOgD3JXStSiFeXQfDo55
-   TL75GEHwIzudSVieoviAWv6wYLFZiKB1PBa+m3lI2T+YlcllIPy2ikQ1l
-   g==;
-X-CSE-ConnectionGUID: v2JD8Ve1TreBvhRIQLP8Ow==
-X-CSE-MsgGUID: 5MTvQcvnRlOYbOHXyC4t8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="199286265"
-X-IronPort-AV: E=Sophos;i="6.15,274,1739804400"; 
-   d="scan'208";a="199286265"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 17:17:15 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 82396D480C;
-	Fri,  9 May 2025 17:17:13 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 3880CBDC9B;
-	Fri,  9 May 2025 17:17:13 +0900 (JST)
-Received: from iaas-rdma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 595581A009A;
-	Fri,  9 May 2025 16:17:12 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: jgg@ziepe.ca,
-	leon@kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [PATCH] IB/cm: Remove redundant WARN_ON in cm_free_priv_msg
-Date: Fri,  9 May 2025 16:18:40 +0800
-Message-ID: <20250509081840.40628-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFAU+r1+"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af908bb32fdso1641725a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 01:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746778721; x=1747383521; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y1RmzuKIGXEzqPbaIwvVs3VwBBfUNgoS1igqKWx8OQM=;
+        b=NFAU+r1+C27r6XE2RtX2r7JoTX5zZ2oG+KiOUNsxpyqSCThKx6nHGxCXUGzfYeDos3
+         +5Q9d5LpmlavawHNPDMk/RJyVgJOQ2TPF7ANWSWgZ/by/4RFUIknRRlsZ7oc8hOrfyDW
+         RG+JLAbYOtE2UIKnwVser8oKqu8oQgVbuXIYRg+lB4QyUamcNFt0Scs87Gf1OS0vjPf3
+         DbT9ZXFU9fyeEt9cTW4v9ZTEAhBFrsyoZoNl/EKCnCmCT/4IUQI9LSoGIVGqTQ7aRLcm
+         5NPEmIulToqBeO5ERXQPVyzMmtxWS0fdBV3mAw6JzhuYjPLZVZkKM63CPnQfaKEH/69d
+         EoZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746778721; x=1747383521;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y1RmzuKIGXEzqPbaIwvVs3VwBBfUNgoS1igqKWx8OQM=;
+        b=CyyOEa7VWy0l9lzRYjv+Tf4yaHc1MVRlFENJqTz8cCOmETK6z/31hi3r+agQP8pBX6
+         f6TCyArkHDCxGULQqm3KgBvLF+BRkq0vBD30imXqD0a8XzExXyszyLSfPNhmea3QMuhW
+         NV9F7bvSoDD5dqh/5AeiDLETJ/eal0mQXeTuN8Z0tsC8Gz+uDBG+JJC2uI6wKRYVS0Oa
+         wPaqoEsPOpcxrWYERlJovchWWeJfnZyCK8Jw2Ck9iQRlgT1zezCc/Aq6RQxqDXRbfLjX
+         2FXyMUYZmDVGPazUQwV8v1BEz5y/f+BVLQIVXxSpCqAmKwrBpfHUjRYV1S1En/TsKmx1
+         XMnA==
+X-Gm-Message-State: AOJu0Yy0c6EafywzezjrTJWYO0+UMb67KYH7USAd/tFunKAvgeBzszlr
+	+LHp3JkBN+3SdcUpoaKI5mTi8NnfCyTcJxGBRvKHJgrs96odxybd/RFlEYmuxlrVuHgaTsWc+lf
+	7X/CRbTrKbkI8uuf0kY5/J7d4/JE=
+X-Gm-Gg: ASbGncsfH0UVH5m5c4gEH+3Z2ZRV2VeBYIaZD71QeBvtfH2cZlzOO/EhrXpTkq6QglV
+	ebXciloH2ZaC3MbWHfIM8/Tfzym3s5FhZ/mydhGcvW4a9ZsUHnUf0+ED8V9XrobItVlw4pJJ0vm
+	51qgIhb1AJhvo1vjiZUUoIKw==
+X-Google-Smtp-Source: AGHT+IHSwnhH6sQTzDkjEDYvSXoyVw63XJ3/nuyfapSdFb0/X/jRsbcPJ1obMKLV9Or2N5Ip/JsQjp6yYuxgkPXuSVg=
+X-Received: by 2002:a17:903:2f8f:b0:21f:40de:ae4e with SMTP id
+ d9443c01a7336-22fc931b7f5mr32776885ad.9.1746778721027; Fri, 09 May 2025
+ 01:18:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Nathan Royce <nroycea+kernel@gmail.com>
+Date: Fri, 9 May 2025 03:18:05 -0500
+X-Gm-Features: ATxdqUEOmzqqGz2yQf3lqCNx70m1Yo3GWjlBzv7F5ZtfiNyX1HemQdd7hOLUgGQ
+Message-ID: <CALaQ_hp+TAgH6TFOy_DB0YpRYiDKNYH7LSL4nf03c1XWbrHFxw@mail.gmail.com>
+Subject: "scripts/get_maintainer.pl" - "Bad divisor in main::vcs_assign: 0"
+To: Joe Perches <joe@perches.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Sometimes, the blktests triggered this WARN_ON():
- ------------[ cut here ]------------
- WARNING: CPU: 3 PID: 1330889 at cm.c:353 cm_free_priv_msg+0xaa/0xc0 [ib_cm]
-...
- CPU: 3 UID: 0 PID: 1330889 Comm: kworker/u16:1 Tainted: G        W  OE      6.13.0-rc3+ #3
- Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
- Workqueue: ib_mad1 timeout_sends [ib_core]
- RIP: 0010:cm_free_priv_msg+0xaa/0xc0 [ib_cm]
-...
- Call Trace:
-  <TASK>
-  ? cm_free_priv_msg+0xaa/0xc0 [ib_cm]
-  ? __warn.cold+0x93/0xfa
-  ? cm_free_priv_msg+0xaa/0xc0 [ib_cm]
-  ? report_bug+0xff/0x140
-  ? handle_bug+0x58/0x90
-  ? exc_invalid_op+0x17/0x70
-  ? asm_exc_invalid_op+0x1a/0x20
-  ? cm_free_priv_msg+0xaa/0xc0 [ib_cm]
-  cm_process_send_error+0x64/0x1f0 [ib_cm]
-  timeout_sends+0x1e5/0x2d0 [ib_core]
-  process_one_work+0x156/0x310
-  worker_thread+0x252/0x390
-  ? __pfx_worker_thread+0x10/0x10
-  kthread+0xd2/0x100
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork+0x34/0x50
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork_asm+0x1a/0x30
-  </TASK>
- ---[ end trace 0000000000000000 ]---
+Commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 
-In cm_process_send_error(), cm_free_priv_msg() will be called
-when (msg != cm_id_priv->msg) is true. And all other calling to
-cm_free_priv_msg() cases, msg is always the same as cm_id_priv->msg.
-
-So it's safe to remove this WARN_ON
-
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- drivers/infiniband/core/cm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
-index 142170473e75..1a8e5b0e4d85 100644
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -350,7 +350,7 @@ static void cm_free_priv_msg(struct ib_mad_send_buf *msg)
- 
- 	lockdep_assert_held(&cm_id_priv->lock);
- 
--	if (!WARN_ON(cm_id_priv->msg != msg))
-+	if (cm_id_priv->msg == msg)
- 		cm_id_priv->msg = NULL;
- 
- 	if (msg->ah)
--- 
-2.44.0
-
+The result from `./scripts/get_maintainer.pl -f scripts/config `.
