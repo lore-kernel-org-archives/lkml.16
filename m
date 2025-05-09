@@ -1,168 +1,182 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36BE272E48
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A112272E44;
+	Fri,  9 May 2025 12:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746793561; cv=none; b=l12O56wIGqTaMFthB62Fm2CA/ZUBlBN1e36dFMe/3toYpqD7gJEU+2vzvXtxYPJLsaqAjplRuwjcjHhZw9kVHnqoqXoeJcUoKEQwqcB4Q9FRiKn2Hq/rkzLOQb1af3C1Jqxcs3w1UfQTkO0kKx/i4ph9Z5nOA6R81tNO7g5RW2c=
+	t=1746793612; cv=none; b=Yuhql7sg1RG9fy3wKJs/2XtO3RHLNPqh5Z9x0U2ZpOuY0ewLwn5S8YDyrKvucC/sGs8gWC7XNrVH/n+6+p6FMbJTTawDW6rVZC4xufrCZLt1XHsZt0KdSVxjZQqWb/6D7eQ7JcsZ0BGCoj7aeeh5YGpq45/BCvEJQDc1opDx4nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746793561; c=relaxed/simple;
-	bh=ijJYXrptjViAwmHAuvri8OCe7PUy4skQXcbImZvLItE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=njU5w0dkUi7IQW6QJCUI6FUcXeV5do1NAdfod/HAr9Uhtsugb2haaHQnh0lnahWYO3xQ9rLDe7pLP+jFEERH8ZHrm3ZXPKZNNlEd5LE0jJnutu1Ku3eURLhozubg5vqDDdrj0hsrbyGBtIo7wbP/Nvb2gQ4k8IJ6OKgPZwkEc2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KzYJYMNx; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1746793612; c=relaxed/simple;
+	bh=7PAKo79OBUGSoLnXINsEM7x2Qse0A4rdY1naPEDS7Wc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eV2CgPWDqgD+rWBZPYHvGaZPQYykgI9VihjYwxih8HLtNCRyWuWa0Tmpq4IPyIEUvZtDUsmrv/qBUUKr5yqv5P6dwQjTn1t9HINZlgAt9CYa2A1ejMSy9aolvcTKO7MpSQg58Ktm6fGgI/4rn73mKdS0PZrD4Dm3N8i+2LJNiIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eg1LQWL7; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KzYJYMNx"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746793554; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=s1OBMHH9lNcbiwBxHcJKRHLpPG0d29gL0JUaEp0FVkA=;
-	b=KzYJYMNxsGSFumHTq1KJi/XMVuPPyDbPIh1alGvCI9CALF2ZCoOFd0XtRYFMbtr14eG9Bu0dgMgpqwNXb8Nbe8FEThh1aGEJqlSii0XnAM1+pP0dkkIRpYmpYX3l1deYxrxccmyqqz5wSJ1igJHmyZ4J12FhUOVpmJ0BgGikvHI=
-Received: from 30.120.133.168(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wa3cyme_1746793552 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 09 May 2025 20:25:53 +0800
-Message-ID: <3d52c5bb-60c5-4bfd-958e-737a8cc90853@linux.alibaba.com>
-Date: Fri, 9 May 2025 20:25:52 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eg1LQWL7"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c5568355ffso205055285a.0;
+        Fri, 09 May 2025 05:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746793610; x=1747398410; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kwBRH74C4Cjpm87bSfrtYSAOX2kIdu6R3gkHd+qGuu8=;
+        b=Eg1LQWL74YKRHm+LwAVlLRcqth8sbGZczlqXHI/C8nDEH42npofUukJyypqRro1dL4
+         U9RQIt8HfqQsPm09vpFqV//bZP5PZZDXnRUUUpvTCbOMVRUCOWNnJiVO7/a9Cnec4buf
+         kY157LTK+P1naPzgrL5zHX2A0c05tg8LoKVfmuMyhxOONpea4dpRf10uXHrXsyIqWk0+
+         RFwTSXSYeW6TWoihUIywXZl2Mdv+IEa8Voc0gR++ccO7tDOBBgCIOilmwtTzYdf7dlqy
+         wwbbk5oZN2CCBfLYCcujMqJVUhPAQBHloP6omzyEj2rsy5h+d7K/pRJyYwGbbZVIr1Ux
+         7iZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746793610; x=1747398410;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kwBRH74C4Cjpm87bSfrtYSAOX2kIdu6R3gkHd+qGuu8=;
+        b=YkB+T3UaWXPqyb4o0D3kbz2iwgcwKbqH8P6VLT469B3xwlfQgPxZKUFkYqc8Qsa9Cs
+         4QjHZE83pfE2MC9ZUQfj7qKg7ri57RF2C6fJn5YMulIrdKXaTF8G4l+YCgPEDL5K1Dk4
+         1Z47vGhPAtBgCxJz5rZsUk1xfZd0K3AC2/v/D88/aeaKws+Xdt+2ycs3j94k0DBKHcew
+         f1Olbnf7QDyKQXcu36zhObciIeNxd3Lbveyo72HOu6TV7rwJv8NOV6ZuXf4aBCJ7+nkj
+         NODyr1QPn+GJwJG+zo+cxaECgGCfqefeR9c/DQ/evxL8BV7mlQpa339e9bf1S9i0I+sr
+         DMFw==
+X-Forwarded-Encrypted: i=1; AJvYcCW558AIfWdQn+aTu5WnsNwTZpANALtYHZMB89DKI3dx/0DPbBd3HZQ75UiIDg69f3jgZp36Z5LaU7N7@vger.kernel.org, AJvYcCXopDDfiN90DZVZgdGYHYsxpn9C7Rdl2ME1CTrBnXw84rwz4jIxKhx60SwjNY5A3frXrH1WbToAIyZkLjDW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx52e7kHQb8WR3fy89QBSVR96o84bYbBlSBFSrssyFw07h8wSzF
+	2DK4kbe6k6bBN1EMPNPEGRqQQ2f+EiE+a8/IDMRnJDd86Gpr08a1
+X-Gm-Gg: ASbGncs3oRgWDOnSzRuVmaRXZKlRevspQnLTlRe1VWdWlzpCiTtUmBaijFLmLt5cBJB
+	waFGOmBIYgkbX0caSwnm7zLcRTKPvchu9wWvp7rWoUWnuKuOikotbNpiVE5O84DsFd6QhZbfEx/
+	CoCge424LoukpCvVkfyGynVma0Nu/KPXcqQjeNbhQk49KRrXc/Vjanu4uk0EWUiKTg3Rs0H7bVw
+	jFXFbx2YFPQ8DiT7Xa9181Rx1xVh5YLqHG+9Eus72p2rvqEN4lMG/RHkT9cvwqbjenGXcNwh3HJ
+	QDnEktuPWF0RyInelUfhZfnHpuBwJMADBuSiYvvK/LxmRokWDLT7
+X-Google-Smtp-Source: AGHT+IF13lpklzPbh8xMbJqnVkS8TJNKtSOtn9pjfRhQnXEhuJW95QQJxk5TmDOVOxq1lUF8eH9Cmw==
+X-Received: by 2002:a05:620a:24cb:b0:7c5:5d4b:e62a with SMTP id af79cd13be357-7cd011790admr721621385a.54.1746793609859;
+        Fri, 09 May 2025 05:26:49 -0700 (PDT)
+Received: from localhost.localdomain ([216.237.233.165])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f4e19asm131843485a.4.2025.05.09.05.26.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 05:26:49 -0700 (PDT)
+From: John Clark <inindev@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Quentin Schulz <quentin.schulz@cherry.de>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	John Clark <inindev@gmail.com>
+Subject: [PATCH RESEND v4 0/3] Add Luckfox Omni3576 Carrier Board support for RK3576
+Date: Fri,  9 May 2025 08:26:34 -0400
+Message-Id: <20250509122637.26674-1-inindev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: mincore: use pte_batch_bint() to batch process
- large folios
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: 21cnbao@gmail.com, ryan.roberts@arm.com, dev.jain@arm.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <99cb00ee626ceb6e788102ca36821815cd832237.1746697240.git.baolin.wang@linux.alibaba.com>
- <c83ddc32-565b-40e3-b43f-12fe6e70586c@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <c83ddc32-565b-40e3-b43f-12fe6e70586c@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+[RESEND]: Addressing Krzysztof Kozlowski's feedback:
+- Corrected Cc list: used proper maintainer emails.
+- Confirmed Conor Dooley's Acked-by tag in patch 1/3.
 
+This series adds device tree support for the Luckfox Omni3576 Carrier
+Board with the Core3576 Module, powered by the Rockchip RK3576 SoC
+(four Cortex-A72 cores, four Cortex-A53 cores, Mali-G52 MC3 GPU). It
+enables essential functionality for booting Linux and basic connectivity,
+with plans for future support of peripherals like WiFi, MIPI-DSI, HDMI,
+and Ethernet.
 
-On 2025/5/9 15:51, David Hildenbrand wrote:
-> On 09.05.25 02:45, Baolin Wang wrote:
->> When I tested the mincore() syscall, I observed that it takes longer with
->> 64K mTHP enabled on my Arm64 server. The reason is the 
->> mincore_pte_range()
->> still checks each PTE individually, even when the PTEs are contiguous,
->> which is not efficient.
->>
->> Thus we can use pte_batch_hint() to get the batch number of the present
->> contiguous PTEs, which can improve the performance. I tested the 
->> mincore()
->> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
->> obvious performance improvement:
->>
->> w/o patch        w/ patch        changes
->> 6022us            549us            +91%
->>
->> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
->> see any obvious regression for base pages.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->> Changes from v2:
->> - Re-calculate the max_nr, per Barry.
->> Changes from v1:
->> - Change to use pte_batch_hint() to get the batch number, per Ryan.
->>
->> Note: I observed the min_t() can introduce a slight performance 
->> regression
->> for base pages, so I change to add a batch size check for base pages,
->> which can resolve the performance regression issue.
->> ---
->>   mm/mincore.c | 22 +++++++++++++++++-----
->>   1 file changed, 17 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/mincore.c b/mm/mincore.c
->> index 832f29f46767..42d6c9c8da86 100644
->> --- a/mm/mincore.c
->> +++ b/mm/mincore.c
->> @@ -21,6 +21,7 @@
->>   #include <linux/uaccess.h>
->>   #include "swap.h"
->> +#include "internal.h"
->>   static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned 
->> long addr,
->>               unsigned long end, struct mm_walk *walk)
->> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned 
->> long addr, unsigned long end,
->>       pte_t *ptep;
->>       unsigned char *vec = walk->private;
->>       int nr = (end - addr) >> PAGE_SHIFT;
->> +    int step, i;
->>       ptl = pmd_trans_huge_lock(pmd, vma);
->>       if (ptl) {
->> @@ -118,16 +120,26 @@ static int mincore_pte_range(pmd_t *pmd, 
->> unsigned long addr, unsigned long end,
->>           walk->action = ACTION_AGAIN;
->>           return 0;
->>       }
->> -    for (; addr != end; ptep++, addr += PAGE_SIZE) {
->> +    for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
->>           pte_t pte = ptep_get(ptep);
->> +        step = 1;
->>           /* We need to do cache lookup too for pte markers */
->>           if (pte_none_mostly(pte))
->>               __mincore_unmapped_range(addr, addr + PAGE_SIZE,
->>                            vma, vec);
->> -        else if (pte_present(pte))
->> -            *vec = 1;
->> -        else { /* pte is a swap entry */
->> +        else if (pte_present(pte)) {
->> +            unsigned int batch = pte_batch_hint(ptep, pte);
->> +
->> +            if (batch > 1) {
->> +                unsigned int max_nr = (end - addr) >> PAGE_SHIFT;
-> 
-> Nit: probably would have called this max_step to match step.
+Tested features (on Linux 6.15-rc4):
+ - UART: Serial console operational
+ - SD card: Mounts and reads/writes successfully
+ - PCIe: NVMe SSD detected, mounted, and fully functional
+ - USB 2.0: Host ports operational
+ - RTC: Timekeeping and wake-up tested
+ - LED: Heartbeat trigger functional
+ - eMMC: Enabled in device tree, not populated on tested hardware
 
-OK. If need respin the patch, I'll rename it.
+The series includes three patches:
+ 1. dt-bindings: vendor-prefixes: Add Luckfox vendor prefix
+ 2. dt-bindings: arm: rockchip: Add Luckfox Omni3576 and Core3576 bindings
+ 3. arm64: dts: rockchip: Add Luckfox Omni3576 board support
 
->> +
->> +                step = min_t(unsigned int, batch, max_nr);
->> +            }
->> +
->> +            for (i = 0; i < step; i++)
->> +                vec[i] = 1;
-> 
-> I'm surprised this micro-optimization matters that much. Probably the 
+The device tree is covered by the existing ROCKCHIP ARCHITECTURE entry in
+MAINTAINERS. I am aware of ongoing RK3576 upstreaming efforts (e.g., by
+Collabora) and welcome feedback or collaboration to align with mainline
+driver development.
 
-Me too.
+Changes in v4:
+ - Patch 1: Unchanged, Acked-by: Conor Dooley <conor.dooley@microchip.com>.
+ - Patch 2: Fixed binding for Omni3576 Carrier Board to use correct enum
+   syntax (enum: [luckfox,omni3576] instead of invalid const), added
+   luckfox,core3576 to compatible string to reflect module dependency.
+ - Patch 3: Updated compatible string in rk3576-luckfox-omni3576.dts to
+   match revised binding ("luckfox,omni3576", "luckfox,core3576",
+   "rockchip,rk3576").
 
-> compiler
-> defers the calculation of max_nr. I am not convinced we need that level of
-> micro-optimization in this code ...
-> 
-> 
-> But if we're already micro-optimizing, you could have optimized out the 
-> loop as
-> well for order-0:
-> 
->      unsigned int batch = pte_batch_hint(ptep, pte);
-> 
->      if (batch > 1) {
->          unsigned int max_nr = (end - addr) >> PAGE_SHIFT;
-> 
->          step = min_t(unsigned int, batch, max_nr);
->          for (i = 0; i < step; i++)
->              vec[i] = 1;
->      } else {
->          *vec = 1;
->      }
+Changes in v3:
+ - Split device tree into rk3576-luckfox-core3576.dtsi (module) and
+   rk3576-luckfox-omni3576.dts (carrier board) for better modularity.
+   Previous Acked-by from Krzysztof Kozlowski for Patch 2 no longer applies
+   due to substantial changes.
+ - Addressed Jonas Karlman's feedback on patch 3/3 (Luckfox Omni3576
+   device tree):
+   - Added pinctrl for green LED GPIO (gpio1 RK_PD5) for proper pin setup.
+   - Reordered regulator node properties for consistent sequence (e.g.,
+     regulator-name, regulator-min-microvolt, regulator-max-microvolt,
+     etc.).
+   - Updated regulator nodes (vcc_3v3_pcie, vbus_5v0_typec, vcc_5v0_host,
+     vcc_5v0_hdmi) to use 'gpios' property instead of deprecated 'gpio'.
+   - Removed pmic-power-off pinctrl state and pinctrl-1 from RK806 PMIC
+     node, as they are vendor-specific and undocumented in bindings.
+   - Removed pwrkey node from PMIC, as it lacks binding documentation.
+   - Added blank line between properties and child nodes in i2c2 node for
+     DT style compliance.
+   - Removed no-mmc property from sdmmc node to enable MMC support,
+     aligning with RK3576 SD v3.0 and MMC v4.51 capabilities, allowing TF
+     card slot to support MMC devices or eMMC via adapter.
+ - Removed Ethernet support (gmac0/gmac1 nodes) per Andrew Lunn's
+   feedback, as it used the generic PHY driver with incorrect RGMII delay
+   settings, incompatible with the upcoming MAE0621A driver.
+   Collaborating with Andrew Lunn on a device driver, with Ethernet
+   support to be submitted separately when complete.
+ - Addressed Rob Herring's DTB check warnings, other warnings (e.g., VOP,
+   PCIe, OTP, HDMI PHY) originate from rk3576.dtsi and are outside this
+   patchset scope.
+ - Added RNG node to pick up Nicolas Frattaroli's "add RK3576 RNG node"
+   patch.
 
-I tried this method, and it had no impact on performance.
+Changes in v2:
+ - Enabled HDMI node per feedback from Heiko Stuebner and Nicolas
+   Frattaroli; untested due to upstream driver issues.
+ - Enabled Ethernet 1 node per Heiko's device tree philosophy; untested
+   due to suspected PHY driver or configuration issues (removed in v3 per
+   Andrew Lunn).
+ - Clarified eMMC remains enabled but unpopulated on tested board, per
+   Heiko.
 
-> In any case
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: John Clark <inindev@gmail.com>
+---
+John Clark (3):
+  dt-bindings: vendor-prefixes: Add luckfox prefix
+  dt-bindings: arm: rockchip: Add Luckfox Omni3576 and Core3576 bindings
+  arm64: dts: rockchip: Add Luckfox Omni3576 Board support
 
-Thanks.
+ .../devicetree/bindings/arm/rockchip.yaml     |   7 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../dts/rockchip/rk3576-luckfox-core3576.dtsi | 683 ++++++++++++++++++
+ .../dts/rockchip/rk3576-luckfox-omni3576.dts  |  53 ++
+ 5 files changed, 746 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-luckfox-core3576.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-luckfox-omni3576.dts
+
+-- 
+2.39.5
+
