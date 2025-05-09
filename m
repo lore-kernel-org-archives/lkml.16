@@ -1,87 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C69F28EA75;
-	Fri,  9 May 2025 11:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B2528ECEE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746789613; cv=none; b=nXEvQZYodMPA9hBmEeQsU+mZAah+pg5oifvHWF26qIRwjdBmLi8YTIOnq9pq/NrIRJWU5+QHMasSPSxWUseqBDb0ggV1mCt3UJmKNkDysvFPfwuA2Fp7IwQXcUVCADG8XNp28tgV+zBsar+hamMm1lyzzlc305ivdqRGljzocwc=
+	t=1746789640; cv=none; b=szzSSy6TdziXxjFxWoJbXD9nI/5wmTYpECCvD0zODdF3dKQjYDdT24LISJK8ERZGeiRDW/wfC0Ic/s/LAue1jF7ni1RmTkmKFUwYA20VyHbvmqO8XMuMXo4RaQfqbtTb2p2HMVUJMyRAn0W91Q8EmD4W2dOogSb7sAQtauwq3AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746789613; c=relaxed/simple;
-	bh=E+s6OoJgG+h3YTB+bOxBeFfCl/S1GtVx3v7NBigk4N8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pro4+YCIbBq0bBvxIa1ekXpVLXI3G3VGlDuPu4LCVlr0BvGE+dSn5cWrVgGyKRLNDc6lb0WM/B6OHsPXSv3xcRlbCCxiNY76vlQm/zSHDxgC2QjC52no3ZuRL9Uyk3fqWjG8/U249lAhvd8NWmZ1/x8EIqU728HVfRUxrdVCidI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIZpK6PK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746789640; c=relaxed/simple;
+	bh=yoTxnq74WPNkNddj+21/14jDBfGMw7QYijOl5YQWEpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i4x9UYd9nwz878N4uL46Y73/EAmONuK13rTWp+F5aMnRCh6cnG3xSiz/3kgTLRLrm50FbujhVzctlpp5n0pbIbq5Qvl9DUx5jVF2NQwb+lNR5hIaWNnow1kHdHjOv491uaA51hMdg1iOhDQBdG9djttssNu3VO+7VyF1DHGQdFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=vhG5qcTB; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIZpK6PK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A13C4CEE4;
-	Fri,  9 May 2025 11:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746789612;
-	bh=E+s6OoJgG+h3YTB+bOxBeFfCl/S1GtVx3v7NBigk4N8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IIZpK6PKmMoYIe6HXf8nOlb4a7LGWutODyY5I6vimOkGrVtbfOgUCeNvBIlPTgfxl
-	 V53tNPZE2m+MCGhcWHLknu+TrQoh5oViF/uqr5bBFJJfeX0dGCbqvVODfbsVLOWSpq
-	 Fwkn+hkVmK3AqvlZ+vaLtMIA3uTgwb9tc6YV2PZPXDn/BEXw6q9sMAM1+FR70w6RaY
-	 +aMnpnEtHhGSfW8XbeoaubD/p29h+L9V4peeufMvADXv8KG7KXfOQZeNHkhfGxsM+T
-	 pOPpPpS0NDp2aDoU+9CiqTBfd77d3uwnULDE+U05OESUdIp5UEVxLtbBGr5wxKltr5
-	 PrtHQgW/2ZGSw==
-From: Christian Brauner <brauner@kernel.org>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-debuggers@vger.kernel.org,
-	Sentaro Onizuka <sentaro@amazon.com>
-Subject: Re: [PATCH] fs: convert mount flags to enum
-Date: Fri,  9 May 2025 13:20:07 +0200
-Message-ID: <20250509-altbekannt-maskiert-292dbfb0daff@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250507223402.2795029-1-stephen.s.brennan@oracle.com>
-References: <20250507223402.2795029-1-stephen.s.brennan@oracle.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="vhG5qcTB"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86135ad7b4cso79771839f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1746789636; x=1747394436; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NTSX0/tw8NEx2HZiz9FcVkfctrtBy+rS4Bs93fohJKY=;
+        b=vhG5qcTBTHn5t8HmquDxULE57jUHAhkCG/BLT5mnQnDaF3xwHBU6mUFXqKKVOSNTwE
+         6wLYcyCKHrmcKD1abxN4RyyknUG2W71301FwDHnWSA/iO7xPrOGRGR/n3hUUrDeyfY8B
+         QZ0DxJzSjzewGzFxvjKKAKFemNgxADsd+c/vRUYygdIO8LAz8XKMo1dMx1+NiZum7zzo
+         pVsXL3Ccsi6yzMCpAha4Htq6nzQEZz3qk5kdQj+v8v+VvT8/rPoHU+pchFBBTnGN6Yts
+         nAgYL9eEAmchZZmF8ikdTNlZcGoTaB7v9JocMhyq8ZpbHdF2k8ZuZGR299zL/v0zDYDQ
+         GDaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746789636; x=1747394436;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NTSX0/tw8NEx2HZiz9FcVkfctrtBy+rS4Bs93fohJKY=;
+        b=GlPkdph0EU4rnYVwtuVxCW9xih/z+WC1a1cm9X1oTMRH3yMRnci3XhqheQf8cuDGrg
+         +e5foKNtUPaE2djr1TMtMh+RTCUDv+QV9v6gEwFfXKWANSlLaRwG+xU1E6m2RY6zMVC2
+         MwvnpdUrh3GTERUn9FqczqZyRTA50Fbe+lfyKSouSC1KCuaNVgewzXmowaqZr1RS0Ke+
+         m9Ci6lZS0SfWHGEqHuyE0NGa5wiu+5/EAJnqV3eBM2GT0a3NjImC8MF61/zbG28z6FSC
+         8dC0kWCoyd+YkuOGLi1taMvmMCf07zAvGtGRmeOGuhrse1Ztc/8UnVUx9EE6ZRm2gW6Q
+         Orkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrQHH1Tvqlj24JuKrlL+p2/leUDd7iQqqV/DWT3zWj9GBIedXGBtlhOkwe/fOImtCDwl/0K733g/pNTms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFEwnUJl6KYyBRmdwG+i9mD7aQns8AQxv2mxD6PCe3K6VjacOd
+	ikhDhAZSlBWQiF0CZoyIUjZ3vvqKTRdXORHyYHFZE/wUjCrX58mhEyHRTS8SDc/5paAC54MHRkg
+	f
+X-Gm-Gg: ASbGncs2aeDpSRpK95LBgI0lgCY+DRCqp7e9Zz0DnWF8+U3+on277qb4RRbj8ftYuOH
+	njAXxXsiCifICm6/j8j2Mnjj2nVG0MYj1cVeajl0RfFA9yVjz+ugLX2NmBjo5HoeJD6M02pNVTW
+	ZDoWjEnUqvwn8SikX+lbUkZ+rXoyAjavVDgwGFfEBHXbrznDvuD8uvKrbFivHSkAubLDOfVhDxJ
+	m3CGqKtiYCC6n4v/RRDwAdchMLdSNpcA1L7bCVkdn2Y01DDBUIRCt0nlOUJWO1myUv35ACoNIPa
+	bF2CtqLWHk6UDLZnqxDEnifyxIb90TgrgoAIWlnWiIZ8p3fJ3sLegYfo5JEe///1OghXwdTgvjZ
+	cN5WT9LpRe5TVRQ==
+X-Google-Smtp-Source: AGHT+IF05PBHHDZrwWQcLeXCbxDAB8MCaPu4N0jfY4wA0OvXddQCJwebAgEaZT9GlDpW3ltbOgzKXQ==
+X-Received: by 2002:a05:6e02:2489:b0:3da:6f46:5c1a with SMTP id e9e14a558f8ab-3da7e1e1b12mr36660425ab.2.1746789636400;
+        Fri, 09 May 2025 04:20:36 -0700 (PDT)
+Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3da7e10549fsm5136325ab.23.2025.05.09.04.20.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 04:20:35 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	dlan@gentoo.org
+Cc: heylenay@4d2.org,
+	inochiama@outlook.com,
+	guodong@riscstar.com,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/6] reset: spacemit: add K1 reset support
+Date: Fri,  9 May 2025 06:20:25 -0500
+Message-ID: <20250509112032.2980811-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1727; i=brauner@kernel.org; h=from:subject:message-id; bh=E+s6OoJgG+h3YTB+bOxBeFfCl/S1GtVx3v7NBigk4N8=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTIPnnxd8vyc87FZrxK6pvjd08Nm9qzfuMpJearDoe3/ H4l/vfttI5SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJpOsx/JXSmr9tebfJujmz Pws9m3SESzvzTvWRu5LnvqpFuHBFv53G8M/w4IWnPon3XaaHWWm/9LO42CUVGJ7Jc8SmreFj1ez yYn4A
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Wed, 07 May 2025 15:34:01 -0700, Stephen Brennan wrote:
-> In prior kernel versions (5.8-6.8), commit 9f6c61f96f2d9 ("proc/mounts:
-> add cursor") introduced MNT_CURSOR, a flag used by readers from
-> /proc/mounts to keep their place while reading the file. Later, commit
-> 2eea9ce4310d8 ("mounts: keep list of mounts in an rbtree") removed this
-> flag and its value has since been repurposed.
-> 
-> For debuggers iterating over the list of mounts, cursors should be
-> skipped as they are irrelevant. Detecting whether an element is a cursor
-> can be difficult. Since the MNT_CURSOR flag is a preprocessor constant,
-> it's not present in debuginfo, and since its value is repurposed, we
-> cannot hard-code it. For this specific issue, cursors are possible to
-> detect in other ways, but ideally, we would be able to read the mount
-> flag definitions out of the debuginfo. For that reason, convert the
-> mount flags to an enum.
-> 
-> [...]
+This series adds reset controller support for the SpacemiT K1 SoC.
+A SpacemiT reset controller is implemented as an auxiliary device
+associated with a clock controller (CCU).  A new header file
+holds definitions used by both the clock and reset drivers.
 
-Applied to the vfs-6.16.mount.api branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.mount.api branch should appear in linux-next soon.
+This code builds upon the clock controller driver from Haylen Chu.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+The only difference from v7 is that the structure containing
+the auxiliary device struct is now allocated using kzalloc().
+Previously devm_kzalloc() was used, passing the parent device
+pointer as its first argument, and as Haylen pointed out, it
+was being (doubly) freed in the auxiliary device release
+function.  Everything else is essentially identical to v7.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+This series is based on the "for-next" branch in the SpacemiT
+repository:
+  https://github.com/spacemit-com/linux/tree/for-next
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+All of these patches are available here:
+  https://github.com/riscstar/linux/tree/outgoing/reset-v8
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.mount.api
+					-Alex
 
-[1/1] fs: convert mount flags to enum
-      https://git.kernel.org/vfs/vfs/c/6a8dcdd969cb
+Between version 7 and version 8:
+  - The structure containing the auxiliary device is now allocated
+    using kzalloc().  That means its lifetime is not tied to the
+    parent device, and auxiliary device's release function is
+    correct in freeing the structure.
+
+Here is version 7 of this series.
+  https://lore.kernel.org/lkml/20250508195409.2962633-1-elder@riscstar.com/
+
+Between version 6 and version 7:
+  - The new shared header file is now named "k1-syscon.h" (suggested
+    by Haylen Chu)
+  - The SPACEMIT_CCU_K1 config option has been removed (suggested
+    by Philipp Zabel)
+  - The SPACEMIT_CCU config option is now tristate, and selects
+    AUXILIARY_BUS (suggested by Haylen Chu)
+  - All code is concentrated into a single file "reset-spacemit.c"
+    rather than in a directory (suggested by Philipp Zabel)
+  - A bogus return value has been fixed, and a few irrelevant comments
+    have been removed (suggested by Philipp Zabel)
+  - MODULE_AUTHOR(), MODULE_DESCRIPTION(), and MODULE_LICENSE() are
+    now supplied (suggested by Haylen Chu)
+
+Here is version 6 of this series.
+  https://lore.kernel.org/lkml/20250506210638.2800228-1-elder@riscstar.com/
+
+Between version 5 and version 6:
+  - Reworked the code to use the auxiliary device framework.
+  - Moved the code supporting reset under drivers/reset/spacemit.
+  - Created a new header file shared by reset and clock.
+  - Separated generic from SoC-specific code in the reset driver.
+  - Dropped two Reviewed-by tags.
+
+Here is version 5 of this series.
+  https://lore.kernel.org/lkml/20250418145401.2603648-1-elder@riscstar.com/
+
+Between version 4 and version 5:
+  - Added Haylen's Reviewed-by on the second patch.
+  - Added Philipp's Reviewed-by on the third patch.
+  - In patch 4, added a const qualifier to some structures, and removed
+    parentheses surrounding integer constants, as suggested by Philipp
+  - Now based on the SpacemiT for-next branch
+
+Here is version 4 of this series.
+  https://lore.kernel.org/lkml/20250414191715.2264758-1-elder@riscstar.com/
+
+Between version 3 and version 4:
+  - Now based on Haylen Chu's v7 clock code, built on v6.15-rc2.
+  - Added Krzysztof's Reviewed-by on the first patch.
+
+Here is version 3 of this series.
+  https://lore.kernel.org/lkml/20250409211741.1171584-1-elder@riscstar.com/
+
+Between version 2 and version 3 there was no feedback, however:
+  - Haylen posted v6 of the clock series, and it included some changes
+    that affected the logic in this reset code.
+  - I was informed that defining CCU nodes without any clocks led to
+    warnings about "clocks" being a required property when running
+    "make dtbs_check".  For that reason, I made clock properties
+    optional for reset-only CCU nodes.
+  - This code is now based on v6.15-rc1, which includes a few commits
+    that were listed as dependencies previously.
+
+Here is version 2 of this series.
+  https://lore.kernel.org/lkml/20250328210233.1077035-1-elder@riscstar.com/
+
+Between version 1 and version 2:
+  - Added Rob's Reviewed-by tag on the first patch
+  - Renamed the of_match_data data type (and one or two other symbols) to
+    use "spacemit" rather than "k1".
+  - Replaced the abbreviated "rst" or "RST" in names of newly-defined
+    sympols with "reset" or "RESET" respectively.
+  - Eliminated rcdev_to_controller(), which was only used once.
+  - Changed a function that unsafely did a read/modify/write of a register
+    to use regmap_update_bits() instead as suggested by Haylen.
+  - Eliminated a null check for a pointer known to be non-null.
+  - Reordered the assignment of reset controller device fields.
+  - Added a "sentinel" comment as requested by Yixun.
+  - Updated to be based on Linux v6.14 final.
+
+Here is the first version of this series.
+  https://lore.kernel.org/lkml/20250321151831.623575-1-elder@riscstar.com/
+
+Alex Elder (6):
+  dt-bindings: soc: spacemit: define spacemit,k1-ccu resets
+  soc: spacemit: create a header for clock/reset registers
+  clk: spacemit: set up reset auxiliary devices
+  reset: spacemit: add support for SpacemiT CCU resets
+  reset: spacemit: define three more CCUs
+  riscv: dts: spacemit: add reset support for the K1 SoC
+
+ .../soc/spacemit/spacemit,k1-syscon.yaml      |  29 +-
+ arch/riscv/boot/dts/spacemit/k1.dtsi          |  18 ++
+ drivers/clk/spacemit/Kconfig                  |   1 +
+ drivers/clk/spacemit/ccu-k1.c                 | 225 +++++++------
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-spacemit.c                | 297 ++++++++++++++++++
+ .../dt-bindings/clock/spacemit,k1-syscon.h    | 128 ++++++++
+ include/soc/spacemit/k1-syscon.h              | 160 ++++++++++
+ 9 files changed, 741 insertions(+), 127 deletions(-)
+ create mode 100644 drivers/reset/reset-spacemit.c
+ create mode 100644 include/soc/spacemit/k1-syscon.h
+
+
+base-commit: cb9c3aeae509b36afbdf46942a7a0a0dfc856ce7
+-- 
+2.45.2
+
