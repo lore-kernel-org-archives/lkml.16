@@ -1,128 +1,139 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09881FF5E3;
-	Fri,  9 May 2025 08:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9CE2749F4;
+	Fri,  9 May 2025 08:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746778024; cv=none; b=Z839zEcjh8yJk/vtSXngxCOsB7u3R6gjyPctJGvTdKFvo+oSC5Zl4ocBkpzcf7NUaUlvGB4fu1BFg92IeQph2n/HYLXzYcgs6gqlg2uB23LpZgbypaFPpGxty3zP1vuHDhr5sFTtMB2Wh9ohQeB04yHwYjNwVhM7PU6+VJp8PWI=
+	t=1746778030; cv=none; b=d/iJIIPFCebFWfoJ3bP28aUT4SHfuLzAJtAHOLnOO5wAqHs0Z1/hFkTsjzwIyezYIK5t36FpE7JrcvDg7JZZyCIYki6gF17RV4D2WDy0/C4ZLFceFTUgGDWF/FZXDvhzZpZSx9rbDWCVW9XYkzJa82BKwuBmhMOYJ65LV6h3E3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746778024; c=relaxed/simple;
-	bh=WNIl+4X0H+uuLCrpjLBGP1Uv7OwZjKDBg+5YejZ0woY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uwth0kJjOv7VFnw8NJq8CmHrJrRzmpVpi8lojTPA8Rj/28wkc/zsoOcWHo8T1pLs07+Fdz6mYoAq+YRZ2/XqXrh2sUWpM1jSDR3Afw0y+ufPPTKoFjMsG5UT/JU9xQmD5rhF3DJ3JVes4mZn8l830HHMYm51vLVesAUVwME8vJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: esmtpgz10t1746777980t4c8c40ac
-X-QQ-Originating-IP: Nu8Lohit4j56xgXn52+ECE0kjTfqihu0oOduchgaQC8=
-Received: from [10.20.7.18] ( [118.249.225.48])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 09 May 2025 16:05:39 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11159292202234552627
-Message-ID: <48586F8AA034EA7A+02ca49ef-db27-47a5-8de3-3407dcfb48a5@kylinsec.com.cn>
-Date: Fri, 9 May 2025 16:06:07 +0800
+	s=arc-20240116; t=1746778030; c=relaxed/simple;
+	bh=GmgLDcYQyIw/YSz839e+qQM5KL6RDCNHqO2F1hLqyEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTTYVpcvavIavLy/N6sLkAX97EMQ1dcFldiqWJUmvVOhyy8oXWFkkQICa67sygkunlmNX+fe58G9kkGjb+jMSPM58pE74+tsXhuDmthbaQLs38BlpZyqvc5oiP4gTg+5OchlDGGD6fz9VQxpiSv3MepIy/ucTtMQBXbydwTs3t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=YlaJVlDD; arc=none smtp.client-ip=220.197.32.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="YlaJVlDD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=NayRbH+Za6jxrlNZRjNmkKSqs2Xv5DXjaUGWLMkJCjA=;
+	b=YlaJVlDDmaVnGqHNZVFamQwncF6km7Bx+FItRKfR6TspwW098A0Gi/STDfSGNh
+	53Jc+stXuN+KoneyrNrCEGUJYaSHct5O1gKM4V/8paX/mrQQK8FptEj0dGhKgrMk
+	IhxHMPaESFJinRDI0mdIYQLMs87pgjUJ5lC4zD6SpatFs=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgAnPuNhtx1ojC+mAA--.27459S3;
+	Fri, 09 May 2025 16:05:55 +0800 (CST)
+Date: Fri, 9 May 2025 16:05:52 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: maudspierings@gocontroll.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v6 2/8] arm64: dts: imx8mp: Add pinctrl config definitions
+Message-ID: <aB23YOkCMnA4F3hV@dragon>
+References: <20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com>
+ <20250417-initial_display-v6-2-3c6f6d24c7af@gocontroll.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] rtc: loongson: Add missing alarm notifications for
- ACPI RTC events
-To: Binbin Zhou <zhoubinbin@loongson.cn>, alexandre.belloni@bootlin.com,
- wangming01@loongson.cn
-Cc: chenhuacai@kernel.org, gaojuxin@loongson.cn, git@xen0n.name,
- jiaxun.yang@flygoat.com, keguang.zhang@gmail.com, lixuefeng@loongson.cn,
- linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250429062736.982039-1-liudalin@kylinsec.com.cn>
- <20250509014046.7399-1-liudalin@kylinsec.com.cn>
- <3c8eddda-ecce-4fdf-8773-3cfe8a09f237@loongson.cn>
-From: Liu Dalin <liudalin@kylinsec.com.cn>
-In-Reply-To: <3c8eddda-ecce-4fdf-8773-3cfe8a09f237@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz7a-0
-X-QQ-XMAILINFO: ONJthgsgJlmJHRWAX+4DDDTBSOQa+oho/Wbzhddrl15++GyuUrOvaVAp
-	482VQjQdxFU+Gs85XStPJzF3QKc+0JPNajpUdTI91dzaVXoeHGFmBsgaaGnaDxoQ+xVhtgs
-	QIQC5uVVX7VQuto1ibFDPEkpvLRh2ZQN+OAt6GSJzE6NhNWRGQEVpFdNtbwcvTHmMt/OqAq
-	IjQFv008KXV/7KK/38Rtd68A5Ex+OwIkamdguUSnhe+52fxgOBgeiH+1TxIGggfkG1FYRWz
-	1K6D5VJ8MIZJ9H2ppdLKwd1PnoRW8mV6uYG4o6p4RFI6myw15tEdp6cf+xmCf2kdxmwrYqj
-	iG/xqwlEgmR7RXXhIQob5Wa7CXrje9Tny23Tc6xqsAtjehCsv1SO98ZY4TAZ5yJYGtyoY5C
-	Ep4mTqe39IA1yD5zZql5Jhc6cGeW23DtTdJSrFbZHxehlFARKyGUzrlGxke2dAgRHRtiCFS
-	HOPdAe31yeu4jDPt+D7rfKDiFQ7/OcolDPz7aVHhOHdQZECFpRGOxe5xfiyX3edoDPMKrrD
-	QxUSQf9uZAXNbZ39CCiAx7Rz7q6Jm59AwKLGaje9Ltk9lSuPqPVDwu2R5bL/ldEWuzSuNxQ
-	ZZ0PQi2hCoEgvAMEFpvSy+d0rGfv/kMsKk27Ra4T3z6NAcI1oXSXqDEmLPiwYpmXjvCJS1W
-	aGyioh8PVWG0UsSrjbPbUombbqOFTysAAupgWsyQ1iFzBjGgqaq6pKl4aEQw4nFTdXJ6Q2J
-	ay2obULav7S0gt96+9gCeBMua4C2E9zYRBVUlreL8oWKcKp0zVyzSkRs0l+AnHFAdOWRom1
-	eiWb8Z4JrRHYfASfiAqDa3VASMhMK2OcNhx3j3X7Njn/KPnciYW49c5quiOUwcYW+SlM4SX
-	KlRBZLq2VtDqjsdEUFr+N7EO7jE4Zz+gzCAsGCoQr6r/fK6pmcXAJ9aiVWz7aqz0ru+Jffe
-	zUkNc89iHUWcG+pPEldqc2FRcfYtklf3XBA5C0/rAuhAC4ZuKctxcStN5wMng7Tv2LY8=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417-initial_display-v6-2-3c6f6d24c7af@gocontroll.com>
+X-CM-TRANSID:Mc8vCgAnPuNhtx1ojC+mAA--.27459S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAFW5XF1kWrWrGryUuF45ZFb_yoW5Gw43pF
+	yqkry3Zr18tF47Gw1Sv3Wayrs0v3Z3XF47u3y7WrW5tF4DAw18XF1Ygw4Ygr1Yqrsag3yF
+	9F1qvw1I93sxGrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeE__UUUUU=
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEgVIZWgdtb4IEAAAsc
 
-
-
-在 2025/5/9 15:12, Binbin Zhou 写道:
-> Hi:
+On Thu, Apr 17, 2025 at 12:14:03PM +0200, Maud Spierings via B4 Relay wrote:
+> From: Maud Spierings <maudspierings@gocontroll.com>
 > 
-> On 2025/5/9 09:40, Liu Dalin wrote:
->> When an application sets and enables an alarm on Loongson RTC devices,
->> the alarm notification fails to propagate to userspace because the
->> ACPI event handler omits calling rtc_update_irq().
->>
->> As a result, processes waiting via select() or poll() on RTC device
->> files fail to receive alarm notifications.
->>
->> Fixes: 1b733a9ebc3d ("rtc: Add rtc driver for the Loongson family chips")
->> Signed-off-by: Liu Dalin <liudalin@kylinsec.com.cn>
-> Technically I don't think this is a compliant patch, firstly this patch 
-> should be V2 and also you should add "Changlog" for describing the 
-> differences from the previous patch.
-> Anyway, it's good to me.
-
-Ok! There is another problem, if regmap_write(priv->regmap,
-TOY_MATCH0_REG, 0) move to the end of loongson_rtc_handler as 
-09471d8f5b39("rtc: loongson: clear TOY_MATCH0_REG in 
-loongson_rtc_isr()"), the interrupt also can be triggered multiple times.
-
-So the regmap_write(priv->regmap,TOY_MATCH0_REG, 0) is move behind of 
-rtc_update_irq by me, then the interrupt was triggered OK.
-
-Is there any problem ?
-
+> Currently to configure each IOMUXC_SW_PAD_CTL_PAD the raw value of this
+> register is written in the dts, these values are not obvious. Add defines
+> which describe the fields of this register which can be or-ed together to
+> produce readable settings.
 > 
-> Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
+> ---
+> This patch has already been sent in a different group of patches: [1]
+> It was requested there to submit it along with a user, this series also
+> includes some users for it.
 > 
->> ---
->>   drivers/rtc/rtc-loongson.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
->> index 97e5625c064c..2ca7ffd5d7a9 100644
->> --- a/drivers/rtc/rtc-loongson.c
->> +++ b/drivers/rtc/rtc-loongson.c
->> @@ -129,6 +129,14 @@ static u32 loongson_rtc_handler(void *id)
->>   {
->>       struct loongson_rtc_priv *priv = (struct loongson_rtc_priv *)id;
->> +    rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
->> +
->> +    /*
->> +     * The TOY_MATCH0_REG should be cleared 0 here,
->> +     * otherwise the interrupt cannot be cleared.
->> +     */
->> +    regmap_write(priv->regmap, TOY_MATCH0_REG, 0);
->> +
->>       spin_lock(&priv->lock);
->>       /* Disable RTC alarm wakeup and interrupt */
->>       writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
-> Thanks.
-> Binbin
+> [1]: https://lore.kernel.org/all/20250218-pinctrl_defines-v2-2-c554cad0e1d2@gocontroll.com/
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h | 33 ++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h b/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+> index 0fef066471ba607be02d0ab15da5a048a8a213a7..19a23d148246f4fb990050a9d06d20b6e769f254 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+> @@ -6,6 +6,39 @@
+>  #ifndef __DTS_IMX8MP_PINFUNC_H
+>  #define __DTS_IMX8MP_PINFUNC_H
+>  
+> +/* Drive Strength */
+> +#define MX8MP_DSE_X1 0x0
+> +#define MX8MP_DSE_X2 0x4
+> +#define MX8MP_DSE_X4 0x2
+> +#define MX8MP_DSE_X6 0x6
+> +
+> +/* Slew Rate */
+> +#define MX8MP_FSEL_FAST 0x10
+> +#define MX8MP_FSEL_SLOW 0x0
+> +
+> +/* Open Drain */
+> +#define MX8MP_ODE_ENABLE 0x20
+> +#define MX8MP_ODE_DISABLE 0x0
+> +
+> +#define MX8MP_PULL_DOWN 0x0
+> +#define MX8MP_PULL_UP 0x40
+> +
+> +/* Hysteresis */
+> +#define MX8MP_HYS_CMOS 0x0
+> +#define MX8MP_HYS_SCHMITT 0x80
+> +
+> +#define MX8MP_PULL_ENABLE 0x100
+> +#define MX8MP_PULL_DISABLE 0x0
+> +
+> +/* SION force input mode */
+> +#define MX8MP_SION 0x40000000
+
+Can we have all these indents aligned on the same column using tabs?
+
+> +
+> +/* long defaults */
+> +#define MX8MP_USDHC_DATA_DEFAULT (MX8MP_FSEL_FAST | MX8MP_PULL_UP | \
+> +								  MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
+
+Can we indent like this?
+
+#define MX8MP_USDHC_DATA_DEFAULT (MX8MP_FSEL_FAST | MX8MP_PULL_UP | \
+				  MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
+
+Shawn
+
+> +#define MX8MP_I2C_DEFAULT (MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | \
+> +						   MX8MP_PULL_ENABLE | MX8MP_SION)
+> +
+>  /*
+>   * The pin function ID is a tuple of
+>   * <mux_reg conf_reg input_reg mux_mode input_val>
+> 
+> -- 
+> 2.49.0
 > 
 > 
 
