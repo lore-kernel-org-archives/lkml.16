@@ -1,66 +1,66 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2AB2749F5
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3382741D0
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746781190; cv=none; b=Yy4y+OMCGl9yAquzSlssR5fWiLSWFT8xJym1VPByiwegQzgJd6FeWMCpem5zZEAI0MbXN4vg4mdcEtpitjowlbS91HhI1a9UTb95yNPTLigyyTKzQXu/T3vRcnY0Z/o6ocb3Gv85Bfisfg1kuGv0Y0I3VClRE9Fvwj/d2gD1iBY=
+	t=1746781192; cv=none; b=MzqXPddNgUOGyZ0XStDOo8S27oQRKRTrzKaj5a/Wh0WE5Cf/Vspbj9SUqXLRbP7bHUnY+nDUbVisMUVEKWQitL0fur4rmp+ByX0zuzP/eGSxed/rY3xJg+FcGYgqkWQOv3bt1za68QQKjzrcN77CRcof52JVQElX9Y1fHmqVXXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746781190; c=relaxed/simple;
-	bh=gDQq96GGiawbb69OmbCZK5wRVJLN5w3DnUGh97vmrJE=;
+	s=arc-20240116; t=1746781192; c=relaxed/simple;
+	bh=wFSO+bW0reZeJiU75auO+mE0Vw0w+a9HRouNJGN1GmI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I6N8L25b+4VgZSY40Z4Y1UiVnBoZYeGTwDNyIZnWGPAQQl3q6COZpDfT2X/Cchpavw9eqedOnJ7SQmlEuTJhb3yZNXfCHOTd9HTx9FQaMSUfTpj3ULf1+1lHPGKfy2nschrCuKawbIac7dRJaIF5bCCiiJR27UPIQq+6AmH4Ba8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yF149tYB; arc=none smtp.client-ip=209.85.128.50
+	 In-Reply-To:To:Cc; b=rKDIe4HLlenw7YSdZNShL4AgH0Gq9A2oivHDYlLjRb+70ygOuvXCiULC/4UaIIohUZ11Or0oxAGmn/G8HDQMx1wPbMhlQE5wNM7PpwvS9JR5oIrZ51orjKY6CAQfKJqzXg5FuMytpwrGLMUisRm0Y3bM9Y35NIe0MK9AVbTA1q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c3PGZCVQ; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yF149tYB"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so18282585e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 01:59:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c3PGZCVQ"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a1fb17a9beso96338f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 01:59:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746781186; x=1747385986; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746781188; x=1747385988; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LL0SI7hRp64EoC4NuU/ZcmxBzSY7mUI9jIp63c+PSfE=;
-        b=yF149tYBXus86Qg5OPbVy7X9GcUSd7DqysPA5ncE39x1PrcQvkDjcF/qx+RHiBlwLT
-         6GuuvwxiZmhAY0MjmLN5fAHaWb2Q0iom/d4qkqeFxiXwVnPYj5lzxaHJU6ePcxKhTfxv
-         E6SgrRaxEsOCIEHkDfw4K2aGC9a0XqOko9uzr/dVaR0PD1jzBgD7VcOdEqHpLoXvEOky
-         KQFgaqN/ZCVzL/WvuViDTiv0D2vuJq2aIIw6aNjdg0ioWtrb1eItxKQqyCW9B/f5QhC1
-         PSF1rwNhSLhrPrX2wubSgn+mpWbzTwTyTgpAngrlA5Q6g1IILNwoogrHdHOvCZaRoCvD
-         vaQw==
+        bh=ASnQFcWLigUiMmzLp6e/Ns1g9XB4PFwbLTaJMqYMfMM=;
+        b=c3PGZCVQ4/0l7IqGD9UnY+rxidqiAANcXKWo4aAWabPlkgI0nnkSywci+fa8A2t8iJ
+         wtJNb9zsge8MsR0m1/XfxTEVS4XGmT2Ve+T5vQjH/CgMOGjOTe7QGA3MKZaTObG0WW59
+         GuOOrIpoJnYn8+8VLaejQZ/DBYLz9jsCxeuOQ4Mh+P2XkUFRTvTs674FAlM/QQV3RiWe
+         7DXyGlw4QaQnN7q1ENwTIh+EfELAfO9o1qtz/uQS+KRiau9mFPjQRMewADVC/O+EHZBM
+         SkdApxUjTd0XgzszFvTWmeOS7e2wNfvCvBnh4C7JFh1IdelV2DCbVT2AnocNt9wJgOlu
+         +Yfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746781186; x=1747385986;
+        d=1e100.net; s=20230601; t=1746781188; x=1747385988;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LL0SI7hRp64EoC4NuU/ZcmxBzSY7mUI9jIp63c+PSfE=;
-        b=NpHudNYz3nHejWsmfwZJRIgzZO528lDcFXj/othpkmsaN2XgU7mKl9P2ykSqY+TxFH
-         maw2Z6tA3mQ0n4vUk4nXVptQU4bJL/okFCqQeIelOfPMq8tjDex7g2+qFViHF2fO74AX
-         JHS3/MJtnh1KJ9duhmOKNSTs1hfJvalHyF3ENqF3uNFaz2Wa50lqD+rCbyYNoaVKB5+V
-         MdiH3tgmYCWJSdqQFKTFWx9/FzGukAncIczF6Yb1R3kA449B3d4OGyylpuUV/MmdtFeS
-         YnN881mADDU9SdEagVldb8QaHz2zULZ817jz8vRHw3Avt+gDWckPiYyC4fcFai/anAeN
-         DKpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXndcuZWtlpqTRhIFupWRwJkSTG/Vcvgc8IQPIPSuje5d1/W/e4LVmgpTa1O2NRoIMLmWuTV5I1NbRgXe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+k0eY+ojjovWvZvuVhz+oF0TYzXhws5NFoFyXIUhnGmKQkwjo
-	ChCov+BzQm0TqQ5qaAzblAWPsN+gP8veh1DYtr9n2yqHITJMCoHH2RW5Zp/uf8M=
-X-Gm-Gg: ASbGncvgoQOZyT5qIzwDlFHewg1FjAZS18EKLMIeC+8m3GRv/zzTAdgXQPbdrD7WMJH
-	XqIZNOyFdymm0TBt7jKU6UNXsZv9cAgJ2AXEJv0SSm7mZDTHzer/kvk3hMBMMLsJfIQ1Cr4ythB
-	eseUs5DsP/dMGye1ifP3+Gvlol3Ns2k+iB9zs7Jsk29p/QLylta0uVJLg5d/hJKJMFZ3jNg58Og
-	gG2NsdYkEKPzeCqyucNCtPuk7ffNxSQ/JBNCEvbpon9Py3k5luWzzhx4XHTRuKv5ebbARq41Gr9
-	CLbZrnxAvUSvyn/qz7RRwpD73xX9dKo73/DRhW7LUgJ/UGla916zVSU3gHAqgg==
-X-Google-Smtp-Source: AGHT+IF+OYkKTDmCWEB33fkMtV2Hs1Fyo+S5yTgPcYID1gXQGcB5imZPQroRvLjP1qNq1NuqZ7b1LQ==
-X-Received: by 2002:a05:600c:37c6:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-442d6c39d19mr25831495e9.0.1746781186524;
-        Fri, 09 May 2025 01:59:46 -0700 (PDT)
+        bh=ASnQFcWLigUiMmzLp6e/Ns1g9XB4PFwbLTaJMqYMfMM=;
+        b=J3ZTfCdFWmNrsUXiG6kfPdkYWjbUa2UqP6q7rm7lt6Q2PhNaXCaEEiyuaC4vRk7Kei
+         0r8OQjkd6IRpqFy2DhVfaCqm3LjvhU4BBvyTeTStxAtny8MA1dHiqmYPYKDFdp7clUig
+         zggSknNf1J7a3Qi4+dBQXg1zbZdy0ERa0taf87EvtJWAWk0zFdDF2LAH4POaHwtes10l
+         Ku7u/RkBto92qRFw8USommKD1CxF9D4noQPpAyQIeF3sFyXY89gls81F0nCEyxVxCp7X
+         0nvqYF8f2Q0Dg6TLAWA95APp/MDhUvGtzo66mxvvhi4KT8wAVrXtDK63oAJ0iqBVM69/
+         +0eA==
+X-Forwarded-Encrypted: i=1; AJvYcCXiWCriZUtHsWrVU+ar6GQde/9YH8C43nLI8SDyWhuXFvu4mXtzIbacO/Ja4hCQXdz977G9UOa/ZwNs6vw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD6XCLjv1d0DONN7z1gq9zG6X7qCfonHJZwKT66TA9D5aHD0wt
+	eo7ekDrTfkHaW8QNgYr0hbhSwXqGpo17VwpDZfzX8fQxbICRq7yv5NstW6AsnfA=
+X-Gm-Gg: ASbGncs3VCyWiIU0CnZNDkg6IfCd98MD7DV/tDWkquG5pGOpogpLo+qZCNle7oFqVUf
+	uevYc2x58+oxZnkFn7DNZCLkUSaYcUsDQ3OVK0DHZVO/MoMoOBP1vzIzy1lz7K35c+/N/NZ2hO1
+	Gt6R1YkPOmpMD9/c0o4pMFsjrftXW3xA89E/2V1FllbKAq4MoyMPn4l2sbyJR5HkcfsNJwqbwx/
+	AipXGqcWckGtbVeCSA8shSte3TYksOoYOfx14Rl0hGRJQtIjBpbdxdHaXZZ/vNiW696vyMCksSj
+	AzOAbrPQ9N5fIKSVBtqkvf12MJki9WBo5EkEVfrb2ff3GzHd++zbi5Co3td4rw==
+X-Google-Smtp-Source: AGHT+IFx+LSi2P1gg9frBl/nSRpkctm4QwBWfWv5N/4i2O+LQgr/nmgIxLSi06bFssUOA42kmzpd6A==
+X-Received: by 2002:a05:6000:2485:b0:3a0:af63:c35d with SMTP id ffacd0b85a97d-3a1f64374ecmr1989939f8f.19.1746781188481;
+        Fri, 09 May 2025 01:59:48 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67df639sm22369115e9.13.2025.05.09.01.59.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67df639sm22369115e9.13.2025.05.09.01.59.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 01:59:46 -0700 (PDT)
+        Fri, 09 May 2025 01:59:48 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Fri, 09 May 2025 10:59:40 +0200
-Subject: [PATCH v2 2/6] drm/panel: visionox-rm69299: add plumbing to
- support panel variants
+Date: Fri, 09 May 2025 10:59:42 +0200
+Subject: [PATCH v2 4/6] drm/panel: visionox-rm69299: switch to
+ devm_regulator_bulk_get_const()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-topic-misc-shift6-panel-v2-2-c2c2d52abd51@linaro.org>
+Message-Id: <20250509-topic-misc-shift6-panel-v2-4-c2c2d52abd51@linaro.org>
 References: <20250509-topic-misc-shift6-panel-v2-0-c2c2d52abd51@linaro.org>
 In-Reply-To: <20250509-topic-misc-shift6-panel-v2-0-c2c2d52abd51@linaro.org>
 To: Jessica Zhang <quic_jesszhan@quicinc.com>, 
@@ -83,148 +83,89 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Casey Connolly <casey.connolly@linaro.org>, 
  Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4412;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2466;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=gDQq96GGiawbb69OmbCZK5wRVJLN5w3DnUGh97vmrJE=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoHcP9+2WSCKMk4dRAWq2StiDl4binZHitA1jTM0EM
- nFNOI0+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaB3D/QAKCRB33NvayMhJ0ZznD/
- 9WaRCwSPExe05+IQ9+4rP+3qkRLnLQn2WKQoVrOoVkk3Eq8BBHrUde2QOxoFiz67RaFd1+P/Ez/BM2
- RaOtY5IlvbL+Kc510TtJLW8DC45FKcEld1jZH1D58G6celPL7nr7I5WnYtWRqNhtUtdZ24IxAjK/Oh
- fyHslpFpHYSzMKsf7J8oboTfX49BU9VWRz5WvgitFIq9XjEoPFQxLfRfk4khsfUVgkjXyGXvrY6q2N
- huT+JcJUNxovJJMMwkwUF2WWBoNB8+bulebASPtgU2qaViHgwmVz27f2+tpFmDof1YFOXxV2iodGeC
- O1SCmq9aRNy2Ze9D3nMKMe3snEZT8B++8b3vvxwMxhLkU84jomwL9j+9b3Krn4udH1fXYd5bKv2/OH
- 9zu7sBW/P+bGkdVogM3JwWhb3FELf66ylNzToxgvgE1s5eDea3ae/FwkbnTwYAaDvyuoRW/YGMqC7j
- fXBEfZAzOntkTrPdlTM6eI0UQWH/naD/BNxNm0l1Uog2MYTdsaLY7trvI9G5+P+wT0ScpsxjHn/wps
- nCdH80zuU3XaHbARsgym2+ZnGif4F6DpjkikYP7DoVRgtY8uMTRl5JG8rVc4YDyLQ2Or//4A1wEVJu
- +cvSnfFmyvVP+F6hS3DLTqm/H78QLXx9TotJYutdkonY2JyLx1s6Bcn1cTiA==
+ bh=wFSO+bW0reZeJiU75auO+mE0Vw0w+a9HRouNJGN1GmI=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoHcP+ZjUj+MNthAC93tQv3yVpyEM9usXDnu07Lj43
+ mCpk3guJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaB3D/gAKCRB33NvayMhJ0SYTD/
+ 9VRHzPDa8DYPUdooooCuzwmLoXMZnZugd889qT8G8CNT/ZozZGTaiHrOJpsKSK+EknLoqyZJT5aOUS
+ AqWLY6WHZAGqJbOJLRqb8FkkZh1OQl869dnu4BkwAXwc53gHCC5pTmGD/DaOBYERoN1BMUTd50biBX
+ CkdgdQJKrsvt7K3QdW+5VbrxgzjM8aIrrf7DmpPnVgKQNAh5ZlW4OG+YnpTrsF9nr6M7doqweQ8nYa
+ 8NxOTKZjZVnFbtc3feajhdNygqgDFPgNPWE5NSFWXY0qrgUKOXsjD/cS8tcA1f1sOkVKkmYrOPz/4b
+ WsVA+zPgI66uPgYmJ+0mO82IfeaitLKGolj8qwKoX7p+bJCY3d5rpMj0XbhfG834BHWNAEShJgLGnO
+ UW06Uh9IfoqcG33stlgxBhQAupWS79snZWJ8KLHwyhPi7IqgkDae15J11/bmo00aOo7SvTs2W1R5XV
+ B5qcTqFwgYsTvNrXsjl6LAG9MZBcTCcbvSc4ih+7M+yL1nHwhArjcT5KvZIRnMyGch+Edj+WzmKmqk
+ cVmCodLXMqBdghsH3f4N00AN4qKv8Hk6P90LY5XnHbDA22FX/MdFKFcSHZKcup+yEU9ut9HARqWyt9
+ BW/CP3DfhEtcqfG7CoWtpnnfOViR+TEgbPc/yzy67uNCK9D+nYL6OlqrW/+w==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-In order to support a panel variant, add plumbing code to pass
-init sequence and mode as compatible data.
+Switch to devm_regulator_bulk_get_const() to move the supply
+data to const.
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/gpu/drm/panel/panel-visionox-rm69299.c | 58 ++++++++++++++------------
- 1 file changed, 32 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/panel/panel-visionox-rm69299.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-index be3a9797fbced5222b313cf83f8078b919e2c219..156bca0197481b470fa85b2eab7c979b76e489b6 100644
+index c3c14150a5546512151fb15c8e9a91269ca21c65..fe921d5fb1942c47c5b849e827c244d7fbde25a3 100644
 --- a/drivers/gpu/drm/panel/panel-visionox-rm69299.c
 +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-@@ -5,6 +5,7 @@
+@@ -24,12 +24,17 @@ struct visionox_rm69299_panel_desc {
  
- #include <linux/delay.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include <linux/mod_devicetable.h>
- #include <linux/gpio/consumer.h>
- #include <linux/regulator/consumer.h>
-@@ -15,11 +16,22 @@
- #include <drm/drm_modes.h>
- #include <drm/drm_panel.h>
- 
-+struct visionox_rm69299_panel_desc {
-+	const struct drm_display_mode *mode;
-+	const u8 *init_seq;
-+	unsigned int init_seq_len;
-+};
-+
  struct visionox_rm69299 {
  	struct drm_panel panel;
- 	struct regulator_bulk_data supplies[2];
+-	struct regulator_bulk_data supplies[2];
++	struct regulator_bulk_data *supplies;
  	struct gpio_desc *reset_gpio;
  	struct mipi_dsi_device *dsi;
-+	const struct visionox_rm69299_panel_desc *desc;
-+};
-+
-+static const u8 visionox_rm69299_1080x2248_60hz_init_seq[][2] = {
-+	{ 0xfe, 0x00 }, { 0xc2, 0x08 }, { 0x35, 0x00 }, { 0x51, 0xff },
+ 	const struct visionox_rm69299_panel_desc *desc;
  };
  
- static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *panel)
-@@ -84,7 +96,7 @@ static int visionox_rm69299_unprepare(struct drm_panel *panel)
- static int visionox_rm69299_prepare(struct drm_panel *panel)
- {
- 	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
--	int ret;
-+	int ret, i;
- 
- 	ret = visionox_rm69299_power_on(ctx);
- 	if (ret < 0)
-@@ -92,28 +104,12 @@ static int visionox_rm69299_prepare(struct drm_panel *panel)
- 
- 	ctx->dsi->mode_flags |= MIPI_DSI_MODE_LPM;
- 
--	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0xfe, 0x00 }, 2);
--	if (ret < 0) {
--		dev_err(ctx->panel.dev, "cmd set tx 0 failed, ret = %d\n", ret);
--		goto power_off;
--	}
--
--	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0xc2, 0x08 }, 2);
--	if (ret < 0) {
--		dev_err(ctx->panel.dev, "cmd set tx 1 failed, ret = %d\n", ret);
--		goto power_off;
--	}
--
--	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0x35, 0x00 }, 2);
--	if (ret < 0) {
--		dev_err(ctx->panel.dev, "cmd set tx 2 failed, ret = %d\n", ret);
--		goto power_off;
--	}
--
--	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0x51, 0xff }, 2);
--	if (ret < 0) {
--		dev_err(ctx->panel.dev, "cmd set tx 3 failed, ret = %d\n", ret);
--		goto power_off;
-+	for (i = 0; i < ctx->desc->init_seq_len; i++) {
-+		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, &ctx->desc->init_seq[i * 2], 2);
-+		if (ret < 0) {
-+			dev_err(ctx->panel.dev,	"cmd tx failed, ret = %d\n", ret);
-+			return ret;
-+		}
- 	}
- 
- 	ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_EXIT_SLEEP_MODE, NULL, 0);
-@@ -160,8 +156,7 @@ static int visionox_rm69299_get_modes(struct drm_panel *panel,
- 	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
- 	struct drm_display_mode *mode;
- 
--	mode = drm_mode_duplicate(connector->dev,
--				  &visionox_rm69299_1080x2248_60hz);
-+	mode = drm_mode_duplicate(connector->dev, ctx->desc->mode);
- 	if (!mode) {
- 		dev_err(ctx->panel.dev, "failed to create a new display mode\n");
- 		return 0;
-@@ -191,6 +186,10 @@ static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	ctx->desc = device_get_match_data(dev);
-+	if (!ctx->desc)
-+		return -EINVAL;
++static const struct regulator_bulk_data visionox_rm69299_supplies[] = {
++	{ .supply = "vdda", .init_load_uA = 32000 },
++	{ .supply = "vdd3p3", .init_load_uA = 13200 },
++};
 +
- 	mipi_dsi_set_drvdata(dsi, ctx);
+ static const u8 visionox_rm69299_1080x2248_60hz_init_seq[][2] = {
+ 	{ 0xfe, 0x00 }, { 0xc2, 0x08 }, { 0x35, 0x00 }, { 0x51, 0xff },
+ };
+@@ -43,7 +48,8 @@ static int visionox_rm69299_power_on(struct visionox_rm69299 *ctx)
+ {
+ 	int ret;
  
- 	ctx->dsi = dsi;
-@@ -239,8 +238,15 @@ static void visionox_rm69299_remove(struct mipi_dsi_device *dsi)
- 	drm_panel_remove(&ctx->panel);
+-	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
++	ret = regulator_bulk_enable(ARRAY_SIZE(visionox_rm69299_supplies),
++				    ctx->supplies);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -66,7 +72,8 @@ static int visionox_rm69299_power_off(struct visionox_rm69299 *ctx)
+ {
+ 	gpiod_set_value(ctx->reset_gpio, 0);
+ 
+-	return regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
++	return regulator_bulk_disable(ARRAY_SIZE(visionox_rm69299_supplies),
++				      ctx->supplies);
  }
  
-+const struct visionox_rm69299_panel_desc visionox_rm69299_1080p_display_desc = {
-+	.mode = &visionox_rm69299_1080x2248_60hz,
-+	.init_seq = (const u8 *)visionox_rm69299_1080x2248_60hz_init_seq,
-+	.init_seq_len = ARRAY_SIZE(visionox_rm69299_1080x2248_60hz_init_seq),
-+};
-+
- static const struct of_device_id visionox_rm69299_of_match[] = {
--	{ .compatible = "visionox,rm69299-1080p-display", },
-+	{ .compatible = "visionox,rm69299-1080p-display",
-+	  .data = &visionox_rm69299_1080p_display_desc },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, visionox_rm69299_of_match);
+ static int visionox_rm69299_unprepare(struct drm_panel *panel)
+@@ -172,12 +179,8 @@ static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
+ 
+ 	ctx->dsi = dsi;
+ 
+-	ctx->supplies[0].supply = "vdda";
+-	ctx->supplies[0].init_load_uA = 32000;
+-	ctx->supplies[1].supply = "vdd3p3";
+-	ctx->supplies[1].init_load_uA = 13200;
+-
+-	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies), ctx->supplies);
++	ret = devm_regulator_bulk_get_const(dev, ARRAY_SIZE(visionox_rm69299_supplies),
++					    visionox_rm69299_supplies, &ctx->supplies);
+ 	if (ret < 0)
+ 		return ret;
+ 
 
 -- 
 2.34.1
