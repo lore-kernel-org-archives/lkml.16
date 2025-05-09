@@ -1,88 +1,277 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75EF1339A4;
-	Fri,  9 May 2025 01:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D8273477
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 01:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746754139; cv=none; b=j/TySeQZqBeSRdKIC+8HyUiyFmIoGt8IfWGFHPqo92PaKZ7I63tT4K4ieix24gJ/ozXd55Ee3cxfWgNvpjs6Eb45X59co3B56i43LwVk9hWCreCGbY+Ahs9ltXK2td02JLFoz5AWxWoVQrIhPaqwx+zGARaG2ncaFhRp3LlZoWA=
+	t=1746754216; cv=none; b=SPkx2gP+BKzRVT02/XxI7hJpGr0V7xNLS9XT9vvaS0biCDFEYDApPndK9mNDqpHbMqm1wQS8qe4x+RSpLyGoH2dy4Y8jJ8ScIZ93WBUekm6oY7qVTRsOvZ4dFK/fbhstaYZnFpHF8Wd0Q0SLYVHkIMRm+ghHxJQgSXTe25U7c38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746754139; c=relaxed/simple;
-	bh=0WX7lzNhoLFaeUZOspWAuZsL5pC/FLkw1kJVG5zFX4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F3KPGYIxtGMOeqpUw8xuxqPFA+rGROLH1ViWeagBieT41KZ1v6ITlHWfhFtmEPLj+a/lnsvHbljKxxZLI75iwOPyxge1B22Otd/ZjZ7Us/aBKeDnR7V8XLj3kxbJsBhyuPOcq/F/1EJwPgRpCgehoYZHZf+yWrI8iVVO1xBSktE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNLRLSjk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746754216; c=relaxed/simple;
+	bh=/qbfzc8/AS/igr2+ccTAmTclHpAKBi+VPfU1OA167hY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HAehfGKk7mjxnWUMgAfFh8sfmLkszL2HIfFzPhcedWV7VWdO48xkYfCcMPL2d1yGucAiUTBnzVGLfzetuNqmQpB+fm4eWsGvq/1f4YLSn4UTU7VshFuqGkQFAVSAkFTyjm04/9pVapUbKOwPqBrdu8iMwTHehvZhRKsBc7qXkGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BbqDPw3V; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNLRLSjk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B521C4CEE7;
-	Fri,  9 May 2025 01:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746754139;
-	bh=0WX7lzNhoLFaeUZOspWAuZsL5pC/FLkw1kJVG5zFX4g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nNLRLSjkdMcghiY1dVm9t8X+FLaMwq/+/ytJfE38Y5mo9zG77oUcYCnNrTdCicYeK
-	 EAxmxfdNh9r1FBOEECYpNWlKVT6MzrnoEmLPuDNDbowb5LprQSL8DGA7Z5x+CszCoE
-	 NG8Je+SJkN+YCPlZEiCSkP92pyXDtmsWvVxC2Xsjc4nwTQNkXD5aYhC/RaRzaHm1id
-	 ES5jis2R6cy79IjionLUvPNlfEb+0KxbR6OVbN+Hiot+XZ2bibaXjYLObZ5o1Rb/SR
-	 M0gpEWtb8YccuNvLoC/99ELt6RBFTQpS6fZhHiDMU7Khsu9TYmRWc5F9/q+xF75fVE
-	 QhICrhizMW5Ww==
-Date: Thu, 8 May 2025 18:28:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jon Kohler <jon@nutanix.com>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, Zvi Effron <zeffron@riotgames.com>,
- Stanislav Fomichev <stfomichev@gmail.com>, Jason Wang
- <jasowang@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
- Simon Horman <horms@kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org"
- <bpf@vger.kernel.org>, Jacob Keller <jacob.e.keller@intel.com>
-Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
- and metadata length
-Message-ID: <20250508182857.2b60301e@kernel.org>
-In-Reply-To: <2121D2EF-E554-4DCB-BB6A-93FB3975B064@nutanix.com>
-References: <20250506125242.2685182-1-jon@nutanix.com>
-	<aBpKLNPct95KdADM@mini-arch>
-	<681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch>
-	<c8ad3f65-f70e-4c6e-9231-0ae709e87bfe@kernel.org>
-	<CAC1LvL3nE14cbQx7Me6oWS88EdpGP4Gx2A0Um4g-Vuxk4m_7Rw@mail.gmail.com>
-	<062e886f-7c83-4d46-97f1-ebbce3ca8212@kernel.org>
-	<681b96abe7ae4_1f6aad294c9@willemb.c.googlers.com.notmuch>
-	<B4F050C6-610F-4D04-88D7-7EF581DA7DF1@nutanix.com>
-	<e4cf6912-74fb-441f-ad05-82ea99d81020@kernel.org>
-	<6FF98F38-2AE5-4000-8827-81369C3FB429@nutanix.com>
-	<b99b73e8-0957-45f8-bd54-6c50640706df@kernel.org>
-	<20250507171829.3e8f8a76@kernel.org>
-	<2121D2EF-E554-4DCB-BB6A-93FB3975B064@nutanix.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BbqDPw3V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746754213;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cMx2+KSa5+OqN7vVFvRFQnhnHcLAVcYaLjsZze86Tmg=;
+	b=BbqDPw3VP8sbrJvF8HVgrP4m/KWPH1YPdsbIOllUD87hA0oMyaKWxW3YlSpa/mS5WL4DEB
+	EVHMGEhSwqVKufcwEDXBU1dj3I74G8TkbOy4hIp0MWYbE197gMk8Vk6yaYRrVO2jttLLmY
+	eg2IvFOKku58Gl4FSzK7apC4LLkLxko=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-177-EaCFTf9fM4K98gUIpMorrw-1; Thu,
+ 08 May 2025 21:30:11 -0400
+X-MC-Unique: EaCFTf9fM4K98gUIpMorrw-1
+X-Mimecast-MFC-AGG-ID: EaCFTf9fM4K98gUIpMorrw_1746754209
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C9F4219560AF;
+	Fri,  9 May 2025 01:30:07 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.120])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 03478180049D;
+	Fri,  9 May 2025 01:29:53 +0000 (UTC)
+Date: Fri, 9 May 2025 09:29:48 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <llong@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org, storagedev@microchip.com,
+	virtualization@lists.linux.dev,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v6 1/9] lib/group_cpus: let group_cpu_evenly return
+ number initialized masks
+Message-ID: <aB1ajDUwJy6PVGEY@fedora>
+References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
+ <20250424-isolcpus-io-queues-v6-1-9a53a870ca1f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-isolcpus-io-queues-v6-1-9a53a870ca1f@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, 8 May 2025 03:19:42 +0000 Jon Kohler wrote:
-> >> I like xdp_linear_len() as it is descriptive/clear. =20
-> >=20
-> > FWIW I don't feel strongly but my very weak preference would be=20
-> > not to merge this. I already know I'll be looking at the definitions
-> > every time. Is it obvious to everyone in this thread whether "headroom"
-> > includes the metadata length? It's not obvious to me. But the patch
-> > seems quite popular so =F0=9F=A4=B7=EF=B8=8F =20
->=20
-> Jespers suggestion to have a DOC: on this hopefully will be helpful.
->=20
-> I=E2=80=99ll try my hand that that and see what sort of trouble I can get=
- into
+On Thu, Apr 24, 2025 at 08:19:40PM +0200, Daniel Wagner wrote:
+> group_cpu_evenly might allocated less groups then the requested:
+> 
+> group_cpu_evenly
+>   __group_cpus_evenly
+>     alloc_nodes_groups
+>       # allocated total groups may be less than numgrps when
+>       # active total CPU number is less then numgrps
+> 
+> In this case, the caller will do an out of bound access because the
+> caller assumes the masks returned has numgrps.
+> 
+> Return the number of groups created so the caller can limit the access
+> range accordingly.
+> 
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>  block/blk-mq-cpumap.c        |  6 +++---
+>  drivers/virtio/virtio_vdpa.c |  9 +++++----
+>  fs/fuse/virtio_fs.c          |  6 +++---
+>  include/linux/group_cpus.h   |  3 ++-
+>  kernel/irq/affinity.c        |  9 +++++----
+>  lib/group_cpus.c             | 12 +++++++++---
+>  6 files changed, 27 insertions(+), 18 deletions(-)
+> 
+> diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
+> index 444798c5374f48088b661b519f2638bda8556cf2..269161252add756897fce1b65cae5b2e6aebd647 100644
+> --- a/block/blk-mq-cpumap.c
+> +++ b/block/blk-mq-cpumap.c
+> @@ -19,9 +19,9 @@
+>  void blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+>  {
+>  	const struct cpumask *masks;
+> -	unsigned int queue, cpu;
+> +	unsigned int queue, cpu, nr_masks;
+>  
+> -	masks = group_cpus_evenly(qmap->nr_queues);
+> +	masks = group_cpus_evenly(qmap->nr_queues, &nr_masks);
+>  	if (!masks) {
+>  		for_each_possible_cpu(cpu)
+>  			qmap->mq_map[cpu] = qmap->queue_offset;
+> @@ -29,7 +29,7 @@ void blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+>  	}
+>  
+>  	for (queue = 0; queue < qmap->nr_queues; queue++) {
+> -		for_each_cpu(cpu, &masks[queue])
+> +		for_each_cpu(cpu, &masks[queue % nr_masks])
+>  			qmap->mq_map[cpu] = qmap->queue_offset + queue;
+>  	}
+>  	kfree(masks);
+> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
+> index 1f60c9d5cb1810a6f208c24bb2ac640d537391a0..a7b297dae4890c9d6002744b90fc133bbedb7b44 100644
+> --- a/drivers/virtio/virtio_vdpa.c
+> +++ b/drivers/virtio/virtio_vdpa.c
+> @@ -329,20 +329,21 @@ create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+>  
+>  	for (i = 0, usedvecs = 0; i < affd->nr_sets; i++) {
+>  		unsigned int this_vecs = affd->set_size[i];
+> +		unsigned int nr_masks;
+>  		int j;
+> -		struct cpumask *result = group_cpus_evenly(this_vecs);
+> +		struct cpumask *result = group_cpus_evenly(this_vecs, &nr_masks);
+>  
+>  		if (!result) {
+>  			kfree(masks);
+>  			return NULL;
+>  		}
+>  
+> -		for (j = 0; j < this_vecs; j++)
+> +		for (j = 0; j < nr_masks; j++)
+>  			cpumask_copy(&masks[curvec + j], &result[j]);
+>  		kfree(result);
+>  
+> -		curvec += this_vecs;
+> -		usedvecs += this_vecs;
+> +		curvec += nr_masks;
+> +		usedvecs += nr_masks;
+>  	}
+>  
+>  	/* Fill out vectors at the end that don't need affinity */
+> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> index 2c7b24cb67adb2cb329ed545f56f04700aca8b81..7ed43b9ea4f3f8b108f1e0d7050c27267b9941c9 100644
+> --- a/fs/fuse/virtio_fs.c
+> +++ b/fs/fuse/virtio_fs.c
+> @@ -862,7 +862,7 @@ static void virtio_fs_requests_done_work(struct work_struct *work)
+>  static void virtio_fs_map_queues(struct virtio_device *vdev, struct virtio_fs *fs)
+>  {
+>  	const struct cpumask *mask, *masks;
+> -	unsigned int q, cpu;
+> +	unsigned int q, cpu, nr_masks;
+>  
+>  	/* First attempt to map using existing transport layer affinities
+>  	 * e.g. PCIe MSI-X
+> @@ -882,7 +882,7 @@ static void virtio_fs_map_queues(struct virtio_device *vdev, struct virtio_fs *f
+>  	return;
+>  fallback:
+>  	/* Attempt to map evenly in groups over the CPUs */
+> -	masks = group_cpus_evenly(fs->num_request_queues);
+> +	masks = group_cpus_evenly(fs->num_request_queues, &nr_masks);
+>  	/* If even this fails we default to all CPUs use first request queue */
+>  	if (!masks) {
+>  		for_each_possible_cpu(cpu)
+> @@ -891,7 +891,7 @@ static void virtio_fs_map_queues(struct virtio_device *vdev, struct virtio_fs *f
+>  	}
+>  
+>  	for (q = 0; q < fs->num_request_queues; q++) {
+> -		for_each_cpu(cpu, &masks[q])
+> +		for_each_cpu(cpu, &masks[q % nr_masks])
+>  			fs->mq_map[cpu] = q + VQ_REQUEST;
+>  	}
+>  	kfree(masks);
+> diff --git a/include/linux/group_cpus.h b/include/linux/group_cpus.h
+> index e42807ec61f6e8cf3787af7daa0d8686edfef0a3..bd5dada6e8606fa6cf8f7babf939e39fd7475c8d 100644
+> --- a/include/linux/group_cpus.h
+> +++ b/include/linux/group_cpus.h
+> @@ -9,6 +9,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/cpu.h>
+>  
+> -struct cpumask *group_cpus_evenly(unsigned int numgrps);
+> +struct cpumask *group_cpus_evenly(unsigned int numgrps,
+> +				  unsigned int *nummasks);
+>  
+>  #endif
+> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+> index 44a4eba80315cc098ecfa366ca1d88483641b12a..d2aefab5eb2b929877ced43f48b6268098484bd7 100644
+> --- a/kernel/irq/affinity.c
+> +++ b/kernel/irq/affinity.c
+> @@ -70,20 +70,21 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+>  	 */
+>  	for (i = 0, usedvecs = 0; i < affd->nr_sets; i++) {
+>  		unsigned int this_vecs = affd->set_size[i];
+> +		unsigned int nr_masks;
+>  		int j;
+> -		struct cpumask *result = group_cpus_evenly(this_vecs);
+> +		struct cpumask *result = group_cpus_evenly(this_vecs, &nr_masks);
+>  
+>  		if (!result) {
+>  			kfree(masks);
+>  			return NULL;
+>  		}
+>  
+> -		for (j = 0; j < this_vecs; j++)
+> +		for (j = 0; j < nr_masks; j++)
+>  			cpumask_copy(&masks[curvec + j].mask, &result[j]);
+>  		kfree(result);
+>  
+> -		curvec += this_vecs;
+> -		usedvecs += this_vecs;
+> +		curvec += nr_masks;
+> +		usedvecs += nr_masks;
+>  	}
+>  
+>  	/* Fill out vectors at the end that don't need affinity */
+> diff --git a/lib/group_cpus.c b/lib/group_cpus.c
+> index ee272c4cefcc13907ce9f211f479615d2e3c9154..016c6578a07616959470b47121459a16a1bc99e5 100644
+> --- a/lib/group_cpus.c
+> +++ b/lib/group_cpus.c
+> @@ -332,9 +332,11 @@ static int __group_cpus_evenly(unsigned int startgrp, unsigned int numgrps,
+>  /**
+>   * group_cpus_evenly - Group all CPUs evenly per NUMA/CPU locality
+>   * @numgrps: number of groups
+> + * @nummasks: number of initialized cpumasks
+>   *
+>   * Return: cpumask array if successful, NULL otherwise. And each element
+> - * includes CPUs assigned to this group
+> + * includes CPUs assigned to this group. nummasks contains the number
+> + * of initialized masks which can be less than numgrps.
+>   *
+>   * Try to put close CPUs from viewpoint of CPU and NUMA locality into
+>   * same group, and run two-stage grouping:
+> @@ -344,7 +346,8 @@ static int __group_cpus_evenly(unsigned int startgrp, unsigned int numgrps,
+>   * We guarantee in the resulted grouping that all CPUs are covered, and
+>   * no same CPU is assigned to multiple groups
+>   */
+> -struct cpumask *group_cpus_evenly(unsigned int numgrps)
+> +struct cpumask *group_cpus_evenly(unsigned int numgrps,
+> +				  unsigned int *nummasks)
+>  {
+>  	unsigned int curgrp = 0, nr_present = 0, nr_others = 0;
+>  	cpumask_var_t *node_to_cpumask;
+> @@ -421,10 +424,12 @@ struct cpumask *group_cpus_evenly(unsigned int numgrps)
+>  		kfree(masks);
+>  		return NULL;
+>  	}
+> +	*nummasks = nr_present + nr_others;
 
-I hate to dwell since I already said I don't feel strongly :) but the
-doc is orthogonal, it helps people who don't understand the geometry
-to understand it. My concern was that I understand the geometry, but
-now I will also need to remember what we decided to call "headroom"
-since (unlike skbs) XDP has all sort of stuff packed in front of the
-packet data :)
+WARN_ON(nr_present + nr_others < numgrps) can be removed now.
+
+Other than that and with Thomas's comment addressed:
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+
+Thanks,
+Ming
+
