@@ -1,342 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E80D2609C3;
-	Fri,  9 May 2025 22:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0298254B14
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 22:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746829424; cv=none; b=A+C2swVPUWKYnocZhuMdc/UIvrpwKzpCKV6KP4ZZ+f1cIqEvfu0B1WHLsFLvMtytXvh59P8Ef059f3YyGltKKKyumbNdZT4e5vw4jGUxb5xxLZ+pfhZjwp5WvMrqZHuU3nxehEi9QRvSA7MQSbwC8HWDfiSbrUrOhojAYPQaasA=
+	t=1746829634; cv=none; b=qsrAArZsiYbKhDBRSeqd8mPUHChc+PEE0lRRvtRZrjBqTjXu0SliPCimF9wjeSWl+yUmfHPju1X0Tbt98NYBmnP8OnZMEg8B/QFHzjgPOWgMb5YL2U60eKFSAlQt+a2Dv6g8+oh28HiNqToqX+B1wJ37WQ1zU8QDYoSH05f9ejA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746829424; c=relaxed/simple;
-	bh=gkF1iBmfa995sCmBCk6c8+T9mHJSG8t8B52ptEzcenk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WSAUnq+Frino6tP6KdwXsMT3SBIHj/ks7Qbhe7CRD0aZWqgqFtKzVErBgh8F4V6h/w0uzx9P29HLkAF1Ky/WkFItTIANGZpNHBUzOXndTtrixj/6l6ujT45TVW/x+Rs8n74pnpPVP8X4RzC7FJqIDqCbmk/wv5V/vIxrLrcCBI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfbLc/W7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746829634; c=relaxed/simple;
+	bh=yKsMUjLuGE3EkuKCU26HBOsw2KJoVDDc5eXnJCektgU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ClGHB5F5TRlYpVzcQ1IqcP8aORZaQ0e74KptzFpj2zkLc9oWiTn2e2kZrSBskdib0/Xt9m7QwzK5hDoQSxtDdW7QXtT1pas60aH8ASeQ8kDWx7jJjs7Xzin7Itx2q2bdwoLQ75cZQ6RidF3rjpTe5+eLse4oCg5UILHCJqimcqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PaPQgo3b; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfbLc/W7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8024C4CEE4;
-	Fri,  9 May 2025 22:23:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746829424;
-	bh=gkF1iBmfa995sCmBCk6c8+T9mHJSG8t8B52ptEzcenk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RfbLc/W7nKx3W2LvZGCaQB6YYlS1E4CYO26pTc4H/SxQyJMmEgAzLBVu8/uJu4Eof
-	 XjlFXdPu6LIuGrDhPTdjAVHseeYh0CTNg7/FA548wEmz6jnIelPfd2LE3GKe24OjPe
-	 iyqFxz6/kj71MouugcJn5tcXScw6ftYrYZz9lDHyZcoXrxFpZq+cY65ceXU3z6P3zV
-	 cycXS/HhbC5GditcgtcYBhy/ziiADbP6B7KlhN9YToWK68+uaiyDn/C/YWjzoXXBNK
-	 srIq2MhmR/jWed+160wyl6NwJFyG9KFh5FTG8wDe4LibRh+SMV5P+kYq1LKo2cnDZi
-	 eFshsbC8wUZCw==
-Date: Fri, 9 May 2025 17:23:42 -0500
-From: Rob Herring <robh@kernel.org>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, kernel-list@raspberrypi.com
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- brcm,bcm2835-armctrl-ic to DT schema
-Message-ID: <20250509222342.GA85203-robh@kernel.org>
-References: <20250505144618.1287539-1-robh@kernel.org>
- <ee082ba2-d452-43a1-bb94-3c04c407ea31@gmx.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PaPQgo3b"
+Message-ID: <260a8c6a-f92f-41c8-a212-8f9f8ddf6b5b@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746829628;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jteVl+qSFnN6ueuKmbFExf6FzhNWgyq6s4G+Z3sYIiU=;
+	b=PaPQgo3bkhPNazELJ9NUurbL3qAdnBDCM4rrLX089JO2lMY65sw7yCqZXRHmBesqO7f/3y
+	LfpsLOI5NX6Bdx4UA8VAF/1JFUss+cvO+g7o3w1o5jSktrnZADu/9+aYXof68HipAsZDQa
+	Ud0eqikeeTnxFGNBnXOEyoFRQc9FAKo=
+Date: Fri, 9 May 2025 15:26:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Subject: Re: [PATCH 0/5] Enable hstateen bits lazily for the KVM RISC-V Guests
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv <linux-riscv-bounces@lists.infradead.org>
+References: <20250505-kvm_lazy_enable_stateen-v1-0-3bfc4008373c@rivosinc.com>
+ <D9OYWFEXSA55.OUUXFPIGGBZV@ventanamicro.com>
+ <bc0f1273-d596-47dd-bcc6-be9894157828@linux.dev>
+ <D9Q05T702L8Y.3UTLG7VXIFXOK@ventanamicro.com>
+ <ec73105c-f359-4156-8285-b471e3521378@linux.dev>
+ <D9QTOYMN362W.398FE9SQB0S4X@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <D9QTOYMN362W.398FE9SQB0S4X@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ee082ba2-d452-43a1-bb94-3c04c407ea31@gmx.net>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 05, 2025 at 06:03:29PM +0200, Stefan Wahren wrote:
-> Hi Rob,
-> 
-> Am 05.05.25 um 16:46 schrieb Rob Herring (Arm):
-> > Convert the Broadcom BCM2835 ARMCTRL interrupt controller binding to
-> > schema format. It's a straight-forward conversion of the typical
-> > interrupt controller.
-> i send a similiar patch on May 2nd:
-> https://lore.kernel.org/linux-devicetree/20250502105213.39864-1-wahrenst@gmx.net/
-> 
-> I would prefer your version, but ...
-> > 
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >   .../brcm,bcm2835-armctrl-ic.txt               | 131 --------------
-> >   .../brcm,bcm2835-armctrl-ic.yaml              | 161 ++++++++++++++++++
-> >   2 files changed, 161 insertions(+), 131 deletions(-)
-> >   delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> >   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> > deleted file mode 100644
-> > index bdd173056f72..000000000000
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> > +++ /dev/null
-> > @@ -1,131 +0,0 @@
-> > -BCM2835 Top-Level ("ARMCTRL") Interrupt Controller
-> > -
-> > -The BCM2835 contains a custom top-level interrupt controller, which supports
-> > -72 interrupt sources using a 2-level register scheme. The interrupt
-> > -controller, or the HW block containing it, is referred to occasionally
-> > -as "armctrl" in the SoC documentation, hence naming of this binding.
-> > -
-> > -The BCM2836 contains the same interrupt controller with the same
-> > -interrupts, but the per-CPU interrupt controller is the root, and an
-> > -interrupt there indicates that the ARMCTRL has an interrupt to handle.
-> > -
-> > -Required properties:
-> > -
-> > -- compatible : should be "brcm,bcm2835-armctrl-ic" or
-> > -                 "brcm,bcm2836-armctrl-ic"
-> > -- reg : Specifies base physical address and size of the registers.
-> > -- interrupt-controller : Identifies the node as an interrupt controller
-> > -- #interrupt-cells : Specifies the number of cells needed to encode an
-> > -  interrupt source. The value shall be 2.
-> > -
-> > -  The 1st cell is the interrupt bank; 0 for interrupts in the "IRQ basic
-> > -  pending" register, or 1/2 respectively for interrupts in the "IRQ pending
-> > -  1/2" register.
-> > -
-> > -  The 2nd cell contains the interrupt number within the bank. Valid values
-> > -  are 0..7 for bank 0, and 0..31 for bank 1.
-> > -
-> > -Additional required properties for brcm,bcm2836-armctrl-ic:
-> > -- interrupts : Specifies the interrupt on the parent for this interrupt
-> > -  controller to handle.
-> > -
-> > -The interrupt sources are as follows:
-> > -
-> > -Bank 0:
-> > -0: ARM_TIMER
-> > -1: ARM_MAILBOX
-> > -2: ARM_DOORBELL_0
-> > -3: ARM_DOORBELL_1
-> > -4: VPU0_HALTED
-> > -5: VPU1_HALTED
-> > -6: ILLEGAL_TYPE0
-> > -7: ILLEGAL_TYPE1
-> > -
-> > -Bank 1:
-> > -0: TIMER0
-> > -1: TIMER1
-> > -2: TIMER2
-> > -3: TIMER3
-> > -4: CODEC0
-> > -5: CODEC1
-> > -6: CODEC2
-> > -7: VC_JPEG
-> > -8: ISP
-> > -9: VC_USB
-> > -10: VC_3D
-> > -11: TRANSPOSER
-> > -12: MULTICORESYNC0
-> > -13: MULTICORESYNC1
-> > -14: MULTICORESYNC2
-> > -15: MULTICORESYNC3
-> > -16: DMA0
-> > -17: DMA1
-> > -18: VC_DMA2
-> > -19: VC_DMA3
-> > -20: DMA4
-> > -21: DMA5
-> > -22: DMA6
-> > -23: DMA7
-> > -24: DMA8
-> > -25: DMA9
-> > -26: DMA10
-> > -27: DMA11-14 - shared interrupt for DMA 11 to 14
-> > -28: DMAALL - triggers on all dma interrupts (including channel 15)
-> > -29: AUX
-> > -30: ARM
-> > -31: VPUDMA
-> > -
-> > -Bank 2:
-> > -0: HOSTPORT
-> > -1: VIDEOSCALER
-> > -2: CCP2TX
-> > -3: SDC
-> > -4: DSI0
-> > -5: AVE
-> > -6: CAM0
-> > -7: CAM1
-> > -8: HDMI0
-> > -9: HDMI1
-> > -10: PIXELVALVE1
-> > -11: I2CSPISLV
-> > -12: DSI1
-> > -13: PWA0
-> > -14: PWA1
-> > -15: CPR
-> > -16: SMI
-> > -17: GPIO0
-> > -18: GPIO1
-> > -19: GPIO2
-> > -20: GPIO3
-> > -21: VC_I2C
-> > -22: VC_SPI
-> > -23: VC_I2SPCM
-> > -24: VC_SDIO
-> > -25: VC_UART
-> > -26: SLIMBUS
-> > -27: VEC
-> > -28: CPG
-> > -29: RNG
-> > -30: VC_ARASANSDIO
-> > -31: AVSPMON
-> > -
-> > -Example:
-> > -
-> > -/* BCM2835, first level */
-> > -intc: interrupt-controller {
-> > -	compatible = "brcm,bcm2835-armctrl-ic";
-> > -	reg = <0x7e00b200 0x200>;
-> > -	interrupt-controller;
-> > -	#interrupt-cells = <2>;
-> > -};
-> > -
-> > -/* BCM2836, second level */
-> > -intc: interrupt-controller {
-> > -	compatible = "brcm,bcm2836-armctrl-ic";
-> > -	reg = <0x7e00b200 0x200>;
-> > -	interrupt-controller;
-> > -	#interrupt-cells = <2>;
-> > -
-> > -	interrupt-parent = <&local_intc>;
-> > -	interrupts = <8>;
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.yaml b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.yaml
-> > new file mode 100644
-> > index 000000000000..4edc4c3ff6bd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.yaml
-> > @@ -0,0 +1,161 @@
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/brcm,bcm2835-armctrl-ic.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: BCM2835 ARMCTRL Interrupt Controller
-> > +
-> > +maintainers:
-> > +  - Florian Fainelli <florian.fainelli@broadcom.com>
-> I would suggest to add
-> 
-> - Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
 
-Ok, added.
+On 5/8/25 6:45 AM, Radim Krčmář wrote:
+> 2025-05-07T17:34:38-07:00, Atish Patra <atish.patra@linux.dev>:
+>> On 5/7/25 7:36 AM, Radim Krčmář wrote:
+>>> 2025-05-06T11:24:41-07:00, Atish Patra <atish.patra@linux.dev>:
+>>>> On 5/6/25 2:24 AM, Radim Krčmář wrote:
+>>>>> 2025-05-05T14:39:25-07:00, Atish Patra <atishp@rivosinc.com>:
+>>>>>>                                                       This series extends
+>>>>>> those to enable to correpsonding hstateen bits in PATCH1. The remaining
+>>>>>> patches adds lazy enabling support of the other bits.
+>>>>> The ISA has a peculiar design for hstateen/sstateen interaction:
+>>>>>
+>>>>>      For every bit in an hstateen CSR that is zero (whether read-only zero
+>>>>>      or set to zero), the same bit appears as read-only zero in sstateen
+>>>>>      when accessed in VS-mode.
+>>>> Correct.
+>>>>
+>>>>> This means we must clear bit 63 in hstateen and trap on sstateen
+>>>>> accesses if any of the sstateen bits are not supposed to be read-only 0
+>>>>> to the guest while the hypervisor wants to have them as 0.
+>>>> Currently, there are two bits in sstateen. FCSR and ZVT which are not
+>>>> used anywhere in opensbi/Linux/KVM stack.
+>>> True, I guess we can just make sure the current code can't by mistake
+>>> lazily enable any of the bottom 32 hstateen bits and handle the case
+>>> properly later.
+>> I can update the cover letter and leave a comment about that.
+>>
+>> Do you want a additional check in sstateen
+>> trap(kvm_riscv_vcpu_hstateen_enable_stateen)
+>> to make sure that the new value doesn't have any bits set that is not
+>> permitted by the hypervisor ?
+> I wanted to prevent kvm_riscv_vcpu_hstateen_lazy_enable() from being
+> able to modify the bottom 32 bits, because they are guest-visible and
+> KVM does not handle them correctly -- it's an internal KVM error that
+> should be made obvious to future programmers.
 
-> > +
-> > +description: >
-> > +  The BCM2835 contains a custom top-level interrupt controller, which supports
-> > +  72 interrupt sources using a 2-level register scheme. The interrupt
-> > +  controller, or the HW block containing it, is referred to occasionally as
-> > +  "armctrl" in the SoC documentation, hence naming of this binding.
-> > +
-> > +  The BCM2836 contains the same interrupt controller with the same interrupts,
-> > +  but the per-CPU interrupt controller is the root, and an interrupt there
-> > +  indicates that the ARMCTRL has an interrupt to handle.
-> > +
-> > +  The interrupt sources are as follows:
-> > +
-> > +  Bank 0:
-> > +    0: ARM_TIMER
-> > +    1: ARM_MAILBOX
-> > +    2: ARM_DOORBELL_0
-> > +    3: ARM_DOORBELL_1
-> > +    4: VPU0_HALTED
-> > +    5: VPU1_HALTED
-> > +    6: ILLEGAL_TYPE0
-> > +    7: ILLEGAL_TYPE1
-> > +
-> > +  Bank 1:
-> > +    0: TIMER0
-> > +    1: TIMER1
-> > +    2: TIMER2
-> > +    3: TIMER3
-> > +    4: CODEC0
-> > +    5: CODEC1
-> > +    6: CODEC2
-> > +    7: VC_JPEG
-> > +    8: ISP
-> > +    9: VC_USB
-> > +    10: VC_3D
-> > +    11: TRANSPOSER
-> > +    12: MULTICORESYNC0
-> > +    13: MULTICORESYNC1
-> > +    14: MULTICORESYNC2
-> > +    15: MULTICORESYNC3
-> > +    16: DMA0
-> > +    17: DMA1
-> > +    18: VC_DMA2
-> > +    19: VC_DMA3
-> > +    20: DMA4
-> > +    21: DMA5
-> > +    22: DMA6
-> > +    23: DMA7
-> > +    24: DMA8
-> > +    25: DMA9
-> > +    26: DMA10
-> > +    27: DMA11-14 - shared interrupt for DMA 11 to 14
-> > +    28: DMAALL - triggers on all dma interrupts (including channel 15)
-> > +    29: AUX
-> > +    30: ARM
-> > +    31: VPUDMA
-> > +
-> > +  Bank 2:
-> > +    0: HOSTPORT
-> > +    1: VIDEOSCALER
-> > +    2: CCP2TX
-> > +    3: SDC
-> > +    4: DSI0
-> > +    5: AVE
-> > +    6: CAM0
-> > +    7: CAM1
-> > +    8: HDMI0
-> > +    9: HDMI1
-> > +    10: PIXELVALVE1
-> > +    11: I2CSPISLV
-> > +    12: DSI1
-> > +    13: PWA0
-> > +    14: PWA1
-> > +    15: CPR
-> > +    16: SMI
-> > +    17: GPIO0
-> > +    18: GPIO1
-> > +    19: GPIO2
-> > +    20: GPIO3
-> > +    21: VC_I2C
-> > +    22: VC_SPI
-> > +    23: VC_I2SPCM
-> > +    24: VC_SDIO
-> > +    25: VC_UART
-> > +    26: SLIMBUS
-> > +    27: VEC
-> > +    28: CPG
-> > +    29: RNG
-> > +    30: VC_ARASANSDIO
-> > +    31: AVSPMON
-> > +
-> Don't we need something like
-> 
-> allOf:
-> � - $ref: /schemas/interrupt-controller.yaml#
-> 
-> ?
+Sure. I will add something along those lines.
 
-No. It's not needed because you have to define the constraints here 
-anyways. Really, only schemas with child nodes or that have properties 
-without further constraints need the reference. It doesn't hurt to have 
-it either. It just gets applied twice.
 
-This could change though. Early on when there were not many device 
-schemas, it was useful to apply interrupt-controller.yaml on all nodes 
-named 'interrupt-controller', but that need has diminished.
+>>>> In case, we need to enable one of the bits in the future, does hypevisor
+>>>> need to trap every sstateen access ?
+>>> We need to trap sstateen accesses if the guest is supposed to be able to
+>>> control a bit in sstateen, but the hypervisor wants to lazily enable
+>>> that feature and sets 0 in hstateen until the first trap.
+>> Yes. That's what PATCH 4 in this series does.
+> I was thinking about the correct emulation.
+>
+> e.g. guest sets sstateen bit X to 1, but KVM wants to handle the feature
+> X lazily, which means that hstateen bit X is 0.
+> hstateen bit SE0 must be 0 in that case, because KVM must trap the guest
+> access to bit X and properly emulate it.
+> When the guest accesses a feature controlled by sstateen bit X, KVM will
+> lazily enable the feature and then set sstateen and hstateen bit X.
 
-Rob
+Yeah. That's possible. The current series is just trying to trap & 
+enable rather
+than trap & emulate except for few AIA related bits which trap even with 
+hstateen
+bit set due to sw file instead of vsfile.
+
+Once we have such requirement any other feature bit, we can extend the 
+generic
+trap & enable framework to trap & emulate.
+
