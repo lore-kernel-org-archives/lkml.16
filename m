@@ -1,71 +1,168 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic316-26.consmr.mail.ne1.yahoo.com (sonic316-26.consmr.mail.ne1.yahoo.com [66.163.187.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0DE225A50;
-	Fri,  9 May 2025 14:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B14229B1E
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.187.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746801674; cv=none; b=grKbKeeK52J7ll7AboNUbeI9octgYLclee7DRERopF3QcpTIWrSRa0Oi+YcpmSWowwG7HjHdAeJf750msnZy5nBMjYpY5JRhjy0OyK2NFdfTrtmHAaASBvJ5PF2S84gzFWGt46B1u76nnbl0fCP0LK9LOeJfPYwrBVNT5bpku9E=
+	t=1746801709; cv=none; b=BpWXdavv41pqOTeyi2KNotVaxB6HmrmKdxBVDA49GH61kLkCvpot4GrilnIQcY3jQOiVtd/iEE/1p+sS2++z5ssNiFnDomk8kFeafFpQiSzHH7LrqektqTJiZDS9W6oPSlXUIQ23AvC4MiaHE9X/+CTgLfbEg9PqgsYin9KTWlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746801674; c=relaxed/simple;
-	bh=1Bb8xF5ZUtAqzAYX+MCnhk8JufnOu8YhLs1oNq47D4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HAaSZEzwvIix1G7iy+VoH3kfDRNdf1HetFy/GUBfgX9s9cgUgsUyIpDTx5o5RSnwgKtYgJETfn/e3XrNWo7GSBCXp/oaFLtkC/kCUX0lDEv4ydO+DpjQ5lm3KZ8ZBqA6UtUMeVdeXE0lNQC64UYlfv8hOxukWuJBK4EcBA3WXdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=cfr8GOgm; arc=none smtp.client-ip=220.197.32.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1746801709; c=relaxed/simple;
+	bh=A1DRdNzvRO7bBeDRi/bpn+3y+WIKMP/+KezebnFpDVo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sjcKB3ouvjaKdT981IrEcVs7N/d3j9b/R+/5r8jAE8CddWOerEVTpK0qBTM91x826R3sU0XXUL7sJX5IKXVk1EgZDJ81Yb3xdIyrK3OqGkQ+whw8If0pWpFGgUovNV5wF8rJUDas7qbyuaIgJOV9TGaUXlaDZtRW0mH2+7CNec4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=jr/Fhw07; arc=none smtp.client-ip=66.163.187.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="cfr8GOgm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=yUwQFda+RlFIMXKiIF4g+n1LDysyAUbuSGkjmJu59Ic=;
-	b=cfr8GOgmFsA2xfLB7tC4cs6pXs2TEJkPJLkAcTW6VwZd4EUlbSUtIe7stkK96p
-	WSOCOj7j5rsObTdgRkl2E0mHplt13wrUI+YDKamzENgs/WjV/0lloc4rrf+mVtP2
-	ZiaorTCC6rhl39ewTp7s9FnCZGHgAR/iJ3jYhol/d4NHI=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgDn7xPQEx5oH32oAA--.41579S3;
-	Fri, 09 May 2025 22:40:18 +0800 (CST)
-Date: Fri, 9 May 2025 22:40:16 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-	linux@ew.tq-group.com, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] arm64: dts: imx93-tqma9352-mba91xxca: disable Open
- Drain for MDIO
-Message-ID: <aB4T0Jaz2VJk07hF@dragon>
-References: <20250430081849.1827688-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="jr/Fhw07"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746801706; bh=jyz1EpjrXmQFEdvYzfKkRG0h9+cP/Df3Hrp2pEvQ8oI=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=jr/Fhw07WP7OamGatXcI7AVekPopoUy68irWRT5ftgPdIu7By/67Ze1otM+km9bHrJlL57ipKFfasJauAOYrAt2ZuEVuswDqOyD8VL4A15CkF27YEJJseL7hLuowuatuEGn1IlicYErZyzOpysNJhGRB3DTPOAshEA/gn82MAyrVVr0c+zMIoUrk+dR2AbjyTqn9AS1QMC+Cl8oJSH5lppCNeOV7OkP56oUS+fuzTdiOuoCVM/Idot+jkQDr6L7a3MxP1euDsNriAt60MXuhfgPpwNaprdoUoJC5bVZehwt4B22VS56G1SPnLds+wa6HMv/zPUBsj5wtDLhCkMcC/g==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746801706; bh=A8iFapUWfEbAKFR1hiyt3/O7EleN7XefIN6RvuuxNqE=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=A1NcBslPIOiOaHdXmB3CEFyttF2L20ete5MZleAba0clTVTHsipkLRZBNHn0FPLmwCsXk0dXUFGDmcT4j+t9DnZRFNp11GzOSIMTYvS2nzZ113moTm5yEeKkjF/TcY2IKWZ386+0UGaTlksmgz3kuNTKaczIo46AJSumKYRxroE3/p/cYNisHwtprBu0Q7u/g08hN1fB1t39tUu1pFPO91jMvxua5lAjbJP4uYeXVdharCTr/Be/HU17qGkzNSDYcl+EGiPgR4MKxVEpHrrmG2Jmxse7tcKLA6cTEa02nLcnF69a+ZZrp/SHZNZ/9KHemVNmgXpu25t4TFggPSF8pw==
+X-YMail-OSG: UDhtazUVM1kgd9EJesIiZcC9j47Ftq1XFHbnRBy0n_zZQ8sAyOfS0hV9QLCgwh0
+ URVJm2Esv3nxg1WyTqUgV71tZ9x0_rWkIIBdws26amNvK.kJtelAyduQlSYBaNBmZ5TWm0oaNKnc
+ WadabCdddd5kBBF8N0RiYqSwCeMTAJoVzm6XmdaRJCaGwE9UFnfwgICLWmvMsnsDmqrJKMrL27_P
+ Yf0NAeF5dXxiU0eRS1PFpbDl35NxUjYrE2tITQpjGJfrM2vLI6IUpRz6CRScvT4AZI.g7sZ50u7u
+ yVtC2qGFMMEkfX6YKrvp3IJ5n1p.LxamjPHpwWIMM8_7J.eyFHAjPqntTJ.XLic1aA6d4IF8B_J.
+ T9DKU7gQOZSerr8IDCo6t5GHTawN_Qo_I8zFjzZVLv3E2X2LgoZHi9SiYn8xgJOPeqiDX2Ua5Ukd
+ N7R5N7gpvt0FQ44kb8Ld2tLvH8XvmhpLtdfqEx5cqSUICjivnTgtOLOuEgXH9zX05S5YuobzXVRJ
+ MxBf2ecjMXdldahnSVswrvlZyS919prf5baD2ab5cf1OVLnNJyjMeuGVppLbTAaXLD4gFj4UF6cj
+ JqZbzaCpGNcrUdVPUl6Gq8mbiUJ6n3Ck7SAEyno0LuCQQFuxMOKv8vfCkLmlvRy1h1yuyNm2Qc_U
+ LsIFIDWPADOKG9yudlREieklxUK3JLqnlhAuGA9O_YD8_I7DQ82XLfuPfz3rwvucSsJEl5zN8_ge
+ 8tS5ozJba9Wh_k7hXSs9t8TvmposJ81pM4Z6YxZ_X48PvEDjByv9Z5.UKLyi9boe5QBBvnkR3vpG
+ 2sB7hRAMKrMe.U17WI7szuSF3fzDmc_eofDA1sw6GWCKDmrkUzRgs4LdGczfEOkv4qkRRsbMaeq5
+ EuojzJrG8cqTYV3OvFJyR1rBFMYZzSl_5ssfM2fUzZ2in9y0RHnysqahJ7.yAZUIqpZylQsWV0IV
+ JcUiQo04Gn7VIcRA99wv9N4YqX2ZnzmG8iV_g9CsM6gMrjEnLTsCLJRDDbdoLDvMgsw1Tmv72OJd
+ BuA_rWzf5jxB0M9am6M9DhRbSO0V4OFqw.Rv8XOhEeH1oK4mA.b_7xK4kmSXfSGXPQ9gRn9QfnJy
+ D7tluF_ZOpjkhy5SZIGIMnX4TO2PR9jgYCdnE09bZw.ZDqtavmO71vdRnOYrcKgVN0lRigrwvMdN
+ QI9qcJ2CVBUA930q32FEgf3kpMUgAo.lMQnq4FN3nnJjzkWQk9XV_O58dX.0AJICflPMDc7f.3TI
+ vJD.0tboAeYAKjvIeoTRfdsWzcADjPvgNoTbg.BzTUjwigac8IPPafISOXqcck0qGLuBJ..nQ4Nz
+ Z_cudwPBHgsjhIIkj8xS5Fi1IR2lo9gVzcT.XIxa8sCtthEHfS0BU7MYIs_HjBBSOY2NDWx5RLDs
+ uMXNM5RPpwYP3TyiCuNzFJ.1m0pNAJa2_3qbn0KdwC2WDQKaK4NOjEzDghBUl38Ba4GdumRJxbg8
+ hU.E6_3R95vCYWtxEkcjkuHD_4VHdMxSpWlFqsQ_3clzz_smcA_4Sfts3pdIHOUie56H7ykzIP_2
+ J7vY9BOVFkLYa2oWUmik1Jv.EXLtl2wXuz.beiuckt88rzPEN.gTsH8PiiGXs8OiqM4MoU.9LBk2
+ iQClV.pxYLW.pqqH.1lNba9OhEtAhsk_8dHPNbPH09yk0oH8fSBDQ97r.g3QYgz1WUEQQFf_Jndc
+ SOXZ81vVkjZFKYa_2dlttaIOImzHJ3HGM4tNvzaO_CmNKoc.E79Qi.NV_Xk33HWG1Kb9gvE8Ybvs
+ ynvYDx5N0Fd9Ua5fxay817fX7Ues0SybVDeTojOmPGoXY0ACGFrxwSlf0B1aqWUezGaGIWEIbQ2t
+ C2d51FvcT8.2f97Gb8SxLMUdP6OZqxeGDJ1V4ewDN5BShHR35tNtMtU.1ZzuiFWXvndxKw_twVo2
+ ZN06Im9zawq4qo1o0hMYGMPKIK_ySiL3uNdo.ZYkJoYp09tbEnhsjglrf7QRT.9JqfeDhLsPVEr2
+ uv.uOKwlUDxXFCyINHoEhcLulfPBOsxvRwHzaBg4Am3s9fo0x0XoHEzYp5dzcIt8Zig8FHIrolmh
+ .9iKroRAsJTj5agvxYvrJnY6BCILxoaUYRHVQJ6HhtPqTJUhABvn_xTSZDhktGtHRWewf8fixIXM
+ eOi7uwQzFNfQJdZR2DXq3vcNx70tpY2.4n2He8u7gIMNJwnQ9G.EmQjf0uTkmkUlMCHFY49SAyeU
+ H5ZgYSORXCcQ.pNV4WDYe53QvMT1pCYZ04fy5F_Lrq5cj897CqfSFVy13ayAQNS7iNX38zj.bcFq
+ D7JpK1bZiEm0tsz4-
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 3c06c726-96cb-4347-882d-f766ab437c20
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Fri, 9 May 2025 14:41:46 +0000
+Received: by hermes--production-gq1-74d64bb7d7-khmfd (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 334e9395e8ec622649b360b124415a8a;
+          Fri, 09 May 2025 14:21:30 +0000 (UTC)
+Message-ID: <71c3c2d6-5569-4580-89a4-513a03a429ab@schaufler-ca.com>
+Date: Fri, 9 May 2025 07:21:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430081849.1827688-1-alexander.stein@ew.tq-group.com>
-X-CM-TRANSID:M88vCgDn7xPQEx5oH32oAA--.41579S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU8mhFUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCR5IZWgd36zXkwABs5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] lsm: introduce security_lsm_manage_policy hook
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: John Johansen <john.johansen@canonical.com>,
+ Paul Moore <paul@paul-moore.com>, =?UTF-8?Q?Maxime_B=C3=A9lair?=
+ <maxime.belair@canonical.com>,
+ Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+ linux-security-module@vger.kernel.org, jmorris@namei.org, serge@hallyn.com,
+ kees@kernel.org, stephen.smalley.work@gmail.com, takedakn@nttdata.co.jp,
+ linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20250506143254.718647-1-maxime.belair@canonical.com>
+ <20250506143254.718647-3-maxime.belair@canonical.com>
+ <9c68743f-5efa-4a77-a29b-d3e8f2b2a462@I-love.SAKURA.ne.jp>
+ <CAHC9VhRKwB4quqBtYQyxRqCX2C6fCgTbyAP3Ov+NdQ06t1aFdA@mail.gmail.com>
+ <120954c2-87b7-4bda-958b-2b4f0180a736@canonical.com>
+ <efe5b15a-6141-424a-8391-9092e79e4acf@schaufler-ca.com>
+ <20250509.Chuecae0phoo@digikod.net>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20250509.Chuecae0phoo@digikod.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.23772 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Wed, Apr 30, 2025 at 10:18:48AM +0200, Alexander Stein wrote:
-> From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
-> 
-> Using the MDIO pins with Open Drain causes spec violations of the
-> signals. Revert the changes.
-> This is similar to commit 14e66e4b13221 ("Revert "arm64: dts:
-> imx93-tqma9352-mba93xxca: enable Open Drain for MDIO"")
-> 
-> Fixes: e5bc07026f94 ("arm64: add initial device tree for TQMa93xx/MBa91xxCA")
-> Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+On 5/9/2025 3:26 AM, Mickaël Salaün wrote:
+> On Thu, May 08, 2025 at 09:54:19AM -0700, Casey Schaufler wrote:
+>> On 5/8/2025 1:29 AM, John Johansen wrote:
+>>> On 5/7/25 13:25, Paul Moore wrote:
+>>>> On Wed, May 7, 2025 at 6:41 AM Tetsuo Handa
+>>>> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>>>>> On 2025/05/06 23:32, Maxime Bélair wrote:
+>>>>>> diff --git a/security/lsm_syscalls.c b/security/lsm_syscalls.c
+>>>>>> index dcaad8818679..b39e6635a7d5 100644
+>>>>>> --- a/security/lsm_syscalls.c
+>>>>>> +++ b/security/lsm_syscalls.c
+>>>>>> @@ -122,5 +122,10 @@ SYSCALL_DEFINE3(lsm_list_modules, u64 __user
+>>>>>> *, ids, u32 __user *, size,
+>>>>>>   SYSCALL_DEFINE5(lsm_manage_policy, u32, lsm_id, u32, op, void
+>>>>>> __user *, buf, u32
+>>>>>>                __user *, size, u32, flags)
+>>>>>>   {
+>>>>>> -     return 0;
+>>>>>> +     size_t usize;
+>>>>>> +
+>>>>>> +     if (get_user(usize, size))
+>>>>>> +             return -EFAULT;
+>>>>>> +
+>>>>>> +     return security_lsm_manage_policy(lsm_id, op, buf, usize,
+>>>>>> flags);
+>>>>>>   }
+>>>>> syzbot will report user-controlled unbounded huge size memory
+>>>>> allocation attempt. ;-)
+>>>>>
+>>>>> This interface might be fine for AppArmor, but TOMOYO won't use this
+>>>>> interface because
+>>>>> TOMOYO's policy is line-oriented ASCII text data where the
+>>>>> destination is switched via
+>>>>> pseudo‑filesystem's filename ...
+>>>> While Tetsuo's comment is limited to TOMOYO, I believe the argument
+>>>> applies to a number of other LSMs as well.  The reality is that there
+>>>> is no one policy ideal shared across LSMs and that complicates things
+>>>> like the lsm_manage_policy() proposal.  I'm intentionally saying
+>>>> "complicates" and not "prevents" because I don't want to flat out
+>>>> reject something like this, but I think there needs to be a larger
+>>>> discussion among the different LSM groups about what such an API
+>>>> should look like.  We may not need to get every LSM to support this
+>>>> new API, but we need to get something that would work for a
+>>>> significant majority and would be general/extensible enough that we
+>>>> would expect it to work with the majority of future LSMs (as much as
+>>>> we can predict the future anyway).
+>>>>
+>>> yep, I look at this is just a starting point for discussion. There
+>>> isn't going to be any discussion without some code, so here is a v1
+>>> that supports a single LSM let the bike shedding begin.
+>> Aside from the issues with allocating a buffer for a big policy
+>> I don't see a problem with this proposal. The system call looks
+>> a lot like the other LSM interfaces, so any developer who likes
+>> those ought to like this one. The infrastructure can easily check
+>> the lsm_id and only call the appropriate LSM hook, so no one
+>> is going to be interfering with other modules.
+> We may not want to only be able to load buffers containing policies, but
+> also to leverage file descriptors like Landlock does.  Getting a
+> property from a kernel object or updating it is mainly about dealing
+> with a buffer.  And the current LSM syscalls do just that.  Other kind
+> of operations may require more than that though.
+>
+> I don't like multiplexer syscalls because they don't expose a clear
+> semantic and can be complex to manage and filter.  This new syscall is
+> kind of a multiplexer that redirect commands to an arbitrary set of
+> kernel parts, which can then define their own semantic.  I'd like to see
+> a clear set of well-defined operations and their required permission.
+> Even better, one syscall per operation should simplify their interface.
 
-Applied, thanks!
+The development and maintenance of system calls is expensive in both
+time and effort. LSM specific system calls frighten me. When I was
+young adding system calls was just  not  done. A system call would
+never be allowed for a specific sub-system or optional feature. True,
+there are issues with the LSM specific filesystem approach. But I
+like it, as it allows the LSM more freedom in its interfaces and
+won't clutter the API if the LSM goes away or quits using it.
 
