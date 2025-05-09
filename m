@@ -1,183 +1,155 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D6324685
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 17:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED42318C06
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 17:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746812415; cv=none; b=V8+2nju6b9tCMs4ILmg8CAv3UwClipbNFpVommVUYO73+q8ahC4xNMvhMjPwVGrTQuSjhBi2DA/U7rg4xPAGfQHkdXE0x8j2vnjBSY+yhlXOoSnJBzOqvqkdZ+qa+SzvnSuiYKQu6bWDKJVw6QuGUdL3CoQRSv9A2fn1aUhr0GU=
+	t=1746812739; cv=none; b=fqLgYdTxq9/RS/c6EEGPp0bS2d391JnWBx+6+FidPmtdBH+vFKM+ztNWlBo/ReqNHLVTQQlRDXlPy4F+4LGZAGOmLY/YOwNp/Baz2FXpp4XbyDNd6hyxXgfiNK0ye8dVmGsVBiOiiipL+FrQDmhZXdM1DSaBEqpVEsg5HTtaI8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746812415; c=relaxed/simple;
-	bh=+qCNOud0fg9OPCPJYle0fLKy/ERft65W3dJCJenBqZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ovlapERMr0PWdLp8OToUsYRcux1IdmZmzxLZ3emJS1tdqZQ2IqOJXrkPZpLh9bTOkT3ByQYl1NtxWErLqL1kXdYww78l1TLfrPdJQZObdZ2bnIgchyKimyzpmVbUPUpY7aenNuxcRgSK1DirBIwQ7QakGHQeKPwtAtl8zNBN4R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LNJqiJRQ; arc=none smtp.client-ip=220.197.31.4
+	s=arc-20240116; t=1746812739; c=relaxed/simple;
+	bh=iUvMzhzeaAqPZHBZvj2ZxqUiMpiQOXdS0RpkR226DMU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=E3l+lX39ezuoXuoY17MnnrLAkI1V54pwnmUB41XIWIZcUkCU4cXXr8kn2OyWVfWfwntPnjniEj/qAFz+AByo2PRqv66BAWDiTfQzbohsEuBdOh2fXV0a0dzddRs41vcbe7XaM5DDLfHf8p+hDnQKZceXzgmBSKEp3ZAp3zjGJY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=LOp2TlvU reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LNJqiJRQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="LOp2TlvU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=07
-	i3jvklR0vx9OSADeziqkp40nZ/Zft1yJ0zQrQjUFM=; b=LNJqiJRQZH3S2sw4JD
-	4thGkWRXrwU8woLFBVOBkhRxZ+RJxkXyzo5f5NYL6iX9JKNBSb8rJq792inZyFun
-	GQUOzpqzhfY/KWq6UQ7lNtDsqWlekjSCcgEodSkGZK7OLHxaPHGKgq6dHzzlaH6E
-	XlCRPuQgL/H050gREmN3lc6Tw=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgDHg9HSPR5oUrKHAA--.12846S4;
-	Sat, 10 May 2025 01:39:37 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: surenb@google.com,
-	kent.overstreet@linux.dev,
-	akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	David Wang <00107082@163.com>
-Subject: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between read() calls
-Date: Sat, 10 May 2025 01:39:29 +0800
-Message-Id: <20250509173929.42508-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250507175500.204569-1-00107082@163.com>
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=3Db9m1C9yF1t3fY+w7duLvPC2FBWdq/V/1AWjqJykTk=; b=L
+	Op2TlvU5PtBBZRuHhHqzZ/pXTRYHAByMf2BOTvdwuZmrs3DH8nTc41akbdsMo2x/
+	RHxabXMcvl4mDyxPhfFE3T8IMp0hr0VS8QfpXuphk0t2la+ECsz/EBi4aOs0T7ma
+	oZzhq7O58jdmlNOXFk8APtoohVYOEOMDWyY9H0B8rQ=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-125 (Coremail) ; Sat, 10 May 2025 01:45:02 +0800
+ (CST)
+Date: Sat, 10 May 2025 01:45:02 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Suren Baghdasaryan" <surenb@google.com>
+Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] alloc_tag: keep codetag iterator cross read() calls
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <CAJuCfpFVdg5HkW03ZLFTyPHghW7cmYX=mA1TDajqRy8A4as42A@mail.gmail.com>
 References: <20250507175500.204569-1-00107082@163.com>
+ <20250509055313.922707-1-00107082@163.com>
+ <CAJuCfpFVdg5HkW03ZLFTyPHghW7cmYX=mA1TDajqRy8A4as42A@mail.gmail.com>
+X-NTES-SC: AL_Qu2fBPSavU8r5CWQY+kXn0oTju85XMCzuv8j3YJeN500lCTQ3xIuZ25CM2L10fmFADKmoQmLdClc59lId49xYqiLd3s77babgljdsAXpK9Jr
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgDHg9HSPR5oUrKHAA--.12846S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWUWw1UXF18ZrWDXF47Jwb_yoWruF17pa
-	13ua4YkF4rAr1UCF4rJr4IqFW3t3W8ta18XF42qrWFvFn0vrs8uF98Jryj9Fy3AFy8Ka1a
-	va90k34UJr9IvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p__-BDUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gRIqmgePWgV5gAAsk
+Message-ID: <6a880201.b2c3.196b6268f81.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:fSgvCgD33yYePx5ovgUBAA--.9138W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hZIqmgePWgV5wACs1
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-When reading /proc/allocinfo, for each read syscall, seq_file would
-invoke start/stop callbacks. In start callback, a memory is alloced
-to store iterator and the iterator would start from beginning to
-walk linearly to current read position.
-
-seq_file read() takes at most 4096 bytes, even if read with a larger
-user space buffer, meaning read out all of /proc/allocinfo, tens of read
-syscalls are needed. For example, a 306036 bytes allocinfo files need
-76 reads:
-
- $ sudo cat /proc/allocinfo  | wc
-    3964   16678  306036
- $ sudo strace -T -e read cat /proc/allocinfo
- ...
- read(3, "        4096        1 arch/x86/k"..., 131072) = 4063 <0.000062>
- ...
- read(3, "           0        0 sound/core"..., 131072) = 4021 <0.000150>
- ...
-For those n=3964 lines, each read takes about m=3964/76=52 lines,
-since iterator restart from beginning for each read(),
-it would move forward
-   m  steps on 1st read
- 2*m  steps on 2nd read
- 3*m  steps on 3rd read
- ...
-   n  steps on last read
-As read() along, those linear seek steps make read() calls slower and
-slower.  Adding those up, codetag iterator moves about O(n*n/m) steps,
-making data structure traversal take significant part of the whole reading.
-Profiling when stress reading /proc/allocinfo confirms it:
-
- vfs_read(99.959% 1677299/1677995)
-     proc_reg_read_iter(99.856% 1674881/1677299)
-         seq_read_iter(99.959% 1674191/1674881)
-             allocinfo_start(75.664% 1266755/1674191)
-                 codetag_next_ct(79.217% 1003487/1266755)  <---
-                 srso_return_thunk(1.264% 16011/1266755)
-                 __kmalloc_cache_noprof(0.102% 1296/1266755)
-                 ...
-             allocinfo_show(21.287% 356378/1674191)
-             allocinfo_next(1.530% 25621/1674191)
-codetag_next_ct() takes major part.
-
-A private data alloced at open() time can be used to carry iterator
-alive across read() calls, and avoid the memory allocation and
-iterator reset for each read(). This way, only O(1) memory allocation
-and O(n) steps iterating, and `time` shows performance improvement
-from ~7ms to ~4ms.
-Profiling with the change:
-
- vfs_read(99.865% 1581073/1583214)
-     proc_reg_read_iter(99.485% 1572934/1581073)
-         seq_read_iter(99.846% 1570519/1572934)
-             allocinfo_show(87.428% 1373074/1570519)
-                 seq_buf_printf(83.695% 1149196/1373074)
-                 seq_buf_putc(1.917% 26321/1373074)
-                 _find_next_bit(1.531% 21023/1373074)
-                 ...
-                 codetag_to_text(0.490% 6727/1373074)
-                 ...
-             allocinfo_next(6.275% 98543/1570519)
-             ...
-             allocinfo_start(0.369% 5790/1570519)
-             ...
-Now seq_buf_printf() takes major part.
-
-Signed-off-by: David Wang <00107082@163.com>
----
- lib/alloc_tag.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
-
-diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-index 25ecc1334b67..fdd5887769a6 100644
---- a/lib/alloc_tag.c
-+++ b/lib/alloc_tag.c
-@@ -45,21 +45,16 @@ struct allocinfo_private {
- static void *allocinfo_start(struct seq_file *m, loff_t *pos)
- {
- 	struct allocinfo_private *priv;
--	struct codetag *ct;
- 	loff_t node = *pos;
- 
--	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
--	m->private = priv;
--	if (!priv)
--		return NULL;
--
--	priv->print_header = (node == 0);
-+	priv = (struct allocinfo_private *)m->private;
- 	codetag_lock_module_list(alloc_tag_cttype, true);
--	priv->iter = codetag_get_ct_iter(alloc_tag_cttype);
--	while ((ct = codetag_next_ct(&priv->iter)) != NULL && node)
--		node--;
--
--	return ct ? priv : NULL;
-+	if (node == 0) {
-+		priv->print_header = true;
-+		priv->iter = codetag_get_ct_iter(alloc_tag_cttype);
-+		codetag_next_ct(&priv->iter);
-+	}
-+	return priv->iter.ct ? priv : NULL;
- }
- 
- static void *allocinfo_next(struct seq_file *m, void *arg, loff_t *pos)
-@@ -76,12 +71,7 @@ static void *allocinfo_next(struct seq_file *m, void *arg, loff_t *pos)
- 
- static void allocinfo_stop(struct seq_file *m, void *arg)
- {
--	struct allocinfo_private *priv = (struct allocinfo_private *)m->private;
--
--	if (priv) {
--		codetag_lock_module_list(alloc_tag_cttype, false);
--		kfree(priv);
--	}
-+	codetag_lock_module_list(alloc_tag_cttype, false);
- }
- 
- static void print_allocinfo_header(struct seq_buf *buf)
-@@ -249,7 +239,8 @@ static void __init procfs_init(void)
- 	if (!mem_profiling_support)
- 		return;
- 
--	if (!proc_create_seq(ALLOCINFO_FILE_NAME, 0400, NULL, &allocinfo_seq_op)) {
-+	if (!proc_create_seq_private(ALLOCINFO_FILE_NAME, 0400, NULL, &allocinfo_seq_op,
-+				     sizeof(struct allocinfo_private), NULL)) {
- 		pr_err("Failed to create %s file\n", ALLOCINFO_FILE_NAME);
- 		shutdown_mem_profiling(false);
- 	}
--- 
-2.39.2
-
+CgpBdCAyMDI1LTA1LTEwIDAxOjM0OjUyLCAiU3VyZW4gQmFnaGRhc2FyeWFuIiA8c3VyZW5iQGdv
+b2dsZS5jb20+IHdyb3RlOgo+T24gVGh1LCBNYXkgOCwgMjAyNSBhdCAxMDo1M+KAr1BNIERhdmlk
+IFdhbmcgPDAwMTA3MDgyQDE2My5jb20+IHdyb3RlOgo+Pgo+PiBXaGVuIHJlYWRpbmcgL3Byb2Mv
+YWxsb2NpbmZvLCBmb3IgZWFjaCByZWFkIHN5c2NhbGwsIHNlcV9maWxlIHdvdWxkCj4+IGludm9r
+ZSBzdGFydC9zdG9wIGNhbGxiYWNrcy4gSW4gc3RhcnQgY2FsbGJhY2ssIGEgbWVtb3J5IGlzIGFs
+bG9jZWQKPj4gdG8gc3RvcmUgaXRlcmF0b3IgYW5kIHRoZSBpdGVyYXRvciB3b3VsZCBzdGFydCBm
+cm9tIGJlZ2lubmluZyB0bwo+PiB3YWxrIHRvIGN1cnJlbnQgcmVhZCBwb3NpdGlvbi4KPj4KPj4g
+c2VxX2ZpbGUgcmVhZCgpIHRha2VzIGF0IG1vc3QgNDA5NiBieXRlcywgZXZlbiBpZiByZWFkIHdp
+dGggYSBsYXJnZXIKPj4gdXNlciBzcGFjZSBidWZmZXIsIG1lYW5pbmcgcmVhZCBvdXQgYWxsIG9m
+IC9wcm9jL2FsbG9jaW5mbywgdGVucyBvZiByZWFkCj4+IHN5c2NhbGxzIGFyZSBuZWVkZWQuIEZv
+ciBleGFtcGxlLCBhIDMwNjAzNiBieXRlcyBhbGxvY2luZm8gZmlsZXMgbmVlZAo+PiA3NiByZWFk
+czoKPj4KPj4gICQgc3VkbyBjYXQgL3Byb2MvYWxsb2NpbmZvICB8IHdjCj4+ICAgICAzOTY0ICAg
+MTY2NzggIDMwNjAzNgo+PiAgJCBzdWRvIHN0cmFjZSAtVCAtZSByZWFkIGNhdCAvcHJvYy9hbGxv
+Y2luZm8KPj4gIC4uLgo+PiAgcmVhZCgzLCAiICAgICAgICA0MDk2ICAgICAgICAxIGFyY2gveDg2
+L2siLi4uLCAxMzEwNzIpID0gNDA2MyA8MC4wMDAwNjI+Cj4+ICAuLi4KPj4gIHJlYWQoMywgIiAg
+ICAgICAgICAgMCAgICAgICAgMCBzb3VuZC9jb3JlIi4uLiwgMTMxMDcyKSA9IDQwMjEgPDAuMDAw
+MTUwPgo+PiAgLi4uCj4+IEZvciB0aG9zZSBuPTM5NjQgbGluZXMsIGVhY2ggcmVhZCB0YWtlcyBh
+Ym91dCBtPTM5NjQvNzY9NTIgbGluZXMsCj4+IHNpbmNlIGl0ZXJhdG9yIHJlc3RhcnQgZnJvbSBi
+ZWdpbm5pbmcgZm9yIGVhY2ggcmVhZCgpLAo+PiBpdCB3b3VsZCBtb3ZlIGZvcndhcmQKPj4gICAg
+bSAgc3RlcHMgb24gMXN0IHJlYWQKPj4gIDIqbSAgc3RlcHMgb24gMm5kIHJlYWQKPj4gIDMqbSAg
+c3RlcHMgb24gM3JkIHJlYWQKPj4gIC4uLgo+PiAgICBuICBzdGVwcyBvbiBsYXN0IHJlYWQKPj4g
+QXMgcmVhZCgpIGFsb25nLCBtb3JlIGl0ZXJhdG9yIHN0ZXBzIG1ha2UgcmVhZCgpIGNhbGxzIHNs
+b3dlciBhbmQKPj4gc2xvd2VyLiAgQWRkaW5nIHRob3NlIHVwLCBjb2RldGFnIGl0ZXJhdG9yIG1v
+dmVzIGFib3V0IE8obipuL20pIHN0ZXBzLAo+PiBtYWtpbmcgZGF0YSBzdHJ1Y3R1cmUgdHJhdmVy
+c2FsIHRha2Ugc2lnbmlmaWNhbnQgcGFydCBvZiB0aGUgd2hvbGUgcmVhZGluZy4KPj4gUHJvZmls
+aW5nIHdoZW4gc3RyZXNzIHJlYWRpbmcgL3Byb2MvYWxsb2NpbmZvIGNvbmZpcm1zIGl0Ogo+Pgo+
+PiAgdmZzX3JlYWQoOTkuOTU5JSAxNjc3Mjk5LzE2Nzc5OTUpCj4+ICAgICAgcHJvY19yZWdfcmVh
+ZF9pdGVyKDk5Ljg1NiUgMTY3NDg4MS8xNjc3Mjk5KQo+PiAgICAgICAgICBzZXFfcmVhZF9pdGVy
+KDk5Ljk1OSUgMTY3NDE5MS8xNjc0ODgxKQo+PiAgICAgICAgICAgICAgYWxsb2NpbmZvX3N0YXJ0
+KDc1LjY2NCUgMTI2Njc1NS8xNjc0MTkxKQo+PiAgICAgICAgICAgICAgICAgIGNvZGV0YWdfbmV4
+dF9jdCg3OS4yMTclIDEwMDM0ODcvMTI2Njc1NSkgIDwtLS0KPj4gICAgICAgICAgICAgICAgICBz
+cnNvX3JldHVybl90aHVuaygxLjI2NCUgMTYwMTEvMTI2Njc1NSkKPj4gICAgICAgICAgICAgICAg
+ICBfX2ttYWxsb2NfY2FjaGVfbm9wcm9mKDAuMTAyJSAxMjk2LzEyNjY3NTUpCj4+ICAgICAgICAg
+ICAgICAgICAgLi4uCj4+ICAgICAgICAgICAgICBhbGxvY2luZm9fc2hvdygyMS4yODclIDM1NjM3
+OC8xNjc0MTkxKQo+PiAgICAgICAgICAgICAgYWxsb2NpbmZvX25leHQoMS41MzAlIDI1NjIxLzE2
+NzQxOTEpCj4+IGFsbG9jaW5mb19zdGFydCgpIHRha2VzIGFib3V0IDc1JSBvZiBzZXFfcmVhZCgp
+Lgo+Pgo+PiBBIHByaXZhdGUgZGF0YSBhbGxvY2VkIGF0IG9wZW4oKSB0aW1lIGNhbiBiZSB1c2Vk
+IHRvIGNhcnJ5IGl0ZXJhdG9yCj4+IGFsaXZlIGFjcm9zcyByZWFkKCkgY2FsbHMsIGFuZCBhdm9p
+ZCB0aGUgbWVtb3J5IGFsbG9jYXRpb24gYW5kCj4+IGl0ZXJhdG9yIHJlc2V0IGZvciBlYWNoIHJl
+YWQoKS4gVGhpcyB3YXksIG9ubHkgTygxKSBtZW1vcnkgYWxsb2NhdGlvbgo+PiBhbmQgTyhuKSBz
+dGVwcyBpdGVyYXRpbmcsIGFuZCBgdGltZWAgc2hvd3MgcGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQK
+Pj4gZnJvbSB+N21zIHRvIH40bXMuCj4+IFByb2ZpbGluZyB3aXRoIHRoZSBjaGFuZ2U6Cj4+Cj4+
+ICB2ZnNfcmVhZCg5OS44NjUlIDE1ODEwNzMvMTU4MzIxNCkKPj4gICAgICBwcm9jX3JlZ19yZWFk
+X2l0ZXIoOTkuNDg1JSAxNTcyOTM0LzE1ODEwNzMpCj4+ICAgICAgICAgIHNlcV9yZWFkX2l0ZXIo
+OTkuODQ2JSAxNTcwNTE5LzE1NzI5MzQpCj4+ICAgICAgICAgICAgICBhbGxvY2luZm9fc2hvdyg4
+Ny40MjglIDEzNzMwNzQvMTU3MDUxOSkKPj4gICAgICAgICAgICAgICAgICBzZXFfYnVmX3ByaW50
+Zig4My42OTUlIDExNDkxOTYvMTM3MzA3NCkKPj4gICAgICAgICAgICAgICAgICBzZXFfYnVmX3B1
+dGMoMS45MTclIDI2MzIxLzEzNzMwNzQpCj4+ICAgICAgICAgICAgICAgICAgX2ZpbmRfbmV4dF9i
+aXQoMS41MzElIDIxMDIzLzEzNzMwNzQpCj4+ICAgICAgICAgICAgICAgICAgLi4uCj4+ICAgICAg
+ICAgICAgICAgICAgY29kZXRhZ190b190ZXh0KDAuNDkwJSA2NzI3LzEzNzMwNzQpCj4+ICAgICAg
+ICAgICAgICAgICAgLi4uCj4+ICAgICAgICAgICAgICBhbGxvY2luZm9fbmV4dCg2LjI3NSUgOTg1
+NDMvMTU3MDUxOSkKPj4gICAgICAgICAgICAgIC4uLgo+PiAgICAgICAgICAgICAgYWxsb2NpbmZv
+X3N0YXJ0KDAuMzY5JSA1NzkwLzE1NzA1MTkpCj4+ICAgICAgICAgICAgICAuLi4KPj4gYWxsb2Np
+bmZvX3N0YXJ0IHRha3MgbGVzcyB0aGFuIDElLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBX
+YW5nIDwwMDEwNzA4MkAxNjMuY29tPgo+Cj5JIHRoaW5rIHlvdSB3aWxsIGJlIHBvc3RpbmcgYW5v
+dGhlciB2ZXJzaW9uIHRvIGFkZHJlc3MgY29tbWVudHMgaW4gdGhlCj5maXJzdCBwYXRjaCwgYnV0
+IGZvciB0aGlzIHBhdGNoIGZlZWwgZnJlZSB0byBhZGQ6Cj4KPkFja2VkLWJ5OiBTdXJlbiBCYWdo
+ZGFzYXJ5YW4gPHN1cmVuYkBnb29nbGUuY29tPgo+Cj5UaGFua3MhCj4KCk9vcHMuLi4uIEkganVz
+dCBtYWRlIHNvbWUgY2hhbmdlcyB0byBjb21taXQgbWVzc2FnZS4KKEZvdW5kIHNvbWUgdHlwbywg
+YW5kIG1hZGUgc29tZSByZS13b3JkaW5ncy4uLi4pCj4+IC0tLQo+PiAgbGliL2FsbG9jX3RhZy5j
+IHwgMjkgKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAx
+MCBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2xpYi9h
+bGxvY190YWcuYyBiL2xpYi9hbGxvY190YWcuYwo+PiBpbmRleCAyNWVjYzEzMzRiNjcuLmZkZDU4
+ODc3NjlhNiAxMDA2NDQKPj4gLS0tIGEvbGliL2FsbG9jX3RhZy5jCj4+ICsrKyBiL2xpYi9hbGxv
+Y190YWcuYwo+PiBAQCAtNDUsMjEgKzQ1LDE2IEBAIHN0cnVjdCBhbGxvY2luZm9fcHJpdmF0ZSB7
+Cj4+ICBzdGF0aWMgdm9pZCAqYWxsb2NpbmZvX3N0YXJ0KHN0cnVjdCBzZXFfZmlsZSAqbSwgbG9m
+Zl90ICpwb3MpCj4+ICB7Cj4+ICAgICAgICAgc3RydWN0IGFsbG9jaW5mb19wcml2YXRlICpwcml2
+Owo+PiAtICAgICAgIHN0cnVjdCBjb2RldGFnICpjdDsKPj4gICAgICAgICBsb2ZmX3Qgbm9kZSA9
+ICpwb3M7Cj4+Cj4+IC0gICAgICAgcHJpdiA9IGt6YWxsb2Moc2l6ZW9mKCpwcml2KSwgR0ZQX0tF
+Uk5FTCk7Cj4+IC0gICAgICAgbS0+cHJpdmF0ZSA9IHByaXY7Cj4+IC0gICAgICAgaWYgKCFwcml2
+KQo+PiAtICAgICAgICAgICAgICAgcmV0dXJuIE5VTEw7Cj4+IC0KPj4gLSAgICAgICBwcml2LT5w
+cmludF9oZWFkZXIgPSAobm9kZSA9PSAwKTsKPj4gKyAgICAgICBwcml2ID0gKHN0cnVjdCBhbGxv
+Y2luZm9fcHJpdmF0ZSAqKW0tPnByaXZhdGU7Cj4+ICAgICAgICAgY29kZXRhZ19sb2NrX21vZHVs
+ZV9saXN0KGFsbG9jX3RhZ19jdHR5cGUsIHRydWUpOwo+PiAtICAgICAgIHByaXYtPml0ZXIgPSBj
+b2RldGFnX2dldF9jdF9pdGVyKGFsbG9jX3RhZ19jdHR5cGUpOwo+PiAtICAgICAgIHdoaWxlICgo
+Y3QgPSBjb2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpKSAhPSBOVUxMICYmIG5vZGUpCj4+IC0g
+ICAgICAgICAgICAgICBub2RlLS07Cj4+IC0KPj4gLSAgICAgICByZXR1cm4gY3QgPyBwcml2IDog
+TlVMTDsKPj4gKyAgICAgICBpZiAobm9kZSA9PSAwKSB7Cj4+ICsgICAgICAgICAgICAgICBwcml2
+LT5wcmludF9oZWFkZXIgPSB0cnVlOwo+PiArICAgICAgICAgICAgICAgcHJpdi0+aXRlciA9IGNv
+ZGV0YWdfZ2V0X2N0X2l0ZXIoYWxsb2NfdGFnX2N0dHlwZSk7Cj4+ICsgICAgICAgICAgICAgICBj
+b2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpOwo+PiArICAgICAgIH0KPj4gKyAgICAgICByZXR1
+cm4gcHJpdi0+aXRlci5jdCA/IHByaXYgOiBOVUxMOwo+PiAgfQo+Pgo+PiAgc3RhdGljIHZvaWQg
+KmFsbG9jaW5mb19uZXh0KHN0cnVjdCBzZXFfZmlsZSAqbSwgdm9pZCAqYXJnLCBsb2ZmX3QgKnBv
+cykKPj4gQEAgLTc2LDEyICs3MSw3IEBAIHN0YXRpYyB2b2lkICphbGxvY2luZm9fbmV4dChzdHJ1
+Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKmFyZywgbG9mZl90ICpwb3MpCj4+Cj4+ICBzdGF0aWMgdm9p
+ZCBhbGxvY2luZm9fc3RvcChzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKmFyZykKPj4gIHsKPj4g
+LSAgICAgICBzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUgKnByaXYgPSAoc3RydWN0IGFsbG9jaW5m
+b19wcml2YXRlICopbS0+cHJpdmF0ZTsKPj4gLQo+PiAtICAgICAgIGlmIChwcml2KSB7Cj4+IC0g
+ICAgICAgICAgICAgICBjb2RldGFnX2xvY2tfbW9kdWxlX2xpc3QoYWxsb2NfdGFnX2N0dHlwZSwg
+ZmFsc2UpOwo+PiAtICAgICAgICAgICAgICAga2ZyZWUocHJpdik7Cj4+IC0gICAgICAgfQo+PiAr
+ICAgICAgIGNvZGV0YWdfbG9ja19tb2R1bGVfbGlzdChhbGxvY190YWdfY3R0eXBlLCBmYWxzZSk7
+Cj4+ICB9Cj4+Cj4+ICBzdGF0aWMgdm9pZCBwcmludF9hbGxvY2luZm9faGVhZGVyKHN0cnVjdCBz
+ZXFfYnVmICpidWYpCj4+IEBAIC0yNDksNyArMjM5LDggQEAgc3RhdGljIHZvaWQgX19pbml0IHBy
+b2Nmc19pbml0KHZvaWQpCj4+ICAgICAgICAgaWYgKCFtZW1fcHJvZmlsaW5nX3N1cHBvcnQpCj4+
+ICAgICAgICAgICAgICAgICByZXR1cm47Cj4+Cj4+IC0gICAgICAgaWYgKCFwcm9jX2NyZWF0ZV9z
+ZXEoQUxMT0NJTkZPX0ZJTEVfTkFNRSwgMDQwMCwgTlVMTCwgJmFsbG9jaW5mb19zZXFfb3ApKSB7
+Cj4+ICsgICAgICAgaWYgKCFwcm9jX2NyZWF0ZV9zZXFfcHJpdmF0ZShBTExPQ0lORk9fRklMRV9O
+QU1FLCAwNDAwLCBOVUxMLCAmYWxsb2NpbmZvX3NlcV9vcCwKPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHNpemVvZihzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUpLCBOVUxM
+KSkgewo+PiAgICAgICAgICAgICAgICAgcHJfZXJyKCJGYWlsZWQgdG8gY3JlYXRlICVzIGZpbGVc
+biIsIEFMTE9DSU5GT19GSUxFX05BTUUpOwo+PiAgICAgICAgICAgICAgICAgc2h1dGRvd25fbWVt
+X3Byb2ZpbGluZyhmYWxzZSk7Cj4+ICAgICAgICAgfQo+PiAtLQo+PiAyLjM5LjIKPj4K
