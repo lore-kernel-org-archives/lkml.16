@@ -1,161 +1,104 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D2321CC43;
-	Fri,  9 May 2025 12:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFA92101BD;
+	Fri,  9 May 2025 12:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746793236; cv=none; b=IYjPzHr1ZkYnf/ArX8JJvLEDmZtaIeYXV8wgL2d0jUSs9P94pBzEK0cTWSbBxdC8O3Pv3+C5EEY8y5JiMrTJJwHTjkbnWadrShyqU07tVHZdUwg+FHbFpov/UMGb2LesdMcaBBsk4N6A27dcBboYtJabyM8N1chg9mXN0EXZowI=
+	t=1746793238; cv=none; b=cKBFKs10NPwqkDI7VLzZIVfnM7msenskOxvi/56oqY4m5QotjZwdCJWKi65yevBHdJ6JhwzxMZBeVvWBUp1UYbEi3Z/ZnAiD/OApk7/irXdLZIGQCptLD3ZBnYLeg+MdXg9i+DGWItQI/sqCs8cFrri4WBhj+uTKcQzf8XULd/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746793236; c=relaxed/simple;
-	bh=Ax9T6UkoX56Blctsz+lrpfAmrwAvmcSV3HKk+zSsLyk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ByPArgAzx3AazzHdfXXjc9DyulgcWPzWr4lAiyuqBHVdY5JPCE17z+qsN5tYgkwJteiqVdXvUj0axGns5jKxiymWa1Axn/IlkVMnau0CKNmmLXRc0ym5yEOfbPpK1syE5Gso0hTv5Z2YvvbNXAf669bmpZnxTbBccBMDt+aWW4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WE6X6Oe6; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746793238; c=relaxed/simple;
+	bh=V5ZkZLQRuhW6tfA4j7ERqOdUxZSQCwk50GAfm/MYMXc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RpxhZ1o5AUzR0M1M8dlgQqEPrjLn6sfo2DM4PksKZHxtJ/Q25tBVWIwZf8Rky16soc0kmFGb6JZqoVZcAgaC7UEiU5RO6d8l1rrFIbbWBoMZCltn4w3SY7SJdyjbKezVLwAl7LDpuBsEp2ohy33tkNDRL7T9xg4R6Q1COqSA50s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Ruil6K+b; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WE6X6Oe6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=9Szx3j0XFQEI/UBZs807hBKYHQ3bAc/qN60fFOlHrtI=;
-	b=WE6X6Oe68i2pgvx5xNscRvtTNl3LlOetrwoJA5hDiunh5b9eEwaidFRfleV8n5
-	v+bysff+v0rPSbJOT1Hby7e3FKVCp67ea45gyvg7e2SS/6cmVlmS44czvB2v+aia
-	fsKZBlcG59+ToQhiA3BZFRmj7Ad0b8FgffcspENpFqbac=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3_5EM7x1oPsfZAA--.35294S2;
-	Fri, 09 May 2025 20:03:27 +0800 (CST)
-Message-ID: <78abe899-e529-49e8-9a16-a2657db666e4@163.com>
-Date: Fri, 9 May 2025 20:03:24 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ruil6K+b"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 549CKOow2172425
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 9 May 2025 07:20:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746793224;
+	bh=+mQhNQN15AWPoSxZ/UW96naO8N0jhNAwPL8W34KjnmI=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Ruil6K+bU9qcMNno0uaEo96wcmGTT/kQZTJQB3CauvilAMSPMBWBfd3CunIaQfcbk
+	 3N7VVWfaPnJR0VI+qr0SR7PG5xlljJQXMbgC0SLRC8wExIaduHVPFDjEvXB+AEZmWE
+	 X3zAmt2k0rJXPznyuO4VMmRf//mI4mzo058Aiums=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 549CKOZ9099455
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 9 May 2025 07:20:24 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 9
+ May 2025 07:20:23 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 9 May 2025 07:20:23 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 549CKNDF014862;
+	Fri, 9 May 2025 07:20:23 -0500
+From: Nishanth Menon <nm@ti.com>
+To: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Daniel Schultz <d.schultz@phytec.de>
+CC: Nishanth Menon <nm@ti.com>, <upstream@lists.phytec.de>
+Subject: Re: [PATCH v2 1/2] arm64: dts: ti: k3-am62a: Enable CPU freq throttling on thermal alert
+Date: Fri, 9 May 2025 07:20:05 -0500
+Message-ID: <174679319970.1568651.6289988251494879815.b4-ty@ti.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250506114134.3514899-1-d.schultz@phytec.de>
+References: <20250506114134.3514899-1-d.schultz@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, yue.wang@amlogic.com, neil.armstrong@linaro.org,
- robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com,
- jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250506173439.292460-1-18255117159@163.com>
- <20250506173439.292460-4-18255117159@163.com>
- <20250506174110.63ayeqc4scmwjj6e@pali>
- <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
- <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
- <20250507163620.53v5djmhj3ywrge2@pali>
- <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3_5EM7x1oPsfZAA--.35294S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCrW8WFWktr1rAF45Kw13twb_yoWrWFykpF
-	y3XF1FyFs8Jr13CFnFqa1kKry3tasrKryrXrn8Gry3AF9IqryUGFy2yr4rua47Xr1xCF1j
-	yr1YqrWSvF1Yy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07URc_hUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwdIo2gd5xbcqQAAsG
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hi Daniel Schultz,
 
-
-On 2025/5/9 15:08, Manivannan Sadhasivam wrote:
-> On Wed, May 07, 2025 at 06:36:20PM +0200, Pali Rohár wrote:
->> On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
->>> On 2025/5/7 23:03, Hans Zhang wrote:
->>>> On 2025/5/7 01:41, Pali Rohár wrote:
->>>>> On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
->>>>>> The Aardvark PCIe controller enforces a fixed 512B payload size via
->>>>>> PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
->>>>>> core negotiations.
->>>>>>
->>>>>> Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
->>>>>> PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
->>>>>> during device initialization, leveraging root port configurations and
->>>>>> device-specific capabilities.
->>>>>>
->>>>>> Aligning Aardvark with the unified MPS framework ensures consistency,
->>>>>> avoids artificial constraints, and allows the hardware to operate at
->>>>>> its maximum supported payload size while adhering to PCIe
->>>>>> specifications.
->>>>>>
->>>>>> Signed-off-by: Hans Zhang <18255117159@163.com>
->>>>>> ---
->>>>>>    drivers/pci/controller/pci-aardvark.c | 2 --
->>>>>>    1 file changed, 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/controller/pci-aardvark.c
->>>>>> b/drivers/pci/controller/pci-aardvark.c
->>>>>> index a29796cce420..d8852892994a 100644
->>>>>> --- a/drivers/pci/controller/pci-aardvark.c
->>>>>> +++ b/drivers/pci/controller/pci-aardvark.c
->>>>>> @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
->>>>>> advk_pcie *pcie)
->>>>>>        reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
->>>>>>        reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
->>>>>>        reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
->>>>>> -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
->>>>>>        reg &= ~PCI_EXP_DEVCTL_READRQ;
->>>>>> -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
->>>>>>        reg |= PCI_EXP_DEVCTL_READRQ_512B;
->>>>>>        advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
->>>>>> -- 
->>>>>> 2.25.1
->>>>>>
->>>>>
->>>>> Please do not remove this code. It is required part of the
->>>>> initialization of the aardvark PCI controller at the specific phase,
->>>>> as defined in the Armada 3700 Functional Specification.
->>>>>
->>>>> There were reported more issues with those Armada PCIe controllers for
->>>>> which were already sent patches to mailing list in last 5 years. But
->>>>> unfortunately not all fixes were taken / applied yet.
->>>>
->>>> Hi Pali,
->>>>
->>>> I replied to you in version v2.
->>>>
->>>> Is the maximum MPS supported by Armada 3700 512 bytes?
->>
->> IIRC yes, 512-byte mode is supported. And I think in past I was testing
->> some PCIe endpoint card which required 512-byte long payload and did not
->> worked in 256-byte long mode (not sure if the card was not able to split
->> transaction or something other was broken, it is quite longer time).
->>
->>>> What are the default values of DevCap.MPS and DevCtl.MPS?
->>
->> Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
->> type?
->>
->> Aardvark controller does not have the real HW PCI-to-PCI bridge device.
->> There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
->> create fake kernel PCI device in the hierarchy to make kernel and
->> userspace happy. Yes, this is deviation from the PCIe standard but well,
->> buggy HW is also HW.
->>
->> And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
->>
+On Tue, 06 May 2025 04:41:33 -0700, Daniel Schultz wrote:
+> Enable throttling down the CPU frequency when an alert temperature
+> threshold (lower than the critical threshold) is reached.
 > 
-> Oh. Then this patch is not going to change the MPS setting of the root bus. But
-> that also means that there is a deviation in what the PCI core expects for a
-> root port and what is actually programmed in the hw.
-> 
-> Even in this MPS case, if the PCI core decides to scale down the MPS value of
-> the root port, then it won't be changed in the hw and the hw will continue to
-> work with 512B? Shouldn't the controller driver change the hw values based on
-> the values programmed by PCI core of the emul bridge?
-> 
-> But until that is fixed, this patch should be dropped.
 > 
 
-Dear Mani,
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-I will drop this patch in the next version.
+[1/2] arm64: dts: ti: k3-am62a: Enable CPU freq throttling on thermal alert
+      commit: 8785b579d431b2a76a64f105328434d3c543debf
+[2/2] arm64: dts: ti: k3-am62x-phyboard-lyra-gpio-fan: Update cooling maps
+      commit: 625e540cee2cfa0e514e0c8fb929fe2893e6d3bf
 
-Best regards,
-Hans
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
 
