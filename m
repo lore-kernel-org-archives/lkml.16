@@ -1,71 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m15588.qiye.163.com (mail-m15588.qiye.163.com [101.71.155.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAFA28E57C;
-	Fri,  9 May 2025 10:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F3E38FA3;
+	Fri,  9 May 2025 10:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746787116; cv=none; b=l/BcmHe65ULQCTz83L8R8n/Mv7eOPZUPF4iG2WIjZNsEf7TvxZOoFnwBCgm2zsc6KTujZizwNn3fjLHytvN7jGLaAK+7PQFCuzOxuD+0rgtlRF8Ie4NlQgN9IbPrPE5F2eB9vrC34jUuiZSQryj+4NqIaPVMw4tPWc3mxUO/Gck=
+	t=1746787117; cv=none; b=QtQFpV7WA2TB285YTsofiEuut2kPUVj+76+6lS8bCbaXn1fsL6yVYi+3tcPgjj+03Kfr87JiIO7uMWTYq/zikViApSKYdFksyKsG9a/gf1l0dUg1YdJZK/APascX0lWVD5uCXVTiQjm/NoZQeHIO12BOiQB+SV49PzeNW/jlUgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746787116; c=relaxed/simple;
-	bh=sBAbm4SuIn80Cm4grT8hVNMovldKiFgkvskTMNgDNrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rXvuF4J/oUU6tGXxF3nmzcW0UNGTqwiwMg+Fo/JNvMBzX432bjYDbGEruB5y4NHX1TqP6sogzK2067cwKsGwNDZfHCkxt1OQjXs+M8fYsMu1V+T7KsRs8XgxjIcoiP6kgFGK19uIqTiRnB8WmJlzIuiZ3CT5qroOoDdP39DKB4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9voHfwX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746787117; c=relaxed/simple;
+	bh=K96/bG14GgbRLJKYa0D8cCP0iXT/bPx44NNr/wynQjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GBBMSfGTDK63o6GGcyCZzGsantVyu9nDbnxDNs7tDPTw1eY6jHZJq7HcromyjFuM2Ih88sIvMdgGOXc5LnvJAZhcPeE5AO5OaYaPufnjA1EaDXxmHc1Ecroi7axwMIsy1VQuaD74bXRd/Yl1krAQirxT1EWNOjuClWzKeoK+VUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=LjqiIKp4; arc=none smtp.client-ip=101.71.155.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9voHfwX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFAADC4CEE4;
-	Fri,  9 May 2025 10:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746787115;
-	bh=sBAbm4SuIn80Cm4grT8hVNMovldKiFgkvskTMNgDNrw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t9voHfwXIYBm9ZoVTNUKI4aXHk8tHvdyYI7H7DhWWk8DHI46p6dlhgF/RepjGNUcA
-	 y9CLB+QL3xJhroEHfmo4PZtgm6v034kFYf6dgGj2iF0iWl+qzXAR/H3PurU+qAf5gJ
-	 AbZeX9Ct9RENXJGlEd/Gcq5qcwEiHf5KXBV032PYoFeT0vBTSewXiuTZfnGCSzzCPV
-	 v1ZdPBTerq51/w6f+IWETxcXpPDTlkxrdC/cg5DnQiomxEy/s7wwVFkdrrulJgFCpt
-	 6m6ATTlsszvFJKfs7qYHoDmhLflphfOwy5et17ZrBYYeFIjF31Qz2q1uWWTY6A07UJ
-	 rbb6/we/YLjRA==
-Date: Fri, 9 May 2025 12:38:29 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH] fs: allow nesting with FREEZE_EXCL
-Message-ID: <20250509-unzucht-gestundet-8633defb4c9e@brauner>
-References: <ilwyxf34ixfkhbylev6d76tz5ufzg2sdxxhy6i3tr4ko5dbefr@57yuviqrftzr>
- <20250404-work-freeze-v1-1-31f9a26f7bc9@kernel.org>
- <m2bvkh2v56akvvomku4w6n4lbw3zkc2awlutijndb7cc3tuirz@o64zcabrekch>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="LjqiIKp4"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1483147d7;
+	Fri, 9 May 2025 18:23:13 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Elaine Zhang <zhangqing@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v7 1/5] dt-bindings: rockchip: pmu: Add rk3562 compatible
+Date: Fri,  9 May 2025 18:23:04 +0800
+Message-Id: <20250509102308.761424-2-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250509102308.761424-1-kever.yang@rock-chips.com>
+References: <20250509102308.761424-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <m2bvkh2v56akvvomku4w6n4lbw3zkc2awlutijndb7cc3tuirz@o64zcabrekch>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh9LT1ZCQk5KQ0MfQhlCS01WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
+	1VSktLVUpCWQY+
+X-HM-Tid: 0a96b49211d703afkunm1483147d7
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mgg6Qjo*AzJNHQEWM04XMC5M
+	KzgKCi1VSlVKTE9NTENNSkJOSkpJVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJSklNNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=LjqiIKp45d99+uVl79tQqJgzdHYMjIsIbtnNKusEYqWFWoIzQpH3R30yYxLBvVEnSxbv6uVO4ch05vK/mj9JLAW1hqW2gESJYd2XJfclI77qbn5h5bk6B0v9wNZmikLjMM9GpQu+UBOhsUD3AfxG32Sx4WHoMxu8m6BwXjGfA3A=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=UqY47bEJ3m3QvIAj9MWfYHzg5LSRqTUwnmEz2yAcZ6E=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, May 07, 2025 at 01:18:34PM +0200, Jan Kara wrote:
-> On Fri 04-04-25 12:24:09, Christian Brauner wrote:
-> > If hibernation races with filesystem freezing (e.g. DM reconfiguration),
-> > then hibernation need not freeze a filesystem because it's already
-> > frozen but userspace may thaw the filesystem before hibernation actually
-> > happens.
-> > 
-> > If the race happens the other way around, DM reconfiguration may
-> > unexpectedly fail with EBUSY.
-> > 
-> > So allow FREEZE_EXCL to nest with other holders. An exclusive freezer
-> > cannot be undone by any of the other concurrent freezers.
-> > 
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> 
-> This has fallen through the cracks in my inbox but the patch now looks good
-> to me. Maybe we should fold it into "fs: add owner of freeze/thaw" to not
-> have strange intermediate state in the series?
+Add the compatible for the pmu mfd on rk3562.
 
-Done.
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+---
+
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4:
+- Collect ack tag
+
+Changes in v3: None
+Changes in v2: None
+
+ Documentation/devicetree/bindings/arm/rockchip/pmu.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
+index 52016a141227..46c1af851be7 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
+@@ -25,6 +25,7 @@ select:
+           - rockchip,rk3288-pmu
+           - rockchip,rk3368-pmu
+           - rockchip,rk3399-pmu
++          - rockchip,rk3562-pmu
+           - rockchip,rk3568-pmu
+           - rockchip,rk3576-pmu
+           - rockchip,rk3588-pmu
+@@ -43,6 +44,7 @@ properties:
+           - rockchip,rk3288-pmu
+           - rockchip,rk3368-pmu
+           - rockchip,rk3399-pmu
++          - rockchip,rk3562-pmu
+           - rockchip,rk3568-pmu
+           - rockchip,rk3576-pmu
+           - rockchip,rk3588-pmu
+-- 
+2.25.1
+
