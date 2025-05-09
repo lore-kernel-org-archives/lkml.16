@@ -1,167 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B20272E48;
-	Fri,  9 May 2025 12:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD3B28FFD8
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746793707; cv=none; b=YHO9B/0PqseZRCDRYTeCd1yN0q8oRv4mM7TnwxkHVhXuSf/dpZh1nVl9Cwj18ooiFVo6zG+/GaN6TbSfqrj5QAB98OTjhr6cA/CHQ1c/F6F3TYWHTFNZ7jQ8hqi8LzDdaQbcyVqFzyqDrW4pXCT9ddCyP0NFjWqZRractMv9nRM=
+	t=1746793742; cv=none; b=LY8tcGNVdEuMi1Yg+IMrejf7wNe31woyAa9A7jlFa4RR0lQhXz4LQpmGmMHL6876zGwB3WXcXH1KyEmGy/5H8ZtAA/7PhVYP8yefbrFCY1zzqj8I3D7gh351+SSlKUEyqXZtJezn84m+9uyvXhjhnU3SvvVgLi8ZQ5CjnDXoqEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746793707; c=relaxed/simple;
-	bh=fuZTMWGwPhBVNjqBj4ll7rIHhloRvxlNNhkQQ0qbH7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a2HrpcWZp6+h2uCn87VFAh6DVpBBLPDhtE1JL1hmI9CuFrToOlIbLQKEwJPMAOKDhAJFBwdM7YNTBHLBqPOzGvet9Dls/uLr9tT2vYmHJttB5refvmtD9xN0nFO1rHw0KillkZtQoD6nbNZj8FErkPLXzf2ABliqFl27ubV3j2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QuUyZia9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746793742; c=relaxed/simple;
+	bh=nb+VpaJq+SiYExLWTH9ohp3EXEsphmTirZX72v2mZ4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B/xNf31w61l9KIixLdIZJhM0Zp5OUyz9P5LrNtHzoYBjvYx4OYTFAZ68BxnR8eDIF/YyFI+dUZdgHwCMJea+0haWu+sOWtjGYwAcgZm81ZbH3EY+e+cWIOb/qlm6io25qovK2lpxocwuM9v9Fs4FY+uBKUBJ07v+f6UL4tF4kuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d4YXDI9J; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QuUyZia9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99C03C4CEE4;
-	Fri,  9 May 2025 12:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746793707;
-	bh=fuZTMWGwPhBVNjqBj4ll7rIHhloRvxlNNhkQQ0qbH7Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QuUyZia9CNFi3ElWbAkEraEOzQi8qa0iquT72A7vmYtpPQEvqCEDiqfJPSRUrfhHC
-	 pULEwgg8MfWqbZSpbYOO6tj9I989g9dPL/OWnbMoRx77F+gyjLNi40Xi4Pmwloi98m
-	 zGyHimwl4dxoxyscHw63HmP9d7vHo4Sb1jtF3bvpo8qcxGkEJi6gM4UwK2VpqDQFbE
-	 VLrS/AdQtRNLZsmJRHKvPme+WKoeOrDmD8/ajm2p3FYyc11ihVthOcp/df9SIgjq5J
-	 8zZQl3yUQrk8ogTYLkTLUZcCkN1IMGSptDj+uCgNIkhv74hrlzTioymIE9rcwbyR+d
-	 WYD/zeJz7qWdA==
-Date: Fri, 9 May 2025 14:28:23 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: "Andries E. Brouwer" <aeb@cwi.nl>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	libc-alpha@sourceware.org, "G. Branden Robinson" <branden@debian.org>, 
-	Carlos O'Donell <carlos@redhat.com>, Eugene Syromyatnikov <evgsyr@gmail.com>
-Subject: Re: man-pages-6.14 released
-Message-ID: <qghsrpxzxccbcuuctx56oq5xe7mtpkgljis7ovopr6ojmiz3js@vw5p5w7om4f4>
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d4YXDI9J"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549BPSHA011293
+	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 12:29:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dzrex/88nnhuYbD7YROGz0GqdTFZd6rHcQ09znuzbo8=; b=d4YXDI9JVT/RdlR1
+	GdJC0wS2u069Epw93BWciJUdMIKF3UNJ7Xwwp+e0iyfQJacs+XFNJpL7CH9rJO2j
+	oFvLXzNuPJq2ov5je25KP4h2Y/GJS0ZLpSd7jcSq+zh1nOFpSX8113NNCllxYy37
+	2Ry3ETq+cJxlP9igVJeqN355DpMucEY0C4iOGvfCKBPS9wmoiLHvPULecANXfHxa
+	Om+VQYlM/ZtEyade92RrwGBOqCpgHhwwH4se8hgL8oFQT8VhYhfLQtWkH3nB6zAY
+	7BPdecxDiL/ZuFaVNV9b0iyr5HipcNjTqOogpel2QAg/USc/Y3lO4FtjZxZdyLpO
+	O9DJeg==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp7cq88-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:29:00 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47983a580dbso4241761cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:29:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746793739; x=1747398539;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dzrex/88nnhuYbD7YROGz0GqdTFZd6rHcQ09znuzbo8=;
+        b=oFRB0EKgWkKYax01P82td+k9h/cEv6WQHkCYBPDD3arltvPYHqjgvtWQNCA9bJ9sXS
+         RddrGRjI/cSDciX8aZ3YASOk7OEs2ELHdCHH0V8ut4vYEbCRzx56zbOi3+K+k6Nd5cZ7
+         L3uWaTIzilMch0urzIJi0uxmZZYEckrI6KzDWsiK+944lYTolrLZ6gr2fpykWcT/6vEM
+         aoA3ARmvIEgEWIZm0dqAPl8W7GJqFAZ+1q8P4GUxgpixFpW6Ew+GS7551+osFTw5A/f7
+         +DZyzj8KTLK/RIPFT394EaULwDfI04OrHKpkNqbVOoRfLucAK+otuo/u5tSPbeRq3SM9
+         mzpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTzrUVx3mrEDdem/5STL4av9gGavRVieTsMVQJaczURnuUxuF59thrKVJh+jyilRswAmvKvRrGMMXrjSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw736Cj1fvKgeiLui12qHstrtBK/svbz07Wapz46UP0eOxFfAAS
+	5x8FkV0vdqWY1m24oSfY0ENWPS2Fw2oflIBCy4m8Ed9CgHBMauLCPjs93TPxdd6zt+xjiEwq14u
+	GlqL3NYQwsHO8sqifbdnJJAvpm8TECzirmIjKBbJJizAo9qAEQSusrUndi8p62Jc=
+X-Gm-Gg: ASbGncsbODX2VK4Y9WAbLw4jLJl+c5QIdmvkH1GJRuESPXJWUdV32r3IGRTGxoWoCqo
+	YKks3cj/F3uSyU6BWGe/NQzfeiXKaX9QJ1PZFaYH0ah5Jofr+wkgx2d15pkZ4DBi8iuoehWUkuO
+	OpFIVUOMyLzmiXd8g5/1JR2hK2jgUllrKoJ/qmJ/UT5E0s6l17oeezJdA0PuILIfzu54H0Epmbc
+	goNYnjHrdZRKm2IAubf8XOeWCqsgrHEhGdJjxHhsYLfTsdOT89SoGtbvhaI24hCVhDjs+6j7pct
+	dpqrJEghZljdlKmM3zFpfLhnv/VN4sRxejaPFs6T8JjI7lWC1sMEITc84DjzwuFmiL4=
+X-Received: by 2002:a05:622a:406:b0:476:63e5:eb93 with SMTP id d75a77b69052e-494527627acmr19924241cf.7.1746793738942;
+        Fri, 09 May 2025 05:28:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHh76kBlsHwWwCEVlS+S1ABlxGBvnfq9t4dYT6eIbKcDYDcf8Gdr8WUiN8ExkgtpWuH7XTO8w==
+X-Received: by 2002:a05:622a:406:b0:476:63e5:eb93 with SMTP id d75a77b69052e-494527627acmr19923881cf.7.1746793738374;
+        Fri, 09 May 2025 05:28:58 -0700 (PDT)
+Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad21947a442sm142986366b.82.2025.05.09.05.28.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 05:28:57 -0700 (PDT)
+Message-ID: <17431c94-7215-4e50-acc9-7df97558af16@oss.qualcomm.com>
+Date: Fri, 9 May 2025 14:28:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wmkobnhtviw6detq"
-Content-Disposition: inline
-In-Reply-To: <20250509121454.GA952723@if>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT 01/14] soc: qcom: Add UBWC config provider
+To: Connor Abbott <cwabbott0@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
+ <20250508-topic-ubwc_central-v1-1-035c4c5cbe50@oss.qualcomm.com>
+ <CACu1E7H6FGm0npQnG+M3Jzn9RSL9CYkkDg3rtH+=on4_caPTZQ@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CACu1E7H6FGm0npQnG+M3Jzn9RSL9CYkkDg3rtH+=on4_caPTZQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEyMSBTYWx0ZWRfX7O2cYPTda/Wd
+ m2zw6wZWNrf8hul4uuUDynZwNTSJGm5uxK4b7vgqDBq2dvs9wMTfXqIF3CP6K1Yqg6JkZz0b49w
+ Q+u3f1I96j72WtAZLFdEOQ6QX3nIJfmzH4KVRPulx18dehwAVllt90E0WvMyV6Fa1PI0RfWqlzD
+ SyEzNt3oE+6rJ534O+SNFHNZZ2BcgmftbavR5QslqqPpgZF8sj5Ojrd0brKWKpZSUyU+VYMwOk0
+ 8N2SuMPpcd1FD0sR8reS77pL56mfegh7N+r58Zk+acsf6wLBUqv8208b1kwnazD5NihJoTjoniI
+ R3nGggK8+FyKhikMZH9JMt10K8V+Khg1mJLoSWX9XX2nLkRrkvUxNK12SRox4UxcLeW4kaie7Gt
+ y8fqHT0QqeuKQQtsMyXRjpdM0unLXqlIDFfElr28zGNCoJ89FmZSxeIlBAa6saI44Tzs1xCl
+X-Proofpoint-GUID: s8sQFlZ97J4MAzbj5WwzlSUimwOZc14t
+X-Authority-Analysis: v=2.4 cv=B/G50PtM c=1 sm=1 tr=0 ts=681df50c cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=qJKz7-gl4_nKpslyRI8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-ORIG-GUID: s8sQFlZ97J4MAzbj5WwzlSUimwOZc14t
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_05,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090121
 
+On 5/8/25 10:12 PM, Connor Abbott wrote:
+> On Thu, May 8, 2025 at 2:13 PM Konrad Dybcio <konradybcio@kernel.org> wrote:
+>>
+>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>
+>> Add a file that will serve as a single source of truth for UBWC
+>> configuration data for various multimedia blocks.
+>>
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> ---
 
---wmkobnhtviw6detq
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: "Andries E. Brouwer" <aeb@cwi.nl>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	libc-alpha@sourceware.org, "G. Branden Robinson" <branden@debian.org>, 
-	Carlos O'Donell <carlos@redhat.com>, Eugene Syromyatnikov <evgsyr@gmail.com>
-Subject: Re: man-pages-6.14 released
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
-MIME-Version: 1.0
-In-Reply-To: <20250509121454.GA952723@if>
+[...]
 
-[CC +=3D Branden, Carlos, Eugene]
+>> +struct qcom_ubwc_cfg_data {
+>> +       u32 ubwc_enc_version;
+>> +       /* Can be read from MDSS_BASE + 0x58 */
+>> +       u32 ubwc_dec_version;
+>> +       u32 ubwc_swizzle;
+>> +       int highest_bank_bit;
+>> +       bool ubwc_bank_spread;
+>> +       bool macrotile_mode;
+>> +       u32 mdss_reg_bus_bw;
+> 
+> This doesn't really seem relevant to UBWC?
 
-Hi Andries,
+I'll admit I just took it with the rest of properties for a simpler transition.
 
-On Fri, May 09, 2025 at 02:14:54PM +0200, Andries E. Brouwer wrote:
-> Hi Alejandro,
->=20
-> > > I wonder about the legal status of such a change.
-> > > There is ownership of the pages, and a license that allows
-> > > others to do certain things.
-> >=20
-> > I also wonder about it.  We discussed it for several (~3) months, and I
-> > documented links to the discussion in the commit message:
-> >=20
-> > commit 9f2986c34166085225bb5606ebfd4952054e1657
-> > Author: Alejandro Colomar <alx@kernel.org>
-> > Date:   Fri Apr 11 02:19:48 2025 +0200
-> >=20
-> >     *, CREDITS: Unify copyright notices
-> >    =20
-> >     Link: <https://lore.kernel.org/linux-man/jpin2dbnp5vpitnh7l4qmvkamz=
-q3h3xljzsznrudgioox3nn72@57uybxbe3h4p/T/#u>
-> >     Link: <https://www.linuxfoundation.org/blog/blog/copyright-notices-=
-in-open-source-software-projects>
->=20
-> So I read this last link, and see
->=20
-> "Don=E2=80=99t change someone else=E2=80=99s copyright notice without the=
-ir permission
-> You should not change or remove someone else=E2=80=99s copyright notice u=
-nless
-> they have expressly (in writing) permitted you to do so. This includes
-> third parties=E2=80=99 notices in pre-existing code."
+Generally, we could ma-a-a-aybe just make up a common value and pray it doesn't
+break anything, as we're taking numbers that translate to ANYTHING_ABOVE_OFF or
+ANYTHING_ABOVE_OFF_PLUS_1 in most cases wrt a cpu-ipblock path.
 
-I understood that paragraph as not changing copyright notices from
-people unrelated to the project.  For example, pages copied (or based
-on) other pages from UCB should retain their copyright (and I kept it):
+> 
+>> +};
+> 
+> The comments should be copied over from the Adreno struct. That was
+> the main way the meaning of most of these was documented and you're
+> deleting it here.
 
-	$ grep -rn Copyright.*University -C1 man | head
-	man/man3/fopen.3-1-'\" t
-	man/man3/fopen.3:2:.\" Copyright 1990-1991, The Regents of the University =
-of California.
-	man/man3/fopen.3-3-.\" Copyright, The contributors to the Linux man-pages =
-project
-	--
-	man/man3/fts.3-1-'\" t
-	man/man3/fts.3:2:.\" Copyright 1989-1994, The Regents of the University of=
- California.
-	man/man3/fts.3-3-.\" Copyright, The contributors to the Linux man-pages pr=
-oject
-	--
-	man/man3/alloca.3-1-'\" t
-	man/man3/alloca.3:2:.\" Copyright 1980-1991, Regents of the University of =
-California.
+I'll do that.
 
->=20
-> The main topic of that link is how one should document new contributions,
-> and writing "by the contributors of the foo project" is OK for new stuff,
-> of course provided the new contributor agrees.
-> In my opinion it is illegal to change existing copyright notices,
-> unless you get permission from all people involved, which seems unlikely.
-
-Hmmmm, I'll ask the full list of everyone who's copyright notice was
-changed.  Let's see how that goes.
-
-BTW, while we're here, do you give explicit permission to change _your_
-copyright notices in this sense?
-
-
-Cheers,
-Alex
-
-> Andries
-
---=20
-<https://www.alejandro-colomar.es/>
-
---wmkobnhtviw6detq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgd9OEACgkQ64mZXMKQ
-wqkIPw/+NC65s/jPNjMaR+UXY7+X0cNmafz+eoMh0j7NPk0Z19NZXHKoKyRD9ZPb
-DBwTBaTbmNkQRHWus5bXO7B4uqBLaq4gkzj7nlTmymtSmSnOC+/5XDcGqvfFD2a3
-LTYYMx2iSDEyNegXY/5mwgE6oX+yjASzD5FJsdZBXhAeofZ/hgPp/qb+CNcK3gyQ
-0Pao6JOdNqec08jyBiVrU/sBygdOfaFPxk/h+Sarijn1ZxARf1wOQJtZpdb9HMVb
-iHYcnjJFy77Od/02aPiaB9SP2yQAIl47UNhIIgEEdciQCs3Rw6KUrrm4zPo9mmng
-32avtFrTPDKE847yAUCPDnCr/e2fCNri1LuStvzB+s/X3nOKu994g1HE4hX53r5V
-u7M9KBGhB+C9jyLGF5PQC6GATGjo6PYCKXbXkJelk837YzyVe+zxeqM+BogFC2bS
-2LwhL8QCbYSK5Gaf5wOABOgIOk97uyta1QNXjs0pq7NdVLYxztPPLehyIqolSU7J
-LpgcZ5lOuTrFxpF050+7yqmTj+I96ku5Yr//Iu9QSYCqy3U+rTKn+t93EhO5o/2x
-29oPtJNixP3SOMlSvh+gO1FuajvyOAOBsYg9FT9EBdnOZLCWzJUP0Py/vk/TWNq6
-fmv1Wqu6W9ux86k/pFqnnoCf1jtwkYf744Wb+2CJy8pgANqolTw=
-=dlOZ
------END PGP SIGNATURE-----
-
---wmkobnhtviw6detq--
+Konrad
