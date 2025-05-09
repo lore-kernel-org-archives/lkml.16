@@ -1,215 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9308F7E1
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746790791; cv=fail; b=AEBqMwTx1ognPKqst7wnpSLHJYjmgpS8f7iAohALL6LBf4CDvHzqnLFqsV4RPE2fCkpFM1lPohNr07YCu7cvWYS+Vb6ycVciSfbYFzE8mKcVoDT1htmVgaP6+zWfkeCy4/rNSjYutRS3YFgWZ1/P7HxO90/wu7j6eHb3ujeo6JU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746790791; c=relaxed/simple;
-	bh=H7NncF/W2HJwkLpIUzCknKc5wDqKd7zKmAPZVX4DEj0=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dh3TXJQNUz2tmzBALaEU+B1CP8lM4Jb7A7fr+4o6nHoafXe8w3FlTouosgbRCqBto6GNLjwyDxI2A0bT5GVqzUz7aqIw7ByUhWR2MjbCHSrEif5xEtKJiJhnQYnZVAf/TxHfxac/KIA6vW9UJ9tAbHxd6EK1sAQGw2UPq/uP6FI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jmJ6CUGq; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E966D219319
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746790911; cv=none; b=FMbBRtV5iy9jdSGc29KkvRsAe6eKqi8aslQHvhcufndfC2IG8wH2CxzgdLDfBuuO0zRljDUsAmOKeC6hriRcZECaEwSWYKjGerhxoLb7eRyzy2qnJpDk429Kd7H7ibOBzplN3gQ//wG5Lxdmj9ikMr92BBmEWdHZL0DY8qBCuAw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746790911; c=relaxed/simple;
+	bh=21R4CdsJlxo6ZIUB4aWnLHQhzIqhbI+E6wdmGGSh4zs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YQKSPA5VAhRYaQrcBHw9lKg42nOnRLsdqpUGOB6iBpIUFwBJbLZVOvRyNWkcgB7dBIylBcYjyGCHHTwPxjLva3UjDSpLv1FEsoTXayJI9g8Hdww3Iwi8uWOCRX+c3+PYPBIF8SCl+nEzKC+MlUJaW6Np4whZ9zXufpRjiorp95c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ayri1AN/; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jmJ6CUGq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746790790; x=1778326790;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=H7NncF/W2HJwkLpIUzCknKc5wDqKd7zKmAPZVX4DEj0=;
-  b=jmJ6CUGqBBxjiWT0tuficxSJxqFSt336Q2RjFM/IF397iCj/JJ9PglpC
-   aBIKz81I2eDGSVu4smBUfkEzVRJbpzOFrKJwUTOgxaHvWTJfSti/s3ScD
-   d5LrKaDyyW00y4EFD9a09FugeuNlfCagaUDmYjkiepcM7V6q46JkI7etX
-   VLqZNHOMd//W7RR1zuCA6KW0MKm2O/M1Qppn4ndbInd5iNJb80flRA6/y
-   dnATTwf1bXJ5ObHUzB0adhy9vxPpOtQXLQVsJ1i2V862gMcN9ceaxdgal
-   yK5wYEZUnPDJqAEtTop1kk3F0eXJGKrKCUmEJ/gfQwnRClXse+nJPS35x
-   Q==;
-X-CSE-ConnectionGUID: oxoj2XnfRo+S6D9Fkr6A9w==
-X-CSE-MsgGUID: Rld8Fz1ZTaabGoXnHOjzWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48773282"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="48773282"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 04:39:48 -0700
-X-CSE-ConnectionGUID: uVq7jevfRxiG6ZkVkA5ZBg==
-X-CSE-MsgGUID: 1D8hEaKQTWCA9S0yK66QcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="136474463"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 04:39:48 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 9 May 2025 04:39:47 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 9 May 2025 04:39:47 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 9 May 2025 04:39:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p6clAShxDawZm5dR/KHX1EpKDlYAXRcMm12afkM50VjBU8ypb+HmhUa34jTxHdCsR0ry8AnLrd/oorF3PGtPo4OPUkY+S5H1Gmx285ym3GVSq3lgelIU6RQLN24zX1r2CXpr7+LjDOSPJNw41UdTh5mXwaSXESagcylUXqjL1BTqp3/2/ffGXmIRAQ7+WueUIF8ZzG7tGa41iWkbloR5vWcwLOGHzG73syqZlCOpHGpDnmSLAsynry5BgcCnxhewwVqA0KIl0KWjM48Cnhg85gk3z68wr2AsdRHIYLAtrdc6p5350jiEBsoeC/aFwCWav2dpuRUbtT76vOeWB0v4qQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/z58JXmcIFAottJ2Kn2ro9r0xg/SJMfYGeqvHW5wp0g=;
- b=ZKJTbeOxj72ALYS/eSQnzQgbwpUoyWsj+yX+Vnin1P8zvTC+bDMX4pN41n5DV7caogYLrfdQGLL4Qr3nW/jpNOIRv+LvaAD8loiQ8yiXXPl0PYWS21HKT5udvlABKU2ZvUFj0vuWvWddbZTZqT4ymIEupC5cUoOKOHlqWgWra3+0mG4v3boXcn6czzSeKfVD4i75c3qwMSbVAzp26riAVmVvFz6536dHVv+qE4bzQygVJBu915OlhedCf8EQshNfZhrR9jpLjRojo/L4dBJtYeinlxvfJu/9HKM6ZqSQUU+rE1AcONuFeeU7e1/aM3MVfefJ1Xorlvjhryyp9Z4MwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DS0PR11MB6373.namprd11.prod.outlook.com (2603:10b6:8:cb::20) by
- LV3PR11MB8458.namprd11.prod.outlook.com (2603:10b6:408:1bb::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 11:39:16 +0000
-Received: from DS0PR11MB6373.namprd11.prod.outlook.com
- ([fe80::2dd5:1312:cd85:e1e]) by DS0PR11MB6373.namprd11.prod.outlook.com
- ([fe80::2dd5:1312:cd85:e1e%7]) with mapi id 15.20.8678.025; Fri, 9 May 2025
- 11:39:16 +0000
-From: "Wang, Wei W" <wei.w.wang@intel.com>
-To: "Liu, Yi L" <yi.l.liu@intel.com>, "dwmw2@infradead.org"
-	<dwmw2@infradead.org>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"Tian, Kevin" <kevin.tian@intel.com>, "jroedel@suse.de" <jroedel@suse.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: RE: [PATCH v1 1/3] iommu/vt-d: Eliminate pci_physfn() in
- dmar_find_matched_satc_unit()
-Thread-Topic: [PATCH v1 1/3] iommu/vt-d: Eliminate pci_physfn() in
- dmar_find_matched_satc_unit()
-Thread-Index: AQHbwKlWrEBKPcjlWEmyyFYMUSaQVrPKBJOAgAAg50A=
-Date: Fri, 9 May 2025 11:39:16 +0000
-Message-ID: <DS0PR11MB637371E03056B47148533BDDDC8AA@DS0PR11MB6373.namprd11.prod.outlook.com>
-References: <20250509140021.4029303-1-wei.w.wang@intel.com>
- <20250509140021.4029303-2-wei.w.wang@intel.com>
- <19e39263-e408-4867-a080-d5f187095159@intel.com>
-In-Reply-To: <19e39263-e408-4867-a080-d5f187095159@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS0PR11MB6373:EE_|LV3PR11MB8458:EE_
-x-ms-office365-filtering-correlation-id: a2c4b73e-92c4-47f1-3444-08dd8eee2142
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?eAK+aXYB97AkIeJtdUKHt8oxlfqOjtxOQAM26CItLMKE4TCTKRrxSv+GCYLY?=
- =?us-ascii?Q?PoYUB1BsY7HLuA+dMEiMAEesVrdKJDuYCWWxhgHEKXe1l+D0IqMLQpxCUSNF?=
- =?us-ascii?Q?kCs8Dlnq3U5SKEWZg0YDMzDUe4DYhzGj4xZRX08kzq8OaUiLFOdVBv4YV9Ii?=
- =?us-ascii?Q?Ln43VN9FBWLhFTf89qweZZ9svy12wRLh9Pco8A0Q/r0bMfZO8FXN2yPN0iHQ?=
- =?us-ascii?Q?fXDERtQ5oF6I6/SajFU05pxzG0rGepkNReVsA4nCs2k7n4Lw9UlSYjWwV8Gh?=
- =?us-ascii?Q?mge61E8AsYUTpK4ESjrLJXSYJT+5uAVlpDxL+Em2nAAh+s9lhRUOQiDpwTCx?=
- =?us-ascii?Q?ZcNxGGU+j46qXXewoQkHz1XHs8tfthD0SonbpcRp5qiILYkxv3zBM2ViexGa?=
- =?us-ascii?Q?c/NozCpvxV996hzGA2ajNPHzSDPEX1nQ9ShkysMyH7ZtacIgSmrlw6JmjR/b?=
- =?us-ascii?Q?/3O6+2JRaurIOupvE20zb/NfkiXeIXiv4xZ7CZlde5sj9kugmGmSyH+qgDUc?=
- =?us-ascii?Q?MV4ofPxtY7It1X7ZJPgp6BjzHL4rrb602ssO1ZXoCLxpQraNHZXElmC0Wv0M?=
- =?us-ascii?Q?+PmIw2/g3Qmu9cOL+2pWQ5D9ZcUsUGzBG8T7u5FPWdmgnvrMw6dVVt9lLeWx?=
- =?us-ascii?Q?x5o3DrfTZnz8XTnq/6CHFf0pSZoFLF/nqRsP2ZG//uR4lRmN7T9M8xjwtoNd?=
- =?us-ascii?Q?fS4Rvt9gIuGbUoaGVh33uMVrV9n9hZnqP4C6tcsge1n2Z+/kSAGGhVaX/ORu?=
- =?us-ascii?Q?y6V5QrDKG2TKm3ECYWWd5XVxThDLlFqrru0OSKHrLMdKvClyXkpsuHbQavEC?=
- =?us-ascii?Q?bylSsGqeDA4vYoZmI1MpFzAzu2n4cX326zhknZxH6x7E9ffvvHUzW9A8f5yP?=
- =?us-ascii?Q?1S9O2amychXKspc4jVKRQKTIk7DGh8kMaZeXAO4I1lvbvOF1FVP+Ba2KBi/e?=
- =?us-ascii?Q?8A/efp/DOLVq966skeublb9qmVRgx4L3/QhjKuRqOmGmoo0UmFaI3bSF1Haw?=
- =?us-ascii?Q?qiKW63D/lOi5xADy+X7fNumUh0PqPfnRKsmDLjPcjEKcc3wgBZLPKQ+fmU0G?=
- =?us-ascii?Q?z6vCFaDO5uQsymtXFPqsojgMsAplvfsZ/D+WgPtw8uxuza54wtIeAWeEt5r2?=
- =?us-ascii?Q?Xj/+Q/DtdIFkkPFssyfl67mpGsvei32yhcA0eepJctHXF6tnNpgKw5akvHmI?=
- =?us-ascii?Q?4mw5wpI3lwVaN7mzOUO3YsEs+/ukgk+GK/+R+n1xKvgF8GDiBhrg8z4WDjDX?=
- =?us-ascii?Q?F5zNy6Qy4uldtp9VjBokYR6EybVGFkgr1G1SC3Mv5z89AQu73z9XJiaPvWN0?=
- =?us-ascii?Q?qnA6awhT+ChHUmCaH6qn7ukvKlj0q5c0FJHd0KL/ChbQBH4xWnKQuFx7nbYk?=
- =?us-ascii?Q?H743zKDyQtkuwFrlOd/OvBUtJmXrlojzLL9cqUHZRFRVZPJ4ZLSRG/KB5h9V?=
- =?us-ascii?Q?f5TqDUv3+411ju6Sa9bicOS6yQvTwY8qptCCgedaHUwRMMDxsDADz+U/B6nV?=
- =?us-ascii?Q?ohZ58zY+iQlfAa8=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB6373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?69pAR14UAnPNF6Sotr7Dz4ExX+Cwkc4O3GdBg9/jiMrurRuGz5sXcFixPljc?=
- =?us-ascii?Q?H+DfJDpN4imUj5d8S/kEDMf3ruEpf6LyglsIlXTvuc3nHinTSLMUlhiBTzNY?=
- =?us-ascii?Q?ZVigBc6TJD+elVf4wz0EEtJN8IocBAqm0BCbcD+LKrC/uVjw6Flozyr5jBni?=
- =?us-ascii?Q?RYXJwlF0GiAu15Z2lYne2y7pIJu5HXp9o14BBNm1OMUqgwXS9ZDHbIY+09Dd?=
- =?us-ascii?Q?vqiN4Vs2BTbhFm/TXT84huPYK3ZJMvKHvTRFs8JKRcUdEdyXsatyIQ2o0l5p?=
- =?us-ascii?Q?eMssbnAbV6Ks5nYhXfTvLGQdhFufWsWNxQUlJQaT7vpSiDgdvv/D3sTh6ajv?=
- =?us-ascii?Q?q34CjkBE5D3caM0BsMpdJbBoEAsPMmWLq3MMMrqtBTWWSrA/M5Ul2LXQATGF?=
- =?us-ascii?Q?HhcmlyCWXMEYGNbRD4OR5/B33vUow98a8Sikr0Wjmgj5/yRdCL9ELL8wAuaD?=
- =?us-ascii?Q?pBscLTubjeuhyMPrKMBJCTISDB6SgTNSDMAU7dz48PqD1a5vvFQyk3G3uKrv?=
- =?us-ascii?Q?CSJ3ao4GiYR7b2jzULzex81ciRtnuO1x+GveZY+rjHFadw7quYW4dEKhF40e?=
- =?us-ascii?Q?B9WdMLUbk+qUcx/kNeP9GQkMb+4ZFVZXFrway15yC04Hx8m/KPX+9kYhCKH/?=
- =?us-ascii?Q?FN1Sc7UaunUehmbRyw4egZjz14+QUyMoFsI5dwc0KCfEHO7ZpZeO+5IJt3n0?=
- =?us-ascii?Q?B8RERe90poinMIAibrW4qjHNxY/t0akIPID/HDYOGuMoZDJJcf0edrLzacQB?=
- =?us-ascii?Q?gt7wIPYSSlYdKYmVjI2jCAZYX5aduZ/0uxrSPae4MaJAdCTDvE/J/7Rkc5hx?=
- =?us-ascii?Q?858iEjCJ1wTiRYTZiD91xePfBpMGzu9lSHsZg8p9+yzgrDiC+v1ZOJ1tS1/Z?=
- =?us-ascii?Q?FdRAdopDgEccT+1FV9C3IFMjO6UImWwEALFlHcgCLW9lUndLiNWn8Y3h+zZs?=
- =?us-ascii?Q?xdELbhZuoxt1Gquz1bkWNNNnFBQtbQE84dXLjh9d+J7x+Qp6gkZ3LL8a595M?=
- =?us-ascii?Q?giYTvgVlU5qO8jaoewZIS9TRr9XfBIX5Ckjmm7vGtSD/YA1ln5xWYF1hUZxd?=
- =?us-ascii?Q?+urUn5N47X23yzx+Q9RZRNC9emiLu25hk5gKeW8+1V2DYjhkVqTB60yIjghu?=
- =?us-ascii?Q?d4d6jQUWQW9zyc22YDuUPhECUh8NgoHzFJoHDfWsBiLdT/mETbpduRuvB5Dk?=
- =?us-ascii?Q?td9VPIqBlmNqWYHRi7anlCZIk6g4DjTYw6QYu1tDDZHk+kA/HNSqk89AfdvN?=
- =?us-ascii?Q?rvPxjEUgPIu5ZOWygiMR31w2AGsd0TXjT+J0UFK73mTrBZFHO2RuKz6YZWu5?=
- =?us-ascii?Q?3bHGUPKGhhQ5/1h4+GTL46NnI0FKMwHNi2yGDz0X8eNV8UcKoq7/sCXgAsL3?=
- =?us-ascii?Q?wPJJ0vtwgDy0xwtdpay7fn3SqUw5RBxykTrufXSb6qgBqACdiLmPqoI+NlBz?=
- =?us-ascii?Q?5FKk/YvPgaypOw0R3yVDjA0Ui1ix6dYhamHP+TAePP22dnXdg2i/2LbLLInc?=
- =?us-ascii?Q?DqF/4gjjHJ9TAmiLCtoZWQr/gsuW3FwHWiur0BpKO+deUHnl/wbwVfActCIV?=
- =?us-ascii?Q?IcVou1SfviqwNEMJHJzoAb8jTbWpQjL0Uj1iAfPJ?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ayri1AN/"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acae7e7587dso292953166b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1746790907; x=1747395707; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xqSqgdbr6mkrFUbRKHE1fLZLEEIHfO7KWsMJjVuS+q4=;
+        b=ayri1AN/SeBgJ2RHWOluJm//i1J26QV+grwv7cw760nXkqFlLPeqM3zfaIicoUnJQV
+         nR0ZkT2odUUfKWb61TYl5guqeewzxnJ9UpeOyzbuCRZq3DJltHrP/pBowx17XdQZ/+TM
+         bAYDL0AILCtYvyS+Hmq1aBlwNDmX5EknHeVUbG7SFjK6fDzCpNjhg4YxMlpkFfK7intx
+         5D9LEFukgf9Stu+h2kwp8wr9NIWnCYb4SyCCYZyvegjMqOGFnf/jHJ0+ghsaKYwkmoO/
+         rXLA0I5xGaS+lf9mnzuuHTw4q5BlxuBV4kJ/9/tMjl8hNqgZLskHGWJ2fKi0YE8s5yKI
+         tvEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746790907; x=1747395707;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xqSqgdbr6mkrFUbRKHE1fLZLEEIHfO7KWsMJjVuS+q4=;
+        b=h93kkb3PJNesNqfYlpgz8TvFtJdK02rMCC4PWQYUOHQVt6OQ9DTAlw/y9NRbNuNdI/
+         ouxdcX9ds6S+iUEaAshlOtQKHzVDcZdspuMDjTDN745QfuigTsLLfbknTw61rX7yN5Gp
+         NMXSOmVivRn5+J1jvDeIOLNGLqLm/YDQ1yBOzXGDE7qJfKjlslRajX3mfmsLBW6N3lcy
+         U6oyupM6JglKrO0NOb5UJqH1kuNYrX6sSzGPj1GSoa/f4H1GoX+l9g19VGytblUVSrhn
+         V7pfpka0D81fGgL8gzkfu1KvhmQxVZfZ2PyDXb2jE4PFM54EZ2sJpxgBvX4ZVeLlTrnl
+         Mrhg==
+X-Forwarded-Encrypted: i=1; AJvYcCXoFEiXy+rm0WQzHHloUDHlBeA8odhWIjIlb5CwmN4qRIeUYuCx6UOZQ4YFMsYfViFK38K/u5PCF49ntww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrIhZCmd7alwHFsf5A39lLftsQjYxRguxzAc1icJY5LjG6oLSX
+	6KGDRcxtGdUBu0VLM0CJDv/vC2sBeDjVV2fAaAGSADc00YbcLfbrHFUJXuJ8E4M=
+X-Gm-Gg: ASbGnct5Nol63tWe/VHMNkz2unapJK4wgnsbiLpvUqlyFMofGCXc9TSmspDuphxQmCJ
+	4rze3LwBryK/ZWkwW68gVCsQ2auB1nHJpFf/L5X1CNO7VkotUVpcQ2G21ORhtyrGaxnBCRXNG9b
+	d3J7LF+xlcOrUEmtGcOaZQH28uslFRKHXBXU8ZuYl4NZZINQW/YePItZZoq5d7r6DKLkbhRr+Jg
+	mt77GPj+i5dDVpZoQXsy8wH9wejMtUrgUtONkxdZdpeiXSj+/Ch/HvHqiHP0P0LcwaD9MyBjkjF
+	dVGSaevv3vri5EwVGQc1Yuo3FaT758j/O8BJ+VgA8ZaVUQSP
+X-Google-Smtp-Source: AGHT+IG2j0Pea0l+03cwVMYbfwrcANbL1huFvD6sD/j4JhDPCTCSj3oUMBeHqG1csVa7s5Hq/oxNxw==
+X-Received: by 2002:a17:907:1907:b0:ac2:cae8:e153 with SMTP id a640c23a62f3a-ad218ea823fmr310536466b.4.1746790907122;
+        Fri, 09 May 2025 04:41:47 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd2a8sm138611966b.145.2025.05.09.04.41.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 04:41:46 -0700 (PDT)
+Message-ID: <b4771b63-3198-47c8-a83d-5133ba80d39b@tuxon.dev>
+Date: Fri, 9 May 2025 14:41:44 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB6373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2c4b73e-92c4-47f1-3444-08dd8eee2142
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2025 11:39:16.7346
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +Wlq9n3XRHqpt35Aew9T5d1NRVxXfvTreksE61N6aI/l+yS1zbW/AZ9bXqzPx2WEj2yW7gBkg62tgEjJ83OMNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8458
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+To: Philipp Zabel <p.zabel@pengutronix.de>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
+ sboyd@kernel.org, saravanak@google.com
+Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250430103236.3511989-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250430103236.3511989-6-claudiu.beznea.uj@bp.renesas.com>
+ <42a5119e547685f171be6f91e476a9b595599cf9.camel@pengutronix.de>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <42a5119e547685f171be6f91e476a9b595599cf9.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Friday, May 9, 2025 5:16 PM, Liu, Yi L wrote:
-> On 2025/5/9 22:00, Wei Wang wrote:
-> > The function dmar_find_matched_satc_unit() contains a duplicate call
-> > to pci_physfn(). This call is unnecessary as pci_physfn() has already
-> > been invoked by the caller. Removing the redundant call simplifies the
-> > code and improves efficiency a bit.
-> >
-> > Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-> > ---
-> >   drivers/iommu/intel/iommu.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> > index cb0b993bebb4..d8aa71305509 100644
-> > --- a/drivers/iommu/intel/iommu.c
-> > +++ b/drivers/iommu/intel/iommu.c
-> > @@ -2744,7 +2744,6 @@ static struct dmar_satc_unit
-> *dmar_find_matched_satc_unit(struct pci_dev *dev)
-> >   	struct device *tmp;
-> >   	int i;
-> >
-> > -	dev =3D pci_physfn(dev);
->=20
-> better have a comment to highlight the input dev should be PF. also, can =
-add a
-> WARN_ON(dev->is_virtfn);
+Hi, Philipp,
 
-How about changing the input to "struct pci_dev *pf_pdev " (like the one us=
-ed
-in device_lookup_iommu())?
-This way, we probably don't need extra comments, and WARN_ON() might not be
-necessary IMHO, as this is a static function with only one caller currently=
- (already
-clear that the input is a pf_dev)
+On 09.05.2025 13:51, Philipp Zabel wrote:
+> Hi Claudiu,
+> 
+> On Mi, 2025-04-30 at 13:32 +0300, Claudiu wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+>> only as a root complex, with a single-lane (x1) configuration. The
+>> controller includes Type 1 configuration registers, as well as IP
+>> specific registers (called AXI registers) required for various adjustments.
+>>
+>> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
+>> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
+>> host driver can be reused for these variants with minimal adjustments.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> ---
+>>  MAINTAINERS                              |    8 +
+>>  drivers/pci/controller/Kconfig           |    7 +
+>>  drivers/pci/controller/Makefile          |    1 +
+>>  drivers/pci/controller/pcie-rzg3s-host.c | 1561 ++++++++++++++++++++++
+>>  4 files changed, 1577 insertions(+)
+>>  create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
+>>
+> [...]
+>> diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/controller/pcie-rzg3s-host.c
+>> new file mode 100644
+>> index 000000000000..c3bce0acd57e
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
+>> @@ -0,0 +1,1561 @@
+> [...]
+>> +static int rzg3s_pcie_resets_bulk_set(int (*action)(int num, struct reset_control_bulk_data *rstcs),
+>> +				      struct reset_control **resets, u8 num_resets)
+>> +{
+>> +	struct reset_control_bulk_data *data __free(kfree) =
+>> +		kcalloc(num_resets, sizeof(*data), GFP_KERNEL);
+>> +
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	for (u8 i = 0; i < num_resets; i++)
+>> +		data[i].rstc = resets[i];
+>> +
+>> +	return action(num_resets, data);
+>> +}
+> 
+> What is the purpose of this? Can't you just store struct
+> reset_control_bulk_data in struct rzg3s_pcie_host and call
+> reset_control_bulk_assert/deassert() directly?
 
+Yes, I can. I was trying to avoid storing also the reset_control_bulk_data
+in struct rzg3s_pcie_host since all that is needed can be retrieved from
+the already parsed in probe cfg_resets and power_resets.
+
+> 
+>> +static int
+>> +rzg3s_pcie_resets_init(struct device *dev, struct reset_control ***resets,
+>> +		       struct reset_control *(*action)(struct device *dev, const char *id),
+>> +		       const char * const *reset_names, u8 num_resets)
+>> +{
+>> +	*resets = devm_kcalloc(dev, num_resets, sizeof(struct reset_control *), GFP_KERNEL);
+>> +	if (!*resets)
+>> +		return -ENOMEM;
+>> +
+>> +	for (u8 i = 0; i < num_resets; i++) {
+>> +		(*resets)[i] = action(dev, reset_names[i]);
+>> +		if (IS_ERR((*resets)[i]))
+>> +			return PTR_ERR((*resets)[i]);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> Why not use devm_reset_control_bulk_get_exclusive() directly?
+
+I wasn't able to find a bulk_get_exclusive_deasserted() kind of API.
+
+This IP needs particular sequence for configuration. First, after power on,
+the following resets need to be de-asserted:
+
+	const char * const power_resets[] = {
+		"aresetn", "rst_cfg_b", "rst_load_b",
+	};
+
+then, after proper values are written into the configuration registers, the
+rest of the resets need to be de-asserted:
+
+	const char * const cfg_resets[] = {
+		"rst_b", "rst_ps_b", "rst_gp_b", "rst_rsm_b",
+	};
+
+So I was trying to get and de-assert the power_resets in probe and just get
+the cfg_resets in the 1st step of the initialization, and later to
+de-assert the cfg_resets as well.
+
+Now, after you pointed it out, maybe you are proposing to just
+get_exclusive everything in one shot and then to de-assert what is needed
+at proper moments with generic reset control APIs?
+
+Thank you for your review,
+Claudiu
