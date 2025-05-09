@@ -1,155 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AA11372;
-	Fri,  9 May 2025 03:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242DF1372;
+	Fri,  9 May 2025 03:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746762333; cv=none; b=sh58U++8LR/ThS7KVap9LdyBGzlrcHFBE80ASJP0CKCTOee3LBKz2lsu3qDxstQUSsgSGmf2S6d30VLO49wnmGcFQV3MBmPg2h+mzAJ2EkWcJjH0m8TbcGngQhAu97nptXWnRdNgRf9OCyBQRO01p8jF46SiR13yNrdNmjE2+XA=
+	t=1746762643; cv=none; b=og9EmKyVXO+EhWry/Jbo1wn+5IL6M6JBasZdM+Pqo4ho3NFFZoRpcu2yhiQG7xzmR02YnF5LORukci2H6s7e8rxvzKQpYo3is3+9vz3Zuo49uKiBw+VcG+6uf/VCgjHFC5aNiecNSDYGC9TMbM0rwbAGHorok86+fWtqsNGSJ88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746762333; c=relaxed/simple;
-	bh=/4kk68aDZro+woff7rjU8dPy7UepG7EyDgvaFIt4Zxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RqfNU4igp6mGKsIFc3OONDYnRFSCpDiiXvsSyNuuaboLZVpJIwmx2owq+drxpg1lRfOrAvIX8s7ev7uKKida+A5hqIbi6YIwKX3fYfazITG4Wr3GpL9c/rQc4otlkAqg4nveIK9t5rbhG7f5B/tWxUBEzOreLg415WxFjnZy/VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/Ye6Tsd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746762643; c=relaxed/simple;
+	bh=hy5pzYUav/BP0YDgiOVnShocA7zS7BA61sxle7neUg4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YRLaAhBkeJrE8rLW0+ZM+9Z5flFkRO4w3Y3IbbKijLsYKiYfdCWtV/v5b++lTW0bWq/7WXXWWhh5gz3ZQpfm7RknGt8+yzyFkZiil9ydnAk87NUkxN8b7huIqIbrIEy3Tdaq9BvCRexB/3YRTfaLTfFcRUUjLY+saKXUXUzabgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffraIcol; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/Ye6Tsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F41C4CEE4;
-	Fri,  9 May 2025 03:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746762333;
-	bh=/4kk68aDZro+woff7rjU8dPy7UepG7EyDgvaFIt4Zxo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=C/Ye6TsdmqLnhCfyNEFp0qanKHaJxie+uMAAoH9mu801IC+Zp5DI4/Irg/pZrqY9T
-	 vMADV75iOADsKKvk+m/jxIGOe4eYqrpdO1JgbzAqCX/Vv43h+X05YcJSb8WzpwW/zN
-	 kDcNdrulhD4qsvUx2QDhZsiWgBOrjxeXs3oclj2kqmF4B2imJnVINc0hCmWW9rfjHu
-	 FT1RU983zPL1GpIPuopSPxP9F6rbUKlsjyffov8mstpDIEW7vxYrXYTXUVOjnKDyNz
-	 w6ZuChBWaJACl5+5LsUhHOjL2pI97CJ+NEtrpXa+1C+AJj0KDibaAPArGKQ4WkfkBf
-	 8QdIDNxisllPg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CE942CE11A4; Thu,  8 May 2025 20:45:32 -0700 (PDT)
-Date: Thu, 8 May 2025 20:45:32 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Z qiang <qiang.zhang1211@gmail.com>
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu/nocb: Fix possible invalid rdp's->nocb_cb_kthread
- pointer access
-Message-ID: <625640fd-80bf-4357-8734-5ee87540fea8@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
- <20250507112605.20910-3-qiang.zhang1211@gmail.com>
- <b23a7caa-a548-4691-badc-4122907ea688@paulmck-laptop>
- <CALm+0cU8ndBcXsR_F1_XPcnb7+yvNoOynD7ucuZ6FfxAygDwqA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffraIcol"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d8fc9dbce4so10680865ab.0;
+        Thu, 08 May 2025 20:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746762641; x=1747367441; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aaSQSE/HMH1qJ6r6p4XK/7TbsZvPwZPNrcjteVR+WAA=;
+        b=ffraIcolguOcG6A5hkCFVz/Mhciihmqrd4Vltqyo65uVCEvmp8l/7W30443ztZ00jq
+         l8TYkzIjxIUk8b9/V0MtDhGGCrXHhSKB9K8bETH27YgijEt7QUTIPit1cIxubc9PhW6V
+         Ybl2Ui34ZyUKEElG+oR+lY3MhAgAEA1rq05Txbs2suVUr6XrRkc9hKaYqqB89APjxQ24
+         d6NlU9zlNjjRkb9+VgED13mxRlC89gxmKZAnb43McCuxVN5Flg8eOIuq+SU8HeKtAZK8
+         K/ziml3vF3YVVLSn9SGIqoG3+To5+1LRAcBbp1Qm5GMYOFUv4z2l6tEnYBVi+pDBqC6C
+         y5xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746762641; x=1747367441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aaSQSE/HMH1qJ6r6p4XK/7TbsZvPwZPNrcjteVR+WAA=;
+        b=MbkiliDROCrMdzLKJGxpbou10Jysss2ssSmqDojyIxapAMFe+cd27+8t2uhW3l/NIE
+         sdW7+vRrRBwhrdS20owU7jUtkOyjo3i/oaiUMOefRQa2GaDpuGp+92xG108GxUpNDRLd
+         tMh/Vshdq27TXfima6m274lo4cBPjcpPmV2wGODWcaeW+cvu5ywlsmQpG3tFZgjYnLL4
+         KL+5el5jC5en8v9z+S3gmpqHHB3G5cmDWv9BaIv4GHtlXAdtD8PeNqGBCnb5M3evyRjw
+         72PEJCGHBFCx1dg1tfNHD4IWlBrr8CRoK1VcYuTDgBBM4TftyTwNOmQrIN9IG8dpqaQX
+         6ELQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUm9LrgCDR/DGnBX/8aq8vksYsKsoUVdgmtuKrEqqnw7WAqTcZFzZkSY7hi8tbrz/1pbb7sOMAoqmPYf6s=@vger.kernel.org, AJvYcCUxj4c5D0CdKw9PdpJ7JrFsmCogx0qQ7lkgZNXEh3LgbMNgVaoG/WYxbph002KuaamiudnHlHRcu2haNA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1wXnn+Go4oGwSGcR1oJ3FabtaJrvwjHTVZ2C3R1Z0Y6QylZDj
+	GXlaYyf/x9Il/HzewVQ2nGYPWvjGQahGVA1hRFYi47DA4M6LEJXdR0K57PZvzrKPEuM/BeESFYX
+	ZlIpZiWhcuhm4Uk+oIJ7drYBrb10=
+X-Gm-Gg: ASbGnctaUQqzGUsRRwAwOkFK1Svxidg4SCRXyrI72lXjMWYn11UR6T6/j2EmWOVgaku
+	oZkwyOtj7kcNiER4euOHuA5qDGTi/oP8fJ5mawswoQD5Izr2kc2ps98eKSyc3Mi0MyVwY8iDs7p
+	3ly8F/d7K1AkoKNzDe1+7Bk9D3AOqBnpSN
+X-Google-Smtp-Source: AGHT+IGDsiNP6b7Ntgyd9mrDWZhyyjw+qLzWqKgXqKRu/+adjAGmGTajymdrLVvCtn7gmze+JihzDCvnPKWSScgjTWc=
+X-Received: by 2002:a05:6e02:1fc8:b0:3d0:26a5:b2c with SMTP id
+ e9e14a558f8ab-3da7e34871amr18179335ab.8.1746762641045; Thu, 08 May 2025
+ 20:50:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALm+0cU8ndBcXsR_F1_XPcnb7+yvNoOynD7ucuZ6FfxAygDwqA@mail.gmail.com>
+References: <20250508235109.585096-1-stfomichev@gmail.com>
+In-Reply-To: <20250508235109.585096-1-stfomichev@gmail.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Fri, 9 May 2025 11:50:04 +0800
+X-Gm-Features: AX0GCFthO-yBe0GwNZFZ1xaNDpopRKOfM4mk-G42AtzYTfPnYJnCB8Sks0K_y7Y
+Message-ID: <CAL+tcoCwAUNmBuN1KR5oa90nZGMqOeNc-xEYdi2nairE5-1BBw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net/mlx5: support software TX timestamp
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, saeedm@nvidia.com, tariqt@nvidia.com, 
+	andrew+netdev@lunn.ch, linux-rdma@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, leon@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 11:32:13AM +0800, Z qiang wrote:
-> >
-> > On Wed, May 07, 2025 at 07:26:05PM +0800, Zqiang wrote:
-> > > In the preparation stage of CPU online, if the corresponding
-> > > the rdp's->nocb_cb_kthread does not exist, will be created,
-> > > there is a situation where the rdp's rcuop kthreads creation fails,
-> > > and then de-offload this CPU's rdp, does not assign this CPU's
-> > > rdp->nocb_cb_kthread pointer, but this rdp's->nocb_gp_rdp and
-> > > rdp's->rdp_gp->nocb_gp_kthread is still valid.
-> > >
-> > > This will cause the subsequent re-offload operation of this offline
-> > > CPU, which will pass the conditional check and the kthread_unpark()
-> > > will access invalid rdp's->nocb_cb_kthread pointer.
-> > >
-> > > This commit therefore use rdp's->nocb_gp_kthread instead of
-> > > rdp_gp's->nocb_gp_kthread for safety check.
-> >
-> > Let's see...
-> >
-> > The rcu_nocb_cpu_offload() and rcu_nocb_cpu_deoffload() functions invoke
-> > cpus_read_lock(), and thus exclude all the CPU-hotplug notifiers,
-> > including the one that invokes rcutree_prepare_cpu().  There is also
-> > rcu_spawn_gp_kthread(), but that is an early_initcall() that happens
-> > before CPU hotplug can happen, at least for non-boot CPUs.
-> >
-> > So rcu_spawn_cpu_nocb_kthread() cannot run concurrently with either
-> > rcu_nocb_cpu_offload() or rcu_nocb_cpu_deoffload(), correct?
-> 
-> Yes, the rcutree_prepare_cpu() is invoked under the cpus_write_lock()
-> protection.
+On Fri, May 9, 2025 at 7:51=E2=80=AFAM Stanislav Fomichev <stfomichev@gmail=
+.com> wrote:
+>
+> Having a software timestamp (along with existing hardware one) is
+> useful to trace how the packets flow through the stack.
+> mlx5e_tx_skb_update_hwts_flags is called from tx paths
+> to setup HW timestamp; extend it to add software one as well.
+>
+> Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
 
-Very good!
+Thanks for working on this.
 
-> > It appears that all CPUs (try to) create their rcuoc and rcuog kthreads
-> > when they come online, regardless of the nohz_full and rcu_nocbs kernel
-> > boot parameters, some old tree_nocb.h comments notwithstanding.  ;-) The
-> > rcu_organize_nocb_kthreads() function looks to cover all CPUs as well,
-> > so ->nocb_gp_rdp will always be set after very early boot (give or take
-> > alloc_bootmem_cpumask_var() failure in rcu_nocb_setup() and checked for
-> > by the cpumask_available() in rcu_organize_nocb_kthreads()).
-> >
-> > The rcu_spawn_cpu_nocb_kthread() can fail to spawn the GP kthread,
-> > in which case both ->nocb_cb_kthread and ->nocb_gp_kthread remain
-> > NULL.
-> 
-> This is a low probability event, but it is possible, if this happens,
-> and we test it with rcutorture configured with parameters
-> nocbs_toggle and onoff_interval, it will trigger a null ptr access.
+An a bit irrelevant topic here is it seems we miss adding
+SOF_TIMESTAMPING_TX_SOFTWARE in mlx4_en_get_ts_info() since mlx4 has
+used skb_tx_timestamp function in mlx4_en_xmit(). IIUC, I'm going to
+send a patch to add this flag.
 
-Understood, and that might be another patch if you would like to
-persue it.
+Thanks,
+Jason
 
-							Thanx, Paul
-
-> Thanks
-> Zqiang
-> 
-> 
-> >
-> > If so, LGTM.
-> >
-> >                                                         Thanx, Paul
-> >
-> > > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> > > ---
-> > >  kernel/rcu/tree_nocb.h | 5 ++---
-> > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-> > > index 1596812f7f12..6679140bb0b5 100644
-> > > --- a/kernel/rcu/tree_nocb.h
-> > > +++ b/kernel/rcu/tree_nocb.h
-> > > @@ -1146,7 +1146,6 @@ static bool rcu_nocb_rdp_offload_wait_cond(struct rcu_data *rdp)
-> > >  static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
-> > >  {
-> > >       int wake_gp;
-> > > -     struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
-> > >
-> > >       WARN_ON_ONCE(cpu_online(rdp->cpu));
-> > >       /*
-> > > @@ -1156,7 +1155,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
-> > >       if (!rdp->nocb_gp_rdp)
-> > >               return -EINVAL;
-> > >
-> > > -     if (WARN_ON_ONCE(!rdp_gp->nocb_gp_kthread))
-> > > +     if (WARN_ON_ONCE(!rdp->nocb_gp_kthread))
-> > >               return -EINVAL;
-> > >
-> > >       pr_info("Offloading %d\n", rdp->cpu);
-> > > @@ -1166,7 +1165,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
-> > >
-> > >       wake_gp = rcu_nocb_queue_toggle_rdp(rdp);
-> > >       if (wake_gp)
-> > > -             wake_up_process(rdp_gp->nocb_gp_kthread);
-> > > +             wake_up_process(rdp->nocb_gp_kthread);
-> > >
-> > >       swait_event_exclusive(rdp->nocb_state_wq,
-> > >                             rcu_nocb_rdp_offload_wait_cond(rdp));
-> > > --
-> > > 2.17.1
-> > >
+> ---
+> v2: rename mlx5e_tx_skb_update_hwts_flags (Tariq & Jason)
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 1 +
+>  drivers/net/ethernet/mellanox/mlx5/core/en_tx.c      | 7 ++++---
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drive=
+rs/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> index fdf9e9bb99ac..e399d7a3d6cb 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> @@ -1689,6 +1689,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *pr=
+iv,
+>                 return 0;
+>
+>         info->so_timestamping =3D SOF_TIMESTAMPING_TX_HARDWARE |
+> +                               SOF_TIMESTAMPING_TX_SOFTWARE |
+>                                 SOF_TIMESTAMPING_RX_HARDWARE |
+>                                 SOF_TIMESTAMPING_RAW_HARDWARE;
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/ne=
+t/ethernet/mellanox/mlx5/core/en_tx.c
+> index 4fd853d19e31..55a8629f0792 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> @@ -337,10 +337,11 @@ static void mlx5e_sq_calc_wqe_attr(struct sk_buff *=
+skb, const struct mlx5e_tx_at
+>         };
+>  }
+>
+> -static void mlx5e_tx_skb_update_hwts_flags(struct sk_buff *skb)
+> +static void mlx5e_tx_skb_update_ts_flags(struct sk_buff *skb)
+>  {
+>         if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))
+>                 skb_shinfo(skb)->tx_flags |=3D SKBTX_IN_PROGRESS;
+> +       skb_tx_timestamp(skb);
+>  }
+>
+>  static void mlx5e_tx_check_stop(struct mlx5e_txqsq *sq)
+> @@ -392,7 +393,7 @@ mlx5e_txwqe_complete(struct mlx5e_txqsq *sq, struct s=
+k_buff *skb,
+>         cseg->opmod_idx_opcode =3D cpu_to_be32((sq->pc << 8) | attr->opco=
+de);
+>         cseg->qpn_ds           =3D cpu_to_be32((sq->sqn << 8) | wqe_attr-=
+>ds_cnt);
+>
+> -       mlx5e_tx_skb_update_hwts_flags(skb);
+> +       mlx5e_tx_skb_update_ts_flags(skb);
+>
+>         sq->pc +=3D wi->num_wqebbs;
+>
+> @@ -625,7 +626,7 @@ mlx5e_sq_xmit_mpwqe(struct mlx5e_txqsq *sq, struct sk=
+_buff *skb,
+>         mlx5e_dma_push(sq, txd.dma_addr, txd.len, MLX5E_DMA_MAP_SINGLE);
+>         mlx5e_skb_fifo_push(&sq->db.skb_fifo, skb);
+>         mlx5e_tx_mpwqe_add_dseg(sq, &txd);
+> -       mlx5e_tx_skb_update_hwts_flags(skb);
+> +       mlx5e_tx_skb_update_ts_flags(skb);
+>
+>         if (unlikely(mlx5e_tx_mpwqe_is_full(&sq->mpwqe))) {
+>                 /* Might stop the queue and affect the retval of __netdev=
+_tx_sent_queue. */
+> --
+> 2.49.0
+>
