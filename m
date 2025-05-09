@@ -1,276 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CB22356BC
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746808189; cv=fail; b=TX8cbI5p3ykkRRLRMoaoEJOjPNUQ5R4nkIPdWbseF4LCuYZb5zpC8L5GqDDzArPtJYmo6PVJMeR1VXEIlRdXcpzo0f7xhnLpYszKxhSxtDo4/27xDt34wRAFgOEpzXkoKyo7zIpM0qz+lDt4xdD6M4CEvUkxT6z5NpSQC8UGWRw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746808189; c=relaxed/simple;
-	bh=uFufWwwFndUyFZMpkRW9H07MqcDg3EzVQfQONhSsj7Q=;
-	h=Message-ID:Date:Subject:From:To:CC:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=He4BqKeyn+uCZxF/acbFj2VuDXgo/H7R8WDn530TiK4ISHlVfV4SCfid11zk1+FPk5emZkw18bACiBedH3l0k9zkeS5ptxFjJcgp+hUHDrcACsqHyxueDh/foT97mVN9bkT35eKLnpJcJtN09wtsRviOZMKOoxuRPjhITZeImeU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N2TJFXy4; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4BC238D22
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746808199; cv=none; b=j/usTnaNFvS9N21Bd22PWFh0SgZSDwST10NOZcGoh5QXPCJx73XExjFa17HRrpAlnhJ5+OJW8oPc31sWvRUeTVSno+wP66eZjlhus9hWzgrip/kES7RZZxUTzssZbCZta/TdpgDhLgs3NtGOgisRpvmvM2NzaYvIWtK8datcbjk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746808199; c=relaxed/simple;
+	bh=HYHioEyqW8mZmmUrE6OVt2ezIQqZaf+AB1VpSgRB678=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fxhAkJI4/xwOi3h6VJs9AoSm49TtjBEV6VjRF/O3AvWJV6QEfa1KvhR0p5oweKI4yb5uVY9XFID+JyO4hBmtd76I1WaOjCiDoJtIqwt9jDj7OeUxfJ68gIg4id6cak4qW69866d/AYpkBoUnO6waGL/k20wb7sn8fGOeDVdKYII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CV9P3vh7; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N2TJFXy4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746808188; x=1778344188;
-  h=message-id:date:subject:from:to:cc:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=uFufWwwFndUyFZMpkRW9H07MqcDg3EzVQfQONhSsj7Q=;
-  b=N2TJFXy4Hi0AoapjAdOabB/UZ2fqjfuRuvwpvBjVQznWNcU+jvwToLb9
-   iaEql/0jggjoDyHme7v+IH7bo+RfTrrpyEvmDL1mIyOjMYOwAGEZnKj+v
-   10aiZyzmtg/b+0fO+a83uX3Y4EgpwM/ekwE+d9N/Z2cXCHI2z3fXzm9IZ
-   jp9/BzXYb60LMiJbpfE9m6MnD5EoucT+9kXZBhdNunP2l6ZytTTPAIKmY
-   eUGdfdSxXG3+aOIPg+e+W4aqQkyeq0Q+UkqVbTBB1emaJJlsq4TseDaKC
-   omkJmiXQTLZIpqR7UlO52R5eCaJXo/ODWvt9ehYQn6AuWn+044J27VdKb
-   g==;
-X-CSE-ConnectionGUID: e7F+0JEbShm35CARKMK8Lw==
-X-CSE-MsgGUID: ZQlkzT4JT4WPaTQOJfLTlw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48340686"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="48340686"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:29:47 -0700
-X-CSE-ConnectionGUID: IugjEql4RmegpiK8o3vi3A==
-X-CSE-MsgGUID: kZL4DwDBS7aCYpZ2umDilg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="140727951"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:29:46 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 9 May 2025 09:29:45 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 9 May 2025 09:29:45 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 9 May 2025 09:29:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tuKiRobDc6rGfx1y2DjR6RPMOalDDqOrh5Z6YoPOTDWDVGxyg1wv2DjmjgN1u9N+6iInmn+NtEQExl/C8hf7PJV9J8yEzCEQEWwc34FkqwsoE5Gnsts3SUeBUpbt6p8+XFsBB6+a8yOo2S1yO4/HuZJEf8rvUh+MAk6id9R+cjCh2xFOAbLgTbmUml8LGIxL+YLwry/NfD+EyblfCyUp8HZcEWAhXHOlBAncW2QzAckmiTxv+K4S3F3CojSWf5JIbCNjHMQ1BEmXPzz0VBXTYrA+oGbQXDZJzxyf+YDeMk3c8BxFC7ZQVDa2cvmHG1S5S/Yx0FJ7gT8nTFwSgLcdbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dKye5+3sYjk3uHLej8sDJgyp9ThTZYe+j8dzg/4BB5Q=;
- b=YVfTvYCC43vFv4nRJ6cCJaVKWgyDO+2kNBl2CHgATdzMvMrBljnOamiWrl6VBf/6JHYlivrZjWDMOmy7SL37Tg3KufdoUNlZRci1wTfFuBOBaJ5UGvQcuxTjsPVmylfzXDxVZ1N0pLKD+TedBUQmFSqDzztGbEE7Pb63qZAbqCuO/X33I6K8Uzd4+cqQ8ha3Sxpymn+wtSC1H7suH6GZVrZUEBPb94GciJUL/jWz5AhNM27sVZjJXgTSDIt4QJrrLSynSpxGtDTruYGUK1XmXupUXPNo/UQ57u5+wGc5LUhZg7ibBSVQfwNrrGUf+3JUicZHiqcZOJKrcji2V1f9jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SA1PR11MB8350.namprd11.prod.outlook.com (2603:10b6:806:387::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 16:29:01 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8722.021; Fri, 9 May 2025
- 16:29:01 +0000
-Message-ID: <abdd65a7-1f8e-4c3f-8e08-94787a054430@intel.com>
-Date: Fri, 9 May 2025 09:28:59 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 07/30] x86/resctrl: Check all domains are offline in
- resctrl_exit()
-From: Reinette Chatre <reinette.chatre@intel.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: James Morse <james.morse@arm.com>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Ingo
- Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, H Peter Anvin
-	<hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	<shameerali.kolothum.thodi@huawei.com>, D Scott Phillips OS
-	<scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
-	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>, <fenghuay@nvidia.com>, Shaopeng Tan
-	<tan.shaopeng@jp.fujitsu.com>
-References: <20250508171858.9197-1-james.morse@arm.com>
- <20250508171858.9197-8-james.morse@arm.com>
- <dafc0ab3-aaf7-4055-bf56-ffd5414f8895@intel.com> <aB3lS8K7I0wEkGw_@arm.com>
- <524a79fa-5066-44fb-b9ad-7182dd28fb39@intel.com>
-Content-Language: en-US
-In-Reply-To: <524a79fa-5066-44fb-b9ad-7182dd28fb39@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0P220CA0013.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::20) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CV9P3vh7"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so29340006d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1746808196; x=1747412996; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e5785CgqURmvakdTUlqL7nzZfk4PDQP9h580Dg3FiPk=;
+        b=CV9P3vh7rMAhECyTq8bmdYAtRdrNxtVHIIeLBpqPM3GXPLyXBAu9nHsS/mhlwT2hPi
+         ZE+flyIE4CDmF+Qj/G8/V/lSKMfWNpVj/eZu+bry7Lg277NxJHmt8ebzvIFne/mkfMUD
+         FtHhvEwZqf/B/xJjWZ0RgfVR9aMdMRpTTl+ha7XsIU/PD3cFLnij1tYuOJg6Myoi59Cl
+         RRthIR4AQ9YQuiSUJJ58dje5ja4DLO5pyutm5yWYFNoUpDo+tI0KRso+yzQgeEA/6iPh
+         SCGkVSQvyfi1I7ZUfup38VGry54aGUItpRVJoaL5p2Qsx/FFpb4FQ09VrROH3g8wL+tg
+         +VHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746808196; x=1747412996;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e5785CgqURmvakdTUlqL7nzZfk4PDQP9h580Dg3FiPk=;
+        b=HC07zaSjrPqTgEM8Kbpx6oYCo5mhbLMfRW7G+S1eGOSzBfzQBuMj3toZKqJhfAgxvx
+         Z/41M531TPoVdjL3qIgRVZjJD16JGIoHFosj0TgrPnA1DhjtzQ8S9RmORymIzjkLW4XY
+         xS58Y4f3NLnTlpRkzx6AyYLBtE8Oq+s/PP2AKL/zJ1eipCzxjoy/ciP8wSwJfWgyOYux
+         CdSo9YU/ghqJigL1QGDEdFcgtGyzkddzQ40ZLDWIUPw4cM3HQ4jikA+MDpyQut7ElaMz
+         cAn/NDoRBsUndNEe3DcczxkNdjJq/Wam7UO8Me+P3ooLY4AdobwgAutOE+3TZtKjv7JD
+         V4Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVECObqRrBVSSNPZyZQgB0xZnkLtTKBl6tP/pxT9ztMoPOudOmG/XMJxgwYeHgdcbFbjj/aMdwYTiHnNCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkE6b2D5pRYLPLxyYGgWndi60yLEeJ+Qa6gpcgRejHITxj7A9N
+	gadYkyviuiIBmi7Gt4xwxGnKQoKoR4TctNi4MYrpRt4wxx4xEIKEWuRx8G/xezwlX2oWjeirRAI
+	A
+X-Gm-Gg: ASbGncsW5YA1uGZXz4BNQyuMCVflOjTfCiVqupVmQfdvS8X5bYC0lr/R/5MYSQqdHJ1
+	DGF62XBPHa+pJ/CHoQFoxfBv9jk8+mWykDFh4rusfWlLCqF4eJbH3tbmHHh3xeGhZfIHTZAcX9B
+	ft1E0mSFkUt8WlzL+C4wq486bMB43eaOHkdS9jFwclAP7prREjedIn4geLobvB2xN7pUsP+WuVi
+	P2NfSQRPCTb2Luh+xumurc5gc7UywRIzNbEPaYW6gWJXX7w+Xw4+7e0w2kEXWrPzv2LH/JPOgAK
+	6azXuUpTWzpH512r2AxQdrZHJGfSdUmpG/O1gDS2zgIsWcCrywUJxfJ51kFKgf5adJZkHWvHoyG
+	wUwYvw+lnydL771hm10IB
+X-Google-Smtp-Source: AGHT+IEWBlMz599IZQBAgkkKK9fYMS28rPCOCRFZ9kIcKUmFGu5/3dfLbCNRQQf4+cfmw8Kfeubc/w==
+X-Received: by 2002:ad4:5cc1:0:b0:6f5:fb5:35f0 with SMTP id 6a1803df08f44-6f6e482d000mr52198896d6.30.1746808196114;
+        Fri, 09 May 2025 09:29:56 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a0bee8sm15632866d6.54.2025.05.09.09.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 09:29:55 -0700 (PDT)
+Date: Fri, 9 May 2025 12:29:53 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Rakie Kim <rakie.kim@sk.com>, joshua.hahnjy@gmail.com,
+	akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com,
+	Keith Busch <kbusch@kernel.org>, Jerome Glisse <jglisse@google.com>
+Subject: Re: [RFC] Add per-socket weight support for multi-socket systems in
+ weighted interleave
+Message-ID: <aB4tgSP2r-2s-1ce@gourry-fedora-PF4VCD3F>
+References: <aBuMet_S1ONS1pOT@gourry-fedora-PF4VCD3F>
+ <20250508063042.210-1-rakie.kim@sk.com>
+ <aBzJ42b8zIThYo1X@gourry-fedora-PF4VCD3F>
+ <20250509123131.0000051b@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SA1PR11MB8350:EE_
-X-MS-Office365-Filtering-Correlation-Id: 390c865d-91d7-41e4-d3dd-08dd8f169b25
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NDhnU0hYUWtORTZ0Nys1QkRVWEZWSTdranJCYUFBNDlIRnA0UVpqaVNtRERa?=
- =?utf-8?B?WkJBU0lVdThaZXhMT2JsQ3ZQWVlpdExYdUhxTzJSV0o1TmxPcE5rc21XUTBn?=
- =?utf-8?B?bHZielBvbnZ5WnNJT3RUTnJFZmhrT2xyS0poTU1jcXpkd25oTlBySDZhTHBn?=
- =?utf-8?B?ZTdodGh5ZGljeVVxTEU5UmNaNUY3WWlNSzdmZXExMCtHckVadnl6VjVvSGlF?=
- =?utf-8?B?OWdWN0h3ZnhROTV4UzlFbzkxRDlaZWxreUJjR0h2b1JSSmY1VENZM3VsSUNZ?=
- =?utf-8?B?cVVXeEl3b1c4QloyS0F2ZjRvUkxZSGpBVlhqUGhlbGxjN242eWZleFh3K3ky?=
- =?utf-8?B?cGRHcE41NjcwSml5YU1qVk5LYndjcXFCUE5oUzRVSTVHSWc5a3RzSDltckV0?=
- =?utf-8?B?YTB5bzBzZ3FCQTZjVWJyclU4MUk0YkttaHRqYlo4UmJOV1Y4K21BU29LZDZU?=
- =?utf-8?B?Z2Y5M1NGOFN5U05OK3hQRXlZQjJZeWs5RmIwT3JYYWtSdGcxVkRSeDNHMXFI?=
- =?utf-8?B?UGpaMU5yMzZCV0tFbEhTK0dFeG1oUHRFZjZBUzdMYWZjM0w0bm5aRjUvajRq?=
- =?utf-8?B?NXJ4dmp1UjdWM3pDenpTeklha08vbkNqL1RLaDJkVkxUQWx6SHFNRW8zWTN1?=
- =?utf-8?B?U2pJcUtGZnNPamFVbVNSdlJDWmhyNUJUVFJsK1pSdmIvV2pNaGcwUThJQ0pJ?=
- =?utf-8?B?ODlpN2dYQktubGxXRXkyMld0a1RtOUpCY2xQaDJDbmJ5OFBxS3NyWkhDeXVo?=
- =?utf-8?B?R2VTT2FQcVg4ZSsvazVEWFBNYkRwa0ZOTVVUa3F0Mnh3NFhaTGJsNS9XcHdD?=
- =?utf-8?B?OU9NdEFNZlVicnZ5SFRPb24rL2lJa05FK1pna1BpUEw3RE4rWUtuR05GZzlY?=
- =?utf-8?B?ZkhiVVpLQVVyVHlvQXplTll2MENIcm1hcUhVV1NtSkRRSUswOFZmYUdRV0o5?=
- =?utf-8?B?SW9lSFJ1cGthcWpwdFo5dENTQ0JOeVErc1ZiUlBhVmF0NmtBcWdmQkxGbjE1?=
- =?utf-8?B?RXpYbHkzUFZQYS9tcGcrSG5DZnNwdzkzbFZrc2k2MHJOMCtoZkx5ekpkRnl1?=
- =?utf-8?B?VENqUWU0eHRzQ0g3bEphb1VWTEE0TDNkWC9kNytMTHJvSzBIUGhCdWdYSlgv?=
- =?utf-8?B?MWhMcytpK2Jjc3VpczJwNlVUSnlDYlF5M21VK0hUNG1sN0FLNTNKWEtPcmFI?=
- =?utf-8?B?ckVrMEROWWYvODdWYXd5SnJFUWs0MzA0aGs3Yk1RUHVzcWdGSmpjT2hTaVdu?=
- =?utf-8?B?WVhWSFlicm1laU5hN3VxaTNQOFdWTjFNeWtINk5zdlE0UFVjcTlmbjJIR1l3?=
- =?utf-8?B?MVlETWNQaFM4Ty9nbXBlSUdCZHIvVzJmZGU2eGd0TC8zbkdUeG4vYS9HK3FN?=
- =?utf-8?B?Z3hNNVE2UUtsWWFlaENOZkZ3QXZKLzd4bUgxaEZlb09wdmp3bVZZeFZBeTNO?=
- =?utf-8?B?amRXV3NGVFlKR1F6MW4zcnhGMGgyVG1WMzlmQUVXM0dLVjhFanJDMWJGeE1T?=
- =?utf-8?B?N0VYcXVWS1BnVHdJcFphYWozOS94TDdkSkdNMVBhM29OWlgwakFFaUZpSU5K?=
- =?utf-8?B?UkRQY0hpRytzY3I5UjdpOTJRZWx1NlNWZXRJbUorQncwSHV4VHJpOVJNNEYr?=
- =?utf-8?B?dzQ5M0xXeHdld2xpdGh4Q0d2cHh3L1dMR213NFlKZGN0RTRrR0lzTU5ib3Uw?=
- =?utf-8?B?ZDBYZElsb1NuS012YXAraXdNNGJ0ZlpOT3VMTzFjcE9vRUcrU0RlSFpDT2Vr?=
- =?utf-8?B?VjBhMlUzczVyU2UrbEdLVEFScFNvazltN2ZtS0lsRDc3RzV1OWZJK1pKbTNw?=
- =?utf-8?B?WnVtekZ1NmEzZmV1aTl5b0FMSFBweStDdWV4Nk1pQTNBSGFkZFpWTi9KK3k0?=
- =?utf-8?B?aUxrNkdrcGk1dHVLOStCd2xCcXg2bXAzSVkzelFwMExYbXM5a0daRFU2aTlQ?=
- =?utf-8?Q?qa5aNqjROQI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a2ZHSUc1cEhTTzBoUkdQaVY1Vjd6cUw2dkhXL0ZhVmJZb2ZYQTFITEpETC80?=
- =?utf-8?B?VUd2M2xhK0ZCYThtZnFXL2p2eUNobENVbUVBUk1RZG91QzZIT0NqT3dEQ0N2?=
- =?utf-8?B?eVRLSDRiRnNGZndoOU9ZMTZzdjlOYitWZDJ5TWN5L2hYcEYweWkyTWlsZEZj?=
- =?utf-8?B?QnRLc0c3QlRTSWttbkpoQjM0Q0Z6OFN6bkovMUtnNFMyUEFLUFJ2RDhYNXBi?=
- =?utf-8?B?Y1BVQmRSVmdIVFkzN0x5akdiaEtvN202RmVxTmpNL3VNY1VxT0sxck1OOEVW?=
- =?utf-8?B?cE1oSkFiYkFoL2VwRlJnSWV0Zi9rYkM1TVpBajR0WUFoSXhGVzJqeTZLRlZ5?=
- =?utf-8?B?a0VFYm1mdzZKSlRWbVRtUVBhT1grL0dZMGhJMGU4aDFsS05wSTloU0lsRnA3?=
- =?utf-8?B?V2xEUmRQNUwrSHI4T2NqTSt1cnR1VzhpR3dHdWFLcUtYVHJZSVVaSkhodGtR?=
- =?utf-8?B?WmNxQXpFVERWWVFLZWNncXZnYTVXTHIwaE1oeVVFSlkzMm9kZ1M2NWxvZTZo?=
- =?utf-8?B?dm5QTExTTnlaNlBEalRPQ2E1MDlpQ2FVdlVyb2NMeURSTHN4WDJIdC9MQzB0?=
- =?utf-8?B?TWExOFBpOW5BSm1aK1UxVHBxQ0dFLzNUdFJFOWxKVEY2S0FoVGtacUtpMG9J?=
- =?utf-8?B?VU1mVWZUUFlDTTI3VEdjRlMwVVdKaCtidlNWSHdkNVlycm5jNWdvUC9QLzBi?=
- =?utf-8?B?S2NGdmMwTHZpTHBXN1F6RmUrbmNPa01KTXpDRVJubXZnWVpvcjNXS0pHb0pF?=
- =?utf-8?B?d3lha1dnVHRNb2NVeHQ2dW5PNWtrVDdZeFJ6V09sQldLUEdnaUNoNEhHb3RJ?=
- =?utf-8?B?Z0dKWm50UTB3Nko5RGt1T29XZ1N0L2pFRXJYYmJQSWg3aU5lTlhaQU1PZFk1?=
- =?utf-8?B?UlhRS0k4N3dVeWZBVTZhZzF2cGdKT3lSQjBwOWYzSlp0bXByVHFUaGMyTzZP?=
- =?utf-8?B?ZzFxZmwyWERKWmJUSkhjL0VTV09DNmhER2JlRjN2eHdXR1NTb2x2RVJpTFlN?=
- =?utf-8?B?ZjN5ZXRJTkw4S2NuZy9oR0JIakxXYVhYbWxXWCt0WjFHdXhaTStRaXpDZnQ1?=
- =?utf-8?B?cEZ4aVg1Qiswb1JWVGRQbFB1bHNiVGdyaHk3SGlIM1pGOWRvcG5STTR1QURw?=
- =?utf-8?B?eHowa2VQRkRzTWJYbHk2czI2TGIrMHNUaW1ib2lFdHBzNzlFaFFITm1XR0Qx?=
- =?utf-8?B?VjUraEFoTG9SdjcxTmIyNjhXTENTQXVTR1hXdndwS3R6a2FXQk1IN3VSSERx?=
- =?utf-8?B?MVRUSEpLUUhwc0hjanNPQUQzRU5NTmhUZ2ZsUTV1RUlkK1dyV2Q2TUhhOG9v?=
- =?utf-8?B?bm85VWM3UWFOUzEyVXhtMWpiZTkzSFo2VWhTQ0RoMk8zbVJTc0JvcEJOK2JT?=
- =?utf-8?B?eUJWVTlqZ2JYczl3OUppSk95dmh0VXN0K0RrR3czM0o4b2FCM1Y1VDFBdGVh?=
- =?utf-8?B?dEtCbmtKbGZWWjJvS00yWmgzWFZ6cTM2K0Y0YXVzbllsUXg5VkkrR2JBb3Vv?=
- =?utf-8?B?bnlRWmQwM3ZINHppYnhBcTc3S1dFcGIyRWJsaGpvMjNRN3JsZldlNzBValk3?=
- =?utf-8?B?Ymxpc2F0Yi85TGJla0RqZFY3anpDMEtJMkZFemNxQk93cXdxSVRaMEw1SEVM?=
- =?utf-8?B?akdSaXJ2L3BsbTFVR045MDNqLzl2M3Q1WkdSM09FV2dGbnhoYnRVTzl6N1o3?=
- =?utf-8?B?MVpSY0x4YVRYQ3JGdzlJUGRjak5RdWkxdlFOamYzZ0xUbUxxU0FmUEpjZ3pm?=
- =?utf-8?B?V1lBY1BpaEl5VCtiMzlGYzVTNmVBelBrcm5LT1E2UXJMaGUyN1I1T0diM3FV?=
- =?utf-8?B?Y3ZJYlU2YThHNU9paXJESTM2TkRqQ0E1aG80ck5pNGJHcnZPOVcxdVZEeDF5?=
- =?utf-8?B?ck5JaXFnSmdNa3ptZEN6ZzZ1clVoSHM3SDN4clpYYW5DaG5scHNXbm43anJ2?=
- =?utf-8?B?LzZwVzJ1VmNsQ3J6Mmp3Y2h3YUIwUHdSV3kzMklMMDRIc3lTVFljS0czWHY5?=
- =?utf-8?B?UkZDYi9CcGpieDRRdWZXYytzMjVmUVpQWjBSQ2oySTVPUEU4T2ZaN3hqVERL?=
- =?utf-8?B?U3EyUHY2Qzk2TDBjYk5mYWV1cTcra1JOWWRZaGpHZzlMZWw0YmF5cXRGYjc1?=
- =?utf-8?B?TktqbUR1d3NYNVVwdmpDUnpUVW85RE1NOWpKVTlYS0p5a2tlNDNHeC9xZW1U?=
- =?utf-8?B?MUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 390c865d-91d7-41e4-d3dd-08dd8f169b25
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 16:29:01.2909
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7ypVs00zDgv7p3vdPzS6fHeBAyMJGlmsKUjHgzUcY4LZUqyRRdn6uRw4GvkKT1zcjhOqRXBZR0VyUKMUuw5PJIM67NAf/DAfqSXmu7FpTaE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8350
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509123131.0000051b@huawei.com>
 
-Hi Catalin,
-
-On 5/9/25 9:17 AM, Reinette Chatre wrote:
-> Hi Catalin,
+On Fri, May 09, 2025 at 12:31:31PM +0100, Jonathan Cameron wrote:
+> Anyhow, short term I'd like us to revisit what info we present from HMAT
+> (and what we get from CXL topology descriptions which have pretty much everything we
+> might want).
 > 
-> On 5/9/25 4:21 AM, Catalin Marinas wrote:
->> Hi Reinette,
->>
->> Thanks for the reviews.
->>
->> On Thu, May 08, 2025 at 10:51:23AM -0700, Reinette Chatre wrote:
->>> On 5/8/25 10:18 AM, James Morse wrote:
->>>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->>>> index 88197afbbb8a..f617ac97758b 100644
->>>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->>>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->>>> @@ -4420,8 +4420,32 @@ int __init resctrl_init(void)
->>>>  	return ret;
->>>>  }
->>>>  
->>>> +static bool __exit resctrl_online_domains_exist(void)
->>>> +{
->>>> +	struct rdt_resource *r;
->>>> +
->>>> +	for_each_rdt_resource(r) {
->>>> +		if (!list_empty(&r->ctrl_domains) || !list_empty(&r->mon_domains))
->>>> +			return true;
->>>> +	}
->>>> +
->>>> +	return false;
->>>> +}
->>>
->>> This looks the same as before. Did you notice my comment in [1] about this list_empty() usage?
->>
->> James may have missed that comment (and he's off today). Copying your
->> comment here:
->>
->>> A list needs to be initialized for list_empty() to behave as intended. A list within
->>> an uninitialized or "kzalloc()'ed" struct will not be considered empty.
->>> resctrl_arch_get_resource() as used by for_each_rdt_resource() already establishes
->>> that if an architecture does not support a particular resource then it can (should?)
->>> return a "dummy/not-capable" resource. I do not think resctrl should require
->>> anything additionally like initializing the lists of a dummy/not-capable resource
->>> to support things like this loop.
->>
->> I agree the description of the resctrl_arch_get_resource() semantics
->> doesn't specifically mention that the list_heads should be initialised
->> in dummy resources. IIUC, x86 should be safe for now since the
->> rdt_resources_all[] array elements have the ctrl_domains and mon_domains
->> list_heads initialised.
-> 
-> Not all x86 resources support both control and monitoring. For these resources x86
-> only initializes the arrays it uses. For example, the L2 resource only supports control
-> and thus only the ctrl_domains list is initialized. When the above loop runs on a resource
-> like this it will return "true" because it believes there are monitoring domains
-> online.
-> 
-> Your conclusion that x86 is safe for now may (reason for use of "may" follows) still
-> be valid since resctrl_online_domains_exist() is only called by x86 from its
-> resctrl_arch_exit() that is within the "exit.text" section. Here is where I am not
-> entirely certain of the impact (hence the earlier use of "may") since from what I can
-> tell the linker does not actually discard "exit.text" on x86 because it defines
-> RUNTIME_DISCARD_EXIT.
 
-If you are not familiar with the details then I should add for completeness that resctrl
-is not currently capable of being compiled as a module.
+Generally I think if there is new data to enrich the environment, we
+should try to collect that first before laying down requirements for new
+interfaces / policies.  So tl;dr: "This first, please!"
 
-Reinette
+(I know we discussed this at LSFMM, dropped out of my memory banks)
 
+~Gregory
