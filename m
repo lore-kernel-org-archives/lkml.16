@@ -1,112 +1,211 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A382238C19;
-	Fri,  9 May 2025 16:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454B223958A
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746809514; cv=none; b=IQOO3d7n881EXR1WlHoy9ALSpq8BoGJNoZLdhBfHWYVfSa7L5HT/0o7/rxSQUB/dvNd+FCZH5Sl9yKXKd+d0U6MYhJhgHOiyOfLILifomuLB0Dbl10u7166BIsnieNH0uDpg6IvmStYMnOrlA2Fffm7z4RplVPy1QSayVL5skZI=
+	t=1746809537; cv=none; b=KZx++Cp7pBav+Volidz6JgpLjunAMVxy5LDiuAA6P66KPxTDYsMjhJKbl8Mcik4g5wpL4XhkVd94J6YAHlbnDtsQiHvQr1dNLofmNKYi6PzbnYtgsQXd3mN73ng++l0I3imw4Y6GAjuUFjSnK1XioiZ9QCwL51JSJ1g8i4cjxq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746809514; c=relaxed/simple;
-	bh=9tmfUQl7n6sCe4B6VOxGhrGgZC2hfLqoLZRw4v0V5dg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=joAaeE0UGAFZu2qvuXgh6cUIWW4n4A71OHEzfjfacLJ5AIs1U4J2gbtkY2C0nZsQr8nGZESuHuurmHAj2BBowQaCO7Z9Mm4GTg4EwN8i6FfVcfm6m6OwrGV1i9H4VqTxWE2U2+i2AOs57RyY54oY9xR7dMRwwyqcAOuiBNa72IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=P/NX0RgH; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1746809537; c=relaxed/simple;
+	bh=MPYhgm6iWVqeKJ5zbCg/gVgBRawAwkQ4rc6APfeAXl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BaqPefAUPl3sdBJ5nm7bODgQNOfAXtejX4nYqVZi8v8BdcwDErEiZtG0UqjcP8D5S6DMYS3RTZynt6joDmLZsBeJg/+Qa+TXpgnaasfwoe5h/J1vF9tiq3d0bCgI2nrqLM2w6RLc8lkWwlqvzZvt2xwITLMmFL4HNTIrQThQNS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GhFFnxqp; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="P/NX0RgH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GhFFnxqp"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so338551766b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746809533; x=1747414333; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MPYhgm6iWVqeKJ5zbCg/gVgBRawAwkQ4rc6APfeAXl8=;
+        b=GhFFnxqpJA7XA/M7DImGvVQ0XcQGphxLWvfzgqjdBX+bVL8Io4KqEm+4Rjk5mYt67o
+         JtWzFdu+2HOoFfHxbP0yGhLI8+iKyCEFdA5ac5GuSj6IFt3Hxxc23CvJnapYT/cJo3NP
+         avTlY4DyiJHylTsmGV9Ne9yWC8Aq1+7ZgcOkemUucBXxHO3w1+I5hpHtq0ZwxAOIhZx+
+         1dSz4Ne94uF9Q3qGrrKMUnSDJawizn/ZTGJ4HOx0QYgK6e+4n9Qrc4R90fC0qQUREyhI
+         WsAQ5CEM7K9Wclny+dryuPS0zauj3NuyAmjLnEHshuhk4bD1nBfcT8sI6S5PWmuJi5Zp
+         dCXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746809533; x=1747414333;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MPYhgm6iWVqeKJ5zbCg/gVgBRawAwkQ4rc6APfeAXl8=;
+        b=OuFHT2D6cjEG1cUoMvDGcu8MMZJGkNTBP4Y7+W6PlQ9Q1RmqBFZCn2S0P9uC8h//oo
+         naAY5bNWdnzKu1ePitUOrOroarTyzvUIEOviky740B8uwC0nnc3/4pM0DdYurnBHiADL
+         bbSvTWGRH4bSMh6E8kYHC49DysqHTBPwVmmJXZ2FPPZTk5v02MZrByan+BYT2MSD87KE
+         zGfkQxY+HYDbIW/1GyRz7MbIAGzMM3P2ZdFanpqUg4p3/IyUx5x/B6uep34Rv24DjGKM
+         D4MtoRWpC/6xG/7iKvymx8fbvgUXHreyJfQXh6dPwvlawO2O8lsSat9MuaUe86cPucgB
+         ASxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKoQTH1Ng9L/B4Gc6e+NtQDMYJMnJtAlZO1FOCHvJc+BHPGmyWmLGjgOdn7J2yYXq60g+VFG+WO5Pb0fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrGAkfgGk7xL6cS7na6KIk2e3qKFXV7d8j9q/YPcubkNhH4wxU
+	r4LJc+H0S1GJgIx+TnQJ8TxMI2/cmAzxmNAy4hQrOLORJznGyoUZb3r8p6pkEKqY4fFfNyJy+2j
+	U1daO8rDJOXS5SsL2OVCk86HfT/xZ935r+yXh
+X-Gm-Gg: ASbGncv33B8EGoZYTYt/Gfmib47aVuCB3JaXvxtDRya8vYA9YO3HH9lJscb4J8Awq23
+	BrW+aPmr2bIKwnnawrT4JvdHD73kS+pT9Hk369E4bXNy5/8UapKqz8apiYzajd+7RDkA7qVKNAk
+	/8vfwnVrpKRsVvh7mp9HAtVhzzw/7mXDZGlhuEzxHtvJGan1HUzXEjD/BL
+X-Google-Smtp-Source: AGHT+IGNmQDZ3Zs7DCjn3XA55T3gmgFTAE0YeeoKqQyv8kpQZk9x6BYPeAUbrAL1cDPCvsiyga6f3luTtHZOxuwBYJM=
+X-Received: by 2002:a17:907:3e8d:b0:ad2:3555:f535 with SMTP id
+ a640c23a62f3a-ad23555f608mr18764466b.5.1746809533397; Fri, 09 May 2025
+ 09:52:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1746809509;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ckl3vux5StOjvP2+47jrXU3fLRpLeSvxiApo1TU/VDQ=;
-	b=P/NX0RgHit5EEJXk2v6IpDcc0CmX9jjuKGJ8J8O5RFsGJ+rX/Zfmu63/p9HRzmJ0SEju20
-	pN/gP6SdukESlLnnl2aOcQMGBMKpLbRL94g/juVXzwRKDpD05cfRZQ8VUzJA29MnSUgMZo
-	ZY4jHyKEEzcKFwwvHSoce0HjegXD/XQoC3oHYQxUqnMJtD5Job1emTRTCTV1VNsFpYqyB4
-	jx8bXA/Cqycgs8BL93wm4v4emqKSe08tJV905bRCSeEdKjQlyHIPr69944V7VG5RAvu1H0
-	GyRVpehpmWhks+9m0/OocqJs2C+FWFdssWbUkQJHyPXeEUX0eMh99gpsf78PVA==
-Content-Type: multipart/signed;
- boundary=3e23f8a3f7dd23a047277bc59f050a2e77210dee6735ec02b945a8d601bd;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 09 May 2025 18:51:21 +0200
-Message-Id: <D9RSA5K547DD.1LYPIZZM4XALS@cknow.org>
-Cc: "Conor Dooley" <conor+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Dragan Simic" <dsimic@manjaro.org>, "Rob Herring"
- <robh@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 0/1] arm64: dts: rockchip: rk3568: Move PCIe3 MSI to use
- GIC ITS
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Diederik de Haas" <didi.debian@cknow.org>, "Chukun Pan"
- <amadeus@jmu.edu.cn>, "Heiko Stuebner" <heiko@sntech.de>
-References: <20250308093008.568437-1-amadeus@jmu.edu.cn>
- <D9RQN76VZXO8.T3I0046FNVG3@cknow.org>
-In-Reply-To: <D9RQN76VZXO8.T3I0046FNVG3@cknow.org>
-X-Migadu-Flow: FLOW_OUT
-
---3e23f8a3f7dd23a047277bc59f050a2e77210dee6735ec02b945a8d601bd
+MIME-Version: 1.0
+References: <20250506183533.1917459-1-xii@google.com> <aBqmmtST-_9oM9rF@slm.duckdns.org>
+ <CAOBoifh4BY1f4B3EfDvqWCxNSV8zwmJPNoR3bLOA7YO11uGBCQ@mail.gmail.com>
+ <aBtp98E9q37FLeMv@localhost.localdomain> <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
+ <aBuaN-xtOMs17ers@slm.duckdns.org> <CAOBoifiv2GCeeDjax8Famu7atgkGNV0ZxxG-cfgvC857-dniqA@mail.gmail.com>
+ <aBv2AG-VbZ4gcWpi@pavilion.home> <CAOBoifhWNi-j6jbP6B9CofTrT+Kr6TCSYYPMv7SQdbY5s930og@mail.gmail.com>
+ <b7aa4b10-1afb-476f-ac5d-d8db7151d866@redhat.com> <CAOBoifjzJ=-siSR=2=3FtKwajSgkXsL40XO2pox0XR4c8vvkzg@mail.gmail.com>
+ <9fdad98e-9042-4781-9d73-19f00266711b@redhat.com>
+In-Reply-To: <9fdad98e-9042-4781-9d73-19f00266711b@redhat.com>
+From: Xi Wang <xii@google.com>
+Date: Fri, 9 May 2025 09:52:01 -0700
+X-Gm-Features: ATxdqUGQZI0u5dKFxPdPebOwNGcQTibf5jos_nhRRXIYthHWVUId2xtFCY7q4S8
+Message-ID: <CAOBoifhXFKu-Y7ZtSBErEZTc+Zp_0-VY6o4A1KM5ii1uzN5iqQ@mail.gmail.com>
+Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
+To: Waiman Long <llong@redhat.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+	David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, Chen Yu <yu.c.chen@intel.com>, 
+	Kees Cook <kees@kernel.org>, Yu-Chun Lin <eleanor15x@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	jiangshanlai@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-Hi again,
-
-On Fri May 9, 2025 at 5:34 PM CEST, Diederik de Haas wrote:
-> On Sat Mar 8, 2025 at 10:30 AM CET, Chukun Pan wrote:
->> For a long time, rk3568's MSI-X had bugs and could only work on one node=
+On Thu, May 8, 2025 at 5:30=E2=80=AFPM Waiman Long <llong@redhat.com> wrote=
+:
+>
+> On 5/8/25 6:39 PM, Xi Wang wrote:
+> > On Thu, May 8, 2025 at 12:35=E2=80=AFPM Waiman Long <llong@redhat.com> =
+wrote:
+> >> On 5/8/25 1:51 PM, Xi Wang wrote:
+> >>> I think our problem spaces are different. Perhaps your problems are c=
+loser to
+> >>> hard real-time systems but our problems are about improving latency o=
+f existing
+> >>> systems while maintaining efficiency (max supported cpu util).
+> >>>
+> >>> For hard real-time systems we sometimes throw cores at the problem an=
+d run no
+> >>> more than one thread per cpu. But if we want efficiency we have to sh=
+are cpus
+> >>> with scheduling policies. Disconnecting the cpu scheduler with isolcp=
+us results
+> >>> in losing too much of the machine capacity. CPU scheduling is needed =
+for both
+> >>> kernel and userspace threads.
+> >>>
+> >>> For our use case we need to move kernel threads away from certain vcp=
+u threads,
+> >>> but other vcpu threads can share cpus with kernel threads. The ratio =
+changes
+> >>> from time to time. Permanently putting aside a few cpus results in a =
+reduction
+> >>> in machine capacity.
+> >>>
+> >>> The PF_NO_SETAFFINTIY case is already handled by the patch. These thr=
+eads will
+> >>> run in root cgroup with affinities just like before.
+> >>>
+> >>> The original justifications for the cpuset feature is here and the re=
+asons are
+> >>> still applicable:
+> >>>
+> >>> "The management of large computer systems, with many processors (CPUs=
+), complex
+> >>> memory cache hierarchies and multiple Memory Nodes having non-uniform=
+ access
+> >>> times (NUMA) presents additional challenges for the efficient schedul=
+ing and
+> >>> memory placement of processes."
+> >>>
+> >>> "But larger systems, which benefit more from careful processor and me=
+mory
+> >>> placement to reduce memory access times and contention.."
+> >>>
+> >>> "These subsets, or =E2=80=9Csoft partitions=E2=80=9D must be able to =
+be dynamically adjusted, as
+> >>> the job mix changes, without impacting other concurrently executing j=
+obs."
+> >>>
+> >>> https://docs.kernel.org/admin-guide/cgroup-v1/cpusets.html
+> >>>
+> >>> -Xi
+> >>>
+> >> If you create a cpuset root partition, we are pushing some kthreads
+> >> aways from CPUs dedicated to the newly created partition which has its
+> >> own scheduling domain separate from the cgroup root. I do realize that
+> >> the current way of excluding only per cpu kthreads isn't quite right. =
+So
+> >> I send out a new patch to extend to all the PF_NO_SETAFFINITY kthreads=
 .
->> e.g. [    7.250882] r8125 0002:01:00.0: no MSI/MSI-X. Back to INTx.
->>
->> Following commit b956c9de9175 ("arm64: dts: rockchip: rk356x: Move
->> PCIe MSI to use GIC ITS instead of MBI"), change the PCIe3 controller's
->> MSI on rk3568 to use ITS, so that all MSI-X can work properly.
->>
-> I tested this patch on my NanoPi R5S with a 6.15-rc3 kernel + a number
-> of [vcc|phy]-supply patches that have been accepted for 6.16 (and a
-> small WIP LED patch).
+> >>
+> >> So instead of putting kthreads into the dedicated cpuset, we still kee=
+p
+> >> them in the root cgroup. Instead we can create a separate cpuset
+> >> partition to run the workload without interference from the background
+> >> kthreads. Will that functionality suit your current need?
+> >>
+> >> Cheers,
+> >> Longman
+> >>
+> > It's likely a major improvement over a fixed partition but maybe still =
+not fully
+> > flexible. I am not familiar with cpuset partitions but I wonder if the =
+following
+> > case can be supported:
+> >
+> > Starting from
+> > 16 cpus
+> > Root has cpu 0-3, 8-15
+> > Job A has cpu 4-7 exclusive
+> > Kernel threads cannot run on cpu 4-8 which is good.
+> There will still be some kernel threads with PF_NO_SETAFFINITY flag set.
 >
-> With this patch I get the following kernel warnings:
+> >
+> > Now adding best effort Job B, which is under SCHED_IDLE and rarely ente=
+rs kernel
+> > mode. As we expect C can be easily preempted we allow it to share cpus =
+with A
+> > and kernel threads to maximize throughput. Is there a layout that suppo=
+rts the
+> > requirements below?
+> >
+> > Job C threads on cpu 0-15
 >
-> pci 0001:10:00.0: Primary bus is hard wired to 0
-> pci 0002:20:00.0: Primary bus is hard wired to 0
+> A task/thread can only be in one cpuset. So it cannot span all the CPUs.
+> However, if there are multiples threads within the process, some of the
+> threads can be moved to a different cpuset as it is threaded. With
+> proper thread setting, you can have a job with threads spanning all the
+> CPUs.
 >
-> If I 'unapply' this patch, I don't see those warnings.
+> Cheers,
+> Longman
+>
+> > Job A threads on cpu 4-7
+> > No kernel threads on cpu 4-7
+> >
+> > -Xi
+> >
+>
 
-I was pretty sure I had seen those messages before, but couldn't find
-them before. But now I have: on my rk3588-rock-5b.
+Partitions cannot have overlapping cpus but regular cpusets can. This is
+probably where regular cpusets are still more flexible.
 
-> It's possible that this patch only brought a(nother) problem to light,
-
-So it looks indeed to be this.
-
-Cheers,
-  Diederik
-
->> Chukun Pan (1):
->>   arm64: dts: rockchip: rk3568: Move PCIe3 MSI to use GIC ITS
->>
->>  arch/arm64/boot/dts/rockchip/rk3568.dtsi | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
-
-
---3e23f8a3f7dd23a047277bc59f050a2e77210dee6735ec02b945a8d601bd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaB4yngAKCRDXblvOeH7b
-btTxAP9xcOOm/DKb1fMqBqNcR6qUMiNnWv1MKSyU06BFXAH6LQEAocEqmFyRa4iT
-xDj91oyTLTpAr8k0/xJZDB//WWhFPgs=
-=V4q7
------END PGP SIGNATURE-----
-
---3e23f8a3f7dd23a047277bc59f050a2e77210dee6735ec02b945a8d601bd--
+-Xi
