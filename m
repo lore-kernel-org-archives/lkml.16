@@ -1,102 +1,126 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322952327A3
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30811212B05
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807586; cv=none; b=meWY9d/mIlNlzRAeY3DSS6D9RPO98sGjSMwL7rQzSAyaroex5zvFZTmgnr0Y0n/N9WT/oC4b61BRIcUAZ8aXubctP6DPsVyts26WE7jtlA+vCCbKMIOe1aPM5pTv7yNKW73Tg7pEQW5tRC8wzXgfCVuiWqoHRXg9xQcEI5i+1uE=
+	t=1746807616; cv=none; b=gO+ktzvgmTQUQJoamYCpE/O/iZ4JF5PFiT/eM2A/qC1IwKUl0o/bKOeEyQy/z6udFiQkDjpHEOUFMfadhWe0IfzwMJHSsAdMrjAJQWSjMe7aXVIqDFu7VJcNMwcOIcU9hB2t8Kwl1pdY1pLaADyZcZK7La9kOHg5CFEEl/0wamY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807586; c=relaxed/simple;
-	bh=nuZysdXq7nOnE0VBFR6UJOjGIN3aYFhDt0WDvBmJ1jM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ace8c2GSXDqW4NqYIq0hO7nEa8ESD95HBXmpod0IyVwLAUv0588Rg9I7ecnNuO/r+BvDFiCfc4WlLr1UxXq8utH1ZJhFfmt6/0vg4u+WzwvB0r8BBN6nKQVsfch4RKlvn26Pqr4w/tHJAN8MIkbBSVhh4cN1DO9ZSWii2qCWWaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZtE6me9u; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746807616; c=relaxed/simple;
+	bh=bZMJIKA/Q8Y8cbpxTVSrNE3ays5xUUBzuHzZIUbk3gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M9hi81FbMbmg4SFyveNoWoy8twXdRcz6lvb4VfzAA52P0bCmhL9uX4SWhJZzg+G05btFVZsfmsdK18kMEemt+GJ6XTAUKG+yYyDbc28NgbfC7WWDW2pDJ+I+8Pv6iYD16dGHE88+6CbBGIEicZa/4wT4r2dsqpm+kzZgCmkpi9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ry5kwAiz; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZtE6me9u"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac34257295dso377721066b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:19:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ry5kwAiz"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7411f65811cso1885120b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:20:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1746807582; x=1747412382; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rrAr9gNCFzbksNQwY8jdv6TV8DefUAd1zCCFiYDNNAk=;
-        b=ZtE6me9ufZc4uj7BHfTrTcMOoJlzUZ3n+hx5f1mJqpbHvUHZ74ba/SHFpz1xDkjtca
-         4yuNbgpatP/OKh8YFkzT4zdO2C4iUr21AOtlRTZbXKdNoOCHeCXuZS+u3vY5XR2dkw5A
-         qTKMFUCSxPsS9hFmWyk5DMk17KapAfTI0sk+o=
+        d=gmail.com; s=20230601; t=1746807613; x=1747412413; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WuTzL+215B1tHHIPx1bndSHtxQPnuNkFwtYhq6VJISA=;
+        b=Ry5kwAizcVWMS8VhcyN3Y9f757HO9EyDPZNml1RLEziUayxLGsA81Umbqpqt1gvyLn
+         9+BQR2Cduq//nFgcfcVgiqK3hzo+ihGkvDciCGN2hpP28JbjLi1HHhYYjMX6ylRqmGTF
+         JH+34VHUI8ln4cZ79IKc1aZc9v8YkTIB4lorOw21tKlJxEqOad9x6OtEyd+4uzd+jlHj
+         cDlGtCTLU3yKbpz9MluZSaIe3XCLExISCt0eQkHmw1f8HgSHn1v3JQ1EQFFnDiEvvpa5
+         j4RH7nrQi7vY/77hgtc2JQnVqGhItXfl2q83aVPGWfjP/ncrIByB3JIEGpmvJDU36avS
+         oYcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746807582; x=1747412382;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746807613; x=1747412413;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rrAr9gNCFzbksNQwY8jdv6TV8DefUAd1zCCFiYDNNAk=;
-        b=P98WTnQo4IMIeqgZeQeidWMepZtgyOhdH9fpW/U3FZjmNTUY6VgnzMNdGZIMyJgl4q
-         1UFxDrhVnAKV5xkYpqDR2KCObuIh+NLtUPDhNgUlnwKzNHp59nLcQ3GO01zWupfhw4cm
-         0ujWRxlvD/mZLMV8XAYz8r3myG81o3ZELGKXn/xw6HL+YbgOREp8qNR6NqK7qLaYNypt
-         6sUs2BEJQivkadIaXyAnm6YT8i7yB+JcSdMGDg85WA3vuK0albBoXieZwbOifRMmz75E
-         7y4X3jQwPeu4JhO3hv8OYAaFDy6FEJmjCz/adI+aAVnvZFfdYGPMz4DXrONK89yHM+Z9
-         mc8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVIHL9LVYjJ/0hrCN+lpnFMv2fcnBMt/eYEANMVP+/WG6iGFgL/+Bu8aYskTKBXgWli5AwQZdvmSb0bYLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd+t2KYMzSWMKdioEgtY3LeuU52IanyGRLxa8NtEs9kdk6djEo
-	8TPjbzk1xY6MP73cwMAVuy99iBZS1qbV4LsTp/hZMLSuO1aE9LflnYJ51jTIiuqH6MVFlqdB1Ye
-	GMC4=
-X-Gm-Gg: ASbGncsyx/i1oUxk5+yh8tJQJ2bh2s6chUJBDHlBOuYEbPwOwckcyHL2TGvm+TgpA9o
-	ymQyTwxvWsgA9YxmOVHhNbI8Klv90gPBTWw9Io/FKyhkvlLdDYH4B1Jr+Iald3Ya5uH4LctTZO1
-	4PTD0B4/g82Z4KqraYTGTSiRnDP4lwE7YIEs3IalaVdncVxdB7doBaUfUa7HhV883vbeoD7T/bR
-	UPPRkxJALNylBjhznSnCiZcZJElq/fCFviuMoGWVjTNk/hcCwUfJW8/bVd+Muaa0w9GjnfnUE1G
-	nrJ/Ia73Z7ZThh5n0jYMhX3AIs5aaw1E7AmcRICMuXflHHYNgtwD1Vanwic9Kz+MzyP/5A1KZTP
-	sbwuFm0RCamTbR4k=
-X-Google-Smtp-Source: AGHT+IGW5uE8fRO3QYMFw2Cp9tDD8ClojFfEoQMld4RTBjJAp77UcC1q9q4GJ4zHMql80qq0CjUmGA==
-X-Received: by 2002:a17:907:7ea0:b0:aca:a688:fb13 with SMTP id a640c23a62f3a-ad219057ff1mr435088866b.36.1746807582233;
-        Fri, 09 May 2025 09:19:42 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197471acsm169700866b.118.2025.05.09.09.19.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 09:19:41 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5fbf0324faaso4517802a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:19:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWQng6mpPnuaB3+BQCjqr3yf10xCk13hj7wqSSxlmF477xuigT04sQyQS7Cu9Eoyoo8l6Pbqz9ycDiGzVc=@vger.kernel.org
-X-Received: by 2002:a05:6402:50c6:b0:5fc:9759:395d with SMTP id
- 4fb4d7f45d1cf-5fca0759b23mr3944959a12.11.1746807580754; Fri, 09 May 2025
- 09:19:40 -0700 (PDT)
+        bh=WuTzL+215B1tHHIPx1bndSHtxQPnuNkFwtYhq6VJISA=;
+        b=b3Ice+F1IZQ6EkIvVis1ohP1hn8b2n9krApgZkUKE93reNupYif0EuFPQMU/+1jn3N
+         26KzkP/fq30motMBN9ziZbhS1v4cbn02QxX80xHrjxEXj57vegBua2KZ+MPxOADjiSBE
+         OHg8gOXm0w7a8oGX48QV94Ur7JjqWsDOz+uqklL71C3OjzfxzI+Dp9igLJFza18oNGXN
+         89RxoIwJNuqhmE4P1lJ3wEQRsZ1aPNBX0yRxqnTw68n0pESJUB0vWGddYCYm0VVsWq+e
+         jXF3kL8QGxp2Xcy9hDZ009dr20kwXHdZAoPezxwZR+Jr8OHm8GaqL91wtp3r87Tcq3vS
+         HagA==
+X-Gm-Message-State: AOJu0YwYcw546xmwncQdFqZzu2cgRmJByY8QBlUgnXg3/itkb5xdKOsL
+	xzn4XbKjTbmAPTBWNmazTAzyMI6shW8zBxUWQAKhD+iUiySr8m5lGdrwVznz
+X-Gm-Gg: ASbGncsCz+2SJarzSEf9RxOPl1NxShx2SP45rdB/lupAxwquyc6gp9raJ5Wk6F+TCez
+	SHQtWzvsexqqISmAdM5tg81ieyLnVT5AePedFZc7diTWdPWHssDtj0H3qxZZ+VJgnTGPCBv9EgY
+	UhB8NC+WXG/+N7iy5Bkvw3XfVGJBLETVSgFTjci37EvVDeFn03OJldZbIeV90Wc8BM4Hj94S/tq
+	Hcan34W6dKrn/SrpwfLG25V2NYkNSM5mlyEB1ktCbY0URpIhONxJ0RYCCGVGc6Gq8Im3+Dz1mF+
+	Q6V1jRQy8atYYbKlMu5R0xcWbiD+bFWLlzXMyBb3
+X-Google-Smtp-Source: AGHT+IEWql3Ddh8TsXl6V5lYGyLHAnbo6wvzYweE8Rryrnp6fcNK3nZHHZVIhuXflve8pTkTagY7vQ==
+X-Received: by 2002:a05:6a00:1915:b0:736:62a8:e52d with SMTP id d2e1a72fcca58-7423bf9bbe0mr5265358b3a.12.1746807613286;
+        Fri, 09 May 2025 09:20:13 -0700 (PDT)
+Received: from localhost ([216.228.127.129])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a8f45csm1958760b3a.178.2025.05.09.09.20.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 09:20:12 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Tejun Heo <tj@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Subject: [PATCH] topology: make for_each_node_with_cpus() O(N)
+Date: Fri,  9 May 2025 12:20:08 -0400
+Message-ID: <20250509162009.540506-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0e82be0f-a305-4aba-b9ab-79596f595277@suse.com>
-In-Reply-To: <0e82be0f-a305-4aba-b9ab-79596f595277@suse.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 9 May 2025 09:19:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjNj0vHh9v6-LTrbgtq=o6OS+RN3u3m03nV3n9V+urGtg@mail.gmail.com>
-X-Gm-Features: ATxdqUE930vvXDaPhP3I929-LAWLeqQARrCJt4USO-NUSGrkJQtb4j3_xdmwKes
-Message-ID: <CAHk-=wjNj0vHh9v6-LTrbgtq=o6OS+RN3u3m03nV3n9V+urGtg@mail.gmail.com>
-Subject: Re: [GIT PULL] Modules fixes for v6.15-rc6
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dmitry Antipov <dmantipov@yandex.ru>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 9 May 2025 at 08:09, Petr Pavlu <petr.pavlu@suse.com> wrote:
->
-> The fix has been on modules-next only since yesterday but should be safe.
+From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-Hmm.
+for_each_node_with_cpus() calls nr_cpus_node() at every iteration, which
+makes it O(N^2). Kernel tracks such nodes with N_CPU record in node_states
+array. Switching to it makes for_each_node_with_cpus() O(N).
 
-At a minimum, the *description* of this bug is garbage.
+Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+---
+ include/linux/nodemask.h | 1 +
+ include/linux/topology.h | 5 +----
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-It talks about an "uninitialized completion pointer", but then the fix
-actually depends on it being initialized - just initialized to NULL.
+diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
+index f0ac0633366b..1e2bdda1a0a5 100644
+--- a/include/linux/nodemask.h
++++ b/include/linux/nodemask.h
+@@ -541,6 +541,7 @@ static __always_inline int node_random(const nodemask_t *maskp)
+ 
+ #define for_each_node(node)	   for_each_node_state(node, N_POSSIBLE)
+ #define for_each_online_node(node) for_each_node_state(node, N_ONLINE)
++#define for_each_node_with_cpus(node)	for_each_node_state(node, N_CPU)
+ 
+ /*
+  * For nodemask scratch area.
+diff --git a/include/linux/topology.h b/include/linux/topology.h
+index 24e715f0f6d2..ffee6b4a071a 100644
+--- a/include/linux/topology.h
++++ b/include/linux/topology.h
+@@ -29,6 +29,7 @@
+ 
+ #include <linux/arch_topology.h>
+ #include <linux/cpumask.h>
++#include <linux/nodemask.h>
+ #include <linux/bitops.h>
+ #include <linux/mmzone.h>
+ #include <linux/smp.h>
+@@ -39,10 +40,6 @@
+ #define nr_cpus_node(node) cpumask_weight(cpumask_of_node(node))
+ #endif
+ 
+-#define for_each_node_with_cpus(node)			\
+-	for_each_online_node(node)			\
+-		if (nr_cpus_node(node))
+-
+ int arch_update_cpu_topology(void);
+ 
+ /* Conform to ACPI 2.0 SLIT distance definitions */
+-- 
+2.43.0
 
-I do believe that it always is initialized, and I have pulled this.
-but I really think the explanations here are actively misleading.
-
-Because there's a big difference between "uninitialized" and "not
-pointing to a completion".
-
-               Linus
