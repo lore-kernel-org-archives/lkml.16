@@ -1,57 +1,40 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A861722F762
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3058521CC60;
+	Fri,  9 May 2025 19:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746818762; cv=none; b=KCHGunfInaTDVFcciDYEkwCgqVgS66nwZGQHRSAoZX3D8Y35xMF4S04p2f0fdef5XLjGxzbt0HVmEabf8l9dmGDRG2k7mz8gwgYKOxHx75fDJYaranjjbn/Ryf5gNhINsxha1eGRpi7K23bJ+x52E/xrGjqjEejkJpd+Q/EIW9k=
+	t=1746818770; cv=none; b=gofAGLY4FX1TQajg/5HIIw1FWNOC7PCc/UeHYB5uT/+IoVrMtGb0jP6QV9hjL7AjIFeWZqYT3QUpYZYckJ4gvckS/ufA3DpI+z4PkDCYoq6okEO/S36HG56sK11Nm/OyPXd4qEW4Ooyce33oeE0PKSUPa6ITfb1lnz9LARP+60o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746818762; c=relaxed/simple;
-	bh=vJLK/+2zaVnYm2lG3pTBzuQQiwL6njhF9uUD+1Kx53Y=;
+	s=arc-20240116; t=1746818770; c=relaxed/simple;
+	bh=KX5wDv025P3mKqHFA4TQwWOmuFq2r9EE0CNJ7idXzJU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q/Kl5721rxw6NMENGEh9yw/jUVsImFw6RP+zvaHwbWm16S1Wnt5MAT4f4fcjeLn6/MhldmeaKKDG3oot2n79vFSPd8WpDdk/9B36Zxuk17rdXOFE1T2Tl5cRsM1mA+Ek7GFNHgaA57J4xqBvOGOIeNpdcBmRh4yzIFEKhrb69SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0+jjJtIC; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=ac585jX50mPJDykBcVOUcofOhkwC4jSBus/ppDwDnK1i99mv7sXYv8n8ed5m/xEpFj/A7NltNmV+QD2y16gW8Fwy8QWhqUtnnxdCoEPiktgN3NznY3aoDcbUGErqU4bUdsEqax9BMOhlsEDsItdnFjxiqVFCSsAnk5h3l9kHR8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xr8WBHF/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0+jjJtIC"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-48b7747f881so54371cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746818759; x=1747423559; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MRK58VoET9zvgDbCBhQHoSSCN1RJjcIrwRnLvq4Sf8k=;
-        b=0+jjJtIC9bwtDkwi2LXINnr9HrThjyfjCMMRX8+cW5RLTNibLIGLTYaR0O0PVjjgUe
-         WoenO4VyOahRQVhZ6JjRSOQMPh/5iCMqtxZyNutrzCNMVR3KR5yPVAUdQ0KKUvR2q7hB
-         wm9YyffHtUDHrZWLlQAY4P+19kX14AbKdwmgrAZhGFKjZvpKmG9V/UdK9XqJWf2Jly+e
-         7UREcAIJ8rhhNSwnnTvdPKysVxO69aer5vVtE6XHc0YvJgsnlgJZnjyMufyim218ajLI
-         uUIV6MnrysgNxPZg1gNHtFIkMACzWY1R4g5MnggmFMW/fUiGgN2oCeB1Lh8p9CVal0Gb
-         wxzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746818759; x=1747423559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MRK58VoET9zvgDbCBhQHoSSCN1RJjcIrwRnLvq4Sf8k=;
-        b=xLu1JfKvHQDr+Vov7I+MtXOBLRkbKXbDWs7dPk74lGjLQeqKandNZZr8+E6M8DLs3Z
-         KJsAcv0IAQyq1UFNjT+BdezF3xqPpFN20Pb9WUFxc4gTFqKdvNkgbVBGWlNdua6/yAIh
-         o9uGQP5FzsaFBPZytwbutq60e06YqdSBl6LuTsrCk4A3ysJHv5bksIcSPbmXuc2DFYMK
-         ZDv0BkKSBTP3CQvCWER7iVDfYYMVGOTXV3FcyHeF4/vqvFeUj8BCbilfirnm9K/lYTzq
-         byxfn9P/SqtnVUKeprKycBHfM+E0pvfrqoyAK+E1jjK4Np3AHcETRWGPJdYXD8C+jjyI
-         K8HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkAN1LL7VVqyvQ3G6IGalJUtnCfKhkPNzT4cmZSsy5cPkGbM13jyrSkqcHBRXys5E9Eggb1Tl23Z996/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdxUIkY+SQQpWe9uidNfJh1gmWrIWSz4RI6ehT6g0JFq2tu4fn
-	BmV7shh3xPb/uAcuvv4zsVbjTguyfwiDVZkvt2c5pAAHHkGN/Z010f1indH1GkzHJqq4JzAXkRs
-	a0h4A/0KwMVVqs5ml/LXLYVnTYO/Fymo/6SmoAcBR6JxCofVZXr6D
-X-Gm-Gg: ASbGncsI9SQLTj9ZmH4YY4JL//DxGKwUT/oDP/N2WMT8Yt/pLLIDAi13MOSDgWQr0ZO
-	OKe7is7y21i369xTwuz8kHFOG6nQLeHb+yMBr5LL/QOKIxwye0WCKnPTOUGAmbPAFdFqYCh+8nn
-	DU7TRp0avpv50uaIqerVLgCF2A6+rvJj5cC5kHk5LCZQ==
-X-Google-Smtp-Source: AGHT+IFAHmUD6k9Kc4byGLMuYpc5VWZ1EWrUpWRhN9toDoFBSnJdMJ1BHaLGHq0RChCml0Y4GSPMhFm5cLpvWU84BV0=
-X-Received: by 2002:ac8:5d91:0:b0:480:1561:837f with SMTP id
- d75a77b69052e-494610f14a2mr792601cf.8.1746818759104; Fri, 09 May 2025
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xr8WBHF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D27C4CEEE;
+	Fri,  9 May 2025 19:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746818770;
+	bh=KX5wDv025P3mKqHFA4TQwWOmuFq2r9EE0CNJ7idXzJU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Xr8WBHF/As8nQMEvL8FaQrG2ELOdaZhH6DDcTkuOQLzv33IjcDnrAhhZsw1ybmXKs
+	 am+6romLsSY6fCFrD36JV02epI5VtEaGjKNuEM6ZY7K8KfVF323TJXcjULBPnwbNiZ
+	 9fvot9g/9IFOW48/XRjkIXj9XIglO0frK6X3WqfdfDR1wy4Ugdkwedp9Fl9mgYHUOs
+	 UfNNQX/8nrK3hcu7HIn+A8+6myAg1ZiTTQ3WHHuIXgT0Nl3uPAS4gLvKMyPHBxJLB6
+	 Z2xJ6RrqZDMOIw+lim974APvwNisG2s1rAELeNj3anfeE+c5Q5EGQCFRe/LyBFHUZs
+	 rAiWFoWj4ODFA==
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3feb3f54339so2435580b6e.1;
+        Fri, 09 May 2025 12:26:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVLF65SOJwQ5qqzZ+fYXyGhA5PbkHfOyaQhc3K2PhV650PtCGeYxbseaCfQtY+j3036Dy0N3xIXgUGFbwOo@vger.kernel.org, AJvYcCVyhVh5MXsQDG7G/AwvoKJqY9KHxClSwyrkJgWf45zzgntBnCABo1aNoUhrVsmSo0zfOr6czcYvd29I@vger.kernel.org
+X-Gm-Message-State: AOJu0YwInILbOZTLxTH3KNNjc2lzUDcrKsWJgZ8pv4h22G2Wue1PLXlJ
+	20kM1QOJZ5j1LmrMY1prNHBkAOeAngPbNbQXvrw0VQCakKzRpXBN1nTS2DVwu6oP2/W2fY82pfE
+	R0TFMt6OaADnVKsWIi7QUgGGfaUg=
+X-Google-Smtp-Source: AGHT+IE8GmkxlxVpNu70SxPUR8JfgrMMof4cUdqC8atc5kXLt5jTxXJF796doymX5wIonc+sU/pvkvYOVBUg3NqQh7A=
+X-Received: by 2002:a05:6871:6a2:b0:2d4:edac:d9a9 with SMTP id
+ 586e51a60fabf-2dba42a3b8bmr3120008fac.10.1746818759173; Fri, 09 May 2025
  12:25:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,118 +42,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507175500.204569-1-00107082@163.com> <20250509173836.42473-1-00107082@163.com>
-In-Reply-To: <20250509173836.42473-1-00107082@163.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 9 May 2025 12:25:47 -0700
-X-Gm-Features: AX0GCFsf_Wh7hSaSJkTKUXg6Nisb5y70xYck-HJ6zL4RHZUUCf6DhaOZoQ4ggtk
-Message-ID: <CAJuCfpGa2UxLY5Af_R6ZR4q57T0380bAWvwYWv2PzC=0sgCqKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] alloc_tag: add sequence number for module and iterator
-To: David Wang <00107082@163.com>
-Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org
+References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
+ <20250506213814.2365788-5-zaidal@os.amperecomputing.com> <CAJZ5v0j-84MDP10YEL48GTPWy1SqHWAA_Dbq+X-k3PFi9brZPw@mail.gmail.com>
+ <aBzwpS6t3V4zwrxn@zaid-VirtualBox>
+In-Reply-To: <aBzwpS6t3V4zwrxn@zaid-VirtualBox>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 9 May 2025 21:25:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g9qbKWHgL5gmSQN3vAbj3DUZH0LSdxtY2O5JXscbsGFg@mail.gmail.com>
+X-Gm-Features: ATxdqUHdAxHQrEBtvpSUAWFQbifenSse2G705J-U4DlXfrsupwkHQXQctlVxRWs
+Message-ID: <CAJZ5v0g9qbKWHgL5gmSQN3vAbj3DUZH0LSdxtY2O5JXscbsGFg@mail.gmail.com>
+Subject: Re: [PATCH v7 4/9] ACPI: APEI: EINJ: Remove redundant calls to einj_get_available_error_type
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, james.morse@arm.com, 
+	tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com, 
+	Jonathan.Cameron@huawei.com, ira.weiny@intel.com, Benjamin.Cheatham@amd.com, 
+	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com, 
+	u.kleine-koenig@pengutronix.de, john.allen@amd.com, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	acpica-devel@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 10:39=E2=80=AFAM David Wang <00107082@163.com> wrote=
-:
+On Thu, May 8, 2025 at 7:58=E2=80=AFPM Zaid Alali <zaidal@os.amperecomputin=
+g.com> wrote:
 >
-> Codetag iterator use <id,address> pair to guarantee the
-> validness. But both id and address can be reused, there is
-> theoretical possibility when module inserted right after
-> another module removed, kmalloc returns an address same as
-> the address kfree by previous module and IDR key reuses
-> the key recently removed.
+> On Wed, May 07, 2025 at 01:34:35PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, May 6, 2025 at 11:38=E2=80=AFPM Zaid Alali
+> > <zaidal@os.amperecomputing.com> wrote:
+> > >
+> > > A single call to einj_get_available_error_type in init function is
+> > > sufficient to save the return value in a global variable to be used
+> > > later in various places in the code. This commit does not introduce
+> > > any functional changes, but only removing unnecessary redundant
+> > > function calls.
+> > >
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > > Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+> >
+> > Does this patch depend on patches [1-3/7]?  If not, I can pick it up
+> > as an optimization.
+> Hi Rafael,
 >
-> Add a sequence number to codetag_module and code_iterator,
-> the sequence number is strickly incremented whenever a module
-> is loaded. An iterator is valid if and only if its sequence
-> number match codetag_module's.
->
-> Signed-off-by: David Wang <00107082@163.com>
+> No, this patch is does not depend on 1-3 patches. You can pick it up!
 
-Acked-by: Suren Baghdasaryan <surenb@google.com>
-
-> ---
->  include/linux/codetag.h |  1 +
->  lib/codetag.c           | 17 ++++++++++++++---
->  2 files changed, 15 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-> index d14dbd26b370..90f707c3821f 100644
-> --- a/include/linux/codetag.h
-> +++ b/include/linux/codetag.h
-> @@ -54,6 +54,7 @@ struct codetag_iterator {
->         struct codetag_module *cmod;
->         unsigned long mod_id;
->         struct codetag *ct;
-> +       unsigned long mod_seq;
->  };
->
->  #ifdef MODULE
-> diff --git a/lib/codetag.c b/lib/codetag.c
-> index 42aadd6c1454..496cef7cdad3 100644
-> --- a/lib/codetag.c
-> +++ b/lib/codetag.c
-> @@ -11,8 +11,14 @@ struct codetag_type {
->         struct list_head link;
->         unsigned int count;
->         struct idr mod_idr;
-> -       struct rw_semaphore mod_lock; /* protects mod_idr */
-> +       /*
-> +        * protects mod_idr, next_mod_seq,
-> +        * iter->mod_seq and cmod->mod_seq
-> +        */
-> +       struct rw_semaphore mod_lock;
->         struct codetag_type_desc desc;
-> +       /* generates unique sequence number for module load */
-> +       unsigned long next_mod_seq;
->  };
->
->  struct codetag_range {
-> @@ -23,6 +29,7 @@ struct codetag_range {
->  struct codetag_module {
->         struct module *mod;
->         struct codetag_range range;
-> +       unsigned long mod_seq;
->  };
->
->  static DEFINE_MUTEX(codetag_lock);
-> @@ -48,6 +55,7 @@ struct codetag_iterator codetag_get_ct_iter(struct code=
-tag_type *cttype)
->                 .cmod =3D NULL,
->                 .mod_id =3D 0,
->                 .ct =3D NULL,
-> +               .mod_seq =3D 0,
->         };
->
->         return iter;
-> @@ -91,11 +99,13 @@ struct codetag *codetag_next_ct(struct codetag_iterat=
-or *iter)
->                 if (!cmod)
->                         break;
->
-> -               if (cmod !=3D iter->cmod) {
-> +               if (!iter->cmod || iter->mod_seq !=3D cmod->mod_seq) {
->                         iter->cmod =3D cmod;
-> +                       iter->mod_seq =3D cmod->mod_seq;
->                         ct =3D get_first_module_ct(cmod);
-> -               } else
-> +               } else {
->                         ct =3D get_next_module_ct(iter);
-> +               }
->
->                 if (ct)
->                         break;
-> @@ -190,6 +200,7 @@ static int codetag_module_init(struct codetag_type *c=
-ttype, struct module *mod)
->         cmod->range =3D range;
->
->         down_write(&cttype->mod_lock);
-> +       cmod->mod_seq =3D ++cttype->next_mod_seq;
->         err =3D idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
->         if (err >=3D 0) {
->                 cttype->count +=3D range_size(cttype, &range);
-> --
-> 2.39.2
->
+Now applied as 6.16 material, thanks!
