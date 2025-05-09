@@ -1,110 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFCD27FD53
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A132749F9;
+	Fri,  9 May 2025 08:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746780382; cv=none; b=FckSl9CNH6M8+qg54wVNxiCv+jcfpktlrnX8qQhwOsL4VsYdzbMdZEYc7YbqNC7vFee3TOhJAfkRfSupk4lX05I+y7ClUheDjHTfsA8yM78rdBMqmxFLGWmZWoMenJpU3PR64kN+BuP/tYbkRCx6Z/HMJAp3xuo0Fc+3t3yDtnk=
+	t=1746780418; cv=none; b=iK3r0yEUAPttnHUl3HuS8vwAa8GVPquqhYUT1HMteObtyBia4mkXLfKMdw9muAlJHxQtpILop1jGiJrofErD1+5PnZoWHuX2UZYI9C3Qxw3gyVxewuaYiuV1wYfXCsOBbkxO/aNzxhKOwpgRwN7p4D0VlJZAvvEbW9CwuD9GvnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746780382; c=relaxed/simple;
-	bh=4NVF5+MV/4djn8Pk1xuaXAM/Z2bwawWbmW+j2uP+wb8=;
+	s=arc-20240116; t=1746780418; c=relaxed/simple;
+	bh=pMHYGnRHELxFia/MAGVgWzMYD/pngfkgxW/XHM9ufMk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F3tFJOM4ULnG3G8SLckhNeg/XLOmjPVtewsm6TGD6wg46YPaXzP6cocNLJ9RzpY6+cD4eYpahULIXyPQ/QsRHs6Fc4ymzPGI3hyb/fNYSOmU70Q4vcIlvOAIlhbm32Q7jG7hdWKkdSoDiWPldkImtwE37HQTbD05wM0CLpAiUkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xo0E52rG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=CBqa5WxMDD5+Tl/00+K4sFFl6H044UH0qXaJAMYJ7h14Rt2vkDjFXHX81aW3zj24gUCWylSNR8iRQsd7PEUBMQ4jqpH4+b0R6o5/pwJPGTnrmpRzMW5VXStOcCLabzWIx94RmAG6jUPX6vun50zXF51FI9iqr7bIcSX5+9nxQ6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2DjfQz6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xo0E52rG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746780379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ldm0PwyqH66jO1Mug4aaT3rBzKXZfNBu7VHXn9V5Kxw=;
-	b=Xo0E52rG8i4m8oF6B5tmuD6babAdw9NYxW+4DZ/MXYh9HJJkyWmAKFGeHgx0hNRh/LuTIp
-	20qjMC9sHp1pUVvSQ5juV7qAMeFZSrthIDY6OQT0UKEIcUG+2BjKbG7AlT8wTnpb2KmNn0
-	Ik1L4pD0PWxuCeWsMNpifKJXXQqTgSs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-oP9NcB4AMfiEs_wRKzwhqQ-1; Fri,
- 09 May 2025 04:46:16 -0400
-X-MC-Unique: oP9NcB4AMfiEs_wRKzwhqQ-1
-X-Mimecast-MFC-AGG-ID: oP9NcB4AMfiEs_wRKzwhqQ_1746780374
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3FDB31800374;
-	Fri,  9 May 2025 08:46:14 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.140])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 68A8830001A1;
-	Fri,  9 May 2025 08:46:06 +0000 (UTC)
-Date: Fri, 9 May 2025 16:46:00 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 7/8] selftests: ublk: kublk: decouple ublk_queues from
- ublk server threads
-Message-ID: <aB3AyJdO7-mFzjFf@fedora>
-References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
- <20250507-ublk_task_per_io-v6-7-a2a298783c01@purestorage.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2DjfQz6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1086C4CEE4;
+	Fri,  9 May 2025 08:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746780417;
+	bh=pMHYGnRHELxFia/MAGVgWzMYD/pngfkgxW/XHM9ufMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y2DjfQz6oSyktGTnZMp3v8EEf/WxvZLSateR0ZNivF22NaHzTLcO/eZc9FkeVIXRS
+	 p9gn4ylValhULj4SiGja/fKdzvajwUshC+b798+rkYKGLNVkfkiZOi8PhYy/O5NAPR
+	 gVmELm2YEnSs/gItyMKrO5X8fG3rCf2zinZAZUKu+WbBW6b1MYRHEUv/7u39cgxT/d
+	 i6bLXYZnpJ1YYpGyHiAoTwkq3D3HDBAlKXbjw527kVEKXQd9Ur7t21qXoX8M6D4Tw6
+	 KOrtY08FLYcoAsuu9W85vQHd5X5w3bMaCrewi/9rW2Zgi4fwooM6xd673afkTvJWHa
+	 bywY0JAlTmY1w==
+Date: Fri, 9 May 2025 09:46:52 +0100
+From: Lee Jones <lee@kernel.org>
+To: David Lechner <david@lechnology.com>
+Cc: Ivan Stepchenko <sid@itb.spb.ru>, Pavel Machek <pavel@kernel.org>,
+	Jacek Anaszewski <j.anaszewski@samsung.com>,
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: Re: [PATCH] leds: uleds: fix unchecked copy_to_user() in uleds_read()
+Message-ID: <20250509084652.GA2492385@google.com>
+References: <20250505081342.3855-1-sid@itb.spb.ru>
+ <20250508143451.GQ3865826@google.com>
+ <037fc605-3401-4e68-b452-b5e4882d56bc@lechnology.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250507-ublk_task_per_io-v6-7-a2a298783c01@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <037fc605-3401-4e68-b452-b5e4882d56bc@lechnology.com>
 
-On Wed, May 07, 2025 at 03:49:41PM -0600, Uday Shankar wrote:
-> Add support in kublk for decoupled ublk_queues and ublk server threads.
-> kublk now has two modes of operation:
+On Thu, 08 May 2025, David Lechner wrote:
+
+> On 5/8/25 9:34 AM, Lee Jones wrote:
+> > On Mon, 05 May 2025, Ivan Stepchenko wrote:
+> > 
+> >> The copy_to_user() is annotated with __must_check, indicating that
+> >> its return value must be checked by the caller. Currently, uleds_read()
+> >> ignores it. If the userspace buffer is invalid and copy_to_user() fails,
+> >> the userspace application may assume it has received fresh data, while
+> >> in fact copying has failed. This can leave applications out of sync
+> >> with the actual device state.
+> >>
+> >> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> >>
+> >> Fixes: e381322b0190 ("leds: Introduce userspace LED class driver")
+> >> Signed-off-by: Ivan Stepchenko <sid@itb.spb.ru>
+> >> ---
+> >>  drivers/leds/uleds.c | 11 +++++++----
+> >>  1 file changed, 7 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/leds/uleds.c b/drivers/leds/uleds.c
+> >> index 374a841f18c3..41bfce43136c 100644
+> >> --- a/drivers/leds/uleds.c
+> >> +++ b/drivers/leds/uleds.c
+> >> @@ -147,10 +147,13 @@ static ssize_t uleds_read(struct file *file, char __user *buffer, size_t count,
+> >>  		} else if (!udev->new_data && (file->f_flags & O_NONBLOCK)) {
+> >>  			retval = -EAGAIN;
+> >>  		} else if (udev->new_data) {
+> >> -			retval = copy_to_user(buffer, &udev->brightness,
+> >> -					      sizeof(udev->brightness));
+> >> -			udev->new_data = false;
+> >> -			retval = sizeof(udev->brightness);
+> >> +			if (copy_to_user(buffer, &udev->brightness,
+> >> +					 sizeof(udev->brightness))) {
+> > 
+> > This is not good.
+> > 
+> > Please store the result into a variable and return that instead.
 > 
-> - (preexisting mode) threads and queues are paired 1:1, and each thread
->   services all the I/Os of one queue
-> - (new mode) thread and queue counts are independently configurable.
->   threads service I/Os in a way that balances load across threads even
->   if load is not balanced over queues. requires passing --round_robin
+> Every other caller of copy_to_user() in the kernel I've seen ignores the actual
+> return value and returns -EFAULT, so I thought this looked correct and it was
+> just a quirk of copy_to_user().
+
+Yes, I think you're right.  Interesting.
+
+So my counterproposal is as follows:
+
+--- a/drivers/leds/uleds.c
++++ b/drivers/leds/uleds.c
+@@ -147,10 +147,11 @@ static ssize_t uleds_read(struct file *file, char __user *buffer, size_t count,
+                } else if (!udev->new_data && (file->f_flags & O_NONBLOCK)) {
+                        retval = -EAGAIN;
+                } else if (udev->new_data) {
+-                       retval = copy_to_user(buffer, &udev->brightness,
+-                                             sizeof(udev->brightness));
+-                       udev->new_data = false;
+-                       retval = sizeof(udev->brightness);
++                       ssize_t size = retval = sizeof(udev->brightness);
++                       if (copy_to_user(buffer, &udev->brightness, size))
++                               retval = -EFAULT;
++                       else
++                               udev->new_data = false;
+                }
+
+                mutex_unlock(&udev->mutex);
+
+> >> +				retval = -EFAULT;
+> >> +			} else {
+> >> +				udev->new_data = false;
+> >> +				retval = sizeof(udev->brightness);
+> >> +			}
+> >>  		}
+> >>  
+> >>  		mutex_unlock(&udev->mutex);
+> >> -- 
+> >> 2.39.5
+> >>
+> > 
 > 
-> The new mode of operation is exercised by the new test_generic_08, which
-> issues I/O against a single queue and verifies that each of the 8 ublk
-> server threads handles exactly 1/8 of the total I/O count. Under the old
-> mode of operation (i.e. without --round_robin), all I/O goes to one ublk
-> server thread, and the test fails.
 
-Hi Uday,
-
-I just setup two ublk devices in the following way:
-
-[root@ktest-40 ublk]# ./kublk add -t null -q 2  --nthreads=4 --round_robin
-dev id 0: nr_hw_queues 2 queue_depth 128 block size 512 dev_capacity 524288000
-	max rq size 1048576 daemon pid 8516 flags 0x842 state LIVE
-	queue 0: affinity(0 )
-	queue 1: affinity(8 )
-
-[root@ktest-40 ublk]# ./kublk add -t null -q 2
-dev id 1: nr_hw_queues 2 queue_depth 128 block size 512 dev_capacity 524288000
-	max rq size 1048576 daemon pid 8539 flags 0x42 state LIVE
-	queue 0: affinity(0 )
-	queue 1: affinity(8 )
-
-Then run 'fio/t/io_uring -p0 /dev/ublkb[0|1]', and IOPS of /dev/ublkb0 is
-just 1/3 of /dev/ublkb1.
-
-For ublk/loop, '-q 2  --nthreads=4 --round_robin' is still a bit slower
-than '-q 2', but the gap isn't too big(<10%).
-
-
-Thanks,
-Ming
-
+-- 
+Lee Jones [李琼斯]
