@@ -1,112 +1,151 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F104110F2
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 02:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D8910F2;
+	Fri,  9 May 2025 02:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746758427; cv=none; b=qCUlXer+vX1g3T7KiQu628BubV+lKBVCdGAoQcvQK+MzLY+/XcjXBNMjEU3RzhosheQk1Sk8IvJfG/3eJw8kSeQmwh8otiSYHLjm4RB/wBju7UKr12CKVycPQccszkbnIrcYSGqOE9/mMokysfu+Nmd3L9O0bMdsCvYggTnyhCo=
+	t=1746758483; cv=none; b=H96aF/c7NXbw+Mghd7JMLcGRwDlrs0uTQAPyI80aJfI4vrHvtKNNOYQw1r4/iYnxGUQ20/xG7iaV7DuGueobQoJuBt/Ol267bKI7d9CgKLDAQpv5AbAm96ABoJXAv0NqSmm0/Y0jIHFXrbnfJP7efW+y3mfjaohRBi503k5TPVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746758427; c=relaxed/simple;
-	bh=fbU3HjWyMXkb9dGsZnGLbxInBFDNVNu9m2J3gvv0qnM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DSatk+tucK3d4m1SnZANK86jIckJBNcS7EVdCHlDeWU6sH9VQlSBKRPPRNQtazSbRAQ7xJK8moVPi/EdX/U+3HcS/3Y8uSZQGw4YETgdxSQuzxBhLtFioC7lzBCdD6DoBqizLLibmhwP9xi5dAgEecUCt0OpyJ+uuD+NT1t8pH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eINcCWxD; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746758483; c=relaxed/simple;
+	bh=QCt7W9cQubdkOh1wzz0DSW4wGR4LXBXeyzwonSK7vwE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ezYaXuXAklgdmRcZ2EsS9oJu4jMP5MWrhqhMszDdakVBgXjbg1SkW2gh2HoH/44yOe0rBF2ebtpJfs5sy3+iyz+3WQR3NJ3S7f0aEjVbZtZTdmOE6ZIbh8I/ebINIca/r6QVA1j8+3VSG9GSeq2pHaahhVcCUOVLxxCvBxFXuew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LTkXVan5; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eINcCWxD"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5fbf1365b1fso5121a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 19:40:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTkXVan5"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22e70a9c6bdso26585925ad.3;
+        Thu, 08 May 2025 19:41:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746758424; x=1747363224; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746758481; x=1747363281; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fbU3HjWyMXkb9dGsZnGLbxInBFDNVNu9m2J3gvv0qnM=;
-        b=eINcCWxDjU1u5WMzC4bWyzKpLTcSq8kp09EeAwZ0xQl1jnSPwVMY0Jg6czzR32uyN2
-         xHAcVRWGKfF/VfNUf9jwpyv/7aQPRjdV+VTns7wy3oV2r2464Ptj2Sp+tshepmCtBziM
-         UYzJYmk3VIxMyw2pjHKnWprRvEhKDVdv4SIsawitKDYfdhSrchpkBeqlva3OaJNFjZQ0
-         Fg/i/wcKwSxWfoO0mS0kJYbWS+w/i2K1dYubAezrlrwhQ1pqA5PaKfEAArDgal2LlZuS
-         BXDVjQR/2b6VpTXz4UeHtYdGw9ieb4muVvc/jL/EFNab9YPKY+OvOQ9Nox7O3b3DZ5jM
-         tbQw==
+        bh=mFS6mbwVeD+XxwjTe2L6G5xAyvfPHlOmCcGIREdnkRY=;
+        b=LTkXVan5wASFMkgedm1oq4CSqd2veMO7GHLjvMumV3fjiJDrEnSccdhssbSHwJ0Psf
+         PPr63wh4BkWOeMRettjLGiWQB5WzXJDbVBYEnVSZqiBN7xmbVbBENY3i5tVUGik+IvhG
+         U89PD5E+vwna9Cn/DD5UOaUVvxzerUQSK8YBRA6B5ws6KSPFpb2NXrxg+58uvlSArVWh
+         s1f3xvTsgGLAW2Vaf3Kp0HY8DzUmJj4z2+lFMxuqDBqbFg23KY9XoyD93/a2tuQOIm3O
+         YHxACf7gXDux6yAYmypNYCV5ywPb03xkBRfLqybj7KMK11w8zBakM88/1UC7G58neQyI
+         zaoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746758424; x=1747363224;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746758481; x=1747363281;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fbU3HjWyMXkb9dGsZnGLbxInBFDNVNu9m2J3gvv0qnM=;
-        b=qa3gD46t+rCLb/uvkVqPz7R0uqB07EbfdJyEl+oEQRrwqO0fPmm8IwuBw07ZDWKRxv
-         5ITgkDCAG+8eLgWjacrgzlUw77kK4MIkG/Rt80hRyqoTyzIXlEkc1bk/uYJMN8zFqOrm
-         3KBfkNKVEaWkI2D8LVhC6THn0jbeeFKD4rDU0mn5xlhPq9HZS1wBaAlQGbxibUpSln/x
-         Cne8j/G9Ak3KbIO2gWKJyR0kjXJKAN86oFDudjfJaJJlMYC3F5MJeDRzspgxg30mZt4C
-         mxtQXOOABNw7DQMZZYg4i6+leypTB9isnLfZs/FzJDrGW4ewmLxzplQLGN9pxSK8df6F
-         kXwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsMGMRq68MFzZ89XlY70j4M3vNQe7euwR6cIUhn3ZE89dDOYstuvR8t3NoQwYyQFFY2QG3FIGak74siJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyjj5rorWf+m9XquKHS+T13059pSmVo/g91Gap/ydl1Kt4Jwbqv
-	U+9iF3FftmjPCwxZkcdHWcz9+WKiGwUUFPD0UXR4+m/d3PmY4qWZDSQVmqC5XxDN6PuTpHbrHFD
-	eFKMTnhn8xFVCVCqfmrd4HDWuvqPhdzUNrTTmxFEKwI+EWFNRmw==
-X-Gm-Gg: ASbGnctSAd9Hg5W1N2F5bUh+0puhzpLm67y9yhtZWzpUKkxbfff0QZtWN00iRL7ugr1
-	mlKUSW1t93fh8lveNe43HomLkC4z1E4BB+56KzV6jZJGZgNNVyqpeE/bOz6Cic7DaJYzipxVjzv
-	20RTBbiBEiv0YHKGQ05xEX
-X-Google-Smtp-Source: AGHT+IHs8N8GIJHV6hQ7v6BVcAhLlzquJwKORlwm8OHV24AyjhJvWrD2zfqx4hpKyBMB0ZsJzP8evSJIQn9Apks+tPQ=
-X-Received: by 2002:aa7:cd07:0:b0:5fa:ac6f:ff97 with SMTP id
- 4fb4d7f45d1cf-5fca1efb492mr46780a12.2.1746758424053; Thu, 08 May 2025
- 19:40:24 -0700 (PDT)
+        bh=mFS6mbwVeD+XxwjTe2L6G5xAyvfPHlOmCcGIREdnkRY=;
+        b=VBVkxGDZ1kgYPH7hGEgZQKYqE2GRz8Zflcutn6p8r3efX53IhjNnwjQia3N9AFPZVn
+         HH5cFxbZMlYScm27XOcDxXrGB0pqQ06BE5FfGMSOjm01z69b1ZXGUxNv5MAjm9Mrc0L2
+         NInbIAAlIz/MS/RNviAE+IcyXWyB30/QdMO7D7hadNNKkGX6GUadK0Mf4FN2Sg3jNnNQ
+         WoJ2ehTlSKqxqUnQ4nf+GIBE57a9MnYCLJ8fGdgNOzz2dZ0pwKPI/3TVo5u4BvatJzRH
+         uEO2cIaCNi1IhkUg5JPbzvsHpUjkxHMgj9dpioqzPqCJm2YpIULOuJGH8hUfNK0CiFRi
+         VI4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUb9I7hDAqokECR26aOQvB2sub+rTIxU6AAmHh13kd7aLsR1HJtvP3/kcF0HZ2gUxDOW84Yvxa8TipcOqJivIujR1ofdYJR@vger.kernel.org, AJvYcCWHTt3BX6lYtQjKTWTxvGwA3qgirZX126vhoBpkrCX0lJtTj+6+3vqMezVPSVgON1VjiU09WlEh+oZrke90@vger.kernel.org, AJvYcCWkR4/dy5z/u/TdKcoW7XVJYQnFRWeAh2EJPVTSK/2zmRoZAwBjmfO2ZlrBFyw0L+YicVewqkNVZyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzxIHtT1AShRlGIPFn68xLK2yI4BJhixiGEn4n3fgpaGstaMO2
+	D7rAoQrLcBmxdxV7L6EgkpR0tEmQrdJ0yNMEdK3ECjoZgmlCoe99
+X-Gm-Gg: ASbGncurgEMXlwTmHge01bHmMbgjf72HhWEoMQ2TPGqIiePAYKYl4KIWMB3ErwXFvn+
+	rps0ig7TtQOTlw6hK/sbbmWryieFsgt7bskyJM6UH0hVq1BluX0kmWWvcFUSG1SK9N4QFsLeYOV
+	94QBJoqA0SQ/Dv7B12VqLkV5LPTJFolvT3x9DoGj/iwpfnYkShvnwfU46YkfXCWpwUODGRLmUZP
+	cgeQZSaJLn7hNPWOwRVoN+jl0bN3sQIlw6+9mEdcvDHY3PwKhMt2Kni2Vqzlbx2D/wjXxyc+l5z
+	gBoEtGH3zUHAN9sEnE4esSDvg9SN1Trke/Jn693INXbTg3bf3Fa/84Lr0czqekGmJVAzIZXSb2t
+	vdl9E7Ix6/64TCxo=
+X-Google-Smtp-Source: AGHT+IGyYqp1wunfFzEOreidx8NjAbn3wqVn2CCrv5Sg8a4MZvMn88hnCC6hGU4WQ+NrUM+4SB//iQ==
+X-Received: by 2002:a17:902:f682:b0:224:a79:5fe9 with SMTP id d9443c01a7336-22fc8b59bd0mr22926965ad.30.1746758481075;
+        Thu, 08 May 2025 19:41:21 -0700 (PDT)
+Received: from localhost.localdomain ([14.116.239.36])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7544fc1sm7111905ad.46.2025.05.08.19.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 19:41:20 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: paul@paul-moore.com
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	chrisw@osdl.org,
+	greg@kroah.com,
+	jmorris@namei.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	serge@hallyn.com,
+	viro@zeniv.linux.org.uk,
+	wufan@linux.microsoft.com,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v3] securityfs: fix missing of d_delete() in securityfs_remove()
+Date: Fri,  9 May 2025 10:41:12 +0800
+Message-Id: <20250509024112.362527-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <CAHC9VhScmdZLz7W=FN+mfWjf5LB7jbTJm5g-iy35hvvMgbKRfQ@mail.gmail.com>
+References: <CAHC9VhScmdZLz7W=FN+mfWjf5LB7jbTJm5g-iy35hvvMgbKRfQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425200541.113015-1-xur@google.com> <174601619410.22196.10353886760773998736.tip-bot2@tip-bot2>
- <jj4fu243l7ap4bza5imrgjk5f5dhsoloxezgphdjwo7sb5iqsq@wkt46abbt45r>
- <yrdh2fmzgqlrfe35wvxb3a2z7wdqod3liupdbriqzc5ihqjw5y@fsqeyi34cbgg>
- <xb2rjui75xylasuihl7gdnovv2z6qxgsefmzhxvhntlcuw5ktb@zbstyytmzjag> <20250508152713.GI4439@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250508152713.GI4439@noisy.programming.kicks-ass.net>
-From: Rong Xu <xur@google.com>
-Date: Thu, 8 May 2025 19:40:13 -0700
-X-Gm-Features: AX0GCFuXdBKM7y2tZJ4PRPCqtCRq-rf2WAsTlEUdkGvaXI8BntKBO0j8ScCcDyc
-Message-ID: <CAF1bQ=S52yEfJhhW8WrqmXu7ux1W4zVyk7Osv80tkiXpvegNqQ@mail.gmail.com>
-Subject: Re: [PATCH] objtool: Speed up SHT_GROUP reindexing
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, tip-bot2 for Rong Xu <tip-bot2@linutronix.de>, 
-	linux-tip-commits@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 8, 2025 at 8:27=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Wed, May 07, 2025 at 05:11:53PM -0700, Josh Poimboeuf wrote:
-> > On Wed, May 07, 2025 at 05:11:03PM -0700, Josh Poimboeuf wrote:
-> > > From 2a33e583c87e3283706f346f9d59aac20653b7fd Mon Sep 17 00:00:00 200=
-1
-> > > Message-ID: <2a33e583c87e3283706f346f9d59aac20653b7fd.1746662991.git.=
-jpoimboe@kernel.org>
-> > > From: Josh Poimboeuf <jpoimboe@kernel.org>
-> > > Date: Wed, 7 May 2025 16:56:55 -0700
-> > > Subject: [PATCH] objtool: Speed up SHT_GROUP reindexing
+On Thu, 8 May 2025 18:55:30 -0700, Fan Wu <wufan@kernel.org> wrote:
+> On Thu, May 8, 2025 at 7:11 AM <alexjlzheng@gmail.com> wrote:
 > >
-> > Urgh, sorry about the patch formatting, the above can obviously be
-> > dropped.
->
-> No worries, my script did it almost right :-)
->
-> Patch seems sane to me; I'll go stick it into objtool/core. Rong if you
-> could verify your case still work correctly that would be appreciated.
+> > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> >
+> > Consider the following execution flow:
+> >
+> >   Thread 0: securityfs_create_dir("A")
+> >   Thread 1: cd /sys/kernel/security/A           <- we hold 'A'
+> >   Thread 0: securityfs_remove(dentry)           <- 'A' don't go away
+> >   Thread 0: securityfs_create_dir("A")          <- Failed: File exists!
+> >
+> > Although the LSM module will not be dynamically added or deleted after
+> > the kernel is started, it may dynamically add or delete pseudo files
+> > for status export or function configuration in userspace according to
+> > different status, which we are not prohibited from doing so.
+> >
+> > In addition, securityfs_recursive_remove() avoids this problem by calling
+> > __d_drop() directly. As a non-recursive version, it is somewhat strange
+> > that securityfs_remove() does not clean up the deleted dentry.
+> >
+> > Fix this by adding d_delete() in securityfs_remove().
+> >
+> > Fixes: b67dbf9d4c198 ("[PATCH] add securityfs for all LSMs to use")
+> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> > ---
+> > changelog:
+> > v3: Modify the commit message to avoid readers mistakenly thinking that the LSM is being dynamically loaded
+> > v2: https://lore.kernel.org/all/20250507111204.2585739-1-alexjlzheng@tencent.com/
+> > v1: https://lore.kernel.org/all/20250425092548.6828-1-alexjlzheng@tencent.com/
+> > ---
+> >  security/inode.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/security/inode.c b/security/inode.c
+> > index da3ab44c8e57..d99baf26350a 100644
+> > --- a/security/inode.c
+> > +++ b/security/inode.c
+> > @@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
+> >                         simple_rmdir(dir, dentry);
+> >                 else
+> >                         simple_unlink(dir, dentry);
+> > +               d_delete(dentry);
+> >                 dput(dentry);
+> >         }
+> >         inode_unlock(dir);
+> > --
+> > 2.49.0
+> >
+> >
+> 
+> Since this could impact efi_secret_unlink(), I would suggest adding linux-efi.
 
-I tested the patch, and it works for me.
+Thank you for your reply. :)
 
-I also looked at the patch. It assumes there is only one .symtab section.
- In general, there can be multiple symtab sections in an ELF file. But this
-(i.e. one symtab) most likely holds for the kernel.
+Did you mean cc to linux-efi?
 
-Tested-by: Rong Xu <xur@google.com>
+thanks,
+Jinliang Zheng.
 
-Thanks,
-
--Rong
-
->
+> 
+> -Fan
