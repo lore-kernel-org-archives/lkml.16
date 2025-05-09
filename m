@@ -1,63 +1,92 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1967E230D14;
-	Fri,  9 May 2025 14:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC00142E83;
+	Fri,  9 May 2025 14:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746802481; cv=none; b=cXJAYS14q9fxrM7Ea5eYlkHWUOWx7L/6HUkC9zkbJxj5NqU3fjaOgZe2LmVQyqraLtiKAyQ444Po9dD0fq0Wd9h4cyOzNP8LUcBvYV+Z7JIlWQvioOB/ZfaWHyzI2GMqFleP+eawJTfCpphoV6ChZJ9zd6yEeyFJcK5nk63sVdw=
+	t=1746802662; cv=none; b=mszd/k5yWFeFhbuS6nlXV1LXLVfXa9RoKWpHi3JJc0rAaEtHjApHUXoRAQY+V3JlgvmRrgoW/qb+halwmfcT21YORiLS4iwJtsdnU3cQ1EEZ6ftL1Kg1AgfWbP5tIT0Zju6hgCZROfrnsnblS+eSNsU1FWcC6r1F/iIqPn7iIJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746802481; c=relaxed/simple;
-	bh=ftCFmTDm4MpBp+NrzQlh8AVYNKU4PO8esHvpD3a43fE=;
+	s=arc-20240116; t=1746802662; c=relaxed/simple;
+	bh=2ULhiX/sx2ZhXn330YQk4+98fuJt2QBfaxpf96HwbhM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWyx0rThMppXzkmAMRjxGUBTyW6fDhufGgSNPHdt6iJMiYmcL3NkyoSvGJpCHWCMToLCxlnu0DInR9wg/0HCzzJ5LlH6JbFeivnaTOpartrRLRhpNbjpTIfJlBVG+4/qdhGIDeLhecOTrg95TXjFIGok2KCDNuI5zEqFn5eP1Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=CAQD5QrC; arc=none smtp.client-ip=220.197.32.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=V4YVSPrKEDySmxLaGoGtvS655rFLn2qww0W9wum9Q/KHM3Yec0bu2SCfs86C9s7rXNQGhDt18w8A0Z8XJPUj4m52X5cngev1HPDh9zGR8ZbS+rHBbngIWJ3KQKGOZY4ZkmwRpG7laqEJaG1Yf2sd0V07NC2YMSSZQCQrerhnivU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtOyIt7r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="CAQD5QrC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=oPlOYtBazf98uWZHxWpdn4kV8cJsQLj4ZpKTkdWd44U=;
-	b=CAQD5QrCGozhLcpHXuJIkNPy0br7JHKOGqMxioVLuJXJ+uMSG8o8WB6qdujPvn
-	sVt5Qn9NJecoUJJ7DO4kKog3/jnunrHXckX7hbzvSaXuJCu0kk86T4JBarYja0Y4
-	PVopQAyz/2dotQLiOa/SkXRlk6wkw2lh+aTp9OiV5Rrxw=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgDn3_MIFx5o9kGtAA--.4244S3;
-	Fri, 09 May 2025 22:54:01 +0800 (CST)
-Date: Fri, 9 May 2025 22:53:59 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: mxs: use padconfig macros
-Message-ID: <aB4XB+OcNBCkcW3m@dragon>
-References: <20250507141504.1332054-1-dario.binacchi@amarulasolutions.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtOyIt7r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA72C4CEEE;
+	Fri,  9 May 2025 14:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746802661;
+	bh=2ULhiX/sx2ZhXn330YQk4+98fuJt2QBfaxpf96HwbhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qtOyIt7r63xVa2TFttLbLYvhxW/5E2kNkFc4HgmSapbfi7jbggZgcq5YqP3yC3DCT
+	 ADIGRaLdWN5Cd3Ga4+CUSd9P1FJ6QnU+WG0oseq+H59A3UeRxB/WivhQAPs9eJBNM9
+	 3q5QGUm/ju2FQJT3QqmXlvcWf8NYQTpIQqll3Qo78SihOzCANPTB2pZUksXpO11rli
+	 T0+beAGs2FDsgRFnj41eloL6g+tj18BIu9fwkjhJmV1NoSObduVSYQaanA2pHC4K3j
+	 06TFVSva+FZ7dvcajGbcBrlpRcnU1d4FmyZ8dn1YVr5SOV5Vev0xmo+zokVgcO03wY
+	 Bh4s5Epe00t6w==
+Date: Fri, 9 May 2025 15:57:36 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	tglx@linutronix.de, daniel.lezcano@linaro.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, tim609@andestech.com
+Subject: Re: [PATCH v2 6/9] dt-bindings: cache: ax45mp-cache: allow variable
+ cache-sets for Andes L2 cache
+Message-ID: <20250509-anatomy-marry-a4e1513c613e@spud>
+References: <20250503151829.605006-1-ben717@andestech.com>
+ <20250503151829.605006-7-ben717@andestech.com>
+ <20250506-clammy-punctuate-6cb07dd0e81e@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xZGzDY3EIIpq4MLF"
+Content-Disposition: inline
+In-Reply-To: <20250506-clammy-punctuate-6cb07dd0e81e@spud>
+
+
+--xZGzDY3EIIpq4MLF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507141504.1332054-1-dario.binacchi@amarulasolutions.com>
-X-CM-TRANSID:Ms8vCgDn3_MIFx5o9kGtAA--.4244S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUwxhlDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCwpIZWgd37XrywAAsT
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 04:14:58PM +0200, Dario Binacchi wrote:
-> Convert mx2{3,8} dts files to use the padconfig macros defined in
-> mxs-pinfunc.h.
-> 
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+On Tue, May 06, 2025 at 05:23:21PM +0100, Conor Dooley wrote:
+> On Sat, May 03, 2025 at 11:18:26PM +0800, Ben Zong-You Xie wrote:
+> > The current device tree binding for the Andes AX45MP L2 cache enforces
+> > a fixed number of cache-sets (1024). However, there are 2048 cache-sets=
+ in
+> > the QiLai SoC. This change allows both 1024 and 2048 as valid values for
+> > "cache-sets".
+> >=20
+> > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+> > Acked-by: Rob Herring (Arm) <robh@kernel.org>
+>=20
+> Applied, thanks.
 
-Applied, thanks!
+You know what, I am starting to have second thoughts here. Why does the
+qilai not have a specific compatible like the plic etc? I think you
+should have one, and only allow the 2048 cache-sets there. I'm going to
+go and drop this patch, and please do that for the next version.
 
+Prabhakar, should we add a specific one for the rz/five too?
+
+--xZGzDY3EIIpq4MLF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaB4X4AAKCRB4tDGHoIJi
+0i+qAQC9iBtavy0hTp+A64DvVYTEh716pjoR6R6D8EMqDgbsuQEA5A0t5+8Bvqs3
+WbNQu9XqKvPxbXPdDeX4CzuUZJ+1pQU=
+=n5zh
+-----END PGP SIGNATURE-----
+
+--xZGzDY3EIIpq4MLF--
