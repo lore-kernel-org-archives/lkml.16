@@ -1,236 +1,153 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021141.outbound.protection.outlook.com [52.101.129.141])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F37323C8A1;
-	Fri,  9 May 2025 18:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.141
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746813784; cv=fail; b=UB5+yErOUptZ2Rd2N2J9RiDa3IxTWygGfq5DSsclEV+YidknF3UCUw1EEukOSzPgCv0xGSaHoDEqds5BM4dmsMcrFHoBsTkOPQDzdLHbs+MPuClJKjDuoHv6TcgnwTmOQlmHTeDLhtJFDFkEHJG25g2sQNa8BeSVQnkaUyF2nZY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746813784; c=relaxed/simple;
-	bh=vtAU26z9ezxDSDv4YjF5dSKkQys9ySL+sbxqRVfUV88=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LMCX9Nn5LaJZ4E7ls3P3n6KFN098FH9kmy27PB4X5BhTcs6N65iIevzMIJEk1M1Qf53L0SCr39MwE6W74hP/KaiNBma5Hd/Zs5TlWvtJubaTMNfe+yeX08BEZEZokRyiSFwTA7Fuew1pJFK6Etso/WUlm+q4LlNIobVzjONTQbw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=ZyJ76Etm; arc=fail smtp.client-ip=52.101.129.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2166C22FF55;
+	Fri,  9 May 2025 18:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746813799; cv=none; b=HYwIT/okTjMpBfAF6p/HVlimONXIaNgcrnZJH5Jle4O9yrAzUlnJqHoTq8i9WvhlyS1XZgsCsNDMbR2iUA69djoiLWiLAWcsZyNmsKur40oNWBO9Y45Jo/ABgvjq2lOsEX9mWmBNkTU7ALdBT7ALGnaP3U30PKvMBXTGg53fifk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746813799; c=relaxed/simple;
+	bh=agWPrgdVFVFCV3wS8fucRGbSHpoVcf4Zz1I8aPAowlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDPff7Eo7BbxGYbnpAFUrYPrrE2US3AckgbNE+sDLo9XRWQtK1Rza7ufBGVmn3a6cq+Fay/j5mmzpQ1Mshs36J4BJMDkF4C94dxS20wmveNTzT4/6wlWyxRs481H7EHNgQW3EmiRB+knQlyid0t4SgapDkmWVDbBe0zcADH3Rl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UCNJU1BO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ZyJ76Etm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uEEyLDwpgzxIpAjy0lax6H6YtiaMMxoMZ8zNiJuR5dlq6rgC7foUqUzWBUnv/uDCHL5YBfh5oQE/6OLfqLZ5mBKFKtaIdt9HxQUi4c5B25dXU/PrfSsQoYECkeGlbDDqUlLP1FCYbjGcg5M5bxwUSUKS0JtVpJ4eBNHyHzPMSCeayUoDKqDY8hjawAGHLSXICDxS7mSJ0I2PjvCjoWOiGs0QlbaTKOaVyRw0FREnfzrDbZrZ/HYAwUqRrjQoQZv/PmwVdh7lFaP9ewuhL7CSnqdxaqUUKbN02S4NN/myiNCYdJKfLOwjgxwVXYA6Mk6v7m7mCZg3GXlk9mErMrEgng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XfB890TzvoyQO6xWHFmz+H2/QcMh1f1+NnwEU+FGsRs=;
- b=T4b5qRuttWH0wVFBsKYzpSyNSqSmfTJfVy+9xjBLXMu/bg2q5ghk22sMDESTM7g+9i7/BdC/cSkIv55No6pO2/j39ChLdAgybe7fr5foTmxBTZ6IXoygeQB7t8ixDBo4fx7mgUisIMIxXMK0Dyn570xnIDxd4BMhsPvDAgrG68ARjRIBo+qMPvP8iM2CZ0dimIHUcimkKMB6o0CTn6OmfiGCz/rj+/e4SNKymlltLdvUTRYo5shPdcCW+Dm6IIRxpXpFOZhLFKzsfSzOpwfyvkdjGLJIK0hE4X74+BLEH/HE2fI0IAB1nu+kKCMI9hzK199TblWsXICv0FLg7xRlRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XfB890TzvoyQO6xWHFmz+H2/QcMh1f1+NnwEU+FGsRs=;
- b=ZyJ76EtmA8M9WkCGD8MX5ga3wLYNyxAPPPM8guQhkBq07gSRKBpr9kWUzCGBDuTN+8z/pC6M8wDHnQZg4cElnrKF9OKzO0fi4o+gI4m2RkNBQjlRh/i/DJNP4nKmT8OW3SMF0ozkQCaCZj2c32W1m54nM2yIOmxElsZbVfh7J4o=
-Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM (2603:1096:d10:36::22)
- by SIAP153MB1340.APCP153.PROD.OUTLOOK.COM (2603:1096:4:28c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.5; Fri, 9 May
- 2025 18:02:58 +0000
-Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
- ([fe80::1d66:c349:800b:f365]) by KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
- ([fe80::1d66:c349:800b:f365%5]) with mapi id 15.20.8746.002; Fri, 9 May 2025
- 18:02:58 +0000
-From: Saurabh Singh Sengar <ssengar@microsoft.com>
-To: Wei Liu <wei.liu@kernel.org>, Roman Kisel <romank@linux.microsoft.com>
-CC: Naman Jain <namjain@linux.microsoft.com>, KY Srinivasan
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui
-	<decui@microsoft.com>, Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Stanislav Kinsburskii
-	<skinsburskii@linux.microsoft.com>, Nuno Das Neves
-	<nunodasneves@linux.microsoft.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
-Thread-Topic: [EXTERNAL] Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
-Thread-Index: AQHbvmPWwq1NkNsYtEq9b/XTYQeJpbPHBnSQgACG/ACAAXzIAIABkZyA
-Date: Fri, 9 May 2025 18:02:57 +0000
-Message-ID:
- <KUZP153MB14447CC188576D3A7376CEAABE8AA@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
-References: <20250506084937.624680-1-namjain@linux.microsoft.com>
- <KUZP153MB1444858108BDF4B42B81C2A0BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <8f83fbdb-0aee-4602-ad8a-58bbd22dbdc9@linux.microsoft.com>
- <aBzx8HDwKakGG1tR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-In-Reply-To: <aBzx8HDwKakGG1tR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c6ff1c44-4d74-4a20-b38f-c066d6ccf37d;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-05-09T18:00:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: KUZP153MB1444:EE_|SIAP153MB1340:EE_
-x-ms-office365-filtering-correlation-id: 01ff478e-ff96-4489-91bb-08dd8f23baad
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?cBI7MbrkHvK/At8tXeW/0xz6jTcrfoHh5n/qizQsQhADgIh4pmghh0SjR57j?=
- =?us-ascii?Q?V8CjVkOoAlywv7EZDpw4ElKn6F9bcIQr74UyfpcMsiTn94xfisLj4pBqiT4l?=
- =?us-ascii?Q?usep5KDt97KSZeAKftyeHvvfPbdtHyLLx0pcJHi2l1iWJOk/Jkjm6iUMooyE?=
- =?us-ascii?Q?TUelhDMHyKbl1L5aQrdFuvW3miJVJppO7qP24pBuloAaKL7cI/7xVy9cInY0?=
- =?us-ascii?Q?wZNpMU4RJejCoNCb1taH1AL/V+eU/jMsMOBpMAQe7wz9hoDl1OI+Y+FiPX7A?=
- =?us-ascii?Q?OyVeUInkFobP5P2vIy2pDkh5tTZCwboFIoeercGhxuobkP51yYouP3zIwH2t?=
- =?us-ascii?Q?78U/GebCFohnFY5dB2LnXRWNVzp7Bu0LUXhU4qTeu0tqUd6u/L+J37JPdxfl?=
- =?us-ascii?Q?gWmI+cKUlmSf5F7ls1FtffpsjK8Kzm8L6Z9Cs6oOUzd1aSrqL9nDE6NvNSTt?=
- =?us-ascii?Q?ezMADwaZ0eZNXF8FE8bxAbAjDKnQwOWimPS6Mi2FPNepUwhI0whiOKg9OFcw?=
- =?us-ascii?Q?nXUP+xXFnxQAJX1Kys7OOmDPHlybQsyTeo2FEx73T82fWCQ8LyxDhHKZtUOy?=
- =?us-ascii?Q?cbyl0sOE1zbhZUo37xhMT4S9S+L/nB8XKQI3KPi7khdzOQDoCZIHpRHM0JTZ?=
- =?us-ascii?Q?ZZ12jiLs7ohHCv5TTHkEgTQ6G/iIkU1fmK0bZ/5sqr4bUcSVHEvRdED4AKS4?=
- =?us-ascii?Q?5O4GQYHyoQu8zXGYnJawi1NdVqlnK3H8MGywo7U26g/hAkvKgRWAWoSkUqhJ?=
- =?us-ascii?Q?MmGhg5Z/BO3weEjdTJsKnt7rHhrDdjXj0nzomUsbe3ue1g0YYcW/bXUEDR/S?=
- =?us-ascii?Q?8w+Aq2HurN8fOvuNg3t2+cr2KrFkkx+nf7RESnw3vE3q8johru5xoTki34py?=
- =?us-ascii?Q?lGjlceAHMEAwv97sf5TG7Wz5UJDZRlbi756RGRREIbjuq7XauNgx5jkkopQp?=
- =?us-ascii?Q?+8j1tyFEi7gZPLJAq6Yq5N5WU8cK1+krXiQ+GD/zlKq5dUD7ODkTaQx1bd3i?=
- =?us-ascii?Q?4+BDh4TvwtLtYRXg6kZL7Y876CX6qgIu2MsR1JuiniM4X0g0K5OmgIXHaumu?=
- =?us-ascii?Q?8c5Mu2gajt0OIztJe0ZFNXL8099N8ZNR5tc0rdasoVAfiaWMZ/2uQ1t79ueO?=
- =?us-ascii?Q?9cJkS3MbeHoPJu3aFG75jXI978sZQDgxdzdYT8lx1TRLwyc9Cpvc1eD+8146?=
- =?us-ascii?Q?NLfJ0Ps7dSz6qYup48yGwZNfwyWWCXbW4hW5r80Lq4uQvsf3pEbTOMR84lNU?=
- =?us-ascii?Q?n/c0m6SqAktJC0wWrVy+iMGjU/EP1BSt/fCe2yVxar1NYbqkBPAlWd2Es4mw?=
- =?us-ascii?Q?+m2xNTfFHLPKXVH2DWUKjbBswIexGSN+VRohCb7/sBUScU+prClb8JTLL5nK?=
- =?us-ascii?Q?zISO4Y0yUhHGHZ0K56xiumMeBgwjBzDo2UvomHMMFt9dpww0QDAg/RDyXaXt?=
- =?us-ascii?Q?VO8ThCebda1xT4rFyldc41Yn4WZ6az6HLE4U8ySY1SVkjhyCryGLPQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KUZP153MB1444.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Z16ZGzOnIMJyiS0tYZywto/5+XaIugeu0pq20ZGjkz7R9CyoT/XrIu1mcQqa?=
- =?us-ascii?Q?Yjrc5obZBq4CY3jx6sCjt2ZsGwVagg4ZpIL3XN6GKllJJTz/mQPWpgTzSqiW?=
- =?us-ascii?Q?5mkV3B3dwi+YS8AE2ADUYTqwcsBYTY3Cm1w8a/9ouMpmFd3o6I8R67qMkXO4?=
- =?us-ascii?Q?6Pv9DFkKytcYyIPLN/GtPY7N90vcyOHqgdq/gAfE0WJDCcmvE20+BhGZp7ne?=
- =?us-ascii?Q?7Nwl3u9ivlPlItNGda7c8MvcI1qGbBzkSWqOUMXMgvJQhkCGDrbejJ+uCyng?=
- =?us-ascii?Q?k0p2jXRYM1Y6oy8R7errQeGNW6oyjcPRr4Vw7WYj3wNByp7785GIn51YgEB4?=
- =?us-ascii?Q?5qhV+WCdKbPVQAwVrWcADM9aZZOgvlbN0zqPrzDKoccUsSYXYBBDehSHCUwa?=
- =?us-ascii?Q?7OATsyarw9NQ92nI8AP+1AAnyDD2svo7mhBOwtyInQujqKTikR1C8hsWNPlo?=
- =?us-ascii?Q?ZfmFpbsbm9ZtgmbcBvCq426ZWnTauJe8KPKlgdWn8IQALVMEe1CPykwylPlO?=
- =?us-ascii?Q?gZecnGoMlMGCN4Oce0IeQzzdTa4Nu7lv5au6F3SgGF0SDhKZT+tjGVs9o4Is?=
- =?us-ascii?Q?3UGvrTCKz0hkuOXdA0PjPy3u8t92lzir/T0A83F6CaLVe3UEzolwWS7BWIaf?=
- =?us-ascii?Q?EgLHbgFatRftK2GIa3C9khi2sNxLb69GKozDrXm+V+mi1DcDivdOCKnjxYzh?=
- =?us-ascii?Q?t3awUiWjEGUiDw5b+2MsX/GrZvyhtYyzuzMv8zNQdKn+/pf5eFtD8cjCRPVs?=
- =?us-ascii?Q?w6LE50rlFbhqTFaGxlhcma0gtYQlf4IsVh9BuZCWCzU9LzjMrPzNCpADRn3N?=
- =?us-ascii?Q?T9LRurAy8ABuNOoctuOYvwi8ZkWHkISH2nUH73k55HQPfH80rIed+oeD0JdX?=
- =?us-ascii?Q?jx3L/umX0rx5x1/7f1Dsvd04znR9uB4xcrFRM0S1wF5SoRGh5/HTNCjxX0rb?=
- =?us-ascii?Q?nfHjsxC0Te9ahAMWGfjX2RGFF/T6J423tK2KtKYhsMsxk46MAQrjdE9/RaRm?=
- =?us-ascii?Q?//Hz+OuF6G6A/w/UUaJsugynNk0Nn3f+7kT9p0ZKCqFGth53p+cbnTR3neTF?=
- =?us-ascii?Q?8t1B7SfxXPmd8HP2syPgxIkWVtZtENbW42O9ue0tXY4dcpnEMk/qYWnPmvHp?=
- =?us-ascii?Q?vR850DDWyYWVeBhzRfrLhshXG7iUn8AXBa9uvfuwv2DoUacGVswT0lPy4i0z?=
- =?us-ascii?Q?RmZ/BgoFteJ+KxHVytfMgSPZg01ZGpVXFLl3kDxz+1ECCg2lCRebNuk/fGhe?=
- =?us-ascii?Q?O8osezc75MD8jqu2KEYVbAQUQKNtJdWB9ZmJeODUVZ6URiv5IX3l+xKDrqgu?=
- =?us-ascii?Q?WrFKRaG6O5wHQqbAtkHVL305mvJvPpYn5cQLbueeuRPF65Sym5sNikBmRVAX?=
- =?us-ascii?Q?IXsqVG2jUJMBJOy8kiTkKcIoXb/NIyr+Brb3rznsKJUbjUhHejbDTZL7Ch6q?=
- =?us-ascii?Q?r0jxVexzUVceHww+ViuwmIovaHuTAQBMRY5QmOL/574DPOjBr7Cg75+3dObv?=
- =?us-ascii?Q?YNa7tjAPGYnonfcWaLTylB7JvDnN+c7Bmi/HHEqdEkVD+h9LN20UEnpCutMi?=
- =?us-ascii?Q?kRT1KY5Z1pCXvUFvyGtFMzRRzdijd4L9/Wjwq9jY?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UCNJU1BO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7NNy3XcZQY5E+n5cILbOTq7vvjJkGbBTsW0q+cK8Ogs=; b=UCNJU1BOKJB13Fi0tE0jzjpSka
+	aZIYeLpJIJ3h42m3B3UvKQ4beuFhCvtnarF2RNBXSvJQ1KoWTogRcWndg28AhC31xByvn+pcaTj3z
+	QPieR6sDAzsIytDTu0bKLVoWJ/di8fjSB+7D8OWm1zCzHkxbXx6PB0LHarqEO98MUHF7jtfSqyeGt
+	8QifsGMjJ9EcopYMJnQxLxCzDF6zacb93ZhFkuONoyOtBIx5Me7zSjO0Cvw3+d9AASfd8GEFX0ow9
+	cN5ob6R/K7uzPxb3AuBLfJ1OmFhQLpt+SjlBUwMAGp+ZUnbqmqh1A/vKh0k4t8zYDDm7TD2JmvtUT
+	u/19oCQg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uDS3L-0000000DXhJ-02YZ;
+	Fri, 09 May 2025 18:02:31 +0000
+Date: Fri, 9 May 2025 19:02:30 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Byungchul Park <byungchul@sk.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	almasrymina@google.com, ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+	ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
+Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct
+ page
+Message-ID: <aB5DNqwP_LFV_ULL@casper.infradead.org>
+References: <20250509115126.63190-1-byungchul@sk.com>
+ <20250509115126.63190-20-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01ff478e-ff96-4489-91bb-08dd8f23baad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2025 18:02:57.4554
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yHAIvM9nJFf6BA77C6Rqc1h9i0FuIOmShfxDmVSmNHROukv5xjxTKaYAaWusumjy/CYsBHvi/HRc4ERc3C4AGw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SIAP153MB1340
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509115126.63190-20-byungchul@sk.com>
 
+On Fri, May 09, 2025 at 08:51:26PM +0900, Byungchul Park wrote:
+> +++ b/include/linux/mm_types.h
+> @@ -20,6 +20,7 @@
+>  #include <linux/seqlock.h>
+>  #include <linux/percpu_counter.h>
+>  #include <linux/types.h>
+> +#include <net/netmem_type.h> /* for page pool */
+>  
+>  #include <asm/mmu.h>
+>  
+> @@ -118,17 +119,7 @@ struct page {
+>  			 */
+>  			unsigned long private;
+>  		};
+> -		struct {	/* page_pool used by netstack */
+> -			/**
+> -			 * @pp_magic: magic value to avoid recycling non
+> -			 * page_pool allocated pages.
+> -			 */
+> -			unsigned long pp_magic;
+> -			struct page_pool *pp;
+> -			unsigned long _pp_mapping_pad;
+> -			unsigned long dma_addr;
+> -			atomic_long_t pp_ref_count;
+> -		};
+> +		struct __netmem_desc place_holder_1; /* for page pool */
+>  		struct {	/* Tail pages of compound page */
+>  			unsigned long compound_head;	/* Bit zero is set */
+>  		};
 
+The include and the place holder aren't needed.
 
-> -----Original Message-----
-> From: Wei Liu <wei.liu@kernel.org>
-> Sent: 08 May 2025 23:33
-> To: Roman Kisel <romank@linux.microsoft.com>
-> Cc: Saurabh Singh Sengar <ssengar@microsoft.com>; Naman Jain
-> <namjain@linux.microsoft.com>; KY Srinivasan <kys@microsoft.com>;
-> Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>;
-> Dexuan Cui <decui@microsoft.com>; Anirudh Rayabharam
-> <anrayabh@linux.microsoft.com>; Saurabh Sengar
-> <ssengar@linux.microsoft.com>; Stanislav Kinsburskii
-> <skinsburskii@linux.microsoft.com>; Nuno Das Neves
-> <nunodasneves@linux.microsoft.com>; linux-kernel@vger.kernel.org; linux-
-> hyperv@vger.kernel.org
-> Subject: [EXTERNAL] Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
->=20
-> On Wed, May 07, 2025 at 12:20:36PM -0700, Roman Kisel wrote:
-> >
-> >
-> > On 5/7/2025 6:02 AM, Saurabh Singh Sengar wrote:
-> > >
-> > [..]
-> >
-> > > > +	}
-> > > > +
-> > > > +	local_irq_save(flags);
-> > > > +	in =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
-> > > > +	out =3D *this_cpu_ptr(hyperv_pcpu_output_arg);
-> > > > +
-> > > > +	if (copy_from_user(in, (void __user *)hvcall.input_ptr,
-> > > > hvcall.input_size)) {
-> > >
-> > > Here is an issue related to usage of user copy functions when interru=
-pt are
-> disabled.
-> > > It was reported by Michael K here:
-> > > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg=
-i
-> > > thub.com%2Fmicrosoft%2FOHCL-Linux-
-> Kernel%2Fissues%2F33&data=3D05%7C02%
-> > >
-> 7Cssengar%40microsoft.com%7C3a21fc17545e4bafb86e08dd8e5aa427%7C72
-> f98
-> > >
-> 8bf86f141af91ab2d7cd011db47%7C1%7C0%7C638823242185564641%7CUnk
-> nown%7
-> > >
-> CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJ
-> XaW4
-> > >
-> zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DpdQ90a
-> aKZsy
-> > > 67qkPZkV4BfpwM6cM6scUbTeH9lT7s6s%3D&reserved=3D0
-> >
-> > From the practical point of view, that memory will be touched by the
-> > user mode by virtue of Rust requiring initialization so the a possible
-> > page fault would be resolved before the IOCTL. OpenHCL runs without
-> > swap so the the memory will not be paged out to require page faults to
-> > be brought in back.
-> >
-> > I do agree that might be turned into a footgun by the user land if
-> > they malloc a page w/o prefaulting (so it's just a VA range, not
-> > backed with the physical page), and then send its address straight
-> > over here right after w/o writing any data to it. Perhaps likelier
-> > with the output data. Anyway, yes, relying on the user land doing sane
-> > things isn't the best approach to the kernel programming.
->=20
-> Yep. We don't rely on user land software doing sane things to maintain
-> correctness in kernel, so this needs to be fixed.
->=20
-> Thanks,
-> Wei.
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index 00064e766b889..c414de6c6ab0d 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/mm.h>
+>  #include <net/net_debug.h>
+> +#include <net/netmem_type.h>
 
+... which I think means you don't need the separate header file.
 
-How about fixing this for normal x86 for now and put a TODO for CVM to be f=
-ixed later, when we bring in CVM support ?
+>  /* net_iov */
+>  
+> @@ -20,15 +21,6 @@ DECLARE_STATIC_KEY_FALSE(page_pool_mem_providers);
+>   */
+>  #define NET_IOV 0x01UL
+>  
+> -struct netmem_desc {
+> -	unsigned long __unused_padding;
+> -	unsigned long pp_magic;
+> -	struct page_pool *pp;
+> -	struct net_iov_area *owner;
+> -	unsigned long dma_addr;
+> -	atomic_long_t pp_ref_count;
+> -};
+> -
+>  struct net_iov_area {
+>  	/* Array of net_iovs for this area. */
+>  	struct netmem_desc *niovs;
+> @@ -38,31 +30,6 @@ struct net_iov_area {
+>  	unsigned long base_virtual;
+>  };
+>  
+> -/* These fields in struct page are used by the page_pool and net stack:
+> - *
+> - *        struct {
+> - *                unsigned long pp_magic;
+> - *                struct page_pool *pp;
+> - *                unsigned long _pp_mapping_pad;
+> - *                unsigned long dma_addr;
+> - *                atomic_long_t pp_ref_count;
+> - *        };
+> - *
+> - * We mirror the page_pool fields here so the page_pool can access these fields
+> - * without worrying whether the underlying fields belong to a page or net_iov.
+> - *
+> - * The non-net stack fields of struct page are private to the mm stack and must
+> - * never be mirrored to net_iov.
+> - */
+> -#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
+> -	static_assert(offsetof(struct page, pg) == \
+> -		      offsetof(struct netmem_desc, iov))
+> -NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
+> -NET_IOV_ASSERT_OFFSET(pp, pp);
+> -NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
+> -NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+> -#undef NET_IOV_ASSERT_OFFSET
 
-Regards,
-Saurabh
+... but you do want to keep asserting that netmem_desc and
+net_iov have the same offsets.  And you want to assert that struct page
+is big enough to hold everything in netmem_desc, like we do for slab:
+
+static_assert(sizeof(struct slab) <= sizeof(struct page));
+
