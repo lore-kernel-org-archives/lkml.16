@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F30226FA42;
-	Fri,  9 May 2025 20:18:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F3A276024;
+	Fri,  9 May 2025 20:18:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746821882; cv=none; b=c3I0T9BlbgHP3DmRzj/kc17mhrraf4foZQ7ERvLa9c2MTlyG7X3ffrNAWXivqVw2oRRn2y6xxJ3bd9HKjVdHKIQjzDcWunjIH3r3LO+UmoxRinGM+BuKUXJOpoW4GnsL7tIuYqO79cEkhj9mZdB1hfmiU5P4A+S2O4tO6lehpDc=
+	t=1746821884; cv=none; b=u32Dfk4jGUyoDb/x5f3Sl0mdN6eFD6AbSIBnmLNib6VOnxYeOGIx1+RXFhkMiYy4AUat86H0p1YfxXQAHEDJqWNC9oRpBsuG3g9N7BVQsotDHqLkw0itflgssjofp9VQj6ftSkE7SsVpHMjBPftcTcJs3Lx6S+TCWKQXHeA8ZxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746821882; c=relaxed/simple;
-	bh=30eLE6xSDMB9ljZcmYDvILgYPcifP1so4H1h7z0aDvg=;
+	s=arc-20240116; t=1746821884; c=relaxed/simple;
+	bh=nG0D1Th2MfRsPa/QSsPxSzVCpK+SaAFbpW1WnLuhvFw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=axu6/9dHTQ/00/XjAKb5LsTyomjlt6g/9n+cEpgB8x1QtSRfqavTHaNGAuSe6AtyJJVdWoV5aUXaaQuhgKIuMnHu6uM8aSj6y/zZDpSzX+wATJTw4tWdcVTsiHfuLQTQQYUH8Ov0uDj9y+uKO2KFlKQSoGWA6JiwMhT4jjJIOqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCjDocGY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ulCEgOsTyAkazBkPheD+UpgvFL300lw0F7KD2vnTj4qYZ2SGyDlkHK/adPR86S6We28o+fe3+8iqmjgtA5zfHzpCJWkWCWnU4+PWrhrg79DR8WuC8POLi5Z037P3V4vS8VD/492Dtd4eiOu/geeuSl52H6qsJ9rXCFXTzAlWRWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=an0/2ltE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCjDocGY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C8DAC4CEEF;
-	Fri,  9 May 2025 20:18:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="an0/2ltE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAF6C4CEE9;
+	Fri,  9 May 2025 20:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746821882;
-	bh=30eLE6xSDMB9ljZcmYDvILgYPcifP1so4H1h7z0aDvg=;
+	s=k20201202; t=1746821883;
+	bh=nG0D1Th2MfRsPa/QSsPxSzVCpK+SaAFbpW1WnLuhvFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RCjDocGY6wtU7QuY9SLLU+3LX6HKM455N3xV53/lxn2oBgMRRdjGR4uI4LEyf17+E
-	 bW/sjjry87Jwv+4zkfPKL0FIOdAzLOEueOABo8njXXQuiWJ2S/gTAJOyW58CvdSktm
-	 Ugmzn4xbX1KIbroGkfv9MMHfKVgnNOivMn7uzdWpP3f53jHfCafqKDwRpdlNiH4l/g
-	 bx4cjWNjGcn65Vwl/4sxWy4YyfT23J4ksxBc2c66LMuU2vNjvepZLP7otUpdpu1wqm
-	 D+tBM9cGVJjRpi8RzrswdPNSYLzOx4DPpP1o/Nr3wK4zY0oaHsuI/gJd0DOoc/bi7Y
-	 1eki/ALcxwbRw==
+	b=an0/2ltEMaxftommRLf1wOOrhLwoqcPyXA1fOgV7HMYo6xQU1YbrR24U9/6+g46xT
+	 ewWdvQwOo4DsURWQdhv/N3g6T8uaf3s1G19yAJG/ODSlT4DAwz5e0kvWm2rdWhF4Yu
+	 ctjyz4dzMo4PQFdKQBkCSi/G8jrxT8thNUoWDZcEhAs+cyl0gh3nTb+UmUSRXvrUea
+	 gSo7wgMAIpsB0No8KqRAIw5QNU3LQKGLY3guWOijVk3dJqwfMOwVKklzKc0PKM/zdI
+	 ZPlPO3oS2Qf3kmKLUUBRlgeEkJszVgQsBCWhoZJyknIGVh/xkRJDluzVQN5l6aZH7e
+	 JKnbFJXNDqnHg==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Fazla Mehrab <a.mehrab@bytedance.com>,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>
-Subject: [PATCH v2 25/62] objtool: Convert elf iterator macros to use 'struct elf'
-Date: Fri,  9 May 2025 13:16:49 -0700
-Message-ID: <ad779fe847e9c28e1ea51f5b5d3cb444d9c9c191.1746821544.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 27/62] objtool: Mark .cold subfunctions
+Date: Fri,  9 May 2025 13:16:51 -0700
+Message-ID: <d67ebbcb2d1da07b08ba3e2d43339b857a874b40.1746821544.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1746821544.git.jpoimboe@kernel.org>
 References: <cover.1746821544.git.jpoimboe@kernel.org>
@@ -55,158 +55,108 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-'struct objtool_file' is specific to the check code and doesn't belong
-in the elf code which is supposed to be objtool_file-agnostic.  Convert
-the elf iterator macros to use 'struct elf' instead.
+Introduce a flag to identify .cold subfunctions so they can be detected
+easier and faster.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/check.c               | 22 +++++++++++-----------
- tools/objtool/include/objtool/elf.h |  8 ++++----
- tools/objtool/orc_gen.c             |  2 +-
- 3 files changed, 16 insertions(+), 16 deletions(-)
+ tools/objtool/check.c               | 14 ++++++--------
+ tools/objtool/elf.c                 | 19 ++++++++++---------
+ tools/objtool/include/objtool/elf.h |  1 +
+ 3 files changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 8a87c38516fc..c6884620e49d 100644
+index d53438865d68..043c36b70f26 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -106,7 +106,7 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
- #define for_each_insn(file, insn)					\
- 	for (struct section *__sec, *__fake = (struct section *)1;	\
- 	     __fake; __fake = NULL)					\
--		for_each_sec(file, __sec)				\
-+		for_each_sec(file->elf, __sec)				\
- 			sec_for_each_insn(file, __sec, insn)
+@@ -1581,7 +1581,9 @@ static int add_jump_destinations(struct objtool_file *file)
+ 		/*
+ 		 * Cross-function jump.
+ 		 */
+-		if (func && insn_func(jump_dest) && func != insn_func(jump_dest)) {
++
++		if (func && insn_func(jump_dest) && !func->cold &&
++		    insn_func(jump_dest)->cold) {
  
- #define func_for_each_insn(file, func, insn)				\
-@@ -429,7 +429,7 @@ static int decode_instructions(struct objtool_file *file)
- 	struct instruction *insn;
- 	int ret;
+ 			/*
+ 			 * For GCC 8+, create parent/child links for any cold
+@@ -1598,11 +1600,8 @@ static int add_jump_destinations(struct objtool_file *file)
+ 			 * case where the parent function's only reference to a
+ 			 * subfunction is through a jump table.
+ 			 */
+-			if (!strstr(func->name, ".cold") &&
+-			    strstr(insn_func(jump_dest)->name, ".cold")) {
+-				func->cfunc = insn_func(jump_dest);
+-				insn_func(jump_dest)->pfunc = func;
+-			}
++			func->cfunc = insn_func(jump_dest);
++			insn_func(jump_dest)->pfunc = func;
+ 		}
  
--	for_each_sec(file, sec) {
-+	for_each_sec(file->elf, sec) {
- 		struct instruction *insns = NULL;
- 		u8 prev_len = 0;
- 		u8 idx = 0;
-@@ -859,7 +859,7 @@ static int create_cfi_sections(struct objtool_file *file)
- 	}
+ 		if (jump_is_sibling_call(file, insn, jump_dest)) {
+@@ -4066,9 +4065,8 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
+ 			 * If this hole jumps to a .cold function, mark it ignore too.
+ 			 */
+ 			if (insn->jump_dest && insn_func(insn->jump_dest) &&
+-			    strstr(insn_func(insn->jump_dest)->name, ".cold")) {
++			    insn_func(insn->jump_dest)->cold)
+ 				insn_func(insn->jump_dest)->ignore = true;
+-			}
+ 		}
  
- 	idx = 0;
--	for_each_sym(file, sym) {
-+	for_each_sym(file->elf, sym) {
- 		if (sym->type != STT_FUNC)
- 			continue;
- 
-@@ -875,7 +875,7 @@ static int create_cfi_sections(struct objtool_file *file)
- 		return -1;
- 
- 	idx = 0;
--	for_each_sym(file, sym) {
-+	for_each_sym(file->elf, sym) {
- 		if (sym->type != STT_FUNC)
- 			continue;
- 
-@@ -2165,7 +2165,7 @@ static int add_jump_table_alts(struct objtool_file *file)
- 	if (!file->rodata)
- 		return 0;
- 
--	for_each_sym(file, func) {
-+	for_each_sym(file->elf, func) {
- 		if (func->type != STT_FUNC)
- 			continue;
- 
-@@ -2471,7 +2471,7 @@ static int classify_symbols(struct objtool_file *file)
- {
- 	struct symbol *func;
- 
--	for_each_sym(file, func) {
-+	for_each_sym(file->elf, func) {
- 		if (func->type == STT_NOTYPE && strstarts(func->name, ".L"))
- 			func->local_label = true;
- 
-@@ -2516,7 +2516,7 @@ static void mark_rodata(struct objtool_file *file)
- 	 *
- 	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
- 	 */
--	for_each_sec(file, sec) {
-+	for_each_sec(file->elf, sec) {
- 		if ((!strncmp(sec->name, ".rodata", 7) &&
- 		     !strstr(sec->name, ".str1.")) ||
- 		    !strncmp(sec->name, ".data.rel.ro", 12)) {
-@@ -4178,7 +4178,7 @@ static int add_prefix_symbols(struct objtool_file *file)
- 	struct section *sec;
- 	struct symbol *func;
- 
--	for_each_sec(file, sec) {
-+	for_each_sec(file->elf, sec) {
- 		if (!(sec->sh.sh_flags & SHF_EXECINSTR))
- 			continue;
- 
-@@ -4270,7 +4270,7 @@ static int validate_functions(struct objtool_file *file)
- 	struct section *sec;
- 	int warnings = 0;
- 
--	for_each_sec(file, sec) {
-+	for_each_sec(file->elf, sec) {
- 		if (!(sec->sh.sh_flags & SHF_EXECINSTR))
- 			continue;
- 
-@@ -4449,7 +4449,7 @@ static int validate_ibt(struct objtool_file *file)
- 	for_each_insn(file, insn)
- 		warnings += validate_ibt_insn(file, insn);
- 
--	for_each_sec(file, sec) {
-+	for_each_sec(file->elf, sec) {
- 
- 		/* Already done by validate_ibt_insn() */
- 		if (sec->sh.sh_flags & SHF_EXECINSTR)
-@@ -4610,7 +4610,7 @@ static void disas_warned_funcs(struct objtool_file *file)
- 	struct symbol *sym;
- 	char *funcs = NULL, *tmp;
- 
--	for_each_sym(file, sym) {
-+	for_each_sym(file->elf, sym) {
- 		if (sym->warned) {
- 			if (!funcs) {
- 				funcs = malloc(strlen(sym->name) + 1);
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index 0f9adfe8e852..fcea9338c687 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -324,16 +324,16 @@ static inline void set_sym_next_reloc(struct reloc *reloc, struct reloc *next)
- 	reloc->_sym_next_reloc = (unsigned long)next | bit;
+ 		return false;
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index d36c0d42fd7b..59568381486c 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -441,6 +441,10 @@ static void elf_add_symbol(struct elf *elf, struct symbol *sym)
+ 	list_add(&sym->list, entry);
+ 	elf_hash_add(symbol, &sym->hash, sym->idx);
+ 	elf_hash_add(symbol_name, &sym->name_hash, str_hash(sym->name));
++
++	if (is_func_sym(sym) && strstr(sym->name, ".cold"))
++		sym->cold = 1;
++	sym->pfunc = sym->cfunc = sym;
  }
  
--#define for_each_sec(file, sec)						\
--	list_for_each_entry(sec, &file->elf->sections, list)
-+#define for_each_sec(elf, sec)						\
-+	list_for_each_entry(sec, &elf->sections, list)
+ static int read_symbols(struct elf *elf)
+@@ -527,18 +531,15 @@ static int read_symbols(struct elf *elf)
+ 		sec_for_each_sym(sec, sym) {
+ 			char *pname;
+ 			size_t pnamelen;
+-			if (!is_func_sym(sym))
++
++			if (!sym->cold)
+ 				continue;
  
- #define sec_for_each_sym(sec, sym)					\
- 	list_for_each_entry(sym, &sec->symbol_list, list)
+-			if (sym->pfunc == NULL)
+-				sym->pfunc = sym;
+-
+-			if (sym->cfunc == NULL)
+-				sym->cfunc = sym;
+-
+ 			coldstr = strstr(sym->name, ".cold");
+-			if (!coldstr)
+-				continue;
++			if (!coldstr) {
++				ERROR("%s(): cold subfunction without \".cold\"?", sym->name);
++				return -1;
++			}
  
--#define for_each_sym(file, sym)						\
-+#define for_each_sym(elf, sym)						\
- 	for (struct section *__sec, *__fake = (struct section *)1;	\
- 	     __fake; __fake = NULL)					\
--		for_each_sec(file, __sec)				\
-+		for_each_sec(elf, __sec)				\
- 			sec_for_each_sym(__sec, sym)
- 
- #define for_each_reloc(rsec, reloc)					\
-diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
-index 922e6aac7cea..6eff3d6a125c 100644
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/orc_gen.c
-@@ -57,7 +57,7 @@ int orc_create(struct objtool_file *file)
- 
- 	/* Build a deduplicated list of ORC entries: */
- 	INIT_LIST_HEAD(&orc_list);
--	for_each_sec(file, sec) {
-+	for_each_sec(file->elf, sec) {
- 		struct orc_entry orc, prev_orc = {0};
- 		struct instruction *insn;
- 		bool empty = true;
+ 			pnamelen = coldstr - sym->name;
+ 			pname = strndup(sym->name, pnamelen);
+diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
+index 0914dadece0b..f41496b0ad8f 100644
+--- a/tools/objtool/include/objtool/elf.h
++++ b/tools/objtool/include/objtool/elf.h
+@@ -71,6 +71,7 @@ struct symbol {
+ 	u8 local_label       : 1;
+ 	u8 frame_pointer     : 1;
+ 	u8 ignore	     : 1;
++	u8 cold		     : 1;
+ 	struct list_head pv_target;
+ 	struct reloc *relocs;
+ 	struct section *group_sec;
 -- 
 2.49.0
 
