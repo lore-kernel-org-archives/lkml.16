@@ -1,83 +1,68 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D01D26A1B8
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DE826A1B8
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746773471; cv=none; b=kudSpzREcecpPYr2EGixX/lNM37xN29jyP1BIWCw/dpFkH/Vq+q6b/TrgonxWFVpIpO1SN0LqikEvQ5kMhTCy5MJ6e0LgvJmGjyxnISM64VcmcOulu0lRlq+xAS/zQHvg/sQO/kgUfOOnrT3IktGjO4971HCyn3vvvd1yiH+klw=
+	t=1746773480; cv=none; b=tK4mGgUSTG2tkd/5up+9sQXG1jFObQXKIsa3+xWnSRIFWfkQ37NnCBnYgWlMahbXUo4qQXBZvhl0SZvRBW0TCmb2L5oMPzsZx16xGrqginEBxO4DvBBRHabA4+lZSbVaHzKaNtz5MgqLPY3vgd9d0ChOsVm2S9GQFvv82+9fLw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746773471; c=relaxed/simple;
-	bh=wiDZ4xkPtV9BOe7ADj1LbvuGPB4FiUezAyGN2IFKEzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fk+OwyFv7Qcd5lV34Vw4V4vyHvA61jVGPdenB17nVcvcQs2QBNCKxBmA4ehx+cCYIlrJ1BGMJ/uaL6mqIk9+KGPmaobBQjHDMdXgBJG+23T2TUUvrz77D6lGmO4Vduc90O91Fm5yDgiiyVZXbbTIVcRa46c6UgZaM76BY3BvRzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZLhl8vlt; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1746773480; c=relaxed/simple;
+	bh=AF5fpfzqJ+Ej96B9gVRXqWtxyZAB5RD/WG1QkctopUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Jn55wnPYptju20CipDTFnR4iRMJe7jHJeGznH5cnZj140gnjPlohMlsXDEcDmUFD4o9c6v/GarVkm50w6XwmtWZWYFVH73A0nZTXSHN33mdoZdL8frjkDODxXkytpSCbZQ0uYlBVCoGsy3xKqHoLvhfbyDAIkFvj9hldrgpo/G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hBbOvkW7; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLhl8vlt"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so18513095e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 23:51:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hBbOvkW7"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fbda5a8561so2577639a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 23:51:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746773468; x=1747378268; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
-        b=ZLhl8vltiQyAai1i+3Sn+H0oJQzhx2abSENViGQGEi/dQOBeBEIWkVmHyDe56CHdLt
-         xDKK0g6GDHValO90OKLmhKsHxBC+IQkjHp1xhb8B67gRrfG//1E2UEPij8Lfzkl+ZSmd
-         Ctx4cYNfzv3iaukeZn0YbhpJtLdreKmT2xXwozoLqNnEtS8QL108OPMuH7c+UGaXBK85
-         qeEOFyq2mdQMZEZ4Mv6ZefuHOZtS9d0XdK9YsL9cpJjjxqloitR4iVeGiSavGywOx2TP
-         DqwfefGijEOyPKlA/cjFEaNRW6SAkoeMHd5uup1+sfQ5BP6Av/+V7me1cfS0RnJ+i3nr
-         2tnA==
+        d=linaro.org; s=google; t=1746773477; x=1747378277; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KYBTfNGTTnEFB0aMh2qxUzJsPyPpesZiTr/JW3zojpk=;
+        b=hBbOvkW7BmxxOxP8+ympB4RWPZGeOn6CHHfZqQVoajLn2esBcrg8teL3Sb9RxSdtEE
+         FIqwy/AfK32iPhEhxOvmOrrYgTrIclCym++2l9pNPRIfr5PwfC0d59S/466Czt7iIgHc
+         RDZmCdxRkNm/6Eob/Dw5IihzoyfPO9Rkeo27CA48Uiv8gaEvhWECLNBmCnPUD7jlXRQb
+         LltmR6EnOMtsxD+DV8CGuq7L6Yz2wccEG6Mmo8vP77iTSuwD5LmdeZOeOtcbuW4WKC5C
+         /azERjZjjCXk8K6Tp7VpeUQ7pWtf2jZL5/zWpwXzZ0VGdb8vfzTO+KVYLcgY5PzmSF0q
+         6rWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746773468; x=1747378268;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1746773477; x=1747378277;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ypnr2THvthLLCavYo7AZWLvgkehzz9yqDu3s2kWxJOs=;
-        b=iEtGVHCWg7vOTYXOqtJ7FNeRZ+fh/Q0F5PkPVmQ5zDd72QqE9Mu1hw1jdYq+QLKpy3
-         LR+ERESIWnzccRbc/6WdifnHgMuA4Xe7eZkFTN9kEPqiOXyPs5FPczFh8KkwclJpLrpu
-         TNzslHKfAEkQvltPK9+iaRB8yLKpdsXVx6gwM4wDHC9lOamnGiuml2TYH5l8hlR0CiHH
-         64ttmGEVvtf8/HRw5dwoxMEcLJRG8Nqh4b9Ttsj/5WbZwQy4gYe6vsZKTPTdJ92XnX0R
-         7yvv8Dt7zFIyd01leUf61F1wzGC6DWZ18k+dE9rznKRlxgv4IJiKqGpaqd4j/ahVNNOY
-         GzZA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4oja4sYrCXWUAuKyy3YTY0iB5pLOxkKpPzHcp1S1fk0ngRaPpKh84zi4/KyoyHPgH8EjsKde5hDsaNBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyihijXxDv4XjUmoF7kkOydWZzIQTA0itf2FCPcU629a5g7ieUH
-	4dtX/ajopEbUzyI7UW6pz4qSdX7fv4L9yqRFTtv9VN8gFBOgF3ZM6vTvwyKb8g==
-X-Gm-Gg: ASbGnctj72ZQWzP1SHpSBVmWNrmVAnUtbPrUqQy23tYnN/5KuCXARNY1NwDHzoPpp+Z
-	dtf12xKKfpIK2XpD3xlPhQwBf3jIOy3UVMvablgi+c2WDXlwLaZ3lXWCERxDwvY3D7waGQ/qusO
-	r6B9ik398wAoWS9ZDCzao/RkLku9mzKA8toiA4lq10YBk1MCZ8l/CjeHoDs3IAPnbdeETmkiL+/
-	a5jXxqibf5CtMlxIF+unK6fl3LAezR14GZ5gyR9Kjvc5H9ncnvms2Tizkq+vaICZ16D3+f1AAbP
-	OzuhfqT4YWqL8Vd4bk2JMjtUdTkco65leUPE4r+m+YutHR29XRlbpy3VHXTPPlrjlj6K8AC8n0R
-	HGnqj7fKBwqz45usxV2PKKI8=
-X-Google-Smtp-Source: AGHT+IEBZ+xyU+mtZq/TJ5fu+6WMLt3/ZEPH5kI6vP9q6SNWA2Tnohwr4qj0xsEIdaPCJ/e8n6vxRA==
-X-Received: by 2002:a05:6000:178e:b0:391:4889:5045 with SMTP id ffacd0b85a97d-3a1f649be24mr1423812f8f.36.1746773468403;
-        Thu, 08 May 2025 23:51:08 -0700 (PDT)
-Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5e1sm2214791f8f.89.2025.05.08.23.51.07
+        bh=KYBTfNGTTnEFB0aMh2qxUzJsPyPpesZiTr/JW3zojpk=;
+        b=nrkjea/Ir+2UynWnyxMUuJOXNFe2RtBcADkcpbFQ6p/iB2QIsislRMgpKsRzwMvIc/
+         YVEuXFC51OnRKhSD0mDi25gg33d0OCy+HyPRR0BqG2KQn0a2TY06pB0NqFOXPEyQrex3
+         UICWvHgclCV2lJ2xMZggwiitq5asMAJ6TXZEypwfWGNJ49Q/UGUeNvhnBdnicx6KhV+L
+         gkqY7vlDwc9KVojWRMF917W9Hcq6YdGFEh4JzC413mT/yS7y5+A34S3Mu2L3jsCZDWal
+         mN6LiVHYWeh7sTR8g+E8UUTmaxraO6namtYg4rN9fMiz30zYd9AsMmYuIVtBdnDiTOto
+         CjBw==
+X-Gm-Message-State: AOJu0Yz0NTIOxsqS7VnLwbH65RaeiR7l/0hCBc4RIgnuiwAHTQz7LKpe
+	5V+ozdexy/Cexs+621Izg8bSasyQzEq/64tf8EwdyujRURKSThnNIfIektYTR/8+e3Nb1VTqy3B
+	i
+X-Gm-Gg: ASbGncsJYecTfNl7olUxy2Tkzlj2jSeagSG2Et7tfgrYA2fKx8QdwmUY3O8I1qcgWDg
+	T2eGILjkUxtEddWcRyt6oIEQw3Z2FwwzhyOmDWYfe7e3d2kdNeDH1F5A8S53M5/0RQ6r3Jp8evD
+	fUtcyqW5wVC8x6wAMkkXU910wR00geb5y5CSv2TBB4A4SFCJlS54JEO1NuDc0ZuFOxUI4tVzrYl
+	+Cmm4HaApNJ4lbWuy7/xeGF4ShTbB2SlX3c+4LVfVxmy8RxcWiX8sn/xX5zuO1dWEAbeGEZPHrh
+	h0koa2BbmmdWwUBLEZ/HGUsCy9eC06SPIRXKQfjpUwhMry4+zdj+qrIb53eCyejZKmTLyNwuAwH
+	SqCCjy7I=
+X-Google-Smtp-Source: AGHT+IGEq7s1cGa8nS1cxj9LzdihYh5cljT0mvPGw2cCH0VhEx2xs7QLyoyuTIKGYy59vJPEyiabaw==
+X-Received: by 2002:a05:6402:13cf:b0:5f6:c4ed:e24e with SMTP id 4fb4d7f45d1cf-5fca07eb917mr1808116a12.27.1746773476973;
+        Thu, 08 May 2025 23:51:16 -0700 (PDT)
+Received: from rayden (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d7100d2sm955653a12.80.2025.05.08.23.51.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 23:51:07 -0700 (PDT)
-Date: Fri, 9 May 2025 12:21:07 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ethan Zhao <etzhao1900@gmail.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 1/5] PCI/ERR: Remove misleading TODO regarding kernel
- panic
-Message-ID: <34nnkgbfkccvxiksjb5qaojppcvnkq4l7rchllsppy7cl4fics@4mwtb3rhko5n>
-References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
- <20250508-pcie-reset-slot-v4-1-7050093e2b50@linaro.org>
- <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
+        Thu, 08 May 2025 23:51:16 -0700 (PDT)
+Date: Fri, 9 May 2025 08:51:14 +0200
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: arm@kernel.org, soc@kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	op-tee@lists.trustedfirmware.org
+Subject: [GIT PULL] TEE updates for 6.16
+Message-ID: <20250509065114.GA4188600@rayden>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,27 +71,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec5bd8d1-c865-40ac-b03d-9e07875d931c@gmail.com>
 
-On Fri, May 09, 2025 at 02:11:00PM +0800, Ethan Zhao wrote:
-> 
-> 
-> On 5/8/2025 3:10 PM, Manivannan Sadhasivam wrote:
-> > A PCI device is just another peripheral in a system. So failure to
-> > recover it, must not result in a kernel panic. So remove the TODO which
-> > is quite misleading.
-> > 
-> Could you explain what the result would be if A PCI device failed to
-> recovery from FATAL/NON_FATAL aer error or DPC event ? what else
-> better choice we have as next step ? or just saying "failed" then
-> go ahead ?
-> 
+Hello arm-soc maintainers,
 
-If the recovery is not possible (with device,bus,host reset), then there is
-nothing could be done.
+Please pull two small small patches for the TEE subsystem and OP-TEE driver.
 
-- Mani
+Thanks,
+Jens
 
--- 
-மணிவண்ணன் சதாசிவம்
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/jenswi/linux-tee.git tags/tee-for-v6.16
+
+for you to fetch changes up to 39bb67edcc582b3b386a9ec983da67fa8a10ec03:
+
+  tee: Prevent size calculation wraparound on 32-bit kernels (2025-04-30 14:57:03 +0200)
+
+----------------------------------------------------------------
+Small TEE updates for v6.16
+
+- Remove an unnecessary NULL check before release_firmware() in the
+  OP-TEE driver
+- Prevent a size wrap in the TEE subsystem. The wrap would have been caught
+  later in the code so no security consequences.
+
+----------------------------------------------------------------
+Chen Ni (1):
+      tee: optee: smc: remove unnecessary NULL check before release_firmware()
+
+Jann Horn (1):
+      tee: Prevent size calculation wraparound on 32-bit kernels
+
+ drivers/tee/optee/smc_abi.c |  3 +--
+ drivers/tee/tee_core.c      | 11 ++++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
