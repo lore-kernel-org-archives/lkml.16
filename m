@@ -1,25 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D09528D8FD
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA4C28EA45
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795730; cv=none; b=S/CX25HDqWF2/l7MydyTHAG65in3BmiCIf1ckzjerH6Au9HV4W0zeH/LK9Ve4FvDy1sUqiExP/tCpo69Og0MIN1z2JPiV/oaDzhdfsS8E6LrQQrwhVNqOk9nA/WX+JxFc+oqvZeo2SQ51knYOSMUNEv/hG/yxKPMSoH+1GqlNFc=
+	t=1746795772; cv=none; b=HpxPD9PKRBb4Gz04JN9+tfaiyKM6fCDYQp3VSthakOiHfrt2u8htgFnaJg1JjULI6pl1rCUFnnx86TGp3hG7lo2e9ICluoeUPTsInWQTyR7CmT6FapfhaKE2V+qA3PHbpo7w4FevPdSx5h8YTw9fyKH7ZccRVCdIr1b3yCEyxhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795730; c=relaxed/simple;
-	bh=Kze0SyEYvQc8SDRBVeNXW/G/mCAizeF6tVAMrvRPVhA=;
+	s=arc-20240116; t=1746795772; c=relaxed/simple;
+	bh=I5m0YI+0CYleZqXeh83R5cf65v2zE8kZXElS7TtZ16k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YQm4CjU1rWtteRs43vHoGZaCOIEfy/UPzYlFtIkfxAVUygfhmfZtG2F1Ka2TFVwsjwCjbQ08y2iZ+IzOyg4RKNHFnz5m1tFOHRdlBlB1NDHiOtFCXDAHC2E8aKWtJA+Ty6S9v0rJ+bnwO/27PReWEyxpTY2702rQo/ROlwhEOi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B18BA1595;
-	Fri,  9 May 2025 06:01:56 -0700 (PDT)
-Received: from [10.57.90.222] (unknown [10.57.90.222])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87F603F58B;
-	Fri,  9 May 2025 06:02:05 -0700 (PDT)
-Message-ID: <2ad910f4-6930-4da2-aa2b-f3875f71e001@arm.com>
-Date: Fri, 9 May 2025 14:02:03 +0100
+	 In-Reply-To:Content-Type; b=HVfwGWjxARVkf2cGZQoZHEJ2KbGcvvAanYLEhWqthDiq4RQgDz9ys3xXkoMosCdV3HmqrvBqy6VwA/FAyS0P8n09AjThLNnpmdp7rYTTKk//mKH+rQbRNYc5MDnjnT7QVQVF7w7p+ju6vOp1hqdQJshgoiUKSwsoZelaCFXQ/TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nQBpMxgh; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nQBpMxgh"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549Af3U3004468;
+	Fri, 9 May 2025 13:02:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=TDjkF/
+	/Nhp950cpZ/fbjETYdNCwuZBtjg6uNqRtDxKI=; b=nQBpMxghUqnKdttB18XGkJ
+	J7ntEXTkAIfzDYuTvicvStctHxZ4Hp8upCdjGkomigGrc322rsg2GXs3kZuA6q5+
+	nQSr7OxAoZ4Li97yxjoVQqWS/nGO1lR4diSPfb7OfzjJ8ZLUr+hvOlfw9W0Mj0gW
+	6PenqfPVRcKTxca4bu9oEal7+XMc+xXo2duizI+Ctf4ZqExSLAT41LkcynnUdFcN
+	TT94KHUOZ2CmqAm8sQ5D+iy3iSMCm919FwISZ7GywbrEmxWH6jWXdJrsK6NVUC4v
+	1N3TB/Q9yYvkYlwahQiRutv1IV56e1oIIZTqy84ZCcRSUAtv3l6Zg+mnu2jWuUsA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46hg5sgj9p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 13:02:30 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 549D0Uv1005482;
+	Fri, 9 May 2025 13:02:30 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46hg5sgj9h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 13:02:30 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5499nMcx014583;
+	Fri, 9 May 2025 13:02:29 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46dypm352f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 13:02:29 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 549D2PFV58130830
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 9 May 2025 13:02:25 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7752020040;
+	Fri,  9 May 2025 13:02:25 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AF38020043;
+	Fri,  9 May 2025 13:02:22 +0000 (GMT)
+Received: from [9.124.210.99] (unknown [9.124.210.99])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  9 May 2025 13:02:22 +0000 (GMT)
+Message-ID: <d2bc5f3c-b360-41fe-998f-2ef444aba6ed@linux.ibm.com>
+Date: Fri, 9 May 2025 18:32:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,139 +69,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/9] Merge arm64/riscv hugetlbfs contpte support
-Content-Language: en-GB
-To: Alexandre Ghiti <alexghiti@rivosinc.com>, Will Deacon <will@kernel.org>,
- Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, Catalin Marinas
- <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>,
- Matthew Wilcox <willy@infradead.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Andrew Morton <akpm@linux-foundation.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-mm@kvack.org
-References: <20250321130635.227011-1-alexghiti@rivosinc.com>
- <4dd5d187-f977-4f27-9937-8608991797b5@ghiti.fr>
- <64409a13-1c07-42cd-b1ec-572042738f1b@arm.com>
- <84cb893a-46e3-408a-ba0e-2eff0b44d2a1@ghiti.fr>
- <20250508123046.GA3706@willie-the-truck>
- <CAHVXubjZB-riBLv+RGis6ErS8NvU4ijVTgvUO06fTxPhbEjXfA@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAHVXubjZB-riBLv+RGis6ErS8NvU4ijVTgvUO06fTxPhbEjXfA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 3/6] powerpc: fadump: use lock guard for mutex
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, mpe@ellerman.id.au,
+        peterz@infradead.org, ajd@linux.ibm.com, mahesh@linux.ibm.com,
+        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
+        Srikar Dronamraju <srikar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com
+References: <20250505075333.184463-1-sshegde@linux.ibm.com>
+ <20250505075333.184463-4-sshegde@linux.ibm.com>
+ <9f18e699-4819-4d2f-a932-fc5e399e8abd@linux.ibm.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <9f18e699-4819-4d2f-a932-fc5e399e8abd@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: wNFCSBdOTPN5emLT6e1yeS-PxPbvP4DB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEyMyBTYWx0ZWRfX45+IfNik/6x4 YBiJFHFJkLQ6pkEmGVmidyfBmeNWV3lgu0t+L03vN0UGpD06i72bW8VhCIWc61tq93dFMn0tVkp zxWg+AEGKrB/YYsJB+5hTqgfm3+WRsylGtI0n9+QPmHfCyIxKyqCY+tPCM0qeezSFyLYG2dOVPj
+ d3l+6pLwlSNSmfHpN1Ep4eKPGO7ggNZbTpMPNwZRJ1R3BJbHW0PaiKhD8n4TIDF3pPTNEVSh6UW vYs/q/u+xgbIcr7AEY5IrxQyqYVahH4PhP+XWSlpFCQtfyN7+KmL8wNuvv8bS95l9yES6zCqQik huOuv/02hgdqrKey5R9tjGNjLcz6XIECxRLKbsc3QPmxuQUpZSdhSbG6hghzyiF39W146Co4/oR
+ OwdXmCVwmtiKftR4LKZAg1j+I2eYrRUeP0IbLsuwDlNCJ7Eet2fO3h/nKNt/lGXefKRMp3ar
+X-Proofpoint-ORIG-GUID: ex8w7jr7aokN3IiwYasi3P57Rg77Rqjk
+X-Authority-Analysis: v=2.4 cv=NrjRc9dJ c=1 sm=1 tr=0 ts=681dfce6 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=VnNF1IyMAAAA:8 a=Twlkf-z8AAAA:8
+ a=w4zUdiFJCf33N9Ciak0A:9 a=lqcHg5cX4UMA:10 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=ImwWUX5h3JJ3gRE9moBe:22 a=z2U-W3hJrleVIN9YIjzO:22 a=1CNFftbPRP8L7MoqJWF3:22 a=-74SuR6ZdpOK_LpdRCUo:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_05,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 suspectscore=0 impostorscore=0 bulkscore=0
+ mlxscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015 lowpriorityscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090123
 
-On 09/05/2025 12:09, Alexandre Ghiti wrote:
-> Hi Will,
+
+
+On 5/8/25 11:23, Sourabh Jain wrote:
 > 
-> On Thu, May 8, 2025 at 2:30 PM Will Deacon <will@kernel.org> wrote:
+
+Hi Sourabh.
+
+> On 05/05/25 13:23, Shrikanth Hegde wrote:
+>> use scoped_guard for scope based resource management of mutex.
+>> This would make the code simpler and easier to maintain.
 >>
->> Hi folks,
+>> More details on lock guards can be found at
+>> https://lore.kernel.org/all/20230612093537.614161713@infradead.org/T/#u
 >>
->> On Mon, May 05, 2025 at 06:08:50PM +0200, Alexandre Ghiti wrote:
->>> On 29/04/2025 16:09, Ryan Roberts wrote:
->>>> On 07/04/2025 13:04, Alexandre Ghiti wrote:
->>>>> Can someone from arm64 review this? I think it's preferable to share the same
->>>>> implementation between riscv and arm64.
->>>> I've been thinking about this for a while and had some conversations internally.
->>>> This patchset has both pros and cons.
->>>>
->>>> In the pros column, it increases code reuse in an area that has had quite of few
->>>> bugs popping up lately; so this would bring more eyes and hopefully higher
->>>> quality in the long run.
->>>>
->>>> But in the cons column, we have seen HW errata in similar areas in the past and
->>>> I'm nervous that by hoisting this code to mm, we make it harder to workaround
->>>> any future errata. Additionally I can imagine that this change could make it
->>>> harder to support future Arm architecture enhancements.
->>>>
->>>> I appreciate the cons are not strong *technical* arguments but nevertheless they
->>>> are winning out in this case; My opinion is that we should keep the arm64
->>>> implementations of huge_pte_ (and contpte_ too - I know you have a separate
->>>> series for this) private to arm64.
->>>>
->>>> Sorry about that.
->>>>
->>>>> The end goal is the support of mTHP using svnapot on riscv, which we want soon,
->>>>> so if that patchset does not gain any traction, I'll just copy/paste the arm64
->>>>> implementation into riscv.
->>>> This copy/paste approach would be my preference.
->>>
->>>
->>> I have to admit that I disagree with this approach, the riscv and arm64
->>> implementations are *exactly* the same so it sounds weird to duplicate code,
->>> the pros you mention outweigh the cons.
->>>
->>> Unless I'm missing something about the erratas? To me, that's easily fixed
->>> by providing arch specific overrides no? Can you describe what sort of
->>> erratas would not fit then?
-
-One concrete feature is the use of Arm's FEAT_BBM level 2 to avoid having to do
-break-before-make and TLB maintenance when doing a fold or unfold operation.
-There is a series in flight to add this support at [1]. I can see this type of
-approach being extended to the hugetlb helpers in future.
-
-I also have another series in flight at [2] that tidies up the hugetlb
-implementation and does some optimizations. But the optimizations depend on
-arm64-specific TLB maintenance APIs.
-
-[1]
-https://lore.kernel.org/linux-arm-kernel/20250428153514.55772-2-miko.lenczewski@arm.com/
-
-[2]
-https://lore.kernel.org/linux-arm-kernel/20250422081822.1836315-1-ryan.roberts@arm.com/
-
-As for errata, that's obviously much more fuzzy; there have been a bunch
-relating to the MMU in the recent past, and I wouldn't be shocked if more turned up.
-
-For future architecture enchancements, I'm aware of one potential feature being
-discussed for which this change would likely make it harder to implement.
-
+>> Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
+>> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+>> ---
+>>   arch/powerpc/kernel/fadump.c | 11 ++++-------
+>>   1 file changed, 4 insertions(+), 7 deletions(-)
 >>
->> If we start with the common implementation you have here, nothing
->> prevents us from forking the code in future if the architectures diverge
->> so I'd be inclined to merge this series and see how we get on. 
+>> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+>> index df16c7f547ab..b8c7993c5bb1 100644
+>> --- a/arch/powerpc/kernel/fadump.c
+>> +++ b/arch/powerpc/kernel/fadump.c
+>> @@ -1375,15 +1375,12 @@ static void fadump_free_elfcorehdr_buf(void)
+>>   static void fadump_invalidate_release_mem(void)
+>>   {
+>> -    mutex_lock(&fadump_mutex);
+>> -    if (!fw_dump.dump_active) {
+>> -        mutex_unlock(&fadump_mutex);
+>> -        return;
+>> +    scoped_guard(mutex, &fadump_mutex) {
+>> +        if (!fw_dump.dump_active)
+>> +            return;
+>> +        fadump_cleanup();
+>>       }
+>> -    fadump_cleanup();
+>> -    mutex_unlock(&fadump_mutex);
+>> -
+>>       fadump_free_elfcorehdr_buf();
+>>       fadump_release_memory(fw_dump.boot_mem_top, 
+>> memblock_end_of_DRAM());
+>>       fadump_free_cpu_notes_buf();
+> 
+> I tried to understand how scoped_guard gets unwrapped and what changes
+> it brings to the assembly of the update function. However, with GCC version
+> 11.5.0 20240719 (Red Hat 11.5.0-5), identical assembly was generated for 
+> the
+> fadump_invalidate_release_mem function with or without this patch.
+> 
+> Which was a surprise to me because there are lot macros and compiler
+> magic involved here to call destructor ( for example https:// 
+> clang.llvm.org/docs/AttributeReference.html#cleanup)
+> when a variable goes out of scope.
 
-OK if that's your preference, I'm ok with it. I don't have strong opinion, just
-a sense that we will end up with loads of arch-specific overrides. As you say,
-let's see.
-
-Alexandre, I guess this series is quite old now and will need to incorporate the
-hugtelb fixes I did last cycle? And ideally I'd like [2] to land then for that
-to also be incorporated into your next version. (I'm still hopeful we can get
-[2] into v6.16 and have been waiting patiently for Will to pick it up ;) ).
-
-I guess we can worry about [1] later as that is only affected by your other series.
-
-How does that sound?
-
->> However,
->> one thing I *do* think we need to ensure is that the relevant folks from
->> both arm64 (i.e. Ryan) and riscv (i.e. Alexandre) are cc'd on changes to
->> the common code. Otherwise, it's going to be a step backwards in terms
->> of maintainability.
->>>> Could we add something to MAINTAINERS so that the new file picks you both
->> up as reviewers?
-
-That's fine with me. Lorenzo added me for some parts of MM this cycle anyway.
-
-Thanks,
-Ryan
+that is nice to see.
 
 > 
-> I'm adding Lorenzo as he is cleaning the mm MAINTAINERS entries.
+> c000000000053978 <fadump_invalidate_release_mem.part.0>:
+> c000000000053978:       ae 01 4c 3c     addis   r2,r12,430
+> c00000000005397c:       88 47 42 38     addi    r2,r2,18312
+> c000000000053980:       a6 02 08 7c     mflr    r0
+> c000000000053984:       11 57 02 48     bl      c000000000079094 <_mcount>
+> c000000000053988:       a6 02 08 7c     mflr    r0
+> c00000000005398c:       f8 ff e1 fb     std     r31,-8(r1)
+> c000000000053990:       f0 ff c1 fb     std     r30,-16(r1)
+> c000000000053994:       1f 01 e2 3f     addis   r31,r2,287
+> c000000000053998:       30 ea ff 3b     addi    r31,r31,-5584
+> c00000000005399c:       10 00 01 f8     std     r0,16(r1)
+> c0000000000539a0:       81 ff 21 f8     stdu    r1,-128(r1)
+> c0000000000539a4:       18 00 41 f8     std     r2,24(r1)
+> c0000000000539a8:       ad fe ff 4b     bl      c000000000053854 
+> <fadump_cleanup+0x8>
+> c0000000000539ac:       c2 00 62 3c     addis   r3,r2,194
+> c0000000000539b0:       98 c3 63 38     addi    r3,r3,-15464
+> c0000000000539b4:       c9 1d 06 49     bl      c0000000010b577c 
+> <mutex_unlock+0x8>
+> c0000000000539b8:       00 00 00 60     nop
+> c0000000000539bc:       1f 01 22 3d     addis   r9,r2,287
+> snip...
 > 
-> @Lorenzo: should we add a new section "CONTPTE" for this? FYI, hugetlb
-> is the first patchset, I have another patchset to merge THP contpte
-> support [1] as well so the "HUGETLB" section does not seem to be a
-> good fit.
 > 
-> [1] https://lore.kernel.org/linux-riscv/20240508191931.46060-1-alexghiti@rivosinc.com/
+> Also, fadump_invalidate_release_mem() is only called in the fadump 
+> kernel in two scenarios
+> to release the reserved memory:
 > 
-> Thanks,
+> 1. After dump collection
+> 2. When fadump fails to process the dump
 > 
-> Alex
+> So even if the compiler messes up something here, there is no impact on 
+> dump collection as such.
+
+If there is a compiler mess up we will have a much bigger issue, since 
+these are quite widely used in core areas such as scheduler, timers etc.
+
 > 
->>
->> Will
+> So changes looks good to me:
+> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+
+Thanks for taking a look and reviewing it.
 
