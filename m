@@ -1,276 +1,309 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3004928ECEF
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796103; cv=none; b=urEaUUngX+XkwzjkllFBxkfxG4UggxXm8rkeLkTcPJaX218scAftfTd0FjHyknYw7J2ZP5WCvXEJaUWBsi0MUp75yMBB7ReeVQh3Svig8PkuragN7l2nrj4hf8kC8S+fJqVKQAvmaNYswbpGP4qtFZRrZRcZHZMWjNW9VwfJ1OU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796103; c=relaxed/simple;
-	bh=G8s1ZY5lIvNBoyfpd1ER166KdFJT5CUBqUYWqyIfkp0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q64UO3aZQHSdtHkZ5hyiikCf2PMIREBRffttMSNpMIVByje4Y5Z8jPdBtOCDCmVBlX7walZQ+o/t4MwquaRyA16eeCBJZ+AYZhs8XljlgaJkRpu1bVYjt4RK59cp+nbvDOT7QyZ3aAP/DmiDFo3BNEMvkuOQWYzq1f3F6zO2VxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LRSQLYPA; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022481B043F;
+	Fri,  9 May 2025 13:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746796124; cv=pass; b=IvKlxF5+CmNVqgMndW7C/xG+DcXMrnRnPaFY1z5OREWe4kVF/fd+ti+vnsWnFjODq8mG0RyRossZqpgfxHi00r6LKElEkCmqOr6L+n0fbIBtxV0jBd0Fn+IOeqf3CsDZLfpRktWE7r8/HrXXKc0QIZXO8S/6FM5onztKNso7HxM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746796124; c=relaxed/simple;
+	bh=xqE1iTPuiqjIqgw0ENa2bnSmPb/PNkkX9Y7MJSrvuLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FuRKwytdudfsAUlYjnFjf2uKu8/IH5YzfdWxrSt0LPdsDwMOZNBysuycLm2JM5ZXGbv+uTTQB1NBE6Buaam1LyQ0lAfK8YG3IhjHfQOSp/iq8ECwsBQEz2jEyQHR8ST3Ou8GLGrPJ2XT9H5mQbM5XX5V3RcCQCh7SPwy9KABN5w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=b3Hwe487; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LRSQLYPA"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e78fc91f2dfso1078202276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746796100; x=1747400900; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fVYRkHKw52M3BjGtHJefrTdsepgDBO63XsUhymlbJcM=;
-        b=LRSQLYPAQDHbcJxPsFpXn4pi230oFlEQPe9YDEIE1OUQ1n1qfCCnxbh0W06T1Xuzqx
-         PJ8gLopJ9e2LXncG/gNjit0Gl+fHIMpOyxnSJIPwbxQWnDm8agcaaJsAclJrz0526lls
-         OYxBrAChxwLjynxFxChXJzcmZcT1h5wGwL58+IdR44xi5KPdl7zzoOjSqoWajxKqUrK/
-         rjablLrwNceSreaYIGs6U9G+1U955Bh7ad9FAPM6ANx1QUtGnoSaBj0xs8jggUVqQtSg
-         7NiphvW5CsHEKBv41d0a5zumZ8fThwtDd7LiGW4k2pjSYLQoEYBSM6LbA3WE5ntghNbD
-         gC/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746796100; x=1747400900;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fVYRkHKw52M3BjGtHJefrTdsepgDBO63XsUhymlbJcM=;
-        b=Bo20L0cw2iWlZWV8vB9kFgmMSxPspOYqZRbVYR5JBSzYhFkMKqDFqmzJBMQfkkbkSd
-         7QWe2SkPkcmWLDKNJd50brCfvvZScXYkk+9AEsCTGhaXvyAwCUrKJu2iXgxaFHLUp1qK
-         bmR3Zl5ZatPHylaoLDMr+Jk9OPsbYlIFOtKDSAQGh7tuL3yksYcj5QvInb/yblFf8+6o
-         NFbqC2whevnQj935sC4QPc8avjqQUrbu+aBCFw8coWKvVCrfb5ibicCvwlGKQjakK28X
-         rkKhR97mNuz23agMRxAEbsimkCuu8eYbNNyxuhOq1bMYAzUQ/IVGktmG22ZLBOej4+gZ
-         0L9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVHgRrpyzzuAvEWMzDJ1D3bNna8sNclwdMnZvyXGURaRVJiOppOUk4QQy47IBXE6z2aetdqCTk+UT8p2tM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz513nv8ocvtW0T1tAA+CEGfZdUPH6Uh28yO9Ak9FyWvr1b/F4F
-	39o8ptfp1zfmCe3gU1JhqvIYHlns7tuc2zX0xnLwQNrcHd2BbRB10POBfygUzqRYN4pxi24FkU6
-	d7aR33UD4BkG2b5l9Dhs44+y22SEcTR52EyEfwA==
-X-Gm-Gg: ASbGncuja96NRCP2u/6wC3H5vOyjyEfvbDFh60iOJD5TH7swTrx95wmdXprUwWjnZB6
-	+le22gsSZkFglkz/pleMrME/GwzIiBwYlTqThKXIlVoKY8YtGZIeln6uazVGGY+nTGtqUH5Vgr4
-	DmRtKyz9FsmEM6pH6gUwmgoME=
-X-Google-Smtp-Source: AGHT+IH2JDVFbvhaphmw+ZiHjy5jTFcXVh4nYLPuoFz7f8j078Sj3NtwI2ZU1YVhHgwvrKdj2BVQInsur3IPE8wL0NE=
-X-Received: by 2002:a05:6902:188f:b0:e78:f7a0:fcf8 with SMTP id
- 3f1490d57ef6-e78fdd62ce9mr4332205276.48.1746796099598; Fri, 09 May 2025
- 06:08:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="b3Hwe487"
+ARC-Seal: i=1; a=rsa-sha256; t=1746796103; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=US+g2AF4fHzrvIDc/kGreBKVpYykSlAQw+i81SVOM8t3XRHp/DTvF47vLta7Gtqm5IeegZEzesYKWppuRgy//TlWSsQeodNbuZlX3FLFIa/qravgRm5Nv0HBs1TCVgrw4/EZuUUR3Fd5YO0709fxa/NziavgnVpxTkPx2HUKlqs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746796103; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0Kz7Sxbv9pao/1StwTgsThhEeMqeH0uwXWYJNk57XQM=; 
+	b=E/EzH8mafujlLSVWB10hzO0PlFoY8H/nZp8M2OS9L6L911TrY6WA8kMPjhwBzSl5JdO1SsNyaz8YZhBzktkOF6aUxMfGD7abUVrbe84VH+5JrolRn/raVjrAcH/QB+nQb3caF3yjh8JyLQNmWym2bUvn3YF+80CSY7tYHcSZZBY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746796103;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=0Kz7Sxbv9pao/1StwTgsThhEeMqeH0uwXWYJNk57XQM=;
+	b=b3Hwe487YYLirPwGQjIJ3ByPsgGz18eYwgMkzqfbNIpaKtHkDwX0gOTktnSy/m+K
+	bsg3i0zYMt3LFzFPcqbeWaNB3vfo132Roup6ZKc3P2WSJbISQlCLv9l+W6GI6alOLeH
+	CRYXSNqddG0NLGOrApxSzWAQ9wbvyOmbVQqaOW9k=
+Received: by mx.zohomail.com with SMTPS id 1746796101912648.0880381486586;
+	Fri, 9 May 2025 06:08:21 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 1C3DA18072E; Fri, 09 May 2025 15:08:18 +0200 (CEST)
+Date: Fri, 9 May 2025 15:08:18 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc: Diederik de Haas <didi.debian@cknow.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH v2 2/5] arm64: dts: rockchip: move rock 5b to include file
+Message-ID: <dbwzgqfzc4ax6skthp4bkyhhixcm4fohzbcr4px3ugbx7ntmwx@ipncpit75fau>
+References: <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
+ <20250508-rock5bp-for-upstream-v2-2-677033cc1ac2@kernel.org>
+ <D9RN1HZAXH1M.3H228KWQJ9CR0@cknow.org>
+ <2653568.Lt9SDvczpP@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com>
- <2025021539-untrained-prompter-a48f@gregkh> <4bf01946-90e3-4169-91fa-10d9f90310e9@tuxon.dev>
- <8d83ea72-bb81-4c63-bf69-28cf5848ae20@tuxon.dev> <20250305140309.744866b2@jic23-huawei>
- <Z8k8lDxA53gUJa0n@google.com> <f74085be-7b14-4551-a0a7-779318a5dc70@tuxon.dev>
- <20250330163129.02f24afb@jic23-huawei> <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev>
- <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev>
-In-Reply-To: <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 9 May 2025 15:07:42 +0200
-X-Gm-Features: ATxdqUE0kopdsybbSMrmxC7VqnkNh0url7yLK55qKM2y_hb32Kemd5KcIG6DJkA
-Message-ID: <CAPDyKFoMqmCFBoO8FwQe2wHh2kqQi4jUZNFyiNckK7QhGVgmvg@mail.gmail.com>
-Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
- probe resources
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Jonathan Cameron <jic23@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, dakr@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	geert@linux-m68k.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="iqik5rtwwzfpqten"
+Content-Disposition: inline
+In-Reply-To: <2653568.Lt9SDvczpP@diego>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.2/244.214.33
+X-ZohoMailClient: External
 
-On Fri, 9 May 2025 at 13:51, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
->
-> Hi, Rafael, Ulf, PM list,
->
->
-> On 09.04.2025 19:12, Claudiu Beznea wrote:
-> > Hi, Rafael,
-> >
-> > On 30.03.2025 18:31, Jonathan Cameron wrote:
-> >> On Thu, 27 Mar 2025 18:47:53 +0200
-> >> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> >>
-> >>> Hi, Rafael,
-> >>>
-> >>> On 06.03.2025 08:11, Dmitry Torokhov wrote:
-> >>>> On Wed, Mar 05, 2025 at 02:03:09PM +0000, Jonathan Cameron wrote:
-> >>>>> On Wed, 19 Feb 2025 14:45:07 +0200
-> >>>>> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> >>>>>
-> >>>>>> Hi, Daniel, Jonathan,
-> >>>>>>
-> >>>>>> On 15.02.2025 15:51, Claudiu Beznea wrote:
-> >>>>>>> Hi, Greg,
-> >>>>>>>
-> >>>>>>> On 15.02.2025 15:25, Greg KH wrote:
-> >>>>>>>> On Sat, Feb 15, 2025 at 03:08:49PM +0200, Claudiu wrote:
-> >>>>>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>>>>>>>>
-> >>>>>>>>> On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}),
-> >>>>>>>>> clocks are managed through PM domains. These PM domains, registered on
-> >>>>>>>>> behalf of the clock controller driver, are configured with
-> >>>>>>>>> GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
-> >>>>>>>>> clocks are enabled/disabled using runtime PM APIs. The power domains may
-> >>>>>>>>> also have power_on/power_off support implemented. After the device PM
-> >>>>>>>>> domain is powered off any CPU accesses to these domains leads to system
-> >>>>>>>>> aborts.
-> >>>>>>>>>
-> >>>>>>>>> During probe, devices are attached to the PM domain controlling their
-> >>>>>>>>> clocks and power. Similarly, during removal, devices are detached from the
-> >>>>>>>>> PM domain.
-> >>>>>>>>>
-> >>>>>>>>> The detachment call stack is as follows:
-> >>>>>>>>>
-> >>>>>>>>> device_driver_detach() ->
-> >>>>>>>>>   device_release_driver_internal() ->
-> >>>>>>>>>     __device_release_driver() ->
-> >>>>>>>>>       device_remove() ->
-> >>>>>>>>>         platform_remove() ->
-> >>>>>>>>>         dev_pm_domain_detach()
-> >>>>>>>>>
-> >>>>>>>>> During driver unbind, after the device is detached from its PM domain,
-> >>>>>>>>> the device_unbind_cleanup() function is called, which subsequently invokes
-> >>>>>>>>> devres_release_all(). This function handles devres resource cleanup.
-> >>>>>>>>>
-> >>>>>>>>> If runtime PM is enabled in driver probe via devm_pm_runtime_enable(), the
-> >>>>>>>>> cleanup process triggers the action or reset function for disabling runtime
-> >>>>>>>>> PM. This function is pm_runtime_disable_action(), which leads to the
-> >>>>>>>>> following call stack of interest when called:
-> >>>>>>>>>
-> >>>>>>>>> pm_runtime_disable_action() ->
-> >>>>>>>>>   pm_runtime_dont_use_autosuspend() ->
-> >>>>>>>>>     __pm_runtime_use_autosuspend() ->
-> >>>>>>>>>       update_autosuspend() ->
-> >>>>>>>>>         rpm_idle()
-> >>>>>>>>>
-> >>>>>>>>> The rpm_idle() function attempts to resume the device at runtime. However,
-> >>>>>>>>> at the point it is called, the device is no longer part of a PM domain
-> >>>>>>>>> (which manages clocks and power states). If the driver implements its own
-> >>>>>>>>> runtime PM APIs for specific functionalities - such as the rzg2l_adc
-> >>>>>>>>> driver - while also relying on the power domain subsystem for power
-> >>>>>>>>> management, rpm_idle() will invoke the driver's runtime PM API. However,
-> >>>>>>>>> since the device is no longer part of a PM domain at this point, the PM
-> >>>>>>>>> domain's runtime PM APIs will not be called. This leads to system aborts on
-> >>>>>>>>> Renesas SoCs.
-> >>>>>>>>>
-> >>>>>>>>> Another identified case is when a subsystem performs various cleanups
-> >>>>>>>>> using device_unbind_cleanup(), calling driver-specific APIs in the process.
-> >>>>>>>>> A known example is the thermal subsystem, which may call driver-specific
-> >>>>>>>>> APIs to disable the thermal device. The relevant call stack in this case
-> >>>>>>>>> is:
-> >>>>>>>>>
-> >>>>>>>>> device_driver_detach() ->
-> >>>>>>>>>   device_release_driver_internal() ->
-> >>>>>>>>>     device_unbind_cleanup() ->
-> >>>>>>>>>       devres_release_all() ->
-> >>>>>>>>>         devm_thermal_of_zone_release() ->
-> >>>>>>>>>         thermal_zone_device_disable() ->
-> >>>>>>>>>           thermal_zone_device_set_mode() ->
-> >>>>>>>>>             struct thermal_zone_device_ops::change_mode()
-> >>>>>>>>>
-> >>>>>>>>> At the moment the driver-specific change_mode() API is called, the device
-> >>>>>>>>> is no longer part of its PM domain. Accessing its registers without proper
-> >>>>>>>>> power management leads to system aborts.
-> >>>>>>>>>
-> >>>>>>>>> Open a devres group before calling the driver probe, and close it
-> >>>>>>>>> immediately after the driver remove function is called and before
-> >>>>>>>>> dev_pm_domain_detach(). This ensures that driver-specific devm actions or
-> >>>>>>>>> reset functions are executed immediately after the driver remove function
-> >>>>>>>>> completes. Additionally, it prevents driver-specific runtime PM APIs from
-> >>>>>>>>> being called when the device is no longer part of its power domain.
-> >>>>>>>>>
-> >>>>>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>>>>>>>> ---
-> >>>>>>>>>
-> >>>>>>>>> Hi,
-> >>>>>
-> >>>>> Hi Claudiu, Greg,
-> >>>>>
-> >>>>> Sorry, I missed this thread whilst travelling and only saw it because
-> >>>>> of reference from the in driver solution.
-> >>>>>
-> >>>>>>>>>
-> >>>>>>>>> Although Ulf gave its green light for the approaches on both IIO [1],
-> >>>>>>>>> [2] and thermal subsystems [3], Jonathan considered unacceptable the
-> >>>>>>>>> approaches in [1], [2] as he considered it may lead to dificult to
-> >>>>>>>>> maintain code and code opened to subtle bugs (due to the potential of
-> >>>>>>>>> mixing devres and non-devres calls). He pointed out a similar approach
-> >>>>>>>>> that was done for the I2C bus [4], [5].
-> >>>>>>>>>
-> >>>>>>>>> As the discussions in [1], [2] stopped w/o a clear conclusion, this
-> >>>>>>>>> patch tries to revive it by proposing a similar approach that was done
-> >>>>>>>>> for the I2C bus.
-> >>>>>>>>>
-> >>>>>>>>> Please let me know you input.
-> >>>>>>>>
-> >>>>>>>> I'm with Jonathan here, the devres stuff is getting crazy here and you
-> >>>>>>>> have drivers mixing them and side affects happening and lots of
-> >>>>>>>> confusion.  Your change here is only going to make it even more
-> >>>>>>>> confusing, and shouldn't actually solve it for other busses (i.e. what
-> >>>>>>>> about iio devices NOT on the platform bus?)
-> >>>>>
-> >>>>> In some cases they are already carrying the support as per the link
-> >>>>> above covering all i2c drivers.  I'd like to see a generic solution and
-> >>>>> I suspect pushing it to the device drivers rather than the bus code
-> >>>>> will explode badly and leave us with subtle bugs where people don't
-> >>>>> realise it is necessary.
-> >>>>>
-> >>>>> https://lore.kernel.org/all/20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com/
-> >>>>> is a lot nastier looking than what we have here. I'll review that in a minute
-> >>>>> to show that it need not be that bad, but none the less not pleasant.
-> >>>>>
-> >>>>> +CC linux-iio to join up threads and Dmitry wrt to i2c case (and HID that does
-> >>>>> similar)
-> >>>>
-> >>>> We should not expect individual drivers handle this, because this is a
-> >>>> layering violation: they need to know implementation details of the bus
-> >>>> code to know if the bus is using non-devres managed resources, and
-> >>>> adjust their behavior. Moving this into driver core is also not
-> >>>> feasible, as not all buses need it. So IMO this should belong to
-> >>>> individual bus code.
-> >>>>
-> >>>> Instead of using devres group a bus may opt to use
-> >>>> devm_add_action_or_reset() and other devm APIs to make sure bus'
-> >>>> resource unwinding is carried in the correct order relative to freeing
-> >>>> driver-owned resources.
-> >>>
-> >>> Can you please let us know your input on the approach proposed in this
-> >>> patch? Or if you would prefer devm_add_action_or_reset() as suggested by
-> >>> Dmitry? Or if you consider another approach would fit better?
-> >>>
-> >>> Currently there were issues identified with the rzg2l-adc driver (driver
-> >>> based solution proposed in [1]) and with the rzg3s thermal driver (solved
-> >>> by function rzg3s_thermal_probe() from [2]).
-> >>>
-> >>> As expressed previously by Jonathan and Dimitry this is a common problem
-> >>> and as the issue is due to a call in the bus driver, would be better and
-> >>> simpler to handle it in the bus driver. Otherwise, individual drivers would
-> >>> have to be adjusted in a similar way.
-> >>>
-> >>
-> >> Rafael,
-> >>
-> >> Greg suggested we ask for your input on the right option:
-> >>
-> >> https://lore.kernel.org/all/2025032703-genre-excitable-9473@gregkh/
-> >> (that thread has the other option).
-> >
-> > Can you please let us know your opinion on this?
-> Can you please let us know if you have any suggestions for this?
 
-It's been a while since I looked at this. Although as I understand it,
-the main issue comes from using devm_pm_runtime_enable().
+--iqik5rtwwzfpqten
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/5] arm64: dts: rockchip: move rock 5b to include file
+MIME-Version: 1.0
 
-As I have tried to argue before, I think devm_pm_runtime_enable()
-should *not* be used. Not here, not at all. Runtime PM isn't like any
-other resources that we fetch/release. Instead, it's a behaviour that
-you turn on and off, which needs to be managed more carefully, rather
-than relying on fetch/release ordering from devres.
+Hi,
 
-That said, I would convert the driver to use pm_runtime_enable() and
-pm_runtime_disable() instead.
+On Fri, May 09, 2025 at 02:54:00PM +0200, Heiko St=FCbner wrote:
+> Am Freitag, 9. Mai 2025, 14:44:57 Mitteleurop=E4ische Sommerzeit schrieb =
+Diederik de Haas:
+> > Hi,
+> >=20
+> > On Thu May 8, 2025 at 7:48 PM CEST, Sebastian Reichel wrote:
+> > > Radxa released some more boards, which are based on the original
+> > > Rock 5B. Move its board description into an include file to avoid
+> > > unnecessary duplication.
+> >=20
+> > Aren't you moving it *out of* an/the include file?
+> > If so, the patch Subject and the above line should be updated so that
+> > they correctly reflect what is changed in this patch.
+> >=20
+> > The above text is correct (and the same ...) as patch 1, but in this
+> > patch you move things out of the dtsi which are unique per board.
+> >=20
+> > > NOTE: this should be merged with the previous commit to ensure
+> > > bisectability. The rename happens in a separete commit during
+> > > development because git does not properly detect the rename when
+> > > the original filename is reused in the same commit. This means
+> > >
+> > > 1. it's a lot harder to review the changes
+> > > 2. it's a lot harder to rebase the patch series
+> >=20
+> > Or did I fall prey to the exact thing you described here?
+>=20
+> I think Sebastian's idea  is, that I squash both patches when applying.
+> This split makes it easy(er) to review because patch1 is just a rename.
+>=20
+> And merging them when applying then makes it again not break bisectabilit=
+y.
 
-Kind regards
-Uffe
+Correct. This is a lot easier to review than what git generates when
+having these two patches squashed together, which is a huge diff of
+all 1000+ lines in the file (I tried really hard to convince it that
+this is mostly a rename with --find-renames and --find-copies). You
+can see this kind of mess in patch 2 of the ROCK 5T series that
+Nicolas just send (I will comment on that and suggest to do the same
+thing I did to ease review. In his case it should even be possible
+to do it in a bisectable way without needing a squash :)).
+
+Greetings,
+
+-- Sebastian
+
+>=20
+>=20
+> Heiko
+>=20
+>=20
+> > Cheers,
+> >   Diederik
+> >=20
+> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > > ---
+> > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts  | 52 ++++++++++++++=
+++++++++++
+> > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi | 40 --------------=
+----
+> > >  2 files changed, 52 insertions(+), 40 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/a=
+rm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > > new file mode 100644
+> > > index 0000000000000000000000000000000000000000..9407a7c9910ada1f6c803=
+d2e15785a9cbd9bd655
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > > @@ -0,0 +1,52 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > +
+> > > +/dts-v1/;
+> > > +
+> > > +#include "rk3588-rock-5b.dtsi"
+> > > +
+> > > +/ {
+> > > +	model =3D "Radxa ROCK 5B";
+> > > +	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
+> > > +};
+> > > +
+> > > +&sdio {
+> > > +	max-frequency =3D <200000000>;
+> > > +	no-sd;
+> > > +	no-mmc;
+> > > +	non-removable;
+> > > +	bus-width =3D <4>;
+> > > +	cap-sdio-irq;
+> > > +	disable-wp;
+> > > +	keep-power-in-suspend;
+> > > +	wakeup-source;
+> > > +	sd-uhs-sdr12;
+> > > +	sd-uhs-sdr25;
+> > > +	sd-uhs-sdr50;
+> > > +	sd-uhs-sdr104;
+> > > +	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
+> > > +	vqmmc-supply =3D <&vcc_1v8_s3>;
+> > > +	pinctrl-names =3D "default";
+> > > +	pinctrl-0 =3D <&sdiom0_pins>;
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > > +&uart6 {
+> > > +	pinctrl-names =3D "default";
+> > > +	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > > +&pinctrl {
+> > > +	usb {
+> > > +		vcc5v0_host_en: vcc5v0-host-en {
+> > > +			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&vcc5v0_host {
+> > > +	enable-active-high;
+> > > +	gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
+> > > +	pinctrl-names =3D "default";
+> > > +	pinctrl-0 =3D <&vcc5v0_host_en>;
+> > > +};
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch/=
+arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+> > > index 17f4fd054cd3d1c4e23ccfe014a9c4b9d7ad1a06..6052787d2560978d2bae6=
+cfbeea5fc1d419d583a 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+> > > @@ -8,9 +8,6 @@
+> > >  #include "rk3588.dtsi"
+> > > =20
+> > >  / {
+> > > -	model =3D "Radxa ROCK 5B";
+> > > -	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
+> > > -
+> > >  	aliases {
+> > >  		mmc0 =3D &sdhci;
+> > >  		mmc1 =3D &sdmmc;
+> > > @@ -139,10 +136,6 @@ vcc5v0_host: regulator-vcc5v0-host {
+> > >  		regulator-always-on;
+> > >  		regulator-min-microvolt =3D <5000000>;
+> > >  		regulator-max-microvolt =3D <5000000>;
+> > > -		enable-active-high;
+> > > -		gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
+> > > -		pinctrl-names =3D "default";
+> > > -		pinctrl-0 =3D <&vcc5v0_host_en>;
+> > >  		vin-supply =3D <&vcc5v0_sys>;
+> > >  	};
+> > > =20
+> > > @@ -488,12 +481,6 @@ pcie3_vcc3v3_en: pcie3-vcc3v3-en {
+> > >  			rockchip,pins =3D <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
+> > >  		};
+> > >  	};
+> > > -
+> > > -	usb {
+> > > -		vcc5v0_host_en: vcc5v0-host-en {
+> > > -			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+> > > -		};
+> > > -	};
+> > >  };
+> > > =20
+> > >  &pwm1 {
+> > > @@ -530,27 +517,6 @@ &sdmmc {
+> > >  	status =3D "okay";
+> > >  };
+> > > =20
+> > > -&sdio {
+> > > -	max-frequency =3D <200000000>;
+> > > -	no-sd;
+> > > -	no-mmc;
+> > > -	non-removable;
+> > > -	bus-width =3D <4>;
+> > > -	cap-sdio-irq;
+> > > -	disable-wp;
+> > > -	keep-power-in-suspend;
+> > > -	wakeup-source;
+> > > -	sd-uhs-sdr12;
+> > > -	sd-uhs-sdr25;
+> > > -	sd-uhs-sdr50;
+> > > -	sd-uhs-sdr104;
+> > > -	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
+> > > -	vqmmc-supply =3D <&vcc_1v8_s3>;
+> > > -	pinctrl-names =3D "default";
+> > > -	pinctrl-0 =3D <&sdiom0_pins>;
+> > > -	status =3D "okay";
+> > > -};
+> > > -
+> > >  &sfc {
+> > >  	pinctrl-names =3D "default";
+> > >  	pinctrl-0 =3D <&fspim2_pins>;
+> > > @@ -566,12 +532,6 @@ flash@0 {
+> > >  	};
+> > >  };
+> > > =20
+> > > -&uart6 {
+> > > -	pinctrl-names =3D "default";
+> > > -	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
+> > > -	status =3D "okay";
+> > > -};
+> > > -
+> > >  &spi2 {
+> > >  	status =3D "okay";
+> > >  	assigned-clocks =3D <&cru CLK_SPI2>;
+> >=20
+> >=20
+>=20
+>=20
+>=20
+>=20
+
+--iqik5rtwwzfpqten
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgd/jkACgkQ2O7X88g7
++pqFOg/9EbNnhPC/WiMi/qXyXGffru2bWrd2fN92qsOSJXAa/oqXiZ39WCMHXWoy
+beHRT8UD9EMTgDT0BzlYkBt4gmqHC2prGNwc98J4VIraW+99L5Ue7Fl34RkiGebx
+Etqu+ap2aYsFC7DEKTAD4Zf6/ndzmd6K/BqObMm+gWpZnlpC0K4ibYzDPSkuyX+o
+b3G07C9GT3oJ2sQ/m7FabbTN8muiBluVrgHsCeCyGUXZLnHtBFRq8xiLhDdFYz4P
+SIQ/4av19tCJC6tRaKF6rJ3HSTqvTmehrbj6SUCIYxgXuWW5t/P4nkw/5gikke/O
+jmN04Aom769SNOzMtqAFFPOMVWcwiHXNSxoCX1OyUAWBoZS2eElXUOtCvdK/Ovxr
+c7OM8VdJCCG7c2fewv0EGBofEBdquyklGqQ+4yRNcAKjdeEJJuxqYn+wgyrdIUH5
+tYuQ8wb2C7JtkD1fYNpunQdSBP+TwR9NWWlECTrj6zvv4bnjcqyvNlH2VrXHJmav
+Q9Cwghm8YUcjZNL7S6D4tNKf39nVCG3Dy4hLYwZYn9shjr7tmgdIuCKE311y9KKx
+McB4cU3ZjxegO/WgnSLIwf5cLOHXfi7vwZ/0PneO87+pIid777Xc1fOJg6/E1VEI
+67cq7Ftf+v7SottG50/HGk/u1SPBe9yKLS6TxS0TmgTWUIg720I=
+=C+4K
+-----END PGP SIGNATURE-----
+
+--iqik5rtwwzfpqten--
