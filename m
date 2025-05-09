@@ -1,134 +1,128 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B17C153BD9
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7035B211491
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746797963; cv=none; b=of91EMUxUFeZDBmPz8X3BuHckPVz6NpdMvPkI6UohcTVRL/TglbBi4wezqVtEyom58Xnwt/XGaLIx3+pXc/jbKO0Nf0EJUUW6fbkWhnP5/J1+QBgrC0gNylgG9n6BYktlwXEr9XnmoShwuJbsbjulA3kDV+ycSSxfAyLvHLNzpo=
+	t=1746798040; cv=none; b=fhAgjdTdqBIilwBZegVJeCvQzh4w6Qo0YqIYEVqY3ivzdcpQJbnsx1xeWVTy23LSRYqMFDZVu1yhUqf8m3eoExOZNRy7T6HR2EJ12iC854zWZHRFgHpRLfDcOg/QK4dIlCxrsFXjMH7fyQxs1oD4c1Hmnsvp6UCdd2rVNkQr7Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746797963; c=relaxed/simple;
-	bh=+SAecJshSRPaIcVA50Z2ct3hxvegOjl9jzM4zGt/nm0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lHMA3WJopSvy9tgJNTBCgKlqvwCIxeLPv7TxcWPlPQezn0QMuCn8nwc9NaxOcHwov5uhasrZSzeGlfcQrQjlBQWu/iFlIzJicbFfnzfrtfjfcfBwjcjS9NFsKwQK0WEM6S+mhelBVhU/dDRp6LewWPoZJuHeaB7YZajoOPea/l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZsepdH1l; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746798040; c=relaxed/simple;
+	bh=6kh1EmvyaIMEv6qY2bKAXfovW6AsqQRIY19O2CY38EA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DryGAWgV6bENtYC/2USSOMCG09Q/kiTOZ9NXMGmoW+gWWmevMdESLAWLHaWg+FAKMh0KbUmV3bjnxFcOJjkXx7RSfVAQdXIvt3yJiW1ZYQDG/Uc5KKLN4NMZSeOQSx3K7NM0dpumgSgZANwgS8AcyY9gFOw+sCTd+zqhYf6Xylo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gjNkB4nJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZsepdH1l"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22e1eafa891so199045ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746797960; x=1747402760; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3fxOminYtpWUZQiMgSZHXWpN5MCC4KN4wDDm2MDcmMo=;
-        b=ZsepdH1lw0wBjyHOSx274dzRNiFogOj7NxxHd0ef25U1sqyTLf8ekxpudtINOBXihz
-         dBg+OgZNb2/CweObE4Xvl0cxFcMiPanuq7SGgSUgpoIF6Eb+owHQdgvGrTVN/6pTcSXE
-         NC6Igw0K3vYFAzG36b199BxGNLzntF4gAkb5PX9NRk87u/axbu2gs7nVqmhoKRy4G2j9
-         3kcDIEJi+rA5XjRUgJitkxUxs0b3/ANagle9YRV74tlinaLGHBKv62Ys+pjdTIJ30SCT
-         hqdpLySXkzmp6RN1UdEY5oyb46ud7yS4JgJj3eg3OTvrRU1fN3UEE5772UHWkCYJ5Pha
-         3KUw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjNkB4nJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746798037;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rbU/Ik2HFCaYPRnGL3BpFYVtUHthaf34xL/8Qjh8JzE=;
+	b=gjNkB4nJYMgojcVibeQ5SGVZ8XeO4Xc0u1A3bEjCmCMCsB/jahcrgxlSKIO1HqnvRWdOug
+	dHM2xtN3JdH8gXsXNc59/d/jfN/MX94O6rZ8i78gfR1GxORlGKe+u3skihmFxLTnyC3rkm
+	ziVS+MpIgrJK3WdI+ow0q6NGU+G195E=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-42-tvwojjusND66ZHZCNAvMxw-1; Fri, 09 May 2025 09:40:36 -0400
+X-MC-Unique: tvwojjusND66ZHZCNAvMxw-1
+X-Mimecast-MFC-AGG-ID: tvwojjusND66ZHZCNAvMxw_1746798035
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so10173385e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:40:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746797960; x=1747402760;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3fxOminYtpWUZQiMgSZHXWpN5MCC4KN4wDDm2MDcmMo=;
-        b=TcFXc800McELZfO1vEQNJBuERQGhp+BGGU2r+5ibb6zPVDrKZOx4rAg/V57aUeJMT/
-         45DEP1ypsMzLkkaRJOceHoOZBTwKVzdubRapJn+QWzeVq9rh6VKqPfsKXPjWWVBKFma3
-         LouGpJZ2am0FFHGCpZs1VHnWH4F43dl3ioVBrPFFfl3t83Tzs1SiMWJXRWrufTnCjBzh
-         xxnLxiWM07v26W+OQxD6zGJGCC17MmgJiyLG6jPQhyoL16DpQxQgmBFlLDFb3pGYCwgo
-         3ZXRhsKvyf98D5KEcc4ymhKwdDK0WrxjxuVwFCZPbqdVpE501ZNfEkV3sA0+PYMsumwA
-         Cb+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVJjj7bDoBBEHZckYH2+77RN0xyJW1F1i6LA2dkbbxknseYSTisRkRH5hrpf2/l1Ztu2b6bzS3Eosta9tU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPomyJQf7raU5pASAZZ8Tyfli901wQNwwpXf7LmXBJECV9Q4pe
-	Do7Yhf2aPtij6hMljZ5MUGJYhPyeZ18eBh3e0jKT4quvfwNzbJ1cD06s1i8zkd+VBPG8G80yGp3
-	nXyLbiVl39C8yvv4wr/LjqQ1d8TA0OpUSGMFhce9u6CLXiGHp/SjWf1M=
-X-Gm-Gg: ASbGncsugJlBb7mR+LJTPZ/9vldytFL3apjrMxYJupi1a7dbKsCzRNrL/AqVbODaYGk
-	dPnxqbcrA3O2FZu9qN4aqdkk269ZBGlTH6G2FB7bqmpU6uPozRF7lbbRVFXMvb7ZrhkwnglISDH
-	xzfMB9Ed8M1BIaFuGekLEEyOQ=
-X-Google-Smtp-Source: AGHT+IEwSfRNnaH95+h5gTCk6s7PbcKJRcNX84WicSnspnOWS7dZFt3dRyIY7kPhGsxUj79tWFtNab4qqD/H8cMPSEI=
-X-Received: by 2002:a17:903:2348:b0:223:37ec:63be with SMTP id
- d9443c01a7336-22fc950c1a6mr2674515ad.4.1746797960304; Fri, 09 May 2025
- 06:39:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746798035; x=1747402835;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rbU/Ik2HFCaYPRnGL3BpFYVtUHthaf34xL/8Qjh8JzE=;
+        b=cUqPXoR1K8M65VfiXnJJPuZXscZQKuOncXH+rMjBCN1U4jDEt1ggkCjlRga7z3ribi
+         g9xbKPoGp6S1kpdahOKZWH8TJAI/VnXE3boNVX2FDYr3OBXLq1i7qFFS1tFTJ6UpDWLs
+         Cvxh8M8kEsoBPbph1lc5+9VnD/GGLp+qnTTGgUFKeIOTG45H5yB6P+Qb1uKNW/8byurX
+         0aBk/m4CBh8D1uhT9i3EO/omZVPnonDsWL6Ku4NvbCxUb1dLwsVo5/+Ui0yhiJrGnIa3
+         +CtShPGUUL+pZKOaaUGf8SJXf6YOjZ4DcW/qVBbsASTJ+Tf29Jk4iaQyhT9POcFOz1kP
+         FsEA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5SJTvSVvUWsnVd/WZa+LfbOVA75dV6ajuh2Qn+tdAE0mvtzlckOFBZjjVWZZJpviORsy/dgpjegfVar0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyWnee2sCumZScw5HuRi83yqj2VbeGSXFfwxLma76o/A01lcJn
+	Wb6uNyxlJXQDtU1s3XE3NBKpo0TIP0nojvxO6LlhYSCvj6OjiZaWpMqZuG8IXj/yjsRHp+YpmDG
+	IKIT0zKGPpTYL0XWZvu5MnbaMGTDIVvEwG17OV2AIJe+i/KCkZa+0liF9o3vv0Q==
+X-Gm-Gg: ASbGnctDwcuPX9m/9PEnoIEysDmWA09VYomMcVLbVFq+SufPO1THzVNVNKU85itN7Uu
+	pYaEybhNwwNAesUU2QOQi3PS+ZLUsyEPAokwXCHrOB88wY08xZUKW0kqhcCekMtNAJMpKFPb05u
+	/dh2vWfGnFcaTa8Q2r8sP3+Tug7cB+W+Z13ka8war3XMMqkM5fM32+2j/jZGT5TIBASsP0Ey7rE
+	FEpMT5zKnuGfqRjhXfYzckdqSmZJyVnBYde5JeFqirupwEifRYQo3Ejika/KZOWbe7NmLWmXqRy
+	oHrEZO7O8gVHLD0gr28auWBuWFyfIEEvwxEtbUcYKzdf+7HADCvZKmAnkg==
+X-Received: by 2002:a05:600c:6819:b0:43d:649:4e50 with SMTP id 5b1f17b1804b1-442d6d44db5mr30308875e9.13.1746798034806;
+        Fri, 09 May 2025 06:40:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8Kxh1nPeuAUwUqlxdH6k97wyjBuBL7pw2aJhhUSJalMBvgbkpXFDayp+M9yqixrKB3tLmdA==
+X-Received: by 2002:a05:600c:6819:b0:43d:649:4e50 with SMTP id 5b1f17b1804b1-442d6d44db5mr30308675e9.13.1746798034415;
+        Fri, 09 May 2025 06:40:34 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3b7dc1sm71403735e9.34.2025.05.09.06.40.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 06:40:33 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	linux-coco@lists.linux.dev
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: rectify file entries in TRUSTED SECURITY MODULE (TSM) INFRASTRUCTURE
+Date: Fri,  9 May 2025 15:40:31 +0200
+Message-ID: <20250509134031.70559-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509115126.63190-1-byungchul@sk.com> <20250509115126.63190-3-byungchul@sk.com>
-In-Reply-To: <20250509115126.63190-3-byungchul@sk.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 9 May 2025 06:39:07 -0700
-X-Gm-Features: ATxdqUF4K-4yNvtDjbyMxyaeg9As7utYfgs1YC3WPlMHOm8ZwsgITBMzbMftwFI
-Message-ID: <CAHS8izOVynwxo4ZVG8pxqocThRYYL4EqRHpEtPPFQpLViTUKLA@mail.gmail.com>
-Subject: Re: [RFC 02/19] netmem: introduce netmem alloc/put API to wrap page
- alloc/put API
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
-	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
-	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 9, 2025 at 4:51=E2=80=AFAM Byungchul Park <byungchul@sk.com> wr=
-ote:
->
-> To eliminate the use of struct page in page pool, the page pool code
-> should use netmem descriptor and API instead.
->
-> As part of the work, introduce netmem alloc/put API allowing the code to
-> use them rather than struct page things.
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
-> ---
->  include/net/netmem.h | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/include/net/netmem.h b/include/net/netmem.h
-> index 45c209d6cc689..c87a604e980b9 100644
-> --- a/include/net/netmem.h
-> +++ b/include/net/netmem.h
-> @@ -138,6 +138,24 @@ static inline netmem_ref page_to_netmem(struct page =
-*page)
->         return (__force netmem_ref)page;
->  }
->
-> +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
-> +               unsigned int order)
-> +{
-> +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
-> +}
-> +
-> +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid,
-> +               unsigned long nr_netmems, netmem_ref *netmem_array)
-> +{
-> +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
-> +                       (struct page **)netmem_array);
-> +}
-> +
-> +static inline void put_netmem(netmem_ref netmem)
-> +{
-> +       put_page(netmem_to_page(netmem));
-> +}
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-We can't really do this. netmem_ref is an abstraction that can be a
-struct page or struct net_iov underneath. We can't be sure when
-put_netmem is called that it is safe to convert to a page via
-netmem_to_page(). This will crash if put_netmem is called on a
-netmem_ref that is a net_iov underneath.
+Commit 7515f45c1652 ("coco/guest: Move shared guest CC infrastructure to
+drivers/virt/coco/guest/") moves drivers/virt/coco/tsm.c to
+drivers/virt/coco/guest/report.c, and adjusts the file entry in TRUSTED
+SECURITY MODULE (TSM) INFRASTRUCTURE.
 
-Please read the patch series that introduced netmem_ref to familiarize
-yourself with the background here:
+However, commit b9e22b35d459 ("tsm-mr: Add TVM Measurement Register
+support") also touches that section, leading to some unintended state with
+the two concurrent changes of these two commits, i.e., entry
+drivers/virt/coco/tsm*.c is still in place, where it should have been
+deleted. Note that the existing file entry drivers/virt/coco/tsm*.c is not
+needed, as the files are after their renaming in drivers/virt/coco/guest/,
+and there is already a file entry in this section for that directory.
 
-https://lkml.iu.edu/hypermail/linux/kernel/2401.2/09140.html
+Rectify this section appropriately.
 
---=20
-Thanks,
-Mina
+Further, commit f6953f1f9ec4 ("tsm-mr: Add tsm-mr sample code") adds
+example code to samples/tsm-mr/, but in the MAINTAINERS section, it refers
+to the non-existing directory samples/tsm/. So, rectify that file entry to
+the existing intended location as well.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ MAINTAINERS | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6dbdf02d6b0c..e8a21d6f89f8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24991,9 +24991,8 @@ S:	Maintained
+ F:	Documentation/ABI/testing/configfs-tsm-report
+ F:	Documentation/driver-api/coco/
+ F:	drivers/virt/coco/guest/
+-F:	drivers/virt/coco/tsm*.c
+ F:	include/linux/tsm*.h
+-F:	samples/tsm/
++F:	samples/tsm-mr/
+ 
+ TRUSTED SERVICES TEE DRIVER
+ M:	Balint Dobszay <balint.dobszay@arm.com>
+-- 
+2.49.0
+
