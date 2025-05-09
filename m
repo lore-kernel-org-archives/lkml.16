@@ -1,240 +1,191 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2082.outbound.protection.outlook.com [40.107.220.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CB41482F5;
-	Fri,  9 May 2025 12:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746794103; cv=none; b=jyOmYBvZvRiO5khyPEbXaSuxQh7zGG33i5IuOgnTi9C4P4bKO60BL6s+r07gXEdm3Gbk5BJTY3rIwuPHCW2AnTLyRjq965FjGhl01bpkISEkus+Z+jSg/RxDOYyJlg2Jz8Q5U3dWK06DFP2SYPESAQuoG1u6Evd188dmLnQAY0Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746794103; c=relaxed/simple;
-	bh=G75b+GhVhMnqOFc0IDAkV6m8fQgJOkK5sx1cr0HRUtY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RfW/5hlY2VCx6Qbs6y/1wytNxhcCIz1Hna2qji0KLs4j1TLJm7o7d1c9Q+yofpYvQ31ibrMRpsjU7+K7QanTzGTV5aJ5iak4UffrjlBxiQwdWORr1UoraebyF0VZ50W7Exaqf6LboVomde7lmQdxKGIOi25vlsfm4+K+rHy/AUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52b2290e292so782274e0c.3;
-        Fri, 09 May 2025 05:35:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746794100; x=1747398900;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=94UQ6nPbfEM2IWkc+ebOq3AomqrfTBM0co76eK16X14=;
-        b=lUjeT94RlPCb9eP1vz/H8Qp9N0DL6Oxup183keJmG909N9a0VWFU+5Od+KZ7sDl2a8
-         lWYKJcqNBYF0rWWGJgIkJW7jwWgJdKNRXCM6laC0oeh8+3xacN5X2teewjXAy1PRKPX2
-         2GVTja8Q3tWsGkzDcNtxDSXOxiuExQaDYApi+3V3Z4wsckQ1APRHYflGZ/hEpzaEBtxA
-         yHqX8ndq/fTA6MtrTfvCRyAwa5gwzh5Wo8nY9V0SkBlRNo8Z7o9jNO+1jPeog4EYjarK
-         ygCmmtstLOIV5iqqa7dW0S3fSE83O79eCAFT/aYrDawzfeWEash7WciZnscp5o6lW/vj
-         TaDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGTk5YwhuKUUbG/YYFGd5UbBgd7uAkLCB0thzCcfMfNf/GXmTVxVPk0coKzbO1pGAUmf4rPC0UfLqX@vger.kernel.org, AJvYcCWEGkt+52o7tHWi2qP2dKSulu9AV5cCyZ49O2F7jLgehOLWBvqFjzHrE9DViUC0Gn/CgfTqx5W9EeUepGHnb89G7OE=@vger.kernel.org, AJvYcCWqoSVqAW8onWL4O26eYBC1zaHix+P4CdWYuv9+lJChl4flNBkv5dY30lFPdhNPad9ZFZbYBbCDjGfEEGoL@vger.kernel.org, AJvYcCX7/Y/DZpUekBScAw9yUay6x1U6aEO+LA7TgnytWPXjCnmbLJtsNJRQHzKWnz4Z8VOZ2bDSGxdqMgI3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDHEPf24EKanQXa/2oipOEkB3ca/NnThTNyhmCJAet1+Mx6rJd
-	LK1DEawt3z6hAxEgmjTHIgMluoJOqDMDv08dOGbQvUTzOINEzI9K5vwQBujU
-X-Gm-Gg: ASbGncsxSUR3glmAU+/M9F3zrE4CQ1vqiUh9/mDXb8h74q5fy60h1WwoIPQ/QZsZJSB
-	2ywCtIuQnLAMh1wtHKB8CHFHfVHNzxVX/urvqtSsP8O770sYHZKWDY/qzanrdFPMrN/0Zk1P8mH
-	f9F6DRQi8ovhFgWtFv4j/blLwgPaQ/vYjj56/eEpL+ixcN1v6PSJZdNbMHJebduTPkOen/DlQsH
-	i045a3RyVnI2np5qH+Tubi6N0WJxOttZVwnqzRLFvXFh8O8R37ntOt92b9DA2ETDlXorCs770QY
-	/ufS2hGBch4lzjQxSgzVXCiWQzUZBGdw42hIjzwgARTothwm7Obc+SX3+yRKU8TLmRwlEifis1t
-	K9dQ=
-X-Google-Smtp-Source: AGHT+IGH7tls50rMKezCOILGfoeHd//zLH+2RVKKlaiq/DvKVFxKawlx2R4DwXqAeopiUHl6WvesSw==
-X-Received: by 2002:a05:6122:250a:b0:526:7f3:16e0 with SMTP id 71dfb90a1353d-52c53ae0af6mr2307713e0c.1.1746794099721;
-        Fri, 09 May 2025 05:34:59 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c536ff1bfsm1080835e0c.7.2025.05.09.05.34.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 05:34:59 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-8783d2bf386so535646241.0;
-        Fri, 09 May 2025 05:34:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNHI8KGBlwzkHrd+Dp/xmj0oB+iwwssuE4M4LGXErqQoHFvdPD6JhalVcoLesMONgts7IgF01C9Ds9@vger.kernel.org, AJvYcCVhOUrrVX2h1OW+HsV56rEdpZCVw10UbxP3Dg+qyNeCnx/KhJiRKhlYxGnJStfR6migMIttkD1a7P3VXs+V@vger.kernel.org, AJvYcCVhaLfkdWVNUqSIO8NVLoUp3dAntlzcpHGIMa9AgnNpkPf4CqmsqIgQUOLmMBpiGR2aatM7tduepwSXOOFwkjQ7BgA=@vger.kernel.org, AJvYcCXeeoEg5YSpH8IfWTYz38Iv5CLLkntKMu9MVtnM04dhyCZyuaInLoMi+E1U390q08zPhWh/u3s1WHIL@vger.kernel.org
-X-Received: by 2002:a05:6102:15a0:b0:4dd:b9bc:df71 with SMTP id
- ada2fe7eead31-4deed3552b0mr2685121137.10.1746794098501; Fri, 09 May 2025
- 05:34:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9431482F5;
+	Fri,  9 May 2025 12:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746794155; cv=fail; b=m8l0y2IiXDP/2PNLYYmQfbgZ9q8cLjcxrC7HQB3odL6tMVWV7nVaX8GYSJkicVROheMRTmcBKC9vuvRcIlZM0sQDQASe+/BKZ8OGS531wMSipRNf56McVsGpEUdfd8Fx264/wuF4nqGfDk0Tner4r1phLraIm8Xyqr0ItB0PV/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746794155; c=relaxed/simple;
+	bh=rwiZrZpsdyTA9VcBafX2w+TYgeu+GOWAt+S5eBmsDa8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZIj+gqBQNpDeD8W5koBneYbYmAufcmeLM5s8JW1O6U1qQ3/tWqiGtZGIa3v1DtEuNx1TvTOa0UliLAyXPjS4KHIWxoIrtq/PDquMsc850/QRy76aim2BqnmYtolvsN2Ae54gEHoB0vZtP8J5pxkBm09gd41mp1qjwSC7VjDTvRc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oOAzZCa2; arc=fail smtp.client-ip=40.107.220.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oOAzZCa2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hmuEmKW55Hqru3XVQc64GWOVkyd8JvcXgwTNDAU+uMpMuiYnUgRn1F1DmDaLrmbYJmVzup/GOWBD16e0X8tce6GFUUSe0hPUdgr3UDx1ND7PNvvmyONs1ygAK4EsrpDLHTaYTRC25IN5q7PU3sMXAScUDsfK41oKJ5T1CrYlFSrDJUK9MF5NGbnxta0Uh7uLJq5gH0fW4Mo9oLaHUPxD5qG/h6j/hZjyopOU81ImYb3G6xw4J13wppMT4+epnOwVSE1qHIKiojP9uQIN4N7yMaExrgE9U2e2pdnkBBzgtKRICYfmGGrYYgf/b5Cr8bq3XZNgB9DNNneuLpdW4w8XxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sZW4tCVnuhb1kX4elKayY4342q/anXKXqJPpnSwqn0s=;
+ b=TCO3h9N/f1htuDJXtgRb9Chs7HkA/9EJKsq93r8n5MfwEfXh5Pz7qF6FL37GtJ0rf8ozUV7hP3SabFGr/ZEzY2dtW5Zx0Wh1JvkdajOhkhbTWRDTHhy12eTdDAgTfFfRusE8G3JlN3AN3qETDj+TCICjzo/OoiBafiYisffa6maBl0+5+WgOZTqinLibJp6xQDbdue6AFVPT10TN2rBdOnUVttKPDkAm3Rpmq4AhIgwMCS5DHFr8m3cdvBqc0cLmvLZkvnw9Bg4mX3EFLhWFujJ/Z227tnvUr3YYl95EIBTtu1ozOBoSf1pNMaumFn7F3kSpELyqSL9oZf8C8SijNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sZW4tCVnuhb1kX4elKayY4342q/anXKXqJPpnSwqn0s=;
+ b=oOAzZCa2W6oOFdsOtt7rMPe7jyRxijRZTifmbpvZg+QujYQR6Sb8NPWSg/W9GTYAEXLDAetNo0nAq3gSEqnftDmDeTceRxK8wGKMqzbKs7dy6Wm0SvvSdSp/MUQN3wTFb4hFYFPCjFSPNjbqFQvFqjnpApSTrUyHulYGnEHGfKSIyrV6Ib8GpXFMWkHibmWIPeLljgLBoBN7iVx/UAv+P/O0APsQ68rSmhORU+ugxAJNoHkyeNPg6u670P5pMm6HDDVyjcENGyrDNFuounkD13vDDQGRyPaWzVmwJJJVeNhU1F5HsANEMNgD1kcHNQtuzybRF8Wlxa4MQtQCUZ9zbA==
+Received: from DS7P220CA0016.NAMP220.PROD.OUTLOOK.COM (2603:10b6:8:223::8) by
+ CH1PPFD8936FA16.namprd12.prod.outlook.com (2603:10b6:61f:fc00::624) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 9 May
+ 2025 12:35:47 +0000
+Received: from CY4PEPF0000E9D2.namprd03.prod.outlook.com
+ (2603:10b6:8:223:cafe::4e) by DS7P220CA0016.outlook.office365.com
+ (2603:10b6:8:223::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Fri,
+ 9 May 2025 12:35:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CY4PEPF0000E9D2.mail.protection.outlook.com (10.167.241.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 12:35:47 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 9 May 2025
+ 05:35:34 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 9 May 2025 05:35:34 -0700
+Received: from build-va-bionic-20241022.nvidia.com (10.127.8.12) by
+ mail.nvidia.com (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14
+ via Frontend Transport; Fri, 9 May 2025 05:35:29 -0700
+From: Vishwaroop A <va@nvidia.com>
+To: <krzk@kernel.org>, <broonie@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <thierry.reding@gmail.com>,
+	<jonathanh@nvidia.com>, <skomatineni@nvidia.com>, <ldewangan@nvidia.com>,
+	<kyarlagadda@nvidia.com>, <smangipudi@nvidia.com>, <bgriffis@nvidia.com>,
+	<linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Vishwaroop A <va@nvidia.com>
+Subject: [PATCH v3] dt-bindings: spi: tegra: Document IOMMU property for Tegra234 QSPI
+Date: Fri, 9 May 2025 12:35:20 +0000
+Message-ID: <20250509123521.3471650-1-va@nvidia.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
- <20250410140628.4124896-4-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdUv6+KFuobDzzmKFOH6PvwU0RFzd1M9WrEZ-yzESBahkw@mail.gmail.com> <e77c85de-4542-44e1-af2e-f63f72602ff8@tuxon.dev>
-In-Reply-To: <e77c85de-4542-44e1-af2e-f63f72602ff8@tuxon.dev>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 9 May 2025 14:34:46 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXFtBmjDu=1RS2MLNYzhZ0fmpT7+1QbA9p4LvoLHitOuw@mail.gmail.com>
-X-Gm-Features: AX0GCFtVScxF2koK4EeZ1OeR2EYr9pDTWXomyx_gSltjeSBJrsTivswCYklOMbw
-Message-ID: <CAMuHMdXFtBmjDu=1RS2MLNYzhZ0fmpT7+1QbA9p4LvoLHitOuw@mail.gmail.com>
-Subject: Re: [PATCH 3/7] clk: renesas: rzg2l-cpg: Add support for MSTOP in
- clock enable/disable API
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D2:EE_|CH1PPFD8936FA16:EE_
+X-MS-Office365-Filtering-Correlation-Id: da4581a4-5de1-40fb-ee77-08dd8ef60642
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZkYeii7ZhdRrgIS9JKnVQJx17fzD1lbvpxl0E3FvruqhPvrHtiXA4e94sosU?=
+ =?us-ascii?Q?nOaAdK66GWEoNyMMhVEEamBIkXVIb/WHqrn9/IULEZd+JoeMKUztaDiJkF+1?=
+ =?us-ascii?Q?7zqK1uh/eA2Da6DzvHB7ImjlntGpi7YQtMqMnAxI+DcwcrvJaDLD3a0HsyPH?=
+ =?us-ascii?Q?FpFH7BzokZcNm/6AXniO875yKI9rsis6O1Lo+9b4phYl00KWY8G6zu/9Er+8?=
+ =?us-ascii?Q?dplkIQUGsrx0LfTKNN2eWkdui9CCmP8S7KciOFxuoe5Nyq3A/Nhba0rkD+s/?=
+ =?us-ascii?Q?Iylqcde/X/t8vYbJLuZ+BRPmdikHBjDjegj24SwD2OWAsvygRkibLlLIQHTU?=
+ =?us-ascii?Q?oyJoVdt2CUDq/6uxQkkaJFYp1eo90ORNaVQgVpaKd4Dyvb2OeAih2/AfZgVN?=
+ =?us-ascii?Q?GdNmFV3t0eDPmqAKyuLlBNqeGytG9W8KAy9v50L2stsjBHxL6k+jJzcS2p4V?=
+ =?us-ascii?Q?nm319v/7GsjiP2WNgDLhrcBhugFvWcRbmtVaxI7KyXioLtTIkj79RjND7X+Z?=
+ =?us-ascii?Q?R2T92gS4ghfJuQNLA4TF/ZSGxNnrwaFfmlyg9IOoNq8w6S/+8veUtX+wWUZi?=
+ =?us-ascii?Q?mSTRynUelOLav48997nt6cNVzPmgo8abN42XIdZ38HvUAgCWaNvZem/3898s?=
+ =?us-ascii?Q?VgqIyhrcUTQitpNnPVkyws1zziBR+FAPhCY0gVDwbUr6M7fdXR54BwwkT0qp?=
+ =?us-ascii?Q?6QvyVr0fNNlJi7YjAXV6w5WOtj7Rj3zLeCYgkXwk1k8COqbN3gnWgEKpbMSb?=
+ =?us-ascii?Q?MafvVPIhNC5BNzYkHSdNC8UJ45xH5R/qXtAbcZ3g6+3BqIjlhguBZbhZK6WI?=
+ =?us-ascii?Q?b51qN+ADouEhiuf9Sc+KXFFv27lkVggwq14Sqq+GDxct82qd5mxg/T167i23?=
+ =?us-ascii?Q?V36kFRGpzmZ1xS1BKwtVDzOoOzjCvOqEfChmZrL5zNFQFmVxmBPb4KfO4G4N?=
+ =?us-ascii?Q?fwQn7Wi9PaS39+HiU0LIZhhOjwj4HYuPKnNB0sVvnUTzxf/i84RSZWvyBffz?=
+ =?us-ascii?Q?3zwnmIF1GwPM94cJRI+c9ndag1vKCHPay/ncjPgU+K3zn44eksh+COVFMR7m?=
+ =?us-ascii?Q?ZEgrhwSSawZMg2PNnSqZKclsJuHL2repTtpEAuSaAhAH1xhiCRx1Y2QAIBFC?=
+ =?us-ascii?Q?xaXdZC5QQ/4oKSXCTNdq5KdG1bOK3M569zVdbN4P2KDyZGWaW1+34en3Lg8V?=
+ =?us-ascii?Q?eb0m/Dy8TjWjLv5jXatTHGVcmqXmUGvI9vQNPBPKl5Z2bqjtbgRzacFsAjFQ?=
+ =?us-ascii?Q?WzqQGh7mHngYHgslR+t3/OCGHxQfxul/yGeJI21avR+yFvW58h0zYCG8yb6h?=
+ =?us-ascii?Q?SabZ6mQWBmXSwdMy9Dntt16qIq9CpXpKXRl8GyISgML4EdSt24Dn6Q2hwfHH?=
+ =?us-ascii?Q?3nf68gyaQY933UNXAW1McrJ3y8RGxenDANslGbvv5oM+kAK8mSrN++DSps9m?=
+ =?us-ascii?Q?kFzIaheuuk0HLEhEG/58XSnzhrjoH/IxmxcdImz466CEMLBOEX7L2GE5IPDv?=
+ =?us-ascii?Q?vqHn/ACNuyNe7ZE3E91UzkB9c17Iwei3uW/buFSRt0XoVB0nX/etvBVWRg?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 12:35:47.3655
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: da4581a4-5de1-40fb-ee77-08dd8ef60642
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D2.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFD8936FA16
 
-Hi Claudiu,
+Add the 'iommus' property to the Tegra QSPI device tree binding.
+The property is needed for Tegra234 when using the internal DMA
+controller, and is not supported on other Tegra chips, as DMA is
+handled by an external controller.
 
-On Fri, 9 May 2025 at 12:54, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> On 07.05.2025 18:42, Geert Uytterhoeven wrote:
-> > On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>
-> >> The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
-> >> module has one or more MSTOP bits associated with it, and these bits need
-> >> to be configured along with the module clocks. Setting the MSTOP bits
-> >> switches the module between normal and standby states.
-> >>
-> >> Previously, MSTOP support was abstracted through power domains
-> >> (struct generic_pm_domain::{power_on, power_off} APIs). With this
-> >> abstraction, the order of setting the MSTOP and CLKON bits was as follows:
-> >>
-> >> Previous Order:
-> >> A/ Switching to Normal State (e.g., during probe):
-> >> 1/ Clear module MSTOP bits
-> >> 2/ Set module CLKON bits
-> >>
-> >> B/ Switching to Standby State (e.g., during remove):
-> >> 1/ Clear CLKON bits
-> >> 2/ Set MSTOP bits
-> >>
-> >> However, in some cases (when the clock is disabled through devres), the
-> >> order may have been (due to the issue described in link section):
-> >>
-> >> 1/ Set MSTOP bits
-> >> 2/ Clear CLKON bits
-> >>
-> >> Recently, the hardware team has suggested that the correct order to set
-> >> the MSTOP and CLKON bits is:
-> >>
-> >> Updated Order:
-> >> A/ Switching to Normal State (e.g., during probe):
-> >> 1/ Set CLKON bits
-> >> 2/ Clear MSTOP bits
-> >>
-> >> B/ Switching to Standby State (e.g., during remove):
-> >> 1/ Set MSTOP bits
-> >> 2/ Clear CLKON bits
-> >>
-> >> To prevent future issues due to incorrect ordering, the MSTOP setup has
-> >> now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
-> >> with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
-> >> from the RZ/G3S HW manual.
-> >>
-> >> Additionally, since multiple clocks of a single module may be mapped to a
-> >> single MSTOP bit, MSTOP setup is reference-counted.
-> >>
-> >> Furthermore, as all modules start in the normal state after reset, if the
-> >> module clocks are disabled, the module state is switched to standby. This
-> >> prevents keeping the module in an invalid state, as recommended by the
-> >> hardware team.
-> >>
-> >> Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >
-> > Thanks for your patch!
-> >
-> >> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> >> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+Signed-off-by: Vishwaroop A <va@nvidia.com>
+---
+ .../bindings/spi/nvidia,tegra210-quad.yaml    | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-> >> +/* Need to be called with a lock held to avoid concurrent access to mstop->refcnt. */
-> >> +static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
-> >> +                                            bool standby)
-> >> +{
-> >> +       struct rzg2l_cpg_priv *priv = clock->priv;
-> >> +       struct mstop *mstop = clock->mstop;
-> >> +       bool update = false;
-> >> +       u32 value;
-> >> +
-> >> +       if (!mstop)
-> >> +               return;
-> >> +
-> >> +       value = MSTOP_MASK(mstop->conf) << 16;
-> >> +
-> >> +       if (standby) {
-> >> +               unsigned int criticals = 0;
-> >> +
-> >> +               for (u8 i = 0; i < clock->num_shared_mstop_clks; i++) {
-> >
-> > unsigned int
-> >
-> >> +                       struct mstp_clock *clk = clock->shared_mstop_clks[i];
-> >> +
-> >> +                       if (clk->critical)
-> >> +                               criticals++;
-> >> +               }
-> >> +
-> >> +               /* Increment if clock is critical, too. */
-> >> +               if (clock->critical)
-> >> +                       criticals++;
-> >
-> > If clock->shared_mstop_clks[] would include the current clock, then
-> > (a) this test would not be needed, and
->
-> Agree!
->
-> > (b) all clocks sharing the same mstop could share a single
-> >     clock->shared_mstop_clks[] array.
->
-> I'll look into this but I'm not sure how should I do it w/o extra
-> processing at the end of registering all the clocks. FWICT, that would
-> involve freeing some shared_mstop_clks arrays and using a single reference
-> as the shared_mstop_clks[] is updated after every clock is registered. Can
-> you please let me know if this what you are thinking about?
-
-Currently, when detecting two clocks share the same mstop,
-you (re)allocate each clock's shared_mstop_clks[], and add the
-other clock:
-
-    rzg2l_cpg_add_shared_mstop_clock(priv->dev, clock, clk);
-    rzg2l_cpg_add_shared_mstop_clock(priv->dev, clk, clock);
-
-Instead, call rzg2l_cpg_add_shared_mstop_clock() once, and modify
-rzg2l_cpg_add_shared_mstop_clock() to not only realloc the target's
-shared_mstop_clks[], but also loop over all its existing entries,
-and update their shared_mstop_clks[] pointers.
-
-> >> +       for (unsigned int i = 0; i < priv->num_mod_clks; i++) {
-> >> +               struct mstp_clock *clk;
-> >> +               struct clk_hw *hw;
-> >> +               u32 val;
-> >> +
-> >> +               if (priv->clks[priv->num_core_clks + i] == ERR_PTR(-ENOENT))
-> >> +                       continue;
-> >> +
-> >> +               hw = __clk_get_hw(priv->clks[priv->num_core_clks + i]);
-> >> +               clk = to_mod_clock(hw);
-> >
-> > As this patch adds four more loops iterating over all module clocks
-> > and skipping empty entries, I think it is worthwhile to introduce a
-> > custom for_each_mstp_clock()-iterator.
->
-> I was thinking about it and I tried do it with a macro, keeping this code
-> in it:
->
->     for (unsigned int i = 0; i < priv->num_mod_clks; i++) {
->         struct mstp_clock *clk;
->         struct clk_hw *hw;
->         u32 val;
->
->         if (priv->clks[priv->num_core_clks + i] == ERR_PTR(-ENOENT))
->             continue;
->
-> but it was a complicated macro and abandoned it in the end.
-
-Yes, the implementation would be complicated, but the semantics
-would be clear.  The kernel already has complex macros like
-for_each_nest_rmap_safe() and for_each_oldnew_connector_in_state().
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml b/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
+index 48e97e240265..04d3b1a47392 100644
+--- a/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
++++ b/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
+@@ -10,9 +10,6 @@ maintainers:
+   - Thierry Reding <thierry.reding@gmail.com>
+   - Jonathan Hunter <jonathanh@nvidia.com>
+ 
+-allOf:
+-  - $ref: spi-controller.yaml#
+-
+ properties:
+   compatible:
+     enum:
+@@ -47,6 +44,9 @@ properties:
+       - const: rx
+       - const: tx
+ 
++  iommus:
++    maxItems: 1
++
+ patternProperties:
+   "@[0-9a-f]+$":
+     type: object
+@@ -69,6 +69,19 @@ required:
+ 
+ unevaluatedProperties: false
+ 
++allOf:
++  - $ref: spi-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          const: nvidia,tegra234-qspi
++    then:
++      properties:
++        iommus: true
++    else:
++      properties:
++        iommus: false
++
+ examples:
+   - |
+     #include <dt-bindings/clock/tegra210-car.h>
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
