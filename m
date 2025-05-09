@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241BC29AAEB;
-	Fri,  9 May 2025 20:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E4429AB0D;
+	Fri,  9 May 2025 20:18:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746821905; cv=none; b=AqFaYdLWxG52zJixBiNOYhyv24urBwAUdvfv5/wro9IOw2W9jiiEMy7i8WiUdHUH1sC1snE7nn+RD2KV8m07HH+AVtCigekJUsV8vogNoyF7k2djDcluryX3lEL49zrxVErKZjn5Zwer2ccZPmhsQu4A02dAhlxhhtEDtncaZCw=
+	t=1746821906; cv=none; b=DIrzkQ2qbxcT3eJKuoKz/AXL+CX1Nys+HgBrSfb/reJXVYpM8CAkkhiVuI0amtPJBnxbGx9WhOjw/DwLzEyp+ONWOJFKG89845nIPmqRdKxm6Ax0XNXjASTB6jGqN7x7YZvJAWvjNn4Mib31paAUDKX8LgWQjXsFRw0xzZCSELw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746821905; c=relaxed/simple;
-	bh=iNTRpBq9KLho7r5MiQ2IzJKM2/5WdHdwn8puwfQIvvA=;
+	s=arc-20240116; t=1746821906; c=relaxed/simple;
+	bh=sUazod9fDHv6Y0sMdgofaAG7+zcMTxL59nufwr9DdXI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bo0+azVvShsefftoDUd6MddjELZ2nnkiuwRLAdWVgqzeBRpGZuh1Cl2Vb8JN8+bchpr9eUrXmr8hxaAXNeTsoF0KVyf0884PETb178XUkQGfshBY5BN4zeB9Nz7xxv1e7R7lM7RpC1e2BZ1zHAW++N148vb4Rn73oebutDxuZLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZIBN9zH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qCyzs7YoiILcXbQIlimlkbfXP5kb8rjxxmRwVhpcZIxeTcXOelB14XzaCsQEgEWrcXbUNML4pE50D0jOhkK8mCASiN7Fhq/Xkjrt4I1rO7vCDZqCW2ToLJ9ekfFW44DQ8yXRtnr25cdTAv/CIKvCiXjYX3/54YAw5R/niRTgGf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8Eb7YQJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZIBN9zH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3448C4CEE9;
-	Fri,  9 May 2025 20:18:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8Eb7YQJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E170C4CEEE;
+	Fri,  9 May 2025 20:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746821904;
-	bh=iNTRpBq9KLho7r5MiQ2IzJKM2/5WdHdwn8puwfQIvvA=;
+	s=k20201202; t=1746821905;
+	bh=sUazod9fDHv6Y0sMdgofaAG7+zcMTxL59nufwr9DdXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aZIBN9zHCJe+uAanE2vUybr8PO2kYEt3PY82bWKVr8+Q5ezTxInme/a8NXhHp/yY8
-	 8hRjfmorYsAgdLSwdsY3VZBURwmNu0uP01WwCeZFLhLZVap0m/L3wDEv1EXuQzgoQl
-	 vTvGRv+TSMmrPOC4M3O+Gyp6i+pbRct8mPjiSaL5V/8Z16j7mVmQh0grzFbpO/fEF7
-	 QaB0R9wyKDO9iZGbYYNBrEFDjmw26BhuCQjfR59M11/oYXZnsq3cAa63t6mmjzqR2Z
-	 2PdT/Rpw/6t0h1UXczu5m4gOPVqa0OhzzZOlHXscJAuP2Im7+FwXaVuufsQMkAO1TK
-	 PA6GASwBMi6ow==
+	b=q8Eb7YQJAThvBkuGKqgfPanDm3ob3CMsGx4JM1AetYfv0DYx345u4/f4DXW9LsnB5
+	 qLfw3EezTGP/cEotZad9T0lLsamujT/OZ53mKU8PWAztmbHTNpPQXScnN0eA1Ic/J9
+	 TuU7zS13fgSYGO45BgdglnV+rHCUaAzIw10h2j6Kdo+hExs/vvqfPoFUL/5qzTNzC3
+	 ZYH0OhzDnckhRe0iT+ztTEq4Rm5ZmsSswzB6C4keKdC3G23B3YZBNgcHObZUS4rHIn
+	 TOeNaGV+cnTD2rSodXE/62AxaeFO0Z33oHIlY7CrjFqmEMOJPFoD5hXp9Gyt/g7Dec
+	 IuAgN7i1qVO3w==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Fazla Mehrab <a.mehrab@bytedance.com>,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>
-Subject: [PATCH v2 56/62] objtool: Add base objtool support for livepatch modules
-Date: Fri,  9 May 2025 13:17:20 -0700
-Message-ID: <ed05aca9028fa80d9f48ee88ebb80dc90c6a4194.1746821544.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 58/62] livepatch/klp-build: Add stub init code for livepatch modules
+Date: Fri,  9 May 2025 13:17:22 -0700
+Message-ID: <97663fd9f60494bf4d027114fab13540102b26fe.1746821544.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1746821544.git.jpoimboe@kernel.org>
 References: <cover.1746821544.git.jpoimboe@kernel.org>
@@ -55,183 +55,129 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for klp-build, enable "classic" objtool to work on
-livepatch modules:
-
-  - Avoid duplicate symbol/section warnings for prefix symbols and the
-    .static_call_sites and __mcount_loc sections which may have already
-    been extracted by klp diff.
-
-  - Add __klp_funcs to the IBT function pointer section whitelist.
-
-  - Prevent KLP symbols from getting incorrectly classified as cold
-    subfunctions.
+Add a module initialization stub which can be linked with binary diff
+objects to produce a livepatch module.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/check.c                   | 44 +++++++++++++++++++++----
- tools/objtool/elf.c                     |  4 ++-
- tools/objtool/include/objtool/elf.h     |  1 +
- tools/objtool/include/objtool/objtool.h |  2 +-
- 4 files changed, 43 insertions(+), 8 deletions(-)
+ scripts/livepatch/init.c | 108 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
+ create mode 100644 scripts/livepatch/init.c
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index bc9bc37efa55..5bd1b8d000bd 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2015-2017 Josh Poimboeuf <jpoimboe@redhat.com>
-  */
- 
-+#define _GNU_SOURCE /* memmem() */
- #include <string.h>
- #include <stdlib.h>
- #include <inttypes.h>
-@@ -627,6 +628,20 @@ static int init_pv_ops(struct objtool_file *file)
- 	return 0;
- }
- 
-+static bool is_livepatch_module(struct objtool_file *file)
+diff --git a/scripts/livepatch/init.c b/scripts/livepatch/init.c
+new file mode 100644
+index 000000000000..2274d8f5a482
+--- /dev/null
++++ b/scripts/livepatch/init.c
+@@ -0,0 +1,108 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Init code for a livepatch kernel module
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/livepatch.h>
++
++extern struct klp_object_ext __start_klp_objects[];
++extern struct klp_object_ext __stop_klp_objects[];
++
++static struct klp_patch *patch;
++
++static int __init livepatch_mod_init(void)
 +{
-+	struct section *sec;
++	struct klp_object *objs;
++	unsigned int nr_objs;
++	int ret;
 +
-+	if (!opts.module)
-+		return false;
++	nr_objs = __stop_klp_objects - __start_klp_objects;
 +
-+	sec = find_section_by_name(file->elf, ".modinfo");
-+	if (!sec)
-+		return false;
++	if (!nr_objs) {
++		pr_err("nothing to patch!\n");
++		ret = -EINVAL;
++		goto err;
++	}
 +
-+	return memmem(sec->data->d_buf, sec_size(sec), "\0livepatch=Y", 12);
++	patch = kzalloc(sizeof(*patch), GFP_KERNEL);
++	if (!patch) {
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	objs = kzalloc(sizeof(struct klp_object) * (nr_objs + 1),  GFP_KERNEL);
++	if (!objs) {
++		ret = -ENOMEM;
++		goto err_free_patch;
++	}
++
++	for (int i = 0; i < nr_objs; i++) {
++		struct klp_object_ext *obj_ext = __start_klp_objects + i;
++		struct klp_func_ext *funcs_ext = obj_ext->funcs;
++		unsigned int nr_funcs = obj_ext->nr_funcs;
++		struct klp_func *funcs = objs[i].funcs;
++		struct klp_object *obj = objs + i;
++
++		funcs = kzalloc(sizeof(struct klp_func) * (nr_funcs + 1), GFP_KERNEL);
++		if (!funcs) {
++			ret = -ENOMEM;
++			for (int j = 0; j < i; j++)
++				kfree(objs[i].funcs);
++			goto err_free_objs;
++		}
++
++		for (int j = 0; j < nr_funcs; j++) {
++			funcs[j].old_name   = funcs_ext[j].old_name;
++			funcs[j].new_func   = funcs_ext[j].new_func;
++			funcs[j].old_sympos = funcs_ext[j].sympos;
++		}
++
++		obj->name = obj_ext->name;
++		obj->funcs = funcs;
++
++		memcpy(&obj->callbacks, &obj_ext->callbacks, sizeof(struct klp_callbacks));
++	}
++
++	patch->mod = THIS_MODULE;
++	patch->objs = objs;
++
++	/* TODO patch->states */
++
++#ifdef KLP_NO_REPLACE
++	patch->replace = false;
++#else
++	patch->replace = true;
++#endif
++
++	return klp_enable_patch(patch);
++
++err_free_objs:
++	kfree(objs);
++err_free_patch:
++	kfree(patch);
++err:
++	return ret;
 +}
 +
- static int create_static_call_sections(struct objtool_file *file)
- {
- 	struct static_call_site *site;
-@@ -638,7 +653,12 @@ static int create_static_call_sections(struct objtool_file *file)
- 
- 	sec = find_section_by_name(file->elf, ".static_call_sites");
- 	if (sec) {
--		if (!opts.dryrun)
-+		/*
-+		 * Livepatch modules may have already extracted the static call
-+		 * site entries to take advantage of vmlinux static call
-+		 * privileges.
-+		 */
-+		if (!!opts.dryrun || !file->klp)
- 			WARN("file already has .static_call_sites section, skipping");
- 
- 		return 0;
-@@ -684,7 +704,7 @@ static int create_static_call_sections(struct objtool_file *file)
- 
- 		key_sym = find_symbol_by_name(file->elf, tmp);
- 		if (!key_sym) {
--			if (!opts.module) {
-+			if (!opts.module || file->klp) {
- 				ERROR("static_call: can't find static_call_key symbol: %s", tmp);
- 				return -1;
- 			}
-@@ -911,7 +931,11 @@ static int create_mcount_loc_sections(struct objtool_file *file)
- 
- 	sec = find_section_by_name(file->elf, "__mcount_loc");
- 	if (sec) {
--		if (!opts.dryrun)
-+		/*
-+		 * Livepatch modules have already extracted their __mcount_loc
-+		 * entries to cover the !CONFIG_FTRACE_MCOUNT_USE_OBJTOOL case.
-+		 */
-+		if (!opts.dryrun && !file->klp)
- 			WARN("file already has __mcount_loc section, skipping");
- 
- 		return 0;
-@@ -2612,6 +2636,8 @@ static int decode_sections(struct objtool_file *file)
- {
- 	int ret;
- 
-+	file->klp = is_livepatch_module(file);
++static void __exit livepatch_mod_exit(void)
++{
++	unsigned int nr_objs;
 +
- 	mark_rodata(file);
- 
- 	ret = init_pv_ops(file);
-@@ -4285,8 +4311,13 @@ static int add_prefix_symbol(struct objtool_file *file, struct symbol *func)
- 		if (offset < opts.prefix)
- 			continue;
- 
-+		/*
-+		 * Ignore attempts to make duplicate symbols in livepatch
-+		 * modules.  They've already extracted the prefix symbols
-+		 * except for the newly compiled init.c.
-+		 */
- 		sym_pfx = elf_create_prefix_symbol(file->elf, func, opts.prefix);
--		if (!sym_pfx) {
-+		if (!sym_pfx && !file->klp) {
- 			WARN("duplicate prefix symbol for %s\n", func->name);
- 			return -1;
- 		}
-@@ -4621,6 +4652,7 @@ static int validate_ibt(struct objtool_file *file)
- 		    !strncmp(sec->name, ".debug", 6)			||
- 		    !strcmp(sec->name, ".altinstructions")		||
- 		    !strcmp(sec->name, ".ibt_endbr_seal")		||
-+		    !strcmp(sec->name, ".kcfi_traps")			||
- 		    !strcmp(sec->name, ".orc_unwind_ip")		||
- 		    !strcmp(sec->name, ".retpoline_sites")		||
- 		    !strcmp(sec->name, ".smp_locks")			||
-@@ -4630,12 +4662,12 @@ static int validate_ibt(struct objtool_file *file)
- 		    !strcmp(sec->name, "__bug_table")			||
- 		    !strcmp(sec->name, "__ex_table")			||
- 		    !strcmp(sec->name, "__jump_table")			||
-+		    !strcmp(sec->name, "__klp_funcs")			||
- 		    !strcmp(sec->name, "__mcount_loc")			||
--		    !strcmp(sec->name, ".kcfi_traps")			||
- 		    !strcmp(sec->name, ".llvm.call-graph-profile")	||
- 		    !strcmp(sec->name, ".llvm_bb_addr_map")		||
- 		    !strcmp(sec->name, "__tracepoints")			||
--		    strstr(sec->name, "__patchable_function_entries"))
-+		    !strcmp(sec->name, "__patchable_function_entries"))
- 			continue;
- 
- 		for_each_reloc(sec->rsec, reloc)
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index de1d8554d979..ae1c852ff8d8 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -496,8 +496,10 @@ static int elf_add_symbol(struct elf *elf, struct symbol *sym)
- 	    (strstarts(sym->name, "__pfx") || strstarts(sym->name, "__cfi_")))
- 		sym->prefix = 1;
- 
-+	if (strstarts(sym->name, ".klp.sym"))
-+		sym->klp = 1;
- 
--	if (is_func_sym(sym) && strstr(sym->name, ".cold"))
-+	if (!sym->klp && is_func_sym(sym) && strstr(sym->name, ".cold"))
- 		sym->cold = 1;
- 	sym->pfunc = sym->cfunc = sym;
- 
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index 1bf9c0a1112d..adfe508f96f5 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -84,6 +84,7 @@ struct symbol {
- 	u8 debug_checksum    : 1;
- 	u8 changed	     : 1;
- 	u8 included	     : 1;
-+	u8 klp		     : 1;
- 	struct list_head pv_target;
- 	struct reloc *relocs;
- 	struct section *group_sec;
-diff --git a/tools/objtool/include/objtool/objtool.h b/tools/objtool/include/objtool/objtool.h
-index 37e9fe4492d6..731965a742e9 100644
---- a/tools/objtool/include/objtool/objtool.h
-+++ b/tools/objtool/include/objtool/objtool.h
-@@ -30,7 +30,7 @@ struct objtool_file {
- 	struct list_head mcount_loc_list;
- 	struct list_head endbr_list;
- 	struct list_head call_list;
--	bool ignore_unreachables, hints, rodata;
-+	bool ignore_unreachables, hints, rodata, klp;
- 
- 	unsigned int nr_endbr;
- 	unsigned int nr_endbr_int;
++	nr_objs = __stop_klp_objects - __start_klp_objects;
++
++	for (int i = 0; i < nr_objs; i++)
++		kfree(patch->objs[i].funcs);
++
++	kfree(patch->objs);
++	kfree(patch);
++}
++
++module_init(livepatch_mod_init);
++module_exit(livepatch_mod_exit);
++MODULE_LICENSE("GPL");
++MODULE_INFO(livepatch, "Y");
++MODULE_DESCRIPTION("Livepatch module");
 -- 
 2.49.0
 
