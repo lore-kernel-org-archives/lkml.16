@@ -1,108 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA28164A8F;
-	Fri,  9 May 2025 03:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE7B21E094
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 03:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746760805; cv=none; b=b+yIc02INh6krbqeVEp7OeQGrj7KJYWk1VMndSQUrVLk+hcOHIc9YaftyYKXzTkmG2FFFTCyqvBjZcXgUPsfUyK3c0wRRl2G/AW8kAJ448NhiuYFrYbyKh/L621Qg9+WRXEwDJZsPpFcM4qUtmepWqkgpDVZWgg1sf7c0Y+uzuM=
+	t=1746760838; cv=none; b=tnFefTnQo4EMaxBLOCFFU+0ONTAEjQGbY6dZ0BMEulNCQLimcBx9+eQI+AhmT0P2ttAvDvyuk0rEQLMcNZUPKOJ0x+TD/czC29lS5jx9mJHeu1lj0iF31pLY3ajOMzmwSST23jA80zu3b9GJfW7Hn4wKMij7LadQs3jU4a1SMDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746760805; c=relaxed/simple;
-	bh=NY9f4q2kixUeTEknFQvFoV+AD+81IXXwblbM2CctxyA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=PJaLjAN4k3++h89E+Y41DS4uiX8PGQpjddwpEiKQSk2cKt6/G8WjHBwfrpRmCCIh0mdCncnJ5qtLTrcNdQmcI+o/yR+iPhZPilu9aZKGBWe0bvjI0g6wo7Kl3s/q6TCNAIHCzZnNfRcHPpExjMhNK3V0j/riIe7Jo8JED2XtSvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyi099k6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746760838; c=relaxed/simple;
+	bh=QxYt6I37j8Y2FWScFRIV2InQ82omXNQYJHqU/dkoDOQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rL+Lj9GS3fuHJ5LziXzvYAF63+U0cGKjMWPAU9UzMbaBA+O1bd5ZzEP/op/ni4bPW7yYvjAwMUsDaoNjWXARiNGQwKXHAkWR5gUL088mGP7ybE8Q4PWcnLDXb+qNqNk7WUO9PcyijHO8jEPLTEKPc+CFu8XRv905JGNAvJAT+28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=2llTUcHZ; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyi099k6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C55C4CEE7;
-	Fri,  9 May 2025 03:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746760804;
-	bh=NY9f4q2kixUeTEknFQvFoV+AD+81IXXwblbM2CctxyA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=lyi099k6fyh1ahKM/tIi2w1iD/oHFITWbewaXU85RAhs+2ImiRhUMBLcf1bBVf0Cg
-	 IUDKwZdC220PhgWaq7heBSTYpoTXLtChkVBQDVdT3N0UMiRsFfifWyASo5x1ET2GWH
-	 5TJUM319B4kyqdQ7xFGWDdlATCmBwMy2FnH7kZ02beNN9qepzcvadR1eI0h5jqExlj
-	 gvS8iSfn1Fo06yiztqXMR531F175M5zkI5XoaE7PyjFTJvdoElQZr4P4t6Me+0ZXQY
-	 OqVZk/Y2E8RLNk+gDJ99htcy2OYiD4iNe7FQ2Xg2fpwyiGAKmsEl6yQH/2GLY4K+Ov
-	 Z0BlxGOkIyVwg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BFF380AA7D;
-	Fri,  9 May 2025 03:20:44 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="2llTUcHZ"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d9189e9a06so7772685ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 20:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746760836; x=1747365636; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SnqKcVSyirwFx4wEXZIT0zJRplLj4a3hbHksAZ3+SSo=;
+        b=2llTUcHZLw6lkdSaA7SZ26rQk0pvWBtXZGqOKYRe+hJw77S5vZ4SUYziUG/BmQFSnH
+         iAUW8p5quXkXaUI4KY36MXOxO6lDGF7CL/HUA1EA3WoKIaMc5xP4KUF/BL6BeLQQ29mS
+         DjRzLbOIN0Uu0W+NQimB+37BjrZ/p9xeFkSLhEzlQZbwFj5Us6uOYqmOJqITUCn5Cz7t
+         t0dzXGWvjO/gNfMK1CLqTXcu7YfppmCE3ryhiyrIqAGmoPszKdQg07Z2FVC3FbOGwuOM
+         oKRCDaVz45uuFiK6a6+whegrPpMFa8ajXuNS36JA90h/Z8ojcvw/SL/P7oseeMYUNuCu
+         10Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746760836; x=1747365636;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SnqKcVSyirwFx4wEXZIT0zJRplLj4a3hbHksAZ3+SSo=;
+        b=GdNKXd8DWzWP3pGpMpIzKjBxuJCxXRcwwYknRiIMuIqHoOE/y1kBK3OYH7xzI0eukg
+         lZa59wK5a+WRcZdDuy8Hw4B9j6QB9Ns1vU36qIYQ+ntE04iw1ge/CaPKR9QV401rdGlU
+         PCupihIwM+iH7NDw2XI5SjHaSrPQ16iRCicY4pvkPDxqAjQ18S08TfXs27TuoeVqDU90
+         EBdgZh7ZmMoi7DToLfNwZEHHS5BWp2/szL59J9ShYIagR81ToIYqrks5J5CBtJvMTlTJ
+         +0izNxWVxETALtD2yTOQlOQRtAnZXb6BfNT0H8SVRHuwBRqF7f8XcYXlYN6Me/zK0g+c
+         u6ew==
+X-Forwarded-Encrypted: i=1; AJvYcCWl7ClT3gL0Nn62CwRAbZ6aKFbCCYsntMmU/S1Gpz8LjLQ6+1Y21RJEQ6nR0T+fpKX9PJFDqeWA0uSZ7ZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy88DXGPLLGwTfb/pYB27Rto/MyFlsOrfFgDo8bdZFmyg9w/GHd
+	qEFfBPhj28evoyOhSudT4si3L9pXywxMozxCus1sI800GbIJHFgXjAL3ebZWwgQ2L8FFYFTdSR5
+	HzMqxqwQqYlJXgx/Bm3xESk2PmGjKVpsD7UA4wA==
+X-Gm-Gg: ASbGncv5qV5bB9vYcBcYszdqzy0UbKLtUhPBQ294ROkcwVSun+/8zdA5nVzeB30LLwE
+	PRaFgjvmyeY1XLx614KESMrIkjYkrvo62E0esNQ/dgaySwgacrXWVe7zA5FGG6J5q6/jnbViXQr
+	+4Rx6zqmShGoYXSaEuAFDOD8k=
+X-Google-Smtp-Source: AGHT+IGxJSJOfj/uPGDX0l9BVY/KPaOwcW52GGJrD6j3FDNArn7ULaOwfHRemocw3j7KZ3LWZVqMGaPpDr7hAfyxnxs=
+X-Received: by 2002:a05:6e02:2292:b0:3d6:cd54:ba53 with SMTP id
+ e9e14a558f8ab-3da7e21658cmr27127695ab.22.1746760835694; Thu, 08 May 2025
+ 20:20:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v7 net-next 00/14] Add more features for ENETC v4 - round 2
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174676084300.3115683.12773669022927548558.git-patchwork-notify@kernel.org>
-Date: Fri, 09 May 2025 03:20:43 +0000
-References: <20250506080735.3444381-1-wei.fang@nxp.com>
-In-Reply-To: <20250506080735.3444381-1-wei.fang@nxp.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, christophe.leroy@csgroup.eu,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- timur@kernel.org
+References: <20250424173204.1948385-12-cleger@rivosinc.com> <mhng-0c7b576b-882d-4020-996d-adb1b2bbcc4b@palmer-ri-x1c9a>
+In-Reply-To: <mhng-0c7b576b-882d-4020-996d-adb1b2bbcc4b@palmer-ri-x1c9a>
+From: Anup Patel <anup@brainfault.org>
+Date: Fri, 9 May 2025 08:50:24 +0530
+X-Gm-Features: ATxdqUHBve2EeFlPYflmLTkAF_hrOfFokX5MPn_gLZXF6fdS6VEfyoAB6lvQ_MY
+Message-ID: <CAAhSdy1JspaC6aYjkMQn_fvjc1eFakdu2JMTQFuCzrh4h4o_3w@mail.gmail.com>
+Subject: Re: [PATCH v6 11/14] RISC-V: KVM: add SBI extension init()/deinit() functions
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Atish Patra <atishp@rivosinc.com>, cleger@rivosinc.com, 
+	Paul Walmsley <paul.walmsley@sifive.com>, atishp@atishpatra.org, shuah@kernel.org, 
+	corbet@lwn.net, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-kselftest@vger.kernel.org, samuel.holland@sifive.com, 
+	ajones@ventanamicro.com, debug@rivosinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Hi Palmer,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+On Thu, May 8, 2025 at 10:57=E2=80=AFPM Palmer Dabbelt <palmer@dabbelt.com>=
+ wrote:
+>
+> On Thu, 24 Apr 2025 10:31:58 PDT (-0700), cleger@rivosinc.com wrote:
+> > The FWFT SBI extension will need to dynamically allocate memory and do
+> > init time specific initialization. Add an init/deinit callbacks that
+> > allows to do so.
+> >
+> > Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
+> > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> > ---
+> >  arch/riscv/include/asm/kvm_vcpu_sbi.h |  9 +++++++++
+> >  arch/riscv/kvm/vcpu.c                 |  2 ++
+> >  arch/riscv/kvm/vcpu_sbi.c             | 26 ++++++++++++++++++++++++++
+> >  3 files changed, 37 insertions(+)
+>
+> There's 4 KVM patches in here without an Ack from Atish or Anup.
+> They're all tied up in the SBIv3 stuff, so just LMK if you want me to
+> take them into that staging branch or if you want me to wait.
+>
+> For now I'm going to go look at other stuff, no rush on my end.
 
-On Tue,  6 May 2025 16:07:21 +0800 you wrote:
-> This patch set adds the following features.
-> 1. Compared with ENETC v1, the formats of tables and command BD of ENETC
-> v4 have changed significantly, and the two are not compatible. Therefore,
-> in order to support the NETC Table Management Protocol (NTMP) v2.0, we
-> introduced the netc-lib driver and added support for MAC address filter
-> table and RSS table.
-> 2. Add MAC filter and VLAN filter support for i.MX95 ENETC PF.
-> 3. Add RSS support for i.MX95 ENETC PF.
-> 4. Add loopback support for i.MX95 ENETC PF.
-> 
-> [...]
+The 4 KVM patches of this series should go through the KVM RISC-V
+tree to avoid conflicts when it reaches Linus. I am okay doing a shared
+tag for the first 10 patches.
 
-Here is the summary with links:
-  - [v7,net-next,01/14] net: enetc: add initial netc-lib driver to support NTMP
-    https://git.kernel.org/netdev/net-next/c/4701073c3deb
-  - [v7,net-next,02/14] net: enetc: add command BD ring support for i.MX95 ENETC
-    https://git.kernel.org/netdev/net-next/c/e3f4a0a8ddb4
-  - [v7,net-next,03/14] net: enetc: move generic MAC filtering interfaces to enetc-core
-    https://git.kernel.org/netdev/net-next/c/401dbdd1c23c
-  - [v7,net-next,04/14] net: enetc: add MAC filtering for i.MX95 ENETC PF
-    https://git.kernel.org/netdev/net-next/c/6c5bafba347b
-  - [v7,net-next,05/14] net: enetc: add debugfs interface to dump MAC filter
-    https://git.kernel.org/netdev/net-next/c/df6cb0958089
-  - [v7,net-next,06/14] net: enetc: add set/get_rss_table() hooks to enetc_si_ops
-    https://git.kernel.org/netdev/net-next/c/66b3fb001156
-  - [v7,net-next,07/14] net: enetc: make enetc_set_rss_key() reusable
-    https://git.kernel.org/netdev/net-next/c/7e1af4d6e4b4
-  - [v7,net-next,08/14] net: enetc: add RSS support for i.MX95 ENETC PF
-    https://git.kernel.org/netdev/net-next/c/2627e9873d69
-  - [v7,net-next,09/14] net: enetc: change enetc_set_rss() to void type
-    https://git.kernel.org/netdev/net-next/c/42fb12220ade
-  - [v7,net-next,10/14] net: enetc: enable RSS feature by default
-    https://git.kernel.org/netdev/net-next/c/2219281242fc
-  - [v7,net-next,11/14] net: enetc: extract enetc_refresh_vlan_ht_filter()
-    https://git.kernel.org/netdev/net-next/c/014e33e2d8e9
-  - [v7,net-next,12/14] net: enetc: move generic VLAN hash filter functions to enetc_pf_common.c
-    https://git.kernel.org/netdev/net-next/c/5d7f6f6836a1
-  - [v7,net-next,13/14] net: enetc: add VLAN filtering support for i.MX95 ENETC PF
-    https://git.kernel.org/netdev/net-next/c/f7d30ef6c1f7
-  - [v7,net-next,14/14] net: enetc: add loopback support for i.MX95 ENETC PF
-    https://git.kernel.org/netdev/net-next/c/932ce98041ff
+Regards,
+Anup
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+>
+> >
+> > diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include=
+/asm/kvm_vcpu_sbi.h
+> > index 4ed6203cdd30..bcb90757b149 100644
+> > --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> > +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> > @@ -49,6 +49,14 @@ struct kvm_vcpu_sbi_extension {
+> >
+> >       /* Extension specific probe function */
+> >       unsigned long (*probe)(struct kvm_vcpu *vcpu);
+> > +
+> > +     /*
+> > +      * Init/deinit function called once during VCPU init/destroy. The=
+se
+> > +      * might be use if the SBI extensions need to allocate or do spec=
+ific
+> > +      * init time only configuration.
+> > +      */
+> > +     int (*init)(struct kvm_vcpu *vcpu);
+> > +     void (*deinit)(struct kvm_vcpu *vcpu);
+> >  };
+> >
+> >  void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu, struct kvm_run =
+*run);
+> > @@ -69,6 +77,7 @@ const struct kvm_vcpu_sbi_extension *kvm_vcpu_sbi_fin=
+d_ext(
+> >  bool riscv_vcpu_supports_sbi_ext(struct kvm_vcpu *vcpu, int idx);
+> >  int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *ru=
+n);
+> >  void kvm_riscv_vcpu_sbi_init(struct kvm_vcpu *vcpu);
+> > +void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu);
+> >
+> >  int kvm_riscv_vcpu_get_reg_sbi_sta(struct kvm_vcpu *vcpu, unsigned lon=
+g reg_num,
+> >                                  unsigned long *reg_val);
+> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> > index 60d684c76c58..877bcc85c067 100644
+> > --- a/arch/riscv/kvm/vcpu.c
+> > +++ b/arch/riscv/kvm/vcpu.c
+> > @@ -185,6 +185,8 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu=
+)
+> >
+> >  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+> >  {
+> > +     kvm_riscv_vcpu_sbi_deinit(vcpu);
+> > +
+> >       /* Cleanup VCPU AIA context */
+> >       kvm_riscv_vcpu_aia_deinit(vcpu);
+> >
+> > diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+> > index d1c83a77735e..3139f171c20f 100644
+> > --- a/arch/riscv/kvm/vcpu_sbi.c
+> > +++ b/arch/riscv/kvm/vcpu_sbi.c
+> > @@ -508,5 +508,31 @@ void kvm_riscv_vcpu_sbi_init(struct kvm_vcpu *vcpu=
+)
+> >               scontext->ext_status[idx] =3D ext->default_disabled ?
+> >                                       KVM_RISCV_SBI_EXT_STATUS_DISABLED=
+ :
+> >                                       KVM_RISCV_SBI_EXT_STATUS_ENABLED;
+> > +
+> > +             if (ext->init && ext->init(vcpu) !=3D 0)
+> > +                     scontext->ext_status[idx] =3D KVM_RISCV_SBI_EXT_S=
+TATUS_UNAVAILABLE;
+> > +     }
+> > +}
+> > +
+> > +void kvm_riscv_vcpu_sbi_deinit(struct kvm_vcpu *vcpu)
+> > +{
+> > +     struct kvm_vcpu_sbi_context *scontext =3D &vcpu->arch.sbi_context=
+;
+> > +     const struct kvm_riscv_sbi_extension_entry *entry;
+> > +     const struct kvm_vcpu_sbi_extension *ext;
+> > +     int idx, i;
+> > +
+> > +     for (i =3D 0; i < ARRAY_SIZE(sbi_ext); i++) {
+> > +             entry =3D &sbi_ext[i];
+> > +             ext =3D entry->ext_ptr;
+> > +             idx =3D entry->ext_idx;
+> > +
+> > +             if (idx < 0 || idx >=3D ARRAY_SIZE(scontext->ext_status))
+> > +                     continue;
+> > +
+> > +             if (scontext->ext_status[idx] =3D=3D KVM_RISCV_SBI_EXT_ST=
+ATUS_UNAVAILABLE ||
+> > +                 !ext->deinit)
+> > +                     continue;
+> > +
+> > +             ext->deinit(vcpu);
+> >       }
+> >  }
