@@ -1,224 +1,433 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837D62FB2
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 04:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303222FB2;
+	Fri,  9 May 2025 04:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746763534; cv=none; b=LaH68TkRKnU4OFCWQhYHzjQocs0WxXOQWIuJUVlkAWQAa1pvhn2nsd7cxoJiigbhJokXDiQvAMB8OERUR/jJ1slJN7kZr28idn248++VbF36SiWQJpRKYQt9HN4j2Hz5oB5PWmmJIB1Tjx8aohS2Es7f7zqTWnMQXSh2nhvhkOQ=
+	t=1746763751; cv=none; b=LJsvitTdl6csSo/xYCLAliOm3WKdwY5CRyv2iwOSQ9GPxIwcztAmibldaqoro0Z6wPZLXjZoaUicUaEfvmEMvXom+/SwFEuNkE76QZZzFpX1WohxQ+3TDSCmtL1aISXJe8J3cmBAD44jC4u947AaT/tbRwCfELA9+PTgHjHwlcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746763534; c=relaxed/simple;
-	bh=0DajdWIxqX04cEFHsZa2aIbEGn7OafUX6QvMVLBLWSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DDjIQwMv3j+PLRCrdExrb0xTx0U0BbpNY07/52QY49GlFM3A26tb4cH0FSTqyjQxqPJEPVYZMnDJOURydTju65PjBGziFIWdHQesUdO5pKhkqdtPMbijcXUfOA9FvWtpO5xLyZKafvC23o+/MH8plVZsgR6TXxLFmUtRIW0qQtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dZUMEKFE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746763751; c=relaxed/simple;
+	bh=EOh0nhVog/npxeTS3fGbJP2vIkd+ue784+b9kCoRt5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UwQV6QDmYmlHHCFGHq6cGiUnK+2xhGTNQBylvkc/71RfIjiticb1iWdqtDZ0vwLom38naRPvxrt5Ov1SBEg7Mb/sS/LgZ4/ROhl1nah+vtFOBlxJ547wf/XJVyYG4EVcIZIp9QdeS2/rKh6sNciJdz5cfGvVcGZVcNhNVppWDUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=I420ILXi; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dZUMEKFE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746763531;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J+SYrIQbnbnk5O/f1zspa8NoKFzZ95VWEpF6PHlNOTo=;
-	b=dZUMEKFENZaaSwenXLb9MGRLqHYTLfh5U0lVc+NgxmD7+a5AlNsTz0dA8OjMROFBnl93Gh
-	mBUj00OWbR59YRRYgoq3Dg23HE/6atuITZZnI3wy3SxICdPZvQ6kfyJKLjvhbriBkVOXwB
-	5TiX+xo02SmiWlL/hETeRvcESjOMfg0=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-354-K3sEc1bRMCWqd1BMcXoMpg-1; Fri, 09 May 2025 00:05:30 -0400
-X-MC-Unique: K3sEc1bRMCWqd1BMcXoMpg-1
-X-Mimecast-MFC-AGG-ID: K3sEc1bRMCWqd1BMcXoMpg_1746763528
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-72f3b4c0305so2013313b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 21:05:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746763528; x=1747368328;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J+SYrIQbnbnk5O/f1zspa8NoKFzZ95VWEpF6PHlNOTo=;
-        b=Qsw9YdzgFRfLowP/gLaN10D3WjDJE72MPZJ897RF90Goxk1H5fboWc8qqorBQlT7Vv
-         yJTHlgvw9PZEQEP6i+6Psqf3Pe9bHdVDut6ulZw57J/C2cZkYL8xkS8go+HGsWBj/HaY
-         PpWN1InHAwJykWGM+0kPxvjsnWmEG4xNxBDyXqm9m8cUjIEa4KeI+h9ns50UWKNjS2t3
-         56k4WhYRXbZq8VH52CKhAc3Zpe4t+N/8no1Qi+GSgSCmCMsbArTjsoq/bGpjk7dA5LjD
-         fIj/9nCm+KLLRlIMIk7+NYO6mwqpMTu5PzHn/aUdvUmtRDdy3wVUNvAjXawNzmAxZXZR
-         iXkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuQp3TI8o6Ra0jWBxKynb/iez1zOkwS9UT3BEG23HkIxsoO1ANZdGkvTo0lOFiLxHEb0q7rRfVDGKj8PI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEoX8X7aVcSPMj/5pMjzG0ynG7/zjRT0lHXfZWdteW/wYIxKUT
-	z5wyaKDsNgHa1X8cRJdBHfjHHTzUbkpifHPtX8x2gZysEEBMU9NWUlBd0GT7JT3JNlW1/7DNOQM
-	Puoa/GQ4djwFnrqKiDEr5htvbszPRQvW3Qq0qcwVovMrR3NO4U4jGXiKmLe27pA==
-X-Gm-Gg: ASbGncsApK7XxnptEI0feTPbVPWklHSo+NrsfmlU2nLSyxN+2+p+n35vzi7jAdyLN8O
-	N2WCaiDPQPVoZB8NQG+pEBTekLhKOq4nUR39LyzJTnEYwvjwWROYhWqCyAqgnWW8I9SxVLBSUOo
-	nIMguFpNaJZULGcoDyMf9R/qs8sfQn+eMjvHpnIDL8ZfTHEY+v/REGM1uKo+w1F9AizMQ1/V+os
-	ds3YbQbhSKxIi+ACF8JB6BR9NRul2rMAGGlnFj3J5WRrdRVMnQUT8gOyH9E9OYRBJcwybp6rDMW
-	Yvg=
-X-Received: by 2002:a05:6a00:2e24:b0:73e:30dc:bb9b with SMTP id d2e1a72fcca58-7423ba88b38mr2682904b3a.2.1746763528164;
-        Thu, 08 May 2025 21:05:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE77As/UwDFJ+dP/ELWVq0LFZcNGkVTWSBLh/OwCUft42xY+m4lFdYftfZTKsV2tbDZ8ZSfVg==
-X-Received: by 2002:a05:6a00:2e24:b0:73e:30dc:bb9b with SMTP id d2e1a72fcca58-7423ba88b38mr2682870b3a.2.1746763527716;
-        Thu, 08 May 2025 21:05:27 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237705123sm882603b3a.16.2025.05.08.21.05.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 21:05:27 -0700 (PDT)
-Date: Fri, 9 May 2025 12:04:36 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>, fuqiang wang <fuqiang.wang@easystack.cn>, 
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
-References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
- <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
- <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
- <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I420ILXi"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54948wdM1293462
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 May 2025 23:08:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746763739;
+	bh=4xUkPcBOZOYrCXo3/PN0zJAkR5UUvCqOD3d5X34nMU4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=I420ILXi1QPZlhFtFXigMRE9lgUus0mwIXqeO/ArOSxq3Rrt7m3+fkEy1uChj1sOT
+	 hDXHQlzIdoNddMtkocRB3yURmvTkLEOntyDvCCgD4hV4LN1RG1iB7TaaxFqOZeoAAu
+	 S4dTTT+Vwq7MfjxAtH6FbtK8dGwibNPmM7BYJI7E=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54948wfq013933
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 May 2025 23:08:58 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
+ May 2025 23:08:58 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 8 May 2025 23:08:58 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54948s0r097467;
+	Thu, 8 May 2025 23:08:55 -0500
+Message-ID: <56b77ce1-10bd-49ec-a16b-1fe463a8ad9e@ti.com>
+Date: Fri, 9 May 2025 09:38:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 12/35] remoteproc: k3: Refactor mailbox rx_callback
+ functions into common driver
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: <andersson@kernel.org>, <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>,
+        <jm@ti.com>, <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250425104135.830255-1-b-padhi@ti.com>
+ <20250425104135.830255-13-b-padhi@ti.com> <aBzR1YrJ0eWQUlfP@p14s>
+Content-Language: en-US
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <aBzR1YrJ0eWQUlfP@p14s>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, May 07, 2025 at 10:59:59PM -0700, Andrew Morton wrote:
->On Thu, 8 May 2025 12:25:15 +0800 Coiby Xu <coxu@redhat.com> wrote:
->
->> >
->> >Acked-by: Baoquan He <bhe@redhat.com>
+Hi Mathieu,
+
+On 08/05/25 21:16, Mathieu Poirier wrote:
+> On Fri, Apr 25, 2025 at 04:11:12PM +0530, Beleswar Padhi wrote:
+>> The mailbox .rx_callback implementations in TI K3 R5, DSP and M4
+>> remoteproc drivers handle inbound mailbox messages in the same way.
+>> Introduce a common driver 'ti_k3_common.c' and refactor the
+>> implementations into a common function 'k3_rproc_mbox_callback'() in it.
 >>
->> Hi Andrew,
+>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+>> Tested-by: Judith Mendez <jm@ti.com>
+>> ---
+>> v11: Changelog:
+>> 1. Carried T/B tag.
 >>
->> It seems this patch was missed.
->
->January 2024.  Yes, it's fair to assume that it was missed ;)
->
->> Will you pick it up?
->
->Sure.
-
-Thanks for quickly processing this patch! Sorry I didn't reply yesterday
-as I was trying to reproduce the UBSAN warning and truly understand the
-it.
-
->
->> Without this patch,
->> kdump kernel will fail to be loaded by the kexec_file_load,
-
-As already pointed out by Baoquan, a manual test shows kexec_file_load
-actually works despite the UBSAN warning. Sorry I misinterpreted the
-UBSAN warning and the automated test result failure (somehow sysrq
-wasn't be triggered and vmcore wasn't saved either).
-
-
+>> Link to v10:
+>> https://lore.kernel.org/all/20250417182001.3903905-13-b-padhi@ti.com/
 >>
->>   [  139.736948] UBSAN: array-index-out-of-bounds in arch/x86/kernel/crash.c:350:25
->>   [  139.742360] index 0 is out of range for type 'range [*]'
-[...]
+>> v10: Changelog:
+>> None
 >>
->
->Do we know why this has appeared at such a late date?  The reporter
->must be doing something rare.
-
-The UBSAN warning happens because flexible array members annotated with
-__counted_by are accessed without assigning an array element count i.e.
-crash_mem->ranges[0] is accessed without setting max_nr_ranges after
-vzalloc,
-
-     // include/linux/crash_core.h
-     struct crash_mem {
-     	unsigned int max_nr_ranges;
-     	unsigned int nr_ranges;
-     	struct range ranges[] __counted_by(max_nr_ranges);
-     };
-
-The bad commit was introduced in 2021 but only recent gcc-15 supports
-__counted_by. That's why we don't see this UBSAN warning until this
-year. And although this UBSAN warning is scary enough, fortunately it
-doesn't cause a real problem. 
-
->
->Baoquan, please re-review this?
->
->A -stable backport is clearly required.  A Fixes: would be nice, but I
->assume this goes back a long time so it isn't worth spending a lot of
->time working out when this was introduced.
-
-So I believe the correct fix should be as follows,
-
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -301,6 +301,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
-         cmem = vzalloc(struct_size(cmem, ranges, 1));
-         if (!cmem)
-                 return -ENOMEM;
-+       cmem->max_nr_ranges = 1;
-  
-         memset(&cmd, 0, sizeof(struct crash_memmap_data));
-         cmd.params = params;
+>> Link to v9:
+>> https://lore.kernel.org/all/20250317120622.1746415-11-b-padhi@ti.com/
+>>
+>>  drivers/remoteproc/Makefile               |  4 +-
+>>  drivers/remoteproc/ti_k3_common.c         | 84 +++++++++++++++++++++++
+>>  drivers/remoteproc/ti_k3_common.h         |  1 +
+>>  drivers/remoteproc/ti_k3_dsp_remoteproc.c | 50 +-------------
+>>  drivers/remoteproc/ti_k3_m4_remoteproc.c  | 49 +------------
+>>  drivers/remoteproc/ti_k3_r5_remoteproc.c  | 50 +-------------
+>>  6 files changed, 90 insertions(+), 148 deletions(-)
+>>  create mode 100644 drivers/remoteproc/ti_k3_common.c
+>>
+>> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+>> index 5ff4e2fee4abd..e30908ca4bfcd 100644
+>> --- a/drivers/remoteproc/Makefile
+>> +++ b/drivers/remoteproc/Makefile
+>> @@ -36,7 +36,7 @@ obj-$(CONFIG_RCAR_REMOTEPROC)		+= rcar_rproc.o
+>>  obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
+>>  obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
+>>  obj-$(CONFIG_STM32_RPROC)		+= stm32_rproc.o
+>> -obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o
+>> -obj-$(CONFIG_TI_K3_M4_REMOTEPROC)	+= ti_k3_m4_remoteproc.o
+>> +obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o ti_k3_common.o
+>> +obj-$(CONFIG_TI_K3_M4_REMOTEPROC)	+= ti_k3_m4_remoteproc.o ti_k3_common.o
+>>  obj-$(CONFIG_TI_K3_R5_REMOTEPROC)	+= ti_k3_r5_remoteproc.o
+> The R5 driver doesn't need to be compile with ti_k3_common.c?
 
 
-And a Fixes tag should be dedicated to commit
-5849cdf8c120 ("x86/crash: Fix crash_setup_memmap_entries() out-of-bounds access")
-which forgot to set cmem->max_nr_ranges=1.
+Thanks for catching this! I will fix this in revision.
+
+All the existing K3 devices had one of the DSP/M4 rprocs along with a R5 rproc. So this was never caught with tests.
+
+Thanks,
+Beleswar
 
 >
->The patch needed a bit of work to apply to current code.  I did the
->below.  It compiles.
->
->--- a/arch/x86/kernel/crash.c~x86-kexec-fix-potential-cmem-ranges-out-of-bounds
->+++ a/arch/x86/kernel/crash.c
->@@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_e
-> 	/*
-> 	 * Exclusion of crash region and/or crashk_low_res may cause
-> 	 * another range split. So add extra two slots here.
->+	 *
->+	 * Exclusion of low 1M may not cause another range split, because the
->+	 * range of exclude is [0, 1M] and the condition for splitting a new
->+	 * region is that the start, end parameters are both in a certain
->+	 * existing region in cmem and cannot be equal to existing region's
->+	 * start or end. Obviously, the start of [0, 1M] cannot meet this
->+	 * condition.
->+	 *
->+	 * But in order to lest the low 1M could be changed in the future,
->+	 * (e.g. [stare, 1M]), add a extra slot.
-> 	 */
->-	nr_ranges += 2;
->+	nr_ranges += 3;
-> 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-> 	if (!cmem)
-> 		return NULL;
->@@ -317,9 +327,16 @@ int crash_setup_memmap_entries(struct ki
-> 	 * split. So use two slots here.
-> 	 */
-> 	nr_ranges = 2;
->-	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
->+	/*
->+	 * In the current x86 architecture code, the elfheader is always
->+	 * allocated at crashk_res.start. But it depends on the allocation
->+	 * position of elfheader in crashk_res. To avoid potential out of
->+	 * bounds in future, add a extra slot.
->+	 */
->+	cmem = vzalloc(struct_size(cmem, ranges, 2));
-> 	if (!cmem)
-> 		return -ENOMEM;
->+	cmem->max_nr_ranges = 2;
-
-Thanks for coming up with the above patch! I think the goal of this
-patch is addressing a different issue but it also fixes the UBSAN
-warning because cmem->max_nr_ranges is now set.
-
->
-> 	cmem->max_nr_ranges = nr_ranges;
-> 	cmem->nr_ranges = 0;
->_
-
-
--- 
-Best regards,
-Coiby
-
+>>  obj-$(CONFIG_XLNX_R5_REMOTEPROC)	+= xlnx_r5_remoteproc.o
+>> diff --git a/drivers/remoteproc/ti_k3_common.c b/drivers/remoteproc/ti_k3_common.c
+>> new file mode 100644
+>> index 0000000000000..7b45e3b416186
+>> --- /dev/null
+>> +++ b/drivers/remoteproc/ti_k3_common.c
+>> @@ -0,0 +1,84 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * TI K3 Remote Processor(s) driver common code
+>> + *
+>> + * Refactored out of ti_k3_r5_remoteproc.c, ti_k3_dsp_remoteproc.c and
+>> + * ti_k3_m4_remoteproc.c.
+>> + *
+>> + * ti_k3_dsp_remoteproc.c:
+>> + * Copyright (C) 2018-2022 Texas Instruments Incorporated - https://www.ti.com/
+>> + *	Suman Anna <s-anna@ti.com>
+>> + *
+>> + * ti_k3_m4_remoteproc.c:
+>> + * Copyright (C) 2021-2024 Texas Instruments Incorporated - https://www.ti.com/
+>> + *	Hari Nagalla <hnagalla@ti.com>
+>> + */
+>> +
+>> +#include <linux/io.h>
+>> +#include <linux/mailbox_client.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_reserved_mem.h>
+>> +#include <linux/omap-mailbox.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/remoteproc.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#include "omap_remoteproc.h"
+>> +#include "remoteproc_internal.h"
+>> +#include "ti_sci_proc.h"
+>> +#include "ti_k3_common.h"
+>> +
+>> +/**
+>> + * k3_rproc_mbox_callback() - inbound mailbox message handler
+>> + * @client: mailbox client pointer used for requesting the mailbox channel
+>> + * @data: mailbox payload
+>> + *
+>> + * This handler is invoked by the K3 mailbox driver whenever a mailbox
+>> + * message is received. Usually, the mailbox payload simply contains
+>> + * the index of the virtqueue that is kicked by the remote processor,
+>> + * and we let remoteproc core handle it.
+>> + *
+>> + * In addition to virtqueue indices, we also have some out-of-band values
+>> + * that indicate different events. Those values are deliberately very
+>> + * large so they don't coincide with virtqueue indices.
+>> + */
+>> +void k3_rproc_mbox_callback(struct mbox_client *client, void *data)
+>> +{
+>> +	struct k3_rproc *kproc = container_of(client, struct k3_rproc, client);
+>> +	struct device *dev = kproc->rproc->dev.parent;
+>> +	struct rproc *rproc = kproc->rproc;
+>> +	u32 msg = (u32)(uintptr_t)(data);
+>> +
+>> +	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+>> +
+>> +	switch (msg) {
+>> +	case RP_MBOX_CRASH:
+>> +		/*
+>> +		 * remoteproc detected an exception, but error recovery is not
+>> +		 * supported. So, just log this for now
+>> +		 */
+>> +		dev_err(dev, "K3 rproc %s crashed\n", rproc->name);
+>> +		break;
+>> +	case RP_MBOX_ECHO_REPLY:
+>> +		dev_info(dev, "received echo reply from %s\n", rproc->name);
+>> +		break;
+>> +	default:
+>> +		/* silently handle all other valid messages */
+>> +		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+>> +			return;
+>> +		if (msg > rproc->max_notifyid) {
+>> +			dev_dbg(dev, "dropping unknown message 0x%x", msg);
+>> +			return;
+>> +		}
+>> +		/* msg contains the index of the triggered vring */
+>> +		if (rproc_vq_interrupt(rproc, msg) == IRQ_NONE)
+>> +			dev_dbg(dev, "no message was found in vqid %d\n", msg);
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL_GPL(k3_rproc_mbox_callback);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_DESCRIPTION("TI K3 common Remoteproc code");
+>> diff --git a/drivers/remoteproc/ti_k3_common.h b/drivers/remoteproc/ti_k3_common.h
+>> index 43aedab9f0aa3..785bb4b17d02f 100644
+>> --- a/drivers/remoteproc/ti_k3_common.h
+>> +++ b/drivers/remoteproc/ti_k3_common.h
+>> @@ -88,4 +88,5 @@ struct k3_rproc {
+>>  	void *priv;
+>>  };
+>>  
+>> +void k3_rproc_mbox_callback(struct mbox_client *client, void *data);
+>>  #endif /* REMOTEPROC_TI_K3_COMMON_H */
+>> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>> index e92fab831670c..7bd1d5a790cb2 100644
+>> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>> @@ -24,54 +24,6 @@
+>>  
+>>  #define KEYSTONE_RPROC_LOCAL_ADDRESS_MASK	(SZ_16M - 1)
+>>  
+>> -/**
+>> - * k3_dsp_rproc_mbox_callback() - inbound mailbox message handler
+>> - * @client: mailbox client pointer used for requesting the mailbox channel
+>> - * @data: mailbox payload
+>> - *
+>> - * This handler is invoked by the OMAP mailbox driver whenever a mailbox
+>> - * message is received. Usually, the mailbox payload simply contains
+>> - * the index of the virtqueue that is kicked by the remote processor,
+>> - * and we let remoteproc core handle it.
+>> - *
+>> - * In addition to virtqueue indices, we also have some out-of-band values
+>> - * that indicate different events. Those values are deliberately very
+>> - * large so they don't coincide with virtqueue indices.
+>> - */
+>> -static void k3_dsp_rproc_mbox_callback(struct mbox_client *client, void *data)
+>> -{
+>> -	struct k3_rproc *kproc = container_of(client, struct k3_rproc, client);
+>> -	struct device *dev = kproc->rproc->dev.parent;
+>> -	const char *name = kproc->rproc->name;
+>> -	u32 msg = omap_mbox_message(data);
+>> -
+>> -	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+>> -
+>> -	switch (msg) {
+>> -	case RP_MBOX_CRASH:
+>> -		/*
+>> -		 * remoteproc detected an exception, but error recovery is not
+>> -		 * supported. So, just log this for now
+>> -		 */
+>> -		dev_err(dev, "K3 DSP rproc %s crashed\n", name);
+>> -		break;
+>> -	case RP_MBOX_ECHO_REPLY:
+>> -		dev_info(dev, "received echo reply from %s\n", name);
+>> -		break;
+>> -	default:
+>> -		/* silently handle all other valid messages */
+>> -		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+>> -			return;
+>> -		if (msg > kproc->rproc->max_notifyid) {
+>> -			dev_dbg(dev, "dropping unknown message 0x%x", msg);
+>> -			return;
+>> -		}
+>> -		/* msg contains the index of the triggered vring */
+>> -		if (rproc_vq_interrupt(kproc->rproc, msg) == IRQ_NONE)
+>> -			dev_dbg(dev, "no message was found in vqid %d\n", msg);
+>> -	}
+>> -}
+>> -
+>>  /*
+>>   * Kick the remote processor to notify about pending unprocessed messages.
+>>   * The vqid usage is not used and is inconsequential, as the kick is performed
+>> @@ -155,7 +107,7 @@ static int k3_dsp_rproc_request_mbox(struct rproc *rproc)
+>>  
+>>  	client->dev = dev;
+>>  	client->tx_done = NULL;
+>> -	client->rx_callback = k3_dsp_rproc_mbox_callback;
+>> +	client->rx_callback = k3_rproc_mbox_callback;
+>>  	client->tx_block = false;
+>>  	client->knows_txdone = false;
+>>  
+>> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> index 04095407a483d..a1bcc4b265dfe 100644
+>> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> @@ -21,53 +21,6 @@
+>>  #include "ti_sci_proc.h"
+>>  #include "ti_k3_common.h"
+>>  
+>> -/**
+>> - * k3_m4_rproc_mbox_callback() - inbound mailbox message handler
+>> - * @client: mailbox client pointer used for requesting the mailbox channel
+>> - * @data: mailbox payload
+>> - *
+>> - * This handler is invoked by the K3 mailbox driver whenever a mailbox
+>> - * message is received. Usually, the mailbox payload simply contains
+>> - * the index of the virtqueue that is kicked by the remote processor,
+>> - * and we let remoteproc core handle it.
+>> - *
+>> - * In addition to virtqueue indices, we also have some out-of-band values
+>> - * that indicate different events. Those values are deliberately very
+>> - * large so they don't coincide with virtqueue indices.
+>> - */
+>> -static void k3_m4_rproc_mbox_callback(struct mbox_client *client, void *data)
+>> -{
+>> -	struct device *dev = client->dev;
+>> -	struct rproc *rproc = dev_get_drvdata(dev);
+>> -	u32 msg = (u32)(uintptr_t)(data);
+>> -
+>> -	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+>> -
+>> -	switch (msg) {
+>> -	case RP_MBOX_CRASH:
+>> -		/*
+>> -		 * remoteproc detected an exception, but error recovery is not
+>> -		 * supported. So, just log this for now
+>> -		 */
+>> -		dev_err(dev, "K3 rproc %s crashed\n", rproc->name);
+>> -		break;
+>> -	case RP_MBOX_ECHO_REPLY:
+>> -		dev_info(dev, "received echo reply from %s\n", rproc->name);
+>> -		break;
+>> -	default:
+>> -		/* silently handle all other valid messages */
+>> -		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+>> -			return;
+>> -		if (msg > rproc->max_notifyid) {
+>> -			dev_dbg(dev, "dropping unknown message 0x%x", msg);
+>> -			return;
+>> -		}
+>> -		/* msg contains the index of the triggered vring */
+>> -		if (rproc_vq_interrupt(rproc, msg) == IRQ_NONE)
+>> -			dev_dbg(dev, "no message was found in vqid %d\n", msg);
+>> -	}
+>> -}
+>> -
+>>  /*
+>>   * Kick the remote processor to notify about pending unprocessed messages.
+>>   * The vqid usage is not used and is inconsequential, as the kick is performed
+>> @@ -581,7 +534,7 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
+>>  
+>>  	kproc->client.dev = dev;
+>>  	kproc->client.tx_done = NULL;
+>> -	kproc->client.rx_callback = k3_m4_rproc_mbox_callback;
+>> +	kproc->client.rx_callback = k3_rproc_mbox_callback;
+>>  	kproc->client.tx_block = false;
+>>  	kproc->client.knows_txdone = false;
+>>  	kproc->mbox = mbox_request_channel(&kproc->client, 0);
+>> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+>> index a6799ce121327..a1dfbe383c13c 100644
+>> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
+>> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+>> @@ -129,54 +129,6 @@ struct k3_r5_core {
+>>  	bool released_from_reset;
+>>  };
+>>  
+>> -/**
+>> - * k3_r5_rproc_mbox_callback() - inbound mailbox message handler
+>> - * @client: mailbox client pointer used for requesting the mailbox channel
+>> - * @data: mailbox payload
+>> - *
+>> - * This handler is invoked by the OMAP mailbox driver whenever a mailbox
+>> - * message is received. Usually, the mailbox payload simply contains
+>> - * the index of the virtqueue that is kicked by the remote processor,
+>> - * and we let remoteproc core handle it.
+>> - *
+>> - * In addition to virtqueue indices, we also have some out-of-band values
+>> - * that indicate different events. Those values are deliberately very
+>> - * large so they don't coincide with virtqueue indices.
+>> - */
+>> -static void k3_r5_rproc_mbox_callback(struct mbox_client *client, void *data)
+>> -{
+>> -	struct k3_rproc *kproc = container_of(client, struct k3_rproc, client);
+>> -	struct device *dev = kproc->rproc->dev.parent;
+>> -	const char *name = kproc->rproc->name;
+>> -	u32 msg = omap_mbox_message(data);
+>> -
+>> -	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+>> -
+>> -	switch (msg) {
+>> -	case RP_MBOX_CRASH:
+>> -		/*
+>> -		 * remoteproc detected an exception, but error recovery is not
+>> -		 * supported. So, just log this for now
+>> -		 */
+>> -		dev_err(dev, "K3 R5F rproc %s crashed\n", name);
+>> -		break;
+>> -	case RP_MBOX_ECHO_REPLY:
+>> -		dev_info(dev, "received echo reply from %s\n", name);
+>> -		break;
+>> -	default:
+>> -		/* silently handle all other valid messages */
+>> -		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+>> -			return;
+>> -		if (msg > kproc->rproc->max_notifyid) {
+>> -			dev_dbg(dev, "dropping unknown message 0x%x", msg);
+>> -			return;
+>> -		}
+>> -		/* msg contains the index of the triggered vring */
+>> -		if (rproc_vq_interrupt(kproc->rproc, msg) == IRQ_NONE)
+>> -			dev_dbg(dev, "no message was found in vqid %d\n", msg);
+>> -	}
+>> -}
+>> -
+>>  /* kick a virtqueue */
+>>  static void k3_r5_rproc_kick(struct rproc *rproc, int vqid)
+>>  {
+>> @@ -356,7 +308,7 @@ static int k3_r5_rproc_request_mbox(struct rproc *rproc)
+>>  
+>>  	client->dev = dev;
+>>  	client->tx_done = NULL;
+>> -	client->rx_callback = k3_r5_rproc_mbox_callback;
+>> +	client->rx_callback = k3_rproc_mbox_callback;
+>>  	client->tx_block = false;
+>>  	client->knows_txdone = false;
+>>  
+>> -- 
+>> 2.34.1
+>>
