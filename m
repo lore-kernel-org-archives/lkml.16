@@ -1,136 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6292222BC;
-	Fri,  9 May 2025 14:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADA720FA96;
+	Fri,  9 May 2025 14:32:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746801013; cv=none; b=Wp47h8s9eLhJczFatzyQl21rDivqo4Hocfqzr4/w/SUn0Tkeyc+IIbZnR19zrInTn7UJlsI5RqNin2RD/ELK/hMLlnodMB4uA/LMYeemWRebGABTGcg1/Tn9wcJ9fUuv2goQk6uJq7BXvBCJU6Lj3k+wlFGipf1pTVQLNSJG6nI=
+	t=1746801180; cv=none; b=UvzTkV8/YNRnLcfzGQCZo9Cw07uKRwEvuWv3/N1kdhypdf7r8n33l/klzP9MMiEtgW6uWgvBOCoTBfUV54/HnDV+aL9iWsptMZcyzfYSIsa4kN0231BIvUwjAE8BfQME52pV7avwA+sLm4ht+q7ecV2G7Zy3yBoLIXc4UFI+q8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746801013; c=relaxed/simple;
-	bh=T69onzC5gDOMieIFB/H9JUWz7lbjuiw9X0DCqrP93JU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sfIgtZnyBtoEvjWFY8f8zuNFFJyaObGSJ/INWOwV4lDNqo/RzT9IgJUlvmmkLi2lS6xNF4bj8fcLu6qGCCduyIWANNP8ZXXw9n/LHOsfzy6N6utiGxSLzK6TxYsTgsu1ShXmObM+2n5XZ1A1dcwDqFLXKzZ8TBAB29gfta+rCt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ve12nKpK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746801180; c=relaxed/simple;
+	bh=bnv6WvKGCd+BC4dR2FMi0pVqt0dFJbKiGJOa88vOM5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u4RXa34QxA0kRGmqVdfbJwyJyfP1yXmyx1BN8s9lUokRUCF5PF3wrQ1x1TAW/J6ZOOqQcmM1h55bXKKTnh3wQQV3lDJqmK/8lLCyzI5+Zp4XSybWgIOzHfDjLGaqgci/a9dMhHK+pX6+XPFKaCA07pIzZSPfTeke664d/5a0HU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijxhFHRh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ve12nKpK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A160C4CEE4;
-	Fri,  9 May 2025 14:30:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijxhFHRh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC911C4CEE4;
+	Fri,  9 May 2025 14:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746801012;
-	bh=T69onzC5gDOMieIFB/H9JUWz7lbjuiw9X0DCqrP93JU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ve12nKpKNoLO5S+jGDn+GnuKSmtlyWwW4gCq55wNbmE+8aewcIX+EYVk67L0Emrms
-	 bSMYq1XjAW4UVMbr2mKrc0MyX2k7Ob9Uw8zIL+bndaJZrhbU7MCGAaVn8YDzoBdVLq
-	 3VjfNcBoBwE/ANJqCFtMghOvXQoRzrb90pbwB55GOklkdt9t7sNpTFHEbvNbH1v5nB
-	 kogBKX65ir+V/RxTTkE6nscV9kSyKMUO2sw1Y2vEFzh0TX+6Q3K2JBrzRnh6CZL6gX
-	 YOISaBd7S150QOMDWxVrXGdVBf4e4tbGDOHKgRzm2+A5GQzBs/xGQC7amEuKsqnzk+
-	 hTU+l6R3+po9w==
-Message-ID: <bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
-Date: Fri, 9 May 2025 16:30:08 +0200
+	s=k20201202; t=1746801179;
+	bh=bnv6WvKGCd+BC4dR2FMi0pVqt0dFJbKiGJOa88vOM5Q=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=ijxhFHRhCzuckcLpR/2gUNK+IIaYU1Dhswqz5MoFapT1HxKB1Ql4ElsaTVGzgj88k
+	 NbNLYckxKBbCY5U0OMzSXq7Dl0IcMBcLDm2YJy9x0N4uMpPKHh8rU137U6AME7FfKh
+	 NgXtvTfkf4RXtdLnUJou6XoKaSB5ruFNVQJEARuQj1g1tmqSHNwxMYXBw5Xyr2UKLS
+	 jVtIXlQ3dtT4QvVqV8AwMGGHsgnz+tBX3j3qveeeM/cW6p25JIDLUkcRfydxXA2XqE
+	 lIM6Nj2eoFauFSBYW0uos2p8vtwCeU92fYV6i2kwVDQKVMIICcG0FXCJBStNzND8Jz
+	 8UL3ovo7Zez5g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 65CD7CE083E; Fri,  9 May 2025 07:32:59 -0700 (PDT)
+Date: Fri, 9 May 2025 07:32:59 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org
+Subject: Re: [PATCH 0/3] Make rcutorture safe(r) for arm64
+Message-ID: <bd8dc7fa-92e6-4bd4-9393-d4d66d1227c9@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <da86a280-f402-499f-a4ba-df626ca4c748@paulmck-laptop>
+ <0cabdd10-658e-4577-9b4e-5d4a2641360e@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] tracing: fprobe: Fix RCU warning message in list
- traversal
-Content-Language: en-GB, fr-BE
-To: Breno Leitao <leitao@debian.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-References: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0cabdd10-658e-4577-9b4e-5d4a2641360e@nvidia.com>
 
-Hi Breno,
-
-On 10/04/2025 14:22, Breno Leitao wrote:
-> When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
-> warning:
+On Fri, May 09, 2025 at 09:18:00AM -0400, Joel Fernandes wrote:
 > 
->     WARNING: suspicious RCU usage
->     kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
 > 
->     other info that might help us debug this:
-> 	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
+> On 5/8/2025 7:42 PM, Paul E. McKenney wrote:
+> > Hello!
+> > 
+> > This series makes a few small updates to make rcutorture run better
+> > on arm64 servers.  Remaining issues include TREE07 .config issues
+> > that are addressed by Mark Rutland's porting of PREEMPT_LAZY to arm64
+> > and by upcoming work to handle the fact that arm64 kernels cannot be
+> > built with CONFIG_SMP=n.  In the meantime, the CONFIG_SMP=n issue can
+> > be worked around by explictly specifying the TREE01, TREE02, TREE03,
+> > TREE04, TREE05, TREE07, SRCU-L, SRCU-N, SRCU-P, TASKS01, TASKS03, RUDE01,
+> > TRACE01, and TRACE02 scenarios, preferably in a script.  (But if you
+> > want typing practice, don't let me stand in your way!)
+> > 
+> > 1.	Check for "Call trace:" as well as "Call Trace:".
+> > 
+> > 2.	Reduce TREE01 CPU overcommit.
+> > 
+> > 3.	Remove MAXSMP and CPUMASK_OFFSTACK from TREE01.
+> > 
 > 
->     Call Trace:
-> 	fprobe_module_callback
-> 	notifier_call_chain
-> 	blocking_notifier_call_chain
-> 
-> This warning occurs because fprobe_remove_node_in_module() traverses an
-> RCU list using RCU primitives without holding an RCU read lock. However,
-> the function is only called from fprobe_module_callback(), which holds
-> the fprobe_mutex lock that provides sufficient protection for safely
-> traversing the list.
-> 
-> Fix the warning by specifying the locking design to the
-> CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
-> hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
-> provides the required protection.
+> These I will take for 6.16 and run some tests, since we're seeing these issues
+> on ARM. But let me know if you want to delay to 6.17. Thanks!
 
-@Breno: thank you for the patch, I have it applied for a while on a
-branch dedicated to our CI to avoid false positive reports.
+Your decision on both sets makes a lot of sense to me, v6.16 for the
+simple ARM-related ones and v6.17 for the less-important and more-complex
+series.
 
-Tested-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-
-Hopefully this fix can be sent to Linus before the v6.15 release :)
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+							Thanx, Paul
