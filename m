@@ -1,72 +1,73 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4102356B2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA72235045;
 	Fri,  9 May 2025 16:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806923; cv=none; b=fRJj/uJNIWL329Zm6FJkNjHltBZxsTRENK3R0rMFaQTnmPyAWn8EyYEwXueT4xXtvgdXz3J5K7dztks/N2Zf+OQrSOisgp1vXOmeLamE5386IrDqb68YuAMtr6S8iWi4pMOdToHeKeKAtzUANKkcYZa4xbqifPuFE1pei2ZVeMo=
+	t=1746806923; cv=none; b=tk/qCOVBfxOmgcI9nJd+ijIpcremSLc4LiXUuKhynMtYXu2yld9uPnbFpf8gBpfFhtK/OZAd/NrLmQNRSssF+eupeIwLsrXNuKaMmNwK9iayqXePJKuRS0MefneWblVH0vSvzakiwZZ802rhYg+ua5ulDRVA6WG1KM0dT+K1Upw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746806923; c=relaxed/simple;
-	bh=ZwFuEe8DkkWpSbklp9tJMWWdWWEXy5q/e/ChlpnUxK4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QFiwpHZo/MCJUThvfZBcAKCHUWItipG0lDuA8hi8oXwJi45VslUimeWX4cr95X60pv1/gu1BSn7J5CGSunvvNquZzMBlXjrdlEtit48pw7b0ugk9VfWVGwmZKNcgXo2RVJnFPS8BBIfsZRFr43xHClgGnffKkr3cfSVVMvHUNfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SZoN0nxa; arc=none smtp.client-ip=205.220.180.131
+	bh=+YmS+XO10LE2RWZoerrvmhIROZ5i+zr7drXRI+JCM8Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OgmnzNARMwPQX4gXvaXgPemIdq05zgr/mSiYCbH7K5YKlrPJToW4YNPmf4rbJeYy+DNiN4PKMwYcOHOHv2ONk0qNffl9O18Dlg2LectiRRJidyzOdMYvWuufK7LawUdvNevyQqYQPQpY3q8YLFG1+lC91Ub/hO7Trdw0Ib/NWH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VPt0ilw+; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SZoN0nxa"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VPt0ilw+"
 Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549Bw1nH016178;
-	Fri, 9 May 2025 16:07:59 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549DVrnO016373;
+	Fri, 9 May 2025 16:08:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=x//HoGDvChJRzD+X0fsLWD
-	YpL90eu8WeJV48DlkoUUs=; b=SZoN0nxaWT2USYoaRZXm4fQ3KpwCzTKOeIvZeU
-	aT+wktMur7VUKdwYmLGZ0nG93f0SHr6viBcqV4XeMoXTXsTlNEC/IP53cWmRexX6
-	WFM90x7pTMHHL4SAZVYt70LuhHFvFMqyXDsyFoClvMy5rVJkdp+R6Wu/U9oVq7JS
-	SGFpNCrWglEO8j1+JNSpO8APYocVYiQ5g4K6tA6+kBIddvNgY2hLfIynqEU2Tzor
-	ccpyr4ZrkzhRbsd6rzKlKgvlKQY/6UI1O1l3Glq3ZFSmqIPE9KAFEXWiSgRTN8wD
-	484J8sX6KJos+NhxEH+Fu+xXVdwIyXLaitg2teeGDa6t7v5w==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8w56f-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VCxERcKy6WGw1b/FGOKeUm8vQBZKq1ALhgHvbZGHfds=; b=VPt0ilw+vAD9/gpL
+	oXhz7d0rrC1NfS6So8HamzK+NIcqRmgZYdJGH8fJpfj7GWX16JulZDOqYSelBPKK
+	13vIGQyHubHPgIoj2z93p3UOvonA1BAtm+CCUl+Wp33moVKa4Tpb04MSdOHcbb/z
+	nqm5n4EExpZsKtiJ19HNN90BEPYuOeGccSQ26cR0uGvtoKanBpeNZFcMGfQP3WX0
+	Wm1rSRMZMHPkMQjiMrURJ0Zm1DOaRKXigrJnXhhTmc3d119BoQ1xVeE2RoecEtK4
+	aow0DjiiEyriSdysxEnxpxHj/fEaSXkav3yY3odRX32F+vCSQeiwcvPSd1XRZXza
+	c2AE3Q==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8w574-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 16:07:59 +0000 (GMT)
+	Fri, 09 May 2025 16:08:12 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549G7wYu028689
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549G8B2x028285
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 16:07:58 GMT
+	Fri, 9 May 2025 16:08:11 GMT
 Received: from PHILBER.na.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 9 May 2025 09:07:52 -0700
+ 15.2.1544.9; Fri, 9 May 2025 09:08:05 -0700
 From: Peter Hilber <quic_philber@quicinc.com>
 To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+        Richard Cochran <richardcochran@gmail.com>
 CC: Trilok Soni <quic_tsoni@quicinc.com>,
         Peter Hilber
 	<quic_philber@quicinc.com>,
-        =?UTF-8?q?Eugenio=20P=C3=A9rez?=
-	<eperezma@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <virtualization@lists.linux.dev>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Ridoux, Julien" <ridouxj@amazon.com>,
-        Daniel Lezcano
-	<daniel.lezcano@linaro.org>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        Parav Pandit <parav@nvidia.com>,
-        "Matias
- Ezequiel Vara Larsen" <mvaralar@redhat.com>,
-        Cornelia Huck
-	<cohuck@redhat.com>, Simon Horman <horms@kernel.org>,
-        <virtio-dev@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-rtc@vger.kernel.org>
-Subject: [PATCH v7 0/4] Add virtio_rtc module
-Date: Fri, 9 May 2025 18:07:21 +0200
-Message-ID: <20250509160734.1772-1-quic_philber@quicinc.com>
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
+        <netdev@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+        "Ridoux,
+ Julien" <ridouxj@amazon.com>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland
+	<mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        Parav Pandit
+	<parav@nvidia.com>,
+        Matias Ezequiel Vara Larsen <mvaralar@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, Simon Horman <horms@kernel.org>,
+        <virtio-dev@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v7 2/4] virtio_rtc: Add PTP clocks
+Date: Fri, 9 May 2025 18:07:23 +0200
+Message-ID: <20250509160734.1772-3-quic_philber@quicinc.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250509160734.1772-1-quic_philber@quicinc.com>
+References: <20250509160734.1772-1-quic_philber@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,271 +80,753 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: wNjG3jqLdb7nYrjnkIHiEtBFTk4lt0oK
-X-Proofpoint-ORIG-GUID: wNjG3jqLdb7nYrjnkIHiEtBFTk4lt0oK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE1OSBTYWx0ZWRfX31FMGvnspxZw
- tFJmNugxL9LJLzwE8vLvUVMpp543K27+Mk6/Q6bHiwV5Nk79wSG4V2eMbe7eI94gi3AH34yKRVE
- NzK9LUorPKB2/DbQtoaUXoaA+IABcQLv8ZaesC8WDE8pv15GiLmSQIV3nzvAqMKUzcYqc0CN805
- KVlESk6cFbkxuBkZVWl05SOABX/W2c0HEoz3EqiRyZetHi0OfIovQjXO0popI+GjhXYuotRd4xy
- A0IDJppHDY+25//ER93FYP7Mcp7/n0Aj4crB7/qFot3Rk86xqE6YmMh6Vs4bdNvyy9Ae6AtKELB
- Ocz3nxVZ2ArSzVxPTBTweBhdmNKw9z6JHo/KT+KXbAC//gBO/j3Az+CV6k6oG0isicr7arPZc4p
- 22q3BWAe8eB3z0y981F2qW0Hp7ragj8QMyZrSbfKvno5VRTDC3ROS5nDDcEtKdX03dbKPh6U
-X-Authority-Analysis: v=2.4 cv=e/4GSbp/ c=1 sm=1 tr=0 ts=681e285f cx=c_pps
+X-Proofpoint-GUID: WgumjOGdyjLmMQOgSR1Zvk_3p4Nf4sSp
+X-Proofpoint-ORIG-GUID: WgumjOGdyjLmMQOgSR1Zvk_3p4Nf4sSp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE1OSBTYWx0ZWRfX0isE/mqxkkHL
+ j3jm0FAf4F/TzBV7yKjO7STEdrlNo/+E9rH14lg0oJy0lheij8lf8ezT8X7GtDuFx55fRoAfSOt
+ 9syWSaPc45eV/ZCZlHGEwzzl0JQs2DuePtzLHsj8Y7EBiGsvPOQ/zw6CZJwFtkKTxRYlemegLUk
+ LuAmbqxdE6oHxxLupzep5vx+NXzOiSz0ggvElGaCIlmzqUzEMYf+2HOqFVLUAqi+YgHHNhjidFb
+ DYSBnLHvJGu6iwVV+XI0FH6J/mhVNs7g8AhrcuqvnuRdyWKcQWrs5KKiQQNRT+9w3o1cBpgOhyO
+ 0wnT/Ofqh0vxiZdgGoCv2mjoa/zmA8thJULNFmnMJvBmN8+goFb/X0HoiOTf79LEO4JK8YqsxC5
+ ym7UuHHJZUgez3KkRuJWy8p75PBb0r2NLo0A1L1FSfN/6ZBKigp1VEDJCT7aCbE/gLOndcRR
+X-Authority-Analysis: v=2.4 cv=e/4GSbp/ c=1 sm=1 tr=0 ts=681e286c cx=c_pps
  a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=dIu3SnmMAAAA:8 a=nYO1uykr7MxyYb2uiYgA:9 a=TjNXssC_j7lpFel5tvFf:22
- a=Ua9G7VpiFza3u12uuhVB:22
+ a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=OJK5QsYNW5bFeTl00T4A:9
+ a=TjNXssC_j7lpFel5tvFf:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-09_06,2025-05-09_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1011
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
  mlxlogscore=999 spamscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
  mlxscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2505090159
 
-This series implements a driver for a virtio-rtc device conforming to spec
-proposal v9 [1]. It includes a PTP clock driver and an RTC class driver
-with alarm.
+Expose the virtio_rtc clocks as PTP clocks to userspace, similar to
+ptp_kvm. virtio_rtc can expose multiple clocks, e.g. a UTC clock and a
+monotonic clock.
 
-v7 updates
-==========
-
-v7 adds a char length printf modifier to avoid a warning with old
-compilers.
-
-The spec v9 changes do not affect this driver implementation.
-
-Overview
-========
-
-This patch series adds the virtio_rtc module. The virtio_rtc module
-implements a driver compatible with the proposed Virtio RTC device
-specification [1]. The Virtio RTC (Real Time Clock) device provides
-information about current time. The device can provide different clocks,
-e.g. for the UTC or TAI time standards, or for physical time elapsed since
-some past epoch. The driver can read the clocks with simple or more
-accurate methods. Optionally, the driver can set an alarm.
-
-For the Virtio RTC device, there is currently a proprietary implementation,
-which has been used for testing.
-
-PTP clock interface
-===================
-
-virtio_rtc exposes clocks as PTP clocks to userspace, similar to ptp_kvm.
-If both the Virtio RTC device and this driver have special support for the
-current clocksource, time synchronization programs can use
-cross-timestamping using ioctl PTP_SYS_OFFSET_PRECISE2 aka
-PTP_SYS_OFFSET_PRECISE. Similar to ptp_kvm, system time synchronization
-with single-digit ns precision is possible with a quiescent reference clock
-(from the Virtio RTC device). This works even when the Virtio device
-response is slow compared to ptp_kvm hypercalls.
-
-The following illustrates a test using PTP_SYS_OFFSET_PRECISE, with
-interspersed strace log and chrony [2] refclocks log, on arm64. In the
-example, chrony tracks a virtio_rtc PTP clock ("PHCV", /dev/ptp0). The raw
-offset between the virtio_rtc clock and CLOCK_REALTIME is 0 to 1 ns. At the
-device side, the Virtio RTC device artificially delays both the clock read
-request, and the response, by 50 ms. Cross-timestamp interpolation still
-works with this delay. chrony also monitors a ptp_kvm clock ("PHCK",
-/dev/ptp3) for comparison, which yields a similar offset.
-
-	ioctl(5</dev/ptp3>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.000329>
-	===============================================================================
-	   Date (UTC) Time         Refid  DP L P  Raw offset   Cooked offset      Disp.
-	===============================================================================
-	2023-06-29 18:49:55.595742 PHCK    0 N 0  1.000000e-09  8.717931e-10  5.500e-08
-	2023-06-29 18:49:55.595742 PHCK    - N -       -        8.717931e-10  5.500e-08
-	ioctl(6</dev/ptp0>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.101545>
-	2023-06-29 18:49:56.147766 PHCV    0 N 0  1.000000e-09  8.801870e-10  5.500e-08
-	2023-06-29 18:49:56.147766 PHCV    - N -       -        8.801870e-10  5.500e-08
-	ioctl(5</dev/ptp3>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.000195>
-	2023-06-29 18:49:56.202446 PHCK    0 N 0  1.000000e-09  7.364180e-10  5.500e-08
-	2023-06-29 18:49:56.202446 PHCK    - N -       -        7.364180e-10  5.500e-08
-	ioctl(6</dev/ptp0>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.101484>
-	2023-06-29 18:49:56.754641 PHCV    0 N 0  0.000000e+00 -2.617368e-10  5.500e-08
-	2023-06-29 18:49:56.754641 PHCV    - N -       -       -2.617368e-10  5.500e-08
-	ioctl(5</dev/ptp3>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.000270>
-	2023-06-29 18:49:56.809282 PHCK    0 N 0  1.000000e-09  7.779321e-10  5.500e-08
-	2023-06-29 18:49:56.809282 PHCK    - N -       -        7.779321e-10  5.500e-08
-	ioctl(6</dev/ptp0>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.101510>
-	2023-06-29 18:49:57.361376 PHCV    0 N 0  0.000000e+00 -2.198794e-10  5.500e-08
-	2023-06-29 18:49:57.361376 PHCV    - N -       -       -2.198794e-10  5.500e-08
-
-This patch series only adds special support for the Arm Generic Timer
-clocksource. At the driver side, it should be easy to support more
-clocksources.
-
-Fallback PTP clock interface
-----------------------------
-
-Without special support for the current clocksource, time synchronization
-programs can still use ioctl PTP_SYS_OFFSET_EXTENDED2 aka
-PTP_SYS_OFFSET_EXTENDED. In this case, precision will generally be worse
-and will depend on the Virtio device response characteristics.
-
-The following illustrates a test using PTP_SYS_OFFSET_EXTENDED, with
-interspersed strace log and chrony refclocks log, on x86-64 (with `ts'
-values omitted):
-
-	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
-	===============================================================================
-	   Date (UTC) Time         Refid  DP L P  Raw offset   Cooked offset      Disp.
-	===============================================================================
-	2023-06-28 14:11:26.697782 PHCV    0 N 0  3.318200e-05  3.450891e-05  4.611e-06
-	2023-06-28 14:11:26.697782 PHCV    - N -       -        3.450891e-05  4.611e-06
-	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
-	2023-06-28 14:11:27.208763 PHCV    0 N 0 -3.792800e-05 -4.023965e-05  4.611e-06
-	2023-06-28 14:11:27.208763 PHCV    - N -       -       -4.023965e-05  4.611e-06
-	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
-	2023-06-28 14:11:27.722818 PHCV    0 N 0 -3.328600e-05 -3.134404e-05  4.611e-06
-	2023-06-28 14:11:27.722818 PHCV    - N -       -       -3.134404e-05  4.611e-06
-	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
-	2023-06-28 14:11:28.233572 PHCV    0 N 0 -4.966900e-05 -4.584331e-05  4.611e-06
-	2023-06-28 14:11:28.233572 PHCV    - N -       -       -4.584331e-05  4.611e-06
-	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
-	2023-06-28 14:11:28.742737 PHCV    0 N 0  4.902700e-05  5.361388e-05  4.611e-06
-	2023-06-28 14:11:28.742737 PHCV    - N -       -        5.361388e-05  4.611e-06
-
-PTP clock setup
----------------
-
-The following udev rule can be used to get a symlink /dev/ptp_virtio to the
-UTC clock:
+Userspace should distinguish different clocks through the name assigned by
+the driver. In particular, UTC-like clocks can also be distinguished by if
+and how leap seconds are smeared. udev rules such as the following can be
+used to get different symlinks for different clock types:
 
 	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 0/variant 0", SYMLINK += "ptp_virtio"
+	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 1/variant 0", SYMLINK += "ptp_virtio_tai"
+	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 2/variant 0", SYMLINK += "ptp_virtio_monotonic"
+	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 3/variant 0", SYMLINK += "ptp_virtio_smear_unspecified"
+	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 3/variant 1", SYMLINK += "ptp_virtio_smear_noon_linear"
+	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 3/variant 2", SYMLINK += "ptp_virtio_smear_sls"
+	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 4/variant 0", SYMLINK += "ptp_virtio_maybe_smeared"
 
-The following chrony configuration directive can then be added in
-/etc/chrony/chrony.conf to synchronize to the Virtio UTC clock:
+The preferred PTP clock reading method is ioctl PTP_SYS_OFFSET_PRECISE2,
+through the ptp_clock_info.getcrosststamp() op. For now,
+PTP_SYS_OFFSET_PRECISE2 will return -EOPNOTSUPP through a weak function.
+PTP_SYS_OFFSET_PRECISE2 requires cross-timestamping support for specific
+clocksources, which will be added in the following. If the clocksource
+specific code is enabled, check that the Virtio RTC device supports the
+respective HW counter before obtaining an actual cross-timestamp from the
+Virtio device.
 
-	refclock PHC /dev/ptp_virtio refid PHCV poll -1 dpoll -1
+The Virtio RTC device response time may be higher than the timekeeper
+seqcount increment interval. Therefore, obtain the cross-timestamp before
+calling get_device_system_crosststamp().
 
-RTC interface
-=============
+As a fallback, support the ioctl PTP_SYS_OFFSET_EXTENDED2 for all
+platforms.
 
-This patch series adds virtio_rtc as a generic Virtio driver, including
-both a PTP clock driver and an RTC class driver.
+Assume that concurrency issues during PTP clock removal are avoided by the
+posix_clock framework.
 
-Feedback is greatly appreciated.
+Kconfig recursive dependencies prevent virtio_rtc from implicitly enabling
+PTP_1588_CLOCK, therefore just warn the user if PTP_1588_CLOCK is not
+available. Since virtio_rtc should in the future also expose clocks as RTC
+class devices, do not depend VIRTIO_RTC on PTP_1588_CLOCK.
 
-[1] https://lore.kernel.org/virtio-comment/20250507155036.1489-1-quic_philber@quicinc.com/
-[2] https://chrony.tuxfamily.org/
+Signed-off-by: Peter Hilber <quic_philber@quicinc.com>
+---
 
-Changelog
-=========
+Notes:
+    v7:
+    
+    - Use char length printf modifier to avoid truncation warning (kernel test
+      robot).
+    
+    v6:
+    
+    - Shorten PTP clock names to always fit into 32 bytes.
+    
+    - Do not mark comments missing parameter documentation as kernel doc (Simon
+      Horman).
+    
+    v5:
+    
+    - Fix style issues.
+    
+    v4:
+    
+    - Distinguish UTC-like clocks by handling of leap seconds (spec v6).
+    
+    - For PTP clock name, always use numeric clock type, and numeric variant.
+    
+    - Update types to spec v6.
+    
+    - Cosmetic improvements.
+    
+    v3:
+    
+    - don't guard cross-timestamping with feature bit (spec v3)
+    
+    - reduce clock id to 16 bits (spec v3)
+    
+    v2:
+    
+    - Depend on prerequisite patch series "treewide: Use clocksource id for
+      get_device_system_crosststamp()".
+    
+    - Check clocksource id before sending crosststamp message to device.
+    
+    - Do not support multiple hardware counters at runtime any more, since
+      distinction of Arm physical and virtual counter appears unneeded after
+      discussion with Marc Zyngier.
 
- v7:
-
-- Use char length printf modifier to avoid truncation warning (kernel test
-  robot).
-
-v6:
-
-- Shorten PTP clock names to always fit into 32 bytes.
-
-- Fix sparse warning about endianness mismatch (Simon Horman).
-
-- Do not mark comments missing parameter documentation as kernel doc (Simon
-  Horman).
-
-- Improve error status computation readability.
-
-- Avoid conditional locking within a block.
-
-v5:
-
-- Update to virtio-rtc spec v7, essentially removing definitions.
-
-- Fix multiple bugs after readying device during probe and restore.
-
-- Actually initialize Virtio clock id for RTC class device.
-
-- Add freeze/restore ops already in first patch.
-
-- Minor changes:
-
-  - Use new APIs devm_device_init_wakeup(), secs_to_jiffies().
-
-  - Fix style issues.
-
-  - Improve logging types and clarity.
-
-  - Drop unnecessary memory barrier pair.
-
-  - Return error status from device, whenever available.
-
-v4:
-
-- Update Virtio interface to spec v6.
-
-- Distinguish UTC-like clocks by handling of leap seconds (spec v6).
-
-- Do not create RTC class device for clocks which may step on leap seconds
-  (Alexandre Belloni).
-
-- Clear RTC class feature bit instead of defining reduced ops
-  (Alexandre Belloni).
-
-- For PTP clock name, always use numeric clock type, and numeric variant.
-
-- Use macros for 64-bit divisions.
-
-- Remove unnecessary memory barriers.
-
-- Cosmetic improvements.
-
-- Drop upstreamed timekeeping bugfixes from series.
-
-v3:
-
-- Update to conform to virtio spec RFC v3 (no significant behavioral
-  changes).
-
-- Add RTC class driver with alarm according to virtio spec RFC v3.
-
-- For cross-timestamp corner case fix, switch back to v1 style closed
-  interval test (Thomas Gleixner).
-
-v2:
-
-- Depend on patch series "treewide: Use clocksource id for
-  get_device_system_crosststamp()" to avoid requiring a clocksource pointer
-  with get_device_system_crosststamp().
-
-- Assume Arm Generic Timer will use CP15 virtual counter. Drop
-  arm_arch_timer helper functions (Marc Zyngier).
-
-- Improve cross-timestamp fixes problem description and implementation
-  (John Stultz).
-
-
-Peter Hilber (4):
-  virtio_rtc: Add module and driver core
-  virtio_rtc: Add PTP clocks
-  virtio_rtc: Add Arm Generic Timer cross-timestamping
-  virtio_rtc: Add RTC class driver
-
- MAINTAINERS                          |    7 +
- drivers/virtio/Kconfig               |   64 ++
- drivers/virtio/Makefile              |    5 +
- drivers/virtio/virtio_rtc_arm.c      |   23 +
- drivers/virtio/virtio_rtc_class.c    |  262 +++++
- drivers/virtio/virtio_rtc_driver.c   | 1407 ++++++++++++++++++++++++++
- drivers/virtio/virtio_rtc_internal.h |  122 +++
- drivers/virtio/virtio_rtc_ptp.c      |  347 +++++++
- include/uapi/linux/virtio_rtc.h      |  237 +++++
- 9 files changed, 2474 insertions(+)
- create mode 100644 drivers/virtio/virtio_rtc_arm.c
- create mode 100644 drivers/virtio/virtio_rtc_class.c
- create mode 100644 drivers/virtio/virtio_rtc_driver.c
- create mode 100644 drivers/virtio/virtio_rtc_internal.h
+ drivers/virtio/Kconfig               |  24 +-
+ drivers/virtio/Makefile              |   1 +
+ drivers/virtio/virtio_rtc_driver.c   | 121 +++++++++-
+ drivers/virtio/virtio_rtc_internal.h |  46 ++++
+ drivers/virtio/virtio_rtc_ptp.c      | 347 +++++++++++++++++++++++++++
+ 5 files changed, 535 insertions(+), 4 deletions(-)
  create mode 100644 drivers/virtio/virtio_rtc_ptp.c
- create mode 100644 include/uapi/linux/virtio_rtc.h
 
-
-base-commit: 1f69fe75a3286daf4fdaad9c5f72c7ac507d7ff0
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index 83bcb06acb6c..a14a2b77e142 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -194,11 +194,33 @@ config VIRTIO_RTC
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+ 	help
+ 	 This driver provides current time from a Virtio RTC device. The driver
+-	 provides the time through one or more clocks.
++	 provides the time through one or more clocks. The Virtio RTC PTP
++	 clocks must be enabled to expose the clocks to userspace.
+ 
+ 	 To compile this code as a module, choose M here: the module will be
+ 	 called virtio_rtc.
+ 
+ 	 If unsure, say M.
+ 
++if VIRTIO_RTC
++
++comment "WARNING: Consider enabling VIRTIO_RTC_PTP."
++	depends on !VIRTIO_RTC_PTP
++
++comment "Enable PTP_1588_CLOCK in order to enable VIRTIO_RTC_PTP."
++	depends on PTP_1588_CLOCK=n
++
++config VIRTIO_RTC_PTP
++	bool "Virtio RTC PTP clocks"
++	default y
++	depends on PTP_1588_CLOCK
++	help
++	 This exposes any Virtio RTC clocks as PTP Hardware Clocks (PHCs) to
++	 userspace. The PHC sysfs attribute "clock_name" describes the clock
++	 type.
++
++	 If unsure, say Y.
++
++endif # VIRTIO_RTC
++
+ endif # VIRTIO_MENU
+diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+index c41c4c0f9264..88d6fb8d4731 100644
+--- a/drivers/virtio/Makefile
++++ b/drivers/virtio/Makefile
+@@ -16,3 +16,4 @@ obj-$(CONFIG_VIRTIO_DMA_SHARED_BUFFER) += virtio_dma_buf.o
+ obj-$(CONFIG_VIRTIO_DEBUG) += virtio_debug.o
+ obj-$(CONFIG_VIRTIO_RTC) += virtio_rtc.o
+ virtio_rtc-y := virtio_rtc_driver.o
++virtio_rtc-$(CONFIG_VIRTIO_RTC_PTP) += virtio_rtc_ptp.o
+diff --git a/drivers/virtio/virtio_rtc_driver.c b/drivers/virtio/virtio_rtc_driver.c
+index c87ee4e63424..7499908ee34c 100644
+--- a/drivers/virtio/virtio_rtc_driver.c
++++ b/drivers/virtio/virtio_rtc_driver.c
+@@ -38,11 +38,16 @@ struct viortc_vq {
+  * struct viortc_dev - virtio_rtc device data
+  * @vdev: virtio device
+  * @vqs: virtqueues
++ * @clocks_to_unregister: Clock references, which are only used during device
++ *                        removal.
++ *			  For other uses, there would be a race between device
++ *			  creation and setting the pointers here.
+  * @num_clocks: # of virtio_rtc clocks
+  */
+ struct viortc_dev {
+ 	struct virtio_device *vdev;
+ 	struct viortc_vq vqs[VIORTC_MAX_NR_QUEUES];
++	struct viortc_ptp_clock **clocks_to_unregister;
+ 	u16 num_clocks;
+ };
+ 
+@@ -638,6 +643,99 @@ int viortc_cross_cap(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
+  * init, deinit
+  */
+ 
++/**
++ * viortc_init_ptp_clock() - init and register PTP clock
++ * @viortc: device data
++ * @vio_clk_id: virtio_rtc clock id
++ * @clock_type: virtio_rtc clock type
++ * @leap_second_smearing: virtio_rtc leap second smearing
++ *
++ * Context: Process context.
++ * Return: Positive if registered, zero if not supported by configuration,
++ *         negative error code otherwise.
++ */
++static int viortc_init_ptp_clock(struct viortc_dev *viortc, u16 vio_clk_id,
++				 u8 clock_type, u8 leap_second_smearing)
++{
++	struct device *dev = &viortc->vdev->dev;
++	char ptp_clock_name[PTP_CLOCK_NAME_LEN];
++	struct viortc_ptp_clock *vio_ptp;
++
++	snprintf(ptp_clock_name, PTP_CLOCK_NAME_LEN,
++		 "Virtio PTP type %hhu/variant %hhu", clock_type,
++		 leap_second_smearing);
++
++	vio_ptp = viortc_ptp_register(viortc, dev, vio_clk_id, ptp_clock_name);
++	if (IS_ERR(vio_ptp)) {
++		dev_err(dev, "failed to register PTP clock '%s'\n",
++			ptp_clock_name);
++		return PTR_ERR(vio_ptp);
++	}
++
++	viortc->clocks_to_unregister[vio_clk_id] = vio_ptp;
++
++	return !!vio_ptp;
++}
++
++/**
++ * viortc_init_clock() - init local representation of virtio_rtc clock
++ * @viortc: device data
++ * @vio_clk_id: virtio_rtc clock id
++ *
++ * Initializes PHC to represent virtio_rtc clock.
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_init_clock(struct viortc_dev *viortc, u16 vio_clk_id)
++{
++	u8 clock_type, leap_second_smearing;
++	bool is_exposed = false;
++	int ret;
++
++	ret = viortc_clock_cap(viortc, vio_clk_id, &clock_type,
++			       &leap_second_smearing);
++	if (ret)
++		return ret;
++
++	if (IS_ENABLED(CONFIG_VIRTIO_RTC_PTP)) {
++		ret = viortc_init_ptp_clock(viortc, vio_clk_id, clock_type,
++					    leap_second_smearing);
++		if (ret < 0)
++			return ret;
++		if (ret > 0)
++			is_exposed = true;
++	}
++
++	if (!is_exposed)
++		dev_warn(&viortc->vdev->dev,
++			 "cannot expose clock %d (type %d, variant %d) to userspace\n",
++			 vio_clk_id, clock_type, leap_second_smearing);
++
++	return 0;
++}
++
++/**
++ * viortc_clocks_deinit() - unregister PHCs
++ * @viortc: device data
++ */
++static void viortc_clocks_deinit(struct viortc_dev *viortc)
++{
++	struct viortc_ptp_clock *vio_ptp;
++	unsigned int i;
++
++	for (i = 0; i < viortc->num_clocks; i++) {
++		vio_ptp = viortc->clocks_to_unregister[i];
++
++		if (!vio_ptp)
++			continue;
++
++		viortc->clocks_to_unregister[i] = NULL;
++
++		WARN_ON(viortc_ptp_unregister(vio_ptp, &viortc->vdev->dev));
++	}
++}
++
+ /**
+  * viortc_clocks_init() - init local representations of virtio_rtc clocks
+  * @viortc: device data
+@@ -648,6 +746,7 @@ int viortc_cross_cap(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
+ static int viortc_clocks_init(struct viortc_dev *viortc)
+ {
+ 	u16 num_clocks;
++	unsigned int i;
+ 	int ret;
+ 
+ 	ret = viortc_cfg(viortc, &num_clocks);
+@@ -661,8 +760,22 @@ static int viortc_clocks_init(struct viortc_dev *viortc)
+ 
+ 	viortc->num_clocks = num_clocks;
+ 
+-	/* In the future, PTP clocks will be initialized here. */
+-	(void)viortc_clock_cap;
++	viortc->clocks_to_unregister =
++		devm_kcalloc(&viortc->vdev->dev, num_clocks,
++			     sizeof(*viortc->clocks_to_unregister), GFP_KERNEL);
++	if (!viortc->clocks_to_unregister)
++		return -ENOMEM;
++
++	for (i = 0; i < num_clocks; i++) {
++		ret = viortc_init_clock(viortc, i);
++		if (ret)
++			goto err_deinit_clocks;
++	}
++
++	return 0;
++
++err_deinit_clocks:
++	viortc_clocks_deinit(viortc);
+ 
+ 	return ret;
+ }
+@@ -741,7 +854,9 @@ static int viortc_probe(struct virtio_device *vdev)
+  */
+ static void viortc_remove(struct virtio_device *vdev)
+ {
+-	/* In the future, PTP clocks will be deinitialized here. */
++	struct viortc_dev *viortc = vdev->priv;
++
++	viortc_clocks_deinit(viortc);
+ 
+ 	virtio_reset_device(vdev);
+ 	vdev->config->del_vqs(vdev);
+diff --git a/drivers/virtio/virtio_rtc_internal.h b/drivers/virtio/virtio_rtc_internal.h
+index 9c249c15b68f..2e589903d04f 100644
+--- a/drivers/virtio/virtio_rtc_internal.h
++++ b/drivers/virtio/virtio_rtc_internal.h
+@@ -9,6 +9,7 @@
+ #ifndef _VIRTIO_RTC_INTERNAL_H_
+ #define _VIRTIO_RTC_INTERNAL_H_
+ 
++#include <linux/ptp_clock_kernel.h>
+ #include <linux/types.h>
+ 
+ /* driver core IFs */
+@@ -21,4 +22,49 @@ int viortc_read_cross(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
+ int viortc_cross_cap(struct viortc_dev *viortc, u16 vio_clk_id, u8 hw_counter,
+ 		     bool *supported);
+ 
++/* PTP IFs */
++
++struct viortc_ptp_clock;
++
++#if IS_ENABLED(CONFIG_VIRTIO_RTC_PTP)
++
++struct viortc_ptp_clock *viortc_ptp_register(struct viortc_dev *viortc,
++					     struct device *parent_dev,
++					     u16 vio_clk_id,
++					     const char *ptp_clock_name);
++int viortc_ptp_unregister(struct viortc_ptp_clock *vio_ptp,
++			  struct device *parent_dev);
++
++#else
++
++static inline struct viortc_ptp_clock *
++viortc_ptp_register(struct viortc_dev *viortc, struct device *parent_dev,
++		    u16 vio_clk_id, const char *ptp_clock_name)
++{
++	return NULL;
++}
++
++static inline int viortc_ptp_unregister(struct viortc_ptp_clock *vio_ptp,
++					struct device *parent_dev)
++{
++	return -ENODEV;
++}
++
++#endif
++
++/* HW counter IFs */
++
++/**
++ * viortc_hw_xtstamp_params() - get HW-specific xtstamp params
++ * @hw_counter: virtio_rtc HW counter type
++ * @cs_id: clocksource id corresponding to hw_counter
++ *
++ * Gets the HW-specific xtstamp params. Returns an error if the driver cannot
++ * support xtstamp.
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++int viortc_hw_xtstamp_params(u8 *hw_counter, enum clocksource_ids *cs_id);
++
+ #endif /* _VIRTIO_RTC_INTERNAL_H_ */
+diff --git a/drivers/virtio/virtio_rtc_ptp.c b/drivers/virtio/virtio_rtc_ptp.c
+new file mode 100644
+index 000000000000..f84599950cd4
+--- /dev/null
++++ b/drivers/virtio/virtio_rtc_ptp.c
+@@ -0,0 +1,347 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Expose virtio_rtc clocks as PTP clocks.
++ *
++ * Copyright (C) 2022-2023 OpenSynergy GmbH
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ *
++ * Derived from ptp_kvm_common.c, virtual PTP 1588 clock for use with KVM
++ * guests.
++ *
++ * Copyright (C) 2017 Red Hat Inc.
++ */
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/ptp_clock_kernel.h>
++
++#include <uapi/linux/virtio_rtc.h>
++
++#include "virtio_rtc_internal.h"
++
++/**
++ * struct viortc_ptp_clock - PTP clock abstraction
++ * @ptp_clock: PTP clock handle for unregistering
++ * @viortc: virtio_rtc device data
++ * @ptp_info: PTP clock description
++ * @vio_clk_id: virtio_rtc clock id
++ * @have_cross: device supports crosststamp with available HW counter
++ */
++struct viortc_ptp_clock {
++	struct ptp_clock *ptp_clock;
++	struct viortc_dev *viortc;
++	struct ptp_clock_info ptp_info;
++	u16 vio_clk_id;
++	bool have_cross;
++};
++
++/**
++ * struct viortc_ptp_cross_ctx - context for get_device_system_crosststamp()
++ * @device_time: device clock reading
++ * @system_counterval: HW counter value at device_time
++ *
++ * Provides the already obtained crosststamp to get_device_system_crosststamp().
++ */
++struct viortc_ptp_cross_ctx {
++	ktime_t device_time;
++	struct system_counterval_t system_counterval;
++};
++
++/* Weak function in case get_device_system_crosststamp() is not supported */
++int __weak viortc_hw_xtstamp_params(u8 *hw_counter, enum clocksource_ids *cs_id)
++{
++	return -EOPNOTSUPP;
++}
++
++/**
++ * viortc_ptp_get_time_fn() - callback for get_device_system_crosststamp()
++ * @device_time: device clock reading
++ * @system_counterval: HW counter value at device_time
++ * @ctx: context with already obtained crosststamp
++ *
++ * Return: zero (success).
++ */
++static int viortc_ptp_get_time_fn(ktime_t *device_time,
++				  struct system_counterval_t *system_counterval,
++				  void *ctx)
++{
++	struct viortc_ptp_cross_ctx *vio_ctx = ctx;
++
++	*device_time = vio_ctx->device_time;
++	*system_counterval = vio_ctx->system_counterval;
++
++	return 0;
++}
++
++/**
++ * viortc_ptp_do_xtstamp() - get crosststamp from device
++ * @vio_ptp: virtio_rtc PTP clock
++ * @hw_counter: virtio_rtc HW counter type
++ * @cs_id: clocksource id corresponding to hw_counter
++ * @ctx: context for get_device_system_crosststamp()
++ *
++ * Reads HW-specific crosststamp from device.
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_ptp_do_xtstamp(struct viortc_ptp_clock *vio_ptp,
++				 u8 hw_counter, enum clocksource_ids cs_id,
++				 struct viortc_ptp_cross_ctx *ctx)
++{
++	u64 max_ns, ns;
++	int ret;
++
++	ctx->system_counterval.cs_id = cs_id;
++
++	ret = viortc_read_cross(vio_ptp->viortc, vio_ptp->vio_clk_id,
++				hw_counter, &ns,
++				&ctx->system_counterval.cycles);
++	if (ret)
++		return ret;
++
++	max_ns = (u64)ktime_to_ns(KTIME_MAX);
++	if (ns > max_ns)
++		return -EINVAL;
++
++	ctx->device_time = ns_to_ktime(ns);
++
++	return 0;
++}
++
++/*
++ * PTP clock operations
++ */
++
++/**
++ * viortc_ptp_getcrosststamp() - PTP clock getcrosststamp op
++ * @ptp: PTP clock info
++ * @xtstamp: crosststamp
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_ptp_getcrosststamp(struct ptp_clock_info *ptp,
++				     struct system_device_crosststamp *xtstamp)
++{
++	struct viortc_ptp_clock *vio_ptp =
++		container_of(ptp, struct viortc_ptp_clock, ptp_info);
++	struct system_time_snapshot history_begin;
++	struct viortc_ptp_cross_ctx ctx;
++	enum clocksource_ids cs_id;
++	u8 hw_counter;
++	int ret;
++
++	if (!vio_ptp->have_cross)
++		return -EOPNOTSUPP;
++
++	ret = viortc_hw_xtstamp_params(&hw_counter, &cs_id);
++	if (ret)
++		return ret;
++
++	ktime_get_snapshot(&history_begin);
++	if (history_begin.cs_id != cs_id)
++		return -EOPNOTSUPP;
++
++	/*
++	 * Getting the timestamp can take many milliseconds with a slow Virtio
++	 * device. This is too long for viortc_ptp_get_time_fn() passed to
++	 * get_device_system_crosststamp(), which has to usually return before
++	 * the timekeeper seqcount increases (every tick or so).
++	 *
++	 * So, get the actual cross-timestamp first.
++	 */
++	ret = viortc_ptp_do_xtstamp(vio_ptp, hw_counter, cs_id, &ctx);
++	if (ret)
++		return ret;
++
++	ret = get_device_system_crosststamp(viortc_ptp_get_time_fn, &ctx,
++					    &history_begin, xtstamp);
++	if (ret)
++		pr_debug("%s: get_device_system_crosststamp() returned %d\n",
++			 __func__, ret);
++
++	return ret;
++}
++
++/* viortc_ptp_adjfine() - unsupported PTP clock adjfine op */
++static int viortc_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
++{
++	return -EOPNOTSUPP;
++}
++
++/* viortc_ptp_adjtime() - unsupported PTP clock adjtime op */
++static int viortc_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
++{
++	return -EOPNOTSUPP;
++}
++
++/* viortc_ptp_settime64() - unsupported PTP clock settime64 op */
++static int viortc_ptp_settime64(struct ptp_clock_info *ptp,
++				const struct timespec64 *ts)
++{
++	return -EOPNOTSUPP;
++}
++
++/*
++ * viortc_ptp_gettimex64() - PTP clock gettimex64 op
++ *
++ * Context: Process context.
++ */
++static int viortc_ptp_gettimex64(struct ptp_clock_info *ptp,
++				 struct timespec64 *ts,
++				 struct ptp_system_timestamp *sts)
++{
++	struct viortc_ptp_clock *vio_ptp =
++		container_of(ptp, struct viortc_ptp_clock, ptp_info);
++	int ret;
++	u64 ns;
++
++	ptp_read_system_prets(sts);
++	ret = viortc_read(vio_ptp->viortc, vio_ptp->vio_clk_id, &ns);
++	ptp_read_system_postts(sts);
++
++	if (ret)
++		return ret;
++
++	if (ns > (u64)S64_MAX)
++		return -EINVAL;
++
++	*ts = ns_to_timespec64((s64)ns);
++
++	return 0;
++}
++
++/* viortc_ptp_enable() - unsupported PTP clock enable op */
++static int viortc_ptp_enable(struct ptp_clock_info *ptp,
++			     struct ptp_clock_request *rq, int on)
++{
++	return -EOPNOTSUPP;
++}
++
++/*
++ * viortc_ptp_info_template - ptp_clock_info template
++ *
++ * The .name member will be set for individual virtio_rtc PTP clocks.
++ *
++ * The .getcrosststamp member will be cleared for PTP clocks not supporting
++ * crosststamp.
++ */
++static const struct ptp_clock_info viortc_ptp_info_template = {
++	.owner = THIS_MODULE,
++	/* .name is set according to clock type */
++	.adjfine = viortc_ptp_adjfine,
++	.adjtime = viortc_ptp_adjtime,
++	.gettimex64 = viortc_ptp_gettimex64,
++	.settime64 = viortc_ptp_settime64,
++	.enable = viortc_ptp_enable,
++	.getcrosststamp = viortc_ptp_getcrosststamp,
++};
++
++/**
++ * viortc_ptp_unregister() - PTP clock unregistering wrapper
++ * @vio_ptp: virtio_rtc PTP clock
++ * @parent_dev: parent device of PTP clock
++ *
++ * Return: Zero on success, negative error code otherwise.
++ */
++int viortc_ptp_unregister(struct viortc_ptp_clock *vio_ptp,
++			  struct device *parent_dev)
++{
++	int ret = ptp_clock_unregister(vio_ptp->ptp_clock);
++
++	if (!ret)
++		devm_kfree(parent_dev, vio_ptp);
++
++	return ret;
++}
++
++/**
++ * viortc_ptp_get_cross_cap() - get xtstamp support info from device
++ * @viortc: virtio_rtc device data
++ * @vio_ptp: virtio_rtc PTP clock abstraction
++ *
++ * Context: Process context.
++ * Return: Zero on success, negative error code otherwise.
++ */
++static int viortc_ptp_get_cross_cap(struct viortc_dev *viortc,
++				    struct viortc_ptp_clock *vio_ptp)
++{
++	enum clocksource_ids cs_id;
++	bool xtstamp_supported;
++	u8 hw_counter;
++	int ret;
++
++	ret = viortc_hw_xtstamp_params(&hw_counter, &cs_id);
++	if (ret) {
++		vio_ptp->have_cross = false;
++		return 0;
++	}
++
++	ret = viortc_cross_cap(viortc, vio_ptp->vio_clk_id, hw_counter,
++			       &xtstamp_supported);
++	if (ret)
++		return ret;
++
++	vio_ptp->have_cross = xtstamp_supported;
++
++	return 0;
++}
++
++/**
++ * viortc_ptp_register() - prepare and register PTP clock
++ * @viortc: virtio_rtc device data
++ * @parent_dev: parent device for PTP clock
++ * @vio_clk_id: id of virtio_rtc clock which backs PTP clock
++ * @ptp_clock_name: PTP clock name
++ *
++ * Context: Process context.
++ * Return: Pointer on success, ERR_PTR() otherwise; NULL if PTP clock support
++ *         not available.
++ */
++struct viortc_ptp_clock *viortc_ptp_register(struct viortc_dev *viortc,
++					     struct device *parent_dev,
++					     u16 vio_clk_id,
++					     const char *ptp_clock_name)
++{
++	struct viortc_ptp_clock *vio_ptp;
++	struct ptp_clock *ptp_clock;
++	ssize_t len;
++	int ret;
++
++	vio_ptp = devm_kzalloc(parent_dev, sizeof(*vio_ptp), GFP_KERNEL);
++	if (!vio_ptp)
++		return ERR_PTR(-ENOMEM);
++
++	vio_ptp->viortc = viortc;
++	vio_ptp->vio_clk_id = vio_clk_id;
++	vio_ptp->ptp_info = viortc_ptp_info_template;
++	len = strscpy(vio_ptp->ptp_info.name, ptp_clock_name,
++		      sizeof(vio_ptp->ptp_info.name));
++	if (len < 0) {
++		ret = len;
++		goto err_free_dev;
++	}
++
++	ret = viortc_ptp_get_cross_cap(viortc, vio_ptp);
++	if (ret)
++		goto err_free_dev;
++
++	if (!vio_ptp->have_cross)
++		vio_ptp->ptp_info.getcrosststamp = NULL;
++
++	ptp_clock = ptp_clock_register(&vio_ptp->ptp_info, parent_dev);
++	if (IS_ERR(ptp_clock))
++		goto err_on_register;
++
++	vio_ptp->ptp_clock = ptp_clock;
++
++	return vio_ptp;
++
++err_on_register:
++	ret = PTR_ERR(ptp_clock);
++
++err_free_dev:
++	devm_kfree(parent_dev, vio_ptp);
++	return ERR_PTR(ret);
++}
 -- 
 2.43.0
 
