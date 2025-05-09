@@ -1,233 +1,137 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E65535976;
-	Fri,  9 May 2025 09:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872C728C865
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783563; cv=none; b=dn10l/isJfP+CRwGPORVVoPMU1R333le2Gx0pcnE2AP6fUfgwg3teNBluGqfgCxUUc5hHWiSpDiscDnsmkF6YP+f10aSDrSqEI85Fu6J2c3JVIvH7zzyTQWdEkdy68sd1jK3wWmX86EDOfE+idmm7o1ESKc+6I8F9FjeRDyt/wc=
+	t=1746783584; cv=none; b=tPOQng7bF9cW0Fe6GuxMqNB579KWtj3ikfNKugZ6atfQdQfQnM0DDzt2A4rqBTPGDVHSnapMKfLvf5HpBAlXBIfPi3/xkepGyeKhNOT3ecA1NlvjJfoBCRrKIAZCH7BNR8SvE4I5CXO2XAB2zZcJzOvoO08oVUIBJibaDomYf1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783563; c=relaxed/simple;
-	bh=Ctc2LlgT/TBtEZb9BwfLgoa2yV+uYDSFls2xwrat8Os=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AAfxb+MHj6W5Di6V6FOIGnxIXyxzUhUkteWdvbg1ul8PYjMlE2mxfx2ZHxqx1CH8Qfcm7KgMv65Ix6pqQdmfeE5BpzOOcXq7Hpnu5X+A/3g97IoUFXisEmM3LuKo/lM/MWsPAa0UFkNvho6WfyZ7QV716S439CbhiFPbOJyf3kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5499AZvK004245;
-	Fri, 9 May 2025 09:38:34 GMT
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46e430pca6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 09 May 2025 09:38:34 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Fri, 9 May 2025 02:38:33 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Fri, 9 May 2025 02:38:28 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <chuck.lever@oracle.com>,
-        <jlayton@kernel.org>, <trond.myklebust@hammerspace.com>,
-        <anna@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
-        <kuba@kernel.org>, <pabeni@redhat.com>, <ebiederm@xmission.com>,
-        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <liujian56@huawei.com>, <kuniyu@amazon.com>
-Subject: [PATCH 6.1.y] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
-Date: Fri, 9 May 2025 17:38:28 +0800
-Message-ID: <20250509093828.3243368-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746783584; c=relaxed/simple;
+	bh=RplcoCMUVfVJa1bfwTgt+wQZds9GCvttkxCVBpMbMAs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=A7hYUo/UnvSwNei+x1OO/k8CkwUdL6T+dfy64lzLvIhwEsOWIpx3SrUNUSwKgax+QV+JwgURw1escH5wupij+xzR7+bjt9KrzCkDLv0m3wUl5uA0EEPllA5wLh9RIJemP1eu8anoFacSpfjxHvakVNnZB6RuFtv5UHr5Fu4lY9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1KSjstOE; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1KSjstOE"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d733063cdso15244805e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746783580; x=1747388380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kTatT7oc6SPkLV8UOO9ITX1WtYVFDfP/JvB23W/R7aU=;
+        b=1KSjstOE9582yrWrF58W5WGXVXMgzfWSbEZ+/CG2SN+w7QrXac84FE0O1QcqQYJAXR
+         nmTVCZGp4UeuTW/WPmf21LRJj0Ejmxo4vvFk9J30EoAlWhhS+a+0j4WgRriODTORmIp2
+         MPdmTsDM5adPFiQ5BlR6a0TcP2v5Ho3UHuCnE0UIMM1cq8XRzOw3W5qljZOW0EpzL5CR
+         RVv9DC7pBriz4cvMmzPJv+9RuUnqEHx88ccc/MUE58edVkMEyA6RcY1S3ABh2FH7OQTk
+         /2Jp4JrWv6EQlOVglIXib4QiLJTJdUgTs4YiKEWOUCEXc1XTl++kpLXBehlm0qafQur/
+         okaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746783580; x=1747388380;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kTatT7oc6SPkLV8UOO9ITX1WtYVFDfP/JvB23W/R7aU=;
+        b=Ul1AIQxH0oCCLNclcEoPXeZDoI+xTsv/SjQojoNUftUPsPxWoL92HC2Ew92uamtr7t
+         WUaw7l0HAZ814pYP/1xxInjgIvXtT0HV4mvWg4GKSK9dsjoSN0K8aMGXtSHYimRJVfV4
+         dV6d6lXu8fb4eHp2iiZ7ZAKIs6BfnG/LJWMNaJ8PVvdfO7oeqtQyxeQUdFOOrNf5/UaL
+         aSFa/I11yzFX6vSfTv7p7qJLb80S7ZlqSPREUWzIBSLs3Sj0SlPkcYx/FAauxVNzgo6o
+         jF2CI4pjiiItNuj2Mh4Gk+9ON/Ht53NAiRj+QmD1NV/eOmKISu838FBE+kL7d9nFByl6
+         wptg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwMR160IUVsPYU9p523PLxntXr1TkTIB9H1JMseoVPM6wh0V4+roTCn/KahJGLA7z9IppCjYOU16agVmA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4Nn/W3ZPY2nL4N0KJSHPe4QcYeGobgxvw+l9oY6tChrQJhZJW
+	BmnIHA7+7N4ntyfypRUlBPMBCUjyRRtSN1ki8O0Hg2b6PU3ajS1KXI+kXRHMtFHWxSe3yCG1SVt
+	XXvQ3lm9qtFJWiw==
+X-Google-Smtp-Source: AGHT+IHqYY6QgFatnO4kmm/lbjZTm+fx7RZhPxnJgrujsTZiWnAaUwl/SJr0N8FI6m9dTrvKDwuZPkt6E5895QI=
+X-Received: from wmbay20.prod.google.com ([2002:a05:600c:1e14:b0:440:6251:31f4])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3b17:b0:441:b5cb:4f94 with SMTP id 5b1f17b1804b1-442d6d08c20mr22251045e9.5.1746783579884;
+ Fri, 09 May 2025 02:39:39 -0700 (PDT)
+Date: Fri, 9 May 2025 09:39:37 +0000
+In-Reply-To: <CAM5zL5psM0ED0A5ZkEdNi34q2itfyMCi+QRBtG-5URUsChUU6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=BajY0qt2 c=1 sm=1 tr=0 ts=681dcd1a cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=dt9VzEwgFbYA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8 a=vggBfdFIAAAA:8 a=SEtKQCMJAAAA:8 a=t7CeM3EgAAAA:8
- a=1f2QqqMRGjE1UMYEyBAA:9 a=kyTSok1ft720jgMXX5-3:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: WASk0LQFlJwxy6C-Cknx7dsR8T8oJvlv
-X-Proofpoint-ORIG-GUID: WASk0LQFlJwxy6C-Cknx7dsR8T8oJvlv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA5MiBTYWx0ZWRfX+RG/N2dPGMh2 j1//+/kOAUg8zN2uXHGG9d8/9VJvmJ5mBMOGtlwXe3T47RjnaI0AJMm6yGv6B/2Vdnt38soIz9q WgU7xeC62TecBL8aqRaILiCaSpRRZVRecmXv+YiWkZYoZ1+mSXv7EFCQyPzX6n7WVpWN2eivLK8
- AFQPdvSP3yDbX27i7sbDR86n/EdPXevd7vcO8fXaElAGmV+FYFUZQ2HMb+hp143h4l2sKnQNGFI MSd2FXU2tO8+Uem5p+Ds9KM7Cp+FETCSuwvF/+wH1U+hYyJwL/IdLt5ORnosQrqqblBH28mkkIe BFe0K3O24hEIIrZlKUsAloM3WcG43YeKGnE1YGeA8fHKU6O8UZ4RmCdBThaZoR8CEIHBmcVSY/q
- TOS5kqXvNkoiRllesLRtM17jhLY+5hE6Fy9v4d8xCy8UR0TF/zhXV+NktlDPhjeY4ljmU1fk
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2505090092
+Mime-Version: 1.0
+References: <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
+ <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
+ <20250416202040.GD38216@noisy.programming.kicks-ass.net> <202504161442.66CE2596@keescook>
+ <20250417081818.GJ38216@noisy.programming.kicks-ass.net> <CANiq72kjDM0cKALVy4POEzhfdT4nO7tqz0Pm7xM+3=_0+L1t=A@mail.gmail.com>
+ <CANiq72muSS+NNs5fxp4GPKWWhyXT95spvbGsZz6AJnK8RerUqQ@mail.gmail.com>
+ <aB3A0Qe5WqmxXQJt@google.com> <CANiq72=NymSwziZw1a0PUNyJ=TCN5tkr3PojJRQ0sjqFWDjz-g@mail.gmail.com>
+ <CAM5zL5psM0ED0A5ZkEdNi34q2itfyMCi+QRBtG-5URUsChUU6A@mail.gmail.com>
+Message-ID: <aB3NWUrtWMXOppYE@google.com>
+Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+From: Alice Ryhl <aliceryhl@google.com>
+To: "=?utf-8?B?UGF3ZcWC?= Anikiel" <panikiel@google.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Kees Cook <kees@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Matthew Maurer <mmaurer@google.com>, 
+	Ramon de C Valle <rcvalle@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Liu Jian <liujian56@huawei.com>
+On Fri, May 09, 2025 at 11:11:48AM +0200, Pawe=C5=82 Anikiel wrote:
+> On Fri, May 9, 2025 at 11:04=E2=80=AFAM Miguel Ojeda
+> <miguel.ojeda.sandonis@gmail.com> wrote:
+> >
+> > On Fri, May 9, 2025 at 10:46=E2=80=AFAM Alice Ryhl <aliceryhl@google.co=
+m> wrote:
+> > >
+> > > Actually ... I don't think putting it on CFI_AUTO_DEFAULT the right
+> > > approach.
+> > >
+> > > Shouldn't the depends on clause go on `config FINEIBT` instead? After
+> > > all, the current patch just means that you can't make FineIBT the
+> > > default option. But you can still pass kcfi=3Dfineibt on boot to enbl=
+e
+> > > FineIBT which would result in the same crash.
+> >
+> > I thought the intention was to avoid disabling FineIBT at config time:
+> > https://lore.kernel.org/all/202504161442.66CE2596@keescook/
+>=20
+> I think you mean enabling FineIBT - yes, this patch does exactly that,
+> it's still possible to enable it by hand with cfi=3D
+>=20
+> > If another approach is needed, then we can change it on top if that is
+> > OK (I am about to submit the PR).
+>=20
+> Putting it on CONFIG_FINEIBT was my initial idea, but it turns out
+> that this creates a dependency cycle in Kconfig:
+>=20
+> error: recursive dependency detected!
+>         symbol RUST depends on CALL_PADDING
+>         symbol CALL_PADDING is selected by FINEIBT
+>         symbol FINEIBT depends on RUST
+>=20
+> Not sure if it's possible to make it work.
 
-[ Upstream commit 3f23f96528e8fcf8619895c4c916c52653892ec1 ]
+To fix that, we probably have to do one of:
 
-BUG: KASAN: slab-use-after-free in tcp_write_timer_handler+0x156/0x3e0
-Read of size 1 at addr ffff888111f322cd by task swapper/0/0
+Option 1: Upgrade the rustc MSRV past 1.81 and drop the depends on
+          CALL_PADDING.
 
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc4-dirty #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1
-Call Trace:
- <IRQ>
- dump_stack_lvl+0x68/0xa0
- print_address_description.constprop.0+0x2c/0x3d0
- print_report+0xb4/0x270
- kasan_report+0xbd/0xf0
- tcp_write_timer_handler+0x156/0x3e0
- tcp_write_timer+0x66/0x170
- call_timer_fn+0xfb/0x1d0
- __run_timers+0x3f8/0x480
- run_timer_softirq+0x9b/0x100
- handle_softirqs+0x153/0x390
- __irq_exit_rcu+0x103/0x120
- irq_exit_rcu+0xe/0x20
- sysvec_apic_timer_interrupt+0x76/0x90
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20
-RIP: 0010:default_idle+0xf/0x20
-Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90
- 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 33 f8 25 00 fb f4 <fa> c3 cc cc cc
- cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
-RSP: 0018:ffffffffa2007e28 EFLAGS: 00000242
-RAX: 00000000000f3b31 RBX: 1ffffffff4400fc7 RCX: ffffffffa09c3196
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff9f00590f
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102360835d
-R10: ffff88811b041aeb R11: 0000000000000001 R12: 0000000000000000
-R13: ffffffffa202d7c0 R14: 0000000000000000 R15: 00000000000147d0
- default_idle_call+0x6b/0xa0
- cpuidle_idle_call+0x1af/0x1f0
- do_idle+0xbc/0x130
- cpu_startup_entry+0x33/0x40
- rest_init+0x11f/0x210
- start_kernel+0x39a/0x420
- x86_64_start_reservations+0x18/0x30
- x86_64_start_kernel+0x97/0xa0
- common_startup_64+0x13e/0x141
- </TASK>
+Option 2: Split `config FINEIBT` into two options:
 
-Allocated by task 595:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- __kasan_slab_alloc+0x87/0x90
- kmem_cache_alloc_noprof+0x12b/0x3f0
- copy_net_ns+0x94/0x380
- create_new_namespaces+0x24c/0x500
- unshare_nsproxy_namespaces+0x75/0xf0
- ksys_unshare+0x24e/0x4f0
- __x64_sys_unshare+0x1f/0x30
- do_syscall_64+0x70/0x180
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+config HAVE_FINEIBT
+	def_bool y
+	depends on X86_KERNEL_IBT && CFI_CLANG && MITIGATION_RETPOLINE
+	depends on !RUST || RUSTC_VERSION >=3D 108800
 
-Freed by task 100:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- kasan_save_free_info+0x3b/0x60
- __kasan_slab_free+0x54/0x70
- kmem_cache_free+0x156/0x5d0
- cleanup_net+0x5d3/0x670
- process_one_work+0x776/0xa90
- worker_thread+0x2e2/0x560
- kthread+0x1a8/0x1f0
- ret_from_fork+0x34/0x60
- ret_from_fork_asm+0x1a/0x30
+config FINEIBT
+	bool "Accept cfi=3Dfineibt option at boot"
+	depends on HAVE_FINEIBT
+	select CALL_PADDING
 
-Reproduction script:
-
-mkdir -p /mnt/nfsshare
-mkdir -p /mnt/nfs/netns_1
-mkfs.ext4 /dev/sdb
-mount /dev/sdb /mnt/nfsshare
-systemctl restart nfs-server
-chmod 777 /mnt/nfsshare
-exportfs -i -o rw,no_root_squash *:/mnt/nfsshare
-
-ip netns add netns_1
-ip link add name veth_1_peer type veth peer veth_1
-ifconfig veth_1_peer 11.11.0.254 up
-ip link set veth_1 netns netns_1
-ip netns exec netns_1 ifconfig veth_1 11.11.0.1
-
-ip netns exec netns_1 /root/iptables -A OUTPUT -d 11.11.0.254 -p tcp \
-	--tcp-flags FIN FIN  -j DROP
-
-(note: In my environment, a DESTROY_CLIENTID operation is always sent
- immediately, breaking the nfs tcp connection.)
-ip netns exec netns_1 timeout -s 9 300 mount -t nfs -o proto=tcp,vers=4.1 \
-	11.11.0.254:/mnt/nfsshare /mnt/nfs/netns_1
-
-ip netns del netns_1
-
-The reason here is that the tcp socket in netns_1 (nfs side) has been
-shutdown and closed (done in xs_destroy), but the FIN message (with ack)
-is discarded, and the nfsd side keeps sending retransmission messages.
-As a result, when the tcp sock in netns_1 processes the received message,
-it sends the message (FIN message) in the sending queue, and the tcp timer
-is re-established. When the network namespace is deleted, the net structure
-accessed by tcp's timer handler function causes problems.
-
-To fix this problem, let's hold netns refcnt for the tcp kernel socket as
-done in other modules. This is an ugly hack which can easily be backported
-to earlier kernels. A proper fix which cleans up the interfaces will
-follow, but may not be so easy to backport.
-
-Fixes: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets.")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Acked-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-[Routine __netns_tracker_free() is not supported in 6.1 and so using
-netns_tracker_free() instead.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- net/sunrpc/svcsock.c  | 4 ++++
- net/sunrpc/xprtsock.c | 7 +++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 23b4c728de59..654579553edb 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1457,6 +1457,10 @@ static struct svc_xprt *svc_create_socket(struct svc_serv *serv,
- 	newlen = error;
- 
- 	if (protocol == IPPROTO_TCP) {
-+		netns_tracker_free(net, &sock->sk->ns_tracker);
-+		sock->sk->sk_net_refcnt = 1;
-+		get_net_track(net, &sock->sk->ns_tracker, GFP_KERNEL);
-+		sock_inuse_add(net, 1);
- 		if ((error = kernel_listen(sock, 64)) < 0)
- 			goto bummer;
- 	}
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index b9dc8e197dde..181474105e4c 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1855,6 +1855,13 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
- 		goto out;
- 	}
- 
-+	if (protocol == IPPROTO_TCP) {
-+		netns_tracker_free(xprt->xprt_net, &sock->sk->ns_tracker);
-+		sock->sk->sk_net_refcnt = 1;
-+		get_net_track(xprt->xprt_net, &sock->sk->ns_tracker, GFP_KERNEL);
-+		sock_inuse_add(xprt->xprt_net, 1);
-+	}
-+
- 	filp = sock_alloc_file(sock, O_NONBLOCK, NULL);
- 	if (IS_ERR(filp))
- 		return ERR_CAST(filp);
--- 
-2.34.1
-
+Alice
