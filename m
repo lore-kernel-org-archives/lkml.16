@@ -1,258 +1,233 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2791428C2BF
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E65535976;
+	Fri,  9 May 2025 09:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783494; cv=none; b=cWtbaisLgMKzw9zSlAWL2A1C0f+rqMIjMU95jDNSrNQtadE00PiFEk1sMzsGySoFY9GhZng3HK3ybbd4fBgQRMYSjKcz1JLiXrURW9CN6OKmuYtf5Q7vDvGv46eFxGSF3WWq4ftrJEZAWyCwOK9m08NzcdCfo+Zlpc3Uz07046A=
+	t=1746783563; cv=none; b=dn10l/isJfP+CRwGPORVVoPMU1R333le2Gx0pcnE2AP6fUfgwg3teNBluGqfgCxUUc5hHWiSpDiscDnsmkF6YP+f10aSDrSqEI85Fu6J2c3JVIvH7zzyTQWdEkdy68sd1jK3wWmX86EDOfE+idmm7o1ESKc+6I8F9FjeRDyt/wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783494; c=relaxed/simple;
-	bh=jvUkub0aSoBEKneXO9aNBg43kyYhY4o715wkt5qtMLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UBvk7tEKq/E214GjTunmIu6GlwqXIKXB4yasE660nE39TeQ+cTws4OjLeAVOhLepryc64juadWgJt1RjVabeoNu0/ZFfByUF7kgZRbjmqnHxz/RkUFjY2hSJmtGY71luYtpmO8ySuoF0zYhjWGEViMJKJiW8nBPzlG5AMeWV2+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eliBvBGO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eliBvBGO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746783489;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3hUhtyxYJYbw99c3I/tz5acTbZ7x9KccXKxTFtyDPoE=;
-	b=eliBvBGOjeQzwMUU8k1qRGcYicyOkD4IOW7/TW85ZDrQ2mhyF5RM0rm0STmdHY7bjlKI96
-	zmaRC7pwaul50itXkfgQoIDu7xeJ41Du8PQNWqcbnE7FdXYxkifwMlpahLyzfQk2S1lI/x
-	ichNgtqgqmnP9zreaNUTo/3BJ1E3ud4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-G-vT8tH5Nn67jgClqgTUhA-1; Fri, 09 May 2025 05:38:07 -0400
-X-MC-Unique: G-vT8tH5Nn67jgClqgTUhA-1
-X-Mimecast-MFC-AGG-ID: G-vT8tH5Nn67jgClqgTUhA_1746783486
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442cdf07ad9so8207315e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:38:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746783486; x=1747388286;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3hUhtyxYJYbw99c3I/tz5acTbZ7x9KccXKxTFtyDPoE=;
-        b=MSTrzx6vdgvboc8raIBfF5hM4ZKJzohjhCnc5fRacvpzr2y8VSpNhh6BIhx0T35JAC
-         vuaHe8rkvzZ972hm9um3sGCS+s25D3SzIOpBfj7Y7fgIWOO3+J1J3Rk2j6Y5hhCsaUDG
-         2kSLZPolU7zVeqlyX9RBoRjsuR9pHNO/BGrX66XD5f+sPBrH8AieNYqSiPLyhMQJU7v8
-         SKMqidk8sT3+UijIthrE6PFeTE6GL0IWRS1NdgFb83bcPlqzIwNRfyxfMBg+fSaITvKs
-         cIklMvKhGKKnkViCo5zsloL5xsBUpg4fAOOGzME6WB2gGnDglvmlMbXaa9jzd8kWgMMU
-         sPxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWkQjg2lMkUQeOT0Hxzyi5+VvhPUgi/Utm0qdDlWUu2lQMmSY8EACWBxZ68De562zLr3sj6x40srkdNCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUapVMkj9eotzU4B7IptBD2gbr0VFW1aQ5P8HjHT4OB638O206
-	ebbMJg/sDVU0FnOxRvx50yXDmZNhe2f9CT5G+yDfw4uQlXNY3SkiNrQ3tyJKjrIWLgs7mRe++9P
-	Mo7ANbQaMySreJ+ZocEW7luUeCauzR5YHX+vdCvaOIFxN/jPSRORaY18E7qOzvA==
-X-Gm-Gg: ASbGncuScy4AFD0eKFDnr52EhX/eeodAofrsPItSodLL8VUBqsVDgrfpJ6IpryMU5RC
-	yTbePK9kxL1RSurBvKKXbjmzsHgRwJTy2T+3OEweje+GHRS6B950Yr1XFbGxuyPMk8lrO+19nBH
-	uR9E31zJBc94Va2kuuJ2vb8ehWW8/Ju3mYZPAL+CBMBzQzKzFV5+rDhGQ5WpeOr/MbPwRHM12/o
-	WmOshyANoT/92q3FV+lOy/yg68nV1GjltOnvmnvNyRyIERBJUMcncGMVcBVnE7U/izLmCMl5D60
-	Ty4NfzxABUu8Wj0tkCfg5Vaf5N3DIN82MMf5czD7lZoIcig0UpwRJzeWblUTufWnOSd6kvuS2gn
-	UtaftTp9IXozIdwu3FOACZahKpxZx8t8hSBSldio=
-X-Received: by 2002:a05:600c:548d:b0:43d:ea:51d2 with SMTP id 5b1f17b1804b1-442d6d44918mr20687505e9.14.1746783486437;
-        Fri, 09 May 2025 02:38:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEcTro5FHgTcGgAPOwFLaYfLvXYGrp/OdrqtZgrae9BTUGXusjtXgLtdT+shONyKdv0GJTp0Q==
-X-Received: by 2002:a05:600c:548d:b0:43d:ea:51d2 with SMTP id 5b1f17b1804b1-442d6d44918mr20687265e9.14.1746783486027;
-        Fri, 09 May 2025 02:38:06 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3aecb0sm66649365e9.28.2025.05.09.02.38.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 02:38:05 -0700 (PDT)
-Message-ID: <f93ef55c-250d-445f-9d77-b619685c419b@redhat.com>
-Date: Fri, 9 May 2025 11:38:04 +0200
+	s=arc-20240116; t=1746783563; c=relaxed/simple;
+	bh=Ctc2LlgT/TBtEZb9BwfLgoa2yV+uYDSFls2xwrat8Os=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AAfxb+MHj6W5Di6V6FOIGnxIXyxzUhUkteWdvbg1ul8PYjMlE2mxfx2ZHxqx1CH8Qfcm7KgMv65Ix6pqQdmfeE5BpzOOcXq7Hpnu5X+A/3g97IoUFXisEmM3LuKo/lM/MWsPAa0UFkNvho6WfyZ7QV716S439CbhiFPbOJyf3kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5499AZvK004245;
+	Fri, 9 May 2025 09:38:34 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46e430pca6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 09 May 2025 09:38:34 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Fri, 9 May 2025 02:38:33 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Fri, 9 May 2025 02:38:28 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <chuck.lever@oracle.com>,
+        <jlayton@kernel.org>, <trond.myklebust@hammerspace.com>,
+        <anna@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <ebiederm@xmission.com>,
+        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <liujian56@huawei.com>, <kuniyu@amazon.com>
+Subject: [PATCH 6.1.y] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
+Date: Fri, 9 May 2025 17:38:28 +0800
+Message-ID: <20250509093828.3243368-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Memory hotplug locking issue: Useless (?) zone span seqlock
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Vlastimil Babka <vbabka@suse.cz>, Pavel Tatashin
- <pasha.tatashin@soleen.com>, Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>
-References: <b3acfb1e-2d7a-42ef-9705-bf0b20a0d152@efficios.com>
- <a5cde237-0dcf-4e85-b763-7a38e9f9c563@redhat.com>
- <8a4a5d6e-d2cf-420d-91f3-2797618e7255@efficios.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <8a4a5d6e-d2cf-420d-91f3-2797618e7255@efficios.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=BajY0qt2 c=1 sm=1 tr=0 ts=681dcd1a cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=dt9VzEwgFbYA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8 a=vggBfdFIAAAA:8 a=SEtKQCMJAAAA:8 a=t7CeM3EgAAAA:8
+ a=1f2QqqMRGjE1UMYEyBAA:9 a=kyTSok1ft720jgMXX5-3:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: WASk0LQFlJwxy6C-Cknx7dsR8T8oJvlv
+X-Proofpoint-ORIG-GUID: WASk0LQFlJwxy6C-Cknx7dsR8T8oJvlv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA5MiBTYWx0ZWRfX+RG/N2dPGMh2 j1//+/kOAUg8zN2uXHGG9d8/9VJvmJ5mBMOGtlwXe3T47RjnaI0AJMm6yGv6B/2Vdnt38soIz9q WgU7xeC62TecBL8aqRaILiCaSpRRZVRecmXv+YiWkZYoZ1+mSXv7EFCQyPzX6n7WVpWN2eivLK8
+ AFQPdvSP3yDbX27i7sbDR86n/EdPXevd7vcO8fXaElAGmV+FYFUZQ2HMb+hp143h4l2sKnQNGFI MSd2FXU2tO8+Uem5p+Ds9KM7Cp+FETCSuwvF/+wH1U+hYyJwL/IdLt5ORnosQrqqblBH28mkkIe BFe0K3O24hEIIrZlKUsAloM3WcG43YeKGnE1YGeA8fHKU6O8UZ4RmCdBThaZoR8CEIHBmcVSY/q
+ TOS5kqXvNkoiRllesLRtM17jhLY+5hE6Fy9v4d8xCy8UR0TF/zhXV+NktlDPhjeY4ljmU1fk
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ lowpriorityscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2505090092
 
-On 08.05.25 15:11, Mathieu Desnoyers wrote:
-> On 2025-05-08 06:45, David Hildenbrand wrote:
->> On 07.03.25 21:22, Mathieu Desnoyers wrote:
->>> I'm currently perfecting my understanding of the mm code and reviewing
->>> pieces of it as I go, and stumbled on this:
->>>
->>> commit 27cacaad16c5 ("mm,memory_hotplug: drop unneeded locking")
->>>
->>> This commit removes all users of zone_span_writelock(), thus making
->>> the inline useless, but leaves the now useless
->>> zone_span_seqbegin()/zone_span_seqretry() in place within
->>> page_outside_zone_boundaries().
->>>
->>> So I'm confused. What's going on ?
->>>
->>> And if this commit got things very wrong when removing the
->>> seqlock, I wonder if there are cases where its partial
->>> pgdat_resize_lock() removal can be an issue as well.
->>
->> I stumbled over that myself recently as well. I think I mentioned in the
->> past that we should just store
->>
->> start_pfn + end_pfn
->>
->> instead of
->>
->> start_pfn + nr_pages
->>
->>
->> Then, concurrent resizing could happen (and we could atomically read
->> start_pfn / end_pfn).
->>
->> Right now, when adjusting start_pfn, we always also have to adjust
->> nr_pages. A concurrent reader calculating end_pfn manually could see
->> some crappy result.
->>
->> Having that said, I am not aware of issues in that area, but it all
->> looks like only a partial cleanup to me.
-> 
-> I wonder if all callers to zone_spans_pfn() prevent concurrent modification
-> of the zone start_pfn and nr_pages ?
+From: Liu Jian <liujian56@huawei.com>
 
-I think compaction does not protect against that (e.g., no 
-mem_hotplug_begin()).
+[ Upstream commit 3f23f96528e8fcf8619895c4c916c52653892ec1 ]
 
-My understanding was that compaction can mostly tolerate it (e.g., 
-recheck pfn_to_online_page() + page_zone() check)
+BUG: KASAN: slab-use-after-free in tcp_write_timer_handler+0x156/0x3e0
+Read of size 1 at addr ffff888111f322cd by task swapper/0/0
 
-> 
-> For instance set_pfnblock_flags_mask() (called by set_pageblock_migratetype)
-> does:
-> 
->          VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page);
-> 
+CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc4-dirty #7
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1
+Call Trace:
+ <IRQ>
+ dump_stack_lvl+0x68/0xa0
+ print_address_description.constprop.0+0x2c/0x3d0
+ print_report+0xb4/0x270
+ kasan_report+0xbd/0xf0
+ tcp_write_timer_handler+0x156/0x3e0
+ tcp_write_timer+0x66/0x170
+ call_timer_fn+0xfb/0x1d0
+ __run_timers+0x3f8/0x480
+ run_timer_softirq+0x9b/0x100
+ handle_softirqs+0x153/0x390
+ __irq_exit_rcu+0x103/0x120
+ irq_exit_rcu+0xe/0x20
+ sysvec_apic_timer_interrupt+0x76/0x90
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20
+RIP: 0010:default_idle+0xf/0x20
+Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90
+ 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 33 f8 25 00 fb f4 <fa> c3 cc cc cc
+ cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
+RSP: 0018:ffffffffa2007e28 EFLAGS: 00000242
+RAX: 00000000000f3b31 RBX: 1ffffffff4400fc7 RCX: ffffffffa09c3196
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff9f00590f
+RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102360835d
+R10: ffff88811b041aeb R11: 0000000000000001 R12: 0000000000000000
+R13: ffffffffa202d7c0 R14: 0000000000000000 R15: 00000000000147d0
+ default_idle_call+0x6b/0xa0
+ cpuidle_idle_call+0x1af/0x1f0
+ do_idle+0xbc/0x130
+ cpu_startup_entry+0x33/0x40
+ rest_init+0x11f/0x210
+ start_kernel+0x39a/0x420
+ x86_64_start_reservations+0x18/0x30
+ x86_64_start_kernel+0x97/0xa0
+ common_startup_64+0x13e/0x141
+ </TASK>
 
-Yes, that might indeed trigger in some weird races.
+Allocated by task 595:
+ kasan_save_stack+0x24/0x50
+ kasan_save_track+0x14/0x30
+ __kasan_slab_alloc+0x87/0x90
+ kmem_cache_alloc_noprof+0x12b/0x3f0
+ copy_net_ns+0x94/0x380
+ create_new_namespaces+0x24c/0x500
+ unshare_nsproxy_namespaces+0x75/0xf0
+ ksys_unshare+0x24e/0x4f0
+ __x64_sys_unshare+0x1f/0x30
+ do_syscall_64+0x70/0x180
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-> If we look at zone_spans_pfn():
-> 
-> static inline unsigned long zone_end_pfn(const struct zone *zone)
-> {
->           return zone->zone_start_pfn + zone->spanned_pages;
-> }
-> 
-> static inline bool zone_spans_pfn(const struct zone *zone, unsigned long pfn)
-> {
->           return zone->zone_start_pfn <= pfn && pfn < zone_end_pfn(zone);
-> }
-> 
-> A concurrent updater which shrinks a zone by moving its start would have
-> to increment zone_start_pfn *and* decrement spanned_pages. If this happens
-> concurrently with the loads from zone_spans_pfn(), then it can observe
-> an intermediate state (only nr pages reduced or only zone start moved).
-> The first scenario at least can lead to false positive VM_BUG_ON().
+Freed by task 100:
+ kasan_save_stack+0x24/0x50
+ kasan_save_track+0x14/0x30
+ kasan_save_free_info+0x3b/0x60
+ __kasan_slab_free+0x54/0x70
+ kmem_cache_free+0x156/0x5d0
+ cleanup_net+0x5d3/0x670
+ process_one_work+0x776/0xa90
+ worker_thread+0x2e2/0x560
+ kthread+0x1a8/0x1f0
+ ret_from_fork+0x34/0x60
+ ret_from_fork_asm+0x1a/0x30
 
-Jup.
+Reproduction script:
 
-> 
-> Likewise if the updater expands the zone by moving its start left. If
-> the observer loads an updated start pfn without observing the nr pages
-> update, it can lead to false positive VM_BUG_ON().
-> 
-> I notice that zone_intersects() also uses zone_end_pfn(). It is used for
-> instance by default_kernel_zone_for_pfn() without locks. In this case,
-> reading both nr pages and start pfn concurrently with update could cause
-> a false-positive match, for instance if the start of the range is moved
-> but the nr pages prior value is loaded (concurrent shrink). This could
-> match a zone outside of the function parameter range.
-> 
-> Another reader of those fields is update_pgdat_span(), which appears to
-> be called only from remove_pfn_range_from_zone with mem_hotplug_lock
-> held in write mode. So that one should be fine.
-> 
-> AFAIU, updates to nr pages and zone start pfn are done by:
-> 
-> - remove_pfn_range_from_zone (AFAIU always called with mem_hotplug_lock
->     in write mode),
-> - shrink_zone_span (called from remove_pfn_range_from_zone),
-> - resize_zone_range (__meminit function), called from move_pfn_range_to_zone()
->     also called with mem_hotplug_lock in write mode.
+mkdir -p /mnt/nfsshare
+mkdir -p /mnt/nfs/netns_1
+mkfs.ext4 /dev/sdb
+mount /dev/sdb /mnt/nfsshare
+systemctl restart nfs-server
+chmod 777 /mnt/nfsshare
+exportfs -i -o rw,no_root_squash *:/mnt/nfsshare
 
-Yes, I refactored that at some point. mem_hotplug_begin() could protect 
-against it, but we really don't want to grab that all over the place.
+ip netns add netns_1
+ip link add name veth_1_peer type veth peer veth_1
+ifconfig veth_1_peer 11.11.0.254 up
+ip link set veth_1 netns netns_1
+ip netns exec netns_1 ifconfig veth_1 11.11.0.1
 
-> 
-> So I think your idea of keeping track of both zone_start_pfn and zone_end_pfn
-> would solve this specific issue, however we'd have to carefully consider what
-> happens to users of spanned_pages (e.g. zone_is_empty()) callers, because it
-> would then require to calculate the spanned_pages from end - start, which
-> then can have similar issues wrt atomicity against concurrent updates.
+ip netns exec netns_1 /root/iptables -A OUTPUT -d 11.11.0.254 -p tcp \
+	--tcp-flags FIN FIN  -j DROP
 
-We could easily just store both things (spanned pages + end_pfn), such 
-that we can read both atomically.
+(note: In my environment, a DESTROY_CLIENTID operation is always sent
+ immediately, breaking the nfs tcp connection.)
+ip netns exec netns_1 timeout -s 9 300 mount -t nfs -o proto=tcp,vers=4.1 \
+	11.11.0.254:/mnt/nfsshare /mnt/nfs/netns_1
 
+ip netns del netns_1
+
+The reason here is that the tcp socket in netns_1 (nfs side) has been
+shutdown and closed (done in xs_destroy), but the FIN message (with ack)
+is discarded, and the nfsd side keeps sending retransmission messages.
+As a result, when the tcp sock in netns_1 processes the received message,
+it sends the message (FIN message) in the sending queue, and the tcp timer
+is re-established. When the network namespace is deleted, the net structure
+accessed by tcp's timer handler function causes problems.
+
+To fix this problem, let's hold netns refcnt for the tcp kernel socket as
+done in other modules. This is an ugly hack which can easily be backported
+to earlier kernels. A proper fix which cleans up the interfaces will
+follow, but may not be so easy to backport.
+
+Fixes: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets.")
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Acked-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+[Routine __netns_tracker_free() is not supported in 6.1 and so using
+netns_tracker_free() instead.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ net/sunrpc/svcsock.c  | 4 ++++
+ net/sunrpc/xprtsock.c | 7 +++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 23b4c728de59..654579553edb 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -1457,6 +1457,10 @@ static struct svc_xprt *svc_create_socket(struct svc_serv *serv,
+ 	newlen = error;
+ 
+ 	if (protocol == IPPROTO_TCP) {
++		netns_tracker_free(net, &sock->sk->ns_tracker);
++		sock->sk->sk_net_refcnt = 1;
++		get_net_track(net, &sock->sk->ns_tracker, GFP_KERNEL);
++		sock_inuse_add(net, 1);
+ 		if ((error = kernel_listen(sock, 64)) < 0)
+ 			goto bummer;
+ 	}
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index b9dc8e197dde..181474105e4c 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -1855,6 +1855,13 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
+ 		goto out;
+ 	}
+ 
++	if (protocol == IPPROTO_TCP) {
++		netns_tracker_free(xprt->xprt_net, &sock->sk->ns_tracker);
++		sock->sk->sk_net_refcnt = 1;
++		get_net_track(xprt->xprt_net, &sock->sk->ns_tracker, GFP_KERNEL);
++		sock_inuse_add(xprt->xprt_net, 1);
++	}
++
+ 	filp = sock_alloc_file(sock, O_NONBLOCK, NULL);
+ 	if (IS_ERR(filp))
+ 		return ERR_CAST(filp);
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
