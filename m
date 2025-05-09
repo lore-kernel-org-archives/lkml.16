@@ -1,167 +1,229 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2890B283FF8
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AE615E96;
+	Fri,  9 May 2025 13:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746798725; cv=none; b=C7CcZTQCucxJmS9UsiJYffnX9rHC8W+CNcC+DrVXWeZtBAgwH4rp7J79c0IffOqVGZOog5F9g84VysV/gmc4JFkMX/hhlFt4Mpg+5MEty05pKkZvW36zQqqKL9LTrnt8fEXvcVBrO31JORlHzqf+/q/SRykYK4VN53h1vEz+/+s=
+	t=1746798751; cv=none; b=SSKvg+J1fqQDdnSs3Ymthi9YHE+k9du0IftkDJ5r5VDdExvpz2+MfgyyGPenXzoPkB3JmXqIeOqottO3h78XvAt7O7MgCCjoCJ3sFbRNshdymmZavFVkXMlAZhj/RgkaVgmFcMJsL1YyD49Pd9nfnBfm3NaXl2s4cirSqBCxSew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746798725; c=relaxed/simple;
-	bh=xSi3SQWrLWCR+2uoRJltv4xcKkEVO8oIQbo95yWp1hA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=us15FsznPekFbKZ17T39/wyqNjofNEU2BBOjq+HRffxBWE16/xfNk3BTq+AAkBAlGA+dXoQLUN0BUBSuwI4iF3vtFcunIw7Jts0smz1OgXHxGLPSdYleys5WY+poDfIssyohZryLHAAU8YM/bgegvXbci2vpTI/4hOCe+QZTqNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=m4Unt46N; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746798751; c=relaxed/simple;
+	bh=08z/fA4ndGXl+5Zu9henL1jr4DrNeoyJNAHGe5fOiKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+f1MX5zqi/SNKrU6f2uGq61oOpNvAkQH4fetWg14Fo+8qsksF/n69KnkVpcsZ1zsHMDvf6X/i+fCcrQ1RDa01Sxzur0TkDQh7tbqVIA2gZvNjPAI3vLYbBphVRLGd900ft1OFBYGDJqkMKjSJVQ8MT9svXLzzEGmKovSGC5k4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPga8wPk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m4Unt46N"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso19878311fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:52:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746798720; x=1747403520; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tVLjzfrQL3LKJR87gCuySpYYpzmYD7FiFUMoW7plIE4=;
-        b=m4Unt46NFl7mXf8EoWzrObScJb7A5XVtKKj0mNNPjH/71+0ok1xNuAXqLUNRLP7nx+
-         1oz4PXfJjasg9ccfKNClnqc/WLrH1m9eq7e0a3YVPz1cxlnhqmndKgg+lHqKfyComuso
-         qpoVMdkZJv6ARNJI0LtDZXkqv87MVjTFyJF/c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746798720; x=1747403520;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tVLjzfrQL3LKJR87gCuySpYYpzmYD7FiFUMoW7plIE4=;
-        b=gbG3qwzPLUrRuzv6i3FbTUO/FkNyjSznVX26+IAT6WW09F/wFBU+kM6M5Z22TP/atm
-         7KZbo2XNXwWKynzql2gk8xnGBOob6DjOhuTuatORLFJMwqMkfY9keUd1F4udrubXYi3k
-         y109tjyIK9+zwwDtQ3O3eE2ytTEZc+qBfwq42zPyQSF45nBkp4x8TqaBdVTtU5RSeDXu
-         aT3LPGRAUW9dBYSupOkBqO4YfU2vAEgxf3JZSq4ye4pxurQB+mB+QeJT5TJM4jX8tAb5
-         rtp3gqvnxpNUpJ0q+hRHJErmESuPj8zGdqURbHUh0LcXu4LkUY433YGNGdUsnCXX8cdz
-         A0ag==
-X-Forwarded-Encrypted: i=1; AJvYcCXHpqwHSi23Yvpa5/Hq32vYzg/V7gJprPCe1PcCiY6oRmdEiyqb9SENIH6o7Q/vz/rSfSMk14ylVLLjd1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi+CzzUqesMwwM8avKmebAy/OmVKMOSwzh/v9YQG9CYya08aS1
-	1YkA/x2W0ypW3Krqii4rWm3tyTYVTR5kWgcGrKRwNV2WjXFlfcd/nJI+FqI5DgMzmISC879dwdw
-	=
-X-Gm-Gg: ASbGncsqjo4itcPveoS/p9DukNdXNs2AqymYJWoOEqrA1Asbz9BenH5Uje4G7QMdfkM
-	7WGBxcE0M1fd2sL1zPhA9bf8OxzMl2cBZ+im1dcqJvP03pI8wMgiQ+QpOCQB4G9JYl3/FRmxtBn
-	K02M3Ep5CLOsfI9Pj+3W/HmVOVV7+hoQmgPr9j9apjwQJV95vtm7kcM7RklIpnpddwK8cbslCNP
-	E4uLPENOqcFdIrwt2hfjkNUksC2Czt3HeZm/qkAT3rBDTNHH2gQCA1LND1/xOx7L5jdZjMZBF48
-	bAacV94m/631569AIUDgNuVhZk11Z172rM67tRKm6wtjtlsYdoazFF3twp+fK340lH/pRfXZH78
-	Rnk5aMqA=
-X-Google-Smtp-Source: AGHT+IH//MLRWpf4nzwqkWAo9L6Lm0dosvkKnsocwh1Jv9jevrlB5bePUzyg5tCGa1EGHmq7kwuVzA==
-X-Received: by 2002:a2e:bc0e:0:b0:308:ec50:e841 with SMTP id 38308e7fff4ca-326c4627e18mr14303941fa.25.1746798720100;
-        Fri, 09 May 2025 06:52:00 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c33b7dbesm2739991fa.36.2025.05.09.06.51.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 06:51:59 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-326c8ae08e8so5200991fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:51:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXmTrg+hz7C2iQHDN1fK2jluP+tXVdonkjB8DkpyWpMfV3kdVbfq934wYWwQOEVxI4rDBKFgm6MlV32fnc=@vger.kernel.org
-X-Received: by 2002:a2e:bc0e:0:b0:308:ec50:e841 with SMTP id
- 38308e7fff4ca-326c4627e18mr14303681fa.25.1746798718846; Fri, 09 May 2025
- 06:51:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPga8wPk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B3F8C4CEE4;
+	Fri,  9 May 2025 13:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746798750;
+	bh=08z/fA4ndGXl+5Zu9henL1jr4DrNeoyJNAHGe5fOiKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iPga8wPk30SBCjyT2PEUpAYxWoTbCCCa51yC3+AyjqVwUqmbgf8l5BZGzU50nqgKO
+	 T/SbQqEFoNjRGxPWMrUpgxEAUiuavHUVGS9kV4yQEJ/XhIdS89Bc2EN2IArxQcAxwJ
+	 +rcfywS+2pEzDvkl2yjYifY85o+FKATLxPkT6cuVESvyw7VmGs13D6MI7YEVWlcuvc
+	 T99kz01ZuvAObUCGDlslJ4D7PEfNSa98Yw9ZX+FGfp1Eq4BfgUUEg8RBWOD981D2C0
+	 qRZYPd1NmVpZ0b+Enh2uKqfOKs3j90id1gG9RjeCtFUuGpabtO/JLz3TOUX+gre7ja
+	 LB9GEVxkaxeog==
+Date: Fri, 9 May 2025 14:52:24 +0100
+From: Will Deacon <will@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	David Hildenbrand <david@redhat.com>,
+	Dave Chinner <david@fromorbit.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v4 5/5] mm/filemap: Allow arch to request folio size
+ for exec memory
+Message-ID: <20250509135223.GB5707@willie-the-truck>
+References: <20250430145920.3748738-1-ryan.roberts@arm.com>
+ <20250430145920.3748738-6-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
- <20250327-uvc-granpower-ng-v6-5-35a2357ff348@chromium.org> <64c00146-e6d2-448d-a416-19d5ae7ae3f6@jjverkuil.nl>
-In-Reply-To: <64c00146-e6d2-448d-a416-19d5ae7ae3f6@jjverkuil.nl>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 9 May 2025 15:51:46 +0200
-X-Gmail-Original-Message-ID: <CANiDSCvM_V0Pv+cxd31AwcXjG-etJ3imsDYfRb7W2t0NKT67OA@mail.gmail.com>
-X-Gm-Features: ATxdqUH8qd_0JqxrGXD24hL8xVd6IQNh0CjzpBXdZtauLNAQq8oQh8buUtDugGI
-Message-ID: <CANiDSCvM_V0Pv+cxd31AwcXjG-etJ3imsDYfRb7W2t0NKT67OA@mail.gmail.com>
-Subject: Re: [PATCH v6 5/5] media: uvcvideo: Do not turn on the camera for
- some ioctls
-To: Hans Verkuil <hans@jjverkuil.nl>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430145920.3748738-6-ryan.roberts@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Hans
+On Wed, Apr 30, 2025 at 03:59:18PM +0100, Ryan Roberts wrote:
+> Change the readahead config so that if it is being requested for an
+> executable mapping, do a synchronous read into a set of folios with an
+> arch-specified order and in a naturally aligned manner. We no longer
+> center the read on the faulting page but simply align it down to the
+> previous natural boundary. Additionally, we don't bother with an
+> asynchronous part.
+> 
+> On arm64 if memory is physically contiguous and naturally aligned to the
+> "contpte" size, we can use contpte mappings, which improves utilization
+> of the TLB. When paired with the "multi-size THP" feature, this works
+> well to reduce dTLB pressure. However iTLB pressure is still high due to
+> executable mappings having a low likelihood of being in the required
+> folio size and mapping alignment, even when the filesystem supports
+> readahead into large folios (e.g. XFS).
+> 
+> The reason for the low likelihood is that the current readahead
+> algorithm starts with an order-0 folio and increases the folio order by
+> 2 every time the readahead mark is hit. But most executable memory tends
+> to be accessed randomly and so the readahead mark is rarely hit and most
+> executable folios remain order-0.
+> 
+> So let's special-case the read(ahead) logic for executable mappings. The
+> trade-off is performance improvement (due to more efficient storage of
+> the translations in iTLB) vs potential for making reclaim more difficult
+> (due to the folios being larger so if a part of the folio is hot the
+> whole thing is considered hot). But executable memory is a small portion
+> of the overall system memory so I doubt this will even register from a
+> reclaim perspective.
+> 
+> I've chosen 64K folio size for arm64 which benefits both the 4K and 16K
+> base page size configs. Crucially the same amount of data is still read
+> (usually 128K) so I'm not expecting any read amplification issues. I
+> don't anticipate any write amplification because text is always RO.
+> 
+> Note that the text region of an ELF file could be populated into the
+> page cache for other reasons than taking a fault in a mmapped area. The
+> most common case is due to the loader read()ing the header which can be
+> shared with the beginning of text. So some text will still remain in
+> small folios, but this simple, best effort change provides good
+> performance improvements as is.
+> 
+> Confine this special-case approach to the bounds of the VMA. This
+> prevents wasting memory for any padding that might exist in the file
+> between sections. Previously the padding would have been contained in
+> order-0 folios and would be easy to reclaim. But now it would be part of
+> a larger folio so more difficult to reclaim. Solve this by simply not
+> reading it into memory in the first place.
+> 
+> Benchmarking
+> ============
+> TODO: NUMBERS ARE FOR V3 OF SERIES. NEED TO RERUN FOR THIS VERSION.
+> 
+> The below shows nginx and redis benchmarks on Ampere Altra arm64 system.
+> 
+> First, confirmation that this patch causes more text to be contained in
+> 64K folios:
+> 
+> | File-backed folios     |   system boot   |      nginx      |      redis      |
+> | by size as percentage  |-----------------|-----------------|-----------------|
+> | of all mapped text mem | before |  after | before |  after | before |  after |
+> |========================|========|========|========|========|========|========|
+> | base-page-4kB          |    26% |     9% |    27% |     6% |    21% |     5% |
+> | thp-aligned-8kB        |     4% |     2% |     3% |     0% |     4% |     1% |
+> | thp-aligned-16kB       |    57% |    21% |    57% |     6% |    54% |    10% |
+> | thp-aligned-32kB       |     4% |     1% |     4% |     1% |     3% |     1% |
+> | thp-aligned-64kB       |     7% |    65% |     8% |    85% |     9% |    72% |
+> | thp-aligned-2048kB     |     0% |     0% |     0% |     0% |     7% |     8% |
+> | thp-unaligned-16kB     |     1% |     1% |     1% |     1% |     1% |     1% |
+> | thp-unaligned-32kB     |     0% |     0% |     0% |     0% |     0% |     0% |
+> | thp-unaligned-64kB     |     0% |     0% |     0% |     1% |     0% |     1% |
+> | thp-partial            |     1% |     1% |     0% |     0% |     1% |     1% |
+> |------------------------|--------|--------|--------|--------|--------|--------|
+> | cont-aligned-64kB      |     7% |    65% |     8% |    85% |    16% |    80% |
+> 
+> The above shows that for both workloads (each isolated with cgroups) as
+> well as the general system state after boot, the amount of text backed
+> by 4K and 16K folios reduces and the amount backed by 64K folios
+> increases significantly. And the amount of text that is contpte-mapped
+> significantly increases (see last row).
+> 
+> And this is reflected in performance improvement:
+> 
+> | Benchmark                                     |          Improvement |
+> +===============================================+======================+
+> | pts/nginx (200 connections)                   |                8.96% |
+> | pts/nginx (1000 connections)                  |                6.80% |
+> +-----------------------------------------------+----------------------+
+> | pts/redis (LPOP, 50 connections)              |                5.07% |
+> | pts/redis (LPUSH, 50 connections)             |                3.68% |
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  arch/arm64/include/asm/pgtable.h |  8 +++++++
+>  include/linux/pgtable.h          | 11 +++++++++
+>  mm/filemap.c                     | 40 ++++++++++++++++++++++++++------
+>  3 files changed, 52 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 2a77f11b78d5..9eb35af0d3cf 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1537,6 +1537,14 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
+>   */
+>  #define arch_wants_old_prefaulted_pte	cpu_has_hw_af
+>  
+> +/*
+> + * Request exec memory is read into pagecache in at least 64K folios. This size
+> + * can be contpte-mapped when 4K base pages are in use (16 pages into 1 iTLB
+> + * entry), and HPA can coalesce it (4 pages into 1 TLB entry) when 16K base
+> + * pages are in use.
+> + */
+> +#define exec_folio_order() ilog2(SZ_64K >> PAGE_SHIFT)
+> +
+>  static inline bool pud_sect_supported(void)
+>  {
+>  	return PAGE_SIZE == SZ_4K;
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index b50447ef1c92..1dd539c49f90 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -456,6 +456,17 @@ static inline bool arch_has_hw_pte_young(void)
+>  }
+>  #endif
+>  
+> +#ifndef exec_folio_order
+> +/*
+> + * Returns preferred minimum folio order for executable file-backed memory. Must
+> + * be in range [0, PMD_ORDER). Default to order-0.
+> + */
+> +static inline unsigned int exec_folio_order(void)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  #ifndef arch_check_zapped_pte
+>  static inline void arch_check_zapped_pte(struct vm_area_struct *vma,
+>  					 pte_t pte)
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index e61f374068d4..37fe4a55c00d 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3252,14 +3252,40 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+>  	if (mmap_miss > MMAP_LOTSAMISS)
+>  		return fpin;
+>  
+> -	/*
+> -	 * mmap read-around
+> -	 */
+>  	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+> -	ra->start = max_t(long, 0, vmf->pgoff - ra->ra_pages / 2);
+> -	ra->size = ra->ra_pages;
+> -	ra->async_size = ra->ra_pages / 4;
+> -	ra->order = 0;
+> +	if (vm_flags & VM_EXEC) {
+> +		/*
+> +		 * Allow arch to request a preferred minimum folio order for
+> +		 * executable memory. This can often be beneficial to
+> +		 * performance if (e.g.) arm64 can contpte-map the folio.
+> +		 * Executable memory rarely benefits from readahead, due to its
+> +		 * random access nature, so set async_size to 0.
 
-On Fri, 9 May 2025 at 15:44, Hans Verkuil <hans@jjverkuil.nl> wrote:
->
-> On 27/03/2025 22:05, Ricardo Ribalda wrote:
-> > There are some ioctls that do not need to turn on the camera. Do not
-> > call uvc_pm_get in those cases.
-> >
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/usb/uvc/uvc_v4l2.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >
-> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > index 0f1ed0387b2611c8d21e211afe21a35101071d93..668a4e9d772c6d91f045ca75e2744b3a6c69da6b 100644
-> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > @@ -1440,6 +1440,26 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
-> >       struct uvc_fh *handle = file->private_data;
-> >       int ret;
-> >
-> > +     /* The following IOCTLs do not need to turn on the camera. */
-> > +     switch (cmd) {
-> > +     case VIDIOC_CREATE_BUFS:
-> > +     case VIDIOC_DQBUF:
-> > +     case VIDIOC_ENUM_FMT:
-> > +     case VIDIOC_ENUM_FRAMEINTERVALS:
-> > +     case VIDIOC_ENUM_FRAMESIZES:
-> > +     case VIDIOC_ENUMINPUT:
-> > +     case VIDIOC_EXPBUF:
-> > +     case VIDIOC_G_FMT:
-> > +     case VIDIOC_G_PARM:
-> > +     case VIDIOC_G_SELECTION:
-> > +     case VIDIOC_QBUF:
-> > +     case VIDIOC_QUERYCAP:
-> > +     case VIDIOC_REQBUFS:
-> > +     case VIDIOC_SUBSCRIBE_EVENT:
-> > +     case VIDIOC_UNSUBSCRIBE_EVENT:
->
-> Wouldn't it be better to check against the ioctls that DO need to turn on the camera?
+In light of this observation (about randomness of instruction fetch), do
+you think it's worth ignoring VM_RAND_READ for VM_EXEC?
 
-I thought it was safer this way. I will look into inverting the logic
-in a follow-up patch.
+Either way, I was looking at this because it touches arm64 and it looks
+fine to me:
 
-Regards!
+Acked-by: Will Deacon <will@kernel.org>
 
->
-> That is more future proof IMHO.
->
-> If a new ioctl is created, and uvc implements it and that needs to turn on the camera,
-> then presumably you will realize that when you add that ioctl in uvc.
->
-> If a new ioctl is created and uvc does not need to turn on the camera, then you will
-> almost certainly forget to add it to this list.
->
-> I'm not blocking this patch, but I think it will be hard to keep this list up to date.
-> Inverting the test is probably much easier to handle in the future.
->
-> Apologies if this has been discussed before, if so, just point to that discussion so I
-> can read through it.
->
-> Regards,
->
->         Hans
->
-> > +             return video_ioctl2(file, cmd, arg);
-> > +     }
-> > +
-> >       ret = uvc_pm_get(handle->stream->dev);
-> >       if (ret)
-> >               return ret;
-> >
->
-
-
--- 
-Ricardo Ribalda
+Will
