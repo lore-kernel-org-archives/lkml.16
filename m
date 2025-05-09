@@ -1,263 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4162356A3;
-	Fri,  9 May 2025 15:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0216B225405;
+	Fri,  9 May 2025 15:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806087; cv=none; b=k9w35HFI/28NMxEhJVZ6xG2kXFFBz/9x+CLp6beNEcvgc8rac020RzrXL2IoMPgP2UquVHga9GyA87UmM5YWR7ouxrZFEN7TfTsM5dZzARGzkpW5wuouU55v7EdWmIojQPerHA2h5O83zF7ScOiKsWpvIUy1gALGx/ORiNlVtxk=
+	t=1746806126; cv=none; b=Gm3H8XaXxg8F6+TqcW8V0z0ulGmB+KMK8z02+9vhEllpPBrgs2ZPAy/2XO6w6vWkBh6M15K+U3yeOkwIBtwgZqiDa/JUBkkug8WLd/xYm+jkHIDMwe1mp9BY0t1nWfpoo3xXaD/NSIifij1aLUHE6NWYya0VflJmEDCLOz4KIJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746806087; c=relaxed/simple;
-	bh=U7kTRtDKEyi26UTZypbYVJmh4wa4LgmaBdSpf8+xSlU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QbL9txdg2qU71kJb1shBAzVO+8rR3WJHrm01Gmu58GgrnM9DB4MpO3MuF1KCsTLsGo4qyKcYVWZYbUmndHUryX5EYsouP+LjGrSWzasF5EqFgwawjG7madb/p81T0ZDZhdZBfYAPrb+8LiMXcW9lO+8fjq/D+K0woEVl3XUsckg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClrPljYm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746806126; c=relaxed/simple;
+	bh=od8nP8o0UlODMNkoyBI4gReWiVWh67aEDsUBdwCRDNg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KeXb43i+DsLZZ4B2UuSLocSSz8MAyQjKrcxxdHuMatqADS+lDamwB6G//MwKhivVW1FSuMydBw59tHRe3yMxw5QJ0b4SwzAoM9N2p7FKISnNXXCBjxIfGy5Nnd3Xu6WDv/QpsXoGbfvJNd/N59xsp79kn84kCfc6aeDHa+rx2ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PR9ov2Qu; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClrPljYm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B826EC4CEF0;
-	Fri,  9 May 2025 15:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746806086;
-	bh=U7kTRtDKEyi26UTZypbYVJmh4wa4LgmaBdSpf8+xSlU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ClrPljYmGwXqXnD83Pe5KMkCq6Cv3JHy+4PeVZ9LW7q4nQ/7uyVypqq8XFI1fY+pe
-	 jwNZljIvtBVXhglIXUiKEFHPJX40Ip/cuvslwfPYeb7yYjskKA0W4aoLMHIs5rxKkL
-	 yYxSg5hDtGJQOQ6s0k+PWC3KBrn/Rs2uSBzkaLbFwtzvNlhk1jD6g5nrJzjusivW4x
-	 D3ynAB/gF/MjLwnbz/6JSu1Afdt6KUm/eKCE1LCazH3Nbrh3ZqJdsI5uiWecUxaG2W
-	 psvmKNW96qpCH1QlBq75MklUczPOSPn575vSrNlMAqrpBCn7FgN7sJGdULdjgnTJPC
-	 anSwY/JodVi5A==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 09 May 2025 11:53:46 -0400
-Subject: [PATCH v9 10/10] ref_tracker: eliminate the ref_tracker_dir name
- field
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PR9ov2Qu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=lv
+	ElYGxbUgfGLHwTggNkO6oW/94xCB8HSeEjWFVcDz0=; b=PR9ov2QujZ5597Hu+c
+	hexQ+mdYPSQHxc5O4IrchlCD+aLmL0nq23Ry1Cwy6nLwckpATO99bON7Aerqdd2n
+	j8gB73BT8Kus+WxrKMUhRnRaCkEMlI1bJzesQjPEtI2Lrl44S4ToqelxjxFhVqAf
+	jBYl8SYCgvqTHb+MOxZUdvi5o=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wCH+a9CJR5oqYT+AA--.23731S5;
+	Fri, 09 May 2025 23:54:45 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: shawn.lin@rock-chips.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	heiko@sntech.de,
+	manivannan.sadhasivam@linaro.org
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH 3/4] PCI: rockchip-host: Refactor IRQ handling with info arrays
+Date: Fri,  9 May 2025 23:54:01 +0800
+Message-Id: <20250509155402.377923-4-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250509155402.377923-1-18255117159@163.com>
+References: <20250509155402.377923-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-reftrack-dbgfs-v9-10-8ab888a4524d@kernel.org>
-References: <20250509-reftrack-dbgfs-v9-0-8ab888a4524d@kernel.org>
-In-Reply-To: <20250509-reftrack-dbgfs-v9-0-8ab888a4524d@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jani Nikula <jani.nikula@linux.intel.com>, 
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
- Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7622; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=U7kTRtDKEyi26UTZypbYVJmh4wa4LgmaBdSpf8+xSlU=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoHiUwuTNC/LNoDy5x85rg9NT/5Jr8iJxv8nNdi
- QqV3ruQECeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaB4lMAAKCRAADmhBGVaC
- FdHPD/9Kz2fFDOZ0GbHQ+AIsH/45Bjuk8QMpIRGJjTAaUUzTsMqeMqEG0M3s7L25OgPw//f9LZy
- HxajSiSSOwp7K1HoIEmZuAeqW6ltWv8iMhuVHQVXi7VwE/g6Ramekdgwi0nt4n9Cs8gAE6XV1Ux
- 4faNZgD3qrX6FkOpq/0lvFy6XcLxVbPs+PPNmv1c4Rv77VfF9Xy+TcmrohK+qFlTv0yYY82Ejr1
- qOtENhvJAUftZPpzJxM0FTyMKxOBIMXgZSYBSxm0vpiV1L4mU/jATfq6SfznVhIkDtpDeJu7KL9
- HRqTMc6t+xzBxAu1lNCdc8yYQrirLd++CtMDOkFhiXft8d1D9FIBqJUoYoocHv0gK2FuO+0Nqn5
- y6eUVXSfYvi5mIlWp5keXmzjzP3/abxgPeexxhhlexVvxpVJZnlFjjR6RELwr3P4+5RFlO08pcZ
- YYWUr4miY4xG7nFLRt9BiOvzTboC5PZOkFLjH+pWAABKFYe/af24qSQQjtHXjOucSMNlt70rOq/
- 0iWYG5/IjZJODZOmbnXArXqoHyd8AS/LypE/hQKcMOdL0BQj6/seWUTQbDaR9hN/pYz4WNUql4+
- Evu/8hLhtzTBtuHFrDqHdTXLa3bUmuWeHJADp8WQZZDjeRdGMDT3R4MClhTaR1hP1eC1FQGwhq1
- khmJBhE2oO2dTfg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCH+a9CJR5oqYT+AA--.23731S5
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Jw1rWF1xuF15Gw4Dtr4ktFb_yoW7tF1rp3
+	yUtFnrAr48Xw1fZr9Iyw15X3WrXFnI9aykCrs3G3y7Z3Wvyw1jga1jgFZxWw1IgFWDX342
+	kw43tF97ZFsruFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR9NVJUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxRIo2geJBoy5wAAs5
 
-Now that we have dentries and the ability to create meaningful symlinks
-to them, don't keep a name string in each tracker. Switch the output
-format to print "class@address", and drop the name field.
+Replace repetitive if-conditions for IRQ status checks with structured
+arrays (`pcie_subsys_irq_info` and `pcie_client_irq_info`) and loop-based
+logging. This simplifies maintenance and reduces code duplication.
 
-Also, add a kerneldoc header for ref_tracker_dir_init().
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/gpu/drm/display/drm_dp_tunnel.c |  2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.c |  2 +-
- drivers/gpu/drm/i915/intel_wakeref.c    |  2 +-
- include/linux/ref_tracker.h             | 20 ++++++++++++++------
- lib/ref_tracker.c                       |  6 +++---
- lib/test_ref_tracker.c                  |  2 +-
- net/core/dev.c                          |  2 +-
- net/core/net_namespace.c                |  4 ++--
- 8 files changed, 24 insertions(+), 16 deletions(-)
+ drivers/pci/controller/pcie-rockchip-host.c | 110 +++++++++-----------
+ 1 file changed, 48 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
-index f2a8ef6abf34d89a642d7c7708c41e5b1dc9dece..f8d1f9c60e86c5a7b1866e1c9f6425e99d4ca9c6 100644
---- a/drivers/gpu/drm/display/drm_dp_tunnel.c
-+++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
-@@ -1920,7 +1920,7 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
- 	}
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index 209eb94ece1b..ba1f7832bda5 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -36,6 +36,45 @@
+ #include "../pci.h"
+ #include "pcie-rockchip.h"
  
- #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
--	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun", "dptun");
-+	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
- #endif
- 
- 	for (i = 0; i < max_group_count; i++) {
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 94315e952ead9be276298fb2a0200d102005a0c1..d560f94af7a86f1fc139204a4e901eaea22c6ef1 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -60,7 +60,7 @@ static struct drm_i915_private *rpm_to_i915(struct intel_runtime_pm *rpm)
- static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
++struct rockchip_irq_info {
++	u32 bit;
++	const char *msg;
++};
++
++static const struct rockchip_irq_info pcie_subsys_irq_info[] = {
++	{ PCIE_CORE_INT_PRFPE,
++	  "parity error detected while reading from the PNP receive FIFO RAM" },
++	{ PCIE_CORE_INT_CRFPE,
++	  "parity error detected while reading from the Completion Receive FIFO RAM" },
++	{ PCIE_CORE_INT_RRPE,
++	  "parity error detected while reading from replay buffer RAM" },
++	{ PCIE_CORE_INT_PRFO, "overflow occurred in the PNP receive FIFO" },
++	{ PCIE_CORE_INT_CRFO,
++	  "overflow occurred in the completion receive FIFO" },
++	{ PCIE_CORE_INT_RT, "replay timer timed out" },
++	{ PCIE_CORE_INT_RTR,
++	  "replay timer rolled over after 4 transmissions of the same TLP" },
++	{ PCIE_CORE_INT_PE, "phy error detected on receive side" },
++	{ PCIE_CORE_INT_MTR, "malformed TLP received from the link" },
++	{ PCIE_CORE_INT_UCR, "Unexpected Completion received from the link" },
++	{ PCIE_CORE_INT_FCE,
++	  "an error was observed in the flow control advertisements from the other side" },
++	{ PCIE_CORE_INT_CT, "a request timed out waiting for completion" },
++	{ PCIE_CORE_INT_UTC, "unmapped TC error" },
++	{ PCIE_CORE_INT_MMVC, "MSI mask register changes" },
++};
++
++static const struct rockchip_irq_info pcie_client_irq_info[] = {
++	{ PCIE_CLIENT_INT_LEGACY_DONE, "legacy done" },
++	{ PCIE_CLIENT_INT_MSG, "message done" },
++	{ PCIE_CLIENT_INT_HOT_RST, "hot reset" },
++	{ PCIE_CLIENT_INT_DPA, "dpa" },
++	{ PCIE_CLIENT_INT_FATAL_ERR, "fatal error" },
++	{ PCIE_CLIENT_INT_NFATAL_ERR, "Non fatal error" },
++	{ PCIE_CLIENT_INT_CORR_ERR, "correctable error" },
++	{ PCIE_CLIENT_INT_PHY, "phy" },
++};
++
+ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
  {
- 	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
--			     "intel_runtime_pm", dev_name(rpm->kdev));
-+			     "intel_runtime_pm");
- 	ref_tracker_dir_symlink(&rpm->debug, "intel_runtime_pm-%s", dev_name(rpm->kdev));
- }
+ 	u32 status;
+@@ -411,47 +450,11 @@ static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
+ 	if (reg & PCIE_CLIENT_INT_LOCAL) {
+ 		dev_dbg(dev, "local interrupt received\n");
+ 		sub_reg = rockchip_pcie_read(rockchip, PCIE_CORE_INT_STATUS);
+-		if (sub_reg & PCIE_CORE_INT_PRFPE)
+-			dev_dbg(dev, "parity error detected while reading from the PNP receive FIFO RAM\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_CRFPE)
+-			dev_dbg(dev, "parity error detected while reading from the Completion Receive FIFO RAM\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_RRPE)
+-			dev_dbg(dev, "parity error detected while reading from replay buffer RAM\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_PRFO)
+-			dev_dbg(dev, "overflow occurred in the PNP receive FIFO\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_CRFO)
+-			dev_dbg(dev, "overflow occurred in the completion receive FIFO\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_RT)
+-			dev_dbg(dev, "replay timer timed out\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_RTR)
+-			dev_dbg(dev, "replay timer rolled over after 4 transmissions of the same TLP\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_PE)
+-			dev_dbg(dev, "phy error detected on receive side\n");
  
-diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/intel_wakeref.c
-index 2e0498b3fa7947f994de1339d4d2bed93de1a795..bbd5171ce0a22435e540f10821f2a0dad59c1d2f 100644
---- a/drivers/gpu/drm/i915/intel_wakeref.c
-+++ b/drivers/gpu/drm/i915/intel_wakeref.c
-@@ -114,7 +114,7 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
- 			 "wakeref.work", &key->work, 0);
+-		if (sub_reg & PCIE_CORE_INT_MTR)
+-			dev_dbg(dev, "malformed TLP received from the link\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_UCR)
+-			dev_dbg(dev, "Unexpected Completion received from the link\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_FCE)
+-			dev_dbg(dev, "an error was observed in the flow control advertisements from the other side\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_CT)
+-			dev_dbg(dev, "a request timed out waiting for completion\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_UTC)
+-			dev_dbg(dev, "unmapped TC error\n");
+-
+-		if (sub_reg & PCIE_CORE_INT_MMVC)
+-			dev_dbg(dev, "MSI mask register changes\n");
++		for (int i = 0; i < ARRAY_SIZE(pcie_subsys_irq_info); i++) {
++			if (sub_reg & pcie_subsys_irq_info[i].bit)
++				dev_dbg(dev, "%s\n", pcie_subsys_irq_info[i].msg);
++		}
  
- #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
--	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref", name);
-+	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref");
- 	ref_tracker_dir_symlink(&wf->debug, "intel_wakeref-%s", name);
- #endif
- }
-diff --git a/include/linux/ref_tracker.h b/include/linux/ref_tracker.h
-index ddc5a7b2bd84692bbc1e1ae67674ec2c6857e1ec..5878e7fce712930700054033ff5f21547e75224f 100644
---- a/include/linux/ref_tracker.h
-+++ b/include/linux/ref_tracker.h
-@@ -24,7 +24,6 @@ struct ref_tracker_dir {
- 	struct dentry		*dentry;
- 	struct dentry		*symlink;
- #endif
--	char			name[32];
- #endif
- };
+ 		rockchip_pcie_write(rockchip, sub_reg, PCIE_CORE_INT_STATUS);
+ 	} else if (reg & PCIE_CLIENT_INT_PHY) {
+@@ -473,29 +476,12 @@ static irqreturn_t rockchip_pcie_client_irq_handler(int irq, void *arg)
+ 	u32 reg;
  
-@@ -48,10 +47,21 @@ void ref_tracker_dir_symlink(struct ref_tracker_dir *dir, const char *fmt, ...)
+ 	reg = rockchip_pcie_read(rockchip, PCIE_CLIENT_INT_STATUS);
+-	if (reg & PCIE_CLIENT_INT_LEGACY_DONE)
+-		dev_dbg(dev, "legacy done interrupt received\n");
+-
+-	if (reg & PCIE_CLIENT_INT_MSG)
+-		dev_dbg(dev, "message done interrupt received\n");
  
- #endif /* CONFIG_DEBUG_FS */
+-	if (reg & PCIE_CLIENT_INT_HOT_RST)
+-		dev_dbg(dev, "hot reset interrupt received\n");
+-
+-	if (reg & PCIE_CLIENT_INT_DPA)
+-		dev_dbg(dev, "dpa interrupt received\n");
+-
+-	if (reg & PCIE_CLIENT_INT_FATAL_ERR)
+-		dev_dbg(dev, "fatal error interrupt received\n");
+-
+-	if (reg & PCIE_CLIENT_INT_NFATAL_ERR)
+-		dev_dbg(dev, "non fatal error interrupt received\n");
+-
+-	if (reg & PCIE_CLIENT_INT_CORR_ERR)
+-		dev_dbg(dev, "correctable error interrupt received\n");
+-
+-	if (reg & PCIE_CLIENT_INT_PHY)
+-		dev_dbg(dev, "phy interrupt received\n");
++	for (int i = 0; i < ARRAY_SIZE(pcie_client_irq_info); i++) {
++		if (reg & pcie_client_irq_info[i].bit)
++			dev_dbg(dev, "%s interrupt received\n",
++				pcie_client_irq_info[i].msg);
++	}
  
-+/**
-+ * ref_tracker_dir_init - initialize a ref_tracker dir
-+ * @dir: ref_tracker_dir to be initialized
-+ * @quarantine_count: max number of entries to be tracked
-+ * @class: pointer to static string that describes object type
-+ *
-+ * Initialize a ref_tracker_dir. If debugfs is configured, then a file
-+ * will also be created for it under the top-level ref_tracker debugfs
-+ * directory.
-+ *
-+ * Note that @class must point to a static string.
-+ */
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- 	INIT_LIST_HEAD(&dir->list);
- 	INIT_LIST_HEAD(&dir->quarantine);
-@@ -65,7 +75,6 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 	dir->dentry = NULL;
- 	dir->symlink = NULL;
- #endif
--	strscpy(dir->name, name, sizeof(dir->name));
- 	ref_tracker_dir_debugfs(dir);
- 	stack_depot_init();
- }
-@@ -90,8 +99,7 @@ int ref_tracker_free(struct ref_tracker_dir *dir,
- 
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- }
- 
-diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
-index 5e84e5fd78e147a036d4adb511e657da07866a55..5fb384dd919e1f1ad632eaf595b954118bcfddab 100644
---- a/lib/ref_tracker.c
-+++ b/lib/ref_tracker.c
-@@ -123,7 +123,7 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 	stats = ref_tracker_get_stats(dir, display_limit);
- 	if (IS_ERR(stats)) {
- 		pr_ostream(s, "%s%s@%p: couldn't get stats, error %pe\n",
--			   s->prefix, dir->name, dir, stats);
-+			   s->prefix, dir->class, dir, stats);
- 		return;
- 	}
- 
-@@ -134,14 +134,14 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 		if (sbuf && !stack_depot_snprint(stack, sbuf, STACK_BUF_SIZE, 4))
- 			sbuf[0] = 0;
- 		pr_ostream(s, "%s%s@%p has %d/%d users at\n%s\n", s->prefix,
--			   dir->name, dir, stats->stacks[i].count,
-+			   dir->class, dir, stats->stacks[i].count,
- 			   stats->total, sbuf);
- 		skipped -= stats->stacks[i].count;
- 	}
- 
- 	if (skipped)
- 		pr_ostream(s, "%s%s@%p skipped reports about %d/%d users.\n",
--			   s->prefix, dir->name, dir, skipped, stats->total);
-+			   s->prefix, dir->class, dir, skipped, stats->total);
- 
- 	kfree(sbuf);
- 
-diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
-index d263502a4c1db248f64a66a468e96c8e4cffab25..b983ceb12afcb84ad60360a1e6fec0072e78ef79 100644
---- a/lib/test_ref_tracker.c
-+++ b/lib/test_ref_tracker.c
-@@ -64,7 +64,7 @@ static int __init test_ref_tracker_init(void)
- {
- 	int i;
- 
--	ref_tracker_dir_init(&ref_dir, 100, "selftest", "selftest");
-+	ref_tracker_dir_init(&ref_dir, 100, "selftest");
- 
- 	timer_setup(&test_ref_tracker_timer, test_ref_tracker_timer_func, 0);
- 	mod_timer(&test_ref_tracker_timer, jiffies + 1);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 380d07bec15a1f62ed27c31a6e211e74f3a5561d..00776cba0276554066c94a6fc86f5ed4df430cfa 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -11620,7 +11620,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- 
- 	dev->priv_len = sizeof_priv;
- 
--	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev", name);
-+	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev");
- #ifdef CONFIG_PCPU_DEV_REFCNT
- 	dev->pcpu_refcnt = alloc_percpu(int);
- 	if (!dev->pcpu_refcnt)
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 1c5e0289f0f0b37c61852d95d4e11a8c12a868f3..5b06a0bf88e62c19f6f610eca3a4c4750ff4a2ea 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -324,8 +324,8 @@ static __net_init void preinit_net(struct net *net, struct user_namespace *user_
- {
- 	refcount_set(&net->passive, 1);
- 	refcount_set(&net->ns.count, 1);
--	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt", "net_refcnt");
--	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt", "net_notrefcnt");
-+	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt");
-+	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt");
- 
- 	get_random_bytes(&net->hash_mix, sizeof(u32));
- 	net->dev_base_seq = 1;
-
+ 	rockchip_pcie_write(rockchip, reg & (PCIE_CLIENT_INT_LEGACY_DONE |
+ 			      PCIE_CLIENT_INT_MSG | PCIE_CLIENT_INT_HOT_RST |
 -- 
-2.49.0
+2.25.1
 
