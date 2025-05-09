@@ -1,126 +1,84 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30811212B05
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43A02356D9;
+	Fri,  9 May 2025 16:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807616; cv=none; b=gO+ktzvgmTQUQJoamYCpE/O/iZ4JF5PFiT/eM2A/qC1IwKUl0o/bKOeEyQy/z6udFiQkDjpHEOUFMfadhWe0IfzwMJHSsAdMrjAJQWSjMe7aXVIqDFu7VJcNMwcOIcU9hB2t8Kwl1pdY1pLaADyZcZK7La9kOHg5CFEEl/0wamY=
+	t=1746807667; cv=none; b=E9O4kj8zOgTbqFndumuOWNk3gqsI04zaNP4ISzAksQcmtGh4rlgFbp/mhgmVAQYvanZFgUr4y6Ld+rehQeiwpinpJUnsOzAVBQ+rqQPlqIanD4tHopAYGkzB8+fz+LC8861+GV7jq4o8IR0mFiOCsdx1hezmDby4PsEbMsjC+4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807616; c=relaxed/simple;
-	bh=bZMJIKA/Q8Y8cbpxTVSrNE3ays5xUUBzuHzZIUbk3gg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M9hi81FbMbmg4SFyveNoWoy8twXdRcz6lvb4VfzAA52P0bCmhL9uX4SWhJZzg+G05btFVZsfmsdK18kMEemt+GJ6XTAUKG+yYyDbc28NgbfC7WWDW2pDJ+I+8Pv6iYD16dGHE88+6CbBGIEicZa/4wT4r2dsqpm+kzZgCmkpi9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ry5kwAiz; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746807667; c=relaxed/simple;
+	bh=dL7KD/TlJeCv74sI23DpTJADqUEeXDYITiCPLXNsLjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=omV2wCcacX+qtFOHKTsoBW+tFK0KWPHO4iX/PT0U1kh0bdCRh+VYv6OmT9UCyEPPxVSJpsoa1XwC7XNbY9hYC/WpO/tJQ92HFKUGzyAMADbhTNTXrtBkDjQ88GAy+xeTXK5VyigR21qLjhgQwW+DePIBWKZ/FFSX+MSgYExs0oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npDu+qte; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ry5kwAiz"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7411f65811cso1885120b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:20:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746807613; x=1747412413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WuTzL+215B1tHHIPx1bndSHtxQPnuNkFwtYhq6VJISA=;
-        b=Ry5kwAizcVWMS8VhcyN3Y9f757HO9EyDPZNml1RLEziUayxLGsA81Umbqpqt1gvyLn
-         9+BQR2Cduq//nFgcfcVgiqK3hzo+ihGkvDciCGN2hpP28JbjLi1HHhYYjMX6ylRqmGTF
-         JH+34VHUI8ln4cZ79IKc1aZc9v8YkTIB4lorOw21tKlJxEqOad9x6OtEyd+4uzd+jlHj
-         cDlGtCTLU3yKbpz9MluZSaIe3XCLExISCt0eQkHmw1f8HgSHn1v3JQ1EQFFnDiEvvpa5
-         j4RH7nrQi7vY/77hgtc2JQnVqGhItXfl2q83aVPGWfjP/ncrIByB3JIEGpmvJDU36avS
-         oYcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746807613; x=1747412413;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WuTzL+215B1tHHIPx1bndSHtxQPnuNkFwtYhq6VJISA=;
-        b=b3Ice+F1IZQ6EkIvVis1ohP1hn8b2n9krApgZkUKE93reNupYif0EuFPQMU/+1jn3N
-         26KzkP/fq30motMBN9ziZbhS1v4cbn02QxX80xHrjxEXj57vegBua2KZ+MPxOADjiSBE
-         OHg8gOXm0w7a8oGX48QV94Ur7JjqWsDOz+uqklL71C3OjzfxzI+Dp9igLJFza18oNGXN
-         89RxoIwJNuqhmE4P1lJ3wEQRsZ1aPNBX0yRxqnTw68n0pESJUB0vWGddYCYm0VVsWq+e
-         jXF3kL8QGxp2Xcy9hDZ009dr20kwXHdZAoPezxwZR+Jr8OHm8GaqL91wtp3r87Tcq3vS
-         HagA==
-X-Gm-Message-State: AOJu0YwYcw546xmwncQdFqZzu2cgRmJByY8QBlUgnXg3/itkb5xdKOsL
-	xzn4XbKjTbmAPTBWNmazTAzyMI6shW8zBxUWQAKhD+iUiySr8m5lGdrwVznz
-X-Gm-Gg: ASbGncsCz+2SJarzSEf9RxOPl1NxShx2SP45rdB/lupAxwquyc6gp9raJ5Wk6F+TCez
-	SHQtWzvsexqqISmAdM5tg81ieyLnVT5AePedFZc7diTWdPWHssDtj0H3qxZZ+VJgnTGPCBv9EgY
-	UhB8NC+WXG/+N7iy5Bkvw3XfVGJBLETVSgFTjci37EvVDeFn03OJldZbIeV90Wc8BM4Hj94S/tq
-	Hcan34W6dKrn/SrpwfLG25V2NYkNSM5mlyEB1ktCbY0URpIhONxJ0RYCCGVGc6Gq8Im3+Dz1mF+
-	Q6V1jRQy8atYYbKlMu5R0xcWbiD+bFWLlzXMyBb3
-X-Google-Smtp-Source: AGHT+IEWql3Ddh8TsXl6V5lYGyLHAnbo6wvzYweE8Rryrnp6fcNK3nZHHZVIhuXflve8pTkTagY7vQ==
-X-Received: by 2002:a05:6a00:1915:b0:736:62a8:e52d with SMTP id d2e1a72fcca58-7423bf9bbe0mr5265358b3a.12.1746807613286;
-        Fri, 09 May 2025 09:20:13 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a8f45csm1958760b3a.178.2025.05.09.09.20.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 09:20:12 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Andrea Righi <arighi@nvidia.com>,
-	Tejun Heo <tj@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: [PATCH] topology: make for_each_node_with_cpus() O(N)
-Date: Fri,  9 May 2025 12:20:08 -0400
-Message-ID: <20250509162009.540506-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npDu+qte"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746807666; x=1778343666;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dL7KD/TlJeCv74sI23DpTJADqUEeXDYITiCPLXNsLjY=;
+  b=npDu+qtevgylzG1Rk+3h0Bmq8a1+Cy8UhMcXq5KsfHXTpV3QTCIjvsTb
+   59fBwn6v4FnGmOjDA4PIGU2JkHwjRiRjb6cwcFlSSCBsDLmgRQsZE8yz/
+   RyjDpzc8zIITSb6LImwSXb4HqDY7Y3Xi8CGhEvRM/I3R4c8KhDwxmH9I6
+   UJQ5ajGEd8jGPUeQjqxX/1ngHsDDcgOlnliJbGvkwvrL+x1K8CUK98M4G
+   YbWvRuMapi/o6F2TKVQ9CzF5nySRfXDMBTXIqrmqx8tQRGAHTtT8AfueY
+   Q+iy2GC4qcfXNswYhV80AhtJgMQdqC0o6d+dfQysbxJviawg932MVcrfa
+   w==;
+X-CSE-ConnectionGUID: Gyl0z5usTnybaw9ZY1XWDw==
+X-CSE-MsgGUID: jbZO14siRFODurXvRM4vjQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48339790"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="48339790"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:21:06 -0700
+X-CSE-ConnectionGUID: zXuMQpltQAKA3+Ng8M/phg==
+X-CSE-MsgGUID: dUIDlxakSoyMHg85kq6Wrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="140724147"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:21:02 -0700
+Date: Fri, 9 May 2025 19:20:59 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	x86 Maintainers <x86@kernel.org>, intel-xe@lists.freedesktop.org,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: Re: [PATCH v1 2/3] PM: sleep: Introduce pm_suspend_in_progress()
+Message-ID: <aB4ra4BsLu5Rv5ea@black.fi.intel.com>
+References: <5903743.DvuYhMxLoT@rjwysocki.net>
+ <2020901.PYKUYFuaPT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2020901.PYKUYFuaPT@rjwysocki.net>
 
-From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+On Fri, May 09, 2025 at 03:02:27PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Introduce pm_suspend_in_progress() to be used for checking if a system-
+> wide suspend or resume transition is in progress, instead of comparing
+> pm_suspend_target_state directly to PM_SUSPEND_ON, and use it where
+> applicable.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-for_each_node_with_cpus() calls nr_cpus_node() at every iteration, which
-makes it O(N^2). Kernel tracks such nodes with N_CPU record in node_states
-array. Switching to it makes for_each_node_with_cpus() O(N).
-
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
----
- include/linux/nodemask.h | 1 +
- include/linux/topology.h | 5 +----
- 2 files changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index f0ac0633366b..1e2bdda1a0a5 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -541,6 +541,7 @@ static __always_inline int node_random(const nodemask_t *maskp)
- 
- #define for_each_node(node)	   for_each_node_state(node, N_POSSIBLE)
- #define for_each_online_node(node) for_each_node_state(node, N_ONLINE)
-+#define for_each_node_with_cpus(node)	for_each_node_state(node, N_CPU)
- 
- /*
-  * For nodemask scratch area.
-diff --git a/include/linux/topology.h b/include/linux/topology.h
-index 24e715f0f6d2..ffee6b4a071a 100644
---- a/include/linux/topology.h
-+++ b/include/linux/topology.h
-@@ -29,6 +29,7 @@
- 
- #include <linux/arch_topology.h>
- #include <linux/cpumask.h>
-+#include <linux/nodemask.h>
- #include <linux/bitops.h>
- #include <linux/mmzone.h>
- #include <linux/smp.h>
-@@ -39,10 +40,6 @@
- #define nr_cpus_node(node) cpumask_weight(cpumask_of_node(node))
- #endif
- 
--#define for_each_node_with_cpus(node)			\
--	for_each_online_node(node)			\
--		if (nr_cpus_node(node))
--
- int arch_update_cpu_topology(void);
- 
- /* Conform to ACPI 2.0 SLIT distance definitions */
--- 
-2.43.0
-
+Reviewed-by: Raag Jadav <raag.jadav@intel.com>
