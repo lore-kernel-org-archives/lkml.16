@@ -1,202 +1,204 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DCE2749EC;
-	Fri,  9 May 2025 09:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDEB14F98;
+	Fri,  9 May 2025 09:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746781521; cv=none; b=myL66+arJlGlIpK1dHdecxzWaGms2VRiFz6jT7D8VdtlbA6IzoXrr+eSOlSvrZ1DkJAgrRNtOJK+XHyG18Uwa4dF/WFoXjNwtyJ00+E4BgKhh4pmVXNQ4+0NKbYsXvQ4xvTY1B0fVtszGNgq3/vMIMc+D2Zuql4mTZXcoUeZkeQ=
+	t=1746781615; cv=none; b=o1EWANTJymePq3OsAQaNgRQEVLDcTdgKIMWsIvEumriAN2ZDtYavDhwPShgyZ4KpwgDs32LoEGVtoHuww8hEUkgkmyrKoNs+/IvSEr7+IlbgvAd8yV80uKWKfXTDQPH3jOR39rHJd4xAKXSemkB+ow4QlqRZtGJW33tS/4ugyq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746781521; c=relaxed/simple;
-	bh=r6AyoO4jM+4/G7CsUbGRmd/cmBg0WG9BKGrxNSbN2nE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=STlfCyrLGmG+t9zVR1/0ztImILEikE7TGbtDW8Cpemj0LX/RlxSudpWRUgIIpU6dEUCEZ8j/ZSr9WmHOXDcorPHyVJkyXTrzU0BjO+QqjJMTuKgaCuzna1GIPx59xh4ZPtBPeSnEmIzZ87Hr0NjTHqrCCrKx9ysJ/Omo7NCeTKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H4xvfpS1; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746781615; c=relaxed/simple;
+	bh=sAFkRHh9bzGYnsvmn6RJcgV4uo5APsdL0DD3ImIhGSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IUuCtrebEko8lTgRtxj+SJQgfdfg5TXpRpswOLvideecHv1oksYowuvGjLg1eljXKBoktKezhGMXrXGFsBwGDdqv/86b7szjvxEsjD40JScN1yHRLS1D9NuVu33324dknyhh6xJ3ce9UcZhBCpJhoYl7qlg1oeSVMBvf6xCVAdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IoEVEnfR; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H4xvfpS1"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5498kiYu013054;
-	Fri, 9 May 2025 09:05:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qSUZkrk+gU0muWy6QiHsRn3FzS/UezpX2nUffPV+MkM=; b=H4xvfpS1FjXoSrJ4
-	/mctbo0cTpZCa5VKVGbnTvaYkgfD4KkMasHTn6jwG5MjG7jqfp1EKXAqtxcIV15N
-	P8LmDWxh5I24WxheENwrxjBHIhsFAxT2+Dysse1ia2abXWy8EkLlKqE5W2QD42t3
-	FLFJ6PgExZncBHQUJzRlm3n7AUUE7p51nTwgXp9bLq+KhHRohd2lMgDRqQS5fOAy
-	S9C7cPN1VUMn1R750bo1K0t+zpEyLlnHhAcVSjsxdc/nhX6YUjJwLtEu2fGX01HS
-	zPekECfTNAIiRfh4fnIOVc61s0BWCDrRlnG2op8KvcDJjfWPklfAORfpHgE75//c
-	pYSkQQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gt52u8cf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 09:05:17 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54995GdN018495
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 09:05:16 GMT
-Received: from [10.216.47.65] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
- 02:05:12 -0700
-Message-ID: <73cc2db3-8692-4da7-8cfb-29c2450a706d@quicinc.com>
-Date: Fri, 9 May 2025 14:35:10 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoEVEnfR"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ace3b03c043so300645266b.2;
+        Fri, 09 May 2025 02:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746781612; x=1747386412; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ww1C5cskFkFK3cmuMB2ZAcdmwSeUk/Y0atV0njjxmYo=;
+        b=IoEVEnfRrOjx3hvG/XAzT9ujZIzlFlXmFtQTbWCmDzZsGZ4EZsh6kR987yJJWURnKW
+         kWGKSiaVbs9GaVPcDI5YzNZLTJjvZfv9kLwy1y7RoaoRJDU7IThvd5PNRi4WjiitMKwp
+         86ThWhQ3UM/efwHwB2B+JuaZLYcsM0YRqrhRanENsVU5RUzgyEv33bZgaVdMyLsRWBdU
+         /7KUofUa4HIptl94yxzHA3WunSRma0vx/W2I85lEGhwzMNQHp3pEspxJsjIzRxy52PHE
+         Ocaan9XSi8droq8Eq9VC2jo/kfzi9nQNRlA5J3N6puVxDLGGtOHrUOi2iRj1uJjW0fGI
+         3C4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746781612; x=1747386412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ww1C5cskFkFK3cmuMB2ZAcdmwSeUk/Y0atV0njjxmYo=;
+        b=gDsPTezMLKA5oHhgwZUV0nW15ukbBI8xYZ6yTwyCzZbZT6f0q65opL5Ze6Nq9v72z4
+         gA4ZxdZgBSglAHgaPJGxYFyJNh+DYiBz0PLtFFlCSD+r9LWIaSGKTuCLI7yz6zKJ8g6R
+         vFlOtsga2dqdSgeQStSZI0VlXc5Gu7k/MimJCEKMbc7d58ASILSH4AYnIALKptz/KpZX
+         WcpNJlHe3EnBn2KS7ahR1P/FZv1AgI9vV200MBsVqthm+tXEun2F2YJ8d3sEklw0tWFl
+         RosDQVhd7JnZWHFi8d+D6TWqtkLjHefR6Vj2fBJKe/goo6VylouxAAoAzkOZqloEZUpR
+         suqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZR26DfErl4cdLqMGi/Thfbw0yW6BQIF/xjDVehy/5Ts7WKmcflPTBsRqV6R+xDblCmFJlsZ89JFU9ze3z@vger.kernel.org, AJvYcCWvIsr0jtmeW8w/00NV+nBDHcLo35pWI5hxJAZ9qCJoiugJwTuyY7SPzFfBWpzkWOS+KJ8ketEozJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKEENpsFfYFeDEqsp+9yWshRcJNz9rCEaaj7lPQ87aXtdul3rW
+	t1/ypiH0yElo1eiNhSk1XyXdEkNaccKw3/H+GlnTZlFE/fRKCu4fVBQImGcOtSIJrM1BhPMJnsN
+	91G5R/P1EgrWvdr9T+oVIlm3BTK4=
+X-Gm-Gg: ASbGncsTY9x6yvNpdFi9k41j7tBbSDFiZvcG3KNG/GtzMR9AQiTL+BN6zXg0tZv4kAY
+	xyf+w6b38BwvhZhC9Goce4DsiCiaiWybuTgz+DOomI1ybG7cpeN504iqOgRuC4QAg+a5dToc4bT
+	iMG2BEa3qpxAtKz35dz7XxKa8y
+X-Google-Smtp-Source: AGHT+IHIy0jD4deps83mC+BJmknL3Cgj5RJsKo2gQsuaVts0eTtH76HrlAlx5F1MimQi1yke5qB3yYDyvNVQ5fq28rQ=
+X-Received: by 2002:a17:907:940c:b0:ad2:2417:12db with SMTP id
+ a640c23a62f3a-ad2241716dfmr90159966b.40.1746781611479; Fri, 09 May 2025
+ 02:06:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: dts: qcom: sa8775p: Add default pin
- configurations for QUP SEs
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_msavaliy@quicinc.com>,
-        <quic_anupkulk@quicinc.com>
-References: <20250429173334.303003-1-quic_vdadhani@quicinc.com>
- <xvmk4paonzafxm5aesu67ggkwpdak2ughhi35wap45rjtuplsk@xe52pvnudsbp>
-Content-Language: en-US
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <xvmk4paonzafxm5aesu67ggkwpdak2ughhi35wap45rjtuplsk@xe52pvnudsbp>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA4NyBTYWx0ZWRfX4zzvydsRplEs
- pqJfMeMaWHQ8ZW70HNUbCjB8do/CShgETaiuOPns8KgolxJRVSgmMe+8Tfg2h4XGzs/z71xPryR
- WtCT2p2yG46G+abJcVHQSd8NfN6mgIvoE/oMm9ZKQ8wK099iPnnNDPP9/zXF9w8rta91P/4MSiU
- btRkG2cEM5df2FUO2pWTdxAsbMhuqqVX1iVyL4QdqY4WefvSd23HVFJNNP7oAhfDq/5ZXyOSUtg
- UP88r7Qj6jw7hUh+2S5465QDL+xCOUMRebizpbAzbBKPcVqodIBCy+pubx7glB4B4qwOxc/6AS8
- KmON2hyMM6NtUrWtZGSbAa7e/hWL/lGSSOIbp5LtjMr47YsaHCqznKxLxiLoi5aHAv/v2z9DhvM
- h0SFCqUMK0yo3KO7gSgPaeT52OFR+lbg+EyqqswRTWfFeLak1wmTVt5PeXJjE7zB44EEm8Gt
-X-Authority-Analysis: v=2.4 cv=LKFmQIW9 c=1 sm=1 tr=0 ts=681dc54d cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=KtguLzq4JQKON55N9fIA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: rb27hl35HjopbzTLVNaDzE77O7gZnewt
-X-Proofpoint-GUID: rb27hl35HjopbzTLVNaDzE77O7gZnewt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=841 clxscore=1015 lowpriorityscore=0 suspectscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
- priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505090087
+References: <20250509013931.47524-1-andrew.lopes@alumni.usp.br>
+In-Reply-To: <20250509013931.47524-1-andrew.lopes@alumni.usp.br>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 9 May 2025 12:06:15 +0300
+X-Gm-Features: AX0GCFuAk1M85duu0X3oWCXjgf2w9d_WEv2IGSuBGytINUPqhfHKLGeCIGOw80w
+Message-ID: <CAHp75Ve7-hMUxrmXQnkMjynhPUbD6R+K=-j+h0zELvcxZdy5nw@mail.gmail.com>
+Subject: Re: [PATCH v3] iio: accel: sca3000: replace usages of internal read
+ data helpers by spi helpers
+To: Andrew Ijano <andrew.ijano@gmail.com>
+Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, May 9, 2025 at 4:39=E2=80=AFAM Andrew Ijano <andrew.ijano@gmail.com=
+> wrote:
+>
+> Remove usages of sca3000_read_data() and sca3000_read_data_short()
+> functions, replacing it by spi_w8r8() and spi_w8r16() helpers. Just
+> one case that reads large buffers is left using an internal helper.
+>
+> This is an old driver that was not making full use of the newer
+> infrastructure.
 
+Suggested-by: ? (IIRC Jonathan suggested this, but ignore if I am mistaken)
 
-On 5/3/2025 11:11 AM, Dmitry Baryshkov wrote:
-> On Tue, Apr 29, 2025 at 11:03:34PM +0530, Viken Dadhaniya wrote:
->> Default pinctrl configurations for all QUP (Qualcomm Universal Peripheral)
->> Serial Engines (SEs) are missing in the SoC device tree. These
->> configurations are required by client teams when enabling any SEs as I2C,
->> SPI, or Serial protocols.
->>
->> Add default pin configurations for Serial Engines (SEs) for all supported
->> protocols, including I2C, SPI, and UART, to the sa8775p device tree.  This
->> change facilitates slave device driver clients to enable usecase with
->> minimal modifications.
->>
->> Remove duplicate pin configurations from target-specific file as same pin
->> configuration is included in the SoC device tree.
->>
->> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->> ---
->> v2 -> v3:
->>
->> - Remove duplicate pin configurations from target-specific file.
->>
->> v2 Link: https://lore.kernel.org/lkml/20250324151047.842648-1-quic_vdadhani@quicinc.com/
->>
->> v1 -> v2:
->>
->> - Drop drive-strength and bias property from soc dtsi.
->> - Update commit log.
->>
->> v1 Link: https://lore.kernel.org/lkml/20250225154136.3052757-1-quic_vdadhani@quicinc.com/
->> ---
->> ---
->> ---
->>   arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi |  35 -
->>   arch/arm64/boot/dts/qcom/sa8775p.dtsi      | 750 +++++++++++++++++++++
->>   2 files changed, 750 insertions(+), 35 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> index 967913169539..3b4243ef37e7 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> @@ -508,15 +508,11 @@ queue3 {
->>   
->>   &i2c11 {
->>   	clock-frequency = <400000>;
->> -	pinctrl-0 = <&qup_i2c11_default>;
->> -	pinctrl-names = "default";
->>   	status = "okay";
->>   };
->>   
->>   &i2c18 {
->>   	clock-frequency = <400000>;
->> -	pinctrl-0 = <&qup_i2c18_default>;
->> -	pinctrl-names = "default";
->>   	status = "okay";
->>   };
->>   
->> @@ -678,8 +674,6 @@ &sleep_clk {
->>   };
->>   
->>   &spi16 {
->> -	pinctrl-0 = <&qup_spi16_default>;
->> -	pinctrl-names = "default";
->>   	status = "okay";
->>   };
->>   
->> @@ -712,80 +706,53 @@ ethernet0_mdio: ethernet0-mdio-pins {
->>   		};
->>   	};
->>   
->> -	qup_uart10_default: qup-uart10-state {
->> -		pins = "gpio46", "gpio47";
->> -		function = "qup1_se3";
->> -	};
->> -
->>   	qup_spi16_default: qup-spi16-state {
->> -		pins = "gpio86", "gpio87", "gpio88", "gpio89";
->> -		function = "qup2_se2";
->>   		drive-strength = <6>;
->>   		bias-disable;
->>   	};
-> 
-> If you are movign parts of these pinstates to the sa8775p.dtsi, then you
-> should also turn these declarations into label-based updates:
-> 
-> &qup_spi16_default {
-> 	drive-strength = <6>;
-> 	bias-disable;
-> };
-> 
-> Otherwise the configuration is fragile: if the name gets changed, then
-> two parts will not match.
-> 
+...
 
-Sure, Updated in v4.
+>         ret =3D sca3000_write_reg(st, SCA3000_REG_CTRL_SEL_ADDR, ctrl_reg=
+);
+>         if (ret)
+>                 goto error_ret;
+> -       ret =3D sca3000_read_data_short(st, SCA3000_REG_CTRL_DATA_ADDR, 1=
+);
+> +
+> +       ret =3D spi_w8r8(st->us, SCA3000_READ_REG(SCA3000_REG_CTRL_DATA_A=
+DDR));
+>         if (ret)
+>                 goto error_ret;
+> -       return st->rx[0];
 
->>   
->>   	qup_i2c11_default: qup-i2c11-state {
->> -		pins = "gpio48", "gpio49";
->> -		function = "qup1_se4";
->>   		drive-strength = <2>;
->>   		bias-pull-up;
->>   	};
->>   
+> +       return ret;
+>  error_ret:
+>         return ret;
+
+Doesn't feel like a good cleanup. Please, drop this error handling
+completely, just return instead of goto above.
+
+...
+
+> -                       *val =3D sign_extend32(be16_to_cpup((__be16 *)st-=
+>rx) >>
+> +                       *val =3D sign_extend32(be16_to_cpu((__be16) ret) =
 >>
-> 
+
+This doesn't look good, can you define a proper __be16 variable on
+stack and use it instead of ret?
+
+>                                              chan->scan_type.shift,
+
+With the above done, move this parameter to the previous line.
+
+>                                              chan->scan_type.realbits - 1=
+);
+>                 } else {
+
+...
+
+> -                       *val =3D (be16_to_cpup((__be16 *)st->rx) >>
+> +                       *val =3D (be16_to_cpu((__be16) ret) >>
+>                                 chan->scan_type.shift) &
+>                                 GENMASK(chan->scan_type.realbits - 1, 0);
+
+Ditto.
+
+...
+
+>         /* if off and should be on */
+> -       if (state && !(st->rx[0] & SCA3000_REG_MODE_FREE_FALL_DETECT))
+> +       if (state && !(ret & SCA3000_REG_MODE_FREE_FALL_DETECT))
+>                 return sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
+> -                                        st->rx[0] | SCA3000_REG_MODE_FRE=
+E_FALL_DETECT);
+> +                                        ret | SCA3000_REG_MODE_FREE_FALL=
+_DETECT);
+>         /* if on and should be off */
+> -       else if (!state && (st->rx[0] & SCA3000_REG_MODE_FREE_FALL_DETECT=
+))
+> +       else if (!state && (ret & SCA3000_REG_MODE_FREE_FALL_DETECT))
+
+Remove redundant 'else'
+
+>                 return sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
+> -                                        st->rx[0] & ~SCA3000_REG_MODE_FR=
+EE_FALL_DETECT);
+> +                                        ret & ~SCA3000_REG_MODE_FREE_FAL=
+L_DETECT);
+>         else
+
+Ditto.
+
+>                 return 0;
+
+...
+
+>         ret =3D sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
+> -                               (st->rx[0] & SCA3000_MODE_PROT_MASK));
+> +                               (ret & SCA3000_MODE_PROT_MASK));
+
+Remove unneeded parentheses.
+
+...
+
+> -       ret =3D sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1)=
+;
+> +       ret =3D spi_w8r8(st->us, SCA3000_READ_REG(SCA3000_REG_INT_MASK_AD=
+DR));
+
+> +
+
+Stray blank line.
+
+>         if (ret)
+>                 goto error_ret;
+
+Perhaps you wanted it to be here?
+
+>         ret =3D sca3000_write_reg(st, SCA3000_REG_INT_MASK_ADDR,
+
+> -                               (st->rx[0] &
+> +                               (ret &
+>                                  ~(SCA3000_REG_INT_MASK_RING_THREE_QUARTE=
+R |
+>                                    SCA3000_REG_INT_MASK_RING_HALF |
+>                                    SCA3000_REG_INT_MASK_ALL_INTS)));
+
+Remove unneeded parentheses (outer for the last parameter).
+
+--=20
+With Best Regards,
+Andy Shevchenko
