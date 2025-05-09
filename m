@@ -1,60 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AFE26156A;
-	Fri,  9 May 2025 22:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CD7261399;
+	Fri,  9 May 2025 22:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746828740; cv=none; b=Soxz+UDw1FuefpC1Fju3SvrjAmkakHXFyyeJeCYEaRMvnxibSszF5oUyoGrP+gObVUByIO1u0miN3r22anlLhRIqZyEF/79EZBMnL0Y0OT3hV0+bnc4hcZwkDvz7hpOfb96fR9kqhryfQUC5EC01mb+u236zBQH3GeU0Y5V76FI=
+	t=1746828794; cv=none; b=kcIOq6ME8jtzyXD9NdlY/GEPYUXRQ1umFnYDzU4sc2xdnOPbVdXzqmPmQdCRQ5HLxxnRmhkx4kk0EOwEHjsH4mJVmtg0DqqrmpJFmM2fST2tkxRyC4WlJ0ECVaDbCmXbEOnkNfCZXDC9Ard7Hl7W38/MvKIklV+cwlsTowN+h+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746828740; c=relaxed/simple;
-	bh=ZZ25JgcrA3CQi6q3MuZwVNyCrz8R+uAApr2nUDdvFv4=;
+	s=arc-20240116; t=1746828794; c=relaxed/simple;
+	bh=BfrFfELWW3+UrgSOiH4UXZ9Ta4VUjbwmJzYcDJxUpW4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2gvr45zVRBwg+F9p/Ep3/lqlenbP+scqspzlIRSSzMMtxlXOjNsIItRAth2xWDe3jsWBXa9irKdNGZLeXAg1pEQ/FxeqHGMm8wSLAYR1GdFTlGI0EnWXoIX/N9iyHzVOM44kgAEmoCGD/ELz2gA/QrOxq8B9Fr6A9I7C7834aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meYThyWq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=K4IjeoRHWkVUPiSHaTSeKbQKFSgqyc/CF14nfPXlSD47pmzA1LPGOrE1ZZTkX8xEQcF/qXXVg4IFCwQeXtx3TMN9hmXKsMw0Srn7aPkWk8LaoHbmxhje/NTrd5f+EFoEf7xKNQUSn/Y0KWe4y2neBarXrg5773qcmOUxKbVMuUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=LqTS3gBw; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meYThyWq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 148BFC4CEE4;
-	Fri,  9 May 2025 22:12:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746828738;
-	bh=ZZ25JgcrA3CQi6q3MuZwVNyCrz8R+uAApr2nUDdvFv4=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="LqTS3gBw"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E7B4240E023E;
+	Fri,  9 May 2025 22:13:08 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id jgYeXQKVFDsw; Fri,  9 May 2025 22:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746828778; bh=Z3K2BVjA7j2LUuahJEX1B3DgJ/pI+yotAmrKie8D/lE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=meYThyWq16D2RKwR67+RZZErriyTQ8nr6U5QjQRY7ExamF5O7DMi0Xvv+K/DfqlxU
-	 Hl+wQdoHM+VAt+F09kxTdvYReRMc6mDDjMmffY78fwT0XmNvnzl+co7Q3ixLCCYzxQ
-	 JGjAJrjPh7EgZz9ukFqDTP5xKeT+x1pBodzYCt6ROlNRFijRr2p2h/aF0u1G9jJLPd
-	 DxYoYbqHqXjIVHhaWacinSxAGTG/l+NJcRXUtt/dOAp4Q48aPzRSw/JTT5Htd3F7oi
-	 IL+8UCSp4lwV9WrVG3gfZaC3oQhGKPs3PpGf7eXuw0iS48KUsy4ebqW1C3+tzQazO1
-	 d7rumTinve3xA==
-Date: Fri, 9 May 2025 15:12:16 -0700
-From: Bjorn Andersson <andersson@kernel.org>
-To: Melody Olvera <melody.olvera@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, 
-	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, Trilok Soni <quic_tsoni@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] soc: qcom: llcc-qcom: Add support for LLCC V6
-Message-ID: <cnlu4yhfax3ggtkig46bwimr7acpoxl6x74dpu3kdwq2wcjwmd@d6spkmdywrja>
-References: <20250414-sm8750_llcc_master-v4-0-e007f035380c@oss.qualcomm.com>
- <20250414-sm8750_llcc_master-v4-2-e007f035380c@oss.qualcomm.com>
+	b=LqTS3gBwF3ftaNl/LiXXmbo7ugHXLoP9V77GE6e6cI0//ogoIgmZgs1wr0UYKwTDe
+	 0Pp/iXrbZu+UMcTjV0URPAnRme8uxjF9Csf8XbovENRBSAx18Y2xlDffKcpOcD3n1f
+	 H1wTwGRALZDgXPSGi9Yel7i/Z0gHLjxxXAp/it//wA1DsFMx/GsSdThp4VtDbpyXY0
+	 H10Eaoc1exWPxVLaNgVj4vrHC4agj6PvO0ne8C5FU/DOxBkHasQPwO39mXNQ2d3zrv
+	 vhv/W4Coqc3dAmX+T1fH4eyAgtC2h2m4Q5HBbDVa7cNTgdCfbwE3bjaqJ9bSaMrk++
+	 kLr+May4NJ48gRZQyKgP4ll/UbzrH70y5XKVZfXSgFfJb2WhipqJ35E8ZwFsmfUEPu
+	 TrtJ2cRqX9mYK/cQNHzpvsh7F/ElSlR79garces/Y5Ej7rQdvR2atx1PFVeGIOD043
+	 K3klKl7wD9lU/KF6MyY4wDhj4YTB8zCK+5sN2QivUwZ4M2AgVj9oFl71zBz0O2dDCg
+	 kdZYSAHSlydgDtKynjW/0coUuu98y3QJcvSmgUEianVmLAwQS9vaNzvlieVVC2ovkW
+	 jmQeNMah4xDdKXwLcFGiCi/9cckxaREkN8dU1V4vTvv8OUr9QC3urAkG8ByqefjE2d
+	 upUCsFdlR5+g6pw4tyVRUlq0=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 625F940E0238;
+	Fri,  9 May 2025 22:12:43 +0000 (UTC)
+Date: Sat, 10 May 2025 00:12:36 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 43/62] x86/alternative: Define ELF section entry size
+ for alternatives
+Message-ID: <20250509221236.GGaB591CVcWMLiMJN5@fat_crate.local>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <68a8126c21f4ee054d6c4d6262d0f465b5babd89.1746821544.git.jpoimboe@kernel.org>
+ <20250509213635.GFaB51YzAbFIlC37QS@fat_crate.local>
+ <tv2gorcohozg6ppwetgi5qqgoabsrv62qbgsgph6z7zk6vxln2@qmgsjufyenjh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250414-sm8750_llcc_master-v4-2-e007f035380c@oss.qualcomm.com>
+In-Reply-To: <tv2gorcohozg6ppwetgi5qqgoabsrv62qbgsgph6z7zk6vxln2@qmgsjufyenjh>
 
-On Mon, Apr 14, 2025 at 04:21:51PM -0700, Melody Olvera wrote:
-> Add support for LLCC V6. V6 adds several additional usecase IDs,
-> rearrages several registers and offsets, and supports slice IDs
-> over 31, so add a new function for programming LLCC V6.
+On Fri, May 09, 2025 at 02:54:00PM -0700, Josh Poimboeuf wrote:
+> On Fri, May 09, 2025 at 11:36:35PM +0200, Borislav Petkov wrote:
+> > On Fri, May 09, 2025 at 01:17:07PM -0700, Josh Poimboeuf wrote:
+> > > +#define ALTINSTR_SIZE		14
+> > 
+> > We have sizeof(struct alt_instr) to offer...
 > 
+> Right, but IIRC, sizeof(struct alt_instr) isn't available at macro
+> expansion time so it would have to be provided as an input constraint.
+> 
+> That doesn't really work for the ALTERNATIVE macro, where the asm
+> constraints are out of our control because they're set by the caller.
 
-Can you please fix up the checkpatch warnings in this patch?
+Bah, that doesn't work. And you're enforcing it with BUILD_BUG_ON(). Oh well,
+ignore the noise.
 
-Thanks,
-Bjorn
+:-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
