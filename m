@@ -1,98 +1,91 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A32B238172
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1AF238172;
+	Fri,  9 May 2025 18:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746815281; cv=none; b=nqu+L0y/O8QYuPsAQgX6dgUHdI2mtAqpOEBj7ghaDtxAvmN1MKZEO8eB1SXT2hP5dBH5aM4KgyGehMgc/HqjS89t+rVIUYLu1VYOYABtME5K/OzkgTEwlHphGHFz9Ds/KftrurC+fRYNNlS4zyVWPZES+r5Wn0vlzcEQlaF2IYM=
+	t=1746815317; cv=none; b=tCNpXEKHnxi0vq7QDTD0xcV/Oloj+fy/KTBupSsximi5Vv+VL86ttrYRXyY1eT8ZwgQZdAlRGdlKDhfI0Vvo2YJ1gsegytpg2HdypLSaid104re2gYGAo2wf9tJUl+pdTYemQXoJioyuNhwqLHCPPA6AmbuKWU+fngHppf280ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746815281; c=relaxed/simple;
-	bh=sGMDR4vrCsmFK5oEVJjhbe9GdCx3AVSX7y/0PLZa9DE=;
+	s=arc-20240116; t=1746815317; c=relaxed/simple;
+	bh=10fWKQkNnHsqIbf/pw3ZTsZtcdW11Mi85qpJNxHdr28=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oKZAwvU31azB4NOaWIJh39YeXmKz4NJYxieYS+wa9maNh9iI87NAQisMw9sV3VYRtObPGV3DPwmlNLwXNnM+Krc5/Aa65I6B/vNrKr6x85cHRx9sQaNgoyjrwtjuivqVnfhjFBsXHFNE7iD51wd0O4aY0EvnDX3DRnrFU9P5Mh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=IOz3QZPn; arc=none smtp.client-ip=209.85.215.178
+	 To:Cc:Content-Type; b=DfBGKGNd8s302tXyk3PHyaXhAO2qtJbQxa/vQOJyNSG/s89sTbICUVYWRBBLJkBXkDNPG3VdS3Qh0IlnHO0jzzt85G5Vquq3WsdTDSmmzJDyBYRLUxXvIaDGsF3U/V93nEx5B8LqThoCtCEdBxooI67VDvXYLuIM2ZhXboISfV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=AYbnBLQB; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IOz3QZPn"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b200178c011so1847309a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:28:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AYbnBLQB"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74248a3359fso564457b3a.2;
+        Fri, 09 May 2025 11:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1746815280; x=1747420080; darn=vger.kernel.org;
+        d=googlemail.com; s=20230601; t=1746815315; x=1747420115; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sGMDR4vrCsmFK5oEVJjhbe9GdCx3AVSX7y/0PLZa9DE=;
-        b=IOz3QZPniNAiptK8EY1Arse5iZ8jPF7hnOzQXGjLMp0tsX8qigDutLa3cPedfn36+q
-         re+4wrM3KYT4m4PLiuDT5wNLnu2ev2cl++HFcrU8MeLgrZT7TqeIFNFG7UCA/hFy1fkb
-         /HV/9XWdrmvakn94rUgDA+WaWxr9vTTZYWrGrZbfFdt83roF/7XoriuICcDA/3yJLsO3
-         BGI1GSoYUDc9TfOOrx5Gk0iLWH1KvwOsuMj4WEKFQXIy75BHrUknqOq/iK0e6kUfJkky
-         lulzcYlFs8hjD3jpGWXMKLvY9oVfbvZyqZEdc2OKvcVfQqjLlFy08MDjZBkCDFl/4/8x
-         01VQ==
+        bh=AVjmITvg5xwQUhBH3cPWu+1Rci6sKZeIVD+X8Tz7B6Y=;
+        b=AYbnBLQBGpTjp4qqM5x5rME4jKnQ2sztadWaKg67B7gLiTJGsHIyOaq2cZaKBsInK4
+         +i6/D4AXyNsfN/+ACIkd/xx+2Zmave6jUzAOBv460Q7uJhiQVESshau07d4BWOfON8Bs
+         0PC957BYTrdAUWnrN6CJqR+20M4Mpo6WS1AOyiSIz4WCDgeJW+vYoo1I/eSI71Q96kP+
+         vp4HeqHtau0MACVztknNCnLCLkdCiJ/KRxCuT+gdOC4QSg8fe3b70jTKOnE7wLv0nFIb
+         IVqBAkr2B1lfGoqzu7sshrCH7PKhROj9iwORAoisfVInGYmIQvi1z/dFfGLU5NKUePxw
+         gepg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746815280; x=1747420080;
+        d=1e100.net; s=20230601; t=1746815315; x=1747420115;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sGMDR4vrCsmFK5oEVJjhbe9GdCx3AVSX7y/0PLZa9DE=;
-        b=wo1dZXLcT8Nbab36U/G/91k2+mAYmx3b4AhxL+0MkxJCSa4U/B8FPwXw4H8tLuYkG7
-         cJ01cS5PFssDyNBkhQyg2fCK00a9JMymF1qBHx5aVVpVtVihBGStR4irSN1qmETkrIMy
-         domm6Y92z3DaEQeTa9jCiqay3BD3mPmeE9stXCZhOgksv73kHl/cgaviqJi4cjlNZLVV
-         3RYn4/B6q9ndPONK39QVppnWVxqolRh96a43u7dsAHqOo2cb9pQg2F7mkML7RY1tsTYR
-         6XzZ2+URNpJntEUwalYM1wjS2FYMrL6Z4uiuBmcQCu0skCJ1CypROlObRpMz5xGgBOzH
-         +Fxg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4CP5zB2e7qV8m+/IecJ5a8twH2cvqn13wMSGx+3oc/u3W8PhyRmzaa8roJGSduO1rhAL/AIhjRbZu18c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh8QZCAyv/9ban3d7IZYddotSxF7FULH4Rx+WRuNKOxkEsrut1
-	7FVKDb2+ZWm2KtBjh3hiTFcHy1NJ1JdcGFQAlFED6k/3Sk5oEDNMWzt9HHh10pUu1YA2vhpxJPs
-	BuYhYc/Eeb5C634kvkvhzB43UWbo=
-X-Gm-Gg: ASbGncv1RcL86Ha/GKpq3CEvQcFY1LBko1qJhLhluf8mcs8yIVLfFqDuvJOgT1nLRJd
-	Z+whHLiIRISS8OBd9a92B9dsT/aWJSCydMXLdUUDhuLizHyBa+aSXjrbHIHmz5jm6YpkkNMd12P
-	CtW73lN1TokJB5uOg8EZABNK/xuaA0LbikD9fvLSXumKkaJUyQU4fbq8qqnCO7BtuTTg==
-X-Google-Smtp-Source: AGHT+IHXDGWP+YtZpWiwJiGwLYqFvxGO5dbb7SWr+ooxT2b9DImqaiGMOG5CHnVu37yhFV5sw1lsNGEQqFB08eoyEkU=
-X-Received: by 2002:a17:902:d48c:b0:220:d909:1734 with SMTP id
- d9443c01a7336-22fc8b32ce8mr71176355ad.14.1746815279648; Fri, 09 May 2025
- 11:27:59 -0700 (PDT)
+        bh=AVjmITvg5xwQUhBH3cPWu+1Rci6sKZeIVD+X8Tz7B6Y=;
+        b=MTF16kTkDPbRdtqnLS3X9Yybbhy25HxViRimEul2UCqOrP7ZXB3Ry2mgr5JC2x9G0I
+         sMn73hApfdpWkBbjPSJy5XUoV65r6aRpZ8PdvcPsUcd9tyNyqxgzSgYpB7uRHYv81+oC
+         eC727DpdeZWGUef/xNhoimPgDyHpy9TlcWBIXp3RvhyelfpPFcLnXYSD3xwtT7Ya5Vng
+         dZbTjfPkboymGKOGK/lx2NMRjsBcu9hnBHWvulUHxmFrDdg8U2wfhpyFGAJWwRI6ffPT
+         S3uv9YEYefBiX6Lpya+V+MSYXpR2cBsR1o8ijBz9OJNZ6iHMZ4KtlDTJVndPmZqQlnKi
+         mNSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVakknxfzUs/T3StL4pSLbKvc7Xyrb3PSBzH+u7plPaSRTDmyYoYNbwGqHfX0YEn7Z2KJlGqZxMhjPF@vger.kernel.org, AJvYcCVjmLE+cDVjhhKfkrnnTeCgLIezo8sTAYi7hft6WPkvYe4JAMw/GXCU0B5k8i7vj1VudIgI8iWfoVmfHaH+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLPrEnl/UzsN2EKZ28TMQ2PHkWOLwhFbbaF+qA/gyr9B43Yc6P
+	0DzYgSIzVxzcxCy69+x37IwbyefVLwgvAzHJ3fICVWYre0PIl+XltbwNG7GK442OpGtBWZ9bMI3
+	hrAJm6ZGazUlh5PpXyEQyzcLLB3s=
+X-Gm-Gg: ASbGnctuSmJEbQI+mWZwm2Y+ggV/2n3jQN27TP38JfUucwC5NhJ5g0wyC/8GwkN1AM5
+	IzdOCzPLeATtxaUASbAuASezBSNsp45pPc1pAehtezFsOY2gkdWVJz9bpANqItlbH4ndTa6Uluj
+	KlyuOt3j2RJ3tf5CWK7mYLdOM9fSvXGIldSs+UFJbflpjbjf1YZ1HpIzKLn9Gp1fa5Uw==
+X-Google-Smtp-Source: AGHT+IEwd7AiDoJxpDhyTHw6FTDd796IjH1JzgkpmVh4628MtJYKSWng6hqIPivs5wHI5s0eCiBfNcWPOBCx0dc2UHI=
+X-Received: by 2002:a17:902:f70a:b0:225:abd2:5e39 with SMTP id
+ d9443c01a7336-22fc8c8eac0mr65654585ad.30.1746815315465; Fri, 09 May 2025
+ 11:28:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505184338.678540-1-richard120310@gmail.com> <6d2f35ee-1b33-40b6-b164-ab4480110e49@linaro.org>
-In-Reply-To: <6d2f35ee-1b33-40b6-b164-ab4480110e49@linaro.org>
+References: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Fri, 9 May 2025 20:27:47 +0200
-X-Gm-Features: AX0GCFux03CvY5ldQo8MgJxENVqxGp77YENyE8ZwpmGhXEQFNatCnqiqkcdNym4
-Message-ID: <CAFBinCDmHhF7=-dutXT6RE9hVzfN3akLicGkQKw=Arm8bq2NKQ@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/meson: Use 1000ULL when operating with mode->clock
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: I Hsin Cheng <richard120310@gmail.com>, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	khilman@baylibre.com, jbrunet@baylibre.com, christophe.jaillet@wanadoo.fr, 
-	skhan@linuxfoundation.org, dri-devel@lists.freedesktop.org, 
-	linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+Date: Fri, 9 May 2025 20:28:24 +0200
+X-Gm-Features: AX0GCFt7pQHVyrf4n1xvCNGZ9D5D94k38mJZKPZaIgxrW2CstAdBDU6m2wUQANg
+Message-ID: <CAFBinCDt1jDv=jhDoW3UtBUL8BuLL8PpJPKjpC1Sf5fifnw+6g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson: Drop unused aml_pctl_find_group_by_name()
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-amlogic@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 5:35=E2=80=AFPM <neil.armstrong@linaro.org> wrote:
+On Fri, May 9, 2025 at 5:01=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> On 05/05/2025 20:43, I Hsin Cheng wrote:
-> > Coverity scan reported the usage of "mode->clock * 1000" may lead to
-> > integer overflow. Use "1000ULL" instead of "1000"
-> > when utilizing it to avoid potential integer overflow issue.
-> >
-> > Link: https://scan5.scan.coverity.com/#/project-view/10074/10063?select=
-edIssue=3D1646759
-> > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> aml_pctl_find_group_by_name() is not used anywhere, as reported by W=3D1
+> clang build:
 >
-> Could you add a Fixes tag ?
-Fixes: 1017560164b6 ("drm/meson: use unsigned long long / Hz for
-frequency types")
-
-Neil, can you add this while applying or do we need a v3?
-
-
-Best regards,
-Martin
+>   pinctrl-amlogic-a4.c:600:2: error: unused function 'aml_pctl_find_group=
+_by_name' [-Werror,-Wunused-function]
+>
+> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
