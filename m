@@ -1,58 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22577E0E8;
-	Fri,  9 May 2025 02:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10D9242D75;
+	Fri,  9 May 2025 02:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746757077; cv=none; b=T9f3PmfrZXK7zr/f/Et9hXfH2FK9Gn8Y0P0kF1asleYMHd4rExuYHK9md2rL/ZoSc4E6RboeLcOyjuqH/4RJiszURxsL3ejPYA5yLe+b6Im1V4P2z8pQVOnP3qnRpCw+MuIo7BPQvpLJmL2lN5DSUDHEjAHBKmnbzTjb3YlZAvM=
+	t=1746757096; cv=none; b=nHyMdoNGvIHTirr7NfZgNVoqFJxu0K5puAJVfV2PNKBwYj0/pi83lOhyTT1ur0PE9+gTSdM5/VXy9+mcVnHa3a4Q5wf696lXR9C1r8FabzSF4TeYGFKIvz3x2sYsMZKOwo/wALBj9GljBR2i/nA/xlVlXv63mONKnPbr+2yGiCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746757077; c=relaxed/simple;
-	bh=wGEzWR6WTZcRw7fY06oJ8MlbhCBOdgHesLcRLWkuAG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s8TORnvA5LkCwC80htv8Cq73bZO8mGUVvZqGZmEY3fpQmCow/I69YKS3zOjwtL81qapL7Nu2r6H5xR3Hr23Zrfwlkr2n0dNwqkg3MvjlQZNN+ne7oIf7dbTIMGYZeyewVEChJavRnNL/SuUKfD5D7cllJgY9SYzCwNTJ4FLQg9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMEfJhQP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMEfJhQP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A114C4CEE7;
-	Fri,  9 May 2025 02:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746757076;
-	bh=wGEzWR6WTZcRw7fY06oJ8MlbhCBOdgHesLcRLWkuAG4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mMEfJhQPbLgGN0mbI+rYp1xnbX+2+3AGNeLtrxufB0TJEaD1f9xDZmNaArwa9W7bs
-	 N9hT354TQ9vIh6ncMAdqwt+Ccf4AKW22zOaQjcUOSuv8yuXiyp4AvLswofG7f1ta/S
-	 IvZV86XZUT64wMqloQIpcYNxqxCPNToH4dkG3zUfYXcs/zMCfmoUuoq5TogckM81O8
-	 UWMWj9hYX1pIhus/BLK1ocmqBwHwOXc5yWPi2LWNswIJQ6iodtTdrgX3Dyyt0BShHm
-	 iaZTvpvhdOsAxbgx75boB9lj1yvfnFLjrkxrFNQr4jFOic+2a9Gq8UP3Ae7arO7/7/
-	 i7qJke4RZ71Qw==
-Date: Thu, 8 May 2025 19:17:54 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Konstantin Taranov <kotaranov@linux.microsoft.com>
-Cc: kotaranov@microsoft.com, pabeni@redhat.com, haiyangz@microsoft.com,
- kys@microsoft.com, edumazet@google.com, davem@davemloft.net,
- decui@microsoft.com, wei.liu@kernel.org, longli@microsoft.com,
- jgg@ziepe.ca, leon@kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH rdma-next v3 1/4] net: mana: Probe rdma device in mana
- driver
-Message-ID: <20250508191754.21e9ad31@kernel.org>
-In-Reply-To: <1746557541-3617-2-git-send-email-kotaranov@linux.microsoft.com>
-References: <1746557541-3617-1-git-send-email-kotaranov@linux.microsoft.com>
-	<1746557541-3617-2-git-send-email-kotaranov@linux.microsoft.com>
+	s=arc-20240116; t=1746757096; c=relaxed/simple;
+	bh=mxDVPjsDKcDaT0A+7FtJ1iu07Vwd+q9XbsTcO2uDOZc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qQ4QkoVfx6MnUNWoMP97y8QjYC6j+0gzpDjYRDZ4qwwJQlbMv5KZ5efZ9eWKt+syMddg49gB0vWdioMDBVdFdwWpKQwmJ0GmBuViovpzyaEORhl9hv3MNJAT1FQLnG26JHnUCbHEb85VZmseAjZTKYhCKDz7kkakiiDDVT3x0H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZtscS3hC9z2CddF;
+	Fri,  9 May 2025 09:59:04 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id D8FCD18001B;
+	Fri,  9 May 2025 10:02:40 +0800 (CST)
+Received: from localhost.huawei.com (10.90.30.45) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 9 May 2025 10:02:40 +0800
+From: Qinxin Xia <xiaqinxin@huawei.com>
+To: <21cnbao@gmail.com>, <xiaqinxin@huawei.com>
+CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
+	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <stable@vger.kernel.org>
+Subject: [PATCH v3 1/4] dma-mapping: benchmark: Add padding to ensure uABI remained consistent
+Date: Fri, 9 May 2025 10:02:35 +0800
+Message-ID: <20250509020238.3378396-2-xiaqinxin@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250509020238.3378396-1-xiaqinxin@huawei.com>
+References: <20250509020238.3378396-1-xiaqinxin@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-On Tue,  6 May 2025 11:52:18 -0700 Konstantin Taranov wrote:
-> From: Konstantin Taranov <kotaranov@microsoft.com>
-> 
-> Initialize gdma device for rdma inside mana module.
-> For each gdma device, initialize an auxiliary ib device.
+The padding field in the structure was previously reserved to
+maintain a stable interface for potential new fields, ensuring
+compatibility with user-space shared data structures.
+However,it was accidentally removed by tiantao in a prior commit,
+which may lead to incompatibility between user space and the kernel.
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+This patch reinstates the padding to restore the original structure
+layout and preserve compatibility.
+
+Fixes: 8ddde07a3d28 ("dma-mapping: benchmark: extract a common header file for map_benchmark definition")
+Cc: stable@vger.kernel.org
+Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+---
+ include/linux/map_benchmark.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
+index 62674c83bde4..2ac2fe52f248 100644
+--- a/include/linux/map_benchmark.h
++++ b/include/linux/map_benchmark.h
+@@ -27,5 +27,6 @@ struct map_benchmark {
+ 	__u32 dma_dir; /* DMA data direction */
+ 	__u32 dma_trans_ns; /* time for DMA transmission in ns */
+ 	__u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
++	__u8 expansion[76];     /* For future use */
+ };
+ #endif /* _KERNEL_DMA_BENCHMARK_H */
+-- 
+2.33.0
+
