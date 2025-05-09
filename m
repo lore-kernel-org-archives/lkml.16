@@ -1,127 +1,95 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AF3292928
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBC6292914
 	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796466; cv=none; b=cFAp/LnuggZXTmwCAUV09ZVbe8rm7ZxjwiXh3BPt0TZLVszza5qt/Bx7NHq93P9dn9NvdlYycmPTWThAsqmBsYXt7lXPGUqz57hmoYWkG+UMQM5XdviVR+0a2HVA1jKCHIoziTXi948ZOvNaTY9pl3y4AYUj9nO5KRRYRf4oX1M=
+	t=1746796468; cv=none; b=H70Gc4Zo+jRgC7CWiMpL1AnzGAjcmYJ6tdvdWqEd/oagzWbqGh9RYpxlBXqD8JbPODYB30Pu+9pDI84NnM4oJCuI/AO4VTlyC58hXVP7s7nFaHaug6NExtMDRdhSnCvXwzFmlFi12Kthcr0vaU0BjwBfw1oPkBu4YLPX2TW+OMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796466; c=relaxed/simple;
-	bh=9RnZ968TcDZnmqkj1ovGuHA82/+SYZzxreZCpC+Nq5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BjS0N+N+cvmGac5n2UPbwJgJrIpzOExpC5Jc9+ZRg59Se05xNyH/sPa4csqvk9oOXHFxmJUia5yoQHi4AFToGZ4lqFhED1r2vrqUjaFaJta8t+tuBwUDTse5LqdBwnbAWpxHfbqfRwtEUz5g8fO6FcFw3JJnI8DYgeCkCe3wKpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=KUr0/5jt; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1746796468; c=relaxed/simple;
+	bh=KSWxgLBt9iNu+W2gwxOsv3uUQUlLsR80lwPpcYA00IM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G0Dy51o/++tQNPpzdd08cP83OX7bx0+N/VQcbexX764oEzvgRqLizVFHluiNhLHQQiVlZ+UZKYKMIxlBbwT03whKKQD0IjJJQXukuW2sPH5UrcOVqJ8/+/QPIQth3UD3CCZUFwHLCg9hl+nTmdV+LKAlyZ8+6dvN5dJvPlD5F2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=DeBl4dBL; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="KUr0/5jt"
-Date: Fri, 9 May 2025 09:14:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1746796462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GkV6XoLaeT2EUCE/NRO86y22RkBlw2IGYotCv1aLQSo=;
-	b=KUr0/5jtENQERP52yAYyt9IK2gGgnJxdgoNRDysr1hpd6oIGJJhYkytCXszxuyRDLU9w/t
-	fAoT37A+wgjIrLevT7LK0GEoaLSfqnXpAqhsgv09PqVZDeHv62PMWj5DpP5UzawuYvSF+k
-	k3YwLakl1UFfkfRE06C178u6bNqoOqO30f0bMfjuFsMge8aMMPPRTrRXa6V2YHVmDni+9d
-	kW2h7BSKu5Q6bn2kqNMWFVeMcTOdMjJlOjcWLTMPW6tuiim8B7MaNGSdCD/YKecmfKfiIo
-	O61gWmXP7cI87kYTgSHKKB/KLPP17doJLxC90VzzWihh3dylx2QDVR4YsitG+w==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: sven@svenpeter.dev
-Cc: Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
-	Hector Martin <marcan@marcan.st>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 7/9] arm64: dts: apple: t8103: Add SMC node
-Message-ID: <aB3_nYoHofJ7wD8L@blossom>
-References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
- <20250503-smc-6-15-v4-7-500b9b6546fc@svenpeter.dev>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="DeBl4dBL"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c560c55bc1so258992585a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1746796464; x=1747401264; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1wuHYvY9TE0ehuOIB/jYes0+Q8eGbfL5Wth0ZjKDdKI=;
+        b=DeBl4dBLDGehrYXn/lmZXsd9TBpPWk8cn1PtYnVe8axZj96jNINaj1vKm5QGzUKfXb
+         uCivdKToIcMVilB5uGW1ZyOyH2rRy5zr0xEW2CI9aZmhosXBDbc0qnljnt3Ys5w8LX2H
+         1q3qsnhC4VA6QFlTpy6BmB7NYDrMqKgPJ8NVA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746796464; x=1747401264;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1wuHYvY9TE0ehuOIB/jYes0+Q8eGbfL5Wth0ZjKDdKI=;
+        b=wMzDtK36/lBfvgi0TFFZTbdGFzvC3Dk35OPMrWNg+est5HgsflvFE8womAIRvnw/a0
+         7/2DPLeWL0J7HKbtz8URQNCEP4KFCZJLZKOnAX2l3vFGxdiz8cId73w9xf9K14D7ICl7
+         2bloUQXWuCAzAUUudrsV+ULshwhnBdELA0zIN+OIBS0cDMV+7qW6xA11lhWykybo2on8
+         lIrTYh4Uuj5jNvM4saBdEoyT3zP3aDk80gzF8nLf/CfXHCTI+xe3twuchjBY+KrYyDHv
+         Im5PVIEfTS9BEVqYeHNNX8QahBrj8HDjmDwJXiwWtdGRLm9ptWqp+/bN+4yV98y56hIV
+         SEyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7eY2Op0VDNdFbtl9reqYetK6HepWhBuVPpUn+5eM9+TBKVbs0E8s+tzCY8wJIGbZokbUu3FUe1pNdiNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXN18FGBhtmlMXrxb2PqDZ+/qlsqG1Zw1Bia0yJD2IKRXpe3cB
+	TDHu94EcrgZsWV9QRvyKVC00FOE9psp1jkFAmMbwu+qx1k+v/Snaoto7x8y/8eV7CaaflAihfDg
+	9/5Uk9lU7V24ZmBTixrG876Yj8QWqeEVW6omxzg==
+X-Gm-Gg: ASbGncu5uvcN7tV3kbp6VvaHRHVTL74jAOGWN6Khp3Q4/AMjMNk+cjS7XdiU5RNk4uT
+	TZx4FsSF48R/5Tsbmw9lW2kWvEzEcNCR3Y3yWxG7wEDWN47eqTbehqgn7g/dNPpzINRS8xRqpfp
+	o07h5q5pz+lyEj2J8CU7GhQUEW
+X-Google-Smtp-Source: AGHT+IEI3puvqThQlqq0KVhrZ5KQwMenEd8/Y1uIX7gEk73Z+TEhqZJWbjf4NkO60KZ1lrGz4/VXQmOvi5r7glYegFY=
+X-Received: by 2002:a05:620a:191a:b0:7cc:58e5:17a6 with SMTP id
+ af79cd13be357-7cd010f4275mr540946285a.8.1746796463656; Fri, 09 May 2025
+ 06:14:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250503-smc-6-15-v4-7-500b9b6546fc@svenpeter.dev>
-X-Migadu-Flow: FLOW_OUT
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com> <CAOQ4uxjDwk6NA_UKiJuXfyY=2G33rruu3jr70pthFpBBbSgp1A@mail.gmail.com>
+In-Reply-To: <CAOQ4uxjDwk6NA_UKiJuXfyY=2G33rruu3jr70pthFpBBbSgp1A@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Fri, 9 May 2025 15:14:12 +0200
+X-Gm-Features: ATxdqUHOG_qOnUoa0UNQFUYGPrSWq-neQTRbvMiWLcTxWd52TgDxDOOospnlmVs
+Message-ID: <CAJfpegvEYUgEbpATpQx8NqVR33Mv-VK96C+gbTag1CEUeBqvnA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] fuse: Expose more information of fuse backing
+ files to userspace
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: chenlinxuan@uniontech.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Type: text/plain; charset="UTF-8"
 
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+On Fri, 9 May 2025 at 09:36, Amir Goldstein <amir73il@gmail.com> wrote:
 
-Le Sat , May 03, 2025 at 10:06:54AM +0000, Sven Peter via B4 Relay a écrit :
-> From: Hector Martin <marcan@marcan.st>
-> 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Sven Peter <sven@svenpeter.dev>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
-> ---
->  arch/arm64/boot/dts/apple/t8103.dtsi | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-> index 20faf0c0d80927b2e18dd966a61b5507b322c72f..58270e7d79b07ee98340f140972a6f0d14c86dcb 100644
-> --- a/arch/arm64/boot/dts/apple/t8103.dtsi
-> +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-> @@ -836,6 +836,41 @@ wdt: watchdog@23d2b0000 {
->  			interrupts = <AIC_IRQ 338 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  
-> +		smc: smc@23e400000 {
-> +			compatible = "apple,t8103-smc", "apple,smc";
-> +			reg = <0x2 0x3e400000 0x0 0x4000>,
-> +				<0x2 0x3fe00000 0x0 0x100000>;
-> +			reg-names = "smc", "sram";
-> +			mboxes = <&smc_mbox>;
-> +
-> +			smc_gpio: gpio {
-> +				compatible = "apple,smc-gpio";
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +			};
-> +
-> +			smc_reboot: reboot {
-> +				compatible = "apple,smc-reboot";
-> +				nvmem-cells = <&shutdown_flag>, <&boot_stage>,
-> +					<&boot_error_count>, <&panic_count>, <&pm_setting>;
-> +				nvmem-cell-names = "shutdown_flag", "boot_stage",
-> +					"boot_error_count", "panic_count", "pm_setting";
-> +			};
-> +		};
-> +
-> +		smc_mbox: mbox@23e408000 {
-> +			compatible = "apple,t8103-asc-mailbox", "apple,asc-mailbox-v4";
-> +			reg = <0x2 0x3e408000 0x0 0x4000>;
-> +			interrupt-parent = <&aic>;
-> +			interrupts = <AIC_IRQ 400 IRQ_TYPE_LEVEL_HIGH>,
-> +				<AIC_IRQ 401 IRQ_TYPE_LEVEL_HIGH>,
-> +				<AIC_IRQ 402 IRQ_TYPE_LEVEL_HIGH>,
-> +				<AIC_IRQ 403 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "send-empty", "send-not-empty",
-> +				"recv-empty", "recv-not-empty";
-> +			#mbox-cells = <0>;
-> +		};
-> +
->  		pinctrl_smc: pinctrl@23e820000 {
->  			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
->  			reg = <0x2 0x3e820000 0x0 0x4000>;
-> 
-> -- 
-> 2.34.1
-> 
-> 
+> This is not the case with displaying conn, because lsof is not designed
+> to list fuse conn.
+>
+> Is there a way for userspace to get from conn to fuse server pid?
+
+Define "server pid".
+
+One such definition would be
+
+ "A fuse server is a process that has an open file descriptor
+referring to a /dev/fuse instance."
+
+This definition allows a mapping between tasks and fuse connections to
+be established.  Note that this is not a 1:1 mapping.  Multiple
+processes could have the same fuse fd (or a clone) open and one
+process could have multiple different connections associated with it.
+
+This might be sufficient for lsof if it can find out the connection
+number from the fd.  E.g. adding "fuse_connection: N" to fdinfo would
+work, I think.
+
+Thanks,
+Miklos
