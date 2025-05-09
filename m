@@ -1,145 +1,103 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C57266B5D;
-	Fri,  9 May 2025 06:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60B0267B92
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746770732; cv=none; b=od4NQCFVGrrhtGnBCUZRUkdIyywmrN8khJWJ2R/rXJ2mPS6aL5wtQQPurhgrFM+VtLs1KZRc9ELkymrq8l1vRenyvnS5aOh7JZHi1yW7dx0lZ/4k3TcZKLPit6P6JKZGuMRUa3ZeXBUfkgInatyv32W7X0gja3qTcNSRdWOPPn4=
+	t=1746770767; cv=none; b=s1b+N9PFN3bMpQZzoM8fCIIqMUrRqPmoVX3Y7NFHQ8lRl7Yojo8lvDKfzT60sJKnd/d1yUBn4eSAQiuC068tRKzy1v70PUYNIxHpIF+7XbtanyTefX8t+GLZP5A8pDO3lOO3tipHnxfp7c+VH4bgO03yBut3Kic/h0/aXtAI24k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746770732; c=relaxed/simple;
-	bh=yoKpL3WlbzzybTP9NLZ4XDEB0+QhoX7umE7dJZLY28U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=K7APr0cUraYPUV1bQit5V6BPG3lbplD5NLQrKnBfom2bD0jbdHVbzuhkZZXLfezYPCer9bpN3ZDuRMjsQIetULQ7slvWrCxcCkLWvQ9aZGBQs82iPGd3Zz7RCZpqcuKhuNzeer2PM/PH4d8ua5kIdEaVVdRv5FGM2w5gtZjMjOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jnguVLlZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FeQqFw4R; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1746770767; c=relaxed/simple;
+	bh=TH9PeFQY8q94hxRo5V+cT19JOfiNEkHT9PZ6U92hPZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EKWlMBb+J5pHmXzcxhyvGnUlYCuLfaS9Xm4ougigRhDCbUoTihZoMTzMcQq39yj4exUlwp6u2LRGLWLRF3uBRUZ2P2+jf7pITvrnLo1MCsbH/9XMKvJxW4KaJZb3O/JbCCuB5h6mWyAQ8S02OHALaCt8BjDI0IrV6APsAKjHYJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjQhxwTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jnguVLlZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FeQqFw4R"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 5F1FC2540165;
-	Fri,  9 May 2025 02:05:28 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Fri, 09 May 2025 02:05:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1746770728;
-	 x=1746857128; bh=qZ8PpynMyA3bGCmwcCrTN20BWUQt0buKgTswM5C+T9g=; b=
-	jnguVLlZJaMH9cvyUpSiwX94nVTw/gCJ1+aZHXVhyAWhPyP7yJYe4uMAj8lGVIgQ
-	RRct8Qm9jEAnBHolU4IIRIo8wGOnFNF4UGpRj8/zko3ha/ovPBefvLGkPQY8M/q4
-	y9vwuWs77DF8sG5D10DN5hdOPAStxb9leTp6IpkmfC5+VWZNjcQdUizwYW1eBycQ
-	08IPsfxCEjoSJNbUw/SkwBtSloAJkCDyNN7AlHY3v4/9LxGfJC6+hDJmgke++Vj9
-	1KdpPA4VdCNmvc0eiCfdqoKzZj35zw+qXgA4OtezGvPVcz45WB/lbg1PcYV0uVoZ
-	DxrlqsqmnQVV9F0aM//y3w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746770728; x=
-	1746857128; bh=qZ8PpynMyA3bGCmwcCrTN20BWUQt0buKgTswM5C+T9g=; b=F
-	eQqFw4RJt5Pnwf9M0+4uwpBt+f8o/vNadtnZnBCch3NrLysDy/b3mgbzXxiL4Gqv
-	iT2TSab7F3NPoVVVKXMQpkB/Ug4ciYTpUT4Qd4gYU8r6uGplUEo2oEk560bA4EZh
-	caEJ0HcxlRAuCldWUnjarQdAzJ3Kp3CM+x4My3oO7xizXFzJw0AYoW89M4cumCyw
-	gimP9/qfdRg2/ZgYzOMyzrw8WVxIxercZFT4eGINN9EcU4BMCN7OiRSCkgeuplD5
-	kIjPxaZkMIzVaaXD80qcJ4pbxEXW/KodM1AAhlOAaNUggqIML7LHiGq2UAKmEOzy
-	ML7K886wRKRo25ACyQ67g==
-X-ME-Sender: <xms:J5sdaPRYsbI_VBfO7JlcgbY1exAaAs2G14mR33Y50tC1iDRUEwbJOw>
-    <xme:J5sdaAw0VEzT0-TcHaSeGXzmI38XcDYv00yP7MdFFADvOWTuwNsceo0D1CMiuJlW0
-    B7CuY1Er0rltue0N1o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledukeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    vdekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghnihgvlhdrrghlmhgvih
-    gurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihl
-    lhdrtghhpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoh
-    eprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopegrlhgvgidrghgrhihn
-    ohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifjhgsrghllhgrnhgtvg
-    esghhmrghilhdrtghomhdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdr
-    tghomhdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmhgrihhlrdgtoh
-    hmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:J5sdaE1JDYETjLgyiECyW0ljfGM_hDj-7fdgBoJBYbi7yhku8AEHPA>
-    <xmx:J5sdaPDPYoCj0N0Dmg2dITRziM42lxJWWfsvF0vGGrlOIRnL7q-V4A>
-    <xmx:J5sdaIjtZ34cNXzDSi6ReDp0TWWLBexm8jKPfCwJqugvj7l_xW75Yw>
-    <xmx:J5sdaDrv7pswzOnn80kNMGP9sKtq36dBscVnu_Oc7ST_E9kgoePbrQ>
-    <xmx:KJsdaBlnaKL704IQpL9yXD7Jgzyvy_-qpxKsA4XEGdh4reS-gJXpLFjo>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3BB071C20069; Fri,  9 May 2025 02:05:27 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjQhxwTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE849C4CEE4;
+	Fri,  9 May 2025 06:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746770767;
+	bh=TH9PeFQY8q94hxRo5V+cT19JOfiNEkHT9PZ6U92hPZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RjQhxwTlVlQpWPRg645XZXCWXR7PwGKKLj5Mk/sl8bzUwD/sdChUHyAFaBuWy8A05
+	 zMM1S6NYGianLsBtkOJ3unXumiRYRsJ/035yKh6rNrkwYb76HZBdSlFyLqy7monYbV
+	 sRB5u2iCM22FM39vk8NNJMKghKDri+sagL3hRHsu3nZb+mXL+5kUcbG8kbjflBjBq3
+	 hoEc3Gs3eovhjfttaRRh0FFOfaHxpWdck6nexV/uB4ZqVf3p8f5Vz8jTGLYC0IPiDK
+	 wnGzhzkvCtz/44ftNNkFhkfLjI9WAHICs04KS9YboQn7oOTsZ9p/eqzMNt+LVhEHEe
+	 OjSmly+UG+IwA==
+Date: Fri, 9 May 2025 08:06:02 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: dmukhin@ford.com, mingo@redhat.com, andriy.shevchenko@linux.intel.com,
+	x86@kernel.org, daniels <daniels@collabora.com>,
+	Daniel Stone <daniel@fooishbar.org>,
+	robdclark <robdclark@gmail.com>, lumag@kernel.org,
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: x86: Boot failure on select chromebooks with v6.15-rc5
+Message-ID: <aB2bStp8efMHPjet@gmail.com>
+References: <a8638f85-1cc2-4f51-97ba-7106a4662885@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tfe1d269e5f3a05db
-Date: Fri, 09 May 2025 08:05:06 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andrew Ballance" <andrewjballance@gmail.com>,
- "Danilo Krummrich" <dakr@kernel.org>, "Dave Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, bhelgaas@google.com,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- "Raag Jadav" <raag.jadav@intel.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>, me@kloenk.dev,
- "FUJITA Tomonori" <fujita.tomonori@gmail.com>, daniel.almeida@collabora.com
-Cc: "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
-Message-Id: <03548041-89f9-41a2-8488-5b234ce11138@app.fastmail.com>
-In-Reply-To: <20250509031524.2604087-5-andrewjballance@gmail.com>
-References: <20250509031524.2604087-1-andrewjballance@gmail.com>
- <20250509031524.2604087-5-andrewjballance@gmail.com>
-Subject: Re: [PATCH 04/11] rust: io: add PortIo
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8638f85-1cc2-4f51-97ba-7106a4662885@collabora.com>
 
-On Fri, May 9, 2025, at 05:15, Andrew Ballance wrote:
-> +
-> +#define define_rust_pio_read_helper(name, type)     \
-> +	type rust_helper_##name(unsigned long port) \
-> +	{                                           \
-> +		return name(port);                  \
-> +	}
-> +
-> +#define define_rust_pio_write_helper(name, type)                \
-> +	void rust_helper_##name(type value, unsigned long port) \
-> +	{                                                       \
-> +		name(value, port);                              \
-> +	}
-> +
-> +define_rust_pio_read_helper(inb, u8);
-> +define_rust_pio_read_helper(inw, u16);
-> +define_rust_pio_read_helper(inl, u32);
-> +
-> +define_rust_pio_write_helper(outb, u8);
-> +define_rust_pio_write_helper(outw, u16);
-> +define_rust_pio_write_helper(outl, u32);
 
-These have to be guarded with "#ifdef CONFIG_HAS_PIO", since
-most modern machines no longer support PIO at all, even behind
-PCI.
+* Vignesh Raman <vignesh.raman@collabora.com> wrote:
 
-The option is still enabled by default for a number of
-architectures that normally don't have PIO, but it should
-eventually become optional on pretty much anything but
-x86 and a few 1990s-era workstations that implement x86-style
-on-board devices.
+> Hi,
+> 
+> With v6.15-rc5, the below chromebooks were not booting with the following
+> message. These tests were run in drm-ci.
+> 
+> Starting kernel ...
+> [    1.843801]  ? __pfx_kernel_init+0x10/0x10
+> [    1.909838]  ? __pfx_kernel_init+0x10/0x10
+> 
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1420485
+> 
+> Failing jobs:
+> amdgpu:stoney (AMD Stoney Ridge chipset):
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76000926
+> 
+> i915:amly (64 bit Intel Whiskey Lake):
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76000929
+> 
+> i915:whl (64 bit Intel Amber Lake):
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76000931
+> 
+> These tests were passing till v6.14-rc7, and the issue was seen starting in
+> v6.15-rc1. This issue is seen only with these 3 boards and does not affect
+> other chromebooks (the pipeline log shows the other i915 driver tests).
+> 
+> On bisecting the commits, the commit which introduced this issue is,
+> 3181424aeac2f6596534bf43021a10eae294a9b0 x86/early_printk: Add support for
+> MMIO-based UARTs
+> 
+> After reverting the below commits in v6.15-rc5, the board boots and tests
+> are executed:
+> 3181424aeac2 x86/early_printk: Add support for MMIO-based UARTs
+> 996457176bb7 x86/early_printk: Use 'mmio32' for consistency, fix comments
+> (this fixes 3181424aeac2)
 
-     Arnd
+What boot cmdline does your kernel have? The MMIO-UART patches should 
+only have an effect if the feature is specifically enabled via a boot 
+option:
+
++               if (!strncmp(buf, "mmio32", 6)) {
++			buf += 6;
++                       early_mmio_serial_init(buf);
++                       early_console_register(&early_serial_console, keep);
++                       buf += 4;
++               }
+
+The only other change I can see is the moving of an #if line.
+
+Thanks,
+
+	Ingo
