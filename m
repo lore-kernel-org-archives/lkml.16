@@ -1,223 +1,327 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623042957BA;
-	Fri,  9 May 2025 14:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1153229615A
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746799938; cv=none; b=GU6pSYdqNd0jHxCPQbV/IsPVXAYOPdu9Wj4o23nA/of30zEYHxsz/FYUTHv5nEmlGwTQIn9OONDM223Mk5m+Oi7666R7yFnkUr3iupuuDbzaaPRMGFtd5Y+92hTF7d7Oq3EcawAsk7slYkYSV5Yf6eB2IKCEDPLeucaq7VVfp2M=
+	t=1746799947; cv=none; b=Pz7RdLJmTH3Rd0nJAV0prXJ4Ty2kjUltyN8Rnr3VyNo9LZq4Gi01W5kyHZwLehPU0F3HGt0+DTHbxmPbo2bOV3G6WajHlg5ac++6JEMdwGrwzJzBeojd7oicDoBxIXEChKRtV9oEUEEOcEFGWmg88gjR7V+jEYSnN0gMVxzQ+q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746799938; c=relaxed/simple;
-	bh=RifdIHYgrPYypE5hz/Vh43kD0MeXbhXJUcAPqgNfYPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oH6uc6DY1vFn/lMfB6qJoj3UxtfyemyiaEdwRP8Ahte/vkMxi6ojB1G0vV9Qpva+/J8ZtVLhweYKiuO7tkJL46vkuUf2s9R4+NMqcGdZKmVO4JbOg3EciWyjLO8qlA3IBQTw2KgDIX4ILOMBb+HnHwdm58VBifq1sRMXGhUyikI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQfjmaPM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746799947; c=relaxed/simple;
+	bh=3mZ5hAbvTCuIpHvCHnGp5N48F8JXYf8gvrfdJsvnFVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WlWc+M8lHTKzPEtA+MSQKg5ufWj5bYox0ltj7j2xWKoO4iOsmExG9Zo8ExMhvZrlQI4eCubZlEEHjeauVa8nExkCX1KNPZtlvyP/o4n/+L05JVuxe4ap9IF8AUzfld2u8USXLigNArG4mBxgH7kuHj4rQ0X0Gkkq7IizyaCEOv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=f0GjcgKX; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQfjmaPM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC66EC4CEE4;
-	Fri,  9 May 2025 14:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746799937;
-	bh=RifdIHYgrPYypE5hz/Vh43kD0MeXbhXJUcAPqgNfYPU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iQfjmaPMFpGQW37aYk0DOToMF7soOmRPt0Il0514LrTQ3YRddYF7Q2FKDCAhQXTpG
-	 FGVTCQFfSyz7VTWwQLQH3vAsh4DYm7+XAd0m1i2i72CiRMo70h40AdzaMLdL0xBwrF
-	 xheTevbJX0hx32okk0+ezgnTaKPR6lP3tWBbMmvzYVlSqKqeDis0y1OkV9+lffy1HV
-	 fHzlFuGHxF9/cix992lX6B+DiCwf+kpwhsfyzRuLyaxVsJdy9j2s+3oQGNqnLwbNF2
-	 Hgxr2Fj5THutJep623Hjq4UdUX9XeK7r8gEgPMdGqimF+juJjpu8qXdEDOp/Tp6v8b
-	 B6an5erIAOpbw==
-Date: Fri, 9 May 2025 15:12:12 +0100
-From: Lee Jones <lee@kernel.org>
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v8 5/9] mfd: bcm590xx: Add PMU ID/revision parsing
- function
-Message-ID: <20250509141212.GE2492385@google.com>
-References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
- <20250430-bcm59054-v8-5-e4cf638169a4@gmail.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="f0GjcgKX"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5fbdf6973e7so2719375a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1746799942; x=1747404742; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i38qSpFJPSTwazTHcNnfuMY71y9hs8KYKhkMQ5X3D4Q=;
+        b=f0GjcgKXD8ka5seM/mzwDj+ps5CIWrIcXLShb/2CU7Gkt6mKvohSD6slvYQGQSCUlG
+         PFbTw/Rac3tjYG30SxnkKw9dWi8YZRZnoPDpG9xPV8aWDdCAHTABICmVEgmZILxXLMG7
+         lmmRxzGkty+q/t0+m0+Jb3y0phXraOhvPcpjtNhDkt5i/0993PqbtyVMyC4IRYc2CIJT
+         zWuUPJDm/NS/VyFvdWuAlyBSrDDVjoi97rVrVRGsdgyb98yR5OPZ+8gGtJpRW2zqUWAW
+         cbkrAz5oYjBucG7HtoieEJMaHOPcrzyJCQ2nVBsWTOyD1O7HBI7VsCWkifOj/OMTG6AR
+         xv3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746799942; x=1747404742;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i38qSpFJPSTwazTHcNnfuMY71y9hs8KYKhkMQ5X3D4Q=;
+        b=wc0ktf+Q0j8euww29HUtpdLM/QjbukD6kY2+iClq4nrTYDmc/XA88cB1JUgM9fzodP
+         aGaZhBvJoTrKZIU4A1Ed8vybgavxbhmUIXD1C/ls6Cq2zE8eBQ8aoE8D7dHM+MWGzTUd
+         3MKxqF/C7pYBfr2x7Z7p5nQuIyY2ll+Y8clCND6Ui3Rqh4YSRmtuz8ymOb+2LWEG4xVP
+         I7m/AHhR6hgCY7WXQD3tBzNkjDm6HcCW6M8oApniSGy3rKk5vgd502bgS4QXTTZZ4SzP
+         XHAfsE9iDjIqSfz158oBEQwrKE8vYG9XAjKexFIUKZGAjw0wq9ENeIgRQmEQimB586qF
+         e9Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1b3cIWq+dS3k1i3K6fwech+A9Az5QVhfQcqRiAplxSxUFuv4W13BF11ydBjxZlayJTuX06gk7F6EkzdE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPxbi9UzE7B9uibK8N4Uv92IU/wWbepkdRrYr5d3Onsi7YIv7o
+	fQ9eMcCiqgEhd2uYIx8VFm6rLwXP5YI1OTrDV3npeRNKzcSabTb4nCAD9dFCnbM=
+X-Gm-Gg: ASbGncsLSHCjaZccw0w99rJl4GloLK3kDbUHYL0ir4DUnGUCm5IU0YWTeQ3uQPWUfy7
+	7gPx/2/rOrOOO0J/HqnM1AOUuJhZTR7nLrm03HpPjv3Ix9fjJc47BQPjqq//kRVzfwKd5A1xztq
+	1LHSf6+q2adp6l0fnW/Er2uL1dENpjpxGLeNwY1LxaBldxhbxlOzDAd8aP/0MW8YZlSv5JRAhOa
+	ruCdJKshi4JufZkCYQ+j9eMircbCD5WtYVjRXMQZr9c9GeEi41hk0adrhGeZNV0zonLKZd4XDPl
+	Gt8ebpS6R8kjOUvvyB7TOl8W/dm1gqzeMyoeUNAkf1sViX3T
+X-Google-Smtp-Source: AGHT+IHT3Dv/9vkIs0ra+NCFrMJz3T4UtPvNv1hS8WbA/UJp4/Pj2uNQCPPyYHPEBj5bGRWVd9KKSA==
+X-Received: by 2002:a17:906:e20b:b0:ac3:f1dc:f3db with SMTP id a640c23a62f3a-ad218fc86a9mr284052266b.13.1746799941942;
+        Fri, 09 May 2025 07:12:21 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2198532d7sm155288566b.170.2025.05.09.07.12.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 07:12:21 -0700 (PDT)
+Message-ID: <c3a2950a-17ff-444a-bee7-af5e7e10e2bf@tuxon.dev>
+Date: Fri, 9 May 2025 17:12:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250430-bcm59054-v8-5-e4cf638169a4@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
+ probe resources
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ dakr@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, bhelgaas@google.com
+References: <20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com>
+ <2025021539-untrained-prompter-a48f@gregkh>
+ <4bf01946-90e3-4169-91fa-10d9f90310e9@tuxon.dev>
+ <8d83ea72-bb81-4c63-bf69-28cf5848ae20@tuxon.dev>
+ <20250305140309.744866b2@jic23-huawei> <Z8k8lDxA53gUJa0n@google.com>
+ <f74085be-7b14-4551-a0a7-779318a5dc70@tuxon.dev>
+ <20250330163129.02f24afb@jic23-huawei>
+ <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev>
+ <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev>
+ <CAPDyKFoMqmCFBoO8FwQe2wHh2kqQi4jUZNFyiNckK7QhGVgmvg@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <CAPDyKFoMqmCFBoO8FwQe2wHh2kqQi4jUZNFyiNckK7QhGVgmvg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 30 Apr 2025, Artur Weber wrote:
+Hi, Ulf,
 
-> The BCM590xx PMUs have two I2C registers for reading the PMU ID
-> and revision. The revision is useful for subdevice drivers, since
-> different revisions may have slight differences in behavior (for
-> example - BCM59054 has different regulator configurations for
-> revision A0 and A1).
-> 
-> Check the PMU ID register and make sure it matches the DT compatible.
-> Fetch the digital and analog revision from the PMUREV register
-> so that it can be used in subdevice drivers.
-> 
-> Also add some known revision values to bcm590xx.h, for convenience
-> when writing subdevice drivers.
-> 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> ---
-> Changes in v8:
-> - Change PMU ID print from dev_info to dev_dbg
-> - Unwrap some lines and let them go up to 100 chars
-> - Drop comment above bcm590xx_parse_version (keep the comments inside
->   the function, they make it a bit more clear what's happening since
->   it's doing two separate things)
-> 
-> Changes in v7:
-> - Return -ENODEV on PMU ID mismatch
-> - Drop "Check your DT compatible" from ID mismatch error message
-> 
-> Changes in v6:
-> - Adapt to PMUID being passed as device type value
-> - Rename rev_dig and rev_ana to rev_digital and rev_analog
-> - Rewrite commit message
-> 
-> Changes in v5:
-> - Add REG_ prefix to register offset constant names
-> 
-> Changes in v4:
-> - Added this commit
-> ---
->  drivers/mfd/bcm590xx.c       | 55 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/bcm590xx.h | 14 +++++++++++
->  2 files changed, 69 insertions(+)
-> 
-> diff --git a/drivers/mfd/bcm590xx.c b/drivers/mfd/bcm590xx.c
-> index 4620eed0066fbf1dd691a2e392e967747b4d125b..12d0db4237e79fcfcb2af4a0d93961b6239a3863 100644
-> --- a/drivers/mfd/bcm590xx.c
-> +++ b/drivers/mfd/bcm590xx.c
-> @@ -17,6 +17,15 @@
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
->  
-> +/* Under primary I2C address: */
-> +#define BCM590XX_REG_PMUID		0x1e
-> +
-> +#define BCM590XX_REG_PMUREV		0x1f
-> +#define BCM590XX_PMUREV_DIG_MASK	0xF
-> +#define BCM590XX_PMUREV_DIG_SHIFT	0
-> +#define BCM590XX_PMUREV_ANA_MASK	0xF0
-> +#define BCM590XX_PMUREV_ANA_SHIFT	4
-> +
->  static const struct mfd_cell bcm590xx_devs[] = {
->  	{
->  		.name = "bcm590xx-vregs",
-> @@ -37,6 +46,48 @@ static const struct regmap_config bcm590xx_regmap_config_sec = {
->  	.cache_type	= REGCACHE_MAPLE,
->  };
->  
-> +/* Map PMU ID value to model name string */
-> +static const char * const bcm590xx_names[] = {
-> +	[BCM590XX_PMUID_BCM59054] = "BCM59054",
-> +	[BCM590XX_PMUID_BCM59056] = "BCM59056",
-> +};
-> +
-> +static int bcm590xx_parse_version(struct bcm590xx *bcm590xx)
-> +{
-> +	unsigned int id, rev;
-> +	int ret;
-> +
-> +	/* Get PMU ID and verify that it matches compatible */
-> +	ret = regmap_read(bcm590xx->regmap_pri, BCM590XX_REG_PMUID, &id);
-> +	if (ret) {
-> +		dev_err(bcm590xx->dev, "failed to read PMU ID: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (id != bcm590xx->pmu_id) {
-> +		dev_err(bcm590xx->dev, "Incorrect ID for %s: expected %x, got %x.\n",
-> +			bcm590xx_names[bcm590xx->pmu_id], bcm590xx->pmu_id, id);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Get PMU revision and store it in the info struct */
-> +	ret = regmap_read(bcm590xx->regmap_pri, BCM590XX_REG_PMUREV, &rev);
-> +	if (ret) {
-> +		dev_err(bcm590xx->dev, "failed to read PMU revision: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	bcm590xx->rev_digital = (rev & BCM590XX_PMUREV_DIG_MASK) >> BCM590XX_PMUREV_DIG_SHIFT;
-> +
-> +	bcm590xx->rev_analog = (rev & BCM590XX_PMUREV_ANA_MASK) >> BCM590XX_PMUREV_ANA_SHIFT;
-> +
-> +	dev_dbg(bcm590xx->dev, "PMU ID 0x%x (%s), revision: digital %d, analog %d",
-> +		 id, bcm590xx_names[id],
-> +		 bcm590xx->rev_digital, bcm590xx->rev_analog);
+Thank you for your input!
 
-Nit: This would fit on the line above.
-
-> +
-> +	return 0;
-> +}
-> +
->  static int bcm590xx_i2c_probe(struct i2c_client *i2c_pri)
->  {
->  	struct bcm590xx *bcm590xx;
-> @@ -78,6 +129,10 @@ static int bcm590xx_i2c_probe(struct i2c_client *i2c_pri)
->  		goto err;
->  	}
->  
-> +	ret = bcm590xx_parse_version(bcm590xx);
-> +	if (ret)
-> +		goto err;
-> +
->  	ret = devm_mfd_add_devices(&i2c_pri->dev, -1, bcm590xx_devs,
->  				   ARRAY_SIZE(bcm590xx_devs), NULL, 0, NULL);
->  	if (ret < 0) {
-> diff --git a/include/linux/mfd/bcm590xx.h b/include/linux/mfd/bcm590xx.h
-> index 8d146e3b102a7dbce6f4dbab9f8ae5a9c4e68c0e..fbc458e94bef923ca1b69afe2cac944adf6fedf8 100644
-> --- a/include/linux/mfd/bcm590xx.h
-> +++ b/include/linux/mfd/bcm590xx.h
-> @@ -17,6 +17,16 @@
->  #define BCM590XX_PMUID_BCM59054		0x54
->  #define BCM590XX_PMUID_BCM59056		0x56
->  
-> +/* Known chip revision IDs */
-> +#define BCM59054_REV_DIGITAL_A1		1
-> +#define BCM59054_REV_ANALOG_A1		2
-> +
-> +#define BCM59056_REV_DIGITAL_A0		1
-> +#define BCM59056_REV_ANALOG_A0		1
-> +
-> +#define BCM59056_REV_DIGITAL_B0		2
-> +#define BCM59056_REV_ANALOG_B0		2
-> +
->  /* max register address */
->  #define BCM590XX_MAX_REGISTER_PRI	0xe7
->  #define BCM590XX_MAX_REGISTER_SEC	0xf0
-> @@ -30,6 +40,10 @@ struct bcm590xx {
->  
->  	/* PMU ID value; also used as device type */
->  	u8 pmu_id;
-> +
-> +	/* Chip revision, read from PMUREV reg */
-> +	u8 rev_digital;
-> +	u8 rev_analog;
->  };
->  
->  #endif /*  __LINUX_MFD_BCM590XX_H */
+On 09.05.2025 16:07, Ulf Hansson wrote:
+> On Fri, 9 May 2025 at 13:51, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>>
+>> Hi, Rafael, Ulf, PM list,
+>>
+>>
+>> On 09.04.2025 19:12, Claudiu Beznea wrote:
+>>> Hi, Rafael,
+>>>
+>>> On 30.03.2025 18:31, Jonathan Cameron wrote:
+>>>> On Thu, 27 Mar 2025 18:47:53 +0200
+>>>> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>>>>
+>>>>> Hi, Rafael,
+>>>>>
+>>>>> On 06.03.2025 08:11, Dmitry Torokhov wrote:
+>>>>>> On Wed, Mar 05, 2025 at 02:03:09PM +0000, Jonathan Cameron wrote:
+>>>>>>> On Wed, 19 Feb 2025 14:45:07 +0200
+>>>>>>> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>>>>>>>
+>>>>>>>> Hi, Daniel, Jonathan,
+>>>>>>>>
+>>>>>>>> On 15.02.2025 15:51, Claudiu Beznea wrote:
+>>>>>>>>> Hi, Greg,
+>>>>>>>>>
+>>>>>>>>> On 15.02.2025 15:25, Greg KH wrote:
+>>>>>>>>>> On Sat, Feb 15, 2025 at 03:08:49PM +0200, Claudiu wrote:
+>>>>>>>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>>>>>>>
+>>>>>>>>>>> On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}),
+>>>>>>>>>>> clocks are managed through PM domains. These PM domains, registered on
+>>>>>>>>>>> behalf of the clock controller driver, are configured with
+>>>>>>>>>>> GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
+>>>>>>>>>>> clocks are enabled/disabled using runtime PM APIs. The power domains may
+>>>>>>>>>>> also have power_on/power_off support implemented. After the device PM
+>>>>>>>>>>> domain is powered off any CPU accesses to these domains leads to system
+>>>>>>>>>>> aborts.
+>>>>>>>>>>>
+>>>>>>>>>>> During probe, devices are attached to the PM domain controlling their
+>>>>>>>>>>> clocks and power. Similarly, during removal, devices are detached from the
+>>>>>>>>>>> PM domain.
+>>>>>>>>>>>
+>>>>>>>>>>> The detachment call stack is as follows:
+>>>>>>>>>>>
+>>>>>>>>>>> device_driver_detach() ->
+>>>>>>>>>>>   device_release_driver_internal() ->
+>>>>>>>>>>>     __device_release_driver() ->
+>>>>>>>>>>>       device_remove() ->
+>>>>>>>>>>>         platform_remove() ->
+>>>>>>>>>>>         dev_pm_domain_detach()
+>>>>>>>>>>>
+>>>>>>>>>>> During driver unbind, after the device is detached from its PM domain,
+>>>>>>>>>>> the device_unbind_cleanup() function is called, which subsequently invokes
+>>>>>>>>>>> devres_release_all(). This function handles devres resource cleanup.
+>>>>>>>>>>>
+>>>>>>>>>>> If runtime PM is enabled in driver probe via devm_pm_runtime_enable(), the
+>>>>>>>>>>> cleanup process triggers the action or reset function for disabling runtime
+>>>>>>>>>>> PM. This function is pm_runtime_disable_action(), which leads to the
+>>>>>>>>>>> following call stack of interest when called:
+>>>>>>>>>>>
+>>>>>>>>>>> pm_runtime_disable_action() ->
+>>>>>>>>>>>   pm_runtime_dont_use_autosuspend() ->
+>>>>>>>>>>>     __pm_runtime_use_autosuspend() ->
+>>>>>>>>>>>       update_autosuspend() ->
+>>>>>>>>>>>         rpm_idle()
+>>>>>>>>>>>
+>>>>>>>>>>> The rpm_idle() function attempts to resume the device at runtime. However,
+>>>>>>>>>>> at the point it is called, the device is no longer part of a PM domain
+>>>>>>>>>>> (which manages clocks and power states). If the driver implements its own
+>>>>>>>>>>> runtime PM APIs for specific functionalities - such as the rzg2l_adc
+>>>>>>>>>>> driver - while also relying on the power domain subsystem for power
+>>>>>>>>>>> management, rpm_idle() will invoke the driver's runtime PM API. However,
+>>>>>>>>>>> since the device is no longer part of a PM domain at this point, the PM
+>>>>>>>>>>> domain's runtime PM APIs will not be called. This leads to system aborts on
+>>>>>>>>>>> Renesas SoCs.
+>>>>>>>>>>>
+>>>>>>>>>>> Another identified case is when a subsystem performs various cleanups
+>>>>>>>>>>> using device_unbind_cleanup(), calling driver-specific APIs in the process.
+>>>>>>>>>>> A known example is the thermal subsystem, which may call driver-specific
+>>>>>>>>>>> APIs to disable the thermal device. The relevant call stack in this case
+>>>>>>>>>>> is:
+>>>>>>>>>>>
+>>>>>>>>>>> device_driver_detach() ->
+>>>>>>>>>>>   device_release_driver_internal() ->
+>>>>>>>>>>>     device_unbind_cleanup() ->
+>>>>>>>>>>>       devres_release_all() ->
+>>>>>>>>>>>         devm_thermal_of_zone_release() ->
+>>>>>>>>>>>         thermal_zone_device_disable() ->
+>>>>>>>>>>>           thermal_zone_device_set_mode() ->
+>>>>>>>>>>>             struct thermal_zone_device_ops::change_mode()
+>>>>>>>>>>>
+>>>>>>>>>>> At the moment the driver-specific change_mode() API is called, the device
+>>>>>>>>>>> is no longer part of its PM domain. Accessing its registers without proper
+>>>>>>>>>>> power management leads to system aborts.
+>>>>>>>>>>>
+>>>>>>>>>>> Open a devres group before calling the driver probe, and close it
+>>>>>>>>>>> immediately after the driver remove function is called and before
+>>>>>>>>>>> dev_pm_domain_detach(). This ensures that driver-specific devm actions or
+>>>>>>>>>>> reset functions are executed immediately after the driver remove function
+>>>>>>>>>>> completes. Additionally, it prevents driver-specific runtime PM APIs from
+>>>>>>>>>>> being called when the device is no longer part of its power domain.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>
+>>>>>>>>>>> Hi,
+>>>>>>>
+>>>>>>> Hi Claudiu, Greg,
+>>>>>>>
+>>>>>>> Sorry, I missed this thread whilst travelling and only saw it because
+>>>>>>> of reference from the in driver solution.
+>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> Although Ulf gave its green light for the approaches on both IIO [1],
+>>>>>>>>>>> [2] and thermal subsystems [3], Jonathan considered unacceptable the
+>>>>>>>>>>> approaches in [1], [2] as he considered it may lead to dificult to
+>>>>>>>>>>> maintain code and code opened to subtle bugs (due to the potential of
+>>>>>>>>>>> mixing devres and non-devres calls). He pointed out a similar approach
+>>>>>>>>>>> that was done for the I2C bus [4], [5].
+>>>>>>>>>>>
+>>>>>>>>>>> As the discussions in [1], [2] stopped w/o a clear conclusion, this
+>>>>>>>>>>> patch tries to revive it by proposing a similar approach that was done
+>>>>>>>>>>> for the I2C bus.
+>>>>>>>>>>>
+>>>>>>>>>>> Please let me know you input.
+>>>>>>>>>>
+>>>>>>>>>> I'm with Jonathan here, the devres stuff is getting crazy here and you
+>>>>>>>>>> have drivers mixing them and side affects happening and lots of
+>>>>>>>>>> confusion.  Your change here is only going to make it even more
+>>>>>>>>>> confusing, and shouldn't actually solve it for other busses (i.e. what
+>>>>>>>>>> about iio devices NOT on the platform bus?)
+>>>>>>>
+>>>>>>> In some cases they are already carrying the support as per the link
+>>>>>>> above covering all i2c drivers.  I'd like to see a generic solution and
+>>>>>>> I suspect pushing it to the device drivers rather than the bus code
+>>>>>>> will explode badly and leave us with subtle bugs where people don't
+>>>>>>> realise it is necessary.
+>>>>>>>
+>>>>>>> https://lore.kernel.org/all/20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com/
+>>>>>>> is a lot nastier looking than what we have here. I'll review that in a minute
+>>>>>>> to show that it need not be that bad, but none the less not pleasant.
+>>>>>>>
+>>>>>>> +CC linux-iio to join up threads and Dmitry wrt to i2c case (and HID that does
+>>>>>>> similar)
+>>>>>>
+>>>>>> We should not expect individual drivers handle this, because this is a
+>>>>>> layering violation: they need to know implementation details of the bus
+>>>>>> code to know if the bus is using non-devres managed resources, and
+>>>>>> adjust their behavior. Moving this into driver core is also not
+>>>>>> feasible, as not all buses need it. So IMO this should belong to
+>>>>>> individual bus code.
+>>>>>>
+>>>>>> Instead of using devres group a bus may opt to use
+>>>>>> devm_add_action_or_reset() and other devm APIs to make sure bus'
+>>>>>> resource unwinding is carried in the correct order relative to freeing
+>>>>>> driver-owned resources.
+>>>>>
+>>>>> Can you please let us know your input on the approach proposed in this
+>>>>> patch? Or if you would prefer devm_add_action_or_reset() as suggested by
+>>>>> Dmitry? Or if you consider another approach would fit better?
+>>>>>
+>>>>> Currently there were issues identified with the rzg2l-adc driver (driver
+>>>>> based solution proposed in [1]) and with the rzg3s thermal driver (solved
+>>>>> by function rzg3s_thermal_probe() from [2]).
+>>>>>
+>>>>> As expressed previously by Jonathan and Dimitry this is a common problem
+>>>>> and as the issue is due to a call in the bus driver, would be better and
+>>>>> simpler to handle it in the bus driver. Otherwise, individual drivers would
+>>>>> have to be adjusted in a similar way.
+>>>>>
+>>>>
+>>>> Rafael,
+>>>>
+>>>> Greg suggested we ask for your input on the right option:
+>>>>
+>>>> https://lore.kernel.org/all/2025032703-genre-excitable-9473@gregkh/
+>>>> (that thread has the other option).
+>>>
+>>> Can you please let us know your opinion on this?
+>> Can you please let us know if you have any suggestions for this?
 > 
-> -- 
-> 2.49.0
-> 
+> It's been a while since I looked at this. Although as I understand it,
+> the main issue comes from using devm_pm_runtime_enable().
 
--- 
-Lee Jones [李琼斯]
+Yes, it comes from the usage of devm_pm_runtime_enable() in drivers and the
+dev_pm_domain_detach() call in platform_remove() right after calling
+driver's remove function.
+
+On the platform I experienced issues with, the dev_pm_domain_detach() drops
+the clocks from the device power domain and any subsequent PM runtime
+resume calls (that may happen in the devres cleanup phase) have no effect
+on enabling the clocks. If driver has functions registered (e.g. through
+devm_add_action_or_reset()), or driver specific runtime PM functions that
+access directly registers in the devres cleanup phase this leads to system
+aborts.
+
+
+> 
+> As I have tried to argue before, I think devm_pm_runtime_enable()
+> should *not* be used. Not here, not at all. Runtime PM isn't like any
+> other resources that we fetch/release. Instead, it's a behaviour that
+> you turn on and off, which needs to be managed more carefully, rather
+> than relying on fetch/release ordering from devres.
+> 
+> That said, I would convert the driver to use pm_runtime_enable() and
+> pm_runtime_disable() instead.
+
+I've tried this approach previously but it resulted in more complicated
+code and thus, Jonathan wasn't happy with it [1].
+
+Another approach I've tried was to have devres group opened/closed in the
+driver itself [2], [3] but it was postponed as this approach may have a chance.
+
+At the moment I have 2 drivers waiting for a resolution on this [2], [3]
+and I recently posted a new one [4] that uses driver specific local devres
+group to avoid this issue.
+
+
+Thank you,
+Claudiu
+
+[1]
+https://lore.kernel.org/all/20250224120608.1769039-2-claudiu.beznea.uj@bp.renesas.com
+[2]
+https://lore.kernel.org/all/20250324122627.32336-2-claudiu.beznea.uj@bp.renesas.com
+[3]
+https://lore.kernel.org/all/20250324135701.179827-3-claudiu.beznea.uj@bp.renesas.com/
+[4]
+https://lore.kernel.org/all/20250430103236.3511989-6-claudiu.beznea.uj@bp.renesas.com
