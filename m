@@ -1,387 +1,191 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5454B29188C
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298E8296D03;
+	Fri,  9 May 2025 13:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796701; cv=none; b=QOYdKPEXSaXGc3DiOjNBlzVxRJCR53PcTApyZ4JEtGb/b622vRtiwldlvNp6GHVnIbyas3A2h4jR8bQq7OWwGIN6IbDxDzaFaPLcU628RaLKOlgB+OLdWawXu8Ay3GQCjs37SmApHOo4KYlkVfaYyR9IjihkBRLSBuVcUMoPq7g=
+	t=1746796705; cv=none; b=oxJHTVI/iAu0q2LaHhRlAXVhbKXPWMzNhIlJNC0849lCNbZWtv3linWSHqd41nUtj/nkM5Ztw25tye8g+g2SadLBhxcubScQaG+XBh4LO6Eoy0Vab8OYctrvPNHmbEE/WYSbZHQPW2md8Dbf7/ioN3zmv/hb2c6ix+IvmLMopLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796701; c=relaxed/simple;
-	bh=8OquTIt/vmD6K9arovO7DOyoUElUpbG67nqKF7oIvnw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=BWVDoZZ5c9B1qfWsA6Wu8KEZ7j5DmPl8maimrXv5lq14DsY+ACVErwTenxS+nuajsX3aNuScjVLQqwk+T16FD376oQ+gBmZh5h4xVC87KfivfMSNM32avwUpV6SZKTHikD+eI3e6Cjt3GevxJJHj+XAFROgaT7nd60m+MHYd+b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=Evi6SeZG; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1746796705; c=relaxed/simple;
+	bh=sgUuawys4CVWd18cGnNmHCR+VHk9LnqU+20rIof8jPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uVQ1ACZM33Xb+gLZ5NV3KrLePC8ewcY7evmpZl3llG2ddVOm4HK9b8envmswI5+rzZ6QybmtSf+Se3DZn5NUiCl1l4PGyVK9gtYQrGps1qfpvZCr1WMNHPIwQVsK0g+8BmSq4i7+uvXtp2dQEDTaluh6kqQ4bBc/WoTj3Nlpubw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MhstrrLf; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="Evi6SeZG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhstrrLf"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0ebf39427so1333509f8f.3;
+        Fri, 09 May 2025 06:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746796701; x=1747401501; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d6kFmlgqoPiMHx9iRiwRxPf9qHkMFcTzTxiQjceKAuI=;
+        b=MhstrrLfVCeBMHAdsyK0a1k7uthaaQOLFpTGTOBmpJGYCyXoB5kK4KBjIeWrxNA0VI
+         VCMQu1Z4pzuPHbmht894f3gkZtvlY+G8Kk0Bze8ueEywVtLRFAGnxdKKnSdh/gogPzmh
+         N3lY9vQu/EwERB5TpEKIyKeDJ2htt0WxwnoVjujx+2rD7/rwPU7oHkg1yVtILhl2nyWO
+         sOy0k0q12e1+Mygwa9mu13LG97oVRUqlAmDJADcSUk68OU6soh7sa1pCsHzJ5gh+7GOD
+         qvmh340RPS49FrxRYPBsaBxdwVbGfJywA1SJ4okFpMSVFT0Iq+26kIvb0rKlozVeix0k
+         Bmgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746796701; x=1747401501;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d6kFmlgqoPiMHx9iRiwRxPf9qHkMFcTzTxiQjceKAuI=;
+        b=k5rEtNR2cnAOd4DB42DRDt3B7mWiuxNNDMHFMsdfonBjjwjwDf3BcJBkFwcZEH+hLg
+         ioSV8KmjFyFmdgn6q6EHUOP1Kdnd5xKzHBamgpustrVPAf5AAqN2mJ6Sa0UVxFwH91Xt
+         M57vO3BPAnU2tLc+3GEcY0rycgtPXcAU4xJpbXJQvxmaadfssDOZQRDS/A2v9V24tRTx
+         cMSjBUQYQUqmObXPjHPVgCaDcY+j8/Dix/+5Qy633qEvU6QEda7I6lprBQVF2pRAaYUH
+         XJcLXBiAbRvYWmWMb87uHPNIGsDprmj893cxP6w+AA4R+iUjgG8iij+mK/Hx07/o9zJu
+         oNxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR/vkw6StAAOTIVFg8a1rs9V9O6ogjv0IKxWphGW0R7UPrXmhAfzwNu+zi7uhaDB1t/mOCIowAuD9aYLw1oqkPQrE=@vger.kernel.org, AJvYcCXdFmBGWTSOJhR49V4WRn658jZRMfg05QDIRuUBKsTBJaAZ58aMhFFXHze14ryMxU7/QM8Xjm7U1j83/Jef@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI0Mt/zkC72wyMWpGQtTZaG1ElhYMmeGtnXQpWGY6z0GL3Rprf
+	eETgiN6iexg4F+4DIyeTFhCdnK7r62PFAIH2f5DcLQrzY1Dyk/ia
+X-Gm-Gg: ASbGncuubyJtbD7p9aA2xK37SG7kXKI37aCTUq2jK82NDYPr1Q0gJoECJeCjp4agiJG
+	vuXX/niohOxDOiuegBL2n2yF+klaNB+QuM0TFJNPfN70ruWzVIYXLydignD83XhW7gqEYv1oz9R
+	KsIie1d0J9Pj6eQDY9u9D1mAWLc3ijtlw5sXZIb6nxqf0SXJfrvlH19PUOF+hAtkB6Lj7SDuTsF
+	26bIoJ2Tm9yW7C9ESIrYcIRUwPyOwBED0bJNPre06U1j1HcStfGLsFy2Flz6lnFL8Lj+YxP1vjT
+	8rgqVF3ivFbzuqsnCEjzbd/0oDV0n10tzIQEwuT/NAXF61Y8
+X-Google-Smtp-Source: AGHT+IGKuCHUteYYaaWgXJ0x6ii7m7FmxtGjV1AI/Suc2tv2PoC0iHGOic2BZRIQbQSqWmqYDWEbjA==
+X-Received: by 2002:adf:e105:0:b0:39c:30d9:3b5c with SMTP id ffacd0b85a97d-3a1f649a919mr2476134f8f.39.1746796701118;
+        Fri, 09 May 2025 06:18:21 -0700 (PDT)
+Received: from [10.14.0.2] ([178.239.163.112])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2a12sm3194434f8f.44.2025.05.09.06.18.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 06:18:20 -0700 (PDT)
+Message-ID: <6191c255-84cc-4721-91d1-1884472989f7@gmail.com>
+Date: Fri, 9 May 2025 15:18:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1746796686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nVdoRmzHdJIDzHX5mXnwcwEn0rBmpBpiL6BVXHOZ+ps=;
-	b=Evi6SeZGpNRULGqJy6DsClZaUaVxL+vZt/e/PDbDKVn3OV5tm3qwkxMpY5ZOVL6S04fICi
-	XVauFECRsbn3Jiy1FYHzyur1/SWCc4XNgvBZAH8s5/lpGPmJmASFBZ3rcOvQ/8PgUDncfa
-	uQnV3mXFbn2XijbZmq5IXjipzQ/8ObVcBfdgwHHkGvrGjOl9BaYJBMkt0MHrtEr8aIDjqU
-	jFv3e7xsRKmPuYP55cJAsfcO7J9a+QmkfuK07n72QOuaaPy/oE1pg0X+gXGjj6Le3yjLad
-	sifi7XLlwBhfxS+cRHPHNmZU94m2xGYU6aq6uplgFiNdQYFHuf+MGIQVId081Q==
-Content-Type: multipart/signed;
- boundary=33bca27b73304a4270d6ea8fbc04c0d790682b0e0c2dc71e4f7c11e0ec14;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 09 May 2025 15:18:04 +0200
-Message-Id: <D9RNQUO6IKFU.9BYJLSAQV9WT@cknow.org>
-Subject: Re: [PATCH v2 5/5] arm64: dts: rockchip: add USB-C support for ROCK
- 5B+
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Sebastian Reichel" <sebastian.reichel@collabora.com>, "Heiko Stuebner"
- <heiko@sntech.de>
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <kernel@collabora.com>
-References: <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
- <20250508-rock5bp-for-upstream-v2-5-677033cc1ac2@kernel.org>
-In-Reply-To: <20250508-rock5bp-for-upstream-v2-5-677033cc1ac2@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
+ filesystems with manually crafted filesystem
+To: Theodore Ts'o <tytso@mit.edu>, Dmitry Vyukov <dvyukov@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org,
+ linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <2025040820-REJECTED-6695@gregkh>
+ <20250509072033.1335321-1-dvyukov@google.com>
+ <2025050940-marrow-roundish-8b98@gregkh>
+ <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
+ <2025050924-marmalade-overfill-fc5a@gregkh>
+ <CACT4Y+ZqToLK5R__x8O1ZctsG3wQtRn36JWF2MPRYqY+Zy_CUA@mail.gmail.com>
+ <20250509121036.GA92783@mit.edu>
+Content-Language: en-US
+From: Attila Szasz <szasza.contact@gmail.com>
+In-Reply-To: <20250509121036.GA92783@mit.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---33bca27b73304a4270d6ea8fbc04c0d790682b0e0c2dc71e4f7c11e0ec14
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+ > I would invite that security researchers
+> file CVE's with the *product* as opposed to the upstream open source
+> project.
 
-Hi,
+The CVE was originally filed for Ubuntu Linux ;)
+Namely, cpe:2.3:o:canonical:ubuntu_linux.
 
-On Thu May 8, 2025 at 7:48 PM CEST, Sebastian Reichel wrote:
-> Add hardware description for the USB-C port in the Radxa ROCK 5 Model B+
-> This describes the OHCI, EHCI and XHCI USB parts, but not yet the Display=
-Port
-> AltMode, since the bindings for that are not yet upstream.
+It was moved to kernel.org CNA territory due to some politics,
+then it was rejected on the same day the bug was fixed upstream.
+
+Since then, I saw Canonical folks mention that they wanted to
+allocate a new one but needed to obfuscate the description so it no
+longer sounds like a kernel bug.
+
+Which, incidentally, is not quite true either, it *is* a kernel bug.
+
+Since then I checked, and 5.4 LTS (any<=5.6) had been vulnerable without
+the need to ever mount an untrusted/malformed FS just by systematically
+corrupting a vanilla fs's B-trees with normal operations.
+       
+
+There was also a logic issue I wrote about that hasn't been
+patched, since hfs_brec_find() can return with -ENOENT, and
+hfsplus_create_attr did not treat ENOENT as a problem when
+inserting records, resulting in a flow completely missing the
+only boundary checks that were present earlier. With the issue
+that commit 25efb2f patched upstream and another issue I found,
+the condition for the rejection is no longer true.
+The image to begin with is not even corrupt.
+
+According to this, https://lwn.net/Articles/652468/, user namespace
+mounting for block filesystems *was seriously considered*
+at some point, but it was deemed too hard or costly.
+But ok, so it is "doable" in theory.
+
+Then, it is just not consistent with the rest of your CNA practices to
+blame users for relaxing requirements on mounting, and as this shows,
+this was not even the case here for one of the LTS stables.
+
+I think the delegated threat model is a difficult one, but you kind of
+chose this yourselves with the CNA policy of treating most bugs as
+potentially exploitable.
+
+
+> If companies want to assign me a chunk of headcount (say, 4 or 5 L4's
+> and L5's for 3 years working on thing but ext4 hardening, plus a
+> full-time L5 after that working exclusively to maintain the ext4
+> hardening featuers and fix random syzbot complaints), I know what I
+> could assign them to change the security assumptions that we have for
+> ext4.  It might require a
+> CONFIG_EXT4_SECURITY_IS_MORE_IMPORTANT_THAN_PERFORMANCE parameter to
+> enable all of the hardening features, but it is doable.
+
+> But they aren't, so I consider it to be *obivous* that the industry
+> doesn't think is important --- just as Orange Book A1 certified OS's
+> was a total, complete, and abject commercial failure.  And note, we
+> don't assign CVE's based on the fact that se all OS's violate the
+> security trust model of Orange Book's A1.  :-)
+
+No, you (or more like cve@) assign CVEs on panic_on_warn noise instead:)
+
+On 5/9/25 14:10, Theodore Ts'o wrote:
+> On Fri, May 09, 2025 at 10:03:13AM +0200, Dmitry Vyukov wrote:
+>> If we can't prove it does not have security impact in any context,
+>> then the safe default would be to say it's unsafe.
+> In that case *anything* could be unsafe.  You could have a context
+> where (a) you aren't using secure boot, (b) /dev/mem is enabled, (c)
+> /dev/mem is world writeable, etc.  In which case the mere existence of
+> /bin/bash would be "unsafe".  Yes, this is uncreasonable and unsane.
+> But that's because the "no security impact in any context" standard is
+> insane.
 >
-> Support for the ROCK 5B is prepared, but not exposed at the moment,
-> since it results in unreliable boot behavior due to hard resets killing
-> the supply voltage. Some further investigation and fixes in the kernel's
-> Type-C Port Manager (TCPM) state machine is needed before exposing the
-> port. The ROCK 5B+ has a dedicated port for powering the board and thus
-> is not affected.
+> As far as many file system authors are concerned allowing automount by
+> defaullt is insane, and is apparently the fault of some Red Hat
+> product manager many years ago.
 >
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../boot/dts/rockchip/rk3588-rock-5b-plus.dts      |  16 +++
->  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |  23 ++++
->  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi   | 137 +++++++++++++++=
-++++++
->  3 files changed, 176 insertions(+)
+> E2fsprogs and xfsprogs now ship with a udev rule which disables
+> automount by default.  If applied, mounting a maliciously fuzzed file
+> system requires root privileges.
 >
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts b/arch/=
-arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts
-> index 74c7b6502e4dda4b774f43c704ebaee350703c0d..4096cd853f9a909e4233d2c61=
-a1fe5ee83904c4c 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts
-> @@ -99,12 +99,28 @@ pcie3x2_rst: pcie3x2-rst {
->  	};
-> =20
->  	usb {
-> +		usbc_sbu_dc: usbc-sbu-dc {
-> +			rockchip,pins =3D <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>,
-> +					<0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
->  		vcc5v0_host_en: vcc5v0-host-en {
->  			rockchip,pins =3D <1 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
->  	};
->  };
-> =20
-> +&usbc0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&usbdp_phy0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&usbc_sbu_dc>;
-> +	sbu1-dc-gpios =3D <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
-> +	sbu2-dc-gpios =3D <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
-> +};
-> +
->  &vcc5v0_host {
->  	enable-active-high;
->  	gpio =3D <&gpio1 RK_PA1 GPIO_ACTIVE_HIGH>;
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64=
-/boot/dts/rockchip/rk3588-rock-5b.dts
-> index 9407a7c9910ada1f6c803d2e15785a9cbd9bd655..ab0c572ea9234f373af4a47db=
-93fc1786f0e6fbf 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> @@ -36,8 +36,20 @@ &uart6 {
->  	status =3D "okay";
->  };
-> =20
-> +&usbdp_phy0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&usbc_sbu_dc>;
-> +	sbu1-dc-gpios =3D <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
-> +	sbu2-dc-gpios =3D <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
-> +};
-> +
->  &pinctrl {
->  	usb {
-> +		usbc_sbu_dc: usbc-sbu-dc {
-> +			rockchip,pins =3D <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>,
-> +					<0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-
-Shouldn't these be <4 RK_PA6 ...> and <4 RK_PA7 ...> ?
-
-In the rock5bp_v1.2 schematic they're (IIUC) GPIO0_C4 and _C5, but in
-rock_5b_v1450 schematic TYPEC0_SBU1_DC and TYPEC0_SBU2_DC are on
-GPIO4_A6 and GPIO4_A7.
-
-And in rock_5b_v1450 GPIO0_C4 and _C5 are connected to WIFI_REG_ON_H and
-BT_W AKE_HOST_H respectively.
-
-Cheers,
-  Diederik
-
-> +		};
-> +
->  		vcc5v0_host_en: vcc5v0-host-en {
->  			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
-> @@ -50,3 +62,14 @@ &vcc5v0_host {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&vcc5v0_host_en>;
->  };
-> +
-> +/*
-> + * Do not yet offer USB-C support on the Rock 5B. The current U-Boot
-> + * Linux setup is quite unstable and for many power-supplies needs multi=
-ple
-> + * hard resets to boot to userspace. Let's enable this once the issues
-> + * in the TCPM kernel code have been solved. Without this any automated
-> + * boot tests will run into problems.
-> + */
-> +/delete-node/ &usbc0;
-> +/delete-node/ &usb_host0_xhci;
-> +/delete-node/ &usbdp_phy0;
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch/arm6=
-4/boot/dts/rockchip/rk3588-rock-5b.dtsi
-> index 6052787d2560978d2bae6cfbeea5fc1d419d583a..314fdc0c1c20b25b0fdc5254f=
-3b090586c169a00 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
-> @@ -5,6 +5,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/leds/common.h>
->  #include <dt-bindings/soc/rockchip,vop2.h>
-> +#include <dt-bindings/usb/pd.h>
->  #include "rk3588.dtsi"
-> =20
->  / {
-> @@ -92,6 +93,15 @@ rfkill-bt {
->  		shutdown-gpios =3D <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
->  	};
-> =20
-> +	vcc12v_dcin: regulator-vcc12v-dcin {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc12v_dcin";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt =3D <12000000>;
-> +		regulator-max-microvolt =3D <12000000>;
-> +	};
-> +
->  	vcc3v3_pcie2x1l0: regulator-vcc3v3-pcie2x1l0 {
->  		compatible =3D "regulator-fixed";
->  		enable-active-high;
-> @@ -146,6 +156,19 @@ vcc5v0_sys: regulator-vcc5v0-sys {
->  		regulator-boot-on;
->  		regulator-min-microvolt =3D <5000000>;
->  		regulator-max-microvolt =3D <5000000>;
-> +		vin-supply =3D <&vcc12v_dcin>;
-> +	};
-> +
-> +	vbus5v0_typec: vbus5v0-typec {
-> +		compatible =3D "regulator-fixed";
-> +		enable-active-high;
-> +		gpio =3D <&gpio2 RK_PB6 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&vbus5v0_typec_en>;
-> +		regulator-name =3D "vbus5v0_typec";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		vin-supply =3D <&vcc5v0_sys>;
->  	};
-> =20
->  	vcc_1v1_nldo_s3: regulator-vcc-1v1-nldo-s3 {
-> @@ -309,6 +332,67 @@ regulator-state-mem {
->  	};
->  };
-> =20
-> +&i2c4 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&i2c4m1_xfer>;
-> +	status =3D "okay";
-> +
-> +	usbc0: usb-typec@22 {
-> +		compatible =3D "fcs,fusb302";
-> +		reg =3D <0x22>;
-> +		interrupt-parent =3D <&gpio3>;
-> +		interrupts =3D <RK_PB4 IRQ_TYPE_LEVEL_LOW>;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&usbc0_int>;
-> +		vbus-supply =3D <&vbus5v0_typec>;
-> +		/*
-> +		 * When the board is starting to send power-delivery messages
-> +		 * too late (5 seconds according to the specification), the
-> +		 * power-supply reacts with a hard-reset. That removes the
-> +		 * power from VBUS for some time, which resets te whole board.
-> +		 */
-> +		status =3D "fail";
-> +
-> +		usb_con: connector {
-> +			compatible =3D "usb-c-connector";
-> +			label =3D "USB-C";
-> +			data-role =3D "dual";
-> +			power-role =3D "sink";
-> +			try-power-role =3D "sink";
-> +			op-sink-microwatt =3D <1000000>;
-> +			sink-pdos =3D
-> +				<PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>,
-> +				<PDO_VAR(5000, 20000, 5000)>;
-> +
-> +			ports {
-> +				#address-cells =3D <1>;
-> +				#size-cells =3D <0>;
-> +
-> +				port@0 {
-> +					reg =3D <0>;
-> +					usbc0_role_sw: endpoint {
-> +						remote-endpoint =3D <&dwc3_0_role_switch>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg =3D <1>;
-> +					usbc0_orien_sw: endpoint {
-> +						remote-endpoint =3D <&usbdp_phy0_orientation_switch>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg =3D <2>;
-> +					dp_altmode_mux: endpoint {
-> +						remote-endpoint =3D <&usbdp_phy0_dp_altmode_mux>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
->  &i2c6 {
->  	status =3D "okay";
-> =20
-> @@ -481,6 +565,16 @@ pcie3_vcc3v3_en: pcie3-vcc3v3-en {
->  			rockchip,pins =3D <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
->  	};
-> +
-> +	usb {
-> +		usbc0_int: usbc0-int {
-> +			rockchip,pins =3D <3 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		vbus5v0_typec_en: vbus5v0-typec-en {
-> +			rockchip,pins =3D <2 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
->  };
-> =20
->  &pwm1 {
-> @@ -866,6 +960,14 @@ &uart2 {
->  	status =3D "okay";
->  };
-> =20
-> +&u2phy0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&u2phy0_otg {
-> +	status =3D "okay";
-> +};
-> +
->  &u2phy1 {
->  	status =3D "okay";
->  };
-> @@ -893,6 +995,27 @@ &u2phy3_host {
->  	status =3D "okay";
->  };
-> =20
-> +&usbdp_phy0 {
-> +	mode-switch;
-> +	orientation-switch;
-> +	status =3D "okay";
-> +
-> +	port {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		usbdp_phy0_orientation_switch: endpoint@0 {
-> +			reg =3D <0>;
-> +			remote-endpoint =3D <&usbc0_orien_sw>;
-> +		};
-> +
-> +		usbdp_phy0_dp_altmode_mux: endpoint@1 {
-> +			reg =3D <1>;
-> +			remote-endpoint =3D <&dp_altmode_mux>;
-> +		};
-> +	};
-> +};
-> +
->  &usbdp_phy1 {
->  	status =3D "okay";
->  };
-> @@ -905,6 +1028,20 @@ &usb_host0_ohci {
->  	status =3D "okay";
->  };
-> =20
-> +&usb_host0_xhci {
-> +	usb-role-switch;
-> +	status =3D "okay";
-> +
-> +	port {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		dwc3_0_role_switch: endpoint {
-> +			remote-endpoint =3D <&usbc0_role_sw>;
-> +		};
-> +	};
-> +};
-> +
->  &usb_host1_ehci {
->  	status =3D "okay";
->  };
-
-
---33bca27b73304a4270d6ea8fbc04c0d790682b0e0c2dc71e4f7c11e0ec14
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaB4AjgAKCRDXblvOeH7b
-bt6iAP4kthtjrbYmyarcnjN/1gVMWFkZhBOQ9q75f2+QZUWYKQD/WnNV8qywAzPX
-7WOOlBtd2T/Qhse1vAlbhjcj/yu05Qo=
-=RLtz
------END PGP SIGNATURE-----
-
---33bca27b73304a4270d6ea8fbc04c0d790682b0e0c2dc71e4f7c11e0ec14--
+> Of course, distributions are free to change the default, just as they
+> are free to ship a system where root has a default password of
+> "password" or /bin/bash is setuid root.  It would be insane, but
+> product managers often do insane things in the name of user
+> convenience.  In those cases, I would invite that security researchers
+> file CVE's with the *product* as opposed to the upstream open source
+> project.
+>
+> If companies want to assign me a chunk of headcount (say, 4 or 5 L4's
+> and L5's for 3 years working on thing but ext4 hardening, plus a
+> full-time L5 after that working exclusively to maintain the ext4
+> hardening featuers and fix random syzbot complaints), I know what I
+> could assign them to change the security assumptions that we have for
+> ext4.  It might require a
+> CONFIG_EXT4_SECURITY_IS_MORE_IMPORTANT_THAN_PERFORMANCE parameter to
+> enable all of the hardening features, but it is doable.
+>
+> But they aren't, so I consider it to be *obivous* that the industry
+> doesn't think is important --- just as Orange Book A1 certified OS's
+> was a total, complete, and abject commercial failure.  And note, we
+> don't assign CVE's based on the fact that se all OS's violate the
+> security trust model of Orange Book's A1.  :-)
+>
+> 						- Ted
+>
