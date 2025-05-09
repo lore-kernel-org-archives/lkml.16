@@ -1,169 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F4226FD95
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6117A270557;
+	Fri,  9 May 2025 07:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776027; cv=none; b=ft9sXkiCxJ7tQQqRZRvDcKLwCG+StuMMy9xGW1MWjuDY2jP6B4BRDb6D8k5K2PQU3WjQSzwE6CSXiWt4yNCk1D5SkoNZD4bBCw5whZQjH2FHu+OxwPFUEyg7pQ0/SIfyvUgF7ddBAqyzaj45E7+c1za4qtVIHIeuOlywp7jwEjQ=
+	t=1746776044; cv=none; b=SR3YzIi0FE/FDZ4HFC1QWxspgoHE2N8PmuVknKOCXjQDHPafV8r5daOyERP5bTNFGCBoBWlBTP4860/1mNv7sFC8w5l/nmVgjGAG6+2/mzZxcWiTpku0D1fM2HZn1nOPkGBiUtFwcX1pu7VzEqdDtVgPEVIzDk0APYZJEFOyF2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776027; c=relaxed/simple;
-	bh=FWyuxhoonZwohLikNd7BSVrApuwXrx4iVj+WWJE6P+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=apAvbpAwg08LWo+hNblmQLZyblnkpv7bxxmpsQUkjpKxJKeqYLLUqpfu6ouP1bbRsrHMQQKBxV2N0IxFIka6MH94EdtrN8rGHuNV7SRCL6FyKUhrtmpg1FM3YtDjblS6t4/MzDTrN1HkQUy5p8BOiJ/GdZLSzKxfn+uqtajixR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NqMo78rL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746776044; c=relaxed/simple;
+	bh=om7NTmxes7IKAz7R1O7o0V5iGGNcv7oTxJIZLKrgaKE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FbPhua1f95Rb8zWMwFphWeo5YPo9S5xJ4ck/V8oE57hw8QoUSqqslwI5PTKfjWMBP9Qdhz0u8x4+VT5SZ78XF8x3x9u5Gy+bDm9VrPye+QpvDtLk6PKeWQgg7K92XnF6FVJURYwzwlzc3wsZy8xZrojcU0RAA3e5psIJuA3BLdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtfNYfUm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqMo78rL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746776024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VpG7PvH0UplrJjw105ZtScpJjsINX/Nh8S8T5pYtBeg=;
-	b=NqMo78rLEop9adMqbY1hkrc5avVgSNUkKvVLpEJO6C8HANhn16uORfmy6TbKeQETU6xMw6
-	Bw/uZXE3PvDiNalqeSmU8e9RB/AOjrqBJtc1e6j81lHOmgK1WQwyhHyPnCahe9fSS+8XkT
-	Mu6N3NUVb6hNQIquUmg9JC4zt3uLn+4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-Ch1BYn7kMLaIE58Cbj6CqQ-1; Fri, 09 May 2025 03:33:42 -0400
-X-MC-Unique: Ch1BYn7kMLaIE58Cbj6CqQ-1
-X-Mimecast-MFC-AGG-ID: Ch1BYn7kMLaIE58Cbj6CqQ_1746776022
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b2e56da1so727164f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 00:33:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746776021; x=1747380821;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VpG7PvH0UplrJjw105ZtScpJjsINX/Nh8S8T5pYtBeg=;
-        b=RZX4IPCX9XH/QDqLMRLO8k1YO+m4lUNruMfub+Cq0s4v3Dt+giasP8MpGzOsnCKOsP
-         tuPLX099lQBbYmIDMF4fqg7W5LFSEjtRj2NgGgICfASlr+VCeP0aHDTcQIgKygZVVkns
-         KnR3rYbqy0XCuqhZhBc/YvxL+dhU180e28gokgnHIgcQqxouMnOGQf4YW4C3Gm6N4HH4
-         80Gj/hXCct1wnPIhP7bmatxH6aSiGepRKIBHbhoLU5AjEu5+XyUFBp9ibhAPJLAV39R5
-         PPnVZaE0DmK588pKu3/GVMHE8LwAxZCxNLWI/MoEZ3kBbuZzin/3wpvHnMwkLran9zsG
-         73Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCV/dRa0aVbNN/UeaOAY9od0dU6nP6e0LUgW0hGbH7BUZR0/F87ONmiuYBL8l7XWqAYrco/ZEJPvspFbDiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8fjdMJNKXppvVFUVzkA6dgt9SepQGfmt/Dwk6u9zCD25HNkTn
-	6EQjRXjrDl+9K2m9mKMmzNaT/5fYuk7i/RoVIc4OCq9TTVnE1AdUTtPWjitTEON5tgaU8eIB4q2
-	MsgzTmXWejov4HiGzefqwnSa0fKE8FJo2IWxfcZKmoO3CtIuu1DJr3EgbTh1TkA==
-X-Gm-Gg: ASbGncsL0fsxKoiJ9cmUNrLjJprcm8DVqJIGvfdbTVWldsdFcHcaPRMC3IGEHesu6K/
-	UOofGqhUcwLHzhAAug67aiZqjnTCucVMh02LsMC4rI82ZoRY0ZmHpEg0QAYjkjQRErSOuqEPHr2
-	n7h9sYASPxOkB4hDd9kmyIdfAe3jzivIClG+os0aXy/P36ae/NREYu2Zs7kGRPEYlSJodriyobb
-	+Ti4bNXCgl1Ewb5TPIsHqwbxYwIpGuc3SceQGoMjh/pMxL624gWSqLroq1QTo51HrqCGamA517S
-	1PVXb2FQ3UVndAawLEH1AIASA6FL9VauZrxBpc2AaA8qBooX8Ia2Kesrr2PK7xKzCWkdIgLUsnG
-	krMB02UU9vOKtM46roQUE8WHovswYmTLm3Wf9oWk=
-X-Received: by 2002:a05:6000:2ce:b0:3a0:b7e7:1076 with SMTP id ffacd0b85a97d-3a1f646d9ecmr1609195f8f.11.1746776021675;
-        Fri, 09 May 2025 00:33:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFLJJiTiA7hsFL7Ee2bBJr6joX3bZAuOsH7kejhhjJDWeCmlPlWcMLLBoFlmQYM8P+6GnsmoQ==
-X-Received: by 2002:a05:6000:2ce:b0:3a0:b7e7:1076 with SMTP id ffacd0b85a97d-3a1f646d9ecmr1609184f8f.11.1746776021306;
-        Fri, 09 May 2025 00:33:41 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32835dsm62966135e9.6.2025.05.09.00.33.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 00:33:40 -0700 (PDT)
-Message-ID: <d91f6f10-a17e-4bbc-94a1-41b43b41c1ec@redhat.com>
-Date: Fri, 9 May 2025 09:33:38 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtfNYfUm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C6070C4CEE4;
+	Fri,  9 May 2025 07:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746776043;
+	bh=om7NTmxes7IKAz7R1O7o0V5iGGNcv7oTxJIZLKrgaKE=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=RtfNYfUm3ObLoYJtNvwdpW4Uzon0XUbBdueG7cdRdO/tYwHq5yOz76HZErG+0mDPJ
+	 BCQGvHkVK4fSkCnIGdKQeYYI//YnlsQjlp/CPfsYaoiuPFfMEaTOyovW+xa1jtTmCg
+	 cPBQbit6VLCNCsnw0hsZ89MUE5TeYdx+CK4KIyLtA9MHNA5f3c2/5LV+g9cjkd4xd8
+	 vm4uYVfHJGXj5qymHKCxeCpnAYw7CBVjqZor5M2UKaRwrAkzRhPAHLmFnKTsXndZkh
+	 d66g8C7EBvNiz9g1pHCxf00cQZ4gxtmJ+ClJN9Irbr0jLuIxd0yppGWDjEdlli5+dg
+	 nIbkqOOffyZoQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1014C3ABC3;
+	Fri,  9 May 2025 07:34:03 +0000 (UTC)
+From: Vincent Knecht via B4 Relay <devnull+vincent.knecht.mailoo.org@kernel.org>
+Date: Fri, 09 May 2025 09:33:57 +0200
+Subject: [PATCH] media: i2c: ov8858: Add sensor's pixel matrix size
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] selftests/mm: add simple VM_PFNMAP tests based on
- mmap'ing /dev/mem
-To: Dev Jain <dev.jain@arm.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Ingo Molnar
- <mingo@redhat.com>, Peter Xu <peterx@redhat.com>
-References: <20250508222041.1647645-1-david@redhat.com>
- <ecd0bc7e-8af5-40d6-b118-1604d2851f6b@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ecd0bc7e-8af5-40d6-b118-1604d2851f6b@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-ov8858-crop-v1-1-403a0993c1de@mailoo.org>
+X-B4-Tracking: v=1; b=H4sIAOSvHWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUwNL3fwyCwtTC93kovwCXctkYwPzpGTLFNMkMyWgjoKi1LTMCrBp0bG
+ 1tQCmF1LpXQAAAA==
+X-Change-ID: 20250509-ov8858-crop-9c307bc9d5b6
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+ Nicholas Roth <nicholas@rothemail.net>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ phone-devel@vger.kernel.org, Vincent Knecht <vincent.knecht@mailoo.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746776042; l=2530;
+ i=vincent.knecht@mailoo.org; s=20250414; h=from:subject:message-id;
+ bh=Tbtt8BBwWz2mwKkgqDb8gx79AJW3BuKIcJaTjg3kE+c=;
+ b=eNvFV248nRzjXE5U9vVLQkc4ETvKQAQ+lcxDcHgc7pl+KP1aeE3eZt6Rl8TDdrK4i6VgyemT+
+ mEJWP5lZKqlAIwvaMVlbH+WEUNKeXQMkxzSPqMDaq3Ue89eBfK9iLqg
+X-Developer-Key: i=vincent.knecht@mailoo.org; a=ed25519;
+ pk=MFCVQkhL3+d3NHDzNPWpyZ4isxJvT+QTqValj5gSkm4=
+X-Endpoint-Received: by B4 Relay for vincent.knecht@mailoo.org/20250414
+ with auth_id=377
+X-Original-From: Vincent Knecht <vincent.knecht@mailoo.org>
+Reply-To: vincent.knecht@mailoo.org
 
-On 09.05.25 07:35, Dev Jain wrote:
-> 
-> 
-> On 09/05/25 3:50 am, David Hildenbrand wrote:
->> Let's test some basic functionality using /dev/mem. These tests will
->> implicitly cover some PAT (Page Attribute Handling) handling on x86.
->>
->> These tests will only run when /dev/mem access to the first two pages
->> in physical address space is possible and allowed; otherwise, the tests
->> are skipped.
-> 
+From: Vincent Knecht <vincent.knecht@mailoo.org>
 
-Hi Dev,
+The OV8858 pixel array is composed as:
+- vertically: 16 dummy columns, 3264 valid ones and 16 dummy columns for
+  a total of 3296 columns
+- horizontally: 24 optical black lines, 16 dummy ones, 2448 valid, 16
+  dummies and 24 optical black lines for a total of 2528 lines
 
-> Some generic comments:
-> 1. I think you should also update .gitignore?
+Set native and active sensor pixel sizes.
 
-I wonder if we could add a checkpatch warning for that, it keeps on 
-happening :)
+Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+---
+ drivers/media/i2c/ov8858.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-> 2. You can use ksft_exit_fail_perror() for wherever you want to print
-> strerror(errno).
+diff --git a/drivers/media/i2c/ov8858.c b/drivers/media/i2c/ov8858.c
+index 95f9ae7948463e95ce0b2cb58195de02ee72c02a..9a86aa46e20b48ef4bae7d70ce485985c1ba886a 100644
+--- a/drivers/media/i2c/ov8858.c
++++ b/drivers/media/i2c/ov8858.c
+@@ -77,6 +77,14 @@
+ 
+ #define REG_NULL			0xffff
+ 
++/* OV8858 native and active pixel array size */
++#define OV8858_NATIVE_WIDTH		3296U
++#define OV8858_NATIVE_HEIGHT		2528U
++#define OV8858_PIXEL_ARRAY_LEFT		16U
++#define OV8858_PIXEL_ARRAY_TOP		40U
++#define OV8858_PIXEL_ARRAY_WIDTH	3264U
++#define OV8858_PIXEL_ARRAY_HEIGHT	2448U
++
+ static const char * const ov8858_supply_names[] = {
+ 	"avdd",		/* Analog power */
+ 	"dovdd",	/* Digital I/O power */
+@@ -1492,11 +1500,40 @@ static int ov8858_init_state(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
++static int ov8858_get_selection(struct v4l2_subdev *sd,
++				struct v4l2_subdev_state *sd_state,
++				struct v4l2_subdev_selection *sel)
++{
++	switch (sel->target) {
++	case V4L2_SEL_TGT_CROP:
++		sel->r = *v4l2_subdev_state_get_crop(sd_state, 0);
++		return 0;
++
++	case V4L2_SEL_TGT_NATIVE_SIZE:
++		sel->r.top = 0;
++		sel->r.left = 0;
++		sel->r.width = OV8858_NATIVE_WIDTH;
++		sel->r.height = OV8858_NATIVE_HEIGHT;
++		return 0;
++
++	case V4L2_SEL_TGT_CROP_DEFAULT:
++	case V4L2_SEL_TGT_CROP_BOUNDS:
++		sel->r.top = OV8858_PIXEL_ARRAY_TOP;
++		sel->r.left = OV8858_PIXEL_ARRAY_LEFT;
++		sel->r.width = OV8858_PIXEL_ARRAY_WIDTH;
++		sel->r.height = OV8858_PIXEL_ARRAY_HEIGHT;
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
+ static const struct v4l2_subdev_pad_ops ov8858_pad_ops = {
+ 	.enum_mbus_code = ov8858_enum_mbus_code,
+ 	.enum_frame_size = ov8858_enum_frame_sizes,
+ 	.get_fmt = v4l2_subdev_get_fmt,
+ 	.set_fmt = ov8858_set_fmt,
++	.get_selection = ov8858_get_selection,
+ };
+ 
+ static const struct v4l2_subdev_ops ov8858_subdev_ops = {
 
+---
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+change-id: 20250509-ov8858-crop-9c307bc9d5b6
 
-Makes sense, thanks!
-
-
+Best regards,
 -- 
-Cheers,
+Vincent Knecht <vincent.knecht@mailoo.org>
 
-David / dhildenb
 
