@@ -1,217 +1,104 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9264725E803
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AE625E803
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746820173; cv=none; b=d08p4dObtB1+AOTlvZRs58mpXAfmx+m8Fw4LrF1wHEp0TF4uBmKxI8+vLojxLy/iAfd/Z9J2qpxAUlvgDl40/WAZ70J30oljpFGqTEIDSYxFBFklq8L8sOiZOTMuB5T3xjaGVUra/daiyVLr4PDJXUON+qRYsmi8ntWZH9wJkFk=
+	t=1746820190; cv=none; b=Tb9C13jO7dduOCTbfFsGiEjfie4YjlJR8S6swS/LWuLFYZ1gfXlAiT/q9/EGkXj+ROFM86g+5r4Edi7ikaQqM2M2Y9kRBXlMZeA4X9kjuVYJBKJwSov5OmlWbz/cig4ALep9/XSbZz9rQBzo0mN23Msn+nexBLVb655cBDf5+C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746820173; c=relaxed/simple;
-	bh=ily75yK8xjS4x174faSzLC0rlvGeHE1RtwEY9NZzTgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c6VRym8W/EgOXHlZnuHeLZjq78ehNNPEbds/1hsFj6Xs2g52PFmvQcxeBHxJ/SIMGtvmB0UHI1hTMPBtcvYIEmoFSGHmahNoKJkYRiEWjOUv7ZqMTxtqTurykY3vfjYAWA8dDjGmTGQqnnComHx7NzMwBqmknE0RBc5DuR9Ie3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=S+Evd/Ii; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746820190; c=relaxed/simple;
+	bh=1rA9pbfysAAOSkTPIe3jUXA8b4w6+NvzgE9EF461Tqo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jcFWS88boEy3j2HdD1FJSFtbsVizs2mNVjVsOMWEUnviQQ1nKjao/y5C/Xo9pQIirvzPh6NvuRTsTLeYnKFNbyYDBZJKhTgnXNG9NPRjKUlEzDjW15SoJdARrO7a9hHqUfMBkVRT2LZHVJAb6EMd8Y182oR6/seOdwocTaL+j/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uh9YRwvQ; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="S+Evd/Ii"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549Ci7ZN022873
-	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 19:49:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=q6twRJ5MGk2ljnr9shqLaEC/
-	wfAfOzln6nkhsqQ2b/w=; b=S+Evd/IifCtsqJ/LX9eE6ot8dXL+KPd1RR9NaKc/
-	7Z7/yXASz8+kq8SOyfJbw/oEt6glV1Ut74eIjZysFZ9bAYrhwUAF8179xGt/aKRx
-	mUep2gQ8Q1DMGZmNEJ+q6wDOdotVr3XHPY4arBIrBEvKCLZPQJZZ9vGkSyE9KV9I
-	ZmZGuB5IjNxADd4lRp40rPi94IApFqNw5UPZZ5i3Kk7sBBO4oPoBZ+epB+0i9J3H
-	j1WJxXhidV8qjtzZKDZOwwWgEawm+PtzOP4glz87lcqyXBOBMYG1Ld76BxHzcs2e
-	xjxFu/2mi1v6ELigc4dF6hjsTBmtV0uJ/EdPksAsqEgtPQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp85rd0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 19:49:25 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5f3b94827so369974085a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:49:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746820164; x=1747424964;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uh9YRwvQ"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-326c38c7346so10706721fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746820187; x=1747424987; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q6twRJ5MGk2ljnr9shqLaEC/wfAfOzln6nkhsqQ2b/w=;
-        b=OXnTsdqbJZfqqOIjrEfpN7Ixp6VYlFOzUt2tUCcx7f2o/f03HmrbYvAdLnxcdsy2KQ
-         9Q7+qhpPXPcO7JwhIRQbcNtsZo3XayXY8Pj9S7PPGiKscPE3iYGwp5DDEPn9XIgVH/MQ
-         I+4pQteknicTHmr7vZOK/YZs3JS7j78PIJQypAa9mwdB6KdDXNSFLOV1W5OBWKnftjmq
-         cmMZ36hPrSedUYcediXw4qEt24Ri+ECAXTDHh+dRn+rFdCSix82qL4m5pjPIvMwVcZ3c
-         YUFPgRnW79TAiETS4cPvlyimwRTWb8lAxCa1Pn3X6imr/VI2LYN/AXtKG/R1mSD0abSr
-         EyKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJiJHKzIJ2nySjnWGL9MEoOn9SQ0jT+k2sl3IRcjiiWHXhWPbq5OGopH7wieZ8+i+qR4g5a3zVdoEqApk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmXj7qboESL1E/O+UlqkKRzgZPsfa+i09FbtQdpmmK/Is94Cgh
-	COo17wZUDKs/p1/QXsMMT8ZrVY5skwq+4oUg1duYQqIhIWlbZuFrUPOit4Sp8Quf9hcn3rSwOII
-	4O3K0nzN2QbI/PwtbsvdVxO7HFL9rOlr9xdhr97hiXPwvba3UtTrtHf8a9MmZSYA=
-X-Gm-Gg: ASbGnctUh+v7VAM2X0TlZ4JHqXXMdOKdXWcgvbFgmdLy+GgbJoqyuV2soMpb6n0Lrz3
-	7DLmtKQnPBsn2WTMXsGACg4iP6RqUENFPs7dyYz4wjKhR4H4nVLhKKwsbWmjHpeGVtLIpZiTsg5
-	wiwFbGFlVlXL555iD3wCeVpRLVRmiNuDLCrsfi/GPmJnN78iKQLspNhal3TiH8y7n6AwcPhBIAe
-	TX/6KIFCsRX3O/qdoz8c78GjkZOGqyssjlMPKjgPaMIZSNKAM1cMGfWWNJylIoO+ZvQaROQgb4W
-	GjqgVz/qcgeiJ7TtmSDWLFFslicftAgCIrAytSqVkCvHVbIUNhX3EYuzxlG+6hBbs9QV1rF4NOk
-	=
-X-Received: by 2002:a05:620a:440c:b0:7c7:694e:1ba0 with SMTP id af79cd13be357-7cd01157d9bmr777999685a.44.1746820163801;
-        Fri, 09 May 2025 12:49:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH4SbNZ9mAxpct98JyjHGJQGPpYXjkLoNs4MOsUEaF/4x4x9oUNXOaY2cOSWncyzhmRx3b0Mg==
-X-Received: by 2002:a05:620a:440c:b0:7c7:694e:1ba0 with SMTP id af79cd13be357-7cd01157d9bmr777996085a.44.1746820163421;
-        Fri, 09 May 2025 12:49:23 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c339a241sm3385071fa.18.2025.05.09.12.49.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 12:49:22 -0700 (PDT)
-Date: Fri, 9 May 2025 22:49:20 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Alexey Klimov <alexey.klimov@linaro.org>, andersson@kernel.org,
-        konradybcio@kernel.org, linux-arm-msm@vger.kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, srini@kernel.org,
-        quic_ekangupt@quicinc.com, krzysztof.kozlowski@linaro.org,
-        "Bharath Kumar (QUIC)" <quic_bkumar@quicinc.com>,
-        "Chenna Kesava Raju (QUIC)" <quic_chennak@quicinc.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
-Message-ID: <pzlsbznxpfsbdsxlzvcbdy7wwba4z5hoya7fyoacwjadtpl7y4@qajecdvs3bho>
-References: <20250502011539.739937-1-alexey.klimov@linaro.org>
- <10f69da3-6f94-4249-a8f3-459dc48fa5e1@oss.qualcomm.com>
- <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
- <3c0fea8d-0715-40e6-bed9-e0961bf034e0@oss.qualcomm.com>
- <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
+        bh=HkthMC5pBUBIR79/LBRxLxQk8eX8NXVvH63MQzRTefg=;
+        b=uh9YRwvQevERrpxkl5HjDmM5I3Pm+1+uoE+UY5h86bsrZ6JW1yu5dTMtE7ihXjRsUM
+         iO5HgFOuRuF+qEMs/UJyV+sqxOgF6+hrLHXVTya+0hx7VEPVH6JqIa//k0X92Z53uTcZ
+         w+vBwftw4tcTPX/U3i05ief208NcZP2fiaoOLZnKwyf6j01e41LWLHLXtHuFrmZ/T8Jk
+         G9t3EPXboINBtmQHPGjEqLedwwvcInMHt4c+qnUZwBfa1yLJp6sHB2HeANNRjOQp/dZ6
+         zfY4yw/6047AwvHU7b6BW8xVasl6SsTSUwOD17Lx/hTUooIAFCVDvkeb4rYQIXvrgFqQ
+         smVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746820187; x=1747424987;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HkthMC5pBUBIR79/LBRxLxQk8eX8NXVvH63MQzRTefg=;
+        b=lUIrLBaPquLZyrsqVGZdKKs7nQSYcuDsTNbOY8nW/cD0GQQJm5Ql3fxAFDgZdr1sU/
+         xiCf9WtWctQHa01uSFGK9ZP/vZZOuxAb4RdrP98p7wbY6qEVf2fkS12/Nuv7aktvxmtb
+         t+VeQVyq7dRjqzWTJcJcRKZdgldyswgaEZ24C1bAR5uNG7UILxqod3wbdU/HD+qARWAM
+         lAYE+7Xi6OOljVlr3tVY2F9PEfefq9jarqoW0Wiv7wHPnTMg+LPDVddShNNTdrQmv8sg
+         uClxRKMfticrpi9/JwIAHwA0EFcP8Zy8NU86TFTdrWNzthTat2rCpFG8qzk46fg1RpVp
+         6JhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+dcRCXKffNn+hddd47SDD8u3ykM14Kmna2X9RfEaJmvDD+nahPawUWAE8R7GpOYeYuSbGfASvHRj3BV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDQiBg0vlBRhjeU4SJZmzf0OLJpPFXW9PQnfEh194TmjjUoEYa
+	U2S1CIMxhXAPM9zl1egpC2PlV3MZ14ZktrOYLdY3M1u5MhiCbudDxNTV3DiBdV7GHbk0O61oyuc
+	Gd1VrItcFeHTs7o1ai9e3wTkCE1rfrj3gnWM=
+X-Gm-Gg: ASbGncs/GkJDyCT5UdlNToIw1eISBXuzWY4laViJl9E1pLuJzqyj2Tg3uZE80M5nqbD
+	OXtjtQc4VgpyTZruaYoWazL46dNxIOqZ6Py6AA6gy4j0RKsdRCdE4jCmRrxadgF7EZ2dFaMR71K
+	wjjGgRX8HwLbbwFkuH079l/l/A+tqCfIRF9y+uPyx6HnRQ4Ers4nAzkI2PMv4Dpw==
+X-Google-Smtp-Source: AGHT+IHPs26+8qFhVtt6rZfT7v/Bj66W+Ybf4tWa/b7HJYYLuKMLmrjqmiqMxjNh9pAHElOQjonw6ASbF4xImhWCv4k=
+X-Received: by 2002:a05:651c:a11:b0:30b:efa5:69a8 with SMTP id
+ 38308e7fff4ca-326c463040cmr20036911fa.36.1746820186572; Fri, 09 May 2025
+ 12:49:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=681e5c45 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=yetcnpw8gU3TWa0XJlAA:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
- a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: hijXgQEHoDRA-ajadf4bVwuoia712Afj
-X-Proofpoint-GUID: hijXgQEHoDRA-ajadf4bVwuoia712Afj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE5OCBTYWx0ZWRfX60ybidUTbOX8
- vKuSeCtSvaAYH7HV1NjErPyDInjl3cDNpLZ66yk1ed9tUgpzhM6jtv7KboIFTVMZ2q+zGgjIt/m
- dcP2A66M/veauhqiHkA+z+fvxOKpFSFRyjH845R+B9nBgqVZbtWQ0jVNlZhW8WfYOp2/XOAWv+j
- n6NyJaEtIMCZDYv8qqrOH4lyCGXfYbAFnjG038RnJxTcrGJtcy+brZy8r6L0wzBWEe51jvZS6ZQ
- Cr4RZyczT/USSH5+k7EkCAaRjoAyY+VsfgwRiUqnmSfipsWkAq64zm/wstajexAm2r7euRuKPhW
- 20cez+opgWaFdwgrtJwpNuAsJvTH5BtP1iCDc0QpxwcUGYy4Irn5TxQe3P7biWHh2DbiNK1V6Oq
- 2R7Yr11M/SnY1i/GbVz+23NRHPafd5E5mJw2oDLbWUKv2uqyaWSAh6QMvz4js9Rwsf2150Bi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_08,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
- spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090198
+References: <4a6f1494-c6fe-4f66-a376-b6389538ef9f@kenogo.org>
+ <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com> <e598eaa0-3b3b-4c16-9d7c-ff35dd150baa@kenogo.org>
+In-Reply-To: <e598eaa0-3b3b-4c16-9d7c-ff35dd150baa@kenogo.org>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 9 May 2025 12:49:33 -0700
+X-Gm-Features: ATxdqUFM3jdhUduGCOy3rmkCdz8pD3rptDlYC-bziHAuPHBQNUk1lFo4l4HWQ74
+Message-ID: <CANDhNCqZRZPE=s5q+K2-jKJnBycAxXBJH_mUmC1d+jWEvOPGZA@mail.gmail.com>
+Subject: Re: ntp: Adjustment of time_maxerror with 500ppm instead of 15ppm
+To: Keno Goertz <contact@kenogo.org>
+Cc: tglx@linutronix.de, zippel@linux-m68k.org, linux-kernel@vger.kernel.org, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 09:12:30AM +0530, Ekansh Gupta wrote:
-> 
-> 
-> On 5/9/2025 4:27 AM, Konrad Dybcio wrote:
-> > On 5/9/25 12:20 AM, Alexey Klimov wrote:
-> >> On Fri May 2, 2025 at 10:38 AM BST, Konrad Dybcio wrote:
-> >>> On 5/2/25 3:15 AM, Alexey Klimov wrote:
-> >>>> While at this, also add required memory region for fastrpc.
-> >>>>
-> >>>> Tested on sm8750-mtp device with adsprpdcd.
-> >>>>
-> >>>> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> >>>> Cc: Srinivas Kandagatla <srini@kernel.org>
-> >>>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-> >>>> ---
-> >>>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 ++++++++++++++++++++++++++++
-> >>>>  1 file changed, 70 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
-> >>>> index 149d2ed17641..48ee66125a89 100644
-> >>>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
-> >>>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
-> >>>> @@ -7,6 +7,7 @@
-> >>>>  #include <dt-bindings/clock/qcom,sm8750-gcc.h>
-> >>>>  #include <dt-bindings/clock/qcom,sm8750-tcsr.h>
-> >>>>  #include <dt-bindings/dma/qcom-gpi.h>
-> >>>> +#include <dt-bindings/firmware/qcom,scm.h>
-> >>>>  #include <dt-bindings/interconnect/qcom,icc.h>
-> >>>>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
-> >>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>>> @@ -523,6 +524,14 @@ llcc_lpi_mem: llcc-lpi@ff800000 {
-> >>>>  			reg = <0x0 0xff800000 0x0 0x800000>;
-> >>>>  			no-map;
-> >>>>  		};
-> >>>> +
-> >>>> +		adsp_rpc_remote_heap_mem: adsp-rpc-remote-heap {
-> >>>> +			compatible = "shared-dma-pool";
-> >>>> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
-> >>>> +			alignment = <0x0 0x400000>;
-> >>>> +			size = <0x0 0xc00000>;
-> >>>> +			reusable;
-> >>>> +		};
-> >>>>  	};
-> >>>>  
-> >>>>  	smp2p-adsp {
-> >>>> @@ -2237,6 +2246,67 @@ q6prmcc: clock-controller {
-> >>>>  						};
-> >>>>  					};
-> >>>>  				};
-> >>>> +
-> >>>> +				fastrpc {
-> >>>> +					compatible = "qcom,fastrpc";
-> >>>> +					qcom,glink-channels = "fastrpcglink-apps-dsp";
-> >>>> +					label = "adsp";
-> >>>> +					memory-region = <&adsp_rpc_remote_heap_mem>;
-> >>> IIUC the driver only considers this on the sensor DSP
-> >> Memory region is required for audio protection domain + adsprpdcd as far as I know.
-> > next-20250508
-> >
-> > rmem_node = of_parse_phandle(rdev->of_node, "memory-region", 0);
-> > if (domain_id == SDSP_DOMAIN_ID && rmem_node) {
-> > 	// ...
-> > }
-> >
-> > maybe some driver changes are still pending?
-> 
-> Would like to add some more details here:
-> 
-> Memory region is required for audio PD for dynamic loading and remote heap memory
-> requirements. Some initial memory(~2MB) is allocated initially when audio daemon
-> is getting attached[1] and this memory is added to audio PD memory pool.
+On Fri, May 9, 2025 at 12:40=E2=80=AFPM Keno Goertz <contact@kenogo.org> wr=
+ote:
+> On 5/8/25 21:45, John Stultz wrote:
+> > Have you tried a patch introducing PHI (likely setting it to 15000 as
+> > MAXFREQ is represented as nsec/sec) and using it instead of MAXFREQ in
+> > the calculation? Do you see any behavioral change in fixing it, or is
+> > this just a reporting  correctness issue?
+>
+> I haven't tried a patch, but I couldn't find any place in the kernel
+> itself that uses time_maxerror.  So I wouldn't expect behavioral changes
+> within the kernel.  Of course, user space applications may depend on the
+> values returned by the adjtimex system call.
 
-How is being handled for the audio PD case? Could you please point it
-out in? Currently, as Konrad pointed out, it is only being used for
-Sensors domain (unless I miss some obvious usage handled by the core).
+Agreed. Established userspace expectations (of the current behavior)
+are what I'm worried about.
 
-> 
-> Additionally, if there is some additional memory requirement from audio PD, the
-> PD can request for more memory using remote heap request[2]
-> 
-> The support for SDSP was added sometime back[3] to support SDSP usecases on some old
-> platform as there were no dedicated context banks for SDSP there. On recent platforms,
-> context banks are available wherever SDSP is supported. 
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1273
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
-> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=c3c0363bc72d4d0907a6d446d7424b3f022ce82a
-> 
-> //Ekansh
-> 
-> >
-> > Konrad
-> >
-> 
+> In fact, I only noticed this behavior in the first place because I am
+> writing a distributed time-stamping program and the maxerror reported by
+> libc's ntp_gettime (which calls adjtimex on Linux) just felt way too larg=
+e.
+>
+> I'm curious to hear what Miroslav might know about other user space
+> applications that take an interest in this value.
 
--- 
-With best wishes
-Dmitry
+It might be good to share a kernel patch so that folks can test such a
+change as well.
+
+thanks
+-john
