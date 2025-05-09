@@ -1,262 +1,213 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3505F28E5E3
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 10:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B67C28E5E3;
+	Fri,  9 May 2025 10:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785428; cv=none; b=jdfuUzFjSXlg53r7CkBKz8GQyUdk5gZkJEXjxyXUB9Gl7vvypZ4+JRMDB/GjzpWpOegKUOxxnnY6yCmfDO3Po1RX/1pqZsPBhFNIOKSlLW3BUbCpeda2WN7MZ7Su8/5qE4KEAdbU9fmjzzTikm4vPWapDqmojxsVuXuV2VFglFc=
+	t=1746785464; cv=none; b=gxw+gx6iytuHPPlstgTaVYl4m75/Gb7bnzQRQmYUKqKhzbjzCPTL42R1477fhV1pysnXRqNIGpNNNaQrsJAnBG0RsiwVJGrXWJ4toS2gwwb9WDwrHBj0JyNDD74NVyJLXIJryGQe9GUxpToUTaV+V1kp4mReEEBLYWyhepIyLso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785428; c=relaxed/simple;
-	bh=MWcHZN4Tnpd9NleOwcRsf738CIl68RyshheujKhARZ8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aB2vxF4rbSHTqzz0+270rEMwLW8vHvvJEfvBBb1LNMzqOv4Gg+WsJF+24vxE8sD2MzMmxFx4MH4XKCBnLRPteBHm0ofLgvf8mACp15rY+THmoROQcbZ4p/GPZ/fQkElP8JN7OFnisl930Oc3pESEivoJKy1O4YRyg04MLGEuA8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e7f5129d5so160075239f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 03:10:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746785425; x=1747390225;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n0lKQms4WA2Vd3mIlqw0q0UZ+Q2kxi4T8Yoi1K/CTqE=;
-        b=ZxrIFa6Gkr0//MQijSGvMrFuaJVg+2WW5i4pIOwE6d/XyczQyY0r+oRyE43j/nPq4+
-         sRbxfRVh8X4TWxUZop1zZp0vGbpA5HXvqoX3+GY39gD5MLSNzqy9KZAFmW6a09iNjGhD
-         RO8cEUdan9po9e9ntJ///gKn972jUrkUveS3R9GEKnfGdyc9enKSPw1JztGduOXQAbtn
-         gOlIl4pS3d/DNG/3eYezItAuC/8PPG2huw39tydzoD9UKsnxHM8LyQGBZBruSIBC2vy0
-         tkQIq467+arSaSXHMzcYO7HagWXCcZwZNo4dfR9nQ2QNAzqe0MfD6la0z5pG/ykePiIG
-         QqDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWU7P2Ix6HcevpH4n1McJdPvqArEyY6L8cVKqY369Ozvfh42FswwNhKYVSq7nixHj/6vSkyefND715QxEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8XGMVy5p/KhgcQHhGse6m+jCeFtI/phhCKztaGc9VlHL81lli
-	AT46YxHuowW7gnfo2Z6j0Lll6NzVIAOpjMB1HBtAaNywEUt8wMwRXxwoCSegf70HbWWNX8VqEk0
-	Zm4UmVBngHQo/em9P+kPqMzJMobVVS9S1gFNoXCOjGKWamQy/IsK/ESQ=
-X-Google-Smtp-Source: AGHT+IFrGPfr3JTIgZMK3aCNi4zdxIKNNyTklGUFCf3wg1uunylqBYOOdK4kZwhRoiWpsQZVSuQH6W+KA5lsaBwC+1bBGpxiR/sC
+	s=arc-20240116; t=1746785464; c=relaxed/simple;
+	bh=Qaky7RedrcOMmPqHtyjf5ffJQToE+TYbiEAJfJ73Rmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2tYdTvFE5U+rx4wpK9pMolRMwc4FPUkzTEpkAopo7liQRaABiYA/4iB/OQVpr4wAnGqIlBtLGWXk/E1/DqwvmeL3chTbTNntgxJKpmYUVFWsGUA8nAy0F/g5JhA/ztKhGBQYp+EfjcHUu7xvGnujIqb5nUHm/LACk0ac7Fw4RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EaImMMFg; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EaImMMFg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746785462; x=1778321462;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qaky7RedrcOMmPqHtyjf5ffJQToE+TYbiEAJfJ73Rmg=;
+  b=EaImMMFgvSfOMqlvlYBxigR49Ccboc2nMtoPtqEEiw/7mq+qWYlw/QZQ
+   NIdnJQ4IF+4Y8az5XJ7tIBOa7S+a5V+KS6xYNId0B14nJRRfkd45IgT7b
+   YAbtmIfS2vJ+5ydyV92OhzJPvpRgXRJ7WtXfGulT+urOX3cwSthHoEefZ
+   /QJ4eb3E6bD48hGpwEgJc9uYsT5Cy7Limn7f80arbMgEDtGnMV0c69UAx
+   I1ih8s+vGEg0UgI+Ac1sjC6Zt5YxONl4F1JiR1LpDxZJvsglOih2pNQhx
+   iwS6sGwbCk6ZOPZ1KF+VgDV1UM1xyHXlv5xNo30MfL5kwSC7kXUDIhmDT
+   Q==;
+X-CSE-ConnectionGUID: Zztr1gcYT+2dalzw9qRtmw==
+X-CSE-MsgGUID: ZWWeUG+oQxSnWtaTGIznNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48724843"
+X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
+   d="scan'208";a="48724843"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 03:11:02 -0700
+X-CSE-ConnectionGUID: HqY9jbtzSteBKacvM4ethg==
+X-CSE-MsgGUID: kPZ4jp7LTgSjyqipK5/yuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
+   d="scan'208";a="137075540"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 09 May 2025 03:10:56 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDKgv-000Bv5-32;
+	Fri, 09 May 2025 10:10:53 +0000
+Date: Fri, 9 May 2025 18:10:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+	Dragos Bogdan <dragos.bogdan@analog.com>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Tobias Sperling <tobias.sperling@softing.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v2 1/4] iio: backend: update
+ iio_backend_oversampling_ratio_set
+Message-ID: <202505091706.owR2rZED-lkp@intel.com>
+References: <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b2a:b0:3d6:d162:be12 with SMTP id
- e9e14a558f8ab-3da7e213504mr38059075ab.21.1746785425253; Fri, 09 May 2025
- 03:10:25 -0700 (PDT)
-Date: Fri, 09 May 2025 03:10:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681dd491.050a0220.a19a9.012b.GAE@google.com>
-Subject: [syzbot] [autofs?] possible deadlock in anon_pipe_write
-From: syzbot <syzbot+247d7a192c296bf9769c@syzkaller.appspotmail.com>
-To: autofs@vger.kernel.org, linux-kernel@vger.kernel.org, raven@themaw.net, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
 
-Hello,
+Hi Pop,
 
-syzbot found the following issue on:
+kernel test robot noticed the following build errors:
 
-HEAD commit:    0d8d44db295c Merge tag 'for-6.15-rc5-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1236fb68580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b39cb28b0a399ed3
-dashboard link: https://syzkaller.appspot.com/bug?extid=247d7a192c296bf9769c
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+[auto build test ERROR on jic23-iio/togreg]
+[also build test ERROR on linus/master v6.15-rc5 next-20250508]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Unfortunately, I don't have any reproducer for this issue yet.
+url:    https://github.com/intel-lab-lkp/linux/commits/Pop-Ioan-Daniel/iio-backend-update-iio_backend_oversampling_ratio_set/20250508-203339
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250508123107.3797042-2-pop.ioan-daniel%40analog.com
+patch subject: [PATCH v2 1/4] iio: backend: update iio_backend_oversampling_ratio_set
+config: arm-randconfig-004-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091706.owR2rZED-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091706.owR2rZED-lkp@intel.com/reproduce)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5536cda9f25f/disk-0d8d44db.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/92d52f7afb23/vmlinux-0d8d44db.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a31f0b2e7b87/bzImage-0d8d44db.xz
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505091706.owR2rZED-lkp@intel.com/
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+247d7a192c296bf9769c@syzkaller.appspotmail.com
+All errors (new ones prefixed by >>):
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc5-syzkaller-00032-g0d8d44db295c #0 Not tainted
-------------------------------------------------------
-syz.4.1562/14048 is trying to acquire lock:
-ffff88807af9fc68 (&pipe->mutex){+.+.}-{4:4}, at: anon_pipe_write+0x15d/0x1a70 fs/pipe.c:459
-
-but task is already holding lock:
-ffff8880588b8140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_write fs/autofs/waitq.c:55 [inline]
-ffff8880588b8140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_notify_daemon+0x4a6/0xd60 fs/autofs/waitq.c:164
-
-which lock already depends on the new lock.
+>> drivers/iio/adc/ad4851.c:324:53: error: incompatible pointer to integer conversion passing 'const struct iio_chan_spec *' to parameter of type 'unsigned int' [-Wint-conversion]
+     324 |         ret = iio_backend_oversampling_ratio_set(st->back, chan, osr);
+         |                                                            ^~~~
+   include/linux/iio/backend.h:212:25: note: passing argument to parameter 'chan' here
+     212 |                                        unsigned int chan,
+         |                                                     ^
+   1 error generated.
 
 
-the existing dependency chain (in reverse order) is:
+vim +324 drivers/iio/adc/ad4851.c
 
--> #2 (&sbi->pipe_mutex){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
-       autofs_write fs/autofs/waitq.c:55 [inline]
-       autofs_notify_daemon+0x4a6/0xd60 fs/autofs/waitq.c:164
-       autofs_wait+0x10ca/0x1a70 fs/autofs/waitq.c:426
-       autofs_mount_wait+0x132/0x380 fs/autofs/root.c:255
-       autofs_d_automount+0x390/0x7f0 fs/autofs/root.c:401
-       follow_automount fs/namei.c:1455 [inline]
-       __traverse_mounts+0x192/0x790 fs/namei.c:1500
-       traverse_mounts fs/namei.c:1529 [inline]
-       handle_mounts fs/namei.c:1632 [inline]
-       step_into+0x5aa/0x2270 fs/namei.c:1976
-       walk_component+0xfc/0x5b0 fs/namei.c:2144
-       lookup_last fs/namei.c:2636 [inline]
-       path_lookupat+0x17e/0x780 fs/namei.c:2660
-       filename_lookup+0x224/0x5f0 fs/namei.c:2689
-       kern_path+0x35/0x50 fs/namei.c:2822
-       lookup_bdev+0xd8/0x280 block/bdev.c:1205
-       resume_store+0x1d6/0x460 kernel/power/hibernate.c:1248
-       kobj_attr_store+0x55/0x80 lib/kobject.c:840
-       sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
-       kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:591 [inline]
-       vfs_write+0x5ba/0x1180 fs/read_write.c:684
-       ksys_write+0x12a/0x240 fs/read_write.c:736
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+   295	
+   296	static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
+   297						 const struct iio_chan_spec *chan,
+   298						 unsigned int osr)
+   299	{
+   300		struct ad4851_state *st = iio_priv(indio_dev);
+   301		int val, ret;
+   302	
+   303		guard(mutex)(&st->lock);
+   304	
+   305		if (osr == 1) {
+   306			ret = regmap_clear_bits(st->regmap, AD4851_REG_OVERSAMPLE,
+   307						AD4851_OS_EN_MSK);
+   308			if (ret)
+   309				return ret;
+   310		} else {
+   311			val = ad4851_osr_to_regval(osr);
+   312			if (val < 0)
+   313				return -EINVAL;
+   314	
+   315			ret = regmap_update_bits(st->regmap, AD4851_REG_OVERSAMPLE,
+   316						 AD4851_OS_EN_MSK |
+   317						 AD4851_OS_RATIO_MSK,
+   318						 FIELD_PREP(AD4851_OS_EN_MSK, 1) |
+   319						 FIELD_PREP(AD4851_OS_RATIO_MSK, val));
+   320			if (ret)
+   321				return ret;
+   322		}
+   323	
+ > 324		ret = iio_backend_oversampling_ratio_set(st->back, chan, osr);
+   325		if (ret)
+   326			return ret;
+   327	
+   328		switch (st->info->resolution) {
+   329		case 20:
+   330			switch (osr) {
+   331			case 0:
+   332				return -EINVAL;
+   333			case 1:
+   334				val = 20;
+   335				break;
+   336			default:
+   337				val = 24;
+   338				break;
+   339			}
+   340			break;
+   341		case 16:
+   342			val = 16;
+   343			break;
+   344		default:
+   345			return -EINVAL;
+   346		}
+   347	
+   348		ret = iio_backend_data_size_set(st->back, val);
+   349		if (ret)
+   350			return ret;
+   351	
+   352		if (osr == 1 || st->info->resolution == 16) {
+   353			ret = regmap_clear_bits(st->regmap, AD4851_REG_PACKET,
+   354						AD4851_PACKET_FORMAT_MASK);
+   355			if (ret)
+   356				return ret;
+   357	
+   358			st->resolution_boost_enabled = false;
+   359		} else {
+   360			ret = regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+   361						 AD4851_PACKET_FORMAT_MASK,
+   362						 FIELD_PREP(AD4851_PACKET_FORMAT_MASK, 1));
+   363			if (ret)
+   364				return ret;
+   365	
+   366			st->resolution_boost_enabled = true;
+   367		}
+   368	
+   369		if (st->osr != osr) {
+   370			ret = ad4851_scale_fill(indio_dev);
+   371			if (ret)
+   372				return ret;
+   373	
+   374			st->osr = osr;
+   375		}
+   376	
+   377		return 0;
+   378	}
+   379	
 
--> #1 (&of->mutex){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
-       kernfs_fop_write_iter+0x28f/0x510 fs/kernfs/file.c:325
-       iter_file_splice_write+0x91c/0x1150 fs/splice.c:738
-       do_splice_from fs/splice.c:935 [inline]
-       do_splice+0x1475/0x1fc0 fs/splice.c:1348
-       __do_splice+0x32a/0x360 fs/splice.c:1430
-       __do_sys_splice fs/splice.c:1633 [inline]
-       __se_sys_splice fs/splice.c:1615 [inline]
-       __x64_sys_splice+0x187/0x250 fs/splice.c:1615
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&pipe->mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
-       lock_acquire kernel/locking/lockdep.c:5866 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
-       anon_pipe_write+0x15d/0x1a70 fs/pipe.c:459
-       __kernel_write_iter+0x71d/0xa90 fs/read_write.c:617
-       __kernel_write+0xf5/0x140 fs/read_write.c:637
-       autofs_write fs/autofs/waitq.c:57 [inline]
-       autofs_notify_daemon+0x4db/0xd60 fs/autofs/waitq.c:164
-       autofs_wait+0x10ca/0x1a70 fs/autofs/waitq.c:426
-       autofs_mount_wait+0x132/0x380 fs/autofs/root.c:255
-       autofs_d_automount+0x390/0x7f0 fs/autofs/root.c:401
-       follow_automount fs/namei.c:1455 [inline]
-       __traverse_mounts+0x192/0x790 fs/namei.c:1500
-       traverse_mounts fs/namei.c:1529 [inline]
-       handle_mounts fs/namei.c:1632 [inline]
-       step_into+0x5aa/0x2270 fs/namei.c:1976
-       walk_component+0xfc/0x5b0 fs/namei.c:2144
-       lookup_last fs/namei.c:2636 [inline]
-       path_lookupat+0x17e/0x780 fs/namei.c:2660
-       filename_lookup+0x224/0x5f0 fs/namei.c:2689
-       user_path_at+0x3a/0x60 fs/namei.c:3120
-       do_mount fs/namespace.c:4221 [inline]
-       __do_sys_mount fs/namespace.c:4435 [inline]
-       __se_sys_mount fs/namespace.c:4412 [inline]
-       __x64_sys_mount+0x1fc/0x310 fs/namespace.c:4412
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &pipe->mutex --> &of->mutex --> &sbi->pipe_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&sbi->pipe_mutex);
-                               lock(&of->mutex);
-                               lock(&sbi->pipe_mutex);
-  lock(&pipe->mutex);
-
- *** DEADLOCK ***
-
-1 lock held by syz.4.1562/14048:
- #0: ffff8880588b8140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_write fs/autofs/waitq.c:55 [inline]
- #0: ffff8880588b8140 (&sbi->pipe_mutex){+.+.}-{4:4}, at: autofs_notify_daemon+0x4a6/0xd60 fs/autofs/waitq.c:164
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 14048 Comm: syz.4.1562 Not tainted 6.15.0-rc5-syzkaller-00032-g0d8d44db295c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
- lock_acquire kernel/locking/lockdep.c:5866 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
- anon_pipe_write+0x15d/0x1a70 fs/pipe.c:459
- __kernel_write_iter+0x71d/0xa90 fs/read_write.c:617
- __kernel_write+0xf5/0x140 fs/read_write.c:637
- autofs_write fs/autofs/waitq.c:57 [inline]
- autofs_notify_daemon+0x4db/0xd60 fs/autofs/waitq.c:164
- autofs_wait+0x10ca/0x1a70 fs/autofs/waitq.c:426
- autofs_mount_wait+0x132/0x380 fs/autofs/root.c:255
- autofs_d_automount+0x390/0x7f0 fs/autofs/root.c:401
- follow_automount fs/namei.c:1455 [inline]
- __traverse_mounts+0x192/0x790 fs/namei.c:1500
- traverse_mounts fs/namei.c:1529 [inline]
- handle_mounts fs/namei.c:1632 [inline]
- step_into+0x5aa/0x2270 fs/namei.c:1976
- walk_component+0xfc/0x5b0 fs/namei.c:2144
- lookup_last fs/namei.c:2636 [inline]
- path_lookupat+0x17e/0x780 fs/namei.c:2660
- filename_lookup+0x224/0x5f0 fs/namei.c:2689
- user_path_at+0x3a/0x60 fs/namei.c:3120
- do_mount fs/namespace.c:4221 [inline]
- __do_sys_mount fs/namespace.c:4435 [inline]
- __se_sys_mount fs/namespace.c:4412 [inline]
- __x64_sys_mount+0x1fc/0x310 fs/namespace.c:4412
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7faef658e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007faef7347038 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007faef67b5fa0 RCX: 00007faef658e969
-RDX: 0000000000000000 RSI: 00002000000001c0 RDI: 0000000000000000
-RBP: 00007faef6610ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000010000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007faef67b5fa0 R15: 00007ffeefd9fb38
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
