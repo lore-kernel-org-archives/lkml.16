@@ -1,119 +1,83 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2861EF1D;
-	Fri,  9 May 2025 15:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C887B136672
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746804210; cv=none; b=G3Did6YFLLWl/2j9S4d8CBb1XcUD3h/CT9O6cuTcMI5jnVGRgCDPMhaBp1kR7/lAIQQV/IilPJv41t72F8xCzlNHZq0nb6fVZY+KRuEdxMX0wjDd/QIcKWxl23QOx7znTLZt8/WcOuOXidP8JXiM2slkXBGY58+zsW7k+rBdEuo=
+	t=1746804224; cv=none; b=MNCU7Pa4RsGY2Pn7PvKDXCyuAYVyXye18Um4+9Q1kBaPp0F+YfhI9AG+6vD4QQr5K9X3ZgyKVJxHfdi0IJp0VEtrkrIwzAvGJPvlUQu61iK0akBrUSrGyT2uycd9hHf68AERnmeZ7CNOYUXHQXJhBdeg5KitdqynyzYkSfDwORc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746804210; c=relaxed/simple;
-	bh=Gsm7maKqBiGEkB4CMrW8kR92MF+qpAT+l9JBsjjJEi8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzEGtUgRk9AA+2wmLQ6HQRvgyplGdl0HcmjOhGucAktCijbqVQSfSQFj3XRdjq3NwBSZl0HKPjokvSbTa9Q7WM5ShuLmp8fjDybY/Esj4l9FpV4ItxoYi7EF1BYfMWJHXbdz8b3ljYW/q0/y37xal9Qrm2x+LAWLTbRDh9C5J7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E9a1ruxU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X75/8YF0; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746804224; c=relaxed/simple;
+	bh=eTJS0fq08hkN+Ld0FhSP2cc226T0ey4xQHYNifqulV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qfZTB5eJOnlI7r4TNFiTXUAEwwGFurn2jXVtJjN+svhwP/lulR0hUZ7aG6ilWwd/ZOXBsAsuWTRMNVM+2646B/gxS0mOzkQkXeKLWXgNbCQBc1TW4qXigRyeJiPz/hVuBFtxUGKDTUmhlRLzBSH4APe+Ltf3rw6uzFp7bTuHKXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=SN5O5y33; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E9a1ruxU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X75/8YF0"
-Date: Fri, 9 May 2025 17:23:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746804206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ztJasIoBDJWEIKfzfzMyjc+QbQB0gz4/ludEgLczczU=;
-	b=E9a1ruxU3+LfR45oiR+UTe1jARe961mB4jU3IqmC37Y/Lt3KLBVgZg4ive3LPO+spUq/Xz
-	INuV5+X69oOlHxGir01XGnhp03tOzLEDi6iSGrdhR6ILPaPm98qq+zFnvqKpACgqJLyiRB
-	fo5nkotsoy1mGzJX1Sphmze3KeqrwNDct9qL+AV7hbvG2cTWU1kcNgP0iUrKJRbRbvKi7Y
-	OG/NIYj/YvmgwPLa0g1++T9gkKp+8L/J2qWE7lLu7dwyKuMKBPstuTDqjxyNzZpB8ZPYOp
-	cItnCk4JUIz2Daax+0lY447v6qLTBw5kkAB9S0S5B9apbrDU8TKY9rB25nAKow==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746804206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ztJasIoBDJWEIKfzfzMyjc+QbQB0gz4/ludEgLczczU=;
-	b=X75/8YF0OEs4v9F6foa88dGP8RIHr5p/v37BC88SUVCUBGk6avIUSESrZxd4m3xPWsz9V5
-	jrcjqIZPGb/7p9DQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: john.ogness@linutronix.de, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 13/22] rv: Add support for LTL monitors
-Message-ID: <20250509152321.zsiacCwk@linutronix.de>
-References: <cover.1746776116.git.namcao@linutronix.de>
- <4a992489b5bebd8558dc42eeef0bd998686a42b4.1746776116.git.namcao@linutronix.de>
- <817f3cb62b2632286e5c6fffde3163592a110eee.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="SN5O5y33"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=VRcNlZIROkbG0sCWrxKhEWE7NClVs/KiomSYUNRRAb0=; b=SN5O5y33zakZ19sb4IaG/Y8vdy
+	tqV/b9FihN9G8n5yVs6/5n4mIsj5z1cBM5hPU8uCGzwV6mE3YKlSwAeoBXkJlITg7E2fFjObBZJ1+
+	UoS9LoOs+j0QpYnOcjDcyQCDLiCfCv9iqDsDC8zK6to7GUkWP9CDMAxrZsPCbtLPf8UhZmP7dqxBU
+	rN4jYixde5chFIxAZLu3tWFeoQngUIGUPuh4w4VmKfrW10hAUytalukjDsL4TQl8TM0Ufluh+RyNo
+	FiEo6tgQLzGM+AmIBggPT1vbzBJb73Ki4MZ9GWg8ZitNSsxR6U/lhwfz/AX1YgdSEt9HElK4LhEmD
+	lLzGwNoA==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uDPZc-0007v0-VF; Fri, 09 May 2025 17:23:41 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: heiko@sntech.de
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: drop wrong spdif clock from edp1 on rk3588
+Date: Fri,  9 May 2025 17:23:29 +0200
+Message-ID: <20250509152329.2004073-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <817f3cb62b2632286e5c6fffde3163592a110eee.camel@redhat.com>
 
-On Fri, May 09, 2025 at 04:50:29PM +0200, Gabriele Monaco wrote:
-> On Fri, 2025-05-09 at 10:12 +0200, Nam Cao wrote:
-> > +    def negate(self):
-> > +        # ![]F == <>(!F)
-> > +        return EventuallyOp(self.left,
-> > self.right.negate()).normalize()
-> 
-> Shouldn't this be:
->   +        return EventuallyOp(self.child.negate()).normalize()
+As described, the analogix-dp controller on rk3588 only supports 2 clocks
+and the edp0 node handles that correctly.
 
-Yes, remnant of the old version :(
+The edp1 node on the other hand seems to have a dangling 3rd clock called
+spdif, that probably only exists in the vendor-tree.
 
-> > +def p_unop(p):
-> > +    '''
-> > +    unop : ALWAYS ltl
-> > +         | EVENTUALLY ltl
-> > +         | NOT ltl
-> > +    '''
-> > +    if p[1] == "always":
-> > +        op = AlwaysOp(p[2])
-> > +    if p[1] == "eventually":
-> > +        op = EventuallyOp(p[2])
-> > +    if p[1] == "not":
-> > +        op = NotOp(p[2])
-> 
-> Pylint is complaining about this one, wouldn't it be better changing it to an
-> if/elif chain and addding:
-> 
->     else:
->         raise ValueError("Invalid unary operator: %s" % p[1])
+As that is not handled at all, remove it for now so that we adhere to the
+binding.
 
-lex should have failed due to unknown token before getting here. But yes,
-this would be a good change.
+Fixes: a481bb0b1ad9 ("arm64: dts: rockchip: Add eDP1 dt node for rk3588")
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > +def parse_ltl(s: str) -> ASTNode:
-> > +    spec = parser.parse(s)
-> > +
-> > +    subexpr = dict()
-> > +
-> > +    for assign in spec:
-> > +        if assign[0] == "RULE":
-> > +            rule = assign[1]
-> > +        else:
-> > +            subexpr[assign[0]] = assign[1]
-> 
-> rule may be undefined here (but I guess python will just say variable rule is
-> undefined and it would be quite clear the ltl didn't start with a rule.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
+index 9d81d3b9444e..90414486e466 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
+@@ -255,8 +255,8 @@ hdmi1_out: port@1 {
+ 	edp1: edp@fded0000 {
+ 		compatible = "rockchip,rk3588-edp";
+ 		reg = <0x0 0xfded0000 0x0 0x1000>;
+-		clocks = <&cru CLK_EDP1_24M>, <&cru PCLK_EDP1>, <&cru CLK_EDP1_200M>;
+-		clock-names = "dp", "pclk", "spdif";
++		clocks = <&cru CLK_EDP1_24M>, <&cru PCLK_EDP1>;
++		clock-names = "dp", "pclk";
+ 		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		phys = <&hdptxphy1>;
+ 		phy-names = "dp";
+-- 
+2.47.2
 
-We could make the error verbose.
-
-> I'm still getting a few more errors but my model may be to blame, still need to
-> play a bit.
-
-Feel free to send me the model. Maybe it is a bug in the script. But I
-would be happy to help debugging your model as well.
-
-Thanks for the feedback,
-Nam
