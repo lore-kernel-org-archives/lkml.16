@@ -1,346 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4731C26FA5C
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 10:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961AF222576;
+	Fri,  9 May 2025 10:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746784847; cv=none; b=YOSqJn3dbuqB9xKoLVqRIzPv+Qv/SGWIgN1TaTQYk7zO6VTW4QZ5KWYRNbqY2dtV4kr82kNyAtiXJ85CzI4ZYOvSLK9dW3i9Gu7aVBsNMNgEEu+C/lHuf2mRWP+DSsKiOXc1yyMT9e8kOmhVz8PB3JxZAFhcXoN0/wOktFuque8=
+	t=1746784913; cv=none; b=gW21DHlqseGlyLo2NDHNjYG5Z55jHx7iI73979bPXuRVaIISC3WZB9aSf/2BlUf0cwQUwDU+Ymp1tm4h6BXUmNYA1EhAiZ7hTTwNA8XpNMrvlekICDbB3USQthYk068VCnKzKc/RymSE0VUYFYgyyiBgQYPeApTwHj+79f6Opv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746784847; c=relaxed/simple;
-	bh=YIHLASraxeQeN4cvEtLjoGsf4tO1xddfe0FGGD2jVuQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k0ctIv/0AkhEfbCqG3o7k8Bx1zF5X8C8P66Ay1PcKZXZM1NF6KaHvtE6wpT1IymI1aDMtC2ONE7BljOesOqAeUhkvzTuI/+ZUD9a+J2+tdLJ00vTuRUA3Os+sOcEuY9I9phbGL/PKqOMeZxFWj4/j7lHXGLnMnChJEoQ6PMIwQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C0C92jR3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C0C92jR3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746784844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YdI0c2Ef+H+t2CoZ3Ly3e5qaqDe8ORgkm4gpmqjbuzo=;
-	b=C0C92jR3JKnAL6wsebeQ0SdRhjbDDOUjcghkCxQHXjNj8EezelFbGEihmXSWA4/cbRYUDH
-	iHBj80wrbZjScGVgC4rDCcBEmCFJmblXgsMWk/jfj3T3VYc2kWMSZMnIHuDM0m4euKbJho
-	KlwyPdvhx/UhtE3Mso/2rVU2x1HKIp8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-s2nWfjutNB6gNK1M1gQDPg-1; Fri, 09 May 2025 06:00:42 -0400
-X-MC-Unique: s2nWfjutNB6gNK1M1gQDPg-1
-X-Mimecast-MFC-AGG-ID: s2nWfjutNB6gNK1M1gQDPg_1746784842
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a0b9bbfb0fso1048282f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 03:00:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746784841; x=1747389641;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YdI0c2Ef+H+t2CoZ3Ly3e5qaqDe8ORgkm4gpmqjbuzo=;
-        b=wDEK8RqM8OJDTgrVZKe8inwfSut0ODq9QBS0DbxrND1tug/JhtJgJoFtEiv3kV0Ymg
-         Ks8CP+kOFp6XulhccxYzEt/NHZSQ82XukF3IwpE4f4MaEFhWhqeOOXErDdqak8E5kOFm
-         Fuqn7c/6hOg8O4gOdHYguJ9btZwCcptdNTQrSmwuvkzbZ/dsjfSw6+b8HjORPhp7tdXd
-         1jgFCW/ZW6+a3GIJn473iBeZnTFnR8CPEyW+P/JDLoZ71i+mGDETSsWqr/t3rNZR82Zp
-         zOsU6v9RUdWpUspseOaAciu6gCud9hPwGNHnH+c3Aa0ghaUzJQt5dNjdCDJKjQaqR4+p
-         eoDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8vNhqa2ij7YUeN37SE47So752TqKTNIfyIo7Aig9646HFoSlSBTsyrMwJ3MAX2afFXhdMgrONp3ipk5Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIZpoSvzstXfAEM9g0l+g2//PAwzsGUDlWvXfK7q10QPZe+dPc
-	DYt3YA12m/U+aG3XdGNzP8o7APfDd7uIk2uw8kMMq7IjZM1CJ/TQxQsCOLu6lYVX9rsAZE3ZBji
-	5Z/Owk8o1oXvcTWnntMmXR1wqpXLQkbgz2CMJpp1i3cAKvRcnJmMYwfE42MK8wQ==
-X-Gm-Gg: ASbGncslw7Q0VTcB5TX5TrMxenAY++cZbjjQHmn6R8rAw7rwUT0L7keMgiqNd60ZE1s
-	jVO2P50OzThJPtpRP+A3/PDEgIlAXmiK0Uea4rvn/r/k8BCHPjj9xWEZGTkJ3RlSDkfI7WnRlb5
-	QkrnGuge+EF9Pnl0lnJQUm20RO77QWX9ikGvZ1m3ZkjS/3+w/jRpCFMotHKLa9LmDOMPOBW9+yT
-	pU7FDJliCcax/Vr97MkLE5TCv7I2HC0gPeYwsveobBdmKGQFbev3aS6HVUr5dUZ6J07J7B+0DLZ
-	v3/wKKoSUkmI+NESMBRRpNBZ/bLunYiHmU3E4quL6XSEEsL1KAOacDg440hNthKFLfal4Z+WXKq
-	pfs8AjL0PPGi05bZqoKdUrqen5UyLFRgf77drUzE=
-X-Received: by 2002:a5d:59ae:0:b0:3a0:b4a7:6e56 with SMTP id ffacd0b85a97d-3a1f64ae7e4mr2062879f8f.56.1746784841385;
-        Fri, 09 May 2025 03:00:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYtk7kpi0fEgjDBJYe3FZ+XRuJX0yVPoXvgyZF1DXmFH2J8LWLBlwtUV3NaxFWynOOHr+6zA==
-X-Received: by 2002:a5d:59ae:0:b0:3a0:b4a7:6e56 with SMTP id ffacd0b85a97d-3a1f64ae7e4mr2062808f8f.56.1746784840558;
-        Fri, 09 May 2025 03:00:40 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3af15bsm66971035e9.30.2025.05.09.03.00.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 03:00:40 -0700 (PDT)
-Message-ID: <2204037e-f0bd-4059-b32a-d0970d96cea3@redhat.com>
-Date: Fri, 9 May 2025 12:00:38 +0200
+	s=arc-20240116; t=1746784913; c=relaxed/simple;
+	bh=UqxSh0I3I9c3iteiH8IjuE/CVdAAqboiJmRdwbu2iZY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rXzwCaySRJ8cu2W7CHJfCdZxboQQs0Fm9laiNOvJDTPthUnpLFTijU8O2K05GMBFLtugdu40S0lj3x1cSquGWs8K8zVFT/g+KjxWKeg+JjP9RRNYQzaFLAKkfI4Jmq5ZjRqrYp7n1vDJEsme8Rqo2PQbRogN1DvwnQCzOPbhHBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5499AZw2004245;
+	Fri, 9 May 2025 10:01:45 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46e430pcvj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 09 May 2025 10:01:44 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Fri, 9 May 2025 03:01:43 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Fri, 9 May 2025 03:01:40 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <clm@fb.com>, <josef@toxicpanda.com>,
+        <dsterba@suse.com>, <linux-btrfs@vger.kernel.org>, <wqu@suse.com>,
+        <fdmanana@suse.com>
+Subject: [PATCH 5.15.y] btrfs: don't BUG_ON() when 0 reference count at btrfs_lookup_extent_info()
+Date: Fri, 9 May 2025 18:01:39 +0800
+Message-ID: <20250509100139.3246547-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm: introduce new .mmap_prepare() file callback
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Wilcox <willy@infradead.org>
-References: <cover.1746615512.git.lorenzo.stoakes@oracle.com>
- <c958ac6932eb8dd9ddbd2363bc2d242ff244341b.1746615512.git.lorenzo.stoakes@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <c958ac6932eb8dd9ddbd2363bc2d242ff244341b.1746615512.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=BajY0qt2 c=1 sm=1 tr=0 ts=681dd288 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=dt9VzEwgFbYA:10 a=iox4zFpeAAAA:8 a=t7CeM3EgAAAA:8 a=cm_jlSa5FMeQIn3fhkUA:9 a=WzC6qhA0u3u7Ye7llzcV:22
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: JeU32VCosWcbvaKeJoeVU5r8e0K_5fpT
+X-Proofpoint-ORIG-GUID: JeU32VCosWcbvaKeJoeVU5r8e0K_5fpT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA5NiBTYWx0ZWRfX2v4APnMuOAFu SNYw1upWtjV90TYTzYUUkHAusODB1X/FK4EUTOKOu5VYzuj8iULtl15ZHiBeCaGwBbsrdhnqc+K /Y1BPJEyoUF91mwWi2irmta4jUGT5Exi/gVfg3I74zCH9JZsol2kvPeNMycVDKY9yzMCw5xWrME
+ eaREw89heHWomgA3VnKKYhaPJr24LAKVxQ2ymiUQkLWio8xnLSSZw0iJj+Rzc3C4MvR2OG7fEVj /wZ52pPjAyoZUACZGIjYeYfmXeYhc7vpVtSHCopTCB7jkv2tHJk48UadnV5Ie++UQiJMe1WE75P L0W9X+cHlL6uX0k0uGVwpauimc3GRRNPsQ1RebIUyablSSRHc/R7f/pJ5ROZAMWAw27Ge6R3rWb
+ ijW/wek40BPGYfaoIar8eONcgvJs59kmI+zjMWDPxNdEY53SxZnNykED1gLE9mPzGPv+E61P
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_04,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=873
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2505090096
 
-On 07.05.25 13:03, Lorenzo Stoakes wrote:
-> Provide a means by which drivers can specify which fields of those
-> permitted to be changed should be altered to prior to mmap()'ing a
-> range (which may either result from a merge or from mapping an entirely new
-> VMA).
-> 
-> Doing so is substantially safer than the existing .mmap() calback which
-> provides unrestricted access to the part-constructed VMA and permits
-> drivers and file systems to do 'creative' things which makes it hard to
-> reason about the state of the VMA after the function returns.
-> 
-> The existing .mmap() callback's freedom has caused a great deal of issues,
-> especially in error handling, as unwinding the mmap() state has proven to
-> be non-trivial and caused significant issues in the past, for instance
-> those addressed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
-> error path behaviour").
-> 
-> It also necessitates a second attempt at merge once the .mmap() callback
-> has completed, which has caused issues in the past, is awkward, adds
-> overhead and is difficult to reason about.
-> 
-> The .mmap_prepare() callback eliminates this requirement, as we can update
-> fields prior to even attempting the first merge. It is safer, as we heavily
-> restrict what can actually be modified, and being invoked very early in the
-> mmap() process, error handling can be performed safely with very little
-> unwinding of state required.
-> 
-> The .mmap_prepare() and deprecated .mmap() callbacks are mutually
-> exclusive, so we permit only one to be invoked at a time.
-> 
-> Update vma userland test stubs to account for changes.
-> 
+From: Filipe Manana <fdmanana@suse.com>
 
-In general, looks very good to me.
+[ Upstream commit 28cb13f29faf6290597b24b728dc3100c019356f ]
 
-Some comments, especially regarding suboptimal code duplciation with the 
-stubs. (unless I am missing fine details :) )
+Instead of doing a BUG_ON() handle the error by returning -EUCLEAN,
+aborting the transaction and logging an error message.
 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->   include/linux/fs.h               | 38 +++++++++++++++
->   include/linux/mm_types.h         | 24 ++++++++++
->   mm/memory.c                      |  3 +-
->   mm/mmap.c                        |  2 +-
->   mm/vma.c                         | 70 +++++++++++++++++++++++++++-
->   tools/testing/vma/vma_internal.h | 79 ++++++++++++++++++++++++++++++--
->   6 files changed, 208 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 016b0fe1536e..d6c5a703a215 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2169,6 +2169,7 @@ struct file_operations {
->   	int (*uring_cmd)(struct io_uring_cmd *ioucmd, unsigned int issue_flags);
->   	int (*uring_cmd_iopoll)(struct io_uring_cmd *, struct io_comp_batch *,
->   				unsigned int poll_flags);
-> +	int (*mmap_prepare)(struct vm_area_desc *);
->   } __randomize_layout;
->   
->   /* Supports async buffered reads */
-> @@ -2238,11 +2239,48 @@ struct inode_operations {
->   	struct offset_ctx *(*get_offset_ctx)(struct inode *inode);
->   } ____cacheline_aligned;
->   
-> +static inline bool file_has_deprecated_mmap_hook(struct file *file)
-> +{
-> +	return file->f_op->mmap;
-> +}
-> +
-> +static inline bool file_has_mmap_prepare_hook(struct file *file)
-> +{
-> +	return file->f_op->mmap_prepare;
-> +}
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ fs/btrfs/extent-tree.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-I am usually not a fan of such dummy helper functions .. I mean, how far 
-do we go?
-
-file_has_f_op()
-
-file_is_non_null()
-
-...
-
-Or is this required for some stubbing regarding vma tests? But even the 
-stubs below confuse me a bit, because they do exactly the same thing :(
-
-:)
-
-> +
-> +/* Did the driver provide valid mmap hook configuration? */
-> +static inline bool file_has_valid_mmap_hooks(struct file *file)
-> +{
-> +	bool has_mmap = file_has_deprecated_mmap_hook(file);
-> +	bool has_mmap_prepare = file_has_mmap_prepare_hook(file);
-> +
-> +	/* Hooks are mutually exclusive. */
-> +	if (has_mmap && has_mmap_prepare)
-
-Should this be WARN_ON_ONCE() ?
-
-> +		return false;
-> +
-> +	/* But at least one must be specified. */
-> +	if (!has_mmap && !has_mmap_prepare)
-> +		return false;
-> +
- > +	return true;
-
-return has_mmap || has_mmap_prepare;
-
-And I think you can drop the comment about "at least one" with that, 
-should be quite clear from that simplified version.
-
-> +}
-> +
->   static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
->   {
-> +	/* If the driver specifies .mmap_prepare() this call is invalid. */
-> +	if (file_has_mmap_prepare_hook(file))
-
-Should this be WARN_ON_ONCE() ?
-
-> +		return -EINVAL;
-> +
->   	return file->f_op->mmap(file, vma);
->   }
->   
-> +static inline int __call_mmap_prepare(struct file *file,
-> +		struct vm_area_desc *desc)
-> +{
-> +	return file->f_op->mmap_prepare(desc);
-> +}
-> +
-
-[...]
-
->   struct file {
->   	struct address_space	*f_mapping;
-> +	const struct file_operations	*f_op;
->   };
->   
->   #define VMA_LOCK_OFFSET	0x40000000
-> @@ -1125,11 +1157,6 @@ static inline void vm_flags_clear(struct vm_area_struct *vma,
->   	vma->__vm_flags &= ~flags;
->   }
->   
-> -static inline int call_mmap(struct file *, struct vm_area_struct *)
-> -{
-> -	return 0;
-> -}
-> -
->   static inline int shmem_zero_setup(struct vm_area_struct *)
->   {
->   	return 0;
-> @@ -1405,4 +1432,46 @@ static inline void free_anon_vma_name(struct vm_area_struct *vma)
->   	(void)vma;
->   }
->   
-> +static inline bool file_has_deprecated_mmap_hook(struct file *file)
-> +{
-> +	return file->f_op->mmap;
-> +}
-> +
-> +static inline bool file_has_mmap_prepare_hook(struct file *file)
-> +{
-> +	return file->f_op->mmap_prepare;
-> +}
- > +> +/* Did the driver provide valid mmap hook configuration? */
-> +static inline bool file_has_valid_mmap_hooks(struct file *file)
-> +{
-> +	bool has_mmap = file_has_deprecated_mmap_hook(file);
-> +	bool has_mmap_prepare = file_has_mmap_prepare_hook(file);
-> +
-> +	/* Hooks are mutually exclusive. */
-> +	if (has_mmap && has_mmap_prepare)
-> +		return false;
- > +> +	/* But at least one must be specified. */
-> +	if (!has_mmap && !has_mmap_prepare)
-> +		return false;
-> +
- > +	return true;> +}
-> +
-> +static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	/* If the driver specifies .mmap_prepare() this call is invalid. */
-> +	if (file_has_mmap_prepare_hook(file))
- > +		return -EINVAL;> +
-> +	return file->f_op->mmap(file, vma);
-> +}
-> +
-> +static inline int __call_mmap_prepare(struct file *file,
-> +		struct vm_area_desc *desc)
-> +{
-> +	return file->f_op->mmap_prepare(desc);
-> +}
-
-Hm, is there a way avoid a copy of the exact same code from fs.h, and 
-essentially test the implementation in fs.h (-> more coverage by using 
-less duplciated stubs?).
-
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 551faae77bc3..8959506a0aa7 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -176,6 +176,14 @@ int btrfs_lookup_extent_info(struct btrfs_trans_handle *trans,
+ 			ei = btrfs_item_ptr(leaf, path->slots[0],
+ 					    struct btrfs_extent_item);
+ 			num_refs = btrfs_extent_refs(leaf, ei);
++			if (unlikely(num_refs == 0)) {
++				ret = -EUCLEAN;
++				btrfs_err(fs_info,
++			"unexpected zero reference count for extent item (%llu %u %llu)",
++					  key.objectid, key.type, key.offset);
++				btrfs_abort_transaction(trans, ret);
++				goto out_free;
++			}
+ 			extent_flags = btrfs_extent_flags(leaf, ei);
+ 		} else {
+ 			ret = -EINVAL;
+@@ -187,8 +195,6 @@ int btrfs_lookup_extent_info(struct btrfs_trans_handle *trans,
+ 
+ 			goto out_free;
+ 		}
+-
+-		BUG_ON(num_refs == 0);
+ 	} else {
+ 		num_refs = 0;
+ 		extent_flags = 0;
+@@ -218,10 +224,19 @@ int btrfs_lookup_extent_info(struct btrfs_trans_handle *trans,
+ 			goto search_again;
+ 		}
+ 		spin_lock(&head->lock);
+-		if (head->extent_op && head->extent_op->update_flags)
++		if (head->extent_op && head->extent_op->update_flags) {
+ 			extent_flags |= head->extent_op->flags_to_set;
+-		else
+-			BUG_ON(num_refs == 0);
++		} else if (unlikely(num_refs == 0)) {
++			spin_unlock(&head->lock);
++			mutex_unlock(&head->mutex);
++			spin_unlock(&delayed_refs->lock);
++			ret = -EUCLEAN;
++			btrfs_err(fs_info,
++			  "unexpected zero reference count for extent %llu (%s)",
++				  bytenr, metadata ? "metadata" : "data");
++			btrfs_abort_transaction(trans, ret);
++			goto out_free;
++		}
+ 
+ 		num_refs += head->ref_mod;
+ 		spin_unlock(&head->lock);
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
