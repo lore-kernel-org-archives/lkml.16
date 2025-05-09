@@ -1,129 +1,103 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C810F220F58
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0057D220F58
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782599; cv=none; b=NrNI2zZ2ch+7O5sTDl+//ZID78xrjKuQjfzOBksirh1cSn9D1VJlE9lQ2vKT5yYx8y0eCyiW3pMYN1NA4FUg04/0d4BkEH+paxUUP/iCa5kLybEJGQHcritMk9T6HeYVwkLbGWfH5yT8bSR85KKINCOPelfcoWaPUUjiv/4jgqA=
+	t=1746782607; cv=none; b=sqa1gWEWPth0bTrOM/1nz3/1TT7X5/phbz8UzGI5Aw9uRyvQfzBcPyB6s4tusnKtHMVs45g9VvknSqRmoGTD1v21nhvMxGaOyoB8pj8ZUeSBjZko7TWYMUoZOKT8srXhlT7wm+5iK71qR2Vr0kYCgZdGDwizRd9nta2gfTQP9Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782599; c=relaxed/simple;
-	bh=nbUdKnSjm4LnOuyzo/lWOvIEbOAfnZHdu678REqEbkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sYNd6pm8fIoJh4gCW9lRTMudsLKyQGGfgdQDP8YGzlcXhz74B0xfD4sCFcE0uRD5re4vLJpwPFb7pmMNjJ173+Jj7gDPDJoqLxNr8yH2bS+ItdYJKmZi7X8D7Mh53zeDUySOtbSRqVr6VxWNdnjVKkTnvoi+l+td31+aGmSd8mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cacheline.de; spf=pass smtp.mailfrom=cacheline.de; dkim=pass (2048-bit key) header.d=cacheline.de header.i=@cacheline.de header.b=bcfaLdxd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dEli/C46; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cacheline.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cacheline.de
+	s=arc-20240116; t=1746782607; c=relaxed/simple;
+	bh=orNsIBHvumuIEYwOUdggNHqoj/VcRbaBN0QdchWSsr8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f1Vu/k4RfSKM2r6Zgkpdx1uqrW+JGbOm6S8S3JFGe7Iz3TLzji1UqGnJlVuX3uo71CAhDF0juW1mvqufzYCrqfAObSLzzWiFpW/xdyq8y290g9ap2mh8FOSdyrdKzPYD1qSg43+SvglRPQBTSwxyvlOBqsyscI07Nzvff/d/u1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsZizdXw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cacheline.de header.i=@cacheline.de header.b="bcfaLdxd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dEli/C46"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id C0B5713801E0;
-	Fri,  9 May 2025 05:23:15 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Fri, 09 May 2025 05:23:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cacheline.de; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:reply-to:subject:subject:to:to; s=fm3; t=1746782595; x=
-	1746868995; bh=viP7kjlIVlpBSBpxSKbfEK6gKGtSEFGuYX1YWNLPR6U=; b=b
-	cfaLdxdElqb/vfLGCHY9Rw+E5kzUXzFLWcdjgFHOwy2Mt3paLigZmlM/gX14He1r
-	NgGqAzW1G26Uf6Xhpq6Jx065niv28iIZyMZcTnjx25kFtk/3iZVVvJ0awNvw1N0D
-	Q4vvRTyrLb6Js0FT8S91mfEeV+520/aWmDRh6T4PPH3lmK1l4mR/4BCkewq0wk7Y
-	sDlpqmTa4JzvyJlQo2S5xa28qCnXg7HOq1LGJI7/vYi/+FQ72H0cTkgy/c6QCKEG
-	UZu/Ols2zljvkjs1HSDTVg7ktXVUi/LRhdiZeYJbFnY6QimOw4GH2EpHn9ySXNFa
-	N7/C+VC5OuLx2hFVeNx8Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1746782595; x=1746868995; bh=v
-	iP7kjlIVlpBSBpxSKbfEK6gKGtSEFGuYX1YWNLPR6U=; b=dEli/C46v68Px9Yzu
-	aAW4euSH5Z0JcDufEr1fVLPL9PmkyQ/iB1irYavrcE7Ncs02IRls1jw8Qgyp0YAJ
-	vA0wVvmzh219HfsM6lqiRQuMco4J/E24mxJFLZtrOUE7PqIihBo1B7X4wlLD8Hq2
-	ddvBM+4VWSovqZBUhgWK7eexFf0QvrfEs86x6WXzAFfcpRqMgncCEc9f+uW1/g05
-	0f0uXzl0LE4uJBoNMbtP+/ePzA91bjfc7fEN60ofY1CuLvsMNmU6kiZ9J185NlJL
-	YSl1BA47g1ILSbnBWgcVN1tQ3EuwUJluxnZXyJzLgxMhWx1tyJSdHScigbxzTsDe
-	R7yzA==
-X-ME-Sender: <xms:gskdaHhdC9RLJTSx9rxy2AGotZVnfOfFwvYa3t1qMzBealfqUQCkAg>
-    <xme:gskdaEC4ZgHDpv7hqsJZvv0av5zsQim5s8jjr2TnER4DnnqLA8e0Y8GHK-B82VJz5
-    _gXx4oB6A-LokQRwQw>
-X-ME-Received: <xmr:gskdaHFLpjRti3T9JSkNE_lceh02KeKPR4tRLv5sPWFhxKl7uhJf9snaduMHxKNdR1n2q4svgWVXvddM1rMf2ALQlIs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvvdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkgggtugfgjggfsehtkeertddt
-    reejnecuhfhrohhmpedftehhmhgvugcuufdrucffrghrfihishhhucdluggvvhdmfdcuoe
-    gurghrfihirdguvghvsegtrggthhgvlhhinhgvrdguvgeqnecuggftrfgrthhtvghrnhep
-    uddufeeuvdevtdffkeeuleejfefhfeelhfdvgffgueeukeetlefhveegveeihfetnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggrrhifihdr
-    uggvvhestggrtghhvghlihhnvgdruggvpdhnsggprhgtphhtthhopeduuddpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtoheprghnughrvgifrdgtohhophgvrhefsegtihhtrhhi
-    gidrtghomhdprhgtphhtthhopegurghrfihisehlihhnuhhtrhhonhhigidruggvpdhrtg
-    hpthhtohepmhhinhhgohesrhgvughhrghtrdgtohhmpdhrtghpthhtohepsghpsegrlhhi
-    vghnkedruggvpdhrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnth
-    gvlhdrtghomhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgt
-    phhtthhopehhphgrseiihihtohhrrdgtohhmpdhrtghpthhtohepjhhohhhnrdhoghhnvg
-    hssheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopeigkeeisehkvghrnhgvlhdr
-    ohhrgh
-X-ME-Proxy: <xmx:gskdaEQRpaGKBc2plN1EwY66j7rW7CpGh2fSuIzMYnFkRw-uyDeF7Q>
-    <xmx:gskdaEw2vz8iPSEankoDONMW2M86Hq5WGIg8v44711imMrS2eRUZ6w>
-    <xmx:gskdaK4CKWaEfR2ig3AmH2Xc10B8UzyENYh4FLywK-soGIDFSCav_A>
-    <xmx:gskdaJwJ5Cbc-h39Z0JpKUnKD7YDcsw7XM8ekzvaS7XRHHPBbTV55g>
-    <xmx:g8kdaA1Mluu4fcCSCpKyF77H871OI18LJ5hNRmk1I-aUVJDJJ3aFkpf9>
-Feedback-ID: i7c5149e1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 9 May 2025 05:23:11 -0400 (EDT)
-Date: Fri, 9 May 2025 11:23:10 +0200
-From: "Ahmed S. Darwish (dev)" <darwi.dev@cacheline.de>
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 02/26] x86/cpu: Sanitize CPUID(0x80000000) output
-Message-ID: <aB3Jfta9e9fdqZFs@lx-t490>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsZizdXw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE8DC4CEE9
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746782606;
+	bh=orNsIBHvumuIEYwOUdggNHqoj/VcRbaBN0QdchWSsr8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WsZizdXw8RhjQGY2xsfdDxAhDvw11kKDmRN6J8U65884v943Uuku+J4nfri+SoFKn
+	 uSfeo9Do4n26N31gcScYko5a2J/rYMYHJvo2b1BSFOcnFjdynQG0k2Rfvq0Z6DoOeN
+	 OI31nbEQd4cMaZgRpcXUzaR5S+e2Ut9c6vShCZIb2yke4FmSwxYNVGU+rYunwvJENx
+	 Q54aR2ZA3pLz+sL/wFZRVpr8T5hveL4Idh8n4qHBKOAPDUDj+RKloF43hUbR9cYMBB
+	 BAp5CvRpx/usCK5ct2tvWYD/vdE0q0TXAlaRV0MQBbRImCU2cN/fdT3GlPXz/XAOhL
+	 rvSju3Ho+T5Rw==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so1236754e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:23:26 -0700 (PDT)
+X-Gm-Message-State: AOJu0YynGPbqK1RhvFrqbBXtBpLn3cWvUtH1Z86cCKYr7A7JR//hk4yC
+	nsbzgVNZSrHrvJE4ckRTQgdqRJN2y3eq6GD1VR+vyNT/WMr8U+TLcUiLbIzfgM2j7uVNhCVpMmy
+	D0fzHZ39tyvs7dqJJJK9dSUFpjQA=
+X-Google-Smtp-Source: AGHT+IHROycVcCVXCil0Pp22cUai2J8w5Fgzg+A7pGdF0RAlaP4uxX9ZTomNpnXxNRsWJbp1niYxaIWDOjiCxkpd3aI=
+X-Received: by 2002:a05:651c:198c:b0:31f:8c3c:605b with SMTP id
+ 38308e7fff4ca-326c46c0798mr10484471fa.39.1746782604894; Fri, 09 May 2025
+ 02:23:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6b0c87e0-d98d-4394-85bd-8abf556ebf0f@citrix.com>
-User-Agent: Mutt/2.2.14 (516568dc) (2025-02-20)
+References: <cover.1746037489.git.sergii.dmytruk@3mdeb.com> <5c4d5adaa40fc5d5d1bcfef813713040e4df13a4.1746037489.git.sergii.dmytruk@3mdeb.com>
+In-Reply-To: <5c4d5adaa40fc5d5d1bcfef813713040e4df13a4.1746037489.git.sergii.dmytruk@3mdeb.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 9 May 2025 11:23:13 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF6uHrEYLkbnuK=noLDFJFwjDgcwRXNH2O5m-vveDOMeA@mail.gmail.com>
+X-Gm-Features: ATxdqUFmvkLcyVANtsl9IxUVBF4eEHa8N2BqP_FBMYxUFiakgqveNZGR0pqZPBw
+Message-ID: <CAMj1kXF6uHrEYLkbnuK=noLDFJFwjDgcwRXNH2O5m-vveDOMeA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 8/9] x86: AMD changes for EFI stub DRTM launch support
+To: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+Cc: linux-kernel@vger.kernel.org, trenchboot-devel@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
-
-On Wed, 07 May 2025, Andrew Cooper wrote:
+On Thu, 1 May 2025 at 00:45, Sergii Dmytruk <sergii.dmytruk@3mdeb.com> wrote:
 >
-> On 06/05/2025 6:04 am, Ahmed S. Darwish wrote:
-> >
-> > CPUID(0x80000000).EAX returns the max extended CPUID leaf available.  On
-> > x86-32 machines
+> From: Ross Philipson <ross.philipson@oracle.com>
 >
-> How certain are you that it's all 32bit CPUs?  AIUI, it's an Intel
-> specific behaviour, not shared by other x86 vendors of the same era.
+> * Only do the TXT setup steps if this is a TXT launch not an SKINIT one.
+> * Initialize boot params address for SKINIT.
 >
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
 
-Sorry, I missed responding to this earlier.
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-You're correct.  I indeed assumed that for all invalid CPUID queries, the
-CPU repeats the output of the last valid standard leaf on /all/ x86
-machines — thus CPUID(0x80000000) behaves this way also on all x86-32
-machines lacking an extended range.
-
-I've done a quick check on some Intel vs. AMD machines, and indeed, this
-is Intel-specific.  AMD machines just return all-zero instead.
-
-(The patch content is still valid, and I guess that's what HPA was just
- hinting at further down the thread.)
-
-Thanks!
-~ Ahmed
+> ---
+>  drivers/firmware/efi/libstub/x86-stub.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index bfa36466a79c..0453be1ba58d 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -798,15 +798,21 @@ static bool efi_secure_launch_update_boot_params(struct slr_table *slrt,
+>                                                  struct boot_params *boot_params)
+>  {
+>         struct slr_entry_intel_info *txt_info;
+> +       struct slr_entry_amd_info *skinit_info;
+>         struct slr_entry_policy *policy;
+>         bool updated = false;
+>         int i;
+>
+>         txt_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
+> -       if (!txt_info)
+> -               return false;
+> +       if (txt_info)
+> +               txt_info->boot_params_addr = (u64)boot_params;
+> +
+> +       skinit_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_AMD_INFO);
+> +       if (skinit_info)
+> +               skinit_info->boot_params_addr = (u64)boot_params;
+>
+> -       txt_info->boot_params_addr = (u64)boot_params;
+> +       if (!txt_info && !skinit_info)
+> +               return false;
+>
+>         policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
+>         if (!policy)
+> --
+> 2.49.0
+>
