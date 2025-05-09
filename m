@@ -1,332 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206EB29114C;
-	Fri,  9 May 2025 12:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A74290D80;
+	Fri,  9 May 2025 12:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795181; cv=none; b=mMjBzT4LslKnLQO72d5liz1zL74XzLjimk9xOp9heUiMrDkB7XWibf9UV0KNR6CSKazzR3/LzvOIZ4MEfH5C/yd+uJ5q9dBBFf/NrXvkLpX4BLXqw0wXPz+QXfCZWNiZGVX3AQCJiuYXdlabfZWLQYJ85GY7ad4WZQ9eimfbPmA=
+	t=1746795251; cv=none; b=jcfp33Y/Yv6dVmawAbm9pXnJ8y1+lcXfg2W10ObNdNN5DzvgZSsaT1q981CsTLqPh4k+nNqEN8u8wl2nfcYaIO3iYqar/grkYHhikopmmy6/frRI7XxCNWQPKGLfQ8+hRcKnpLKLwzhICMmh1eVIQl55krpGndhBsXmcLbNcsfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795181; c=relaxed/simple;
-	bh=csIdm8rOheD5HAvRthwznu0vhK7n7Z3LIFwPSQSRI1s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aKHw5bffHk07Xn8gQVP9nXJPmPDxpxTa4+eWwoZr7kj7wNb33dhRJV9v9lWGTpN1aizo+zeCUUxuCniZ8zqfruevuJIQ13S9lBck4T5NJpKZ5cn6zyrscjVYX5MYvi+AtcQC5CSHB5hDKOO+2OBE954viBjd7eajZwiF2ZCV+38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WQRZ+6L+; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746795251; c=relaxed/simple;
+	bh=DcwkRXNgEvRvHOzSApJNgPnA4OWWt5LOWujrHc8SEQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SNWC685IzMu5Mzb23T0DPD6BpO9W0csMwFBeteK/y13YZGXKknjdiWwSIclQ/H+idIT4NtxI8EcbKQAz6Q5BJaILRSIUrokjlqsGsnDaXODa6uuP4UoePypgjYwbDRgXcM+iWJOpeBULIYsVaZDucF4TN8OGyzSOmYR75ldwSH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Qs9CY6NC; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQRZ+6L+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746795181; x=1778331181;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=csIdm8rOheD5HAvRthwznu0vhK7n7Z3LIFwPSQSRI1s=;
-  b=WQRZ+6L+WxE/D3fmpHeasN3w/rbPY1HGrUH7vVCcGZjArxhQ+KQUHM3C
-   iWLZ6BR9qVpzI3hC0SmPQldsmj0ybudhMdtj8VyTUZkwFdqhmwOhp0nAm
-   1x+NaPypItiukZyrdTMijGXPQR9/0sx/6g4oDac9NEWK8lzxy/k4fxmYm
-   oWYJatmhWcxf2aUMgMzyF6q6kMXaQwMEWYZQi8A1kbs7qwSDldTXjSN0g
-   hQRkbMv19ZAEk3ARoyGBU5fn5/fWmDc/Y15sCbtuKJ02w/KYCptja4uyS
-   N9qy3YWYtntrNlmz+5Y9eNFY0Dn3Vg9C7J9/Sc4L0LYp47Ky+MK9E8GAL
-   w==;
-X-CSE-ConnectionGUID: 70Msj5VuTOi9c7GPy5TVfg==
-X-CSE-MsgGUID: d4IuYnWlRP6E8jJZtFdUfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="66027329"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="66027329"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 05:53:00 -0700
-X-CSE-ConnectionGUID: Ow6u/R7kRumMYC+TPWEIeg==
-X-CSE-MsgGUID: m/DTKirER0O4Zu5qyQQJEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="141828297"
-Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
-  by fmviesa004.fm.intel.com with ESMTP; 09 May 2025 05:52:56 -0700
-From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-To: donald.hunter@gmail.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	vadim.fedorenko@linux.dev,
-	jiri@resnulli.us,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch,
-	aleksandr.loktionov@intel.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-rdma@vger.kernel.org,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Milena Olech <milena.olech@intel.com>
-Subject: [PATCH net-next v2 3/3] ice: add Reference SYNC dpll pins
-Date: Fri,  9 May 2025 14:46:51 +0200
-Message-Id: <20250509124651.1227098-4-arkadiusz.kubalewski@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250509124651.1227098-1-arkadiusz.kubalewski@intel.com>
-References: <20250509124651.1227098-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Qs9CY6NC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=R7GJ7qvzsdrqnYobrx3s7aB7m2F5mPpRtkMxGcl8bYk=; b=Qs9CY6NCsFtAMSdALPcnM0RY2S
+	hVgMAFTAAEUXMZyhGOpCuicXYXbd+xpjtl+ZKbBmx18g+7UDSQMqnBCod+UOoDm02c0WmB3srf0YP
+	Yq/WlJ74jJ8+4Ci62cu+ELaeTFc7b+w4jJKuDCQZwZyF5TrOSmBN9iMruMsxb7rsMkuvR9bw+CBwG
+	XVim9lAnfXCwTGnBezG8zdJlIvYirt6kBoHhxj2dv3ldAjIC3PatC8rHzgET+OSU/fHBCVu1ztqYq
+	AKSa8RmV1pSYSH6pCb1yDSdUkzdRFmIf9n88dSQEbCtgU39Rqf1gfOjYXZnhPTY5YGx8N4PGmAbxY
+	UGmKiKgw==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uDNEn-0005A8-SH; Fri, 09 May 2025 14:54:01 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Diederik de Haas <didi.debian@cknow.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH v2 2/5] arm64: dts: rockchip: move rock 5b to include file
+Date: Fri, 09 May 2025 14:54:00 +0200
+Message-ID: <2653568.Lt9SDvczpP@diego>
+In-Reply-To: <D9RN1HZAXH1M.3H228KWQJ9CR0@cknow.org>
+References:
+ <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
+ <20250508-rock5bp-for-upstream-v2-2-677033cc1ac2@kernel.org>
+ <D9RN1HZAXH1M.3H228KWQJ9CR0@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Implement Reference SYNC input pin get/set callbacks, allow user space
-control over dpll pin pairs capable of Reference SYNC support.
+Am Freitag, 9. Mai 2025, 14:44:57 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Diederik de Haas:
+> Hi,
+>=20
+> On Thu May 8, 2025 at 7:48 PM CEST, Sebastian Reichel wrote:
+> > Radxa released some more boards, which are based on the original
+> > Rock 5B. Move its board description into an include file to avoid
+> > unnecessary duplication.
+>=20
+> Aren't you moving it *out of* an/the include file?
+> If so, the patch Subject and the above line should be updated so that
+> they correctly reflect what is changed in this patch.
+>=20
+> The above text is correct (and the same ...) as patch 1, but in this
+> patch you move things out of the dtsi which are unique per board.
+>=20
+> > NOTE: this should be merged with the previous commit to ensure
+> > bisectability. The rename happens in a separete commit during
+> > development because git does not properly detect the rename when
+> > the original filename is reused in the same commit. This means
+> >
+> > 1. it's a lot harder to review the changes
+> > 2. it's a lot harder to rebase the patch series
+>=20
+> Or did I fall prey to the exact thing you described here?
 
-Reviewed-by: Milena Olech <milena.olech@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
----
-v2:
-- improve commit message.
----
- .../net/ethernet/intel/ice/ice_adminq_cmd.h   |   2 +
- drivers/net/ethernet/intel/ice/ice_dpll.c     | 186 ++++++++++++++++++
- 2 files changed, 188 insertions(+)
+I think Sebastian's idea  is, that I squash both patches when applying.
+This split makes it easy(er) to review because patch1 is just a rename.
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-index bdee499f991a..7fd0f0091d36 100644
---- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-@@ -2288,6 +2288,8 @@ struct ice_aqc_get_cgu_abilities {
- 	u8 rsvd[3];
- };
- 
-+#define ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN		BIT(7)
-+
- /* Set CGU input config (direct 0x0C62) */
- struct ice_aqc_set_cgu_input_config {
- 	u8 input_idx;
-diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.c b/drivers/net/ethernet/intel/ice/ice_dpll.c
-index bce3ad6ca2a6..98f0c86f41fc 100644
---- a/drivers/net/ethernet/intel/ice/ice_dpll.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dpll.c
-@@ -12,6 +12,19 @@
- #define ICE_DPLL_PIN_ESYNC_PULSE_HIGH_PERCENT	25
- #define ICE_DPLL_PIN_GEN_RCLK_FREQ		1953125
- 
-+#define ICE_SR_PFA_DPLL_DEFAULTS		0x152
-+#define ICE_DPLL_PFA_REF_SYNC_TYPE		0x2420
-+#define ICE_DPLL_PFA_REF_SYNC_TYPE2		0x2424
-+#define ICE_DPLL_PFA_END			0xFFFF
-+#define ICE_DPLL_PFA_HEADER_LEN			4
-+#define ICE_DPLL_PFA_ENTRY_LEN			3
-+#define ICE_DPLL_PFA_MAILBOX_REF_SYNC_PIN_S	4
-+#define ICE_DPLL_PFA_MASK_OFFSET		1
-+#define ICE_DPLL_PFA_VALUE_OFFSET		2
-+
-+#define ICE_DPLL_E810C_SFP_NC_PINS		2
-+#define ICE_DPLL_E810C_SFP_NC_START		4
-+
- /**
-  * enum ice_dpll_pin_type - enumerate ice pin types:
-  * @ICE_DPLL_PIN_INVALID: invalid pin type
-@@ -1314,6 +1327,89 @@ ice_dpll_input_esync_get(const struct dpll_pin *pin, void *pin_priv,
- 	return 0;
- }
- 
-+/**
-+ * ice_dpll_input_ref_sync_set - callback for setting reference sync feature
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: requested state for reference sync for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync frequency
-+ * feature for input pin.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_input_ref_sync_set(const struct dpll_pin *pin, void *pin_priv,
-+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
-+			    const enum dpll_pin_state state,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+	struct ice_pf *pf = p->pf;
-+	u8 flags_en = 0;
-+	int ret;
-+
-+	if (ice_dpll_is_reset(pf, extack))
-+		return -EBUSY;
-+	mutex_lock(&pf->dplls.lock);
-+
-+	if (p->flags[0] & ICE_AQC_GET_CGU_IN_CFG_FLG2_INPUT_EN)
-+		flags_en = ICE_AQC_SET_CGU_IN_CFG_FLG2_INPUT_EN;
-+	if (state == DPLL_PIN_STATE_CONNECTED)
-+		flags_en |= ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN;
-+	ret = ice_aq_set_input_pin_cfg(&pf->hw, p->idx, 0, flags_en, 0, 0);
-+	if (!ret)
-+		ret = ice_dpll_pin_state_update(pf, p, ICE_DPLL_PIN_TYPE_INPUT,
-+						extack);
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ice_dpll_input_ref_sync_get - callback for getting reference sync config
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: on success holds reference sync state for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync frequency
-+ * feature for input pin.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_input_ref_sync_get(const struct dpll_pin *pin, void *pin_priv,
-+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
-+			    enum dpll_pin_state *state,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+	struct ice_pf *pf = p->pf;
-+
-+	if (ice_dpll_is_reset(pf, extack))
-+		return -EBUSY;
-+	mutex_lock(&pf->dplls.lock);
-+	if (p->flags[0] & ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN)
-+		*state = DPLL_PIN_STATE_CONNECTED;
-+	else
-+		*state = DPLL_PIN_STATE_DISCONNECTED;
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_rclk_state_on_pin_set - set a state on rclk pin
-  * @pin: pointer to a pin
-@@ -1440,6 +1536,8 @@ static const struct dpll_pin_ops ice_dpll_input_ops = {
- 	.phase_offset_get = ice_dpll_phase_offset_get,
- 	.esync_set = ice_dpll_input_esync_set,
- 	.esync_get = ice_dpll_input_esync_get,
-+	.ref_sync_set = ice_dpll_input_ref_sync_set,
-+	.ref_sync_get = ice_dpll_input_ref_sync_get,
- };
- 
- static const struct dpll_pin_ops ice_dpll_output_ops = {
-@@ -1619,6 +1717,91 @@ static void ice_dpll_periodic_work(struct kthread_work *work)
- 				   msecs_to_jiffies(500));
- }
- 
-+/**
-+ * ice_dpll_init_ref_sync_inputs - initialize reference sync pin pairs
-+ * @pf: pf private structure
-+ *
-+ * Read DPLL TLV capabilities and initialize reference sync pin pairs in
-+ * dpll subsystem.
-+ *
-+ * Return:
-+ * * 0 - success or nothing to do (no ref-sync tlv are present)
-+ * * negative - AQ failure
-+ */
-+static int ice_dpll_init_ref_sync_inputs(struct ice_pf *pf)
-+{
-+	struct ice_dpll_pin *inputs = pf->dplls.inputs;
-+	struct ice_hw *hw = &pf->hw;
-+	u16 addr, len, end, hdr;
-+	int ret;
-+
-+	ret = ice_get_pfa_module_tlv(hw, &hdr, &len, ICE_SR_PFA_DPLL_DEFAULTS);
-+	if (ret) {
-+		dev_err(ice_pf_to_dev(pf),
-+			"Failed to read PFA dpll defaults TLV ret=%d\n", ret);
-+		return ret;
-+	}
-+	end = hdr + len;
-+
-+	for (addr = hdr + ICE_DPLL_PFA_HEADER_LEN; addr < end;
-+	     addr += ICE_DPLL_PFA_ENTRY_LEN) {
-+		unsigned long bit, ul_mask, offset;
-+		u16 pin, mask, buf;
-+		bool valid = false;
-+
-+		ret = ice_read_sr_word(hw, addr, &buf);
-+		if (ret)
-+			return ret;
-+
-+		switch (buf) {
-+		case ICE_DPLL_PFA_REF_SYNC_TYPE:
-+		case ICE_DPLL_PFA_REF_SYNC_TYPE2:
-+		{
-+			u16 mask_addr = addr + ICE_DPLL_PFA_MASK_OFFSET;
-+			u16 val_addr = addr + ICE_DPLL_PFA_VALUE_OFFSET;
-+
-+			ret = ice_read_sr_word(hw, mask_addr, &mask);
-+			if (ret)
-+				return ret;
-+			ret = ice_read_sr_word(hw, val_addr, &pin);
-+			if (ret)
-+				return ret;
-+			if (buf == ICE_DPLL_PFA_REF_SYNC_TYPE)
-+				pin >>= ICE_DPLL_PFA_MAILBOX_REF_SYNC_PIN_S;
-+			valid = true;
-+			break;
-+		}
-+		case ICE_DPLL_PFA_END:
-+			addr = end;
-+			break;
-+		default:
-+			continue;
-+		}
-+		if (!valid)
-+			continue;
-+
-+		ul_mask = mask;
-+		offset = 0;
-+		for_each_set_bit(bit, &ul_mask, BITS_PER_TYPE(u16)) {
-+			int i, j;
-+
-+			if (hw->device_id == ICE_DEV_ID_E810C_SFP &&
-+			    pin > ICE_DPLL_E810C_SFP_NC_START)
-+				offset = -ICE_DPLL_E810C_SFP_NC_PINS;
-+			i = pin + offset;
-+			j = bit + offset;
-+			if (i < 0 || j < 0)
-+				return -ERANGE;
-+			ret = dpll_pin_ref_sync_pair_add(inputs[i].pin,
-+							 inputs[j].pin);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_release_pins - release pins resources from dpll subsystem
-  * @pins: pointer to pins array
-@@ -1936,6 +2119,9 @@ static int ice_dpll_init_pins(struct ice_pf *pf, bool cgu)
- 	if (ret)
- 		return ret;
- 	if (cgu) {
-+		ret = ice_dpll_init_ref_sync_inputs(pf);
-+		if (ret)
-+			goto deinit_inputs;
- 		ret = ice_dpll_init_direct_pins(pf, cgu, pf->dplls.outputs,
- 						pf->dplls.num_inputs,
- 						pf->dplls.num_outputs,
--- 
-2.38.1
+And merging them when applying then makes it again not break bisectability.
+
+
+Heiko
+
+
+> Cheers,
+>   Diederik
+>=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts  | 52 ++++++++++++++++=
+++++++++
+> >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi | 40 ----------------=
+=2D-
+> >  2 files changed, 52 insertions(+), 40 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm=
+64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..9407a7c9910ada1f6c803d2=
+e15785a9cbd9bd655
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> > @@ -0,0 +1,52 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "rk3588-rock-5b.dtsi"
+> > +
+> > +/ {
+> > +	model =3D "Radxa ROCK 5B";
+> > +	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
+> > +};
+> > +
+> > +&sdio {
+> > +	max-frequency =3D <200000000>;
+> > +	no-sd;
+> > +	no-mmc;
+> > +	non-removable;
+> > +	bus-width =3D <4>;
+> > +	cap-sdio-irq;
+> > +	disable-wp;
+> > +	keep-power-in-suspend;
+> > +	wakeup-source;
+> > +	sd-uhs-sdr12;
+> > +	sd-uhs-sdr25;
+> > +	sd-uhs-sdr50;
+> > +	sd-uhs-sdr104;
+> > +	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
+> > +	vqmmc-supply =3D <&vcc_1v8_s3>;
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&sdiom0_pins>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&uart6 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&pinctrl {
+> > +	usb {
+> > +		vcc5v0_host_en: vcc5v0-host-en {
+> > +			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&vcc5v0_host {
+> > +	enable-active-high;
+> > +	gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&vcc5v0_host_en>;
+> > +};
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch/ar=
+m64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+> > index 17f4fd054cd3d1c4e23ccfe014a9c4b9d7ad1a06..6052787d2560978d2bae6cf=
+beea5fc1d419d583a 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+> > @@ -8,9 +8,6 @@
+> >  #include "rk3588.dtsi"
+> > =20
+> >  / {
+> > -	model =3D "Radxa ROCK 5B";
+> > -	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
+> > -
+> >  	aliases {
+> >  		mmc0 =3D &sdhci;
+> >  		mmc1 =3D &sdmmc;
+> > @@ -139,10 +136,6 @@ vcc5v0_host: regulator-vcc5v0-host {
+> >  		regulator-always-on;
+> >  		regulator-min-microvolt =3D <5000000>;
+> >  		regulator-max-microvolt =3D <5000000>;
+> > -		enable-active-high;
+> > -		gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
+> > -		pinctrl-names =3D "default";
+> > -		pinctrl-0 =3D <&vcc5v0_host_en>;
+> >  		vin-supply =3D <&vcc5v0_sys>;
+> >  	};
+> > =20
+> > @@ -488,12 +481,6 @@ pcie3_vcc3v3_en: pcie3-vcc3v3-en {
+> >  			rockchip,pins =3D <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
+> >  		};
+> >  	};
+> > -
+> > -	usb {
+> > -		vcc5v0_host_en: vcc5v0-host-en {
+> > -			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+> > -		};
+> > -	};
+> >  };
+> > =20
+> >  &pwm1 {
+> > @@ -530,27 +517,6 @@ &sdmmc {
+> >  	status =3D "okay";
+> >  };
+> > =20
+> > -&sdio {
+> > -	max-frequency =3D <200000000>;
+> > -	no-sd;
+> > -	no-mmc;
+> > -	non-removable;
+> > -	bus-width =3D <4>;
+> > -	cap-sdio-irq;
+> > -	disable-wp;
+> > -	keep-power-in-suspend;
+> > -	wakeup-source;
+> > -	sd-uhs-sdr12;
+> > -	sd-uhs-sdr25;
+> > -	sd-uhs-sdr50;
+> > -	sd-uhs-sdr104;
+> > -	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
+> > -	vqmmc-supply =3D <&vcc_1v8_s3>;
+> > -	pinctrl-names =3D "default";
+> > -	pinctrl-0 =3D <&sdiom0_pins>;
+> > -	status =3D "okay";
+> > -};
+> > -
+> >  &sfc {
+> >  	pinctrl-names =3D "default";
+> >  	pinctrl-0 =3D <&fspim2_pins>;
+> > @@ -566,12 +532,6 @@ flash@0 {
+> >  	};
+> >  };
+> > =20
+> > -&uart6 {
+> > -	pinctrl-names =3D "default";
+> > -	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
+> > -	status =3D "okay";
+> > -};
+> > -
+> >  &spi2 {
+> >  	status =3D "okay";
+> >  	assigned-clocks =3D <&cru CLK_SPI2>;
+>=20
+>=20
+
+
+
 
