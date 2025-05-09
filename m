@@ -1,249 +1,164 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49457290BA0
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2FD291157;
+	Fri,  9 May 2025 12:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746794714; cv=none; b=aBERCRiOdFrPTKuRvGp4znWCGHDW4r9jOE3h2vQUJQknbKCRG+8Ir2PUflm8w2m732RLQFd1WPAB7QC8gf4rpEO1O10gXA9jxYX5dDIW1dXN+i2fwojmHv5bZIQAoJFMU0AcArPGgZ3lryQQQk5CWzf6Jogl/KiS2gabUQ7Myyg=
+	t=1746794720; cv=none; b=UBsfHQGWnPd+zF7eI0Gk+MSqjHMHmYn8QtQzoAdf4a3lZyu7tR9Wv6OBGFiDT3C9RphliMVfu2nze15Mnx36BqnIcbP/NLPgKNuVDGhX4/sB+CKYpmTiVvj5WGtRAAQJ9+r7kuObaBNLbyJz9NyuybviR25AKapqbrWZE7QHuDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746794714; c=relaxed/simple;
-	bh=5hWc92BIAJybu8SJz53/NZw6BpLdce7GUubnVuWwujw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ZNB0Q0zdZcz12VM3GITtYHRpsVHwznzNOr7eeU/8E0cxvxenz70gdqCyUMn9xBtMi/ZsTzngZwIw1XStMhxSqQ8kTmzxCJcspQkUNDTQqUe5Rd5UYEH/zPYyobZ5GUXqO9PLEtLzh0EHEeGgPSDwHdOt4z9LKTy3rwC1QpYBOHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=ImuD8IbR; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1746794720; c=relaxed/simple;
+	bh=BKBlIPRSeUyGxnT8243TNn9ON4PZ2d/rVn9Qpr+/YTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oEpj6Ghbnytv0plRaoak6Dum4B0XWrNqc5ZV8u1fwYHa6gh5Xl800PbQ0lUdZ0Rujvgt78S8MXokZNFKIQjs8QJB4Vtc8pG8vvIaRZ3bHwH/4oFRAqRr7X9I4xP132RsR41cbZJd1m1FupOqVhaqgEPPHssYrbXXk4wYZH40dmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=J8q8Vb3D; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="ImuD8IbR"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="J8q8Vb3D"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5494BviB017154;
+	Fri, 9 May 2025 12:45:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=xP9Vs2
+	7fdO3qCwq3XfEIE0V2SkGM89IPn3wz9QVdXEI=; b=J8q8Vb3D5AQDZYygntj/gZ
+	FSBf1uzOTTmqRjISzQ4/+lQxpC7ecTpzwnGK22RgZR7ZVKpVPPNzpyWgf/aRX99E
+	m/YIJ5y+TY2axu0UogY38YsQZNEWcafXRMqQ66k9A1FBgEpzOqWsirRx9bjq2tGi
+	FgV8DmYB9NrYrgHioKglMqL5aIqWwjuZ+XZMB5HpVI1OZe60DXo4jpanE5douoMw
+	5U68LEcLR0S4HRKbQMxBX614I3536YQscP/CbSZjoBiFlI5kIOPzHEE2AT1nxVK+
+	b+V9FnZBBzZs+go5v8iDjBY8XNlcpCS/aoGuCVT3X7zFEXhcRbkPST75OuzNtsOw
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46h46kutq5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 12:45:18 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 549AkYOh013765;
+	Fri, 9 May 2025 12:45:17 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062tyxe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 12:45:17 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 549CjD1N54133126
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 9 May 2025 12:45:13 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 457112008C;
+	Fri,  9 May 2025 12:45:13 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 605472008B;
+	Fri,  9 May 2025 12:45:11 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.43.107.211])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  9 May 2025 12:45:11 +0000 (GMT)
+Date: Fri, 9 May 2025 18:15:08 +0530
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: bpf <bpf@vger.kernel.org>, Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: [linux-next][selftests/bpf] Kernel ABI header at
+ 'tools/include/uapi/linux/if_xdp.h'
+Message-ID: <aB341KkxXB+gu3IV@linux.ibm.com>
+References: <c2bc466d-dff2-4d0d-a797-9af7f676c065@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1746794706;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KW4KBcGtJSrAqFPHP5H5PG7TlnbU9UpApL0n436QVo4=;
-	b=ImuD8IbRIqKE/CNpdy4WPO3H6jwtC1fJZQatK6NXOjntc5zPYY0Hini8qWMmbczkWJBfkA
-	ngxt4TAajwKHgWWQVXc+p0IYLaaWurIOD87JeLM1V0R/fYqCuKcGKVAEi7lw758doECP/l
-	UPVVsgeGriocqzrprVLErqTCAq65AlolVSZo77ifnvUka01goaVwjItz+4WU1pBiimJoI0
-	X5wTj02NhPFroV0UJohtv/paQRC4NbD08j7/roreBlL0GN+VlIVwAgx4q2Qq3Zw6HL1MXY
-	f9AXHD9tgg4nzE5F+EE3opvXO2Rn0ULldCSPleRIbDnmgSH8eCVqYgOLFcRyIg==
-Content-Type: multipart/signed;
- boundary=a8e812d93356676e6d3194396309dd33e90e10afd882605b15d3904c7ce0;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 09 May 2025 14:44:57 +0200
-Message-Id: <D9RN1HZAXH1M.3H228KWQJ9CR0@cknow.org>
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <kernel@collabora.com>
-Subject: Re: [PATCH v2 2/5] arm64: dts: rockchip: move rock 5b to include
- file
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Sebastian Reichel" <sebastian.reichel@collabora.com>, "Heiko Stuebner"
- <heiko@sntech.de>
-References: <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
- <20250508-rock5bp-for-upstream-v2-2-677033cc1ac2@kernel.org>
-In-Reply-To: <20250508-rock5bp-for-upstream-v2-2-677033cc1ac2@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c2bc466d-dff2-4d0d-a797-9af7f676c065@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=LaM86ifi c=1 sm=1 tr=0 ts=681df8de cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=8nJEP1OIZ-IA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=6tX_wsqJ8x3pxrqpp-wA:9 a=3ZKOabzyN94A:10
+ a=wPNLvfGTeEIA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEyMyBTYWx0ZWRfX81B0S1uOUU60 IMgosEkj7L4zjh6/vBOnluXnhveb4o4sC78XL/zJ+bqB/pBGm/T47WMkmLhP/JnLqOwHyjO4ISN 4jcJxx0Ft3WtbgckGPplvKSDpgfIcbFMC3P5tvD5mJkFmK9YuYLCnlwzuxU2x5FJ8X5CHFJ/+Z7
+ /pc9G+zVG3qjnpnTRPO1IKa/5aPu0zih2PKv1O0Q7cC3Ez26eVk9SwvCQt0kyXuzYxm2FIZQqSj wtQirTupWJ7IB0tcDosBdTbUH7BNAw3oKl94Jby0tdItk7TTjZJ73JTmq7qhg5prbBwQRoapNn8 tyS6xTd4lyGq6wry+71tWvw5gLlwxUH8IMhZRLfUokvczDGJXsm7EUFEeOAOQCtreaS61d3GOgJ
+ 0URVECPmKRAaSm1iPwS80EpbuCik9v/VQtbdO6CLqyUJ7MWVWZLHt2uC9BEBtheYP31kLdRB
+X-Proofpoint-ORIG-GUID: gzCnkb2gXhegTp_tdTnth2Z8poKHT3q7
+X-Proofpoint-GUID: gzCnkb2gXhegTp_tdTnth2Z8poKHT3q7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_05,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ clxscore=1015 bulkscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090123
 
---a8e812d93356676e6d3194396309dd33e90e10afd882605b15d3904c7ce0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Fri, May 09, 2025 at 05:38:12PM +0530, Venkat Rao Bagalkote wrote:
+> Hello,
+> 
+> 
+> I am observing build warnings. while compiling selftests/bpf on
+> the next-20250508 repo.
+> 
+> 
+> Warnings:
+> 
+> 
+> Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h'
+> differs from latest version at 'include/uapi/linux/if_xdp.h'
+> 
+> 
+> Auto-detecting system features:
+> ...                                    llvm: [ on  ]
+> 
+>   MKDIR    libbpf
+>   TEST-HDR [test_progs] tests.h
+>   MKDIR    bpftool
+>   MKDIR    include
+>   MKDIR    no_alu32
+>   MKDIR    cpuv4
+>   TEST-HDR [test_maps] tests.h
+>   MKDIR    resolve_btfids
+>   LIB      liburandom_read.so
+>   SIGN-FILE sign-file
+>   BINARY   uprobe_multi
+>   MKDIR
+>   GEN /root/linux-next/tools/testing/selftests/bpf/bpf-helpers.rst
+>   GEN /root/linux-next/tools/testing/selftests/bpf/bpf-syscall.rst
+>   GEN /root/linux-next/tools/testing/selftests/bpf/tools/build/libbpf/bpf_helper_defs.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/btf.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf_common.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf_legacy.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_helpers.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_tracing.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_endian.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/skel_internal.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_core_read.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf_version.h
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/usdt.bpf.h
+>   GEN /root/linux-next/tools/testing/selftests/bpf/bpf-syscall.2
+>   GEN /root/linux-next/tools/testing/selftests/bpf/tools/build/libbpf/libbpf.pc
+> Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h'
+> differs from latest version at 'include/uapi/linux/if_xdp.h'
+>   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_helper_defs.h
+>   INSTALL libbpf_headers
+>   BINARY   urandom_read
+>   CC      /root/linux-next/tools/test
+> 
+> 
+> If you happen to fix this, please add below tag.
+> 
+> 
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> 
+> 
+> 
+> Regards,
+> 
+> Venkat.
+> 
+Thanks for reporting it Venkat. I have sent the potential fix to https://lore.kernel.org/all/20250509123802.695574-1-skb99@linux.ibm.com/
 
-Hi,
-
-On Thu May 8, 2025 at 7:48 PM CEST, Sebastian Reichel wrote:
-> Radxa released some more boards, which are based on the original
-> Rock 5B. Move its board description into an include file to avoid
-> unnecessary duplication.
-
-Aren't you moving it *out of* an/the include file?
-If so, the patch Subject and the above line should be updated so that
-they correctly reflect what is changed in this patch.
-
-The above text is correct (and the same ...) as patch 1, but in this
-patch you move things out of the dtsi which are unique per board.
-
-> NOTE: this should be merged with the previous commit to ensure
-> bisectability. The rename happens in a separete commit during
-> development because git does not properly detect the rename when
-> the original filename is reused in the same commit. This means
->
-> 1. it's a lot harder to review the changes
-> 2. it's a lot harder to rebase the patch series
-
-Or did I fall prey to the exact thing you described here?
-
-Cheers,
-  Diederik
-
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts  | 52 ++++++++++++++++++=
-++++++
->  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi | 40 ------------------
->  2 files changed, 52 insertions(+), 40 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64=
-/boot/dts/rockchip/rk3588-rock-5b.dts
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..9407a7c9910ada1f6c803d2e1=
-5785a9cbd9bd655
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +
-> +/dts-v1/;
-> +
-> +#include "rk3588-rock-5b.dtsi"
-> +
-> +/ {
-> +	model =3D "Radxa ROCK 5B";
-> +	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
-> +};
-> +
-> +&sdio {
-> +	max-frequency =3D <200000000>;
-> +	no-sd;
-> +	no-mmc;
-> +	non-removable;
-> +	bus-width =3D <4>;
-> +	cap-sdio-irq;
-> +	disable-wp;
-> +	keep-power-in-suspend;
-> +	wakeup-source;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-sdr104;
-> +	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
-> +	vqmmc-supply =3D <&vcc_1v8_s3>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&sdiom0_pins>;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart6 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
-> +	status =3D "okay";
-> +};
-> +
-> +&pinctrl {
-> +	usb {
-> +		vcc5v0_host_en: vcc5v0-host-en {
-> +			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +};
-> +
-> +&vcc5v0_host {
-> +	enable-active-high;
-> +	gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&vcc5v0_host_en>;
-> +};
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch/arm6=
-4/boot/dts/rockchip/rk3588-rock-5b.dtsi
-> index 17f4fd054cd3d1c4e23ccfe014a9c4b9d7ad1a06..6052787d2560978d2bae6cfbe=
-ea5fc1d419d583a 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
-> @@ -8,9 +8,6 @@
->  #include "rk3588.dtsi"
-> =20
->  / {
-> -	model =3D "Radxa ROCK 5B";
-> -	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
-> -
->  	aliases {
->  		mmc0 =3D &sdhci;
->  		mmc1 =3D &sdmmc;
-> @@ -139,10 +136,6 @@ vcc5v0_host: regulator-vcc5v0-host {
->  		regulator-always-on;
->  		regulator-min-microvolt =3D <5000000>;
->  		regulator-max-microvolt =3D <5000000>;
-> -		enable-active-high;
-> -		gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
-> -		pinctrl-names =3D "default";
-> -		pinctrl-0 =3D <&vcc5v0_host_en>;
->  		vin-supply =3D <&vcc5v0_sys>;
->  	};
-> =20
-> @@ -488,12 +481,6 @@ pcie3_vcc3v3_en: pcie3-vcc3v3-en {
->  			rockchip,pins =3D <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
->  	};
-> -
-> -	usb {
-> -		vcc5v0_host_en: vcc5v0-host-en {
-> -			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
-> -		};
-> -	};
->  };
-> =20
->  &pwm1 {
-> @@ -530,27 +517,6 @@ &sdmmc {
->  	status =3D "okay";
->  };
-> =20
-> -&sdio {
-> -	max-frequency =3D <200000000>;
-> -	no-sd;
-> -	no-mmc;
-> -	non-removable;
-> -	bus-width =3D <4>;
-> -	cap-sdio-irq;
-> -	disable-wp;
-> -	keep-power-in-suspend;
-> -	wakeup-source;
-> -	sd-uhs-sdr12;
-> -	sd-uhs-sdr25;
-> -	sd-uhs-sdr50;
-> -	sd-uhs-sdr104;
-> -	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
-> -	vqmmc-supply =3D <&vcc_1v8_s3>;
-> -	pinctrl-names =3D "default";
-> -	pinctrl-0 =3D <&sdiom0_pins>;
-> -	status =3D "okay";
-> -};
-> -
->  &sfc {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&fspim2_pins>;
-> @@ -566,12 +532,6 @@ flash@0 {
->  	};
->  };
-> =20
-> -&uart6 {
-> -	pinctrl-names =3D "default";
-> -	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
-> -	status =3D "okay";
-> -};
-> -
->  &spi2 {
->  	status =3D "okay";
->  	assigned-clocks =3D <&cru CLK_SPI2>;
-
-
---a8e812d93356676e6d3194396309dd33e90e10afd882605b15d3904c7ce0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaB34zAAKCRDXblvOeH7b
-bspkAQDgrjd4oJNZSgatYk5e0hVQKf7yl7XI/rQr2kM9asNPSAEAlw0l4olpMeDx
-eBT79vJHA5+VVMCa7wErGOK6rQi7+gc=
-=5PU0
------END PGP SIGNATURE-----
-
---a8e812d93356676e6d3194396309dd33e90e10afd882605b15d3904c7ce0--
+Thanks,
+Saket
