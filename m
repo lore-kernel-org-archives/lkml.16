@@ -1,174 +1,340 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03435464E;
-	Fri,  9 May 2025 21:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345D625394A;
+	Fri,  9 May 2025 21:08:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746824662; cv=none; b=enSzbcgsD1FN8mrV4owtgxEUtHupnWP5kscXXSu6AAxa8mLvPQWKiJB9OYzcPXvzqyeGVZeCGKWU8fKg5uDGzSsqAfu+MFiyIu2U/CnTPB3yqjChPytAeKp89s5Zoy0FnL9Zdsv/X4AyfNYlzo7gKKfdzKIjxJv1lvX7oXDBON4=
+	t=1746824883; cv=none; b=eop5iszi3W/uth8hHBRR0prgxvv3Eqx39hDwbVWwMIl+BgCKmK2MDp//TsMJBRPGY+VjIZmF3PG0i50KPmnHUsjhQVSLyHL2Zm+jJ0+Lq2N8wWYbyLPzS9GBj+Oi9Ym/P8crFStZ2Av81SGDuPH7w+yoJSIpIPusIWXcLK45dYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746824662; c=relaxed/simple;
-	bh=v3Zwm6/aCZ7Mpskl6W+PHfQjemE6+xItrRb+q1pwKiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R2UhGy9S8/ln7R/istBvKeuE/z4PlUrbPIa3/g8z+a5BPFAS2q8nhEyOdrBlxmQXPoOwUAHXhN/Nrzdsls+zW83pvG23I2XyGbJ65Fsg1KH1o/j+tjqEoZ6FaqFDbUdXJ/suT671FPFLDL9ok1BJsuDh8ut72ag4HQ035EMXZAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hi76QhD1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746824883; c=relaxed/simple;
+	bh=CAxTMPR8YPvt69jMr9a/HnbcXSU4cctemxa+AVtAFbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kSpl+t2yU4TWXZA+cWcC7Svz8QeN4PjVdHQRdy/XxIoul5/lRglCzX8mdCnHM8kdmD2/aiETOXzYPcrIrwxZcMiEyt21g1HgxeLDY7C2xcltNHQ0wp8w1Q3QENg0F71+J2juSUTMlli04SNdXzR9/xkzPw3Tf2H3OCBSwaSY1lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1We5LSV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hi76QhD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3DD0C4CEE4;
-	Fri,  9 May 2025 21:04:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1We5LSV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A72E5C4CEE4;
+	Fri,  9 May 2025 21:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746824662;
-	bh=v3Zwm6/aCZ7Mpskl6W+PHfQjemE6+xItrRb+q1pwKiA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Hi76QhD1TUAaMth8j8sJ1/rAteJIAgjHhlMcDSJJVlhrefXXuZLz+Gs5SeQv0eS8u
-	 qv+k9Tjy5He67vwcbBaWDVOn2bvJfBplsJ88vogVJ7dWnLcpxfmHSXDSKt/8Xt/ufQ
-	 jka7Pc9o0DwfWQN/jbXaKXP++2KNlcpx/kCxBgxmV7w8UVp8HtpKYHz4i+MvVp+4Wu
-	 ZVnl+sntJTUK0+4zYBsBzqge48QiHDYL5Zo5/gK8ODLf0qveZStuAFHTFSs0SZB56M
-	 16k+4K75eHQ3KQhLJ3gZ/zK2q2qcw8T3p0gSudaDhHa8H5iWTcNKYAwKnFDBeuLuqO
-	 Mm1f/aLoq3eAw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: [PATCH v2] perf report: Add 'tgid' sort key
-Date: Fri,  9 May 2025 14:04:21 -0700
-Message-ID: <20250509210421.197245-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
+	s=k20201202; t=1746824882;
+	bh=CAxTMPR8YPvt69jMr9a/HnbcXSU4cctemxa+AVtAFbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N1We5LSVZ15+LhFsS3loTqYybJgPreqHIReEJy176pHa414yKvrmoykEIuRo4INxJ
+	 9tmo0mlpg82B/zeb1OcfORrFivYHERRq75Yv6Vdp/9dgYqcoYwSuJlecEw/gLS4BAu
+	 oSCsEwzKgHF9HBs2Wy5dS2QnW5SLLZ/GJVCTDyqvKxK/F1/6FRX8KiMgHoTWG3qC6a
+	 6N4Y4bwzkA6EOkV5ULEsiXW5ej77xwcstcqJeCw4VJGmbphc8g9GFR9AnDCy0WqWdM
+	 ZJ2Pgnklq9pxgw2YzALlThXNoxta6p5G+xD9OaEgPPtXQVnhs2Q/5Due7BvPpALYOv
+	 FlUOoI4RB3oGA==
+Date: Fri, 9 May 2025 16:08:00 -0500
+From: Rob Herring <robh@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+	mturquette@baylibre.com, sboyd@kernel.org, saravanak@google.com,
+	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH 4/8] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
+ documentation for the PCIe IP on Renesas RZ/G3S
+Message-ID: <20250509210800.GB4080349-robh@kernel.org>
+References: <20250430103236.3511989-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250430103236.3511989-5-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430103236.3511989-5-claudiu.beznea.uj@bp.renesas.com>
 
-Sometimes we need to analyze the data in process level but current sort
-keys only work on thread level.  Let's add 'tgid' sort key for that as
-'pid' is already taken for thread.
+On Wed, Apr 30, 2025 at 01:32:32PM +0300, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
+> Base Specification 4.0. It is designed for root complex applications and
+> features a single-lane (x1) implementation. Add documentation for it.
+> The interrupts, interrupt-names, resets, reset-names, clocks, clock-names
+> description were obtained from the hardware manual.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>  .../pci/renesas,r9a08g045s33-pcie.yaml        | 242 ++++++++++++++++++
+>  1 file changed, 242 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml b/Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
+> new file mode 100644
+> index 000000000000..354f9c3be139
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
+> @@ -0,0 +1,242 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/renesas,r9a08g045s33-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/G3S PCIe host controller
+> +
+> +maintainers:
+> +  - Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> +
+> +description:
+> +  Renesas RZ/G3S PCIe host controller complies with PCIe Base Specification
+> +  4.0 and supports up to 5 GT/s (Gen2).
+> +
+> +properties:
+> +  compatible:
+> +    const: renesas,r9a08g045s33-pcie # RZ/G3S
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    items:
+> +      - description: System error interrupt
+> +      - description: System error on correctable error interrupt
+> +      - description: System error on non-fatal error interrupt
+> +      - description: System error on fatal error interrupt
+> +      - description: AXI error interrupt
+> +      - description: INTA interrupt
+> +      - description: INTB interrupt
+> +      - description: INTC interrupt
+> +      - description: INTD interrupt
+> +      - description: MSI interrupt
+> +      - description: Link bandwidth interrupt
+> +      - description: PME interrupt
+> +      - description: DMA interrupt
+> +      - description: PCIe event interrupt
+> +      - description: Message interrupt
+> +      - description: All interrupts
+> +
+> +  interrupt-names:
+> +    items:
+> +      - description: int_serr
+> +      - description: int_ser_cor
+> +      - description: int_serr_nonfatal
+> +      - description: int_serr_fatal
+> +      - description: axi_err_int
+> +      - description: inta_rc
+> +      - description: intb_rc
+> +      - description: intc_rc
+> +      - description: intd_rc
+> +      - description: intmsi_rc
 
-This will look mostly the same, but it only uses tgid instead of tid.
-Here's an example of a process with two threads (thloop).
+Isn't every interrupt for the root complex?
 
-  $ perf record -- perf test -w thloop
+> +      - description: int_link_bandwidth
+> +      - description: int_pm_pme
+> +      - description: dma_int
+> +      - description: pcie_evt_int
+> +      - description: msg_int
+> +      - description: int_all
 
-  $ perf report --stdio -s tgid,pid -H
-  ...
-  #
-  #    Overhead  Tgid:Command / Pid:Command
-  # ...........  ..........................
-  #
-     100.00%     2018407:perf
-         50.34%     2018407:perf
-         49.66%     2018409:perf
+'int_' or '_int' is redundant (and inconsistent). Drop.
 
-Suggested-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-report.txt |  1 +
- tools/perf/util/hist.h                   |  1 +
- tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
- tools/perf/util/sort.h                   |  1 +
- 4 files changed, 41 insertions(+)
+> +
+> +  clocks:
+> +    items:
+> +      - description: System clock
+> +      - description: PM control clock
+> +
+> +  clock-names:
+> +    items:
+> +      - description: aclk
+> +      - description: clkl1pm
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 3376c471057506d9..acef3ff4178eff66 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -94,6 +94,7 @@ OPTIONS
- 
- 	- comm: command (name) of the task which can be read via /proc/<pid>/comm
- 	- pid: command and tid of the task
-+	- tgid: command and tgid of the task
- 	- dso: name of library or module executed at the time of sample
- 	- dso_size: size of library or module executed at the time of sample
- 	- symbol: name of function executed at the time of sample
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 355198fd70281f43..c64254088fc77246 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -42,6 +42,7 @@ enum hist_column {
- 	HISTC_TIME,
- 	HISTC_DSO,
- 	HISTC_THREAD,
-+	HISTC_TGID,
- 	HISTC_COMM,
- 	HISTC_CGROUP_ID,
- 	HISTC_CGROUP,
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 8efafa7c10822ee9..45e6546539600a46 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -141,6 +141,43 @@ struct sort_entry sort_thread = {
- 	.se_width_idx	= HISTC_THREAD,
- };
- 
-+/* --sort tgid */
-+
-+static int64_t
-+sort__tgid_cmp(struct hist_entry *left, struct hist_entry *right)
-+{
-+	return thread__pid(right->thread) - thread__pid(left->thread);
-+}
-+
-+static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
-+				       size_t size, unsigned int width)
-+{
-+	int tgid = thread__pid(he->thread);
-+	const char *comm = NULL;
-+
-+	/* display comm of the thread-group leader */
-+	if (thread__pid(he->thread) == thread__tid(he->thread)) {
-+		comm = thread__comm_str(he->thread);
-+	} else {
-+		struct maps *maps = thread__maps(he->thread);
-+		struct thread *leader = machine__find_thread(maps__machine(maps),
-+							     tgid, tgid);
-+		if (leader) {
-+			comm = thread__comm_str(leader);
-+			thread__put(leader);
-+		}
-+	}
-+	width = max(7U, width) - 8;
-+	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
-+}
-+
-+struct sort_entry sort_tgid = {
-+	.se_header	= "   Tgid:Command",
-+	.se_cmp		= sort__tgid_cmp,
-+	.se_snprintf	= hist_entry__tgid_snprintf,
-+	.se_width_idx	= HISTC_TGID,
-+};
-+
- /* --sort simd */
- 
- static int64_t
-@@ -2508,6 +2545,7 @@ static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
- 
- static struct sort_dimension common_sort_dimensions[] = {
- 	DIM(SORT_PID, "pid", sort_thread),
-+	DIM(SORT_TGID, "tgid", sort_tgid),
- 	DIM(SORT_COMM, "comm", sort_comm),
- 	DIM(SORT_DSO, "dso", sort_dso),
- 	DIM(SORT_SYM, "symbol", sort_sym),
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 6e92ac62b9c80a0b..a742ab7f3c677f48 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -73,6 +73,7 @@ enum sort_type {
- 	SORT_SYM_OFFSET,
- 	SORT_ANNOTATE_DATA_TYPE_CACHELINE,
- 	SORT_PARALLELISM,
-+	SORT_TGID,
- 
- 	/* branch stack specific sort keys */
- 	__SORT_BRANCH_STACK,
--- 
-2.49.0.1015.ga840276032-goog
+'l1pm' or 'pm'
 
+> +
+> +  resets:
+> +    items:
+> +      - description: AXI2PCIe Bridge reset
+> +      - description: Data link layer/transaction layer reset
+> +      - description: Transaction layer (ACLK domain) reset
+> +      - description: Transaction layer (PCLK domain) reset
+> +      - description: Physical layer reset
+> +      - description: Configuration register reset
+> +      - description: Configuration register reset
+> +
+> +  reset-names:
+> +    items:
+> +      - description: aresetn
+> +      - description: rst_b
+> +      - description: rst_gp_b
+> +      - description: rst_ps_b
+> +      - description: rst_rsm_b
+> +      - description: rst_cfg_b
+> +      - description: rst_load_b
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  dma-ranges:
+> +    description:
+> +      A single range for the inbound memory region.
+> +    maxItems: 1
+> +
+> +  renesas,sysc:
+> +    description: System controller phandle
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  vendor-id:
+> +    const: 0x1912
+> +
+> +  device-id:
+> +    const: 0x0033
+> +
+> +  legacy-interrupt-controller:
+> +    description: Interrupt controller node for handling legacy PCI interrupts
+> +    type: object
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 0
+> +
+> +      "#interrupt-cells":
+> +        const: 1
+> +
+> +      interrupt-controller: true
+> +
+> +      interrupts:
+> +        items:
+> +          - description: INTA interrupt
+> +          - description: INTB interrupt
+> +          - description: INTC interrupt
+> +          - description: INTD interrupt
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#interrupt-cells"
+> +      - interrupt-controller
+> +      - interrupts
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - reset-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +  - power-domains
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - "#interrupt-cells"
+> +  - renesas,sysc
+> +  - vendor-id
+> +  - device-id
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r9a08g045-cpg.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        gic: interrupt-controller {
+> +            interrupt-controller;
+> +            #interrupt-cells = <3>;
+> +        };
+
+Drop. Don't need to show provider nodes for the example.
+
+> +
+> +        pcie@11e40000 {
+> +            compatible = "renesas,r9a08g045s33-pcie";
+> +            reg = <0 0x11e40000 0 0x10000>;
+> +            ranges = <0x03000000 0 0x30000000 0 0x30000000 0 0x8000000>;
+> +            dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0 0x8000000>;
+> +            bus-range = <0x0 0xff>;
+> +            clocks = <&cpg CPG_MOD R9A08G045_PCI_ACLK>,
+> +                     <&cpg CPG_MOD R9A08G045_PCI_CLKL1PM>;
+> +            clock-names = "aclk", "clkl1pm";
+> +            resets = <&cpg R9A08G045_PCI_ARESETN>,
+> +                     <&cpg R9A08G045_PCI_RST_B>,
+> +                     <&cpg R9A08G045_PCI_RST_GP_B>,
+> +                     <&cpg R9A08G045_PCI_RST_PS_B>,
+> +                     <&cpg R9A08G045_PCI_RST_RSM_B>,
+> +                     <&cpg R9A08G045_PCI_RST_CFG_B>,
+> +                     <&cpg R9A08G045_PCI_RST_LOAD_B>;
+> +            reset-names = "aresetn", "rst_b", "rst_gp_b", "rst_ps_b",
+> +                          "rst_rsm_b", "rst_cfg_b", "rst_load_b";
+> +            interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
+
+It is very odd that you have the INTx interrupts here and below.
+
+As I mentioned in the driver, you don't need the legacy node any more. 
+Just add 'interrupt-controller' to this node and point interrupt-map to 
+this node.
+
+> +                         <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
+> +            interrupt-names = "int_serr", "int_serr_cor", "int_serr_nonfatal",
+> +                              "int_serr_fatal", "axi_err_int", "inta_rc",
+> +                              "intb_rc", "intc_rc", "intd_rc",
+> +                              "intmsi_rc", "int_link_bandwidth", "int_pm_pme",
+> +                              "dma_int", "pcie_evt_int", "msg_int",
+> +                              "int_all";
+> +            #interrupt-cells = <1>;
+> +            interrupt-map-mask = <0 0 0 7>;
+> +            interrupt-map = <0 0 0 1 &pcie_intx 0>, /* INT A */
+> +                            <0 0 0 2 &pcie_intx 1>, /* INT B */
+> +                            <0 0 0 3 &pcie_intx 2>, /* INT C */
+> +                            <0 0 0 4 &pcie_intx 3>; /* INT D */
+> +            device_type = "pci";
+> +            num-lanes = <1>;
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            power-domains = <&cpg>;
+> +            renesas,sysc = <&sysc>;
+> +            vendor-id = <0x1912>;
+> +            device-id = <0x0033>;
+> +
+> +            pcie_intx: legacy-interrupt-controller {
+> +                interrupt-controller;
+> +                #interrupt-cells = <1>;
+> +                #address-cells = <0>;
+> +                interrupt-parent = <&gic>;
+> +                interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
+> +                             <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
+> +                             <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
+> +                             <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.43.0
+> 
