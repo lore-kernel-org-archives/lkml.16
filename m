@@ -1,185 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CA5D53C;
-	Fri,  9 May 2025 06:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516DB26AAB8;
+	Fri,  9 May 2025 06:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746772831; cv=none; b=WDX/fEiVWlODX/cFbFV4ayHoXgbC1w1cjxjf3T7hzshXq2GNDL8Bk3czGFBzB//zKk4l59MwpclQCUIjBhacXefKVJB6dmPDYx7v4RJTVKiAytrqLeo7QoZkm/tp+HfGY21+/RkS1NZnNRUTcEovGLz1gWxgS4+R46nkaCc8II0=
+	t=1746772846; cv=none; b=ZVs0Exj1aEcPEoYCuukdV85jxxo55PjuPM+8GHENvZhXtR9yD5VbXIRsIYqevOt5qAItqvV4OBT69cwtbJxo/3UnJqP1QTyp24OQxvVVGLbtyphkvVq+LJ9+dLGQh9yZnQ37t9Uzunv39QyEzzKvRT7JH8/e5Flob+On6WXMSrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746772831; c=relaxed/simple;
-	bh=efT4gy3DPSJVddrgV3Coynq8JjHJLhPlxsgqiMB2KA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AtOkGYOlykcErgdrRztF307Oalprbk5FVMGAEdk3ChBA1x8T8C5DFOaDeQfKCAvgv9DJp/78I06lJjAaQNDoI8gxxpO9JOk99rpGEwyESUE+6nFuUMyfmbc4mgWMehrkfSc5xKgk665srgNLdQ0BqpS3aHZSbRG1Iw5tVhmc6Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7XwOpH5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746772846; c=relaxed/simple;
+	bh=fxFHM0v/ka3OQUBI82UzTNhBtodXGXXGvy6pJYC+zm4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eZWtOWMMNYa78s7qaT3ITfvZEgdxnlCDkkQyulWbJIoDVcnxTIhk2sXBmRnr4VE2pyI40IfIQxHIQVMOrn9HwOYzCSuWiZjcKz+7VAVcEQkKGHXwE1/LbnvpDa9WUVrZUAh3NegvO4/ERWJJHB+UtomgXa+xcXBYsmFdCO07ZwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WDrcJGZo; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7XwOpH5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A1BC4CEE4;
-	Fri,  9 May 2025 06:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746772830;
-	bh=efT4gy3DPSJVddrgV3Coynq8JjHJLhPlxsgqiMB2KA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7XwOpH5E6EltH7WTXdpxVBPYMzno7SRjM/s9++39HRHcEijg1HXhFRtp/yg44q6l
-	 y7dszeimOpth5KQTRYPe2xHrpebYWpiW0cBjvmy3+1iZsqGvpBApip9ax9cgIivGAm
-	 3/K/iZPwmnlnnCvPVp9QmTbgSgWOb2vgiyNuGF2lFt2smO41K4jjEJIrxvcpql5Tvq
-	 i9owDKb8IIt7cuGCYG7shtzr5+Ib/VobAsQI1l+5JsmVevnL8al/+Oe+SbpQGaAZ7v
-	 8M/NYJlJUVNLstW+lw0lDCuJHKjEm4xm7DGNMKfQiSdzcIP4rD3dGoO1z7USZnnAIU
-	 KYUKhfXaCAPFA==
-Date: Fri, 9 May 2025 08:40:28 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Nick Hu <nick.hu@sifive.com>
-Cc: Cyan Yang <cyan.yang@sifive.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH] dt-bindings: power: Add SiFive Domain Management
- controllers
-Message-ID: <20250509-small-graceful-limpet-d0ea41@kuoka>
-References: <20250509021605.26764-1-nick.hu@sifive.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WDrcJGZo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746772830;
+	bh=ihh5ov5KNpxuRkZgVS2WL0voYFPXwHmFK1A25R6l4s8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=WDrcJGZoqfFu4BM0j0HqkiUNcfToAXs91ynhU/Rez7iz1gkgvtNjiSrUQPC5hIV/n
+	 3Rlxl6FjQw2RciCFXmwyHPo+g7CdmxV2THVmd/jjtDQSinNh8nEZWTMh9Ubw5jLuRr
+	 IGa51LFdhWOwLqTfbGZpvxsQeRU6IMSOVojnAjlo=
+X-QQ-mid: esmtpsz16t1746772827te5f6ae54
+X-QQ-Originating-IP: xj3l6DJxrjkt4qTlt77TClYLZub6HSSXCznRsEI96bA=
+Received: from mail-yw1-f178.google.com ( [209.85.128.178])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 09 May 2025 14:40:25 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 8370490462894577466
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7091d7244e8so17856677b3.3;
+        Thu, 08 May 2025 23:40:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUUFHpWh6X22vLYxJwFgU/drslJu6behU+H/h3BhjtiOPBczK/gUqzgPydcnJ2Nw+KH8NBHp+XpeD1UD7k4@vger.kernel.org, AJvYcCVBpor63sNamTkUeKz6BsxJ931/+Fx7vjPKKQeZSVu/jUfe1n6/sFppiGV3NxggGLeU9bqinBbp+6g6s863@vger.kernel.org
+X-Gm-Message-State: AOJu0YyciT3g6/zNh3BmLTWi7QyzXwoSK4iadhlxCZzeC39ooaRTbWnt
+	F9VLKfNWXVH+idWDg38/CwxlOdEDkiIccfNanVya72hf138uEpbQ425DPlcV1pOUabvr+ZqAUWl
+	b90LtE/Kfo8VSmLUGIkP4I6lQR74=
+X-Google-Smtp-Source: AGHT+IFDWb8362FrDmkSJcfKLIT9BCU/J1FTe+b0rRaNN0UQUsLyveoFtB5VWAftvXNt2sd2zZ+lmxNaUm68KNiQXLI=
+X-Received: by 2002:a05:690c:74c5:b0:708:ca91:d583 with SMTP id
+ 00721157ae682-70a3fb1461emr30415607b3.25.1746772825216; Thu, 08 May 2025
+ 23:40:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250509021605.26764-1-nick.hu@sifive.com>
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com> <20250509-fusectl-backing-files-v3-3-393761f9b683@uniontech.com>
+In-Reply-To: <20250509-fusectl-backing-files-v3-3-393761f9b683@uniontech.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Fri, 9 May 2025 14:40:14 +0800
+X-Gmail-Original-Message-ID: <07F6D6C67DF1D1A0+CAC1kPDOdDdPQVKs0C-LmgT1_MGBWbFqy4F+5TeunYBkA=xq7+Q@mail.gmail.com>
+X-Gm-Features: ATxdqUE25ZeQ5xIHSbFb-ApRFoPgWAHDZSxksRoyReXXX_uje8AZxeHlMjW1Ym8
+Message-ID: <CAC1kPDOdDdPQVKs0C-LmgT1_MGBWbFqy4F+5TeunYBkA=xq7+Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] fs: fuse: add more information to fdinfo
+To: chenlinxuan@uniontech.com
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: Np4vjJaFyq9jHr2M3gGr6lOltbJQO+TaSWN8jIZnpdslFFeoOYjHIOcA
+	V8oOtFPrc2XWEmYxmY92t6Xpp7RY9y/lmnN6q4AD/bsYMK32ykR5NBQ+9TSbc09FN6Uu3pt
+	Jx6BfS9mHyqW0rzLf/Rc7ekVvhuLAdpkYkCbMkdC1Kbt1X3LfcWSCfsPeVqa+MWI50BObru
+	N2Z3xyc3O+XbxVjwp7f5GjtoSutBvUBaTApbCJDv6jdWWFiRFmLDTbQeboHNjYIRVufIuIT
+	dFMpL2PUEQEnPM+XtKluR/q8EN55a+x8QrtLJayoRyp0lBSZNn4LXaAiK42mOZ4QrLst9Z4
+	frk50+F9IwFgicFdukgcyECeo+yPJkNRjA2G+rfEMjmD7aQpv/rad6UOaRfnlwCM+ZnRGD5
+	Prii5jl5Qne1jtVCh5lpQDaY9076mYNQKf2ThaRRW4x/thF54vfhgshhWDMQzLmd8t1QKoI
+	+uKAGsl3PoyUB6evvl6kVmxx91c0JddV0O8PdJFmi8su4CmjVgyzUoiY+RZ64PjiQBIMOs2
+	SJA/msakcMtuEk5wcf3YlPLq/xUQKOw/qMzi7Uy/xAQf5Tb7iYq92R36/JpRfj96FJ+pdQ+
+	HCX4mBtV/nwrOzck4xEeDZsotLzCaxjykrt0vBtwhUeDLzl0iOOBVnxGVkiDLeqF2N9GXwX
+	RGUwoZkQh44ugM7UpMMe2Kj2uwmuJREzp9t3hrfYX/DGheDuf9TDq3p2gydEqSvtdUxH7oO
+	U1wqdaRgje2V50TwuOerRV6FH2FG8Xq3QMgzRg07o6+0hfQBS5vxaPFIKw7fQZPilaF2yZL
+	orMxNUrl3W/CGr8T+uMdjaxTV8u0WS+ShZ829heTU1m4mP5D8s5gblm89GWyJZJXlrQI1cv
+	cD0P6A0qo4+qI5xWg7CoMfEQdogYUClAWuS9Jjvy5m1SExOyCqzK5K0Ll6Xxsb/jNFSr5cd
+	Osgft/IH80h+5ZyS7c4tmnRIk8Hxp0QK6VEo5lRUqd9hHtKfnGE6LMQYIo2XongA3wplNcz
+	aVBbQyRyfss0SjWIGTVsCBc3kj4C5ZmRc/8Yn5WxEC1LgGjHDo
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Fri, May 09, 2025 at 10:16:04AM GMT, Nick Hu wrote:
-> SiFive Domain Management controller includes the following components
-> - SiFive Tile Management Controller
-> - SiFive Cluster Management Controller
-> - SiFive Core Complex Management Controller
-> 
-> These controllers control the clock and power domain of the
-> corresponding domain.
-> 
-> Signed-off-by: Nick Hu <nick.hu@sifive.com>
-> Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+On Fri, May 9, 2025 at 2:34=E2=80=AFPM Chen Linxuan via B4 Relay
+<devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
+>
+> From: Chen Linxuan <chenlinxuan@uniontech.com>
+>
+> This commit add fuse connection device id, open_flags and backing
+> files, to fdinfo of opened fuse files.
+>
+> Related discussions can be found at links below.
+>
+> Link: https://lore.kernel.org/all/CAOQ4uxgS3OUy9tpphAJKCQFRAn2zTERXXa0QN_=
+KvP6ZOe2KVBw@mail.gmail.com/
+> Link: https://lore.kernel.org/all/CAOQ4uxgkg0uOuAWO2wOPNkMmD9wqd5wMX+gTfC=
+T-zVHBC8CkZg@mail.gmail.com/
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
 > ---
->  .../devicetree/bindings/power/sifive,tmc.yaml | 89 +++++++++++++++++++
-
-Where is a patch with the driver (user of the binding)?
-
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/sifive,tmc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/power/sifive,tmc.yaml b/Documentation/devicetree/bindings/power/sifive,tmc.yaml
-> new file mode 100644
-> index 000000000000..7ed4f290b94b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/sifive,tmc.yaml
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/sifive,tmc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  fs/fuse/file.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 754378dd9f7159f20fde6376962d45c4c706b868..1e54965780e9d625918c22a3d=
+ea48ba5a9a5ed1b 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -8,6 +8,8 @@
+>
+>  #include "fuse_i.h"
+>
+> +#include "linux/idr.h"
+> +#include "linux/rcupdate.h"
+>  #include <linux/pagemap.h>
+>  #include <linux/slab.h>
+>  #include <linux/kernel.h>
+> @@ -3392,6 +3394,21 @@ static ssize_t fuse_copy_file_range(struct file *s=
+rc_file, loff_t src_off,
+>         return ret;
+>  }
+>
+> +static void fuse_file_show_fdinfo(struct seq_file *seq, struct file *f)
+> +{
+> +       struct fuse_file *ff =3D f->private_data;
+> +       struct fuse_conn *fc =3D ff->fm->fc;
+> +       struct file *backing_file =3D fuse_file_passthrough(ff);
 > +
-> +title: SiFive Domain Management Controller
-> +
-> +maintainers:
-> +  - Cyan Yang <cyan.yang@sifive.com>
-> +  - Nick Hu <nick.hu@sifive.com>
-> +  - Samuel Holland <samuel.holland@sifive.com>
-> +
-> +description: |
-> +  This is the device tree binding for the following SiFive Domain Management Controllers.
+> +       seq_printf(seq, "fuse conn:%u open_flags:%u\n", fc->dev, ff->open=
+_flags);
 
-Explain the hardware, not that "binding is a binding for ...".
+Note: The fc->dev is already accessible to userspace.
+The mnt_id field in /proc/PID/fdinfo/FD references a mount,
+which can be found in /proc/PID/mountinfo.
 
-Also, wrap according to Linux coding style.
-
-
-> +  - Tile Management Controller
-> +      - TMC0
-> +      - TMC1
-> +      - TMC2
-> +      - TMC3
-> +  - Subsystem Management Controller
-> +      - SMC0
-> +      - SMC1
-> +      - SMC2
-> +      - SMC3
-> +  - Cluster Management Controller
-> +      - CMC2
-> +      - CMC3
-> +  SiFive Domain Management Controllers support the SiFive Quiet Interface
-> +  Protocol (SQIP) starting from the Version 1. The control method is
-> +  different from the Version 0, making them incompatible.
-> +
-> +allOf:
-> +  - $ref: power-domain.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - {}
-> +          - pattern: "^sifive,[ts]mc0$"
-> +      - items:
-> +          - {}
-> +          - pattern: "^sifive,[ts]mc3$"
-> +          - pattern: "^sifive,[ts]mc2$"
-> +          - pattern: "^sifive,[ts]mc1$"
-> +      - items:
-> +          - {}
-> +          - pattern: "^sifive,[ts]mc2$"
-> +          - pattern: "^sifive,[ts]mc1$"
-> +      - items:
-> +          - {}
-> +          - pattern: "^sifive,[ts]mc1$"
-> +      - items:
-> +          - {}
-> +          - const: sifive,cmc3
-> +          - const: sifive,cmc2
-> +      - items:
-> +          - {}
-> +          - const: sifive,cmc2
-
-All of this is just unexpected. Why any compatible should come with
-these? You need to use SoC specific compatibles.
-
+And this file includes the device ID.
 
 > +
-> +  reg:
-> +    maxItems: 1
+> +       if (backing_file) {
+> +               seq_puts(seq, "fuse backing_file: ");
+> +               seq_file_path(seq, backing_file, " \t\n\\");
+> +               seq_puts(seq, "\n");
+> +       }
+> +}
 > +
-> +  sifive,feature-level:
-> +    description: |
-> +      Supported power features. This property is absent if the full set of features
-> +      is supported
-
-Compatible defines this. Drop.
-
-
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    enum: ["nopg", "ceasepg", "runonlypg"]
-> +
-> +  "#power-domain-cells":
-> +    const: 0
-> +
-> +if:
-> +  not:
-> +    properties:
-> +      compatible:
-> +        contains:
-> +          pattern: "^sifive,[tsc]mc3$"
-> +then:
-> +  properties:
-> +    sifive,feature-level: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-
-Missing example.
-
-Best regards,
-Krzysztof
-
+>  static const struct file_operations fuse_file_operations =3D {
+>         .llseek         =3D fuse_file_llseek,
+>         .read_iter      =3D fuse_file_read_iter,
+> @@ -3411,6 +3428,9 @@ static const struct file_operations fuse_file_opera=
+tions =3D {
+>         .poll           =3D fuse_file_poll,
+>         .fallocate      =3D fuse_file_fallocate,
+>         .copy_file_range =3D fuse_copy_file_range,
+> +#ifdef CONFIG_PROC_FS
+> +       .show_fdinfo    =3D fuse_file_show_fdinfo,
+> +#endif
+>  };
+>
+>  static const struct address_space_operations fuse_file_aops  =3D {
+>
+> --
+> 2.43.0
+>
+>
+>
+>
