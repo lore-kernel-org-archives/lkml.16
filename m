@@ -1,136 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC8A28ECEF;
-	Fri,  9 May 2025 12:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AE02900B6
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746794363; cv=none; b=q/PcjsQyI5xgTi3qI8mg+pmTbc5wHaglsQvqM/eevWQgq7vSDDOU8CC24LBti+uBzf+EsU8UwBZeeusgF0KvUp52joqf56rV7WL/y+NJeb5gYT+5LnDOYXPXJgA/O9SFd73MmE8mm3kVdpgj6+kfBMpkpBP4adeR7vMhpzW/6r4=
+	t=1746794390; cv=none; b=EN5Svwr2YXM0IyUVBKjidNBQtXC9IS5j8HTO9ZjEMz788LZQX5PH6c3dYJQhfnHURExHsrf1bELWe6oKWFXrTR9qJL4DoBsaKe+LnxynFX5odASIa8s396BX4T0BQ1fwnzvKJmXBANZ+Mz5MCah2YiOZ148Rg3yCZazBBWBuRVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746794363; c=relaxed/simple;
-	bh=cUmOxOaE52FoEMZHnlv9RgRXtpWQx9C474WJO5+AbhI=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Gs/ZNPyjo5wKBbNEA+rvuUXM93+eAqvm0P82hywkBzMhYEEvgNqzvDR3K465aV2FUUKR5m+U//ZR5ByGFygb8+GqerTae5QRh4yjLUqVO2fWnHHv56WC1dkBF8dpl38JvixOUpMnosJ/IkYGLIrHVNr/T1Mg0khUtOe27P8IfCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoVtvlTu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746794390; c=relaxed/simple;
+	bh=/yVwv3WnxQrh5A9TkAjLUuCLJpOPoWAN+elytrliOlU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HpKtWh1cAhy7BYjuPOrWN3BvcV3cN21hCzom4UjTax2w6JQ2UgglzRAJ3fGxXFhILAOKdagXZyypxpevPZSO13EXeTjSGA4ouopGL4p2YertIW6j/X0AYtDCQVTMlBRhGf/v8+88RmrpsE27DVz+DIJN+vQyiibAqu4B/WoGpvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KnLUUF76; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoVtvlTu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B1EC4CEE4;
-	Fri,  9 May 2025 12:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746794363;
-	bh=cUmOxOaE52FoEMZHnlv9RgRXtpWQx9C474WJO5+AbhI=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=aoVtvlTuC0s5AXOpQUKBtQ6yf+hLFn13+wVmG4Ziw/fDORTVFrT/C0zYquWy85qIp
-	 B4xH6BwW9XjV9rRSfHEIQ3eoW8fFcCii/0OKUSW+bNWabOHJKMksHNH6wj/hNF6SY8
-	 PEA0Kr4Wsd5kwW+N32yuKFiIdfWkcI1qQp/C5lCqqY9BqhqdcNfGHQ6riC1ZSkjgrH
-	 a5YUXYTpR4/X6ZN8CyCOpiN2yUkfsBq1V+IIg+eZ7Wkw/SpiBuRD5tHOszn6PhHN3v
-	 WL46kn7Xr6u8dwz3LtWzJfhhGcuFIJotbut+F3z6rPpKqbLTtX90JZlPycF/yRfBw2
-	 iFNTlW20BHNRA==
-Date: Fri, 09 May 2025 07:39:21 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KnLUUF76"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5498Qj3G024844
+	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 12:39:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4G1RV5OSQbBgLbkxXdEz6RKY+uaAPac1V0RoEspl1mc=; b=KnLUUF76t2PuxaRe
+	ypLdVnGyaLLu66zSCesTwxcmWkL0OyupdYnP85RjBJqaRGr3Y9mUdsW+WGmBbHZm
+	wws1I6B3PDr+y9fMgwCJb5FCfEkN8nQux7Ehj8rJ3IQjl32nEaRzJ1u3BprW+mOo
+	V2LS3XUHbvTAglhtFTLVcH+eM19dSORNU1foWMKmfzu+zdhQZ4lLFfcgZg04W8An
+	VlF+ir97v0BI3kxI6xJzWKEvOcamssCsPKrjRjcsQhRPtUyjQ/6hIz+c2c1GtnjE
+	KTum0rXo7u6+h16SjVjI6XOvOhY5pcWGcl6CeIK9gs7SVOyS9JrWusCcMu2UMqgw
+	/aeATA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp84qc1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:39:47 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c54734292aso56715785a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:39:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746794386; x=1747399186;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4G1RV5OSQbBgLbkxXdEz6RKY+uaAPac1V0RoEspl1mc=;
+        b=wexZfatsKIpFXU4FIY/OwCDveRmLCJAXRqbWsq9dzIz/bgX3YYu1ll3m3BwUvB6x+N
+         YPc9Rzd/XNCz6EJmA9NGt8zOwop5j/bmrExtnmVRePLSowJUL/HOkj69aDa3mnJKJQ8L
+         l5NFlxRu751vVbKnOvQJucP8bdpSbavvBxGxkhtoQfrhw2NQa+UYJgwGxcnFUo5by4vh
+         B5lLtDSrfLMwqmm7nGaSkz0qP82MIZzHJSU3nV+ORoKhKiV3aHoUgNvGcntLeLklVC6E
+         9MeoiL8XtF7HdC65UajNTXBB74gAHcV4MgNzkbBXl+GYRA+J4jQmv5MwYXdMHSclqyg9
+         yaNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkKP36FgsSxuWDCpWeIH7utoHXBtRB7O7eZGD0v59H4EnOEnjKiEfi3ilmOyiP6++QCq5Dd9iTVdyEc14=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX8zDe/WtOhjwDIryZEEjrbt2MCOlM0IhkG3s9t4dNVqYwIWT6
+	D1h9ZkWz+xIZvvEI+EY2VC7h+SQZzJ9pquQVZw7/LPOE7xfFNG8vWwYcw2XTcJVrrSe3/UhI5Br
+	20bG8QMfTZNYqLHfmm3NFfCgA7+ELXUcaAidQIJiUL6Y5YBqaVDfbY+q4vGzIqhA=
+X-Gm-Gg: ASbGncvDOLsh+z+JYOBgFruy8TO0yInU8ej+qqoSCUs6c68dl0pwFz3fuiIaCvqkq6s
+	eIA3FFe61/9Pi0KdOcTQONmc9nlfqr8agpK356gt5BbNtHgGPvyBf5YiRPOGXQOFdHlZ46+uTnw
+	mB2kK+vsJlQcvPTXxlyiNSmsDtZvOiXUtJncNEwZEnEr7uWyQh4jS3c67YwHO9PUiQFhfgwwPL1
+	AOkSjR193Sn07UWcKWxJu5mpiGGffPvBPrno7sH13dfxvIjoWw5TM3hM5yOrL3PNtJUR6hWewZY
+	gqdf+RAX5nEHG3d4HmBothwUtSETbzmq0Wx18L8cnvfPbWeOEoBQRhqsPdrNGZ56D9I=
+X-Received: by 2002:a05:620a:270a:b0:7c0:b106:94ba with SMTP id af79cd13be357-7cd011186f3mr194764285a.7.1746794386264;
+        Fri, 09 May 2025 05:39:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhQplMN/T2Kquk8OAgFmlti7cmfd722WmVfsRvtwRfluidvoeB7ua1lUBaXYSIjte577KX6w==
+X-Received: by 2002:a05:620a:270a:b0:7c0:b106:94ba with SMTP id af79cd13be357-7cd011186f3mr194762585a.7.1746794385893;
+        Fri, 09 May 2025 05:39:45 -0700 (PDT)
+Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219746506sm143082866b.88.2025.05.09.05.39.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 05:39:45 -0700 (PDT)
+Message-ID: <b374b468-819b-4f5a-9ecc-0926c3696db3@oss.qualcomm.com>
+Date: Fri, 9 May 2025 14:39:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Teresa Remmet <t.remmet@phytec.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Fabio Estevam <festevam@gmail.com>, 
- Yashwanth Varakala <y.varakala@phytec.de>, linux-kernel@vger.kernel.org, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Benjamin Hahn <b.hahn@phytec.de>, upstream@lists.phytec.de, 
- Jan Remmet <j.remmet@phytec.de>, imx@lists.linux.dev, 
- Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-To: Yannic Moog <y.moog@phytec.de>
-In-Reply-To: <20250507-wip-y-moog-phytec-de-imx95-libra-v1-0-4b73843ad4cd@phytec.de>
-References: <20250507-wip-y-moog-phytec-de-imx95-libra-v1-0-4b73843ad4cd@phytec.de>
-Message-Id: <174679427817.2814201.3015231739636256872.robh@kernel.org>
-Subject: Re: [PATCH 0/2] Add new imx imx95-libra-rdk-fpsc SBC
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT 07/14] drm/msm/a6xx: Resolve the meaning of UBWC_MODE
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Connor Abbott <cwabbott0@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
+ <20250508-topic-ubwc_central-v1-7-035c4c5cbe50@oss.qualcomm.com>
+ <CACu1E7H9_EkGFkjL1MRU9M-_YFHnPb5v9SxDg6fXm0m-imzC2Q@mail.gmail.com>
+ <1f6fcbed-c7c4-42c2-814b-3834b08c5977@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <1f6fcbed-c7c4-42c2-814b-3834b08c5977@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=681df793 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=sEJkFV_Ntms1zBwlKkIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: LzcDvv8d0HX2tH-J-sJ4AyzaCdJoRgZx
+X-Proofpoint-GUID: LzcDvv8d0HX2tH-J-sJ4AyzaCdJoRgZx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEyMyBTYWx0ZWRfX0YoHHFtKVh/g
+ p8TsVQTWC5ToEdylp3YdiUxUkgAHDpy3JrnoCXWcqYOpMddJEWEW6Be2L1ecXpBL8n9oqOrANdJ
+ uNolwjfMIuTXVe2LTGDwSHmCpUTqawm9qcAp3m/zOFLdSbXYI0O1KK7xoP0+FcFubRXxbKWezvo
+ YqYQWHDCmfxoVlD3iKOTO3pr0PUO+gOCOcBnnJN8FGDmVRptGEURXrbSfWO39wbUr/W+KT9c1GD
+ rtBHGU6ip5qATAZDk2FFDzSm2oZ3xnBF2zcN074a68YUKW4b7n9zb/DecjVpHMRobn+fU4oyRb9
+ RoSMXaMtneKpjCTARuCtKIidiYaO7bvzFMP0nOACJCl5jrHF/nQ/o/wJZau7XT7rSmMhWj3PEDM
+ VDeA3cHBr12b3aCHnhOLyZrLWF8VFpvE2lw6Mxe3CxA3mFAyFyiRZLoVtjYcRKwJ4i1lEtVW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_05,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ spamscore=0 mlxlogscore=889 bulkscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090123
 
-
-On Wed, 07 May 2025 15:13:11 +0200, Yannic Moog wrote:
-> The Libra i.MX 95 is a SBC that consists of the Libra base board
-> and the phyCORE i.MX 95 FPSC SoM.
-> This series adds its binding and device trees.
+On 5/9/25 2:37 PM, Konrad Dybcio wrote:
+> On 5/8/25 8:25 PM, Connor Abbott wrote:
+>> On Thu, May 8, 2025 at 2:14 PM Konrad Dybcio <konradybcio@kernel.org> wrote:
+>>>
+>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>
+>>> This bit is set iff the UBWC version is 1.0. That notably does not
+>>> include QCM2290's "no UBWC".
+>>
+>> While this is technically true, AFAIK the only difference between UBWC
+>> 1.0 and 2.0 is that newer UBWC disables level 1 bank swizzling, which
+>> is why I originally wrote it this way. There's a bit of redundancy
+>> between the UBWC version and ubwc_swizzle bit 0.
 > 
-> ---
-> Yannic Moog (2):
->       dt-bindings: add imx95-libra-rdk-fpsc
->       arm64: dts: add imx95-libra-rdk-fpsc board
-> 
->  Documentation/devicetree/bindings/arm/fsl.yaml     |   7 +
->  arch/arm64/boot/dts/freescale/Makefile             |   1 +
->  .../boot/dts/freescale/imx95-libra-rdk-fpsc.dts    | 327 ++++++++++
->  .../boot/dts/freescale/imx95-phycore-fpsc.dtsi     | 656 +++++++++++++++++++++
->  4 files changed, 991 insertions(+)
-> ---
-> base-commit: 9bfe32fed9a8c17000f7cd6bc59ce8348aefe5e9
-> change-id: 20250415-wip-y-moog-phytec-de-imx95-libra-27c9ce555b91
-> 
-> Best regards,
-> --
-> Yannic Moog <y.moog@phytec.de>
-> 
-> 
-> 
+> It turns out to be a hardware matter
 
+Well you just said that.. in any case, i can do either (or both with a
+sanity check)
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 9bfe32fed9a8c17000f7cd6bc59ce8348aefe5e9
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250507-wip-y-moog-phytec-de-imx95-libra-v1-0-4b73843ad4cd@phytec.de:
-
-arch/arm64/boot/dts/freescale/imx95-libra-rdk-fpsc.dtb: usb@4c200000 (fsl,imx95-usb): compatible: 'oneOf' conditional failed, one must be fixed:
-	['fsl,imx95-usb', 'fsl,imx7d-usb', 'fsl,imx27-usb'] is too long
-	'fsl,imx95-usb' is not one of ['fsl,imx27-usb']
-	'fsl,imx95-usb' is not one of ['fsl,imx23-usb', 'fsl,imx25-usb', 'fsl,imx28-usb', 'fsl,imx35-usb', 'fsl,imx50-usb', 'fsl,imx51-usb', 'fsl,imx53-usb', 'fsl,imx6q-usb', 'fsl,imx6sl-usb', 'fsl,imx6sx-usb', 'fsl,imx6ul-usb', 'fsl,imx7d-usb', 'fsl,vf610-usb']
-	'fsl,imx95-usb' is not one of ['fsl,imx8dxl-usb', 'fsl,imx8ulp-usb']
-	'fsl,imx95-usb' is not one of ['fsl,imx8mm-usb', 'fsl,imx8mn-usb', 'fsl,imx93-usb']
-	'fsl,imx95-usb' is not one of ['fsl,imx6sll-usb', 'fsl,imx7ulp-usb']
-	'fsl,imx27-usb' was expected
-	'fsl,imx7ulp-usb' was expected
-	'fsl,imx6ul-usb' was expected
-	from schema $id: http://devicetree.org/schemas/usb/chipidea,usb2-imx.yaml#
-arch/arm64/boot/dts/freescale/imx95-libra-rdk-fpsc.dtb: usb@4c200000 (fsl,imx95-usb): interrupts: [[0, 176, 4], [0, 174, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/usb/chipidea,usb2-imx.yaml#
-arch/arm64/boot/dts/freescale/imx95-libra-rdk-fpsc.dtb: /soc/usb@4c200000: failed to match any schema with compatible: ['fsl,imx95-usb', 'fsl,imx7d-usb', 'fsl,imx27-usb']
-arch/arm64/boot/dts/freescale/imx95-libra-rdk-fpsc.dtb: usbmisc@4c200200 (fsl,imx95-usbmisc): compatible: 'oneOf' conditional failed, one must be fixed:
-	['fsl,imx95-usbmisc', 'fsl,imx7d-usbmisc', 'fsl,imx6q-usbmisc'] is too long
-	'fsl,imx95-usbmisc' is not one of ['fsl,imx25-usbmisc', 'fsl,imx27-usbmisc', 'fsl,imx35-usbmisc', 'fsl,imx51-usbmisc', 'fsl,imx53-usbmisc', 'fsl,imx6q-usbmisc', 'fsl,vf610-usbmisc']
-	'fsl,imx95-usbmisc' is not one of ['fsl,imx6ul-usbmisc', 'fsl,imx6sl-usbmisc', 'fsl,imx6sx-usbmisc', 'fsl,imx7d-usbmisc']
-	'fsl,imx95-usbmisc' is not one of ['fsl,imx7ulp-usbmisc', 'fsl,imx8mm-usbmisc', 'fsl,imx8mn-usbmisc', 'fsl,imx8ulp-usbmisc']
-	'fsl,imx6sll-usbmisc' was expected
-	'fsl,imx6q-usbmisc' was expected
-	'fsl,imx6ul-usbmisc' was expected
-	from schema $id: http://devicetree.org/schemas/usb/fsl,usbmisc.yaml#
-arch/arm64/boot/dts/freescale/imx95-libra-rdk-fpsc.dtb: usbmisc@4c200200 (fsl,imx95-usbmisc): reg: [[0, 1277166080, 0, 512], [0, 1275133972, 0, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/usb/fsl,usbmisc.yaml#
-arch/arm64/boot/dts/freescale/imx95-libra-rdk-fpsc.dtb: /soc/usbmisc@4c200200: failed to match any schema with compatible: ['fsl,imx95-usbmisc', 'fsl,imx7d-usbmisc', 'fsl,imx6q-usbmisc']
-
-
-
-
-
+Konrad
