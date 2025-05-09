@@ -1,65 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F533267B96
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 05:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4525267B9B;
+	Fri,  9 May 2025 05:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746768572; cv=none; b=QCb42PwkbGM6+HIBKjmvmUwk4lPRJoJoK6h7c8QIdPYZF9KC/9KmTuwG67yuITF7pQKnsxY7aktKzsfZO3HHoO/C9mh/Vo9TGxs/wyeIFlHiy06enlXZqWmoYbZCpFxmFvyAtoLhlHMJtyh9Cu7NGU/qs9J0bfjJ+LBF+XjaOSU=
+	t=1746768599; cv=none; b=ganEODzH87725j0RcDBpVRhwoPSPM4dfuVrOaSl8IomIkGneFdQEODGfsEtDo8lE7/nsAz4lPH71DRtlkLpQHy+c733SV6PeWOzGJB7cVQFKk8WG7UH/Z98YpxytiyxHa4g7zqRTLny+T9V/mm6DCbcdtcjudYEGbvd56JJOqyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746768572; c=relaxed/simple;
-	bh=L4UUaVG5X3LUiYHS/5N1PoJuNArLa1EF6Sqthuav9h4=;
+	s=arc-20240116; t=1746768599; c=relaxed/simple;
+	bh=KhWQ+jRqzp9ACybx9mX/GMmftROOC+S9oSgLo0fnOBI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=So4rJaMEILSwbyDc/6/HDFzl2CCVegMqE2urn65ElQTlGCDT5ZHO/hHHu46ih4JQ1sOZZNQGOVjVFaTdyCUZap3W+yxrrOOYHUDEM549R3A6GU5xsJx6Dz5mwp+ST4r5FAU27MmU2f9KWorbD1LHPqnt9A3jkC75D4uUAicY1nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G0pNiRdR; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tueSBhG/BsuK2xeU/HJ1kg4SHJhUOYKeuIU7a5A14Qrn3tUPaAaGKMv4a5DeRNeI25CUb8b0D0GCFs3SGbn+DRhR1OraBrvifikTNb1PfDBWRtuOeSsH5kdmr/H+ddUNYMozCMsSsJlyi5IgDnrA/dvBD204sn1Y5v9yO6NgN3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WCivhjdW; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G0pNiRdR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746768570; x=1778304570;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L4UUaVG5X3LUiYHS/5N1PoJuNArLa1EF6Sqthuav9h4=;
-  b=G0pNiRdRKaZP6sqxEWwi/t8CMSMXTigAAntkChfq+CI1KbA3XQUE/K57
-   yrba45Fswt+nbRNgos/6SYW3qh1iY96rnAiZmP1Z+dQX03qssAo6qem7F
-   NZmLiEKo6fVo9KUTCs01hVRdY1acygF3ZYxq738Lnu2iHck7KGvXnNfTh
-   2EqesmyasUBOFRHgA8Z/QHp1uIbd4jXIXeMcvkgar/QUPrcmEhlCEjoxV
-   b+o+kW5oaouHODJVgU+XkaXwj+DNf61B455wd5dJ7K2aV2vavLJPtC+hs
-   g5rbyGTMK2CgUOsvJ6gBsmMCGHw2mudTnuOcrlDyffR0orbeWL5Yc1n9p
-   A==;
-X-CSE-ConnectionGUID: Z62g7TJZSM6DAAWlgeyCbg==
-X-CSE-MsgGUID: FdcABmp2TuOr8AESRmUbIw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59985870"
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="59985870"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 22:29:30 -0700
-X-CSE-ConnectionGUID: jWPSW1eRRrS74AaaPw5jUw==
-X-CSE-MsgGUID: K/jORPu1QKquHkt7pL4iTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="136472312"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 08 May 2025 22:29:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uDGIX-000Bgd-1V;
-	Fri, 09 May 2025 05:29:25 +0000
-Date: Fri, 9 May 2025 13:28:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>,
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	=?iso-8859-1?B?Q3Pza+FzLA==?= Bence <csokas.bence@prolan.hu>,
-	Michael Walle <mwalle@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v2] mtd: Verify written data in paranoid mode
-Message-ID: <202505091318.0QvCicb9-lkp@intel.com>
-References: <20250508183733.514124-3-csokas.bence@prolan.hu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCivhjdW"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c9376c4bddso200754685a.3;
+        Thu, 08 May 2025 22:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746768596; x=1747373396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3FjiY5A6s1JyFLIfKZGHNec3qZYKZdehnvSKZyBFilw=;
+        b=WCivhjdW9PNcYArtFAdXGE9CBq/7Cs5AWQ9u8WBli2UynecbEelv/4HVylv6BIxUZ1
+         Ld/q570Km5PxJFYorKZd291wpLfjszxtbT9sC9iuu0yQAb4JOnm5g+ZdhN8fgvI/jHih
+         OsKmuVP57E8d0Qe4+sfIb2Iim7xs2omQNoFFEgho1xvISOtagWyeykW+EpPCp+v4AUnR
+         O7Vfz0uu6N0gBFJclNySatrXA8s3dLzKip1AvsdoueO2bVOq3YofX/L+C3vbMolYNJmB
+         KFMwfzJQt0AY+LDJeUnH9Yxuj5NMA8F24QIYX7TUAZ2F/8x+ShLS/I968gI1lttB9UnU
+         R6tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746768596; x=1747373396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3FjiY5A6s1JyFLIfKZGHNec3qZYKZdehnvSKZyBFilw=;
+        b=A7cpA5j/+isYLZXD9ECVjRTAJyDtfvTDvbZt5zqRsLiZdl3GIiJ9P8ult3Je19k6W9
+         ldl1LlSRwP3uKlasWvwjc3xJEQvgsedOonJhWNmjKfu9BoPItTZVoE963s30JwV6wjaP
+         0c9ErbGWNWj6AprJmA2QqBf9q7VFOyEpTeH57A0O9IYRWhMeGKQLKg9lL7738UZ9kdGL
+         asoqra2/bS7G+Q/tqg6GQY5iQkSBMn7BUWKj9EgpaFteQRKDrbMDsZptaVJx67ZLTK9+
+         wp6zg0oImf+pgB7XBEJiF+loC8xTWvT8RF3oEAzixv2RMSvyMbPF1/L2N6eoy9j/vI6z
+         T+HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyBFZfup7Drxq5LXi9MoIgYNJHAmpT7p96lg5w5coaOiXO9GNVfWsjkO67kkh1Hkp7qX9iU8LjzBo=@vger.kernel.org, AJvYcCXNNEmHIuYmwvWMX18/F3j3O58WUS+JndFRSkADuBpAn/LrrMtHiy1Bw859LKxXVZHA/4iH7hJrwOyKD/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/PlnN3dHoFsT9kkzEeRur6BtQtaGvfDuWJRnnNhLq+3q8nqLg
+	UlRX+2BceHn8LNJmWoKKIpoe8JE0u2+41tgRJlrmIWILd6gkyzWl
+X-Gm-Gg: ASbGnctT83izQgFeOcs3csbhCNTdcj9gcceCk6x21B4wxB9cIBV71AAJDnfPWj9zz+I
+	p5cRYDelkMW9aWXRsk9ZPMsmkdB5JI/zRIfLZUREMusT8Nf5llY4X0ZkQRHFZAif/KWziiijtlU
+	cfF+Z0l9wM/ULSQRUc5eCES0B9Tv7IKMRc0SeYeYUYZ+gZmmAWj4tQ31g4PR1wH4+B3poV6YRNF
+	GlIG5unB011RJ4wt5ce2T69+0J/0AqmrjwEO1Il/gYA2rRB3TvoFQ9YB/4MqYxYHsth1eGdQyPr
+	fmrLoMho4qWxyW7ajg5bctMNh0k2ewDdY0w/
+X-Google-Smtp-Source: AGHT+IGqKaXBDx7D+415LmvcxrCVps/+1mN6t+Zmb6KW8pkUykVEh5mmk/Wa62mfVviY4+S9vqvHsQ==
+X-Received: by 2002:a05:620a:4549:b0:7ca:d9e8:d722 with SMTP id af79cd13be357-7cd010f7058mr286344485a.17.1746768596541;
+        Thu, 08 May 2025 22:29:56 -0700 (PDT)
+Received: from localhost ([142.186.8.171])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd00f98942sm91970985a.49.2025.05.08.22.29.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 22:29:56 -0700 (PDT)
+Date: Fri, 9 May 2025 01:32:39 -0400
+From: Seyediman Seyedarab <imandevel@gmail.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v3] cpufreq: fix locking order in store_local_boost to
+ prevent deadlock
+Message-ID: <6nfpd4jvx7dmpl5hqk5nokxprxbcccah66x2mptgwxtyxmb74r@qiosxhaw3tew>
+References: <20250430160943.2836-1-ImanDevel@gmail.com>
+ <20250502050639.2a4mbdav4mdlhbp2@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,71 +74,154 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250508183733.514124-3-csokas.bence@prolan.hu>
+In-Reply-To: <20250502050639.2a4mbdav4mdlhbp2@vireshk-i7>
 
-Hi Bence,
+On 25/05/02 10:36AM, Viresh Kumar wrote:
+> On 30-04-25, 12:09, Seyediman Seyedarab wrote:
+> > Lockdep reports a possible circular locking dependency[1] when
+> > writing to /sys/devices/system/cpu/cpufreq/policyN/boost,
+> > triggered by power-profiles-daemon at boot.
+> > 
+> > store_local_boost() used to acquire cpu_hotplug_lock *after*
+> > the policy lock had already been taken by the store() handler.
+> > However, the expected locking hierarchy is to acquire
+> > cpu_hotplug_lock before the policy guard. This inverted lock order
+> > creates a *theoretical* deadlock possibility.
+> > 
+> > Acquire cpu_hotplug_lock in the store() handler *only* for the
+> > local_boost attribute, before entering the policy guard block,
+> > and remove the cpus_read_lock/unlock() calls from store_local_boost().
+> > Also switch from guard() to scoped_guard() to allow explicitly wrapping
+> > the policy guard inside the cpu_hotplug_lock critical section.
+> > 
+> >  [1]
+> >  ======================================================
+> >  WARNING: possible circular locking dependency detected
+> >  6.15.0-rc4-debug #28 Not tainted
+> >  ------------------------------------------------------
+> >  power-profiles-/596 is trying to acquire lock:
+> >  ffffffffb147e910 (cpu_hotplug_lock){++++}-{0:0}, at: store_local_boost+0x6a/0xd0
+> > 
+> >  but task is already holding lock:
+> >  ffff9eaa48377b80 (&policy->rwsem){++++}-{4:4}, at: store+0x37/0x90
+> > 
+> >  which lock already depends on the new lock.
+> > 
+> >  the existing dependency chain (in reverse order) is:
+> > 
+> >  -> #2 (&policy->rwsem){++++}-{4:4}:
+> >         down_write+0x29/0xb0
+> >         cpufreq_online+0x841/0xa00
+> >         cpufreq_add_dev+0x71/0x80
+> >         subsys_interface_register+0x14b/0x170
+> >         cpufreq_register_driver+0x154/0x250
+> >         amd_pstate_register_driver+0x36/0x70
+> >         amd_pstate_init+0x1e7/0x270
+> >         do_one_initcall+0x67/0x2c0
+> >         kernel_init_freeable+0x230/0x270
+> >         kernel_init+0x15/0x130
+> >         ret_from_fork+0x2c/0x50
+> >         ret_from_fork_asm+0x11/0x20
+> > 
+> >  -> #1 (subsys mutex#3){+.+.}-{4:4}:
+> >         __mutex_lock+0xc2/0x930
+> >         subsys_interface_register+0x83/0x170
+> >         cpufreq_register_driver+0x154/0x250
+> >         amd_pstate_register_driver+0x36/0x70
+> >         amd_pstate_init+0x1e7/0x270
+> >         do_one_initcall+0x67/0x2c0
+> >         kernel_init_freeable+0x230/0x270
+> >         kernel_init+0x15/0x130
+> >         ret_from_fork+0x2c/0x50
+> >         ret_from_fork_asm+0x11/0x20
+> > 
+> >  -> #0 (cpu_hotplug_lock){++++}-{0:0}:
+> >         __lock_acquire+0x1087/0x17e0
+> >         lock_acquire.part.0+0x66/0x1b0
+> >         cpus_read_lock+0x2a/0xc0
+> >         store_local_boost+0x6a/0xd0
+> >         store+0x50/0x90
+> >         kernfs_fop_write_iter+0x135/0x200
+> >         vfs_write+0x2ab/0x540
+> >         ksys_write+0x6c/0xe0
+> >         do_syscall_64+0xbb/0x1d0
+> >         entry_SYSCALL_64_after_hwframe+0x56/0x5e
+> > 
+> > Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+> > ---
+> > Changes in v3:
+> >  - Rebased over PM tree's linux-next branch
+> >  - Added a comment to explain why this piece of code is required
+> >  - Switched from guard() to scoped_guard() to allow explicitly wrapping
+> >    the policy guard inside the cpu_hotplug_lock critical section.
+> > 
+> > Changes in v2:
+> >  - Restrict cpu_hotplug_lock acquisition to only
+> >    the local_boost attribute in store() handler.
+> > 
+> > Regards,
+> > Seyediman
+> > 
+> >  drivers/cpufreq/cpufreq.c | 23 ++++++++++++++++-------
+> >  1 file changed, 16 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 21fa733a2..b349adbeb 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -622,10 +622,7 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
+> >  	if (!policy->boost_supported)
+> >  		return -EINVAL;
+> >  
+> > -	cpus_read_lock();
+> >  	ret = policy_set_boost(policy, enable);
+> > -	cpus_read_unlock();
+> > -
+> >  	if (!ret)
+> >  		return count;
+> >  
+> > @@ -1006,16 +1003,28 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
+> >  {
+> >  	struct cpufreq_policy *policy = to_policy(kobj);
+> >  	struct freq_attr *fattr = to_attr(attr);
+> > +	int ret = -EBUSY;
+> >  
+> >  	if (!fattr->store)
+> >  		return -EIO;
+> >  
+> > -	guard(cpufreq_policy_write)(policy);
+> > +	/*
+> > +	 * store_local_boost() requires cpu_hotplug_lock to be held, and must be
+> > +	 * called with that lock acquired *before* taking policy->rwsem to avoid
+> > +	 * lock ordering violations.
+> > +	 */
+> > +	if (fattr == &local_boost)
+> > +		cpus_read_lock();
+> >  
+> > -	if (likely(!policy_is_inactive(policy)))
+> > -		return fattr->store(policy, buf, count);
+> > +	scoped_guard(cpufreq_policy_write, policy) {
+> > +		if (likely(!policy_is_inactive(policy)))
+> > +			ret = fattr->store(policy, buf, count);
+> > +	}
+> >  
+> > -	return -EBUSY;
+> > +	if (fattr == &local_boost)
+> > +		cpus_read_unlock();
+> > +
+> > +	return ret;
+> >  }
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+> -- 
+> viresh
 
-kernel test robot noticed the following build warnings:
+Hi there,
 
-[auto build test WARNING on d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3]
+Just following up to see if there's anything you'd like me to
+change or address in the patch before it can move forward.
+Please let me know if any updates are needed.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bence-Cs-k-s/mtd-Verify-written-data-in-paranoid-mode/20250509-024044
-base:   d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
-patch link:    https://lore.kernel.org/r/20250508183733.514124-3-csokas.bence%40prolan.hu
-patch subject: [PATCH v2] mtd: Verify written data in paranoid mode
-config: i386-buildonly-randconfig-002-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091318.0QvCicb9-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091318.0QvCicb9-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505091318.0QvCicb9-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/mtd/mtdcore.c:1775:12: warning: '_mtd_verify' defined but not used [-Wunused-function]
-    1775 | static int _mtd_verify(struct mtd_info *mtd, loff_t to, size_t len, const u8 *buf)
-         |            ^~~~~~~~~~~
-
-
-vim +/_mtd_verify +1775 drivers/mtd/mtdcore.c
-
-  1774	
-> 1775	static int _mtd_verify(struct mtd_info *mtd, loff_t to, size_t len, const u8 *buf)
-  1776	{
-  1777		struct device *dev = &mtd->dev;
-  1778		u_char *verify_buf;
-  1779		size_t r_retlen;
-  1780		int ret;
-  1781	
-  1782		verify_buf = devm_kmalloc(dev, len, GFP_KERNEL);
-  1783		if (!verify_buf)
-  1784			return -ENOMEM;
-  1785	
-  1786		ret = mtd_read(mtd, to, len, &r_retlen, verify_buf);
-  1787		if (ret < 0)
-  1788			goto err;
-  1789	
-  1790		if (len != r_retlen) {
-  1791			/* We shouldn't see short reads */
-  1792			dev_err(dev, "Verify failed, written %zd but only read %zd",
-  1793				len, r_retlen);
-  1794			ret = -EIO;
-  1795			goto err;
-  1796		}
-  1797	
-  1798		if (memcmp(verify_buf, buf, len)) {
-  1799			dev_err(dev, "Verify failed, compare mismatch!");
-  1800			ret = -EIO;
-  1801		}
-  1802	
-  1803	err:
-  1804		devm_kfree(dev, verify_buf);
-  1805		return ret;
-  1806	}
-  1807	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Seyediman
