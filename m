@@ -1,128 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9631AA782
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 02:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 429462AE96;
+	Fri,  9 May 2025 02:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746756286; cv=none; b=m2M5Uer1XyyulTkcC70yYMW9POuko9wUpeg/P4gM5fkCUL1sJQ7QZdzkDlR8oGEIgqX1lOvZ+TpWOVrdUetV/PhacL5la8vCfCK1g4EcXmXGBX91Pi/xR5+LNjKPzDQpmwQ+iXzS1WjzpoT8moRnhzxIBqI43cPgU9KhIxbsFn8=
+	t=1746756402; cv=none; b=XZmfO0p6DzPkKDdavD9hRxj5Fp8/xtD1HZEpQlcPOZZd3upvwr+FNP95qWXLwdlQHi+pXrBvfBbzmUp83SrtC/pWAyZ+PdoxsxC0cdyej//W8MTGdjNgHvycZQWkjyld6Nl7LwpgMX9sXsaEp7bLpGaunPDgFPtZCZX07QbmPRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746756286; c=relaxed/simple;
-	bh=+qfZDALLUhrJhLp9Y8tdMpOzOUBGedANZ5WjS6Kpy/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YSNqUUsoNDJdXE7sMl+wI0cDOhkOJZ+QtqC8dg6p40v5F9yGHg3trG5GZ+ItUwkZx20us9kYi8/YLX6C5l+f9h3AFUe0XVBDpzkUavJy6OjSr076PaQl6CYFT2T162qGIxTN7xQMagvwLIMUKH5bt/h6Z+DhCYqw6EmyqIHa22s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2nhecG5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2nhecG5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746756284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xmiJGCWH2hP12TenpYZdFu2FrjT+vq7C54lLFOzY/dY=;
-	b=A2nhecG53IxTMARtdqGYE/0p4nEGG+qrE0wkwSaDoxOKhezUZY9xQClcEYxiDQOJc6pN8J
-	q/4qOloLhQZJC/98zG2htCsoqP7l6Z2g+KMTDiSlJ9G3q3Vn+9ABda4srDJGFKlkodNZdu
-	GPtoihclY53nUozzjyTFp6OjUEWFXVw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-47-Zis-y8ssOV-_Ywxk8Qv7Cw-1; Thu,
- 08 May 2025 22:04:40 -0400
-X-MC-Unique: Zis-y8ssOV-_Ywxk8Qv7Cw-1
-X-Mimecast-MFC-AGG-ID: Zis-y8ssOV-_Ywxk8Qv7Cw_1746756278
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D32241956080;
-	Fri,  9 May 2025 02:04:37 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.120])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 24C4A180049D;
-	Fri,  9 May 2025 02:04:23 +0000 (UTC)
-Date: Fri, 9 May 2025 10:04:18 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Hannes Reinecke <hare@suse.de>, Daniel Wagner <wagi@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <llong@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Mel Gorman <mgorman@suse.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org, storagedev@microchip.com,
-	virtualization@lists.linux.dev,
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v6 6/9] isolation: introduce io_queue isolcpus type
-Message-ID: <aB1iolILQcvvHDE9@fedora>
-References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
- <20250424-isolcpus-io-queues-v6-6-9a53a870ca1f@kernel.org>
- <2db989db-4849-46a9-9bad-0b67d85d1650@suse.de>
- <dd4719dc-5ac4-44d9-bccb-e867d322864e@flourine.local>
+	s=arc-20240116; t=1746756402; c=relaxed/simple;
+	bh=eOG+6uPAgB6kk87jbQU1jozNIa3ia4nGj0etd0Lgu8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qR/O+i8XR+6f7IPb0E+AF9IsbquFzsFDPq4oWGkZn473d8OreZGu2OS4QBL/zoY/nUPQaJbF9/vv7dH41tYja39wfcenTCB4OewlGR2Q/Pgu12oJveTnBC27kemnyjV7O+/QWJRTAzX3W5qyBPx5tM3mt2ssoedumXXCXhHXgjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8BxjawlYx1oktPaAA--.63242S3;
+	Fri, 09 May 2025 10:06:29 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMBxLscjYx1owBG_AA--.32426S2;
+	Fri, 09 May 2025 10:06:27 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	bigeasy@linutronix.de,
+	clrkwllms@kernel.org,
+	rostedt@goodmis.org
+Cc: loongarch@lists.linux.dev,
+	linux-rt-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>,
+	stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Prevent cond_resched() occurring within kernel-fpu
+Date: Fri,  9 May 2025 10:06:26 +0800
+Message-Id: <20250509020626.23414-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd4719dc-5ac4-44d9-bccb-e867d322864e@flourine.local>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLscjYx1owBG_AA--.32426S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uryUKFyDXFyxuryDtr15WrX_yoW5Jr4Upr
+	yfur95tr4UJa4ava9rJw18Cry5Awn7G34xWa9xG34rA34Yqr18Xwn29r12qF12vFyIyFyS
+	vFnYqrWI93W5A3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-On Fri, Apr 25, 2025 at 09:32:16AM +0200, Daniel Wagner wrote:
-> On Fri, Apr 25, 2025 at 08:26:22AM +0200, Hannes Reinecke wrote:
-> > On 4/24/25 20:19, Daniel Wagner wrote:
-> > > Multiqueue drivers spreading IO queues on all CPUs for optimal
-> > > performance. The drivers are not aware of the CPU isolated requirement
-> > > and will spread all queues ignoring the isolcpus configuration.
-> > > 
-> > > Introduce a new isolcpus mask which allows the user to define on which
-> > > CPUs IO queues should be placed. This is similar to the managed_irq but
-> > > for drivers which do not use the managed IRQ infrastructure.
-> > > 
-> > > Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> > > ---
-> > >   include/linux/sched/isolation.h | 1 +
-> > >   kernel/sched/isolation.c        | 7 +++++++
-> > >   2 files changed, 8 insertions(+)
-> > > 
-> > Reviewed-by: Hannes Reinecke <hare@suse.de>
-> 
-> Just realized I forgot to also add some document on this new argument:
-> 
-> 			io_queue
-> 			  Isolate from IO queue work caused by multiqueue
-> 			  device drivers. Restrict the placement of
-> 			  queues to housekeeping CPUs only, ensuring that
-> 			  all IO work is processed by a housekeeping CPU.
-> 
-> 			  Note: When an isolated CPU issues an IO, it is
-> 			  forwarded to a housekeeping CPU. This will
-> 			  trigger a software interrupt on the completion
-> 			  path.
-> 
-> 			  Note: It is not possible to offline housekeeping
-> 			  CPUs that serve isolated CPUs.
+When CONFIG_PREEMPT_COUNT is not configured (i.e. CONFIG_PREEMPT_NONE/
+CONFIG_PREEMPT_VOLUNTARY), preempt_disable() / preempt_enable() merely
+acts as a barrier(). However, in these cases cond_resched() can still
+trigger a context switch and modify the CSR.EUEN, resulting in do_fpu()
+exception being activated within the kernel-fpu critical sections, as
+demonstrated in the following path:
 
-This patch adds kernel parameter only, but not apply it at all, the above
-words just confuses everyone, so I'd suggest to not expose the kernel
-command line & document until the whole mechanism is supported.
+dcn32_calculate_wm_and_dlg()
+    DC_FP_START()
+	dcn32_calculate_wm_and_dlg_fpu()
+	    dcn32_find_dummy_latency_index_for_fw_based_mclk_switch()
+		dcn32_internal_validate_bw()
+		    dcn32_enable_phantom_stream()
+			dc_create_stream_for_sink()
+			   kzalloc(GFP_KERNEL)
+				__kmem_cache_alloc_node()
+				    __cond_resched()
+    DC_FP_END()
 
-Especially 'irqaffinity=0 isolcpus=io_queue' requires the application
-to offline CPU in order, which has to be documented:
+This patch is similar to commit d021985 (x86/fpu: Improve crypto
+performance by making kernel-mode FPU reliably usable in softirqs).  It
+uses local_bh_disable() instead of preempt_disable() for non-RT kernels
+so it can avoid the cond_resched() issue, and also extend the kernel-fpu
+application scenarios to the softirq context.
 
-https://lore.kernel.org/all/cc5e44dd-e1dc-4f24-88d9-ce45a8b0794f@flourine.local/
+Cc: stable@vger.kernel.org
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/kfpu.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-Thanks,
-Ming
+diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
+index ec5b28e570c9..4e469b021cf4 100644
+--- a/arch/loongarch/kernel/kfpu.c
++++ b/arch/loongarch/kernel/kfpu.c
+@@ -18,11 +18,28 @@ static unsigned int euen_mask = CSR_EUEN_FPEN;
+ static DEFINE_PER_CPU(bool, in_kernel_fpu);
+ static DEFINE_PER_CPU(unsigned int, euen_current);
+ 
++static inline void fpregs_lock(void)
++{
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		local_bh_disable();
++	else
++		preempt_disable();
++}
++
++static inline void fpregs_unlock(void)
++{
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		local_bh_enable();
++	else
++		preempt_enable();
++}
++
+ void kernel_fpu_begin(void)
+ {
+ 	unsigned int *euen_curr;
+ 
+-	preempt_disable();
++	if (!irqs_disabled())
++		fpregs_lock();
+ 
+ 	WARN_ON(this_cpu_read(in_kernel_fpu));
+ 
+@@ -73,7 +90,8 @@ void kernel_fpu_end(void)
+ 
+ 	this_cpu_write(in_kernel_fpu, false);
+ 
+-	preempt_enable();
++	if (!irqs_disabled())
++		fpregs_unlock();
+ }
+ EXPORT_SYMBOL_GPL(kernel_fpu_end);
+ 
+-- 
+2.20.1
 
