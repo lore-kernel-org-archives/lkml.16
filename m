@@ -1,182 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A4D224AF9
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B710224AF9;
+	Fri,  9 May 2025 07:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776459; cv=none; b=o4B0vLcRRotHa0Y9fqd7PERgiC+vanEdLjwbOjeEFmrOYyKb0+hQxjBx4LvjqasklvOIQuxhcNeqfz1Unw3ady0a068rpV6kp3RGmiLl/7SS09Bg09n0Ww/VHlnEEhOISs3UuGIEc5pTmxLZvztThzFevULXw+OfE0dep/dzA9c=
+	t=1746776473; cv=none; b=N119ZI7T2XEFJEF5L+DAKtH20Eqsmb/BmQdOr03/pGMQEag1CQoMDuINRhF2Xzg1yW40cqlQYKc3v7qvuNBaE9g2E9omyolysm418X0TrRmZWeOQJyimhFQrFmmRVuqjvsIxiitbleNPdZRdmqPUA4tSAsvG4nqyNgyqCkYjifg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776459; c=relaxed/simple;
-	bh=KmAT6LtY7QcLblQ611owrIfQCbW1DtEAiEj0njoLyRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=peKiosFEkJqtEe4GMcJsecO+g8CiEWlqcfUv2HoQlIIAemFE1Qaj81XjTok8OiM2YKyPzsv3nMRH6Oo4RJlkG31AM3JTR4923iz76Ub+9shwW0/T9AVH803f2rFbOpHBCCutR6Lb4nV+cD3pMuTtiSEe6xhN2l1bndy4IawBq44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c9bn0PbT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746776473; c=relaxed/simple;
+	bh=DW1BKxTlV1yYmqBkfcAWvYM5e+Uuh8hcjIt6CNs+G2M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nYuM1drXPHUI9W+8FU+46Fa9aaRxgNfRGu+aObHNrcOUVWJ5s71JTuPIvSy6HH7eZiNjjspq51zlWm3K0WOB73eonHASE5BrMvuQeBPdZk7vBj8F57ZNi/Zf55m3QJs8RCRTSdIubBqt22xDmdPtsloxQPVu0cikxKPJvrjlwhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=EsiRaRfT; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c9bn0PbT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746776455;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qZadeAT3wG/Mxtz9H4xGBzCmoVYS3YynDqPksK6AKGM=;
-	b=c9bn0PbTGTPrpokdq7BbCOW94h4OvFqfEa8J6MA0axeM3VeeSRQklT6lA78Vq0+tujw6Rs
-	9XdK+2GV+xmFZFqDJvzDr8UqaZ7b8IPLoZEhcAmcTxpjCwuuD97YjnB9zSrfVsWrA1lzRv
-	I6/PHuZTCecyof3CpCuJoLhmgmfTMmU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-Sc9IPGtCPy2Ug01D356qJA-1; Fri,
- 09 May 2025 03:40:52 -0400
-X-MC-Unique: Sc9IPGtCPy2Ug01D356qJA-1
-X-Mimecast-MFC-AGG-ID: Sc9IPGtCPy2Ug01D356qJA_1746776450
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 925F5195608B;
-	Fri,  9 May 2025 07:40:50 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.140])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 73981180049D;
-	Fri,  9 May 2025 07:40:44 +0000 (UTC)
-Date: Fri, 9 May 2025 15:40:39 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 4/8] selftests: ublk: kublk: tie sqe allocation to io
- instead of queue
-Message-ID: <aB2xd4593ZkWuMbB@fedora>
-References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
- <20250507-ublk_task_per_io-v6-4-a2a298783c01@purestorage.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="EsiRaRfT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746776460;
+	bh=DW1BKxTlV1yYmqBkfcAWvYM5e+Uuh8hcjIt6CNs+G2M=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=EsiRaRfThIRLES2khdy4ycmxeu8Jf0ERcLuP0B5Ycm3QkYZW1Rnb3umX0JCY6cgnj
+	 kATZD7WP1uSWjHWXlqNU6DDpdEKwtffs8ZjYOLLUE8/pc8x3hUaiQ4fcen4Nnk+ISD
+	 cjWnev8gkrrRpR8OdirweE4PnkYcMZ+hgqNV1Kv4=
+X-QQ-mid: zesmtpsz9t1746776458te5f03d3f
+X-QQ-Originating-IP: jpOgmuWxThU2N9IujBG7zz83uiKhLp8YmONv9lRkilQ=
+Received: from mail-yw1-f182.google.com ( [209.85.128.182])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 09 May 2025 15:40:56 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 1265807080710549643
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7082ce1e47cso17756357b3.2;
+        Fri, 09 May 2025 00:40:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUETYNIYlhewUnyNNRQJB/hzzLxrBsLRBCw6bynH0W/otRbF+Ma8Y9m9SAK4BKCadZhvuWeiu40LLTTNsqZ@vger.kernel.org, AJvYcCUKiHgJ9qle883dEVK08W8VP9/AWBkpDpyUPgozZcrkbdG2zHPADIG1XGuCXHGrHm1T+lKYSyly3mYIcFGq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTFXPM9dAsYaqovp1DcxfdQ9re/5bb2qbcqgb1BdDNfrjxxZRb
+	V9lcfZmWezTWWc8OPx530tBeLecTvW2dTAWODzuwla2VSq1zgYUk8bDoNS1iWW48vbPGFfVML3L
+	rKaa7bT0zxFWhthnSWuG0w5vETZw=
+X-Google-Smtp-Source: AGHT+IEmabRY5SROPxQjOoo2hdunN8s5tP16e1+Gk/9mjjjxidAP1RlkUwls01CWU2CR89VhRsFMqKW++viXH6XpHC0=
+X-Received: by 2002:a05:690c:3605:b0:708:c37e:6269 with SMTP id
+ 00721157ae682-70a3fb7d500mr30917727b3.37.1746776455637; Fri, 09 May 2025
+ 00:40:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-ublk_task_per_io-v6-4-a2a298783c01@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+ <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com> <CAOQ4uxhuD0QF16jbYPqnoAUQHGw_ab3wi0ZONHVTXjCh0fug-Q@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhuD0QF16jbYPqnoAUQHGw_ab3wi0ZONHVTXjCh0fug-Q@mail.gmail.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Fri, 9 May 2025 15:40:44 +0800
+X-Gmail-Original-Message-ID: <F774A3CF92DC75A7+CAC1kPDMy7j6zCdGSSSrXUOEz6ejKX93WJaFU=e11=gF8E_QoQA@mail.gmail.com>
+X-Gm-Features: ATxdqUHOkjHFsf8QsHwzv-BDvVpyi3wt9jjwxsvPaHIEoPw4Iw2S28WtaVkA8fY
+Message-ID: <CAC1kPDMy7j6zCdGSSSrXUOEz6ejKX93WJaFU=e11=gF8E_QoQA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: chenlinxuan@uniontech.com, Miklos Szeredi <miklos@szeredi.hu>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: MPtvDXbctkRmKuaD5fbLmBcfgrWUMp63yYx1DQA2QLfHFHhj/8DxoE3u
+	HmdqkGVM3Vc7+poWeNOK7MlYIrESQ7WODBc4GcTi+C7vL6FnXwzGXULJv5SVZ5KAMSJprEa
+	6NC2jImeHvCkROF563cpIWyJAB8ituPwvYx1ukfJnos6HZt47YvFHhyU1BYGn59GzisOjU/
+	sjFJeb7lk1x/pcUFNrwnArY7CAqe5A16ipO6MaQp5PbEvrk+/G63g3zTHv1V90U3oDUHt5p
+	uJvhxCr8ee6tWtlLNfZXiFRPucZGwMv1fNQp7EuJF2fLM4xD6OZNZuI9QogbT+01A8yRecZ
+	AYgDAXgxMwyRW5OTAhfKqCemAns0HrsCpbJfOOf4+UMFlzcaeBsGxFqoT5INEUZDWiCeoLF
+	jnbj3J2u0KfDs4GrkOpLCjwciBStwh8LpWhaM2p2G5BmlsucGgFXBos1QgdMsvmoVJTDxcp
+	3rYcYfyxBgO1LK7VJ6d04TD0eyBbFDAqOvX3FiUZ2uHxWBu9x27WvzmD9V0VfBgV+DqgSsd
+	6jM0QbqFxTDo9dlDPct61LLZEGTrR32J9+fYehd+yBLoPMAQOO7Rtxc4yTWiHLIdO9npzg6
+	5Ii/XfJp52jAK64C5ZzGpDX/ZIOclFCw04jLrYROQyADFw+eaHk3890mKec8Dc8Ik41lMOp
+	gu3gT7bGUrNliTRDlsGHjkM/GAWfU97/uilHCGS/3P3JohDeU9SKQ5V1URFr1J/kU3KEGVv
+	nGiZxLy8JzqaXg0WklcEdufLnf/7btBRb3EwuDpSZx6Qd3lYEkvVxxbMB6ryLbL+nviB4Uq
+	HikqOYYF/8lrH1kWyxW//PtDjalQ4LQYC/14qcVA5Yk0PNgCx6RHVYMVOUA621hQfxEDMdo
+	Z1oe4q0O/MghrsPpOXrM0kOIIwzV1mJvVoynNT/++GEE6SUFDZSBE+CMZ+Yb/pyA+lxAUvf
+	RNH5mkGUOSf4U7pRrcgqHT/WMDkARU1AHMaF1SL1xHgbRDvvpkNOHaqnE9OX/t07et4eknG
+	aQY+k/Qpk1ZFx11XY5JfLZrGKscDQ=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Wed, May 07, 2025 at 03:49:38PM -0600, Uday Shankar wrote:
-> We currently have a helper ublk_queue_alloc_sqes which the ublk targets
-> use to allocate SQEs for their own operations. However, as we move
-> towards decoupled ublk_queues and ublk server threads, this helper does
-> not make sense anymore. SQEs are allocated from rings, and we will have
-> one ring per thread to avoid locking. Change the SQE allocation helper
-> to ublk_io_alloc_sqes. Currently this still allocates SQEs from the io's
-> queue's ring, but when we fully decouple threads and queues, it will
-> allocate from the io's thread's ring instead.
-> 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
->  tools/testing/selftests/ublk/fault_inject.c |  2 +-
->  tools/testing/selftests/ublk/file_backed.c  |  6 +++---
->  tools/testing/selftests/ublk/kublk.c        |  3 ++-
->  tools/testing/selftests/ublk/kublk.h        | 11 +++++++----
->  tools/testing/selftests/ublk/null.c         |  2 +-
->  tools/testing/selftests/ublk/stripe.c       |  4 ++--
->  6 files changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ublk/fault_inject.c b/tools/testing/selftests/ublk/fault_inject.c
-> index 6bc8ee519b483ba6a365dccb03ad389425eefd3b..101c6dad6cf1f6dd45bbc46baa793493b97646bf 100644
-> --- a/tools/testing/selftests/ublk/fault_inject.c
-> +++ b/tools/testing/selftests/ublk/fault_inject.c
-> @@ -41,7 +41,7 @@ static int ublk_fault_inject_queue_io(struct ublk_queue *q, int tag)
->  		.tv_nsec = (long long)q->dev->private_data,
->  	};
->  
-> -	ublk_queue_alloc_sqes(q, &sqe, 1);
-> +	ublk_io_alloc_sqes(ublk_get_io(q, tag), &sqe, 1);
->  	io_uring_prep_timeout(sqe, &ts, 1, 0);
->  	sqe->user_data = build_user_data(tag, ublksrv_get_op(iod), 0, q->q_id, 1);
->  
-> diff --git a/tools/testing/selftests/ublk/file_backed.c b/tools/testing/selftests/ublk/file_backed.c
-> index 69991ac7a0a947acba7b23ac89348936a3fcef75..563f11a21604bbf5b9531f69f806d09cdd785960 100644
-> --- a/tools/testing/selftests/ublk/file_backed.c
-> +++ b/tools/testing/selftests/ublk/file_backed.c
-> @@ -18,7 +18,7 @@ static int loop_queue_flush_io(struct ublk_queue *q, const struct ublksrv_io_des
->  	unsigned ublk_op = ublksrv_get_op(iod);
->  	struct io_uring_sqe *sqe[1];
->  
-> -	ublk_queue_alloc_sqes(q, sqe, 1);
-> +	ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, 1);
->  	io_uring_prep_fsync(sqe[0], 1 /*fds[1]*/, IORING_FSYNC_DATASYNC);
->  	io_uring_sqe_set_flags(sqe[0], IOSQE_FIXED_FILE);
->  	/* bit63 marks us as tgt io */
-> @@ -34,7 +34,7 @@ static int loop_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_de
->  	struct io_uring_sqe *sqe[3];
->  
->  	if (!zc) {
-> -		ublk_queue_alloc_sqes(q, sqe, 1);
-> +		ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, 1);
->  		if (!sqe[0])
->  			return -ENOMEM;
->  
-> @@ -48,7 +48,7 @@ static int loop_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_de
->  		return 1;
->  	}
->  
-> -	ublk_queue_alloc_sqes(q, sqe, 3);
-> +	ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, 3);
->  
->  	io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, tag);
->  	sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
-> diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-> index d0eaf06fadbbb00c0549bba0a08f1be23baa2359..7b3af98546803134dd7f959c40408cefda7cd45c 100644
-> --- a/tools/testing/selftests/ublk/kublk.c
-> +++ b/tools/testing/selftests/ublk/kublk.c
-> @@ -439,6 +439,7 @@ static int ublk_queue_init(struct ublk_queue *q)
->  	for (i = 0; i < q->q_depth; i++) {
->  		q->ios[i].buf_addr = NULL;
->  		q->ios[i].flags = UBLKSRV_NEED_FETCH_RQ | UBLKSRV_IO_FREE;
-> +		q->ios[i].q = q;
->  
->  		if (q->state & UBLKSRV_NO_BUF)
->  			continue;
-> @@ -554,7 +555,7 @@ int ublk_queue_io_cmd(struct ublk_queue *q, struct ublk_io *io, unsigned tag)
->  	if (io_uring_sq_space_left(&q->ring) < 1)
->  		io_uring_submit(&q->ring);
->  
-> -	ublk_queue_alloc_sqes(q, sqe, 1);
-> +	ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, 1);
->  	if (!sqe[0]) {
->  		ublk_err("%s: run out of sqe %d, tag %d\n",
->  				__func__, q->q_id, tag);
-> diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
-> index 34f92bb2c64d0ddc7690b2654613e0c77b2b8121..7c912116606429215af7dbc2a8ce6b40ef89bfbd 100644
-> --- a/tools/testing/selftests/ublk/kublk.h
-> +++ b/tools/testing/selftests/ublk/kublk.h
-> @@ -119,6 +119,8 @@ struct ublk_io {
->  	unsigned short flags;
->  	unsigned short refs;		/* used by target code only */
->  
-> +	struct ublk_queue *q;
-> +
->  	int result;
+On Fri, May 9, 2025 at 3:20=E2=80=AFPM Amir Goldstein <amir73il@gmail.com> =
+wrote:
+> Please undo these whitespace changes.
 
-In following patch, you added 'tag' to 'struct ublk_io', then 8bytes 'struct
-ublk_queue *q' needn't to be added because it can be figured out by
-container_of():
-
-	- queue->ios can be calculated by 'io' address & its tag.
-	
-	- please add one helper ublk_io_to_queue(io) for it.
-
-Also please try to avoid hole to 'ublk_io'.
-
-Otherwise, this patch looks fine.
-
-
-
-thanks,
-Ming
-
+Sorry for that, I run clang-format somehow. They will be removed in V4.
