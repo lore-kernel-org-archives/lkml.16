@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DF32918D9;
-	Fri,  9 May 2025 13:45:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F811293464;
+	Fri,  9 May 2025 13:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746798330; cv=none; b=ZezWkiMqS/w08xjEkZltKLV2SUbox5AsFP7d6LCl5WS/vEyVym9i4JAHTseFKSx8efQOIUzkvvoqh3JR65BpOYHO1ssxEbOtwqy/KFLz26pq0w38tIn5y9NR/c6jAOKv8gZX4Uuxm9N/nRS+FW8y8y8Y3IenlRdNyID37ZV0izk=
+	t=1746798331; cv=none; b=aSvuXxYYxCBtff4Ov74vicAjV5yAgCUBXPBaNw4LhbSI6/k0vtYoRmK7ElKw0zZzWPMXyACnccvs/XQEvv3B/PpHvJH2UVv+ywz6Euye+wzCPwZdhoYN+c5hIQ4CEaGX0ZhKy+xalYHE23LGWtLho/5j0APBbI4a+nC6uVTdIt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746798330; c=relaxed/simple;
-	bh=yqGvQe/s0yWZ/zaxW6IrpjE03zU+qFB6abQPXDFaf8s=;
+	s=arc-20240116; t=1746798331; c=relaxed/simple;
+	bh=v5Uak0RcmfjhTO5Ysk+NhysPrBjg5pgA9cE1Hgd2gfE=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=tr5TDusHMD9wzARw8hr0qr+rfginimTh1Ia74+eenqRftel3Kg8+cvFvXnVEoqbtxMv8CP4tNhyD7dGv0/bJDZdEuQ5DIcczgeGY1Ccr0wXAr2Z3uYLdxhw7UvzFYFfeeZ0n2uWlg1dUChFwYhn8puiQ32MmHXRrqLrxkUtbYS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6lfrPqa; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=oP8WXgJtf1Z7WD2vQN1DGymTt9bMlboqXqZN0jD58nx9DmugQT6cJPghq10u00ZtoR6KEhhUGfB4FCuxj8aW7IXiVH+wOp/SgH+IcAYjtrvAjbXsHP381THv3uoquiXS8wnMg1+tFcf+xUwZgT6b/8rqg3v4KGlwf3QqTHZnU8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHMEwdP2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6lfrPqa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C555C4CEE4;
-	Fri,  9 May 2025 13:45:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHMEwdP2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42DC6C4CEEF;
+	Fri,  9 May 2025 13:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746798329;
-	bh=yqGvQe/s0yWZ/zaxW6IrpjE03zU+qFB6abQPXDFaf8s=;
+	s=k20201202; t=1746798331;
+	bh=v5Uak0RcmfjhTO5Ysk+NhysPrBjg5pgA9cE1Hgd2gfE=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=l6lfrPqaXuY27lzg4aTHZTyJwcz29HR+dWPrmwiHqjAfcYXMpOyX1hBfdi1jHJOcC
-	 JVATvoL9B4hJ6U1Xd0Xu0SH0YX0LJg0+4pcCxOvYFX7lmuASuqKfQNlfEOx0Xw0LQc
-	 mhMLD/vmCBR1q0qOdqX5U3NzaF2Thtuyf6pj3S5S6z9iZxAKGrfsD+iuz8lcgHLnXV
-	 cCOKyNQCyTEfhMwzEynEBbqLVKPzsKTZdY4E40395BmPqk71aP6Hu170C2Kh59h8Kg
-	 oVoYx9vy0/C4ngv5VEALksnbm7hQUNPJjEr2Go8OjKGr0gWEVa0T4szy5dRbY1HCpp
-	 SYH9ap8XS6wNw==
-Date: Fri, 09 May 2025 08:45:27 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	b=iHMEwdP23ywmij2dIw06QIo1o6RyOrSI+/zsCUo5nDKnUyppRzFrGEvOZ5PXwhj/F
+	 HMaL5F7Jd+nsTV2PeECplWgyg998OJc2hYhu0RYzRRzdUi39Hr7hZ+dEE96nl4KanE
+	 Mf7qKeRNhFFHkUHpkgMbdpEu8el4vEHEb8cjcLbIVIQgBjPQyzPpQ+gRJkfsrexTkk
+	 TJUd/vwH+S6QEvA2mxVyMV4q4QIXAlQYHgAU8eek2BOkuGqMFdCL1Cu4Im9S4Y4Asy
+	 X5ALlmXBPwdgyXhNwqVPVZRU5vJaVnqW2yv3ewUpZm1hFQqcPjfwNokpZNt6FarIvL
+	 nAxP6/23PbmFg==
+Date: Fri, 09 May 2025 08:45:29 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,48 +36,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Dragos Bogdan <dragos.bogdan@analog.com>, 
- Sergiu Cuciurean <sergiu.cuciurean@analog.com>, 
- Marcelo Schmitt <marcelo.schmitt@analog.com>, devicetree@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- Olivier Moysan <olivier.moysan@foss.st.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Tobias Sperling <tobias.sperling@softing.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
+Cc: David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, 
+ Simona Vetter <simona@ffwll.ch>, Conor Dooley <conor+dt@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Ramona Alexandra Nechita <ramona.nechita@analog.com>, 
- Antoniu Miclaus <antoniu.miclaus@analog.com>, 
- Alisa-Dariana Roman <alisadariana@gmail.com>, 
- Andy Shevchenko <andy@kernel.org>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-In-Reply-To: <20250508123107.3797042-4-pop.ioan-daniel@analog.com>
-References: <20250508123107.3797042-1-pop.ioan-daniel@analog.com>
- <20250508123107.3797042-4-pop.ioan-daniel@analog.com>
-Message-Id: <174679832695.3268142.16005695454216991921.robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: iio: adc: add ad7405
+ Andy Yan <andy.yan@rock-chips.com>, 
+ Chaoyi Chen <chaoyi.chen@rock-chips.com>, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Sandy Huang <hjc@rock-chips.com>, linux-arm-kernel@lists.infradead.org, 
+ Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, devicetree@vger.kernel.org, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>
+To: Chaoyi Chen <kernel@airkyi.com>
+In-Reply-To: <20250509070247.868-3-kernel@airkyi.com>
+References: <20250509070247.868-1-kernel@airkyi.com>
+ <20250509070247.868-3-kernel@airkyi.com>
+Message-Id: <174679832782.3268212.14187145716217204354.robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: display: rockchip: Convert
+ cdn-dp-rockchip.txt to yaml
 
 
-On Thu, 08 May 2025 15:30:56 +0300, Pop Ioan Daniel wrote:
-> Add devicetree bindings for ad7405/adum770x family.
+On Fri, 09 May 2025 15:02:47 +0800, Chaoyi Chen wrote:
+> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 > 
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> Convert cdn-dp-rockchip.txt to yaml.
+> 
+> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 > ---
-> changes in v2:
->  - remove  #address-cells and #size-cells
->  - add additionalProperties: false instead of unevaluatedProperties: false
->  - remove #include <dt-bindings/interrupt-controller/irq.h>
->    because it's not used
->  - add new line at the end of the file
->  - add mantainer
->  .../bindings/iio/adc/adi,ad7405.yaml          | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
+> 
+> Changes in v2:
+> - Rename binding file name to match compatible
+> - Add more description about grf/phy/extcon
+> - Fix coding style
+> 
+> 
+>  .../display/rockchip/cdn-dp-rockchip.txt      |  74 --------
+>  .../rockchip/rockchip,rk3399-cdn-dp.yaml      | 158 ++++++++++++++++++
+>  2 files changed, 158 insertions(+), 74 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -85,24 +82,13 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml: properties:clocks: 'anyOf' conditional failed, one must be fixed:
-	'maxitems' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
-	'type' was expected
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml: properties:clocks: 'anyOf' conditional failed, one must be fixed:
-	'maxItems' is a required property
-		hint: Only "maxItems" is required for a single entry if there are no constraints defined for the values.
-	'maxitems' is not one of ['maxItems', 'description', 'deprecated']
-		hint: Only "maxItems" is required for a single entry if there are no constraints defined for the values.
-	Additional properties are not allowed ('maxitems' was unexpected)
-		hint: Arrays must be described with a combination of minItems/maxItems/items
-	'maxitems' is not one of ['description', 'deprecated', 'const', 'enum', 'minimum', 'maximum', 'multipleOf', 'default', '$ref', 'oneOf']
-	hint: cell array properties must define how many entries and what the entries are when there is more than one entry.
-	from schema $id: http://devicetree.org/meta-schemas/clocks.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
+ 	 $id: http://devicetree.org/schemas/display/rockchip/rockchip,cdn-dp.yaml
+ 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250508123107.3797042-4-pop.ioan-daniel@analog.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250509070247.868-3-kernel@airkyi.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
