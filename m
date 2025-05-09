@@ -1,211 +1,272 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DB602918F1;
-	Fri,  9 May 2025 11:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196F128FAB1
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746791511; cv=none; b=MpTmkfpVHNY1b74axei+Yiyo0DvBn3Ldv2JGD/fkXJBtBEqSDr5edcaTNL+Jcvt0OwBgLeZllhGsx6gWkgLOigNblEqaNEzbrZBJjQ4q7jZXwiQsQxyATzTFrf/XHn1QzneQNIprdcfnqPCIj+IGX+0QSHtCHT996uNXrzT4vz4=
+	t=1746791507; cv=none; b=TTZe5smBBOKXYDPIDPCVAkZ1OgZU6FciRkQirw+PxYXXXaDsi83VIQ9ooHGoE0sdsjEISrdHtN91iOchBc4SwLZGyairQvsYQr7cUFOrRfH2MiDseapn8iJC6RfRejFW3yk4EthbVzA9EEnIhJJr6xmdgaLS0uRYcok0k/TogPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746791511; c=relaxed/simple;
-	bh=5HbkRADnH0AfURkYRtpP5zV79eZ3YdBexWxwI/8bZw8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=VqqfAUSSmeqVslFr1c3LD4Zr4+D0qbM5miz+YrRAz47NP0uife7O2BEmVsRO8qVhlGTiF1/E2Yj2Tu0IMc4xfXv6W3h1Nv+cnkaFFcAi/Urla8QLJGnld+HOpfavAstwNkuaQfk72kfxAOdJ5LwYVppXE9ltUxku5uayuLmoATE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-98-681dec4a7ecf
-From: Byungchul Park <byungchul@sk.com>
-To: willy@infradead.org,
-	netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel_team@skhynix.com,
-	kuba@kernel.org,
-	almasrymina@google.com,
-	ilias.apalodimas@linaro.org,
-	harry.yoo@oracle.com,
-	hawk@kernel.org,
-	akpm@linux-foundation.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	davem@davemloft.net,
-	john.fastabend@gmail.com,
-	andrew+netdev@lunn.ch,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	vishal.moola@gmail.com
-Subject: [RFC 19/19] mm, netmem: remove the page pool members in struct page
-Date: Fri,  9 May 2025 20:51:26 +0900
-Message-Id: <20250509115126.63190-20-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250509115126.63190-1-byungchul@sk.com>
-References: <20250509115126.63190-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsXC9ZZnka7XG9kMg2PX+SzmrF/DZrH6R4XF
-	8gc7WC2+/LzNbrF44TdmiznnW1gsnh57xG5xf9kzFos97duZLXpbfjNbNO1YwWRxYVsfq8Xl
-	XXPYLO6t+c9qcWyBmMW3028YLdbvu8Fq8fvHHDYHIY8tK28yeeycdZfdY8GmUo/NK7Q8um5c
-	YvbYtKqTzWPTp0nsHneu7WHzODHjN4vHzh2fmTw+Pr3F4vF+31U2j8+b5AJ4o7hsUlJzMstS
-	i/TtErgydh+7xl4wW6ni0dd+9gbG2dJdjJwcEgImEu2nD7LA2Fu2vgCz2QTUJW7c+MkMYosI
-	GEp8fnQcKM7FwSywkFniyuKf7CAJYQEfidZrd4CKODhYBFQldjdEgIR5Bcwkth7ZxQoxU15i
-	9YYDYCWcQPH+j+ogYSEBU4llUxawgYyUEPjPJtH/5zMjRL2kxMEVN1gmMPIuYGRYxSiUmVeW
-	m5iZY6KXUZmXWaGXnJ+7iREYA8tq/0TvYPx0IfgQowAHoxIPr8Vz2Qwh1sSy4srcQ4wSHMxK
-	IrzPO2UyhHhTEiurUovy44tKc1KLDzFKc7AoifMafStPERJITyxJzU5NLUgtgskycXBKNTB6
-	lPLrf9nrr5vIZdsyx10m80rK37Tfu2dtUZza3LfQ+UjHRsfkqom8E3bYXbiTIb0mt2HXzbOK
-	bm2mPQk7rvP/7i09XP/yu3qej/zkK+LOzK93s9vuOW4Zmru5v4nvIC/3xvBWgzqNhiPcUp6H
-	94bw8guu59dcV3xpe1fIjCcrA7dIr19fu1KJpTgj0VCLuag4EQBHz4cXfQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsXC5WfdrOv1RjbD4OhNJos569ewWaz+UWGx
-	/MEOVosvP2+zWyxe+I3ZYs75FhaLp8cesVvcX/aMxWJP+3Zmi96W38wWTTtWMFkcnnuS1eLC
-	tj5Wi8u75rBZ3Fvzn9Xi2AIxi2+n3zBarN93g9Xi9485bA7CHltW3mTy2DnrLrvHgk2lHptX
-	aHl03bjE7LFpVSebx6ZPk9g97lzbw+ZxYsZvFo+dOz4zeXx8eovF4/2+q2wei198YPL4vEku
-	gC+KyyYlNSezLLVI3y6BK2P3sWvsBbOVKh597WdvYJwt3cXIySEhYCKxZesLFhCbTUBd4saN
-	n8wgtoiAocTnR8eB4lwczAILmSWuLP7JDpIQFvCRaL12B6iIg4NFQFVid0MESJhXwExi65Fd
-	rBAz5SVWbzgAVsIJFO//qA4SFhIwlVg2ZQHbBEauBYwMqxhFMvPKchMzc0z1irMzKvMyK/SS
-	83M3MQIDelntn4k7GL9cdj/EKMDBqMTDa/FcNkOINbGsuDL3EKMEB7OSCO/zTpkMId6UxMqq
-	1KL8+KLSnNTiQ4zSHCxK4rxe4akJQgLpiSWp2ampBalFMFkmDk6pBkaWQ4KSvseWGcZPqJp5
-	WuZr8on9agrFqTKPix26MrzU9+kvX9C8xmnFriwF0RcC+2JPZbBtK2LYN6NNsaAkQZI70Itp
-	1Wa2xnudRZeW3r03+ZvyDIsnIeuyJiXFf+VS7Jq6dMnEfIPpinsYzU48ufT42MeopZ+PVYtc
-	CA70eS3D0WxxX2u24E4lluKMREMt5qLiRACPzzROZAIAAA==
-X-CFilter-Loop: Reflected
+	s=arc-20240116; t=1746791507; c=relaxed/simple;
+	bh=94hSLVwahZL6uSGp/GCIw7ak3VmONi+Q3s+hjbITQj8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HNuT9k37k8n9CSdrD5U3F82KwDfpiXo2yAfa34HAiza3fEA8+/qNkeGh0WQRb4nqNaTaON8vtPFXt3XyOVkPzucoic3fnJi0oTsPa3+IOxJuirn0vJoCgkgJhZqwpL8ldIltj2zH9FmKcLGfGPdn5UL+A+UhnP5p2RIsCtx4zfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=rRT6by3M; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="rRT6by3M"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5fc7edf00b2so2533324a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1746791500; x=1747396300; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HcCUAVth4/4X0ivCD1jla215xTKz2P8JDpUcQkYuzX4=;
+        b=rRT6by3MuduwkSN/H4fHg3R3x+qWcNizG+URaLmW2ISNy7GYhh1fpzPFZ2G9ffPYyG
+         izXnmui2iSTjI7TCX9BMj3pUeYywAHM/XTvh6qShsaZv7ZCfu5a9LmdeEdkWdQqHieBL
+         885NsSYTtAVhqY4H/WcTuZLEhEu2Hs8NH69GoHtqgg9WVluFkkvlEjNo8US434zLjjE3
+         9b9lUJByaoj/bm96D6m7jyu11BYEwGfxmkreqcvheUE1HT6/3KG89LlLTNICJ9ZSBMup
+         vyXtV3ld8DkwKMs3j1IEaG9tbV8pTI6UDmLVZzJcr6fAofr+FdURv02Ky4LCzDjHihrF
+         rgJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746791500; x=1747396300;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HcCUAVth4/4X0ivCD1jla215xTKz2P8JDpUcQkYuzX4=;
+        b=cktRnXJSdCFIo2TnBkd7ZpH19PVn7/73uKnOCbph98McZh6IkExB4Stze/7lEwoBEP
+         2U7JySvRqYLPyi1LLjlXGWVwFuC4eGhXILYRKDdgd1Nqx7F03NHgMwrgTwQKR3tAnG3q
+         Zg8IZwy48pAl0CMR6CLazKM6Y10hX/fgFQuSfF3ShMB1Jz6SB+X93mp8BOxtgUY06P6y
+         f6FRtCyDQoeKZwHyPyfMwX9fo7r3JE7yIO6pomFCBVG1aYcLBDzJysNIP3zxxioi2x8N
+         LIuMVhr6GHzsW8YWxoRobmFdnuVhyQaGSQ1oQUFsd9q9lhnGdxm2pQyHgPS/7qczRNx6
+         KwaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhpfyANPuLvGkG2532FHGJ2v/g4WdNpSOB/DeXQj9VqoGP6Bfh4pYdIy35U8ccYm8SOoNRqfZhWj6oS7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNTk84x9EgNQ+tu2JTM3Auhi15w2KtHKyqMHEq7iP+vzUh4dG/
+	54ODULgKAymjXuhrtZeyUh9m9ArPtFUsc2E0CYGwSV78XR4HEsnR5/JJAODPfAs=
+X-Gm-Gg: ASbGncv0KJa968JqLDFAC5fB0RA5VILMpeXLkKt+Lb/oLvpkmlKyFDesde/GqCOKyln
+	VuhISCVn0ZW50YyOGbWRGCR4sY5UkyRbm0QuUXxK1cbTkDIlPdzh2lHRG0v3n2b0UO+8/0k1pQl
+	IbqjxEOHTLkjr73KbmCLxdBoNsBU6R4iB3VgiRlCRWBpWvUgxnqUTpXBI7iKHNmzIXcMIqs1tsH
+	TO3C072vM52+yNsyNzq+HqgVkrYXrfuKvHdKJ7U+4BGN6HtXfVpwT6XAHqUlQ5I5xuLUexX3VXA
+	xQgYy33cUSshOzdZ+JTIoFQZvhgsOkSRnOBa2a+aJGMwyGkO
+X-Google-Smtp-Source: AGHT+IFrGDRXG6FAVEd4uSESGaBsfaTJHvGQG8PV98kRwmaQFMuRJod0R5mnXx5DDPecf/kyISoRWw==
+X-Received: by 2002:a17:907:97d2:b0:ad1:77aa:503 with SMTP id a640c23a62f3a-ad219124207mr305429066b.36.1746791500229;
+        Fri, 09 May 2025 04:51:40 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bdd63sm138709266b.154.2025.05.09.04.51.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 04:51:39 -0700 (PDT)
+Message-ID: <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev>
+Date: Fri, 9 May 2025 14:51:38 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
+ probe resources
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+To: Jonathan Cameron <jic23@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, dakr@kernel.org,
+ ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ geert@linux-m68k.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+References: <20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com>
+ <2025021539-untrained-prompter-a48f@gregkh>
+ <4bf01946-90e3-4169-91fa-10d9f90310e9@tuxon.dev>
+ <8d83ea72-bb81-4c63-bf69-28cf5848ae20@tuxon.dev>
+ <20250305140309.744866b2@jic23-huawei> <Z8k8lDxA53gUJa0n@google.com>
+ <f74085be-7b14-4551-a0a7-779318a5dc70@tuxon.dev>
+ <20250330163129.02f24afb@jic23-huawei>
+ <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Now that all the users of the page pool members in struct page have been
-gone, the members can be removed from struct page.  However, the space
-in struct page needs to be kept using a place holder with the same size,
-until struct netmem_desc has its own instance, not overlayed onto struct
-page, to avoid conficting with other members within struct page.
+Hi, Rafael, Ulf, PM list,
 
-Remove the page pool members in struct page and replace with a place
-holder.  The place holder should be removed once struct netmem_desc has
-its own instance.
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
----
- include/linux/mm_types.h  | 13 ++-----------
- include/net/netmem.h      | 35 +----------------------------------
- include/net/netmem_type.h | 22 ++++++++++++++++++++++
- 3 files changed, 25 insertions(+), 45 deletions(-)
- create mode 100644 include/net/netmem_type.h
+On 09.04.2025 19:12, Claudiu Beznea wrote:
+> Hi, Rafael,
+> 
+> On 30.03.2025 18:31, Jonathan Cameron wrote:
+>> On Thu, 27 Mar 2025 18:47:53 +0200
+>> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>>
+>>> Hi, Rafael,
+>>>
+>>> On 06.03.2025 08:11, Dmitry Torokhov wrote:
+>>>> On Wed, Mar 05, 2025 at 02:03:09PM +0000, Jonathan Cameron wrote:  
+>>>>> On Wed, 19 Feb 2025 14:45:07 +0200
+>>>>> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>>>>>  
+>>>>>> Hi, Daniel, Jonathan,
+>>>>>>
+>>>>>> On 15.02.2025 15:51, Claudiu Beznea wrote:  
+>>>>>>> Hi, Greg,
+>>>>>>>
+>>>>>>> On 15.02.2025 15:25, Greg KH wrote:    
+>>>>>>>> On Sat, Feb 15, 2025 at 03:08:49PM +0200, Claudiu wrote:    
+>>>>>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>>>>>
+>>>>>>>>> On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}),
+>>>>>>>>> clocks are managed through PM domains. These PM domains, registered on
+>>>>>>>>> behalf of the clock controller driver, are configured with
+>>>>>>>>> GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
+>>>>>>>>> clocks are enabled/disabled using runtime PM APIs. The power domains may
+>>>>>>>>> also have power_on/power_off support implemented. After the device PM
+>>>>>>>>> domain is powered off any CPU accesses to these domains leads to system
+>>>>>>>>> aborts.
+>>>>>>>>>
+>>>>>>>>> During probe, devices are attached to the PM domain controlling their
+>>>>>>>>> clocks and power. Similarly, during removal, devices are detached from the
+>>>>>>>>> PM domain.
+>>>>>>>>>
+>>>>>>>>> The detachment call stack is as follows:
+>>>>>>>>>
+>>>>>>>>> device_driver_detach() ->
+>>>>>>>>>   device_release_driver_internal() ->
+>>>>>>>>>     __device_release_driver() ->
+>>>>>>>>>       device_remove() ->
+>>>>>>>>>         platform_remove() ->
+>>>>>>>>> 	  dev_pm_domain_detach()
+>>>>>>>>>
+>>>>>>>>> During driver unbind, after the device is detached from its PM domain,
+>>>>>>>>> the device_unbind_cleanup() function is called, which subsequently invokes
+>>>>>>>>> devres_release_all(). This function handles devres resource cleanup.
+>>>>>>>>>
+>>>>>>>>> If runtime PM is enabled in driver probe via devm_pm_runtime_enable(), the
+>>>>>>>>> cleanup process triggers the action or reset function for disabling runtime
+>>>>>>>>> PM. This function is pm_runtime_disable_action(), which leads to the
+>>>>>>>>> following call stack of interest when called:
+>>>>>>>>>
+>>>>>>>>> pm_runtime_disable_action() ->
+>>>>>>>>>   pm_runtime_dont_use_autosuspend() ->
+>>>>>>>>>     __pm_runtime_use_autosuspend() ->
+>>>>>>>>>       update_autosuspend() ->
+>>>>>>>>>         rpm_idle()
+>>>>>>>>>
+>>>>>>>>> The rpm_idle() function attempts to resume the device at runtime. However,
+>>>>>>>>> at the point it is called, the device is no longer part of a PM domain
+>>>>>>>>> (which manages clocks and power states). If the driver implements its own
+>>>>>>>>> runtime PM APIs for specific functionalities - such as the rzg2l_adc
+>>>>>>>>> driver - while also relying on the power domain subsystem for power
+>>>>>>>>> management, rpm_idle() will invoke the driver's runtime PM API. However,
+>>>>>>>>> since the device is no longer part of a PM domain at this point, the PM
+>>>>>>>>> domain's runtime PM APIs will not be called. This leads to system aborts on
+>>>>>>>>> Renesas SoCs.
+>>>>>>>>>
+>>>>>>>>> Another identified case is when a subsystem performs various cleanups
+>>>>>>>>> using device_unbind_cleanup(), calling driver-specific APIs in the process.
+>>>>>>>>> A known example is the thermal subsystem, which may call driver-specific
+>>>>>>>>> APIs to disable the thermal device. The relevant call stack in this case
+>>>>>>>>> is:
+>>>>>>>>>
+>>>>>>>>> device_driver_detach() ->
+>>>>>>>>>   device_release_driver_internal() ->
+>>>>>>>>>     device_unbind_cleanup() ->
+>>>>>>>>>       devres_release_all() ->
+>>>>>>>>>         devm_thermal_of_zone_release() ->
+>>>>>>>>> 	  thermal_zone_device_disable() ->
+>>>>>>>>> 	    thermal_zone_device_set_mode() ->
+>>>>>>>>> 	      struct thermal_zone_device_ops::change_mode()
+>>>>>>>>>
+>>>>>>>>> At the moment the driver-specific change_mode() API is called, the device
+>>>>>>>>> is no longer part of its PM domain. Accessing its registers without proper
+>>>>>>>>> power management leads to system aborts.
+>>>>>>>>>
+>>>>>>>>> Open a devres group before calling the driver probe, and close it
+>>>>>>>>> immediately after the driver remove function is called and before
+>>>>>>>>> dev_pm_domain_detach(). This ensures that driver-specific devm actions or
+>>>>>>>>> reset functions are executed immediately after the driver remove function
+>>>>>>>>> completes. Additionally, it prevents driver-specific runtime PM APIs from
+>>>>>>>>> being called when the device is no longer part of its power domain.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>>>>> ---
+>>>>>>>>>
+>>>>>>>>> Hi,  
+>>>>>
+>>>>> Hi Claudiu, Greg,
+>>>>>
+>>>>> Sorry, I missed this thread whilst travelling and only saw it because
+>>>>> of reference from the in driver solution.
+>>>>>  
+>>>>>>>>>
+>>>>>>>>> Although Ulf gave its green light for the approaches on both IIO [1],
+>>>>>>>>> [2] and thermal subsystems [3], Jonathan considered unacceptable the
+>>>>>>>>> approaches in [1], [2] as he considered it may lead to dificult to
+>>>>>>>>> maintain code and code opened to subtle bugs (due to the potential of
+>>>>>>>>> mixing devres and non-devres calls). He pointed out a similar approach
+>>>>>>>>> that was done for the I2C bus [4], [5].
+>>>>>>>>>
+>>>>>>>>> As the discussions in [1], [2] stopped w/o a clear conclusion, this
+>>>>>>>>> patch tries to revive it by proposing a similar approach that was done
+>>>>>>>>> for the I2C bus.
+>>>>>>>>>
+>>>>>>>>> Please let me know you input.    
+>>>>>>>>
+>>>>>>>> I'm with Jonathan here, the devres stuff is getting crazy here and you
+>>>>>>>> have drivers mixing them and side affects happening and lots of
+>>>>>>>> confusion.  Your change here is only going to make it even more
+>>>>>>>> confusing, and shouldn't actually solve it for other busses (i.e. what
+>>>>>>>> about iio devices NOT on the platform bus?)    
+>>>>>
+>>>>> In some cases they are already carrying the support as per the link
+>>>>> above covering all i2c drivers.  I'd like to see a generic solution and
+>>>>> I suspect pushing it to the device drivers rather than the bus code
+>>>>> will explode badly and leave us with subtle bugs where people don't
+>>>>> realise it is necessary. 
+>>>>>
+>>>>> https://lore.kernel.org/all/20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com/
+>>>>> is a lot nastier looking than what we have here. I'll review that in a minute
+>>>>> to show that it need not be that bad, but none the less not pleasant.
+>>>>>
+>>>>> +CC linux-iio to join up threads and Dmitry wrt to i2c case (and HID that does
+>>>>> similar)  
+>>>>
+>>>> We should not expect individual drivers handle this, because this is a
+>>>> layering violation: they need to know implementation details of the bus
+>>>> code to know if the bus is using non-devres managed resources, and
+>>>> adjust their behavior. Moving this into driver core is also not
+>>>> feasible, as not all buses need it. So IMO this should belong to
+>>>> individual bus code.
+>>>>
+>>>> Instead of using devres group a bus may opt to use
+>>>> devm_add_action_or_reset() and other devm APIs to make sure bus'
+>>>> resource unwinding is carried in the correct order relative to freeing
+>>>> driver-owned resources.  
+>>>
+>>> Can you please let us know your input on the approach proposed in this
+>>> patch? Or if you would prefer devm_add_action_or_reset() as suggested by
+>>> Dmitry? Or if you consider another approach would fit better?
+>>>
+>>> Currently there were issues identified with the rzg2l-adc driver (driver
+>>> based solution proposed in [1]) and with the rzg3s thermal driver (solved
+>>> by function rzg3s_thermal_probe() from [2]).
+>>>
+>>> As expressed previously by Jonathan and Dimitry this is a common problem
+>>> and as the issue is due to a call in the bus driver, would be better and
+>>> simpler to handle it in the bus driver. Otherwise, individual drivers would
+>>> have to be adjusted in a similar way.
+>>>
+>>
+>> Rafael,
+>>
+>> Greg suggested we ask for your input on the right option:
+>>
+>> https://lore.kernel.org/all/2025032703-genre-excitable-9473@gregkh/
+>> (that thread has the other option).
+> 
+> Can you please let us know your opinion on this?
+Can you please let us know if you have any suggestions for this?
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index e76bade9ebb12..69904a0855358 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -20,6 +20,7 @@
- #include <linux/seqlock.h>
- #include <linux/percpu_counter.h>
- #include <linux/types.h>
-+#include <net/netmem_type.h> /* for page pool */
- 
- #include <asm/mmu.h>
- 
-@@ -118,17 +119,7 @@ struct page {
- 			 */
- 			unsigned long private;
- 		};
--		struct {	/* page_pool used by netstack */
--			/**
--			 * @pp_magic: magic value to avoid recycling non
--			 * page_pool allocated pages.
--			 */
--			unsigned long pp_magic;
--			struct page_pool *pp;
--			unsigned long _pp_mapping_pad;
--			unsigned long dma_addr;
--			atomic_long_t pp_ref_count;
--		};
-+		struct __netmem_desc place_holder_1; /* for page pool */
- 		struct {	/* Tail pages of compound page */
- 			unsigned long compound_head;	/* Bit zero is set */
- 		};
-diff --git a/include/net/netmem.h b/include/net/netmem.h
-index 00064e766b889..c414de6c6ab0d 100644
---- a/include/net/netmem.h
-+++ b/include/net/netmem.h
-@@ -10,6 +10,7 @@
- 
- #include <linux/mm.h>
- #include <net/net_debug.h>
-+#include <net/netmem_type.h>
- 
- /* net_iov */
- 
-@@ -20,15 +21,6 @@ DECLARE_STATIC_KEY_FALSE(page_pool_mem_providers);
-  */
- #define NET_IOV 0x01UL
- 
--struct netmem_desc {
--	unsigned long __unused_padding;
--	unsigned long pp_magic;
--	struct page_pool *pp;
--	struct net_iov_area *owner;
--	unsigned long dma_addr;
--	atomic_long_t pp_ref_count;
--};
--
- struct net_iov_area {
- 	/* Array of net_iovs for this area. */
- 	struct netmem_desc *niovs;
-@@ -38,31 +30,6 @@ struct net_iov_area {
- 	unsigned long base_virtual;
- };
- 
--/* These fields in struct page are used by the page_pool and net stack:
-- *
-- *        struct {
-- *                unsigned long pp_magic;
-- *                struct page_pool *pp;
-- *                unsigned long _pp_mapping_pad;
-- *                unsigned long dma_addr;
-- *                atomic_long_t pp_ref_count;
-- *        };
-- *
-- * We mirror the page_pool fields here so the page_pool can access these fields
-- * without worrying whether the underlying fields belong to a page or net_iov.
-- *
-- * The non-net stack fields of struct page are private to the mm stack and must
-- * never be mirrored to net_iov.
-- */
--#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
--	static_assert(offsetof(struct page, pg) == \
--		      offsetof(struct netmem_desc, iov))
--NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
--NET_IOV_ASSERT_OFFSET(pp, pp);
--NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
--NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
--#undef NET_IOV_ASSERT_OFFSET
--
- static inline struct net_iov_area *net_iov_owner(const struct netmem_desc *niov)
- {
- 	return niov->owner;
-diff --git a/include/net/netmem_type.h b/include/net/netmem_type.h
-new file mode 100644
-index 0000000000000..6a3ac8e908515
---- /dev/null
-+++ b/include/net/netmem_type.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ *	Author:	Byungchul Park <max.byungchul.park@gmail.com>
-+ */
-+
-+#ifndef _NET_NETMEM_TYPE_H
-+#define _NET_NETMEM_TYPE_H
-+
-+#include <linux/stddef.h>
-+
-+struct netmem_desc {
-+	unsigned long __unused_padding;
-+	struct_group_tagged(__netmem_desc, actual_data,
-+		unsigned long pp_magic;
-+		struct page_pool *pp;
-+		struct net_iov_area *owner;
-+		unsigned long dma_addr;
-+		atomic_long_t pp_ref_count;
-+	);
-+};
-+
-+#endif /* _NET_NETMEM_TYPE_H */
--- 
-2.17.1
-
+Thank you,
+Claudiu
