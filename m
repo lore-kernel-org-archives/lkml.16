@@ -1,302 +1,268 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D7F272E48
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5042900B7
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746793785; cv=none; b=CqWx6QotL+u+EjOyGGOwFUa+iL3T1S4jjnw4A6bTVXjNtGYcVoTisrI5O90gEGLEC8kC3sOK0gVmvwi4KVkwIjciR9PUgzFrmXOqQH/cH0MGZwCI1/ErDfSy4WdeCxlakqnk5ixhBU4Vg/tVslYojp7rtQgA7Z1KZV/40BkXtYM=
+	t=1746793785; cv=none; b=krBtzMdDN0taNTz0YnJlPSdpLPgbwOdcMBBECFLuuxorMpFjW6dR4AF9iH9Xz8kfMhmwffjNpelmSEb4bJjhqNTb5l3or75p9XpB2CF0SNqElC4iIYntSTg2xZfW/9UZdlyXjGgN7phyNswlPthO6xuf8dr7OE7VbSyZcjv3Okk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746793785; c=relaxed/simple;
-	bh=cH2CzgoVU2W+swzRKCqghmesY5Q+0hMAl/BEk0/GF7o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GqRILdAmnkrrCkVYkVNGYzGlsqXGTyakiFMXLsrYzoUpiPHkAufDRZUT+Ms36w952X7pVBOTIEQLjintiLKfLC73g+xI5atPv+GRxYIAPhOjJARGMZ+Mgn6f1sezyqME5EJg4XllpMgtcFIMp+diRulAV8YOIH2yvhq6S9TYNb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WNpUvwAS; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	bh=sFuyvUI2Q8wKOM1dcBqZnHhZp3tnHs1TQoRCszgMphg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AkRcBdINEPtYNme1/9XSGzrfAUFXaxnCfm1eIYMKhBmTRLCHnlCVY9DXFpBHkFtTrQWtvZ6MByR+Asae4cbb1Ewk+KDuEjHE5tedis93yk8060X03mh5ldVgFn1jen8FLhKwYIUq1/1qAAHENx9L112P5j/rUPiQhpwqSEpd2E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=XOTWavjH; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WNpUvwAS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Lk
-	5hseJDZLEJj8y3q9W91NPndzlr4BGhrO+m8OBMRmg=; b=WNpUvwASRRPCRIBj4s
-	US2eJy60fDgd4lmfCzlElTjB+3kN1rkRtVYKYlJjeqLx92oPQ9PZBH8C00PVxzA7
-	ul5YvMg2sCdL5bA5V9VkNotyTmX8i5ALOhes5M86jIQRDlg3HfhrgqQOeATvbqZF
-	gX3n0jQVsEHhcHIOT7aK7MAII=
-Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3h9ay9B1oNPDSAA--.2625S2;
-	Fri, 09 May 2025 20:27:31 +0800 (CST)
-From: Xavier Xia <xavier_qy@163.com>
-To: 21cnbao@gmail.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	ioworker0@gmail.com
-Cc: akpm@linux-foundation.org,
-	catalin.marinas@arm.com,
-	david@redhat.com,
-	gshan@redhat.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	willy@infradead.org,
-	xavier_qy@163.com,
-	ziy@nvidia.com
-Subject: [PATCH v5] arm64/mm: Optimize loop to reduce redundant operations of contpte_ptep_get
-Date: Fri,  9 May 2025 20:27:28 +0800
-Message-Id: <20250509122728.2379466-1-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="XOTWavjH"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d81ca1d436so16853005ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746793783; x=1747398583; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AmSXbLbqCzPF90SNiwdHQn9vNmHfXn9lOr1cdvWu+qo=;
+        b=XOTWavjHRMf/uXjiaxu5UzOhIq/wXx0YhulXtt6hnFV+ZywF3tL7mva3DQtW7eS1aW
+         Hbo3NAjaswMz9Vp6kzyIVWbM2hO/sEdnScGkcQdtUhKDfsrkgMPlQAvUEYg03Mk4BT1C
+         NFmjXps9uWsHwAnqp5QDxueRQv86HvE/ZyJn3WriMC5UTFI7u9uc547g1oFtPvcb6ynx
+         pd4DfNe9UgNdYl02f0gIFIA2V2XszVjRFLHXlvKoCgkGTaxW8pwM+P5ozRQFrofhzmty
+         od2QeoD1/OsgrIcFQNt++bxOPzZw5hMGPw0Z95mcxjF4TclKojq85cinc0uw1V2u634Y
+         tG6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746793783; x=1747398583;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AmSXbLbqCzPF90SNiwdHQn9vNmHfXn9lOr1cdvWu+qo=;
+        b=oBviCNUZTI8BER2WBkkbHAQdj/7vwZ1A9elWXtzsq5nNGun2lSxz4VJdB3yLVhobte
+         71Uva0URW72ruNRXzt6UKFKb8453cONEasrqKlj/VLyILOB8pZW/5378JCj40jOl0ll7
+         3+bVlqmAi6Ln15GyqelQXn2PeSb/joA63S3H1jNKqXMii62np5kyXYFBz5meSJ/gzkvD
+         SbhNmVzqsUQz+/Y8N6AK2JDR04M8/bmXceUv1NZM+bWYkEGmUc04xrbSsSOebWiLYYFe
+         my+hvAWFgqdCpLoIkgSS71eEsByIgEYMeoP8F3U+JQRQB+46169isNYOZnShtbt8VwnA
+         ODKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWRU6mxSM3WS2t+MCwy6XmJ8lK2TqBnJ2bd6H/eoVSnbUsSj9FhL0afQg6HFCCH7HjqQ9YR1ntYnJgIk6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz8gkKj/bPrzbIuTap79MHMgDLAhG3WUyrufznqoYkvp+W3TVw
+	d1EReG9yzLHyMZ79dw8ovICx6OtpOSddaT+2fS+nV65Bz7mZaKGMNqFYFvrbFHjLt+YnHaTTWlZ
+	WIdyt0lySBhrXABzB99SC1M9Wenj1YvfFOWfDFg==
+X-Gm-Gg: ASbGncsC3r/EmPvudAYPRMtgxsE7FSfcp7q2wQWnzUvvQbZFcngegMFjxaYjqsjuumG
+	dw+YOOW8Qd9trovkDiHs6UiUFDeKCVJDrq0DIiLgUjyRANCjtxWorONVcXQP1CjA2YzNu5XAl3C
+	GtM+MNGC4FCJYiYMc8VonhzQ79fPIEmei03g==
+X-Google-Smtp-Source: AGHT+IHp3DAd3qnbQTzEXrr/AOZUFWtye6vkktK43JI1h3+333nR09AfAjWbSTrZebXAYTQjM4E8ILVD9YcJzu9MLfI=
+X-Received: by 2002:a05:6e02:1605:b0:3d0:239a:c46a with SMTP id
+ e9e14a558f8ab-3da7e1e6ff5mr39960875ab.9.1746793779664; Fri, 09 May 2025
+ 05:29:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3h9ay9B1oNPDSAA--.2625S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GF1UCr47Cw1fWry7tF1rCrg_yoWxAF45pF
-	WfCF1aqrZ7JFn3Ga1fGw1kJr15J3s3Jay7XrnIka18Aa4DZrZ5ZFW2kryFyryUGrWkX3y8
-	Ar1UWr4DCFyDCF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piHa0PUUUUU=
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiVhNIEGgd7Lv1FgAAsc
+References: <20250508142842.1496099-2-rkrcmar@ventanamicro.com>
+ <20250508142842.1496099-4-rkrcmar@ventanamicro.com> <CAAhSdy2nOBndtJ46yHbdjc2f0cNoPV3kjXth-q57cXt8jZA6bQ@mail.gmail.com>
+ <D9RHYLQHCFP1.24E5305A5VDZH@ventanamicro.com> <CAAhSdy2U_LsoVm=4jdZQWdOkPkCH8c2bk6rsts8rY+ZGKwVuUg@mail.gmail.com>
+ <20250509-0811f32c1643d3db0ad04f63@orel>
+In-Reply-To: <20250509-0811f32c1643d3db0ad04f63@orel>
+From: Anup Patel <anup@brainfault.org>
+Date: Fri, 9 May 2025 17:59:28 +0530
+X-Gm-Features: AX0GCFsIuiVVtRxrNte_DR3qLk13RCLnfai43T5xiVxY6FHBVScamxZ1lBQWA4g
+Message-ID: <CAAhSdy389g=cvi81e7SKAi=2KTC2y9bd17aHniTUr4RNY=Kokg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] RISC-V: KVM: add KVM_CAP_RISCV_MP_STATE_RESET
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This commit optimizes the contpte_ptep_get and contpte_ptep_get_lockless
-function by adding early termination logic. It checks if the dirty and
-young bits of orig_pte are already set and skips redundant bit-setting
-operations during the loop. This reduces unnecessary iterations and
-improves performance.
+On Fri, May 9, 2025 at 5:49=E2=80=AFPM Andrew Jones <ajones@ventanamicro.co=
+m> wrote:
+>
+> On Fri, May 09, 2025 at 05:33:49PM +0530, Anup Patel wrote:
+> > On Fri, May 9, 2025 at 2:16=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkr=
+cmar@ventanamicro.com> wrote:
+> > >
+> > > 2025-05-09T12:25:24+05:30, Anup Patel <anup@brainfault.org>:
+> > > > On Thu, May 8, 2025 at 8:01=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 =
+<rkrcmar@ventanamicro.com> wrote:
+> > > >>
+> > > >> Add a toggleable VM capability to modify several reset related cod=
+e
+> > > >> paths.  The goals are to
+> > > >>  1) Allow userspace to reset any VCPU.
+> > > >>  2) Allow userspace to provide the initial VCPU state.
+> > > >>
+> > > >> (Right now, the boot VCPU isn't reset by KVM and KVM sets the stat=
+e for
+> > > >>  VCPUs brought up by sbi_hart_start while userspace for all others=
+.)
+> > > >>
+> > > >> The goals are achieved with the following changes:
+> > > >>  * Reset the VCPU when setting MP_STATE_INIT_RECEIVED through IOCT=
+L.
+> > > >
+> > > > Rather than using separate MP_STATE_INIT_RECEIVED ioctl(), we can
+> > > > define a capability which when set, the set_mpstate ioctl() will re=
+set the
+> > > > VCPU upon changing VCPU state from RUNNABLE to STOPPED state.
+> > >
+> > > Yeah, I started with that and then realized it has two drawbacks:
+> > >
+> > >  * It will require larger changes in userspaces, because for
+> > >    example QEMU now first loads the initial state and then toggles th=
+e
+> > >    mp_state, which would incorrectly reset the state.
+> > >
+> > >  * It will also require an extra IOCTL if a stopped VCPU should be
+> > >    reset
+> > >     1) STOPPED -> RUNNING (=3D reset)
+> > >     2) RUNNING -> STOPPED (VCPU should be stopped)
+> > >    or if the current state of a VCPU is not known.
+> > >     1) ???     -> STOPPED
+> > >     2) STOPPED -> RUNNING
+> > >     3) RUNNING -> STOPPED
+> > >
+> > > I can do that for v3 if you think it's better.
+> >
+> > Okay, for now keep the MP_STATE_INIT_RECEIVED ioctl()
+> >
+> > >
+> > > >>  * Preserve the userspace initialized VCPU state on sbi_hart_start=
+.
+> > > >>  * Return to userspace on sbi_hart_stop.
+> > > >
+> > > > There is no userspace involvement required when a Guest VCPU
+> > > > stops itself using SBI HSM stop() call so STRONG NO to this change.
+> > >
+> > > Ok, I'll drop it from v3 -- it can be handled by future patches that
+> > > trap SBI calls to userspace.
+> > >
+> > > The lack of userspace involvement is the issue.  KVM doesn't know wha=
+t
+> > > the initial state should be.
+> >
+> > The SBI HSM virtualization does not need any KVM userspace
+> > involvement.
+> >
+> > When a VCPU stops itself using SBI HSM stop(), the Guest itself
+> > provides the entry address and argument when starting the VCPU
+> > using SBI HSM start() without any KVM userspace involvement.
+> >
+> > In fact, even at Guest boot time all non-boot VCPUs are brought-up
+> > using SBI HSM start() by the boot VCPU where the Guest itself
+> > provides entry address and argument without any KVM userspace
+> > involvement.
+>
+> HSM only specifies the state of a few registers and the ISA only a few
+> more. All other registers have IMPDEF reset values. Zeros, like KVM
+> selects, are a good choice and the best default, but if the VMM disagrees=
+,
+> then it should be allowed to select what it likes, as the VMM/user is the
+> policy maker and KVM is "just" the accelerator.
 
-In order to verify the optimization performance, a test function has been
-designed. The function's execution time and instruction statistics have
-been traced using perf, and the following are the operation results on a
-certain Qualcomm mobile phone chip:
+Till now there are no such IMPDEF reset values expected. We will
+cross that bridge when needed. Although, I doubt we will ever need it.
 
-Test Code:
+>
+> >
+> > >
+> > > >>  * Don't make VCPU reset request on sbi_system_suspend.
+> > > >
+> > > > The entry state of initiating VCPU is already available on SBI syst=
+em
+> > > > suspend call. The initiating VCPU must be resetted and entry state =
+of
+> > > > initiating VCPU must be setup.
+> > >
+> > > Userspace would simply call the VCPU reset and set the complete state=
+,
+> > > because the userspace exit already provides all the sbi information.
+> > >
+> > > I'll drop this change.  It doesn't make much sense if we aren't fixin=
+g
+> > > the sbi_hart_start reset.
+> > >
+> > > >> The patch is reusing MP_STATE_INIT_RECEIVED, because we didn't wan=
+t to
+> > > >> add a new IOCTL, sorry. :)
+> > > >>
+> > > >> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.c=
+om>
+> > > >> ---
+> > > >> If you search for cap 7.42 in api.rst, you'll see that it has a wr=
+ong
+> > > >> number, which is why we're 7.43, in case someone bothers to fix AR=
+M.
+> > > >>
+> > > >> I was also strongly considering creating all VCPUs in RUNNABLE sta=
+te --
+> > > >> do you know of any similar quirks that aren't important, but could=
+ be
+> > > >> fixed with the new userspace toggle?
+> > > >
+> > > > Upon creating a VM, only one VCPU should be RUNNABLE and all
+> > > > other VCPUs must remain in OFF state. This is intentional because
+> > > > imagine a large number of VCPUs entering Guest OS at the same
+> > > > time. We have spent a lot of effort in the past to get away from th=
+is
+> > > > situation even in the host boot flow. We can't expect user space to
+> > > > correctly set the initial MP_STATE of all VCPUs. We can certainly
+> > > > think of some mechanism using which user space can specify
+> > > > which VCPU should be runnable upon VM creation.
+> > >
+> > > We already do have the mechanism -- the userspace will set MP_STATE o=
+f
+> > > VCPU 0 to STOPPED and whatever VCPUs it wants as boot with to RUNNABL=
+E
+> > > before running all the VCPUs for the first time.
+> >
+> > Okay, nothing to be done on this front.
+> >
+> > >
+> > > The userspace must correctly set the initial MP state anyway, because=
+ a
+> > > resume will want a mp_state that a fresh boot.
+> > >
+> > > > The current approach is to do HSM state management in kernel
+> > > > space itself and not rely on user space. Allowing userspace to
+> > > > resetting any VCPU is fine but this should not affect the flow for
+> > > > SBI HSM, SBI System Reset, and SBI System Suspend.
+> > >
+> > > Yes, that is the design I was trying to change.  I think userspace
+> > > should have control over all aspects of the guest it executes in KVM.
+> >
+> > For SBI HSM, the kernel space should be the only entity managing.
+>
+> The VMM should always be the only manager. KVM can provide defaults in
+> order to support simple VMMs that don't have opinions, but VMMs concerned
+> with managing all state on behalf of their users' choices and to ensure
+> successful migrations, will want to be involved.
 
-	#define PAGE_SIZE 4096
-	#define CONT_PTES 16
-	#define TEST_SIZE (4096* CONT_PTES * PAGE_SIZE)
-	#define YOUNG_BIT 8
-	void rwdata(char *buf)
-	{
-		for (size_t i = 0; i < TEST_SIZE; i += PAGE_SIZE) {
-			buf[i] = 'a';
-			volatile char c = buf[i];
-		}
-	}
-	void clear_young_dirty(char *buf)
-	{
-		if (madvise(buf, TEST_SIZE, MADV_FREE) == -1) {
-			perror("madvise free failed");
-			free(buf);
-			exit(EXIT_FAILURE);
-		}
-		if (madvise(buf, TEST_SIZE, MADV_COLD) == -1) {
-			perror("madvise free failed");
-			free(buf);
-			exit(EXIT_FAILURE);
-		}
-	}
-	void set_one_young(char *buf)
-	{
-		for (size_t i = 0; i < TEST_SIZE; i += CONT_PTES * PAGE_SIZE) {
-			volatile char c = buf[i + YOUNG_BIT * PAGE_SIZE];
-		}
-	}
+I think you misunderstood my comment. VMM is still the over manager
+but the VCPU SBI HSM states are managed by the kernel KVM.
 
-	void test_contpte_perf() {
-		char *buf;
-		int ret = posix_memalign((void **)&buf, CONT_PTES * PAGE_SIZE,
-				TEST_SIZE);
-		if ((ret != 0) || ((unsigned long)buf % CONT_PTES * PAGE_SIZE)) {
-			perror("posix_memalign failed");
-			exit(EXIT_FAILURE);
-		}
+Regards,
+Anup
 
-		rwdata(buf);
-	#if TEST_CASE2 || TEST_CASE3
-		clear_young_dirty(buf);
-	#endif
-	#if TEST_CASE2
-		set_one_young(buf);
-	#endif
-
-		for (int j = 0; j < 500; j++) {
-			mlock(buf, TEST_SIZE);
-
-			munlock(buf, TEST_SIZE);
-		}
-		free(buf);
-	}
-
-	Descriptions of three test scenarios
-
-Scenario 1
-	The data of all 16 PTEs are both dirty and young.
-	#define TEST_CASE2 0
-	#define TEST_CASE3 0
-
-Scenario 2
-	Among the 16 PTEs, only the 8th one is young, and there are no dirty ones.
-	#define TEST_CASE2 1
-	#define TEST_CASE3 0
-
-Scenario 3
-	Among the 16 PTEs, there are neither young nor dirty ones.
-	#define TEST_CASE2 0
-	#define TEST_CASE3 1
-
-Test results
-
-|Scenario 1         |       Original|       Optimized|
-|-------------------|---------------|----------------|
-|instructions       |    37912436160|     18731580031|
-|test time          |         4.2797|          2.2949|
-|overhead of        |               |                |
-|contpte_ptep_get() |         21.31%|           4.80%|
-
-|Scenario 2         |       Original|       Optimized|
-|-------------------|---------------|----------------|
-|instructions       |    36701270862|     36115790086|
-|test time          |         3.2335|          3.0874|
-|Overhead of        |               |                |
-|contpte_ptep_get() |         32.26%|          33.57%|
-
-|Scenario 3         |       Original|       Optimized|
-|-------------------|---------------|----------------|
-|instructions       |    36706279735|     36750881878|
-|test time          |         3.2008|          3.1249|
-|Overhead of        |               |                |
-|contpte_ptep_get() |         31.94%|          34.59%|
-
-For Scenario 1, optimized code can achieve an instruction benefit of 50.59%
-and a time benefit of 46.38%.
-For Scenario 2, optimized code can achieve an instruction count benefit of
-1.6% and a time benefit of 4.5%.
-For Scenario 3, since all the PTEs have neither the young nor the dirty
-flag, the branches taken by optimized code should be the same as those of
-the original code. In fact, the test results of optimized code seem to be
-closer to those of the original code.
-
-It can be proven through test function that the optimization for
-contpte_ptep_get is effective. Since the logic of contpte_ptep_get_lockless
-is similar to that of contpte_ptep_get, the same optimization scheme is
-also adopted for it.
-
-Signed-off-by: Xavier Xia <xavier_qy@163.com>
----
-Changes in v5:
-- Replace macro CHECK_CONTPTE_CONSISTENCY with inline function contpte_is_consistent
-  for improved readability and clarity, as suggested by Barry.
-- Link to v4: https://lore.kernel.org/all/20250508070353.2370826-1-xavier_qy@163.com/
-
-Changes in v4:
-- Convert macro CHECK_CONTPTE_FLAG to an internal loop for better readability.
-- Refactor contpte_ptep_get_lockless using the same optimization logic, as suggested by Ryan.
-- Link to v3: https://lore.kernel.org/all/3d338f91.8c71.1965cd8b1b8.Coremail.xavier_qy@163.com/
----
- arch/arm64/mm/contpte.c | 74 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 65 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index bcac4f55f9c1..1037450b68e9 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -169,17 +169,44 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
- 	for (i = 0; i < CONT_PTES; i++, ptep++) {
- 		pte = __ptep_get(ptep);
- 
--		if (pte_dirty(pte))
-+		if (pte_dirty(pte)) {
- 			orig_pte = pte_mkdirty(orig_pte);
--
--		if (pte_young(pte))
-+			for (; i < CONT_PTES; i++, ptep++) {
-+				pte = __ptep_get(ptep);
-+				if (pte_young(pte)) {
-+					orig_pte = pte_mkyoung(orig_pte);
-+					break;
-+				}
-+			}
-+			break;
-+		}
-+
-+		if (pte_young(pte)) {
- 			orig_pte = pte_mkyoung(orig_pte);
-+			i++;
-+			ptep++;
-+			for (; i < CONT_PTES; i++, ptep++) {
-+				pte = __ptep_get(ptep);
-+				if (pte_dirty(pte)) {
-+					orig_pte = pte_mkdirty(orig_pte);
-+					break;
-+				}
-+			}
-+			break;
-+		}
- 	}
- 
- 	return orig_pte;
- }
- EXPORT_SYMBOL_GPL(contpte_ptep_get);
- 
-+static inline bool contpte_is_consistent(pte_t pte, unsigned long pfn,
-+					pgprot_t prot, pgprot_t orig_prot)
-+{
-+	return pte_valid_cont(pte) && pte_pfn(pte) == pfn &&
-+			pgprot_val(prot) == pgprot_val(orig_prot);
-+}
-+
- pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
- {
- 	/*
-@@ -221,16 +248,45 @@ pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
- 		pte = __ptep_get(ptep);
- 		prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
- 
--		if (!pte_valid_cont(pte) ||
--		   pte_pfn(pte) != pfn ||
--		   pgprot_val(prot) != pgprot_val(orig_prot))
-+		if (!contpte_is_consistent(pte, pfn, prot, orig_prot))
- 			goto retry;
- 
--		if (pte_dirty(pte))
-+		if (pte_dirty(pte)) {
- 			orig_pte = pte_mkdirty(orig_pte);
--
--		if (pte_young(pte))
-+			for (; i < CONT_PTES; i++, ptep++, pfn++) {
-+				pte = __ptep_get(ptep);
-+				prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
-+
-+				if (!contpte_is_consistent(pte, pfn, prot, orig_prot))
-+					goto retry;
-+
-+				if (pte_young(pte)) {
-+					orig_pte = pte_mkyoung(orig_pte);
-+					break;
-+				}
-+			}
-+			break;
-+		}
-+
-+		if (pte_young(pte)) {
- 			orig_pte = pte_mkyoung(orig_pte);
-+			i++;
-+			ptep++;
-+			pfn++;
-+			for (; i < CONT_PTES; i++, ptep++, pfn++) {
-+				pte = __ptep_get(ptep);
-+				prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
-+
-+				if (!contpte_is_consistent(pte, pfn, prot, orig_prot))
-+					goto retry;
-+
-+				if (pte_dirty(pte)) {
-+					orig_pte = pte_mkdirty(orig_pte);
-+					break;
-+				}
-+			}
-+			break;
-+		}
- 	}
- 
- 	return orig_pte;
--- 
-2.34.1
-
+>
+> Thanks,
+> drew
+>
+> >
+> > >
+> > > Accelerating SBI in KVM is good, but userspace should be able to say =
+how
+> > > the unspecified parts are implemented.  Trapping to userspace is the
+> > > simplest option.  (And sufficient for ecalls that are not a hot path.=
+)
+> > >
+> >
+> > For the unspecified parts, we have KVM exits at appropriate places
+> > e.g. SBI system reset, SBI system suspend, etc.
+> >
+> > Regards,
+> > Anup
