@@ -1,112 +1,163 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3220C8F64;
-	Fri,  9 May 2025 07:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFC18F64;
+	Fri,  9 May 2025 07:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746775282; cv=none; b=H8qPXzOqsi0g6N8f+YIrsg1uiGdJXFazvR8Ci9DKay7F5+Jp6iTq9kFhIdK8NFutI+KmR+zmjfGwC0T22pQEXKLONhN8Ss0q+4ihU5QjGFfnPeiWpcpg0erojGim85OWMx1DqWoXAPrjCFNPt1wNWLl8R5+BXGj5O9Et155kvCI=
+	t=1746775357; cv=none; b=PVCxDKfnRxf3AwVEHjoVyjaBS09EnQZy9EBhKTsLA2vu0PIuC9e0dB2gMvY/UhH+jXT2h0M08jydQs4anCEnkMSyJ2Hr3v5t9RtueHU81JJhOhmCSYdqWHVy4huST0seg4M0sOq6/1Ft9zDgF/cxVJzL2fHWGCRpMErXfYxx90M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746775282; c=relaxed/simple;
-	bh=AU97mTucFD8huV9girVLcsarctFzJeJaKwanWY6F4Dk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VNG+hVglzaCwqNZvZwUyrmke+79CILoKMFml0KifKlpix5VRn91rQPLhbrNGlQPphgdmHgH2K3MQxKNuwuGP1cJAxIH25PsbmsVnVajFIrhApwhIAufW/GEdjQxh3PxAvjwIaw4hw72nRD77nw1nhXwRSD2fFHv6Exvp6yTLGnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+sZxWDq; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746775357; c=relaxed/simple;
+	bh=97WtU+MBAa+57anLMQl6DoUdFVtogLxvVIWNsqKvBVY=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=XtuI5jLcRmYj7ZO7fTmGaDoAMzuP7EGnIFIs3WUpCGH1iRqDE/vxFzVj94PZ/POQR6zv9qM3PdLX//DwSugAc72erugDvKOdfUXQAC5/6ZKFZMJng0KXdj6t29CT7GaPXYsr4itrPI9x+/ML5KyiNDlYyTkMpjeOrb7sZ3YEkQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lNeOSzKJ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+sZxWDq"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ace333d5f7bso306656366b.3;
-        Fri, 09 May 2025 00:21:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746775279; x=1747380079; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GIO49LvjU1ArzBRt+DVSk3+lysp0QTnWTNGBa5IZDHw=;
-        b=Q+sZxWDqOUctnGtnqquR0tDR99wokV9cJULgoN2BC8ITkj06ThFUgMk5/675/j1utE
-         1LBxHGDhlywJBZIo6u0rNTwqDI+Ouj54JAdhgr1ORzt1NoGRLjfkB75zFyRS9Qelfbji
-         jCuAxRyialm2et8dbNe1bhI+I/ybmYz4O57FIkWl1yBJdJZ5HxqVmbsZBppneTx1Q26j
-         fWNtpl20rDbKlILE1eeQ5XI7XBE/sD4A50JJeHq9uCL3OiQHlQqYVyBwrRjwTdWjNIhr
-         GSkI8TKt0wqIrUTU8Tn855PGt0eylKUVbXyD8wuqoNyRLmohb0MHaPOdew8k5OYtjBru
-         UOYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746775279; x=1747380079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GIO49LvjU1ArzBRt+DVSk3+lysp0QTnWTNGBa5IZDHw=;
-        b=uGzjazD32kaAoJSBoQYliNhhbfhROVrkmX9xDAe+eWzjIjD4NoULC1dEjtEGKQ57ni
-         NWXutVgICcIMI89exDR0LxlEhrujnsg+oulpitM3Jpc0O4XB8sZ8utliWrZp5NGGGHZ5
-         wB0DlDxryp+xLHCeb2gxFPrZ4eStKn0Swtxi4m4V0aDKSMTQDHDHUoC/8wgMEvZgQQJe
-         xAPBFht43R65HpVvdUuftga6SO2F5k6zjs8g1kXK8b/MWJzqq9tuakBLZgsFXx7L1JMA
-         PO5ig7iBE5mp9L01l3+zGeGBomt5kaSxbSzg9R99CagUt5ahwCxrM6kxP7qqhRdgjjLx
-         Y/xw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBQuDhgtYOgYEp9HWI2b3yxwOh4MIMUYGlb7w/xFXwwv6lP4xt2JMuKU30VD4Fc8OI1jrwQuSa1uGCG54/@vger.kernel.org, AJvYcCV896HGnzOPPk17bsfAdSUsAxPyFIklecbjLnJOEprL7rZOAQT3T+UT7+JgQJmvAZjCvFp/DdOnJ4CKqSeb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIQtOkC0KHsZG+tDaESOulbpgGR6fNlEgapayksjheyWM671sM
-	7zFZ7R6Wq/redoi2JzVuqr+kg4qnufBjxVTpLxSplNcqn7GQrFfhTp9BdDYZ0m3684JlOqBZiJP
-	fvaim8c1R7a0F/20t7rDzmEbhmak=
-X-Gm-Gg: ASbGnct34EyM0URqPqCIvfgSAMJjGAJMX9sTLKYyMJUZn0OBf/RyVz5nIr7T1mH8upU
-	AZdNyVncQUGw96FikwvHZz0KkYGtkeP/6XU1rBHY2VR+rhrEOCz0wWMmaskAO87S0gcrZE7Uc82
-	dEkFEjMcCgGrLfW+EpLezcQw==
-X-Google-Smtp-Source: AGHT+IEEEWHj6h3X59Q9RMPV3W3nRGeDebR0nHC6CB7xQbEGZmQHmK7xBc9IR7w+nEug5cevPajg7B19/65D/tLbN1o=
-X-Received: by 2002:a17:906:8e0f:b0:ace:6f8e:e857 with SMTP id
- a640c23a62f3a-ad21880d6a9mr209438166b.0.1746775279256; Fri, 09 May 2025
- 00:21:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lNeOSzKJ"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5492ApUZ024939;
+	Fri, 9 May 2025 07:22:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=m/OkqM920/9mWe1H1Onn3C
+	LPqmU72LcQ6hBPXuTFPXM=; b=lNeOSzKJvsJdJKODNf3fvlo4BBOu1eHxqJBryI
+	I2/7rrJAcG+HeRwQxnVMdyIi35/0d1Iav05OoqYHh+8lMfECnpergQdxE+9eGmTs
+	B1cueCUkSIrqOH6OPjckkEI2og581meAxCCu90c7alrlSSoVXsuj64clb2jrCKjz
+	Ir4ZEikmqcagLFrPtibd/Zm7ZwsGGDeOZRZiP8s/oOWkquM07b+iHhSm+EcOiJV1
+	35j6x/kkSsmnehCnHIitTD3tlG5qdLDIOAQl36uNPkyZ/ZSXaz88R2FjCQqjA2O7
+	qK6v6LL21U/ySFJhalCgZAA+sDzPdyfAKHACZU9//mtM9HCw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp13t85-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 07:22:24 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5497MN50026480
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 07:22:23 GMT
+Received: from [10.213.111.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
+ 00:22:17 -0700
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Subject: [PATCH v4 0/3] Support for Adreno 623 GPU
+Date: Fri, 9 May 2025 12:51:38 +0530
+Message-ID: <20250509-a623-gpu-support-v4-0-d4da14600501@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com> <20250509-fusectl-backing-files-v3-1-393761f9b683@uniontech.com>
-In-Reply-To: <20250509-fusectl-backing-files-v3-1-393761f9b683@uniontech.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 9 May 2025 09:21:08 +0200
-X-Gm-Features: ATxdqUFBQx08WpmlPn6LRFl9_eMPAokWkmeX_591NcQm0jWfFh5a1CETU74LTm4
-Message-ID: <CAOQ4uxinMMXY+vmu4nVLqTKSoDqUjDjH3D7VaPUQOa2b-N3AKw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] fs: fuse: add const qualifier to fuse_ctl_file_conn_get()
-To: chenlinxuan@uniontech.com
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAKtHWgC/3XPy07DMBAF0F+JvGYqP2ITRwjxH4iFPXESL/Kon
+ VhFVf4d4y4ooizvSPdczZVEF7yLpK2uJLjko1/mHOqniuBo5sGB73ImnHJJORNgFBcwrDvEfV2
+ XsEGvlG4UFb1tJMm1NbjeXwr5/nHLwZ33LG+3I7EmOsBlmvzWVkmdmISApTu5GE3ZbKuXMikYB
+ VuDDWbGEYb+AnGadkgKODCJitrG2E7rt7yAfsZTdl/J9+7o47aEz/JZYmX4/ycSAwpaC1QShe4
+ 7fu8VLvE7gjcPCJ4J44yStUNknfhLiB9C0keEyIRAK9iz1l1du9/EcRxfNPVZgbABAAA=
+X-Change-ID: 20250213-a623-gpu-support-f6698603fb85
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Konrad
+ Dybcio" <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>,
+        "Akhil P
+ Oommen" <quic_akhilpo@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746775337; l=1850;
+ i=quic_akhilpo@quicinc.com; s=20240726; h=from:subject:message-id;
+ bh=97WtU+MBAa+57anLMQl6DoUdFVtogLxvVIWNsqKvBVY=;
+ b=bCho6Xre9ekWKe4Pn4FbREI4mf8pBQkoBgosMhRWb6TAQY4OnRIhH0zdxHqV12v3pCtjq8Eea
+ u7EkLsXnAMaDHGzMgcfFg5cjd3N20EtGsUr8ECKT9hWeWMdPdqRROQc
+X-Developer-Key: i=quic_akhilpo@quicinc.com; a=ed25519;
+ pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA2OSBTYWx0ZWRfXzVCoUXPUIOrT
+ dVZOFL3HYuPxPAhIjQiYiqrMUqoZMSvFrTaj+z70Gn/FNvkEObO21Bcy4jYoT6227jZbi5RfmJ7
+ gRpgIqQ6KyeFPIxnddarl3rfeHtnQwb2r3ZYOh7L5tzP0U9/REwWWJbOZ5McXGKCHI0Gx5WUxQl
+ l3OtxGlR++PwbP3sPguSvjpIHcdRZS97CgnKjqaQ6xESf/3Le8FPooPv4ZL6ZjRSWHK9xaS1vCZ
+ NHFozLlolt2JxJlO9BtZx4ACT+talqL7pmczc1oEPX7Rz9nG0o94O85oe44a6AE7GXP+FgTzyGS
+ eTSZeHGcw6gOYxoC4CwHiGIkgAXX5vQFVPp13Mh3gWHWZ8nHxS82YWDYncvPMmmfUrYdehTReHr
+ Ic3z777kPgJvrPQfA4GVf2xvdsWGkUngYg8OBb+37/Je8UrJbcTi0RqgZ/S9M4cxLeGmlGP7
+X-Proofpoint-GUID: VGbfHNDHiV1NdB_oqKj9sojzexwl6XPN
+X-Proofpoint-ORIG-GUID: VGbfHNDHiV1NdB_oqKj9sojzexwl6XPN
+X-Authority-Analysis: v=2.4 cv=W4o4VQWk c=1 sm=1 tr=0 ts=681dad30 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=Zgk8kBV0DBUZDr0MsEgA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_02,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 phishscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 impostorscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505090069
 
-On Fri, May 9, 2025 at 8:34=E2=80=AFAM Chen Linxuan via B4 Relay
-<devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
->
-> From: Chen Linxuan <chenlinxuan@uniontech.com>
->
-> Add const qualifier to the file parameter in fuse_ctl_file_conn_get
-> function to indicate that this function does not modify the passed file
-> object. This improves code clarity and type safety by making the API
-> contract more explicit.
->
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+This series adds support for A623 GPU found in QCS8300 chipsets. This
+GPU IP is very similar to A621 GPU, except for the UBWC configuration
+and the GMU firmware.
 
-Feel free to add:
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+Both DT patches are for Bjorn and the dt-bindings update for Rob Clark
+to pick up.
 
-> ---
->  fs/fuse/control.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-> index 2a730d88cc3bdb50ea1f8a3185faad5f05fc6e74..f0874403b1f7c91571f38e4ae=
-9f8cebe259f7dd1 100644
-> --- a/fs/fuse/control.c
-> +++ b/fs/fuse/control.c
-> @@ -20,7 +20,7 @@
->   */
->  static struct super_block *fuse_control_sb;
->
-> -static struct fuse_conn *fuse_ctl_file_conn_get(struct file *file)
-> +static struct fuse_conn *fuse_ctl_file_conn_get(const struct file *file)
->  {
->         struct fuse_conn *fc;
->         mutex_lock(&fuse_mutex);
->
-> --
-> 2.43.0
->
->
+---
+Changes in v4:
+- Correct the commit text for the new patch#1 added in v3 and drop the
+incorrect R-b tag
+- Link to v3: https://lore.kernel.org/r/20250508-a623-gpu-support-v3-0-3cb31799d44e@quicinc.com
+
+Changes in v3:
+- Rebased on top of v6.15-rc5
+- Dropped drm-msm patches since they are merged in v6.15
+- Correct GMU opp table in dt (Konrad)
+- Remove smmu_clk from gmu clock list (Konrad)
+- Update dt-bindings yaml with a new patch#1
+- Link to v2: https://lore.kernel.org/r/20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com
+
+Changes in v2:
+- Fix hwcg config (Konrad)
+- Split gpucc reg list patch (Rob)
+- Rebase on msm-next tip
+- Link to v1: https://lore.kernel.org/r/20250213-a623-gpu-support-v1-0-993c65c39fd2@quicinc.com
+
+---
+Jie Zhang (3):
+      dt-bindings: display/msm/gmu: Update Adreno 623 bindings
+      arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+      arm64: dts: qcom: qcs8300-ride: Enable Adreno 623 GPU
+
+ .../devicetree/bindings/display/msm/gmu.yaml       | 34 ++++++++
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |  8 ++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi              | 91 ++++++++++++++++++++++
+ 3 files changed, 133 insertions(+)
+---
+base-commit: bc720facc421d0ff6d568323035d1a4d5d35ce84
+change-id: 20250213-a623-gpu-support-f6698603fb85
+prerequisite-message-id: <20250310-b4-branch-gfx-smmu-v6-2-15c60b8abd99@quicinc.com>
+prerequisite-patch-id: f8fd1a2020c940e595e58a8bd3c55d00d3d87271
+prerequisite-patch-id: 6a64b525e8ef33377b3cd885554b421fe8e6a192
+
+Best regards,
+-- 
+Akhil P Oommen <quic_akhilpo@quicinc.com>
+
