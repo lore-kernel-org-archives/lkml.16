@@ -1,115 +1,141 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3621327055D;
-	Fri,  9 May 2025 07:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD3127055D;
+	Fri,  9 May 2025 07:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776925; cv=none; b=dkgrSc1xPSc8tnxtnrEs5kzOIIqdOqX+INFSQiNiyXvf6uTZKm0lZmS7hCh4h0Qf3cTlNWYkTBMhK9xQUxmm2bhkZfcB2hH0C63wkdL8t1D4gLtjyKJCGi71GymCFK8iQdA6BpiwJbkaUNoToWKfuEdBQ30otoFAj3XBziXua0c=
+	t=1746776948; cv=none; b=V0WW+Jv99APdMVBUD9CBkjTAwZs7pdgbkDhmmcrCEAE6uQmKXk1XvhzFN0EZj0yWwS975HgwAtPRy7wwDYU5YutXP4duJv7GzPEgpYry6NYquH8tEESM1p9j8ldIq3ZWVOe1N1bdPU4qZ8c+a65X/sco4b6s21wShEXsyrvuN3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776925; c=relaxed/simple;
-	bh=vWmlIJ/bfhkqfGW/df/LkQdIFbwYFHZ3jlpCzpw/fpo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=L5pFjXiQ1YfvO4QQYxgmTMVf8Ij1d30BPNN1WpiLd+TmeIjhR0wSat2C5KDMN09nMTHLAghdpmoJHrab3dPTdtHJtDKoZhE6rKW5mUJ84sXuj9y5PhASoLNaSWTAy3cylfylRu+tMSWEMc+iFa+nPBE32S1GCF/nlvHiDA7+3EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LsNxdgh3; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746776948; c=relaxed/simple;
+	bh=Qm35ocUja106vQcCzehngsxcScUQ8t8EEoToUMaDeVQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MV8tRJOsPcCjxVPsjgsS1TOtNirvXRl/IkL++OAo7WrHD2jjo6GQRBOqmb1Ryrp2uYWc1UwEy7OtSrJy6JG24lHL1T8vt3E7OPjYfHrxjR5C9/IcK7w7CFps5HJ47bwXcGgo0psAdCiPVhh6d2ZY/sa/uoVrn2aziviYHcnyDyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AJUAJzlT; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LsNxdgh3"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5497mYic1338029
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 9 May 2025 02:48:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746776914;
-	bh=4e3+vQC7jXYNsVDluYv45Cizxg84x2l6/EsV/UN5RrA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=LsNxdgh3gojJqGeRhZ57VCZixcngOvhwEVRwU4kGNf66o8780ILuReluAeb4hJpvj
-	 3So/V3RiXReOHTZbWod4SReP02ZLxnrQQD7FJcD4wHegNapOQwdwgOvNrg2xEAqvR5
-	 bNvGyVou+rMVmz+aFXGt0w92DkRrKBGC/jVLwJcE=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5497mYPV112184
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 9 May 2025 02:48:34 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 9
- May 2025 02:48:33 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 9 May 2025 02:48:33 -0500
-Received: from [172.24.19.187] (lt5cd2489kgj.dhcp.ti.com [172.24.19.187])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5497mTof084167;
-	Fri, 9 May 2025 02:48:30 -0500
-Message-ID: <fed0d761-2793-4204-aff5-f65ba7dbc4bd@ti.com>
-Date: Fri, 9 May 2025 13:18:29 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJUAJzlT"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-528ce9730cfso460272e0c.3;
+        Fri, 09 May 2025 00:49:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746776945; x=1747381745; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EYiUl52hL8bnUKtwOCM4fmuwNTc1LYwe3bT+bqnTv8Q=;
+        b=AJUAJzlTTLsLxPBIP9plm3v6OZUYfrdo5+v/8ABwiOVfQHnPaOjL1XpfYxjOcrhkB8
+         vEPKNVpD4AikRyCAht+5kuKsuDQgNv2CnRe/+Wxznsyz/Ack3ZkqJExDiDKosTfDzsnP
+         vgPrO3FfRqp1w2pQaXMKAgOprSMksKklvGzrGO4nO7kly8XMaXDiMnNTCyalDYrGhze2
+         dhnWoYbDAN2k6vjxPz75aW6dxmaGjwk7v4rB6+MSYBUNWkZIZ54TqO9nezRVgQbGEd0q
+         nRB1dXMM4YALP938vxifcVecUXcaIB+CRzYoW96PTFngfhZvtCn8aRULegCw7fBqwhAj
+         Gcwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746776945; x=1747381745;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EYiUl52hL8bnUKtwOCM4fmuwNTc1LYwe3bT+bqnTv8Q=;
+        b=ns73yrGS3u3+ACS0SO8Owb9YXM8P/3EvMeThHCWlHjYrlTHIogCKZ+CyTmCL2bdOMl
+         7RCMfpYoHyfi0eWVAUw4aVvTeXYdNmeXcBzq+Jla2lWLmUDGF0KYEuqAzZyYb0SLFZuh
+         c4EalfJiseynsHqJwdy601eSSqTwmCtRKTTTLwILMPcJqLxBm1Eqw2GfH80pmb5PQzhW
+         +YlmqguaXpQJbkVQh61vJsT3JRWtmgTFX0gIF18DTm87GwFednAPKYA5wOtD5lmT4Pga
+         y9ovr7HB6Uf/ITZZV5idZ7GzFZReVEyn4wkvQx75/ZtNS2HuEQirRiljvK9x6XdPOn+U
+         RjSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqWPZxNuHtBvzQv65uh6U65quca/RMH/0+ENla459lMZqoBvVukUXMIy86EHbdmwQXgunk8USeis79Vgo=@vger.kernel.org, AJvYcCXLbFT1kXsYR6kFXaHY5LD5f76cBFcrLtxL3cIYL32T3LRKEXXIwIq5rVOgkaRKB3088J6z7FJx5VzJmlSz3KaQIoFfHQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx28BWz0YTgeq2aRKUq2wxV0yfe1IYn8IdXqADR3/tfK+zVxw83
+	PIyLcnOaVZlQapKDwJXHSEgO/lNnFyDpKVeYFnnMFk5R4jogHtpn
+X-Gm-Gg: ASbGncuHfFsPyxfvhf1YnTdjO1pg7jlTQlxLCVN5f/Jns4AvAmO0837htR4Y5CbrrDc
+	emShVVjsewBuA7jsp6TJZumBBrYq4g6mkBSRXkztOGMzXvsinA17MfaOlV25k8sAewyPJAXCR6Y
+	tv1TpdYROMx1jlD8vReHZAwRqRddQ+5v7o4F+YckKOiEuQh4PDNU2TS4zSktyMkWPh63wpduKop
+	PqnaoNUYfmKPCJfkobS2x2NtRuptW+j2cwBE90+NJXzUGBWLQQcVajisPGiIITWqjyo6ni/yKnn
+	OT4yz8PWRegnJmhglD1bIMQeVoqg+vNC1lVavSov
+X-Google-Smtp-Source: AGHT+IEyrJbae1a+03ec+BhX+SpORF51sM+Vf7YAY9S+znTMYLvP1NKaz6h1M1mXknNbXiQ54WN3RA==
+X-Received: by 2002:a05:6102:800f:b0:4c4:fdb9:2ea with SMTP id ada2fe7eead31-4deed333f02mr1912141137.7.1746776945311;
+        Fri, 09 May 2025 00:49:05 -0700 (PDT)
+Received: from [192.168.1.26] ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f62986f3sm678265241.33.2025.05.09.00.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 00:49:04 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH RFC 0/5] platform/x86: firmware_attributes_class: Add a
+ high level API
+Date: Fri, 09 May 2025 04:48:32 -0300
+Message-Id: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] arm64: dts: ti: j722s-evm: Add MUX to control
- CSI2RX
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <vaishnav.a@ti.com>, <r-donadkar@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <jai.luthra@linux.dev>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
-References: <20250508155134.2026300-1-y-abhilashchandra@ti.com>
- <20250508155134.2026300-3-y-abhilashchandra@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250508155134.2026300-3-y-abhilashchandra@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAFCzHWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDYyMz3bRy3cSSkqJi3cSCTF2D1NRE82QDIyPTJDMloJaCotS0zAqwcdF
+ KQW7OSrG1tQCz4E6iYwAAAA==
+X-Change-ID: 20250326-fw-attrs-api-0eea7c0225b6
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Joshua Grisham <josh@joshuagrisham.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: Antheas Kapenekakis <lkml@antheas.dev>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1676; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=Qm35ocUja106vQcCzehngsxcScUQ8t8EEoToUMaDeVQ=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmym3OOnqjZkhNZInhlW29Ihz+jyqfv86IUZZ5dOLdlq
+ WXKxseNHaUsDGJcDLJiiiztCYu+PYrKe+t3IPQ+zBxWJpAhDFycAjCRaCVGhlO8DlMuCcz5/UPt
+ yC6xRobVdsHb1RsmvmdV++oRFDzlhTQjw009x1OJAvOUPVLklvlXl3zk094wKdeKYfPWsPmP4pK
+ qmAE=
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
+Hi all,
 
-On 5/8/2025 9:21 PM, Yemike Abhilash Chandra wrote:
-> J722S EVM has the CSI2RX routed to a MIPI CSI connector and to 22-pin RPi
-> camera connector through an analog mux with GPIO control, model that so
-> that an overlay can control the mux state according to connected cameras.
+These series adds the _long awaited_ API for the Firmware Attributes
+class.
 
-In case you are another version,
+You'll find all the details in the commit messages and kernel-doc.
 
-consider to change in commit message "model that so that" to "model mux 
-so that".
+I think it's easier to understand by example, so I used the
+samsung-galaxybook driver for this purpose (last patch). IMO code
+readibility, simplicity, maintainability, etc. is greatly improved, but
+there is still room for improvement of the API itself. For this reason I
+submitted this as an RFC.
 
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+As always, your feedback is very appreciated :)
 
+Overview
+========
 
->
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-> index 0f18fe710929..43256c71a19c 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-> @@ -266,6 +266,20 @@ transceiver2: can-phy2 {
->   		max-bitrate = <5000000>;
->   		standby-gpios = <&exp1 17 GPIO_ACTIVE_HIGH>;
->   	};
-> +
-> +	csi01_mux: mux-controller-0 {
-> +		compatible = "gpio-mux";
-> +		#mux-state-cells = <1>;
-> +		mux-gpios = <&exp1 6 GPIO_ACTIVE_HIGH>;
-> +		idle-state = <0>;
-> +	};
-> +
-> +	csi23_mux: mux-controller-1 {
-> +		compatible = "gpio-mux";
-> +		#mux-state-cells = <1>;
-> +		mux-gpios = <&exp1 7 GPIO_ACTIVE_HIGH>;
-> +		idle-state = <0>;
-> +	};
->   };
->   
->   &main_pmx0 {
+Patch 1-2: New API with docs included.
+  Patch 3: New firwmare attributes type
+  Patch 4: Misc Maintainers patch
+  Patch 5: samsung-galaxybook example
+
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Kurt Borja (4):
+      platform/x86: firmware_attributes_class: Add a high level API
+      platform/x86: firmware_attributes_class: Add a boolean type
+      MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
+      platform/x86: samsung-galaxybook: Transition to new firmware_attributes API
+
+Thomas Weißschuh (1):
+      platform/x86: firmware_attributes_class: Add device initialization methods
+
+ .../ABI/testing/sysfs-class-firmware-attributes    |   1 +
+ MAINTAINERS                                        |   7 +
+ drivers/platform/x86/firmware_attributes_class.c   | 424 +++++++++++++++++++++
+ drivers/platform/x86/firmware_attributes_class.h   | 283 ++++++++++++++
+ drivers/platform/x86/samsung-galaxybook.c          | 299 ++++++---------
+ 5 files changed, 829 insertions(+), 185 deletions(-)
+---
+base-commit: 3c415b1df95c06ae4f9bdb166541ab366b862cc2
+change-id: 20250326-fw-attrs-api-0eea7c0225b6
+-- 
+ ~ Kurt
+
