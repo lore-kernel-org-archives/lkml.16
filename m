@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3095D27A925;
-	Fri,  9 May 2025 20:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F8229188E;
+	Fri,  9 May 2025 20:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746821886; cv=none; b=KvfUcexMYAvQZwPUJDPlnE7ndfGWNLllFT45T9XmLl3sbxsdiKh70UhvHb09JGRbWEy7noaX7rq1YwUSkENg5uy8BJ2whmEddFaamM4GWcHPuoKKRDoRPtyIHqCH4XJsK9K99SiKLxIuTiF6imZz7PkYfnZ688qy/hgAitu61NI=
+	t=1746821886; cv=none; b=rCAk7iNqf4u4uEbow85/P3xAusuNt71J8LrWVnbKYLewUf5EHcCJKGmXykxW9ycgx8P1iZarlOAvp835I2z3OrPm99bMuYQDvIumFuiDa4r7n6XQz90bFVPDgOsR12H90jNVv/FGkMitTbjDCiztnoi5rdiBtVvKa9PQ08RtpN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746821886; c=relaxed/simple;
-	bh=Boy9wHA23OKqJtEN3bVTI2eRSSWNKeq4o2FdXbHxnqE=;
+	bh=4dEdBQqKg96SIuMQ4R/7bsyOczgXLNxTXCnaDOxtU+0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I84SzgU/baYUPsuoclDLZ3qS6xI1EY2Nvb/Stojn/ELXBmjmXSpjqIAY9W6JGreKU0+pgKy6ekujWle+7hu5l1OaFn6QjSLOkA9oDwsOieRKHEdd5IvvZnE90Y9zOJIHznAqJaebG5gbAq7ITsfAxb/jtrH32lsh+dzmioDBvM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNpa9S0N; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WPx32AODDMj/MJtPklHxdfPeOYKppBjuw1HV2k7mSix01tROZEDoLNIMkWv6S5tr34UyugcIdvUgWbMyHZAgtP/32/L9CBwglXUTWI85quj1FfUboRPc6PzP/HUb2y/KUmxJ+S6BHX2BpBQZ3uZzPUXDKq6Wmh0lLxvEWAVdHls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bd3Ltiqm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNpa9S0N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12CFBC4CEEF;
-	Fri,  9 May 2025 20:18:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bd3Ltiqm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2913AC4CEF0;
+	Fri,  9 May 2025 20:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746821884;
-	bh=Boy9wHA23OKqJtEN3bVTI2eRSSWNKeq4o2FdXbHxnqE=;
+	s=k20201202; t=1746821886;
+	bh=4dEdBQqKg96SIuMQ4R/7bsyOczgXLNxTXCnaDOxtU+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bNpa9S0NxvncHPr23Hfpe++saLBwT1acULEXarkyfD1eG7DHmkVBWC1x8n0SkmHfo
-	 b8PEuNe2vHeu9I0zy4hpIk1pvjU4aQOJIBmkEEI6rODk6HROy+gnEplGcMxUViP63p
-	 tYc6p2EV7joaAcjppe+Zx4UYo7gL9o9rvPHfHJvkwdFxEBtzmqLwNTLrmDZtHE8ETL
-	 jjS8vNKThHUz8GVvHa4qadYrDKCi/hl8RYwkNOhed05HnHMt27Bzud8lcG501HzMGP
-	 43aq5SFz/wuwHKqUYHXAr5wSnEl98Iko+6PVWwHMYCJ2nSd2HEJ784PrQb2PvmTN9g
-	 YUdZiCYU6sg+A==
+	b=bd3LtiqmHR4yfQXPnlG2a6IGZEk75/F9WQ/qb+UDdnHs7UZc6ijKJ57otVRy5PVW5
+	 QIvKQSQ5adnIczmNUSGUVWqM7J3ZwcIyh+24lee3CB/U54FUEkoSkVtFQptKu5F658
+	 uINeS5l7P/5fTDw1hikrUA7iR311QrjBEhhjXEeaHF6YNq0hrN75RDhxCe/wsCbx1i
+	 +MmssoHYEharGhRx10q4Du6w6gQ7/f9H7le8ov+w+1qOdRe2tKPSuqkWG0I/VEQV6d
+	 KQ1goQk8tdhnxGJNPnKJtq9+AGKdtlDLA+u59szdMT/GbpI6IPqD0dVXVPKI4fk0Ro
+	 ITM3ntU45fjGA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Fazla Mehrab <a.mehrab@bytedance.com>,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>
-Subject: [PATCH v2 28/62] objtool: Fix weak symbol hole detection for .cold functions
-Date: Fri,  9 May 2025 13:16:52 -0700
-Message-ID: <8ae052ab65412c0fc0359e780dc382f9feb53ace.1746821544.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 31/62] objtool: Avoid emptying lists for duplicate sections
+Date: Fri,  9 May 2025 13:16:55 -0700
+Message-ID: <506d79489b610bde50f877fa0f67cf527b05cf06.1746821544.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1746821544.git.jpoimboe@kernel.org>
 References: <cover.1746821544.git.jpoimboe@kernel.org>
@@ -55,150 +55,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When ignore_unreachable_insn() looks for weak function holes which jump
-to their .cold functions, it assumes the parent function comes before
-the corresponding .cold function in the symbol table.  That's not
-necessarily the case with -ffunction-sections.
-
-Mark all the holes beforehand (including .cold functions) so the
-ordering of the discovery doesn't matter.
+When a to-be-created section already exists, there's no point in
+emptying the various lists if their respective sections already exist.
+In fact it's better to leave them intact as they might get used later.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/check.c                 | 84 ++++++++++++++-------------
- tools/objtool/include/objtool/check.h |  3 +-
- 2 files changed, 45 insertions(+), 42 deletions(-)
+ tools/objtool/check.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 043c36b70f26..a2a025ec57e8 100644
+index c9f041168bce..3b9443b98fd5 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -2527,6 +2527,44 @@ static void mark_rodata(struct objtool_file *file)
- 	file->rodata = found;
- }
+@@ -637,7 +637,6 @@ static int create_static_call_sections(struct objtool_file *file)
  
-+static void mark_holes(struct objtool_file *file)
-+{
-+	struct instruction *insn;
-+	bool in_hole = false;
-+
-+	if (!opts.link)
-+		return;
-+
-+	/*
-+	 * Whole archive runs might encounter dead code from weak symbols.
-+	 * This is where the linker will have dropped the weak symbol in
-+	 * favour of a regular symbol, but leaves the code in place.
-+	 */
-+	for_each_insn(file, insn) {
-+		if (insn->sym || !find_symbol_hole_containing(insn->sec, insn->offset)) {
-+			in_hole = false;
-+			continue;
-+		}
-+
-+		/* Skip function padding and pfx code */
-+		if (!in_hole && insn->type == INSN_NOP)
-+			continue;
-+
-+		in_hole = true;
-+		insn->hole = 1;
-+
-+		/*
-+		 * If this hole jumps to a .cold function, mark it ignore.
-+		 */
-+		if (insn->jump_dest) {
-+			struct symbol *dest_func = insn_func(insn->jump_dest);
-+
-+			if (dest_func && dest_func->cold)
-+				dest_func->ignore = true;
-+		}
-+	}
-+}
-+
- static int decode_sections(struct objtool_file *file)
- {
- 	int ret;
-@@ -2592,6 +2630,9 @@ static int decode_sections(struct objtool_file *file)
- 	if (ret)
- 		return ret;
+ 	sec = find_section_by_name(file->elf, ".static_call_sites");
+ 	if (sec) {
+-		INIT_LIST_HEAD(&file->static_call_list);
+ 		WARN("file already has .static_call_sites section, skipping");
+ 		return 0;
+ 	}
+@@ -853,7 +852,6 @@ static int create_cfi_sections(struct objtool_file *file)
  
-+	/* Must be after add_jump_destinations() */
-+	mark_holes(file);
-+
- 	/*
- 	 * Must be after add_call_destinations() such that it can override
- 	 * dead_end_function() marks.
-@@ -4021,7 +4062,8 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
- 	struct instruction *prev_insn;
- 	int i;
+ 	sec = find_section_by_name(file->elf, ".cfi_sites");
+ 	if (sec) {
+-		INIT_LIST_HEAD(&file->call_list);
+ 		WARN("file already has .cfi_sites section, skipping");
+ 		return 0;
+ 	}
+@@ -902,7 +900,6 @@ static int create_mcount_loc_sections(struct objtool_file *file)
  
--	if (insn->type == INSN_NOP || insn->type == INSN_TRAP || (func && func->ignore))
-+	if (insn->type == INSN_NOP || insn->type == INSN_TRAP ||
-+	    insn->hole || (func && func->ignore))
- 		return true;
+ 	sec = find_section_by_name(file->elf, "__mcount_loc");
+ 	if (sec) {
+-		INIT_LIST_HEAD(&file->mcount_loc_list);
+ 		WARN("file already has __mcount_loc section, skipping");
+ 		return 0;
+ 	}
+@@ -947,7 +944,6 @@ static int create_direct_call_sections(struct objtool_file *file)
  
- 	/*
-@@ -4032,46 +4074,6 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
- 	    !strcmp(insn->sec->name, ".altinstr_aux"))
- 		return true;
- 
--	/*
--	 * Whole archive runs might encounter dead code from weak symbols.
--	 * This is where the linker will have dropped the weak symbol in
--	 * favour of a regular symbol, but leaves the code in place.
--	 *
--	 * In this case we'll find a piece of code (whole function) that is not
--	 * covered by a !section symbol. Ignore them.
--	 */
--	if (opts.link && !func) {
--		int size = find_symbol_hole_containing(insn->sec, insn->offset);
--		unsigned long end = insn->offset + size;
--
--		if (!size) /* not a hole */
--			return false;
--
--		if (size < 0) /* hole until the end */
--			return true;
--
--		sec_for_each_insn_continue(file, insn) {
--			/*
--			 * If we reach a visited instruction at or before the
--			 * end of the hole, ignore the unreachable.
--			 */
--			if (insn->visited)
--				return true;
--
--			if (insn->offset >= end)
--				break;
--
--			/*
--			 * If this hole jumps to a .cold function, mark it ignore too.
--			 */
--			if (insn->jump_dest && insn_func(insn->jump_dest) &&
--			    insn_func(insn->jump_dest)->cold)
--				insn_func(insn->jump_dest)->ignore = true;
--		}
--
--		return false;
--	}
--
- 	if (!func)
- 		return false;
- 
-diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
-index 00fb745e7233..0f4e7ac929ef 100644
---- a/tools/objtool/include/objtool/check.h
-+++ b/tools/objtool/include/objtool/check.h
-@@ -64,7 +64,8 @@ struct instruction {
- 	    noendbr		: 1,
- 	    unret		: 1,
- 	    visited		: 4,
--	    no_reloc		: 1;
-+	    no_reloc		: 1,
-+	    hole		: 1;
- 		/* 10 bit hole */
- 
- 	struct alt_group *alt_group;
+ 	sec = find_section_by_name(file->elf, ".call_sites");
+ 	if (sec) {
+-		INIT_LIST_HEAD(&file->call_list);
+ 		WARN("file already has .call_sites section, skipping");
+ 		return 0;
+ 	}
 -- 
 2.49.0
 
