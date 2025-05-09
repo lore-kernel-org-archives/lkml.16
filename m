@@ -1,131 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164F88F64;
-	Fri,  9 May 2025 07:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D0A8F64;
+	Fri,  9 May 2025 07:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746775120; cv=none; b=VRbAnaJx7/akXPkLl/+oNuQ8jDYBn5zQttjNIblR56GnwzCksU0NN3Yc50GhQxJqOCmGvJK8RncJ5rTbfnU8xB/MwSZlebon0f1zGycWCKgWhTvHQpGUjbOR7isAcYNo7wc7nMw8VEGRcApLRT+H37HHIMmOLOvJFFjyAG0Kcfw=
+	t=1746775135; cv=none; b=iCVEWteXdTZKBzbUUJZBY30u2oWtEMiuhMlMEdkPMZildVbWsBGM8FKd09wAeKBlWNOEDexErhczL9VqjwwAROlbgq2KMma2P/IqWzdMGWmgidWHKirCKTY2sr4DsCF7Aiqq84CWE8xjkzk87SrVf/AfcbA0QLPKMMZ7Tizh0rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746775120; c=relaxed/simple;
-	bh=WdgrOy2RPo0nCk/bcC2ywsBSNqyV335TPHHX0q4PyYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CLr3y741uJcaNe0JDiDqwxnstbm85zBrJk72G+6Kf99lQMnEyOnApvHQG/lvPksWFB6h+GrpcVtjHCH4NTEcUzjQjaXi+OkVTHnX5YKhathoSXgXd0X2W1mVl0biFY1Odw2DnRunlY4llNwlLKDidV00nYx0+78m5s5AGdGv78M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DNEvEQuq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746775135; c=relaxed/simple;
+	bh=0bpkn16FlO8guV0JpiDuN0GhJ+8MVxdY1+nhUi7V2+U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B/TG1pZ4TcUagy3bDUYuiFD3QtUUTNipvwIKcLCrQjQhZTbji8/TIRgjhCsslIc4lNHxqxs1RULSyVf4sBY9ybLwJsYpDBCpY+TNvdsH1WoCTuFnIz9TBcEn6e2B5DYCn7K/yuUV61w86xQyHSpINmNbqhbM9+pY12hjXnjZdJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AzFYO32x; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DNEvEQuq"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5492cSE5009191;
-	Fri, 9 May 2025 07:18:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3C07s+uImPI8s4GiBFJp/oMOL7Al0jdDsxGtkQVfuls=; b=DNEvEQuq2pKOTfoq
-	5tnhPaz5QHUHz67+WtBDjrmZ5vbhniM5u/umXjnjrZZ2CG5PWCBuNyfAnHJV57Zx
-	TIzoaEWv6Inu2SMSInme3vdOuAWLc2azLwatBdHwVK8DzMEiAzPz1uft2Js4tflv
-	uaZcay4ljPeY5cUzcHnwqjypGCgYT5xiD/daeJwIdBv/Qb6741gQkYeYwgEG4Whh
-	51aKsZEcQhlutUWptDo9eex/iprI+OJqZYt9e5vhNufroSe/ZYYF2EdIi54tYsoj
-	6J0BPOkiS85YBmsNbgnxOj3JdhR6P4ufG12GvUEi/amUG64GcXThpNA//QAxP0jN
-	nuRDWQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpeupbp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 07:18:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5497IRnc028657
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 07:18:27 GMT
-Received: from [10.216.57.57] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
- 00:18:20 -0700
-Message-ID: <9245741a-a4e4-4be9-a630-adbb5c07a0b5@quicinc.com>
-Date: Fri, 9 May 2025 12:48:17 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzFYO32x"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fbeadf2275so3227695a12.2;
+        Fri, 09 May 2025 00:18:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746775132; x=1747379932; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9PTO5iMS3MJa+j0YRv176Z6nGa9ottE/kWMAQs3ZREo=;
+        b=AzFYO32xs1Fcz6WLi0G1XlFGCfFUaK2Ni4J77h8x3AVLRdZI9YUH20wIglEQgvdbkf
+         kvBgeQJmSA5iqsnQEeiq/SMZvEvAXgUFQToECI5KXEIImV6aCpJipGJe8jSfSnVW7XDO
+         7LilcNNXf8HHC/WJAy62A18VdCQZZa/kJ0q/zmI0dCPOZ++1hMD8eGsx+AJ/2z8X5yQZ
+         C15cvm8SfMWn02e4tnHjpMxV6UTcRkHeqFL6Jce4vf4n1YnuSo2naFWkuvkWmO1zhhft
+         eUQmD4VM3vLctitzAVjLbWMihd5+EDd076fw7ZFnTUBCuKIJwG6kpN2jN9UkrZUu5OCQ
+         iRYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746775132; x=1747379932;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9PTO5iMS3MJa+j0YRv176Z6nGa9ottE/kWMAQs3ZREo=;
+        b=iJrCO+UekHTsaeU+T3aS6FRPNbpQ+tOk8Det3AdhszrREnKUW9DVJ3iftEe2uLnMzk
+         UVQRB/32VrapWNjLkqcoDNmUz1Ax1qwVHtIpWKeS64Du+x6MWq2u0ECgecCYQFqXfSNd
+         MahrMUWdllsiAOVFw0ocyFDH2R+r+GmjhT+ZS9sjr0pE6DJMG9408OAtMkYvHVAh7mIT
+         WZbLiAeJK1UrkgKqDmeTixZWey03Q5m8J/J2f/wag2ffmglmcLoST2va0BUnp+wXDLAg
+         UMlIXntTfxZB5nbTiGy3df0Du9+L04RmlY/RVLDTq/NORlae7rES242UyqqT3LWZQ8Bx
+         9fcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUytrhjEEntLEIuM2VssCquCRCwYKETnYuubca2JwqxSRSqWCwFCVdHbRQtv5W1Hm9dKEPNOrZp@vger.kernel.org, AJvYcCXE9SiJ/yBO5ojz6/wjR6bo8hUl+2qr7wp3uqR3tVukoNgcskTWUWn7V3FeK27gfJWCdbg8ji81RzTxwPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1bAuOxGN7SyTPNgQikIAFGaz0178WBGRBj9PvaLEXd3oFaNOq
+	EfWkJl6DvppB5p5iqwmP+HJvCnLkerR+gTjAvds0YLZpdMpmC6RQ
+X-Gm-Gg: ASbGncu2nM/bkiYGHPfk738F1OaXOoHTSOl3nsmsOxvy2zU68LPf+Xo2RgxwH5MysR5
+	gm70B6Ul1QiogpOdN27Xa2dXsD4dh5os9GtpK6ngEfVkh7jm/s1Wn7YySd1qDLF2Q+GZzHKTJB1
+	/qaF6zYl2jBQiL4pcKjtvf3umHQAesPQfdCKPedZpbgLSGlH0Ry5bgFzZP3Q3B3RlfehRTR03hE
+	7vWGyxECao3u/riG7d6HM664iyHoah36qmFGZixqzfa6k/x6PN9MIVSvaW4qEt3AzNXIcWNKk1Z
+	7aW476uYy33m6B1uuSVg9dQFS9CmQBSIJxtXShN4qB6gxqKkfUEq8M0UcDrgPgxD7Psdb8V1DWU
+	t7ICZlOeKp47b3tEoSzk=
+X-Google-Smtp-Source: AGHT+IGDdYgrjPJ7ZsaLGSh3Fj2BAgV3yPukGQ/Cd+owAdD4qw418l6Yt2BNI0eGtYS9qF3kyBVs/Q==
+X-Received: by 2002:a05:6402:2396:b0:5fc:a51b:9358 with SMTP id 4fb4d7f45d1cf-5fca51b95femr1047572a12.15.1746775131958;
+        Fri, 09 May 2025 00:18:51 -0700 (PDT)
+Received: from localhost.localdomain (ip092042140082.rev.nessus.at. [92.42.140.82])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d70e296sm960777a12.75.2025.05.09.00.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 00:18:51 -0700 (PDT)
+From: Jakob Unterwurzacher <jakobunt@gmail.com>
+X-Google-Original-From: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
+To: Woojung Huh <woojung.huh@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: quentin.schulz@cherry.de,
+	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: dsa: microchip: linearize skb for tail-tagging switches
+Date: Fri,  9 May 2025 09:18:19 +0200
+Message-Id: <20250509071820.4100022-1-jakob.unterwurzacher@cherry.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: qcs8300-ride: Enable Adreno 623
- GPU
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>
-References: <20250508-a623-gpu-support-v3-0-3cb31799d44e@quicinc.com>
- <20250508-a623-gpu-support-v3-3-3cb31799d44e@quicinc.com>
- <954547f9-3bdf-4d26-a7bc-54c8a288d542@kernel.org>
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <954547f9-3bdf-4d26-a7bc-54c8a288d542@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA2OSBTYWx0ZWRfX1uw/gMpw9rru
- G10Ki5WLjGwS6c2DwGS79s1IXbDKfbVcHgd0aE5V06jI3pTw3quztESA8Rteqb6hB4XwYH7llR8
- WNWsaDu8DvMKpY9FGUcWkhERNAP8gVMtfYmPqu+sYYQ3YRxRr5JRUUsYdAKHkBY1vSKcJFZKbrG
- WwEho7HBtTXkuusCGooev4cKusbLbkAiFaQqBtkMSVn9c1XzFhL4U57JzxpOO/0zqZ1lREM/DOE
- e4jrlcZIHzxzQ0uZJvXBMdyoyPDjC1CXCAC45FvDneYi3tN7UGzWsHPFyiQIbFdT0vLxz80uSkn
- hJeSYJ4C0FMhf0dAbGoaSrPP5ZwrCq6kbEhB8kTh4RVkQ7GcFX2aZaURZClvAzcaWibn3K0VLLb
- hoJz5PBVk2wTlwehVwTVzpwx4DPa0Yb08wXHazcWiI+mkDTGTMLl/hWWjZDV/ELhDqJ3kFPU
-X-Proofpoint-ORIG-GUID: f9XKnAjWlHp5fLqYmrHnjDycq9jTMTOx
-X-Proofpoint-GUID: f9XKnAjWlHp5fLqYmrHnjDycq9jTMTOx
-X-Authority-Analysis: v=2.4 cv=Yt4PR5YX c=1 sm=1 tr=0 ts=681dac44 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=KKAkSRfTAAAA:8 a=OqMYrAO4_3c4-Z3rUcIA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_02,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxscore=0 adultscore=0 spamscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=737 suspectscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505090069
+Content-Transfer-Encoding: 8bit
 
-On 5/9/2025 11:14 AM, Krzysztof Kozlowski wrote:
-> On 08/05/2025 18:19, Akhil P Oommen wrote:
->> From: Jie Zhang <quic_jiezh@quicinc.com>
->>
->> Enable GPU for qcs8300-ride platform and provide path for zap
->> shader.
->>
->> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
->> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
->> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> Is this also real review or you took it from entirely different patch?
+The pointer arithmentic for accessing the tail tag does not
+seem to handle nonlinear skbs.
 
-Why? There was no change to this patch.
+For nonlinear skbs, it reads uninitialized memory inside the
+skb headroom, essentially randomizing the tag, breaking user
+traffic.
 
--Akhil
+Example where ksz9477_rcv thinks that the packet from port 1 comes
+from port 6 (which does not exist for the ksz9896 that's in use),
+dropping the packet. Debug prints added by me (not included in
+this patch):
 
-> 
-> 
-> Best regards,
-> Krzysztof
+	[  256.645337] ksz9477_rcv:323 tag0=6
+	[  256.645349] skb len=47 headroom=78 headlen=0 tailroom=0
+	               mac=(64,14) mac_len=14 net=(78,0) trans=78
+	               shinfo(txflags=0 nr_frags=1 gso(size=0 type=0 segs=0))
+	               csum(0x0 start=0 offset=0 ip_summed=0 complete_sw=0 valid=0 level=0)
+	               hash(0x0 sw=0 l4=0) proto=0x00f8 pkttype=1 iif=3
+	               priority=0x0 mark=0x0 alloc_cpu=0 vlan_all=0x0
+	               encapsulation=0 inner(proto=0x0000, mac=0, net=0, trans=0)
+	[  256.645377] dev name=end1 feat=0x0002e10200114bb3
+	[  256.645386] skb headroom: 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	[  256.645395] skb headroom: 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	[  256.645403] skb headroom: 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	[  256.645411] skb headroom: 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	[  256.645420] skb headroom: 00000040: ff ff ff ff ff ff 00 1c 19 f2 e2 db 08 06
+	[  256.645428] skb frag:     00000000: 00 01 08 00 06 04 00 01 00 1c 19 f2 e2 db 0a 02
+	[  256.645436] skb frag:     00000010: 00 83 00 00 00 00 00 00 0a 02 a0 2f 00 00 00 00
+	[  256.645444] skb frag:     00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01
+	[  256.645452] ksz_common_rcv:92 dsa_conduit_find_user returned NULL
+
+Call skb_linearize before trying to access the tag.
+
+This patch fixes ksz9477_rcv which is used by the ksz9896 I have at
+hand, and also applies the same fix to ksz8795_rcv which seems to have
+the same problem.
+
+Tested on v6.12.19 and today's master (d76bb1ebb5587f66b).
+
+Signed-off-by: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
+---
+ net/dsa/tag_ksz.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/net/dsa/tag_ksz.c b/net/dsa/tag_ksz.c
+index c33d4bf17929..7fbcdb7f152a 100644
+--- a/net/dsa/tag_ksz.c
++++ b/net/dsa/tag_ksz.c
+@@ -140,7 +140,12 @@ static struct sk_buff *ksz8795_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ static struct sk_buff *ksz8795_rcv(struct sk_buff *skb, struct net_device *dev)
+ {
+-	u8 *tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
++	u8 *tag;
++
++	if (skb_linearize(skb))
++		return NULL;
++
++	tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
+ 
+ 	return ksz_common_rcv(skb, dev, tag[0] & KSZ8795_TAIL_TAG_EG_PORT_M,
+ 			      KSZ_EGRESS_TAG_LEN);
+@@ -311,8 +316,13 @@ static struct sk_buff *ksz9477_xmit(struct sk_buff *skb,
+ 
+ static struct sk_buff *ksz9477_rcv(struct sk_buff *skb, struct net_device *dev)
+ {
++	u8 *tag;
++
++	if (skb_linearize(skb))
++		return NULL;
++
+ 	/* Tag decoding */
+-	u8 *tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
++	tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
+ 	unsigned int port = tag[0] & KSZ9477_TAIL_TAG_EG_PORT_M;
+ 	unsigned int len = KSZ_EGRESS_TAG_LEN;
+ 
+-- 
+2.39.5
 
