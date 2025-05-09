@@ -1,189 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A5823F403;
-	Fri,  9 May 2025 18:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2181222CBF6;
+	Fri,  9 May 2025 18:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746816410; cv=none; b=iMLskjbk0vWiXqyeKOssbXmqbCGYaka+Zk4BB8y4qGDdLu0QhhVbcfSCDaFML7MsvGeMfLGMEIoUGYF8V6j43/Asu+ZGvTWU8Q/fqR1i97sbj1rdH1/MnZOR4/jvkc95ZRl7kctvpzSSFRPy13HKJODWNrk6z/9z9njAxUuAim0=
+	t=1746816521; cv=none; b=RtGFKEoJnd2xR5WWnvmmsOX9PTY6wWmUcOYv+k6d/d2dksQ79vTnZJ4ra4zsk8MmJJHSM1HJutWU/8mq8hEukXHcuD0E9EYSLUfEGQ508znwfcWzFxA3729YIAjUEVQiYrL2RPZeZgdg2Kw9Rh2uasd/UNEI3632m94jX4jbivQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746816410; c=relaxed/simple;
-	bh=F/srgboolEoNxf0xX1d6ZqQ2GWgFKW9K2bjlRHJGoYE=;
+	s=arc-20240116; t=1746816521; c=relaxed/simple;
+	bh=My1+3MQih7+ZGs+koEY7B2zh1yjPSCZ9rBsJe5PRIIQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FHFgXgDkm4dY9G9LCf8onTytjmYV8dQliwJSVglQgRRVDXM7TJWF8hH0e27zvrjEaPq8c7QozQgVKtiNSd8BFjRRMFGcNOc4CVTsTJ3QO249k5zcEc/SUl32jM3vo47mH59bLKxTHXhkTODi6GXJTYgM61qPe3d8Y5ntSTRZLa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7oxhMVB; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=HMdKhu6gzfJZ/Bh8OGWYBJXamQBQRkRFlyK35IeeEcBKYowFWAedAKl1fEo7O4nvYSv9iHd6YIpUw1TMs7ZI5cG5tqDrKXMKUsywo/bRL4XyrHqg2gmMD1aTDwrbNyJ5YfkybNrZIpb7f1PqcADKZ/4iqfDYo8XQjBvVbjyx86Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWlpSlQD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7oxhMVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13154C4AF09;
-	Fri,  9 May 2025 18:46:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWlpSlQD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D950C4CEE4;
+	Fri,  9 May 2025 18:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746816410;
-	bh=F/srgboolEoNxf0xX1d6ZqQ2GWgFKW9K2bjlRHJGoYE=;
+	s=k20201202; t=1746816520;
+	bh=My1+3MQih7+ZGs+koEY7B2zh1yjPSCZ9rBsJe5PRIIQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q7oxhMVBiWbVUZReFjjltopRsrRmnIRmtM9f5C64yLOfNPa5ej2/yyNi4OXLzH0UR
-	 5YlcwF8GqVyGsoFU3PBADdbqNnwI0x7j19myjhiW5kLL61jm40em37MDBhr4jRFYOn
-	 W3vcNmhn9zOr2YRFiKsmxswHlUffMGb0nAEtWv09tMkt0a6uHgKfGJfzrL5rBumfHU
-	 L8RQYZI3AWSdzdPei7ElUTSeaCQ9gNpWpft1lm3us1JlvSC77an4cPKc2dhi6RMBAO
-	 Dz68Ti/fuSbLfLG0RfPsAWreRML5LQXVsB+J9XFgXKzNvCHWliXI+/enMGGIQGb/3t
-	 XHC/9ltW3jKJw==
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f54e4f2989so39636526d6.1;
-        Fri, 09 May 2025 11:46:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4RlwWHglrFvoxL8AclvmzZ0jLYvf6cCEIoYvDpnhvruJHlIITBQPNB+cW4IZ9oWaXkh/VbfiGnURP2UM=@vger.kernel.org, AJvYcCUSZYe5p4fF/p2tcZC4p7/ARY3i7ENaPIJiVBmRJXgnHuxWOhrpv/cXiHHWbKvUTsgwln4h8YL3as5FW32S4SI7@vger.kernel.org, AJvYcCWjlC1fbjWoc73Zl+Uy7tIOVmsxzjYUjXK78vGrfOUtCZKcp3C/AX6UjOG7HRROIGzGm3tqtuM5WUjYmku8@vger.kernel.org, AJvYcCXl7pZgzunl+K2HYVjW0pXRDfbbAngdRqFyXJqC/AelBoCtEjdxOSrfavFzLLpfuQjeHMI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRqopq004tPTcdoDt8jiKF+eNSas656w8bLr6+Gkse9GXqLY1j
-	1prE8vbYeDsnRsHFY7h0MXOSTLnNDs3crFsAiguHkjnGeOTv7nF1tB6ZvK9/Kwph8Xqla9RlD6A
-	1Upj6sqMNPHRI0cSzbGWB/SUeoq8=
-X-Google-Smtp-Source: AGHT+IHzegnveWO7yNyyJPV9oHHJDYKhi+KVMw2HxLK2dVU9AjengIKx1B1T4go18EbwEKwlkm3pkByd5qNjbxz1TBA=
-X-Received: by 2002:a05:6214:528f:b0:6e8:9021:9090 with SMTP id
- 6a1803df08f44-6f6e47fb43dmr64135446d6.26.1746816409199; Fri, 09 May 2025
- 11:46:49 -0700 (PDT)
+	b=uWlpSlQDvXdtvrGbuhSNYL7jBwpKW334EuH5bySmAq8bVBJTxhwubEU1o0Ys3zqOf
+	 by2synHLNe8b8FO6fOf2oA6VKjpQwBqp43e3SEhUTKZAmkHdDbHU+7GGvpbebdrqeO
+	 UUG1eTolTMUAtDcK1+WouZrzyh7hb9tngvqPKCoCeodWMKU6Yk46a1AX3Uh9T5IftT
+	 vsqcxD3iBNVSJUoXw2V9Xz3Cfik8cKU/ufRrWABA6SPpa7Wf23vs5xQY8YgAqxJ3Gv
+	 EhbFuYFX2Vy0cmfJyenylwmT81Mk4+7tBgZ18CxHeW7t6iwCP7nrchgXXtc5BvFBnQ
+	 ZucIbswQorUDQ==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-604ad0347f5so617445eaf.2;
+        Fri, 09 May 2025 11:48:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4Hpgt8LNx9xs1+hTlgfUdH/w04ahJ+i+wlI0RIR+6bnqMkVcUlxLxMmA13tuhLBQPF9Aew6iFmBSo@vger.kernel.org, AJvYcCWnLuneq8nx/ql1MNA3lgRpjTHL7A+gGht2AZs9doTR4XGzEgVW8ahORzKvr+ctfAKRLhMiLnv/ZgFg@vger.kernel.org, AJvYcCXmKo5eSQEICMZ2YCL5u4M77e4wHSYpt7HXN0hDTCRhbVMufYpQQay9/269Xx+bS2/vQoT23egVoNHvtbpF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDiIJ+JnbFVi/xPWXpLzYPAurTJFiQRp/nwcqmfE5NSSy2FZQ4
+	2sWiSXb0+OfI3SCQO1oU3Qq0PUJMnn6mza72EiOPAVeqqCM/T8TOagGEu+qCw/n257jZcCBkpER
+	zFozeHd2ot0yd8VxLH4O2O37GkaE=
+X-Google-Smtp-Source: AGHT+IEFE8/BnJZlxUAgWsL1amhNwc7r5riPys75kcshhW3sZ05Bo9lzZ6yPYfueEH7ZKd0hIVMQrBznvLXd2XsSH8c=
+X-Received: by 2002:a05:6870:a48b:b0:2d5:230f:b34d with SMTP id
+ 586e51a60fabf-2dba41fe6e7mr2783019fac.1.1746816519829; Fri, 09 May 2025
+ 11:48:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508182025.2961555-1-tjmercier@google.com> <20250508182025.2961555-6-tjmercier@google.com>
-In-Reply-To: <20250508182025.2961555-6-tjmercier@google.com>
-From: Song Liu <song@kernel.org>
-Date: Fri, 9 May 2025 11:46:37 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5WOmyfPqBc_Hn7ApGWP_2uz_cJwyaDWF_VwiHJu9s_1A@mail.gmail.com>
-X-Gm-Features: ATxdqUGGw_RTmwKfe1Qy3K0z0SH6aVXz07rdhh_MxtVslad1T1IwByDPS78WyqM
-Message-ID: <CAPhsuW5WOmyfPqBc_Hn7ApGWP_2uz_cJwyaDWF_VwiHJu9s_1A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 5/5] selftests/bpf: Add test for open coded dmabuf_iter
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
+References: <7ae7866ab8b897253703ecee44c688b6832d49a3.1745552799.git.xiaopei01@kylinos.cn>
+In-Reply-To: <7ae7866ab8b897253703ecee44c688b6832d49a3.1745552799.git.xiaopei01@kylinos.cn>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 9 May 2025 20:48:29 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iqu82HP4bd0Ne2AkjSt6_EDa43Qt5jAWhAGHcdq5ePUw@mail.gmail.com>
+X-Gm-Features: ATxdqUFbxBo0M0IYDtlWkZecAYcoPXiPlDtjaPpY-AvEt_JIptg9XIk2TngiCbY
+Message-ID: <CAJZ5v0iqu82HP4bd0Ne2AkjSt6_EDa43Qt5jAWhAGHcdq5ePUw@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: pci_root: Constify fwnode_handle in acpi_pci_root_remap_iospace
+To: Pei Xiao <xiaopei01@kylinos.cn>
+Cc: bhelgaas@google.com, rafael@kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 11:21=E2=80=AFAM T.J. Mercier <tjmercier@google.com>=
- wrote:
+On Fri, Apr 25, 2025 at 5:48=E2=80=AFAM Pei Xiao <xiaopei01@kylinos.cn> wro=
+te:
 >
-> Use the same test buffers as the traditional iterator and a new BPF map
-> to verify the test buffers can be found with the open coded dmabuf
-> iterator.
-
-The way we split 4/5 and 5/5 makes the code tricker to follow. I guess
-the motivation is to back port default iter along to older kernels. But I
-think we can still make the code cleaner.
-
+> The fwnode_handle passed into pci_register_io_range is not modified,
+> so make it const.
 >
-> Signed-off-by: T.J. Mercier <tjmercier@google.com>
+> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
 > ---
-[...]
-
+>  drivers/acpi/pci_root.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> -static int create_udmabuf(void)
-> +static int create_udmabuf(int map_fd)
->  {
->         struct udmabuf_create create;
->         int dev_udmabuf;
-> +       bool f =3D false;
->
->         udmabuf_test_buffer_size =3D 10 * getpagesize();
->
-> @@ -63,10 +64,10 @@ static int create_udmabuf(void)
->         if (!ASSERT_OK(ioctl(udmabuf, DMA_BUF_SET_NAME_B, udmabuf_test_bu=
-ffer_name), "name"))
->                 return 1;
->
-> -       return 0;
-> +       return bpf_map_update_elem(map_fd, udmabuf_test_buffer_name, &f, =
-BPF_ANY);
-
-We don't really need this bpf_map_update_elem() inside
-create_udmabuf(), right?
-
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d0b6a024daae..74ade4160314 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -858,7 +858,7 @@ static void acpi_pci_root_validate_resources(struct d=
+evice *dev,
+>         }
 >  }
 >
-> -static int create_sys_heap_dmabuf(void)
-> +static int create_sys_heap_dmabuf(int map_fd)
+> -static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
+> +static void acpi_pci_root_remap_iospace(const struct fwnode_handle *fwno=
+de,
+>                         struct resource_entry *entry)
 >  {
->         sysheap_test_buffer_size =3D 20 * getpagesize();
->
-> @@ -77,6 +78,7 @@ static int create_sys_heap_dmabuf(void)
->                 .heap_flags =3D 0,
->         };
->         int heap_fd, ret;
-> +       bool f =3D false;
->
->         if (!ASSERT_LE(sizeof(sysheap_test_buffer_name), DMA_BUF_NAME_LEN=
-, "NAMETOOLONG"))
->                 return 1;
-> @@ -95,18 +97,18 @@ static int create_sys_heap_dmabuf(void)
->         if (!ASSERT_OK(ioctl(sysheap_dmabuf, DMA_BUF_SET_NAME_B, sysheap_=
-test_buffer_name), "name"))
->                 return 1;
->
-> -       return 0;
-> +       return bpf_map_update_elem(map_fd, sysheap_test_buffer_name, &f, =
-BPF_ANY);
+>  #ifdef PCI_IOBASE
+> --
 
-Same for this bpf_map_update_elem(), we can call this directly from
-create_test_buffers().
-
->  }
->
-> -static int create_test_buffers(void)
-> +static int create_test_buffers(int map_fd)
->  {
->         int ret;
->
-> -       ret =3D create_udmabuf();
-> +       ret =3D create_udmabuf(map_fd);
->         if (ret)
->                 return ret;
->
-> -       return create_sys_heap_dmabuf();
-> +       return create_sys_heap_dmabuf(map_fd);
-
-Personally, I would prefer we just merge all the logic of
-create_udmabuf() and create_sys_heap_dmabuf()
-into create_test_buffers().
-
->  }
->
-[...]
-> +
->  void test_dmabuf_iter(void)
->  {
->         struct dmabuf_iter *skel =3D NULL;
-> +       int iter_fd, map_fd;
->         char buf[256];
-> -       int iter_fd;
->
->         skel =3D dmabuf_iter__open_and_load();
->         if (!ASSERT_OK_PTR(skel, "dmabuf_iter__open_and_load"))
->                 return;
->
-> -       if (!ASSERT_OK(create_test_buffers(), "create_buffers"))
-> +       map_fd =3D bpf_map__fd(skel->maps.testbuf_hash);
-> +       if (!ASSERT_OK_FD(map_fd, "map_fd"))
-> +               goto destroy_skel;
-> +
-> +       if (!ASSERT_OK(create_test_buffers(map_fd), "create_buffers"))
->                 goto destroy;
->
->         if (!ASSERT_OK(dmabuf_iter__attach(skel), "skel_attach"))
-> @@ -215,10 +246,13 @@ void test_dmabuf_iter(void)
->
->         if (test__start_subtest("default_iter"))
->                 subtest_dmabuf_iter_check_default_iter(skel);
-> +       if (test__start_subtest("open_coded"))
-> +               subtest_dmabuf_iter_check_open_coded(skel, map_fd);
->
->         close(iter_fd);
->
->  destroy:
->         destroy_test_buffers();
-> +destroy_skel:
->         dmabuf_iter__destroy(skel);
->  }
-[...]
+Applied as 6.16 material, thanks!
