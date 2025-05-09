@@ -1,147 +1,136 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9E323D2AF
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554BE23D2AF;
+	Fri,  9 May 2025 14:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746799718; cv=none; b=mVjWChzmXj6G9SGcaiZQ+HdHg6bV2XYMX6eKpnD7N+WPJSpzN2CUk6rMacZSxFMD46RRnMy+3pDJ1ye0ksvl0ywC7XdHprN+KMmJI6D1hEf1ir9kq7HJhP4KC6bfLUVloDv5lr2NmgYyrhr2rV26QoLJfRjNPFfNfeuXe6YrnAg=
+	t=1746799728; cv=none; b=rcojiJgaFU+ODW7k35iItf81Xrt0LLvya5UU6+73NZOTN7c2tRwmQNP6/zT7vhHUH5NrMHE1EUSYFq42aekq/EUxCPb7DwO1J3D3mQszSu9eUQ6QG+RfOgNzWpXWqB18RB0uaAu1FcYx4rKSmyMplMTmZjP1A4yilYNa46mkMQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746799718; c=relaxed/simple;
-	bh=yB9tD82kZsx4nMI0j7OrKYBQSWlkAqwno2nGol5/f0M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pOnxSbxaAIHjGS2FxrHLmjgb44ro/W8vMjsWbfPkbl2R9oE7t7HW2iGqxj+Yg16OA1UAbcMMPSVOhkU3MWxRIOtnIAw600OnvsnUyo/g4ZFHrxQhJfhmcu+aIYjvmHJLvO+4OEIeeHPzcqsD+GtIVjJSDShEzoRhAc440tpRSJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KUNMSg0x; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746799728; c=relaxed/simple;
+	bh=TT+lpPy+OMdPfeE2RJdWTHLt32F9aq+bILiEC9wSg4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Va+UKoQcaBb09XadydY+qDxvWDN/PSWen7hbXfpn1DZJLBIzg6jBJ1nTS54cRSaFIe012w6HjGmdfgOQwJmzVTyvQQ+JOsfs1Vn/8W6J5LUcvhNFk3fuRGxuqMuSkMrwQNUQj6BRuz9OcJBcBen9Aboz777O2jBuoAKd4KWUhUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jKvtZEwR; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KUNMSg0x"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e1eafa891so204685ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:08:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746799716; x=1747404516; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FFqbnVNc9dUbim4PbQYLYQFSIiUpvMdYWkhdEyrUVQI=;
-        b=KUNMSg0xxq8UD0Icd5mup/857PZeisTv+UK+WJp20PZzIb7msFlwY52zuwtfwojcK8
-         h4UAZA0sRKR9YThn6DVg3C2gyrY+ea3cKQUwrGbPzy/g8KvryDyKEwCpL4C1wWzw7oSX
-         ZpAzRfEwTeulI+YiJVStxJIFEn/fpaxHTNIbzMoaS4ywWjFsWer75IZ3THRon4ZThQgU
-         PlV0HRmIRzx7zByb2IvQKQp5ma0zpt+4hcXKfhR794ns/ohtVioo9pzKoYBqpb+9ZHSJ
-         ZD5fbFMW1CjYlnZ+3hN/NtdUWAbZYfWDD/pIKMDRY2a5TlkSkoyZsudmoQ8AKZVTg+RB
-         5fKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746799716; x=1747404516;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FFqbnVNc9dUbim4PbQYLYQFSIiUpvMdYWkhdEyrUVQI=;
-        b=FG4RsHVppm8JKnZmIXXJX0Bfox0VGKI+fVue9U+iF7zycOHfjESZ2L4oBClaZXTzj0
-         F4QpybKUEbxAcOQjvHC+dX5/WuRe1pbd3BZ0KiH8jFlRw/jkohCBzJMdG2L1eZ+APoZo
-         l9KtMq7bgV/MSwHe5FCDikAHrgl56gHu4XzGDEtPeue0g34WcvrnnT1IeO1yBhuAAGyT
-         6ZIH8Wnmqbjsy5XIvwodF/8Aw1gn8GtDimB2IdZi+s1Im+sbu3HkiNBKRju/QhhnZlL3
-         g0I6uFlpq9XUDaBcwWISPNkWrRSQTjSY0AVp/C/Y4hKFNIWI6UuY77fwRWHCX6kgZCLB
-         q2Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCWntAn5JwgO3eEUgTG4no2ThThZZKEKYfD329vFI9fKVX/skxG8UEUu9bYbtmzmitpLF3C/W7pp874r1cs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrCG1ncvYaimSb81iJHNEHoISz8IZet2ExiJtKJK+1uwoXFmFZ
-	oZXfvYn0zXRXrRHgkKxHfblHbuLF5D/zP2DHFFCWTGV6przocQMgtiLlgpe8Cttgh0MNFeIRlI6
-	7p+31Fy+Qv5vZ88c+TqI7G0/WaLlnNuG+GQiV
-X-Gm-Gg: ASbGncuSChRrXeiVpMgXsVtjBqqTf8uZfqOwxNOyYZgIlZI3wTkWbf1IUQoB8Knrq56
-	amhQcuFs5IKyp3g0j0GipLfE/umem92c9ilKxMbwYtbm2IJ7kZxQpDN+xzZmZgm2n0ezvXF1moC
-	ggDO9wbFL5rwSiQ47aKoc0bs8YBbbLD8Ji0Q==
-X-Google-Smtp-Source: AGHT+IGwAYiqOkI69U23WzHUisbNBNCgh5LKXHUJCNsnc9/k2TMV/9VsQx1gC7vPeTFcX4NQS+9fo9X8M2DV4yPtZDU=
-X-Received: by 2002:a17:903:1d1:b0:21f:56e5:daee with SMTP id
- d9443c01a7336-22fc950b8c9mr2937835ad.6.1746799715468; Fri, 09 May 2025
- 07:08:35 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jKvtZEwR"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AE6B840E015E;
+	Fri,  9 May 2025 14:08:38 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YI9qHHUxPmSg; Fri,  9 May 2025 14:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746799714; bh=TjXS7ec2meU62v5WeiXGJiXDH2QWa1yq0kvc6VuthsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jKvtZEwRcXVHqBJfIuqfg76A8nIMuSYZ5kppwCjOsExoYYfNrrIJQo1SEYabSuWmx
+	 9ejzW/d0gLQcHekjE+ajy9u1onLzu22p3itX93Xe4tnuRj/OBgtfw53Qflvp9+1Vsb
+	 ATeR47hNFTE/Skn2ZwT1DL3j5rxReHXV6C7dWG9Bm8wLOVvJmjfNqVqS+IebKeUnzx
+	 7dZkd0L80PYBeYgQwEI8vXolRWKOR1w7bn5le/1DCg/syy3Ft6Zdnoa6HVNlpxwM2l
+	 zi/JpRnks6+KoBhw06+BhCsY0KegLoR7ebULiB2mxJBHdEkvBTPKaJdX2yGbOfceHn
+	 UGCxRpQKR7nusOVzhpfJqJI4lVmGxH4qYVJwKXvC5V3nrqwRnD+6+VRJqMHPQUoF9x
+	 Y5ViyktyUyrXjyfVasLn3RDc0CFSJq2JxKFEU1jXXzB3oEB71433FAj5lHq/oG3mRX
+	 yAWiOHewO+W4SJIAW5ptM8QFh5NQT5aXLx/XLWsvtlrFWUMGQ9lL+O6obXlL4eLTAZ
+	 Dzs9RLiHxmTev+0GF2eQjQZseO8a5dxc75L9CADneDdpqfzqm6aq/xQoi/QCMLnAXu
+	 Oe7172o1jbizazQrm5lEAfoiKlveIHBPWvJtcradgbD+inaELzNycGqhVEBkP4ITtU
+	 T+TzB64bQvxhhnv3NrWhN4XQ=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D2DCF40E01CF;
+	Fri,  9 May 2025 14:08:26 +0000 (UTC)
+Date: Fri, 9 May 2025 16:08:21 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	Smita.KoralahalliChannabasappa@amd.com,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH v3 14/17] x86/mce/amd: Enable interrupt vectors once
+ per-CPU on SMCA systems
+Message-ID: <20250509140821.GQaB4MVUiLk-a5FWM-@fat_crate.local>
+References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
+ <20250415-wip-mca-updates-v3-14-8ffd9eb4aa56@amd.com>
+ <20250507193539.GPaBu2C_Gt7ksvRHoc@fat_crate.local>
+ <20250508155300.GB1939543@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509115126.63190-1-byungchul@sk.com> <20250509115126.63190-3-byungchul@sk.com>
- <CAHS8izOVynwxo4ZVG8pxqocThRYYL4EqRHpEtPPFQpLViTUKLA@mail.gmail.com>
-In-Reply-To: <CAHS8izOVynwxo4ZVG8pxqocThRYYL4EqRHpEtPPFQpLViTUKLA@mail.gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 9 May 2025 07:08:23 -0700
-X-Gm-Features: ATxdqUESv5rvoqSiI-S_NcuOU50UhlEM7rerRk6BBS4ZPkn6WrJLg_cavsMJdRE
-Message-ID: <CAHS8izP3knY42632AcfTHcpgpSz49gP0j6CnyswUoHW6JtC3=w@mail.gmail.com>
-Subject: Re: [RFC 02/19] netmem: introduce netmem alloc/put API to wrap page
- alloc/put API
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
-	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
-	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250508155300.GB1939543@yaz-khff2.amd.com>
 
-j
+On Thu, May 08, 2025 at 11:53:00AM -0400, Yazen Ghannam wrote:
+> Let me flip it around. Why is this check needed at all?
 
-On Fri, May 9, 2025 at 6:39=E2=80=AFAM Mina Almasry <almasrymina@google.com=
-> wrote:
->
-> On Fri, May 9, 2025 at 4:51=E2=80=AFAM Byungchul Park <byungchul@sk.com> =
-wrote:
-> >
-> > To eliminate the use of struct page in page pool, the page pool code
-> > should use netmem descriptor and API instead.
-> >
-> > As part of the work, introduce netmem alloc/put API allowing the code t=
-o
-> > use them rather than struct page things.
-> >
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > ---
-> >  include/net/netmem.h | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/include/net/netmem.h b/include/net/netmem.h
-> > index 45c209d6cc689..c87a604e980b9 100644
-> > --- a/include/net/netmem.h
-> > +++ b/include/net/netmem.h
-> > @@ -138,6 +138,24 @@ static inline netmem_ref page_to_netmem(struct pag=
-e *page)
-> >         return (__force netmem_ref)page;
-> >  }
-> >
-> > +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
-> > +               unsigned int order)
-> > +{
-> > +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
-> > +}
-> > +
-> > +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid=
-,
-> > +               unsigned long nr_netmems, netmem_ref *netmem_array)
-> > +{
-> > +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
-> > +                       (struct page **)netmem_array);
-> > +}
-> > +
-> > +static inline void put_netmem(netmem_ref netmem)
-> > +{
-> > +       put_page(netmem_to_page(netmem));
-> > +}
->
-> We can't really do this. netmem_ref is an abstraction that can be a
-> struct page or struct net_iov underneath. We can't be sure when
-> put_netmem is called that it is safe to convert to a page via
-> netmem_to_page(). This will crash if put_netmem is called on a
-> netmem_ref that is a net_iov underneath.
->
+As I said above, some BIOS f*ckup.
 
-On a closer look, it looks like this put_netmem is only called from
-code paths where you are sure the netmem_ref is a page underneath, so
-this is likely fine for now. There is a net_next series that is adding
-proper put_netmem support [1]. It's probably best to rebase your work
-on top of that, but this should be fine in the meantime.
+> Was there ever a real issue to resolve?
 
-[1] https://lore.kernel.org/netdev/20250508004830.4100853-1-almasrymina@goo=
-gle.com/
+Not that I remember...
 
---
-Thanks,
-Mina
+> It seems to me the deferred error updates are just following what other code
+> did.
+
+Let's search the web for it:
+
+* https://bbs.archlinux.org/viewtopic.php?id=299379
+
+- silly guests, who cares
+
+* https://gitlab.com/qemu-project/qemu/-/issues/2571
+
+- another misguided qemu...
+
+Aha:
+
+https://lore.kernel.org/lkml/20241219124426.325747-1-pbonzini@redhat.com
+
+the usual virt silly stuff.
+
+> I figure the reason to have the platform give the offset to the OS is so
+> the OS doesn't hard code it (in case it needs to change). These offsets
+> were hard coded in the past (conflict between IBS/THR), and it caused
+> problems when the offsets switched in the hardware. The registers that
+> give the offsets were introduced soon after, I think.
+
+Right.
+
+> So the checks we do are defeating the purpose. The OS is still hard
+> coding the offsets. The goal of this change is to follow the intent of
+> the design. Sometimes we need to let go and trust [the BIOS]. ;)
+
+Look at you being silly :-P
+
+> Now we could update the checks to verify that an offset is not used for
+> multiple interrupt sources.
+
+... or, we won't do anything until someone in BIOS f*cks up again.
+ 
+> Let's follow up with the design folks to be sure.
+
+Yah, sounds like we will have to verify them after all. You can see how
+universally widespread the trust in BIOS is...
+
+:-P
+
+In any case, whatever you do, when you axe off stuff, write in the commit
+message why you do so. Silently removing it is making me want to know why it
+is ok now.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
