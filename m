@@ -1,628 +1,317 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E77F27603B;
-	Sat, 10 May 2025 19:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837A0B660;
+	Sat, 10 May 2025 19:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746906201; cv=none; b=UlqX76vujFoNTpDbTjN69Gheb1JSU2mut5HFVzPIbzuDDhm5d92EisTaUfKIjiUjE1pwun0qnjV2DcwCh1yyv12rG+KBnRFQM0SaMJDG823nZN3KY0kP41nIX5B6cfsFK1Qwb/XUdgnRxsqhLd+7iw2iNJyj9hsXkXJeE3PEUZA=
+	t=1746906692; cv=none; b=VYCjNTb8ZvP7YaaMvwo1G0nDWKe5SoK516IDnKG7sRp53n+fvVrqrYhEYKRdiHw/r6/y/w/whW2aNJauY8NY3hxUAZ44yym9h1thvOfj40myCzRVf1/dYt00vqaGERqKEZSuXUdJqmiVu49Q3Ab7EQxPHRABx/RAOru7gRnlCIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746906201; c=relaxed/simple;
-	bh=AqqaMB30uWeNBPi6eapQMsRaWN5WUqUZI3tfXltWrtU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FN7H/2ZcI+gJ6LpVLLr6Bs6jFGAx/xlscGAcERsdmEc4P82DSaFjDpB/6/0CafGf1a8xvKWKOme77YUnUrxRPPu3ssCexIWXYSqKT98q4st2mPo3VAQF2G5ARLwZikb7PIN81OUSRf8g2QJ80tNZ3Srb+DdM9wOv9wKzK26ePoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KYDPvW8d; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746906692; c=relaxed/simple;
+	bh=wRSxFUMncV4sK8MmPr2rqvlqW6o1u1kT0hrSd9CADyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gJbgGzKgOpm+kBRkZ1ficPXtV1KCHRAhJJDGids8mDW9nKh+5UKloZRAAA2cLayVUIvZfcv7+PRnLiDhaiJl9i5Y7Rn/QctYAQjRSrgg2ukbLXORKCskyHkXqgw82NgdPg9uX45v3uAgKWl01SUNCjlK3409UO0YOKqarJgqvPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jdneS7fw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYDPvW8d"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso724070b3a.2;
-        Sat, 10 May 2025 12:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746906198; x=1747510998; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SRddgwOHN1Vyi2V2faPWngR/Eu23tCZlOEXW/jSpDeM=;
-        b=KYDPvW8dHCCnjT2x4U66zgGTc2ydNmAZPkmYnymaOldOyViGgBRgemyPMjVKOTC65P
-         imq0E4DhwTh/rO5q5ZrvjwrKwRhdzLiKKZb4IDjgDb+An6WLQNijxbNDviMCHItlWCNj
-         Mn2ZYS13R6QhlWv2LgpE03g0TH6uuLxeJLzn/vRYKyViixjVAAK7igPPi74orbnRCFnz
-         YSoJkRePmLROVs+m02o9AzDDxk8BXiALE2T1VhPOWGynco56E3PTPVJu8f9enHgeupt5
-         BsgNevLpk+qJffQFMy7xor/I/ieShd1578ftx3UqnrvZCkpdku06/LJd+78SRwV8FDx0
-         xfjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746906198; x=1747510998;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SRddgwOHN1Vyi2V2faPWngR/Eu23tCZlOEXW/jSpDeM=;
-        b=VOf3vxPXjg+l9GKhv1a48vz3NKTeFY4tZCbZgFWAX6CIDZ64S2U8DarKZb8YphduGs
-         7EJ0jcaf/BT5OaBcxbtPVxPctgrcpz7FUetH1qkMxoj9HtA2DBtHW8Pq/lzRgu8JU6QJ
-         pMPxeyWsM5a2pLCJqbTNRF6nKWbOG15HLCvpWx/8sKsHmwuhV1aGme8VDz8UR0jAZjc4
-         fNi9xVlFYtGFFRex+pj4kfbdkDH8/5RESGyNQAa+rMNmdLj/q/9oRwIlzewibryzemh6
-         zckC1mVhpe3rW6d05a8pX98Dz2DDmRV7+F5GFVVNNEn1wKYkCGJeF9bSoVcUEfIeMaLE
-         jWhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWH/2JKkigPbmjs3bCpbIsy7MJ7TC3lXvnU5leSue+UVSzLq0aq8vVYER5LZh9U2s7FV4xbvUeDXLpL@vger.kernel.org, AJvYcCWScKZ763j0laDeUE1R2YLTLHIZOB3zBtthJX91KhNxVCvOQu8HmDzKqOcNzhQKRV41wbiuwMGtVZK67XwO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcvjSJyO1zWAjGQ2LzrRsHw2lwwBqt9nILB4B8ekVqT7baei98
-	YvgwPqQt4Qe4iIEQh29Nc78cpBa5Y+I+hi0mOeLCibkhxo9Jngi6
-X-Gm-Gg: ASbGncup83+NoQ1YTqwcfUr/Msl0IOYkFniuMh29hylpzH1itFEkmGlTkKEn5n1p/P3
-	M/EOS9NdYPEZ65Z/CPhQJwADw6IAaSqRTQm4iVkTW8M1z+kf28sZwVPqleh83gTD3yaGS1D0k2a
-	okjickdJRE0gq8hUh2jqT+FG/Tn4LsNArOQ2AnABRnzxPs3p4NOE95nMM+paIo+Xj2V8LhIImmx
-	liBY+io3f5Ea+amlPVPNrChhac0NEMzSfj7HSDV+kqXeJA8GT62TEZW3Taqnu3E+ls8dX9WLhmi
-	szDjOhfkby/RU1AFfGmV72Uw50h55eLBc6McTTeNAzEMMwQpHqeHs5GYdFhQDwg=
-X-Google-Smtp-Source: AGHT+IH053WbjA3cvqj9iQ8a7h5v+mWrap4AkYe2w2/EzsXrjAunLV+dXYcLOr/NytKnX5MMq0uq+Q==
-X-Received: by 2002:a05:6a20:e68d:b0:1ee:8435:6b69 with SMTP id adf61e73a8af0-215ababcab7mr11814578637.1.1746906198481;
-        Sat, 10 May 2025 12:43:18 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2523e67d53sm2223670a12.19.2025.05.10.12.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 12:43:18 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Sat, 10 May 2025 23:42:23 +0400
-Subject: [PATCH 3/3] ARM: dts: vt8500: Add serial flash controller and its
- clock
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jdneS7fw"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54AJO0Ji021801;
+	Sat, 10 May 2025 19:50:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	WpiVX3FjHvSU+zGFtRReZ4AoerzAgurwn/wfTdHq+NU=; b=jdneS7fwVFxF1F+D
+	S0iR1r4qOYDDj9rQkSaWr+z8F3G2NijdEzpWOvwZttyhjQe5VncHjeTvtBhNIsQ3
+	0b5x4Zg9nDZV4436wSmHSKbkmVOENduABnJd2jXDD6sZkgv4rEj6o4d/b5NtFd5+
+	XKAK4oX0j18fculBCROhDfOoY8JB665KT5Y5VUcEC1z4Ty7mUEDzJEiLADqGEMzB
+	VhcpYQH13mB+XjMtN38VWxKIpNRb15kxdzuoo47xjv7/TsSY07uInznRpYVaRrBd
+	bW6DUjiIFMIwz3p8vVP9Z88k5FqLjJTCznrmaLRQomDI4zRhjyYAg7ze2PMSTSiD
+	ES36OQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hy68h24t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 10 May 2025 19:50:56 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54AJotRI008152
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 10 May 2025 19:50:55 GMT
+Received: from [10.110.70.93] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 10 May
+ 2025 12:50:54 -0700
+Message-ID: <9e904c79-b023-4d9e-b675-a3114faa7198@quicinc.com>
+Date: Sat, 10 May 2025 12:50:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re:
+To: Shawn Anastasio <sanastasio@raptorengineering.com>,
+        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        "Krishna
+ Chaitanya Chundru" <krishna.chundru@oss.qualcomm.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Rob Herring" <robh@kernel.o>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>,
+        chaitanya chundru
+	<quic_krichai@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad
+ Dybcio <konradybcio@kernel.org>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        <quic_vbadigan@quicnic.com>, <amitk@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <jorge.ramirez@oss.qualcomm.com>,
+        "Dmitry
+ Baryshkov" <lumag@kernel.org>,
+        Timothy Pearson
+	<tpearson@raptorengineering.com>
+References: <20250509173833.2197248-1-sanastasio@raptorengineering.com>
+Content-Language: en-US
+From: Trilok Soni <quic_tsoni@quicinc.com>
+In-Reply-To: <20250509173833.2197248-1-sanastasio@raptorengineering.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250510-wmt-sflash-v1-3-02a1ac6adf12@gmail.com>
-References: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
-In-Reply-To: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746906149; l=13606;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=AqqaMB30uWeNBPi6eapQMsRaWN5WUqUZI3tfXltWrtU=;
- b=9HbS2d3KP67QxcLBqUs+Dm8Msny0saXPEgDQmen+dSuDYtQ20sj7w1/xe9rRlJJ9Pq67aMgon
- FcjxhBj1ydjDOsdRKTsBdSXp5hOVWTQJQ+SRtcLotX7oLt+TcTEnOcn
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEwMDIwNSBTYWx0ZWRfX01JMpdNY58+v
+ YATrdwJhwwV8qKEpFC14bgZ2zntRfo3G7LoEhHMVYsUWLJdvomG5LKGAN9DPPfEe80SN0OHaU+N
+ 3J+IghMMyL0vfI0gS8Eoeq8MyLhXFJK94I0hX3RPQE0x6SQ0LIEhuA3HRGdnBTsQJG3wPepN+WE
+ oKo/HrUObySppH51bwE+rLS1QtlqKVbf+rhj2CTYRo24a2gJRiclIb6rts415AaG1IeyCH8TX45
+ znlhGd71ODFgHBSHnrA9LfNtkCwo7hr+J+KRS1COpdCJXRmdu8mq4ePM2VeICDyGY2fvN/GP7hE
+ IgLrvBBTpPrC07ApswCPIRvZ0bKFIYADWanAw3oPHfgJFdHEqjUqloeYJF1h5z8WDXrfnNZayDo
+ FrxZoD2Xh43AoIKxEjbU0fhU/UbS9UprkrVNgMqgVmhe9N0lamCYhDgNlyaydE7ibGWAGr1P
+X-Proofpoint-GUID: K9CamFTXNj3fXmpBDToZAU7fWqvz5Of-
+X-Proofpoint-ORIG-GUID: K9CamFTXNj3fXmpBDToZAU7fWqvz5Of-
+X-Authority-Analysis: v=2.4 cv=c5irQQ9l c=1 sm=1 tr=0 ts=681fae20 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=_AprYWD3AAAA:8 a=YmvwPZGcNBAA2zSj3IgA:9 a=QEXdDO2ut3YA:10
+ a=fKH2wJO7VO9AkD4yHysb:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-10_05,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505100205
 
-The serial flash controller resides at the same MMIO address in all known
-VIA/WonderMedia SoCs, and its clock uses the same enable bit and divisor
-reg on all SoCs, feeding off PLL B.
+On 5/9/2025 10:38 AM, Shawn Anastasio wrote:
+> From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> 
+> Date: Sat, 12 Apr 2025 07:19:56 +0530
+> Subject: [PATCH v6] PCI: PCI: Add pcie_link_is_active() to determine if the
+>  PCIe link is active
 
-Add respective DT nodes using SoC specific compatibles for the controller
-to make it future proof in case any differences in behavior are discovered
-later on.
+I don't understand this patch and it doesn't have any subject in email. Please fix. 
 
-All known boards boot from SPI NOR flash, so their flash chips are at CS0
-and mapped by the boot ROM at the end of their CPU address space. Add
-respective DT nodes in board-specific dts files too.
+> 
+> Introduce a common API to check if the PCIe link is active, replacing
+> duplicate code in multiple locations.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+> ---
+> This is an updated patch pulled from Krishna's v5 series:
+> https://patchwork.kernel.org/project/linux-pci/list/?series=952665
+> 
+> The following changes to Krishna's v5 were made by me:
+>   - Revert pcie_link_is_active return type back to int per Lukas' review
+>     comments
+>   - Handle non-zero error returns at call site of the new function in
+>     pci.c/pci_bridge_wait_for_secondary_bus
+> 
+>  drivers/pci/hotplug/pciehp.h      |  1 -
+>  drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
+>  drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
+>  drivers/pci/pci.c                 | 26 +++++++++++++++++++++---
+>  include/linux/pci.h               |  4 ++++
+>  5 files changed, 31 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index 273dd8c66f4e..acef728530e3 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -186,7 +186,6 @@ int pciehp_query_power_fault(struct controller *ctrl);
+>  int pciehp_card_present(struct controller *ctrl);
+>  int pciehp_card_present_or_link_active(struct controller *ctrl);
+>  int pciehp_check_link_status(struct controller *ctrl);
+> -int pciehp_check_link_active(struct controller *ctrl);
+>  void pciehp_release_ctrl(struct controller *ctrl);
+> 
+>  int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index d603a7aa7483..4bb58ba1c766 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -260,7 +260,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	/* Turn the slot on if it's occupied or link is up */
+>  	mutex_lock(&ctrl->state_lock);
+>  	present = pciehp_card_present(ctrl);
+> -	link_active = pciehp_check_link_active(ctrl);
+> +	link_active = pcie_link_is_active(ctrl->pcie->port);
+>  	if (present <= 0 && link_active <= 0) {
+>  		if (ctrl->state == BLINKINGON_STATE) {
+>  			ctrl->state = OFF_STATE;
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 8a09fb6083e2..278bc21d531d 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -221,33 +221,6 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
+>  	pcie_do_write_cmd(ctrl, cmd, mask, false);
+>  }
+> 
+> -/**
+> - * pciehp_check_link_active() - Is the link active
+> - * @ctrl: PCIe hotplug controller
+> - *
+> - * Check whether the downstream link is currently active. Note it is
+> - * possible that the card is removed immediately after this so the
+> - * caller may need to take it into account.
+> - *
+> - * If the hotplug controller itself is not available anymore returns
+> - * %-ENODEV.
+> - */
+> -int pciehp_check_link_active(struct controller *ctrl)
+> -{
+> -	struct pci_dev *pdev = ctrl_dev(ctrl);
+> -	u16 lnk_status;
+> -	int ret;
+> -
+> -	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
+> -		return -ENODEV;
+> -
+> -	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> -	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
+> -
+> -	return ret;
+> -}
+> -
+>  static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
+>  {
+>  	u32 l;
+> @@ -467,7 +440,7 @@ int pciehp_card_present_or_link_active(struct controller *ctrl)
+>  	if (ret)
+>  		return ret;
+> 
+> -	return pciehp_check_link_active(ctrl);
+> +	return pcie_link_is_active(ctrl_dev(ctrl));
+>  }
+> 
+>  int pciehp_query_power_fault(struct controller *ctrl)
+> @@ -584,7 +557,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
+>  	 * Synthesize it to ensure that it is acted on.
+>  	 */
+>  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+> -	if (!pciehp_check_link_active(ctrl))
+> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
+>  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
+>  	up_read(&ctrl->reset_lock);
+>  }
+> @@ -884,7 +857,7 @@ int pciehp_slot_reset(struct pcie_device *dev)
+>  	pcie_capability_write_word(dev->port, PCI_EXP_SLTSTA,
+>  				   PCI_EXP_SLTSTA_DLLSC);
+> 
+> -	if (!pciehp_check_link_active(ctrl))
+> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
+>  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
+> 
+>  	return 0;
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e77d5b53c0ce..3bb8354b14bf 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4926,7 +4926,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+>  		return 0;
+> 
+>  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+> -		u16 status;
+> 
+>  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+>  		msleep(delay);
+> @@ -4942,8 +4941,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+>  		if (!dev->link_active_reporting)
+>  			return -ENOTTY;
+> 
+> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
+> -		if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> +		if (pcie_link_is_active(dev) <= 0)
+>  			return -ENOTTY;
+> 
+>  		return pci_dev_wait(child, reset_type,
+> @@ -6247,6 +6245,28 @@ void pcie_print_link_status(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL(pcie_print_link_status);
+> 
+> +/**
+> + * pcie_link_is_active() - Checks if the link is active or not
+> + * @pdev: PCI device to query
+> + *
+> + * Check whether the link is active or not.
+> + *
+> + * Return: link state, or -ENODEV if the config read failes.
+> + */
+> +int pcie_link_is_active(struct pci_dev *pdev)
+> +{
+> +	u16 lnk_status;
+> +	int ret;
+> +
+> +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
+> +		return -ENODEV;
+> +
+> +	pci_dbg(pdev, "lnk_status = %x\n", lnk_status);
+> +	return !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> +}
+> +EXPORT_SYMBOL(pcie_link_is_active);
+> +
+>  /**
+>   * pci_select_bars - Make BAR mask from the type of resource
+>   * @dev: the PCI device for which BAR mask is made
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 51e2bd6405cd..a79a9919320c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1945,6 +1945,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
+>  			    pci_select_bars(pdev, IORESOURCE_MEM));
+>  }
+> 
+> +int pcie_link_is_active(struct pci_dev *dev);
+>  #else /* CONFIG_PCI is not enabled */
+> 
+>  static inline void pci_set_flags(int flags) { }
+> @@ -2093,6 +2094,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  {
+>  	return -ENOSPC;
+>  }
+> +
+> +static inline bool pcie_link_is_active(struct pci_dev *dev)
+> +{ return false; }
+>  #endif /* CONFIG_PCI */
+> 
+>  /* Include architecture-dependent settings and functions */
+> --
+> 2.30.2
+> 
+> 
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
- arch/arm/boot/dts/vt8500/vt8500-bv07.dts     | 37 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/vt8500/vt8500.dtsi         | 34 +++++++++++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8505-ref.dts      | 37 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8505.dtsi         | 21 ++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8650-mid.dts      | 37 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8650.dtsi         | 21 ++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8750-apc8750.dts  | 37 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8750.dtsi         | 21 ++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8850-w70v2.dts    | 37 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8850.dtsi         | 21 ++++++++++++++++
- arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts | 37 ++++++++++++++++++++++++++++
- 11 files changed, 340 insertions(+)
-
-diff --git a/arch/arm/boot/dts/vt8500/vt8500-bv07.dts b/arch/arm/boot/dts/vt8500/vt8500-bv07.dts
-index 38a2da5e2c5d64477f04e1da9d98cb97be0d95e4..c3c5ba3ac014cc49bee8c2b9e6c7b25225d4d5fe 100644
---- a/arch/arm/boot/dts/vt8500/vt8500-bv07.dts
-+++ b/arch/arm/boot/dts/vt8500/vt8500-bv07.dts
-@@ -30,6 +30,43 @@ timing0: timing-800x480 {
- 	};
- };
- 
-+&sflash {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-boot";
-+				reg = <0 0x50000>;
-+				read-only;
-+			};
-+
-+			partition@1 {
-+				label = "U-boot environment 1";
-+				reg = <0x50000 0x10000>;
-+			};
-+
-+			partition@2 {
-+				label = "U-boot environment 2";
-+				reg = <0x60000 0x10000>;
-+			};
-+
-+			partition@3 {
-+				label = "W-load";
-+				reg = <0x70000 0x10000>;
-+				read-only;
-+			};
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/vt8500/vt8500.dtsi b/arch/arm/boot/dts/vt8500/vt8500.dtsi
-index 2ba021585d4889f29777a12473964c29f999f3a0..7ea115576c69b517cb2a08206638062f22c976a0 100644
---- a/arch/arm/boot/dts/vt8500/vt8500.dtsi
-+++ b/arch/arm/boot/dts/vt8500/vt8500.dtsi
-@@ -74,6 +74,19 @@ ref24: ref24M {
- 					clock-frequency = <24000000>;
- 				};
- 
-+				ref25: clock-25000000 {
-+					#clock-cells = <0>;
-+					compatible = "fixed-clock";
-+					clock-frequency = <25000000>;
-+				};
-+
-+				pllb: clock@204 {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-pll-clock";
-+					clocks = <&ref25>;
-+					reg = <0x204>;
-+				};
-+
- 				clkuart0: uart0 {
- 					#clock-cells = <0>;
- 					compatible = "via,vt8500-device-clock";
-@@ -105,6 +118,15 @@ clkuart3: uart3 {
- 					enable-reg = <0x250>;
- 					enable-bit = <4>;
- 				};
-+
-+				clksf: clock {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-device-clock";
-+					clocks = <&pllb>;
-+					divisor-reg = <0x314>;
-+					enable-reg = <0x254>;
-+					enable-bit = <23>;
-+				};
- 			};
- 		};
- 
-@@ -114,6 +136,18 @@ timer@d8130100 {
- 			interrupts = <36>;
- 		};
- 
-+		sflash: spi-nor-controller@d8002000 {
-+			compatible = "via,vt8500-sflash";
-+			reg = <0xd8002000 0x400>,
-+			      <0xff800000 0x800000>,
-+			      <0xef800000 0x800000>;
-+			reg-names = "io", "chip0-mmap", "chip1-mmap";
-+			clocks = <&clksf>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		usb@d8007900 {
- 			compatible = "via,vt8500-ehci";
- 			reg = <0xd8007900 0x200>;
-diff --git a/arch/arm/boot/dts/vt8500/wm8505-ref.dts b/arch/arm/boot/dts/vt8500/wm8505-ref.dts
-index 8ce9e2ef0a81097e7143a5392ee5b42bf8028ec1..b037f9d919fb51a527f35276e2b8601f3f3d8505 100644
---- a/arch/arm/boot/dts/vt8500/wm8505-ref.dts
-+++ b/arch/arm/boot/dts/vt8500/wm8505-ref.dts
-@@ -30,6 +30,43 @@ timing0: timing-800x480 {
- 	};
- };
- 
-+&sflash {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-boot";
-+				reg = <0 0x50000>;
-+				read-only;
-+			};
-+
-+			partition@1 {
-+				label = "U-boot environment 1";
-+				reg = <0x50000 0x10000>;
-+			};
-+
-+			partition@2 {
-+				label = "U-boot environment 2";
-+				reg = <0x60000 0x10000>;
-+			};
-+
-+			partition@3 {
-+				label = "W-load";
-+				reg = <0x70000 0x10000>;
-+				read-only;
-+			};
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/vt8500/wm8505.dtsi b/arch/arm/boot/dts/vt8500/wm8505.dtsi
-index 99c064c916b2279797f71261ca9306e9dcd4bbd8..bf9ba4e99f86d1bf41c4e4bfe8b4f71ad162be4f 100644
---- a/arch/arm/boot/dts/vt8500/wm8505.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8505.dtsi
-@@ -203,6 +203,15 @@ clksdhc: sdhc {
- 					enable-reg = <0x254>;
- 					enable-bit = <18>;
- 				};
-+
-+				clksf: clock {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-device-clock";
-+					clocks = <&pllb>;
-+					divisor-reg = <0x314>;
-+					enable-reg = <0x254>;
-+					enable-bit = <23>;
-+				};
- 			};
- 		};
- 
-@@ -212,6 +221,18 @@ timer@d8130100 {
- 			interrupts = <36>;
- 		};
- 
-+		sflash: spi-nor-controller@d8002000 {
-+			compatible = "wm,wm8505-sflash";
-+			reg = <0xd8002000 0x400>,
-+			      <0xff800000 0x800000>,
-+			      <0xef800000 0x800000>;
-+			reg-names = "io", "chip0-mmap", "chip1-mmap";
-+			clocks = <&clksf>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		usb@d8007100 {
- 			compatible = "via,vt8500-ehci";
- 			reg = <0xd8007100 0x200>;
-diff --git a/arch/arm/boot/dts/vt8500/wm8650-mid.dts b/arch/arm/boot/dts/vt8500/wm8650-mid.dts
-index 7977b6c1e8ebf215df210dee703e470b9159d329..d3c8b7b99706603bab5aa8dad1165edb3763c2f6 100644
---- a/arch/arm/boot/dts/vt8500/wm8650-mid.dts
-+++ b/arch/arm/boot/dts/vt8500/wm8650-mid.dts
-@@ -31,6 +31,43 @@ timing0: timing-800x480 {
- 	};
- };
- 
-+&sflash {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-boot";
-+				reg = <0 0x50000>;
-+				read-only;
-+			};
-+
-+			partition@1 {
-+				label = "U-boot environment 1";
-+				reg = <0x50000 0x10000>;
-+			};
-+
-+			partition@2 {
-+				label = "U-boot environment 2";
-+				reg = <0x60000 0x10000>;
-+			};
-+
-+			partition@3 {
-+				label = "W-load";
-+				reg = <0x70000 0x10000>;
-+				read-only;
-+			};
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/vt8500/wm8650.dtsi b/arch/arm/boot/dts/vt8500/wm8650.dtsi
-index 0d6c7bd87f7dcce0eef056d04c38ab1de5d52639..972b61d2437b1da9ce765b65f844872e8df4da1d 100644
---- a/arch/arm/boot/dts/vt8500/wm8650.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8650.dtsi
-@@ -175,6 +175,15 @@ clksdhc: sdhc {
- 					enable-reg = <0x254>;
- 					enable-bit = <18>;
- 				};
-+
-+				clksf: clock {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-device-clock";
-+					clocks = <&pllb>;
-+					divisor-reg = <0x314>;
-+					enable-reg = <0x254>;
-+					enable-bit = <23>;
-+				};
- 			};
- 		};
- 
-@@ -184,6 +193,18 @@ timer@d8130100 {
- 			interrupts = <36>;
- 		};
- 
-+		sflash: spi-nor-controller@d8002000 {
-+			compatible = "wm,wm8650-sflash";
-+			reg = <0xd8002000 0x400>,
-+			      <0xff800000 0x800000>,
-+			      <0xef800000 0x800000>;
-+			reg-names = "io", "chip0-mmap", "chip1-mmap";
-+			clocks = <&clksf>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		usb@d8007900 {
- 			compatible = "via,vt8500-ehci";
- 			reg = <0xd8007900 0x200>;
-diff --git a/arch/arm/boot/dts/vt8500/wm8750-apc8750.dts b/arch/arm/boot/dts/vt8500/wm8750-apc8750.dts
-index 136e812bc1e498d48c7fc61154bc66a48888b117..4465946cfe44e82db1cad14c1f81237e1ccc0e67 100644
---- a/arch/arm/boot/dts/vt8500/wm8750-apc8750.dts
-+++ b/arch/arm/boot/dts/vt8500/wm8750-apc8750.dts
-@@ -24,6 +24,43 @@ i2c: i2c {
- 	};
- };
- 
-+&sflash {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-boot";
-+				reg = <0 0x50000>;
-+				read-only;
-+			};
-+
-+			partition@1 {
-+				label = "U-boot environment 1";
-+				reg = <0x50000 0x10000>;
-+			};
-+
-+			partition@2 {
-+				label = "U-boot environment 2";
-+				reg = <0x60000 0x10000>;
-+			};
-+
-+			partition@3 {
-+				label = "W-load";
-+				reg = <0x70000 0x10000>;
-+				read-only;
-+			};
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/vt8500/wm8750.dtsi b/arch/arm/boot/dts/vt8500/wm8750.dtsi
-index 0158c0ba5dd110957eac38775d3bf3ebd2ab4154..d6b4e4463fae1e8a0a3cf0feecce7125b4a67f5c 100644
---- a/arch/arm/boot/dts/vt8500/wm8750.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8750.dtsi
-@@ -240,6 +240,15 @@ clki2c1: i2c1clk {
- 					enable-reg = <0x250>;
- 					enable-bit = <9>;
- 				};
-+
-+				clksf: clock {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-device-clock";
-+					clocks = <&pllb>;
-+					divisor-reg = <0x314>;
-+					enable-reg = <0x254>;
-+					enable-bit = <23>;
-+				};
- 			};
- 		};
- 
-@@ -256,6 +265,18 @@ timer@d8130100 {
- 			interrupts = <36>;
- 		};
- 
-+		sflash: spi-nor-controller@d8002000 {
-+			compatible = "wm,wm8750-sflash";
-+			reg = <0xd8002000 0x400>,
-+			      <0xff800000 0x800000>,
-+			      <0xef800000 0x800000>;
-+			reg-names = "io", "chip0-mmap", "chip1-mmap";
-+			clocks = <&clksf>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		usb@d8007900 {
- 			compatible = "via,vt8500-ehci";
- 			reg = <0xd8007900 0x200>;
-diff --git a/arch/arm/boot/dts/vt8500/wm8850-w70v2.dts b/arch/arm/boot/dts/vt8500/wm8850-w70v2.dts
-index 5d409323b10cb94a5694722de1e31cff5be390ce..d2638a204579d3dff477bb7f458438037e08019b 100644
---- a/arch/arm/boot/dts/vt8500/wm8850-w70v2.dts
-+++ b/arch/arm/boot/dts/vt8500/wm8850-w70v2.dts
-@@ -42,6 +42,43 @@ timing0: timing-800x480 {
- 	};
- };
- 
-+&sflash {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-boot";
-+				reg = <0 0x50000>;
-+				read-only;
-+			};
-+
-+			partition@1 {
-+				label = "U-boot environment 1";
-+				reg = <0x50000 0x10000>;
-+			};
-+
-+			partition@2 {
-+				label = "U-boot environment 2";
-+				reg = <0x60000 0x10000>;
-+			};
-+
-+			partition@3 {
-+				label = "W-load";
-+				reg = <0x70000 0x10000>;
-+				read-only;
-+			};
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/vt8500/wm8850.dtsi b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-index c4bfb4d30aad0358b39cbf30edf0c63e32167bbd..6837198de2508536eef52537a7f451679d36c38b 100644
---- a/arch/arm/boot/dts/vt8500/wm8850.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-@@ -217,6 +217,15 @@ clksdhc: sdhc {
- 					enable-reg = <0x250>;
- 					enable-bit = <0>;
- 				};
-+
-+				clksf: clock {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-device-clock";
-+					clocks = <&pllb>;
-+					divisor-reg = <0x314>;
-+					enable-reg = <0x254>;
-+					enable-bit = <23>;
-+				};
- 			};
- 		};
- 
-@@ -243,6 +252,18 @@ timer@d8130100 {
- 			interrupts = <36>;
- 		};
- 
-+		sflash: spi-nor-controller@d8002000 {
-+			compatible = "wm,wm8850-sflash";
-+			reg = <0xd8002000 0x400>,
-+			      <0xff800000 0x800000>,
-+			      <0xef800000 0x800000>;
-+			reg-names = "io", "chip0-mmap", "chip1-mmap";
-+			clocks = <&clksf>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		usb@d8007900 {
- 			compatible = "via,vt8500-ehci";
- 			reg = <0xd8007900 0x200>;
-diff --git a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
-index 58b3c8deb4f20ae072bf1381f1dfa5e5adeb414a..647fdcccdbbd680276af1fa30363e09bbeb5ad16 100644
---- a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
-+++ b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
-@@ -16,6 +16,43 @@ memory@0 {
- 	};
- };
- 
-+&sflash {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-boot";
-+				reg = <0 0x50000>;
-+				read-only;
-+			};
-+
-+			partition@1 {
-+				label = "U-boot environment 1";
-+				reg = <0x50000 0x10000>;
-+			};
-+
-+			partition@2 {
-+				label = "U-boot environment 2";
-+				reg = <0x60000 0x10000>;
-+			};
-+
-+			partition@3 {
-+				label = "W-load";
-+				reg = <0x70000 0x10000>;
-+				read-only;
-+			};
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
 
 -- 
-2.49.0
-
+---Trilok Soni
