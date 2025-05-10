@@ -1,189 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B04B225761;
-	Sat, 10 May 2025 17:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7035233086;
+	Sat, 10 May 2025 17:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746898067; cv=none; b=N4QvQvcrMl6fhDaADAFEefD5tGHMrnHKOGRJ36EXwBLxeTkz6WWYxl+PBPcObS5CSRsIob9009SDHoOOoI0Vtc3K+Q0TcGy1g8pK1lF3lyHko9OFJ9hYBHBuC4EyQ3dHwZfiuTCcYHGaE8bSfcPNyWVo3gWgcBm2q5fs6EJ/Yok=
+	t=1746898746; cv=none; b=PvEL42t9uTz4V0tLAOU1kvWQm/F1GLlZ+iWT/5sQ5za6gHo2Ru5Sgti/O3fD4B4++LK4JeRzsNu9xoeA8OdBAyG9HRb0K9D70OKI44Rt7Q81AcwNPc6eU08IvNjO8VWnwqnqNA67us6mFznTXEw3UM0meu8t+p4UVCXugHwPeHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746898067; c=relaxed/simple;
-	bh=+J/+CqkaZBq2Lqdhn+5CkAOalO3LtUaHMJsMspBO4Qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mArNMTh0+WhGnR0pa5ozBP4NkvmT096TIEP7EyBVWU6CTS77T1NG0rTdPKiNqK204+pbPuuO6uFnMNatLyNq3JXFOfhvBDy3cYlXi6p1f8VFLZ7aUDK6V58BOf4dOx/ASK5o/DVsmchDE2FGsiGUDzNmtmYz4RmKQr8hh4E7dXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q8H2s5X9; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746898746; c=relaxed/simple;
+	bh=55t2jOzwJu/Pe94Z1MGgGTsjmdsmro44z4m15Q30ch4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YZQyy+H7H7yUIzIB07oBYh+swzXw7pfY5zRYJY4eoGUZM3h5DujIlNzdn1iQnyKTcC/SNZK1QDFdvs3DoBUD/oE6B5eHupsctkdsXGUBEgcNoLiMKLzCx/CIjCWvunu8+D4uXPV7j2kPGaW7nB34Li++xzjkyH6YLh28sOMJr7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eWdod1Zq; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q8H2s5X9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746898065; x=1778434065;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+J/+CqkaZBq2Lqdhn+5CkAOalO3LtUaHMJsMspBO4Qs=;
-  b=Q8H2s5X9V7hyt9oX0rDkG8o7BgykL6aXlnjJ7u/57ktGSiO76LYbsCe4
-   ineyp4Nz+GPfZT2wj1m0Kg5Sdb0oAeHMKnKRzN1tJEcWyg0tLlV9NBsQP
-   l/SZirQ9ivx/BhnusTwgnQL7lxc7OtsgdmjHAY1KO/h+pb6dh5ieWDDRT
-   6qzVmeO3WmosktEha5RLF7GLWqAydDjoEl+ZaGtYiHZ44bfiZ5JM2IncL
-   +bDbV3wCmE1hx8YedUmrwjCBE962qhQWDay+t62+LHrLQ2snq2u8XgYNC
-   Yxg751EFueF7bdsC0kbVhoLqMpdxN9dhd5C0DlP9R4iJNtK4gP+q036hY
-   w==;
-X-CSE-ConnectionGUID: RJ6ncf0yQu6PCnlU4cwAOQ==
-X-CSE-MsgGUID: lFfgNe/2T4uue3++I05k7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11429"; a="52370600"
-X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
-   d="scan'208";a="52370600"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 10:27:44 -0700
-X-CSE-ConnectionGUID: cBLo+jBWRP+JHUZYaI3zLQ==
-X-CSE-MsgGUID: Vqz4sNCcRO+QrY8wrOd+aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
-   d="scan'208";a="174084803"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 10 May 2025 10:27:40 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uDnz7-000DF1-2S;
-	Sat, 10 May 2025 17:27:37 +0000
-Date: Sun, 11 May 2025 01:26:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Daniel Golle <daniel@makrotopia.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org
-Subject: Re: [net-next PATCH v3 11/11] net: airoha: add phylink support for
- GDM2/3/4
-Message-ID: <202505110156.WGym4cxS-lkp@intel.com>
-References: <20250510102348.14134-12-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWdod1Zq"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22e16234307so33918035ad.0;
+        Sat, 10 May 2025 10:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746898745; x=1747503545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RF8ffXs2a5We2CWtSW9yaEOhQbyIvm2awu47Uy03/dI=;
+        b=eWdod1ZqPKmuFvgKEKcJdhEjHcWAHGU768yy2aBQIWwAhP8c5F5ejETjYQdLYv/rHA
+         HTo5Bt70akg/tOO5nY1AdkQh5NZ3NWOFXMZEQFixtN/laAWReuS4lGWKVH3iL6ClgcQ4
+         rNRXc8U59+8e2whra+wzQCVz2TLNOUxEXGDQKT1+ERtxL5JuKL37lykrvJI/wbrMaY9G
+         26MTK/1jchUStXoRqWIBNSCGKrCdm6guTRq+ctID2jPo8stnA3RwaiGLhH8LL7BEGt8Z
+         iu2bi7EJnlEMk/4bmKDm4G+NlYBKSyzhJrttsTcuHcx+ILY430/ZCmazpjunNoWMCO3V
+         A60Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746898745; x=1747503545;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RF8ffXs2a5We2CWtSW9yaEOhQbyIvm2awu47Uy03/dI=;
+        b=KKVgYuyNQSPgbY2n65YlG96mPDnRgjz70er43GMl+X8J1ME6DIYsU3D3sT8SR2LkOJ
+         3/BiniebwE2osO+hxEw0b0kmkCw3lWhatCLxzlhBslgFh9/0RIVe4Zho8/Xutgvf3Zkq
+         3wsMZ7nBe0/g8C2No3f0JbqKcWVyi2u3i3ZANcz0rGC5bcrOas5nbcILUB8zDJDJx8qi
+         UTU5/NFZ+gOhE1LL2h1FtYGcGTTppnnQdkIO7KZ24UrxnrmDV+9Utq5FCIvw/jM9d2WX
+         HtJYO1R9RbPOgSemV778LbsBFpJk8c96UP/FJKLd3G1UBfytTwKEFcTLuX/jEuBf4196
+         289Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVsCaGwxxQY/Sjm+TR+YYdRb+qY4hp4weEnCMdW8A3bzL8s0rGqyhvvwEWr9O5U5bWs1+vg9BHgaJexoo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeDw+yT40/3Uh5JHRx7gzw91RZkHlA7GOXW8tJ2ZRYVpBvh7jh
+	G864AbHuoZCyee6yyFf+lFiXuDjILq4OBW06sfpevB6mgJdYHG5W
+X-Gm-Gg: ASbGncsIFEPpMp2hWjsxGOEr8CycQ6Y6MPRIDzoLYm3ViuMznTsvwzXba+/xxGhAkA7
+	GWmWz7BIG97AMk2Gajmmfck5sTcnNcuI+U8kg/gBoP2bCE53mZwqDGYQCpBIHzDOCqZGuAJBpRi
+	z0wVQfxZ0aBsr9X/Y6DtSDby3ct7E/7ot66Hq5YgZ1bhoxvWRP61IksK6jYlSeP6Y57S9jp3Qiw
+	i20P0Zus+pJta/80aXlkAtGZd0wEsxbGREF7iBrWt1GKN1epM0lRIEqXZ1zfiw5lEzoywBnN9Z0
+	9PJ8hQK1fFD63GLBXbVc7gY1eLsGsH05+GJ8YRaIwuKAQ56BVqd4ZLAozvw0F3t4qkN1KBWysB0
+	FmGY=
+X-Google-Smtp-Source: AGHT+IGTSxQPyOYD2KYBCUKfHwpds4RRWRANwFMGm8fDWS9SWeC9Jtl+M+LV9FTIZF/FsTZvk/vGyQ==
+X-Received: by 2002:a17:902:e806:b0:215:58be:334e with SMTP id d9443c01a7336-22fc9340996mr94447795ad.10.1746898744533;
+        Sat, 10 May 2025 10:39:04 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:7b7f:bab1:cfed:9805:ea32:5760])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82a4c41sm35651255ad.237.2025.05.10.10.38.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 10:39:04 -0700 (PDT)
+From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Subject: [PATCH] perf stat: Fix JSON output formatting in iostat_prefix()
+Date: Sat, 10 May 2025 23:08:25 +0530
+Message-ID: <20250510173825.32444-1-suchitkarunakaran@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250510102348.14134-12-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Christian,
+The iostat_prefix() function previously included a TODO noting that its output
+format was incorrect in JSON mode. This patch corrects that by conditionally
+formatting the prefix string based on the output mode specified in
+perf_stat_config.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+---
+ tools/perf/arch/x86/util/iostat.c | 35 ++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
-[auto build test WARNING on net-next/main]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/net-phylink-keep-and-use-MAC-supported_interfaces-in-phylink-struct/20250510-182833
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250510102348.14134-12-ansuelsmth%40gmail.com
-patch subject: [net-next PATCH v3 11/11] net: airoha: add phylink support for GDM2/3/4
-config: sh-randconfig-002-20250510 (https://download.01.org/0day-ci/archive/20250511/202505110156.WGym4cxS-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250511/202505110156.WGym4cxS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505110156.WGym4cxS-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/net/ethernet/airoha/airoha_eth.c:10:
->> include/linux/pcs/pcs.h:90:1: warning: 'fwnode_phylink_pcs_get_from_fwnode' defined but not used [-Wunused-function]
-      90 | fwnode_phylink_pcs_get_from_fwnode(struct fwnode_handle *fwnode,
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/pcs/pcs.h:78:12: warning: 'register_fwnode_pcs_notifier' defined but not used [-Wunused-function]
-      78 | static int register_fwnode_pcs_notifier(struct notifier_block *nb)
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/fwnode_phylink_pcs_get_from_fwnode +90 include/linux/pcs/pcs.h
-
-91110a42083f1a Christian Marangi 2025-05-10  24  
-90fbe52edd2a1f Christian Marangi 2025-05-10  25  /**
-90fbe52edd2a1f Christian Marangi 2025-05-10  26   * fwnode_pcs_get - Retrieves a PCS from a firmware node
-90fbe52edd2a1f Christian Marangi 2025-05-10  27   * @fwnode: firmware node
-90fbe52edd2a1f Christian Marangi 2025-05-10  28   * @index: index fwnode PCS handle in firmware node
-90fbe52edd2a1f Christian Marangi 2025-05-10  29   *
-90fbe52edd2a1f Christian Marangi 2025-05-10  30   * Get a PCS from the firmware node at index.
-90fbe52edd2a1f Christian Marangi 2025-05-10  31   *
-90fbe52edd2a1f Christian Marangi 2025-05-10  32   * Returns a pointer to the phylink_pcs or a negative
-90fbe52edd2a1f Christian Marangi 2025-05-10  33   * error pointer. Can return -EPROBE_DEFER if the PCS is not
-90fbe52edd2a1f Christian Marangi 2025-05-10  34   * present in global providers list (either due to driver
-90fbe52edd2a1f Christian Marangi 2025-05-10  35   * still needs to be probed or it failed to probe/removed)
-90fbe52edd2a1f Christian Marangi 2025-05-10  36   */
-90fbe52edd2a1f Christian Marangi 2025-05-10  37  struct phylink_pcs *fwnode_pcs_get(struct fwnode_handle *fwnode,
-90fbe52edd2a1f Christian Marangi 2025-05-10  38  				   int index);
-90fbe52edd2a1f Christian Marangi 2025-05-10  39  
-91110a42083f1a Christian Marangi 2025-05-10  40  /**
-91110a42083f1a Christian Marangi 2025-05-10  41   * fwnode_phylink_pcs_get_from_fwnode - Retrieves the PCS provided
-91110a42083f1a Christian Marangi 2025-05-10  42   *					by the firmware node from a
-91110a42083f1a Christian Marangi 2025-05-10  43   *					firmware node
-91110a42083f1a Christian Marangi 2025-05-10  44   * @fwnode: firmware node
-91110a42083f1a Christian Marangi 2025-05-10  45   * @pcs_fwnode: PCS firmware node
-91110a42083f1a Christian Marangi 2025-05-10  46   *
-91110a42083f1a Christian Marangi 2025-05-10  47   * Parse 'pcs-handle' in 'fwnode' and get the PCS that match
-91110a42083f1a Christian Marangi 2025-05-10  48   * 'pcs_fwnode' firmware node.
-91110a42083f1a Christian Marangi 2025-05-10  49   *
-91110a42083f1a Christian Marangi 2025-05-10  50   * Returns a pointer to the phylink_pcs or a negative
-91110a42083f1a Christian Marangi 2025-05-10  51   * error pointer. Can return -EPROBE_DEFER if the PCS is not
-91110a42083f1a Christian Marangi 2025-05-10  52   * present in global providers list (either due to driver
-91110a42083f1a Christian Marangi 2025-05-10  53   * still needs to be probed or it failed to probe/removed)
-91110a42083f1a Christian Marangi 2025-05-10  54   */
-91110a42083f1a Christian Marangi 2025-05-10  55  struct phylink_pcs *
-91110a42083f1a Christian Marangi 2025-05-10  56  fwnode_phylink_pcs_get_from_fwnode(struct fwnode_handle *fwnode,
-91110a42083f1a Christian Marangi 2025-05-10  57  				   struct fwnode_handle *pcs_fwnode);
-91110a42083f1a Christian Marangi 2025-05-10  58  
-90fbe52edd2a1f Christian Marangi 2025-05-10  59  /**
-90fbe52edd2a1f Christian Marangi 2025-05-10  60   * fwnode_phylink_pcs_parse - generic PCS parse for fwnode PCS provider
-90fbe52edd2a1f Christian Marangi 2025-05-10  61   * @fwnode: firmware node
-90fbe52edd2a1f Christian Marangi 2025-05-10  62   * @available_pcs: pointer to preallocated array of PCS
-90fbe52edd2a1f Christian Marangi 2025-05-10  63   * @num_pcs: where to store count of parsed PCS
-90fbe52edd2a1f Christian Marangi 2025-05-10  64   *
-90fbe52edd2a1f Christian Marangi 2025-05-10  65   * Generic helper function to fill available_pcs array with PCS parsed
-90fbe52edd2a1f Christian Marangi 2025-05-10  66   * from a "pcs-handle" fwnode property defined in firmware node up to
-90fbe52edd2a1f Christian Marangi 2025-05-10  67   * passed num_pcs.
-90fbe52edd2a1f Christian Marangi 2025-05-10  68   *
-90fbe52edd2a1f Christian Marangi 2025-05-10  69   * If available_pcs is NULL, num_pcs is updated with the count of the
-90fbe52edd2a1f Christian Marangi 2025-05-10  70   * parsed PCS.
-90fbe52edd2a1f Christian Marangi 2025-05-10  71   *
-90fbe52edd2a1f Christian Marangi 2025-05-10  72   * Returns 0 or a negative error.
-90fbe52edd2a1f Christian Marangi 2025-05-10  73   */
-90fbe52edd2a1f Christian Marangi 2025-05-10  74  int fwnode_phylink_pcs_parse(struct fwnode_handle *fwnode,
-90fbe52edd2a1f Christian Marangi 2025-05-10  75  			     struct phylink_pcs **available_pcs,
-90fbe52edd2a1f Christian Marangi 2025-05-10  76  			     unsigned int *num_pcs);
-90fbe52edd2a1f Christian Marangi 2025-05-10  77  #else
-91110a42083f1a Christian Marangi 2025-05-10 @78  static int register_fwnode_pcs_notifier(struct notifier_block *nb)
-91110a42083f1a Christian Marangi 2025-05-10  79  {
-91110a42083f1a Christian Marangi 2025-05-10  80  	return -EOPNOTSUPP;
-91110a42083f1a Christian Marangi 2025-05-10  81  }
-91110a42083f1a Christian Marangi 2025-05-10  82  
-90fbe52edd2a1f Christian Marangi 2025-05-10  83  static inline struct phylink_pcs *fwnode_pcs_get(struct fwnode_handle *fwnode,
-90fbe52edd2a1f Christian Marangi 2025-05-10  84  						 int index)
-90fbe52edd2a1f Christian Marangi 2025-05-10  85  {
-90fbe52edd2a1f Christian Marangi 2025-05-10  86  	return ERR_PTR(-ENOENT);
-90fbe52edd2a1f Christian Marangi 2025-05-10  87  }
-90fbe52edd2a1f Christian Marangi 2025-05-10  88  
-91110a42083f1a Christian Marangi 2025-05-10  89  static struct phylink_pcs *
-91110a42083f1a Christian Marangi 2025-05-10 @90  fwnode_phylink_pcs_get_from_fwnode(struct fwnode_handle *fwnode,
-91110a42083f1a Christian Marangi 2025-05-10  91  				   struct fwnode_handle *pcs_fwnode)
-91110a42083f1a Christian Marangi 2025-05-10  92  {
-91110a42083f1a Christian Marangi 2025-05-10  93  	return ERR_PTR(-ENOENT);
-91110a42083f1a Christian Marangi 2025-05-10  94  }
-91110a42083f1a Christian Marangi 2025-05-10  95  
-
+diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+index 7442a2cd87ed..1d9c20dab5c7 100644
+--- a/tools/perf/arch/x86/util/iostat.c
++++ b/tools/perf/arch/x86/util/iostat.c
+@@ -403,18 +403,29 @@ void iostat_prefix(struct evlist *evlist,
+ 	struct iio_root_port *rp = evlist->selected->priv;
+ 
+ 	if (rp) {
+-		/*
+-		 * TODO: This is the incorrect format in JSON mode.
+-		 *       See prepare_timestamp()
+-		 */
+-		if (ts)
+-			sprintf(prefix, "%6lu.%09lu%s%04x:%02x%s",
+-				ts->tv_sec, ts->tv_nsec,
+-				config->csv_sep, rp->domain, rp->bus,
+-				config->csv_sep);
+-		else
+-			sprintf(prefix, "%04x:%02x%s", rp->domain, rp->bus,
+-				config->csv_sep);
++		if (ts) {
++			if (config->json_output)
++				sprintf(prefix,
++					"\"interval\" : %lu.%09lu, \"device\" : \"%04x:%02x\"",
++					(unsigned long)ts->tv_sec, ts->tv_nsec,
++					rp->domain, rp->bus);
++			else if (config->csv_output)
++				sprintf(prefix, "%lu.%09lu%s%04x:%02x%s",
++					(unsigned long)ts->tv_sec, ts->tv_nsec,
++					config->csv_sep,
++					rp->domain, rp->bus, config->csv_sep);
++			else
++				sprintf(prefix, "%6lu.%09lu %04x:%02x%s",
++					(unsigned long)ts->tv_sec, ts->tv_nsec,
++					rp->domain, rp->bus, config->csv_sep);
++		} else {
++			if (config->json_output)
++				sprintf(prefix, "\"device\" : \"%04x:%02x\"",
++					rp->domain, rp->bus);
++			else
++				sprintf(prefix, "%04x:%02x%s", rp->domain,
++					rp->bus, config->csv_sep);
++		}
+ 	}
+ }
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
