@@ -1,145 +1,265 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1714911712;
-	Sat, 10 May 2025 04:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380D19AD90
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 04:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746852056; cv=none; b=Fmtwu/xcUPsm72a/y75ZjU8FvqRWyfSKT1tdL8zmgiKDbDISRyGnk6eybxODPMbQrLHckVre34Gk6ZBVaMbZ/mdNfRLGgR9/iuBz28G5qTj0Foi13Z76fs/jfEGOELvuBM2zgaasUhSgSABqROomhwgAsEXVKgRj0K9dbVf/3ps=
+	t=1746852209; cv=none; b=o0FHpkRIod+zE87R3Qfkh/7E9dFgEGu3HkH3cbwsXaCs3mlrOJdiaORgOfdY8g4KuIMnPL3ramc1HNS+d9hcz8IbUXCCeEvxdtb+USdrV0ezspUUjUCjUW5iA4gAVeZJq7HvTakXuLlZ9Kq0s3lejQMbUEDYe4OIxUkB6+0vrIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746852056; c=relaxed/simple;
-	bh=jTHIkAq0vDYW4ceZDtB7fZ4URl3MLSGgA69/Ee18wQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LNlQdNXdF2mCEypOmrEzUwZRG9ESLZoziyC6ikpfddJ8HzgxRLod4tb1vIRebL+yhjGnNT3szGDadqPEvrA7o0oqH0TSW82X4Dkh4xneyCDsOIWwmv9dtuc5BySo6rAbu8z/w8NE8s3p05lBs3tYSEZLJuZzT52ZuELBUHIi1Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=I2PmAVQC; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746852209; c=relaxed/simple;
+	bh=/5JPn8nkuaHhvBTbLLNhMRbfLHVvXtgnWLb7683hvpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iuJCcWqHW9k0xQmQFgH2spZ1N5vIV2nj/fvSK1Tk4PpCo+VtpEHEZL/L8SvRjqobAK53DtcZvCIqJICjP95gCJ0Ja61bedR3k9dZKJhrM8yV+xYesDH3Y5C1C1R5csnb1fY+l9g6A09cZOTQBH3ULZ3nFscO3mK4taBtkDVtdD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qDhuPHIS; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="I2PmAVQC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/lN44O3XrR2VBQqL6sjWL92zE4CKd19p9D4vTjvHmnE=; b=I2PmAVQCm7r+Pdy5aIgazKzTik
-	/1waYXWzKWOyMRPLlz2iS6Xu10K9bCXtHB/+Vc5k1q0Ep2nJBN+X5KKaExNiES+EBTqDplsJhunrp
-	jPbyXujxQQgF5ctd+D/II6df6JYGhxF1GkVn6sCtnmcp7HPjVP+FgqaaN+YUL++XfJVcaaETeUwOd
-	qEC4WGnxOEplweG40rFK6nrKP3t3BcEh6Jm6khODE9dEXzue7eQ7uTjTXafXTKw2vGrCHnVYWrd4w
-	H4wHJmF1PU2/3VPQUPr4N3SYwLThgVAH79IGnoCiwJA4ZN+RztBcZH9W02Chv4o2F8golE2eC8ADR
-	Db2axiDw==;
-Received: from [106.101.9.89] (helo=[192.168.6.21])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uDbwL-0064SW-6U; Sat, 10 May 2025 06:40:43 +0200
-Message-ID: <69341122-4c69-446b-9b57-5b69d955edb7@igalia.com>
-Date: Sat, 10 May 2025 13:40:35 +0900
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qDhuPHIS"
+Message-ID: <093ee42f-4dd5-4f52-b7a5-ba5e22b18bdc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746852202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KwCCg12m3qDujlSkl2Q/Jkzw0xDwNqi9grEtKdNHxG4=;
+	b=qDhuPHISiuVFaRNbhf1jtwhqt7tU2W8dmqsQ14U0+FHCOLfmFGKjDb3SUnMIPp821KVPlb
+	rb4EJtR46DDQRRXoez0Y4BnNfoIms1UqQL/iCqelOpT1WAQKOIGRKfYhQok6te/3I0BVvS
+	cSsCIn/+V36xt8RNCOyxRqLND4qujZA=
+Date: Sat, 10 May 2025 06:43:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PM: EM: Add inotify support when the energy model is
- updated.
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: christian.loehle@arm.com, tj@kernel.org, rafael@kernel.org,
- pavel@kernel.org, kernel-dev@igalia.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, len.brown@intel.com
-References: <20250507014728.6094-1-changwoo@igalia.com>
- <a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com>
+Subject: Re: [PATCH for-next v2 1/2] RDMA/rxe: Implement synchronous prefetch
+ for ODP MRs
+To: Daisuke Matsuda <dskmtsd@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+References: <20250503134224.4867-1-dskmtsd@gmail.com>
+ <20250503134224.4867-2-dskmtsd@gmail.com>
+ <cdea578b-5570-4a8d-98cc-61081a281a84@linux.dev>
+ <b5560914-e613-499d-88c8-82f5255a1dd1@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <b5560914-e613-499d-88c8-82f5255a1dd1@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Lukasz and Rafael,
 
-Thank you for the pointers and guidance.
-
-On 5/9/25 19:55, Lukasz Luba wrote:
-> Hi Changwoo,
-> 
-> On 5/7/25 02:47, Changwoo Min wrote:
->> The sched_ext schedulers [1] currently access the energy model through 
->> the
->> debugfs to make energy-aware scheduling decisions [2]. The userspace part
->> of a sched_ext scheduler feeds the necessary (post-processed) energy- 
->> model
->> information to the BPF part of the scheduler.
+在 2025/5/10 4:46, Daisuke Matsuda 写道:
+> On 2025/05/10 0:19, Zhu Yanjun wrote:
+>> On 03.05.25 15:42, Daisuke Matsuda wrote:
+>>> Minimal implementation of ibv_advise_mr(3) requires synchronous 
+>>> calls being
+>>> successful with the IBV_ADVISE_MR_FLAG_FLUSH flag. Asynchronous 
+>>> requests,
+>>> which are best-effort, will be added subsequently.
+>>>
+>>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+>>> ---
+>>>   drivers/infiniband/sw/rxe/rxe.c     |  7 +++
+>>>   drivers/infiniband/sw/rxe/rxe_loc.h | 10 ++++
+>>>   drivers/infiniband/sw/rxe/rxe_odp.c | 86 
+>>> +++++++++++++++++++++++++++++
+>>>   3 files changed, 103 insertions(+)
+>>>
+>>> diff --git a/drivers/infiniband/sw/rxe/rxe.c 
+>>> b/drivers/infiniband/sw/rxe/rxe.c
+>>> index 3a77d6db1720..e891199cbdef 100644
+>>> --- a/drivers/infiniband/sw/rxe/rxe.c
+>>> +++ b/drivers/infiniband/sw/rxe/rxe.c
+>>> @@ -34,6 +34,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
+>>>       mutex_destroy(&rxe->usdev_lock);
+>>>   }
+>>> +static const struct ib_device_ops rxe_ib_dev_odp_ops = {
+>>> +    .advise_mr = rxe_ib_advise_mr,
+>>> +};
+>>> +
+>>>   /* initialize rxe device parameters */
+>>>   static void rxe_init_device_param(struct rxe_dev *rxe, struct 
+>>> net_device *ndev)
+>>>   {
+>>> @@ -103,6 +107,9 @@ static void rxe_init_device_param(struct rxe_dev 
+>>> *rxe, struct net_device *ndev)
+>>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
+>>> IB_ODP_SUPPORT_SRQ_RECV;
+>>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
+>>> IB_ODP_SUPPORT_FLUSH;
+>>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
+>>> IB_ODP_SUPPORT_ATOMIC_WRITE;
+>>> +
+>>> +        /* set handler for ODP prefetching API - ibv_advise_mr(3) */
+>>> +        ib_set_device_ops(&rxe->ib_dev, &rxe_ib_dev_odp_ops);
+>>>       }
+>>>   }
+>>> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h 
+>>> b/drivers/infiniband/sw/rxe/rxe_loc.h
+>>> index f7dbb9cddd12..21b070f3dbb8 100644
+>>> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
+>>> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
+>>> @@ -197,6 +197,9 @@ enum resp_states rxe_odp_atomic_op(struct rxe_mr 
+>>> *mr, u64 iova, int opcode,
+>>>   int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
+>>>                   unsigned int length);
+>>>   enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 
+>>> iova, u64 value);
+>>> +int rxe_ib_advise_mr(struct ib_pd *pd, enum 
+>>> ib_uverbs_advise_mr_advice advice,
+>>> +             u32 flags, struct ib_sge *sg_list, u32 num_sge,
+>>> +             struct uverbs_attr_bundle *attrs);
+>>>   #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+>>>   static inline int
+>>>   rxe_odp_mr_init_user(struct rxe_dev *rxe, u64 start, u64 length, 
+>>> u64 iova,
+>>> @@ -225,6 +228,13 @@ static inline enum resp_states 
+>>> rxe_odp_do_atomic_write(struct rxe_mr *mr,
+>>>   {
+>>>       return RESPST_ERR_UNSUPPORTED_OPCODE;
+>>>   }
+>>> +static inline int rxe_ib_advise_mr(struct ib_pd *pd, enum 
+>>> ib_uverbs_advise_mr_advice advice,
+>>> +                   u32 flags, struct ib_sge *sg_list, u32 num_sge,
+>>> +                   struct uverbs_attr_bundle *attrs)
+>>> +{
+>>> +    return -EOPNOTSUPP;
+>>> +}
+>>> +
+>>>   #endif /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+>>>   #endif /* RXE_LOC_H */
+>>> diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c 
+>>> b/drivers/infiniband/sw/rxe/rxe_odp.c
+>>> index 6149d9ffe7f7..e5c60b061d7e 100644
+>>> --- a/drivers/infiniband/sw/rxe/rxe_odp.c
+>>> +++ b/drivers/infiniband/sw/rxe/rxe_odp.c
+>>> @@ -424,3 +424,89 @@ enum resp_states rxe_odp_do_atomic_write(struct 
+>>> rxe_mr *mr, u64 iova, u64 value)
+>>>       return RESPST_NONE;
+>>>   }
+>>> +
+>>> +static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
+>>> +                   enum ib_uverbs_advise_mr_advice advice,
+>>> +                   u32 pf_flags, struct ib_sge *sg_list,
+>>> +                   u32 num_sge)
+>>> +{
+>>> +    struct rxe_pd *pd = container_of(ibpd, struct rxe_pd, ibpd);
+>>> +    unsigned int i;
+>>> +    int ret = 0;
+>>> +
+>>> +    for (i = 0; i < num_sge; ++i) {
+>>> +        struct rxe_mr *mr;
+>>> +        struct ib_umem_odp *umem_odp;
+>>> +
+>>> +        mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
+>>> +                   sg_list[i].lkey, RXE_LOOKUP_LOCAL);
+>>> +
+>>> +        if (IS_ERR(mr)) {
+>>> +            rxe_dbg_pd(pd, "mr with lkey %x not found\n", 
+>>> sg_list[i].lkey);
+>>> +            return PTR_ERR(mr);
+>>> +        }
+>>> +
+>>> +        if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
+>>> +            !mr->umem->writable) {
+>>> +            rxe_dbg_mr(mr, "missing write permission\n");
+>>> +            rxe_put(mr);
+>>> +            return -EPERM;
+>>> +        }
+>>> +
+>>> +        ret = rxe_odp_do_pagefault_and_lock(mr, sg_list[i].addr,
+>>> +                            sg_list[i].length, pf_flags);
+>>> +        if (ret < 0) {
+>>> +            if (sg_list[i].length == 0)
+>>> +                continue;
+>>> +
+>>> +            rxe_dbg_mr(mr, "failed to prefetch the mr\n");
+>>> +            rxe_put(mr);
+>>> +            return ret;
+>>> +        }
+>>> +
+>>> +        umem_odp = to_ib_umem_odp(mr->umem);
+>>> +        mutex_unlock(&umem_odp->umem_mutex);
+>>> +
+>>> +        rxe_put(mr);
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
+>>> +                     enum ib_uverbs_advise_mr_advice advice,
+>>> +                     u32 flags, struct ib_sge *sg_list, u32 num_sge)
+>>> +{
+>>> +    u32 pf_flags = RXE_PAGEFAULT_DEFAULT;
+>>> +
+>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH)
+>>> +        pf_flags |= RXE_PAGEFAULT_RDONLY;
+>>> +
+>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
+>>> +        pf_flags |= RXE_PAGEFAULT_SNAPSHOT;
+>>> +
+>>> +    /* Synchronous call */
+>>> +    if (flags & IB_UVERBS_ADVISE_MR_FLAG_FLUSH)
+>>> +        return rxe_ib_prefetch_sg_list(ibpd, advice, pf_flags, 
+>>> sg_list,
+>>> +                           num_sge);
+>>> +
+>>> +    /* Asynchronous call is "best-effort" */
 >>
->> However, there is a limitation in the current debugfs support of the 
->> energy
->> model. When the energy model is updated (em_dev_update_perf_domain), 
->> there
->> is no way for the userspace part to know such changes (besides polling 
->> the
->> debugfs files).
->>
->> Therefore, add inotify support (IN_MODIFY) when the energy model is 
->> updated.
->> With this inotify support, the directory of an updated performance domain
->> (e.g., /sys/kernel/debug/energy_model/cpu0) and its parent directory 
->> (e.g.,
->> /sys/kernel/debug/energy_model) are inotified. Therefore, a sched_ext
->> scheduler (or any userspace application) monitors the energy model change
->> in userspace using the regular inotify interface.
->>
->> Note that accessing the energy model information from userspace has many
->> advantages over other alternatives, especially adding new BPF kfuncs. The
->> userspace has much more freedom than the BPF code (e.g., using external
->> libraries and floating point arithmetics), which may be infeasible (if 
->> not
->> impossible) in the BPF/kernel code.
->>
->> [1] https://lwn.net/Articles/922405/
->> [2] https://github.com/sched-ext/scx/pull/1624
->>
->> Signed-off-by: Changwoo Min <changwoo@igalia.com>
->> ---
->>
->> ChangeLog v1 -> v2:
->>    - Change em_debug_update() to only inotify the directory of an updated
->>      performance domain (and its parent directory).
->>    - Move the em_debug_update() call outside of the mutex lock.
->>    - Update the commit message to clarify its motivation and what will be
->>      inotified when updated.
->>
->>   kernel/power/energy_model.c | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
-> 
-> I have discussed that with Rafael and we have similar view.
-> The EM debugfs is not the right interface for this purpose.
-> 
-> A better design and mechanism for your purpose would be the netlink
-> notification. It is present in the kernel in thermal framework
-> and e.g. is used by Intel HFI
-> - drivers/thermal/intel/intel_hfi.c
-> - drivers/thermal/thermal_netlink.c
-> It's able to send to the user space the information from FW about
-> the CPUs' efficiency changes, which is similar to this EM modification.
+>> Asynchronous call is not implemented now, why does this comment appear?
+>
+> Even without the 2nd patch, async calls are reported as successful.
 
 
-I have considered netlink before. However, I chose the debugfs-inotify
-path since it requires fewer changes.
+Async call is not implemented. How to call "async calls are reported as 
+successful"?
 
-However, if the netlink interface is better for this purpose (I agree
-*debugfs* is not ideal), sure let's go with that direction.
 
-> 
-> Would you be interested in writing similar mechanism in the EM fwk?
+Zhu Yanjun
 
-Sure, I will work on it and send another patch set.
-
-> 
-> Regards,
-> Lukasz
-> 
-> _______________________________________________
-> Kernel-dev mailing list -- kernel-dev@igalia.com
-> To unsubscribe send an email to kernel-dev-leave@igalia.com
-> 
+> The comment is inserted to show the reason, which is based on the
+> description from 'man 3 ibv_advise_mr' as follows:
+> ===
+> An application may pre-fetch any address range within an ODP MR when 
+> using the IBV_ADVISE_MR_ADVICE_PREFETCH or 
+> IBV_ADVISE_MR_ADVICE_PREFETCH_WRITE advice. Semantically, this 
+> operation is best-effort. That means the kernel does not guarantee 
+> that underlying pages are updated in the HCA or the pre-fetched pages 
+> would remain resident.
+> ===
+>
+> Thanks,
+> Daisuke
+>
+>>
+>> Zhu Yanjun
+>>
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +int rxe_ib_advise_mr(struct ib_pd *ibpd,
+>>> +             enum ib_uverbs_advise_mr_advice advice,
+>>> +             u32 flags,
+>>> +             struct ib_sge *sg_list,
+>>> +             u32 num_sge,
+>>> +             struct uverbs_attr_bundle *attrs)
+>>> +{
+>>> +    if (advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH &&
+>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
+>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
+>>> +        return -EOPNOTSUPP;
+>>> +
+>>> +    return rxe_ib_advise_mr_prefetch(ibpd, advice, flags,
+>>> +                     sg_list, num_sge);
+>>> +}
+>>
+>
+-- 
+Best Regards,
+Yanjun.Zhu
 
