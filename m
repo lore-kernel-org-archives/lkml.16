@@ -1,123 +1,92 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5B1C4609;
-	Sat, 10 May 2025 17:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493761B043C
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 17:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746899291; cv=none; b=nmVHh3lIQC3E/1A/m87f2W6PnNwou9FVmrIXKpPSsNazbdjrTivHczYQv/jLw15W0zhGYp4DGZngJLnwD399WgNS41t91dHnZNBP2dkhXILKOL+jAbTniJbCZG0Y3OI4KQjgXUYEnUFe9imcHVlDxMNvhAJmT59P/nNZGF8BBk0=
+	t=1746899843; cv=none; b=oUAr2mwHxkYGFjj23QavBStK47SU8ccVU13msyi6DA2kRC5X3ebIyz9flgYUUPsteA64hvUc8Mt3C174B2EAXCzy7XmHEUbEe9t5DmUKov+9WqMvlLAlZ5njwwXNb63RGtFxWXaMuPThlhjz6BAJcSSjRPxTDGlcaDda+SjfMjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746899291; c=relaxed/simple;
-	bh=kUcCYZpGhDJuM0PTGBl3uRYLyZgIWmlE2IQoydwC+S4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YGrecaw1j4swtmbYJc0Rj1vvMSjHgwTIGiJhBS9dro5Ck/czHUwAKQkq1cd6QRzlLw/tRuuH79qGsuNE4vuIGsqi1FjhYdbTdn64GNBUkby6vr6IJjhH0JaAovlzoEUU4TukzEsmGhQlSLEZwYSWY4zMZiRB293GnWK0vqSI6EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=G3tlCJfG; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1746899843; c=relaxed/simple;
+	bh=WjgGUfr6X08qxQK3zfVrb3aTo/x2kOH4Dzdn/sVCI8Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uoOTuRplzAL2Xa5N1ektQJ9rsuUWTD3EcaDsMPjyNqHxbiHWRZM6cxvI11qb7D05YJq4Y31k2CR7vKGK8zGResntxHsowuLg2C6QmCKEZP6UCCkyYkultjbabjPkFYMDQg394cwKG2s4QQ9NGfHyqvn1hYFWj5B/HERs40+38Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a42M2fwj; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="G3tlCJfG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=goUj4uTlrWULdr0JG01jm/v04D1+T1nfYQPlEzafaUQ=; b=G3tlCJfGytToS8LQrZKmPFYuKT
-	kd38RvglH2yCEorb3ldkOhZVSS6uNvxY+7FS8C2toSRhiNVG5R9HSHJ+58KGLSBni2HsOjMmYxb3A
-	k9oN67wLIdbRcODSLXO4aMFlirJuZwbL//U78COHa8N0LyZs9h7co7CT9E6f2Ya+LjfN+58O9tPAl
-	iXKsymbQiUVnlYxT5uSxevGfeAQVmBpTPNFEvfsJ1xxxwIYlYoWvcIWaFxdfJ57X28eo/wAPPs6Xt
-	IKE1zPnByOyGcKWAopYeuXy4QVQInMaOs2VAqEFZz8afl/F1ZGrsFqaAyZzmoEH4LIK1XWwQt5Qyd
-	MhU5ZCnA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uDoIu-00000002izj-2OIw;
-	Sat, 10 May 2025 17:48:04 +0000
-Date: Sat, 10 May 2025 18:48:04 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] fs: Fix typo in comment of link_path_walk()
-Message-ID: <20250510174804.GZ2023217@ZenIV>
-References: <20250510104632.480749-1-richard120310@gmail.com>
- <20250510120835.GY2023217@ZenIV>
- <aB9KHNNBzWxMJ2_j@vaxr-BM6660-BM6360>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a42M2fwj"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54d98aa5981so4982464e87.0
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746899839; x=1747504639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WjgGUfr6X08qxQK3zfVrb3aTo/x2kOH4Dzdn/sVCI8Y=;
+        b=a42M2fwjO7jggns9B/kIVIC39zfwxk023gX7SsN02ebietWCjA8+ip6ffcvqJKqq7E
+         0/aX0jztyEQyFmtaMfVYCAK08uGowJXfQBXzTulQNQXqr15BmfDRVcZxl12bNcgFeREA
+         iKNFqMeWUpZ0qPcPBKkyfcyyxN/dEOWkTjw597zLyGYsaNxJ5988MAVrzOD06qy+pt/P
+         6PETy89olOmrHsUGv14Sk7PKowS20n6JKxBYGEFPIaPRld/oguencRcBG0xLvqh9mFXw
+         9z5nnIZiD7HEfX/zHoFreLSTNCDvz1KKmYU/bZPFvFIAU+eHteGfFtuiDX+dB5AABpEn
+         fX0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746899839; x=1747504639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WjgGUfr6X08qxQK3zfVrb3aTo/x2kOH4Dzdn/sVCI8Y=;
+        b=DFDHTTcuK0C0DwYG6G6ujTpoQdCZ+TPs7E0FPNptBHocidZ/vOA1ylK2M/4IG5YEj4
+         Ao82/7jx0U2b1zcP0nJef/kBiGP4YkyHcgwWX2um3P0WK5N2oAIHQkgqJFtCzC21YXM2
+         XyAaJaGox4TuqQqOfw+uv+G2KtCDIURxkFPeSrg21vaXCgUwn0boEVdgmoF/PekiBkcg
+         +BGWnn3//2JH/UluMpgxOOlbiGtgFf1Ku4gcaak2gjINUsUCtc+K9H+Wm4NjYj7WzWyk
+         cW7Nkqk8xs/4uhJsM3VC4GrzFNo5MVb5Ib9yJi41v6Pld/sBl1t5wlP0gTkxg2guzI30
+         mmQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbLukDM/k/iWAVbhahi6lUfZuR5MKPZWiElzCNY5UhQL3Rq+H+wkHyl90pB12l5ASH/4bfV5QuQIq3NNM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3rfCoCvZulw1FjsYB1Ymp1Pfiqcke5LG/sjwpEm7ZKjc8EXDn
+	zTTjxjxhEJAfgqrSfxwkHW2hHFO7h1w1E4nf3288JR6pvP7Ut7pIxlHynEiy6KM8zH8mWYvGtWO
+	RZAGwxn1K04eI8Y78V8TkOFVYUhM=
+X-Gm-Gg: ASbGnctv0ZzOAdSygHhfnknvJKN59S/D69sb41QflUFngQj7dlOCH6r2DbHbRK32a5U
+	hBnkbBhR6zhpScjCwlKRk6DA0GkuJnt3HkBbF1xzuHLmGgWg8km7IXlJTS8oLyOHKlXkrfNLjbB
+	gn2RS+pINs2TqtjohUpg0MkjWeEhAuOaxs3Iq54R4wsfZELsEP5TgfZheXFIvbU1oS
+X-Google-Smtp-Source: AGHT+IF3Z7tQbN2UvUVUBVdgIrJ9vuxONRjESM/OBLUWaAOZrCvSkzujqqR6dmG4HVeFUAwt4imd8+AAeDimdibevQg=
+X-Received: by 2002:a05:651c:30c6:b0:30c:7a7:e874 with SMTP id
+ 38308e7fff4ca-326c4569ba6mr34455471fa.11.1746899838943; Sat, 10 May 2025
+ 10:57:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aB9KHNNBzWxMJ2_j@vaxr-BM6660-BM6360>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+References: <20250510011806.13470-1-benato.denis96@gmail.com> <20250510011806.13470-2-benato.denis96@gmail.com>
+In-Reply-To: <20250510011806.13470-2-benato.denis96@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Sat, 10 May 2025 14:57:07 -0300
+X-Gm-Features: AX0GCFu_Mc34XZBVrE6yFFGghE4cYWVtNs10oUnBiwd7enOu-iz8bicOZ1AybT8
+Message-ID: <CAOMZO5A1oRcUuNVcr_kcKz0SZqGc-AHzLR+__gRQEaV__xKbsw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ARM: imx_v4_v5_defconfig: define CONFIG_ARCH_NXP
+To: Denis Benato <benato.denis96@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 10, 2025 at 08:44:12PM +0800, I Hsin Cheng wrote:
-> On Sat, May 10, 2025 at 01:08:35PM +0100, Al Viro wrote:
-> > On Sat, May 10, 2025 at 06:46:32PM +0800, I Hsin Cheng wrote:
-> > > Fix "NUL" to "NULL".
-> > > 
-> > > Fixes: 200e9ef7ab51 ("vfs: split up name hashing in link_path_walk() into helper function")
-> > 
-> > Not a typo.  And think for a second about the meaning of
-> > so "fixed" sentence - NUL and '/' are mutually exclusive
-> > alternatives; both are characters.  NULL is a pointer and
-> > makes no sense whatsoever in that context.
-> 
-> Ohh thanks for the head up. I'll keep this in mind, really big thanks!
+On Fri, May 9, 2025 at 10:18=E2=80=AFPM Denis Benato <benato.denis96@gmail.=
+com> wrote:
+>
+> Define CONFIG_ARCH_NXP so that CONFIG_ARCH_MXC won't be disabled
+> as it depends on CONFIG_ARCH_NXP.
 
-FWIW, the logics could be cleaner; what happens there is that having
-consumed a pathname component, we want to find two things:
-	* was it the last one?
-	* if not, where does the next one start?
-If the next character is the end of string (NUL, zero byte), everything's
-obvious - it was the last component.  If not, the next character must
-be '/' (anything else would've been a part of component we've just read
-through), and usually that would mean that there are other components
-coming after it.  However, there might be more than one slash (/usr//bin
-means the same thing as /usr/bin), so we need to skip however many slashes
-there might be in order to find the beginning of the next component.
-What's more, /usr/bin/ is also valid and means the same thing as /usr/bin,
-so it's still possible that component we've read was the last one - we
-won't know until we skip all slashes and see if we've reached the end
-of string.
+This is not correct.
 
-A possible way to clarify that might be something like
+$ make imx_v4_v5_defconfig
+#
+# configuration written to .config
+#
+$ cat .config | grep CONFIG_ARCH_MXC
+CONFIG_ARCH_MXC=3Dy
 
-/* given a pointer just past the end of component find the next one */
-static inline const char *next_component(const char *s)
-{
-	if (!*s)		// end of string
-		return NULL;
-	// the only other thing possible here is '/'; skip it, along with
-	// any extra slashes (if any - rare, but legal) right after it.
-	do {
-		s++;
-	} while (unlikely(*s == '/'));
-	if (unlikely(!*s))	// slash(es), then end of string
-		return NULL;
-	return s;		// beginning of the next component
-}
-
-with
-		name = next_component(name);
-		if (!name) {
-			/* we are at the end of... */
-                        if (!depth) {
-				/* ... the pathname or trailing symlink; done */
-                                nd->dir_vfsuid = i_uid_into_vfsuid(idmap, nd->inode);
-                                nd->dir_mode = nd->inode->i_mode;
-                                nd->flags &= ~LOOKUP_PARENT;
-                                return 0;
-                        }
-                        /* ... the last component of nested symlink */
-                        name = nd->stack[--depth].name;
-                        link = walk_component(nd, 0);
-		} else {
-			/* not the last component */
-			link = walk_component(nd, WALK_MORE);
-		}
-
-in the corresponding place in link_path_walk().  Not sure if it's better
-that way, to be honest - taking that chunk into an inline helper would
-force reader to go looking for the definition of that helper and that
-just might be more disruptive than the current variant.  Hell knows...
+CONFIG_ARCH_NXP is an arm64 option.
