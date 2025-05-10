@@ -1,108 +1,81 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B89B1E1E13;
-	Sat, 10 May 2025 07:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66932E401;
+	Sat, 10 May 2025 07:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746863449; cv=none; b=h5omqafuPnSCXcZvtiev/XqByfBVmWyq7baGvV5r4KYeIcsddXFRhXtEvuUzo5dx8e5YOUb1KtV2LccojVuSEciUpkOP067zzlALZ8dhZ6vRiTsJ3YY5OKcikllTQletsVLRyKN1H5YQRTjrfL/lrcKsYuc6crtj/5UegpuwaGo=
+	t=1746863616; cv=none; b=LQDaipmeXuiXlbV0BWEyebGK7cLQg0zweXHjVjLCZoXNu7L9ixa6wIKxHye+Ttp9zUirkh0/xmYAIPQWEOSDnwgXTTePNQtYPW9aQlRXZvfOXq6MVi3AkMFzK232Ca9YPq3CEL9HLQIH6vex7MIXHkPkWhD63wipuAIOOu9H0hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746863449; c=relaxed/simple;
-	bh=rq3+R8KxgRQTbXSQTHcwopUOhKrrc6gxWrgWlboK0+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xh12hacEasFTHzNxm6Fw2bmBudxmXeKD319ChlYKh1mBGjqmIj9ZrQ2pUYOwTMXMRBrmYo4wvLsNGbpfGSF5F0GCUTxyTr1DnQxwgde/4+hYSMe7yTgVG0nFR3vvITwLvqgEMQjOomPe9on3rjWKbwEWWqTJ4+ohJJ2ccSHOc7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=UerPiPgR; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1746863616; c=relaxed/simple;
+	bh=oJREma6J7hcfGwjgy7lv6qM1wLUpD8zhJ0GVqc+khVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bM7ggkOMxc9iExoQgPWlC+a2L7213ZaLi1pJLF/m/NHS8XfEcfyWO1rZSYRFYFlFpBItVPIC3Aay8mKBMWGCxNM/WputfwD/WdTk3sw5JuYx0M5DKuwBM8uPPr9y4Qem57Hhj9t0cp5otRPT0WoURiLAcjHrDYqrCUuzgd51yNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Zh74CPPy; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="UerPiPgR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1746863443;
-	bh=rq3+R8KxgRQTbXSQTHcwopUOhKrrc6gxWrgWlboK0+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UerPiPgR2zXRGr3J4NW4UklryCK1zkrNBaFP6nlXrkDX1DXXDGyOzFq825xtmnLKu
-	 I7dteRFqiNm7ddMS5jsg4rBXNsku3c0ezlNb7diFcdqBOshkVUtf5fEJzriPPB5tew
-	 ZXRjYLMEgfipJWg1ZiajS/c0IFN5JfYqAAIC9nhw=
-Date: Sat, 10 May 2025 09:50:43 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Sung-Chi Li <lschyi@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] hwmon: (cros_ec) add PWM control over fans
-Message-ID: <a07adf23-8073-4c07-ae4a-0fdd4feb9f2a@t-8ch.de>
-References: <20250502-cros_ec_fan-v2-0-4d588504a01f@chromium.org>
- <20250502-cros_ec_fan-v2-2-4d588504a01f@chromium.org>
- <a89ee43f-79d9-405a-a099-7ce90fe6eb55@t-8ch.de>
- <aBgpepY29tFUGVYm@google.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Zh74CPPy"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 194F525F3D;
+	Sat, 10 May 2025 09:53:25 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id KZGqBqejas4K; Sat, 10 May 2025 09:53:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746863604; bh=oJREma6J7hcfGwjgy7lv6qM1wLUpD8zhJ0GVqc+khVo=;
+	h=From:To:Cc:Subject:Date;
+	b=Zh74CPPyoh9D7+lMgkqcxGni/Ama8qPHgkp8CW+MExpCgEMsNOSSq3jguj6UXSYWS
+	 +GoYIvBxE4/jSnPisVLioL85+YADSekcrJkBZnhZxhR+XdMSCbWLHcTD0nYhMvvs/K
+	 8XkNsERLGrZiWogGnos3dEi4+tedx6iFBsCPEEFBq2F4/7uE88ijMSJAdWy4o6Bb0n
+	 dFql4uNyHQnAIGgyQDNeZ1jKb+ayS7oItIULNv25AwJ4qa5VH7Q7XWXooXN04aBiyA
+	 DVW9ZjDp2EYcJznABxckPHr4meR5pN9gRASxxXIw7syioHbpcC4759kLhCyT4iADKO
+	 PRSSA3DIuankw==
+From: Yao Zi <ziyao@disroot.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Yao Zi <ziyao@disroot.org>
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] clk: rockchip: Pass NULL as reg pointer when registering GRF MMC clocks
+Date: Sat, 10 May 2025 07:52:49 +0000
+Message-ID: <20250510075248.34006-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBgpepY29tFUGVYm@google.com>
 
-On 2025-05-05 10:59:06+0800, Sung-Chi Li wrote:
-> On Sat, May 03, 2025 at 09:36:39AM +0200, Thomas Weißschuh wrote:
-> > On 2025-05-02 13:34:46+0800, Sung-Chi Li via B4 Relay wrote:
-> > > From: Sung-Chi Li <lschyi@chromium.org>
+This corrects the type and suppresses sparse warnings about passing
+plain integers as NULL pointer.
 
-<snip>
+Fixes: 621ba4d9f6db ("clk: rockchip: Support MMC clocks in GRF region")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505100302.YVtB1zhF-lkp@intel.com/
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ drivers/clk/rockchip/clk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > >  static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
-> > >  {
-> > >  	unsigned int offset;
-> > > @@ -76,6 +114,8 @@ static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> > >  	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> > >  	int ret = -EOPNOTSUPP;
-> > >  	u16 speed;
-> > > +	u8 control_method;
-> > > +	u8 pwm_value;
-> > 
-> > Ordering.
-> > 
-> 
-> I thought you are talking about only the u8 variables, or do you mean the
-> ordering should be applied with different types (and the declarations of
-> different types are mixed)?
+diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+index 43d7ed5c3418..805ab4a6f7e0 100644
+--- a/drivers/clk/rockchip/clk.c
++++ b/drivers/clk/rockchip/clk.c
+@@ -622,7 +622,7 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
+ 			clk = rockchip_clk_register_mmc(
+ 				list->name,
+ 				list->parent_names, list->num_parents,
+-				0,
++				NULL,
+ 				grf, list->muxdiv_offset,
+ 				list->div_shift
+ 			);
+-- 
+2.49.0
 
-The ordering was for the whole declaration block.
-If you want to keep variables of the same type together, declare them in
-a single line (and sort that).
-
-<snip>
-
-> > > +static int cros_ec_hwmon_resume(struct platform_device *pdev)
-> > > +{
-> > > +	const struct cros_ec_hwmon_priv *priv = platform_get_drvdata(pdev);
-> > > +	size_t i;
-> > > +
-> > > +	if (!priv->fan_control_supported)
-> > > +		return 0;
-> > > +
-> > > +	/* EC sets fan control to auto after suspended, restore to settings before suspended. */
-> > > +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
-> > > +		if (!(priv->manual_fans & BIT(i)))
-> > > +			continue;
-> > > +
-> > > +		/*
-> > > +		 * Setting fan PWM value to EC will change the mode to manual for that fan in EC as
-> > > +		 * well, so we do not need to issue a separate fan mode to manual call.
-> > > +		 */
-> > > +		cros_ec_hwmon_set_fan_pwm_val(priv->cros_ec, i, priv->manual_fan_pwm_values[i]);
-> > 
-> > Error handling?
-> > 
-> 
-> I removed the error checking in the v2 version because after second thought, I
-> think even if we failed at the i th fan, we should do our best to restore these
-> fan settings, thus continuing on the (i+1) th fan and so on rather than stop the
-> process immediately. Is adding a warning log for the failure sufficient?
-
-A warning sounds good here.
