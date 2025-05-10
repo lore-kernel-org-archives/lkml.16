@@ -1,76 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC492A1BB;
-	Sat, 10 May 2025 06:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9041545038
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 06:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746856946; cv=none; b=VyiUl1Fez+4KcP5LMZxrBZqLOgGwaX+n0dsNJLTE7pQ9zxi+mnRNgnKU+5sAPeUVBGRZG/oj4BlZ8RWCbHDLhFckq3kIgaISbVN5R6nRBjvZX1hwImkeCTOezII1YQ60+hI5xmYlCx4PdDpKJAumgcD1d9S6sx7WSszLxgmAUzw=
+	t=1746856964; cv=none; b=gUa4L26ja4VhvdjNOPpjkLwYORRciG9iGpxoxz/Rl3RZuGiZTaoDTmeXikrgXlOCwRiJah055J5vtAFhjTFvBxgu/+6m3XUSwjQS4GzsPzPlabKWFrX3SVfgf9HE7E5gyn7AnR1ol4fJ/WubG6U1ZyUorstjGGMdrmOLBYRZBPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746856946; c=relaxed/simple;
-	bh=JlSsQetcX37kb+C7A/7Zl2d7NI2PP1OhBJ4yWdB2dq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpDEL2DqoBL6fWnm2MKmtkkVqif+jlFePROreyy/Z6VQrRUOHQ+cJ7FKQmeWsk2+8wZPlCfonCJdHvrbKl5DYiaJqhYAWTwpO7j49LVK+ZxwsUTB2Fy2EF0FU/LoFhCWRbLojis7NlDbg0sZdIsvvOxlY31Tmb9qwhyvTuqFuSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NV/viZqF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746856964; c=relaxed/simple;
+	bh=9oF1QhbHCrUP+nOX0q5huIbc3K657Rizofqx0DN1r+0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qG3U+FjSxDu5aAk2B7BNh0XlVHtQ+C0fDNqwlrAveTjPa1Uvm4xlbIcGX/j169TIiy7qogTmDNkWSsosrD2uAVsqURAsPg5WPro6qvikkQlhVh0L14l9+DCzCjj+LRQcf0b/rixTmP0t54SOgDNFf34B5YyQ+t5KyxAEEYSZDBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B0yilAF3; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B0yilAF3; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NV/viZqF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597E0C4CEE2;
-	Sat, 10 May 2025 06:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746856945;
-	bh=JlSsQetcX37kb+C7A/7Zl2d7NI2PP1OhBJ4yWdB2dq8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NV/viZqFlgmeYeOd+a37GQMGj2Wdbb597buCO2CHtoo5e9okzB+Nv34A5uSb9yT7U
-	 T0U8EAQfSlJcGSLoQOiuuV37BPT2TZRRLYdrZg+Bf1h7FYKPqevWoI2XGpD7ZFv4Y1
-	 ji3riEIa4f44hkK9/0xN6sFKUXg5wiWnmmFl9xRPL/L7AtODj4a9jdbpPx1Gq9lCsD
-	 3NmTdIov3AhWHgJXT9gSdmYwd8K0vCiZ1fGQSnLiBRc1cFDJzHiEKcW4xcfQR011fO
-	 rKOMjmaAad2EKQDQN4zhH6H5qvV8zabd6dfFzqfBG7IPuskgqzzU9ah2fg91EEzKSy
-	 /t2IFMZsxRXRA==
-Date: Fri, 9 May 2025 23:02:19 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Danny Tsen <dtsen@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [v2 PATCH] crypto: powerpc/poly1305 - Add poly1305_emit_arch
- wrapper
-Message-ID: <20250510060219.GC505731@sol>
-References: <aByX_Y64C6lVRR8M@gondor.apana.org.au>
- <f66620e2-77e3-4713-a946-ddb2c8a0bccb@linux.ibm.com>
- <aByiNZNxqyTerdYG@gondor.apana.org.au>
- <1d2c2fdc-5c36-4d4e-8b25-8289b865726d@linux.ibm.com>
- <aB31DI4QBBZuQObQ@gondor.apana.org.au>
- <20250510044450.GA505731@sol>
- <aB7fvi_FBdnmLUON@gondor.apana.org.au>
- <20250510053308.GB505731@sol>
- <aB7o2SiwNLfBTgQk@gondor.apana.org.au>
- <aB7pCuT2wfEe_xby@gondor.apana.org.au>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B0yilAF3";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B0yilAF3"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 857641F397;
+	Sat, 10 May 2025 06:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1746856960; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=5x0FrLrT9arD78nhtjUiXkm3MxmtAVjf5jKghGKlN54=;
+	b=B0yilAF3iYnqGKxHn3iBP5eDc7zGo5ks3Fq6A7wtKy09l/DrrFLRmEunhCyEadEbkuh/ZE
+	hqwRBLuuYfLVKiESDAoPmzocev/mYt97xsXIj1cw02maWwsvxlJ3iOJ7KgHwfWdp4Th54H
+	MvoqfcdJsYfQH90L+SgJj3Ca4WzDnUg=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=B0yilAF3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1746856960; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=5x0FrLrT9arD78nhtjUiXkm3MxmtAVjf5jKghGKlN54=;
+	b=B0yilAF3iYnqGKxHn3iBP5eDc7zGo5ks3Fq6A7wtKy09l/DrrFLRmEunhCyEadEbkuh/ZE
+	hqwRBLuuYfLVKiESDAoPmzocev/mYt97xsXIj1cw02maWwsvxlJ3iOJ7KgHwfWdp4Th54H
+	MvoqfcdJsYfQH90L+SgJj3Ca4WzDnUg=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4F8A1136A5;
+	Sat, 10 May 2025 06:02:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PQZQEQDsHmjhMgAAD6G6ig
+	(envelope-from <jgross@suse.com>); Sat, 10 May 2025 06:02:40 +0000
+From: Juergen Gross <jgross@suse.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	sstabellini@kernel.org
+Subject: [GIT PULL] xen: branch for v6.15-rc6
+Date: Sat, 10 May 2025 08:02:39 +0200
+Message-ID: <20250510060239.18894-1-jgross@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aB7pCuT2wfEe_xby@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 857641F397
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_DN_NONE(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:mid,suse.com:dkim];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Action: no action
 
-On Sat, May 10, 2025 at 01:50:02PM +0800, Herbert Xu wrote:
-> On Sat, May 10, 2025 at 01:49:13PM +0800, Herbert Xu wrote:
-> >
-> > Did I do something wrong?
-> 
-> OK perhaps it's just that the qemu emulation being slow.
+Linus,
 
-Yes, non-native QEMU usually isn't any good for benchmarking the
-architecture-optimized code, due to the instructions it uses having to be
-emulated.  Just to give another random example, in (non-native) QEMU the RISC-V
-CRC code is much slower than the generic CRC code.  But when run on an actual
-RISC-V processor it's much faster.
+Please git pull the following tag:
 
-- Eric
+ git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.15a-rc6-tag
+
+xen: branch for v6.15-rc6
+
+It contains the following patches:
+
+- A fix for the xenbus driver allowing to use a PVH Dom0 with Xenstore
+  running in another domain.
+
+- A fix for the xenbus driver addressing a rare race condition resulting
+  in NULL dereferences and other problems.
+
+- A fix for the xen-swiotlb driver fixing a problem seen on Arm platforms.
+
+Thanks.
+
+Juergen
+
+ drivers/xen/swiotlb-xen.c                |  1 +
+ drivers/xen/xenbus/xenbus.h              |  2 ++
+ drivers/xen/xenbus/xenbus_comms.c        |  9 ++++-----
+ drivers/xen/xenbus/xenbus_dev_frontend.c |  2 +-
+ drivers/xen/xenbus/xenbus_probe.c        | 14 ++++++++------
+ drivers/xen/xenbus/xenbus_xs.c           | 18 ++++++++++++++++--
+ 6 files changed, 32 insertions(+), 14 deletions(-)
+
+Jason Andryuk (2):
+      xenbus: Allow PVH dom0 a non-local xenstore
+      xenbus: Use kref to track req lifetime
+
+John Ernberg (1):
+      xen: swiotlb: Use swiotlb bouncing if kmalloc allocation demands it
