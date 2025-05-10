@@ -1,175 +1,128 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB4C21B9E2
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE0D259C
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746872613; cv=none; b=rEd84kUGIli4oVI1lozYodd0f9wN0CYKVBXIhBC2AkGs57juYRxQ8wHBKHXH7a0dE+BBJVLmjjGxs2G/8t/BapFEd0ZkO4FXhfJynmwVI1lzJLYUf1kSPra06lk48k4vo85fb8jdl4LTl9d6IsG7yFtjkRDQPODXjN9xBLwf5dI=
+	t=1746872664; cv=none; b=LHuPzFGaE8TlhOUBdUSYlHHRCIicgVlWKF7Dmyx0E9CmggVNSVA50yjOhHD7qRuOBhqaQVnOnF3w2vcmA3b+3+wYxKrI6KJFBCrZzYNbWmy3QM1SeVKxsOZwj30T7J+RnAXHqWStKlOHoCEQ2nM+9t0Ns+pCDFOr5UsqlyLsIvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746872613; c=relaxed/simple;
-	bh=q0wisZRt5L9pgCrLCML8CY8UvzsBCAeD/nP6yE4p5bY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WJSM//Rmii+/2DC/pT4UDzZDGej9JjGVeo4+cclWOzAIWWPTbZX8Ki2R/f/Tnmmwzqpwh72bniVdOI2R6gFZ9XiqRdF5ymMv9jXUriu9wpuDI1eJ+qIohroPaEkoHWMhMXivK1ucF5vvP7JFO2Woxo2jcrFM49vwGaceOAYZ9AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da717e86b1so31750865ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:23:31 -0700 (PDT)
+	s=arc-20240116; t=1746872664; c=relaxed/simple;
+	bh=XR2eoL21B7qgjqjwcqA53eAq02iWZTPQJFIvkizweE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qkx74eiAI4gjcinWPFPbrXzlNaDoOGOaofU/noGOB9vmosxvLHm8fYbScwEe1YfSVra9exQeR7xFE1rMxn5Rv1vw3ZbXQWuJ/YDnH5rJnuxBPCPiqsU24hCVMKVQRHYb7Uxxwg2zUeVNrKx3oHRbbmAhk7qVPy125k8+0Ai3160=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCX2IeS/; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCX2IeS/"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so30633525e9.3
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746872660; x=1747477460; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X54rWRNLW17tSBvsmAsUPfuEHJyuny1CVhaZpG1ZBXU=;
+        b=YCX2IeS/NEOvTvdOvKB5DcuMlasDELhv5wcLUVa+6tzhIzVvdKcpdO6FWy0ywKFE2F
+         jlPwrz6k3AaebT4a9BADNBgV8SZUqM6mjBCSDnj9pnK0oUmds/F5EKzPUT8L8/d0cz7I
+         2s9Qmhm8iyPhhL+yFCgZ4i9rMlFQFj15W9pD71deZ28soksykJoFW92ys8HhtkDwpZ5H
+         z2fGNfvDgvuMlMWCGd2n4aEU84/gt1ts6k7x2YggSXIZ+O+zp28VSvenD6NlNg036nmU
+         tKIGTvaVU2CqWnmsr1yod//FnVTA/1J+lK8lg4xz5vzQDKBbNs2L1aK4tiU7ldOiHp5q
+         T5gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746872610; x=1747477410;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ME2pcLTIWfFJQpkjnq7laYhtteo6YmR7jL8iYdx3Li0=;
-        b=KZazxsDu8pO/dzcDaWfjzmPV18xZA6Ha94mVGN37ki0Jc6UE83bQqkGiHMIOSVNh/J
-         ggY6DKFIZfCgMbICAexuqOliLxdYsQS5TEO5xLKqaCLb5M8456HxJnbSHyT+BnUx6uDQ
-         YMRx/4a6Heu1qFj+URsjyOptvYa118aNSD60pY7GkrEAoh4EY2fm+KmH8/6PWa97auLd
-         1DxZsKf6dmV1mjzxsPs7WLhgE+IJrOD20h8zlczFnor/DDMvwY46CIiozMQgrhoBdJK3
-         H5HuisIFumtshzQkflnAMbH+e0YOAU8ZmjTkXbyHmSXIICnr8xb8uNyBQLNDbVsuXICQ
-         Txdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWjyc3gtk1zlm4OEv8jHqKHLHwVFNGB4CHO+kMG+4pqFa9UEi5ZNVFsznSaUJxQO930/JKHQAKP0PTGFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycbZnKmfVHEl8RzIGddA2AS+36R/qLHXikQsr/slQC4N3lOEmz
-	+SqbA799D6o8npuNjO8r46W5aSn7sP9xLZ8UGp8M9FYavQZia9GhXdwWZMT5uXhJXvEJINR9lyG
-	xV+yPsP/0wP9Inn9Pl1icDuayGS1tpzGlMS8wFtnryYlVn8ds1TKgMlg=
-X-Google-Smtp-Source: AGHT+IE3kICTyrVLQUUUSYgkh0Ms303NZQ2PftYdffS42SfBgyOrUm0wsE8sLG569ASRtLgT2wKNruVCdhqJ9aKfE5sWbepAQ3eg
+        d=1e100.net; s=20230601; t=1746872660; x=1747477460;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X54rWRNLW17tSBvsmAsUPfuEHJyuny1CVhaZpG1ZBXU=;
+        b=dk2/Mxi583NVx/nKSvWRW8iuopQZNzUY37QXkqyKWc+NUmQ+8ZgHa4cFe8YemPfePy
+         HVw1DJr+Tn3JrGLh3IU5rzfgHRPcbk5ZOZ+a2VDkKA9DGOgQoIWzcjB/bD+WxRNqfnnK
+         Bj1SuQ7a+ZSQgtPYaFhII0bFHpDE8l51GfWXINTECbhk5q79h2Ywwi7dR6v/IigzQuVb
+         aWnvgT/dUxkajzJuClAXa98L01UODGVqIeRGf0vj6o5JatyzEmj514LJkp9w8wdacST3
+         KnSdpBw4bbPnhDOXAhxsOuwK20rfnGZ1j2SupCyiCJBz4qzjt3k8o4S5D8diteSa7tfp
+         cbBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIoHwgJidZfJ5ToF2+CCirEzJPuxx3q46CmbNgOLpE5Ox99RwyqJ4J9ktra0F8T7beCw31EbO7cRFFlpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSlpn6qNik7bothLygq7IQDCvLIZTTOU27tLDW9oYEqQo3NMw+
+	UiJgzCszBZpGOznvyrjTWeHKFl3gydnfWvqXXTEuG4H068UeZvzn
+X-Gm-Gg: ASbGncsADJZcpTaM8LWg+LbklC2VAhW8eBwdyrs03GqpZSN2lMV+oBqoeWVriq800Oy
+	ffs/jNmwmfHjqDEb/OKaLbJhaluRQ14a9wzQlxUMXqfVIC2LTRpbm+x2WEphdGJt7RsV7OIhUll
+	UdlPhjvEgtvKZ0N+oHMRBCClS276NX91jXU4Of+5KrqV8uMyfeFbAjNiB5USq6F6hUChFQg4RMR
+	s8T0bDB2e5BAzIObBwoM8n7/eIsjXKPzvaiE+TBGpDP5HmPaiy/H9pZoOCHhkR6ww9LGh2XZv9p
+	EZ8v+dagwSmCyWPL3Xeuuo2gWXrWnHMqib5kqTmBA0fRkTkA41J9f3x5Z5YM6qR8gftsJu2zV31
+	9QpgmLxVvAvHDNw==
+X-Google-Smtp-Source: AGHT+IHmKjjVR4g+SsPL5UrBT/AEPsB+lNkQ5qQbaRA/6ZQru5xn1OVVVzTDLMZwyDlYYW3az+Mxrg==
+X-Received: by 2002:a05:600c:37c6:b0:43c:f629:66f3 with SMTP id 5b1f17b1804b1-442d6d517e2mr52696175e9.18.1746872660399;
+        Sat, 10 May 2025 03:24:20 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67e138asm57265725e9.10.2025.05.10.03.24.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 03:24:20 -0700 (PDT)
+Date: Sat, 10 May 2025 11:24:19 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, yuzhao@google.com, stevensd@chromium.org,
+ kaleshsingh@google.com, zhanjun@uniontech.com, niecheng1@uniontech.com,
+ guanwentao@uniontech.com, Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] mm: vmscan: Avoid signedness error for GCC 5.4
+Message-ID: <20250510112419.749652a7@pumpkin>
+In-Reply-To: <74D5BC8AD7E5511A+13242b55-13e5-463a-9422-f863d58b6af6@uniontech.com>
+References: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
+	<20250506162438.91fffc7ef924d9653ed0f503@linux-foundation.org>
+	<74D5BC8AD7E5511A+13242b55-13e5-463a-9422-f863d58b6af6@uniontech.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2489:b0:3da:6f46:5c1a with SMTP id
- e9e14a558f8ab-3da7e1e1b12mr79953545ab.2.1746872610474; Sat, 10 May 2025
- 03:23:30 -0700 (PDT)
-Date: Sat, 10 May 2025 03:23:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681f2922.050a0220.f2294.0005.GAE@google.com>
-Subject: [syzbot] [net?] BUG: unable to handle kernel paging request in nsim_drv_port_add
-From: syzbot <syzbot+1e4a7dc1542addfca0a5@syzkaller.appspotmail.com>
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Wed, 7 May 2025 12:06:11 +0800
+WangYuli <wangyuli@uniontech.com> wrote:
 
-syzbot found the following issue on:
+> Hi Andrew Morton,
+> 
+> On 2025/5/7 07:24, Andrew Morton wrote:
+> > On Wed,  7 May 2025 00:02:38 +0800 WangYuli <wangyuli@uniontech.com> wrote:
+> >
+> > Make `tier' unsigned?  After all, negative tier numbers are nonsensical.  
+> 
+> That point is well taken.
+> 
+> However, I've noticed that variables named "tier" seem to be commonly 
+> defined as int rather than unsigned int throughout the mm subsystem, and 
+> perhaps even the wider kernel code.
+> 
+> I was wondering if changing just this one instance might feel a little 
+> inconsistent?
+> 
+> Perhaps a possible approach for now could be to change this line to for 
+> (i = tier % MAX_NR_TIERS; i <= min_t(int, tier, MAX_NR_TIERS - 1); i++) 
+> {, which would allow us to keep the signed int type for the tier 
+> variable itself.
 
-HEAD commit:    9c69f8884904 Merge tag 'bcachefs-2025-05-08' of git://evil..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b5d8f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b353fce507849ee
-dashboard link: https://syzkaller.appspot.com/bug?extid=1e4a7dc1542addfca0a5
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+Remember that min_t(int, a, b) is just min((int)a, (int)b) and you really
+wouldn't put casts like that in code.
+Even if a cast can't be avoided only one side would normally need it.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+There really ought to be a 'duck shoot' against min_t().
+I'm trying very hard to stop any more being added.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6f122d34f751/disk-9c69f888.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d2f2b90345ca/vmlinux-9c69f888.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/90cead75be18/bzImage-9c69f888.xz
+	David
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1e4a7dc1542addfca0a5@syzkaller.appspotmail.com
+> 
+> Regarding the potential for a more comprehensive change in the future to 
+> redefine all these "tier" variables and related ones as unsigned int, I 
+> would be very grateful for your guidance on whether that's a direction 
+> we should consider.
+> 
+> But actually, whether it's signed or not likely won't affect its normal 
+> operation...
+> 
+> Thanks,
+> 
 
-BUG: unable to handle page fault for address: fffffffffffffee8
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD e184067 P4D e184067 PUD e186067 PMD 0 
-Oops: Oops: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 19500 Comm: syz.0.2769 Tainted: G     U              6.15.0-rc5-syzkaller-00136-g9c69f8884904 #0 PREEMPT(full) 
-Tainted: [U]=USER
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:580 [inline]
-RIP: 0010:__mutex_lock+0x159/0xb90 kernel/locking/mutex.c:746
-Code: 00 8b 35 9a 09 48 0f 85 f6 75 29 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 60 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 93 07 00 00 <48> 3b 5b 60 0f 85 e0 01 00 00 bf 01 00 00 00 e8 43 0d 1e f6 48 8d
-RSP: 0018:ffffc9000407fa50 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: fffffffffffffe88 RCX: 1ffffffff35654bc
-RDX: 1fffffffffffffdd RSI: 0000000000000000 RDI: fffffffffffffee8
-RBP: ffffc9000407fb90 R08: ffffffff870eaaa4 R09: 0000000000000000
-R10: ffffc9000407fba8 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffffc9000407fad0 R14: 0000000000000000 R15: 1ffff9200080ff54
-FS:  00007ff6196956c0(0000) GS:ffff8881249ec000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffffffffee8 CR3: 000000005fcee000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- nsim_drv_port_add+0x54/0x1a0 drivers/net/netdevsim/dev.c:1710
- new_port_store+0x129/0x170 drivers/net/netdevsim/bus.c:79
- dev_attr_store+0x55/0x80 drivers/base/core.c:2440
- sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
- kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x5ba/0x1180 fs/read_write.c:684
- ksys_write+0x12a/0x240 fs/read_write.c:736
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff61878e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ff619695038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007ff6189b5fa0 RCX: 00007ff61878e969
-RDX: 0000000000000001 RSI: 0000200000000500 RDI: 0000000000000003
-RBP: 00007ff618810ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007ff6189b5fa0 R15: 00007ffde1b77968
- </TASK>
-Modules linked in:
-CR2: fffffffffffffee8
----[ end trace 0000000000000000 ]---
-RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:580 [inline]
-RIP: 0010:__mutex_lock+0x159/0xb90 kernel/locking/mutex.c:746
-Code: 00 8b 35 9a 09 48 0f 85 f6 75 29 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 60 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 93 07 00 00 <48> 3b 5b 60 0f 85 e0 01 00 00 bf 01 00 00 00 e8 43 0d 1e f6 48 8d
-RSP: 0018:ffffc9000407fa50 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: fffffffffffffe88 RCX: 1ffffffff35654bc
-RDX: 1fffffffffffffdd RSI: 0000000000000000 RDI: fffffffffffffee8
-RBP: ffffc9000407fb90 R08: ffffffff870eaaa4 R09: 0000000000000000
-R10: ffffc9000407fba8 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffffc9000407fad0 R14: 0000000000000000 R15: 1ffff9200080ff54
-FS:  00007ff6196956c0(0000) GS:ffff8881249ec000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffffffffee8 CR3: 000000005fcee000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess), 1 bytes skipped:
-   0:	8b 35 9a 09 48 0f    	mov    0xf48099a(%rip),%esi        # 0xf4809a0
-   6:	85 f6                	test   %esi,%esi
-   8:	75 29                	jne    0x33
-   a:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  11:	fc ff df
-  14:	48 8d 7b 60          	lea    0x60(%rbx),%rdi
-  18:	48 89 fa             	mov    %rdi,%rdx
-  1b:	48 c1 ea 03          	shr    $0x3,%rdx
-  1f:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
-  23:	0f 85 93 07 00 00    	jne    0x7bc
-* 29:	48 3b 5b 60          	cmp    0x60(%rbx),%rbx <-- trapping instruction
-  2d:	0f 85 e0 01 00 00    	jne    0x213
-  33:	bf 01 00 00 00       	mov    $0x1,%edi
-  38:	e8 43 0d 1e f6       	call   0xf61e0d80
-  3d:	48                   	rex.W
-  3e:	8d                   	.byte 0x8d
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
