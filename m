@@ -1,91 +1,51 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EED7DEAC7;
-	Sat, 10 May 2025 06:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974C71A841A;
+	Sat, 10 May 2025 06:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746857934; cv=none; b=ixTI+eezlTD98s2R+N1En2biZthE95jMKIx1ted5ujnuCZmomYb0IEAVtqd4QlLMt5IadDVQsum4xufNttMIA5Kr540vFDdwIyJ5nkfiTTf2Ny/n6uVeDUkIhGitnRFsHur/PshnAUKbPchgdq1AB1O30jcso04yJDTyzCnbxu0=
+	t=1746858011; cv=none; b=A/7CjZxU+21Ao6Q+Ixnd0X5b3JFj6kgMkof4gVMwRMgnLNKdywQoFxUd5EORXCZI4BhDuV1OYNRyfM0XND+tlHXwWwY0GvTI0QJRUhVW47d81+d3NltsNkG14YC3COPy/QlAjDx0wgLGB6p8UlOuRimyLqv8GtV3/NGKtPDP5z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746857934; c=relaxed/simple;
-	bh=bkaSkQKKL+Wfa26ihWSrZj6fNEzSNv23lXHNw7dkRgk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P2Fozr3giFbYT7bMbHxrprUFY/TI5BMtCas0Z5DvdGG+RV57mCOsfgqz5ovlvmrqt+0hFHJn5M9zdYIlkdZd5eASuUxyR40DRHbnc+9dLDMEVvPlZwakxyqFA2CP2VW2AnaJqYH4wkbEuU1PN+Qtd1/2O6V7FnREZMUGsYVIZao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ELd7srLu; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746858011; c=relaxed/simple;
+	bh=1VJImxCkdvElsFp1jkBFRXJkWpsnQDrCnov/e1gZxYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O9zW/w23Ihby6aElmmZbz7VygOIQJp1EOhg0ME7QhlXkkfg1jPIwpLa7a0+S5vVHz5dpuEiQc4QihoYO/xWzL/jCogAbPV5i3AUMdqevXf74K2s/mDXxGENApqPb0LwmgVEjScC5qJbQPIxZ33ACg5SrRuDjankpwOIPv34qHIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D/fPhLeu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ELd7srLu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=E6
-	sFA1+0o6qqX1tn2eUR7zvx/z+b6iz6uSlv8sbSvvs=; b=ELd7srLuavvnUVJfEn
-	GfHSGbz2/OJTFHCQz6UoxGCKe1pyGCejW5yXcleZdMZMYHCU7SARYkfl0YVCl0UD
-	HpQE2f8r9KlkVz5lcGJ9UK5BG+FfBPpwqSIiqC3KWt1vqO6Aju6Ou8BZZeCFRcKY
-	W1+I/1xs3BeFKfS3ylo04wrao=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3i1Kf7x5oX2eZAQ--.58511S2;
-	Sat, 10 May 2025 14:18:08 +0800 (CST)
-From: chenchangcheng <ccc194101@163.com>
-To: laurent.pinchart@ideasonboard.com,
-	ribalda@chromium.org
-Cc: hdegoede@redhat.com,
-	mchehab@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	chenchangcheng <chenchangcheng@kylinos.cn>
-Subject: [PATCH v10] media: uvcvideo: Fix bandwidth issue for Alcor camera.
-Date: Sat, 10 May 2025 14:18:03 +0800
-Message-Id: <20250510061803.811433-1-ccc194101@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D/fPhLeu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97A38C4CEE2;
+	Sat, 10 May 2025 06:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746858010;
+	bh=1VJImxCkdvElsFp1jkBFRXJkWpsnQDrCnov/e1gZxYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D/fPhLeuLmSGUBdv5NYQtcwoIlyIfubECfDQJlfHUXjaZ3o2IdAhhyvQkBA57NMBY
+	 ogCH5zCHmw+W+l2dBP1CEm1j/+cJRSQTCTkpvXOjfLkH5PJja/KkiXo6UWjBTzdyYy
+	 FdGjYg360+wWyv7H4cS3lSfw0Sa6DicdMdsU0Nqo=
+Date: Sat, 10 May 2025 08:18:25 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 9/9] CodingStyle: flip the rule about curlies
+Message-ID: <2025051001-undertow-unsolved-3aee@gregkh>
+References: <20250509203430.3448-1-adobriyan@gmail.com>
+ <20250509203430.3448-9-adobriyan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3i1Kf7x5oX2eZAQ--.58511S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFWDKry5WFWfKF1xAr4UCFg_yoW8Xw1xpa
-	1ruayFyryUJrWFganrJa1rKw4rJanakw4fKFy3W34UZr45JryxXFy3G340q34qya1fAw13
-	tr1qqrnF939Yvr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07joGQDUUUUU=
-X-CM-SenderInfo: 5fffimiurqiqqrwthudrp/1tbiVhdI3mgeVhAAwwABsl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509203430.3448-9-adobriyan@gmail.com>
 
-From: chenchangcheng <chenchangcheng@kylinos.cn>
+On Fri, May 09, 2025 at 11:34:30PM +0300, Alexey Dobriyan wrote:
+> Require set of curlies {} in all if/else branches and all loops
+> not matter how simple.
 
-Some broken device return wrong dwMaxPayloadTransferSize fields
-as follows:
-    [  218.632537] [pid:20427,cpu6,guvcview,8]uvcvideo: Device requested 2752512 B/frame bandwidth.
-    [  218.632598] [pid:20427,cpu6,guvcview,9]uvcvideo: No fast enough alt setting for requested bandwidth.
+Sorry, but no, we are not going to change this long-term coding style
+rule for no real reason at this point in time.
 
-When dwMaxPayloadTransferSize is greater than maxpsize,
-it will prevent the camera from starting.
-So use the bandwidth of maxpsize.
-
-Signed-off-by: chenchangcheng <chenchangcheng@kylinos.cn>
----
- drivers/media/usb/uvc/uvc_video.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index e3567aeb0007..a74cf89852d1 100644
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -262,6 +262,15 @@ static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
- 
- 		ctrl->dwMaxPayloadTransferSize = bandwidth;
- 	}
-+
-+	if (stream->intf->num_altsetting > 1 &&
-+	    ctrl->dwMaxPayloadTransferSize > stream->maxpsize) {
-+		dev_warn_ratelimited(&stream->intf->dev,
-+				     "the max payload transmission size (%d) exceededs the size of the ep max packet (%d). Using the max size.\n",
-+				     ctrl->dwMaxPayloadTransferSize,
-+				     stream->maxpsize);
-+		ctrl->dwMaxPayloadTransferSize = stream->maxpsize;
-+	}
- }
- 
- static size_t uvc_video_ctrl_size(struct uvc_streaming *stream)
-
-base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
--- 
-2.25.1
-
+greg k-h
