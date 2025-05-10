@@ -1,99 +1,98 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37251D6AA;
-	Sat, 10 May 2025 00:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03192594;
+	Sat, 10 May 2025 00:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746836337; cv=none; b=i6Ll6UWYWsr3JE1Ebo6Cz4veubXJ1KUEb9CfUY4VPcgTi9gSPKEtcbIoDO/XWNsTUUfp2+NsR1fFtOf+/Nosz16gy7A22/mUW/iufFRahcIh2LAFFjDuQUNtHTKGwzwlwqA5MGc0E1HnfeE3245Ov1A48ID3K0p93MkJjngX+UQ=
+	t=1746836871; cv=none; b=ZPvK389GmQM5Av46YaRD9GNNhLTa/AltNgqapQaKucGxXikWHdSjkmRFGGXo4L2u3/Z4ZAFi9Z4/MUHRx7q5+AYCyqCZwMNWkswmvnaUOy+PBfufv/TqVhHXbWDArd/9E/b8WdDRXamD1HXkCUvpuaQHns6MwdjUkEkkD1E1rdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746836337; c=relaxed/simple;
-	bh=lsLtnFSVphBZGRaEOpHYnW/43K3L3GszCrMpsXdOAAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cb3/FtmR3dpfSKCxfba0XQ8KSCGSS5YfeI4mrTpze4G06IfuZbaaS53RqYGF4dlCwppvKDi12VnCBnfEDn1yR7FtjOFt/5FHgaTcc2Dj5XGfq8HjI8EbQMIyaN7itTL/+reyJURhgJUyPa/izRZrq//9cgeyVsHDW4qFOMvLFoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NrnMwztr; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746836871; c=relaxed/simple;
+	bh=HqMC/PvO3hI0omYHl1kiX7py/howh1t3h7nulYsHeA4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n+KdCVVQlJbuugJxrvuHUn7aAQ5awCwvoK0DzNvr/CNYFU+PV+XATqvgeKU1+C3Acs2gT1ucJlgk6HLOxSd4OZoXXWQYW/05CLh9e2BNx1KiYOE7Ez7mc3w68zcAAxobTY9D7NYZ3y3IgtFTfAxtKOWgI1NOoVM7/dwnOq7ZM9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zc8yK7lP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NrnMwztr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=JxEjBAQahXn7jOCRVGcyOqQ96R/5yhjHGXWRQR573Kg=; b=NrnMwztrylTNvdmJfJ9q0Qh+I6
-	K8qZyCmISUX3nEEtgcOFP1QVwEkkU7Vn3JE5kkZvfjsSlYFUtC3rZrbwhmD7AkH+FFenzHL8sfF+y
-	hdHgK/hqqNxe+pLxAaSXg0g5i5XI5DhKGudPqXbfQ2pLuG1Ed7rYl8AKWdc6vgiSzeZT5H6fMtXLg
-	74mAF3AbRGaZsXoVPKK1tP4v9ADylxl3mcO1b7DJqP6VKQoIDpfAZy4vUt7NA1f2CIDomqVT2ssK9
-	MuuhwTXyWAtics6zMrlC27a9SF/y1896pKxCbh3OMohIp+f7e7llOWbcs+Lwc3eK1D+Ku30oATR5A
-	nZptyVvw==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uDXvU-0000000GO9z-0NBe;
-	Sat, 10 May 2025 00:18:48 +0000
-Message-ID: <a4e821f9-9daa-4a65-b41a-200a6da85191@infradead.org>
-Date: Fri, 9 May 2025 17:18:40 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zc8yK7lP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118AAC4CEE4;
+	Sat, 10 May 2025 00:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746836870;
+	bh=HqMC/PvO3hI0omYHl1kiX7py/howh1t3h7nulYsHeA4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Zc8yK7lPMH4Wvj+nKpwVYUsupUfWveByPXcHbw7wwSK4aCzBQMv3aX2n9p65JHPLQ
+	 gHAlAGPFjgUZT1pXT6+1MDq/sTraeEh/RrzFRYdYnezk2i+oOoDGX6DIpDKmQ6VRDS
+	 9RM07OsaYtJXh6uCQ5c9oZLvHSMyqilkzbay0aLq81P1atJZc6RtJ5OLtehvMteiv9
+	 6PpHf5EXKAx5RuW17Iw6Bf6Cvi5oSOSxFyNPoKoZUAYfK7aPREyaQyDDD/8NxBOAxs
+	 hPIo9JqPAScHY/FzWBwVyxV5Tx0qNkGvO0N/UQW8BpVnEhUflnM5EdVs4yKT1kuX9k
+	 DGRdelXk5YaWA==
+From: SeongJae Park <sj@kernel.org>
+To: damon@lists.linux.dev
+Cc: SeongJae Park <sj@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: DAMON Beer/Coffee/Tea chat reminder for the week of 2025-05-12
+Date: Fri,  9 May 2025 17:27:46 -0700
+Message-Id: <20250510002746.58427-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for May 9 (i2c/busses/i2c-mlxbf.c)
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Khalil Blaiech <kblaiech@nvidia.com>, Asmaa Mnebhi <asmaa@nvidia.com>,
- linux-i2c@vger.kernel.org
-References: <20250509195816.7f0a67a3@canb.auug.org.au>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250509195816.7f0a67a3@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+Hello,
 
 
+This is yet another reminder of upcoming DAMON Beer/Coffee/Tea chats
+(https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing)
+for the week of 2025-05-12.
 
-On 5/9/25 2:58 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20250508:
-> 
+We will have the two meetings in the week as usual.
 
-on i386:
+I'm also considering merging any-topic and dedicated-topic discussions since
+apparently people prefer dedicated topic discussions.  For any-topic, I'm
+thinking about creating a Slack-like casual messaging systems.  Nothing has
+decided so far.  I'm just thinking about options.  Please let me know if you
+have any concerns or suggestions for that.
 
-ld: drivers/i2c/busses/i2c-mlxbf.o: in function `mlxbf_i2c_set_timings':
-i2c-mlxbf.c:(.text+0x67): undefined reference to `__udivdi3'
-ld: i2c-mlxbf.c:(.text+0x8a): undefined reference to `__udivdi3'
-ld: i2c-mlxbf.c:(.text+0xc7): undefined reference to `__udivdi3'
-ld: i2c-mlxbf.c:(.text+0xeb): undefined reference to `__udivdi3'
-ld: i2c-mlxbf.c:(.text+0x112): undefined reference to `__udivdi3'
+Any-topic discussions
+---------------------
 
-ld: drivers/i2c/busses/i2c-mlxbf.o: in function `mlxbf_i2c_calculate_freq_from_tyu':
-i2c-mlxbf.c:(.text+0x194): undefined reference to `__udivdi3'
-ld: drivers/i2c/busses/i2c-mlxbf.o: in function `mlxbf_i2c_calculate_freq_from_yu':
-i2c-mlxbf.c:(.text+0x1e0): undefined reference to `__udivdi3'
+Next three time slots for any topic (no reservation is required) are scheduled
+as below:
 
-These come fromm using '/' instead of one of the kernel's DIV macros when using
-u64 or ULL  data types.
+- 2025-05-12 (Mon) 18:00 PT (https://meet.google.com/ndx-evoc-gbu)
+- 2025-05-28 (Wed) 09:30 PT (https://meet.google.com/ndx-evoc-gbu)
+- 2025-06-09 (Mon) 18:00 PT (https://meet.google.com/ndx-evoc-gbu)
 
-in mlxbf_i2c_get_ticks():
+Dedicated-topic discussions
+---------------------------
 
-	ticks = (nanoseconds * frequency) / MLXBF_I2C_FREQUENCY_1GHZ;
+Next three time slots that I reserved in advance for possible future dedicated
+topic discussions are as below.
 
-in mlxbf_i2c_calculate_freq_from_yu():
+- 2025-05-14 (Wed) 09:30 PT (not yet reserved)
+- 2025-05-26 (Mon) 18:00 PT (not yet reserved)
+- 2025-06-11 (Wed) 09:30 PT (not yet reserved)
 
-	corepll_frequency = (MLXBF_I2C_PLL_IN_FREQ * core_f) / MLNXBF_I2C_COREPLL_CONST;
-	corepll_frequency /= (++core_r) * (++core_od);
+Please reach out to me (sj@kernel.org or whatever) to reserve the
+not-yet-reserved time slots for your topics.  The reservation is made in a
+First-Come First-Served way, and I will send a Google Meet link to
+reservation-confirmed attendees.
 
-in mlxbf_i2c_calculate_freq_from_tyu():
+Please note that other time slots are also available on demands.
 
-	core_frequency /= (++core_r) * (++core_od);
+Shared Calendar
+---------------
+
+You can get the schedule via this shared Google Calendar:
+https://calendar.google.com/calendar/u/0?cid=ZDIwOTA4YTMxNjc2MDQ3NTIyMmUzYTM5ZmQyM2U4NDA0ZGIwZjBiYmJlZGQxNDM0MmY4ZTRjOTE0NjdhZDRiY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t
+
+You can also get the past and upcoming schedules via
+https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing
 
 
-commit 37f071ec327b0 ("i2c: mlxbf: Fix frequency calculation")
-
-
--- 
-~Randy
-
+Thanks,
+SJ
