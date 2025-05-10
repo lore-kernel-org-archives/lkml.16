@@ -1,151 +1,74 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D4E1EDA06
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 21:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CF978C9C;
+	Sat, 10 May 2025 21:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746910910; cv=none; b=Urkb2ICJ9WKkJTKaYpf0S59qVAi7Zd1iEpUYD1a6OjD9hOiRRePQOitIwIJabg/mrCzq3Dt3v5tWM5ceAQw+Hj2wEFfLnFAkVbpma87MiXIMmfzFUDRZUG/w0lOqWdBEZ9QbEVh+KWeF6gXI2cKgjV4xeBOUHq/whJOh2FH0xrM=
+	t=1746911482; cv=none; b=RdfSyRRLG38Z11uFBNRoJrH7DB0jls4p3BgNYO7cZv+5CYdFM4aAPz+0NKmgnEG29x5rY6h4rBcEbKyniOBYEUJNjlWSsPS/SJex3jNI/7mlYVh22eCtKbZMwLS2dhR9f3kxA/vmRuIH5l6ldZ6fw14PpXrIVkSLIEFP6NBXXgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746910910; c=relaxed/simple;
-	bh=CqyaO56/um0r7+07UnuOVscO2huajZ+XOTAMEA9PjAs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=abqLyEMjZF4pAFPbr+8Y/b564G3kjopzUu1DDmAnRu9OfYHZB+iRTdzYiUmZr+lASt8QiWYLNu4SJaKUD3MD3d5Qwc0G9YM3MwehKhkYKiruOyL4golfIPlGftzow8cJJhHTD35uujXhuFyXWuDku0hlK5FlQtfWs2qu/GsD3bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Tba9+g+h; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746911482; c=relaxed/simple;
+	bh=YaTRPpJu4IXAqgUm93MB+ZnsNUdNBD0yv1Wjlt/WKU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/ZDg+OKpyTyjeh+5G4BhNtNWri2fezsn1w8Gj+gfl9O4IY2LFedp4jZ45c+MZBPZuuJbAAJHjz7+4aqtY+IMPs3irPcIvuGRYSC4EqIAQOz3aHDcQCp76VysoJyfegjz0vB7XRknxsmn/J/3AyvX1CjAhV+XOXJkoyxoEia7dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c5kk5HVK; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Tba9+g+h"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746910894;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SbT4EkS9jDwls1/MWPzR6fUxNMkTZUGDTe7h7TpT/ko=;
-	b=Tba9+g+hj5ohfWOFe9qq5iXS40bSZ7Tj2ikBvDOSHh6Fe+fLHL18HEe/hpl+yKriILmQrn
-	dtWpOGN+mFOEOG1DAXVSNqjoBpU/B0U1PVmuaU4llaGy+J7UUtpM5Aju1jpCdrxsWGXmmj
-	VyKBjKpvlwL+rUHfcVW64oG6C8VyaQQ=
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	linux-modules@vger.kernel.org
-Subject: [PATCH] params: Add support for static keys
-Date: Sat, 10 May 2025 17:01:26 -0400
-Message-ID: <20250510210126.4032840-1-kent.overstreet@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c5kk5HVK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=o6ORA5gX6E7XXNPH3F2az+0vfTFANLlW+LsGqTkQWXc=; b=c5kk5HVKCDDYj2sENDA8ExaPt+
+	Orw20A+GMCdu2UrgLWCc8EeTaXHnGH8sSRWhyvFjheunrbEKZt4e2kLAm5F4Z4NGy2hOlw/6j2348
+	Zv7eJrPI+kAJVDNsgVR7U5vvaSUpu77IsLs5JILrzkxjKcw213DX0chHrKBRPZeRnDKbDEXgAmEbv
+	gE49rfFUCW/kHjG+lQ4C3WuKJCuXyd9uw3dbuSscaZsi4I5caFoAcAp+iGeY8TFQcBS57kdx2pei2
+	Udzm9eU4gsnmSdZb/DFQW6jIzVhRAycSDod+OTmwyVDoSuQpaX8dr7N9ornV2Y0B515lWS8id8PQI
+	vFZEoH6g==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uDrTO-00000008Pgo-13Gs;
+	Sat, 10 May 2025 21:11:06 +0000
+Date: Sat, 10 May 2025 22:11:06 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: I Hsin Cheng <richard120310@gmail.com>, brauner@kernel.org,
+	jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] fs: Fix typo in comment of link_path_walk()
+Message-ID: <aB_A6jiLNBwpeNsJ@casper.infradead.org>
+References: <20250510104632.480749-1-richard120310@gmail.com>
+ <20250510120835.GY2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250510120835.GY2023217@ZenIV>
 
-Static keys can now be a module parameter, e.g.
+On Sat, May 10, 2025 at 01:08:35PM +0100, Al Viro wrote:
+> On Sat, May 10, 2025 at 06:46:32PM +0800, I Hsin Cheng wrote:
+> > Fix "NUL" to "NULL".
+> > 
+> > Fixes: 200e9ef7ab51 ("vfs: split up name hashing in link_path_walk() into helper function")
+> 
+> Not a typo.  And think for a second about the meaning of
+> so "fixed" sentence - NUL and '/' are mutually exclusive
+> alternatives; both are characters.  NULL is a pointer and
+> makes no sense whatsoever in that context.
 
-module_param_named(foo, foo.key, static_key_t, 0644)
+fwiw, C refers to strings as being 'null terminated' rather than NUL
+terminated.  eg 5.2.1:
 
-bcachefs is now using this.
+"A byte with all bits set to 0, called the null character, shall exist
+in the basic execution character set; it is used to terminate a character
+string."
 
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Daniel Gomez <da.gomez@samsung.com>
-Cc: linux-modules@vger.kernel.org
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
----
- include/linux/jump_label.h  |  2 ++
- include/linux/moduleparam.h |  6 ++++++
- kernel/params.c             | 35 +++++++++++++++++++++++++++++++++++
- 3 files changed, 43 insertions(+)
-
-diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-index fdb79dd1ebd8..0fc9b71db56f 100644
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -107,6 +107,8 @@ struct static_key {
- #endif	/* CONFIG_JUMP_LABEL */
- };
- 
-+typedef struct static_key static_key_t;
-+
- #endif /* __ASSEMBLY__ */
- 
- #ifdef CONFIG_JUMP_LABEL
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index bfb85fd13e1f..2494e7e67453 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -488,6 +488,12 @@ extern int param_set_bint(const char *val, const struct kernel_param *kp);
- #define param_get_bint param_get_int
- #define param_check_bint param_check_int
- 
-+/* A static key, which can only be set like a bool */
-+extern const struct kernel_param_ops param_ops_static_key_t;
-+extern int param_set_static_key_t(const char *val, const struct kernel_param *kp);
-+extern int param_get_static_key_t(char *buffer, const struct kernel_param *kp);
-+#define param_check_static_key_t(name, p) __param_check(name, p, struct static_key)
-+
- /**
-  * module_param_array - a parameter which is an array of some type
-  * @name: the name of the array variable
-diff --git a/kernel/params.c b/kernel/params.c
-index 2509f216c9f3..991f49e138e7 100644
---- a/kernel/params.c
-+++ b/kernel/params.c
-@@ -14,6 +14,7 @@
- #include <linux/overflow.h>
- #include <linux/security.h>
- #include <linux/slab.h>
-+#include <linux/static_key.h>
- #include <linux/string.h>
- 
- #ifdef CONFIG_SYSFS
-@@ -412,6 +413,40 @@ const struct kernel_param_ops param_ops_bint = {
- };
- EXPORT_SYMBOL(param_ops_bint);
- 
-+int param_set_static_key_t(const char *val, const struct kernel_param *kp)
-+{
-+	/* Match bool exactly, by re-using it. */
-+	struct kernel_param boolkp = *kp;
-+	bool v;
-+	int ret;
-+
-+	boolkp.arg = &v;
-+
-+	ret = param_set_bool(val, &boolkp);
-+	if (ret)
-+		return ret;
-+	if (v)
-+		static_key_enable(kp->arg);
-+	else
-+		static_key_disable(kp->arg);
-+	return 0;
-+}
-+EXPORT_SYMBOL(param_set_static_key_t);
-+
-+int param_get_static_key_t(char *buffer, const struct kernel_param *kp)
-+{
-+	struct static_key *key = kp->arg;
-+	return sprintf(buffer, "%c\n", static_key_enabled(key) ? 'N' : 'Y');
-+}
-+EXPORT_SYMBOL(param_get_static_key_t);
-+
-+const struct kernel_param_ops param_ops_static_key_t = {
-+	.flags = KERNEL_PARAM_OPS_FL_NOARG,
-+	.set = param_set_static_key_t,
-+	.get = param_get_static_key_t,
-+};
-+EXPORT_SYMBOL(param_ops_static_key_t);
-+
- /* We break the rule and mangle the string. */
- static int param_array(struct module *mod,
- 		       const char *name,
--- 
-2.49.0
-
+so NULL-terminated is incorrect because it uses the wrong case.  All this
+to sau. I Hsin Cheng, please do not submit patches "correcting" comments
+in the other direction (ie changing NULL to NUL).  They aren't
+ambiguous.
