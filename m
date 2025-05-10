@@ -1,171 +1,167 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3AF1E2853;
-	Sat, 10 May 2025 08:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1053D561;
+	Sat, 10 May 2025 08:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746864928; cv=none; b=YDVut6/AlivRMFbTncLU3qjSR6nGoSHUF+phJuPILvdtru92v8Y/Y+AlO1h+QepqPeD1Yz7tKErNyIxebvG6CB85sgJZE7OTkNXt8ABtzLg7KDDpanzXHkJr4j07g2S8cDM5qe6ltCjXTAyhdoUS1EDuCKyEOJ/y0HWmihoCsaQ=
+	t=1746865217; cv=none; b=mEiIBvl+3mPtmH8G2P4AxGwFaTtxZDFoyDBbUAtqtt7/EByuZ5j4qqXOYOz8GtZJggC+29+uZzmYGKpqg3DF9Q0CGtSTNB9jLpwWBy+mXa126xjvSjilIp8b2zCtTWl1BrY1QeKmLE5NITtM1M1i9nIiU6iTgsWqxoW6WhpPtf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746864928; c=relaxed/simple;
-	bh=VXGH4gHfoq5zBVBDrUGxQPKyMbZKpfTr9hgObAwt+ig=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lRQbbWaJ8xR228qw1ngbrnZfDqAtfUmYrzrXWmI0Mz6vGWwxYW8sPTFQZByU/6bPQ2RPQ/v3snZkFR1VEeMvvKKysKYrv9oKETfzim9IymqGjkicXaqfd5maZz8Yr/yzdHE0kPa6DpVCxWiwPogp8XrEnxPL4C2/si+qLBuKv5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Zvdwz2NPCz27hF3;
-	Sat, 10 May 2025 16:16:03 +0800 (CST)
-Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
-	by mail.maildlp.com (Postfix) with ESMTPS id C95CA1800B1;
-	Sat, 10 May 2025 16:15:16 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemg500006.china.huawei.com
- (7.202.181.43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 10 May
- 2025 16:15:16 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH v8 6/6] hisi_acc_vfio_pci: update function return values.
-Date: Sat, 10 May 2025 16:11:55 +0800
-Message-ID: <20250510081155.55840-7-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20250510081155.55840-1-liulongfang@huawei.com>
-References: <20250510081155.55840-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1746865217; c=relaxed/simple;
+	bh=w4KCtfNN++3rTxuFj1Y4PcCXB490W9C1G146sr8flJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sweLRFdF3Gql1sT7N7QCNTobXjLraTVY8cOHvRWwVa2qk0ws5bjgz6EFzQ7r2jKT+9d0/c02+fw4xGJg0ZLdmXjIIMZAf9SpdlCN7AxGay/nfO9w7wUps7u116x+9o0NyOKT+MG7Mq69j1HAkXeDc2mgMxM1iTsyVrmJGrnszsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ovsafr1I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ovsafr1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0830C4CEE2;
+	Sat, 10 May 2025 08:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746865217;
+	bh=w4KCtfNN++3rTxuFj1Y4PcCXB490W9C1G146sr8flJk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ovsafr1IoxltalBpWEdz0LRdhvqKYCKnVgsC+Vf1jGoTlQa8kTcrVqMddNZ9jxlGx
+	 NsSZnwuns+gK0X7hsYK5kHY7+tv3l0Nz8CjPhoYHdPXCF3678/kL56DbxnAtJ6Dm8c
+	 hfvz+XXtlGWevcAN0Kt/M/3Nm6tKw3+SIMuWThSODPIHMoli0nXWiNNMlaDGX2Cdhr
+	 yvaAnWPq/C34W7kk9VhP1ArPoAgmx/6aX4+j1kYOXdxwqId3K8uKrV8E3YIHbh4Oi9
+	 5Ka4dw3rSJqhJ7duWnZ8/z9zvwQ/1FT+Zn1pnpUQQ8NntaD1WvfQ+jZN8GZpIQwVD+
+	 PI7AGINwOgXzQ==
+Date: Sat, 10 May 2025 10:20:14 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] net: airoha: Fix an error handling path in
+ airoha_alloc_gdm_port()
+Message-ID: <aB8MPkMYXWvoaA03@lore-desk>
+References: <5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr>
+ <aBzOaiU6Ac3ZTU-4@lore-desk>
+ <68149c51-ba75-4f0f-a86a-bd810d47d684@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg500006.china.huawei.com (7.202.181.43)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1vz8AGLIu0dXvB1F"
+Content-Disposition: inline
+In-Reply-To: <68149c51-ba75-4f0f-a86a-bd810d47d684@wanadoo.fr>
 
-In this driver file, many functions call sub-functions and use ret
-to store the error code of the sub-functions.
-However, instead of directly returning ret to the caller, they use a
-converted error code, which prevents the end-user from clearly
-understanding the root cause of the error.
-Therefore, the code needs to be modified to directly return the error
-code from the sub-functions.
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-Reviewed-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
----
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 29 ++++++++++---------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+--1vz8AGLIu0dXvB1F
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-index d12a350440d3..2149f49aeec7 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-@@ -190,9 +190,10 @@ static int qm_set_regs(struct hisi_qm *qm, struct acc_vf_data *vf_data)
- 	int ret;
- 
- 	/* Check VF state */
--	if (unlikely(hisi_qm_wait_mb_ready(qm))) {
-+	ret = hisi_qm_wait_mb_ready(qm);
-+	if (unlikely(ret)) {
- 		dev_err(&qm->pdev->dev, "QM device is not ready to write\n");
--		return -EBUSY;
-+		return ret;
- 	}
- 
- 	ret = qm_write_regs(qm, QM_VF_AEQ_INT_MASK, &vf_data->aeq_int_mask, 1);
-@@ -325,13 +326,15 @@ static void qm_dev_cmd_init(struct hisi_qm *qm)
- static int vf_qm_cache_wb(struct hisi_qm *qm)
- {
- 	unsigned int val;
-+	int ret;
- 
- 	writel(0x1, qm->io_base + QM_CACHE_WB_START);
--	if (readl_relaxed_poll_timeout(qm->io_base + QM_CACHE_WB_DONE,
-+	ret = readl_relaxed_poll_timeout(qm->io_base + QM_CACHE_WB_DONE,
- 				       val, val & BIT(0), MB_POLL_PERIOD_US,
--				       MB_POLL_TIMEOUT_US)) {
-+				       MB_POLL_TIMEOUT_US);
-+	if (ret) {
- 		dev_err(&qm->pdev->dev, "vf QM writeback sqc cache fail\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	return 0;
-@@ -392,7 +395,7 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 	ret = vf_qm_version_check(vf_data, dev);
- 	if (ret) {
- 		dev_err(dev, "failed to match ACC_DEV_MAGIC\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	if (vf_data->dev_id != hisi_acc_vdev->vf_dev->device) {
-@@ -404,7 +407,7 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 	ret = qm_get_vft(vf_qm, &vf_qm->qp_base);
- 	if (ret <= 0) {
- 		dev_err(dev, "failed to get vft qp nums\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	if (ret != vf_data->qp_num) {
-@@ -501,7 +504,7 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 	ret = qm_write_regs(qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
- 	if (ret) {
- 		dev_err(dev, "failed to write QM_VF_STATE\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
- 
-@@ -542,7 +545,7 @@ static int vf_qm_read_data(struct hisi_qm *vf_qm, struct acc_vf_data *vf_data)
- 
- 	ret = qm_get_regs(vf_qm, vf_data);
- 	if (ret)
--		return -EINVAL;
-+		return ret;
- 
- 	/* Every reg is 32 bit, the dma address is 64 bit. */
- 	vf_data->eqe_dma = vf_data->qm_eqc_dw[QM_XQC_ADDR_HIGH];
-@@ -556,13 +559,13 @@ static int vf_qm_read_data(struct hisi_qm *vf_qm, struct acc_vf_data *vf_data)
- 	ret = qm_get_sqc(vf_qm, &vf_data->sqc_dma);
- 	if (ret) {
- 		dev_err(dev, "failed to read SQC addr!\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	ret = qm_get_cqc(vf_qm, &vf_data->cqc_dma);
- 	if (ret) {
- 		dev_err(dev, "failed to read CQC addr!\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	return 0;
-@@ -588,7 +591,7 @@ static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 
- 	ret = vf_qm_read_data(vf_qm, vf_data);
- 	if (ret)
--		return -EINVAL;
-+		return ret;
- 
- 	migf->total_length = sizeof(struct acc_vf_data);
- 	/* Save eqc and aeqc interrupt information */
-@@ -1379,7 +1382,7 @@ static int hisi_acc_vf_debug_check(struct seq_file *seq, struct vfio_device *vde
- 	ret = qm_wait_dev_not_ready(vf_qm);
- 	if (ret) {
- 		seq_puts(seq, "VF device not ready!\n");
--		return -EBUSY;
-+		return ret;
- 	}
- 
- 	return 0;
--- 
-2.24.0
+> Le 08/05/2025 =E0 17:31, Lorenzo Bianconi a =E9crit=A0:
+> > > If register_netdev() fails, the error handling path of the probe will=
+ not
+> > > free the memory allocated by the previous airoha_metadata_dst_alloc()=
+ call
+> > > because port->dev->reg_state will not be NETREG_REGISTERED.
+> > >=20
+> > > So, an explicit airoha_metadata_dst_free() call is needed in this cas=
+e to
+> > > avoid a memory leak.
+> > >=20
+> > > Fixes: af3cf757d5c9 ("net: airoha: Move DSA tag in DMA descriptor")
+> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > > ---
+> > > Changes in v2:
+> > >    - New patch
+> > >=20
+> > > Compile tested only.
+> > > ---
+> > >   drivers/net/ethernet/airoha/airoha_eth.c | 10 +++++++++-
+> > >   1 file changed, 9 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/e=
+thernet/airoha/airoha_eth.c
+> > > index 16c7896f931f..af8c4015938c 100644
+> > > --- a/drivers/net/ethernet/airoha/airoha_eth.c
+> > > +++ b/drivers/net/ethernet/airoha/airoha_eth.c
+> > > @@ -2873,7 +2873,15 @@ static int airoha_alloc_gdm_port(struct airoha=
+_eth *eth,
+> > >   	if (err)
+> > >   		return err;
+> > > -	return register_netdev(dev);
+> > > +	err =3D register_netdev(dev);
+> > > +	if (err)
+> > > +		goto free_metadata_dst;
+> > > +
+> > > +	return 0;
+> > > +
+> > > +free_metadata_dst:
+> > > +	airoha_metadata_dst_free(port);
+> > > +	return err;
+> > >   }
+> > >   static int airoha_probe(struct platform_device *pdev)
+> > > --=20
+> > > 2.49.0
+> > >=20
+> >=20
+> > I have not tested it but I think the right fix here would be something =
+like:
+> >=20
+> > diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/eth=
+ernet/airoha/airoha_eth.c
+> > index b1ca8322d4eb..33f8926bba25 100644
+> > --- a/drivers/net/ethernet/airoha/airoha_eth.c
+> > +++ b/drivers/net/ethernet/airoha/airoha_eth.c
+> > @@ -2996,10 +2996,12 @@ static int airoha_probe(struct platform_device =
+*pdev)
+> >   	for (i =3D 0; i < ARRAY_SIZE(eth->ports); i++) {
+> >   		struct airoha_gdm_port *port =3D eth->ports[i];
+> > -		if (port && port->dev->reg_state =3D=3D NETREG_REGISTERED) {
+> > +		if (!port)
+> > +			continue;
+>=20
+> I think it works.
+>=20
+> We can still have port non NULL and airoha_metadata_dst_alloc() which fai=
+ls,
+> but airoha_metadata_dst_free() seems to handle it correctly.
+>=20
+> CJ
 
+Actually, in order to be consistent with the rest of the code where a
+routine undoes changes in case of an internal failure, I would prefer your
+approach. Can you please post your solution in the next iteration? Thanks.
+
+Regards,
+Lorenzo
+
+>=20
+>=20
+> > +
+> > +		if (port->dev->reg_state =3D=3D NETREG_REGISTERED)
+> >   			unregister_netdev(port->dev);
+> > -			airoha_metadata_dst_free(port);
+> > -		}
+> > +		airoha_metadata_dst_free(port);
+> >   	}
+> >   	free_netdev(eth->napi_dev);
+> >   	platform_set_drvdata(pdev, NULL);
+> >=20
+> > Regards,
+> > Lorenzo
+>=20
+
+--1vz8AGLIu0dXvB1F
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaB8MPgAKCRA6cBh0uS2t
+rA/HAP9Zi1+4C2rxgiwNRJbwEjcF5j+ybpugyU0dEY4lrRu2EQEAybkmU3Kx+5HH
+BBgU9PCKsxYpYZbJameFHUNS4FU14AA=
+=nxAu
+-----END PGP SIGNATURE-----
+
+--1vz8AGLIu0dXvB1F--
