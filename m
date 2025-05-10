@@ -1,103 +1,68 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44A91553AB;
-	Sat, 10 May 2025 20:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60281A8F98
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 20:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746907712; cv=none; b=Qk7uNg0ToUV1II0yGI4kqYvCPTnY5rdWd2SUw+cDTVsskWkzkZaucSqrkQU04SILiuhO+km/Q4WB7ypm8ileDiIa3rHzEhA8s4YqMObRuT64l18297zhCVxK/k+RuWyAjdG6StUbzBiXDuRchrHyfFJVYXxg8LivKwU24w5IfvQ=
+	t=1746908598; cv=none; b=uDlgy7nbu9zUmejQs8y9q9ZJYEwkVMlxd0uEmLBROz8PMR5VFCsZUqAO010sqwI5Bu170rUbgH06+UitWJiqOjqCqAG06SeYJ4JxKV2cZkNw3RCRFia8zEsbaRG6R6joUvWoQLxnZqJHFkLRBuxBK3KEcv4StPlV54zkugFdMXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746907712; c=relaxed/simple;
-	bh=5+cONwOXDuyB77cnnwA6m8Ya5JRWtd0jAWyuzfxRgk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RBhkFmD6s2eaUHprzdRmSZif2f8DnlKbRirppPxA0SdGbMzX+IkaUXvCC4mjDl1g2l7+r1rrkqcNRnkheuUprGRbv8sbtiA4QkXo6SxkKJFi+QwLHCjo/dr1jirgvPYzC0eN0UsNaI6DDs4fQ3n+cXRrqQYxsKdbnf6/D+Jj8cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E65LeBfr; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746908598; c=relaxed/simple;
+	bh=qN8bxgxXw/JuWHM04aEiViparQk0BL3VhD4k6jWlljc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uqQqNB02VaWg2QR0V+qA8fyQf3bGfOYVWvTzmZpx6Z9a6+oC25muC4+CTi8rYOcZsJ35dsgvxC6n8q4wVKP5GfThOl48/MAAts9KRZwzHllak52WR9P8+O/s5/Bh89TFfYW8uVYU6KYvGbmgnaXj8VZTgTilCA1upErL4SX3QX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=s40o9nMs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E65LeBfr"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a1d8c09674so1382405f8f.1;
-        Sat, 10 May 2025 13:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746907709; x=1747512509; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Lc/ZdqzlArTaC/lydsj336svhWx1Nn8oj/k5ev0NFtM=;
-        b=E65LeBfrK8ReMu/SQrWIxRtsWJ/eBbRMBTBBKtItMI4TIrzxat0CeVAiJ8vo0Rc2n+
-         9fJr7y/Xj8tBIGoTJRdG+ccSN7ryD1nbA9S6HInEf5H9Gq+DLDIxEIzY9WcCc+S6xJT9
-         OdQfGR3z/RxglS3iTiQcR0bc7AHN7zxxWD7R0aIjQ0iW12bH5v09+7wQcU1tRaFdOPEi
-         yAh3JHWcpRzIXD5/2CT4/s6PLKeznNSqTJK55MHQP81jKTupKjwn5rX428dZhcQKdYiW
-         3itwZiCfX44kTKPuBDsMaA0UdUCVHscrwg9U3Dt/9ZKhnpjsExAXI77GqSuCkh1sECED
-         P6qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746907709; x=1747512509;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lc/ZdqzlArTaC/lydsj336svhWx1Nn8oj/k5ev0NFtM=;
-        b=H2P1paOEhanAEqtsqrRME6MBgQ9kbh8fcw+stry2dHFXZB+Tb/Rzbr4dcfNpr+vavM
-         32ftSIdQEmOH8bwqOnu/AG4Y0aBkS7oRko1aIoKzbqGNLHufmt4iTU8yQ91+uCNdCYx0
-         e3xXHcvLc3/OB1EPVB4kwC8IDFLj4J7HxdKS7LPf47Lhdai33Ob4yT4lR1SlGg2BstNm
-         tyUE98Rvvf0qgIxOZvEdP3hbjDrtsLoGO+dIlFpyNmZWzExEEI8n+NTI3SC7u/a3cKFE
-         jx9d4brN1JzfCY7oMXfuSBj9Pg//DWIHR6EcYo7auwE5MJsPMhOiuQKss9hMoFLrsOQm
-         8Ohg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGHdUKYPR2U0DIU6SPBwGC90oaytSiRIM2cHsg1ELs0g+n7bbxaDsZuY+DJ2Iuc13QD+nsTEcV+iI3TlA=@vger.kernel.org, AJvYcCX7pRSYBu+FE1bOG8t6KUs7hgupRpbbV5h/2R2HooVOSaqjZMz/XJzSGZq6pTPTtZQXCtpLcUbP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyQVZ5R13CRWCaGeOqSPzDx040WRXPIVYxmP3KidEDaP97mPZj
-	jKeteG/BbFeIRkFjmEUZ3J9vUU7MJiF0uceneZ2R7ulYA3Q3pxQh
-X-Gm-Gg: ASbGncuz1oaADhsvWnSb1QtdJTth0hRL/zd0+rlFHcergdrRPVI0jiVbOGwNLiIoq+C
-	/+WTj7hkvLbslDPu4a9guq1Ir2gl8VuOYodwNNUJJBE5WtyMxaUZBTsuD5H5hzbWDs3FsowCMi1
-	1C7+ZxkrTq0NVCxDR3PssSWvr34ddmIb9Hy+nOKpuostjH5cgON8kQIi3R3lh1cKIDV3rcD8fBv
-	CzRjjBLD/Tm5w9UWu5lVg5RaBXEb4+bG40tSL7LGDSw9JrcVwZCu8JHbQCSYGKI5uhid9uED5Sw
-	poRX7KiGRGGMd68lPKMmxtR0AeHmslKkXfpsuo1rGcjRo8cJynML6uK6XkWrxmLmv+L3irEk5qS
-	uZV4wT8eI8dpbF5bFdxA5Idm8k4eXLSqHmZ65kdVSBSRPiRy5ccyMlFMcvlie6KsQIy4L3nMl3X
-	1za5EjB8Q3Tdnkbt8bYo8AMmTZ/EFc
-X-Google-Smtp-Source: AGHT+IGKyqgiqH79FzzP8TFAECw82E2cAyMbweCROyTDwZ2p185qPMtWXu14SsEV4oFbL+wR5DmN6Q==
-X-Received: by 2002:a05:6000:1a8a:b0:3a2:453:77a0 with SMTP id ffacd0b85a97d-3a204537856mr325912f8f.57.1746907708892;
-        Sat, 10 May 2025 13:08:28 -0700 (PDT)
-Received: from ?IPV6:2a02:8388:180a:cd80:ae73:baa1:6de4:2169? (2a02-8388-180a-cd80-ae73-baa1-6de4-2169.cable.dynamic.v6.surfer.at. [2a02:8388:180a:cd80:ae73:baa1:6de4:2169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dddebsm7193743f8f.3.2025.05.10.13.08.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 May 2025 13:08:27 -0700 (PDT)
-Message-ID: <10106e65-3e38-4a9d-ac7e-2b5819bb3613@gmail.com>
-Date: Sat, 10 May 2025 22:08:26 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="s40o9nMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA08C4CEE2;
+	Sat, 10 May 2025 20:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746908598;
+	bh=qN8bxgxXw/JuWHM04aEiViparQk0BL3VhD4k6jWlljc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s40o9nMsFQmhbOPFNIZ/u6gd36d4LIHxbQW/N5Dzi9Yn1sJFcIl99PtdBU+NMPfDL
+	 s+jzksdcbPJTYJTu/vyHpiZ4EbcyJYDLBm8zM83PiocUjT4g4GmGhoFZwPcHn/BFUk
+	 Cv3/3YBiW6CH9yQevuZwt1wgh0q+TmANOWU/j7jI=
+Date: Sat, 10 May 2025 13:23:16 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Boian Bonev <bbonev@devuan.org>
+Cc: linux-kernel@vger.kernel.org, Balbir Singh <bsingharora@gmail.com>, Yang
+ Yang <yang.yang29@zte.com.cn>, Wang Yaxin <wang.yaxin@zte.com.cn>, Kun
+ Jiang <jiang.kun2@zte.com.cn>, xu xin <xu.xin16@zte.com.cn>
+Subject: Re: Bug 220102 - struct taskstats breaks backward compatibility
+ since version 15
+Message-Id: <20250510132316.3719945330c9d0ebed86f8c9@linux-foundation.org>
+In-Reply-To: <d48f4302ac09d9539242a324ec4d0917fede6a71.camel@devuan.org>
+References: <5c176101cd5fd8e629b18380bf7678ea6c6a5d63.camel@devuan.org>
+	<20250509141727.19b616d1c4a549d01656e5dd@linux-foundation.org>
+	<d48f4302ac09d9539242a324ec4d0917fede6a71.camel@devuan.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: dsa: microchip: linearize skb for tail-tagging
- switches
-To: Tristram.Ha@microchip.com
-Cc: quentin.schulz@cherry.de, jakob.unterwurzacher@cherry.de,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, andrew@lunn.ch,
- olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
-References: <20250509071820.4100022-1-jakob.unterwurzacher@cherry.de>
- <DM3PR11MB8736CCEC9ADD424FEE973E1DEC8AA@DM3PR11MB8736.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Jakob Unterwurzacher <jakobunt@gmail.com>
-In-Reply-To: <DM3PR11MB8736CCEC9ADD424FEE973E1DEC8AA@DM3PR11MB8736.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 10.05.25 00:18, Tristram.Ha@microchip.com wrote:
-> 
-> I am curious about what MAC controller are you using to return socket
-> buffer with fragments?
+On Sat, 10 May 2025 14:45:31 +0300 Boian Bonev <bbonev@devuan.org> wrote:
 
-Hi, we have the KSZ9896C connected to gmac1 on the Rockchip RK3588, dts [1][2] 
-says:
+> On Fri, 2025-05-09 at 14:17 -0700, Andrew Morton wrote:
+> > Yes, please send along the patch.=A0 Include the suitable Fixes: and we
+> > can backport this into the affected -stable kernels.
+> >=20
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D220102
+>=20
+> My patch was attached in the bugzilla above.
 
-	gmac1: ethernet@fe1c0000 {
-		compatible = "rockchip,rk3588-gmac", "snps,dwmac-4.20a";
+We barely use bugzilla at all for kernel development.  I think I wish
+that kernel bugzilla was simply shut down, replaced with a page to help
+people to email their bug reports.
 
-Thanks, Jakob
+> I also see that Wang Yaxin
+> <wang.yaxin@zte.com.cn> has already sent a different but working
+> patch...
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi?h=v6.15-rc5#n1811
-[2] 
-https://www.kernel.org/doc/Documentation/devicetree/bindings/net/snps%2Cdwmac.yaml
+Cool.  Except I cannot find that patch.  Help?
+
