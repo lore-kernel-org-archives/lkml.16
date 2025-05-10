@@ -1,501 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9F911712;
-	Sat, 10 May 2025 20:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDE21547F5
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 20:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746909434; cv=none; b=k7SlbBfJ7iEn6TCPVeKwXsQFf7VutG/LF+MAg3jG4Z6DECRzoDRT8mnWCAr2ETsr19TO8j6gxxrcCCnQRwkPxvllHEVMS/pti04WrAiOtSzAR/Wy5GBTXbRGax8Q9dHc13oX0HYoqaWh6hGTUkSN6KpAPTLMTcHyZZR9qNlEUW8=
+	t=1746909952; cv=none; b=izc/VcspUegv4EHiNPczqDWuMEJlwojvZTZHPDwWyYr/bWeC5tsGwG9vaQ9ABoEBtfrYyXOyPjp0R+/SCA/CEyySZXgbwTLM+OUTFc6jBO33q8YHMSaTMxXOmlbPIaFIBs1h3fMGDMbRFGsRJn8Ffl8aB6p1iQMreJVR9j8O8+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746909434; c=relaxed/simple;
-	bh=O+SlaKdtZp79RC5iriXxoc3snbcV8rCFYzStpKSUxck=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XhiFYlNThtldQXe+ZLEJZ5fu61qHLpfAftXzEKcM+Kdsit4RCAP9ZVe96W9xffi6U91W69ZhOHEGd+W0f1D/PZUrE/O1Mtv4f6z5+/fSkFaMTcKB2+MxpTsiszquxytm2Ix+62gNnZyDFIHloQklBwqMa2V5hFIgDMqK7bImqlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B876C4CEE2;
-	Sat, 10 May 2025 20:37:12 +0000 (UTC)
-Date: Sat, 10 May 2025 16:37:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, netdev
- <netdev@vger.kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- David Ahern <dsahern@kernel.org>, Juri Lelli <juri.lelli@gmail.com>, Breno
- Leitao <leitao@debian.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Gabriele Monaco <gmonaco@redhat.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v4] tracepoint: Have tracepoints created with
- DECLARE_TRACE() have _tp suffix
-Message-ID: <20250510163730.092fad5b@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746909952; c=relaxed/simple;
+	bh=YDy9w+jQBR1Gxg40Fe02GHCPn2ATzzdCywMHD+kacWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XiJ6dBmLlsxYFInJ24cBXNn72aEe4ZnmT4ilwxx5j5z0n92Gu6KfMey0N/SRhFMsWIgOT3I3pHeMhJyF6MiUaTt/3spD6TpGixjZR8Q3clFpJkJ1EPmrPXwyFsViTiHevAIGaZwPUsrThAiDtJqu8TNt1mbOGaHHDTg51vOkE9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zx2/7ugq; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zx2/7ugq"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so17529005e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 13:45:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746909949; x=1747514749; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EyP4HwBraQsae7oLaQ+SqQNi/VeXX8Q8Sp+epudPAIU=;
+        b=Zx2/7ugqPkeiwRQ8q683ZRRpYd9e9YO6eyQvVWfc1rov9oGiGAlzsxgd7tcTdpr17X
+         RdiXuJBdmqoNq0nYuuHpdYWotdMbDlqLiIunHeK6IirJKWDJpXAR9FBFm/dNRpxTCDiX
+         KOlNOzLMv0BuyUyjztiS45FPbe4G+8Tc4UybkdPPUcQmzAMtk+fV12YG9yunejHJiZR8
+         l4qgAzG0YOHQXFTPZTL+Kdd0ectR5yoKw7whJWx4qtPvaE843gVi97MCK4u2NJC2R1n8
+         rXHpD2o795omllT03aIWM1xEONKAB+4DlJuxiH129TG0wfPjxRaBD+iafiuKaAU3hlGM
+         2kfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746909949; x=1747514749;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EyP4HwBraQsae7oLaQ+SqQNi/VeXX8Q8Sp+epudPAIU=;
+        b=rx8+SETEMU846ncQjF2SfsbT/nElczoO2y1/LbW4LstSY5DecS1NSbKqCFNwu9fl1s
+         KbvdfLtn1c2Uq2xslEOkh6tHk6KqfFLrKQ8TBduqK91CSpT5rYMf4bmQ1MPDopPZ4A4N
+         /0Bkr7JivRtW7qp1pOBFFSPBzAkns8FfrpGsts0Oqfq4WrUCeNa3aLgX10bUKjWA95rz
+         8C5UCjpQG40e6jDmhRIRf8C0mpM+MBoiwD/Kji8ASw6U96LNJCiKAcdEddajRS/38d4s
+         tRX3UbATIRIkYFz7J8HhN3i6AFguuZNU+4EluzHyxPKycesO02NUSXlb62xVOWzqbejv
+         GNeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvyLX0Tm/fDt7sv2txaXNc25tVt5dMR6Rc9+tulX/1lAPeHosVoIAtu9mYOiXKmPVJ6wao1qEKeJrkxoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk03OY563OJzLHXowO5T1LRRkysf7SRidgNLLjxColHzbnpRHj
+	DI/J+xinrT+0r9URVpXo3+oOjZUYhCv/VUsrUa+ehC6xn1GOJnIT
+X-Gm-Gg: ASbGncvlleAzNf2a3JIalnoeS924wPdaB5+LKC27dJRYHdMp64dT5NcOKAcQgNbfpmG
+	JKmZxogcLR3bqrOR4mH5FgnuGEPX4HxSV/ez86Exa+jL1orKlD5L9W2ySxoPMHgFEMlkHfS2uSO
+	xz4+2cJ4FJ1eGcmruE9b+BMJ78n5POyUMAmfhDRRjEuLcYXPS+BZ7foAgns0bTPDiHzt+1BV0mC
+	5bOKYcWBzzqkqb6MzRwj+zRf3qKjLY9UmGr24kQ2hemIKI6t73W4JQlWL4yKYRXzVuwVWAzbxD3
+	eiHPz6Ca6C6AopAR2aJiR8T8b6kmdBK++r8ZWo+bJNom+qtjgrhoVz0Bk9aOR29uUeAVNPHeSuH
+	k89E6zOCZElGke4Aty9tJ9eNWK+sV6udssSvEzzrIsqXO9Xp4n1YmNT3oIHZHJ2RhT5JTDUJcid
+	p8cRldXjrHqx2tnGdJsgWZOu8=
+X-Google-Smtp-Source: AGHT+IGdWyU2hz+jdbWaes1gHHcXW+EnwlUuRy0KsqxkMVgWLxt1Tz+TF2HYZdR/ABaf+HyogT5azw==
+X-Received: by 2002:a05:6000:401e:b0:3a0:aee0:c647 with SMTP id ffacd0b85a97d-3a1f64374e1mr6738425f8f.17.1746909948699;
+        Sat, 10 May 2025 13:45:48 -0700 (PDT)
+Received: from ?IPV6:2003:ea:8f3a:400:9165:e299:6732:ee1d? (p200300ea8f3a04009165e2996732ee1d.dip0.t-ipconnect.de. [2003:ea:8f3a:400:9165:e299:6732:ee1d])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde1asm7305103f8f.8.2025.05.10.13.45.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 May 2025 13:45:48 -0700 (PDT)
+Message-ID: <ec8c3fff-d08b-4132-9a9e-c70e3efe6f2a@gmail.com>
+Date: Sat, 10 May 2025 22:46:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Documentation of locking needs when working with lists?
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar
+ <mingo@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <4f405d9b-460c-49f7-91b2-d147d9818369@gmail.com>
+ <2025051012-karma-setting-af04@gregkh>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <2025051012-karma-setting-af04@gregkh>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 10.05.2025 15:20, Greg Kroah-Hartman wrote:
+> On Sat, May 10, 2025 at 10:46:32AM +0200, Heiner Kallweit wrote:
+>> Even though lists are used everywhere, I was surprised not being able to find
+>> documentation about which operations need locking, and which ones are safe
+>> lock-less.
+>>
+>> My case:
+>> I have a list where the only operation is adding entries.
+>> It's clear that adding entries has to be serialized.
+>> Question is whether a list_for_each_entry is safe lock-less.
+>>
+>> Looking at the code I *think* it's safe, under the precondition that
+>> reading/writing pointers is atomic.
+>>
+>> Any hint or documentation link would be appreciated. Thanks!
+> 
+> You MUST have locking for your list if you have multiple processes
+> accessing it at the same time.
+> 
+Thanks. Sure, I need locking for the writers (list_add_tail).
+Question is about the reader, list_for_each_entry.
+Last step in list_add_tail() is WRITE_ONCE(prev->next, new);
+list_next_entry() reads the "next" member of the iterator.
 
-Most tracepoints in the kernel are created with TRACE_EVENT(). The
-TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where in
-reality, TRACE_EVENT() is just a helper macro that calls those other two
-macros), will create not only a tracepoint (the function trace_<event>()
-used in the kernel), it also exposes the tracepoint to user space along
-with defining what fields will be saved by that tracepoint.
+Therefore I think list_next_entry() always sees a consistent
+state, either the old or the new value of the "next" pointer.
+So I don't see a need for locking list_for_each_entry().
 
-There are a few places that tracepoints are created in the kernel that are
-not exposed to userspace via tracefs. They can only be accessed from code
-within the kernel. These tracepoints are created with DEFINE_TRACE()
+If there is such a need, I'd be interested in the potential
+race scenario.
 
-Most of these tracepoints end with "_tp". This is useful as when the
-developer sees that, they know that the tracepoint is for in-kernel only
-(meaning it can only be accessed inside the kernel, either directly by the
-kernel or indirectly via modules and BPF programs) and is not exposed to
-user space.
-
-Instead of making this only a process to add "_tp", enforce it by making
-the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
-requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
-to use that keeps the original name.
-
-Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.home/
-
-Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v3: https://lore.kernel.org/20250510092342.77371990@gandalf.local.home
-
-- Added "_tp" suffix in bpf tests to:
-
-  tp_btf/bpf_testmod_test_raw_tp_null in raw_tp_null.c
-  tp_btf/bpf_testmod_test_raw_tp_null in raw_tp_null_fail.c
-  raw_tp.w/bpf_testmod_test_writable_bare in test_module_attach.c
-
-  Hopefully this passes the bpf verifier tests.
-
- Documentation/trace/tracepoints.rst           | 17 ++++++---
- include/linux/tracepoint.h                    | 38 +++++++++++++------
- include/trace/bpf_probe.h                     |  8 ++--
- include/trace/define_trace.h                  | 17 ++++++++-
- include/trace/events/sched.h                  | 30 +++++++--------
- include/trace/events/tcp.h                    |  2 +-
- .../testing/selftests/bpf/progs/raw_tp_null.c |  2 +-
- .../selftests/bpf/progs/raw_tp_null_fail.c    |  2 +-
- .../selftests/bpf/progs/test_module_attach.c  |  4 +-
- .../bpf/progs/test_tp_btf_nullable.c          |  4 +-
- .../selftests/bpf/test_kmods/bpf_testmod.c    |  8 ++--
- 11 files changed, 83 insertions(+), 49 deletions(-)
-
-diff --git a/Documentation/trace/tracepoints.rst b/Documentation/trace/tracepoints.rst
-index decabcc77b56..b35c40e3abbe 100644
---- a/Documentation/trace/tracepoints.rst
-+++ b/Documentation/trace/tracepoints.rst
-@@ -71,7 +71,7 @@ In subsys/file.c (where the tracing statement must be added)::
- 	void somefct(void)
- 	{
- 		...
--		trace_subsys_eventname(arg, task);
-+		trace_subsys_eventname_tp(arg, task);
- 		...
- 	}
- 
-@@ -129,12 +129,12 @@ within an if statement with the following::
- 		for (i = 0; i < count; i++)
- 			tot += calculate_nuggets();
- 
--		trace_foo_bar(tot);
-+		trace_foo_bar_tp(tot);
- 	}
- 
--All trace_<tracepoint>() calls have a matching trace_<tracepoint>_enabled()
-+All trace_<tracepoint>_tp() calls have a matching trace_<tracepoint>_enabled()
- function defined that returns true if the tracepoint is enabled and
--false otherwise. The trace_<tracepoint>() should always be within the
-+false otherwise. The trace_<tracepoint>_tp() should always be within the
- block of the if (trace_<tracepoint>_enabled()) to prevent races between
- the tracepoint being enabled and the check being seen.
- 
-@@ -143,7 +143,10 @@ the static_key of the tracepoint to allow the if statement to be implemented
- with jump labels and avoid conditional branches.
- 
- .. note:: The convenience macro TRACE_EVENT provides an alternative way to
--      define tracepoints. Check http://lwn.net/Articles/379903,
-+      define tracepoints. Note, DECLARE_TRACE(foo) creates a function
-+      "trace_foo_tp()" whereas TRACE_EVENT(foo) creates a function
-+      "trace_foo()", and also exposes the tracepoint as a trace event in
-+      /sys/kernel/tracing/events directory.  Check http://lwn.net/Articles/379903,
-       http://lwn.net/Articles/381064 and http://lwn.net/Articles/383362
-       for a series of articles with more details.
- 
-@@ -159,7 +162,9 @@ In a C file::
- 
- 	void do_trace_foo_bar_wrapper(args)
- 	{
--		trace_foo_bar(args);
-+		trace_foo_bar_tp(args); // for tracepoints created via DECLARE_TRACE
-+					//   or
-+		trace_foo_bar(args);    // for tracepoints created via TRACE_EVENT
- 	}
- 
- In the header file::
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index a351763e6965..826ce3f8e1f8 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -464,16 +464,30 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- #endif
- 
- #define DECLARE_TRACE(name, proto, args)				\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()),		\
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)		\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_SYSCALL(name, proto, args)			\
-+	__DECLARE_TRACE_SYSCALL(name##_tp, PARAMS(proto), PARAMS(args),	\
-+				PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT(name, proto, args)				\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()),		\
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)		\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_SYSCALL(name, proto, args)			\
- 	__DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args),	\
- 				PARAMS(void *__data, proto))
- 
-@@ -591,32 +605,32 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 
- #define DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, print)
- #define DEFINE_EVENT(template, name, proto, args)		\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg)\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_CONDITION(template, name, proto,		\
- 			       args, cond)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- 
- #define TRACE_EVENT(name, proto, args, struct, assign, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define TRACE_EVENT_FN(name, proto, args, struct,		\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
--#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,		\
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
-+#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,	\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),	\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 			PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_CONDITION(name, proto, args, cond,		\
- 			      struct, assign, print)		\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_SYSCALL(name, proto, args, struct, assign,	\
- 			    print, reg, unreg)			\
--	DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT_SYSCALL(name, PARAMS(proto), PARAMS(args))
- 
- #define TRACE_EVENT_FLAGS(event, flag)
- 
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index 183fa2aa2935..9391d54d3f12 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -119,14 +119,14 @@ static inline void bpf_test_buffer_##call(void)				\
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(call, proto, args)				\
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args))		\
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), 0)
- 
- #undef DECLARE_TRACE_WRITABLE
- #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
- 	__CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args)) \
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), size)
- 
- #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
- 
-diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-index ed52d0506c69..b2ba5a80583f 100644
---- a/include/trace/define_trace.h
-+++ b/include/trace/define_trace.h
-@@ -74,10 +74,18 @@
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(name, proto, args)	\
--	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
- 
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)	\
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)	\
- 	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- /* If requested, create helpers for calling these tracepoints from Rust. */
-@@ -115,6 +123,11 @@
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)
- 
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)
-+
- #ifdef TRACEPOINTS_ENABLED
- #include <trace/trace_events.h>
- #include <trace/perf.h>
-@@ -136,6 +149,8 @@
- #undef TRACE_HEADER_MULTI_READ
- #undef DECLARE_TRACE
- #undef DECLARE_TRACE_CONDITION
-+#undef DECLARE_TRACE_EVENT
-+#undef DECLARE_TRACE_EVENT_CONDITION
- 
- /* Only undef what we defined in this file */
- #ifdef UNDEF_TRACE_INCLUDE_FILE
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97d86c1..152fc8b37aa5 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -773,64 +773,64 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
-  *
-  * Postfixed with _tp to make them easily identifiable in the code.
-  */
--DECLARE_TRACE(pelt_cfs_tp,
-+DECLARE_TRACE(pelt_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(pelt_rt_tp,
-+DECLARE_TRACE(pelt_rt,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_dl_tp,
-+DECLARE_TRACE(pelt_dl,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_hw_tp,
-+DECLARE_TRACE(pelt_hw,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_irq_tp,
-+DECLARE_TRACE(pelt_irq,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_se_tp,
-+DECLARE_TRACE(pelt_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_cpu_capacity_tp,
-+DECLARE_TRACE(sched_cpu_capacity,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(sched_overutilized_tp,
-+DECLARE_TRACE(sched_overutilized,
- 	TP_PROTO(struct root_domain *rd, bool overutilized),
- 	TP_ARGS(rd, overutilized));
- 
--DECLARE_TRACE(sched_util_est_cfs_tp,
-+DECLARE_TRACE(sched_util_est_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(sched_util_est_se_tp,
-+DECLARE_TRACE(sched_util_est_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_update_nr_running_tp,
-+DECLARE_TRACE(sched_update_nr_running,
- 	TP_PROTO(struct rq *rq, int change),
- 	TP_ARGS(rq, change));
- 
--DECLARE_TRACE(sched_compute_energy_tp,
-+DECLARE_TRACE(sched_compute_energy,
- 	TP_PROTO(struct task_struct *p, int dst_cpu, unsigned long energy,
- 		 unsigned long max_util, unsigned long busy_time),
- 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
- 
--DECLARE_TRACE(sched_entry_tp,
-+DECLARE_TRACE(sched_entry,
- 	TP_PROTO(bool preempt, unsigned long ip),
- 	TP_ARGS(preempt, ip));
- 
--DECLARE_TRACE(sched_exit_tp,
-+DECLARE_TRACE(sched_exit,
- 	TP_PROTO(bool is_switch, unsigned long ip),
- 	TP_ARGS(is_switch, ip));
- 
--DECLARE_TRACE_CONDITION(sched_set_state_tp,
-+DECLARE_TRACE_CONDITION(sched_set_state,
- 	TP_PROTO(struct task_struct *tsk, int state),
- 	TP_ARGS(tsk, state),
- 	TP_CONDITION(!!(tsk->__state) != !!state));
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 1a40c41ff8c3..4f9fa1b5b89b 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,7 +259,7 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
- 
--DECLARE_TRACE(tcp_cwnd_reduction_tp,
-+DECLARE_TRACE(tcp_cwnd_reduction,
- 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
- 		 int newly_lost, int flag),
- 	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag)
-diff --git a/tools/testing/selftests/bpf/progs/raw_tp_null.c b/tools/testing/selftests/bpf/progs/raw_tp_null.c
-index 5927054b6dd9..efa416f53968 100644
---- a/tools/testing/selftests/bpf/progs/raw_tp_null.c
-+++ b/tools/testing/selftests/bpf/progs/raw_tp_null.c
-@@ -10,7 +10,7 @@ char _license[] SEC("license") = "GPL";
- int tid;
- int i;
- 
--SEC("tp_btf/bpf_testmod_test_raw_tp_null")
-+SEC("tp_btf/bpf_testmod_test_raw_tp_null_tp")
- int BPF_PROG(test_raw_tp_null, struct sk_buff *skb)
- {
- 	struct task_struct *task = bpf_get_current_task_btf();
-diff --git a/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c b/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c
-index 38d669957bf1..0d58114a4955 100644
---- a/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c
-+++ b/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c
-@@ -8,7 +8,7 @@
- char _license[] SEC("license") = "GPL";
- 
- /* Ensure module parameter has PTR_MAYBE_NULL */
--SEC("tp_btf/bpf_testmod_test_raw_tp_null")
-+SEC("tp_btf/bpf_testmod_test_raw_tp_null_tp")
- __failure __msg("R1 invalid mem access 'trusted_ptr_or_null_'")
- int test_raw_tp_null_bpf_testmod_test_raw_tp_null_arg_1(void *ctx) {
-     asm volatile("r1 = *(u64 *)(r1 +0); r1 = *(u64 *)(r1 +0);" ::: __clobber_all);
-diff --git a/tools/testing/selftests/bpf/progs/test_module_attach.c b/tools/testing/selftests/bpf/progs/test_module_attach.c
-index 7f3c233943b3..03d7f89787a1 100644
---- a/tools/testing/selftests/bpf/progs/test_module_attach.c
-+++ b/tools/testing/selftests/bpf/progs/test_module_attach.c
-@@ -19,7 +19,7 @@ int BPF_PROG(handle_raw_tp,
- 
- __u32 raw_tp_bare_write_sz = 0;
- 
--SEC("raw_tp/bpf_testmod_test_write_bare")
-+SEC("raw_tp/bpf_testmod_test_write_bare_tp")
- int BPF_PROG(handle_raw_tp_bare,
- 	     struct task_struct *task, struct bpf_testmod_test_write_ctx *write_ctx)
- {
-@@ -31,7 +31,7 @@ int raw_tp_writable_bare_in_val = 0;
- int raw_tp_writable_bare_early_ret = 0;
- int raw_tp_writable_bare_out_val = 0;
- 
--SEC("raw_tp.w/bpf_testmod_test_writable_bare")
-+SEC("raw_tp.w/bpf_testmod_test_writable_bare_tp")
- int BPF_PROG(handle_raw_tp_writable_bare,
- 	     struct bpf_testmod_test_writable_ctx *writable)
- {
-diff --git a/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c b/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
-index 39ff06f2c834..cf0547a613ff 100644
---- a/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
-+++ b/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
-@@ -6,14 +6,14 @@
- #include "../test_kmods/bpf_testmod.h"
- #include "bpf_misc.h"
- 
--SEC("tp_btf/bpf_testmod_test_nullable_bare")
-+SEC("tp_btf/bpf_testmod_test_nullable_bare_tp")
- __failure __msg("R1 invalid mem access 'trusted_ptr_or_null_'")
- int BPF_PROG(handle_tp_btf_nullable_bare1, struct bpf_testmod_test_read_ctx *nullable_ctx)
- {
- 	return nullable_ctx->len;
- }
- 
--SEC("tp_btf/bpf_testmod_test_nullable_bare")
-+SEC("tp_btf/bpf_testmod_test_nullable_bare_tp")
- int BPF_PROG(handle_tp_btf_nullable_bare2, struct bpf_testmod_test_read_ctx *nullable_ctx)
- {
- 	if (nullable_ctx)
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index 3220f1d28697..18eded4d1d15 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -413,7 +413,7 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 
- 	(void)bpf_testmod_test_arg_ptr_to_struct(&struct_arg1_2);
- 
--	(void)trace_bpf_testmod_test_raw_tp_null(NULL);
-+	(void)trace_bpf_testmod_test_raw_tp_null_tp(NULL);
- 
- 	bpf_testmod_test_struct_ops3();
- 
-@@ -431,14 +431,14 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 	if (bpf_testmod_loop_test(101) > 100)
- 		trace_bpf_testmod_test_read(current, &ctx);
- 
--	trace_bpf_testmod_test_nullable_bare(NULL);
-+	trace_bpf_testmod_test_nullable_bare_tp(NULL);
- 
- 	/* Magic number to enable writable tp */
- 	if (len == 64) {
- 		struct bpf_testmod_test_writable_ctx writable = {
- 			.val = 1024,
- 		};
--		trace_bpf_testmod_test_writable_bare(&writable);
-+		trace_bpf_testmod_test_writable_bare_tp(&writable);
- 		if (writable.early_ret)
- 			return snprintf(buf, len, "%d\n", writable.val);
- 	}
-@@ -470,7 +470,7 @@ bpf_testmod_test_write(struct file *file, struct kobject *kobj,
- 		.len = len,
- 	};
- 
--	trace_bpf_testmod_test_write_bare(current, &ctx);
-+	trace_bpf_testmod_test_write_bare_tp(current, &ctx);
- 
- 	return -EIO; /* always fail */
- }
--- 
-2.47.2
+> good luck!
+> 
+> greg k-h
 
