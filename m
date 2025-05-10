@@ -1,182 +1,150 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C541E0B86;
-	Sat, 10 May 2025 07:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1678E19AD70;
+	Sat, 10 May 2025 07:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746863185; cv=none; b=SoYtCFddCR4gxUrBKBMTmQNSZK66FosBlQ6HGh7fWaexBBDBTPUzT2cWcdJV+IWxJjT2x5Q2TKAZ6pV0Vc6zGdl6bRAoLeCOGVGND9tCwNp82Vgnm0Bgpr8YzIxnsd7yDaDK+e68FRJ+u//bg/y7JQ9JXhkFiQ7bF5Ak5WEd0wU=
+	t=1746863296; cv=none; b=SQcnoQkDq0ZuHVkimH27YNV+hxA/wzKA9HChWIhKdRjv/pcH8qZNFDPnF7NCgKAQkYaEU7+qls5bxYAkxjxIPENL9bxa9FQ38e8+ofHJxBvyPT9oLQwpK5TujtDhCaEgIJ03nG28U3FVsLBan0kCGMhK56Kss25Q4N+JM+RYdIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746863185; c=relaxed/simple;
-	bh=np0DaZ3kQtyZ8X0ulRKMltdlhXrvfRJ+lXFN+7rI0b0=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Bf8R1jll0xeRs8DiCkkRxTSqfJgutqrj+1RNKLvgaWTIiCCvjPhIAMZz/svgrlrPMNYGqo8yQylBuUgF98fqPgh5HnmLJPfz6DaA6zkhRUlrdiDFCzaAFlwWchP14z/kv2RUlgkpWmWmkEklzBjU2FzRxpPIyT+Y5L46nSlaE3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZvdDz6lNgznfXM;
-	Sat, 10 May 2025 15:44:51 +0800 (CST)
-Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
-	by mail.maildlp.com (Postfix) with ESMTPS id AC7911400CA;
-	Sat, 10 May 2025 15:46:09 +0800 (CST)
-Received: from [10.67.121.110] (10.67.121.110) by
- kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 10 May 2025 15:46:09 +0800
-Subject: Re: [PATCH v7 6/6] hisi_acc_vfio_pci: update function return values.
-To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
-	<jgg@nvidia.com>, Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
-References: <20250411035907.57488-1-liulongfang@huawei.com>
- <20250411035907.57488-7-liulongfang@huawei.com>
- <ed4f09039ffb45f3a3d5b418c92ae6ad@huawei.com>
-From: liulongfang <liulongfang@huawei.com>
-Message-ID: <c60625eb-eb48-d504-7334-70e375b4a202@huawei.com>
-Date: Sat, 10 May 2025 15:46:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1746863296; c=relaxed/simple;
+	bh=Cd8t/G/GucXe7OoO59rxNrYaeNdZIWCPe5EO5IQB1BI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=JMjcqFaH86L5QHqh5lMUgyoBqaJQAJBU8GmMtzSSm7XAUq3BhPNmqDZq0ptRv+hrLywPws0+qmwyI9A95TvGtnMYiyeJcPZL9ZWXSPi7ZgAFikSaTKVtkNoozCexuH0D6lv1Ik4V/uztuWev/62RDhueUhTcT/x0xyf1boXhsKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWP7MkT+; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWP7MkT+"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac34257295dso469621866b.2;
+        Sat, 10 May 2025 00:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746863293; x=1747468093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2eCRydtYot/T77PlmVjAZqprs+6gjk0Q2CtBojQ6anQ=;
+        b=jWP7MkT+DFjjzZ65z50edFMaovciPvPo7nQk7FnHWbVVBy0rghwok/srhAHJ/Z3nZf
+         MCtPfPT3kBf+9/wAdcKdDW69cVRF0I9uy5mPugOOUJ0woT8bNIAjZJ5eqafrd/H4x2cz
+         EBbQZGiuyNSw1JN6MoEINdldHD8RLrNyxnOLzUvd7GWZf1XeE6uSoPMZeRpqMtjfVHPD
+         bVyYZKjbPkQEMyk4aJsIUHWGaDdZ5PFW1EAaE2e/HYXVDqDOUnkhWMm/XA+9xmyv9Mik
+         8tPA3wKUrIP+XrzCeIr9tW1QD554XgGLRnMDE7C7i0AtAhTay01QVFN+WGhM20kIJ8a1
+         kq/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746863293; x=1747468093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2eCRydtYot/T77PlmVjAZqprs+6gjk0Q2CtBojQ6anQ=;
+        b=gaw4hN6jxLaWB7GwSUyXruqSrkjBVKqW2fUhnAgF4bjEDnucmb3vW4Bw/zbKG+RGhw
+         zLvCAGz/0Bo9A3OjtCE1PhQXXAvXxLvMkwTv6zpnJ0/OCIo465r+LsHKLmAL0u5npMc2
+         7hMNmaGKqn4cmB/THhHssA15AMfXSbPu3gBLpP9qRH4tw9bxF2VIVcvzh6RpgSzQ1WZ6
+         VoHTRE7ASmb6BIvOUaAHilPjI/PzsIroRbev/XBtwAT/Vbh4KwxQec1pbLjXnaWfTWPe
+         xn/JHAAVKqXUYi0IZ1lI/3/e6ai5UaG7hTNOjiOyEaat2XDq4z59XOPCK70Fmu64kRVb
+         R8zg==
+X-Forwarded-Encrypted: i=1; AJvYcCWpyXN6/B2sSVm+A5xnBhRaFWWbeopOd6QmkZsC3tVRqGhCfElD0M8rJsuQBSUJ5O/oVp9wv1bbjqA5zw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyazCv3UoN/KvCJSQajEFRpomipilJ6cfECtkFPkks+qgxK5hh3
+	TVYRE8LAhxHieCQDuutwn+ejb9J5Ab30eqAuPkoU3TdoF1S4ZGNB6gtPxOYDCwvboloQMyTRjqD
+	ypASkuXQT/hbr0QKiGgjkbUtjo2M=
+X-Gm-Gg: ASbGncuUN0mIUXRuLDceKmtUXu/10S3Ipa6g00Kg+buWZ0k+7mgX9lan09uYfPQ+fFD
+	87wx5HhRLFAGS7afiFTJSxAVwt0uoA+ZV6Lzlo94nKF5aCR7B0IWcN2xUEHvQh1X2feW/vZnUF4
+	AwsE3F6fFAyB34sf/c5AXMoNpdlKgEMmI=
+X-Google-Smtp-Source: AGHT+IGYJ1ic0z6zfmJi28h3XssudanXpRTQJtmTjv6UF/vx8Xs9Ks5qQdxj40CKenH4bTDbXl73dBcDdXcDtG2yoeg=
+X-Received: by 2002:a17:907:c312:b0:ace:c225:c71d with SMTP id
+ a640c23a62f3a-ad218e92d44mr567941066b.2.1746863292969; Sat, 10 May 2025
+ 00:48:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ed4f09039ffb45f3a3d5b418c92ae6ad@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500006.china.huawei.com (7.202.181.43)
+From: cen zhang <zzzccc427@gmail.com>
+Date: Sat, 10 May 2025 15:48:00 +0800
+X-Gm-Features: AX0GCFsYGSe5WMKMfeGtoCt2-4xZ93jFZyCGqTPHyYt8EeiWD2VHF7_44xsa3QU
+Message-ID: <CAFRLqsUCLMz0hY-GaPj1Z=fhkgRHjxVXHZ8kz0PvkFN0b=8L2Q@mail.gmail.com>
+Subject: [BUG] Data race on delayed_refs->num_heads_ready between
+ btrfs_delete_ref_head and btrfs_run_delayed_refs
+To: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+Cc: linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	baijiaju1990@gmail.com, zhenghaoran154@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-on 2025/4/15 17:25, Shameerali Kolothum Thodi wrote:
-> 
-> 
->> -----Original Message-----
->> From: liulongfang <liulongfang@huawei.com>
->> Sent: Friday, April 11, 2025 4:59 AM
->> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
->> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
->> <jonathan.cameron@huawei.com>
->> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
->> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
->> Subject: [PATCH v7 6/6] hisi_acc_vfio_pci: update function return values.
->>
->> In this driver file, many functions call sub-functions and use ret
->> to store the error code of the sub-functions.
->> However, instead of directly returning ret to the caller, they use a
->> converted error code, which prevents the end-user from clearly
->> understanding the root cause of the error.
->> Therefore, the code needs to be modified to directly return the error
->> code from the sub-functions.
->>
->> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
->> ---
->>  drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c | 16 ++++++++--------
->>  1 file changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> index d12a350440d3..c63e302ac092 100644
->> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> @@ -392,7 +392,7 @@ static int vf_qm_check_match(struct
->> hisi_acc_vf_core_device *hisi_acc_vdev,
->>  	ret = vf_qm_version_check(vf_data, dev);
->>  	if (ret) {
->>  		dev_err(dev, "failed to match ACC_DEV_MAGIC\n");
->> -		return -EINVAL;
->> +		return ret;
->>  	}
->>
->>  	if (vf_data->dev_id != hisi_acc_vdev->vf_dev->device) {
->> @@ -404,7 +404,7 @@ static int vf_qm_check_match(struct
->> hisi_acc_vf_core_device *hisi_acc_vdev,
->>  	ret = qm_get_vft(vf_qm, &vf_qm->qp_base);
->>  	if (ret <= 0) {
->>  		dev_err(dev, "failed to get vft qp nums\n");
->> -		return -EINVAL;
->> +		return ret;
->>  	}
->>
->>  	if (ret != vf_data->qp_num) {
->> @@ -501,7 +501,7 @@ static int vf_qm_load_data(struct
->> hisi_acc_vf_core_device *hisi_acc_vdev,
->>  	ret = qm_write_regs(qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
->>  	if (ret) {
->>  		dev_err(dev, "failed to write QM_VF_STATE\n");
->> -		return -EINVAL;
->> +		return ret;
->>  	}
->>  	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
->>
->> @@ -542,7 +542,7 @@ static int vf_qm_read_data(struct hisi_qm *vf_qm,
->> struct acc_vf_data *vf_data)
->>
->>  	ret = qm_get_regs(vf_qm, vf_data);
->>  	if (ret)
->> -		return -EINVAL;
->> +		return ret;
->>
->>  	/* Every reg is 32 bit, the dma address is 64 bit. */
->>  	vf_data->eqe_dma = vf_data->qm_eqc_dw[QM_XQC_ADDR_HIGH];
->> @@ -556,13 +556,13 @@ static int vf_qm_read_data(struct hisi_qm
->> *vf_qm, struct acc_vf_data *vf_data)
->>  	ret = qm_get_sqc(vf_qm, &vf_data->sqc_dma);
->>  	if (ret) {
->>  		dev_err(dev, "failed to read SQC addr!\n");
->> -		return -EINVAL;
->> +		return ret;
->>  	}
->>
->>  	ret = qm_get_cqc(vf_qm, &vf_data->cqc_dma);
->>  	if (ret) {
->>  		dev_err(dev, "failed to read CQC addr!\n");
->> -		return -EINVAL;
->> +		return ret;
->>  	}
->>
->>  	return 0;
->> @@ -588,7 +588,7 @@ static int vf_qm_state_save(struct
->> hisi_acc_vf_core_device *hisi_acc_vdev,
->>
->>  	ret = vf_qm_read_data(vf_qm, vf_data);
->>  	if (ret)
->> -		return -EINVAL;
->> +		return ret;
->>
->>  	migf->total_length = sizeof(struct acc_vf_data);
->>  	/* Save eqc and aeqc interrupt information */
->> @@ -1379,7 +1379,7 @@ static int hisi_acc_vf_debug_check(struct seq_file
->> *seq, struct vfio_device *vde
->>  	ret = qm_wait_dev_not_ready(vf_qm);
->>  	if (ret) {
->>  		seq_puts(seq, "VF device not ready!\n");
->> -		return -EBUSY;
->> +		return ret;
->>  	}
->>
->>  	return 0;
-> 
-> Any reason you avoided few other instances here?
->
+Hello maintainers,
 
-In the next version, I will add the modification.
+I would like to report a data race bug detected in
+the Btrfs filesystem on Linux kernel 6.14-rc4.
+The issue was discovered by our tools,
+which identified unsynchronized concurrent accesses to
+`delayed_refs->num_heads_ready`.
 
-Thank you.
-Longfang.
+The relevant stack trace detail is as follows:
 
-> 1. qemu_set_regs() --> hisi_qm_wait_mb_ready() -->ret -EBUSY;
-> 2. vf_qm_cache_wb() ret -EINVAL on -ETIMEOUT.
-> 
-> With the above addressed,
-> 
-> Reviewed-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> 
-> Thanks,
-> Shameer
-> 
-> .
-> 
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3DDATARACE=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+Function: btrfs_delete_ref_head+0x164/0x180 fs/btrfs/delayed-ref.c:550
+Function: check_ref_cleanup+0x178/0x290 fs/btrfs/extent-tree.c:3381
+Function: btrfs_free_tree_block+0x334/0x7f0 fs/btrfs/extent-tree.c:3444
+Function: btrfs_quota_disable+0x4d2/0x750 fs/btrfs/qgroup.c:1414
+Function: btrfs_ioctl_quota_ctl+0x18f/0x1f0 fs/btrfs/ioctl.c:3707
+Function: btrfs_ioctl+0x943/0xe40 fs/btrfs/ioctl.c:5325
+Function: vfs_ioctl fs/ioctl.c:51 [inline]
+Function: __do_sys_ioctl fs/ioctl.c:906 [inline]
+Function: __se_sys_ioctl+0x91/0xf0 fs/ioctl.c:892
+Function: do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+Function: do_syscall_64+0xc9/0x1a0 arch/x86/entry/common.c:83
+Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Function: 0x0
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ __btrfs_run_delayed_refs+0xe0/0x1a50 fs/btrfs/extent-tree.c:2015
+ btrfs_run_delayed_refs+0xd1/0x2b0 fs/btrfs/extent-tree.c:2158
+ btrfs_commit_transaction+0x27a/0x1c40 fs/btrfs/transaction.c:2196
+ del_balance_item fs/btrfs/volumes.c:3810 [inline]
+ reset_balance_state+0x193/0x240 fs/btrfs/volumes.c:3874
+ btrfs_balance+0x1698/0x1770 fs/btrfs/volumes.c:4706
+ btrfs_ioctl_balance+0x290/0x470 fs/btrfs/ioctl.c:3587
+ btrfs_ioctl+0xcaf/0xe40 fs/btrfs/ioctl.c:5305
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0x91/0xf0 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1a0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+
+The code locations involved in the data race are:
+
+Write (fs/btrfs/delayed-ref.c):
+
+if (!head->processing)
+    delayed_refs->num_heads_ready--;
+
+Reader (fs/btrfs/extent-tree.c):
+
+delayed_refs =3D &trans->transaction->delayed_refs;
+if (min_bytes =3D=3D 0) {
+    max_count =3D delayed_refs->num_heads_ready;
+    ...
+}
+
+I=E2=80=99ve verified that this issue still exists in the latest source tre=
+e as follows
+
+Write (fs/btrfs/delayed-ref.c):
+
+548        if (!head->processing)
+549                delayed_refs->num_heads_ready--;
+
+Reader (fs/btrfs/extent-tree.c):
+
+2007        delayed_refs =3D &trans->transaction->delayed_refs;
+2008        if (min_bytes =3D=3D 0) {
+2009                max_count =3D delayed_refs->num_heads_ready;
+2010                min_bytes =3D U64_MAX;
+2011        }
+
+Thank you for your attention to this matter.
+
+Best regards,
+Cen Zhang
