@@ -1,85 +1,89 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792741E2852;
-	Sat, 10 May 2025 01:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693431DA53;
+	Sat, 10 May 2025 01:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746841085; cv=none; b=ElRsA8o1jMrP2xgh6yCXOsfFhKdrZe6SCD7Igi1uhXOrifyDJ7gyEFhHvqxns5KlJxmFTFwdAcg75pXEnWay8IGwBLwhpPFEMEPe1RKere9gP/JyDNI8K/DGus2qQW5/+kkrPVv5IdQxMQ3ahTi4im4bPbRZXF4HzmrA/uET71g=
+	t=1746841277; cv=none; b=NTBNeHg2Ejckf7Hy3hoHGJ9ECdxPkwWLWL5MerodM1qRH1Seuir94IZkR3Dh/HyRAwofkj9A/VGnE6655BtI4vsL5Cokp2bjlha5cFk2ts+eBDjdpCM4GAedzv8X+4g/Zn3Rxdbv3C/iawgat19eJE/NLCk/D3Rxjq5DcgyqIsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746841085; c=relaxed/simple;
-	bh=dj8o2QTnCDr8ohkesAp8BSgfS4SRxpbtqt4mGydYjLM=;
+	s=arc-20240116; t=1746841277; c=relaxed/simple;
+	bh=mDi0TIGJZ63a/quHDmKu4WHXpA8aYV3xArV1tE2GZUg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h8DYRp42O8PkRLurp/ghZGsQnMqgzvjQ+3zMPLv/6F/YR28xZQVubnS2KV8il5WebwnyY9eyAulwpO5IVdQ83my+Lf57Qsvw/fu2NCVt14IUY/XwvTK2QUgZN5NX/FKHZBjItpZexTDuiILTji/eA0q8s+1i8bo3TNvb69ToHKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=HmXOFb4U; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=T34wm5MbYkHoDv1tHYnO1z6i20vbBvimwRx07L5iiFDT6htssByb9FpT1jf0wY4h7EPk4OMyxMyskAnwjspO75M7NW1aSlsgNfU1sV1GQLpA1uVO0q0yyca2E/h+faQj248+qeca+xjHqPKc5UBSY1YrqcfUX2tvUmDiQ6AF67w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6ohMaIH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="HmXOFb4U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=iyV8HkAn6nqQyuiUYQoJaHYTsOkBmzu+xr40l8RNaEU=; b=HmXOFb4UYofjAQ8c2BlImQRCXl
-	TYEmcTlD2O9evPk7Hqh2ayp0ZZQ5hORT7K3L/TL8q+m/ZayQUm8VEAgCsKBE0xBe6ZJ23ZG6FWM2e
-	+igoaXEC+l691s7Wps1c9y/Tr+sBtSHnRvdG2HwrKQB4I8uxQ7hyje0H/BOIK5mymFHcBDuYrtH7D
-	S2J6Bs8d4/vX9GTJdtQgokbDi6zGn1fBSGulrN+t/1GKzyH/Or9RP6OOY2qPkfvrFaBTUgPZB8qlW
-	8A9hMlfB8+pBTFrLpws8elVgsUZIJKNqsZMLicBGq9XDTYcNDGLOL4gZOPWVHjnOsw3ecsRS8s1Aw
-	qo6PEOeA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uDZA6-004zn5-1g;
-	Sat, 10 May 2025 09:37:59 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 10 May 2025 09:37:58 +0800
-Date: Sat, 10 May 2025 09:37:58 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aB6t9lfMCSuYVxwv@gondor.apana.org.au>
-References: <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <aBypVwhHHzmqqN5K@Red>
- <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
- <aBy06xyzh5kKC48a@Red>
- <aB10PqZNk0L-ly70@gondor.apana.org.au>
- <aB24nSeEJKtP1bO_@gondor.apana.org.au>
- <aB3ggeQDdaPblUxi@Red>
- <aB6oxlR6DINIvdLM@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6ohMaIH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA748C4CEE4;
+	Sat, 10 May 2025 01:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746841277;
+	bh=mDi0TIGJZ63a/quHDmKu4WHXpA8aYV3xArV1tE2GZUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i6ohMaIHto9aIPdGVKoBmf9YSJTUUJlr0AE8DLQ2nLts87uSUuuEY605B574Sdx+O
+	 CgC3NJ2cgtWoXPQpIm24eP8NLrdbsditChljgljeN5s0YKfyv/DqW+xjCAAKZBH7hZ
+	 9D3Z5NVRGYQtPZ3ylYeKd4ctPY6tVH86zd0AoJG1iVCJvC4uiT6eieLtKE4Yj4B8RN
+	 BnnAmZmYgwOSr2G7Kp7qfekuR+YsgSISXgEEIz55TbI8+tm9MQjEri0U0vCjWjEz2z
+	 5rB/mqhD/yfKKTS6FvHVi4LR8236BlUCB1vjXNcZFGXEMx36D7PYAmWQxLfRcjBXpi
+	 rmbRM4BqrGRkg==
+Date: Sat, 10 May 2025 10:41:14 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.1 00/97] 6.1.138-rc2 review
+Message-ID: <aB6uurX99AZWM9I1@finisterre.sirena.org.uk>
+References: <20250508112609.711621924@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vLsmwX0+DaTA6DXO"
+Content-Disposition: inline
+In-Reply-To: <20250508112609.711621924@linuxfoundation.org>
+X-Cookie: Well begun is half done.
+
+
+--vLsmwX0+DaTA6DXO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aB6oxlR6DINIvdLM@gondor.apana.org.au>
 
-On Sat, May 10, 2025 at 09:15:50AM +0800, Herbert Xu wrote:
-> 
-> I see some bugs in the driver with regards to zero-length updates,
-> but I'm at a loss as to why that would only make a difference when
-> run concurrently.
+On Thu, May 08, 2025 at 01:30:23PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.138 release.
+> There are 97 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-In particular, when testmgr does an update+final, it will give a
-non-NULL SG list to the final call.
+This breaks NFS boot on Rasperry Pi 3B - it's the previously reported
+issue with there apparently being no packets coming in that was seen on
+some of the more recent stables (not finding the mails immediately).
+Bisects didn't kick off automatically but I suspect it's:
 
-The buggy code in marvell/cesa will then read that non-NULL SG list
-during the final call and overwrite the cached bytes with it.
-However, I still can't see why that would make a difference because
-it should contain the same data.
+   net: phy: microchip: force IRQ polling mode for lan88xx
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+This also seems to apply to v5.15.
+
+--vLsmwX0+DaTA6DXO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgerrkACgkQJNaLcl1U
+h9CSOgf/RNNrifNkTEqtk9Zrv+V1rXeendgZANWf3l61O5jmLzKZfT+IdD7c+Paw
+PDNVqYa1o+L1Yt0DJmNOegyu9bpvVn/XFZTLyuCTHCbYP0DLkb7K5Kyoig0qPvNP
+gp2oOwpFixEHOyVv25LX9G1kLRagAEPr/2m5S3DxkYB9/8Ur5eiIkfknGQIq8bd7
+EUNTJnie2itcB0GessOtHmIPM0/sXNBybYJBsi1+DEtLR0UFfq3SlWcxQldsOC/y
+kNJy3vGp/BY5kAXHUs4i93P5eVYoBgdGIKgPSLQtU2L6OMT+BxLwBcILbC8WbYVg
+Gp28UPV2G6Rn3JKJjRISQMfTHe2Z0Q==
+=+S/v
+-----END PGP SIGNATURE-----
+
+--vLsmwX0+DaTA6DXO--
