@@ -1,92 +1,89 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC2D7FBA2;
-	Sat, 10 May 2025 01:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436001754B;
+	Sat, 10 May 2025 01:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746841471; cv=none; b=eGOry2SSoNZXClNXChkxDEWAk8NrYLCcEYmc1YZTGLgepv23hSwc0jHy1HWPGYa7usC3cZyMAzHBLYzKB1HeyJ5WrbxMKI5PwcwpeHW8BdDZFI0o/1Zlh5d5AMvJCBFE1jwm8oW0kuAky23PXzsmMmG2hbayMGdeQy2KeAJY16I=
+	t=1746841781; cv=none; b=mSsxeYnj6txNeULG9mYmJJRGLy/LXEp5+9XII7+75uBI0uEEmtSWlu/1IbPCiqYICxR/vlQRzBESCNkucY3Pn+3ZuXAyp/ASaZPQc/LM6Yv9ht+LYO+GlnJj7LKLX2kXnNZAYhwxWkTH6saIM/IJ/brYSt/H3+46zNRlSVaX97c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746841471; c=relaxed/simple;
-	bh=M5tx+r1QbIUCT1y1uSrH7KPbcnmkzXkMSj/LeL8Zzv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rzwgGYipEOLvwVUkaZH66HsailnvC+cqM9HIWVSWikQ+Fgh/hwSqfia9FdWMAU5SXSD4P57bssFqoU071EgqaOvJ9s2UpSCn/d7Qe3e+5hoM3GBivLf23htdMhGp5YDAzVybLUvGTOf9mGTKt+qukxxxEymztlbuQjHMybWio24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=n8vm+53d; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746841781; c=relaxed/simple;
+	bh=Aov1SJkhdkQKlDCLDo428Jyt4hs8og5eGT1+m5Ecjf0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nsOBiySug3JnzuE1qKl65jWTKH5fpUMJOeNOWh8hvLhzZHmw2l4262Oq7DrLaroWP13+Wyu7/Pj7F0OaFSDtIfJ/RVv9DGnGEKjI4+5DphukSPt6T8iUcHBdRLGrPO5++WDnSrIxfQMh+MbpY1bVM/Lu61SfJII00AwN94LCaQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbcvcntU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="n8vm+53d"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=VL+chSAODTarjeBDTkcr1EDJvwQEwFverB/SmL/keUM=; b=n8vm+53d2GgZ1XjCJLUyDsVI7p
-	dUIsGDXnPKNmve+HPc3E8gWFv88Vk05qPGXsFx/uk27TMLOPoNiLW4fCz9QTSgjts1RQMB5YWl4ir
-	LQCVsvURz3hcTvALV/txB5dsALOc37RyunEm+01U8MBuXs/tS6rouVHuq1tXymc94+tn9Lpw302Es
-	hkmDhL5VMz+9Y2WgrhzZtf1ZnuiTKCK3huZtY3VBYfQqM7UqCYdABXICTdKAhrZ/NAR4OYj93DYP7
-	LgOilsu95cnuSS8CYT+1pzCOCyfYKDdo5jhjTsoS9oLCWdlfnTeNXZ9vYkZdohboMG7GGcmFvhgtZ
-	yjVk+5xQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uDZGK-004zr6-2J;
-	Sat, 10 May 2025 09:44:25 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 10 May 2025 09:44:24 +0800
-Date: Sat, 10 May 2025 09:44:24 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aB6veEHqgrxBJs01@gondor.apana.org.au>
-References: <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <aBypVwhHHzmqqN5K@Red>
- <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
- <aBy06xyzh5kKC48a@Red>
- <aB10PqZNk0L-ly70@gondor.apana.org.au>
- <aB24nSeEJKtP1bO_@gondor.apana.org.au>
- <aB3ggeQDdaPblUxi@Red>
- <aB6oxlR6DINIvdLM@gondor.apana.org.au>
- <aB6t9lfMCSuYVxwv@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbcvcntU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5DF7C4CEE4;
+	Sat, 10 May 2025 01:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746841780;
+	bh=Aov1SJkhdkQKlDCLDo428Jyt4hs8og5eGT1+m5Ecjf0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=JbcvcntUOmGA+YQOkeGNE2hLhRYaKeEHXoX258ipZ1CJUhcbom2v0wxLUlaRofriQ
+	 qPpb6TKKo0O+pXwJoLtdk5rmIiIEX41rsRKMQSs4PSEbyCFJD5vUWnMw9ArL8YAG0P
+	 7dOu9GuETlRsAklsLOzspmYc1RlexsX72sb7FYDF2RbLvqihWEf3aR+Y0typjtzCQK
+	 hDPnOedEIQYdf1DpovfF/zCTBFzdz2MQ+10Pan8OUEjdXv+j2c91kU6DAYJOLs+JsB
+	 VAdaGRRDNn4elctTGkYlwoT+g+briT9TV32b07qErYjqXhJ9UZUJya9Ji/OvFNCFHQ
+	 bOrxa8gmD01YA==
+From: Mark Brown <broonie@kernel.org>
+To: cezary.rojewski@intel.com, liam.r.girdwood@linux.intel.com, 
+ peter.ujfalusi@linux.intel.com, yung-chuan.liao@linux.intel.com, 
+ ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com, 
+ pierre-louis.bossart@linux.dev, linux@treblig.org
+Cc: perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250509003716.278416-1-linux@treblig.org>
+References: <20250509003716.278416-1-linux@treblig.org>
+Subject: Re: [PATCH] ASoC: Intel: atom: Remove unused functions
+Message-Id: <174684177763.47320.2027004600109136122.b4-ty@kernel.org>
+Date: Sat, 10 May 2025 10:49:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aB6t9lfMCSuYVxwv@gondor.apana.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Sat, May 10, 2025 at 09:37:58AM +0800, Herbert Xu wrote:
->
-> In particular, when testmgr does an update+final, it will give a
-> non-NULL SG list to the final call.
+On Fri, 09 May 2025 01:37:16 +0100, linux@treblig.org wrote:
+> sst_cdev_fragment_elapsed() was added in 2014 by
+> commit 7adab122a57c ("ASoC: Intel: sst - add compressed ops handling")
+> but has remained unused.
+> 
+> sst_get_stream_allocated() was added in 2014 by
+> commit cc547054d312 ("ASoC: Intel: sst - add pcm ops handling")
+> but has remained unused.
+> 
+> [...]
 
-This ties in with all the test results so far because it appears
-that all the failed test vectors involve a final call.
+Applied to
 
-> The buggy code in marvell/cesa will then read that non-NULL SG list
-> during the final call and overwrite the cached bytes with it.
-> However, I still can't see why that would make a difference because
-> it should contain the same data.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-I think I can see where it does make a difference.  The SG list
-is never mapped during the final call.  So the DMA address is going
-to be either crap or more likely the address from the previous
-update call where it was mapped.
+Thanks!
 
-Now depending on how DMA mapping works on your platform, that may
-indeed be buggy during concurrent calls only.
+[1/1] ASoC: Intel: atom: Remove unused functions
+      commit: 248b75f89e99e59e5362d02d4df3f5e698137c29
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
