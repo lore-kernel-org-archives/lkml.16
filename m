@@ -1,39 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE32C2563
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 16:40:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69BC221FBE
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 16:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746895233; cv=none; b=ugTowQ1aFDrY2lKiAV6Z5AwGU165oy8rOEOTXmYofkucxXv/u1fpT8XOblFHEQMog4uO/UNhyE2Q81LuicbqB9GZ0hECSX1Y/6vnXSyTxG0pOLGgQ3t+VsgqnACzUH+JEmMdMvXwURU3Vy59Gp2nkEDv7icsmzByR33zc33u9ss=
+	t=1746895292; cv=none; b=PoVlPuQTSfNqar2+4iR8c8ubyDEk5cKut57KLWs4+48a6UWJjkHhMpNQCD8rPUIvyuGIQRWTwsJERmgatBcPjksrfST74rWXN6C55uCY1kjuXfgy1FGKPI3LPbf7aD9lIKRYQg39/2wpyWJEpTJqr2BDQeDUU9pN38FwdKmbINE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746895233; c=relaxed/simple;
-	bh=V76YZpQxAQU0cNM6QNbybr1eHBBMhELuI/DfvKdgNGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sGhy2GbwyQH+zjmIUaDrNNDmC3voHERyHpMHR9VZIC8VAYbyHdRrhJbB6bnofHubC1y1qtees3omXXGn6RO98dTeKtwBABjuzmaxsDxcHv1rv9qQq2I5Hr/+WOkWCvUpiQ/5QVOPFdnbBzwMVOjGnkkmSPmRtJ7Y3bNb5UfVgmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ut+mJpBU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746895292; c=relaxed/simple;
+	bh=rbJZxrSbS04OMy+KMamFhwO3lee5Vo4dN7i0CY932xo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QAaUd8UvdfGyQUR3QDD4RqlqurFBxS28e5dDSp1tjeO7A2afcnQcjEfOut4F/qsidcPwoi2f88OrV5KJ3VCCuOn+a7hSCQuNOl4RgiE6bILYbWCbpcTt9OTyqySVn+hbVvK86pOFBGjNFpRzi0MOZl/3RWcAhY4SyU1O8+YWxuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oNWz2AgE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ut+mJpBU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A17A8C4CEE2;
-	Sat, 10 May 2025 16:40:31 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oNWz2AgE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8549C4CEE2;
+	Sat, 10 May 2025 16:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746895232;
-	bh=V76YZpQxAQU0cNM6QNbybr1eHBBMhELuI/DfvKdgNGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ut+mJpBUuZaVzqwgvUwi679NxVscWNy6hGfEBFMHLkoyIDkBMbKenPvweC8XGE9/6
-	 M6GvC6+N0AYeUS6tbYZZ1I/0FdtGKv9DshEVa5H9XMumPr3aKOSl+drKBiUGp6mQpQ
-	 uOMz5ToeHLE7w41YTclUyXq3BMkYWKIaCVmedm6g=
-Date: Sat, 10 May 2025 18:40:29 +0200
+	s=korg; t=1746895291;
+	bh=rbJZxrSbS04OMy+KMamFhwO3lee5Vo4dN7i0CY932xo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=oNWz2AgEPQ+PuhUHi93BcY3ij6e1KbiNBLIBOCbHqqSgP0YHwZMdWV0DHrgLDxcRq
+	 NuTETXMVYQuit5kQhICtnbk3xbLHYHZzo9P6WONcaiFfMXkG6UjIOaQb0yEufmKCpC
+	 1bVzft52376nyNO6CFwpbzduqYbWnnk+2+wOviGs=
+Date: Sat, 10 May 2025 18:41:28 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
 	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [GIT PULL] Driver core fix for 6.15-rc6
-Message-ID: <2025051049-scion-sustained-a2e7@gregkh>
-References: <aB9aTNHuSV-5U15D@kroah.com>
- <CAHk-=wgiZ2kk73wU58o8B8_5fuNLReGQkGo_8HXsnsCE_YUsBw@mail.gmail.com>
+Subject: [GIT PULL] Driver core fix for 6.15-rc6 - try 2
+Message-ID: <aB-BuCkpqmN3ybIP@kroah.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,20 +40,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgiZ2kk73wU58o8B8_5fuNLReGQkGo_8HXsnsCE_YUsBw@mail.gmail.com>
 
-On Sat, May 10, 2025 at 09:00:25AM -0700, Linus Torvalds wrote:
-> On Sat, 10 May 2025 at 06:53, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git driver-core-6.15-rc6
-> 
-> I suspect you forgot to push out, or it's in some other tree.
-> 
-> Because there's no such tag in that git repo.
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
 
-Argh, yes, we moved the tree as it's now shared, but I forgot to update
-my script.  It's really at git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
 
-I'll resend this with the proper location, sorry about that.
+are available in the Git repository at:
 
-greg k-h
+  git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git driver-core-6.15-rc6
+
+for you to fetch changes up to 95deee37a12364f410d22c6a8383f59738a2fef3:
+
+  platform: Fix race condition during DMA configure at IOMMU probe time (2025-05-01 18:00:58 +0200)
+
+----------------------------------------------------------------
+Driver core fix for 6.15-rc6
+
+Here is a single driver core fix for a regression for platform devices
+that is a regression from a change that went into 6.15-rc1 that affected
+Pixel devices.  It has been in linux-next for over a week with no
+reported problems.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Will McVicker (1):
+      platform: Fix race condition during DMA configure at IOMMU probe time
+
+ drivers/base/platform.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
