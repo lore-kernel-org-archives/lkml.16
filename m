@@ -1,111 +1,78 @@
-Received: from trager.us (trager.us [52.5.81.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7CBB67F;
-	Sat, 10 May 2025 01:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E47113212A
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 01:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746840757; cv=none; b=ji+zfpvNeKR2yck/eUFBsRgKeYxD9YsWf6bZYeuW0hidDBC2MB1cf852Ru8/N4Jn7NHSMBtFI72qvxPy015Px7p78IzEQPlLUDqn4w9iFbDg2g4M1JOYsCrVZMUvKY/1G5xhKEYqJgNVB3NtnPzS1HbJ+7gHgKP+mp6T77NO2qs=
+	t=1746840920; cv=none; b=UAOoK6lQDJHwbPOud5v21kb2bo/fGhLZT2dc4cdQVArAmSAVnDw6fu67d/6GPUokLb9DaUn1AIfkJl8MBB5OgW1x4AwChAgMnMZRpMJQIGskL3KHpzFJv69udoAEBogwniHR71eRevrNiTb+gjguE8qgkyv+s01BiIvYh59E3MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746840757; c=relaxed/simple;
-	bh=xgEoxdF8WtQ4LXl7GXwgSisMk5T5Altc6CL481mKxEQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GkWp0rfPi1LVgfwW+i9eB2QPVFRQdIpcuGX/zqxLeeGU4Jzq9zvf/od7Z1hGOyhJ7/Ia7olQVpDmOgCj6axIHsDq93ppSq2iogU+cCjHjMvkjpEEws1VnqIxQjvIgISFY4d1cw1SyyZv1zUM7Ts4dllCNd3n+ALP34Oy4a/uZSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uDY9X-0002Do-TG; Sat, 10 May 2025 00:33:20 +0000
-From: Lee Trager <lee@trager.us>
-To: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	kernel-team@meta.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Su Hui <suhui@nfschina.com>,
-	Lee Trager <lee@trager.us>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 0/5] eth: fbnic: Add devlink dev flash support
-Date: Fri,  9 May 2025 17:21:12 -0700
-Message-ID: <20250510002851.3247880-1-lee@trager.us>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1746840920; c=relaxed/simple;
+	bh=RKZARjtItSMo67EEN9USgQO9kVkqBIBwfgHN4qsQIF4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=jR6gH3Ukm7q2Wpve2H9CyKUJkFddHWK0Qi2pdVGSq4xMlw1KPM5vVAsgLZlS+xJhieiBd+n70k9NvfC0nEI24eouROVZDYt/iPuQM/BX4VftP2AB3fAuxfrs/xPmQat2mV9bupfmmpS8MnNtYm06WRJk5cXjmMj6X9dw6AHYdpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Jn7m1SE4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Jn7m1SE4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF16C4CEE4;
+	Sat, 10 May 2025 01:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746840919;
+	bh=RKZARjtItSMo67EEN9USgQO9kVkqBIBwfgHN4qsQIF4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Jn7m1SE4CkXhy8+3E6kC1fI4Jx9ahn2xXUX6E5oZu2JSsg8nbWlZObHnAYokfHd/4
+	 Uhaid6Xl/iEVNjIJrMr1FIvOWbjdbqF6l5z1AfW50W7pYPunkgAiAdWaPZjwzqZvVg
+	 DowEuEXhgAVxjZQsgst+x2RWJiZD3XqeRioz5PxE=
+Date: Fri, 9 May 2025 18:35:18 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: Coiby Xu <coxu@redhat.com>, fuqiang wang <fuqiang.wang@easystack.cn>,
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
+Message-Id: <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
+In-Reply-To: <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
+References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
+	<ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
+	<4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
+	<20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+	<2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
+	<aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-fbnic supports updating firmware using signed PLDM images. PLDM images are
-written into the flash. Flashing does not interrupt the operation of the
-device.
+On Fri, 9 May 2025 17:58:01 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-Changes:
+> > The bad commit was introduced in 2021 but only recent gcc-15 supports
+> > __counted_by. That's why we don't see this UBSAN warning until this
+> > year. And although this UBSAN warning is scary enough, fortunately it
+> > doesn't cause a real problem.
+> > 
+> > > 
+> > > Baoquan, please re-review this?
+> > > 
+> > > A -stable backport is clearly required.  A Fixes: would be nice, but I
+> > > assume this goes back a long time so it isn't worth spending a lot of
+> > > time working out when this was introduced.
+> > 
+> > So I believe the correct fix should be as follows,
+> 
+> Thanks for testing and investigation into these. Could you arrange this
+> into formal patches based on your testing and analysis? 
+> 
+> It would be great if you can include Fuqiang's patch since it has
+> conflict with your LUKS patch. This can facilitate patch merging for
+> Andrew. Thanks in advance.
 
-V4:
-* Tested flashing in a 50x loop
-* Add devl_lock() in shutdown / quiescene paths like suspend to prevent
-  interrupting the FW flashing process.
-* Add support for multiple completion messages.
-* Removed BSD function notation from fbnic_fw_xmit_fw_start_upgrade()
-* Mailbox functions no longer return cmpl_data->result
-* Add missing error check in fbnic_fw_xmit_fw_write
-* Drop setting cmpl->u.fw_update.* to 0
-* Set offset and length before validation
-* Drop !fw check
-* Firmware upgrades are now process driven
-* Fix potential memory leak when an error is received in the mailbox when
-  updating.
-* Include anti-rollback support
-* Drop retries when updating but increase timeout to 10s
-* Use NL_SET_ERR_MSG_FMT_MOD in fbnic_devlink_flash_update()
-* Updated cover letter, commit messages, and docs as suggested
-* Dropped kdocs
-* Patched libpldmfw to not require send_package_data or send_component_table
-  which allowed stub functions to be dropped.
-* Dropped all dev_*() printks
-* Fixed Xmas tree variable declarations
-
-V3 - https://lore.kernel.org/lkml/20241111043058.1251632-1-lee@trager.us/T/
-* Fix comments
-
-V2 - https://lore.kernel.org/all/20241022013941.3764567-1-lee@trager.us/
-* Fixed reversed Xmas tree variable declarations
-* Replaced memcpy with strscpy
-
-Lee Trager (5):
-  pldmfw: Don't require send_package_data or send_component_table to be
-    defined
-  eth: fbnic: Accept minimum anti-rollback version from firmware
-  eth: fbnic: Add support for multiple concurrent completion messages
-  eth: fbnic: Add mailbox support for PLDM updates
-  eth: fbnic: Add devlink dev flash support
-
- .../device_drivers/ethernet/meta/fbnic.rst    |  11 +
- drivers/net/ethernet/meta/Kconfig             |   1 +
- drivers/net/ethernet/meta/fbnic/fbnic.h       |   3 +-
- .../net/ethernet/meta/fbnic/fbnic_devlink.c   | 260 +++++++++++++++-
- drivers/net/ethernet/meta/fbnic/fbnic_fw.c    | 294 ++++++++++++++++--
- drivers/net/ethernet/meta/fbnic/fbnic_fw.h    |  53 +++-
- drivers/net/ethernet/meta/fbnic/fbnic_mac.c   |   2 +-
- drivers/net/ethernet/meta/fbnic/fbnic_pci.c   |   9 +
- lib/pldmfw/pldmfw.c                           |   6 +
- 9 files changed, 616 insertions(+), 23 deletions(-)
-
---
-2.47.1
+Yes please, I'm a bit lost here. 
+x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch is not
+presently in mm.git and I'd appreciate clarity on how to resolve the
+conflicts which a new version of
+x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch will produce.
