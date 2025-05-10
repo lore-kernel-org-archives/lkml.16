@@ -1,269 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3144E33F6;
-	Sat, 10 May 2025 04:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F75033F6
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 04:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746849676; cv=none; b=U+EKiQ6ytXQ4YWUIas/tArTjZz6Ks7mpBZaSRJqVFp6nDT/X9YxnFGWOvCuorKJDgvF9ytwP36IVUWIuCXAHmFVaji8l3Epm9dljNSuxHLSyMOmDtEoruZQxjW6FdlaV4sppL+xPFdxLpvJUVEo5hf0pIXf//7oP1Oin2Bm1q1o=
+	t=1746849801; cv=none; b=i7yUQJAMdXmFua7PXdT+6g+puLX/dvTwW1OyAMVz0b0KbcPATNq4A07NFyLtlU8HB/WZtUAIcE++LYaLnKwc/gFduZi/GcW88ZZbkhEtxEVZvSwfoQf6z6abSGjM3dwuQdvZcZrfjTTACYSSkwiph6dxTd02KByZfAhx+3coVrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746849676; c=relaxed/simple;
-	bh=2yibZf/BqFCxmgeVfgrmZujspAalPwgoidGyV/l3wqk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mswwtsyaXW7GnLCntpeqMZ7D6wF4SrbGFeviE9NqyprLX8OEUad/Rsvv6cgXYCmY7ECZlTBOYmF2LO8jMLCC/KLw6jwWX1cXIKKlg5nDWbm2CQsaTjeiK42824EjJ4jk9CXKC0qIzhA6ejGsWe2gW6czDp7FltTzuPoaP4V3VQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtFA2yLw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746849801; c=relaxed/simple;
+	bh=t+G7iGtz51NCSD+MuoQy0TNL4V8+uERvHQKDik2c+ds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gj4AE2pex5tzI8KxxlpYiPvdzspIep29VWAaEuj7gcAV+7I8HKOe4GC54EQYMgNREoFtHYJFsznTn4+ceylTjRFi/0pC708HYNA3pkgBT4ObhyG+7rJj6mJZj52rMN+jWGqYP32yXmhYFWHZunA72Yl1FQPSVRL5UhbRFr88CQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k2lJzSdc; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtFA2yLw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D388C4CEE2;
-	Sat, 10 May 2025 04:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746849675;
-	bh=2yibZf/BqFCxmgeVfgrmZujspAalPwgoidGyV/l3wqk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BtFA2yLwnVdjLHchIkfY7OY4x7J1kbx8Xk9ui86caJDELx4yrx0dwuZEXBXVmq8CV
-	 QDinFCNrmYM/EQRBfJ8BleQnnQooyBccyz1a57kc+XR43Bspf2dYrEqi//7DT8tKEZ
-	 aoVOrWDa4gtSWBYZuzf81hxc/vD6qTlyRS+hQe/RVLL1oxn4Ie1eBSyzBjPztC7468
-	 WxKEndhuCncg9H3kusGwV/iV/+JwORgbrVu/DdmRSBGL8SvQlTZeF4H5paNqvVPwJR
-	 FHbO5bStjeEe410D3BORjtXnOC70Ai7+alX7ntgliJi6jvzpQFW0dAmtejBVBzMtg/
-	 Psrz6tfXjg2zA==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] lib/crc: make arch-optimized code use subsys_initcall
-Date: Fri,  9 May 2025 20:59:59 -0700
-Message-ID: <20250510035959.87995-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k2lJzSdc"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4774611d40bso121621cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 21:03:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746849798; x=1747454598; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dvp7VCvFDKnx/a5kWY4TFIakrGqMlV1KSWlgl2jF3rk=;
+        b=k2lJzSdcsPAAShhUzLjgj6AblmOF99DUiU8kOLC6lHgsOu7arc8HNfUGN8QCSUD6n6
+         X/H0kIx66TSFNNbxDbw2aoOV7Wordh/Cgf7urS7efXGxrjLddVeEMwsweE6WxvUuhkh/
+         E7dJkUzZtmZfq2hMUUzANla5H/rUY6aLbRN7OtTv7Z83MVNrOFtmxjT9G3qO8l0jD0FX
+         nI/eDqTeeCsY1XO84YsvGuxxngku/61Z7Z67ld5j0yyfjOuwYsWi5BEbfTnsMouriEmN
+         RgMom4kPjf4SHOXaWVKgp7n9gHefJlFayv1lL4q65F5bD+6lpwu4HYMv9CPg+zg9nn9I
+         Km4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746849798; x=1747454598;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dvp7VCvFDKnx/a5kWY4TFIakrGqMlV1KSWlgl2jF3rk=;
+        b=YSQE6TlgVZHYuGj7hUnctsLeNfcqIDAVwzPIcMcMxVinaAQRs7Ga1dLmLE0IuXSiJy
+         6CDejI584V1mybNS84kXjdU/FEL8VSz+sE8EwgDtcOaM+fK6IbQ+LTKIcwnATM95dVFF
+         auhJYeO52KLxiZQap/DHbSK+nIBLdV/ecxNoA2HzxHDhWl1Mvv4OcvnfobdespbV22Ep
+         dF1spwV6jsqsZyyfn5S3Mxmf0VqMQ6tRRCvQ7drqZVeNesXJINYjdC9rnnrbNmK2JZle
+         mkA3W0MAJm3OUZz5SKtMAlQplsfvYxaz4b1sB+0CqLSxAsUTfYGv7iGFnUt/W8ZfWoZH
+         1o9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUOInaj/ZZMkwxOo+ISlM45o+XFSh6vdRGe8VYR4TTD0rghMdA0kq9n0VoBvjn5muEF/s1fbBcULgGKhnY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIz3m/4gmFtcUfc8w+9HdT/XIVHmC7LtxEhcIfkmHWxQb26e4U
+	wE7P1d08TUPJKR90LFcFkBZ99aUFMrKQJQUK/rAf1cynovYkNJ4+rZFPeySOrUh9md8sEU9EfyM
+	auWqfmB1L3ds8hvjGMuFFCNfGICpSVV7V9auO
+X-Gm-Gg: ASbGncuMXwyGSb/VtMoWoeiqYEKjnDtTCKsrcAM6yKVRNUC+/zCk/bXSdoEtQvBqDwR
+	qDgAhTJW9aILgeWvLIGBiRkUAEOk7l9xIwhlEEG6hXkcg7pXbPmIef1Ix+WUUTRU1MiONlVLfLq
+	eADubNc85gPzfvCfZdpAUOm1zyyq1vEh4GYOfU6ALhbicqmx/jQbI5Ra4t6MVz1m8=
+X-Google-Smtp-Source: AGHT+IGa6MCZkC7TJO9+WiK45ItxubNoVxnApGxNlmqwtd4qdWS3wVJjqSuWv2sanSl5OfbToCZ9VTmOoruwm2aV73M=
+X-Received: by 2002:ac8:5ac7:0:b0:477:c4f:ee58 with SMTP id
+ d75a77b69052e-494611a9033mr2461021cf.24.1746849797569; Fri, 09 May 2025
+ 21:03:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250507175500.204569-1-00107082@163.com> <20250509173929.42508-1-00107082@163.com>
+ <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
+ <CAJuCfpHB8T8daanvE_wowRD9-sAo30rtCcFfMPZL_751+KSs5w@mail.gmail.com>
+ <294d0743c0b2e5c409857ef81a6fe8baaf87727f.camel@linux.intel.com>
+ <CAJuCfpF=u-LpR6S+XmwPe8a6h4knzP2Nu5WFp=Rdvqa14vOzDA@mail.gmail.com>
+ <CAJuCfpFLqTR=KfkstR-iRQvE7ZQMsr9=jXj6C4VdFq-Ebq6mvQ@mail.gmail.com>
+ <3cbaf905.ef7.196b82bdcc9.Coremail.00107082@163.com> <CAJuCfpHuYHJh6yM+na0WLi3Lb910m73Xth8N3ZBnJKpAW5Qxww@mail.gmail.com>
+ <7bb65ee6.129c.196b857cdb3.Coremail.00107082@163.com>
+In-Reply-To: <7bb65ee6.129c.196b857cdb3.Coremail.00107082@163.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 9 May 2025 21:03:06 -0700
+X-Gm-Features: AX0GCFsLYORsD96opZgIs85f1ii3lyJmLrotI3rCOLs3ZebES_QUF9_QvaGjKQ0
+Message-ID: <CAJuCfpE670s5=QAbuqCLB3XuOkfL=L44r93cwJdrhHn=bYNd-Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between
+ read() calls
+To: David Wang <00107082@163.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>, kent.overstreet@linux.dev, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Eric Biggers <ebiggers@google.com>
+On Fri, May 9, 2025 at 8:58=E2=80=AFPM David Wang <00107082@163.com> wrote:
+>
+>
+>
+> At 2025-05-10 11:30:50, "Suren Baghdasaryan" <surenb@google.com> wrote:
+> >On Fri, May 9, 2025 at 8:10=E2=80=AFPM David Wang <00107082@163.com> wro=
+te:
+> >>
+> >>
+> >> At 2025-05-10 05:15:43, "Suren Baghdasaryan" <surenb@google.com> wrote=
+:
+> >> >On Fri, May 9, 2025 at 1:46=E2=80=AFPM Suren Baghdasaryan <surenb@goo=
+gle.com> wrote:
+> >> >>
+> >> >> On Fri, May 9, 2025 at 12:46=E2=80=AFPM Tim Chen <tim.c.chen@linux.=
+intel.com> wrote:
+> >> >> >
+> >> >> > On Fri, 2025-05-09 at 12:36 -0700, Suren Baghdasaryan wrote:
+> >> >> > > On Fri, May 9, 2025 at 11:33=E2=80=AFAM Tim Chen <tim.c.chen@li=
+nux.intel.com> wrote:
+> >> >> > > >
+> >> >> > > > On Sat, 2025-05-10 at 01:39 +0800, David Wang wrote:
+> >> >> > > > >
+> >> >> > > > >
+> >> >> > > > > Signed-off-by: David Wang <00107082@163.com>
+> >> >> > >
+> >> >> > > Acked-by: Suren Baghdasaryan <surenb@google.com>
+> >> >> > >
+> >> >> > > > > ---
+> >> >> > > > >  lib/alloc_tag.c | 29 ++++++++++-------------------
+> >> >> > > > >  1 file changed, 10 insertions(+), 19 deletions(-)
+> >> >> > > > >
+> >> >> > > > > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+> >> >> > > > > index 25ecc1334b67..fdd5887769a6 100644
+> >> >> > > > > --- a/lib/alloc_tag.c
+> >> >> > > > > +++ b/lib/alloc_tag.c
+> >> >> > > > > @@ -45,21 +45,16 @@ struct allocinfo_private {
+> >> >> > > > >  static void *allocinfo_start(struct seq_file *m, loff_t *p=
+os)
+> >> >> > > > >  {
+> >> >> > > > >       struct allocinfo_private *priv;
+> >> >> > > > > -     struct codetag *ct;
+> >> >> > > > >       loff_t node =3D *pos;
+> >> >> > > > >
+> >> >> > > > > -     priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
+> >> >> > > > > -     m->private =3D priv;
+> >> >> > > > > -     if (!priv)
+> >> >> > > > > -             return NULL;
+> >> >> > > > > -
+> >> >> > > > > -     priv->print_header =3D (node =3D=3D 0);
+> >> >> > > > > +     priv =3D (struct allocinfo_private *)m->private;
+> >> >> > > > >       codetag_lock_module_list(alloc_tag_cttype, true);
+> >> >> > > > > -     priv->iter =3D codetag_get_ct_iter(alloc_tag_cttype);
+> >> >> > > > > -     while ((ct =3D codetag_next_ct(&priv->iter)) !=3D NUL=
+L && node)
+> >> >> > > > > -             node--;
+> >> >> > > > > -
+> >> >> > > > > -     return ct ? priv : NULL;
+> >> >> > > > > +     if (node =3D=3D 0) {
+> >> >> > > > > +             priv->print_header =3D true;
+> >> >> > > > > +             priv->iter =3D codetag_get_ct_iter(alloc_tag_=
+cttype);
+> >> >> > > > > +             codetag_next_ct(&priv->iter);
+> >> >> > > > > +     }
+> >> >> > > >
+> >> >> > > > Do you need to skip print header when *pos !=3D 0? i.e add
+> >> >> > >
+> >> >> > > Technically not needed since proc_create_seq_private() allocate=
+s
+> >> >> > > seq->private using kzalloc(), so the initial value of
+> >> >> > > priv->print_header is always false.
+> >> >> >
+> >> >> > But we'll start with first call to allocinfo_start() with *pos =
+=3D=3D 0,
+> >> >>
+> >> >> Usually but not always if we do lseek() to a non-zero position befo=
+rehand.
+> >> >
+> >> >Actually, this change will break the lseek() case. We can't always
+> >> >assume that we start reading from *pos =3D=3D 0. Current patch will f=
+ail
+> >> >to initialize priv if we start reading with *pos !=3D 0.
+> >> >priv->iter should be tracking current position and allocinfo_start()
+> >> >should detect a mismatch between *pos and iter->pos and re-walk the
+> >> >tags if there was a position change.
+> >>
+> >> seq_file works line by line,  I think even if it support lseek, seq_fi=
+le would still start with line #0,
+> >> since seq_file have on clue the byte size for each line.
+> >>
+> >> I will check the code,  make some tests and update later.
+> >
+> >Ah, yes. You are correct.
+> >seq_lseek() will traverse restarting from 0:
+> >https://elixir.bootlin.com/linux/v6.14.6/source/fs/seq_file.c#L323.
+> >Position jumps are similarly handled with traversal from 0:
+> >https://elixir.bootlin.com/linux/v6.14.6/source/fs/seq_file.c#L194.
+> >
+>
+> Actually I was expecting EOPNOTSUPP when lseek on seq files, surprised to=
+ see it works...... :)
+>
+> If seq_file somehow skips start(0),  then nothing would be displayed sinc=
+e
+> priv->iter.ct would be 0 and `return priv->iter.ct ? priv : NULL;` would =
+return NULL;
+> But I think that case  would be  seq_file's bug,   starting with 0 is kin=
+d of protocol promised by seq_file.
 
-Make the architecture-optimized CRC code do its CPU feature checks in
-subsys_initcalls instead of arch_initcalls.  This makes it consistent
-with arch/*/lib/crypto/ and ensures that it runs after initcalls that
-possibly could be a prerequisite for kernel-mode FPU, such as x86's
-xfd_update_static_branch() and loongarch's init_euen_mask().
+Yes, I think that is the correct assumption. Even pread() with a jump
+in position should work the same way, restarting at 0.
 
-Note: as far as I can tell, x86's xfd_update_static_branch() isn't
-*actually* needed for kernel-mode FPU.  loongarch's init_euen_mask() is
-needed to enable save/restore of the vector registers, but loongarch
-doesn't yet have any CRC or crypto code that uses vector registers
-anyway.  Regardless, let's be consistent with arch/*/lib/crypto/ and
-robust against any potential future dependency on an arch_initcall.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
-
-I'm planning to take this through the crc tree.
-
- arch/arm/lib/crc-t10dif.c            | 2 +-
- arch/arm/lib/crc32.c                 | 2 +-
- arch/arm64/lib/crc-t10dif.c          | 2 +-
- arch/loongarch/lib/crc32-loongarch.c | 2 +-
- arch/mips/lib/crc32-mips.c           | 2 +-
- arch/powerpc/lib/crc-t10dif.c        | 2 +-
- arch/powerpc/lib/crc32.c             | 2 +-
- arch/sparc/lib/crc32.c               | 2 +-
- arch/x86/lib/crc-t10dif.c            | 2 +-
- arch/x86/lib/crc32.c                 | 2 +-
- arch/x86/lib/crc64.c                 | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm/lib/crc-t10dif.c b/arch/arm/lib/crc-t10dif.c
-index 382437094bddd..1093f8ec13b0b 100644
---- a/arch/arm/lib/crc-t10dif.c
-+++ b/arch/arm/lib/crc-t10dif.c
-@@ -58,11 +58,11 @@ static int __init crc_t10dif_arm_init(void)
- 		if (elf_hwcap2 & HWCAP2_PMULL)
- 			static_branch_enable(&have_pmull);
- 	}
- 	return 0;
- }
--arch_initcall(crc_t10dif_arm_init);
-+subsys_initcall(crc_t10dif_arm_init);
- 
- static void __exit crc_t10dif_arm_exit(void)
- {
- }
- module_exit(crc_t10dif_arm_exit);
-diff --git a/arch/arm/lib/crc32.c b/arch/arm/lib/crc32.c
-index 7ef7db9c0de73..f2bef8849c7c3 100644
---- a/arch/arm/lib/crc32.c
-+++ b/arch/arm/lib/crc32.c
-@@ -101,11 +101,11 @@ static int __init crc32_arm_init(void)
- 		static_branch_enable(&have_crc32);
- 	if (elf_hwcap2 & HWCAP2_PMULL)
- 		static_branch_enable(&have_pmull);
- 	return 0;
- }
--arch_initcall(crc32_arm_init);
-+subsys_initcall(crc32_arm_init);
- 
- static void __exit crc32_arm_exit(void)
- {
- }
- module_exit(crc32_arm_exit);
-diff --git a/arch/arm64/lib/crc-t10dif.c b/arch/arm64/lib/crc-t10dif.c
-index 99d0b5668a286..c2ffe4fdb59d1 100644
---- a/arch/arm64/lib/crc-t10dif.c
-+++ b/arch/arm64/lib/crc-t10dif.c
-@@ -59,11 +59,11 @@ static int __init crc_t10dif_arm64_init(void)
- 		if (cpu_have_named_feature(PMULL))
- 			static_branch_enable(&have_pmull);
- 	}
- 	return 0;
- }
--arch_initcall(crc_t10dif_arm64_init);
-+subsys_initcall(crc_t10dif_arm64_init);
- 
- static void __exit crc_t10dif_arm64_exit(void)
- {
- }
- module_exit(crc_t10dif_arm64_exit);
-diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/crc32-loongarch.c
-index 8e6d1f517e73c..b37cd8537b459 100644
---- a/arch/loongarch/lib/crc32-loongarch.c
-+++ b/arch/loongarch/lib/crc32-loongarch.c
-@@ -112,11 +112,11 @@ static int __init crc32_loongarch_init(void)
- {
- 	if (cpu_has_crc32)
- 		static_branch_enable(&have_crc32);
- 	return 0;
- }
--arch_initcall(crc32_loongarch_init);
-+subsys_initcall(crc32_loongarch_init);
- 
- static void __exit crc32_loongarch_exit(void)
- {
- }
- module_exit(crc32_loongarch_exit);
-diff --git a/arch/mips/lib/crc32-mips.c b/arch/mips/lib/crc32-mips.c
-index 84df361e71813..45e4d2c9fbf54 100644
---- a/arch/mips/lib/crc32-mips.c
-+++ b/arch/mips/lib/crc32-mips.c
-@@ -161,11 +161,11 @@ static int __init crc32_mips_init(void)
- {
- 	if (cpu_have_feature(cpu_feature(MIPS_CRC32)))
- 		static_branch_enable(&have_crc32);
- 	return 0;
- }
--arch_initcall(crc32_mips_init);
-+subsys_initcall(crc32_mips_init);
- 
- static void __exit crc32_mips_exit(void)
- {
- }
- module_exit(crc32_mips_exit);
-diff --git a/arch/powerpc/lib/crc-t10dif.c b/arch/powerpc/lib/crc-t10dif.c
-index ddd5c4088f508..4253842cc50d3 100644
---- a/arch/powerpc/lib/crc-t10dif.c
-+++ b/arch/powerpc/lib/crc-t10dif.c
-@@ -69,11 +69,11 @@ static int __init crc_t10dif_powerpc_init(void)
- 	if (cpu_has_feature(CPU_FTR_ARCH_207S) &&
- 	    (cur_cpu_spec->cpu_user_features2 & PPC_FEATURE2_VEC_CRYPTO))
- 		static_branch_enable(&have_vec_crypto);
- 	return 0;
- }
--arch_initcall(crc_t10dif_powerpc_init);
-+subsys_initcall(crc_t10dif_powerpc_init);
- 
- static void __exit crc_t10dif_powerpc_exit(void)
- {
- }
- module_exit(crc_t10dif_powerpc_exit);
-diff --git a/arch/powerpc/lib/crc32.c b/arch/powerpc/lib/crc32.c
-index 42f2dd3c85dde..77e5a37006f00 100644
---- a/arch/powerpc/lib/crc32.c
-+++ b/arch/powerpc/lib/crc32.c
-@@ -70,11 +70,11 @@ static int __init crc32_powerpc_init(void)
- 	if (cpu_has_feature(CPU_FTR_ARCH_207S) &&
- 	    (cur_cpu_spec->cpu_user_features2 & PPC_FEATURE2_VEC_CRYPTO))
- 		static_branch_enable(&have_vec_crypto);
- 	return 0;
- }
--arch_initcall(crc32_powerpc_init);
-+subsys_initcall(crc32_powerpc_init);
- 
- static void __exit crc32_powerpc_exit(void)
- {
- }
- module_exit(crc32_powerpc_exit);
-diff --git a/arch/sparc/lib/crc32.c b/arch/sparc/lib/crc32.c
-index 428fd5588e936..40d4720a42a1b 100644
---- a/arch/sparc/lib/crc32.c
-+++ b/arch/sparc/lib/crc32.c
-@@ -72,11 +72,11 @@ static int __init crc32_sparc_init(void)
- 
- 	static_branch_enable(&have_crc32c_opcode);
- 	pr_info("Using sparc64 crc32c opcode optimized CRC32C implementation\n");
- 	return 0;
- }
--arch_initcall(crc32_sparc_init);
-+subsys_initcall(crc32_sparc_init);
- 
- static void __exit crc32_sparc_exit(void)
- {
- }
- module_exit(crc32_sparc_exit);
-diff --git a/arch/x86/lib/crc-t10dif.c b/arch/x86/lib/crc-t10dif.c
-index d073b3678edc2..db7ce59c31ace 100644
---- a/arch/x86/lib/crc-t10dif.c
-+++ b/arch/x86/lib/crc-t10dif.c
-@@ -27,11 +27,11 @@ static int __init crc_t10dif_x86_init(void)
- 		static_branch_enable(&have_pclmulqdq);
- 		INIT_CRC_PCLMUL(crc16_msb);
- 	}
- 	return 0;
- }
--arch_initcall(crc_t10dif_x86_init);
-+subsys_initcall(crc_t10dif_x86_init);
- 
- static void __exit crc_t10dif_x86_exit(void)
- {
- }
- module_exit(crc_t10dif_x86_exit);
-diff --git a/arch/x86/lib/crc32.c b/arch/x86/lib/crc32.c
-index e6a6285cfca87..d09343e2cea93 100644
---- a/arch/x86/lib/crc32.c
-+++ b/arch/x86/lib/crc32.c
-@@ -86,11 +86,11 @@ static int __init crc32_x86_init(void)
- 		static_branch_enable(&have_pclmulqdq);
- 		INIT_CRC_PCLMUL(crc32_lsb);
- 	}
- 	return 0;
- }
--arch_initcall(crc32_x86_init);
-+subsys_initcall(crc32_x86_init);
- 
- static void __exit crc32_x86_exit(void)
- {
- }
- module_exit(crc32_x86_exit);
-diff --git a/arch/x86/lib/crc64.c b/arch/x86/lib/crc64.c
-index 1214ee726c16d..351a09f5813e2 100644
---- a/arch/x86/lib/crc64.c
-+++ b/arch/x86/lib/crc64.c
-@@ -37,11 +37,11 @@ static int __init crc64_x86_init(void)
- 		INIT_CRC_PCLMUL(crc64_msb);
- 		INIT_CRC_PCLMUL(crc64_lsb);
- 	}
- 	return 0;
- }
--arch_initcall(crc64_x86_init);
-+subsys_initcall(crc64_x86_init);
- 
- static void __exit crc64_x86_exit(void)
- {
- }
- module_exit(crc64_x86_exit);
-
-base-commit: 46e3311607d6c18a760fba4afbd5d24d42abb0f3
--- 
-2.49.0
-
+>
+>
+> >>
+>
+> >>
+> >> >
+> >> >>
+> >> >> > then print_header will be initialized to true.
+> >> >>
+> >> >> After the first call to allocinfo_show() print_header will be reset
+> >> >> back to false.
+> >> >>
+> >> >> > Will there be subsequent calls of allocinfo_start() with *pos !=
+=3D0,
+> >> >> > but priv->print_header stays at 0?
+> >> >>
+> >> >> Yes, there will be subsequent calls to allocinfo_start() with *pos =
+!=3D0
+> >> >> and priv->print_header=3Dfalse, which is what we want, right? We wa=
+nt to
+> >> >> print the header only at the beginning of the file (node =3D=3D 0).
+> >> >>
+> >> >> >
+> >> >> > Tim
+> >> >> > >
+> >> >> > > >
+> >> >> > > >         } else {
+> >> >> > > >                 priv->print_header =3D false;
+> >> >> > > >         }
+> >> >> > > >
+> >> >> > > > Tim
+> >> >> > > >
+> >> >> > > > > +     return priv->iter.ct ? priv : NULL;
+> >> >> > > > >  }
+> >> >> > > > >
+> >> >> > > >
+> >> >> >
