@@ -1,132 +1,85 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4D01E2852;
-	Sat, 10 May 2025 01:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792741E2852;
+	Sat, 10 May 2025 01:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746840991; cv=none; b=jXnaFpLNvXrwTIbe04sNRwwfYO9k/6SDKK7LAkf3IJce9QBg6/du8510Y8qIkf87xOorSJbfLI6kpm6Wgimdi5e6IqghPAhXO1Zql2VBQCt8rY+wKBcymGcb0xLxZ2Zynyfktl1AuFBqttkwnP2njuzjLN4D8IYWdQ6hSsLecD8=
+	t=1746841085; cv=none; b=ElRsA8o1jMrP2xgh6yCXOsfFhKdrZe6SCD7Igi1uhXOrifyDJ7gyEFhHvqxns5KlJxmFTFwdAcg75pXEnWay8IGwBLwhpPFEMEPe1RKere9gP/JyDNI8K/DGus2qQW5/+kkrPVv5IdQxMQ3ahTi4im4bPbRZXF4HzmrA/uET71g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746840991; c=relaxed/simple;
-	bh=JqYUP0gYITpwIO56NDGK79wZtTPw/VgY4gE78t6lC9s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eX5Ju4spoQm5+A3zNO++DIK+PnJ1JJRgfx8aXXZkXplBbouQSHafWm6lCqbN8IieeHpYX4+bTJD6eSTFf7U6cES2DkkcaGkrO1myfZOuAjrCQJ5QMCk7XSxPeXdmf5SvaiMjHp1EsEpZFLIfTlp9IBtuaWXKWn3slUequ6+umIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FELXjd7n; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746841085; c=relaxed/simple;
+	bh=dj8o2QTnCDr8ohkesAp8BSgfS4SRxpbtqt4mGydYjLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8DYRp42O8PkRLurp/ghZGsQnMqgzvjQ+3zMPLv/6F/YR28xZQVubnS2KV8il5WebwnyY9eyAulwpO5IVdQ83my+Lf57Qsvw/fu2NCVt14IUY/XwvTK2QUgZN5NX/FKHZBjItpZexTDuiILTji/eA0q8s+1i8bo3TNvb69ToHKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=HmXOFb4U; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FELXjd7n"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22c336fcdaaso28122155ad.3;
-        Fri, 09 May 2025 18:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746840989; x=1747445789; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wD9SkKboBNMZ2NtG53GX3UU3m+Xh67ccGkM3pd0hqvQ=;
-        b=FELXjd7nuqd4aVfe0keq+aClN7yUecO2YYtWdYDAOKSpe28UnEa2stwMkbB7+TIIpL
-         N7aM28w9JwErPXsf6+QN5JTl6rQdBKGQwEGg8tGZBIDVK4qu79PHvn1c+bqC6nASLTnC
-         nEJ5hZYh2JVaF7/3ZBQVWxWzQ7BBExjY2l37tUYSOfAJWByFFGS9rr4ASMLPiK2mZIWZ
-         cBI2TkPfHp5d/qGSNnCjHssnpcjF3OUSXzPvGeFmyS1lCphOzUNt+OWzdbleMkZSo+gY
-         o3DGp7QTZNf9cHUAXiQTE+wNvWrW+iys48nK2Zdcs6uPTu1Yl7WFbxj0A14PDwl88S8r
-         wPnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746840989; x=1747445789;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wD9SkKboBNMZ2NtG53GX3UU3m+Xh67ccGkM3pd0hqvQ=;
-        b=C5W5oD1zBkan5FSajYHX8To05TEbM9RR2sAUwiq5XZK6Ent/wt6Z5c6FB5LiobrLlr
-         LZ5nl4mlY9oDxB4FtjPYvZfuPOYRFXAYUClPhLRyCiRcJNZBzn3OWsN+Pe7RI9MphYtS
-         zOEFu5UjFnqoRYeyNXHKFTWEEGLWVgzehrXbSCHMHlXHB66xutcaGylEfZRXZiYcTaB4
-         nng4Ly42mLITefTkaedXqW57hYSEMII/PtXcxXxA3In6UXVthuCrjF6lJalH0/y5nCiY
-         B9n9F9cYaD4LEGNQgzLxDPvOjcXSlfAr5rOL1s6XheTezNHq+0roDI2WmOetJ4LM51XP
-         7Trw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7JDIQwYxI52ujTKlKZzVO/QCFv4mxFDmjE1RrEOmlvP6URVifKm8N5wr2Zie5YITdouwbkqLgs1F+iSlk@vger.kernel.org, AJvYcCXxJgZpjy2Lq+I/E5y4nQzVvvEwcHmcvdrpvmh97I/YhO6NaxPPH2lXMVia/X0Ab413+/IASYfoOfu/Brs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj+pmG1QFh1SAFg7wkwX3odDtF7lkPBDM83bn3Dz6Q6Ot2PkFB
-	X0iylSK90p5/vu7tTKwHHD28xGhH59hppTwxpPLh2K9rGn1kIkYA
-X-Gm-Gg: ASbGncuyQ7oVO+i8J10n/2wP88T2pvse6HAKO+hqsybZrdwKLxwqi88P4zS4nyTUbis
-	6b68cCoQbQ3cOkojzfOb9JeQBf6hic2iaCg6trZtGhA7H2D6DYTjTekvgOdfpAfTt6By5MYMfMH
-	tc0M7y+S+sTCvCQ+b7IVsicanaUF5R14jeg9UffTZnGvu6YEj07mSyW+jgXrvIn3MHFjdprlbti
-	BccqZWd6rQJEtockDrNUyHYtqlpXKgJXPZXQE0Np6fEaXWhCVsywMmqwL61svlKx/RnD8lgt8Pt
-	PsYNYD3jwmf4BqJwjg+V38aMWXj+HhiB/OT4LIgDWPWZO3GOBErR6ULF2U2odzaNDG68deQJZmJ
-	zR0sNRoBCZztsyGbAuDThRZK0NdyCJGHdwmChkQ==
-X-Google-Smtp-Source: AGHT+IENg0QA4pDDrAf5YXcYOBv5jJnYgaomoJkaWvWaHINOGGkwFUMAt+vGF529iQB2hgnXBoY+FQ==
-X-Received: by 2002:a17:903:1904:b0:22e:4d64:821f with SMTP id d9443c01a7336-22fc8b56982mr61314845ad.20.1746840988708;
-        Fri, 09 May 2025 18:36:28 -0700 (PDT)
-Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271bcfsm23902965ad.125.2025.05.09.18.36.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 18:36:28 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: john.ogness@linutronix.de,
-	pmladek@suse.com
-Cc: Jason@zx2c4.com,
-	gregkh@linuxfoundation.org,
-	linux-serial@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="HmXOFb4U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=iyV8HkAn6nqQyuiUYQoJaHYTsOkBmzu+xr40l8RNaEU=; b=HmXOFb4UYofjAQ8c2BlImQRCXl
+	TYEmcTlD2O9evPk7Hqh2ayp0ZZQ5hORT7K3L/TL8q+m/ZayQUm8VEAgCsKBE0xBe6ZJ23ZG6FWM2e
+	+igoaXEC+l691s7Wps1c9y/Tr+sBtSHnRvdG2HwrKQB4I8uxQ7hyje0H/BOIK5mymFHcBDuYrtH7D
+	S2J6Bs8d4/vX9GTJdtQgokbDi6zGn1fBSGulrN+t/1GKzyH/Or9RP6OOY2qPkfvrFaBTUgPZB8qlW
+	8A9hMlfB8+pBTFrLpws8elVgsUZIJKNqsZMLicBGq9XDTYcNDGLOL4gZOPWVHjnOsw3ecsRS8s1Aw
+	qo6PEOeA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uDZA6-004zn5-1g;
+	Sat, 10 May 2025 09:37:59 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 10 May 2025 09:37:58 +0800
+Date: Sat, 10 May 2025 09:37:58 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	lkp@intel.com,
-	oe-lkp@lists.linux.dev,
-	oliver.sang@intel.com,
-	ryotkkr98@gmail.com
-Subject: [PATCH] rslib: Add scheduling points during the test
-Date: Sat, 10 May 2025 10:35:15 +0900
-Message-Id: <20250510013515.69636-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
+Message-ID: <aB6t9lfMCSuYVxwv@gondor.apana.org.au>
+References: <aBt5Mxq1MeefwXGJ@Red>
+ <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+ <aBw_iC_4okpiKglQ@gondor.apana.org.au>
+ <aBypVwhHHzmqqN5K@Red>
+ <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
+ <aBy06xyzh5kKC48a@Red>
+ <aB10PqZNk0L-ly70@gondor.apana.org.au>
+ <aB24nSeEJKtP1bO_@gondor.apana.org.au>
+ <aB3ggeQDdaPblUxi@Red>
+ <aB6oxlR6DINIvdLM@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aB6oxlR6DINIvdLM@gondor.apana.org.au>
 
-The test has been prone to softlockup but stayed unnoticed because
-of the printk calls during the test resets the soflockup watchdog by
-calling touch_nmi_watchdog(). With the commit b63e6f60eab4 ("serial:
-8250: Switch to nbcon console"), the printk calls no longer suppress
-the softlockup and warnings can be observed more evidently that shows
-the test needs more scheduling points.
+On Sat, May 10, 2025 at 09:15:50AM +0800, Herbert Xu wrote:
+> 
+> I see some bugs in the driver with regards to zero-length updates,
+> but I'm at a loss as to why that would only make a difference when
+> run concurrently.
 
-Provide scheduling points by adding cond_resched() for each test
-iteration on their up to/beyond error correction capacity.
+In particular, when testmgr does an update+final, it will give a
+non-NULL SG list to the final call.
 
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
----
+The buggy code in marvell/cesa will then read that non-NULL SG list
+during the final call and overwrite the cached bytes with it.
+However, I still can't see why that would make a difference because
+it should contain the same data.
 
-Hi!
-
-The discussion on how the printk was preventing
-the softlockup can be found here [0].
-
-Sincerely,
-Ryo Takakura
-
-[0] https://lore.kernel.org/all/202501221029.fb0d574d-lkp@intel.com/
----
- lib/reed_solomon/test_rslib.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
-index 75cb1adac..322d7b0a8 100644
---- a/lib/reed_solomon/test_rslib.c
-+++ b/lib/reed_solomon/test_rslib.c
-@@ -306,6 +306,8 @@ static void test_uc(struct rs_control *rs, int len, int errs,
- 
- 		if (memcmp(r, c, len * sizeof(*r)))
- 			stat->dwrong++;
-+
-+		cond_resched();
- 	}
- 	stat->nwords += trials;
- }
-@@ -400,6 +402,8 @@ static void test_bc(struct rs_control *rs, int len, int errs,
- 		} else {
- 			stat->rfail++;
- 		}
-+
-+		cond_resched();
- 	}
- 	stat->nwords += trials;
- }
+Cheers,
 -- 
-2.34.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
