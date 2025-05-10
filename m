@@ -1,67 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B101D9A54;
-	Sat, 10 May 2025 09:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58195477F;
+	Sat, 10 May 2025 09:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746868563; cv=none; b=MYg5bEeL3T09bhCLqL5mLsJJzBK8tCFmg7dRo0UueYWAWXtwjpUhxAeB6kP/DJrPbvon2SL/Qs6nG5KUuZOwguRs2e/KPD2D9WHoaT6n7CmI2K9pxvQiZkzABVL5eCQu7DwDyTkFTedlj+ttB3NBnYvRR27m/96ZQSL1Jubrvbc=
+	t=1746868847; cv=none; b=c1eZinrjz2KnrLe0C9+9QKi0xH2uu+KEyKDZKm3PoI9fvhjvi10kJmpN7oHtTroOs7rktBWrIj0T7ax2WxBbO6sG3GvwnQ5klNlOGYGCr64Nqza9lmYH3xwlhWAMFZP2ZaahQ6u/y4qqX3D4YMhSAfOrL0GD10LX2M3pFVSxt8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746868563; c=relaxed/simple;
-	bh=N0WvBWcRaJqlD2szj6a2rYDUoL1UN49lZxJeaXuaiUU=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=MFZTbtn33eHjMFUzxiVEZdT6vgOxnZsBBplqsnFMVwnfzfbNITj4bv+wLWNHWarPoj+acNIz8PLBPejgInsW51TCKMxnf2PsVD6uth8oEqb+6GxGZo4r6G3PqwXHWqQh7qejjoD852hdjXDUv2yjxAkMlMlz56zOMlg6PzXe8xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvYmN0+u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746868847; c=relaxed/simple;
+	bh=vCF/5xuRbFnc41DDoRuqpdTT8j5kjjqRrKLNDXa+R7o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dX4RSz40vk/z3cTKqH0EyPRKcU37uDljBSabt6AFfZWXLGbDirFwp0UxEDElFFyq7ayf2SnkPnOCry64aJ/iUEsjZvbT8RBBiaSfxuj8uMWusPohSGByDyZ2WEuO4cC+ruCz5Tl5lP7+hjwewesMhh4KOdS7jAOBcPEJKaQl/og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EFqxC+yY; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvYmN0+u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD385C4CEE2;
-	Sat, 10 May 2025 09:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746868563;
-	bh=N0WvBWcRaJqlD2szj6a2rYDUoL1UN49lZxJeaXuaiUU=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=VvYmN0+u/+1ASx2sAgrFMXwxnbL4R8LTOb4fp5TRJiniNv7KQl4+Ko4mrQqrrmSiv
-	 aIJZpmqGS6WATO9zy7I4vWEcUrjRedeUn22W/+Z64/vXNQB0K6K2DOfyap4M+hIkQM
-	 bVSL32xrhuFlldAJlKiev8inl8mb6ymCVkXdehHO+DbHWmmFEctDdkzPJjjSiND8eV
-	 c7SzIiOVfp/y0EZ2iv6Jk1GPLKIC3eudGEY+06DAuceIuoFBMJPPdMJrkf1SSOP2QY
-	 uEdNQ1ZHxAeU13oIdbeG0Zqd93huOcbCF3gB2LNDuRmTaziGz5ij6FyhXHkj9w9DZ+
-	 6XSyjUEIUexLQ==
-Message-ID: <13d5e1fbe12e289da1d1e5184eb5277c@kernel.org>
-Date: Sat, 10 May 2025 09:15:59 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v3 20/22] drm/bridge: add devm_drm_put_bridge()
-In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-20-b8bc1f16d7aa@bootlin.com>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-20-b8bc1f16d7aa@bootlin.com>
-Cc: asahi@lists.linux.dev, chrome-platform@lists.linux.dev, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, imx@lists.linux.dev, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, platform-driver-x86@vger.kernel.org, "Andrzej
- Hajda" <andrzej.hajda@intel.com>, "Anusha Srivatsa" <asrivats@redhat.com>, "Chun-Kuang
- Hu" <chunkuang.hu@kernel.org>, "David Airlie" <airlied@gmail.com>, "Dmitry
- Baryshkov" <lumag@kernel.org>, "Douglas Anderson" <dianders@chromium.org>, "Fabio
- Estevam" <festevam@gmail.com>, "Hui Pu" <Hui.Pu@gehealthcare.com>, "Jagan
- Teki" <jagan@amarulasolutions.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
- Karlman" <jonas@kwiboo.se>, "Krzysztof Kozlowski" <krzk@kernel.org>, "Laurent
- Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime
- Ripard" <mripard@kernel.org>, "Neil Armstrong" <neil.armstrong@linaro.org>, "Paul
- Kocialkowski" <paulk@sys-base.io>, "Pengutronix Kernel Team" <kernel@pengutronix.de>, "Robert
- Foss" <rfoss@kernel.org>, "Sascha Hauer" <s.hauer@pengutronix.de>, "Shawn
- Guo" <shawnguo@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFqxC+yY"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso28521055e9.2;
+        Sat, 10 May 2025 02:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746868844; x=1747473644; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ERk94FJo2I+nhqkg3uZ4mky2ZS0le31BrUmfDAtnQw=;
+        b=EFqxC+yYV5ZOnt1/JG2cpb27wy1n4EblLoVzoP0F5RPjO8yCKSbKTh/M8fPytYoly/
+         5KRiUsmB35aErXhuZWki7UV9wyOApa4Rqhyn5t2NT4B6UYqaNL9m2Hu77B/5bmyQmZiQ
+         i4s9RXmr9kLZllt+8hZWMQh/JQqhkPMhPs9Px7x+bYJZgxWmLu7aya3O5+598JevzoVM
+         WoNz5Q4FbtIcha9RC8fUKXK9xSfH26eJzDY0/6C+HM2zAdxG4NV1Vdwlhxjcl0nSlj9U
+         ZCu8gLOKoEUX/aKuqJAvZilaf0QVXoNBcBfQZ4dT0X0v2eEOEL5ejvJ3U5MQ/qx7AXa9
+         iCXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746868844; x=1747473644;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1ERk94FJo2I+nhqkg3uZ4mky2ZS0le31BrUmfDAtnQw=;
+        b=w2C4VahuenbHgo0xd2RhO5f0uVsM1/q7pAIZl69ttE2X8gge00g0NDdFjkhZrmohKP
+         zLyZN2QsfhtlRVoHu1GuvR9KOMyhAlejp1eYJ+radS1dBUIeJk2l4yqffCIr5o+55JFm
+         9rIcv3ZQBsaH0UGgzJtNDKQMIQAXcRZYs3thaiKRd6Tzy6pjsOQpITgjIpuyBcgwoQqC
+         9HM53Orcxbd6kJXk59/FWBEL6YQeZu71dWF3Z9SKAbk04167R+KfOctSM7xT1GZaWMaG
+         xfSDNVBL63c7vpY8jkrlReMGNA9kXeS4NdJ3b2sBiw6Uilb8ET3eEYyIxrbVCU8iHl4a
+         t8hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7rg9dL549jhZq4vtKzznDuGZ1Wy0JtK38VXMqfXH/NaMdcVg0SYn0cVW8JhruL7w2oK22XKbgCwpj@vger.kernel.org, AJvYcCU8vBAn5Fvhfl2Wxn7+2ijOV8dTVWeWJ9AS01QdaZg2dpiMrKhbf1bYrvAOUeN64CYKvnb+8LOtM7ugK1FG@vger.kernel.org, AJvYcCWo0GeYbCxOmevE1FhBxaLB6cZ4rCEPhnNxmoTyDwdFmAxhPjtWYLGFvBpo7XnvqS1d1i2Ur8m2MSOk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0Wx1TlvFedRV3twgDCytMpX+LzOFFitLVlw+c9Z+PGkWHJXXN
+	vlPXQxX09HpAJqutMerZJ3BX9OOBsgIHF04AXF4gpl2L5LZkztHEtGLUWVHd
+X-Gm-Gg: ASbGncsPxDJtynDO7fzJUpacIremvaM3t7AME1H/lvSyXfkt2nIQAG3XDPxvLjiz6xb
+	4u+3/BKHFdKgA2hFRDRfpfvIZjwXDR2Q9t9MaQZYMIjPk+KlGEp+E+9icOTmo0L6mrZNlV3yEYn
+	H+EthyAa5jeueeyIGTOytX2Q5gjOlaHDy2AFAkWL8IV3r9cVf+pZXt++AGbsJxOSvy7yuEydgWM
+	LUkMmSdj9ByPNXese5thHOv/xpo7dRVV9PAT0WxQHI7ZLdhkAU9t0ym8VeI78flID27A1+dQQBk
+	XVnw8TSZeX5Eek7ho+jOqdGBgdwgzHnZWqd63Zj9MTO5HXxr1cKC1pf/DuMogh2xli504txm+q9
+	+
+X-Google-Smtp-Source: AGHT+IFGOLjcCMtVhz1MxaltaMoTEbTdcOOSuwUxitdQ3lnKbTU8OCemlylfzPjg0tJcpC/HYRB8Ww==
+X-Received: by 2002:a05:600c:348a:b0:43d:fa59:be39 with SMTP id 5b1f17b1804b1-442d6ddf515mr51214805e9.33.1746868843500;
+        Sat, 10 May 2025 02:20:43 -0700 (PDT)
+Received: from tempest2.110.lan (xt27dd.stansat.pl. [83.243.39.221])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae5asm55901985e9.36.2025.05.10.02.20.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 02:20:43 -0700 (PDT)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: linux-hwmon@vger.kernel.org
+Cc: Pawel Dembicki <paweldembicki@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Noah Wang <noahwang.wang@outlook.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Grant Peltier <grantpeltier93@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Shen Lichuan <shenlichuan@vivo.com>,
+	Charles Hsu <ythsu0511@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v3 0/5] hwmon: pmbus: Add support for MPM82504 and MPM3695 family
+Date: Sat, 10 May 2025 11:18:43 +0200
+Message-ID: <20250510091937.2298256-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 9 May 2025 15:53:46 +0200, Luca Ceresoli wrote:
-> Bridges obtained via devm_drm_bridge_alloc(dev, ...) will be put when the
-> requesting device (@dev) is removed.
->=20
-> However drivers which obtained them may need to put the obtained reference
-> explicitly. One such case is if they bind the devm removal action to a
->=20
-> [ ... ]
+This series extends the hwmon PMBus driver for the MPS MPQ8785 to support
+two additional Monolithic Power Systems devices: the MPM82504 and
+MPM3695 family.
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+The driver is restructured to support multiple devices using device tree
+matching. It also introduces an optional
+"mps,vout-fb-divider-ratio-permille" property to configure the
+VOUT_SCALE_LOOP PMBus register, which adjusts reported output voltages
+depending on the external feedback divider.
 
-Thanks!
-Maxime
+Device tree bindings are updated accordingly.
+
+Changes have been tested on hardware with device-tree based matching
+using the MPM82504 and MPM3695-10.
+
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Pawel Dembicki (5):
+  dt-bindings: hwmon: Add bindings for mpq8785 driver
+  hwmon: pmbus: mpq8785: Prepare driver for multiple device support
+  hwmon: pmbus: mpq8785: Implement VOUT feedback resistor divider ratio
+    configuration
+  hwmon: pmbus: mpq8785: Add support for MPM82504
+  hwmon: pmbus: mpq8785: Add support for MPM3695 family
+
+ .../bindings/hwmon/pmbus/mps,mpq8785.yaml     | 74 +++++++++++++++
+ .../devicetree/bindings/trivial-devices.yaml  |  2 -
+ Documentation/hwmon/mpq8785.rst               | 27 ++++--
+ drivers/hwmon/pmbus/mpq8785.c                 | 95 +++++++++++++++++--
+ 4 files changed, 182 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
+
+-- 
+2.43.0
+
