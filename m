@@ -1,75 +1,39 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E4A1D7984
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 06:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C4E178CC8;
+	Sat, 10 May 2025 06:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746858698; cv=none; b=XJedHYKgHVoM9VpcDYGX+G/Y1wwj5bN+eJqOH1fs78ScvefMILr/icGmMVtlAqtXJ0jhws+peMw81sL/j7DH8CMvfJn1Gc3GpehbvBPQ+T79RYzNgJxbowgBXuB/uuzpcwVvINLeKYkFDbcad6Zx61ABug+bbTErKL2HgCRpJ88=
+	t=1746860082; cv=none; b=ktg0gb5CKStbqYxaZrAnoMhi2g8KOzvjBiKbY9WQIE8BT4oGzX8JL/6xDYuAkRMWniJ+nt+sSkw+zzlW+vaMNrdhI1uk3YAExT7lCtcdecvtyJemhJKnS5ojEtDtZ+VfbPZnRlE+ZtWkh1JH/dXxwyM3k/soDAqIyvn4TTCwWYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746858698; c=relaxed/simple;
-	bh=/CUWNCKJLlL2ZUz9MqaxNPY5UPyrCzuEVCDqSKKaiwY=;
+	s=arc-20240116; t=1746860082; c=relaxed/simple;
+	bh=mdnOUrBAK4hSGCJ/wGMi1H1M6KiEQEjDBPc6zkE+Olc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTCNn5hJFBEsZQqvuZL9KMRfkQ8GkqMM8QSI0jEhJnZN0fKtThqMv6uSwd4cJeo3/bvMNOZ3b34tbL1f0wv5kFVT7/feD3aIdB9NW3BjNs8OUpSMqa87ZJNfs7UOTHpd0YswrGZwIzWYwgwXduIHff6fWKYe+V8Mdtxunar/FM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MVXIBFaN; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=QLfJr2ioY0T9DyMzoy6Ml7vyNt2KNDDBtLxO+oN/QmpkIGHi4RyXTMKyAs62HdqV9MXjrGgN/eiwAMXMazrQzArR2zUqi7x5dTKdt7zXgQIoudRUeWUAkpopna13D7m/tHD/NgRLvSajtNrIoz9lQBi4GJGZim3ByOOFRbqRrhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=dAmddKkl; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MVXIBFaN"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a0be321968so1522887f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 23:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746858694; x=1747463494; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=al12x7untsw9gT40SLDOdxEjze2k19FQIlHKuwT2kqQ=;
-        b=MVXIBFaNTzcJH/anR5qym88MwkABM+Zj7KoL7uATZcH+BcrAecC9frL5VeS0sVdzdi
-         hUJv3H9ojh1IGvebhzIZkbD1w/6ZixvlV4Qdke2ddT52SO8kUrjsCP0L+sbHUuMy8TPq
-         OBLL8tROouoczzulH4wuBAmedzNO3y1XAiQes2ZVN4UmKsvhAns6yiyH9zNA5Y7xWcPy
-         6NHTOR3EB4XXbB4UwUVIrXFzK2zEPnVyWg+8b/S3HHkmOxwDIHsLOIeJcExhv5WjdvEm
-         2RcvTRvBZxupHzftBZLBo2042CXYaCwZXXcKWUj+CSvLlBgMUTBWrKI/zRN15cBJrU01
-         Pl3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746858694; x=1747463494;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=al12x7untsw9gT40SLDOdxEjze2k19FQIlHKuwT2kqQ=;
-        b=kCA80/4KKnE9MHvCOJckGV21vJ5hVbI2teuqz873VvTG8hpwokUeOhxq+zzz6LUV4J
-         PGltmaDiO3kXmU8hJS1KCtpcoKd+fEp1SKau4CW1SNoUOjsofH7eUUTDcNNwGt1TDWAN
-         SB/p/uJn/pX4dEBvBdUEchvwLsssnq77no6Mgf40/AsN3HoZOe+/hoJ0Ar1ajXy4Gp6w
-         Z4vLNHH+ExCmQBqVh0opZPDMjsAXPCLc6i9/PFme0xIolh+SB9thVym/Fevatvu+8taw
-         mwJV1I3KZT9arIhuiSL2vT1TS6EqVyuWhKbNJ0kU4qh8M14gtvVHFQGY7hrwzH41eDs7
-         Sebw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnXlVpG0JwfqC/PxEM2oDXATEcvGzNl8dH8AmYMThD3frdVA6d72Bz1fS+vpZFVuiWufFTUlSInbdixP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCe/m8j7veFw9VugkvyD4IKZNX8Dh9GPd3Z9+Xpp2PX2nXqBzW
-	c+rT0MboPkzclbQ6r2Z5yAv2JI4iggguWG6byyH4tbU8Uj4FAC+jDP3k0k90iw==
-X-Gm-Gg: ASbGncvo6JUGkxhIlzSesbqln2OHI52Yfvfq4BNMrhNtbIyBOBXGU5Ls4eerebf7YC7
-	+d67GPzOJtlZlPBG2k/qVx2gKJgLzdgax4T5AbwF/Y0gSF2lx21zE53rqcW1pQ5eqg0hMNxb4Pr
-	RcjDTjLmCC04s5yx7an0wVOORdEiBeqcB2JJP5Kebk+XfjkvPLLHKmdadhBWoTA5oDXWMeG7WAd
-	GwIs4N8QCRVvjagJD/jLH2cSs6LvpszFh8xZ1N/vhFL4OenF3zFULw6COhbQCAx5jHeeSOjUw2P
-	wsw3iYGrB/7XkJDdr82ZC6PCNmt8L63MmNYJoOhyy1T2myRGhe7OXyaxicM+Hvxjc3zbPVX2dfV
-	NsGMCYWjFZ0plnPJn4ZTrpeD+68KFyJunUw==
-X-Google-Smtp-Source: AGHT+IETPcny+oJkB2S2QRPRO7MBeUeS+pHJgVEZyOPsrPJBO7sk8jq/SJTSNUR5nO2ekoZ3PrRZwg==
-X-Received: by 2002:a05:6000:22ca:b0:391:454:5eb8 with SMTP id ffacd0b85a97d-3a1f64b5c99mr4768988f8f.48.1746858693887;
-        Fri, 09 May 2025 23:31:33 -0700 (PDT)
-Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c583sm5351182f8f.84.2025.05.09.23.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 23:31:33 -0700 (PDT)
-Date: Sat, 10 May 2025 12:01:31 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>, bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.14 382/642] PCI/pwrctrl: Move
- pci_pwrctrl_unregister() to pci_destroy_dev()
-Message-ID: <tfil3k6pjl5pvyu5hrhnoq7bleripyvdpcimuvjrvswpqrail3@65t65y2owbpw>
-References: <20250505221419.2672473-1-sashal@kernel.org>
- <20250505221419.2672473-382-sashal@kernel.org>
- <aBnDI_40fX7SM4tp@wunner.de>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="dAmddKkl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1746860065;
+	bh=mdnOUrBAK4hSGCJ/wGMi1H1M6KiEQEjDBPc6zkE+Olc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dAmddKklFUQDIjKEg3mw0lS4BtYt0yQAx9GPLwf5dQwSj/v3UONoD8jSzszAvvRVA
+	 ZERMZnqbsJQiltplbeV4A3LzuEIWJAVbuQhPx2k92+ugMGpTOUIcytnwk2LmXfErHu
+	 Rt8J6K5obLJ+5vI8a3OnR1rjYQge471hZy6Rpeqo=
+Date: Sat, 10 May 2025 08:54:24 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Kees Cook <kees@kernel.org>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Willy Tarreau <w@1wt.eu>, Andy Lutomirski <luto@amacapital.net>, 
+	Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 00/14] kselftest harness and nolibc compatibility
+Message-ID: <d8d36e51-9456-49a3-88c4-44cffdcc5c0a@t-8ch.de>
+References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,40 +43,95 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBnDI_40fX7SM4tp@wunner.de>
+In-Reply-To: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
 
-On Tue, May 06, 2025 at 10:06:59AM +0200, Lukas Wunner wrote:
-> On Mon, May 05, 2025 at 06:09:58PM -0400, Sasha Levin wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > [ Upstream commit 2d923930f2e3fe1ecf060169f57980da819a191f ]
-> > 
-> > The PCI core will try to access the devices even after pci_stop_dev()
-> > for things like Data Object Exchange (DOE), ASPM, etc.
-> > 
-> > So, move pci_pwrctrl_unregister() to the near end of pci_destroy_dev()
-> > to make sure that the devices are powered down only after the PCI core
-> > is done with them.
+Hi Shuah and Kees,
+
+On 2025-05-05 17:15:18+0200, Thomas Weißschuh wrote:
+> Nolibc is useful for selftests as the test programs can be very small,
+> and compiled with just a kernel crosscompiler, without userspace support.
+> Currently nolibc is only usable with kselftest.h, not the more
+> convenient to use kselftest_harness.h
+> This series provides this compatibility by removing the usage of problematic
+> libc features from the harness.
+
+I'd like to get this series into the next merge window.
+For that I'd like to expose it to linux-next through the nolibc tree.
+If you don't have the time for a review or issues crop up, I will drop
+the patches again.
+
+Are you fine with that?
+
+The issues reported by Mark have been fixed and tests have been written
+for them.
+
+> Based on nolibc/for-next.
+> The series is meant to be merged through the nolibc tree.
 > 
-> The above was patch [2/5] in this series:
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+> Changes in v4:
+> - Drop patches for nolibc which where already applied
+> - Preserve signatures of test functions for tests making assumptions about them
+>   drop 'selftests: harness: Always provide "self" and "variant"'
+>   add 'selftests: harness: Add "variant" and "self" to test metadata'
+>   adapt 'selftests: harness: Stop using setjmp()/longjmp()'
+> - Validate test function signatures in harness selftest
+> - Link to v3: https://lore.kernel.org/r/20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de
 > 
-> https://lore.kernel.org/r/20250116-pci-pwrctrl-slot-v3-0-827473c8fbf4@linaro.org/
+> Changes in v3:
+> - Send patches to correct kselftest harness maintainers
+> - Move harness selftest to dedicated directory
+> - Add harness selftest to MAINTAINERS
+> - Integrate harness selftest cleanup with the selftest framework
+> - Consistently use "kselftest harness" in commit messages
+> - Properly propagate kselftest harness failure
+> - Link to v2: https://lore.kernel.org/r/20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de
 > 
-> ... so I think the preceding patch [1/5] is a prerequisite and would
-> need to be cherry-picked as well.  Upstream commit id is:
-> 957f40d039a98d630146f74f94b3f60a40a449e4
+> Changes in v2:
+> - Rebase unto v6.15-rc1
+> - Rename internal nolibc symbols
+> - Handle edge case of waitpid(INT_MIN) == ESRCH
+> - Fix arm configurations for final testing patch
+> - Clean up global getopt.h variable declarations
+> - Add Acks from Willy
+> - Link to v1: https://lore.kernel.org/r/20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de
 > 
-
-Yes, thanks for spotting it Lukas, appreciated!
-
-> That said, I'm not sure this is really a fix that merits backporting
-> to stable.  Mani may have more comments whether it makes sense.
+> ---
+> Thomas Weißschuh (14):
+>       selftests: harness: Add kselftest harness selftest
+>       selftests: harness: Use C89 comment style
+>       selftests: harness: Ignore unused variant argument warning
+>       selftests: harness: Mark functions without prototypes static
+>       selftests: harness: Remove inline qualifier for wrappers
+>       selftests: harness: Remove dependency on libatomic
+>       selftests: harness: Implement test timeouts through pidfd
+>       selftests: harness: Don't set setup_completed for fixtureless tests
+>       selftests: harness: Move teardown conditional into test metadata
+>       selftests: harness: Add teardown callback to test metadata
+>       selftests: harness: Add "variant" and "self" to test metadata
+>       selftests: harness: Stop using setjmp()/longjmp()
+>       selftests: harness: Guard includes on nolibc
+>       HACK: selftests/nolibc: demonstrate usage of the kselftest harness
 > 
-
-Both this commit and the one corresponding to patch 1/5 are not bug fixes that
-warrants backporting. So please drop this one from the queue.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+>  MAINTAINERS                                        |    1 +
+>  tools/testing/selftests/Makefile                   |    1 +
+>  tools/testing/selftests/kselftest_harness.h        |  175 +-
+>  .../testing/selftests/kselftest_harness/.gitignore |    2 +
+>  tools/testing/selftests/kselftest_harness/Makefile |    7 +
+>  .../selftests/kselftest_harness/harness-selftest.c |  138 ++
+>  .../kselftest_harness/harness-selftest.expected    |   64 +
+>  .../kselftest_harness/harness-selftest.sh          |   13 +
+>  tools/testing/selftests/nolibc/Makefile            |   15 +-
+>  tools/testing/selftests/nolibc/harness-selftest.c  |    1 +
+>  tools/testing/selftests/nolibc/nolibc-test.c       | 1715 +-------------------
+>  tools/testing/selftests/nolibc/run-tests.sh        |    2 +-
+>  12 files changed, 313 insertions(+), 1821 deletions(-)
+> ---
+> base-commit: 2051d3b830c0889ae55e37e9e8ff0d43a4acd482
+> change-id: 20250130-nolibc-kselftest-harness-8b2c8cac43bf
+> 
+> Best regards,
+> -- 
+> Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> 
