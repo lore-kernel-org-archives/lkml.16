@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1523D2566E6
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 11:20:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72858256C7C
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 11:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746876057; cv=none; b=Yb/KSFypDttdIKvOPLo0Y4Okki3kqyyfczL0tAlXADslJn2TI0R88SCNpa81m2c15OQs4JrI/ugT03w8yxxcC3i5cKAX+kqA4kL+FGz8bN2gyC742Gh0tsMi73hfsfgXJC739QyTHkVS+gVKKfemm+lqhxkIGxVxJ6zeuJXyTps=
+	t=1746876062; cv=none; b=S9jEmy3Gzf3wVDFSMokX+39ni/mAqUmVA+cm9dzcqw9SPuqU8mn4NmORECZuXcZ5q0H5ULuXpNVV3vQ3bImxiXOvuobxlgF0xybGl8pp2nF/tuj3IZjJc935sGFz9I8tMmT7aPX+O3hLRLkakKBlvNUoFh0W8nv9d8DS9243aQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746876057; c=relaxed/simple;
-	bh=pYm2R2gUfeL0wsx9E20viwhqSY3XgOz0aapKWvuh+Uc=;
+	s=arc-20240116; t=1746876062; c=relaxed/simple;
+	bh=Q9mkgBrLw5Vvpn5yhkzCOPbo1CBdGkbMGBJZom8Q4DM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TJWhv6GfSXAqdkBL6ufaOt5AbptvfoxxelAw/uXB7oeRkzfB/1BZ3+paGI9jzQhKnYHGXsM6rxPvCIXLZQTsBhDTx+mGOrv81xkWTJSKZZSmH+iDQcErNJlGjqCb9NRDZdtdNJBrb1X6E27maL8M6sHAM6Y3KxfCpexjqIBnBPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bbKL+y1j; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=WdENxzBuejON6Kj4s+TFYHRCAs08ivFgyOFx1yKzDVgqsP22ntxh802Hc75F2sWXfnvCtu4sJRY5+Yh2cXhEei5hkOsc7mw30zQLIALokgocg6oKpEnMcSAb719wl0pIAPVnnV+AzpsCrbU6kTUJ3l2Xq0kNEIT3AZrB496qij8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P5myGUQv; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bbKL+y1j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P5myGUQv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746876056; x=1778412056;
+  t=1746876060; x=1778412060;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pYm2R2gUfeL0wsx9E20viwhqSY3XgOz0aapKWvuh+Uc=;
-  b=bbKL+y1jLRMwxHh+31w02Ja+6faxBRJq8nGOOKUOSlD0y3vGzdZua5m9
-   29fBCV1bX2gYCGuGDrij3Z/yOOE8NWG+WKrb8dzcVa/srGM1Lj7PR4qNt
-   Ol3UCo4hNA8PbgQWAxq7t+zpURZSaARv5pwJbM/h3xvJrGBeMCTOPhy7m
-   +8gXwIVVpmF7SE9VvPFLpUhj1V5KM0wI6HbThMK5NBiP+/UJRuqGDuTas
-   j7XR95mXJt9AfjvWFTnZcRHLPRdJXyopl7RiS2SPgkng0yLwO4IWsHy0H
-   e19WdGC0F4+Slqmogndd1783xVU7J3fJXqBA2kaUfJXloUuMFz39QYJ59
-   A==;
-X-CSE-ConnectionGUID: r4GHEayORN++rD5PfJdt6A==
-X-CSE-MsgGUID: 9M3CwZRUSNGdBDPdiM8a/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="71219314"
+  bh=Q9mkgBrLw5Vvpn5yhkzCOPbo1CBdGkbMGBJZom8Q4DM=;
+  b=P5myGUQv+RqNJ/sjwh94L+dzihoEN5wc69jZQYBB+c5+9q+BOHIIFJSR
+   B+naWpydR7R1PtWI83GKOHNn/GsK77VHEG6y8sc6r3q+/uw/THtUkMNAu
+   ObSU7fDsNrJ91e9h5d8aAZEwWSyPKSQ1el+B/GGgdk3OQm8EJ8JOYHAUI
+   0DsG7iOs/QQlMQe3yb+2qHMWOp4Bz9oaEuoEZG2pY5Tjgpm8/8OHXc6Th
+   RqA85s0BcCqf1pRMARcX32orSfkZA4AQfV1eYVzcUcumXkRuxJardJt5o
+   +VVof/Md73KAgp1u1iKERyrUN0pBJ/KNNsj0sVA/oBJssN4/TGqz+DkY6
+   g==;
+X-CSE-ConnectionGUID: k/eMxB99QL6qXkmpcyRKSA==
+X-CSE-MsgGUID: ak14BP+yST6vmJ8Mb19QEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="71219325"
 X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="71219314"
+   d="scan'208";a="71219325"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 04:20:56 -0700
-X-CSE-ConnectionGUID: 3tqTCSJ9Seyy+vquA9SOxw==
-X-CSE-MsgGUID: OLhSmXwiQW+x62S09qU6Vg==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 04:21:00 -0700
+X-CSE-ConnectionGUID: zBkVGW2nQDKUH1x0QLFKwA==
+X-CSE-MsgGUID: to6iWzxDS+i3cGHfO4dBuw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="136566499"
+   d="scan'208";a="136566503"
 Received: from server.sh.intel.com ([10.239.53.23])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 04:20:52 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 04:20:56 -0700
 From: Kai Huang <kai.huang@intel.com>
 To: dave.hansen@intel.com,
 	bp@alien8.de,
@@ -63,9 +63,9 @@ Cc: kirill.shutemov@linux.intel.com,
 	ashish.kalra@amd.com,
 	nik.borisov@suse.com,
 	sagis@google.com
-Subject: [PATCH v2 3/5] x86/kexec: Disable kexec/kdump on platforms with TDX partial write erratum
-Date: Sat, 10 May 2025 11:20:07 +0000
-Message-ID: <3e81d02d2780a0636a69b948acabf4641b8c416d.1746874095.git.kai.huang@intel.com>
+Subject: [PATCH v2 4/5] x86/virt/tdx: Remove the !KEXEC_CORE dependency
+Date: Sat, 10 May 2025 11:20:08 +0000
+Message-ID: <0c0d9d250a7961e4aca325f970e73e204d650ad9.1746874095.git.kai.huang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1746874095.git.kai.huang@intel.com>
 References: <cover.1746874095.git.kai.huang@intel.com>
@@ -77,74 +77,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some early TDX-capable platforms have an erratum: A kernel partial
-write (a write transaction of less than cacheline lands at memory
-controller) to TDX private memory poisons that memory, and a subsequent
-read triggers a machine check.
+During kexec it is now guaranteed that all dirty cachelines of TDX
+private memory are flushed before jumping to the new kernel.  The TDX
+private memory from the old kernel will remain as TDX private memory in
+the new kernel, but it is OK because kernel read/write to TDX private
+memory will never cause machine check, except on the platforms with the
+TDX partial write erratum, which has already been handled.
 
-On those platforms, the old kernel must reset TDX private memory before
-jumping to the new kernel, otherwise the new kernel may see unexpected
-machine check.  Currently the kernel doesn't track which page is a TDX
-private page.  For simplicity just fail kexec/kdump for those platforms.
-
-Leverage the existing machine_kexec_prepare() to fail kexec/kdump by
-adding the check of the presence of the TDX erratum (which is only
-checked for if the kernel is built with TDX host support).  This rejects
-kexec/kdump when the kernel is loading the kexec/kdump kernel image.
-
-The alternative is to reject kexec/kdump when the kernel is jumping to
-the new kernel.  But for kexec this requires adding a new check (e.g.,
-arch_kexec_allowed()) in the common code to fail kernel_kexec() at early
-stage.  Kdump (crash_kexec()) needs similar check, but it's hard to
-justify because crash_kexec() is not supposed to abort.
-
-It's feasible to further relax this limitation, i.e., only fail kexec
-when TDX is actually enabled by the kernel.  But this is still a half
-measure compared to resetting TDX private memory so just do the simplest
-thing for now.
-
-The impact to userspace is the users will get an error when loading the
-kexec/kdump kernel image:
-
-  kexec_load failed: Operation not supported
-
-This might be confusing to the users, thus also print the reason in the
-dmesg:
-
-  [..] kexec: not allowed on platform with tdx_pw_mce bug.
+It is safe to allow kexec to work together with TDX now.  Remove the
+!KEXEC_CORE dependency.
 
 Signed-off-by: Kai Huang <kai.huang@intel.com>
 ---
- arch/x86/kernel/machine_kexec_64.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index f5a7b1894fcf..39e133dab7cb 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -347,6 +347,22 @@ int machine_kexec_prepare(struct kimage *image)
- 	unsigned long reloc_end = (unsigned long)__relocate_kernel_end;
- 	int result;
- 
-+	/*
-+	 * Some early TDX-capable platforms have an erratum.  A kernel
-+	 * partial write (a write transaction of less than cacheline
-+	 * lands at memory controller) to TDX private memory poisons that
-+	 * memory, and a subsequent read triggers a machine check.
-+	 *
-+	 * On those platforms the old kernel must reset TDX private
-+	 * memory before jumping to the new kernel otherwise the new
-+	 * kernel may see unexpected machine check.  For simplicity
-+	 * just fail kexec/kdump on those platforms.
-+	 */
-+	if (boot_cpu_has_bug(X86_BUG_TDX_PW_MCE)) {
-+		pr_info_once("Not allowed on platform with tdx_pw_mce bug\n");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	/* Setup the identity mapped 64bit page table */
- 	result = init_pgtable(image, __pa(control_page));
- 	if (result)
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 0f63f550ab52..bd576bc8843a 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1923,7 +1923,6 @@ config INTEL_TDX_HOST
+ 	depends on X86_X2APIC
+ 	select ARCH_KEEP_MEMBLOCK
+ 	depends on CONTIG_ALLOC
+-	depends on !KEXEC_CORE
+ 	depends on X86_MCE
+ 	help
+ 	  Intel Trust Domain Extensions (TDX) protects guest VMs from malicious
 -- 
 2.43.0
 
