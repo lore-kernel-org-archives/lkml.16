@@ -1,62 +1,133 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED0D2777ED
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 18:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537CA14901B;
+	Sat, 10 May 2025 18:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746901932; cv=none; b=S2HK7HObfCZMpPvMBJyxhWVRbEHwvgLsyHMyx3HCOWKr9hoR5ICXf5DsGjpDjBKW8SyKzgWCNpp1KjJgZmDWV0PpyLdTw1aUBpidqucRlgibEVnuB6cY1bXlZluwFx9FOlODjcYk2fzOXpT1bk6m+qFpDkSWxGzk47bbcrPV8Zo=
+	t=1746902868; cv=none; b=blJEBQIGM4I35mP8EA6AnoE24XWipv3YKGVIX+B9d7a4k82UreZj49zI489COJKwENeaITmE5v7RXGcoQRon7/eANhZS8HTKYQcbuvA3tHOHyHuncEh9xKVpXTvafevbskmvsfbDZhs25wbfHfjl1lysKurINE9UkDdxRMYq/0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746901932; c=relaxed/simple;
-	bh=kw8sFH6NcIVRkErPKGz/8/FmW8EHGa9/rfc4gc5NJoE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h/emDI9Ke42F8fhms0VtMyGHkg+uTA2HKDG1O9sLxfGoblM+Whr2XbiMygH3M16GvmqNfeaLiV+Tr3XOan173xBMFwcj3e8pxuGlapf3ibRg7xQYglTKtmkgN/e83j92ZoQ1saJRtzgIbHlvSRMBtDeFqkdQirMhcO3t1sZAsnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id e8fa2954-2dcc-11f0-96ba-005056bdd08f;
-	Sat, 10 May 2025 21:30:56 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 10 May 2025 21:30:55 +0300
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1746902868; c=relaxed/simple;
+	bh=L1j19XD16Pmx2xa/rrGqIBgP7XAqdou4yQFSC/F63nY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RXHm9vi89vXD9vzeGVxG/m/650KrCoya8Dq5rd+TIhc2eiKg7XDxGdJUkSU8RYA/aCVXzQxgmc5n8HbdD18oQggpVomJVlC5Mdq9PpN2KbKbJLTThDzbbNUYWdsmIyVrYYu/HYTGqHl07DLxkHgqfqkUT3EW/p/BW6d8nhLTfAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/4ZNjQG; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/4ZNjQG"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af5085f7861so2182312a12.3;
+        Sat, 10 May 2025 11:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746902866; x=1747507666; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q61TaHYW+ivShFmxukNezPRDLRq+ybo9Om6oxCMvOBo=;
+        b=h/4ZNjQGeI0XPnvXdZmSmSgkVmn6bKPHv57oZrXy4SriuhsNXRpDHdAHk008aKai4D
+         ONby4KTcVsOpZui9KgMi/N/k4cg2BimZ2+0X7IHKa88mQeylEqWKmj5SlkvZdWXInPvT
+         vjfwJ8ZSIwFWyFYKHhi0GiK3DFSaSizhdtCs7MmCY9PML6QIaVpwWm8FOFCIhJYDO32l
+         6geDwNoSLzNb/0H616960YdYnsvNBmHPCj28szlY/tOQfuHTBjjkkbGX/ZfB+2r2iLk1
+         e4d+vhp8VJwzjWgBgF3HnxpM9djvyyUAXucB4bvXwXLZ7PUgZciMKX0d0Glh1kAlbyOP
+         CbWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746902866; x=1747507666;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q61TaHYW+ivShFmxukNezPRDLRq+ybo9Om6oxCMvOBo=;
+        b=LX+h2rodQCe5rpfvAQx9W2BZwEtxHfnFgPzcKKltuYwbiSmoT8KZIb6ekLareunFlu
+         0xAxowl11ozJux/8kLIWk/M0BXtKfrJlWMtfGt4aoxoWX8xZv9nA13e5e1cdMxvWIxhl
+         CiqMlfxa/AmO69pnWoh8pa5wRTvEGiotmltzhl4W8NiHhm9A2CMP09LIbXCwNzvvH/pS
+         +iiuJmq7IPNZSjG4Lb99BP6i+/sDsQ1YlSxtb4rkn1D9bPn/EvatNfL0QUn/vzLmVK0A
+         DtagmXZrX200HgenCiYE3N0DqNfAnGHQLjpYZoCu0IwcRPQvePnOaGAxZMHgbhsSxpMF
+         3pzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVC3fbj7i7K+SJyb5fY5dGynvlwgfyGjjg8K0fEnpRbX9SR7FxOEOjRqkd+p8L6gVBUMw1ieRWCAdvy1E=@vger.kernel.org, AJvYcCXqvHJ55PlrX7pWGnEacQpVSRJUPQrwYE39UeSDa1br4bgY7qkLEafOpTETPbSUga+ZthaT7457fO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCX52MnlUguVOwBzglWtyK2cLz7GGJs02GQw/XM3sPV7qfE9yy
+	f9lZHdvjF1jqYLx3uGLYG5h68C6bEeMZsdgS1Cy/7SQofZvCgfNU
+X-Gm-Gg: ASbGnctQY40f1De+4+ErkjwNFVvgNNXQz1oKpP2ix+j9gd7abPiuDmIdRv+bCZ+gj+V
+	/uRsWyWsQu7mCuQP8g3s+LLpcKjXfYJg0844IcGy1ojfabl/DoR5Li9+PVKGDJ6VSndY9+DvDbQ
+	mToNf5Sv8oD3cFj6lYqdehq/3BR+gsOJGc7hE2r1lC0jpzHIXNq5wYzoC37muTDugMkcUH/9QU4
+	Z54BhTpGuvY/lRPcWVDg6jv0pmMOoAEs3S1kgZM4YgrkiU28i5/WX2EkUYETz2mQXL40Sk4HckA
+	HgfWeCt4XwCpqTkYy9lHdgI1iy+D/VAolFkf82yIeVET3jEWa1h+1zCs/wBAV1R6ZpoT24vrMNP
+	4RsU=
+X-Google-Smtp-Source: AGHT+IFDX15DHKvx49SFGOI3uN8yupopOlTlzXxH3QBsDKhq46eIZIKSEuAlW0EQtuv21T6o+iDmEQ==
+X-Received: by 2002:a17:902:e84d:b0:22e:62cf:498f with SMTP id d9443c01a7336-22fc8e961a1mr125418135ad.38.1746902866378;
+        Sat, 10 May 2025 11:47:46 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:7b7f:bab1:cfed:9805:ea32:5760])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828b450sm35797895ad.178.2025.05.10.11.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 11:47:46 -0700 (PDT)
+From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+To: trenn@suse.com,
+	shuah@kernel.org,
+	jwyatt@redhat.com,
+	jkacur@redhat.com,
+	linux-pm@vger.kernel.org
+Cc: linux-kernel-mentees@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Subject: Re: [PATCH v1 1/1] pinctrl: at91: Fix possible out-of-boundary access
-Message-ID: <aB-bX57Y88TmYyas@surfacebook.localdomain>
-References: <20250508200807.1384558-1-andriy.shevchenko@linux.intel.com>
+	Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Subject: [PATCH] tools/powercap: Implement powercap_set_enabled()
+Date: Sun, 11 May 2025 00:17:09 +0530
+Message-ID: <20250510184709.44935-1-suchitkarunakaran@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508200807.1384558-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-Thu, May 08, 2025 at 11:08:07PM +0300, Andy Shevchenko kirjoitti:
-> at91_gpio_probe() doesn't check that given OF alias is not available or
-> something went wrong when trying to get it. This might have consequences
-> when accessing gpio_chips array with that value as an index. Note, that
-> BUG() can be compiled out and hence won't actually perform the required
-> checks.
+The powercap_set_enabled() function previously returned a dummy value
+and was marked with a TODO comment. This patch implements the function
+by writing the desired mode (0 or 1) to /sys/class/powercap/intel-rapl/enabled
 
-Also
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/r/202505052343.UHF1Zo93-lkp@intel.com/
+Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+---
+ tools/power/cpupower/lib/powercap.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-> Fixes: 6732ae5cb47c ("ARM: at91: add pinctrl support")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+diff --git a/tools/power/cpupower/lib/powercap.c b/tools/power/cpupower/lib/powercap.c
+index 94a0c69e55ef..7947b9809239 100644
+--- a/tools/power/cpupower/lib/powercap.c
++++ b/tools/power/cpupower/lib/powercap.c
+@@ -70,6 +70,22 @@ static int sysfs_get_enabled(char *path, int *mode)
+ 	return ret;
+ }
+ 
++static int sysfs_set_enabled(const char *path, int mode)
++{
++	int fd;
++	char buf[2] = { mode ? '1' : '0', '\n' };
++	ssize_t ret;
++
++	fd = open(path, O_WRONLY);
++	if (fd == -1)
++		return -1;
++
++	ret = write(fd, buf, sizeof(buf));
++	close(fd);
++
++	return ret == sizeof(buf) ? 0 : -1;
++}
++
+ int powercap_get_enabled(int *mode)
+ {
+ 	char path[SYSFS_PATH_MAX] = PATH_TO_POWERCAP "/intel-rapl/enabled";
+@@ -77,12 +93,10 @@ int powercap_get_enabled(int *mode)
+ 	return sysfs_get_enabled(path, mode);
+ }
+ 
+-/*
+- * TODO: implement function. Returns dummy 0 for now.
+- */
+ int powercap_set_enabled(int mode)
+ {
+-	return 0;
++	char path[SYSFS_PATH_MAX] = PATH_TO_POWERCAP "/intel-rapl/enabled";
++	return sysfs_set_enabled(path, mode);
+ }
+ 
+ /*
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
