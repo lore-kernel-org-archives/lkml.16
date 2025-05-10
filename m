@@ -1,139 +1,257 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AF8156F5D
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 02:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177A17E9;
+	Sat, 10 May 2025 02:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746844123; cv=none; b=F2nvPx9B5+PYcNHqHp7rLcusqnyO2Ld0S4VFH4zGoei7bhXWM/bgkXCgNzKs0AeIoBjefWZq7HVde143Ol43JNIS6ydy7cudzQp87QlXbaFfdQp4CDLpTfUoeDrlGAvuuy7T2mcJG4RzTMaJ2H0K7Q0b0RoH47iXJBTQmYb7TzY=
+	t=1746845170; cv=none; b=FtifFMwrwrng2mIQVZhSwY+OBPykVPDamXSiSq3bR+IoJoo7iutChah2qzLivhVX7odVJj+/vSk0t4oSBmSy7L87w0vGfI2TK8Ev6+TfFYuSTK82b8nwaASjriXcxmbNWLWen8mlZSaPMgflyaOZHK4Qg06rmrXstEyPdT325JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746844123; c=relaxed/simple;
-	bh=wzaNYL5XxypF2ie5zb9BPa/nkiwXBYjeHp0uSYBFbbQ=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=nFI0wd5op4RvY8ok5BQd339Yrd+jjCNlKE77xjFes3uUwjrMg/baSbrAxlvpRoFmK8Vms5Yu43nLbHNIvaHijW4SpKhpiK+np3UidcEW0ozIbRUdMrKEeL6zDRxzpR3R4ZtGvoweASqgFUbR7U/VFGvYcjy4LFr+gcFGrbBWgjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GSuAA2uo; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1746845170; c=relaxed/simple;
+	bh=vmQ2G3YHFqaGJxRQSznzYP+cVNkunMYSZ290j7TCx6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=tBAdlxJRlOIeEZ/9nufMU1GvpOhQnV2Sn60GdZXv45+Q5deYnMBuiBs8RtdMr4S8x7eos4MNUikYErSLC4AzGbnJJZk7UQMKFhybJqHtRHr/cgzohUpJfFc6ay2NStDIpQBye19ifV/Hapw5EdEarMltx0EIGPSkvKhY1QzxiA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NMMkEn67; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GSuAA2uo"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250510022839epoutp026ba19492d8bfe3fbc6dabbec2b9eefed~_CXi7aXeM2604626046epoutp02K
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 02:28:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250510022839epoutp026ba19492d8bfe3fbc6dabbec2b9eefed~_CXi7aXeM2604626046epoutp02K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1746844119;
-	bh=OMQQgRzKRMxctcYpGXbSKjA/hpXZSmYOzyU6SVM8EaM=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=GSuAA2uo7mU0ClLAf30T+JPDNR1sX4ak6XhD4BUyH+i9WHmf5kij07QdRi1XByvR4
-	 8ymTWzEcEFD6Idz5cCYtoALme4xg//7V17MFuFOpxnU7CcXYO/r4N9cluOJmXE1RN5
-	 EQ40Z5noUeCkbJunnZnEzRag847b/zD/lVMuZ0wE=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250510022838epcas5p28e74cb800febced7f58728200ce47115~_CXhv0UP32406324063epcas5p2k;
-	Sat, 10 May 2025 02:28:38 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZvVD42xvxz6B9m6; Sat, 10 May
-	2025 02:28:36 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250510022835epcas5p1c9bcad7541f77b798cd1510b7b612ddf~_CXesPXs51597015970epcas5p1r;
-	Sat, 10 May 2025 02:28:35 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250510022835epsmtrp1c274660011cbf5ec9b262358934dc063~_CXeqj9Nq0425404254epsmtrp1a;
-	Sat, 10 May 2025 02:28:35 +0000 (GMT)
-X-AuditID: b6c32a52-40bff70000004c16-22-681eb9d27cec
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	EE.70.19478.2D9BE186; Sat, 10 May 2025 11:28:34 +0900 (KST)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250510022832epsmtip2d27f435acb90026832818feb5f8b4bba~_CXcp-X2a2690626906epsmtip2W;
-	Sat, 10 May 2025 02:28:32 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Pritam Manohar Sutar'" <pritam.sutar@samsung.com>, <krzk@kernel.org>,
-	<s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
-	<mturquette@baylibre.com>, <sboyd@kernel.org>, <sunyeal.hong@samsung.com>
-Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<rosa.pila@samsung.com>, <dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
-	"'stable'" <stable@kernel.org>
-In-Reply-To: <20250506080154.3995512-1-pritam.sutar@samsung.com>
-Subject: RE: [PATCH v2] clk: samsung: correct clock summary for hsi1 block
-Date: Sat, 10 May 2025 07:58:31 +0530
-Message-ID: <045701dbc153$3aa85bc0$aff91340$@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMMkEn67"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30a8cbddce3so2474475a91.1;
+        Fri, 09 May 2025 19:46:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746845168; x=1747449968; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=m/yHIEOas07Rege8xaw2TSi1aHLDAWR8pVsPOzQp7vM=;
+        b=NMMkEn67n9WXmsWt3D6jTLdW2ecrBTLl0fTb5AD+6ggwsDDOx/jdpjzX9RyKPKgs8b
+         3lBqt+ehCBa7971WK7v9MssHxjXVeThBYwaILkFGcwT7WmtfxXBGvzX6ElE1EOnWP8rI
+         kCASpaagGdXfM+0nkpcDzN7MDGPCUoR7wPptFrwePClLW2kr7aZ7oLQi39K1pwrOnlI7
+         z7YK4eq6Mnuip3JMQWgFouhzOINxYUOQ0yKMD1BuUY+g7u6CMWVUvFCuQEXhENFGUQrG
+         wvdkpxuhn8FBznLHtOErpg6RYv5hrpVLl+mSdBu5gujoFMQjYfqvj/mae93Nwg5MvfgG
+         n72g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746845168; x=1747449968;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/yHIEOas07Rege8xaw2TSi1aHLDAWR8pVsPOzQp7vM=;
+        b=W6jOaBJpN+ZlXO1ZJVaXhYZIIcDLH2kujhXXH7EmoUC4gj9SbpDSIKQXc2RLBkc6HT
+         D8hQSHpQTuYgshoBYD4t777oQsb1ugvg7GmTvAU7l9sbGJ1c/LKxTtvwl5DN0XINuDrq
+         DyXiQ/4RA+2sJmuH3xmTdyepdQMFg5xs0pfoIGsQVsrt24bFIQm3MG19UPjjuxInJEu0
+         mFZC6mkNSjsbZtEvgG963shS8C1t81vLldoPJvHjS4UT3MkJJxlZKAULiA2AhHxiCzWd
+         WCu55TnqFVP/XSLSNk18Bx3vZJp56mJqlsijx+b39q7sFfyeQTLGJ+0AI+quKVl2DoqW
+         MfLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOFfWALC1j3mM2U56aBPQ/NF+hyce7JrAOmolUPE0M4Z4XVXm/wtH9alwuxkDZ3NJskpRXLOrzEt13mA==@vger.kernel.org, AJvYcCXPrwGPfxN2dRNm0TDGUrbF28N255QNs4e6K61xR+3H7THWPLWwAHiMGErIDmZpORUFKqyDT+2n2Z4l62U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+09OHOQ3+46pAefUxRh/W7tQ/M9soGjLDQFFDiS7xewVtrouu
+	oI0v/yXPt+3oLfeNUGV+tM3i9bRmxi5bDW3+kt+Y5lKI2v+rO/Id3vq992iA
+X-Gm-Gg: ASbGncvQhnVQUkdVULZ3kAsLcHOpRmx7vFkUKv56Ad9RLSc4eGTKzhu8o7HsO0XS2d+
+	ahAf6EvBA9TVHEdmIyTuaA5aA2KuBUeOTS95nfQfI04ZmVihgiHCuwjoZvifwBIoEMI91ftqTIt
+	X+UL/Khf5lmHcKShq1u7HDLgtydbbdCz+d/QlNxdza3M6e6FXvTY3QhxlNN+XpldVO4XfWITZS5
+	KW2oNVjGIZ5FCyRcoGvDlg2MBhcFB6WNBFBiSVQB8pvQJJsK+AoDkRM+/ItJDKgiuw2k9Rg2I0u
+	00CZfUUkLfUFFZEYEdLJlMYDR1qZMK38xWoHTGl8RWjvsCIHi786omtzwzoxgM/rRTtNxtWiMXB
+	sJ5CgnIHcDWUEgGwFLAUyQwzH+Ls=
+X-Google-Smtp-Source: AGHT+IGJjlfaACz8A7xon+J+jxF5svlaxdDSe8LJUS2WmIj+7XirEPM3IfWdb9Ns0mHiKGwET4Wwfw==
+X-Received: by 2002:a17:90b:3a8f:b0:2f8:b2c:5ef3 with SMTP id 98e67ed59e1d1-30c3cff4114mr9980646a91.14.1746845167922;
+        Fri, 09 May 2025 19:46:07 -0700 (PDT)
+Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4d2e499sm4826715a91.16.2025.05.09.19.46.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 19:46:07 -0700 (PDT)
+Message-ID: <b5560914-e613-499d-88c8-82f5255a1dd1@gmail.com>
+Date: Sat, 10 May 2025 11:46:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJXoAhNt2lxpjQmxp3wpnZOkbsiiwIMDegbssMEZrA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsWy7bCSvO6lnXIZBvc2W1lc//Kc1eLejmXs
-	FtduLGS3OH9+A7vFpsfXWC0+9txjtbi8aw6bxYzz+5gsLp5ytXh2bwWbxZefD5gtDr9pZ7X4
-	d20ji8Wn8xfYLJqWrWdy4Pd4f6OV3WPTqk42j81L6j36tqxi9Pi8SS6ANYrLJiU1J7MstUjf
-	LoErY8KGWYwFb3kqnh8xbmDcxdXFyMkhIWAicXzqNcYuRi4OIYHtjBIfdv5kgUhIS1zfOIEd
-	whaWWPnvOTtE0XNGiaenDzCDJNgEdCV2LG5jA0mICFxhlJj2+ytYFbNAG5PE8v5uqJaJjBLd
-	c2+wgbRwCjhITD7xHmyusICXxIfZ75hAbBYBVYnVl1aD1fAKWErMnfWMBcIWlDg58wmYzSyg
-	LdH7sJURwpaX2P52DjPEfQoSP58uYwWxRQSsJJb0vmaGqBGXeHn0CPsERuFZSEbNQjJqFpJR
-	s5C0LGBkWcUomlpQnJuem1xgqFecmFtcmpeul5yfu4kRHJdaQTsYl63/q3eIkYmD8RCjBAez
-	kgjv806ZDCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8yjmdKUIC6YklqdmpqQWpRTBZJg5OqQYm
-	DwNVvcjuzwqBrrmVageSdl81THo57+PM5+sKU+4rMy19tOP+vcdnuharlJ1JfWaXkGw16Zuu
-	0fs9O7bJdsr03nqt5hTiHOskcehUqkSv3bZ7O3v+5efXT/+9wjW52EeYcfHTuDdnUv2+bfiW
-	eOVpzF3lLSui32u7p1kaTlD7JBF/POVggnXP4hVPzwc9e3j5RPs6lckPrgoa2H3s4lzTqJUo
-	krZRdaLN5PZbjA3Nzdou91n/PxV+cu5weugX39ZKLvltN7R2f+Z5utb70kxPk9qKhYcfdqvu
-	/rZOVzr38ca900qMfQ7+WruU+V7ulWA5j50CVdfWXSjfvD+t6U7F4Z5cS3nR4guCTg4fr1zs
-	VmIpzkg01GIuKk4EAAY5zY86AwAA
-X-CMS-MailID: 20250510022835epcas5p1c9bcad7541f77b798cd1510b7b612ddf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250506075413epcas5p2ce0db6da9f359e9c3bb16b03c1a5eb4f
-References: <CGME20250506075413epcas5p2ce0db6da9f359e9c3bb16b03c1a5eb4f@epcas5p2.samsung.com>
-	<20250506080154.3995512-1-pritam.sutar@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH for-next v2 1/2] RDMA/rxe: Implement synchronous prefetch
+ for ODP MRs
+To: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+References: <20250503134224.4867-1-dskmtsd@gmail.com>
+ <20250503134224.4867-2-dskmtsd@gmail.com>
+ <cdea578b-5570-4a8d-98cc-61081a281a84@linux.dev>
+Content-Language: en-US
+From: Daisuke Matsuda <dskmtsd@gmail.com>
+In-Reply-To: <cdea578b-5570-4a8d-98cc-61081a281a84@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Pritam
+On 2025/05/10 0:19, Zhu Yanjun wrote:
+> On 03.05.25 15:42, Daisuke Matsuda wrote:
+>> Minimal implementation of ibv_advise_mr(3) requires synchronous calls being
+>> successful with the IBV_ADVISE_MR_FLAG_FLUSH flag. Asynchronous requests,
+>> which are best-effort, will be added subsequently.
+>>
+>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+>> ---
+>>   drivers/infiniband/sw/rxe/rxe.c     |  7 +++
+>>   drivers/infiniband/sw/rxe/rxe_loc.h | 10 ++++
+>>   drivers/infiniband/sw/rxe/rxe_odp.c | 86 +++++++++++++++++++++++++++++
+>>   3 files changed, 103 insertions(+)
+>>
+>> diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
+>> index 3a77d6db1720..e891199cbdef 100644
+>> --- a/drivers/infiniband/sw/rxe/rxe.c
+>> +++ b/drivers/infiniband/sw/rxe/rxe.c
+>> @@ -34,6 +34,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
+>>       mutex_destroy(&rxe->usdev_lock);
+>>   }
+>> +static const struct ib_device_ops rxe_ib_dev_odp_ops = {
+>> +    .advise_mr = rxe_ib_advise_mr,
+>> +};
+>> +
+>>   /* initialize rxe device parameters */
+>>   static void rxe_init_device_param(struct rxe_dev *rxe, struct net_device *ndev)
+>>   {
+>> @@ -103,6 +107,9 @@ static void rxe_init_device_param(struct rxe_dev *rxe, struct net_device *ndev)
+>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_SRQ_RECV;
+>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_FLUSH;
+>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_ATOMIC_WRITE;
+>> +
+>> +        /* set handler for ODP prefetching API - ibv_advise_mr(3) */
+>> +        ib_set_device_ops(&rxe->ib_dev, &rxe_ib_dev_odp_ops);
+>>       }
+>>   }
+>> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
+>> index f7dbb9cddd12..21b070f3dbb8 100644
+>> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
+>> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
+>> @@ -197,6 +197,9 @@ enum resp_states rxe_odp_atomic_op(struct rxe_mr *mr, u64 iova, int opcode,
+>>   int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
+>>                   unsigned int length);
+>>   enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value);
+>> +int rxe_ib_advise_mr(struct ib_pd *pd, enum ib_uverbs_advise_mr_advice advice,
+>> +             u32 flags, struct ib_sge *sg_list, u32 num_sge,
+>> +             struct uverbs_attr_bundle *attrs);
+>>   #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+>>   static inline int
+>>   rxe_odp_mr_init_user(struct rxe_dev *rxe, u64 start, u64 length, u64 iova,
+>> @@ -225,6 +228,13 @@ static inline enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr,
+>>   {
+>>       return RESPST_ERR_UNSUPPORTED_OPCODE;
+>>   }
+>> +static inline int rxe_ib_advise_mr(struct ib_pd *pd, enum ib_uverbs_advise_mr_advice advice,
+>> +                   u32 flags, struct ib_sge *sg_list, u32 num_sge,
+>> +                   struct uverbs_attr_bundle *attrs)
+>> +{
+>> +    return -EOPNOTSUPP;
+>> +}
+>> +
+>>   #endif /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+>>   #endif /* RXE_LOC_H */
+>> diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
+>> index 6149d9ffe7f7..e5c60b061d7e 100644
+>> --- a/drivers/infiniband/sw/rxe/rxe_odp.c
+>> +++ b/drivers/infiniband/sw/rxe/rxe_odp.c
+>> @@ -424,3 +424,89 @@ enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
+>>       return RESPST_NONE;
+>>   }
+>> +
+>> +static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
+>> +                   enum ib_uverbs_advise_mr_advice advice,
+>> +                   u32 pf_flags, struct ib_sge *sg_list,
+>> +                   u32 num_sge)
+>> +{
+>> +    struct rxe_pd *pd = container_of(ibpd, struct rxe_pd, ibpd);
+>> +    unsigned int i;
+>> +    int ret = 0;
+>> +
+>> +    for (i = 0; i < num_sge; ++i) {
+>> +        struct rxe_mr *mr;
+>> +        struct ib_umem_odp *umem_odp;
+>> +
+>> +        mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
+>> +                   sg_list[i].lkey, RXE_LOOKUP_LOCAL);
+>> +
+>> +        if (IS_ERR(mr)) {
+>> +            rxe_dbg_pd(pd, "mr with lkey %x not found\n", sg_list[i].lkey);
+>> +            return PTR_ERR(mr);
+>> +        }
+>> +
+>> +        if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
+>> +            !mr->umem->writable) {
+>> +            rxe_dbg_mr(mr, "missing write permission\n");
+>> +            rxe_put(mr);
+>> +            return -EPERM;
+>> +        }
+>> +
+>> +        ret = rxe_odp_do_pagefault_and_lock(mr, sg_list[i].addr,
+>> +                            sg_list[i].length, pf_flags);
+>> +        if (ret < 0) {
+>> +            if (sg_list[i].length == 0)
+>> +                continue;
+>> +
+>> +            rxe_dbg_mr(mr, "failed to prefetch the mr\n");
+>> +            rxe_put(mr);
+>> +            return ret;
+>> +        }
+>> +
+>> +        umem_odp = to_ib_umem_odp(mr->umem);
+>> +        mutex_unlock(&umem_odp->umem_mutex);
+>> +
+>> +        rxe_put(mr);
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
+>> +                     enum ib_uverbs_advise_mr_advice advice,
+>> +                     u32 flags, struct ib_sge *sg_list, u32 num_sge)
+>> +{
+>> +    u32 pf_flags = RXE_PAGEFAULT_DEFAULT;
+>> +
+>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH)
+>> +        pf_flags |= RXE_PAGEFAULT_RDONLY;
+>> +
+>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
+>> +        pf_flags |= RXE_PAGEFAULT_SNAPSHOT;
+>> +
+>> +    /* Synchronous call */
+>> +    if (flags & IB_UVERBS_ADVISE_MR_FLAG_FLUSH)
+>> +        return rxe_ib_prefetch_sg_list(ibpd, advice, pf_flags, sg_list,
+>> +                           num_sge);
+>> +
+>> +    /* Asynchronous call is "best-effort" */
+> 
+> Asynchronous call is not implemented now, why does this comment appear?
 
-> -----Original Message-----
-> From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-> Sent: Tuesday, May 6, 2025 1:32 PM
-> To: krzk@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
-> alim.akhtar@samsung.com; mturquette@baylibre.com; sboyd@kernel.org;
-> sunyeal.hong@samsung.com
-> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org; linux-
-> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> rosa.pila@samsung.com; dev.tailor@samsung.com;
-> faraz.ata@samsung.com; Pritam Manohar Sutar
-> <pritam.sutar@samsung.com>; stable <stable@kernel.org>
-> Subject: [PATCH v2] clk: samsung: correct clock summary for hsi1 block
-> 
-> clk_summary shows wrong value for "mout_hsi1_usbdrd_user".
-> It shows 400Mhz instead of 40Mhz as below.
-> 
-> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
->   mout_hsi1_usbdrd_user     0 0 0 400000000 0 0 50000 Y ...
->     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
-> 
-> Correct the clk_tree by adding correct clock parent for
-> "mout_hsi1_usbdrd_user".
-> 
-> Post this change, clk_summary shows correct value.
-> 
-> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
->   mout_clkcmu_hsi1_usbdrd   0 0 0 400000000 0 0 50000 Y ...
->     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
->       mout_hsi1_usbdrd_user 0 0 0 40000000  0 0 50000 Y ...
-> 
-> Fixes: 485e13fe2fb6 ("clk: samsung: add top clock support for ExynosAuto
-> v920 SoC")
-> Cc: stable <stable@kernel.org>
-> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-> ---
+Even without the 2nd patch, async calls are reported as successful.
+The comment is inserted to show the reason, which is based on the
+description from 'man 3 ibv_advise_mr' as follows:
+===
+An application may pre-fetch any address range within an ODP MR when using the IBV_ADVISE_MR_ADVICE_PREFETCH or IBV_ADVISE_MR_ADVICE_PREFETCH_WRITE advice. Semantically, this operation is best-effort. That means the kernel does not guarantee that underlying pages are updated in the HCA or the pre-fetched pages would remain resident.
+===
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Thanks,
+Daisuke
+
+> 
+> Zhu Yanjun
+> 
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +int rxe_ib_advise_mr(struct ib_pd *ibpd,
+>> +             enum ib_uverbs_advise_mr_advice advice,
+>> +             u32 flags,
+>> +             struct ib_sge *sg_list,
+>> +             u32 num_sge,
+>> +             struct uverbs_attr_bundle *attrs)
+>> +{
+>> +    if (advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH &&
+>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
+>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
+>> +        return -EOPNOTSUPP;
+>> +
+>> +    return rxe_ib_advise_mr_prefetch(ibpd, advice, flags,
+>> +                     sg_list, num_sge);
+>> +}
+> 
 
