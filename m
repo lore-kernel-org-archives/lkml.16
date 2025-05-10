@@ -1,164 +1,90 @@
-Received: from e240-12.smtp-out.eu-north-1.amazonses.com (e240-12.smtp-out.eu-north-1.amazonses.com [23.251.240.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D302747B;
-	Sat, 10 May 2025 14:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2A91DF261
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 14:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746888039; cv=none; b=qWwF6HEo3Mn/e7Nm1FSVDYiQnR5HN0D+RmIIUGQdsiqDD+B/Ms9ONXR9xkOChATgn1VgcsV7G7qXMbER8Mwen5m2Ma5CgtrgXz6c4VHtChLkS4TT+w3BQW/2INDIWAYDc0SnUn2VCzRLaZfFVXDCm0opYm6ABb6bDXCaHLkO7MI=
+	t=1746888682; cv=none; b=PRLQaJF4WIiQHrzw4um1G6UnBXd7rtz8TlAF1jBlYYp3b2wxDKUQNMKGu1qAljb3Vv3BcMDNwLwt734iIDiWHI01SiVcqR63Og3BEOzTeW6uXLMcRTsdQTTcv63Dmz22AOMgxb7t30nU42WiMmu9cIu2J6ZztBviGxI5Wh0ROl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746888039; c=relaxed/simple;
-	bh=KMKl5zhXLDYEfXZ6tteF1iVkfC9CD4G+WrBxconLDd0=;
+	s=arc-20240116; t=1746888682; c=relaxed/simple;
+	bh=zsELSqRjGwpwYDGEAo1SYrGJoM/k0KSED4jVlGtRMAs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ea8tRhRrtdSHeTQ2e09i5ExQ9sMTppOsbQJ4OkSipCTRQPF802u7/aON6iqF0gunNUCNxdB8nfJh2X3AWNiV3U7oSmqiel4kVuu3cZKZAWpLUY7VDckNHGxambu3x1I7IkXjicSfjFrcwj2Odtoj/nj/+jV6CLXlRhNUuMuaOAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=iwo1lv8f; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=Ca75rZMd; arc=none smtp.client-ip=23.251.240.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+	 To:Cc:Content-Type; b=jp+0+uW/89GXDJUFH8fov4XNCBa7osYM0fb4C3T8o+3z9JqkdJltaf4tMh89jiEaPCiDjO9ruF5RVHhWkdanVAQfjanmVOc+amv95Js/cTzxBGZCRrivA+83QOgnEUHZ1HXl2VlVbFGmKGEkvoeIGtODEZP49LaSuIm1o6dx2g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4ic0R1y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="iwo1lv8f";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Ca75rZMd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746888035;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=KMKl5zhXLDYEfXZ6tteF1iVkfC9CD4G+WrBxconLDd0=;
-	b=iwo1lv8fI08QdE5VYLmRTxtD/9qKI799T8AerPRboc3KglsdTOmCHay8oe3d+KpQ
-	f0l99fphfTrIC5ZveZNtRTxIcoYwmHGP0re5VEXSvJCrsZoPjGospmf9Vqoy5om32N6
-	DVLOLW+UDzui9X6huEM4G9X15MvZ+r7JC4N2zKVcsmNWBXLlCjv1uBtrwjh0eIN2jx6
-	QaiY1jhvlsPnm22N8sMmLnbyh92lI+ig9p4yTuSUfxCVI3hJ6+yRhXaK6GwagbgZWwS
-	FfvOFe8IfJW6lS8PGdaZ40hpyMG8t02L2fduwBFLXEKDF7vL3V/NVwQvOFR49ftzAUe
-	vWo1Y2KgVQ==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746888035;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-	bh=KMKl5zhXLDYEfXZ6tteF1iVkfC9CD4G+WrBxconLDd0=;
-	b=Ca75rZMd2pkXEZ6zP1H0DLvSyPug23JBw85G+hQ597ZELxmtRCF04+uyd1GnhsTx
-	1MlenaAqp1CYpL3+MiUuKpiIRS+TjWzEy1kgeGjkqZ5lrJMGKHmeB8iob/DLcHylID8
-	kh4cVHriMN2tYyCSorVmMZIwYL+rKqm+F8nYaz6Y=
-X-Forwarded-Encrypted: i=1; AJvYcCU/cTAxoNY28G6ME7Ie8pPZaroTJD4UBGACAshD6NIjkkv+W4cKW2nK8O6C2sAPb5v1Wso=@vger.kernel.org, AJvYcCW2COPqE5mYPzRsbqXTJGrVFsXQDZsBR9bh95wqxJ59GccxhhJzXu0iiwXij1vN8583CPa0Fq7+hYbKQ1Iq@vger.kernel.org, AJvYcCWNLuzjpHeUnjUVbg/XDdK5bpyFbX1CsMVhzNpSmhchTF+iTFFv+QZ5fgHjcXotRyxriS8xGziA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYQOiLvVeH1RzDZj10+m4Vbfloyxpf2dWb7jLVxPUlhUA4gHDm
-	HzRRtjTAVz1mYUU3bXJ+vcN4sOA3eqtJMZgz013G84VC6OqlFbbRcon6PSfXfF51QqhbnSBpb98
-	pyAzMMElRotPbdHiKKF3y3FfDc3o=
-X-Google-Smtp-Source: AGHT+IFOxsIG+1iEx9ZpQPXXa6rt+jwNsdN1AWSLrJAKilGXNLBf51PhuX6pHHj6liVACzbJVfRrTYocmdRAEfDQcL4=
-X-Received: by 2002:a2e:b8c9:0:b0:30b:efa3:b105 with SMTP id
- 38308e7fff4ca-326c45900ccmr31918351fa.19.1746888034583; Sat, 10 May 2025
- 07:40:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4ic0R1y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75A4C4CEEF
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 14:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746888680;
+	bh=zsELSqRjGwpwYDGEAo1SYrGJoM/k0KSED4jVlGtRMAs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=E4ic0R1yyK2r3oBsRPCIYxLhMJLSFseZ5yKdr2JKZxzxnzRhDKnjjvTXxjkXn6nt6
+	 LLHZIvSoAalIlJ+aHGsZa0rXKO9SjxkMeMHqVFoMKV83rJISs53DnQEpbbSavKCy1B
+	 4Ee7Qeu7EmlrHO6VPk2vMSNf2iYjJaiJ2ndfUuzXVyQAEYLdkNm58fTNFFMbmN0NqF
+	 Op5CHWP1X7cvf/IkROLJyz1Waib/FMChy+4tt6wFCIqHRw7RtiFWVf0EcsiGAgF5yo
+	 Cxg6xIsdXQDWAW1Q36CFZNJdFNYbY0LO8BF6eYNmWP7tD+pEnG55BGcjI85r/i6tI+
+	 my1eTRXjOCMAw==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3104ddb8051so31257881fa.1
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 07:51:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVsqs31xHOrobcmAXJWG9jEINmyZe/Mb1CWJd6P8qVq6dkzLb8yHmqtQK03N1XOMoO7pzCKe4OFt5IoYcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQHziHGfDRo/mW+JYhj/6vlqAGwlvNnoPSJ2dcfvWe4VoGzfo3
+	8YKXJwOg0cTGh7XdCqgVxa9DSR+CQrgGEgiwWA+UO7etWuJf7bTfp4WaXk37UDAt7eHz/4o6e22
+	YlgHP4OHGlr1PCgMf52AoyqIs0Do=
+X-Google-Smtp-Source: AGHT+IFCwZSRdn26ua1mADuX2FLvZpSYy/nPAqD9VqLEUNl7tR+K1OfZnZXEbtVHGH/n+xlOJuIrvqqHRdo5HgpJRSw=
+X-Received: by 2002:a05:651c:a11:b0:30b:efa5:69a8 with SMTP id
+ 38308e7fff4ca-326c463040cmr29581801fa.36.1746888679157; Sat, 10 May 2025
+ 07:51:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <01100196ba916f60-f2642e95-026a-4ba3-bd32-f871d781c2d6-000000@eu-north-1.amazonses.com>
-In-Reply-To: <01100196ba916f60-f2642e95-026a-4ba3-bd32-f871d781c2d6-000000@eu-north-1.amazonses.com>
-From: Ozgur Kara <ozgur@goosey.org>
-Date: Sat, 10 May 2025 14:40:34 +0000
-X-Gmail-Original-Message-ID: <CADvZ6Eq4uZsiM4tPZVQGYQYhAFgLmu=ND2vcrY7vmkPGtLfh4A@mail.gmail.com>
-X-Gm-Features: AX0GCFvhh_bksUL8uCmWQxmdadZWrfe_8ngxSdo9LL1zIZrNhm7TvDpZYH9nycg
-Message-ID: <01100196baa40a87-e4dfc972-74d0-40b9-a78f-83cfe5649dfe-000000@eu-north-1.amazonses.com>
-Subject: Re: [PATCH] net: fix unix socket bpf implementation: ensure reliable
- wake-up signaling
-To: Ozgur Kara <ozgur@goosey.org>
-Cc: John Fastabend <john.fastabend@gmail.com>, 
-	Jakub Sitnicki <jakub@cloudflare.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	"David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	netdev@vger.kernel.org, bpf@vger.kernel.org, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-7-ardb+git@google.com>
+ <20250510145449.4117af82@pumpkin>
+In-Reply-To: <20250510145449.4117af82@pumpkin>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 10 May 2025 16:51:07 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXESAk4ZT_HAFaWQJLmyo9CyFYbRsToEXagPygBpFhDZiw@mail.gmail.com>
+X-Gm-Features: AX0GCFuDYk0wIKsB8w8fCdMgnjBRCjP7Um94zfPZ8VFPRS-ex_v1FteLOhbr35A
+Message-ID: <CAMj1kXESAk4ZT_HAFaWQJLmyo9CyFYbRsToEXagPygBpFhDZiw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] x86/boot: Set __pgtable_l5_enabled correctly
+ before calling into C code
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
-X-SES-Outgoing: 2025.05.10-23.251.240.12
 
-Hello,
-I'm sorry but actually please ignore this patch because i realized
-that i can put an atomic process with finish_wait() instead of
-prepare_to_wait() because its located in af_unix.h and i'm trying to
-understand it now.
-Can we preserve wake-up with schedule() by registering towards wait
-queue by using finish_wait() instead of prepare_to_wait()?
-i will figure out the wait in af_unix.h and send a new patch.
+On Sat, 10 May 2025 at 15:54, David Laight <david.laight.linux@gmail.com> wrote:
+>
+> On Tue,  6 May 2025 17:45:35 +0200
+> Ard Biesheuvel <ardb+git@google.com> wrote:
+>
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Ensure that __pgtable_l5_enabled() is set to its permanent value before
+> > calling into any C code that may manipulate page tables or reference any
+> > global variable or object that may be dimensioned differently based on
+> > whether 5-level paging is in use.
+> ...
+> >  #ifdef CONFIG_X86_5LEVEL
+> > -/* __pgtable_l5_enabled needs to be in .data to avoid being cleared along with .bss */
+> > -unsigned int __section(".data") __pgtable_l5_enabled;
+> > +unsigned int __pgtable_l5_enabled = 1;
+> > +
+> > +/* These need to be in .data to avoid being cleared along with .bss */
+> >  unsigned int __section(".data") pgdir_shift = 39;
+> >  unsigned int __section(".data") ptrs_per_p4d = 1;
+>
+> Is that comment (and the section assignment) relevant given that they
+> are initialised non-zero?
+>
 
-Sorry,
+Excellent point - no, they are not.
 
-Ozgur
+> I'd guess that __pgtable_l5_enabled was getting set before .bss was cleared?
+>
 
-Ozgur Kara <ozgur@goosey.org>, 10 May 2025 Cmt, 17:20 tarihinde =C5=9Funu y=
-azd=C4=B1:
->
-> From: Ozgur Kara <ozgur@goosey.org>
->
-> This patch addresses a race condition in the unix socket bpf
-> implementation where wake-up signals could be missed. specifically,
-> after releasing mutex (`mutex_unlock(&u->iolock)`) and before
-> acquiring it again (`mutex_lock(&u->iolock)`) another thread can
-> insert data and send a wake-up signal. if this signal occurs before
-> `wait_woken()` is called, it may be lost and cause the thread to
-> remain unnecessarily blocked.
->
-> to fix this patch introduces a safer wait mechanism using
-> `prepare_to_wait()` and `finish_wait()` which ensures that the wakeup
-> signal is not missed. this prevents unnecessary blocking and reduces
-> the risk of potential deadlocks in high-load or multi-processor
-> environments.
->
-> such race conditions can lead to performance degradation or, in rare
-> cases, deadlocks, especially under heavy load or on multi-cpu systems
-> where the problem may be difficult to reproduce.
->
-> also there was a space in the last line so i added a checkpatch correctio=
-n :)
->
-> Signed-off-by: Ozgur Kara <ozgur@goosey.org>
-> --
-> diff --git a/net/unix/unix_bpf.c b/net/unix/unix_bpf.c
-> index e0d30d6d22ac..04f2b38803d2 100644
-> --- a/net/unix/unix_bpf.c
-> +++ b/net/unix/unix_bpf.c
-> @@ -26,14 +26,29 @@ static int unix_msg_wait_data(struct sock *sk,
-> struct sk_psock *psock,
->         if (!timeo)
->                 return ret;
->
-> +       /* wait queue is waited */
->         add_wait_queue(sk_sleep(sk), &wait);
->         sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
-> +
-> +       /* control while locked */
->         if (!unix_sk_has_data(sk, psock)) {
-> +               set_current_state(TASK_INTERRUPTIBLE);
->                 mutex_unlock(&u->iolock);
-> -               wait_woken(&wait, TASK_INTERRUPTIBLE, timeo);
-> +
-> +               if (!schedule_timeout(timeo))
-> +                       ret =3D 0; /* timeout set */
-> +               else
-> +                       ret =3D signal_pending(current) ? -ERESTARTSYS : =
-1;
-> +
->                 mutex_lock(&u->iolock);
-> -               ret =3D unix_sk_has_data(sk, psock);
-> +
-> +               if (ret > 0)
-> +                       ret =3D unix_sk_has_data(sk, psock);
-> +       } else {
-> +               ret =3D 1; /* return data */
->         }
-> +
-> +       __set_current_state(TASK_RUNNING);
->         sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
->         remove_wait_queue(sk_sleep(sk), &wait);
->         return ret;
-> @@ -198,5 +213,4 @@ void __init unix_bpf_build_proto(void)
->  {
->         unix_dgram_bpf_rebuild_protos(&unix_dgram_bpf_prot, &unix_dgram_p=
-roto);
->         unix_stream_bpf_rebuild_protos(&unix_stream_bpf_prot,
-> &unix_stream_proto);
-> -
->  }
-> --
->
->
->
+Yes.
