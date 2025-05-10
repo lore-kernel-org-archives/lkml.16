@@ -1,201 +1,135 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3187BA27
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741C242AB4
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746847864; cv=none; b=azDfbsjkSgeTdsFXXI81pq2Uq+ahlrONenF9v+ayZ7kgcUlmKBBEGiJ1fkRoHHQMLhuHAJiU6rKjKxkNzkmae0FnqHzqRvmTM3+HL9DlDjBQAs4/oFO5567UJgWLY6h4/BnQ9oBXrglE6k8xZ1brRnLzh908m9q6FXvLMxdeyaM=
+	t=1746847927; cv=none; b=FsAZKG6EdfwlDHe+TrbnZZgP6F8W8s6nMLnhtmUTmZ2uUNoFrCqKS25HG1RG5+YKFk52nkrtXdzX/Wx835sHW68GyG+pXHCP1BHjFpkS0ynC8JPgJfuDdPKQEysz0SM5eh2yrLamB3tv/ycinZYp6jR7xPA3OE31Qk34W+6/KvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746847864; c=relaxed/simple;
-	bh=yHfPpaz4WoW4QV4ea/eBvd8nOOUC0mPFz2ZVber3AiE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qIvWuxgzNNY5sDVs9KPg+WG62KztH5tZtvc2fJcsDjWUmaIjleCreu2QeI+yR13lyQSSAza4j75NBEanbBgSdu4DtOXhm1+pEAbEkf0iH6YPbxSqE5nLd3HXuvOwko7YxQQk5rfp/dMlz8zcdARPKbYT0ZNGIz6zQ9JyX/PrXkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IroJaUro; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IroJaUro"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47666573242so154701cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 20:31:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746847861; x=1747452661; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cxC/mzAUv+WLp2bqkAOe0LlzGx41xiGaA3xtnTEbHto=;
-        b=IroJaUroZMys92oeSLp/kqvR+s43FVJsOaRUw03ZebWnvEkjHlcKw2TPnXTG6R+9H7
-         2mEA4EhkcGzLH52PCiQM6PS021HIPucdxnHahDj2SclXFNEhXI3J30/RcquCi/mWhXpc
-         1pHAjrdt5MjUuHzfO9k6qLc8yQgMP3cGc4vkzAlCx2igv96J/CYy52cTe8D7k1PVlN7U
-         aJtEI9h3A5otQowg4PSEY7zmHw1YsauUmXFPel6ClQa1B7AlmAjOOSnm4nAvFN2SRwVV
-         Iv0hJBISHV0GFKBB8lGr8KRm60vOxdlLU0tS95Qrpyiti/c6LnadVEiVNXYHejR51fiz
-         s+Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746847861; x=1747452661;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cxC/mzAUv+WLp2bqkAOe0LlzGx41xiGaA3xtnTEbHto=;
-        b=FQ58AWc8m/bwtXK0I//yWPAl/+hsFzOqXoFD9vDP43x1VvVwOki4H57gNZ/Z/MK6Hh
-         lHIEqxrjjJnRIzr70LmcsSwRGHdHnIUl/SSSWLf+GESs11iz1yoW3viCz+c4/Xyn/4c/
-         0upHt28llOk+6vzjPeX/BIscvv9FRHPkNji66QI2BvJtWk7+nWY4PdNW16CUbvvi4r/v
-         COaRinbm4CFV8Akt5ZUwN9p8FwJAvz3em9ZbHwoG2TAGXq1X5eNbS0YT8kgQzw1/9sfw
-         hdrV30f1Nvs9yWYWKnSfaD/q4jt9JKjuYkDoLdjOMcW70qzvbTOD1mEWn1gxN30hnl/8
-         HWog==
-X-Forwarded-Encrypted: i=1; AJvYcCXZQLFUFtu3pVgFOX+bIoyUU1/3ICUvqbM/oQEno0tYp8wDLeJbps5r4+w/TRJ3OD1hjL42AUimfiiC54A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMz2S5ZycgHUvt2pDVmJEAkiWdI0GAwJ9KLlWQEXocWtQIF+PF
-	c0bYf/czf/7eem3DO/qyiWvvQseVKf18gKN8d7em0WQ/8hv8mS+VP9SYAWVKahMRP/FtiSuELgu
-	42aqdnruvGFcZOEHSK3JXT+r4HPiPWgiXiuaG
-X-Gm-Gg: ASbGncugtnc5TlkwEz3/NIOmBkJesRR2asatDkrj2xUu5B3g1UH9wv2FJVTzBV/JF49
-	YZMq/+9r2kqGF9Zc02F693vi9jb48+pmMiAspTM6pvIdep7slfN/M3Xf8liQCTe1cuSIwWt6qf2
-	EqDgdoKH7YNv0AFAj3kmEcKs1POHb/Y/8=
-X-Google-Smtp-Source: AGHT+IFGMaC9OqkxFNOPZKLQA5bM+AqNuwWWMAveWL+IGAFF7qDQwggjNqRbcq9N+nQeXDrOPW2xGU801kG98ywgtGo=
-X-Received: by 2002:a05:622a:54e:b0:467:8416:d99e with SMTP id
- d75a77b69052e-49462f90a7bmr1032861cf.21.1746847861271; Fri, 09 May 2025
- 20:31:01 -0700 (PDT)
+	s=arc-20240116; t=1746847927; c=relaxed/simple;
+	bh=WDgm1rnjA6iM8ibp1cxEAvd6TWSmBc8LRAKzag92bIo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e+h5gr6NSsV/bg40hsbP469Wrfv2PEQ9pY7R/IAJhpF2laVNm/QjQkMgne3GtqFzOyFNsec48pnt9Yysh9FMkFgp0CIcCvTKZnu2Qv5kaVaJYNb+2xlK9RE2Nw7O7KaS6iUqqD53OJ9+PfJPHT+DrYdkmkj5ubbaSSDQGqd1vcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZvWZn0pZzz1R7Xb;
+	Sat, 10 May 2025 11:29:53 +0800 (CST)
+Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4A5F1140293;
+	Sat, 10 May 2025 11:32:00 +0800 (CST)
+Received: from huawei.com (10.175.124.71) by kwepemg100017.china.huawei.com
+ (7.202.181.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 10 May
+ 2025 11:31:59 +0800
+From: Wupeng Ma <mawupeng1@huawei.com>
+To: <bryan-bt.tan@broadcom.com>, <vishnu.dasa@broadcom.com>,
+	<ryan.roberts@arm.com>, <jhansen@vmware.com>, <darius@vmware.com>,
+	<acking@vmware.com>
+CC: <bcm-kernel-feedback-list@broadcom.com>, <gregkh@linuxfoundation.org>,
+	<linux-kernel@vger.kernel.org>, <mawupeng1@huawei.com>,
+	<sunnanyong@huawei.com>
+Subject: [PATCH] VMCI: fix race between vmci_host_setup_notify and vmci_ctx_unset_notify
+Date: Sat, 10 May 2025 11:30:40 +0800
+Message-ID: <20250510033040.901582-1-mawupeng1@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507175500.204569-1-00107082@163.com> <20250509173929.42508-1-00107082@163.com>
- <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
- <CAJuCfpHB8T8daanvE_wowRD9-sAo30rtCcFfMPZL_751+KSs5w@mail.gmail.com>
- <294d0743c0b2e5c409857ef81a6fe8baaf87727f.camel@linux.intel.com>
- <CAJuCfpF=u-LpR6S+XmwPe8a6h4knzP2Nu5WFp=Rdvqa14vOzDA@mail.gmail.com>
- <CAJuCfpFLqTR=KfkstR-iRQvE7ZQMsr9=jXj6C4VdFq-Ebq6mvQ@mail.gmail.com> <3cbaf905.ef7.196b82bdcc9.Coremail.00107082@163.com>
-In-Reply-To: <3cbaf905.ef7.196b82bdcc9.Coremail.00107082@163.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 9 May 2025 20:30:50 -0700
-X-Gm-Features: AX0GCFsQsRL9ga96UAA-qchFPMnhNROUHcHBnwyvG4zLqJF0vdTeFZc6RBnaKRU
-Message-ID: <CAJuCfpHuYHJh6yM+na0WLi3Lb910m73Xth8N3ZBnJKpAW5Qxww@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between
- read() calls
-To: David Wang <00107082@163.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>, kent.overstreet@linux.dev, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg100017.china.huawei.com (7.202.181.58)
 
-On Fri, May 9, 2025 at 8:10=E2=80=AFPM David Wang <00107082@163.com> wrote:
->
->
-> At 2025-05-10 05:15:43, "Suren Baghdasaryan" <surenb@google.com> wrote:
-> >On Fri, May 9, 2025 at 1:46=E2=80=AFPM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> >>
-> >> On Fri, May 9, 2025 at 12:46=E2=80=AFPM Tim Chen <tim.c.chen@linux.int=
-el.com> wrote:
-> >> >
-> >> > On Fri, 2025-05-09 at 12:36 -0700, Suren Baghdasaryan wrote:
-> >> > > On Fri, May 9, 2025 at 11:33=E2=80=AFAM Tim Chen <tim.c.chen@linux=
-.intel.com> wrote:
-> >> > > >
-> >> > > > On Sat, 2025-05-10 at 01:39 +0800, David Wang wrote:
-> >> > > > >
-> >> > > > >
-> >> > > > > Signed-off-by: David Wang <00107082@163.com>
-> >> > >
-> >> > > Acked-by: Suren Baghdasaryan <surenb@google.com>
-> >> > >
-> >> > > > > ---
-> >> > > > >  lib/alloc_tag.c | 29 ++++++++++-------------------
-> >> > > > >  1 file changed, 10 insertions(+), 19 deletions(-)
-> >> > > > >
-> >> > > > > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> >> > > > > index 25ecc1334b67..fdd5887769a6 100644
-> >> > > > > --- a/lib/alloc_tag.c
-> >> > > > > +++ b/lib/alloc_tag.c
-> >> > > > > @@ -45,21 +45,16 @@ struct allocinfo_private {
-> >> > > > >  static void *allocinfo_start(struct seq_file *m, loff_t *pos)
-> >> > > > >  {
-> >> > > > >       struct allocinfo_private *priv;
-> >> > > > > -     struct codetag *ct;
-> >> > > > >       loff_t node =3D *pos;
-> >> > > > >
-> >> > > > > -     priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
-> >> > > > > -     m->private =3D priv;
-> >> > > > > -     if (!priv)
-> >> > > > > -             return NULL;
-> >> > > > > -
-> >> > > > > -     priv->print_header =3D (node =3D=3D 0);
-> >> > > > > +     priv =3D (struct allocinfo_private *)m->private;
-> >> > > > >       codetag_lock_module_list(alloc_tag_cttype, true);
-> >> > > > > -     priv->iter =3D codetag_get_ct_iter(alloc_tag_cttype);
-> >> > > > > -     while ((ct =3D codetag_next_ct(&priv->iter)) !=3D NULL &=
-& node)
-> >> > > > > -             node--;
-> >> > > > > -
-> >> > > > > -     return ct ? priv : NULL;
-> >> > > > > +     if (node =3D=3D 0) {
-> >> > > > > +             priv->print_header =3D true;
-> >> > > > > +             priv->iter =3D codetag_get_ct_iter(alloc_tag_ctt=
-ype);
-> >> > > > > +             codetag_next_ct(&priv->iter);
-> >> > > > > +     }
-> >> > > >
-> >> > > > Do you need to skip print header when *pos !=3D 0? i.e add
-> >> > >
-> >> > > Technically not needed since proc_create_seq_private() allocates
-> >> > > seq->private using kzalloc(), so the initial value of
-> >> > > priv->print_header is always false.
-> >> >
-> >> > But we'll start with first call to allocinfo_start() with *pos =3D=
-=3D 0,
-> >>
-> >> Usually but not always if we do lseek() to a non-zero position beforeh=
-and.
-> >
-> >Actually, this change will break the lseek() case. We can't always
-> >assume that we start reading from *pos =3D=3D 0. Current patch will fail
-> >to initialize priv if we start reading with *pos !=3D 0.
-> >priv->iter should be tracking current position and allocinfo_start()
-> >should detect a mismatch between *pos and iter->pos and re-walk the
-> >tags if there was a position change.
->
-> seq_file works line by line,  I think even if it support lseek, seq_file =
-would still start with line #0,
-> since seq_file have on clue the byte size for each line.
->
-> I will check the code,  make some tests and update later.
+During our test, it is found that a warning can be trigger in try_grab_folio
+as follow:
 
-Ah, yes. You are correct.
-seq_lseek() will traverse restarting from 0:
-https://elixir.bootlin.com/linux/v6.14.6/source/fs/seq_file.c#L323.
-Position jumps are similarly handled with traversal from 0:
-https://elixir.bootlin.com/linux/v6.14.6/source/fs/seq_file.c#L194.
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 1678 at mm/gup.c:147 try_grab_folio+0x106/0x130
+  Modules linked in:
+  CPU: 0 UID: 0 PID: 1678 Comm: syz.3.31 Not tainted 6.15.0-rc5 #163 PREEMPT(undef)
+  RIP: 0010:try_grab_folio+0x106/0x130
+  Call Trace:
+   <TASK>
+   follow_huge_pmd+0x240/0x8e0
+   follow_pmd_mask.constprop.0.isra.0+0x40b/0x5c0
+   follow_pud_mask.constprop.0.isra.0+0x14a/0x170
+   follow_page_mask+0x1c2/0x1f0
+   __get_user_pages+0x176/0x950
+   __gup_longterm_locked+0x15b/0x1060
+   ? gup_fast+0x120/0x1f0
+   gup_fast_fallback+0x17e/0x230
+   get_user_pages_fast+0x5f/0x80
+   vmci_host_unlocked_ioctl+0x21c/0xf80
+  RIP: 0033:0x54d2cd
+  ---[ end trace 0000000000000000 ]---
 
->
->
-> >
-> >>
-> >> > then print_header will be initialized to true.
-> >>
-> >> After the first call to allocinfo_show() print_header will be reset
-> >> back to false.
-> >>
-> >> > Will there be subsequent calls of allocinfo_start() with *pos !=3D0,
-> >> > but priv->print_header stays at 0?
-> >>
-> >> Yes, there will be subsequent calls to allocinfo_start() with *pos !=
-=3D0
-> >> and priv->print_header=3Dfalse, which is what we want, right? We want =
-to
-> >> print the header only at the beginning of the file (node =3D=3D 0).
-> >>
-> >> >
-> >> > Tim
-> >> > >
-> >> > > >
-> >> > > >         } else {
-> >> > > >                 priv->print_header =3D false;
-> >> > > >         }
-> >> > > >
-> >> > > > Tim
-> >> > > >
-> >> > > > > +     return priv->iter.ct ? priv : NULL;
-> >> > > > >  }
-> >> > > > >
-> >> > > >
-> >> >
+Digging into the source, context->notify_page may init by get_user_pages_fast
+and can be seen in vmci_ctx_unset_notify which will try to put_page. However
+get_user_pages_fast is not finished here and lead to following
+try_grab_folio warning. The race condition is shown as follow:
+
+cpu0			cpu1
+vmci_host_do_set_notify
+vmci_host_setup_notify
+get_user_pages_fast(uva, 1, FOLL_WRITE, &context->notify_page);
+lockless_pages_from_mm
+gup_pgd_range
+gup_huge_pmd  // update &context->notify_page
+			vmci_host_do_set_notify
+			vmci_ctx_unset_notify
+			notify_page = context->notify_page;
+			if (notify_page)
+			put_page(notify_page);	// page is freed
+__gup_longterm_locked
+__get_user_pages
+follow_trans_huge_pmd
+try_grab_folio // warn here
+
+To slove this, use local variable page to make notify_page can be seen
+after finish get_user_pages_fast.
+
+Fixes: a1d88436d53a ("VMCI: Fix two UVA mapping bugs")
+Closes: https://lore.kernel.org/all/e91da589-ad57-3969-d979-879bbd10dddd@huawei.com/
+Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
+---
+ drivers/misc/vmw_vmci/vmci_host.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
+index abe79f6fd2a7..b64944367ac5 100644
+--- a/drivers/misc/vmw_vmci/vmci_host.c
++++ b/drivers/misc/vmw_vmci/vmci_host.c
+@@ -227,6 +227,7 @@ static int drv_cp_harray_to_user(void __user *user_buf_uva,
+ static int vmci_host_setup_notify(struct vmci_ctx *context,
+ 				  unsigned long uva)
+ {
++	struct page *page;
+ 	int retval;
+ 
+ 	if (context->notify_page) {
+@@ -243,13 +244,11 @@ static int vmci_host_setup_notify(struct vmci_ctx *context,
+ 	/*
+ 	 * Lock physical page backing a given user VA.
+ 	 */
+-	retval = get_user_pages_fast(uva, 1, FOLL_WRITE, &context->notify_page);
+-	if (retval != 1) {
+-		context->notify_page = NULL;
++	retval = get_user_pages_fast(uva, 1, FOLL_WRITE, &page);
++	if (retval != 1)
+ 		return VMCI_ERROR_GENERIC;
+-	}
+-	if (context->notify_page == NULL)
+-		return VMCI_ERROR_UNAVAILABLE;
++
++	context->notify_page = page;
+ 
+ 	/*
+ 	 * Map the locked page and set up notify pointer.
+-- 
+2.43.0
+
