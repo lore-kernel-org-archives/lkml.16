@@ -1,111 +1,157 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from email.devuan.org (polpo.devuan.org [65.21.79.241])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ED4130A54
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 22:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C8E1E32D3
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 22:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.79.241
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746914483; cv=none; b=qkC1t1Z1pzRLxfFk5XaYplyhs5TcBLDajrxpccnuc9ls3Y0be8ae25cige34lVTXHkXBwbYuRHiX0QOHD5ZbC2NbLP4o5nTfY8i+kauLDugJO7ThjGSVAMsWA4OYc42aIQI5zOM7d+DDTnksyQ+qtVXFXnOU785A7HTfRerd6d4=
+	t=1746914658; cv=none; b=uLZLQ0lmlEXvBywycNWZl2ee4vETC/wKX7gkO0N2k208Rr8b4MwKM6A8IkptAYduIaApVyGIO+sNyH5GETftl2dJJ4AfrJW/gTz+qRn8xo3xUojwih59dm2C9q32sgKNUh0yRrNdjnLlk/eck2fojC7FGBZql340ny0dKdYCLOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746914483; c=relaxed/simple;
-	bh=hJo/CjgNE/ExB6fgao/L4wMg39dAJ8inr8ykGOVijcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=swjHYVqbCxoDPLBcFEPg2vWx+Ht5lnbjQAPPO9If4GRap0G22EjhgIM1st6/FgkEKM+f6Gtd4UBREvkumHaEkSfFRZzw4hbZRALcawRps3e0bztNjg9igmhopEJLQl4nJj+VOZJr+BjqUhXI3af9imJ8dgCqdh8cgcukyyKesHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=R83QxQId; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1746914658; c=relaxed/simple;
+	bh=cjSNKgGFeWQHhFdI5nd+HUT/Iy2Ac2dI8y0lB2faJus=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=E0mzH+jwUkscgFEoIHYuL0aWcd2vTxRToQlH6/mIMan8RnVwNQ9vJn9clYhA0zgAt8qIg4cmw3GhPWH4HidvU+EbSuqJlk5oj3EbGftlB4yhuSXzqJSnxbYQ+88d9RtzCin0aGil8NoAwHJdpoExZTX+1Tueb+/pjJ51OEo7hb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=devuan.org; spf=pass smtp.mailfrom=devuan.org; dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b=jwbFzQ1q; dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b=nJDy1TJM; arc=none smtp.client-ip=65.21.79.241
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=devuan.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=devuan.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="R83QxQId"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=KjN1nBhdxQaGDQyrmYVR1VzvPD+o09XYSFx1g7uAoQo=; b=R83QxQIdH8NYNnrP3EEGoBvw2f
-	noLkPoo2eSYooZLrPxk4w5mKdQ0z0ZQC8DpHBpKTgMlkR9RrSjajNU6KKhP8u7fsIOffvtNyCUWJU
-	QjaZOPSetUm3vUwJJXRAvKGDuJx5A3debRjRr8ni7b9ECglvtbaJUvBnZNr/4fkVLeFsUa9hxxehR
-	1Y2VdjhnuhKQJIK6nQpwXoxdxgW1n2C/pM+k8YC0Uv9XZ8NTm3t1OySTYg3Vo+lN0u9KIB1NG0FP/
-	QhOIyBByNTnPIjL7KxkzLazejhqUXXKla+0C6OzDML3TXrn4gQ6ok83pqYHXWcvfDfpbTUthXfpw5
-	3ITXQ/hQ==;
-Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uDsFy-0007Ay-M3; Sun, 11 May 2025 00:01:18 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] arm64: dts: rockchip: move rk3528 i2c+uart aliases to board files
-Date: Sun, 11 May 2025 00:01:06 +0200
-Message-ID: <20250510220106.2108414-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b="jwbFzQ1q";
+	dkim=pass (2048-bit key) header.d=devuan.org header.i=@devuan.org header.b="nJDy1TJM"
+Received: by email.devuan.org (Postfix, from userid 109)
+	id 022FB658; Sat, 10 May 2025 22:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=devuan.org;
+	s=default; t=1746914643;
+	bh=cjSNKgGFeWQHhFdI5nd+HUT/Iy2Ac2dI8y0lB2faJus=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=jwbFzQ1qRRd9BeNs4fxG6qfuGo1pvfeCbgGyYek4Y0WK0S77ZrINoxDP2wPdcdO6p
+	 xFJ2DNf9m3dbXj5vqdc3HzPmrqXdrdi72gRyCWTwjQp9Lw5Xmxdm8uSCPOBqFukodB
+	 Nuw4MhQ85axmvoPi8w7yX11ah3iItv7ql1kX196DNStqGo6nfmKsBA5U+hws7hsxgD
+	 yvWlAa45h6NSAbXgIrdqzsq/5QUB6WTencIEQicvk7ZfPOH9XrUsXwTTfrzznibkMS
+	 HC9NU5LK7jhaeenlSJXQbsTCQB0snPyMuDMBzJjq8G3K4glraHCLnDHPzdGblSWLw+
+	 YGIEf03TqylqA==
+X-Spam-Level: 
+Received: from [10.14.5.250] (office.ipacct.com [195.85.215.8])
+	by email.devuan.org (Postfix) with ESMTPSA id 844324E;
+	Sat, 10 May 2025 22:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=devuan.org;
+	s=default; t=1746914640;
+	bh=cjSNKgGFeWQHhFdI5nd+HUT/Iy2Ac2dI8y0lB2faJus=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=nJDy1TJM3BPZ7wnULPGwT2jorpQoslJrkY0pMciGANnwK5CI/4EhojOXGPu4FkfnQ
+	 l5uLUs+edrQQbej7muEIN2/SGmOnsST6tcfZNQj49HOkeMetDk0c5AWzdxgVvdIo9c
+	 cYvc137o6EeeshxE+djJHUsdFWs0sKCIB4W9uF6Ij8msEBrLLz+3WjZtNHSRuShQcP
+	 ko3xFa8hI06gvFbcjjTh2d/dTmoZCnEORHB+0PDAwIH0na55gvo6xtPwDy8AEQMgRH
+	 XJHGK7WMhFnfnWpVA1Iq2Mq49L3EZc4AAcphGbkXAz7V15xiwB9QakE2gd84MOM3pq
+	 v1jVD9KWqQhsg==
+Message-ID: <d113c621664bdfefee95fee5f17fb00c593d7f66.camel@devuan.org>
+Subject: Re: Bug 220102 - struct taskstats breaks backward compatibility
+ since version 15
+From: Boian Bonev <bbonev@devuan.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Balbir Singh <bsingharora@gmail.com>, Yang
+ Yang <yang.yang29@zte.com.cn>, Wang Yaxin <wang.yaxin@zte.com.cn>, Kun
+ Jiang <jiang.kun2@zte.com.cn>, xu xin <xu.xin16@zte.com.cn>
+Date: Sun, 11 May 2025 01:03:58 +0300
+In-Reply-To: <20250510132316.3719945330c9d0ebed86f8c9@linux-foundation.org>
+References: <5c176101cd5fd8e629b18380bf7678ea6c6a5d63.camel@devuan.org>
+	 <20250509141727.19b616d1c4a549d01656e5dd@linux-foundation.org>
+	 <d48f4302ac09d9539242a324ec4d0917fede6a71.camel@devuan.org>
+	 <20250510132316.3719945330c9d0ebed86f8c9@linux-foundation.org>
+Content-Type: multipart/mixed; boundary="=-bjdRn8/vwfBVtMMUeEIq"
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Even though they will be the same for all boards, i2c and uart aliases
-are supposed to live in the individual board files, to not create
-aliases for disabled nodes.
+--=-bjdRn8/vwfBVtMMUeEIq
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-So move the newly added aliases for rk3528 over to the Radxa E20C board,
-which is the only rk3528 board right now.
+On Sat, 2025-05-10 at 13:23 -0700, Andrew Morton wrote:
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D220102
+> >=20
+> > My patch was attached in the bugzilla above.
+>=20
+> We barely use bugzilla at all for kernel development.=C2=A0 I think I wis=
+h
+> that kernel bugzilla was simply shut down, replaced with a page to
+> help people to email their bug reports.
 
-Fixes: d3a05f490d04 ("arm64: dts: rockchip: Add I2C controllers for RK3528")
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../boot/dts/rockchip/rk3528-radxa-e20c.dts      |  2 ++
- arch/arm64/boot/dts/rockchip/rk3528.dtsi         | 16 ----------------
- 2 files changed, 2 insertions(+), 16 deletions(-)
+I am not sure if my patch is up to standards, PFA
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-index 506d54337ece..9f6ccd9dd1f7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-@@ -18,8 +18,10 @@ / {
- 
- 	aliases {
- 		ethernet0 = &gmac1;
-+		i2c1 = &i2c1;
- 		mmc0 = &sdhci;
- 		mmc1 = &sdmmc;
-+		serial0 = &uart0;
- 	};
- 
- 	chosen {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-index cd8ef389ccf3..b2724c969a76 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-@@ -24,22 +24,6 @@ aliases {
- 		gpio2 = &gpio2;
- 		gpio3 = &gpio3;
- 		gpio4 = &gpio4;
--		i2c0 = &i2c0;
--		i2c1 = &i2c1;
--		i2c2 = &i2c2;
--		i2c3 = &i2c3;
--		i2c4 = &i2c4;
--		i2c5 = &i2c5;
--		i2c6 = &i2c6;
--		i2c7 = &i2c7;
--		serial0 = &uart0;
--		serial1 = &uart1;
--		serial2 = &uart2;
--		serial3 = &uart3;
--		serial4 = &uart4;
--		serial5 = &uart5;
--		serial6 = &uart6;
--		serial7 = &uart7;
- 	};
- 
- 	cpus {
--- 
-2.47.2
+>=20
+> > I also see that Wang Yaxin
+> > <wang.yaxin@zte.com.cn> has already sent a different but working
+> > patch...
+>=20
+> Cool.=C2=A0 Except I cannot find that patch.=C2=A0 Help?
 
+That one was on email.
+
+--=-bjdRn8/vwfBVtMMUeEIq
+Content-Disposition: attachment; filename="taskstats_compat.patch"
+Content-Type: text/x-patch; name="taskstats_compat.patch"; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL2luY2x1ZGUvdWFwaS9saW51eC90YXNrc3RhdHMuaCBiL2luY2x1ZGUvdWFw
+aS9saW51eC90YXNrc3RhdHMuaAppbmRleCA5NTc2MjIzMmUwMTguLjdmMTY5YzY1YjE2ZSAxMDA2
+NDQKLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L3Rhc2tzdGF0cy5oCisrKyBiL2luY2x1ZGUvdWFw
+aS9saW51eC90YXNrc3RhdHMuaApAQCAtMzQsNyArMzQsNyBAQAogICovCiAKIAotI2RlZmluZSBU
+QVNLU1RBVFNfVkVSU0lPTgkxNQorI2RlZmluZSBUQVNLU1RBVFNfVkVSU0lPTgkxNgogI2RlZmlu
+ZSBUU19DT01NX0xFTgkJMzIJLyogc2hvdWxkIGJlID49IFRBU0tfQ09NTV9MRU4KIAkJCQkJICog
+aW4gbGludXgvc2NoZWQuaCAqLwogCkBAIC03Miw4ICs3Miw2IEBAIHN0cnVjdCB0YXNrc3RhdHMg
+ewogCSAqLwogCV9fdTY0CWNwdV9jb3VudCBfX2F0dHJpYnV0ZV9fKChhbGlnbmVkKDgpKSk7CiAJ
+X191NjQJY3B1X2RlbGF5X3RvdGFsOwotCV9fdTY0CWNwdV9kZWxheV9tYXg7Ci0JX191NjQJY3B1
+X2RlbGF5X21pbjsKIAogCS8qIEZvbGxvd2luZyBmb3VyIGZpZWxkcyBhdG9taWNhbGx5IHVwZGF0
+ZWQgdXNpbmcgdGFzay0+ZGVsYXlzLT5sb2NrICovCiAKQEAgLTgyLDE0ICs4MCwxMCBAQCBzdHJ1
+Y3QgdGFza3N0YXRzIHsKIAkgKi8KIAlfX3U2NAlibGtpb19jb3VudDsKIAlfX3U2NAlibGtpb19k
+ZWxheV90b3RhbDsKLQlfX3U2NAlibGtpb19kZWxheV9tYXg7Ci0JX191NjQJYmxraW9fZGVsYXlf
+bWluOwogCiAJLyogRGVsYXkgd2FpdGluZyBmb3IgcGFnZSBmYXVsdCBJL08gKHN3YXAgaW4gb25s
+eSkgKi8KIAlfX3U2NAlzd2FwaW5fY291bnQ7CiAJX191NjQJc3dhcGluX2RlbGF5X3RvdGFsOwot
+CV9fdTY0CXN3YXBpbl9kZWxheV9tYXg7Ci0JX191NjQJc3dhcGluX2RlbGF5X21pbjsKIAogCS8q
+IGNwdSAid2FsbC1jbG9jayIgcnVubmluZyB0aW1lCiAJICogT24gc29tZSBhcmNoaXRlY3R1cmVz
+LCB2YWx1ZSB3aWxsIGFkanVzdCBmb3IgY3B1IHRpbWUgc3RvbGVuCkBAIC0xNjEsOCArMTU1LDgg
+QEAgc3RydWN0IHRhc2tzdGF0cyB7CiAJX191NjQJd3JpdGVfYnl0ZXM7CQkvKiBieXRlcyBvZiB3
+cml0ZSBJL08gKi8KIAlfX3U2NAljYW5jZWxsZWRfd3JpdGVfYnl0ZXM7CS8qIGJ5dGVzIG9mIGNh
+bmNlbGxlZCB3cml0ZSBJL08gKi8KIAotCV9fdTY0ICBudmNzdzsJCQkvKiB2b2x1bnRhcnlfY3R4
+dF9zd2l0Y2hlcyAqLwotCV9fdTY0ICBuaXZjc3c7CQkJLyogbm9udm9sdW50YXJ5X2N0eHRfc3dp
+dGNoZXMgKi8KKwlfX3U2NCAgIG52Y3N3OwkJCS8qIHZvbHVudGFyeV9jdHh0X3N3aXRjaGVzICov
+CisJX191NjQgICBuaXZjc3c7CQkJLyogbm9udm9sdW50YXJ5X2N0eHRfc3dpdGNoZXMgKi8KIAog
+CS8qIHRpbWUgYWNjb3VudGluZyBmb3IgU01UIG1hY2hpbmVzICovCiAJX191NjQJYWNfdXRpbWVz
+Y2FsZWQ7CQkvKiB1dGltZSBzY2FsZWQgb24gZnJlcXVlbmN5IGV0YyAqLwpAQCAtMTcyLDE0ICsx
+NjYsMTAgQEAgc3RydWN0IHRhc2tzdGF0cyB7CiAJLyogRGVsYXkgd2FpdGluZyBmb3IgbWVtb3J5
+IHJlY2xhaW0gKi8KIAlfX3U2NAlmcmVlcGFnZXNfY291bnQ7CiAJX191NjQJZnJlZXBhZ2VzX2Rl
+bGF5X3RvdGFsOwotCV9fdTY0CWZyZWVwYWdlc19kZWxheV9tYXg7Ci0JX191NjQJZnJlZXBhZ2Vz
+X2RlbGF5X21pbjsKIAogCS8qIERlbGF5IHdhaXRpbmcgZm9yIHRocmFzaGluZyBwYWdlICovCiAJ
+X191NjQJdGhyYXNoaW5nX2NvdW50OwogCV9fdTY0CXRocmFzaGluZ19kZWxheV90b3RhbDsKLQlf
+X3U2NAl0aHJhc2hpbmdfZGVsYXlfbWF4OwotCV9fdTY0CXRocmFzaGluZ19kZWxheV9taW47CiAK
+IAkvKiB2MTA6IDY0LWJpdCBidGltZSB0byBhdm9pZCBvdmVyZmxvdyAqLwogCV9fdTY0CWFjX2J0
+aW1lNjQ7CQkvKiA2NC1iaXQgYmVnaW4gdGltZSAqLwpAQCAtMTg3LDggKzE3Nyw2IEBAIHN0cnVj
+dCB0YXNrc3RhdHMgewogCS8qIHYxMTogRGVsYXkgd2FpdGluZyBmb3IgbWVtb3J5IGNvbXBhY3Qg
+Ki8KIAlfX3U2NAljb21wYWN0X2NvdW50OwogCV9fdTY0CWNvbXBhY3RfZGVsYXlfdG90YWw7Ci0J
+X191NjQJY29tcGFjdF9kZWxheV9tYXg7Ci0JX191NjQJY29tcGFjdF9kZWxheV9taW47CiAKIAkv
+KiB2MTIgYmVnaW4gKi8KIAlfX3UzMiAgIGFjX3RnaWQ7CS8qIHRocmVhZCBncm91cCBJRCAqLwpA
+QCAtMjA4LDE3ICsxOTYsMzAgQEAgc3RydWN0IHRhc2tzdGF0cyB7CiAJLyogdjEyIGVuZCAqLwog
+CiAJLyogdjEzOiBEZWxheSB3YWl0aW5nIGZvciB3cml0ZS1wcm90ZWN0IGNvcHkgKi8KLQlfX3U2
+NCAgICB3cGNvcHlfY291bnQ7Ci0JX191NjQgICAgd3Bjb3B5X2RlbGF5X3RvdGFsOwotCV9fdTY0
+ICAgIHdwY29weV9kZWxheV9tYXg7Ci0JX191NjQgICAgd3Bjb3B5X2RlbGF5X21pbjsKKwlfX3U2
+NCAgIHdwY29weV9jb3VudDsKKwlfX3U2NCAgIHdwY29weV9kZWxheV90b3RhbDsKIAogCS8qIHYx
+NDogRGVsYXkgd2FpdGluZyBmb3IgSVJRL1NPRlRJUlEgKi8KLQlfX3U2NCAgICBpcnFfY291bnQ7
+Ci0JX191NjQgICAgaXJxX2RlbGF5X3RvdGFsOwotCV9fdTY0ICAgIGlycV9kZWxheV9tYXg7Ci0J
+X191NjQgICAgaXJxX2RlbGF5X21pbjsKLQkvKiB2MTU6IGFkZCBEZWxheSBtYXggKi8KKwlfX3U2
+NCAgIGlycV9jb3VudDsKKwlfX3U2NCAgIGlycV9kZWxheV90b3RhbDsKKwkvKiB2MTU6IGJyb2tl
+biBjb21wYXRpYmlsaXR5ICovCisJLyogdjE2OiBhZGQgRGVsYXkgbWluL21heCAqLworCV9fdTY0
+CWNwdV9kZWxheV9taW47CisJX191NjQJY3B1X2RlbGF5X21heDsKKwlfX3U2NAlibGtpb19kZWxh
+eV9taW47CisJX191NjQJYmxraW9fZGVsYXlfbWF4OworCV9fdTY0CXN3YXBpbl9kZWxheV9taW47
+CisJX191NjQJc3dhcGluX2RlbGF5X21heDsKKwlfX3U2NAlmcmVlcGFnZXNfZGVsYXlfbWluOwor
+CV9fdTY0CWZyZWVwYWdlc19kZWxheV9tYXg7CisJX191NjQJdGhyYXNoaW5nX2RlbGF5X21pbjsK
+KwlfX3U2NAl0aHJhc2hpbmdfZGVsYXlfbWF4OworCV9fdTY0CWNvbXBhY3RfZGVsYXlfbWluOwor
+CV9fdTY0CWNvbXBhY3RfZGVsYXlfbWF4OworCV9fdTY0ICAgd3Bjb3B5X2RlbGF5X21pbjsKKwlf
+X3U2NCAgIHdwY29weV9kZWxheV9tYXg7CisJX191NjQgICBpcnFfZGVsYXlfbWluOworCV9fdTY0
+ICAgaXJxX2RlbGF5X21heDsKIH07CiAKIAo=
+
+
+--=-bjdRn8/vwfBVtMMUeEIq--
