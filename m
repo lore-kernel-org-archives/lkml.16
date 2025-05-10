@@ -1,57 +1,91 @@
-Received: from mail.fastemail60.com (mail.fastemail60.com [102.222.20.253])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E58266B74
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 18:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=102.222.20.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408A9244679
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 18:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746901145; cv=none; b=n87hEDXXHkXhW3Uy1rMc+0mTR6NNLVAsUVjXjnh4uUf24ONrGNj8EL3SnuMgPFVdNeu5E/k31vH40Eyi/ihQx/LVYy20cyjhJIcLVbX3zbOGlHlKFhH+HJ70kPrKqIazquY4d+1kNinnBndj+EOdVXIwDFxoAa07/1Dx1liuvbU=
+	t=1746901693; cv=none; b=S3QM4hZH7OxxZqub5dLHpPJPBOLKH0Rpr5lE7BoGZ72Cp3D1Zy/QvjbdJIBuNR8FkedPNvXRiKnQ0G3YfB6iaA9YuqAeIo7uCYhjYPRQbGz7VM7HXEReV3KTxzsllVFVzon8Xd+gTFc7/Njjck3i9zTrHC2fb6JWqfy90xVEL8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746901145; c=relaxed/simple;
-	bh=0kM12Ki2v7eI61I1WvQrX7nQw+DKE1uiGUA45uahRZc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AhGR2AM6pY6KXb9HkNAc7erVGERRdrk6FWjfIosjqHf/fxDyBq1ykZNslHT2dXjPI+/f2n6l6YumRsXHl0Ryfj+1kjLxrdfvIjSbqh0yvxob3ArWCNQoF4SVChRDMnjGxLRb7BwLWTkBjgo4J7KsRvqov1n1AvRmak1PLXsioWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fastemail60.com; spf=none smtp.mailfrom=fastemail60.com; dkim=pass (2048-bit key) header.d=fastemail60.com header.i=@fastemail60.com header.b=WwviCgJc; arc=none smtp.client-ip=102.222.20.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fastemail60.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fastemail60.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastemail60.com header.i=@fastemail60.com header.b="WwviCgJc"
-Received: from fastemail60.com (unknown [194.156.79.202])
-	by mail.fastemail60.com (Postfix) with ESMTPA id C4569887AD1
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 16:32:08 +0200 (SAST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.fastemail60.com C4569887AD1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastemail60.com;
-	s=202501; t=1746887530;
-	bh=0kM12Ki2v7eI61I1WvQrX7nQw+DKE1uiGUA45uahRZc=;
-	h=Reply-To:From:To:Subject:Date:From;
-	b=WwviCgJcovWv8tzalAMJatzEh+EHti7VXHPDMhwg6rWKLzeTOZyVbKUVn/XS0oARa
-	 6uKcly5gQcr+CAMmu/IfWD1TFu03PKja3xsT2b4Vctiqhcjv/KQVhmGcOd3AT62B4k
-	 cm8XVXonxKaE1oN9T5hP7ky8GnDXBX6tZCrpkUm1MF9O/+jgrxWgMTyLe082UU7yB9
-	 BdIK5ksBgUptm/ubhWQVNxIQJmsXXtZe8pDjzDt17/evFpyKiT+u68QKkmHXWsvxw4
-	 LNIz43ZvEbSHtsvqdwp7GC96tLWq5AiePzwWJvTazDZIjrctFg0+eyeEZPzg6QUKJC
-	 xtEyVR+msKk+g==
-Reply-To: import@herragontradegroup.cz
-From: Philip Burchett<info@fastemail60.com>
-To: linux-kernel@vger.kernel.org
-Subject: Inquiry
-Date: 10 May 2025 10:32:08 -0400
-Message-ID: <20250510103208.EB4FA99DD8455E43@fastemail60.com>
+	s=arc-20240116; t=1746901693; c=relaxed/simple;
+	bh=9gVwUnLYR1pYhWx6NRL9eT+D/v3yyrCVvAMryYWu6aQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LMAEzM5mMpWfkN/k0On6hRTWjjS+42hEIriV/qHul/0O8kOIzfBd4hjfZ6kHCIOl/4+sqe5zbr6s7Aaf451hIw4v8rWN0gbliy2g5ZEGSrD+Xz/FWhcneujHNRnhQ8OTymICjFh1VidsFe7l8DohjkZbYs6TdkY2l6ZPx5K1Ngs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id 5c52b789-2dcc-11f0-96ba-005056bdd08f;
+	Sat, 10 May 2025 21:27:01 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 10 May 2025 21:26:58 +0300
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Ray Jui <rjui@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Vladimir Zapolskiy <vz@mleia.com>, Keerthy <j-keerthy@ti.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH RFC 8/9] gpio: timberdale: Make irq_chip immutable
+Message-ID: <aB-acnUBnidSw7r4@surfacebook.localdomain>
+References: <20250509-gpio-v1-0-639377c98288@nxp.com>
+ <20250509-gpio-v1-8-639377c98288@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.4 (mail.fastemail60.com [0.0.0.0]); Sat, 10 May 2025 16:32:10 +0200 (SAST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-gpio-v1-8-639377c98288@nxp.com>
 
-Greetings, Supplier.
+Fri, May 09, 2025 at 12:45:39PM +0800, Peng Fan (OSS) kirjoitti:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Kernel warns about mutable irq_chips:
+> "not an immutable chip, please consider fixing!"
+> 
+> Constify timbgpio_irqchip, flag the irq_chip as IRQCHIP_IMMUTABLE,
+> add the new helper functions, and call the appropriate gpiolib functions.
 
-Please give us your most recent catalog; we would want to order=20
-from you.
+...
 
-I look forward to your feedback.
+>  	struct timbgpio *tgpio = irq_data_get_irq_chip_data(d);
+>  	int offset = d->irq - tgpio->irq_base;
+> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+>  	unsigned long flags;
+
+While at it, replace direct accesses to IRQ data `irq` member.
+
+  	int offset = hwirq - tgpio->irq_base;
+
+...
+
+>  static void timbgpio_irq_enable(struct irq_data *d)
+>  {
+>  	struct timbgpio *tgpio = irq_data_get_irq_chip_data(d);
+>  	int offset = d->irq - tgpio->irq_base;
+> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+>  	unsigned long flags;
+
+Ditto.
+
+> +	gpiochip_enable_irq(&tgpio->gpio, hwirq);
+> +
+>  	spin_lock_irqsave(&tgpio->lock, flags);
+>  	tgpio->last_ier |= 1UL << offset;
+>  	iowrite32(tgpio->last_ier, tgpio->membase + TGPIO_IER);
+
+>  }
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Philip Burchett
