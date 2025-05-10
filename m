@@ -1,112 +1,166 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE161C5D7D
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 07:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D660BA27;
+	Sat, 10 May 2025 07:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746862158; cv=none; b=JC+bEsISsO9OTWYBmtWwsH45+aZAi62fF/37nkOB5CyBXNLpHggxhSYUZ5IapkrzYRF59kOS37qGvoa1ZcxXpJhBe+nELEjgFp/mybHn+QgzAE54phU0LSUE3uNL+EDqS/K2/wlbYX6xfA3gGMfhWmktuAcErS5Pd8jtu/1lKYY=
+	t=1746862887; cv=none; b=QGb0ha0jNmgYfmDu5mCNEZMr2f1bylViSSVR2MgXvt8/QmpgO0g/OhqR/d5Nu04IT0ayfQLt7s8fcMimwnMV2xTScwmn3bo+UPow4rIoMZya8R6eaYRVFMRt5pgvFvrLiV2Ktg+LEsJLJiJLLRes9HRpYz+W+JRl3XxsV02lPoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746862158; c=relaxed/simple;
-	bh=xvMJy4jOfhr05ap3IoxrAv5Nl5E3LbWkecByzv8o984=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K42Zzrshhh8C6w4NkCmDJeiruG1dlw/dFX2NcwpQ06b7AYwZACtVNuerCH5LQwihzD557J1vcPL4pvTExkfWrP16p5hZqkUZqPA7cDJ3EKlmSdlKy4qGeDwNvFQ7F5cRWb4EhaRyPxGtC6WS+3pIuvujgCZh6b9qSJJ8vLYZ5AI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FZhqWk4A; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FZhqWk4A"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e73e9e18556so2777219276.0
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 00:29:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746862154; x=1747466954; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rmD36ciZziZR7H2RC8Oob602p43Xl1hi/xBE0M4Q8MU=;
-        b=FZhqWk4ApcT6+VBF+M4s7PWQ4tvYeyPQ8R/brgGghjJH0YXL8m/yPOGSsMKSA4LC2E
-         8SooMeQytLUEDAO4S7zZ3YVgYqD6wS7THBa4WlAcPZq97ZPhcmNFkSrIyXbP+tEerDmh
-         Uij2/fjbUrAxxu9cPHpxdSgI1L0Z3s4qb4XZFX05qwKqsksciaQ+oUd22jYdBx7MOOq0
-         Yi3+8yJvgOz8hLSzLERJC2H7pfyXztuvyC3qmnxHrw3g6IAqrVMP7mc8W7ZLza2Qfb5J
-         /FIrzhRDUHud5IyxOvwJpQdZYttH4cINw7jrn0V1xDPoLYjvDuimeDQD8ANJT1u2Brju
-         fiuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746862154; x=1747466954;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rmD36ciZziZR7H2RC8Oob602p43Xl1hi/xBE0M4Q8MU=;
-        b=hD9L9QqXJYzRKr0UH8elLYksj2BQkXynTsUdBv3ZzHAO6CoIzI5llIggWpEQmSQo71
-         zkXn6LqnpNc7lGsHPbwGFcXrd/crOC8uhFzJBFg6tHg3KZlHOvzZm3xB4Ucdqz7cqqNW
-         l0wEzY5J/otHOjcIxJZCxerJJ5OlAl3QDj3qsneMFiCinO1M7BOIlvMIA12HRYwMyGjW
-         ZIskycYLAmA4rbwgettHSAxqea4nqJt4m+1hVbfq9kG4Xy5giLuDNHaLhOpLuYJHaO3o
-         4/PTxRS0rz6BP2H7kLaODW9um1rsnAs8831xwf5TYCjqAz9opcOK26oFZKTzCXLzdsYV
-         Nlmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPYK0PGJ2G8VKmNdatnON80IxtGl1htx3d4e5AFk6uP8/JBilKIBPYQhWbWUeJXXS4zmm+BSVkV4NrFoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylRyf7FIMJkfmWU6CiCIu7pAIqF8t9bJme2xpK0sMvYXN4lRDE
-	wEfgTgBR2/riNQVkA38eCygEXmU6+3BRpc42uydnzVpe24Og5LIdFWoMJ786GClGbvfx3M4Abqx
-	KJCXckdYlZXrTBUh9P/+3iYJF681yIUb0o8fe5g==
-X-Gm-Gg: ASbGncsiY6mqVVfeY7fClpJWTjt0tGN8E+Mwk5DdVbQ3PYtfBHpAwXmgY6/nw2Y34NS
-	z1KtgwOETBYkHU9G+/a93s4HHrlonn6hZHnUbrTXt0gPQEq0Zj+gxXnm9DNSRmW9o2d5aC4zxF7
-	d7nyZ6GpWPZZlI3O3x9a2dandSE3KNu3mo
-X-Google-Smtp-Source: AGHT+IEfIM9Qw+3d6qM4rvgEJLOTcGMzXGJ+Hg/E23wPkNnrtYTIEl4IAR6K4XzzErQSvkwMjFJbKzhGzX8NrLjHTkw=
-X-Received: by 2002:a05:6902:2012:b0:e70:a83d:da74 with SMTP id
- 3f1490d57ef6-e78fdfb0cbdmr7844342276.9.1746862154336; Sat, 10 May 2025
- 00:29:14 -0700 (PDT)
+	s=arc-20240116; t=1746862887; c=relaxed/simple;
+	bh=XIa1zMHZSqTZnNTmX3xxSHcICoLv7ngOW0oVLcEIz8A=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JQ5QOxZElYhR2U3Hb8uC/eWnewWEDXLm34ligoDwRnCOgD+igZDexzqRFCc0vdaBqH0ZMq/NI8o/QCOpbm5OfyezFYU+4UAyLHbQsoQKu44keaVioISOKJr9Xq7TNpuehDeAr7FcWuH4TDMl5rnaN3/IsbZfc3sOBTHOrSqGOaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Zvd823ZTFzsStT;
+	Sat, 10 May 2025 15:40:34 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5AFAE140143;
+	Sat, 10 May 2025 15:41:13 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 10 May 2025 15:41:12 +0800
+Subject: Re: [PATCH v7 5/6] hisi_acc_vfio_pci: bugfix live migration function
+ without VF device driver
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>, Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
+References: <20250411035907.57488-1-liulongfang@huawei.com>
+ <20250411035907.57488-6-liulongfang@huawei.com>
+ <937a11b53cca42ef94d8383608a10f59@huawei.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <460f52a8-7a4a-96f7-b0db-299d3cfc244c@huawei.com>
+Date: Sat, 10 May 2025 15:41:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509115126.63190-1-byungchul@sk.com> <20250509115126.63190-19-byungchul@sk.com>
-In-Reply-To: <20250509115126.63190-19-byungchul@sk.com>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Sat, 10 May 2025 10:28:37 +0300
-X-Gm-Features: AX0GCFsXhaptoCkxu0ZbCxN8jfaibb-tlI-nC4q5nIWFLMwAFBGIlbfnvN55rlU
-Message-ID: <CAC_iWjLwC1t=Xrxb9QUxRpRqHCuXLcC6eRtu+Tr=NbpS-BFt4A@mail.gmail.com>
-Subject: Re: [RFC 18/19] page_pool: make page_pool_get_dma_addr() just wrap page_pool_get_dma_addr_netmem()
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	almasrymina@google.com, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
-	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
-	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <937a11b53cca42ef94d8383608a10f59@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-On Fri, 9 May 2025 at 14:51, Byungchul Park <byungchul@sk.com> wrote:
->
-> The page pool members in struct page cannot be removed unless it's not
-> allowed to access any of them via struct page.
->
-> Do not access 'page->dma_addr' directly in page_pool_get_dma_addr() but
-> just wrap page_pool_get_dma_addr_netmem() safely.
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
-> ---
->  include/net/page_pool/helpers.h | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/include/net/page_pool/helpers.h b/include/net/page_pool/helpers.h
-> index 4deb0b32e4bac..7e0395c70bfa2 100644
-> --- a/include/net/page_pool/helpers.h
-> +++ b/include/net/page_pool/helpers.h
-> @@ -441,12 +441,7 @@ static inline dma_addr_t page_pool_get_dma_addr_netmem(netmem_ref netmem)
->   */
->  static inline dma_addr_t page_pool_get_dma_addr(const struct page *page)
->  {
-> -       dma_addr_t ret = page->dma_addr;
-> -
-> -       if (PAGE_POOL_32BIT_ARCH_WITH_64BIT_DMA)
-> -               ret <<= PAGE_SHIFT;
-> -
-> -       return ret;
-> +       return page_pool_get_dma_addr_netmem(page_to_netmem(page));
->  }
->
->  static inline void __page_pool_dma_sync_for_cpu(const struct page_pool *pool,
-> --
-> 2.17.1
+On 2025/4/15 16:45, Shameerali Kolothum Thodi wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: liulongfang <liulongfang@huawei.com>
+>> Sent: Friday, April 11, 2025 4:59 AM
+>> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
+>> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
+>> <jonathan.cameron@huawei.com>
+>> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
+>> Subject: [PATCH v7 5/6] hisi_acc_vfio_pci: bugfix live migration function
+>> without VF device driver
+>>
+>> If the VF device driver is not loaded in the Guest OS and we attempt to
+>> perform device data migration, the address of the migrated data will
+>> be NULL.
+>> The live migration recovery operation on the destination side will
+>> access a null address value, which will cause access errors.
+>>
+>> Therefore, live migration of VMs without added VF device drivers
+>> does not require device data migration.
+>> In addition, when the queue address data obtained by the destination
+>> is empty, device queue recovery processing will not be performed.
+>>
+>> Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live
+>> migration")
+>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+>> Reviewed-by: Shameer Kolothum
+>> <shameerali.kolothum.thodi@huawei.com>
+>> ---
+>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 22 +++++++++++++------
+>>  1 file changed, 15 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> index cadc82419dca..d12a350440d3 100644
+>> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> @@ -426,13 +426,6 @@ static int vf_qm_check_match(struct
+>> hisi_acc_vf_core_device *hisi_acc_vdev,
+>>  		return -EINVAL;
+>>  	}
+>>
+>> -	ret = qm_write_regs(vf_qm, QM_VF_STATE, &vf_data->vf_qm_state,
+>> 1);
+>> -	if (ret) {
+>> -		dev_err(dev, "failed to write QM_VF_STATE\n");
+>> -		return ret;
+>> -	}
+>> -
+>> -	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
+>>  	hisi_acc_vdev->match_done = true;
+>>  	return 0;
+>>  }
+>> @@ -498,6 +491,20 @@ static int vf_qm_load_data(struct
+>> hisi_acc_vf_core_device *hisi_acc_vdev,
+>>  	if (migf->total_length < sizeof(struct acc_vf_data))
+>>  		return -EINVAL;
+>>
+>> +	if (!vf_data->eqe_dma || !vf_data->aeqe_dma ||
+>> +	    !vf_data->sqc_dma || !vf_data->cqc_dma) {
+>> +		dev_info(dev, "resume dma addr is NULL!\n");
+>> +		hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
+>> +		return 0;
+>> +	}
+> 
+> 
+> I am still not fully understood why we need the above check. The only case as
+> far as I can think of where this will happen is when the source VM Guest has
+> not loaded the ACC driver. And we do take care of that already using vf_qm_state and
+> checking total_length == QM_MATCH_SIZE.
+> 
+> Have you seen this happening in any other scenario during your tests?
 >
 
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+This is a problem that was discovered and fixed in previous abnormal scenario tests.
+In the abnormal tests, abnormal error handling was performed and real-time migration
+was executed. However, due to the lack of this check, the device became abnormal
+after migration.
+
+Thanks,
+Longfang.
+
+> Thanks,
+> Shameer
+> 
+>> +
+>> +	ret = qm_write_regs(qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to write QM_VF_STATE\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
+>> +
+>>  	qm->eqe_dma = vf_data->eqe_dma;
+>>  	qm->aeqe_dma = vf_data->aeqe_dma;
+>>  	qm->sqc_dma = vf_data->sqc_dma;
+>> @@ -1531,6 +1538,7 @@ static int hisi_acc_vfio_pci_migrn_init_dev(struct
+>> vfio_device *core_vdev)
+>>  	hisi_acc_vdev->vf_id = pci_iov_vf_id(pdev) + 1;
+>>  	hisi_acc_vdev->pf_qm = pf_qm;
+>>  	hisi_acc_vdev->vf_dev = pdev;
+>> +	hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
+>>  	mutex_init(&hisi_acc_vdev->state_mutex);
+>>  	mutex_init(&hisi_acc_vdev->open_mutex);
+>>
+>> --
+>> 2.24.0
+> 
+> .
+> 
