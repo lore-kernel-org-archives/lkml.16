@@ -1,460 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35091F12FB;
-	Sat, 10 May 2025 13:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7DD38385
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 13:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746883408; cv=none; b=Nj//ZOhMRaaz2FWxlp/wA4zKYgmbXZZcn4jKIh8NcevWozkvX8+CO+rm7BToqDqEUFkRft5a90EZqkDBpdis7/aw57tOTfjYvthmmLyrOmFuOIvtF+R8rsHiBQ9HupEExaPVcy0ZC6ien1w6XRwYXYACoCr+eR4k3CpVaEC8scE=
+	t=1746883899; cv=none; b=IFpol3zZC3kue5qkzmyS29HgHC1HzwXLNHwvCvOY8cGRIQCax7kna+LXu4TsadyJWDDxrUSp+/Rkdc3n4r1tu7ecqNzV0LrBrVxBgSWswqfKLOVbwi6q08u6XTWh7N3q1DPAwu+jMrPAfJIvup7zAgaNI2iqQxjS0tJlmAO3m3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746883408; c=relaxed/simple;
-	bh=E2Yav4W1E6EF4SvtddGoOnejKl4PvaAgYAF1P9PUHic=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TBM17ZvBRysBf0Dct3NR1qwn8Rm5lpMZq6G/xXFt2Dohxv4Ihd5Rxy3AbbWr3dIhD4isIS7O/j00niMDOghwvFJoITVmSjNJl8NEqzWaG1RvGkyMHNQXekc1YlrW8uMSZcA7kPHBU3gMnk6QUDsh4HSErbtFwQ+VkzRnhqBar1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B89B0C4CEE2;
-	Sat, 10 May 2025 13:23:25 +0000 (UTC)
-Date: Sat, 10 May 2025 09:23:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, netdev 
- <netdev@vger.kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- David Ahern <dsahern@kernel.org>, Juri Lelli <juri.lelli@gmail.com>, Breno
-  Leitao <leitao@debian.org>, Alexei Starovoitov 
- <alexei.starovoitov@gmail.com>, Andrii Nakryiko 
- <andrii.nakryiko@gmail.com>, Gabriele Monaco <gmonaco@redhat.com>, Masami 
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers 
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v3] tracepoint: Have tracepoints created with
- DECLARE_TRACE() have _tp suffix
-Message-ID: <20250510092342.77371990@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746883899; c=relaxed/simple;
+	bh=9ZwPwjMp0Hxfd9fdkEM02NqZ4uA2RlXeCJBasucJVUo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LUgDZMWy6wYLdZWgMwv6gGxEdty0r/b4uR7je6EQGAYMamW+z0JssWRaUoKR9U2+4/gzaapQy/wdJ2gnmfb82FazprEi2/siJ9hYrRWkCsSU/s9LIZ/Z1nxEDaNphVXOXDoRpkcOH/n/X5lap44153wT8b4HHew19TsgWwsSL28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYwJkCYS; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYwJkCYS"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so3897424e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 06:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746883895; x=1747488695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VL6Fvfai1PHeZtCNEsUTgX9mVLqB3qkTgLU0KE2btZ0=;
+        b=lYwJkCYSFpPCtgmxp9ByZ8vjfv0OD19kj7aFZYEp5f0HlRJaaARN6Kk2PloTCjFU6b
+         RYQ9mQWIzr6+sMs67pLp42COdyUo42BcBjOWoYfI0jK2XewUZ9A3fY2n2kkLPC7Nin7V
+         nWSxAnO4sN+DPVGUe9a6uuyFQQ0pKvlCpaNtrS1kDHzxsm1Wjb+VJYMxNahjXAggd2J5
+         TGQoVuay0OxF77CYAZzXMAVep/i5UYFsakCCRbzP+98vweZmUNULWT1qW+W8Bm86TiYJ
+         QEFOKnntgNU9t8R0r8weQ4izlGzCExN2Dr7EG9HeVuCAC7LmYJ5kLfjMnDvq2o1U7W7Z
+         2sZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746883895; x=1747488695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VL6Fvfai1PHeZtCNEsUTgX9mVLqB3qkTgLU0KE2btZ0=;
+        b=E0YGAm2PgLvAy09Kd7+3NV1bVzV4lec6AggTj2DHuwQyQJVQd/ssIv0OAnOPyXQ9kj
+         oPikDK0pIJLupoEcsoMlXINcjsmFSny5Uegx9R9iT8BcC6tmj8wa/i/2FjnapXtVyH8h
+         0a0FGT+034CZDg+5YpZIxQFAgtAUa9BtBAh1Lp/0klqbcBwiN84ieaRroJsba7hzHmO1
+         Zq7HqiKTBPzP7B8IONUd2lfXRczaj71vgaAF43xehLiShXMOOoRrXgIVddjOU6ELVACK
+         PY53CkzC0PDvkQs6375lHcrjxkzqOKUU8hCS8egDOlonl68gqhF4DEbqD3p+yKifXR5o
+         B9VA==
+X-Forwarded-Encrypted: i=1; AJvYcCW4ETcJExUarwKGqX7P2bu+dog2KccFFNLzUQ58rTlXS9Yhc02FpSUIxzzs46g74m20xJ6LMFaBGOpOqaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQkPTdUDpoQoosq00fT4l6+XcbxtWtlXxbNjh7k4Qik605DXEw
+	vsZ7K670XqY85MzKTVZLkRGdO0Rlmy6X0DSqrBGOJfPGWVpY9S3JUrXpS08WxRJ88gTuk2Fkxsv
+	s6Y5nY9Ybm+U5jvMrrk7bdh4TdjY=
+X-Gm-Gg: ASbGncvOcVu++CeMxq7P34Tkdphv/7vEDGICEjfNfyKw4eQVY71iqxv1TxYiYw2W1Ju
+	07UbZlvKM1temvYf1qlbp3kRRFmBDuG9rVOlvOLlIgD6iBISxLyi/iKPDxs7fIRPyWj1tR/DDgf
+	/QSKtl7TADTWLdJt4FAB/n2KaTHsLeU4s1LvRy6/7Rsb37KIXLy7Kyz5sV+CAKdx5Ab6k=
+X-Google-Smtp-Source: AGHT+IFY0BGu3g/pTCRin6LTOeTXMCua6Lm2Xlw5vkLw5gm3jByMT586BMqriqHE2or/QSURE0M3Qibzc3UQrMUNS98=
+X-Received: by 2002:a05:6512:4381:b0:54d:6981:4b83 with SMTP id
+ 2adb3069b0e04-54fc67cb105mr2839818e87.24.1746883894661; Sat, 10 May 2025
+ 06:31:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <tencent_C2C42D3D6D8894E8E82EECD6CD707A026F0A@qq.com> <681e0719.050a0220.a19a9.0133.GAE@google.com>
+In-Reply-To: <681e0719.050a0220.a19a9.0133.GAE@google.com>
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date: Sat, 10 May 2025 22:31:18 +0900
+X-Gm-Features: AX0GCFv_W-UqIc_TgES5ohi93JS7gaBXJWp4lMS50iimPEYwJ5GZ8KACHRpbRYI
+Message-ID: <CAKFNMokMnXoRuz=GvNRoyaqKLDEJEymQEK7MdvD3BzA03=qZcQ@mail.gmail.com>
+Subject: Re: [syzbot] [nilfs?] possible deadlock in nilfs_segctor_construct
+To: syzbot <syzbot+81394db39b0e2ed2db06@syzkaller.appspotmail.com>
+Cc: syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org, 
+	eadavis@qq.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Sat, May 10, 2025 at 9:46=E2=80=AFPM syzbot
+<syzbot+81394db39b0e2ed2db06@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot has tested the proposed patch but the reproducer is still triggeri=
+ng an issue:
+> possible deadlock in nilfs_mdt_get_block
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> WARNING: possible circular locking dependency detected
+> 6.15.0-rc5-syzkaller-00136-g9c69f8884904-dirty #0 Not tainted
+> ------------------------------------------------------
+> segctord/5927 is trying to acquire lock:
+> ffff88803ffcc610 (sb_internal#2){.+.+}-{0:0}, at: nilfs_mdt_create_block =
+fs/nilfs2/mdt.c:80 [inline]
+> ffff88803ffcc610 (sb_internal#2){.+.+}-{0:0}, at: nilfs_mdt_get_block+0x1=
+93/0xab0 fs/nilfs2/mdt.c:258
+>
+> but task is already holding lock:
+> ffff8880422660a0 (&nilfs_bmap_mdt_lock_key){++++}-{4:4}, at: nilfs_bmap_p=
+ropagate+0x2f/0x130 fs/nilfs2/bmap.c:328
+>
+> which lock already depends on the new lock.
+>
+>
+> the existing dependency chain (in reverse order) is:
+>
+> -> #2 (&nilfs_bmap_mdt_lock_key){++++}-{4:4}:
+>        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+>        down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
+>        nilfs_bmap_lookup_at_level+0x92/0x3d0 fs/nilfs2/bmap.c:65
+>        nilfs_bmap_lookup fs/nilfs2/bmap.h:182 [inline]
+>        nilfs_mdt_submit_block+0x3a3/0x830 fs/nilfs2/mdt.c:144
+>        nilfs_mdt_read_block+0x46/0x320 fs/nilfs2/mdt.c:178
+>        nilfs_mdt_get_block+0x11f/0xab0 fs/nilfs2/mdt.c:254
+>        nilfs_palloc_get_block+0x18d/0x2b0 fs/nilfs2/alloc.c:239
+>        nilfs_palloc_get_desc_block fs/nilfs2/alloc.c:296 [inline]
+>        nilfs_palloc_prepare_alloc_entry+0x3a3/0xf40 fs/nilfs2/alloc.c:607
+>        nilfs_ifile_create_inode+0x111/0x2e0 fs/nilfs2/ifile.c:61
+>        nilfs_new_inode+0x1ed/0x750 fs/nilfs2/inode.c:321
+>        nilfs_create+0x100/0x2f0 fs/nilfs2/namei.c:98
+>        lookup_open fs/namei.c:3701 [inline]
+>        open_last_lookups fs/namei.c:3800 [inline]
+>        path_openat+0x14f1/0x3830 fs/namei.c:4036
+>        do_filp_open+0x1fa/0x410 fs/namei.c:4066
+>        do_sys_openat2+0x121/0x1c0 fs/open.c:1429
+>        do_sys_open fs/open.c:1444 [inline]
+>        __do_sys_openat fs/open.c:1460 [inline]
+>        __se_sys_openat fs/open.c:1455 [inline]
+>        __x64_sys_openat+0x138/0x170 fs/open.c:1455
+>        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+>        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> -> #1 (&nilfs->ns_segctor_sem){++++}-{4:4}:
+>        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+>        down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
+>        nilfs_transaction_begin+0x365/0x710 fs/nilfs2/segment.c:221
+>        nilfs_create+0xc9/0x2f0 fs/nilfs2/namei.c:95
+>        lookup_open fs/namei.c:3701 [inline]
+>        open_last_lookups fs/namei.c:3800 [inline]
+>        path_openat+0x14f1/0x3830 fs/namei.c:4036
+>        do_filp_open+0x1fa/0x410 fs/namei.c:4066
+>        do_sys_openat2+0x121/0x1c0 fs/open.c:1429
+>        do_sys_open fs/open.c:1444 [inline]
+>        __do_sys_openat fs/open.c:1460 [inline]
+>        __se_sys_openat fs/open.c:1455 [inline]
+>        __x64_sys_openat+0x138/0x170 fs/open.c:1455
+>        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+>        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> -> #0 (sb_internal#2){.+.+}-{0:0}:
+>        check_prev_add kernel/locking/lockdep.c:3166 [inline]
+>        check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+>        validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
+>        __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
+>        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+>        percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
+>        __sb_start_write include/linux/fs.h:1783 [inline]
+>        sb_start_intwrite include/linux/fs.h:1966 [inline]
+>        nilfs_transaction_begin+0x268/0x710 fs/nilfs2/segment.c:218
+>        nilfs_mdt_create_block fs/nilfs2/mdt.c:80 [inline]
+>        nilfs_mdt_get_block+0x193/0xab0 fs/nilfs2/mdt.c:258
+>        nilfs_palloc_get_block+0x18d/0x2b0 fs/nilfs2/alloc.c:239
+>        nilfs_palloc_get_entry_block+0x8c/0xa0 fs/nilfs2/alloc.c:355
+>        nilfs_dat_prepare_entry fs/nilfs2/dat.c:45 [inline]
+>        nilfs_dat_prepare_alloc fs/nilfs2/dat.c:82 [inline]
+>        nilfs_dat_prepare_update+0xb1/0x300 fs/nilfs2/dat.c:250
+>        nilfs_direct_propagate+0x1ac/0x370 fs/nilfs2/direct.c:279
+>        nilfs_bmap_propagate+0x77/0x130 fs/nilfs2/bmap.c:329
+>        nilfs_collect_file_data+0x4f/0xd0 fs/nilfs2/segment.c:589
+>        nilfs_segctor_apply_buffers+0x161/0x330 fs/nilfs2/segment.c:1010
+>        nilfs_segctor_scan_file+0x68e/0x8e0 fs/nilfs2/segment.c:1059
+>        nilfs_segctor_collect_blocks fs/nilfs2/segment.c:1267 [inline]
+>        nilfs_segctor_collect fs/nilfs2/segment.c:1547 [inline]
+>        nilfs_segctor_do_construct+0x1eac/0x6970 fs/nilfs2/segment.c:2122
+>        nilfs_segctor_construct+0x17b/0x690 fs/nilfs2/segment.c:2478
+>        nilfs_segctor_thread_construct fs/nilfs2/segment.c:2585 [inline]
+>        nilfs_segctor_thread+0x6cd/0xe00 fs/nilfs2/segment.c:2700
+>        kthread+0x70e/0x8a0 kernel/kthread.c:464
+>        ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+>        ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>
+> other info that might help us debug this:
+>
+> Chain exists of:
+>   sb_internal#2 --> &nilfs->ns_segctor_sem --> &nilfs_bmap_mdt_lock_key
+>
+>  Possible unsafe locking scenario:
+>
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&nilfs_bmap_mdt_lock_key);
+>                                lock(&nilfs->ns_segctor_sem);
+>                                lock(&nilfs_bmap_mdt_lock_key);
+>   rlock(sb_internal#2);
+>
+>  *** DEADLOCK ***
+>
+> 1 lock held by segctord/5927:
+>  #0: ffff8880422660a0 (&nilfs_bmap_mdt_lock_key){++++}-{4:4}, at: nilfs_b=
+map_propagate+0x2f/0x130 fs/nilfs2/bmap.c:328
+>
+> stack backtrace:
+> CPU: 0 UID: 0 PID: 5927 Comm: segctord Not tainted 6.15.0-rc5-syzkaller-0=
+0136-g9c69f8884904-dirty #0 PREEMPT(full)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
+16.3-2~bpo12+1 04/01/2014
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+>  print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2079
+>  check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2211
+>  check_prev_add kernel/locking/lockdep.c:3166 [inline]
+>  check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+>  validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
+>  __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
+>  lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+>  percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
+>  __sb_start_write include/linux/fs.h:1783 [inline]
+>  sb_start_intwrite include/linux/fs.h:1966 [inline]
+>  nilfs_transaction_begin+0x268/0x710 fs/nilfs2/segment.c:218
+>  nilfs_mdt_create_block fs/nilfs2/mdt.c:80 [inline]
+>  nilfs_mdt_get_block+0x193/0xab0 fs/nilfs2/mdt.c:258
+>  nilfs_palloc_get_block+0x18d/0x2b0 fs/nilfs2/alloc.c:239
+>  nilfs_palloc_get_entry_block+0x8c/0xa0 fs/nilfs2/alloc.c:355
+>  nilfs_dat_prepare_entry fs/nilfs2/dat.c:45 [inline]
+>  nilfs_dat_prepare_alloc fs/nilfs2/dat.c:82 [inline]
+>  nilfs_dat_prepare_update+0xb1/0x300 fs/nilfs2/dat.c:250
+>  nilfs_direct_propagate+0x1ac/0x370 fs/nilfs2/direct.c:279
+>  nilfs_bmap_propagate+0x77/0x130 fs/nilfs2/bmap.c:329
+>  nilfs_collect_file_data+0x4f/0xd0 fs/nilfs2/segment.c:589
+>  nilfs_segctor_apply_buffers+0x161/0x330 fs/nilfs2/segment.c:1010
+>  nilfs_segctor_scan_file+0x68e/0x8e0 fs/nilfs2/segment.c:1059
+>  nilfs_segctor_collect_blocks fs/nilfs2/segment.c:1267 [inline]
+>  nilfs_segctor_collect fs/nilfs2/segment.c:1547 [inline]
+>  nilfs_segctor_do_construct+0x1eac/0x6970 fs/nilfs2/segment.c:2122
+>  nilfs_segctor_construct+0x17b/0x690 fs/nilfs2/segment.c:2478
+>  nilfs_segctor_thread_construct fs/nilfs2/segment.c:2585 [inline]
+>  nilfs_segctor_thread+0x6cd/0xe00 fs/nilfs2/segment.c:2700
+>  kthread+0x70e/0x8a0 kernel/kthread.c:464
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>  </TASK>
+>
+>
+> Tested on:
+>
+> commit:         9c69f888 Merge tag 'bcachefs-2025-05-08' of git://evil..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11a694d458000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D91c351a0f6229=
+e67
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D81394db39b0e2ed=
+2db06
+> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd=
+6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D10c7476858=
+0000
+>
+>
 
-Most tracepoints in the kernel are created with TRACE_EVENT(). The
-TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where in
-reality, TRACE_EVENT() is just a helper macro that calls those other two
-macros), will create not only a tracepoint (the function trace_<event>()
-used in the kernel), it also exposes the tracepoint to user space along
-with defining what fields will be saved by that tracepoint.
+This reports a different circular lock dependency than all other
+reports in this issue, so it appears to be a separate issue. I'd like
+to dig deeper.
 
-There are a few places that tracepoints are created in the kernel that are
-not exposed to userspace via tracefs. They can only be accessed from code
-within the kernel. These tracepoints are created with DEFINE_TRACE()
-
-Most of these tracepoints end with "_tp". This is useful as when the
-developer sees that, they know that the tracepoint is for in-kernel only
-(meaning it can only be accessed inside the kernel, either directly by the
-kernel or indirectly via modules and BPF programs) and is not exposed to
-user space.
-
-Instead of making this only a process to add "_tp", enforce it by making
-the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
-requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
-to use that keeps the original name.
-
-Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.home/
-
-Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/20250507162049.30a3ccae@gandalf.local.home
-
-- Fix BPF programs in tools to handle the _tp properly (Andrii Nakryiko)
-
-  Andrii, can you make sure I did the changes correctly?
-
- Documentation/trace/tracepoints.rst           | 17 ++++++---
- include/linux/tracepoint.h                    | 38 +++++++++++++------
- include/trace/bpf_probe.h                     |  8 ++--
- include/trace/define_trace.h                  | 17 ++++++++-
- include/trace/events/sched.h                  | 30 +++++++--------
- include/trace/events/tcp.h                    |  2 +-
- .../selftests/bpf/progs/test_module_attach.c  |  2 +-
- .../bpf/progs/test_tp_btf_nullable.c          |  4 +-
- .../selftests/bpf/test_kmods/bpf_testmod.c    |  8 ++--
- 9 files changed, 80 insertions(+), 46 deletions(-)
-
-diff --git a/Documentation/trace/tracepoints.rst b/Documentation/trace/tracepoints.rst
-index decabcc77b56..b35c40e3abbe 100644
---- a/Documentation/trace/tracepoints.rst
-+++ b/Documentation/trace/tracepoints.rst
-@@ -71,7 +71,7 @@ In subsys/file.c (where the tracing statement must be added)::
- 	void somefct(void)
- 	{
- 		...
--		trace_subsys_eventname(arg, task);
-+		trace_subsys_eventname_tp(arg, task);
- 		...
- 	}
- 
-@@ -129,12 +129,12 @@ within an if statement with the following::
- 		for (i = 0; i < count; i++)
- 			tot += calculate_nuggets();
- 
--		trace_foo_bar(tot);
-+		trace_foo_bar_tp(tot);
- 	}
- 
--All trace_<tracepoint>() calls have a matching trace_<tracepoint>_enabled()
-+All trace_<tracepoint>_tp() calls have a matching trace_<tracepoint>_enabled()
- function defined that returns true if the tracepoint is enabled and
--false otherwise. The trace_<tracepoint>() should always be within the
-+false otherwise. The trace_<tracepoint>_tp() should always be within the
- block of the if (trace_<tracepoint>_enabled()) to prevent races between
- the tracepoint being enabled and the check being seen.
- 
-@@ -143,7 +143,10 @@ the static_key of the tracepoint to allow the if statement to be implemented
- with jump labels and avoid conditional branches.
- 
- .. note:: The convenience macro TRACE_EVENT provides an alternative way to
--      define tracepoints. Check http://lwn.net/Articles/379903,
-+      define tracepoints. Note, DECLARE_TRACE(foo) creates a function
-+      "trace_foo_tp()" whereas TRACE_EVENT(foo) creates a function
-+      "trace_foo()", and also exposes the tracepoint as a trace event in
-+      /sys/kernel/tracing/events directory.  Check http://lwn.net/Articles/379903,
-       http://lwn.net/Articles/381064 and http://lwn.net/Articles/383362
-       for a series of articles with more details.
- 
-@@ -159,7 +162,9 @@ In a C file::
- 
- 	void do_trace_foo_bar_wrapper(args)
- 	{
--		trace_foo_bar(args);
-+		trace_foo_bar_tp(args); // for tracepoints created via DECLARE_TRACE
-+					//   or
-+		trace_foo_bar(args);    // for tracepoints created via TRACE_EVENT
- 	}
- 
- In the header file::
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index a351763e6965..826ce3f8e1f8 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -464,16 +464,30 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- #endif
- 
- #define DECLARE_TRACE(name, proto, args)				\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()),		\
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)		\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_SYSCALL(name, proto, args)			\
-+	__DECLARE_TRACE_SYSCALL(name##_tp, PARAMS(proto), PARAMS(args),	\
-+				PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT(name, proto, args)				\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()),		\
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)		\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_SYSCALL(name, proto, args)			\
- 	__DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args),	\
- 				PARAMS(void *__data, proto))
- 
-@@ -591,32 +605,32 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 
- #define DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, print)
- #define DEFINE_EVENT(template, name, proto, args)		\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg)\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_CONDITION(template, name, proto,		\
- 			       args, cond)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- 
- #define TRACE_EVENT(name, proto, args, struct, assign, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define TRACE_EVENT_FN(name, proto, args, struct,		\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
--#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,		\
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
-+#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,	\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),	\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 			PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_CONDITION(name, proto, args, cond,		\
- 			      struct, assign, print)		\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_SYSCALL(name, proto, args, struct, assign,	\
- 			    print, reg, unreg)			\
--	DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT_SYSCALL(name, PARAMS(proto), PARAMS(args))
- 
- #define TRACE_EVENT_FLAGS(event, flag)
- 
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index 183fa2aa2935..9391d54d3f12 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -119,14 +119,14 @@ static inline void bpf_test_buffer_##call(void)				\
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(call, proto, args)				\
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args))		\
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), 0)
- 
- #undef DECLARE_TRACE_WRITABLE
- #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
- 	__CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args)) \
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), size)
- 
- #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
- 
-diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-index ed52d0506c69..b2ba5a80583f 100644
---- a/include/trace/define_trace.h
-+++ b/include/trace/define_trace.h
-@@ -74,10 +74,18 @@
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(name, proto, args)	\
--	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
- 
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)	\
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)	\
- 	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- /* If requested, create helpers for calling these tracepoints from Rust. */
-@@ -115,6 +123,11 @@
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)
- 
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)
-+
- #ifdef TRACEPOINTS_ENABLED
- #include <trace/trace_events.h>
- #include <trace/perf.h>
-@@ -136,6 +149,8 @@
- #undef TRACE_HEADER_MULTI_READ
- #undef DECLARE_TRACE
- #undef DECLARE_TRACE_CONDITION
-+#undef DECLARE_TRACE_EVENT
-+#undef DECLARE_TRACE_EVENT_CONDITION
- 
- /* Only undef what we defined in this file */
- #ifdef UNDEF_TRACE_INCLUDE_FILE
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97d86c1..152fc8b37aa5 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -773,64 +773,64 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
-  *
-  * Postfixed with _tp to make them easily identifiable in the code.
-  */
--DECLARE_TRACE(pelt_cfs_tp,
-+DECLARE_TRACE(pelt_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(pelt_rt_tp,
-+DECLARE_TRACE(pelt_rt,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_dl_tp,
-+DECLARE_TRACE(pelt_dl,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_hw_tp,
-+DECLARE_TRACE(pelt_hw,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_irq_tp,
-+DECLARE_TRACE(pelt_irq,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_se_tp,
-+DECLARE_TRACE(pelt_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_cpu_capacity_tp,
-+DECLARE_TRACE(sched_cpu_capacity,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(sched_overutilized_tp,
-+DECLARE_TRACE(sched_overutilized,
- 	TP_PROTO(struct root_domain *rd, bool overutilized),
- 	TP_ARGS(rd, overutilized));
- 
--DECLARE_TRACE(sched_util_est_cfs_tp,
-+DECLARE_TRACE(sched_util_est_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(sched_util_est_se_tp,
-+DECLARE_TRACE(sched_util_est_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_update_nr_running_tp,
-+DECLARE_TRACE(sched_update_nr_running,
- 	TP_PROTO(struct rq *rq, int change),
- 	TP_ARGS(rq, change));
- 
--DECLARE_TRACE(sched_compute_energy_tp,
-+DECLARE_TRACE(sched_compute_energy,
- 	TP_PROTO(struct task_struct *p, int dst_cpu, unsigned long energy,
- 		 unsigned long max_util, unsigned long busy_time),
- 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
- 
--DECLARE_TRACE(sched_entry_tp,
-+DECLARE_TRACE(sched_entry,
- 	TP_PROTO(bool preempt, unsigned long ip),
- 	TP_ARGS(preempt, ip));
- 
--DECLARE_TRACE(sched_exit_tp,
-+DECLARE_TRACE(sched_exit,
- 	TP_PROTO(bool is_switch, unsigned long ip),
- 	TP_ARGS(is_switch, ip));
- 
--DECLARE_TRACE_CONDITION(sched_set_state_tp,
-+DECLARE_TRACE_CONDITION(sched_set_state,
- 	TP_PROTO(struct task_struct *tsk, int state),
- 	TP_ARGS(tsk, state),
- 	TP_CONDITION(!!(tsk->__state) != !!state));
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 1a40c41ff8c3..4f9fa1b5b89b 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,7 +259,7 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
- 
--DECLARE_TRACE(tcp_cwnd_reduction_tp,
-+DECLARE_TRACE(tcp_cwnd_reduction,
- 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
- 		 int newly_lost, int flag),
- 	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag)
-diff --git a/tools/testing/selftests/bpf/progs/test_module_attach.c b/tools/testing/selftests/bpf/progs/test_module_attach.c
-index 7f3c233943b3..4f5325e2c638 100644
---- a/tools/testing/selftests/bpf/progs/test_module_attach.c
-+++ b/tools/testing/selftests/bpf/progs/test_module_attach.c
-@@ -19,7 +19,7 @@ int BPF_PROG(handle_raw_tp,
- 
- __u32 raw_tp_bare_write_sz = 0;
- 
--SEC("raw_tp/bpf_testmod_test_write_bare")
-+SEC("raw_tp/bpf_testmod_test_write_bare_tp")
- int BPF_PROG(handle_raw_tp_bare,
- 	     struct task_struct *task, struct bpf_testmod_test_write_ctx *write_ctx)
- {
-diff --git a/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c b/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
-index 39ff06f2c834..cf0547a613ff 100644
---- a/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
-+++ b/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
-@@ -6,14 +6,14 @@
- #include "../test_kmods/bpf_testmod.h"
- #include "bpf_misc.h"
- 
--SEC("tp_btf/bpf_testmod_test_nullable_bare")
-+SEC("tp_btf/bpf_testmod_test_nullable_bare_tp")
- __failure __msg("R1 invalid mem access 'trusted_ptr_or_null_'")
- int BPF_PROG(handle_tp_btf_nullable_bare1, struct bpf_testmod_test_read_ctx *nullable_ctx)
- {
- 	return nullable_ctx->len;
- }
- 
--SEC("tp_btf/bpf_testmod_test_nullable_bare")
-+SEC("tp_btf/bpf_testmod_test_nullable_bare_tp")
- int BPF_PROG(handle_tp_btf_nullable_bare2, struct bpf_testmod_test_read_ctx *nullable_ctx)
- {
- 	if (nullable_ctx)
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index 3220f1d28697..18eded4d1d15 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -413,7 +413,7 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 
- 	(void)bpf_testmod_test_arg_ptr_to_struct(&struct_arg1_2);
- 
--	(void)trace_bpf_testmod_test_raw_tp_null(NULL);
-+	(void)trace_bpf_testmod_test_raw_tp_null_tp(NULL);
- 
- 	bpf_testmod_test_struct_ops3();
- 
-@@ -431,14 +431,14 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 	if (bpf_testmod_loop_test(101) > 100)
- 		trace_bpf_testmod_test_read(current, &ctx);
- 
--	trace_bpf_testmod_test_nullable_bare(NULL);
-+	trace_bpf_testmod_test_nullable_bare_tp(NULL);
- 
- 	/* Magic number to enable writable tp */
- 	if (len == 64) {
- 		struct bpf_testmod_test_writable_ctx writable = {
- 			.val = 1024,
- 		};
--		trace_bpf_testmod_test_writable_bare(&writable);
-+		trace_bpf_testmod_test_writable_bare_tp(&writable);
- 		if (writable.early_ret)
- 			return snprintf(buf, len, "%d\n", writable.val);
- 	}
-@@ -470,7 +470,7 @@ bpf_testmod_test_write(struct file *file, struct kobject *kobj,
- 		.len = len,
- 	};
- 
--	trace_bpf_testmod_test_write_bare(current, &ctx);
-+	trace_bpf_testmod_test_write_bare_tp(current, &ctx);
- 
- 	return -EIO; /* always fail */
- }
--- 
-2.47.2
-
+Ryusuke Konishi
