@@ -1,48 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31621E5B9B;
-	Sat, 10 May 2025 07:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE592747B;
+	Sat, 10 May 2025 07:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746861314; cv=none; b=Fk+mhLKTCwgy1E8KVcAU8SQWNdknZaR4iowFVr44YpsSMhNkWPRVGe7iyST+mLddpHSqJqfCS5u67TSrvqhL99X8u87bjTUNEydhBm57ZBOX5bf747Wi5ct3HQENxJan0xpImpA8tH/Z7nbklwmKucaixLhBM1EaiOfK9bvhXMc=
+	t=1746861548; cv=none; b=bAWq/BqIOKrpO5Z1I90rhV8NcKB4QIQqcXl0ZDV26CP2d+cdHNINgKmQKuzEPs017DN2tygKVXup3FvzFGh0nQwweOWDUUSuO3WMRbeUF3cX6KjHKhw5sNdQFXfcUUB6ZZGhj5gAFJFBoPvbNX9VhQdcDL58+NJAVWYWvrn4c9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746861314; c=relaxed/simple;
-	bh=BEOqE2tqMAxWaoMXbA9V5M7++Jbo2p1chC3Wvukt7Wo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kFiIxwaHWJ+y2Witvi/wvEQqDhQh/Oi4vUkQE6QrC0qfK2eJWw+Kpfa6As+pBym05wGAkeWt4rQP+ED5YD3swE9Su5pfVEfdjrBRAKPouDK1LGoT/MCVj0O7jQTRmXr/GFQEHN/cbT4pVY0iISP3Rzhr9LBI61ecL1kSoKivPh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QViP04k7; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746861548; c=relaxed/simple;
+	bh=x/6Nj4jfIjBS2T8K/+HNTFSghyP4K3RB4/iYDV1JBkI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qwgoT5y13edCAa74pUtIO2aFG9l9STEMzUyty6arSFjX1UoYF7Tj+EyN3yY9oulmOZQIJVYRC4GPDYuMB75+X5ShX9hArh57zfJ2X8jBk/qs02wMdzR8ubtW5DzFF6we4ZmvDUyWIbPXERz/rnylPny65aAEJhLUY0Vpz8iZK18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C8fR/NWh; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QViP04k7"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54A6Tkrt018863;
-	Sat, 10 May 2025 07:14:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UCgcrdULWipSXWVwkvOHsT5HbMWYQ29OYxYE22eVPDU=; b=QViP04k7jGdK7TIL
-	q1Qf0hPgauZl87R5XPm9r+qeSDq7pnwv1kOdjauIrjvMxpBscYVUcqAKLCjbcj1K
-	ucKuS+Ln6mnmTR5PXIcvBj0D8I8vVcrOMtRzCa8i6jbw13Sgsz3zm2ORn3NM9r1e
-	AeUqC/ndobAHx/ykd6LXui2xtLUx7ksKWUFlp8Nvt9YniZWIzV7HgB3ZUzwCSIvu
-	0FOsO4AKMLM1IBhmNbjv3jYAP8gOiCHqpp3mOGrC0hXKs+BY6sVERzJBAp6s1yJl
-	U6jkZ7bRbIkjp3EPaJfPiqvbEC2kvbSS5U4XJfB1LwQlcDLWDnsbP1QCNUzngmQ8
-	q58cwQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hwt90asj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 10 May 2025 07:14:51 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54A7EoRp020408
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 10 May 2025 07:14:50 GMT
-Received: from [10.204.73.14] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 10 May
- 2025 00:14:44 -0700
-Message-ID: <cfc85bc0-1808-42ac-b0b0-41e4935ec74d@quicinc.com>
-Date: Sat, 10 May 2025 12:44:28 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8fR/NWh"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-227b828de00so28137555ad.1;
+        Sat, 10 May 2025 00:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746861545; x=1747466345; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mI00I1jgV1Gz3HCNeGR3mFLybO5XNTxT635pmmEPFsI=;
+        b=C8fR/NWhVdtotP1CY+N5bDhVzrTRhceuiqXBhZGGz4SIlubeXy79F1Ci1Ez0kHA76q
+         7SSEqCZgD74DfOZh4lEBuoqJWQXKiPQaxetXHZ1j+O7No+Cdvtt1iYvIXd2Ab3Im8T4v
+         gSmUgIwcRiRPx0MkQr4L9+hj47btpTFIzt7yFTzG2yXl7YmkJ2nyqsE7+gOBeNn/Obur
+         e9Ex+ketnpn10Fji1UYzP3qqOSW56ICO053lh4raFySLgcu1Oyp/EqH3ma9+TBWfamu2
+         6zaOsX/trVbsV9Q5oxvfD1uTI9gr1cf2zT2ZmuaFa4yEHNCj4oAOATDXqxZCWZm26Paj
+         syaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746861545; x=1747466345;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mI00I1jgV1Gz3HCNeGR3mFLybO5XNTxT635pmmEPFsI=;
+        b=vMAlSJmXr9OScWtg+kUrrHRpKvkMX3r3pgFFZ+O2cb7+nW8x3zZvFZgPttGMKkLabQ
+         tnye+xaUefDDRqwSR/uB8IhrPvq/08ZRqlRTF7TaovAzEkcqzNdDWW26j2Wq4xkq9b+o
+         u2KNeAqLjtPO+655iNMnhGh8XsoUmeIIX17xKx9tjkmCsp7qVTBf20uCTGLAE081iOAq
+         JjQ2Hkv3Wot3TRGOwKH36uw0Uy5Ul5NdvILkX6tIX9yYLNE3CHStbscLu3yXal9EYNlf
+         8lYQNheDaCA5DPJhEc7ivh508h7B9ec3nIacTXDSqFVGFLbWYDa8t7HKmUbmWz6qNJeo
+         0a6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVW7KGY/Yf/LQnNSEP+MzfNVdbADSGkvgH+A1U5l+ILSH+mPQNBwyDK1+NfDMw/Nj68d/tKIHkOUjX77Q==@vger.kernel.org, AJvYcCWCa2lETPA8za7ZaqJ4fwkxDwD9wrNSyOG2IsCXJZg6JDTj9LtoenmqU2/haJncuQKN9MhtW2OsDv3LXEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXoG7i88R0Sh00P3VaTXxVRS2hGEzDJpoZ6q7SmXvJMJFxG238
+	Ht80x+/IY9jVS42ZwQvSqYcmNUpWjWAVh4sMU6QGIX4gGv/wtkN7ClJseOcg
+X-Gm-Gg: ASbGnctXCOHiDRh6tekpg1F3uCns0IGNiwmvvCshPT6HKkoLGOmjP6u8e9miNrUtGXE
+	2/DL2WOuYp5AZFjgvzCw5Q01v4RyOT7oMkbm916h2TGYmpsEPrdGl9zp2VjGvfkaOsEoiaoq9QP
+	Ed7tmxGLLRnm9T12bjcHo077Dm/c4ZcvKMl7MCPGrBOLu9x9hPiNmo9TfAXSZuk2o7zYrdtNR9C
+	yCyLeqig3RDBuenjCJUPe+43HWHyqPTIeTgaXUTp9WWT9JPEK0cyGvzYN3SwAZBz2GvnShgmu5Z
+	+Tpy/+3oLP5da37VJYl7KnoDj2FFm8iWiXy87AuC/23hgOWbjo/zP5ZANJqT8qp2w1zpM1IfQ3L
+	JUafE52ZWcCZG8aTydlUtxvo3SN4=
+X-Google-Smtp-Source: AGHT+IGoZ2ngl1aphNRdZ03UYT87SSVWYcmt2OUX32zVzS8N1bUq66LrmQlqncxZjlprzsf8yVZvRA==
+X-Received: by 2002:a17:903:2346:b0:215:bc30:c952 with SMTP id d9443c01a7336-22fc8b1b2e4mr78727755ad.6.1746861544532;
+        Sat, 10 May 2025 00:19:04 -0700 (PDT)
+Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828b3a0sm28229215ad.179.2025.05.10.00.19.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 May 2025 00:19:04 -0700 (PDT)
+Message-ID: <e07e0ad8-32da-452e-809a-f3dfeb8b56f3@gmail.com>
+Date: Sat, 10 May 2025 16:18:59 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,168 +67,220 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC/WIP v2 4/9] arm64: dts: qcom: sa8775p: Add support for
- camss
-To: Vikram Sharma <quic_vikramsa@quicinc.com>, <rfoss@kernel.org>,
-        <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250427070135.884623-1-quic_vikramsa@quicinc.com>
- <20250427070135.884623-5-quic_vikramsa@quicinc.com>
+Subject: Re: [PATCH for-next v2 1/2] RDMA/rxe: Implement synchronous prefetch
+ for ODP MRs
+To: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+References: <20250503134224.4867-1-dskmtsd@gmail.com>
+ <20250503134224.4867-2-dskmtsd@gmail.com>
+ <cdea578b-5570-4a8d-98cc-61081a281a84@linux.dev>
+ <b5560914-e613-499d-88c8-82f5255a1dd1@gmail.com>
+ <093ee42f-4dd5-4f52-b7a5-ba5e22b18bdc@linux.dev>
 Content-Language: en-US
-From: Suresh Vankadara <quic_svankada@quicinc.com>
-In-Reply-To: <20250427070135.884623-5-quic_vikramsa@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEwMDA3MCBTYWx0ZWRfX9SV3GmetpTwc
- X0VXYu1G47/tEnvP8FWh+hdMTNn0XGp1bPOdeZBTnzepG7hlfy7rS1XnTE7l+I3Zud/9DSX4n1n
- WGAIiI1mvlAC5njItQgjfzkmKqdxb3iOhqhJ/sMqLuqFbz5MlA6ffYESnF0yaqojtJAD5ZgtfOp
- Y0S1lmHYpWgCknzpCAMtZkJn44CAlBiLcsbVGRoYNFp2lbVn2Uk/ZbDLSVDTnYj9tdT2to6Vkpd
- s16ZMg+2Dk3DwfJUPMj7fY6YOCwBPOrT2ec9BYgG5egwaties5K4S3x7PWPoCyGATPv6whz54EH
- ozZhSlHCR4atayqVQZtEE6DVEbKKpqq+DHcIA6uccj/nbV4udHFUe4zBKK401rA05pgDL8O/bTc
- PBb7LntAykdVa9XFAxNa+YRNqiTlafy4IVsfJjQWIA9Zrmu+e5O9hd5PdT5q6JG0OkFaU+7m
-X-Proofpoint-ORIG-GUID: Kxw6DUOrPUofECTmBkYuMgyl2MM_WRwy
-X-Proofpoint-GUID: Kxw6DUOrPUofECTmBkYuMgyl2MM_WRwy
-X-Authority-Analysis: v=2.4 cv=a58w9VSF c=1 sm=1 tr=0 ts=681efceb cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=OqTgW8rPjYiluJQXZTQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-10_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1011 impostorscore=0 mlxscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505100070
+From: Daisuke Matsuda <dskmtsd@gmail.com>
+In-Reply-To: <093ee42f-4dd5-4f52-b7a5-ba5e22b18bdc@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 4/27/2025 12:31 PM, Vikram Sharma wrote:
-> Add changes to support the camera subsystem on the SA8775P.
+On 2025/05/10 13:43, Zhu Yanjun wrote:
 > 
-> Co-developed-by: Suresh Vankadara <quic_svankada@quicinc.com>
-> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
-> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
-> ---
->   arch/arm64/boot/dts/qcom/sa8775p.dtsi | 187 ++++++++++++++++++++++++++
->   1 file changed, 187 insertions(+)
+> 在 2025/5/10 4:46, Daisuke Matsuda 写道:
+>> On 2025/05/10 0:19, Zhu Yanjun wrote:
+>>> On 03.05.25 15:42, Daisuke Matsuda wrote:
+>>>> Minimal implementation of ibv_advise_mr(3) requires synchronous calls being
+>>>> successful with the IBV_ADVISE_MR_FLAG_FLUSH flag. Asynchronous requests,
+>>>> which are best-effort, will be added subsequently.
+>>>>
+>>>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
+>>>> ---
+>>>>   drivers/infiniband/sw/rxe/rxe.c     |  7 +++
+>>>>   drivers/infiniband/sw/rxe/rxe_loc.h | 10 ++++
+>>>>   drivers/infiniband/sw/rxe/rxe_odp.c | 86 +++++++++++++++++++++++++++++
+>>>>   3 files changed, 103 insertions(+)
+>>>>
+>>>> diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
+>>>> index 3a77d6db1720..e891199cbdef 100644
+>>>> --- a/drivers/infiniband/sw/rxe/rxe.c
+>>>> +++ b/drivers/infiniband/sw/rxe/rxe.c
+>>>> @@ -34,6 +34,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
+>>>>       mutex_destroy(&rxe->usdev_lock);
+>>>>   }
+>>>> +static const struct ib_device_ops rxe_ib_dev_odp_ops = {
+>>>> +    .advise_mr = rxe_ib_advise_mr,
+>>>> +};
+>>>> +
+>>>>   /* initialize rxe device parameters */
+>>>>   static void rxe_init_device_param(struct rxe_dev *rxe, struct net_device *ndev)
+>>>>   {
+>>>> @@ -103,6 +107,9 @@ static void rxe_init_device_param(struct rxe_dev *rxe, struct net_device *ndev)
+>>>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_SRQ_RECV;
+>>>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_FLUSH;
+>>>>           rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_ATOMIC_WRITE;
+>>>> +
+>>>> +        /* set handler for ODP prefetching API - ibv_advise_mr(3) */
+>>>> +        ib_set_device_ops(&rxe->ib_dev, &rxe_ib_dev_odp_ops);
+>>>>       }
+>>>>   }
+>>>> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
+>>>> index f7dbb9cddd12..21b070f3dbb8 100644
+>>>> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
+>>>> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
+>>>> @@ -197,6 +197,9 @@ enum resp_states rxe_odp_atomic_op(struct rxe_mr *mr, u64 iova, int opcode,
+>>>>   int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
+>>>>                   unsigned int length);
+>>>>   enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value);
+>>>> +int rxe_ib_advise_mr(struct ib_pd *pd, enum ib_uverbs_advise_mr_advice advice,
+>>>> +             u32 flags, struct ib_sge *sg_list, u32 num_sge,
+>>>> +             struct uverbs_attr_bundle *attrs);
+>>>>   #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+>>>>   static inline int
+>>>>   rxe_odp_mr_init_user(struct rxe_dev *rxe, u64 start, u64 length, u64 iova,
+>>>> @@ -225,6 +228,13 @@ static inline enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr,
+>>>>   {
+>>>>       return RESPST_ERR_UNSUPPORTED_OPCODE;
+>>>>   }
+>>>> +static inline int rxe_ib_advise_mr(struct ib_pd *pd, enum ib_uverbs_advise_mr_advice advice,
+>>>> +                   u32 flags, struct ib_sge *sg_list, u32 num_sge,
+>>>> +                   struct uverbs_attr_bundle *attrs)
+>>>> +{
+>>>> +    return -EOPNOTSUPP;
+>>>> +}
+>>>> +
+>>>>   #endif /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+>>>>   #endif /* RXE_LOC_H */
+>>>> diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
+>>>> index 6149d9ffe7f7..e5c60b061d7e 100644
+>>>> --- a/drivers/infiniband/sw/rxe/rxe_odp.c
+>>>> +++ b/drivers/infiniband/sw/rxe/rxe_odp.c
+>>>> @@ -424,3 +424,89 @@ enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
+>>>>       return RESPST_NONE;
+>>>>   }
+>>>> +
+>>>> +static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
+>>>> +                   enum ib_uverbs_advise_mr_advice advice,
+>>>> +                   u32 pf_flags, struct ib_sge *sg_list,
+>>>> +                   u32 num_sge)
+>>>> +{
+>>>> +    struct rxe_pd *pd = container_of(ibpd, struct rxe_pd, ibpd);
+>>>> +    unsigned int i;
+>>>> +    int ret = 0;
+>>>> +
+>>>> +    for (i = 0; i < num_sge; ++i) {
+>>>> +        struct rxe_mr *mr;
+>>>> +        struct ib_umem_odp *umem_odp;
+>>>> +
+>>>> +        mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
+>>>> +                   sg_list[i].lkey, RXE_LOOKUP_LOCAL);
+>>>> +
+>>>> +        if (IS_ERR(mr)) {
+>>>> +            rxe_dbg_pd(pd, "mr with lkey %x not found\n", sg_list[i].lkey);
+>>>> +            return PTR_ERR(mr);
+>>>> +        }
+>>>> +
+>>>> +        if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
+>>>> +            !mr->umem->writable) {
+>>>> +            rxe_dbg_mr(mr, "missing write permission\n");
+>>>> +            rxe_put(mr);
+>>>> +            return -EPERM;
+>>>> +        }
+>>>> +
+>>>> +        ret = rxe_odp_do_pagefault_and_lock(mr, sg_list[i].addr,
+>>>> +                            sg_list[i].length, pf_flags);
+>>>> +        if (ret < 0) {
+>>>> +            if (sg_list[i].length == 0)
+>>>> +                continue;
+>>>> +
+>>>> +            rxe_dbg_mr(mr, "failed to prefetch the mr\n");
+>>>> +            rxe_put(mr);
+>>>> +            return ret;
+>>>> +        }
+>>>> +
+>>>> +        umem_odp = to_ib_umem_odp(mr->umem);
+>>>> +        mutex_unlock(&umem_odp->umem_mutex);
+>>>> +
+>>>> +        rxe_put(mr);
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
+>>>> +                     enum ib_uverbs_advise_mr_advice advice,
+>>>> +                     u32 flags, struct ib_sge *sg_list, u32 num_sge)
+>>>> +{
+>>>> +    u32 pf_flags = RXE_PAGEFAULT_DEFAULT;
+>>>> +
+>>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH)
+>>>> +        pf_flags |= RXE_PAGEFAULT_RDONLY;
+>>>> +
+>>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
+>>>> +        pf_flags |= RXE_PAGEFAULT_SNAPSHOT;
+>>>> +
+>>>> +    /* Synchronous call */
+>>>> +    if (flags & IB_UVERBS_ADVISE_MR_FLAG_FLUSH)
+>>>> +        return rxe_ib_prefetch_sg_list(ibpd, advice, pf_flags, sg_list,
+>>>> +                           num_sge);
+>>>> +
+>>>> +    /* Asynchronous call is "best-effort" */
+>>>
+>>> Asynchronous call is not implemented now, why does this comment appear?
+>>
+>> Even without the 2nd patch, async calls are reported as successful.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index 5bd0c03476b1..81eadb2bb663 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -7,6 +7,7 @@
->   #include <dt-bindings/interconnect/qcom,icc.h>
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
->   #include <dt-bindings/clock/qcom,rpmh.h>
-> +#include <dt-bindings/clock/qcom,sa8775p-camcc.h>
->   #include <dt-bindings/clock/qcom,sa8775p-dispcc.h>
->   #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
->   #include <dt-bindings/clock/qcom,sa8775p-gpucc.h>
-> @@ -3940,6 +3941,192 @@ videocc: clock-controller@abf0000 {
->   			#power-domain-cells = <1>;
->   		};
->   
-> +		camss: isp@ac7a000 {
-> +			compatible = "qcom,sa8775p-camss";
-If more number of nodes are added for CAMSS, adding isp in compatible 
-string helps to differentiate.
+> 
+> Async call is not implemented. How to call "async calls are reported as successful"?
 
-> +			reg-names = "csid0",
-> +				    "csid1",
-> +				    "csid_lite0",
-> +				    "csid_lite1",
-> +				    "csid_lite2",
-> +				    "csid_lite3",
-> +				    "csid_lite4",
-> +				    "csid_wrapper",
-csid wrapper is top register set, which is applicable for both csid 0 
-and csid 1. It is logical to keep along with csid0 and csid1, instead of 
-alpha numerical order.
+Please see the manual.
+cf. https://manpages.debian.org/testing/libibverbs-dev/ibv_advise_mr.3.en.html
 
-> +
-> +			clocks = <&camcc CAM_CC_CAMNOC_AXI_CLK>,
-> +				 <&camcc CAM_CC_CORE_AHB_CLK>,
-> +				 <&camcc CAM_CC_CPAS_AHB_CLK>,
-> +				 <&camcc CAM_CC_CPAS_FAST_AHB_CLK>,
-> +				 <&camcc CAM_CC_CPAS_IFE_LITE_CLK>,
-> +				 <&camcc CAM_CC_CPAS_IFE_0_CLK>,
-> +				 <&camcc CAM_CC_CPAS_IFE_1_CLK>,
-> +				 <&camcc CAM_CC_CSID_CLK>,
-> +				 <&camcc CAM_CC_CSIPHY0_CLK>,
-> +				 <&camcc CAM_CC_CSI0PHYTIMER_CLK>,
-> +				 <&camcc CAM_CC_CSIPHY1_CLK>,
-> +				 <&camcc CAM_CC_CSI1PHYTIMER_CLK>,
-> +				 <&camcc CAM_CC_CSIPHY2_CLK>,
-> +				 <&camcc CAM_CC_CSI2PHYTIMER_CLK>,
-> +				 <&camcc CAM_CC_CSIPHY3_CLK>,
-> +				 <&camcc CAM_CC_CSI3PHYTIMER_CLK>,
-> +				 <&camcc CAM_CC_CSID_CSIPHY_RX_CLK>,
-> +				 <&gcc GCC_CAMERA_HF_AXI_CLK>,
-> +				 <&gcc GCC_CAMERA_SF_AXI_CLK>,
-> +				 <&camcc CAM_CC_ICP_AHB_CLK>,
-> +				 <&camcc CAM_CC_IFE_0_CLK>,
-> +				 <&camcc CAM_CC_IFE_0_FAST_AHB_CLK>,
-> +				 <&camcc CAM_CC_IFE_1_CLK>,
-> +				 <&camcc CAM_CC_IFE_1_FAST_AHB_CLK>,
-> +				 <&camcc CAM_CC_IFE_LITE_CLK>,
-> +				 <&camcc CAM_CC_IFE_LITE_AHB_CLK>,
-> +				 <&camcc CAM_CC_IFE_LITE_CPHY_RX_CLK>,
-> +				 <&camcc CAM_CC_IFE_LITE_CSID_CLK>;
-> +			clock-names = "camnoc_axi",
-> +				      "core_ahb",
-> +				      "cpas_ahb",
-> +				      "cpas_fast_ahb_clk",
-> +				      "cpas_ife_lite",
-> +				      "cpas_vfe0",
-> +				      "cpas_vfe1",
-Maintain consistency on vfe/ife in complete camss node. In reg section, 
-vfe is used for full and lite version. in clock-names section ife lite 
-and vfe are used. As clock IDs upstream and ife is used for full and 
-lite, this convention will be followed in camss node as well.
+If IBV_ADVISE_MR_FLAG_FLUSH is not given to 'flags' parameter,
+then this function 'rxe_ib_advise_mr_prefetch()' simply returns 0.
+Consequently, ibv_advise_mr(3) and underlying ioctl(2) get no error.
+This behaviour is allowd in the spec as I quoted in the last reply.
 
-> +				      "csid",
-> +				      "csiphy0",
-> +				      "csiphy0_timer",
-> +				      "csiphy1",
-> +				      "csiphy1_timer",
-> +				      "csiphy2",
-> +				      "csiphy2_timer",
-> +				      "csiphy3",
-> +				      "csiphy3_timer",
-> +				      "csiphy_rx",
-> +				      "gcc_axi_hf",
-> +				      "gcc_axi_sf",
-> +				      "icp_ahb",
-sf and icp_ahb clocks needed?
+It might be nice to return -EOPNOTSUPP just below the comment instead,
+but not doing so is acceptable according to the spec. Additionally,
+such change will be overwritten in the next patch after all.
 
-> +
-> +			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-> +					 &config_noc SLAVE_CAMERA_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-> +					<&mmss_noc MASTER_CAMNOC_HF QCOM_ICC_TAG_ALWAYS
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-> +					<&mmss_noc MASTER_CAMNOC_SF QCOM_ICC_TAG_ACTIVE_ONLY
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-> +			interconnect-names = "ahb",
-> +					     "hf_0",
-> +					     "sf_0";
-sf_0 needed?
+Thanks,
+Daisuke
 
-> +
-> +			iommus = <&apps_smmu 0x3400 0x20>;
+> 
+> 
+> Zhu Yanjun
+> 
+>> The comment is inserted to show the reason, which is based on the
+>> description from 'man 3 ibv_advise_mr' as follows:
+>> ===
+>> An application may pre-fetch any address range within an ODP MR when using the IBV_ADVISE_MR_ADVICE_PREFETCH or IBV_ADVISE_MR_ADVICE_PREFETCH_WRITE advice. Semantically, this operation is best-effort. That means the kernel does not guarantee that underlying pages are updated in the HCA or the pre-fetched pages would remain resident.
+>> ===
+>>
+>> Thanks,
+>> Daisuke
+>>
+>>>
+>>> Zhu Yanjun
+>>>
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +int rxe_ib_advise_mr(struct ib_pd *ibpd,
+>>>> +             enum ib_uverbs_advise_mr_advice advice,
+>>>> +             u32 flags,
+>>>> +             struct ib_sge *sg_list,
+>>>> +             u32 num_sge,
+>>>> +             struct uverbs_attr_bundle *attrs)
+>>>> +{
+>>>> +    if (advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH &&
+>>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
+>>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
+>>>> +        return -EOPNOTSUPP;
+>>>> +
+>>>> +    return rxe_ib_advise_mr_prefetch(ibpd, advice, flags,
+>>>> +                     sg_list, num_sge);
+>>>> +}
+>>>
+>>
 
-
-Regards,
-Suresh Vankadara.
