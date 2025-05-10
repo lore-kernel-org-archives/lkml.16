@@ -1,166 +1,116 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D660BA27;
-	Sat, 10 May 2025 07:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF44BA27
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 07:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746862887; cv=none; b=QGb0ha0jNmgYfmDu5mCNEZMr2f1bylViSSVR2MgXvt8/QmpgO0g/OhqR/d5Nu04IT0ayfQLt7s8fcMimwnMV2xTScwmn3bo+UPow4rIoMZya8R6eaYRVFMRt5pgvFvrLiV2Ktg+LEsJLJiJLLRes9HRpYz+W+JRl3XxsV02lPoY=
+	t=1746863032; cv=none; b=BiSS1fWxRpR7f/87yfC7+rCiBnE3aVz7EWkFUXnUPWf61uEewSM5Zln5fpk2zN/yub9Iuwn0g+Rd7fjobyVH28UIloggK7bR3Fa6zGjI+/Blh1K2KZGt3kWnSAogB5WgWTJQP8X315mNS9GE12EqRk5X4nu5jLVkBw6OIo8mrPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746862887; c=relaxed/simple;
-	bh=XIa1zMHZSqTZnNTmX3xxSHcICoLv7ngOW0oVLcEIz8A=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JQ5QOxZElYhR2U3Hb8uC/eWnewWEDXLm34ligoDwRnCOgD+igZDexzqRFCc0vdaBqH0ZMq/NI8o/QCOpbm5OfyezFYU+4UAyLHbQsoQKu44keaVioISOKJr9Xq7TNpuehDeAr7FcWuH4TDMl5rnaN3/IsbZfc3sOBTHOrSqGOaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Zvd823ZTFzsStT;
-	Sat, 10 May 2025 15:40:34 +0800 (CST)
-Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5AFAE140143;
-	Sat, 10 May 2025 15:41:13 +0800 (CST)
-Received: from [10.67.121.110] (10.67.121.110) by
- kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 10 May 2025 15:41:12 +0800
-Subject: Re: [PATCH v7 5/6] hisi_acc_vfio_pci: bugfix live migration function
- without VF device driver
-To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
-	<jgg@nvidia.com>, Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
-References: <20250411035907.57488-1-liulongfang@huawei.com>
- <20250411035907.57488-6-liulongfang@huawei.com>
- <937a11b53cca42ef94d8383608a10f59@huawei.com>
-From: liulongfang <liulongfang@huawei.com>
-Message-ID: <460f52a8-7a4a-96f7-b0db-299d3cfc244c@huawei.com>
-Date: Sat, 10 May 2025 15:41:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1746863032; c=relaxed/simple;
+	bh=gVwu5i5dr8Gu8f8RQwH56pS50hW/bWmE75LzhrJPSX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GCutYISS4GUBRaDq9myUvHtaOjr7RW9ECzYkk49X2TQFsaQFq9ewip5kZYk7eHpDK4MepnlaA2+XtcsEWu+Z8AQ1rsPT3YHSV6mWH3C8bA+f5sw6PKMtvNS86bt0/VxXemFcllad3flSk+rse/qIXg988CmXIfmyb86+UU4+Kbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t5V0gDzh; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t5V0gDzh"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a1d8c09674so1147172f8f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 00:43:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746863028; x=1747467828; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zgxyHav/FDfAPqF2ubFj/kOjw60kxGTa94/J4F6aQhQ=;
+        b=t5V0gDzh5p3+g5fx1X1GjTVNyZkl/iHGHqpQdUyKnO+pBIiFbdUukhe6GSzN6MZg73
+         ClrV+GyKP8F/m/Uiz58SQHSWU9/8LHxZht4S6hv9IaV4B9I4k93Wu78cMTZR6p7YjGFR
+         EhNdH0e9XXcIMet0WclJXfnxSHV2ONgkGgih/D1XhJ4bhlh0GEXhooYKuakidB+Ic8kD
+         neESNben084jgBRkYIsub0L2jDRtobyDT7dKYwxYHGpMl4HH/LwxVY/mIOa9M2KK/2PF
+         +qQQxBldXRVoQmuR4fEiMhGMUVCqZh5kZS+kqIVVwwERIHqt6uJfM2giMklxz/3NVun+
+         zzSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746863028; x=1747467828;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zgxyHav/FDfAPqF2ubFj/kOjw60kxGTa94/J4F6aQhQ=;
+        b=U2k+ksmtofX/DtwYNQ98HdaMaH3qCKpxVsKk9XC6iAfW8OukNbXW57GkWdNTtWh+3S
+         Rs4r4i4MzAfC/0ZIaSwAV13jdcydUO/T3riiBiwjN3IjR/twIK/cMoUNE1HhNrTddDu8
+         5SQrWPLE3x+25b0EHb4dnqiONqnQF6OqAT0yVzGKaIjXylmWWtb41IBLsvUY2Ic3s50B
+         kyTkubgGQ/mR4ZibXRklAQO13FHEaMIxYLTBdh8iy3oeHzJQSEI/AP6FwpxNYUroXf7i
+         96WmqDqgdjIHy4iYdpN4ugyAJUYJX4UVu3sbMQNPikbvkUrdHUHGcJym0Kt77CbmhYMI
+         BbFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXt63rluqgf4PiFFfBa8GTSFNvxGjtj0pJOpO6gAPcAAoiaQF7yIAXEU6RGXX2gWU0sjzQPcfMznI0XpF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcowRWDgnceuyG0Nr5H9BDuxibOXaKlvrroh8m2gdLugIfvQhs
+	su47V25aqIfOg1ogqjmr8s7czjxDck7Fj1muoorEhEYIeYcGj7EPZbgo7+VEQ28=
+X-Gm-Gg: ASbGncvDtl8tLOUdRaOYffMV1e9r03v+bimEtAoEbMEt/PfCPp7c0WJnxqQNRp8JUJb
+	vaTemL68Dt5DEy6OkSjB2DEeZXQtSVO8fQXlSZJHdmWCUGV7qUC8rCfrAm7hgPnZ99rySjgEHMw
+	Yq3aYGWmKERiqmziT2xdWr8frqK2h/JPLnWqJ+UvvtjTdxch2zDgMElo+vrc9G9GHPixnx/Rrd6
+	nfbmPFLcNfhtu+9RHoHP8J/D1FKmt4GG1APa77bw0rG3adj/GxeDyumbwD21YUVHqBjEwGH5l+J
+	2PtHkhFmKnc0P9QZzGViPkvFV3cnJuLcmECyRobgChaRz/y+wV4/kYWg
+X-Google-Smtp-Source: AGHT+IEYxL7W6rw3MZmtN8Hifi8g47H7dZD22sCgXBrSPKpmdOCfDEnqQwAFYZ9z9qgI8K5Jh9yNrQ==
+X-Received: by 2002:a05:6000:186e:b0:39d:724f:a8f1 with SMTP id ffacd0b85a97d-3a1f64279e0mr5124295f8f.10.1746863028389;
+        Sat, 10 May 2025 00:43:48 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f57ddd2dsm5596666f8f.9.2025.05.10.00.43.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 00:43:48 -0700 (PDT)
+Date: Sat, 10 May 2025 10:43:44 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Ard Biesheuvel <ardb@kernel.org>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [tip:x86/boot 10/10] arch/x86/boot/compressed/sev-handle-vc.c:104
+ do_boot_stage2_vc() error: we previously assumed 'boot_ghcb' could be null
+ (see line 101)
+Message-ID: <202505100719.9pE7wDfB-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <937a11b53cca42ef94d8383608a10f59@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg500006.china.huawei.com (7.202.181.43)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2025/4/15 16:45, Shameerali Kolothum Thodi wrote:
-> 
-> 
->> -----Original Message-----
->> From: liulongfang <liulongfang@huawei.com>
->> Sent: Friday, April 11, 2025 4:59 AM
->> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
->> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
->> <jonathan.cameron@huawei.com>
->> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
->> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
->> Subject: [PATCH v7 5/6] hisi_acc_vfio_pci: bugfix live migration function
->> without VF device driver
->>
->> If the VF device driver is not loaded in the Guest OS and we attempt to
->> perform device data migration, the address of the migrated data will
->> be NULL.
->> The live migration recovery operation on the destination side will
->> access a null address value, which will cause access errors.
->>
->> Therefore, live migration of VMs without added VF device drivers
->> does not require device data migration.
->> In addition, when the queue address data obtained by the destination
->> is empty, device queue recovery processing will not be performed.
->>
->> Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live
->> migration")
->> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
->> Reviewed-by: Shameer Kolothum
->> <shameerali.kolothum.thodi@huawei.com>
->> ---
->>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 22 +++++++++++++------
->>  1 file changed, 15 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> index cadc82419dca..d12a350440d3 100644
->> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
->> @@ -426,13 +426,6 @@ static int vf_qm_check_match(struct
->> hisi_acc_vf_core_device *hisi_acc_vdev,
->>  		return -EINVAL;
->>  	}
->>
->> -	ret = qm_write_regs(vf_qm, QM_VF_STATE, &vf_data->vf_qm_state,
->> 1);
->> -	if (ret) {
->> -		dev_err(dev, "failed to write QM_VF_STATE\n");
->> -		return ret;
->> -	}
->> -
->> -	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
->>  	hisi_acc_vdev->match_done = true;
->>  	return 0;
->>  }
->> @@ -498,6 +491,20 @@ static int vf_qm_load_data(struct
->> hisi_acc_vf_core_device *hisi_acc_vdev,
->>  	if (migf->total_length < sizeof(struct acc_vf_data))
->>  		return -EINVAL;
->>
->> +	if (!vf_data->eqe_dma || !vf_data->aeqe_dma ||
->> +	    !vf_data->sqc_dma || !vf_data->cqc_dma) {
->> +		dev_info(dev, "resume dma addr is NULL!\n");
->> +		hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
->> +		return 0;
->> +	}
-> 
-> 
-> I am still not fully understood why we need the above check. The only case as
-> far as I can think of where this will happen is when the source VM Guest has
-> not loaded the ACC driver. And we do take care of that already using vf_qm_state and
-> checking total_length == QM_MATCH_SIZE.
-> 
-> Have you seen this happening in any other scenario during your tests?
->
+Hi Ard,
 
-This is a problem that was discovered and fixed in previous abnormal scenario tests.
-In the abnormal tests, abnormal error handling was performed and real-time migration
-was executed. However, due to the lack of this check, the device became abnormal
-after migration.
+FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
 
-Thanks,
-Longfang.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
+head:   ed4d95d033e359f9445e85bf5a768a5859a5830b
+commit: ed4d95d033e359f9445e85bf5a768a5859a5830b [10/10] x86/sev: Disentangle #VC handling code from startup code
+config: x86_64-randconfig-161-20250510 (https://download.01.org/0day-ci/archive/20250510/202505100719.9pE7wDfB-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
 
-> Thanks,
-> Shameer
-> 
->> +
->> +	ret = qm_write_regs(qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
->> +	if (ret) {
->> +		dev_err(dev, "failed to write QM_VF_STATE\n");
->> +		return -EINVAL;
->> +	}
->> +	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
->> +
->>  	qm->eqe_dma = vf_data->eqe_dma;
->>  	qm->aeqe_dma = vf_data->aeqe_dma;
->>  	qm->sqc_dma = vf_data->sqc_dma;
->> @@ -1531,6 +1538,7 @@ static int hisi_acc_vfio_pci_migrn_init_dev(struct
->> vfio_device *core_vdev)
->>  	hisi_acc_vdev->vf_id = pci_iov_vf_id(pdev) + 1;
->>  	hisi_acc_vdev->pf_qm = pf_qm;
->>  	hisi_acc_vdev->vf_dev = pdev;
->> +	hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
->>  	mutex_init(&hisi_acc_vdev->state_mutex);
->>  	mutex_init(&hisi_acc_vdev->open_mutex);
->>
->> --
->> 2.24.0
-> 
-> .
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202505100719.9pE7wDfB-lkp@intel.com/
+
+smatch warnings:
+arch/x86/boot/compressed/sev-handle-vc.c:104 do_boot_stage2_vc() error: we previously assumed 'boot_ghcb' could be null (see line 101)
+
+vim +/boot_ghcb +104 arch/x86/boot/compressed/sev-handle-vc.c
+
+ed4d95d033e359 Ard Biesheuvel 2025-05-04   96  void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ed4d95d033e359 Ard Biesheuvel 2025-05-04   97  {
+ed4d95d033e359 Ard Biesheuvel 2025-05-04   98  	struct es_em_ctxt ctxt;
+ed4d95d033e359 Ard Biesheuvel 2025-05-04   99  	enum es_result result;
+ed4d95d033e359 Ard Biesheuvel 2025-05-04  100  
+ed4d95d033e359 Ard Biesheuvel 2025-05-04 @101  	if (!boot_ghcb && !early_setup_ghcb())
+                                                    ^^^^^^^^^^
+Check for NULL.  Should the && be ||?
+
+ed4d95d033e359 Ard Biesheuvel 2025-05-04  102  		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_GEN_REQ);
+ed4d95d033e359 Ard Biesheuvel 2025-05-04  103  
+ed4d95d033e359 Ard Biesheuvel 2025-05-04 @104  	vc_ghcb_invalidate(boot_ghcb);
+                                                                   ^^^^^^^^^
+Unchecked dereference.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
