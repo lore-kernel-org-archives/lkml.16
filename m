@@ -1,63 +1,63 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E8121B9C3;
-	Sat, 10 May 2025 09:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB95220F4A;
+	Sat, 10 May 2025 09:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746868878; cv=none; b=BypNEjqyxns0jxpd5iv9L9xEfv3FNjC9C8noUQbv9qzeM1X/KXJ0YNd05FUISE6+oiJKmHitW+gNUgirSkU/h8ibxrpWRGac18YV9xxrrHoC27MdG/nvKrwTuj7bHJNeX4E7sjp9lTZElc1tJqyOnqr/B43aUOW26umdYoGw1c8=
+	t=1746868886; cv=none; b=NJqBd8VCXrrlx9W87AWUaHAomhjo7Ec5A8rUt5OkGWFIX5n9a2WpsV+afjIHWupJUinDOmmO8cybzeiAcHSgo4cbpZJhLQ5eOUxnj2P3ZaxDokivwRW5a11aowNMbP3K56OBb2H5dA2FXEhG0/6XSNVxsKdQwBlJwfrnRQMXvP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746868878; c=relaxed/simple;
-	bh=qqjG4TLZWzysZi1HRtBlJBJzqF+FJgFf4pYolgJ75xE=;
+	s=arc-20240116; t=1746868886; c=relaxed/simple;
+	bh=AEZwoEa0kIBgfXAtsj5VukUGw/H0uEfko6HeuAepTa0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rd+Dx2uGeAMqQoY6piYh1TAEbejdOzTi0NEYIM545T9m2uWp6Ubx6YAcnU2Tno0zSYV3zgnC40Jlxe8giU0M3M7VHX9EdiX9eW65duxcvSmllO9zYvHJ6hp584bMvxbVxe6QsGdtWfyJ/CX2XJ3nJ1WEXUUw3NCm0HEtKjeBbwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gqjyjt7p; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=ANHJGLGsvFBPNpc327Q7AxuIM64ePmdrZGV5/42pNtSQMr2HRTZw8U6QIctExVeaAa/rBlMpHjBIMjd3zti2VabUyW3TALYh253aBnNd/vm7z1GYPT7+LC46W2Z/ndelqWjk76k406mgJju9pja4VPNwljc21mCtNTK4A4D19mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W5WgRV4o; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gqjyjt7p"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d0618746bso21783075e9.2;
-        Sat, 10 May 2025 02:21:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5WgRV4o"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso18983005e9.3;
+        Sat, 10 May 2025 02:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746868874; x=1747473674; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746868883; x=1747473683; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NUKFOmyrkNA7dur3Ib6dvAXhOopAOx/jVKysZ5pKnNs=;
-        b=Gqjyjt7pOdk0VrKqVKOhe6sALyGDTDsA6F1KBPGHNecGnHSGYJQPJWcJPw4Q63XRAH
-         p9TeItEz2TLUADT3+538zzt1ySdqX158lT4YPvVeZr8Yl1IvoSuOhBgtmhCLRM8oUDrX
-         6mbAcs1mKlWdV7S080DxS6juIN7Urnw2ez2TTDYCgXkxv5DSr1535JUZpi179KWebd5L
-         anemPKx4f0cyXdyPadeAZr2D8q5/LJO/IO4EE/9D7pof1KGXnrzW2MZI+fctNoZHhLqS
-         3kuziZENqcBJmk0Cu1xGs/FGmL/IouHnVNjpwRQd3h9SWEl30U5N2E9vMzCuDPIqwc/a
-         bzYA==
+        bh=bO6Jqt0PFTVJr7LcSorP6iBX8+l4quuhVdfU4Z0JfBo=;
+        b=W5WgRV4o4ar+Q5BCK4N/3Tz1aQySI8W+rbFYmCCuHD5J7OmH27inl4Bt6gE6dtRmxb
+         aBunufVbO9L30FRDZaYDHUErfCoItty03vCwLmu3kutQ7gbtGRvdmKmkkgQLT4odtWfv
+         FK5Ccow7mn4TzEFSefgcbyjoH7+6eInLXIWyCByO/CssZeu1lfmBBCJ7nzvfd5sLUf4/
+         Zh95Ewi9WLsxKcKO7rzzj13YmCKmeSpniCZr/J9BtBEtTQ9MbUeNix9S0D9R3HbQ8XO8
+         pApUOqAxgn7ukxzzCN18wzV3W4T7gY27683OYJe5zcRrlY/OELLGSkFuM5hSBGK1EiJq
+         khvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746868874; x=1747473674;
+        d=1e100.net; s=20230601; t=1746868883; x=1747473683;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NUKFOmyrkNA7dur3Ib6dvAXhOopAOx/jVKysZ5pKnNs=;
-        b=qN5+bwr9Fgss6QCFzMeSkJQwKPsiN6VcLnh8LnlmQPsMU5aRl1MO5MGmkybmH/V32W
-         HmDFK5YoiaA/OQhpm//Y/AKLaUGd+VNJ8eeMFjoiJ0DaG4530guztGmBui/sxgPODolK
-         Mb9VYqFoxtRkeq1b2yHVi404rRTpX8zqL1PL3JXsHy/c2xOiX4SlCfUbibxdIzRLLyVy
-         Ev1LGCZ3i8hJk3rMhsVjrY4F/6m12D9G6hHXaFAzSwI7Mp3aBe29DVqjWW+Viyqv1jii
-         6ZWqV2r9Z3mT984SuaiLBhU8nyN2TW0RMQE65GzYOpx+yMe7N+AWBoqvCOqut/S58RLw
-         5CnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6voXuPulSqZpO1/LbhSFZFSgKjkBE0yO4Y68Orlnn0OY0AvEEVX0ZJ7sFGdNnOYRCEria9McXIQIr@vger.kernel.org, AJvYcCWj7+MwK56KXwZVBXeyKytdoay4Gu7BboCY9A0z0BU6m9AFZK+o5fr34HSz8wUpRLSidegYfxSvwBPQhr3j@vger.kernel.org, AJvYcCX0ON7fXvxyL91aHr1IXsTQnT6aEyAnKwyWu6l7p2j8cOiwHa7KhifQ3X9G1GJXp6FformkiGqVyaoh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzetV6jyHe4XL6ITzdNcbrZ5E4BFRm7IMJvGiwCETSP2ieYEmJt
-	aLmI4QK91ZZuQk+JdXLnGAmga08ekI85Gu4eVJ4Au2nslXgaqWAuP92/t474
-X-Gm-Gg: ASbGncu9S9KKOBg4KVIX7x3ekJ/NgGbkguTevBfOuInevkz37Uo5vXNee2K1Ieg7bZU
-	fBW2K/oDtvKYhMzKAawJANqhUCx8iLZnAvw8MxOw4pf2LBpEYgwPJEDlPLdA6xvKTm9WwMhdQ+/
-	doyXgauONtkuApgyDMEetx8yA2oQY41yIhNU3yAXeQoEDh08ObKM14e8qbzog4m4vBknqzPA5x0
-	AbL+prhEUO+5eHD18bHNfuXbnxUxZRq0F+oDHiprvwANekeX63h72Xk9OUtGn8eOM+TXtkxz62j
-	fljPkqsq8xa9Bkaa/DdIFgIuV87EhywQKERtWcY/M3huJ9xLmpATj2ah4KCg4vxDwTMRs85oDeI
+        bh=bO6Jqt0PFTVJr7LcSorP6iBX8+l4quuhVdfU4Z0JfBo=;
+        b=LjbC+PmwrFoZ5EZxEGnwCOhXcdNVITvRKOLcezsSgXeLHA6IzR4NKhtW0mu8kWZq8k
+         EdcuSZfcrCAVCiSEzEekCquE9gtk6RWNTFAV9Px7Wmr6qBbZ2ueZgIugxFUtEEREaEB/
+         QXhkHsbalI0hL+QZbK6BWqxqSa1HH1CntYzAsv+bbOIjO+HAGWP+YvRZK7AWLwVq68V8
+         qYzAztDxgByC1vvE0dpZDOqMi/J4y1xhDwn+g2zwNJPBFD7X8mUhI+LNORMhcM8OTpmp
+         mJyDayR/MtycsA8UJhJqz0g8XKGcPzEOZSl5chFSqyUvPMEqsCe6JgT6Pk4iTJKAWGer
+         C1kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrZ6iZPQH2aVR4G0d5wgzCzI7ggDbKwjih4P/e9wFtxNSbYYTJJTrI2NdtLXiBAubmKv4OSsmxUORF@vger.kernel.org, AJvYcCWe9TcpuX9F0WsNfBTQW2stSH2EfSdmQk2zc8jNjgaXM3ob8I3LaSP9Y5hFMTL858Gq6i+CYo07qnkq@vger.kernel.org, AJvYcCXUURcITF9MoUevGlLqZ9x5E2qIP8Tl39SGIUCCYxkYQmMEW5QsVtXKgPgOztwM4pEEazTusNLNis/jEdo9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQZ8UHA5cKHE9ihndspA8MSWwmeey7W8yShcGjwKz9CondDAec
+	eF0hicgg9XE4qbfCGBBJbcnoRZ8smwIDViIfl1hciquEVRA6cIna5sBff5WC
+X-Gm-Gg: ASbGnctgqXxXPjqBNd6EsV+6izS8YFawYOJ5DxtDd3+lv7Gi0bJ3P8CWcn2S6NA04WH
+	wYuQDpJqkGGaaX+fbl1wRws+kllofEg36axV1mgh7wT2IkJI4wtGMOU4KNafUHGIf+NtY5n+bne
+	/3OF57/IAkXU9JtnEQ81aYuBy+5R7g+K0YI1wDkbhdNTqQddx2Jnu85oxADlMShCOts/H0T4SYn
+	i0AQwMlADNBnk0Zti0SfMGMCe6WVgc3Y63YfVRVDExlCTZVozdqsA3adDbeuYsLFQGMD9T1CR1P
+	OVficRTXP7esbuwyypAKI/M7xnUwxhn/9e9665mfhPcDgtDTCQJC+OwY4WEWhsQmqN7AiHLX1Xl
 	6
-X-Google-Smtp-Source: AGHT+IGlEra8PjVc2cBUJrQLHSr6lum+RzZkg5Qz4cmGYCMkFR9xrLOfBpgCy33LdOqth/PAKkqXoQ==
-X-Received: by 2002:a05:600c:3d8a:b0:43d:94:cfe6 with SMTP id 5b1f17b1804b1-442d6dacbe7mr63034535e9.16.1746868874280;
-        Sat, 10 May 2025 02:21:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG56s9f07iaGmAkfDoSoclIwgguXa6vIbT+eM6/yZ1j9g/Soz+JIG6toLAVKqzVqMSXTYaRLQ==
+X-Received: by 2002:a05:600c:3e8e:b0:43d:42b:e186 with SMTP id 5b1f17b1804b1-442d6d37b08mr56223145e9.8.1746868882578;
+        Sat, 10 May 2025 02:21:22 -0700 (PDT)
 Received: from tempest2.110.lan (xt27dd.stansat.pl. [83.243.39.221])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae5asm55901985e9.36.2025.05.10.02.21.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae5asm55901985e9.36.2025.05.10.02.21.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 02:21:13 -0700 (PDT)
+        Sat, 10 May 2025 02:21:22 -0700 (PDT)
 From: Pawel Dembicki <paweldembicki@gmail.com>
 To: linux-hwmon@vger.kernel.org
 Cc: Pawel Dembicki <paweldembicki@gmail.com>,
@@ -68,21 +68,21 @@ Cc: Pawel Dembicki <paweldembicki@gmail.com>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Noah Wang <noahwang.wang@outlook.com>,
-	Fabio Estevam <festevam@gmail.com>,
 	Naresh Solanki <naresh.solanki@9elements.com>,
 	Michal Simek <michal.simek@amd.com>,
+	Fabio Estevam <festevam@gmail.com>,
 	Grant Peltier <grantpeltier93@gmail.com>,
 	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
 	Shen Lichuan <shenlichuan@vivo.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
 	Charles Hsu <ythsu0511@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v3 4/5] hwmon: pmbus: mpq8785: Add support for MPM82504
-Date: Sat, 10 May 2025 11:18:47 +0200
-Message-ID: <20250510091937.2298256-5-paweldembicki@gmail.com>
+Subject: [PATCH v3 5/5] hwmon: pmbus: mpq8785: Add support for MPM3695 family
+Date: Sat, 10 May 2025 11:18:48 +0200
+Message-ID: <20250510091937.2298256-6-paweldembicki@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250510091937.2298256-1-paweldembicki@gmail.com>
 References: <20250510091937.2298256-1-paweldembicki@gmail.com>
@@ -94,158 +94,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for the Monolithic Power Systems MPM82504 digital voltage
-regulator. MPM82504 uses PMBus direct format for voltage output.
+Add support for the Monolithic Power Systems MPM3695 family.
+It contains four devices with suffixes: -10, -20, -25 and -100.
+The device is PMBus compliant and shares characteristics with the
+MPM82504.
 
-Tested with device tree based matching.
+MPM3695-25 has different VOLTAGE_SCALE_LOOP register size [11:0]
+and it needs to be separated because it will be configured in the next
+commit.
+
+Tested with device tree based matching (MPM3695-10).
 
 Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
 ---
 v3:
-  - fix alphabetical order in multiple places
-  - change PMBUS_READ_TEMPERATURE_1_SIGN macro name to
-    MPM82504_READ_TEMPERATURE_1_SIGN
-  - use sign_extend32()
-  - fix typo in documentation
+  - fix alphabetical order in couple places
+  - adjust patch after patch order change
 v2:
-  - fixed signedess for temperatures < 0 deg C
-  - removed empty lines
+  - Added whole MPM3695 family
 ---
- Documentation/hwmon/mpq8785.rst | 20 +++++++++++++++-----
- drivers/hwmon/pmbus/mpq8785.c   | 33 ++++++++++++++++++++++++++++++++-
- 2 files changed, 47 insertions(+), 6 deletions(-)
+ Documentation/hwmon/mpq8785.rst | 13 +++++++++----
+ drivers/hwmon/pmbus/mpq8785.c   | 10 +++++++++-
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/Documentation/hwmon/mpq8785.rst b/Documentation/hwmon/mpq8785.rst
-index bf8176b87086..b91fefb1a84c 100644
+index b91fefb1a84c..198d5dfd7c30 100644
 --- a/Documentation/hwmon/mpq8785.rst
 +++ b/Documentation/hwmon/mpq8785.rst
 @@ -5,6 +5,7 @@ Kernel driver mpq8785
  
  Supported chips:
  
-+  * MPS MPM82504
++  * MPS MPM3695 family
+   * MPS MPM82504
    * MPS MPQ8785
  
-     Prefix: 'mpq8785'
-@@ -14,6 +15,14 @@ Author: Charles Hsu <ythsu0511@gmail.com>
+@@ -15,6 +16,14 @@ Author: Charles Hsu <ythsu0511@gmail.com>
  Description
  -----------
  
-+The MPM82504 is a quad 25A, scalable, fully integrated power module with a PMBus
-+interface. The device offers a complete power solution that achieves up to 25A
-+per output channel. The MPM82504 has four output channels that can be paralleled
-+to provide 50A, 75A, or 100A of output current for flexible configurations.
-+The device can also operate in parallel with the MPM3695-100 and additional
-+MPM82504 devices to provide a higher output current. The MPM82504 operates
-+at high efficiency across a wide load range.
++The MPM3695 family is a scalable, ultra-thin, fully integrated power module with
++a PMBus interface. It offers a complete power solution that achieves up to
++10A (-10 variant), 20A (-25 variant), 25A (-20 variant), 100A (-100 variant)
++of output current with excellent load and line regulation across a wide input
++voltage range. It operates at high efficiency over a wide load range, and can
++be parallled to deliver higher current. Variants -10,-20 and -100 have different
++voltage scale configuration register range (10 bits) than -25 version (11 bits).
 +
- The MPQ8785 is a fully integrated, PMBus-compatible, high-frequency, synchronous
- buck converter. The MPQ8785 offers a very compact solution that achieves up to
- 40A output current per phase, with excellent load and line regulation over a
-@@ -23,18 +32,19 @@ output current load range.
- The PMBus interface provides converter configurations and key parameters
- monitoring.
- 
--The MPQ8785 adopts MPS's proprietary multi-phase digital constant-on-time (MCOT)
-+The devices adopts MPS's proprietary multi-phase digital constant-on-time (MCOT)
- control, which provides fast transient response and eases loop stabilization.
--The MCOT scheme also allows multiple MPQ8785 devices to be connected in parallel
--with excellent current sharing and phase interleaving for high-current
-+The MCOT scheme also allows multiple devices or channels to be connected in
-+parallel with excellent current sharing and phase interleaving for high-current
- applications.
- 
- Fully integrated protection features include over-current protection (OCP),
+ The MPM82504 is a quad 25A, scalable, fully integrated power module with a PMBus
+ interface. The device offers a complete power solution that achieves up to 25A
+ per output channel. The MPM82504 has four output channels that can be paralleled
+@@ -42,10 +51,6 @@ Fully integrated protection features include over-current protection (OCP),
  over-voltage protection (OVP), under-voltage protection (UVP), and
  over-temperature protection (OTP).
  
--The MPQ8785 requires a minimal number of readily available, standard external
--components, and is available in a TLGA (5mmx6mm) package.
-+All supported modules require a minimal number of readily available, standard
-+external components. The MPM82504 is available in a BGA (15mmx30mmx5.18mm)
-+package and the MPQ8785 is available in a TLGA (5mmx6mm) package.
- 
+-All supported modules require a minimal number of readily available, standard
+-external components. The MPM82504 is available in a BGA (15mmx30mmx5.18mm)
+-package and the MPQ8785 is available in a TLGA (5mmx6mm) package.
+-
  Device compliant with:
  
+ - PMBus rev 1.3 interface.
 diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
-index 2e7c0d0c3f81..1e12e7267a7f 100644
+index 1e12e7267a7f..6c9c0970e5d6 100644
 --- a/drivers/hwmon/pmbus/mpq8785.c
 +++ b/drivers/hwmon/pmbus/mpq8785.c
-@@ -4,14 +4,19 @@
-  */
+@@ -13,9 +13,11 @@
+ #define MPM82504_READ_TEMPERATURE_1_SIGN	BIT(9)
+ #define MPM82504_READ_TEMPERATURE_1_SIGN_POS	9
  
- #include <linux/i2c.h>
-+#include <linux/bitops.h>
- #include <linux/module.h>
- #include <linux/property.h>
- #include <linux/of_device.h>
- #include "pmbus.h"
- 
--enum chips { mpq8785 };
-+#define MPM82504_READ_TEMPERATURE_1_SIGN	BIT(9)
-+#define MPM82504_READ_TEMPERATURE_1_SIGN_POS	9
-+
-+enum chips { mpm82504, mpq8785 };
+-enum chips { mpm82504, mpq8785 };
++enum chips { mpm3695, mpm3695_25, mpm82504, mpq8785 };
  
  static u16 voltage_scale_loop_max_val[] = {
-+	[mpm82504] = GENMASK(9, 0),
++	[mpm3695] = GENMASK(9, 0),
++	[mpm3695_25] = GENMASK(11, 0),
+ 	[mpm82504] = GENMASK(9, 0),
  	[mpq8785] = GENMASK(10, 0),
  };
- 
-@@ -41,6 +46,23 @@ static int mpq8785_identify(struct i2c_client *client,
- 	return 0;
- };
- 
-+static int mpm82504_read_word_data(struct i2c_client *client, int page,
-+				   int phase, int reg)
-+{
-+	int ret;
-+
-+	ret = pmbus_read_word_data(client, page, phase, reg);
-+
-+	if (ret < 0 || reg != PMBUS_READ_TEMPERATURE_1)
-+		return ret;
-+
-+	/* Fix PMBUS_READ_TEMPERATURE_1 signedness */
-+	if (ret & MPM82504_READ_TEMPERATURE_1_SIGN)
-+		ret = sign_extend32(ret, MPM82504_READ_TEMPERATURE_1_SIGN_POS) & 0xffff;
-+
-+	return ret;
-+}
-+
- static struct pmbus_driver_info mpq8785_info = {
- 	.pages = 1,
- 	.format[PSC_VOLTAGE_IN] = direct,
-@@ -63,12 +85,14 @@ static struct pmbus_driver_info mpq8785_info = {
+@@ -85,6 +87,8 @@ static struct pmbus_driver_info mpq8785_info = {
  };
  
  static const struct i2c_device_id mpq8785_id[] = {
-+	{ "mpm82504", mpm82504 },
++	{ "mpm3695", mpm3695 },
++	{ "mpm3695-25", mpm3695_25 },
+ 	{ "mpm82504", mpm82504 },
  	{ "mpq8785", mpq8785 },
  	{ },
- };
+@@ -92,6 +96,8 @@ static const struct i2c_device_id mpq8785_id[] = {
  MODULE_DEVICE_TABLE(i2c, mpq8785_id);
  
  static const struct of_device_id __maybe_unused mpq8785_of_match[] = {
-+	{ .compatible = "mps,mpm82504", .data = (void *)mpm82504 },
++	{ .compatible = "mps,mpm3695", .data = (void *)mpm3695 },
++	{ .compatible = "mps,mpm3695-25", .data = (void *)mpm3695_25 },
+ 	{ .compatible = "mps,mpm82504", .data = (void *)mpm82504 },
  	{ .compatible = "mps,mpq8785", .data = (void *)mpq8785 },
  	{}
- };
-@@ -92,6 +116,13 @@ static int mpq8785_probe(struct i2c_client *client)
+@@ -116,6 +122,8 @@ static int mpq8785_probe(struct i2c_client *client)
  		chip_id = (kernel_ulong_t)i2c_get_match_data(client);
  
  	switch (chip_id) {
-+	case mpm82504:
-+		info->format[PSC_VOLTAGE_OUT] = direct;
-+		info->m[PSC_VOLTAGE_OUT] = 8;
-+		info->b[PSC_VOLTAGE_OUT] = 0;
-+		info->R[PSC_VOLTAGE_OUT] = 2;
-+		info->read_word_data = mpm82504_read_word_data;
-+		break;
- 	case mpq8785:
- 		info->identify = mpq8785_identify;
- 		break;
++	case mpm3695:
++	case mpm3695_25:
+ 	case mpm82504:
+ 		info->format[PSC_VOLTAGE_OUT] = direct;
+ 		info->m[PSC_VOLTAGE_OUT] = 8;
 -- 
 2.43.0
 
