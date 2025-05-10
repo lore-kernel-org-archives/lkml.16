@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631871B21BF
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 13:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239A31B21BF
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 13:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746885176; cv=none; b=hJPi/dH6dYgeYwRUuMIvaONsjzDkxec7vS7won1O/U/pqYzp8gJIHbHCrJMmXbVnkWOhqTPEPCn3sSdaaRGDnw69b+Vxl20UcJSg5vW/9/iKOoXiKno+bCxM7mxuvGtyvtT1IGwZwNPK8d6JYy6wsaiG3ouosdxNK6NBkbbXP1c=
+	t=1746885200; cv=none; b=YU1gbcm1LC9JvfIeveXN5olWlDvCG0sRqnHP/wtlCSOTLdNvOTpQtO0wP+sShKN+aWat16UBywiVYHHEmk4te3edLsRlXpcXHCyzUSBnwM3+PoETuTK74t+aWvKDG3nuijh+Q8ptTBJbA0Jo8aSFzLGYiyRPRzz80YA5/lU5R2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746885176; c=relaxed/simple;
-	bh=QOgG8NrhX3t1V5A2Lz7iTrszO06Wk/FGbJ857nU+Tes=;
+	s=arc-20240116; t=1746885200; c=relaxed/simple;
+	bh=D4NK2x8UOD8X6y92H2z8HktJ7clT1LNn6CPTV/oeChk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=efaktnzcGbjsdNsRKniWCrdRy96wfqB6XR9HQavcN0Zbsp4LCke18QBJ6Z41RKaJjZ/YxpTMEIcVp9wJxcmuIiXtfg5h+uF54S/OAW305T6s2kpKVzTTxUFYBcv+fyUdOLZGFVwRV84mBiD49P1KL4/JumFb0/kn8/2Rwc1S4k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hEy1ylXO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=ExiKz5aytR+QymcfxLe//+LYNWWl/AgwW6RbE+yGzsdIheTwstX/8jO2BYQW1zp4A8r/ahhf1Y+fmZsG9wqTCsrnXr7AyH+CNfmgQOiSIDHcu2/oUBpVmUvcTj+TWu/s7GWoUOVBfwUoTbZRmGNovxJCcLfRrLTLLlkdrTGFIQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LaNVlBsb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hEy1ylXO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6C3C4CEE2;
-	Sat, 10 May 2025 13:52:55 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LaNVlBsb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16FF7C4CEE2;
+	Sat, 10 May 2025 13:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746885175;
-	bh=QOgG8NrhX3t1V5A2Lz7iTrszO06Wk/FGbJ857nU+Tes=;
+	s=korg; t=1746885199;
+	bh=D4NK2x8UOD8X6y92H2z8HktJ7clT1LNn6CPTV/oeChk=;
 	h=Date:From:To:Cc:Subject:From;
-	b=hEy1ylXO5eqc7RkukVPzW/NXDPWM5oDfW40JEbVrGNIWIdSEvGg9heSlBSjbKxvYF
-	 uMmyOb8EyidbScaNk9suwU86sgsDjWnq7lacVdTL7iU1LIgM2fYfRMZM/t6HOsa4gD
-	 tUiBjBbnsFjJsq3/YJna1iPJ56u+NEIWWMKW9uSI=
-Date: Sat, 10 May 2025 15:52:52 +0200
+	b=LaNVlBsblX+f8lUeI8cyY26R3Qb4CInV958qLHy6k1F5kfSEBJlDiFA5mfbF7tbo8
+	 WAXI1UqsSG2+6OG6ye77GOE/lt/UKSnbDPCrSrzlyFFpXJ/zFIF6cXOQ+EgFYRprmt
+	 Obg0So9eyydE6b/82CGLioQZ3XQXnRWmEmjWd6Gw=
+Date: Sat, 10 May 2025 15:53:16 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 6.15-rc6
-Message-ID: <aB9aNLzpdHsXMfBU@kroah.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [GIT PULL] Driver core fix for 6.15-rc6
+Message-ID: <aB9aTNHuSV-5U15D@kroah.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,111 +47,25 @@ The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-6.15-rc6
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git driver-core-6.15-rc6
 
-for you to fetch changes up to 65995e97a1caacf0024bebda3332b8d1f0f443c4:
+for you to fetch changes up to 95deee37a12364f410d22c6a8383f59738a2fef3:
 
-  Drivers: hv: Make the sysfs node size for the ring buffer dynamic (2025-05-02 13:59:02 +0200)
+  platform: Fix race condition during DMA configure at IOMMU probe time (2025-05-01 18:00:58 +0200)
 
 ----------------------------------------------------------------
-Char/Misc/IIO driver fixes for 6.15-rc6
+Driver core fix for 6.15-rc6
 
-Here are a bunch of small driver fixes (mostly all IIO) for 6.15-rc6.
-Included in here are:
-  - loads of tiny IIO driver fixes for reported issues
-  - hyperv driver fix for a much-reported and worked on sysfs ring
-    buffer creation bug
-
-All of these have been in linux-next for over a week (the IIO ones for
-many weeks now), with no reported issues.
+Here is a single driver core fix for a regression for platform devices
+that is a regression from a change that went into 6.15-rc1 that affected
+Pixel devices.  It has been in linux-next for over a week with no
+reported problems.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-Angelo Dureghello (1):
-      iio: adc: ad7606: fix serial register access
+Will McVicker (1):
+      platform: Fix race condition during DMA configure at IOMMU probe time
 
-David Lechner (8):
-      iio: adc: ad7380: disable offload before using SPI bus
-      iio: adc: ad7606: check for NULL before calling sw_mode_config()
-      iio: adc: ad7380: fix event threshold shift
-      iio: imu: inv_mpu6050: align buffer for timestamp
-      iio: chemical: sps30: use aligned_s64 for timestamp
-      iio: chemical: pms7003: use aligned_s64 for timestamp
-      iio: imu: adis16550: align buffers for timestamp
-      iio: pressure: mprls0025pa: use aligned_s64 for timestamp
-
-Gabriel Shahrouzi (2):
-      staging: iio: adc: ad7816: Correct conditional logic for store mode
-      iio: adis16201: Correct inclinometer channel resolution
-
-Greg Kroah-Hartman (1):
-      Merge tag 'iio-fixes-for-6.15a' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/jic23/iio into char-misc-linus
-
-Gustavo Silva (1):
-      iio: imu: bmi270: fix initial sampling frequency configuration
-
-Jonathan Cameron (5):
-      iio: temp: maxim-thermocouple: Fix potential lack of DMA safe buffer.
-      iio: accel: adxl355: Make timestamp 64-bit aligned using aligned_s64
-      iio: adc: dln2: Use aligned_s64 for timestamp
-      iio: adc: ad7768-1: Fix insufficient alignment of timestamp.
-      iio: adc: ad7266: Fix potential timestamp alignment issue.
-
-Krzysztof Kozlowski (3):
-      iio: accel: fxls8962af: Fix wakeup source leaks on device unbind
-      iio: adc: qcom-spmi-iadc: Fix wakeup source leaks on device unbind
-      iio: imu: st_lsm6dsx: Fix wakeup source leaks on device unbind
-
-Lothar Rubusch (1):
-      iio: accel: adxl367: fix setting odr for activity time update
-
-Luca Ceresoli (1):
-      iio: light: opt3001: fix deadlock due to concurrent flag access
-
-Naman Jain (2):
-      uio_hv_generic: Fix sysfs creation path for ring buffer
-      Drivers: hv: Make the sysfs node size for the ring buffer dynamic
-
-Silvano Seva (2):
-      iio: imu: st_lsm6dsx: fix possible lockup in st_lsm6dsx_read_fifo
-      iio: imu: st_lsm6dsx: fix possible lockup in st_lsm6dsx_read_tagged_fifo
-
-Simon Xue (1):
-      iio: adc: rockchip: Fix clock initialization sequence
-
-Zhang Lixu (3):
-      iio: hid-sensor-prox: Restore lost scale assignments
-      iio: hid-sensor-prox: support multi-channel SCALE calculation
-      iio: hid-sensor-prox: Fix incorrect OFFSET calculation
-
- drivers/hv/hyperv_vmbus.h                          |   6 ++
- drivers/hv/vmbus_drv.c                             | 109 ++++++++++++++++++++-
- drivers/iio/accel/adis16201.c                      |   4 +-
- drivers/iio/accel/adxl355_core.c                   |   2 +-
- drivers/iio/accel/adxl367.c                        |  10 +-
- drivers/iio/accel/fxls8962af-core.c                |   7 +-
- drivers/iio/adc/ad7266.c                           |   2 +-
- drivers/iio/adc/ad7380.c                           |  32 ++++--
- drivers/iio/adc/ad7606.c                           |  11 ++-
- drivers/iio/adc/ad7606_spi.c                       |   2 +-
- drivers/iio/adc/ad7768-1.c                         |   2 +-
- drivers/iio/adc/dln2-adc.c                         |   2 +-
- drivers/iio/adc/qcom-spmi-iadc.c                   |   4 +-
- drivers/iio/adc/rockchip_saradc.c                  |  17 ++--
- drivers/iio/chemical/pms7003.c                     |   5 +-
- drivers/iio/chemical/sps30.c                       |   2 +-
- .../iio/common/hid-sensors/hid-sensor-attributes.c |   4 +
- drivers/iio/imu/adis16550.c                        |   2 +-
- drivers/iio/imu/bmi270/bmi270_core.c               |   6 +-
- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c         |   2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c     |   6 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c       |   7 +-
- drivers/iio/light/hid-sensor-prox.c                |  22 +++--
- drivers/iio/light/opt3001.c                        |   5 +-
- drivers/iio/pressure/mprls0025pa.h                 |  17 ++--
- drivers/iio/temperature/maxim_thermocouple.c       |   2 +-
- drivers/staging/iio/adc/ad7816.c                   |   2 +-
- drivers/uio/uio_hv_generic.c                       |  39 ++++----
- include/linux/hyperv.h                             |   6 ++
- 29 files changed, 241 insertions(+), 96 deletions(-)
+ drivers/base/platform.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
