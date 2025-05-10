@@ -1,54 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528BD1F1507;
-	Sat, 10 May 2025 01:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B5F2CCC5;
+	Sat, 10 May 2025 01:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746839987; cv=none; b=CUZwJagTYYxkZa6F5Al/9soet2zb0tdLM2wmhBgD8j0tv39bXTYaw70o6LqL14mdbEyTHQ1tKfLMnihl3QU/YSY0mBx3y/xA7W4424HtbI9FjdD/K7x2t4lp6kYNKh98jAA2ol8sVtrppWlp12T5avciWDe3f6Q/vgjdN2iJtTQ=
+	t=1746840272; cv=none; b=Omz3xOPTJhUhEp36ThSOriwGMiv6EYnhj6u+oYRyb2SvY/SDBL8w9b4vo36zZh/kDARyqK8MyWJ5C6EixvrIU8b/b6xKY8Y1i1atZVGCQ3zyso5ZyOAAbB5M2F1BLLZYeIcWPebrS1zJNuFTBVSn2SsF9C99NqdItwsNTJK6SP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746839987; c=relaxed/simple;
-	bh=zg5HXGTrlhhiTOPA2jjHZNaufpDMA8T3jdH8ZIjofCM=;
+	s=arc-20240116; t=1746840272; c=relaxed/simple;
+	bh=OXyvStXyWT9QVR/lqb24WJsPCQVbmjx9JphtTcaNWWQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eJ6gsFU/ItPkbjw/IvqNjmFEF5FlC5dBVsmHtWeBtNhL1ZL4CiZ0578GxpAv51XPkvHoc+7b/XYdE7nnYSWULGOHMCmarhbn8xQQmmNk5o+W2XEUesBtwlPlsCnsG7YwOGgYzRDwCtuu0YvqGYboW/4aorHuTxRbD8Rx8VF5xxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NumnG3Yk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LG1g5WsczHhQUIa0McTevzdbmYpX1rRNt1ql0IgmSzwkAQ0N6hdNjYMGHGU43gIB/psSbtwXOKL13bMJZU058Y8e2UHeJzDqbns1i6mw1+mlEQV++7pB7LKBKIV7nv1chC/8sdKv2LyoVBXFKdUG6Gy7HMIljnLtJ6oyz7GOQEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jyEq0mEn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NumnG3Yk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679F1C4CEE4;
-	Sat, 10 May 2025 01:19:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jyEq0mEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B491BC4CEE4;
+	Sat, 10 May 2025 01:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746839986;
-	bh=zg5HXGTrlhhiTOPA2jjHZNaufpDMA8T3jdH8ZIjofCM=;
+	s=k20201202; t=1746840271;
+	bh=OXyvStXyWT9QVR/lqb24WJsPCQVbmjx9JphtTcaNWWQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NumnG3YkxGfCRVCRqFGOxTVTNokveYQU3KGb+ew7fW3U9W8knAl9YOvv9vQAQKUcE
-	 wc0l7IkUC2x5IJzv1rXo5TzKv4GA+tUyXIT2UkFBX8NZJgUSOFFdV8liH4mdDdT1iR
-	 g2nLt+KTnipcSshGEND00NS4Z/cbqznavW3ubfAL0l9csA4lYTQbrPF+okif5Sr+n8
-	 UUGHxSNwN3XM+EA26Odbm0Np9FDL6Fo6BwXtnSdhpv+tp+679oL8CYC2z1VLtC0FY4
-	 hNP1k1Ij1blLOrpyGohdWcJQlscEJ8FLHKZ1k3UYsgxpSbNNf0tOr2aBamujglQqT3
-	 B88t6ewQtaPlg==
-Date: Sat, 10 May 2025 10:19:44 +0900
+	b=jyEq0mEnFMcXVRqXaM/mREBJkPzq8NpTzauraynEUQ9Ln26bvQZGrsiwLhKZUvV7M
+	 a9d5LDEgQmgttZRPK0RU29VGZyVqFwlipcMBa0BU63V120k+q/NqI5RyU6xXLT97gV
+	 WCJlNcwhMcMxhaZRlSPaWkNrIY1S4yvBCnR+sMgbV02AsViLbVDiZuJD2X5KR45uGI
+	 CtyvZ//ZDN4JTCL0J6uO4cf6bYu+clGR+V1qs180kR/Ttig4fcn3tc1BpOPgc0eqwH
+	 /gd3qIFakCnKOrib3j+2y4OV0QEUSXtssNxylKXZZONocVHmI96buJavfv7yJojvMv
+	 DTEOKp3mM0tiQ==
+Date: Sat, 10 May 2025 10:24:28 +0900
 From: Mark Brown <broonie@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
-	NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, larisa.grigore@nxp.com,
-	arnd@linaro.org, andrei.stefanescu@nxp.com,
-	dan.carpenter@linaro.org, linux-spi@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
-Subject: Re: [PATCH 11/14] spi: spi-fsl-dspi: Halt the module after a new
- message transfer
-Message-ID: <aB6psNq3F-bsAA3e@finisterre.sirena.org.uk>
-References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-11-32bfcd2fea11@linaro.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 000/129] 6.6.90-rc2 review
+Message-ID: <aB6qzJxxyPSa6gPS@finisterre.sirena.org.uk>
+References: <20250508112618.875786933@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,42 +46,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="W8tovzokLkW8kDL3"
+	protocol="application/pgp-signature"; boundary="50O+UGwiy2Q6jXgH"
 Content-Disposition: inline
-In-Reply-To: <20250509-james-nxp-spi-v1-11-32bfcd2fea11@linaro.org>
+In-Reply-To: <20250508112618.875786933@linuxfoundation.org>
 X-Cookie: Well begun is half done.
 
 
---W8tovzokLkW8kDL3
+--50O+UGwiy2Q6jXgH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 12:05:58PM +0100, James Clark wrote:
-> From: Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
->=20
-> The XSPI mode implementation in this driver still uses the EOQ flag to
-> signal the last word in a transmission and deassert the PCS signal.
-> However, at speeds lower than ~200kHZ, the PCS signal seems to remain
-> asserted even when SR[EOQF] =3D 1 indicates the end of a transmission.
-> This is a problem for target devices which require the deassertation of
-> the PCS signal between transfers.
+On Thu, May 08, 2025 at 01:30:36PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.90 release.
+> There are 129 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-This also looks like it might be a fix?
+Tested-by: Mark Brown <broonie@kernel.org>
 
---W8tovzokLkW8kDL3
+--50O+UGwiy2Q6jXgH
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgeqa8ACgkQJNaLcl1U
-h9AOTQf/dvvH6zQ9y3ahPtoaRH796SUktbVlwo17kK32GIACKMksAuQXPZd+9n7b
-4FxeO+I3OfdJYftlsCGwhls/p18ok4/vHQ/wFzvMlt3zMXx0IM6e4UyB9rEqnuVy
-YqERHCwORZvPcv3bFj7vRmkmzxGRuygjl9Wo02e7LEEztSJNelk1PVruHYUiRkih
-5Tj739mOIqhPsf7zIhSnliDUDGcfEiFTJo9Hai3Jx6z3Wj6oTy4hYyq2g/G5g1pi
-g5EgAwO0st8dJKenYZf109W094rXshtEywMUZd1DkB2+Nf7JaPCqZUbm1IAsAX9L
-vLwgHrh6qCnJk1VYCOiW/qs30XD5+w==
-=zCVN
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgeqssACgkQJNaLcl1U
+h9A4fgf/XDEoyxqozEz0QcLVFnZgV1jrnrVMB64bO7uRkW03+9qvBOB9G8UAObLR
+P+bSEnRyw2RBLJxQuwY9JxbXAhtALd0a5h02TFk6SDIFqaF+rq5BU0WZnu8ADwju
+d4hJpBYcB6t+F+nYGO0Pj6Uo9B8c2XKZ3FJVf5pp0+quM6fix270cGLkAq//kybv
+CW9vCvzYwuSK04NldifMX2BBcXT9FbDjmryfV2owBV+iE2CNMq1EoHVK3/IYZ8Yo
+6xY1SOlXMG1WKh2JYQ0oonrqpWaKD/AprHLcWo0sm9VWDjd5p5kmdYo/aW5gQi4e
+fBQfeISQEfd0Ts9945UK8W6aDEgTtA==
+=o8UX
 -----END PGP SIGNATURE-----
 
---W8tovzokLkW8kDL3--
+--50O+UGwiy2Q6jXgH--
