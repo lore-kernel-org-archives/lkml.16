@@ -1,125 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DE96125;
-	Sat, 10 May 2025 07:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AA71E7660;
+	Sat, 10 May 2025 07:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746863084; cv=none; b=dvxemJYYdHql5tIsuHpTd0TrADLnQ/+snF2RrkdMH+9M3aMeEdlSBf9O6zchKhdlpQDNS9JtipW5TKCH9HutN0ZLw+Hq9Jso8hyLeqrnQJfHJ3hrOyCUEK/2F3c7V5NYFvIv54Hlw1lciMF+YuY6KhWBY1rQf0vdZE8b5D9oTjg=
+	t=1746863109; cv=none; b=Ao7uvsnrRIFVbTSVC6a/EEJm46fpaTdf7S2AtWpoChFr5pw8In81CuaSRI98QTsg8eq0O/o20axVr7VMdWjgiy3P3oWSRz6mKcJSnuw2rBDlNDknBh7GBHV+z8p3QCQy30KHH4aTb789kHigucM88vYPrPtc/RdFiG7rW7LDay4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746863084; c=relaxed/simple;
-	bh=bE/SOpoChEP71E9o00tKei1ZQQ2RQ/5dOoWOaqj9An8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PP/OBrYFdDG1ixLd2ut2PewqpAiTsRsRFnkpFGq1Pv904SFd3uG4T5Vv0QXn/E5lhLCaOg854qb/ZDB9gehWxylG5zAQ+BePa6hYAA0ha2/OwzLsK2H/6GwDH3fq5E5Jp9fHW91jA+DufrcfGVw94uJQcyC59f+BEPbelRxotJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRm0JemU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746863109; c=relaxed/simple;
+	bh=GQdySjnU/U2AKITWufHtvENXM8nduTjgzWyCaiFQeTs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AEMt9fRsdJv0V9vkCL9PEXHU7MKVd94prC7bFIivEDZM4Ux4OV6WRYTL6MaCXsNJgkzyBnGItSB/uZDRdzk+y2cjxLcDTPobeIuYwGv3REEYSlXj42dDN1JgFhZyrhbOIhll/qloMr/SctkrQm50aw+OW5zMys4/0dBQCWcACvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWVyvLOb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRm0JemU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23CA1C4CEE2;
-	Sat, 10 May 2025 07:44:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWVyvLOb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0F06DC4CEEF;
+	Sat, 10 May 2025 07:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746863083;
-	bh=bE/SOpoChEP71E9o00tKei1ZQQ2RQ/5dOoWOaqj9An8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZRm0JemUldpe+AgpDLQ5gUzWpGiNST07Xb7zIxeqwnu7jsSZr1yS4/lz4mfza2rln
-	 G7AyXvCic3ERDJlHJMfN3/S7aWRxrb7rmLDTtta01a79D3ACZLBzNl2+Zd4CVFHMqs
-	 quMc08ZsU6wqlDsG6c5lHSD5KEpOOdNF1h70gGSb4W8qvFDaK7kw0dKtNwzqtYeQgU
-	 zmm/Yxvof1Ps+yJAHT7+PbjkbgIV7njlN6hU0BumHXRHQ8/Aw16DO7Lf8ciKRklKi3
-	 JDoafNUlWi1+P/wswBxr6C1sL3xDClwUVa6Rsq0Wk/bcrQXS2SN5ixpLivo249eC2O
-	 Ja0cRETdRmAjw==
-Date: Sat, 10 May 2025 10:44:38 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, Peter Huewe <peterhuewe@gmx.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	linux-integrity@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>
-Subject: Re: [PATCH v4 1/4] tpm: add buf_size parameter in the .send callback
-Message-ID: <aB8D5syofPSqjzns@kernel.org>
-References: <20250509085713.76851-1-sgarzare@redhat.com>
- <20250509085713.76851-2-sgarzare@redhat.com>
+	s=k20201202; t=1746863109;
+	bh=GQdySjnU/U2AKITWufHtvENXM8nduTjgzWyCaiFQeTs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=lWVyvLObDxpwcHwEzTI0jBgYFiEGQK0JqbemVp5GK9gwcnKcAQjDTyS6IKLB4WwkP
+	 gYLkGh4ePlFwykb3i7KxYTjzakN3vjZXA0vJpCNDct3KLqQiKOsTGbYjFRCd2Cyc3n
+	 xXWnyPgM+9hH/p9oO19Zhi+1hQN+qknB34QQta2cuo61jXEbRwimQz4HUAINFoZLOt
+	 iEwjhJi3f/cTQG+9cKavHU+oL0l+WTv5HKsJ7Yu0FOGFHsFnMWC035UiXYI8QHRn/o
+	 sc3lPzGGzxDm+9DwOvlpWSoyD9l7RTglE45vaMxyPnHtvH9bStsv0ObnA6C1k4N4A9
+	 tWW4kCisDxAYA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004CCC3ABBE;
+	Sat, 10 May 2025 07:45:09 +0000 (UTC)
+From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
+Date: Sat, 10 May 2025 07:44:42 +0000
+Subject: [PATCH 2/7] nvmem: core: round up to word_size
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509085713.76851-2-sgarzare@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250510-nvmem-dt-v1-2-eccfa6e33f6a@svenpeter.dev>
+References: <20250510-nvmem-dt-v1-0-eccfa6e33f6a@svenpeter.dev>
+In-Reply-To: <20250510-nvmem-dt-v1-0-eccfa6e33f6a@svenpeter.dev>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ Sven Peter <sven@svenpeter.dev>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1011; i=sven@svenpeter.dev;
+ h=from:subject:message-id;
+ bh=H4fL+CAaJi5RsVSWx0aHxTvxkzr7MJNevpfVzdnrUaE=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ4Y8879pU0vbs4VO/5ijucvz2QEJ3lUxMZOLLk9YufX/+
+ XpJM/+nHaUsDGIcDLJiiizb99ubPnn4RnDppkvvYeawMoEMYeDiFICJ/NRj+F/vJXd5iYrr0s4d
+ M34U/TTJDHolWdu+20GUVeDk/stvgr4x/A+5W/zSJJ9N6c8Etdg/UqW8ebnKszftrHz0/Up8hcZ
+ HGwYA
+X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
+ auth_id=167
+X-Original-From: Sven Peter <sven@svenpeter.dev>
+Reply-To: sven@svenpeter.dev
 
-On Fri, May 09, 2025 at 10:57:10AM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> 
-> Add a new `buf_size` parameter to the `.send` callback in `tpm_class_ops`.
-> This parameter will allow drivers to differentiate between the actual
-> command length to send and the total buffer size. Currently `buf_now` is
-> not used, but it will be used to implement devices with synchronous send()
-> to send the command and receive the response on the same buffer.
-> 
-> Also rename the previous parameter `len` to `cmd_len` in the declaration
-> to make it clear that it contains the length in bytes of the command
-> stored in the buffer. The semantics don't change and it can be used as
-> before by drivers. This is an optimization since the drivers could get it
-> from the header, but let's avoid duplicating code.
-> 
-> While we are here, resolve a checkpatch warning:
->   WARNING: Unnecessary space before function pointer arguments
->   #66: FILE: include/linux/tpm.h:90:
->   +	int (*send) (struct tpm_chip *chip, u8 *buf, size_t cmd_len,
-> 
-> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> v4:
-> - rework the commit description [Jarkko]
-> ---
->  include/linux/tpm.h                  | 3 ++-
->  drivers/char/tpm/st33zp24/st33zp24.c | 2 +-
->  drivers/char/tpm/tpm-interface.c     | 2 +-
->  drivers/char/tpm/tpm_atmel.c         | 3 ++-
->  drivers/char/tpm/tpm_crb.c           | 2 +-
->  drivers/char/tpm/tpm_ftpm_tee.c      | 4 +++-
->  drivers/char/tpm/tpm_i2c_atmel.c     | 3 ++-
->  drivers/char/tpm/tpm_i2c_infineon.c  | 3 ++-
->  drivers/char/tpm/tpm_i2c_nuvoton.c   | 3 ++-
->  drivers/char/tpm/tpm_ibmvtpm.c       | 6 ++++--
->  drivers/char/tpm/tpm_infineon.c      | 3 ++-
->  drivers/char/tpm/tpm_nsc.c           | 3 ++-
->  drivers/char/tpm/tpm_svsm.c          | 3 ++-
->  drivers/char/tpm/tpm_tis_core.c      | 3 ++-
->  drivers/char/tpm/tpm_tis_i2c_cr50.c  | 6 ++++--
->  drivers/char/tpm/tpm_vtpm_proxy.c    | 4 +++-
->  drivers/char/tpm/xen-tpmfront.c      | 3 ++-
->  17 files changed, 37 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 9ac9768cc8f7..7ac390ec89ce 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -87,7 +87,8 @@ struct tpm_class_ops {
->  	const u8 req_complete_val;
->  	bool (*req_canceled)(struct tpm_chip *chip, u8 status);
->  	int (*recv) (struct tpm_chip *chip, u8 *buf, size_t len);
-> -	int (*send) (struct tpm_chip *chip, u8 *buf, size_t len);
-> +	int (*send)(struct tpm_chip *chip, u8 *buf, size_t cmd_len,
-> +		    size_t buf_size);
+From: Sven Peter <sven@svenpeter.dev>
 
-I'm sorry but now that I look at this, just for the sake of consistency:
+Some nvmem controllers like Apple's eFuses or Nintendo's OTP have a cell
+word size that's larger than one byte and cannot read anything smaller.
+Round up cell->bytes correctly when accessing a subset of bits.
 
-	int (*send)(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-		    size_t cmd_len);
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ drivers/nvmem/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I.e. match the order and parameter names from tpm_try_transmit().
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 1bd39b12c21a86b9b135be95251a52a10543c2ea..02081c93fa467e5448bd78a4920072d437365fb9 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -595,8 +595,8 @@ static int nvmem_cell_info_to_nvmem_cell_entry_nodup(struct nvmem_device *nvmem,
+ 	cell->np = info->np;
+ 
+ 	if (cell->nbits)
+-		cell->bytes = DIV_ROUND_UP(cell->nbits + cell->bit_offset,
+-					   BITS_PER_BYTE);
++		cell->bytes = round_up(DIV_ROUND_UP(cell->nbits + cell->bit_offset,
++					   BITS_PER_BYTE), nvmem->word_size);
+ 
+ 	if (!IS_ALIGNED(cell->offset, nvmem->stride)) {
+ 		dev_err(&nvmem->dev,
 
-BR, Jarkko
+-- 
+2.34.1
+
+
