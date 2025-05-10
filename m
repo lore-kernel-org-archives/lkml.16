@@ -1,370 +1,126 @@
-Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF7A846F
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8DDD846F
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746846252; cv=none; b=jtnnkEfvN5CDh6iWZc9JVDDl1n75tc5iHwZXRj+lp+ZxNOoLyCMbVLKhi29dfrkpnpjoPDL2nKADQou1C9BAqg/3xLt4FP5yWG6Faucuebwq26LLHs78igFZu94f5UFo9Opi/Yy04diDGt7cgl/3NqKZ/MFkMhVZ2egYIGWG9K0=
+	t=1746846650; cv=none; b=szSfHRrmqGnChUkur7cbovF/zabL5ceRHPkxUfl82zoT7ZaJUm+CSAKkbHyy+hzweCHLGkiJlVHqfYmqszkdawKQKyX9jGnOE1oNPx09Df74WB1WkO3Mmt/Ihh7ykMQHbK83B10LmZp8dkjh/CXtVFT8EVhmPlOWXiyO5PqhHEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746846252; c=relaxed/simple;
-	bh=/ChQVtuifeLvNV+OhKSlhnIYf69DETTiawf9vc6SbIA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=joPmCoiqdos1UsRZ4eN8MHCrVHI02alqFYXMCkmg2j2sAeHlzEqVfUuduDqAQPebx/cdKpiliGwqqcXYEBa33uBhndkAyeH7yeCdl2rewl3eUwb7tPzhZLlfhoxF4tz7SD9hH8Nmy1UhJ9hb+YTjGsGAnUKOomKGBRZo/Nj6U9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EhvXiebJ; arc=none smtp.client-ip=209.85.128.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746846650; c=relaxed/simple;
+	bh=CAgHGSxCvrBE9rW8K/6Dj0MxZd8Dgot57x2MAuXnQ2U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=QPBbAVpFiWjMnuW2tcIqXRMk6FD7+D9E6/Qs31gcKHvj00qPPZ49J4Hs+Qh6zxJrqMcgAyq0YyFaZ3HkkYST11oniLckkXRCM1uT6YQyTj2omMb5Ue191KdLclPPvs4n9QyWRB7Vy8oErFsKnG73zVr7YX6iDMl6Fbo+vnUJbEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Dc7vaGyD reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhvXiebJ"
-Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-707d3c12574so23412137b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 20:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746846248; x=1747451048; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kYu/LA9AjdzrzJtWOjQsn3xYZ0icjSffhzd9xey+Pos=;
-        b=EhvXiebJDgtdYS4AvLLv1Pp3kFjET7ukBFnxNcqIrM2BqmzvLnqSno3NU7VkE+niR2
-         F9LpQfqiCQTFTQR7j1FiF6aZuPGILTAfOzf/QMXLqNnUetX9wAEG9VLR2SS7pS2rj15h
-         8BfvMOsXJsTQ59zn4rwNy8pYWjb5qPj4m8iYu1NC607LECQPfhixt3BfZAm/Vglly1QD
-         lcuBVCO/6j95BQ5z2Hdzy9fwisrOE+A7i384FKZ7StI7Y6bjJ0zPM0tPX999I+nYMzGy
-         kSfgJ9qUrriygvfKeZ/Tb6XQWfIlhBf7L+GZmJoK8Xq2Nlim+KJWCtseWuloyUHHCN6T
-         hWuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746846248; x=1747451048;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kYu/LA9AjdzrzJtWOjQsn3xYZ0icjSffhzd9xey+Pos=;
-        b=tiC+kDpphhNFr32xs2LX/P2wmmkMYaYpiXlglLlTYhxerOe4V21wVqJCkSlXEJ+Gig
-         Q0WKF7DU4NhIxDdHmzrpTGcDH5E3bEJIPYkjBUQNP4BvfBIhS16LR3TlKpHpp/P9eesp
-         jUj//mRIZWHAgkuMGfbYANwZIOjlB+nJIro0k7tk4jskGJn1xdVDzpZqfYOE1CvzD7Eg
-         +qgcWz5VNjIwN7SbQgKr4a53cUUmOpIIvNhK20WWjNc8GfxvKH3DM9Wtqz9IZEnlTA4W
-         XVIWBAWZ2d+U91k/bsVO9HYD6R1VUDlVnC/XnQHS7wEUs+NklRVxcPTZTm6izNBvRZ5N
-         EFAA==
-X-Gm-Message-State: AOJu0Yy6JJLVyN7IdANKz8kH6h4od68nYNnd/lKhKAsbCVgSjRi+2Oqq
-	tg9i3oM8B8oz4XJKBhblVHPh99I6+0RFlHuIADX6POmruzKXXKJAG9WpX+IoqKEv7hIXGTQ8ZS3
-	cjrMHdr0gsXWZKN3ea4D640MJm4hKcrcIZxc=
-X-Gm-Gg: ASbGncs9QuLaEMTleZ4Bwg+jdlIlIj3JLKHGZkO7qH7ICXOS/4TVxWu5e2KDV0J6dan
-	JeIfwhQjyb5TALW6i5S9Hkh+ptOcW2o2ixDk6PWipgvpfovzozA1NEMUDesqJgaKnKx0b9qNEyU
-	FnqCEoroTl7jsZ70vGkXNUjMrML56qniC8jknZr0wDLII+Y0UeO77ZYUn/X9sr9lynagIcRwOR
-X-Google-Smtp-Source: AGHT+IHYxWhcpzljKG176acccY/5Q5mZL3/FlioJ5Lu9FcHW4hnklmyM+bFvbCUaE1xPFA9SRG8S+b/A4zlZFHxb3hI=
-X-Received: by 2002:a05:690c:3749:b0:703:b8f7:a653 with SMTP id
- 00721157ae682-70a2cae3e9emr142830437b3.9.1746846247819; Fri, 09 May 2025
- 20:04:07 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Dc7vaGyD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=liqVt+y/MENWHPAiidgPdcKn8HEolOEYJQaAWDXSlcA=; b=D
+	c7vaGyDj43tcllREAY+LIzGrNw8YrVaVZVvWyNZbRLQ91viLiqDQnwW+7XUGFFbR
+	sEsmvOLyMa0RipIYtXHeylhoXz+hPUKUiFLcLuVYnuYdOP+mQwCTVdXY+WI2ABgn
+	WS5yfFARmhXj1yZOCqMOZuURLswbSciuMrR6XnXWAM=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-128 (Coremail) ; Sat, 10 May 2025 11:10:04 +0800
+ (CST)
+Date: Sat, 10 May 2025 11:10:04 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Suren Baghdasaryan" <surenb@google.com>
+Cc: "Tim Chen" <tim.c.chen@linux.intel.com>, kent.overstreet@linux.dev,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between
+ read() calls
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <CAJuCfpFLqTR=KfkstR-iRQvE7ZQMsr9=jXj6C4VdFq-Ebq6mvQ@mail.gmail.com>
+References: <20250507175500.204569-1-00107082@163.com>
+ <20250509173929.42508-1-00107082@163.com>
+ <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
+ <CAJuCfpHB8T8daanvE_wowRD9-sAo30rtCcFfMPZL_751+KSs5w@mail.gmail.com>
+ <294d0743c0b2e5c409857ef81a6fe8baaf87727f.camel@linux.intel.com>
+ <CAJuCfpF=u-LpR6S+XmwPe8a6h4knzP2Nu5WFp=Rdvqa14vOzDA@mail.gmail.com>
+ <CAJuCfpFLqTR=KfkstR-iRQvE7ZQMsr9=jXj6C4VdFq-Ebq6mvQ@mail.gmail.com>
+X-NTES-SC: AL_Qu2fBPSfuU4r4iSQYOkZnEYQheY4XMKyuPkg1YJXOp80liTj+QsqeHJmM2fy0MWCMhmgvRWIThZo2P9Ff7J6UbI3tyWRlCbZhr3wKmxlG/6j
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Amit <amitchoudhary0523@gmail.com>
-Date: Sat, 10 May 2025 08:33:57 +0530
-X-Gm-Features: AX0GCFvg3HSQUhh4rq3BJfkJi18qjXTF10jsYbKeEq8Y1dvQ3ncSFyKGrjdZU5U
-Message-ID: <CAFf+5zivvBhC3xjU0Eottf=BEJicH_DQeZhgN7-0OG2B9m=_rg@mail.gmail.com>
-Subject: Alternate implementation of C standard library's getline() function
- which is much simpler to use than getline().
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-File get_line_from_file.c implements a function get_line_from_file() which is
-an alternate implementation of C standard library's getline() function and this
-function is much simpler to use than getline().
-
-There are three files and their contents are listed below:
-
---------------------
-get_line_from_file.c
---------------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#include "get_line_from_file.h"
-
-#include <stddef.h>
-#include <sys/types.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#define NEW_LINE '\n'
-
-#define BUF_SIZE_INCREMENT 1024
-
-char *get_line_from_file(int fd, int *error_num)
-{
-
-    char *buf = NULL;
-    char *buf_temp = NULL;
-
-    long curr_buf_size = 0;
-    long curr_data_len = 0;
-
-    ssize_t bytes_read = -1;
-    int end_of_file_reached_or_error = 0;
-    int new_line_found = 0;
-    long i = 0;
-
-    *error_num = NO_ERROR;
-
-    if (fd < 0) {
-        *error_num = INVALID_FD;
-        return NULL;
-    }
-
-    while (1) {
-
-        buf_temp = buf;
-
-        buf = realloc(buf, (size_t)(curr_buf_size + BUF_SIZE_INCREMENT));
-
-        if (!buf) {
-            free(buf_temp);
-            *error_num = NO_MEMORY;
-            return NULL;
-        }
-
-        curr_buf_size = curr_buf_size + BUF_SIZE_INCREMENT;
-
-        // read data from file
-        while (curr_data_len != curr_buf_size) {
-
-            bytes_read = read(fd, buf + curr_data_len,
-                              (size_t)(curr_buf_size - curr_data_len));
-
-            if (bytes_read == 0) { // end of file reached
-                // Check if no bytes were read earlier also in this call to
-                // get_line_from_file(). If yes, then this means that end of
-                // test file was reached (but not actually read) in the last
-                // call to get_line_from_file(). So, this time end of file was
-                // read and 0 was returned by read. So, since there are no bytes
-                // to process, free the buffer and return NULL.
-                if (curr_data_len == 0) {
-                    free(buf);
-                    return NULL;
-                }
-            } // end of if bytes_read == 0
-
-            if (bytes_read <= 0) {
-                end_of_file_reached_or_error = 1;
-                break;
-            } // end of if bytes_read <= 0
-
-            curr_data_len = curr_data_len + bytes_read;
-
-        } // end of inner while (1) loop
-
-        new_line_found = 0;
-
-        for (i = 0; i < curr_data_len; i++) {
-            if (buf[i] == NEW_LINE) {
-                buf[i] = 0;
-                new_line_found = 1;
-                break;
-            }
-        } // end of for loop
-
-        if (new_line_found) {
-
-            // realloc and seek
-            buf_temp = buf;
-
-            buf = realloc(buf, (size_t)(i + 1));
-
-            if (!buf) {
-                free(buf_temp);
-                *error_num = NO_MEMORY;
-                return NULL;
-            }
-
-            if (lseek(fd, (i + 1) - curr_data_len, SEEK_CUR) < 0) {
-                *error_num = FILE_LSEEK_ERROR;
-                free(buf);
-                return NULL;
-            }
-
-            return buf;
-
-        } else { // new line not found
-
-            // NEW_LINE not found and end of file has been reached or some
-            // error happened. So, allocate one extra byte for terminating
-            // null byte and return.
-            if (end_of_file_reached_or_error) {
-
-                buf_temp = buf;
-
-                buf = realloc(buf, (size_t)(curr_data_len + 1));
-
-                if (!buf) {
-                    free(buf_temp);
-                    *error_num = NO_MEMORY;
-                    return NULL;
-                }
-
-                buf[curr_data_len] = 0;
-
-                return buf;
-
-            } // end of if end_of_file_reached_or_error
-
-        } // end of if - else (new_line_found)
-
-    } // end of outer while (1) loop
-
-} // end of get_line_from_file
-
---------------------
-get_line_from_file.h
---------------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#ifndef _GET_LINE_FROM_FILE_H_
-#define _GET_LINE_FROM_FILE_H_
-
-#define NO_ERROR 0 // no error happened.
-#define INVALID_FD -1 // fd is less than 0.
-#define NO_MEMORY -2 // memory not available.
-#define FILE_LSEEK_ERROR -3 // error in seeking file
-
-/*
- * char *get_line_from_file(int fd, int *error_num):
- *
- * Function get_line_from_file() is an alternate implementation of C standard
- * library's getline() function and this function is much simpler to use than
- * getline().
- *
- * Function get_line_from_file() returns a line from the file represented by fd.
- *
- * This function supports only regular files (no pipes, sockets, etc).
- *
- * If fd is less than 0 then NULL is returned and *error_num is assigned the
- * appropriate error value (INVALID_FD in this case).
- *
- * In case of any error, *error_num is assigned the appropriate error value.
- *
- * The high level algorithm of this function is:
- *
- *      The function get_line_from_file() reads some bytes in a buffer from the
- *      file and tries to find the newline in the buffer. If the newline is not
- *      found then it reads more bytes from the file in the buffer. When the
- *      newline is found in the buffer, then the newline is replaced with the
- *      null terminating character and the buffer is reallocated to the correct
- *      size. Then the file offset for reading is set to the start of the next
- *      line. And then the buffer is returned to the user.
- *
- * Please note that the returned line/buffer doesn't contain any newlines.
- *
- * The line/buffer returned by this function is allocated using realloc(),
- * so it is user's responsibility to free the line (free memory).
- */
-
-char *get_line_from_file(int fd, int *error_num);
-
-#endif
-
--------------------------
-test_get_line_from_file.c
--------------------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#include "get_line_from_file.h"
-
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-int main(int argc, char *argv[])
-{
-
-    int fd = -1;
-    char *line = NULL;
-    int error_num = 0;
-
-    if (argc != 2) {
-        printf("\n");
-        printf("Error: Incorrect usage.\n");
-        printf("\n");
-        printf("This program takes only one argument which is the name of a"
-               " file whose contents have to be printed.\n");
-        printf("\n");
-        printf("Usage: %s file_name\n", argv[0]);
-        printf("\n");
-        printf("Please try again. Exiting..\n");
-        printf("\n");
-        exit(1);
-    }
-
-    fd = open(argv[1], O_RDONLY);
-
-    if (fd < 0) {
-        printf("\n%s: File \"%s\" could not be opened. Exiting..\n\n",
-               __FILE__, argv[1]);
-        exit(1);
-    }
-
-    while ((line = get_line_from_file(fd, &error_num)) != NULL) {
-        printf("%s\n", line);
-        free(line);
-    }
-
-    if (error_num != 0) {
-        printf("\nError number returned = %d\n\n", error_num);
-    }
-
-    close(fd);
-
-} // end of function main()
+Message-ID: <3cbaf905.ef7.196b82bdcc9.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:gCgvCgD3_wSNwx5omyoBAA--.8290W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBxJqmgevNQrKQADsw
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+
+CkF0IDIwMjUtMDUtMTAgMDU6MTU6NDMsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
+Z2xlLmNvbT4gd3JvdGU6Cj5PbiBGcmksIE1heSA5LCAyMDI1IGF0IDE6NDbigK9QTSBTdXJlbiBC
+YWdoZGFzYXJ5YW4gPHN1cmVuYkBnb29nbGUuY29tPiB3cm90ZToKPj4KPj4gT24gRnJpLCBNYXkg
+OSwgMjAyNSBhdCAxMjo0NuKAr1BNIFRpbSBDaGVuIDx0aW0uYy5jaGVuQGxpbnV4LmludGVsLmNv
+bT4gd3JvdGU6Cj4+ID4KPj4gPiBPbiBGcmksIDIwMjUtMDUtMDkgYXQgMTI6MzYgLTA3MDAsIFN1
+cmVuIEJhZ2hkYXNhcnlhbiB3cm90ZToKPj4gPiA+IE9uIEZyaSwgTWF5IDksIDIwMjUgYXQgMTE6
+MzPigK9BTSBUaW0gQ2hlbiA8dGltLmMuY2hlbkBsaW51eC5pbnRlbC5jb20+IHdyb3RlOgo+PiA+
+ID4gPgo+PiA+ID4gPiBPbiBTYXQsIDIwMjUtMDUtMTAgYXQgMDE6MzkgKzA4MDAsIERhdmlkIFdh
+bmcgd3JvdGU6Cj4+ID4gPiA+ID4KPj4gPiA+ID4gPgo+PiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
+IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+Cj4+ID4gPgo+PiA+ID4gQWNrZWQtYnk6IFN1
+cmVuIEJhZ2hkYXNhcnlhbiA8c3VyZW5iQGdvb2dsZS5jb20+Cj4+ID4gPgo+PiA+ID4gPiA+IC0t
+LQo+PiA+ID4gPiA+ICBsaWIvYWxsb2NfdGFnLmMgfCAyOSArKysrKysrKysrLS0tLS0tLS0tLS0t
+LS0tLS0tLQo+PiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTkg
+ZGVsZXRpb25zKC0pCj4+ID4gPiA+ID4KPj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvbGliL2FsbG9j
+X3RhZy5jIGIvbGliL2FsbG9jX3RhZy5jCj4+ID4gPiA+ID4gaW5kZXggMjVlY2MxMzM0YjY3Li5m
+ZGQ1ODg3NzY5YTYgMTAwNjQ0Cj4+ID4gPiA+ID4gLS0tIGEvbGliL2FsbG9jX3RhZy5jCj4+ID4g
+PiA+ID4gKysrIGIvbGliL2FsbG9jX3RhZy5jCj4+ID4gPiA+ID4gQEAgLTQ1LDIxICs0NSwxNiBA
+QCBzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUgewo+PiA+ID4gPiA+ICBzdGF0aWMgdm9pZCAqYWxs
+b2NpbmZvX3N0YXJ0KHN0cnVjdCBzZXFfZmlsZSAqbSwgbG9mZl90ICpwb3MpCj4+ID4gPiA+ID4g
+IHsKPj4gPiA+ID4gPiAgICAgICBzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUgKnByaXY7Cj4+ID4g
+PiA+ID4gLSAgICAgc3RydWN0IGNvZGV0YWcgKmN0Owo+PiA+ID4gPiA+ICAgICAgIGxvZmZfdCBu
+b2RlID0gKnBvczsKPj4gPiA+ID4gPgo+PiA+ID4gPiA+IC0gICAgIHByaXYgPSBremFsbG9jKHNp
+emVvZigqcHJpdiksIEdGUF9LRVJORUwpOwo+PiA+ID4gPiA+IC0gICAgIG0tPnByaXZhdGUgPSBw
+cml2Owo+PiA+ID4gPiA+IC0gICAgIGlmICghcHJpdikKPj4gPiA+ID4gPiAtICAgICAgICAgICAg
+IHJldHVybiBOVUxMOwo+PiA+ID4gPiA+IC0KPj4gPiA+ID4gPiAtICAgICBwcml2LT5wcmludF9o
+ZWFkZXIgPSAobm9kZSA9PSAwKTsKPj4gPiA+ID4gPiArICAgICBwcml2ID0gKHN0cnVjdCBhbGxv
+Y2luZm9fcHJpdmF0ZSAqKW0tPnByaXZhdGU7Cj4+ID4gPiA+ID4gICAgICAgY29kZXRhZ19sb2Nr
+X21vZHVsZV9saXN0KGFsbG9jX3RhZ19jdHR5cGUsIHRydWUpOwo+PiA+ID4gPiA+IC0gICAgIHBy
+aXYtPml0ZXIgPSBjb2RldGFnX2dldF9jdF9pdGVyKGFsbG9jX3RhZ19jdHR5cGUpOwo+PiA+ID4g
+PiA+IC0gICAgIHdoaWxlICgoY3QgPSBjb2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpKSAhPSBO
+VUxMICYmIG5vZGUpCj4+ID4gPiA+ID4gLSAgICAgICAgICAgICBub2RlLS07Cj4+ID4gPiA+ID4g
+LQo+PiA+ID4gPiA+IC0gICAgIHJldHVybiBjdCA/IHByaXYgOiBOVUxMOwo+PiA+ID4gPiA+ICsg
+ICAgIGlmIChub2RlID09IDApIHsKPj4gPiA+ID4gPiArICAgICAgICAgICAgIHByaXYtPnByaW50
+X2hlYWRlciA9IHRydWU7Cj4+ID4gPiA+ID4gKyAgICAgICAgICAgICBwcml2LT5pdGVyID0gY29k
+ZXRhZ19nZXRfY3RfaXRlcihhbGxvY190YWdfY3R0eXBlKTsKPj4gPiA+ID4gPiArICAgICAgICAg
+ICAgIGNvZGV0YWdfbmV4dF9jdCgmcHJpdi0+aXRlcik7Cj4+ID4gPiA+ID4gKyAgICAgfQo+PiA+
+ID4gPgo+PiA+ID4gPiBEbyB5b3UgbmVlZCB0byBza2lwIHByaW50IGhlYWRlciB3aGVuICpwb3Mg
+IT0gMD8gaS5lIGFkZAo+PiA+ID4KPj4gPiA+IFRlY2huaWNhbGx5IG5vdCBuZWVkZWQgc2luY2Ug
+cHJvY19jcmVhdGVfc2VxX3ByaXZhdGUoKSBhbGxvY2F0ZXMKPj4gPiA+IHNlcS0+cHJpdmF0ZSB1
+c2luZyBremFsbG9jKCksIHNvIHRoZSBpbml0aWFsIHZhbHVlIG9mCj4+ID4gPiBwcml2LT5wcmlu
+dF9oZWFkZXIgaXMgYWx3YXlzIGZhbHNlLgo+PiA+Cj4+ID4gQnV0IHdlJ2xsIHN0YXJ0IHdpdGgg
+Zmlyc3QgY2FsbCB0byBhbGxvY2luZm9fc3RhcnQoKSB3aXRoICpwb3MgPT0gMCwKPj4KPj4gVXN1
+YWxseSBidXQgbm90IGFsd2F5cyBpZiB3ZSBkbyBsc2VlaygpIHRvIGEgbm9uLXplcm8gcG9zaXRp
+b24gYmVmb3JlaGFuZC4KPgo+QWN0dWFsbHksIHRoaXMgY2hhbmdlIHdpbGwgYnJlYWsgdGhlIGxz
+ZWVrKCkgY2FzZS4gV2UgY2FuJ3QgYWx3YXlzCj5hc3N1bWUgdGhhdCB3ZSBzdGFydCByZWFkaW5n
+IGZyb20gKnBvcyA9PSAwLiBDdXJyZW50IHBhdGNoIHdpbGwgZmFpbAo+dG8gaW5pdGlhbGl6ZSBw
+cml2IGlmIHdlIHN0YXJ0IHJlYWRpbmcgd2l0aCAqcG9zICE9IDAuCj5wcml2LT5pdGVyIHNob3Vs
+ZCBiZSB0cmFja2luZyBjdXJyZW50IHBvc2l0aW9uIGFuZCBhbGxvY2luZm9fc3RhcnQoKQo+c2hv
+dWxkIGRldGVjdCBhIG1pc21hdGNoIGJldHdlZW4gKnBvcyBhbmQgaXRlci0+cG9zIGFuZCByZS13
+YWxrIHRoZQo+dGFncyBpZiB0aGVyZSB3YXMgYSBwb3NpdGlvbiBjaGFuZ2UuCgpzZXFfZmlsZSB3
+b3JrcyBsaW5lIGJ5IGxpbmUsICBJIHRoaW5rIGV2ZW4gaWYgaXQgc3VwcG9ydCBsc2Vlaywgc2Vx
+X2ZpbGUgd291bGQgc3RpbGwgc3RhcnQgd2l0aCBsaW5lICMwLApzaW5jZSBzZXFfZmlsZSBoYXZl
+IG9uIGNsdWUgdGhlIGJ5dGUgc2l6ZSBmb3IgZWFjaCBsaW5lLgoKSSB3aWxsIGNoZWNrIHRoZSBj
+b2RlLCAgbWFrZSBzb21lIHRlc3RzIGFuZCB1cGRhdGUgbGF0ZXIuCgoKPgo+Pgo+PiA+IHRoZW4g
+cHJpbnRfaGVhZGVyIHdpbGwgYmUgaW5pdGlhbGl6ZWQgdG8gdHJ1ZS4KPj4KPj4gQWZ0ZXIgdGhl
+IGZpcnN0IGNhbGwgdG8gYWxsb2NpbmZvX3Nob3coKSBwcmludF9oZWFkZXIgd2lsbCBiZSByZXNl
+dAo+PiBiYWNrIHRvIGZhbHNlLgo+Pgo+PiA+IFdpbGwgdGhlcmUgYmUgc3Vic2VxdWVudCBjYWxs
+cyBvZiBhbGxvY2luZm9fc3RhcnQoKSB3aXRoICpwb3MgIT0wLAo+PiA+IGJ1dCBwcml2LT5wcmlu
+dF9oZWFkZXIgc3RheXMgYXQgMD8KPj4KPj4gWWVzLCB0aGVyZSB3aWxsIGJlIHN1YnNlcXVlbnQg
+Y2FsbHMgdG8gYWxsb2NpbmZvX3N0YXJ0KCkgd2l0aCAqcG9zICE9MAo+PiBhbmQgcHJpdi0+cHJp
+bnRfaGVhZGVyPWZhbHNlLCB3aGljaCBpcyB3aGF0IHdlIHdhbnQsIHJpZ2h0PyBXZSB3YW50IHRv
+Cj4+IHByaW50IHRoZSBoZWFkZXIgb25seSBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZSBmaWxlIChu
+b2RlID09IDApLgo+Pgo+PiA+Cj4+ID4gVGltCj4+ID4gPgo+PiA+ID4gPgo+PiA+ID4gPiAgICAg
+ICAgIH0gZWxzZSB7Cj4+ID4gPiA+ICAgICAgICAgICAgICAgICBwcml2LT5wcmludF9oZWFkZXIg
+PSBmYWxzZTsKPj4gPiA+ID4gICAgICAgICB9Cj4+ID4gPiA+Cj4+ID4gPiA+IFRpbQo+PiA+ID4g
+Pgo+PiA+ID4gPiA+ICsgICAgIHJldHVybiBwcml2LT5pdGVyLmN0ID8gcHJpdiA6IE5VTEw7Cj4+
+ID4gPiA+ID4gIH0KPj4gPiA+ID4gPgo+PiA+ID4gPgo+PiA+Cg==
