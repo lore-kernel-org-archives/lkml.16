@@ -1,86 +1,71 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F72618DF8D;
-	Sat, 10 May 2025 10:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B2C18DF8D;
+	Sat, 10 May 2025 10:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746871236; cv=none; b=uHkEGiFoTfXCcL04nuctDPYbUYeGhatK214YqbXqXSO5VgtyzIyp0hpbbpsVGKFLLdeIljDWjOi+Kh+jhH0cgubsi8f/1/sYcHw8gJXn2pEBROY27w78OsVir7dyL3cqGC995ak6CiPinknoR5Rt2WZQ7vng9oWV4V2yH2dvnrc=
+	t=1746871542; cv=none; b=IuEvCpqrwoO5mPx6fbnaf/yS8umtRBc4MP5XkD7dz7+57HUm+uKdJJal035kobn+TfFXBiwBEu5AnmqkYGnPqIcKy3E5VxSJ+BqJIlr71UteTnvzWBjJB6vhWDB3+EweUBOT5j5KMWyo2jkBYZMSj2ko0/oGvaXxlzhHmWxbf5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746871236; c=relaxed/simple;
-	bh=Pi3y4dmEW1UEme+HX6yYi09ZtTkO/xqgAF/M7VX6HHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qyCuMaL1+vEYEeZaFhERp3J/ZTD84P71wISLcZrJgiEXB8fF471rHxPHunxA7hunc7SqUFu3HiKsvV5qS3PCql/DEH63A30hY2jVnEMwW09AfrLqqWq/AZtAtgZoBDq/w9tBiWwovjs6UXU/IOfnnP36ksTHb2FMiarrm6m3pSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [111.199.70.239])
-	by APP-05 (Coremail) with SMTP id zQCowADnJg8iIh9oBnoDEw--.48103S2;
-	Sat, 10 May 2025 17:53:42 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: njavali@marvell.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: mrangankar@marvell.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [RESEND PATCH] scsi: qla4xxx: Add missing is_qla4022 check in device initialization
-Date: Sat, 10 May 2025 17:52:57 +0800
-Message-ID: <20250510095257.921-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1746871542; c=relaxed/simple;
+	bh=nCg5dTq3OdqIAS+Cl59freLTg2I/khLS4trUZ7wl8+g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=h5octX1AvQIZaGlJ3SxioFE4IZBJpH5Lbpr1EISdbSoJCtvUZMeruiGWJ/+0psxKutA4v39TeK4n59ZlQ3kPIaNYxp5nkbBwhcurL3qe57nlsME4gh7jbdAJM7BjkS/sU8TCHQD6IG73grvlVEZ6Jri/SKihnyOi16qr72ZHDSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=lYr2mgJ6; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="lYr2mgJ6"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4068341080
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1746871534; bh=nCg5dTq3OdqIAS+Cl59freLTg2I/khLS4trUZ7wl8+g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lYr2mgJ6qGVYEx6+p/cIs1CIN8mPg7NT6QgMaqIRRJ4IBLrnd0/l7gE9ksWO20JGM
+	 AAgWMWa0jTYU6AH+6JSLOjbz++zbuTZ8szStTrQQK/xNIKD6V6tnKaR3HM1myRlVwZ
+	 WO5ANi8PSKOJ0X+7SkoLDiSDZByu6fbfrhEbW4q9B+8huGEp6C9WWWPHfo2gqnHgeC
+	 We9HQahhV8JHWuxFB39dRVxVCiFdJhhCDEC5hfdxZHTFwlkHcV7GknzBMvxeLikvb9
+	 qspUgUcLV+lN3/+PPVRMGrPO9b235Xs2h9Pt8BszoY/ms72Byvsrm0T99l0RNR1kx9
+	 7JnXAoQo+vrSQ==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 4068341080;
+	Sat, 10 May 2025 10:05:33 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: workflows@vger.kernel.org, linux-kernel@vger.kernel.org, Alexey Dobriyan
+ <adobriyan@gmail.com>
+Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into
+ symlink
+In-Reply-To: <20250509203430.3448-1-adobriyan@gmail.com>
+References: <20250509203430.3448-1-adobriyan@gmail.com>
+Date: Sat, 10 May 2025 04:05:29 -0600
+Message-ID: <87frhcsrva.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADnJg8iIh9oBnoDEw--.48103S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFWxGryUGF1rGw15XFWfGrg_yoWkuwb_ua
-	10v34Iv3ZIyr4kZ3W7XF18JFnavrsYqr1jq34Sqr4fA34UZ3s3Xryqv343Zw15G3yjyasx
-	Gws5Xry5Ar1fKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb4kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-	Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
-	6r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
-	UUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYSA2gesI3jzAAAs-
+Content-Type: text/plain
 
-The current code only checks for is_qla4032 in the adapter initialization
-logic, but is_qla4022 is also required for proper handling of qla4022
-devices. This can lead to incorrect behavior on qla4022 adapters.
+Alexey Dobriyan <adobriyan@gmail.com> writes:
 
-This patch adds the missing is_qla4022 check to ensure proper handling
-of both qla4022 and qla4032 devices during adapter initialization.
+> Every time I open Documentation/CodingStyle it says the party moved
+> somewhere else. :-(
+>
+> Of course, I forget where it moved to by the next time.
+>
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> ---
 
-Fixes: d915058f4874 ("[SCSI] qla4xxx: add support for qla4032")
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/scsi/qla4xxx/ql4_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No 0/9 cover letter?
 
-diff --git a/drivers/scsi/qla4xxx/ql4_init.c b/drivers/scsi/qla4xxx/ql4_init.c
-index 301bc09c8365..dfe3d0b26224 100644
---- a/drivers/scsi/qla4xxx/ql4_init.c
-+++ b/drivers/scsi/qla4xxx/ql4_init.c
-@@ -513,7 +513,7 @@ static int qla4xxx_fw_ready(struct scsi_qla_host *ha)
- 			      "seconds expired= %d\n", ha->host_no, __func__,
- 			      ha->firmware_state, ha->addl_fw_state,
- 			      timeout_count));
--		if (is_qla4032(ha) &&
-+		if ((is_qla4022(ha) || is_qla4032(ha)) &&
- 			!(ha->addl_fw_state & FW_ADDSTATE_LINK_UP) &&
- 			(timeout_count < ADAPTER_INIT_TOV - 5)) {
- 			break;
--- 
-2.42.0.windows.2
+Just FYI, I won't apply coding-style patches without a strong sense that
+there is a consensus behind them...I suspect that could prove to be a
+high bar here.
 
+Thanks,
+
+jon
