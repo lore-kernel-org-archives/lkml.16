@@ -1,164 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71F3288D6;
-	Sat, 10 May 2025 03:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA6C4288D6
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746849204; cv=none; b=HBckOXfyEgnioPvrskyiwKBc5IuDITIUC7sbjFPhawPzPnYSNYp2wGXq9G4X8DsoXwP9yxRuZWxRK2fFGpkeOlX3ePYmT0iWeU3uXsL2oml5NyTgwjNiht+yyDvFnlh3SjQh2uEgn+1kxLvcHNCPWEVCrj7MShuJBaCocu/oLhM=
+	t=1746849547; cv=none; b=Nlnk4tJFQ0le7SUs9GmzbkLFFWWxsQS3bi8wY7i9AUl5f6GCrd6GSfnK08Tuq0EEpnUCxVAWJwevjUm3JGJ+l8CCMM63ae36p2ZSxebxBJJ/aZ1Qxw/eJRJ4HemFheioXrYynjiqBmdU20nU5KdxLCUY6l/gqWPlBTspmHUKc90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746849204; c=relaxed/simple;
-	bh=7qd8Dq2IKH8h6Z7jvG365ZGz9qLosU047aoIDs4o9oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=niEWPZ0saHTVDki//8NfvQPCRJiGY2kEQxslGGkC37n+kNEoaOO+wlpf6lvgsOD6ekVQHhiRyB1K3+ikTrsJadgy8XhLvGGOva9/DMW2wQ/5pASOYgQM8DK2brbeIfWSHbI52sE0/o+1Iu6+96uojThBbCAg9XtLGWEqwVaY/jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nVwMizCX; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746849547; c=relaxed/simple;
+	bh=9Cw381KLctZ4HcdUtbAymFU967UMtv9Lndj7P6qd76E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Q7agr23kh6uuA/ytWiwIuCRhY3pqlqlOP6jHnUkyoxqTK03CFU7RTZkFVy9y+mG7cNIi+NgQ8gaGKGIQD2mn3cloFX86YogfjVSurqrbRhlHL2GQ51igyBG38fXFsRhdOTgoCnBnFut7oQUFaynACsVSwr4EdwyRb0d+LNbEb8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=QUBvHjiH reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nVwMizCX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746849203; x=1778385203;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7qd8Dq2IKH8h6Z7jvG365ZGz9qLosU047aoIDs4o9oc=;
-  b=nVwMizCXBN2guwF+vXSbwEbxtpLhrJNvl/PqoDCWvp9WLWPyDwyC6XIj
-   Z6wcnGhdjSnh/U/wMmMFDpWwingkfGcPTpc/UTGqqyHhxAcrtehZU+ZOf
-   TbFlvMA/tJyMEpOGT0IeB0Uajw8ZsCu5wntAnBGHTuSwpVWl/jTMiSyaU
-   hv+limzd+UohZwWGkxk/pwU9bITvsWGwDCvNWu68z8aFxf7dufSVZrG6F
-   7iFVEY+PINirOXyfxJcL7O3V7LFGhvx/IwnHCjJ9jFZtF0UI/2f1s5/KW
-   vZMg1o1xoqQU0MI/xgUwmKCzWa1oY0xOq+6ynBXrTDXa3wYTcZFXlBtIy
-   g==;
-X-CSE-ConnectionGUID: Bt7B+ElmQ3O+AjoKBRIOdg==
-X-CSE-MsgGUID: 1ng2/xBISC+qm39FQLVJgA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48843481"
-X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="48843481"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 20:53:22 -0700
-X-CSE-ConnectionGUID: Ia6DHy6hToG9AsdGC0hjsw==
-X-CSE-MsgGUID: SEM7hvo0QLuzcu2Q3hWrYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="160095646"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa002.fm.intel.com with ESMTP; 09 May 2025 20:53:17 -0700
-Date: Sat, 10 May 2025 11:47:55 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>, kvm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
-	christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
-	alex.williamson@redhat.com, vivek.kasireddy@intel.com,
-	dan.j.williams@intel.com, yilun.xu@intel.com,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lukas@wunner.de, yan.y.zhao@intel.com, daniel.vetter@ffwll.ch,
-	leon@kernel.org, baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
-	tao1.su@intel.com
-Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
-Message-ID: <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
-References: <20250107142719.179636-1-yilun.xu@linux.intel.com>
- <371ab632-d167-4720-8f0d-57be1e3fee84@amd.com>
- <4b6dc759-86fd-47a7-a206-66b25a0ccc6d@amd.com>
- <c10bf9c2-e073-479d-ad1c-6796c592d333@amd.com>
- <aB3jLmlUKKziwdeG@yilunxu-OptiPlex-7050>
- <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
- <20250509184318.GD5657@nvidia.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="QUBvHjiH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=nDcIRkEQ4CSUXxX0dVJa+XqS7i/HGdMYdn6W7O/fhZs=; b=Q
+	UBvHjiH4hHjv3jrTggxBOFs4UI0K/C6DqgSVBPV9+6JJMhDyOkqmUB5oRpDnkIG5
+	AQ1etguwzTU8PtPDsqFQ57ho1Xla4yFjtakSYhRhL00OXmFNX8JyNdr6EwsdpjhZ
+	Oa19q+pJdC9WphQH7fsLP16E6CKcUgkS3OTEoC2jP0=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-128 (Coremail) ; Sat, 10 May 2025 11:58:04 +0800
+ (CST)
+Date: Sat, 10 May 2025 11:58:04 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Suren Baghdasaryan" <surenb@google.com>
+Cc: "Tim Chen" <tim.c.chen@linux.intel.com>, kent.overstreet@linux.dev,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between
+ read() calls
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <CAJuCfpHuYHJh6yM+na0WLi3Lb910m73Xth8N3ZBnJKpAW5Qxww@mail.gmail.com>
+References: <20250507175500.204569-1-00107082@163.com>
+ <20250509173929.42508-1-00107082@163.com>
+ <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
+ <CAJuCfpHB8T8daanvE_wowRD9-sAo30rtCcFfMPZL_751+KSs5w@mail.gmail.com>
+ <294d0743c0b2e5c409857ef81a6fe8baaf87727f.camel@linux.intel.com>
+ <CAJuCfpF=u-LpR6S+XmwPe8a6h4knzP2Nu5WFp=Rdvqa14vOzDA@mail.gmail.com>
+ <CAJuCfpFLqTR=KfkstR-iRQvE7ZQMsr9=jXj6C4VdFq-Ebq6mvQ@mail.gmail.com>
+ <3cbaf905.ef7.196b82bdcc9.Coremail.00107082@163.com>
+ <CAJuCfpHuYHJh6yM+na0WLi3Lb910m73Xth8N3ZBnJKpAW5Qxww@mail.gmail.com>
+X-NTES-SC: AL_Qu2fBPSftkwj4iKYYukZnEYQheY4XMKyuPkg1YJXOp80liTj+QsqeHJmM2fy0MWCMhmgvRWIThZo2P9Ff7J6UbIozmhKmBHnAGsdkfASGrC/
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509184318.GD5657@nvidia.com>
+Message-ID: <7bb65ee6.129c.196b857cdb3.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:gCgvCgD3_wTNzh5oty8BAA--.8433W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBdJqmgeyjBdrQACsi
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Fri, May 09, 2025 at 03:43:18PM -0300, Jason Gunthorpe wrote:
-> On Sat, May 10, 2025 at 12:28:48AM +0800, Xu Yilun wrote:
-> > On Fri, May 09, 2025 at 07:12:46PM +0800, Xu Yilun wrote:
-> > > On Fri, May 09, 2025 at 01:04:58PM +1000, Alexey Kardashevskiy wrote:
-> > > > Ping?
-> > > 
-> > > Sorry for late reply from vacation.
-> > > 
-> > > > Also, since there is pushback on 01/12 "dma-buf: Introduce dma_buf_get_pfn_unlocked() kAPI", what is the plan now? Thanks,
-> > > 
-> > > As disscussed in the thread, this kAPI is not well considered but IIUC
-> > > the concept of "importer mapping" is still valid. We need more
-> > > investigation about all the needs - P2P, CC memory, private bus
-> > > channel, and work out a formal API.
-> > > 
-> > > However in last few months I'm focusing on high level TIO flow - TSM
-> > > framework, IOMMUFD based bind/unbind, so no much progress here and is
-> > > still using this temporary kAPI. But as long as "importer mapping" is
-> > > alive, the dmabuf fd for KVM is still valid and we could enable TIO
-> > > based on that.
-> > 
-> > Oh I forgot to mention I moved the dmabuf creation from VFIO to IOMMUFD
-> > recently, the IOCTL is against iommufd_device.
-> 
-> I'm surprised by this.. iommufd shouldn't be doing PCI stuff, it is
-> just about managing the translation control of the device.
-
-I have a little difficulty to understand. Is TSM bind PCI stuff? To me
-it is. Host sends PCI TDISP messages via PCI DOE to put the device in
-TDISP LOCKED state, so that device behaves differently from before. Then
-why put it in IOMMUFD?
-
-Or "managing the translation control" means IOMMUFD provides the TSM
-bind/unbind uAPI and call into VFIO driver for real TSM bind
-implementation?
-
-> 
-> > According to Jason's
-> > opinion [1], TSM bind/unbind should be called against iommufd_device,
-> > then I need to do the same for dmabuf.  This is because Intel TDX
-> > Connect enforces a specific operation sequence between TSM unbind & MMIO
-> > unmap:
-> > 
-> >   1. STOP TDI via TDISP message STOP_INTERFACE
-> >   2. Private MMIO unmap from Secure EPT
-> >   3. Trusted Device Context Table cleanup for the TDI
-> >   4. TDI ownership reclaim and metadata free
-> 
-> So your issue is you need to shoot down the dmabuf during vPCI device
-> destruction?
-
-I assume "vPCI device" refers to assigned device in both shared mode &
-prvate mode. So no, I need to shoot down the dmabuf during TSM unbind,
-a.k.a. when assigned device is converting from private to shared.
-Then recover the dmabuf after TSM unbind. The device could still work
-in VM in shared mode. 
-
-> 
-> VFIO also needs to shoot down the MMIO during things like FLR
-> 
-> I don't think moving to iommufd really fixes it, it sounds like you
-> need more coordination between the two parts??
-
-Yes, when moving to iommufd, VFIO needs extra kAPIs to inform IOMMUFD
-about the shooting down. But FLR or MSE toggle also breaks TSM bind
-state. As long as we put TSM bind in IOMMUFD, anyway the coordination
-is needed.
-
-What I really want is, one SW component to manage MMIO dmabuf, secure
-iommu & TSM bind/unbind. So easier coordinate these 3 operations cause
-these ops are interconnected according to secure firmware's requirement.
-Otherwise e.g. for TDX, when device is TSM bound (IOMMUFD controls
-bind) and VFIO wants FLR, VFIO revokes dmabuf first then explode.
-
-Safe way is one SW component manages all these "pre-FLR" stuffs, let's say
-IOMMUFD, it firstly do TSM unbind, let the platform TSM driver decides
-the correct operation sequence (TDISP, dmabuf for private MMIO mapping,
-secure dma). After TSM unbind, it's a shared device and IOMMUFD have no
-worry to revoke dmabuf as needed.
-
-Maybe I could send a patchset to illustrate...
-
-Thanks,
-Yilun
-
-> 
-> Jason
+CgpBdCAyMDI1LTA1LTEwIDExOjMwOjUwLCAiU3VyZW4gQmFnaGRhc2FyeWFuIiA8c3VyZW5iQGdv
+b2dsZS5jb20+IHdyb3RlOgo+T24gRnJpLCBNYXkgOSwgMjAyNSBhdCA4OjEw4oCvUE0gRGF2aWQg
+V2FuZyA8MDAxMDcwODJAMTYzLmNvbT4gd3JvdGU6Cj4+Cj4+Cj4+IEF0IDIwMjUtMDUtMTAgMDU6
+MTU6NDMsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29vZ2xlLmNvbT4gd3JvdGU6Cj4+
+ID5PbiBGcmksIE1heSA5LCAyMDI1IGF0IDE6NDbigK9QTSBTdXJlbiBCYWdoZGFzYXJ5YW4gPHN1
+cmVuYkBnb29nbGUuY29tPiB3cm90ZToKPj4gPj4KPj4gPj4gT24gRnJpLCBNYXkgOSwgMjAyNSBh
+dCAxMjo0NuKAr1BNIFRpbSBDaGVuIDx0aW0uYy5jaGVuQGxpbnV4LmludGVsLmNvbT4gd3JvdGU6
+Cj4+ID4+ID4KPj4gPj4gPiBPbiBGcmksIDIwMjUtMDUtMDkgYXQgMTI6MzYgLTA3MDAsIFN1cmVu
+IEJhZ2hkYXNhcnlhbiB3cm90ZToKPj4gPj4gPiA+IE9uIEZyaSwgTWF5IDksIDIwMjUgYXQgMTE6
+MzPigK9BTSBUaW0gQ2hlbiA8dGltLmMuY2hlbkBsaW51eC5pbnRlbC5jb20+IHdyb3RlOgo+PiA+
+PiA+ID4gPgo+PiA+PiA+ID4gPiBPbiBTYXQsIDIwMjUtMDUtMTAgYXQgMDE6MzkgKzA4MDAsIERh
+dmlkIFdhbmcgd3JvdGU6Cj4+ID4+ID4gPiA+ID4KPj4gPj4gPiA+ID4gPgo+PiA+PiA+ID4gPiA+
+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+Cj4+ID4+ID4gPgo+
+PiA+PiA+ID4gQWNrZWQtYnk6IFN1cmVuIEJhZ2hkYXNhcnlhbiA8c3VyZW5iQGdvb2dsZS5jb20+
+Cj4+ID4+ID4gPgo+PiA+PiA+ID4gPiA+IC0tLQo+PiA+PiA+ID4gPiA+ICBsaWIvYWxsb2NfdGFn
+LmMgfCAyOSArKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiA+PiA+ID4gPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRpb25zKC0pCj4+ID4+ID4gPiA+
+ID4KPj4gPj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvbGliL2FsbG9jX3RhZy5jIGIvbGliL2FsbG9j
+X3RhZy5jCj4+ID4+ID4gPiA+ID4gaW5kZXggMjVlY2MxMzM0YjY3Li5mZGQ1ODg3NzY5YTYgMTAw
+NjQ0Cj4+ID4+ID4gPiA+ID4gLS0tIGEvbGliL2FsbG9jX3RhZy5jCj4+ID4+ID4gPiA+ID4gKysr
+IGIvbGliL2FsbG9jX3RhZy5jCj4+ID4+ID4gPiA+ID4gQEAgLTQ1LDIxICs0NSwxNiBAQCBzdHJ1
+Y3QgYWxsb2NpbmZvX3ByaXZhdGUgewo+PiA+PiA+ID4gPiA+ICBzdGF0aWMgdm9pZCAqYWxsb2Np
+bmZvX3N0YXJ0KHN0cnVjdCBzZXFfZmlsZSAqbSwgbG9mZl90ICpwb3MpCj4+ID4+ID4gPiA+ID4g
+IHsKPj4gPj4gPiA+ID4gPiAgICAgICBzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUgKnByaXY7Cj4+
+ID4+ID4gPiA+ID4gLSAgICAgc3RydWN0IGNvZGV0YWcgKmN0Owo+PiA+PiA+ID4gPiA+ICAgICAg
+IGxvZmZfdCBub2RlID0gKnBvczsKPj4gPj4gPiA+ID4gPgo+PiA+PiA+ID4gPiA+IC0gICAgIHBy
+aXYgPSBremFsbG9jKHNpemVvZigqcHJpdiksIEdGUF9LRVJORUwpOwo+PiA+PiA+ID4gPiA+IC0g
+ICAgIG0tPnByaXZhdGUgPSBwcml2Owo+PiA+PiA+ID4gPiA+IC0gICAgIGlmICghcHJpdikKPj4g
+Pj4gPiA+ID4gPiAtICAgICAgICAgICAgIHJldHVybiBOVUxMOwo+PiA+PiA+ID4gPiA+IC0KPj4g
+Pj4gPiA+ID4gPiAtICAgICBwcml2LT5wcmludF9oZWFkZXIgPSAobm9kZSA9PSAwKTsKPj4gPj4g
+PiA+ID4gPiArICAgICBwcml2ID0gKHN0cnVjdCBhbGxvY2luZm9fcHJpdmF0ZSAqKW0tPnByaXZh
+dGU7Cj4+ID4+ID4gPiA+ID4gICAgICAgY29kZXRhZ19sb2NrX21vZHVsZV9saXN0KGFsbG9jX3Rh
+Z19jdHR5cGUsIHRydWUpOwo+PiA+PiA+ID4gPiA+IC0gICAgIHByaXYtPml0ZXIgPSBjb2RldGFn
+X2dldF9jdF9pdGVyKGFsbG9jX3RhZ19jdHR5cGUpOwo+PiA+PiA+ID4gPiA+IC0gICAgIHdoaWxl
+ICgoY3QgPSBjb2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpKSAhPSBOVUxMICYmIG5vZGUpCj4+
+ID4+ID4gPiA+ID4gLSAgICAgICAgICAgICBub2RlLS07Cj4+ID4+ID4gPiA+ID4gLQo+PiA+PiA+
+ID4gPiA+IC0gICAgIHJldHVybiBjdCA/IHByaXYgOiBOVUxMOwo+PiA+PiA+ID4gPiA+ICsgICAg
+IGlmIChub2RlID09IDApIHsKPj4gPj4gPiA+ID4gPiArICAgICAgICAgICAgIHByaXYtPnByaW50
+X2hlYWRlciA9IHRydWU7Cj4+ID4+ID4gPiA+ID4gKyAgICAgICAgICAgICBwcml2LT5pdGVyID0g
+Y29kZXRhZ19nZXRfY3RfaXRlcihhbGxvY190YWdfY3R0eXBlKTsKPj4gPj4gPiA+ID4gPiArICAg
+ICAgICAgICAgIGNvZGV0YWdfbmV4dF9jdCgmcHJpdi0+aXRlcik7Cj4+ID4+ID4gPiA+ID4gKyAg
+ICAgfQo+PiA+PiA+ID4gPgo+PiA+PiA+ID4gPiBEbyB5b3UgbmVlZCB0byBza2lwIHByaW50IGhl
+YWRlciB3aGVuICpwb3MgIT0gMD8gaS5lIGFkZAo+PiA+PiA+ID4KPj4gPj4gPiA+IFRlY2huaWNh
+bGx5IG5vdCBuZWVkZWQgc2luY2UgcHJvY19jcmVhdGVfc2VxX3ByaXZhdGUoKSBhbGxvY2F0ZXMK
+Pj4gPj4gPiA+IHNlcS0+cHJpdmF0ZSB1c2luZyBremFsbG9jKCksIHNvIHRoZSBpbml0aWFsIHZh
+bHVlIG9mCj4+ID4+ID4gPiBwcml2LT5wcmludF9oZWFkZXIgaXMgYWx3YXlzIGZhbHNlLgo+PiA+
+PiA+Cj4+ID4+ID4gQnV0IHdlJ2xsIHN0YXJ0IHdpdGggZmlyc3QgY2FsbCB0byBhbGxvY2luZm9f
+c3RhcnQoKSB3aXRoICpwb3MgPT0gMCwKPj4gPj4KPj4gPj4gVXN1YWxseSBidXQgbm90IGFsd2F5
+cyBpZiB3ZSBkbyBsc2VlaygpIHRvIGEgbm9uLXplcm8gcG9zaXRpb24gYmVmb3JlaGFuZC4KPj4g
+Pgo+PiA+QWN0dWFsbHksIHRoaXMgY2hhbmdlIHdpbGwgYnJlYWsgdGhlIGxzZWVrKCkgY2FzZS4g
+V2UgY2FuJ3QgYWx3YXlzCj4+ID5hc3N1bWUgdGhhdCB3ZSBzdGFydCByZWFkaW5nIGZyb20gKnBv
+cyA9PSAwLiBDdXJyZW50IHBhdGNoIHdpbGwgZmFpbAo+PiA+dG8gaW5pdGlhbGl6ZSBwcml2IGlm
+IHdlIHN0YXJ0IHJlYWRpbmcgd2l0aCAqcG9zICE9IDAuCj4+ID5wcml2LT5pdGVyIHNob3VsZCBi
+ZSB0cmFja2luZyBjdXJyZW50IHBvc2l0aW9uIGFuZCBhbGxvY2luZm9fc3RhcnQoKQo+PiA+c2hv
+dWxkIGRldGVjdCBhIG1pc21hdGNoIGJldHdlZW4gKnBvcyBhbmQgaXRlci0+cG9zIGFuZCByZS13
+YWxrIHRoZQo+PiA+dGFncyBpZiB0aGVyZSB3YXMgYSBwb3NpdGlvbiBjaGFuZ2UuCj4+Cj4+IHNl
+cV9maWxlIHdvcmtzIGxpbmUgYnkgbGluZSwgIEkgdGhpbmsgZXZlbiBpZiBpdCBzdXBwb3J0IGxz
+ZWVrLCBzZXFfZmlsZSB3b3VsZCBzdGlsbCBzdGFydCB3aXRoIGxpbmUgIzAsCj4+IHNpbmNlIHNl
+cV9maWxlIGhhdmUgb24gY2x1ZSB0aGUgYnl0ZSBzaXplIGZvciBlYWNoIGxpbmUuCj4+Cj4+IEkg
+d2lsbCBjaGVjayB0aGUgY29kZSwgIG1ha2Ugc29tZSB0ZXN0cyBhbmQgdXBkYXRlIGxhdGVyLgo+
+Cj5BaCwgeWVzLiBZb3UgYXJlIGNvcnJlY3QuCj5zZXFfbHNlZWsoKSB3aWxsIHRyYXZlcnNlIHJl
+c3RhcnRpbmcgZnJvbSAwOgo+aHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvdjYuMTQu
+Ni9zb3VyY2UvZnMvc2VxX2ZpbGUuYyNMMzIzLgo+UG9zaXRpb24ganVtcHMgYXJlIHNpbWlsYXJs
+eSBoYW5kbGVkIHdpdGggdHJhdmVyc2FsIGZyb20gMDoKPmh0dHBzOi8vZWxpeGlyLmJvb3RsaW4u
+Y29tL2xpbnV4L3Y2LjE0LjYvc291cmNlL2ZzL3NlcV9maWxlLmMjTDE5NC4KPgoKQWN0dWFsbHkg
+SSB3YXMgZXhwZWN0aW5nIEVPUE5PVFNVUFAgd2hlbiBsc2VlayBvbiBzZXEgZmlsZXMsIHN1cnBy
+aXNlZCB0byBzZWUgaXQgd29ya3MuLi4uLi4gOikKCklmIHNlcV9maWxlIHNvbWVob3cgc2tpcHMg
+c3RhcnQoMCksICB0aGVuIG5vdGhpbmcgd291bGQgYmUgZGlzcGxheWVkIHNpbmNlIApwcml2LT5p
+dGVyLmN0IHdvdWxkIGJlIDAgYW5kIGByZXR1cm4gcHJpdi0+aXRlci5jdCA/IHByaXYgOiBOVUxM
+O2Agd291bGQgcmV0dXJuIE5VTEw7CkJ1dCBJIHRoaW5rIHRoYXQgY2FzZSAgd291bGQgYmUgIHNl
+cV9maWxlJ3MgYnVnLCAgIHN0YXJ0aW5nIHdpdGggMCBpcyBraW5kIG9mIHByb3RvY29sIHByb21p
+c2VkIGJ5IHNlcV9maWxlLiAKCgo+PgoKPj4KPj4gPgo+PiA+Pgo+PiA+PiA+IHRoZW4gcHJpbnRf
+aGVhZGVyIHdpbGwgYmUgaW5pdGlhbGl6ZWQgdG8gdHJ1ZS4KPj4gPj4KPj4gPj4gQWZ0ZXIgdGhl
+IGZpcnN0IGNhbGwgdG8gYWxsb2NpbmZvX3Nob3coKSBwcmludF9oZWFkZXIgd2lsbCBiZSByZXNl
+dAo+PiA+PiBiYWNrIHRvIGZhbHNlLgo+PiA+Pgo+PiA+PiA+IFdpbGwgdGhlcmUgYmUgc3Vic2Vx
+dWVudCBjYWxscyBvZiBhbGxvY2luZm9fc3RhcnQoKSB3aXRoICpwb3MgIT0wLAo+PiA+PiA+IGJ1
+dCBwcml2LT5wcmludF9oZWFkZXIgc3RheXMgYXQgMD8KPj4gPj4KPj4gPj4gWWVzLCB0aGVyZSB3
+aWxsIGJlIHN1YnNlcXVlbnQgY2FsbHMgdG8gYWxsb2NpbmZvX3N0YXJ0KCkgd2l0aCAqcG9zICE9
+MAo+PiA+PiBhbmQgcHJpdi0+cHJpbnRfaGVhZGVyPWZhbHNlLCB3aGljaCBpcyB3aGF0IHdlIHdh
+bnQsIHJpZ2h0PyBXZSB3YW50IHRvCj4+ID4+IHByaW50IHRoZSBoZWFkZXIgb25seSBhdCB0aGUg
+YmVnaW5uaW5nIG9mIHRoZSBmaWxlIChub2RlID09IDApLgo+PiA+Pgo+PiA+PiA+Cj4+ID4+ID4g
+VGltCj4+ID4+ID4gPgo+PiA+PiA+ID4gPgo+PiA+PiA+ID4gPiAgICAgICAgIH0gZWxzZSB7Cj4+
+ID4+ID4gPiA+ICAgICAgICAgICAgICAgICBwcml2LT5wcmludF9oZWFkZXIgPSBmYWxzZTsKPj4g
+Pj4gPiA+ID4gICAgICAgICB9Cj4+ID4+ID4gPiA+Cj4+ID4+ID4gPiA+IFRpbQo+PiA+PiA+ID4g
+Pgo+PiA+PiA+ID4gPiA+ICsgICAgIHJldHVybiBwcml2LT5pdGVyLmN0ID8gcHJpdiA6IE5VTEw7
+Cj4+ID4+ID4gPiA+ID4gIH0KPj4gPj4gPiA+ID4gPgo+PiA+PiA+ID4gPgo+PiA+PiA+Cg==
