@@ -1,198 +1,253 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677531E0B9C
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 17:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37201C5F13;
+	Sat, 10 May 2025 17:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746896430; cv=none; b=VP7SYq8QE5bYvVJhIfJQBb9cWzRxw3arTEgx/4196F3Q5gok8j3cUHwJbYPlDZ52Tg03AcR6uDF9NZXbSMkwIGmNqeaPNk3r0oGtbpWB+9Q+aHr5JLdRHwhBiGWDu4I3S6nFwEbY5g1CxjUgsoDly1/3o2axvduI1nOwHIBm9Ac=
+	t=1746896875; cv=none; b=czuwdc1RQIt+sPXEf9l3CpJmVf3nj31qQ1zcBeQlCCzfeBQCGcu/nMQQqyXvCQ+9r102tkqL/90tWBQUlQKoTha9uvpNw3UwGnIa0DKhgLwhEOnhAvlTN6+w73uqdoLFmyb+lFJfi3qmlqfTJv6Zij7RbPo8YfQQ8cZF8RkciDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746896430; c=relaxed/simple;
-	bh=K8n0HpR/neCLBEbB828sJp2oVFAuaDVp3vnH2yHape8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Sr7d+36C5Hk99ABk5MPwOawHhp7x5eTUBy56mneVDhFUT+hpUX9+CeADv6DO2nWjK6t0AXuUkbyA/kUc6vG+1yNr3qkfYLLMeYyAwFJduq61nbca/mYjaQKqZI5WlMVdHFPYkZTd5smMwx3YiRjl4UjxIc12eOXGgZWNzeQuCOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3da720e0c93so73211175ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:00:27 -0700 (PDT)
+	s=arc-20240116; t=1746896875; c=relaxed/simple;
+	bh=YHdZExlPi8JRaqBx4SwzcjgNQQKrlGLt+p5Cn+/Tt20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K/Kh2u7lL88+ZeqJpDLxudY0rrQdpt5HmcFwO5V6TfXwR8mi2fG0pMFINsQ2yAuvqFDvcuX3+M64fZHTvxKJTNfHSLbStfZ8KmeOdmTNNWpn8NWaq9zR5pHCpeApBlsAdlmq6PLDDa4kKhxwhytAcgpwDPRRekd6OCOk2vTLs/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RkjWxZNz; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkjWxZNz"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f5365bdbaeso30142676d6.3;
+        Sat, 10 May 2025 10:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746896873; x=1747501673; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2yoVnhpnR5W4cCH43dm1CPgOkwqMQqiWPXQzcbBDh/w=;
+        b=RkjWxZNzAhc2cL2/jo0DDeHyHjFsULmHy8WZgDQowVgbyfG8HUmpssGuQM7BILOeEr
+         ftX9GH8J3fGkOu/RDpORI+N2Yi+pVXNj3x1eJe9vcdKZ8GfkwzHmMKA2FOwH+lrVOhII
+         IH8fJR+xxz6c1e7L1HTsriouNzaGquok0guXwJfbIUk4ElJbECRwsOk1Qa8MyRBFYTv4
+         smT1CdsBe5wdgdY3F3uUYFc6fk8qUGogxyV+g1cjHdP1ZMK0ogVLGw2wIgBl314qm4Hi
+         dTItYYOQ5YQ7+ktyEW9mgokPFOtwLFmnVbuZsXykZ7AZG3SwAg72Ofu28I6wxoEW1Nb8
+         K56w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746896426; x=1747501226;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1746896873; x=1747501673;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KtpNmZE2s/t0daIHScYq92YukUSpQckx6jyaq+D5Br8=;
-        b=AYXkZz+iOM/p+iEfuQeqSbAtFTMHv2hiUxF9PzJgwkjOQ/HnZQeDST0FQkpw62J6S7
-         X7ZGMkw9Pqbszz04SSD3FpWpNv6yPrn4WkZ97szOob/jmB6EfWs2gFK5ZWaEmLgw20un
-         WLuUNwFaPMCiGMBeypjw0soIacXOgc1ML9gIeRkwUPn0bUZFlJz/pT+uXPjeM+MCuHu0
-         QtJQxWPe+CGYmewAWAgdXA1yjkiyrpHkzvXoiOxhWWijibNJh/CaW1jszRGduKLbwhKy
-         baPhiTqhNWj+3q39cagzd2JYxa7Wt545zd2y5YSSJZ/t+zcP2+Y4xe1hjgEA8er3J1nN
-         FTyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWh3Atmy3bVYQx2x8HTAJHFAcsJWPBlLnOSEuLSgGiEqYuGfNJ2yD9Z/Wvklkp6xL4jW9jnAEly7Xhw5z0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxaJOJuq3iQODTF91NKJyJZWDtHVz0krr8vcgKKnVvI3Z+kd4J
-	T7MSSCzzUeQOEonusk4VTnCcdwjZCvQqADuZvbS6PidJHbCCN6E9RoMYKUYa4D7nPEPtPfUOFlX
-	nECpHyoB0XTyAUjB7Ps1XTLZ3TgHwRU97PZv19+0p9TWEGJjaegxbPnY=
-X-Google-Smtp-Source: AGHT+IG+r3FmrD5d5RAbjotiKkqlITeXPybWN4TiJr1WK6tG+KercdVCnbQ3u8Ti8yLdQKniJj2pwKPjdUZGKbLF37ezZK0GTdLT
+        bh=2yoVnhpnR5W4cCH43dm1CPgOkwqMQqiWPXQzcbBDh/w=;
+        b=KP/UWJgDtKl7thRgITy/NJbe7KMzXxan5aliVgcGo8yAJ5UFV6R+3+4H85qiMvVbIy
+         fTjub8MBqKdO1DIJ7E0bRg6UHykrA6r8r5gOH7tGtrArh+R+sBOy3UmClYf6JTLvGXEC
+         kYuKBEDS66D1iIqrmxfTJ5dsBNpiihDquyMkua7KViqy4RGQ2LWwihmisHRABqRDHAA5
+         7mHi2vxZRvfZZKCAkSPtL26To1pI5JFAgC/HWdXZxGcVuGu8pct4ZMYYbz3pdBGINEj7
+         Eb2FN8MaPuF1Gw5LC/n6tTh2AEfxkYclR84I6YjY/GOVEzLytkoekSspW9PXsn6jUXsZ
+         Wnsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOgELJqw3J30BlF0462WNOr2AiXdAmU9kZpW3gvQQWdi67L6DxJJO1s9GOYIZ/YWExW/R4Ym7IWIw=@vger.kernel.org, AJvYcCWb3cI+zVyCWPZ7yNtpAry9tdR1LlMeDtehEt6Fh2iZtVyH/rgiXNYhZGcavLD7tN4sH+At4RI2nv3bJB0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzzqWiufVY7cx6nZ23Sv4M4AyQkNW4wSb2RSOw5ubUeHl391+p
+	Ksth82oRepG4qhi/EUsBQernGcQLcAqd7KIh/tACggr/7Kf7JC2E
+X-Gm-Gg: ASbGnctKBYOqWL+FuplSRDDpLCCtDHcDYQ5Kx+uxAo4Hnd0p4ZV0XBOvRSG0+lans65
+	y6iRdeumFyml1JCLGhe47fGs08Z+DwzZuYGKh6iLifPoKPHkxXt+UFaLfDyXlXSSC7k1C8zOw+M
+	rW0buNIhdgQ1E/kFPQfNayaKobzS1Z+AwNCMS8bzpd4izh1yYItuz07EDF078pJZuhD/DlnVlP0
+	NguCb/+ZM0kG2rz46BLi5tvZfm3BRSForjJhW/bgy7a7sNkhjYqEPy2NUI5dl7pzSk0Rv/LLYcZ
+	lUOIyCaYUSMS32hKmUb1oo+utqtUvfjQOnkWN1y4en0gYVk=
+X-Google-Smtp-Source: AGHT+IGCPD1owgssnN8lIRwkXhCvXQPW2XNhujCZDGyUr5ROgJzEY9lthnAog/W9wUHSg3bCTJb4mA==
+X-Received: by 2002:a05:6214:5883:b0:6f6:e701:9612 with SMTP id 6a1803df08f44-6f6e7019911mr107331236d6.34.1746896872529;
+        Sat, 10 May 2025 10:07:52 -0700 (PDT)
+Received: from localhost ([142.186.8.171])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f6e39f47ecsm27622046d6.41.2025.05.10.10.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 10:07:52 -0700 (PDT)
+Date: Sat, 10 May 2025 13:10:37 -0400
+From: Seyediman Seyedarab <imandevel@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v3] cpufreq: fix locking order in store_local_boost to
+ prevent deadlock
+Message-ID: <ufcvwme2iycbtssrvrbrfbxzfo7jernzeqj45qm6ig3dr2qtud@glza233zaivs>
+References: <20250430160943.2836-1-ImanDevel@gmail.com>
+ <20250502050639.2a4mbdav4mdlhbp2@vireshk-i7>
+ <6nfpd4jvx7dmpl5hqk5nokxprxbcccah66x2mptgwxtyxmb74r@qiosxhaw3tew>
+ <CAJZ5v0gf00GoUUraqY75M5G9bxPkJ5WQ30m5tnksVvA=kTnabg@mail.gmail.com>
+ <CAJZ5v0hFBAi7dNhQC1DJG1Fg44LaR-j-vsxO5=G8VbDj15Kr5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3c83:b0:3d9:66ba:1ad2 with SMTP id
- e9e14a558f8ab-3da7e169228mr94328825ab.0.1746896426468; Sat, 10 May 2025
- 10:00:26 -0700 (PDT)
-Date: Sat, 10 May 2025 10:00:26 -0700
-In-Reply-To: <6751804a.050a0220.17bd51.009a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681f862a.050a0220.f2294.0013.GAE@google.com>
-Subject: Re: [syzbot] [v9fs?] INFO: task hung in v9fs_evict_inode
-From: syzbot <syzbot+56bd5818697f0f93fdd9@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org, 
-	linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com, 
-	v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hFBAi7dNhQC1DJG1Fg44LaR-j-vsxO5=G8VbDj15Kr5Q@mail.gmail.com>
 
-syzbot has found a reproducer for the following issue on:
+On 25/05/10 01:41PM, Rafael J. Wysocki wrote:
+> On Fri, May 9, 2025 at 7:03 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Fri, May 9, 2025 at 7:29 AM Seyediman Seyedarab <imandevel@gmail.com> wrote:
+> > >
+> > > On 25/05/02 10:36AM, Viresh Kumar wrote:
+> > > > On 30-04-25, 12:09, Seyediman Seyedarab wrote:
+> > > > > Lockdep reports a possible circular locking dependency[1] when
+> > > > > writing to /sys/devices/system/cpu/cpufreq/policyN/boost,
+> > > > > triggered by power-profiles-daemon at boot.
+> > > > >
+> > > > > store_local_boost() used to acquire cpu_hotplug_lock *after*
+> > > > > the policy lock had already been taken by the store() handler.
+> > > > > However, the expected locking hierarchy is to acquire
+> > > > > cpu_hotplug_lock before the policy guard. This inverted lock order
+> > > > > creates a *theoretical* deadlock possibility.
+> > > > >
+> > > > > Acquire cpu_hotplug_lock in the store() handler *only* for the
+> > > > > local_boost attribute, before entering the policy guard block,
+> > > > > and remove the cpus_read_lock/unlock() calls from store_local_boost().
+> > > > > Also switch from guard() to scoped_guard() to allow explicitly wrapping
+> > > > > the policy guard inside the cpu_hotplug_lock critical section.
+> > > > >
+> > > > >  [1]
+> > > > >  ======================================================
+> > > > >  WARNING: possible circular locking dependency detected
+> > > > >  6.15.0-rc4-debug #28 Not tainted
+> > > > >  ------------------------------------------------------
+> > > > >  power-profiles-/596 is trying to acquire lock:
+> > > > >  ffffffffb147e910 (cpu_hotplug_lock){++++}-{0:0}, at: store_local_boost+0x6a/0xd0
+> > > > >
+> > > > >  but task is already holding lock:
+> > > > >  ffff9eaa48377b80 (&policy->rwsem){++++}-{4:4}, at: store+0x37/0x90
+> > > > >
+> > > > >  which lock already depends on the new lock.
+> > > > >
+> > > > >  the existing dependency chain (in reverse order) is:
+> > > > >
+> > > > >  -> #2 (&policy->rwsem){++++}-{4:4}:
+> > > > >         down_write+0x29/0xb0
+> > > > >         cpufreq_online+0x841/0xa00
+> > > > >         cpufreq_add_dev+0x71/0x80
+> > > > >         subsys_interface_register+0x14b/0x170
+> > > > >         cpufreq_register_driver+0x154/0x250
+> > > > >         amd_pstate_register_driver+0x36/0x70
+> > > > >         amd_pstate_init+0x1e7/0x270
+> > > > >         do_one_initcall+0x67/0x2c0
+> > > > >         kernel_init_freeable+0x230/0x270
+> > > > >         kernel_init+0x15/0x130
+> > > > >         ret_from_fork+0x2c/0x50
+> > > > >         ret_from_fork_asm+0x11/0x20
+> > > > >
+> > > > >  -> #1 (subsys mutex#3){+.+.}-{4:4}:
+> > > > >         __mutex_lock+0xc2/0x930
+> > > > >         subsys_interface_register+0x83/0x170
+> > > > >         cpufreq_register_driver+0x154/0x250
+> > > > >         amd_pstate_register_driver+0x36/0x70
+> > > > >         amd_pstate_init+0x1e7/0x270
+> > > > >         do_one_initcall+0x67/0x2c0
+> > > > >         kernel_init_freeable+0x230/0x270
+> > > > >         kernel_init+0x15/0x130
+> > > > >         ret_from_fork+0x2c/0x50
+> > > > >         ret_from_fork_asm+0x11/0x20
+> > > > >
+> > > > >  -> #0 (cpu_hotplug_lock){++++}-{0:0}:
+> > > > >         __lock_acquire+0x1087/0x17e0
+> > > > >         lock_acquire.part.0+0x66/0x1b0
+> > > > >         cpus_read_lock+0x2a/0xc0
+> > > > >         store_local_boost+0x6a/0xd0
+> > > > >         store+0x50/0x90
+> > > > >         kernfs_fop_write_iter+0x135/0x200
+> > > > >         vfs_write+0x2ab/0x540
+> > > > >         ksys_write+0x6c/0xe0
+> > > > >         do_syscall_64+0xbb/0x1d0
+> > > > >         entry_SYSCALL_64_after_hwframe+0x56/0x5e
+> > > > >
+> > > > > Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+> > > > > ---
+> > > > > Changes in v3:
+> > > > >  - Rebased over PM tree's linux-next branch
+> > > > >  - Added a comment to explain why this piece of code is required
+> > > > >  - Switched from guard() to scoped_guard() to allow explicitly wrapping
+> > > > >    the policy guard inside the cpu_hotplug_lock critical section.
+> > > > >
+> > > > > Changes in v2:
+> > > > >  - Restrict cpu_hotplug_lock acquisition to only
+> > > > >    the local_boost attribute in store() handler.
+> > > > >
+> > > > > Regards,
+> > > > > Seyediman
+> > > > >
+> > > > >  drivers/cpufreq/cpufreq.c | 23 ++++++++++++++++-------
+> > > > >  1 file changed, 16 insertions(+), 7 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > > > index 21fa733a2..b349adbeb 100644
+> > > > > --- a/drivers/cpufreq/cpufreq.c
+> > > > > +++ b/drivers/cpufreq/cpufreq.c
+> > > > > @@ -622,10 +622,7 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
+> > > > >     if (!policy->boost_supported)
+> > > > >             return -EINVAL;
+> > > > >
+> > > > > -   cpus_read_lock();
+> > > > >     ret = policy_set_boost(policy, enable);
+> > > > > -   cpus_read_unlock();
+> > > > > -
+> > > > >     if (!ret)
+> > > > >             return count;
+> > > > >
+> > > > > @@ -1006,16 +1003,28 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
+> > > > >  {
+> > > > >     struct cpufreq_policy *policy = to_policy(kobj);
+> > > > >     struct freq_attr *fattr = to_attr(attr);
+> > > > > +   int ret = -EBUSY;
+> > > > >
+> > > > >     if (!fattr->store)
+> > > > >             return -EIO;
+> > > > >
+> > > > > -   guard(cpufreq_policy_write)(policy);
+> > > > > +   /*
+> > > > > +    * store_local_boost() requires cpu_hotplug_lock to be held, and must be
+> > > > > +    * called with that lock acquired *before* taking policy->rwsem to avoid
+> > > > > +    * lock ordering violations.
+> > > > > +    */
+> > > > > +   if (fattr == &local_boost)
+> > > > > +           cpus_read_lock();
+> > > > >
+> > > > > -   if (likely(!policy_is_inactive(policy)))
+> > > > > -           return fattr->store(policy, buf, count);
+> > > > > +   scoped_guard(cpufreq_policy_write, policy) {
+> > > > > +           if (likely(!policy_is_inactive(policy)))
+> > > > > +                   ret = fattr->store(policy, buf, count);
+> > > > > +   }
+> > > > >
+> > > > > -   return -EBUSY;
+> > > > > +   if (fattr == &local_boost)
+> > > > > +           cpus_read_unlock();
+> > > > > +
+> > > > > +   return ret;
+> > > > >  }
+> > > >
+> > > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > >
+> > > > --
+> > > > viresh
+> > >
+> > > Hi there,
+> > >
+> > > Just following up to see if there's anything you'd like me to
+> > > change or address in the patch before it can move forward.
+> > > Please let me know if any updates are needed.
+> >
+> > I'm kind of wondering why local_boost needs cpus_read_lock() at all.
+> > Holding the policy rwsem blocks CPU online/offline already for this
+> > policy.
+> >
+> > Is that because ->set_boost() may need to synchronize with the other policies?
+> 
+> IOW, what can go wrong if the cpus_read_lock() locking is dropped from
+> there altogether?
 
-HEAD commit:    0e1329d4045c Merge tag 'rust-fixes-6.15-2' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15a76cf4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
-dashboard link: https://syzkaller.appspot.com/bug?extid=56bd5818697f0f93fdd9
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123d34d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d91670580000
+I think ->set_boost() being per-policy makes cpus_read_lock()
+unnecessary here. Since we already hold the policy lock, any
+topology changes involving this policy should be blocked.
+And because we're not iterating over all CPUs or policies to
+set boost, we don't need to worry about CPU hotplug synchronization
+in this case.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ab812a79f364/disk-0e1329d4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3f8097de4dd6/vmlinux-0e1329d4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/58fe086be90f/bzImage-0e1329d4.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+56bd5818697f0f93fdd9@syzkaller.appspotmail.com
-
-INFO: task syz-executor256:5823 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc5-syzkaller-00204-g0e1329d4045c #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor256 state:D stack:25112 pid:5823  tgid:5823  ppid:5816   task_flags:0x400140 flags:0x00004002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- netfs_wait_for_outstanding_io include/linux/netfs.h:558 [inline]
- v9fs_evict_inode+0x170/0x320 fs/9p/vfs_inode.c:348
- evict+0x501/0x9c0 fs/inode.c:810
- __dentry_kill+0x209/0x660 fs/dcache.c:660
- dput+0x19f/0x2b0 fs/dcache.c:902
- shrink_dcache_for_umount+0xa0/0x170 fs/dcache.c:1612
- generic_shutdown_super+0x67/0x2c0 fs/super.c:620
- kill_anon_super+0x3b/0x70 fs/super.c:1237
- v9fs_kill_super+0x4c/0x90 fs/9p/vfs_super.c:193
- deactivate_locked_super+0xb9/0x130 fs/super.c:473
- cleanup_mnt+0x425/0x4c0 fs/namespace.c:1435
- task_work_run+0x1d1/0x260 kernel/task_work.c:227
- resume_user_mode_work+0x5e/0x80 include/linux/resume_user_mode.h:50
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x9a/0x120 kernel/entry/common.c:218
- do_syscall_64+0x103/0x210 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f938ec869b7
-RSP: 002b:00007ffcc34c98a8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
-RAX: 0000000000000000 RBX: 000000000001a18b RCX: 00007f938ec869b7
-RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffcc34c9960
-RBP: 00007ffcc34c9960 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000202 R12: 00007ffcc34ca9d0
-R13: 000055556f5f06c0 R14: 00007ffcc34ca9d0 R15: 00000000000000a9
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/31:
- #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
-2 locks held by kworker/u8:6/1320:
- #0: ffff88801a089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff88801a089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x9b1/0x17a0 kernel/workqueue.c:3319
- #1: ffffc900045cfc60 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc900045cfc60 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ec/0x17a0 kernel/workqueue.c:3319
-2 locks held by kworker/u8:10/3558:
- #0: ffff88801a089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff88801a089148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x9b1/0x17a0 kernel/workqueue.c:3319
- #1: ffffc9000c4e7c60 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc9000c4e7c60 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ec/0x17a0 kernel/workqueue.c:3319
-2 locks held by getty/5579:
- #0: ffff888030a8b0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc90002ffe2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
-1 lock held by syz-executor256/5819:
- #0: ffffffff8df41200 (rcu_state.barrier_mutex){+.+.}-{4:4}, at: rcu_barrier+0x4c/0x570 kernel/rcu/tree.c:3774
-1 lock held by syz-executor256/5821:
- #0: ffffffff8df41338 (rcu_state.exp_mutex){+.+.}-{4:4}, at: exp_funnel_lock kernel/rcu/tree_exp.h:336 [inline]
- #0: ffffffff8df41338 (rcu_state.exp_mutex){+.+.}-{4:4}, at: synchronize_rcu_expedited+0x3b7/0x730 kernel/rcu/tree_exp.h:998
-1 lock held by syz-executor256/5822:
- #0: ffff888077f8e0e0 (&type->s_umount_key#43){+.+.}-{4:4}, at: __super_lock fs/super.c:56 [inline]
- #0: ffff888077f8e0e0 (&type->s_umount_key#43){+.+.}-{4:4}, at: __super_lock_excl fs/super.c:71 [inline]
- #0: ffff888077f8e0e0 (&type->s_umount_key#43){+.+.}-{4:4}, at: deactivate_super+0xa9/0xe0 fs/super.c:505
-1 lock held by syz-executor256/5823:
- #0: ffff88807f15a0e0 (&type->s_umount_key#43){+.+.}-{4:4}, at: __super_lock fs/super.c:56 [inline]
- #0: ffff88807f15a0e0 (&type->s_umount_key#43){+.+.}-{4:4}, at: __super_lock_excl fs/super.c:71 [inline]
- #0: ffff88807f15a0e0 (&type->s_umount_key#43){+.+.}-{4:4}, at: deactivate_super+0xa9/0xe0 fs/super.c:505
-1 lock held by syz-executor256/11897:
- #0: ffffffff8df41338 (rcu_state.exp_mutex){+.+.}-{4:4}, at: exp_funnel_lock kernel/rcu/tree_exp.h:304 [inline]
- #0: ffffffff8df41338 (rcu_state.exp_mutex){+.+.}-{4:4}, at: synchronize_rcu_expedited+0x2f4/0x730 kernel/rcu/tree_exp.h:998
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc5-syzkaller-00204-g0e1329d4045c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
- watchdog+0xfee/0x1030 kernel/hung_task.c:437
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Not tainted 6.15.0-rc5-syzkaller-00204-g0e1329d4045c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:pv_native_safe_halt+0x13/0x20 arch/x86/kernel/paravirt.c:81
-Code: cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 03 1b 19 00 f3 0f 1e fa fb f4 <c3> cc cc cc cc cc cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc90000197de0 EFLAGS: 000002c6
-RAX: aeb744c0f33a6400 RBX: ffffffff81974e28 RCX: aeb744c0f33a6400
-RDX: 0000000000000001 RSI: ffffffff8d7372f8 RDI: ffffffff8bc0fee0
-RBP: ffffc90000197f20 R08: ffff8880b8932b5b R09: 1ffff1101712656b
-R10: dffffc0000000000 R11: ffffed101712656c R12: ffffffff8f7da770
-R13: 0000000000000001 R14: 0000000000000001 R15: 1ffff110038d9b40
-FS:  0000000000000000(0000) GS:ffff888126200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055556f5f86f8 CR3: 0000000078712000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
- default_idle+0x13/0x20 arch/x86/kernel/process.c:748
- default_idle_call+0x74/0xb0 kernel/sched/idle.c:117
- cpuidle_idle_call kernel/sched/idle.c:185 [inline]
- do_idle+0x1e8/0x510 kernel/sched/idle.c:325
- cpu_startup_entry+0x44/0x60 kernel/sched/idle.c:423
- start_secondary+0x101/0x110 arch/x86/kernel/smpboot.c:315
- common_startup_64+0x13e/0x147
- </TASK>
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Regards,
+Seyediman
