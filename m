@@ -1,134 +1,199 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D90014901B;
-	Sat, 10 May 2025 18:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2042F14901B
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 18:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746903374; cv=none; b=dWF6x3kGBynniNrvPsqiZ4Q8WQFd7EbYd7BS2TfkY9ptyoKYIQ27M1DXj+yoQGgJ6stWFzOFrUaT8Wyl2PCtTRJI3omidE5kYc111zUwDeiX9AIOLMvHQh5y3/2BxHjXfvL8Cth3QVzJOodCvrS5aI6u2AILWNFV+duZlOcJaBE=
+	t=1746903532; cv=none; b=miemLNUE0PEh8O+Wd8nmHT6JL0mBw/vqfQu8m/JIe3etcOAhhKlXe7OjobNHrRJ+c7NzVzgnL0u9m7OahuhyUDgx7755/tIUne9H6DB+OWoVsNdfciF+MsMv8sx2lK2s79WLAh9RXwQ3A1Zu7V9aaC1aP5Fvrs4DtmEJZ3MEzZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746903374; c=relaxed/simple;
-	bh=sYK72jBvgVSxhElTy/MD1VFf65hh+HF+faCDPTny7VQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qQxHsVtRZVfNjZx3vgf8L89Xpj2EbkIRQEiTT1E+mtrn+1IK4DiS6Fd+EHy7V7wUtddPXPJ6KpvjrnJ2AjtLHJDyFL8JmuETUJLNKpUgyhyXR+aYn8gDeCuzhpGB3v2xiWg01+pOuk+mJyVE9dIMeZqRNxYPUPno+CjuA6kpufc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X7uqFIL4; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746903532; c=relaxed/simple;
+	bh=9ZeCWs8FPhDCQe5hkXPmNbZypTdF447RzD2RTbyJgnw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=E2KUFxQN0Sbi2bk5tMymd4+qQBoVqUqbMs3rG4v2IqnPgTIfn/Atwy+jN/LdBHm7/ffbGuPiLIYiJl/Zc2+/DUczLUA1L2SxnWd0YXue34+lBbeJIMztQJhO966Yei7GSJbDlXlc3+LMylbku30Br3VG6WD8nRm6oiFfC90XOB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dzADSrIm; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X7uqFIL4"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso21291315e9.3;
-        Sat, 10 May 2025 11:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746903370; x=1747508170; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sV6+C/SkMy5hqY/2ZrPRB8T+4Wfbn/XWQI3x/65ffmA=;
-        b=X7uqFIL43UZxYgClnq+8XcLxNnAgNw+We6I7l3WkIn05i7sV7JndchyUeQHeIP+1qS
-         T4sg/FKsiBy9oK0cYuQ3VROZYm/FHQiE1eTQileKML/FRCzJBANx+ukPZhGvIZEYFwr8
-         6chSKoKf95Wy+U54qyzVyNvfC41cpvJkr9/W0IgmzPcSJ9kSZCQYviV2W8FcMedKJ9au
-         nquIPjLJ2qVgfMFOwXdqa7QnzxloqZ4CryrAiCl+IfJLm3m/A3yXewl+v2Z8e5JZApqE
-         uE/yiATQOe4956FzzhSkoUrqTiMyopyS9H/mRMXja7HTIKFpQigMhb1pxWX2fXxw70md
-         OTjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746903370; x=1747508170;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sV6+C/SkMy5hqY/2ZrPRB8T+4Wfbn/XWQI3x/65ffmA=;
-        b=jrRZSAanyzRkcjJac/fNbq6GRF69dvHp9Zy9a0vdRNiS8lIkZ64T+J2UzvQDZ2lda/
-         RmYrxP/0smE2gWJRZYt0dLPxaihhonWdzXPen67ZuKbo1hw5mDzW0KQE1Df566nBABry
-         a0TeBn8CcOPI3N6N8UdA1t7xG5eY7GTvDp52utbqpKGd02KTJkJK38RVFVSGigEyCYtK
-         E1BHgiaYhYiOrzhDq2ucT2w4WGC7vRoNNy6d6osfRdL0QA/0sCnAs34/hlnVxucH4R/S
-         DP/oeX6VDziRgiJEN4hiwu8UU/t6j+r9JdtAgxTXoNMI17ihq40VELgH2j/9o0EyTJTx
-         0oRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvlMT9OId4go/T1gusXtha+7T73WKDQhQ5BzVEZVc0hZYqgZ5WLFgJ3155P1ScJox/vtJPrYVRSY86jY8=@vger.kernel.org, AJvYcCWPY++MB2BDCNIJYCB7oUx9n6acVMpDtpZEGw7duDSyVbgXvcwFpmHjQP0lsH1evG8BjeNGs7sjaENP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFdo2sfBKCIfxUhOC+W6axiLmrppvJpdiC8lur+2MwoHAwGMOI
-	nMMK8FEGVjRlFApeXy5ICy5W5UAv0BvP5fHLhXLJQ/2ey9AW9bFn
-X-Gm-Gg: ASbGncsNhlCLwDUR32djSk+hkaF22ZaFX4DWoOKSJGvN8KNS21e1lspav7gIgF5o2N/
-	6D95WpHi8V0JJZ99tAeuSrAtRsL/Of9nCRzkc28H+aIaZkJGyLxJS6blxWSjVrNhyVi5g0joQ/M
-	TEQTe8GJZRa//39EjvaDh0tJ8YrUSfcnLIBAKjDJIQ7ztKARkOD4eFIo/6+iVg/DxOOqS0EPMWK
-	rrv5Y79BVBkHHwb/bPtq88OUSyrH+G/Ckk04pMq9ukVDfJ6zbOTTJwlcqCQLr6cxRLOXP5yYq3k
-	m38oPnf5Ym0x5zzydvll2U7w3qdxRG+qFq4xOGGeBgjV4qKMPVndhDpQgE2TaBmUDEbVBWwB+sN
-	D7VSFoYIts081kg==
-X-Google-Smtp-Source: AGHT+IHRvI9gry6ZmfPemiXxUUiYsvTTV5FOvmHsNPAkWQhK57k+tBWZiGsFiSuKBxKvkv1MiJs9RQ==
-X-Received: by 2002:a05:6000:4282:b0:3a2:453:7792 with SMTP id ffacd0b85a97d-3a2045378afmr220269f8f.43.1746903370425;
-        Sat, 10 May 2025 11:56:10 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d30asm7100862f8f.76.2025.05.10.11.56.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 11:56:10 -0700 (PDT)
-Date: Sat, 10 May 2025 19:56:03 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/9] CodingStyle: tell people how to split long "for"
- loops
-Message-ID: <20250510195603.37279af3@pumpkin>
-In-Reply-To: <20250509203430.3448-8-adobriyan@gmail.com>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
-	<20250509203430.3448-8-adobriyan@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dzADSrIm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746903532; x=1778439532;
+  h=date:from:to:cc:subject:message-id;
+  bh=9ZeCWs8FPhDCQe5hkXPmNbZypTdF447RzD2RTbyJgnw=;
+  b=dzADSrImyb6wbvoVbm5LcmV/7gJJnz2PURxXwJG0F5UxgQcF5e+1Qhz0
+   7EYGa1sLDtNa4+iAT6RzS1S8x3w55abciOz1zUAlNA4PDWptGyjT7YhHk
+   XMIlO+Z6h7OjMHhOiYYbrVQKnRiaUBQqItesjDnbNd+MKyhKZVD9ERv3S
+   E1qUHqXLyPaz8Wjh9ZKS4IDHXsMdN/6cxt/v1msmb9Jv3Dit9N1Fn5Tlw
+   wJd7Xy1XafdW2Lp/AyY/s2t9ceNuyixmxfg9u+sjTjqiM5CG1wLo8rb2O
+   KZj68oDma2fgxZGk2eXsL4FTMi3oKOYnaoAOg2eobup3VxCCQGvHUMlAx
+   A==;
+X-CSE-ConnectionGUID: gFaw3y2mRYeqTBL/tsyM7Q==
+X-CSE-MsgGUID: ii140meEQNCaj90om5/bmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11429"; a="71239255"
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="71239255"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 11:58:51 -0700
+X-CSE-ConnectionGUID: vTb/IUSIRRSGDIkRfrKCMQ==
+X-CSE-MsgGUID: knQDxHFRRYKm+vPAiuRkbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="140994651"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 10 May 2025 11:58:49 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDpPL-000DJO-0v;
+	Sat, 10 May 2025 18:58:47 +0000
+Date: Sun, 11 May 2025 02:58:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/core] BUILD SUCCESS
+ c1ab449df871d6ce9189cb0a9efcd37d2ead10f0
+Message-ID: <202505110229.iz2Wa5rx-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri,  9 May 2025 23:34:29 +0300
-Alexey Dobriyan <adobriyan@gmail.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
+branch HEAD: c1ab449df871d6ce9189cb0a9efcd37d2ead10f0  genirq: Fix inverted condition in handle_nested_irq()
 
-> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> ---
->  Documentation/process/coding-style.rst | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> index e17de69845ff..494ab3201112 100644
-> --- a/Documentation/process/coding-style.rst
-> +++ b/Documentation/process/coding-style.rst
-> @@ -183,7 +183,21 @@ Descendants are always substantially shorter than the parent and
->  are placed substantially to the right.  A very commonly used style
->  is to align descendants to a function open parenthesis.
->  
-> -These same rules are applied to function headers with a long argument list.
-> +These same rules are applied to function prototypes with a long argument list.
-> +
-> +Very long ``for`` loops are split at the ``;`` characters making it easier
-> +to see which code goes to which clause:
-> +
-> +.. code-block:: c
-> +
-> +	for (int i = 0;
-> +	     i < N;
-> +	     i += 1)
-> +	{
-> +	}
-> +
-> +Opening curly is placed on a separate line then to make it easier to tell
-> +loop body from iteration clause.
+elapsed time: 1446m
 
-Is that actually the style - I don't remember seeing it.
+configs tested: 122
+configs skipped: 3
 
-The location of the { isn't a significant problem with for (;;), it can be
-much worse elsewhere.
-In reality the 'align with the (' is what causes the problems, either
-double indenting (two tabs) or half indent (4 spaces - to annoy anyone who
-sets an editor to 4 space tabs) is more readable.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-For for (;;) loops I'll normally try moving the initialisation outside the
-loop and even put an inverted condition inside the loop to avoid long lines.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                   randconfig-001-20250510    gcc-14.2.0
+arc                   randconfig-002-20250510    gcc-13.3.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                         bcm2835_defconfig    clang-21
+arm                        mvebu_v5_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250510    gcc-10.5.0
+arm                   randconfig-002-20250510    clang-21
+arm                   randconfig-003-20250510    gcc-10.5.0
+arm                   randconfig-004-20250510    gcc-7.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250510    gcc-7.5.0
+arm64                 randconfig-002-20250510    gcc-5.5.0
+arm64                 randconfig-003-20250510    clang-21
+arm64                 randconfig-004-20250510    gcc-7.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250510    gcc-14.2.0
+csky                  randconfig-002-20250510    gcc-13.3.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250510    clang-21
+hexagon               randconfig-002-20250510    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250510    gcc-12
+i386        buildonly-randconfig-002-20250510    gcc-12
+i386        buildonly-randconfig-003-20250510    gcc-12
+i386        buildonly-randconfig-004-20250510    gcc-12
+i386        buildonly-randconfig-005-20250510    gcc-12
+i386        buildonly-randconfig-006-20250510    gcc-12
+i386                                defconfig    clang-20
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250510    gcc-13.3.0
+loongarch             randconfig-002-20250510    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                          rb532_defconfig    clang-18
+nios2                         3c120_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250510    gcc-11.5.0
+nios2                 randconfig-002-20250510    gcc-7.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250510    gcc-6.5.0
+parisc                randconfig-002-20250510    gcc-12.4.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                      cm5200_defconfig    clang-21
+powerpc                        icon_defconfig    gcc-14.2.0
+powerpc                   lite5200b_defconfig    clang-21
+powerpc                 mpc832x_rdb_defconfig    gcc-14.2.0
+powerpc                 mpc837x_rdb_defconfig    gcc-14.2.0
+powerpc                    mvme5100_defconfig    gcc-14.2.0
+powerpc                     ppa8548_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250510    gcc-7.5.0
+powerpc               randconfig-002-20250510    clang-17
+powerpc               randconfig-003-20250510    clang-21
+powerpc64             randconfig-001-20250510    clang-18
+powerpc64             randconfig-002-20250510    gcc-10.5.0
+powerpc64             randconfig-003-20250510    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250510    gcc-14.2.0
+riscv                 randconfig-002-20250510    gcc-7.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250510    gcc-7.5.0
+s390                  randconfig-002-20250510    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                        dreamcast_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250510    gcc-9.3.0
+sh                    randconfig-002-20250510    gcc-11.5.0
+sh                             shx3_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250510    gcc-12.4.0
+sparc                 randconfig-002-20250510    gcc-14.2.0
+sparc                       sparc64_defconfig    gcc-14.2.0
+sparc64                          alldefconfig    gcc-14.2.0
+sparc64               randconfig-001-20250510    gcc-10.5.0
+sparc64               randconfig-002-20250510    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250510    gcc-12
+um                    randconfig-002-20250510    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250510    clang-20
+x86_64      buildonly-randconfig-002-20250510    clang-20
+x86_64      buildonly-randconfig-003-20250510    gcc-12
+x86_64      buildonly-randconfig-004-20250510    gcc-11
+x86_64      buildonly-randconfig-005-20250510    gcc-12
+x86_64      buildonly-randconfig-006-20250510    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250510    gcc-8.5.0
+xtensa                randconfig-002-20250510    gcc-14.2.0
 
-If a #define all bets are off :-)
-
-	David
-
-
-
->  
->  However, never break user-visible strings such as printk messages because
->  that breaks the ability to grep for them.
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
