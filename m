@@ -1,135 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CA02222D2;
-	Sat, 10 May 2025 13:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0804212F94
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 13:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746885248; cv=none; b=ZHatcJlz3LfSICnqOk/5Pkiv1OVHF72o1YPcQSdMUnaSwDhItWK9LYR6xAkjVbKQ0UZwAAs2QlES1X//OGdpSBNrbac5z3MYgz9MjXe6ih+izq+KMpi9RVtD4lLPuWOEz7Ixv/04OqQJv8V1WsMqs7wvlqi3pqPwhzF0tiFFZfg=
+	t=1746885294; cv=none; b=rjGiH0I/ao4q3o0ykLTLpgCj2d2on6UAHvGfTdp8UheQmI+gCP07hV3ZrzNUi+XFSM7EAJ6xxsAYusQR4tvkyaVvbKecRhDAlre6pXPpfl8FFPztCe4aIis8AcyS6KahOlg1FzcNn5xmKpeX7Ar9v4xT1RXNqJyizPJXzYvggOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746885248; c=relaxed/simple;
-	bh=6ea29RnEcGDdJm3zwVPchFi9hgzrk7540s+zE+aYxiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Y+MM0RI5rvv0jiopoMWN/lWR61I/y+62Jh78ngw20+wuoII7pZkEMIudueC62GcMJ1Lc07G3yYycrHz5F0b5OhtiUkyIRmHBj6+FSuHSbbwE3bc+3EMxVj0tWYJBRbXbYmlmTtlnGqEt/UIyfpISm0KoVS0cymzHQHvPH5owjwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hs2sSZdz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746885294; c=relaxed/simple;
+	bh=tew+OYjJ5cRuTPrgY5OlKkHhrAih9UXuCeDccAztix8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hL3I34Kr/rk/GMXap7Fdmey//I5Y0FnWM8jHFXMxKlemlVdUrTYUqedv6QcrWSytvYzJ4nM2/Vhu1b8gmdrKCXM6Q1tESZMAh+D87mc9MQi3+NVzOIwc6GirgO+SK3I/Flrjd2XqaDnQS04XXgNGJvgbPpDAnFgILdqG88cW0/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ed8ZRe4+; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hs2sSZdz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B00C4CEE2;
-	Sat, 10 May 2025 13:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746885247;
-	bh=6ea29RnEcGDdJm3zwVPchFi9hgzrk7540s+zE+aYxiU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=hs2sSZdzHDa1T5JLjUGYDLOPmlBo4CI43bHpFaLV1Z4yjLIOigywd+RDSkni4ZzLI
-	 903DXmwi8JvvVOSb+ikfSYY1oBOS7m2gWYhoBCGMdiKZ2P7Hk4WUtGViO0Hv4yL3LD
-	 RiGX9GFJ4yN8cnkRmgnrR/SIHPXuEgLwzdo51sx8=
-Date: Sat, 10 May 2025 15:54:04 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB driver fixes for 6.15-rc6
-Message-ID: <aB9afOnb3zQRbIPs@kroah.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ed8ZRe4+"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a0b9625735so1496874f8f.2
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 06:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746885291; x=1747490091; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BjBPZ3Dx0YY0ztC7lpM0G2cZI/G3ZsQmJznRB+o2OEw=;
+        b=Ed8ZRe4+/FK0/pdbgUMeHLmQRy4dJcji2I+fVMi2WQy0iw6NTprUOxIW405/nE/o0l
+         5/KyigURVK6Yu9T/2PxSuMqDs0oMkssHy3l+OmyIiTMjoPuVEey/6YxCOpI+jO9LO8SR
+         iD9bWDmU16KgjK4hR9Rn6X29XVRFyxQvB/SRHFpvIvkkiuW3zs0XB/J6AYSWID96M/IE
+         8Qa8K1q0FlsRY7WgsEnsn5C6FABWwM2cNfyUdjp0dnPGDLmYR4Nnalai+DTJdY/GPZA6
+         C+igHaXcDgoUJ4DMcZpKv8cYP5HoNuf5mzsWbTKq/oPWDu4psUmSgDU91vmwPfVNbiPT
+         HfNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746885291; x=1747490091;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BjBPZ3Dx0YY0ztC7lpM0G2cZI/G3ZsQmJznRB+o2OEw=;
+        b=lN7oUTl9UvoB3yTtvfL7XSTHbGgklCZpmUyn1d6T/fQ8TCdjXJPXRdltLO/4/7jn3x
+         s/seFZOD6B+8B5MXeOIhEevMrpyPqcSCnqNd98eQiDppCW/PHC4kp2uPMejlUjgSJ2AK
+         xN6IIuZEB+Q3S49TFFHb0fLa8lNhylCi4ocR3/+e3u35H/xdo1gQbZ4gJRbLf4YHpYKt
+         mWae1jyH2ycEq5fDfxQg3VGwDpqF9fdjDvEDrwVnWsssCvbDbaXEQ0H00UnL3hjxbAhx
+         TKeSfVqJvsjZ4BNOunM73v2qEBjZL0GSlhD+KQ+Eid+Vda48J1GTZnkJJKGNfNJMbm3r
+         hSpw==
+X-Gm-Message-State: AOJu0YxBu0nq9wNepL0IX/3vmJDRfyAL0j1l/nMSW4LPFAqnTa6noNHq
+	A40ooDTTR3+a+6ZTym2YQMq6XllTFSj8frBQQBebguAmLxGtzV5S
+X-Gm-Gg: ASbGncv8KNlgb4YTBIcIziklUmJcZCjd13tWxQn3+99acgcBy/WW/rjKHgsnsLs5h77
+	eq3iiW2+QMIFtMP84vU7xeh2ANyisGnQVCaLpWC9uFb784yl5R+NRruc7VwA0Jjh2XWuz8gOd+J
+	xRtWAt6NImcEykB4JEvffTcWIT7O8RIpA0LpipLXssgQ/HSjOgNB2BRBJ8X3uiIhKzi+KvVtG8s
+	9dtrE6MD5TbjOeeUVajYOlkk+wKiGkXLZ/4tvhOe06Ohw3Z5ITG9Jm48mfflnfdGcxcmjFuaGRT
+	N6SIL6nBiubI6zA/lZbQYOaH5tjs1fKT8tI/ZfpjzjqUTeC6MpstD5V3CpqycSfgFKjBx0fXd4T
+	HNQNnkE1YbbG2UQ==
+X-Google-Smtp-Source: AGHT+IHyhIYCaq1wsdSJlvlYOTzk+T0PRtflOw27eVEMnhZlvP5XqVbge6zQ91TY7pzQxh2U8XY0qw==
+X-Received: by 2002:a5d:4fc7:0:b0:39c:1257:dbaa with SMTP id ffacd0b85a97d-3a1f64b5a66mr4754793f8f.58.1746885291084;
+        Sat, 10 May 2025 06:54:51 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2961sm6429607f8f.45.2025.05.10.06.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 06:54:50 -0700 (PDT)
+Date: Sat, 10 May 2025 14:54:49 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, Ard Biesheuvel
+ <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 2/3] x86/boot: Set __pgtable_l5_enabled correctly
+ before calling into C code
+Message-ID: <20250510145449.4117af82@pumpkin>
+In-Reply-To: <20250506154532.1281909-7-ardb+git@google.com>
+References: <20250506154532.1281909-5-ardb+git@google.com>
+	<20250506154532.1281909-7-ardb+git@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
+On Tue,  6 May 2025 17:45:35 +0200
+Ard Biesheuvel <ardb+git@google.com> wrote:
 
-  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> Ensure that __pgtable_l5_enabled() is set to its permanent value before
+> calling into any C code that may manipulate page tables or reference any
+> global variable or object that may be dimensioned differently based on
+> whether 5-level paging is in use.
+...
+>  #ifdef CONFIG_X86_5LEVEL
+> -/* __pgtable_l5_enabled needs to be in .data to avoid being cleared along with .bss */
+> -unsigned int __section(".data") __pgtable_l5_enabled;
+> +unsigned int __pgtable_l5_enabled = 1;
+> +
+> +/* These need to be in .data to avoid being cleared along with .bss */
+>  unsigned int __section(".data") pgdir_shift = 39;
+>  unsigned int __section(".data") ptrs_per_p4d = 1;
 
-are available in the Git repository at:
+Is that comment (and the section assignment) relevant given that they
+are initialised non-zero?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.15-rc6
+I'd guess that __pgtable_l5_enabled was getting set before .bss was cleared?
 
-for you to fetch changes up to cab63934c33b12c0d1e9f4da7450928057f2c142:
-
-  xhci: dbc: Avoid event polling busyloop if pending rx transfers are inactive. (2025-05-05 16:30:45 +0200)
-
-----------------------------------------------------------------
-USB fixes for 6.15-rc6
-
-Here are some small USB driver fixes for 6.15-rc6.  Included in here
-are:
-  - typec driver fixes
-  - usbtmc ioctl fixes
-  - xhci driver fixes
-  - cdnsp driver fixes
-  - some gadget driver fixes
-
-Nothing really major, just all little stuff that people have reported
-being issues.  All of these have been in linux-next this week with no
-reported issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Alexey Charkov (1):
-      usb: uhci-platform: Make the clock really optional
-
-Andrei Kuchynski (2):
-      usb: typec: ucsi: displayport: Fix deadlock
-      usb: typec: ucsi: displayport: Fix NULL pointer access
-
-Dave Penkler (3):
-      usb: usbtmc: Fix erroneous get_stb ioctl error returns
-      usb: usbtmc: Fix erroneous wait_srq ioctl return
-      usb: usbtmc: Fix erroneous generic_read ioctl return
-
-Jim Lin (1):
-      usb: host: tegra: Prevent host controller crash when OTG port is used
-
-Lukasz Czechowski (1):
-      usb: misc: onboard_usb_dev: fix support for Cypress HX3 hubs
-
-Mathias Nyman (1):
-      xhci: dbc: Avoid event polling busyloop if pending rx transfers are inactive.
-
-Michal Pecio (1):
-      usb: xhci: Don't trust the EP Context cycle bit when moving HW dequeue
-
-Oliver Neukum (1):
-      USB: usbtmc: use interruptible sleep in usbtmc_read
-
-Pawel Laszczak (2):
-      usb: cdnsp: Fix issue with resuming from L1
-      usb: cdnsp: fix L1 resume issue for RTL_REVISION_NEW_LPM version
-
-Prashanth K (3):
-      usb: gadget: f_ecm: Add get_status callback
-      usb: gadget: Use get_status callback to set remote wakeup capability
-      usb: dwc3: gadget: Make gadget_wakeup asynchronous
-
-RD Babiera (1):
-      usb: typec: tcpm: delay SNK_TRY_WAIT_DEBOUNCE to SRC_TRYWAIT transition
-
-Wayne Chang (1):
-      usb: gadget: tegra-xudc: ACK ST_RC after clearing CTRL_RUN
-
- drivers/usb/cdns3/cdnsp-gadget.c     | 31 +++++++++++++++++++
- drivers/usb/cdns3/cdnsp-gadget.h     |  6 ++++
- drivers/usb/cdns3/cdnsp-pci.c        | 12 ++++++--
- drivers/usb/cdns3/cdnsp-ring.c       |  3 +-
- drivers/usb/cdns3/core.h             |  3 ++
- drivers/usb/class/usbtmc.c           | 59 +++++++++++++++++++++--------------
- drivers/usb/dwc3/core.h              |  4 +++
- drivers/usb/dwc3/gadget.c            | 60 ++++++++++++++----------------------
- drivers/usb/gadget/composite.c       | 12 +++-----
- drivers/usb/gadget/function/f_ecm.c  |  7 +++++
- drivers/usb/gadget/udc/tegra-xudc.c  |  4 +++
- drivers/usb/host/uhci-platform.c     |  2 +-
- drivers/usb/host/xhci-dbgcap.c       | 19 ++++++++++--
- drivers/usb/host/xhci-dbgcap.h       |  3 ++
- drivers/usb/host/xhci-ring.c         | 19 ++++++------
- drivers/usb/host/xhci-tegra.c        |  3 ++
- drivers/usb/misc/onboard_usb_dev.c   | 10 ++++--
- drivers/usb/typec/tcpm/tcpm.c        |  2 +-
- drivers/usb/typec/ucsi/displayport.c | 21 ++++++++-----
- drivers/usb/typec/ucsi/ucsi.c        | 34 ++++++++++++++++++++
- drivers/usb/typec/ucsi/ucsi.h        |  2 ++
- 21 files changed, 221 insertions(+), 95 deletions(-)
+	David
