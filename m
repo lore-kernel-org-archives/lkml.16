@@ -1,452 +1,170 @@
-Received: from trager.us (trager.us [52.5.81.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C5D28F5;
-	Sat, 10 May 2025 00:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DEE213224
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 00:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746837634; cv=none; b=ldZ9sXf77ten5OBDdSsfPIOXE6nwZr+osjjkxYrbGaIptLGgkxcpLZgvqPCGtO03I0VKq0hAZXX/ynaLs6BtyfEupMTPGZRTubRGhyEh1r1Vyr5TqA3bLShq5mO1/0sGO7o3GgpAeGhs6K2CJ0L2ZoZ+PIseGnTmrg4U4wcZNsM=
+	t=1746837683; cv=none; b=dByXmY/ssOB3RBduSfw1gLl1UDTIg0D7EBjn/s4Bwi7r+5LZATjv+d/34ogXz5939HJX4LJoDHw0mUIcTAU/fzlc1LcCSGttiBycAiJn5PX4alkVktvroQeeokk8+1Tg7Fscmsg5Ei/KH9iWf8yvloo2LHRtN2Yfv8HvqE8tZwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746837634; c=relaxed/simple;
-	bh=ZSBeNZhVlDluP2mEXpc5bd+15XC6fnGcgcWH3iHGyS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Uii5byxHRvAn00BoBROTE9kxxVylPcEMUaSo74Vt0mZD8v5Zvaa4XNAq4RRmOwArfbityFW2Psbg1F2pNArNPVa/OM7RV+lyqrIEm2LThLomJirC7pUpoWOKunHmU2Mx6D+PXKl95AotIX8eZi50kYYlPvP5sphhKGsJg9F0nhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uDYGM-0002FN-I1; Sat, 10 May 2025 00:40:22 +0000
-From: Lee Trager <lee@trager.us>
-To: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	kernel-team@meta.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Su Hui <suhui@nfschina.com>,
-	Lee Trager <lee@trager.us>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 5/5] eth: fbnic: Add devlink dev flash support
-Date: Fri,  9 May 2025 17:21:17 -0700
-Message-ID: <20250510002851.3247880-6-lee@trager.us>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250510002851.3247880-1-lee@trager.us>
-References: <20250510002851.3247880-1-lee@trager.us>
+	s=arc-20240116; t=1746837683; c=relaxed/simple;
+	bh=73CHZ/lq1sMu5gZn1AeOKB8NNBFxh7Dkdc7JMuA6LdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ahDYBHuJ8NiyYmdNAxXxelhKUOEtyw50oA0gYS97EoKWOaKcNj8TdIKVlWG4ItKX8Ct+5xfzeAXBmPBrj1NotjNr4UCwEqwy92tXfUhcY/DKaBIWoYKf/t9BTxuzVV32HkDMmp5ftDpMMoxWB0GDm9o6yu/uym5aJ3MkwmabRuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J8t84OcN; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J8t84OcN"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e1eafa891so73315ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 17:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746837681; x=1747442481; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SBjonWDXiwuQILtTm7x6j214UCIpmModdeV3pdwiOBc=;
+        b=J8t84OcNGeDWJ+cSg6yC6TLTMaLLpfr3r11WZAJAvcgAu3T3WkWJKNVr7DJiArdiS9
+         Bnl8IoGON8FU3XU1YvNqZvGXZRmMiDM8XNbdaaYYOdelcFU1SbJkUvpZmPnHpiT95PGV
+         ndmFcB7AVH7yCl7n0L019ISJmnZoElg2HuB9GQJrNHbCv6bp3ih+CjxuWS42F+EsYVh7
+         Dktncy8CXDPFJguwvZgE8TiUMF7vbrgO4aTp2fCccfwNx4Wf4VtGgp05EqWQCf3rQ0BO
+         EEn1Kjoc1skTeHpSRH10V5m1FIIyoE9e0w0pHRYrKr13RY4A9SmAXuzNkexW2wGdZBsw
+         buaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746837681; x=1747442481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SBjonWDXiwuQILtTm7x6j214UCIpmModdeV3pdwiOBc=;
+        b=ivfsvTugF9KBJsMXbsKIgNpPcpf3lEknuqZ7adKNC7jOdGmABZ5qLpRuepKN11m+J4
+         UWCm+W32Rmgf6gAMHwmyiuq7fM/cnRtWMZFpV7dc33gj+fbigWgYDlFYqTlWAcGPUwOH
+         mHOyHtXGi8Rh/QWFe6M1qb2gWOufrQbFXNS+veRMQT6EKuV+nyNLNHC8XUacMpE2xnam
+         DdXUVBNOIyubWgfM/0VAlFinDu14HX5wJ+1FjR3GhMA+t3iAF4bVMa+Hp+WxrYNmQzHJ
+         KFQqFgUFDPDch5XCI7jHty3WqgxMeaU7mtU2zhWp5wY/6rer63JLQewU1vK3+V3PI2nx
+         NOQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCbEq0ZHJeARWj8mpehRLZyo00OqOKOPkyXxvBbA9ZBE7o2kJIee/NUGDlr9/J5mUClxYMHttsI/strt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt72SufasMqpBl/7mxIp+1va4nybzUr7agVEmSggDgdmRsdvgh
+	YkUGT4D66tRMso0Lo4VLiBlbR3fVD2Y0uOt+rrYhZajWHeDPsxMYI3r6ARUPtwfpQaednaXCTWj
+	oPecDWPc4N6c1W96p5D/NJXv8X+lbDd5QRKjh
+X-Gm-Gg: ASbGncuX0Yox6SUHfNzQI9nUm0NnHZxRYCAQRj37t49BJ651hWloUDLO8D0Zx5mjR5H
+	Q2teqtluwQLH6jevVQBG0tHookaqXSLsrvVPCd/rvvYBeGxrhPBgiHJfGoz34TKVOyRuFQInaDF
+	/vRbW2jXurjRyO2KHfL6snIap22jOvCGRySooVt7MajN3MB6DrAdqll/AiL+dselZn5A==
+X-Google-Smtp-Source: AGHT+IGz6/tGqcv09JHVcdip+PWSS/pI3uTDyapYVQeSj5kq9IPPE6er0FMBtSr5k1778akK9t5wu6TehjWbdJSuiK4=
+X-Received: by 2002:a17:902:ecc9:b0:216:6ecd:8950 with SMTP id
+ d9443c01a7336-22ff6e92954mr498655ad.19.1746837680928; Fri, 09 May 2025
+ 17:41:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <aBAiCBmON0g0Qro1@yzhao56-desk.sh.intel.com> <CAGtprH_ggm8N-R9QbV1f8mo8-cQkqyEta3W=h2jry-NRD7_6OA@mail.gmail.com>
+ <aBldhnTK93+eKcMq@yzhao56-desk.sh.intel.com> <CAGtprH9wi6zHJ5JeuAnjZThMAzxxibJGo=XN1G1Nx8txZRg8_w@mail.gmail.com>
+ <aBmmirBzOZfmMOJj@yzhao56-desk.sh.intel.com> <CAGtprH9fDMiuk3JGSS12M-wFoqRj+sjdtEHJFS_5QfKX7aGkRQ@mail.gmail.com>
+ <aBsNsZsWuVl4uo0j@yzhao56-desk.sh.intel.com> <CAGtprH-+Bo4hFxL+THiMgF5V4imdVVb0OmRhx2Uc0eom9=3JPA@mail.gmail.com>
+ <aBwJHE/zRDvV41fH@yzhao56-desk.sh.intel.com> <CAGtprH9hwj7BvSm4DgRkHmdPnmi-1-FMH5Z7xK1VBh=s4W8VYA@mail.gmail.com>
+ <aB10gNcmsw0TSrqh@yzhao56-desk.sh.intel.com> <CAGtprH8=-70DU2e52OJe=w0HfuW5Zg6wGHV32FWD_hQzYBa=fA@mail.gmail.com>
+ <8d8f4d0ec970fc7c16341ee994d177d9e042c860.camel@intel.com>
+In-Reply-To: <8d8f4d0ec970fc7c16341ee994d177d9e042c860.camel@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Fri, 9 May 2025 17:41:06 -0700
+X-Gm-Features: ATxdqUFkjNsyopjZSsChhmV3FeqMlTB5k3Xs3nRCEQhvIc667JWsLMcn9mx-uM8
+Message-ID: <CAGtprH8sn48pNC29SSNqCCV88O8mjU1JiOFvLbLrm_7LGjGRuQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>, 
+	"Li, Xiaoyao" <xiaoyao.li@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com" <tabba@google.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "Du, Fan" <fan.du@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"Weiny, Ira" <ira.weiny@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support to update the CMRT and control firmware as well as the UEFI
-driver on fbnic using devlink dev flash.
+On Fri, May 9, 2025 at 4:45=E2=80=AFPM Edgecombe, Rick P
+<rick.p.edgecombe@intel.com> wrote:
+>
+> On Fri, 2025-05-09 at 07:20 -0700, Vishal Annapurve wrote:
+> > I might be wrongly throwing out some terminologies here then.
+> > VM_PFNMAP flag can be set for memory backed by folios/page structs.
+> > udmabuf seems to be working with pinned "folios" in the backend.
+> >
+> > The goal is to get to a stage where guest_memfd is backed by pfn
+> > ranges unmanaged by kernel that guest_memfd owns and distributes to
+> > userspace, KVM, IOMMU subject to shareability attributes. if the
+> > shareability changes, the users will get notified and will have to
+> > invalidate their mappings. guest_memfd will allow mmaping such ranges
+> > with VM_PFNMAP flag set by default in the VMAs to indicate the need of
+> > special handling/lack of page structs.
+>
+> I see the point about how operating on PFNs can allow smoother transition=
+ to a
+> solution that saves struct page memory, but I wonder about the wisdom of
+> building this 2MB TDX code against eventual goals.
 
-Make sure the shutdown / quiescence paths like suspend take the devlink
-lock to prevent them from interrupting the FW flashing process.
+This discussion was more in response to a few questions from Yan [1].
 
-Signed-off-by: Lee Trager <lee@trager.us>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
- .../device_drivers/ethernet/meta/fbnic.rst    |  11 +
- drivers/net/ethernet/meta/Kconfig             |   1 +
- .../net/ethernet/meta/fbnic/fbnic_devlink.c   | 260 +++++++++++++++++-
- drivers/net/ethernet/meta/fbnic/fbnic_fw.h    |   9 +
- drivers/net/ethernet/meta/fbnic/fbnic_pci.c   |   9 +
- 5 files changed, 289 insertions(+), 1 deletion(-)
+My point of this discussion was to ensure that:
+1) There is more awareness about the future roadmap.
+2) There is a line of sight towards supporting guest memory (at least
+guest private memory) without page structs.
 
-diff --git a/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst b/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst
-index 3483e498c08e..f8592dec8851 100644
---- a/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst
-+++ b/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst
-@@ -28,6 +28,17 @@ devlink dev info provides version information for all three components. In
- addition to the version the hg commit hash of the build is included as a
- separate entry.
+No need to solve these problems right away, but it would be good to
+ensure that the design choices are aligned towards the future
+direction.
 
-+Upgrading Firmware
-+------------------
-+
-+fbnic supports updating firmware using signed PLDM images with devlink dev
-+flash. PLDM images are written into the flash. Flashing does not interrupt
-+the operation of the device.
-+
-+On host boot the latest UEFI driver is always used, no explicit activation
-+is required. Firmware activation is required to run new control firmware. cmrt
-+firmware can only be activated by power cycling the NIC.
-+
- Statistics
- ----------
+One thing that needs to be resolved right away is - no refcounts on
+guest memory from outside guest_memfd [2]. (Discounting the error
+situations)
 
-diff --git a/drivers/net/ethernet/meta/Kconfig b/drivers/net/ethernet/meta/Kconfig
-index 831921b9d4d5..3ba527514f1e 100644
---- a/drivers/net/ethernet/meta/Kconfig
-+++ b/drivers/net/ethernet/meta/Kconfig
-@@ -27,6 +27,7 @@ config FBNIC
- 	select NET_DEVLINK
- 	select PAGE_POOL
- 	select PHYLINK
-+	select PLDMFW
- 	help
- 	  This driver supports Meta Platforms Host Network Interface.
+[1] https://lore.kernel.org/lkml/aBldhnTK93+eKcMq@yzhao56-desk.sh.intel.com=
+/
+[2] https://lore.kernel.org/lkml/CAGtprH_ggm8N-R9QbV1f8mo8-cQkqyEta3W=3Dh2j=
+ry-NRD7_6OA@mail.gmail.com/
 
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-index 0072d612215e..4cb615385671 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-@@ -3,10 +3,12 @@
+>
+> We were thinking to enable 2MB TDX huge pages on top of:
+> 1. Mmap shared pages
+> 2. In-place conversion
+> 3. 2MB huge page support
+>
+> Where do you think struct page-less guestmemfd fits in that roadmap?
 
- #include <linux/unaligned.h>
- #include <linux/pci.h>
-+#include <linux/pldmfw.h>
- #include <linux/types.h>
- #include <net/devlink.h>
+Ideally the roadmap should be:
+1. mmap support
+2. Huge page support in guest memfd with in-place conversion
+3. 2MB huge page EPT mappings support
+4. private memory without page structs
+5. private/shared memory without page structs
 
- #include "fbnic.h"
-+#include "fbnic_tlv.h"
+There should be newer RFC series landing soon for 1 and 2. In my
+opinion, as long as hugepage EPT support is reviewed, tested and is
+stable enough, it can land upstream sooner than 2 as well.
 
- #define FBNIC_SN_STR_LEN	24
-
-@@ -109,8 +111,264 @@ static int fbnic_devlink_info_get(struct devlink *devlink,
- 	return 0;
- }
-
-+static bool
-+fbnic_pldm_match_record(struct pldmfw *context, struct pldmfw_record *record)
-+{
-+	struct pldmfw_desc_tlv *desc;
-+	u32 anti_rollback_ver = 0;
-+	struct devlink *devlink;
-+	struct fbnic_dev *fbd;
-+	struct pci_dev *pdev;
-+
-+	/* First, use the standard PCI matching function */
-+	if (!pldmfw_op_pci_match_record(context, record))
-+		return -ENODEV;
-+
-+	pdev = to_pci_dev(context->dev);
-+	fbd = pci_get_drvdata(pdev);
-+	devlink = priv_to_devlink(fbd);
-+
-+	/* If PCI match is successful, check for vendor-specific descriptors */
-+	list_for_each_entry(desc, &record->descs, entry) {
-+		if (desc->type != PLDM_DESC_ID_VENDOR_DEFINED)
-+			continue;
-+
-+		if (desc->size < 21 || desc->data[0] != 1 ||
-+		    desc->data[1] != 15)
-+			continue;
-+
-+		if (memcmp(desc->data + 2, "AntiRollbackVer", 15) != 0)
-+			continue;
-+
-+		anti_rollback_ver = get_unaligned_le32(desc->data + 17);
-+		break;
-+	}
-+
-+	/* Compare versions and return error if they do not match */
-+	if (anti_rollback_ver < fbd->fw_cap.anti_rollback_version) {
-+		char buf[128];
-+
-+		snprintf(buf, sizeof(buf),
-+			 "New firmware anti-rollback version (0x%x) is older than device version (0x%x)!",
-+			 anti_rollback_ver, fbd->fw_cap.anti_rollback_version);
-+		devlink_flash_update_status_notify(devlink, buf,
-+						   "Anti-Rollback", 0, 0);
-+
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static int
-+fbnic_flash_start(struct fbnic_dev *fbd, struct pldmfw_component *component)
-+{
-+	struct fbnic_fw_completion *cmpl;
-+	int err;
-+
-+	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
-+	if (!cmpl)
-+		return -ENOMEM;
-+
-+	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ);
-+	err = fbnic_fw_xmit_fw_start_upgrade(fbd, cmpl,
-+					     component->identifier,
-+					     component->component_size);
-+	if (err)
-+		goto cmpl_free;
-+
-+	/* Wait for firmware to ack firmware upgrade start */
-+	if (wait_for_completion_timeout(&cmpl->done, 10 * HZ))
-+		err = cmpl->result;
-+	else
-+		err = -ETIMEDOUT;
-+
-+	fbnic_fw_clear_cmpl(fbd, cmpl);
-+cmpl_free:
-+	fbnic_fw_put_cmpl(cmpl);
-+
-+	return err;
-+}
-+
-+static int
-+fbnic_flash_component(struct pldmfw *context,
-+		      struct pldmfw_component *component)
-+{
-+	const u8 *data = component->component_data;
-+	const u32 size = component->component_size;
-+	struct fbnic_fw_completion *cmpl;
-+	const char *component_name;
-+	struct devlink *devlink;
-+	struct fbnic_dev *fbd;
-+	struct pci_dev *pdev;
-+	u32 offset = 0;
-+	u32 length = 0;
-+	char buf[32];
-+	int err;
-+
-+	pdev = to_pci_dev(context->dev);
-+	fbd = pci_get_drvdata(pdev);
-+	devlink = priv_to_devlink(fbd);
-+
-+	switch (component->identifier) {
-+	case QSPI_SECTION_CMRT:
-+		component_name = "boot1";
-+		break;
-+	case QSPI_SECTION_CONTROL_FW:
-+		component_name = "boot2";
-+		break;
-+	case QSPI_SECTION_OPTION_ROM:
-+		component_name = "option-rom";
-+		break;
-+	default:
-+		snprintf(buf, sizeof(buf), "Unknown component ID %u!",
-+			 component->identifier);
-+		devlink_flash_update_status_notify(devlink, buf, NULL, 0,
-+						   size);
-+		return -EINVAL;
-+	}
-+
-+	/* Once firmware receives the request to start upgrading it responds
-+	 * with two messages:
-+	 * 1. An ACK that it received the message and possible error code
-+	 *    indicating that an upgrade is not currently possible.
-+	 * 2. A request for the first chunk of data
-+	 *
-+	 * Setup completions for write before issuing the start message so
-+	 * the driver can catch both messages.
-+	 */
-+	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
-+	if (!cmpl)
-+		return -ENOMEM;
-+
-+	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ);
-+	err = fbnic_mbx_set_cmpl(fbd, cmpl);
-+	if (err)
-+		goto cmpl_free;
-+
-+	devlink_flash_update_timeout_notify(devlink, "Initializing",
-+					    component_name, 15);
-+	err = fbnic_flash_start(fbd, component);
-+	if (err)
-+		goto err_no_msg;
-+
-+	while (offset < size) {
-+		if (!wait_for_completion_timeout(&cmpl->done, 15 * HZ)) {
-+			err = -ETIMEDOUT;
-+			break;
-+		}
-+
-+		err = cmpl->result;
-+		if (err)
-+			break;
-+
-+		/* Verify firmware is requesting the next chunk in the seq. */
-+		if (cmpl->u.fw_update.offset != offset + length) {
-+			err = -EFAULT;
-+			break;
-+		}
-+
-+		offset = cmpl->u.fw_update.offset;
-+		length = cmpl->u.fw_update.length;
-+
-+		if (length > TLV_MAX_DATA || offset + length > size) {
-+			err = -EFAULT;
-+			break;
-+		}
-+
-+		devlink_flash_update_status_notify(devlink, "Flashing",
-+						   component_name,
-+						   offset, size);
-+
-+		/* Mailbox will set length to 0 once it receives the finish
-+		 * message.
-+		 */
-+		if (!length)
-+			continue;
-+
-+		reinit_completion(&cmpl->done);
-+		err = fbnic_fw_xmit_fw_write_chunk(fbd, data, offset, length,
-+						   0);
-+		if (err)
-+			break;
-+	}
-+
-+	if (err) {
-+		fbnic_fw_xmit_fw_write_chunk(fbd, NULL, 0, 0, err);
-+err_no_msg:
-+		snprintf(buf, sizeof(buf), "Mailbox encountered error %d!",
-+			 err);
-+		devlink_flash_update_status_notify(devlink, buf,
-+						   component_name, 0, 0);
-+	}
-+
-+	fbnic_fw_clear_cmpl(fbd, cmpl);
-+cmpl_free:
-+	fbnic_fw_put_cmpl(cmpl);
-+
-+	return err;
-+}
-+
-+static const struct pldmfw_ops fbnic_pldmfw_ops = {
-+	.match_record = fbnic_pldm_match_record,
-+	.flash_component = fbnic_flash_component,
-+};
-+
-+static int
-+fbnic_devlink_flash_update(struct devlink *devlink,
-+			   struct devlink_flash_update_params *params,
-+			   struct netlink_ext_ack *extack)
-+{
-+	struct fbnic_dev *fbd = devlink_priv(devlink);
-+	const struct firmware *fw = params->fw;
-+	struct device *dev = fbd->dev;
-+	struct pldmfw context;
-+	char *err_msg;
-+	int err;
-+
-+	context.ops = &fbnic_pldmfw_ops;
-+	context.dev = dev;
-+
-+	err = pldmfw_flash_image(&context, fw);
-+	if (err) {
-+		switch (err) {
-+		case -EINVAL:
-+			err_msg = "Invalid image";
-+			break;
-+		case -EOPNOTSUPP:
-+			err_msg = "Unsupported image";
-+			break;
-+		case -ENOMEM:
-+			err_msg = "Out of memory";
-+			break;
-+		case -EFAULT:
-+			err_msg = "Invalid header";
-+			break;
-+		case -ENOENT:
-+			err_msg = "No matching record";
-+			break;
-+		case -ENODEV:
-+			err_msg = "No matching device";
-+			break;
-+		case -ETIMEDOUT:
-+			err_msg = "Timed out waiting for reply";
-+			break;
-+		default:
-+			err_msg = "Unknown error";
-+			break;
-+		}
-+
-+		NL_SET_ERR_MSG_FMT_MOD(extack,
-+				       "Failed to flash PLDM Image: %s (error: %d)",
-+				       err_msg, err);
-+	}
-+
-+	return err;
-+}
-+
- static const struct devlink_ops fbnic_devlink_ops = {
--	.info_get = fbnic_devlink_info_get,
-+	.info_get	= fbnic_devlink_info_get,
-+	.flash_update	= fbnic_devlink_flash_update,
- };
-
- void fbnic_devlink_free(struct fbnic_dev *fbd)
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-index 0ab6ae3859e4..6baac10fd688 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-@@ -100,6 +100,15 @@ do {									\
- #define fbnic_mk_fw_ver_str(_rev_id, _str) \
- 	fbnic_mk_full_fw_ver_str(_rev_id, "", "", _str, sizeof(_str))
-
-+enum {
-+	QSPI_SECTION_CMRT			= 0,
-+	QSPI_SECTION_CONTROL_FW			= 1,
-+	QSPI_SECTION_UCODE			= 2,
-+	QSPI_SECTION_OPTION_ROM			= 3,
-+	QSPI_SECTION_USER			= 4,
-+	QSPI_SECTION_INVALID,
-+};
-+
- #define FW_HEARTBEAT_PERIOD		(10 * HZ)
-
- enum {
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-index 70a852b3e99d..249d3ef862d5 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-@@ -6,6 +6,7 @@
- #include <linux/pci.h>
- #include <linux/rtnetlink.h>
- #include <linux/types.h>
-+#include <net/devlink.h>
-
- #include "fbnic.h"
- #include "fbnic_drvinfo.h"
-@@ -388,8 +389,12 @@ static int fbnic_pm_suspend(struct device *dev)
- 	rtnl_unlock();
-
- null_uc_addr:
-+	devl_lock(priv_to_devlink(fbd));
-+
- 	fbnic_fw_free_mbx(fbd);
-
-+	devl_unlock(priv_to_devlink(fbd));
-+
- 	/* Free the IRQs so they aren't trying to occupy sleeping CPUs */
- 	fbnic_free_irqs(fbd);
-
-@@ -420,11 +425,15 @@ static int __fbnic_pm_resume(struct device *dev)
-
- 	fbd->mac->init_regs(fbd);
-
-+	devl_lock(priv_to_devlink(fbd));
-+
- 	/* Re-enable mailbox */
- 	err = fbnic_fw_request_mbx(fbd);
- 	if (err)
- 		goto err_free_irqs;
-
-+	devl_unlock(priv_to_devlink(fbd));
-+
- 	/* No netdev means there isn't a network interface to bring up */
- 	if (fbnic_init_failure(fbd))
- 		return 0;
---
-2.47.1
+>
+> >
+> > As an intermediate stage, it makes sense to me to just not have
+> > private memory backed by page structs and use a special "filemap" to
+> > map file offsets to these private memory ranges. This step will also
+> > need similar contract with users -
+> >    1) memory is pinned by guest_memfd
+> >    2) users will get invalidation notifiers on shareability changes
+> >
+> > I am sure there is a lot of work here and many quirks to be addressed,
+> > let's discuss this more with better context around. A few related RFC
+> > series are planned to be posted in the near future.
+>
+> Look forward to collecting more context, and thanks for your patience whi=
+le we
+> catch up. But why not an iterative approach? We can't save struct page me=
+mory on
+> guestmemfd huge pages until we have guestmemfd huge pages.
