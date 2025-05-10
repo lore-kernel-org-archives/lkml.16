@@ -1,107 +1,189 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DD8519C556
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485019C556;
+	Sat, 10 May 2025 03:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746848177; cv=none; b=HjdWWMub6VTerUn2xhRHfGdI6Xksbw0D0rMtWk+tT9fCYJGPUhjbR1pP7Au0iHhmNhg3WmDG95WpFq4u7RZzyR4dGblEkk5bOsHnpX9rC9YhLUVmewKcQ1aqA3SVVFGfST4JT3fdEmCpJMbZykW+tWO0627sCZXkOZcQCoaeZvw=
+	t=1746848687; cv=none; b=NntXdyuu2JlHzRp1B7kqT+PANW3yoFxTs7CdFQxYxNRu8dzSicRJ9QVGf47UmkuT3XzJDXZVB/dZMg7A6bRF77bfz/arGf6OSRe+FY/EBII9BVVaaVeqBTDEzimEpJzofs9BPsW8HvcjlVmzf8DhGC3DLtXQxQQTTquff/Sreyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746848177; c=relaxed/simple;
-	bh=90SklKXFWqF5yabT/MHUzKHcwbxe9jbWkHzVLaV2rQ4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=R4kbdpOrtVs1gj6xqdeH245RuskaBlw81FgRtixYaKaYTruMx8v9/11oJZIHwLF4sO34riJamFZBxtImnQve3gJs+HFfa1DZa0zd4bCmKzrMIH28JQ4NSUhH5Cud8JGI9s0cQHYQnXZThuTsrC8uyOo/cGhzf8kYCWvslp7scWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=IMZspYA7; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746848687; c=relaxed/simple;
+	bh=lJZMKARAdrlkZTQd04Ofxb+YfDhSi6CN4YD16dHYFsE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EISq90KH2XtVuB0L9J9KgGsrVvAnapfyr0WhdSttlcQHm8XdO4wAZZSp1msrAYr0Yq6vIIoJIH3uvw5/UPtzHM1o1H700qdvJJ60x+kw0DiBh23TOjpA2C/M7zdm4FIPvtHB7UFQ+fzqzexRKhNdf/ji/bro9ewoUddb8VzXsXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0B7rA63; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IMZspYA7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=90SklKXFWqF5yabT/MHUzKHcwbxe9jbWkHzVLaV2rQ4=; b=I
-	MZspYA7CKGyBpyUpunt1oHmohNU8QGVZkHBzgmfD0Iwq43ahcLhf2o2eRV1kXr+1
-	fC5I0CEMXo20qjEL4j7Pe2BMG0yAXxSqKU0dy2eO7/4UhJ5oKVIFQhwbUtH+LRoE
-	bsS7TU3ILPdtxtWtdQpA0ISSAqzpmgXm8Re+uQK3Uw=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-128 (Coremail) ; Sat, 10 May 2025 11:35:47 +0800
- (CST)
-Date: Sat, 10 May 2025 11:35:47 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Tim Chen" <tim.c.chen@linux.intel.com>
-Cc: "Suren Baghdasaryan" <surenb@google.com>, kent.overstreet@linux.dev,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between
- read() calls
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <294d0743c0b2e5c409857ef81a6fe8baaf87727f.camel@linux.intel.com>
-References: <20250507175500.204569-1-00107082@163.com>
- <20250509173929.42508-1-00107082@163.com>
- <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
- <CAJuCfpHB8T8daanvE_wowRD9-sAo30rtCcFfMPZL_751+KSs5w@mail.gmail.com>
- <294d0743c0b2e5c409857ef81a6fe8baaf87727f.camel@linux.intel.com>
-X-NTES-SC: AL_Qu2fBPSft0kv4SSYYOkZnEYQheY4XMKyuPkg1YJXOp80liTj+QsqeHJmM2fy0MWCMhmgvRWIThZo2P9Ff7J6UbI9cYWZ5Z7tgSJZMW1ehqq3
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0B7rA63"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9E2C4CEE2;
+	Sat, 10 May 2025 03:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746848685;
+	bh=lJZMKARAdrlkZTQd04Ofxb+YfDhSi6CN4YD16dHYFsE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Y0B7rA632mHKyXt7Vt4nCU2+YBEpSzFc4SWaYnxjjFWcb21ZS9ynLWOIueEx6I7z5
+	 y+pfKiaRe8U1QJXfjXAfmgG80HWxEV+0rMG9I+nWQ9EWCjVLPeu9En2L5KfRqw/qHa
+	 t7PNLxXqQcN6qbMr17mX9AnXziuNHNBjGbrHzhYfsrTaBoopFWcnreHaIC/DEG3pRT
+	 byh7psw4HItZQMPQp6C16nEXnxEXaBZ9qjaC66032FPm74JTvONHdgQr3bj0WIgAaY
+	 WmoceLpSrqNXf2dO5dJLTyhfPy456DbJOCHcHGftZsTaJHsr/4aET53UQlgWKQ0xl5
+	 zJj2P16U2pFeQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Paul Cacheux <paulcacheux@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: probes: Fix a possible race in trace_probe_log APIs
+Date: Sat, 10 May 2025 12:44:41 +0900
+Message-ID: <174684868120.551552.3068655787654268804.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <c48b719.112d.196b84367d1.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:gCgvCgD3f+STyR5oqC0BAA--.7114W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gxJqmgexcNK8QACs0
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-CkF0IDIwMjUtMDUtMTAgMDM6NDY6MDYsICJUaW0gQ2hlbiIgPHRpbS5jLmNoZW5AbGludXguaW50
-ZWwuY29tPiB3cm90ZToKPk9uIEZyaSwgMjAyNS0wNS0wOSBhdCAxMjozNiAtMDcwMCwgU3VyZW4g
-QmFnaGRhc2FyeWFuIHdyb3RlOgo+PiBPbiBGcmksIE1heSA5LCAyMDI1IGF0IDExOjMz4oCvQU0g
-VGltIENoZW4gPHRpbS5jLmNoZW5AbGludXguaW50ZWwuY29tPiB3cm90ZToKPj4gPiAKPj4gPiBP
-biBTYXQsIDIwMjUtMDUtMTAgYXQgMDE6MzkgKzA4MDAsIERhdmlkIFdhbmcgd3JvdGU6Cj4+ID4g
-PiAKPj4gPiA+IAo+PiA+ID4gU2lnbmVkLW9mZi1ieTogRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYz
-LmNvbT4KPj4gCj4+IEFja2VkLWJ5OiBTdXJlbiBCYWdoZGFzYXJ5YW4gPHN1cmVuYkBnb29nbGUu
-Y29tPgo+PiAKPj4gPiA+IC0tLQo+PiA+ID4gIGxpYi9hbGxvY190YWcuYyB8IDI5ICsrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tCj4+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlv
-bnMoKyksIDE5IGRlbGV0aW9ucygtKQo+PiA+ID4gCj4+ID4gPiBkaWZmIC0tZ2l0IGEvbGliL2Fs
-bG9jX3RhZy5jIGIvbGliL2FsbG9jX3RhZy5jCj4+ID4gPiBpbmRleCAyNWVjYzEzMzRiNjcuLmZk
-ZDU4ODc3NjlhNiAxMDA2NDQKPj4gPiA+IC0tLSBhL2xpYi9hbGxvY190YWcuYwo+PiA+ID4gKysr
-IGIvbGliL2FsbG9jX3RhZy5jCj4+ID4gPiBAQCAtNDUsMjEgKzQ1LDE2IEBAIHN0cnVjdCBhbGxv
-Y2luZm9fcHJpdmF0ZSB7Cj4+ID4gPiAgc3RhdGljIHZvaWQgKmFsbG9jaW5mb19zdGFydChzdHJ1
-Y3Qgc2VxX2ZpbGUgKm0sIGxvZmZfdCAqcG9zKQo+PiA+ID4gIHsKPj4gPiA+ICAgICAgIHN0cnVj
-dCBhbGxvY2luZm9fcHJpdmF0ZSAqcHJpdjsKPj4gPiA+IC0gICAgIHN0cnVjdCBjb2RldGFnICpj
-dDsKPj4gPiA+ICAgICAgIGxvZmZfdCBub2RlID0gKnBvczsKPj4gPiA+IAo+PiA+ID4gLSAgICAg
-cHJpdiA9IGt6YWxsb2Moc2l6ZW9mKCpwcml2KSwgR0ZQX0tFUk5FTCk7Cj4+ID4gPiAtICAgICBt
-LT5wcml2YXRlID0gcHJpdjsKPj4gPiA+IC0gICAgIGlmICghcHJpdikKPj4gPiA+IC0gICAgICAg
-ICAgICAgcmV0dXJuIE5VTEw7Cj4+ID4gPiAtCj4+ID4gPiAtICAgICBwcml2LT5wcmludF9oZWFk
-ZXIgPSAobm9kZSA9PSAwKTsKPj4gPiA+ICsgICAgIHByaXYgPSAoc3RydWN0IGFsbG9jaW5mb19w
-cml2YXRlICopbS0+cHJpdmF0ZTsKPj4gPiA+ICAgICAgIGNvZGV0YWdfbG9ja19tb2R1bGVfbGlz
-dChhbGxvY190YWdfY3R0eXBlLCB0cnVlKTsKPj4gPiA+IC0gICAgIHByaXYtPml0ZXIgPSBjb2Rl
-dGFnX2dldF9jdF9pdGVyKGFsbG9jX3RhZ19jdHR5cGUpOwo+PiA+ID4gLSAgICAgd2hpbGUgKChj
-dCA9IGNvZGV0YWdfbmV4dF9jdCgmcHJpdi0+aXRlcikpICE9IE5VTEwgJiYgbm9kZSkKPj4gPiA+
-IC0gICAgICAgICAgICAgbm9kZS0tOwo+PiA+ID4gLQo+PiA+ID4gLSAgICAgcmV0dXJuIGN0ID8g
-cHJpdiA6IE5VTEw7Cj4+ID4gPiArICAgICBpZiAobm9kZSA9PSAwKSB7Cj4+ID4gPiArICAgICAg
-ICAgICAgIHByaXYtPnByaW50X2hlYWRlciA9IHRydWU7Cj4+ID4gPiArICAgICAgICAgICAgIHBy
-aXYtPml0ZXIgPSBjb2RldGFnX2dldF9jdF9pdGVyKGFsbG9jX3RhZ19jdHR5cGUpOwo+PiA+ID4g
-KyAgICAgICAgICAgICBjb2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpOwo+PiA+ID4gKyAgICAg
-fQo+PiA+IAo+PiA+IERvIHlvdSBuZWVkIHRvIHNraXAgcHJpbnQgaGVhZGVyIHdoZW4gKnBvcyAh
-PSAwPyBpLmUgYWRkCj4+IAo+PiBUZWNobmljYWxseSBub3QgbmVlZGVkIHNpbmNlIHByb2NfY3Jl
-YXRlX3NlcV9wcml2YXRlKCkgYWxsb2NhdGVzCj4+IHNlcS0+cHJpdmF0ZSB1c2luZyBremFsbG9j
-KCksIHNvIHRoZSBpbml0aWFsIHZhbHVlIG9mCj4+IHByaXYtPnByaW50X2hlYWRlciBpcyBhbHdh
-eXMgZmFsc2UuCj4KPkJ1dCB3ZSdsbCBzdGFydCB3aXRoIGZpcnN0IGNhbGwgdG8gYWxsb2NpbmZv
-X3N0YXJ0KCkgd2l0aCAqcG9zID09IDAswqAKPnRoZW4gcHJpbnRfaGVhZGVyIHdpbGwgYmUgaW5p
-dGlhbGl6ZWQgdG8gdHJ1ZS4KPldpbGwgdGhlcmUgYmUgc3Vic2VxdWVudCBjYWxscyBvZiBhbGxv
-Y2luZm9fc3RhcnQoKSB3aXRoICpwb3MgIT0wLAo+YnV0IHByaXYtPnByaW50X2hlYWRlciBzdGF5
-cyBhdCAwPyAKCkhlYWRlciBvbmx5IG5lZWRzIHRvIGJlIHByaW50ZWQgYXQgbGluZSAjMDoKTm9y
-bWFsIHNlcV9maWxlIG9wZXJhdGVzOwogICAgc3RhcnQoMCkKICAgIHNob3coMCkgICA8LS0tcHJp
-bnQgaGVhZGVyIGhlcmUKICAgIHNob3coMSkKICAgIHN0b3AoKQogICAgc3RhcnQoMikgICA8LS0t
-LW5vIG5lZWQgdG8gcHJpbnQgaGVhZGVyCiAgICBzaG93KDIpCiAgICBzaG93KDMpCiAgIC4uLgoK
-SWYgc3RhcnQoMCkvc2hvdygwKSBoYXBwZW5lZCB0d2ljZSwgdHdvIGhlYWRlciB3b3VsZCBiZSBw
-cmludGVkOyBvciBpZiB0aGVyZSBpcyBubyBzdGFydCgwKSBub3RoaW5nIHdvdWxkIGJlIHByaW50
-ZWQuCklmIHRob3NlIHR3byBzY2VuYXJpbyBoYXBwZW5zLCAgSSB0aGluayBpdCBpcyBhIGJ1ZyBp
-biBzZXFfZmlsZS4KClRoYW5rcwpEYXZpZAogCgo+Cj5UaW0KPj4gCj4+ID4gCj4+ID4gICAgICAg
-ICB9IGVsc2Ugewo+PiA+ICAgICAgICAgICAgICAgICBwcml2LT5wcmludF9oZWFkZXIgPSBmYWxz
-ZTsKPj4gPiAgICAgICAgIH0KPj4gPiAKPj4gPiBUaW0KPj4gPiAKPj4gPiA+ICsgICAgIHJldHVy
-biBwcml2LT5pdGVyLmN0ID8gcHJpdiA6IE5VTEw7Cj4+ID4gPiAgfQo+PiA+ID4gCj4+ID4gCg==
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Since the shared trace_probe_log variable can be accessed and
+modified via probe event create operation of kprobe_events,
+uprobe_events, and dynamic_events, it should be protected.
+In the dynamic_events, all operations are serialized by
+`dyn_event_ops_mutex`. But kprobe_events and uprobe_events
+interfaces are not serialized.
+
+To solve this issue, introduces dyn_event_create(), which runs
+create() operation under the mutex, for kprobe_events and
+uprobe_events. This also uses lockdep to check the mutex is
+held when using trace_probe_log* APIs.
+
+Reported-by: Paul Cacheux <paulcacheux@gmail.com>
+Closes: https://lore.kernel.org/all/20250510074456.805a16872b591e2971a4d221@kernel.org/
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/trace/trace_dynevent.c |   16 +++++++++++++++-
+ kernel/trace/trace_dynevent.h |    1 +
+ kernel/trace/trace_kprobe.c   |    2 +-
+ kernel/trace/trace_probe.c    |    9 +++++++++
+ kernel/trace/trace_uprobe.c   |    2 +-
+ 5 files changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+index a322e4f249a5..5d64a18cacac 100644
+--- a/kernel/trace/trace_dynevent.c
++++ b/kernel/trace/trace_dynevent.c
+@@ -16,7 +16,7 @@
+ #include "trace_output.h"	/* for trace_event_sem */
+ #include "trace_dynevent.h"
+ 
+-static DEFINE_MUTEX(dyn_event_ops_mutex);
++DEFINE_MUTEX(dyn_event_ops_mutex);
+ static LIST_HEAD(dyn_event_ops_list);
+ 
+ bool trace_event_dyn_try_get_ref(struct trace_event_call *dyn_call)
+@@ -116,6 +116,20 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 	return ret;
+ }
+ 
++/*
++ * Locked version of event creation. The event creation must be protected by
++ * dyn_event_ops_mutex because of protecting trace_probe_log.
++ */
++int dyn_event_create(const char *raw_command, struct dyn_event_operations *type)
++{
++	int ret;
++
++	mutex_lock(&dyn_event_ops_mutex);
++	ret = type->create(raw_command);
++	mutex_unlock(&dyn_event_ops_mutex);
++	return ret;
++}
++
+ static int create_dyn_event(const char *raw_command)
+ {
+ 	struct dyn_event_operations *ops;
+diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
+index 936477a111d3..beee3f8d7544 100644
+--- a/kernel/trace/trace_dynevent.h
++++ b/kernel/trace/trace_dynevent.h
+@@ -100,6 +100,7 @@ void *dyn_event_seq_next(struct seq_file *m, void *v, loff_t *pos);
+ void dyn_event_seq_stop(struct seq_file *m, void *v);
+ int dyn_events_release_all(struct dyn_event_operations *type);
+ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type);
++int dyn_event_create(const char *raw_command, struct dyn_event_operations *type);
+ 
+ /*
+  * for_each_dyn_event	-	iterate over the dyn_event list
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 2703b96d8990..3e5c47b6d7b2 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -1089,7 +1089,7 @@ static int create_or_delete_trace_kprobe(const char *raw_command)
+ 	if (raw_command[0] == '-')
+ 		return dyn_event_release(raw_command, &trace_kprobe_ops);
+ 
+-	ret = trace_kprobe_create(raw_command);
++	ret = dyn_event_create(raw_command, &trace_kprobe_ops);
+ 	return ret == -ECANCELED ? -EINVAL : ret;
+ }
+ 
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 2eeecb6c95ee..424751cdf31f 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -154,9 +154,12 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
+ }
+ 
+ static struct trace_probe_log trace_probe_log;
++extern struct mutex dyn_event_ops_mutex;
+ 
+ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+ {
++	lockdep_assert_held(&dyn_event_ops_mutex);
++
+ 	trace_probe_log.subsystem = subsystem;
+ 	trace_probe_log.argc = argc;
+ 	trace_probe_log.argv = argv;
+@@ -165,11 +168,15 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+ 
+ void trace_probe_log_clear(void)
+ {
++	lockdep_assert_held(&dyn_event_ops_mutex);
++
+ 	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
+ }
+ 
+ void trace_probe_log_set_index(int index)
+ {
++	lockdep_assert_held(&dyn_event_ops_mutex);
++
+ 	trace_probe_log.index = index;
+ }
+ 
+@@ -178,6 +185,8 @@ void __trace_probe_log_err(int offset, int err_type)
+ 	char *command, *p;
+ 	int i, len = 0, pos = 0;
+ 
++	lockdep_assert_held(&dyn_event_ops_mutex);
++
+ 	if (!trace_probe_log.argv)
+ 		return;
+ 
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 3386439ec9f6..35cf76c75dd7 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -741,7 +741,7 @@ static int create_or_delete_trace_uprobe(const char *raw_command)
+ 	if (raw_command[0] == '-')
+ 		return dyn_event_release(raw_command, &trace_uprobe_ops);
+ 
+-	ret = trace_uprobe_create(raw_command);
++	ret = dyn_event_create(raw_command, &trace_uprobe_ops);
+ 	return ret == -ECANCELED ? -EINVAL : ret;
+ }
+ 
 
