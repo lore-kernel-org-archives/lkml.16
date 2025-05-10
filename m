@@ -1,127 +1,98 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30751DE2B4;
-	Sat, 10 May 2025 07:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A0B487BF;
+	Sat, 10 May 2025 07:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746863896; cv=none; b=tei9jnGyN7RG/MDtFWKVTRWejm6wKLzNfNrxEopto7y/t19zoEaiuSlcn3sOF2cJSv7t56IkarTp0r6XUZcNKS0oPvAltwHA6SeQlngcLkdJ9aioKAh/f6kc5CRAMJkTR3afUnN/k446FQfYmNnAKzO54JIC0OFYEA3SWNqSrJk=
+	t=1746863906; cv=none; b=fVYmQ1xbobw7X+sCp0XkC1WKyJIWDOavaDmeMLJplCal2O7Q5YXGG7zU8Tj0sPiZ3lqZsQLCQO4S+shZJl+FwjnOZq+IkuUVhNZWkzgeKAWh16p2b+UUBckrj8D3YqvN19iDGZ/cY6vEE37N8FhBWsrFpT0zoq2mw729FGdyZhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746863896; c=relaxed/simple;
-	bh=kftq25OgRn+R8pj3LPI+z7IFsfDRBzwEA5nhTmffpLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dpZMCdul1+TQ0J8AoITVSG39b3KkrtNg5ry/rRtt5c2xzQby/Ik7uUyL8dqqfkesZSIFAGMEF6AqzsR2dQnmtfLjrj8kIDwcDyjZjrhslaHDLY7sPTqsMgqtDAHIF2cEaQ52UpPHyHARoyy8GXd7fdq31QCgKCquKjv0RC34Q0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=FPctQsuF; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1746863906; c=relaxed/simple;
+	bh=P1G2xu7Rlz3N3Eg+ssUwPVtqGeaHbCXQ+Y3FGgP+7cA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=msmy+KJFwjev7v+yaaeFGfRM/MtpmaQEe4zgsqt5nuYJMKw52JhBnq6zlqJM4IL4eK6agrGw2IsBlPJlS0cqjuKYh7LDCkvU0vrblgikMeQVravuxkZZTUSmyzPVsXsulh2dWSqZrO8ewIPprw/bJ/0lda58Xrby2ykGJjuPolI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=E3VgiFRs; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="FPctQsuF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1746863891;
-	bh=kftq25OgRn+R8pj3LPI+z7IFsfDRBzwEA5nhTmffpLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FPctQsuF2cP0Y2uBS7Z+3vDaP592VwNqZo/rxicMFNj2jfjQ3TIWa3vxSRwWX+MQM
-	 OZdS7hywOyIlfx4g5FVtB6cWoExBFItpNozHjy9wNOmxNjRHB8RtJRvYJMW4Feb0to
-	 n5PpfhMylUQuiygTAVtJ3wdbzOKEZoBtgJdZTzXQ=
-Date: Sat, 10 May 2025 09:58:10 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Sung-Chi Li <lschyi@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] hwmon: (cros_ec) register fans into thermal
- framework cooling devices
-Message-ID: <ad81f125-90e1-4033-8037-10be83088b12@t-8ch.de>
-References: <20250502-cros_ec_fan-v2-0-4d588504a01f@chromium.org>
- <20250502-cros_ec_fan-v2-3-4d588504a01f@chromium.org>
- <b2432c5c-2589-4cfe-821f-47e5128af2d0@t-8ch.de>
- <aBl4wcX889otz_ms@google.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="E3VgiFRs"
+X-UUID: 88e0175a2d7411f0813e4fe1310efc19-20250510
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=/0xFx54tgBlIJSx/TzMrCRoxqo+lXZra13mrRwl9RwI=;
+	b=E3VgiFRsY5dH9I37sVs5dDbApWQFz31W2NQxrk9Byf/9IrqUY/jbGmrBQkWFVjU6jtVbJ6yMHRRPAJ6R7E3Bjus4RlCuIMq9xwdjeDCD8KueS4lp8BlXoYo9dyxPOTqye8r0bY9Gkgjuz+719HG1bmTNJrPTjgQXXTY0Bebp1Xw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:7ef570ba-99e6-41fc-9ea2-ed8875756ad9,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:7e0dcee0-512b-41ef-ab70-9303a9a81417,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 88e0175a2d7411f0813e4fe1310efc19-20250510
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+	(envelope-from <yunfei.dong@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 775236318; Sat, 10 May 2025 15:58:18 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Sat, 10 May 2025 15:58:15 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Sat, 10 May 2025 15:58:14 +0800
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
+	<nfraprado@collabora.com>, Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
+	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>
+CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
+ Dong <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH 01/14] dt-bindings: media: mediatek: vcodec: add decoder dt-bindings for mt8196
+Date: Sat, 10 May 2025 15:53:31 +0800
+Message-ID: <20250510075357.11761-2-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250510075357.11761-1-yunfei.dong@mediatek.com>
+References: <20250510075357.11761-1-yunfei.dong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBl4wcX889otz_ms@google.com>
+Content-Type: text/plain
+X-MTK: N
 
-On 2025-05-06 10:49:37+0800, Sung-Chi Li wrote:
-> On Sat, May 03, 2025 at 09:27:18AM +0200, Thomas Weißschuh wrote:
-> > On 2025-05-02 13:34:47+0800, Sung-Chi Li via B4 Relay wrote:
-> > > From: Sung-Chi Li <lschyi@chromium.org>
+Add compatible for video decoder on MT8196 platform, which is a
+lat + single core architecture.
 
-<snip>
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+---
+ .../bindings/media/mediatek,vcodec-subdev-decoder.yaml           | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > > diff --git a/drivers/hwmon/cros_ec_hwmon.c b/drivers/hwmon/cros_ec_hwmon.c
-> > > index c5e42e2a03a0c8c68d3f8afbb2bb45b93a58b955..abfcf44fb7505189124e78c651b0eb1e0533b4e8 100644
-> > > --- a/drivers/hwmon/cros_ec_hwmon.c
-> > > +++ b/drivers/hwmon/cros_ec_hwmon.c
-> > > @@ -13,6 +13,7 @@
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/platform_data/cros_ec_commands.h>
-> > >  #include <linux/platform_data/cros_ec_proto.h>
-> > > +#include <linux/thermal.h>
-> > 
-> > Needs a dependency on CONFIG_THERMAL.
-> > 
-> 
-> I think adding the `if (!IS_ENABLED(CONFIG_THERMAL))` you suggested is
-> sufficient, and turning on or off CONFIG_THERMAL both can compile, so I'll only
-> add the guarding statement in the `cros_ec_hwmon_register_fan_cooling_devices`.
+diff --git a/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-decoder.yaml b/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-decoder.yaml
+index bf8082d87ac0..74e1d88d3056 100644
+--- a/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-decoder.yaml
++++ b/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-decoder.yaml
+@@ -76,6 +76,7 @@ properties:
+       - mediatek,mt8186-vcodec-dec
+       - mediatek,mt8188-vcodec-dec
+       - mediatek,mt8195-vcodec-dec
++      - mediatek,mt8196-vcodec-dec
+ 
+   reg:
+     minItems: 1
+-- 
+2.46.0
 
-Agreed.
-
-> > > +
-> > > +	if (!priv->fan_control_supported)
-> > > +		return;
-> > > +
-> > > +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
-> > > +		if (!(priv->usable_fans & BIT(i)))
-> > > +			continue;
-> > > +
-> > > +		cpriv = devm_kzalloc(dev, sizeof(*cpriv), GFP_KERNEL);
-> > > +		if (!cpriv)
-> > > +			return;
-> > > +
-> > > +		cpriv->hwmon_priv = priv;
-> > > +		cpriv->index = i;
-> > > +		devm_thermal_of_cooling_device_register(
-> > > +			dev, NULL, devm_kasprintf(dev, GFP_KERNEL, "cros-ec-fan%zu", i), cpriv,
-> > 
-> > What happens for multiple/chained ECs? If both provide sensors the
-> > thermal device names will collide.
-> > 
-> 
-> How about changing the "cros-ec-fan%zu" to "%s-fan%zu", which prefixes the
-> `dev_name()`? Here is an example from a device: cros-ec-hwmon.12.auto-fan0.
-
-Sounds good in general.
-It should match what a potential future HWMON_C_REGISTER_TCD would do.
-Which in turn should mirror HWMON_C_REGISTER_TZ, if that has a specific
-naming scheme.
-
-> > Error handling for devm_kasprintf() is missing.
-> > 
-> 
-> Thank you for catching this, I will skip registering that device if the
-> devm_kasprintf() fails.
-
-This should also mirror what HWMON_C_REGISTER_TZ is doing on errors.
-If I read the code correctly, probing is aborted there.
-
-> 
-> > > +			&cros_ec_thermal_cooling_ops);
-> > 
-> > Error handling for devm_thermal_of_cooling_device_register() is missing.
-> > 
-> 
-> I think we should continue registering other fans, so maybe we add a warning
-> here if the registration fails?
-
-Same as above.
-
-<snip>
