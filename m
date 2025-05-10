@@ -1,73 +1,76 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9DF1EA7C9
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 17:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF92231837;
+	Sat, 10 May 2025 17:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746897924; cv=none; b=kJVxNRYY9gVrPhjsK1TqM7n5gWNiGDDGDbfkiSqwYQ9tDFiuwhg4GFvhjIWe+jn2KfVbsyBfMtfyNlQE5mOKg/icR5gNz3lUKlKTnkVeJsNNSIDlJgsYX6oALQGxFzgH5m7mulQ0jcXv4h5L44V3riKoyNEIhERfEZOVqQ/ACqI=
+	t=1746897943; cv=none; b=aqTRUmbDlpxOw5mEz24umUspGj2NwODVO2YuF1PGNlQPnMjY8XREhhUtP+MvDwhQoXPu84BUaNpEooqaj9Yw6r1zmzmy3q20AgNDr44TR8Zxc+SDf79XD8cWKWml9fFVAlZ/wFvLo3XhKjN9YD38lzl4lCcnVKTW9hAuv6WZ40M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746897924; c=relaxed/simple;
-	bh=FzWBBt43Y383q4HfZDh5aYt5Cg1Cf53Vj02cyZIuy1A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BWTRfCO+bn8pepy+EJSwyohyjsk6Iig/AZKbAC6PtGYm7rETAeyCN5VQdZHlw2vs114+FEVgrm6wL4IOw3QsYxI8Q4JdgDexbXSwxOG7VmWzQjBbY+D266jjpkm7ZLKp+KSpjflqZdjXQOqJjkW0NX+DK5PbBDShbgsX1byb0vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vr6IW7mw; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1746897943; c=relaxed/simple;
+	bh=PVR2/5euqOuyaXdAuwW8N/x5gcI97G4iFgoEvQ6Vw9o=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=pC0H24nS1BTzJQdY9myymJSahLKp/Q8nL+y23hrM+SSp6Pj+zWuNG95RfB1OZk1RRovb+wJ7vZ8xPkivU1O/C7OFCaMU/pNJx0vVFHSVeuke33RycQ2Dve4JaZDgxzjY7mz94P2NuAxvUtA4WQ5gsnkIsT2enTz5o80hmy/j6xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y8c7BKCt; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vr6IW7mw"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad24677aaf6so19166066b.2
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:25:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8c7BKCt"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3995ff6b066so1712278f8f.3;
+        Sat, 10 May 2025 10:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746897921; x=1747502721; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppzCaZZulN4ybunhQ0SeSkauTMh7T4bUjJ7VwEDaceg=;
-        b=Vr6IW7mwuUpBjyf3oUbVHx8IKPiQwJ2V/NFcBBxgOg7EeQcoFs6WsOl+glVpmfmw0I
-         vpnBT71zuZOuEsbafOI/ZAigGCy7WAaUg5cho/0/03jBKa1Y3cRzucbMVgk+vH0vv6ad
-         YYemNyxSYFO51gKmB+ClUFuiI8WfaLiPc1gCwSWGZbfHumCt0kUs8mgcSUFz9/tzq0pI
-         qWKr1yt1YVEngfaTbOEohclxz+50DuTY/sKjQ0gQNhDMT6N1Grj9ddfD079ORAiRotx2
-         d9y31Y13Xd+WPb8MYQ8menLZtulk8ufblz3eONpMGkMiFfcX2ZxC3AaUPMzXMUx+qFDf
-         9jLw==
+        d=gmail.com; s=20230601; t=1746897940; x=1747502740; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=loWaUTc3ItqSmmSDVC847qIYyYkmIRUdKWPahuJRyf0=;
+        b=Y8c7BKCtGx2gO3tS/VeTYAd0ac+bya9uVNemUMCr8RefaiPr5U9RvtUpHix8LZ11RK
+         ap4c6rlfo2SzPlqFqI7XQRgNCYAKLJtt4Hwa2eM/4jtXkhEo0vSzH+J1Fe4k9RKKLYS0
+         NAYd2tOajmbF2yd76t1J3Ofk/pgCkcImsmBmOkXJ0mtexQyB8lWZ388FH5TPI6gtDc1R
+         Kh5+09U1GpxLM4jjjLjJ3ErCTHJ+6sHO/sZQg9Vn/eiDkzJ322wyC7xgr4VUrL6B/Act
+         8grA64PVUlyKnszMWc+7SyIVL+4nNTYGuiceckZIfBdZsMoUZIWVPav33eez6h0sOcCQ
+         3UCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746897921; x=1747502721;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ppzCaZZulN4ybunhQ0SeSkauTMh7T4bUjJ7VwEDaceg=;
-        b=F9ngT5iCbPS+Xs6Sh/koWip7jIu6wkvsWBDlDAsrCu9Hy4kX7QGrmh8zUThen6soH6
-         VNRte2NeQV0tijA7u9/OFsGtPramuahzO74V716T7k4k1FUzvOhrSoLxysb6Oaf+N7q+
-         fL4jgFCyV+4FCfkgVaekAMFf/TspfnG93FPu90Rvl3uCHiiSPFkcah07AzPdH5uU+pJP
-         SWKN3GFo3G4NKUVl8WVUDX9lEXLWWjsbI3XiSTGu92qXu4IDIQtXOJwl36zkZg8ixdl3
-         oMWM1PGXaRQniNBGmDFYqUxGV3tthRf78oXYihQ3n+FisveNoLhzIRpHnO63Dy2vGkRT
-         4aKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmsFJS74vqPO2Aat13S1ott46sMXnUcHCqF8qks1bWny/AUNVJV1avLY1Kr6MUt5SIUlRFT6mxfwGjlgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9vyurBnYxo1GHPEe+MFN+qi2BDIzulb6LTqvLBJqgDEWKdocN
-	bCha9GCKxtS697AerhB6kbRw+Q683tg6izJ7Pqq7hyIjujIFGIVI
-X-Gm-Gg: ASbGncs09UIQl2qbD5BvitHTd1Xw5nAI4/rve5mp14/zPZ4sJ4qsicFKpZnuR5BvwhQ
-	KHNOodas+U9YEAw3Bvf2UTpI4aLtWaF1U/fTtIllFtuMMAocbsZqPCrhsszRQnEZGEg6VwH+ufT
-	eX11guYchMYUehrpIGnzWO7TasqUYYuxS3G+Kt2h81ndSGfQG0XPSRc9OpY7ELI7TOB8/EbzXBx
-	wrKuzfFN17WveKVruc1j2wk2JNitUCqnn5ttTvr8TYsl8PUVjZP87uca5uOSejWHEo0V1gJO8+/
-	CffUEJ0Lzzx6P28BNNomuVA7Z7QZhiBp7lYkr6Og2Q/QAg2C0konsLDnU9l4AhFy0qvd5ebXkRR
-	deDuJcqXk6xgHlaWZZCrK+p/6heCKTJGw2DuOQl++tLAtCSuGLlHbk8FhE4OuoY0S6gU2NWkc4x
-	FUBqfTrHKWAfI=
-X-Google-Smtp-Source: AGHT+IH2jH92Ofi3qwYUF7/zNqhANG2Z7iCEB6Sturs5aIkxR5IsmC8vQqLvH8kQHxEPVsIVRFk8aQ==
-X-Received: by 2002:a17:907:6a13:b0:ace:6f45:b5c6 with SMTP id a640c23a62f3a-ad218edd00cmr775048866b.22.1746897920527;
-        Sat, 10 May 2025 10:25:20 -0700 (PDT)
-Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-79cf-0e0d-6e5d-219d.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:79cf:e0d:6e5d:219d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197465cdsm339717666b.115.2025.05.10.10.25.20
+        d=1e100.net; s=20230601; t=1746897940; x=1747502740;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=loWaUTc3ItqSmmSDVC847qIYyYkmIRUdKWPahuJRyf0=;
+        b=R84cmP6+Ezmd9UPKxvYSWxLfXcx066PJGuV7L8hoDGNVmG+oGh7NeAg6F+rAT+g7ui
+         PzUtjuKNKlgslUay7h2GEHNBxHvRR41DtPZYy+qIZ3luqppDEWg5z5TwqlGK22KiJHqp
+         8odVdFBabFbuXDgE5oPGcVHC0ss39HSBiaCFuWn4i71TWA6SZPh80Gbup+R3iIcRDjPT
+         dlzohC0pqUcVold50UnbZmTysciAcUpM7Iw+P8N9N1ejkqPo8tgc/RQNfXuL0C95kB/o
+         /VkROV5lIbf6piQf5PZ+Chg+57Q0gindayoNEbz6q2CXnkYVrAbUU4fue0skGQKmu+tE
+         JbJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBwVGXoTFN4dgklmdyNjtGdJywvOjXRveu2FYyllfSxN97l0J9iSbQoCguUeIPVCDRqzq9kb3bXrnj@vger.kernel.org, AJvYcCXNOgebeYbeGPoXMWiPbLkMF9FBXjuWw5sB7AtyumvVYH/wYLjbsSCYQ6jFoBdiVoEG1dacHgGkJGQ=@vger.kernel.org, AJvYcCXp73BJzOwuFZM6v0wYurIhSYaf5h0FhUeTiopsZdU7PfpKmUu5jmzesjnlzTBIhHdXXzyYRr8f96763tIC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCssrR7rPtrHQSo6FlnIch+vt1fcy4H2cEXHJNP8MfrkXOJu4n
+	1o+UcrhAPKEnatbSkw16+SWqiWflVr/sds0XwXyVJ35w5AltsREU
+X-Gm-Gg: ASbGnctm05to+r1bLFcs80leVukimcJOaxsODAa1472/FtkwUyQs7WOOaJGGNwUHF32
+	hzmecYbwkmDeQ0bTAbrQ8kDeRO1/dlv6kRxjLfv4wJgy7ll+S6lug7tdZvLEk1MVys7l8qUcaIT
+	51CavoKyzLAH2pbjSJyQoVDnRiJRjz6ViaNSXiDw7dtLmT3zYJTyzbs4ZITUpnwjq0pdilc0wDy
+	aIhO1HRqHMyGaSQYmLVwvul/7gK9Q63uBNosTrOZlyudmwRvybGD209BdO0YhzCj0KxXWpuFYdA
+	XSLvMhh8fjoWJTxUWEgpdkeP9qzOFI8AyTsMaNqtulvjHO+Rc2Y399Z8YO1qQRInklkGyhy88tc
+	i1+2JdifnZkbM0XA78N2h
+X-Google-Smtp-Source: AGHT+IGbq9qkv/gQaa4vYjk1kyBAHtxX/8ZAWD7AWGJwOJ9AAPk0sMxB6VvwhFWwD1gF6So1rIVe0g==
+X-Received: by 2002:a5d:5f48:0:b0:3a0:8298:143d with SMTP id ffacd0b85a97d-3a1f647ae37mr6557233f8f.13.1746897939956;
+        Sat, 10 May 2025 10:25:39 -0700 (PDT)
+Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde6bsm7032009f8f.13.2025.05.10.10.25.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 10:25:20 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: dpenkler@gmail.com
-Cc: gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH] Staging: gpib: iblib: iboffline check if board is in use
-Date: Sat, 10 May 2025 19:24:20 +0200
-Message-Id: <20250510172419.274616-1-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Sat, 10 May 2025 10:25:39 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/2] dt-bindings: thermal: Add support for Airoha EN7581 thermal sensor
+Date: Sat, 10 May 2025 19:25:01 +0200
+Message-ID: <20250510172509.2547273-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,49 +79,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Ensures that a board cannot be taken offline while it's still in use.
+Add support for Airoha EN7581 thermal sensor and monitor. This is a
+simple sensor for the CPU or SoC Package that provide thermal sensor and
+trip point for hot low and critical condition to fire interrupt and
+react on the abnormal state.
 
-Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/staging/gpib/common/iblib.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Changes v2:
+- Add Reviewed-by tag
 
-diff --git a/drivers/staging/gpib/common/iblib.c b/drivers/staging/gpib/common/iblib.c
-index 7a44517464ab..0ab5680457ac 100644
---- a/drivers/staging/gpib/common/iblib.c
-+++ b/drivers/staging/gpib/common/iblib.c
-@@ -240,7 +240,6 @@ int ibonline(struct gpib_board *board)
- 	return 0;
- }
- 
--/* XXX need to make sure board is generally not in use (grab board lock?) */
- int iboffline(struct gpib_board *board)
- {
- 	int retval;
-@@ -250,6 +249,15 @@ int iboffline(struct gpib_board *board)
- 	if (!board->interface)
- 		return -ENODEV;
- 
-+	/* Ensure board is not in use */
-+	if (mutex_lock_interruptible(&board->user_mutex))
-+		return -ERESTARTSYS;
+ .../thermal/airoha,en7581-thermal.yaml        | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/airoha,en7581-thermal.yaml
+
+diff --git a/Documentation/devicetree/bindings/thermal/airoha,en7581-thermal.yaml b/Documentation/devicetree/bindings/thermal/airoha,en7581-thermal.yaml
+new file mode 100644
+index 000000000000..ca0242ef0378
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/airoha,en7581-thermal.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/airoha,en7581-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (board->use_count > 0) {
-+		mutex_unlock(&board->user_mutex);
-+		return -EBUSY;
-+	}
++title: Airoha EN7581 Thermal Sensor and Monitor
 +
- 	if (board->autospoll_task && !IS_ERR(board->autospoll_task)) {
- 		retval = kthread_stop(board->autospoll_task);
- 		if (retval)
-@@ -262,6 +270,7 @@ int iboffline(struct gpib_board *board)
- 	board->online = 0;
- 	dev_dbg(board->gpib_dev, "board offline\n");
- 
-+	mutex_unlock(&board->user_mutex);
- 	return 0;
- }
- 
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
++
++properties:
++  compatible:
++    const: airoha,en7581-thermal
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  airoha,chip-scu:
++    description: phandle to the chip SCU syscon
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++  '#thermal-sensor-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - airoha,chip-scu
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    thermal-sensor@1efbd800 {
++        compatible = "airoha,en7581-thermal";
++        reg = <0x1efbd000 0xd5c>;
++        interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++        airoha,chip-scu = <&chip_scu>;
++
++        #thermal-sensor-cells = <0>;
++    };
 -- 
-2.34.1
+2.48.1
 
