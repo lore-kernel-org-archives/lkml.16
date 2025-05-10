@@ -1,160 +1,180 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2965420B7FA;
-	Sat, 10 May 2025 22:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93751D88A6;
+	Sat, 10 May 2025 22:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746916480; cv=none; b=g2SaBdUWByMcVIrD9P52K6+fUrXVFSOluuaz2+kaui2CDofxUvtmwejXIYPjCBVxq4+dfvpOObi0fhUFFYH1ghmSp/XK4eWcDXk4u9u9auYBgK4Wkur7zeLfcLupeTIRUzrjMyZSjiWlf4LucrZsRSmcJGshNaiae3ZKbamsB1w=
+	t=1746917079; cv=none; b=lrewaCHqhjA3cbu4tWCbkQnBFOMXILFbPDpKVDuFzoZzvaFNyVn9yjwGh1l6VrwnXKhWIl+R0J5Fs/yivDZ7DFit4aB53N59KGtD6W3r5n9NBbc3Vwa0ad80kia9Bh4BVO8jdFJl4xPAGRZRmn9igYCDpOrgeATYTA3wcx7hXjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746916480; c=relaxed/simple;
-	bh=VA+r8TlMvQ+zsu8dUJc/GlSJtmFEKUVcH9YdAOj/AH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iyBbgeQvr82o6U57RArw//SGkd8VPZ0m0GIgksoOy1EbEMPnQo1Q7ftGKJjwlhUZb4QKFxyXWelSBc9gJJlQ6lf4fvKQAAoQRJf8Cqqk0L5HQMWgOf+VQ+PBil/dHNSM9mkGm7xiVykci5hIgGbpXXVWHtgkYD2EXGR18LE7zbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSbaeVdp; arc=none smtp.client-ip=209.85.222.172
+	s=arc-20240116; t=1746917079; c=relaxed/simple;
+	bh=1sD2ANAPhxbMTgUJjV6OOFERUaKdrVWCpm2uXtIcbJA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H9ZYRh9rKaPn4QhICX/2qlDZnX4ygyOnTC8QEJZ1HAwbtF5qryeJw3aYat/EXKUiRsiYu8Bx4igcjlyUw0V4lhVqTLPipt9UwRY3Iz3gPsTRYdpOjUNlc2Ya+NLikvn5OWzTvjZ/goBkeunZSsES30VKDw3arGss+fbIo8vuEXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SP91Bpq+; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSbaeVdp"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c5b2472969so358519285a.1;
-        Sat, 10 May 2025 15:34:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SP91Bpq+"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a0b570f44cso449045f8f.3;
+        Sat, 10 May 2025 15:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746916478; x=1747521278; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=X9RqchaeKuSR9tb3CHmzTo6Ss78YKwXAQrXHYWmrF9A=;
-        b=eSbaeVdpD/bP+aSc4/b/jEbSu+U7U+zjjKhdEQm3XAOGQWAC7cTk/7jKtx7aaGdYhp
-         40GIsjJ2XWdcyQlnBA4T9n8/nTzucfMHJF6kEUOr4eMfw1KAtBgeO4pRd+sZAs0I4gcN
-         NkJAm8VaAvcg3KkIQMgGDiBHsRbqPjzxOI05ZHvvGd5h3NSygpA1GSpVRaFb3gnmASxg
-         Y9RFNTJiPSTP3VqVauui6eBp1i8uM26vs4KuYNyzrJ0Vts+LnOsYHxyqkGN/rJg6Id2K
-         b9f6YAvGramDdPCaHRP+7FIj3378+MK1HclEiSMN6WdQ6eFn64Si4tQ8K8AE79DUUoH5
-         TRrQ==
+        d=gmail.com; s=20230601; t=1746917076; x=1747521876; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLfoFm2aKPUkwsjgXuQTlUH0jobhXoQ876loWM2/gCc=;
+        b=SP91Bpq+5UfzU8yGxA40JARes2QhVnY8MI08ZhG1SDqqldX6vDbDy8SEkUnqGRsa9g
+         iZQIoZj3z7SXgrsgsMqmmwDc8qMDd9qEZXWtX6A1/RQw/+z1iih2h3DbgDZUD2NlXxGc
+         /WFsVVyPIpmfUvjSFkE2FWe5VZ2/apL00QHpgMssbkQL57hkBC0Wse/ryaOb6iLj9J36
+         Z8q/MfpHzRpKuRievTGBH8SJ0Vvu6/xhEWN/meGXL5HLwrYerNH8TM6eGMJhIEOHRgMD
+         lwNZqdJlPojbAvnOGCOXznk+xYd5c9KceW94aDCmbmsa0zP/AnFI032DnYg26+PIXObD
+         9HLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746916478; x=1747521278;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X9RqchaeKuSR9tb3CHmzTo6Ss78YKwXAQrXHYWmrF9A=;
-        b=Om894F2t4avSrHSEMBiRw2qOKDeATzFOLRYuS1SLdTzMoAFsNl7VrkD4jSkAMVLupQ
-         BGlIMWTtBqsG/DiCgbaZqist1naZMPpdTpifMGZWl5banLfYJfwWEs7e6dDy15jEExkB
-         dUSyDfbemRISNdgIOWby26WhjHW6yAdGAXbLHVWJtD9M11erxNWVXEk79n4yPU5bakLD
-         jbqFUZjSw7BAwN4Hht5x/6JO0F6LO8Qm58QTsudqageuJF0TlqO5Gb1tQcCcSJRXuzq+
-         jxuNmhyLG53+RZVg6UITPQyI8tIAEJD9kerhyk4+nNlDUx6/3FEqR++6MxgLkU5sDxrn
-         WiHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWWuMXvzL980CBPFpdoqelHuTooOx2y/8Lfk6gD2H0p5n3Z0OTDQ7CQvLRnVp/CAvIzbnIk602cms=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXQzBrMKafKsOe6o98zrvPFQ/6cqz+Bckbg2EqDY73beA7m/0a
-	6Tr4WrRQXb3T8CAv3YlMFmPb+vK1aOlxtzrnrHDWo0566lSg1bjQ
-X-Gm-Gg: ASbGncszY+Y7s7QgLzTXdYpcJuh+vHrqfdj8ONxDlNhfT1/N9YIOOaK7KyBbmdhobk9
-	UvehcV/EsST+T7dl+6zJbJoYo5klu/tVHgQr+S6ZvWwVEmkN0hCxiaOTBmy9ST8EaV/U+mGk3cn
-	wpO8RY92UnBycZ3ktXyZ4qMC+H7dvh1SutiSu1ap/3XT3TJndTd9pCleZxQ/Xt12boPs6iYRHf/
-	5HbtdvarKQSSQ9ZYothx2ZRfdkHeQP/8pmyNNxvpFNzfoODZ7bAmJ0pz6bmPkGoMRv6P7PUJFRY
-	M5CalysVcEia3Jf4qzFU8f0g41w=
-X-Google-Smtp-Source: AGHT+IFNxZ+WwsD8gTpXkGg65SNCLgE5qlBO7RTMUPiiYfAL7UnFJgwMfjv6YT79wlFJycMs0w8xeg==
-X-Received: by 2002:a05:620a:d8d:b0:7c3:cd78:df43 with SMTP id af79cd13be357-7cd01168e05mr1231923285a.58.1746916477861;
-        Sat, 10 May 2025 15:34:37 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd00ff11d6sm318727185a.115.2025.05.10.15.34.36
+        d=1e100.net; s=20230601; t=1746917076; x=1747521876;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zLfoFm2aKPUkwsjgXuQTlUH0jobhXoQ876loWM2/gCc=;
+        b=KTHNlAQ6+ZCbBaDMK/LbRq6D6TegxkWIzcvlHCH4UzTqwGwldLXkWTr4Xv+kKNKLA/
+         Qsf5x48Pox+NfvDWCT3fAOvpUX5MSltl705xUrcak6gkiB1CDec1e+ygRoAwKzwGstAv
+         UkfhvtlJWN0pwWyOZbPcVIm2VCFPmq9yXqs35Am/o3yYK3EnUqT0hehKqxofHfCDf9E4
+         f6ntrKt6XUabFY096rcWe/8xzgM5twfraLnGBJ+XJq5Ob++Z0gHDOGVMDYe6bMYNZqJ1
+         2B56z+7YX5/6f1UwpPdLdQ1hB+IvhniAVsUUXCCj4IdQJy8n7JMoyLNd0zPGAJQMxUGk
+         PIBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2LM7R7ok2bJbhgIs2HMoOTp+83i+ROyZzI04QdkyxxWwTDroOgKAieJiCqI7BBpW4qyLNd2Zby8h9TSA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmPDz1jfmZ2t28XXszVslA/u7UauigJD4ZbdCTQn6DWwamztlW
+	CgBG2eqaS1TKD6aArUCagZxB7+76wTr87jy9dL8gWrB/ctTle4Nf
+X-Gm-Gg: ASbGncu7VEsA+d1xDpw7LVW35pAj82C1ZnEb4BeLYnM0L4oymMJSa/MMRC2y4YA9xyw
+	zFkv3IF5NMVDAzQze1kmG6UkIQ1sraJY/XZOYp+dzf8cnU1DlzTmcpSRno2fcMOfJD7xjNJvaaI
+	YIKMxrYqlHLMKsc0BsegwaF4WxfayKaxM4UBwaUKMcbt/R4sEMMzjLXxQMruEsescQ7C7O7HtK2
+	7iKgqMnEWtyWfhYJGmeNl4gC667qKNav5vbYVegEQHGejS6r7PT6FG5fGksv0mNDiC5qvCsgSZ1
+	LwjcCU+u3mq/KYCi3iMvvYI0AzYX8z12VPXko+0txROSrJApWSJI/X1C4XnQ+mHFCCMc+CyZvWF
+	9Bpx3TGxB9RU68x+5tmTVIw==
+X-Google-Smtp-Source: AGHT+IEujXYieBF+xZYxwSREZGjjefiVBeXxKXImt1iUxerxbvjfPVA408i2Ut5KyhfNHQYbkpTihg==
+X-Received: by 2002:a05:600c:3513:b0:43b:ca39:a9b8 with SMTP id 5b1f17b1804b1-442d9c8e883mr21960715e9.2.1746917075868;
+        Sat, 10 May 2025 15:44:35 -0700 (PDT)
+Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2f65sm7701015f8f.55.2025.05.10.15.44.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 15:34:37 -0700 (PDT)
-Date: Sun, 11 May 2025 06:34:09 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, sophgo@lists.linux.dev, linux-rtc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v15] rtc: sophgo: add rtc support for Sophgo CV1800 SoC
-Message-ID: <u6ofni4aabs4jy4unh5nudgm6qieg5hsk3xt4725yiuumlspen@ypery534oe4q>
-References: <20250507195626.502240-1-alexander.sverdlin@gmail.com>
- <dm4l3wfcuygmuylz6uqn2g7wztg4tyrjbm24hqcpffjnpkwany@ib2nvjibq2wl>
- <4d15d7b363869080da825ddc700e553a68928c85.camel@gmail.com>
+        Sat, 10 May 2025 15:44:34 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org
+Cc: linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	eraretuya@gmail.com,
+	l.rubusch@gmail.com
+Subject: [PATCH v8 0/7] iio: accel: adxl345: add interrupt based sensor events
+Date: Sat, 10 May 2025 22:43:58 +0000
+Message-Id: <20250510224405.17910-1-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4d15d7b363869080da825ddc700e553a68928c85.camel@gmail.com>
 
-On Sat, May 10, 2025 at 04:30:07PM +0200, Alexander Sverdlin wrote:
-> Hi Inochi!
-> 
-> On Fri, 2025-05-09 at 06:21 +0800, Inochi Amaoto wrote:
-> > On Wed, May 07, 2025 at 09:56:20PM +0200, Alexander Sverdlin wrote:
-> > > From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > > 
-> > > Implement the RTC driver for CV1800, which able to provide time alarm.
-> > > 
-> > > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> 
-> ...
-> 
-> > > +static int cv1800_rtc_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct cv1800_rtc_priv *rtc;
-> > > +	int ret;
-> > > +
-> > > +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-> > > +	if (!rtc)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	rtc->rtc_map = device_node_to_regmap(pdev->dev.parent->of_node);
-> > > +	if (IS_ERR(rtc->rtc_map))
-> > > +		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->rtc_map),
-> > > +				     "cannot get parent regmap\n");
-> > > +
-> > > +	rtc->irq = platform_get_irq(pdev, 0);
-> > > +	if (rtc->irq < 0)
-> > > +		return rtc->irq;
-> > > +
-> > > +	rtc->clk = devm_clk_get_enabled(pdev->dev.parent, "rtc");
-> > > +	if (IS_ERR(rtc->clk))
-> > > +		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->clk),
-> > > +				     "rtc clk not found\n");
-> > > +
-> > > +	platform_set_drvdata(pdev, rtc);
-> > > +
-> > > +	device_init_wakeup(&pdev->dev, 1);
-> > > +
-> > > +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-> > > +	if (IS_ERR(rtc->rtc_dev))
-> > > +		return PTR_ERR(rtc->rtc_dev);
-> > > +
-> > > +	rtc->rtc_dev->ops = &cv1800_rtc_ops;
-> > > +	rtc->rtc_dev->range_max = U32_MAX;
-> > > +
-> > > +	ret = devm_request_irq(&pdev->dev, rtc->irq, cv1800_rtc_irq_handler,
-> > > +			       IRQF_TRIGGER_HIGH, "rtc alarm", rtc);
-> > > +	if (ret)
-> > > +		return dev_err_probe(&pdev->dev, ret,
-> > > +				     "cannot register interrupt handler\n");
-> > > +
-> > > +	return devm_rtc_register_device(rtc->rtc_dev);
-> > > +}
-> > > +
-> > 
-> > I wonder whether the rtc driver may need reset (maybe optional) for this?
-> > If so, please add it.
-> 
-> I'm not sure which reset you are referring to... RTC module can carry out
-> system-wide resets, but cannot be reset itself (as I understand).
-> 
+Add several interrupt based sensor detection events:
+- free fall
+- activity
+- inactivity
+- sample frequency
+- full frequency g range approach
+- documentation
 
-This is fine for me.
+All the needed parameters for each and methods of adjusting them, and
+forward a resulting IIO event for each to the IIO channel.
 
-> Initially I was thinking about providing a reboot driver for Linux utilizing
-> the RTC module but it turns out PSCI interface is not optional on ARM64, which
-> means PSCI reset interface has to be provided by the firmware (I'm thinking
-> about U-Boot) and Linux will rely on PSCI reboot.
-> 
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+---
+v7 -> v8:
+- activity/inactivity are MAG events
+- separate AC coupled activity/inactivity events as MAG_REFERENCED events,
+  since AC coupling introduces a (some kind of) reference relation
+- since freefall and inactivity (DC coupled) are then actually identical,
+  this results in a challenging situation for the freefall patch. Thus,
+  the freefall patch is moved to end of this series (before documentation)
+- freefall: provide separate sysfs handles to configure and enable freefall
+- documentation: update sections on activity/inactivity, freefall, event
+  names and examples
 
-I am not familiar with PSCI, but there is a fact that preserve uboot may
-be costly as the ram is limited. I think it may be fine to have a reboot
-driver to provide power function at the same time. But if you find there
-is a way to implement PSCI reboot, just do the thing you prefer.
+v6 -> v7:
+- freefall: add a virtual channel, replace OR'ing the axis by AND'ing them
+- inactivity: add a virtual channel, replace OR'ing the axis by AND'ing them
 
-Regards,
-Inochi
+v5 -> v6:
+- replace bool axis_en for tap and activity/inactivity
+- apply freefall bit mask
+- change `measure_en` to use `regmap_update_bits()` for POWER_CTL register
+- fix comments and update documentation, particularly on inactivity time
+
+v4 -> v5:
+- read_config_value() and write_config_value() now use direct returns,
+  in case of a failure, measurement stays turned off
+- fifo evaluation returns 0 in case of success
+- axis enum turned into three different set of defines for tap, act and inact
+- turn the suppress bit into a separate define macro
+- variable naming, generally use axis_ctrl for similar variables
+
+v3 -> v4:
+- rename patch "add double tap suppress bit" to
+  "set the tap suppress bit permanently" to make it more comprehensive
+- added patch "cleanup regmap return values"
+- added patch "introduce adxl345_push_event function", as a solution
+  to the return value problem, group all int_stat evaluating pieces
+  in the same function
+- tap, act and inact axis enabling are using now regmap cache
+- activity enable depending on individual axis now, as the sensor offers
+  such feature
+- inactivity enable depending on individual axis now, as the sensor offers
+  such feature
+- fix bug in previous patch: separate axis direction in interrupt handler
+  sharing the same variable for tap and activity, if tap and activity
+  enabled together
+- refac of the direction identification of previous patch: only read
+  act/tap axis once now in interrupt handler if both is enabled
+- fix bug in previous patch: return value of pushed event in interrupt
+  handler
+- several cleanups
+
+v2 -> v3:
+- generally introduction of regmap cache for all directly stored 8-bit
+  values, specification of volatile regs and cleanup
+- moving thresholds, unchanged values and flags to regmap cache, in
+  consequence removal of corresponding member values of the state
+  instance
+- removal of intio and int_map member fields due to regmap cache, thus
+  split of set_interrupts() patches in two parts
+- rework documentation
+- rework of ac-bit comment
+
+v1 -> v2:
+- implementation of all events (but tap2 suppress bit) by means IIO ABI
+- add sample frequency / ODR configuration
+- add g ranges configuration
+- add activity/inactivity using auto-sleep and powersave
+- add dynamic adjustment of default values for
+  activity/inactivity thresholds and time for inactivity based on ODR
+  and g range (can be overwritten)
+- add sensor documentation
+---
+Lothar Rubusch (7):
+  iio: accel: adxl345: extend sample frequency adjustments
+  iio: accel: adxl345: add g-range configuration
+  iio: accel: adxl345: add activity event feature
+  iio: accel: adxl345: add inactivity feature
+  iio: accel: adxl345: add coupling detection for activity/inactivity
+  iio: accel: adxl345: add freefall feature
+  docs: iio: add documentation for adxl345 driver
+
+ Documentation/iio/adxl345.rst    |  458 ++++++++++++
+ drivers/iio/accel/adxl345.h      |    2 +-
+ drivers/iio/accel/adxl345_core.c | 1172 +++++++++++++++++++++++++++++-
+ 3 files changed, 1592 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/iio/adxl345.rst
+
+-- 
+2.39.5
+
