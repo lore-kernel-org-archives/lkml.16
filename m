@@ -1,98 +1,147 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7721E51FF;
-	Sat, 10 May 2025 11:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430302561A1;
+	Sat, 10 May 2025 11:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746877162; cv=none; b=AnrZJAPDSUXv7dRVbrOl2E0Zh7oY1qsq4zy4RVoSa8ZsSXXq/+0a1nikjn9Ph6g+Httwz2r3pmDetfiYPyrkdP9yWvWnMq65FOWsONWdSUab29nkopAQDNQr5s8JdqKT+tiQ0KdQ4iO+bvJTGtkksKwxKifggxbyMwRrb3DooEA=
+	t=1746877187; cv=none; b=AOpJi226wRb/UF4y67vpk5U3i1YgR3JLZS0+t4M2Mj9bDKekv4Bw3QynzD3c66IPbL6jcTsM4MOw1UbsBO+fVDIyclXr+pJvrVxCUZsxUMYivhm6LXUJ1oyPqlDF026Nz++5N1tUbQxocwfmsvqPunky9aRYTNvIIVPWqMgM00E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746877162; c=relaxed/simple;
-	bh=EDQuRvyjOhBKQFQpvBLiE8UiAZWa+KcFbF2YJnhHHpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jx9FwBCgmIVcFJNtx4yBAqF8xXkqjlFqA0Dq+VRdCAeSS0r1cctOlAZL2bvVA/uzR+B6MLPahhOgZ5ms0n2i1IwnELhMz4MeFcL2fFYOLxXzi+SXN0wa5ssJLQIHO/FaOpPQC1CN+fHDA1tCWOP/JHBu1IMVzNXLadhk6Fay7Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=FHTg5FoI; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746877187; c=relaxed/simple;
+	bh=QpZwWj9tYtN0sZvHD3Qwn0gNE6Td9jqHZ++5XShWvPo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NI7y3Psp8OTOIE1MFqJBRcfIf7oZZSr/Nz+Uh2DckqlXr67LmUsGW5FVtgE9D0BJ6tDcyUddg8uAqCQ+dbFFx4nZATE3eAuJUEQPIbWnuujTSpoYkZWnvAVJa2tm64tVOWc7H+95Cl5UyiPUxceKauZ+uRMZCst/pxwkqgVtuFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYU85P2B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="FHTg5FoI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=P02P98sxQcu6HHUuTs3FtpD/eLhHV+smfCERXdEZBaM=; b=FHTg5FoITJwqL+qsvbSXIndvUx
-	PaJYmoi0ikCx+xhr/997BMAFnHX2AoTisXwczoPBg+ZiBwJdFuwn3nTbd1VaYc8rp88mENngdX7jH
-	08Wm7RLMQHZ9iamGq465R4STZbA4i5JtJEtudIEcn4kCHbN2B5w15bqmbpG179I9NlOrnH8LbyvOF
-	aBdIqugMFXjD8h1DtU1WoDSLNZXvwe3HYRRrtPhcdu+8eWDWdOncunNcbg/N8zdPtRFoeWQh4oUhL
-	vE6IdPUfTxGjL6TNP7vIqdRYJZ/Drljm6gRNclk50zAGeLRxyY33cuvs+RNAB4bSxity4lca+beNE
-	ox3Ieu5g==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uDiXy-0053ll-39;
-	Sat, 10 May 2025 19:39:16 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 10 May 2025 19:39:14 +0800
-Date: Sat, 10 May 2025 19:39:14 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aB864l2mx4ZChZBE@gondor.apana.org.au>
-References: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <dd55ba91a5aebce0e643cab5d57e4c87a006600f.camel@gmail.com>
- <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
- <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
- <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
- <aB81Dh83fZoKa2st@Red>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYU85P2B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D94C4CEF2;
+	Sat, 10 May 2025 11:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746877186;
+	bh=QpZwWj9tYtN0sZvHD3Qwn0gNE6Td9jqHZ++5XShWvPo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tYU85P2BKhm3w/zvJv9+YfLrhMSJeqPPi2uV5dB1s/9bUlrSZG8z7IopglMX9s/jl
+	 GeS+hpCzl3n0ABGlM0oFTwrXhc7VF1IPt9+d6q+sf1rFoqDnhIuerABiMGPoV1MBli
+	 oKbAKYMyaX2SP1aME6EtmbyI/haj1/+sgjA6V6WfJ5jCUn0hlhdLp/WXxdf5AcmaAs
+	 /uJ1f8jATS6RvfMio3inxQxDwAEtdINqriqkjcDzDLbrcMruBElsF9158IfG2xdERp
+	 ltFdaqa1u/7vUQcbq4nZp4JYHr5Fz6Z5a4FP8Uf0zL7RJ8c6ETrG0i7Li90A+2rKJD
+	 jlSsYueM559gg==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-60658e1fedfso1435863eaf.2;
+        Sat, 10 May 2025 04:39:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVx4qA/Rs9erQuMvU1pT8OMVYupKQUCWMKF7Lnu0wGKYZMVCAYuXmb1QVGYHry9lSSJdmSD5JQ9mT1la5A=@vger.kernel.org, AJvYcCWsl1AaYz5xUjl0HJI1FCo+nRAtvAUspXXOu3F6D2Ngk5bKx9+22ln1gQ8uZ+BXxhHh0hWeT9Ml0EgtSsY=@vger.kernel.org, AJvYcCXnoRB0ejb3xqy0jbhs5dgcd5+4EgVPnlazWp8bFlsicMaSuAr7wIHI2Mb6KkhhNrJE6HLy55TJM28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw91eVMaWYTHmgVxgE75exRDUuyQGle/P2xXnhplxzTmZO5UdvE
+	o8UqjC2+IPLjZ/n6jTgVeL2C12ujAFbSv0PHK991ukfKn+4qsZnj7OXxec8TQ84+mmWBdJQbMma
+	hOXnheslTrgJDGLL9gxubN0n4LN8=
+X-Google-Smtp-Source: AGHT+IFowrQSFUqwp7UlZesLCMrc8FdmdGffCkX0MR/ANVEEOUjlkkioOdme8ITOHZ1VKxz9p8uxuaPC8rzs+bm6zWk=
+X-Received: by 2002:a05:6820:2013:b0:606:361b:52ad with SMTP id
+ 006d021491bc7-6084b6556d9mr4089022eaf.3.1746877185955; Sat, 10 May 2025
+ 04:39:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aB81Dh83fZoKa2st@Red>
+References: <10629535.nUPlyArG6x@rjwysocki.net> <22630663.EfDdHjke4D@rjwysocki.net>
+ <c6cd714b-b0eb-42fc-b9b5-4f5f396fb4ec@nvidia.com> <CAJZ5v0jWTtaQEcx0p+onU3eujgAJpF_V57wzZCuYv2NVnEb7VQ@mail.gmail.com>
+ <7c970b02-7b58-4d15-b5f6-18bbfd883ccd@nvidia.com> <CAJZ5v0jcWQ3QKx=2nzDpnYPyGuYfT4TModwdAreWZu4d0hXmoA@mail.gmail.com>
+ <CAJZ5v0jG+54uKiY-uSc6B+8JuA6eU1j8tGM5d=XsrT0EmabMeQ@mail.gmail.com>
+ <563657c5-5529-45fd-96fa-bab68ca992a9@nvidia.com> <CAJZ5v0jVOG_u=F36aOVh=qu4Ef-5QFAmC+5-fmF_mU8NSr_LnA@mail.gmail.com>
+ <b17469ee-0d8c-49ff-8fc8-a3c3cc9964dd@nvidia.com>
+In-Reply-To: <b17469ee-0d8c-49ff-8fc8-a3c3cc9964dd@nvidia.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 10 May 2025 13:39:33 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iv-+5Spz8hBn6dNTdmij6XULp+M=oc0kLM96aX+bSwBw@mail.gmail.com>
+X-Gm-Features: AX0GCFudp9POWsRB88Wt7e9U_46zIjMRMXgMeZsoILl_pqvxo6k7zrNd9XHF_yM
+Message-ID: <CAJZ5v0iv-+5Spz8hBn6dNTdmij6XULp+M=oc0kLM96aX+bSwBw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] PM: sleep: Resume children after resuming the parent
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Saravana Kannan <saravanak@google.com>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 10, 2025 at 01:14:22PM +0200, Corentin Labbe wrote:
+On Wed, May 7, 2025 at 5:40=E2=80=AFPM Jon Hunter <jonathanh@nvidia.com> wr=
+ote:
 >
-> This is the git diff result to be sure I didnt miss a patch: http://kernel.montjoie.ovh/cesa.debug.diff
+>
+>
+> On 07/05/2025 15:56, Rafael J. Wysocki wrote:
+>
+> ...
+>
+> > So apparently one of the children has not been suspended yet when this
+> > happens.  That's fine because it should be suspended at one point and
+> > the parent suspend should be unblocked, so it looks like the child
+> > suspend doesn't complete for some reason.
+> >
+> >> I will enable the PM_ADVANCED_DEBUG and confirm that making the I2C
+> >> itself non-async works.
+> >
+> > What probably happens is that after the "PM: sleep: Suspend async
+> > parents after suspending children" , the i2c clients are suspended
+> > upfront (because they have no children) and when one of them has
+> > suspended, it triggers a parent suspend.  The parent suspend then
+> > waits for the other client to complete suspending, but that cannot
+> > make progress for some reason.
+> >
+> > Before that patch, the i2c clients would have suspended only after all
+> > of the "sync" devices following them in dpm_list had been suspended
+> > (the list is processed in the reverse order during suspend), so it
+> > looks like there is a hidden dependency between one of the i2c clients
+> > and a "sync" device.
+> >
+> > If the above supposition is right, flagging the i2c client as "sync"
+> > will make the problem go away.
+>
+> So all the I2C controllers are 'sync' devices ...
+>
+> $ cat /sys/class/i2c-dev/i2c-*/power/async
+> disabled
+> disabled
+> disabled
+> disabled
+> disabled
+> disabled
+> disabled
+>
+> The I2C clients on the problematic I2C controller are all 'async'
+> devices ...
+>
+> $ cat /sys/class/i2c-dev/i2c-2/device/2-*/power/async
+> enabled
+> enabled
+> enabled
+>
+> Setting all these to 'disabled' fixes the problem. However, also just
+> setting the 'cypd4226' device to 'sync' fixes the problem (the ina3221
+> devices seem to be fine being async). The 'cypd4226' device is
+> interesting, because this one is a USB Type-C controller and there is a
+> circular dependency between the Type-C and USB PHY (see
+> arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts).
+>
+> If I make the following change then this does fix it ...
+>
+> diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c
+> b/drivers/usb/typec/ucsi/ucsi_ccg.c
+> index f01e4ef6619d..e9a9df1431af 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_ccg.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+> @@ -1483,6 +1483,8 @@ static int ucsi_ccg_probe(struct i2c_client *client=
+)
+>
+>          i2c_set_clientdata(client, uc);
+>
+> +       device_disable_async_suspend(uc->dev);
+> +
+>          pm_runtime_set_active(uc->dev);
+>          pm_runtime_enable(uc->dev);
+>          pm_runtime_use_autosuspend(uc->dev);
+>
 
-Thanks! I think we have a smoking gun:
-
-[   45.700298] mv_cesa_dma_step: 1 0xc7011440 0x9256040 "0x9256020"
-[   45.706141] mv_cesa_ahash_req_cleanup: 0 0xc93b9c00
-[   45.711996] mv_cesa_int: 1 0x4ea1 0x80
-[   45.716875] mv_cesa_int: 0 0x4ea1 0x80
-[   45.720627] mv_cesa_tdma_process: 1 "0x9256020"
-[   45.724380] mv_cesa_tdma_process: 0 0x9256140
-[   45.728757] mv_cesa_ahash_complete: 1 0xc7011400
-[   45.733112] mv_cesa_ahash_complete: 0 0xc7011200
-[   45.737741] mv_cesa_tdma_process: 1 0 0xc7011400
-[   45.742364] mv_cesa_tdma_process: 0 0 0xc7011200
-[   45.746994] mv_cesa_ahash_req_cleanup: 1 0xc7011400
-[   45.751614] mv_cesa_ahash_req_cleanup: 0 0xc7011200
-[   45.756635] mv_cesa_ahash_queue_req: 0 0xc93b9c00
-[   45.766104] mv_cesa_dma_step: 0 0xc93b9c40 "0x9256020" 0x9256000
-[   45.771972] alg: ahash: mv-sha1 test failed (wrong result) on test vector 3, cfg="init+update+update+final two even splits"
-
-The descriptor 0x9256020 was just freed by engine 1, and it's still
-the current pointer of engine 1.  It was then immediately reused by
-engine 0 starting a new chain.  It's conceivable that engine 1 then
-somehow starts executing on it at the same time.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I'm going to pick up this patch for 6.16 and add a changelog to it, so
+please consider providing a Signed-off-by: tag for this change.
