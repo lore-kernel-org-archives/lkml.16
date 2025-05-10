@@ -1,46 +1,73 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CA0288D6
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 16:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39FB72626
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 16:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746893746; cv=none; b=j9wnTIo8+NGt53NKsFzA3qGc99n2jtJZ2WX53E3OXXelKUh/vE0DQCb/Vi1FLTA0YZput7Jfep79jj/DvUhStbiU1cfKKKlwf6aj/DVUA+Dw2vpGjEghMdLNFrl4lZo4Xw5DOrdfnE+HHqNoqVsJgxzZlZkMAzBFDg89XWH/ajA=
+	t=1746894455; cv=none; b=tDaoB14yN4aVC+TPiuGLBDLNc5N3upiW703s3rxcOnA302F7tlzB5FJ3zcRgIfyBK6KzLmiBAkIaFryKwHflVVVQKTMyyvF2O3lM5bFNKD3ZPb/WpJ49Q7YyY29w2ZisTfxiuGZ+x9TSSUsc8pLkVj9VsCeecnBF00LWA1g3MNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746893746; c=relaxed/simple;
-	bh=I7qsisNmJSUmqYJBmMiwDIyEFTkKuC/j8SsQjRaqRkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OXZmp2ccYg9/7m65dCnYul7KkZzjrjJjW8cW/HbJgH3IxCSZqpI9IPhIIHD3KH9p76p366VDn+WwVCSuDQvaiA+N34VjfQyvzMNZ7QvS1tblh/6GKCyLOeRpNYDtFoeDeDgc9YV0/YNzOJZ3XzGKZ1lmuRgMqwz4TTmizQBCZVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=HwGIKoxR; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1746894455; c=relaxed/simple;
+	bh=hlCUz5L7YYHCnAz5zXlcpfQ+9spDc53tAfo4cLSzHkA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FVpOK1ETOFXg/GYCVvnZmMp6rZnFz91UHRRZHNaRmK2FeX6K+ZqwtDwinGlnFQZ8zw7jakE4tLqoscyeeZFd26jnxjelkAsHJLLsN6mbpXFrhz40OsxaoOth1NbDeOZZ0+LVcwtQtfovVhSh7maCk01VmlmuBKCIK3RyOW49AI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VorTKi9A; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="HwGIKoxR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=0GKSka8sGAEVtIjgnkv+3cC9f+hK5UlvpIaCwa+sWU4=; b=HwGIKoxRapWnJikLnDBLSqW7KD
-	EFFcCdddUtvPqFJWG6JHMfL1tzYz4SPBlCFuAqFrIfAjAvG+NXZ5hf0mKhkstK1SBSlKdo0hA9Pwh
-	KzsB5A3Ey9PrW2mcWwQBBSGTvuwWHrYoXwTEl75811/u0gLTvdR9C1mp58aJoOu1PCe4FWNm5VLMo
-	xWxrt9qE7JSGLm60tWt3+y5eD136ZPLQkyYNclMnjAKlGNbVzkuy3N9i1PhAUWaL1wY6SW4oGrTlC
-	zHrJMsN8XmTMtLXe1i1HyByugK2qtwh/2uHueMzmjS1XIE+4gKVFsr2HG6xVXpULuESkb0oZGN4NE
-	ZgDKZMFA==;
-Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uDmrU-0000ha-Hn; Sat, 10 May 2025 18:15:40 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: kever.yang@rock-chips.com,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: convert rk3562 to their dt-binding constants
-Date: Sat, 10 May 2025 18:15:31 +0200
-Message-ID: <20250510161531.2086706-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VorTKi9A"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso3089711b3a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 09:27:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746894453; x=1747499253; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iidseWrmQAaKmamWqRvKIa2BgakFXlBN60PWqSL08MA=;
+        b=VorTKi9Ar3kvhqtt8FH4XieIxLAfCURQz+rxW7HSGD6D03NWA4v4o7uZU3hnGNNK2B
+         UJ6j63YQ/XFwBJ8dt/EqENgfLdwwX/nfB/JxYQl4j5GHlc7hwIi1bvilmRnE6+WEgEaj
+         A56ZcPGe3WeEAqeDAfD0BYchsS82bIBBTb/sOuRzZbXP5M89PUTLgrXS8IBb3EImgvRT
+         a0TfTXZCXySCjxbgMmVfH0QSz37/pw3SapenVM4a5nqaCApeC4j3dAWvsoTUaqz3IpZc
+         2IJEPTYuba5f0r5bI58IBMOQnAEivtp+YJaY6gDRN0csW1JWICz72ODCXIjNSd9hwNtU
+         SRxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746894453; x=1747499253;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iidseWrmQAaKmamWqRvKIa2BgakFXlBN60PWqSL08MA=;
+        b=tMRtBnSavhvk/1Jv+52Ya9F+3cisiuSfDoebneu7l9UG/Pcu1LGQUFWyHrSl4xcCeV
+         Gr/rOZl+Mrb8pgjyAsmAHHg6+QCURZ8XAqQF9+W5Yulb1krSe43SB/84XegNZeGQ0isV
+         TFK4PfJEJXFZWIaCSNOP0YcI/dEMzxxlDf5AbgxN+HpDqhhD7RUjGelDAgBXjc7CBhD+
+         8lFa56SUkucoURf78UiafZMoD2FGd7uL4cWZRLS2IzBNsXKLus/U1/10d/SGjGNfChBM
+         FhsyWSxvOYiat7Fs8gFtnb1pKQ9ymYhPou80neibppJT+KDcWosNtIKhR6m9u9YMPj5X
+         wDAA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6nGRg3qNHEJ9rsiMqqXimODEWQ/pnVDeNzccLg6Ie7kQWB4AWZ0GLYJ+jKspM7OjVQ0dJJuIc+6HptoQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGMl6y3VfL+5QODZcVawF6+hpOBDh/QSGNQuYCYzMuHR6HmDgv
+	Hrr6FG3yInTBFSc2/G1SSHXSpZLWsVCtjKu9DONgEbyrMCuN+bpR
+X-Gm-Gg: ASbGncuamdnrZpDeLDmBX8ECSzjffuHvEn4ecd6GCaxoBDn5U8Mv/k9O5hV3TjNe+G/
+	sOV+oVrVjo4vk2J9qgJHM7zQTxdN4MFsBc92M9r73RA2PKyOvKrJfC0lQi99l5kOtGraoUiTSjW
+	EGjB3RcjBYst9bKS11Fc8uBdL2qSgZHavoZyRqKDP+QEvJ1CN6UdjeqBrS2b2Q0UsN1Z9At9I9m
+	v49cHppxiD64deRElvCzd4yUTUpyjH1sCpQ+/qQeNRhlKMk5rDyQ64aLwCkUgyjAII+F5030fnO
+	Ofsg6HZipRrf2tckXDzgryOl7UmvMXanqGi5uaB7Us4ZtmC01xdG2RQAHKCi5riOLx3uUkwW
+X-Google-Smtp-Source: AGHT+IHK2beeCMsx/5Bzb+Gk5YE42dfO1pf769pj+RJ+6WHRlmFSwROvvhPL7g2xQITPSp6YBNMoDg==
+X-Received: by 2002:a05:6a00:2353:b0:736:3ea8:4805 with SMTP id d2e1a72fcca58-7423bc5da8emr10943862b3a.7.1746894452823;
+        Sat, 10 May 2025 09:27:32 -0700 (PDT)
+Received: from gmail.com ([143.248.6.202])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a0d012sm3483285b3a.93.2025.05.10.09.27.30
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 10 May 2025 09:27:32 -0700 (PDT)
+From: Seongmanlee <cloudlee1719@gmail.com>
+To: x86@kernel.org
+Cc: leonardo-leecaprio <augustus92@kaist.ac.kr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH] x86/sev: Fix operator precedence in GHCB_MSR_VMPL_REQ_LEVEL macro
+Date: Sun, 11 May 2025 01:27:24 +0900
+Message-Id: <20250510162726.90681-1-cloudlee1719@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,118 +76,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that the binding head has been merged, convert the power-domain ids
-back to these constants for easier handling.
+From: leonardo-leecaprio <augustus92@kaist.ac.kr>
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+The GHCB_MSR_VMPL_REQ_LEVEL macro lacked parentheses around the bitmask
+expression, causing the shift operation to bind too early. As a result,
+when switching to VMPL2 from VMPL1 (e.g., GHCB_MSR_VMPL_REQ_LEVEL(1)),
+incorrect values such as 0x000000016 were generated instead of the intended
+0x100000016.
+
+This patch fixes the precedence issue by grouping the masked value
+before applying the shift.
+
+Signed-off-by: leonardo-leecaprio <augustus92@kaist.ac.kr>
 ---
- arch/arm64/boot/dts/rockchip/rk3562.dtsi | 37 ++++++++++++------------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+ arch/x86/include/asm/sev-common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3562.dtsi b/arch/arm64/boot/dts/rockchip/rk3562.dtsi
-index 0156f969c4bc..412ecad79b0d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3562.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3562.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/power/rockchip,rk3562-power.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/reset/rockchip,rk3562-cru.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
-@@ -546,48 +547,48 @@ power: power-controller {
- 				#size-cells = <0>;
- 				status = "okay";
+diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
+index acb85b934..0020d77a0 100644
+--- a/arch/x86/include/asm/sev-common.h
++++ b/arch/x86/include/asm/sev-common.h
+@@ -116,7 +116,7 @@ enum psc_op {
+ #define GHCB_MSR_VMPL_REQ		0x016
+ #define GHCB_MSR_VMPL_REQ_LEVEL(v)			\
+ 	/* GHCBData[39:32] */				\
+-	(((u64)(v) & GENMASK_ULL(7, 0) << 32) |		\
++	((((u64)(v) & GENMASK_ULL(7, 0)) << 32) |	\
+ 	/* GHCBDdata[11:0] */				\
+ 	GHCB_MSR_VMPL_REQ)
  
--				power-domain@8 {
--					reg = <8>;
-+				power-domain@RK3562_PD_GPU {
-+					reg = <RK3562_PD_GPU>;
- 					pm_qos = <&qos_gpu>;
- 					#power-domain-cells = <0>;
- 				};
- 
--				power-domain@7 {
--					reg = <7>;
-+				power-domain@RK3562_PD_NPU {
-+					reg = <RK3562_PD_NPU>;
- 					pm_qos = <&qos_npu>;
- 					#power-domain-cells = <0>;
- 				};
- 
--				power-domain@11 {
--					reg = <11>;
-+				power-domain@RK3562_PD_VDPU {
-+					reg = <RK3562_PD_VDPU>;
- 					pm_qos = <&qos_rkvdec>;
- 					#power-domain-cells = <0>;
- 				};
- 
--				power-domain@12 {
--					reg = <12>;
-+				power-domain@RK3562_PD_VI {
-+					reg = <RK3562_PD_VI>;
- 					#power-domain-cells = <1>;
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					pm_qos = <&qos_isp>,
- 						 <&qos_vicap>;
- 
--					power-domain@10 {
--						reg = <10>;
-+					power-domain@RK3562_PD_VEPU {
-+						reg = <RK3562_PD_VEPU>;
- 						pm_qos = <&qos_vepu>;
- 					#power-domain-cells = <0>;
- 					};
- 				};
- 
--				power-domain@13 {
--					reg = <13>;
-+				power-domain@RK3562_PD_VO {
-+					reg = <RK3562_PD_VO>;
- 					#power-domain-cells = <1>;
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					pm_qos = <&qos_vop>;
- 
--					power-domain@14 {
--						reg = <14>;
-+					power-domain@RK3562_PD_RGA {
-+						reg = <RK3562_PD_RGA>;
- 						pm_qos = <&qos_rga_rd>,
- 							 <&qos_rga_wr>,
- 							 <&qos_jpeg>;
-@@ -595,8 +596,8 @@ power-domain@14 {
- 					};
- 				};
- 
--				power-domain@15 {
--					reg = <15>;
-+				power-domain@RK3562_PD_PHP {
-+					reg = <RK3562_PD_PHP>;
- 					pm_qos = <&qos_pcie>,
- 						 <&qos_usb3>;
- 					#power-domain-cells = <0>;
-@@ -616,7 +617,7 @@ gpu: gpu@ff320000 {
- 				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "job", "mmu", "gpu";
- 			operating-points-v2 = <&gpu_opp_table>;
--			power-domains = <&power 8>;
-+			power-domains = <&power RK3562_PD_GPU>;
- 			#cooling-cells = <2>;
- 			status = "disabled";
- 		};
-@@ -653,7 +654,7 @@ pcie2x1: pcie@ff500000 {
- 			num-lanes = <1>;
- 			phys = <&combphy_pu PHY_TYPE_PCIE>;
- 			phy-names = "pcie-phy";
--			power-domains = <&power 15>;
-+			power-domains = <&power RK3562_PD_PHP>;
- 			ranges = <0x01000000 0x0 0xfc100000 0x0 0xfc100000 0x0 0x100000
- 				  0x02000000 0x0 0xfc200000 0x0 0xfc200000 0x0 0x1e00000
- 				  0x03000000 0x3 0x00000000 0x3 0x00000000 0x0 0x40000000>;
 -- 
-2.47.2
+2.39.5 (Apple Git-154)
 
