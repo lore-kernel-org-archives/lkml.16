@@ -1,142 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59686610D;
-	Sat, 10 May 2025 09:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDEE13AA3C;
+	Sat, 10 May 2025 09:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746867796; cv=none; b=bzzBKsXraOjEMKRIu93unglA+bZvj+5NaQPxPq2w5GKs0veCDgKdGDo7k5xhyXp3iDrZ3vA4Dz7WgsokG0eTy2Z2pablPh44aYxBM1rMhGqX46q/VhogKzAEY3a7dCoIMzJnKGWpMEy0nood7ORfFCNsL9sumeX9enwM0J0FU9g=
+	t=1746867946; cv=none; b=QWJ0WYgE53SIi62gpqdM1hv70N4BXMWsQM08KSvyMQlFjG8c4FMGFosYtiI2mzSw13y9Yfq29IZtel5i7vzJMI8Hp323aICKNUrI+GaF3Ebd6IoFcyiFmOfgU+xtv2lcu9cIfzPGwPHVxBD4ErGPjefXgy9r6kjCW+b0ki6bZks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746867796; c=relaxed/simple;
-	bh=gKArUPq/LOsmWZFtbSjRAerxf4ZgQ0kJBSBsD9tlBuY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cL6788+2Mdp6a+Yws4hUfjdrzq+GuCmTX84WwgudstKMr0h/PkeU1wJwJwEiKFLZRBeb3bW/cN/DsB3E9c42VNdd+a9MS+t2Xdgg+wIi7s6bbz6+g1iR9QCUb4kIS8ttsROeI5vucfBLnNIuqHbg/k1hm7u1WMnNsbrKzJcZrYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0Pj8se0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746867946; c=relaxed/simple;
+	bh=7pPEpt1ZFjKyQHQAaquYgejiWLSjoSfy/kespplo5bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lku54611gt3pyGsn8yhIC1l+WlrJoKpc13zHCSe5D3QsO1EfpjTNnuwany36Nwsf90XXvtwGDMgWi3aBRmcXjwoK4kZ3h024NvTQQyg3MRMWjsIv5Xz9Dxlk3pwoy5IbGvTJTxScqKveP0ojYplsPyaahcZcdfYuSPdPx4fnazw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=lCu1/nNh; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0Pj8se0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9ABDC4CEEB;
-	Sat, 10 May 2025 09:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746867795;
-	bh=gKArUPq/LOsmWZFtbSjRAerxf4ZgQ0kJBSBsD9tlBuY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=m0Pj8se0Xs9Y/tCzp8Yw9GXyysM7WmBxuWI8x4y3qe+7btAl3Ym3gGxG6jigQAKcw
-	 BgYItJGvA5paKzlGMOcC3lEKctSaQUw3osChhdrrKi6+oEP3S6t8ewOFYCCfe2ScO6
-	 TB69GHyVFtvPad0hXwZwQWU8adjd+t9xtIUgKDKd1askI+PewXlOiutRQQTfmTbRC9
-	 6dxR3ffqHoYIrtkTjDzB3jqId4bDFZ2hj7FYNUjqGKbLqwmzKdo3hPN12XobiH3IiV
-	 6zfZGh76SFs+MxZPjJo90MS5RKeQo8kHFYp7urBTxO+y7INcxGzix6QN6bp+HX73sw
-	 xFQRzucMJ8B4g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uDg6z-00DdfH-Cc;
-	Sat, 10 May 2025 10:03:13 +0100
-Date: Sat, 10 May 2025 10:03:10 +0100
-Message-ID: <87jz6o6do1.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sebastian Ott <sebott@redhat.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Colton Lewis <coltonlewis@google.com>,
-	Ricardo Koller <ricarkol@google.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="lCu1/nNh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=zG2CZ00hIij72Wfq75L5nm6s6AZFu66zk2JfVghbHw4=; b=lCu1/nNhbiJJRdSPbwFvj3OYGo
+	NWOZF6zDpi1AdgQUSsqtApZBa+6ULLoCjif7xRqlE+Pkt+kewUmL0/EeEO9FaVY+/ZF64Hxsv3e6o
+	CLag3jU0ZJcdFdmM1VBmkBUa38nQutBr+pNFKqhe10fQsrnLUdUBojz4GZtgjdYt5RguYWJV3Xsyk
+	pulCPFdTe8HY4t5ZLsNqWRdeDcaKGvOfHXhZmrxfQtIBWgg1KZ9q+2zt8XJtkiiZHrIcINsIUBVe/
+	Qq4tSycZXdx+sC9BTQOJLOznEaiTffnzHpw2EvsI0Ja8Y9EkiAhKeb8zznvkMhOm8/X6AI3g2JCuM
+	iBt99fcw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uDg9K-0052ZL-1c;
+	Sat, 10 May 2025 17:05:39 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 10 May 2025 17:05:38 +0800
+Date: Sat, 10 May 2025 17:05:38 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 3/3] KVM: arm64: selftests: arch_timer_edge_cases - workaround for AC03_CPU_14
-In-Reply-To: <20250509143312.34224-4-sebott@redhat.com>
-References: <20250509143312.34224-1-sebott@redhat.com>
-	<20250509143312.34224-4-sebott@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
+Message-ID: <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
+References: <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
+ <Zw31JIEyh28vK9q7@gondor.apana.org.au>
+ <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+ <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+ <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
+ <aBsdTJUAcQgW4ink@gondor.apana.org.au>
+ <aBt5Mxq1MeefwXGJ@Red>
+ <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+ <aBw_iC_4okpiKglQ@gondor.apana.org.au>
+ <dd55ba91a5aebce0e643cab5d57e4c87a006600f.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: sebott@redhat.com, oliver.upton@linux.dev, coltonlewis@google.com, ricarkol@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd55ba91a5aebce0e643cab5d57e4c87a006600f.camel@gmail.com>
 
-On Fri, 09 May 2025 15:33:12 +0100,
-Sebastian Ott <sebott@redhat.com> wrote:
+On Sat, May 10, 2025 at 10:32:53AM +0200, Klaus Kudielka wrote:
+>
+> So, I am back at the hardware (armada-385-turris-omnia), and gave this patch a try.
+> CONFIG_CRYPTO_DEV_MARVELL_CESA=m
 > 
-> arch_timer_edge_cases currently fails on ampere-one machines with
-> the following assertion failure:
-> 
-> ==== Test Assertion Failure ====
->   arm64/arch_timer_edge_cases.c:169: timer_condition == istatus
->   pid=11236 tid=11236 errno=4 - Interrupted system call
->      1  0x0000000000404ce7: test_run at arch_timer_edge_cases.c:938
->      2  0x0000000000401ebb: main at arch_timer_edge_cases.c:1053
->      3  0x0000ffff9fa8625b: ?? ??:0
->      4  0x0000ffff9fa8633b: ?? ??:0
->      5  0x0000000000401fef: _start at ??:?
->   0x1 != 0x0 (timer_condition != istatus)
-> 
-> Meaning that the timer condition was met and an interrupt
-> was presented but the timer status bit in the control register
-> was not set.
-> 
-> This happens due to AC03_CPU_14 "Timer CVAL programming of a delta
-> greater than 2^63 will result in incorrect behavior."
-> 
-> Work around this issue by reducing the value that is used to reset
-> the counter and thus reduce the delta.
-> 
-> Link: https://lore.kernel.org/kvmarm/ac1de1d2-ef2b-d439-dc48-8615e121b07b@redhat.com
-> Link: https://amperecomputing.com/assets/AmpereOne_Developer_ER_v0_80_20240823_28945022f4.pdf
-> Signed-off-by: Sebastian Ott <sebott@redhat.com>
-> ---
->  tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
-> index a813b4c6c817..2f0397df0aa6 100644
-> --- a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
-> +++ b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
-> @@ -31,7 +31,7 @@ static const int32_t TVAL_MIN = INT32_MIN;
->  static const uint32_t TIMEOUT_NO_IRQ_US = 50000;
->  
->  /* A nice counter value to use as the starting one for most tests. */
-> -static const uint64_t DEF_CNT = (CVAL_MAX / 2);
-> +static const uint64_t DEF_CNT = (CVAL_MAX / 4);
+> Upon modprobe marvell-cesa, I get the following results.
 
-This is rather arbitrary, and only sidestep the issue: the core
-problem is that CVAL_MAX is defined as ~0, and that we have no idea
-what the *effective* counter width is.
-
-So while this happen to sidestep the particular Ampere erratum (and
-avoid failures on X1E), this is only papering over the problem. Which
-is why I always had some reservations on this particular test -- it is
-remarkably broken.
-
-If anything, we should compute the expected width of the counter based
-on the frequency and the architectural guarantees ("Roll-over time of
-not less than 40 years."), just like the kernel driver does (see
-arch_counter_get_width()).
-
-I'm also not keen on hiding a HW bug by altering the test. What of
-other guests that would fall into the same issue? If we think the
-problem exposed by this test is serious enough, then we need to fully
-trap and emulate the timers, X1E style. Performance would definitely
-suffer, but that would be the correct thing to do.
-
-So my proposal is to fix the test to be compliant with the intent of
-the architecture instead of making bets and using semi-random values.
-If that's good enough to make that test pass on A1, great.
+Thanks, could you please try this patch which goes on top of the
+previous v3 patch to disable chaining completely?
 
 Thanks,
-
-	M.
-
 -- 
-Jazz isn't dead. It just smells funny.
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
+index 9b5fd957dde2..f4fe2a881f1e 100644
+--- a/drivers/crypto/marvell/cesa/tdma.c
++++ b/drivers/crypto/marvell/cesa/tdma.c
+@@ -123,7 +123,7 @@ void mv_cesa_tdma_chain(struct mv_cesa_engine *engine,
+ 	 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
+ 	 * the last element of the current chain.
+ 	 */
+-	if (last->flags & CESA_TDMA_BREAK_CHAIN) {
++	if (1 || (last->flags & CESA_TDMA_BREAK_CHAIN)) {
+ 		engine->chain_sw.first = NULL;
+ 		engine->chain_sw.last = NULL;
+ 	}
