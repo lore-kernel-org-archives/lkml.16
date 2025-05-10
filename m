@@ -1,69 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C3D221726;
-	Sat, 10 May 2025 09:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A3F7FBA2
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 09:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746870156; cv=none; b=ovhQKj4sKUtLjmBJ3Htc/CL7jd47h7czpp5QNz2tO81OZOVxZdXQDTaJGQy7/AiiTCsOpemTy9I2wk1j+pCujKwOEzkBX+9pwqdepVGQq0QfYy08bk0e8wThy00ACV4FF7ygVAuovw2hRMgdtYdjYl6Mcl0c03YLlpBNuzWLqLg=
+	t=1746870303; cv=none; b=rTeby6uYNEM+WS6Unlh/ta42n1lj4CSpx7g7XsaYVB+azmhn6U7lS2BkfgbUvATWZe34yo5tuyx2dvPdL8dBr9hBfxXkN4wlHJXT5Tv9KrfoKH38bkavtxm6woi3OtBHMrVz84jaWF9Y48ZrDl59brQHLMAuoKWg2t6h5H6bEqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746870156; c=relaxed/simple;
-	bh=mvGfz4+zhaqRCocFMaf0hgjCnm1CJTvyI1js5uNHlJs=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=HaP5s9Fr56ThhtdMKtugkPHP1PPdGMAR0IIsIkNgDTPlyCPFIlIxpZdea/5A1HsjuSBMLJZE8dpJXTDCg4mjeEGh5RjeBhKXxsuqeyXwOgufQSfhK1NbeZ8T67/R+efsA6IQQIhVEFUl9HQhWqBBBJ99x7sgBTRAi3w7VVm1QB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldIPC27B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746870303; c=relaxed/simple;
+	bh=zqlh9T6lprqhOCs89lpTlZP7/3GWg+hgKWkX6nmed60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lv4MwLgqaHhUDesN+6HTxNk3n2JTki8T+RNVXQsynqAAkPdm5gp/N3c9ot8884P88b3SnYbu0yF74DLHGkDCPtmICoqW+IbLUnElYZFLcQLnbny0+4X7UL/H8k6kzcSwFZYFi4RgcUwklU55Z4wV9I4ytbfloulVFeO6Rf9h8X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=B7WvgvF8; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldIPC27B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67518C4CEE2;
-	Sat, 10 May 2025 09:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746870156;
-	bh=mvGfz4+zhaqRCocFMaf0hgjCnm1CJTvyI1js5uNHlJs=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=ldIPC27Bt9cUfcjCameGNcaKJEAzqc7AUG4thRUqo3qyHbBIdcMs8n0bTUIlQ5Tym
-	 TJ7a9nhwlFa6+4GEQwIXU2cFx+VvQ3OOD4XQqH+HZ6e6O5slyTKfu+IY7orStEmsf7
-	 eC0/5x1y0Vg6Xmq3EiJb6IJts6XegY1Z06KyQ77eaEbMVXv3ghE27h09P69DXIY8Gf
-	 9QftRl1mTZGBFVanZ/8Q7gRLFPXgadbF10wjnLH+hZH7YFIa/GdZ/yr013KSFD4rSd
-	 NWLTE5kwJ+ijvBSyCwBPXOzsriTpRCh+eVuiXMtGgY+rum+32WSQ8qr99iOs9aGbQ2
-	 Y6mdWOA3Vy+qw==
-Message-ID: <0bc432f67dc0cdb5fa307565df72af34@kernel.org>
-Date: Sat, 10 May 2025 09:42:32 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v3 22/22] drm/todo: add entry to remove
- devm_drm_put_bridge()
-In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-22-b8bc1f16d7aa@bootlin.com>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-22-b8bc1f16d7aa@bootlin.com>
-Cc: asahi@lists.linux.dev, chrome-platform@lists.linux.dev, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, imx@lists.linux.dev, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, platform-driver-x86@vger.kernel.org, "Andrzej
- Hajda" <andrzej.hajda@intel.com>, "Anusha Srivatsa" <asrivats@redhat.com>, "Chun-Kuang
- Hu" <chunkuang.hu@kernel.org>, "David Airlie" <airlied@gmail.com>, "Dmitry
- Baryshkov" <lumag@kernel.org>, "Douglas Anderson" <dianders@chromium.org>, "Fabio
- Estevam" <festevam@gmail.com>, "Hui Pu" <Hui.Pu@gehealthcare.com>, "Jagan
- Teki" <jagan@amarulasolutions.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
- Karlman" <jonas@kwiboo.se>, "Jonathan Corbet" <corbet@lwn.net>, "Krzysztof
- Kozlowski" <krzk@kernel.org>, "Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>, "Neil
- Armstrong" <neil.armstrong@linaro.org>, "Paul Kocialkowski" <paulk@sys-base.io>, "Pengutronix
- Kernel Team" <kernel@pengutronix.de>, "Robert Foss" <rfoss@kernel.org>, "Sascha
- Hauer" <s.hauer@pengutronix.de>, "Shawn Guo" <shawnguo@kernel.org>, "Simona
- Vetter" <simona@ffwll.ch>, "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas
- Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="B7WvgvF8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=zqlh
+	9T6lprqhOCs89lpTlZP7/3GWg+hgKWkX6nmed60=; b=B7WvgvF8dMkzBKswDZJx
+	FA06frZF6aUJ9Cx86BMAHbRcooYVmQ2zZtSmmEASUcXvVfYa7joQ983d1ixz+YMp
+	ZcK2Jkx38Ccq0veZvOxX+0EN3HfrjmRcbkztrn/ZuFGvcpqq58ssN+uePGzVrGT5
+	pUpZpIDxlD5WWlj+WWIqf+vnz/ceeZDoocGU0ipfkmIXiF9WP4COXduTKewr35Wp
+	CkpyaNBEaTO7cbItu2GgdXdOtxowtYnR7iZrkqTij9sCWnoYbzxN6u8/MqApfqjt
+	0u/EyTrwuY6unSlcIpyMGR01dzdtDh7G/rerMhObSHGGikB25nqfdAZ5P7jwr0rW
+	MA==
+Received: (qmail 263804 invoked from network); 10 May 2025 11:44:49 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 May 2025 11:44:49 +0200
+X-UD-Smtp-Session: l3s3148p1@H4AG78Q0lk4vQDLS
+Date: Sat, 10 May 2025 11:44:48 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] i2c-host-fixes for v6.15-rc6
+Message-ID: <aB8gEAEBtIW3ATB4@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+References: <xpvrz2zt7jm7k56vu6txgyorg73yrfag2omwyqbkpqdkxyoikl@rh5wcugtqwhf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IvN/djnseQK5rpJl"
+Content-Disposition: inline
+In-Reply-To: <xpvrz2zt7jm7k56vu6txgyorg73yrfag2omwyqbkpqdkxyoikl@rh5wcugtqwhf>
 
-On Fri, 9 May 2025 15:53:48 +0200, Luca Ceresoli wrote:
-> devm_drm_put_bridge() is a temporary workaround waiting for the panel
-> bridge lifetime rework. Add a TODO entry to not forget it must be removed
-> after such rework.
+
+--IvN/djnseQK5rpJl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 09, 2025 at 02:09:01PM +0200, Andi Shyti wrote:
+> Hi Wolfram,
 >=20
-> Suggested-by: Maxime Ripard <mripard@kernel.org>
+> Two patches in this pull request. The first one updates the
+> MAINTAINERS file to remove Seth from the ISMT entry. His email
+> bounces, and he no longer works at Intel. I had a chat with him
+> before he left, and he did not intend to continue in the role.
 >=20
-> [ ... ]
+> The second patch is a minor fix, barely worth a Fixes tag, but
+> we decided to include it since it addresses a warning introduced
+> in the latest merge window. We preferred to keep the patch and
+> its fix in the same release cycle.
+>=20
+> That said, I hope to see you soon, and in the meantime I wish
+> you a great weekend.
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Thanks, pulled. Yes, see you soon :)
 
-Thanks!
-Maxime
+
+--IvN/djnseQK5rpJl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgfIAwACgkQFA3kzBSg
+Kbb0VA/8DwLyAx0UwZ2an+52TdkTsf0FQyoUoqLb7HvGKQ01kpC4pYTVlXdYDpPY
+OBknU8LFdEdAEvLCdzImc9IBDuRzGTyO0jonI00T6+48s8WVkU2Tl9umPfz+T9+L
+zdRRE7kXR8GW25YY5SILsXBGcJTEe6nY8YRS6TRXiL7IvSOL2eotU0/p6WehBrGD
+uQZh8awbmHpO+oYiOiHWKLKFYVajsd8GplbKAwup3FNIUWkWgabreyDhc1NPxFdZ
+hBz3N1bmnWVw/NTQKZzSzCHZVhr9JLAcsIDPe34D/VnOK60v7SNoq7SEd+UFsEAw
+9oOJZte8kPIiWq52VZkzUdHl/MqyX0dlf+HMXYTppAfFDs5OWT9RX8EGXwlsA+5W
+GxFXZ6HkUUvIyzYh62/x2QyCQVas9CgQq4RqFnH0/JtkTeTJLMd0/NyGhcYbBbcB
+fkNu+G16vEFDODsqX9+TKN6cCuegyxQ0HBikTs5v4HnoHZSW5/AH8dlJA2KrnQnO
+7rMftNpupMRfqwKu9XLCAaWdg1JI0WeBHDhYM4/PxQecAmnyFAz1s4w6vgi0d4aZ
+hlbl40RuVKIg1sO1fR55T3kEmQhKOBUTur5wUmAJaWiSfEjIIceetRvqJtdlzdC/
+yZJi+04hrhhAM4i71E7yCBwPiGS7L9uYAa37dyxAgNI4/6fXV/g=
+=QTrs
+-----END PGP SIGNATURE-----
+
+--IvN/djnseQK5rpJl--
