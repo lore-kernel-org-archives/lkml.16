@@ -1,217 +1,121 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1D8221F24;
-	Sat, 10 May 2025 07:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4734C2E401;
+	Sat, 10 May 2025 08:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746863922; cv=none; b=QRRx4N4pUfMNTWP3M6HjD7T4f5w/SaIylvKl2sW1YmydQd1xX3QXWLnr13vuY8GyYKRSLUWPX5HdEhOK/TE2oeEONWKkvJq456Dvv7ho2hSOk5n+5RFgQJrlwBjlN8tty4AuVP6RW9dMntxxgzRRgmQv7Fdh6YsPyrxikUfDmkM=
+	t=1746864177; cv=none; b=J1C7ZVVsBtiP2z1aheQhKUqTs/PevzLF0KgjlqtyCZ6X54cdTwQxJiX0CG8T6kLZVOKSmhSpWThQyFL+MAEVQdCsFp1Yy3r0ktfrmuvzRorrlPFrZTqjhn+yU79S7HjTm4C6rM49n3d82AvOJXAZwWOJz8bAjHymqse0isdsZrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746863922; c=relaxed/simple;
-	bh=mI3iewsuJuKo4PZ8m0kiHtdODfzA7n4MnVvFLvXaZ3o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gNatTmFE+AT3IkMFN7D7EY5AfahKUVB6lB419Ljpr4D3G1xWGAJHaQYiNbFU0Az/wnaX6DqUnDD1tn9ZZ6enSkW1RD17LxN/xwqoYKDPv5Ksv5d8uy9xG6tAW2KYJaUg1OzziXr7oFRgmC3/HTeyBNi5RbOIdD44IPYZ4gI914I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=CT31vcog; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1746864177; c=relaxed/simple;
+	bh=TgGotephKsM3CZvFEOAbmICkRQqBI40OGkRN9uP0W/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BoLiqGSUZooISlj1bKniLeiM6Ng13ExvGc7X83bsET2tUvcGjGOTjZ8FbOlFjdQSW/p/Xd+dguwY65XGP5QKkHP6r2Xy9EB/LV6MyN6KXdomT4lOq5bECNltAlz12zFGLBwTp3bCxHAipvfJh/JhK3ARAhorZ2lAygfb0zlrw6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Cp+2ur12; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CT31vcog"
-X-UUID: 916bc0042d7411f082f7f7ac98dee637-20250510
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=BAIkgZN1tALx+5TYHI1VWwihIl2+mQhkPkkhE3bXgMA=;
-	b=CT31vcogJBI8qia2wLXYDH7nOgAAWepZp15yDdbdhQ1jaYkarFZbzCmzwmelZBNOrfbKB7pdP0NEnBPTlK/45VMuU5EcX6+CEiz/c0ux4bPwNTUAEJfZ75I8Zf+nSpxzd7iJ2HFCznQuX7dmLp5CVwytzJK5paZtlnLGjlgmETY=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:6bc19390-9b50-4609-a069-bf24a27641f0,IP:0,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-5
-X-CID-META: VersionHash:0ef645f,CLOUDID:43cd5e51-76c0-4e62-bb75-246dfb0889c6,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 916bc0042d7411f082f7f7ac98dee637-20250510
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1546077641; Sat, 10 May 2025 15:58:32 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Sat, 10 May 2025 15:58:29 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Sat, 10 May 2025 15:58:29 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
-	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>
-CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH 14/14] media: mediatek: decoder: support av1 extend vsi
-Date: Sat, 10 May 2025 15:53:44 +0800
-Message-ID: <20250510075357.11761-15-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250510075357.11761-1-yunfei.dong@mediatek.com>
-References: <20250510075357.11761-1-yunfei.dong@mediatek.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Cp+2ur12"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 9416225F87;
+	Sat, 10 May 2025 10:02:52 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id EgI7a7q_e3sx; Sat, 10 May 2025 10:02:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746864163; bh=TgGotephKsM3CZvFEOAbmICkRQqBI40OGkRN9uP0W/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Cp+2ur12X9YGgScUvhME4HTmlhADbBWK3Mc1HfKlC0WDvtn8pMHmpH0iY3wshCc3b
+	 J+OfKmC0aZ82LgU9l4Sbi8PtgAh5icWcVRLWeVJ65H4xG9m26/59YWP0/ExK4gVhZ0
+	 SPXYlEniuB953XVt92CAXcvVdLa8esWewf+AudhTRQSHu8liVU53tb6+BEoSypY3dF
+	 k5waeYzDnbt7oSOtZ3PVgY/xjOxksCHx6KlVaH90hSsib3EDh7mG5V0cBz/lwzn891
+	 3dfbggHa9kwQynBCS+3B9Y2MT3VoxNzVFc2KtR7CHBFMFYWSaLHnNd4DAt7m/tdk3b
+	 LdqART5uD+xcw==
+Date: Sat, 10 May 2025 08:02:29 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Chukun Pan <amadeus@jmu.edu.cn>, linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] rockchip: Enable Ethernet controller on Radxa E20C
+Message-ID: <aB8IFYq2uPPXm0HX@pie.lan>
+References: <20250509202402.260038-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509202402.260038-1-jonas@kwiboo.se>
 
-The driver can't access tile buffer address for extend architecture,
-set tile group information in vcp and share it with kernel.
+On Fri, May 09, 2025 at 08:23:56PM +0000, Jonas Karlman wrote:
+> The Rockchip RK3528 has two Ethernet controllers, one 100/10 MAC to be
+> used with the integrated PHY and a second 1000/100/10 MAC to be used
+> with an external Ethernet PHY.
+> 
+> This series add device tree nodes for the Ethernet controllers found in
+> RK3528 and enable the LAN interface on Radxa E20C.
+> 
+> This include a gmac0 node for the 100/10 MAC and its related integrated
+> PHY node that only have recived limited testing. I have no board that
+> expose an Ethernet port for the gmac0 and the integrated PHY. However,
+> the PHY can be identified on addr 0x2 as 0044.1400 and in vendor kernel
+> this relate to the Rockchip RK630 PHY. A proper PHY driver will be
+> needed to support any real use of gmac0.
+> 
+> Changes in v3:
+> - Rebase on top of latest mmind/for-next
+> 
+> Changes in v2:
+> - Split from the "Add GMAC support for RK3528" driver series [1]
+> - Add ethernet-phy@2 for the integrated PHY
+> - Rebase on top of the "Support I2C controllers in RK3528" series [2]
+> 
+> [1] https://lore.kernel.org/r/20250309232622.1498084-1-jonas@kwiboo.se
+> [2] https://lore.kernel.org/r/20250309070603.35254-1-ziyao@disroot.org
+> 
+> Jonas Karlman (2):
+>   arm64: dts: rockchip: Add GMAC nodes for RK3528
+>   arm64: dts: rockchip: Enable Ethernet controller on Radxa E20C
+> 
+>  .../boot/dts/rockchip/rk3528-radxa-e20c.dts   |  30 +++++
+>  arch/arm64/boot/dts/rockchip/rk3528.dtsi      | 105 ++++++++++++++++++
+>  2 files changed, 135 insertions(+)
 
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
----
- .../vcodec/decoder/vdec/vdec_av1_req_lat_if.c | 46 ++++++++++++++++---
- 1 file changed, 39 insertions(+), 7 deletions(-)
+On my Radxa E20C board, iperf3 shows the interface could run at roughly
+1Gbps with this series,
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c
-index 6070485e26c4..43541faeea87 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c
-@@ -25,6 +25,8 @@
- 
- #define AV1_INVALID_IDX			-1
- 
-+#define AV1_NON_EXT_VSI_SIZE		0xD50
-+
- #define AV1_DIV_ROUND_UP_POW2(value, n)			\
- ({							\
- 	typeof(n) _n  = n;				\
-@@ -641,6 +643,8 @@ struct vdec_av1_slice_fb {
-  * @frame:		current frame info
-  * @state:		status after decode done
-  * @cur_lst_tile_id:	tile id for large scale
-+ * @tile_group:	tile group info
-+ * @reserved:		reserved
-  */
- struct vdec_av1_slice_vsi {
- 	/* lat */
-@@ -665,6 +669,8 @@ struct vdec_av1_slice_vsi {
- 	struct vdec_av1_slice_frame frame;
- 	struct vdec_av1_slice_state state;
- 	u32 cur_lst_tile_id;
-+	struct vdec_av1_slice_tile_group tile_group;
-+	unsigned int reserved[4];
- };
- 
- /**
-@@ -1394,13 +1400,18 @@ static int vdec_av1_slice_setup_tile_group(struct vdec_av1_slice_instance *insta
- 					   struct vdec_av1_slice_vsi *vsi)
- {
- 	struct v4l2_ctrl_av1_tile_group_entry *ctrl_tge;
--	struct vdec_av1_slice_tile_group *tile_group = &instance->tile_group;
-+	struct vdec_av1_slice_tile_group *tile_group;
- 	struct vdec_av1_slice_uncompressed_header *uh = &vsi->frame.uh;
- 	struct vdec_av1_slice_tile *tile = &uh->tile;
- 	struct v4l2_ctrl *ctrl;
- 	u32 tge_size;
- 	int i;
- 
-+	if (IS_VDEC_SUPPORT_EXT(instance->ctx->dev->dec_capability))
-+		tile_group = &vsi->tile_group;
-+	else
-+		tile_group = &instance->tile_group;
-+
- 	ctrl = v4l2_ctrl_find(&instance->ctx->ctrl_hdl, V4L2_CID_STATELESS_AV1_TILE_GROUP_ENTRY);
- 	if (!ctrl)
- 		return -EINVAL;
-@@ -1601,6 +1612,7 @@ static void vdec_av1_slice_setup_lat_buffer(struct vdec_av1_slice_instance *inst
- 					    struct vdec_lat_buf *lat_buf)
- {
- 	struct vdec_av1_slice_work_buffer *work_buffer;
-+	u32 num_tiles;
- 	int i;
- 
- 	vsi->bs.dma_addr = bs->dma_addr;
-@@ -1635,12 +1647,18 @@ static void vdec_av1_slice_setup_lat_buffer(struct vdec_av1_slice_instance *inst
- 
- 	vsi->tile.buf = instance->tile.dma_addr;
- 	vsi->tile.size = instance->tile.size;
--	memcpy(lat_buf->tile_addr.va, instance->tile.va, 64 * instance->tile_group.num_tiles);
- 
- 	vsi->cdf_table.buf = instance->cdf_table.dma_addr;
- 	vsi->cdf_table.size = instance->cdf_table.size;
- 	vsi->iq_table.buf = instance->iq_table.dma_addr;
- 	vsi->iq_table.size = instance->iq_table.size;
-+
-+	if (IS_VDEC_SUPPORT_EXT(instance->ctx->dev->dec_capability))
-+		num_tiles = vsi->tile_group.num_tiles;
-+	else
-+		num_tiles = instance->tile_group.num_tiles;
-+
-+	memcpy(lat_buf->tile_addr.va, instance->tile.va, 64 * num_tiles);
- }
- 
- static void vdec_av1_slice_setup_seg_buffer(struct vdec_av1_slice_instance *instance,
-@@ -1663,7 +1681,7 @@ static void vdec_av1_slice_setup_tile_buffer(struct vdec_av1_slice_instance *ins
- 					     struct vdec_av1_slice_vsi *vsi,
- 					     struct mtk_vcodec_mem *bs)
- {
--	struct vdec_av1_slice_tile_group *tile_group = &instance->tile_group;
-+	struct vdec_av1_slice_tile_group *tile_group;
- 	struct vdec_av1_slice_uncompressed_header *uh = &vsi->frame.uh;
- 	struct vdec_av1_slice_tile *tile = &uh->tile;
- 	u32 tile_num, tile_row, tile_col;
-@@ -1674,6 +1692,11 @@ static void vdec_av1_slice_setup_tile_buffer(struct vdec_av1_slice_instance *ins
- 	u32 *tile_info_buf = instance->tile.va;
- 	u64 pa = (u64)bs->dma_addr;
- 
-+	if (IS_VDEC_SUPPORT_EXT(instance->ctx->dev->dec_capability))
-+		tile_group = &vsi->tile_group;
-+	else
-+		tile_group = &instance->tile_group;
-+
- 	if (uh->disable_cdf_update == 0)
- 		allow_update_cdf = 1;
- 
-@@ -1887,7 +1910,7 @@ static int vdec_av1_slice_init(struct mtk_vcodec_dec_ctx *ctx)
- {
- 	struct vdec_av1_slice_instance *instance;
- 	struct vdec_av1_slice_init_vsi *vsi;
--	int ret;
-+	int ret, vsi_size = AV1_NON_EXT_VSI_SIZE;
- 
- 	instance = kzalloc(sizeof(*instance), GFP_KERNEL);
- 	if (!instance)
-@@ -1926,9 +1949,18 @@ static int vdec_av1_slice_init(struct mtk_vcodec_dec_ctx *ctx)
- 		goto error_vsi;
- 	}
- 
--	if (vsi->vsi_size != sizeof(struct vdec_av1_slice_vsi))
--		mtk_vdec_err(ctx, "remote vsi size 0x%x mismatch! expected: 0x%zx\n",
--			     vsi->vsi_size, sizeof(struct vdec_av1_slice_vsi));
-+	if (IS_VDEC_SUPPORT_EXT(ctx->dev->dec_capability)) {
-+		vsi_size = sizeof(struct vdec_av1_slice_vsi);
-+		vsi->iq_table_size = AV1_IQ_TABLE_SIZE;
-+		vsi->cdf_table_size = AV1_CDF_SIZE;
-+	}
-+
-+	if (vsi->vsi_size != vsi_size) {
-+		mtk_vdec_err(ctx, "remote vsi size 0x%x mismatch! expected: 0x%x\n",
-+			     vsi->vsi_size, vsi_size);
-+		ret = -EINVAL;
-+		goto error_vsi;
-+	}
- 
- 	instance->irq_enabled = 1;
- 	instance->inneracing_mode = IS_VDEC_INNER_RACING(instance->ctx->dev->dec_capability);
--- 
-2.46.0
+# iperf3 -c 192.168.114.51
+Connecting to host 192.168.114.51, port 5201
+[  5] local 192.168.114.50 port 41894 connected to 192.168.114.51 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   113 MBytes   948 Mbits/sec    0    380 KByes
+[  5]   1.00-2.00   sec   112 MBytes   944 Mbits/sec    0    399 KBytes
+[  5]   2.00-3.00   sec   112 MBytes   940 Mbits/sec    0    399 KBytes
+[  5]   3.00-4.00   sec   112 MBytes   942 Mbits/sec    0    399 KBytes
+[  5]   4.00-5.00   sec   112 MBytes   944 Mbits/sec    0    399 KBytes
+[  5]   5.00-6.00   sec   112 MBytes   940 Mbits/sec    0    399 KBytes
+[  5]   6.00-7.00   sec   112 MBytes   940 Mbits/sec    0    399 KBytes
+[  5]   7.00-8.00   sec   112 MBytes   944 Mbits/sec    0    399 KBytes
+[  5]   8.00-9.00   sec   112 MBytes   941 Mbits/sec    0    399 KBytes
+[  5]   9.00-10.00  sec   112 MBytes   941 Mbits/sec    0    399 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   942 Mbits/sec    0            sender
+[  5]   0.00-10.00  sec  1.10 GBytes   941 Mbits/sec                  receiver
 
+iperf Done.
+
+Tested-by: Yao Zi <ziyao@disroot.org>
+
+Thanks for your work!
+
+> -- 
+> 2.49.0
+> 
