@@ -1,70 +1,53 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF44BA27
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 07:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DE96125;
+	Sat, 10 May 2025 07:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746863032; cv=none; b=BiSS1fWxRpR7f/87yfC7+rCiBnE3aVz7EWkFUXnUPWf61uEewSM5Zln5fpk2zN/yub9Iuwn0g+Rd7fjobyVH28UIloggK7bR3Fa6zGjI+/Blh1K2KZGt3kWnSAogB5WgWTJQP8X315mNS9GE12EqRk5X4nu5jLVkBw6OIo8mrPM=
+	t=1746863084; cv=none; b=dvxemJYYdHql5tIsuHpTd0TrADLnQ/+snF2RrkdMH+9M3aMeEdlSBf9O6zchKhdlpQDNS9JtipW5TKCH9HutN0ZLw+Hq9Jso8hyLeqrnQJfHJ3hrOyCUEK/2F3c7V5NYFvIv54Hlw1lciMF+YuY6KhWBY1rQf0vdZE8b5D9oTjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746863032; c=relaxed/simple;
-	bh=gVwu5i5dr8Gu8f8RQwH56pS50hW/bWmE75LzhrJPSX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GCutYISS4GUBRaDq9myUvHtaOjr7RW9ECzYkk49X2TQFsaQFq9ewip5kZYk7eHpDK4MepnlaA2+XtcsEWu+Z8AQ1rsPT3YHSV6mWH3C8bA+f5sw6PKMtvNS86bt0/VxXemFcllad3flSk+rse/qIXg988CmXIfmyb86+UU4+Kbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t5V0gDzh; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746863084; c=relaxed/simple;
+	bh=bE/SOpoChEP71E9o00tKei1ZQQ2RQ/5dOoWOaqj9An8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PP/OBrYFdDG1ixLd2ut2PewqpAiTsRsRFnkpFGq1Pv904SFd3uG4T5Vv0QXn/E5lhLCaOg854qb/ZDB9gehWxylG5zAQ+BePa6hYAA0ha2/OwzLsK2H/6GwDH3fq5E5Jp9fHW91jA+DufrcfGVw94uJQcyC59f+BEPbelRxotJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRm0JemU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t5V0gDzh"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a1d8c09674so1147172f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 00:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746863028; x=1747467828; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zgxyHav/FDfAPqF2ubFj/kOjw60kxGTa94/J4F6aQhQ=;
-        b=t5V0gDzh5p3+g5fx1X1GjTVNyZkl/iHGHqpQdUyKnO+pBIiFbdUukhe6GSzN6MZg73
-         ClrV+GyKP8F/m/Uiz58SQHSWU9/8LHxZht4S6hv9IaV4B9I4k93Wu78cMTZR6p7YjGFR
-         EhNdH0e9XXcIMet0WclJXfnxSHV2ONgkGgih/D1XhJ4bhlh0GEXhooYKuakidB+Ic8kD
-         neESNben084jgBRkYIsub0L2jDRtobyDT7dKYwxYHGpMl4HH/LwxVY/mIOa9M2KK/2PF
-         +qQQxBldXRVoQmuR4fEiMhGMUVCqZh5kZS+kqIVVwwERIHqt6uJfM2giMklxz/3NVun+
-         zzSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746863028; x=1747467828;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgxyHav/FDfAPqF2ubFj/kOjw60kxGTa94/J4F6aQhQ=;
-        b=U2k+ksmtofX/DtwYNQ98HdaMaH3qCKpxVsKk9XC6iAfW8OukNbXW57GkWdNTtWh+3S
-         Rs4r4i4MzAfC/0ZIaSwAV13jdcydUO/T3riiBiwjN3IjR/twIK/cMoUNE1HhNrTddDu8
-         5SQrWPLE3x+25b0EHb4dnqiONqnQF6OqAT0yVzGKaIjXylmWWtb41IBLsvUY2Ic3s50B
-         kyTkubgGQ/mR4ZibXRklAQO13FHEaMIxYLTBdh8iy3oeHzJQSEI/AP6FwpxNYUroXf7i
-         96WmqDqgdjIHy4iYdpN4ugyAJUYJX4UVu3sbMQNPikbvkUrdHUHGcJym0Kt77CbmhYMI
-         BbFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXt63rluqgf4PiFFfBa8GTSFNvxGjtj0pJOpO6gAPcAAoiaQF7yIAXEU6RGXX2gWU0sjzQPcfMznI0XpF0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcowRWDgnceuyG0Nr5H9BDuxibOXaKlvrroh8m2gdLugIfvQhs
-	su47V25aqIfOg1ogqjmr8s7czjxDck7Fj1muoorEhEYIeYcGj7EPZbgo7+VEQ28=
-X-Gm-Gg: ASbGncvDtl8tLOUdRaOYffMV1e9r03v+bimEtAoEbMEt/PfCPp7c0WJnxqQNRp8JUJb
-	vaTemL68Dt5DEy6OkSjB2DEeZXQtSVO8fQXlSZJHdmWCUGV7qUC8rCfrAm7hgPnZ99rySjgEHMw
-	Yq3aYGWmKERiqmziT2xdWr8frqK2h/JPLnWqJ+UvvtjTdxch2zDgMElo+vrc9G9GHPixnx/Rrd6
-	nfbmPFLcNfhtu+9RHoHP8J/D1FKmt4GG1APa77bw0rG3adj/GxeDyumbwD21YUVHqBjEwGH5l+J
-	2PtHkhFmKnc0P9QZzGViPkvFV3cnJuLcmECyRobgChaRz/y+wV4/kYWg
-X-Google-Smtp-Source: AGHT+IEYxL7W6rw3MZmtN8Hifi8g47H7dZD22sCgXBrSPKpmdOCfDEnqQwAFYZ9z9qgI8K5Jh9yNrQ==
-X-Received: by 2002:a05:6000:186e:b0:39d:724f:a8f1 with SMTP id ffacd0b85a97d-3a1f64279e0mr5124295f8f.10.1746863028389;
-        Sat, 10 May 2025 00:43:48 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f57ddd2dsm5596666f8f.9.2025.05.10.00.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 00:43:48 -0700 (PDT)
-Date: Sat, 10 May 2025 10:43:44 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Ard Biesheuvel <ardb@kernel.org>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [tip:x86/boot 10/10] arch/x86/boot/compressed/sev-handle-vc.c:104
- do_boot_stage2_vc() error: we previously assumed 'boot_ghcb' could be null
- (see line 101)
-Message-ID: <202505100719.9pE7wDfB-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRm0JemU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23CA1C4CEE2;
+	Sat, 10 May 2025 07:44:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746863083;
+	bh=bE/SOpoChEP71E9o00tKei1ZQQ2RQ/5dOoWOaqj9An8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZRm0JemUldpe+AgpDLQ5gUzWpGiNST07Xb7zIxeqwnu7jsSZr1yS4/lz4mfza2rln
+	 G7AyXvCic3ERDJlHJMfN3/S7aWRxrb7rmLDTtta01a79D3ACZLBzNl2+Zd4CVFHMqs
+	 quMc08ZsU6wqlDsG6c5lHSD5KEpOOdNF1h70gGSb4W8qvFDaK7kw0dKtNwzqtYeQgU
+	 zmm/Yxvof1Ps+yJAHT7+PbjkbgIV7njlN6hU0BumHXRHQ8/Aw16DO7Lf8ciKRklKi3
+	 JDoafNUlWi1+P/wswBxr6C1sL3xDClwUVa6Rsq0Wk/bcrQXS2SN5ixpLivo249eC2O
+	 Ja0cRETdRmAjw==
+Date: Sat, 10 May 2025 10:44:38 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, Peter Huewe <peterhuewe@gmx.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	linux-integrity@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Sumit Garg <sumit.garg@kernel.org>
+Subject: Re: [PATCH v4 1/4] tpm: add buf_size parameter in the .send callback
+Message-ID: <aB8D5syofPSqjzns@kernel.org>
+References: <20250509085713.76851-1-sgarzare@redhat.com>
+ <20250509085713.76851-2-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,44 +56,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250509085713.76851-2-sgarzare@redhat.com>
 
-Hi Ard,
+On Fri, May 09, 2025 at 10:57:10AM +0200, Stefano Garzarella wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> 
+> Add a new `buf_size` parameter to the `.send` callback in `tpm_class_ops`.
+> This parameter will allow drivers to differentiate between the actual
+> command length to send and the total buffer size. Currently `buf_now` is
+> not used, but it will be used to implement devices with synchronous send()
+> to send the command and receive the response on the same buffer.
+> 
+> Also rename the previous parameter `len` to `cmd_len` in the declaration
+> to make it clear that it contains the length in bytes of the command
+> stored in the buffer. The semantics don't change and it can be used as
+> before by drivers. This is an optimization since the drivers could get it
+> from the header, but let's avoid duplicating code.
+> 
+> While we are here, resolve a checkpatch warning:
+>   WARNING: Unnecessary space before function pointer arguments
+>   #66: FILE: include/linux/tpm.h:90:
+>   +	int (*send) (struct tpm_chip *chip, u8 *buf, size_t cmd_len,
+> 
+> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> v4:
+> - rework the commit description [Jarkko]
+> ---
+>  include/linux/tpm.h                  | 3 ++-
+>  drivers/char/tpm/st33zp24/st33zp24.c | 2 +-
+>  drivers/char/tpm/tpm-interface.c     | 2 +-
+>  drivers/char/tpm/tpm_atmel.c         | 3 ++-
+>  drivers/char/tpm/tpm_crb.c           | 2 +-
+>  drivers/char/tpm/tpm_ftpm_tee.c      | 4 +++-
+>  drivers/char/tpm/tpm_i2c_atmel.c     | 3 ++-
+>  drivers/char/tpm/tpm_i2c_infineon.c  | 3 ++-
+>  drivers/char/tpm/tpm_i2c_nuvoton.c   | 3 ++-
+>  drivers/char/tpm/tpm_ibmvtpm.c       | 6 ++++--
+>  drivers/char/tpm/tpm_infineon.c      | 3 ++-
+>  drivers/char/tpm/tpm_nsc.c           | 3 ++-
+>  drivers/char/tpm/tpm_svsm.c          | 3 ++-
+>  drivers/char/tpm/tpm_tis_core.c      | 3 ++-
+>  drivers/char/tpm/tpm_tis_i2c_cr50.c  | 6 ++++--
+>  drivers/char/tpm/tpm_vtpm_proxy.c    | 4 +++-
+>  drivers/char/tpm/xen-tpmfront.c      | 3 ++-
+>  17 files changed, 37 insertions(+), 19 deletions(-)
+> 
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 9ac9768cc8f7..7ac390ec89ce 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -87,7 +87,8 @@ struct tpm_class_ops {
+>  	const u8 req_complete_val;
+>  	bool (*req_canceled)(struct tpm_chip *chip, u8 status);
+>  	int (*recv) (struct tpm_chip *chip, u8 *buf, size_t len);
+> -	int (*send) (struct tpm_chip *chip, u8 *buf, size_t len);
+> +	int (*send)(struct tpm_chip *chip, u8 *buf, size_t cmd_len,
+> +		    size_t buf_size);
 
-FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
+I'm sorry but now that I look at this, just for the sake of consistency:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
-head:   ed4d95d033e359f9445e85bf5a768a5859a5830b
-commit: ed4d95d033e359f9445e85bf5a768a5859a5830b [10/10] x86/sev: Disentangle #VC handling code from startup code
-config: x86_64-randconfig-161-20250510 (https://download.01.org/0day-ci/archive/20250510/202505100719.9pE7wDfB-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+	int (*send)(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
+		    size_t cmd_len);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202505100719.9pE7wDfB-lkp@intel.com/
+I.e. match the order and parameter names from tpm_try_transmit().
 
-smatch warnings:
-arch/x86/boot/compressed/sev-handle-vc.c:104 do_boot_stage2_vc() error: we previously assumed 'boot_ghcb' could be null (see line 101)
-
-vim +/boot_ghcb +104 arch/x86/boot/compressed/sev-handle-vc.c
-
-ed4d95d033e359 Ard Biesheuvel 2025-05-04   96  void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
-ed4d95d033e359 Ard Biesheuvel 2025-05-04   97  {
-ed4d95d033e359 Ard Biesheuvel 2025-05-04   98  	struct es_em_ctxt ctxt;
-ed4d95d033e359 Ard Biesheuvel 2025-05-04   99  	enum es_result result;
-ed4d95d033e359 Ard Biesheuvel 2025-05-04  100  
-ed4d95d033e359 Ard Biesheuvel 2025-05-04 @101  	if (!boot_ghcb && !early_setup_ghcb())
-                                                    ^^^^^^^^^^
-Check for NULL.  Should the && be ||?
-
-ed4d95d033e359 Ard Biesheuvel 2025-05-04  102  		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_GEN_REQ);
-ed4d95d033e359 Ard Biesheuvel 2025-05-04  103  
-ed4d95d033e359 Ard Biesheuvel 2025-05-04 @104  	vc_ghcb_invalidate(boot_ghcb);
-                                                                   ^^^^^^^^^
-Unchecked dereference.
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+BR, Jarkko
