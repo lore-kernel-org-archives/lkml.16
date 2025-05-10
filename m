@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78A1B67F;
-	Sat, 10 May 2025 10:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D627B67F;
+	Sat, 10 May 2025 10:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746874043; cv=none; b=LenfN7FZiCxh04BJsIhgJ9UIm82PvbyPbCy0C0Q4PJtE1xBUm6OBaIwVBqfqYx+jXTsldc2lKtzKpx6xOyDyA9p+HN2mRfStrttSaCvT4J2zI2RX7efwWYwXY1lPihceGfrw6YAcud2kmEHjekq5TcqDP8pPd+ARv7uFqAzzoH0=
+	t=1746874076; cv=none; b=E7LzrOmJ4pJh05mwhDD0bU5NSbSytWLjKPkSetqrCBxUfcoGjfRGf6uS8OXHlRtYWDvaiB1pHxUQRmvd2p5gG9Ik1d2NfCRwl55/IA5FM6PWd7L5IoSKdz5MgEuOccvIDqWjU8c6AkIgUNQQhXYcqDUaLjTBWGEMm5ljqgtUk5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746874043; c=relaxed/simple;
-	bh=JzL8VGVYtgBK9zzL1zBp88LEkrJDtaAyUWPZRfOo2iI=;
+	s=arc-20240116; t=1746874076; c=relaxed/simple;
+	bh=guKgikhGJmIEydKvKvWq1qzyZ10YGC1G6ISdpGSLVSc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jtEXzA/bVcukaXrk7Pda7WlDkU4YoK1SSQr7IdFoWQEoamc5bkUF7mRmyrA81P6XeThDLvK3tWx7/4SA1jlrXKINMQohZyESLIrVMbJW8oRwfZvirG9H0FU7AMZm3mA84abofNgkG6lBV55dvsa5uF+9f/F7drzLv7mlh0wtdmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/3heN6c; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ld0t0MCZdFWDeHr8v20s8LZMzQ8qUxb7CPljl24EWLRL4CLsDvGw34fwEamGCZztpV2p09HRUKHYEh3w99dmJsGCbYIz9kZAyuF8FoufK62zccdGmMq0SKN4cX85Owz4lWgz8BbHEa2E0nyew7EoVXXxjPytgx7YLqgR8ghBx3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qc8Q/Txn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/3heN6c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CB8C4CEE2;
-	Sat, 10 May 2025 10:47:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qc8Q/Txn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70F9C4CEE2;
+	Sat, 10 May 2025 10:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746874043;
-	bh=JzL8VGVYtgBK9zzL1zBp88LEkrJDtaAyUWPZRfOo2iI=;
+	s=k20201202; t=1746874075;
+	bh=guKgikhGJmIEydKvKvWq1qzyZ10YGC1G6ISdpGSLVSc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=m/3heN6cdXU8QOX+GHST5lV2WW1Ck0kp1ZMMr/W6cHvz21qQX6C6rAa4A2TokpvF+
-	 bmyVhibgajwIBcMtXjuuvdjefh6qIDDhaLpLrzh+cdSL6RjAnmo7tw15L87Fu/tDWi
-	 E2zhKDPAHaihP29zx+gCW/cAZuAkf0/nI4rU/kkHxpy0XyR2+TE0tVmLA9mFGIRFXD
-	 CuoH5TOca97QSG8BKlbCivLkIEdeUwzomnjhQXD0gooweGM3Km3HlqmgcdysOHF1L3
-	 CJHqGV4P8StZkk5d+C7EYAXBh2k9AR3EoVOxi8VYz/QuiWsO0UFJkoVJLBxTujEiyu
-	 Fq9XysRI6S/dg==
-Date: Sat, 10 May 2025 12:47:19 +0200
+	b=qc8Q/TxnLqKmINezyP6ENygxELgSfT494xra/Qp2m0WVN8MgDY8PwqTLVdHCyxjio
+	 6/js3vBzv1KUgtl58rSt57XE6uyDahAvh4FNVuPwq+TBYmIjZ9fAy2c/uQJp8YmP6u
+	 JXKMexJfJQ+aWwzLKgQ6mYPluRzyVWTso9pF+gtgyYutG+rZz9qRHk8kX4cGLAKDdA
+	 WOxJL03KMxI/ldDOch972BSh+Essu+R6uyYdeJsLutXquPY0VI2GpwUIuN7+MqnPRt
+	 wOZ9WU/0EWAxKSbb10oMP8s9pFmxVmjDYNj9Zc0VXzeW/hj3ZWpoKKm48CGIclnMMJ
+	 t2Q/182CzXEMg==
+Date: Sat, 10 May 2025 12:47:51 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Alexey Dobriyan <adobriyan@gmail.com>
 Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -45,6 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250510104751.axOpzaKTXJImNaLcUIX9ZHTjSfJbz-BUVlUFySyeMnk@z>
 
 Em Fri,  9 May 2025 23:34:25 +0300
 Alexey Dobriyan <adobriyan@gmail.com> escreveu:
@@ -65,7 +66,8 @@ Alexey Dobriyan <adobriyan@gmail.com> escreveu:
 > +If you must use ``typedef`` consider using identical names for both the type
 > +and its alias so that the type can be forward declared if necessary:
 
-Better not, as symbols with duplicated names will generate a Sphinx warning (*). 
+Better not, as symbols with duplicated names will generate a Sphinx
+warning(*), depending on how they're documented and used.
 
 (*) It shouldn't, but there is a pending issue on Sphinx since version 3.1
     still not addressed:
