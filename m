@@ -1,143 +1,140 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1502E2747B;
-	Sat, 10 May 2025 07:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0F31DED63
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 07:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746861957; cv=none; b=P+okNdlLYqHaERBrwz48ONMWlyB9NuR3ytlupMrl57Rqh5gM/wK5AA7NEkMArn0tJ3clpeE4hPUc4+oBvENvyzXaCTMb5UXKdoJTjZ/oYG79QHLCRWx6viB86RWJU+LWaK4vzmAZeS1Dgk97I5myCQn/M7g3b5AYCnG4iMGhl3Q=
+	t=1746862000; cv=none; b=NDnHDBw+oUlH18c1q/11XKq0ybVcRwztcio+L18wO8BqjlBgbt0HPdtlzAQF1GuofFrJdfFEs0Qyn+k/ZXw83cWgBrElEKtqyIPBt9Lv8FHe/uLmHSLrwUGeBZ4gXLUIoOXJ7CzVv++XGbi7ORdjIuTALBTSE5BtZK6x1pboFkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746861957; c=relaxed/simple;
-	bh=LKQuDg71kuc86yeHdsMwQmlJfEnl+jVcYcFCHZUJGNM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GzhGPMITCO/J659iNBSndDww7uuesUK9/ZYI3pBLiB1YUX9m92EUBJQCOR/kl6x5QJn6Boat3DQ2obDFFjHoheGLULU62fl2X5OI6wtNADrqI6ETIMOJWHbiCzZd72dIi1BpG2yuVoQPb4rW5T7QYovJnbagyVDERYcSfaduaXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KERH6vmo; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746862000; c=relaxed/simple;
+	bh=IsstClPVLUc7visattUsTCDVc2Bga5dlryPcSOhxpEU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DA4omCy1lFOZlX9DOadx5jsO12w4xexJVwKLiZ8sXhxfh49ImxpHgKK67EQOIpobKqvdEO1ZdsmbAWnZosFrHfLVp4XMGFzIHYX55zqWd97UMDPUWl+Z9MypOGmT84E7Mff2MlLuwBwlutEhFNxXTw5uA2n5tIyJVzrR1tJwg88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t2qBV7D6; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KERH6vmo"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54A7Gkxj024974;
-	Sat, 10 May 2025 07:25:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WcYqoQI9erN/w1hZyVlXxbtVQPPAA2u3o/mXslFUsLA=; b=KERH6vmoe+b5nFb/
-	nPAuO3eoFuySiY6XRz55rRLHRJtGCt6mNRKXmDk/PiJs1bWTlSx0CNbWO9hnRVlr
-	d59zS0F7ekkTeDfSdCOzm5RqKlBwqmF+fMJ/fccxPk88AmSpO818M0ubywGofh8A
-	+X2SBEZN7XpWWCjpFMn4+nKR9yx0fx5X+nPuctc4tegE07pyKF8Hfx8n1tUQ0+hf
-	Txhvj5+JjPdjInKgQ4t1rF5IYNK6MV4XNxhrG2In5yvopctCSZZZ2+432EvOLZTm
-	6BmKNujM4KSQxpjE+WcAv88EO6QsiVmZvhY8woFOebd4XPoFVuUWcoObpVwmbLn0
-	YI/2fg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46j03b85m1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 10 May 2025 07:25:36 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54A7PZxl004605
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 10 May 2025 07:25:35 GMT
-Received: from [10.204.73.14] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 10 May
- 2025 00:25:30 -0700
-Message-ID: <6449b4ed-4ae6-453d-a717-8b0771ecb475@quicinc.com>
-Date: Sat, 10 May 2025 12:55:27 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t2qBV7D6"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e732386e4b7so2937245276.1
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 00:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746861997; x=1747466797; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zSts27GOHs7qkbKGSUS9YSDd5Z671TY7T7HU1jkBF1I=;
+        b=t2qBV7D6U5I7QMpxQyGcA+2yegxB72ntibEkOjazxjYPeJDNCDRtrn56O8HMNlgcR5
+         FpLVgcAi3FUFEJGokHUKxGjqiacgDzIeF5noBS7BoRRg+4ZUTSFKO/tPePeOAvlZQvsk
+         MIZNv2ZfYK/ksuSuRimGxfjDryMZFHuTYDR7DRySmA7ngQ1dUsvVQEOAEnjjPIJta9mh
+         1g91zNIEWIPD+Tb8GeCDE4F8t2eHWcNNAdecNFEX3Hhqyfwg4Ur9JSnX3vSgPlOGPZD1
+         2JFk+hI1itN6gL/aqf2MN36IZ1dCg8S+1RSv67M20AMHEYoSXcMZNLFKrcdD6zi0ZL9N
+         xP9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746861997; x=1747466797;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zSts27GOHs7qkbKGSUS9YSDd5Z671TY7T7HU1jkBF1I=;
+        b=DOmbAtuKID6e9TQqs1QErUcZTmTCov8iJwaqDeBf0Y89Iwx6peDja8V/d7N4nKIFUI
+         jJbxu/PXlVIjhcbqpJ65mOBcOSwG+ubq8vrBaHPBVLA7AQyElgJGdVqREoZoN1SKNcE2
+         LWZRcfuxoOkHMzTz1TE4Ik9iotYx+KmHjbXkLDxUEdKzMuiDpC9tlvExvziObcmNED7v
+         RwT1NS9J3NQPihcyN7AdT/1iUafeiX3oBicfd3UIcmRGP7MXjoVoPcWXuohwe7aQ8fLH
+         2CB16zjmgJKb0PjZbuEpYHBHOiU7YoopS85cdJgIp6PdR9zepAavGqlaDbCwgVoMyDwQ
+         XO8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV+07mzcLE8wAyEuPJUkwgt08jh5wGul7RmqCJPiNAnXyWTgutFR8WzSZUnhkJvYnmv3af02dtdZYdEUII=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6yHmQyk0wMk2xip+uI23hosGGtGbT2fcQSj/3js4hswdzhr1j
+	UK3Bupy8LDwiDZphDGueV6QesAyqJKeQX+Oq6wnMk4PzENiysqPjq2WVYoJ5LDn8oiTuhlU1EZw
+	+MWZJ3ZuCVpTlZhpJhLN38Z3FwLfRugxdao9P8g==
+X-Gm-Gg: ASbGncsDVcZUjYmT9wY/CzcWZo63Fs6fGoqkxHzklFBlB0ycZ1UaqtD01UgWSbddh8L
+	q7+7G/d2yUqaEgvITe6zFqZUgvVrbwd6tQDuXsE5TF+uSKMC0lcK3fRvr9FufOtQpTyf7W9ssfU
+	U8wm8/QLJT1etjnxMauCdKZTdKpRFUGMfB
+X-Google-Smtp-Source: AGHT+IHgBd4y9JeTiyphse47nrob8CWwmAtJD/GkOKCnuv2yJ5ga46vbAkHETH7rfV5vl6KLnxpaFgEyuxCKBcbzPao=
+X-Received: by 2002:a05:6902:1009:b0:e75:bea4:5eab with SMTP id
+ 3f1490d57ef6-e78fdd612a4mr7925554276.43.1746861997224; Sat, 10 May 2025
+ 00:26:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC/WIP v2 5/9] media: qcom: camss: Add sa8775p compatible
-To: Vikram Sharma <quic_vikramsa@quicinc.com>, <rfoss@kernel.org>,
-        <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250427070135.884623-1-quic_vikramsa@quicinc.com>
- <20250427070135.884623-6-quic_vikramsa@quicinc.com>
-Content-Language: en-US
-From: Suresh Vankadara <quic_svankada@quicinc.com>
-In-Reply-To: <20250427070135.884623-6-quic_vikramsa@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 55a1xE1HaKYhcbz2PAI7jSgNUoWpaMT7
-X-Authority-Analysis: v=2.4 cv=DOuP4zNb c=1 sm=1 tr=0 ts=681eff70 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=XdGAH4ZiSAM6yD7sjqcA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 55a1xE1HaKYhcbz2PAI7jSgNUoWpaMT7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEwMDA3MiBTYWx0ZWRfXzyrQ3ieUETXZ
- ze01T8G0Vw7w/6q8/RivkFy6f+J0qZauGqmUWNRiirBLxJh4+3oJZhBkyxNEo4bDuMTs9vlZ8sG
- jiYQDVy6mGdhJDBctZFONHwlSLJO9Mn5bP/hmPimIAs685PAJiQiKmONSF32E+oRqyqTyb7J9Gi
- Wmkk6s01ZMx5xDFfhC7xZAoLhTTkPJQPobRNQ5Noat0AgAcxwTRU/jpVs07Lkec0ulH7S+bn3tb
- Wc7Q8a6RcVWbsdUO0Im/Dq7nfY8TUuh3oibk53CVRWMuwENYkLJp2KjbCk8v/RJcOtSIxWOWpA0
- hyZ+CaQyEvFywuV7oNnnJMd4C4FcjvEYDj73QsRi/OwjiMUv4yAFWCCpG/ejq0UaAMuOvLDbDDB
- ApSF63xCRtYrkNmgjjK3igww1NApzeWH1Qp10sFVPhoRA1DJ0VWv+o0q8nBoY4pbOXDwvhDm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-10_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 adultscore=0 spamscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505100072
+References: <20250509115126.63190-1-byungchul@sk.com> <20250509115126.63190-20-byungchul@sk.com>
+In-Reply-To: <20250509115126.63190-20-byungchul@sk.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Sat, 10 May 2025 10:26:00 +0300
+X-Gm-Features: AX0GCFvyCLf2YkLqAu7ZNrSMk-Tgd-w0sQTqK105Q5BnOqCAJU2n8_lO-l0LyAE
+Message-ID: <CAC_iWj+vweve6V33cqHGZ6tSehs85vXd7VKAGNiEjLoK2pc+PQ@mail.gmail.com>
+Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct page
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	almasrymina@google.com, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
+	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
+	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Byungchul
 
+On Fri, 9 May 2025 at 14:51, Byungchul Park <byungchul@sk.com> wrote:
+>
+> Now that all the users of the page pool members in struct page have been
+> gone, the members can be removed from struct page.  However, the space
+> in struct page needs to be kept using a place holder with the same size,
+> until struct netmem_desc has its own instance, not overlayed onto struct
+> page, to avoid conficting with other members within struct page.
+>
 
-On 4/27/2025 12:31 PM, Vikram Sharma wrote:
-> Add CAMSS_8775P enum, SA8775P compatible and sa8775p camss driver
-> private data, the private data just include some basic information
-> now, later changes will enumerate with csiphy, tpg, csid and vfe
-> resources.
-> 
-> Co-developed-by: Suresh Vankadara <quic_svankada@quicinc.com>
-> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
-> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
-> ---
->   drivers/media/platform/qcom/camss/camss.c | 23 +++++++++++++++++++++++
->   drivers/media/platform/qcom/camss/camss.h |  1 +
->   2 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-> index 467f7ff4b042..9e0e1bf855bd 100644
-> --- a/drivers/media/platform/qcom/camss/camss.c
-> +++ b/drivers/media/platform/qcom/camss/camss.c
-> @@ -2483,6 +2483,19 @@ static const struct resources_icc icc_res_sm8550[] = {
->   	},
->   };
->   
-> +static const struct resources_icc icc_res_sa8775p[] = {
-> +	{
-> +		.name = "ahb",
-> +		.icc_bw_tbl.avg = 38400,
-> +		.icc_bw_tbl.peak = 76800,
-> +	},
-> +	{
-> +		.name = "hf_0",
-> +		.icc_bw_tbl.avg = 2097152,
-> +		.icc_bw_tbl.peak = 2097152,
-Recheck these values
+FWIW similar mirroring was intially proposed [0] a few years ago
 
-> @@ -3865,6 +3887,7 @@ static const struct of_device_id camss_dt_match[] = {
->   	{ .compatible = "qcom,msm8916-camss", .data = &msm8916_resources },
->   	{ .compatible = "qcom,msm8953-camss", .data = &msm8953_resources },
->   	{ .compatible = "qcom,msm8996-camss", .data = &msm8996_resources },
-> +	{ .compatible = "qcom,sa8775p-camss", .data = &sa8775p_resources },
-Address compatible string based on DTS comment
+> Remove the page pool members in struct page and replace with a place
+> holder.  The place holder should be removed once struct netmem_desc has
+> its own instance.
 
-Regards,
-Suresh Vankadara.
+instance? To make sure I understand this, the netmem_descs are
+expected to be allocated in the future right?
 
+[...]
+
+> -
+>  static inline struct net_iov_area *net_iov_owner(const struct netmem_desc *niov)
+>  {
+>         return niov->owner;
+> diff --git a/include/net/netmem_type.h b/include/net/netmem_type.h
+> new file mode 100644
+> index 0000000000000..6a3ac8e908515
+> --- /dev/null
+> +++ b/include/net/netmem_type.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> + *
+> + *     Author: Byungchul Park <max.byungchul.park@gmail.com>
+
+Shouldn't Minas authorship be preserved here?
+
+> + */
+> +
+> +#ifndef _NET_NETMEM_TYPE_H
+> +#define _NET_NETMEM_TYPE_H
+> +
+> +#include <linux/stddef.h>
+> +
+> +struct netmem_desc {
+> +       unsigned long __unused_padding;
+> +       struct_group_tagged(__netmem_desc, actual_data,
+> +               unsigned long pp_magic;
+> +               struct page_pool *pp;
+> +               struct net_iov_area *owner;
+> +               unsigned long dma_addr;
+> +               atomic_long_t pp_ref_count;
+> +       );
+> +};
+> +
+> +#endif /* _NET_NETMEM_TYPE_H */
+> --
+> 2.17.1
+>
+
+[0] https://lore.kernel.org/netdev/1549550196-25581-1-git-send-email-ilias.apalodimas@linaro.org/
+Thanks
+/Ilias
