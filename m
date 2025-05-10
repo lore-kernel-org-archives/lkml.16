@@ -1,104 +1,122 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499E5189F3F;
-	Sat, 10 May 2025 15:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B6C22CBD0
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 15:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746891146; cv=none; b=Xp4rK65w9vN/9b6EuNIedcJ5ls78swUFLTGfCNQYo2uymzr2h6mF4HCwSSrQR1LugTacX9P2qiW9+6vsNA3AWEUssbZyKu/kXCs5LjAHwehmNJFV5/C+cA8nwrs0wbLdqtjk20qTB9XV4o4WeU+qeCiTgQP2SmWZeUfK0PZf6LE=
+	t=1746891490; cv=none; b=QuUEUm4Ju1QYyb9fIEiMLg/Q/2nj436HoGcW9XiBFR9rYy8k6IHcCO1tzMMKX2JrMYNjgQUN/N3XdxZ2g0D5RVJA4wm2ehdtwwgF2SslmFX3aCl8QVjw2ogMNvwrzolhhxvKTY4Qpn4G3m79+xrfRZ7qH9CtVZwbrRiygUBffIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746891146; c=relaxed/simple;
-	bh=Qc05YvQd0vI3HlBbTp06BdjeXOC450faijq9mN/Ykck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qZngOxqnasLeEfeQYEmN99reeGeunlxXggxkOR+C39tCCwsLnu17ikFSYAkJmk3wa19bRoYBCZPQ57f00PYB/vCliQ93JLpq/xsB7VlBSQKXsz0txONGNVvYtEWwPRMWuUjOpgBEiia+Cn0e/L0WNVHVH37dkAqpGMxzIR+J784=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZW8Zp1FQ; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1746891490; c=relaxed/simple;
+	bh=FI4bk2uvupimMFJpuFZh5GpeoaWpAnt1WVk6KoMoWlc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nEg87PAKX44BE7S7qZ1P7rwlWSUP+5pVbp7TuYQf4XlAmGeEs1l3LIZpxvVfMIX1Mscv0Lr6sRWBC7+9siXWuPYcTFgXgfP47uE3ddYeG6UsYHZxLgI0FSCLv924FdFvgoIDnWT8ERy495TyxDESqf10lqOk5YZIl0EZZhphvzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rtub3K4A; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZW8Zp1FQ"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad221e3e5a2so243446166b.1;
-        Sat, 10 May 2025 08:32:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rtub3K4A"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbee929e83so4813511a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 08:38:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746891143; x=1747495943; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JO3YataffYPrXuj75gcg3TSw3IJYHLUJXACaoC6+gBk=;
-        b=ZW8Zp1FQsqywg3DSAPY9cwpZDObW/i+a7FfpYenJpJVR/mJ5Hk6HZwuSdvqkmg0tgJ
-         +OAd6LlnwZgb4ZyA6eIasz6MT1gkC+thMGxeKcop7V7capQLruN/lpHgpb/XZhUMNZRU
-         b7ynMrI+7Hgx3yVjAztOqjeSCFAqP5HFgm0DqvEy6Mi74FEEpW2rXzZkd5vtTP+qZrxW
-         ozjZEma+hIaEnpzxuNTg0ARylZO7ngj0pMJrAnEGLeiJc+Y98u1pTC1RVktKetpEqzQ6
-         L7CIT8oQtZwYnaMvYsz5kqeCTQB0nDVyxmWILQwf83JvXMAwGjFLhd5iKFmsm1v9lpaw
-         rJUA==
+        d=gmail.com; s=20230601; t=1746891486; x=1747496286; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aCRLY6PSOaTqAxmVdWEjXCR36yqNhZAvTLdz/IG0MaQ=;
+        b=Rtub3K4AF6NC1yihSSVxDtQuFRDfqmriCBPGi2XdwOceG9HzQizqiZVcPQJIq2ypc0
+         nWV/IpYMx/0p1+TZha2y61DiEiTnBVwwX8Hz2DuO9tPkm9qcINB0um5oH3Wpyzp5vsTS
+         Wg+Mbat0uumRqekxtE/duphTOIll+A2rdOEtNeT5TXBxvI0Lq5mYGxdfRqXpBIItIts5
+         /3gVqbHaaaMaG54o9JC67r/c4BCzVPHmMNfIbj2pOo8z6VnUoEpzcZJbd76xE+5bIu9O
+         U46qyVBpATjkW8G6Jh+awDRtOLyJAigtUkfpYCqCCGweDrmj1FNTOKFtLdNEDYvh9gRp
+         rZrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746891143; x=1747495943;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JO3YataffYPrXuj75gcg3TSw3IJYHLUJXACaoC6+gBk=;
-        b=Q8TM3qCnIbaPZGdl3bym2o6VV7hdyYyvvSU03htxT0VOqk2UKDyjJaG8GgXRju13Rn
-         qIwZmMiC8w/6DiWE2o8zU4rSLHmic9z3Fn6G61PZmo2E630MsjJ6uHJUHVQss2Kn6rfn
-         xcpqQFXtUKEuQUjYJVLj+noiPyy8KVGn1SsMCqYJz7OoDKbz0RDx2Z2EC6xHNbP3Q5MX
-         2l0vIJZmzQGtvtA+PvwFiQhekUcPqk8+1LkZu79Y8uDRkfpH0/997RV9elF2gwyqrbs6
-         +fUCtjZbaLr3U0dKZ7mMv+YAf10OOCbdDCJWGHU2FtDIKNiRjXGX30f40GrbQEER50uL
-         v1Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJbYwUjWWRkqiGJ+E+LZm7XUktIdXsGkQroihzdlPRWlUQtByz16Ul5ie8Hrr2p5orN3CVBD/Ntj8KWt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznIQ7jzEiA4Alfa8P7LLwsZh5mxww7Wg4JKc1xChpnksk/VY5d
-	HbL3kZS3+bSGB7a8TVopOqJSudgNc2opg15WwJ+dIo70XEEihZfK
-X-Gm-Gg: ASbGncu6NFusK1Sp97DWSYbPfiAOiMqyiFrMuteg5wCndoKDOophNCuS9hilYZ4PapL
-	bLYknkgVNKFmn8FcTsPn+QmZdslVCNB3Loo9pLttG5b0Gl0CZ/MRKDTrQSEQMWa9wp50+TeXl+G
-	jFf/ssHDWvElJR+Lx4scgYqGYbDAg/jbY4cHkiP//6hJMkiVYMX8+5c52sxGX+e6/1Q8MHQHmaY
-	/noozNmQbUbbz2k7QhIPobqQm8F42/YA3PDuwrxJohmvKdmpuQhBHrkZOiFYbDKg5V/VFa1eg0H
-	8lUrvIM+G//tK8M7CdZhlqijYzHMp36vr2s3kb9oqYFEhbJuFNRju3pwn1Gnb7VD2hSmVD6Nj2k
-	=
-X-Google-Smtp-Source: AGHT+IEOxR/l/vntZrk62iCLv8eENeEgSRGDMZXjwZemo8Lbpx+AM7PncOIJtTyup5q0sHR8zWQlqg==
-X-Received: by 2002:a17:907:940f:b0:ac2:49b1:166f with SMTP id a640c23a62f3a-ad2192b7bb7mr718329066b.52.1746891143219;
-        Sat, 10 May 2025 08:32:23 -0700 (PDT)
-Received: from [192.168.0.131] ([194.183.54.57])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219746cf4sm332752466b.102.2025.05.10.08.32.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 May 2025 08:32:22 -0700 (PDT)
-Message-ID: <62a74e0e-f5a1-40b5-a855-6e9bd620cbd5@gmail.com>
-Date: Sat, 10 May 2025 17:32:21 +0200
+        d=1e100.net; s=20230601; t=1746891486; x=1747496286;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aCRLY6PSOaTqAxmVdWEjXCR36yqNhZAvTLdz/IG0MaQ=;
+        b=bs7kyKoOk65mFXs9Ieuda5VDUJAXedQ1lXCksGA9zFdp9SM8X8iGRXR5WV0jYERUSB
+         XyNdkyC5uxrXu9wXMCW8WzZofCwOox4dUNnGrjdBNO/XVc7U/m34dSivxODWFAKYBjFZ
+         Ymv7YlQ3k9uSmBLtk1xQuRl49unETv+BWOiVTLwIyZ8aXTc3M7HPqZOdrhh8fFWb8nkf
+         9SlYT9zk75/g4HnBXmhwbfT4o2GGy3EvFia0xToHYLhvgyzKcB98bNn5KHcX8rMZhT4D
+         Gv23ajChgHMm70QQHnbHClIC7iOQ3TsBH4CKBbYF0Y7Yru9OAPM2/7q2GStVHOk8a2Yc
+         PcgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWr2HkTdC/gI0WOD/g24TR2tCjwIk2rCccig//JDCgPpxiUaDp1YiiBf0YxRcimdMgvlbbRQ+3REVDCD1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr26yaXciLn40Wbgwx3SAyqis2qwpBIvxmMoUS4FOfnmSGzKgN
+	E5icp3s8rpQs0VUSX+dQXGT4B/tQiV9a/7eULwGdgd3p7GuMUQOSteew8A70dp1V4A==
+X-Gm-Gg: ASbGncsKe5HBEaBNELHgePJ/O8M8Nbv3d8IEtUFZIH6V1/wnEjAiOLPOVzshq/vjTqK
+	0G2LoLPxf/hV6fRDORICi56/GkN/KGJm+Fl7YMPeAxWveAO6GT9GJcp3ua8zpeanj7RRuL67bRM
+	4Y3PC6MYfufo+D4b9QI2mOY/MlykpyNSU9lolKck06F4nVJyXdENW7x7jfMjU0y+t6odAkDXHtt
+	iKGQkw5LgVwjiVTQWVhuRJ3TNiJpTcnFbwG9xyFg1hd9M5C/8dgFIL2RXydA4nnK6TsufJ4ub7h
+	BWQ7SpIYWga+e2zASVq8QPYvaTpFuBO5bKXsEuYwNuARw12DWTvJuxzrpwqQhl5geqRHD6CTwIF
+	opigqPyIm2kRBZEYtVRdUVwbc3fbUN1hEFIIrkLINVl1PgQBlKEriS034WC3NJVV4nuhB9PcvsE
+	9A3kEhvOjimKU=
+X-Google-Smtp-Source: AGHT+IGFdMZcsOY7f2tt7vpbB1oV8Xxo5s/81U/bkxLxz5rk1rLAGldrYx5xLBlmMnknbg6GEMlasA==
+X-Received: by 2002:a05:6402:90e:b0:5fb:1cbb:9390 with SMTP id 4fb4d7f45d1cf-5fca081bc55mr6639155a12.33.1746891486412;
+        Sat, 10 May 2025 08:38:06 -0700 (PDT)
+Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-79cf-0e0d-6e5d-219d.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:79cf:e0d:6e5d:219d])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d70e296sm2986376a12.75.2025.05.10.08.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 08:38:06 -0700 (PDT)
+From: Thomas Andreatta <thomasandreatta2000@gmail.com>
+X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+To: dpenkler@gmail.com
+Cc: gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Thomas Andreatta <thomas.andreatta2000@gmail.com>
+Subject: [PATCH 1/2] Staging: common: iblib: Changed ibrsc function type
+Date: Sat, 10 May 2025 17:37:59 +0200
+Message-Id: <20250510153800.130974-1-thomas.andreatta2000@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
- multi_index
-To: Johan Adolfsson <johan.adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
-Content-Language: en-US
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-In-Reply-To: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Johan,
+Function ibrsc type changed from void to int.
+Returning 0 for success.
 
-On 5/6/25 12:39, Johan Adolfsson wrote:
-> mc_subled used for multi_index needs well defined array indexes,
-> to guarantee the desired result, optionally use reg for that.
-> 
-> If devicetree child nodes is processed in random or reverse order
-> you may end up with multi_index "blue green red" instead of the expected
-> "red green blue".
-> If user space apps uses multi_index to deduce how to control the leds
-> they would most likely be broken without this patch if devicetree
-> processing is reversed (which it appears to be).
+Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+---
+ drivers/staging/gpib/common/iblib.c       | 4 ++--
+ drivers/staging/gpib/include/gpib_proto.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Are you trying to solve some real problem that occurred to you?
-
-The order of DT nodes parsing is not a problem here - we save
-color index in subled_info to be able to figure out which color
-is on which position. This information can be retrieved in sysfs
-by reading multi_index file.
-
+diff --git a/drivers/staging/gpib/common/iblib.c b/drivers/staging/gpib/common/iblib.c
+index b297261818f2..8b4280309ae7 100644
+--- a/drivers/staging/gpib/common/iblib.c
++++ b/drivers/staging/gpib/common/iblib.c
+@@ -418,12 +418,12 @@ int ibsic(struct gpib_board *board, unsigned int usec_duration)
+ 	return 0;
+ }
+ 
+-	/* FIXME make int */
+-void ibrsc(struct gpib_board *board, int request_control)
++int ibrsc(struct gpib_board *board, int request_control)
+ {
+ 	board->master = request_control != 0;
+ 	if (board->interface->request_system_control)
+ 		board->interface->request_system_control(board, request_control);
++	return 0;
+ }
+ 
+ /*
+diff --git a/drivers/staging/gpib/include/gpib_proto.h b/drivers/staging/gpib/include/gpib_proto.h
+index 2c7dfc02f517..9ef1cc247289 100644
+--- a/drivers/staging/gpib/include/gpib_proto.h
++++ b/drivers/staging/gpib/include/gpib_proto.h
+@@ -38,7 +38,7 @@ int iblines(const struct gpib_board *board, short *lines);
+ int ibrd(struct gpib_board *board, uint8_t *buf, size_t length, int *end_flag, size_t *bytes_read);
+ int ibrpp(struct gpib_board *board, uint8_t *buf);
+ int ibrsv2(struct gpib_board *board, uint8_t status_byte, int new_reason_for_service);
+-void ibrsc(struct gpib_board *board, int request_control);
++int ibrsc(struct gpib_board *board, int request_control);
+ int ibsic(struct gpib_board *board, unsigned int usec_duration);
+ int ibsre(struct gpib_board *board, int enable);
+ int ibpad(struct gpib_board *board, unsigned int addr);
 -- 
-Best regards,
-Jacek Anaszewski
+2.34.1
+
