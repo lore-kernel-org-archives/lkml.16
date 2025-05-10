@@ -1,186 +1,222 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04FB1448E3
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 23:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95D1282FA
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 23:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746920190; cv=none; b=k+S7XSmhfCnBy7xz+tyPwTZYIBjVImmE/Q4RBpV34uT7elP32J5mLe4ld/2uhuDZMeS+b9hFlekEG5+scP3Qr0J4HBgoSOVM/ejJU4WmBgycCGjLsBIi+zNkNvGL2NXoPADCM3fQoJjuz5nBxyluh+NGLdZzVLQSKSltqdoXaK4=
+	t=1746920679; cv=none; b=McGZ/u2du2yNMU2dtk0yzh4AYaAflnxn/xJYU3Rhir59vbgLewH29hdjhj19y/ZDSewkFu60M0SHibTqWIFAxrkxykuLxTsJqOuVvmsoXD4du4UaZTovPiE6TMaCe25sxAjkAp15DqHPzCrhuM3hTNCIFWifdKBGtriTtXCkQhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746920190; c=relaxed/simple;
-	bh=nhd1BIQqUw9sM1KdyJI6OM7qVmHO1GVGYA/ycl8n8CY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=TLR+gUhpNLiK+8l61TtjyTd8aEI4mCCO680KErEdzOOtW0vyz1a2lG43bcr3tA0yACJtZAudJ0g4KX1n5GiboFtwneRVeEt6181sn4S4ddwoJXwUQFDYRKN/wOe/pMHHa6RsM7Y8UAQHOirb9fKwAaqMe4sKEtJQwAdaIqZxMvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so42008305ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 16:36:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746920187; x=1747524987;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jnbq8VH5wB43oH4o1F7g/3iQ9AWJHMQBNtcAuCJTTH4=;
-        b=dqlKy6njpVWNHrrrvVj1ND0689aXbA/pTFdpTOBfSqvflAtJRJw+ETpCUowS7VOkea
-         KwIgH+KnahINYac597mWt1bdwcUHk1mkyED/0jtDufZSDDEdqkeReuQ4N6uTWs7KVjor
-         dvGaEekjk4Sk1U2KfM4+RFaPueK5iMvskHeawLpaeUd+5T6fj2PW8P70zSKPxQZGOAhq
-         aNa89OB6TfqUtxKxqNMJhWUjMaIWBBgdz/Ah8Obg4BGUvJEniK+HnJcIUc7LmYY3Pj3a
-         IDo3j5DTIXFaem7GbEQdmB7dj4ZOGH68qi0/7QS6sSoxBqHixBWH+ttHQuXhuE7JKwdI
-         CH9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbM5z9YzqvWvRDYlRNA7bMjr15HTQuAF3ofjaDFeU8kqT2ywS0N0VtdopKn8QfRYlVCe7XkhNMDzPYSOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+65Hv5uMo/r5n1p4e5JsJXcydYcmQ1aAcpZXkPULfsE65vO38
-	MCCxCpSFcbNrbVMuNB3qRY0zoVGHP4LjR3weX9LHNJThChKEA5iJP5+qo762o2IISL/pEgcH1SY
-	Q2nnnFGvIFiaJS9EqMLAmocP4yBMCVn1GKMKLaQTY7ndtgfg2Qr9UffQ=
-X-Google-Smtp-Source: AGHT+IEWO8Wk2iEyeVOZB8Az2t48YFJpUGjpsS2nsP6tx2BE49SAfe2Wv86vPSr+2Mn/Fk9BSQKANWFOcr+uyINERbEf7ka2G1L2
+	s=arc-20240116; t=1746920679; c=relaxed/simple;
+	bh=OcrjuwKmH8gRN7V43BS4Upp3Th3waCQG80IGh2FoVz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=h94DhOlz2n1NyoDwhhYXH6BNxdLDCG6VJULSQUvFoQ7wUlpqxbhLS8mA/gvl7XybbEs9ws+T+fgsMX9GrmG5UVqQzWj0oipPcFFAyP8JweJRwNpUFV7EYksXvD/5QfNLJ67/zvzuW6V4Bsf7FI/lrE1zS2g/kdNe0lecIacBY18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JkJM9bR8; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JkJM9bR8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746920677; x=1778456677;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=OcrjuwKmH8gRN7V43BS4Upp3Th3waCQG80IGh2FoVz4=;
+  b=JkJM9bR88wAKO2g8PODF9Abcm6nEA1e1huG3PdFQKXj2Gd0cNA+F/XBO
+   F10Okd+tUmw/2nr1tYJAJmoHUXWABKFnALD/CNLps9R9AzRnrJrQlcNvC
+   NbeFsGjQOse3jZ5mutuddiiGF3JQxeU7Lt4J2zhnZptbp/4l4siMaOAP6
+   N0N8q/uMnhUktNsel2UaXg+/yiQP/mPjrmFU47ZkaZR5wvr5tVcWk4emj
+   C3Iu9b6zSFTMMOlA7+zOdSHI/HdClza2yjBsipMiGrwqPM+hXzEKUXr5y
+   km8Aksj+L+zAwu7Ou8crvnKctB0Anz/TYB7RGaKbDyVOHdoymPgkQeT34
+   Q==;
+X-CSE-ConnectionGUID: AZABKGSNTVCJ5k2RswBhag==
+X-CSE-MsgGUID: QmcM5a0DTCeec1AYHwX/Ig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11429"; a="51394163"
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="51394163"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 16:44:36 -0700
+X-CSE-ConnectionGUID: gwdmZW5LQRygAzLkKRwe8Q==
+X-CSE-MsgGUID: JkSDOhp1QDu43oWTYiL+Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="136858507"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 10 May 2025 16:44:35 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDtrs-000DTj-2F;
+	Sat, 10 May 2025 23:44:32 +0000
+Date: Sun, 11 May 2025 07:43:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jani Nikula <jani.nikula@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:57: warning: '_sel'
+ directive output may be truncated writing 4 bytes into a region of size
+ between 3 and 13
+Message-ID: <202505110731.zGNzAnGK-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12cb:b0:3d3:f27a:9103 with SMTP id
- e9e14a558f8ab-3da7e1e26camr110347245ab.1.1746920187534; Sat, 10 May 2025
- 16:36:27 -0700 (PDT)
-Date: Sat, 10 May 2025 16:36:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681fe2fb.050a0220.f2294.001a.GAE@google.com>
-Subject: [syzbot] [io-uring?] BUG: unable to handle kernel NULL pointer
- dereference in io_ring_buffers_peek
-From: syzbot <syzbot+5b8c4abafcb1d791ccfc@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,
+Hi Jani,
 
-syzbot found the following issue on:
+FYI, the error/warning still remains.
 
-HEAD commit:    0d8d44db295c Merge tag 'for-6.15-rc5-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=179f282f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=925afd2bdd38a581
-dashboard link: https://syzkaller.appspot.com/bug?extid=5b8c4abafcb1d791ccfc
-compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d984f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1774339b980000
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   345030986df8f7712f9e4c00fe61e145c8984ef3
+commit: 03ee752f00fd0daa082b43774cfd03a7f9a17385 drm/imx: prefer snprintf over sprintf
+date:   1 year, 3 months ago
+config: csky-randconfig-r053-20231127 (https://download.01.org/0day-ci/archive/20250511/202505110731.zGNzAnGK-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250511/202505110731.zGNzAnGK-lkp@intel.com/reproduce)
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/98a89b9f34e4/non_bootable_disk-0d8d44db.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f2af76a30640/vmlinux-0d8d44db.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a0bb41cd257b/zImage-0d8d44db.xz
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505110731.zGNzAnGK-lkp@intel.com/
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5b8c4abafcb1d791ccfc@syzkaller.appspotmail.com
+All warnings (new ones prefixed by >>):
 
-8<--- cut here ---
-Unable to handle kernel NULL pointer dereference at virtual address 0000000e when read
-[0000000e] *pgd=84997003, *pmd=df9a9003
-Internal error: Oops: 205 [#1] SMP ARM
-Modules linked in:
-CPU: 0 UID: 0 PID: 3102 Comm: syz-executor415 Not tainted 6.15.0-rc5-syzkaller #0 PREEMPT 
-Hardware name: ARM-Versatile Express
-PC is at io_ring_buffers_peek+0x24/0x258 io_uring/kbuf.c:227
-LR is at io_buffers_peek+0x68/0x8c io_uring/kbuf.c:343
-pc : [<8088956c>]    lr : [<80889cb0>]    psr: 20000013
-sp : df991dc0  ip : df991e08  fp : df991e04
-r10: 00012361  r9 : 00000000  r8 : 8498d740
-r7 : 84498a0c  r6 : 84498a00  r5 : df991e44  r4 : 84995000
-r3 : 00000001  r2 : 84498a0c  r1 : df991e44  r0 : 84995000
-Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 30c5387d  Table: 845f43c0  DAC: fffffffd
-Register r0 information: slab io_kiocb start 84995000 pointer offset 0 size 192
-Register r1 information: 2-page vmalloc region starting at 0xdf990000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-Register r2 information: slab kmalloc-256 start 84498a00 pointer offset 12 size 256
-Register r3 information: non-paged memory
-Register r4 information: slab io_kiocb start 84995000 pointer offset 0 size 192
-Register r5 information: 2-page vmalloc region starting at 0xdf990000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-Register r6 information: slab kmalloc-256 start 84498a00 pointer offset 0 size 256
-Register r7 information: slab kmalloc-256 start 84498a00 pointer offset 12 size 256
-Register r8 information: slab kmalloc-64 start 8498d740 pointer offset 0 size 64
-Register r9 information: NULL pointer
-Register r10 information: non-paged memory
-Register r11 information: 2-page vmalloc region starting at 0xdf990000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-Register r12 information: 2-page vmalloc region starting at 0xdf990000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-Process syz-executor415 (pid: 3102, stack limit = 0xdf990000)
-Stack: (0xdf991dc0 to 0xdf992000)
-1dc0: 81a4be54 8030cb0c 8495d100 00000001 00010000 84498a0c 00000000 84995000
-1de0: df991e44 84498a00 84498a0c 00000000 80000001 00012361 df991e1c df991e08
-1e00: 80889cb0 80889554 837e3b80 84995000 df991e84 df991e20 808931e0 80889c54
-1e20: df991e4c df991e30 8089ec2c 8050a4c4 00010001 00000001 8057abbc 00000000
-1e40: 00000000 84498a0c 00000000 00000000 00010001 7df2f2e8 80886a40 84995000
-1e60: 81cf0ca0 00000000 80000001 81cf0b5c 0000001b 83b4ec00 df991ebc df991e88
-1e80: 80886bd8 80892f38 849953c0 84995480 84995540 8495d000 8499506c 84995000
-1ea0: 84ae0000 00000000 00000000 83b4ec00 df991f14 df991ec0 808877a8 80886b7c
-1ec0: 8088e164 81a4bdf8 8499bdb8 845f43c8 00000800 00000800 81cf0b5c 00000800
-1ee0: 8495d000 7df2f2e8 840ae0c0 00000042 8495d000 00003517 840ae0c0 00000000
-1f00: 83b4ec00 00000000 df991fa4 df991f18 80888250 808875a8 df991f74 8495d040
-1f20: 00000000 0000173d 840ae000 00000000 df991f94 df991f40 8151ae48 8057a670
-1f40: df991f60 84404000 00000000 8281d1f0 00000a0f 76f57000 df991fb0 80234108
-1f60: 20000280 00000000 df991fac df991f78 8023478c 7df2f2e8 00000120 00000000
-1f80: 00000000 0008e068 000001aa 8020029c 83b4ec00 000001aa 00000000 df991fa8
-1fa0: 80200060 80888124 00000000 00000000 00000003 00003517 0000173d 00000042
-1fc0: 00000000 00000000 0008e068 000001aa 20000080 20000280 00000000 00000000
-1fe0: 7e8b7c70 7e8b7c60 00010874 0002f900 40000010 00000003 00000000 00000000
-Call trace: 
-[<80889548>] (io_ring_buffers_peek) from [<80889cb0>] (io_buffers_peek+0x68/0x8c io_uring/kbuf.c:343)
- r10:00012361 r9:80000001 r8:00000000 r7:84498a0c r6:84498a00 r5:df991e44
- r4:84995000
-[<80889c48>] (io_buffers_peek) from [<808931e0>] (io_recv_buf_select io_uring/net.c:1077 [inline])
-[<80889c48>] (io_buffers_peek) from [<808931e0>] (io_recv+0x2b4/0x46c io_uring/net.c:1138)
- r5:84995000 r4:837e3b80
-[<80892f2c>] (io_recv) from [<80886bd8>] (__io_issue_sqe io_uring/io_uring.c:1740 [inline])
-[<80892f2c>] (io_recv) from [<80886bd8>] (io_issue_sqe+0x68/0x658 io_uring/io_uring.c:1759)
- r10:83b4ec00 r9:0000001b r8:81cf0b5c r7:80000001 r6:00000000 r5:81cf0ca0
- r4:84995000
-[<80886b70>] (io_issue_sqe) from [<808877a8>] (io_queue_sqe io_uring/io_uring.c:1975 [inline])
-[<80886b70>] (io_issue_sqe) from [<808877a8>] (io_submit_sqe io_uring/io_uring.c:2231 [inline])
-[<80886b70>] (io_issue_sqe) from [<808877a8>] (io_submit_sqes+0x20c/0x938 io_uring/io_uring.c:2348)
- r10:83b4ec00 r9:00000000 r8:00000000 r7:84ae0000 r6:84995000 r5:8499506c
- r4:8495d000
-[<8088759c>] (io_submit_sqes) from [<80888250>] (__do_sys_io_uring_enter io_uring/io_uring.c:3408 [inline])
-[<8088759c>] (io_submit_sqes) from [<80888250>] (sys_io_uring_enter+0x138/0x780 io_uring/io_uring.c:3342)
- r10:00000000 r9:83b4ec00 r8:00000000 r7:840ae0c0 r6:00003517 r5:8495d000
- r4:00000042
-[<80888118>] (sys_io_uring_enter) from [<80200060>] (ret_fast_syscall+0x0/0x1c arch/arm/mm/proc-v7.S:67)
-Exception stack(0xdf991fa8 to 0xdf991ff0)
-1fa0:                   00000000 00000000 00000003 00003517 0000173d 00000042
-1fc0: 00000000 00000000 0008e068 000001aa 20000080 20000280 00000000 00000000
-1fe0: 7e8b7c70 7e8b7c60 00010874 0002f900
- r10:000001aa r9:83b4ec00 r8:8020029c r7:000001aa r6:0008e068 r5:00000000
- r4:00000000
-Code: e1a08002 e5912000 e50b2030 e1a05001 (e1d920be) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	e1a08002 	mov	r8, r2
-   4:	e5912000 	ldr	r2, [r1]
-   8:	e50b2030 	str	r2, [fp, #-48]	@ 0xffffffd0
-   c:	e1a05001 	mov	r5, r1
-* 10:	e1d920be 	ldrh	r2, [r9, #14] <-- trapping instruction
+   drivers/gpu/drm/imx/ipuv3/imx-ldb.c: In function 'imx_ldb_probe':
+>> drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:57: warning: '_sel' directive output may be truncated writing 4 bytes into a region of size between 3 and 13 [-Wformat-truncation=]
+     658 |                 snprintf(clkname, sizeof(clkname), "di%d_sel", i);
+         |                                                         ^~~~
+   drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:17: note: 'snprintf' output between 8 and 18 bytes into a destination of size 16
+     658 |                 snprintf(clkname, sizeof(clkname), "di%d_sel", i);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+vim +/_sel +658 drivers/gpu/drm/imx/ipuv3/imx-ldb.c
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+   617	
+   618	static int imx_ldb_probe(struct platform_device *pdev)
+   619	{
+   620		struct device *dev = &pdev->dev;
+   621		struct device_node *np = dev->of_node;
+   622		struct device_node *child;
+   623		struct imx_ldb *imx_ldb;
+   624		int dual;
+   625		int ret;
+   626		int i;
+   627	
+   628		imx_ldb = devm_kzalloc(dev, sizeof(*imx_ldb), GFP_KERNEL);
+   629		if (!imx_ldb)
+   630			return -ENOMEM;
+   631	
+   632		imx_ldb->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
+   633		if (IS_ERR(imx_ldb->regmap)) {
+   634			dev_err(dev, "failed to get parent regmap\n");
+   635			return PTR_ERR(imx_ldb->regmap);
+   636		}
+   637	
+   638		/* disable LDB by resetting the control register to POR default */
+   639		regmap_write(imx_ldb->regmap, IOMUXC_GPR2, 0);
+   640	
+   641		imx_ldb->dev = dev;
+   642		imx_ldb->lvds_mux = device_get_match_data(dev);
+   643	
+   644		dual = of_property_read_bool(np, "fsl,dual-channel");
+   645		if (dual)
+   646			imx_ldb->ldb_ctrl |= LDB_SPLIT_MODE_EN;
+   647	
+   648		/*
+   649		 * There are three different possible clock mux configurations:
+   650		 * i.MX53:  ipu1_di0_sel, ipu1_di1_sel
+   651		 * i.MX6q:  ipu1_di0_sel, ipu1_di1_sel, ipu2_di0_sel, ipu2_di1_sel
+   652		 * i.MX6dl: ipu1_di0_sel, ipu1_di1_sel, lcdif_sel
+   653		 * Map them all to di0_sel...di3_sel.
+   654		 */
+   655		for (i = 0; i < 4; i++) {
+   656			char clkname[16];
+   657	
+ > 658			snprintf(clkname, sizeof(clkname), "di%d_sel", i);
+   659			imx_ldb->clk_sel[i] = devm_clk_get(imx_ldb->dev, clkname);
+   660			if (IS_ERR(imx_ldb->clk_sel[i])) {
+   661				ret = PTR_ERR(imx_ldb->clk_sel[i]);
+   662				imx_ldb->clk_sel[i] = NULL;
+   663				break;
+   664			}
+   665	
+   666			imx_ldb->clk_parent[i] = clk_get_parent(imx_ldb->clk_sel[i]);
+   667		}
+   668		if (i == 0)
+   669			return ret;
+   670	
+   671		for_each_child_of_node(np, child) {
+   672			struct imx_ldb_channel *channel;
+   673			int bus_format;
+   674	
+   675			ret = of_property_read_u32(child, "reg", &i);
+   676			if (ret || i < 0 || i > 1) {
+   677				ret = -EINVAL;
+   678				goto free_child;
+   679			}
+   680	
+   681			if (!of_device_is_available(child))
+   682				continue;
+   683	
+   684			if (dual && i > 0) {
+   685				dev_warn(dev, "dual-channel mode, ignoring second output\n");
+   686				continue;
+   687			}
+   688	
+   689			channel = &imx_ldb->channel[i];
+   690			channel->ldb = imx_ldb;
+   691			channel->chno = i;
+   692	
+   693			/*
+   694			 * The output port is port@4 with an external 4-port mux or
+   695			 * port@2 with the internal 2-port mux.
+   696			 */
+   697			ret = drm_of_find_panel_or_bridge(child,
+   698							  imx_ldb->lvds_mux ? 4 : 2, 0,
+   699							  &channel->panel, &channel->bridge);
+   700			if (ret && ret != -ENODEV)
+   701				goto free_child;
+   702	
+   703			/* panel ddc only if there is no bridge */
+   704			if (!channel->bridge) {
+   705				ret = imx_ldb_panel_ddc(dev, channel, child);
+   706				if (ret)
+   707					goto free_child;
+   708			}
+   709	
+   710			bus_format = of_get_bus_format(dev, child);
+   711			if (bus_format == -EINVAL) {
+   712				/*
+   713				 * If no bus format was specified in the device tree,
+   714				 * we can still get it from the connected panel later.
+   715				 */
+   716				if (channel->panel && channel->panel->funcs &&
+   717				    channel->panel->funcs->get_modes)
+   718					bus_format = 0;
+   719			}
+   720			if (bus_format < 0) {
+   721				dev_err(dev, "could not determine data mapping: %d\n",
+   722					bus_format);
+   723				ret = bus_format;
+   724				goto free_child;
+   725			}
+   726			channel->bus_format = bus_format;
+   727			channel->child = child;
+   728		}
+   729	
+   730		platform_set_drvdata(pdev, imx_ldb);
+   731	
+   732		return component_add(&pdev->dev, &imx_ldb_ops);
+   733	
+   734	free_child:
+   735		of_node_put(child);
+   736		return ret;
+   737	}
+   738	
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
