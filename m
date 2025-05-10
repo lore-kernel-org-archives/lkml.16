@@ -1,106 +1,85 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0804212F94
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 13:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF3D22257D;
+	Sat, 10 May 2025 14:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746885294; cv=none; b=rjGiH0I/ao4q3o0ykLTLpgCj2d2on6UAHvGfTdp8UheQmI+gCP07hV3ZrzNUi+XFSM7EAJ6xxsAYusQR4tvkyaVvbKecRhDAlre6pXPpfl8FFPztCe4aIis8AcyS6KahOlg1FzcNn5xmKpeX7Ar9v4xT1RXNqJyizPJXzYvggOQ=
+	t=1746885760; cv=none; b=GqrJDBYInHNZarWEfQGnUSLjDSJ8AAlflz8qg6yczi89S50c8K7ZAtwGB63VXDat6XvbpfIWRwFl9GDKse/a3AYuxk4NA5sjbyc22dicKrBK9ZVm7tHBrLOi0DCKlBKu75yazVJy9f7WdyfOx2yZUW2ZHkBO4XbAbgwOfsBfvI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746885294; c=relaxed/simple;
-	bh=tew+OYjJ5cRuTPrgY5OlKkHhrAih9UXuCeDccAztix8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hL3I34Kr/rk/GMXap7Fdmey//I5Y0FnWM8jHFXMxKlemlVdUrTYUqedv6QcrWSytvYzJ4nM2/Vhu1b8gmdrKCXM6Q1tESZMAh+D87mc9MQi3+NVzOIwc6GirgO+SK3I/Flrjd2XqaDnQS04XXgNGJvgbPpDAnFgILdqG88cW0/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ed8ZRe4+; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746885760; c=relaxed/simple;
+	bh=2XWdywg6ZvZzXHbTOTG/a2iluWjXymhAIWpEo9FlkdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K59yXGX1n+2nj1c+qSRPrhAmwQQl06+dKisxDKh3GR1a+DF5i2/vYds4jV5xs/EGEbMzUbQo/G9YOc02DqwLF3uYHsVG7S6PTMGDvNrPmYQcgWF0X8nQNtdEHKKiRvEwQtBuxD60LRTV/is8buS/6oZwQejZGDOXUDNGLFAO+RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoYvyrK4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ed8ZRe4+"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a0b9625735so1496874f8f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 06:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746885291; x=1747490091; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BjBPZ3Dx0YY0ztC7lpM0G2cZI/G3ZsQmJznRB+o2OEw=;
-        b=Ed8ZRe4+/FK0/pdbgUMeHLmQRy4dJcji2I+fVMi2WQy0iw6NTprUOxIW405/nE/o0l
-         5/KyigURVK6Yu9T/2PxSuMqDs0oMkssHy3l+OmyIiTMjoPuVEey/6YxCOpI+jO9LO8SR
-         iD9bWDmU16KgjK4hR9Rn6X29XVRFyxQvB/SRHFpvIvkkiuW3zs0XB/J6AYSWID96M/IE
-         8Qa8K1q0FlsRY7WgsEnsn5C6FABWwM2cNfyUdjp0dnPGDLmYR4Nnalai+DTJdY/GPZA6
-         C+igHaXcDgoUJ4DMcZpKv8cYP5HoNuf5mzsWbTKq/oPWDu4psUmSgDU91vmwPfVNbiPT
-         HfNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746885291; x=1747490091;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BjBPZ3Dx0YY0ztC7lpM0G2cZI/G3ZsQmJznRB+o2OEw=;
-        b=lN7oUTl9UvoB3yTtvfL7XSTHbGgklCZpmUyn1d6T/fQ8TCdjXJPXRdltLO/4/7jn3x
-         s/seFZOD6B+8B5MXeOIhEevMrpyPqcSCnqNd98eQiDppCW/PHC4kp2uPMejlUjgSJ2AK
-         xN6IIuZEB+Q3S49TFFHb0fLa8lNhylCi4ocR3/+e3u35H/xdo1gQbZ4gJRbLf4YHpYKt
-         mWae1jyH2ycEq5fDfxQg3VGwDpqF9fdjDvEDrwVnWsssCvbDbaXEQ0H00UnL3hjxbAhx
-         TKeSfVqJvsjZ4BNOunM73v2qEBjZL0GSlhD+KQ+Eid+Vda48J1GTZnkJJKGNfNJMbm3r
-         hSpw==
-X-Gm-Message-State: AOJu0YxBu0nq9wNepL0IX/3vmJDRfyAL0j1l/nMSW4LPFAqnTa6noNHq
-	A40ooDTTR3+a+6ZTym2YQMq6XllTFSj8frBQQBebguAmLxGtzV5S
-X-Gm-Gg: ASbGncv8KNlgb4YTBIcIziklUmJcZCjd13tWxQn3+99acgcBy/WW/rjKHgsnsLs5h77
-	eq3iiW2+QMIFtMP84vU7xeh2ANyisGnQVCaLpWC9uFb784yl5R+NRruc7VwA0Jjh2XWuz8gOd+J
-	xRtWAt6NImcEykB4JEvffTcWIT7O8RIpA0LpipLXssgQ/HSjOgNB2BRBJ8X3uiIhKzi+KvVtG8s
-	9dtrE6MD5TbjOeeUVajYOlkk+wKiGkXLZ/4tvhOe06Ohw3Z5ITG9Jm48mfflnfdGcxcmjFuaGRT
-	N6SIL6nBiubI6zA/lZbQYOaH5tjs1fKT8tI/ZfpjzjqUTeC6MpstD5V3CpqycSfgFKjBx0fXd4T
-	HNQNnkE1YbbG2UQ==
-X-Google-Smtp-Source: AGHT+IHyhIYCaq1wsdSJlvlYOTzk+T0PRtflOw27eVEMnhZlvP5XqVbge6zQ91TY7pzQxh2U8XY0qw==
-X-Received: by 2002:a5d:4fc7:0:b0:39c:1257:dbaa with SMTP id ffacd0b85a97d-3a1f64b5a66mr4754793f8f.58.1746885291084;
-        Sat, 10 May 2025 06:54:51 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2961sm6429607f8f.45.2025.05.10.06.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 06:54:50 -0700 (PDT)
-Date: Sat, 10 May 2025 14:54:49 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, Ard Biesheuvel
- <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 2/3] x86/boot: Set __pgtable_l5_enabled correctly
- before calling into C code
-Message-ID: <20250510145449.4117af82@pumpkin>
-In-Reply-To: <20250506154532.1281909-7-ardb+git@google.com>
-References: <20250506154532.1281909-5-ardb+git@google.com>
-	<20250506154532.1281909-7-ardb+git@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoYvyrK4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB225C4CEE2;
+	Sat, 10 May 2025 14:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746885759;
+	bh=2XWdywg6ZvZzXHbTOTG/a2iluWjXymhAIWpEo9FlkdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MoYvyrK4Ad0pwDgpp8dx/CY0XK5+fQJzeFGnAWrS6/NvL8wHsvxbwHRRuK0vx9zBe
+	 uboZvPmuQdBxwSZui2oG8AV5nEyBjS8/8+sO1F59P/75FjZcRjsSXJcVlIr50FGl7X
+	 gEXmorsHtmtUAEOUmKhiAYaIgeCLt83yysgV5gL5pxYIrpb/Bmj4oxb8Kg2bG6Uwxz
+	 xyWfUfUFOqpYcwCVokgmRrPaU+7aKxMtnO7pKqGPgqQZPfqCY56eFWoapTKueHU23K
+	 32yanyaO3Oasiromc9XsxeiHgyWt+tIsPgiCrxQsD4292QozMquLgu6wH8q69CllE3
+	 NC5X0l2dB2Nxw==
+Date: Sat, 10 May 2025 16:02:33 +0200
+From: Greg Kroah-Hartman <gregkh@kernel.org>
+To: Wang Zhaolong <wangzhaolong1@huawei.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2025-37835: smb: client: Fix netns refcount imbalance
+ causing leaks and use-after-free
+Message-ID: <2025051017-finisher-smith-3f26@gregkh>
+References: <2025050908-CVE-2025-37835-546f@gregkh>
+ <d2ab4035-d893-44b6-a511-656b5177ba74@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2ab4035-d893-44b6-a511-656b5177ba74@huawei.com>
 
-On Tue,  6 May 2025 17:45:35 +0200
-Ard Biesheuvel <ardb+git@google.com> wrote:
-
-> From: Ard Biesheuvel <ardb@kernel.org>
+On Sat, May 10, 2025 at 05:33:40PM +0800, Wang Zhaolong wrote:
 > 
-> Ensure that __pgtable_l5_enabled() is set to its permanent value before
-> calling into any C code that may manipulate page tables or reference any
-> global variable or object that may be dimensioned differently based on
-> whether 5-level paging is in use.
-...
->  #ifdef CONFIG_X86_5LEVEL
-> -/* __pgtable_l5_enabled needs to be in .data to avoid being cleared along with .bss */
-> -unsigned int __section(".data") __pgtable_l5_enabled;
-> +unsigned int __pgtable_l5_enabled = 1;
-> +
-> +/* These need to be in .data to avoid being cleared along with .bss */
->  unsigned int __section(".data") pgdir_shift = 39;
->  unsigned int __section(".data") ptrs_per_p4d = 1;
+> > 
+> > Affected and fixed versions
+> > ===========================
+> > 
+> > 	Issue introduced in 6.6.62 with commit e8c71494181153a134c96da28766a57bd1eac8cb and fixed in 6.6.87 with commit c6b6b8dcef4adf8ee4e439bb97e74106096c71b8
+> > 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.12.23 with commit 7d8dfc27d90d41627c0d6ada97ed0ab57b3dae25
+> > 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.13.11 with commit 961755d0055e0e96d1849cc0425da966c8a64e53
+> > 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.14.2 with commit 476617a4ca0123f0df677d547a82a110c27c8c74
+> > 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.15-rc1 with commit 4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
+> > 	Issue introduced in 6.11.9 with commit c7f9282fc27fc36dbaffc8527c723de264a132f8
+> > 
+> > Please see https://www.kernel.org for a full list of currently supported
+> > kernel versions by the kernel community.
+> > 
+> > Unaffected versions might change over time as fixes are backported to
+> > older supported kernel versions.  The official CVE entry at
+> > 	https://cve.org/CVERecord/?id=CVE-2025-37835
+> > will be updated if fixes are backported, please check that for the most
+> > up to date information about this issue.
+> 
+> Hello,
+> 
+> This CVE has already been submitted previously, under the identifier
+> CVE-2025-22077.
+> 
+> The relevant discussion can be found in the following link:
+> 
+> https://lore.kernel.org/all/b7822cca-5ef5-4e09-bca1-2857aada4741@huawei.com/
+> 
+> Is this a redundant submission?
 
-Is that comment (and the section assignment) relevant given that they
-are initialised non-zero?
+Yes, sorry about that, this will now be rejected.  I need to go and
+sweep the ids for any reverts like this one, thanks for reminding me.
 
-I'd guess that __pgtable_l5_enabled was getting set before .bss was cleared?
-
-	David
+greg k-h
