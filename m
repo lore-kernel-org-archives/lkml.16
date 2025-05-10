@@ -1,92 +1,123 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87DF199FC1
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 17:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5B1C4609;
+	Sat, 10 May 2025 17:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746899015; cv=none; b=VWOVMgDG8LmCmRRgc++3JXZJ96SjpEIUF2xj3LcJBj1z0gkhu3S/ioFuCkoMOQgQNFYmAReyyPH8nYa7MRcuoYMAyHp8RDWIZvtqK1AqCz6jcgzqy1J6lrK4/Ce/I3jzaf2hnxd2QPqkJebQDgs148EveEeeeZzSoyfvzSX+dqY=
+	t=1746899291; cv=none; b=nmVHh3lIQC3E/1A/m87f2W6PnNwou9FVmrIXKpPSsNazbdjrTivHczYQv/jLw15W0zhGYp4DGZngJLnwD399WgNS41t91dHnZNBP2dkhXILKOL+jAbTniJbCZG0Y3OI4KQjgXUYEnUFe9imcHVlDxMNvhAJmT59P/nNZGF8BBk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746899015; c=relaxed/simple;
-	bh=jMyHj2bRFRLFLwnL0P0MWOlET2HCHY3sbBxhS0iCR5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m2AF+ZkHG8LV8ScFixLXjRYoH28tLej0PeaIAmjPVzUi9TOP62z07Dlq1AaWFKiZyLL1Kea4AStnsQM2iJDGd/3gvjGumlZ+2mFboZvMEpNE2T12PuCbaA0nIipgQQWxCEekKZBGZAHjGraaPhjndOlEB8UbXgjp/yTI3JQ11c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nJhO0HEg; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746899291; c=relaxed/simple;
+	bh=kUcCYZpGhDJuM0PTGBl3uRYLyZgIWmlE2IQoydwC+S4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YGrecaw1j4swtmbYJc0Rj1vvMSjHgwTIGiJhBS9dro5Ck/czHUwAKQkq1cd6QRzlLw/tRuuH79qGsuNE4vuIGsqi1FjhYdbTdn64GNBUkby6vr6IJjhH0JaAovlzoEUU4TukzEsmGhQlSLEZwYSWY4zMZiRB293GnWK0vqSI6EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=G3tlCJfG; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJhO0HEg"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5fbf52aad74so6850876a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746899012; x=1747503812; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XudQIlWXwf0Ka7UaZjcMta2G0Y3PX5txiCv6+/rb6yY=;
-        b=nJhO0HEgtRrzj1/EXjAyjs2k7a/a7PvcVatWlbpyCuYqasG71U4yWiCcdLwwipYBrJ
-         W7Zz53X8kcKveyIKqslQj/lOOofgk5EsuVBRHksmWuy5h51HKBwqFTT94IHF82HUXhbb
-         YAqiN8GkSZF+pyoH3qAQQ5EARQPnOPw2TsciLzq9MUi/axOlhnhLSd62TMvKI9xd9SN0
-         CmPu7vW7s+AGLENL3QF20BvAob+oEQRfxIWYspWMytyywhuNWIQ3RVaq7vqgGTmkIIj3
-         JupHkbISgouFEm71eRHaw1SiXrWMKAXKO5MNUr5UI2Bj3DWW2iGI3fXr9jB6tBWtkHrf
-         qFOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746899012; x=1747503812;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XudQIlWXwf0Ka7UaZjcMta2G0Y3PX5txiCv6+/rb6yY=;
-        b=s11Gx3QWLzuIuxgja+37sUFzE13jhD+sRRmj4w8Xx+VWc+J9Tgfjcv9boWY5qvKcBv
-         dz1AWMlVvr7BXqKdTSHvsfnL7exu3k9ai8GRY1hJwOknE4gCOsfeyTB5+JonH8Vqm6Me
-         EFvvoMo1IR/IBlMKjzGs3ju3tNNCvX6MFuqXfK2WB8YleiGq5IIo4uglygbRSNYT/bnV
-         dtl81y65zy4EMlIFxgSvRi9c6erkAbX6rdzUh33iX2vNDoZQkmfjkQ5Kul3I1YaYO+i/
-         Fn7Y26fNkQStPEOx9qBIdEJuA/KtctCh13T31yFYLT0ttUWlyTsftTO2ZcEeL4A+gUJe
-         Vacw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpUOrbm+294pdrWATbD81e5Yd//rQRz+0h7LCi1g4Cy0QrNPmnX7U/QmEX6AuEbbUkoeiVX5MY0TcU+bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytfvxokL0u6cBbmpkgYyYU1cuwmozglWJAVXCrRZtRiEdpxJ1c
-	KZcVeP6MjJPsebS0TxC8kxwblK387ckLdDl4EG3K/3M8xkE0wFJ1
-X-Gm-Gg: ASbGncv3mqbhnlIYAn0+sKME8snavMXJXHmr+I/QaJs7k0weTNlQK69+EWsXPvFF7y1
-	2ZA6bOb5sBYoR50jqreJQwGmG9Xr+nKAs6jMJEe2CXg2TRpzzOJZQDDIfFyQAn7l28Xf7+gpgBh
-	CBBTjY+yzQwFuUVuR32Dixx7kO+k9huQHDhm74XWbm6naxOAtccpUKFobtU+UgeilB0X4n5+Gk4
-	Vfqn4VQoSXKuzfo81vNgeIQx1yY9wBpGD80nYtYuo2k+o3+dDcKZ2jH7eewaKvQz5S+Vcm07omo
-	uYrmmPBx+zCzejY/NlILcet98SwAQgDUnrKTQtFw/LWtPm4FtrzILWU9cXnYe9xt/Y7hgpVTZi9
-	hLIjzJI6dbo3RzMouIVeI5TBuz0gcuLzBNd/r57tD+SPgVecKGI88PxkK1usVAuy8vpbvKRnTMH
-	tVbSAXU78ZoYKYPC896kEXJw==
-X-Google-Smtp-Source: AGHT+IFxcxlx2x8TBUFtxBWf7qjrNckgV709Zpt3md2UpCKd4rKDt0E0SjpeXSciSxXU3cEGDq4j6Q==
-X-Received: by 2002:a17:907:1c84:b0:acb:b9ab:6d75 with SMTP id a640c23a62f3a-ad21b4272fdmr702172166b.23.1746899011668;
-        Sat, 10 May 2025 10:43:31 -0700 (PDT)
-Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-79cf-0e0d-6e5d-219d.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:79cf:e0d:6e5d:219d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192c8608sm343613666b.26.2025.05.10.10.43.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 10:43:31 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: dpenkler@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [PATCH 2/2] Staging: common: gpib_os: simplify return value handling
-Date: Sat, 10 May 2025 19:43:30 +0200
-Message-Id: <20250510174330.297207-1-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <2025051046-ipad-overdrawn-8890@gregkh>
-References: <2025051046-ipad-overdrawn-8890@gregkh>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="G3tlCJfG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=goUj4uTlrWULdr0JG01jm/v04D1+T1nfYQPlEzafaUQ=; b=G3tlCJfGytToS8LQrZKmPFYuKT
+	kd38RvglH2yCEorb3ldkOhZVSS6uNvxY+7FS8C2toSRhiNVG5R9HSHJ+58KGLSBni2HsOjMmYxb3A
+	k9oN67wLIdbRcODSLXO4aMFlirJuZwbL//U78COHa8N0LyZs9h7co7CT9E6f2Ya+LjfN+58O9tPAl
+	iXKsymbQiUVnlYxT5uSxevGfeAQVmBpTPNFEvfsJ1xxxwIYlYoWvcIWaFxdfJ57X28eo/wAPPs6Xt
+	IKE1zPnByOyGcKWAopYeuXy4QVQInMaOs2VAqEFZz8afl/F1ZGrsFqaAyZzmoEH4LIK1XWwQt5Qyd
+	MhU5ZCnA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uDoIu-00000002izj-2OIw;
+	Sat, 10 May 2025 17:48:04 +0000
+Date: Sat, 10 May 2025 18:48:04 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] fs: Fix typo in comment of link_path_walk()
+Message-ID: <20250510174804.GZ2023217@ZenIV>
+References: <20250510104632.480749-1-richard120310@gmail.com>
+ <20250510120835.GY2023217@ZenIV>
+ <aB9KHNNBzWxMJ2_j@vaxr-BM6660-BM6360>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aB9KHNNBzWxMJ2_j@vaxr-BM6660-BM6360>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-> But again, as this can not fail, why is this needed?
+On Sat, May 10, 2025 at 08:44:12PM +0800, I Hsin Cheng wrote:
+> On Sat, May 10, 2025 at 01:08:35PM +0100, Al Viro wrote:
+> > On Sat, May 10, 2025 at 06:46:32PM +0800, I Hsin Cheng wrote:
+> > > Fix "NUL" to "NULL".
+> > > 
+> > > Fixes: 200e9ef7ab51 ("vfs: split up name hashing in link_path_walk() into helper function")
+> > 
+> > Not a typo.  And think for a second about the meaning of
+> > so "fixed" sentence - NUL and '/' are mutually exclusive
+> > alternatives; both are characters.  NULL is a pointer and
+> > makes no sense whatsoever in that context.
+> 
+> Ohh thanks for the head up. I'll keep this in mind, really big thanks!
 
-Agree, should've checked it before trying to solve the "FIXME".
+FWIW, the logics could be cleaner; what happens there is that having
+consumed a pathname component, we want to find two things:
+	* was it the last one?
+	* if not, where does the next one start?
+If the next character is the end of string (NUL, zero byte), everything's
+obvious - it was the last component.  If not, the next character must
+be '/' (anything else would've been a part of component we've just read
+through), and usually that would mean that there are other components
+coming after it.  However, there might be more than one slash (/usr//bin
+means the same thing as /usr/bin), so we need to skip however many slashes
+there might be in order to find the beginning of the next component.
+What's more, /usr/bin/ is also valid and means the same thing as /usr/bin,
+so it's still possible that component we've read was the last one - we
+won't know until we skip all slashes and see if we've reached the end
+of string.
 
-> Start way back at the "ends" of the call chain.  If they can fail, then
-start propagating the error up all the way to here.
+A possible way to clarify that might be something like
 
-Sounds logic, will add it to my check-list from now on, thanks!
+/* given a pointer just past the end of component find the next one */
+static inline const char *next_component(const char *s)
+{
+	if (!*s)		// end of string
+		return NULL;
+	// the only other thing possible here is '/'; skip it, along with
+	// any extra slashes (if any - rare, but legal) right after it.
+	do {
+		s++;
+	} while (unlikely(*s == '/'));
+	if (unlikely(!*s))	// slash(es), then end of string
+		return NULL;
+	return s;		// beginning of the next component
+}
 
-Best,
-Thomas
+with
+		name = next_component(name);
+		if (!name) {
+			/* we are at the end of... */
+                        if (!depth) {
+				/* ... the pathname or trailing symlink; done */
+                                nd->dir_vfsuid = i_uid_into_vfsuid(idmap, nd->inode);
+                                nd->dir_mode = nd->inode->i_mode;
+                                nd->flags &= ~LOOKUP_PARENT;
+                                return 0;
+                        }
+                        /* ... the last component of nested symlink */
+                        name = nd->stack[--depth].name;
+                        link = walk_component(nd, 0);
+		} else {
+			/* not the last component */
+			link = walk_component(nd, WALK_MORE);
+		}
+
+in the corresponding place in link_path_walk().  Not sure if it's better
+that way, to be honest - taking that chunk into an inline helper would
+force reader to go looking for the definition of that helper and that
+just might be more disruptive than the current variant.  Hell knows...
