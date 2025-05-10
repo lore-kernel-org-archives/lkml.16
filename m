@@ -1,112 +1,144 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C401E51E0;
-	Sat, 10 May 2025 21:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B087B224EA;
+	Sat, 10 May 2025 21:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746911548; cv=none; b=NAZ7YD6CXIwvJSb5Jd9JtzaQVpF1Z6t4A+KrXv1GOyd2umEFQAK/9vIaH29I6nsBkNU7h+SOz63gmJVF0ledhCPXppcDEUqY09+aCagqBYZMk/hLKVY85XwJhUWd4Yf+iKUKJyMWPz91HV1DiHGdz1cxKnMPFKvKjKuQLB5D4Jk=
+	t=1746912338; cv=none; b=AjV+87K/Vuy/xbXL2n55CuVL1M48YUTTFXlr9n13Xdm+4h23XkuFtE/X1wpIx8xC7ZE7u7nXykhxAfpspl7IvgOwiWUSgMj8pdApmXfgNDu42L2/wNO/Hi4UPpquB8g2m9nVzLYxUaSd/vdG0jWAthU78It764w5SMGwhhOWT78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746911548; c=relaxed/simple;
-	bh=99tvlAZWEuT3qwX1J52V8Qi3RGLC7ca/kMNaFkuTT1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CY0mKEz80rKijBa3/qPtfAbgu6qtKp735BOlBxaodOtsfhkdcPC0JVtjMY9eXS9tBNEGLVMaqJUUZN+4Gxw9Z4/lxecWkcvlACvDU1XnoigOZ8ppt3tiAN8w1PnjSsTHxHEY/yvnhKF7D+8ihhPas4S49vERa7wUft43MFmY66g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TUp/H4+8; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746912338; c=relaxed/simple;
+	bh=rtuILwoeJ02PJuhMgQ83eu/H9smsHlvds2fZgT1GB3I=;
+	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=eCQl3FsCFjY1b27x24XVvNgq/DFlc9VeGhmkwXsiKQY2XLTAhRyltjsegzix7RiKb4IeVTprpqYqu2BCOOgSGPlEroPaYa87eKvtEOiDgTaAqBMYvTR6DZpE8xVIQ4TGiPt5IPO5VaoiBfGzk2mF3A/mjWI7NnwCoP0TkWfVw6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GkPB6/bS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUp/H4+8"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2301ac32320so644645ad.1;
-        Sat, 10 May 2025 14:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746911546; x=1747516346; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IcysVuRM01e8zLhgHgz9JyDQtk813RWNIBugP/k/rrI=;
-        b=TUp/H4+8/bKXbFIXL38oKLDQB287VQy3qbDl/OTrRqpQ99aw4u4k/y+/7LRogrKlsD
-         1a6Ba7Sp9Byxofqu9c2rYCMW4kmyVXDYurSGGdRg1Ke+OvarB3rhg7JoVacaAJY5Pso9
-         Z398CEnHtbEai8QMUDgV+M2o0hJOR8rtgeRX58qecGT3rkCDRIyl5UmcK2K/O/rYH5xW
-         cVOFOEGnWSeRl0qQle02eSa0Yg+sn/IjmIYRsDir/w6+7IDbbNNwNsQ/5S4f/TmU94au
-         0S3HpTHXkwc/01DGkQwVWfIEmOwPZ1Wqm0At1d6Dw1zWMHgntl60QAcAMHRolT3bhdvq
-         i/yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746911546; x=1747516346;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IcysVuRM01e8zLhgHgz9JyDQtk813RWNIBugP/k/rrI=;
-        b=ZlTCc5kN3LVh22cFpZYut5CH4guqNbcVT5Jy41F//Xw7Ko4c7qfjnQEwKFDHJ5PWwQ
-         uG1VlDu8LIwYwkpbo0VwMB4vwL+ct5459B0UU+4CYv73UfoZwAUwAOQCoJzUtUPmKa+7
-         XSR8NE0d9zsRJ+gQLco9tJhXtj8Ph0QWlKxWrTzuCjwrIqHZuD2Dl2qA7onHAJQ9JPOj
-         bzv0rmMwDZfrG2UMOTv33G8V6aWuIfAGvL1aETYb0vhX2UVGk2ZpQGuE7m2QoLYkQuen
-         2fZ3bveSILXT5tybmpse5BFYD5yVjdoMnBT13v+AuyhpnNB0vZIF7EN+a9Jk+2Qvg70g
-         XXjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgMkOsE7c61sa5FjCs3Wl8oR40u8S4dR8z0kQua03aRVOMbWelEINqOeXzd0bAUdE5dKWtHMaUI/1u@vger.kernel.org, AJvYcCVXnTR55tWh2eoqR3QXZ7YfKLJDSzUPm1mL6Q0hLFaUTxHW0Kbl7PCzbr6ub0kqpGk6jPVLAzyDTfGbj0E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvFLCJ/6uvNgkABo3oqLKGRXYcgUCveVOrA7Ec20rX7YGU/1gx
-	yIVt0V5x3OiM+t7Bkt8+yaFZm7vVRlmy18sG85v1HiXcXWoKECtg
-X-Gm-Gg: ASbGnctScAJR0AB7e5/zZ0OfkxUa+U0qDIlGSwoTye3EwNvYpd7TTBrElKhAG6Kwm+G
-	Xc7cmXx3KpcFMAUoELwdepqQTw7stgyyDWyuhFPhUYK2di6h/8TEP8N7K5O4A7H1EXEUPPyEVO1
-	BXWfb2s79NCHQoRchRS+we2yVPLGRek3OTVojt3RIFEbZOECt5aaZo/E+7AdRMytvPvINfN+yL3
-	355n7BZ7nPVn5NFSyGLXaqw9wpR5s3Rj6lLs8v/adHZopM0CwanCfBLH1q4FiT8mFWjwls2lXAe
-	R/L66Z5dB/UxOBiy9qCOpKVZumZPqqE8DDUKBSh5ct4thGkU75kDRlZJYB1jQdLx+DQM/uQ=
-X-Google-Smtp-Source: AGHT+IHOkDeF1qvme6IAJ3xVM8B8PTX/iO9Ye9cjAxNd5RLB1/qjzyJoFZ8xI71aesB3lePs9KM48g==
-X-Received: by 2002:a17:902:f652:b0:223:42ca:10ef with SMTP id d9443c01a7336-22fc91aca36mr134170545ad.43.1746911546065;
-        Sat, 10 May 2025 14:12:26 -0700 (PDT)
-Received: from sid-Inspiron-15-3525.. ([106.222.231.111])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b23495122e7sm2815557a12.4.2025.05.10.14.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 14:12:25 -0700 (PDT)
-From: Siddarth Gundu <siddarthsgml@gmail.com>
-To: b-liu@ti.com,
-	gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org,
-	Siddarth Gundu <siddarthsgml@gmail.com>
-Subject: [PATCH] usb: musb: Fix signed integer overflow
-Date: Sun, 11 May 2025 02:42:17 +0530
-Message-ID: <20250510211217.122790-1-siddarthsgml@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GkPB6/bS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D13C4CEE2;
+	Sat, 10 May 2025 21:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746912337;
+	bh=rtuILwoeJ02PJuhMgQ83eu/H9smsHlvds2fZgT1GB3I=;
+	h=Date:From:To:Cc:Subject:From;
+	b=GkPB6/bSe3Q1n59MVg7bHe5WNUENLRVwjmANfyPQTDR+vdG3rpBQmOCzFGDAi06FV
+	 j/cDJvH7BGsnlteiLmGKm/vIyCJ452S4nsEa/dPkuHcfiO/rrGpy4XHUct7qrp+Lw3
+	 tRsJ3g05V0gmO0yP8Ld/LEy3pnd6hkmrmuJZiSCk=
+Date: Sat, 10 May 2025 14:25:36 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ mm-commits@vger.kernel.org
+Subject: [GIT PULL] hotfixes for 6.15-rc6
+Message-Id: <20250510142536.5e56d771875c6357574a3b89@linux-foundation.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Shifting 1 << 31 on a 32-bit int causes signed integer overflow, which
-leads to undefined behavior.
 
-Cast 1 to u32 before performing the shift, eliminating the
-undefined behavior.
+Linus, please merge this batch of MM and non-MM hotfixes, thanks.
 
-Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
----
- drivers/usb/musb/cppi_dma.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The following changes since commit 92a09c47464d040866cf2b4cd052bc60555185fb:
 
-diff --git a/drivers/usb/musb/cppi_dma.h b/drivers/usb/musb/cppi_dma.h
-index 3606be897cb2..33bf5f83f08d 100644
---- a/drivers/usb/musb/cppi_dma.h
-+++ b/drivers/usb/musb/cppi_dma.h
-@@ -38,7 +38,7 @@ struct cppi_rx_stateram {
- };
- 
- /* hw_options bits in CPPI buffer descriptors */
--#define CPPI_SOP_SET	((u32)(1 << 31))
-+#define CPPI_SOP_SET	((u32)1 << 31)
- #define CPPI_EOP_SET	((u32)(1 << 30))
- #define CPPI_OWN_SET	((u32)(1 << 29))	/* owned by cppi */
- #define CPPI_EOQ_MASK	((u32)(1 << 28))
-@@ -48,7 +48,7 @@ struct cppi_rx_stateram {
- #define CPPI_RECV_PKTLEN_MASK 0xFFFF
- #define CPPI_BUFFER_LEN_MASK 0xFFFF
- 
--#define CPPI_TEAR_READY ((u32)(1 << 31))
-+#define CPPI_TEAR_READY ((u32)1 << 31)
- 
- /* CPPI data structure definitions */
- 
--- 
-2.43.0
+  Linux 6.15-rc5 (2025-05-04 13:55:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-05-10-14-23
+
+for you to fetch changes up to 7b08b74f3d99f6b801250683c751d391128799ec:
+
+  mm: fix folio_pte_batch() on XEN PV (2025-05-07 23:39:42 -0700)
+
+----------------------------------------------------------------
+22 hotfixes.  13 are cc:stable and the remainder address post-6.14 issues
+or aren't considered necessary for -stable kernels.
+
+About half are for MM.  Five OCFS2 fixes and a few MAINTAINERS updates.
+
+----------------------------------------------------------------
+Feng Tang (1):
+      selftests/mm: compaction_test: support platform with huge mount of memory
+
+Frank van der Linden (1):
+      mm/hugetlb: copy the CMA flag when demoting
+
+Gavin Guo (1):
+      mm/huge_memory: fix dereferencing invalid pmd migration entry
+
+Guenter Roeck (1):
+      x86: disable image size check for test builds
+
+Heming Zhao (1):
+      ocfs2: fix the issue with discontiguous allocation in the global_bitmap
+
+Jan Kara (3):
+      ocfs2: switch osb->disable_recovery to enum
+      ocfs2: implement handshaking with ocfs2 recovery thread
+      ocfs2: stop quota recovery before disabling quotas
+
+Kairui Song (1):
+      mm, swap: fix false warning for large allocation with !THP_SWAP
+
+Kees Cook (1):
+      mm: vmalloc: support more granular vrealloc() sizing
+
+Lance Yang (1):
+      mailmap: add entries for Lance Yang
+
+Lorenzo Stoakes (4):
+      MAINTAINERS: add reverse mapping section
+      MAINTAINERS: add core mm section
+      MAINTAINERS: add mm THP section
+      tools/testing/selftests: fix guard region test tmpfs assumption
+
+Madhavan Srinivasan (1):
+      selftests/mm: fix build break when compiling pkey_util.c
+
+Mark Tinguely (1):
+      ocfs2: fix panic in failed foilio allocation
+
+Nysal Jan K.A. (1):
+      selftests/mm: fix a build failure on powerpc
+
+Peter Xu (1):
+      mm/userfaultfd: fix uninitialized output field for -EAGAIN race
+
+Petr Vaněk (1):
+      mm: fix folio_pte_batch() on XEN PV
+
+Ryusuke Konishi (1):
+      nilfs2: fix deadlock warnings caused by lock dependency in init_nilfs()
+
+Uwe Kleine-König (1):
+      mailmap: map Uwe's BayLibre addresses to a single one
+
+ .mailmap                                     |  3 ++
+ MAINTAINERS                                  | 66 +++++++++++++++++++++--
+ arch/x86/kernel/vmlinux.lds.S                | 10 +++-
+ fs/nilfs2/the_nilfs.c                        |  3 --
+ fs/ocfs2/alloc.c                             |  1 +
+ fs/ocfs2/journal.c                           | 80 ++++++++++++++++++++--------
+ fs/ocfs2/journal.h                           |  1 +
+ fs/ocfs2/ocfs2.h                             | 17 +++++-
+ fs/ocfs2/quota_local.c                       |  9 +---
+ fs/ocfs2/suballoc.c                          | 38 ++++++++++---
+ fs/ocfs2/suballoc.h                          |  1 +
+ fs/ocfs2/super.c                             |  3 ++
+ fs/userfaultfd.c                             | 28 +++++++---
+ include/linux/vmalloc.h                      |  1 +
+ mm/huge_memory.c                             | 11 ++--
+ mm/hugetlb.c                                 |  6 +++
+ mm/internal.h                                | 27 ++++------
+ mm/swapfile.c                                | 23 +++++---
+ mm/vmalloc.c                                 | 31 ++++++++---
+ tools/testing/selftests/mm/compaction_test.c | 19 +++++--
+ tools/testing/selftests/mm/guard-regions.c   | 16 +++---
+ tools/testing/selftests/mm/pkey-powerpc.h    | 14 ++++-
+ tools/testing/selftests/mm/pkey_util.c       |  1 +
+ 23 files changed, 314 insertions(+), 95 deletions(-)
 
