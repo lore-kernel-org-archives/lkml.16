@@ -1,94 +1,154 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E8217BEBF;
-	Sat, 10 May 2025 05:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D401AA1FF;
+	Sat, 10 May 2025 05:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746853683; cv=none; b=CkalDFM0nabJo2tTOoH6sIJKZyBXpH21fSkSrC+5M6jCqr51TdXWYrmUcdpY1QZu3nwvAh3UDZOsnoseVXbUn+PhSBkyziRCGZljNuWkqvpfheIAEF4IpTN2MdnsVfvvISWkyxmLeIKP8FlqmGW1DtT/F1e3y/exws1f8aFhA9A=
+	t=1746853846; cv=none; b=Hc+5O114k6NcXzv8k4f9OXoYK3l3UuwuMwZozBuwN6q0dF/1PJqA9ViQHhBuU7xG5lal0BVb7o55RQvejjzqBsiEN/401hHD9XTP0K0dwi8wuagTSYXnYKFosimAoIB6UcZuJGfSZp5QtHYHRUEZmGrOVQwlhylonR5aNZJ3pvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746853683; c=relaxed/simple;
-	bh=2h/ER4Av5lrZ2ZNbEqOS7iazNxZZsmjP5bUvBqvZhUo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tZQxMybTuqXv1UKFYc6zLYeeXTc+x3MeSOLSrf1BhZi8pYeyZwsbRS7ykjSr2IfTVktacp13oCtvaUpQsDKnpKweDR2WfTV+uErpFVRjHhyruY7FhgYfTUGds8ALoNJ48WlxSBobUNpUM0MnO1hsThpnBjGvxzauoZtnBk8JdXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=YBEY9j+X; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746853846; c=relaxed/simple;
+	bh=TgmJWF3/bJwbo7pvdJKm5r96QrqDikIeuZcORScR7uU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p360CzKuzvltM3kUsIa2Ex5w/3Vh3OQHSHhWHAdh9NdVdIUf072zyCCY4GFNjEdmLY10rLbWEswT7JKyzMiR1KJ+IpsaIHoT9my3Ih/rpOkrm9NvMKWiqCpLpPrTcDO6d5WJmnLQWS5j09QsIV8S9Y7b61+f/iqBkQCKkaWZRXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ikFVOLUY; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="YBEY9j+X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UGMVV710k7xJlFKtjlVNBynWLBl3NNPuBRG70mWr2do=; b=YBEY9j+XC4IC45jPI1bm9e4Ser
-	n2tV19cBysctuRt1INGgt0OOzW0z1iPPLqrFvEnfxiNWiyQ8gra6aFkID4e0I5waSa3M1l4vSlLGd
-	CCQttpYTCDTjr759BPcpctqDRjn6lF4PqI1HX/ikdR3K8MdCS7uIoJKoCxYxxloGJJgvjJAWqtZu4
-	EdbOfUa8jMnzgZAHUmOrarw4rr+yCnICLUrdYCZK856GKipwaZ/q/ollK2SPPvLS+CXxf0CXvcxCu
-	lxXArU4Wd4+i7MfsHodYUHI8g+oSa7Lna81+CmSSFZHhhAnb7WKaelgL6lYXXpfrNAZl7Lgu6utyg
-	cF0GsvYw==;
-Received: from [106.101.9.89] (helo=[192.168.6.21])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uDcMc-0064se-DT; Sat, 10 May 2025 07:07:53 +0200
-Message-ID: <90834b07-9261-4be6-a10b-88d3f5308e1e@igalia.com>
-Date: Sat, 10 May 2025 14:07:45 +0900
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ikFVOLUY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=vMhtEJfdZpUDS9IDF0B8Zb/9KjpkRX5BnvJWaH2DWgc=; b=ikFVOLUYl3i57zYvM0ACCJe20k
+	pa0vuBq/p3GidFyOLsoZ6mF1TRAe9tg1Ana0wWyhJHW/W5y+a+y7VawP4jjiKMoTeHuVO3EdXBHSB
+	f382vFM7GkzqP5RkVdHzbuCE9Z9vDKMSkuMrIKNFOWwE0DlGFQk4YKDtgAJ5KLwbnZHXxwvdTPF41
+	mhh/DX6dh1y8zJjgI4Sb8phr27xdSFxwAkwFSTziH1kvI1QvWr8Dq27d+0RyUkEzk5JDE1jzgjSQ1
+	xoP5941HF/z8YkAdRdth9qwdbZ7RHJv9LZyfCfLKZsrjnnL6EVWR4h7uC1zjpUW/cp1UBQFaxB42i
+	piBNk+GQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uDcTe-0050uv-1c;
+	Sat, 10 May 2025 13:10:23 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 10 May 2025 13:10:22 +0800
+Date: Sat, 10 May 2025 13:10:22 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Danny Tsen <dtsen@linux.ibm.com>
+Subject: [v2 PATCH] crypto: powerpc/poly1305 - Add poly1305_emit_arch wrapper
+Message-ID: <aB7fvi_FBdnmLUON@gondor.apana.org.au>
+References: <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
+ <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
+ <aBtF2jVZQwxGiHVk@gondor.apana.org.au>
+ <37cf099e-d5c2-40d8-bc31-77e1f9623b1c@linux.ibm.com>
+ <aByX_Y64C6lVRR8M@gondor.apana.org.au>
+ <f66620e2-77e3-4713-a946-ddb2c8a0bccb@linux.ibm.com>
+ <aByiNZNxqyTerdYG@gondor.apana.org.au>
+ <1d2c2fdc-5c36-4d4e-8b25-8289b865726d@linux.ibm.com>
+ <aB31DI4QBBZuQObQ@gondor.apana.org.au>
+ <20250510044450.GA505731@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PM: EM: Add inotify support when the energy model is
- updated.
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
-Cc: christian.loehle@arm.com, tj@kernel.org, pavel@kernel.org,
- kernel-dev@igalia.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, len.brown@intel.com
-References: <20250507014728.6094-1-changwoo@igalia.com>
- <a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com>
- <CAJZ5v0ixh=ra-TDbC59rpZoGn0pRWmAMchHqoOb_XwB2XUzA7Q@mail.gmail.com>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <CAJZ5v0ixh=ra-TDbC59rpZoGn0pRWmAMchHqoOb_XwB2XUzA7Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250510044450.GA505731@sol>
 
-Thank you, Rafael, for the pointer.
+On Fri, May 09, 2025 at 09:44:50PM -0700, Eric Biggers wrote:
+>
+> This fixes "-cpu Power10", but older CPUs (e.g. "-cpu POWER9") are still
+> failing.
 
-On 5/10/25 01:41, Rafael J. Wysocki wrote:
->>
->> I have discussed that with Rafael and we have similar view.
->> The EM debugfs is not the right interface for this purpose.
->>
->> A better design and mechanism for your purpose would be the netlink
->> notification. It is present in the kernel in thermal framework
->> and e.g. is used by Intel HFI
->> - drivers/thermal/intel/intel_hfi.c
->> - drivers/thermal/thermal_netlink.c
->> It's able to send to the user space the information from FW about
->> the CPUs' efficiency changes, which is similar to this EM modification.
-> 
-> In addition, after this patch
-> 
-> https://lore.kernel.org/linux-pm/3637203.iIbC2pHGDl@rjwysocki.net/
-> 
-> which is about to get into linux-next, em_dev_update_perf_domain()
-> will not be the only place where the Energy Model can be updated.
+You're right.  I'll revert this and apply the following patch
+instead.
 
-I am curious about whether the energy mode is likely to be updated more
-often with this change. How often the energy model is likely to be
-updated is the factor to be considered for the interface and the model
-to post-processing the eneergy model (in the BPF schedulers).
+BTW this thing is still hopelessly broken if it's called from
+softirq context because there is no SIMD fallback.  Yes I removed
+the SIMD check but it was already broken before that as it simply
+switched from the 4-block version to the 1-block version if SIMD
+is not available rather than actually doing something that is
+safe in softirq context.
 
-Regards,
-Changwoo Min
+Perhaps we should just remove this altogether until it's fixed.
 
-> 
-> Thanks!
-> _______________________________________________
-> Kernel-dev mailing list -- kernel-dev@igalia.com
-> To unsubscribe send an email to kernel-dev-leave@igalia.com
+---8<---
+Add poly1305_emit_arch with fallback instead of calling assembly
+directly.  This is because the state format differs between p10
+and that of the generic implementation.
 
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Reported-by: Eric Biggers <ebiggers@google.com>
+Fixes: 14d31979145d ("crypto: powerpc/poly1305 - Add block-only interface")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/arch/powerpc/lib/crypto/poly1305-p10-glue.c b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
+index 7cea0ebcc6bc..3f1664a724b6 100644
+--- a/arch/powerpc/lib/crypto/poly1305-p10-glue.c
++++ b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
+@@ -14,10 +14,7 @@
+ 
+ asmlinkage void poly1305_p10le_4blocks(struct poly1305_block_state *state, const u8 *m, u32 mlen);
+ asmlinkage void poly1305_64s(struct poly1305_block_state *state, const u8 *m, u32 mlen, int highbit);
+-asmlinkage void poly1305_emit_arch(const struct poly1305_state *state,
+-				   u8 digest[POLY1305_DIGEST_SIZE],
+-				   const u32 nonce[4]);
+-EXPORT_SYMBOL_GPL(poly1305_emit_arch);
++asmlinkage void poly1305_emit_64(const struct poly1305_state *state, const u32 nonce[4], u8 digest[POLY1305_DIGEST_SIZE]);
+ 
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_p10);
+ 
+@@ -65,6 +62,16 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
+ }
+ EXPORT_SYMBOL_GPL(poly1305_blocks_arch);
+ 
++void poly1305_emit_arch(const struct poly1305_state *state,
++			u8 digest[POLY1305_DIGEST_SIZE],
++			const u32 nonce[4])
++{
++	if (!static_key_enabled(&have_p10))
++		return poly1305_emit_generic(state, digest, nonce);
++	poly1305_emit_64(state, nonce, digest);
++}
++EXPORT_SYMBOL_GPL(poly1305_emit_arch);
++
+ bool poly1305_is_arch_optimized(void)
+ {
+ 	return static_key_enabled(&have_p10);
+diff --git a/arch/powerpc/lib/crypto/poly1305-p10le_64.S b/arch/powerpc/lib/crypto/poly1305-p10le_64.S
+index 2ba2911b8038..a3c1987f1ecd 100644
+--- a/arch/powerpc/lib/crypto/poly1305-p10le_64.S
++++ b/arch/powerpc/lib/crypto/poly1305-p10le_64.S
+@@ -1030,7 +1030,7 @@ SYM_FUNC_END(poly1305_64s)
+ # Input: r3 = h, r4 = s, r5 = mac
+ # mac = h + s
+ #
+-SYM_FUNC_START(poly1305_emit_arch)
++SYM_FUNC_START(poly1305_emit_64)
+ 	ld	10, 0(3)
+ 	ld	11, 8(3)
+ 	ld	12, 16(3)
+@@ -1060,7 +1060,7 @@ Skip_h64:
+ 	std	10, 0(5)
+ 	std	11, 8(5)
+ 	blr
+-SYM_FUNC_END(poly1305_emit_arch)
++SYM_FUNC_END(poly1305_emit_64)
+ 
+ SYM_DATA_START_LOCAL(RMASK)
+ .align 5
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
