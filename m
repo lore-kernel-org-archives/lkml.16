@@ -1,208 +1,193 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2080.outbound.protection.outlook.com [40.107.96.80])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965451A83F9;
-	Sat, 10 May 2025 12:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746881532; cv=fail; b=VOVg/RLPZEG7ckEQxNALjRCYAPHANoaud/qymaE+gKFaiF2d1891ejYG95DZyCWaUrWCUA1QQIBZgSNOzhpCAlcmwIQ5AAyk4+UAZyUCJPAEY0C93tkvOZDjrlOvQ1WhH6yvm5Xsdo8gnUx1vzl5scZUH8/yWMtjX1flq7wvJVI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746881532; c=relaxed/simple;
-	bh=GssX6BRqjCBbg9xyVL/yKBpil81neAPsc/xTlGx4f4A=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QoC2Qs1k51QL0I+r7mjgMimwmstRCyg1hon4g1I1jFlTYUUmPoSBQUahyRp/jbXIPY4EfT70OxEbqfZg3Onmc7xfAQtVphxymR81uG8NkDdavbDw04+6YBwv+9oXFhbJW2DTjZFQ609a4LH3JpNhuvUi2O5DFYfTIeg+WjBZ85E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y45UpuRM; arc=fail smtp.client-ip=40.107.96.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829CE219E4;
+	Sat, 10 May 2025 12:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746881770; cv=none; b=Anbvii1Lzf2sMYV/7lvHa6WXg90xIBONwcB/ApJuCQcXPsiV6s9DA9LGHodCObjySwiow4ZokX0PQZ7Bhz9jX5LWyF5b5vVUapV9B4lPKiq1BiuWu1RgJHWOqxur+R+vtQY+uASTnBGiFWANsjwY5dO+fHDCeDPaZweQ3puThec=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746881770; c=relaxed/simple;
+	bh=eGXhWc4LMZvP6uULI0tq53w4eI/7N4b3BmO92mcL71s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpIr23gMnu3HAn3PK3Cn3HqyEgB20vno/tcSYrk4JvBoKyl8tWervOL/ik3NElzFaHQ4fI/Mu2k+KyGXGRquMhhzPSnO3psJG14tE/Ly3P7GQj9x9atAeIo2ptUrFP+yXvBva22g+2XSH58w/hfmyx5VtFEWW22Aqn+bgNzRyIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fm87MaZr; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y45UpuRM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OVbNmM0nAUNYdwq9jhYs1oW63BGsrfYeXZd6lhmijikgBqBmSp6cieGCGR3u0kq162wfS2FPTN6CGPaU5rd055JXP7yHgafwYKsXJ1998DEpBghYYQg0iogOggcrlLvMCn0PxjRHRbKcbVsErAzoc8vWKktUk3Z1vHDX+FDhbHQcTOSnUuXRBCqIr2OBeIEAhpIfSxEHaw7rSl2tbfCDl8vAH36cuaA0HPuonzevSCNxYACfZPz7j/W4nwILTrtysXjjDeyEQ+9wJFp4ejCoMgq62IGNPR0mcM4BVUc/pFmUpzaX30dGumFOrKGr/22PVmVGXywXsvOY5MYQZP52QQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SYR40e5pLexCThCphO/uZN4O2c8r5btNU/drngop+yA=;
- b=UWHf5C1w2BYd+Hbb+JJ6+eWk8/xfFG3Rt0nUfOUATqeaucme12RjBy5eITakOSpwCo+h8TqR1NQ4L1kJyBK+6pAAyQ3ydDXBLiWqVKTWuLaBl8fUxw6t47fzyNyUAj9ZpJl4SWas7+y4ZDIcz8gBdzWdfKRXTtBDe1bu4Bt7rls/i0ooC47pcElXnkVRNzqDq0B09pnbqU4OGs7zJexyFjH8qwQEzH+67mHZENiBjSIyN1AxPplfNKYyeLS2NU4rdXPdJ8D9DmLEmc3lcD7vmK3XIDEb2PxJcwAujGOoZ1lGswOD8DXAYcIDsJbdNdTYTQ2QyaYnzy2/49RJCtbGNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SYR40e5pLexCThCphO/uZN4O2c8r5btNU/drngop+yA=;
- b=y45UpuRMbCe5oWPZBV5oBnoxMoz/vayGS7ICpsiC0AASrzj1wcbSvxU8In41xtXROMhtw3ClMfHzh7uvDZ1+6oraH68sn8msLLcYkFPDitkx0JFyM9AUzR0lUQZrTLNai23ThXnm//bu9w7qVsOB9mMlZ68iOEHdpHU7Add39Pk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by SA3PR12MB7921.namprd12.prod.outlook.com (2603:10b6:806:320::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Sat, 10 May
- 2025 12:52:06 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8722.021; Sat, 10 May 2025
- 12:52:06 +0000
-Message-ID: <e574e1d0-b003-462d-9a59-ef16e95b7766@amd.com>
-Date: Sat, 10 May 2025 22:51:58 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 06/19] iommufd/viommu: Add
- IOMMU_VIOMMU_SET/UNSET_VDEV_ID ioctl
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
- will@kernel.org, joro@8bytes.org, suravee.suthikulpanit@amd.com,
- robin.murphy@arm.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- shuah@kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org,
- mshavit@google.com, shameerali.kolothum.thodi@huawei.com,
- smostafa@google.com, yi.l.liu@intel.com
-References: <35701c5e-030a-4f52-b6f6-ed18368fb2cd@amd.com>
- <20241004114147.GF1365916@nvidia.com>
- <95ab62fa-bb1c-4e4a-a210-b0bdba0d4ad2@amd.com>
- <aBHYN39FcH+NG5Ab@Asurada-Nvidia> <20250505170807.GP2260709@nvidia.com>
- <aBl5uLOFCntuIYYz@nvidia.com> <20250506125847.GA2260709@nvidia.com>
- <8e0182b9-7a8b-4388-9f22-c39bfbaf3df1@amd.com>
- <20250507122411.GA90261@nvidia.com>
- <76ac7908-45d7-4821-b34c-a5d2ee49c7d7@amd.com>
- <20250509220717.GE5657@nvidia.com>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20250509220717.GE5657@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0103.namprd04.prod.outlook.com
- (2603:10b6:806:122::18) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fm87MaZr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746881769; x=1778417769;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eGXhWc4LMZvP6uULI0tq53w4eI/7N4b3BmO92mcL71s=;
+  b=fm87MaZrU4QDtrqijQH1jPCNfFYMviCFjiGBXtgtIa3z1maHjhEUf2t+
+   vMNNCHIZGRtKHAlU8+8el1JOU5342UnRUJOnygSomcxCYRQvUEAz6V2n8
+   5sG9VUekp9nka2Vm8uG70nlePdLtRjgTLrq/BBJPUrIh+jvcAdO6Mcmk3
+   8exwrjk5x9U/xrlQJQ46fUSbEcVcJIjcUUWuPuBNQGH/pNR6szD9sL+5J
+   xDsFw/OZJ+vdHDwms8uG8t7L8RZlBQ3jCu/TKDqfjNiLAL0h5S6DkB6iC
+   07l2Fau8lYSZwo21Y7TiZtTS2n6ipEKEutW97V612DiyQPvQ0TIF95AG7
+   Q==;
+X-CSE-ConnectionGUID: otwaq+RFSNSRi6RssJ6HVw==
+X-CSE-MsgGUID: YcBMDw7CRiyixb2KsGDvHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11429"; a="59340847"
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="59340847"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 05:56:08 -0700
+X-CSE-ConnectionGUID: nnxKV96WQBml8ooeUlsasA==
+X-CSE-MsgGUID: yswAqtIsSuqv3UZ+FORl8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="160159403"
+Received: from agladkov-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.64])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 05:56:05 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 59AA81201BC;
+	Sat, 10 May 2025 15:56:02 +0300 (EEST)
+Date: Sat, 10 May 2025 12:56:02 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: laurent.pinchart@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl,
+	kieran.bingham@ideasonboard.com, naush@raspberrypi.com,
+	mchehab@kernel.org, hdegoede@redhat.com,
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <aB9M4jUsGA9YAkSm@kekkonen.localdomain>
+References: <20250310122305.209534-1-mehdi.djait@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|SA3PR12MB7921:EE_
-X-MS-Office365-Filtering-Correlation-Id: d84f9feb-6e6c-4d55-3720-08dd8fc177e4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NjRCdlhkTWxONXVQOVhJdlE5bENSUnljYzNSckZiMEdLRGpsbjZ1amNoNXNa?=
- =?utf-8?B?Q0tVNzBPMjJ1OGo5NnlNUVBDL0I2Q21SY1MvTHJKd3IvT1NYdVhtRVlKdG1h?=
- =?utf-8?B?UmtpZkVIYWpGamI1dEkyUWprWXhFelBFYUg3MG9uNEM4NTdyQXlJc0pIeGNs?=
- =?utf-8?B?dDV0YmVCS0ZqblhPS0lTRVo1VVBQdEE1L1k0a3VaYUJQanNQa3FvVWoyNzV4?=
- =?utf-8?B?MkhjU2k3MGhkSXloV2Z6cjh5czhEeUMreEJ5YWNrR1NEUWxZckRpWXBwSE4x?=
- =?utf-8?B?WFQyY1BNT0pseGhDWkorU1F1b2pnUWJycWJvenFMdUpRQXZnaXg0cWJQVUtJ?=
- =?utf-8?B?U2lpWG5IY0xoT09lWVNyZ3FvdVRCT1o0dUhEajFrRUVUZVN2ZGV4RElYKzdO?=
- =?utf-8?B?NTdDWjYrbllWZjFTMHdGOHdlYTdtUDZrUnJ5U2RrYXI4ZmRVdE03WE1MdHNV?=
- =?utf-8?B?RUxaUnM5N2JCZjBtTTZJaktnR3FHVERlTXB4SklveS81M1ZCek5XK0I1TkE4?=
- =?utf-8?B?Qk95cFltcWFVYW9HRUFmTFpzRFhvbzBXb0puaG5NZ0tCbVBsMytPa3Y2bGU2?=
- =?utf-8?B?anJSWUJ0TEswbC9weHNrVkR1dG5SZUY4TUpFaS9pWEwwekdKdHMyYkxJVUdY?=
- =?utf-8?B?ell4ZEtBejVkU0dqaTdoRGxUTEdiOWRHTkhCVlJRRHJuN3FUbTY1a1RjczZB?=
- =?utf-8?B?MWNoS0tFTXFTWGl2OFVGUU52UG1SSXg4di9jNTA0OVp3UkVXcXE2cFBaRmtM?=
- =?utf-8?B?Sll6UDZJanVKT0NqZGNDVUpqRVR2R1Vwcnhjc1hyOEhSVXJXcEJRQ3JhMHhF?=
- =?utf-8?B?TkwvY0ZDMVpuTEFESngwcDVDdFdVaUUxeU9Nd1FtWmMyWm54Q01DVUdPbWlU?=
- =?utf-8?B?R0dPQTc4M2ZhM0VtbHphbkpocUNLTkRRTVczZHVySjNmWkNWRy9NeTNoQnNO?=
- =?utf-8?B?SVh6WSs4cnhzcVdxdExsb08xQkdWbm9DRFJxS2dQZU50VFNmNXNMRTlqV1RX?=
- =?utf-8?B?d0xldXptRUs0NVkxVGxmV1pDS2pyVTVBSjZmaUVPNmY1QW02eHZxSzVra3lN?=
- =?utf-8?B?YjduRmFsS3NVcjVlcXk4dktqMTJYcnBpUzYzZUhhcm1nbUYxMG91Q0UyMnpm?=
- =?utf-8?B?YUNRRFNCRzJKVzM5RW1jWkhKWVU2WnJhWVJHenVhUlpjSnIvNm1CYzhnMjRn?=
- =?utf-8?B?eEJ0U1YrUTI5SUdzY3hkUkVZNGczVmRXbmc4TnJTV1FBdHhUZldiUkc1ZW01?=
- =?utf-8?B?eVdRdTVVZThWaGxjTHc0SFhESnc5VE1aSG5GeG16TDZPRThuMXlJdWRHVGtN?=
- =?utf-8?B?VFlhclg5THowY1NKUW5tUlMxQklBSEY5cHJFVXNmR2RYbXRWbmM5ekdsdlFL?=
- =?utf-8?B?UXM4ck1OcFJQSzV3YUdVQ2dETWFDY2VLdnBsaWYrbHJSQXNodjJpMk9WS2tM?=
- =?utf-8?B?UXBMczU4Y1Q4ZmdWaEJHTDgrUDF4dmNaRFN2VUtoRTdudE1hZHp4QjNCV2FC?=
- =?utf-8?B?S0J6amQrdGcvcVptNGh2aXdjSVUvTHNvM0ZPSWVrdjZNSVJhbzNrZWZtbk0y?=
- =?utf-8?B?cjZaVHpDTGlSMnAyU1V2ZW5UYzNNQ1RsanFMQXhVYXRzM3g4Q1NwZG9yZGJz?=
- =?utf-8?B?WitRMjlWajhsMWorY0d6RzhFM2hXMnp2QWM0dWdYMFQzS0h1ZmlNa1F2RFNC?=
- =?utf-8?B?K0ZLSEk2TG9qSmg3ei9BZXM1eU16a0p6bUo4Y2UxVjVOdEFwUS82NjUyYUcz?=
- =?utf-8?B?WGtzaE51MWpKVjhocEt4Uy9BbEtaM1llRUhlOEQyRGFpWHhFWFdBUm83dHRS?=
- =?utf-8?B?WUdORkFMTzdiRTB4QXdQR3VNbUhmaGx2VzhZdHdQZlNBM0F4UHYyQldYL0lE?=
- =?utf-8?B?V1NXSnJmOFRBdzlTNW9HUEx2RStEUXg4UFZVM1dYR2RwZ05aRERkeHJaR1Zk?=
- =?utf-8?Q?IDKkNQ/FXFY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VHMrWlJweHhaWlcvRkdXMDcxcUxPTUdPYllZd3ZMeE91cVJlTHZUbzlpUlJY?=
- =?utf-8?B?SW1rMU12dE9CTVdxSWhEWEZ5TG5MblZ5MkJvL1lUak4rcEV3WG1HTjM4OFNl?=
- =?utf-8?B?VEkraFg3TjMrUU11aTNObFlCaDhBQ1VDVlpQU0FUa3d4bnByV29HeWRkZzMv?=
- =?utf-8?B?eElYRnVybEJUMG1rU1k0OEQrKzk0alBBcXl4ejdzNXR6aHVHVDRGbjFHTUZG?=
- =?utf-8?B?WisxajFyR0RCU2szUnJlYzgzdGtpMytTbXRPQmUyQUlPaThCZ2JTb2tRcC9w?=
- =?utf-8?B?V3l1T2xaU0VjOFV1WU8vZGh1TUtMY3c1Y01Ock8zMUw5SjlYUExUWEM0bTF2?=
- =?utf-8?B?c0lMN1dVQml1V2pVL2FwTVlQWkZjbkxQbkwwUVJmTE5IUnVhaHBOQ1NUQms1?=
- =?utf-8?B?VnJKNnZ4dmVwUm43UVdoUHBDa3JKNmsxME1PSUVRR3dlNC92eFBsMDBiU0VU?=
- =?utf-8?B?QUlmWCtyRm9tcndqNWdFVzdXaWtCWG1aVzZUSjM2QlFjaU9BV3AyZHZob2po?=
- =?utf-8?B?NVZwRzVCMDI5NXU3a3JGTllINGs4TjY4WkNUaE1xeEIzU3YzMXN1TUkzcjVF?=
- =?utf-8?B?WUMvc25oeWp1NEt0d3ozN25YdHV0eGdEYzlqL280MWlueXF2SVQ3QVF5QU9U?=
- =?utf-8?B?azdFbGhwUE1CWHVxL0UyYmUwc2JEVWZsc0hZREdvbWZoVmEwdERZTzllMVA1?=
- =?utf-8?B?VmFqOHQwR2JrVG9WQ0JiM0lXVElPTDJKT21iaWV6cDZxTHhJNUdwT25LU2FF?=
- =?utf-8?B?QTk4TFV1SnFKZ1NvK2s4UXVMUm1GNGh3NnduRkROSXRoN0JHNEovRWVURThC?=
- =?utf-8?B?OHdwR2Y3VmJCaFBkMW1EUDZTVm44MTFGQlRJVWRkNGdsbkNGQ2t5bk9wUmpq?=
- =?utf-8?B?OXNMSzJFY3RzTGl0ekdTQmdrMEk0aGRtUS9Vcy9KbDhwdUVHQU9PdUR6K3dU?=
- =?utf-8?B?ZUIwbGsxRnNrMFJwQVZZR25FWDZvNHhTRlo0ZkFkTEJ0bVBqTWFRclBVREgv?=
- =?utf-8?B?dzQwRHB2NE1xRWdGSEpCVzBmdVRodTVaYm91K2w4U3Z5VEFzZVhqM3BYT3NU?=
- =?utf-8?B?QlFCSisvM3hKSXpFdVhnSDF6dUo3Q2hSeWNNaC9ESzFIbkZIdVV3YTFuRFlz?=
- =?utf-8?B?blg0K2NVc1NNejJVRXFwU0NoN0NoUklvK0czK24zQmEydy9ZNnNzSkZwMEU5?=
- =?utf-8?B?ZHBsVmtGN1l4QXRUZnlXcjIvMzNyTERYZ0dzb1d3UU50TlQvWkpUV2NZNmR3?=
- =?utf-8?B?b2ZtWXdhT2JmbjFEemdBR0RoLzZndzJRM1dPWENZa0V3WldhckVDdWsxV3dT?=
- =?utf-8?B?QXZNUWYxS2ZMc0ZySGt6czd4dW9ZalB6Yy83LzdVK1VRZExoZThhWW9halMv?=
- =?utf-8?B?TEhLalhNcnkrbUMvSmRXc2c2S3laV2VFVEVmdzZMeWR4L0FVb2szWUNiT1VF?=
- =?utf-8?B?MitkNXFiU3hkSkl4OThFOVpleVFVdEQxOFpIT0FmUDhhY2N3TWhkbE1vc282?=
- =?utf-8?B?d2llVUo4K0dzVGdKODV2UE5MeEkxMlFIUjgwMmZYWjN5eUFDVHJIaXZzOGFM?=
- =?utf-8?B?cmNTUW1DMGNVVnZUajRCc2RXVTd4ZndaUktMNCtEQUk0c0RnNVdveWRXR0Q0?=
- =?utf-8?B?UW45a25qaTkrRWgvQTNIYkpoajRWbGhkSVluZGFSQko4Sm9DWW5KMnp0cUVC?=
- =?utf-8?B?TkNRUldFSUlFTEtBWmZEcG9SWjBMZFVFSTYrV1ZEdG9mb3Flek5RTThsQy9U?=
- =?utf-8?B?VFhERlU1bHR6OXVENU1CMlh6NVZZYzhHNFArTTJuM2JEbkhZcFEyZC85dmxt?=
- =?utf-8?B?MWxzK1ZIZk0yalBFT0VKanJZT1BoTXFldGhZbSthcHQrUXMwWVEwL1IzQmEw?=
- =?utf-8?B?WldISmlPaVFzUjJqSDVXSHNTT0QzbXVVb0ZGWWpxNmtWWWozM0tXZ29Jd0lZ?=
- =?utf-8?B?T1I3V29Wc3EwSER0TXpSSkFxOHppWmhhRzZoWXFCaEV6UXo1U2lPUDdFMVdv?=
- =?utf-8?B?ZmJla2FxeTZrVUVhdU9BdlN2N2dOc2JiSGNPeUM1Rk1JMEhQYzZtL291TUNF?=
- =?utf-8?B?REdJdlYzOXNKSHkyU1pHZUpHUmpFSjdDb1dQWm8waDBJNWVpdDRXT2hJWUpO?=
- =?utf-8?Q?dE+e+zr824pSQLC3MaFZMyhoC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d84f9feb-6e6c-4d55-3720-08dd8fc177e4
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2025 12:52:06.1616
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8jn53Dhl0S/HT7OCxrj1+JpysBw7yJ0u9nQcveN7/e9E8LN9FBkV0lWYYsjUMFP4Mz8y36ZVBn3JIc7l8FwmwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7921
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310122305.209534-1-mehdi.djait@linux.intel.com>
 
+Hi Mehdi,
 
-
-On 10/5/25 08:07, Jason Gunthorpe wrote:
-> On Fri, May 09, 2025 at 12:57:18PM +1000, Alexey Kardashevskiy wrote:
->>
->>
->> On 7/5/25 22:24, Jason Gunthorpe wrote:
->>> On Wed, May 07, 2025 at 09:18:29PM +1000, Alexey Kardashevskiy wrote:
->>>
->>>>> We should not destroy the vdevice for something like that. In a CC
->>>>> case that would unplug it from the VM which is not right.
->>>>
->>>> vdevice is not directly seen by the guest, is not it? The guest will
->>>> see, for example, an "AMD IOMMU" and assume there is device table
->>>> for all 64K devices, and so on, it is QEMU which will be
->>>> reallocating vdevice in the host's IOMMUFD. Did I miss something
->>>> here? Thanks,
->>>
->>> I imagined the vdevice would trigger the CC call to create the vPCI
->>> function in the guest attached to the secure iommu.
->>
->> What is this vPCI going to look like inside the guest? There still
->> be AMD IOMMU PCI function and passed through to-be-trusted PCI
->> function.
+On Mon, Mar 10, 2025 at 01:23:05PM +0100, Mehdi Djait wrote:
+> Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> platforms to retrieve a reference to the clock producer from firmware.
 > 
-> However the VMM tells it to look using the arguments to the create
-> vdevice ioctl?
+> This helper behaves the same as clk_get_optional() except where there is
+> no clock producer like ACPI-based platforms.
 > 
-> I don't understand the question?
+> For ACPI-based platforms the function will read the "clock-frequency"
+> ACPI _DSD property and register a fixed frequency clock with the frequency
+> indicated in the property.
+> 
+> Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+> ---
+> Link for discussion (where this patch was proposed): https://lore.kernel.org/linux-media/20250220154909.152538-1-mehdi.djait@linux.intel.com/
+> 
+> v1 -> v2:
+> Suggested by Sakari:
+>     - removed clk_name
+>     - removed the IS_ERR() check
+>     - improved the kernel-doc comment and commit msg
+> Link for v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehdi.djait@linux.intel.com
+> 
+>  drivers/media/v4l2-core/v4l2-common.c | 35 +++++++++++++++++++++++++++
+>  include/media/v4l2-common.h           | 18 ++++++++++++++
+>  2 files changed, 53 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> index 0a2f4f0d0a07..99d826acb213 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -34,6 +34,9 @@
+>   * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
+>   */
+>  
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/module.h>
+>  #include <linux/types.h>
+>  #include <linux/kernel.h>
+> @@ -636,3 +639,35 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
+> +
+> +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+> +{
+> +	struct clk_hw *clk_hw;
+> +	struct clk *clk;
+> +	u32 rate;
+> +	int ret;
+> +
+> +	clk = devm_clk_get_optional(dev, id);
+> +	if (clk)
+> +		return clk;
+> +
+> +	if (!is_acpi_node(dev_fwnode(dev)))
+> +		return ERR_PTR(-ENOENT);
+> +
+> +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	if (!id) {
+> +		id = devm_kasprintf(dev, GFP_KERNEL, "clk-%s", dev_name(dev));
+> +		if (!id)
+> +			return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
 
-"We should not destroy the vdevice" confused me. It is not a device which a VM would see (or is it?), it is a QEMU/IOMMUFD object which we can create/destroy at any time (well, may be not, but the VM does not have a say in this). And then this vPCI thing - what is it, synonym to "vdevice" or a different thing?
+devm_clk_hw_register_fixed_rate() is only available when COMMON_CLK is
+enabled. You need #ifdefs here. In practice without CCF only
+devm_clk_get_optional() is useful I guess.
 
+Another question is then how commonly COMMON_CLK is enabled e.g. on x86
+systems. At least Debian kernel has it. Presumably it's common elsewhere,
+too.
+
+> +	if (IS_ERR(clk_hw))
+> +		return ERR_CAST(clk_hw);
+> +
+> +	return clk_hw->clk;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
+> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> index 63ad36f04f72..35b9ac698e8a 100644
+> --- a/include/media/v4l2-common.h
+> +++ b/include/media/v4l2-common.h
+> @@ -573,6 +573,24 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+>  			     unsigned int num_of_driver_link_freqs,
+>  			     unsigned long *bitmap);
+>  
+> +/**
+> + * devm_v4l2_sensor_clk_get - lookup and obtain a reference to an optional clock
+> + *			      producer for a camera sensor.
+> + *
+> + * @dev: device for v4l2 sensor clock "consumer"
+> + * @id: clock consumer ID
+> + *
+> + * This function behaves the same way as clk_get_optional() except where there
+> + * is no clock producer like in ACPI-based platforms.
+> + * For ACPI-based platforms, the function will read the "clock-frequency"
+> + * ACPI _DSD property and register a fixed-clock with the frequency indicated
+> + * in the property.
+> + *
+> + * Return:
+> + * * pointer to a struct clk on success or an error code on failure.
+> + */
+> +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id);
+> +
+>  static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
+>  {
+>  	/*
 
 -- 
-Alexey
+Regards,
 
+Sakari Ailus
