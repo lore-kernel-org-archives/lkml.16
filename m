@@ -1,70 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D401F2C58;
-	Sat, 10 May 2025 08:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59686610D;
+	Sat, 10 May 2025 09:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746867506; cv=none; b=l7XMBepbnszbg1UzmS3o4wDaHUcmcRTgIPJNIOYloVxm7RBc24SLErdNkgeXalKBt9SOk+qXE5qrehZTHiXLAAc9kQ7fegOS+9uJsZrHBvVJ8LcDRT0LJinu8mnwTBMKrdw4BhdXdTcdMnHo5f2OYJNDsvSqwMOed2HdY911xDs=
+	t=1746867796; cv=none; b=bzzBKsXraOjEMKRIu93unglA+bZvj+5NaQPxPq2w5GKs0veCDgKdGDo7k5xhyXp3iDrZ3vA4Dz7WgsokG0eTy2Z2pablPh44aYxBM1rMhGqX46q/VhogKzAEY3a7dCoIMzJnKGWpMEy0nood7ORfFCNsL9sumeX9enwM0J0FU9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746867506; c=relaxed/simple;
-	bh=KQZXL+8mSvjE/ffDNqcBTcqjRRAsjW7xKRH4V1Yhz3g=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=EHu0QYcdDHh62e2YkReASJbO7jyaM2P8HffYqjjFoibe209unp8BGqPI3UpNN+QBDs42lWopKtoi0nqYe/Q1SDcxs5WAjfag2cNeL4gwdyGtrb+Yx/OHvVKk5E7PhN9eCV41ZQuv9wR22WKnRPXIQbWK2ghDBNRY4W7v4wPAQMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hn3ETCkg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746867796; c=relaxed/simple;
+	bh=gKArUPq/LOsmWZFtbSjRAerxf4ZgQ0kJBSBsD9tlBuY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cL6788+2Mdp6a+Yws4hUfjdrzq+GuCmTX84WwgudstKMr0h/PkeU1wJwJwEiKFLZRBeb3bW/cN/DsB3E9c42VNdd+a9MS+t2Xdgg+wIi7s6bbz6+g1iR9QCUb4kIS8ttsROeI5vucfBLnNIuqHbg/k1hm7u1WMnNsbrKzJcZrYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0Pj8se0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hn3ETCkg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FDE7C4CEE2;
-	Sat, 10 May 2025 08:58:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0Pj8se0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9ABDC4CEEB;
+	Sat, 10 May 2025 09:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746867505;
-	bh=KQZXL+8mSvjE/ffDNqcBTcqjRRAsjW7xKRH4V1Yhz3g=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=Hn3ETCkgrLKLiIMOIHgmHZ0GK9SwwrPLV0AORbbNC7iRm8NgjaFFdGZDc4Dtk2Vkb
-	 ILpF5jgJemxZm3tBLCXYuylreXKQOedbjrYPf0dX0D8Gwil+GrvA0d/N+MjuTsSPi0
-	 pPXGD42cx5PYor7h5EmMwlIF4f95fjfhiVhe/LB/cRGe/t9k+6FmfPtxcc5lPcfE33
-	 53jRp5zSdpPN5PTvZm6DUFfd/lZcF7sQUUw97FMRgTz2HVr2bOvL/wyG6QmRSnCVOS
-	 bRBedGbL4x3zcX/cDykTDe+pno5Sl0lYyGXnm97mAT/4Iy50StfDILe1nmNMV8bsfE
-	 2UD6ihELv+fDQ==
-Message-ID: <5573173c96551b51def2ec8806f297be@kernel.org>
-Date: Sat, 10 May 2025 08:58:22 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v3 12/22] drm/omap: dss: sdi: convert to
- devm_drm_bridge_alloc() API
-In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-12-b8bc1f16d7aa@bootlin.com>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-12-b8bc1f16d7aa@bootlin.com>
-Cc: asahi@lists.linux.dev, chrome-platform@lists.linux.dev, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, imx@lists.linux.dev, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, platform-driver-x86@vger.kernel.org, "Andrzej
- Hajda" <andrzej.hajda@intel.com>, "Anusha Srivatsa" <asrivats@redhat.com>, "Chun-Kuang
- Hu" <chunkuang.hu@kernel.org>, "David Airlie" <airlied@gmail.com>, "Dmitry
- Baryshkov" <lumag@kernel.org>, "Douglas Anderson" <dianders@chromium.org>, "Fabio
- Estevam" <festevam@gmail.com>, "Hui Pu" <Hui.Pu@gehealthcare.com>, "Jagan
- Teki" <jagan@amarulasolutions.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
- Karlman" <jonas@kwiboo.se>, "Krzysztof Kozlowski" <krzk@kernel.org>, "Kuninori
- Morimoto" <kuninori.morimoto.gx@renesas.com>, "Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>, "Neil
- Armstrong" <neil.armstrong@linaro.org>, "Paul Kocialkowski" <paulk@sys-base.io>, "Pengutronix
- Kernel Team" <kernel@pengutronix.de>, =?utf-8?b?Um9iIEhlcnJpbmcgKEFybSk=?= <robh@kernel.org>, "Robert
- Foss" <rfoss@kernel.org>, "Sascha Hauer" <s.hauer@pengutronix.de>, "Shawn
- Guo" <shawnguo@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Tomi
- Valkeinen" <tomi.valkeinen@ideasonboard.com>
-Content-Transfer-Encoding: quoted-printable
+	s=k20201202; t=1746867795;
+	bh=gKArUPq/LOsmWZFtbSjRAerxf4ZgQ0kJBSBsD9tlBuY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=m0Pj8se0Xs9Y/tCzp8Yw9GXyysM7WmBxuWI8x4y3qe+7btAl3Ym3gGxG6jigQAKcw
+	 BgYItJGvA5paKzlGMOcC3lEKctSaQUw3osChhdrrKi6+oEP3S6t8ewOFYCCfe2ScO6
+	 TB69GHyVFtvPad0hXwZwQWU8adjd+t9xtIUgKDKd1askI+PewXlOiutRQQTfmTbRC9
+	 6dxR3ffqHoYIrtkTjDzB3jqId4bDFZ2hj7FYNUjqGKbLqwmzKdo3hPN12XobiH3IiV
+	 6zfZGh76SFs+MxZPjJo90MS5RKeQo8kHFYp7urBTxO+y7INcxGzix6QN6bp+HX73sw
+	 xFQRzucMJ8B4g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uDg6z-00DdfH-Cc;
+	Sat, 10 May 2025 10:03:13 +0100
+Date: Sat, 10 May 2025 10:03:10 +0100
+Message-ID: <87jz6o6do1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Colton Lewis <coltonlewis@google.com>,
+	Ricardo Koller <ricarkol@google.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 3/3] KVM: arm64: selftests: arch_timer_edge_cases - workaround for AC03_CPU_14
+In-Reply-To: <20250509143312.34224-4-sebott@redhat.com>
+References: <20250509143312.34224-1-sebott@redhat.com>
+	<20250509143312.34224-4-sebott@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sebott@redhat.com, oliver.upton@linux.dev, coltonlewis@google.com, ricarkol@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, 9 May 2025 15:53:38 +0200, Luca Ceresoli wrote:
-> This is the new API for allocating DRM bridges.
->=20
-> Switching from a non-devm to a devm allocation allows removing the kfree()
-> in the remove function and in the probe error management code, and as a
-> consequence to simplify the code flow by removing now unnecessary gotos.
->=20
-> [ ... ]
+On Fri, 09 May 2025 15:33:12 +0100,
+Sebastian Ott <sebott@redhat.com> wrote:
+> 
+> arch_timer_edge_cases currently fails on ampere-one machines with
+> the following assertion failure:
+> 
+> ==== Test Assertion Failure ====
+>   arm64/arch_timer_edge_cases.c:169: timer_condition == istatus
+>   pid=11236 tid=11236 errno=4 - Interrupted system call
+>      1  0x0000000000404ce7: test_run at arch_timer_edge_cases.c:938
+>      2  0x0000000000401ebb: main at arch_timer_edge_cases.c:1053
+>      3  0x0000ffff9fa8625b: ?? ??:0
+>      4  0x0000ffff9fa8633b: ?? ??:0
+>      5  0x0000000000401fef: _start at ??:?
+>   0x1 != 0x0 (timer_condition != istatus)
+> 
+> Meaning that the timer condition was met and an interrupt
+> was presented but the timer status bit in the control register
+> was not set.
+> 
+> This happens due to AC03_CPU_14 "Timer CVAL programming of a delta
+> greater than 2^63 will result in incorrect behavior."
+> 
+> Work around this issue by reducing the value that is used to reset
+> the counter and thus reduce the delta.
+> 
+> Link: https://lore.kernel.org/kvmarm/ac1de1d2-ef2b-d439-dc48-8615e121b07b@redhat.com
+> Link: https://amperecomputing.com/assets/AmpereOne_Developer_ER_v0_80_20240823_28945022f4.pdf
+> Signed-off-by: Sebastian Ott <sebott@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
+> index a813b4c6c817..2f0397df0aa6 100644
+> --- a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
+> +++ b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
+> @@ -31,7 +31,7 @@ static const int32_t TVAL_MIN = INT32_MIN;
+>  static const uint32_t TIMEOUT_NO_IRQ_US = 50000;
+>  
+>  /* A nice counter value to use as the starting one for most tests. */
+> -static const uint64_t DEF_CNT = (CVAL_MAX / 2);
+> +static const uint64_t DEF_CNT = (CVAL_MAX / 4);
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+This is rather arbitrary, and only sidestep the issue: the core
+problem is that CVAL_MAX is defined as ~0, and that we have no idea
+what the *effective* counter width is.
 
-Thanks!
-Maxime
+So while this happen to sidestep the particular Ampere erratum (and
+avoid failures on X1E), this is only papering over the problem. Which
+is why I always had some reservations on this particular test -- it is
+remarkably broken.
+
+If anything, we should compute the expected width of the counter based
+on the frequency and the architectural guarantees ("Roll-over time of
+not less than 40 years."), just like the kernel driver does (see
+arch_counter_get_width()).
+
+I'm also not keen on hiding a HW bug by altering the test. What of
+other guests that would fall into the same issue? If we think the
+problem exposed by this test is serious enough, then we need to fully
+trap and emulate the timers, X1E style. Performance would definitely
+suffer, but that would be the correct thing to do.
+
+So my proposal is to fix the test to be compliant with the intent of
+the architecture instead of making bets and using semi-random values.
+If that's good enough to make that test pass on A1, great.
+
+Thanks,
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
