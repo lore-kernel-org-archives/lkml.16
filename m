@@ -1,100 +1,137 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83471CA84
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 19:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476C119B3CB;
+	Sat, 10 May 2025 19:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746905698; cv=none; b=Bn5zSiSbRlKw/piHlbG67KqsxbqqHg2RVgrtQSAaDvVntfB1u8WVdBzPC2+qJN/ahfa5RiUU+ZCF8nykjdraCFk4tavHa7ZVWLxkHvm2owudGrlnhgmmGg2cx+IeP/xCwcTzGqjit3u9z34o+ILKYJ9G4w17y1oT2jecnaTuuek=
+	t=1746906163; cv=none; b=mTmxr+248N9yhaTdbFBvUgUy4GQmgndovDSc4pj5bLc1L5i+m5KMIEKEq7UIkpmkDPSoHpsmqb46k3n/3XWvsnMnGxyjoz8KfeDvDLCtbmg11/kwzA5+M1sMuyJ78gm9E/4WuusMqAVHNIFjLC2w98YyWYe4Y+mrfDHAoydi3wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746905698; c=relaxed/simple;
-	bh=tMioPQX0pVyJ3o4jZaR764X0CMWnq2gzkza9bi1CP8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZCX6cn63QlKgK1FyZRdAQDUP0OejiyX5xdHUqpfaQsi8/YQHuqSnS32l75d/0wKHsTA55AASkdFtUdyaHOVb1Ah+sRXp8N5eWQ4QZYwn0EmWNS9fU79hSoNzLXzgwPdkOuoMUTP/CznZGcaFPmpi1GZ1AeUJMA3hddhGeACkO8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lfEx9y5B; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1746906163; c=relaxed/simple;
+	bh=/yGugloBJjOPYsW7G1LloM/bgQysm4Goabb2TS0uuR4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=M5ONzN7IWi2PGWYhGEszF+cBmoB5CrauLwMMjI7ZeCMOIxakNEty8KXRw2dwBYGXgmsE3hpZt8TLcrAPfnmiIqxLhJjc2aPo2WDdeABGJf8zFDCa4HzltCtnHOf/AdcgBPPXMH2ximnrlNQvjCU8soJe07CaQhxjhDBWfjbOJfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PZOxXfPP; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfEx9y5B"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-739525d4e12so3001315b3a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 12:34:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZOxXfPP"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7423df563d6so1823759b3a.0;
+        Sat, 10 May 2025 12:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746905696; x=1747510496; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CVsGfWQ8buUPSw0hs7dZBA5g6N+Vx7k04xhAKanYCJU=;
-        b=lfEx9y5BZx8ozaEdvIHvbM7UceEzSOGFi/tHMdcm38QN3skJ2qjDCz9W0/cUgbltA3
-         UTDqHn+G7ZrS5jHRVWBKwZqM46+1fQVErv0Fm2ZrYFrIxj6H0MsI8ubKProQlJBEHQI0
-         nu6qqvuBFrP1u6HDR7StSdyTILNzbFIPUllMAB78mGVF30OUpWxHm5kM6Wc7+fSUHq+r
-         hSAf3C8cKbdJdegksZNL4pEIuxH0AQMTl+tepV4p0xGqPQvQ4c2bxVQUpRMVpcpLu3s6
-         NpSODnE/Lw+e87FQTqjJENESLr59ArqZ88vuCl9GSY5sY1OIu86CSsVWumGOPEMTKTQB
-         1L7A==
+        d=gmail.com; s=20230601; t=1746906161; x=1747510961; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BoUcwGY/R3cNZfS/qBHsbioe5Np0VUp+LEp6Z3RV7R8=;
+        b=PZOxXfPPkXWDloUgyf9rSav3jb56kF7PxiDgm9328yVvhxUdeZf2k+gfBoh9glbsNr
+         FapPoBpxKshfqLaC+H4kyzOcULOrsnUymHt3gNF+scVqgzfN2ooQp7ktt+B4ZSe202v/
+         Y7G/G818d5vMkGgtS4dy3iDshiBNR3FeA3Z0rb60i8AidXHg7+am2BBwJmZ5/EREKWmR
+         yakko8Q5YHusqrRJICqdehKNKL6iTxiU/6B8277bOA0+m67LHyEpgPBCSLrLMnX26OxY
+         rPD/UctUmu1DRA5hfH2R5AgpbM76eVPODzg68O/sgmdB2/r4F4SrZrEJQQJnhkFwa9VK
+         tMAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746905696; x=1747510496;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746906161; x=1747510961;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CVsGfWQ8buUPSw0hs7dZBA5g6N+Vx7k04xhAKanYCJU=;
-        b=beHtg6G9RDlGpikPccr4fLl3patXInG6T1SSRNamMQ4nQwmp0ip1yG2oAvxV//XfCr
-         2CJ5U/+edYR79QE6CVOHnoBW/beZoZN3ZhkSx7tNbqb1/gKFYM1iZL2kZCUPek4PnmsE
-         Ro1+xZNfRNcqVdo/+GRWmMQXR5mYPL1kiaPA3Q5DAV9Wkt0FRX7mep8U+EPMTc5dJnCw
-         SY0Am9qNWfylxim209YW8OUeMv6z0P+8KvnzI2/nJrhWJiYMP0+NcmP8RUb0t9G7z+FL
-         utIY3fpmURC8HKopIugcdZPlx1Iqj3lSX595pfvOVCehrqX8eP0uwdrlzdAg7sW8n/1q
-         tYqA==
-X-Gm-Message-State: AOJu0YxhNwES8uZxqCrsp+glUn1Yk9f7w3Cbx1okU9T7sdpj196/xiz/
-	8C37WLEe9ZPJn8FXT77hCEUNprgyfAA+xiuVD2vVBGyNgTz2Kwa15ilYqFev/68=
-X-Gm-Gg: ASbGnctmkQ8qvsS7qO6MRsgOMoPYWBRlgq0FUqq+VGmwsTIqmoccQByrKR+d+rzMGrk
-	oNwGNrTO2hO3XzOshzWaBXMFmebosDjlcedF88o56OuMmBOtF3EzVjNkz+PfTt/dbecyru1YZ2a
-	+JiFJVmYXS8ogFhkjW/nOaVvO+u18lkrlXECInKMGrVigZZFgHggrXrP2JeFoEUQ2t7iMqLjI9O
-	jVmVUqwU+4Drl+go0lCBywxi4lPDIXdzkPG3gG9RmKB0lTLn7PNbL4h8kPh8ZlQwTrYGlmN0NFV
-	T8nqWbDthYjODDIdNUreU3kvH/VgtmDix7DMKJZarMJoPjHPgA2l3OU3gLXLJP0MkQ==
-X-Google-Smtp-Source: AGHT+IEILGZmOaGYbeDaB6qby2u9/rMgMrqD9p6qN7Sq4xb9Kc+yl8rnfNzKED7fDbqMuhG+I9LigQ==
-X-Received: by 2002:a05:6a00:2350:b0:736:57cb:f2aa with SMTP id d2e1a72fcca58-7423bfb970amr10893224b3a.13.1746905695748;
-        Sat, 10 May 2025 12:34:55 -0700 (PDT)
-Received: from localhost.localdomain ([125.177.3.166])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7423775d442sm3519548b3a.74.2025.05.10.12.34.52
+        bh=BoUcwGY/R3cNZfS/qBHsbioe5Np0VUp+LEp6Z3RV7R8=;
+        b=H1S7Vw+/ugquLCySvK9oTERDQq4aM2ugi5cqLzZWXQLU4dJaA8mldFcaEVrh58/XF2
+         qOMHTsUduZTeQ5zRVTWpXXuUpx+hdDDX8DfW44E//DulVgSbgcqJ1gR0AHfJ9gFNWlN1
+         lDofT2rlkmfVhyH+zmroCcNAp762SJVyoV6o44NoZGYp48tTZYRMof1tNUrGmQNHqZMO
+         3vFAUOZP2GjQjU3YcRwIdnl7KOemj/H1VcIZil2hHdY226A02Z+jfFTUbRvKWKHNvsQM
+         GnezQSAoztjj3zecNp57SgyZqIjpE8w+aJcVQswlxLq5XHYi0p3RtjaWeYqliFGRyIwI
+         Uibg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG/Z2VUT+VWHqLZUNX0E9ZlT49DOX80VhVX+lCgj+MuW4she2ccfuqGrZ8sCDGZv7oFriwQFtzRfFwRjSC@vger.kernel.org, AJvYcCXoZoLu7NWuT0XlqPT5QpWS769weUA9JUuau8CduTDmO8oj+dDJ73q/zlr5lNXl124M7VGZXwlbalh0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/Mf7p2sH1l2IA7PRiGCYAiWMHcpG/aOexeD1FM8uInMEMKaXM
+	/fn2BngSqmouPXaPS3lrM56rilMEbuB4eIl6dm5NVAbhuLsWPNw0
+X-Gm-Gg: ASbGncvxoCAPHIycrM44KG1l/lvXM3/m5OSsnxwF5DnHgSu240N4pLF+u8O+RJpoVgP
+	geN6WIRV7lM5g8F1zt9/TwzNoL9o1x3KRHAnUN3hbfTR31T5cZxy9V3VkgznnQJBk7kDc07nNuE
+	fzq0bnM/G9s6/0/tO6hIz8/FZQhSZEb3lAgJA2OFjl9rBTtPw0SuUmAJUVe6Y7hbkBjBfJdaPL0
+	QOUOoaM3Ywt7j9XuEs+dXPDJeep02bKqQcAdwYZGFRybIoNTrL9chYLyMgnA3wb7osfu9cd76Kd
+	A6gaMqXRc8Jkm8F7qupJ2Ymu9t4q1+J0c/cWbumwjDpykTu4UCkSF1D9+h/EG6M=
+X-Google-Smtp-Source: AGHT+IHyaOCg6nmdx1tpmmDVVi4RGIofai7lhOL76Jh1bNi0mXY+p+TyZU8dD2IPM4g1icTcfEtCkw==
+X-Received: by 2002:a05:6a20:d490:b0:1f5:884a:7549 with SMTP id adf61e73a8af0-215abcf3a0bmr12342972637.41.1746906161432;
+        Sat, 10 May 2025 12:42:41 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2523e67d53sm2223670a12.19.2025.05.10.12.42.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 12:34:55 -0700 (PDT)
-From: Hyunmin Lee <hyunminrlee@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: [PATCH] sched: Fix a typo in the comment for CLONE_THREAD
-Date: Sun, 11 May 2025 04:34:29 +0900
-Message-ID: <20250510193429.2641-1-hyunminrlee@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Sat, 10 May 2025 12:42:40 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Subject: [PATCH 0/3] mtd: spi-nor: Add VIA/WonderMedia serial flash
+ controller driver
+Date: Sat, 10 May 2025 23:42:20 +0400
+Message-Id: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABysH2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDU0MD3fLcEt3itJzE4gzdJIOkRGPTNMNE48RUJaCGgqLUtMwKsGHRsbW
+ 1AO8IJ1xcAAAA
+X-Change-ID: 20250510-wmt-sflash-b0ba35f1a3ae
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746906149; l=2148;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=/yGugloBJjOPYsW7G1LloM/bgQysm4Goabb2TS0uuR4=;
+ b=qKl34F1ulpROgbhFtip/Ntb7igCmTfhWuTyH8JITUi/hXyBS3ZnQ3a4trQoLk0edNiFYMW1sI
+ OdnJDEsF3tECR0psehALNSioy48Rb4R8KLLibVLCS21GuvBLfWuNryn
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-Signed-off-by: Hyunmin Lee <hyunminrlee@gmail.com>
+Add a driver for the self-contained SPI NOR flash controller found on
+VIA/WonderMedia SoCs, along with the respective DT binding and DTS.
+
+The driver is a clean reimplementation based on the Linux SPI NOR
+framework, although only chip probing routines are SPI NOR specific.
+The rest of the controller operation is abstracted away behind a small
+set of MMIO registers and a physical memory mapping for chip contents.
+In fact, the vendor's implementation open-coded all driver operations
+on top of the MTD framework directly, but had to rely on a static table
+of supported flash chips indexed by ID due to the lack of auto-probing.
+
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
- include/uapi/linux/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Alexey Charkov (3):
+      dt-bindings: spi: Add VIA/WonderMedia serial flash controller
+      mtd: spi-nor: Add a driver for the VIA/WonderMedia serial flash controller
+      ARM: dts: vt8500: Add serial flash controller and its clock
 
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index 359a14cc76a4..453d365f3c0c 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -16,7 +16,7 @@
- #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
- #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
- #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
--#define CLONE_THREAD	0x00010000	/* Same thread group? */
-+#define CLONE_THREAD	0x00010000	/* Same thread group */
- #define CLONE_NEWNS	0x00020000	/* New mount namespace group */
- #define CLONE_SYSVSEM	0x00040000	/* share system V SEM_UNDO semantics */
- #define CLONE_SETTLS	0x00080000	/* create a new TLS for the child */
+ .../devicetree/bindings/spi/via,vt8500-sflash.yaml | 122 +++++
+ MAINTAINERS                                        |   2 +
+ arch/arm/boot/dts/vt8500/vt8500-bv07.dts           |  37 ++
+ arch/arm/boot/dts/vt8500/vt8500.dtsi               |  34 ++
+ arch/arm/boot/dts/vt8500/wm8505-ref.dts            |  37 ++
+ arch/arm/boot/dts/vt8500/wm8505.dtsi               |  21 +
+ arch/arm/boot/dts/vt8500/wm8650-mid.dts            |  37 ++
+ arch/arm/boot/dts/vt8500/wm8650.dtsi               |  21 +
+ arch/arm/boot/dts/vt8500/wm8750-apc8750.dts        |  37 ++
+ arch/arm/boot/dts/vt8500/wm8750.dtsi               |  21 +
+ arch/arm/boot/dts/vt8500/wm8850-w70v2.dts          |  37 ++
+ arch/arm/boot/dts/vt8500/wm8850.dtsi               |  21 +
+ arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts       |  37 ++
+ drivers/mtd/spi-nor/controllers/Kconfig            |  14 +
+ drivers/mtd/spi-nor/controllers/Makefile           |   1 +
+ drivers/mtd/spi-nor/controllers/wmt-sflash.c       | 525 +++++++++++++++++++++
+ 16 files changed, 1004 insertions(+)
+---
+base-commit: ed61cb3d78d585209ec775933078e268544fe9a4
+change-id: 20250510-wmt-sflash-b0ba35f1a3ae
+
+Best regards,
 -- 
-2.43.0
+Alexey Charkov <alchark@gmail.com>
 
