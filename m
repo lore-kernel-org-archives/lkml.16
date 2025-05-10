@@ -1,114 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41838221726;
-	Sat, 10 May 2025 09:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F72618DF8D;
+	Sat, 10 May 2025 10:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746871162; cv=none; b=fqdncG2XhAeasnrxllZ0yR6AQS88TrCt2f/epBsK5AX4jg3Ekz7OP0hJVmDAegKdsAq4GAq5snMO7YhuakgpvCZetIyoPutBB9M0S0z9AY7l55J0acuRKQHSWWOZfuChDuKmtRTy3guDwMzdmBZfQ6p13WdFvXMKwHMA294FEtg=
+	t=1746871236; cv=none; b=uHkEGiFoTfXCcL04nuctDPYbUYeGhatK214YqbXqXSO5VgtyzIyp0hpbbpsVGKFLLdeIljDWjOi+Kh+jhH0cgubsi8f/1/sYcHw8gJXn2pEBROY27w78OsVir7dyL3cqGC995ak6CiPinknoR5Rt2WZQ7vng9oWV4V2yH2dvnrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746871162; c=relaxed/simple;
-	bh=3DEDo/oT2mSMSaFNL9SAV8nObn2xvcl2tILbp4CvHJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ksgUvn9wt9c7VFMbv+rdmxjfsSwdIVjJ6S7WboDQ0zu2/ZVNhQyZWUwepXJe5+UlWzBjBteTN69wWyCzP5tXmX7eGlSYR1QS03DulsUNKcwDy4OkmyYbuoCqCG5j0tben2h/vc7mr8Euu9lOdPTYgDHqjKCOz4j7dCg21px0fZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXWpAKMN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXWpAKMN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37174C4CEE2;
-	Sat, 10 May 2025 09:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746871161;
-	bh=3DEDo/oT2mSMSaFNL9SAV8nObn2xvcl2tILbp4CvHJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rXWpAKMNzeCNUPQsBH4RKKdK7l89yw0b+2lxhE6Az1XtHzs5gDI8lrCdav9ZbFlY7
-	 fCgQm4MZFA39hJ/owlgQZAUCLqKQ0BXi4fIWheg/x5Vlj5TrHLvq3j2MosBEewj60c
-	 itmdtszyhedIyELm76r/dC+GDOfDGoC5LjPAfgGVE234GPxcZxYHlvguA6gdI2UYFL
-	 iLfyHAp4jNjaBuGnZzmAeNJffZx7xp8ApgpGKHhxfRsaEmEHDTEe7YaqJLdG7IAWjf
-	 D2EmK44ParOoe43q1mi1zkpJ/Bi52RWyNrfkveGzRcljdprHCjuLLvGUKG7OXW5jTY
-	 T70o6qew3fsJg==
-Date: Sat, 10 May 2025 11:59:17 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Eric Auger <eric.auger@redhat.com>, David Airlie <airlied@redhat.com>, 
-	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Simona Vetter <simona@ffwll.ch>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux.dev>, 
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/virtio: implement virtio_gpu_shutdown
-Message-ID: <urpxto3fgvwoe4hob2aukggeop4bcsyb7m5wflgru4c3otd6rq@aktopqufgxom>
-References: <20250507082821.2710706-1-kraxel@redhat.com>
+	s=arc-20240116; t=1746871236; c=relaxed/simple;
+	bh=Pi3y4dmEW1UEme+HX6yYi09ZtTkO/xqgAF/M7VX6HHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qyCuMaL1+vEYEeZaFhERp3J/ZTD84P71wISLcZrJgiEXB8fF471rHxPHunxA7hunc7SqUFu3HiKsvV5qS3PCql/DEH63A30hY2jVnEMwW09AfrLqqWq/AZtAtgZoBDq/w9tBiWwovjs6UXU/IOfnnP36ksTHb2FMiarrm6m3pSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.199.70.239])
+	by APP-05 (Coremail) with SMTP id zQCowADnJg8iIh9oBnoDEw--.48103S2;
+	Sat, 10 May 2025 17:53:42 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: njavali@marvell.com,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: mrangankar@marvell.com,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [RESEND PATCH] scsi: qla4xxx: Add missing is_qla4022 check in device initialization
+Date: Sat, 10 May 2025 17:52:57 +0800
+Message-ID: <20250510095257.921-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="heio2mtmzyxze2l7"
-Content-Disposition: inline
-In-Reply-To: <20250507082821.2710706-1-kraxel@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowADnJg8iIh9oBnoDEw--.48103S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWxGryUGF1rGw15XFWfGrg_yoWkuwb_ua
+	10v34Iv3ZIyr4kZ3W7XF18JFnavrsYqr1jq34Sqr4fA34UZ3s3Xryqv343Zw15G3yjyasx
+	Gws5Xry5Ar1fKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+	Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
+	UUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYSA2gesI3jzAAAs-
 
+The current code only checks for is_qla4032 in the adapter initialization
+logic, but is_qla4022 is also required for proper handling of qla4022
+devices. This can lead to incorrect behavior on qla4022 adapters.
 
---heio2mtmzyxze2l7
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/virtio: implement virtio_gpu_shutdown
-MIME-Version: 1.0
+This patch adds the missing is_qla4022 check to ensure proper handling
+of both qla4022 and qla4032 devices during adapter initialization.
 
-Hi,
+Fixes: d915058f4874 ("[SCSI] qla4xxx: add support for qla4032")
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/scsi/qla4xxx/ql4_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, May 07, 2025 at 10:28:21AM +0200, Gerd Hoffmann wrote:
-> Calling drm_dev_unplug() is the drm way to say the device
-> is gone and can not be accessed any more.
->=20
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Tested-by: Eric Auger <eric.auger@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virti=
-o/virtgpu_drv.c
-> index e32e680c7197..71c6ccad4b99 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device =
-*vdev)
-> =20
->  static void virtio_gpu_shutdown(struct virtio_device *vdev)
->  {
-> -	/*
-> -	 * drm does its own synchronization on shutdown.
-> -	 * Do nothing here, opt out of device reset.
-> -	 */
-> +	struct drm_device *dev =3D vdev->priv;
-> +
-> +	/* stop talking to the device */
-> +	drm_dev_unplug(dev);
+diff --git a/drivers/scsi/qla4xxx/ql4_init.c b/drivers/scsi/qla4xxx/ql4_init.c
+index 301bc09c8365..dfe3d0b26224 100644
+--- a/drivers/scsi/qla4xxx/ql4_init.c
++++ b/drivers/scsi/qla4xxx/ql4_init.c
+@@ -513,7 +513,7 @@ static int qla4xxx_fw_ready(struct scsi_qla_host *ha)
+ 			      "seconds expired= %d\n", ha->host_no, __func__,
+ 			      ha->firmware_state, ha->addl_fw_state,
+ 			      timeout_count));
+-		if (is_qla4032(ha) &&
++		if ((is_qla4022(ha) || is_qla4032(ha)) &&
+ 			!(ha->addl_fw_state & FW_ADDSTATE_LINK_UP) &&
+ 			(timeout_count < ADAPTER_INIT_TOV - 5)) {
+ 			break;
+-- 
+2.42.0.windows.2
 
-I'm not necessarily opposed to using drm_dev_unplug() here, but it's
-still pretty surprising to me. It's typically used in remove, not
-shutdown. The typical helper to use at shutdown is
-drm_atomic_helper_shutdown.
-
-So if the latter isn't enough or wrong, we should at least document why.
-
-Maxime
-
---heio2mtmzyxze2l7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaB8jcAAKCRAnX84Zoj2+
-duddAYDhtj3E5iLvtJE0ExfR3YSefUln3girrNWJDNmuwHDv700fcFh2eNBGOWJy
-94rqjtoBfRpekvvA/QLKNQlgDgV2cxs7yw1z4vpWWmJ/RQAgNfXyMUxiepy/DCAJ
-GQrxfPQIlw==
-=QWHu
------END PGP SIGNATURE-----
-
---heio2mtmzyxze2l7--
