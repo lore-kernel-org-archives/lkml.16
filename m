@@ -1,159 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354581A83F8
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 08:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8D51A4F3C
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 08:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746866729; cv=none; b=SQ3qeDG2X89FLf3EdGsXpTNhkN8CZzSNqSAp+CRB0sclJAEwAGag0D3n7G5+49vrMi1sntXfwNDQPzyBCl+tQRgs6VlUL8r/7MchgFT/cnadtLnrElqi33bBKGT/+SuXVzn1L25AhpG5LWMe9pTfDBNQl34p+Xf29bHS2Cp1U3U=
+	t=1746866780; cv=none; b=QQKNu8op7RP9k0bn3se29r161jB0J187S1C60AYMDmjV7caVdU8o90uXhDPpxMwp+UDMsh0b9nVJ3fJbcV2RCFgd7LoZhszTdk/I7yZbAL2/zgphy9hyZzsGBhndB9U32DFiKa7yvDDnQ4MH2k/RGC5IrbX6tGPcaNp4ikF5z04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746866729; c=relaxed/simple;
-	bh=I6iJum6veYGsxpAyFOfOr2Yj09dXqcOpxgiyuNYyMxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O7plSRFhH2dl3fe/eNUfIIm0q/Q1+nWfQDq1RRs/PBkh8cUlQhRHjNOhA8+jeX2p27H9pYya21Hs7Noh0LaHHu51JXZrSN+JpB2s1HgrtdH4iWSCZ3Fu5pUTL1zbHEEfpaZQwLEF5rejg70bY5lfpJWmVWiZnCCTdPIiNpapxO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGwyprX3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746866780; c=relaxed/simple;
+	bh=o1pRI5vghrc9QBHHiwbOKz3WHumfxVOKzsoipEvVuQc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=n100eqr6c/jkP96XcJsa/ba0vR62WzMOul2Nk1XfqDBZEahEs0VF5Fg7DXj0l8rRU2fC+wEks/hO/mRX7WW1Zj+6tKiuQNynHFgmuAENTeiwTWMUXJ45OiXjoWvMT6g+d2WjiMk49HpBEcbvhOObhdUBvBToLHthhHsXCXcX8GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OgJFOXIs; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGwyprX3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FEDC4CEE2;
-	Sat, 10 May 2025 08:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746866728;
-	bh=I6iJum6veYGsxpAyFOfOr2Yj09dXqcOpxgiyuNYyMxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AGwyprX3UyBRk+DKoSfT3MjrJPBg0lORBpbWCmN9tOsYJBm4oX5BeMTEXnK/pbFup
-	 WdHJA5ER7kPqB+7ZPc5WdDM2++6y2k/TNdtDjrfOom23rzjzNgdT3zuy+1PVGpXfav
-	 U9ulHjHNPfsMtA48Q3Wd6s5eUzDCOIrB1URNPncND3wUFvKCOh1jw4ULGUQELVzVte
-	 8YFKSC1XpjNWUZh5oK97zVU8WXd/P3m9SmSjSm4BtUveqUAaiFmLtgCM5cVKaTPnRp
-	 F96tTZR/ZsVhd0lwWKkpwPqUnWuaZQIBllo3U1Uk9aXrpnH8187wldnY7vGczx2aLQ
-	 o7ZQBM0FkZsmg==
-Date: Sat, 10 May 2025 10:45:23 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH] futex: Fix futex_mm_init() build failure on older compilers,
- remove rcu_assign_pointer()
-Message-ID: <aB8SI00EHBri23lB@gmail.com>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-15-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OgJFOXIs"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso17107565e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 01:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746866777; x=1747471577; darn=vger.kernel.org;
+        h=content-transfer-encoding:autocrypt:subject:from:cc:to
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o1pRI5vghrc9QBHHiwbOKz3WHumfxVOKzsoipEvVuQc=;
+        b=OgJFOXIssdhI4fn1Fcw4dIU7l2Wu03Icf7miQt6d2bW1ws35PNb7Ttx3TkQr4ctFc4
+         QRcnayNsdqDsaNL1B6sDU9RNU4MQiC0iZxG0v4Jr1Rz/JvCMEtoeTaDJtnea+hjVbT/f
+         MKWE3oUroz+u3hxOX02k0tqeKi9ypMOcDih1OhBT/Jdm/J8v3lfNR4OJO9JqpR9n1opA
+         RTgDfnxiWznDtHjAPyQ//2MMDhYX5Rm7QbGhWpPXrY8j9rgFLiGrb6I4phjOSJh2qiB1
+         OHodYPfH3nsg0rSVf6s5rdPrGK4OLLQa+AYlpsau7jcpgttJxmu1DeCzcsR4rGuhYp0n
+         RBdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746866777; x=1747471577;
+        h=content-transfer-encoding:autocrypt:subject:from:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o1pRI5vghrc9QBHHiwbOKz3WHumfxVOKzsoipEvVuQc=;
+        b=JstmhPjfeNukcSWhDr7LXt+V4vDhEnhqWVzM+Ec7l4IS5fB3OTRLJxmDDtQfFJeIq3
+         MhN504skru4C1F0bgcsJqWmqq8OJmpkc1/jyH3wW9MC9Aq/gXL57r7qGgsFsZft7pixT
+         7ZiZ2O/U9jejn0XhgqLuY0stZENf/Nu8DPXdfkycjtOlQ6lOhOUgvZZWciulg0TxZjbj
+         lNynvPACImjO961CqtOau41YsFepMLjpDJNw451lsnzhsqPiUOt4dPF19O7SfMveKemV
+         1TfS156kXKX9bY+l92lPG4oTCg407mf81sqmSS5+wzrmt3I5ntYexN/eCfG7WMm11YLG
+         ruKA==
+X-Gm-Message-State: AOJu0Yx8ZTcfyPaRfCcO9yadncAi/PMo2azxWcOY8pjMSElQdxSu8VSi
+	Nsl63VrZNhtbYlq2VCKZTANgDQHbCkWUoNkyS7kcWdW/vlSTr1NpjLZ1AA==
+X-Gm-Gg: ASbGncuiaZwRrp2JJd5dhAsUfgAs9ff2BmCD9soNwAuy16payZ+JLLiK6LOVYSz33Ql
+	W1Ghxv9tGry7wiE97Hs4GJumVUI9VP9gTsRsCmyVRApke7T7mvdR2/jlFeHwmSmOnBFkRG1TEgA
+	oh4CUcmmHPZ0END8TQ4t/4G7ymaU/fB25gXpk3B+1CE/TRuOyMWCSrIWCOYjLBGY4sfozfHEJxa
+	JAJ9q0Oyjgc7aJiHamhSZ78n8/7derWj3IpX9Yl12trh+coOXTSoCUewehko10wY+I7nr/Noi77
+	glVemjLF2y6SogycZ/+EJB0cgv+GxfTDs9I3z5kgZfymh81sw4taWJu2VZOtIvgT2DWMRLLK+5k
+	0euKKhVjc1TaIf7U/yGSTuabM8y/vPx8a43FNE1SHe+U3HIEVZPkG/gG8TMx9kGB/YO9Nr5DjRJ
+	PbPS+7Gx1BNgAg
+X-Google-Smtp-Source: AGHT+IGwz17sfIpZC/eVpvHXuBMU43mOVKJTN+oVAMZ101Y52KMUKuvcu6Wi/dGWErGdZPVoBy+UYA==
+X-Received: by 2002:a05:600c:3483:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-442d6d44b23mr54411455e9.14.1746866776789;
+        Sat, 10 May 2025 01:46:16 -0700 (PDT)
+Received: from ?IPV6:2003:ea:8f3a:400:c49c:ed91:96e5:222b? (p200300ea8f3a0400c49ced9196e5222b.dip0.t-ipconnect.de. [2003:ea:8f3a:400:c49c:ed91:96e5:222b])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f58ebd43sm5947801f8f.37.2025.05.10.01.46.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 May 2025 01:46:16 -0700 (PDT)
+Message-ID: <4f405d9b-460c-49f7-91b2-d147d9818369@gmail.com>
+Date: Sat, 10 May 2025 10:46:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416162921.513656-15-bigeasy@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Documentation of locking needs when working with lists?
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Even though lists are used everywhere, I was surprised not being able to find
+documentation about which operations need locking, and which ones are safe
+lock-less.
 
-* Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+My case:
+I have a list where the only operation is adding entries.
+It's clear that adding entries has to be serialized.
+Question is whether a list_for_each_entry is safe lock-less.
 
-> diff --git a/include/linux/futex.h b/include/linux/futex.h
-> index 1d3f7555825ec..40bc778b2bb45 100644
-> --- a/include/linux/futex.h
-> +++ b/include/linux/futex.h
-> @@ -85,7 +85,8 @@ void futex_hash_free(struct mm_struct *mm);
->  
->  static inline void futex_mm_init(struct mm_struct *mm)
->  {
-> -	mm->futex_phash =  NULL;
-> +	rcu_assign_pointer(mm->futex_phash, NULL);
-> +	mutex_init(&mm->futex_hash_lock);
->  }
+Looking at the code I *think* it's safe, under the precondition that
+reading/writing pointers is atomic.
 
-This breaks the build on older compilers - I tried gcc-9, x86-64 
-defconfig:
-
-  CC      io_uring/futex.o
- In file included from ./arch/x86/include/generated/asm/rwonce.h:1,
-                 from ./include/linux/compiler.h:390,
-                 from ./include/linux/array_size.h:5,
-                 from ./include/linux/kernel.h:16,
-                 from io_uring/futex.c:2:
- ./include/linux/futex.h: In function 'futex_mm_init':
- ./include/linux/rcupdate.h:555:36: error: dereferencing pointer to incomplete type 'struct futex_private_hash'
-  555 | #define RCU_INITIALIZER(v) (typeof(*(v)) __force __rcu *)(v)
-      |                                    ^~~~
- ./include/asm-generic/rwonce.h:55:33: note: in definition of macro '__WRITE_ONCE'
-   55 |  *(volatile typeof(x) *)&(x) = (val);    \
-      |                                 ^~~
- ./arch/x86/include/asm/barrier.h:63:2: note: in expansion of macro 'WRITE_ONCE'
-   63 |  WRITE_ONCE(*p, v);      \
-      |  ^~~~~~~~~~
- ./include/asm-generic/barrier.h:172:55: note: in expansion of macro '__smp_store_release'
-  172 | #define smp_store_release(p, v) do { kcsan_release(); __smp_store_release(p, v); } while (0)
-      |                                                       ^~~~~~~~~~~~~~~~~~~
- ./include/linux/rcupdate.h:596:3: note: in expansion of macro 'smp_store_release'
-  596 |   smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
-      |   ^~~~~~~~~~~~~~~~~
- ./include/linux/rcupdate.h:596:25: note: in expansion of macro 'RCU_INITIALIZER'
-  596 |   smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
-      |                         ^~~~~~~~~~~~~~~
- ./include/linux/futex.h:91:2: note: in expansion of macro 'rcu_assign_pointer'
-   91 |  rcu_assign_pointer(mm->futex_phash, NULL);
-      |  ^~~~~~~~~~~~~~~~~~
- make[3]: *** [scripts/Makefile.build:203: io_uring/futex.o] Error 1
- make[2]: *** [scripts/Makefile.build:461: io_uring] Error 2
- make[1]: *** [/home/mingo/tip/Makefile:2004: .] Error 2
- make: *** [Makefile:248: __sub-make] Error 2
-
-The problem appears to be that this variant of rcu_assign_pointer() 
-wants to know the full type of 'struct futex_private_hash', which type 
-is local to futex.c:
-
-   kernel/futex/core.c:struct futex_private_hash {
-
-So either we uninline futex_mm_init() and move it into futex/core.c, or 
-we share the structure definition with kernel/fork.c. Both have 
-disadvantages.
-
-A third solution would be to just initialize mm->futex_phash with NULL 
-like the patch below, it's not like this new MM's ->futex_phash can be 
-observed externally until the task is inserted into the task list - 
-which guarantees full store ordering.
-
-This relaxation of this initialization might also give a tiny speedup 
-on certain platforms.
-
-But an Ack from PeterZ on that assumption would be nice.
-
-Thanks,
-
-	Ingo
-
-=====================================>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-
- include/linux/futex.h | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/futex.h b/include/linux/futex.h
-index eccc99751bd9..168ffd5996b4 100644
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -88,7 +88,14 @@ void futex_hash_free(struct mm_struct *mm);
- 
- static inline void futex_mm_init(struct mm_struct *mm)
- {
--	rcu_assign_pointer(mm->futex_phash, NULL);
-+	/*
-+	 * No need for rcu_assign_pointer() here, as we can rely on
-+	 * tasklist_lock write-ordering in copy_process(), before
-+	 * the task's MM becomes visible and the ->futex_phash
-+	 * becomes externally observable:
-+	 */
-+	mm->futex_phash = NULL;
-+
- 	mutex_init(&mm->futex_hash_lock);
- }
- 
- 
+Any hint or documentation link would be appreciated. Thanks!
