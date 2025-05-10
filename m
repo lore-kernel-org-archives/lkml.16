@@ -1,109 +1,97 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.outgoing.loopia.se (smtp.outgoing.loopia.se [93.188.3.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE1422D4D4
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 15:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B72223327
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 15:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.3.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746891490; cv=none; b=UWPfWYFtmD72J1+VYjW1cmjRVRulT2AQ257B4ihpOT/MMOZ2FGt6w20TvTs6XdTW8binuIPj5lu6U+ltKL7ogOv+Hvu0PGfe4tQJs5tLlImWd6v9GNJ7nLYg8eVkF0iLIkjwVfa6I31p3uwmUo7HPatZ+vuWzbPiwsL9EAK+NOU=
+	t=1746891639; cv=none; b=DA84JvnevKdMzWSwW+otKWJmd94u40dfVS5I5VDPzPWRJFnd8T/zC1bBc6cLPI3oIxHWegRKWqCtAt0ZrdD1Qfiu3TAAfhFkSX7aveXggQ8eJT6WOJRlla68ZAOr9Feh3LCEAW2ywRyqhFO4a38VPnD+bTF2pJftbTdvyfwvmS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746891490; c=relaxed/simple;
-	bh=cyKzN5n74ZRPzOjivCuJ+2rpIjBBQdYG1gV1au2lrSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pvRQj1uyiBJbHRL9ITDbqfmmwWNUk76UrGL9p5UyEDwqi5rwRCWoWkkDMLaniZBRGoSyErvW/vccXYJ7nejSNIiOOCxjUMkG3QPIJ+1fOBYEk91zhr3Y5ifQHLz/950XDu7pgzcEnZr+y9rrYfvNFYRMtWuNvDieTQRyFnEvAwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QWA4K11T; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746891639; c=relaxed/simple;
+	bh=KQnU/8biptC1lyMJGcNts0DIV/7C76t6ScF3y+7ePT0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=V93T8sXfWZv0Xb6pcNJHJPVDnTBJFeRgbqMcR5HebEuxhdF+ST920ASTkK72L8myYIDJIf3RtnDOJJMBJjjAF9MyoqkEApk1ix9B3Z41nSKZ+6yENjMr1w3JiV2U7YwSs9q1dklHs5p7x/LBbri3yOQPoT7MbB6KW264iJErkKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lxm.se; spf=pass smtp.mailfrom=lxm.se; dkim=pass (2048-bit key) header.d=lxm.se header.i=@lxm.se header.b=PptzLYqb; arc=none smtp.client-ip=93.188.3.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lxm.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lxm.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWA4K11T"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f3f04b5dbcso4903785a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 08:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746891487; x=1747496287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WisVRIR4CgyfzhdNxpezMbCgvO4XZsl1Wpaq0T63y3k=;
-        b=QWA4K11T8I8zm2NYEwlpSfrAjtQFtt0h5jJOdJyvArXonsJ5yiMRd54UoT4VOurJdf
-         tQkwwmYlDYQ4I86t5RIDL5HoUtlAtDIpgPL744ptHsK/WPZAr/xu9loyRIBxdakGVup+
-         ry/0BLIgh4z4ktUy8EPeW5m+s+QpyhuIxkq2xZBhQ8N8DAuxCw+U0J4qVaHpGfD6SY83
-         aEQipUmrz7h3TuK2tiA/TS0QvBCM6/nUTn9ZFOB7gcm+4qoCuhaxb08Zd+1JDqMX1mFf
-         VI3S/JiEu1Qwez+F6vdrRBW0IT8iPl8dt90kDafmzq+/jbMuDFrp+Ntq1PzCZCmtkRx4
-         2p6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746891487; x=1747496287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WisVRIR4CgyfzhdNxpezMbCgvO4XZsl1Wpaq0T63y3k=;
-        b=W44tjPvVNCO/gZk34alAPipQ90JwjPb02ZocqjVp/8W46w3g4Str2fAuOWNzm8IzpJ
-         5Kp8jroJJHXF7rJd3uvOSgWs+MvtWQgwXybz+6V1xiJ08Vcdnb1spErybzzeoNGcBdwW
-         5ZuTdt9E9ca54RlpT5rsxYLhdXif3loOHQrGL0552A9rJYsZa7Se79kAelJ3gYcQz8xi
-         +qkWrA870tCXjbN+UQUWcsmAbFOIzsmHwMjGHcEdxh3/EW5Us12+DB/Q3CePMc/K/rQq
-         oTBcE+rsDhhKx9HlZTPZe9WBMtAu2wl4OFOafNPNhCf/tJIJBrQd8BUT1WsLbHor7/YZ
-         CrUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgL80JjXoG3g18pwXnTbyVDRbLEqZx2dTskH4OcIbzVhKheASpwIWdIk/hwW1YIUuuy4AMo8b46Nq8I3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+pUSZFHttwN9KfiEu92CSfhVILZCibsPbSj8OaUgZ/KwlcM+e
-	XoxWFf1qUH2g3siFlQFabFtLtP6O5LCo6tXDgeWUtxi7HPK7moi9LrNYDvP+72iJ/w==
-X-Gm-Gg: ASbGncuphLUMOabG/d4nK5m2+prZpSXNFputJ0go9OGwOkNoxSPYlBh0r8qBQXC5o5h
-	ioTZ8nJL2UFjxt875zstcZGbLzV0FXi0KIDSPWphcZ5sIelxauWBxaZj1zud/pv6YCxaiWcTosg
-	tmrdwlOUku7zgl59yE1dXtjI+X1V1HjxbtV/pQSfXmto41b5SufnIhr8o5XMhUBB+u6xTj807Xe
-	wwExSGZJVpp9ftHxnLPZnOWnp4Mw+OIBBterb0ax7a9ESH8SA/hVuhaJgNSQG6SrrJuMOeNayHw
-	xRs9bTuu081AJ9inWQHQ1g+zDMCimbOdTglM6FZ9AuukwMR3PSSVZEDkKRtMDy0eOjuGff3dcVE
-	Mv0cVw+E3b2sYZUXLzAWlJLwhoIsEu+njTMiyiJz+BDXPq3hR4Wk1mIW8yhVo1d5n4MLoCak+lZ
-	GH4A6WkDaB/F0=
-X-Google-Smtp-Source: AGHT+IGJ7K1oC+40LDkqzQMhD25A5UkOKfSfr8SDBJL1orB3LhZckJHKiEfLWOxv6y/kE9lR9h4LtA==
-X-Received: by 2002:a05:6402:26c1:b0:5f3:f8d5:4a5e with SMTP id 4fb4d7f45d1cf-5fca0730971mr5419551a12.2.1746891487036;
-        Sat, 10 May 2025 08:38:07 -0700 (PDT)
-Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-79cf-0e0d-6e5d-219d.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:79cf:e0d:6e5d:219d])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d70e296sm2986376a12.75.2025.05.10.08.38.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 08:38:06 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: dpenkler@gmail.com
-Cc: gregkh@linuxfoundation.org,
+	dkim=pass (2048-bit key) header.d=lxm.se header.i=@lxm.se header.b="PptzLYqb"
+Received: from s807.loopia.se (localhost [127.0.0.1])
+	by s807.loopia.se (Postfix) with ESMTP id 5B326327E44
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 17:33:51 +0200 (CEST)
+Received: from s934.loopia.se (unknown [172.22.191.6])
+	by s807.loopia.se (Postfix) with ESMTP id 40F62326E58;
+	Sat, 10 May 2025 17:33:51 +0200 (CEST)
+Received: from s474.loopia.se (unknown [172.22.191.5])
+	by s934.loopia.se (Postfix) with ESMTP id 37AE27CE9FA;
+	Sat, 10 May 2025 17:33:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at amavis.loopia.se
+X-Spam-Flag: NO
+X-Spam-Score: -1.2
+X-Spam-Level:
+Authentication-Results: s474.loopia.se (amavisd-new); dkim=pass (2048-bit key)
+ header.d=lxm.se
+Received: from s979.loopia.se ([172.22.191.6])
+ by s474.loopia.se (s474.loopia.se [172.22.190.14]) (amavisd-new, port 10024)
+ with LMTP id vG2lrLdINikH; Sat, 10 May 2025 17:33:50 +0200 (CEST)
+X-Loopia-Auth: user
+X-Loopia-User: henrik@lxm.se
+X-Loopia-Originating-IP: 92.35.16.29
+Received: from pc.arpa.home (c-92-35-16-29.bbcust.telenor.se [92.35.16.29])
+	(Authenticated sender: henrik@lxm.se)
+	by s979.loopia.se (Postfix) with ESMTPSA id 9AE1410BC394;
+	Sat, 10 May 2025 17:33:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lxm.se;
+	s=loopiadkim1708025221; t=1746891230;
+	bh=dGzqMlkGrM/RG1QWaZUTpamCo8a7h4gI2wxn4xA3pJw=;
+	h=From:To:Cc:Subject:Date;
+	b=PptzLYqbrSG951A+OIcWhz7KaS6qGgb4EiULRKlRyYTYZDU7MjrJJCuzgBEDnYxiP
+	 b0/iZivq3HMEFzYOb8KOQDFybbY6/9/w1A9rxWs0bmvIV35+d8s4vlBBN/wnbbjs8o
+	 Ve7yzFLJ+PCYwmOck3+gFcNd94Da+7yWbeRpzPpCxJMCL2RlVP2WOTtbyjjMnCOZOh
+	 uc/JbGSq+dWUwXoUiNDjxpY/ROYAJAAwdXULOOgthaUgvI1LdCuQYZw2QXrWkvFJJL
+	 hb+hyu8QMVmkAva54vfMJMjoCOsWWp1XNZTzxC35X83/1AdqDiuA5rQrf05wUhCrJW
+	 IOuboXLs15GaA==
+From: =?UTF-8?q?Henrik=20Lindstr=C3=B6m?= <henrik@lxm.se>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev
+Cc: linux-kbuild@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH 2/2] Staging: common: gpib_os: `request_system_control_ioctl` return value
-Date: Sat, 10 May 2025 17:38:00 +0200
-Message-Id: <20250510153800.130974-2-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250510153800.130974-1-thomas.andreatta2000@gmail.com>
-References: <20250510153800.130974-1-thomas.andreatta2000@gmail.com>
+	=?UTF-8?q?Henrik=20Lindstr=C3=B6m?= <henrik@lxm.se>
+Subject: [PATCH] Makefile: remove dependency on archscripts for header installation
+Date: Sat, 10 May 2025 17:32:04 +0200
+Message-Id: <20250510153204.11052-1-henrik@lxm.se>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-`request_system_control_ioctl` now returns the value returned from the
-function `ibrsc`, now int.
+There doesn't seem to be any purpose behind this dependency, and it prevents
+installing x86 and mips headers on non Linux systems. Doing so is useful when
+building a cross compiler targetting Linux, which requires the header files.
 
-Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+Signed-off-by: Henrik Lindström <henrik@lxm.se>
 ---
- drivers/staging/gpib/common/gpib_os.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/gpib/common/gpib_os.c b/drivers/staging/gpib/common/gpib_os.c
-index 8456b97290b8..dddf7a70084d 100644
---- a/drivers/staging/gpib/common/gpib_os.c
-+++ b/drivers/staging/gpib/common/gpib_os.c
-@@ -1970,9 +1970,9 @@ static int request_system_control_ioctl(struct gpib_board *board, unsigned long
- 	if (retval)
- 		return -EFAULT;
+diff --git a/Makefile b/Makefile
+index b29cc321ffd9..0234faafe8f0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1366,7 +1366,7 @@ PHONY += archheaders archscripts
+ hdr-inst := -f $(srctree)/scripts/Makefile.headersinst obj
  
--	ibrsc(board, request_control);
-+	retval = ibrsc(board, request_control);
- 
--	return 0;
-+	return retval;
- }
- 
- static int t1_delay_ioctl(struct gpib_board *board, unsigned long arg)
+ PHONY += headers
+-headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders archscripts
++headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders
+ ifdef HEADER_ARCH
+ 	$(Q)$(MAKE) -f $(srctree)/Makefile HEADER_ARCH= SRCARCH=$(HEADER_ARCH) headers
+ else
 -- 
-2.34.1
+2.39.5
 
