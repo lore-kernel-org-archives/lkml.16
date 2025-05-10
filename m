@@ -1,97 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A6C1EA7EB;
-	Sat, 10 May 2025 08:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354581A83F8
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 08:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746866672; cv=none; b=jkj8te5/eD7ZwN9WKsXr7tyE4waW7ANu6EcKzjtCYmsbHc25uWjlnp1H8XWpe9Hp8V/xfzkNPV5vDsEVAfMQFNq3xliM/avlXu7kQye2s6ocUbdrfR7khlwXNUBYP28BFwUuicOJmAmln0HoseLSrLnBjsmOiMRsub5lIRZ/sW0=
+	t=1746866729; cv=none; b=SQ3qeDG2X89FLf3EdGsXpTNhkN8CZzSNqSAp+CRB0sclJAEwAGag0D3n7G5+49vrMi1sntXfwNDQPzyBCl+tQRgs6VlUL8r/7MchgFT/cnadtLnrElqi33bBKGT/+SuXVzn1L25AhpG5LWMe9pTfDBNQl34p+Xf29bHS2Cp1U3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746866672; c=relaxed/simple;
-	bh=+jzMMg+8qQHgg35V15goKA1QTUFHCDmPs4KrlKdhpME=;
+	s=arc-20240116; t=1746866729; c=relaxed/simple;
+	bh=I6iJum6veYGsxpAyFOfOr2Yj09dXqcOpxgiyuNYyMxg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLBjMaOG1IWj1nlKLYZMdG+KyXdbANtuuj+PUKDEku1I/R6YbUOR8+q6jFM3dK3DNrYBMS0Y0Tk7GmINLDGbwv3a7DytO3Lo5IZ6i0mYdgkcihKgxlJiCGOdsAyO5JQKPRRhPICaFF5Bz38vYum39pvyequEzX5cECYI90aiP1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0Xl54h3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7plSRFhH2dl3fe/eNUfIIm0q/Q1+nWfQDq1RRs/PBkh8cUlQhRHjNOhA8+jeX2p27H9pYya21Hs7Noh0LaHHu51JXZrSN+JpB2s1HgrtdH4iWSCZ3Fu5pUTL1zbHEEfpaZQwLEF5rejg70bY5lfpJWmVWiZnCCTdPIiNpapxO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGwyprX3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0Xl54h3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DF10C4CEEB;
-	Sat, 10 May 2025 08:44:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGwyprX3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FEDC4CEE2;
+	Sat, 10 May 2025 08:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746866671;
-	bh=+jzMMg+8qQHgg35V15goKA1QTUFHCDmPs4KrlKdhpME=;
+	s=k20201202; t=1746866728;
+	bh=I6iJum6veYGsxpAyFOfOr2Yj09dXqcOpxgiyuNYyMxg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W0Xl54h3KjjKFfTFEhHErwdQSHjucmw9GxgRfmYr5AHOE8RdJLUMfrlB+EL9szQ3g
-	 wWJ6PvTy57+0j6UxvyxCZP+ogkCuUVr8EzuYAHe1D7jAq8AaVVtGH58OUz/K8cOTi+
-	 1lhwI6ek1VZS7afqt3H/1UDAu/WND0BOvw4KdHy3XqqqpWQ+DcXgKRz6jNksLbRwiN
-	 dvTIdOU2LvXm7sfvoiXIB8SdDKODR81RoQqtHeH2+l7huHS81Z62jyckBWAZzEaINS
-	 9p+J9o3MAWYHHQha0YYwAAqmbno0ym1V4LqWfvYngjvWeDv1RJ6PVDrmITfAnni059
-	 2gpVwDNGZp3PA==
-Date: Sat, 10 May 2025 10:44:28 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Douglas Anderson <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, 
-	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Hui Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	linux-stm32@st-md-mailman.stormreply.com, Aradhya Bhatia <a-bhatia1@ti.com>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: Re: [PATCH v3 04/22] drm/bridge: cdns-dsi: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <xf44dsvdlzwxuzxgsmysf62azyv7tvq7dqgy2ixpcw4sb3jifq@gvgpl5qjozld>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
- <20250509-drm-bridge-convert-to-alloc-api-v3-4-b8bc1f16d7aa@bootlin.com>
+	b=AGwyprX3UyBRk+DKoSfT3MjrJPBg0lORBpbWCmN9tOsYJBm4oX5BeMTEXnK/pbFup
+	 WdHJA5ER7kPqB+7ZPc5WdDM2++6y2k/TNdtDjrfOom23rzjzNgdT3zuy+1PVGpXfav
+	 U9ulHjHNPfsMtA48Q3Wd6s5eUzDCOIrB1URNPncND3wUFvKCOh1jw4ULGUQELVzVte
+	 8YFKSC1XpjNWUZh5oK97zVU8WXd/P3m9SmSjSm4BtUveqUAaiFmLtgCM5cVKaTPnRp
+	 F96tTZR/ZsVhd0lwWKkpwPqUnWuaZQIBllo3U1Uk9aXrpnH8187wldnY7vGczx2aLQ
+	 o7ZQBM0FkZsmg==
+Date: Sat, 10 May 2025 10:45:23 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH] futex: Fix futex_mm_init() build failure on older compilers,
+ remove rcu_assign_pointer()
+Message-ID: <aB8SI00EHBri23lB@gmail.com>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
+ <20250416162921.513656-15-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="5n64y2ueq77czjvz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-4-b8bc1f16d7aa@bootlin.com>
+In-Reply-To: <20250416162921.513656-15-bigeasy@linutronix.de>
 
 
---5n64y2ueq77czjvz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 04/22] drm/bridge: cdns-dsi: convert to
- devm_drm_bridge_alloc() API
-MIME-Version: 1.0
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-On Fri, May 09, 2025 at 03:53:30PM +0200, Luca Ceresoli wrote:
-> This is the new API for allocating DRM bridges.
->=20
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> diff --git a/include/linux/futex.h b/include/linux/futex.h
+> index 1d3f7555825ec..40bc778b2bb45 100644
+> --- a/include/linux/futex.h
+> +++ b/include/linux/futex.h
+> @@ -85,7 +85,8 @@ void futex_hash_free(struct mm_struct *mm);
+>  
+>  static inline void futex_mm_init(struct mm_struct *mm)
+>  {
+> -	mm->futex_phash =  NULL;
+> +	rcu_assign_pointer(mm->futex_phash, NULL);
+> +	mutex_init(&mm->futex_hash_lock);
+>  }
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+This breaks the build on older compilers - I tried gcc-9, x86-64 
+defconfig:
 
-Maxime
+  CC      io_uring/futex.o
+ In file included from ./arch/x86/include/generated/asm/rwonce.h:1,
+                 from ./include/linux/compiler.h:390,
+                 from ./include/linux/array_size.h:5,
+                 from ./include/linux/kernel.h:16,
+                 from io_uring/futex.c:2:
+ ./include/linux/futex.h: In function 'futex_mm_init':
+ ./include/linux/rcupdate.h:555:36: error: dereferencing pointer to incomplete type 'struct futex_private_hash'
+  555 | #define RCU_INITIALIZER(v) (typeof(*(v)) __force __rcu *)(v)
+      |                                    ^~~~
+ ./include/asm-generic/rwonce.h:55:33: note: in definition of macro '__WRITE_ONCE'
+   55 |  *(volatile typeof(x) *)&(x) = (val);    \
+      |                                 ^~~
+ ./arch/x86/include/asm/barrier.h:63:2: note: in expansion of macro 'WRITE_ONCE'
+   63 |  WRITE_ONCE(*p, v);      \
+      |  ^~~~~~~~~~
+ ./include/asm-generic/barrier.h:172:55: note: in expansion of macro '__smp_store_release'
+  172 | #define smp_store_release(p, v) do { kcsan_release(); __smp_store_release(p, v); } while (0)
+      |                                                       ^~~~~~~~~~~~~~~~~~~
+ ./include/linux/rcupdate.h:596:3: note: in expansion of macro 'smp_store_release'
+  596 |   smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
+      |   ^~~~~~~~~~~~~~~~~
+ ./include/linux/rcupdate.h:596:25: note: in expansion of macro 'RCU_INITIALIZER'
+  596 |   smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
+      |                         ^~~~~~~~~~~~~~~
+ ./include/linux/futex.h:91:2: note: in expansion of macro 'rcu_assign_pointer'
+   91 |  rcu_assign_pointer(mm->futex_phash, NULL);
+      |  ^~~~~~~~~~~~~~~~~~
+ make[3]: *** [scripts/Makefile.build:203: io_uring/futex.o] Error 1
+ make[2]: *** [scripts/Makefile.build:461: io_uring] Error 2
+ make[1]: *** [/home/mingo/tip/Makefile:2004: .] Error 2
+ make: *** [Makefile:248: __sub-make] Error 2
 
---5n64y2ueq77czjvz
-Content-Type: application/pgp-signature; name="signature.asc"
+The problem appears to be that this variant of rcu_assign_pointer() 
+wants to know the full type of 'struct futex_private_hash', which type 
+is local to futex.c:
 
------BEGIN PGP SIGNATURE-----
+   kernel/futex/core.c:struct futex_private_hash {
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaB8R6wAKCRAnX84Zoj2+
-duEOAYD5W8gO3mYzy/rzNOgxh+og+ZXDnXUK5Epp9vOFPU7ZJjHyo+4t6VnXTLBA
-aRhwVKIBgNklbO9mFaRUYvyZAYKC4STPZvzgX7VRFZ+IUPjgiEFG3YFlCeRAP/yY
-JptKD6dJQQ==
-=9/Jk
------END PGP SIGNATURE-----
+So either we uninline futex_mm_init() and move it into futex/core.c, or 
+we share the structure definition with kernel/fork.c. Both have 
+disadvantages.
 
---5n64y2ueq77czjvz--
+A third solution would be to just initialize mm->futex_phash with NULL 
+like the patch below, it's not like this new MM's ->futex_phash can be 
+observed externally until the task is inserted into the task list - 
+which guarantees full store ordering.
+
+This relaxation of this initialization might also give a tiny speedup 
+on certain platforms.
+
+But an Ack from PeterZ on that assumption would be nice.
+
+Thanks,
+
+	Ingo
+
+=====================================>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+ include/linux/futex.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/futex.h b/include/linux/futex.h
+index eccc99751bd9..168ffd5996b4 100644
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -88,7 +88,14 @@ void futex_hash_free(struct mm_struct *mm);
+ 
+ static inline void futex_mm_init(struct mm_struct *mm)
+ {
+-	rcu_assign_pointer(mm->futex_phash, NULL);
++	/*
++	 * No need for rcu_assign_pointer() here, as we can rely on
++	 * tasklist_lock write-ordering in copy_process(), before
++	 * the task's MM becomes visible and the ->futex_phash
++	 * becomes externally observable:
++	 */
++	mm->futex_phash = NULL;
++
+ 	mutex_init(&mm->futex_hash_lock);
+ }
+ 
+ 
