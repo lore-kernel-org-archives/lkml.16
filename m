@@ -1,66 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from trager.us (trager.us [52.5.81.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88952E401;
-	Sat, 10 May 2025 01:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7CBB67F;
+	Sat, 10 May 2025 01:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746840394; cv=none; b=hG+uJarDEfwyiHOPlGJx4FuqwGk+o92rXGPi6bQ8QWMZJamgIGwctglx70MVaXn5oYvZdMOWdMJQxodd+D5O5OJYelTeZdWVruonPRKMoIbIF7c4aaLroFSSdNHfrlJ83bsTZ8HS6It7eOjKYgg7nW6G2+werqOyAv5/XG3xImM=
+	t=1746840757; cv=none; b=ji+zfpvNeKR2yck/eUFBsRgKeYxD9YsWf6bZYeuW0hidDBC2MB1cf852Ru8/N4Jn7NHSMBtFI72qvxPy015Px7p78IzEQPlLUDqn4w9iFbDg2g4M1JOYsCrVZMUvKY/1G5xhKEYqJgNVB3NtnPzS1HbJ+7gHgKP+mp6T77NO2qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746840394; c=relaxed/simple;
-	bh=G3646iFM/PSXY7R167/rsBSW0S3KtjrzdAQFJQP3ynA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Bx+Ib3bkaB0mfxrhdVM6cV3es4kBQHfxugLFzrWIkVaVTJ4gcUnao7o0mlhC+C45lKZ1HYaIrQ/bjWkydlBqoTjlVmeG5vc6PgQ546xKmWAx5mU3+5evF3m9fiNUa4qv0mdyLGJS6AB1q5oXjRnpLqirwshrNXzHIXe3obcqG/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ErIWNpYq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ErIWNpYq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94B0C4CEE4;
-	Sat, 10 May 2025 01:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746840393;
-	bh=G3646iFM/PSXY7R167/rsBSW0S3KtjrzdAQFJQP3ynA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ErIWNpYqkcqsxM+6XhEBHioSO4BSy2GdXycbHxGuYxRyI7TcDv8EWg5IQv8p19V3E
-	 c1Kk2rSN8N1i/rpbwyR5GGWgU3uk+0XvBxzB6xijkNQbiHU1wYI9L7RcUU/8zVLAL3
-	 BEw2KTmp6++ckQxBYqyL5BDwKh8P7/YhkNNz5m/Q=
-Date: Fri, 9 May 2025 18:26:32 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song
- <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, Alexei
- Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, bpf@vger.kernel.org, linux-mm@kvack.org,
- cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, Meta kernel team
- <kernel-team@meta.com>
-Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
-Message-Id: <20250509182632.8ab2ba932ca5e0f867d21fc2@linux-foundation.org>
-In-Reply-To: <20250509232859.657525-1-shakeel.butt@linux.dev>
-References: <20250509232859.657525-1-shakeel.butt@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746840757; c=relaxed/simple;
+	bh=xgEoxdF8WtQ4LXl7GXwgSisMk5T5Altc6CL481mKxEQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GkWp0rfPi1LVgfwW+i9eB2QPVFRQdIpcuGX/zqxLeeGU4Jzq9zvf/od7Z1hGOyhJ7/Ia7olQVpDmOgCj6axIHsDq93ppSq2iogU+cCjHjMvkjpEEws1VnqIxQjvIgISFY4d1cw1SyyZv1zUM7Ts4dllCNd3n+ALP34Oy4a/uZSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
+Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
+	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <lee@trager.us>)
+	id 1uDY9X-0002Do-TG; Sat, 10 May 2025 00:33:20 +0000
+From: Lee Trager <lee@trager.us>
+To: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	kernel-team@meta.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Su Hui <suhui@nfschina.com>,
+	Lee Trager <lee@trager.us>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 0/5] eth: fbnic: Add devlink dev flash support
+Date: Fri,  9 May 2025 17:21:12 -0700
+Message-ID: <20250510002851.3247880-1-lee@trager.us>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri,  9 May 2025 16:28:55 -0700 Shakeel Butt <shakeel.butt@linux.dev> wrote:
+fbnic supports updating firmware using signed PLDM images. PLDM images are
+written into the flash. Flashing does not interrupt the operation of the
+device.
 
-> BPF programs can trigger memcg charged kernel allocations in nmi
-> context. However memcg charging infra for kernel memory is not equipped
-> to handle nmi context. This series adds support for kernel memory
-> charging for nmi context.
+Changes:
 
-The patchset adds quite a bit of material to core MM on behalf of a
-single caller.  So can we please take a close look at why BPF is doing
-this?
+V4:
+* Tested flashing in a 50x loop
+* Add devl_lock() in shutdown / quiescene paths like suspend to prevent
+  interrupting the FW flashing process.
+* Add support for multiple completion messages.
+* Removed BSD function notation from fbnic_fw_xmit_fw_start_upgrade()
+* Mailbox functions no longer return cmpl_data->result
+* Add missing error check in fbnic_fw_xmit_fw_write
+* Drop setting cmpl->u.fw_update.* to 0
+* Set offset and length before validation
+* Drop !fw check
+* Firmware upgrades are now process driven
+* Fix potential memory leak when an error is received in the mailbox when
+  updating.
+* Include anti-rollback support
+* Drop retries when updating but increase timeout to 10s
+* Use NL_SET_ERR_MSG_FMT_MOD in fbnic_devlink_flash_update()
+* Updated cover letter, commit messages, and docs as suggested
+* Dropped kdocs
+* Patched libpldmfw to not require send_package_data or send_component_table
+  which allowed stub functions to be dropped.
+* Dropped all dev_*() printks
+* Fixed Xmas tree variable declarations
 
-What would be involved in changing BPF to avoid doing this, or of
-changing BPF to handle things locally?  What would be the end-user
-impact of such an alteration?  IOW, what is the value to our users of
-the present BPF behavior?
+V3 - https://lore.kernel.org/lkml/20241111043058.1251632-1-lee@trager.us/T/
+* Fix comments
 
+V2 - https://lore.kernel.org/all/20241022013941.3764567-1-lee@trager.us/
+* Fixed reversed Xmas tree variable declarations
+* Replaced memcpy with strscpy
 
+Lee Trager (5):
+  pldmfw: Don't require send_package_data or send_component_table to be
+    defined
+  eth: fbnic: Accept minimum anti-rollback version from firmware
+  eth: fbnic: Add support for multiple concurrent completion messages
+  eth: fbnic: Add mailbox support for PLDM updates
+  eth: fbnic: Add devlink dev flash support
+
+ .../device_drivers/ethernet/meta/fbnic.rst    |  11 +
+ drivers/net/ethernet/meta/Kconfig             |   1 +
+ drivers/net/ethernet/meta/fbnic/fbnic.h       |   3 +-
+ .../net/ethernet/meta/fbnic/fbnic_devlink.c   | 260 +++++++++++++++-
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c    | 294 ++++++++++++++++--
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.h    |  53 +++-
+ drivers/net/ethernet/meta/fbnic/fbnic_mac.c   |   2 +-
+ drivers/net/ethernet/meta/fbnic/fbnic_pci.c   |   9 +
+ lib/pldmfw/pldmfw.c                           |   6 +
+ 9 files changed, 616 insertions(+), 23 deletions(-)
+
+--
+2.47.1
