@@ -1,97 +1,86 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711E213B58B
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F3024B29
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746846759; cv=none; b=Fu7+sQiSH6APcqOjpDBHHSV8cx1mZ+M3V7EGAvOdTealtMIiIBr/dqESeQDIRrdLh6RkMDGr1zAMtKgdTsnk2FiVi9GY6WThIs0cXe4eWItfzZzYDNqnIwMFjX0ZY225wE9Q8Bguyv3EKc3gzHTovQOhkVuPPR72WNGmLbLqZdw=
+	t=1746847584; cv=none; b=Vez1hY778oVxXQyFmNQdDtEmF0a7+02gNc6BBhBZS3NuGzBc1uVdg2kTukRrr8QFfQ/VWLuUCZ0UgLdb8t3kQ3FoHc+RTt3QVIQL9yPLImwcL6rU1toaA4HvlXgC2tpLLnDL9KGu06Zh0HbZf/vFnVy8TjvM7naVBxwySWbnYc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746846759; c=relaxed/simple;
-	bh=sJX7Wm1L2WnQLt74u0pXKyPEk6kzoPni3XC5cT6ciOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8YJJGVudqdTYiIniLlmBX2O6Lh4bZvlJQn08XHPj9Vquh2/5KH5cSHozEyje4F78yk84LwDooUm8lp7wFRP31ZI7RsXqvpp9Er0TinuLPOAhTk2pefh0xcq9Xtzhh2FIJ39dnfSzigvUxCbxW3EInO8NfvjMC21zC+nL7AA+g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iJ9Dn2q6; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746847584; c=relaxed/simple;
+	bh=QIpt02LYO1R8RWPVE5NAgG9Nn7Ig63WWTiMMMzfCXxA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=resIrwWQ0CHZXyHzaLmZBnBzPwIg6yyjxubhGAg+ONLaYtWlM6whI84QrDeSRuB63aGRJb+56/BuUdQUWE+v57GYKYQ9ecIYLfZMSB3F6MGfrokdruIpzv8i+A3vcWDN6JyQ69ktb/wqKVSptTuVQBTav2SnNqae5I2VZDk7THo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Tdh3J8SS reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iJ9Dn2q6"
-Date: Fri, 9 May 2025 20:11:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746846754;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JiEb5YARkO2I8m9A66UGcmQ4V3Z4sE94ND81dqX+dO8=;
-	b=iJ9Dn2q67WMEAPWD03Wr+NCVGG1K0ctFpYfjkOrA7o9w2bUsBo6t4dz3iBQgZBUFlFlOyD
-	gNFtM5MoreKTji25JnyAaUyofLbxs8dlRmUNIqXMM2EA74KDxsQxeqw43SZwQ3mUrSl0zc
-	Sno7ZsJBmrBzBEgdLddC25+2UZ4bqlw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Vlastimil Babka <vbabka@suse.cz>, Alexei Starovoitov <ast@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
-Message-ID: <xe443fcnpjf4nozjuzx2lzwjqkhzhkualcwxk4f5y6e5v7d7vl@h47t3oz3ippf>
-References: <20250509232859.657525-1-shakeel.butt@linux.dev>
- <20250509182632.8ab2ba932ca5e0f867d21fc2@linux-foundation.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Tdh3J8SS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=oU+cMc6ZOlFQWAq6dQ2bMXk2bihfuhYNwBhN6Y+KoxU=; b=T
+	dh3J8SSPjrJiIHYNmZr1fGdobVGwZTBri3HKjvK7e75/a980n1FWS8LciFRWknhF
+	WCcv7B98i+Z9VXjvo5rJ1vNWS/wA1zgWvMq+Y5XhSd2bJPXwfFveI++9gAV+n08r
+	xQ1AnzdziCuU3c61xTvycZ7D+nhgGPSPs/wYxzGDME=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-128 (Coremail) ; Sat, 10 May 2025 11:25:18 +0800
+ (CST)
+Date: Sat, 10 May 2025 11:25:18 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Tim Chen" <tim.c.chen@linux.intel.com>
+Cc: surenb@google.com, kent.overstreet@linux.dev, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between
+ read() calls
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
+References: <20250507175500.204569-1-00107082@163.com>
+ <20250509173929.42508-1-00107082@163.com>
+ <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
+X-NTES-SC: AL_Qu2fBPSfuE0q7imdYukZnEYQheY4XMKyuPkg1YJXOp80liTj+QsqeHJmM2fy0MWCMhmgvRWIThZo2P9Ff7J6UbIjiec6pflHcWV1TvGZ1P7k
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509182632.8ab2ba932ca5e0f867d21fc2@linux-foundation.org>
-X-Migadu-Flow: FLOW_OUT
+Message-ID: <4538ec3b.1052.196b839d0f1.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:gCgvCgD3n+Ufxx5oeSwBAA--.7119W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBxJqmgevNQrKQAHs0
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hi Andrew,
-
-On Fri, May 09, 2025 at 06:26:32PM -0700, Andrew Morton wrote:
-> On Fri,  9 May 2025 16:28:55 -0700 Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> 
-> > BPF programs can trigger memcg charged kernel allocations in nmi
-> > context. However memcg charging infra for kernel memory is not equipped
-> > to handle nmi context. This series adds support for kernel memory
-> > charging for nmi context.
-> 
-> The patchset adds quite a bit of material to core MM on behalf of a
-> single caller.  So can we please take a close look at why BPF is doing
-> this?
-> 
-> What would be involved in changing BPF to avoid doing this, or of
-> changing BPF to handle things locally?  What would be the end-user
-> impact of such an alteration?  IOW, what is the value to our users of
-> the present BPF behavior?
-> 
-
-Before answering the questions, let me clarify that this series is
-continuation of the work which added similar support for page allocator
-and related memcg charging and now the work is happening for
-kmalloc/slab allocations. Alexei has a proposal on reentrant kmalloc and
-here I am providing how memcg charging for that (reentrant kmalloc)
-should work.
-
-Next let me take a stab in answering the questions and BPF folks can
-correct me if I am wrong. From what I understand, users can attach BPF
-programs at almost any place in kernel and those BPF programs can do
-memory allocations. This line of work is to make those allocations work
-if the any such BPF attach point is triggered in mni context.
-
-Before this line of work (reentrant page and slab allocators), I think
-BPF had its internal cache but it was very limited and can easily fail
-allocation requests (please BPF folks correct me if I am wrong). This
-was discussed in LSFMM this year as well.
-
-Now regarding the impact to the users. First there will not be any
-negative impact on the non-users of this feature. For the value this
-feature will provide to users, I think this line of work will make BPF
-programs of the users more reliable with better allocation behavior.
-BPF folks, please add more comments for the value of these features.
-
-thanks,
-Shakeel
+CgpBdCAyMDI1LTA1LTEwIDAyOjMzOjQ4LCAiVGltIENoZW4iIDx0aW0uYy5jaGVuQGxpbnV4Lmlu
+dGVsLmNvbT4gd3JvdGU6Cj5PbiBTYXQsIDIwMjUtMDUtMTAgYXQgMDE6MzkgKzA4MDAsIERhdmlk
+IFdhbmcgd3JvdGU6Cj4+IAo+PiAKPj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgV2FuZyA8MDAxMDcw
+ODJAMTYzLmNvbT4KPj4gLS0tCj4+ICBsaWIvYWxsb2NfdGFnLmMgfCAyOSArKysrKysrKysrLS0t
+LS0tLS0tLS0tLS0tLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDE5
+IGRlbGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2xpYi9hbGxvY190YWcuYyBiL2xpYi9h
+bGxvY190YWcuYwo+PiBpbmRleCAyNWVjYzEzMzRiNjcuLmZkZDU4ODc3NjlhNiAxMDA2NDQKPj4g
+LS0tIGEvbGliL2FsbG9jX3RhZy5jCj4+ICsrKyBiL2xpYi9hbGxvY190YWcuYwo+PiBAQCAtNDUs
+MjEgKzQ1LDE2IEBAIHN0cnVjdCBhbGxvY2luZm9fcHJpdmF0ZSB7Cj4+ICBzdGF0aWMgdm9pZCAq
+YWxsb2NpbmZvX3N0YXJ0KHN0cnVjdCBzZXFfZmlsZSAqbSwgbG9mZl90ICpwb3MpCj4+ICB7Cj4+
+ICAJc3RydWN0IGFsbG9jaW5mb19wcml2YXRlICpwcml2Owo+PiAtCXN0cnVjdCBjb2RldGFnICpj
+dDsKPj4gIAlsb2ZmX3Qgbm9kZSA9ICpwb3M7Cj4+ICAKPj4gLQlwcml2ID0ga3phbGxvYyhzaXpl
+b2YoKnByaXYpLCBHRlBfS0VSTkVMKTsKPj4gLQltLT5wcml2YXRlID0gcHJpdjsKPj4gLQlpZiAo
+IXByaXYpCj4+IC0JCXJldHVybiBOVUxMOwo+PiAtCj4+IC0JcHJpdi0+cHJpbnRfaGVhZGVyID0g
+KG5vZGUgPT0gMCk7Cj4+ICsJcHJpdiA9IChzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUgKiltLT5w
+cml2YXRlOwo+PiAgCWNvZGV0YWdfbG9ja19tb2R1bGVfbGlzdChhbGxvY190YWdfY3R0eXBlLCB0
+cnVlKTsKPj4gLQlwcml2LT5pdGVyID0gY29kZXRhZ19nZXRfY3RfaXRlcihhbGxvY190YWdfY3R0
+eXBlKTsKPj4gLQl3aGlsZSAoKGN0ID0gY29kZXRhZ19uZXh0X2N0KCZwcml2LT5pdGVyKSkgIT0g
+TlVMTCAmJiBub2RlKQo+PiAtCQlub2RlLS07Cj4+IC0KPj4gLQlyZXR1cm4gY3QgPyBwcml2IDog
+TlVMTDsKPj4gKwlpZiAobm9kZSA9PSAwKSB7Cj4+ICsJCXByaXYtPnByaW50X2hlYWRlciA9IHRy
+dWU7Cj4+ICsJCXByaXYtPml0ZXIgPSBjb2RldGFnX2dldF9jdF9pdGVyKGFsbG9jX3RhZ19jdHR5
+cGUpOwo+PiArCQljb2RldGFnX25leHRfY3QoJnByaXYtPml0ZXIpOwo+PiArCX0KPgo+RG8geW91
+IG5lZWQgdG8gc2tpcCBwcmludCBoZWFkZXIgd2hlbiAqcG9zICE9IDA/IGkuZSBhZGQKPgo+CX0g
+ZWxzZSB7Cj4JCXByaXYtPnByaW50X2hlYWRlciA9IGZhbHNlOwo+CX0KPgo+VGltCgpwcmludF9o
+ZWFkZXIgZmxhZyB3aWxsIGJlIHNldCB0byBmYWxzZSBvbmNlIGhlYWRlciBpcyBwcmludGVkLCBp
+biBhbGxvY2luZm9fc2hvdygpOgoxMTQgICAgICAgICBpZiAocHJpdi0+cHJpbnRfaGVhZGVyKSB7
+CjExNSAgICAgICAgICAgICAgICAgcHJpbnRfYWxsb2NpbmZvX2hlYWRlcigmYnVmKTsKMTE2ICAg
+ICAgICAgICAgICAgICBwcml2LT5wcmludF9oZWFkZXIgPSBmYWxzZTsKMTE3ICAgICAgICAgfQoK
+b25jZSBwcml2LT5wcmludF9oZWFkZXIpIGlzIHNldCB0byB0cnVlLCAgdGhlIGhlYWRlciB3aWxs
+IGJlIHByaW50ZWQgb25jZSBhbmQgb25seSBvbmNlIHVudGlsIGl0IGlzIApzZXQgdG8gdHJ1ZSBu
+ZXh0IHRpbWUuCgpUaGFua3MKRGF2aWQKCj4KPj4gKwlyZXR1cm4gcHJpdi0+aXRlci5jdCA/IHBy
+aXYgOiBOVUxMOwo+PiAgfQo+PiAgCg==
