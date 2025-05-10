@@ -1,108 +1,175 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA7621B9E2
-	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB4C21B9E2
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 10:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746872498; cv=none; b=bFlLIryL0QwmPzpGUQQvRagpDp5+VMUilg6AUig1xTxOCn4TpHz+/cX1/6LTOiTmyYp05epP1SmYY/x2oj4a+m0ebeA0/b6THVjz1tWtFq8t8ElWMyB3jju2s6MGA8Cc3Abr3S/tK6Ko8nmsrC3cyBhEu7rYMWQd0wxT9C936ss=
+	t=1746872613; cv=none; b=rEd84kUGIli4oVI1lozYodd0f9wN0CYKVBXIhBC2AkGs57juYRxQ8wHBKHXH7a0dE+BBJVLmjjGxs2G/8t/BapFEd0ZkO4FXhfJynmwVI1lzJLYUf1kSPra06lk48k4vo85fb8jdl4LTl9d6IsG7yFtjkRDQPODXjN9xBLwf5dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746872498; c=relaxed/simple;
-	bh=wvyfyP5GNb7dYAUO9N524DiOE/hrns350VPRomjD9R0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m0kDVbqTRL6zdQ0gokeQDHOAi6xJGjCdW5HVlg648qdKK7AUfyOexL76/P769cHodVd70luaQQVIkSdt3EE6EhmlS0yZnSV2RtHCwPGOdNHMsGdL65OChU8pEp8ur1lICcjpAPTCcD/j5/y3+ZabQOKSburvgBxGRygg3E8728g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NeGORnBt; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NeGORnBt"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7423fb98cb1so1264000b3a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746872496; x=1747477296; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5uq+Zst8YwtPGpsQlMHD4aGLCy+mUn3+jss35jpDE/s=;
-        b=NeGORnBtIR0rahPird2feB5CPO9/+LrPo6HDEvGG3wHpaa88y4b1aOYH1iwppHgOHJ
-         Ed2hlHkcvgB9HJ2exgzBsS4m8+AKHgHeMhm9VPakUsQMz786Cn8U/BKNI3ttfbdtnxSz
-         dBW+v7x5Cbfnjr50l9r9TT/+pTNKnuhEWQAqhUAxPHQiWso58USZ3AI0tTqDdsUwCHJ0
-         4Hkxfkpaz86Q4lThn/ZfO9e8u1s4uBSgmJp3Z6tg/ClaqJSYyEvaJvkEMkrihPlXxovs
-         6WXUb/fQOvjYKnmr2v3eizD/ozX9oUR+zQzs9skGjwYMKnG1ZtJ9UTd0HT41etTgfoqT
-         QtaQ==
+	s=arc-20240116; t=1746872613; c=relaxed/simple;
+	bh=q0wisZRt5L9pgCrLCML8CY8UvzsBCAeD/nP6yE4p5bY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WJSM//Rmii+/2DC/pT4UDzZDGej9JjGVeo4+cclWOzAIWWPTbZX8Ki2R/f/Tnmmwzqpwh72bniVdOI2R6gFZ9XiqRdF5ymMv9jXUriu9wpuDI1eJ+qIohroPaEkoHWMhMXivK1ucF5vvP7JFO2Woxo2jcrFM49vwGaceOAYZ9AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da717e86b1so31750865ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 03:23:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746872496; x=1747477296;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5uq+Zst8YwtPGpsQlMHD4aGLCy+mUn3+jss35jpDE/s=;
-        b=BAcijFX7Qy4K1bzw6nypzyxg12HymNadhGmo1vT+YiqMknvVkq4LnHOS2SgUAHkFE7
-         S2moipTfsjYTikXOvuhBZnm8sfdXMpWJ6BW7KjCWNKCHjvlFLCv8SDzoxLzSUVkLoxaG
-         qenA3ZvqAatIKui+ksrkO6SQ56yoe7Or7K0uzaVLktoJ3Sc/DmrHmHQKogbTUg9ZOj3a
-         L6k+7eI5r3mfhGDyOLi4r9cUjfKqmHFRTsci2obpebNg8o1mPkjKLYnQ8xUHrUmT/Wrw
-         kxxuCmXM/wv8IFIM36RaHSOFClPkQU0x0Y/ImizM+9Q7bQXPWaiaerS6UBp70YnPJYcv
-         UmoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyuvBMF+r3v/92shYLDRFpI3cCxPXsSte8cI349aEiY3lMEmyVKqr1vBrGRZ47O0CT4BbLjt8H2uPQExI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1nDG/mp8hzVsmIvqXGTj4xWngJtvdgVXa970MNSc9TKHYbs99
-	SrL/agRw4TtBFZENlBGxFjIRbOcb3/r1826h9/xd9Vh676rxK2a/
-X-Gm-Gg: ASbGncu9zJYQmtPeme406sVxfljnPS52COUilK+mAO1CBlXUSuVQ73Nx7TK3CHU0uIs
-	GRmN+L3GM7gggFgeeh3BqblTWv2RPKOhPBYM/X3lVbUtL1C3zTFvui4i8HVRVxq2ajI4IyD7xah
-	bDwnnRmodO9cBl2kAWtalMiK+DR9lo4vipkSrOZ3oZf4/PipfNoeoVjGofe1Ja/oAi3CkEOd7cz
-	HuoGSx6dnjKdU1wDvj+qxDt5K7CyLw6b8Jk8DyW5X3gd++NuLdk0MLGKaUlDO//tnMV3Fe9uQnV
-	0jixjQL/fMmJiLkJ5Hnu8tNZKL54M0009yzMIpccRyZXQiNUGL0sFnvj
-X-Google-Smtp-Source: AGHT+IGTyFC3y3txfPtKS8vmVFwlrXN1ldd56g5XK0RMzSCg6bJ2N10vkSvR4w29AgSFP+E0lUB6TQ==
-X-Received: by 2002:a05:6a00:2d08:b0:736:5544:7ad7 with SMTP id d2e1a72fcca58-7423bfb9282mr8688337b3a.14.1746872496113;
-        Sat, 10 May 2025 03:21:36 -0700 (PDT)
-Received: from ilya.linux.jp ([240b:10:c301:9100:7db1:c9cc:c837:2394])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a8efa2sm2978554b3a.165.2025.05.10.03.21.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 03:21:35 -0700 (PDT)
-From: ilya guterman <amfernusus@gmail.com>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me
-Cc: linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Ilya Guterman <amfernusus@gmail.com>
-Subject: [PATCH] drivers/nvme: Add quirks for device 025e:f1ac
-Date: Sat, 10 May 2025 19:21:30 +0900
-Message-ID: <20250510102130.14710-1-amfernusus@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1746872610; x=1747477410;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ME2pcLTIWfFJQpkjnq7laYhtteo6YmR7jL8iYdx3Li0=;
+        b=KZazxsDu8pO/dzcDaWfjzmPV18xZA6Ha94mVGN37ki0Jc6UE83bQqkGiHMIOSVNh/J
+         ggY6DKFIZfCgMbICAexuqOliLxdYsQS5TEO5xLKqaCLb5M8456HxJnbSHyT+BnUx6uDQ
+         YMRx/4a6Heu1qFj+URsjyOptvYa118aNSD60pY7GkrEAoh4EY2fm+KmH8/6PWa97auLd
+         1DxZsKf6dmV1mjzxsPs7WLhgE+IJrOD20h8zlczFnor/DDMvwY46CIiozMQgrhoBdJK3
+         H5HuisIFumtshzQkflnAMbH+e0YOAU8ZmjTkXbyHmSXIICnr8xb8uNyBQLNDbVsuXICQ
+         Txdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXWjyc3gtk1zlm4OEv8jHqKHLHwVFNGB4CHO+kMG+4pqFa9UEi5ZNVFsznSaUJxQO930/JKHQAKP0PTGFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycbZnKmfVHEl8RzIGddA2AS+36R/qLHXikQsr/slQC4N3lOEmz
+	+SqbA799D6o8npuNjO8r46W5aSn7sP9xLZ8UGp8M9FYavQZia9GhXdwWZMT5uXhJXvEJINR9lyG
+	xV+yPsP/0wP9Inn9Pl1icDuayGS1tpzGlMS8wFtnryYlVn8ds1TKgMlg=
+X-Google-Smtp-Source: AGHT+IE3kICTyrVLQUUUSYgkh0Ms303NZQ2PftYdffS42SfBgyOrUm0wsE8sLG569ASRtLgT2wKNruVCdhqJ9aKfE5sWbepAQ3eg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2489:b0:3da:6f46:5c1a with SMTP id
+ e9e14a558f8ab-3da7e1e1b12mr79953545ab.2.1746872610474; Sat, 10 May 2025
+ 03:23:30 -0700 (PDT)
+Date: Sat, 10 May 2025 03:23:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681f2922.050a0220.f2294.0005.GAE@google.com>
+Subject: [syzbot] [net?] BUG: unable to handle kernel paging request in nsim_drv_port_add
+From: syzbot <syzbot+1e4a7dc1542addfca0a5@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Ilya Guterman <amfernusus@gmail.com>
+Hello,
 
-This commit adds NVME_QUIRK_NO_DEEPEST_PS for
-device [126f:2262], which belongs to device SOLIDIGM P44 Pro SSDPFKKW020X7
+syzbot found the following issue on:
 
-The device frequently have trouble exiting the deepest power state (5),
-resulting in the entire disk unresponsive.
+HEAD commit:    9c69f8884904 Merge tag 'bcachefs-2025-05-08' of git://evil..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b5d8f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b353fce507849ee
+dashboard link: https://syzkaller.appspot.com/bug?extid=1e4a7dc1542addfca0a5
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Verified by setting nvme_core.default_ps_max_latency_us=10000 and observing them behaving normally.
-Also by running with the patch couldn't reproduce the issue after multiple wake up from sleeps.
-Running without the patch again reprodcued the issue on the first wake from sleep.
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6f122d34f751/disk-9c69f888.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d2f2b90345ca/vmlinux-9c69f888.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/90cead75be18/bzImage-9c69f888.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1e4a7dc1542addfca0a5@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: fffffffffffffee8
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD e184067 P4D e184067 PUD e186067 PMD 0 
+Oops: Oops: 0000 [#1] SMP KASAN PTI
+CPU: 0 UID: 0 PID: 19500 Comm: syz.0.2769 Tainted: G     U              6.15.0-rc5-syzkaller-00136-g9c69f8884904 #0 PREEMPT(full) 
+Tainted: [U]=USER
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:580 [inline]
+RIP: 0010:__mutex_lock+0x159/0xb90 kernel/locking/mutex.c:746
+Code: 00 8b 35 9a 09 48 0f 85 f6 75 29 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 60 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 93 07 00 00 <48> 3b 5b 60 0f 85 e0 01 00 00 bf 01 00 00 00 e8 43 0d 1e f6 48 8d
+RSP: 0018:ffffc9000407fa50 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: fffffffffffffe88 RCX: 1ffffffff35654bc
+RDX: 1fffffffffffffdd RSI: 0000000000000000 RDI: fffffffffffffee8
+RBP: ffffc9000407fb90 R08: ffffffff870eaaa4 R09: 0000000000000000
+R10: ffffc9000407fba8 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffc9000407fad0 R14: 0000000000000000 R15: 1ffff9200080ff54
+FS:  00007ff6196956c0(0000) GS:ffff8881249ec000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffee8 CR3: 000000005fcee000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ nsim_drv_port_add+0x54/0x1a0 drivers/net/netdevsim/dev.c:1710
+ new_port_store+0x129/0x170 drivers/net/netdevsim/bus.c:79
+ dev_attr_store+0x55/0x80 drivers/base/core.c:2440
+ sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
+ kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x5ba/0x1180 fs/read_write.c:684
+ ksys_write+0x12a/0x240 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff61878e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ff619695038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007ff6189b5fa0 RCX: 00007ff61878e969
+RDX: 0000000000000001 RSI: 0000200000000500 RDI: 0000000000000003
+RBP: 00007ff618810ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007ff6189b5fa0 R15: 00007ffde1b77968
+ </TASK>
+Modules linked in:
+CR2: fffffffffffffee8
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:580 [inline]
+RIP: 0010:__mutex_lock+0x159/0xb90 kernel/locking/mutex.c:746
+Code: 00 8b 35 9a 09 48 0f 85 f6 75 29 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 60 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 93 07 00 00 <48> 3b 5b 60 0f 85 e0 01 00 00 bf 01 00 00 00 e8 43 0d 1e f6 48 8d
+RSP: 0018:ffffc9000407fa50 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: fffffffffffffe88 RCX: 1ffffffff35654bc
+RDX: 1fffffffffffffdd RSI: 0000000000000000 RDI: fffffffffffffee8
+RBP: ffffc9000407fb90 R08: ffffffff870eaaa4 R09: 0000000000000000
+R10: ffffc9000407fba8 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffc9000407fad0 R14: 0000000000000000 R15: 1ffff9200080ff54
+FS:  00007ff6196956c0(0000) GS:ffff8881249ec000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffee8 CR3: 000000005fcee000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	8b 35 9a 09 48 0f    	mov    0xf48099a(%rip),%esi        # 0xf4809a0
+   6:	85 f6                	test   %esi,%esi
+   8:	75 29                	jne    0x33
+   a:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  11:	fc ff df
+  14:	48 8d 7b 60          	lea    0x60(%rbx),%rdi
+  18:	48 89 fa             	mov    %rdi,%rdx
+  1b:	48 c1 ea 03          	shr    $0x3,%rdx
+  1f:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
+  23:	0f 85 93 07 00 00    	jne    0x7bc
+* 29:	48 3b 5b 60          	cmp    0x60(%rbx),%rbx <-- trapping instruction
+  2d:	0f 85 e0 01 00 00    	jne    0x213
+  33:	bf 01 00 00 00       	mov    $0x1,%edi
+  38:	e8 43 0d 1e f6       	call   0xf61e0d80
+  3d:	48                   	rex.W
+  3e:	8d                   	.byte 0x8d
+
+
 ---
- drivers/nvme/host/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index d49b69565d04..d62fef76cc07 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3734,6 +3734,8 @@ static const struct pci_device_id nvme_id_table[] = {
- 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
- 	{ PCI_DEVICE(0x1e49, 0x0041),   /* ZHITAI TiPro7000 NVMe SSD */
- 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
-+	{ PCI_DEVICE(0x025e, 0xf1ac),   /* SOLIDIGM  P44 pro SSDPFKKW020X7  */
-+		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
- 	{ PCI_DEVICE(0xc0a9, 0x540a),   /* Crucial P2 */
- 		.driver_data = NVME_QUIRK_BOGUS_NID, },
- 	{ PCI_DEVICE(0x1d97, 0x2263), /* Lexar NM610 */
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
