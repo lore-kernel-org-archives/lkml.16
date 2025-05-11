@@ -1,71 +1,88 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A4319E971;
-	Sun, 11 May 2025 07:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E701D191F6D
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 07:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746948898; cv=none; b=NI3ExQGz3ZwSkd9MpqyOqwvHBCCvTQ6WsEb4l0Q39i2iyVjsgyfMjQAgp1++ApgdFa8lsJk2wJCLYXiS6i4vHHbe4w0f22h+hOxfmhXJ8lNtz2rtzVegYw45A4LM3uW84VupW9p7sSdj/v7F6wCp/ey0A3h/QPg6IKjDm8X4XmE=
+	t=1746949752; cv=none; b=kpoI8HK2o2QXRa62rOmsNCvKnjojnLucR//IMaITxz1WMGVi6BAVG0fwTaTNdoxgi7KmEw5kGbw+xXcVIH/S6TNnz3VI4yatttix2vLUFmkzT1FT6pIPRtDluhvb0AIYZeexdmprO+W/j75LLyZaafCW2kMwjKXlWE1cYJo8BOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746948898; c=relaxed/simple;
-	bh=Doh9LCt+Ux6Z/Yi03IcCaklolO8jUuYjlW6T0irfjGk=;
+	s=arc-20240116; t=1746949752; c=relaxed/simple;
+	bh=7Jj8CXKlYlOfWLHXN3XBoeY0sEtJaZ4kuGropzS7Hq0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=olHZAwiJrX+uwz+Yinb/5NA3IwPwZB5jXxQZO8TykuYcw27lcjG9/LnAB1R32+H/WfJddUyvW0iwqwUsC8HrQEi5RBeNA/lPSBEnqi9Y5/gM3+JOuNr4Z+mAGXJJfV4gIn5AqXmCvpWGqIG6YPjUEE7t9q/1MjrywzJRlbbugEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1uE1Cv-0005sg-00; Sun, 11 May 2025 09:34:45 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id B1497C02B0; Sun, 11 May 2025 09:34:34 +0200 (CEST)
-Date: Sun, 11 May 2025 09:34:34 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: torvalds@linux-foundation.org
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MIPS fixes for v6.15
-Message-ID: <aCBTCo8kyo-LxpV5@alpha.franken.de>
+	 Content-Disposition; b=gHET6hhd3HC7ZWxLdAQfmKwD0Cigzzlbxw6pvgfjaPcMOQSmD+gLWI1YGEwpfeliWC/RjrA3kQHwSN+TQ91giHtLbg39EyuSlgW00AnD8OmFwEpyDmu4MKdrohCdEvzvlv68vGCAZio2RH8bKJlY6cQHDbyEGKn3rHxjB0kmJDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQ0gcY1D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQ0gcY1D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D3C7C4CEE4;
+	Sun, 11 May 2025 07:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746949750;
+	bh=7Jj8CXKlYlOfWLHXN3XBoeY0sEtJaZ4kuGropzS7Hq0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=vQ0gcY1DhnCj2+UOBvy7L4K4OENydFITGHy2WZOFy/geo8APrwSaHwIUamFLx2rC2
+	 k+4oCyTJ9VRBx+bg86e2Z3NIyJYFIsSSiUwsuNkVZ5xTgmBxa/LclQk0MMiazSLFID
+	 8GKm7j5tmAmdavBix7avbwDvGFNfpUvbALDq0SQxk3pgdS1IJiC8e6ZayYsmFqRJ8B
+	 7asakV5xLY5nTazgAXhZiFKOIO2mErSJHL8n6b3PD+GWFNRZjPi/eugWLefJAvFpxm
+	 yWTNvPgMQczYFA6GdInXNFJbzUorp0LRn7L48KWml8AkyqLzGMW9N4zIjWBZqaFpeX
+	 QpffBi4zffz9A==
+Date: Sun, 11 May 2025 09:49:05 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: [GIT PULL] timer subsystem fixes
+Message-ID: <aCBWcZpS1JNuEG4T@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Linus,
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Please pull the latest timers/urgent Git tree from:
 
-are available in the Git repository at:
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-05-11
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips-fixes_6.15_1
+   # HEAD: 94cff94634e506a4a44684bee1875d2dbf782722 clocksource/i8253: Use raw_spinlock_irqsave() in clockevent_i8253_disable()
 
-for you to fetch changes up to c44572e0cc13c9afff83fd333135a0aa9b27ba26:
+Misc timers fixes:
 
-  MIPS: Fix MAX_REG_OFFSET (2025-04-30 20:04:59 +0200)
+ - Fix time keeping bugs in CLOCK_MONOTONIC_COARSE clocks
 
-----------------------------------------------------------------
-Fix delayed timers
-Fix NULL pointer deref
-Fix wrong range check
+ - Work around absolute relocations into vDSO code that
+   GCC erroneously emits in certain arm64 build environments
 
-----------------------------------------------------------------
-Marco Crivellari (3):
-      MIPS: Fix idle VS timer enqueue
-      MIPS: Move r4k_wait() to .cpuidle.text section
-      MIPS: rename rollback_handler with skipover_handler
+ - Fix a false positive lockdep warning in the i8253 clocksource
+   driver
 
-Thorsten Blum (2):
-      MIPS: CPS: Fix potential NULL pointer dereferences in cps_prepare_cpus()
-      MIPS: Fix MAX_REG_OFFSET
+ Thanks,
 
- arch/mips/include/asm/idle.h   |  5 ++-
- arch/mips/include/asm/ptrace.h |  3 +-
- arch/mips/kernel/genex.S       | 71 ++++++++++++++++++++++++------------------
- arch/mips/kernel/idle.c        |  7 -----
- arch/mips/kernel/smp-cps.c     |  4 +++
- arch/mips/kernel/traps.c       | 10 +++---
- 6 files changed, 54 insertions(+), 46 deletions(-)
+	Ingo
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+------------------>
+Sebastian Andrzej Siewior (1):
+      clocksource/i8253: Use raw_spinlock_irqsave() in clockevent_i8253_disable()
+
+Thomas Gleixner (1):
+      timekeeping: Prevent coarse clocks going backwards
+
+Thomas Weiﬂschuh (1):
+      arm64: vdso: Work around invalid absolute relocations from GCC
+
+
+ arch/arm64/include/asm/vdso/gettimeofday.h | 13 ++++++++
+ drivers/clocksource/i8253.c                |  4 +--
+ include/linux/timekeeper_internal.h        |  8 +++--
+ kernel/time/timekeeping.c                  | 50 +++++++++++++++++++++++++-----
+ kernel/time/vsyscall.c                     |  4 +--
+ 5 files changed, 63 insertions(+), 16 deletions(-)
