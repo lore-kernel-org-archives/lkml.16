@@ -1,104 +1,70 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEBF2907;
-	Sun, 11 May 2025 16:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C1D2907
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 16:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746982040; cv=none; b=XJT6e8b45Wz6qRGBTNJKEwgiuyJnB6QEidrAJKelfM9vMx4qFvm3VBz7nWsIyqJ+Drd8ZE4pYRVrFdfX6Fu1Sh5qRi/vHyJiVd19eGUpdvZFEDRP2nLfF97lRxOA1uGxUtEIiqjrTOJeXm7R2MqClxXGUT6PpgX9xKEiyY5dJbk=
+	t=1746982282; cv=none; b=FqNEm3582jnt3gLnyem1LYvPl3d14rf9TK3R+Z2xJvWY79vlPyKqKUzuakcLSA0SguPQNpHNt+Ig2RKNIJ8W4oK6QT74C85lhpshrLzNQh29WAdvtTkm/p2sbFozTbMe50dEtm/MdFSTV/r9lNKM/0PD8GgiRdNVDRnKD63DYO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746982040; c=relaxed/simple;
-	bh=mjnVU8GLX2LF0mn0qFKXmn86qGb28F05Qgh8z6E3Dv8=;
+	s=arc-20240116; t=1746982282; c=relaxed/simple;
+	bh=hp0V2rHp0AnNag69pcoABnJEQYAZl8UmFSF2rOTR0Rc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPYWRmRI5UP8kzUAFkbiw22VvxI5n7hbdXLiXY/waOXnoO/t3RO9SMKTsap70DJfYra2v03RBc+EqbRQ/QKfWsYOKlDxHG/CXg0ZtptnspKybXqOTnumcz38XNUfKUd4L3zhCFhT+1xfVIpFXInll3qF42TTzA0zPYXDlMmXnAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=MbT184Ui; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=G4f5mrG2TLmz6dHNfc+v4TkbffK84pTUeX2uQsZNeglXQizB4mhuHk09tth3gUj3/SYhD4qeDjm5gC1DfUcGKmtlGGpwigmRKXnIiDlGWSO3zKOQBkwFU2ZXIzrkPc2l45ZI7PngYq8utroWHlfEkrUB3z/0hcjgG8TvT1U69J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=wgL3cOyp; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="MbT184Ui"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=3uMgTx2GWzheI3qQ2tvAzWzktzlRZ1kEYS564YIhKqQ=; b=MbT184Ui+Uune8jG
-	FbGv71Kcjo74SjUYmVk+IuLtYhCGYNEUGvhtnptx1jcBbtkn5lLmjTDfG0PthwkNidjT18imHGYYe
-	NN+vqc5V2pIf8crvrJTfMCnIdG3LkEfvAnpLkIoPeANu+fh2UdqvMrY8gg77roKrOvJ5lnmngxYxK
-	w9TCfsnaRwbLxchUdW3310+RaqAd5LpbUTXgXr+t1iT5Lph5NtIPRGF7lYesESxjPW3mez14ofOvS
-	f8IyfluQoakJgT0FYalJuhY1B8Ml6OyQjdAcSZuVDRubQZHJtsTNUXh9YJUDPBaCJbuhKqXmaC4Vy
-	mVxeshLpwHoUFyqxLg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uE9pT-002u3D-2Q;
-	Sun, 11 May 2025 16:47:07 +0000
-Date: Sun, 11 May 2025 16:47:07 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: perex@perex.cz, tiwai@suse.com, krzysztof.h1@wp.pl,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: question on sound/isa/msnd/msnd_midi.c
-Message-ID: <aCDUi3sBXHOICgs3@gallifrey>
-References: <aByXJKi2j7B4b0bH@gallifrey>
- <87r00vxmjs.wl-tiwai@suse.de>
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="wgL3cOyp"
+Date: Sun, 11 May 2025 12:51:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1746982277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SeoAHDIH23gFXGyKcKHI7nDG1fKj5EZdsLV0fsLEv9Y=;
+	b=wgL3cOypWMiXkr9it1pxC/4m9VSuGKQURmq2hX4dI9imvGcAa+rZft30xDqz7Uvuctg6aw
+	iSXHNE1QQcYQ7qQ0jJ05KEvtUsQcqtUGne6LjZFNr1BpbuGZ/4/3he38YxPL3u6eAQTXU7
+	7SWBd4GpKwuayuXzWonj6gESUbJ6+Dno/VHdlSIGnrmbtzqUa21VYWohtCYgNWMgLIDqH1
+	nC1CtYQ2QGWPh+BkYFhGwYr0NZrH/RxikGTCnefEoNwrUPEFzCigkafaBQuTMfpe/WrtIH
+	P4QzBQ2UagN1QTDpbrQcoyQuZ7IxtE4LMsWkcuPwzi6vr5CFC+cUX/F24YUSXQ==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: sven@svenpeter.dev
+Cc: Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
+	Hector Martin <marcan@marcan.st>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 05/10] mfd: Add Apple Silicon System Management
+ Controller
+Message-ID: <aCDVgI4_LtE6OfO-@blossom>
+References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
+ <20250511-smc-6-15-v5-5-f5980bdb18bd@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87r00vxmjs.wl-tiwai@suse.de>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 16:46:08 up 14 days, 59 min,  1 user,  load average: 0.04, 0.03,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <20250511-smc-6-15-v5-5-f5980bdb18bd@svenpeter.dev>
+X-Migadu-Flow: FLOW_OUT
 
-* Takashi Iwai (tiwai@suse.de) wrote:
-> On Thu, 08 May 2025 13:36:04 +0200,
-> Dr. David Alan Gilbert wrote:
-> > 
-> > Hi,
-> >    I noticed that nothing calls snd_msndmidi_new in
-> > sound/isa/msnd/msnd_midi.c and was about to delete it, but I'm not
-> > too sure - I think it's actually a bug where it should be called.
-> > 
-> >   This code was added in 2009 by
-> > commit f6c638350275 ("ALSA: Turtle Beach Multisound Classic/Pinnacle driver")
-> > (Pretty new for an ISA card!)
-> > 
-> > Looking at msnd_midi.c the only function in there that anything
-> > calls is snd_msndmidi_input_read() called by msnd_pinnacle.c but that
-> > is guarded by a check:
-> > 
-> >   146    if (chip->msndmidi_mpu)
-> >   147          snd_msndmidi_input_read(chip->msndmidi_mpu);   
-> > 
-> > but I don't think anything sets that msndmidi_mpu, since the only
-> > thing that could is snd_msndmidi_new() which isn't called.
-> > 
-> > I see that the original poster didn't test the external midi:
-> >    https://mailman.alsa-project.org/hyperkitty/list/alsa-devel@alsa-project.org/message/CWPYLPLJQEK64UU3YFCAMVXGDY42QKF2/
-> > so I guess this has always been missing.
-> > 
-> > I don't have the hardware to test.
-> > 
-> > Thoughts?
-> 
-> Well, it's a very old code on an old interface, and if it's not used
-> (even because of a typo or an overlook), then it's basically no chance
-> to be used in future.  Let's rip off.
+> +struct apple_smc_key_info {
+> +	u8 size;
+> +	u32 type_code;
+> +	u8 flags;
+> +};
 
-Ok, I'll cut a patch to remove snd_msndmidi_new() and then probably the whole
-of msnd_midi.c and the call in msnd_pinnacle.c
+This still has the padding problem from v4. With that fixed,
 
-Dave
-
-> 
-> thanks,
-> 
-> Takashi
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
