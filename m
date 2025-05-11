@@ -1,63 +1,63 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9202C2609FD;
-	Sun, 11 May 2025 20:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A112D263F3A;
+	Sun, 11 May 2025 20:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746994407; cv=none; b=K1HYuE7wlwad617Ik0PB7xZfQihaxYgZmwVEKvkKzwtVuirXIaijK96QBTjUthjpWw0Wg/XuajtWdH1JosbHjU14f/voT6Ca9k0o422yjlgsem0m+c2DI3VzzjT7lo/JEtGKouydRYyhkpRQqbdJE2TukSEDd+KjuWgOcZpFQlY=
+	t=1746994410; cv=none; b=qpbZ42YAxkujq/Yhtda5ChfCrmYbNOn545sAGxOT3A5iI1gu3/6wdxb3omfRpvdZHPDb8nYKmExY8BbH+L+t7QgwhTmwetkfD1Ge62RG4WkQ+DMUr6vcZh3unDCu7ADdJzoYAX3hkDXE7ULKKxKOjSY33srg5fdNXl+yJJn0Rq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746994407; c=relaxed/simple;
-	bh=wrmp2LSwPgwNKJnArG8IijGvZzsMq5cRrMXTvwCX/X8=;
+	s=arc-20240116; t=1746994410; c=relaxed/simple;
+	bh=k2+jZG2fKDLcj1sNgat6nwbjyAPTOdXAGJj7hrPW7/M=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KjYkP5+ouL2fzCBj+dzim2o4L8m37iv1MuBzvfaLwEstW4C+TNqZmMH6G4Mkyt2xczSZatibFiwhTM3qHO7BFHhzFq5YgyrtW/yJ+Bpr1/SYlG1+GcVnHFhx/NY6uXp8w8ATjgDbSJVDz1g6CW8KsA6np4Er8hvrUae5GcLs4zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0KCa5No; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=O33vXNzgoqPk+yR80Q/ttHDUg1OClG5xakIc/a4/k9FFUg9KT+Z0CyGa5JGI39xltyTkrpRi68mefU8vc6iArZU+iZfLOrbeTqlV57/3tbs2ZTndvNSMwaW+GcUxO6iJYcvSDvmUwGrK2uS37w/hO6HaRjXyohDC+UR00MqEPsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HwuX1eGZ; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0KCa5No"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso38160245e9.2;
-        Sun, 11 May 2025 13:13:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HwuX1eGZ"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0ebf39427so2886975f8f.3;
+        Sun, 11 May 2025 13:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746994404; x=1747599204; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746994407; x=1747599207; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=orWgUHmQriyeNcYTKTqzfO4CbKpuvQ3L/489i8p8bBQ=;
-        b=O0KCa5No7wfJDL6PEfrmNJkxdEeK/dCKD8Nr+z6B/kkLlXHUdlvL37Zubxz5ejRif1
-         9wqBEEtHCHUU3a6iWaRD6u1esXKzqMjfNJebwiGpl6SCbruB66Cc+xc6LkVbBdwuajtQ
-         jEchgGHQsnjR5OBmjgiBb9D5IN5394ZR56Ypj7aMPvy091P7bJo95DyTvat2PZ/oEuWN
-         i0QF7IqFOSa8js7gPjTb0Bbi+Wew0L/d+fg8G7EwnOxH9U4KU3pBxhapIpD7BaQs8/d2
-         N6UqeNFKV3U85Z8WhZjUc6qWJxz4d99hJWFZAkGDfr88gBnSRZ9LefTVS5GbMiZRmr2r
-         OFPg==
+        bh=0mejOF2mYhTEXxWVOimbjN00Vr4yLk+E8aCpQ2xV2aM=;
+        b=HwuX1eGZ4OYTWFZYiW3QfU/T2ZfbIbt+nyS/sf5gkwyhUHGX7obFbQH67pF4IT2odK
+         bXfdnhkmHNJJStbgvMXXm718DWQOT0KhFCU611cw89cov0zCjGM4bZRI1i0xLDyvz9Ru
+         826iANaHTxBlDJrkXM4rVmGGhIm4iQjliPFB0FOyLm/Xwo8SBootXfIdyjqMp4TuT458
+         T/H7lxSJTtWSBPSFr4YdzYuG5gEF5cKSiN8LHlsEWX44rcSEvZdNnwPlyQ6h6BkPxrUR
+         4OkYbD5rnQ6ED/GfDtnHyfZviGapmI9roX2NeVKoxFSo8tgfEzvFXlagUCpQhUBhTyIW
+         DrvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746994404; x=1747599204;
+        d=1e100.net; s=20230601; t=1746994407; x=1747599207;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=orWgUHmQriyeNcYTKTqzfO4CbKpuvQ3L/489i8p8bBQ=;
-        b=HwzCPhOSzqy2pmAzytvbSgWtpOqh3ZtmS8AzA5ywX9CZdTJrWvplikhSIBU6mLvUx2
-         ReJ6L2yHaOk5sLgglW5L4r5RPp0udrmx6SQxdiVN5kr+aNMxfJMxNKw2A9aQvy9tzvnm
-         KlPrg285ydiWfg9vfQGNDi7QFPdoymMV89JJCcQx4XUZEMijqckAoMU2i/VSXE4/J4b0
-         5+Sb9DdRpNjMPpW2WiXjVcPXD2qxu6kzK1bEScM+/nw8V+af/C13M9x3wUwaWsRrBNuB
-         rbM0waT8gDxE5uSkHcxiQatPziWWQ0OE+iljtCRKZSIEg7baG3/Y56DUKz3+k02n+rCZ
-         UxDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBuW8afQfm/yGOAL1ce6AHmNoA0zNjnf+oWKBVFfRmMiB4hWlNs1Wqm0Y1Sk3t9xpoWq3YsNLbjNV2sMsV@vger.kernel.org, AJvYcCWWQmJz+5aRBlQmmeCNa4G8YLnE3/Q6hGIYz0bRxi6O+g/jWhjvIxqh7kcKYZVkRWVYBYRZDZ90@vger.kernel.org, AJvYcCXJmMrAcnt8TXtxewJQLmfZlnPnh/Nnv0pLKkDgJtIhPiPM617NBzk32Tz1oRRw2T/3v2eMOpKcO9JK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiF8c/P4KoVBN9awYF6Aqya7Mt2R9cbDrwf7ZGWrL9XHM9Bq+Z
-	MZuMkrIVQ32OkhstRziVeEtp5vONKtQwBjmWjdHFBU7CHVx6mdlG
-X-Gm-Gg: ASbGncvFMGaTRnMOpAnF2BYsiZQVe4spBfdRmePlgKiO2Kllnbbryxrr5p6mgJ5dLEM
-	JFChuGM24y65bnow6jxpHOxQOzEk300Z6l71OswbSQpesGC0e3cop76U6eiED/pqEVofI+eD7t8
-	xEMzlMifNj77Vej7XHfvUad4EzSMdunbs27l9ZfILCngJ6GlklZi7SzvppxfMr/eZKKPtTZRY4S
-	6iRhtjc+uTxLfTR53K051BVn/pGR2zldZiNqx9M8nQcJjAfqn6cgpih14T1lytGrCKTAzR5yWNf
-	TWsQnRmcfncMTCqVfwJZvhi1qC+PuwMIiaGu7BcjH0ZmwNIdYFcuHJHLTbGEjpDsEKx8ZVZk27S
-	cemkEdo6d8YFHvFf0GLBm
-X-Google-Smtp-Source: AGHT+IHWxj+KdF4Fuo3sU2eTz3DS6XFpP3uC5wf0mdEBBT1l4DVSLSioRRGfxBvH8wk86+wmiuanpA==
-X-Received: by 2002:a05:600c:384a:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-442d6dd24a4mr90298855e9.22.1746994403445;
-        Sun, 11 May 2025 13:13:23 -0700 (PDT)
+        bh=0mejOF2mYhTEXxWVOimbjN00Vr4yLk+E8aCpQ2xV2aM=;
+        b=oggbpUt03qQ9BY1bCqYX2KnsfiTJNxdPKM2hERR9eS432FcoAVaxB/VaOGguhzKnJ/
+         hsW6GDoT1/GqT8IE371Lv/OZAhKrs4yHeKbVku4VHsQxMQqCe2f6in2inAEv4fOYTTyR
+         M+vQLKWhe2L7+XcJ+fZNfl8g2UBKwH9j45Sjy9npT5IjvrMMDqSWBK01TTZq1twJTYfw
+         9lUVldKKF9Y7K7x8AMcIkQRC1utdL/Qg05sDvOwg5yFm6Bek1R0Nc1veMLzxfuUcdUSb
+         ES9t63zvDOV3/MkI1+e68rna/qr64Cpdn8gB68sD0vceXVGwUyTrTdo3juqWDf0NzDkL
+         JnaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyAwz5Xwjuav2DmTYvOOmKt+U7UyPJS9g5rBCRX52LmnucAyREtSTnpd4amnQ81610lpdVxKgX5xwg@vger.kernel.org, AJvYcCVFGsOgAgF+dbmGaVta5/Qrww4hAJY/DtKdZcvNIp2L2fx0Qlor5AS6dAev0hkEqaS6A9ptLjnM/zStaX/l@vger.kernel.org, AJvYcCXNjtg+W8vo01qTX6ZfUuPVpQsPHmdeYtfouxbXbJ+cbzj8bip2iI3X5HtVDt8D1XPJQeu9ls/B@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN1UBALss8fJIJb/lQERdeyCS7lY96h/eVU+6Ck5MS9lh1yzai
+	/K5w5ZOt3BCL1lpAgNo8uWxiIBV0T3GdgK8JENfKmQ1AKchavxN8
+X-Gm-Gg: ASbGncuegFUom4ZvLXF/PhKuVs91NrZdv3Opjzbt5EgnJZyLe08yz/7PfKlYbv39NH5
+	xXQMO40EP/rREeIxW/vCK+s3HQ0HKl98ttzFzYm7EG+72VDegZAHe/DiYAfqua+CmDWBXC2tFSa
+	TpOEzINDOR2ZX8bqRZ3uhFmQpluai0nwHcWKR8e+M2kEa5cU+2IFEQkYPwvbRhV1/EMchI7Cf34
+	sJP3Byu+jqjCJQM3VqGA+ia34U3U7TFv+huJwVc3VJOmx3H66mdEtxgiozwVud90YmO4u1wLftb
+	sRMa52U4QxmJExcAVVW/85NVnfivu4xykwWIVx/vK4Z0bXK7nqQx1eZ2H3yi5GzobYWWlEeCWI3
+	tnE2P9N6HOK84FkkYNiVUg2k/574WFvw=
+X-Google-Smtp-Source: AGHT+IFXCPvOH+Bl0GOCcZZfsHkVWH8TlBB8Wsfu39SLQaVZ3YE4Fzkrf4cNMCkqAZKJSKwW3S53LQ==
+X-Received: by 2002:a05:6000:18ae:b0:3a0:831d:267c with SMTP id ffacd0b85a97d-3a1f6433a0bmr9412917f8f.18.1746994406860;
+        Sun, 11 May 2025 13:13:26 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442d67ee275sm100615165e9.19.2025.05.11.13.13.21
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442d67ee275sm100615165e9.19.2025.05.11.13.13.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 13:13:22 -0700 (PDT)
+        Sun, 11 May 2025 13:13:26 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -83,9 +83,9 @@ To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	llvm@lists.linux.dev
-Subject: [net-next PATCH v4 02/11] net: phylink: keep and use MAC supported_interfaces in phylink struct
-Date: Sun, 11 May 2025 22:12:28 +0200
-Message-ID: <20250511201250.3789083-3-ansuelsmth@gmail.com>
+Subject: [net-next PATCH v4 04/11] net: phylink: add phylink_release_pcs() to externally release a PCS
+Date: Sun, 11 May 2025 22:12:30 +0200
+Message-ID: <20250511201250.3789083-5-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250511201250.3789083-1-ansuelsmth@gmail.com>
 References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
@@ -97,105 +97,139 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add in phylink struct a copy of supported_interfaces from phylink_config
-and make use of that instead of relying on phylink_config value.
+Add phylink_release_pcs() to externally release a PCS from a phylink
+instance. This can be used to handle case when a single PCS needs to be
+removed and the phylink instance needs to be refreshed.
 
-This in preparation for support of PCS handling internally to phylink
-where a PCS can be removed or added after the phylink is created and we
-need both a reference of the supported_interfaces value from
-phylink_config and an internal value that can be updated with the new
-PCS info.
+On calling phylink_release_pcs(), the PCS will be removed from the
+phylink internal PCS list and the phylink supported_interfaces value is
+reparsed with the remaining PCS interfaces.
+
+Also a phylink resolve is triggered to handle the PCS removal.
+
+A flag to make phylink resolve reconfigure the interface (even if it
+didn't change) is also added. This is needed to handle the special
+case when the current PCS used by phylink is removed and a major_config
+is needed to propagae the configuration change. With this option
+enabled we also force mac_config even if the PHY link is not up for
+the in-band case.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/net/phy/phylink.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/net/phy/phylink.c | 58 ++++++++++++++++++++++++++++++++++++++-
+ include/linux/phylink.h   |  2 ++
+ 2 files changed, 59 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 0faa3d97e06b..ec42fd278604 100644
+index 95d7e06dee56..2f28c4c83062 100644
 --- a/drivers/net/phy/phylink.c
 +++ b/drivers/net/phy/phylink.c
-@@ -59,6 +59,11 @@ struct phylink {
- 	/* The link configuration settings */
- 	struct phylink_link_state link_config;
+@@ -84,6 +84,7 @@ struct phylink {
+ 	bool link_failed;
+ 	bool suspend_link_up;
+ 	bool major_config_failed;
++	bool reconfig_interface;
+ 	bool mac_supports_eee_ops;
+ 	bool mac_supports_eee;
+ 	bool phy_enable_tx_lpi;
+@@ -895,6 +896,55 @@ static void phylink_resolve_an_pause(struct phylink_link_state *state)
+ 	}
+ }
  
-+	/* What interface are supported by the current link.
-+	 * Can change on removal or addition of new PCS.
++/**
++ * phylink_release_pcs - Removes a PCS from the phylink PCS available list
++ * @pcs: a pointer to the phylink_pcs struct to be released
++ *
++ * This function release a PCS from the phylink PCS available list if
++ * actually in use. It also refreshes the supported interfaces of the
++ * phylink instance by copying the supported interfaces from the phylink
++ * conf and merging the supported interfaces of the remaining available PCS
++ * in the list and trigger a resolve.
++ */
++void phylink_release_pcs(struct phylink_pcs *pcs)
++{
++	struct phylink *pl;
++
++	ASSERT_RTNL();
++
++	pl = pcs->phylink;
++	if (!pl)
++		return;
++
++	list_del(&pcs->list);
++	pcs->phylink = NULL;
++
++	/* Check if we are removing the PCS currently
++	 * in use by phylink. If this is the case,
++	 * force phylink resolve to reconfigure the interface
++	 * mode and set the phylink PCS to NULL.
 +	 */
-+	DECLARE_PHY_INTERFACE_MASK(supported_interfaces);
++	if (pl->pcs == pcs) {
++		mutex_lock(&pl->state_mutex);
 +
- 	/* The current settings */
- 	phy_interface_t cur_interface;
- 
-@@ -610,7 +615,7 @@ static int phylink_validate_mask(struct phylink *pl, struct phy_device *phy,
- static int phylink_validate(struct phylink *pl, unsigned long *supported,
- 			    struct phylink_link_state *state)
- {
--	const unsigned long *interfaces = pl->config->supported_interfaces;
-+	const unsigned long *interfaces = pl->supported_interfaces;
- 
- 	if (state->interface == PHY_INTERFACE_MODE_NA)
- 		return phylink_validate_mask(pl, NULL, supported, state,
-@@ -1809,6 +1814,9 @@ struct phylink *phylink_create(struct phylink_config *config,
- 	mutex_init(&pl->state_mutex);
- 	INIT_WORK(&pl->resolve, phylink_resolve);
- 
++		pl->reconfig_interface = true;
++		pl->pcs = NULL;
++
++		mutex_unlock(&pl->state_mutex);
++	}
++
++	/* Refresh supported interfaces */
 +	phy_interface_copy(pl->supported_interfaces,
-+			   config->supported_interfaces);
++			   pl->config->supported_interfaces);
++	list_for_each_entry(pcs, &pl->pcs_list, list)
++		phy_interface_or(pl->supported_interfaces,
++				 pl->supported_interfaces,
++				 pcs->supported_interfaces);
 +
- 	pl->config = config;
- 	if (config->type == PHYLINK_NETDEV) {
- 		pl->netdev = to_net_dev(config->dev);
-@@ -1967,7 +1975,7 @@ static int phylink_validate_phy(struct phylink *pl, struct phy_device *phy,
- 		 * those which the host supports.
- 		 */
- 		phy_interface_and(interfaces, phy->possible_interfaces,
--				  pl->config->supported_interfaces);
-+				  pl->supported_interfaces);
++	phylink_run_resolve(pl);
++}
++EXPORT_SYMBOL_GPL(phylink_release_pcs);
++
+ static unsigned int phylink_pcs_inband_caps(struct phylink_pcs *pcs,
+ 				    phy_interface_t interface)
+ {
+@@ -1688,6 +1738,10 @@ static void phylink_resolve(struct work_struct *w)
+ 		if (pl->phydev)
+ 			link_state.link &= pl->phy_state.link;
  
- 		if (phy_interface_empty(interfaces)) {
- 			phylink_err(pl, "PHY has no common interfaces\n");
-@@ -2684,12 +2692,12 @@ static phy_interface_t phylink_sfp_select_interface(struct phylink *pl,
- 		return interface;
++		/* Force mac_config if we need to reconfig the interface */
++		if (pl->reconfig_interface)
++			mac_config = true;
++
+ 		/* Only update if the PHY link is up */
+ 		if (pl->phydev && pl->phy_state.link) {
+ 			/* If the interface has changed, force a link down
+@@ -1722,7 +1776,8 @@ static void phylink_resolve(struct work_struct *w)
+ 		phylink_apply_manual_flow(pl, &link_state);
+ 
+ 	if (mac_config) {
+-		if (link_state.interface != pl->link_config.interface) {
++		if (link_state.interface != pl->link_config.interface ||
++		    pl->reconfig_interface) {
+ 			/* The interface has changed, force the link down and
+ 			 * then reconfigure.
+ 			 */
+@@ -1732,6 +1787,7 @@ static void phylink_resolve(struct work_struct *w)
+ 			}
+ 			phylink_major_config(pl, false, &link_state);
+ 			pl->link_config.interface = link_state.interface;
++			pl->reconfig_interface = false;
+ 		}
  	}
  
--	if (!test_bit(interface, pl->config->supported_interfaces)) {
-+	if (!test_bit(interface, pl->supported_interfaces)) {
- 		phylink_err(pl,
- 			    "selection of interface failed, SFP selected %s (%u) but MAC supports %*pbl\n",
- 			    phy_modes(interface), interface,
- 			    (int)PHY_INTERFACE_MODE_MAX,
--			    pl->config->supported_interfaces);
-+			    pl->supported_interfaces);
- 		return PHY_INTERFACE_MODE_NA;
- 	}
+diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+index ef0b5a0729c8..c5496c063b6a 100644
+--- a/include/linux/phylink.h
++++ b/include/linux/phylink.h
+@@ -717,6 +717,8 @@ void phylink_disconnect_phy(struct phylink *);
+ int phylink_set_fixed_link(struct phylink *,
+ 			   const struct phylink_link_state *);
  
-@@ -3576,14 +3584,14 @@ static int phylink_sfp_config_optical(struct phylink *pl)
++void phylink_release_pcs(struct phylink_pcs *pcs);
++
+ void phylink_mac_change(struct phylink *, bool up);
+ void phylink_pcs_change(struct phylink_pcs *, bool up);
  
- 	phylink_dbg(pl, "optical SFP: interfaces=[mac=%*pbl, sfp=%*pbl]\n",
- 		    (int)PHY_INTERFACE_MODE_MAX,
--		    pl->config->supported_interfaces,
-+		    pl->supported_interfaces,
- 		    (int)PHY_INTERFACE_MODE_MAX,
- 		    pl->sfp_interfaces);
- 
- 	/* Find the union of the supported interfaces by the PCS/MAC and
- 	 * the SFP module.
- 	 */
--	phy_interface_and(interfaces, pl->config->supported_interfaces,
-+	phy_interface_and(interfaces, pl->supported_interfaces,
- 			  pl->sfp_interfaces);
- 	if (phy_interface_empty(interfaces)) {
- 		phylink_err(pl, "unsupported SFP module: no common interface modes\n");
-@@ -3729,7 +3737,7 @@ static int phylink_sfp_connect_phy(void *upstream, struct phy_device *phy)
- 
- 	/* Set the PHY's host supported interfaces */
- 	phy_interface_and(phy->host_interfaces, phylink_sfp_interfaces,
--			  pl->config->supported_interfaces);
-+			  pl->supported_interfaces);
- 
- 	/* Do the initial configuration */
- 	return phylink_sfp_config_phy(pl, phy);
 -- 
 2.48.1
 
