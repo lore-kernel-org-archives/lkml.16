@@ -1,167 +1,111 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41821EA90;
-	Sun, 11 May 2025 15:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCE42566F4;
+	Sun, 11 May 2025 16:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746978472; cv=none; b=ENg7UCbhppVVWUL8ykDrYlSSc0t6KtRP0kour3ERZmEvHYQ3BZSXm9XueMISA14A+an52ypDrmKsfdjSE0BOdNcJLx13aEO5deKje50NJ/V+3zp0X1ZnXUflqrxicNp1DaqJq0SxMB9BLq6cVWQrCDfFfuV1aHDQLs9p1SCZJFY=
+	t=1746979600; cv=none; b=hAfIadLkboGPKt6uFLPpPu+Q2HaRVvmExpBG70WlnUUTW9B+VQpXtiAqmGifkiL+L3pjiE+TFC19ke0IfVbX64B0Oa4BIA2ITL/hzulXwJ/SBgUht0eodil998uP3jPLWj7NTduSjpgfljZvExi75+wfjV2QyzV0BRseY1RODus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746978472; c=relaxed/simple;
-	bh=apevVu4S4A3gC1ScqlvK4rzXGz+MNz8y2NyyBOx14c8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hRuCW8Py139rF0Ss8k6ZKKOmlSPMmH72zERnUdSmf2qLPvh+4pYODY6tktYbtHiaqMsX/RWSdVPc11Byd6NTccjl6Hhki7meiblonKEiDYH+4TmkQVLR07SZ6wd5G5dC3kkSjg32iZHBLNm2ZiTCTsiS5Zn0zaJFjcDAaHutnwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6Oi1tCt; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746979600; c=relaxed/simple;
+	bh=7jcXa1duGB4RLgLwkFP/05XRZV0fBz4a7PjTgDhagIQ=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=sQNtXRudMd9DMIJ3IdFm1CT2wcKqFiwf0zs0YvOqBGosfxtjqi+/NKbsFvzGft6gIWhVhyvmr94V351Oxd+dRW0wUQU+WXcFZ98DBFTLgwNt2/PkG5hrCBb2Gu17dEzCU45LK8aox9YTc4ui6+1HVjHNnv4esgqdpMC0/Hwf5N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=gdm7Ftz1; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6Oi1tCt"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30a89c31ae7so4836206a91.2;
-        Sun, 11 May 2025 08:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746978470; x=1747583270; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BMIRT//FkWurqHCR5yWkHL+jcYZxgGvY2tq1kDCM/ag=;
-        b=G6Oi1tCtrha8bDH5Gmu8PTk5bnvo3ZCQnJZ9TqVrS8hM3QRYlh7LNW+cN/GNUrwDG8
-         KmXFnqRdjC0SRYEs1v13N7aDlAGZIn6gkmjB5P+aTdWSSSXrlxLzi7TCjH3DlbdoaP5N
-         Kwx3UkOXbY7vJHdC4A80G+/+rnCKfVZNYaMby4dgQm0mfsNJA/aDjs6YHZS+q8a7IlLP
-         QrVq3Ybq+SqcwONWafQEc/OlKpzKheETtb31+sc4a+s3U01z4Fx7HTDLFEi0SwEAPcdt
-         YEWmvxVS7D7T2NEPbrarVEUTgqxg8nw+e1JfxUuhaDF0KZiSKG6AR7WzK2puggx5dQw0
-         N5NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746978470; x=1747583270;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BMIRT//FkWurqHCR5yWkHL+jcYZxgGvY2tq1kDCM/ag=;
-        b=o4AjZG4ZUE88KgIr+Siy6xE7ocSiyWqNQhK8z4f0J/O/n0R93BbXer//wU+QdhvodI
-         G0M8vIab3r/gW/czUWAAAF/4n3luLlJKFTu7WkUhjjtB2rjTSpn7kJPLLMiCI/vNJ8bw
-         8xMB6IMBHKXxEAQYntpTPGjYZxsmXN8ez4FgLSqvASUFhDUn9QYozABIihU8qmAPKO2y
-         QR66a9A4QU5OTnXAm5GI3VzOP6U++hjcfX8ZcZnNgRFjVG3OcTC1NSbP3EtUz3pct6We
-         ELJ98ORkMw3tbb3lOn/IiemW1sMCAUoXmzxrazeaEunhyX2/ancSqrVz9wB0dck5GSdF
-         dZyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOrYFLI6gZu1DgNr+3ji4fQHaf6jiAiIDpYlsd3QdrBDwRvN31H9BjodOZNqdhqJmvL6cGura4Z05MpcrQ@vger.kernel.org, AJvYcCVsDNe59ycEliun2erT17o2kKjdekldqQB5w4OmUGm8c8yCpR/B4elRi7yYY2TpZfYjWZROkLJFSAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTgxs8fQgrBrYcCWeUBErQrrIX7DBpS6tcaWfvQJyiH5MGHG82
-	oSwdwdza2Y7M0Hh29PWme00vJdSm2hPB24a6OfUgcJs5HmhUwY4EPK39YFaF4uuAKOX1FzhyYCb
-	aXjKkHvlp4ipYZq5xb8UtGaNs5pA=
-X-Gm-Gg: ASbGncuBgMpFgkizg2gxwLXyuGxHws1XfwAd0trqykEz9YnCtjnur7jnXS6or7BaoM/
-	tJQDO1T27gmnBP13J8T/3eX508bD/aVnKiaUNChrOdZxTmr9e+nB0ouEbiyC/MEmec6XcOTlYkb
-	yP0AiB5v7JL5zdnGCSFYxFq0udFUVavMnTjA==
-X-Google-Smtp-Source: AGHT+IFWibzz1lQvEgrwAVuLTAi11+cCr8d7hzsIJdC+gKZ+mnn8eilh8OS9AJPz0NtnIoyNuGMUVS0IsE9CzmODIHk=
-X-Received: by 2002:a17:90b:3c0a:b0:2ff:693a:7590 with SMTP id
- 98e67ed59e1d1-30c3d65e441mr18951434a91.33.1746978470054; Sun, 11 May 2025
- 08:47:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="gdm7Ftz1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1746979584; x=1747584384; i=frank-w@public-files.de;
+	bh=7jcXa1duGB4RLgLwkFP/05XRZV0fBz4a7PjTgDhagIQ=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=gdm7Ftz1w0u8z5QRFsnmx9AkK+ztIEv1syuJamnLPXKg/UjwnePHm2lzQlbNv70q
+	 MT80DfyqpF2aMWdI85fR0EJhS6KQW/yIG9oJoNELcGTRHfjkwcIoDtZQoHfj68Ekt
+	 JeVCjzqLP78rm+/1MwrpRIkwOpNOntvDd8gbA0nU88rZE6RfuGvPG6Q0rpKU6SGlz
+	 MgZQ6bHiedEQ00L4rSwSvrtAhozCYEaSHPzTw5SLpljHl5L3gYr0agrx9Jwx6GEC5
+	 jl4a7Sop7hpxcOgV9+ZwrH9RD1rU2N10y1b75QzArrFLeXf0Wj7gw+oxh8LNTqXEt
+	 fFG7BanYwLRZ3ry6Gw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [194.15.84.99] ([194.15.84.99]) by
+ trinity-msg-rest-gmx-gmx-live-74d694d854-wjlx8 (via HTTP); Sun, 11 May 2025
+ 16:06:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503190044.32511-1-gye976@gmail.com> <20250504152441.13772899@jic23-huawei>
- <CAKbEznvZ3BHJK8TjGg7MR2dDMtWk+gZ5SewF_u_J0=Nw6c082Q@mail.gmail.com> <20250507204026.11a260ef@jic23-huawei>
-In-Reply-To: <20250507204026.11a260ef@jic23-huawei>
-From: Gyeyoung Baek <gye976@gmail.com>
-Date: Mon, 12 May 2025 00:47:39 +0900
-X-Gm-Features: AX0GCFtLZhxA6Y6KxoO7N2eXBNn4pYEcwjZdV0aRJVREMWk3P180KvIBdmXReis
-Message-ID: <CAKbEznuG6-+cKOOVSvyw30Qra_6yVruA0cvpcK5Gqp2_kcPHcw@mail.gmail.com>
-Subject: Re: [PATCH] iio: trigger: Add validation to reject devices requiring
- top half
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <trinity-9fe03bba-54ab-4395-b6ae-4cf1d91e1b72-1746979584333@trinity-msg-rest-gmx-gmx-live-74d694d854-wjlx8>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: linux@fw-web.de, andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com
+Cc: arinc.unal@arinc9.com, Landen.Chao@mediatek.com, dqfext@gmail.com,
+ sean.wang@mediatek.com, daniel@makrotopia.org, lorenzo@kernel.org,
+ nbd@nbd.name, netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Aw: [PATCH v1 00/14] further mt7988 devicetree work
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 11 May 2025 16:06:24 +0000
+In-Reply-To: <20250511141942.10284-1-linux@fw-web.de>
+References: <20250511141942.10284-1-linux@fw-web.de>
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:P12+K2uFVSHcFESudIJQAhZEXoN0/qrWcaFHgGWi5rtrJDP3lhLhp0PRD15yk4yAD+Qei
+ GdAejadAzkqN4wLdsaLo+PeZgfCS7PfzDC2C7cBTmAFLM+4PX1k4Aiz7OxMcszIjwJshP9SP22HU
+ had3NWgewgnIyNelCik44jSVjhqrps9IdeI5NujdDhVrzIJejURMOXEpTIM1Ap9FTWB+ZtwvHB0V
+ FU0bkw+3BFGfuEyt5jyEWZLTiAQ6KLjxGPShaF+KvPjOsCtWlN3uA8EaCXdE57Uc/+SDjQH+3YR5
+ RnBmETZbhYJYzaro2rI2HK33ZiXcf7dUeYQTdLgsXyIyl+em7IfbDl0gqW24uV7DLU=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SixuLMgmyWM=;wNTrUbF3xMJPnUgIaLZ/oGRbd1P
+ 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
 
-Hello Jonathan,
-I=E2=80=99ve referred to your previous comments and implemented the ideas.
-Thank you for your earlier feedback.
-I now have a few follow-up questions and would appreciate your
-thoughts on the below points.
+sorry for splitted series and duplicate part 9
 
-On Thu, May 8, 2025 at 4:40=E2=80=AFAM Jonathan Cameron <jic23@kernel.org> =
-wrote:
->
-> On Wed, 7 May 2025 00:55:27 +0900
-> Gyeyoung Baek <gye976@gmail.com> wrote:
+my mail provider responded with "5.7.1 Command rejected" at part 9 and i had to use another one.
 
-> I'd take a different approach (slightly) though it's more effort.
->
-> Step 1. Tidy up current situation.
->
-> Patch to convert all existing calls to devm_iio_triggered_buffer_setup()
-> and iio_triggered_buffer_setup() to not take a top half function but repl=
-ace
-> that variable with a bool early_timestamp or something along those lines.
-> Replace the h in struct iio_poll_func with a similarly named bool.
-> Bunch of plumbing to make that all get filled in correctly.
->
-> Then in iio_trigger_attach_pollfunc() check that bool and if appropriate
-> pass iio_pollfunc_store_time() it to request_threaded_irq()
-
-Now we have both the existing `devm_iio_triggered_buffer_setup()`,
-and a new version with the additional arguments of that.
-Should these two coexist for compatibility, or should the before one
-be replaced by the new one?
-
-> Step 2. Make what you want work cleanly now we only have that one handler=
-.
->
-> In iio_trigger_poll_nested() we can't know if that flag is set and I'm no=
-t
-> really keen on trying to get to this from elsewhere. We have previously c=
-onsidered
-> solving this case via whether the timestamp is set or not in the threaded
-> handler. I've never like that much as in theory timestamp 0 is valid (was
-> a while ago). The rpr0521 light sensor has handling for this.
-
-What I'm trying to do is a mechanism where device drivers can
-automatically get timestamps without manually handling them =E2=80=94 simpl=
-y
-by setting a argument to indicate whether to capture the timestamp in
-the tophalf or bottomhalf.
-
-But there are cases like the rpr0521 where the driver sets the
-timestamp manually within its own trigger.
-Would it make sense to extend this to automatically set the timestamp
-in cases where the driver uses its own trigger as well?
-To that, I believe we would need a unified interface that can cover
-all trigger types (e.g., interrupt, software trigger) that invoke
-poll() or poll_nested().
-Would it be the right direction?
-Or would it be more appropriate to consider only the top/bottom of a
-consumer device?
-
-> I wonder if the following would work.
->
-> In iio_trigger_attach_poll_func() we have access to the trigger and
-> the pollfunc.  So if the pollfunc flag for wanting an early timestamp is =
-set and
-> we know the trigger is going to use iio_poll_trigger_nested() then we cou=
-ld
-> wrap the registered handler in a local one that calls the iio_pollfunc_st=
-ore_time()
->
-> The additional magic needed here is that today we don't know that about t=
-he trigger.
-> So we'd need to add a bool to the struct iio_trig to indicate it and set =
-that
-> for all drivers that use iio_trigger_poll_nested()   bool nested; will do=
-.
->
-> It's not perfect as there are driver that do iio_trigger_poll() and iio_t=
-rigger_poll_nested()
-> depending on path. To handle those we'd need a flag to say don't overwrit=
-e my timestamp.
-> at91-sama5d2-adc.c is the first one I found.
-
-> There are ways to make even that work but lets skip that for now as they'=
-d
-> slightly complicate things. That driver won't call the timestamp capture =
-in
-> some paths but it doesn't today so we are no worse off.
-
---
-Regards,
-Gyeyoung
+regards Frank
