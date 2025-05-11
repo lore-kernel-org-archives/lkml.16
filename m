@@ -1,174 +1,228 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97E21885B8
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1168D156F28
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746985465; cv=none; b=ACFP4/8FJjJL7/H4vWWmJmTWE7uUjIOhl7+P3mJLXKv1Q6ly6dctZmDtCzf932zrjt9Lliv3GVz0eZSZasNrNOp3xOsBJSCBNkxRy1A4WGnVF9znWe0XhIVGESC5wQwD8iEiK1wBH8Lag/0ircCZv6i1XkgSykyu0BaNGiVmBXI=
+	t=1746985599; cv=none; b=D0meE2oysJAzaXnfO2pMpWrwyVNtE5CqdSrch0AX/mjLxUbn/pjKnjRQRMLI5EIVCSQ6PTXvxPOhy8bO4mZOSDlJ5F6OHehuEIyth4qNjhqx1p9MKFa+7FDWxOGCa6qP80lm8UZpH7a1emLVxfeuyhcGq8vHWdV4qv2QxAvoAdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746985465; c=relaxed/simple;
-	bh=CEsw6mzRiWGUMeZK0jVVN6aEuZaR4voawRXJKJIskg0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=k22JuxUPObCxrGAHE9D/Vo4r8VoKItIsEprrs0hJuN8D0HUsv8r6S2+5/aGoQY7ATv8Oa3MlepUBsu1J1lEZC7dK7k5l3tlJ/g8fDvavorOKlf7xMvOnIHi1xsX58ZcW/mjTAD8NDX7eLBs2QRMDG4u7NQUkuXTaYemDBJmrz1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3da82fd3df6so40699385ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 10:44:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746985463; x=1747590263;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1746985599; c=relaxed/simple;
+	bh=8OwMFLhhIArPMkXspYwNl3MrKVbZe0hfpWIx92ZBjpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JJt4jNKz3Me3w4pUhuXIHfJvCZMsHDnTeQlMGcaN8cS2eaT30kHwsY+mbuGpQdYZhtRFs7eVXnsoniWgYCD2rIp4RYNrKr5tXipPG6GrWnSoDIKYpAHaDMmDD0tWlCeo5Iy4koPdJsz2z0/zWRuN8GvdMuOvT172QTQQ7s2Lf8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EExrEJDC; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EExrEJDC"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so26431745e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 10:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746985595; x=1747590395; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/KpCTyNle1tG7yuZb222RpeOFLV+rMGE2z3vKjcud4s=;
-        b=w4TxZ2Wy1297MBUTuXlAxvrKe7PrmXPzgizCZHLnBJ9kPcB1+cA1yEH16CdrPkFB++
-         eCOCXbhJNN4iKqrhwoeD0P0+eiYEwPA4+hA3SAlF9HxaXnW4I3/RAPjwjubDV/PQs76h
-         3S+ZSLMiIYSs4Dl9RQHP1IUbkG/dNsG66+kFnDiVyiPKP/4PX9N5Qpr6J9arumRfBnxt
-         nMrZ6vTBNF0KMVdc8U1lo73QpmY26t/BpNVodxvNhIwpTmc0t+UreToPmrvp3F2eVNu0
-         auYyn3oXA4/u5kR68hOpIoZJodZyWeeBM7JNBxdt6B7wez4XMXHGQ9fWhkFRhboHvJpC
-         S/pA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNDlwQkExlM8kLo7wO9mQy2RpVYzSnXONf+Mw3tBL4wWOlF1YCWkO/2FWDSb3qUvjOfo7QbP/ySN8z6u0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrjycMOSzrrCqIF9TVP4DE2T4iMvN59zYHVf3GnFBSssLyn+h3
-	m0rIAWoU45Z1G6O6rQYHCYay6c64mlYZ9tLASD2LRJ/1AQ77tArUhg59M2V5a+9is5H0Iwe9mRC
-	IeRpWlG91XlTKx9FOMLktc1a18z9062UUvP+GPivhbLORjtODkfWym38=
-X-Google-Smtp-Source: AGHT+IHEWo5oVhboPVPcl3NLw/eLbWnrfvPyU8Exy8KJuGNj7ubzRaMT3oH6ORwYi/96ZfWdTQ6EDrBIlyZbDntLjEwOAvYlPw93
+        bh=71Yr4Tj5FXklh2M1YhEvgAExOFERp4o4g1avjYW/63k=;
+        b=EExrEJDCMaBSdxxnT4M3QzrsZf/8ReX4+X7DVHS+KTdP/pGc7z92CBbbAwhJMGaNGk
+         8Y0IDMfxYgHM/fc9bHiq0sboq3qzDTqbF7a9008ioHBwMNrXR2pcd3su0MSNTcjjfYbc
+         76bm7F0RAJJhYOJCYNEbTy+yKFfglbWpEfiJCrXYFWO6iXwITmvDy9sMsSI5wnPRIVN8
+         ObOL5svSqK4gHlyF3PmrolbN2SgGG/UEivcCbpR0kSiFMC/bV7WfFKo1YpVXbUdnelzf
+         P+HZXFFWLAeqPJIr9pyL984LbIbHhMbJeivGOfGaNQr9q2oRk2ccc4BDw5P2gfq2TkKj
+         xDEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746985595; x=1747590395;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=71Yr4Tj5FXklh2M1YhEvgAExOFERp4o4g1avjYW/63k=;
+        b=DwrCVMNq6OHkJw7p7ujjwpeHjfuvBmC9QWl/Ld1EvkKSYmmIcld9gppwydt1pJpTAI
+         tdDufkaaUUCXrMKTE2clBx6FPISDF86kAxCTcXCrMRXDZRkJ4xDY2ux2mNePkm76+kXv
+         CCN3zhAxHSzsezluU6s8a8iCF7w9Ccgk/H9f/Hq2PpCWen3vXw2jKW6SjnrPqO2tb48r
+         E2ZZuEcJP3CVPxYb62UysNJW8imFHk33SDvOcCY1AcbmiRYveLU5hQKCUmUjnW2UUnpg
+         1rO9RMB3lsnKfV59uTaGI6Fr1ERXEO/4cbXsVT04jxWfrQuo1eoj/2eP0YwMrt5N6cQR
+         4uhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUfq5V74cqlyJxYW8a8mAEi57zHucMdTLFotV2YrRYsXszQSR6UNGPDIbhialBF0uOkxISVv1nsHQdmJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTM14qaq4N5phOmIORlZFVjbJiKZuU+nPqb2aduHkGkftHlRa9
+	/HcKsLuH5gX0cY8CA/Lb8p8/adgKNDA3WPmnEOTvg485TIu17K3qTZZ0xx7dht8=
+X-Gm-Gg: ASbGncsxt6TS6hQhPojAQGROuOvp9BwltXnHyqV5wc2rlRI1w10jhdIWWsp/5d16E0M
+	vtRHasYtBXTy5mNcf+6yMsOirELWUZvs0n6Bl3NAoPSb01Rra8WFlVNeBXilHWpeAO6WTAYdFpV
+	88WycO0lYG0iuYtcmWAP4BAw7PtJHFpy0vvuzE/IQ0T7UYhZ2WSa3KdPrycfCCM6ywRiCfg2+Lm
+	uRTrfq4iEUoFpTYYsJ/1f+ztTZeeDs4xeJAbatPFGzNc2vMvF1CXUSQrT7nMeV9YYMRbaGj2GRr
+	iz+1kasKIUol6Yzpg18Pb5UDz8OXx7/eOxj/vAvOWhS/tvu2MlgQSA==
+X-Google-Smtp-Source: AGHT+IE8IsDzl9+c2njAtHrivPeEXcUCgMYEQX14/fVv7Y4VnuVvC558uuC8GvC4j0Fr4IRA4QuPdg==
+X-Received: by 2002:a5d:64ab:0:b0:3a1:f635:1133 with SMTP id ffacd0b85a97d-3a1f64220b7mr8846248f8f.7.1746985595204;
+        Sun, 11 May 2025 10:46:35 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecb46sm9977125f8f.30.2025.05.11.10.46.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 May 2025 10:46:34 -0700 (PDT)
+Message-ID: <95bd54bf-09b7-4444-94a7-87ab9a3035e6@linaro.org>
+Date: Sun, 11 May 2025 18:46:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:349a:b0:3d9:6cb5:3be4 with SMTP id
- e9e14a558f8ab-3da7e20d096mr137937015ab.15.1746985462726; Sun, 11 May 2025
- 10:44:22 -0700 (PDT)
-Date: Sun, 11 May 2025 10:44:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6820e1f6.050a0220.f2294.003c.GAE@google.com>
-Subject: [syzbot] [fs?] [efi?] BUG: unable to handle kernel paging request in alloc_fs_context
-From: syzbot <syzbot+52cd651546d11d2af06b@syzkaller.appspotmail.com>
-To: ardb@kernel.org, jk@ozlabs.org, linux-efi@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    c32f8dc5aaf9 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1762d670580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4635ffd6ad5b4a
-dashboard link: https://syzkaller.appspot.com/bug?extid=52cd651546d11d2af06b
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165c0cd4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f49cf4580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b921498959d4/disk-c32f8dc5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/04e6ad946c4b/vmlinux-c32f8dc5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d4f0d8db50ee/Image-c32f8dc5.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+52cd651546d11d2af06b@syzkaller.appspotmail.com
-
-efivarfs: resyncing variable state
-Unable to handle kernel paging request at virtual address dfff800000000005
-KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]
-Mem abort info:
-  ESR = 0x0000000096000005
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x05: level 1 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[dfff800000000005] address between user and kernel address ranges
-Internal error: Oops: 0000000096000005 [#1]  SMP
-Modules linked in:
-CPU: 1 UID: 0 PID: 6487 Comm: syz-executor120 Not tainted 6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : alloc_fs_context+0x1b4/0x76c fs/fs_context.c:294
-lr : __lse_atomic64_add arch/arm64/include/asm/atomic_lse.h:134 [inline]
-lr : arch_atomic64_add arch/arm64/include/asm/atomic.h:67 [inline]
-lr : raw_atomic64_add include/linux/atomic/atomic-arch-fallback.h:2672 [inline]
-lr : raw_atomic_long_add include/linux/atomic/atomic-long.h:121 [inline]
-lr : atomic_long_add include/linux/atomic/atomic-instrumented.h:3261 [inline]
-lr : get_cred_many include/linux/cred.h:203 [inline]
-lr : get_cred include/linux/cred.h:218 [inline]
-lr : alloc_fs_context+0x150/0x76c fs/fs_context.c:293
-sp : ffff8000a31b7760
-x29: ffff8000a31b7790 x28: dfff800000000000 x27: ffff0000c8ef88d8
-x26: 0000000000000028 x25: ffff0000c7e6f4c8 x24: ffff80008fb953e0
-x23: 0000000000000000 x22: ffff0000c7e6f498 x21: ffff0000c8ef8000
-x20: 0000000000000000 x19: ffff0000c7e6f400 x18: 00000000ffffffff
-x17: ffff800092f27000 x16: ffff80008adb31c0 x15: 0000000000000001
-x14: 1fffe0001a05b0e0 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff60001a05b0e1 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : 0000000000000005 x7 : ffff80008022b2b8 x6 : ffff80008022b4b4
-x5 : ffff0000dabc9c90 x4 : ffff8000a31b7520 x3 : ffff800080dfa950
-x2 : 0000000000000001 x1 : 0000000000000008 x0 : 0000000000000001
-Call trace:
- alloc_fs_context+0x1b4/0x76c fs/fs_context.c:294 (P)
- fs_context_for_mount+0x34/0x44 fs/fs_context.c:332
- vfs_kern_mount+0x38/0x178 fs/namespace.c:1313
- efivarfs_pm_notify+0x1c4/0x4b4 fs/efivarfs/super.c:529
- notifier_call_chain+0x1b8/0x4e4 kernel/notifier.c:85
- blocking_notifier_call_chain+0x70/0xa0 kernel/notifier.c:380
- pm_notifier_call_chain+0x2c/0x3c kernel/power/main.c:109
- snapshot_release+0x104/0x1c4 kernel/power/user.c:125
- __fput+0x340/0x75c fs/file_table.c:465
- ____fput+0x20/0x58 fs/file_table.c:493
- task_work_run+0x1dc/0x260 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x4e8/0x1998 kernel/exit.c:953
- do_group_exit+0x194/0x22c kernel/exit.c:1102
- __do_sys_exit_group kernel/exit.c:1113 [inline]
- __se_sys_exit_group kernel/exit.c:1111 [inline]
- pid_child_should_wake+0x0/0x1dc kernel/exit.c:1111
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-Code: 97f8a879 f9400368 9100a11a d343ff48 (387c6908) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	97f8a879 	bl	0xffffffffffe2a1e4
-   4:	f9400368 	ldr	x8, [x27]
-   8:	9100a11a 	add	x26, x8, #0x28
-   c:	d343ff48 	lsr	x8, x26, #3
-* 10:	387c6908 	ldrb	w8, [x8, x28] <-- trapping instruction
+User-Agent: Mozilla Thunderbird
+Subject: Re: make -C tools/perf build-test failing on aarch64
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org
+References: <aB6vFFcRErPVt7p9@x1>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <aB6vFFcRErPVt7p9@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 10/05/2025 2:42 am, Arnaldo Carvalho de Melo wrote:
+> Hi,
+> 
+> 	I noticed that upstream is failing on aarch64:
+> 
+> acme@raspberrypi:~/git/perf-tools-next $ uname -a
+> Linux raspberrypi 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux
+> acme@raspberrypi:~/git/perf-tools-next $ grep -m1 Model /proc/cpuinfo
+> Model		: Raspberry Pi 5 Model B Rev 1.1
+> acme@raspberrypi:~/git/perf-tools-next $
+> acme@raspberrypi:~/git/perf-tools-next $ git log --oneline -1 ; time make -C tools/perf build-test
+> cd17a9b1a779 (HEAD -> perf-tools-next, number/perf-tools-next, number/HEAD) perf test demangle-ocaml: Switch to using dso__demangle_sym()
+> make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+> - tarpkg: ./tests/perf-targz-src-pkg .
+> make[1]: *** [tests/make:351: tarpkg] Error 2
+> make: *** [Makefile:109: build-test] Error 2
+> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> 
+> real	0m12.130s
+> user	0m12.653s
+> sys	0m2.091s
+> acme@raspberrypi:~/git/perf-tools-next $
+> 
+> I noticed that it is using some files from outside tools/, i.e. kernel
+> files, so I tried adding those (and its dependencies) to the
+> tools/perf/MANIFEST, but stumbled at this point:
+> 
+> acme@raspberrypi:~/git/perf-tools-next $ git diff
+> diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+> index 364b55b00b48..3fe627c4b599 100644
+> --- a/tools/perf/MANIFEST
+> +++ b/tools/perf/MANIFEST
+> @@ -28,3 +28,6 @@ scripts/bpf_doc.py
+>   tools/bpf/bpftool
+>   kernel/bpf/disasm.c
+>   kernel/bpf/disasm.h
+> +scripts/Kbuild.include
+> +scripts/Makefile.asm-headers
+> +include/uapi/asm-generic/Kbuild
+> acme@raspberrypi:~/git/perf-tools-next $
+> 
+> To test it directly:
+> 
+> acme@raspberrypi:~/git/perf-tools-next $ sh -x tools/perf/tests/perf-targz-src-pkg tools/perf
+> + set -e
+> + PERF=tools/perf
+> + cd tools/perf/../..
+> + make perf-targz-src-pkg
+>    ARCHIVE perf-6.15.0-rc5.tar.gz
+> + ls -rt perf-6.15.0-rc5.tar.gz
+> + TARBALL=perf-6.15.0-rc5.tar.gz
+> + mktemp -d
+> + TMP_DEST=/tmp/tmp.wzVpK2Gmvw
+> + tar xf perf-6.15.0-rc5.tar.gz -C /tmp/tmp.wzVpK2Gmvw
+> + rm -f perf-6.15.0-rc5.tar.gz
+> + cd -
+> + make -C /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf
+> make: Entering directory '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf'
+>    BUILD:   Doing 'make -j4' parallel build
+> 
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ OFF ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+> 
+>    PERF_VERSION = 6.15.rc5.gcd17a9b1a779
+>    GEN     common-cmds.h
+>    GEN     /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+>    CC      jvmti/libjvmti.o
+>    GEN     perf-archive
+>    GEN     perf-iostat
+>    CC      dlfilters/dlfilter-test-api-v0.o
+>    CC      dlfilters/dlfilter-test-api-v2.o
+>    CC      dlfilters/dlfilter-show-cycles.o
+>    CC      jvmti/jvmti_agent.o
+>    CC      jvmti/libstring.o
+>    CC      jvmti/libctype.o
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/array.o
+> make[4]: *** No rule to make target '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libperf/arch/arm64/include/generated/uapi/asm/unistd_64.h'.  Stop.
+> make[3]: *** [Makefile:108: uapi-asm-generic] Error 2
+> make[2]: *** [Makefile.perf:973: /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libperf/libperf.a] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/cpu.h
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/fs.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/tracing_path.o
+>    LD      jvmti/jvmti-in.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/cpu.o
+>    LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/libapi-in.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/debug.o
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/debug.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/io.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/io_dir.h
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/cgroup.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/str_error_r.o
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fd/array.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fs/fs.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fs/tracing_path.h
+>    INSTALL libapi_headers
+>    LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/libapi-in.o
+>    LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/libapi-in.o
+>    AR      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/libapi.a
+> make[1]: *** [Makefile.perf:290: sub-make] Error 2
+> make: *** [Makefile:76: all] Error 2
+> make: Leaving directory '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf'
+> acme@raspberrypi:~/git/perf-tools-next $
+> 
+> I think this is related to:
+> 
+> commit bfb713ea53c746b07ae69fe97fa9b5388e4f34f9 (perf-tools)
+> Author: James Clark <james.clark@linaro.org>
+> Date:   Thu Apr 17 14:55:50 2025 +0100
+> 
+>      perf tools: Fix arm64 build by generating unistd_64.h
+> 
+> Can you please take a look?
+> 
+> Thanks a lot,
+> 
+> - Arnaldo
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Hmm yeah looks like it's caused by that. I'm travelling tomorrow but 
+I'll try to take a look.
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Thanks
+James
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
