@@ -1,88 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E701D191F6D
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 07:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE311494A8
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 07:54:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746949752; cv=none; b=kpoI8HK2o2QXRa62rOmsNCvKnjojnLucR//IMaITxz1WMGVi6BAVG0fwTaTNdoxgi7KmEw5kGbw+xXcVIH/S6TNnz3VI4yatttix2vLUFmkzT1FT6pIPRtDluhvb0AIYZeexdmprO+W/j75LLyZaafCW2kMwjKXlWE1cYJo8BOo=
+	t=1746950044; cv=none; b=jo0Z6A3BjZs8YaMOiScReUZIxiPhxUfaLV8pAHsY2dnYsI8k5xw6/+Okfbkyx/DuYcHJjjtR5mKdhRSql/BgJ9KHBLBGGHq4jF+4imFjQuB3IM54tgoXpNxBIEykeWWLFQiH/EQOy1mTH0fMgZ8kM6AQ5FNQGH7a0lKf+Ft2pC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746949752; c=relaxed/simple;
-	bh=7Jj8CXKlYlOfWLHXN3XBoeY0sEtJaZ4kuGropzS7Hq0=;
+	s=arc-20240116; t=1746950044; c=relaxed/simple;
+	bh=hufqZl6EC+S6bSmgnw9yy20pcthWWSOQaq+QGENIh3A=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gHET6hhd3HC7ZWxLdAQfmKwD0Cigzzlbxw6pvgfjaPcMOQSmD+gLWI1YGEwpfeliWC/RjrA3kQHwSN+TQ91giHtLbg39EyuSlgW00AnD8OmFwEpyDmu4MKdrohCdEvzvlv68vGCAZio2RH8bKJlY6cQHDbyEGKn3rHxjB0kmJDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQ0gcY1D; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=uE2uQyu/JmIvSyH07riV/iyUajOB7T9rsXWAKyyP5RvYhbWaxgEDHpq2/bzD+ZV3rB4KMu9WYddcb84eLYaXFXE4A4ZKzTrk/65s5Xg+NhU2S8prJ9jiPF+r3wNFD91CpH1vOr3vd18pYEfj5RknvRkt0zsuNlqeCHJfMravvuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbxX4VYA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQ0gcY1D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D3C7C4CEE4;
-	Sun, 11 May 2025 07:49:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbxX4VYA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC55C4CEE4;
+	Sun, 11 May 2025 07:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746949750;
-	bh=7Jj8CXKlYlOfWLHXN3XBoeY0sEtJaZ4kuGropzS7Hq0=;
+	s=k20201202; t=1746950043;
+	bh=hufqZl6EC+S6bSmgnw9yy20pcthWWSOQaq+QGENIh3A=;
 	h=Date:From:To:Cc:Subject:From;
-	b=vQ0gcY1DhnCj2+UOBvy7L4K4OENydFITGHy2WZOFy/geo8APrwSaHwIUamFLx2rC2
-	 k+4oCyTJ9VRBx+bg86e2Z3NIyJYFIsSSiUwsuNkVZ5xTgmBxa/LclQk0MMiazSLFID
-	 8GKm7j5tmAmdavBix7avbwDvGFNfpUvbALDq0SQxk3pgdS1IJiC8e6ZayYsmFqRJ8B
-	 7asakV5xLY5nTazgAXhZiFKOIO2mErSJHL8n6b3PD+GWFNRZjPi/eugWLefJAvFpxm
-	 yWTNvPgMQczYFA6GdInXNFJbzUorp0LRn7L48KWml8AkyqLzGMW9N4zIjWBZqaFpeX
-	 QpffBi4zffz9A==
-Date: Sun, 11 May 2025 09:49:05 +0200
+	b=cbxX4VYAQidcK+QNKiwfo/QuhVWG+Ts1Y2tQbQTiQkC2PGu1ST9THfSYKM+dFBbAm
+	 +ghq1Txa90yDxTcelDD1ja5RUQowKG2Eto5u09OokONVx1gC4RB40gD1a/lUUsF8lQ
+	 8ggBcrFXegwmptINuq5Gp2tRLHFlkPr79n98i2hyi17joZp/6mEl0B5QWEi4XsLD/x
+	 scCee5isA2Sl73VLQuLM9jM1saKQIZRRx+o41YTpGS3fq1DG6qn7zsb9A09odMw7Sp
+	 f9+pooXpSJFdDIKAnzXzIknQicajUtuB7ppG5+Q+MDRjSoHyCi0CN7f6K+cSbfAwPi
+	 e5573/NWyAB2A==
+Date: Sun, 11 May 2025 09:53:59 +0200
 From: Ingo Molnar <mingo@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Subject: [GIT PULL] timer subsystem fixes
-Message-ID: <aCBWcZpS1JNuEG4T@gmail.com>
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [GIT PULL] x86 fix
+Message-ID: <aCBXl3x1VSU7fCzu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 
 Linus,
 
-Please pull the latest timers/urgent Git tree from:
+Please pull the latest x86/urgent Git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-05-11
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-05-11
 
-   # HEAD: 94cff94634e506a4a44684bee1875d2dbf782722 clocksource/i8253: Use raw_spinlock_irqsave() in clockevent_i8253_disable()
+   # HEAD: 5214a9f6c0f56644acb9d2cbb58facf1856d322b x86/microcode: Consolidate the loader enablement checking
 
-Misc timers fixes:
-
- - Fix time keeping bugs in CLOCK_MONOTONIC_COARSE clocks
-
- - Work around absolute relocations into vDSO code that
-   GCC erroneously emits in certain arm64 build environments
-
- - Fix a false positive lockdep warning in the i8253 clocksource
-   driver
+Fix a boot regression on very old x86 CPUs without CPUID support.
 
  Thanks,
 
 	Ingo
 
 ------------------>
-Sebastian Andrzej Siewior (1):
-      clocksource/i8253: Use raw_spinlock_irqsave() in clockevent_i8253_disable()
-
-Thomas Gleixner (1):
-      timekeeping: Prevent coarse clocks going backwards
-
-Thomas Weiﬂschuh (1):
-      arm64: vdso: Work around invalid absolute relocations from GCC
+Borislav Petkov (AMD) (1):
+      x86/microcode: Consolidate the loader enablement checking
 
 
- arch/arm64/include/asm/vdso/gettimeofday.h | 13 ++++++++
- drivers/clocksource/i8253.c                |  4 +--
- include/linux/timekeeper_internal.h        |  8 +++--
- kernel/time/timekeeping.c                  | 50 +++++++++++++++++++++++++-----
- kernel/time/vsyscall.c                     |  4 +--
- 5 files changed, 63 insertions(+), 16 deletions(-)
+ arch/x86/include/asm/microcode.h         |  2 ++
+ arch/x86/kernel/cpu/microcode/amd.c      |  6 ++--
+ arch/x86/kernel/cpu/microcode/core.c     | 58 +++++++++++++++++++-------------
+ arch/x86/kernel/cpu/microcode/intel.c    |  2 +-
+ arch/x86/kernel/cpu/microcode/internal.h |  1 -
+ arch/x86/kernel/head32.c                 |  4 ---
+ 6 files changed, 41 insertions(+), 32 deletions(-)
