@@ -1,181 +1,134 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B968A59
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 00:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95593234
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 00:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746922765; cv=none; b=gA2d0mK+TrJhBdhbZhEGLjeBRjzDGrbiymN3jBltVM4Qd/KfzzET3S3X7PO06IW84i/hCuRUK6KQoUgKx87h2TywhnC6owtprbddDfqNwtCayg0OPmVAPhksHThrjEZQhyvjC2KXZx6dzssmuZPLTERScBrRjEgGUNPC7etDjxc=
+	t=1746923760; cv=none; b=nZZj7qsi3R7PgGsYP4h5Tb3pbqthxd3/sndNj8/s69ekbleKlb4ZJW/AVR/CwwofplZ8nXV+yQ+nsvaPOo1LSUQb0vty9E+5WTXtL+6aFBfkjUfquREncULZynv9WBDkbD6cN2uvH70m3ourgxB3+L8HZn0bc4QuUsR1giafINA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746922765; c=relaxed/simple;
-	bh=0cZBtVoHVFs1C5QVmgDUNpeiHBzoVU50bFqhITm/dvI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kBnkyTJB1YLKFnzTYI1HJJhP1DBUz6397tS5OV841Z4VhT5rBsn9Wb8LmIttvb2AU0NvnoXHH+CR1JeNm8ePxhTSSeqnVI6lO8w3JQlQ65akdyUoWy+Ot08FAHgbJgpBjISK2QOJi/HYxhn1ZGRS3yUUDq45lJ8BEk4pY2ypveU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85b5875e250so318947839f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 17:19:22 -0700 (PDT)
+	s=arc-20240116; t=1746923760; c=relaxed/simple;
+	bh=r03nLJvgUgmrXUBp6pwwH1baawwiopAwlukRYtT8E8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oZXRdtnxkpWpLOpLJcwRUsXLJbi+Zi+XSHVs9aaHYuWJMwj9+WegvEzOiVhdjsaAsOn6DtOs4/ECYnco+9VVP71/D+oPLUjRjaunjz2HU9+Hk1WTOq1+OALKNv6BeEWK/uKt5qlnLlc2HGjZtmbiLOMeLVTElAwQ5tR5hTCxAw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=YBKcljK1; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="YBKcljK1"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7373aa99e2cso626322b3a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 17:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1746923758; x=1747528558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gtRaVsiUBI+SZ9IP8U8WDTO4rTZdygKMrFtkoyTuE/s=;
+        b=YBKcljK1hLQ/txMdxQ1bK1cdOGHYDVulrCIfYr6zlA6qpQcrIlDwsulYknuGx7HFl2
+         UuV5kF2t7r0BEerB+2rwnefXHqPkA3F7WgBlxBHLnq6wSQxgm/Dwg1BdNyT4rTSehxyS
+         JQeruB4lNcl6A+tr9j5SA+n5t1wB7vEeZT+y0I0TMHACuOubs61o5yPSincVRFORTyIp
+         yTaHyaB1w5FesWJVlcoPGFH7e1GhqLZPFJnG6rP7uuecSBp7com0PP+Y40d1c+bp4IXc
+         9OtM9Xn9POU2FM+Z2uw0R062OZawBGEfDETnYlkvZYwwgSI4vBgcksn3D17NPBV52/fg
+         s3/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746922762; x=1747527562;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HzRgQZqA6gXuY7HDluzT2btHJzutmkSAmtPUfQjNVFU=;
-        b=jUUPjM4h3g4tQdzdp1eye8Gy9czHogHia8GFXKLvn4KD/QIb75GwJu8jnElhuZn4mX
-         4bNJ2pEefqm7rExZV/BSCQHwNJuhanx7cSwhosV79dnC3fhyBIIkA41k+KPrA3Ni2WSb
-         txp4pSLyYb8zeMQBIUcDkTxoFKfbJYAQoqZu2onI5d6Gmpq/l6THFpTSwq1xpnJEZRkZ
-         hJarVHq502KCqMGyco4PtrF4lBomdp7f6U2j7dKdhJvJkmtIs0F69YzDaH2GKEX1Zmnk
-         2OQNKLth9X/nKFraGHpY+iJ+eyjciHqPiOLn+W6JdSSD7NaUfTHoy/J09trFpGn6AW16
-         TzdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsKMuwWlici+YkwQlZFWYMILESHWwIejcDgOel+Fl+skPZ7EzKLxYAJ+kp4Px+XzRpugXawoN8GZ8JZWo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysrcapI2ssFw1DOadMpTkk8lSlEKd5q5LGvUJO2mkMpj7C7drc
-	a7FzzoexR/1HKeC1S5GfBFV1ihIFpGFIWku38LdT7zFqzLNnhG09Ln7E780unJnHhXVWCnnfvy7
-	FqQrIy+WKYnmq1rg/qXzHpjvKXz2Zr6sD3X9d02Ap7kLlmEenh0NsNiw=
-X-Google-Smtp-Source: AGHT+IHskAVgUbMbI6+49o73PLsFSiex1auVB8/pc5F4mLM4Oa0Ix+SdMsa9372wGjIP8CRUSzn8TN/cua37iySXTkX4jOgIdZgF
+        d=1e100.net; s=20230601; t=1746923758; x=1747528558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gtRaVsiUBI+SZ9IP8U8WDTO4rTZdygKMrFtkoyTuE/s=;
+        b=c1l/91T/Cpdpu++LE4JyloeZiw0u8Db8jtKlyMhnIAr7IOswXkefThRVIjsXTtyC/R
+         7jiSLtZoQh+sORdb71XZZU/kN14sN9etHK/2mPfBHjRcXXgOrWjKkVEeh1zxC1o1ZydG
+         MBcWXIPCNhrR6wFRP21i2UBOiKXUkH/6Ts78n1u6K+Tye/MVN/7GUmepCPx/b9AhPhYf
+         INRWD+n55qr2OwU4hAJhHGvIGt6XYC1n+k+RfhPfl8KR4AUotX8j1QcvuPrAAS/alUdk
+         zD6/gjf6HXxeCdZ/SXd8JNHpENsL4fGzLiQkhp3QsAR6BKFlW1XEvhi3iQZlNQTZB62V
+         4nww==
+X-Forwarded-Encrypted: i=1; AJvYcCU7qegkeo1WX9M0CJTMZhWOcZzXnS3kbjJFjTOh0LjI0tcEf4vhEx1fADuMtQh6RsnFQffq1O4KaK79RQ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIwGIU3XM1Bql72CXW7UufJspS6S4wc06P88KYLRbH8d6XgFk/
+	ias34YHTeDvkU26o9ONollBVqoFiLIkwinJOlCKbGBEo9KVE0YS9fMndc2KbxandAijz9nucd4P
+	8ULAzdbqRVcJfDD1uFeMvNZj0Er8YM6AfwohjiQ==
+X-Gm-Gg: ASbGncvxsDx9l5BYhem3xZASjXNyRXuJccHJHeKAceH3g+theWp4cA954vMeaUq5URF
+	C3hBxzS+Kp83Ve3y9vmWqbVhAC4xuj4cYlOm0sKVIvTVFvKYaOz0/kZ/4eExjwJTAyLdqFrWrXF
+	JM/U4NAXIKqbzg5r3uKYLTX6aDSKyDyNY=
+X-Google-Smtp-Source: AGHT+IEQchr0wi7aB6E+8gcZ5oqBZRv0bHhEJAH4Nl3ce9Fg2GOxYYgtWBIB9g4f0p6+kGvZGmGTGjU/TmWpKmQUugs=
+X-Received: by 2002:a17:902:ced0:b0:224:216e:38bd with SMTP id
+ d9443c01a7336-22fc8b3b40fmr53521885ad.5.1746923757953; Sat, 10 May 2025
+ 17:35:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2282:b0:3d6:cbed:330c with SMTP id
- e9e14a558f8ab-3da7e1efc2amr91102345ab.11.1746922762341; Sat, 10 May 2025
- 17:19:22 -0700 (PDT)
-Date: Sat, 10 May 2025 17:19:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681fed0a.050a0220.f2294.001c.GAE@google.com>
-Subject: [syzbot] [io-uring?] BUG: unable to handle kernel NULL pointer
- dereference in io_buffer_select
-From: syzbot <syzbot+6456a99dfdc2e78c4feb@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com> <20250507-ublk_task_per_io-v6-2-a2a298783c01@purestorage.com>
+In-Reply-To: <20250507-ublk_task_per_io-v6-2-a2a298783c01@purestorage.com>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Sat, 10 May 2025 17:35:46 -0700
+X-Gm-Features: AX0GCFvq5YiYiXLcLb8hsdNH-xK5jnR1e6XUTmKox4Zk6Icabgf3xuys_D3kZR8
+Message-ID: <CADUfDZrhsQfx6nyCZQq=8HDZLysa48uBWuENY6oKnFuayt-wCw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/8] sbitmap: fix off-by-one when wrapping hint
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, May 7, 2025 at 2:49=E2=80=AFPM Uday Shankar <ushankar@purestorage.c=
+om> wrote:
+>
+> In update_alloc_hint_after_get, we wrap the new hint back to 0 one bit
+> too early. This breaks round robin tag allocation (BLK_MQ_F_TAG_RR) -
+> some tags get skipped, so we don't get round robin tags even in the
+> simple case of single-threaded load on a single hctx. Fix the off-by-one
+> in the wrapping condition so that round robin tag allocation works
+> properly.
+>
+> The same pattern occurs in __sbitmap_get_word, so fix it there too.
 
-syzbot found the following issue on:
+Should this have a Fixes tag? Looks like the off-by-one wrapping has
+existed since 4bb659b15699 ("blk-mq: implement new and more efficient
+tagging scheme"), but it's only a correctness issue with round-robin
+tag allocation, which was added in 24391c0dc57c ("blk-mq: add tag
+allocation policy").
 
-HEAD commit:    0d8d44db295c Merge tag 'for-6.15-rc5-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12df282f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=925afd2bdd38a581
-dashboard link: https://syzkaller.appspot.com/bug?extid=6456a99dfdc2e78c4feb
-compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150338f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143984f4580000
+I don't have much background on blk-mq's round-robin tag allocation, but FW=
+IW,
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/98a89b9f34e4/non_bootable_disk-0d8d44db.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f2af76a30640/vmlinux-0d8d44db.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a0bb41cd257b/zImage-0d8d44db.xz
+Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6456a99dfdc2e78c4feb@syzkaller.appspotmail.com
-
-Unable to handle kernel NULL pointer dereference at virtual address 0000000e when read
-[0000000e] *pgd=84797003, *pmd=df777003
-Internal error: Oops: 205 [#1] SMP ARM
-Modules linked in:
-CPU: 1 UID: 0 PID: 3105 Comm: syz-executor192 Not tainted 6.15.0-rc5-syzkaller #0 PREEMPT 
-Hardware name: ARM-Versatile Express
-PC is at io_ring_buffer_select io_uring/kbuf.c:163 [inline]
-PC is at io_buffer_select+0x50/0x18c io_uring/kbuf.c:207
-LR is at rcu_read_unlock include/linux/rcupdate.h:873 [inline]
-LR is at xa_load+0x68/0xa4 lib/xarray.c:1621
-pc : [<80889a10>]    lr : [<81a4be54>]    psr: 20000013
-sp : df985e18  ip : df985dd8  fp : df985e34
-r10: 837a6c80  r9 : 00000000  r8 : 80000001
-r7 : df985e50  r6 : 00000000  r5 : 841f2900  r4 : 84799000
-r3 : 00000001  r2 : 00000000  r1 : 846eb500  r0 : 00000000
-Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-Control: 30c5387d  Table: 84731880  DAC: 00000000
-Register r0 information: NULL pointer
-Register r1 information: slab kmalloc-64 start 846eb500 pointer offset 0 size 64
-Register r2 information: NULL pointer
-Register r3 information: non-paged memory
-Register r4 information: slab io_kiocb start 84799000 pointer offset 0 size 192
-Register r5 information: slab kmalloc-2k start 841f2800 pointer offset 256 size 2048
-Register r6 information: NULL pointer
-Register r7 information: 2-page vmalloc region starting at 0xdf984000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-Register r8 information: non-slab/vmalloc memory
-Register r9 information: NULL pointer
-Register r10 information: slab sock_inode_cache start 837a6c80 pointer offset 0 size 576
-Register r11 information: 2-page vmalloc region starting at 0xdf984000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-Register r12 information: 2-page vmalloc region starting at 0xdf984000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-Process syz-executor192 (pid: 3105, stack limit = 0xdf984000)
-Stack: (0xdf985e18 to 0xdf986000)
-5e00:                                                       84799000 8466a500
-5e20: 00000000 00000040 df985e84 df985e38 80892d3c 808899cc 8057abbc 8030cb0c
-5e40: 84799000 00000001 01799000 00000000 00000000 c8c55b45 80886a40 84799000
-5e60: 81cf0bd4 00000000 80000001 81cf0b5c 0000000a 8402bc00 df985ebc df985e88
-5e80: 80886df4 80892b18 00000000 00000000 00000000 841f2800 8479906c 84799000
-5ea0: 848c0000 00000000 00000000 8402bc00 df985f14 df985ec0 808877a8 80886b7c
-5ec0: 8088e164 81a4bdf8 8479adb8 84731888 00000001 00000001 81cf0b5c 00000001
-5ee0: 841f2800 c8c55b45 84786240 00000000 841f2800 000027e2 84786240 00000000
-5f00: 8402bc00 00000000 df985fa4 df985f18 80888250 808875a8 df985f74 841f2840
-5f20: 00000000 00000000 df985fac df985f38 8022b8b8 8046ec28 df985f64 df985f48
-5f40: 8057a6bc 84460c00 00000000 8281d1f0 00000a0f 76f4a000 df985fb0 80234108
-5f60: 00000000 000f4240 df985fac df985f78 8023478c c8c55b45 000000c0 00000000
-5f80: 00000000 0008e068 000001aa 8020029c 8402bc00 000001aa 00000000 df985fa8
-5fa0: 80200060 80888124 00000000 00000000 00000003 000027e2 00000000 00000000
-5fc0: 00000000 00000000 0008e068 000001aa 00000001 00000000 000f4240 00000000
-5fe0: 7ef9ac70 7ef9ac60 0001088c 0002f900 40000010 00000003 00000000 00000000
-Call trace: 
-[<808899c0>] (io_buffer_select) from [<80892d3c>] (io_recvmsg+0x230/0x420 io_uring/net.c:988)
- r7:00000040 r6:00000000 r5:8466a500 r4:84799000
-[<80892b0c>] (io_recvmsg) from [<80886df4>] (__io_issue_sqe io_uring/io_uring.c:1740 [inline])
-[<80892b0c>] (io_recvmsg) from [<80886df4>] (io_issue_sqe+0x284/0x658 io_uring/io_uring.c:1759)
- r10:8402bc00 r9:0000000a r8:81cf0b5c r7:80000001 r6:00000000 r5:81cf0bd4
- r4:84799000
-[<80886b70>] (io_issue_sqe) from [<808877a8>] (io_queue_sqe io_uring/io_uring.c:1975 [inline])
-[<80886b70>] (io_issue_sqe) from [<808877a8>] (io_submit_sqe io_uring/io_uring.c:2231 [inline])
-[<80886b70>] (io_issue_sqe) from [<808877a8>] (io_submit_sqes+0x20c/0x938 io_uring/io_uring.c:2348)
- r10:8402bc00 r9:00000000 r8:00000000 r7:848c0000 r6:84799000 r5:8479906c
- r4:841f2800
-[<8088759c>] (io_submit_sqes) from [<80888250>] (__do_sys_io_uring_enter io_uring/io_uring.c:3408 [inline])
-[<8088759c>] (io_submit_sqes) from [<80888250>] (sys_io_uring_enter+0x138/0x780 io_uring/io_uring.c:3342)
- r10:00000000 r9:8402bc00 r8:00000000 r7:84786240 r6:000027e2 r5:841f2800
- r4:00000000
-[<80888118>] (sys_io_uring_enter) from [<80200060>] (ret_fast_syscall+0x0/0x1c arch/arm/mm/proc-v7.S:67)
-Exception stack(0xdf985fa8 to 0xdf985ff0)
-5fa0:                   00000000 00000000 00000003 000027e2 00000000 00000000
-5fc0: 00000000 00000000 0008e068 000001aa 00000001 00000000 000f4240 00000000
-5fe0: 7ef9ac70 7ef9ac60 0001088c 0002f900
- r10:000001aa r9:8402bc00 r8:8020029c r7:000001aa r6:0008e068 r5:00000000
- r4:00000000
-Code: e3130001 0a00002f e5910000 e1d120be (e1d030be) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	e3130001 	tst	r3, #1
-   4:	0a00002f 	beq	0xc8
-   8:	e5910000 	ldr	r0, [r1]
-   c:	e1d120be 	ldrh	r2, [r1, #14]
-* 10:	e1d030be 	ldrh	r3, [r0, #14] <-- trapping instruction
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> ---
+>  lib/sbitmap.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+> index d3412984170c03dc6600bbe53f130404b765ac5a..aa1cec78b9649f1f3e8ef2d61=
+7dd7ee724391a8c 100644
+> --- a/lib/sbitmap.c
+> +++ b/lib/sbitmap.c
+> @@ -51,7 +51,7 @@ static inline void update_alloc_hint_after_get(struct s=
+bitmap *sb,
+>         } else if (nr =3D=3D hint || unlikely(sb->round_robin)) {
+>                 /* Only update the hint if we used it. */
+>                 hint =3D nr + 1;
+> -               if (hint >=3D depth - 1)
+> +               if (hint >=3D depth)
+>                         hint =3D 0;
+>                 this_cpu_write(*sb->alloc_hint, hint);
+>         }
+> @@ -182,7 +182,7 @@ static int __sbitmap_get_word(unsigned long *word, un=
+signed long depth,
+>                         break;
+>
+>                 hint =3D nr + 1;
+> -               if (hint >=3D depth - 1)
+> +               if (hint >=3D depth)
+>                         hint =3D 0;
+>         }
+>
+>
+> --
+> 2.34.1
+>
