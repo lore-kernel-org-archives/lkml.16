@@ -1,297 +1,202 @@
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011034.outbound.protection.outlook.com [52.101.129.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54330184E;
-	Sun, 11 May 2025 10:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746960456; cv=none; b=shzqedjy8xVTM5fiInE7PFUI3DDCTUqs6TaSLB9x1y5JOmbp8wwEjfupWcs8N2ICs+1raRVFwSStOJh1SGaOnyBzxgRztAuYn4jUlU/BGRO8yaAI0lChQcpuJeUMrtkKfJA0CJGDgNdYEWT5n2R0bwEp9QuD77Jo78LmvQIvueI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746960456; c=relaxed/simple;
-	bh=+AT3YEnKLWJwakDMoKjF/CGOZ4nw7zPET4ecXHGX9B4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JAWt1HA7SJM2bX5HC5slUO5p3jYZ8mbJBxcEymdykROdY1XZjHqdmq9hs5/01O4LstB33SSMzZse6Fv9buIEHtRPxRpQKqg/+obBZNHWYpeGJperFDDB7CWihF745NfWNFw/nDTz8e5FztCyktIISTb2inchm15dIMDQiXWVM4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=eHRIbcz5; arc=none smtp.client-ip=185.125.188.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A83B184E;
+	Sun, 11 May 2025 10:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746960533; cv=fail; b=EsDazM8Fdep2FFoRRYzzEfyoCJeQjzdNUWyZA5IbMzNAssI4/1lPuGakxxaTYdx5YudorJYHxJQr+2O2gH0XEgHkPPvb4DGV2YZIPsR9RDYh0RjwRS0rpN0LI4pjPLkEIRLX6Py4V/9asava1pdmm3O/zWrIVb6lBs7cg4zIVTo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746960533; c=relaxed/simple;
+	bh=KtwVApcn06oXTcUK0z81jDdbejx3PuSiWNfRUEeq1pw=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=jAWKfumUDcnV9wxuanTyPyhAPCNRMH4RuDENUSQhFrc40gae4oMGC7fP+iv9H8XpBKiArnngCKeh+XbWIzKaWaDt6aZd3MTgJlVyA2brWK45HvEMqwRYChkOcabjDmrUVDJGBWusa/i048LhyL3izX7neVJgLd/hLBjjTQpHooI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=DYToFf3u; arc=fail smtp.client-ip=52.101.129.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="eHRIbcz5"
-Received: from [172.20.3.254] (unknown [213.157.19.135])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 28AC93FF1F;
-	Sun, 11 May 2025 10:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1746960443;
-	bh=U4WbwpaVb0Qo8GQJAxkR1Cw5Qxdz8WjqLdu5gfIlk4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=eHRIbcz5An47S7IqSD3295q2vstefzGinmpchT86M923+Ec0KK37z/Vp9qOwbbRZ6
-	 GCezsUaumSP6MCxH68OBmAiB/YB4H2lUmSq8Q/EcN6Z75GCndJQD0EzRabSwykYuc0
-	 fXgPgEJwh9AFj7+EWncqYB25djZXV6snTymLZzOiAh4oIc4MR5k9TvHXIlg0/rnPEX
-	 lYpsCccLmOFXWEoDOMpqeuhidq1A2wZyFD+YCdJiS8FwEVg2AwZ+7qbXtIKzB4Hd0n
-	 3yC/qXJwudSF6aroNLZ1hhmxs5xB9dR31ySzbUesTSeOawtrGMt8WLux52qiG07gUM
-	 yWS9Lb+roGGKQ==
-Message-ID: <19313f6b-42d7-4845-9a4b-93c7546aadb9@canonical.com>
-Date: Sun, 11 May 2025 03:47:21 -0700
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="DYToFf3u"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PcJ7IqcjByG/BWy4dmXIhTbgl2IZm32/SsbjrRbYMXU9qx6p0qDKN3Np7ihOMR/TDtLrutRjNqiQuxtq4BGv+A1lQ4NYwxVETOwR+w/WGE6Ep5dChLLyLb9wPk6f6p7TzrIq4zojA9lWgUZ9ZhTcxcBsU7XQumAAZIhvnC/0lGepJGHK+WlTJfHXq4QNxbidYH/lKcOU29q+keTVim0nLUWUaBc9IAHe8auoU6gZac8+W4aOKJKP4TiWj13EesV+HAUAuxHuJ047Tx1ot9OPccFtOHQZSDXgXf0tiul+By/+E1BMDoZ1NAwuahmg21K7IK7hfu1l+O8pD7wqsAYjgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UZ2Qljz2qxF+MAxY4Rpmf1pQsCI1AIA2UOd24bhFF7Q=;
+ b=kC4Eg1wdk0NFN21V3pGM83oOWtTz27WZNrEts7KdOW6oa3r6g1tjpXt1+ZSb/C01bGjGxpMUdGAfsTq7TdqXMgd4MfmIwgbYVa+uBIsF0+HDLuj+mHgIC+4l6gzO+2l6lVXztNZzxemJu5ncxheiELXs02fmzsWRURjlyale3OvbesB4GEdylAMUQwGWPho2YLXVruqZAv/725PW+DnieIPOJRMHDMON9Y4Q4jRzRS/Ug87fuVbXpHbE2wbYaHATw3dw/cek1ruJSZGMAr/IfS63wG0SR+Fzs8DKlFfLeVHE82E6pGAJjko1LWR9p3kod2jfWYvKhU2M0HnBGqW44w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UZ2Qljz2qxF+MAxY4Rpmf1pQsCI1AIA2UOd24bhFF7Q=;
+ b=DYToFf3uJayGmlnOGbcKkjc2cs/pD9v3dR9g9WlFxAJUkEJpIsZAF5lNOhjoZdeRN/3iNdb522wKvnSJ0GW3/DQT1NYYbq7P33VOyywbGW7ZUMASbqbq0PHmD0W6YcZJFnOMiZbFR41v4rWhOXDMnBTZktbZq45/hhiS03gM7d/d7eJOSzV+hYqBsxThEvvvmvyBoQ5hLmGkfQ7y7jh9co7YDC5DwHy0khgjizU5/yfMKZv6RPJveO7gPUpUGqKmTukezYzy1KZshD6szqub4KaIsvnbrse5hZIUzPJ8gZRRK4yuOIjpbiLPtT7LfFP9G9xWckOQ3Pwlz+QkS/Qzkg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by SI2PR06MB5386.apcprd06.prod.outlook.com (2603:1096:4:1ed::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Sun, 11 May
+ 2025 10:48:48 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%5]) with mapi id 15.20.8722.021; Sun, 11 May 2025
+ 10:48:48 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de,
+	Yangtao Li <frank.li@vivo.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= <ernesto.mnd.fernandez@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com
+Subject: [PATCH] hfsplus: remove mutex_lock check in hfsplus_free_extents
+Date: Sun, 11 May 2025 05:08:55 -0600
+Message-Id: <20250511110856.543944-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0012.apcprd02.prod.outlook.com
+ (2603:1096:4:194::7) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] Wire up the lsm_manage_policy syscall
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: Song Liu <song@kernel.org>, =?UTF-8?Q?Maxime_B=C3=A9lair?=
- <maxime.belair@canonical.com>, linux-security-module@vger.kernel.org,
- paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, kees@kernel.org,
- stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
- takedakn@nttdata.co.jp, penguin-kernel@i-love.sakura.ne.jp,
- linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-References: <20250506143254.718647-1-maxime.belair@canonical.com>
- <20250506143254.718647-2-maxime.belair@canonical.com>
- <CAPhsuW4qY9B3KdhqrUOZoNBWQmO_RDwbH46my314WxrFwxbwkQ@mail.gmail.com>
- <aa3c41f9-6b25-4871-a4be-e08430e59730@canonical.com>
- <CAPhsuW4FVMS7v8p_C-QzE8nBxCb6xDRhEecm_KHZ3KbKUjOXrQ@mail.gmail.com>
- <9aaeda3a-8ef5-4820-b2e4-9180b73fb368@canonical.com>
- <20250509.ePu7gaim1Foo@digikod.net>
-Content-Language: en-US
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <20250509.ePu7gaim1Foo@digikod.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SI2PR06MB5386:EE_
+X-MS-Office365-Filtering-Correlation-Id: 520c42b5-efd1-424f-eba9-08dd907968a4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nncWiemWC7Yb5p5hyZ35b4i2ucA4A6JHw3rEJin8bkh2c1DYUbEsSd3LwPW6?=
+ =?us-ascii?Q?5eVSxbo2VAPCIILtHp8l37IYuzCBtiwV1oSIRjit+vtlfq4gRYRgPTfBsdlZ?=
+ =?us-ascii?Q?SNOojDLCEre7wu9xfGq1m/d6C1YKK6xOiMEYY5ggZjg5W1yKwHqDtsdRb6Dy?=
+ =?us-ascii?Q?Vonjd7yVuvWjIOTddc2pFEwrKPPfs1iFhuLgGxxkAd3dv38v1ERDuAxaQWJH?=
+ =?us-ascii?Q?rtfkRLwLFBpE8PeVZT4hdoKYUpVCavg1+rsKfPuQf+Rtt8B7vuFixoKGbQPP?=
+ =?us-ascii?Q?QZaoVPDzlc751EJ0zHtel8XZr5SHAbbLc/Nm0OjP+9R3AJVkWzqOtBYpiWXg?=
+ =?us-ascii?Q?+N02nhiQ5EkPBfAtPaZKlstxUUOiJLWvRhVtm0a6OtrpgYDmaBanGRqdCP3I?=
+ =?us-ascii?Q?ir01vxhVnkCXwdaIrz9wYuTYMcrv4jovSYamq4qkSKxRkENlkWkFt9nF36WU?=
+ =?us-ascii?Q?mF4LjGsd5bjOMIaBeV4Vs4TXRUwrVz9B/l+JqXKnOId3kSd8U1e5L3z80dE1?=
+ =?us-ascii?Q?wQTmWQdVPWmjsmCVvDWA2+i/BGh0KVtg/eUgExeJo0jOOTmJ+qZheBrKQRNe?=
+ =?us-ascii?Q?oQW6CztnuLT6lrK1KELQJkSiEhEXcVU/HotGV1GKg+iArbNE/H2F0IsjcNyT?=
+ =?us-ascii?Q?mftgwDt63yaZFnN1wS1zNgr2HW1TbFwykD+kmr57rOhjZaViVwZIrrx36PBS?=
+ =?us-ascii?Q?lz3GBOt8L9eNG1y+hzqcZekg1fHe78altBESekGT+W4AjLN/788pks3KYItw?=
+ =?us-ascii?Q?RkW784SPkKXWvEThI3rQ+GbElbfiR5U3Y2w9WZFhPGWZjy5JzK9LklZIEhGV?=
+ =?us-ascii?Q?7XYs32BpYZLMCJ0NL9grronrJmmMvcQJ+Knw8W7yz9yZZjRWhQPcCc3npWIn?=
+ =?us-ascii?Q?mF5wTB0TwRBwTSB8uOKj/Ou0fd7GOnyBRCsTAK//OwlX7ibsaxkZTlIeYjME?=
+ =?us-ascii?Q?eJZ3RXiRUUIaTiuxm1pTrHHWcgrlcn4s2DdkbONw19KN1YdTG1nLOOlBuXPl?=
+ =?us-ascii?Q?dcm2d6KGBmeeYpCkiQUnRuPwO3ELiNSXfZ6xYh+bLy5p58mc8W1f9o/Wr2JZ?=
+ =?us-ascii?Q?O/rvyC5t9xIpH85M/R7ZFcf43zeH7/Jqkdzqqs7EcV/9EfGybJCgIPnIdlq7?=
+ =?us-ascii?Q?6gI0rrdBH3zA4sGj36E/3eBvmkGc/wxZMPo9RgK/EXNN6Q9OswZNhLuCznQn?=
+ =?us-ascii?Q?WIiO2xf8hMp2+IHS9cq0br0+LNoAP52ZJCsJfGgAbvtu4JdWytOXngbSgntQ?=
+ =?us-ascii?Q?oDK/4OByj1bue2eKrd5xM0RxAf7YVqTrNX55YN1oI4a1ZaXVmGEwBlJ1fpCS?=
+ =?us-ascii?Q?F6iXqO/Nrs8K7ucLaZnLjaxNglnzaLT56UbITmRV7nTFucTzULSDDiq8p7/X?=
+ =?us-ascii?Q?LY0WpMQf12inHSHhtSV/HeyFYVlUNy5/BlE7ZF8iiDHon/mJHjXfIaScoMg5?=
+ =?us-ascii?Q?AP4o5iqQuxHmSOLPA+09lHnT7lTNkganQmk430HnItNCRFO4ujpTFvZXrsRw?=
+ =?us-ascii?Q?O9aRfuGdmF78lLc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jvCNJ5TtL8akfYKBVDBNAeL4sIM+YfHdFVeLjLJlTi13UyDpx8/q/ycv2gm+?=
+ =?us-ascii?Q?vCyF6lUPk/YHYrdz+I5MMjM7KTVfPccg+UsFaVyrzUKfKHa0f9hT0HyZxaVN?=
+ =?us-ascii?Q?9lTR2mrWnNxaEx+jGq+W/kbyau/cuZRVTxJxyCy7UENfuUTSx5NEsR2XxQ5L?=
+ =?us-ascii?Q?N3f3fSgSV40pVuCVZTNY/+XuL349L8Uo3wr0nVksY8Hcg6pS2XA9GNtSppFs?=
+ =?us-ascii?Q?ElPZTBDmL/IXJR2K7/oUsTXqZ57mZO4pzKDThwMD8A3qpOM5fCeA1cz05qsm?=
+ =?us-ascii?Q?56rRTkBvG3vHovjBUlmVvrLs3lUHnN3QOhi7GgzvNpwIbk/93OCHPitN0bZF?=
+ =?us-ascii?Q?gVPNMAY1spyEY/if/ninlWspW0GXR4OAGGU1og5UkJ9stdmYUok8XnzCV7lc?=
+ =?us-ascii?Q?4YSEfpTW4bj0RjaZLB3pT4pMYgxMuWO598v0WY9PlLIP7RdcBwRW7CHT7W4N?=
+ =?us-ascii?Q?fFrsL06d9t1Hoec7w5/4s7+7VA7gk/GqHwpxI+TRMXrbOC7jzN2a9FOJJCC4?=
+ =?us-ascii?Q?YzDal+v6iE0KuDwGR3sjGDodLj/tId9YCvTwCOTPW45YfBuoGd/Io1IJzUK4?=
+ =?us-ascii?Q?+lDc1iDX4rZSusI+vsiONgQBeRDiP8Ov6fAnjEe0XglGGRMtFDoHuEu5//GK?=
+ =?us-ascii?Q?Xm6ynIy4SgaEKOoZNig7kkbY1ecNWz0XO1Z4QWTxZKrZd3Vu+ad01jxh2E20?=
+ =?us-ascii?Q?QIyskTyd/7BzDgXIG6VEEg7IyxPedQLnmkpbHV0VxP4XFaTKht6CqfFPs0g3?=
+ =?us-ascii?Q?I8tsjy0IyaKPJPjjd/OaLXuf8rg0mRafLGtuAwWFbfgslPHSimYi4RsV/H7R?=
+ =?us-ascii?Q?Xru6p+Rjgm5INugXJZ2xKv0Jtr0KSq202KJ1thVi6WP5g9Aq8Gx894OiJJa1?=
+ =?us-ascii?Q?plg0msaoZVCxNluWNtvC7LhrP/81XgM7Kpr05XSef/0QHhX3ndTXLg+6B9u1?=
+ =?us-ascii?Q?UvL/duBgk/24ypGu/NC6+GgTqFX/14pchA41RQ8aOM+vX3dn+dxd/R4a4R0l?=
+ =?us-ascii?Q?IDa2HEjd7rwKlMm2tMmwx3KSRPsmECF153ZN2Lm+cekxmaXInDrP+Af+U+xW?=
+ =?us-ascii?Q?2sGjKig0DZu9jChpmYlydRAENVaXp0LlYDKu0QQQSPvCgr0inulc5jeAi9Zl?=
+ =?us-ascii?Q?fPpf1QXlG5LoU4JDuygofQ1TfipMUnxyoT/km9Xf2xEchJ7nfsBvoei5OEhz?=
+ =?us-ascii?Q?K4rAQM6/mgQfyqAXNIaLWUdkOFmGWyCWUfZELoxMRoYvXu2iXF3GMwbMRkpZ?=
+ =?us-ascii?Q?7So+Of8ERzFRmyLNQzkdi6J8WNfZSRQHmflUXo6P66P5yi5RTmeJloYvztxR?=
+ =?us-ascii?Q?wve8Y/70TcBvi+3II7rGDw8CqHYnbN/7azcHiHTv8cCSV3x5QSvHcejTD5Uo?=
+ =?us-ascii?Q?TYzvH+PYrFYFvniy7sFo9S7wNA3PUyMH54tPbESb6ldL40v7MELbJ7xUs4pr?=
+ =?us-ascii?Q?uwiKpwMi5dn7y6poXxehY/vo5hURF3HttcICxDULjiYhgBn/9ek7EZzx7vVN?=
+ =?us-ascii?Q?07un2KvaqUMnYN5T1td45N9ZmbmV0v3V2iRBN9Lpz5u969gAl8R4WYrLWgUJ?=
+ =?us-ascii?Q?6acvnfVPMaHTjHE5zMy5gTnR5KZmKwDUyQupJamW?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 520c42b5-efd1-424f-eba9-08dd907968a4
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2025 10:48:48.0668
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vQ/v7hvJ/8H5UsdJkC1A+MM5GANiz8hBRse4c66mckQ8IBB2luFJaTdpUkQTgu61O02lEA2q0mVYaguBjYygvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5386
 
-On 5/9/25 03:26, Mickaël Salaün wrote:
-> On Thu, May 08, 2025 at 01:18:20AM -0700, John Johansen wrote:
->> On 5/7/25 23:06, Song Liu wrote:
->>> On Wed, May 7, 2025 at 8:37 AM Maxime Bélair
->>> <maxime.belair@canonical.com> wrote:
->>> [...]
->>>>>
->>>>> These two do not feel like real benefits:
->>>>> - One syscall cannot fit all use cases well...
->>>>
->>>> This syscall is not intended to cover every case, nor to replace existing kernel
->>>> interfaces.
->>>>
->>>> Each LSM can decide which operations it wants to support (if any). For example, when
->>>> loading policies, an LSM may choose to allow only policies that further restrict
->>>> privileges.
->>>>
->>>>> - Not working in containers is often not an issue, but a feature.
->>>>
->>>> Indeed, using this syscall requires appropriate capabilities and will not permit
->>>> unprivileged containers to manage policies arbitrarily.
->>>>
->>>> With this syscall, capability checks remain the responsibility of each LSM.
->>>>
->>>> For instance, in the AppArmor patch, a profile can be loaded only if
->>>> aa_policy_admin_capable() succeeds (which requires CAP_MAC_ADMIN). Moreover, by design,
->>>> policies can be loaded only in the current namespace.
->>>>
->>>> I see this syscall as a middle point between exposing the entire sysfs, creating a large
->>>> attack surface, and blocking everything.
->>>>
->>>> Landlock’s existing syscalls already improve security by allowing processes to further
->>>> restrict their ambient rights while adding only a modest attack surface.
->>>>
->>>> This syscall is a further step in that direction: it lets LSMs add restrictive policies
->>>> without requiring exposing every other interface.
->>>
->>> I don't think a syscall makes the API more secure. If necessary, we can add
->>
->> It exposes a different attack surface. Requiring mounting of the fs to where it is visible
->> in the container, provides attack surface, and requires additional external configuration.
-> 
-> We should also keep in mind that syscalls could be accessible from
-> everywhere, by everyone, which may increase the attack surface compared
-> to a privileged filesystem interface.  Adding a second interface may
-> also introduce issues.  Anyway, I'm definitely not against syscalls, but
-> I don't see why the filesystem interface would be "less secure" in this
-> context.
-> 
+Syzbot reported an issue in hfsplus subsystem:
 
-yes syscalls being accessible from everywhere is another form of attack
-surface, that needs to be mediated.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 4400 at fs/hfsplus/extents.c:346
+	hfsplus_free_extents+0x700/0xad0
+Call Trace:
+<TASK>
+hfsplus_file_truncate+0x768/0xbb0 fs/hfsplus/extents.c:606
+hfsplus_write_begin+0xc2/0xd0 fs/hfsplus/inode.c:56
+cont_expand_zero fs/buffer.c:2383 [inline]
+cont_write_begin+0x2cf/0x860 fs/buffer.c:2446
+hfsplus_write_begin+0x86/0xd0 fs/hfsplus/inode.c:52
+generic_cont_expand_simple+0x151/0x250 fs/buffer.c:2347
+hfsplus_setattr+0x168/0x280 fs/hfsplus/inode.c:263
+notify_change+0xe38/0x10f0 fs/attr.c:420
+do_truncate+0x1fb/0x2e0 fs/open.c:65
+do_sys_ftruncate+0x2eb/0x380 fs/open.c:193
+do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+do_syscall_64+0x3d/0xb0 arch/x86/entry/common.c:80
+entry_SYSCALL_64_after_hwframe+0x63/0xcd
 
-the fs can be mediated, its expose is a multiple lsms with multiple
-different interfaces on the files within it. What really is more
-problematic is makng the fs available in the container. Yes a
-container manager can do it but then you are dependent on the
-container manager making your interface available.
+To avoid deadlock, Commit 31651c607151 ("hfsplus: avoid deadlock
+on file truncation") unlock extree before hfsplus_free_extents(),
+and add check wheather extree is locked in hfsplus_free_extents().
 
-Other wise you are looking at making mount available to your app
-within the container.
+However, when operations such as hfsplus_file_release,
+hfsplus_setattr, hfsplus_unlink, and hfsplus_unlink are executed
+concurrently in different files, it is very likely to trigger the
+WARN_ON, which will lead syzbot and xfstest to consider it as an
+abnormality.
 
->>
->> Then there is the whole issue of getting the various LSMs to allow another LSM in the
->> stack to be able manage its own policy.
-> 
-> Right, and it's a similar issue with seccomp policies wrt syscalls.
-> 
-yes, though seccomp I have found to be the easier one to deal with
+Since we already have alloc_mutex to protect alloc file modify,
+let's remove mutex_lock check.
 
->>
->>> permission check to each pseudo file. The downside of the syscall, however,
->>> is that all the permission checks are hard-coded in the kernel (except for
->>
->> The permission checks don't have to be hard coded. Each LSM can define how it handles
->> or manages the syscall. The default is that it isn't supported, but if an lsm decides
->> to support it, there is now reason that its policy can't determine the use of the
->> syscall.
-> 
->  From an interface design point of view, it would be better to clearly
-> specify the scope of a command (e.g. which components could be impacted
-> by a command), and make sure the documentation reflect that as well.
-> Even better, have a syscalls per required privileges and impact (e.g.
-> privileged or unprivileged).  Going this road, I'm not sure if a
-> privileged syscall would make sense given the existing filesystem
-> interface.
-> 
+Fixes: 31651c607151f ("hfsplus: avoid deadlock on file truncation")
+Reported-by: syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/00000000000057fa4605ef101c4c@google.com/
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
+---
+ fs/hfsplus/extents.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-uhhhmmm, not just privileged. As you well know we are looking to use
-this for unprivileged policy. The LSM can limit to privileged if it
-wants but it doesn't have to limit it to privileged policy.
+diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
+index a6d61685ae79..b1699b3c246a 100644
+--- a/fs/hfsplus/extents.c
++++ b/fs/hfsplus/extents.c
+@@ -342,9 +342,6 @@ static int hfsplus_free_extents(struct super_block *sb,
+ 	int i;
+ 	int err = 0;
+ 
+-	/* Mapping the allocation file may lock the extent tree */
+-	WARN_ON(mutex_is_locked(&HFSPLUS_SB(sb)->ext_tree->tree_lock));
+-
+ 	hfsplus_dump_extent(extent);
+ 	for (i = 0; i < 8; extent++, i++) {
+ 		count = be32_to_cpu(extent->block_count);
+-- 
+2.48.1
 
->>
->>> BPF LSM); while the sys admin can configure permissions of the pseudo
->>> files in user space.
->>>
->> Other LSMs also have policy that can control access to pseudo filesystems and
->> other resources. Again, the control doesn't have to be hard coded. And seccomp can
->> be used to block the syscall.
->>
->>
->>
->>>> Again, each module decides which operations to expose through this syscall. In many cases
->>>> the operation will still require CAP_SYS_ADMIN or a similar capability, so environments
->>>> that choose this interface remain secure while gaining its advantages.
->>>>
->>>>>>     - Avoids overhead of other kernel interfaces for better efficiency
->>>>>
->>>>> .. and it is is probably less efficient, because everything need to
->>>>> fit in the same API.
->>>>
->>>> As shown below, the syscall can significantly improve the performance of policy management.
->>>> A more detailed benchmark is available in [1].
->>>>
->>>> The following table presents the time required to load an AppArmor profile.
->>>>
->>>> For every cell, the first value is the total time taken by aa-load, and the value in
->>>> parentheses is the time spent to load the policy in the kernel only (total - dry‑run).
->>>>
->>>> Results are in microseconds and are averaged over 10 000 runs to reduce variance.
->>>>
->>>>
->>>> | t (µs)    | syscall     | pseudofs    | Speedup       |
->>>> |-----------|-------------|-------------|---------------|
->>>> | 1password | 4257 (1127) | 3333 (192)  | x1.28 (x5.86) |
->>>> | Xorg      | 6099 (2961) | 5167 (2020) | x1.18 (x1.47) |
->>>>
->>>
->>> I am not sure the performance of loading security policies is on any
->>> critical path.
->>
->> generally speaking I agree, but I am also not going to turn down a
->> performance improvement either. Its a nice to have, but not a strong
->> argument for need.
->>
->>> The implementation calls the hook for each LSM, which is why I think the
->>> syscall is not efficient.
->>>
->> it should only call the LSM identified by the lsmid in the call.
->>
->>> Overall, I am still not convinced a syscall for all LSMs is needed. To
->>> justify such
->>
->> its not needed by all LSMs, just a subset of them, and some nebulous
->> subset of potentially future LSMs that is entirely undefinable.
->>
->> If we had had appropriate LSM syscalls landlock wouldn't have needed
->> to have landlock specific syscalls. Having another LSM go that route
->> feels wrong especially now that we have some LSM syscalls.
-> 
-> I don't agree.  Dedicated syscalls are a good thing.  See my other
-> reply.
-> 
-
-I think we can just disagree on this point.
-
->> If a
->> syscall is needed by an LSM its better to try hashing something out
->> that might have utility for multiple LSMs or at the very least,
->> potentially have utility in the future.
->>
->>
->>> a syscall, I think we need to show that it is useful in multiple LSMs.
->>> Also, if we
->>> really want to have single set of APIs for all LSMs, we may also need
->>> get_policy,
->>
->> We are never going to get a single set of APIs for all LSMs. I will
->> settle for an api that has utility for a subset
->>
->>> remove_policy, etc. This set as-is appears to be an incomplete design. The
->>
->> To have a complete design, there needs to be feedback and discussion
->> from multiple LSMs. This is a starting point.
->>
->>> implementation, with call_int_hook, is also problematic. It can easily
->>> cause some> controversial behaviors.
->>>
->> agreed it shouldn't be doing a straight call_int_hook, it should only
->> call it against the lsm identified by the lsmid
-> 
-> Yes, but then, I don't see the point of a "generic" LSM syscall.
-
-its not a generic LSM syscall. Its a syscall or maybe a set of syscalls
-for a specific scoped problem of loading/managing policy.
-
-Can we come to something acceptable? I don't know but we are going to
-look at it before trying for an apparmor specific syscall.
