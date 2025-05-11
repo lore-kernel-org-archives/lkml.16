@@ -1,97 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4820F64D;
-	Sun, 11 May 2025 22:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E8F64D;
+	Sun, 11 May 2025 22:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747002768; cv=none; b=bUR617f/tJCDs5BXL8nm4MvtVqH4NW8VuTBYkDykS0jtHm45nAxzMe/7Cw32pUIgBLqCjifsVZ51GUeCtVzRWLRblZ50NA0dnS3oSuvB+5wPIPaB+ya0hywWrjbO1Zn83dxzcX/4GWG9Ht5gcTDwo4ahdODvmKbl6DUTMnCJtzI=
+	t=1747002808; cv=none; b=Rw98nVszPCsN3oD8l0iFj+tusq0T4zIhqO81XCrJ/nAoHq3XB1d1e4h6b4xZwL8ROG6qFkwV/idXmWteYp8A4VGJBadNnDXOhvVZBTkt8vzFdLyPb3CUThdeXtXy7bK+chY2R2gp+tGRgXPtr2CiVm6HmiF/k2pO2YqlNw258nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747002768; c=relaxed/simple;
-	bh=zEr8YVTgxUuRemG9tXDQYzlbeBXo0eInFAWLvVMrc58=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ZJ3+n2rUAb3rOtNVMjkjpD/8vsZND96MXCODggZj9ObJhHjGL/yMHLZPTlrZs0BlR/q7nRb66qx1YnCTlwNbNnsy5D8MLXZWUkPSqXvH+iYdcZ//S7N8Ocv6xF/kNeS3ZeMjZndiY1jJCsq+fLioYsGGHG8LZ9monov2Ohrv11w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=duJMGrNW; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747002808; c=relaxed/simple;
+	bh=tyYEPPNu6sfrAJok3EZ0IVFCHm0s9MKh4uJtJBRQACI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QAk8h0ViOh9t7ZYrbtjQJQHO5dkxYlmlv4OGTAdpCAPR3Hin5hkPkOw0Hcs99ErAjveUtsixK63BpwbXybyNwfNi0SZUX4SFwC7gBEPjCAmt2hRONPORKPv541YgOPce+mgUN+SgZ5bxRfpcPBBr+r+27ekeBDPIYGVCfBdoobI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H19xtvdw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="duJMGrNW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747002766; x=1778538766;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=zEr8YVTgxUuRemG9tXDQYzlbeBXo0eInFAWLvVMrc58=;
-  b=duJMGrNWA0fqilwsqnbMD9yIUMlF5VqUtNHV6kYNg5p9+8Q6fuIrhDmC
-   w9qIJVIuSiaE/4sA54bGIooANU06L8mIjbPcX9ThBMUUgbJ9z1WFJTMDX
-   QGRuc6StEinsLVF5bQ06j7vt0lbfkNkVMUzXtjBmJ2Rz/8pEhisFkTIjS
-   KMJVSjj6T1pNGG9SXlU/6YC+OB8RsXPtcjTIz1MkL/13bUWwvtTp+bccG
-   /wr22siHTbC77WGSd5e/oXRRueaBI6GA5xQbAkSu0V8h5UFFL1VCSxY/D
-   NMIxlNxOL+kZSLK3vDJl3OGYRu6PO8fjDCg9Ep4VUw/FidOCUxCggnR3h
-   A==;
-X-CSE-ConnectionGUID: xsbJkyImSLS9iOI47jrsAQ==
-X-CSE-MsgGUID: QdkRQuB7TzqsvaNq/GtPmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="60131767"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="60131767"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 15:32:44 -0700
-X-CSE-ConnectionGUID: xDId60qfQney9Ln7vSKHjw==
-X-CSE-MsgGUID: 6nWs04uSQRaXoOijCNk0nQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="160450300"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 15:32:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
-Cc: sre@kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250429003606.303870-1-W_Armin@gmx.de>
-References: <20250429003606.303870-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v2 1/4] power: supply: core: Add additional health
- status values
-Message-Id: <174700275600.13063.9398321342899509983.b4-ty@linux.intel.com>
-Date: Mon, 12 May 2025 01:32:36 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H19xtvdw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1904C4CEE4;
+	Sun, 11 May 2025 22:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747002807;
+	bh=tyYEPPNu6sfrAJok3EZ0IVFCHm0s9MKh4uJtJBRQACI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H19xtvdw0TQcWQvEBfrPgIeKS8/AmsCdm0HbK3E41dS5+kbg8sr5urTCh3SVZEioN
+	 gpRsbfo0G2FS/psALkNgb8CQsFaDtU4Q4pkfi6mAtWaxgyTP7ERgI8D7l6/6SCMaUw
+	 B7VfwXwAZHBSswC/MP7+wLd5mBAjQ17xANGKf6IG1uXuTmka5qxwd9IWxZsw97mXP3
+	 rwo2vJRfkhJ4NMQ2U/I/p546AjGJ6csbjNbENJCNTdfFP40MOwaOjYVcNXDqvZ4mfH
+	 UXUc2ka4QoGWtqYH9gcAzAtK8ZbdIGoeNgbTLh+VTeunkJTD75LO4aGpoK+0vWGzO7
+	 vEkb2lVdFApAg==
+Date: Sun, 11 May 2025 17:33:21 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, dmitry.baryshkov@linaro.org, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org, 
+	lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, konradybcio@kernel.org, 
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, quic_qianyu@quicinc.com, 
+	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v5 0/6] pci: qcom: Add QCS8300 PCIe support
+Message-ID: <cyapaa36fotqxoyhc554m74uw4nah52j3ymaay24k3bfjd2fgw@o57nbyo3wyaq>
+References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
 
-On Tue, 29 Apr 2025 02:36:03 +0200, Armin Wolf wrote:
-
-> Some batteries can signal when an internal fuse was blown. In such a
-> case POWER_SUPPLY_HEALTH_DEAD is too vague for userspace applications
-> to perform meaningful diagnostics.
+On Wed, May 07, 2025 at 11:10:13AM +0800, Ziyue Zhang wrote:
+> This series adds document, phy, configs support for PCIe in QCS8300.
+> The series depend on the following devicetree.
 > 
-> Additionally some batteries can also signal when some of their
-> internal cells are imbalanced. In such a case returning
-> POWER_SUPPLY_HEALTH_UNSPEC_FAILURE is again too vague for userspace
-> applications to perform meaningful diagnostics.
+> This series depends on PCIe SMMU for QCS8300:
+> https://lore.kernel.org/all/dc535643-235d-46e9-b241-7d7b0e75e6ac@oss.qualcomm.com/
+
+I've picked this dependency now, but please in the future include such
+dependent patches into a single series (keep original author and
+signed-off-by, add your signed-off-by last).
+
+Regards,
+Bjorn
+
 > 
-> [...]
-
-
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/4] power: supply: core: Add additional health status values
-      commit: e6b07a34038716e010d9fd1ac74c1d84a501f369
-[2/4] platform/x86: dell-ddv: Implement the battery matching algorithm
-      commit: 52e59cf1332dc4da5aecaa64c20f4a9f902e3186
-[3/4] platform/x86: dell-ddv: Expose the battery manufacture date to userspace
-      commit: 366a50722c7071120a494aaf91c9193922e3d8f6
-[4/4] platform/x86: dell-ddv: Expose the battery health to userspace
-      commit: d5251eef71bab8bd0b9ea3fe0005ad3d2553c3bb
-
---
- i.
-
+> Have follwing changes:
+> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
+> 	- Add compatible for qcs8300 platform.
+> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> ---
+> Changes in v5:
+> - Add QCOM PCIe controller version in commit msg (Mani)
+> - Modify platform dts change subject (Dmitry)
+> - Update bindings to fix the dtb check errors.
+> - Remove qcs8300 compatible in driver, do not need it (Dmitry)
+> - Fixed compile error found by kernel test robot
+> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v4:
+> - Add received tag
+> - Fixed compile error found by kernel test robot
+> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
+> 
+> Changes in v3:
+> - Add received tag(Rob & Dmitry)
+> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+> - remove pcieprot0 node(Konrad & Mani)
+> - Fix format comments(Konrad)
+> - Update base-commit to tag: next-20241213(Bjorn)
+> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
+> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v2:
+> - Fix some format comments and match the style in x1e80100(Konrad)
+> - Add global interrupt for PCIe0 and PCIe1(Konrad)
+> - split the soc dtsi and the platform dts into two changes(Konrad)
+> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+> 
+> Ziyue Zhang (6):
+>   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+>     for sa8775p
+>   dt-bindings: PCI: qcom,pcie-sa8775p: document qcs8300
+>   arm64: dts: qcom: qcs8300: enable pcie0
+>   arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
+>   arm64: dts: qcom: qcs8300: enable pcie1
+>   arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
+> 
+>  .../bindings/pci/qcom,pcie-sa8775p.yaml       |  26 +-
+>  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   4 +-
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  80 +++++
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 297 +++++++++++++++++-
+>  4 files changed, 396 insertions(+), 11 deletions(-)
+> 
+> 
+> base-commit: a269b93a67d815c8215fbfadeb857ae5d5f519d3
+> -- 
+> 2.34.1
+> 
