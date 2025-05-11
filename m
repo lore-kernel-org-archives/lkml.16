@@ -1,224 +1,143 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0748199943
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 09:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB483259C;
+	Sun, 11 May 2025 09:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746957229; cv=none; b=FyEzQ5I2Mo02W63DIjCyqCJR03l5kh/x74zKTOiWH7DqawZDCswLZl44TpO4XRtJM1nPfGUO3XCyCYKkiDMrxy+EeAtI2C+t1UPpwulx+mz4SoiVVQn1TX8dZ3xXcIWJYuCvzMQzPWHaV0NImTKB8TlbbNlAXFbb6PfDt3bWdg8=
+	t=1746957385; cv=none; b=LO4bNnSiyrYdGpzFmyv+iPWjq2a9lemeppu0v7/IVBg0VYgCt5yBWADheGntDzCdX/vCRTgsCq0D/PrkiPYNC5JyYCTv7F6Cep5ysWP8tVvr0Snzh48Kj7whY8gkp/q4036G0tqUrUQzjYoZNqjBopBf5CkbYNWNL+qLLGbMhhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746957229; c=relaxed/simple;
-	bh=LZUKTqSRIzcTe3Oi+qurbGORduHQ3aDEWoEgQumaS/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lQql8tkcjWcdGlk4br0HE3PgXmlXiqkFFvaFRO1o9zd8SgKTRQa0Y7oYKmaHAYKgrWPh+RjSuKP2UZ83blspaFBpLu6Qt+xD7en44V0oiHkikT7BkB4UAQnrl0rfjXCcNZ7qrwSXEbKbkh2C/OhkOY/TPynTYCH6Qc90O2526vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FnGTEvYB; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746957385; c=relaxed/simple;
+	bh=EcBmzsM7eA7xMZYYigJuzVHeIpJyY81far1nUncUJBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZxE5B/oRR6ZsCptcfb5vjTy6Fv3FsGftnT7fSyAaVXzC9+jFdpD+NHp3Lss82WaVf64O7yhUi1eafrRRhf9P5Jvs3i49xEbFUYbgYXxCHak40AULztvxWcoM8Yns47rCh0H3tEMRmtciARDZe16xyIwi66/UI5LDIzsJ4QA0jKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=f0rnALs5; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FnGTEvYB"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso21500175e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746957226; x=1747562026; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=svOIBgOqEfJz5rl1KUebw1DSPQLmx16oiBp9+Pj6aYI=;
-        b=FnGTEvYBuQPrh6lZoo+7yjOEfmZXAOnlTG6rsaoRM4P5pLlpA5ojiAd8CCJeBQPGcU
-         HmIBdOyBijm8yXQyE6vQGRL1eK/rK36zM7QvA2mmplueo62QbKex1OAtnE6sCTmKDmic
-         Vb+k8Bi5MMYVpdWJJQTZlPg1N6KpwWTbFE1yKkTTDb5ooM0RkIJGbQGT2jbO0Pvgk+GW
-         RyMflzzzzJ6WOLNwp/SWWyI7OcWVLmDxElYAO087eE18aUjJSc//ERu4sjndnwlY7Tc5
-         cHVjAKcjyLovstlcFgJYU9ElhEkZ3sGXRjtYWsiYoMd5WB7YT5nEAUqm05HUrp/k+Oh6
-         IS7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746957226; x=1747562026;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=svOIBgOqEfJz5rl1KUebw1DSPQLmx16oiBp9+Pj6aYI=;
-        b=jX5r9NZMBPYC8/C6HXYeD8Tj3HiAdNjzwRM7N1KSZSHAAUJpIXg1AGLJUrwr3sWKNq
-         tOXtt03iW6hdr5nCzPPGkTzfXx93l9qx6FBR4Ct6nmHrMpkjc4F2Q+Z9mKO/TSJ+4Zu1
-         G+r01AkdBWSYOTQI+2tp4qMxyYNe2a0UXS5JS6ujvQzxK6SVSGwttT9dah0SnyY8PFEt
-         2pxKyI1wBiRViI91WMGVeymxEtCE580iQAcz8zEQPPICgc5c02yv/8CXEE812GU0BylR
-         OCpGQH+klorb6e8VsMRsyRw1e816F9JeXVAu8ZQ472OSA4HcZDhqq009XdZxAgTTFKea
-         7iJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXa8/lyLFvHgB/bbNpM3a+J68hyDF+ksC67MdqljNCKt45KiYD4kfqyqlHkQ4V2EbGF13woGjQYft2WjVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx65JYj8n0TMzLFX4dhTAkxDNF78wB6MoyKxba1tV2ZoZsw6nC4
-	ZsNNiMGdyR8v5R1ZdvExPGpch4355JOAI3FisHlBvXlmHgMLBytLubIqvp78i6U=
-X-Gm-Gg: ASbGnctdp5xeO14X6CAx71iBFgc/EXSzK6lv5P/YmHc74jUFaPgvbLHOSSRwHyZnHkm
-	eYd3evs3Z6rahzmukOheGrPV2z6nYG6RQqAi9NQ8g7VCqJnHGEzv1EzkmQ2C40kG8Y5/ieDkYLD
-	xz4A+VzJwGiLY+lKv6U9E4rVQhdnmyZH+I0DJGsH0cUkBaehYPKMci3z9l3O7k3BsJZgKOjxymO
-	k2OI2WFXF0tS9GUJ3OZjLb6LGDS1Kk3qZV9CK90BWsetxByzZVLIpc3D2OLbHonTNmDuhzc9fAi
-	/JnGDZtuphHxtBxA0aE6YyfIBO5LZf4g4XvqcJSaoV2tJKiLNzBwOXxZ/QtYU67rchZKEL02pdE
-	YrLB9komVmyHu9wmA
-X-Google-Smtp-Source: AGHT+IEaXwLtr3ulVMHDoKRGiNLV/K4UKtErrKqyimNqORo5mIpZHz11BKqYDHNoxO5NUXC77uulTA==
-X-Received: by 2002:a05:600c:4e45:b0:43d:46de:b0eb with SMTP id 5b1f17b1804b1-442d6d44814mr82270705e9.12.1746957225872;
-        Sun, 11 May 2025 02:53:45 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae10sm87083295e9.37.2025.05.11.02.53.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 May 2025 02:53:44 -0700 (PDT)
-Message-ID: <cfe66826-fe23-47c6-8292-74066f021330@linaro.org>
-Date: Sun, 11 May 2025 10:53:43 +0100
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="f0rnALs5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746957368;
+	bh=Q4WxYauR8AdJ2g/bxgK0OnCSDtGUKaZ3FXBv5zWSQ3o=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=f0rnALs5oYBMFRrdF1RW73vlsLnna6oGrnfoA34TNgOWbS86QPxuwpyQ8fn7Xfe9h
+	 RdWyOlrraNRSI8Odt7xHAsSLlvAUx/ZqSh9E0GSD/ACDZ56bNYOFUloBcMxB0WVuDt
+	 Exg8rkVTvENt4TGsdwjdd3xT9q3Ips6ktO23FTRQ=
+X-QQ-mid: esmtpgz16t1746957366t3978378b
+X-QQ-Originating-IP: idxpsimLGU0hGHoiytzFM6c0lvSOxOI2RwYkgO90RQg=
+Received: from mail-yw1-f171.google.com ( [209.85.128.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sun, 11 May 2025 17:56:04 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 268385335283760362
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7080dd5fe92so30443597b3.3;
+        Sun, 11 May 2025 02:56:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVA4PjaHvjSu+FrYhd3Xjz0sgFUYH295+Y5N1BYdUc9hTjoYCvijf1NjPxjUM7DNXONXj7VXTKo20QcSKBR@vger.kernel.org, AJvYcCVJr0iSoJFP9dE40Pl5596RDv1DlAkJOQ9LcFSoF8+m0S0qKhh5TWBViEKooQdcnt5xMtdV/SbAr163e7+V@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxwNE1i1+HZh/Foko786pz7p9+yWEREKyH5vyEKSpkLzOc1YYI
+	1L/TWINq7DNIYFjyPhlqlNk13ZmNgrH9tG+JwJib1k5jUO8ExvCx95nV9EtN2m0jVls7KYAMDBv
+	S3HXUGmL5rwxNLgddI8b665ComTw=
+X-Google-Smtp-Source: AGHT+IFqLuDae5TrF5IJo/7IWt5v5Ao8J2mX0Tw9OQ+ugBMU8waXlOuwwp+zL8mDO91ahsSldM64QRb3cm2hmqEcuR0=
+X-Received: by 2002:a05:690c:6a12:b0:708:bc6e:f48c with SMTP id
+ 00721157ae682-70a3f871939mr119947467b3.0.1746957363719; Sun, 11 May 2025
+ 02:56:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC/WIP v2 4/9] arm64: dts: qcom: sa8775p: Add support for
- camss
-To: Suresh Vankadara <quic_svankada@quicinc.com>,
- Vikram Sharma <quic_vikramsa@quicinc.com>, rfoss@kernel.org,
- todor.too@gmail.com, mchehab@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
- cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com, will@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250427070135.884623-1-quic_vikramsa@quicinc.com>
- <20250427070135.884623-5-quic_vikramsa@quicinc.com>
- <cfc85bc0-1808-42ac-b0b0-41e4935ec74d@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <cfc85bc0-1808-42ac-b0b0-41e4935ec74d@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+ <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
+ <CAJfpegvhZ8Pts5EJDU0efcdHRZk39mcHxmVCNGvKXTZBG63k6g@mail.gmail.com>
+ <CAC1kPDPeQbvnZnsqeYc5igT3cX=CjLGFCda1VJE2DYPaTULMFg@mail.gmail.com> <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
+In-Reply-To: <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Sun, 11 May 2025 17:55:52 +0800
+X-Gmail-Original-Message-ID: <63311AB69C79877E+CAC1kPDPWag5oaZH62YbF8c=g7dK2_AbFfYMK7EzgcegDHL829Q@mail.gmail.com>
+X-Gm-Features: AX0GCFtK-hImNBOzxFlHZ0vKLUrnxwuWZbKGGsFDBefNUE-06UaT5YtTpY95gd8
+Message-ID: <CAC1kPDPWag5oaZH62YbF8c=g7dK2_AbFfYMK7EzgcegDHL829Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: M5WiB9omAJaF9DHc4yLBEuj8uN1xheSWhMmEP+Ro2wxHA43u/0331fWs
+	tRaB1zM2nLcU5rXC9pE0YjDS18B9IlIs3LOM3SNkiWXTI7uQdcRDB0x8PnGV3H+cBob8xEz
+	OmYFfniXxKxxzdEKsot6rwPsui9NFu3klfyevGMzq83M1VnKfqjtGzF56Q4SMYusM079GOV
+	Hnhk4hqQTwUmI9VOs4Z7CemEg5IT7nXXXAw6JlosAbx6M2flZt62jZXDzxxT9gbUsr2Z+yn
+	l3Vj9DWrRAl/E9Xd4CaFgLGemcdx9IhRVSMV38toKtoBKgonSf0qtK/e0bXg1x7hlYUqIsk
+	ae84TI8U63wwmYcu4HKepAsWIUc7ezNlBY4wPBTttRH5NBbksT9y5odzp2R5Lt907lLYcs/
+	pt86DFweBYgY6qb9h3f8xjPdifmO8LWLunMAzHA8Q/ksO8LkWlBocRFPkBeQshELs6g35/A
+	gxWJYX1tXU4nyMt/74qhaq6uolc92wnLodigfiNXh4mP/WKS542sLSUFp6z2/IJQZV9axEH
+	VA4uCzZEY6faLaAMsLhNPJxEwQeDhbxXNftxGRHzj5zaOey/12xCAviFFD5JYVADIkVmrVp
+	0LSKMrmHYytyq1WnkomZdjjyUUvByyx/oDxaYwb+7+8z8QrS4d+Z4VhTknOGUM0QySZHyc1
+	bcQyOCgTTjhrcCVuhBdXHlmUYh4qK5z8CJFcowVQ8eLlzdC10o6/eL/hsllPGb01fyBtpUh
+	VpMpc7yaGiKkyXBHan4ArZs6Dkgmhb+69vwnexEBfPLrrlKddT3xNqdCf244kXoFjcq2cw1
+	IHE9lm9a0vR5KW8VWP76nLhMQJ2DBcfelgY6g2MZ/pbP5XZL+vRuN3UzZYwb4PPktqZ1N+J
+	goZqdxBOaGSjad+QHrMLmezGtihkzyK2sY44bLembKbc43ipEovdrPJIm5WF/xfKuLwyFx2
+	Q10nHyNkvz1URJ1x4fGMscxyITsmjfrR0QoWSibaSlQbnla7HPXTB0aCo8SJONsJmFnvj0U
+	gYQmQ7ZKFt0BVrsqfz8wdr0Wz2Hw944gD9W2548HUnS+p0ld00F9jZwtFuUryPVCyx6a/aT
+	RLgQ+PFayT0x0NLcaPLVOv7KA9WWz7xwU4EAHkgd/cD
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-On 10/05/2025 08:14, Suresh Vankadara wrote:
-> 
-> 
-> On 4/27/2025 12:31 PM, Vikram Sharma wrote:
->> Add changes to support the camera subsystem on the SA8775P.
->>
->> Co-developed-by: Suresh Vankadara <quic_svankada@quicinc.com>
->> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
->> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sa8775p.dtsi | 187 ++++++++++++++++++++++++++
->>   1 file changed, 187 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/ 
->> dts/qcom/sa8775p.dtsi
->> index 5bd0c03476b1..81eadb2bb663 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
->> @@ -7,6 +7,7 @@
->>   #include <dt-bindings/interconnect/qcom,icc.h>
->>   #include <dt-bindings/interrupt-controller/arm-gic.h>
->>   #include <dt-bindings/clock/qcom,rpmh.h>
->> +#include <dt-bindings/clock/qcom,sa8775p-camcc.h>
->>   #include <dt-bindings/clock/qcom,sa8775p-dispcc.h>
->>   #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
->>   #include <dt-bindings/clock/qcom,sa8775p-gpucc.h>
->> @@ -3940,6 +3941,192 @@ videocc: clock-controller@abf0000 {
->>               #power-domain-cells = <1>;
->>           };
->> +        camss: isp@ac7a000 {
->> +            compatible = "qcom,sa8775p-camss";
-> If more number of nodes are added for CAMSS, adding isp in compatible 
-> string helps to differentiate.
+On Fri, May 9, 2025 at 10:59=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> =
+wrote:
 
-We need to keep a consistent upstream schema.
+> Right.  But I'm not asking you to implement this, just thinking about
+> an interface that is generic enough to cover past and possible future
+> cases.
 
-If we were adding other hardware blocks - say the BPS it would just be 
-appended to the end here, declared as another v4l2 device and then 
-wired-together from user-space via likely a qcom specific libcamera 
-pipeline.
+I am not very familiar with the existing features in the kernel and
+their development directions.
+For example, I do know about the SCM_RIGHTS functionality,
+but if you hadn't mentioned it here,
+I wouldn't have realized that they are essentially addressing the same
+kind of problem.
 
-> 
->> +            reg-names = "csid0",
->> +                    "csid1",
->> +                    "csid_lite0",
->> +                    "csid_lite1",
->> +                    "csid_lite2",
->> +                    "csid_lite3",
->> +                    "csid_lite4",
->> +                    "csid_wrapper",
-> csid wrapper is top register set, which is applicable for both csid 0 
-> and csid 1. It is logical to keep along with csid0 and csid1, instead of 
-> alpha numerical order.
+I don't think I currently have enough expertise to design an interface
+that could even account for future cases, but I will give it a try.
 
-We've had it feels like an eternity of debates about this and 
-compromised on alphanum sort of of node-names as the most consistent 
-with prior art.
+I noticed that the current extended attribute names already use the
+namespace.value format.
+Perhaps we could reuse this naming scheme and extend it to support
+features like nested namespaces.
 
-> 
->> +
->> +            clocks = <&camcc CAM_CC_CAMNOC_AXI_CLK>,
->> +                 <&camcc CAM_CC_CORE_AHB_CLK>,
->> +                 <&camcc CAM_CC_CPAS_AHB_CLK>,
->> +                 <&camcc CAM_CC_CPAS_FAST_AHB_CLK>,
->> +                 <&camcc CAM_CC_CPAS_IFE_LITE_CLK>,
->> +                 <&camcc CAM_CC_CPAS_IFE_0_CLK>,
->> +                 <&camcc CAM_CC_CPAS_IFE_1_CLK>,
->> +                 <&camcc CAM_CC_CSID_CLK>,
->> +                 <&camcc CAM_CC_CSIPHY0_CLK>,
->> +                 <&camcc CAM_CC_CSI0PHYTIMER_CLK>,
->> +                 <&camcc CAM_CC_CSIPHY1_CLK>,
->> +                 <&camcc CAM_CC_CSI1PHYTIMER_CLK>,
->> +                 <&camcc CAM_CC_CSIPHY2_CLK>,
->> +                 <&camcc CAM_CC_CSI2PHYTIMER_CLK>,
->> +                 <&camcc CAM_CC_CSIPHY3_CLK>,
->> +                 <&camcc CAM_CC_CSI3PHYTIMER_CLK>,
->> +                 <&camcc CAM_CC_CSID_CSIPHY_RX_CLK>,
->> +                 <&gcc GCC_CAMERA_HF_AXI_CLK>,
->> +                 <&gcc GCC_CAMERA_SF_AXI_CLK>,
->> +                 <&camcc CAM_CC_ICP_AHB_CLK>,
->> +                 <&camcc CAM_CC_IFE_0_CLK>,
->> +                 <&camcc CAM_CC_IFE_0_FAST_AHB_CLK>,
->> +                 <&camcc CAM_CC_IFE_1_CLK>,
->> +                 <&camcc CAM_CC_IFE_1_FAST_AHB_CLK>,
->> +                 <&camcc CAM_CC_IFE_LITE_CLK>,
->> +                 <&camcc CAM_CC_IFE_LITE_AHB_CLK>,
->> +                 <&camcc CAM_CC_IFE_LITE_CPHY_RX_CLK>,
->> +                 <&camcc CAM_CC_IFE_LITE_CSID_CLK>;
->> +            clock-names = "camnoc_axi",
->> +                      "core_ahb",
->> +                      "cpas_ahb",
->> +                      "cpas_fast_ahb_clk",
->> +                      "cpas_ife_lite",
->> +                      "cpas_vfe0",
->> +                      "cpas_vfe1",
-> Maintain consistency on vfe/ife in complete camss node. In reg section, 
-> vfe is used for full and lite version. in clock-names section ife lite 
-> and vfe are used. As clock IDs upstream and ife is used for full and 
-> lite, this convention will be followed in camss node as well.
-> 
->> +                      "csid",
->> +                      "csiphy0",
->> +                      "csiphy0_timer",
->> +                      "csiphy1",
->> +                      "csiphy1_timer",
->> +                      "csiphy2",
->> +                      "csiphy2_timer",
->> +                      "csiphy3",
->> +                      "csiphy3_timer",
->> +                      "csiphy_rx",
->> +                      "gcc_axi_hf",
->> +                      "gcc_axi_sf",
->> +                      "icp_ahb",
-> sf and icp_ahb clocks needed?
-> 
->> +
->> +            interconnects = <&gem_noc MASTER_APPSS_PROC 
->> QCOM_ICC_TAG_ACTIVE_ONLY
->> +                     &config_noc SLAVE_CAMERA_CFG 
->> QCOM_ICC_TAG_ACTIVE_ONLY>,
->> +                    <&mmss_noc MASTER_CAMNOC_HF QCOM_ICC_TAG_ALWAYS
->> +                     &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
->> +                    <&mmss_noc MASTER_CAMNOC_SF QCOM_ICC_TAG_ACTIVE_ONLY
->> +                     &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
->> +            interconnect-names = "ahb",
->> +                         "hf_0",
->> +                         "sf_0";
-> sf_0 needed?
-> 
->> +
->> +            iommus = <&apps_smmu 0x3400 0x20>;
-> 
-> 
-> Regards,
-> Suresh Vankadara.
+For instance, in a situation like this:
+
+A fixed file 0 in an io_uring is a FUSE fd.
+This FUSE fd belongs to FUSE connection 64.
+This FUSE fd has a backing file.
+This backing file is actually provided by mnt_id=3D36.
+
+Running getfattr -m '-' /proc/path/to/the/io_uring/fd could return
+something like:
+
+io_uring.fixed_files.0.fuse.conn=3D"64"
+io_uring.fixed_files.0.fuse.backing_file.mnt_id=3D"36"
+io_uring.fixed_files.0.fuse.backing_file.path=3D"/path/to/real/file"
+
+Here, the mnt_id is included because I believe
+resolving /path/to/real/file in user space might be a relatively complex ta=
+sk.
+Providing this attribute could make it easier for tools like lsof to work w=
+ith.
+
+Additionally, the reason I am working on this is that
+I want to make FUSE's passthrough functionality work for non-privileged use=
+rs.
+
+Someone on the mailing list asked why passthrough requires privileges befor=
+e:
+https://lore.kernel.org/all/CAOYeF9V_FM+0iZcsvi22XvHJuXLXP6wUYPwRYfwVFThajw=
+w9YA@mail.gmail.com/#t
+In response, I submitted a patch that includes documentation explaining thi=
+s:
+https://lore.kernel.org/all/20250507-fuse-passthrough-doc-v2-0-ae7c0dd8bba6=
+@uniontech.com/
+
+Perhaps we could start by discussing that patch.
