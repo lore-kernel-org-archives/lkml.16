@@ -1,127 +1,234 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D17C28FF
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746953749; cv=none; b=cHKnTgd50re/oIOT9GKsKvHTm79rHnryykSnoV6IJ3/t/XXgOvdTuDh+qaoB3mqyDm4YFUV4i8j/mbxYY308/2++zDpxIRGfL9KvyM7Axwpn0PDNQ3ADKdRD0kRABsQiv2BJtxf66ZkSDigoCVQ1SbndtVs1vqD/3uX3WEo3s4U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746953749; c=relaxed/simple;
-	bh=YeSgjSVqJ2rI7xgAvby/b3asBcQ5Une5Xh2zKLvCKhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpdA8T2899xk0oCx3qtBjCtywhWVlpB0skiFq1kiys+22EbUrJgD/zt91XPv4KEYeGOpvIFQfQwu97Gn61dR35BhqO/P9WJoT1lFnB831tKmMeqsFou1thhHQkF2ruMps9BVnlQaIqbdj/7QpDN54fj7mQSC3FYJeB98nFpnurQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eK4FiM62; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E6018DF86;
+	Sun, 11 May 2025 08:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746953884; cv=fail; b=GCLx9l5jAlNZTazLpXhu07uQnTeGvEJOQO3fr1huOoaRMXddZe1Dzl3mvj8ZJvEcj3aiApL8NrNYl9yX1qhEcs8ugjLiB4DBb7CRioMi9yu+oQcCyE5FpE3NdcHWtGNBBc56DR1TVugIrbCwpwjWaBBgTCWN/8QI1y/dDYjNDu0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746953884; c=relaxed/simple;
+	bh=VEJZc82NODLYmcVE1dcgSKepwhUjZTzRq7EsAxZzY3A=;
+	h=Message-ID:Date:Subject:From:To:CC:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iY7LVwXHM9ylpnK4Bxhnqxa1GgvfFTaGfMM9qi/Jg2mGR2h6sI8flBGZjaelFVSlNMu1bOhyG7vCijjKLzRwVQ5OWPn39fw4JrBREZhNHI50CcuZKP0cvi0fxJiAgPy14Lu7uOzblEqfI3ZJDHVAEMHPZIO3k5Jqmw7i8aP8K6w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LtflK6u5; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eK4FiM62"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2EFD840E023B;
-	Sun, 11 May 2025 08:55:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FHbRGwQaV2OU; Sun, 11 May 2025 08:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746953731; bh=sizVZE4DrN4UnKLnyZ+fPRU89PwmAombH0k+F9AIJHk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eK4FiM62hz+l9S6VTOyNklvtCX0PlcufbAKI+ha6EYLrC6cm4Yir/YCh9rPhTBDab
-	 E2Zp2wLV/1yTAaiQ8HjjuVuZewrx9s7T6AjuhdI8BvjKFaoNuLo9pM6KSmXEz9CrEt
-	 1VBGmX/vRav0brSI1qDxKfbgYnTa7WRmQXsNyCMcWG2PAIzM30bpz0s3HTkqGdHiiO
-	 M1a7Cx/lHzNFcB7I8J03H73KtSeBvweqUdK0W6kUw3WtGweuEP6+dGCdPVKFToH4dl
-	 sXzn6K9lMu/o+Zhdl37ir9lAYsLv/I6YisyDvfZ5CgbRBLF3MeJAFKApkAPGeqsFlo
-	 GDQiOBDNcpsfzaLCB2zbXDbEn4JZEIlOcB5wDasSRKNcDA9JYJHUBsi1TSYnWQ/NQj
-	 grIhgn6zwksKJmwAvcDwswyxL0rDDWRNu/PrzCyiJU2tLIkhGqO9icEX1LBhyMFBt8
-	 TL9tD/aL0xhlvPJOaefpQtAtAYN6/4L/HV0IAODJC59EtQk6dKTIoPk50akRRIBZIG
-	 DmbdIGmAFgVjH7MYHUSdW2ydUZx8oFTg0ebH/q+fRYsOPO3EFx5hvHm44XMyXWUv/f
-	 DfpExquthQo8JU6MEEC/lXRX1NyWdJYuBDjVvqHo7H2XTqI+qeXjKLgg8AYgWIV3X7
-	 qP5lcVciP7iwr7XoQFXIkDxU=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0CC9740E0192;
-	Sun, 11 May 2025 08:55:22 +0000 (UTC)
-Date: Sun, 11 May 2025 10:55:13 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Seongmanlee <cloudlee1719@gmail.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Cc: x86@kernel.org, leonardo-leecaprio <augustus92@kaist.ac.kr>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/sev: Fix operator precedence in
- GHCB_MSR_VMPL_REQ_LEVEL macro
-Message-ID: <20250511085513.GAaCBl8fIwQb7BpjNv@fat_crate.local>
-References: <20250510162726.90681-1-cloudlee1719@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LtflK6u5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746953882; x=1778489882;
+  h=message-id:date:subject:from:to:cc:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=VEJZc82NODLYmcVE1dcgSKepwhUjZTzRq7EsAxZzY3A=;
+  b=LtflK6u5AHvC1NdQYnLzIz6VTomIJYLc7RxCqdfDrmgw+1bLuiO9KyDb
+   O5WQpjBQu34FS1XYa4RMCkeeOgM92ZdIj/ci1yQiG/Vi9FJv4P/GmnLDU
+   Icyhq2euP2Mzp9N+aEmIQhb9fAJSJz2EUekeZfPauqINRv/0yl025+Cpp
+   3gBOKNaWI0rBGlSpjHEjetwpElsQwVcDQCZ3aaHh77iiw1j6+0BL6MuGm
+   i58Rc9vc9QxmBV6cj+xUXN642cO4hfa1WlXsufBtYQCjtRS2DriUz4FCg
+   3rQf2rveLgZeP6ZbGj2H3Rpf1qamGAKuqxMFJctv6ssksIQQyinEcY16s
+   Q==;
+X-CSE-ConnectionGUID: C6YnhZNeS9S/6DXsGLIHHQ==
+X-CSE-MsgGUID: K4fB1W9nTbeS3hBg2nc2Bw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11429"; a="59753105"
+X-IronPort-AV: E=Sophos;i="6.15,280,1739865600"; 
+   d="scan'208";a="59753105"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 01:58:01 -0700
+X-CSE-ConnectionGUID: BKwMhX18RmGTIHAGJHlgIw==
+X-CSE-MsgGUID: VRO7CLfdR46zW1Sn121b4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,280,1739865600"; 
+   d="scan'208";a="160335694"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 01:58:00 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sun, 11 May 2025 01:57:59 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Sun, 11 May 2025 01:57:59 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Sun, 11 May 2025 01:57:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qE6Zw1GkLYjD6f1Hiibxl8kL9WNc0vP2Cz8d3YVvtHi04zh3cEBKram7wpBj7ix5pocXmRbbKLexc/jFvAJj0I9v5lfhe2IFTvAoYzhPKiorz+ylIC6zxp5cZHyN84eFolomidiQ8xJMQPNrElUqB4lcmLF7iNhMPQ9Y0MoDKyaJtJsV40IODkh6eVULBoZV4c2+kPV78rkes1QAboEfX1wsZslxnStiCSddr3F+xEI7tKI1tlM9AaPNWXvwiT1O5haES2ZXTUTLxW/NFnhUcTS3dnLg6YpHAWIN3GZluRrm9pr2e59keeQEhJpAnM6gLANdWRKgpAYbMZj96Fu3IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Gn+QG2T/ex2II0pAPL0UtQc8MZWdher6+kp/ungypGc=;
+ b=ZBttBJp6umFQMZTd61ssti2Azy58lSBBQbuYm1tTY9+0OikF4x0H0vCgtxUla4V4W9hU+Aqira6NPMOB+zLXN+wbXUF+rOkNyBOuUplokJDqNTbM7GLB35Oa8b4jsu282cvvj20HlAsn7+ND2IjQZHFjg3TMg22Bv0NBKL7EJseR/BFQDC7IB+q7cWf9nSlRO1Akek+ZplYu4zZRx0z083p8oKGe089CkYmTCKTKcpdcbp1MraDjCIVejHJ7iuFSFRJoqFYDLx0lx//J8q2dOY3ZPffwgaZvSUwsKcNiy8QYI9mFiYCAq7v4guDz6Gdk2EIcms4GbgA5/yEKoBOzhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6054.namprd11.prod.outlook.com (2603:10b6:510:1d2::8)
+ by DM4PR11MB5264.namprd11.prod.outlook.com (2603:10b6:5:38b::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Sun, 11 May
+ 2025 08:57:57 +0000
+Received: from PH7PR11MB6054.namprd11.prod.outlook.com
+ ([fe80::a255:8692:8575:1301]) by PH7PR11MB6054.namprd11.prod.outlook.com
+ ([fe80::a255:8692:8575:1301%2]) with mapi id 15.20.8722.024; Sun, 11 May 2025
+ 08:57:57 +0000
+Message-ID: <e5ede906-0dd2-4f41-86e1-1364c8321774@intel.com>
+Date: Sun, 11 May 2025 11:57:50 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: <pbonzini@redhat.com>, <seanjc@google.com>
+CC: <mlevitsk@redhat.com>, <kvm@vger.kernel.org>,
+	<rick.p.edgecombe@intel.com>, <kirill.shutemov@linux.intel.com>,
+	<kai.huang@intel.com>, <reinette.chatre@intel.com>, <xiaoyao.li@intel.com>,
+	<tony.lindgren@linux.intel.com>, <binbin.wu@linux.intel.com>,
+	<isaku.yamahata@intel.com>, <linux-kernel@vger.kernel.org>,
+	<yan.y.zhao@intel.com>, <chao.gao@intel.com>
+References: <20250425075756.14545-1-adrian.hunter@intel.com>
+ <20250425075756.14545-2-adrian.hunter@intel.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20250425075756.14545-2-adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DB3PR06CA0005.eurprd06.prod.outlook.com (2603:10a6:8:1::18)
+ To PH7PR11MB6054.namprd11.prod.outlook.com (2603:10b6:510:1d2::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250510162726.90681-1-cloudlee1719@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6054:EE_|DM4PR11MB5264:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0a90fb10-1eff-4951-702f-08dd9069ec96
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?M2MvdDhLcmNwV3VwM25hajFkQVRrOFUxSGNIL1lKODgvWWRKUk8rN3pHbGZs?=
+ =?utf-8?B?WWZuQ0NFbGxzVzhteVlRRGhhWmI1MnY5VDhsc0loVHNOQ0kzUVNDNFNrS1lZ?=
+ =?utf-8?B?bVhEaVlFNWpWZEpENmVzRlNkMldRN2Z5Mm12NmdFb0MrVjhtSFk1SFFpVHhx?=
+ =?utf-8?B?T2llblQxQTZOUkp5VTFlMEx1cFkwZGVzNmRPYlQyNHNUaWtVWEJicmRXNTRk?=
+ =?utf-8?B?Y3FzcEtJYlpXVXlNYUhQdzdzN1V3dTNlUWVmcVNaWEMySVdla3RmNE1JMllU?=
+ =?utf-8?B?NG03M3gxa1ZQdG5mSUxrVkVYemY5ZEdZcW5yQ0dwRTV6K2tqRXNPTVJiWkZh?=
+ =?utf-8?B?UHdKMjVLMW45azRLWnpqY3ozRkdMYjRIV0NpQk9yS2ZraU1HbC9XUHNBVDQ1?=
+ =?utf-8?B?aFgwZUgrY1JNVENSelJDSmdySno0Y29BTEdFWllMQVNIU09tczNhOVhQMWIr?=
+ =?utf-8?B?bG0rSlowSVppY2paT2gyUjFJMjdVRWYxWXRaY1FONTloQUoyVkpkWWpoV3la?=
+ =?utf-8?B?TjNFVUVHaFlpZG1aY3BSOUVUUWJva3kyVXBNaGFIT0t4WjVhcGhSWkhaem00?=
+ =?utf-8?B?RGlhQnNYYlZiVWdLZFlQZEdwdi81clg2cW5FdXBtLzlLOWt2QWFwaUZxMmpl?=
+ =?utf-8?B?bkt2am9YMEd3c09EczdYSlovSm9rZVd6dmtIS0NkL09zYkJ6OEhFS2lkMnFl?=
+ =?utf-8?B?SjlQbm41bGQ2MmZoUlljbDcyMnQ2WUdoekE3clE3WUlYUzhlVHlqZ3V0czBS?=
+ =?utf-8?B?dWVJbFV0SkladHNFNEtFS2wvSXpUMWtDR05sclZiVk44MVhaWDF2VWo0NVN2?=
+ =?utf-8?B?RmV1emlpL1oxN1hnTXE0Qm9zcC81NVM5WjFMN0pCSU9Pc2VJbTJmMG50Ungy?=
+ =?utf-8?B?bGJCMysxRDdDYkNsWU0xQnowdG1pQWdBdjB2eUpFYW5ONzU3MVRBdkNMYjBV?=
+ =?utf-8?B?MDBLeUJZMFp0QU9IZndTa3ZOQm1PNm1zVjYwWVZzRW1iMkxyblE3U0FTNGxp?=
+ =?utf-8?B?YWZ1U3hpQjF5T0gySGI0WDkyaTYyNDZXZjZBaTZTNVlpVEhzck5GaUF1aFZR?=
+ =?utf-8?B?UmcyajhWUXp1QVpNUkZIZG9kbE1XRndvMXdVQkVSbGFEYURXZWNFUkREU0gx?=
+ =?utf-8?B?THFrQjNTUmV1K3I2a3l0bENnRjRmUkhZVGRsUU1ER0lxeU9hcWM1ZlF4eW1C?=
+ =?utf-8?B?YWVBK2h6OFZHaXB5Mm9Cd1lkU3d2NG5YcjFuRzBnUStaa2ZDOXpGV3R0aXlm?=
+ =?utf-8?B?VndLWXk4SllUcm10SmNJVzJRcXl2ZnI0SUo0MHF1WXVxSUNmME41bEhCTzJJ?=
+ =?utf-8?B?eS9pY1J1cXU3VDRIdTZ5OC9tYytiOWpicVJpV3VxWkFldEZpMzZZNy9WL3hV?=
+ =?utf-8?B?ckRLYWtySE52amlQa0szY1hlRVFrUkVHQWR2NHRvNDd6SlVGSU1jdFBSSjY3?=
+ =?utf-8?B?Y2xNWk1uanZaVEV0akh2M05RZVNEbFNEQ1Vhdy9TV2RCUHhtdkFkUExsa2tG?=
+ =?utf-8?B?aExmdnRTKzZYQ1hvWENoQXcxcmdES1BvR1ZlMGdpd1ZDQ0FPcUFOeFZsb2Vl?=
+ =?utf-8?B?Qkd1aHUwalhiVDgwcHFxVWY5NE5zSStjeXZEektaVnVtVnFOb01YcENHUHVE?=
+ =?utf-8?B?cldQRzJBbGRnQ1d5M3k4WUFCNk1BUHpzVU1XanpWbnkzK21OKzFMdVViM1pX?=
+ =?utf-8?B?c2hVQitOMU9FM0M4SjZCTWFEUHpLUGRNam1vclJhTERPZ254L1hodnZVUFVa?=
+ =?utf-8?B?ZFpaZ3I2ZlZLZENOdTF2Y1Vlc2d2cUxuWkczR2pmYzdicUlPMHlGa3dTTmFa?=
+ =?utf-8?B?NUloc21ZZWVDVnVmbWtQeDIrNVhycldaWk5nQkQxbzhDR1BCcUlBdlV2RS9w?=
+ =?utf-8?B?TXY1OWJLUTVzVXAxQ3Q3L2JOT1F6bUlQcUVBNGdKVERIUGc9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6054.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UmQ4VFlOZ2hJZWVuSWZyUkpTa0pUcEwyRzJYMEVSZXRma0MrZ3NRYjAzd3p0?=
+ =?utf-8?B?M3BiclRCaXpHcDNOZ2FCU3pxWDlORjcxakh1NUxEWHlWbDlkTi9JcldiZ0Z2?=
+ =?utf-8?B?ZDZhcU0yTW9Mb1dvMnZNY015SDR2S3pSSmkvbkRaRnNzK1Y3SEpKQnBEczA5?=
+ =?utf-8?B?eWU1QW50ZU5ydW1jM0tuSElaeUVSVTNQUzBHTGoyY2hlYjViaGthc2V1YzBI?=
+ =?utf-8?B?QnZkVXp4NEQ0VkNRdk5iRkZORUh2MjFCN050dUdWRXQzZWVucXE3WGw3YU16?=
+ =?utf-8?B?YURDY0c0SFhXekJ6N1VFU283eTloWUYrYlpONTJUNU1HUmRKT0t1dHZvR3ox?=
+ =?utf-8?B?WVdVYytBNUVudmE4cDZjM0hCZkZaZFpHYzFCM3kzU3N2RGRmM3A3MnJZaU1k?=
+ =?utf-8?B?S3VIMUdNTEVHSDc5WEFlRnk5QjhvKy9xZFpuYUlObjloZytCOTNYZVQweUxi?=
+ =?utf-8?B?QVd5L2hVT3d6djFESTJNQktoajJMQzV4dHNnV3JxTVk5Y1phR2NtdUtueFhE?=
+ =?utf-8?B?WlRCTjIzVXFUYUo1OEswdTNDRWRYc2JkWGtSUUE4cWh2YmVweGRGZ3V5M0dr?=
+ =?utf-8?B?V3pPVy85UzNtVGJYVmtNQmZhU3JybjllTnM0OHBod1ZnVm1rUVZXNEhtdGh6?=
+ =?utf-8?B?ODl1UmZiNm5NY1NCc2F6K2h1NEtlSFc2RzdjejM1dXVIcll3VjdNMEVNQlVB?=
+ =?utf-8?B?SzN4MVBTaFVQVWpoeFBaaW53Zytrb0JXY25iekZ6bjJBdnIvRXg1M1RnMWNW?=
+ =?utf-8?B?TzhESXdYd2RKZDQ0MGlGOEVhQWRXdTB0dDltTkd5blBiSG85T0s0dEl5RitF?=
+ =?utf-8?B?RXAvelFTUTJ1TDlLQlNhZGVHSXEyUnFVWEZ5REZYWU5rWUY5N2tlYWJWL2to?=
+ =?utf-8?B?dHBjdTdlTHhMTmd2TFN3bWQ1dTF6ckNBdTNpcTZOdDhReC9YYmVOMWhudnBi?=
+ =?utf-8?B?OFF4YlU2d3lqU21MUU1hemsxS1M3T3FsWDRUWGo3YXFaS2MwSkMyaUgxOVpJ?=
+ =?utf-8?B?MFNFYkFodHRXL2VjTXp6cXhmSkxSSUxwOEJGTklmQVVuYjJEbHFVdndyc0U3?=
+ =?utf-8?B?eWwyalRlajZDRGZhNWg0QkJ5emM2VnV2TDJScVp0TFlsRnFQTk10bkFJOWpV?=
+ =?utf-8?B?a3IycEhlZGN6QWxuSUp1bS93ZXJjWEpPN3cxS0lqalpZNTZrU0txaFUwWmtw?=
+ =?utf-8?B?Ry9xOHJ2ZWRObmd2SHJNbFJPS2huQ2NhOExWcXgvT0VkVy9BOHdFWEFvSm9j?=
+ =?utf-8?B?T0FuU3EyVXZrWVBRcUhzQ0laZWREK3FENHNxYklZbm01M0xWQkFGUHQ4UVR4?=
+ =?utf-8?B?Z01vckt2MDZyaG04TVE4dm05a3N2ZWhYNytOQ1RHeFBpdFNhcFdnVmJ1VXdM?=
+ =?utf-8?B?SXJ5STZDMUY4bkU3MkQ4K1laRW5Ibk5la2gyL3U4Nmt2TjAzYnM1VVZDb0FM?=
+ =?utf-8?B?NzBEUjlxbEdXRitCVUZ4bmtoVFFNeDZZUXdDZVdMd0Zvb3FqSFZrVC9WU3ZS?=
+ =?utf-8?B?b21iZFc3VlBWNFdwUEQzazRBQWljSVFVeHl2NzBuemNoVzNYbnl3SUlLaVJL?=
+ =?utf-8?B?MVdxV0lISDl3UVJYUW9DN2NjNXNtZ0dHOGFnNXpJRzAwbDNGQlZTQTIyRzF6?=
+ =?utf-8?B?bGxHbFZoaHlDU3FOV3BDRmxpbldUWDVIV3dxTGpsV1NkbTNkNnRNY1BDRFR3?=
+ =?utf-8?B?ZFlERTdiWldkaGx2MVdFVnRqdGdnSzk5OWd3bjdGN2I2U2lXaVJpWXJJUEV0?=
+ =?utf-8?B?TWp3WVB4bjRLcmhqR0RHRGRhblh4VVU5ZHVMTmtCbkkveU5Va3o3TktTN0xt?=
+ =?utf-8?B?UHNVNU9nWUVoTForb2YwM3hZM0RiYTdyRmwrMmgzNFFSQ0xkRTk1WDBlQSt6?=
+ =?utf-8?B?RjU2VjhxOWRKdFEyK0MzZ3Q1dldEcjhsVzFGTUREUEFiUm96TlFMNTVvMjVR?=
+ =?utf-8?B?TmRaOWp4L1hicFZTYnVpbC9TdEVsRXcxaEpIUGpoME53NnpDZHdIdjFhaTVx?=
+ =?utf-8?B?NGttWng1NlkwMStKWTgvSFZYUnNRVUR1bXFRQnRIMmRqT1dvYmlVeGZlVXU0?=
+ =?utf-8?B?NXVXY0ZxTjE5WDdIbEptZy9YZ2dJQllFVE5KbVQ3VU01bnd4bVFPaFpKWUVT?=
+ =?utf-8?B?NTZ3NWF6M3A1aE5uTFNwMk1lS0FZMVQ5L1NtR0FVTE0xTnAyV2w0REpER3hL?=
+ =?utf-8?B?Q1E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a90fb10-1eff-4951-702f-08dd9069ec96
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6054.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2025 08:57:57.5514
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aJn1ndJrAgs+0/6k7S4U11rGh+6dJLOII7EgkUZU/HHRYU3hulmpRm21UtGS7UdXqb78ogsxPT2v/qCD9qatGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5264
+X-OriginatorOrg: intel.com
 
-+ Tom.
+On 25/04/2025 10:57, Adrian Hunter wrote:
+> +static int tdx_terminate_vm(struct kvm *kvm)
+> +{
+> +	if (!kvm_trylock_all_vcpus(kvm))
 
-On Sun, May 11, 2025 at 01:27:24AM +0900, Seongmanlee wrote:
-> From: leonardo-leecaprio <augustus92@kaist.ac.kr>
-> 
-> The GHCB_MSR_VMPL_REQ_LEVEL macro lacked parentheses around the bitmask
-> expression, causing the shift operation to bind too early. As a result,
-> when switching to VMPL2 from VMPL1 (e.g., GHCB_MSR_VMPL_REQ_LEVEL(1)),
-> incorrect values such as 0x000000016 were generated instead of the intended
-> 0x100000016.
-> 
-> This patch fixes the precedence issue by grouping the masked value
+Introduction of kvm_trylock_all_vcpus() is still in progress:
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+	https://lore.kernel.org/r/20250430203013.366479-3-mlevitsk@redhat.com/
 
-Also, do
+but it has kvm_trylock_all_vcpus(kvm) return value the other way around, so
+this will instead need to be:
 
-$ git grep 'This patch' Documentation/process
+	if (kvm_trylock_all_vcpus(kvm))
 
-for more details.
+> +		return -EBUSY;
+> +
+> +	kvm_vm_dead(kvm);
+> +
+> +	kvm_unlock_all_vcpus(kvm);
+> +
+> +	tdx_mmu_release_hkid(kvm);
+> +
+> +	return 0;
+> +}
+> +
+>  int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_tdx_cmd tdx_cmd;
+> @@ -2817,6 +2825,9 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+>  	case KVM_TDX_FINALIZE_VM:
+>  		r = tdx_td_finalize(kvm, &tdx_cmd);
+>  		break;
+> +	case KVM_TDX_TERMINATE_VM:
+> +		r = tdx_terminate_vm(kvm);
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		goto out;
 
-> before applying the shift.
-> 
-
-Fixes: 34ff65901735 ("x86/sev: Use kernel provided SVSM Calling Areas")
-
-> Signed-off-by: leonardo-leecaprio <augustus92@kaist.ac.kr>
-
-Please use your real name.
-
-> ---
->  arch/x86/include/asm/sev-common.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-> index acb85b934..0020d77a0 100644
-> --- a/arch/x86/include/asm/sev-common.h
-> +++ b/arch/x86/include/asm/sev-common.h
-> @@ -116,7 +116,7 @@ enum psc_op {
->  #define GHCB_MSR_VMPL_REQ		0x016
->  #define GHCB_MSR_VMPL_REQ_LEVEL(v)			\
->  	/* GHCBData[39:32] */				\
-> -	(((u64)(v) & GENMASK_ULL(7, 0) << 32) |		\
-> +	((((u64)(v) & GENMASK_ULL(7, 0)) << 32) |	\
->  	/* GHCBDdata[11:0] */				\
->  	GHCB_MSR_VMPL_REQ)
->  
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
