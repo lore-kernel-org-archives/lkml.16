@@ -1,32 +1,67 @@
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490352907;
-	Sun, 11 May 2025 12:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE02194AD5;
+	Sun, 11 May 2025 12:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746965785; cv=none; b=surB9jm8L4Az5jsYNnj6wjxYkvmUiIH6L8AuoWclRiy7yuRlCj3xmHS8H50TKSUruSnX/KoQ+NCUyYKPEoNzUpaqGYE2jr+rleyzs6mV5CLHuWDWZpZd+8WJWvq5xFqDiDTmbWrZ1nbLaXR2vQ4VFKyg7VZbAa6itGPnTCTBjKs=
+	t=1746965803; cv=none; b=Km3OvYuQGkS7+Spl8Jg52zKUCXK3IwzhYcILiKVZG+cvVvsgSw5wLXtSQuilXmUNX/pjCK8Xsx4XC5BqycOWXBlDYATt1iGO2IEQcky3OfPtBeRxxeWiroRQKYHMwZG9r87vlDaDTJ+XvlpJIXrp/rynpipr/RstSGKaxbstWrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746965785; c=relaxed/simple;
-	bh=ih7wmAXVhDCJyYBR3vLth3h9hrhkplcPDL2t1WrCTpM=;
+	s=arc-20240116; t=1746965803; c=relaxed/simple;
+	bh=kyw+l1wJVeveYIBNAH1Tn2Vy7iGJtAsbUzmEZBVbWyI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QXVKj0lxrGJwo36vJfuPPH/3ZjQXz8L6sJUt9oCfnEG+pmSuBfVYCX2eXcBxssybeeFsYWVkR5fMB5//XdyZ25t64ZHJhHXk7uB0UGfywHTjU1qUyrYZ/ZFR07FAddPB8gaua1T+ONtBbDqWwNtz/AE8zrQOimZcwHeFyq5nRxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 54BC8bUa030948
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 11 May 2025 21:38:38 +0930
-Date: Sun, 11 May 2025 21:38:37 +0930
-From: Jonathan Woithe <jwoithe@just42.net>
-To: Valtteri Koskivuori <vkoskiv@gmail.com>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Support Lifebook S2110
- hotkeys
-Message-ID: <aCCTRWvlYKX/fObR@marvin.atrad.com.au>
-References: <20250509184251.713003-1-vkoskiv@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDyrFRqJ8tE4G+y2CLa+VeuoMUpTlJDUM/eQYcfarQh4LHoe/eFwzRM8Zf4ftdv00DpcCdWWBPvJnGx78jVpifEQOaz/fXwa59Y9UOdq5FzkvOiD6nLbu9FBwpp3Q66zJIdukZYnWljdV8Vd2Olu0UuhQiInLoWRodF1iYP7NY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHz5zmL9; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHz5zmL9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746965801; x=1778501801;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kyw+l1wJVeveYIBNAH1Tn2Vy7iGJtAsbUzmEZBVbWyI=;
+  b=NHz5zmL95f9xlJDnC63kQ1fPOOSNs9FhiqsmCa7E+VwGKaToLa+Ag8Qe
+   wktRbubBZfmB0gNy4kicmOjSomtVpa/COk+hNp8mF6D4cQUXsYTqdjkjM
+   zcnpfSPDx3qpBfhZqgu9OxAkjVXizm66B6Fttcgr7UJe1lgUtPW7zSquc
+   Zjl36NT4QppepoUDpzTAdCC4sizcKy5XVYi8psYk4RZ5CGBlY0Wd861xs
+   +zh5HK7bvyENDkW6XoPhpxlsvGCFeKnBZK5sfLg9oX7Rj4oFPrMgoN7fG
+   w6gXK5BC6I5FKThy/0VhQSHyA3S+G0ERLy7Eehvy47B3nkU/O4XSrbjn2
+   g==;
+X-CSE-ConnectionGUID: Asmvh2IwRtCp1M7U47m/9Q==
+X-CSE-MsgGUID: 5snTjAbTQAawtusc0Zn+MQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="74151044"
+X-IronPort-AV: E=Sophos;i="6.15,280,1739865600"; 
+   d="scan'208";a="74151044"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 05:16:40 -0700
+X-CSE-ConnectionGUID: u5/ngfmrQSepRT4nB89Sgw==
+X-CSE-MsgGUID: /P9mnNRNRmeMn9yjtROsIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,280,1739865600"; 
+   d="scan'208";a="142223787"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 11 May 2025 05:16:37 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uE5be-000Dkl-2I;
+	Sun, 11 May 2025 12:16:34 +0000
+Date: Sun, 11 May 2025 20:16:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v6 2/2] thermal: Add support for Airoha EN7581 thermal
+ sensor
+Message-ID: <202505112056.HaqX6Bef-lkp@intel.com>
+References: <20250510172509.2547273-2-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,108 +70,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250509184251.713003-1-vkoskiv@gmail.com>
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+In-Reply-To: <20250510172509.2547273-2-ansuelsmth@gmail.com>
 
-On Fri, May 09, 2025 at 09:42:49PM +0300, Valtteri Koskivuori wrote:
-> The S2110 has an additional set of media playback control keys enabled
-> by a hardware toggle button that switches the keys between "Application"
-> and "Player" modes. Toggling "Player" mode just shifts the scancode of
-> each hotkey up by 4.
-> 
-> Add defines for new scancodes, and a keymap and dmi id for the S2110.
-> 
-> Tested on a Fujitsu Lifebook S2110.
-> 
-> Signed-off-by: Valtteri Koskivuori <vkoskiv@gmail.com>
+Hi Christian,
 
-These additions look fine to me.
+kernel test robot noticed the following build warnings:
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+[auto build test WARNING on rafael-pm/thermal]
+[also build test WARNING on linus/master v6.15-rc5 next-20250509]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> ---
->  drivers/platform/x86/fujitsu-laptop.c | 33 +++++++++++++++++++++++----
->  1 file changed, 29 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index a0eae24ca9e6..162809140f68 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -17,13 +17,13 @@
->  /*
->   * fujitsu-laptop.c - Fujitsu laptop support, providing access to additional
->   * features made available on a range of Fujitsu laptops including the
-> - * P2xxx/P5xxx/S6xxx/S7xxx series.
-> + * P2xxx/P5xxx/S2xxx/S6xxx/S7xxx series.
->   *
->   * This driver implements a vendor-specific backlight control interface for
->   * Fujitsu laptops and provides support for hotkeys present on certain Fujitsu
->   * laptops.
->   *
-> - * This driver has been tested on a Fujitsu Lifebook S6410, S7020 and
-> + * This driver has been tested on a Fujitsu Lifebook S2110, S6410, S7020 and
->   * P8010.  It should work on most P-series and S-series Lifebooks, but
->   * YMMV.
->   *
-> @@ -107,7 +107,11 @@
->  #define KEY2_CODE			0x411
->  #define KEY3_CODE			0x412
->  #define KEY4_CODE			0x413
-> -#define KEY5_CODE			0x420
-> +#define KEY5_CODE			0x414
-> +#define KEY6_CODE			0x415
-> +#define KEY7_CODE			0x416
-> +#define KEY8_CODE			0x417
-> +#define KEY9_CODE			0x420
->  
->  /* Hotkey ringbuffer limits */
->  #define MAX_HOTKEY_RINGBUFFER_SIZE	100
-> @@ -560,7 +564,7 @@ static const struct key_entry keymap_default[] = {
->  	{ KE_KEY, KEY2_CODE,            { KEY_PROG2 } },
->  	{ KE_KEY, KEY3_CODE,            { KEY_PROG3 } },
->  	{ KE_KEY, KEY4_CODE,            { KEY_PROG4 } },
-> -	{ KE_KEY, KEY5_CODE,            { KEY_RFKILL } },
-> +	{ KE_KEY, KEY9_CODE,            { KEY_RFKILL } },
->  	/* Soft keys read from status flags */
->  	{ KE_KEY, FLAG_RFKILL,          { KEY_RFKILL } },
->  	{ KE_KEY, FLAG_TOUCHPAD_TOGGLE, { KEY_TOUCHPAD_TOGGLE } },
-> @@ -584,6 +588,18 @@ static const struct key_entry keymap_p8010[] = {
->  	{ KE_END, 0 }
->  };
->  
-> +static const struct key_entry keymap_s2110[] = {
-> +	{ KE_KEY, KEY1_CODE, { KEY_PROG1 } }, /* "A" */
-> +	{ KE_KEY, KEY2_CODE, { KEY_PROG2 } }, /* "B" */
-> +	{ KE_KEY, KEY3_CODE, { KEY_WWW } },   /* "Internet" */
-> +	{ KE_KEY, KEY4_CODE, { KEY_EMAIL } }, /* "E-mail" */
-> +	{ KE_KEY, KEY5_CODE, { KEY_STOPCD } },
-> +	{ KE_KEY, KEY6_CODE, { KEY_PLAYPAUSE } },
-> +	{ KE_KEY, KEY7_CODE, { KEY_PREVIOUSSONG } },
-> +	{ KE_KEY, KEY8_CODE, { KEY_NEXTSONG } },
-> +	{ KE_END, 0 }
-> +};
-> +
->  static const struct key_entry *keymap = keymap_default;
->  
->  static int fujitsu_laptop_dmi_keymap_override(const struct dmi_system_id *id)
-> @@ -621,6 +637,15 @@ static const struct dmi_system_id fujitsu_laptop_dmi_table[] = {
->  		},
->  		.driver_data = (void *)keymap_p8010
->  	},
-> +	{
-> +		.callback = fujitsu_laptop_dmi_keymap_override,
-> +		.ident = "Fujitsu LifeBook S2110",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK S2110"),
-> +		},
-> +		.driver_data = (void *)keymap_s2110
-> +	},
->  	{}
->  };
->  
-> -- 
-> 2.49.0
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/thermal-Add-support-for-Airoha-EN7581-thermal-sensor/20250511-012647
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal
+patch link:    https://lore.kernel.org/r/20250510172509.2547273-2-ansuelsmth%40gmail.com
+patch subject: [PATCH v6 2/2] thermal: Add support for Airoha EN7581 thermal sensor
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250511/202505112056.HaqX6Bef-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250511/202505112056.HaqX6Bef-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505112056.HaqX6Bef-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/thermal/airoha_thermal.c:317:2: warning: label at end of compound statement is a C23 extension [-Wc23-extensions]
+     317 |         }
+         |         ^
+   1 warning generated.
+
+
+vim +317 drivers/thermal/airoha_thermal.c
+
+   297	
+   298	static irqreturn_t airoha_thermal_irq(int irq, void *data)
+   299	{
+   300		struct airoha_thermal_priv *priv = data;
+   301		enum thermal_notify_event event;
+   302		bool update = false;
+   303		u32 status;
+   304	
+   305		status = readl(priv->base + EN7581_TEMPMONINTSTS);
+   306		switch (status & (EN7581_HOFSINTSTS0 | EN7581_LOFSINTSTS0)) {
+   307		case EN7581_HOFSINTSTS0:
+   308			event = THERMAL_TRIP_VIOLATED;
+   309			update = true;
+   310			break;
+   311		case EN7581_LOFSINTSTS0:
+   312			event = THERMAL_EVENT_UNSPECIFIED;
+   313			update = true;
+   314			break;
+   315		/* Should be impossible as we enable only these interrupt */
+   316		default:
+ > 317		}
+   318	
+   319		/* reset interrupt */
+   320		writel(status, priv->base + EN7581_TEMPMONINTSTS);
+   321	
+   322		if (update)
+   323			thermal_zone_device_update(priv->tz, event);
+   324	
+   325		return IRQ_HANDLED;
+   326	}
+   327	
 
 -- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
