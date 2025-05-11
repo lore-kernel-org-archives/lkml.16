@@ -1,204 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73788258CFB
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 16:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08A41426C;
+	Sun, 11 May 2025 16:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746981327; cv=none; b=mXkb4XCLLrYIZgMjXzMQnR+dHtXi92BBTEnTIcHWcomsNaMxX8TdmCVumHR1zHUVwSr4tBv9SpQgvNWwUgN94t9hzyguvMHGmvCU9ikXJoxLc+ZaFs46viVKZVlfbW/Q2u2fQZxrSHVtwnyo/QFCmVoX5lldkttIOlCzWiwyq4g=
+	t=1746981502; cv=none; b=MJzrt6CyVU8OvVzCGazeLP9KApZvXd8RzJb1fyFAftxANBYqv/ulm9WDCjL+jrh5kYJB1F3c+HXOc/4mvMbK2QgWKkJTQF0U6RX0/8Q6t9hBu/YbdhPOXyoIRuGbiQOpzRuZaRcp4LFuHrOXQZPQ6pewm5wd4TDA2wj+XKC0kz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746981327; c=relaxed/simple;
-	bh=MkHl02Hcg/C7P/syAv18JHro8Do6xpxM2jr5nO1nbsk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gvZY/warNoH/PAL9TFoA5Hae+S6BUs7q7gCclyXkXCuhX+sqIhRvOAlhNzAPnNGOrp7xZV8GDFXKhGDQ57b8cKwHrO3dD0N/qWg5qC3won458tyHt0Wki39mmop4BcSNPOhLTbNJ0D0XgZDLdgrYHPv9p+nHnCG55iEjK2xRvqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJuzghMI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746981502; c=relaxed/simple;
+	bh=hs5vd8LRGfzxohCkfiT0NgBKcp5M5vzIsAKBSBoXpLQ=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=D8LT9261r6bw0kS8VTLNZN9BBLD9vqO5eW3nEcpMt+F6qloHCRqQTdTAw4tG3ZYvSF3sVx9FmxGFpq73iFIdk18uJ8LblP0THKWiXDvfRINbPzZubGc2pAyDMSRROfDsJWURep4/z8mBpNZGF5xz+esJVU14V8OJ3OkrRN/C6Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKj+Z7QH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJuzghMI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06494C4AF09;
-	Sun, 11 May 2025 16:35:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKj+Z7QH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 171BFC4CEE4;
+	Sun, 11 May 2025 16:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746981327;
-	bh=MkHl02Hcg/C7P/syAv18JHro8Do6xpxM2jr5nO1nbsk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RJuzghMIFy93VmeAdc0IgjOjuB/Xh/vCUxyzAT9AoC6LkyjWgQ/LQfDqcNh74AuKb
-	 oZSXhJtWB2L7razBEJO4q4Rv5zZhedjDrbYrm4fvGWTubJcoyOaACaksA3FtFVS2/x
-	 4rk54zMacmJpoy7Wq4ekz3oqQJo2xFvAtnGFmI0EOf3Qg5S6ht1SmLCky5FxAcleDT
-	 Rs5DsrHLHxhlTN+rHO9qoYBKzIH/pt7SUL9AV3zdbgzNzBmF8g2uaft7Rv3xHvQGWk
-	 qePrDU9WxRQ3HbIE0hjKguulDSaqOXETnR1F6DpNYKrEm2D5IC9/IjBjvG3bH0M/Sc
-	 /r8NDLoCRUWHw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uE9e8-00Dt22-Th;
-	Sun, 11 May 2025 17:35:24 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>
-Subject: [PATCH 2/4] irqchip/gic-v3-its: Implement .msi_teardown() callback
-Date: Sun, 11 May 2025 17:35:18 +0100
-Message-Id: <20250511163520.1307654-3-maz@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250511163520.1307654-1-maz@kernel.org>
-References: <20250511163520.1307654-1-maz@kernel.org>
+	s=k20201202; t=1746981502;
+	bh=hs5vd8LRGfzxohCkfiT0NgBKcp5M5vzIsAKBSBoXpLQ=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=iKj+Z7QHlhKB3tC5Zy0pppDZKsomMglPO8eSOMhdfZmNdk1ifDb4+svINF/4J2UC0
+	 gwPfIOcRd65sFHTnRfoz6rvfmXlzfeaTe9tdeSV5Hbpb9uuilbn5u53QOzSba5Vv6r
+	 kNzZy+KJm861N8LvwR4O4SI2CCopHm1FLlCjzlrXL/fkXriW7FKBlqMCWjkEXgbjDY
+	 SJ6YWKvEHLOW3oVj2UnXZ06MKymeQ+Sv0zMtOMaa1BuwUqqB02FSKCykpJjXfUU5yd
+	 YIf+Xx0A6X92HPqBVnQADUH0ddUl9wobZ6wysQ2+TvI6Wz4nlyWIYOVsr1kSnUM/6U
+	 xKRbtaYcBAalw==
+Date: Sun, 11 May 2025 11:38:20 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, lpieralisi@kernel.org, sascha.bischoff@arm.com, timothy.hayes@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+ Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-media@vger.kernel.org, 
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Junhao Xie <bigfoot@classfun.cn>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Heiko Stuebner <heiko@sntech.de>, Aradhya Bhatia <a-bhatia1@ti.com>, 
+ linux-kernel@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>, 
+ Gaosheng Cui <cuigaosheng1@huawei.com>, 
+ Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Ricardo Ribalda <ribalda@chromium.org>, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Kever Yang <kever.yang@rock-chips.com>, Michal Simek <michal.simek@amd.com>
+To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+In-Reply-To: <20250511144752.504162-4-yassine.ouaissa@allegrodvt.com>
+References: <20250511144752.504162-1-yassine.ouaissa@allegrodvt.com>
+ <20250511144752.504162-4-yassine.ouaissa@allegrodvt.com>
+Message-Id: <174698150049.490551.15288138396615870362.robh@kernel.org>
+Subject: Re: [PATCH 3/3] media: allegro-dvt: Add DT-bindings for the Gen 3
+ IP
 
-We currently nuke the structure representing an endpoint device
-translating via an ITS on freeing the last LPI allocated for it.
 
-That's an unfortunate state of affair, as it is pretty common for
-a driver to allocate a single MSI, do something clever, teardown
-this MSI, and reallocate a whole bunch of them. The nvme driver
-does exactly that, amongst others.
+On Sun, 11 May 2025 16:47:34 +0200, Yassine Ouaissa wrote:
+> Add the device-tree bindings for the allegro-dvt Gen 3 IP decoders, and
+> update the MAINTAINERS file.
+> 
+> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+> ---
+>  .../bindings/media/allegrodvt,al300-vdec.yaml | 86 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> 
 
-What happens in that case is that the core code is buggy enough
-to issue another .msi_prepare() call, even if it shouldn't.
-This luckily cancels the above behaviour and hides the problem.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-In order to fix the core code, let's start by implementing the new
-.msi_teardown() callback. Nothing calls it yet, so a side effect
-is that the its_dev structure will not be freed and that the DID
-will stay mapped. Not a big deal, and this will be solved in the
-following patch.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml:52:3: [error] syntax error: could not find expected ':' (syntax)
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its-msi-parent.c | 10 ++++
- drivers/irqchip/irq-gic-v3-its.c            | 56 +++++++++++++--------
- 2 files changed, 45 insertions(+), 21 deletions(-)
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml: ignoring, error parsing file
+./Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml:52:3: could not find expected ':'
+make[2]: *** Deleting file 'Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.example.dts'
+Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml:52:3: could not find expected ':'
+make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.example.dts] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1527: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
 
-diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-index bdb04c8081480..76b94f55b00e2 100644
---- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-+++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-@@ -159,6 +159,14 @@ static int its_pmsi_prepare(struct irq_domain *domain, struct device *dev,
- 					  dev, nvec, info);
- }
- 
-+static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
-+{
-+	struct msi_domain_info *msi_info;
-+
-+	msi_info = msi_get_domain_info(domain->parent);
-+	msi_info->ops->msi_teardown(domain->parent, info);
-+}
-+
- static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 				  struct irq_domain *real_parent, struct msi_domain_info *info)
- {
-@@ -182,6 +190,7 @@ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 		 * %MSI_MAX_INDEX.
- 		 */
- 		info->ops->msi_prepare = its_pci_msi_prepare;
-+		info->ops->msi_teardown = its_msi_teardown;
- 		break;
- 	case DOMAIN_BUS_DEVICE_MSI:
- 	case DOMAIN_BUS_WIRED_TO_MSI:
-@@ -190,6 +199,7 @@ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 		 * size is also known at domain creation time.
- 		 */
- 		info->ops->msi_prepare = its_pmsi_prepare;
-+		info->ops->msi_teardown = its_msi_teardown;
- 		break;
- 	default:
- 		/* Confused. How did the lib return true? */
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 0115ad6c82593..3472b97477104 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3620,8 +3620,43 @@ static int its_msi_prepare(struct irq_domain *domain, struct device *dev,
- 	return err;
- }
- 
-+static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
-+{
-+	struct msi_domain_info *msi_info;
-+	struct its_device *its_dev;
-+	struct its_node *its;
-+	u32 dev_id;
-+
-+	dev_id = info->scratchpad[0].ul;
-+
-+	msi_info = msi_get_domain_info(domain);
-+	its = msi_info->data;
-+
-+	guard(mutex)(&its->dev_alloc_lock);
-+
-+	its_dev = its_find_device(its, dev_id);
-+
-+	/* If the device is shared, keep everything around */
-+	if (its_dev->shared)
-+		return;
-+
-+	/* LPIs should have been already unmapped at this stage */
-+	if (WARN_ON_ONCE(!bitmap_empty(its_dev->event_map.lpi_map,
-+				       its_dev->event_map.nr_lpis)))
-+		return;
-+
-+	its_lpi_free(its_dev->event_map.lpi_map,
-+		     its_dev->event_map.lpi_base,
-+		     its_dev->event_map.nr_lpis);
-+
-+	/* Unmap device/itt, and get rid of the tracking */
-+	its_send_mapd(its_dev, 0);
-+	its_free_device(its_dev);
-+}
-+
- static struct msi_domain_ops its_msi_domain_ops = {
- 	.msi_prepare	= its_msi_prepare,
-+	.msi_teardown	= its_msi_teardown,
- };
- 
- static int its_irq_gic_domain_alloc(struct irq_domain *domain,
-@@ -3722,7 +3757,6 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- {
- 	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
--	struct its_node *its = its_dev->its;
- 	int i;
- 
- 	bitmap_release_region(its_dev->event_map.lpi_map,
-@@ -3736,26 +3770,6 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 		irq_domain_reset_irq_data(data);
- 	}
- 
--	mutex_lock(&its->dev_alloc_lock);
--
--	/*
--	 * If all interrupts have been freed, start mopping the
--	 * floor. This is conditioned on the device not being shared.
--	 */
--	if (!its_dev->shared &&
--	    bitmap_empty(its_dev->event_map.lpi_map,
--			 its_dev->event_map.nr_lpis)) {
--		its_lpi_free(its_dev->event_map.lpi_map,
--			     its_dev->event_map.lpi_base,
--			     its_dev->event_map.nr_lpis);
--
--		/* Unmap device/itt */
--		its_send_mapd(its_dev, 0);
--		its_free_device(its_dev);
--	}
--
--	mutex_unlock(&its->dev_alloc_lock);
--
- 	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
- }
- 
--- 
-2.39.2
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250511144752.504162-4-yassine.ouaissa@allegrodvt.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
