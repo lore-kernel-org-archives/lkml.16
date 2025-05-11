@@ -1,143 +1,113 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5A84315E;
-	Sun, 11 May 2025 17:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A2512D1F1
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746984218; cv=none; b=KPbptr2NR8M74Hq24viTs3rt5HrsGW7oOABe9YHRwk99pFtSfgXBUYaC03FLZWPKOEfJNzs/WGtuwmpoGa9YRvQ7cpoaBj6NKXLpfAjCCsYfS0e8xNGyl8xAHNsHJ50tPXdzO0hgXCoonlRH7i0jhWTPfm5h42mCSFiPxMzJF/M=
+	t=1746984482; cv=none; b=KxFqNnENIv0RLUuijTVvgmc8PM2QNrd60cUQZ6WQpCD9nJ3sqn1oIYZlgd0G2uq7FuQZn7N8V1ZIUxYfcnwaOo8wNJD0THo9y/LQ96gmtwy+rz3Nagc/wYQuhC538u8O00Ehg4n2rbtrEXKC3MrAJ6LKvEiZYzcbs+saUeRWmT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746984218; c=relaxed/simple;
-	bh=LtzpehVGu2B69y1XpCCA5A0OebEImMHVr/qUe8ig5zs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p4pyPaRvJolwfLFgvsvD4LneeyW+u5AQWYyidC5w2irHNi+DB3TBV1kwBVSh0mjeJSqo7I1xFN09uNtywp0VgPTwXxnljgRdhs2yMWYN7w8o7RNJwItu/ieiLILjlD3Mt1onmDk1M63CHuAOFSWyEGyV+72bCBHNMQFl9lPE3WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxiAVEt/; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746984482; c=relaxed/simple;
+	bh=u8Ob+G3P6BviIfXvZ2FMgD6fVlQn8wTY2uh9z+JTQCo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OmdNJA2SM3FuZ2C5qeS/mU+Zi++P0lHxnJNPh25oVpL1OKeaDFppQL6xDLeGHT6NQSM5Ec61cZSISIINZJL34bgyv80pE4iBQ0GxPrmYZsbmylsPnJqcVOT3/vdcly/p3Gb7i5TjDsOAYQlRDVOzXQtVXKF44dftZbiswwWX3Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=E8Z+un9Z; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxiAVEt/"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4def2473a58so770502137.2;
-        Sun, 11 May 2025 10:23:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="E8Z+un9Z"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4774d68c670so64093731cf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 10:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746984216; x=1747589016; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wgA21BcJxdlRP4wuaR895U76otIEBUDznH0KYWsiBok=;
-        b=gxiAVEt/MxhCUjEVBtIISKXH55k9sSwOuc//rffdxzrupWHZZHoFaOj4dlfVQj04XG
-         KkkhWonLA54QYtjoFo39tfiTH43y//ImP2F/P9Ma0EAdklmTG/NZGkiEzBeUmR4+YYXa
-         yVWO3pRkwA0M/tdDOlgw77szO+oWrBpsToriGA0bTCwiKXyHbDTf0kLuV4vJfa5Zv3GX
-         tVgLf9S6yYkCmYOxn6ztzhiWYfwrTbNEQSq5gqjbgtF2V5riasO3V55MQUjL4dUwn5sC
-         wSOLWDw/XaGRCkFcmz8gnn9mtEGJSKR/BU4MnN9ub+68AFvsuwuMC8tsN/nmvW0GgRC1
-         69QQ==
+        d=libre.computer; s=google; t=1746984478; x=1747589278; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PUIuHKm5CrgLUrfb0rxe39olGMFqadKbva67STDygLc=;
+        b=E8Z+un9ZmPdPSMz1ByujP8l7EUJ5AEMxdr0TBu/k9Gl4dfdr8r771kB2icm/qWHEHO
+         Em4ggo9By9jDX7VsKlvWzTMmMgKMCqTSUszKT5F7J0GIdsjakM2FRdoDs0Fj7zcX64Y5
+         KZThpXDGiYWcI4hns0+Tg0Df9wdc0K5jrTAOhnrBtNBqcKzKm+2XmGPJctIpUFi5RnVw
+         q4yNNaEmrvl5dckB8UZIa2qInYMbgfe5satZdp29RjWRtRALPCt9CFx7UFzkcmdOwf/4
+         64aa+DklUxBe4lBNXe2gLAUPrLaBD/ZzFEeroI7XW4aBsVbO6LPTi/zzCZ8l8j60+bn/
+         eotg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746984216; x=1747589016;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wgA21BcJxdlRP4wuaR895U76otIEBUDznH0KYWsiBok=;
-        b=S9wwIUdLVAbIeaRIuHXQ80kvq9bKx71mE8tMByLBVSlmPtWQCjVWDgFCefyIIKV5x0
-         7ZrsL0dWplvsKaJIGcfOALeoRgla5jRnpS1vtrRRt9T8JPoUofVAeKTfsjsZt7WXcqdH
-         AVrAlHLBbwB3OpE8LW6dOtaqZZ8uRLUkptVlA8JlzaMFpp6ay/CgomuVx0f1XIwaxnpK
-         4CChyH8/ToB/CPvlHcOHFtdZJwT8j/lDKgJhioBorq19PLE5StcFuqgOMU78Or4tHozn
-         1frht9GBl9Sl+3NTtX7FA7LBPmexcYQThe25T8c5OTLZ7dqFkbKoTp4zqj/HiMGyI9KW
-         A69A==
-X-Forwarded-Encrypted: i=1; AJvYcCUMu2vhyqvlVwfGaXqlPav8G9NhRNwIojckRtQK2rnS1ALTvaxINErpQI4DKgiRKt1y9r+y9GcMuLW3rAxt@vger.kernel.org, AJvYcCX0O7gOkv2d3bmBs1ofSgQvjs7EAlCnOBpzKSOftpvWqLz1Jvc6iv/3U9OjypN5gd5NKprdSuDabbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4vxp0dHJltNm3htjEIzKYveVoyxCjfyHqJEPLhmn3CjeAziQ1
-	Iwt/s9mVA5jYMuBhKTbd7JvoRYFyTWIwkS0pxFLHBVv8q+RX1eqxn2Z4HNQ2ryLt73P/MWj5Lzh
-	+OHq6iEqj8XE5XJWr4pemZKo1zLI=
-X-Gm-Gg: ASbGncttBFjGiNrC5pxkhKluW1FiG9irSurp/DwqYn4gKCcwH6S39NHtvFLnqs2hcEL
-	ToCVbnwxBSwm5Or+qgQ/Iv5i2bhUKaoaSXA1d5nTn+EsZylqW+6WTdyDadQjr+261mMnuR8iRPS
-	4xFfbFD/WgQwjYfmpivQqSAJApT8GMN/qyWpl03WtLE+0yOw8=
-X-Google-Smtp-Source: AGHT+IGLhEqaokzKQl34iQ57xc/NxVdJGI54Xizj99c/+daJg5Ju85VDhQgT3zo+gLjyclqJKdNxRkGzWhp0ReCK3+Y=
-X-Received: by 2002:a05:6102:5345:b0:4cb:5d6c:9946 with SMTP id
- ada2fe7eead31-4deed334190mr8500994137.10.1746984215757; Sun, 11 May 2025
- 10:23:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746984478; x=1747589278;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PUIuHKm5CrgLUrfb0rxe39olGMFqadKbva67STDygLc=;
+        b=w54LbHkj9VvjMjOA719d4W+GoJ3CChwwh5kpHoqUJMqvVdvHMgvClD/rUqL9fcAF9B
+         l3PR1TzAY22DlDv+eZDicgY83AF94MNvlsK2jvX9bGbS6vH8TREMoeiRTB7GfXrApzyq
+         1zaIjxbo7Fntg9kjR8YV/t26USgIExMjTRA1PpGR/dJxySudu2iyssEolOPvBOAhHCfK
+         VFf1/gDCxOhuWMJitTRNorg+vb8kvNcpslGYW2WaVTuK8m+yCK8myGLl6D/FIuRohqWN
+         zlx+gjWKxlPK6tRZN+QERPT2KCwrKsx8MEDmvfqgBrMdLJ+5X02xwF0006XI/d/YSPKZ
+         Hn4g==
+X-Forwarded-Encrypted: i=1; AJvYcCX667RJgP6Zw2sm01r5cP4dGEmiVIQz1H4t0uwT+2WyM5aMWsVe1ma+3dRNem0U4F9sMLH2HFXpv9Ao+5Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGwK6N4uYAB36/EVs97CHkEhEk+6iWPozAp1IfRNqWD7YPUSrT
+	Hk8jHuEs01GHBbIkPs7i0AuAv2iWcz6a3Fin4hCBAVUrKAmKU1ZbNTRhjidVBw==
+X-Gm-Gg: ASbGncvG3G4GQAdm7/7GZZ2yY5UrO3ZW17JI62y+zvKSpgf4vwY68UIEbTqPdKo4PvF
+	1OMv1m02e0YhFvjW1+VPUmgR4kfRot0xOJuis8WOuRbpkd+EBPfHUatJAWxW3XFePsA6QxLjTc8
+	3hnHxVoDOLJLst7Ts2RaplEUT4AisN8dS/oNsccrMuCuLqDTaBJDQvAU0RmEXvglwPPgISriIUa
+	xxdb4H9HQ4M3fuNJQdmoeO6phvM0M+gjlm3b1BTpksg0J5msEW3ra8Vj1DcN4uXuJCGhuwN9gZh
+	N41TbT1WffLYqkrlpj2duhOFc518DfKjKR8YW1Yg/rnfmSg=
+X-Google-Smtp-Source: AGHT+IFlP5l0H31XlZsHA+W4Q93wZy0iO7ylnNI0g0kBW6+BKRL+6jyRI5gTxis2QFwWchN0XCtGaQ==
+X-Received: by 2002:a05:6214:224a:b0:6e8:f770:5045 with SMTP id 6a1803df08f44-6f6e4801da4mr189887276d6.28.1746984478330;
+        Sun, 11 May 2025 10:27:58 -0700 (PDT)
+Received: from localhost ([2607:fb91:eb2:c0a0:10e4:4464:87db:3a66])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e39f47basm39766846d6.42.2025.05.11.10.27.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 10:27:58 -0700 (PDT)
+From: Da Xue <da@libre.computer>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Da Xue <da@libre.computer>,
+	stable@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: meson-g12a: fix missing spicc clks to clk_sel
+Date: Sun, 11 May 2025 13:27:32 -0400
+Message-Id: <20250511172732.1467671-1-da@libre.computer>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509013931.47524-1-andrew.lopes@alumni.usp.br> <CAHp75Ve7-hMUxrmXQnkMjynhPUbD6R+K=-j+h0zELvcxZdy5nw@mail.gmail.com>
-In-Reply-To: <CAHp75Ve7-hMUxrmXQnkMjynhPUbD6R+K=-j+h0zELvcxZdy5nw@mail.gmail.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sun, 11 May 2025 14:23:24 -0300
-X-Gm-Features: AX0GCFvrIxDMbI0XWKebH07YOg3FUp0UyfdHeuqnsmwrOfESJkVF0TP3ve7vBm8
-Message-ID: <CANZih_Q5WJD9TSnyhPHcygFJDEvvkj1KdWO-1=QO-1Uhr6tLCA@mail.gmail.com>
-Subject: Re: [PATCH v3] iio: accel: sca3000: replace usages of internal read
- data helpers by spi helpers
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
-	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Going back to this one to reply to the unaddressed comments.
+HHI_SPICC_CLK_CNTL bits 25:23 controls spicc clk_sel.
 
-On Fri, May 9, 2025 at 6:06=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-...
->
-> >                                              chan->scan_type.shift,
->
-> With the above done, move this parameter to the previous line.
+It is missing fclk_div 2 and gp0_pll which causes the spicc module to
+output the incorrect clocks for spicc sclk at 2.5x the expected rate.
 
-Ok! I reorganized this shift operation to be all in one line.
+Add the missing clocks resolves this.
 
- ...
->
-> > -                       *val =3D (be16_to_cpup((__be16 *)st->rx) >>
-> > +                       *val =3D (be16_to_cpu((__be16) ret) >>
-> >                                 chan->scan_type.shift) &
-> >                                 GENMASK(chan->scan_type.realbits - 1, 0=
-);
->
-> Ditto.
+Cc: <stable@vger.kernel.org> # 6.1.x: a18c8e0: clk: meson: g12a: add
+Signed-off-by: Da Xue <da@libre.computer>
+---
+ drivers/clk/meson/g12a.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks, I changed here too.
- ...
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index 4f92b83965d5a..892862bf39996 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -4099,8 +4099,10 @@ static const struct clk_parent_data spicc_sclk_parent_data[] = {
+ 	{ .hw = &g12a_clk81.hw },
+ 	{ .hw = &g12a_fclk_div4.hw },
+ 	{ .hw = &g12a_fclk_div3.hw },
++	{ .hw = &g12a_fclk_div2.hw },
+ 	{ .hw = &g12a_fclk_div5.hw },
+ 	{ .hw = &g12a_fclk_div7.hw },
++	{ .hw = &g12a_gp0_pll.hw, },
+ };
+ 
+ static struct clk_regmap g12a_spicc0_sclk_sel = {
+-- 
+2.39.5
 
-> > -       else if (!state && (st->rx[0] & SCA3000_REG_MODE_FREE_FALL_DETE=
-CT))
-> > +       else if (!state && (ret & SCA3000_REG_MODE_FREE_FALL_DETECT))
->
-> Remove redundant 'else'
->
-> >                 return sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
-> > -                                        st->rx[0] & ~SCA3000_REG_MODE_=
-FREE_FALL_DETECT);
-> > +                                        ret & ~SCA3000_REG_MODE_FREE_F=
-ALL_DETECT);
-> >         else
->
-> Ditto.
-Ok! Removed both of them.
-
- ...
->
-> >         ret =3D sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
-> > -                               (st->rx[0] & SCA3000_MODE_PROT_MASK));
-> > +                               (ret & SCA3000_MODE_PROT_MASK));
->
-> Remove unneeded parentheses.
-...
->
-> >         ret =3D sca3000_write_reg(st, SCA3000_REG_INT_MASK_ADDR,
->
-> > -                               (st->rx[0] &
-> > +                               (ret &
-> >                                  ~(SCA3000_REG_INT_MASK_RING_THREE_QUAR=
-TER |
-> >                                    SCA3000_REG_INT_MASK_RING_HALF |
-> >                                    SCA3000_REG_INT_MASK_ALL_INTS)));
->
-> Remove unneeded parentheses (outer for the last parameter).
-Great! Removed all the unneeded parentheses then.
-
---
-Thanks again for these comments,
-Andrew
