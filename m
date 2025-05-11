@@ -1,253 +1,167 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2922907;
-	Sun, 11 May 2025 15:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41821EA90;
+	Sun, 11 May 2025 15:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746978163; cv=none; b=triQ0efe5tz4Ou2lB4LGZSkg/qUmalhqRdmdDtUN0IIlO6om7NJKtU4fFLUcfqL0o0l2JuW6vPxuda71fzjXOVAF/KfBpDJB/Qk8sNlVX2xoqTXJ8RZCq5Q6LD+K/mJfRVONJBdRlXxAYMgHQoAOCM96RbUhqJe/i546eGcqdxs=
+	t=1746978472; cv=none; b=ENg7UCbhppVVWUL8ykDrYlSSc0t6KtRP0kour3ERZmEvHYQ3BZSXm9XueMISA14A+an52ypDrmKsfdjSE0BOdNcJLx13aEO5deKje50NJ/V+3zp0X1ZnXUflqrxicNp1DaqJq0SxMB9BLq6cVWQrCDfFfuV1aHDQLs9p1SCZJFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746978163; c=relaxed/simple;
-	bh=NlqeUqIZdZmkji0hDRwiEmsp/qJoN+HBItdDCNpMVoI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pYKqvWLBWwBJQz+UrvEsLpfdEZMZAT3tJ232IRYuGvmaTBd9QalqWbytTkp6X4levRnlk7kQ9bazQ9eDkrKcu0afQM4BaPZNBE448GE9LRozTGkVYGWFlUUBxhgGFj3PFOaPpV1g76woJpzvSqzM7s3rS98avPt9oyWLnvjyN8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PEo3H27M; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1746978472; c=relaxed/simple;
+	bh=apevVu4S4A3gC1ScqlvK4rzXGz+MNz8y2NyyBOx14c8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hRuCW8Py139rF0Ss8k6ZKKOmlSPMmH72zERnUdSmf2qLPvh+4pYODY6tktYbtHiaqMsX/RWSdVPc11Byd6NTccjl6Hhki7meiblonKEiDYH+4TmkQVLR07SZ6wd5G5dC3kkSjg32iZHBLNm2ZiTCTsiS5Zn0zaJFjcDAaHutnwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6Oi1tCt; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEo3H27M"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0b9625735so1810288f8f.2;
-        Sun, 11 May 2025 08:42:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6Oi1tCt"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30a89c31ae7so4836206a91.2;
+        Sun, 11 May 2025 08:47:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746978159; x=1747582959; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jYqCvtT8FUAfMoo3aGei4XL6q2rIw/A9DS2ZyzQMU28=;
-        b=PEo3H27MR3xzMGonf07ysixcky8tlLau3h1kqDLaefxKD3IVdFmRc/2C+2TSWLIlZo
-         czrbufShkXi7tc9BJ+wXcHDo45zJjYo2q2AuzqbaOfAlsun1TYIkXT5HkkKc2TUew5eD
-         ycaB0xdWJQjETJMOR4UDGwPj37L7nSkn9jrC9Uld7gKLCmfT5dF+ml9L3MfttTotTlxS
-         XIFY7GXiP9MvPEWclOxHzb+guhZO8qGw+SPKkDe9szKysxSrh/FYMx75evDEb0OVMSNt
-         2lLnedlTh+ghPiRwR0jmP4777joRQP5z6uUxgSMHG3iDHWvNjBvB5mIfn6ZFnJwm93nh
-         abNw==
+        d=gmail.com; s=20230601; t=1746978470; x=1747583270; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BMIRT//FkWurqHCR5yWkHL+jcYZxgGvY2tq1kDCM/ag=;
+        b=G6Oi1tCtrha8bDH5Gmu8PTk5bnvo3ZCQnJZ9TqVrS8hM3QRYlh7LNW+cN/GNUrwDG8
+         KmXFnqRdjC0SRYEs1v13N7aDlAGZIn6gkmjB5P+aTdWSSSXrlxLzi7TCjH3DlbdoaP5N
+         Kwx3UkOXbY7vJHdC4A80G+/+rnCKfVZNYaMby4dgQm0mfsNJA/aDjs6YHZS+q8a7IlLP
+         QrVq3Ybq+SqcwONWafQEc/OlKpzKheETtb31+sc4a+s3U01z4Fx7HTDLFEi0SwEAPcdt
+         YEWmvxVS7D7T2NEPbrarVEUTgqxg8nw+e1JfxUuhaDF0KZiSKG6AR7WzK2puggx5dQw0
+         N5NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746978159; x=1747582959;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jYqCvtT8FUAfMoo3aGei4XL6q2rIw/A9DS2ZyzQMU28=;
-        b=uxEx4zyvwH9otcx+C2OtMbvmt8+POK8o4GFr6qkikLf/bRlayWD8x/EWclFqXpkKRe
-         vmGC2I5Kibf2uEYKxK99ypHE/7TZVaVBuo/NLd+Qki+5ZJ3reH3jt+4qa0oLN707eHS+
-         vWkS2J7B8I8NySLpS328V4BoyEr8VTkv+tMOxUZXmzeANi1dW91StbIqrEHtde6e/7g9
-         UBTr1uon1Wy1M1tayXWl/7ae1YkdP8CzHoUmJ2VDE7vJ0RIWpKWboeb+p+oL38HugVyz
-         yWeMZX2bpD9btqD1Zsyaabm/aNt4N2DgtWKiliRxMO3wpxL2317e5GSV1bDm7o3vUmOV
-         E+sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXhar//IYK+sCRS8VnRMPVSigAETAmu5Z8FeBrjVd8rwucpZuseMgrOmMd+xYZdySR2LTHmqGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+DKJ7Lzcwp4EHWD3ENq4b8uEWXdkIc+te0/61jBkZa+/SIAnI
-	SeNK0IYrsb+cKxNRQfASqA2k6t0pha/NE+HkM4ODG5cvG3g2Vjxb
-X-Gm-Gg: ASbGnctcYNhEGd9BAI2eOLCj3CS233lE0D1PIv0Z153yB0UgrrM7MUE0XqVBiKhoXBk
-	x6iobFybzrfWadQzXJ4483a0pJehr8/w9hs3jgpV6sVVrlMV6Vuu1bovRAIIY7xRAEzJBbEv+KQ
-	0usEMw0iwW0y/mYBEzn+/uNogZDACpLn8mY7RgASN25qURT5pbFIyQpLMEH2oXccPp7iHvYnJky
-	87NN2vNTh2+TuWjJpXtPH2AvhaT21Y2B2V08C2uX9MoNSpdny54dZMnpaACOxZzfTvQ72ZVaety
-	gI6/tw4gfrkDQpvZORUBOYQlt4SR9/qX0QSJsdycebTLKBAXcjp9CM6U9VCzA0CAky3RQ2jteE8
-	iY5CNdyrL35c6
-X-Google-Smtp-Source: AGHT+IE5+5gLt9dJza7E2LT/Pv2xiPU2SQKS9FwiyRUhE7nQuI8TWpuRKAbzGdsy6P9BxfOUdB0kfw==
-X-Received: by 2002:a05:6000:1786:b0:3a0:b565:f1ea with SMTP id ffacd0b85a97d-3a1f6421d7bmr7565768f8f.5.1746978159231;
-        Sun, 11 May 2025 08:42:39 -0700 (PDT)
-Received: from fedora.advaoptical.com ([82.166.23.19])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c804sm9706530f8f.95.2025.05.11.08.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 08:42:38 -0700 (PDT)
-From: Sagi Maimon <maimon.sagi@gmail.com>
-To: jonathan.lemon@gmail.com,
-	vadim.fedorenko@linux.dev,
-	richardcochran@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Sagi Maimon <maimon.sagi@gmail.com>
-Subject: [PATCH v4] ptp: ocp: Limit signal/freq counts in show/store functions
-Date: Sun, 11 May 2025 18:42:34 +0300
-Message-ID: <20250511154235.101780-1-maimon.sagi@gmail.com>
-X-Mailer: git-send-email 2.47.0
+        d=1e100.net; s=20230601; t=1746978470; x=1747583270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BMIRT//FkWurqHCR5yWkHL+jcYZxgGvY2tq1kDCM/ag=;
+        b=o4AjZG4ZUE88KgIr+Siy6xE7ocSiyWqNQhK8z4f0J/O/n0R93BbXer//wU+QdhvodI
+         G0M8vIab3r/gW/czUWAAAF/4n3luLlJKFTu7WkUhjjtB2rjTSpn7kJPLLMiCI/vNJ8bw
+         8xMB6IMBHKXxEAQYntpTPGjYZxsmXN8ez4FgLSqvASUFhDUn9QYozABIihU8qmAPKO2y
+         QR66a9A4QU5OTnXAm5GI3VzOP6U++hjcfX8ZcZnNgRFjVG3OcTC1NSbP3EtUz3pct6We
+         ELJ98ORkMw3tbb3lOn/IiemW1sMCAUoXmzxrazeaEunhyX2/ancSqrVz9wB0dck5GSdF
+         dZyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOrYFLI6gZu1DgNr+3ji4fQHaf6jiAiIDpYlsd3QdrBDwRvN31H9BjodOZNqdhqJmvL6cGura4Z05MpcrQ@vger.kernel.org, AJvYcCVsDNe59ycEliun2erT17o2kKjdekldqQB5w4OmUGm8c8yCpR/B4elRi7yYY2TpZfYjWZROkLJFSAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTgxs8fQgrBrYcCWeUBErQrrIX7DBpS6tcaWfvQJyiH5MGHG82
+	oSwdwdza2Y7M0Hh29PWme00vJdSm2hPB24a6OfUgcJs5HmhUwY4EPK39YFaF4uuAKOX1FzhyYCb
+	aXjKkHvlp4ipYZq5xb8UtGaNs5pA=
+X-Gm-Gg: ASbGncuBgMpFgkizg2gxwLXyuGxHws1XfwAd0trqykEz9YnCtjnur7jnXS6or7BaoM/
+	tJQDO1T27gmnBP13J8T/3eX508bD/aVnKiaUNChrOdZxTmr9e+nB0ouEbiyC/MEmec6XcOTlYkb
+	yP0AiB5v7JL5zdnGCSFYxFq0udFUVavMnTjA==
+X-Google-Smtp-Source: AGHT+IFWibzz1lQvEgrwAVuLTAi11+cCr8d7hzsIJdC+gKZ+mnn8eilh8OS9AJPz0NtnIoyNuGMUVS0IsE9CzmODIHk=
+X-Received: by 2002:a17:90b:3c0a:b0:2ff:693a:7590 with SMTP id
+ 98e67ed59e1d1-30c3d65e441mr18951434a91.33.1746978470054; Sun, 11 May 2025
+ 08:47:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250503190044.32511-1-gye976@gmail.com> <20250504152441.13772899@jic23-huawei>
+ <CAKbEznvZ3BHJK8TjGg7MR2dDMtWk+gZ5SewF_u_J0=Nw6c082Q@mail.gmail.com> <20250507204026.11a260ef@jic23-huawei>
+In-Reply-To: <20250507204026.11a260ef@jic23-huawei>
+From: Gyeyoung Baek <gye976@gmail.com>
+Date: Mon, 12 May 2025 00:47:39 +0900
+X-Gm-Features: AX0GCFtLZhxA6Y6KxoO7N2eXBNn4pYEcwjZdV0aRJVREMWk3P180KvIBdmXReis
+Message-ID: <CAKbEznuG6-+cKOOVSvyw30Qra_6yVruA0cvpcK5Gqp2_kcPHcw@mail.gmail.com>
+Subject: Re: [PATCH] iio: trigger: Add validation to reject devices requiring
+ top half
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The sysfs show/store operations could access uninitialized elements
-in the freq_in[] and signal_out[] arrays, leading to NULL pointer
-dereferences. This patch introduces u8 fields (nr_freq_in,
-nr_signal_out) to track the number of initialized elements, capping
-the maximum at 4 for each array. The show/store functions are updated
-to respect these limits, preventing out-of-bounds access and ensuring
-safe array handling.
+Hello Jonathan,
+I=E2=80=99ve referred to your previous comments and implemented the ideas.
+Thank you for your earlier feedback.
+I now have a few follow-up questions and would appreciate your
+thoughts on the below points.
 
-Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
----
-Addressed comments from Vadim Fedorenko:
- - https://www.spinics.net/lists/netdev/msg1090730.html
-Changes since v3:
- - in signal/freq show routine put constant string "UNSUPPORTED" in
-   output instead of returning error.
----
----
- drivers/ptp/ptp_ocp.c | 40 +++++++++++++++++++++++++++++++++-------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+On Thu, May 8, 2025 at 4:40=E2=80=AFAM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+>
+> On Wed, 7 May 2025 00:55:27 +0900
+> Gyeyoung Baek <gye976@gmail.com> wrote:
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index 2ccdca4f6960..14b4b3bebccd 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -315,6 +315,8 @@ struct ptp_ocp_serial_port {
- #define OCP_BOARD_ID_LEN		13
- #define OCP_SERIAL_LEN			6
- #define OCP_SMA_NUM			4
-+#define OCP_SIGNAL_NUM			4
-+#define OCP_FREQ_NUM			4
- 
- enum {
- 	PORT_GNSS,
-@@ -342,8 +344,8 @@ struct ptp_ocp {
- 	struct dcf_master_reg	__iomem *dcf_out;
- 	struct dcf_slave_reg	__iomem *dcf_in;
- 	struct tod_reg		__iomem *nmea_out;
--	struct frequency_reg	__iomem *freq_in[4];
--	struct ptp_ocp_ext_src	*signal_out[4];
-+	struct frequency_reg	__iomem *freq_in[OCP_FREQ_NUM];
-+	struct ptp_ocp_ext_src	*signal_out[OCP_SIGNAL_NUM];
- 	struct ptp_ocp_ext_src	*pps;
- 	struct ptp_ocp_ext_src	*ts0;
- 	struct ptp_ocp_ext_src	*ts1;
-@@ -378,10 +380,12 @@ struct ptp_ocp {
- 	u32			utc_tai_offset;
- 	u32			ts_window_adjust;
- 	u64			fw_cap;
--	struct ptp_ocp_signal	signal[4];
-+	struct ptp_ocp_signal	signal[OCP_SIGNAL_NUM];
- 	struct ptp_ocp_sma_connector sma[OCP_SMA_NUM];
- 	const struct ocp_sma_op *sma_op;
- 	struct dpll_device *dpll;
-+	int signals_nr;
-+	int freq_in_nr;
- };
- 
- #define OCP_REQ_TIMESTAMP	BIT(0)
-@@ -2697,6 +2701,8 @@ ptp_ocp_fb_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
- 	bp->eeprom_map = fb_eeprom_map;
- 	bp->fw_version = ioread32(&bp->image->version);
- 	bp->sma_op = &ocp_fb_sma_op;
-+	bp->signals_nr = 4;
-+	bp->freq_in_nr = 4;
- 
- 	ptp_ocp_fb_set_version(bp);
- 
-@@ -2862,6 +2868,8 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
- 	bp->fw_version = ioread32(&bp->reg->version);
- 	bp->fw_tag = 2;
- 	bp->sma_op = &ocp_art_sma_op;
-+	bp->signals_nr = 4;
-+	bp->freq_in_nr = 4;
- 
- 	/* Enable MAC serial port during initialisation */
- 	iowrite32(1, &bp->board_config->mro50_serial_activate);
-@@ -2888,6 +2896,8 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
- 	bp->flash_start = 0xA00000;
- 	bp->eeprom_map = fb_eeprom_map;
- 	bp->sma_op = &ocp_adva_sma_op;
-+	bp->signals_nr = 2;
-+	bp->freq_in_nr = 2;
- 
- 	version = ioread32(&bp->image->version);
- 	/* if lower 16 bits are empty, this is the fw loader. */
-@@ -3190,6 +3200,9 @@ signal_store(struct device *dev, struct device_attribute *attr,
- 	if (!argv)
- 		return -ENOMEM;
- 
-+	if (gen >= bp->signals_nr)
-+		return -EINVAL;
-+
- 	err = -EINVAL;
- 	s.duty = bp->signal[gen].duty;
- 	s.phase = bp->signal[gen].phase;
-@@ -3247,6 +3260,10 @@ signal_show(struct device *dev, struct device_attribute *attr, char *buf)
- 	int i;
- 
- 	i = (uintptr_t)ea->var;
-+
-+	if (i >= bp->signals_nr)
-+		return sysfs_emit(buf, "UNSUPPORTED\n");
-+
- 	signal = &bp->signal[i];
- 
- 	count = sysfs_emit(buf, "%llu %d %llu %d", signal->period,
-@@ -3359,6 +3376,9 @@ seconds_store(struct device *dev, struct device_attribute *attr,
- 	u32 val;
- 	int err;
- 
-+	if (idx >= bp->freq_in_nr)
-+		return -EINVAL;
-+
- 	err = kstrtou32(buf, 0, &val);
- 	if (err)
- 		return err;
-@@ -3381,6 +3401,9 @@ seconds_show(struct device *dev, struct device_attribute *attr, char *buf)
- 	int idx = (uintptr_t)ea->var;
- 	u32 val;
- 
-+	if (idx >= bp->freq_in_nr)
-+		return sysfs_emit(buf, "UNSUPPORTED\n");
-+
- 	val = ioread32(&bp->freq_in[idx]->ctrl);
- 	if (val & 1)
- 		val = (val >> 8) & 0xff;
-@@ -3402,6 +3425,9 @@ frequency_show(struct device *dev, struct device_attribute *attr, char *buf)
- 	int idx = (uintptr_t)ea->var;
- 	u32 val;
- 
-+	if (idx >= bp->freq_in_nr)
-+		return -EINVAL;
-+
- 	val = ioread32(&bp->freq_in[idx]->status);
- 	if (val & FREQ_STATUS_ERROR)
- 		return sysfs_emit(buf, "error\n");
-@@ -4008,7 +4034,7 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
- {
- 	struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
- 	struct ptp_ocp_signal *signal = &bp->signal[nr];
--	char label[8];
-+	char label[16];
- 	bool on;
- 	u32 val;
- 
-@@ -4031,7 +4057,7 @@ static void
- _frequency_summary_show(struct seq_file *s, int nr,
- 			struct frequency_reg __iomem *reg)
- {
--	char label[8];
-+	char label[16];
- 	bool on;
- 	u32 val;
- 
-@@ -4175,11 +4201,11 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
- 	}
- 
- 	if (bp->fw_cap & OCP_CAP_SIGNAL)
--		for (i = 0; i < 4; i++)
-+		for (i = 0; i < bp->signals_nr; i++)
- 			_signal_summary_show(s, bp, i);
- 
- 	if (bp->fw_cap & OCP_CAP_FREQ)
--		for (i = 0; i < 4; i++)
-+		for (i = 0; i < bp->freq_in_nr; i++)
- 			_frequency_summary_show(s, i, bp->freq_in[i]);
- 
- 	if (bp->irig_out) {
--- 
-2.47.0
+> I'd take a different approach (slightly) though it's more effort.
+>
+> Step 1. Tidy up current situation.
+>
+> Patch to convert all existing calls to devm_iio_triggered_buffer_setup()
+> and iio_triggered_buffer_setup() to not take a top half function but repl=
+ace
+> that variable with a bool early_timestamp or something along those lines.
+> Replace the h in struct iio_poll_func with a similarly named bool.
+> Bunch of plumbing to make that all get filled in correctly.
+>
+> Then in iio_trigger_attach_pollfunc() check that bool and if appropriate
+> pass iio_pollfunc_store_time() it to request_threaded_irq()
 
+Now we have both the existing `devm_iio_triggered_buffer_setup()`,
+and a new version with the additional arguments of that.
+Should these two coexist for compatibility, or should the before one
+be replaced by the new one?
+
+> Step 2. Make what you want work cleanly now we only have that one handler=
+.
+>
+> In iio_trigger_poll_nested() we can't know if that flag is set and I'm no=
+t
+> really keen on trying to get to this from elsewhere. We have previously c=
+onsidered
+> solving this case via whether the timestamp is set or not in the threaded
+> handler. I've never like that much as in theory timestamp 0 is valid (was
+> a while ago). The rpr0521 light sensor has handling for this.
+
+What I'm trying to do is a mechanism where device drivers can
+automatically get timestamps without manually handling them =E2=80=94 simpl=
+y
+by setting a argument to indicate whether to capture the timestamp in
+the tophalf or bottomhalf.
+
+But there are cases like the rpr0521 where the driver sets the
+timestamp manually within its own trigger.
+Would it make sense to extend this to automatically set the timestamp
+in cases where the driver uses its own trigger as well?
+To that, I believe we would need a unified interface that can cover
+all trigger types (e.g., interrupt, software trigger) that invoke
+poll() or poll_nested().
+Would it be the right direction?
+Or would it be more appropriate to consider only the top/bottom of a
+consumer device?
+
+> I wonder if the following would work.
+>
+> In iio_trigger_attach_poll_func() we have access to the trigger and
+> the pollfunc.  So if the pollfunc flag for wanting an early timestamp is =
+set and
+> we know the trigger is going to use iio_poll_trigger_nested() then we cou=
+ld
+> wrap the registered handler in a local one that calls the iio_pollfunc_st=
+ore_time()
+>
+> The additional magic needed here is that today we don't know that about t=
+he trigger.
+> So we'd need to add a bool to the struct iio_trig to indicate it and set =
+that
+> for all drivers that use iio_trigger_poll_nested()   bool nested; will do=
+.
+>
+> It's not perfect as there are driver that do iio_trigger_poll() and iio_t=
+rigger_poll_nested()
+> depending on path. To handle those we'd need a flag to say don't overwrit=
+e my timestamp.
+> at91-sama5d2-adc.c is the first one I found.
+
+> There are ways to make even that work but lets skip that for now as they'=
+d
+> slightly complicate things. That driver won't call the timestamp capture =
+in
+> some paths but it doesn't today so we are no worse off.
+
+--
+Regards,
+Gyeyoung
