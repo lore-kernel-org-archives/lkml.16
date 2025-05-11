@@ -1,326 +1,207 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A988635D
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 04:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628AF28F3
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 05:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746939201; cv=none; b=jvPSCNSMBhSPvR2sdffvVFuQDOYKFq/9sk8b9G0NKhksiHnbkbHU4j6lfMJ9TLl0R1xcOmJyUJ6m2Ch8o3B9o0kc24HVxB/6bgSP/W01hVQkUZVQTRDNc0TVnTtXxZWPO11+n7+C42HM56zO1loLSNJgWrgL/PeAYnV6KeGZ7TM=
+	t=1746940031; cv=none; b=eyOSGL/Fb4p6YfkBYv0OD+YrIkeIMjLw1ISVDt3pfv1tvYVkh4qJ3K71s/sM5QmglyPNYGaLF10knmC/CcPWs+SLGNZuXLPjlDJkkumGn0IXBuMtyfJJKrohWV5AmJgE+btgBWgZ1TX1cBrVsOWkxVPCU8hQnZzl3mAj+LgvvJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746939201; c=relaxed/simple;
-	bh=/wJU2MJdtqF10lIioFiKcXnHWzx0POMPJdl9UDRRE6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bAQ7BSa0qSYXMaS8bIVfM5gedR1xzOfrs970MndMOCMwMBfmc1ckAwNt2yae3cRW08J1gzxUnVb8pbcgYt/s7bKodsNwnPYiqDPJ38/q0NrNk85IoDFOyPHXJ2/LK5RdKvhADDUKELZG6HrbTEawhv2drkhR4AeyBbD+mzOorPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PXKvqypc; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746940031; c=relaxed/simple;
+	bh=SKhYrzLaJwDJCl21s4R7Lj9s9GrrANdwRByF6CAE7N0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Vi2L8XkujYnWmhCYq7W6qwPgbhEzpM4uYXadrYWylrVRvqLG/rwBpvAvWd7jTsxr//29N1mwub4Sxa9gYS9mktUzUMbxYI07/Dg8oN7hOL4zeTUp9calvZTVRQggD7Ubl4sZmtz5rceXA/dzirUPAZu1+q44Jc3IuIAoAumyvvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ES5p2gUH; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PXKvqypc"
-Message-ID: <c009c4e5-418c-444d-8609-0475f3864ed9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746939185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qjgFVdaY+MCM4ikp4xXCvxsizSbEs0nzktNXlNYsOpQ=;
-	b=PXKvqypcKCRkHTHB/H6vyVRoKB/19I/jSfU4rbYy1nJPEt6/t/6UHENFtzWh5a9PjZrnsp
-	rLPqMUjwEG7WdPx+8n0FCxMHCJ284mIedzPGt95AbmF3Fs3D1GCH9IngMxBGDfpVOeAhrQ
-	spzxF6wof4GaZPYDKRkEk+Ctnhv4NZU=
-Date: Sun, 11 May 2025 06:52:59 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ES5p2gUH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746940029; x=1778476029;
+  h=date:from:to:cc:subject:message-id;
+  bh=SKhYrzLaJwDJCl21s4R7Lj9s9GrrANdwRByF6CAE7N0=;
+  b=ES5p2gUH1IGd4JccxXBsODFbx7E0W9MUOT0ts2DR6RsBtgRIfEzy+dpa
+   WXZwX4TsEdjXs3v6rjJOdYbEqdSPGZm6OPsDaNnfrBIGgRQ53Uht0cZom
+   HWhjA+AJg6qQlBB0nfkAUjdUEi519i2ej7eCaP7t7KaABpT0Z1zlG5H/q
+   ix1VpF2Jqn8K2fTVuSagNYAdjyb6bMIwRnMGpaHvgqzrqJoGDbhFj+I+4
+   Ie60Tb/7A16RG0T33p4BxPrvc4LZujXPPGp56pYZoVndvwmNQNOOJfVVM
+   iBYl5UX2MZ2m2J0P4XqoeReQBcyDku1GbDfMe0Us4EHxpFdMZSJiY/4zF
+   w==;
+X-CSE-ConnectionGUID: LM4w4XaERVmxmBQ0vknsVQ==
+X-CSE-MsgGUID: iQdHa8fjQ5ORQplNuxWr0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11429"; a="47992489"
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="47992489"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 22:07:08 -0700
+X-CSE-ConnectionGUID: krMgbNASS2ms2dz+nbXhAg==
+X-CSE-MsgGUID: WS1N7GVJSHih0/hk6wm+KA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,278,1739865600"; 
+   d="scan'208";a="141792147"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 10 May 2025 22:07:07 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDyu1-000DbD-1J;
+	Sun, 11 May 2025 05:07:05 +0000
+Date: Sun, 11 May 2025 13:06:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 5b036d3516a8be54c24c05d8d1dc86f9815ba53e
+Message-ID: <202505111340.3tFOTOiI-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH for-next v2 1/2] RDMA/rxe: Implement synchronous prefetch
- for ODP MRs
-To: Daisuke Matsuda <dskmtsd@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- leon@kernel.org, jgg@ziepe.ca, zyjzyj2000@gmail.com
-References: <20250503134224.4867-1-dskmtsd@gmail.com>
- <20250503134224.4867-2-dskmtsd@gmail.com>
- <cdea578b-5570-4a8d-98cc-61081a281a84@linux.dev>
- <b5560914-e613-499d-88c8-82f5255a1dd1@gmail.com>
- <093ee42f-4dd5-4f52-b7a5-ba5e22b18bdc@linux.dev>
- <e07e0ad8-32da-452e-809a-f3dfeb8b56f3@gmail.com>
- <CAEz=LcutW6BZKB-Def3HmV=WrzjKjmAt_WnxPw3Yu45CoV0+Hw@mail.gmail.com>
- <ad917c1c-2508-41eb-ae5a-8b4fcd97ca7f@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <ad917c1c-2508-41eb-ae5a-8b4fcd97ca7f@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/5/11 4:06, Daisuke Matsuda 写道:
-> 
-> On 2025/05/10 17:04, Greg Sword wrote:
->> On Sat, May 10, 2025 at 3:19 PM Daisuke Matsuda <dskmtsd@gmail.com> 
->> wrote:
->>>
->>> On 2025/05/10 13:43, Zhu Yanjun wrote:
->>>>
->>>> 在 2025/5/10 4:46, Daisuke Matsuda 写道:
->>>>> On 2025/05/10 0:19, Zhu Yanjun wrote:
->>>>>> On 03.05.25 15:42, Daisuke Matsuda wrote:
->>>>>>> Minimal implementation of ibv_advise_mr(3) requires synchronous 
->>>>>>> calls being
->>>>>>> successful with the IBV_ADVISE_MR_FLAG_FLUSH flag. Asynchronous 
->>>>>>> requests,
->>>>>>> which are best-effort, will be added subsequently.
->>>>>>>
->>>>>>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
->>>>>>> ---
->>>>>>>    drivers/infiniband/sw/rxe/rxe.c     |  7 +++
->>>>>>>    drivers/infiniband/sw/rxe/rxe_loc.h | 10 ++++
->>>>>>>    drivers/infiniband/sw/rxe/rxe_odp.c | 86 +++++++++++++++++++++ 
->>>>>>> ++++++++
->>>>>>>    3 files changed, 103 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/ 
->>>>>>> infiniband/sw/rxe/rxe.c
->>>>>>> index 3a77d6db1720..e891199cbdef 100644
->>>>>>> --- a/drivers/infiniband/sw/rxe/rxe.c
->>>>>>> +++ b/drivers/infiniband/sw/rxe/rxe.c
->>>>>>> @@ -34,6 +34,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
->>>>>>>        mutex_destroy(&rxe->usdev_lock);
->>>>>>>    }
->>>>>>> +static const struct ib_device_ops rxe_ib_dev_odp_ops = {
->>>>>>> +    .advise_mr = rxe_ib_advise_mr,
->>>>>>> +};
->>>>>>> +
->>>>>>>    /* initialize rxe device parameters */
->>>>>>>    static void rxe_init_device_param(struct rxe_dev *rxe, struct 
->>>>>>> net_device *ndev)
->>>>>>>    {
->>>>>>> @@ -103,6 +107,9 @@ static void rxe_init_device_param(struct 
->>>>>>> rxe_dev *rxe, struct net_device *ndev)
->>>>>>>            rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
->>>>>>> IB_ODP_SUPPORT_SRQ_RECV;
->>>>>>>            rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
->>>>>>> IB_ODP_SUPPORT_FLUSH;
->>>>>>>            rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
->>>>>>> IB_ODP_SUPPORT_ATOMIC_WRITE;
->>>>>>> +
->>>>>>> +        /* set handler for ODP prefetching API - 
->>>>>>> ibv_advise_mr(3) */
->>>>>>> +        ib_set_device_ops(&rxe->ib_dev, &rxe_ib_dev_odp_ops);
->>>>>>>        }
->>>>>>>    }
->>>>>>> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/ 
->>>>>>> infiniband/sw/rxe/rxe_loc.h
->>>>>>> index f7dbb9cddd12..21b070f3dbb8 100644
->>>>>>> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
->>>>>>> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
->>>>>>> @@ -197,6 +197,9 @@ enum resp_states rxe_odp_atomic_op(struct 
->>>>>>> rxe_mr *mr, u64 iova, int opcode,
->>>>>>>    int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
->>>>>>>                    unsigned int length);
->>>>>>>    enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, 
->>>>>>> u64 iova, u64 value);
->>>>>>> +int rxe_ib_advise_mr(struct ib_pd *pd, enum 
->>>>>>> ib_uverbs_advise_mr_advice advice,
->>>>>>> +             u32 flags, struct ib_sge *sg_list, u32 num_sge,
->>>>>>> +             struct uverbs_attr_bundle *attrs);
->>>>>>>    #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
->>>>>>>    static inline int
->>>>>>>    rxe_odp_mr_init_user(struct rxe_dev *rxe, u64 start, u64 
->>>>>>> length, u64 iova,
->>>>>>> @@ -225,6 +228,13 @@ static inline enum resp_states 
->>>>>>> rxe_odp_do_atomic_write(struct rxe_mr *mr,
->>>>>>>    {
->>>>>>>        return RESPST_ERR_UNSUPPORTED_OPCODE;
->>>>>>>    }
->>>>>>> +static inline int rxe_ib_advise_mr(struct ib_pd *pd, enum 
->>>>>>> ib_uverbs_advise_mr_advice advice,
->>>>>>> +                   u32 flags, struct ib_sge *sg_list, u32 num_sge,
->>>>>>> +                   struct uverbs_attr_bundle *attrs)
->>>>>>> +{
->>>>>>> +    return -EOPNOTSUPP;
->>>>>>> +}
->>>>>>> +
->>>>>>>    #endif /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
->>>>>>>    #endif /* RXE_LOC_H */
->>>>>>> diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/ 
->>>>>>> infiniband/sw/rxe/rxe_odp.c
->>>>>>> index 6149d9ffe7f7..e5c60b061d7e 100644
->>>>>>> --- a/drivers/infiniband/sw/rxe/rxe_odp.c
->>>>>>> +++ b/drivers/infiniband/sw/rxe/rxe_odp.c
->>>>>>> @@ -424,3 +424,89 @@ enum resp_states 
->>>>>>> rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
->>>>>>>        return RESPST_NONE;
->>>>>>>    }
->>>>>>> +
->>>>>>> +static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
->>>>>>> +                   enum ib_uverbs_advise_mr_advice advice,
->>>>>>> +                   u32 pf_flags, struct ib_sge *sg_list,
->>>>>>> +                   u32 num_sge)
->>>>>>> +{
->>>>>>> +    struct rxe_pd *pd = container_of(ibpd, struct rxe_pd, ibpd);
->>>>>>> +    unsigned int i;
->>>>>>> +    int ret = 0;
->>>>>>> +
->>>>>>> +    for (i = 0; i < num_sge; ++i) {
->>>>>>> +        struct rxe_mr *mr;
->>>>>>> +        struct ib_umem_odp *umem_odp;
->>>>>>> +
->>>>>>> +        mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
->>>>>>> +                   sg_list[i].lkey, RXE_LOOKUP_LOCAL);
->>>>>>> +
->>>>>>> +        if (IS_ERR(mr)) {
->>>>>>> +            rxe_dbg_pd(pd, "mr with lkey %x not found\n", 
->>>>>>> sg_list[i].lkey);
->>>>>>> +            return PTR_ERR(mr);
->>>>>>> +        }
->>>>>>> +
->>>>>>> +        if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
->>>>>>> +            !mr->umem->writable) {
->>>>>>> +            rxe_dbg_mr(mr, "missing write permission\n");
->>>>>>> +            rxe_put(mr);
->>>>>>> +            return -EPERM;
->>>>>>> +        }
->>>>>>> +
->>>>>>> +        ret = rxe_odp_do_pagefault_and_lock(mr, sg_list[i].addr,
->>>>>>> +                            sg_list[i].length, pf_flags);
->>>>>>> +        if (ret < 0) {
->>>>>>> +            if (sg_list[i].length == 0)
->>>>>>> +                continue;
->>>>>>> +
->>>>>>> +            rxe_dbg_mr(mr, "failed to prefetch the mr\n");
->>>>>>> +            rxe_put(mr);
->>>>>>> +            return ret;
->>>>>>> +        }
->>>>>>> +
->>>>>>> +        umem_odp = to_ib_umem_odp(mr->umem);
->>>>>>> +        mutex_unlock(&umem_odp->umem_mutex);
->>>>>>> +
->>>>>>> +        rxe_put(mr);
->>>>>>> +    }
->>>>>>> +
->>>>>>> +    return 0;
->>>>>>> +}
->>>>>>> +
->>>>>>> +static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
->>>>>>> +                     enum ib_uverbs_advise_mr_advice advice,
->>>>>>> +                     u32 flags, struct ib_sge *sg_list, u32 
->>>>>>> num_sge)
->>>>>>> +{
->>>>>>> +    u32 pf_flags = RXE_PAGEFAULT_DEFAULT;
->>>>>>> +
->>>>>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH)
->>>>>>> +        pf_flags |= RXE_PAGEFAULT_RDONLY;
->>>>>>> +
->>>>>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
->>>>>>> +        pf_flags |= RXE_PAGEFAULT_SNAPSHOT;
->>>>>>> +
->>>>>>> +    /* Synchronous call */
->>>>>>> +    if (flags & IB_UVERBS_ADVISE_MR_FLAG_FLUSH)
->>>>>>> +        return rxe_ib_prefetch_sg_list(ibpd, advice, pf_flags, 
->>>>>>> sg_list,
->>>>>>> +                           num_sge);
->>>>>>> +
->>>>>>> +    /* Asynchronous call is "best-effort" */
->>>>>>
->>>>>> Asynchronous call is not implemented now, why does this comment 
->>>>>> appear?
->>>>>
->>>>> Even without the 2nd patch, async calls are reported as successful.
->>>>
->>>>
->>>> Async call is not implemented. How to call "async calls are reported 
->>>> as successful"?
->>>
->>> Please see the manual.
->>> cf. https://manpages.debian.org/testing/libibverbs-dev/ 
->>> ibv_advise_mr.3.en.html
->>>
->>> If IBV_ADVISE_MR_FLAG_FLUSH is not given to 'flags' parameter,
->>> then this function 'rxe_ib_advise_mr_prefetch()' simply returns 0.
->>> Consequently, ibv_advise_mr(3) and underlying ioctl(2) get no error.
->>> This behaviour is allowd in the spec as I quoted in the last reply.
->>
->> The functionality wasn't implemented, you added the comments first.
->> You're still weaseling when people point this out.
->>
->>>
->>> It might be nice to return -EOPNOTSUPP just below the comment instead,
->>> but not doing so is acceptable according to the spec. Additionally,
->>> such change will be overwritten in the next patch after all.
->>
->> Move comments to the next patch. In this patch, return -EOPNOTSUPP.
-> 
-> Any opinion from Zhu?
-> I may post a new revision to change the intermediate code,
-> but the final result after applying the patchset will be the same.
-> You are the maintainer of rxe, so I will follow that.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: 5b036d3516a8be54c24c05d8d1dc86f9815ba53e  Merge branch into tip/master: 'x86/sgx'
 
-Thanks a lot. I am fine with your commit.
-Please "Move comments to the next patch. In this patch, return -EOPNOTSUPP".
-I think that it is a good idea. The final result should be the same. 
-Please send out the latest commit following the suggestions.
+elapsed time: 1179m
 
-Thanks a lot for your contributions and efforts.
+configs tested: 130
+configs skipped: 4
 
-Best Regards,
-Zhu Yanjun
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> Thanks,
-> Daisuke
-> 
-> 
->>
->> --G--
->>
->>>
->>> Thanks,
->>> Daisuke
->>>
->>>>
->>>>
->>>> Zhu Yanjun
->>>>
->>>>> The comment is inserted to show the reason, which is based on the
->>>>> description from 'man 3 ibv_advise_mr' as follows:
->>>>> ===
->>>>> An application may pre-fetch any address range within an ODP MR 
->>>>> when using the IBV_ADVISE_MR_ADVICE_PREFETCH or 
->>>>> IBV_ADVISE_MR_ADVICE_PREFETCH_WRITE advice. Semantically, this 
->>>>> operation is best-effort. That means the kernel does not guarantee 
->>>>> that underlying pages are updated in the HCA or the pre-fetched 
->>>>> pages would remain resident.
->>>>> ===
->>>>>
->>>>> Thanks,
->>>>> Daisuke
->>>>>
->>>>>>
->>>>>> Zhu Yanjun
->>>>>>
->>>>>>> +
->>>>>>> +    return 0;
->>>>>>> +}
->>>>>>> +
->>>>>>> +int rxe_ib_advise_mr(struct ib_pd *ibpd,
->>>>>>> +             enum ib_uverbs_advise_mr_advice advice,
->>>>>>> +             u32 flags,
->>>>>>> +             struct ib_sge *sg_list,
->>>>>>> +             u32 num_sge,
->>>>>>> +             struct uverbs_attr_bundle *attrs)
->>>>>>> +{
->>>>>>> +    if (advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH &&
->>>>>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
->>>>>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
->>>>>>> +        return -EOPNOTSUPP;
->>>>>>> +
->>>>>>> +    return rxe_ib_advise_mr_prefetch(ibpd, advice, flags,
->>>>>>> +                     sg_list, num_sge);
->>>>>>> +}
->>>>>>
->>>>>
->>>
->>>
-> 
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250510    gcc-14.2.0
+arc                   randconfig-002-20250510    gcc-13.3.0
+arc                        vdk_hs38_defconfig    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                            mps2_defconfig    clang-21
+arm                        multi_v5_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250510    gcc-10.5.0
+arm                   randconfig-002-20250510    clang-21
+arm                   randconfig-003-20250510    gcc-10.5.0
+arm                   randconfig-004-20250510    gcc-7.5.0
+arm                         s3c6400_defconfig    gcc-14.2.0
+arm                           sunxi_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250510    gcc-7.5.0
+arm64                 randconfig-002-20250510    gcc-5.5.0
+arm64                 randconfig-003-20250510    clang-21
+arm64                 randconfig-004-20250510    gcc-7.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250510    gcc-14.2.0
+csky                  randconfig-002-20250510    gcc-13.3.0
+hexagon                          alldefconfig    clang-21
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250510    clang-21
+hexagon               randconfig-002-20250510    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250510    gcc-12
+i386        buildonly-randconfig-002-20250510    gcc-12
+i386        buildonly-randconfig-003-20250510    gcc-12
+i386        buildonly-randconfig-004-20250510    gcc-12
+i386        buildonly-randconfig-005-20250510    gcc-12
+i386        buildonly-randconfig-006-20250510    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250510    gcc-13.3.0
+loongarch             randconfig-002-20250510    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ip22_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250510    gcc-11.5.0
+nios2                 randconfig-002-20250510    gcc-7.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250510    gcc-6.5.0
+parisc                randconfig-002-20250510    gcc-12.4.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                          g5_defconfig    gcc-14.2.0
+powerpc                       holly_defconfig    clang-21
+powerpc               randconfig-001-20250510    gcc-7.5.0
+powerpc               randconfig-002-20250510    clang-17
+powerpc               randconfig-003-20250510    clang-21
+powerpc64             randconfig-001-20250510    clang-18
+powerpc64             randconfig-002-20250510    gcc-10.5.0
+powerpc64             randconfig-003-20250510    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250510    gcc-14.2.0
+riscv                 randconfig-002-20250510    gcc-7.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250510    gcc-7.5.0
+s390                  randconfig-002-20250510    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                               j2_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250510    gcc-9.3.0
+sh                    randconfig-002-20250510    gcc-11.5.0
+sh                   secureedge5410_defconfig    gcc-14.2.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250510    gcc-12.4.0
+sparc                 randconfig-002-20250510    gcc-14.2.0
+sparc                       sparc32_defconfig    gcc-14.2.0
+sparc                       sparc64_defconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250510    gcc-10.5.0
+sparc64               randconfig-002-20250510    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250510    gcc-12
+um                    randconfig-002-20250510    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250510    clang-20
+x86_64      buildonly-randconfig-002-20250510    clang-20
+x86_64      buildonly-randconfig-003-20250510    gcc-12
+x86_64      buildonly-randconfig-004-20250510    gcc-11
+x86_64      buildonly-randconfig-005-20250510    gcc-12
+x86_64      buildonly-randconfig-006-20250510    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250510    gcc-8.5.0
+xtensa                randconfig-002-20250510    gcc-14.2.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
