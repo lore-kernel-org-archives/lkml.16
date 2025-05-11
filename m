@@ -1,167 +1,63 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B0B522F;
-	Sun, 11 May 2025 18:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EFB18BC1D;
+	Sun, 11 May 2025 18:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746988605; cv=none; b=Lh9wChT4pierKkZO2LKfEXw9CsQv0M0VQ0mx4u7eJ2IUL5gZaav28EUozHdSGm7rbUAa1Tmiyef4KhMUxGlGddiSYkUlaXWsFOzDmJyS6r5VrUYd+mxnwkv+avlXdCyr1OuuwT/9zfHr6PswMCPOxmB4iI6PZHbZJu9MLhdwY0g=
+	t=1746988762; cv=none; b=SSeow/jdVfTSJ+/o8+v/9ZPYuK4l5gFfCXfr3V1a3MWg35qx1birsgB6GAnDEJ1NOQAVF444O1b26OP7m6QlDBwhOZgGMnVoQjd1QDwIBUQoXfjlW3HURq9lAmILEM2d01Jqyi6UDOtgrsooRI9Bgu2ewJxLT6e0FdM18U0IMYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746988605; c=relaxed/simple;
-	bh=yy5uI0gB4ZxjLt7ZHLjLGyR+f1C3zjpEVUs/3N5QraY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h1rwqBIrFwjJ4kWOdANSeT4IpgJ7XD+hxm9FfDX3+hwj9jDanu1TiHFEQ4IkofUGRM7CvRvE6CVgtbrOT+T73H7EV2ZN5iYYOqOluK/3BKjL8Z4ErSH3FVTlBF+ENAVJjwraNFSR4VPuWmKUH7JO+BfjSivoaq+u6s82TZdWx9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqXXwnN3; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746988762; c=relaxed/simple;
+	bh=Fm8Qmue4vd3P36ZJfzYg/7cv/1oKQx1YcTD/jG24/Rc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=gPwioLqAhUSrH45l0X3+Z2w73nPYdPHahkRlf0l+UWNRYo2Z7pwD4ivWsWJkeZHOSB8rP7X0zedFSgIzCUEWhwd6jHRvO0sSsLmPP8c7D4f56nLp+N45hhc9OGd7mO59NBks5ukfGRdlJwu57bQLFvcgNqt8uzaui6tsxA2OeKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dV739ZUj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqXXwnN3"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4def2473a58so779899137.2;
-        Sun, 11 May 2025 11:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746988602; x=1747593402; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZXppe9UTLDGbD+aEkgl2bNsm9yrGbGE6lie0L53bKtY=;
-        b=bqXXwnN3Ou4e3XptPgSDMKYl6uxPe7MADThHqueM8U8beXI++lO2qmEb5O8dqQvmiM
-         qA4jCyKAxiiw9Pir78QSdkDCZicZtEatE9WgrJ+ogyc1Wie5SM/eAPZhy4viwGZgGaRs
-         KMtYgiiYoVi2oi+NSdd7VYUHHK0SviywVihJmHlbm+9su483mlmgu1PoxPsRn4Om8Sxn
-         HbWS8SorOqWS7E/8K/D54r5C7zgWPUqpE7ZAKN+JrB0P3zj3YGR4uWvPbxmVI5+nL5RF
-         WHTuDN3/vgINxvzaK4m+RiO9y1N+j/fugBZ0WjJ8eiN6wZkrmgqpyaMSLbAwL1GYe99K
-         nf+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746988602; x=1747593402;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZXppe9UTLDGbD+aEkgl2bNsm9yrGbGE6lie0L53bKtY=;
-        b=tXrGnuLj6fJXtPcv4IIaZksWqjzEm0Xy6gLT3DGnF/kt7EOnT5eW01f/tIcYKiOkcN
-         8nTQqiiomWU32wI8hU7uviRVmwwz3pS43yd8Vm3At0tlFFO6isTSEeVfGioyslpzQNh5
-         slTNVqZW/UolvLVvEqu02RCo0Mm+zTP5W39A2Z82Zais/BQX1GA8EesfZRdN2qODLyu+
-         QuvtvCufFayBCukCxGTa9t3klZdwIiyG0ChAzk7grz8SixRbITVVldyn5q5lsct+U7zP
-         auHtCRdT6NMGeb0JvQUdjMvkuz/bNJ1b3xOiDG8YyBPDDI8vGXD5BqZ/ml9jxx9QWMo6
-         yHyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSwSszlgPXgW9Xs2CIyefkgwboJzc03KydbCKA4AexIyuuvvvgJxzsHPMhbVkM5U1buqvlE/WwAiE=@vger.kernel.org, AJvYcCWB7equYDuvkubpU1itxbyO/sMroacFJOt4VRf/eTZ+g+h/zFyEtMx6RtW+qmL9xYbGkMIeBDTKQb+ndCkz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAnIZzp8MJ8o+De8gDDbvZg1yUpeX55uFgs3jJX+h3AyAe32wn
-	oUOrUtSdi4rq2FkG+Cb0m9jH7y9Q995AyR8HH+zDPbI/DZMeq3vSEWeEQjqlw7wR8c2cxWPWhjT
-	WMY2sgGNsRo55gGBJvSrxrprCn1c=
-X-Gm-Gg: ASbGncss6NY+0AL2gquYfsgH8wp+5lCjR6BqPx4DEYrorU/0f28f5xM5CEWwK1wHkyQ
-	1FxVlX3VKPhAJ00QaJnRw016dkaqUamK/hVvnZV1WqVXqI0DCLvvg2ttqHcepcr8HZcODFEPg0V
-	mlKDHCNBuOMDG10b0gP4bPpS/FujQSilxwssEvIVwqvlMuGiM=
-X-Google-Smtp-Source: AGHT+IFi5ANvWy3kqotn8wJ68LyB6NZnOj9jyuRnlVTXF1ufHrGgLdCcMFLxFyzVBUUScCt0gAQLR0Ui9JBujBiHlok=
-X-Received: by 2002:a05:6102:3e16:b0:4c3:b0:46fd with SMTP id
- ada2fe7eead31-4deed3ec5cbmr8798342137.24.1746988602431; Sun, 11 May 2025
- 11:36:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dV739ZUj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AAEC4CEE4;
+	Sun, 11 May 2025 18:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746988762;
+	bh=Fm8Qmue4vd3P36ZJfzYg/7cv/1oKQx1YcTD/jG24/Rc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=dV739ZUj5Gnj+h9oBEs6Sj52G+xp9swbqOvvutf5mMYgSjVVrQJumpg/gNGANDQOf
+	 8qMqdIQAdoBOiaw6WtqSGUVBaiRUxmZqqI1HiwWThNx6R8k1tJR08NGSJvkPKMe7Rh
+	 /E2cxEv9086iyJ1pms6siE0f+bN1+klf08w+Ix6tiWUcZjG1OJ2OwpshB9hDBqlQhF
+	 rFJARVDRmJ9K6Auuo2tv4J5GqbQ9W7bmvRcdLy74AV2EUq7FXba2i6p0TjzeRYgRmU
+	 WBLD0Kpl+pNNth/D35WG8N4HjB9OYXrbjMSXRDzWEj3+jfwdYx7rSXrigqxvfudtkF
+	 kOktGLHb5WNGg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDC93805D89;
+	Sun, 11 May 2025 18:40:01 +0000 (UTC)
+Subject: Re: [GIT PULL] KVM changes for Linux 6.15-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250511112225.47328-1-pbonzini@redhat.com>
+References: <20250511112225.47328-1-pbonzini@redhat.com>
+X-PR-Tracked-List-Id: <kvm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250511112225.47328-1-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+X-PR-Tracked-Commit-Id: add20321af2f882ad18716a2fb7b2ce861963f76
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: cd802e7e5f1e77ae68cd98653fb70a97189eb937
+Message-Id: <174698880021.20988.4431164883451742152.pr-tracker-bot@kernel.org>
+Date: Sun, 11 May 2025 18:40:00 +0000
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250510190759.23921-1-andrew.lopes@alumni.usp.br>
- <20250511123416.729eb50f@jic23-huawei> <CANZih_QHNEuFTQ2NysUVOJ-PmrL-ASFeG5b8xBTbRSG=3ho-vw@mail.gmail.com>
-In-Reply-To: <CANZih_QHNEuFTQ2NysUVOJ-PmrL-ASFeG5b8xBTbRSG=3ho-vw@mail.gmail.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sun, 11 May 2025 15:36:31 -0300
-X-Gm-Features: AX0GCFu7nkANHOy1KVHO10yniUzFxYg8uCiA6HE_1g2tPiVkDBckWe11evuPnV4
-Message-ID: <CANZih_SmneYr+jK9Apuif66vfCcpni7K+CzMk32-hZt-LRrZWw@mail.gmail.com>
-Subject: Fwd: [PATCH v4] iio: accel: sca3000: replace usages of internal read
- data helpers by spi helpers
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
-	David Lechner <dlechner@baylibre.com>, nuno.sa@analog.com, andy@kernel.org, 
-	jstephan@baylibre.com, linux-iio <linux-iio@vger.kernel.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-I noticed now that I replied again only to Jonathan. I'm forwarding
-this to all stakeholders.
+The pull request you sent on Sun, 11 May 2025 13:22:23 +0200:
 
-On Sun, May 11, 2025 at 8:34=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
->
-> A few things inline but clearly main thing is to reply to Andy's other
-> points on v3.
->
-Thanks! I replied to other Andy's points.
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-...
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/cd802e7e5f1e77ae68cd98653fb70a97189eb937
 
-> > -static int sca3000_read_data_short(struct sca3000_state *st,
-> > -                                u8 reg_address_high,
-> > -                                int len)
-> > +static int sca3000_read_data(struct sca3000_state *st,
-> > +                          u8 reg_address_high,
-> > +                          int len)
->
-> I'd keep this where the original sca3000_read_data() is
-> That will give a shorter, more obvious diff and puts the code near where =
-it
-> is called helping review.
-Good idea! I'll do that then.
+Thank you!
 
-...
-
-> >  error_ret:
-> >       return ret;
-> This shows the age of the code.  Just return in error paths above rather
-> than a error_ret: label
->
-> Might be a good idea to do a precursor patch tidying up any cases of this
-> before the one doin gthe spi changes in ehre.
-
-Ok! It makes sense. I'm really doing a lot of different changes in
-this patch already.
-
->
-> >  }
-> > @@ -432,13 +434,13 @@ static int sca3000_print_rev(struct iio_dev *indi=
-o_dev)
-> >       struct sca3000_state *st =3D iio_priv(indio_dev);
-> >
-> >       mutex_lock(&st->lock);
->
-> Another patch to use guard(mutex)(&st->lock); etc would be help clean thi=
-s
-> up by allowing direct return in the error path.
-
-Great! In this case, would you suggest the following order?
-1. One patch for general style changes, like the removal of error_ret label=
-s;
-2. Another patch for spi changes;
-3. And another one for using guard(mutex)(&st->lock).
-
-> > -                     ret =3D sca3000_read_data_short(st, address, 2);
-> > +                     ret =3D spi_w8r16(st->us, SCA3000_READ_REG(addres=
-s));
->
-> spi_w8r16be() then no need for the endian conversion below.
-...
-> > -                     ret =3D sca3000_read_data_short(st,
-> > -                                                   SCA3000_REG_TEMP_MS=
-B_ADDR,
-> > -                                                   2);
-> > +                     ret =3D spi_w8r16(st->us,
-> > +                                             SCA3000_READ_REG(SCA3000_=
-REG_TEMP_MSB_ADDR));
->
-> As above. spi_w8r16be()
-
-Great! I didn't know this one. I'll change that then.
-
-> >               mutex_unlock(&st->lock);
->
-> >
->
-> As above. Put the new implementation of this here so we can easily see wh=
-at
-> changed.
-
-Ok! Thanks for pointing it out.
-
---
-Thanks,
-Andrew
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
