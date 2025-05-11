@@ -1,199 +1,110 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA491E485;
-	Sun, 11 May 2025 23:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB8F1EA90;
+	Sun, 11 May 2025 23:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747006539; cv=none; b=s9xuVE+neADrEr3lBUDKM7ee/pANtb2QMeOAnaEAFC3kcW+JJDbjWwTa2yw8TrbItBO6C9SH5L0T5vI4yi4j54qGc4+DffzbBQqbN9V7uIm1UEty3D2YyYToOtpNaXmUFbGf9fcbYa/Ed3deFvMqNfwvxp3BonLYmnkzO4AzhAg=
+	t=1747006882; cv=none; b=BJb8pVcPERCBvkMwT/QrreVFLDeTCKDeX1PWEB4DCrTWGsTKYBSUxoxAd/to8gyzlw1lCKrXunuHdjqQZjdSPLN1pCcluO5+1tWnhgCqdnhtMgEv7xjTf6TvixksqlF+l+wf1KvEF3j+lK3rln2jZfyyfqiiEFOgjqYUJHbe7uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747006539; c=relaxed/simple;
-	bh=XNmWdIQxVcWH/LdDQZ5Jl2zneO22mnRSEzWntMTpN6Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=bze8CWodZ8OVUjBqPx4fVkjzS3z/kIp9vRVExdTCBfwHATBmV251Vi8NqeRsKQmW9TkpQCJI6wq+sLOhIRZZVv2Zmhmr4mlt1FvhXKGBsGQqfIFtnaEp4P/JUlsXVOppGpvcfqAipCByegz1R34upEjtptulAVtGthefy4M5ttw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cAy3wWW3; arc=none smtp.client-ip=209.85.222.43
+	s=arc-20240116; t=1747006882; c=relaxed/simple;
+	bh=0R0M+myRXeKGjxYxVnKG4ZZnr/07Vyid04ibtBzNR9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Avzvu8yZ+bf3+plVub7AjWxuP/cq1EVRlO3dE7/apb9u1Sea5LGoShMLKWzyD0yTPGIqaKHVNWdvwKSJ3kVHYOPep7qqn19Vfo1pfr5puzwxCT+Evgrd6f88E8M2ryGymkuRzOH/MApc1GoTN0t0fjIYk9QJmji6gGBDtYFD0Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aVP3oA6O; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAy3wWW3"
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1090062241.2;
-        Sun, 11 May 2025 16:35:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVP3oA6O"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54fc36323c5so3409873e87.0;
+        Sun, 11 May 2025 16:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747006536; x=1747611336; darn=vger.kernel.org;
-        h=in-reply-to:references:content-transfer-encoding:from:subject:cc:to
-         :message-id:date:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fMrBMLNdO+8utoitlOv2Dln2dGic5qE8A6Jtp+NzDDQ=;
-        b=cAy3wWW3LHUZNXqhxkQmjNMxsPb/9HUkEbTy7fOqMyNliwrqJUeko6VldxHekQycil
-         hwIEgAN1CdCysJ/arakdMbxVmIUzKfGICckhkvnTK+nujPQD3UiM02ra5UFqKX36oAlp
-         jOP2/skILLV9JCA1wYIfOM/eU/nzmWbFMKIrmH/nU/OZ5Ch58fd4uNBt1wdenJVKIOXA
-         hXofcYWY2aZ4SLpdV7d1ljc3QcYve7hGNVqbrnKgkec/cQ2WxmjzvtxLupC6cLpWKkHg
-         xzR7TwFSuu6VxZlCHsvS9tvJLCip2swhjLE2MERpZNJi4Yt/Cv0MSHvYgvitoVGMTB4y
-         IQFA==
+        d=gmail.com; s=20230601; t=1747006878; x=1747611678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HPWRfhQwF7Zu8+M/PG63eaG39ARSOy+14QLGOkMXq70=;
+        b=aVP3oA6OrdfdgcfVR2BqwH60JZcdpBH2C0g6vXeDzuFYVgcVPGA5qCnbUsNtlkUbif
+         henOPMUeY45qmjSlis9iATKigXdN3dffOY7eFlpBT9cqa2jcd1P2+yxGFxPrRzuhGaGV
+         xNsbTj3nrJU1D0O2uiepiiDCwlCPvSPsnl33PwUWdIpEhOLImt2u7QssZzkAkf0Lemkk
+         sEtfBhRFA8uilwJN6IlbDsAIcOZmmG0bXD5CfmXbLQcURekukOpAA/UKUQX/rB6h4GTJ
+         OcFGP2he7KuSPmndHOE96PMb3v6DyuIA8AUktVqz/FuwrSGUKO0w15R+8tkQB6cjjOYd
+         Kq/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747006536; x=1747611336;
-        h=in-reply-to:references:content-transfer-encoding:from:subject:cc:to
-         :message-id:date:mime-version:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fMrBMLNdO+8utoitlOv2Dln2dGic5qE8A6Jtp+NzDDQ=;
-        b=CnuVjaPVvf+qj2hxsKsNh+aW7IqW65UoJIrlBde5KdGB4ByZu8Ess3miwO8qbb9LSr
-         BJntmQ8kzEiUKU/QGRFAej1OjOjm72eA/fNONJflheuwccx44kZgvulxL2FcgAKGqss7
-         lz20gMJaXq7e6m98wEUYEUeWKJ90tWAExK6h4NxAM4cXasqHpE0Vqud440EZ9oqgoagq
-         AzJuBDaSCavS0RthY3RDBARV/PCPcOCRvvbtRAYDpQJSeEl7GUy7TaMKYKcA26YW3Q8G
-         20QpMkftngYtZuwamjROucBY2HkZ2SU5gEjF//mTcf7s/UHbtRhmY6CaQpV+IDZ1QbJ4
-         l6cg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTtcZ7UFVxcId7rI24Kh7WxVKcg4zMS/JFO7DNzKtLC6VuyhIB+QnjBBF6CpJvbfAJTsjSv/it1JI=@vger.kernel.org, AJvYcCVpLrem+WWBUCjCIyUUmIM7MDitBgEkhw1/FLfMzRiPJ5tZwq5iAYE+X9dkOOrG3h7NZTpiB0socRRzBm0=@vger.kernel.org, AJvYcCWG4JD8Du6xTu8yaoLhFkXdFsizroOKTzYmgDWBrCcEBEVAL8afiBIUQ6Ski7f3f/YrFlC5AVj0TQwc82ZO@vger.kernel.org, AJvYcCXXzO4UPUP6AhXJfGjJNtgC7q5KdDICx2cbu41pxQrPVsoOWE7FlCoRdIoWkx1m/xMnG5kN/yUBeLxejsO9ETU72KGa3A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV9AJq30HEKAEZAFdvobPTdV0+tQ9bo+yKlskOByqkvQH0ltYk
-	2VugyLVmFDCIoa2WDroxXmbt3nq8VpN3PThjvZH/PegvPdNS7XJo
-X-Gm-Gg: ASbGncvg8wq1r9y6RFJtDtMfF9Tfl4gpydtE3puWsW44ZSQ8jJ5awYHauN4L8nr10iC
-	bcY7tEfrQTkNSZRbCGhaIi81kzYoSsb5C31co+shwHLSge7es5yLaK4ogQ1d0aagzqUesl38G2Y
-	C+1N2tl5P6q9UOz3338O2KFsWBB/rP4CxIz1fyvjAb1XV73CH17Z39LdYmb4z98eID6a2dg9CQY
-	Cfwp6JmLsNd7rULdkw3WEKwBngt3EhUkUqUO2WL8qWmnrVYi7dWlgY5Q1zZ7t7PjBjqjokAfExb
-	oJcDNbeyl/xirB4ivxrkXtOx6rlZZ7z2RPv4o9ORuNHa
-X-Google-Smtp-Source: AGHT+IHx+nTcXRSjvbE3N0tFiFHEmiEiaDArkY8DRz03T8xrDLdQWbRUrJ2a1ah7qvWyOJoaiLJsCg==
-X-Received: by 2002:a05:6102:1502:b0:4cb:43d4:6926 with SMTP id ada2fe7eead31-4deed33c57dmr9626335137.7.1747006536358;
-        Sun, 11 May 2025 16:35:36 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea0298db9sm4392638137.0.2025.05.11.16.35.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 May 2025 16:35:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747006878; x=1747611678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HPWRfhQwF7Zu8+M/PG63eaG39ARSOy+14QLGOkMXq70=;
+        b=w6ld7TzLnbDWa+PK80j2v1e5+aeywS3/V1IDpxgoM4gB57zL9Z/klKOZxoS2/xECGC
+         jQQgCbkrj6gxE92xwONw7IyZ1udgRJH3DHUnGebsKzg+hJ1GvfsdDvJtxfGfCokP2OS+
+         LrFur9u9CdKrouKohyOl/wrLGfban5dke/1+plAMfnRNlIYhodAodIfZhvzI1Dyxv6Gr
+         /fWE4sIof2JswTNkp4biFU31S0Qytn1mI+h+QGa5Lyz/nf0eHoGyaIftwyjcCpkERzSy
+         klwEPYWrL+e9pbPx8eeXp2C7Negf9fmK3+h2e+fjhapikZm19DOsTq1hdlYvdkzht/RL
+         Mr+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVaHDvFG+CQfkrbRjeu0ZsSUhrSOKLUkqJPP5tG0lEfEmzXyb5oS1by86aTubK7DGZZOeuafdhlbUblbTA=@vger.kernel.org, AJvYcCWjcmceSrk5pAzDsS7VgzRlFYR5iK2pVdMtjmw3z8+5+p+w8Vz62C+hjs3ecac3s+atPduyJLR6b4eIYA8=@vger.kernel.org, AJvYcCWprDYd7NuFbfQNAGhbrSRAvCYvVNk7DR03WK1w7C3pFz8OiKAyCDZbR+FZFJda1Huq8WcnukjeCKx77Xu0VULwQA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNNvpqDJMJhjVum6dz6DzzL9Cs31xXzln7n+DcR+RERm7zzydw
+	PdIcpGrRXS3xNkAp4dmRRby+5w+blCpzkVsBPcHcZF7TqxouFsjDZh9bvg==
+X-Gm-Gg: ASbGncsxpJnnNvBTSefRwsoeDo6rPCTa4KfvdBAdI+rQPY41w0wIK4tuzLM9svtPR5Z
+	MBW6wFZGzIL4olOwye7s+i7gObqHFq2WNyQcYzdtwJJrTBFqCFkkZTYgo4pM+89/DzorpdhS3u+
+	/kFXL+AnIYrMRTgmlm0ns6wLpuVqv6FJ8UTij3meMR6y0HGS0qOv7puh/84gOArlomD8TZU66HF
+	7qD7fKaLQdE/GCDtWviO1YDcC0RoKF76t+JXJHFRohuigVUxadBuaNhdFTN6e/Ladz1b2F5QgUu
+	xpz3Wefvef6bIq2MSBRnNsM4Po8h2yxGp8gfIE9HAzZpgzC12yhntKKwW6bb6oEi05rtv12UDaH
+	UkcMH4hHU2vYvVDyCRM3oVJfQPq629lFY
+X-Google-Smtp-Source: AGHT+IFlCwg+gnvFBun6b+eU0+J5Y+9FqyOBU2eBSiYY8olg/D31X7Bmj9O64BqihX8M4yDiuQbOUg==
+X-Received: by 2002:a2e:a103:0:b0:30b:fc16:d482 with SMTP id 38308e7fff4ca-326b75709d7mr59190011fa.3.1747006878052;
+        Sun, 11 May 2025 16:41:18 -0700 (PDT)
+Received: from i-vetokaappi.home.lan (dsl-hkibng42-56733b-36.dhcp.inet.fi. [86.115.59.36])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c33b80b6sm11159451fa.37.2025.05.11.16.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 16:41:16 -0700 (PDT)
+From: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
+To: linux-arm-msm@vger.kernel.org
+Cc: ~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org,
+	=?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Luca Weiss <luca@lucaweiss.eu>,
+	linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] remoteproc: qcom_wcnss: Fix on platforms without fallback regulators
+Date: Mon, 12 May 2025 02:40:15 +0300
+Message-ID: <20250511234026.94735-1-matti.lehtimaki@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=7547664b886a80457f05e12aaf30434863635008445c92610d3975c9eb38;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Sun, 11 May 2025 20:35:30 -0300
-Message-Id: <D9TQ4OLSV5U7.1NJ2JIKUN6QR3@gmail.com>
-To: "Antheas Kapenekakis" <lkml@antheas.dev>,
- <platform-driver-x86@vger.kernel.org>
-Cc: "Armin Wolf" <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>, "Hans
- de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Jean Delvare" <jdelvare@suse.com>,
- "Guenter Roeck" <linux@roeck-us.net>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH v1 08/10] platform/x86: msi-wmi-platform: Drop excess
- fans in dual fan devices
-From: "Kurt Borja" <kuurtb@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20250511204427.327558-9-lkml@antheas.dev>
-In-Reply-To: <20250511204427.327558-9-lkml@antheas.dev>
-
---7547664b886a80457f05e12aaf30434863635008445c92610d3975c9eb38
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
-> Currently, the platform driver always exposes 4 fans, since the
-> underlying WMI interface reads 4 values from the EC. However, most
-> devices only have two fans. Therefore, at least in the case of the
-> Claw series, quirk the driver to only show two hwmon fans.
->
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/platform/x86/msi-wmi-platform.c | 28 ++++++++++++++++++++++---
->  1 file changed, 25 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x=
-86/msi-wmi-platform.c
-> index 46928fb4da8a6..eaf0eb25e349b 100644
-> --- a/drivers/platform/x86/msi-wmi-platform.c
-> +++ b/drivers/platform/x86/msi-wmi-platform.c
-> @@ -121,6 +121,7 @@ enum msi_wmi_platform_method {
->  struct msi_wmi_platform_quirk {
->  	bool shift_mode;	/* Shift mode is supported */
->  	bool charge_threshold;	/* Charge threshold is supported */
-> +	bool dual_fans;		/* For devices with two hwmon fans */
->  	int pl_min;		/* Minimum PLx value */
->  	int pl1_max;		/* Maximum PL1 value */
->  	int pl2_max;		/* Maximum PL2 value */
-> @@ -216,6 +217,7 @@ static struct msi_wmi_platform_quirk quirk_default =
-=3D {};
->  static struct msi_wmi_platform_quirk quirk_gen1 =3D {
->  	.shift_mode =3D true,
->  	.charge_threshold =3D true,
-> +	.dual_fans =3D true,
->  	.pl_min =3D 8,
->  	.pl1_max =3D 43,
->  	.pl2_max =3D 45
-> @@ -223,6 +225,7 @@ static struct msi_wmi_platform_quirk quirk_gen1 =3D {
->  static struct msi_wmi_platform_quirk quirk_gen2 =3D {
->  	.shift_mode =3D true,
->  	.charge_threshold =3D true,
-> +	.dual_fans =3D true,
->  	.pl_min =3D 8,
->  	.pl1_max =3D 30,
->  	.pl2_max =3D 37
-> @@ -635,6 +638,23 @@ static const struct hwmon_chip_info msi_wmi_platform=
-_chip_info =3D {
->  	.info =3D msi_wmi_platform_info,
->  };
-> =20
-> +static const struct hwmon_channel_info * const msi_wmi_platform_info_dua=
-l[] =3D {
-> +	HWMON_CHANNEL_INFO(fan,
-> +			   HWMON_F_INPUT,
-> +			   HWMON_F_INPUT
-> +			   ),
-> +	HWMON_CHANNEL_INFO(pwm,
-> +			   HWMON_PWM_ENABLE,
-> +			   HWMON_PWM_ENABLE
-> +			   ),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info msi_wmi_platform_chip_info_dual =3D =
-{
-> +	.ops =3D &msi_wmi_platform_ops,
-> +	.info =3D msi_wmi_platform_info_dual,
-> +};
-> +
->  static int msi_wmi_platform_profile_probe(void *drvdata, unsigned long *=
-choices)
->  {
->  	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> @@ -1227,9 +1247,11 @@ static int msi_wmi_platform_hwmon_init(struct msi_=
-wmi_platform_data *data)
->  {
->  	struct device *hdev;
-> =20
-> -	hdev =3D devm_hwmon_device_register_with_info(&data->wdev->dev, "msi_wm=
-i_platform", data,
-> -						    &msi_wmi_platform_chip_info,
-> -						    msi_wmi_platform_hwmon_groups);
-> +	hdev =3D devm_hwmon_device_register_with_info(
-> +		&data->wdev->dev, "msi_wmi_platform", data,
-> +		data->quirks->dual_fans ? &msi_wmi_platform_chip_info_dual :
-> +					&msi_wmi_platform_chip_info,
+Recent change to handle platforms with only single power domain broke
+pronto-v3 which requires power domains and doesn't have fallback voltage
+regulators in case power domains are missing. Add a check to verify
+the number of fallback voltage regulators before using the code which
+handles single power domain situation.
 
-This is the wrong approach.
+Fixes: 65991ea8a6d1 ("remoteproc: qcom_wcnss: Handle platforms with only single power domain")
+Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+---
+ drivers/remoteproc/qcom_wcnss.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Add the quirk and control visibility from msi_wmi_platform_is_visible(),
-like I mentioned in the cover-letter.
+diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+index 775b056d795a..2c7e519a2254 100644
+--- a/drivers/remoteproc/qcom_wcnss.c
++++ b/drivers/remoteproc/qcom_wcnss.c
+@@ -456,7 +456,8 @@ static int wcnss_init_regulators(struct qcom_wcnss *wcnss,
+ 	if (wcnss->num_pds) {
+ 		info += wcnss->num_pds;
+ 		/* Handle single power domain case */
+-		num_vregs += num_pd_vregs - wcnss->num_pds;
++		if (wcnss->num_pds < num_pd_vregs)
++			num_vregs += num_pd_vregs - wcnss->num_pds;
+ 	} else {
+ 		num_vregs += num_pd_vregs;
+ 	}
+-- 
+2.43.0
 
---=20
- ~ Kurt
-
-> +		msi_wmi_platform_hwmon_groups);
-> =20
->  	return PTR_ERR_OR_ZERO(hdev);
->  }
-
-
---7547664b886a80457f05e12aaf30434863635008445c92610d3975c9eb38
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCE0RwAKCRAWYEM49J/U
-Zv25AP9O60DveWgtOqx9mfzmImtIK2qOwNEmZufRLXwCZ/BC/QEAlTw0D3y2OfXV
-2UHOMMQyN6ApqHOmwFbWuxiwEovoCAM=
-=dLWp
------END PGP SIGNATURE-----
-
---7547664b886a80457f05e12aaf30434863635008445c92610d3975c9eb38--
