@@ -1,111 +1,157 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30897184E;
-	Sun, 11 May 2025 09:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945E3EED8;
+	Sun, 11 May 2025 09:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746956836; cv=none; b=k/r83Ilp4rP5IzBp4Z8tITpEgHBHcS/7AlFk3mutPeXTg8ktQFvLcfhVsvoNGZAQnbmLcj4D0AEzct1ZLNxeS0PwrwkCZAyj5zYDB/eIY34xh7JRKIQAcFpYZWmyldRr6b4LqtpAVgos2ImpTRafERQJqhc0541kEzc8hQSxYtk=
+	t=1746957155; cv=none; b=Xp5Trd1GffLcfkPSE+BbAEirNWPQStcMnu4nm48l2Fe4Yftx8YFANU4mb3/ZuWTwaxz91ngd0kzhHKMlnJj0BmAtU8fUijCnhs9Og/pJ8xKCguvgNE+n1YAtHNXspDH9zbTwCbtbb6xK6ElvC6GQV33z6gbpaZTJk3U94DeZiiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746956836; c=relaxed/simple;
-	bh=JgsLRPoHfVI0FmkKHM8XYJ+TGri+MUoSNGaKcxhktoM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=PaA4cOcW4AsETXb+/Dg7YdB/tXSURpKwA0bHKZhABZ+8ULwG03rlyHw4iMPphxcDJz8hsKliTgtTnIV5oZ8EE9svfJnzsmpNF61LhZOLcBWWiqPYgTLfAof4sdXTtOCU53zgZZ3hMoGFFgjbqVlvaQerYTB/zu3AYdXLrc7YoDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=21QlskRt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=euE0Iun4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746957155; c=relaxed/simple;
+	bh=3a0jezamU9RZJR7MiVsc4q4TJxMsQ8euYjLHW9OjbVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LOiKwcycJpzqMpRgXaB8/2XRpxQWuH1ukyI2Oqhgq6P+ek8bsQ1DYq4fijxdQbUUUbHv+pK+7+WvnS07oZ5lEGbrm90jCe2owXJ83O84bLXlsExN8fvn9+kYzUNcSB9QQCTECBJyt3pIrccH44flbzBL+m/hNdlewwpfjvn99Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=elvRyCML; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="21QlskRt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="euE0Iun4"
-Date: Sun, 11 May 2025 09:47:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746956832;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hd8PphlBAuMqIEqPyAgnkP+emeIlQvZgqNZrMmBw4lg=;
-	b=21QlskRtDuil9abS7mKtqu22Khz/KgpQhATR+ZhAcAXT9vEBsZEUJMzC2zCKm8eRqrSOH9
-	FyTNVMVlipIcadBUmvxszFUgd4/J+mwBC0nzXR3/lD8RiS0gTCs8UVn87PlynC93NAoTGi
-	TIxgTfIrofwrcW0c6kD3A0nGkUtgGuWtxRCcqovY6GQOWYi9yKMjb0/F6IfWXdymscx8L2
-	jeoSwwtG5dk5poI1i+TEcjR90gKw4oa05iRseDdnZsah/bgsfo0MKCQ+0m238+kbFsSZkD
-	R/G4HEFwIlb6uV8Dpb/IZa1aIuNtGFptDogfwJmC6mngnueGPagBITmsYkVYQw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746956832;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hd8PphlBAuMqIEqPyAgnkP+emeIlQvZgqNZrMmBw4lg=;
-	b=euE0Iun4YBea9SFqIrpzttFTrzNnVxu0Hf9jBrHBUMqp1RTc47f+N3cltl7dss8fiiPYoR
-	gfuzKGMHInja2YCA==
-From: "tip-bot2 for Seongman Lee" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/sev: Fix operator precedence in
- GHCB_MSR_VMPL_REQ_LEVEL macro
-Cc: Seongman Lee <augustus92@kaist.ac.kr>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250511092329.12680-1-cloudlee1719@gmail.com>
-References: <20250511092329.12680-1-cloudlee1719@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="elvRyCML"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54B5DBRF022791;
+	Sun, 11 May 2025 09:52:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Q2BsqUJ5qs8sClJC0RBmiR2OPzrS2wHqFWx0KothqIg=; b=elvRyCML7Yv1MhEA
+	2WaJOPLHdMD1PTT20TF1SQE+ZQiuswtcTDERA10Xrq5p+8BUB6Bkbk3Cipues0G/
+	4eetcXb2K6NkE/0hJC58BkBvXAeHO+Ouoes1f7jsjOg4kyKOdf3RCdOPkP+5YHDn
+	hHZvs7blT5HYCJ+9llCV87g1vV24ldYc2Pqiachq3buETJCsQ5TzLJerMenyGXwS
+	N1/uzgNXeN5h9Kazg0+5VM3PnqoBpdfRWM/YF5uNW2vOg+Kqc1PaZ0woafOVhjof
+	V84/TZsLZxY4tZzppb4s9mM8QF3tRprH1GWrORhLFeiMIXXjiXIadNBSGpPONx8J
+	v9k/ag==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hyjjhrb8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 11 May 2025 09:52:07 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54B9q65k028030
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 11 May 2025 09:52:06 GMT
+Received: from [10.216.59.153] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 11 May
+ 2025 02:52:01 -0700
+Message-ID: <1903ee8a-f819-4a4d-baee-90f35e0da290@quicinc.com>
+Date: Sun, 11 May 2025 15:21:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174695683185.406.15235858727409884425.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT v6 2/5] drm/msm/adreno: Add speedbin data for SM8550 /
+ A740
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        <neil.armstrong@linaro.org>
+CC: Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, David Airlie <airlied@gmail.com>,
+        "Simona Vetter" <simona@ffwll.ch>,
+        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>
+References: <20250430-topic-smem_speedbin_respin-v6-0-954ff66061cf@oss.qualcomm.com>
+ <20250430-topic-smem_speedbin_respin-v6-2-954ff66061cf@oss.qualcomm.com>
+ <13cd20c6-f758-45ff-82d1-4fd663d1698c@linaro.org>
+ <886d979d-c513-4ab8-829e-4a885953079a@oss.qualcomm.com>
+ <b838f9bd-0537-4f8d-b24b-d96700d566c8@linaro.org>
+ <98a4ad20-c141-4280-801e-015dafd1fb39@oss.qualcomm.com>
+ <a26213ec-808f-4edf-bb0d-ab469ee0a884@linaro.org>
+ <281ab1b6-498e-4b29-9e15-19b5aae25342@oss.qualcomm.com>
+ <63105bce-6b8e-4b99-bca1-3741f27ea25a@linaro.org>
+ <892fc1eb-efd3-4fb6-9110-2df3349960a6@oss.qualcomm.com>
+ <b989522d-bd41-4d76-91a9-3cf680214003@linaro.org>
+ <f5734944-1ed2-4acc-a015-0c638c331bbe@quicinc.com>
+ <d73c6151-91bb-4c96-ad2a-972ad392624b@oss.qualcomm.com>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <d73c6151-91bb-4c96-ad2a-972ad392624b@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTExMDA5OSBTYWx0ZWRfXy0iWnmVfZ948
+ W8G3FTxfcJhMR1S4OQgzgXn02ZhoFwpZnM6bzzSyQZKzaj2D/xjfaof8jxY20M37m/dna7vF53D
+ QVhIYrD+cF4cwCFlhO/ag9hb7iKbEuCr11re/g6MGXYUG2yLxhCM9pVSoRS3AE6zQTUn74/08ae
+ JdV5244rcnHWef0OTdQcQhOVxfzLYithB0I6FEu0CYA64bqlMlyXERuIJo3sWdeL/0uxmkxxXtw
+ bBscXeLtZBcBQW5MfwrlX9/LWpPdIaassjkWWoOJ9/WArOtTJQ9WHj1nr95bJfSXYikRVty23PJ
+ 6ywHLBBdE4Y+ivmSG3u2DEBUIxpndEZFab09DNlSYMAB7b2C7fEK4UXo6OWHknGDHwO1qUQrBu1
+ aLwcYyqK/nMC//U4PUJLYDzXeI0RbJ4egFJK++PqQ4cHBjhu7N18fXQm/anVm7wuAX8J7KpG
+X-Proofpoint-GUID: Pxr5qnV33ichnL7CgcdknTCUznFW9JTU
+X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=68207347 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=90UGo0xaWWtCiJOOztUA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: Pxr5qnV33ichnL7CgcdknTCUznFW9JTU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-11_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 clxscore=1015 spamscore=0 phishscore=0
+ mlxlogscore=833 impostorscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505110099
 
-The following commit has been merged into the x86/urgent branch of tip:
+On 5/1/2025 9:23 PM, Konrad Dybcio wrote:
+> On 5/1/25 11:29 AM, Akhil P Oommen wrote:
+>> On 4/30/2025 10:26 PM, neil.armstrong@linaro.org wrote:
+>>> On 30/04/2025 18:39, Konrad Dybcio wrote:
+>>>> On 4/30/25 6:19 PM, neil.armstrong@linaro.org wrote:
+>>>>> On 30/04/2025 17:36, Konrad Dybcio wrote:
+>>>>>> On 4/30/25 4:49 PM, neil.armstrong@linaro.org wrote:
+>>>>>>> On 30/04/2025 15:09, Konrad Dybcio wrote:
+>>>>>>>> On 4/30/25 2:49 PM, neil.armstrong@linaro.org wrote:
+>>>>>>>>> On 30/04/2025 14:35, Konrad Dybcio wrote:
+>>>>>>>>>> On 4/30/25 2:26 PM, neil.armstrong@linaro.org wrote:
+> 
+> [...]
+> 
+>>> This behaves exactly as I said, so please fix it.
+> 
+> Eh, I was so sure I tested things correctly..
+> 
+>>
+>> Konrad,
+>>
+>> iirc, we discussed this in one of the earlier revision. There is a
+>> circular dependency between the driver change for SKU support and the dt
+>> change that adds supported_hw bitmask in opp-table. Only scenario it
+>> works is when you add these to the initial patches series of a new GPU.
+>>
+>> It will be very useful if we can break this circular dependency.
+> 
+> Right. Let's start with getting that in order
 
-Commit-ID:     f7387eff4bad33d12719c66c43541c095556ae4e
-Gitweb:        https://git.kernel.org/tip/f7387eff4bad33d12719c66c43541c095556ae4e
-Author:        Seongman Lee <augustus92@kaist.ac.kr>
-AuthorDate:    Sun, 11 May 2025 18:23:28 +09:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Sun, 11 May 2025 11:38:03 +02:00
+Another complication with the socinfo is that the value is unique for a
+chipset, not for a GPU. So, it won't work if we keep this data in GPU
+list in the driver.
 
-x86/sev: Fix operator precedence in GHCB_MSR_VMPL_REQ_LEVEL macro
+Downstream solved this problem by keeping the PCODE/FCODE mappings in
+the devicetree.
 
-The GHCB_MSR_VMPL_REQ_LEVEL macro lacked parentheses around the bitmask
-expression, causing the shift operation to bind too early. As a result,
-when requesting VMPL1 (e.g., GHCB_MSR_VMPL_REQ_LEVEL(1)), incorrect
-values such as 0x000000016 were generated instead of the intended
-0x100000016 (the requested VMPL level is specified in GHCBData[39:32]).
+-Akhil.
 
-Fix the precedence issue by grouping the masked value before applying
-the shift.
+> 
+> Konrad
 
-  [ bp: Massage commit message. ]
-
-Fixes: 34ff65901735 ("x86/sev: Use kernel provided SVSM Calling Areas")
-Signed-off-by: Seongman Lee <augustus92@kaist.ac.kr>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250511092329.12680-1-cloudlee1719@gmail.com
----
- arch/x86/include/asm/sev-common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-index acb85b9..0020d77 100644
---- a/arch/x86/include/asm/sev-common.h
-+++ b/arch/x86/include/asm/sev-common.h
-@@ -116,7 +116,7 @@ enum psc_op {
- #define GHCB_MSR_VMPL_REQ		0x016
- #define GHCB_MSR_VMPL_REQ_LEVEL(v)			\
- 	/* GHCBData[39:32] */				\
--	(((u64)(v) & GENMASK_ULL(7, 0) << 32) |		\
-+	((((u64)(v) & GENMASK_ULL(7, 0)) << 32) |	\
- 	/* GHCBDdata[11:0] */				\
- 	GHCB_MSR_VMPL_REQ)
- 
