@@ -1,172 +1,194 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265F81D5CEA
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 11:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F621372;
+	Sun, 11 May 2025 11:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746962033; cv=none; b=T2+tcF5ZjqKBledN6pWRv18kJtamwYRRf2hjRxt0kH/6Kq08gDMW45oPe4IH9CeiRFJACmM31ouCIODnhxcPG8hkBDuyv8wudIlkvlv/xto77Opyyd/FmPayS/n8pQ2KNqLhyO58DhA0fW5pYUq08f5WF2bBftrn1kkjCpEYLFs=
+	t=1746962450; cv=none; b=o9DjC7l2A0AfM6r2eTzt9ozWp6QnOxHfb/Y5S4Ost1gUA/Vi9X3X+LZeZsWgEiBnkj/ZIJBBVq5T8fuRGtjMGvMQoU0T5O/GgeJ0FuJg9h8e/0t/n0hz3VWDQbzA+fnJZ7rGcTpgzbkmTkvAt2H0OEBHig8ZryC7U0WLQv57rI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746962033; c=relaxed/simple;
-	bh=b9I/zEXGQIc7hEokRw3SGv9msRQTW6TBrbYa5QahSTQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XKxtkdRlT1QX3sVr1abzhclO1lUtqK0+aJl3AavKb+4nfD38LHC33l4Q7CnapWsdmYzlA0KbMoCt6mNUCIldV3j4c0HMP3S5t9nd9sk8FiS9k3as1bLbzesiJ5b7LR1zA4LcvzI+yI2NqdnUooTqckJrXwhSSOSTIxmDvfpbpgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ew4AvpcZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746962450; c=relaxed/simple;
+	bh=UHpFY63xsQrBBY+H3Vk/9kjv3KiFFe3kchSSaYqcbhE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M+y4ja/8t6O7AUa6rgl5nC5KwB2UdEVtZCNou+lkdoful8Rf9sXmeUOLzLi42n6cDP+3U9O1j8k0o7ZsNwYSc+djWUtPLUGG4PDMWPOETWyxiAUCI7xjEYBV/EORpOK0M4VT2/BSzfnJoT1Vx7ZQ0swaNMFX2g3rx80wXna+oco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=KNdYwmxn; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ew4AvpcZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746962030;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Airg4webqukAlFGEQw+CSdLqTsx5ThZe2jBG9nkZHPY=;
-	b=Ew4AvpcZG3Bh0Us0YDZkNTXe1YXRXt61BT3++OnxBZmEfGmI4sqKLLASrfIcnw4uOjZ4gD
-	GvmT/n9B+0gvDnYtbk3R5DPSY+m7fR8pc7/FCustJA0NKUcOXnM3XaJlFsWhTt0IEMbNsx
-	CSlZ5thOdrSAGY0I3vPCoPsdAZxasu0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-116-8_JG-6TWM92d6ybzAKXFsw-1; Sun, 11 May 2025 07:13:48 -0400
-X-MC-Unique: 8_JG-6TWM92d6ybzAKXFsw-1
-X-Mimecast-MFC-AGG-ID: 8_JG-6TWM92d6ybzAKXFsw_1746962027
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a0b570a73eso1966512f8f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 04:13:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746962026; x=1747566826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Airg4webqukAlFGEQw+CSdLqTsx5ThZe2jBG9nkZHPY=;
-        b=Qk9xRSnGzV81xAkE/bZinU1FPHMm4vX61G6pPFG58HgVYcJRzfYMHmNJzawSLrGsJ9
-         Gwaq7cN75LqGaR1UWGC46Y2jaZSlXg/LFhYky3GWYIcnkzx2lkqlfCSa+8Ai/h4ShEA3
-         h/xdCQ5XzDvpjqYYlcDc+gbTusCrCJ076QZBwA6n3g+8U3Y1o8K7vSwUHxBsI+5R8UOj
-         FPrZiC362WlnZWoDDogeCQnG1VdKo69oDJUep1SOiMyXd/f9KzpAaUIxzN2URmgv1Ubf
-         mjT9PqZXnQQlspjO202+TANL+dBPl3YIeGAD1M+lDvBuzVwZa/dUBdm50YhLMDzVu7Oi
-         NMZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVp2tfDvuRzuTGtzygSgtjclxDQZ2nVKnSIkBYlIDhkaytNdDisqRjAjHSJLuQ6uzffHU3cSTTXBV35IVc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc+cvm8PkacNBUTOXxs28ovOtSLlY1fkhMDW8h6TrPOcEdyOas
-	UEwW/GsMKGcV74eKE1cCn0RCwd8IN+iD8JhtJjstbOeR/IoloqSMhbtfmtmAIn+Okan95HeWNeE
-	jkhDSQqjvj1COP3UbdEcKfaXjsSm2dTbdzbWrwjw759sWIAmg7JLQ+0w7DfSh1guWYC92pqr0uB
-	1QX3OKd4mYKej08UkPAq+hStgbtZqCL6kpsUHIAcvnlZCtZmI=
-X-Gm-Gg: ASbGnct+TbBN7HI9/6E0zFZdtf6Alx+K1sLTTKCYN4NKPlHHj11lel0QqncwPo5HYUj
-	qHbwnj+nx2PiSBOOwKueYkAgUvFQiTnuxCVqONHvjqcdvhhtg4bKTOAMo6zTYPIedVIDZ
-X-Received: by 2002:a05:6000:a83:b0:3a0:9dd5:5dc2 with SMTP id ffacd0b85a97d-3a1f64d1cd2mr6298351f8f.59.1746962026585;
-        Sun, 11 May 2025 04:13:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNuKTsKl3oRGcCkzR3cb5pXOsob8y4/sdGyAJENPTXcSA9xBtJkpAmGLE6sfC6oyC8lN+o2usBjNacCZNXpm8=
-X-Received: by 2002:a05:6000:a83:b0:3a0:9dd5:5dc2 with SMTP id
- ffacd0b85a97d-3a1f64d1cd2mr6298334f8f.59.1746962026122; Sun, 11 May 2025
- 04:13:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="KNdYwmxn"
+Received: from [172.20.3.254] (unknown [213.157.19.135])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 70D593FA05;
+	Sun, 11 May 2025 11:20:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1746962444;
+	bh=f/7saISowC+Z6v05Cw0k3LzR+ltW9WLurdKJu2z/pFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=KNdYwmxnaMGFz1SFqdfoRB/+R5VtegGBC4IXg2m//uVDFVbzdi0efkH6LDEQeZqyp
+	 OcppKVJ5Py0w7OpL+NHLrQCZjY9NibZlaETl4CF+EYYuJV00RKFeiq59MnfO8z3XyI
+	 XLiIPX1RSp+cLdhQueubWhG0C2bwpAiEku8lta/eIXhtT562/1x0Osf9GQCDraKtJ4
+	 9q9VaJOHtlCnJ/o5Z9AOoDw441TThMdmWZ9ZOFvfMmG15RPvquUNJtvaWWJxxH1cet
+	 zomdfIwMqaXAXnXy1ZmHNDftCquRrN8ECJl2hlQ6DzkuJgg3DdFIwMp8gONYZ07OMX
+	 THqEZDb/BKoUw==
+Message-ID: <1b01ccd0-5a1b-4b34-bbe4-13ee3b73292d@canonical.com>
+Date: Sun, 11 May 2025 04:20:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509190108.1582362-1-seanjc@google.com>
-In-Reply-To: <20250509190108.1582362-1-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Sun, 11 May 2025 13:13:33 +0200
-X-Gm-Features: AX0GCFt6COEoqchgrJJ27SkGNJFtfxEjqyYPA--QXU7uz3ASU9I3N4-OVIu1PQo
-Message-ID: <CABgObfbKCRggZm7kbeVkAykxO1tEi1v7q=emcSxWWgMLX20WPA@mail.gmail.com>
-Subject: Re: [GIT PULL] KVM: x86: Fixes for 6.15-rcN
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] lsm: introduce security_lsm_manage_policy hook
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Casey Schaufler <casey@schaufler-ca.com>
+Cc: Paul Moore <paul@paul-moore.com>,
+ =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
+ Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+ linux-security-module@vger.kernel.org, jmorris@namei.org, serge@hallyn.com,
+ kees@kernel.org, stephen.smalley.work@gmail.com, takedakn@nttdata.co.jp,
+ linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+References: <20250506143254.718647-1-maxime.belair@canonical.com>
+ <20250506143254.718647-3-maxime.belair@canonical.com>
+ <9c68743f-5efa-4a77-a29b-d3e8f2b2a462@I-love.SAKURA.ne.jp>
+ <CAHC9VhRKwB4quqBtYQyxRqCX2C6fCgTbyAP3Ov+NdQ06t1aFdA@mail.gmail.com>
+ <120954c2-87b7-4bda-958b-2b4f0180a736@canonical.com>
+ <efe5b15a-6141-424a-8391-9092e79e4acf@schaufler-ca.com>
+ <20250509.Chuecae0phoo@digikod.net>
+Content-Language: en-US
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ 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 lT9Q
+Organization: Canonical
+In-Reply-To: <20250509.Chuecae0phoo@digikod.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 9, 2025 at 9:01=E2=80=AFPM Sean Christopherson <seanjc@google.c=
-om> wrote:
-> Please pull a random variety of fixes for 6.15.  The SRSO change is the
-> most urgent fix, everything else has either existed for some time, or isn=
-'t
-> actively causing problems.
+On 5/9/25 03:26, Mickaël Salaün wrote:
+> On Thu, May 08, 2025 at 09:54:19AM -0700, Casey Schaufler wrote:
+>> On 5/8/2025 1:29 AM, John Johansen wrote:
+>>> On 5/7/25 13:25, Paul Moore wrote:
+>>>> On Wed, May 7, 2025 at 6:41 AM Tetsuo Handa
+>>>> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>>>>> On 2025/05/06 23:32, Maxime Bélair wrote:
+>>>>>> diff --git a/security/lsm_syscalls.c b/security/lsm_syscalls.c
+>>>>>> index dcaad8818679..b39e6635a7d5 100644
+>>>>>> --- a/security/lsm_syscalls.c
+>>>>>> +++ b/security/lsm_syscalls.c
+>>>>>> @@ -122,5 +122,10 @@ SYSCALL_DEFINE3(lsm_list_modules, u64 __user
+>>>>>> *, ids, u32 __user *, size,
+>>>>>>    SYSCALL_DEFINE5(lsm_manage_policy, u32, lsm_id, u32, op, void
+>>>>>> __user *, buf, u32
+>>>>>>                 __user *, size, u32, flags)
+>>>>>>    {
+>>>>>> -     return 0;
+>>>>>> +     size_t usize;
+>>>>>> +
+>>>>>> +     if (get_user(usize, size))
+>>>>>> +             return -EFAULT;
+>>>>>> +
+>>>>>> +     return security_lsm_manage_policy(lsm_id, op, buf, usize,
+>>>>>> flags);
+>>>>>>    }
+>>>>>
+>>>>> syzbot will report user-controlled unbounded huge size memory
+>>>>> allocation attempt. ;-)
+>>>>>
+>>>>> This interface might be fine for AppArmor, but TOMOYO won't use this
+>>>>> interface because
+>>>>> TOMOYO's policy is line-oriented ASCII text data where the
+>>>>> destination is switched via
+>>>>> pseudo‑filesystem's filename ...
+>>>>
+>>>> While Tetsuo's comment is limited to TOMOYO, I believe the argument
+>>>> applies to a number of other LSMs as well.  The reality is that there
+>>>> is no one policy ideal shared across LSMs and that complicates things
+>>>> like the lsm_manage_policy() proposal.  I'm intentionally saying
+>>>> "complicates" and not "prevents" because I don't want to flat out
+>>>> reject something like this, but I think there needs to be a larger
+>>>> discussion among the different LSM groups about what such an API
+>>>> should look like.  We may not need to get every LSM to support this
+>>>> new API, but we need to get something that would work for a
+>>>> significant majority and would be general/extensible enough that we
+>>>> would expect it to work with the majority of future LSMs (as much as
+>>>> we can predict the future anyway).
+>>>>
+>>>
+>>> yep, I look at this is just a starting point for discussion. There
+>>> isn't going to be any discussion without some code, so here is a v1
+>>> that supports a single LSM let the bike shedding begin.
+>>
+>> Aside from the issues with allocating a buffer for a big policy
+>> I don't see a problem with this proposal. The system call looks
+>> a lot like the other LSM interfaces, so any developer who likes
+>> those ought to like this one. The infrastructure can easily check
+>> the lsm_id and only call the appropriate LSM hook, so no one
+>> is going to be interfering with other modules.
+> 
+> We may not want to only be able to load buffers containing policies, but
+> also to leverage file descriptors like Landlock does.  Getting a
 
-Cool, thanks; pulled.
+I am not opposed to a syscall that leverages file desriptors like landlock
+but that would be a different syscall with different semantics, and
+something for an lsm that wants that semantic to introduce.
 
-Paolo
+> property from a kernel object or updating it is mainly about dealing
+> with a buffer.  And the current LSM syscalls do just that.  Other kind
+> of operations may require more than that though.
+> 
+sure but they don't do it for the semantic of loading/managing policy.
 
-> The following changes since commit 2d7124941a273c7233849a7a2bbfbeb7e28f1c=
-aa:
->
->   Merge tag 'kvmarm-fixes-6.15-2' of https://git.kernel.org/pub/scm/linux=
-/kernel/git/kvmarm/kvmarm into HEAD (2025-04-24 13:28:53 -0400)
->
-> are available in the Git repository at:
->
->   https://github.com/kvm-x86/linux.git tags/kvm-x86-fixes-6.15-rcN
->
-> for you to fetch changes up to e3417ab75ab2e7dca6372a1bfa26b1be3ac5889e:
->
->   KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=3D> 1 VM count transit=
-ions (2025-05-08 07:17:10 -0700)
->
-> ----------------------------------------------------------------
-> KVM x86 fixes for 6.15-rcN
->
->  - Forcibly leave SMM on SHUTDOWN interception on AMD CPUs to avoid causi=
-ng
->    problems due to KVM stuffing INIT on SHUTDOWN (KVM needs to sanitize t=
-he
->    VMCB as its state is undefined after SHUTDOWN, emulating INIT is the
->    least awful choice).
->
->  - Track the valid sync/dirty fields in kvm_run as a u64 to ensure KVM
->    KVM doesn't goof a sanity check in the future.
->
->  - Free obsolete roots when (re)loading the MMU to fix a bug where
->    pre-faulting memory can get stuck due to always encountering a stale
->    root.
->
->  - When dumping GHCB state, use KVM's snapshot instead of the raw GHCB pa=
-ge
->    to print state, so that KVM doesn't print stale/wrong information.
->
->  - When changing memory attributes (e.g. shared <=3D> private), add poten=
-tial
->    hugepage ranges to the mmu_invalidate_range_{start,end} set so that KV=
-M
->    doesn't create a shared/private hugepage when the the corresponding
->    attributes will become mixed (the attributes are commited *after* KVM
->    finishes the invalidation).
->
->  - Rework the SRSO mitigation to enable BP_SPEC_REDUCE only when KVM has =
-at
->    least one active VM.  Effectively BP_SPEC_REDUCE when KVM is loaded le=
-d
->    to very measurable performance regressions for non-KVM workloads.
->
-> ----------------------------------------------------------------
-> Dan Carpenter (1):
->       KVM: x86: Check that the high 32bits are clear in kvm_arch_vcpu_ioc=
-tl_run()
->
-> Mikhail Lobanov (1):
->       KVM: SVM: Forcibly leave SMM mode on SHUTDOWN interception
->
-> Sean Christopherson (2):
->       KVM: x86/mmu: Prevent installing hugepages when mem attributes are =
-changing
->       KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=3D> 1 VM count tra=
-nsitions
->
-> Tom Lendacky (1):
->       KVM: SVM: Update dump_ghcb() to use the GHCB snapshot fields
->
-> Yan Zhao (1):
->       KVM: x86/mmu: Check and free obsolete roots in kvm_mmu_reload()
->
->  arch/x86/kvm/mmu.h     |  3 ++
->  arch/x86/kvm/mmu/mmu.c | 70 +++++++++++++++++++++++++++++++++++---------=
---
->  arch/x86/kvm/smm.c     |  1 +
->  arch/x86/kvm/svm/sev.c | 32 ++++++++++++---------
->  arch/x86/kvm/svm/svm.c | 75 ++++++++++++++++++++++++++++++++++++++++++++=
-++----
->  arch/x86/kvm/svm/svm.h |  2 ++
->  arch/x86/kvm/x86.c     |  4 +--
->  7 files changed, 150 insertions(+), 37 deletions(-)
->
+> I don't like multiplexer syscalls because they don't expose a clear
+> semantic and can be complex to manage and filter.  This new syscall is
+> kind of a multiplexer that redirect commands to an arbitrary set of
+> kernel parts, which can then define their own semantic.  I'd like to see
+> a clear set of well-defined operations and their required permission.
+> Even better, one syscall per operation should simplify their interface.
+
+I am not opposed to that approach. This can be multiple syscalls. Its
+a v1 to try and see if we can come to any agreement on a set of semantics
 
