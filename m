@@ -1,234 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f68.google.com (mail-oo1-f68.google.com [209.85.161.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE76B229B13;
-	Sun, 11 May 2025 11:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6DFAD58
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 11:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746963266; cv=none; b=Z/3Idc95mFn+5IUnTmYu6/Y5sLiX12sqMo+wsgVCQpKZOHfHyBnuDEqQy4ySrtmq5EbuA5M4jnxG96Tcp0HCUde/CL2voE9/gIDiqqTnwBAjZqpn+cHHbizaPO8iqcwk9eTJfsKzTFgBqYq+LWGZY14rB4QXMX+9TdKR/gd1qWs=
+	t=1746963326; cv=none; b=e0YA2EnIZuNvR68f/JUxlKD+wYs+cxK43wktJLeJfj9R9fJqwkzBPF6S/6iDv5q9epqiNZ2NLvAnyzr4XDD3wH7Y9Dj+E9kM5wGa49Iwg5VZSAhPALNTs6zlheEw8YISKBLoumrYluif6gBGFrZWExKjMt2yxwM1ziP2coCRSpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746963266; c=relaxed/simple;
-	bh=UTY+TckcOL9SD6HcZaxJi7PMiU4aqhm+b+2hm84H7dA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=smrSfTlvyuk6OaxKPKhpHxYEOL0BqWzIMyNsWnzRiY21yBgm7AcdKqH+cJPOOZJHq7kTjUVOMrdn24Zh4fI50LP3tXu8aYKEdtFc2BUuekNC++SJV5rd0bf9Qx8Avojk4CAWj8C5CDXqjwSQCXJD6EJNgVKQaUWP8nUh27fgtuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVtp7ti0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746963326; c=relaxed/simple;
+	bh=EEjR51WfiEO0OpgvOkKSeg/13MinUURtfaXnr8XuD4M=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=u2GsFaPPqhllbFy4kUFSU4+c3r3vzafd/xrJTcsnZAnapbn8ExSDnXIyc1LbtFMSSY7/wrtCrCP6poQ3zTAyB7fQeTgwfySurWPsQ5klfRpkvJfxZoVO4jZwXQQxQYuyvpYXPtxE7oS0uIvMdhi7eP0psggft3SOKNiBX2qBghw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZP43G/6L; arc=none smtp.client-ip=209.85.161.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVtp7ti0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85078C4CEE4;
-	Sun, 11 May 2025 11:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746963265;
-	bh=UTY+TckcOL9SD6HcZaxJi7PMiU4aqhm+b+2hm84H7dA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fVtp7ti0ZMMxxwbll/vKXC3wOsDtGV/r4hxe3CcNOcbgg5xT4Qq6Zua0wlZHiryP1
-	 TmwCqcjWhDE748P5HzqvN+Jj2RKsA3jxL2fAKjIZMavt7bcOt6YDAqWNJs3h4MVBGc
-	 yml4VRcH1Yxi1i0KqZPZQCS1vmqT4HCT+xkoTxZfzoNTv7DxyVlwfBFau+5D1wipis
-	 keaJ98EOes+sIQY3qBm4TSvJ/SQb8eUY19tXVoRBCrCshRVHK/FYPGF/FmNbqBtFyq
-	 zirgjhWSj+ZakN8g40cDRWuyPqMUVWqjD/27t4BcwZjSpisIC/2BWEkkoQ4qLqUD4a
-	 Rrr+5adg6AATA==
-Date: Sun, 11 May 2025 12:34:16 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andrew Ijano <andrew.ijano@gmail.com>
-Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, jstephan@baylibre.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] iio: accel: sca3000: replace usages of internal read
- data helpers by spi helpers
-Message-ID: <20250511123416.729eb50f@jic23-huawei>
-In-Reply-To: <20250510190759.23921-1-andrew.lopes@alumni.usp.br>
-References: <20250510190759.23921-1-andrew.lopes@alumni.usp.br>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZP43G/6L"
+Received: by mail-oo1-f68.google.com with SMTP id 006d021491bc7-605ff8aa9d2so957689eaf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 04:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746963324; x=1747568124; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EEjR51WfiEO0OpgvOkKSeg/13MinUURtfaXnr8XuD4M=;
+        b=ZP43G/6L7IcvWUBtEc7snguUQ1xyNLTUhVYqmW9QgDG53e4vlf1uUMonqQqNNiKZ6g
+         kEUcN9HQEx1yuof9gT3BVWNkIhxIZpQZrSjBHKTF2ctvLqEbKm+SrVxt+zKCYmMDJZSw
+         5CjodbnbeB+5kt+UVp7zeW2xB/urEeuuRkpu/dRj2J8m5tA/H+Jypdz+XyNlZ5pQyBCt
+         ovwzmJDmZNtLKAc6Pal10iraVGfTbjK/U2LOnflx95Z6kQsYFupCfwe9TpegkSBUUlKI
+         PYwlLdxn/TAnTqd8+LNoHeZcFXnOaMg3epYh0MexiqBJKSFKYjVZ6UQUUSKVlHI05hn1
+         XkzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746963324; x=1747568124;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EEjR51WfiEO0OpgvOkKSeg/13MinUURtfaXnr8XuD4M=;
+        b=Of3xVxz/JYV5Pl2NU1OAcizHI/g+/zkArVhW5+QNVuSReyQgRKYEV/CZT9xLGlv1Dl
+         VTjkwBwjheDij0wjHLK+bMk3hphKLbpi0tS0LAl8MSWW9wO9TNyqpORAA9iuw++VggkC
+         7yU1TbgUMMK22TSjyQ88REinsK7kaUYjZtJZvGxRpUv2geVWI75oNoLgTZ4QuVoMcy1H
+         FRjSRmOaj4IUx2gfpUdkGJIbwwsHClc15NcJAdv+B/EThPEo0yqE7Iyfsi8ui95u5lbA
+         4TnVVJ4Ji2Y3yuJ8QMm3D+VgDv2IH4rNJCbtw0fpJwgaDhcDoplarwf1IOmwzOo4GBkm
+         zpCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCNBn8ZPZRceg3fYrWhgPqXcj5EFEsGU06rBHI4amdNSTns/trkdGTETxa9DW71w53ehFdMZ8z+vXBjNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDo9CC1oVd5iKJNZmFLu7TfBy6puQ9JC6yhENYh2dartejwH5y
+	zyIeWv3NsgZesLdbdF63dkw9qJ0ywU/cHuyzay6iWIX2j4XLl4ApaR35+7urhnJhLjZekfwHrPt
+	37MyebLPLJnoiu9Ny9w5pKJfPhBGfC1pKtb490nqR
+X-Gm-Gg: ASbGncv9EfL7gJemQey+TKu7oeY5m/6w2W0+iyT2Nw2Jjs3ej+U4pRdmvyePOScUN2F
+	maudUq/oAFOlgjh5ESM6iXZNA1pKx5JHAUv0pzNpqeL+kGK+uT4Nf2LM/rJ4UjTu+eGK6AU7Ak9
+	b23HjzET0jJOocfxJzOlVqHDFE07scHcOScF8=
+X-Google-Smtp-Source: AGHT+IEeyUPjOpYpj0j93yFswOfpVnspKbhghWc7KPLsIIVD2FvMgq/bvyuCANoBF8PUzxyaeOv1CX0nC7ZF2CXsJIk=
+X-Received: by 2002:a05:6820:2113:b0:606:44f0:a963 with SMTP id
+ 006d021491bc7-6083ff0e627mr5596290eaf.1.1746963323816; Sun, 11 May 2025
+ 04:35:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Yin Guoyu <y04609127@gmail.com>
+Date: Sun, 11 May 2025 19:35:14 +0800
+X-Gm-Features: AX0GCFsZ_CQQ4OCqxx1C3Lofw5s5jyK3H--1GSn_DS0hcFU_6NUH-yNJ-3gDBio
+Message-ID: <CAJNGr6ve_6o6drwe_+bRW6UU4Ew9EjaZYaBgx0JAQjYb+A8VSA@mail.gmail.com>
+Subject: Kernel panic - not syncing: System is deadlocked on memory
+To: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 10 May 2025 16:07:09 -0300
-Andrew Ijano <andrew.ijano@gmail.com> wrote:
-
-> Remove usages of sca3000_read_data() and sca3000_read_data_short()
-> functions, replacing it by spi_w8r8() and spi_w8r16() helpers. Just
-> one case that reads large buffers is left using an internal helper.
-> 
-> This is an old driver that was not making full use of the newer
-> infrastructure.
-> 
-> Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
-> Co-developed-by: Gustavo Bastos <gustavobastos@usp.br>
-> Signed-off-by: Gustavo Bastos <gustavobastos@usp.br>
-> Suggested-by: Jonathan Cameron <jic23@kernel.org>
-
-A few things inline but clearly main thing is to reply to Andy's other
-points on v3.
-
-> ---
->  drivers/iio/accel/sca3000.c | 169 +++++++++++++++---------------------
->  1 file changed, 72 insertions(+), 97 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-> index aabe4491efd7..7794efc35970 100644
-> --- a/drivers/iio/accel/sca3000.c
-> +++ b/drivers/iio/accel/sca3000.c
-> @@ -281,10 +281,11 @@ static int sca3000_write_reg(struct sca3000_state *st, u8 address, u8 val)
->  	return spi_write(st->us, st->tx, 2);
->  }
->  
-> -static int sca3000_read_data_short(struct sca3000_state *st,
-> -				   u8 reg_address_high,
-> -				   int len)
-> +static int sca3000_read_data(struct sca3000_state *st,
-> +			     u8 reg_address_high,
-> +			     int len)
-
-I'd keep this where the original sca3000_read_data() is
-That will give a shorter, more obvious diff and puts the code near where it
-is called helping review.
-
->  {
-> +	int ret;
->  	struct spi_transfer xfer[2] = {
->  		{
->  			.len = 1,
-> @@ -296,7 +297,10 @@ static int sca3000_read_data_short(struct sca3000_state *st,
->  	};
->  	st->tx[0] = SCA3000_READ_REG(reg_address_high);
->  
-> -	return spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-> +	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-> +	if (ret)
-> +		dev_err(&st->us->dev, "problem reading register\n");
-> +	return ret;
->  }
-
-...
-
->  /**
-> @@ -412,10 +416,8 @@ static int sca3000_read_ctrl_reg(struct sca3000_state *st,
->  	ret = sca3000_write_reg(st, SCA3000_REG_CTRL_SEL_ADDR, ctrl_reg);
->  	if (ret)
->  		goto error_ret;
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_CTRL_DATA_ADDR, 1);
-> -	if (ret)
-> -		goto error_ret;
-> -	return st->rx[0];
-> +
-> +	ret = spi_w8r8(st->us, SCA3000_READ_REG(SCA3000_REG_CTRL_DATA_ADDR));
->  error_ret:
->  	return ret;
-This shows the age of the code.  Just return in error paths above rather
-than a error_ret: label
-
-Might be a good idea to do a precursor patch tidying up any cases of this
-before the one doin gthe spi changes in ehre.
-
->  }
-> @@ -432,13 +434,13 @@ static int sca3000_print_rev(struct iio_dev *indio_dev)
->  	struct sca3000_state *st = iio_priv(indio_dev);
->  
->  	mutex_lock(&st->lock);
-
-Another patch to use guard(mutex)(&st->lock); etc would be help clean this
-up by allowing direct return in the error path.
-
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_REVID_ADDR, 1);
-> +	ret = spi_w8r8(st->us, SCA3000_READ_REG(SCA3000_REG_REVID_ADDR));
->  	if (ret < 0)
->  		goto error_ret;
->  	dev_info(&indio_dev->dev,
->  		 "sca3000 revision major=%lu, minor=%lu\n",
-> -		 st->rx[0] & SCA3000_REG_REVID_MAJOR_MASK,
-> -		 st->rx[0] & SCA3000_REG_REVID_MINOR_MASK);
-> +		 ret & SCA3000_REG_REVID_MAJOR_MASK,
-> +		 ret & SCA3000_REG_REVID_MINOR_MASK);
->  error_ret:
->  	mutex_unlock(&st->lock);
->  
-
-
->  static int sca3000_read_raw(struct iio_dev *indio_dev,
-> @@ -722,6 +724,7 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
->  	struct sca3000_state *st = iio_priv(indio_dev);
->  	int ret;
->  	u8 address;
-> +	__be16 raw_val;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> @@ -732,25 +735,24 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
->  				return -EBUSY;
->  			}
->  			address = sca3000_addresses[chan->address][0];
-> -			ret = sca3000_read_data_short(st, address, 2);
-> +			ret = spi_w8r16(st->us, SCA3000_READ_REG(address));
-
-spi_w8r16be() then no need for the endian conversion below.
-
-
->  			if (ret < 0) {
->  				mutex_unlock(&st->lock);
->  				return ret;
->  			}
-> -			*val = sign_extend32(be16_to_cpup((__be16 *)st->rx) >>
-> -					     chan->scan_type.shift,
-> +			raw_val = (__be16) ret;
-> +			*val = sign_extend32(be16_to_cpu(raw_val) >> chan->scan_type.shift,
->  					     chan->scan_type.realbits - 1);
->  		} else {
->  			/* get the temperature when available */
-> -			ret = sca3000_read_data_short(st,
-> -						      SCA3000_REG_TEMP_MSB_ADDR,
-> -						      2);
-> +			ret = spi_w8r16(st->us,
-> +						SCA3000_READ_REG(SCA3000_REG_TEMP_MSB_ADDR));
-
-As above. spi_w8r16be()
-
-
->  			if (ret < 0) {
->  				mutex_unlock(&st->lock);
->  				return ret;
->  			}
-> -			*val = (be16_to_cpup((__be16 *)st->rx) >>
-> -				chan->scan_type.shift) &
-> +			raw_val = (__be16) ret;
-> +			*val = (be16_to_cpu(raw_val) >> chan->scan_type.shift) &
->  				GENMASK(chan->scan_type.realbits - 1, 0);
->  		}
->  		mutex_unlock(&st->lock);
-
->  
-
-As above. Put the new implementation of this here so we can easily see what
-changed.
-
-> -static int sca3000_read_data(struct sca3000_state *st,
-> -			     u8 reg_address_high,
-> -			     u8 *rx,
-> -			     int len)
-> -{
-> -	int ret;
-> -	struct spi_transfer xfer[2] = {
-> -		{
-> -			.len = 1,
-> -			.tx_buf = st->tx,
-> -		}, {
-> -			.len = len,
-> -			.rx_buf = rx,
-> -		}
-> -	};
-> -
-> -	st->tx[0] = SCA3000_READ_REG(reg_address_high);
-> -	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-> -	if (ret) {
-> -		dev_err(&st->us->dev, "problem reading register\n");
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-Jonathan
+Hi,
+When I test the Linux kernel (commit
+38fec10eb60d687e30c8c6b5420d86e8149f7557), I encountered a kernel
+panic issue related to memory allocation, specifically in the
+alloc_pages_mpol function. The panic message indicates "System is
+deadlocked on memory," and the call trace points to
+__alloc_frozen_pages_noprof failing to allocate pages, leading to an
+OOM condition.
+The error originates in alloc_pages_mpol, which calls policy_nodemask
+to determine the nodemask and nid for memory allocation. The
+subsequent call to __alloc_frozen_pages_noprof fails when the system
+runs out of memory, with no swap available and no killable processes.
+This crash can be triggered by executing the provided C reproducer
+multiple times. The reproducer performs a series of system calls
+(e.g., file creation, perf_event_open, io_submit, and filesystem
+mounts), which likely stress the memory management system and expose
+the bug.
+This can be reproduced on:
+HEAD commit:
+38fec10eb60d687e30c8c6b5420d86e8149f7557
+console output : https://pastebin.com/raw/T4dfWHSf
+kernel config : https://pastebin.com/raw/u0Efyj5P
+C reproducer : https://pastebin.com/raw/3hPqjF6M
