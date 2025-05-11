@@ -1,213 +1,558 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616CB1D5CEA
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 12:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DF71547D2;
+	Sun, 11 May 2025 13:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746968250; cv=none; b=lWdV8+Z+Kl653lYdWoeSQlJKAXDnL7nFmChxhVCh4XjB3/uVQzW+Uy6zBCW7BcuQvd7NSHJy3oxxDb/eWjdfjJXjhBjB/t1wadN0p3RzFlk3lZI1hRTBLKw6f/cNpmReOtY9+QREGVQvEQGSHmr+V9mHk9oTXe+uhSDgXwNEim0=
+	t=1746968673; cv=none; b=hudkPE78IXpYRWzvRXlyG7HHhZt17yuSJvXEXrTLdc8zfZjurupmDWgGIePIXoEv/iBIR2Vu70Xn2NBnYiebtJ7XAomDvZqFwefBNB9/BmUz6m93Z0eOs2/Zxxe+9444/uih+wZR9xYdpxY9R1fE3YstB/X3ILcFN24dhAZv6c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746968250; c=relaxed/simple;
-	bh=+K8EpEt/CAfUZIpi+myO239tu4+rRh/te3TXNqWUtBs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jzHOPhxwgy0BSa4KDMtuHFx+uZAjacNy0MVpg/VLLlsoZCCRl4Cw3Pi6xUcO3uztpcbxiap7lR9vxQUOi2B6GtS0lgjVWsGYMsewH2KUmEHoPjceZbu0BycqQ26FgQLI58+dh9hFGiSYdZIU+6PW9ii13vrF6pT+yl4NNT2fqcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da7c9e4bcfso34545985ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 05:57:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746968247; x=1747573047;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=o2Kjh5x3/9gdh2OrYxRLL/LdpbR1cvRGAthvDpJx7Rw=;
-        b=lkthchLImfX12NODiMyhFtD4qh4i+lEmircp8kRmIZ3atPaC1oN75u27KRDi+oI+jQ
-         qv9UQQC1mfI4eEzMDHeADmdILgibPWSShNB5guZQzbq3Ar4kD5HtdHnhQqrtG1Swyrjf
-         Y0D3O+ntcMLysEJL9Q/l/1a+7eKqy2IdKpzQ++lMT8QuCVUZYZ+Os+r63tlXWEue6GH/
-         mpCUao1YFiZ+v9ldyGHtwgkok9vkBPm34SgeStiCDcXTvHMap/K+uu346lzggWYdIYZQ
-         h5O9BuyZOHVi69Kq8j9mj/bXFQ4CXZpWCZrgmrrROUJ311tXerJeReLQpLD2JpZxQLwp
-         7UYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3pzfcpH3wa5qrWxbiU+JhfNFlbIJVHuUoN7joFl+LeGUXnqaQPjWpurlwecI2ZFVLyUIfCOnMk/v0JuY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTO9nTemh36SoGnm7Va8K7p7zKFo8QX+8DXCk6qg1oEDwewF55
-	Tldv3XzpHhdK9rOpcHJTXot20tQ4gsCWdr52MGYGIcWSC6kaRmsP7QW/BXLqaOorAcwUUGYJqEL
-	XZkjq2jaVyz23C6f3BQGHBItmvs4ZO63YyzezZB5Lo+aHgWo9WWnrIrs=
-X-Google-Smtp-Source: AGHT+IHJAOVb+NecMT3GEA06eMj3k6igcjqoWpYdRTLciZYKMYYHri8MF6N1PVY4BTSmSu5UmlMjltwWCKcbSHyW2PxNPvkNiknB
+	s=arc-20240116; t=1746968673; c=relaxed/simple;
+	bh=ysFsldOAymgZKvYbT/mcT2n+lZN/1JlFj857Za7YzEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EhKQ6P7cBVRSBn8lX72F+QAI+KpMZVmFNkVkqsu/X0Z1gJEUuH2gJqljYltjE5HIarDZHwfBllXh3X3SnL6pVwB3s4gbcI3Ll64pvQJD9kWfLah2qMiF8DITuCyumwqFWUIwX5lgNSANIdo+F/YXRdDAIyD+IvvqyUyBkfN/V2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMfxwY3d; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMfxwY3d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3732C4CEE4;
+	Sun, 11 May 2025 13:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746968671;
+	bh=ysFsldOAymgZKvYbT/mcT2n+lZN/1JlFj857Za7YzEs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JMfxwY3d0jfhu7YNYGe52TkrJmCEe7iEgNyDcoHKmxR1MFmNfoNg6YWb6QGPgmztM
+	 ZcZgoI9otjgfLVn36OH2YYbGm30mAN0+/w3mEIdHCaenZi+Kw6nj8HAOUtb4aAqVu6
+	 EGQ26jfVpNDpD0cbDXK9TvkeKC0MT/eFW2OD9vXRQJDv7fQ0YicXtuSz2LCHup66xj
+	 Arau1XPKdbmoMyOWOMrmpt+VbxREGcmvgNL5ekNnMFJ+z15qf4TrMbj3WjR6x7t6dH
+	 WBvGASSTFFkYFA8amuZVqZlHMH5aic3vY5R4GpuWRYECDPqpTN1k9Dfy3BPC9yOVWo
+	 17wWJEdrKgncA==
+Date: Sun, 11 May 2025 14:04:18 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Cc: robh@kernel.org, krzysztof.kozlowski@linaro.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
+ lumag@kernel.org, dmitry.baryshkov@oss.qualcomm.com,
+ konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
+ rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
+ david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+ quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
+ quic_skakitap@quicinc.com, neil.armstrong@linaro.org,
+ stephan.gerhold@linaro.org
+Subject: Re: [PATCH V6 4/5] iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+Message-ID: <20250511140418.33171ca3@jic23-huawei>
+In-Reply-To: <20250509110959.3384306-5-jishnu.prakash@oss.qualcomm.com>
+References: <20250509110959.3384306-1-jishnu.prakash@oss.qualcomm.com>
+	<20250509110959.3384306-5-jishnu.prakash@oss.qualcomm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c245:0:b0:3d4:2a4e:1272 with SMTP id
- e9e14a558f8ab-3da7e2173dbmr109754535ab.19.1746968247449; Sun, 11 May 2025
- 05:57:27 -0700 (PDT)
-Date: Sun, 11 May 2025 05:57:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68209eb7.050a0220.f2294.0035.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KASAN: use-after-free Read in bch2_checksum
-From: syzbot <syzbot+7d5c34b9ec9fe139fc0c@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Fri,  9 May 2025 16:39:58 +0530
+Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
 
-syzbot found the following issue on:
+> The ADC architecture on PMIC5 Gen3 is similar to that on PMIC5 Gen2,
+> with all SW communication to ADC going through PMK8550 which
+> communicates with other PMICs through PBS.
+> 
+> One major difference is that the register interface used here is that
+> of an SDAM (Shared Direct Access Memory) peripheral present on PMK8550.
+> There may be more than one SDAM used for ADC5 Gen3 and each has eight
+> channels, which may be used for either immediate reads (same functionality
+> as previous PMIC5 and PMIC5 Gen2 ADC peripherals) or recurring measurements
+> (same as ADC_TM functionality).
+> 
+> By convention, we reserve the first channel of the first SDAM for all
+> immediate reads and use the remaining channels across all SDAMs for
+> ADC_TM monitoring functionality.
+> 
+> Add support for PMIC5 Gen3 ADC driver for immediate read functionality.
+> ADC_TM is implemented as an auxiliary thermal driver under this ADC
+> driver.
+> 
+> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Hi Jishnu,
 
-HEAD commit:    d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1594e4f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
-dashboard link: https://syzkaller.appspot.com/bug?extid=7d5c34b9ec9fe139fc0c
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123544d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11870768580000
+I guess I hadn't looked closely at the aux device code before. There
+is a fairly nasty lifetime issue. I'm a little surprised you didn't
+see it whilst testing driver remove but maybe luck was with / against you!
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8c8c524d8686/disk-d76bb1eb.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c89d5e1e7d6f/vmlinux-d76bb1eb.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/923d0906d02c/bzImage-d76bb1eb.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/af55279b702f/mount_0.gz
+Thanks,
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7d5c34b9ec9fe139fc0c@syzkaller.appspotmail.com
+Jonathan
 
-  node offset 8/40 bset u64s 375: checksum error, type chacha20_poly1305_128: got eb21ae8bf0ac3fa53472f8290f6e6780 should be 61ec379a8789477e76ff1a5280fd6dbd, fixing
-==================================================================
-BUG: KASAN: use-after-free in poly1305_update include/crypto/poly1305.h:83 [inline]
-BUG: KASAN: use-after-free in bch2_checksum+0x209/0x490 fs/bcachefs/checksum.c:157
-Read of size 8 at addr ffff888070915af0 by task syz-executor367/5826
+> diff --git a/drivers/iio/adc/qcom-adc5-gen3-common.c b/drivers/iio/adc/qcom-adc5-gen3-common.c
+> new file mode 100644
+> index 000000000000..edd618b0d39f
+> --- /dev/null
+> +++ b/drivers/iio/adc/qcom-adc5-gen3-common.c
+> @@ -0,0 +1,104 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + *
+> + * Code shared between the main and auxiliary Qualcomm PMIC voltage ADCs
+> + * of type ADC5 Gen3.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/adc/qcom-adc5-gen3-common.h>
+> +
+> +int adc5_gen3_read(struct adc5_device_data *adc, unsigned int sdam_index,
+> +		   u16 offset, u8 *data, int len)
+> +{
+> +	return regmap_bulk_read(adc->regmap,
+> +				adc->base[sdam_index].base_addr + offset,
+> +				data, len);
+> +}
+> +EXPORT_SYMBOL(adc5_gen3_read);
 
-CPU: 1 UID: 0 PID: 5826 Comm: syz-executor367 Not tainted 6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xb4/0x290 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x29a/0x2b0 mm/kasan/generic.c:189
- __asan_memcpy+0x29/0x70 mm/kasan/shadow.c:105
- poly1305_update include/crypto/poly1305.h:83 [inline]
- bch2_checksum+0x209/0x490 fs/bcachefs/checksum.c:157
- bch2_btree_node_read_done+0x1003/0x5470 fs/bcachefs/btree_io.c:1132
- btree_node_read_work+0x565/0xef0 fs/bcachefs/btree_io.c:1366
- bch2_btree_node_read+0x2151/0x27a0 fs/bcachefs/btree_io.c:-1
- __bch2_btree_root_read fs/bcachefs/btree_io.c:1797 [inline]
- bch2_btree_root_read+0x5e7/0x750 fs/bcachefs/btree_io.c:1819
- read_btree_roots+0x2cb/0x800 fs/bcachefs/recovery.c:582
- bch2_fs_recovery+0x2356/0x37b0 fs/bcachefs/recovery.c:929
- bch2_fs_start+0x70b/0xae0 fs/bcachefs/super.c:1091
- bch2_fs_get_tree+0xd99/0x13a0 fs/bcachefs/fs.c:2570
- vfs_get_tree+0x8f/0x2b0 fs/super.c:1759
- do_new_mount+0x24a/0xa40 fs/namespace.c:3884
- do_mount fs/namespace.c:4224 [inline]
- __do_sys_mount fs/namespace.c:4435 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4412
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff05760c2fa
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ff0575c1088 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ff0575c10a0 RCX: 00007ff05760c2fa
-RDX: 000020000000f640 RSI: 0000200000000080 RDI: 00007ff0575c10a0
-RBP: 0000200000000080 R08: 00007ff0575c10e0 R09: 000000000000f5fe
-R10: 0000000000010000 R11: 0000000000000282 R12: 000020000000f640
-R13: 00007ff0575c10e0 R14: 0000000000000003 R15: 0000000000010000
- </TASK>
+Consider namespacing these exports.
 
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x70915
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as freed
-page last allocated via order 5, migratetype Reclaimable, gfp_mask 0x452cd0(GFP_KERNEL_ACCOUNT|__GFP_RECLAIMABLE|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5826, tgid 5825 (syz-executor367), ts 88234860937, free_ts 88442709891
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1d8/0x230 mm/page_alloc.c:1718
- prep_new_page mm/page_alloc.c:1726 [inline]
- get_page_from_freelist+0x21c7/0x22a0 mm/page_alloc.c:3688
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4970
- __alloc_pages_noprof+0xa/0x30 mm/page_alloc.c:5004
- __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
- alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
- ___kmalloc_large_node+0x85/0x200 mm/slub.c:4271
- __kmalloc_large_node_noprof+0x18/0x90 mm/slub.c:4299
- __do_kmalloc_node mm/slub.c:4315 [inline]
- __kvmalloc_node_noprof+0x74/0x5e0 mm/slub.c:5012
- btree_node_data_alloc+0xd5/0x260 fs/bcachefs/btree_cache.c:156
- __bch2_btree_node_mem_alloc+0x1ed/0x410 fs/bcachefs/btree_cache.c:201
- bch2_fs_btree_cache_init+0x2c9/0x680 fs/bcachefs/btree_cache.c:656
- bch2_fs_alloc fs/bcachefs/super.c:909 [inline]
- bch2_fs_open+0x235e/0x2820 fs/bcachefs/super.c:2205
- bch2_fs_get_tree+0x45d/0x13a0 fs/bcachefs/fs.c:2489
- vfs_get_tree+0x8f/0x2b0 fs/super.c:1759
- do_new_mount+0x24a/0xa40 fs/namespace.c:3884
- do_mount fs/namespace.c:4224 [inline]
- __do_sys_mount fs/namespace.c:4435 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4412
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-page last free pid 5826 tgid 5825 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_pages_ok+0x910/0xac0 mm/page_alloc.c:1438
- __folio_put+0x21b/0x2c0 mm/swap.c:112
- folio_put include/linux/mm.h:1580 [inline]
- free_large_kmalloc+0x145/0x200 mm/slub.c:4767
- btree_bounce_free fs/bcachefs/btree_io.c:112 [inline]
- bch2_btree_node_read_done+0x3450/0x5470 fs/bcachefs/btree_io.c:1245
- btree_node_read_work+0x565/0xef0 fs/bcachefs/btree_io.c:1366
- bch2_btree_node_read+0x2151/0x27a0 fs/bcachefs/btree_io.c:-1
- __bch2_btree_root_read fs/bcachefs/btree_io.c:1797 [inline]
- bch2_btree_root_read+0x5e7/0x750 fs/bcachefs/btree_io.c:1819
- read_btree_roots+0x2cb/0x800 fs/bcachefs/recovery.c:582
- bch2_fs_recovery+0x2356/0x37b0 fs/bcachefs/recovery.c:929
- bch2_fs_start+0x70b/0xae0 fs/bcachefs/super.c:1091
- bch2_fs_get_tree+0xd99/0x13a0 fs/bcachefs/fs.c:2570
- vfs_get_tree+0x8f/0x2b0 fs/super.c:1759
- do_new_mount+0x24a/0xa40 fs/namespace.c:3884
- do_mount fs/namespace.c:4224 [inline]
- __do_sys_mount fs/namespace.c:4435 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4412
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> +
+> +int adc5_gen3_write(struct adc5_device_data *adc, unsigned int sdam_index,
+> +		    u16 offset, u8 *data, int len)
+> +{
+> +	return regmap_bulk_write(adc->regmap,
+> +				 adc->base[sdam_index].base_addr + offset,
+> +				 data, len);
+> +}
+> +EXPORT_SYMBOL(adc5_gen3_write);
+> +
+> +/*
+> + * Worst case delay from PBS in readying handshake bit
+wrap at 80 chars
 
-Memory state around the buggy address:
- ffff888070915980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888070915a00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff888070915a80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                                             ^
- ffff888070915b00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888070915b80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
+> + * can be up to 15ms, when PBS is busy running other
+> + * simultaneous transactions, while in the best case, it is
+> + * already ready at this point. Assigning polling delay and
+> + * retry count accordingly.
+> + */
+
+..
+
+> diff --git a/drivers/iio/adc/qcom-spmi-adc5-gen3.c b/drivers/iio/adc/qcom-spmi-adc5-gen3.c
+> new file mode 100644
+> index 000000000000..25b58b9be3b7
+> --- /dev/null
+> +++ b/drivers/iio/adc/qcom-spmi-adc5-gen3.c
+> @@ -0,0 +1,763 @@
+...
+
+> +/*
+> + * Worst case delay from PBS for conversion time can be
+
+wrap at 80
+
+> + * up to 500ms, when PBS has timed out twice, once for
+> + * the initial attempt and once for a retry of the same
+> + * transaction.
+> + */
+
+...
+
+> +
+> +static irqreturn_t adc5_gen3_isr(int irq, void *dev_id)
+> +{
+> +	u8 status, tm_status[2], eoc_status, val;
+> +	struct adc_tm5_auxiliary_drv *adrv_tm;
+> +	struct adc5_chip *adc = dev_id;
+> +	struct auxiliary_device *adev;
+> +	int ret;
+> +
+> +	ret = adc5_gen3_read(&adc->dev_data, ADC5_GEN3_VADC_SDAM,
+> +			     ADC5_GEN3_STATUS1, &status, sizeof(status));
+> +	if (ret) {
+> +		dev_err(adc->dev, "adc read status1 failed with %d\n", ret);
+
+A lot of adc->dev in here.  Maybe worth a local variable.
+
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	ret = adc5_gen3_read(&adc->dev_data, ADC5_GEN3_VADC_SDAM,
+> +			     ADC5_GEN3_EOC_STS, &eoc_status, sizeof(eoc_status));
+> +	if (ret) {
+> +		dev_err(adc->dev, "adc read eoc status failed with %d\n", ret);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	if (status & ADC5_GEN3_STATUS1_CONV_FAULT) {
+> +		dev_err_ratelimited(adc->dev,
+> +				    "Unexpected conversion fault, status:%#x, eoc_status:%#x\n",
+> +				    status, eoc_status);
+> +		val = ADC5_GEN3_CONV_ERR_CLR_REQ;
+> +		adc5_gen3_status_clear(&adc->dev_data, ADC5_GEN3_VADC_SDAM,
+> +				       ADC5_GEN3_CONV_ERR_CLR, &val, 1);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	/* CHAN0 is the preconfigured channel for immediate conversion */
+> +	if (eoc_status & ADC5_GEN3_EOC_CHAN_0)
+> +		complete(&adc->complete);
+> +
+> +	ret = adc5_gen3_read(&adc->dev_data, ADC5_GEN3_VADC_SDAM,
+> +			     ADC5_GEN3_TM_HIGH_STS, tm_status, sizeof(tm_status));
+> +	if (ret) {
+> +		dev_err(adc->dev, "adc read TM status failed with %d\n", ret);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	if (tm_status[0] || tm_status[1]) {
+> +		adev = adc->tm_aux;
+> +		if (!adev || !adev->dev.driver) {
+> +			dev_err(adc->dev,
+> +				"adc_tm auxiliary device not initialized\n");
+> +			return IRQ_HANDLED;
+> +		}
+> +
+> +		adrv_tm = container_of(adev->dev.driver,
+> +				       struct adc_tm5_auxiliary_drv,
+> +				       adrv.driver);
+> +
+> +		if (adrv_tm && adrv_tm->tm_event_notify)
+> +			adrv_tm->tm_event_notify(adev);
+> +		else
+> +			dev_err(adc->dev,
+> +				"adc_tm auxiliary driver not initialized\n");
+
+Not return?  Seems odd to print the dbg print only in this error path path.
+
+> +	}
+> +
+> +	dev_dbg(adc->dev,
+> +		"Interrupt status:%#x, EOC status:%#x, high:%#x, low:%#x\n",
+> +		status, eoc_status, tm_status[0], tm_status[1]);
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+> +static int adc5_gen3_get_fw_channel_data(struct adc5_chip *adc,
+> +					 struct adc5_channel_prop *prop,
+> +					 struct fwnode_handle *fwnode)
+> +{
+> +	const char *name = fwnode_get_name(fwnode);
+> +	const struct adc5_data *data = adc->data;
+> +	u32 chan, value, varr[2], sid = 0;
+> +	struct device *dev = adc->dev;
+> +	const char *channel_name;
+> +	int ret;
+> +
+> +	ret = fwnode_property_read_u32(fwnode, "reg", &chan);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "invalid channel number %s\n",
+> +				     name);
+> +
+> +	/*
+> +	 * Value read from "reg" is virtual channel number
+> +	 * virtual channel number = sid << 8 | channel number
+> +	 */
+> +	sid = FIELD_GET(ADC5_GEN3_VIRTUAL_SID_MASK, chan);
+> +	chan = FIELD_GET(ADC5_GEN3_CHANNEL_MASK, chan);
+> +
+> +	if (chan > ADC5_GEN3_OFFSET_EXT2)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "%s invalid channel number %d\n",
+> +				     name, chan);
+> +
+> +	prop->common_props.channel = chan;
+> +	prop->common_props.sid = sid;
+> +
+> +	channel_name = name;
+> +	fwnode_property_read_string(fwnode, "label", &channel_name);
+> +	prop->common_props.label = channel_name;
+> +
+> +	value = data->decimation[ADC5_DECIMATION_DEFAULT];
+> +	fwnode_property_read_u32(fwnode, "qcom,decimation", &value);
+> +	ret = qcom_adc5_decimation_from_dt(value, data->decimation);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "%#x invalid decimation %d\n",
+> +				     chan, value);
+> +	prop->common_props.decimation = ret;
+> +
+> +	prop->common_props.prescale = adc->data->adc_chans[chan].prescale_index;
+> +	ret = fwnode_property_read_u32_array(fwnode, "qcom,pre-scaling", varr, 2);
+> +	if (!ret) {
+> +		ret = qcom_adc5_prescaling_from_dt(varr[0], varr[1]);
+> +		if (ret < 0)
+> +			return dev_err_probe(dev, ret,
+> +					     "%#x invalid pre-scaling <%d %d>\n",
+> +				chan, varr[0], varr[1]);
+
+Indent to align below line above.
+Check for any other cases of this.
+
+> +		prop->common_props.prescale = ret;
+> +	}
+> +
+> +	value = data->hw_settle_1[VADC_DEF_HW_SETTLE_TIME];
+> +	fwnode_property_read_u32(fwnode, "qcom,hw-settle-time", &value);
+> +	ret = qcom_adc5_hw_settle_time_from_dt(value, data->hw_settle_1);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret,
+> +				     "%#x invalid hw-settle-time %d us\n",
+> +				     chan, value);
+> +	prop->common_props.hw_settle_time_us = ret;
+> +
+> +	value = BIT(VADC_DEF_AVG_SAMPLES);
+> +	fwnode_property_read_u32(fwnode, "qcom,avg-samples", &value);
+> +	ret = qcom_adc5_avg_samples_from_dt(value);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "%#x invalid avg-samples %d\n",
+> +				     chan, value);
+> +	prop->common_props.avg_samples = ret;
+> +
+> +	if (fwnode_property_read_bool(fwnode, "qcom,ratiometric"))
+> +		prop->common_props.cal_method = ADC5_RATIOMETRIC_CAL;
+> +	else
+> +		prop->common_props.cal_method = ADC5_ABSOLUTE_CAL;
+> +
+> +	prop->adc_tm = fwnode_property_read_bool(fwnode, "qcom,adc-tm");
+> +	if (prop->adc_tm) {
+> +		adc->n_tm_channels++;
+> +		if (adc->n_tm_channels > ((adc->dev_data.num_sdams * 8) - 1))
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "Number of TM nodes %u greater than channels supported:%u\n",
+> +					     adc->n_tm_channels,
+> +					     (adc->dev_data.num_sdams * 8) - 1);
+Excess brackets.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct adc5_data adc5_gen3_data_pmic = {
+> +	.full_scale_code_volt = 0x70e4,
+> +	.adc_chans = adc5_gen3_chans_pmic,
+> +	.info = &adc5_gen3_info,
+> +	.decimation = (unsigned int [ADC5_DECIMATION_SAMPLES_MAX])
+> +				{85, 340, 1360},
+
+Inconsistent spacing. Should be { 85 etc
+
+> +	.hw_settle_1 = (unsigned int [VADC_HW_SETTLE_SAMPLES_MAX])
+> +				{ 15, 100, 200, 300, 400, 500, 600, 700,
+> +				  1000, 2000, 4000, 8000, 16000, 32000,
+> +				  64000, 128000 },
+Andy often points this out, but I'll do it this time. Fixed numbers (typically power of 2)
+elements per line make it much easier to see which element is which in these arrays.
+Reduce the indent a little to allow that here.
+
+> +};
+> +
+> +static const struct of_device_id adc5_match_table[] = {
+> +	{
+> +		.compatible = "qcom,spmi-adc5-gen3",
+> +		.data = &adc5_gen3_data_pmic,
+> +	},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, adc5_match_table);
+> +
+> +static int adc5_get_fw_data(struct adc5_chip *adc)
+> +{
+> +	const struct adc5_channels *adc_chan;
+> +	struct adc5_channel_prop *chan_props;
+> +	struct fwnode_handle *child = NULL;
+> +	struct iio_chan_spec *iio_chan;
+> +	unsigned int index = 0;
+> +	int ret;
+> +
+> +	adc->nchannels = device_get_child_node_count(adc->dev);
+> +	if (!adc->nchannels) {
+> +		dev_err(adc->dev, "No ADC channels found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	adc->iio_chans = devm_kcalloc(adc->dev, adc->nchannels,
+> +				      sizeof(*adc->iio_chans), GFP_KERNEL);
+> +	if (!adc->iio_chans)
+> +		return -ENOMEM;
+> +
+> +	adc->chan_props = devm_kcalloc(adc->dev, adc->nchannels,
+> +				       sizeof(*adc->chan_props), GFP_KERNEL);
+> +	if (!adc->chan_props)
+> +		return -ENOMEM;
+> +
+> +	chan_props = adc->chan_props;
+> +	adc->n_tm_channels = 0;
+> +	iio_chan = adc->iio_chans;
+> +	adc->data = device_get_match_data(adc->dev);
+> +
+> +	device_for_each_child_node(adc->dev, child) {
+> +		ret = adc5_gen3_get_fw_channel_data(adc, chan_props, child);
+> +		if (ret < 0)
+
+If this errors out, do you intend to be left holding a reference to
+the child node?  I'm guessing not.  In which case look at scoped
+variant of the iterator.
+
+> +			return ret;
+> +
+> +		chan_props->chip = adc;
+> +		adc_chan = &adc->data->adc_chans[chan_props->common_props.channel];
+> +		chan_props->common_props.scale_fn_type = adc_chan->scale_fn_type;
+> +
+> +		iio_chan->channel = V_CHAN(chan_props->common_props);
+> +		iio_chan->info_mask_separate = adc_chan->info_mask;
+> +		iio_chan->type = adc_chan->type;
+> +		iio_chan->address = index;
+> +		iio_chan->indexed = 1;
+> +		iio_chan++;
+> +		chan_props++;
+> +		index++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void adc5_gen3_uninit_aux(void *data)
+> +{
+> +	auxiliary_device_uninit(data);
+> +}
+> +
+> +static void adc5_gen3_delete_aux(void *data)
+> +{
+> +	auxiliary_device_delete(data);
+> +}
+> +
+> +static void adc5_gen3_aux_device_release(struct device *dev)
+> +{
+> +	struct auxiliary_device *aux = container_of(dev, struct auxiliary_device,
+> +						    dev);
+> +
+> +	kfree(aux);
+
+It wasn't allocated at that granularity.
+
+> +}
+> +
+> +static int adc5_gen3_add_aux_tm_device(struct adc5_chip *adc)
+> +{
+> +	struct tm5_aux_dev_wrapper *aux_device;
+> +	int i, ret, i_tm = 0;
+> +
+> +	aux_device = devm_kzalloc(adc->dev, sizeof(*aux_device), GFP_KERNEL);
+
+There is some lifetime management stuff that is going wrong here.
+Here you allocate a structure that directly contains the
+struct auxiliary_device and use devm managed allocation.
+
+But you free the contained struct auxiliary_device via the release
+above. Firstly that's freeing at a different granularity which is going to
+go wrong.  Also, that pointer is the same as aux_device here (as first element)
+and so you free this via devm_ cleanup and on the reference count of the
+auxiliary device dropping to zero.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Take a look at some other drivers that make use of auxdevs for
+how to handle this.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Key is that the devm handler should be reducing the refcount, not freeing
+the memory as the release will deal with that later.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+> +	if (!aux_device)
+> +		return -ENOMEM;
+> +
+> +	aux_device->aux_dev.name = "adc5_tm_gen3";
+> +	aux_device->aux_dev.dev.parent = adc->dev;
+> +	aux_device->aux_dev.dev.release = adc5_gen3_aux_device_release;
+> +
+> +	aux_device->tm_props = devm_kcalloc(adc->dev, adc->n_tm_channels,
+> +					    sizeof(*aux_device->tm_props),
+> +					    GFP_KERNEL);
+> +	if (!aux_device->tm_props)
+> +		return -ENOMEM;
+> +
+> +	aux_device->dev_data = &adc->dev_data;
+> +
+> +	for (i = 0; i < adc->nchannels; i++) {
+> +		if (!adc->chan_props[i].adc_tm)
+> +			continue;
+> +		aux_device->tm_props[i_tm] = adc->chan_props[i].common_props;
+> +		i_tm++;
+> +	}
+> +
+> +	device_set_of_node_from_dev(&aux_device->aux_dev.dev, adc->dev);
+> +
+> +	aux_device->n_tm_channels = adc->n_tm_channels;
+> +
+> +	ret = auxiliary_device_init(&aux_device->aux_dev);
+> +	if (ret) {
+> +		kfree(&aux_device->aux_dev);
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+What is this freeing? 
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+> +		return ret;
+> +	}
+> +	ret = devm_add_action_or_reset(adc->dev, adc5_gen3_uninit_aux,
+> +				       &aux_device->aux_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = auxiliary_device_add(&aux_device->aux_dev);
+> +	if (ret)
+> +		return ret;
+> +	ret = devm_add_action_or_reset(adc->dev, adc5_gen3_delete_aux,
+> +				       &aux_device->aux_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	adc->tm_aux = &aux_device->aux_dev;
+> +
+> +	return 0;
+> +}
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+> +static int adc5_gen3_probe(struct platform_device *pdev)
+> +{
 
-If you want to undo deduplication, reply with:
-#syz undup
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +	init_completion(&adc->complete);
+> +	mutex_init(&adc->lock);
+If spinning again for other reasons, in new code I have slight preference for
+	ret = devm_mutex_init(&adc->lock);
+	if (ret)
+		return ret;
+
+It was never worth bothering with release until we had devm managed form but
+now we do the code complexity cost is low enough to make it reasonable.
+
+> +	indio_dev->name = pdev->name;
+
+Just to check.  Does that end up as a part number or similar?
+
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &adc5_gen3_info;
+> +	indio_dev->channels = adc->iio_chans;
+> +	indio_dev->num_channels = adc->nchannels;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+
+> diff --git a/include/linux/iio/adc/qcom-adc5-gen3-common.h b/include/linux/iio/adc/qcom-adc5-gen3-common.h
+> new file mode 100644
+> index 000000000000..4f476cd77b37
+> --- /dev/null
+> +++ b/include/linux/iio/adc/qcom-adc5-gen3-common.h
+> @@ -0,0 +1,193 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+
+
+> +#define V_CHAN(x)		\
+
+Might be a good idea to prefix this.  Seems likely we might end up with
+a V_CHAN macro in some generic header in future.
+
+> +	(FIELD_PREP(ADC5_GEN3_VIRTUAL_SID_MASK, (x).sid) | (x).channel)
