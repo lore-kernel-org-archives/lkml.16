@@ -1,271 +1,79 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F6C2580DB;
-	Sun, 11 May 2025 14:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E83578F39;
+	Sun, 11 May 2025 14:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746973205; cv=none; b=kmepU/X+afqoral+rzKaPMchaQtWyj3swJoiPHiM0lTOOg2tAx1wgfBkE8NjYPN1jsFnicdccYBFOMbrCca0GLOCiscjtku1sAWqwRCPr7WB+b5A9vquliRxO8bFnBw1R2MHQdgbPJGrLGX9FmLl+8lT9HQuDafAS36sPZojZ9A=
+	t=1746973376; cv=none; b=puenBZK4GNkUuZft2hz5zOxQbVKs4cd854o63vESmXC6TA/WBXrVZtqpEmealwJ7Yqdl90gpe6yyuZm0N3Oo9JnvuYJV7BEbV8RkYxfrwLBAG/ZajpYNVnGqiR0bWPao6TiXwoU6HLL9d/M/qpkNcYidFuHuEAWcQBUypw3oW6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746973205; c=relaxed/simple;
-	bh=aWKnUqmBIAzmz7AsbX/uYydAvliZDQ0T3YkE099LPos=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s35xSplXKUygMHqA7igWkjMmD/YtcV0AT/K45ysK3P2+O82NQ1LtV+hyq7iQNrKhBT9+0p6MkORN8eqc7da+T7meuEXQolANg2l7xxkusGZtTTMdJ23hoOfA8HoTuzt6hqZvXukjDpKZODETR4qhRJLXi464eK9NNQSTXEVTwv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=mvcPPEZ0; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1746973376; c=relaxed/simple;
+	bh=Cvso/ueR+eQJGqbU8rPIQavb4IEGDWDqZOvGuyA/txM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X98OwrkSX+4WB6wyPnhFlSulH0+mHmByoYoD2gxdbKp7b5iZFM3pyq90PmfieMzMx0e/PYG9nuRVSVtEZBBqLjy6lpRSkP3HYv0E7zs2h6KO6PGaKlh1LZdFWXUkkudfo3RMYd6Fi3cjfnmqR4XlNoFtq8xv9w7/a7J7yCb4AdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=HR6iB83y; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="mvcPPEZ0"
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout4.routing.net (Postfix) with ESMTP id E330A1006D9;
-	Sun, 11 May 2025 14:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1746973201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cDh5uh+/6rnhbfj9TY9faubbv1WlwPVvrXMeeob/qY=;
-	b=mvcPPEZ0JofA5yJBa34DKnVnQ39OHE8Jl0QE68ysaLb3Z0RK6eN4L3IhgD2uaDw7x15gPn
-	0TRERockw1gTolEetcB36gBPiWfhzYP0V1lIWbBbGLEIrI2djce+WvrvzQHT5dV0TE5lIv
-	/vd5a+LwzRUt0vp2d+EAlnwp64zQprI=
-Received: from frank-u24.. (fttx-pool-194.15.84.99.bambit.de [194.15.84.99])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id A5D6D100787;
-	Sun, 11 May 2025 14:20:00 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Felix Fietkau <nbd@nbd.name>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v1 09/14] arm64: dts: mediatek: mt7988: add switch node
-Date: Sun, 11 May 2025 16:19:25 +0200
-Message-ID: <20250511141942.10284-10-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250511141942.10284-1-linux@fw-web.de>
-References: <20250511141942.10284-1-linux@fw-web.de>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="HR6iB83y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Dl2/kCc9M4N4J90OTO9l5W+xhhLbQekv5wqx/NolqZA=; b=HR6iB83yM4dRJGCTEIC3bSTqno
+	iFj7YbvxN6WWBI6gcr/HzXQMY89x84JS9EgrdgpNLazEXz8bBsuBFynkq2Wo9JDexP78D5dUoyRSw
+	q/QkTAkYgxHZ2GnJnULFSbNrMECnHj3SoBqc5gse6FgabX06Lh7kLf2AWICJMHOt1OI8k6MIDLMAQ
+	pBlXnEZ6c9Q0fE2R408AY2gqYWv8n5i8VJQBS/lt7zaruo0aTZgTv/PW3LfDilQgUrjifKOXGWAhO
+	BvtDExmyPAm8X/W26tJncOnDgMTtLBDTdRuOpSVzdI2UoXUOqcX1qkbg0l5NS00kciIXUig03n9Yv
+	yHAxKy5w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uE7Zd-00000009Vtj-1idK;
+	Sun, 11 May 2025 14:22:37 +0000
+Date: Sun, 11 May 2025 15:22:37 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: brauner@kernel.org, jack@suse.cz, akpm@linux-foundation.org,
+	tglx@linutronix.de, jlayton@kernel.org, frederic@kernel.org,
+	chenlinxuan@uniontech.com, xu.xin16@zte.com.cn,
+	adrian.ratiu@collabora.com, lorenzo.stoakes@oracle.com,
+	mingo@kernel.org, felix.moessbauer@siemens.com,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	zhanjun@uniontech.com, niecheng1@uniontech.com,
+	guanwentao@uniontech.com
+Subject: Re: [PATCH] proc: Show the mountid associated with exe
+Message-ID: <20250511142237.GA2023217@ZenIV>
+References: <3885DACAB5D311F7+20250511114243.215132-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: a24ecea1-b7fd-4cb4-a93d-b29036e2e6ac
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3885DACAB5D311F7+20250511114243.215132-1-wangyuli@uniontech.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Sun, May 11, 2025 at 07:42:43PM +0800, WangYuli wrote:
 
-Add mt7988 builtin mt753x switch nodes.
+> +static int proc_exe_mntid(struct seq_file *m, struct pid_namespace *ns,
+> +			struct pid *pid, struct task_struct *task)
+> +{
+> +	struct file *exe_file;
+> +	struct path exe_path;
+> +
+> +	exe_file = get_task_exe_file(task);
+> +
+> +	if (exe_file) {
+> +		exe_path = exe_file->f_path;
+> +		path_get(&exe_file->f_path);
+> +
+> +		seq_printf(m, "%i\n", real_mount(exe_path.mnt)->mnt_id);
+> +
+> +		path_put(&exe_file->f_path);
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 166 ++++++++++++++++++++++
- 1 file changed, 166 insertions(+)
+Excuse me, just what is that path_get/path_put for?  If you have
+an opened file, you do have its ->f_path pinned and unchanging.
+Otherwise this call of path_get() would've itself been unsafe...
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-index aa0947a555aa..ab7612916a13 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-@@ -5,6 +5,7 @@
- #include <dt-bindings/phy/phy.h>
- #include <dt-bindings/pinctrl/mt65xx.h>
- #include <dt-bindings/reset/mediatek,mt7988-resets.h>
-+#include <dt-bindings/leds/common.h>
- 
- / {
- 	compatible = "mediatek,mt7988a";
-@@ -742,6 +743,171 @@ ethsys: clock-controller@15000000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		switch: switch@15020000 {
-+			compatible = "mediatek,mt7988-switch";
-+			reg = <0 0x15020000 0 0x8000>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&ethwarp MT7988_ETHWARP_RST_SWITCH>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				gsw_port0: port@0 {
-+					reg = <0>;
-+					label = "wan";
-+					phy-mode = "internal";
-+					phy-handle = <&gsw_phy0>;
-+				};
-+
-+				gsw_port1: port@1 {
-+					reg = <1>;
-+					label = "lan1";
-+					phy-mode = "internal";
-+					phy-handle = <&gsw_phy1>;
-+				};
-+
-+				gsw_port2: port@2 {
-+					reg = <2>;
-+					label = "lan2";
-+					phy-mode = "internal";
-+					phy-handle = <&gsw_phy2>;
-+				};
-+
-+				gsw_port3: port@3 {
-+					reg = <3>;
-+					label = "lan3";
-+					phy-mode = "internal";
-+					phy-handle = <&gsw_phy3>;
-+				};
-+
-+				port@6 {
-+					reg = <6>;
-+					ethernet = <&gmac0>;
-+					phy-mode = "internal";
-+
-+					fixed-link {
-+						speed = <10000>;
-+						full-duplex;
-+						pause;
-+					};
-+				};
-+			};
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mediatek,pio = <&pio>;
-+
-+				gsw_phy0: ethernet-phy@0 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <0>;
-+					interrupts = <0>;
-+					phy-mode = "internal";
-+					nvmem-cells = <&phy_calibration_p0>;
-+					nvmem-cell-names = "phy-cal-data";
-+
-+					leds {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						gsw_phy0_led0: led@0 {
-+							reg = <0>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+
-+						gsw_phy0_led1: led@1 {
-+							reg = <1>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+					};
-+				};
-+
-+				gsw_phy1: ethernet-phy@1 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <1>;
-+					interrupts = <1>;
-+					phy-mode = "internal";
-+					nvmem-cells = <&phy_calibration_p1>;
-+					nvmem-cell-names = "phy-cal-data";
-+
-+					leds {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						gsw_phy1_led0: led@0 {
-+							reg = <0>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+
-+						gsw_phy1_led1: led@1 {
-+							reg = <1>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+					};
-+				};
-+
-+				gsw_phy2: ethernet-phy@2 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <2>;
-+					interrupts = <2>;
-+					phy-mode = "internal";
-+					nvmem-cells = <&phy_calibration_p2>;
-+					nvmem-cell-names = "phy-cal-data";
-+
-+					leds {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						gsw_phy2_led0: led@0 {
-+							reg = <0>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+
-+						gsw_phy2_led1: led@1 {
-+							reg = <1>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+					};
-+				};
-+
-+				gsw_phy3: ethernet-phy@3 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <3>;
-+					interrupts = <3>;
-+					phy-mode = "internal";
-+					nvmem-cells = <&phy_calibration_p3>;
-+					nvmem-cell-names = "phy-cal-data";
-+
-+					leds {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						gsw_phy3_led0: led@0 {
-+							reg = <0>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+
-+						gsw_phy3_led1: led@1 {
-+							reg = <1>;
-+							function = LED_FUNCTION_LAN;
-+							status = "disabled";
-+						};
-+					};
-+				};
-+			};
-+		};
-+
- 		ethwarp: clock-controller@15031000 {
- 			compatible = "mediatek,mt7988-ethwarp";
- 			reg = <0 0x15031000 0 0x1000>;
--- 
-2.43.0
-
+And I still wonder about the rationale, TBH...
