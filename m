@@ -1,95 +1,108 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FD543169;
-	Sun, 11 May 2025 18:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A090C1F92E;
+	Sun, 11 May 2025 18:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746988174; cv=none; b=fZUelYYcTD90IU7Isz4y3Ya3OC2trtaIe0FZC7ChXMnHlFW03ZrBnxNsjB90utHJr2FV3vnhpYO/S5CWcHLq2dir1FgSmHJG8H7cqxKMglgdIIitdELGUoccxmLKfkpp1OipE+jtciN455rC8xsenUEZbVoQ7NJRcDZFy8F7ukw=
+	t=1746988195; cv=none; b=t4TSRKSUAnKI3TVQkxtFNPlhbvTTSdLkHiEQ86HTnuKDDKqVzXFrFpj1Ir0IvY5/7VDbMRfzGxZVu8/CjLFsQdrtS2j+EtNRJjP1hc4EOqvGe0rYHoFh+o5JrPFnGcWwwEDy/a6RvkybCEKam6AycrxpyJ4CVOid319FaDeujcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746988174; c=relaxed/simple;
-	bh=rICF+iiakKUN/IpgaRD2u2wYA00+d5GkGQ6xuLiHXmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jfIJKkhG47g3xNGeF2JwhI+oOt3EC2S9AXVGYBbqaLB1s0olxr8OaWbJtVODyhLLrJ707Db4qT0HMr33ASnrA0oC6CjaWvArTrAcDnwMnu5g/qWXf9UGAi7HwWyDq8lnaZC21IvK+1rIVp3BkHiMPckR6ZARzKjGg1Do67OfNLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLqoiMip; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746988195; c=relaxed/simple;
+	bh=P08spHZCqkS+djzmNWpgkloO2IXMuAAmAfbPME2tGQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nDg8VogzM9r+YwvK2sHMtc9WDjorLUoyL3IvBmHBi3cH/uyEnFBnGnVJoQUXpiWhhjX80vBNBLV0U1/fjihjbAQR4VTaWWTE6V48+fSXMzmnwLTTliHHCepLWGDkks9Jd8gnC71KD0pn4f8AjorSjbL3UIVK8ZDYyh3iJR6rE9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpLdqagB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLqoiMip"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3087a70557bso587295a91.2;
-        Sun, 11 May 2025 11:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746988172; x=1747592972; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wz6bm1GgVl6/KNAsi2e5kntzR66VhsqLNXmVVaeeM7Y=;
-        b=NLqoiMip0N9LOTF1zSvXY6sOEkNSWg16KK63m1+mYLhSEAIF3h4MZ1dv1qcWCk702s
-         RgZ69D//nbtv+2OP9BSC7kSdlqa2p2ivS5Lq3CD9zIage2MPq71EmqSXdgHTGJhHic29
-         Nr9Ds5l5QghgeF0SjiIv1oUH1I8WUkWQsW6RMzWSyIWPdQD0MQGwaC9KxA/O5u1+S/W7
-         FRzXW/pHGWMjwCykVxVpYL3VCS7zX89MqIyk7+JGZgLURYrZlVCSsFCQZ4Lp7uEYWNu0
-         GDwNugTZF3vMplYBFOpHRl+4R4A8T/dDQHhofOJnelT+KSlUVRUk+kMDkMFCaXbBLm2V
-         lxzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746988172; x=1747592972;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wz6bm1GgVl6/KNAsi2e5kntzR66VhsqLNXmVVaeeM7Y=;
-        b=rXKH3mOR/UQvSp58WmdK2z5bsEuVkDDQA9F8mF6wz8pe1HTk+nKINKtYRHiNPjCoTE
-         rDMZtYNlO4a3JgW0cvWHMsvERN0uZMuAEN/XyUzYzrbnHwuKNe/ZKOef9oOOw6sYFgft
-         3YAEU/vO9QE1zNoupxW/QcD837Z+0Pfi/tE2kbu4O/H37BaMElGe5C9G1ayawbHYJ1ks
-         uZms0g8Y9nVb9KykVKppojCsUNxeSR0mS3Lqdas9gBt8gASjX9dVFFIXMLKDlUMF2OAW
-         zYcrI6r38MTkPrca1yCwJJjcyJp17lW/8Qu1L24K+oU2PDlYhCy3EUD8AWAP68VEhlUw
-         8sNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnMLMGjq6DcVemAZs0YdG16OCWlzQfSsFneeZTr+MT6DcDmwrawi0t/6K/ImKZ14TNDLYd0Qd+qfVjNY4GeZA=@vger.kernel.org, AJvYcCW020sC6+05BiXMvQvc83Du/DcY+mxjmnMLY8LZskRMB5AMivCRmfH+3uZQG1/D2UcYlF4F5vmXNZndwqc=@vger.kernel.org, AJvYcCX7Iqn4aZT2Ngo06KI/71Yx4R8Ha++80YkaTlCe21bRxoH6tN30t3qk4Fw6QxKLZB9GXFXqcrGdwoi0@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmsq3aXl4ooyqQVRlxDka8wXcYZd9sOwHdvSG1mqHBVyS21YdC
-	1jBGChZpclWws8ay+f+TMnqkyEBtraVp88imAEK4zPwRgi0tF6shnC6+slgYgyLjeeHT4qTmrEB
-	nCtuPpgc8M509CAXzK++XkyXY/dX0lsZztLo=
-X-Gm-Gg: ASbGncvzb0Zi+0YLN8HXqx+X/0fFMTwNjtxUypslfpRxQEyRP2svDfXT1QcP9dkZcnu
-	nkvC6GPTjZpn9sX3S2BbP5v1yQYsdoemkjSwVQkImJi46n8WIfSMT/M5lQad85AAr/GtkuxW9qj
-	2eP53KuufWEU2wsjyxDXKcJy5lMofq4CLU
-X-Google-Smtp-Source: AGHT+IHWOSR9A/JCAuFZu+UDzjOsvysFAKfQBFPIHSdBGX3X/A9hDX0aKl6lTriTlc2MIvPho/zaV3roTJvmt050Wsg=
-X-Received: by 2002:a17:903:244c:b0:21f:356:758f with SMTP id
- d9443c01a7336-22fc8b0b6aamr62602245ad.3.1746988172460; Sun, 11 May 2025
- 11:29:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpLdqagB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC0CC4CEE7;
+	Sun, 11 May 2025 18:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746988195;
+	bh=P08spHZCqkS+djzmNWpgkloO2IXMuAAmAfbPME2tGQM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LpLdqagBM+oB8qUzlV7CHCti//pjdZzMNl0dBFZgqq4BPf2EMbOkib3LpWIimJ2gl
+	 6W2na9nPobLe3qPleHFShIhXBgajP4Hno0tsJKToXqugQl2GCAsoZjUVilO5vIFEZK
+	 5/lr20gZ7bkV8yyjVMAIOqVHs/6JG0kh7IZdHmweHvC7vlhS+sjAMU5a2R9QzvViS9
+	 OMIoVROCueqtzBy8wwxZQZtyW9XsIwojxzZE7E3hw65TETUI/ns2VGXC1PNyG3MQIj
+	 bY2J5Dfi+lhcVXhr0ynvedVTWgC0XCdBsYGNyhcI5ZTWaBqqyfW2rIM3LQiTXVwcg8
+	 I5XK20edQWZcQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH] MIPS: bcm63xx: nvram: avoid inefficient use of crc32_le_combine()
+Date: Sun, 11 May 2025 11:28:36 -0700
+Message-ID: <20250511182836.21611-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428140137.468709-1-dakr@kernel.org> <20250428140137.468709-3-dakr@kernel.org>
-In-Reply-To: <20250428140137.468709-3-dakr@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 11 May 2025 20:29:19 +0200
-X-Gm-Features: AX0GCFtQoKnmnCFXJJmm2XcCSBjKVOOREoms9iBsFozi3_2Nk3F0sPXg7CaXj8o
-Message-ID: <CANiq72=x6a8aAko52=Un2u=1u09+cBF14xH6=DXOD8o+0JH=QA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] rust: devres: implement Devres::access_with()
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, 
-	bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, 
-	ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Christian Schrefl <chrisi.schrefl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 4:01=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> +    /// # use kernel::{device::Core, devres::Devres, pci};
-> +    ///
-> +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x=
-4>>) -> Result<()> {
+From: Eric Biggers <ebiggers@google.com>
 
-We need to skip this one when `!PCI` -- quick patch at:
-https://lore.kernel.org/rust-for-linux/20250511182533.1016163-1-ojeda@kerne=
-l.org/
+bcm963xx_nvram_checksum() was using crc32_le_combine() to update a CRC
+with four zero bytes.  However, this is about 5x slower than just
+CRC'ing four zero bytes in the normal way.  Just do that instead.
 
-Cheers,
-Miguel
+(We could instead make crc32_le_combine() faster on short lengths.  But
+all its callers do just fine without it, so I'd like to just remove it.)
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+
+Please consider this patch for the mips tree for 6.16.  If it doesn't
+get picked up, I'll take it through the crc tree.
+
+ include/linux/bcm963xx_nvram.h | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/bcm963xx_nvram.h b/include/linux/bcm963xx_nvram.h
+index c8c7f01159fed..48830bf180427 100644
+--- a/include/linux/bcm963xx_nvram.h
++++ b/include/linux/bcm963xx_nvram.h
+@@ -79,29 +79,25 @@ static inline u64 __pure bcm963xx_nvram_nand_part_size(
+  */
+ static int __maybe_unused bcm963xx_nvram_checksum(
+ 	const struct bcm963xx_nvram *nvram,
+ 	u32 *expected_out, u32 *actual_out)
+ {
++	const u32 zero = 0;
+ 	u32 expected, actual;
+ 	size_t len;
+ 
+ 	if (nvram->version <= 4) {
+ 		expected = nvram->checksum_v4;
+-		len = BCM963XX_NVRAM_V4_SIZE - sizeof(u32);
++		len = BCM963XX_NVRAM_V4_SIZE;
+ 	} else {
+ 		expected = nvram->checksum_v5;
+-		len = BCM963XX_NVRAM_V5_SIZE - sizeof(u32);
++		len = BCM963XX_NVRAM_V5_SIZE;
+ 	}
+ 
+-	/*
+-	 * Calculate the CRC32 value for the nvram with a checksum value
+-	 * of 0 without modifying or copying the nvram by combining:
+-	 * - The CRC32 of the nvram without the checksum value
+-	 * - The CRC32 of a zero checksum value (which is also 0)
+-	 */
+-	actual = crc32_le_combine(
+-		crc32_le(~0, (u8 *)nvram, len), 0, sizeof(u32));
++	/* Calculate the CRC32 of the nvram with the checksum field set to 0. */
++	actual = crc32_le(~0, nvram, len - sizeof(u32));
++	actual = crc32_le(actual, &zero, sizeof(u32));
+ 
+ 	if (expected_out)
+ 		*expected_out = expected;
+ 
+ 	if (actual_out)
+
+base-commit: 3ce9925823c7d6bb0e6eb951bf2db0e9e182582d
+-- 
+2.49.0
+
