@@ -1,318 +1,259 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2054.outbound.protection.outlook.com [40.107.100.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9742673B6;
-	Sun, 11 May 2025 19:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746992404; cv=fail; b=ao9KyyYqkT7cxM8G9fYyrhnwwj7bbZLnvpxGeB5nTX9k+AmP94rFMRPb7C/oqi3Oa4CH4ccp1ARXkh7wPlqAwC+GsyaaXzGmv2LAw/d/hTt169uZJLEcEDTALt+pYT3dz1N4w4BMi4gmvzQKK0y4pLV2RaNqy6pyiWMcV2rUy0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746992404; c=relaxed/simple;
-	bh=bDcrdolzhl8zjEsHtBA7qYeFwxTh6TeiPWaIiS7NYEo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X97eZgQwlALGY7fPHJWrjfJoTm38acVeTtAPoYeqalmgHCJ/HUty03X1rU3ZR36ACkW16z+ABB+F1i/ZIgEsmoSCgEhk62K9tOr8kzbhn93cXLJIbiLOYN5YdHDeZzWyUIeqYEIxTWWrK9y0nMDsxprOgtp+8/codopMXjptv+w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qK9PASx2; arc=fail smtp.client-ip=40.107.100.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434F41714AC;
+	Sun, 11 May 2025 20:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746993819; cv=none; b=X2SgJpZf4eNeNk4w9oU2iIa/vqSvDmc8r/gg5Jf9XtQ3/7rxg2eNfeghB5751L79ihbdT0QE12l16ZgULRvi0V/SRAZEjFM/0m50rb9C+4yimdb3tNmyUhZ84FvtelZD4gWv6rIdUFqCohldeA0bfQ9e55ch+u9LJ6UmC9mi2dM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746993819; c=relaxed/simple;
+	bh=zWxkPb7GPUMz8xpMK0hqm+8jwUqUNLAwd3cO5x1lygM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NXAjPugdZXuHAtLcy7frawLaGKW9taQGamUBqT0bcoAINQQuvQqHSh4QBLcSkaPbRicCiQWQf1sglGMZjxijgU3XUn/8AsMn5B+TqjSB1Qtk2faBmeabUuVQvqKfgXiaJfc5shGZHVEMbS+dBXIPNCI8pugnn7jaT2+QM1YrhzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9D+vHWD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qK9PASx2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TvCqaa4nYItUoTbsl1suudg0OBucXkyENKpA5kwpH+Aeb9c1gx1rtoJkHFu8WO1x3c8oIK0mARnmnG9OMqo8CvhyPh1bX2X+B75D/RwKO6rAGtETpHkpE7FnPLG5dcJ2LCtmgY/W5uRuVNV/DkCxtAz9ofyKH1iRh6/KKL6YuMnZWX/x9zraH557YUq45pqT5KfMc+t4ybMEMLCUWrYpsZDRuYrTrpmMd5o0VX5puhPiUrkhZWsGd0NiCgskSgcHdWW3t9e5HdpcrhLUW1Oh+O47EklEpi557eL6xvanR6sDa+3ydHXk9ZJZucnMWSOqc2M0/YZdhPBCmf4/LSQJIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J7UD4EVBB6r+T4K5Vz6vjhUNU3YsvXbgZt7QPTHL3vM=;
- b=uFoM3+JM9z+sEc3vJ72vGNp7lG5kIS/pa2Sv87uHZZI3PG3KhdL39K0o+C7sFdhTn1Ao9lqpMEj3hBaGuLx7YjQ1OtQzpNPabWqGTlHDmJYWoeJAmMxZqMq/4D2UVqlUeGezPKPbWAucbko3p9DORnqzQVb18raUrcMdd7rcaws7qybyeVKUiGv2NGHrEeXhQEmAP/j/mqKFyXHqm9IC3SidCiUwgLV8BQysIQyskCFFHDmo1e/v4hRY1aiZdwnKg0+9ftXjiidUHmPazbw/QWC2jeUXuk9m8OsN597Z3fg53jFfq77f8A3IdaBt7OLzBGY0mPjq/RMB/mSgrmTdjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J7UD4EVBB6r+T4K5Vz6vjhUNU3YsvXbgZt7QPTHL3vM=;
- b=qK9PASx22lrKfzgq+CLxPuKjHH0Eovm/SOdki6H62yZUbu/XzPFAolhZvA9+zIVeDFbhZNvzrtd2XolZLSeFYPlSYeia6N63OUm9VSMFaIpA/NWlCuEMuX0c4GIu3UwnmD7VgL31Gv2xE2ry6XZeE4sPlHgccmBZ2Opmppbz32xMzpdTv8XSX7IaHc2oR3dK5rVWQx4Uk+GlCKEaeowEVe8SaxVHy04W2uXh1cobuybyKTK5LQQeDFl772PsXB5f3Qss2hqeUfoYI2YqvCV+G41SfRoPcy++J1dk9E3oP7Itp8UjsEjSOayRXqO8aS2Ozo3MB6/Rt92y2mqiwVhtfw==
-Received: from SJ0PR03CA0149.namprd03.prod.outlook.com (2603:10b6:a03:33c::34)
- by MW3PR12MB4490.namprd12.prod.outlook.com (2603:10b6:303:2f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Sun, 11 May
- 2025 19:39:54 +0000
-Received: from SJ5PEPF000001D2.namprd05.prod.outlook.com
- (2603:10b6:a03:33c:cafe::e0) by SJ0PR03CA0149.outlook.office365.com
- (2603:10b6:a03:33c::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Sun,
- 11 May 2025 19:39:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001D2.mail.protection.outlook.com (10.167.242.54) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Sun, 11 May 2025 19:39:54 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 11 May
- 2025 12:39:44 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 11 May
- 2025 12:39:43 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Sun, 11
- May 2025 12:39:39 -0700
-From: Tariq Toukan <tariqt@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>
-CC: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Moshe Shemesh
-	<moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Vlad Dogaru
-	<vdogaru@nvidia.com>, Yevgeny Kliteynik <kliteyn@nvidia.com>, Gal Pressman
-	<gal@nvidia.com>
-Subject: [PATCH net-next 10/10] net/mlx5: HWS, dump bad completion details
-Date: Sun, 11 May 2025 22:38:10 +0300
-Message-ID: <1746992290-568936-11-git-send-email-tariqt@nvidia.com>
-X-Mailer: git-send-email 2.8.0
-In-Reply-To: <1746992290-568936-1-git-send-email-tariqt@nvidia.com>
-References: <1746992290-568936-1-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9D+vHWD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71EF6C4CEE4;
+	Sun, 11 May 2025 20:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746993818;
+	bh=zWxkPb7GPUMz8xpMK0hqm+8jwUqUNLAwd3cO5x1lygM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=m9D+vHWD8RBGHgAY31il4t9dVxEwy43J66ypcsTo5cnEjczS55psACq6lJ2saxM9I
+	 aJcjQHUSPvicVAtglraqv9lUHwFZdxf92Ec20npE2RfMDHCy0rPA6l7BYBwQgG1l+U
+	 LZpFKFDWQlU0xJ/I7XeHTQeFoO5G8ZSqUGC6ulW/9YFA5q0qFW5hyICfVMiQGihB2K
+	 hlNCJHr7WEkrYNCOP/m/FYE0jJSLcEhhCPBu31KD3LBWriM/Lu3xqSJGiFDg/C+PhR
+	 1lBNJsdLMSLQ2us93OUbmFX8VSlv4vBv/PRJVpZn+Ozeu3V2dIo5PwDGL+TcgCLQ9G
+	 vsN/XDIGHDGXA==
+Message-ID: <595adbaa-15b4-4917-b3ad-9bac3e2333e2@kernel.org>
+Date: Sun, 11 May 2025 22:03:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D2:EE_|MW3PR12MB4490:EE_
-X-MS-Office365-Filtering-Correlation-Id: 64b2a8fc-1277-4c86-dd56-08dd90c39aaf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?D8wj2H5WSOR2v7HpGKvBHFAlgcfzMLTeZsni9ZAqBY7UUd1ZV/f4V1VKs4RE?=
- =?us-ascii?Q?vEL4qO+nqnzhIw6KXnBJfJvDpk+T0WxIjwpvQTEhavdd+9ASKUqOtYz1xXYu?=
- =?us-ascii?Q?b+FlSkIdC+SX4sROPxcIiCYD3lewvnsn5s3i4XK43Vrj8TywCOOoqRbboHM2?=
- =?us-ascii?Q?/V5n/SE0Sum+MEjlH4wNcmhGsNiommCwggJGivJqc/A2mqDEUnwYA3wIgUFB?=
- =?us-ascii?Q?X6zvY86qc/7H2MlnGlTyjShXJ526PyA4aPzzlPSytTMYGb5TzIYe6gZlaF1S?=
- =?us-ascii?Q?B3YFZi99hCaigZKBza/n1jXa/P7KT2UUzgaHHTR0z6Re9AhPbG9cnywl8ZFB?=
- =?us-ascii?Q?GrYTbZwsnOkZr8jfL9N7OL56jr4aE+bgAbBMl0sJKMLoxkXlCmtl1zRqXmRo?=
- =?us-ascii?Q?K+VDXAvONSN/WgwDd6VAL6ROCRyIQAT3kGCvbqKSgG0T79OijBQ8EZm912Y2?=
- =?us-ascii?Q?aopWABqergwdK3XwL8wnyT32e6ACdqmvM10/53m8sUlifx3rMTfyQGR9885V?=
- =?us-ascii?Q?9zbFyCowwP2qdSgok3BXMQgQoxGBOu8pP1TaoPNdHPVj6iBEJ5jE7wvwxgk+?=
- =?us-ascii?Q?04hGorKdSL5lTYBgzXCy+WEVXlmxaVkxr5RMKtEkVLvuZe/OdwZMmO2/AQ9l?=
- =?us-ascii?Q?dO9BhmArzZMW5wELwruE5FTYE/yeRLNENYSCXmF7WHxZ+Uj6rijJCLPDE7u0?=
- =?us-ascii?Q?htkmRt8BEBfidNnSdsvD6QdiXasJXx/CfXQJa+S+ZmrzcmsgopCn3jNMT5nW?=
- =?us-ascii?Q?rI3Q+Ctuw8WXtyKVWwIAM7vStdpz6mtBVscvZJNtZmH/gkDW/XSLEM0gCr8K?=
- =?us-ascii?Q?92N2HnMW1JY3/9YNQeNJ97mKR0ggwmgAVitEAOzn95tuaZMyx4e2BVcI4eFg?=
- =?us-ascii?Q?0/LUSR+KEvLnSNbAbQXeV5uUXcTF2rltJLhg5h4ALWFrcgF3RPS5vKifDj8q?=
- =?us-ascii?Q?IaFV0WHD9MyOmKD0CybV9u70xD8cxvF8soMLhHCPo+SxMfJgT+rEk+0qFNAP?=
- =?us-ascii?Q?8so3DeNBrf14k9cMairY7wgxttwNGtsUp+pFS2cEc+vrTK1uVFIrmL2urTaI?=
- =?us-ascii?Q?FnmWOKG/T+FZnzQVTPLXcF3N4jic+DHX6vKRuTEaCfTm7MLJUHIz7uMt6Ixm?=
- =?us-ascii?Q?/NRcPfDo2vRKfre//sGcXwMBRXD2zwUXWppgLzLk66Fr978DV5q4obJFRPz9?=
- =?us-ascii?Q?ZluplN46HTTF/i3JHxe5dbBPqo7E3PKwvBOAkiPwGkPx7YnX6Mkij77IP147?=
- =?us-ascii?Q?G9+Tk2NmWYowVIxuJnmD6xFYf73CXpbraQLA2mn2clhzc9xC506mLKfYacgi?=
- =?us-ascii?Q?EbsHTFxDTHql+X4OYwtuOXWr6aVNg96UsZyAWkzb8uFXcy3tM8DfbaeVpZFi?=
- =?us-ascii?Q?d+HgH+qsK+SKhQahTc9Oho4hogrkmtPk3UVu4YZiwg+XE18OaWv2xHQtp9pp?=
- =?us-ascii?Q?rZaEfNEi0s9P3uXVHQGlIRCTrwc4K/xfI72LLlWSlJhAkvLSsi+q5q0uKIdu?=
- =?us-ascii?Q?NLFnYnNncBnn6ZFbqYoO0/F3KdK9AqtZh0pM?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2025 19:39:54.3444
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64b2a8fc-1277-4c86-dd56-08dd90c39aaf
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4490
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] media: allegro-dvt: Add DT-bindings for the Gen 3 IP
+To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>,
+ Michael Tretter <m.tretter@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Aradhya Bhatia <a-bhatia1@ti.com>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Junhao Xie <bigfoot@classfun.cn>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Kever Yang <kever.yang@rock-chips.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>,
+ Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
+ Gaosheng Cui <cuigaosheng1@huawei.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250511144752.504162-1-yassine.ouaissa@allegrodvt.com>
+ <20250511144752.504162-4-yassine.ouaissa@allegrodvt.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250511144752.504162-4-yassine.ouaissa@allegrodvt.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Yevgeny Kliteynik <kliteyn@nvidia.com>
+On 11/05/2025 16:47, Yassine Ouaissa wrote:
+> Add the device-tree bindings for the allegro-dvt Gen 3 IP decoders, and
+> update the MAINTAINERS file.
+> 
+> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+> ---
+>  .../bindings/media/allegrodvt,al300-vdec.yaml | 86 +++++++++++++++++++
 
-Failing to insert/delete a rule should not happen. If it does happen,
-it would be good to know at which stage it happened and what was the
-failure. This patch adds printing of bad CQE details.
+Looks untested so limited review follows.
 
-Signed-off-by: Yevgeny Kliteynik <kliteyn@nvidia.com>
-Reviewed-by: Vlad Dogaru <vdogaru@nvidia.com>
-Reviewed-by: Mark Bloch <mbloch@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
----
- .../mellanox/mlx5/core/steering/hws/send.c    | 122 +++++++++++++++++-
- .../mellanox/mlx5/core/steering/hws/send.h    |   1 +
- 2 files changed, 120 insertions(+), 3 deletions(-)
+A nit, subject: drop second/last, redundant "DT bindings". The
+"dt-bindings" prefix is already stating that these are DT bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.c
-index cb6abc4ab7df..c4b22be19a9b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.c
-@@ -344,18 +344,133 @@ hws_send_engine_update_rule_resize(struct mlx5hws_send_engine *queue,
- 	}
- }
- 
-+static void hws_send_engine_dump_error_cqe(struct mlx5hws_send_engine *queue,
-+					   struct mlx5hws_send_ring_priv *priv,
-+					   struct mlx5_cqe64 *cqe)
-+{
-+	u8 wqe_opcode = cqe ? be32_to_cpu(cqe->sop_drop_qpn) >> 24 : 0;
-+	struct mlx5hws_context *ctx = priv->rule->matcher->tbl->ctx;
-+	u32 opcode = cqe ? get_cqe_opcode(cqe) : 0;
-+	struct mlx5hws_rule *rule = priv->rule;
-+
-+	/* If something bad happens and lots of rules are failing, we don't
-+	 * want to pollute dmesg. Print only the first bad cqe per engine,
-+	 * the one that started the avalanche.
-+	 */
-+	if (queue->error_cqe_printed)
-+		return;
-+
-+	queue->error_cqe_printed = true;
-+
-+	if (mlx5hws_rule_move_in_progress(rule))
-+		mlx5hws_err(ctx,
-+			    "--- rule 0x%08llx: error completion moving rule: phase %s, wqes left %d\n",
-+			    HWS_PTR_TO_ID(rule),
-+			    rule->resize_info->state ==
-+			    MLX5HWS_RULE_RESIZE_STATE_WRITING ? "WRITING" :
-+			    rule->resize_info->state ==
-+			    MLX5HWS_RULE_RESIZE_STATE_DELETING ? "DELETING" :
-+			    "UNKNOWN",
-+			    rule->pending_wqes);
-+	else
-+		mlx5hws_err(ctx,
-+			    "--- rule 0x%08llx: error completion %s (%d), wqes left %d\n",
-+			    HWS_PTR_TO_ID(rule),
-+			    rule->status ==
-+			    MLX5HWS_RULE_STATUS_CREATING ? "CREATING" :
-+			    rule->status ==
-+			    MLX5HWS_RULE_STATUS_DELETING ? "DELETING" :
-+			    rule->status ==
-+			    MLX5HWS_RULE_STATUS_FAILING ? "FAILING" :
-+			    rule->status ==
-+			    MLX5HWS_RULE_STATUS_UPDATING ? "UPDATING" : "NA",
-+			    rule->status,
-+			    rule->pending_wqes);
-+
-+	mlx5hws_err(ctx, "    rule 0x%08llx: matcher 0x%llx %s\n",
-+		    HWS_PTR_TO_ID(rule),
-+		    HWS_PTR_TO_ID(rule->matcher),
-+		    (rule->matcher->flags & MLX5HWS_MATCHER_FLAGS_ISOLATED) ?
-+		    "(isolated)" : "");
-+
-+	if (!cqe) {
-+		mlx5hws_err(ctx, "    rule 0x%08llx: no CQE\n",
-+			    HWS_PTR_TO_ID(rule));
-+		return;
-+	}
-+
-+	mlx5hws_err(ctx, "    rule 0x%08llx: cqe->opcode      = %d %s\n",
-+		    HWS_PTR_TO_ID(rule), opcode,
-+		    opcode == MLX5_CQE_REQ ? "(MLX5_CQE_REQ)" :
-+		    opcode == MLX5_CQE_REQ_ERR ? "(MLX5_CQE_REQ_ERR)" : " ");
-+
-+	if (opcode == MLX5_CQE_REQ_ERR) {
-+		struct mlx5_err_cqe *err_cqe = (struct mlx5_err_cqe *)cqe;
-+
-+		mlx5hws_err(ctx,
-+			    "    rule 0x%08llx:  |--- hw_error_syndrome = 0x%x\n",
-+			    HWS_PTR_TO_ID(rule),
-+			    err_cqe->rsvd1[16]);
-+		mlx5hws_err(ctx,
-+			    "    rule 0x%08llx:  |--- hw_syndrome_type = 0x%x\n",
-+			    HWS_PTR_TO_ID(rule),
-+			    err_cqe->rsvd1[17] >> 4);
-+		mlx5hws_err(ctx,
-+			    "    rule 0x%08llx:  |--- vendor_err_synd = 0x%x\n",
-+			    HWS_PTR_TO_ID(rule),
-+			    err_cqe->vendor_err_synd);
-+		mlx5hws_err(ctx,
-+			    "    rule 0x%08llx:  |--- syndrome = 0x%x\n",
-+			    HWS_PTR_TO_ID(rule),
-+			    err_cqe->syndrome);
-+	}
-+
-+	mlx5hws_err(ctx,
-+		    "    rule 0x%08llx: cqe->byte_cnt      = 0x%08x\n",
-+		    HWS_PTR_TO_ID(rule), be32_to_cpu(cqe->byte_cnt));
-+	mlx5hws_err(ctx,
-+		    "    rule 0x%08llx:  |-- UPDATE STATUS = %s\n",
-+		    HWS_PTR_TO_ID(rule),
-+		    (be32_to_cpu(cqe->byte_cnt) & 0x80000000) ?
-+		    "FAILURE" : "SUCCESS");
-+	mlx5hws_err(ctx,
-+		    "    rule 0x%08llx:  |------- SYNDROME = %s\n",
-+		    HWS_PTR_TO_ID(rule),
-+		    ((be32_to_cpu(cqe->byte_cnt) & 0x00000003) == 1) ?
-+		    "SET_FLOW_FAIL" :
-+		    ((be32_to_cpu(cqe->byte_cnt) & 0x00000003) == 2) ?
-+		    "DISABLE_FLOW_FAIL" : "UNKNOWN");
-+	mlx5hws_err(ctx,
-+		    "    rule 0x%08llx: cqe->sop_drop_qpn  = 0x%08x\n",
-+		    HWS_PTR_TO_ID(rule), be32_to_cpu(cqe->sop_drop_qpn));
-+	mlx5hws_err(ctx,
-+		    "    rule 0x%08llx:  |-send wqe opcode = 0x%02x %s\n",
-+		    HWS_PTR_TO_ID(rule), wqe_opcode,
-+		    wqe_opcode == MLX5HWS_WQE_OPCODE_TBL_ACCESS ?
-+		    "(MLX5HWS_WQE_OPCODE_TBL_ACCESS)" : "(UNKNOWN)");
-+	mlx5hws_err(ctx,
-+		    "    rule 0x%08llx:  |------------ qpn = 0x%06x\n",
-+		    HWS_PTR_TO_ID(rule),
-+		    be32_to_cpu(cqe->sop_drop_qpn) & 0xffffff);
-+}
-+
- static void hws_send_engine_update_rule(struct mlx5hws_send_engine *queue,
- 					struct mlx5hws_send_ring_priv *priv,
- 					u16 wqe_cnt,
--					enum mlx5hws_flow_op_status *status)
-+					enum mlx5hws_flow_op_status *status,
-+					struct mlx5_cqe64 *cqe)
- {
- 	priv->rule->pending_wqes--;
- 
--	if (*status == MLX5HWS_FLOW_OP_ERROR) {
-+	if (unlikely(*status == MLX5HWS_FLOW_OP_ERROR)) {
- 		if (priv->retry_id) {
-+			/* If there is a retry_id, then it's not an error yet,
-+			 * retry to insert this rule in the collision RTC.
-+			 */
- 			hws_send_engine_retry_post_send(queue, priv, wqe_cnt);
- 			return;
- 		}
-+		hws_send_engine_dump_error_cqe(queue, priv, cqe);
- 		/* Some part of the rule failed */
- 		priv->rule->status = MLX5HWS_RULE_STATUS_FAILING;
- 		*priv->used_id = 0;
-@@ -420,7 +535,8 @@ static void hws_send_engine_update(struct mlx5hws_send_engine *queue,
- 
- 	if (priv->user_data) {
- 		if (priv->rule) {
--			hws_send_engine_update_rule(queue, priv, wqe_cnt, &status);
-+			hws_send_engine_update_rule(queue, priv, wqe_cnt,
-+						    &status, cqe);
- 			/* Completion is provided on the last rule WQE */
- 			if (priv->rule->pending_wqes)
- 				return;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.h b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.h
-index f833092235c1..3fb8e99309b2 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/send.h
-@@ -140,6 +140,7 @@ struct mlx5hws_send_engine {
- 	u16 used_entries;
- 	u16 num_entries;
- 	bool err;
-+	bool error_cqe_printed;
- 	struct mutex lock; /* Protects the send engine */
- };
- 
--- 
-2.31.1
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> 
 
+Please organize the patch documenting compatible (DT bindings) before
+their user.
+See also:
+https://elixir.bootlin.com/linux/v6.14-rc6/source/Documentation/devicetree/bindings/submitting-patches.rst#L46
+
+> diff --git a/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml b/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> new file mode 100644
+> index 000000000000..ea4a55de570c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/allegrodvt,al300-vdec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allegro DVT Video IP Decoder Gen 3
+> +
+> +maintainers:
+> +  - Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
+> +
+> +description: |-
+> +  The al300-vdec represents the latest generation of Allegro DVT IP decoding technology, offering
+
+Wrap at 80, see Linux coding style.
+
+> +  significant advancements over its predecessors. This new decoder features
+> +  enhanced processing capabilities with improved throughput and reduced latency.
+> +
+> +  Communication between the host driver software and the MCU is implemented through
+> +  a specialized mailbox interface mechanism. This mailbox system provides a
+> +  structured channel for exchanging commands, parameters, and status information
+> +  between the host CPU and the MCU controlling the codec engines.
+> +
+> +properties:
+> +  compatible:
+> +    const: allegrodvt,al300-vdec
+
+Undocumented prefix.
+
+What is the actual device name? al300? Can you have al300-adec? or
+al300-dec?
+
+
+> +
+> +  reg:
+> +    items:
+> +      - description: The registers
+> +      - description: the MCU APB register
+> +
+> +  reg-names:
+> +    items:
+> +      - const: regs
+> +      - const: apb
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: MCU clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mcu_clk
+
+Drop clock-names, pretty obvious
+
+> +
+> +  memory-region:
+> +    items:
+> +      - description: Used to allocate memory for the MCU firmware,
+> +      and is also used for various operational buffers required by the MCU during codec operations.
+> +
+> +  firmware-name:
+> +    $ref: /schemas/types.yaml#/definitions/string
+
+Drop, type is already fixed.
+
+missing maxItems: 1
+
+> +    description:
+> +      If present, name of the file within the firmware search path containing
+> +      the MCU firmware.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: False
+> +
+> +examples:
+> +  - |
+> +    axi {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        ald300: ald300@a0120000 {
+
+Drop unused label.
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+
+> +            compatible = "allegrodvt,al300-vdec";
+> +            reg = <0 0xa0120000 0 0x80000>,
+
+Here 0 is not hex
+
+> +            <0x01 0x8000000 0x00 0x8000000>;
+
+but here is hex?
+
+Also misaligned.
+
+Also: very odd large address space.
+
+>  
+
+
+Best regards,
+Krzysztof
