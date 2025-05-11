@@ -1,384 +1,344 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A82813E898;
-	Sun, 11 May 2025 02:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0956828FD;
+	Sun, 11 May 2025 02:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746932080; cv=none; b=VjbeA4kVDmMB0ZwrBwFeCmDvXwEWlCih3F2Pz9l8Ekn8l4ZOGjbRc0bi8Qkt+tocfZDembpYDPL4wA/qnvifAydGRpXv7WlJcPjPAwJNO9J6zWN55IduO1Bz4RUCVGlQxoh2amUqyY/x996XdW10/TwPYKF2XJme3ZlrVHp3cJs=
+	t=1746932327; cv=none; b=h6xmDkEgHiZhAEFl8XSzEwo3kNLYQJPewW995ow/QajZxM3msl9e2+0VRj5ztvZVcVSdPfjuK5xn5ealbyQbROSi9XW0Qhaf8jpsZN4M/Enqvvk2eWk/nuFPOtidCuCxsF9swcTyVU89LyuXBd4wvd421qx8Lo+fLqqJ0dQPzNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746932080; c=relaxed/simple;
-	bh=IEEvh3JvV+l5F4j8MJqC9F3vQdI9e0b+9PInDCwaKa0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tpqvf2wDMqJ6ixRIBZGgcn3PZCGd2EK9Ujlrac+0dDXcTtm4+c6XZjmf9WCMUt0qM8R7E0glIoHRZCUf3/se3k/PqvY+NKOlJrxDqp4Tqc1+O/ZfYlFfq2AJ3pWoWD6znoPf2r/5b0OZbi/NlEPLugFxDlzyF4Skf5caPaeLBkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aYka45oT; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746932327; c=relaxed/simple;
+	bh=xSya/cD7Vro2FPZNZdbVXjzZfM4ndp/BPgCVgVemJfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EAGectz+u3OtNDoliPpd0e78KCQLx+e9hgcj67+qP7QM1/ijn1dglgHDhdwRHtXmhet/ZCAfSiI4GK0gwTf7/ZgqpS/N0iFVFDC69wku3XrffqX8PpedsL0pdU3N+EB/SKIcw59m4YmxmXL8mvyWiU31dFrXWVQly9ocCxXpPQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iT8PQ3js; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aYka45oT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=D+ILB60tTLxf/T57GiFI+wFMqcCa8oqAF8HpkB/MccM=; b=aYka45oTsygBeZ0INvB4YPD1vf
-	uZCzaLtwvZhA8Z/wZ5EsmICw4ZwCW2ij8a9Cwsu7ckvR57u8gqdZe8if6z37XMeQI5KmCo5p/Yb5P
-	PEqtLEPIh6GCyMWqbcj5XnOyrEh79dlKOQwIUsn/t0zJBvXXpnY35FfqxX9yHTvZXxuaUHizlevr/
-	OLtp+GIxbJJvrsZfUTkFmBVP35RWF59Mo3/JQ9XnKPsQbOMg4QsPWKy3KNUXB7lhyzu1t6TB1JRsE
-	lBllVNBo6GwalM9xViMbYmfxssrANf8x+dMOLwSGRS7kWsDR95Y1d6zJObD3KfLhpgdJiATAOLd+x
-	FbizFu/g==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uDwpW-0000000GXXr-3T5U;
-	Sun, 11 May 2025 02:54:20 +0000
-Message-ID: <bb979120-cb57-4429-8438-a5713473403e@infradead.org>
-Date: Sat, 10 May 2025 19:54:14 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iT8PQ3js"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7082ad1355bso28498617b3.1;
+        Sat, 10 May 2025 19:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746932323; x=1747537123; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4rIqno4q3SZ3Qt2EV0P6akhqys5m6oT2jaLjH6WpTDE=;
+        b=iT8PQ3jsMo0fAPqYciXcwr4eD4xbxYIRmyLNXMBK+fe4M5zdzpP9LPyGKZef+x8KPP
+         H2ECCDo0nGAvLT9IqRjPPndEXgyuTwiQvf0jcrYgnQszqDXOgQ3H3CNMaKqTvR+xKIFa
+         CUabmuvecBRCKc5a+keAQ8CTZRa8+rywu7+zi6Cq+Cqfgqizn9SjjLU7KJ39Y1NSiVPh
+         z55Y3bLbxaViCCEKNMJYvIQgIWT/XX6Sf6I/BHd88tC/mOWdl1IKfzyipilpnOntYpUJ
+         aIEvjP6+wu7DJ5tCpFvup67SrxPBNazQDMLKdXzXJMEXpyO0TzDIPcd00bQ7zfcvJxJ/
+         P99g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746932323; x=1747537123;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4rIqno4q3SZ3Qt2EV0P6akhqys5m6oT2jaLjH6WpTDE=;
+        b=js+cpziyul0IOu5A/1BJUM6lwRinJWpcXhETCPH+FsIn+pfNm7o3bsRTg8CwX9IKur
+         p4IK9V2r7oNTbyM5Gi9ONT1VD2AhhMh9PPl+K9RggUWlwU45tJUyaZS17z5b1iDAgAXi
+         yXm4yuY5UnqaaicFFj/Ogt7xbIbLZ5jfay7R3hZnslJ082cLuZI0+/B64S2FSSrv6scl
+         mEr2mdkBNkWaeJdmwuvDzQHUrSYU9aGh9qOj941IdxeiCUHmJV1FY469G0wA92WfPIrT
+         Y1ezHEqxQc3WvDgdVvCAWIgz8RR8q/FUR35odGZ/AtjNDkHtA7svjNSvV1XhJgvtclgX
+         t9jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTaRRtW5+HI3F7PToSTzD/YCtTGXYvr4YdEYjunwyF39xKQ7Mn6V8EIBFtFEWFEQdWtmw/MfzcxbHgTBtg@vger.kernel.org, AJvYcCXK033cQvHtSs9PvRJNdgNbZfx2BRDnq4jhkZl+RQKsLfkMfezjSnFbudnQO2bhndZxgDsTkBtE8Yrr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwhPfn2jZswexPVlsgJsd3MYmukU4KVKZXt+Om9OEu1aEzdch0
+	6VJo3q5ZHSALKTyzD4uVjPj2Fs1t7Vg2kAGnjNpjidVcN8j54b4MaXuSUA==
+X-Gm-Gg: ASbGncv6xFoFsryrev47anHugS2q5Gg1HTsGaM/3zIcotKCqQ3IwlF0TytUKqLhk1Qo
+	7gOdlPYXhSBBevEcwLjUugdza9LZU0kL3fvi/RSlRRBqZ71QqKHuo+WEGnidPOElHaSNluO2MT0
+	J5kU2h1qnewIak4mMFO77K2hiP4gSCgkoTLxeMo1n2lbkkSjZ2UBnAXBfOMWZQdTtXcRL7pMc7V
+	lDPrT4qkaLEaAfo4QsKUt+jdAxeoY9kBZ6ud6uBgKpShn2NgPLcmqk54j3XQuLiKTgt1vKeXNah
+	krKUyGovoAqezZcZlIpOZAL3ZHQp7JbbNUDIUfJPb6jVqVt2vQ==
+X-Google-Smtp-Source: AGHT+IHzJNRE1nE1qbW2MZGxQNyfCfDoJdMT84okbgjoRCuPxSjJvjYiOEtbzvisFV9KGgOn7dPL7Q==
+X-Received: by 2002:a05:690c:6c07:b0:6fd:33a5:59a with SMTP id 00721157ae682-70a3fa3df25mr129045327b3.18.1746932322631;
+        Sat, 10 May 2025 19:58:42 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:1::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d9cb39esm13386787b3.72.2025.05.10.19.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 May 2025 19:58:41 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: "Huang, Ying" <ying.huang@linux.alibaba.com>,
+	gourry@gourry.net,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	osalvador@suse.de,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
+Date: Sat, 10 May 2025 19:58:39 -0700
+Message-ID: <20250511025840.2410154-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250510185150.4078843-1-joshua.hahnjy@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 18/18] cxl: docs - add self-referencing cross-links
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
-References: <20250430181048.1197475-1-gourry@gourry.net>
- <20250430181048.1197475-19-gourry@gourry.net>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250430181048.1197475-19-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+Hello Andrew,
+
+I was hoping to fold this fixlet in with the patch this belongs to. It includes
+some wordsmithing changes, some code simplification/cleanups, and makes sure
+that the code behavior matches that of the ABI I described. I've kept the
+original message below as well, where Ying suggested the changes present in
+this fixlet.
+
+Please let me know if this fixlet is too big, and you would rather prefer a
+new version instead. Thank you as always for your patience and support!
+Joshua
+
+diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
+index ec13382c606f..649c0e9b895c 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
++++ b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
+@@ -24,7 +24,7 @@ Description:	Weight configuration interface for nodeN
+ 		empty string, ...) will return -EINVAL.
+
+ 		Changing the weight to a valid value will automatically
+-		update the system to manual mode as well.
++		switch the system to manual mode as well.
+
+ What:		/sys/kernel/mm/mempolicy/weighted_interleave/auto
+ Date:		May 2025
+diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
+index 3e8da8ba1146..0fe96f3ab3ef 100644
+--- a/include/linux/mempolicy.h
++++ b/include/linux/mempolicy.h
+@@ -57,15 +57,6 @@ struct mempolicy {
+ 	} w;
+ };
+
+-/*
+- * A null weighted_interleave_state is interpted as having .mode = "auto",
+- * and .iw_table is interpreted as an array of 1s with length nr_node_ids.
+- */
+-struct weighted_interleave_state {
+-	bool mode_auto;
+-	u8 iw_table[];
+-};
+-
+ /*
+  * Support for managing mempolicy data objects (clone, copy, destroy)
+  * The default fast path of a NULL MPOL_DEFAULT policy is always inlined.
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index f542691b7123..0624d735a2e7 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -148,6 +148,14 @@ static struct mempolicy preferred_node_policy[MAX_NUMNODES];
+  */
+ static const int weightiness = 32;
+
++/*
++ * A null weighted_interleave_state is interpreted as having .mode="auto",
++ * and .iw_table is interpreted as an array of 1s with length nr_node_ids.
++ */
++struct weighted_interleave_state {
++	bool mode_auto;
++	u8 iw_table[];
++};
+ static struct weighted_interleave_state __rcu *wi_state;
+ static unsigned int *node_bw_table;
+
+@@ -3561,9 +3569,8 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 	int i;
+
+ 	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
+-	if (count == 0 || sysfs_streq(buf, ""))
+-		weight = 0;
+-	else if (kstrtou8(buf, 0, &weight) || weight == 0)
++	if (count == 0 || sysfs_streq(buf, "") ||
++	    kstrtou8(buf, 0, &weight) || weight == 0)
+ 		return -EINVAL;
+
+ 	new_wi_state = kzalloc(struct_size(new_wi_state, iw_table, nr_node_ids),
+@@ -3630,9 +3637,15 @@ static ssize_t weighted_interleave_auto_store(struct kobject *kobj,
+ 	if (!input) {
+ 		old_wi_state = rcu_dereference_protected(wi_state,
+ 					lockdep_is_held(&wi_state_lock));
+-		if (old_wi_state)
+-			memcpy(new_wi_state->iw_table, old_wi_state->iw_table,
+-					nr_node_ids * sizeof(u8));
++		if (!old_wi_state)
++			goto update_wi_state;
++		if (input == old_wi_state->mode_auto) {
++			mutex_unlock(&wi_state_lock);
++			return count;
++		}
++
++		memcpy(new_wi_state->iw_table, old_wi_state->iw_table,
++					       nr_node_ids * sizeof(u8));
+ 		goto update_wi_state;
+ 	}
+
+@@ -3707,8 +3720,12 @@ static void wi_state_free(void)
+ 	kfree(&wi_group->wi_kobj);
+ }
+
++static struct kobj_attribute wi_auto_attr =
++	__ATTR(auto, 0664, weighted_interleave_auto_show,
++			   weighted_interleave_auto_store);
++
+ static void wi_cleanup(void) {
+-	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
++	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
+ 	sysfs_wi_node_delete_all();
+ 	wi_state_free();
+ }
+@@ -3798,10 +3815,6 @@ static int wi_node_notifier(struct notifier_block *nb,
+ 	return NOTIFY_OK;
+ }
+
+-static struct kobj_attribute wi_auto_attr =
+-	__ATTR(auto, 0664, weighted_interleave_auto_show,
+-			   weighted_interleave_auto_store);
+-
+ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+ {
+ 	int nid, err;
 
 
+On Sat, 10 May 2025 11:51:50 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
 
-On 4/30/25 11:10 AM, Gregory Price wrote:
-> Add some crosslinks between pages in the CXL docs - mostly to the
-> ACPI tables.
+> On Sat, 10 May 2025 13:25:32 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
 > 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->  .../driver-api/cxl/devices/device-types.rst   |  2 +-
->  .../cxl/linux/access-coordinates.rst          |  8 +++--
->  .../driver-api/cxl/linux/cxl-driver.rst       | 36 ++++++++++---------
->  .../driver-api/cxl/linux/early-boot.rst       | 30 +++++++++-------
->  .../driver-api/cxl/platform/bios-and-efi.rst  | 13 +++----
->  .../example-configurations/flexible.rst       | 10 +++---
->  .../example-configurations/hb-interleave.rst  | 10 +++---
->  .../multi-dev-per-hb.rst                      | 10 +++---
->  .../example-configurations/one-dev-per-hb.rst | 10 +++---
->  9 files changed, 71 insertions(+), 58 deletions(-)
+> Hi Ying,
+> Thank you for reviewing my patch, as always!
 > 
-
-
-> diff --git a/Documentation/driver-api/cxl/linux/access-coordinates.rst b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> index b07950ea30c9..24db5b41716a 100644
-> --- a/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> +++ b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> @@ -24,7 +24,8 @@ asymmetry in properties does not happen and all paths to EPs are equal.
->  
->  There can be multiple switches under an RP. There can be multiple RPs under
->  a CXL Host Bridge (HB). There can be multiple HBs under a CXL Fixed Memory
-> -Window Structure (CFMWS).
-> +Window Structure (CFMWS) in the
-> +Documentation/driver-api/cxl/platform/acpi/acpi/cedt.rst.
->  
->  An example hierarchy:
->  
-> @@ -83,8 +84,9 @@ also the index for the resulting xarray.
->  
->  The next step is to take the min() of the per host bridge bandwidth and the
->  bandwidth from the Generic Port (GP). The bandwidths for the GP is retrieved
-
-                                                                   are
-
-> -via ACPI tables SRAT/HMAT. The min bandwidth are aggregated under the same
-
-s/min/minimum/ preferably.
-
-> -ACPI0017 device to form a new xarray.
-> +via ACPI tables Documentation/driver-api/cxl/platform/acpi/srat.rst and
-> +Documentation/driver-api/cxl/platform/acpi/hmat.rst. The min bandwidth are
-> +aggregated under the same ACPI0017 device to form a new xarray.
->  
->  Finally, the cxl_region_update_bandwidth() is called and the aggregated
->  bandwidth from all the members of the last xarray is updated for the
-
-> diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
-> index 275174d5b0bb..309cc6999c6b 100644
-> --- a/Documentation/driver-api/cxl/linux/early-boot.rst
-> +++ b/Documentation/driver-api/cxl/linux/early-boot.rst
-> @@ -12,7 +12,8 @@ read EFI and ACPI information throughout this process to configure logical
->  representations of the devices.
->  
->  During Linux Early Boot stage (functions in the kernel that have the __init
-> -decorator), the system takes the resources created by EFI/BIOS (ACPI tables)
-> +decorator), the system takes the resources created by EFI/BIOS
-> +(Documentation/driver-api/cxl/platform/acpi.rst)
->  and turns them into resources that the kernel can consume.
->  
->  
-> @@ -69,13 +70,15 @@ significant impact performance depending on the memory capacity of the system.
->  NUMA Node Reservation
->  =====================
->  
-> -Linux refers to the proximity domains (:code:`PXM`) defined in the SRAT to
-> -create NUMA nodes in :code:`acpi_numa_init`. Typically, there is a 1:1 relation
-> -between :code:`PXM` and NUMA node IDs.
-> +Linux refers to the proximity domains (:code:`PXM`) defined in the
-> +Documentation/driver-api/cxl/platform/acpi/srat.rst to create NUMA nodes in
-> +:code:`acpi_numa_init`. Typically, there is a 1:1 relation between
-> +:code:`PXM` and NUMA node IDs.
->  
-> -SRAT is the only ACPI defined way of defining Proximity Domains. Linux chooses
-> -to, at most, map those 1:1 with NUMA nodes. CEDT adds a description of SPA
-> -ranges which Linux may wish to map to one or more NUMA nodes
-> +The SRAT is the only ACPI defined way of defining Proximity Domains. Linux
-> +chooses to, at most, map those 1:1 with NUMA nodes.
-> +Documentation/driver-api/cxl/platform/acpi/cedt.rst
-> +adds a description of SPA ranges which Linux may map to one or more NUMA nodes
-
-Add ending period ('.') above.
-
->  
->  If there are CXL ranges in the CFMWS but not in SRAT, then a fake :code:`PXM`
->  is created (as of v6.15). In the future, Linux may reject CFMWS not described
-> @@ -88,7 +91,7 @@ data for Linux to identify NUMA nodes their associated memory regions.
->  
->  The relevant code exists in: :code:`linux/drivers/acpi/numa/srat.c`.
->  
-> -See the Example Platform Configurations section for more information.
-> +See Documentation/driver-api/cxl/platform/example-configs.rst for more info.
->  
->  Memory Tiers Creation
->  =====================
-> @@ -107,10 +110,13 @@ Tier membership can be inspected in ::
->    /sys/devices/virtual/memory_tiering/memory_tierN/nodelist
->    0-1
->  
-> -If nodes are grouped which have clear difference in performance, check the HMAT
-> -and CDAT information for the CXL nodes.  All nodes default to the DRAM tier,
-> -unless HMAT/CDAT information is reported to the memory_tier component via
-> -`access_coordinates`.
-> +If nodes are grouped which have clear difference in performance, check the
-> +Documentation/driver-api/cxl/platform/acpi/hmat.rst and CDAT
-> +(Documentation/driver-api/cxl/devices/uefi.rst) information for the CXL nodes.
-> +All nodes default to the DRAM tier, unless HMAT/CDAT information is reported
-> +to the memory_tier component via `access_coordinates`.
-> +
-> +For more, see Documentation/driver-api/cxl/linux/access-coordinates.rst.
->  
->  Contiguous Memory Allocation
->  ============================
-
-
-> diff --git a/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst b/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-> index 13a97c03e25a..b2559d2de225 100644
-> --- a/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-> +++ b/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-> @@ -18,7 +18,7 @@ Things to note:
->  * This SRAT describes one-node for each of the above CFMWS.
-
-                         one node
-
->  * The HMAT describes performance for each node in the SRAT.
->  
-> -CEDT ::
-> +Documentation/driver-api/cxl/platform/acpi/cedt.rst ::
->  
->              Subtable Type : 00 [CXL Host Bridge Structure]
->                   Reserved : 00
-> @@ -137,7 +137,7 @@ CEDT ::
->                      QtgId : 0001
->               First Target : 00000006
->  
-> -SRAT ::
-> +Documentation/driver-api/cxl/platform/acpi/srat.rst ::
->  
->           Subtable Type : 01 [Memory Affinity]
->                  Length : 28
-> @@ -223,7 +223,7 @@ SRAT ::
->         Hot Pluggable : 1
->          Non-Volatile : 0
->  
-> -HMAT ::
-> +Documentation/driver-api/cxl/platform/acpi/hmat.rst ::
->  
->                 Structure Type : 0001 [SLLBI]
->                      Data Type : 00   [Latency]
-> @@ -263,7 +263,7 @@ HMAT ::
->                          Entry : 0100
->                          Entry : 0100
->  
-> -SLIT ::
-> +Documentation/driver-api/cxl/platform/acpi/slit.rst ::
->  
->       Signature : "SLIT"    [System Locality Information Table]
->      Localities : 0000000000000003
-> @@ -276,7 +276,7 @@ SLIT ::
->    Locality   6 : FF FF FF FF FF FF 0A FF
->    Locality   7 : FF FF FF FF FF FF FF 0A
->  
-> -DSDT ::
-> +Documentation/driver-api/cxl/platform/acpi/dsdt.rst ::
->  
->    Scope (_SB)
->    {
-> diff --git a/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst b/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-> index fa0885d82deb..9cbf3dd44b0f 100644
-> --- a/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-> +++ b/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-> @@ -13,7 +13,7 @@ Things to note:
->  * This SRAT describes one-node for both host bridges.
-
-                         one node
-
->  * The HMAT describes a single node's performance.
->  
-> -CEDT ::
-> +Documentation/driver-api/cxl/platform/acpi/cedt.rst ::
->  
->              Subtable Type : 00 [CXL Host Bridge Structure]
->                   Reserved : 00
-> @@ -48,7 +48,7 @@ CEDT ::
->               First Target : 00000007
->              Second Target : 00000006
->  
-> -SRAT ::
-> +Documentation/driver-api/cxl/platform/acpi/srat.rst ::
->  
->           Subtable Type : 01 [Memory Affinity]
->                  Length : 28
-> @@ -62,7 +62,7 @@ SRAT ::
->         Hot Pluggable : 1
->          Non-Volatile : 0
->  
-> -HMAT ::
-> +Documentation/driver-api/cxl/platform/acpi/hmat.rst ::
->  
->                 Structure Type : 0001 [SLLBI]
->                      Data Type : 00   [Latency]
-> @@ -80,14 +80,14 @@ HMAT ::
->                          Entry : 1200
->                          Entry : 0400
->  
-> -SLIT ::
-> +Documentation/driver-api/cxl/platform/acpi/slit.rst ::
->  
->       Signature : "SLIT"    [System Locality Information Table]
->      Localities : 0000000000000003
->    Locality   0 : 10 20
->    Locality   1 : FF 0A
->  
-> -DSDT ::
-> +Documentation/driver-api/cxl/platform/acpi/dsdt.rst ::
->  
->    Scope (_SB)
->    {
-> diff --git a/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst b/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-> index 6adf7c639490..fa24243968ac 100644
-> --- a/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-> +++ b/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-> @@ -14,7 +14,7 @@ Things to note:
->  * This CEDT/SRAT describes one node for both devices.
->  * There is only one proximity domain the HMAT for both devices.
->  
-> -CEDT ::
-> +Documentation/driver-api/cxl/platform/acpi/cedt.rst ::
->  
->              Subtable Type : 00 [CXL Host Bridge Structure]
->                   Reserved : 00
-> @@ -39,7 +39,7 @@ CEDT ::
->                      QtgId : 0001
->               First Target : 00000007
->  
-> -SRAT ::
-> +Documentation/driver-api/cxl/platform/acpi/srat.rst ::
->  
->           Subtable Type : 01 [Memory Affinity]
->                  Length : 28
-> @@ -53,7 +53,7 @@ SRAT ::
->         Hot Pluggable : 1
->          Non-Volatile : 0
->  
-> -HMAT ::
-> +Documentation/driver-api/cxl/platform/acpi/hmat.rst ::
->  
->                 Structure Type : 0001 [SLLBI]
->                      Data Type : 00   [Latency]
-> @@ -69,14 +69,14 @@ HMAT ::
->                          Entry : 1200
->                          Entry : 0200
->  
-> -SLIT ::
-> +Documentation/driver-api/cxl/platform/acpi/slit.rst ::
->  
->       Signature : "SLIT"    [System Locality Information Table]
->      Localities : 0000000000000003
->    Locality   0 : 10 20
->    Locality   1 : FF 0A
->  
-> -DSDT ::
-> +Documentation/driver-api/cxl/platform/acpi/dsdt.rst ::
->  
->    Scope (_SB)
->    {
-> diff --git a/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-> index 8b732dc8c5b6..ee65b3364c5b 100644
-> --- a/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-> +++ b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-> @@ -14,7 +14,7 @@ Things to note:
->  * This CEDT/SRAT describes one-node per device
-
-                              one node
-
->  * The expanders have the same performance and will be in the same memory tier.
->  
-> -CEDT ::
-> +Documentation/driver-api/cxl/platform/acpi/cedt.rst ::
->  
->              Subtable Type : 00 [CXL Host Bridge Structure]
->                   Reserved : 00
-> @@ -62,7 +62,7 @@ CEDT ::
->                      QtgId : 0001
->               First Target : 00000006
->  
-> -SRAT ::
-> +Documentation/driver-api/cxl/platform/acpi/srat.rst ::
->  
->           Subtable Type : 01 [Memory Affinity]
->                  Length : 28
-> @@ -88,7 +88,7 @@ SRAT ::
->         Hot Pluggable : 1
->          Non-Volatile : 0
->  
-> -HMAT ::
-> +Documentation/driver-api/cxl/platform/acpi/hmat.rst ::
->  
->                 Structure Type : 0001 [SLLBI]
->                      Data Type : 00   [Latency]
-> @@ -108,7 +108,7 @@ HMAT ::
->                          Entry : 0200
->                          Entry : 0200
->  
-> -SLIT ::
-> +Documentation/driver-api/cxl/platform/acpi/slit.rst ::
->  
->       Signature : "SLIT"    [System Locality Information Table]
->      Localities : 0000000000000003
-> @@ -116,7 +116,7 @@ SLIT ::
->    Locality   1 : FF 0A FF
->    Locality   2 : FF FF 0A
->  
-> -DSDT ::
-> +Documentation/driver-api/cxl/platform/acpi/dsdt.rst ::
->  
->    Scope (_SB)
->    {
-
--- 
-~Randy
-
+> > Hi, Joshua,
+> > 
+> > Thank you for updated version!  And sorry for late reply.
+> > 
+> > Joshua Hahn <joshua.hahnjy@gmail.com> writes:
+> 
+> [...snip...]
+> 
+> > > diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
+> > > index 0b7972de04e9..ec13382c606f 100644
+> > > --- a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
+> > > +++ b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
+> > > @@ -20,6 +20,35 @@ Description:	Weight configuration interface for nodeN
+> > >  		Minimum weight: 1
+> > >  		Maximum weight: 255
+> > >  
+> > > -		Writing an empty string or `0` will reset the weight to the
+> > > -		system default. The system default may be set by the kernel
+> > > -		or drivers at boot or during hotplug events.
+> > > +		Writing invalid values (i.e. any values not in [1,255],
+> > > +		empty string, ...) will return -EINVAL.
+> > > +
+> > > +		Changing the weight to a valid value will automatically
+> > > +		update the system to manual mode as well.
+> > 
+> > s/update/switch/ ?
+> > 
+> > But my English is poor, please keep your version if you think that it's
+> > better.
+> 
+> I have no particular preference here, whatever will make it easiest for the
+> users to understand what is happening. I'll take your suggestion!
+> 
+> [...snip...]
+> 
+> > > +/*
+> > > + * A null weighted_interleave_state is interpted as having .mode = "auto",
+> > > + * and .iw_table is interpreted as an array of 1s with length nr_node_ids.
+> > > + */
+> > 
+> > Better to move the comments to above "wi_state" definition?
+> > 
+> > > +struct weighted_interleave_state {
+> > > +	bool mode_auto;
+> > > +	u8 iw_table[];
+> > > +};
+> > > +
+> > 
+> > Why do you put the type definition in mempolicy.h instead of
+> > mempolicy.c?  I don't find other users except mempolicy.c.
+> 
+> Good point, I'll move the definition to mempolicy.c and move the comment
+> to the wi_state definition as well.
+> 
+> [...snip...]
+> 
+> > > @@ -3450,31 +3555,104 @@ static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+> > >  static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+> > >  			  const char *buf, size_t count)
+> > >  {
+> > > +	struct weighted_interleave_state *new_wi_state, *old_wi_state = NULL;
+> > >  	struct iw_node_attr *node_attr;
+> > > -	u8 *new;
+> > > -	u8 *old;
+> > >  	u8 weight = 0;
+> > > +	int i;
+> > >  
+> > >  	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
+> > >  	if (count == 0 || sysfs_streq(buf, ""))
+> > >  		weight = 0;
+> > 
+> > According to revised ABI, we should return -EINVAL here?
+> 
+> Great catch, I completely ignored the ABI description that I wrote...
+> I'll go ahead and just return -EINVAL here!
+> 
+> [...snip...]
+> 
+> > > +static ssize_t weighted_interleave_auto_store(struct kobject *kobj,
+> > > +		struct kobj_attribute *attr, const char *buf, size_t count)
+> > > +{
+> > > +	struct weighted_interleave_state *new_wi_state, *old_wi_state = NULL;
+> > > +	unsigned int *bw;
+> > > +	bool input;
+> > > +	int i;
+> > > +
+> > > +	if (kstrtobool(buf, &input))
+> > > +		return -EINVAL;
+> > > +
+> > > +	new_wi_state = kzalloc(struct_size(new_wi_state, iw_table, nr_node_ids),
+> > > +			       GFP_KERNEL);
+> > > +	if (!new_wi_state)
+> > > +		return -ENOMEM;
+> > > +	for (i = 0; i < nr_node_ids; i++)
+> > > +		new_wi_state->iw_table[i] = 1;
+> > > +
+> > > +	mutex_lock(&wi_state_lock);
+> > > +	if (!input) {
+> > 
+> > If input == old_wi_state->mode_auto, we can return directly?
+> 
+> Yes, that makes sense to me.
+> 
+> > >  static void wi_cleanup(void) {
+> > > +	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
+> > 
+> > Why not just
+> > 
+> > 	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
+> > 
+> > ?
+> 
+> Also makes sense!!
+> 
+> > ---
+> > Best Regards,
+> > Huang, Ying
+> 
+> Thank you for your great feedback Ying, I'll make changes based on
+> your suggestions and shortly send up a v9. I hope you have a great day!
+> Joshua
+> 
