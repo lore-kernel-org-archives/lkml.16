@@ -1,232 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EDA23E235;
-	Sun, 11 May 2025 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E362AD0B
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 15:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746977598; cv=none; b=ORxwJOiFQ91obtLtJpTRFMfRK9KWMZ3J6ZmXR5peMH86IzCeoFZyrAeBH79UCXzR15CWwfTXiAaPoj/eYKtK0ZSaIFhwSCwf49tWMQsoX8y6j/LstI1QAB0Ur6mROx5HqujXjaFnDEF3PAbXepC+LJrYg3qmi3s5xzbBvejkJHI=
+	t=1746977810; cv=none; b=llwbXB6dEQjOScX/v9rIA0YUkFfTD/u+KTY4meslTJjRfV//6MguZNzQsdZAbvDTRkW7aMAw6msdrFoZr8sEaqCTQpiyQDksOR08UDPacta4+b/QRyK3Ou1lRdyeFbRCNH75YtET6+HWficEqXMI6MB0+x4ifPwClAMUXQx5JG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746977598; c=relaxed/simple;
-	bh=C0iCaNSnIqBToiCotuuqagsumz7rSI92jdSoF5GHqQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S3acIMelrtUE/BJwUPbk2BBu28ZTfuTxHZA5Nnpz9G5lcTSqeVYUjRNXolwWcbcNsOzp5joBb0nPzMR4SWqIM+AOUDvSg7OlpWwxoLBkSK8sn5z5zhoWhzVxJP0QBpsXYXT4o91flm32j/96a9p3idQTT8XAhc6WxMzh+0bU1Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFIzoDrw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746977810; c=relaxed/simple;
+	bh=qGKacZFH6d9H7gZIy5574lz4sh3DAs6LJsxIoFdhtKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYkb2c+RsRKF4AbrSzQ3PnnAtVA5tRljQzl5GYPycg5fXnaN6XZ8ZUGArafBFvMWUFdN5XCPCl9GcbZHYQ0dJGmc86FW9gyout7vhY5tRiNzc0U2dd2PEaH/dtihqNXP4HQ9Xlf6HG7pvgmvVZ6xWxbmjPch4n+jMeBtKbbz0ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EY+AUvID; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFIzoDrw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DE7C4CEE4;
-	Sun, 11 May 2025 15:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746977597;
-	bh=C0iCaNSnIqBToiCotuuqagsumz7rSI92jdSoF5GHqQ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qFIzoDrwl27jwkRwFGOK5L/6YWjcDGCVKt6pUXfLqVNdPN23EQq2gEgRri/fHazhs
-	 k4E9jp1bciGlozhYfffFIfHmgCfCiVAdTdAKisXFNtO0shws/Emja54tCe6YJ9Ezu2
-	 8yrM1F7ETkclYbaf+O1d2g6K6Jq9EZ1tvRQ67RwJOZF8E/vZWLIwH0tx3DBhY16mth
-	 zxcd1PfRb7v2hPgN6tSwsEM+TiVzAm0oC5jtmvLxY4MnwZSqIu7Omcfnn2dJrRYSl0
-	 p79v4DG3WHdHVYFaDZWaaIFB6xh2WWGyetCHt10uE9cHU1kIKvkq74w+wEXixPzqfR
-	 R8BotJZb6Pz7w==
-Date: Sun, 11 May 2025 16:33:10 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Brajesh Patil <brajeshpatil11@gmail.com>
-Cc: lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, marcelo.schmitt1@gmail.com,
- dlechner@baylibre.com
-Subject: Re: [PATCH v2 4/5] iio: magnetometer: qmc5883l: add extended sysfs
- attributes and configuration options
-Message-ID: <20250511163310.01522d27@jic23-huawei>
-In-Reply-To: <20250508120900.114348-2-brajeshpatil11@gmail.com>
-References: <20250508120900.114348-1-brajeshpatil11@gmail.com>
-	<20250508120900.114348-2-brajeshpatil11@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EY+AUvID"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746977806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NpNCD9/isg8b1+k2LARZWva+SLP5Kbk/L5GpSCTXRlc=;
+	b=EY+AUvIDuP1/ToUb7OyavWjda5NAOgkLGmckDM97zfVkKWKV0f+YO+6NTb3yG/g0kD0mYz
+	z3rX36rFuWZM937ZTVuhO+pK1AurrHoHwooJRXdSn9BBPZb3K7hTxdF9ZbRekiSyYZhJ/O
+	28//JAULF5PQZz0NgiElASPTtTrjvZE=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-2-x60tSm8SMJy6UrRS6RTsDQ-1; Sun, 11 May 2025 11:36:44 -0400
+X-MC-Unique: x60tSm8SMJy6UrRS6RTsDQ-1
+X-Mimecast-MFC-AGG-ID: x60tSm8SMJy6UrRS6RTsDQ_1746977800
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-326c70002d0so11045621fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:36:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746977799; x=1747582599;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NpNCD9/isg8b1+k2LARZWva+SLP5Kbk/L5GpSCTXRlc=;
+        b=bwsoSGLiH35ztG/zDNcqWgHsmOpItonmzo2Jb8+2ffuQX46e7qbHNFjXMIwN79qUtW
+         yic5NAG0qlFrhDnn8NaUKVQB842XwOumA8iTQa8/xCmZ/Lr2hY14gBCORF+tvLJZQPWB
+         XaWB93OQOCvpCebWWhCLsnBKr55rBZp/rYwSL1TJ7cz91LOsK+RKtl1iwLt8gggBa9Pc
+         IKEZtBx/xRLhsqna4Jl68UAWmD+QDc2iKekMo6zoXm/p1HdCoYhoUDgEhyBLVdnBNOQ0
+         5QrERjHwAPdJbPDZ0Nbgv0xfCqKNG6P4Bhi0tR1OHjLUjKjZ5Zykk57NaZoG1WQFF1AZ
+         FLvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgGjQONjbnfnwRNuFc5lE1qgTpeJ7L9fgxYM0/fAVmaESgIwZWHtorJ4BHCWRKMb5L+SbLUIOgDeVL7Fg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSSHWjM8T5a8P9O3NepwMUvXr/EwTA4vsalbTUqFV1Qq9H9cLT
+	u5mA3RgMqU1O7EJS6ooQUL0CV0C97mVbi9SInenochEcq1ymd5VOvH3IfNrbblraX2tVeDjtXBz
+	T8wJKS/3RviJ2YNt8sdMVBs5wP/lJ09w1VyS/iH03kgMT7AKBrILQ0xmZVBtO2VtJUF0HEA==
+X-Gm-Gg: ASbGncutAoImGcM/yY5BPPGlBv4JUGU5HXPsXUMxgaMISDdcXOZ864w5oFOp5GDE2YD
+	kdiQl2XdipI/3nru8Z1/pLEbEPdJaA7wVNBgi9lftBWUB4jBdyclYsMk7YUmDJT7F0CfevJpsvK
+	K5cFOPGc44Pgt5yH5zrH0/rGkorZh/1RNfcqSC5fdn/+16xADZlPpmxus3FwsJmDhSCulFSBsoK
+	ENsrgHJjTklbrqtFiTRVMXFCOsQRjRy6zpjOQX6iy16Nc4KRg5HlAvYuDTxPX2KZ0C2qhIYgdj5
+	x/ipxw==
+X-Received: by 2002:a05:6000:22c5:b0:3a0:9de8:88ba with SMTP id ffacd0b85a97d-3a1f64acc20mr8427883f8f.53.1746977788261;
+        Sun, 11 May 2025 08:36:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEaLhSnXG7WahQEWlAeW3ZdNW5sVr7QFEWtLXAW+865LoU/9TSABIPR1jvc6EOo3bowtzEPcw==
+X-Received: by 2002:a05:6000:4006:b0:39e:cbe3:17c8 with SMTP id ffacd0b85a97d-3a1f6427a7emr7479643f8f.12.1746977777002;
+        Sun, 11 May 2025 08:36:17 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f28f7sm9439635f8f.41.2025.05.11.08.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 08:36:16 -0700 (PDT)
+Date: Sun, 11 May 2025 11:36:13 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: SamiUddinsami.md.ko@gmail.com
+Cc: jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Sami Uddin <sami.md.ko@gmail.com>
+Subject: Re: [PATCH v2] virtio: reject shm region if length is zero
+Message-ID: <20250511113555-mutt-send-email-mst@kernel.org>
+References: <20250511114428.2061-1-sami.md.ko@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250511114428.2061-1-sami.md.ko@gmail.com>
 
-On Thu,  8 May 2025 13:08:59 +0100
-Brajesh Patil <brajeshpatil11@gmail.com> wrote:
-
-> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
+On Sun, May 11, 2025 at 09:14:28PM +0930, SamiUddinsami.md.ko@gmail.com wrote:
+> From: Sami Uddin <sami.md.ko@gmail.com>
+> 
+> Prevent usage of shared memory regions where the length is zero,
+> as such configurations are not valid and may lead to unexpected behavior.
+> 
+> Signed-off-by: Sami Uddin <sami.md.ko@gmail.com>
 > ---
->  drivers/iio/magnetometer/qmc5883l.c | 276 +++++++++++++++++++++++++++-
->  1 file changed, 274 insertions(+), 2 deletions(-)
+> v2:
+> - Fixed coding style issue: added space after 'if' statement
 > 
-> diff --git a/drivers/iio/magnetometer/qmc5883l.c b/drivers/iio/magnetometer/qmc5883l.c
-> index 68597cdd0ca8..07c65f193def 100644
-> --- a/drivers/iio/magnetometer/qmc5883l.c
-> +++ b/drivers/iio/magnetometer/qmc5883l.c
-> @@ -54,6 +54,20 @@
->  #define QMC5883L_OSR_MASK           0xC0
->  #define QMC5883L_OSR_SHIFT          6
+>  include/linux/virtio_config.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> +static const char *const qmc5883l_modes[] = {
-> +	"standby", "continuous"
-
-We try to tie modes like this to what sort of read paterns
-we are setting. Can be done with runtime pm or difference between buffered
-support and sysfs accesses but we almost never expose the control to userspace
-directly.
-
-> +};
-> +
-> +static const int qmc5883l_odr_avail[][2] = {
-> +	{10, 0}, {50, 0}, {100, 0}, {200, 0}
-
-{ 10 , 0 }, etc and trailing comma as not inherent to that last
-value that it is a terminator or anything like that.
-
-> +};
-> +
-> +static const char *const qmc5883l_osr_avail[] = {
-> +	"512", "256", "128", "64"
-> +};
-> +
-> +static const int qmc5883l_scale_avail[] = {2, 8};
-{ 2, 8, }
-
-> +
->  static const int qmc5883l_odr_map[] = {
->  	[QMC5883L_ODR_10HZ]  = 10,
->  	[QMC5883L_ODR_50HZ]  = 50,
-> @@ -82,6 +96,12 @@ struct qmc5883l_data {
-> 
->  static int qmc5883l_init(struct qmc5883l_data *data);
->  static int qmc5883l_set_mode(struct qmc5883l_data *data, unsigned int mode);
-> +static ssize_t qmc5883l_show_odr_avail(struct device *dev,
-> +				       struct device_attribute *attr, char *buf);
-> +static ssize_t qmc5883l_show_scale_avail(struct device *dev,
-> +					 struct device_attribute *attr, char *buf);
-> +static ssize_t qmc5883l_show_status(struct device *dev,
-> +				    struct device_attribute *attr, char *buf);
-> 
-
-Generally reorganize your code to avoid need for forwards declarations.
-
-> 
-> +static const struct iio_enum qmc5883l_mode_enum = {
-> +	.items = qmc5883l_modes,
-> +	.num_items = ARRAY_SIZE(qmc5883l_modes),
-> +	.get = qmc5883l_get_mode_iio,
-> +	.set = qmc5883l_set_mode_iio,
-> +};
-> +
-> +static const struct iio_enum qmc5883l_osr_enum = {
-> +	.items = qmc5883l_osr_avail,
-> +	.num_items = ARRAY_SIZE(qmc5883l_osr_avail),
-> +	.get = qmc5883l_get_osr_iio,
-> +	.set = qmc5883l_set_osr_iio,
-> +};
-> +
-> +static const struct iio_chan_spec_ext_info qmc5883l_ext_info[] = {
-> +	IIO_ENUM("mode", IIO_SHARED_BY_TYPE, &qmc5883l_mode_enum),
-
-Whilst I haven't yet looked at details here, mode attributes are basically unusable by
-generic software.  If at all possible hid that in the driver by auto switching
-modes as appropriate to what userspace is asking you to do.
-
-> +	IIO_ENUM_AVAILABLE("mode", IIO_SHARED_BY_TYPE, &qmc5883l_mode_enum),
-> +	IIO_ENUM("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
-
-standard ABI, so do that the normal way.
-
-> +	IIO_ENUM_AVAILABLE("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
-> +	{ }
-> +};
-> +
-> +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(qmc5883l_show_odr_avail);
-> +static IIO_DEVICE_ATTR(scale_available, 0444, qmc5883l_show_scale_avail, NULL, 0);
-> +static IIO_DEVICE_ATTR(data_ready, 0444, qmc5883l_show_status, NULL, 0);
-> +static IIO_DEVICE_ATTR(overflow, 0444, qmc5883l_show_status, NULL, 0);
-> +
-
-> 
-> +static int qmc5883l_write_raw(struct iio_dev *indio_dev,
-> +			      struct iio_chan_spec const *chan,
-> +			      int val, int val2, long mask)
-> +{
-> +	struct qmc5883l_data *data = iio_priv(indio_dev);
-> +	int odr, range;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (val == 10 && val2 == 0)
-
-If val2 == 0 is required for all. Check that once only.
-
-> +			odr = QMC5883L_ODR_10HZ;
-> +		else if (val == 50 && val2 == 0)
-> +			odr = QMC5883L_ODR_50HZ;
-> +		else if (val == 100 && val2 == 0)
-> +			odr = QMC5883L_ODR_100HZ;
-> +		else if (val == 200 && val2 == 0)
-> +			odr = QMC5883L_ODR_200HZ;
-> +		else
-> +			return -EINVAL;
-> +
-> +		return qmc5883l_set_odr(data, odr);
-> +	case IIO_CHAN_INFO_SCALE:
-> +		if (val == 2 && val2 == 0)
-> +			range = QMC5883L_RNG_2G;
-> +		else if (val == 8 && val2 == 0)
-> +			range = QMC5883L_RNG_8G;
-> +		else
-> +			return -EINVAL;
-> +
-> +		return qmc5883l_set_rng(data, range << QMC5883L_RNG_SHIFT);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int qmc5883l_write_raw_get_fmt(struct iio_dev *indio_dev,
-> +				      struct iio_chan_spec const *chan, long mask)
-> +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return IIO_VAL_INT_PLUS_NANO;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  static irqreturn_t qmc5883l_trigger_handler(int irq, void *p)
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index 169c7d367fac..b641b16d42ef 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -329,6 +329,8 @@ static inline
+>  bool virtio_get_shm_region(struct virtio_device *vdev,
+>  			   struct virtio_shm_region *region, u8 id)
 >  {
->  	struct iio_poll_func *pf = p;
-> @@ -321,6 +577,7 @@ static irqreturn_t qmc5883l_trigger_handler(int irq, void *p)
->  		.storagebits = 16,          \
->  		.endianness = IIO_LE,           \
->  	},                      \
-> +	.ext_info = qmc5883l_ext_info,      \
->  }
-> 
->  static const struct iio_chan_spec qmc5883l_channels[] = {
-> @@ -337,6 +594,18 @@ static const struct iio_chan_spec qmc5883l_channels[] = {
->  	IIO_CHAN_SOFT_TIMESTAMP(3),
->  };
-> 
-> +static struct attribute *qmc5883l_attributes[] = {
-> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-Use the get_avail() callback and standard core handlign for this.
+> +	if (region->len == 0)
+> +		return false;
 
-> +	&iio_dev_attr_scale_available.dev_attr.attr,
-and this.
+if (!region->len)
 
-> +	&iio_dev_attr_data_ready.dev_attr.attr,
-> +	&iio_dev_attr_overflow.dev_attr.attr,
+is more idiomatic
 
-Seconding what David said about custom ABI. Fit with normal ABI where possible
-and think very very hard about whether additional ABI is needed or whether you
-can set the relevant stuff internally.
+>  	if (!vdev->config->get_shm_region)
+>  		return false;
+>  	return vdev->config->get_shm_region(vdev, region, id);
+> -- 
+> 2.34.1
 
-For example data_ready isn't something we'd normally expose to userspace
-directly at all.
-
-> +	NULL
-> +};
