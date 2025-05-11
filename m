@@ -1,255 +1,271 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78DE645
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 13:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD27256C92;
+	Sun, 11 May 2025 13:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746971165; cv=none; b=agOHcc8dHQOAV9Q0yDYyQDF/Ljy8eZ0Y+bIEhfGcq6PGeZByZIEWRU4GW2uIrteicl1jVhFtm3egdG5NB3iGkF25L/6H1BUP69Mpq9p/drgUxfSImWvsl68kaFswR3n2NCiMwjBjOGsiKcfWEQqSH10APF9Z+T+86X9+G1tUQdY=
+	t=1746971344; cv=none; b=sxo1HsGTvODvnqutavrPgxmYsbwBIeaVeu66KbYTA9j9psldWF1mwL0IE35/LloyoxJw2jHRIk4bnaOI8y7li2JhwE7vRibjn7rI2je07eV1ogYybzpU20Su/Cu6FuPYka1NxgwyDWuueEn86SAVw2WuCWpB5SM6emGzpvBzeII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746971165; c=relaxed/simple;
-	bh=4GBA4p87fjNoRncYXPPmJZ44MPwWta/GXPU9r2zEEc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pM5bsd1wsVliDA2ECyKq0JQ5bdggS/tisuYCvhSelFTLwxQ2tRAk+LBA1hxjCg663QhVifNEWoCOQ4iDMTK5wbtLRJATyToEO6iwxj5xlp9qL1TrqfMKHLnuyW9LriA2vCE+Sqhz/fpvvkl0N1Ky3aNvVco7ujVOTQiLzRr7bIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SUzBbprD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746971344; c=relaxed/simple;
+	bh=iVDDATECt9gfhXNkrkHoCiPF6PoyhYBhPrjq8+PFV9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OATMc7NtPRW2DpWO/FybxEceIScWi/ajuIi4zd3L+qcv4brgH9TcRCgk2AI500/7MEozkkUMekdAGw8JpS24WHDQqOZxqsqN8oCEA9Tkcqt9ZeJ6r6nJEnJlJ1u9qvCxGYMClDRF64rbwaJUStza/3VsRHiLRc2chpfh2qV/qAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=tMYYoGuq; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SUzBbprD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746971162;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=++4BTrVLtU+bH/DduG/YVrNpWw/0yt4z9p0yidUBYL0=;
-	b=SUzBbprDL87jVbtMS96UxwKPKsyAzQX2gAEVJGicZA2+jH7wejuOorbS6M7IOF8l84e+zX
-	7hzcOUQqHpkbcv7RwySYXQrqY3VcUKOinPwo/s1Olbkzd7Ajalu/9sFRRE//FMin6n5W8A
-	fWXRaMHoqXLQA4S37CvG/YPg9qQcxsQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-jLaubrVfO3SY3mxqRaKIeg-1; Sun, 11 May 2025 09:46:01 -0400
-X-MC-Unique: jLaubrVfO3SY3mxqRaKIeg-1
-X-Mimecast-MFC-AGG-ID: jLaubrVfO3SY3mxqRaKIeg_1746971160
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso24984005e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 06:46:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746971160; x=1747575960;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=++4BTrVLtU+bH/DduG/YVrNpWw/0yt4z9p0yidUBYL0=;
-        b=Wkgn06aCQkkDajbsYm/6h2lJXXfb3kaJ1cKIkZ7N1K2Sg4eA9IiLbde1sI8X5cUNyl
-         OsLKza4O58Xh/jioYDFVxpoU3JruYA+z/yIKUp7WAoNxMBiAzbRrsGNVtLAobYY7RQFe
-         Q2He4AQJ03Jbur/jdCEwcTxetcIsFZQZlRTTdQRUu4nWDqZP6PTbQgKICE2UwUWJrsRk
-         ETmozVjQYb6uWwR8D9lEQLKbCwSEiCbp7TDsHX16p+0SKNW+/Rt+Qnc/pX5G45uiL5Ps
-         TW2wsOGwz2BFiIfFqcknyg7wJS8bTscWCSs5vjoUMzr00N12G0pyFOhaq51BPSl/FLD2
-         vyXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWM6nCIOwxfUurPsnryU+oXRLEqWpS/1H9i19XQsJR7hh46HH7NNGPOM06jApDBeH9/0oxFUhYKTqxbEwA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeYgKd6ZMeD582QvXgvZJyD3fo9EVWJ2wCg/G5O9lK0T0s/zRs
-	oe5NH5GiOKrLjOzKdd2BcnIKni1QD51BIhEhohSSMHc4C9RkgULq7v+Mnvcox3Hnx/TkKELMnoO
-	qIMRA6ZVDuk4Q7pKv0vcWIx9pL2pE+2wA+gZz420VC5NpDLVzHa11jqgNYPYuzQ==
-X-Gm-Gg: ASbGncvcOitRqPeHWmWzILbyojEFqplZP0IWFqSaiaNvxzOogFu1Jf/xzmjZeYY1D1C
-	3DggYey8ba0vJzSlo7sIaLC+U9kP3iEDJ51CecglS9v43kbmHMzlL6LxZ3e13rfKzjJVtRrK31r
-	z7GJsw8okiBxelAUYOVmhdvj/MFeZdAp5ZV4jOTqIMoSL8M5VeYeXXQHfYTxHS7OnFppMux6wTM
-	22G5CXsXkbAbbz/7Z8MsvZODoO4icFj24FDq5gBmuPFf/hOzSU6tGKRKUKMQPjhDNoCDYC2buJu
-	DqT36Q==
-X-Received: by 2002:a05:600c:8284:b0:43d:878c:7c40 with SMTP id 5b1f17b1804b1-442d6d1fb3bmr91934435e9.10.1746971160229;
-        Sun, 11 May 2025 06:46:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEg1Snjzp8begn9I45ToiSojXxDwp/vHKoP5jUyb2OD3rmo2ILs2v5Bo4MPNzqnhClIlKlDtQ==
-X-Received: by 2002:a05:600c:8284:b0:43d:878c:7c40 with SMTP id 5b1f17b1804b1-442d6d1fb3bmr91934185e9.10.1746971159771;
-        Sun, 11 May 2025 06:45:59 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d685c2d7sm92530965e9.30.2025.05.11.06.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 06:45:59 -0700 (PDT)
-Date: Sun, 11 May 2025 09:45:55 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Igor Mammedov <imammedo@redhat.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>, qemu-arm@nongnu.org,
-	qemu-devel@nongnu.org,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-	Gavin Shan <gshan@redhat.com>, Ani Sinha <anisinha@redhat.com>,
-	Cleber Rosa <crosa@redhat.com>,
-	Dongjiu Geng <gengdongjiu1@gmail.com>,
-	Eduardo Habkost <eduardo@habkost.net>,
-	Eric Blake <eblake@redhat.com>, John Snow <jsnow@redhat.com>,
-	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-	Markus Armbruster <armbru@redhat.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Shannon Zhao <shannon.zhaosl@gmail.com>,
-	Yanan Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 00/20] Change ghes to use HEST-based offsets and add
- support for error inject
-Message-ID: <20250511094546-mutt-send-email-mst@kernel.org>
-References: <cover.1741374594.git.mchehab+huawei@kernel.org>
- <20250511094343-mutt-send-email-mst@kernel.org>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="tMYYoGuq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=55b2MXHN1ae6ZgEcDHzWaK1s3f7kfPOhMW8piFdTCOg=; b=tMYYoGuqY+aLskzruhSEzrfhYm
+	3updh2wCSjrXhRH9dN+KBGTlti7qmJnNuWpzgDA730IaYf3gPQHCRbDaDHqY1qdG1sIgusibybcWC
+	gkZDZC1T3MlB1L/6awN2g5mVWY96XAH4LPZ2UuIXear5YZPwpRwL0rOkvLRSMPAYUpXL3aVrxzRhw
+	wYK1SwbwyWmnAYirxa32HA9ROzvYhGtoVBF/MlQC6mKUwdXqX0BL8X5fzZvAKod9YKe3IX1FrQOWy
+	Un7Zz5plT/hyr5IMxk5kVq5KZ7ybIm6dzFn/ug48j/cFhCxTQ+3zW5t/6TOZhKiH3mZqnDZDXE6LS
+	OyLjqY3A==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uE72j-0006vF-1j; Sun, 11 May 2025 15:48:37 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: amadeus@jmu.edu.cn, andyshrk@163.com, conor+dt@kernel.org,
+ damon.ding@rock-chips.com, devicetree@vger.kernel.org, didi.debian@cknow.org,
+ dsimic@manjaro.org, jbx6244@gmail.com, jing@jing.rocks, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, sebastian.reichel@collabora.com,
+ ziyao@disroot.org
+Subject: Re: [PATCH v7 4/5] arm64: dts: rockchip: add core dtsi for RK3562 SoC
+Date: Sun, 11 May 2025 15:48:35 +0200
+Message-ID: <3317829.AJdgDx1Vlc@diego>
+In-Reply-To: <20250511120009.37031-1-amadeus@jmu.edu.cn>
+References:
+ <13758471.dW097sEU6C@diego> <20250511120009.37031-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250511094343-mutt-send-email-mst@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Sun, May 11, 2025 at 09:45:04AM -0400, Michael S. Tsirkin wrote:
-> On Fri, Mar 07, 2025 at 08:14:29PM +0100, Mauro Carvalho Chehab wrote:
-> > Hi Michael,
-> > 
-> > I'm sending v8 to avoid a merge conflict with v7 due to this
-> > changeset:
-> > 
-> >    611f3bdb20f7 ("hw/acpi/ghes: Make  static")
-> 
-> 
-> 
-> Applied 1-13.
-> Patch 14 needs to apply compat to 10.0 machine type as well.
+Am Sonntag, 11. Mai 2025, 14:00:09 Mitteleurop=C3=A4ische Sommerzeit schrie=
+b Chukun Pan:
+> > First of all, thanks for noticing all the bits and pieces to improve.
+> > I di think I have now fixed up all the "regular" pieces you mentioned
+> > and amended the commit accordingly:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.gi=
+t/commit/?id=3D1d2f65fa98ddcafdfd1ebcdb87105141861b584a
+>=20
+> Thanks a lot for the quick fix! It seems there is still a little problem:
+>=20
+> > <snip>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3562.dtsi
+> > <snip>
+> +	gpu_opp_table: opp-table-gpu {
+> +		compatible =3D "operating-points-v2";
+> +
+> +		opp-300000000 {
+> +			opp-hz =3D /bits/ 64 <300000000>;
+> +			opp-microvolt =3D <825000 825000 1000000>;
+> +		};
+> +		opp-400000000 {
+> +		opp-hz =3D /bits/ 64 <400000000>;
+>=20
+> This line is missing a tab.
 
-Sorry i meant 1-11.
+fixed :-) .
 
-> 
-> > As ghes_record_cper_errors() was written since the beginning
-> > to be public and used by ghes-cper.c. It ended being meged
-> > earlier because the error-injection series become too big,
-> > so it was decided last year to split in two to make easier for
-> > reviewers and maintainers to discuss.
-> > 
-> > Anyway, as mentioned on v7, I guess we're ready to merge this
-> > series, as patches here have been thoughfully reviewed mainly 
-> > by Igor and Jonathan over the last 5-6 months.
-> > 
-> > The only change from v7 is a minor editorial change at HEST doc
-> > spec, and the addition of Igor and Jonathan's A-B/R-B.
-> > 
-> > This series change the way HEST table offsets are calculated,
-> > making them identical to what an OSPM would do and allowing
-> > multiple HEST entries without causing migration issues. It open
-> > space to add HEST support for non-arm architectures, as now
-> > the number and type of HEST notification entries are not
-> > hardcoded at ghes.c. Instead, they're passed as a parameter
-> > from the arch-dependent init code.
-> > 
-> > With such issue addressed, it adds a new notification type and
-> > add support to inject errors via a Python script. The script
-> > itself is at the final patch.
-> > 
-> > ---
-> > v8:
-> >   - added a patch to revert recently-added changeset causing a
-> >     conflict with these. All remaining patches are identical.
-> > 
-> > v7:
-> >   - minor editorial change at the patch updating HEST doc spec
-> >    with the new workflow
-> > 
-> > v6:
-> > - some minor nits addressed:
-> >    - use GPA instead of offset;
-> >    - merged two patches;
-> >    - fixed a couple of long line coding style issues;
-> >    - the HEST/DSDT diff inside a patch was changed to avoid troubles
-> >      applying it.
-> > 
-> > v5:
-> > - make checkpatch happier;
-> > - HEST table is now tested;
-> > - some changes at HEST spec documentation to align with code changes;
-> > - extra care was taken with regards to git bisectability.
-> > 
-> > v4:
-> > - added an extra comment for AcpiGhesState structure;
-> > - patches reordered;
-> > - no functional changes, just code shift between the patches in this series.
-> > 
-> > v3:
-> > - addressed more nits;
-> > - hest_add_le now points to the beginning of HEST table;
-> > - removed HEST from tests/data/acpi;
-> > - added an extra patch to not use fw_cfg with virt-10.0 for hw_error_le
-> > 
-> > v2: 
-> > - address some nits;
-> > - improved ags cleanup patch and removed ags.present field;
-> > - added some missing le*_to_cpu() calls;
-> > - update date at copyright for new files to 2024-2025;
-> > - qmp command changed to: inject-ghes-v2-error ans since updated to 10.0;
-> > - added HEST and DSDT tables after the changes to make check target happy.
-> >   (two patches: first one whitelisting such tables; second one removing from
-> >    whitelist and updating/adding such tables to tests/data/acpi)
-> > 
-> > Mauro Carvalho Chehab (20):
-> >   tests/acpi: virt: add an empty HEST file
-> >   tests/qtest/bios-tables-test: extend to also check HEST table
-> >   tests/acpi: virt: update HEST file with its current data
-> >   Revert "hw/acpi/ghes: Make ghes_record_cper_errors() static"
-> >   acpi/ghes: Cleanup the code which gets ghes ged state
-> >   acpi/ghes: prepare to change the way HEST offsets are calculated
-> >   acpi/ghes: add a firmware file with HEST address
-> >   acpi/ghes: Use HEST table offsets when preparing GHES records
-> >   acpi/ghes: don't hard-code the number of sources for HEST table
-> >   acpi/ghes: add a notifier to notify when error data is ready
-> >   acpi/generic_event_device: Update GHES migration to cover hest addr
-> >   acpi/generic_event_device: add logic to detect if HEST addr is
-> >     available
-> >   acpi/generic_event_device: add an APEI error device
-> >   tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
-> >   arm/virt: Wire up a GED error device for ACPI / GHES
-> >   qapi/acpi-hest: add an interface to do generic CPER error injection
-> >   acpi/generic_event_device.c: enable use_hest_addr for QEMU 10.x
-> >   tests/acpi: virt: update HEST and DSDT tables
-> >   docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
-> >   scripts/ghes_inject: add a script to generate GHES error inject
-> > 
-> >  MAINTAINERS                                   |  10 +
-> >  docs/specs/acpi_hest_ghes.rst                 |  28 +-
-> >  hw/acpi/Kconfig                               |   5 +
-> >  hw/acpi/aml-build.c                           |  10 +
-> >  hw/acpi/generic_event_device.c                |  44 ++
-> >  hw/acpi/ghes-stub.c                           |   7 +-
-> >  hw/acpi/ghes.c                                | 233 ++++--
-> >  hw/acpi/ghes_cper.c                           |  38 +
-> >  hw/acpi/ghes_cper_stub.c                      |  19 +
-> >  hw/acpi/meson.build                           |   2 +
-> >  hw/arm/virt-acpi-build.c                      |  35 +-
-> >  hw/arm/virt.c                                 |  19 +-
-> >  hw/core/machine.c                             |   2 +
-> >  include/hw/acpi/acpi_dev_interface.h          |   1 +
-> >  include/hw/acpi/aml-build.h                   |   2 +
-> >  include/hw/acpi/generic_event_device.h        |   1 +
-> >  include/hw/acpi/ghes.h                        |  51 +-
-> >  include/hw/arm/virt.h                         |   2 +
-> >  qapi/acpi-hest.json                           |  35 +
-> >  qapi/meson.build                              |   1 +
-> >  qapi/qapi-schema.json                         |   1 +
-> >  scripts/arm_processor_error.py                | 476 ++++++++++++
-> >  scripts/ghes_inject.py                        |  51 ++
-> >  scripts/qmp_helper.py                         | 703 ++++++++++++++++++
-> >  target/arm/kvm.c                              |   7 +-
-> >  tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
-> >  .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
-> >  tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
-> >  tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
-> >  tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
-> >  tests/data/acpi/aarch64/virt/HEST             | Bin 0 -> 224 bytes
-> >  tests/qtest/bios-tables-test.c                |   2 +-
-> >  32 files changed, 1695 insertions(+), 90 deletions(-)
-> >  create mode 100644 hw/acpi/ghes_cper.c
-> >  create mode 100644 hw/acpi/ghes_cper_stub.c
-> >  create mode 100644 qapi/acpi-hest.json
-> >  create mode 100644 scripts/arm_processor_error.py
-> >  create mode 100755 scripts/ghes_inject.py
-> >  create mode 100755 scripts/qmp_helper.py
-> >  create mode 100644 tests/data/acpi/aarch64/virt/HEST
-> > 
-> > -- 
-> > 2.48.1
-> > 
+> +			opp-microvolt =3D <825000 825000 1000000>;
+> +		};
+> > <snip>
+> +		spi0: spi@ff220000 {
+> +			compatible =3D "rockchip,rk3562-spi", "rockchip,rk3066-spi";
+> +			reg =3D <0x0 0xff220000 0x0 0x1000>;
+> +			interrupts =3D <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+>=20
+> Also needed here.
+
+I might be blind, but I don't see a tab missing here? #adress-cells and
+#size-cells are in the same level of indentation as the other properties
+of spi0? I did move the -cells down though now.
+
+
+> > <snip>
+> > +		pwm3: pwm@ff230030 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff230030 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+>=20
+> Missed here.
+
+adapted like the other pwm-nodes
+
+> > <snip>
+> > +				power-domain@12 {
+> > +					reg =3D <12>;
+> > +					#power-domain-cells =3D <1>;
+> > +					#address-cells =3D <1>;
+> > +					#size-cells =3D <0>;
+> > ...
+> > +				power-domain@13 {
+> > +					reg =3D <13>;
+> > +					#power-domain-cells =3D <1>;
+>=20
+> Does #power/#address/#size need to be put under pm_qos?
+
+moved
+
+> > <snip>
+> > +		spi1: spi@ff640000 {
+> > +			compatible =3D "rockchip,rk3066-spi";
+> > +			reg =3D <0x0 0xff640000 0x0 0x1000>;
+> > +			interrupts =3D <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > ...
+> > +		spi2: spi@ff650000 {
+> > +			compatible =3D "rockchip,rk3066-spi";
+> > +			reg =3D <0x0 0xff650000 0x0 0x1000>;
+> > +			interrupts =3D <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+>=20
+> Same here.
+
+moved
+
+>=20
+> > <snip>
+> > +		pwm4: pwm@ff700000 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff700000 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm5: pwm@ff700010 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff700010 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm6: pwm@ff700020 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff700020 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm7: pwm@ff700030 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff700030 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm8: pwm@ff710000 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff710000 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm9: pwm@ff710010 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff710010 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm10: pwm@ff710020 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff710020 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm11: pwm@ff710030 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff710030 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm12: pwm@ff720000 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff720000 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm13: pwm@ff720010 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff720010 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm14: pwm@ff720020 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff720020 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+> > ...
+> > +		pwm15: pwm@ff720030 {
+> > +			compatible =3D "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
+> > +			reg =3D <0x0 0xff720030 0x0 0x10>;
+> > +			#pwm-cells =3D <3>;
+> > +			pinctrl-names =3D "active";
+>=20
+> pinctrl and #pwm-cells forgot to change.
+
+hopefully caught all pwms now
+
+
+> > <snip>
+> > +		sdmmc0: mmc@ff880000 {
+> > +			compatible =3D "rockchip,rk3562-dw-mshc",
+> > +				     "rockchip,rk3288-dw-mshc";
+> > +			reg =3D <0x0 0xff880000 0x0 0x10000>;
+> > +			interrupts =3D <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> > +			max-frequency =3D <200000000>;
+> > ...
+> > +		sdmmc1: mmc@ff890000 {
+> > +			compatible =3D "rockchip,rk3562-dw-mshc",
+> > +				     "rockchip,rk3288-dw-mshc";
+> > +			reg =3D <0x0 0xff890000 0x0 0x10000>;
+> > +			interrupts =3D <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> > +			max-frequency =3D <200000000>;
+>=20
+> max-frequency should be placed below clock
+
+moved and also moved fifo-depth upwards between clock-names
+and max-frequency
+
+
+> > <snip>
+> > +		saradc0: adc@ff730000 {
+> > +			compatible =3D "rockchip,rk3562-saradc";
+> > +			reg =3D <0x0 0xff730000 0x0 0x100>;
+> > +			interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> > +			#io-channel-cells =3D <1>;
+> > ...
+> > +		saradc1: adc@ffaa0000 {
+> > +			compatible =3D "rockchip,rk3562-saradc";
+> > +			reg =3D <0x0 0xffaa0000 0x0 0x100>;
+> > +			interrupts =3D <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+> > +			#io-channel-cells =3D <1>;
+>=20
+> `#io-channel-cells` should be put above `status =3D "disabled";`
+
+moved now :-)
+
+Hopefully this now caught all the smallish issues.
+
+
+Thanks a lot
+Heiko
+
 
