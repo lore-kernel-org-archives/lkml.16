@@ -1,139 +1,150 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091CC2571D6
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 13:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE62256C92
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 13:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746971003; cv=none; b=qAsfalm4eW9lXpnfz4THac+41bT/p06/bkI9vA9FpQnbtJ9b4daXYf1NPAlCbpe7whcC8Vq7lb3VsCdCv6l7xCV8JdbeW0SX/o08bYlw8xScLennkrniKzJN3uVX9QLnLiE8OuFfnISXnVeUn6ifN/v1LZtkkO658NZL6W6p9YE=
+	t=1746971031; cv=none; b=Ag4h1x3HShH4pWYC0+MKcXAkcCBgbEVfkn35LBjrzxK+/T6WDjguH4xQ94OwxElNARX77Hva4X7rzDuiGvwZgtgDt2M2bgX1m1frh8y8wIRq0iCWt93hkIWDrZXFZ0uKe9Z8uXP0nXBk6aSLZdX6cyyP1dh3Uz7V5NyE1li0+ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746971003; c=relaxed/simple;
-	bh=DGrIKW6QLI5GXj0WJzMWfVKaiU3ubl+sUPYQLJ6Uq80=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y+URVEdprElRSqGZwNRyIPdjRXVc4NExnKgf8JAPRk8JFEs6roQCc1QkTHeEYcewS2n6OaefAViSCJHgKl7NHm3JGl2EBWy25XycniH7D4ayiWvGo5zJXJU5Q2g+sn8Vw82EXibspWTLGhQTzdZ7Hmekuv0zGAVWBZliDGpaa0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=D0/ceyjj; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1746971031; c=relaxed/simple;
+	bh=FAXQEQiRSJBFkJYUsQBsiyj/bzB2dareIVDnQ2+JyzA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p/cxnY351oXJo7RDuC0tUw7YDEVbgho6uWwNlb7hB8UWEk+o4GARXinrZkMtxGHOvlm64N+74bGdS2dM+A7qJhQ1nKUoG9f/vIYDLDbk6DCW7sFj9h21aMWaHpUqgl0RTDZwtd6jfHQncG9JTfT5CHJ/5emq6vQgvOfbIKkl4vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=tGNw0hPz; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="D0/ceyjj"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22fa414c497so42037595ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 06:43:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="tGNw0hPz"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d8fc9dbce4so16750865ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 06:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1746971001; x=1747575801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746971029; x=1747575829; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xYGn3XecLxKlXcXghuizRd0ORyv4dXXBBqocKLMzEs4=;
-        b=D0/ceyjj/QYLGGdm+n7zPKKEr6+WNeSJD4jliTP0+tsdOMKIQgW9I3xlZU63U6euOF
-         ZZG1Rsk7L2CQtpB0RZ8iktR4UqZlSWITCrqePgn+sWAGZjXzGAE6uj8BIh4AAdpCkmQ5
-         gtZXLus6S1IhBF50FPZ1JSXejnPsV+JTjmGgFX2pJAR0KC2wZgz+TCA9jQv0yCS5cW1s
-         6RPKLbNxs0a1jnRIh1DI+bb7Usd6BEfCpCX3mexoFL4ChW0iV1hv7ExjrKjsz61d5+Jo
-         6BGLDzkXEEFYHKENrdr4ERa9aaN9SwmW62PKJOZdaChj7/L8Qz1ymGe18wa3XP7c4opO
-         qbjg==
+        bh=7tikqvcPSSM0+ie8ei00WO4p/o6p01PdEuZ4eNfazi4=;
+        b=tGNw0hPz9twQaPKDXrcehXDuK13xr9bKweC78DMS/FlZpWCHf1EGEXjAKA1XOBr8ci
+         oIpMxhngXO51I7Yu8ikP2s7wZtPJVzBtNWY9sf6xu7OYc7z/8eGLDEQe61FST85HYFEx
+         8E0t7D7idJZHzsoMEwAKSd+WAwwFDAcH/5/RkmJKza4Cl9STndLad6VuNONKWQZYiqcH
+         cV2AC2H14akL3Huk7vEBnkT+Nv6sCQ+B3iQkZkYjiP1uBX9rmorMZyycUeofgpmI6WZY
+         OeNELxsRlgTfGX8UGIAuINCpIpQxpXHSUxtmHjxAwMR6MUdILkTR+JZUympel+fqXbNQ
+         M6gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746971001; x=1747575801;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746971029; x=1747575829;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xYGn3XecLxKlXcXghuizRd0ORyv4dXXBBqocKLMzEs4=;
-        b=q5NplfX4S0uB2QNadAh0c4HxuU9XUJdCloz0NBBRa5bEWIJHqDuoGoafZue0jmLNxu
-         KzmsClt6ozd3z6yBuMSdCsjSW/lz2B8jS7Y/pOc1fSpmCtk8DSXASKa5lrF1ZRtrn5J4
-         sISxnyc6yKQboGUOdf3+xEALP91MPB0gMnvbx1eUgcGIGFVXTY0DAn2hc0zHnq0rD0Os
-         fX9oGKjkDy0yHNK4CZwWmY7snXs9alud/zKGTYBagDlZCwiAtYgA+zfj+OjXwLZXlbiK
-         CASbssjaLXlVlWJUY67qg3QXoS2FPBz4CZ/EoQTWStZmRg16rVLASjEk8Sy6x7VaY5cm
-         Vf2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXayPnY90AVvx1G6xgYmPc1uDBR/p/pPRkn8xomNwPMpHjU/0q8yEIqtWE/WU74NYLlcQ140HM+hsMJ5ko=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQONHdhcgOk+trVROcJvg3aCXam/JORNU1t9spPMErUOCZz9Y4
-	OCzJLzTPxG/N+lojUYaVFl11OkZa8t6aQlQhYlZdR4Ldd5dulv4g0YCIWmcpAGM=
-X-Gm-Gg: ASbGncsLTf33Yav2JteuCf/1C92sSBT2RpbU4HZbSdJ8AR/dTPhogzPID9acijm92d1
-	yM1ug2G7rsSiqUeOH4Blw54k2PuaPDbUGqwf3JCn6+/vAVjYb9sn2DovdIH7Ny6UI42iHoG5/jH
-	zb1v9czrTnl1RL9x90/MMDF5dq5JmFkjPQXa+jq+z91w+mZIeu9NZuEtXNSBPVlfoYJp6w0+p0J
-	EJdAWOjByFAcTKoX/zY/eSXGactpT3FDKIyRdaoXwFkSxH8nGK67A4xW/BP9c80wuHtKMF51NIj
-	VXfsmCnv8AmB+4INDxcQDdYr5hjKyMywV8/f0XIstM8g9SrBUebBBuUXvtVhcTDsLFOXGxq2RK8
-	SxHjsIDqmqTFsog==
-X-Google-Smtp-Source: AGHT+IG52LyOtdqyYBdOZ0QKQPhVZkpzaGbfXrQI34jhYPtmLfmrXHBFBAebuBhiCsLhxrZFt4LIYA==
-X-Received: by 2002:a17:902:e94d:b0:227:e6fe:2908 with SMTP id d9443c01a7336-22fc91a8448mr169477755ad.48.1746971001231;
-        Sun, 11 May 2025 06:43:21 -0700 (PDT)
-Received: from anup-ubuntu-vm.localdomain ([122.171.17.86])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc754785bsm46665805ad.20.2025.05.11.06.43.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 06:43:20 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v3 23/23] MAINTAINERS: Add entry for RISC-V RPMI and MPXY drivers
-Date: Sun, 11 May 2025 19:09:39 +0530
-Message-ID: <20250511133939.801777-24-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250511133939.801777-1-apatel@ventanamicro.com>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
+        bh=7tikqvcPSSM0+ie8ei00WO4p/o6p01PdEuZ4eNfazi4=;
+        b=IE2/avRKer7+Ilrw3FYIR5RST8K2w1prNddZsYwC45x8tnM+abAjntqlHY8AvHCsX1
+         sOl1Y6Z15NteLIThvS9hQD7b+x29OZKXwlm9e6rIlh+r2r9rePG2VMbaN1xZynFbF6es
+         0nune9pL2RLEW5ws9ymJ6L7xlWSWMxEBRElWJltcmx8/9nJVtnLmPpRcxZN1thqQ3b2W
+         iKp1d2ShDvOztRd9oZ1o6EIxoKxwBwUQQ+e2xuR3/hqos55kBxq1uxtwibNQwaiwmUd5
+         AwWRA+QxzzBglIk8nDcwUeqIew2gvn+FExhK7DDQL5/vECxwJNl7VvUT42B8GnPd9g7C
+         sQRw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4MOesHb5EHB1JUB8itI88XD9+LCfeuAOWmhh3wRIcB/ETXE1nbRUQAwYY3mXPACJMOG2XWUYIS4iKRcQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvtMqtCAwKgdeaI6a1kchfBbjH/NcfiPnmvPMxG9Kx5H0jd13m
+	dk7OxsYo8Puy6hNAPurkCNUOAaDK5RBYVPtkGDubVu3+/WCQngrJUzCwB3gtjW+UlA9+4a5YZQi
+	CUC5XH14U1yWoZujzJSYqDNiEUzkIY7Acyli6Dg==
+X-Gm-Gg: ASbGncv2WrJ3L7FzwvAp+qss1PLlIqS+LAHHQFKsYy8LUhdgf1cH4ZHuxNB4o+rSdrH
+	a5I6jmnirO5iE42+/xT8CUJLZ7z+xyMRoUwumtuxiLXcwlWu8v1edzNTvWWkMNPhM3XOLZ0k3A3
+	Mw93iCM0mg1VPn3wd8vOZw6TM5tRP+ixHz
+X-Google-Smtp-Source: AGHT+IGyy1tvQ5e1+LwmeN6aMxyvc+Kf3eAUBMdPUntGYmvmLxOM06L/3VzGSjkoX8RjJISKXUhUmqEwo7e719ksem0=
+X-Received: by 2002:a05:6e02:1fc8:b0:3d0:26a5:b2c with SMTP id
+ e9e14a558f8ab-3da7e34871amr88924955ab.8.1746971028558; Sun, 11 May 2025
+ 06:43:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250508142842.1496099-2-rkrcmar@ventanamicro.com>
+ <20250508142842.1496099-4-rkrcmar@ventanamicro.com> <CAAhSdy2nOBndtJ46yHbdjc2f0cNoPV3kjXth-q57cXt8jZA6bQ@mail.gmail.com>
+ <D9RHYLQHCFP1.24E5305A5VDZH@ventanamicro.com> <CAAhSdy2U_LsoVm=4jdZQWdOkPkCH8c2bk6rsts8rY+ZGKwVuUg@mail.gmail.com>
+ <20250509-0811f32c1643d3db0ad04f63@orel> <CAAhSdy389g=cvi81e7SKAi=2KTC2y9bd17aHniTUr4RNY=Kokg@mail.gmail.com>
+ <D9ROL5UEYYHX.1B1FE6LZJ9ESO@ventanamicro.com>
+In-Reply-To: <D9ROL5UEYYHX.1B1FE6LZJ9ESO@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Sun, 11 May 2025 19:13:37 +0530
+X-Gm-Features: AX0GCFs_ezw8XJlOzMkddRA3UmJgoXKaRdAdTo6LGXAA1hZrT5A6WwM3ss5-FXk
+Message-ID: <CAAhSdy3j0Uf52hs+_gRxkROTA4sjMkLk1sMtv=XZWsyv15TBSw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] RISC-V: KVM: add KVM_CAP_RISCV_MP_STATE_RESET
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Andrew Jones <ajones@ventanamicro.com>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add Rahul and myself as maintainers for RISC-V RPMI and MPXY drivers.
+On Fri, May 9, 2025 at 7:27=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar=
+@ventanamicro.com> wrote:
+>
+> 2025-05-09T17:59:28+05:30, Anup Patel <anup@brainfault.org>:
+> > On Fri, May 9, 2025 at 5:49=E2=80=AFPM Andrew Jones <ajones@ventanamicr=
+o.com> wrote:
+> >> On Fri, May 09, 2025 at 05:33:49PM +0530, Anup Patel wrote:
+> >> > On Fri, May 9, 2025 at 2:16=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <=
+rkrcmar@ventanamicro.com> wrote:
+> >> > > 2025-05-09T12:25:24+05:30, Anup Patel <anup@brainfault.org>:
+> >> > > > On Thu, May 8, 2025 at 8:01=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=
+=99 <rkrcmar@ventanamicro.com> wrote:
+> >> > > >>  * Preserve the userspace initialized VCPU state on sbi_hart_st=
+art.
+> >> > > >>  * Return to userspace on sbi_hart_stop.
+> >> > > >
+> >> > > > There is no userspace involvement required when a Guest VCPU
+> >> > > > stops itself using SBI HSM stop() call so STRONG NO to this chan=
+ge.
+> >> > >
+> >> > > Ok, I'll drop it from v3 -- it can be handled by future patches th=
+at
+> >> > > trap SBI calls to userspace.
+> >> > >
+> >> > > The lack of userspace involvement is the issue.  KVM doesn't know =
+what
+> >> > > the initial state should be.
+> >> >
+> >> > The SBI HSM virtualization does not need any KVM userspace
+> >> > involvement.
+> >> >
+> >> > When a VCPU stops itself using SBI HSM stop(), the Guest itself
+> >> > provides the entry address and argument when starting the VCPU
+> >> > using SBI HSM start() without any KVM userspace involvement.
+> >> >
+> >> > In fact, even at Guest boot time all non-boot VCPUs are brought-up
+> >> > using SBI HSM start() by the boot VCPU where the Guest itself
+> >> > provides entry address and argument without any KVM userspace
+> >> > involvement.
+> >>
+> >> HSM only specifies the state of a few registers and the ISA only a few
+> >> more. All other registers have IMPDEF reset values. Zeros, like KVM
+> >> selects, are a good choice and the best default, but if the VMM disagr=
+ees,
+> >> then it should be allowed to select what it likes, as the VMM/user is =
+the
+> >> policy maker and KVM is "just" the accelerator.
+> >
+> > Till now there are no such IMPDEF reset values expected. We will
+> > cross that bridge when needed. Although, I doubt we will ever need it.
+>
+> The IMPDEF issue already exists.  KVM resets scounteren to 7, but
+> userspace wants it to be different, likely 0.
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- MAINTAINERS | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+The scounteren set to 7 is temporary workaround which is supposed
+to be removed once Guest Linux initializes scounteren correctly at
+boot time. At this point in time we can remove this scounteren
+workaround from KVM because the SBI PMU driver is initializing
+scounteren correctly since many kernel releases.
+(Refer, pmu_sbi_starting_cpu() in drivers/perf/riscv_pmu_sbi.c)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 69511c3b2b76..46a0909a17d9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20885,6 +20885,21 @@ F:	drivers/perf/riscv_pmu.c
- F:	drivers/perf/riscv_pmu_legacy.c
- F:	drivers/perf/riscv_pmu_sbi.c
- 
-+RISC-V RPMI AND MPXY DRIVERS
-+M:	Rahul Pathak <rahul@summations.net>
-+M:	Anup Patel <anup@brainfault.org>
-+L:	linux-riscv@lists.infradead.org
-+F:	Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
-+F:	Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-system-msi.yaml
-+F:	Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-+F:	Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yaml
-+F:	drivers/clk/clk-rpmi.c
-+F:	drivers/irqchip/irq-riscv-rpmi-sysmsi.c
-+F:	drivers/mailbox/riscv-sbi-mpxy-mbox.c
-+F:	include/linux/mailbox/riscv-rpmi-message.h
-+
- RISC-V SPACEMIT SoC Support
- M:	Yixun Lan <dlan@gentoo.org>
- L:	linux-riscv@lists.infradead.org
--- 
-2.43.0
+If we absolutely need a mechanism for userspace to provide custom
+reset values of CSRs then we should use the existing ONE_REG
+interface to define a new type using which CSR reset values can be
+set at VM creation time. But, I still think we don't need such a
+mechanism immediatly.
 
+Regards,
+Anup
