@@ -1,37 +1,37 @@
 Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6D3189905;
-	Sun, 11 May 2025 14:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEA82566F2;
+	Sun, 11 May 2025 14:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746973199; cv=none; b=R2x00fgGp67NjFg3FAwUqEJ1D6xSguCOyt4xqkmtbCF/yaSoUJE+gSyg4FteYOas2KQZbvTC7rBYBzp3hNs/NeY5dGgN444s5U906XF2xWjnl6RjA2tJJiztnSdq7FN3LV2tqA+TRwLqh4uIkyOuXf5p8wXTUkQna3ypnPzi/Oo=
+	t=1746973201; cv=none; b=uqAtIbyOCtg/gkOsZJolTvDG6eFDmP13fogunjAklcy4NNmvmWMcIdzlrlmkF20RR8eAH6CccTrpIjThDpbdQqww/3vdUcqnn3oDljlDHcUohrhzkqioQ7Lj5v/wuftlTBVfKTGTn0m24HmKuwGGvLmgIgXkWem11Mz7shioM8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746973199; c=relaxed/simple;
-	bh=XXRZGl+UctDtZHPpvMU4a58MBFSFBk2fvZ3jOpa1DHc=;
+	s=arc-20240116; t=1746973201; c=relaxed/simple;
+	bh=mWdG/PFdxPaC45mDzD8ma9Dem8YK1Y7OW36uBZGdz+Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NQxdpl82yCsyIO7mPrXSXxIs6161O2ptJ9cRt3PZntn7kgmuyykpVo+rzz8RRHb5Jg96HZFsFLUKR8ZPkB7hVrur5MlQS+kHOvdWivPiVtP+V2GJNe/pKUbR2U76E6qcwvSQ6RCcL2D3cOP3YptU6+ByHF2VaIZyfHdA9g0OHj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=Lr8RdLBi; arc=none smtp.client-ip=134.0.28.9
+	 MIME-Version; b=qjagTVLRumd9sUqnBNrclR/4lklfsLNk4CBjnUPQoLueuF+O8Pt8TtFUY9oCEK1qh6V86grKCQ8wkPPOIZlD1X1emwQWQAR7d7zI3ETlXr25ws55E2ru+1mrD/D3BYGN1lcHXJ8N61ctqSKUcjFLHBobBivaA2in9Qsj8VF9ErA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=UkJ9gZ3T; arc=none smtp.client-ip=134.0.28.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Lr8RdLBi"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="UkJ9gZ3T"
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout4.routing.net (Postfix) with ESMTP id C50D7100569;
-	Sun, 11 May 2025 14:19:53 +0000 (UTC)
+	by mxout4.routing.net (Postfix) with ESMTP id B834D10001E;
+	Sun, 11 May 2025 14:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1746973194;
+	s=20200217; t=1746973197;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=09L0bbi2Bma9JXQKFtRq2kpouHX/DXAgs6YhAdRHLGI=;
-	b=Lr8RdLBiPGlG/BnV8gmWcbdfWQri+pExu7H/FH/LtvAzNGF8xHDHjcCxZRLrtra10Tc4rX
-	3Mx/8G1XAvlHkRptC7u4QVSVg6OjE7VtDfWXhcAVEBJvD2kApbX8WmGBCYzDXMNEOXpkvX
-	tgduPpVf1q6ricuXpSxBnUqSdbuE5Lk=
+	bh=F2n2o30Q/kVq/KYG6vVQ5aU24ZZC3guR83pv90r8Jms=;
+	b=UkJ9gZ3TP4mpv73nR6bUQtH7yGllG6/eGkZpNCk35tuvz48EK/69cOkqd6hnAG94NrseXq
+	UyfPyK2r5z0SjCtzXWY2KZis+aFtV8wyZ5f34jQS6CojsZLF3/mITkkpCMJTYe2onk9h33
+	EBvRNMKhsXLdxdGChzIyNw2fp7FlMPk=
 Received: from frank-u24.. (fttx-pool-194.15.84.99.bambit.de [194.15.84.99])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 90738100787;
-	Sun, 11 May 2025 14:19:52 +0000 (UTC)
+	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 9F11E100787;
+	Sun, 11 May 2025 14:19:56 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Vladimir Oltean <olteanv@gmail.com>,
@@ -57,9 +57,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v1 01/14] dt-bindings: net: mediatek,net: update for mt7988
-Date: Sun, 11 May 2025 16:19:17 +0200
-Message-ID: <20250511141942.10284-2-linux@fw-web.de>
+Subject: [PATCH v1 05/14] arm64: dts: mediatek: mt7988: move uart0 and spi1 pins to soc dtsi
+Date: Sun, 11 May 2025 16:19:21 +0200
+Message-ID: <20250511141942.10284-6-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250511141942.10284-1-linux@fw-web.de>
 References: <20250511141942.10284-1-linux@fw-web.de>
@@ -70,45 +70,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 43a9dc2b-8449-488e-bbf8-467610c50a98
+X-Mail-ID: 730e5bd4-362e-4c00-a35e-0ec77e8f4691
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Update binding for mt7988 which has 3 gmac and 2 reg items.
+In order to use uart0 or spi1 there is only 1 possible pin definition
+so move them to soc dtsi to reuse them in other boards and avoiding
+conflict if defined twice.
 
+Suggested-by: Daniel Golle <daniel@makrotopia.org>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
- Documentation/devicetree/bindings/net/mediatek,net.yaml | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi  | 14 --------------
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi      | 18 ++++++++++++++++++
+ 2 files changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
-index 9e02fd80af83..5d249da02c3a 100644
---- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
-+++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
-@@ -28,7 +28,8 @@ properties:
-       - ralink,rt5350-eth
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+index 37e541a98ee1..23b267cd47ac 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+@@ -328,13 +328,6 @@ mux {
+ 		};
+ 	};
  
-   reg:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 2
+-	uart0_pins: uart0-pins {
+-		mux {
+-			function = "uart";
+-			groups =  "uart0";
+-		};
+-	};
+-
+ 	snfi_pins: snfi-pins {
+ 		mux {
+ 			function = "flash";
+@@ -356,13 +349,6 @@ mux {
+ 		};
+ 	};
  
-   clocks:
-     minItems: 2
-@@ -381,8 +382,12 @@ allOf:
-             - const: xgp2
-             - const: xgp3
- 
-+        reg:
-+          minItems: 2
-+          maxItems: 2
+-	spi1_pins: spi1-pins {
+-		mux {
+-			function = "spi";
+-			groups = "spi1";
+-		};
+-	};
+-
+ 	spi2_pins: spi2-pins {
+ 		mux {
+ 			function = "spi";
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+index 8c31935f4ab0..ab6fc09940b8 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+@@ -209,6 +209,20 @@ mux {
+ 						 "pcie_wake_n3_0";
+ 				};
+ 			};
 +
- patternProperties:
--  "^mac@[0-1]$":
-+  "^mac@[0-2]$":
-     type: object
-     unevaluatedProperties: false
-     allOf:
++			spi1_pins: spi1-pins {
++				mux {
++					function = "spi";
++					groups = "spi1";
++				};
++			};
++
++			uart0_pins: uart0-pins {
++				mux {
++					function = "uart";
++					groups =  "uart0";
++				};
++			};
+ 		};
+ 
+ 		pwm: pwm@10048000 {
+@@ -244,6 +258,8 @@ serial0: serial@11000000 {
+ 			clocks = <&topckgen CLK_TOP_UART_SEL>,
+ 				 <&infracfg CLK_INFRA_52M_UART0_CK>;
+ 			clock-names = "baud", "bus";
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -338,6 +354,8 @@ spi1: spi@11008000 {
+ 				      "hclk";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&spi1_pins>;
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.43.0
 
