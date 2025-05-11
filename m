@@ -1,102 +1,163 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1F226ADD;
-	Sun, 11 May 2025 20:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBE425E441;
+	Sun, 11 May 2025 20:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746996781; cv=none; b=M83WrFJXsof3rRR87vyqzCC+afOCD6Xxsaka+7cV/QNDbWqSVBfsHNE9saKvbfk+a3qsc9Hw52TvBH7yRsvhnGtgyjPXrfepoy6rR/v20tCycQGvV0mtbcR6ZnA6lJfBoLdIuPpBpxVkEsuOZXLzYnsOCWjiq/prcHX0A1QmhWg=
+	t=1746996806; cv=none; b=JWzePHvrVc+JKTZL+1xYMlwwhxncpkfwWwJME4OOrFQ6F2VAxZbou9i4o8W9JoQzj7IhyhnJvw1/4ALPgQwmigxVnZkHUnLP4oBfyCbqIr9Lb9PFZmaj5O+xSZFc6lx4zZ8grQ68eDHGesBvucXqXIAtA4DDUwmReqmIdv4442k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746996781; c=relaxed/simple;
-	bh=cLWQEuDyXM0HnmZL7YBjStG5UjDwsWt/iMGWtO01te4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J2jCx+n7//2yEd9FMEpJA4kcXEqGKM+1b+z3PlkS31wjyjvi5wjWfSiZynLyl4rFsTqmO0kAJCThwtDJOLpEmmYHcjEpfjmLD1e8jCP+4FNrbszLL7AkUWe5r2LLgQfhqJup+9FA5TLHfFLY9sFOlpMwFUl4bwh7Y98RY78hD8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCBaflPX; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746996806; c=relaxed/simple;
+	bh=BpRiUEkykFFxmO6Nb5gIYaR0NfbGv/J3jo+sqA5HoLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nCrIbDnUaDoAwwJy+4k5K1+TMpkIhYKg+Nq86DkQMOs222omkr7aTXSd1vre70kIggUA43XAE11zP4QbULsbUiaAlEpEv5B55Hcf8Dgnz6ekjeWdI1I2u7NSQhIaiEDn4JykCPzuao+WlVQAAh+Kc7MpNPQvzNt3XWl/ptZWjAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=r67q5xHp; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCBaflPX"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f0c30a1cb6so30073816d6.2;
-        Sun, 11 May 2025 13:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746996779; x=1747601579; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RipRjxnYfW+Jx5Ls2Hz0Hp4uDesu7VcMLC+uJZD+Nr8=;
-        b=jCBaflPXVptkGJUjoxPCWlNXC7drIMz1cP148elQYKZ51cAZJHWDcUmHA59pzsRpKQ
-         k1wYv3HQfGLbTkchOD1GU7CZpVsYmTwVHP3RfztOFKzKnkvUQZ2axOnIRcv8CdwKhwjG
-         jFRFSVBBcxqMKMnVA9KWJRp69+z6I9YGApulolTOS/TTQkcfeOHdiZrgmaRvWSNRunTp
-         cCBBVWRfZwm4Y1v+8gpoTJcwveyuC0llRD10fF+xBcey+dXrp/OOdEr9HZjB1+XLP5x6
-         RT/yj2WVF3SkxtKQgsP7d2aca3A7SgrUV6eGAzSNeM5NwYX2PSZKMECNW6fQqM/UOoWb
-         lS0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746996779; x=1747601579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RipRjxnYfW+Jx5Ls2Hz0Hp4uDesu7VcMLC+uJZD+Nr8=;
-        b=SPJMwiHnzJpW0VQgqf83wD1cq4b4t9RTKXI1ASnu8t65sukp+MtG42r8OkXwJ+Bny1
-         O/yF6N+oWt0g9MaU746yb/TceliftjpBipZSLl2RbfnqhwL03fxiB5Q2H7wTZxHL7Ss3
-         9zrNpJh3y0v0DKEuSa7SuTzcHI06PaOewStb9uAR3Y+bb/QvnxM16ttR3ZT0WegMwpZU
-         GxQtrEry7iAh+9IE/gDzFLR3b08qL1UCOKzHbp9gnFjYGEyiicHulU3+QZQ5Q0k5CMfl
-         IEUzpx8RJ4qD3TMRcWoA47vXsrmB5MkZV8K3yepILnLBG5kwxMVGUYIPoioUtvEJcFmE
-         CqDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVd63SF1CTMyNODXHDK8Gc/o8zj5CWDlGu+21Van+SAq0aiCn7wQJsBp7KrVmIA+vkb/iSiOERNHOqauFI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQfBNi3d/c0pqXg6dUE8Pdr8yXUlp0hl6mj+wV6/v4Q7t+v38J
-	Ns3pnUPK7dPoAAgoqEoBAM07Kf+B6CUxRJ1liqQheV7ClsHZIQEqJy2/N1LAIYGJZtDTNLrihsr
-	RiUDLfZSury70/BamVa+5DAp9YFA=
-X-Gm-Gg: ASbGncttD/ZaWqOno9jZw+JOvdFl/wAFV4bkOlQbh7UlND0baPhWu2NYpuB2UDDJlwO
-	Qv3knFA4Om6BMV/hZ9ozUo9WqXhuVpoHFkmydHA8AM2H/UBBcqIv6780WZAMDBRbT1JyGY4EfSu
-	xPbljM6YcLI/uGagpBMnmR9umP2/FcDuVvZBOQMdP3+AI=
-X-Google-Smtp-Source: AGHT+IEXUJcO+2pqe/WSnvcgKLVVGhD6I+qO3yu2CxFedTENN6cNl+uwgNw1LCNbXpeMTAIsot8KcI6sNYkIsKEGQdE=
-X-Received: by 2002:ad4:5f8c:0:b0:6f5:e80:ac69 with SMTP id
- 6a1803df08f44-6f6e480ac1fmr155723586d6.29.1746996779178; Sun, 11 May 2025
- 13:52:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="r67q5xHp"
+Received: from localhost.localdomain (x5996a826.customers.hiper-net.dk [89.150.168.38])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 81F812E0A48C;
+	Sun, 11 May 2025 23:44:42 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1746996284;
+	bh=MHrWlgs+N01hBSgFhNm7P6i9ul6uIvdp2jaUCTHGVik=; h=From:To:Subject;
+	b=r67q5xHpVpa9JrQt7aSGQEnrkuTUTZnNFF/ZzxrNyXMK591efwnYo+eILIR3+PuYp
+	 euy7QaCmxizoF+sL1WNrkfS6Cjcae+mwTDuuZXj4bAv/TAfqy2FJZnGVebuNjZrPRT
+	 QoYCWtEmdYm4+R264udqO7B8exF+h9qVh1GGANFw=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 89.150.168.38) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kurt Borja <kuurtb@gmail.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v1 03/10] platform/x86: msi-wmi-platform: Add quirk system
+Date: Sun, 11 May 2025 22:44:20 +0200
+Message-ID: <20250511204427.327558-4-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250511204427.327558-1-lkml@antheas.dev>
+References: <20250511204427.327558-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430205305.22844-1-kanchana.p.sridhar@intel.com>
-In-Reply-To: <20250430205305.22844-1-kanchana.p.sridhar@intel.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Sun, 11 May 2025 16:52:47 -0400
-X-Gm-Features: AX0GCFujuwJ08KLC2fnWBSBrn2i3URgm4MKtTV03zVybIUnaxHXnwtnCFSklin4
-Message-ID: <CAKEwX=PSOCKNtX0LXHytMwU67eJ=9-d17T62UMBDMpAeoFb76A@mail.gmail.com>
-Subject: Re: [PATCH v9 00/19] zswap compression batching
-To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, hannes@cmpxchg.org, 
-	yosry.ahmed@linux.dev, chengming.zhou@linux.dev, usamaarif642@gmail.com, 
-	ryan.roberts@arm.com, 21cnbao@gmail.com, ying.huang@linux.alibaba.com, 
-	akpm@linux-foundation.org, linux-crypto@vger.kernel.org, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, clabbe@baylibre.com, 
-	ardb@kernel.org, ebiggers@google.com, surenb@google.com, 
-	kristen.c.accardi@intel.com, wajdi.k.feghali@intel.com, 
-	vinodh.gopal@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174699628445.27701.9153414834377873410@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Wed, Apr 30, 2025 at 4:53=E2=80=AFPM Kanchana P Sridhar
-<kanchana.p.sridhar@intel.com> wrote:
->
-> Changes since v8:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> 1) Rebased to mm-unstable as of 4-21-2025, commit 2c01d9f3c611.
-> 2) Backported commits for reverting request chaining, since these are
->    in cryptodev-2.6 but not yet in mm-unstable: without these backports,
->    deflate-iaa is non-functional in mm-unstable:
->    commit 64929fe8c0a4 ("crypto: acomp - Remove request chaining")
->    commit 5976fe19e240 ("Revert "crypto: testmgr - Add multibuffer acomp
->                          testing"")
->    Backported this hotfix as well:
->    commit 002ba346e3d7 ("crypto: scomp - Fix off-by-one bug when
->    calculating last page").
-> 3) crypto_acomp_[de]compress() restored to non-request chained
->    implementations since request chaining has been removed from acomp in
->    commit 64929fe8c0a4 ("crypto: acomp - Remove request chaining").
+MSI uses the WMI interface as a passthrough for writes to the EC
+and uses a board name match and a quirk table from userspace on
+Windows. Therefore, there is no auto-detection functionality and
+we have to fallback to a quirk table.
 
-I'm a bit confused. Which patches on top of mm-unstable do I need from
-the crypto tree as pre-requisite for this patch series? And in which
-order?
+Introduce it here, prior to starting to add features to it.
+
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/msi-wmi-platform.c | 45 +++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
+index f0d1b8e1a2fec..408d42ab19e20 100644
+--- a/drivers/platform/x86/msi-wmi-platform.c
++++ b/drivers/platform/x86/msi-wmi-platform.c
+@@ -14,6 +14,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/device/driver.h>
++#include <linux/dmi.h>
+ #include <linux/errno.h>
+ #include <linux/hwmon.h>
+ #include <linux/kernel.h>
+@@ -79,8 +80,12 @@ enum msi_wmi_platform_method {
+ 	MSI_PLATFORM_GET_WMI		= 0x1d,
+ };
+ 
++struct msi_wmi_platform_quirk {
++};
++
+ struct msi_wmi_platform_data {
+ 	struct wmi_device *wdev;
++	struct msi_wmi_platform_quirk *quirks;
+ 	struct mutex wmi_lock;	/* Necessary when calling WMI methods */
+ };
+ 
+@@ -124,6 +129,39 @@ static const char * const msi_wmi_platform_debugfs_names[] = {
+ 	"get_wmi"
+ };
+ 
++static struct msi_wmi_platform_quirk quirk_default = {};
++static struct msi_wmi_platform_quirk quirk_gen1 = {
++};
++static struct msi_wmi_platform_quirk quirk_gen2 = {
++};
++
++static const struct dmi_system_id msi_quirks[] = {
++	{
++		.ident = "MSI Claw (gen 1)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_MATCH(DMI_BOARD_NAME, "MS-1T41"),
++		},
++		.driver_data = &quirk_gen1,
++	},
++	{
++		.ident = "MSI Claw AI+ 7",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_MATCH(DMI_BOARD_NAME, "MS-1T42"),
++		},
++		.driver_data = &quirk_gen2,
++	},
++	{
++		.ident = "MSI Claw AI+ 8",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_MATCH(DMI_BOARD_NAME, "MS-1T52"),
++		},
++		.driver_data = &quirk_gen2,
++	},
++};
++
+ static int msi_wmi_platform_parse_buffer(union acpi_object *obj, u8 *output, size_t length)
+ {
+ 	if (obj->type != ACPI_TYPE_BUFFER)
+@@ -413,6 +451,7 @@ static int msi_wmi_platform_init(struct msi_wmi_platform_data *data)
+ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+ {
+ 	struct msi_wmi_platform_data *data;
++	const struct dmi_system_id *dmi_id;
+ 	int ret;
+ 
+ 	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+@@ -422,6 +461,12 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+ 	data->wdev = wdev;
+ 	dev_set_drvdata(&wdev->dev, data);
+ 
++	dmi_id = dmi_first_match(msi_quirks);
++	if (dmi_id)
++		data->quirks = dmi_id->driver_data;
++	else
++		data->quirks = &quirk_default;
++
+ 	ret = devm_mutex_init(&wdev->dev, &data->wmi_lock);
+ 	if (ret < 0)
+ 		return ret;
+-- 
+2.49.0
+
