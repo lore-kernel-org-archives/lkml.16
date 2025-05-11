@@ -1,113 +1,94 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D7B259C9A;
-	Sun, 11 May 2025 16:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A3116F288
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 16:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746981755; cv=none; b=jl1v873woMZ1bBgKmC65uCU9vMPu/EvVuyYvzT5RIcnUEVIUFrxoicNyD8pmlpv5xxTBXc/EU5rKejmD30D76eyCQLN6f5rF9rprBpDkgwzk8Zu1fCcjgaik1HZQ9l6GgvMHWAGVIp6u/WAg0VEvyuouT6ACaRyM1P66NleO6Xk=
+	t=1746981756; cv=none; b=VFV+ThFVzAvLMwB8SndYrKSb5b1ewtlgjdkNsgygABgDx9j/IQkBV6MmNyNQiBlh73KfWSWJLGxs3LPHEw9Iy9XinDY/fkWZGND9NPFQt/ZjOiEyTUJBCM8S84RcRULpc9mTK6Wn8cV4qKzqpUQFCsxB/BlW3cMEb3ywsVrYKow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746981755; c=relaxed/simple;
-	bh=Mst0Yp31ZspedexbU3R7bW/70oowdBHUF2qt/ZHEFSg=;
+	s=arc-20240116; t=1746981756; c=relaxed/simple;
+	bh=aX3J2izsyfR/oGAXvYeQpGXND8eWoNdYvrCA7zPEnHM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pFEzibrxghvUvviBJeo69rC9bGFF/PzpMvmJS8vOJg0IhV0asL1KVXhoIvNvtYQON9D2aTDGZDGRVQGM8eSk45Tn485VYDiyUKGzz54tzNRuT3VlIO3J1+FfyUpfI72HHcWpT4zljStTnQtgqiMwvRPjmvr++QpKKshAQjgve+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=eR7newBU; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=BtU82VMtzIlgTs9NNcpN457S3BhKO7UXFVxwQYiUwRZlPmkXxLN13wJmtxmeKN2Lc+kgBJbnqRIFzNsrfUTKwOYoXEonPGJN8RtEkPl3JMqYIhvbDFJx5gyYCRTg3Oy2NUwss4hV/cZtCVl0Bpl7bgxbiFvDIOIr0KgakiWFeV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=icTaweuO; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="eR7newBU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QfYxhT92+8A6gWfGGKLpIf5nhSq7v4aUuvhWH2UbJM0=; b=eR7newBUNJ4wqxhc3b1d+3qx/c
-	EOFDvTqf8qqEfYJ3R0yC22QrqFJkDAo9E2rWR3JFi6/u5WH2/sFe4owsAocJSN4RWaPCSw9lyau9J
-	KZz2Du6+pdPtjQOcMq/y8NdG6pS80LfMlxgQl+jEMlQqtiXiHhIxDAtgmd4t/z9Crhi0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uE9km-00CGJu-GZ; Sun, 11 May 2025 18:42:16 +0200
-Date: Sun, 11 May 2025 18:42:16 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="icTaweuO"
+Date: Sun, 11 May 2025 12:42:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1746981750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=06G8DBL+yE+EwkMk4FIE8+EABcux+6ejNjNymvMveGU=;
+	b=icTaweuOgQ1MYUdG58b9VuBfGvM0S8yMcRDmLZNfqTcgsShr1ALVEsujoabf9j48819oFV
+	nRxcUiSrnTfpTrWykrRGl8Nb0vfh79/81Ykc/z/pKZ5SjMicf7SYdXkyRYtFrBuFAOag86
+	Pb39WH7IQFBoYYWXsr+g4Ijyy+WOjGn+q0zKgBAyTM7v5zLxuxHIYmeSQkof9LZUzz72ql
+	Tz4WpvzHXUa1Y26xBmKIljtKXAHxycR5qXXvSMSNKzcYrzxpzyzxeiDHIGTEY/zNxCfH9i
+	jDhKn7IJ9hfaGGFO9aXer1EINtXujvOOJfqq30AmWy0nhGGacNR915zvkt/QFQ==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: sven@svenpeter.dev
+Cc: Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
+	Hector Martin <marcan@marcan.st>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v1 09/14] arm64: dts: mediatek: mt7988: add switch node
-Message-ID: <bfa0c158-4205-4070-9b72-f6bde9cd9997@lunn.ch>
-References: <20250511141942.10284-1-linux@fw-web.de>
- <20250511141942.10284-10-linux@fw-web.de>
+	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 04/10] soc: apple: rtkit: Make shmem_destroy optional
+Message-ID: <aCDTcUtxPkXKK3lg@blossom>
+References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
+ <20250511-smc-6-15-v5-4-f5980bdb18bd@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250511141942.10284-10-linux@fw-web.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250511-smc-6-15-v5-4-f5980bdb18bd@svenpeter.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, May 11, 2025 at 04:19:25PM +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+
+Le Sun , May 11, 2025 at 08:18:39AM +0000, Sven Peter via B4 Relay a écrit :
+> From: Sven Peter <sven@svenpeter.dev>
 > 
-> Add mt7988 builtin mt753x switch nodes.
+> shmem_destroy isn't always required for coprocessor-managed buffers but we
+> still enforce that it exists. Just relax the check.
 > 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Sven Peter <sven@svenpeter.dev>
 > ---
->  arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 166 ++++++++++++++++++++++
->  1 file changed, 166 insertions(+)
+>  drivers/soc/apple/rtkit.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-> index aa0947a555aa..ab7612916a13 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-> @@ -5,6 +5,7 @@
->  #include <dt-bindings/phy/phy.h>
->  #include <dt-bindings/pinctrl/mt65xx.h>
->  #include <dt-bindings/reset/mediatek,mt7988-resets.h>
-> +#include <dt-bindings/leds/common.h>
+> diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
+> index 5fffd0f003dc2f4f377faf96cce0c1ce4ff0b788..b8d4da147d23f7e99e76eea314e4d976cddbd1c6 100644
+> --- a/drivers/soc/apple/rtkit.c
+> +++ b/drivers/soc/apple/rtkit.c
+> @@ -279,8 +279,7 @@ static int apple_rtkit_common_rx_get_buffer(struct apple_rtkit *rtk,
+>  	dev_dbg(rtk->dev, "RTKit: buffer request for 0x%zx bytes at %pad\n",
+>  		buffer->size, &buffer->iova);
 >  
->  / {
->  	compatible = "mediatek,mt7988a";
-> @@ -742,6 +743,171 @@ ethsys: clock-controller@15000000 {
->  			#reset-cells = <1>;
->  		};
->  
-> +		switch: switch@15020000 {
-> +			compatible = "mediatek,mt7988-switch";
-> +			reg = <0 0x15020000 0 0x8000>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-> +			resets = <&ethwarp MT7988_ETHWARP_RST_SWITCH>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				gsw_port0: port@0 {
-> +					reg = <0>;
-> +					label = "wan";
-
-I would expect the label to be in the board .dts file, since it is a
-board property, not a SoC property.
-
-	Andrew
+> -	if (buffer->iova &&
+> -	    (!rtk->ops->shmem_setup || !rtk->ops->shmem_destroy)) {
+> +	if (buffer->iova && !rtk->ops->shmem_setup) {
+>  		err = -EINVAL;
+>  		goto error;
+>  	}
+> 
+> -- 
+> 2.34.1
+> 
+> 
