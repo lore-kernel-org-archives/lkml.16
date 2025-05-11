@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD5C18BC1D;
-	Sun, 11 May 2025 18:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43E318BC1D;
+	Sun, 11 May 2025 18:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746988765; cv=none; b=p8fTK+MmYpI3FPYd/9hz7KZ1JBLRiQ/jppK9rNuQnypOPX2foSTefNOYhJrfrPEAw8jT1ej3Qp5sLyRHlrs+E0KRvpA5MX3DXh7Xjy/kqiRx09oHTauFfMo+CQLJcAaXFxzPcL5aKxC5sP7Gm7OKVFIhFWJKt0IMLozh9ONGUrA=
+	t=1746988770; cv=none; b=PBT1PxCN1kgcggjZ2JuPc4ztYuVZFV5jRR8Olg4vlfH+iAt036NeuXFY1ri9IkDTn5kjz7korpun+5jCgVlEcCbOYzIIyMGWO92WqzRxmYoBMO2XiMm4w2sc0M4ZtxHQHw+z2KF+M9LthZsCTfGQtRryxauxAVOpmKfljFvCSAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746988765; c=relaxed/simple;
-	bh=93BJNOQdSaR1P/AsTeVC+RnBexezIioF15VALD8UhLM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FnXHGS9cVxPEoPL8FQ9136RO6/K9ZIdmEywtVxNPGtqEXLE4LPqI0Kjk31i9upWVNZYDOLxenNV93uh2foqIXuwIerDYxlbzcuVlOUlBYBr0UXPKFfO97MFrUrjdx4MbbBdghO5OWZtIYPsmJeQ83QK0e40eg4Zv1dknkEW+MJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=go34NXY5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746988770; c=relaxed/simple;
+	bh=ZfXzB02LgJ0xtMwX1jsz8TaLgIxcVEOVNFT7SIKJGvw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=peZ64BXQUktgDmifO/FitgwuVqBifL7HC0WP1SR0vNTM9ejItLEzBzcx++9NPdO+bhUBu18U73VwhCEtK8icTclpRbKREMSWvHRWqnkl0B8Is/BKf7tQKdXSZLrU+kAxoIm+2uQeBdLZzzLAO12eeKvIuf/vXd56lw8NqKCZJJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCqAInlB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="go34NXY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F5E2C4CEEF;
-	Sun, 11 May 2025 18:39:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCqAInlB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F15C4CEE4;
+	Sun, 11 May 2025 18:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746988764;
-	bh=93BJNOQdSaR1P/AsTeVC+RnBexezIioF15VALD8UhLM=;
+	s=k20201202; t=1746988769;
+	bh=ZfXzB02LgJ0xtMwX1jsz8TaLgIxcVEOVNFT7SIKJGvw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=go34NXY5CubeD1lgA/ffuo3BXnib4hV+L6FKgTR6qSNYGNnNmwHS17ViSE5UBOBnH
-	 sOdJ6XakKXMnSm9FJg4uh0rS6dnxkKflK5iG5OSmMB5OZgTZs3jTnjf6RkYNlFhHdC
-	 Llsis5x6VJLOxZlGqhZs4nqqpK0i1W+tXe/YhRecCtRAUL+j7IoB5wOroxkmQjjN10
-	 AVpSbsUdyGkxvywaCfMuvFS5OOoNhec/7sqntQetomPL5/49hTvhSuLGHwKfcDMKxL
-	 mr09euSMgpozl3vrEqxizQw6WyEt2hA5TkkXVCOUBPolK1hvYv4v5hWt7cV+g4MvNC
-	 H18hTs9PAFkiw==
+	b=gCqAInlBC19qZj2QU7HECTx85l7i4UHoQIPUgLJLuIm3Gmy/xf8I7YWxVE+BMs9BF
+	 R4q53l0mlbEJ4voVgE/dKDu745gc9MeQFHs1J3SYROES6yMeL7fY7uiYZJnhM5quTx
+	 96VRjJHn9r3xkzK/RcCWfzDEX1QxCm93Z7UaFTeJpo82xXc7iyCBKJ0IagFWmZcBNM
+	 n06tBAB+USVgah2A3jiGIhPNhdLSEg6n/TGOzCP73zswPmIZsdMTeWOyN2AhW+m3it
+	 NN2moG9WtGrKuuhWbQg0mOo4m0QvjVoBTXv+Edyrb7nXVxv63uZhLEtD37xZlVJQNm
+	 6tqq0ahTDOPtg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D8D3805D89;
-	Sun, 11 May 2025 18:40:03 +0000 (UTC)
-Subject: Re: [GIT PULL] MIPS fixes for v6.15
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AF9AE380AA79;
+	Sun, 11 May 2025 18:40:08 +0000 (UTC)
+Subject: Re: [git pull] Input updates for v6.15-rc5
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <aCBTCo8kyo-LxpV5@alpha.franken.de>
-References: <aCBTCo8kyo-LxpV5@alpha.franken.de>
-X-PR-Tracked-List-Id: <linux-mips.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aCBTCo8kyo-LxpV5@alpha.franken.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips-fixes_6.15_1
-X-PR-Tracked-Commit-Id: c44572e0cc13c9afff83fd333135a0aa9b27ba26
+In-Reply-To: <vjfoxhbcvltgxbmmnjfnqllyrynjwh2cpraylma644hyhlv5jh@dzbn3dmblhyq>
+References: <vjfoxhbcvltgxbmmnjfnqllyrynjwh2cpraylma644hyhlv5jh@dzbn3dmblhyq>
+X-PR-Tracked-List-Id: <linux-input.vger.kernel.org>
+X-PR-Tracked-Message-Id: <vjfoxhbcvltgxbmmnjfnqllyrynjwh2cpraylma644hyhlv5jh@dzbn3dmblhyq>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.15-rc5
+X-PR-Tracked-Commit-Id: 93406e9d024058b3bf487656ddd0ac552e5a366e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ecb9194d1724d1265c8cfe50fcb1dad718476e5e
-Message-Id: <174698880207.20988.14957158954423763040.pr-tracker-bot@kernel.org>
-Date: Sun, 11 May 2025 18:40:02 +0000
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: torvalds@linux-foundation.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: fea9123979fe892f41ca39d9d0226c1e193b0880
+Message-Id: <174698880758.21126.15445338407905688362.pr-tracker-bot@kernel.org>
+Date: Sun, 11 May 2025 18:40:07 +0000
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 11 May 2025 09:34:34 +0200:
+The pull request you sent on Sat, 10 May 2025 23:31:53 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips-fixes_6.15_1
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.15-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ecb9194d1724d1265c8cfe50fcb1dad718476e5e
+https://git.kernel.org/torvalds/c/fea9123979fe892f41ca39d9d0226c1e193b0880
 
 Thank you!
 
