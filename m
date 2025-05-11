@@ -1,63 +1,63 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0580C2F2E;
-	Sun, 11 May 2025 03:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3C52F2E;
+	Sun, 11 May 2025 03:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746935840; cv=none; b=m4ngTK/otFEv6t8nqq3qHUIL+P51uhkyDepsMvtPaEBmhhnPqLON/PJKEGi8JQrS++B6euX+JuRjml2gZjlhQacC/ueInsXFBAO9Deu78lhYFXhnrwND42k06U/CZjNMUorbMwQjChyrGs4WXPKCu1ze3zPUXTY6k+T1M9xnW0w=
+	t=1746935848; cv=none; b=Y9KiZZpJ7+GEnxpWxoAROtqgufEiuyxxB3s2qDNEY4Lw5we1//9eNzlW2v06F6mev9QuuWiglLfZQLyPObzdfwtzqtZeGNJKHBwFUE6g8ZPq/7Omz4pBY7KSr8DZtm/PgyiMzFjfZJ8V3tsjgic4iQxA6JrLNh92YOySAUBVNQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746935840; c=relaxed/simple;
-	bh=f/UTi+V9OBTgwKw1gQAScv/Z3Q/LzPwLJAcAhilQgdY=;
+	s=arc-20240116; t=1746935848; c=relaxed/simple;
+	bh=f11a/87d/MkxjGBfwqmJZV3iTC4m7JH+7y4sSV73jJE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H43oad+K4jvxm22Nn1mD6FIjI1Y/nhdd9XQBNhOSbYM4Crf1CZnEH06dVhaD/PQbOHSf6SgMXBd6jz+7ynlb1mDgkvmYfVlmij1K1NsiPIf1nEwfgUZ1l/t5JFt3TABNrbyBgcZlMr8lU7iB1EZKDd9gyymk66/7x6KSVyjAGew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gk8Tqx/i; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=qTSxOWAS6aogAyGWU+aJRzhp4szFcnwkM6jQ6V5I9iHSBdtwgGcwmoOpRD943L7rgDbqTsgWVO9kPRNnn+1o9G6TTaArCfjz0BPbtelbjnoqOFOnZcGUd7NfoFdB4fKlkDFS4KDMrsY9bQwiARW5mFrZV4b9sH/r0dgfiRIDSDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c/noOkMA; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gk8Tqx/i"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so36593705e9.3;
-        Sat, 10 May 2025 20:57:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/noOkMA"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a0b7fbdde7so3055724f8f.2;
+        Sat, 10 May 2025 20:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746935837; x=1747540637; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746935844; x=1747540644; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DEhQESYwkokAzogW2qk/KK801wxi9MLakYUcNUui9Ko=;
-        b=gk8Tqx/ihKwcOIW5rP08lKzKethfYHEGzXRG5/uly0qvJZ7KJn5YH3K8qMEGIrqeQq
-         6BA5BR1xZaLDd3rmku/DGHnZNSDQm+Fif9ycv0CuswOIwO+hpxOVxcahfYz8RwofCvsK
-         jiYbe0vvhh1wmQLXKhD7qvVC/YnNxTQT+ItuBc/+PEtzc2Q/Sz6/TBoga32oaoxLatFx
-         kJYBKBxo0pG6BqKgqI8SfpjBLwqKjQHD0udwTfY4x3OJxIPFQz2x7p5pZEYw6P//UqtQ
-         /g63pdAFUeGO7qb+yr0mvEKCjaqJpGSmOmFxH14aSrba8Nos6VKBF3XiHSp70B4i/keL
-         rj0A==
+        bh=AGnjH1P5I0kLHDjAZ4ysHop1/OwSpLWxJh9YdNqBtVk=;
+        b=c/noOkMASm/wdcWc116SnGgN8aKPZ3gQkLh9jdA1tY1ZeL03lCsn8NAjfbD7Mf6AX+
+         oyFAjDuxAy4REoXP0ifaOWQwzYejy0StEosxpIVl6wnxRteWGM7MCl/y52/wnhFsyY/p
+         F0PBnm8DaEWlDB1yUYO0Rto+gVjtaf3bfTu5JDjiqSZ8XoqAKBZAqRgk23/VzzNlhV6p
+         cS7t3U1rWY2BmsoAbrkEC66pz+NchC8Ia8jvBqACccnuOSKXjY4JD1iPAuLw2z3bk/hc
+         hdGhwH161tCz65i5N9G5XVfPP07RnR6SaI5JNmQVIA+TCW+ljEeys0gU6H4YXaM+pLti
+         Kv1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746935837; x=1747540637;
+        d=1e100.net; s=20230601; t=1746935844; x=1747540644;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DEhQESYwkokAzogW2qk/KK801wxi9MLakYUcNUui9Ko=;
-        b=TxH378MSLM6ksJu9Z5F9K3EDEcK2OI2IwYjCB79Y3Nz68qw7T1nfiCTteWtmgwMM/X
-         r1o4vnm/KdHESmOezihIlBbFejBiJ9CbCrWGhqEwPJM+NgQj9oVaRxRZWs8E3qztuqqY
-         ULOxm4V14kdvQErvng7EK1y8pHjmEuiyknbXBv7IpfdFPWP3ab48RAclfDJ0Uamb8N5c
-         KlDYDa48fBIAayR2fIJyr8HKpLoAcGbzt6jWv/VNGQ+WNMjclON9Yt5kgdkvWfHlaE8i
-         n4DAtCdaM63j0AvrDw6nUWW5coOKpxwWQaU4Oje92nhx5lkAlTjI/anAwSXNd6pbJEYL
-         tsqw==
-X-Forwarded-Encrypted: i=1; AJvYcCU62ppuY7wgRVLxYTIqgxjTXzvdI31B39RoAOXyIsTZUu7zcTQjKzRLK3df21xhpFH5F5bIBuLzMFSR@vger.kernel.org, AJvYcCUIetkcQdJMKi3/kpkn5ptX8L24Kfu8l0Ghqv/z63uuOWz7zH8/Pje/a5zzceD5q8HrloOrBGDV707eRM28@vger.kernel.org, AJvYcCVniFEKuNKOwZDqr+WWHQCnQjpkL+f2OJSqdBpuihfQeSWzP6IvQGlU17yALRedWm04y8T6bAuOoca3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqETy6CVDl/zeNa/Loka3XWU7aPVk/0b+lxPhVo/CJez5XJMbS
-	VgqUW2LhrZKooWCAncIoapz1R1UNQ+swSxH3pGAe/kedcvvA5juJeGRcNoWv
-X-Gm-Gg: ASbGncucoZA0/3rKE1ysO3Fkrs2j6NB2skypfi/qUyhNwccYezGAblhkuRph32P5uvj
-	zsRH/y17i/eT3Sq3Q8EA1T4JrPTUfD8Y5/2n4YI78XozfuHck6TWF2MB0Ei1Ov1aIIKloq3evwq
-	TCDHu8stSL3WnAIW1gBv1BMEY7t8kY/xxocLbF3dA8JOYj9ExlH7wRH0W0bTQjgh5Pqiwl2xn2m
-	EenQF8SPp0W5FLob+Pz65/PT6iPXh5On9nC/3N1hW7lieG4tIc5EyycgQ1/zMM9Zu4XAv2JR7/0
-	7MR1E4jkiEhlsaTnUBf97A4HgiP7WWCoy6f7b57V+ixBzAMZa3R6G+i4fDmLuEA661Bld4OUK1C
-	b
-X-Google-Smtp-Source: AGHT+IH8aK1oMDdl3+d+9QndIotL8zgwEtnhri+Fyp0sXJHR+IOaMhBjYpvad+nt5NUr51Gp/yoM5Q==
-X-Received: by 2002:a5d:4807:0:b0:3a0:a09d:b31e with SMTP id ffacd0b85a97d-3a1f64ba5afmr5322166f8f.59.1746935836706;
-        Sat, 10 May 2025 20:57:16 -0700 (PDT)
+        bh=AGnjH1P5I0kLHDjAZ4ysHop1/OwSpLWxJh9YdNqBtVk=;
+        b=QhJO1uhJyz1uUZgfaiwXpHsbAA+xBA6YERP5Rvr4CXQblviH/EtI6ieRQQLMQvZt1J
+         zZgGleh59xxRM37TFHPzg44nlDy5fWGOlJj5BV6BqnSYn47RZChjAzobFaBX3zbcEUYB
+         aPaoW4iAheNtRThrM+6R9TjWP0hbIuWOaxo9jJLJz965GV3KMoYbK+CBKfT0bqN0RpMM
+         z4JWsU7rvzoCm3iuHjiRKQdsDBMNgk+LbmQThJUUMx4wPNdAMeKJMe7He365t0r7CY9p
+         ZkG+lJgHF3iY1FP+hHw9S5eTbMrdTtS+FoUp21FdX27nxVX8R/DaNK9bFBH+Ue1CGQ3Y
+         F1HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhsPPACsbuKSylR+ktv/UuXZ13W6tsQeS5pyb7IU8PR2baavyjjiKx8XrO22U4NH8IBMmCALkFcv31@vger.kernel.org, AJvYcCXEQrl0gUpSDqlEonvINPqH8xAgO6cuvQWjJmKLVVtyzxNor2eXyCCm2uPMSYs0HIFgrTCXHiIrBjaZTiYL@vger.kernel.org, AJvYcCXkbSmAPmplyEs6BblsfRmna5L0X/fO8Y9InbDnV0pv1M+9UA0lCnEFWoxkQmHxv6wTFh2pTfRZaIgA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXhnN+/hc8XDfLcLhRCKa+iWtLzILt+OYaI8XwBxPb+8+HQH4C
+	2BPeUrkXtp+mLl9N1V2XFfYYKmKFi/waRBA1wKgSqQTzp6jg2fhi75nUtZLC
+X-Gm-Gg: ASbGncvpesPSqJsP3Za9OeZqRVozHQtXu0N/YAUQFGUXPMz3PVKzsCDe8kfaRMO/+Jg
+	VyKEtFeQqdrn7yYkujY8IDbUb2DYf7cx4xuZc6eO/wUyXb+8IiUxuGZVYAQ+YHjU/yVkEmDRT40
+	s+PJyRQhScLE6D3r5i6twH7/xbbfZcSimz4+ktpG49KsLkUBH4bip0xbspLPD98nHGzghvBP5xG
+	GgHkYtY9zi4rSrTLhWjMTM4723ESnJbc3Y8zlW4vGL3ucTZiCblsCBx4iVtPuLFGDYrz5mfXzhE
+	OsmUJ0rEkNLP60y7CqgVcLjkMR2hlXv9LRWu/aV7KT6l2DyX4THXJ5hqhIWnEPm5LhgwRQkDJ0k
+	/
+X-Google-Smtp-Source: AGHT+IEAa8DunPvrHQ8yJJ8v4GjnsSw6eFmxwkbwHnHoEfsD2xzSNIHeco505OqaSmbYjeyfZGe/AQ==
+X-Received: by 2002:a05:6000:2088:b0:39e:e557:7fa with SMTP id ffacd0b85a97d-3a1f648865amr5940049f8f.44.1746935844226;
+        Sat, 10 May 2025 20:57:24 -0700 (PDT)
 Received: from tempest2.110.lan (xt27dd.stansat.pl. [83.243.39.221])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c76dsm8163963f8f.92.2025.05.10.20.57.14
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c76dsm8163963f8f.92.2025.05.10.20.57.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 20:57:15 -0700 (PDT)
+        Sat, 10 May 2025 20:57:23 -0700 (PDT)
 From: Pawel Dembicki <paweldembicki@gmail.com>
 To: linux-hwmon@vger.kernel.org
 Cc: Pawel Dembicki <paweldembicki@gmail.com>,
@@ -68,21 +68,21 @@ Cc: Pawel Dembicki <paweldembicki@gmail.com>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Noah Wang <noahwang.wang@outlook.com>,
-	Fabio Estevam <festevam@gmail.com>,
 	Naresh Solanki <naresh.solanki@9elements.com>,
 	Michal Simek <michal.simek@amd.com>,
+	Fabio Estevam <festevam@gmail.com>,
 	Grant Peltier <grantpeltier93@gmail.com>,
 	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Shen Lichuan <shenlichuan@vivo.com>,
 	Peter Zijlstra <peterz@infradead.org>,
+	Shen Lichuan <shenlichuan@vivo.com>,
 	Greg KH <gregkh@linuxfoundation.org>,
 	Charles Hsu <ythsu0511@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v4 1/5] dt-bindings: hwmon: Add bindings for mpq8785 driver
-Date: Sun, 11 May 2025 05:55:44 +0200
-Message-ID: <20250511035701.2607947-2-paweldembicki@gmail.com>
+Subject: [PATCH v4 2/5] hwmon: pmbus: mpq8785: Prepare driver for multiple device support
+Date: Sun, 11 May 2025 05:55:45 +0200
+Message-ID: <20250511035701.2607947-3-paweldembicki@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250511035701.2607947-1-paweldembicki@gmail.com>
 References: <20250511035701.2607947-1-paweldembicki@gmail.com>
@@ -94,126 +94,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add device tree bindings for Monolithic Power Systems MPQ8785, MPM82504
-and MPM3695 PMBus-compliant voltage regulators.
+Refactor the driver to support multiple Monolithic Power Systems devices.
+Introduce chip ID handling based on device tree matching.
 
-These bindings also documents the optional
-"mps,vout-fb-divider-ratio-permille" property.
+No functional changes intended.
+
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
 ---
 v4:
   - no changes done
 v3:
-  - added maximum and default value to 'mps,vout-fb-divider-ratio-permille'
-  - add enum to compatible check
-  - move 'required' to proper place
+ - replaced (uintptr_t) with (kernel_ulong_t)
+ - used i2c_get_match_data() instead i2c_match_id(mpq8785_id, client)->driver_data
 v2:
-  - remove mps,mpq8785 from trivial-devices.yaml
-  - fix alphabetical order
-  - rename voltage-scale-loop to mps,vout-fb-divider-ratio-permille
-  - add mps,vout-fb-divider-ratio-permille min and max values
-  - rewrite mps,vout-fb-divider-ratio-permille description
-
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+ - no changes done
 ---
- .../bindings/hwmon/pmbus/mps,mpq8785.yaml     | 74 +++++++++++++++++++
- .../devicetree/bindings/trivial-devices.yaml  |  2 -
- 2 files changed, 74 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
+ drivers/hwmon/pmbus/mpq8785.c | 38 +++++++++++++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
-new file mode 100644
-index 000000000000..90970a0433e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/pmbus/mps,mpq8785.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
+index 331c274ca892..d0ac294b4bbc 100644
+--- a/drivers/hwmon/pmbus/mpq8785.c
++++ b/drivers/hwmon/pmbus/mpq8785.c
+@@ -8,6 +8,8 @@
+ #include <linux/of_device.h>
+ #include "pmbus.h"
+ 
++enum chips { mpq8785 };
 +
-+title: Monolithic Power Systems Multiphase Voltage Regulators with PMBus
+ static int mpq8785_identify(struct i2c_client *client,
+ 			    struct pmbus_driver_info *info)
+ {
+@@ -53,26 +55,46 @@ static struct pmbus_driver_info mpq8785_info = {
+ 		PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+ 		PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
+ 		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
+-	.identify = mpq8785_identify,
+-};
+-
+-static int mpq8785_probe(struct i2c_client *client)
+-{
+-	return pmbus_do_probe(client, &mpq8785_info);
+ };
+ 
+ static const struct i2c_device_id mpq8785_id[] = {
+-	{ "mpq8785" },
++	{ "mpq8785", mpq8785 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(i2c, mpq8785_id);
+ 
+ static const struct of_device_id __maybe_unused mpq8785_of_match[] = {
+-	{ .compatible = "mps,mpq8785" },
++	{ .compatible = "mps,mpq8785", .data = (void *)mpq8785 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, mpq8785_of_match);
+ 
++static int mpq8785_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct pmbus_driver_info *info;
++	enum chips chip_id;
 +
-+maintainers:
-+  - Charles Hsu <ythsu0511@gmail.com>
++	info = devm_kmemdup(dev, &mpq8785_info, sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
 +
-+description:
-+  Monolithic Power Systems digital multiphase voltage regulators with PMBus.
++	if (dev->of_node)
++		chip_id = (kernel_ulong_t)of_device_get_match_data(dev);
++	else
++		chip_id = (kernel_ulong_t)i2c_get_match_data(client);
 +
-+properties:
-+  compatible:
-+    enum:
-+      - mps,mpm3695
-+      - mps,mpm3695-25
-+      - mps,mpm82504
-+      - mps,mpq8785
++	switch (chip_id) {
++	case mpq8785:
++		info->identify = mpq8785_identify;
++		break;
++	default:
++		return -ENODEV;
++	}
 +
-+  reg:
-+    maxItems: 1
++	return pmbus_do_probe(client, info);
++};
 +
-+  mps,vout-fb-divider-ratio-permille:
-+    description:
-+      The feedback resistor divider ratio, expressed in permille
-+      (Vfb / Vout * 1000). This value is written to the PMBUS_VOUT_SCALE_LOOP
-+      register and is required for correct output voltage presentation.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 4095
-+    default: 706
-+
-+required:
-+  - compatible
-+  - reg
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - mps,mpm3695
-+            - mps,mpm82504
-+    then:
-+      properties:
-+        mps,vout-fb-divider-ratio-permille:
-+          maximum: 1023
-+
-+  - if:
-+      properties:
-+        compatible:
-+          const: mps,mpq8785
-+    then:
-+      properties:
-+        mps,vout-fb-divider-ratio-permille:
-+          maximum: 2047
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      pmic@30 {
-+        compatible = "mps,mpm82504";
-+        reg = <0x30>;
-+        mps,vout-fb-divider-ratio-permille = <600>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 8da408107e55..7c1c0cc29655 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -293,8 +293,6 @@ properties:
-           - mps,mp5990
-             # Monolithic Power Systems Inc. digital step-down converter mp9941
-           - mps,mp9941
--            # Monolithic Power Systems Inc. synchronous step-down converter mpq8785
--          - mps,mpq8785
-             # Temperature sensor with integrated fan control
-           - national,lm63
-             # Serial Interface ACPI-Compatible Microprocessor System Hardware Monitor
+ static struct i2c_driver mpq8785_driver = {
+ 	.driver = {
+ 		   .name = "mpq8785",
 -- 
 2.43.0
 
