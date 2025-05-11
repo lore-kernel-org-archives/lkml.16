@@ -1,135 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE311459F6;
-	Sun, 11 May 2025 09:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BD73A1B6
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 09:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746956079; cv=none; b=kudhB+z23735fBSnLoA8+NlzS+w+CRORw59xKAOjHOj5nsMeiGnfhQI19l3+2mYSzNoqJiDKtCUvMkfaYpLDbREow99DEESV5XfkpOWXQJCbrBD4GYmcRqF4Fq0OQ/1St323E6yqxDPvYafN7rRwJbyFhc9fhXKv7NkB6dBFzAE=
+	t=1746956586; cv=none; b=HUA03GLXocUvPvGVhGu58SyJtdNhhD/GB4Inr3Tac2Aw9ZFFfDvbHh2hDEDkRKTr4D+Us02xRMN599yVXpr46onpBEZieCaKVT8ctRerrN8s/ezcBB+Y82UaOVB+Xnh1QJopX0efCV9tbaiqH4iIzpLmhOrB8JMaS09L4vavhqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746956079; c=relaxed/simple;
-	bh=IXTSrniA0F/bUn9kvpa82cCBTV6wX8LPQ4rmehEcxA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oi7XR9NLycO+DBfkSdaIZ6nN8k20OPOajZColEDJCC8HcYgavE1VG0znmQgPu4EOEHuE3ZqUN9ZCn4EWxPJMtukaGLWbmSqxdUX+a2/+UFIlpGgJIwNJTwCc0TlokT6XZzqJeCd6vOIsEjA9TCgOmjK/JayY+TkiPMMnWkZI1Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGhZZa+6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746956586; c=relaxed/simple;
+	bh=SnC89AHyslSef6V2aYLkekOdGeOj9PF1IUYLzzXqRiM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=WbmkFwiZ5rYrC5fFoucB5kb2jWuRyHtVq8wx/DIrXtCvk8vVlTVCLraSQDjfBNENpIYQQCbaczPopYp6pW3SG4Cvp/9sW581w37BInfSW4+GizPQI/zcgvQOMH1X8HHodlIb4sapYvBJMYU9oVBGQ5SvYPnkA/hA4FTBSMCZDQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0CuGun+; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGhZZa+6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 040B1C4AF0B;
-	Sun, 11 May 2025 09:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746956079;
-	bh=IXTSrniA0F/bUn9kvpa82cCBTV6wX8LPQ4rmehEcxA8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bGhZZa+6l0D52SP+R46iUCCXFQKKJ8Zpg8HBG7B0sCHy6jTfbpHWJvdYkMCQXLE7S
-	 1As/XAaT9ziEYJskWUeXDpFOgBpksmCLrjsIZO2ncOzyyWEPSZ/nrzEujAR0EEgVXP
-	 MiyNzoJHsJ5MpdlRldp1Dc85qO8T9whw2JdEyzUU1YjW9FJvE0185VenC5j41MoMBL
-	 IRgJoBbnPYwME1rpxtKsoqAXOm+CJswQy3LTA9yzJWrwSCdKJCYBeH9ejyVCLWRf8y
-	 bdabH/+zWcGCYH0dU4RTdQ7u/VgWlqANJ5AWZ0aUjLVOWUJMCzVsd/jeIP8CC4/N6r
-	 W+zlcFSL3YjHg==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad24ee085a8so38191766b.0;
-        Sun, 11 May 2025 02:34:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUHFQUrtqW5FOM1knzV2o25b5s1m7EzqUgN4RfM0fpsZWqjABybV8Ff67HsSqOsG3tHawQrvqO/Ra/csomK@vger.kernel.org, AJvYcCV6IZtDUNMM4hYMikzNznnplckU74VunbPzn9RWsIk/j+Oip0CToeWax1ux5vDo3zEtfZGIInCrgZVwt1vy2DZU@vger.kernel.org, AJvYcCX4LUPABViue0uXiyTGO6/StkIoBejs7vvHAO5atrCJ3VZ41oDjx0g+4lBel6acjLXGVW7SGduqvtLpGMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvQN0DNLIsQ6hSaCv+Q+dFl2Jtk6GdEjDBNVVNUwYGTcdP6/tt
-	NFw4EqiASdeI0FFgdTt2Zoa7smVRLcPBGY7h0mPXYx5nkKfdq7kdJqhgY7Og7inH6xY0qBMtHqM
-	lEyoa2UdatDfZc3X6450IXmQTv7c=
-X-Google-Smtp-Source: AGHT+IGTmZ6EF6mEMOjWbqINnWJsCw2wRXE87kMGhAwJ2qS0Md32h3m+YkrG3Wx9y7SkE5DIAuoUoNAFRtWxn6ygHmI=
-X-Received: by 2002:a17:906:5415:b0:ad2:1cd7:cefc with SMTP id
- a640c23a62f3a-ad21cd7d3f1mr642121766b.13.1746956077475; Sun, 11 May 2025
- 02:34:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0CuGun+"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so3506836b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746956583; x=1747561383; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SnC89AHyslSef6V2aYLkekOdGeOj9PF1IUYLzzXqRiM=;
+        b=i0CuGun+j1CGmSILNJkS3g7KztD2ERvhpANUsW7e2c1Xin0g2KGxDA2OScJvlrLQ4u
+         66OHbi7wS9YI+qulH4c0xGHPvNLzqEuuipPSNw+Ho18y0fdc41Rj2AdT7Eo7F2so8IIH
+         dK+C7g9dByqJ+aaykuty/eOqQe/Xg83dVAhpRFQyHlZ5vsbayYj7rJCIibyS+Cm5ck4u
+         gbcQjpMuygL5l6lOgByRYPoRUu5DMsopdhf+GLuilZVIVVlWBFynyGvE6a6BOxGZlj6U
+         U3/UdxyDRSGWudySCbdmWkg/uO8Lqooo/zlhXL0XbXCZe+GfZbfxh5MRtsdzsyOe4yMG
+         KPMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746956583; x=1747561383;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SnC89AHyslSef6V2aYLkekOdGeOj9PF1IUYLzzXqRiM=;
+        b=wvZRYnXyBqsehYR0gakymIZG7SMdrorPnLXgmXA493HgOvKN6CU+VXMbjllTs3wjnX
+         kOIgZF/mae85wM9FaQMOsevtLHpJevECxLlzTir08pZPA1D7kOao+cDw5NbAOVLMVlC5
+         NLyuAnJ3rBlhXCV1RZEVtfRS3AHr4bjRg/2g/xZqiOgR9WCVFnFjxeD03FaD/2jLjqR1
+         c4V8fCAjsLpaj7mEh0t2ZhjYHhMHuQTav/Jxe6/sWW8KNBEVgXj5wxgyF/Mo2DKbjeOu
+         mUbihkPaInesI418GvzLnzhCHLdc7m1MKbnAszaooro83f7+jAlIROAFGegs+7O22JYV
+         aRdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUv4F2AvMdS5qa8cEJ88kf9Yf6LHeo6X4PKT3JqLIHxp8QcrFyLC3egbHGCEZk/dLCNaIfVP1Da8bkc50E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5rvhA9uR76VGP0TKevDzuVuasXQa6pCmu6sxJ5jt7k3juOWdo
+	f65AyzNI6epeLHFeZcaYSqQIfWHWN29YwF/q62CNNK4BF3b6Go7KapywxM198I02t9f0r9bH1t3
+	AruADJvoYV+ju02jw3yyYnFumouQ=
+X-Gm-Gg: ASbGncvaojxw6Ec0wJabdP8p+ZCAeNgjIXqUBvi/FRjF68tyUjZiePoCnHGuGHbM00Z
+	Nr41DACWtMwswGnLxYh08eaZXsrPr1Wc0z8ZFyGlFd6orLH1DEfrdgEdlpxHndT3PYSK4ndxKir
+	NWk0O7+wjeIAPck8EL3Xxf2JIGbfuHyKSLU0De9K9Wco+SLrILQRWxFLuvqqucWv5SXE0=
+X-Google-Smtp-Source: AGHT+IH/mJ0x32ZlNKoI2eDR9O84MqogT0fzcKY9eBjFtKcEWG4I2sMg71tE4UvVNHYrlB5MENrq/i8SwY18K6OTj4U=
+X-Received: by 2002:a05:6a21:3510:b0:1f5:7cb4:b713 with SMTP id
+ adf61e73a8af0-215abb3a301mr14054823637.19.1746956583393; Sun, 11 May 2025
+ 02:43:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
-In-Reply-To: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 11 May 2025 17:34:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
-X-Gm-Features: AX0GCFs1xOMk2kKU9flskV20SeyFaYR6PfUyE9kYaPhzNcBNUwhaCNzouF6DfsI
-Message-ID: <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
-Subject: Re: [PATCH v9 0/5] Add Loongson Security Engine chip driver
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de
+From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date: Sun, 11 May 2025 11:42:27 +0200
+X-Gm-Features: AX0GCFuZrFjEp_RkcV0WctIvu4X1yuw5s5lS-0WHsmvO4h373KZg12qijyqjgv4
+Message-ID: <CAKR-sGezB_SEb7UfPV6o6T2yibkAzNSqK9Hry1kNM46BMsH2_g@mail.gmail.com>
+Subject: mtd: rawnand: brcmnand: exec_op patch broke < v5.0 controllers
+To: dregan@broadcom.com, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, 
+	MTD Maling List <linux-mtd@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	joel.peshkin@broadcom.com, Brian Norris <computersforpeace@gmail.com>, 
+	dan.beygelman@broadcom.com, William Zhang <william.zhang@broadcom.com>, 
+	frieder.schrempf@kontron.de, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vignesh R <vigneshr@ti.com>, 
+	Richard Weinberger <richard@nod.at>, bbrezillon@kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, 
+	liao jaime <jaimeliao.tw@gmail.com>, kilobyte@angband.pl, 
+	Jonas Gorski <jonas.gorski@gmail.com>, dgcbueu <dgcbueu@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Qunqin,
+Hi David,
 
-Where is the 2nd patch in V7?
+I've just realized that your exec_op implementation patch broke
+support of v2.1, v2.2 and v4.0 controllers.
+https://github.com/torvalds/linux/commit/3c8260ce76634291aed877032a41e37388=
+4d69e4
+https://patchwork.ozlabs.org/project/linux-mtd/patch/20231125012438.15191-4=
+-dregan@broadcom.com/
+I know it's an old patch from 6.8 but I just discovered this while
+trying to add 6.12 support for bmips on OpenWrt (from 6.6):
+https://github.com/openwrt/openwrt/pull/18746
 
-Huacai
+The issue is that low level ops always return 0 on v4.0 controllers
+and v2.1/v2.2 controllers don't even have the low level registers
+defined:
+https://github.com/torvalds/linux/blob/3ce9925823c7d6bb0e6eb951bf2db0e9e182=
+582d/drivers/mtd/nand/raw/brcmnand/brcmnand.c#L357
+https://github.com/torvalds/linux/blob/3ce9925823c7d6bb0e6eb951bf2db0e9e182=
+582d/drivers/mtd/nand/raw/brcmnand/brcmnand.c#L371
 
-On Tue, May 6, 2025 at 12:33=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
-> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
-> accelerator engines. Each engine have its own DMA buffer provided
-> by the controller. The kernel cannot directly send commands to the
-> engine and must first send them to the controller, which will
-> forward them to the corresponding engine. Based on these engines,
-> TPM2 have been implemented in the chip, then let's treat TPM2 itself
-> as an engine.
->
-> v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
->
-> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
->     are all encryption related drivers and SM2, SM3, and SM4 drivers
->     will be added to the crypto subsystem in the future, the base driver
->     need to be changed when adding these drivers. Therefore, it may be
->     more appropriate to place the base driver within the crypto
->     subsystem.
->
->     Removed complete callback in all drivers. Removed the concepts of
->     "channel", "msg" and "request" as they may be confusing. Used the
->     concepts of "egnine" and "command" may be better.
->
-> v7: Addressed Huacai's comments.
->
-> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
->
->     crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
->     ls6000se-rng.c ->loongson-rng.c
->
->     tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
->
-> v5: Registered "ls6000se-rng" device in mfd driver
->
-> Qunqin Zhao (5):
->   mfd: Add support for Loongson Security Engine chip controller
->   crypto: loongson - add Loongson RNG driver support
->   MAINTAINERS: Add entry for Loongson crypto driver
->   tpm: Add a driver for Loongson TPM device
->   MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
->
->  MAINTAINERS                            |   9 +
->  drivers/char/tpm/Kconfig               |   9 +
->  drivers/char/tpm/Makefile              |   1 +
->  drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
->  drivers/crypto/Kconfig                 |   1 +
->  drivers/crypto/Makefile                |   1 +
->  drivers/crypto/loongson/Kconfig        |   5 +
->  drivers/crypto/loongson/Makefile       |   1 +
->  drivers/crypto/loongson/loongson-rng.c | 197 +++++++++++++++++++++
->  drivers/mfd/Kconfig                    |  11 ++
->  drivers/mfd/Makefile                   |   2 +
->  drivers/mfd/loongson-se.c              | 235 +++++++++++++++++++++++++
->  include/linux/mfd/loongson-se.h        |  52 ++++++
->  13 files changed, 602 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_loongson.c
->  create mode 100644 drivers/crypto/loongson/Kconfig
->  create mode 100644 drivers/crypto/loongson/Makefile
->  create mode 100644 drivers/crypto/loongson/loongson-rng.c
->  create mode 100644 drivers/mfd/loongson-se.c
->  create mode 100644 include/linux/mfd/loongson-se.h
->
->
-> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-> --
-> 2.45.2
->
->
+I guess that restoring the legacy functions isn't going to happen, but
+is it possible to restore < v5.0 compatibility on the new exec_op
+implementation?
+
+Best regards,
+=C3=81lvaro.
