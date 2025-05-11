@@ -1,35 +1,94 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF8943172;
-	Sun, 11 May 2025 17:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8227425C808;
+	Sun, 11 May 2025 17:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746985654; cv=none; b=EIISmMaFvag2JMqfixyBBbSBlLEQHFIKaNVaKjVEcCgNlk7tvtA/h4cRVi0Dpqk9e85eteMeSG5C2ZsXf8KJ30Y875LLne+xNx+LEUvhRlNJLZZ6UR7q/AlSvG5NaPF81eYbYBq68WHBu3bhIO0LreuERzM+0hvCIeXwftURoUs=
+	t=1746985665; cv=none; b=tcVCfiSWQnDim0R/F/TPAyZeStcfLDxXos27cXFPZxQFV1BCHlKh5CxuA5zTT5+ml7qnD3CoWDYdrnBBXAYk/2j7EiwDqNGrLMNqW2XFNv3jB9LXHglwOTPm+d0vEOKSJS7vzQ6V6WDqMNPqsJd8jC0i1q5yGQNwfsXhUkWqniE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746985654; c=relaxed/simple;
-	bh=BusRFZ5sgIuDTxLkz0Uc4Lb7dUVAgQ/2zwaOtXTQbVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CVpDn5GYrTAdTAGLqZz9VcSTAXM5g404vxq+W6rt6MYFlZOPX8TUixqGuMQ1J8pw8elpvHhSX2MU6i7bVSxW5aF1JAy4YThqkEPjlztIfVa0xFw8N/1EvVJ0swCPT4aq+MKJ8/4jARrLzPdTyF4nSl3oGFDZQbrHk+Qlm2Tr2UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from abreu.speedport.ip (p57bd968f.dip0.t-ipconnect.de [87.189.150.143])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 433D661E647B1;
-	Sun, 11 May 2025 19:46:59 +0200 (CEST)
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Len Brown <len.brown@intel.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
-	linux-pm@vger.kernel.org,
+	s=arc-20240116; t=1746985665; c=relaxed/simple;
+	bh=+hEC0XMSQw9gDeHyFoQjr7nz7nmqiln9JonDapP9s+g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MEDuZUzvZHzaR+o04QrqwNuMVnLcZdCu4kRDPL/3HqiRajfdHb65clf8GPut5cMSg8yWubkYwe09TB8hqIO52O30xUaUkd7P9hFk+NSne7TyszlEcvlnsen65n3xZ3g5SXQD58ecg92Phx4CMpYEVVe+o3qDTIIwQo+JeFMakBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=MinQk4MA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=il8OcWlp; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="MinQk4MA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="il8OcWlp"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 43839138015D;
+	Sun, 11 May 2025 13:47:41 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Sun, 11 May 2025 13:47:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1746985661; x=1747072061; bh=uv
+	2TAX3BLb6KM0Q6C1WKMn0ijkBPxWrmE8C+l0eLSrs=; b=MinQk4MAY1lKh48/ZQ
+	6HWOVa7FalclRXTBtkYzj8tUPbx6Co8OqRvB2GkIPSY7IzJlD0ZT9HPtsMvMf7l0
+	LdW095t3Y+Z5z4CnZJcr0Uj2+YvDYTHOsGQ/yAk2YawryqnfBpUSrZCBfL9OCGiB
+	4MNKgM4vqbQn6ZeSDFHOtSexKRGmp5e8DMBoavKHnd0fHY1aFNCEagZFkZzwxBxf
+	W0HhcZD20LAkEwIPcQqpAPjY1ZTQocXjXKYcS5w5zP2M9laLjnqs4tWrXPKsosKB
+	CYckbbyHmy8vh9VWEK/r0m69TI/b/7PmWiMUKcX/R5Z55SDulMO4YCNskDAUcMsd
+	cwPg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1746985661; x=1747072061; bh=uv2TAX3BLb6KM0Q6C1WKMn0ijkBP
+	xWrmE8C+l0eLSrs=; b=il8OcWlpFKJFfwfMCllTWIjRVQaliHtaDf2lIfvIKkv5
+	0LhCrx+R8ORG/Y96QfQ8nzKZrlY7ihJE6j2k91KvoHxOwPYE22whbQa4ioeDFZue
+	+VJewPhVUfPkK8b1TD5lHBiQBQJJ6LKbYJMZFZ2jDFjEpgfjBdiAWkCPTt7xPv4v
+	PACw+htJbAYx+DJ5z+ULWOZSQWQlIxaWmo6j+cZuinEllmDgEMXGa0TVfoC2nXRm
+	FwM0IafCoFPsUSLBrnEX/FViP2sqSdBLsLvNuGI9ov+c5pC9L+K2mAw+T2CKvCkb
+	mwSijBMHtVtMZRGMFejvPdGriruiOsstZNGYqFUZNg==
+X-ME-Sender: <xms:vOIgaK2DJbGdDpd4OIqodFBYgtE4IOshis0o4hjX6kpiZPGPAg0QBg>
+    <xme:vOIgaNGauNL2IjvMo_1S2bC1gUrI0NYpy_Ot0BKndJKCEeDSAQ86gd2AcwFwNJO4_
+    meO7Kz_wvchMOp87fA>
+X-ME-Received: <xmr:vOIgaC4JvoFFlIXHpaJBA19mpCxmS_45QqUO7h7uf9fVPG4molEXTj5Nn8HQsl7YDNpwr81FM-ig-DT5OFAEOi3f>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleeltddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofggtgfgsehtkeertdertdej
+    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
+    gvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffrrght
+    thgvrhhnpeehudelteetkefgffefudefuedvjeeivdekhfevieefgeffheeltddvvefhfe
+    etgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehn
+    ihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtph
+    htthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmtghhvghhrggssehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiug
+    gvrhdrsggvpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhht
+    vghlrdgtohhmpdhrtghpthhtohepthhomhhirdhvrghlkhgvihhnvghnodhrvghnvghsrg
+    hssehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlrghurhgvnhhtrdhp
+    ihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhinh
+    hugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
+    uhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepnhhikhhlrghsrdhsohguvghrlhhunhguodhrvghnvghsrghssehrrghgnhgrth
+    gvtghhrdhsvg
+X-ME-Proxy: <xmx:vOIgaL2odJlhJtHhlKV1kUUl5d7ZJZo5eIO4dVLzoPY1UeR1qIYwhg>
+    <xmx:vOIgaNFqxdaTLPUie1-SuaqJDrIu14B9ANVmIqiugdec7I8ZVrUIcA>
+    <xmx:vOIgaE_dmAfh_QmF0Zyidjb6ORacAnH4Xrd8JZWogiWN_qieL9Vx7w>
+    <xmx:vOIgaCnGXIyJxO68Mfg7vU4GrETvXVaTSIduh2Vp0MyBNa6k5ohQtA>
+    <xmx:veIgaERJpadgrbh4UfCIK46-lbNfM5OO_XoH9Xoh0DsD0Q0KjLVhCOz2>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 11 May 2025 13:47:40 -0400 (EDT)
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-media@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PM: thaw_processes: Rewrite restarting tasks log to remove stray *done.*
-Date: Sun, 11 May 2025 19:46:47 +0200
-Message-ID: <20250511174648.950430-1-pmenzel@molgen.mpg.de>
+Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v2 0/4] media: rcar-csi2: Add D-PHY support for V4H
+Date: Sun, 11 May 2025 19:47:26 +0200
+Message-ID: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,55 +99,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-`pr_cont()` unfortunately does not work here, as other parts of the
-Linux kernel log between the two log lines:
+Hello,
 
-    [18445.295056] r8152-cfgselector 4-1.1.3: USB disconnect, device number 5
-    [18445.295112] OOM killer enabled.
-    [18445.295115] Restarting tasks ...
-    [18445.295185] usb 3-1: USB disconnect, device number 2
-    [18445.295193] usb 3-1.1: USB disconnect, device number 3
-    [18445.296262] usb 3-1.5: USB disconnect, device number 4
-    [18445.297017] done.
-    [18445.297029] random: crng reseeded on system resumption
+This series adds support for CSI-2 D-PHY reception on R-Car Gen4 V4H
+devices. Previously only C-PHY reception due to poor documentation and
+no hardware to test D-PHY on.
 
-`pr_cont()` also uses the default log level, normally warning, if the
-corresponding log line is interrupted.
+Later revisions of the datasheet (Rev.1.21) describes the start-up
+procedure in some detail, and we now have hardware to test on! The
+documentation however only sparsely documents the registers involved and
+instead mostly document magic values and an order to write them to
+register offsets without much documentation.
 
-Therefore, replace the `pr_cont()`, and explicitly log it as a separate
-line with log level info:
+This series tries to in the extend possible to at least used named
+register and use formulas and lookup tables to make some sens of the
+magic values. Still most of them comes of a table of magic values in the
+datasheet.
 
-    Restarting tasks: Starting
-    […]
-    Restarting tasks: Done
+Patch 1/4 clears up a unfortunate mix of the name mbps (mega bits per
+second) used in the D-PHY context and msps (mega symbols per second)
+used in the C-PHY context.
 
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
----
- kernel/power/process.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Patch 2/4 and 3/4 prepares for adding D-PHY support by cleaning up
+register names and an updated common startup procedure for V4H which
+have been revised in later versions of the datasheet since the initial
+C-PHY V4H support was added.
 
-diff --git a/kernel/power/process.c b/kernel/power/process.c
-index 66ac067d9ae6..1938fafa9172 100644
---- a/kernel/power/process.c
-+++ b/kernel/power/process.c
-@@ -189,7 +189,7 @@ void thaw_processes(void)
- 
- 	oom_killer_enable();
- 
--	pr_info("Restarting tasks ... ");
-+	pr_info("Restarting tasks: Starting\n");
- 
- 	__usermodehelper_set_disable_depth(UMH_FREEZING);
- 	thaw_workqueues();
-@@ -208,7 +208,7 @@ void thaw_processes(void)
- 	usermodehelper_enable();
- 
- 	schedule();
--	pr_cont("done.\n");
-+	pr_info("Restarting tasks: Done\n");
- 	trace_suspend_resume(TPS("thaw_processes"), 0, false);
- }
- 
+Finally patch 4/4 adds D-PHY support.
+
+The work is to great extent at many different link speed and number of
+lanes. In 2-lane mode using an IMX219 and in 4-lane mode using IMX462
+sensors.
+
+See individual patches for change log.
+
+Niklas Söderlund (4):
+  media: rcar-csi2: Clarify usage of mbps and msps
+  media: rcar-csi2: Rework macros to access AFE lanes
+  media: rcar-csi2: Update start procedure for V4H
+  media: rcar-csi2: Add D-PHY support for V4H
+
+ drivers/media/platform/renesas/rcar-csi2.c | 447 ++++++++++++++++++---
+ 1 file changed, 402 insertions(+), 45 deletions(-)
+
 -- 
 2.49.0
 
