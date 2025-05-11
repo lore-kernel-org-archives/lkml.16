@@ -1,174 +1,147 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDF228FF;
-	Sun, 11 May 2025 06:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BC985260
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 06:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746945119; cv=none; b=KYJi3sDskQyGuJC6xUMXHuUGYFd/tFrzdC6pN7lY0VmL5U4arNqoDu3lgobcFmg9elrWw4x1hsxKwO+TqrZhlugf9ICODVfRCK4C/1s1qtY5uvo1G2VA14nPxntoSNfFucjVOvA15mQnB7ePhq+KFXGpF6FHxOho1gUyFgyLyzs=
+	t=1746945678; cv=none; b=gJ9+o6qPKJRlhoUMcNk/XTStHbnEOinecP8DaQi6KnFci7tZSWsjg0fkP8sE7pY15Nhr6pGDddIb2zQcoWpNIa7vkSkAUOGnPigcsGS41IIZ5tTNM/W7NtbAgnrD/ZpNp/ETtHuhUS5s3EWv8y6rM1t230SQnrvSBJxCu8kwW/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746945119; c=relaxed/simple;
-	bh=znWVQx+aqXY7eayIr59PYdm+cbIp1ZLO7od2r167Aho=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=i2y4vJ23/vk//o/9WgxZ6TV/3vUBkg/KOdWyIca5ADw9a0cKLDDhbBfZCGGjDBe6H5rplrkG001v92+jqzjG7cXJgQvrCZ9Djapf43NpvTKx1JWJuBc8VU0EvncHZnt25PywTPnepne5OLF18N6HOa1E5D0CiP9V+qqckgnHreM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sh6+cLMw; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746945678; c=relaxed/simple;
+	bh=+6a/Y1B54Abbs2KqBfh4gH8j0hGjaFDaIJbFdtRC8Y0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IeM+iwPGIMnZfMYKJH6I4M37TDCQsnpKCsJaogzWrmmKKyMZdSrgtpXCifJilIh8QbeW/GW0216e0D29lvwKcW86KvtRMyOkpgZU9xdhPMfkJnLfQnNqlyGUb6VmOAqQ90XG5bv2CHac/v5Wc8O5qXLT8S6vOJDqUgrgoLUshDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aZLvswg0; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sh6+cLMw"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30a9718de94so3290295a91.0;
-        Sat, 10 May 2025 23:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746945117; x=1747549917; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pTJSC0l4aJk91qxHFBVyudGRwUZQSvuJfiYEWiJ6nRQ=;
-        b=Sh6+cLMwg1EsVCaIEABUuwBI/3u9LWehZk4zjcwuIqL2PB8n1ohwgO/Bi/AuTPPJ+d
-         KgAZ6gA0rzmMD6k3kcNirK8fGa7k2/TnUGMVwIHJIueCqTD45ykRcz7sny9srbweZplF
-         6BZwIZNFupBk9oQFuCPx+SAcK3FAmoWh7ggs7hrOG4Nc8RMzlaoj8XiwqQo5HvJ6xptB
-         rR2mV2XeOEsbO/AjkYUjTOK/Sc0PKsqxm2da04stVcOiBr871rJc/oJhETW8GBr5o5iC
-         mWUDbSihhXEjn8F5QQ7yOFhs9R6ay6P4f0PNATXxaktTWjQqNL5YBrnCEHBhqWTvzSLK
-         gG6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746945117; x=1747549917;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pTJSC0l4aJk91qxHFBVyudGRwUZQSvuJfiYEWiJ6nRQ=;
-        b=lVXNCq3ZEXoutlOKxyqaoEQSksS8oaoREJsc0a4LrDkCcdTNY06cTtFO579ylxMmC4
-         Gpe8QN2v/OWgZYrgJg71OCxTGuRVegNDnHwPj9At4wCE82vsbt13gTZLUPmZkvUihm8G
-         g/xVTNbsS/YqTnUOFnfusCmhswsYDQRELJVwkHsPPiK2x13Dd18SPu0HqwnTBeBcbjlg
-         goqH2MdHiXwZ3aA7pLF57V+IwJzI3gm2m4HR1XQMx5Khzd+gPHy/JSmJfZCEePEAw0Hv
-         kApruAGrFUAKTLTJ8KGIVH9k9BcdJmSDm5t916iBDdFpYSdtJ58CCZqUQJS83Cahs0BZ
-         HqdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXc0nXh7AIHFgv0VB8h4cjq/mx2BGyQxnOSIFXv6qUUBPVDYGW9J5VjWMMMu4sEYvsZIwl04J+FYjzurw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1rmn8J9L+iWNXCYH9sD/8sQOLv2JVR/fJujjrV/FMgZzu5mHc
-	e/Y3lcXy6tepuBGlj7HYw9jIqKQCoGdVMEDN2BBVR+uWMtn0HJ2fL6OTZQ==
-X-Gm-Gg: ASbGncsS5mlBr+a1CxC3wWKeWmxnVNZYnxYo0Fo5F29hX969Qh5fBO6LoFaOBQicnAa
-	UkPzIzVZdEfbYb/SJHPwi+HMZC+NpZyiaK8jaZs1eN9Lnoz0ZtKlJ9XwfC40CUNHFSyV3BbNv+a
-	wFUrcEXHWsvfB2xf5nSnHkUaKduxjkesQeeHsGBwi0b0FQAquxjtOMETMuhuZP74p2Rj1y/pQiH
-	rMYqAa4bL51D34Wa6sSmBSrbrogzqgxYuyiPen0y6MiQJ15hLCJ0sWMk9gS28ivtUHndfKTSnYI
-	WgSSgKJayV+tOG/01pyOjhDOJacA5fAZGEd0XjzF1xXcjJWj6Fgp
-X-Google-Smtp-Source: AGHT+IHWNoCsOihMMlrfYsfq/Fv2v5HxGZVSIulYCQFLHZGUVh0kjdIMMNXSwI8fdL5Vzkaq7Cy2TQ==
-X-Received: by 2002:a17:90b:35d2:b0:30a:214c:24c9 with SMTP id 98e67ed59e1d1-30c3cafbd2cmr13244319a91.3.1746945116770;
-        Sat, 10 May 2025 23:31:56 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:81cd:844c:3bd7:4808])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad483fe6fsm6526582a91.6.2025.05.10.23.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 May 2025 23:31:56 -0700 (PDT)
-Date: Sat, 10 May 2025 23:31:53 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v6.15-rc5
-Message-ID: <vjfoxhbcvltgxbmmnjfnqllyrynjwh2cpraylma644hyhlv5jh@dzbn3dmblhyq>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aZLvswg0"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54B2raOY010719;
+	Sun, 11 May 2025 06:40:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=cwAXTc
+	X0HJqzWruHfmnqPSEejaCklME30gdLsup1Ckw=; b=aZLvswg0zJpFBr30nicyfp
+	uCp3Wic0kwHY8C3nk7kuyxZknF74Mbp560IOf7gnQYzQSNQhv2Fc7qmB8tqc2rWk
+	Gc7DYUmyK6Eb3XTW+oVeQi4+eKbStKWxWIT6xNAigu1TSi5I0Fvve6Q+Gjwkcuxb
+	v/i1XQhuA9TF5XFtfWa0aZBGN3J9InXKOixpteDfL5vagl1i8SOwWIZms6Xq+dLn
+	Rgg1eeh26ohVJaa0dCY7mmNjaJlaKoMnHosKprYRE39U3Te+SEasie7fyqQfY3G4
+	eWJK3xTYUHiBcfZKQQ9JPAqDQu/vYICYgR6OzWqwKCvbZJcBtBpSXQFGm3hZc3cA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jce8h69s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 11 May 2025 06:40:57 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54B6eu5v026832;
+	Sun, 11 May 2025 06:40:56 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jce8h69q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 11 May 2025 06:40:56 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54B602xD016348;
+	Sun, 11 May 2025 06:40:55 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jh4t8y4r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 11 May 2025 06:40:55 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54B6es5r25821868
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 11 May 2025 06:40:54 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C5C7C58055;
+	Sun, 11 May 2025 06:40:54 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2BA2F5804B;
+	Sun, 11 May 2025 06:40:49 +0000 (GMT)
+Received: from [9.124.210.168] (unknown [9.124.210.168])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 11 May 2025 06:40:48 +0000 (GMT)
+Message-ID: <dfd310c2-cbf1-44d3-ba69-e3834e04e881@linux.ibm.com>
+Date: Sun, 11 May 2025 12:10:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Linus,
-
-Please pull from:
-
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.15-rc5
-
-to receive updates for the input subsystem. You will get:
-
-- Synaptics touchpad on multiple laptops (Dynabook Portege X30L-G,
-  Dynabook Portege X30-D, TUXEDO InfinityBook Pro 14 v5, Dell
-  Precision M3800, HP Elitebook 850 G1) switched from PS/2 to SMBus mode
-
-- a number of new controllers added to xpad driver: HORI Drum
-  controller, PowerA Fusion Pro 4, PowerA MOGA XP-Ultra controller,
-  8BitDo Ultimate 2 Wireless Controller, 8BitDo Ultimate 3-mode
-  Controller, Hyperkin DuchesS Xbox One controller
-
-- fixes to xpad driver to properly handle Mad Catz JOYTECH NEO SE
-  Advanced and PDP Mirror's Edge Official controllers
-
-- fixes to xpad driver to properly handle "Share" button on some
-  controllers
-
-- a fix for device initialization timing and for waking up the
-  controller in cyttsp5 driver
-
-- a fix for hisi_powerkey driver to properly wake up from s2idle state
-
-- other assorted cleanups and fixes.  
-
-There will be a trivial conflict in drivers/input/joystick/magellan.c -
-please simply accept version coming form this pull request.
-
-Changelog:
----------
-
-Aditya Garg (3):
-      Input: synaptics - enable InterTouch on Dynabook Portege X30L-G
-      Input: synaptics - enable InterTouch on TUXEDO InfinityBook Pro 14 v5
-      Input: synaptics - enable InterTouch on Dell Precision M3800
-
-Arnd Bergmann (1):
-      Input: stmpe-ts - use module alias instead of device table
-
-Dmitry Torokhov (1):
-      Input: synaptics - enable SMBus for HP Elitebook 850 G1
-
-Gary Bisson (1):
-      Input: mtk-pmic-keys - fix possible null pointer dereference
-
-Hugo Villeneuve (1):
-      Input: cyttsp5 - ensure minimum reset pulse width
-
-Kees Cook (1):
-      input/joystick: magellan: Mark __nonstring look-up table
-
-Lode Willems (1):
-      Input: xpad - add support for 8BitDo Ultimate 2 Wireless Controller
-
-Manuel Fombuena (1):
-      Input: synaptics - enable InterTouch on Dynabook Portege X30-D
-
-Mattijs Korpershoek (2):
-      dt-bindings: mediatek,mt6779-keypad: Update Mattijs' email address
-      MAINTAINERS: .mailmap: update Mattijs Korpershoek's email address
-
-Mikael Gonella-Bolduc (1):
-      Input: cyttsp5 - fix power control issue on wakeup
-
-Ulf Hansson (1):
-      Input: hisi_powerkey - enable system-wakeup for s2idle
-
-Vicki Pfau (4):
-      Input: xpad - fix two controller table values
-      Input: xpad - fix Share button on Xbox One controllers
-      Input: xpad - add support for several more controllers
-      Input: xpad - fix xpad_device sorting
-
-WangYuli (1):
-      Input: sparcspkr - avoid unannotated fall-through
-
-Diffstat:
---------
-
- .mailmap                                           |  1 +
- .../bindings/input/mediatek,mt6779-keypad.yaml     |  2 +-
- MAINTAINERS                                        |  2 +-
- drivers/input/joystick/magellan.c                  |  2 +-
- drivers/input/joystick/xpad.c                      | 49 ++++++++++++++--------
- drivers/input/keyboard/mtk-pmic-keys.c             |  4 +-
- drivers/input/misc/hisi_powerkey.c                 |  2 +-
- drivers/input/misc/sparcspkr.c                     | 22 +++++++---
- drivers/input/mouse/synaptics.c                    |  5 +++
- drivers/input/touchscreen/cyttsp5.c                |  7 +++-
- drivers/input/touchscreen/stmpe-ts.c               |  7 +---
- 11 files changed, 65 insertions(+), 38 deletions(-)
-
-Thanks.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration to
+ reduce boot time
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+        Zi Yan <ziy@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>,
+        Ritesh Harjani <ritesh.list@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
+ <aBdK2EIMYYRmmEwA@kernel.org>
+ <a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
+ <188fbfba-afb4-4db7-bbba-7689a96be931@redhat.com>
+ <aBhoqpC4Jy-c-74p@localhost.localdomain>
+ <74c500dd-8d1c-4177-96c7-ddd51ca77306@redhat.com>
+ <aBhuZWpZ7ltMuOe0@kernel.org>
+ <8180a50d-eebe-4f9b-9ce8-d886654a992d@redhat.com>
+ <aBi8Iqp27jXLUWfs@kernel.org>
+ <78bc6a1b-164e-4925-a624-a271a4499364@redhat.com>
+ <d19ad41c-069d-436d-8fea-a05188adcb0e@linux.ibm.com>
+ <20250509141050.4b19bc796d7edf2eb9027361@linux-foundation.org>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <20250509141050.4b19bc796d7edf2eb9027361@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Ga2Yrki2KUyHqj9dpOfaHJoVVqav-z7i
+X-Proofpoint-GUID: 45qzxqsfw3kt6QvgKN-8-P6KZjjfFwRg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTExMDA2MyBTYWx0ZWRfXwq7iltw+6AHU rLC6ElVfOxVnByMKZkifEGgmC0W/Vb+NnXYz6VdzcHigQ7knXr6QIAHfQdIPM79R/6q06Mix0fi +VXiMgTzVfKReglPCpJbh57fooKqfBUG4SNU3lFIvsHaNfLxZJyE0+IvLBWQzZXgmLKVC38JHfz
+ rs0ylBZmZL0LuTGUZMZpSrPp1edzH1QvyVfVkDQ9H/vAh0ZIcUsxR4daN0ka/PmODJRozOt3elt +k6kx7m7JlJ5LWRSZzWK14JxCy6FJUuiJmLw9BwWukO1rIPDBp7j20TsN7Q9AwEAcDnQsYR+rtG MWUXdOYTXFHVBcw8JBDxzifrczwNl73wjaIgBeCSQoxmm9nfWMWZ90ywgnBMOeCdY2Hn6oCbB20
+ xFpAkFviTUMxBBXBiy80jGaek7YD/4FX3zEP4AjYR/9ia4zP8xFbaHf/gZTOPTzTZOgSNRJ9
+X-Authority-Analysis: v=2.4 cv=fvrcZE4f c=1 sm=1 tr=0 ts=68204679 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=P-RETWrbBPZJbLTpotkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=zgiPjhLxNE0A:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-11_02,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ impostorscore=0 priorityscore=1501 mlxlogscore=749 lowpriorityscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505110063
 
 
--- 
-Dmitry
+On 5/10/25 2:40 AM, Andrew Morton wrote:
+> On Fri, 9 May 2025 21:10:34 +0530 Donet Tom <donettom@linux.ibm.com> wrote:
+>
+>>>> Then we can drop the call to register_memory_blocks_under_node() from
+>>>> register_one_node() and add creation of memory blocks to
+>>>> node_dev_init(),
+>>>> i.e.
+>>>>
+>>>> node_dev_init()
+>>>>     for_each_node(nid)
+>>>>       __register_one_node(nid)
+>>>>         for_each_mem_region()
+>>>>           /* create memory block if node matches */
+>>> Yes exactly, that makes sense.
+>> Hi Andrew and Mike
+>>
+>> Based on the discussion so far, it is clear that the patch will work in all cases,
+>> including when CONFIG_ARCH_KEEP_MEMBLOCK  is disabled. Just checking —
+>> would you prefer to take this version, or should I send a v4?
+> My mind is a blank and perhaps some alterations were picked up along
+> the way so I think a full resend would be safer, please.
+
+
+Sure. I will do that.
+
+Thank you
+
+>
