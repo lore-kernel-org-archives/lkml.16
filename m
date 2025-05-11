@@ -1,98 +1,200 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-78.smtpout.orange.fr [80.12.242.78])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDDA199943;
-	Sun, 11 May 2025 08:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35C9139D;
+	Sun, 11 May 2025 08:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746950666; cv=none; b=cS50G0zj7QBg6AzU5Ug0KLtt/XwxXZ3Itl4dHnIkZH0APU3q/wKHaeqm2gjDmogu6U1/rkyHKzqGsoo6ATq2oXkqaoWG5Bvf0AbT0JDkRiFX9lNW62vGueuuCN4UdxFZl0G+oHMqdK42aHWSNpEkwHYxzsfu7lYcvnzl0TtcuPo=
+	t=1746950785; cv=none; b=BDNpnPSd5suIyc6KTUwaPcy/mfB9Mm4HwwgVJIQu7U4YIx9Qc0MFU+aKU5p8Oom8W4FgKQWvS9x49d0mFK7BDQ/w3vZHZF2liMUehrh8bBKgtRpnjKm1CHgfMA1taWugKqDsb0L9hL2MFWWSccsMIdET2aeA5dKx6A9Fsn2bdZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746950666; c=relaxed/simple;
-	bh=YWb2t8IBmufksPX1yCb1pll38Bg6jKtp9P+IlQaWEdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iLEgdYuaVxdPBtT1mDCk9GEzLe4njnvGknb5jkvBbFHjRri8nCng2R6fSjXcR0jng2VwjyEYOdr7Ho0Etuvf9pytktN85jPcViNC1xKXV98n8/8UWNYKljgIuMAMPsgCXYJcn29nrzFiuHNxq4n5kr8YWrwm7EFTgiygazDWe34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=UDI8SM8w; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1746950785; c=relaxed/simple;
+	bh=Y8tOJC2aMCIdltMPzejd/0tAeYVR9F6WHfmMID/mOhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t4RltksRB2gHMErI6vIKgIkRNpCjNua0Bu7TF1kKMFHQFNWqjUZIfqhSzzbMu6OWQlvImbE47kkU3tAUfx0kKF/tm0LRFomgiZZCyFrLW11q1YZJcM8P2i5w6Xo47EU/NxcPTA0277JKljRG/cAZrsKEp/vwB/f9tXwZJCLp9Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Ow7v/TnW; arc=none smtp.client-ip=80.12.242.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="UDI8SM8w"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AB7CB1048C2EC;
-	Sun, 11 May 2025 10:04:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1746950655; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=8dMO43m2NmTXCiptYlYWpF264PfUA4CZZdQaWxjjBcI=;
-	b=UDI8SM8w36xANrgdEYMHr0rC2uMoONObZnYMnuGUkcc7Su8M+ZOU7P+urr43qSVAHyX0uF
-	X4IQq752XEJxTzxrV7x2QJH6m2y7RUuI2rrrdTPaNZtvXKlSb24VlnS5q/hyhh+Q1aWdTj
-	/1+fRBOXEbu1l+QevGnHTEPdf59hHZtSJtCi1enzbXKPqFwUnLBrOFu/Mizi3S9uyy5n3L
-	O1iZStUa4VkuCwVUCaOjkWOS7JJQWtN6RBQiD3TiyVxFGuMt8hM5VRJlTYqgIuvnfNqZ7G
-	PL/fq4G4XlyQX/2CjN5fV3XIQ8G53FqpQ2WaoGXiLLVo3UIDXzNqZRDsFdU2Iw==
-Date: Sun, 11 May 2025 10:04:04 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yukuai3@huawei.com
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
-	tglx@linutronix.de, suzuki.poulose@arm.com, yukuai3@huawei.com
-Subject: Re: [PATCH 6.1 00/97] 6.1.138-rc2 review
-Message-ID: <aCBZ9Ie7/QLNWivS@duo.ucw.cz>
-References: <20250508112609.711621924@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Ow7v/TnW"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id E1YouzOWUmq1yE1YouBaim; Sun, 11 May 2025 09:57:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1746950243;
+	bh=S6aRKGbPJOBzR/kbTKqk+c5qg8qzb2/kJY/g0Fp409Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Ow7v/TnWlYslrKEGxHRUtZoPqwChyr7PDK8vROeq3rzvirmx0FnsZcCenW1PPAoy+
+	 3gaz3zowCldJ1dsjs1MMdDEj3pYGeh2ZDWsyLQITvvyIW080Za2qMwW8dgclPkhnZ6
+	 fa1wPZIqEfVSeIUMAJfpaRafanE6Pb/F0uy1Sl2kO2HlO9Bp8htnWZ2j8tBYfM608U
+	 CfBhWlicdjc6qO63TUL/s3pgpJzc8w99tIS8QpfM9bdDiFKNw/YSKbHP9oLm4Qnthy
+	 l2a8ZEGp6QgrZoccHdO/EMFijQdGWMO4WhJ6grr0Q7KLaBZhJxzSDlxbkmQuja6+dE
+	 J8yVUdgE9rW+A==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sun, 11 May 2025 09:57:23 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <a0677c8f-08f6-4b0d-8393-8086972475f2@wanadoo.fr>
+Date: Sun, 11 May 2025 09:57:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nIaulWZhoYdAc1QR"
-Content-Disposition: inline
-In-Reply-To: <20250508112609.711621924@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] iio: Add driver for Nicera D3-323-AA PIR sensor
+To: waqar.hameed@axis.com
+Cc: jic23@kernel.org, kernel@axis.com, lars@metafoo.de,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1746802541.git.waqar.hameed@axis.com>
+ <c5184074d85b68ca35ccb29ab94d774203b93535.1746802541.git.waqar.hameed@axis.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <c5184074d85b68ca35ccb29ab94d774203b93535.1746802541.git.waqar.hameed@axis.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Le 09/05/2025 à 17:03, Waqar Hameed a écrit :
+> Nicera D3-323-AA is a PIR sensor for human detection. It has support for
+> raw data measurements and detection notification. The communication
+> protocol is custom made and therefore needs to be GPIO bit banged.
+> 
+> The device has two main settings that can be configured: a threshold
+> value for detection and a band-pass filter. The configurable parameters
+> for the band-pass filter are the high-pass and low-pass cutoff
+> frequencies and its peak gain. Map these settings to the corresponding
+> parameters in the `iio` framework.
+> 
+> The low-pass and high-pass cutoff frequencies are pairwise for the
+> different available filter types. Because of this, only allow to set the
+> low-pass cutoff frequency from `sysfs` and use that to configure the
+> corresponding high-pass cutoff frequency. This is sufficient to
+> unambiguously choose a filter type.
+> 
+> Raw data measurements can be obtained from the device. However, since we
+> rely on bit banging, it will be rather cumbersome with buffer support.
+> The main reason being that the data protocol has strict timing
+> requirements (it's serial like UART), and it's mainly used during
+> debugging since in real-world applications only the event notification
+> is of importance. Therefore, only add support for events (for now).
+> 
+> Signed-off-by: Waqar Hameed <waqar.hameed-VrBV9hrLPhE@public.gmane.org>
+> ---
 
---nIaulWZhoYdAc1QR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi!
+...
 
-> This is the start of the stable review cycle for the 6.1.138 release.
-> There are 97 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> +static int d3323aa_set_lp_filter_freq(unsigned long *regmap, const int val,
+> +				      int val2)
+> +{
+> +	size_t idx;
+> +
+> +	/* Truncate fractional part to one digit. */
+> +	val2 /= 100000;
+> +
+> +	for (idx = 0; idx < ARRAY_SIZE(d3323aa_lp_filter_freq); ++idx) {
+> +		int integer = d3323aa_lp_filter_freq[idx][0] /
+> +			      d3323aa_lp_filter_freq[idx][1];
+> +		int fract = d3323aa_lp_filter_freq[idx][0] %
+> +			    d3323aa_lp_filter_freq[idx][1];
 
-> Thomas Gleixner <tglx@linutronix.de>
->     irqchip/gic-v2m: Mark a few functions __init
+Missing newline.
 
-This is not a bugfix, and is itself buggy, needing the next
-patch. Just drop both.
+> +		if (val == integer && val2 == fract)
+> +			break;
+> +	}
+> +
+> +	if (idx == ARRAY_SIZE(d3323aa_lp_filter_freq))
+> +		return -ERANGE;
+> +
+> +	bitmap_write(regmap, d3323aa_lp_filter_regval[idx],
+> +		     D3323AA_REG_BIT_FILSEL0, D3323AA_FILTER_TYPE_NR_BITS);
+> +
+> +	return 0;
+> +}
 
-> Suzuki K Poulose <suzuki.poulose@arm.com>
->     irqchip/gic-v2m: Prevent use after free of gicv2m_get_fwnode()
+...
 
-> Yu Kuai <yukuai3@huawei.com>
->     md: move initialization and destruction of 'io_acct_set' to md.c
+> +static int d3323aa_probe(struct platform_device *pdev)
+> +{
+> +	DECLARE_BITMAP(default_regmap, D3323AA_REG_NR_BITS);
+> +	struct d3323aa_data *data;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return dev_err_probe(&pdev->dev, -ENOMEM,
+> +				     "Could not allocate iio device\n");
+> +
+> +	data = iio_priv(indio_dev);
+> +	data->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	init_completion(&data->reset_completion);
+> +
+> +	ret = devm_mutex_init(data->dev, &data->regmap_lock);
+> +	if (ret)
+> +		return dev_err_probe(data->dev, ret,
+> +				     "Could not initialize mutex (%d)\n", ret);
 
-This seems to be preparation, not a bugfix.
+No need to repeat the error code in the message, when using dev_err_probe().
 
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Same for all calls below.
 
---nIaulWZhoYdAc1QR
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+> +	/* Request GPIOs. */
+> +	data->gpiod_vdd = devm_gpiod_get(data->dev, "vdd", GPIOD_OUT_LOW);
+> +	if (IS_ERR(data->gpiod_vdd))
+> +		return dev_err_probe(data->dev, PTR_ERR(data->gpiod_vdd),
+> +				     "Could not get GPIO vdd (%ld)\n",
+> +				     PTR_ERR(data->gpiod_vdd));
+> +
+> +	data->gpiod_clk_vout =
+> +		devm_gpiod_get(data->dev, "clk-vout", GPIOD_OUT_LOW);
+> +	if (IS_ERR(data->gpiod_clk_vout))
+> +		return dev_err_probe(data->dev, PTR_ERR(data->gpiod_clk_vout),
+> +				     "Could not get GPIO clk-vout (%ld)\n",
+> +				     PTR_ERR(data->gpiod_clk_vout));
+> +
+> +	data->gpiod_data = devm_gpiod_get(data->dev, "data", GPIOD_OUT_LOW);
+> +	if (IS_ERR(data->gpiod_data))
+> +		return dev_err_probe(data->dev, PTR_ERR(data->gpiod_data),
+> +				     "Could not get GPIO data (%ld)\n",
+> +				     PTR_ERR(data->gpiod_data));
+> +
+> +	ret = gpiod_to_irq(data->gpiod_clk_vout);
+> +	if (ret < 0)
+> +		return dev_err_probe(data->dev, ret, "Could not get IRQ (%d)\n",
+> +				     ret);
+> +
+> +	data->irq = ret;
+> +
+> +	/* Do one setup with the default values. */
+> +	bitmap_zero(default_regmap, D3323AA_REG_NR_BITS);
+> +	d3323aa_set_threshold(default_regmap, D3323AA_THRESH_DEFAULT_VAL);
+> +	d3323aa_set_filter_gain(default_regmap,
+> +				D3323AA_FILTER_GAIN_DEFAULT_VAL);
+> +	ret = d3323aa_setup(indio_dev, default_regmap);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->info = &d3323aa_info;
+> +	indio_dev->name = D3323AA_DRV_NAME;
+> +	indio_dev->channels = d3323aa_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(d3323aa_channels);
+> +
+> +	ret = devm_iio_device_register(data->dev, indio_dev);
+> +	if (ret)
+> +		return dev_err_probe(data->dev, ret,
+> +				     "Could not register iio device (%d)\n",
+> +				     ret);
+> +
+> +	return 0;
+> +}
 
------BEGIN PGP SIGNATURE-----
+...
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaCBZ9AAKCRAw5/Bqldv6
-8jCMAJwJdbKdQ0F8TqG+Kot3gNSNeZoCjwCfYhyNHmEl5MgDwqC/BB6LFkdxJkg=
-=iTFO
------END PGP SIGNATURE-----
+CJ
 
---nIaulWZhoYdAc1QR--
