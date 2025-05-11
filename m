@@ -1,123 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6BA188A0E;
-	Sun, 11 May 2025 23:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50E91262FD9;
+	Sun, 11 May 2025 23:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747004879; cv=none; b=hcdr/zNt+dGW698MyTTagIrCjrAbwd/CAvc0r1T49SbXT2zCO1fmU9237VPZF0ktmfeXqSWczp7Vgc03uiAPKn/VYp+WnED/2VpUbUCGakg2jGpJLjfQ22ZMO1kDxjaiWoo9gnUMd4L0JuB92Oe4AahPVLdiEJu+OYG6v/5i+IA=
+	t=1747004888; cv=none; b=HFl9KbQQfcfrskRsCTCZLZmB2szVGTmOI/3SNzYvmUzgjwbTYNAJm4y78U76hhX2otXfzlza/S99lfCfiCqLVeBpeZMctyuKuUy7VXsA62sqAYsjboJGS13MIcxd+oaqn18N1XfrGoNnhf1efMtfonQ+lOaueADoNLpXoyOZa0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747004879; c=relaxed/simple;
-	bh=fiuu/FAQbicG4pdW+3WAgdDwC1anxMimVItK7oW/vC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mr+i5hV4I3cLyoGDmfG+vMMIZjQExuMaaA3hr5ygyI0I+GanZ6NRSl623EOWT2HYhTrxf31NBWywJh/vwjHFrZ3j3w2lhuaZGAy++iqgxHnmerAwF7P+FwQZUzvkX0k4dgqsr5dHJpm/UZPKonp7in4ePign2LHws0mBWO3EmIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3CfWdaU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747004888; c=relaxed/simple;
+	bh=TFgAoICDPd7+D0MXWe9Ure6mza2fxuJqgIO6/JilKiU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=npRliZbMw/76HBoTdGk9EUAp04lZsNpNdE8SQ4jTEboy0nwJOxxZtlOBTTNJ/RisxY9nw32yg6D4QkV2fdVRE+hvu0oMoTOd29Xskf/axjNg6v/uaBaPTosnyHjX8pxEpeSj0S4KonCpJcz+echsO2GdbZ/eeRNoQkEJbiV61EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=i/uIweLM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3CfWdaU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DECFC4CEE4;
-	Sun, 11 May 2025 23:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747004878;
-	bh=fiuu/FAQbicG4pdW+3WAgdDwC1anxMimVItK7oW/vC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3CfWdaUa/SHoDzg4TcXAnERwVXpypQXogaXwYM5lOY2y39H91goJLk96QHhbLGkp
-	 ljSDBxeGI49fJId8Tw+agR7ZDo5WPjA3EmU2ojOPkmx4/f5fVSv7CzFtsh3Jf4hCET
-	 sgGOwE8+iAAQZ9Sk5szx0OhOcUIzZASVN8qoEoiVhvWF2MJYOEPq0z4c1o1UwzRtJs
-	 zk/ddWU7qDv6eR1dvd4m9IReHzL6ioABxXB8wpR3Wck6/eeGXf7rQnOVoMfYtVL/QG
-	 woW1DAsjjbS9dpYQLhQO/TZKQAXuRmUUTLAiR215LAELHXL/6DbcXX7XykTsY2K0b9
-	 lfi34PmvbTiwQ==
-Date: Sun, 11 May 2025 16:07:50 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH net-next 00/10] net: faster and simpler CRC32C computation
-Message-ID: <20250511230750.GA87326@sol>
-References: <20250511004110.145171-1-ebiggers@kernel.org>
- <b9b0f188-d873-43ff-b1e1-259e2afdda6c@lunn.ch>
- <20250511172929.GA1239@sol>
- <fe9fdf65-8eb1-4e33-88ce-4856a10364b2@lunn.ch>
- <CAMj1kXFSm9-5+uBoF3mBbZKRU6wK9jmmyh=L538FoGvZ1XVShQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="i/uIweLM"
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B2B49211D8B6;
+	Sun, 11 May 2025 16:08:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B2B49211D8B6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747004880;
+	bh=C6e1Sd2wwIBHFKi64bmr0cXUFCAbG2BTPif+GBdvk8k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=i/uIweLM/AnCi7PqtxtdfyJTudA/+61xNiWRDAoghEYqfW7si/lWX7uVlaaVMDyX4
+	 9jA91EjAJ3yihJuaC9vdYgkFDLfWxORvxvnRIEuSYhal1jDUg7Xu1XR3GOg9Em6cLH
+	 npeCsKoJGHstFIFm1zrocmvdPk38BL1CW+0I/kEY=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: arnd@arndb.de,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	kys@microsoft.com,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	x86@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next v2 1/4] Documentation: hyperv: Confidential VMBus
+Date: Sun, 11 May 2025 16:07:55 -0700
+Message-ID: <20250511230758.160674-2-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250511230758.160674-1-romank@linux.microsoft.com>
+References: <20250511230758.160674-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFSm9-5+uBoF3mBbZKRU6wK9jmmyh=L538FoGvZ1XVShQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 11, 2025 at 11:45:14PM +0200, Ard Biesheuvel wrote:
-> On Sun, 11 May 2025 at 23:22, Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > On Sun, May 11, 2025 at 10:29:29AM -0700, Eric Biggers wrote:
-> > > On Sun, May 11, 2025 at 06:30:25PM +0200, Andrew Lunn wrote:
-> > > > On Sat, May 10, 2025 at 05:41:00PM -0700, Eric Biggers wrote:
-> > > > > Update networking code that computes the CRC32C of packets to just call
-> > > > > crc32c() without unnecessary abstraction layers.  The result is faster
-> > > > > and simpler code.
-> > > >
-> > > > Hi Eric
-> > > >
-> > > > Do you have some benchmarks for these changes?
-> > > >
-> > > >     Andrew
-> > >
-> > > Do you want benchmarks that show that removing the indirect calls makes things
-> > > faster?  I think that should be fairly self-evident by now after dealing with
-> > > retpoline for years, but I can provide more details if you need them.
-> >
-> > I was think more like iperf before/after? Show the CPU load has gone
-> > down without the bandwidth also going down.
-> >
-> > Eric Dumazet has a T-Shirt with a commit message on the back which
-> > increased network performance by X%. At the moment, there is nothing
-> > T-Shirt quotable here.
-> >
-> 
-> I think that removing layers of redundant code to ultimately call the
-> same core CRC-32 implementation is a rather obvious win, especially
-> when indirect calls are involved. The diffstat speaks for itself, so
-> maybe you can print that on a T-shirt.
+Define what the confidential VMBus is and describe what advantages
+it offers on the capable hardware.
 
-Agreed with Ard.  I did try doing some SCTP benchmarks with iperf3 earlier, but
-they were very noisy and the CRC32C checksumming seemed to be lost in the noise.
-There probably are some tricks to running reliable networking benchmarks; I'm
-not a networking developer.  Regardless, this series is a clear win for the
-CRC32C code, both from a simplicity and performance perspective.  It also fixes
-the kconfig dependency issues.  That should be good enough, IMO.
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+---
+ Documentation/virt/hyperv/vmbus.rst | 41 +++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-In case it's helpful, here are some microbenchmarks of __skb_checksum (old) vs
-skb_crc32c (new):
+diff --git a/Documentation/virt/hyperv/vmbus.rst b/Documentation/virt/hyperv/vmbus.rst
+index 1dcef6a7fda3..ca2b948e5070 100644
+--- a/Documentation/virt/hyperv/vmbus.rst
++++ b/Documentation/virt/hyperv/vmbus.rst
+@@ -324,3 +324,44 @@ rescinded, neither Hyper-V nor Linux retains any state about
+ its previous existence. Such a device might be re-added later,
+ in which case it is treated as an entirely new device. See
+ vmbus_onoffer_rescind().
++
++Confidential VMBus
++------------------
++
++The confidential VMBus provides the control and data planes where
++the guest doesn't talk to either the hypervisor or the host. Instead,
++it relies on the trusted paravisor. The hardware (SNP or TDX) encrypts
++the guest memory and the register state also measuring the paravisor
++image via using the platform security processor to ensure trusted and
++confidential computing.
++
++To support confidential communication with the paravisor, a VMBus client
++will first attempt to use regular, non-isolated mechanisms for communication.
++To do this, it must:
++
++* Configure the paravisor SIMP with an encrypted page. The paravisor SIMP is
++  configured by setting the relevant MSR directly, without using GHCB or tdcall.
++
++* Enable SINT 2 on both the paravisor and hypervisor, without setting the proxy
++  flag on the paravisor SINT. Enable interrupts on the paravisor SynIC.
++
++* Configure both the paravisor and hypervisor event flags page.
++  Both pages will need to be scanned when VMBus receives a channel interrupt.
++
++* Send messages to the paravisor by calling HvPostMessage directly, without using
++  GHCB or tdcall.
++
++* Set the EOM MSR directly in the paravisor, without using GHCB or tdcall.
++
++If sending the InitiateContact message using non-isolated HvPostMessage fails,
++the client must fall back to using the hypervisor synic, by using the GHCB/tdcall
++as appropriate.
++
++To fall back, the client will have to reconfigure the following:
++
++* Configure the hypervisor SIMP with a host-visible page.
++  Since the hypervisor SIMP is not used when in confidential mode,
++  this can be done up front, or only when needed, whichever makes sense for
++  the particular implementation.
++
++* Set the proxy flag on SINT 2 for the paravisor.
+-- 
+2.43.0
 
-    Linear sk_buffs
-
-        Length in bytes    __skb_checksum cycles    skb_crc32c cycles
-        ===============    =====================    =================
-                     64                       43                   18
-                   1420                      204                  161
-                  16384                     1735                 1642
-
-    Nonlinear sk_buffs (even split between head and one fragment)
-
-        Length in bytes    __skb_checksum cycles    skb_crc32c cycles
-        ===============    =====================    =================
-                     64                      579                   22
-                   1420                     1506                  194
-                  16384                     4365                 1682
-
-So 1420-byte linear buffers (roughly the most common case) is 21% faster, but
-other cases range from 5% to 2500% faster.  This was on an AMD Zen 5 processor,
-where the kernel defaults to using IBRS instead of retpoline; I understand that
-an even larger improvement may be seen when retpoline is enabled.
-
-But again this is just the CRC32C checksumming performance.  I'm not claiming
-measurable improvements to overall SCTP (or NVME-TLS) latency or throughput,
-though it's possible that there are.
-
-- Eric
