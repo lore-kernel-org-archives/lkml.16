@@ -1,80 +1,134 @@
-Received: from mail-m2491.xmail.ntesmail.com (mail-m2491.xmail.ntesmail.com [45.195.24.91])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A053C78F52;
-	Sun, 11 May 2025 21:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2CB19307F;
+	Sun, 11 May 2025 21:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747000248; cv=none; b=eXyn9hObqLEBP1hE1UxgdbAf3TmIYlubhgN2gYN/K/LJh6pQkzhpGvHtHPhnTWfb8dBxHouGAv/JC0uOIGbA57QQj3uJcM92gJ/Q+cqjtcdRNLWf86KNmZQylgs2agg3uECvGBFtz6baTcB5FhP/sErnCjqokw9Oag0ELdq1ze8=
+	t=1747000356; cv=none; b=pceXdQYTlyGo48OMMkU6t+SKvN45WX+4VkjqJXYQkUMQ2yYKW16hPJtlA/IBwFxcPtsKWjW8q0LeOj30iKLkzFCR1OfkRihHH7RISK86URmiPkNo5lfwKmthd+ZhPcp8Btz6WZD2+55r4ocRyHFO/Jvm+vy8+4vEQRJ5ldiBxfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747000248; c=relaxed/simple;
-	bh=OOUdApa0JThYxCoz78OPV6tqoLIrTEdW0j0Sn5iyVqY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vD6ZiFjXdYqk/c72lnbAdSWidLxIc8bBssffFO5GWa6AG30wOvOz9mClhMbRdPZZTPpvV/4Z2zzCNy3ldVf4Mkm3SHBdGsuqua3NS83CfTISzeC9xVwXg0xSnVRlv30OllJh5rGZvxwP7ZQytKLLRuXOozk89mILr/oK91FQEXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.195.24.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c03:9b0:dce1:ee4:cfd7:5cd7])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 14a30f72c;
-	Sun, 11 May 2025 23:01:04 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: heiko@sntech.de
-Cc: amadeus@jmu.edu.cn,
-	ziyao@disroot.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v7 4/5] arm64: dts: rockchip: add core dtsi for RK3562 SoC
-Date: Sun, 11 May 2025 23:01:01 +0800
-Message-Id: <20250511150101.51273-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <3317829.AJdgDx1Vlc@diego>
-References: <3317829.AJdgDx1Vlc@diego>
+	s=arc-20240116; t=1747000356; c=relaxed/simple;
+	bh=eVOfRC71/v0naU88mPmpGGIMHyzVH0LVRTWmB7Cvdx8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=aAh4hU5LcdAjARlvZjNQCkuo3mkHv+tez42iPMI8ylyrQj9Qf5sj2nGxX00AovnWbwAExton2Fi6Kd90wcTeTGXY9cBFUGxUcKevgCG+96w4c98ESiAHws5SDePxqeKnnRCE6TiZDGGRCsi99NL222qU1j2vCp4WqSi2w92q6fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ncrT/gZt; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ncrT/gZt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747000354; x=1778536354;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eVOfRC71/v0naU88mPmpGGIMHyzVH0LVRTWmB7Cvdx8=;
+  b=ncrT/gZtZMtA+gFsSqq9GA7zVEWMHjJchL22c0aoCFxRf2G75v5nctJI
+   eBj2aPQOEjpvxBQZZxUgyOrumjFdhuvW20htyOPc7Emw7b13w2LcGOOIl
+   /vbBTyBEEbMn0buxjVDH4AqKzHLJgZDPx9Ytu9Eq2f6nm5MY1jKz0F+Y2
+   aspJ+YjbDld17yi5uFz/fmgiaR2JUllRl64LcIIbB34rV6ibX6u+Culuk
+   XQAVUVXsq57pMyyNfj4hamF4O7bysItRaeYzF1zxqRjnwnfhha0j6t1/H
+   KhYd7BF751EQAvBb5fx/9I6gL4mtVO1dzX23IlDF4qhxlSEM/wFOqm8Ac
+   g==;
+X-CSE-ConnectionGUID: WoSREJfRTlqYJI52M7qxXA==
+X-CSE-MsgGUID: jW+Yzt+yT5+eOm18b/dRQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="74181807"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="74181807"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 14:52:33 -0700
+X-CSE-ConnectionGUID: 22mdZdqxQ9abjmxrBSv0iA==
+X-CSE-MsgGUID: T5wY4l6VSUCR8Y7CbARB4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="136896737"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 14:52:31 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH 1/1] PCI: Non-empty add_list/realloc_head does not warrant BUG_ON()
+Date: Mon, 12 May 2025 00:52:23 +0300
+Message-Id: <20250511215223.7131-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHxgaVhgaHU1JSUNPTEsdHVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtIQUIZS0EfGB5KQR4eT0EYHR9MQU4YH0xZV1kWGg8SFR
-	0UWUFZT0tIVUpLSEpMTU1VSktLVUpCS0tZBg++
-X-HM-Tid: 0a96bfdd298703a2kunm14a30f72c
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjY6Nio6GDJPGUoLFB8zHBMo
-	OgoaChNVSlVKTE9NQkxOTU1OSklMVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0hBQhlLQR8YHkpBHh5PQRgdH0xBThgfTFlXWQgBWUFKSExONwY+
 
-Hi,
+Resource fitting/assignment code checks if there's a remainder in
+add_list (aka. realloc_head in the inner functions) using BUG_ON().
+This problem typically results in a mere PCI device resource assignment
+failure which does not warrant using BUG_ON(). The machine could well
+come up usable even if this condition occurs because the realloc_head
+relates to resources which are optional anyway.
 
-> I might be blind, but I don't see a tab missing here? #adress-cells and
-> #size-cells are in the same level of indentation as the other properties
-> of spi0? I did move the -cells down though now.
+Change BUG_ON() to WARN_ON_ONCE() and free the list if it it's not
+empty.
 
-Sorry I didn't make it clear. This refers to -cells.
+Reported-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Link: https://lore.kernel.org/linux-pci/5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org/
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
 
-> hopefully caught all pwms now
+The cause for the regression reported by Tudor is not understood yet,
+but this change seems useful regardless given somebody has now hit one
+of these BUG_ON()s.
 
-The pinctrl-names of pwm4 to pwm15 are still "active".
+ drivers/pci/setup-bus.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-> +		saradc0: adc@ff730000 {
-> +			compatible = "rockchip,rk3562-saradc";
-> +			reg = <0x0 0xff730000 0x0 0x100>;
-> +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> +			#io-channel-cells = <1>;
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 54d6f4fa3ce1..a0d815557f5c 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -2298,8 +2298,8 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 
+ 		/* Depth last, allocate resources and update the hardware. */
+ 		__pci_bus_assign_resources(bus, add_list, &fail_head);
+-		if (add_list)
+-			BUG_ON(!list_empty(add_list));
++		if (WARN_ON_ONCE(add_list && !list_empty(add_list)))
++			free_list(add_list);
+ 		tried_times++;
+ 
+ 		/* Any device complain? */
+@@ -2361,7 +2361,8 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+ 		pci_bridge_distribute_available_resources(bridge, &add_list);
+ 
+ 		__pci_bridge_assign_resources(bridge, &add_list, &fail_head);
+-		BUG_ON(!list_empty(&add_list));
++		if (WARN_ON_ONCE(!list_empty(&add_list)))
++			free_list(&add_list);
+ 		tried_times++;
+ 
+ 		if (list_empty(&fail_head))
+@@ -2437,7 +2438,8 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+ 
+ 	__pci_bus_size_bridges(bridge->subordinate, &added);
+ 	__pci_bridge_assign_resources(bridge, &added, &failed);
+-	BUG_ON(!list_empty(&added));
++	if (WARN_ON_ONCE(!list_empty(&added)))
++		free_list(&added);
+ 
+ 	if (!list_empty(&failed)) {
+ 		ret = -ENOSPC;
+@@ -2493,6 +2495,7 @@ void pci_assign_unassigned_bus_resources(struct pci_bus *bus)
+ 			__pci_bus_size_bridges(dev->subordinate, &add_list);
+ 	up_read(&pci_bus_sem);
+ 	__pci_bus_assign_resources(bus, &add_list, NULL);
+-	BUG_ON(!list_empty(&add_list));
++	if (WARN_ON_ONCE(!list_empty(&add_list)))
++		free_list(&add_list);
+ }
+ EXPORT_SYMBOL_GPL(pci_assign_unassigned_bus_resources);
 
-> > `#io-channel-cells` should be put above `status = "disabled";`
->
-> moved now :-)
-
-It looks like saradc0 forgot to change.
-
-Thanks,
-Chukun
-
---
-2.25.1
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.39.5
 
