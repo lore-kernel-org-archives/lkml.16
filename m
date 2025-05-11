@@ -1,45 +1,44 @@
 Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2552325EF8E;
-	Sun, 11 May 2025 17:31:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE42725D8E4;
+	Sun, 11 May 2025 17:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746984691; cv=none; b=KAG/bdzVx+le17gVRybIdkZPGUk1QqnUODMPHLV8sgdBKJH4YeQ+4eDuH6EaNl6H8hrMcnSJ6uhM9EB2u5875/SdZQSkN4td+8NoSSE6z6emMPMYJEKKojy/zZ35VtTCl15uinGoYYjLwuk1kDxEJUTj4sJedZ9Ll+SXFlkMTdg=
+	t=1746984697; cv=none; b=M/Yuz0kWlB0hkHlebJVNEdNx93VEU9p1Zm0tOnBObcN5VUBsDF5NKnWnzhvCo0tB85R/AdVsZFv4LGLTl5NORfz24Ko+PlpZLxmgVpED6hQLVPZDlpUuCTTsCxQeXSoKANipBghLdVgdw6yyWPJ3Vs7xLfRt1AsSZjlAY87lD/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746984691; c=relaxed/simple;
-	bh=HyB3gvgb/h0JQKUj9GiU9x13uSqTvYTFQk75IrUs0CM=;
+	s=arc-20240116; t=1746984697; c=relaxed/simple;
+	bh=Pf+VzyysXD68l+KJQCLG2aEwhEMl4XVbBRNkAwxMSTU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kwHxhE60SdvL2TXhx9Re0XkhHSy3w++xMRitRpAHp0BLx+528EBiZsH+fp8HQu6FiIne8j2aDEP6FGf89NVqUD/PCO4Hqu5ANOvrajX5rPcGbdC/m37v1LkyhsBcf3T8oYQ3cTRnb4Q0oLitvCzDxP8Nfjaob/PO33ne1s0tPpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=J+EKzBdh; arc=none smtp.client-ip=168.119.48.163
+	 MIME-Version:Content-Type; b=j8r2aJJQSerLeG+DeKxDG7f6EqelYQo34cnYldRXY6DK5UXx75trBigE3WIEcwMO4NteRk/tgfqbRN0szNAlSSPMslAyOnOj+yMT8vLksio8WN1TjQvUL9D7YlSVqkqWZXhIMvEnmFIpvufDk3KJQPrbcQY/VSacPfGu6bXkxNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=SbcI5efI; arc=none smtp.client-ip=168.119.48.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="J+EKzBdh"
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="SbcI5efI"
 From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
-	s=2023072701; t=1746984687;
+	s=2023072701; t=1746984694;
 	h=from:from:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ai09QT5phA4whwFRDzwcyznvZ9H2i0DJqd7XX39Ep5s=;
-	b=J+EKzBdhuAeEv/U4iHP1fys1yBB5EEZbdJ0YqLf9D7Ic5WuLCFkod2F+IGttnos9hOD7iG
-	yOD5vJLliwRjhLdlvfRsafsY+zrVjoh9Ue5tUo8fdLHwu7/KLnTALtx/EgPXjRTnjyx91R
-	mpra55SzZM7qWPL/e/lNiwasTs9cVdFuJs37ox4ihV6vvsSvU0c2grHH9I1WHoo8tObs/p
-	MKOb9Hu8GPmVK6JGH7EcM93Eo637n7OmaiTv+o4gBUWxhjAf8CGGwNeYsF/vY8ej3ngjSa
-	qm/9cf5YTQToUpP1wGXTyrPXD1BjILKWPSaOqJQ1Zab0e6xlcXL/IDIDNCsXZQ==
+	bh=at5EPWGlV4UKqMblvAMTE9/lujase2/QeqyVZV1+yY0=;
+	b=SbcI5efIaZie5Masa2rB+JAZ9MUDkPHfDEr9HETc1RRQVTB4jZaDA+M2d3prNf5gPhIbW8
+	TVS81hiRT9pJu+V/LCJJgT3VHzZHZ+wS/ADbw+x8cd4sPncKxXDMRmZ9Xm2VjEN2/dXiCb
+	CfVmRlQD47f7kQoGQ8SAPI0xyWJR9FiTSFk/UT2LLODN/7I2znuCaLv5zaU9dCfGgFj8oN
+	epk3ezLvB+xVkybIBPFuxmke6guVl8IpmDOSUIYD25UA9plZseyPWmIeHiBd95wvbfL5Ov
+	ZcxfTar9HwRm7O8dbIOXZuNx7BJS4prwrqjN+kmvuNUJsOHtMr4F0QKxnpdhzg==
 To: selinux@vger.kernel.org
 Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
 	Paul Moore <paul@paul-moore.com>,
 	Stephen Smalley <stephen.smalley.work@gmail.com>,
 	Ondrej Mosnacek <omosnace@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Eric Suen <ericsu@linux.microsoft.com>
-Subject: [PATCH v3 12/14] selinux: check for simple types
-Date: Sun, 11 May 2025 19:30:12 +0200
-Message-ID: <20250511173055.406906-12-cgoettsche@seltendoof.de>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/14] selinux: harden against malformed policies
+Date: Sun, 11 May 2025 19:30:15 +0200
+Message-ID: <20250511173055.406906-15-cgoettsche@seltendoof.de>
 In-Reply-To: <20250511173055.406906-1-cgoettsche@seltendoof.de>
 References: <20250511173055.406906-1-cgoettsche@seltendoof.de>
 Reply-To: cgzones@googlemail.com
@@ -54,110 +53,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Christian Göttsche <cgzones@googlemail.com>
 
-Validate that the target of AVTAB_TYPE rules and file transitions are
-simple types and not attributes.
+With the SELinux namespace feature on the horizon it becomes important
+to identify and reject malformed policies at load time.  Otherwise
+memory corruptions can compromise the kernel or NULL-pointer dereferences
+and BUG() encounters can bring systems down.  Currently this is not a
+security relevant issue since loading a policy requires root privileges
+and permission of the current loaded SELinux policy, making it one of the
+most privileged operation.
 
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
----
- security/selinux/ss/avtab.c    |  9 ++++++++-
- security/selinux/ss/policydb.c | 23 +++++++++++++++++++++--
- security/selinux/ss/policydb.h |  1 +
- 3 files changed, 30 insertions(+), 3 deletions(-)
+Patch 13 limits the valid set of characters and the length for strings
+defined by policies.  Currently there are no restrictions, so control
+characters are accepted, e.g. Esc as part of a type name, and their
+length can be arbitrary.  Human formatted security contexts however must
+not be arbitrarily long, one example is they must fit in a page size for
+selinuxfs interaction and network associations.
+Thus the patch introduces the following restrictions:
+  * Disallow control characters
+  * Limit characters of identifiers to alphanumeric, underscore, dash,
+    and dot
+  * Limit identifiers in length to 128, expect types to 1024 and
+    categories to 32, characters (excluding NUL-terminator)
+    
+v1: https://lore.kernel.org/selinux/20241115133619.114393-23-cgoettsche@seltendoof.de/
 
-diff --git a/security/selinux/ss/avtab.c b/security/selinux/ss/avtab.c
-index 50df8b69de2b..5b45f37fdcbb 100644
---- a/security/selinux/ss/avtab.c
-+++ b/security/selinux/ss/avtab.c
-@@ -426,6 +426,13 @@ int avtab_read_item(struct avtab *a, struct policy_file *fp, struct policydb *po
- 				}
- 				key.specified = spec_order[i] | enabled;
- 				datum.u.data = le32_to_cpu(buf32[items++]);
-+
-+				if ((key.specified & AVTAB_TYPE) &&
-+				    !policydb_simpletype_isvalid(pol, datum.u.data)) {
-+					pr_err("SELinux: avtab: invalid type\n");
-+					return -EINVAL;
-+				}
-+
- 				rc = insertf(a, &key, &datum, p);
- 				if (rc)
- 					return rc;
-@@ -517,7 +524,7 @@ int avtab_read_item(struct avtab *a, struct policy_file *fp, struct policydb *po
- 		datum.u.data = le32_to_cpu(*buf32);
- 	}
- 	if ((key.specified & AVTAB_TYPE) &&
--	    !policydb_type_isvalid(pol, datum.u.data)) {
-+	    !policydb_simpletype_isvalid(pol, datum.u.data)) {
- 		pr_err("SELinux: avtab: invalid type\n");
- 		return -EINVAL;
- 	}
-diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
-index 7774f6da2ebe..2b098d9abf17 100644
---- a/security/selinux/ss/policydb.c
-+++ b/security/selinux/ss/policydb.c
-@@ -686,7 +686,7 @@ static int role_validate(void *key, void *datum, void *datap)
- 	}
- 
- 	ebitmap_for_each_positive_bit(&role->types, node, i) {
--		if (!policydb_type_isvalid(p, i + 1))
-+		if (!policydb_simpletype_isvalid(p, i + 1))
- 			goto bad;
- 	}
- 
-@@ -1047,6 +1047,23 @@ bool policydb_type_isvalid(const struct policydb *p, u32 type)
- 	return true;
- }
- 
-+bool policydb_simpletype_isvalid(const struct policydb *p, u32 type)
-+{
-+	const struct type_datum *datum;
-+
-+	if (!type || type > p->p_types.nprim)
-+		return false;
-+
-+	datum = p->type_val_to_struct[type - 1];
-+	if (!datum)
-+		return false;
-+
-+	if (datum->attribute)
-+		return false;
-+
-+	return true;
-+}
-+
- bool policydb_boolean_isvalid(const struct policydb *p, u32 boolean)
- {
- 	if (!boolean || boolean > p->p_bools.nprim)
-@@ -2235,6 +2252,8 @@ static int filename_trans_read_helper_compat(struct policydb *p, struct policy_f
- 	key.name = name;
- 
- 	otype = le32_to_cpu(buf[3]);
-+	if (!policydb_simpletype_isvalid(p, otype))
-+		goto out;
- 
- 	last = NULL;
- 	datum = policydb_filenametr_search(p, &key);
-@@ -2357,7 +2376,7 @@ static int filename_trans_read_helper(struct policydb *p, struct policy_file *fp
- 		datum->otype = le32_to_cpu(buf[0]);
- 
- 		rc = -EINVAL;
--		if (!policydb_type_isvalid(p, datum->otype))
-+		if (!policydb_simpletype_isvalid(p, datum->otype))
- 			goto out;
- 
- 		dst = &datum->next;
-diff --git a/security/selinux/ss/policydb.h b/security/selinux/ss/policydb.h
-index 04acf414fffa..b4f0c1a754cf 100644
---- a/security/selinux/ss/policydb.h
-+++ b/security/selinux/ss/policydb.h
-@@ -323,6 +323,7 @@ extern int policydb_load_isids(struct policydb *p, struct sidtab *s);
- extern bool policydb_context_isvalid(const struct policydb *p, const struct context *c);
- extern bool policydb_class_isvalid(const struct policydb *p, u16 class);
- extern bool policydb_type_isvalid(const struct policydb *p, u32 type);
-+extern bool policydb_simpletype_isvalid(const struct policydb *p, u32 type);
- extern bool policydb_role_isvalid(const struct policydb *p, u32 role);
- extern bool policydb_user_isvalid(const struct policydb *p, u32 user);
- extern bool policydb_boolean_isvalid(const struct policydb *p, u32 boolean);
+v2: https://lore.kernel.org/selinux/20241216164055.96267-23-cgoettsche@seltendoof.de/
+  - also convert ebitmap_cmp() as suggested by Daniel
+  - accept instead of rejecting unknown xperm specifiers to support
+    backwards compatibility for future ones, suggested by Thiébaud
+  - add wrappers for str_read() to minimize the usage of magic numbers
+  - limit sensitivities to a length of 32, to match categories,
+    suggested by Daniel
+    
+v3:
+  - rename comparison macro to cmp_int()
+  - move some portions from patch 2 to patch 3
+  - minimize magic value usage
+  - fix error branch reported by kernel test robot
+  - merge ebitmap_highest_set_bit() patch into patch making use of it
+  - introduce a central limits.h header
+  - add limits for all kinds of string: filesystem names, filetrans
+    keys, genfs paths, infiniband device names
+  - add patch 14 for MLS stringification hardening
+
+Christian Göttsche (14):
+  selinux: avoid nontransitive comparison
+  selinux: use u16 for security classes
+  selinux: more strict policy parsing
+  selinux: check length fields in policies
+  selinux: validate constraints
+  selinux: pre-validate conditional expressions
+  selinux: check type attr map overflows
+  selinux: reorder policydb_index()
+  selinux: beef up isvalid checks
+  selinux: validate symbols
+  selinux: more strict bounds check
+  selinux: check for simple types
+  selinux: restrict policy strings
+  selinux: harden MLS context string generation against overflows
+
+ security/selinux/include/limits.h   |  90 +++++
+ security/selinux/include/security.h |   1 +
+ security/selinux/ss/avtab.c         |  49 ++-
+ security/selinux/ss/avtab.h         |  13 +
+ security/selinux/ss/conditional.c   | 152 ++++---
+ security/selinux/ss/conditional.h   |   2 -
+ security/selinux/ss/constraint.h    |   3 +-
+ security/selinux/ss/ebitmap.c       |  27 ++
+ security/selinux/ss/ebitmap.h       |   1 +
+ security/selinux/ss/hashtab.h       |   4 +-
+ security/selinux/ss/mls.c           |  84 ++--
+ security/selinux/ss/mls.h           |   6 +-
+ security/selinux/ss/policydb.c      | 597 +++++++++++++++++++++++-----
+ security/selinux/ss/policydb.h      | 106 ++++-
+ security/selinux/ss/services.c      | 111 ++++--
+ security/selinux/ss/symtab.c        |   2 +-
+ security/selinux/ss/symtab.h        |   2 +-
+ 17 files changed, 1008 insertions(+), 242 deletions(-)
+ create mode 100644 security/selinux/include/limits.h
+
 -- 
 2.49.0
 
