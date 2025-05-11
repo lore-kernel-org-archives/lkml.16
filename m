@@ -1,167 +1,108 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC421891AB
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 13:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EA428382;
+	Sun, 11 May 2025 13:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746969572; cv=none; b=WjY1Hoo1l4h6LWEa67hWdBnfLJYhRlobiLP15U5C8xGIxeiHW2+oePi3Qfut72WpBrHQUzqFqXLSi0FqcgTcEcaEGPcXImMwjRV8bP6SSGxZcKTKxw2rluIDFKC9tUD6Q32DL770MscRwBv3Gzpkwu0FGplV4aMZJ1xhWkTBOpQ=
+	t=1746970295; cv=none; b=JjssNn5OH60oX36+SvI0WprgfrqCYO2GNcYP3aW9nDIje1wKjjPS/A9I+9QsGNF3Nq86PZXXbr5ue6dSV7YFT1r85LRDClNpp/BOh2t1wXwx8tntZn0n9c9jIT8QoOD8ydz6yJ8GKF8K2uOr6dj4340xcWsr2sQSF4Kk4F8Iu9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746969572; c=relaxed/simple;
-	bh=I0r8HlHEHZMZBQdFgXJR+5ZLORRLtKIQdIWM17hD9EY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EqJGQVKBgf499lgkl39ioaUWX7PASAnwfPemg9VJhNAO8NVZG1BJv3pQYhr3CtkLJ0e7arxwoK5HUDaNBonKOwWvSjKMomfaMc2le8c7iXG984TFUQbYyO3YHt0vzT5VRFVrP1E3gj1Ffu4hWqqLvUvpCM8z72Sh2AMF9pMSd/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=quora.org; spf=pass smtp.mailfrom=quora.org; dkim=pass (1024-bit key) header.d=quora.org header.i=@quora.org header.b=Lnv7G0up; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=quora.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quora.org
+	s=arc-20240116; t=1746970295; c=relaxed/simple;
+	bh=8i/MCSci8o07v9hng0i71QsBhWS7Rg8Q9NscAaO3yBU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IVJsdou1UHYhkdgLfQSKwJ8wDB1ANp7Mn8+OJI9xk4kv45BKUxviYyO8MH5qhjC5N/RyWwJaHLFQ/7/ocCEq9bixJIAIia9UXwwCYaOZEkFKX/WONvehTT9aWFXLJvExLXq+2A3BBYsdxkymXjt2+MIvfxsYCgJhYs8R8d9tLq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+aMfbSO; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=quora.org header.i=@quora.org header.b="Lnv7G0up"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e73e9e18556so3377660276.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 06:19:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+aMfbSO"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fd0d383b32so1400245a12.3;
+        Sun, 11 May 2025 06:31:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=quora.org; s=google; t=1746969569; x=1747574369; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gisDcoPpjnzkdeg7wyEUyVREO6oQMsPscCNJQoCfPb4=;
-        b=Lnv7G0upIeqWCTrVChq9053cyoTwlmwCz8eds2a9YpmnPvpaEm/Xikm+V0dhfEh53e
-         le39gx19BMnb1CJGcFNYVGehZXptC5ERpxT0Mj10/ALlDAlHk4BgjOMiLQdazxuNTNrT
-         ydVXFtjP6UqGgdIkeC+hmYWq8Q2CeT4IhMohM=
+        d=gmail.com; s=20230601; t=1746970290; x=1747575090; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qfxwlIQ0tbuPkSHji0HK07mcJx2VL7b27pvCA+Qhuds=;
+        b=P+aMfbSO7rNN60WNe4/G6ioCjW1yFh/xOwNkwMBN17qX4dJSrvnqoXCAH07vkASkBq
+         VEsVkLtIlmJJ9cgVQZeeLVyBRl/TCbIXWO8KtMHb//BloycwWXtkE27dXLGGLSir4uu7
+         mrxsJRzNuM7M4tKF/jZZyvP8LcfY/TJz2h83LA08ssgynZ1eqSAvB0FCsgI8e3lMaBgR
+         718cMOF9xnP20SiOKyGVnOECVbrCeYafliFECcwU/E3RRTIHxrdoUXs/yAwISilmicUe
+         ARN1JAL0eBu6DYEL249FjG8EfLGtVCPgVRt5Wz5zwaTH/gXCw1ZGZHIT+pgpoLe8ioG6
+         ATkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746969569; x=1747574369;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746970290; x=1747575090;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gisDcoPpjnzkdeg7wyEUyVREO6oQMsPscCNJQoCfPb4=;
-        b=odel95PTxgvChnETDdeLZIMiIcZ/HHN3SILt2U38A/dfL9bjC+uqVU395nEQa4JQx6
-         iSd4DbqBfpDBri2w/QF7ZHMLiIHr9UwNaDVgQJRhm2Ae7q037j4sGM5CpHlTf9TWoD70
-         HkC225kvvJwxqnJt4z+ebePtcJOHAsBiv3w7r4Gt9+pmjniu9GJYfOcH5A9g4gC7wv2p
-         v2wwSen0ZnJV0ymjEgtKhwg1147eO5kzc20jjsSQ4ZzpHt2gAbmH0GYl+QeWTy11W7Hq
-         +yCJaRPfgbbbizW1e0Tqm2dZHGxBAeytmqMbON4Nrfgdc40TI+EH4MZ88lzX/TDkOQEM
-         Q7hg==
-X-Gm-Message-State: AOJu0Yy3yDM99i6MUf9uRgw8hURwKKhICJZcVQvOZuQUj8HiMH4bGc+d
-	DTUeQxvqvRaUE4PWIxHPBPC9B2bQgFb6rtvlcvNZNu0heTZ9hnP0vs1H0vNjyrNsAeI8qO9R4uJ
-	V
-X-Gm-Gg: ASbGncuSnf/H6qRcjtbePAIaCsocRfSS+niWHoaMn2DPJ1apa2ouuRq6v6SwoCuLQyJ
-	ZcT6BFvgn8l8HR56Xg8G2mJj9iqYBZc6nQNbAb71EB3QHp6UvwJvVLjQ7h3xPK+DFW1uCeUpr5I
-	4y6wN9ifa+fBIJ/XHNE/2yrv1zUELAugP0yIDYocpvNy5gkpSQI3wqcwA45nabJwYBGRlo9Duvq
-	y8qi9THtgZuOFSzcLqhxJg4L8J3A2+CYDTyacYonO1eJkT/OXhvO3+nOfzBFjZTxA4fhxsgklVY
-	dmlvQEQU891gWNQr3U+nH9VxPHYgC5bdeeILYRfamXRaUn5epUs+lg==
-X-Google-Smtp-Source: AGHT+IHmsGSrCy1MKijDg2jk1wm7zFeHpGqXPRNBv7WzlYrib1GkvOgE8y01mcBI9TPq3QjOi4blyA==
-X-Received: by 2002:a05:6902:1028:b0:e79:1566:6505 with SMTP id 3f1490d57ef6-e7915666998mr5089795276.20.1746969569526;
-        Sun, 11 May 2025 06:19:29 -0700 (PDT)
-Received: from spectre.. ([2406:3003:2006:3f45:f900:4749:adc5:9cc8])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7ab4bf8705sm407565276.12.2025.05.11.06.19.26
+        bh=qfxwlIQ0tbuPkSHji0HK07mcJx2VL7b27pvCA+Qhuds=;
+        b=K97/M9cCR126eOOnSDyr/whVI5i19HD9K9wvqsCHMkO1yp8MEBVCnGNr6aQ+2s8PBN
+         ZX+7gjyAJMPSsnkUlTNEVqq/uakqgEZlboVnqvo/6vhl0KENQmool/Hj0qZPvJOYp3d6
+         wFNWwc5LIdZ6QyrWiHT6TGu1Bz4M6zu2NT7imhkMW4sV16XbffQPhQSetNqEZ85FwlP+
+         f3OamwrpcZNBsKh37KFXaAdIGJUKnQsSy9TIMlRkIu6wOmaufXfqPnuuDgN/5KywiiXf
+         6Q+qMpMwtE1vrdROzOgIEX6Bhezb/CjDV+d3JVZYCkl7MJNBicP+hneCK5FpcNyo/ycs
+         Dq6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVcwh6H7E2h3R68ER8zVzoOP+tGAh2uFFbmintdyhSxb9WFd69XvbLdxbxu1J0u4+uAz1F3n88k@vger.kernel.org, AJvYcCVv/VXX09SNw0dG4qhCZdqYKzCHpY4wrDCuRkIKvBQUR4hEXt4CT0FdKTDiwNfU6Dt7Pw2PeaD92F4=@vger.kernel.org, AJvYcCWxqY993QQSyiIp5HHfFtd/l7V2b6kaXLjXhrKaouOpQJr9Uzi5i/V/CKEBSBiXjpWvjz/S9VYnuVFswdTO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdKIS5GdZluOBTio6gccCA4rUT7pSdLAAfwUVf6f+8G8f1B/h6
+	kfxqPfu7NjqfPd1nlcLWCeyLPTpHhxqmvLzSWQ9ZUg6g87nDmwgRDr9fFA==
+X-Gm-Gg: ASbGncsle9x7g4/iugUSdQ06DDEjovfSidxuijC+lY8e4z7y70/57Ho8XFA3ExvRenH
+	0q+iKC8SVjJSRQhqJsdVAnfk2znFbGs/XpANXAI0Qp6p3j8gidXk2zO/SdJ8XgG0xdeuwOxIrDz
+	OuSU5UTLbaXRUczN7owEtL3zjt5e6ebc+gnXs7m5peNoK4eSSanGLZ4han5IX8w7pd/ewSeuK2F
+	rBMxqT3eJiodVqE9U0/61/xKoth5ah+PoE7GBMKBWZls5gd2G48kR7EojqPY9d3h6B50sjPl6Rz
+	rgQ9t+CIt+NAJaXUSiHfrVn1m0fi43/e1vK2evZ8XhlgJu+ReGA2Yi7CtTpHj3awWvW1H6Iy4Pm
+	rU7xX
+X-Google-Smtp-Source: AGHT+IH7yl7XmxNilX/kpFITQRuEskSKWUC3Vt7HAESuFqH2J9O8p35Yu7FQrAMijfsU9DPiUrNnMQ==
+X-Received: by 2002:a17:907:1b1c:b0:aca:d6f0:af0c with SMTP id a640c23a62f3a-ad2192d4a49mr949942566b.59.1746970290354;
+        Sun, 11 May 2025 06:31:30 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad2197bd398sm466765366b.152.2025.05.11.06.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 06:19:28 -0700 (PDT)
-From: Daniel J Blueman <daniel@quora.org>
-To: John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	stable@kernel.org,
-	Daniel J Blueman <daniel@quora.org>,
-	Scott Hamilton <scott.hamilton@eviden.com>
-Subject: [PATCH] Prevent unexpected TSC to HPET clocksource fallback on many-socket systems
-Date: Sun, 11 May 2025 21:19:21 +0800
-Message-ID: <20250511131922.145736-1-daniel@quora.org>
-X-Mailer: git-send-email 2.48.1
+        Sun, 11 May 2025 06:31:29 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH 0/3] i2c: pxa: fix I2C communication on Armada 3700
+Date: Sun, 11 May 2025 15:31:04 +0200
+Message-Id: <20250511-i2c-pxa-fix-i2c-communication-v1-0-e9097d09a015@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJimIGgC/x2MQQqAMAwEvyI5G2gr9uBXxENJo+ZglVZFKP7d4
+ G0HdqZC4SxcYGgqZL6lyJ4UbNsArSEtjBKVwRnXm94aFEd4PAFnef5N+7ZdSSicamLHPrLlLhr
+ yoI0jsx7//ji97wdJTByAbwAAAA==
+X-Change-ID: 20250510-i2c-pxa-fix-i2c-communication-3e6de1e3d0c6
+To: Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+ Russell King <rmk+kernel@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>
+Cc: Robert Marko <robert.marko@sartura.hr>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Russell King <rmk+kernel@armlinux.org.uk>, linux-i2c@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>, Imre Kaloz <kaloz@openwrt.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-On systems with many sockets, kernel timekeeping may quietly fallback from
-using the inexpensive core-level TSCs to the expensive legacy socket HPET,
-notably impacting application performance until the system is rebooted.
-This may be triggered by adverse workloads generating considerable
-coherency or processor mesh congestion.
+There is a long standing bug which causes I2C communication not to
+work on the Armada 3700 based boards. This small series restores
+that functionality.
 
-This manifests in the kernel log as:
- clocksource: timekeeping watchdog on CPU1750: Marking clocksource 'tsc' as unstable because the skew is too large:
- clocksource:                       'hpet' wd_nsec: 503029760 wd_now: 48a38f74 wd_last: 47e3ab74 mask: ffffffff
- clocksource:                       'tsc' cs_nsec: 503466648 cs_now: 3224653e7bd cs_last: 3220d4f8d57 mask: ffffffffffffffff
- clocksource:                       Clocksource 'tsc' skewed 436888 ns (0 ms) over watchdog 'hpet' interval of 503029760 ns (503 ms)
- clocksource:                       'tsc' is current clocksource.
- tsc: Marking TSC unstable due to clocksource watchdog
- TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
- sched_clock: Marking unstable (882011139159, 1572951254)<-(913395032446, -29810979023)
- clocksource: Checking clocksource tsc synchronization from CPU 1800 to CPUs 0,187,336,434,495,644,1719,1792.
- clocksource: Switched to clocksource hpet
-
-Scale the default timekeeping watchdog uncertinty margin by the log2 of
-the number of online NUMA nodes; this allows a more appropriate margin
-from embedded systems to many-socket systems.
-
-This fix successfully prevents HPET fallback on Eviden 12 socket/1440
-thread SH120 and 16 socket/1920 thread SH160 Intel SPR systems with
-Numascale XNC node controllers.
-
-Reviewed-by: Scott Hamilton <scott.hamilton@eviden.com>
-Signed-off-by: Daniel J Blueman <daniel@quora.org>
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
 ---
- kernel/time/Kconfig       | 8 +++++---
- kernel/time/clocksource.c | 9 ++++++++-
- 2 files changed, 13 insertions(+), 4 deletions(-)
+Gabor Juhos (3):
+      i2c: add init_recovery() callback
+      i2c: pxa: prevent calling of the generic recovery init code
+      i2c: pxa: handle 'Early Bus Busy' condition on Armada 3700
 
-diff --git a/kernel/time/Kconfig b/kernel/time/Kconfig
-index b0b97a60aaa6..48dd517bc0b3 100644
---- a/kernel/time/Kconfig
-+++ b/kernel/time/Kconfig
-@@ -200,10 +200,12 @@ config CLOCKSOURCE_WATCHDOG_MAX_SKEW_US
- 	int "Clocksource watchdog maximum allowable skew (in microseconds)"
- 	depends on CLOCKSOURCE_WATCHDOG
- 	range 50 1000
--	default 125
-+	default 50
- 	help
--	  Specify the maximum amount of allowable watchdog skew in
--	  microseconds before reporting the clocksource to be unstable.
-+	  Specify the maximum allowable watchdog skew in microseconds, scaled
-+	  by the log2 of the number of online NUMA nodes to track system
-+	  latency, before reporting the clocksource to be unstable.
-+
- 	  The default is based on a half-second clocksource watchdog
- 	  interval and NTP's maximum frequency drift of 500 parts
- 	  per million.	If the clocksource is good enough for NTP,
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index bb48498ebb5a..43e2e9cc086a 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -10,7 +10,9 @@
- #include <linux/device.h>
- #include <linux/clocksource.h>
- #include <linux/init.h>
-+#include <linux/log2.h>
- #include <linux/module.h>
-+#include <linux/nodemask.h>
- #include <linux/sched.h> /* for spin_unlock_irq() using preempt_count() m68k */
- #include <linux/tick.h>
- #include <linux/kthread.h>
-@@ -133,9 +135,12 @@ static u64 suspend_start;
-  * under test is not permitted to go below the 500ppm minimum defined
-  * by MAX_SKEW_USEC.  This 500ppm minimum may be overridden using the
-  * CLOCKSOURCE_WATCHDOG_MAX_SKEW_US Kconfig option.
-+ *
-+ * If overridden, linearly scale this value by the log2 of the number of
-+ * online NUMA nodes for a reasonable upper bound on system latency.
-  */
- #ifdef CONFIG_CLOCKSOURCE_WATCHDOG_MAX_SKEW_US
--#define MAX_SKEW_USEC	CONFIG_CLOCKSOURCE_WATCHDOG_MAX_SKEW_US
-+#define MAX_SKEW_USEC	(CONFIG_CLOCKSOURCE_WATCHDOG_MAX_SKEW_US * max(ilog2(nr_online_nodes), 1))
- #else
- #define MAX_SKEW_USEC	(125 * WATCHDOG_INTERVAL / HZ)
- #endif
-@@ -1195,6 +1200,8 @@ void __clocksource_update_freq_scale(struct clocksource *cs, u32 scale, u32 freq
- 	 * comment preceding CONFIG_CLOCKSOURCE_WATCHDOG_MAX_SKEW_US above.
- 	 */
- 	if (scale && freq && !cs->uncertainty_margin) {
-+		pr_info("Using clocksource watchdog maximum skew of %uus\n", MAX_SKEW_USEC);
-+
- 		cs->uncertainty_margin = NSEC_PER_SEC / (scale * freq);
- 		if (cs->uncertainty_margin < 2 * WATCHDOG_MAX_SKEW)
- 			cs->uncertainty_margin = 2 * WATCHDOG_MAX_SKEW;
+ drivers/i2c/busses/i2c-pxa.c | 25 +++++++++++++++++++------
+ drivers/i2c/i2c-core-base.c  |  8 +++++++-
+ include/linux/i2c.h          |  4 ++++
+ 3 files changed, 30 insertions(+), 7 deletions(-)
+---
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+change-id: 20250510-i2c-pxa-fix-i2c-communication-3e6de1e3d0c6
+
+Best regards,
 -- 
-2.48.1
+Gabor Juhos <j4g8y7@gmail.com>
 
