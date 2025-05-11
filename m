@@ -1,175 +1,106 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362AC18DB17;
-	Sun, 11 May 2025 14:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CF32BCF5;
+	Sun, 11 May 2025 14:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746974379; cv=none; b=oHyGPDfSHetitUaaQVKZT+6hAPFSBGDfRSEwiFiY4LYnF+bH65RVJgMNo/8vq9zcpCDr9Dq3z/uuxUuEXjzmI9OqC1yjGAfWP68FekTCt9tJfdJw/uWp+L2MwXuy5qcGeh2cPZqvzqQCiTQBy0LTTX1mf+LL5h2lkpDxtCWoq4I=
+	t=1746974449; cv=none; b=G74iM8VyTA1rw/pBa8K+ukay8laOkhdoc073Y8d7f5xbKN2sWPkX4XfXQkMSowiMVaefzsIVloWTNm38jVGtgRZs5vBF22aSbrQoyu2+r8uJL4HYgSEQB8GXfNrVh10MI/QJISZRoUBO6tYDa1j0Um3y7wFs/2tpI9zFgkjPZwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746974379; c=relaxed/simple;
-	bh=nREYfRkNxtqCY8dIKvYj9Jh5KaZKikw2GU45g1FpGQ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JCbenC3XBokBVTfFZtRz/pD0WlhpU72OZJJUpMuCGXjrfw6vUVsCgTbAFCg0Pn0OdtDpI/gWoGj/2aZD+KviRbkOI65sRl+T6vHLmd6l5An+dyAgbcS7rvWpK+WDc7ln/deoXyeibKX41PZ+y5G+jwoBc7hYiHYYXkrKu113Y8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I1wLr7n6; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746974449; c=relaxed/simple;
+	bh=aHn2shim4HRKYpeiFSsXRPiN3gBe4/czch380lKfRwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZTv6M/N2lFI2qNDyA7RqRxPUIKFPGCEkElRnymBERv+vD1E6OonWeoP/Fdf88GjYBT4FPfm3zjcAjIFhGE3T50wfVfEXm6et0zMWwQ94WmhqROEShSnkdcEleLvnzHgXUK80uL+fIz5kcWaAqXyxK6weqcdXmcf8PK3z52Vh1fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/KU7lhp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1wLr7n6"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-acbb85ce788so613654666b.3;
-        Sun, 11 May 2025 07:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746974375; x=1747579175; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SW9lPAAE0aWJ1XdpLge8jdASEs+iW6MBQ78bn7L4jUQ=;
-        b=I1wLr7n6RhvfqkPPovlZB+Nddd5sq0hwP++WccDgqCSC6BBRwmFiDQfftIpZRFoBCf
-         /na94adwpmoP4x1D5HiCVdN0SnUYG5nW6RyJXdtPMyOeSMwOo1vDICxWwnGSnltwgUdZ
-         V3C/IazqkhGa66t3zG7AQx/CWFlz8ytp4BpDPumu6kWboCQzlnYuG2hdj+yM74HVY9jq
-         raTIr8yw3QZkgsgyfA1Dthb4VDnRsr1fCdlhSjQgv3XCrcTu7a16cHtLbPrugxTuHsPd
-         mlIRVZk1NeEdB66Lds1VKJLoG9gB9ruzMqoFHvLeq1JrqzBfFyBsj0ctOSKLlm9uy1gQ
-         ltmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746974375; x=1747579175;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SW9lPAAE0aWJ1XdpLge8jdASEs+iW6MBQ78bn7L4jUQ=;
-        b=IvIuMr5K/lWJJVdPXivV/h0BEG9rQJuz9p+SV/6hJVquc5VptSWouAFKYEcJettoPC
-         ysKQPArDOCfY5oluV7b3/2ZCgjuNXSzzJFKdcPHmqPg0pwHlIopJwYJsoiwlQvI9Tm/Y
-         lmSOQwXCiHuvKLKHNS9xcsqB2tctBQX6FxEcFzu6+k6OEblVbFTVTBEciLhky+bTVpMg
-         QbpRaqZZUG6Oi8OCBEv2vylJBKVj5BuNA1AETWrT88a6kjZjfE/cx+BRZfeEZPq2E0TI
-         OC5UyFOcXK35ek9HGFltqbQjnUvbcBtASVqGaMOwxzXBSQgWXAXM7iCHaa8hbcLQj4v4
-         bMgA==
-X-Forwarded-Encrypted: i=1; AJvYcCV76iLoM2tAupGNapGdjmrrGNQcKpOzylfsG61r1dG1yjGK+TvyJzgTDZf4KHhAi8XOhJufgbUNsv4WKVg=@vger.kernel.org, AJvYcCViY1mhDQJ3OXQ7ZptPAoNy6gg693QlOiYRLi69tKEOcBc7ythYpzBEepsSHGXrOoIMIzx643b3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8dwVHLeMdemM+EzKv6Po5ESbHf1njyrfpOktcYEjGg+PfLlNT
-	pXzu0B1mQgYRh61wB4ssL7J8zHzA1jg7TLsf5j5XLJWozTyj+iEaHzxuI2AuhwbSuTFVPD9GVio
-	2iasO+Cb9QIayxzUzBWVXOr96TBs=
-X-Gm-Gg: ASbGncuNk4fIspk5KAxiyKbyD4f6TNJY5NvYVTOgsaXjfa/lhIVu5YsDP8ZLUxSZcGj
-	6GM705obtiy23avjnxGO900Mjts60dYFHOUHLaIQj78HNDKBPdLPox0d4BNvN5zh4lR8gzoWNk3
-	C84N5LYUJ610mZseAsQ2FMXDwS5DXxj/o=
-X-Google-Smtp-Source: AGHT+IFYNyvgAxBG3Acg9dXAO4GQZ3XGZxpJ7V5Zf6tJ1+NzpJsFY7JOcZqsfAKSniAzDvWWL61zOUYq/uEllgmmrmg=
-X-Received: by 2002:a17:907:7da2:b0:abf:7453:1f1a with SMTP id
- a640c23a62f3a-ad219024691mr945003866b.36.1746974375118; Sun, 11 May 2025
- 07:39:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/KU7lhp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4906C4CEE4;
+	Sun, 11 May 2025 14:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746974448;
+	bh=aHn2shim4HRKYpeiFSsXRPiN3gBe4/czch380lKfRwk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=A/KU7lhpjRKZ3jj/jjY8nN7xamKYWDj1CZVGjWo9TGalrF8GQuF+3pjSu4/5hnOer
+	 6ToTXUSTfelNO5cuXqMGCr2e3jqI1/8lgv6rcPD7M5bx7n9HEMspVGzrqpzv2srBaB
+	 0AkJf4hArsjM8EwkPnEGTq4EPtZnfUBT28eXcS9tfyXvK1fSq2lScFg4fDCKuG5D+u
+	 4VkYX+OxMNeV9zr17zBKxvZdGbKswCm2V7IPnKVpoz6UXdckl4lMalXKZu5FOtqSPi
+	 bo3Wa2uwryJy7srzxp+AtdCW9SwrIJUBQeLDnmk9DJGlf+iyMJPr4APb170WNDP2BF
+	 yhLJeDRrBffcQ==
+Date: Sun, 11 May 2025 15:40:41 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 00/10] Add support for AD4080 ADC
+Message-ID: <20250511154041.3635c7b4@jic23-huawei>
+In-Reply-To: <20250509105019.8887-1-antoniu.miclaus@analog.com>
+References: <20250509105019.8887-1-antoniu.miclaus@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508071901.135057-1-maimon.sagi@gmail.com>
- <20250509150157.6cdf620c@kernel.org> <CAMuE1bH-OB_gPY+fR+gVJSZG_+iPKSBQ5Bm02wevThH1VgSo3Q@mail.gmail.com>
- <CAMuE1bESfcs92z-VowaQjgWG25UK6-fTzgDqFagOyK1yifH5Lg@mail.gmail.com>
-In-Reply-To: <CAMuE1bESfcs92z-VowaQjgWG25UK6-fTzgDqFagOyK1yifH5Lg@mail.gmail.com>
-From: Sagi Maimon <maimon.sagi@gmail.com>
-Date: Sun, 11 May 2025 17:39:08 +0300
-X-Gm-Features: AX0GCFtkrIJ_upTlXJEbOst2K0yfMZQokkgBTNnx_HvNT2FI0TO8PCOtikNFXEM
-Message-ID: <CAMuE1bHL1-t_YD0B5v1LuY_b558U5qbseSYJXvnm734+Vb-v_w@mail.gmail.com>
-Subject: Re: [PATCH v2] ptp: ocp: Limit SMA/signal/freq counts in show/store functions
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev, 
-	richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 11, 2025 at 12:03=E2=80=AFPM Sagi Maimon <maimon.sagi@gmail.com=
-> wrote:
->
-> On Sun, May 11, 2025 at 11:16=E2=80=AFAM Sagi Maimon <maimon.sagi@gmail.c=
-om> wrote:
-> >
-> > On Sat, May 10, 2025 at 1:01=E2=80=AFAM Jakub Kicinski <kuba@kernel.org=
-> wrote:
-> > >
-> > > On Thu,  8 May 2025 10:19:01 +0300 Sagi Maimon wrote:
-> > > > The sysfs show/store operations could access uninitialized elements=
- in
-> > > > the freq_in[], signal_out[], and sma[] arrays, leading to NULL poin=
-ter
-> > > > dereferences. This patch introduces u8 fields (nr_freq_in, nr_signa=
-l_out,
-> > > > nr_sma) to track the actual number of initialized elements, capping=
- the
-> > > > maximum at 4 for each array. The affected show/store functions are =
-updated to
-> > >
-> > > This line is too long. I think the recommended limit for commit messa=
-ge
-> > > is / was 72 or 74 chars.
-> > >
-> > will be fixed on next patch
-> > > > respect these limits, preventing out-of-bounds access and ensuring =
-safe
-> > > > array handling.
-> > >
-> > > What do you mean by out-of-bounds access here. Is there any access wi=
-th
-> > > index > 4 possible? Or just with index > 1 for Adva?
-> > >
-The sysfs interface restricts indices to a maximum of 4; however,
-since an array of 4 signals/frequencies is always created and fully
-accessible via sysfs=E2=80=94regardless of the actual number initialized=E2=
-=80=94this
-bug impacts any board that initializes fewer than 4
-signals/frequencies.
-> > > We need more precise information about the problem to decide if this =
-is
-> > > a fix or an improvement
-> > >
-> > > > +     bp->sma_nr  =3D 4;
-> > >
-> > > nit: double space in all the sma_nr assignments
-> > >
-> > will be fixed on next patch
-> > > >
-> > > >       ptp_ocp_fb_set_version(bp);
-> > > >
-> > > > @@ -2862,6 +2870,9 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, st=
-ruct ocp_resource *r)
-> > > >       bp->fw_version =3D ioread32(&bp->reg->version);
-> > > >       bp->fw_tag =3D 2;
-> > > >       bp->sma_op =3D &ocp_art_sma_op;
-> > > > +     bp->signals_nr =3D 4;
-> > > > +     bp->freq_in_nr =3D 4;
-> > > > +     bp->sma_nr  =3D 4;
-> > > >
-> > > >       /* Enable MAC serial port during initialisation */
-> > > >       iowrite32(1, &bp->board_config->mro50_serial_activate);
-> > > > @@ -2888,6 +2899,9 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, s=
-truct ocp_resource *r)
-> > > >       bp->flash_start =3D 0xA00000;
-> > > >       bp->eeprom_map =3D fb_eeprom_map;
-> > > >       bp->sma_op =3D &ocp_adva_sma_op;
-> > > > +     bp->signals_nr =3D 2;
-> > > > +     bp->freq_in_nr =3D 2;
-> > > > +     bp->sma_nr  =3D 2;
-> > > >
-> > > >       version =3D ioread32(&bp->image->version);
-> > > >       /* if lower 16 bits are empty, this is the fw loader. */
-> > > > @@ -3002,6 +3016,9 @@ ptp_ocp_sma_show(struct ptp_ocp *bp, int sma_=
-nr, char *buf,
-> > > >       const struct ocp_selector * const *tbl;
-> > > >       u32 val;
-> > > >
-> > > > +     if (sma_nr > bp->sma_nr)
-> > > > +             return 0;
-> > >
-> > > Why are you returning 0 and not an error?
-> > >
-> > will be fixed next patch
-> > > As a matter of fact why register the sysfs files for things which don=
-'t
-> > > exists?
-> > > --
-> > The number of SMAs initialized via sysfs is shared across all boards,
-> > necessitating a modification to this mechanism. Additionally, only the
-> > freq_in[] and signal_out[] arrays are causing NULL pointer
-> > dereferences. To address these issues, I will submit two separate
-> > patches: one to handle the NULL pointer dereferences in signals and
-> > freq_in, and another to refactor the SMA initialization process.
-> >
-> > > pw-bot: cr
+On Fri, 9 May 2025 13:50:09 +0300
+Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+
+> The AD4080 is a high-speed, low noise, low distortion, 20-bit, Easy
+> Drive, successive approximation register (SAR) analog-to-digital
+> converter (ADC). Maintaining high performance (signal-to-noise and
+> distortion (SINAD) ratio > 90 dBFS) at signal frequencies in excess
+> of 1 MHz enables the AD4080 to service a wide variety of precision,
+> wide bandwidth data acquisition applications.
+> 
+> This driver aims to be extended in the future to support multiple parts that are
+> not released yet:
+>     AD4081
+>     AD4082
+>     AD4083
+>     AD4084
+>     AD4085
+>     AD4086
+>     AD4087
+>     AD4088
+
+Hi. 
+
+I took another look through and think this is now ready to apply.
+However it came in on a Friday and Nuno has not yet had time to review
+so I'll leave it a few days before applying if no other comments come up.
+
+Thanks,
+
+Jonathan
+
+> 
+> Antoniu Miclaus (10):
+>   iio: backend: add support for filter config
+>   iio: backend: add support for data alignment
+>   iio: backend: add support for number of lanes
+>   dt-bindings: iio: adc: add ad408x axi variant
+>   iio: adc: adi-axi-adc: add filter type config
+>   iio: adc: adi-axi-adc: add data align process
+>   iio: adc: adi-axi-adc: add num lanes support
+>   dt-bindings: iio: adc: add ad4080
+>   iio: adc: ad4080: add driver support
+>   Documetation: ABI: add sinc1 and sinc5+pf1 filter
+> 
+>  Documentation/ABI/testing/sysfs-bus-iio       |   3 +
+>  .../bindings/iio/adc/adi,ad4080.yaml          |  96 +++
+>  .../bindings/iio/adc/adi,axi-adc.yaml         |   2 +
+>  MAINTAINERS                                   |   8 +
+>  drivers/iio/adc/Kconfig                       |  14 +
+>  drivers/iio/adc/Makefile                      |   1 +
+>  drivers/iio/adc/ad4080.c                      | 575 ++++++++++++++++++
+>  drivers/iio/adc/adi-axi-adc.c                 |  77 +++
+>  drivers/iio/industrialio-backend.c            |  58 ++
+>  include/linux/iio/backend.h                   |  19 +
+>  10 files changed, 853 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4080.yaml
+>  create mode 100644 drivers/iio/adc/ad4080.c
+> 
+
