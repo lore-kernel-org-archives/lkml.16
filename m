@@ -1,101 +1,118 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F361FC3;
-	Sun, 11 May 2025 17:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF4B482FF
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746984952; cv=none; b=kSVW1Y+hpmWhsfUPOc2/d/xufV2fpnjL/sLfaNp1hnEMPN6XxR5XMW+XTFdjlh8INRtREOvLSqI7YPMYIeuJEg/YXQgRd+IGeo1jroishxK9xl7kAgZlx2IOFGVNA171tH1v2Ho06WLFTF0F+ElTIDhX7gPkwQyTt+HK5Kf/UDY=
+	t=1746985115; cv=none; b=J2+Aj3G0POiW7tnnmrHhcZkhnPMhSqyCrz/avUXTDa7S0KoyFe11p67MV6RYLZnT9Zy2IS8C44YlJEhqxQDNjJDLZBAQ1fC4uyhPcGh328LnXneQ8ocK0TDzTK3/9xboI948OLx4wEpB229YtHKRUCB+4haw1IIrK5PJrFhWMvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746984952; c=relaxed/simple;
-	bh=ntf5jPKUWH5mcs0SPq8ZSuzRmdoDim4/t3oU1Yllkp8=;
+	s=arc-20240116; t=1746985115; c=relaxed/simple;
+	bh=eBBZG/T8tWp3lz/GI9IwiMI7jMFA+cT2hqHx+2FpoNs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O+pIWvqYFM2mHXarcpCsu5jiHvjre0rh9sdZr1aESx8kSbGe/G0xc/q1srG+RzuqFe351+EHV44clvo5kzhQNbtIZWen9A0ox68sEBz6NOYvRLXYFE1FA3y473Gg/fFwmMzVriaTizaCeVHoig5x7xHP4WI8rHQ/wWmMwfD9tro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AhOn3juR; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=FAj/ocwBqZrztB1oS1SWBNJFxFrFCGpUNhU2A53n8HawIJ9tQ5pHsOHvgZbohtfJNfwz79ekQC+n3Y5iHgqGMXWFy80mX8fIq6GJ16Am2Cs7/nTf/Oq050UJDEW/+pVhbAc8uJjeo8sm0tMQ1963QSYOoIfUSURt+0XWc8O8IfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com; spf=pass smtp.mailfrom=lessconfused.com; dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b=L3qIKz4V; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lessconfused.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhOn3juR"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4ddb9d80bffso2253023137.0;
-        Sun, 11 May 2025 10:35:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b="L3qIKz4V"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af523f4511fso3053535a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 10:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746984950; x=1747589750; darn=vger.kernel.org;
+        d=lessconfused.com; s=lessconfused; t=1746985113; x=1747589913; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ntf5jPKUWH5mcs0SPq8ZSuzRmdoDim4/t3oU1Yllkp8=;
-        b=AhOn3juRBWEuUpIelq2uMoJjMcnePjDYZX9ykI1jR/CJ7FXIJ7uctRAAwBn7WH1glt
-         qs1g7j5+RC43GNiexHLuBiwf7jXZVdqp3DstmTU+gywBckpKRR4I0gsXUHinmNYLEn7Q
-         xDjA5J02suxa//KFzOCpEfJwkquVVnIZ/NPdMEJybq2v0bmfoaoTafFKrbp2uqO48E2L
-         O/WZD7bQuGpCZL91/2AfnppLbXghsyG0KVguuqSTfLOn3/7iiDV9q8fkJI36fiXSvQsl
-         x8eehBScVsfKu9g3Yywmg5aHf5gMhVQdLJ1TAGMaR3tcztiEDeDtx66//bKrHvGkYWHx
-         LyYg==
+        bh=htpdGgGE0WJqHpqKCEDMnW5Vc8YelVzDOmwa66AXTRc=;
+        b=L3qIKz4Vo0pKj8AjefDb3UDmmoQFDUkbGSPC98p2fgrAwaz162TyheWO/UnuETzf4M
+         q/D3+uyzImAvT/rqyijHH8B/OxaCE0kuRhPfny/YISLvKj2a64ZU6KbKtAjRG7Jw3BNT
+         PjdLXl36zv3QU5PLioDu/fnLA3bq91/7tysDY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746984950; x=1747589750;
+        d=1e100.net; s=20230601; t=1746985113; x=1747589913;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ntf5jPKUWH5mcs0SPq8ZSuzRmdoDim4/t3oU1Yllkp8=;
-        b=VfF1zpS9yJxSfF65t+a6i9dDGeyEyaebKfJ9FnFFZASF0VnDr+1L+xzvrPrMKSxk3S
-         /KUw3inN2ZA2/6sAViTf3DjZ8HC+4qyMTRVOsU/b7obtQx4QIlI0Wi+f3VF24AX6J1WW
-         wirSgTQxWQN8uSSjLPgCyMo+U/SsZxl13EVkzjtywXs6jYVX2vbpyCi8LR/Y/1/p632W
-         OwMqo6Qo9wRTsiDU+RV3OwspCBugx4j4FIlND+NsRmFpjL9V/4gLeZQlht4zHJkdYU6Y
-         QW768rHUJ3xT9lej5qwxAlHa2FH+TPmtpNsuYc2akEPsnjsz90oReWOdnfOb2EX/lr6C
-         Y9cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZyGh+Y/MMUijyXJxEPuDDW7WljdB3IFknPxKXArnN97DHqeKettUJF4drV1EKdm8V9E2wYh2ZilJE6ad6@vger.kernel.org, AJvYcCV8v+39H0KrTesj/uQq/1T8ng0F0OSdYo22CVnV3yRu2oLFFPOKxXryT8C1J5oMJgQ0SBHqHr8U6Zw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy74VT8s2/nXbR1pS92xVwmB3iNYayRKnrLtaP+6Ifdd+iqFzkg
-	J/jvWAaAIlTa4RalK7LqsTy4LlHfcPFRahySwBnmyGHCCmPEAlgTCbOhrlTgZc5byLiwu1+djj9
-	zSCzCK4yx1Hk6dYLwr2udT9MVJcc=
-X-Gm-Gg: ASbGncsMiI18vaX5n7EiJ4BO2egy2yAqIdEkkWgJtVTuiaCIwrC+YjF4nflxVwioyRm
-	uovN3LayOz2Fd3OYjUEzfZ201fHs/VJLyY9kwlr/YZrRB990U1g/9fqtqISlMgB66MmsP2BUFz/
-	GqJLtYusgvmF2R+KWZ6PIfZEAxxQAFICZOMqKrzej67ikha2A=
-X-Google-Smtp-Source: AGHT+IFqx/U9d6d0rFWoqyUQjqJ/LXu/A3Z0bAsqcmdMdvVWE/BoKnxnO5Rtp3ZHW7IfAHtgBp2P634nJcD3vDLVPRM=
-X-Received: by 2002:a05:6102:2d0e:b0:4da:fd05:ab54 with SMTP id
- ada2fe7eead31-4deed33b0a1mr9174302137.10.1746984949848; Sun, 11 May 2025
- 10:35:49 -0700 (PDT)
+        bh=htpdGgGE0WJqHpqKCEDMnW5Vc8YelVzDOmwa66AXTRc=;
+        b=dyjA6riizvOX0ykHQniJalSMq+viOgkHYlfaOuGSq5OYny9diXWY793UV3VrGaI5cB
+         9vpgxTYL42ac/BEVO51TksL522tSXLykqHjnN/ciPy5qMCwuOI2cCixrUjWq+I2Boudc
+         JqMhYz6SMis0zWe9NJYd1A6W7CaG7jNK9HA+0CdaKGw6IXw3iAM/sUiFR09zBGpzoMMB
+         A2nSrdn7RhIIlvEK0aCxeuOxbJ72Q2XS5fH9hoVmWwPB0tnE/1/Q0gsc7WxwxQF1ADLu
+         416z8P1D3YB3OLLm/o6gcSAzX8EDZ5SXcXPsTGNkdzPN0rtzA3vb6OpXiJFcNWr0Qssa
+         giqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzctMAdU68g7hf7sj0/MMJL8HVsTAAAtUYlEeQpheOLrp/S5jmsWGOyUxV1y/PQ0W4b/ZTI8zJQzRNig8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3EKtTxF0FJjlCEs70BfARQTfRWXLd11I+Pr+MXGDAnaTbHY3d
+	DqaNr6goDegivzL7qTSCczUk+7xwc+IoA9ehmL097ZFLkbQsL3khSIe7cYYCEWlc7REmvqHbtYP
+	hTeoujqUxrBslnVOjFQUIgPg/mfJlsSTXEd1NAw==
+X-Gm-Gg: ASbGncs22d8LxRTdSIRM4/SR0Yadyuk2bGl59omxGjumt5N2O49aTbrOF/K6TiECf3I
+	m4P1etKROo/6YloxlGjw/38R1zq5EXBdahJuqQZQ+M6+VGOrz8T1SVJaBnqx1mHFvHnq7PwX6OR
+	iGinuk9s2NYZZ/9nI24aUkC1B3gRDGqPD9S4YxEbrTdrd5O55+xcOUXTGifCb2I7t8xqnffjEmp
+	X5r
+X-Google-Smtp-Source: AGHT+IGlWFjDOSR6LptznPfsrBGcmLqTeFU1+S1/2WDCbsxyxoLwah/czQtlkvxYzoeR/HfJw2W1NJ3/is38sxpCk0Y=
+X-Received: by 2002:a17:902:e94d:b0:224:24d5:f20a with SMTP id
+ d9443c01a7336-22fc91c2cdcmr176733505ad.48.1746985113315; Sun, 11 May 2025
+ 10:38:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510190759.23921-1-andrew.lopes@alumni.usp.br> <CAHp75VcUK3krw4qZyUGyKYhDAW_j9UQ7_VtwEx=6V2NMd2XcNQ@mail.gmail.com>
-In-Reply-To: <CAHp75VcUK3krw4qZyUGyKYhDAW_j9UQ7_VtwEx=6V2NMd2XcNQ@mail.gmail.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sun, 11 May 2025 14:35:38 -0300
-X-Gm-Features: AX0GCFu0cIvrL_fJbZWk2k93Td3jHN-0IltSHfg7kVaTVzrboJJ68ZRffOBS2Ns
-Message-ID: <CANZih_TW38JC0U+4wAWTk4UqYxs40B7SKDJidnVhi4K_jr2Crw@mail.gmail.com>
-Subject: Re: [PATCH v4] iio: accel: sca3000: replace usages of internal read
- data helpers by spi helpers
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
-	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250511172732.1467671-1-da@libre.computer>
+In-Reply-To: <20250511172732.1467671-1-da@libre.computer>
+From: Da Xue <da@lessconfused.com>
+Date: Sun, 11 May 2025 13:38:22 -0400
+X-Gm-Features: AX0GCFtg3EgdoWRuH-CkzemoXtkQsOI76TednUqqH8u_ZIuzhBzf52QSqYFsAO0
+Message-ID: <CACdvmAiqQj4NjazMvdwQtB5zX+SQs7bwXEchT5thNM83=bQBhA@mail.gmail.com>
+Subject: Re: [PATCH] clk: meson-g12a: fix missing spicc clks to clk_sel
+To: Da Xue <da@libre.computer>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Kevin Hilman <khilman@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, stable@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 10, 2025 at 6:40=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+Sorry, this is an older version of the patch without Fixes tag from a
+mv error. I'm sending a v2, ignore this one.
+
+On Sun, May 11, 2025 at 1:28=E2=80=AFPM Da Xue <da@libre.computer> wrote:
+>
+> HHI_SPICC_CLK_CNTL bits 25:23 controls spicc clk_sel.
+>
+> It is missing fclk_div 2 and gp0_pll which causes the spicc module to
+> output the incorrect clocks for spicc sclk at 2.5x the expected rate.
+>
+> Add the missing clocks resolves this.
+>
+> Cc: <stable@vger.kernel.org> # 6.1.x: a18c8e0: clk: meson: g12a: add
+> Signed-off-by: Da Xue <da@libre.computer>
+> ---
+>  drivers/clk/meson/g12a.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 4f92b83965d5a..892862bf39996 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -4099,8 +4099,10 @@ static const struct clk_parent_data spicc_sclk_par=
+ent_data[] =3D {
+>         { .hw =3D &g12a_clk81.hw },
+>         { .hw =3D &g12a_fclk_div4.hw },
+>         { .hw =3D &g12a_fclk_div3.hw },
+> +       { .hw =3D &g12a_fclk_div2.hw },
+>         { .hw =3D &g12a_fclk_div5.hw },
+>         { .hw =3D &g12a_fclk_div7.hw },
+> +       { .hw =3D &g12a_gp0_pll.hw, },
+>  };
+>
+>  static struct clk_regmap g12a_spicc0_sclk_sel =3D {
+> --
+> 2.39.5
 >
 >
->
-> Changelog is missing.
-
-Sorry about that, I didn't know we could add changelogs to patches.
-I re-read the guidelines and I'll add these changelogs for next versions.
-
-Thanks for pointing this out.
-
->
-> Also some of my comments became ignored.
->
-> Besides that you had a question which I answered in a previous email.
-> Please, do not send new versions before settling down on the discussed
-> pieces.
-
-Got it! I'll wait until everything is settled before sending next versions.
-
---
-Thanks,
-Andrew
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
