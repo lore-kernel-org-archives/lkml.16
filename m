@@ -1,109 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D55259CB8;
-	Sun, 11 May 2025 15:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2922907;
+	Sun, 11 May 2025 15:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746977868; cv=none; b=S+MwzceETIM16FoMDtQHE3nBDeuwwrdMSO/numbdrn+IuclgmTbGPiEjRfg0lAIaEZdibths2gxWVxLQQbmPAYAhjmYx7ha+DGq2n/e7N3EurYZkwc4h0+qqTWTunlaBqVEepUkw3+UTA8FG1JDOshZpglWSloUHVVE1gD3kH6U=
+	t=1746978163; cv=none; b=triQ0efe5tz4Ou2lB4LGZSkg/qUmalhqRdmdDtUN0IIlO6om7NJKtU4fFLUcfqL0o0l2JuW6vPxuda71fzjXOVAF/KfBpDJB/Qk8sNlVX2xoqTXJ8RZCq5Q6LD+K/mJfRVONJBdRlXxAYMgHQoAOCM96RbUhqJe/i546eGcqdxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746977868; c=relaxed/simple;
-	bh=9nNTh6uI2n0PJZ3sXQWFfPFzfXZgtX+EZm6hEopK2K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pAjGxakjk0SS04e0jFGANx/8fNvvR9jFwFCq9mpHJArqJYyqcdc0R/TQXQnzSg174tp8WDZ+eqmNPKyszQk50ERJQNjgMIUilgq3hfbYYuee57yF37PPrAQ4kroSs+omoaF4tQrqTIPmwtwjOAHm7Ax22CV+kKLeysWG353St8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9NHa5Me; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746978163; c=relaxed/simple;
+	bh=NlqeUqIZdZmkji0hDRwiEmsp/qJoN+HBItdDCNpMVoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pYKqvWLBWwBJQz+UrvEsLpfdEZMZAT3tJ232IRYuGvmaTBd9QalqWbytTkp6X4levRnlk7kQ9bazQ9eDkrKcu0afQM4BaPZNBE448GE9LRozTGkVYGWFlUUBxhgGFj3PFOaPpV1g76woJpzvSqzM7s3rS98avPt9oyWLnvjyN8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PEo3H27M; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9NHa5Me"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 156D5C4CEE4;
-	Sun, 11 May 2025 15:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746977867;
-	bh=9nNTh6uI2n0PJZ3sXQWFfPFzfXZgtX+EZm6hEopK2K8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=E9NHa5MeM64PZa5pdDgGbAnvvhV5Sd55RhREXEDwQE2Lw5bTJzeaeG5ydxLrF5bSV
-	 ttAAhphVqawc03QnD+weq3CZSLSzyoMZKW1bBRMcmo5s9v6C1fEQjAWxyJJAShinqK
-	 B6WAgdifcIGrpt8UB/LRWIJeZ+8VH/M/SzhfRHirgOoWzGCWNqNw2W5JWGjaYzXzaq
-	 L7mJ5d3tah4cnqJZSs7X0moLArLJy/4SND48595JvyvSo/8p+tmiehH4ArJ8T5Mv8h
-	 vZ6qZmqF1/cHrjPhKjGoIEa+VgeWMby+V/sUtG8NYveVI+s5RbHFGXE+Z8ZU+gi1ef
-	 PzuqZNdBYe1fA==
-Date: Sun, 11 May 2025 16:37:39 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] Documentation: ABI: IIO: add calibconv_delay
- documentation
-Message-ID: <20250511163739.6612ced4@jic23-huawei>
-In-Reply-To: <20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
-References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
-	<20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEo3H27M"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0b9625735so1810288f8f.2;
+        Sun, 11 May 2025 08:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746978159; x=1747582959; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jYqCvtT8FUAfMoo3aGei4XL6q2rIw/A9DS2ZyzQMU28=;
+        b=PEo3H27MR3xzMGonf07ysixcky8tlLau3h1kqDLaefxKD3IVdFmRc/2C+2TSWLIlZo
+         czrbufShkXi7tc9BJ+wXcHDo45zJjYo2q2AuzqbaOfAlsun1TYIkXT5HkkKc2TUew5eD
+         ycaB0xdWJQjETJMOR4UDGwPj37L7nSkn9jrC9Uld7gKLCmfT5dF+ml9L3MfttTotTlxS
+         XIFY7GXiP9MvPEWclOxHzb+guhZO8qGw+SPKkDe9szKysxSrh/FYMx75evDEb0OVMSNt
+         2lLnedlTh+ghPiRwR0jmP4777joRQP5z6uUxgSMHG3iDHWvNjBvB5mIfn6ZFnJwm93nh
+         abNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746978159; x=1747582959;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jYqCvtT8FUAfMoo3aGei4XL6q2rIw/A9DS2ZyzQMU28=;
+        b=uxEx4zyvwH9otcx+C2OtMbvmt8+POK8o4GFr6qkikLf/bRlayWD8x/EWclFqXpkKRe
+         vmGC2I5Kibf2uEYKxK99ypHE/7TZVaVBuo/NLd+Qki+5ZJ3reH3jt+4qa0oLN707eHS+
+         vWkS2J7B8I8NySLpS328V4BoyEr8VTkv+tMOxUZXmzeANi1dW91StbIqrEHtde6e/7g9
+         UBTr1uon1Wy1M1tayXWl/7ae1YkdP8CzHoUmJ2VDE7vJ0RIWpKWboeb+p+oL38HugVyz
+         yWeMZX2bpD9btqD1Zsyaabm/aNt4N2DgtWKiliRxMO3wpxL2317e5GSV1bDm7o3vUmOV
+         E+sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhar//IYK+sCRS8VnRMPVSigAETAmu5Z8FeBrjVd8rwucpZuseMgrOmMd+xYZdySR2LTHmqGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+DKJ7Lzcwp4EHWD3ENq4b8uEWXdkIc+te0/61jBkZa+/SIAnI
+	SeNK0IYrsb+cKxNRQfASqA2k6t0pha/NE+HkM4ODG5cvG3g2Vjxb
+X-Gm-Gg: ASbGnctcYNhEGd9BAI2eOLCj3CS233lE0D1PIv0Z153yB0UgrrM7MUE0XqVBiKhoXBk
+	x6iobFybzrfWadQzXJ4483a0pJehr8/w9hs3jgpV6sVVrlMV6Vuu1bovRAIIY7xRAEzJBbEv+KQ
+	0usEMw0iwW0y/mYBEzn+/uNogZDACpLn8mY7RgASN25qURT5pbFIyQpLMEH2oXccPp7iHvYnJky
+	87NN2vNTh2+TuWjJpXtPH2AvhaT21Y2B2V08C2uX9MoNSpdny54dZMnpaACOxZzfTvQ72ZVaety
+	gI6/tw4gfrkDQpvZORUBOYQlt4SR9/qX0QSJsdycebTLKBAXcjp9CM6U9VCzA0CAky3RQ2jteE8
+	iY5CNdyrL35c6
+X-Google-Smtp-Source: AGHT+IE5+5gLt9dJza7E2LT/Pv2xiPU2SQKS9FwiyRUhE7nQuI8TWpuRKAbzGdsy6P9BxfOUdB0kfw==
+X-Received: by 2002:a05:6000:1786:b0:3a0:b565:f1ea with SMTP id ffacd0b85a97d-3a1f6421d7bmr7565768f8f.5.1746978159231;
+        Sun, 11 May 2025 08:42:39 -0700 (PDT)
+Received: from fedora.advaoptical.com ([82.166.23.19])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c804sm9706530f8f.95.2025.05.11.08.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 08:42:38 -0700 (PDT)
+From: Sagi Maimon <maimon.sagi@gmail.com>
+To: jonathan.lemon@gmail.com,
+	vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Sagi Maimon <maimon.sagi@gmail.com>
+Subject: [PATCH v4] ptp: ocp: Limit signal/freq counts in show/store functions
+Date: Sun, 11 May 2025 18:42:34 +0300
+Message-ID: <20250511154235.101780-1-maimon.sagi@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 08 May 2025 12:06:05 +0200
-Angelo Dureghello <adureghello@baylibre.com> wrote:
+The sysfs show/store operations could access uninitialized elements
+in the freq_in[] and signal_out[] arrays, leading to NULL pointer
+dereferences. This patch introduces u8 fields (nr_freq_in,
+nr_signal_out) to track the number of initialized elements, capping
+the maximum at 4 for each array. The show/store functions are updated
+to respect these limits, preventing out-of-bounds access and ensuring
+safe array handling.
 
-> From: Angelo Dureghello <adureghello@baylibre.com>
-> 
-> Add new IIO calibconv_delay documentation.
-> 
-> The ad7606 implements a phase calibation feature, in nanoseconds.
-> Being this a time delay, using the conv_delay suffix.
-> 
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index 190bfcc1e836b69622692d7c056c0092e00f1a9b..9ced916895fbef146d46d17b5fdc932784b4c1df 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -559,6 +559,30 @@ Description:
->  		- a small discrete set of values like "0 2 4 6 8"
->  		- a range specified as "[min step max]"
->  
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay
-> +KernelVersion:  6.16
-> +Contact:        linux-iio@vger.kernel.org
-> +Description:
-> +		Delay of start of conversion in seconds from common reference
-> +		point shared by all channels. Can be writable when used to
-> +		compensate for delay variation introduced by external filters
-> +		feeding a simultaneous sampling ADC.
-> +
-> +		I.e., for the ad7606 ADC series, this value is intended as a
-> +		configurable time delay in seconds, to correct delay introduced
+Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+---
+Addressed comments from Vadim Fedorenko:
+ - https://www.spinics.net/lists/netdev/msg1090730.html
+Changes since v3:
+ - in signal/freq show routine put constant string "UNSUPPORTED" in
+   output instead of returning error.
+---
+---
+ drivers/ptp/ptp_ocp.c | 40 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 33 insertions(+), 7 deletions(-)
 
-Drop the 'in seconds' here as that is repeating the generic bit above. The rest is
-fine subject to formatting Andy noted.
-
-> +		by an optional external filtering circuit.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay_available
-> +KernelVersion:	6.16
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Available values of convdelay. Maybe expressed as:
-> +
-> +		- a range specified as "[min step max]"
-> +
-> +		If shared across all channels, <type>_calibconv_delay_available
-> +		is used.
-> +
->  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_calibscale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_calibscale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_z_calibscale
-> 
+diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+index 2ccdca4f6960..14b4b3bebccd 100644
+--- a/drivers/ptp/ptp_ocp.c
++++ b/drivers/ptp/ptp_ocp.c
+@@ -315,6 +315,8 @@ struct ptp_ocp_serial_port {
+ #define OCP_BOARD_ID_LEN		13
+ #define OCP_SERIAL_LEN			6
+ #define OCP_SMA_NUM			4
++#define OCP_SIGNAL_NUM			4
++#define OCP_FREQ_NUM			4
+ 
+ enum {
+ 	PORT_GNSS,
+@@ -342,8 +344,8 @@ struct ptp_ocp {
+ 	struct dcf_master_reg	__iomem *dcf_out;
+ 	struct dcf_slave_reg	__iomem *dcf_in;
+ 	struct tod_reg		__iomem *nmea_out;
+-	struct frequency_reg	__iomem *freq_in[4];
+-	struct ptp_ocp_ext_src	*signal_out[4];
++	struct frequency_reg	__iomem *freq_in[OCP_FREQ_NUM];
++	struct ptp_ocp_ext_src	*signal_out[OCP_SIGNAL_NUM];
+ 	struct ptp_ocp_ext_src	*pps;
+ 	struct ptp_ocp_ext_src	*ts0;
+ 	struct ptp_ocp_ext_src	*ts1;
+@@ -378,10 +380,12 @@ struct ptp_ocp {
+ 	u32			utc_tai_offset;
+ 	u32			ts_window_adjust;
+ 	u64			fw_cap;
+-	struct ptp_ocp_signal	signal[4];
++	struct ptp_ocp_signal	signal[OCP_SIGNAL_NUM];
+ 	struct ptp_ocp_sma_connector sma[OCP_SMA_NUM];
+ 	const struct ocp_sma_op *sma_op;
+ 	struct dpll_device *dpll;
++	int signals_nr;
++	int freq_in_nr;
+ };
+ 
+ #define OCP_REQ_TIMESTAMP	BIT(0)
+@@ -2697,6 +2701,8 @@ ptp_ocp_fb_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+ 	bp->eeprom_map = fb_eeprom_map;
+ 	bp->fw_version = ioread32(&bp->image->version);
+ 	bp->sma_op = &ocp_fb_sma_op;
++	bp->signals_nr = 4;
++	bp->freq_in_nr = 4;
+ 
+ 	ptp_ocp_fb_set_version(bp);
+ 
+@@ -2862,6 +2868,8 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+ 	bp->fw_version = ioread32(&bp->reg->version);
+ 	bp->fw_tag = 2;
+ 	bp->sma_op = &ocp_art_sma_op;
++	bp->signals_nr = 4;
++	bp->freq_in_nr = 4;
+ 
+ 	/* Enable MAC serial port during initialisation */
+ 	iowrite32(1, &bp->board_config->mro50_serial_activate);
+@@ -2888,6 +2896,8 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+ 	bp->flash_start = 0xA00000;
+ 	bp->eeprom_map = fb_eeprom_map;
+ 	bp->sma_op = &ocp_adva_sma_op;
++	bp->signals_nr = 2;
++	bp->freq_in_nr = 2;
+ 
+ 	version = ioread32(&bp->image->version);
+ 	/* if lower 16 bits are empty, this is the fw loader. */
+@@ -3190,6 +3200,9 @@ signal_store(struct device *dev, struct device_attribute *attr,
+ 	if (!argv)
+ 		return -ENOMEM;
+ 
++	if (gen >= bp->signals_nr)
++		return -EINVAL;
++
+ 	err = -EINVAL;
+ 	s.duty = bp->signal[gen].duty;
+ 	s.phase = bp->signal[gen].phase;
+@@ -3247,6 +3260,10 @@ signal_show(struct device *dev, struct device_attribute *attr, char *buf)
+ 	int i;
+ 
+ 	i = (uintptr_t)ea->var;
++
++	if (i >= bp->signals_nr)
++		return sysfs_emit(buf, "UNSUPPORTED\n");
++
+ 	signal = &bp->signal[i];
+ 
+ 	count = sysfs_emit(buf, "%llu %d %llu %d", signal->period,
+@@ -3359,6 +3376,9 @@ seconds_store(struct device *dev, struct device_attribute *attr,
+ 	u32 val;
+ 	int err;
+ 
++	if (idx >= bp->freq_in_nr)
++		return -EINVAL;
++
+ 	err = kstrtou32(buf, 0, &val);
+ 	if (err)
+ 		return err;
+@@ -3381,6 +3401,9 @@ seconds_show(struct device *dev, struct device_attribute *attr, char *buf)
+ 	int idx = (uintptr_t)ea->var;
+ 	u32 val;
+ 
++	if (idx >= bp->freq_in_nr)
++		return sysfs_emit(buf, "UNSUPPORTED\n");
++
+ 	val = ioread32(&bp->freq_in[idx]->ctrl);
+ 	if (val & 1)
+ 		val = (val >> 8) & 0xff;
+@@ -3402,6 +3425,9 @@ frequency_show(struct device *dev, struct device_attribute *attr, char *buf)
+ 	int idx = (uintptr_t)ea->var;
+ 	u32 val;
+ 
++	if (idx >= bp->freq_in_nr)
++		return -EINVAL;
++
+ 	val = ioread32(&bp->freq_in[idx]->status);
+ 	if (val & FREQ_STATUS_ERROR)
+ 		return sysfs_emit(buf, "error\n");
+@@ -4008,7 +4034,7 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+ {
+ 	struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
+ 	struct ptp_ocp_signal *signal = &bp->signal[nr];
+-	char label[8];
++	char label[16];
+ 	bool on;
+ 	u32 val;
+ 
+@@ -4031,7 +4057,7 @@ static void
+ _frequency_summary_show(struct seq_file *s, int nr,
+ 			struct frequency_reg __iomem *reg)
+ {
+-	char label[8];
++	char label[16];
+ 	bool on;
+ 	u32 val;
+ 
+@@ -4175,11 +4201,11 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
+ 	}
+ 
+ 	if (bp->fw_cap & OCP_CAP_SIGNAL)
+-		for (i = 0; i < 4; i++)
++		for (i = 0; i < bp->signals_nr; i++)
+ 			_signal_summary_show(s, bp, i);
+ 
+ 	if (bp->fw_cap & OCP_CAP_FREQ)
+-		for (i = 0; i < 4; i++)
++		for (i = 0; i < bp->freq_in_nr; i++)
+ 			_frequency_summary_show(s, i, bp->freq_in[i]);
+ 
+ 	if (bp->irig_out) {
+-- 
+2.47.0
 
