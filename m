@@ -1,139 +1,127 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E989D1BEF6D
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D17C28FF
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746953592; cv=none; b=O9UtcqjC8sahNwUEA//MIBNPYxZrR7cOh1jZDY/j921IRqoxXouH4lIPcmJ34bZZtGURueOXdMWt5CKIvop9bsBFSQbJre+LxIUP+HPHj1Vr7sJZubPpUUh7NSisgJAAC51HDKD1q/7PEcivYbqDNoAhCcYhnj7wMUsVIdRJQic=
+	t=1746953749; cv=none; b=cHKnTgd50re/oIOT9GKsKvHTm79rHnryykSnoV6IJ3/t/XXgOvdTuDh+qaoB3mqyDm4YFUV4i8j/mbxYY308/2++zDpxIRGfL9KvyM7Axwpn0PDNQ3ADKdRD0kRABsQiv2BJtxf66ZkSDigoCVQ1SbndtVs1vqD/3uX3WEo3s4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746953592; c=relaxed/simple;
-	bh=/3Ry2gB5rFGVaRFhCZm51kn3qdGjnjINXMCiUDzbJRE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dwiB11mdx2iEvx+tAM5/8G2Z2IB9RO5NXE5T2sHw+a4xd7MKcbsVwFaaZnHwxAquxRf8LeTzvykbvoU9iWP8gtiCcl8fHt4vZVKeJUSLq6c7drWQ0HO2pcbwqvnnPMQLuRxn9cP+AjWMrSlrkxtfYaEn4oxUdfO6rNsEBvZA6Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aKVVNaST; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1746953749; c=relaxed/simple;
+	bh=YeSgjSVqJ2rI7xgAvby/b3asBcQ5Une5Xh2zKLvCKhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpdA8T2899xk0oCx3qtBjCtywhWVlpB0skiFq1kiys+22EbUrJgD/zt91XPv4KEYeGOpvIFQfQwu97Gn61dR35BhqO/P9WJoT1lFnB831tKmMeqsFou1thhHQkF2ruMps9BVnlQaIqbdj/7QpDN54fj7mQSC3FYJeB98nFpnurQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eK4FiM62; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aKVVNaST"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746953581; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=8t92E5KWjqXNVLiB/b284RDqI4JT9H4sLibraRXrnJU=;
-	b=aKVVNaSTwX6FxVROXSeIHFn9b3AR8fl8RBntYMDLNjqRDtHKDC1DcMs4OThoTJTJ2YyirNaPsBsZn+CvQC8rZ6kif++JINSh8qvYXkcMLWYb2miR8To146PP6mdqrB4LOnAw96NqSh0H5zgWGDoNbvl1RQTT/bJ0Ppno1JiMf1I=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WaA7MWw_1746953580 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 11 May 2025 16:53:01 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <lance.yang@linux.dev>,
-	linux-kernel@vger.kernel.org
-Cc: mhiramat@kernel.org,
-	llong@redhat.com,
-	Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH v1 3/3] kernel/watchdog: add option to dump system info when system is locked up
-Date: Sun, 11 May 2025 16:52:54 +0800
-Message-Id: <20250511085254.61446-4-feng.tang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
-References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eK4FiM62"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2EFD840E023B;
+	Sun, 11 May 2025 08:55:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id FHbRGwQaV2OU; Sun, 11 May 2025 08:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746953731; bh=sizVZE4DrN4UnKLnyZ+fPRU89PwmAombH0k+F9AIJHk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eK4FiM62hz+l9S6VTOyNklvtCX0PlcufbAKI+ha6EYLrC6cm4Yir/YCh9rPhTBDab
+	 E2Zp2wLV/1yTAaiQ8HjjuVuZewrx9s7T6AjuhdI8BvjKFaoNuLo9pM6KSmXEz9CrEt
+	 1VBGmX/vRav0brSI1qDxKfbgYnTa7WRmQXsNyCMcWG2PAIzM30bpz0s3HTkqGdHiiO
+	 M1a7Cx/lHzNFcB7I8J03H73KtSeBvweqUdK0W6kUw3WtGweuEP6+dGCdPVKFToH4dl
+	 sXzn6K9lMu/o+Zhdl37ir9lAYsLv/I6YisyDvfZ5CgbRBLF3MeJAFKApkAPGeqsFlo
+	 GDQiOBDNcpsfzaLCB2zbXDbEn4JZEIlOcB5wDasSRKNcDA9JYJHUBsi1TSYnWQ/NQj
+	 grIhgn6zwksKJmwAvcDwswyxL0rDDWRNu/PrzCyiJU2tLIkhGqO9icEX1LBhyMFBt8
+	 TL9tD/aL0xhlvPJOaefpQtAtAYN6/4L/HV0IAODJC59EtQk6dKTIoPk50akRRIBZIG
+	 DmbdIGmAFgVjH7MYHUSdW2ydUZx8oFTg0ebH/q+fRYsOPO3EFx5hvHm44XMyXWUv/f
+	 DfpExquthQo8JU6MEEC/lXRX1NyWdJYuBDjVvqHo7H2XTqI+qeXjKLgg8AYgWIV3X7
+	 qP5lcVciP7iwr7XoQFXIkDxU=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0CC9740E0192;
+	Sun, 11 May 2025 08:55:22 +0000 (UTC)
+Date: Sun, 11 May 2025 10:55:13 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Seongmanlee <cloudlee1719@gmail.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org, leonardo-leecaprio <augustus92@kaist.ac.kr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/sev: Fix operator precedence in
+ GHCB_MSR_VMPL_REQ_LEVEL macro
+Message-ID: <20250511085513.GAaCBl8fIwQb7BpjNv@fat_crate.local>
+References: <20250510162726.90681-1-cloudlee1719@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250510162726.90681-1-cloudlee1719@gmail.com>
 
-Kernel panic code utilizes sys_show_info() to dump needed system
-information to help debugging. Similarly, add this debug option for
-software/hardware lockup cases, and 'lockup_print_mask' is the control
-knob and a bitmask to control what information should be printed out:
++ Tom.
 
-	bit 0: print all tasks info
-	bit 1: print system memory info
-	bit 2: print timer info
-	bit 3: print locks info if CONFIG_LOCKDEP is on
-	bit 4: print ftrace buffer
-	bit 5: print all printk messages in buffer
-	bit 6: print all CPUs backtrace (if available in the arch)
-	bit 7: print only tasks in uninterruptible (blocked) state
+On Sun, May 11, 2025 at 01:27:24AM +0900, Seongmanlee wrote:
+> From: leonardo-leecaprio <augustus92@kaist.ac.kr>
+> 
+> The GHCB_MSR_VMPL_REQ_LEVEL macro lacked parentheses around the bitmask
+> expression, causing the shift operation to bind too early. As a result,
+> when switching to VMPL2 from VMPL1 (e.g., GHCB_MSR_VMPL_REQ_LEVEL(1)),
+> incorrect values such as 0x000000016 were generated instead of the intended
+> 0x100000016.
+> 
+> This patch fixes the precedence issue by grouping the masked value
 
-Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
----
- .../admin-guide/kernel-parameters.txt         | 11 +++++++---
- kernel/watchdog.c                             | 20 +++++++++++++++++++
- 2 files changed, 28 insertions(+), 3 deletions(-)
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index d35d8101bee9..2b8bda2b5f0b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4489,9 +4489,14 @@
- 			bigger log buffer with "log_buf_len" along with this.
- 
- 	hungtask_print_mask=
--			Bitmask for printing system info when hung task is detected.
--			Details of bits definition is the same as panic_print's
--			definition above.
-+			Bitmask for printing system info when hung task is
-+			detected. Details of bits definition is the same as
-+			panic_print's definition above.
-+
-+	lockup_print_mask=
-+			Bitmask for printing system info when software/hardware
-+			system lockup is detected. Details of bits definition
-+			is the same as panic_print's definition above.
- 
- 	parkbd.port=	[HW] Parallel port number the keyboard adapter is
- 			connected to, default is 0.
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 9fa2af9dbf2c..fb1b94929c3b 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -52,6 +52,23 @@ static int __read_mostly watchdog_hardlockup_available;
- struct cpumask watchdog_cpumask __read_mostly;
- unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
- 
-+/*
-+ * A bitmask to control what kinds of system info to be printed when a
-+ * software/hardware lockup is detected, it could be task, memory, lock
-+ * etc. And the bit definition (from panic.h) is:
-+ *
-+ *	#define SYS_PRINT_TASK_INFO		0x00000001
-+ *	#define SYS_PRINT_MEM_INFO		0x00000002
-+ *	#define SYS_PRINT_TIMER_INFO		0x00000004
-+ *	#define SYS_PRINT_LOCK_INFO		0x00000008
-+ *	#define SYS_PRINT_FTRACE_INFO		0x00000010
-+ *	#define SYS_PRINT_ALL_PRINTK_MSG	0x00000020
-+ *	#define SYS_PRINT_ALL_CPU_BT		0x00000040
-+ *	#define SYS_PRINT_BLOCKED_TASKS		0x00000080
-+ */
-+unsigned long lockup_print_mask;
-+core_param(lockup_print_mask, lockup_print_mask, ulong, 0644);
-+
- #ifdef CONFIG_HARDLOCKUP_DETECTOR
- 
- # ifdef CONFIG_SMP
-@@ -212,6 +229,7 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
- 				clear_bit_unlock(0, &hard_lockup_nmi_warn);
- 		}
- 
-+		sys_show_info(lockup_print_mask);
- 		if (hardlockup_panic)
- 			nmi_panic(regs, "Hard LOCKUP");
- 
-@@ -774,6 +792,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 		}
- 
- 		add_taint(TAINT_SOFTLOCKUP, LOCKDEP_STILL_OK);
-+
-+		sys_show_info(lockup_print_mask);
- 		if (softlockup_panic)
- 			panic("softlockup: hung tasks");
- 	}
+Also, do
+
+$ git grep 'This patch' Documentation/process
+
+for more details.
+
+> before applying the shift.
+> 
+
+Fixes: 34ff65901735 ("x86/sev: Use kernel provided SVSM Calling Areas")
+
+> Signed-off-by: leonardo-leecaprio <augustus92@kaist.ac.kr>
+
+Please use your real name.
+
+> ---
+>  arch/x86/include/asm/sev-common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
+> index acb85b934..0020d77a0 100644
+> --- a/arch/x86/include/asm/sev-common.h
+> +++ b/arch/x86/include/asm/sev-common.h
+> @@ -116,7 +116,7 @@ enum psc_op {
+>  #define GHCB_MSR_VMPL_REQ		0x016
+>  #define GHCB_MSR_VMPL_REQ_LEVEL(v)			\
+>  	/* GHCBData[39:32] */				\
+> -	(((u64)(v) & GENMASK_ULL(7, 0) << 32) |		\
+> +	((((u64)(v) & GENMASK_ULL(7, 0)) << 32) |	\
+>  	/* GHCBDdata[11:0] */				\
+>  	GHCB_MSR_VMPL_REQ)
+>  
+
+Thx.
+
 -- 
-2.39.5 (Apple Git-154)
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
