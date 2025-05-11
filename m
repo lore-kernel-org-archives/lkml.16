@@ -1,297 +1,112 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91D91442E8;
-	Sun, 11 May 2025 20:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB5A2AE9A;
+	Sun, 11 May 2025 20:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746993821; cv=none; b=Ncm5vRi6GpTi3hd4on87gXxQL4dK3tk9WwX35nJoHcxk35JX73d0BeMOT6GtD3Ar5Q8iqMPLpcP6donSLiRP44dQExpFns1kV8GLgwiR2+47+X+LI5JWcevPmalXixGfD7Ohg7yqBFROqiCmbJsnP0cfxhye/7RDMVxIg0/Kloo=
+	t=1746993892; cv=none; b=u2v3tbR/Ly+bbUc5s29h2hQ3VyacKs8/n1QtnQwO40eN71zs8+SlN5y9EKa3rMRTEla22wD8VMzus4oT6b3zjf23WKzrZj0gQungMEpPh+i7E2JDBxxoQ70h6t7t/i69nUyg9f8p3FBdl1xzXQ5z0dYCecgQP/aBo2jhQ+NBZ8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746993821; c=relaxed/simple;
-	bh=0tYsn1+YB/ZDeCJGDSidABD4h9cNg37UMu/lTg/ewHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A/b+s+VzELghoU8pdR6oGyS1dOevHSff3MmQg4Mt5uBY3jGzoNGCOG9MbO56s+cLbDlDSGxQyd3r++/GmFmxSxbtIEzY4ZbqqTGKWyY8mns/U2pRwHkyKgmeSflxqjmCRFqEYwpT+YPmxLgR8MgtPYMvtSZlKO6Rw0ejF1IBQ+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=SpGaGmJP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E9priAjd; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1746993892; c=relaxed/simple;
+	bh=a2vLC5e8w621vYFZFZ6T2uLOfqBXeMNXA1BIWr7Badc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KS6wWr6WQKoNKKhaD1OLsYpJt+rAB+UxpprK9hf1QTWvWWt8d0Tp8k5+GJm1bIQliA0Xciayda/oYwraS+JsfsdD8Gtv2sS17zKXPiSvrEBgDw5merRI4GoYdAB4px8ZUfn9OXwhf84ryqPhMkdI73t4YdSIrp6JmK6fYoDA+XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kBGDlyF0; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="SpGaGmJP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E9priAjd"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 9E2531380136;
-	Sun, 11 May 2025 16:03:36 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Sun, 11 May 2025 16:03:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1746993816;
-	 x=1747080216; bh=ER8uMPUUfV9fh3JuRD1VcY4p3g8NRe+ep1bNdV6iuAs=; b=
-	SpGaGmJPXZxe8k7LmCTcmSjAlMq6CewrbDLws58cbZQm84IlpKbg7zwkJdfcMOip
-	eJn43rAAFSXoCbVNDKUkWsxCS96ChLde7bd19clPwo7mytpOjYpAA2b4ETngkUmd
-	n7dsXg+CSoiQdzAU3fwAa49vlkl77PiF8hkSQkbAIfhKVmPnFHtHHEXoF6rczCKT
-	ITrch/bGyD+MU9ly7IGB1rS8K5HZ7wQ9F/xu95gJrlT6ALpiDqDup3R4Iyh+fE0h
-	pyUaI6PaOZ4+pakKK2CTbDO2egy0piXJfDatvcAjunOMRMOjhdL3eZHDBeO0VRiT
-	dU2TqKGNfMvU41pFEJ4hHQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746993816; x=
-	1747080216; bh=ER8uMPUUfV9fh3JuRD1VcY4p3g8NRe+ep1bNdV6iuAs=; b=E
-	9priAjdztj0ZZgiOuYjkoJ8r40hmZKgL7x9tDP+5D1+BnYSZt5IKahMe1d4HY0SE
-	p252KrqXaJb5n7GjbTnOrGaDBIB7OniX6CkxUMbRpHMPBQ66hoIhUABT2EgdZJ+0
-	YvckYfWZ+L8tOX//ZUr/4UOB4yOP68s07qINAusyOJq3BI9O1ndKJe+aUNMGplt5
-	6YyZ+7czhMi4BpxKRxdnF1WRxNIlf/s4hbbyEMWdBCTQwoPXRkjB84VXMjhg1KQE
-	wXh6Mwi4kP9TAWnqcAcjD9recHsKVgq5XfHZZeO4ifhJOStvGcsleHEUFDPFxmKr
-	aGEf/kmIM8e5KEPpwJbnA==
-X-ME-Sender: <xms:lwIhaEGDI37vobuVJfEbUfZpqX-V159auS3ZdModr0f2hIgZgXwVkg>
-    <xme:lwIhaNVk7ULjIeW9CgdGMtXANmZxPXj9nd2IrSlOfejQKLtcp-zpC2qBc1dEWkSTp
-    SEmHw3REa4diuP90To>
-X-ME-Received: <xmr:lwIhaOKkZ2lC1795DOSiRgLP2W1Cs1TkDJa4XgOtF7WAn_KOFBLPTaixfjmrJhP5qdNhEoxY_f1KapEgcGhH-qixr248Xa1rhw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleelvdelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
-    houggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffr
-    rghtthgvrhhnpeefhfellefhffejgfefudfggeejlefhveehieekhfeulefgtdefueehff
-    dtvdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthh
-    drshgvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pegrlhhokhdrrgdrthhifigrrhhisehorhgrtghlvgdrtghomhdprhgtphhtthhopehmtg
-    hhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgvggvrhhtodhrvghnvghs
-    rghssehglhhiuggvrhdrsggvpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlih
-    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthhomhhirdhvrghlkhgvihhnvghn
-    odhrvghnvghsrghssehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlrg
-    hurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghp
-    thhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhg
-X-ME-Proxy: <xmx:lwIhaGGsf0CfkHpOPju7UkFgtuWTYnWuYjvJS9f481BcaJOlhKbWyw>
-    <xmx:lwIhaKVP624SPOWevi4mIS79QmBMucNWAp1q_hgi438KF0i2ZO9Rvw>
-    <xmx:lwIhaJPDwabPlW_YyivRGC1rcljDslsXf1n6HHAoGvf4n0yEnSgOhQ>
-    <xmx:lwIhaB3pV05xmn9kw-AYU9Vd_XNu7nXzd0iUmum3VMUdgHOGtJS7Eg>
-    <xmx:mAIhaHK07y4TlR8iQkgzyzHb2h-oblMJU_1ORjNb2ew6FGUaNpyv0HZb>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 11 May 2025 16:03:35 -0400 (EDT)
-Date: Sun, 11 May 2025 22:03:33 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] media: rcar-csi2: Add D-PHY support for V4H
-Message-ID: <20250511200333.GA2365307@ragnatech.se>
-References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
- <20250511174730.944524-5-niklas.soderlund+renesas@ragnatech.se>
- <10d2ae58-8da8-4802-95be-951d8b376551@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBGDlyF0"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso23034765e9.1;
+        Sun, 11 May 2025 13:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746993889; x=1747598689; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sYnfyvuko3DstVBj9VsnghcCFLtVoXIoYcgRptdifpw=;
+        b=kBGDlyF0xsjuiu3UMx0D6GJS6qIzBvhnDFwJ8TE7HKqyLYwsOtHXIsRppr5lakpq5L
+         MWNiPRY9FHwM7XejFttv+FISBJ1kV//iXYt93i3kBum/HakCkaLOyty3TmBk1dqAOmHT
+         0EHjFus6XACvdsUgkHDpJPKAGhSEwOlpWoh60IFOojpp7msuWJgs1UTzWXfEg7K12K1D
+         qzkrPP5+xuFeUgJG/Ubf3lvVbwlNcnRZy2fi2VRssAxtG7ZZ+OxDS05ZVd/ZM/UloA5s
+         mOkmLEUZoy76oeJRN9y1y9y5I50KsykouBTn8tLZ0l4CuQcS1Y7qxBuaZQpV86wBt6Z5
+         5K6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746993889; x=1747598689;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sYnfyvuko3DstVBj9VsnghcCFLtVoXIoYcgRptdifpw=;
+        b=cwL1gjeE+iCMSgpgHtPwG09ZwDRK5aoTOKD8UlZWpMqrfqoAo84/5uIg96j4RSulSP
+         3vQw/U4brMdOpmMBYMSTeoZ37iLwqZuory6tw5dfvQkBapk8nE7WrmRLs0joqbhK6D63
+         fI9FbO4GveUh/zGK+5/+IXUx9VgbRVgI+4hSKlrI8ktQlMKx5yDRA68J76/RrNRIJJUz
+         sCLLn0CNYc9epd/srHbCWwvblJLsWClqzj+3TGmEt9uvF3OXGxiX6lCGctDbJcxxZ41O
+         hbwwDDpzT6t4AzaC0U6ffNYzauy3C1nvv1+9HOj7RQgjcx9uy5Jk66effXgqofEtXRtx
+         CDIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUz1NM2JPs4IyvcS5/pWKhME0VbyTbjZtL/auhSk8Y/8SHKXI6wnAcHgnv8055WOqFXF5EbkqkWdE2GsyA=@vger.kernel.org, AJvYcCWoXEQ7CH3DK2AJKTEokImSNoGGZqYM3SnTPRtZ9Q5wqfTkzH8B3cH6co7tTTAIvgnhFXoyimGx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTyP/snEgbRsKItvVRpCuR4wgooHhuCOD6K+92ql7K5/yeHHZQ
+	qCtXrNsMOH+DAPjtUayMpNwKjjpENuYzu+edf9+eeq9XbPGYhw0y
+X-Gm-Gg: ASbGncsc9cynpY6dgB2Nkbib8u2J2T/YFpUyy5DLl/qPwv1Cc1tM+JljlT9sH59ttw4
+	tmj/887YqmKVKqKQU/uXYvNEf/ThZgQWbJgnPmmiIMuuKEkfATlQOFHZ6LTUCfogAw0GJUPLciK
+	HgejqvIEF29q02/5g377qxImJklUcQSQaTUa6xwGisddkN6o72NJlM5PbIVdbTJRIzjj1uSQeee
+	ijrGNDrHQ4hRp/J4ZMLegcQ0wapTpwSO0k9U5mw6ioX8cCDOBazoTp4Mj5nKQ+JgvAyGS4/S2nT
+	J0liJO1GwFhW9x8MRbBgvybiPhAGY4uDRKJrHnMcFKJvkDPf2WM9Wu002xBPSsIMks17Z7JQInb
+	DWpdQSKfKWxzZzkFIOgRmOwnQNrd4RcS3yEPpoPROQA206nVgm/IGtrk=
+X-Google-Smtp-Source: AGHT+IFjIJ/PiWP0rc5Lu8A35rP2o8sedXKOTMh73Xgvm5S60olcSUYwZBrdtBhLKmBU/xrQcLLW+w==
+X-Received: by 2002:a05:600c:45d1:b0:43d:8ea:8d80 with SMTP id 5b1f17b1804b1-442d6d18ab4mr87990995e9.5.1746993888671;
+        Sun, 11 May 2025 13:04:48 -0700 (PDT)
+Received: from shift.daheim (p200300d5ff34db0050f496fffe46beef.dip0.t-ipconnect.de. [2003:d5:ff34:db00:50f4:96ff:fe46:beef])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c35sm101844785e9.5.2025.05.11.13.04.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 13:04:47 -0700 (PDT)
+Received: from localhost ([127.0.0.1])
+	by shift.daheim with esmtp (Exim 4.98.2)
+	(envelope-from <chunkeey@gmail.com>)
+	id 1uECsL-00000000RYg-3Q9R;
+	Sun, 11 May 2025 22:04:46 +0200
+Message-ID: <9086a511-bd3e-4a88-ad86-8c51d5a385ac@gmail.com>
+Date: Sun, 11 May 2025 22:04:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <10d2ae58-8da8-4802-95be-951d8b376551@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12] Revert "um: work around sched_yield not yielding in
+ time-travel mode"
+To: Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org,
+ linux-um@lists.infradead.org
+Cc: benjamin.berg@intel.com, sashal@kernel.org, richard@nod.at,
+ stable@vger.kernel.org
+References: <20250509095040.33355-1-chunkeey@gmail.com>
+ <b09d6b4ef6291a2109dd7e1bada4ecff931a553f.camel@sipsolutions.net>
+Content-Language: de-DE, en-US
+From: Christian Lamparter <chunkeey@gmail.com>
+In-Reply-To: <b09d6b4ef6291a2109dd7e1bada4ecff931a553f.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Alok,
-
-Thanks for your feedback.
-
-On 2025-05-12 00:37:09 +0530, ALOK TIWARI wrote:
+On 5/11/25 9:23 PM, Johannes Berg wrote:
+> On Fri, 2025-05-09 at 11:50 +0200, Christian Lamparter wrote:
+>>
+>> What's interesting/very strange strange about this time-travel stuff:
+>>> commit 0b8b2668f998 ("um: insert scheduler ticks when userspace does not yield")
+>>
+>>   $ git describe 0b8b2668f998
+>> => v6.12-rc2-43-g0b8b2668f998
+>>
 > 
+> Come to think of it, often you just want "git describe --contains":
 > 
-> On 11-05-2025 23:17, Niklas Söderlund wrote:
-> > +
-> > +	for (unsigned int l = 0; l < 4; l++)
-> > +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 5), 0x0100);
-> > +
-> > +	for (unsigned int l = 0; l < 4; l++)
-> > +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6), 0x2d02);
-> > +
-> > +	for (unsigned int l = 0; l < 4; l++)
-> > +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 7), 0x1b06);
-> > +
-> > +	if (lut) {
-> > +		/* Documentation LUT have two values but document writing both
-> > +		 * values in a single write.
-> > +		 */
-> > +		for (unsigned int l = 0; l < 4; l++)
-> > +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 3),
-> > +				       lut->rw_hs_rx_3_83 << 3 | lut->rw_hs_rx_3_20, 0x1ff);
-> > +
-> > +		for (unsigned int l = 0; l < 4; l++)
-> > +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6),
-> > +				       lut->rw_hs_rx_6 << 8, 0xff00);
-> > +	}
-> > +
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0404);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x040c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0414);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x041c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0423);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0429);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0430);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x043a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0445);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x044a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0450);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x045a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0465);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0469);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0472);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x047a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0485);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0489);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0490);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x049a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04a4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04ac);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04b4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04bc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04c4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04cc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04d4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04dc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04e4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04ec);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04f4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x04fc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0504);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x050c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0514);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x051c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0523);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0529);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0530);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x053a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0545);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x054a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0550);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x055a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0565);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0569);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0572);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x057a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0585);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0589);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0590);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x059a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05a4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05ac);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05b4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05bc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05c4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05cc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05d4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05dc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05e4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05ec);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05f4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x05fc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0604);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x060c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0614);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x061c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0623);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0629);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0632);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x063a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0645);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x064a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0650);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x065a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0665);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0669);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0672);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x067a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0685);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0689);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0690);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x069a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06a4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06ac);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06b4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06bc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06c4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06cc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06d4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06dc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06e4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06ec);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06f4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x06fc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0704);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x070c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0714);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x071c);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0723);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x072a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0730);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x073a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0745);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x074a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0750);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x075a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0765);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0769);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0772);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x077a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0785);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0789);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0790);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x079a);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07a4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07ac);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07b4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07bc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07c4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07cc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07d4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07dc);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07e4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07ec);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07f4);
-> > +	rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x07fc);
-> 
-> 
-> Instead of manually writing each call, it could use a loop ?
-> 
-> for (int i = 0x0404; i <= 0x07fc; i += 0x08) {
->     rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, i);
+> $ git describe --contains --match=v* 0b8b2668f998
+> v6.13-rc1~18^2~25
 
-Unfortunately the values are not all sequential, see the progression 
-0x061c -> 0x0623 and 0x071c -> 0x0723 for example.
+yeah, I'm wondering if this 'git describe vs git describe --contains' could be the
+reason why the patch was AUTOSEL'd? I have no idea how Sasha's helper works though.
 
-> or if values are not strictly sequential, iterating over the array.
-> static const u16 register_values[]= {0x0404, 0x040c, 0x0414 etc,,}
-> rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
-> register_values[i]);
+As for UML: Your work is greatly appreciated. I've ran into this because OpenWrt is
+currently in the process of adapting to the 6.12 LTS:
+https://github.com/openwrt/openwrt/pull/18666
 
-I agree with you, a array of values would make this look a tad less 
-silly and would reduce the number of lines. I considered this while 
-writing it but opted for this. My reason was as most of the register 
-writes needed to setup the PHY are not documented in the docs I have and 
-I wanted to keep the driver as close to the table of magic values I have 
-to make it easy to compare driver and the limited documentation.
-
-I guess it's really a matter of style. I have no real strong opinion, if 
-people think an array would be nicer I have no issue switching to that.
-
-> 
-> Thanks,
-> Alok
-
--- 
-Kind Regards,
-Niklas Söderlund
+Cheers,
+Christian
