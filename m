@@ -1,105 +1,335 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D974485260
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35322846F;
+	Sun, 11 May 2025 02:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746929672; cv=none; b=e9cr9c03LzAEH0epbif2bOmRSvBYpt8kMzS2ciHBxcPVQcXYe3dHxtjTCCK4wsT9oFeeqe0I1CNu+qVpnXLAircRjv5vlpmud09lm6jWlDYx/d2bWOR80lyqHhGN3myypr0E2/PBET5TXcFR7OrmMAZWpespxXbG2orDrfISu9s=
+	t=1746929919; cv=none; b=LQ4YisweiCjWF1cM3hWxG528rV66fuv0F1frwcW8WtK9VrXYYxEnt/labmSeMnJTmQ7x0zdeqvMStkBrbCtroLRMIKliGWZoJqzqQNKNK/aDFTx4W8Zu7p34pCF2c3UtEiED/fA77iCFBK6rNXlND6QxoS8Jig+7Z+4zrHUtqoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746929672; c=relaxed/simple;
-	bh=ErdE1KVMfWPkKsMxBdbzTAnSvWDLWI4LLjWjznFIFAE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Is7yoIyGvarogT+mTOfdpZArla+MG67YeTwrF/P01nhTfzGCSOadJLT9QaocM9jzPEGuLB1OXOxTb91x73zEpaZgl68XUyyFvmhmvTir802doOD7laxmTQuZpBf07sTUIU3EEghkwfJVNe96iAjLc9HyfRi/8TIppnrEgu6ulEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1IW0YD1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746929919; c=relaxed/simple;
+	bh=hkbykRuCPbV2MO6N0vI99UpA+qlypDnlP9tcZnPvQi0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dtkRIMz4i0zKlxcB2xbUS95+mpXJHepE4i6zqEtQ80/Y18oPiWAxH1lOZw5xqLkOBM+8NqLVJwfvA45uej+ECs4UlJ6b00DnhdguGkBYvdMGzMaGLt/1v0H+Zov+Jmr+EOJddYi+IbqXXrsBFk/AMmM67AtzHvDqLA5e/Vpt7NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aUQDdykE; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1IW0YD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BD3C4AF0D
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746929672;
-	bh=ErdE1KVMfWPkKsMxBdbzTAnSvWDLWI4LLjWjznFIFAE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=D1IW0YD1PWiJE7OexRFET8O5OoDdN/n+H+arvcGWRYzDPMBLnLwS7wBDNnB5yAxhL
-	 ylfsP9uxJzMd0NTxXPAeXHqq1kycZyDThZpY7qV0bJNBtaByGa3Gi+w6CUcx4TvJ7Q
-	 DN5kneaArqhcJFZ9EFuoR9zWEkxh2laX1LhLrZ5PTtbMKgWbdR5vO4pvI4rU0Cljeh
-	 SoL6hb+EFl+I94+/CrjFVOzvQPhkXkl5ucRcMwjXldZ4a8UuCqNzktPwx7j3xeUKyl
-	 96YqxHULEPy323MNYOsLGWDN0jh2e+XwlPuC93HfCvn4PTjDwQeLQ9yMvJcVAulu+4
-	 7bUct8jdLE4fQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5fc9c49c8adso2870881a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 19:14:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrFMrn0GdwfY9L2+2j2IlIFejb82gKZHlHRZ83AKb0AcwH+PHS4aiL49/AN5IP6aoeLIZ1wrox9bhTQvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHEAxVErbOgjnDfIp/u4Bhf02ee7EoGFan8ZrFvzDNlRy6iXLt
-	UIB/Qzh7J+uLuHSlsfjEiKo85ufi4/0JZPnL+/aJCJkv3dPkP4wtIMpEkXP1lrCCZRqxf6hh6TR
-	j8MYq5VjeYcYlKmaggAboc2ppODNu6dbikaUa
-X-Google-Smtp-Source: AGHT+IExXmbIf+BhGVnj7doD3WnX7s+dvlTY3FdrciBuDVwzwOxxJvaT9GkVsNX9nEvSMBd0KFEz7jYxBN5tsLhkF2M=
-X-Received: by 2002:a05:6402:2396:b0:5fc:a51a:9c03 with SMTP id
- 4fb4d7f45d1cf-5fca51a9f9fmr4891240a12.0.1746929670732; Sat, 10 May 2025
- 19:14:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aUQDdykE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=IIOr0KRO/w9uVIzHiGo9e8afBVTWu02eElKI0nhbCLw=; b=aUQDdykEICFUfIzofIWUg9fvzg
+	2NAd6xTpMc+rS/VhW+qKYtXa7WMhxT1QB9dbR36vlW4crYtY0GbJMvtkdqUxZ0AqSYibpSsUBSfLU
+	4/kCmfdYkybncw8YAHVuoAOCIGlqBwrz41zkUb+uzRd0H2qcpiiffBCAAtwyi2dYO274xpaCXwbeq
+	czJuEcT+O10P62AXuIAmrRFeNClFj1fAO+oHoeMFRnsKMF+mAlKxM2kalZ2KzCLTTvRmUDEQrpShT
+	TrtFPmq4nd15AC60Ys3avhIARklecfgHCdTedUQmvo8PF92tWJvx18lAsLSuifjvlt4CT44bTAnDb
+	WCF3Bdyg==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uDwGu-0000000GXNs-1bqC;
+	Sun, 11 May 2025 02:18:33 +0000
+Message-ID: <43d957e0-f52b-4ba8-aa87-cfb8472b8b67@infradead.org>
+Date: Sat, 10 May 2025 19:18:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <87o6w7ge3o.fsf@microsoft.com>
- <CACYkzJ7Ur4kFaGZTDvcFJpn0ZwJ9V+=3ZefUURtkrQGfa68zLg@mail.gmail.com>
- <5dbc2a55a655f57a30be3ff7c6faa1d272e9b579.camel@HansenPartnership.com>
- <CAHC9VhSPLsi+GBtjJsQ8LUqPQW4aHtOL6gOqr9jfpR0i1izVZA@mail.gmail.com>
- <CAADnVQ+C2KNR1ryRtBGOZTNk961pF+30FnU9n3dt3QjaQu_N6Q@mail.gmail.com> <CAHC9VhRjKV4AbSgqb4J_-xhkWAp_VAcKDfLJ4GwhBNPOr+cvpg@mail.gmail.com>
-In-Reply-To: <CAHC9VhRjKV4AbSgqb4J_-xhkWAp_VAcKDfLJ4GwhBNPOr+cvpg@mail.gmail.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Sun, 11 May 2025 04:14:20 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ528JBKbhiw1HNfv1kDBYv_C76cFB8a_Wa6DSqZp5_XuA@mail.gmail.com>
-X-Gm-Features: AX0GCFtRm2U2Z08Q-5iN5TPSVkChFMpfYbeWxPh5iWXOgSo5pdg9_y4ozgwfcPs
-Message-ID: <CACYkzJ528JBKbhiw1HNfv1kDBYv_C76cFB8a_Wa6DSqZp5_XuA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: Paul Moore <paul@paul-moore.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Blaise Boscaccy <bboscaccy@linux.microsoft.com>, bpf <bpf@vger.kernel.org>, code@tyhicks.com, 
-	Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
-	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
-	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
-	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
-	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-
-[...]
-
-> Blaise started this most recent effort by attempting to address the
-> concerns brought up in previous efforts, you and others rejected this
-> first attempt and directed Blaise towards a light skeleton and LSM
-> based approach, which is where he is at with Hornet.  Once again, you
-> reject this approach with minimal guidance on what would be
-> acceptable, and our response is to ask for clarification on your
-> preferred design.  We're not asking for a full working solution,
-> simply a couple of paragraphs outlining the design with enough detail
-> to put forward a working solution that isn't immediately NACK'd.
-> We've made this request multiple times in the past, most recently this
-> past weekend, where KP replied that he would be "happy" to share
-
-Here's the proposed design:
-
-https://lore.kernel.org/bpf/CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com/#t
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 10/18] cxl: docs/linux/dax-driver documentation
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
+References: <20250430181048.1197475-1-gourry@gourry.net>
+ <20250430181048.1197475-11-gourry@gourry.net>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250430181048.1197475-11-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> designs/code.  Unfortunately, since then all we've received from
-> either you or KP since then has been effectively just a list of your
-> objections on repeat; surely typing out a couple of paragraphs
-> outlining a design would have been quicker, easier, and more
-> constructive then your latest reply?
+
+On 4/30/25 11:10 AM, Gregory Price wrote:
+> Add documentation on how the CXL driver interacts with the DAX driver.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>  Documentation/driver-api/cxl/index.rst        |   1 +
+>  .../driver-api/cxl/linux/cxl-driver.rst       | 115 ++++++++++++++++--
+>  .../driver-api/cxl/linux/dax-driver.rst       |  43 +++++++
+>  3 files changed, 149 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/driver-api/cxl/linux/dax-driver.rst
+> 
+
+> diff --git a/Documentation/driver-api/cxl/linux/cxl-driver.rst b/Documentation/driver-api/cxl/linux/cxl-driver.rst
+> index 486baf8551aa..1a354ea1cda4 100644
+> --- a/Documentation/driver-api/cxl/linux/cxl-driver.rst
+> +++ b/Documentation/driver-api/cxl/linux/cxl-driver.rst
+> @@ -34,6 +34,32 @@ into a single memory region. The memory region has been converted to dax. ::
+>      decoder1.0   decoder5.0  endpoint5   port1  region0
+>      decoder2.0   decoder5.1  endpoint6   port2  root0
+>  
+> +
+> +.. kernel-render:: DOT
+> +   :alt: Digraph of CXL fabric describing host-bridge interleaving
+> +   :caption: Diagraph of CXL fabric with a host-bridge interleave memory region
+> +
+> +   digraph foo {
+> +     "root0" -> "port1";
+> +     "root0" -> "port3";
+> +     "root0" -> "decoder0.0";
+> +     "port1" -> "endpoint5";
+> +     "port3" -> "endpoint6";
+> +     "port1" -> "decoder1.0";
+> +     "port3" -> "decoder3.0";
+> +     "endpoint5" -> "decoder5.0";
+> +     "endpoint6" -> "decoder6.0";
+> +     "decoder0.0" -> "region0";
+> +     "decoder0.0" -> "decoder1.0";
+> +     "decoder0.0" -> "decoder3.0";
+> +     "decoder1.0" -> "decoder5.0";
+> +     "decoder3.0" -> "decoder6.0";
+> +     "decoder5.0" -> "region0";
+> +     "decoder6.0" -> "region0";
+> +     "region0" -> "dax_region0";
+> +     "dax_region0" -> "dax0.0";
+> +   }
+> +
+>  For this section we'll explore the devices present in this configuration, but
+>  we'll explore more configurations in-depth in example configurations below.
+>  
+> @@ -41,7 +67,7 @@ Base Devices
+>  ------------
+>  Most devices in a CXL fabric are a `port` of some kind (because each
+>  device mostly routes request from one device to the next, rather than
+> -provide a manageable service).
+> +provide a direct service).
+>  
+>  Root
+>  ~~~~
+> @@ -53,6 +79,8 @@ The Root contains links to:
+>  
+>  * `Host Bridge Ports` defined by ACPI CEDT CHBS.
+>  
+> +* `Downstream Ports` typically connected to `Host Bridge Ports`
+
+Add ending '.' for consistency.
+
+> +
+>  * `Root Decoders` defined by ACPI CEDT CFMWS.
+>  
+>  ::
+> @@ -150,6 +178,27 @@ device configuration data. ::
+>      driver    label_storage_size  pmem         serial
+>      firmware  numa_node           ram          subsystem
+>  
+> +A Memory Device is a discrete base object that is not a port.  While it the
+> +physical device it belongs to may host an `endpoint`, this relationship is
+
+I have some parsing trouble with the sentence above. Maybe s/it the/the/.
+
+> +not captured in sysfs.
+> +
+> +Port Relationships
+> +~~~~~~~~~~~~~~~~~~
+> +In our example described above, there are four host bridges attached to the
+> +root, and two of the host bridges have one endpoint attached.
+> +
+> +.. kernel-render:: DOT
+> +   :alt: Digraph of CXL fabric describing host-bridge interleaving
+> +   :caption: Diagraph of CXL fabric with a host-bridge interleave memory region
+> +
+> +   digraph foo {
+> +     "root0"    -> "port1";
+> +     "root0"    -> "port2";
+> +     "root0"    -> "port3";
+> +     "root0"    -> "port4";
+> +     "port1" -> "endpoint5";
+> +     "port3" -> "endpoint6";
+> +   }
+>  
+>  Decoders
+>  --------
+> @@ -322,6 +371,29 @@ settings (granularity and ways must be the same).
+>  Endpoint decoders are created during :code:`cxl_endpoint_port_probe` in the
+>  :code:`cxl_port` driver, and is created based on a PCI device's DVSEC registers.
+>  
+> +Decoder Relationships
+> +~~~~~~~~~~~~~~~~~~~~~
+> +In our example described above, there is one root decoder which routes memory
+> +accesses over two host bridges.  Each host bridge has a decoder which routes
+> +access to their singular endpoint targets.  Each endpoint has an decoder which
+
+                                                                 a decoder
+
+> +translates HPA to DPA and services the memory request.
+> +
+> +The driver validates relationships between ports by decoder programming, so
+> +we can think of decoders being related in a similarly hierarchical fashion to
+> +ports.
+> +
+> +.. kernel-render:: DOT
+> +   :alt: Digraph of hierarchical relationship between root, switch, and endpoint decoders.
+> +   :caption: Diagraph of CXL root, switch, and endpoint decoders.
+> +
+> +   digraph foo {
+> +     "root0"    -> "decoder0.0";
+> +     "decoder0.0" -> "decoder1.0";
+> +     "decoder0.0" -> "decoder3.0";
+> +     "decoder1.0" -> "decoder5.0";
+> +     "decoder3.0" -> "decoder6.0";
+> +   }
+> +
+>  Regions
+>  -------
+>  
+> @@ -348,6 +420,17 @@ The interleave settings in a `Memory Region` describe the configuration of the
+>  `Interleave Set` - and are what can be expected to be seen in the endpoint
+>  interleave settings.
+>  
+> +.. kernel-render:: DOT
+> +   :alt: Digraph of CXL memory region relationships between root and endpoint decoders.
+> +   :caption: Regions are created based on root decoder configurations. Endpoint decoders
+> +             must be programmed with the same interleave settings as the region.
+> +
+> +   digraph foo {
+> +     "root0"    -> "decoder0.0";
+> +     "decoder0.0" -> "region0";
+> +     "region0" -> "decoder5.0";
+> +     "region0" -> "decoder6.0";
+> +   }
+>  
+>  DAX Region
+>  ~~~~~~~~~~
+> @@ -360,7 +443,6 @@ for more details. ::
+>      dax0.0      devtype  modalias   uevent
+>      dax_region  driver   subsystem
+>  
+> -
+>  Mailbox Interfaces
+>  ------------------
+>  A mailbox command interface for each device is exposed in ::
+> @@ -418,17 +500,30 @@ the relationships between a decoder and it's parent.
+>  
+>  For example, in a `Cross-Link First` interleave setup with 16 endpoints
+>  attached to 4 host bridges, linux expects the following ways/granularity
+> -across the root, host bridge, and endpoints respectively. ::
+> +across the root, host bridge, and endpoints respectively.
+> +
+> +.. flat-table:: 4x4 cross-link first interleave settings
+> +
+> +  * - decoder
+> +    - ways
+> +    - granularity
+>  
+> -                   ways   granularity
+> -  root              4        256
+> -  host bridge       4       1024
+> -  endpoint         16        256
+> +  * - root
+> +    - 4
+> +    - 256
+> +
+> +  * - host bridge
+> +    - 4
+> +    - 1024
+> +
+> +  * - endpoint
+> +    - 16
+> +    - 256
+>  
+>  At the root, every a given access will be routed to the
+>  :code:`((HPA / 256) % 4)th` target host bridge. Within a host bridge, every
+> -:code:`((HPA / 1024) % 4)th` target endpoint.  Each endpoint will translate
+> -the access based on the entire 16 device interleave set.
+> +:code:`((HPA / 1024) % 4)th` target endpoint.  Each endpoint translates based
+> +on the entire 16 device interleave set.
+>  
+>  Unbalanced interleave sets are not supported - decoders at a similar point
+>  in the hierarchy (e.g. all host bridge decoders) must have the same ways and
+> @@ -467,7 +562,7 @@ In this example, the CFMWS defines two discrete non-interleaved 4GB regions
+>  for each host bridge, and one interleaved 8GB region that targets both. This
+>  would result in 3 root decoders presenting in the root. ::
+>  
+> -  # ls /sys/bus/cxl/devices/root0
+> +  # ls /sys/bus/cxl/devices/root0/decoder*
+>      decoder0.0  decoder0.1  decoder0.2
+>  
+>    # cat /sys/bus/cxl/devices/decoder0.0/target_list start size
+> diff --git a/Documentation/driver-api/cxl/linux/dax-driver.rst b/Documentation/driver-api/cxl/linux/dax-driver.rst
+> new file mode 100644
+> index 000000000000..5063d2b675b4
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/linux/dax-driver.rst
+> @@ -0,0 +1,43 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +====================
+> +DAX Driver Operation
+> +====================
+> +The `Direct Access Device` driver was originally designed to provide a
+> +memory-like access mechanism to memory-like block-devices.  It was
+> +extended to support CXL Memory Devices, which provide user-configured
+> +memory devices.
+> +
+> +The CXL subsystem depends on the DAX subsystem to generate either:
+
+                                                  to either:
+
+> +
+> +- A file-like interface to userland via :code:`/dev/daxN.Y`, or
+
+   - Generate a file-like interface ...
+
+> +- Engaging the memory-hotplug interface to add CXL memory to page allocator.
+
+   - Engage the ...
+
+> +
+> +The DAX subsystem exposes this ability through the `cxl_dax_region` driver.
+> +A `dax_region` provides the translation between a CXL `memory_region` and
+> +a `DAX Device`.
+> +
+> +DAX Device
+> +==========
+> +A `DAX Device` is a file-like interface exposed in :code:`/dev/daxN.Y`. A
+> +memory region exposed via dax device can be accessed via userland software
+> +via the :code:`mmap()` system-call.  The result is direct mappings to the
+> +CXL capacity in the task's page tables.
+> +
+> +Users wishing to manually handle allocation of CXL memory should use this
+> +interface.
+> +
+> +kmem conversion
+> +===============
+> +The :code:`dax_kmem` driver converts a `DAX Device` into a series of `hotplug
+> +memory blocks` managed by :code:`kernel/memory-hotplug.c`.  This capacity
+> +will be exposed to the kernel page allocator in the user-selected memory
+> +zone.
+> +
+> +The :code:`memmap_on_memory` setting (both global and DAX device local) dictate
+
+                                                                           dictates
+
+> +where the kernell will allocate the :code:`struct folio` descriptors for this
+
+             kernel
+
+> +memory will come from.  If :code:`memmap_on_memory` is set, memory hotplug
+> +will set aside a portion of the memory block capacity to allocate folios.  If
+> +unset, the memory is allocated via a normal :code:`GFP_KERNEL` allocation -
+> +and as a result will most likely land on the local NUM node of the cpu executing
+
+s/cpu/CPU/ preferably.
+
+> +the hotplug operation.
+
+-- 
+~Randy
+
