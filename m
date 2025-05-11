@@ -1,313 +1,325 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DD813DDAE;
-	Sun, 11 May 2025 02:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEC71F61C
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746929177; cv=none; b=HgWYa9LhOAcmftkOMWVGujwixvzTnl6atny4nq7zrrTm/ne8XJvKCSRKvvTGUPLmh94FlXE7PwsGibTi+3xdsUsgyHbyp/sFFD9s0KkBYzthpdSmOwy/FjQV6nuUMKqSJ8LPVdrPonyP1UC/CCYM/MzGNCxrCub67l9IF9BM48E=
+	t=1746929325; cv=none; b=r0w7Ao4xIZjsfrNlZ42nb2GC/OQilmgV7LKKlzkOndIWxHCUi7MEirprtmbYNeLTyc5GDH/hMQtqzkxJJHniog0jTij0sdCn6goi59l4s1fDdPJAcilSlvMRU3FE5/kVZzryY4Ji8zQue4MGbvc8dURcllkHiVF+157UbRyvPhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746929177; c=relaxed/simple;
-	bh=98ndXhCnbe6LuYyNNE6H1LDju9kSaG2YoNkqcDH7Iis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ty/AIwDzFlVY/6iW7REyTYA0EBEkxv1rp8+f8hBOWIIbmFIuj+n7w9k2OcUaxNerw5uL5hTEOudC2P/538nF407EZ5dsw7vkzyLd4ml5C0nEE5ABy4LLngpIQV6PHVSGD4KzWEyUH3PltIuwkgvTUjEuyV4yam+kPSxZkTB0HCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YwDp4Pwk; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1746929325; c=relaxed/simple;
+	bh=+hP6ZKRaI92mfj/xB9qLtMPQYpDTOyntlDNDZJGNd+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=syY9JKnp1cCcpWixh4n2cHm9fKe/wub/OlCvfpqKvKolROITM11Dpb6HXOn4qLJ/VyiSCYwnaYlDst2uZ9TQxye+SWs2ZsQAypyXWmWGxBsqRlRjFXJvWcosEYpz39gCldFgrmgy6kYqSnxr9G5PH7l4sVLkhvfyP2GFPQRxyVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=muMRmfRv; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwDp4Pwk"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-74068f95d9fso3152989b3a.0;
-        Sat, 10 May 2025 19:06:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muMRmfRv"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f5499c21bbso70459736d6.3
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 19:08:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746929174; x=1747533974; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7xavpdlV7cZBxk/OGVYz5UUZOuq06Pk4hE0oN3K/Zfw=;
-        b=YwDp4Pwkxup8526m8jSbAlXB3XpcGFNVaXEbyZ6Hns9K5O8wjlxENqvinDooWSDM7T
-         50muYBzBhg4NbFFw3cylWDp8ewMdnfs945Oh/nSakJmEqkkeEi2DUz2rKajryLaGORBx
-         VA9LKOH3l7ePur6EurlTf3Voad2KZiMV6QynMvwL2MNqbIWP3kpgJq0GzOLOhB+W1ZKJ
-         RDNhzzGeBsJmAQYRHFtGMx5e22RrUWnZ090mMiKi/FFXu7LeC8oS5k4155uMDM/fjvtZ
-         WebOlLV5Tyh3l8BSUpH8a2TzQRJrvOxARfvHL6EiGklB+mgiittAFaPdSdeejRvE+eDn
-         /reQ==
+        d=gmail.com; s=20230601; t=1746929322; x=1747534122; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ClOyMhlucZgqqcgXQFq1OGdn3FnzyenLIIB/AbOlZeQ=;
+        b=muMRmfRv7bxusPY20jAYjzkWDmpht2mKBB7B4yObIpkTp5TXgK0OSOMnZGGGzeIjWG
+         5C9Czyl/K96aPSDYPPuIj6iHc7VkSueTk/8rSLPSLLIR43FXcSbdb2DP7GDEblBh5vMN
+         H7S6I+xa46MGwga6BTMxyjqc9lQ714nr6rOL0+En/r33e0w1OjqIFZF/g7jBsur3WThS
+         YXz/NkGXozRrb9wZo4L9ot0BuIRI/NETWwT2+9gZFGeVc+hq2juHKTazyXU2QFfC944s
+         i9QG/IvScFybEyljoOuXTNLlv5Htjceq7itRzw5jYgxkIT+xa9fdz31wHZouAVTe1JKU
+         K/cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746929174; x=1747533974;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7xavpdlV7cZBxk/OGVYz5UUZOuq06Pk4hE0oN3K/Zfw=;
-        b=NjUUiqbdH0TD7T6qTyCoe2RAsqGBW8hDkOnTGmhX/5qOb+vXUyWSKiioSoRWQaMfKX
-         2FomytKvFa8MX8ux6JZ8ifRE0mXCG1DDIJzZqWwP4E5E6TLZNru7UMmeUDyNrI+/dZ/0
-         872ThBV8awCtQJV39lwPucE6YNdc4sE01htYvaSbiHi4IjknjJlwD0ySsaLf0th7XKjt
-         morhzsUck71Y8Clnr6YDmk7MqprAWrrLd4Ey5abyZRbILMhivaylVWDqWXf8/JHOB1e7
-         gJgEqCEcM/xqK0WOVnX3YWWEYgLbuCTSqiiWdzFrJ0eLo2BNMlE0/5xUJxw9XWPfBY2d
-         N6NA==
-X-Forwarded-Encrypted: i=1; AJvYcCXC+Sm1rydLLl/2tFetRahUrTCXq7CcODH6IFF5GaG1k1XCUoO9YJzqHKBumwdqCw8T4DpqW8DPhQyw@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGVi4tmIwKKo91TGlnCDSX52jVrd9L35PiDyWs1ZHzW5q37o7x
-	UX/Ja9X3dkLzsqwNzq2hMI8lhpRDv11kg1zmuvx8aO9QKlPhboZCeJ1ltSHD
-X-Gm-Gg: ASbGncssw7ffGfcPMOOEjRy+MM2/2YyO4VaHkM5+YdT/wG6pb4iBTOPI9CRNkJpZyII
-	OXtK2ICUAT7ODQ8yRudEqhP6H3IXycmFljB0FQFjpQezI9hOS5kcZzveJP6MuuHy4Zkd/Hy9Xc8
-	fd3PXJxmqzaSiKzBrnEWwFIjmttnRofdDe3OK2wWrQpBeCE8GVO2IR3aOwtcSDwmJolY8T8NMQD
-	pFZlAombl9T/+35kHmG33AQK8xmZym6JKNPx9+yzVRTsGhZyuiZC9gDCLE1azwG0Aa9iddrsZCm
-	oZWccAv8fRhkyunZJjjNAdRHnG6U2eHTSsCVUu/fG6aqAp96YUQxhy/DhS7hgA1CQm+ZfmlU4FB
-	+P4zShzr6vivw5G6PMYXYHAtKC9g=
-X-Google-Smtp-Source: AGHT+IG59iG8A7MD1sK3fSO5fSEoZoJUba/xi7xuXaniABm9s3GW5wuIhJG2Iob+UQ9SFMlFow2V3g==
-X-Received: by 2002:a05:6a21:6d96:b0:1f3:397d:86f1 with SMTP id adf61e73a8af0-215abb03faemr10677349637.16.1746929173967;
-        Sat, 10 May 2025 19:06:13 -0700 (PDT)
-Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237704ff3sm3795155b3a.1.2025.05.10.19.06.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 May 2025 19:06:13 -0700 (PDT)
-Message-ID: <ad917c1c-2508-41eb-ae5a-8b4fcd97ca7f@gmail.com>
-Date: Sun, 11 May 2025 11:06:10 +0900
+        d=1e100.net; s=20230601; t=1746929322; x=1747534122;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ClOyMhlucZgqqcgXQFq1OGdn3FnzyenLIIB/AbOlZeQ=;
+        b=KQztYmX156CKdYOSSMLtNanbtDmscWxdYG++/3QyK1Hib2ddDaNcUw/N7FwoYJCLc3
+         Job4/aoltFLdzLbrzQm9RY1cIkADxmtTUv/P3hh4z3skZi/dB4ga6JN2qXbKV8zduANL
+         c5TgKOJ2XQVB0yTTZsRXxDRuLf7t28990RdZB5VwQIcMJkoAvOCDpH+/5icWFmklUtjz
+         2taGriTaG3783++Q6rsMzdtr2zxaJIYSiTYpnAHRHHYzqTVmnQmOjc2PoPAT1D8P+24t
+         0YC8I9BAMcvAkDRA3nKpmSpmq5uWj0aZ/t1jDoR9/USER7bV9N0i6W0zeOz2EP5gwRz0
+         xt1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXIRN3fIJCkhlfs1ZZx0Xs/9CvSPHAMdbcZnETsGG7THf7cdDIxOjcfywhOOgVqmfN0zHtlwjZCaRSxLuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytupBwPH3m48mtWy9LEewfGVS9cU/KGN0bbErJUU5uKDLpw2GV
+	awKaQAVY1w3N7bfkhXHqPSW8sqfrX/HPqRrFNN3kpJbLt8rFkRg8qouQPQl2S9uWCrveMm0GVtf
+	vz7EwkMv99LXfQ4U5uRqknA8Z2lU=
+X-Gm-Gg: ASbGncuJWhGV38ajyf/TrFxINUlL4h2CjAomO3ruLUns7AO3FFBEkTDAdnOF5fcZfKq
+	RMxR3zqtKsM/NS0mvMc3im10tlihT/aQ6cXA+aBE/rt4Sfzxa1MD2Ok6BuxZTUY3XRgwWtVveND
+	89kZZ/VqiHBciPHYW47LsB4n40VJqmk6XIRM3F9neTXQ7E
+X-Google-Smtp-Source: AGHT+IF2PhzGd7mOgX0tWj7Z6vinwLYVjeU213A/ddZfEGxSK+Qd5So3trvKUv6fSx63wtK9zaZnFKkdfgqOOiT6+NI=
+X-Received: by 2002:a05:6214:2509:b0:6e8:f99c:7939 with SMTP id
+ 6a1803df08f44-6f6e4858dbamr111203756d6.44.1746929321591; Sat, 10 May 2025
+ 19:08:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH for-next v2 1/2] RDMA/rxe: Implement synchronous prefetch
- for ODP MRs
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- leon@kernel.org, jgg@ziepe.ca, zyjzyj2000@gmail.com
-References: <20250503134224.4867-1-dskmtsd@gmail.com>
- <20250503134224.4867-2-dskmtsd@gmail.com>
- <cdea578b-5570-4a8d-98cc-61081a281a84@linux.dev>
- <b5560914-e613-499d-88c8-82f5255a1dd1@gmail.com>
- <093ee42f-4dd5-4f52-b7a5-ba5e22b18bdc@linux.dev>
- <e07e0ad8-32da-452e-809a-f3dfeb8b56f3@gmail.com>
- <CAEz=LcutW6BZKB-Def3HmV=WrzjKjmAt_WnxPw3Yu45CoV0+Hw@mail.gmail.com>
-Content-Language: en-US
-From: Daisuke Matsuda <dskmtsd@gmail.com>
-In-Reply-To: <CAEz=LcutW6BZKB-Def3HmV=WrzjKjmAt_WnxPw3Yu45CoV0+Hw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+ <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com> <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
+ <CALOAHbCxhL=VM=E5UzNvQYZsrF4zdcQ1-49iEJ1UYvLsurtxCw@mail.gmail.com>
+ <ebfca8f2-40e5-485a-a060-621aa3a22376@gmail.com> <CALOAHbDesDGyokKFSSr3hA1_WnFciQPXe_nboPq9v8OUPLv47g@mail.gmail.com>
+ <20250509051328.GF323143@cmpxchg.org> <CALOAHbA617417UtcwMBJ9Zm_8BbAth57=ngN=tknw8h7nvCwNw@mail.gmail.com>
+ <41e60fa0-2943-4b3f-ba92-9f02838c881b@redhat.com> <CALOAHbAvQDee2=5vsDqj77g5gAGdGpXFBbsC7tpKnCYEDZS3vw@mail.gmail.com>
+ <20250509164654.GA608090@cmpxchg.org>
+In-Reply-To: <20250509164654.GA608090@cmpxchg.org>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Sun, 11 May 2025 10:08:05 +0800
+X-Gm-Features: AX0GCFuXx6aNt3iX3iyRdugZGlhnQTK3V6QST_mQcFhXTae8aR1F8hga1SaSN90
+Message-ID: <CALOAHbBAVELx-fwyoQUH_ypFvT_Zd5ZLjSkAPXxShgCua8ifpA@mail.gmail.com>
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: David Hildenbrand <david@redhat.com>, Usama Arif <usamaarif642@gmail.com>, Zi Yan <ziy@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, shakeel.butt@linux.dev, 
+	riel@surriel.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, May 10, 2025 at 12:47=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.or=
+g> wrote:
+>
+> On Fri, May 09, 2025 at 05:43:10PM +0800, Yafang Shao wrote:
+> > On Fri, May 9, 2025 at 5:31=E2=80=AFPM David Hildenbrand <david@redhat.=
+com> wrote:
+> > >
+> > > On 09.05.25 11:24, Yafang Shao wrote:
+> > > > On Fri, May 9, 2025 at 1:13=E2=80=AFPM Johannes Weiner <hannes@cmpx=
+chg.org> wrote:
+> > > >>
+> > > >> On Fri, May 09, 2025 at 10:15:08AM +0800, Yafang Shao wrote:
+> > > >>> On Fri, May 9, 2025 at 12:04=E2=80=AFAM Usama Arif <usamaarif642@=
+gmail.com> wrote:
+> > > >>>>
+> > > >>>>
+> > > >>>>
+> > > >>>> On 08/05/2025 06:41, Yafang Shao wrote:
+> > > >>>>> On Thu, May 8, 2025 at 12:09=E2=80=AFAM Usama Arif <usamaarif64=
+2@gmail.com> wrote:
+> > > >>>>>>
+> > > >>>>>>
+> > > >>>>>>
+> > > >>>>>> On 07/05/2025 16:57, Zi Yan wrote:
+> > > >>>>>>> On 7 May 2025, at 11:12, Usama Arif wrote:
+> > > >>>>>>>
+> > > >>>>>>>> On 07/05/2025 15:57, Zi Yan wrote:
+> > > >>>>>>>>> +Yafang, who is also looking at changing THP config at cgro=
+up/container level.
+> > > >>>>>
+> > > >>>>> Thanks
+> > > >>>>>
+> > > >>>>>>>>>
+> > > >>>>>>>>> On 7 May 2025, at 10:00, Usama Arif wrote:
+> > > >>>>>>>>>
+> > > >>>>>>>>>> Allowing override of global THP policy per process allows =
+workloads
+> > > >>>>>>>>>> that have shown to benefit from hugepages to do so, withou=
+t regressing
+> > > >>>>>>>>>> workloads that wouldn't benefit. This will allow such type=
+s of
+> > > >>>>>>>>>> workloads to be run/stacked on the same machine.
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> It also helps in rolling out hugepages in hyperscaler conf=
+igurations
+> > > >>>>>>>>>> for workloads that benefit from them, where a single THP p=
+olicy is
+> > > >>>>>>>>>> likely to be used across the entire fleet, and prctl will =
+help override it.
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> An advantage of doing it via prctl vs creating a cgroup sp=
+ecific
+> > > >>>>>>>>>> option (like /sys/fs/cgroup/test/memory.transparent_hugepa=
+ge.enabled) is
+> > > >>>>>>>>>> that this will work even when there are no cgroups present=
+, and my
+> > > >>>>>>>>>> understanding is there is a strong preference of cgroups c=
+ontrols being
+> > > >>>>>>>>>> hierarchical which usually means them having a numerical v=
+alue.
+> > > >>>>>>>>>
+> > > >>>>>>>>> Hi Usama,
+> > > >>>>>>>>>
+> > > >>>>>>>>> Do you mind giving an example on how to change THP policy f=
+or a set of
+> > > >>>>>>>>> processes running in a container (under a cgroup)?
+> > > >>>>>>>>
+> > > >>>>>>>> Hi Zi,
+> > > >>>>>>>>
+> > > >>>>>>>> In our case, we create the processes in the cgroup via syste=
+md. The way we will enable THP=3Dalways
+> > > >>>>>>>> for processes in a cgroup is in the same way we enable KSM f=
+or the cgroup.
+> > > >>>>>>>> The change in systemd would be very similar to the line in [=
+1], where we would set prctl PR_SET_THP_ALWAYS
+> > > >>>>>>>> in exec-invoke.
+> > > >>>>>>>> This is at the start of the process, but you would already k=
+now at the start of the process
+> > > >>>>>>>> whether you want THP=3Dalways for it or not.
+> > > >>>>>>>>
+> > > >>>>>>>> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1c=
+b4d9b28dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
+> > > >>>>>>>
+> > > >>>>>>> You also need to add a new systemd.directives, e.g., MemoryTH=
+P, to
+> > > >>>>>>> pass the THP enablement or disablement info from a systemd co=
+nfig file.
+> > > >>>>>>> And if you find those processes do not benefit from using THP=
+s,
+> > > >>>>>>> you can just change the new "MemoryTHP" config and restart th=
+e processes.
+> > > >>>>>>>
+> > > >>>>>>> Am I getting it? Thanks.
+> > > >>>>>>>
+> > > >>>>>>
+> > > >>>>>> Yes, thats right. They would exactly the same as what we (Meta=
+) do
+> > > >>>>>> for KSM. So have MemoryTHP similar to MemroryKSM [1] and if Me=
+moryTHP is set,
+> > > >>>>>> the ExecContext->memory_thp would be set similar to memory_ksm=
+ [2], and when
+> > > >>>>>> that is set, the prctl will be called at exec_invoke of the pr=
+ocess [3].
+> > > >>>>>>
+> > > >>>>>> The systemd changes should be quite simple to do.
+> > > >>>>>>
+> > > >>>>>> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4=
+d9b28dd4ade7c6ab7be29a/man/systemd.exec.xml#L1978
+> > > >>>>>> [2] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4=
+d9b28dd4ade7c6ab7be29a/src/core/dbus-execute.c#L2151
+> > > >>>>>> [3] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4=
+d9b28dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
+> > > >>>>>
+> > > >>>>> This solution carries a risk: since prctl() does not require an=
+y
+> > > >>>>> capabilities, the task itself could call it and override your m=
+emory
+> > > >>>>> policy. While we could enforce CAP_SYS_RESOURCE to restrict thi=
+s, that
+> > > >>>>> capability is typically enabled by default in containers, leavi=
+ng them
+> > > >>>>> still vulnerable.
+> > > >>>>>
+> > > >>>>> This approach might work for Kubernetes/container environments,=
+ but it
+> > > >>>>> would require substantial code changes to implement securely.
+> > > >>>>>
+> > > >>>>
+> > > >>>> You can already change the memory policy with prctl, for e.g. PR=
+_SET_THP_DISABLE
+> > > >>>> already exists and the someone could use this to slow the proces=
+s down. So the
+> > > >>>> approach this patch takes shouldn't be anymore of a security fix=
+ then what is already
+> > > >>>> exposed by the kernel. I think as you mentioned, if prctl is an =
+issue CAP_SYS_RESOURCE
+> > > >>>> should be used to restrict this.
+> > > >>>
+> > > >>> I believe we should at least require CAP_SYS_RESOURCE to enable T=
+HP,
+> > > >>> since it overrides global system settings. Alternatively,
+> > > >>> CAP_SYS_ADMIN might be even more appropriate, though I'm not enti=
+rely
+> > > >>> certain.
+> > > >>
+> > > >> Hm, could you verbalize a concrete security concern?
+> > > >>
+> > > >> I've never really looked at the global settings as a hard policy, =
+more
+> > > >> as picking a default for the workloads in the system. It's usually
+> > > >> `madvise' or `always', and MADV_HUGEPAGE and MADV_NOHUGEPAGE have =
+long
+> > > >> existed to give applications the ability to refine the global choi=
+ce.
+> > > >>
+> > > >> The prctl should probably respect `never' for consistency, but bey=
+ond
+> > > >> that I don't really see the concern, or how this would allow somet=
+hing
+> > > >> that isn't already possible.
+> > > >
+> > > > I would interpret the always, madvise, and never options as follows=
+:
+> > > > - always
+> > > >    The sysadmin strongly recommends using THP. If a user does not
+> > > > want to use it, they must explicitly disable it.
+>
+> I would call this "kernel mode" or "auto mode", where userspace should
+> *generally* not have to worry about huge pages, but with an option for
+> declaring the odd exceptional case.
+>
+> Both madvise() and unprivileged prctl() currently work, and IMO should
+> continue to work, for declaring exceptions.
+>
+> > > > - madvise
+> > > >   The sysadmin gently encourages the use of THP, but it is only
+> > > > enabled when explicitly requested by the application.
+>
+> And this "user mode" or "manual mode", where applications self-manage
+> which parts of userspace they want to enroll.
+>
+> Both madvise() and unprivileged prctl() should work here as well,
+> IMO. There is no policy or security difference between them, it's just
+> about granularity and usability.
+>
+> > > > - never
+> > > >    The sysadmin discourages the use of THP, and "its use is only pe=
+rmitted
+> > > > with explicit approval" .
+>
+> This one I don't quite agree with, and IMO conflicts with what David
+> is saying as well.
+>
+> > > "never" so far means "no thps, no exceptions". We've had serious THP
+> > > issues in the past, where our workaround until we sorted out the issu=
+e
+> > > for affected customers was to force-disable THPs on that system durin=
+g boot.
+> >
+> > Right, that reflects the current behavior. What we aim to enhance is
+> > by adding the requirement that "its use is only permitted with
+> > explicit approval."
+>
+> I think you're conflating a safety issue with a security issue.
 
-On 2025/05/10 17:04, Greg Sword wrote:
-> On Sat, May 10, 2025 at 3:19 PM Daisuke Matsuda <dskmtsd@gmail.com> wrote:
->>
->> On 2025/05/10 13:43, Zhu Yanjun wrote:
->>>
->>> 在 2025/5/10 4:46, Daisuke Matsuda 写道:
->>>> On 2025/05/10 0:19, Zhu Yanjun wrote:
->>>>> On 03.05.25 15:42, Daisuke Matsuda wrote:
->>>>>> Minimal implementation of ibv_advise_mr(3) requires synchronous calls being
->>>>>> successful with the IBV_ADVISE_MR_FLAG_FLUSH flag. Asynchronous requests,
->>>>>> which are best-effort, will be added subsequently.
->>>>>>
->>>>>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
->>>>>> ---
->>>>>>    drivers/infiniband/sw/rxe/rxe.c     |  7 +++
->>>>>>    drivers/infiniband/sw/rxe/rxe_loc.h | 10 ++++
->>>>>>    drivers/infiniband/sw/rxe/rxe_odp.c | 86 +++++++++++++++++++++++++++++
->>>>>>    3 files changed, 103 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
->>>>>> index 3a77d6db1720..e891199cbdef 100644
->>>>>> --- a/drivers/infiniband/sw/rxe/rxe.c
->>>>>> +++ b/drivers/infiniband/sw/rxe/rxe.c
->>>>>> @@ -34,6 +34,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
->>>>>>        mutex_destroy(&rxe->usdev_lock);
->>>>>>    }
->>>>>> +static const struct ib_device_ops rxe_ib_dev_odp_ops = {
->>>>>> +    .advise_mr = rxe_ib_advise_mr,
->>>>>> +};
->>>>>> +
->>>>>>    /* initialize rxe device parameters */
->>>>>>    static void rxe_init_device_param(struct rxe_dev *rxe, struct net_device *ndev)
->>>>>>    {
->>>>>> @@ -103,6 +107,9 @@ static void rxe_init_device_param(struct rxe_dev *rxe, struct net_device *ndev)
->>>>>>            rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_SRQ_RECV;
->>>>>>            rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_FLUSH;
->>>>>>            rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= IB_ODP_SUPPORT_ATOMIC_WRITE;
->>>>>> +
->>>>>> +        /* set handler for ODP prefetching API - ibv_advise_mr(3) */
->>>>>> +        ib_set_device_ops(&rxe->ib_dev, &rxe_ib_dev_odp_ops);
->>>>>>        }
->>>>>>    }
->>>>>> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
->>>>>> index f7dbb9cddd12..21b070f3dbb8 100644
->>>>>> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
->>>>>> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
->>>>>> @@ -197,6 +197,9 @@ enum resp_states rxe_odp_atomic_op(struct rxe_mr *mr, u64 iova, int opcode,
->>>>>>    int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
->>>>>>                    unsigned int length);
->>>>>>    enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value);
->>>>>> +int rxe_ib_advise_mr(struct ib_pd *pd, enum ib_uverbs_advise_mr_advice advice,
->>>>>> +             u32 flags, struct ib_sge *sg_list, u32 num_sge,
->>>>>> +             struct uverbs_attr_bundle *attrs);
->>>>>>    #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
->>>>>>    static inline int
->>>>>>    rxe_odp_mr_init_user(struct rxe_dev *rxe, u64 start, u64 length, u64 iova,
->>>>>> @@ -225,6 +228,13 @@ static inline enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr,
->>>>>>    {
->>>>>>        return RESPST_ERR_UNSUPPORTED_OPCODE;
->>>>>>    }
->>>>>> +static inline int rxe_ib_advise_mr(struct ib_pd *pd, enum ib_uverbs_advise_mr_advice advice,
->>>>>> +                   u32 flags, struct ib_sge *sg_list, u32 num_sge,
->>>>>> +                   struct uverbs_attr_bundle *attrs)
->>>>>> +{
->>>>>> +    return -EOPNOTSUPP;
->>>>>> +}
->>>>>> +
->>>>>>    #endif /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
->>>>>>    #endif /* RXE_LOC_H */
->>>>>> diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
->>>>>> index 6149d9ffe7f7..e5c60b061d7e 100644
->>>>>> --- a/drivers/infiniband/sw/rxe/rxe_odp.c
->>>>>> +++ b/drivers/infiniband/sw/rxe/rxe_odp.c
->>>>>> @@ -424,3 +424,89 @@ enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
->>>>>>        return RESPST_NONE;
->>>>>>    }
->>>>>> +
->>>>>> +static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
->>>>>> +                   enum ib_uverbs_advise_mr_advice advice,
->>>>>> +                   u32 pf_flags, struct ib_sge *sg_list,
->>>>>> +                   u32 num_sge)
->>>>>> +{
->>>>>> +    struct rxe_pd *pd = container_of(ibpd, struct rxe_pd, ibpd);
->>>>>> +    unsigned int i;
->>>>>> +    int ret = 0;
->>>>>> +
->>>>>> +    for (i = 0; i < num_sge; ++i) {
->>>>>> +        struct rxe_mr *mr;
->>>>>> +        struct ib_umem_odp *umem_odp;
->>>>>> +
->>>>>> +        mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
->>>>>> +                   sg_list[i].lkey, RXE_LOOKUP_LOCAL);
->>>>>> +
->>>>>> +        if (IS_ERR(mr)) {
->>>>>> +            rxe_dbg_pd(pd, "mr with lkey %x not found\n", sg_list[i].lkey);
->>>>>> +            return PTR_ERR(mr);
->>>>>> +        }
->>>>>> +
->>>>>> +        if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
->>>>>> +            !mr->umem->writable) {
->>>>>> +            rxe_dbg_mr(mr, "missing write permission\n");
->>>>>> +            rxe_put(mr);
->>>>>> +            return -EPERM;
->>>>>> +        }
->>>>>> +
->>>>>> +        ret = rxe_odp_do_pagefault_and_lock(mr, sg_list[i].addr,
->>>>>> +                            sg_list[i].length, pf_flags);
->>>>>> +        if (ret < 0) {
->>>>>> +            if (sg_list[i].length == 0)
->>>>>> +                continue;
->>>>>> +
->>>>>> +            rxe_dbg_mr(mr, "failed to prefetch the mr\n");
->>>>>> +            rxe_put(mr);
->>>>>> +            return ret;
->>>>>> +        }
->>>>>> +
->>>>>> +        umem_odp = to_ib_umem_odp(mr->umem);
->>>>>> +        mutex_unlock(&umem_odp->umem_mutex);
->>>>>> +
->>>>>> +        rxe_put(mr);
->>>>>> +    }
->>>>>> +
->>>>>> +    return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
->>>>>> +                     enum ib_uverbs_advise_mr_advice advice,
->>>>>> +                     u32 flags, struct ib_sge *sg_list, u32 num_sge)
->>>>>> +{
->>>>>> +    u32 pf_flags = RXE_PAGEFAULT_DEFAULT;
->>>>>> +
->>>>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH)
->>>>>> +        pf_flags |= RXE_PAGEFAULT_RDONLY;
->>>>>> +
->>>>>> +    if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
->>>>>> +        pf_flags |= RXE_PAGEFAULT_SNAPSHOT;
->>>>>> +
->>>>>> +    /* Synchronous call */
->>>>>> +    if (flags & IB_UVERBS_ADVISE_MR_FLAG_FLUSH)
->>>>>> +        return rxe_ib_prefetch_sg_list(ibpd, advice, pf_flags, sg_list,
->>>>>> +                           num_sge);
->>>>>> +
->>>>>> +    /* Asynchronous call is "best-effort" */
->>>>>
->>>>> Asynchronous call is not implemented now, why does this comment appear?
->>>>
->>>> Even without the 2nd patch, async calls are reported as successful.
->>>
->>>
->>> Async call is not implemented. How to call "async calls are reported as successful"?
->>
->> Please see the manual.
->> cf. https://manpages.debian.org/testing/libibverbs-dev/ibv_advise_mr.3.en.html
->>
->> If IBV_ADVISE_MR_FLAG_FLUSH is not given to 'flags' parameter,
->> then this function 'rxe_ib_advise_mr_prefetch()' simply returns 0.
->> Consequently, ibv_advise_mr(3) and underlying ioctl(2) get no error.
->> This behaviour is allowd in the spec as I quoted in the last reply.
-> 
-> The functionality wasn't implemented, you added the comments first.
-> You're still weaseling when people point this out.
-> 
->>
->> It might be nice to return -EOPNOTSUPP just below the comment instead,
->> but not doing so is acceptable according to the spec. Additionally,
->> such change will be overwritten in the next patch after all.
-> 
-> Move comments to the next patch. In this patch, return -EOPNOTSUPP.
+I appreciate the corrections. English isn't my first language, so I
+occasionally don't use words as precisely as I'd like.
 
-Any opinion from Zhu?
-I may post a new revision to change the intermediate code,
-but the final result after applying the patchset will be the same.
-You are the maintainer of rxe, so I will follow that.
+>
+> David is saying there can be cases where the kernel is broken, and
+> "never" is a production escape hatch to disable the feature until a
+> kernel upgrade for the fix is possible. In such a case, it doesn't
+> make sense to override this decision based on any sort of workload
+> policy, privileged or not.
+>
+> The way I understand you is that you want enrollment (and/or
+> self-management) only for blessed applications.
 
-Thanks,
-Daisuke
+Right.
 
+> Because you don't
+> generally trust workloads in the wild enough to switch the global
+> default away from "never", given the semantics of always/madvise.
 
-> 
-> --G--
-> 
->>
->> Thanks,
->> Daisuke
->>
->>>
->>>
->>> Zhu Yanjun
->>>
->>>> The comment is inserted to show the reason, which is based on the
->>>> description from 'man 3 ibv_advise_mr' as follows:
->>>> ===
->>>> An application may pre-fetch any address range within an ODP MR when using the IBV_ADVISE_MR_ADVICE_PREFETCH or IBV_ADVISE_MR_ADVICE_PREFETCH_WRITE advice. Semantically, this operation is best-effort. That means the kernel does not guarantee that underlying pages are updated in the HCA or the pre-fetched pages would remain resident.
->>>> ===
->>>>
->>>> Thanks,
->>>> Daisuke
->>>>
->>>>>
->>>>> Zhu Yanjun
->>>>>
->>>>>> +
->>>>>> +    return 0;
->>>>>> +}
->>>>>> +
->>>>>> +int rxe_ib_advise_mr(struct ib_pd *ibpd,
->>>>>> +             enum ib_uverbs_advise_mr_advice advice,
->>>>>> +             u32 flags,
->>>>>> +             struct ib_sge *sg_list,
->>>>>> +             u32 num_sge,
->>>>>> +             struct uverbs_attr_bundle *attrs)
->>>>>> +{
->>>>>> +    if (advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH &&
->>>>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
->>>>>> +        advice != IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_NO_FAULT)
->>>>>> +        return -EOPNOTSUPP;
->>>>>> +
->>>>>> +    return rxe_ib_advise_mr_prefetch(ibpd, advice, flags,
->>>>>> +                     sg_list, num_sge);
->>>>>> +}
->>>>>
->>>>
->>
->>
+Historically, we have always set it to 'never.' Due to concerns
+stemming from past incidents, the sysadmins have been hesitant to
+switch it to 'madvise.' However, we=E2=80=99ve now discovered that AI servi=
+ces
+can gain significant performance benefits from it. As a solution, we
+propose enabling THP exclusively for AI services while maintaining the
+global setting as 'never.'
 
+>
+> To me this sounds like you'd need a different mode, call it "blessed";
+> with a privileged interface to control which applications are allowed
+> to madvise/prctl-enable.
+
+This appears to be a viable solution.
+
+--=20
+Regards
+Yafang
