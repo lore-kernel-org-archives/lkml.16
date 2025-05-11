@@ -1,156 +1,138 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2398019EEBD
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 09:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DE01898E9;
+	Sun, 11 May 2025 10:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746957504; cv=none; b=kUsKHmfsef9crObB5ckZaxNzXs9Lbg3MLqClpNaD3Fv/jlPG3tJOc1jiwVqY4r3JveTfD3z32gUm2jo19PJSKih4bG2etqT1V7aCt6Qz81pnEPulOGAGU/KBIKMNV/z4i9trBAz6sZaBMICOn58FtUpJaGJ+ndZt9AOK3ON3/b0=
+	t=1746958007; cv=none; b=ZSxOzF4jsQ1CWmolE/pHW0tpH/ZPV0IxOJ3MfaLl1vMOOufIK7NMz1fkyJYx2McG9kiJBqyaBMhj4/+X83ni3xYcDKqZG4u4hYlYya+eO6XZBOObswMhWgZnEAwzteKKwZLa5Fk+U1XjNlBQUzvMRftFaGzlpex5zKL7Qq/l16E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746957504; c=relaxed/simple;
-	bh=JYic5jH+0L05XJoIFJ1iYa6FaAV0OKg7sLzLsK9sRjo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=pVO5ZXDUbE/bzD41+rmqz8af+t7esOzzi/vqJxWPWjtUQu9KRziRsE1PvW8yJBX1ChChkZ+huUN1SOviBq3nn1+8FnAIUJYrZHJa1V0MGg7MFktbtk0IUE7cTJJ0neH32XCrjJ22YfWNM/AS5DJlUsE6nV4Ucp0xUo7jH6jHD0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d93e2ac7fbso81536705ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:58:22 -0700 (PDT)
+	s=arc-20240116; t=1746958007; c=relaxed/simple;
+	bh=xgX6hEOmFUdS4ONAM2hrKrcnp0P1biKUOCv2eqldCdQ=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KrMCgRFoDxtTJXbBcHzgcMMz2GMDnCBePX1eNsux/HhMrWnb/k7QGP5qfpubzCg+AgYmqnolLen9CS80NSalY7c41pUWXy3GNU8NCkwH0en6VUxvKrmUdFkzcKArmUsNBFcTB9N6fdPU+bfQU4QlXACXpW8MfB6w/W8mw40FfHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fawpbh+A; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fawpbh+A"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a0b933f214so1350314f8f.0;
+        Sun, 11 May 2025 03:06:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746958004; x=1747562804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=3lbLvQJJt49Ss/0QpE+/vZ2gEhOiwMel7wTejYzG5Mw=;
+        b=Fawpbh+AS9OBxPNTZAYJobYtoMa5Ll9r1oEFgD74Wts43KvvEJLOfmoi1rT9PvFV6E
+         oY71vmXDvvrnFH/xe95i7KK6nwhTT9CE1ylDOXz4o2Rm51Yd0nwTZ1A05pG/DIFiXOrm
+         J1b7I/bwTclE/9kppFaOlnHZluMjO3vvF0NsVSDqJ7eu3P9Iu9MKQlJGvCOLKXaFLhfM
+         fLrP1PXLZTe8nbC/wOEQbqgloENHmWPI6HqwjxFgc8In2KD7F/hZdJJx9lTVGT16gZ/b
+         jabcv02JGdt05EAViuZXwyamRitHPFINArOdUWFXKkePeTL+iKHhyENCDlmpVDN2f1bV
+         S+aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746957502; x=1747562302;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JV1UGxlHMeKfbN3pU5mb3+CywSKZHPf7uWSFs6WwF4s=;
-        b=TfCTZUnjKItIm2DWhwERqBRvoEvraST8/Hkst06e63j/J8YmJzXKQqcLu438N64jze
-         IgZIe7POyRwXxD0JQ0jI+s4pdG/r5x1kBt6ZjIE4E8KznyYYYZWsgr12XW5fk1nFcy01
-         iWrZazPaRCEX8INESm/FrQiLqo+ii4iIbLztZ2siy8OoLknT28JGO4n5ykYQCOd9Y0kV
-         3t5TZ92WGrpkbYyI8dD46O8NeDT9Gtm1hR139Lu/M7CPkDDt+cdhIw/aHOsrzc6NtxKK
-         Ya2MJlNQTqnxxNvPbaTQobs2MiwyKXcWxTCyevo7pVTqOe/fRi7FMuSwoM5oG/VqriQ9
-         I04w==
-X-Forwarded-Encrypted: i=1; AJvYcCW6FV0mfn+gVucprWw111GKMRV2Hyq5bFjL5eJe0EpAugVKfyvWtE1TfRzQNMSjtL6EGKxKP1VUZoudWaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgOXMENSpWp9PX6qyZZeGUHyHfi6G8l0B2MdwEZntWRaQ84H3O
-	0FQGS9K1db72ZEClNu/Uh735zPiWEoo/6FEHkuV/rjzglQN35noIiF+2db63qaoiVgB6hoM3hcz
-	QsN5OoaXA4YL2DhZL+rEUiadIM2+Aq1VHZYJ4EwGR85OP7luZiBUXpLw=
-X-Google-Smtp-Source: AGHT+IHApeyE6N3JGUwK3p957j2I9KW/eyiUXTuU8WcfuZUjX1KQzWc6gro8XdnrPAHkngz9aBYeZX4jwSPb72FtCFoRIGc5pk51
+        d=1e100.net; s=20230601; t=1746958004; x=1747562804;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3lbLvQJJt49Ss/0QpE+/vZ2gEhOiwMel7wTejYzG5Mw=;
+        b=IqK0mkhsC64zVM6q7K9zAB0NKgkQcGLyNsLRG1WYnYo+sUyG53u/UQ7P4yENzbyWnm
+         d59cEeQ6Xs3NpYRw7jl6Dv4VyE7e8+1H6Xb75w3QKgo5eO/SzaQzcN5DaM30qKHqXrFk
+         NSIltYtdOw3JWfmidZbe/zIf2v9qnD0oL1ouS6O5m355XkP4M8dikcHy8nA9UsV1zjfS
+         2xf8JAeIFwKjE2Z58DHKwGNgYsiEqPfqB1sV5W93r9E7Dspc8/Go9PrzzQLuIDL/bvZv
+         p1qYjKDuJDUn6MsEoQS/SpueeOUbTaX1uG5jj1KD6gmXGuLudo2rgxaM5K0Ywgywzsem
+         Im4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVRj2eoZdAuTuHukmruwkjLPplSO3WbCVU8OGwPtmnVX25WGVaWGbxeC8rZoahR3uYkhl7O775J@vger.kernel.org, AJvYcCWO+TqCV4pqKpk2ubQK9am2Zq/4vCbs4Zog0u6fkyR1dGloVjQcqV33ZrTOCfHfq3sGpX3ObRdY94G1FKU=@vger.kernel.org, AJvYcCXdplOGC6IY4fcaRroCx3IHZ1kHHrEFyVjncJxyja7qtJccoEV4IEaMfDaZgNEIZq1sA2yjuXZe@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZfoibmgHUu8JOVwCiQ7D6McuI2WSFNiMzb+nBmudtZ7EB9991
+	TNx6aUpb5D3/7TdldAtT+hOwQHDixzhqf02MasHFWyguzltQQFbl
+X-Gm-Gg: ASbGnctZI2ctCBnF1uYINaMuXLe2gqG4S2wzGTGcLZBuXfQz+GtG5K1/o+xmrdARARq
+	/se/KoB0IBZZl7A1ciUmX30ur/aaOLBru4jzjCRbuPO6NEMqgbnBWZmzPQNmFDeLIvyJ/5XrKh8
+	gwk5GIm6KsTILy3sQsH9alYnx4UhfWQT7N6gF0Xq6havJwIqCjJmSIWvl3OllA64eVK5TtMls+R
+	ZLSg8EKYLwFtM/1HQBSChMlbdkCF6ghAEX2gxLPvJ8pgRMtVfQH3qAfBiZT6J3hXEdbkgZPTr4A
+	so3e5Zy/ZqRIXlZnHbC8gTuDFG4mpgFgILwDAsHCEbkL+Xz26kls1BsMCAd1/EbImZTmSnSWw86
+	IdavcBuc=
+X-Google-Smtp-Source: AGHT+IFNk5pQks3/a9jqoV+cf8L7WnYJZgefSs3zx7emLf7m8t2SA0H3W2cjd89NKtDYgBiJn0fb0g==
+X-Received: by 2002:a05:6000:2ce:b0:391:952:c728 with SMTP id ffacd0b85a97d-3a1f6427719mr7273435f8f.4.1746958003552;
+        Sun, 11 May 2025 03:06:43 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5c5sm8934454f8f.96.2025.05.11.03.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 03:06:43 -0700 (PDT)
+Message-ID: <682076b3.5d0a0220.2603de.62cd@mx.google.com>
+X-Google-Original-Message-ID: <aCB2sVejCc1-DE1D@Ansuel-XPS.>
+Date: Sun, 11 May 2025 12:06:41 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [net PATCH] net: phy: aquantia: fix wrong GENMASK define for
+ LED_PROV_ACT_STRETCH
+References: <20250511090619.3453606-1-ansuelsmth@gmail.com>
+ <aCB0dkhiO49NJhyX@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1945:b0:3d4:70ab:f96f with SMTP id
- e9e14a558f8ab-3da7e1e73f3mr108803955ab.8.1746957502153; Sun, 11 May 2025
- 02:58:22 -0700 (PDT)
-Date: Sun, 11 May 2025 02:58:22 -0700
-In-Reply-To: <681d2f16.050a0220.a19a9.011f.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682074be.050a0220.f2294.002c.GAE@google.com>
-Subject: Re: [syzbot] [io-uring?] [usb?] BUG: unable to handle kernel NULL
- pointer dereference in module_kobj_release
-From: syzbot <syzbot+3ea73421f5aa3f339e9e@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCB0dkhiO49NJhyX@shell.armlinux.org.uk>
 
-syzbot has found a reproducer for the following issue on:
+On Sun, May 11, 2025 at 10:57:10AM +0100, Russell King (Oracle) wrote:
+> On Sun, May 11, 2025 at 11:06:17AM +0200, Christian Marangi wrote:
+> > In defining VEND1_GLOBAL_LED_PROV_ACT_STRETCH there was a typo where the
+> > GENMASK definition was swapped.
+> > 
+> > Fix it to prevent any kind of misconfiguration if ever this define will
+> > be used in the future.
+> 
+> I thought GENMASK() was supposed to warn about this kind of thing. I've
+> questioned in the past whether GENMASK() is better than defining fields
+> with hex numbers, and each time I see another repeat of this exact case,
+> I re-question whether GENMASK() actually gives much benefit over hex
+> numbers because it's just too easy to get the two arguments to
+> GENMASK() swapped and it's never obvious that's happened.
+>
 
-HEAD commit:    c32f8dc5aaf9 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e8f4d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4635ffd6ad5b4a
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ea73421f5aa3f339e9e
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ae5670580000
+Maybe there are warning but since this define wasn't actually used they
+are not triggered?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b921498959d4/disk-c32f8dc5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/04e6ad946c4b/vmlinux-c32f8dc5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d4f0d8db50ee/Image-c32f8dc5.gz.xz
+Honestly GENMASK is a saviour as from the dev point it's much easier to
+understand the mask this way than raw hex.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ea73421f5aa3f339e9e@syzkaller.appspotmail.com
+Also most of the programming documentation (or at least the good one)
+always use this pattern of defining a table with range of bits soo
+translating that to the driver with the define is only a matter of
+copying the range number.
 
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-kobject: kobject_add_internal failed for raw_gadget with -EEXIST, don't try to register things with the same name in the same directory.
-Unable to handle kernel paging request at virtual address dfff800000000004
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-Mem abort info:
-  ESR = 0x0000000096000005
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x05: level 1 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[dfff800000000004] address between user and kernel address ranges
-Internal error: Oops: 0000000096000005 [#1]  SMP
-Modules linked in:
-CPU: 1 UID: 0 PID: 6649 Comm: syz.0.16 Not tainted 6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : kasan_byte_accessible+0x10/0x20 mm/kasan/generic.c:199
-lr : __kasan_check_byte+0x20/0x54 mm/kasan/common.c:556
-sp : ffff8000a37576d0
-x29: ffff8000a37576d0 x28: ffff80008f311000 x27: ffff0000c7080000
-x26: ffff80008add4a50 x25: 0000000000000000 x24: 0000000000000001
-x23: 0000000000000000 x22: 0000000000000020 x21: 0000000000000020
-x20: 0000000000000000 x19: ffff80008add4a50 x18: 1fffe0003386ce76
-x17: 0000000000000000 x16: ffff80008adb410c x15: 0000000000000001
-x14: 1fffe00018fbd927 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff600018fbd928 x10: 0000000000000003 x9 : dfff800000000000
-x8 : 0000000000000004 x7 : 0000000000000001 x6 : ffff8000804f0148
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
-x2 : 0000000000000000 x1 : ffff80008add4a50 x0 : 0000000000000020
-Call trace:
- kasan_mem_to_shadow include/linux/kasan.h:64 [inline] (P)
- kasan_byte_accessible+0x10/0x20 mm/kasan/generic.c:199 (P)
- kasan_check_byte include/linux/kasan.h:399 [inline]
- lock_acquire+0xb0/0x2e0 kernel/locking/lockdep.c:5840
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x5c/0x7c kernel/locking/spinlock.c:162
- complete_with_flags kernel/sched/completion.c:20 [inline]
- complete+0x30/0x1a0 kernel/sched/completion.c:47
- module_kobj_release+0x40/0x50 kernel/params.c:946
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x2b0/0x438 lib/kobject.c:737
- lookup_or_create_module_kobject+0x150/0x16c kernel/params.c:783
- module_add_driver+0xb8/0x2dc drivers/base/module.c:46
- bus_add_driver+0x328/0x5b0 drivers/base/bus.c:682
- driver_register+0x220/0x30c drivers/base/driver.c:249
- usb_gadget_register_driver_owner+0xe4/0x250 drivers/usb/gadget/udc/core.c:1700
- raw_ioctl_run drivers/usb/gadget/legacy/raw_gadget.c:595 [inline]
- raw_ioctl+0xfc4/0x33e8 drivers/usb/gadget/legacy/raw_gadget.c:1306
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-Code: d503245f d343fc08 d2d00009 f2fbffe9 (38696908) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	d503245f 	bti	c
-   4:	d343fc08 	lsr	x8, x0, #3
-   8:	d2d00009 	mov	x9, #0x800000000000        	// #140737488355328
-   c:	f2fbffe9 	movk	x9, #0xdfff, lsl #48
-* 10:	38696908 	ldrb	w8, [x8, x9] <-- trapping instruction
+It's also worth to consider that converting bit range to raw hex might
+also introduce error and probably nobody would ever notice them compared
+to the much clear GENMASK macro.
 
+Aside from this, if no check are placed for GENMASK macro then they
+should be easy to implement? Simple logic should be applied like
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+GENMASK(x, y)
+
+x > y should be always true.
+
+Actually I wonder...
+
+with GENMASK(0, 1) what kind of mask is getting created?
+
+> I don't remember there being a dribble of patches in the past
+> correcting bitfields defined using hex numbers, but that seems common
+> with GENMASK().
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
+-- 
+	Ansuel
