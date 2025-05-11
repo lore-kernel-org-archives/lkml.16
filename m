@@ -1,337 +1,1357 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E5D1E9B0B;
-	Sun, 11 May 2025 21:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E6726ADD
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 21:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746999661; cv=none; b=W70f9yjX8b2a1OmmWv+LnLrxrn7GOqBDm01R/9B/hTnrr1kPuQapB1q12+6Ome2DzN0SB8ku/UCZpv0yMnD0JQlMMoILc4GQwlAY6/0WDOdQ1F6g6YMQYmXmRrp+xQaUHvSEcO9S33Istqy4w5ZqZNamBXBnlK+GsmF7nxW8its=
+	t=1746999748; cv=none; b=svBxIqIOLVHgmtc9RNtzYk7j9YpxN9QEGwceCumquexfGQUms+yLy1cByXccfWF+eJVMuWsfJm0eIfhCl7ySQt3uc1sVuAulXv/kI7S+I3lW55Ja9npi6KeZRYw98i7Z4XGuMrgHUCylQOXpdS3nle6HgA8gs7kEfcb2u/Lu4Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746999661; c=relaxed/simple;
-	bh=m5YqWs3A+JJxDq/2ebw9Aqpwy9KmfxthvlW6q+0Jdko=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=toChMjOHLn5zRzvJPQ+njfoVU7R55FGwccGSS/qtczb+pdSbhIWT6SvSNy10vvPAP4Os+eUFKBf7YZ2G5SOuechElbYXKBJp5WwSVUUGlTDyw258i4NRET7sXBHF76cQwwfzKkydTFCo6MlJbAwOiMrYLmM324utUgNe2CAn70s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxM2b1hZ; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxM2b1hZ"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad2440926adso155807466b.1;
-        Sun, 11 May 2025 14:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746999658; x=1747604458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CueOPRpV/a77O5bokU3d6RkibO4gTHAeRmkprjLnfVc=;
-        b=dxM2b1hZVAT0M7n8hRtt2Uq7ui0+lYznEMPVeNlw7EwfzG2YEeWftJIKftBwZKmYBd
-         UE6r2niLZ5eTnz2k399TdT3aA38eEkfGPFNkFlV5eHPYqjqVZZ4VyrKOikZ4Le7zGcb/
-         ZGD3ThwO7uKgZyFOhknRKau3x+qXWTo7in9wR8gzr10YKegpJg6L1pK6QANpj0Y+3ZC2
-         5ZobuZdX2GQIM4Z7DXD3jMPeT42Hwv9+lCUdKOjTIWPBIax92x2yJYY5p2K+rC/T+kkz
-         p9fPiwIVOHmN+T/mKifjz6NKfSRnpH0bT9+gq+h9Gxh91HrZahXNE3H08RcbRiXAT1nP
-         bubg==
+	s=arc-20240116; t=1746999748; c=relaxed/simple;
+	bh=LXJMFWnBk4N9pTyqmyl6LXkVY936Ha4zgZdwMo/kEQY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=nFUcvfRYujs7E5JRuQgNnbMC3WxnB3WxWtSXsGlkq/LN3c7AvXvGizVlJLTW81ae7ZVV2BJge9XcgzWA0YhDM9tOolS490DaUJr2513qmJUfgefBZp2DQjkRT6N7hO20GVzRoGqrbSMCUG/XXUDZ1dLDTx1bG5H9AlOzqkUQOZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d94fe1037cso45141465ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 14:42:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746999658; x=1747604458;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CueOPRpV/a77O5bokU3d6RkibO4gTHAeRmkprjLnfVc=;
-        b=wPrB6qz7QYsTLgLyb38+hOAd4gOS5sfF1DEixqnvP8oXSwEtLxFwHeoOSq6c861W91
-         BARh3utsa9jGMYuT+gqyOCv5hfQDPDjP5sexubBhYWOkkOB86Lg2BOafRhiTUUi1A4cO
-         iAptkUO+alZ7OfDvlr7eEfshxtNyOCVTmY9GmI1IE5dBYDIpAwUNWqSL+cn/QGom2JkW
-         25f27rr5rfmVX/iOWhvQ+pI06d0X32JxBSwGT+eHP5drQMXkISIKs4GL6UQN1g+khrN6
-         51cf6pXAlvUgvzAJ3nHAwnBT082/n21HnA9mTu+AbRLvt6reOfMJC46ORZLTB3iI809y
-         Qcjg==
-X-Forwarded-Encrypted: i=1; AJvYcCURr/fQpA6uI7F6M5eGQV7fk6u10Nn1UdiRvtIwCDqFP/l9VFQnHlcsyXFsoyu4zSSoyFMUmTEV2KW6DVI=@vger.kernel.org, AJvYcCUoye6ziZXkLtzK1+f8wdMouoEL7tlmZGTyD1VQ1KSTPdyHk0g+M2ib1xovbBKRGKe6VvJCeTWG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH+YJPKlKBgbt5BtWUeyoiaUHvmJX6uVhWG65qv8xyJl6d5ia9
-	xTZXbx87LkrBevl1/cCN+YOX87ZlgQPr+Daxjp3/uGVupP+iBmlw
-X-Gm-Gg: ASbGncsfH9/IZuQQzrzwdQ/hStE6i8YkG3WbhGHuNkeLupaRC+f88ELZnqaRSUdf4/S
-	nTroVit3NgXolQTiYT3MtDSFwTPPke1fLiCPFe7FdtgipuGvpHvtFSFCw/x/Op4JNGSVDoBHGK2
-	bKoWN5+LF0x1RYy5uq1RSDujXNAc/VJMFvqJ/qqYkIaytNsEEeS0nEWFIEMvxdg1gqmq0PFUIQ0
-	94NsYFIVXVc9TVYTlGoPFyDCgJUov17eUvW0ThEUhJW8nKuN2mh6xmv5tIl2fidMlfzXE3Qvi4t
-	qLtDLLskRwbkzVnPqPhOVe6xrIV2x8mhWdxPokqimGLhVraAbTjaOstsIyygc9BmWxRSb+z/
-X-Google-Smtp-Source: AGHT+IGyn0ofLXJZjQCGtVxaifRfN0pWuzdUCoxClKekA4d7icx5aqxy2DGVpXDrT6uOJWc9eT5QEw==
-X-Received: by 2002:a17:907:8a8f:b0:ad2:313f:f550 with SMTP id a640c23a62f3a-ad23140714emr635144166b.29.1746999657796;
-        Sun, 11 May 2025 14:40:57 -0700 (PDT)
-Received: from debian-vm.localnet ([2a01:4b00:d20c:cd03:20c:29ff:fe56:c86])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2193495bdsm523315866b.70.2025.05.11.14.40.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 14:40:57 -0700 (PDT)
-From: zakkemble@gmail.com
-To: Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Zak Kemble <zakkemble@gmail.com>
-Subject: [PATCH] net: bcmgenet: tidy up stats, expose more stats in ethtool
-Date: Sun, 11 May 2025 22:40:36 +0100
-Message-Id: <20250511214037.2805-1-zakkemble@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        d=1e100.net; s=20230601; t=1746999744; x=1747604544;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xcH+iCP8HyjQKhFK9npmu5UQTS+dc+8Qnc+eoK1DVCA=;
+        b=rsPtMdcyGSMDWNCHBiKu1XYj+Zr/dD6CpdIEgVSP2aun8wK6hYAFpjSYkT1h7uMQIM
+         V3ymx4Zs3Xgz5PAalnZEt5LOmxfyVB0VFluA+HBkRKAJZGya1krzQ71YR/efhbLH/SCL
+         /sdeBmSZSvKrT06TWA+RhWwLivt1YVErYAtAagPVFGwiHRbIcpV69a9uuQI6p+xQPDdp
+         /JjyO+/jfzdoeKHFMl/Ola+EY0NNa5lHFQZgqWzFyhF5Aqflz2VRCdvj2RETga6beSLP
+         lD0bW0F7f1rygnhT3ifYCql36eoeDiiArHgOnFD0zbFrCB2yvDnpkvLz9gsN/+aIkK4o
+         4iag==
+X-Forwarded-Encrypted: i=1; AJvYcCUQZBFRaRU964EbXHSY7mR3tqE8CG2Ii31RRuHirl9zdB3IO09xcdf9T1q4wE5tPnfrfg5R5eDRPxf1PRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhOi6sJtTF+odGFRG0LXMIw+yj4DRAwSlUQ1eUeLBieUesKCuA
+	wlejGh0gTF2KgQFbAVh3vG5XNpNYTIcqvCG0+7jcJkV3F4cE3RQHAVyDBfLqrniqkfeTu1+pxgz
+	6Mn3igGezwD87jNLUPMEbOyrpqckuH/EuTyn+1zeRrqFCPuhDR/KqS5Q=
+X-Google-Smtp-Source: AGHT+IE9y4m1Al2i2ijRSt5Qgp1qV8QrHPe2IT2WSs2VAPOXp3B8dXWSGuVlooQbrfQaDNjfTb9zYMJIc7iLItmRJOeK9UliWKSs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2586:b0:3d3:fdcc:8fb8 with SMTP id
+ e9e14a558f8ab-3da7e1e779amr113396385ab.10.1746999743898; Sun, 11 May 2025
+ 14:42:23 -0700 (PDT)
+Date: Sun, 11 May 2025 14:42:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682119bf.050a0220.f2294.0040.GAE@google.com>
+Subject: [syzbot] [netfs?] KASAN: slab-out-of-bounds Read in iov_iter_revert
+From: syzbot <syzbot+25b83a6f2c702075fcbc@syzkaller.appspotmail.com>
+To: dhowells@redhat.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netfs@lists.linux.dev, pc@manguebit.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Zak Kemble <zakkemble@gmail.com>
+Hello,
 
-This patch exposes more statistics counters in ethtool and tidies up the
-counters so that they are all per-queue. The netdev counters are now only
-updated synchronously in bcmgenet_get_stats instead of a mix of sync/async
-throughout the driver. Hardware discarded packets are now counted in their
-own missed stat instead of being lumped in with general errors.
+syzbot found the following issue on:
 
-Signed-off-by: Zak Kemble <zakkemble@gmail.com>
+HEAD commit:    d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=178a8670580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c4b1a03f36d77776
+dashboard link: https://syzkaller.appspot.com/bug?extid=25b83a6f2c702075fcbc
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/2860fea791b5/disk-d76bb1eb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6ad835ce04a2/vmlinux-d76bb1eb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6c0ebeae233a/bzImage-d76bb1eb.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+25b83a6f2c702075fcbc@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iov_iter_revert lib/iov_iter.c:633 [inline]
+BUG: KASAN: slab-out-of-bounds in iov_iter_revert+0x443/0x5a0 lib/iov_iter.c:611
+Read of size 4 at addr ffff8880307a4678 by task kworker/u8:9/3466
+
+CPU: 0 UID: 0 PID: 3466 Comm: kworker/u8:9 Not tainted 6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iov_iter_revert lib/iov_iter.c:633 [inline]
+ iov_iter_revert+0x443/0x5a0 lib/iov_iter.c:611
+ netfs_retry_write_stream fs/netfs/write_retry.c:44 [inline]
+ netfs_retry_writes+0x166d/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 32 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff8880307a4fc0 pfn:0x307a4
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff88801b441780 ffffea0000c9f9d0 ffffea0001f01990
+raw: ffff8880307a4fc0 0000000000400038 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                                ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iov_iter_revert lib/iov_iter.c:633 [inline]
+BUG: KASAN: slab-out-of-bounds in iov_iter_revert+0x521/0x5a0 lib/iov_iter.c:611
+Read of size 4 at addr ffff8880307a4668 by task kworker/u8:9/3466
+
+CPU: 0 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iov_iter_revert lib/iov_iter.c:633 [inline]
+ iov_iter_revert+0x521/0x5a0 lib/iov_iter.c:611
+ netfs_retry_write_stream fs/netfs/write_retry.c:44 [inline]
+ netfs_retry_writes+0x166d/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 16 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff8880307a4fc0 pfn:0x307a4
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff88801b441780 ffffea0000c9f9d0 ffffea0001f01990
+raw: ffff8880307a4fc0 0000000000400038 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                          ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iov_iter_revert lib/iov_iter.c:633 [inline]
+BUG: KASAN: slab-out-of-bounds in iov_iter_revert+0x521/0x5a0 lib/iov_iter.c:611
+Read of size 4 at addr ffff8880307a4658 by task kworker/u8:9/3466
+
+CPU: 1 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iov_iter_revert lib/iov_iter.c:633 [inline]
+ iov_iter_revert+0x521/0x5a0 lib/iov_iter.c:611
+ netfs_retry_write_stream fs/netfs/write_retry.c:44 [inline]
+ netfs_retry_writes+0x166d/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff8880307a4fc0 pfn:0x307a4
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000200 ffff88801b441780 ffffea0000c9f9d0 ffffea0001f01990
+raw: ffff8880307a4fc0 0000000000400038 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                    ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iov_iter_bvec_advance lib/iov_iter.c:504 [inline]
+BUG: KASAN: slab-out-of-bounds in iov_iter_advance+0x652/0x6c0 lib/iov_iter.c:576
+Read of size 4 at addr ffff8880307a4658 by task kworker/u8:9/3466
+
+CPU: 0 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iov_iter_bvec_advance lib/iov_iter.c:504 [inline]
+ iov_iter_advance+0x652/0x6c0 lib/iov_iter.c:576
+ netfs_reissue_write+0x13d/0x240 fs/netfs/write_issue.c:250
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x307a4
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b441780 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: 00 00 00 fc fc fc fc fc 00 00 00 fc fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                    ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iov_iter_bvec_advance lib/iov_iter.c:504 [inline]
+BUG: KASAN: slab-out-of-bounds in iov_iter_advance+0x652/0x6c0 lib/iov_iter.c:576
+Read of size 4 at addr ffff8880307a4668 by task kworker/u8:9/3466
+
+CPU: 0 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iov_iter_bvec_advance lib/iov_iter.c:504 [inline]
+ iov_iter_advance+0x652/0x6c0 lib/iov_iter.c:576
+ netfs_reissue_write+0x13d/0x240 fs/netfs/write_issue.c:250
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 16 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x307a4
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b441780 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                          ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iov_iter_bvec_advance lib/iov_iter.c:504 [inline]
+BUG: KASAN: slab-out-of-bounds in iov_iter_advance+0x652/0x6c0 lib/iov_iter.c:576
+Read of size 4 at addr ffff8880307a4678 by task kworker/u8:9/3466
+
+CPU: 1 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iov_iter_bvec_advance lib/iov_iter.c:504 [inline]
+ iov_iter_advance+0x652/0x6c0 lib/iov_iter.c:576
+ netfs_reissue_write+0x13d/0x240 fs/netfs/write_issue.c:250
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 32 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x307a4
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b441780 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                                ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: wild-memory-access in memcpy_from_iter lib/iov_iter.c:73 [inline]
+BUG: KASAN: wild-memory-access in iterate_bvec include/linux/iov_iter.h:123 [inline]
+BUG: KASAN: wild-memory-access in iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+BUG: KASAN: wild-memory-access in iterate_and_advance include/linux/iov_iter.h:328 [inline]
+BUG: KASAN: wild-memory-access in __copy_from_iter lib/iov_iter.c:249 [inline]
+BUG: KASAN: wild-memory-access in _copy_from_iter+0x8c9/0x15b0 lib/iov_iter.c:260
+Read of size 50 at addr ffe728a1399fbe06 by task kworker/u8:9/3466
+
+CPU: 0 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ __asan_memcpy+0x23/0x60 mm/kasan/shadow.c:105
+ memcpy_from_iter lib/iov_iter.c:73 [inline]
+ iterate_bvec include/linux/iov_iter.h:123 [inline]
+ iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+ iterate_and_advance include/linux/iov_iter.h:328 [inline]
+ __copy_from_iter lib/iov_iter.c:249 [inline]
+ _copy_from_iter+0x8c9/0x15b0 lib/iov_iter.c:260
+ copy_from_iter include/linux/uio.h:228 [inline]
+ copy_from_iter_full include/linux/uio.h:245 [inline]
+ pdu_write_u net/9p/protocol.c:234 [inline]
+ p9pdu_vwritef+0x2da/0x1d30 net/9p/protocol.c:614
+ p9_client_prepare_req+0x247/0x4d0 net/9p/client.c:651
+ p9_client_rpc+0x1c4/0xc50 net/9p/client.c:691
+ p9_client_write+0x245/0x6f0 net/9p/client.c:1648
+ v9fs_issue_write+0xe3/0x1b0 fs/9p/vfs_addr.c:59
+ netfs_do_issue_write+0x95/0x110 fs/netfs/write_issue.c:239
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iterate_bvec include/linux/iov_iter.h:117 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance include/linux/iov_iter.h:328 [inline]
+BUG: KASAN: slab-out-of-bounds in __copy_from_iter lib/iov_iter.c:249 [inline]
+BUG: KASAN: slab-out-of-bounds in _copy_from_iter+0x132f/0x15b0 lib/iov_iter.c:260
+Read of size 4 at addr ffff8880307a465c by task kworker/u8:9/3466
+
+CPU: 1 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iterate_bvec include/linux/iov_iter.h:117 [inline]
+ iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+ iterate_and_advance include/linux/iov_iter.h:328 [inline]
+ __copy_from_iter lib/iov_iter.c:249 [inline]
+ _copy_from_iter+0x132f/0x15b0 lib/iov_iter.c:260
+ copy_from_iter include/linux/uio.h:228 [inline]
+ copy_from_iter_full include/linux/uio.h:245 [inline]
+ pdu_write_u net/9p/protocol.c:234 [inline]
+ p9pdu_vwritef+0x2da/0x1d30 net/9p/protocol.c:614
+ p9_client_prepare_req+0x247/0x4d0 net/9p/client.c:651
+ p9_client_rpc+0x1c4/0xc50 net/9p/client.c:691
+ p9_client_write+0x245/0x6f0 net/9p/client.c:1648
+ v9fs_issue_write+0xe3/0x1b0 fs/9p/vfs_addr.c:59
+ netfs_do_issue_write+0x95/0x110 fs/netfs/write_issue.c:239
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 4 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x307a4
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b441780 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                    ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iterate_bvec include/linux/iov_iter.h:120 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance include/linux/iov_iter.h:328 [inline]
+BUG: KASAN: slab-out-of-bounds in __copy_from_iter lib/iov_iter.c:249 [inline]
+BUG: KASAN: slab-out-of-bounds in _copy_from_iter+0x1459/0x15b0 lib/iov_iter.c:260
+Read of size 4 at addr ffff8880307a4658 by task kworker/u8:9/3466
+
+CPU: 1 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iterate_bvec include/linux/iov_iter.h:120 [inline]
+ iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+ iterate_and_advance include/linux/iov_iter.h:328 [inline]
+ __copy_from_iter lib/iov_iter.c:249 [inline]
+ _copy_from_iter+0x1459/0x15b0 lib/iov_iter.c:260
+ copy_from_iter include/linux/uio.h:228 [inline]
+ copy_from_iter_full include/linux/uio.h:245 [inline]
+ pdu_write_u net/9p/protocol.c:234 [inline]
+ p9pdu_vwritef+0x2da/0x1d30 net/9p/protocol.c:614
+ p9_client_prepare_req+0x247/0x4d0 net/9p/client.c:651
+ p9_client_rpc+0x1c4/0xc50 net/9p/client.c:691
+ p9_client_write+0x245/0x6f0 net/9p/client.c:1648
+ v9fs_issue_write+0xe3/0x1b0 fs/9p/vfs_addr.c:59
+ netfs_do_issue_write+0x95/0x110 fs/netfs/write_issue.c:239
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x307a4
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b441780 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                    ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iterate_bvec include/linux/iov_iter.h:129 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance include/linux/iov_iter.h:328 [inline]
+BUG: KASAN: slab-out-of-bounds in __copy_from_iter lib/iov_iter.c:249 [inline]
+BUG: KASAN: slab-out-of-bounds in _copy_from_iter+0x1416/0x15b0 lib/iov_iter.c:260
+Read of size 4 at addr ffff8880307a4658 by task kworker/u8:9/3466
+
+CPU: 1 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iterate_bvec include/linux/iov_iter.h:129 [inline]
+ iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+ iterate_and_advance include/linux/iov_iter.h:328 [inline]
+ __copy_from_iter lib/iov_iter.c:249 [inline]
+ _copy_from_iter+0x1416/0x15b0 lib/iov_iter.c:260
+ copy_from_iter include/linux/uio.h:228 [inline]
+ copy_from_iter_full include/linux/uio.h:245 [inline]
+ pdu_write_u net/9p/protocol.c:234 [inline]
+ p9pdu_vwritef+0x2da/0x1d30 net/9p/protocol.c:614
+ p9_client_prepare_req+0x247/0x4d0 net/9p/client.c:651
+ p9_client_rpc+0x1c4/0xc50 net/9p/client.c:691
+ p9_client_write+0x245/0x6f0 net/9p/client.c:1648
+ v9fs_issue_write+0xe3/0x1b0 fs/9p/vfs_addr.c:59
+ netfs_do_issue_write+0x95/0x110 fs/netfs/write_issue.c:239
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x307a4
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b441780 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:2618 [inline]
+ new_slab+0x244/0x340 mm/slub.c:2672
+ ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __kmalloc_cache_noprof+0xfb/0x3e0 mm/slub.c:4353
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ slab_free_hook mm/slub.c:2332 [inline]
+ slab_free mm/slub.c:4642 [inline]
+ kmem_cache_free+0x148/0x4d0 mm/slub.c:4744
+ exit_mmap+0x511/0xb90 mm/mmap.c:1309
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+page last free pid 5741 tgid 5741 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:499
+ exit_mmap+0x403/0xb90 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1379
+ mmput+0x62/0x70 kernel/fork.c:1401
+ exit_mm kernel/exit.c:589 [inline]
+ do_exit+0x9d1/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880307a4500: 00 00 00 00 fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff8880307a4580: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff8880307a4600: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                    ^
+ ffff8880307a4680: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff8880307a4700: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+==================================================================
+==================================================================
+BUG: KASAN: slab-out-of-bounds in iterate_bvec include/linux/iov_iter.h:117 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+BUG: KASAN: slab-out-of-bounds in iterate_and_advance include/linux/iov_iter.h:328 [inline]
+BUG: KASAN: slab-out-of-bounds in __copy_from_iter lib/iov_iter.c:249 [inline]
+BUG: KASAN: slab-out-of-bounds in _copy_from_iter+0x132f/0x15b0 lib/iov_iter.c:260
+Read of size 4 at addr ffff8880307a466c by task kworker/u8:9/3466
+
+CPU: 0 UID: 0 PID: 3466 Comm: kworker/u8:9 Tainted: G    B               6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+Workqueue: events_unbound netfs_write_collection_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ iterate_bvec include/linux/iov_iter.h:117 [inline]
+ iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+ iterate_and_advance include/linux/iov_iter.h:328 [inline]
+ __copy_from_iter lib/iov_iter.c:249 [inline]
+ _copy_from_iter+0x132f/0x15b0 lib/iov_iter.c:260
+ copy_from_iter include/linux/uio.h:228 [inline]
+ copy_from_iter_full include/linux/uio.h:245 [inline]
+ pdu_write_u net/9p/protocol.c:234 [inline]
+ p9pdu_vwritef+0x2da/0x1d30 net/9p/protocol.c:614
+ p9_client_prepare_req+0x247/0x4d0 net/9p/client.c:651
+ p9_client_rpc+0x1c4/0xc50 net/9p/client.c:691
+ p9_client_write+0x245/0x6f0 net/9p/client.c:1648
+ v9fs_issue_write+0xe3/0x1b0 fs/9p/vfs_addr.c:59
+ netfs_do_issue_write+0x95/0x110 fs/netfs/write_issue.c:239
+ netfs_retry_write_stream fs/netfs/write_retry.c:46 [inline]
+ netfs_retry_writes+0x168a/0x1a50 fs/netfs/write_retry.c:231
+ netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
+ netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 970:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+The buggy address belongs to the object at ffff8880307a4640
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 20 bytes to the right of
+ allocated 24-byte region [ffff8880307a4640, ffff8880307a4658)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x307a4
+anon flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b441780 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52800(GFP_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5741, tgid 5741 (dhcpcd-run-hook), ts 89207943594, free_ts 89206634714
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab mm/slub.c:261
+
 ---
- .../net/ethernet/broadcom/genet/bcmgenet.c    | 89 +++++++++++++++----
- .../net/ethernet/broadcom/genet/bcmgenet.h    | 10 +++
- 2 files changed, 83 insertions(+), 16 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 73d78dcb7..c395a071a 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1018,6 +1018,8 @@ struct bcmgenet_stats {
- 			tx_rings[num].packets), \
- 	STAT_GENET_SOFT_MIB("txq" __stringify(num) "_bytes", \
- 			tx_rings[num].bytes), \
-+	STAT_GENET_SOFT_MIB("txq" __stringify(num) "_errors", \
-+			tx_rings[num].errors), \
- 	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_bytes", \
- 			rx_rings[num].bytes),	 \
- 	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_packets", \
-@@ -1025,7 +1027,23 @@ struct bcmgenet_stats {
- 	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_errors", \
- 			rx_rings[num].errors), \
- 	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_dropped", \
--			rx_rings[num].dropped)
-+			rx_rings[num].dropped), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_multicast", \
-+			rx_rings[num].multicast), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_missed", \
-+			rx_rings[num].missed), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_length_errors", \
-+			rx_rings[num].length_errors), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_over_errors", \
-+			rx_rings[num].over_errors), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_crc_errors", \
-+			rx_rings[num].crc_errors), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_frame_errors", \
-+			rx_rings[num].frame_errors), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_fragmented_errors", \
-+			rx_rings[num].fragmented_errors), \
-+	STAT_GENET_SOFT_MIB("rxq" __stringify(num) "_broadcast", \
-+			rx_rings[num].broadcast)
- 
- /* There is a 0xC gap between the end of RX and beginning of TX stats and then
-  * between the end of TX stats and the beginning of the RX RUNT
-@@ -1046,6 +1064,11 @@ static const struct bcmgenet_stats bcmgenet_gstrings_stats[] = {
- 	STAT_NETDEV(rx_dropped),
- 	STAT_NETDEV(tx_dropped),
- 	STAT_NETDEV(multicast),
-+	STAT_NETDEV(rx_missed_errors),
-+	STAT_NETDEV(rx_length_errors),
-+	STAT_NETDEV(rx_over_errors),
-+	STAT_NETDEV(rx_crc_errors),
-+	STAT_NETDEV(rx_frame_errors),
- 	/* UniMAC RSV counters */
- 	STAT_GENET_MIB_RX("rx_64_octets", mib.rx.pkt_cnt.cnt_64),
- 	STAT_GENET_MIB_RX("rx_65_127_oct", mib.rx.pkt_cnt.cnt_127),
-@@ -1983,7 +2006,8 @@ static void bcmgenet_tx_reclaim_all(struct net_device *dev)
-  * the transmit checksum offsets in the descriptors
-  */
- static struct sk_buff *bcmgenet_add_tsb(struct net_device *dev,
--					struct sk_buff *skb)
-+					struct sk_buff *skb,
-+					struct bcmgenet_tx_ring *ring)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct status_64 *status = NULL;
-@@ -2001,7 +2025,7 @@ static struct sk_buff *bcmgenet_add_tsb(struct net_device *dev,
- 		if (!new_skb) {
- 			dev_kfree_skb_any(skb);
- 			priv->mib.tx_realloc_tsb_failed++;
--			dev->stats.tx_dropped++;
-+			ring->dropped++;
- 			return NULL;
- 		}
- 		dev_consume_skb_any(skb);
-@@ -2089,7 +2113,7 @@ static netdev_tx_t bcmgenet_xmit(struct sk_buff *skb, struct net_device *dev)
- 	GENET_CB(skb)->bytes_sent = skb->len;
- 
- 	/* add the Transmit Status Block */
--	skb = bcmgenet_add_tsb(dev, skb);
-+	skb = bcmgenet_add_tsb(dev, skb, ring);
- 	if (!skb) {
- 		ret = NETDEV_TX_OK;
- 		goto out;
-@@ -2253,7 +2277,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 		   DMA_P_INDEX_DISCARD_CNT_MASK;
- 	if (discards > ring->old_discards) {
- 		discards = discards - ring->old_discards;
--		ring->errors += discards;
-+		ring->missed += discards;
- 		ring->old_discards += discards;
- 
- 		/* Clear HW register when we reach 75% of maximum 0xFFFF */
-@@ -2306,8 +2330,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 
- 		if (unlikely(len > RX_BUF_LENGTH)) {
- 			netif_err(priv, rx_status, dev, "oversized packet\n");
--			dev->stats.rx_length_errors++;
--			dev->stats.rx_errors++;
-+			ring->length_errors++;
- 			dev_kfree_skb_any(skb);
- 			goto next;
- 		}
-@@ -2315,7 +2338,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 		if (unlikely(!(dma_flag & DMA_EOP) || !(dma_flag & DMA_SOP))) {
- 			netif_err(priv, rx_status, dev,
- 				  "dropping fragmented packet!\n");
--			ring->errors++;
-+			ring->fragmented_errors++;
- 			dev_kfree_skb_any(skb);
- 			goto next;
- 		}
-@@ -2329,14 +2352,19 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 			netif_err(priv, rx_status, dev, "dma_flag=0x%x\n",
- 				  (unsigned int)dma_flag);
- 			if (dma_flag & DMA_RX_CRC_ERROR)
--				dev->stats.rx_crc_errors++;
-+				ring->crc_errors++;
- 			if (dma_flag & DMA_RX_OV)
--				dev->stats.rx_over_errors++;
-+				ring->over_errors++;
- 			if (dma_flag & DMA_RX_NO)
--				dev->stats.rx_frame_errors++;
-+				ring->frame_errors++;
- 			if (dma_flag & DMA_RX_LG)
--				dev->stats.rx_length_errors++;
--			dev->stats.rx_errors++;
-+				ring->length_errors++;
-+			if ((dma_flag & (DMA_RX_CRC_ERROR |
-+						DMA_RX_OV |
-+						DMA_RX_NO |
-+						DMA_RX_LG |
-+						DMA_RX_RXER)) == DMA_RX_RXER)
-+				ring->errors++;
- 			dev_kfree_skb_any(skb);
- 			goto next;
- 		} /* error packet */
-@@ -2359,7 +2387,9 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 		ring->packets++;
- 		ring->bytes += len;
- 		if (dma_flag & DMA_RX_MULT)
--			dev->stats.multicast++;
-+			ring->multicast++;
-+		else if (dma_flag & DMA_RX_BRDCAST)
-+			ring->broadcast++;
- 
- 		/* Notify kernel */
- 		napi_gro_receive(&ring->napi, skb);
-@@ -3420,7 +3450,7 @@ static void bcmgenet_timeout(struct net_device *dev, unsigned int txqueue)
- 
- 	netif_trans_update(dev);
- 
--	dev->stats.tx_errors++;
-+	priv->tx_rings[txqueue].errors++;
- 
- 	netif_tx_wake_all_queues(dev);
- }
-@@ -3513,8 +3543,13 @@ static struct net_device_stats *bcmgenet_get_stats(struct net_device *dev)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	unsigned long tx_bytes = 0, tx_packets = 0;
-+	unsigned long tx_errors = 0, tx_dropped = 0;
- 	unsigned long rx_bytes = 0, rx_packets = 0;
- 	unsigned long rx_errors = 0, rx_dropped = 0;
-+	unsigned long rx_missed = 0, rx_length_errors = 0;
-+	unsigned long rx_over_errors = 0, rx_crc_errors = 0;
-+	unsigned long rx_frame_errors = 0, rx_fragmented_errors = 0;
-+	unsigned long multicast = 0, broadcast = 0;
- 	struct bcmgenet_tx_ring *tx_ring;
- 	struct bcmgenet_rx_ring *rx_ring;
- 	unsigned int q;
-@@ -3523,6 +3558,8 @@ static struct net_device_stats *bcmgenet_get_stats(struct net_device *dev)
- 		tx_ring = &priv->tx_rings[q];
- 		tx_bytes += tx_ring->bytes;
- 		tx_packets += tx_ring->packets;
-+		tx_errors += tx_ring->errors;
-+		tx_dropped += tx_ring->dropped;
- 	}
- 
- 	for (q = 0; q <= priv->hw_params->rx_queues; q++) {
-@@ -3532,15 +3569,35 @@ static struct net_device_stats *bcmgenet_get_stats(struct net_device *dev)
- 		rx_packets += rx_ring->packets;
- 		rx_errors += rx_ring->errors;
- 		rx_dropped += rx_ring->dropped;
-+		rx_missed += rx_ring->missed;
-+		rx_length_errors += rx_ring->length_errors;
-+		rx_over_errors += rx_ring->over_errors;
-+		rx_crc_errors += rx_ring->crc_errors;
-+		rx_frame_errors += rx_ring->frame_errors;
-+		rx_fragmented_errors += rx_ring->fragmented_errors;
-+		multicast += rx_ring->multicast;
-+		broadcast += rx_ring->broadcast;
- 	}
- 
-+	rx_errors += rx_length_errors;
-+	rx_errors += rx_crc_errors;
-+	rx_errors += rx_frame_errors;
-+	rx_errors += rx_fragmented_errors;
-+
- 	dev->stats.tx_bytes = tx_bytes;
- 	dev->stats.tx_packets = tx_packets;
-+	dev->stats.tx_errors = tx_errors;
-+	dev->stats.tx_dropped = tx_dropped;
- 	dev->stats.rx_bytes = rx_bytes;
- 	dev->stats.rx_packets = rx_packets;
- 	dev->stats.rx_errors = rx_errors;
--	dev->stats.rx_missed_errors = rx_errors;
- 	dev->stats.rx_dropped = rx_dropped;
-+	dev->stats.rx_missed_errors = rx_missed;
-+	dev->stats.rx_length_errors = rx_length_errors;
-+	dev->stats.rx_over_errors = rx_over_errors;
-+	dev->stats.rx_crc_errors = rx_crc_errors;
-+	dev->stats.rx_frame_errors = rx_frame_errors;
-+	dev->stats.multicast = multicast;
- 	return &dev->stats;
- }
- 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index 10c631bbe..429b63cc6 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -517,6 +517,8 @@ struct bcmgenet_tx_ring {
- 	struct napi_struct napi;	/* NAPI per tx queue */
- 	unsigned long	packets;
- 	unsigned long	bytes;
-+	unsigned long	errors;
-+	unsigned long	dropped;
- 	unsigned int	index;		/* ring index */
- 	struct enet_cb	*cbs;		/* tx ring buffer control block*/
- 	unsigned int	size;		/* size of each tx ring */
-@@ -544,6 +546,14 @@ struct bcmgenet_rx_ring {
- 	unsigned long	packets;
- 	unsigned long	errors;
- 	unsigned long	dropped;
-+	unsigned long	multicast;
-+	unsigned long	missed;
-+	unsigned long	length_errors;
-+	unsigned long	over_errors;
-+	unsigned long	crc_errors;
-+	unsigned long	frame_errors;
-+	unsigned long	fragmented_errors;
-+	unsigned long	broadcast;
- 	unsigned int	index;		/* Rx ring index */
- 	struct enet_cb	*cbs;		/* Rx ring buffer control block */
- 	unsigned int	size;		/* Rx ring size */
--- 
-2.39.5
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
