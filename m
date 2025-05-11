@@ -1,118 +1,130 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF4B482FF
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67118482FF;
+	Sun, 11 May 2025 17:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746985115; cv=none; b=J2+Aj3G0POiW7tnnmrHhcZkhnPMhSqyCrz/avUXTDa7S0KoyFe11p67MV6RYLZnT9Zy2IS8C44YlJEhqxQDNjJDLZBAQ1fC4uyhPcGh328LnXneQ8ocK0TDzTK3/9xboI948OLx4wEpB229YtHKRUCB+4haw1IIrK5PJrFhWMvY=
+	t=1746985154; cv=none; b=mI6K1Yd/zUc3N1Rbs50K7PJVhAUtod4OwCJKGOZtvToCuojVZqpsrJigvvc+OYzlvBU0f3d2JWyeitRg3/d8iOqAhtyNbPLPeTY7rqC73HSO0mTxpGQpLqwhGn4yidsfS7hHbsssnVUlW0bavUK+XulKQku4nQt4KERsxrBvsFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746985115; c=relaxed/simple;
-	bh=eBBZG/T8tWp3lz/GI9IwiMI7jMFA+cT2hqHx+2FpoNs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FAj/ocwBqZrztB1oS1SWBNJFxFrFCGpUNhU2A53n8HawIJ9tQ5pHsOHvgZbohtfJNfwz79ekQC+n3Y5iHgqGMXWFy80mX8fIq6GJ16Am2Cs7/nTf/Oq050UJDEW/+pVhbAc8uJjeo8sm0tMQ1963QSYOoIfUSURt+0XWc8O8IfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com; spf=pass smtp.mailfrom=lessconfused.com; dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b=L3qIKz4V; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lessconfused.com
+	s=arc-20240116; t=1746985154; c=relaxed/simple;
+	bh=rEjUtfu7K6jhAd6mynsfwhXtI77Hs9LzZroBcH2KefM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SIRXSoyocJzgQYMN8cOR0teXsq5xjA6sh/k7q4emphchTpcFSQNF9fTFxWBWtiytLnD9/RzheFKbCCLyb6JZX1eZj9Uw4hiSxtmqLpY3T6eA4eRilz0QkKSxMHOzPZXJlwugDCd5AXWb0f4YiSQgSIktRKtMVHR8PLzgEEc+sX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=WjHjIAGb; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b="L3qIKz4V"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af523f4511fso3053535a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 10:38:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lessconfused.com; s=lessconfused; t=1746985113; x=1747589913; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=htpdGgGE0WJqHpqKCEDMnW5Vc8YelVzDOmwa66AXTRc=;
-        b=L3qIKz4Vo0pKj8AjefDb3UDmmoQFDUkbGSPC98p2fgrAwaz162TyheWO/UnuETzf4M
-         q/D3+uyzImAvT/rqyijHH8B/OxaCE0kuRhPfny/YISLvKj2a64ZU6KbKtAjRG7Jw3BNT
-         PjdLXl36zv3QU5PLioDu/fnLA3bq91/7tysDY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746985113; x=1747589913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=htpdGgGE0WJqHpqKCEDMnW5Vc8YelVzDOmwa66AXTRc=;
-        b=dyjA6riizvOX0ykHQniJalSMq+viOgkHYlfaOuGSq5OYny9diXWY793UV3VrGaI5cB
-         9vpgxTYL42ac/BEVO51TksL522tSXLykqHjnN/ciPy5qMCwuOI2cCixrUjWq+I2Boudc
-         JqMhYz6SMis0zWe9NJYd1A6W7CaG7jNK9HA+0CdaKGw6IXw3iAM/sUiFR09zBGpzoMMB
-         A2nSrdn7RhIIlvEK0aCxeuOxbJ72Q2XS5fH9hoVmWwPB0tnE/1/Q0gsc7WxwxQF1ADLu
-         416z8P1D3YB3OLLm/o6gcSAzX8EDZ5SXcXPsTGNkdzPN0rtzA3vb6OpXiJFcNWr0Qssa
-         giqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzctMAdU68g7hf7sj0/MMJL8HVsTAAAtUYlEeQpheOLrp/S5jmsWGOyUxV1y/PQ0W4b/ZTI8zJQzRNig8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3EKtTxF0FJjlCEs70BfARQTfRWXLd11I+Pr+MXGDAnaTbHY3d
-	DqaNr6goDegivzL7qTSCczUk+7xwc+IoA9ehmL097ZFLkbQsL3khSIe7cYYCEWlc7REmvqHbtYP
-	hTeoujqUxrBslnVOjFQUIgPg/mfJlsSTXEd1NAw==
-X-Gm-Gg: ASbGncs22d8LxRTdSIRM4/SR0Yadyuk2bGl59omxGjumt5N2O49aTbrOF/K6TiECf3I
-	m4P1etKROo/6YloxlGjw/38R1zq5EXBdahJuqQZQ+M6+VGOrz8T1SVJaBnqx1mHFvHnq7PwX6OR
-	iGinuk9s2NYZZ/9nI24aUkC1B3gRDGqPD9S4YxEbrTdrd5O55+xcOUXTGifCb2I7t8xqnffjEmp
-	X5r
-X-Google-Smtp-Source: AGHT+IGlWFjDOSR6LptznPfsrBGcmLqTeFU1+S1/2WDCbsxyxoLwah/czQtlkvxYzoeR/HfJw2W1NJ3/is38sxpCk0Y=
-X-Received: by 2002:a17:902:e94d:b0:224:24d5:f20a with SMTP id
- d9443c01a7336-22fc91c2cdcmr176733505ad.48.1746985113315; Sun, 11 May 2025
- 10:38:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="WjHjIAGb"
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1746984661;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=mkVC4MfGufb30zICByRypu/2WLJbw98VLc1Myk8zgOI=;
+	b=WjHjIAGb/FDY3owDSYsAvQyvgc8Vu+cEHGtZ7o5BisuzVe++BLTcETpQ7UyoGuljnVT826
+	jYgdipP0XJOiivDr+wsT4mefYvQSFvjvbszC7gR13LcNwNJXdCs5J/BAqAEcu2b5lNbiIx
+	UvYmNGN3mZY+HKF5ys185C0++8vQPEzcNQBr6aOwkAqNPYltTsVFPMhOi5M5EMEndZNWfP
+	LJfnRYZ8nLFarB5TJbxu8ZHYdACTdHjXhNdJrICTnTblS9vBtNEWD4WjZOcdeeaiTDuKS6
+	KkEliv3MefxmLcGSuF6O7vF9tlClH8+rOQP48r2IBzO9K8/fWNoUsjjMlQ97qQ==
+To: selinux@vger.kernel.org
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/14] selinux: avoid nontransitive comparison
+Date: Sun, 11 May 2025 19:30:01 +0200
+Message-ID: <20250511173055.406906-1-cgoettsche@seltendoof.de>
+Reply-To: cgzones@googlemail.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511172732.1467671-1-da@libre.computer>
-In-Reply-To: <20250511172732.1467671-1-da@libre.computer>
-From: Da Xue <da@lessconfused.com>
-Date: Sun, 11 May 2025 13:38:22 -0400
-X-Gm-Features: AX0GCFtg3EgdoWRuH-CkzemoXtkQsOI76TednUqqH8u_ZIuzhBzf52QSqYFsAO0
-Message-ID: <CACdvmAiqQj4NjazMvdwQtB5zX+SQs7bwXEchT5thNM83=bQBhA@mail.gmail.com>
-Subject: Re: [PATCH] clk: meson-g12a: fix missing spicc clks to clk_sel
-To: Da Xue <da@libre.computer>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Kevin Hilman <khilman@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, stable@vger.kernel.org, 
-	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Sorry, this is an older version of the patch without Fixes tag from a
-mv error. I'm sending a v2, ignore this one.
+From: Christian Göttsche <cgzones@googlemail.com>
 
-On Sun, May 11, 2025 at 1:28=E2=80=AFPM Da Xue <da@libre.computer> wrote:
->
-> HHI_SPICC_CLK_CNTL bits 25:23 controls spicc clk_sel.
->
-> It is missing fclk_div 2 and gp0_pll which causes the spicc module to
-> output the incorrect clocks for spicc sclk at 2.5x the expected rate.
->
-> Add the missing clocks resolves this.
->
-> Cc: <stable@vger.kernel.org> # 6.1.x: a18c8e0: clk: meson: g12a: add
-> Signed-off-by: Da Xue <da@libre.computer>
-> ---
->  drivers/clk/meson/g12a.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index 4f92b83965d5a..892862bf39996 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -4099,8 +4099,10 @@ static const struct clk_parent_data spicc_sclk_par=
-ent_data[] =3D {
->         { .hw =3D &g12a_clk81.hw },
->         { .hw =3D &g12a_fclk_div4.hw },
->         { .hw =3D &g12a_fclk_div3.hw },
-> +       { .hw =3D &g12a_fclk_div2.hw },
->         { .hw =3D &g12a_fclk_div5.hw },
->         { .hw =3D &g12a_fclk_div7.hw },
-> +       { .hw =3D &g12a_gp0_pll.hw, },
->  };
->
->  static struct clk_regmap g12a_spicc0_sclk_sel =3D {
-> --
-> 2.39.5
->
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+Avoid using nontransitive comparison to prevent unexpected sorting
+results due to (well-defined) overflows.
+See https://www.qualys.com/2024/01/30/qsort.txt for a related issue in
+glibc's qsort(3).
+
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+v3: rename macro to cmp_int()
+---
+ security/selinux/ss/policydb.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
+index 9ea971943713..dc701a7f8652 100644
+--- a/security/selinux/ss/policydb.c
++++ b/security/selinux/ss/policydb.c
+@@ -37,6 +37,8 @@
+ #include "mls.h"
+ #include "services.h"
+ 
++#define cmp_int(a, b) (((a) > (b)) - ((a) < (b)))
++
+ #ifdef CONFIG_SECURITY_SELINUX_DEBUG
+ /* clang-format off */
+ static const char *const symtab_name[SYM_NUM] = {
+@@ -424,11 +426,11 @@ static int filenametr_cmp(const void *k1, const void *k2)
+ 	const struct filename_trans_key *ft2 = k2;
+ 	int v;
+ 
+-	v = ft1->ttype - ft2->ttype;
++	v = cmp_int(ft1->ttype, ft2->ttype);
+ 	if (v)
+ 		return v;
+ 
+-	v = ft1->tclass - ft2->tclass;
++	v = cmp_int(ft1->tclass, ft2->tclass);
+ 	if (v)
+ 		return v;
+ 
+@@ -459,15 +461,15 @@ static int rangetr_cmp(const void *k1, const void *k2)
+ 	const struct range_trans *key1 = k1, *key2 = k2;
+ 	int v;
+ 
+-	v = key1->source_type - key2->source_type;
++	v = cmp_int(key1->source_type, key2->source_type);
+ 	if (v)
+ 		return v;
+ 
+-	v = key1->target_type - key2->target_type;
++	v = cmp_int(key1->target_type, key2->target_type);
+ 	if (v)
+ 		return v;
+ 
+-	v = key1->target_class - key2->target_class;
++	v = cmp_int(key1->target_class, key2->target_class);
+ 
+ 	return v;
+ }
+@@ -496,15 +498,15 @@ static int role_trans_cmp(const void *k1, const void *k2)
+ 	const struct role_trans_key *key1 = k1, *key2 = k2;
+ 	int v;
+ 
+-	v = key1->role - key2->role;
++	v = cmp_int(key1->role, key2->role);
+ 	if (v)
+ 		return v;
+ 
+-	v = key1->type - key2->type;
++	v = cmp_int(key1->type, key2->type);
+ 	if (v)
+ 		return v;
+ 
+-	return key1->tclass - key2->tclass;
++	return cmp_int(key1->tclass, key2->tclass);
+ }
+ 
+ static const struct hashtab_key_params roletr_key_params = {
+-- 
+2.49.0
+
