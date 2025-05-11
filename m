@@ -1,29 +1,29 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CFF13774D
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240E1194A73
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746953590; cv=none; b=FyHHW0LSLV7f84cVvATsZIYBoMyXkdlIrGMnz+XbyrRz1gzU/5wKdPJocJ3DAOHc7bBvTaNXK8jXplFmGb9giUeN1H7aGkNCIWLcrGnlDx0D/KlwFiNwIFow/mLClOmZ33kThbwYZFmRztyrtVIszVu44dy1eiwCidIT+tPXCZA=
+	t=1746953590; cv=none; b=MKuwQqu7rUdNNxsHnsFPSZkBQBdKpv7wwwqNzQhdezhBLgfcYrFTrdigGSws0VUB5JDm5WgB+dKuYtbKYWkoai2qJ3KzU7UDR7D7YLtpu83s9YBgGA8dZvan86lMF4+wQhjCL+ZiBFUu9AsvwtICanhqRiAM4B+Pn3I9UYy33oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746953590; c=relaxed/simple;
-	bh=pQMJWVRUMVyvz7B2ekqfQBMAivgPV7lC6XIAofMoIUI=;
+	bh=kzI+MuQkJcTTyCmrVNWQ/8SgYRK5zQJZsGidEdOxkeM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EmuT16HyVW6EQ69CQL0Zmo4qZ6dr7zElpO7JU9BZYkSEoj/zuopWgDeTXQUhqWVnMeOJbOZBtjANhMPrPvfkXhBt1/lHx6SdKmeoygVNC/IhJWd3Fpz4oYPZL5JPN8BbUrBkPwqCysQC3pK+GhLWbFZAm+MmH0wdlUX/730MJ3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=X/dLATPf; arc=none smtp.client-ip=115.124.30.133
+	 MIME-Version; b=tuRBc2PcD1YjpdomN/JgFKsPyZ+kq7fXpsu0Or9Utj7glriC6nic5+fb/y3FW+r2AZp+ZHfduWCYhFOA4mVtkVWudCDEb6shYjWOOwOKXJs4vJDr3Jdgq2MuMRrxxrNk4J6EJFp9yyo0A9EwDHO9VmyW7rXcfTAjmCe0Ayj6diw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=R1+J9Ueb; arc=none smtp.client-ip=115.124.30.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="X/dLATPf"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="R1+J9Ueb"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1746953578; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=3CD7z4IGopA0PcdO/426rEdhCuUyvCsxsp/UIYP1hKs=;
-	b=X/dLATPfLsGdrYqawcopouSnV1JcsiILXvmVJ0uPzWJ+M/Cad8H8bPZ43gET6VuT2yv4n+vgllyYiv4v/7o0hkwzFTqA4x996grXfrhIa90mkE0HB2zgch1ZcrewVc9jqz5Vent8CfPjfoEwfLTrPsn7Yyi1G/eiW031qwkTe1I=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WaABizR_1746953577 cluster:ay36)
+	t=1746953580; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=J+Izptv443yw1YuFeuFq9CG1fp5LXsIrzm6WXIAqqRI=;
+	b=R1+J9Uebuq5t2GBe8JPDRTmxeP+BgHUHtIrQUMy94iQYua+OAGpCdDIKQBa+2vnhuO3+RwHkQ2dOQQOL17nxwRvudi4GiSXHNCnNCciA0k9DL/qSDIyeAD/lsdfVvRGlNwlCfjIC4lugnaeosTLX4iMUT+z/pby9jl8Ha2eRAtM=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WaA7MWV_1746953578 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sun, 11 May 2025 16:52:58 +0800
+          Sun, 11 May 2025 16:52:59 +0800
 From: Feng Tang <feng.tang@linux.alibaba.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Petr Mladek <pmladek@suse.com>,
@@ -33,9 +33,9 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 Cc: mhiramat@kernel.org,
 	llong@redhat.com,
 	Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH v1 1/3] kernel/panic: generalize panic_print's function to show sys info
-Date: Sun, 11 May 2025 16:52:52 +0800
-Message-Id: <20250511085254.61446-2-feng.tang@linux.alibaba.com>
+Subject: [PATCH v1 2/3] kernel/hung_task: add option to dump system info when hung task detected
+Date: Sun, 11 May 2025 16:52:53 +0800
+Message-Id: <20250511085254.61446-3-feng.tang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
 References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
@@ -47,129 +47,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-panic_print was introduced to help debugging kernel panic by dumping
-different kinds of system information like tasks' call stack, memory,
-ftrace buffer etc. Acutually this function could help debugging cases
-like task-hung, soft/hard lockup too, where user may need the snapshot
-of system info at that time.
+Kernel panic code utilizes sys_show_info() to dump needed system
+information to help debugging. Similarly, add this debug option for
+task hung case, and 'hungtask_print_mask' is the control knob and a
+bitmask to control what information should be printed out:
 
-Extract sys_show_info() function out to be used by other kernel parts
-for debugging.
+            bit 0: print all tasks info
+            bit 1: print system memory info
+            bit 2: print timer info
+            bit 3: print locks info if CONFIG_LOCKDEP is on
+            bit 4: print ftrace buffer
+            bit 5: print all printk messages in buffer
+            bit 6: print all CPUs backtrace (if available in the arch)
+            bit 7: print only tasks in uninterruptible (blocked) state
+
+Also simplify the code about dumping locks and triggering backtrace
+for all CPUs by leveraging sys_show_info().
 
 Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
 ---
- include/linux/panic.h | 11 ++++++++++
- kernel/panic.c        | 47 +++++++++++++++++++++++--------------------
- 2 files changed, 36 insertions(+), 22 deletions(-)
+ .../admin-guide/kernel-parameters.txt         |  5 +++
+ kernel/hung_task.c                            | 42 +++++++++++++------
+ 2 files changed, 34 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/panic.h b/include/linux/panic.h
-index 2494d51707ef..bb1796b64381 100644
---- a/include/linux/panic.h
-+++ b/include/linux/panic.h
-@@ -16,6 +16,17 @@ extern void oops_enter(void);
- extern void oops_exit(void);
- extern bool oops_may_print(void);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index d9fd26b95b34..d35d8101bee9 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4488,6 +4488,11 @@
+ 			Use this option carefully, maybe worth to setup a
+ 			bigger log buffer with "log_buf_len" along with this.
  
-+#define SYS_PRINT_TASK_INFO		0x00000001
-+#define SYS_PRINT_MEM_INFO		0x00000002
-+#define SYS_PRINT_TIMER_INFO		0x00000004
-+#define SYS_PRINT_LOCK_INFO		0x00000008
-+#define SYS_PRINT_FTRACE_INFO		0x00000010
-+#define SYS_PRINT_ALL_PRINTK_MSG	0x00000020
-+#define SYS_PRINT_ALL_CPU_BT		0x00000040
-+#define SYS_PRINT_BLOCKED_TASKS		0x00000080
++	hungtask_print_mask=
++			Bitmask for printing system info when hung task is detected.
++			Details of bits definition is the same as panic_print's
++			definition above.
 +
-+extern void sys_show_info(unsigned long info_mask);
+ 	parkbd.port=	[HW] Parallel port number the keyboard adapter is
+ 			connected to, default is 0.
+ 			Format: <parport#>
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index dc898ec93463..3907e3c6fefa 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -58,12 +58,29 @@ static unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
+ static int __read_mostly sysctl_hung_task_warnings = 10;
+ 
+ static int __read_mostly did_panic;
+-static bool hung_task_show_lock;
+ static bool hung_task_call_panic;
+-static bool hung_task_show_all_bt;
+ 
+ static struct task_struct *watchdog_task;
+ 
++/*
++ * A bitmask to control what kinds of system info to be printed when a
++ * hung task is detected, it could be task, memory, lock etc. And the bit
++ * definition (from panic.h) is:
++ *
++ *	#define SYS_PRINT_TASK_INFO		0x00000001
++ *	#define SYS_PRINT_MEM_INFO		0x00000002
++ *	#define SYS_PRINT_TIMER_INFO		0x00000004
++ *	#define SYS_PRINT_LOCK_INFO		0x00000008
++ *	#define SYS_PRINT_FTRACE_INFO		0x00000010
++ *	#define SYS_PRINT_ALL_PRINTK_MSG	0x00000020
++ *	#define SYS_PRINT_ALL_CPU_BT		0x00000040
++ *	#define SYS_PRINT_BLOCKED_TASKS		0x00000080
++ */
++unsigned long hungtask_print_mask;
++core_param(hungtask_print_mask, hungtask_print_mask, ulong, 0644);
 +
- extern bool panic_triggering_all_cpu_backtrace;
- extern int panic_timeout;
- extern unsigned long panic_print;
-diff --git a/kernel/panic.c b/kernel/panic.c
-index a3889f38153d..2542ae3702f9 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -69,14 +69,6 @@ bool panic_triggering_all_cpu_backtrace;
- int panic_timeout = CONFIG_PANIC_TIMEOUT;
- EXPORT_SYMBOL_GPL(panic_timeout);
++static unsigned long cur_print_mask;
++
+ #ifdef CONFIG_SMP
+ /*
+  * Should we dump all CPUs backtraces in a hung task event?
+@@ -163,11 +180,16 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 	 */
+ 	sysctl_hung_task_detect_count++;
  
--#define PANIC_PRINT_TASK_INFO		0x00000001
--#define PANIC_PRINT_MEM_INFO		0x00000002
--#define PANIC_PRINT_TIMER_INFO		0x00000004
--#define PANIC_PRINT_LOCK_INFO		0x00000008
--#define PANIC_PRINT_FTRACE_INFO		0x00000010
--#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
--#define PANIC_PRINT_ALL_CPU_BT		0x00000040
--#define PANIC_PRINT_BLOCKED_TASKS	0x00000080
- unsigned long panic_print;
++	cur_print_mask = hungtask_print_mask;
++
++	if (!sysctl_hung_task_all_cpu_backtrace)
++		cur_print_mask &= ~SYS_PRINT_ALL_CPU_BT;
++
+ 	trace_sched_process_hang(t);
  
- ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-@@ -208,33 +200,44 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
- }
- EXPORT_SYMBOL(nmi_panic);
+ 	if (sysctl_hung_task_panic) {
+ 		console_verbose();
+-		hung_task_show_lock = true;
++		cur_print_mask |= SYS_PRINT_LOCK_INFO;
+ 		hung_task_call_panic = true;
+ 	}
  
--static void panic_print_sys_info(bool console_flush)
-+void sys_show_info(unsigned long info_mask)
- {
--	if (console_flush) {
--		if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
--			console_flush_on_panic(CONSOLE_REPLAY_ALL);
--		return;
--	}
+@@ -190,10 +212,10 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 			" disables this message.\n");
+ 		sched_show_task(t);
+ 		debug_show_blocker(t);
+-		hung_task_show_lock = true;
++		cur_print_mask |= SYS_PRINT_LOCK_INFO;
+ 
+ 		if (sysctl_hung_task_all_cpu_backtrace)
+-			hung_task_show_all_bt = true;
++			cur_print_mask |= SYS_PRINT_ALL_CPU_BT;
+ 		if (!sysctl_hung_task_warnings)
+ 			pr_info("Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings\n");
+ 	}
+@@ -242,7 +264,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+ 	if (test_taint(TAINT_DIE) || did_panic)
+ 		return;
+ 
+-	hung_task_show_lock = false;
++	cur_print_mask = 0;
+ 	rcu_read_lock();
+ 	for_each_process_thread(g, t) {
+ 		unsigned int state;
+@@ -266,14 +288,8 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+ 	}
+  unlock:
+ 	rcu_read_unlock();
+-	if (hung_task_show_lock)
+-		debug_show_all_locks();
 -
--	if (panic_print & PANIC_PRINT_TASK_INFO)
-+	if (info_mask & SYS_PRINT_TASK_INFO)
- 		show_state();
+-	if (hung_task_show_all_bt) {
+-		hung_task_show_all_bt = false;
+-		trigger_all_cpu_backtrace();
+-	}
  
--	if (panic_print & PANIC_PRINT_MEM_INFO)
-+	if (info_mask & SYS_PRINT_MEM_INFO)
- 		show_mem();
- 
--	if (panic_print & PANIC_PRINT_TIMER_INFO)
-+	if (info_mask & SYS_PRINT_TIMER_INFO)
- 		sysrq_timer_list_show();
- 
--	if (panic_print & PANIC_PRINT_LOCK_INFO)
-+	if (info_mask & SYS_PRINT_LOCK_INFO)
- 		debug_show_all_locks();
- 
--	if (panic_print & PANIC_PRINT_FTRACE_INFO)
-+	if (info_mask & SYS_PRINT_FTRACE_INFO)
- 		ftrace_dump(DUMP_ALL);
- 
--	if (panic_print & PANIC_PRINT_BLOCKED_TASKS)
-+	if (panic_print & SYS_PRINT_ALL_PRINTK_MSG)
-+		console_flush_on_panic(CONSOLE_REPLAY_ALL);
-+
-+	if (info_mask & SYS_PRINT_ALL_CPU_BT)
-+		trigger_all_cpu_backtrace();
-+
-+	if (info_mask & SYS_PRINT_BLOCKED_TASKS)
- 		show_state_filter(TASK_UNINTERRUPTIBLE);
++	sys_show_info(cur_print_mask);
+ 	if (hung_task_call_panic)
+ 		panic("hung_task: blocked tasks");
  }
- 
-+static void panic_print_sys_info(bool console_flush)
-+{
-+	if (console_flush) {
-+		if (panic_print & SYS_PRINT_ALL_PRINTK_MSG)
-+			console_flush_on_panic(CONSOLE_REPLAY_ALL);
-+		return;
-+	}
-+
-+	sys_show_info(panic_print & ~SYS_PRINT_ALL_PRINTK_MSG);
-+}
-+
- void check_panic_on_warn(const char *origin)
- {
- 	unsigned int limit;
-@@ -255,7 +258,7 @@ void check_panic_on_warn(const char *origin)
-  */
- static void panic_other_cpus_shutdown(bool crash_kexec)
- {
--	if (panic_print & PANIC_PRINT_ALL_CPU_BT) {
-+	if (panic_print & SYS_PRINT_ALL_CPU_BT) {
- 		/* Temporary allow non-panic CPUs to write their backtraces. */
- 		panic_triggering_all_cpu_backtrace = true;
- 		trigger_all_cpu_backtrace();
 -- 
 2.39.5 (Apple Git-154)
 
