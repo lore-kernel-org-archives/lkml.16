@@ -1,146 +1,143 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A16625D1F6;
-	Sun, 11 May 2025 17:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5A84315E;
+	Sun, 11 May 2025 17:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746983509; cv=none; b=QQAa7RxJgkSixT5frLqqqn1+EyHdjARld8cfiJwrY+Y+aFrij5ZN4M4lRmn7PNkz64fLUYqWekbxhsK6l0G+Mg0njmBNoAtkpflm0P4K0eLOGkYpryBcqBaZF6epVNNy79qZfywR6EvvWVtv+aQE/w6ieKsut+r8Fh5v0lueeM8=
+	t=1746984218; cv=none; b=KPbptr2NR8M74Hq24viTs3rt5HrsGW7oOABe9YHRwk99pFtSfgXBUYaC03FLZWPKOEfJNzs/WGtuwmpoGa9YRvQ7cpoaBj6NKXLpfAjCCsYfS0e8xNGyl8xAHNsHJ50tPXdzO0hgXCoonlRH7i0jhWTPfm5h42mCSFiPxMzJF/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746983509; c=relaxed/simple;
-	bh=4+/KxXBskIK0RDTyhCfGrQo8tmuDxH8xOQwGZDnbOPQ=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=faqvJaSeidday6IRAlDQxTf03/TV6HBVoZpt3EAXzlNL+CgTTYrc+2miPV7kvwL/ojrgS8VQ450floFjtshKNQLy7Od8hpi+yS9CAs7Lw3thG4lVUsNsRZv9AVS75EaJRZlpAsrKWsPbabD5voHKYwDythI1l/5UhDtVMeVJbek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=OX7AyRVE; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1746984218; c=relaxed/simple;
+	bh=LtzpehVGu2B69y1XpCCA5A0OebEImMHVr/qUe8ig5zs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p4pyPaRvJolwfLFgvsvD4LneeyW+u5AQWYyidC5w2irHNi+DB3TBV1kwBVSh0mjeJSqo7I1xFN09uNtywp0VgPTwXxnljgRdhs2yMWYN7w8o7RNJwItu/ieiLILjlD3Mt1onmDk1M63CHuAOFSWyEGyV+72bCBHNMQFl9lPE3WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxiAVEt/; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="OX7AyRVE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1746983499; x=1747588299; i=frank-w@public-files.de;
-	bh=4+/KxXBskIK0RDTyhCfGrQo8tmuDxH8xOQwGZDnbOPQ=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=OX7AyRVEpFno29IwtlTF2VTBMnL6+B/hMphY9BZduRqbICI0urp+cWWCA91uWgkZ
-	 xGlO2sb+/XdfxUYJuT0y/LgAhv3c417X3o4faq7ZXEYqkb1+EgBS9md17avwMXSsS
-	 1FxWgHOWlQ45pqgCooptU69Idn+20S6Mt8BIeL/HEF0Bloqx4Wso8xyOht7RXd/Hl
-	 aZt5EcB71LIvUHh/h6JaVJEPm679Vv1n7Oe7Gg5r6g/bd1dO5GLhiQ518y3xqPHOU
-	 xadwoqn4n3g9F1dBspCuPrMm9XldMc2Vy2og9fUqoCdKHW9BEeuvgr4rpEljev62D
-	 fAMyEtf3u6uXMtpNDg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [194.15.84.99] ([194.15.84.99]) by
- trinity-msg-rest-gmx-gmx-live-74d694d854-64x2n (via HTTP); Sun, 11 May 2025
- 17:11:38 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxiAVEt/"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4def2473a58so770502137.2;
+        Sun, 11 May 2025 10:23:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746984216; x=1747589016; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wgA21BcJxdlRP4wuaR895U76otIEBUDznH0KYWsiBok=;
+        b=gxiAVEt/MxhCUjEVBtIISKXH55k9sSwOuc//rffdxzrupWHZZHoFaOj4dlfVQj04XG
+         KkkhWonLA54QYtjoFo39tfiTH43y//ImP2F/P9Ma0EAdklmTG/NZGkiEzBeUmR4+YYXa
+         yVWO3pRkwA0M/tdDOlgw77szO+oWrBpsToriGA0bTCwiKXyHbDTf0kLuV4vJfa5Zv3GX
+         tVgLf9S6yYkCmYOxn6ztzhiWYfwrTbNEQSq5gqjbgtF2V5riasO3V55MQUjL4dUwn5sC
+         wSOLWDw/XaGRCkFcmz8gnn9mtEGJSKR/BU4MnN9ub+68AFvsuwuMC8tsN/nmvW0GgRC1
+         69QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746984216; x=1747589016;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wgA21BcJxdlRP4wuaR895U76otIEBUDznH0KYWsiBok=;
+        b=S9wwIUdLVAbIeaRIuHXQ80kvq9bKx71mE8tMByLBVSlmPtWQCjVWDgFCefyIIKV5x0
+         7ZrsL0dWplvsKaJIGcfOALeoRgla5jRnpS1vtrRRt9T8JPoUofVAeKTfsjsZt7WXcqdH
+         AVrAlHLBbwB3OpE8LW6dOtaqZZ8uRLUkptVlA8JlzaMFpp6ay/CgomuVx0f1XIwaxnpK
+         4CChyH8/ToB/CPvlHcOHFtdZJwT8j/lDKgJhioBorq19PLE5StcFuqgOMU78Or4tHozn
+         1frht9GBl9Sl+3NTtX7FA7LBPmexcYQThe25T8c5OTLZ7dqFkbKoTp4zqj/HiMGyI9KW
+         A69A==
+X-Forwarded-Encrypted: i=1; AJvYcCUMu2vhyqvlVwfGaXqlPav8G9NhRNwIojckRtQK2rnS1ALTvaxINErpQI4DKgiRKt1y9r+y9GcMuLW3rAxt@vger.kernel.org, AJvYcCX0O7gOkv2d3bmBs1ofSgQvjs7EAlCnOBpzKSOftpvWqLz1Jvc6iv/3U9OjypN5gd5NKprdSuDabbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4vxp0dHJltNm3htjEIzKYveVoyxCjfyHqJEPLhmn3CjeAziQ1
+	Iwt/s9mVA5jYMuBhKTbd7JvoRYFyTWIwkS0pxFLHBVv8q+RX1eqxn2Z4HNQ2ryLt73P/MWj5Lzh
+	+OHq6iEqj8XE5XJWr4pemZKo1zLI=
+X-Gm-Gg: ASbGncttBFjGiNrC5pxkhKluW1FiG9irSurp/DwqYn4gKCcwH6S39NHtvFLnqs2hcEL
+	ToCVbnwxBSwm5Or+qgQ/Iv5i2bhUKaoaSXA1d5nTn+EsZylqW+6WTdyDadQjr+261mMnuR8iRPS
+	4xFfbFD/WgQwjYfmpivQqSAJApT8GMN/qyWpl03WtLE+0yOw8=
+X-Google-Smtp-Source: AGHT+IGLhEqaokzKQl34iQ57xc/NxVdJGI54Xizj99c/+daJg5Ju85VDhQgT3zo+gLjyclqJKdNxRkGzWhp0ReCK3+Y=
+X-Received: by 2002:a05:6102:5345:b0:4cb:5d6c:9946 with SMTP id
+ ada2fe7eead31-4deed334190mr8500994137.10.1746984215757; Sun, 11 May 2025
+ 10:23:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-a7d75144-e618-4e09-ab4b-42e8557adb93-1746983498805@trinity-msg-rest-gmx-gmx-live-74d694d854-64x2n>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: andrew@lunn.ch, linux@fw-web.de
-Cc: olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, arinc.unal@arinc9.com,
- Landen.Chao@mediatek.com, dqfext@gmail.com, sean.wang@mediatek.com,
- daniel@makrotopia.org, lorenzo@kernel.org, nbd@nbd.name,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Aw: Re: [PATCH v1 02/14] dt-bindings: net: dsa: mediatek,mt7530:
- add dsa-port definition for mt7988
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 11 May 2025 17:11:38 +0000
-In-Reply-To: <88d93b58-84f3-4394-80ed-9adf67d525f4@lunn.ch>
-References: <20250511141942.10284-1-linux@fw-web.de>
- <20250511141942.10284-3-linux@fw-web.de>
- <043d1a0a-1932-42f3-bcd8-17fad10c5543@lunn.ch>
- <88d93b58-84f3-4394-80ed-9adf67d525f4@lunn.ch>
-X-UI-CLIENT-META-MAIL-DROP: W10=
-X-Provags-ID: V03:K1:IEgHLeNpmXm8RjqZWMnrNFlf2ZQICiEArO7hSHNKwiHWYLtBLg/DWUlg1cBIYLoCCfipT
- UZLgTYfr0qJOwNc1fcYe45/v7asWaMd0+3Z8htRjIf3oFfEVPXxi96WPvAbUCqKagU1CguYfJyGv
- NwviTo/6uLvP4wYdr6ck8N77JeBjgdDXlSUIleVJ6utOXEvHiWDwhDauu5JQ3ybh5g7Ktr7L5dzS
- eYyYzY8DSsUeh0HJPEtbfMgeAVY5KCC9f+l8oNVNHQe52ybkw6ZR7VFIHLeeYtGRsG4lPvL9b/tr
- n1ntMXXuJDyMAjXDTekZB+66Ps4yMppb3I1fEhQRlqaRk7fSed7nw7U+oW2GYliShc=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LzP0Bc1axNI=;228SBXE+fpIqt/AekccYzb43SZD
- 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
+References: <20250509013931.47524-1-andrew.lopes@alumni.usp.br> <CAHp75Ve7-hMUxrmXQnkMjynhPUbD6R+K=-j+h0zELvcxZdy5nw@mail.gmail.com>
+In-Reply-To: <CAHp75Ve7-hMUxrmXQnkMjynhPUbD6R+K=-j+h0zELvcxZdy5nw@mail.gmail.com>
+From: Andrew Ijano <andrew.ijano@gmail.com>
+Date: Sun, 11 May 2025 14:23:24 -0300
+X-Gm-Features: AX0GCFvrIxDMbI0XWKebH07YOg3FUp0UyfdHeuqnsmwrOfESJkVF0TP3ve7vBm8
+Message-ID: <CANZih_Q5WJD9TSnyhPHcygFJDEvvkj1KdWO-1=QO-1Uhr6tLCA@mail.gmail.com>
+Subject: Re: [PATCH v3] iio: accel: sca3000: replace usages of internal read
+ data helpers by spi helpers
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> Gesendet: Sonntag, 11. Mai 2025 um 18:45
-> Von: "Andrew Lunn" <andrew@lunn.ch>
-> Betreff: Re: [PATCH v1 02/14] dt-bindings: net: dsa: mediatek,mt7530: ad=
-d dsa-port definition for mt7988
+Going back to this one to reply to the unaddressed comments.
+
+On Fri, May 9, 2025 at 6:06=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Sun, May 11, 2025 at 06:34:30PM +0200, Andrew Lunn wrote:
-> > On Sun, May 11, 2025 at 04:19:18PM +0200, Frank Wunderlich wrote:
-> > > From: Frank Wunderlich <frank-w@public-files.de>
-> > >=20
-> > > Add own dsa-port binding for SoC with internal switch where only phy=
--mode
-> > > 'internal' is valid.
-> >=20
-> > So these internal PHYs don't have LEDs?
->=20
-> Ah, i got that wrong, sorry.
->=20
-> What i don't know about here is if you should be defining your own
-> ds-port binding, or taking the existing binding and add a constraint.
+...
+>
+> >                                              chan->scan_type.shift,
+>
+> With the above done, move this parameter to the previous line.
 
-Hi Andrew
+Ok! I reorganized this shift operation to be all in one line.
 
-thank you for first review.
+ ...
+>
+> > -                       *val =3D (be16_to_cpup((__be16 *)st->rx) >>
+> > +                       *val =3D (be16_to_cpu((__be16) ret) >>
+> >                                 chan->scan_type.shift) &
+> >                                 GENMASK(chan->scan_type.realbits - 1, 0=
+);
+>
+> Ditto.
 
-this patch is only for allowing the phy-mode 'internal' and corrects the w=
-rong mapping to mt7530-das-port which allows rgmii and sgmii which are inv=
-alid on mt7530.
-i splitted the changes in binding to not squash different changes.
+Thanks, I changed here too.
+ ...
 
-the phys with leds are on the builtin mt7530 internal mdio-bus which i add=
- in patch 3.
+> > -       else if (!state && (st->rx[0] & SCA3000_REG_MODE_FREE_FALL_DETE=
+CT))
+> > +       else if (!state && (ret & SCA3000_REG_MODE_FREE_FALL_DETECT))
+>
+> Remove redundant 'else'
+>
+> >                 return sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
+> > -                                        st->rx[0] & ~SCA3000_REG_MODE_=
+FREE_FALL_DETECT);
+> > +                                        ret & ~SCA3000_REG_MODE_FREE_F=
+ALL_DETECT);
+> >         else
+>
+> Ditto.
+Ok! Removed both of them.
 
-regards Frank
+ ...
+>
+> >         ret =3D sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
+> > -                               (st->rx[0] & SCA3000_MODE_PROT_MASK));
+> > +                               (ret & SCA3000_MODE_PROT_MASK));
+>
+> Remove unneeded parentheses.
+...
+>
+> >         ret =3D sca3000_write_reg(st, SCA3000_REG_INT_MASK_ADDR,
+>
+> > -                               (st->rx[0] &
+> > +                               (ret &
+> >                                  ~(SCA3000_REG_INT_MASK_RING_THREE_QUAR=
+TER |
+> >                                    SCA3000_REG_INT_MASK_RING_HALF |
+> >                                    SCA3000_REG_INT_MASK_ALL_INTS)));
+>
+> Remove unneeded parentheses (outer for the last parameter).
+Great! Removed all the unneeded parentheses then.
+
+--
+Thanks again for these comments,
+Andrew
