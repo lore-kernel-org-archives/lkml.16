@@ -1,119 +1,105 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48BE25D557
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40461885B8;
+	Sun, 11 May 2025 17:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746985178; cv=none; b=lR8WvjN+1QJTd6wWGdF3PcF7lrIiuM62u2/qlSR8yr5zJ0aIfAziqmedotXhuw1EbwOqBgwxht2Zm8vuBQ2mAX//TMr58ojhXcYxfD40U698gMP+4NbAnFAIgHUgzxOI5ZEZjiZ/aCiHEvCN+N7C3SIiHESEmu/BQk/BnIiN7Bc=
+	t=1746985327; cv=none; b=PXMQZfR5+RQGv4KZ7GO7jdK3TSE6dJCz/yiJ9IKeEh4BAv+ew+YS4NSmxJdLxyFP4+0D0Z7hDGRW35ZlFfj5yI5idyeae91gFNOkNhfK+BmGXCoUmfpQoEWspyTrP9iuD5thtCwh0Kstu0N2IYP5ZfN6fjNA+YpheKBM+kQXEX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746985178; c=relaxed/simple;
-	bh=IPXduNjdPqXlwZF1nLbl8D7KU2jgmcdSUy8mFKn4DLY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nKBD+8BiAex0tFUeMoM5U7CyGBHYkkZkfp9Pri4Pu/shH1KcW4KnknLtp5+6NXDhNSnZ1i+amPprCUbISJ0jrVt0i5vAykpsH9StHos6GkywsXjyc+mYQ4Sy3RMlqPx5Xwu+Vnjz51J+k/FlXIpl63EluYyulQ0ixArlRYKNxKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=SUvMbhWY; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
+	s=arc-20240116; t=1746985327; c=relaxed/simple;
+	bh=bGHI9wIVRM2wuSWI0IWazEuw/hfpSCGFqcPibrTf7MI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VD+Yn+pyp98RVctyV/cjEzt5q0DdrmaEZE5ybLNnaLcRHcyCwfGv3yZ/w2JN+59n8Tlx+KImOQFEz720QJFnx8ExEr4/zfp1KBVDaV4XHX6Reb3/K1h33Xvlq4pQ7J2z7O8PDJPdakIsZEVzTvZbORR48fbnYarcqvWhEmbrU5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=fp8KPFDU; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="SUvMbhWY"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4775ccf3e56so58620771cf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 10:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=libre.computer; s=google; t=1746985176; x=1747589976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xLoioQfYdPBgm49bPKitfsKJOSsTnQU6DqnNOtLxcjQ=;
-        b=SUvMbhWYe1AOzh8qEaf8fDuvtdEd4nDyBg09KVt8Cgs3HcMwUAdz/VuylRnUV6iBdh
-         jUbcMLmcp6Vxa2sl7Q6YXwCjtynsDBeB13/3XHBUhRutYaCNQ/qlaDt718eLNs/Lun3Z
-         MD096u+YMLXx1C3AhdIA6jxPBnlqpauikcf7sK9fc4GDortMFnUkTuxQSIm1WusIYZ1y
-         e20Ufqq/FRSP3euK80ff04QGz785i5zZQkOa2sUE/DU2fvpQhhB02Tcs5uZ58OfmqK93
-         1lJ65V4h4YAyoMA41+u28PeOCPUuslfw/BfadhCGdNtn5AOiHTP/jBahxsVYkTJRV8gd
-         mTjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746985176; x=1747589976;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xLoioQfYdPBgm49bPKitfsKJOSsTnQU6DqnNOtLxcjQ=;
-        b=JXj0/dE6Rq8u2gWKoNEeKZNjg2fCTlSlQQbhcrPyyPG581ZmEebQ17ymW9I00PW6Lk
-         c1l4ci4tr16TDqLl+/R6Mwf25smIGQIf8o9njOuhTPx1ZLfjoVxh+KPU9YDnEYgpk+XJ
-         f7+wTKCUjnOrv40bCxk1EwlHEsX8KcQMQ21htJq2i/g7LpQgYCbYsCNJPY9JisRz4tDX
-         iXOZPs0vOhAqBSzqm/sCiNKExoV+aWq6hjppPpgrbIOCetbIsrdu5SPK+ReUFq47/9wz
-         fghMiEpI+W8OUUZX5o1XwL8QPoCtbgHkcjnzwjI3XKw4Dhq4Gv7TnIWm71JT/QvdatIj
-         W2oA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7x6z4q/4n8vXmJx/G5iG4E/PpNW8yjGGH7oomoI/BLdI5mwZHAjmh7EMLR+MQhWlHVCa8qeQ54xaXquQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3fanjLSn4Daqtamqi8rnSBmlhtYgvD6+MHTw8d/PFrCAsGFqR
-	+Epw7IPobuv+6tSrONzqhm/RsvQMg9jmk9frJHno9JLUSrdV0nniAtwf/gJID7sb/zho/ZQH7sP
-	P4mLT
-X-Gm-Gg: ASbGncuTRrQgX6vAPH+awviM+j18lZhV7srwzRrdhXuG52DBTc7QN3bfEPFb4ubZ1dF
-	9qaS8EHBfYJ7IaYyX3u8cCUzCGHDSsWAI1fhFQ1OgV9M/8kYAASCo4tea1mJ+Gpyp18161Zc7au
-	ojXSX8kG3iZa5f4yDUUtE12zeiHOcKUz7CcKs5WpT71HBorFGEBuXbPm3UW/S60ujk1Vj/znA3K
-	O6uvGnmatnsp6Gcj8KMrNKljVShxsr3dc0Vk0q21aNzk1c4GccYUimdB2oTMunM+Ej4uB+iskv5
-	JqvyOpFZi1Wk853RIEi1tmHks8SOHYeOetBKIo5Q9uJIYJI=
-X-Google-Smtp-Source: AGHT+IGbtN6p73kbilpYBJERKanPWex1vuDrJr9UjFDjOEDztJIOHD7xUAEl7SH4fqjj9AVcDWDKXw==
-X-Received: by 2002:ac8:5d0d:0:b0:477:6e32:aae2 with SMTP id d75a77b69052e-4945285d6b1mr173557071cf.0.1746985175732;
-        Sun, 11 May 2025 10:39:35 -0700 (PDT)
-Received: from localhost ([2607:fb91:eb2:c0a0:10e4:4464:87db:3a66])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452588d92sm38259301cf.59.2025.05.11.10.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 10:39:35 -0700 (PDT)
-From: Da Xue <da@libre.computer>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Da Xue <da@libre.computer>,
-	stable@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] clk: meson-g12a: fix missing spicc clks to clk_sel
-Date: Sun, 11 May 2025 13:39:26 -0400
-Message-Id: <20250511173926.1468374-1-da@libre.computer>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="fp8KPFDU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=zpu8YKxAyQqf1PwyBYJmSGQ6Olgq5AHM+Ja+9mIqmH4=; b=fp8KPFDUsjwwYEwxqANo7IUr4f
+	FUvoPzxHkw2syWikp3xUxwEdy6UlXV806TbzcoSYnZb9oyjF5L/OrdTOeqRCOTR0Dl1aFGBL1x89T
+	NugWuoimafyrYTfVxh02xH0+xlpZQJDikVwN7BxYZimx1m2TwpUaHR4Y3HW1fiuWkfqacdv0WFK+B
+	TkkiYrrad/GlLahgk7LAj2bFAj8H4EKdX0GUmV2F1u1yOZ0vGvvrlkp26eoZi+HZ13kd9jf35aX3z
+	ghoeUzI6d3G3EuZ1XD2DL9hyjhMGYH1ARKNqSP7PJx5sgTjNCRPed3c611MRunpFcuC6kC1C9LQZO
+	7aAn+tNQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEAgT-0000000AV95-0TCj;
+	Sun, 11 May 2025 17:41:53 +0000
+Date: Sun, 11 May 2025 18:41:53 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: WangYuli <wangyuli@uniontech.com>, brauner@kernel.org, jack@suse.cz,
+	akpm@linux-foundation.org, tglx@linutronix.de, jlayton@kernel.org,
+	frederic@kernel.org, xu.xin16@zte.com.cn,
+	adrian.ratiu@collabora.com, lorenzo.stoakes@oracle.com,
+	mingo@kernel.org, felix.moessbauer@siemens.com,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	zhanjun@uniontech.com, niecheng1@uniontech.com,
+	guanwentao@uniontech.com
+Subject: Re: [PATCH] proc: Show the mountid associated with exe
+Message-ID: <20250511174153.GB2023217@ZenIV>
+References: <3885DACAB5D311F7+20250511114243.215132-1-wangyuli@uniontech.com>
+ <20250511142237.GA2023217@ZenIV>
+ <CAC1kPDP4MCfUFkrQu0-Fg3Du7bz25QAY1Wyqdi_HGVbw326U1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAC1kPDP4MCfUFkrQu0-Fg3Du7bz25QAY1Wyqdi_HGVbw326U1w@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-HHI_SPICC_CLK_CNTL bits 25:23 controls spicc clk_sel.
+On Mon, May 12, 2025 at 12:19:01AM +0800, Chen Linxuan wrote:
+> On Sun, May 11, 2025 at 10:22 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> 
+> > Excuse me, just what is that path_get/path_put for?  If you have
+> > an opened file, you do have its ->f_path pinned and unchanging.
+> > Otherwise this call of path_get() would've itself been unsafe...
+> 
+> I am not very familiar with how these functions should be used.
+> I just copied similar logic from proc_exe_link and added a path_put.
+> Maybe I made a stupid mistake...
 
-It is missing fclk_div 2 and gp0_pll which causes the spicc module to
-output the incorrect clocks for spicc sclk at 2.5x the expected rate.
+path_get() grabs an extra reference to mount and dentry; that is enough
+to guarantee that their refcount will not drop to zero at least until
+we drop the references.
 
-Add the missing clocks resolves this.
+To use it safely you need to be sure that currently refcounts are non-zero
+and won't be dropped to zero right under you - for rather obvious reasons.
 
-Fixes: a18c8e0b7697 ("clk: meson: g12a: add support for the SPICC SCLK Source clocks")
-Cc: <stable@vger.kernel.org> # 6.1
-Signed-off-by: Da Xue <da@libre.computer>
----
-Changelog:
+Your code also clearly relies upon ->f_path being unchanging - otherwise
+you would've risked to drop the references not to the objects you've
+grabbed earlier.
 
-v1 -> v2: add Fixes as an older version of the patch was incorrectly sent as v1
----
- drivers/clk/meson/g12a.c | 2 ++
- 1 file changed, 2 insertions(+)
+If both conditions are satisfied, what's the point of grabbing and dropping
+these references in the first place?
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index 4f92b83965d5a..892862bf39996 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -4099,8 +4099,10 @@ static const struct clk_parent_data spicc_sclk_parent_data[] = {
- 	{ .hw = &g12a_clk81.hw },
- 	{ .hw = &g12a_fclk_div4.hw },
- 	{ .hw = &g12a_fclk_div3.hw },
-+	{ .hw = &g12a_fclk_div2.hw },
- 	{ .hw = &g12a_fclk_div5.hw },
- 	{ .hw = &g12a_fclk_div7.hw },
-+	{ .hw = &g12a_gp0_pll.hw, },
- };
- 
- static struct clk_regmap g12a_spicc0_sclk_sel = {
--- 
-2.39.5
+*IF* there was a chance of mount going away under you, what would prevent
+that happening right before that path_get()?
 
+IOW, these dances with path_get()/path_put() are either nowhere near enough
+or not needed at all.  As it is, ->f_path of an open file *IS* stable and
+mount and dentry references in it do contribute towards mount and dentry
+refcounts.  But my point is, that code does not pass the basic "how could
+that possibly be right?" test.
+
+PS: since you've mentioned proc_exe_link()... the difference there is that
+we want the reference to be used by the caller.  If the file happens to
+be closed just as we return (that can't happen until proc_exe_link() drops
+the reference to struct file it got from get_task_exe_file(), but as soon
+as fput() had been called, there's nothing to guarantee the safety),
+file's contributions to refcounts are dropped, so we can't count upon them
+to stay for as long as we need.  So in that case we fetch the references
+out of ->f_path and pin them before we drop the file reference with fput().
+
+PPS: I'm still not convinced regarding the usefulness of having that
+information; "just because we can display it" isn't a strong argument
+on its own...
