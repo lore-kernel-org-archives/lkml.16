@@ -1,101 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8386C17A2E8
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 11:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6AD2566DD;
+	Sun, 11 May 2025 11:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746964489; cv=none; b=FEuOL0fR8wc3ih1HJuNtWpcKIctumuWYIF0n1w9A2BlT0NhONjmWEkdlSW2CYxfOodZnBL2yDVqZxEGipvoZZwhX2VFHDwN8NO09G7o36Z2hnS1VtJDODSuJ2e5bHWdpvfAjdbDN0xUxfpeAE3ttat7phHyXgt7wqY56Xxqs8rk=
+	t=1746964505; cv=none; b=FRYFr9dOoHUW+0XycfKJgGEdo6t95pUypxP30JP8B0+gMq7YODrMz7MstCC88lMUuglc6O0BGPusUO0JokkbI4X8Qs5X1S8aLYZVX8c8/GTp3Sii72O/rqdLBszodDdLtivj0Gp/YMiPoRTipAEuZxase5D8Bp9cPUc735rGwhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746964489; c=relaxed/simple;
-	bh=oKaqbQN6dXrQwDy7cEcE+3Z7tky5uJDztZOfeAuE59A=;
+	s=arc-20240116; t=1746964505; c=relaxed/simple;
+	bh=R/jynlHicTIibxqN1YzoaealAVK3cpzH5mdY0ko59co=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FUah9wIUsF0Al7Ur7TfDhy/5uQ2VI84UG7SVosU6/iFG+yxZ/GlkQ3qLQDHvhUdyixCFix43wndIMj8WMKV6RI7dKpPSYtdaAaKyzqVDKAWFFzktF4hZpEcPCq4290F/dCEUKLjEL0WI5Sab0qXm8+UqWMS1m2tHLBVjb1edCjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bN0HE6YW; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=GqmyrNfikfZG2kE3fZqaxkoVKeIAOY052PAsO3/SX8UcjTOUm1Ke5v7r59eripw1+9PsQDBS/xCaBQsgaNvMUGCCBCO5HOIOb+4GRJoId9FotsexP5bnFY/yYbytjmWH2k7vXkSWbJ+aCDzNcCQGjJu6u66kufaiyUin5eLILUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oK4kNv9v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bN0HE6YW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDAB2C4CEF1
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 11:54:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oK4kNv9v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81DDC4CEF0;
+	Sun, 11 May 2025 11:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746964489;
-	bh=oKaqbQN6dXrQwDy7cEcE+3Z7tky5uJDztZOfeAuE59A=;
+	s=k20201202; t=1746964504;
+	bh=R/jynlHicTIibxqN1YzoaealAVK3cpzH5mdY0ko59co=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bN0HE6YWZtyknnpo+ItdOBG2RwlPmGUsE6pxYct6bVUgQ/djtThJDs95Wl2tauEMp
-	 6IB3l3FwakdrYPW3bwjfDBTMVTft2BX0KiGm3+WY/OE80EUDxkDwpOyR0FVztV/Eyh
-	 h/1jMEKCzhaFunt3zlfTZMSwB/nWH3SF/5yd5jQrXsHtPAoM9yeNATBf7rEbAOoOks
-	 9w5PtKJp859OrRSRQNPuNtIr4YxgbM9NyihoiGt0KswVRHWPrHQQM7M4ddDEhUNDdQ
-	 DzD58L9iS+IZkLN6zBiLSY2EuTbYF/ABBBU6U7B92vslQg3ojqnsShR/sxxbRw/2qL
-	 f6rmlez+PAjnA==
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2d0920ce388so1931944fac.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 04:54:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUv6jRfGbE7O39aQGuzm5caqTkeuFYaPeQc+29x79XRHOx26y7h/NZH95XrXGOGdMP1i1IP4SzKLGweIBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs/ODMFUEdhCmXdFIdyIdNapd5P14fXB1Sm1muPF2YRqkEJdnw
-	NhKoxGxwYVN/H665EkAUxrYlatQqsohU4Aeut0YdALMsUh58wCH+hme+EVU/nRLgcv8nz3L2OSq
-	GmmV7ZxsuaAYFYXRPYxH44/7zP+g=
-X-Google-Smtp-Source: AGHT+IEK4KdRqlLMj5yLm9Ad7XkLooKIBEJ1MvTuduGup812mvYJUz7vgXbgmWPGcFj/mkXha3Q0C48ACtrZ4uW2oIc=
-X-Received: by 2002:a05:6808:17a9:b0:3f8:8977:7294 with SMTP id
- 5614622812f47-4037fe7a40emr6562059b6e.31.1746964488357; Sun, 11 May 2025
- 04:54:48 -0700 (PDT)
+	b=oK4kNv9vp6AZhws/Y1mSS2tzRpkcGUQaS2c2pTK33GrIeS98vDhvD39kOIfkDRRG8
+	 3EuDmACuLOOnivs8d/FE0JQYw6lTWUYE1yxKX/KFC7n7YO59ikBzNf3X9m0+eXxgt/
+	 t2Jk/ao8HrjolwT7xg4qKy++89n6kAJ8QeDoYP05otScxHg6HW0SzhBBSSzmPhDV1S
+	 WjER6CCk0eCrj1ykBjYNfSKxrW99vfSUgLE/DUdfLeNwo7DsjZ9SgHZ3/uk2IZxd2o
+	 3KdE6Ou+KXwqK09keN37GggiX6lV6SwfbbaQTgysnxQvwRplpVMsAeDyyjotuXFprP
+	 JVovgsNGAvBWQ==
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7304efb4b3bso2229467a34.0;
+        Sun, 11 May 2025 04:55:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrwQxwz2Biry2j0Mox+GCBaX4WnHx8sq6LNwZidV8SW/JVj+OsDnGkKgYwJxyUpHB/ghdFRQeGIIQNFG3I@vger.kernel.org, AJvYcCXbLiKe7gEa3ProLPvQAMmr56UvLWLuAbpyo/Y7QPRpj9JifAqit0RRq71bm0eWeqn1SAbDoADeESulrVj6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzojfWbf2PLsToWe5iCht6H+Qm6T2fCJgBqFMw+mETnOZ8WS00q
+	M1/R10ntNlFE+jKCPnKb9LVr3pKyp7NNL9QBmLg6hCF6bDA0YOxxUEB2+Mpl/yOnmWNSf4+cJVR
+	hXjizumSZFaAeE99F0T8SGnuYMW0=
+X-Google-Smtp-Source: AGHT+IHl217LLTZ7zxoObvKaMKBFA4kOJ3PlQoeZlwEExMOaLOgURFJGHml39H7/mAhcn5JuIlM9mHelK7qmLWutfag=
+X-Received: by 2002:a05:6808:1591:b0:403:56f4:8780 with SMTP id
+ 5614622812f47-4037fdef2f6mr6374004b6e.9.1746964504197; Sun, 11 May 2025
+ 04:55:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509071703.39442-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250509071703.39442-2-krzysztof.kozlowski@linaro.org>
+References: <20250501-device-wakeup-leak-extcon-v2-0-7af77802cbea@linaro.org>
+In-Reply-To: <20250501-device-wakeup-leak-extcon-v2-0-7af77802cbea@linaro.org>
 From: Chanwoo Choi <chanwoo@kernel.org>
-Date: Sun, 11 May 2025 20:54:11 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH2KXuX4d3Ox7CEV4gcVAjFHPMhPC6AzT5LAc3UN5Dzj=A@mail.gmail.com>
-X-Gm-Features: AX0GCFv_VZ-ZmjDC-4tFWUUtkdv7SHSloGp_LCK-BP50W7s519k2dL-YBnzAiTc
-Message-ID: <CAGTfZH2KXuX4d3Ox7CEV4gcVAjFHPMhPC6AzT5LAc3UN5Dzj=A@mail.gmail.com>
-Subject: Re: [PATCH] extcon: adc-jack: Cleanup wakeup source only if it was enabled
+Date: Sun, 11 May 2025 20:54:27 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH1jhDAU8DmcHiv39O5jzoA0NANdVU_T1uCvVLP3=eipkA@mail.gmail.com>
+X-Gm-Features: AX0GCFtHpWRsoYEQ2UpVQNB5r47Zis0KFA4EqRNbsLROGiwhQzWAfoOa-yco2Eo
+Message-ID: <CAGTfZH1jhDAU8DmcHiv39O5jzoA0NANdVU_T1uCvVLP3=eipkA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] extcon: Fix wakeup source leaks on device unbind
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	linux-kernel@vger.kernel.org, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+	Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied it.
+Applied them.
 
 Thanks.
 
-On Fri, May 9, 2025 at 4:18=E2=80=AFPM Krzysztof Kozlowski
+On Thu, May 1, 2025 at 11:34=E2=80=AFPM Krzysztof Kozlowski
 <krzysztof.kozlowski@linaro.org> wrote:
 >
-> Driver in the probe enables wakeup source conditionally, so the cleanup
-> path should do the same - do not release the wakeup source memory if it
-> was not allocated.
+> Changes in v2:
+> - Patch #1: 0->false, extend commit msg
+> - Add Rb/Acks
+> - Link to v1: https://lore.kernel.org/r/20250406-device-wakeup-leak-extco=
+n-v1-0-8873eca57465@linaro.org
 >
-> Reported-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Closes: https://lore.kernel.org/r/22aaebb7-553b-4571-8a43-58a523241082@wa=
-nadoo.fr/
-> Fixes: 63c223dcdd49 ("extcon: adc-jack: Fix wakeup source leaks on device=
- unbind")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Device can be unbound, so driver must also release memory for the wakeup
+> source.  Use devm for driver already having devm interface and manually
+> disable wakeup for drivers still having remove() callback to keep
+> consistent ordering of cleanups.
+>
+> Best regards,
+> Krzysztof
+>
 > ---
->  drivers/extcon/extcon-adc-jack.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Krzysztof Kozlowski (4):
+>       extcon: adc-jack: Fix wakeup source leaks on device unbind
+>       extcon: axp288: Fix wakeup source leaks on device unbind
+>       extcon: fsa9480: Fix wakeup source leaks on device unbind
+>       extcon: qcom-spmi-misc: Fix wakeup source leaks on device unbind
 >
-> diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc=
--jack.c
-> index 557930394abd..7e3c9f38297b 100644
-> --- a/drivers/extcon/extcon-adc-jack.c
-> +++ b/drivers/extcon/extcon-adc-jack.c
-> @@ -164,7 +164,8 @@ static void adc_jack_remove(struct platform_device *p=
-dev)
->  {
->         struct adc_jack_data *data =3D platform_get_drvdata(pdev);
+>  drivers/extcon/extcon-adc-jack.c       | 1 +
+>  drivers/extcon/extcon-axp288.c         | 2 +-
+>  drivers/extcon/extcon-fsa9480.c        | 2 +-
+>  drivers/extcon/extcon-qcom-spmi-misc.c | 2 +-
+>  4 files changed, 4 insertions(+), 3 deletions(-)
+> ---
+> base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+> change-id: 20250406-device-wakeup-leak-extcon-dc1d4429a2b4
 >
-> -       device_init_wakeup(&pdev->dev, false);
-> +       if (data->wakeup_source)
-> +               device_init_wakeup(&pdev->dev, false);
->         free_irq(data->irq, data);
->         cancel_work_sync(&data->handler.work);
->  }
+> Best regards,
 > --
-> 2.45.2
+> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >
 >
 
