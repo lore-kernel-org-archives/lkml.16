@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C00AEEA8;
-	Sun, 11 May 2025 01:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E52DEEA8;
+	Sun, 11 May 2025 01:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746928497; cv=none; b=iO4K+ScDWYOBYzRm0lyHSGGGR97uyhcp6zfn7ij5jrr3+STTyoUObInANfTmclI2j7PzJwDvopVYdeptOsKURQZUB8RkcJYI0l2qS8xc5S5wDSvQhJkPfwdiCS15V5N/kUhZrSQbkqvKIuO1Ffqd8oKf2e2SjoBvCbUMEqFUy9o=
+	t=1746928502; cv=none; b=JWhNEOsUaPTUUngqIi9jWY2qzvgFoX7tmxs0ANJifrtnL7hffy90nzFwfMQZepYuR/DyD1qMLEM9UmPU/yHEVJEn//ASQfpCP7SHiw5vPBdHV7onMhp9Yj/5yOiM4uFbsiCvkpR8OvTmGsTvsmbB576HY65uxhDLsjuN24axTMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746928497; c=relaxed/simple;
-	bh=8YytFU4uQiyuY7JM+uMHnHtT1fzQtqRL8205N8QruuA=;
+	s=arc-20240116; t=1746928502; c=relaxed/simple;
+	bh=ig4DYJ3RXrVpEeq3aerEl+Ap4/cbUODtqNdrvm1zJko=;
 	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=OamW3gKbgY47x8G/A3upfvqYj1IdCfo4OMCqNWHmDTon+ENAaXoUU/5Xv4bOHK/KhEKJeggvqQua/huMWs12Kc1+6yK46UKfTaRhW/Csw6RmNduAN+3bub0RmJbxAv23qAU/HuoZEqFF9w7jTiflAbcC6r5iMq1tyQK6V7iYrtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZeN8YQxG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tr0Ry1l4NcN3w+QjC1nAQr7XCgRFZhw/5SlKo5PLMrTVA6voAM34Kt1yEBQQoQngI4qdQeRKKSWhAMSHA1BuRD9y2IbFFtcnjdfAdYbpkz66Q8Mpqttd+ZUGqF1dctKTfMy/OZmUY3DCGRgU7387e0YSSAdIzT/bw/1EqmKnYGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7dVw8nG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZeN8YQxG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29020C4CEE2;
-	Sun, 11 May 2025 01:54:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7dVw8nG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B011C4CEE2;
+	Sun, 11 May 2025 01:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746928496;
-	bh=8YytFU4uQiyuY7JM+uMHnHtT1fzQtqRL8205N8QruuA=;
+	s=k20201202; t=1746928501;
+	bh=ig4DYJ3RXrVpEeq3aerEl+Ap4/cbUODtqNdrvm1zJko=;
 	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=ZeN8YQxG3gxC5+AQDelL8F3QKALlFm32st5qp9we+RBTJfnIVW3f245aUQdzd3x89
-	 VWo79ay8Def62RdmImND8uqEuufca4SwIKhB+3HSTkI1SLpZGPWJI7l12kF4YyN96e
-	 cQMO5HxHAJHdnt/kMdi2NCL5Yhuxa5nLrZTJjSho++av+CMyrSN6lzjH9oyVJQiTOa
-	 AibEpOf0zH/jmUzVRRz5VouduoNELXrKGNchpHyk+stEZPTnQTLS13UQQXj3lpltUm
-	 HB5q+S/J7KvhevsPCXpk40cRpzc9U8F2KnWm2n7BqfMn86pdyZi5Y88JZ0o8I1Rd8D
-	 EXAF8x2sQFi/Q==
+	b=O7dVw8nGOAjKUBvvPSiCXB25ADmuwKNiprixu+5FFh04GZ2ucVCvxN8jFlQtEHjeY
+	 ImxJlGApNuSuCtgpPcorxA+7CoZbJo6J8RF9JzivuA2wstZQ9u/gngjZH0/JR9OQni
+	 NuIbGRShNPb/deGAzgu8zTrvA06yHiAAZVwOCwmQ8/4wL3Ui2RFpJEXanFKDkQ6nK/
+	 XP1e12gz8+AdtJghb/wfFNlryapmHqAQbBA8DRyscCRk7coru9UYkZ0GTLlfpLAsd5
+	 iX2LV4Vf/e9o4wyclhxLzZ+c93b5lWOALqlCUcfAlxmJymj60l6ewr87wcT8kXrma+
+	 yNbTpHKoV8yEA==
 From: Mark Brown <broonie@kernel.org>
-To: Support Opensource <support.opensource@diasemi.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+To: Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+ Frank Li <Frank.Li@nxp.com>, linux-spi@vger.kernel.org, imx@lists.linux.dev, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ openbmc@lists.ozlabs.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250509142448.257199-2-krzysztof.kozlowski@linaro.org>
-References: <20250509142448.257199-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] regulator: da9121: Fix Wvoid-pointer-to-enum-cast
- warning
-Message-Id: <174692849329.61218.3724088610251570929.b4-ty@kernel.org>
-Date: Sun, 11 May 2025 10:54:53 +0900
+In-Reply-To: <20250509112130.123462-3-krzysztof.kozlowski@linaro.org>
+References: <20250509112130.123462-3-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 1/2] spi: dt-bindings: fsl,dspi: Fix example
+ indentation
+Message-Id: <174692849876.61256.337596049686049621.b4-ty@kernel.org>
+Date: Sun, 11 May 2025 10:54:58 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,22 +51,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, 09 May 2025 16:24:49 +0200, Krzysztof Kozlowski wrote:
-> 'subvariant_id' is an enum, thus cast of pointer on 64-bit compile test
-> with clang and W=1 causes:
-> 
->   da9121-regulator.c:1132:24: error: cast to smaller integer type 'enum da9121_subvariant' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+On Fri, 09 May 2025 13:21:31 +0200, Krzysztof Kozlowski wrote:
+> DTS example in the bindings should be indented with 2- or 4-spaces, so
+> correct a mixture of different styles to keep consistent 4-spaces.
 > 
 > 
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: da9121: Fix Wvoid-pointer-to-enum-cast warning
-      commit: d5cc09847fa0df4034076f884de5957ec816dc52
+[1/2] spi: dt-bindings: fsl,dspi: Fix example indentation
+      commit: 846656f278e803cb60161f0cba4ee90a058440cc
+[2/2] spi: dt-bindings: nuvoton,wpcm450-fiu: Drop unrelated nodes from DTS example
+      commit: a4ca02454821cbc411e0bf16e527d392f188c218
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
