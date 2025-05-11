@@ -1,169 +1,105 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116F713BC0C;
-	Sun, 11 May 2025 02:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D974485260
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746929503; cv=none; b=oMxA86GzSpsxA0j3eNx1nr2vRh2te4+6RiDURab+++jYDR/LXEUkeq/tiyaCSdy8Iv8hxTBhKIgcXU39vlaCN+g6yFCQ/I7+a8OEm7GigzAZ6muAsIVGKFZ8BAmPX6dEyEC3eHyDw3elzho2fxDv0L/pU3u8WUSm+cr0YAW81f4=
+	t=1746929672; cv=none; b=e9cr9c03LzAEH0epbif2bOmRSvBYpt8kMzS2ciHBxcPVQcXYe3dHxtjTCCK4wsT9oFeeqe0I1CNu+qVpnXLAircRjv5vlpmud09lm6jWlDYx/d2bWOR80lyqHhGN3myypr0E2/PBET5TXcFR7OrmMAZWpespxXbG2orDrfISu9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746929503; c=relaxed/simple;
-	bh=/ZttMtOqdZXJjP3wVsUNBq/zJMFu25KYMXihE4ZwiZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OlxZOP5RUkIRY97SgmpmdxXYJCvQWqsa7dVa0EDdLl9AOR/NLIS3UEmAVBrq+1vU01/zNcRUhr6JZONI6kEDSsbS7hguPEZISmHXRGwEn1BrF1rsOTwTXR7Qd5jvzW3/NVR31QfIl7cA6J6sYsQY9AkHz6vCG0jOr/0XdjLikI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YSX7WJV1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746929672; c=relaxed/simple;
+	bh=ErdE1KVMfWPkKsMxBdbzTAnSvWDLWI4LLjWjznFIFAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Is7yoIyGvarogT+mTOfdpZArla+MG67YeTwrF/P01nhTfzGCSOadJLT9QaocM9jzPEGuLB1OXOxTb91x73zEpaZgl68XUyyFvmhmvTir802doOD7laxmTQuZpBf07sTUIU3EEghkwfJVNe96iAjLc9HyfRi/8TIppnrEgu6ulEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1IW0YD1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YSX7WJV1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=/TbWo8gaktSCwlVthFDiGTpBIfa4Kl80ITZsMX9sxUo=; b=YSX7WJV1L4K7jPQUzpaNEb7xug
-	56Jt9QYSeTxjpusZeqwPaoaC01apFsuOXRrSb//9Ah9sE8+JTlhatAYzdAItrvozC8IGdm8oxJONm
-	zIDtQ7Qn4ykc8wE9E3yf1UL/p3g9As8a+iJl4ehdWuJg68HHT0Al/xef848d5FR5CKKZBx2Kq5C2z
-	JMFpmTBdPCNkJKX+xz+ersbWp/Z9IQJuq67SgfHcDQkFo9GLcAavEdD6l9ooeaFAJX9im3Sa2i+Zi
-	4RjXpTUNmeTI9j35wXhJpdSn56hFXETunQfslG+brkrnKZSWjmY52Vjy8+XbhunJQVjun2KM2bxDo
-	tmp60wyQ==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uDwAB-0000000GXMK-0pE9;
-	Sun, 11 May 2025 02:11:37 +0000
-Message-ID: <8db7a29a-740a-4ebd-bc86-41d92a9101a6@infradead.org>
-Date: Sat, 10 May 2025 19:11:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1IW0YD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BD3C4AF0D
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746929672;
+	bh=ErdE1KVMfWPkKsMxBdbzTAnSvWDLWI4LLjWjznFIFAE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=D1IW0YD1PWiJE7OexRFET8O5OoDdN/n+H+arvcGWRYzDPMBLnLwS7wBDNnB5yAxhL
+	 ylfsP9uxJzMd0NTxXPAeXHqq1kycZyDThZpY7qV0bJNBtaByGa3Gi+w6CUcx4TvJ7Q
+	 DN5kneaArqhcJFZ9EFuoR9zWEkxh2laX1LhLrZ5PTtbMKgWbdR5vO4pvI4rU0Cljeh
+	 SoL6hb+EFl+I94+/CrjFVOzvQPhkXkl5ucRcMwjXldZ4a8UuCqNzktPwx7j3xeUKyl
+	 96YqxHULEPy323MNYOsLGWDN0jh2e+XwlPuC93HfCvn4PTjDwQeLQ9yMvJcVAulu+4
+	 7bUct8jdLE4fQ==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5fc9c49c8adso2870881a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 19:14:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrFMrn0GdwfY9L2+2j2IlIFejb82gKZHlHRZ83AKb0AcwH+PHS4aiL49/AN5IP6aoeLIZ1wrox9bhTQvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHEAxVErbOgjnDfIp/u4Bhf02ee7EoGFan8ZrFvzDNlRy6iXLt
+	UIB/Qzh7J+uLuHSlsfjEiKo85ufi4/0JZPnL+/aJCJkv3dPkP4wtIMpEkXP1lrCCZRqxf6hh6TR
+	j8MYq5VjeYcYlKmaggAboc2ppODNu6dbikaUa
+X-Google-Smtp-Source: AGHT+IExXmbIf+BhGVnj7doD3WnX7s+dvlTY3FdrciBuDVwzwOxxJvaT9GkVsNX9nEvSMBd0KFEz7jYxBN5tsLhkF2M=
+X-Received: by 2002:a05:6402:2396:b0:5fc:a51a:9c03 with SMTP id
+ 4fb4d7f45d1cf-5fca51a9f9fmr4891240a12.0.1746929670732; Sat, 10 May 2025
+ 19:14:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 07/18] cxl: docs/linux - early boot configuration
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
-References: <20250430181048.1197475-1-gourry@gourry.net>
- <20250430181048.1197475-8-gourry@gourry.net>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250430181048.1197475-8-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <87o6w7ge3o.fsf@microsoft.com>
+ <CACYkzJ7Ur4kFaGZTDvcFJpn0ZwJ9V+=3ZefUURtkrQGfa68zLg@mail.gmail.com>
+ <5dbc2a55a655f57a30be3ff7c6faa1d272e9b579.camel@HansenPartnership.com>
+ <CAHC9VhSPLsi+GBtjJsQ8LUqPQW4aHtOL6gOqr9jfpR0i1izVZA@mail.gmail.com>
+ <CAADnVQ+C2KNR1ryRtBGOZTNk961pF+30FnU9n3dt3QjaQu_N6Q@mail.gmail.com> <CAHC9VhRjKV4AbSgqb4J_-xhkWAp_VAcKDfLJ4GwhBNPOr+cvpg@mail.gmail.com>
+In-Reply-To: <CAHC9VhRjKV4AbSgqb4J_-xhkWAp_VAcKDfLJ4GwhBNPOr+cvpg@mail.gmail.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Sun, 11 May 2025 04:14:20 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ528JBKbhiw1HNfv1kDBYv_C76cFB8a_Wa6DSqZp5_XuA@mail.gmail.com>
+X-Gm-Features: AX0GCFtRm2U2Z08Q-5iN5TPSVkChFMpfYbeWxPh5iWXOgSo5pdg9_y4ozgwfcPs
+Message-ID: <CACYkzJ528JBKbhiw1HNfv1kDBYv_C76cFB8a_Wa6DSqZp5_XuA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: Paul Moore <paul@paul-moore.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Blaise Boscaccy <bboscaccy@linux.microsoft.com>, bpf <bpf@vger.kernel.org>, code@tyhicks.com, 
+	Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
+	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
+	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
+	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>, kysrinivasan@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+
+[...]
+
+> Blaise started this most recent effort by attempting to address the
+> concerns brought up in previous efforts, you and others rejected this
+> first attempt and directed Blaise towards a light skeleton and LSM
+> based approach, which is where he is at with Hornet.  Once again, you
+> reject this approach with minimal guidance on what would be
+> acceptable, and our response is to ask for clarification on your
+> preferred design.  We're not asking for a full working solution,
+> simply a couple of paragraphs outlining the design with enough detail
+> to put forward a working solution that isn't immediately NACK'd.
+> We've made this request multiple times in the past, most recently this
+> past weekend, where KP replied that he would be "happy" to share
+
+Here's the proposed design:
+
+https://lore.kernel.org/bpf/CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com/#t
 
 
-
-On 4/30/25 11:10 AM, Gregory Price wrote:
-> Document __init time configurations that affect CXL driver probe
-> process and memory region configuration.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->  Documentation/driver-api/cxl/index.rst        |   1 +
->  .../driver-api/cxl/linux/early-boot.rst       | 130 ++++++++++++++++++
->  2 files changed, 131 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/linux/early-boot.rst
-> 
-
-
-> diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
-> new file mode 100644
-> index 000000000000..275174d5b0bb
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/linux/early-boot.rst
-> @@ -0,0 +1,130 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=======================
-> +Linux Init (Early Boot)
-> +=======================
-> +
-> +Linux configuration is split into two major steps: Early-Boot and everything else.
-> +
-> +During early boot, Linux sets up immutable resources (such as numa nodes), while
-> +later operations include things like driver probe and memory hotplug.  Linux may
-> +read EFI and ACPI information throughout this process to configure logical
-> +representations of the devices.
-> +
-> +During Linux Early Boot stage (functions in the kernel that have the __init
-> +decorator), the system takes the resources created by EFI/BIOS (ACPI tables)
-> +and turns them into resources that the kernel can consume.
-> +
-> +
-> +BIOS, Build and Boot Options
-> +============================
-> +
-> +There are 4 pre-boot options that need to be considered during kernel build
-> +which dictate how memory will be managed by Linux during early boot.
-> +
-> +* EFI_MEMORY_SP
-> +
-> +  * BIOS/EFI Option that dictates whether memory is SystemRAM or
-> +    Specific Purpose.  Specific Purpose memory will be deferred to
-> +    drivers to manage - and not immediately exposed as system RAM.
-> +
-> +* CONFIG_EFI_SOFT_RESERVE
-> +
-> +  * Linux Build config option that dictates whether the kernel supports
-> +    Specific Purpose memory.
-> +
-> +* CONFIG_MHP_DEFAULT_ONLINE_TYPE
-> +
-> +  * Linux Build config that dictates whether and how Specific Purpose memory
-> +    converted to a dax device should be managed (left as DAX or onlined as
-> +    SystemRAM in ZONE_NORMAL or ZONE_MOVABLE).
-> +
-> +* nosoftreserve
-> +
-> +  * Linux kernel boot option that dictates whether Soft Reserve should be
-> +    supported.  Similar to CONFIG_EFI_SOFT_RESERVE.
-> +
-> +Memory Map Creation
-> +===================
-> +
-> +While the kernel parses the EFI memory map, if :code:`Specific Purpose` memory
-> +is supported and detect, it will set this region aside as :code:`SOFT_RESERVED`.
-
-                    detected,
-
-> +
-> +If :code:`EFI_MEMORY_SP=0`, :code:`CONFIG_EFI_SOFT_RESERVE=n`, or
-> +:code:`nosoftreserve=y` - Linux will default a CXL device memory region to
-> +SystemRAM.  This will expose the memory to the kernel page allocator in
-> +:code:`ZONE_NORMAL`, making it available for use for most allocations (including
-> +:code:`struct page` and page tables).
-> +
-> +If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
-> +dictates whether the memory is onlined by default (:code:`_OFFLINE` or
-> +:code:`_ONLINE_*`), and if online which zone to online this memory to by default
-> +(:code:`_NORMAL` or :code:`_MOVABLE`).
-> +
-> +If placed in :code:`ZONE_MOVABLE`, the memory will not be available for most
-> +kernel allocations (such as :code:`struct page` or page tables).  This may
-> +significant impact performance depending on the memory capacity of the system.
-> +
-> +
-> +NUMA Node Reservation
-> +=====================
-> +
-> +Linux refers to the proximity domains (:code:`PXM`) defined in the SRAT to
-> +create NUMA nodes in :code:`acpi_numa_init`. Typically, there is a 1:1 relation
-> +between :code:`PXM` and NUMA node IDs.
-> +
-> +SRAT is the only ACPI defined way of defining Proximity Domains. Linux chooses
-> +to, at most, map those 1:1 with NUMA nodes. CEDT adds a description of SPA
-> +ranges which Linux may wish to map to one or more NUMA nodes
-
-Add ending period above.
-
-> +
-> +If there are CXL ranges in the CFMWS but not in SRAT, then a fake :code:`PXM`
-> +is created (as of v6.15). In the future, Linux may reject CFMWS not described
-> +by SRAT due to the ambiguity of proximity domain association.
-
-
--- 
-~Randy
-
+> designs/code.  Unfortunately, since then all we've received from
+> either you or KP since then has been effectively just a list of your
+> objections on repeat; surely typing out a couple of paragraphs
+> outlining a design would have been quicker, easier, and more
+> constructive then your latest reply?
