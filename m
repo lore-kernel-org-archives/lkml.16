@@ -1,134 +1,152 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018193C6BA;
-	Sun, 11 May 2025 06:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C7213CF9C;
+	Sun, 11 May 2025 06:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746943369; cv=none; b=HrDHqPmOx9Mk8MKrs5wp17OX+Md0+5RvcNajftiG+wW0vdIT14c3ZfEGtacANv3T4b9xgcxTzINt39gSVFNhVEQjj94mCrkzMm+WhBsWEQxsNWfZw2FOEezFH+YjhLowuB86tE+0HnvgAeKErGRwNWr0wb7sJ4AHboUiQC9rKYY=
+	t=1746944621; cv=none; b=rUHpSpKlwgHpYlupY+Fk2LRTM+x04Mk7ldHv8v8tV1UdowaTXgqG+YuDMBkBe1lPJUnoK+CddzG3C/grSCd90i4xxiQf+6A8QXBLRP0LEMZDM5Qs20+rUJmTvjRDhlh4HbX610nQWc392si50yMUm3dZ1481iY7xMQqBTod7niY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746943369; c=relaxed/simple;
-	bh=MlbVqfUS1V/DgVbp/3vxmDMvCve29oEvoJ01SbaXDGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YWSO8MG5pi0e9xCDnTDdSXDBufZtHqUAToA/AGSeGAheNPn70MNeKo2Pvql0fovBIewCGmHTBgJEnHWUQyWZg7xJh5W3devV4En+YhGm8DAtO6QbpczDBaQmSN1FoYKgKjFSbEk95Z0dJ9Rk7Aj2praHHFS2cq+lUusFcLCRhPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=kuk8uc2a; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1746944621; c=relaxed/simple;
+	bh=XRXI1dFWC2evk8VpVxbYbs3Js/dKAUFFwwk2s6QGs1s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T7JeNcBF01bcUTCPu0/gX4qNSvWURJWmiA6CN4FVUAQkR+s9SY3b+7SJATjp6dmW3hadEvndhhDYeuFfTuKTxN9+Y6aXzrv93sfp9xwx/WMQ/I711J1iS+LRih0qkOyGYR7pOE/8NHaIRg3ue48nKAqthtuX+g1dJSVBipf78i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4vN5yQ9; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="kuk8uc2a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1746943360;
-	bh=MlbVqfUS1V/DgVbp/3vxmDMvCve29oEvoJ01SbaXDGE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kuk8uc2aihRCipAYZMqFQPw0m5pHj+HlL/AaKWG78nKSWJ9l0UI8fjUbfTS+xgR35
-	 FUOD49MLYCppml78dVKA/rm3tFQEvFr0k3deajsO0efdWG9mPAInoyEJuD8miUG9le
-	 o7HyjHBb4cb/oo3Y/QXmmtK+aRzxo0OtulvUQnsA=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sun, 11 May 2025 08:02:27 +0200
-Subject: [PATCH 1/2] Revert "kbuild: make all file references relative to
- source root"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4vN5yQ9"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad243cdbe98so88843766b.0;
+        Sat, 10 May 2025 23:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746944618; x=1747549418; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g1+g4uBPIIPeKp4LkDWHl6XKodFAe4OiLqdzjIJdnxU=;
+        b=Y4vN5yQ9adx9hR3Rlvx5Uf5zp5eKyDbE06txI/fFDJDU+2fELtngwpOUr7Vlh7n5Fg
+         J2RJdqyB8VJtp9cxWwxf9a8DzeH1/W34q8zwu/wanXGclsFmtcFMjE68PoB0/whQrNQv
+         705bdtyEoeNyxBVNcNBKSL7c88l0WNaEnyzAc1qMfiL/iRzyWHCVdQTwuFnN1al7bYoA
+         U1C+trL2UcUqiQbKO9oLAcZ0RxEnKsSYUwYT6GER/qdre+l+XY8rw4JZG4tVC0kGIZsS
+         OEE7Klcq17feF7fljiQf38leIb3poekeQ8PnHW+puqhzRc8IN3dscFNgC4T3qOxN38bc
+         +1sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746944618; x=1747549418;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g1+g4uBPIIPeKp4LkDWHl6XKodFAe4OiLqdzjIJdnxU=;
+        b=oAl6JUeTAihNhYTJBlEcEbsz+EKbi9pyv3cH9o66aRi5c80bCMVdIH4TjyNUe3w2zY
+         WGNxmuDxbTIxlHd5KJdz5Gmgy/E38KmnAnqG1OIC11k2FAuZA7TR1Vg4JDIx76yTC04L
+         3Sn4kDNt5pY0rLulzF5lLKh4+ehJsf9xBLVuqUiBEZ2+KsvjZSWSXX6hnA1mLQR1cvh1
+         3FQ9k7sUY2zzmMcpEuR3jojn+iziKpHJSnONiU+S+56lq0NgD3QB/bYVQ+rqxhciJWHv
+         cXqBssnaijV3251VyfRa333uZ2SRNOsqmdHHxH6uS1c9Hwh3+GAFgvLljIac8VYSsm3u
+         AGnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjduS76c1+5SMaya9TcAelWPfHf/81DGmU/HaEw4rQCk8EmwnW36f7Endc7BhesGEki6NUsYH+FsyaUQ==@vger.kernel.org, AJvYcCWtkAP+I5QD2bwIuIAT/RspgTsrfDBOVUs63Ei46W7r7loRoRQnvLdRLtooRjB4tPPZirMuDcJs@vger.kernel.org, AJvYcCXk8IHbcEnHwqtKoY0oRtgCtWTcQ18WfamUpkuaZH3bvkVKngW2gICmHqR65OSu21RbWyDLiSRO7bdWaBE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFLG2NDxy4YKgrGbAyCpG4OS/n8Fv7blmrjuESrWHGHqB+h7He
+	Put8rHof150sKWoDXtBRBfw9TSy3y3dCS1rzCEG8tOwQmYNqyYtq
+X-Gm-Gg: ASbGncuO2y8COJcZ5VLi3+5CzieX/Y1Md2HH1Y310j1xvCf6VYE6Urtc5CR/NGZ2JuS
+	XsEeDMH3jtqr3TEg3du+VPjRlkUSTNJyGGcSyKz5rrOng8ZEv0DSeC4n0Dphxs9/Tk1MKUGqLhw
+	n4optcG3kWUsrwBpkRO110FJjViq3AfipAYEXERCHKR1yFjPlIB5CclM+onXbWUa4023HLjxrov
+	2HSja7b9svkUmKvzE4nJolTMNgyd7d8zjB/FnRZtJ+FDrGyh1SnI2aO48V+v/eF9PcyeUYAo0vk
+	VOdUM7QWWmpOefaaVRlxKWyXBOjQ8CCgi2ommXaP+MyPWTQcN9DroaOhf5SAz6K5nsN2yEhi
+X-Google-Smtp-Source: AGHT+IF7wGutgUmMKgsG/fSA9t3L5OyQD1LTZMKMEFfP5F/EhCWZrz0sUd8YfeLn6D6lppASSYigtg==
+X-Received: by 2002:a17:907:7ba8:b0:ad2:1752:d4e9 with SMTP id a640c23a62f3a-ad218eb9985mr924682566b.14.1746944617973;
+        Sat, 10 May 2025 23:23:37 -0700 (PDT)
+Received: from [172.27.62.162] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bdd63sm420132966b.154.2025.05.10.23.23.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 May 2025 23:23:37 -0700 (PDT)
+Message-ID: <7045c4a7-d37c-4249-92a3-3901499ba9b4@gmail.com>
+Date: Sun, 11 May 2025 09:23:33 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250511-kbuild-revert-file-prefix-map-v1-1-9ba640c8411e@weissschuh.net>
-References: <20250511-kbuild-revert-file-prefix-map-v1-0-9ba640c8411e@weissschuh.net>
-In-Reply-To: <20250511-kbuild-revert-file-prefix-map-v1-0-9ba640c8411e@weissschuh.net>
-To: Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Matthieu Baerts <matttbe@kernel.org>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746943359; l=3152;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=MlbVqfUS1V/DgVbp/3vxmDMvCve29oEvoJ01SbaXDGE=;
- b=ItBpoWkK4typeysucQIK/bxX9N+G0KR+f0JRfnaPBe3JkpYnFTm5uvURXyW1y76iGtqUCqciE
- ZSLG45vzT8sDJ7XnXVnI0wQJXpcfjMkIpT4bMKbFI/N6tg0WPd0VwGD
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] net/mlx5: support software TX timestamp
+To: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, saeedm@nvidia.com, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, leon@kernel.org,
+ Jason Xing <kerneljasonxing@gmail.com>
+References: <20250508235109.585096-1-stfomichev@gmail.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250508235109.585096-1-stfomichev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This reverts commit cacd22ce69585a91c386243cd662ada962431e63.
 
--ffile-prefix-map breaks the ability of debuggers to find the source
-file corresponding to object files. As there is no simple or uniform
-way to specify the source directory explicitly, this breaks developers
-workflows.
 
-Revert the unconditional usage of -ffile-prefix-map.
+On 09/05/2025 2:51, Stanislav Fomichev wrote:
+> Having a software timestamp (along with existing hardware one) is
+> useful to trace how the packets flow through the stack.
+> mlx5e_tx_skb_update_hwts_flags is called from tx paths
+> to setup HW timestamp; extend it to add software one as well.
+> 
+> Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+> ---
+> v2: rename mlx5e_tx_skb_update_hwts_flags (Tariq & Jason)
+> ---
+>   drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 1 +
+>   drivers/net/ethernet/mellanox/mlx5/core/en_tx.c      | 7 ++++---
+>   2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> index fdf9e9bb99ac..e399d7a3d6cb 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> @@ -1689,6 +1689,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *priv,
+>   		return 0;
+>   
+>   	info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
+> +				SOF_TIMESTAMPING_TX_SOFTWARE |
+>   				SOF_TIMESTAMPING_RX_HARDWARE |
+>   				SOF_TIMESTAMPING_RAW_HARDWARE;
+>   
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> index 4fd853d19e31..55a8629f0792 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> @@ -337,10 +337,11 @@ static void mlx5e_sq_calc_wqe_attr(struct sk_buff *skb, const struct mlx5e_tx_at
+>   	};
+>   }
+>   
+> -static void mlx5e_tx_skb_update_hwts_flags(struct sk_buff *skb)
+> +static void mlx5e_tx_skb_update_ts_flags(struct sk_buff *skb)
+>   {
+>   	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))
+>   		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+> +	skb_tx_timestamp(skb);
+>   }
+>   
+>   static void mlx5e_tx_check_stop(struct mlx5e_txqsq *sq)
+> @@ -392,7 +393,7 @@ mlx5e_txwqe_complete(struct mlx5e_txqsq *sq, struct sk_buff *skb,
+>   	cseg->opmod_idx_opcode = cpu_to_be32((sq->pc << 8) | attr->opcode);
+>   	cseg->qpn_ds           = cpu_to_be32((sq->sqn << 8) | wqe_attr->ds_cnt);
+>   
+> -	mlx5e_tx_skb_update_hwts_flags(skb);
+> +	mlx5e_tx_skb_update_ts_flags(skb);
+>   
+>   	sq->pc += wi->num_wqebbs;
+>   
+> @@ -625,7 +626,7 @@ mlx5e_sq_xmit_mpwqe(struct mlx5e_txqsq *sq, struct sk_buff *skb,
+>   	mlx5e_dma_push(sq, txd.dma_addr, txd.len, MLX5E_DMA_MAP_SINGLE);
+>   	mlx5e_skb_fifo_push(&sq->db.skb_fifo, skb);
+>   	mlx5e_tx_mpwqe_add_dseg(sq, &txd);
+> -	mlx5e_tx_skb_update_hwts_flags(skb);
+> +	mlx5e_tx_skb_update_ts_flags(skb);
+>   
+>   	if (unlikely(mlx5e_tx_mpwqe_is_full(&sq->mpwqe))) {
+>   		/* Might stop the queue and affect the retval of __netdev_tx_sent_queue. */
 
-Reported-by: Matthieu Baerts <matttbe@kernel.org>
-Closes: https://lore.kernel.org/lkml/edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org/
-Reported-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Closes: https://lore.kernel.org/lkml/aBEttQH4kimHFScx@intel.com/
-Fixes: cacd22ce6958 ("kbuild: make all file references relative to source root")
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- Documentation/kbuild/reproducible-builds.rst | 17 +++++++++++++++++
- Makefile                                     |  2 +-
- 2 files changed, 18 insertions(+), 1 deletion(-)
+Thanks for your patch.
 
-diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
-index a7762486c93fcd3eba08b836bed622a41e829e41..f2dcc39044e66ddd165646e0b51ccb0209aca7dd 100644
---- a/Documentation/kbuild/reproducible-builds.rst
-+++ b/Documentation/kbuild/reproducible-builds.rst
-@@ -46,6 +46,21 @@ The kernel embeds the building user and host names in
- `KBUILD_BUILD_USER and KBUILD_BUILD_HOST`_ variables.  If you are
- building from a git commit, you could use its committer address.
- 
-+Absolute filenames
-+------------------
-+
-+When the kernel is built out-of-tree, debug information may include
-+absolute filenames for the source files.  This must be overridden by
-+including the ``-fdebug-prefix-map`` option in the `KCFLAGS`_ variable.
-+
-+Depending on the compiler used, the ``__FILE__`` macro may also expand
-+to an absolute filename in an out-of-tree build.  Kbuild automatically
-+uses the ``-fmacro-prefix-map`` option to prevent this, if it is
-+supported.
-+
-+The Reproducible Builds web site has more information about these
-+`prefix-map options`_.
-+
- Generated files in source packages
- ----------------------------------
- 
-@@ -116,5 +131,7 @@ See ``scripts/setlocalversion`` for details.
- 
- .. _KBUILD_BUILD_TIMESTAMP: kbuild.html#kbuild-build-timestamp
- .. _KBUILD_BUILD_USER and KBUILD_BUILD_HOST: kbuild.html#kbuild-build-user-kbuild-build-host
-+.. _KCFLAGS: kbuild.html#kcflags
-+.. _prefix-map options: https://reproducible-builds.org/docs/build-path/
- .. _Reproducible Builds project: https://reproducible-builds.org/
- .. _SOURCE_DATE_EPOCH: https://reproducible-builds.org/docs/source-date-epoch/
-diff --git a/Makefile b/Makefile
-index b29cc321ffd9c6a5a201d110bd8a88092c380f65..f3f7dbf8ca284fbbab6bf2459982447471234f5f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1068,7 +1068,7 @@ KBUILD_CFLAGS += -fno-builtin-wcslen
- 
- # change __FILE__ to the relative path to the source directory
- ifdef building_out_of_srctree
--KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
-+KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
- KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
- endif
- 
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 
--- 
-2.49.0
 
