@@ -1,263 +1,318 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B384DDAD;
-	Sun, 11 May 2025 01:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C07139566
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746928651; cv=none; b=Co1XGDBx2Hk49jkG+yvzWbTEKkmwwvFsEh4lII9p1mzqI5LuBTGBTOJfScEmAeczp2bBKRpBRP3W7XoooGQn6TvAQW01UCvDrohxoee+RpsZYhuWFbgl8/xhVuCMF85a+ISzA0K3Cf3TmzSLSyDxtGyejtEGhQq7MUgMh6PZezg=
+	t=1746928898; cv=none; b=UNjAVHDNmVUfP8E00S6oMXHNyqI2cLt54qV9r+m4y1X6vh/G0tmAPY7ivCgDlRsqF0H8YEXKLrnQOqY+IlzIJRxEDDtCpEGXV+RIrsh2Lulw/oXatp69ugpD0N7cOBob7dzuhrJOQYW8XAE0OISEvrTYkk9/Uj3FogJSbid/c40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746928651; c=relaxed/simple;
-	bh=KdbX0jPiRd4tlxIfeYuW+jtn/LCXn3kN3RReU+jqVsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XiYqgb7TTW17Dqk2XmbGvCyYGEp9N0OldwXkQ3UPBzbcO76ao6WmSQdGvNnjIZEYf76qd3JkRTJ8uak6S4cwPjVdiYH5quzEKN54rb92JOBQu+HOe5PtSsPuNX19dwoukycEWOrCfM6bFXHCf1yyYpv6hYyzk9xIwPSmdm8DEdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pQ8KXZD5; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746928898; c=relaxed/simple;
+	bh=Uud/c+M6EfwYviLXv3JhG9QXpJjkB+v/1YKSMnhuxYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=meyCxWZOl2wsKznuaGAbyNRomuLeR8Jp3FpDNWrf3eh/vKkKBL/g+wWjL+9yUSdRfkrWQhxyPTK4R9qmbvdXuYO3fS50hBAevRMA8XEjhq/FfTd9KgjCt5X8qt1dqUl+VZ4jAi2EdRpEu1Erya14C4ejlN786rPe/51x6sq7lQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SknmlYj2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pQ8KXZD5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Rh2oUnvKD7/7pfEaaCaR8pSVJXctOtXLnyFrbhpv8Io=; b=pQ8KXZD53+ZUytlfH/st7V4ixo
-	TZB8A0Q9zVngPf+vM6J8fva0Qx5sQDmKweGS0mSe6niePwFZFl0mDJHz2VT6sjWLNKuZE0FLpcPkV
-	2AuMddOKE+7YblPM2jzpzBsZTQBU4O1EtcaUavLuXr01dvGhANjc+ggcX/b9/NDb/XsphfTr0b5qa
-	wy14tNB4ChZO3TniTqZ7Ww4OxTzsEppJID3MPG1S6hR3aMTNgeKWeVF2/tgemnp4xEtFN+zm9BBat
-	I9DzVL1Ys9G80sbAM9vIXgCqAJm+O/RY6QIhBIHY3teBj8wSROXVVJJ2gEB8YUSwwA9Awg19vO3vk
-	hn5GOTBw==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uDvwI-0000000GXIf-3r8z;
-	Sun, 11 May 2025 01:57:19 +0000
-Message-ID: <d8eadf5e-1b9f-4020-95de-cde60e4bee48@infradead.org>
-Date: Sat, 10 May 2025 18:57:05 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SknmlYj2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7D6C4CEE2
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746928898;
+	bh=Uud/c+M6EfwYviLXv3JhG9QXpJjkB+v/1YKSMnhuxYs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SknmlYj2WWl0gmygOMQ462CEdJe1IMriWCMG4DDLJhTgeRoQh4ODOu2dMUdrccTuQ
+	 CA6pPxS9fLzPjzPokhWdOZa56uhku9XM3FW/1pQFiU25spAaaIXhrBhRDlyB9px4LG
+	 j5Fou3qIi1Pimuy8bJ/xKtnSiH0BmG4k8yIfJn44ZjHqAMvkjkNe0KNAvJ0gdBYWiR
+	 Zetb/OjfXg5lANmS+9bETEreAQLBB+CE6wUhYodPMcG9iavZMgZPLtO1b1VdmK8bjL
+	 SAk5twBmBWhF77iiBcC0QW2BefAOFAyBWMz+0EQ+EV1m4SrlWstyOwgI95x4d7ebM+
+	 Mzm1k2LaJAFHg==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5fd1f7f8b25so598313a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 19:01:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXRaBD9y3Yu4Nd+iA7SX2HTqumpWELjV6bU29jf3qLz5PUS5g2cmqOS/x+sKyZLrUEmZkeJubKKI0peMZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFaisJXAiH9nCAaTRC4732DdfJWTT8tfhbKg+TzbMiS1e3Mtoa
+	PVAFuPVGMSF8PxwLCzUCe9LjpTzs8DN/7l259QYcGPRY88ionUor4/aZB/runfS0O+AF1+Q83wh
+	ojZzIlGBdxpnuHc3gGcKZy4k6/aOOVX/P+mWk
+X-Google-Smtp-Source: AGHT+IEndbWplSJxFGd74VrtGrhFU2hW9QCIiBQIkWd6Wv+M3EzLZDUhAbkzCtB+Hip0tzqQSM6gufYVYT1/8EGDpuY=
+X-Received: by 2002:a05:6402:2688:b0:5fd:1972:99da with SMTP id
+ 4fb4d7f45d1cf-5fd19729aa8mr1758195a12.23.1746928896391; Sat, 10 May 2025
+ 19:01:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 02/18] cxl: docs/devices - device reference and
- uefi placeholder
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
-References: <20250430181048.1197475-1-gourry@gourry.net>
- <20250430181048.1197475-3-gourry@gourry.net>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250430181048.1197475-3-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+ <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+In-Reply-To: <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Sun, 11 May 2025 04:01:25 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
+X-Gm-Features: AX0GCFvon_jvokApR2EuF7DFGQb8hyY-4kxy54yUF6qWCWTtHAsfnnk2ydLvo-Y
+Message-ID: <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: Paul Moore <paul@paul-moore.com>
+Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com, 
+	bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, 
+	dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
+	jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com, 
+	justinstitt@google.com, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net, morbo@google.com, 
+	nathan@kernel.org, neal@gompa.dev, nick.desaulniers+lkml@gmail.com, 
+	nicolas@fjasle.eu, nkapron@google.com, roberto.sassu@huawei.com, 
+	serge@hallyn.com, shuah@kernel.org, teknoraver@meta.com, 
+	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+> > I think we need a more detailed explanation of this approach on-list.
+> > There has been a lot of vague guidance on BPF signature validation
+> > from the BPF community which I believe has partly led us into the
+> > situation we are in now.  If you are going to require yet another
+> > approach, I think we all need to see a few paragraphs on-list
+> > outlining the basic design.
+>
+> Definitely, happy to share design / code.
 
+Here=E2=80=99s the design that Alexei and I have been discussing. It's
+extensible, independent of ELF formats, handles all identified
+use-cases, paves the way for signed unprivileged eBPF, and meets the
+requirements of anyone who wants to run signed eBPF programs.
 
-On 4/30/25 11:10 AM, Gregory Price wrote:
-> Add a simple device primer sufficient to understand the theory
-> of operation documentation.
-> 
-> Add carve-out for CDAT with a TODO.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->  .../driver-api/cxl/devices/device-types.rst   | 170 ++++++++++++++++++
->  Documentation/driver-api/cxl/devices/uefi.rst |  10 ++
->  Documentation/driver-api/cxl/index.rst        |   7 +
->  3 files changed, 187 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
->  create mode 100644 Documentation/driver-api/cxl/devices/uefi.rst
-> 
-> diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
-> new file mode 100644
-> index 000000000000..dfe8d4711987
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/devices/device-types.rst
-> @@ -0,0 +1,170 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====================
-> +Devices and Protocols
-> +=====================
-> +
-> +The type of CXL device (Memory, Accelerator, etc) dictates many configuration steps. This section
-> +covers some basic background on device types and on-device resources used by the platform and OS
-> +which impact configuration.
-> +
-> +Protocols
-> +=========
-> +
-> +There are three core protocols to CXL.  For the purpose of this documentation,
-> +we will only discuss very high level definitions as the specific hardware
-> +details are largely abstracted away from Linux.  See the CXL specification
-> +for more details.
-> +
-> +CXL.io
-> +------
-> +The basic interaction protocol, similar to PCIe configuration mechanisms.
-> +Typically used for initialization, configuration, and I/O access for anything
-> +other than memory (CXL.mem) or cache (CXL.cache) operations.
-> +
-> +The Linux CXL driver exposes access to .io functionalty via the various sysfs
-> +interfaces and /dev/cxl/ devices (which exposes direct access to device
-> +mailboxes).
-> +
-> +CXL.cache
-> +---------
-> +The mechanism by which a device may coherently access and cache host memory.
-> +
-> +Largely transparent to Linux once configured.
-> +
-> +CXL.mem
-> +---------
-> +The mechanism by which the CPU may coherently access and cache device memory.
-> +
-> +Largely transparent to Linux once configured.
-> +
-> +
-> +Device Types
-> +============
-> +
-> +Type-1
-> +------
-> +
-> +A Type-1 CXL device:
-> +
-> +* Supports cxl.io and cxl.cache protocols
-> +* Implements a fully coherent cache
-> +* Allow Device-to-Host coherence and Host-to-Device snoops.
+# Trusted Hash Chain
 
-     Allows
+The key idea of the design is to use a signing algorithm that allows
+us to integrity-protect a number of future payloads, including their
+order, by creating a chain of trust.
 
-> +* Does NOT have host-managed device memory (HDM)
-> +
-> +Typical examples of type-1 devices is a Smart NIC - which may want to
-> +directly operate on host-memory (DMA) to store incoming packets. These
-> +devices largely rely on CPU-attached memory.
-> +
-> +Type-2
-> +------
-> +
-> +A Type-2 CXL Device:
-> +
-> +* Supports cxl.io, cxl.cache, and cxl.mem protocols
-> +* Optionally implements coherent cache and Host-Managed Device Memory
-> +* Is typically an accelerator device w/ high bandwidth memory.
-> +
-> +The primary difference between a type-1 and type-2 device is the presence
-> +of host-managed device memory, which allows the device to operate on a
-> +local memory bank - while the CPU sill has coherent DMA to the same memory.
-> +
-> +The allows things like GPUs to expose their memory via DAX devices or file
-> +descriptors, allows drivers and programs direct access to device memory
-> +rather than use block-transfer semantics.
-> +
-> +Type-3
-> +------
-> +
-> +A Type-3 CXL Device
-> +
-> +* Supports cxl.io and cxl.mem
-> +* Implements Host-Managed Device Memory
-> +* May provide either Volatile or Persistent memory capacity (or both).
-> +
-> +A basic example of a type-3 device is a simple memory expanded, whose
+Consider that Alice needs to send messages M_1, M_2, ..., M_n to Bob.
+We define blocks of data such that:
 
-                                                         expander  ?
+    B_n =3D M_n || H(termination_marker)
 
-> +local memory capacity is exposed to the CPU for access directly via
-> +basic coherent DMA.
-> +
-> +Switch
-> +------
-> +
-> +A CXL switch is a device capacity of routing any CXL (and by extension, PCIe)
-> +protocol between an upstream, downstream, or peer devices.  Many devices, such
-> +as Multi-Logical Devices, imply the presence of switching in some manner.
-> +
-> +Logical Devices and Heads
-> +-------------------------
-> +
-> +A CXL device may present one or more "Logical Devices" to one or more hosts
-> +(via physical "Heads").
-> +
-> +A Single-Logical Device (SLD) is a device which presents a single device to
-> +one or more heads.
-> +
-> +A Multi-Logical Device (MLD) is a device which may present multiple devices
-> +to one or more devices.
-> +
-> +A Single-Headed Device exposes only a single physical connection.
-> +
-> +A Multi-Headed Device exposes multiple physical connections.
-> +
-> +MHSLD
-> +~~~~~
-> +A Multi-Headed Single-Logical Device (MHSLD) exposes a single logical
-> +device to multiple heads which may be connected to one or more discrete
-> +hosts.  An example of this would be a simple memory-pool which may be
-> +statically configured (prior to boot) to expose portions of its memory
-> +to Linux via the CEDT ACPI table.
-> +
-> +MHMLD
-> +~~~~~
-> +A Multi-Headed Multi-Logical Device (MHMLD) exposes multiple logical
-> +devices to multiple heads which may be connected to one or more discrete
-> +hosts.  An example of this would be a Dynamic Capacity Device or which
-> +may be configured at runtime to expose portions of its memory to Linux.
-> +
-> +Example Devices
-> +===============
-> +
-> +Memory Expander
-> +---------------
-> +The simplest form of Type-3 device is a memory expander.  A memory expander
-> +exposes Host-Managed Device Memory (HDM) to Linux.  This memory may be
-> +Volatile or Non-Volatile (Persistent).
-> +
-> +Memory Expanders will typically be considered a form of Single-Headed,
-> +Single-Logical Device - as its form factor will typically be an add-in-card
-> +(AIC) or some other similar form-factor.
-> +
-> +The Linux CXL driver provides support for static or dynamic configuration of
-> +basic memory expanders.  The platform may program decoders prior to OS init
-> +(e.g. auto-decoders), or the user may program the fabric if the platform
-> +defers these operations to the OS.
-> +
-> +Multiple Memory Expanders may be added to an external chassis and exposed to
-> +a host via a head attached to a CXL switch.  This is a "memory pool", and
-> +would be considered an MHSLD or MHMLD depending on the management capabilities
-> +provided by the switch platform.
-> +
-> +As of v6.14, Linux does not provide a formalized interface to manage non-DCD
-> +MHSLD or MHMLD devices.
-> +
-> +Dynamic Capacity Device (DCD)
-> +-----------------------------
-> +
-> +A Dynamic Capacity Device is a Type-3 device which provides dynamic management
-> +of memory capacity. The basic premise of a DCD to provide an allocator-like
-> +interface for physical memory capacity to a "Fabric Manager" (an external,
-> +privileged host with privileges to change configurations for other hosts).
-> +
-> +A DCD manages "Memory Extents", which may be volatile or persistent. Extents
-> +may also be exclusive to a single host or shared across multiple.
+(Each block contains its corresponding message and the hash of the
+*next* block in the chain.)
 
-                                                           multiple hosts.
+    B_{n-1} =3D M_{n-1} || H(B_n)
+    B_{n-2} =3D M_{n-2} || H(B_{n-1})
 
-> +
-> +As of v6.14, Linux does not provide a formalized interface to manage DCD
-> +devices, however there is active work on LKML targeting future release.
-> +
-> +Type-2 Device
-> +-------------
-> +
-> +Todo
+  ...
 
+    B_2 =3D M_2 || H(B_3)
+    B_1 =3D M_1 || H(B_2)
 
--- 
-~Randy
+Alice does the following (e.g., on a build system where all payloads
+are available):
 
+  * Assembles the blocks B_1, B_2, ..., B_n.
+  * Calculates H(B_1) and signs it, yielding Sig(H(B_1)).
+
+Alice sends the following to Bob:
+
+    M_1, H(B_2), Sig(H(B_1))
+
+Bob receives this payload and does the following:
+
+    * Reconstructs B_1 as B_1' using the received M_1 and H(B_2)
+(i.e., B_1' =3D M_1 || H(B_2)).
+    * Recomputes H(B_1') and verifies the signature against the
+received Sig(H(B_1)).
+    * If the signature verifies, it establishes the integrity of M_1
+and H(B_2) (and transitively, the integrity of the entire chain). Bob
+now stores the verified H(B_2) until it receives the next message.
+    * When Bob receives M_2 (and H(B_3) if n > 2), it reconstructs
+B_2' (e.g., B_2' =3D M_2 || H(B_3), or if n=3D2, B_2' =3D M_2 ||
+H(termination_marker)). Bob then computes H(B_2') and compares it
+against the stored H(B_2) that was verified in the previous step.
+
+This process continues until the last block is received and verified.
+
+Now, applying this to the BPF signing use-case, we simplify to two messages=
+:
+
+    M_1 =3D I_loader (the instructions of the loader program)
+    M_2 =3D M_metadata (the metadata for the loader program, passed in a
+map, which includes the programs to be loaded and other context)
+
+For this specific BPF case, we will directly sign a composite of the
+first message and the hash of the second. Let H_meta =3D H(M_metadata).
+The block to be signed is effectively:
+
+    B_signed =3D I_loader || H_meta
+
+The signature generated is Sig(B_signed).
+
+The process then follows a similar pattern to the Alice and Bob model,
+where the kernel (Bob) verifies I_loader and H_meta using the
+signature. Then, the trusted I_loader is responsible for verifying
+M_metadata against the trusted H_meta.
+
+From an implementation standpoint:
+
+# Build
+
+bpftool (or some other tool in the user's build environment) knows
+about the metadata (M_metadata) and the loader program (I_loader). It
+first calculates H_meta =3D H(M_metadata). Then it constructs the object
+to be signed and computes the signature:
+
+    Sig(I_loader || H_meta)
+
+# Loader
+
+bpftool generates the loader program. The initial instructions of this
+loader program are designed to verify the SHA256 hash of the metadata
+(M_metadata) that will be passed in a map. These instructions
+effectively embed the precomputed H_meta as immediate values.
+
+    ld_imm64 r1, const_ptr_to_map // insn[0].src_reg =3D=3D BPF_PSEUDO_MAP_=
+IDX
+    r2 =3D *(u64 *)(r1 + 0);
+    ld_imm64 r3, sha256_of_map_part1 // constant precomputed by
+bpftool (part of H_meta)
+    if r2 !=3D r3 goto out;
+
+    r2 =3D *(u64 *)(r1 + 8);
+    ld_imm64 r3, sha256_of_map_part2 // (part of H_meta)
+    if r2 !=3D r3 goto out;
+
+    r2 =3D *(u64 *)(r1 + 16);
+    ld_imm64 r3, sha256_of_map_part3 // (part of H_meta)
+    if r2 !=3D r3 goto out;
+
+    r2 =3D *(u64 *)(r1 + 24);
+    ld_imm64 r3, sha256_of_map_part4 // (part of H_meta)
+    if r2 !=3D r3 goto out;
+    ...
+
+This implicitly makes the payload equivalent to the signed block (B_signed)
+
+    I_loader || H_meta
+
+bpftool then generates the signature of this I_loader payload (which
+now contains the expected H_meta) using a key (system or user) with
+new flags that work in combination with bpftool -L
+
+This signature is stored in bpf_attr, which is extended as follows for
+the BPF_PROG_LOAD command:
+
+    __aligned_u64 signature;
+    __u32 signature_size;
+    __u32 user_keyring_serial;
+    __u64 system_keyring_id;
+
+# New BPF Commands
+
+## BPF_MAP_GET_HASH args: (map_fd, &sha256_output, output_size)
+
+This command instructs the kernel to compute the SHA256 hash of the
+map's data. If sha256_output is non-NULL, the hash is returned to
+userspace. (While not strictly needed for this specific signing
+use-case to function, it's a useful utility for userspace debugging or
+other applications.)
+
+The kernel also stores this computed hash internally within its struct bpf_=
+map:
+
+    struct bpf_map {
+    +   u64 sha[4];
+        const struct bpf_map_ops *ops;
+        struct bpf_map *inner_map_meta;
+    };
+
+## BPF_MAP_MAKE_EXCLUSIVE args: (map_fd, sha256_of_future_prog)
+
+Exclusivity ensures that the map can only be used by a future BPF
+program whose SHA256 hash matches sha256_of_future_prog.
+
+First, bpf_prog_calc_tag() is updated to compute the SHA256 instead of
+SHA1, and this hash is stored in struct bpf_prog_aux:
+
+    @@ -1588,6 +1588,7 @@ struct bpf_prog_aux {
+         int cgroup_atype; /* enum cgroup_bpf_attach_type */
+         struct bpf_map *cgroup_storage[MAX_BPF_CGROUP_STORAGE_TYPE];
+         char name[BPF_OBJ_NAME_LEN];
+    +    u64 sha[4];
+         u64 (*bpf_exception_cb)(u64 cookie, u64 sp, u64 bp, u64, u64);
+         // ...
+    };
+
+Once BPF_MAP_MAKE_EXCLUSIVE is called with map_fd and the target
+program's SHA256 hash, the kernel marks the map as exclusive. When a
+BPF program is subsequently loaded, if it attempts to use this map,
+the kernel will compare the program's own SHA256 hash against the one
+registered with the map, if matching, it will be added to
+prog->used_maps[]. The program load will fail if the hashes do not
+match or if the map is already in use by another (non-matching)
+exclusive program.
+
+Any program with a different SHA256 will fail to load if it attempts
+to use the exclusive map.
+
+NOTE: Exclusive maps cannot be added as inner maps.
+
+# Light Skeleton Sequence (Userspace Example)
+
+    // Create and populate the metadata map
+
+    map_fd =3D skel_map_create(BPF_MAP_TYPE_ARRAY, "__loader.map", 4,
+opts->data_sz, 1);
+    skel_map_update_elem(map_fd, &key, opts->data, 0);
+
+    // Freeze the map to prevent further userspace modifications.
+    // This makes its content immutable from userspace.
+
+    skel_map_freeze(map_fd);
+
+    // Make the map exclusive to the intended loader program.
+    // sha256_of_loader_prog is the hash of the I_loader binary
+    skel_map_make_exclusive(map_fd, sha256_of_loader_prog);
+
+    skel_map_get_hash(map_fd, NULL, 0);
+
+    // Load the loader program (I_loader) with its signature.
+    opts.ctx =3D (struct bpf_loader_ctx *)skel;
+    opts.data_sz =3D sizeof(opts_data) - 1;
+    opts.data =3D (void *)opts_data;
+    opts.insns_sz =3D sizeof(opts_insn) - 1;
+    opts.insns =3D (void *)opts_insn;
+
+    opts.signature =3D =E2=80=A6 signature of the opts_insn[] bytes=E2=80=
+=A6
+    opts.signature_size =3D sizeof(..);
+    opts. system_keyring_id  =3D ...
+
+    OR
+
+    opts.user_keyring_serial =3D =E2=80=A6 depending on what flag was used =
+in bpftool.
+    err =3D bpf_load_and_run(&opts);
+
+The kernel verifier will:
+
+    * Compute the hash of the provided I_loader bytecode.
+    * Verify the signature against this computed hash.
+    * Check if the metadata map (now exclusive) is intended for this
+program's hash.
+
+The signature check in the verifier (during BPF_PROG_LOAD):
+
+    verify_pkcs7_signature(prog->aux->sha, sizeof(prog->aux->sha),
+sig_from_bpf_attr, =E2=80=A6);
+
+This ensures that the loaded loader program (I_loader), including the
+embedded expected hash of the metadata (H_meta), is trusted.
+Since the loader program is now trusted, it can be entrusted to verify
+the actual metadata (M_metadata) read from the (now exclusive and
+frozen) map against the embedded (and trusted) H_meta. There is no
+Time-of-Check-Time-of-Use (TOCTOU) vulnerability here because:
+
+    * The signature covers the I_loader and its embedded H_meta.
+    * The metadata map M_metadata is frozen before the loader program
+is loaded and associated with it.
+    * The map is made exclusive to the specific (signed and verified)
+loader program.
