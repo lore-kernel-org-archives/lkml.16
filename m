@@ -1,61 +1,62 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4F31E485;
-	Sun, 11 May 2025 23:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E371B393C;
+	Sun, 11 May 2025 23:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747006226; cv=none; b=fXfD6o7yovYxdJGjC0D0MVxxzwy1zjJMG3YR3xotD4Qk287Tg9yufKeij0NDXdANpdOYaIqhutsFFjy1PdblTTYVdSx46NO063aFei4cpbJguVZsVWGi+8MhVvjdBroFG+OKKZeJ7xDoY+9VL6Cv3Qa+Q2xnMYf9m+Ls+zMLMtw=
+	t=1747006303; cv=none; b=XBllFrvjnhoDl3aDW3OHzuLbg2VVyM5alzLUO7oHjgIjzQYmq3Co+huoghAxppwnRLy+ayNTtWz9dDSNt2hHB6jhT3rvrUsDhA+A2q7r1Bl3NHx2vJ5BwBUAsq2xb0r582+vjDVn/mxqp2+PM3Bpmrk/Uoxt0z6Mto9O3dPj+9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747006226; c=relaxed/simple;
-	bh=kxS9RGUJfGYHYRC6/YRlAu+5nrctscMWll9hzu5mfPw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=o3xxsatoNQ9KvBOfTqBBmvLAhHHTg3OVAxgH5Dp5U8dLSqEwomCizXuEYiUdj9ac4q0oaUuCJpYvqPjZOSG5qH8j3kJi7qTPnuE0NnwYYk9Dt3Z5Uu7V8/yuSj4W5Iyk2sgLOMRpHPoHkyTc9a8lt8oiCZmYBnB/552T5mGHfuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5xFv9CW; arc=none smtp.client-ip=209.85.222.44
+	s=arc-20240116; t=1747006303; c=relaxed/simple;
+	bh=0roI/JZWscX9NQeOjyFr3qhVhps94hu0D1pTW3mYU8k=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=Bf0cM/8Kcfo1noAIkRExYCk8dw48lmhaKDE5BHXtoSaVtWdQbscPcI9SShoWIpCfNdFWu/YucLVJbtlhjEzWuZMyauGU4YbG+NNsdFBGwaezAbMy6jtP7K3K1ndoyYWRze/aaRJXUrf+tI9e7GtXEhh5SuqplAf5ujEZYHC2cUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ciJ3WU+4; arc=none smtp.client-ip=209.85.221.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5xFv9CW"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-879e8e2237dso2136150241.0;
-        Sun, 11 May 2025 16:30:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ciJ3WU+4"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52410fb2afeso3275921e0c.3;
+        Sun, 11 May 2025 16:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747006224; x=1747611024; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FuAxY1FnwLvvV5y/w1jLzmRCbR2PH85UKoUxJqV9epg=;
-        b=D5xFv9CWjEpo+EMQJNA0Ze7UV14onpW7Kfi8RnAz6rDAT3pxVF9Xnoxyj+Dg9PVtGl
-         i8sPbPuK/FO0yxlsvDWraf++x9W2nkZTtW9vrXKxRbnYH+aJdazveMraC3Wz3cItZC9X
-         i75/PSR8Ypuik7x0MYdMSCJ82oTo5veeXLAph7jgrxocIfSsr1itZtV22elkfbMX6H3j
-         cqtr/shdPpRHQcaZ9mvtJ2A6x7Zn7NMNuFuw+yPs3yHiwhXGu6LRi2TBCqV/GakD2bEx
-         4ATWkAIMjW6B/IzNNuCvpb1n19zBSe9/HVk2Hdr9WshEOqrR3mUMYu2DUU1K9/anwfC2
-         r8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747006224; x=1747611024;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1747006300; x=1747611100; darn=vger.kernel.org;
+        h=in-reply-to:references:content-transfer-encoding:cc:to:from:subject
+         :message-id:date:mime-version:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FuAxY1FnwLvvV5y/w1jLzmRCbR2PH85UKoUxJqV9epg=;
-        b=OLr26QSHb+7HOf4lrggFGFPGF8OFUBqXhG30foWNcDKmbxoO3crtT6OzbsEH57BGzM
-         uvufmu2EbJ2ZgTCIDTth4UvTn0XrXfZijhBdPfAV9JyrofU07bPKUO4ziYAVPQrWSZqr
-         b6Vp0fXPi0aWcTn4ahfaKKzfO4otwXS6Yrv8zcDaDcLWk2nG7JcD7ZTp4STDC7KUASyk
-         A9bBY4F57kbI3koocO1CGuSaPKk5brWgQnhTcAWijI7fseYhay8493LyRJHcE/MFImsq
-         geOzFawzkFVOGXcxtNqTpSrlfJp8kT4sck4Rk++aoYZ5LlrnymGOTu//53SBPTaTixh2
-         kD+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUmneW2mS1FliW/wxMsGiJhs6Du9y4c6nZm5PsaFZfL0mLsEmXdGsKTnX7E+FTCRVGtNy60blEaYEE6XCSh@vger.kernel.org, AJvYcCVPrij1VLlw1vWV+gkHg+ULU+EXPoU/s+5w2R25Kam1yP/bv427lxS0E8K5UyjBZSz5G6Kw1qfKGTaYPonGoRbny7tlvQ==@vger.kernel.org, AJvYcCW9usKEUqbCMKsb5nzYMm30FQRT0aRJfL1QguqW++MnIIFtiMdYTR1VhwKVy0MR8rAbBElOfTAAEqQ=@vger.kernel.org, AJvYcCWKudGQlBCOYC3Na2DC4aYhPxgcdUeAhvJ0EYo386EOYQYi5hVoz8VwMclbM+1MKNXM5Q7YRImjVOFB0z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmuQuhW0NY559Iv+RGvOFGCxUUyoXirafYJzuXImwXiUiWi02b
-	v0IKlAA3VmG4lRkVNAopSTgPDs37UnLIrIE89JGQWTSjo7zyz9u9
-X-Gm-Gg: ASbGncvL1ogPhRU/Y0VeENRbDDn3mJ2wCxHZw6GzOEQ20R66/E/c+RlrjtKUDcBwGIG
-	8Kzvxj+Dy3bCNbcfvKljZU+gpgfWV777PuNsKCRkYQsLaxjxiJbhRcNtfgBtgg87OwKv2XpySfF
-	HsLxcIn9hq/hGvsG3FlSZ4On/hY6h6P4cw30KqwwLcsr223BSVoBj+UtNnjtiOJHDrgAjtRi8Y1
-	2a7ssxd86AqLPWA4NQLwImGwfx89K4TAuA4X8gDcBmUWnfNS2XcRAen+Taka5cmuADk/uz2fnc8
-	OZ4fnJyetyDPgEoeM/zKdF2s3wWSmqZg2S8uzAbZJnG+8cZz5dZsb/c=
-X-Google-Smtp-Source: AGHT+IGLAPxCLFkep0vlw76XA5pXelgzr8XBayNAzLNhNympu2KSsPefmv4d83vBHWQJt8DoWywtcA==
-X-Received: by 2002:a05:6102:2c02:b0:4c1:9288:906c with SMTP id ada2fe7eead31-4deed33c572mr10054589137.9.1747006223621;
-        Sun, 11 May 2025 16:30:23 -0700 (PDT)
+        bh=hYu5VOY34dRYDM9OJQkhQ6AP2jEXR8+108A2ODvYCho=;
+        b=ciJ3WU+4+pwG9xMEXIMQ9LDf9+01jlB3C9ZTZTqy9MYsIGVLfrNyw3T0gTajEh1BrQ
+         ejNB/XCR0zUbpmY1Uuty7+/7YZlVb0E+YklVrTCN4iceOw5gtwp5yfk3bTImJfR5nuj7
+         btht9LmN7oizukxXPBIOrF4sBZvn9uuCXUc7ON1KZLiW/BOi8cfTMr7AOqZ/tCdgxr+U
+         q9uBURPAo2VdNG1/Hca1ZjF7fs82Zb3Ym9CpzXcj9UQmc2ujtSEzg1GXxS6UJc+3eke7
+         /ukg7icH7GG+zQ+Gml4HiKacesefb3mEJRiZquFks4zEUQUBEYABVKfGN5064T3WIyPi
+         fmBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747006300; x=1747611100;
+        h=in-reply-to:references:content-transfer-encoding:cc:to:from:subject
+         :message-id:date:mime-version:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hYu5VOY34dRYDM9OJQkhQ6AP2jEXR8+108A2ODvYCho=;
+        b=XI0jdlXhxcsssvI2E6bGtZFqSX5/aqnkx+uolUUHbi6WNwP/wJnv4sekuo81+Efig4
+         3QaWpAHVbTkRlZbHPg8BmWIaJXh9Fq7H4YtmxEr4hM6cbsZTAyWBriN1n9Pe9NsrtNw2
+         y+0jcluI8NvvFJEenwRbVhgL4BoZmDYbh5H+oaalf4HJlxEsRgjXe1EOZPhlelmP9twg
+         1WQU2oTtFdfCnPnO5j8pJi148+7d9an9ZQ9vEVgg+jYimdkPmdOPdaF38ulz3QaqLy6O
+         r7QlTKEj9E0AtUQvpFtnC1RlZrJ8jyAH2RFHNPP8hfNOVlrqKUWlXmzN7t+nCcfqFTQe
+         V8DA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHyqbYub7E0GnmO1lcA+8IxOHi4/rgJCbYh0sztyn2FqSiX4M9DsM4pQTBW0wKOIXNO06pb4MUTZg0dao=@vger.kernel.org, AJvYcCUTsUWaXrYtxE+wIFkxzEA+oTNN4F8vOgImqzSoKlUNDI5uQPgeZs9VqbfDWzEL2Ozvi/eCXO08fXaJroIi@vger.kernel.org, AJvYcCWex1KdbGK0Z18HiRvQDgMhFB0L9Vo19thMEsxZbG9QnYEcDjFfeWczFt7Kpbb5PMi+elWCsOcvn/A=@vger.kernel.org, AJvYcCX7VXYu+jhT/1/KAbrtOrcu9BRW8I0faAlx3tQiNvkNQiClwO7BmC4mknl5V8YTLhaPHHPoK5pUPWHxXOG9Q7cqwdGcJQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq2PgZHkDzsONtvd4HZT8WDM8XVn9Xvqvwiu8OO6ExNcvVwr2K
+	HFO/iEe2T+vc/lxp+qAEJ+P2fHZ7mj325fTIuOd3oiHWe5WSmurS
+X-Gm-Gg: ASbGncsIAvddIzrcqeUo4SLjBjvXVyfJXsPq7b93MMlBNZc3rJxXvf6bjZDyChc8ALp
+	juAutpL50VjX0AzBMxLuudwpRcQc5d47U/aNJ2LKRmB/bGzvMJvpDVtVgxSpY4/gstqY5hW59SB
+	fOyimBv99IyjrT/BbGZc1Ki2EQlHuhicUwz+dgyi6fVUaT7ANo2W4R47K9el5Yc+XANEEsV65hy
+	PvcaLfB9a+rVWJcXpW3fgjyPLAempeM89u99HjQ4I7ML8RwLlqGorIys6aRSHX2/q9tRSX75yNv
+	MFjTX7KVU22ctA6I8uQd3XzMpg+9NyK7C1Sx15xwSch8
+X-Google-Smtp-Source: AGHT+IGjw4THN6/CYxPynC8am/IeTYFioe3qgu2m7gcbGWFdTFPKqPOv3p/ao5tYt1WhUTRqy6HkiQ==
+X-Received: by 2002:a05:6102:1586:b0:4c1:a15c:ab5c with SMTP id ada2fe7eead31-4deed3cf763mr8483575137.20.1747006300185;
+        Sun, 11 May 2025 16:31:40 -0700 (PDT)
 Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4deb2018611sm4186579137.20.2025.05.11.16.30.12
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f626c5b1sm4207930241.22.2025.05.11.16.31.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 May 2025 16:30:23 -0700 (PDT)
+        Sun, 11 May 2025 16:31:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,114 +64,233 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
- boundary=1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405;
+ boundary=afce0acdc6ff1c5169616ac0d9d196ee2754539f42460cfad411b3e51f0c;
  micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Sun, 11 May 2025 20:30:11 -0300
-Message-Id: <D9TQ0LYKISGB.3QAOHFXVL9PEO@gmail.com>
+Date: Sun, 11 May 2025 20:31:35 -0300
+Message-Id: <D9TQ1OS3HDY7.DR4X47HLSEND@gmail.com>
+Subject: Re: [PATCH v1 01/10] platform/x86: msi-wmi-platform: Use input
+ buffer for returning result
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Antheas Kapenekakis" <lkml@antheas.dev>,
+ <platform-driver-x86@vger.kernel.org>
 Cc: "Armin Wolf" <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>, "Hans
  de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
  <ilpo.jarvinen@linux.intel.com>, "Jean Delvare" <jdelvare@suse.com>,
  "Guenter Roeck" <linux@roeck-us.net>, <linux-doc@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
- curves/platform profile/tdp/battery limiting
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Antheas Kapenekakis" <lkml@antheas.dev>,
- <platform-driver-x86@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
 X-Mailer: aerc 0.20.1-0-g2ecb8770224a
 References: <20250511204427.327558-1-lkml@antheas.dev>
-In-Reply-To: <20250511204427.327558-1-lkml@antheas.dev>
+ <20250511204427.327558-2-lkml@antheas.dev>
+In-Reply-To: <20250511204427.327558-2-lkml@antheas.dev>
 
---1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405
+--afce0acdc6ff1c5169616ac0d9d196ee2754539f42460cfad411b3e51f0c
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
 
-Hi Antheas,
-
 On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
-> This draft patch series brings into parity the msi-wmi-platform driver wi=
-th
-> the MSI Center M Windows application for the MSI Claw (all models).
-> Unfortunately, MSI Center M and this interface do not have a discovery AP=
-I,
-> necessitating the introduction of a quirk system.
+> From: Armin Wolf <W_Armin@gmx.de>
 >
-> While this patch series is fully functional and tested, there are still
-> some issues that need to be addressed:
->   - Armin notes we need to disable fan curve support by default and quirk
->     it as well, as it is not supported on all models. However, the way
->     PWM enable ops work, this makes it a bit difficult, so I would like
->     some suggestions on how to rework this.
-
-If I understood the question correctly, then you should control the
-visibility of all "curve" related attributes with the quirk.
-
-The custom hwmon attribute_group has an is_visible callback, and so do
-the hwmon_ops.
-
->   - It turns out that to fully disable the fan curve, we have to restore
->     the default fan values. This is also what is done on the OEM software=
-.
->     For this, the last patch in the series is used, which is a bit dirty.
-
-I have a couple questions about this.
-
-* What are the default fan curves? Can these be statically defined?
-* Are user-defined fan curves persistent between reboots?
-
-I have some doubts about the approach you took on the last patch, but I
-want to understand how the platform works first.
-
+> Modify msi_wmi_platform_query() to reuse the input buffer for
+> returning the result of a WMI method call. Using a separate output
+> buffer to return the result is unnecessary because the WMI interface
+> requires both buffers to have the same length anyway.
 >
-> Sleep was tested with all values being preserved during S0iX (platform
-> profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, at
-> least for the Claw devices.
+> Co-developed-by: Antheas Kapenekakis <lkml@antheas.dev>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/msi-wmi-platform.c | 53 ++++++++++++-------------
+>  1 file changed, 26 insertions(+), 27 deletions(-)
 >
-> For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since if
-> his new high level interface is merged beforehand, we can use that instea=
-d.
+> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x=
+86/msi-wmi-platform.c
+> index dc5e9878cb682..41218a9d6e35d 100644
+> --- a/drivers/platform/x86/msi-wmi-platform.c
+> +++ b/drivers/platform/x86/msi-wmi-platform.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/printk.h>
+>  #include <linux/rwsem.h>
+> +#include <linux/string.h>
+>  #include <linux/types.h>
+>  #include <linux/wmi.h>
+> =20
+> @@ -140,19 +141,19 @@ static int msi_wmi_platform_parse_buffer(union acpi=
+_object *obj, u8 *output, siz
+>  }
+> =20
+>  static int msi_wmi_platform_query(struct msi_wmi_platform_data *data,
+> -				  enum msi_wmi_platform_method method, u8 *input,
+> -				  size_t input_length, u8 *output, size_t output_length)
+> +				  enum msi_wmi_platform_method method, u8 *buffer,
+> +				  size_t length)
+>  {
+>  	struct acpi_buffer out =3D { ACPI_ALLOCATE_BUFFER, NULL };
+>  	struct acpi_buffer in =3D {
+> -		.length =3D input_length,
+> -		.pointer =3D input
+> +		.length =3D length,
+> +		.pointer =3D buffer
+>  	};
+>  	union acpi_object *obj;
+>  	acpi_status status;
+>  	int ret;
+> =20
+> -	if (!input_length || !output_length)
+> +	if (!length)
+>  		return -EINVAL;
+> =20
+>  	/*
+> @@ -169,7 +170,7 @@ static int msi_wmi_platform_query(struct msi_wmi_plat=
+form_data *data,
+>  	if (!obj)
+>  		return -ENODATA;
+> =20
+> -	ret =3D msi_wmi_platform_parse_buffer(obj, output, output_length);
+> +	ret =3D msi_wmi_platform_parse_buffer(obj, buffer, length);
+>  	kfree(obj);
+> =20
+>  	return ret;
+> @@ -185,17 +186,15 @@ static int msi_wmi_platform_read(struct device *dev=
+, enum hwmon_sensor_types typ
+>  				 int channel, long *val)
+>  {
+>  	struct msi_wmi_platform_data *data =3D dev_get_drvdata(dev);
+> -	u8 input[32] =3D { 0 };
+> -	u8 output[32];
+> +	u8 buffer[32] =3D { 0 };
+>  	u16 value;
+>  	int ret;
+> =20
+> -	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, input, sizeo=
+f(input), output,
+> -				     sizeof(output));
+> +	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buf, sizeof(=
+buf));
 
-Hopefully!
+s/buf/buffer/
+
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> -	value =3D get_unaligned_be16(&output[channel * 2 + 1]);
+> +	value =3D get_unaligned_be16(&buffer[channel * 2 + 1]);
+>  	if (!value)
+>  		*val =3D 0;
+>  	else
+> @@ -245,13 +244,17 @@ static ssize_t msi_wmi_platform_write(struct file *=
+fp, const char __user *input,
+>  		return ret;
+> =20
+>  	down_write(&data->buffer_lock);
+> -	ret =3D msi_wmi_platform_query(data->data, data->method, payload, data-=
+>length, data->buffer,
+> +	ret =3D msi_wmi_platform_query(data->data, data->method, data->buffer,
+
+Is this logic right? Shouldn't we pass payload instead of data->buffer?
+
+Better yet, I think we should write the payload directly to
+data->buffer and drop the memcpy hunk bellow
 
 --=20
  ~ Kurt
 
->
-> Antheas Kapenekakis (8):
->   platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
->   platform/x86: msi-wmi-platform: Add quirk system
->   platform/x86: msi-wmi-platform: Add platform profile through shift
->     mode
->   platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
->     attributes
->   platform/x86: msi-wmi-platform: Add charge_threshold support
->   platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
->   platform/x86: msi-wmi-platform: Update header text
->   platform/x86: msi-wmi-platform: Restore fan curves on PWM disable and
->     unload
->
-> Armin Wolf (2):
->   platform/x86: msi-wmi-platform: Use input buffer for returning result
->   platform/x86: msi-wmi-platform: Add support for fan control
->
->  .../wmi/devices/msi-wmi-platform.rst          |   26 +
->  drivers/platform/x86/Kconfig                  |    3 +
->  drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++-
->  3 files changed, 1156 insertions(+), 54 deletions(-)
->
->
-> base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
+>  				     data->length);
+>  	up_write(&data->buffer_lock);
+> =20
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> +	down_write(&data->buffer_lock);
+> +	memcpy(data->buffer, payload, data->length);
+> +	up_write(&data->buffer_lock);
+> +
+>  	return length;
+>  }
+> =20
+> @@ -348,23 +351,21 @@ static int msi_wmi_platform_hwmon_init(struct msi_w=
+mi_platform_data *data)
+> =20
+>  static int msi_wmi_platform_ec_init(struct msi_wmi_platform_data *data)
+>  {
+> -	u8 input[32] =3D { 0 };
+> -	u8 output[32];
+> +	u8 buffer[32] =3D { 0 };
+>  	u8 flags;
+>  	int ret;
+> =20
+> -	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_EC, input, sizeof=
+(input), output,
+> -				     sizeof(output));
+> +	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_EC, buffer, sizeo=
+f(buffer));
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> -	flags =3D output[MSI_PLATFORM_EC_FLAGS_OFFSET];
+> +	flags =3D buffer[MSI_PLATFORM_EC_FLAGS_OFFSET];
+> =20
+>  	dev_dbg(&data->wdev->dev, "EC RAM version %lu.%lu\n",
+>  		FIELD_GET(MSI_PLATFORM_EC_MAJOR_MASK, flags),
+>  		FIELD_GET(MSI_PLATFORM_EC_MINOR_MASK, flags));
+>  	dev_dbg(&data->wdev->dev, "EC firmware version %.28s\n",
+> -		&output[MSI_PLATFORM_EC_VERSION_OFFSET]);
+> +		&buffer[MSI_PLATFORM_EC_VERSION_OFFSET]);
+> =20
+>  	if (!(flags & MSI_PLATFORM_EC_IS_TIGERLAKE)) {
+>  		if (!force)
+> @@ -378,27 +379,25 @@ static int msi_wmi_platform_ec_init(struct msi_wmi_=
+platform_data *data)
+> =20
+>  static int msi_wmi_platform_init(struct msi_wmi_platform_data *data)
+>  {
+> -	u8 input[32] =3D { 0 };
+> -	u8 output[32];
+> +	u8 buffer[32] =3D { 0 };
+>  	int ret;
+> =20
+> -	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_WMI, input, sizeo=
+f(input), output,
+> -				     sizeof(output));
+> +	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_WMI, buffer, size=
+of(buffer));
+>  	if (ret < 0)
+>  		return ret;
+> =20
+>  	dev_dbg(&data->wdev->dev, "WMI interface version %u.%u\n",
+> -		output[MSI_PLATFORM_WMI_MAJOR_OFFSET],
+> -		output[MSI_PLATFORM_WMI_MINOR_OFFSET]);
+> +		buffer[MSI_PLATFORM_WMI_MAJOR_OFFSET],
+> +		buffer[MSI_PLATFORM_WMI_MINOR_OFFSET]);
+> =20
+> -	if (output[MSI_PLATFORM_WMI_MAJOR_OFFSET] !=3D MSI_WMI_PLATFORM_INTERFA=
+CE_VERSION) {
+> +	if (buffer[MSI_PLATFORM_WMI_MAJOR_OFFSET] !=3D MSI_WMI_PLATFORM_INTERFA=
+CE_VERSION) {
+>  		if (!force)
+>  			return -ENODEV;
+> =20
+>  		dev_warn(&data->wdev->dev,
+>  			 "Loading despite unsupported WMI interface version (%u.%u)\n",
+> -			 output[MSI_PLATFORM_WMI_MAJOR_OFFSET],
+> -			 output[MSI_PLATFORM_WMI_MINOR_OFFSET]);
+> +			 buffer[MSI_PLATFORM_WMI_MAJOR_OFFSET],
+> +			 buffer[MSI_PLATFORM_WMI_MINOR_OFFSET]);
+>  	}
+> =20
+>  	return 0;
 
 
---1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405
+--afce0acdc6ff1c5169616ac0d9d196ee2754539f42460cfad411b3e51f0c
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCEzCAAKCRAWYEM49J/U
-ZvMVAP90EoPkVW7VqHuwNlfls7tgNzziX1CAK5Eu6S5HKDVw+QD/VFui/pt6/cZX
-xPsGAD7Fgq9WqgM4WaErpofj5IHf2gw=
-=ZTi6
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCEzWwAKCRAWYEM49J/U
+ZkBMAP0QCgQ8EFPcTh4IoLvioMBBfkMLrclFRvUl645QwDqXDAEAmsF1S/lg6S5o
+GIP14336be7q5bbk6UoYVBVxC4AECws=
+=m/5S
 -----END PGP SIGNATURE-----
 
---1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405--
+--afce0acdc6ff1c5169616ac0d9d196ee2754539f42460cfad411b3e51f0c--
