@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B4C2AD0B;
-	Sun, 11 May 2025 20:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B86425A358;
+	Sun, 11 May 2025 20:24:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746994726; cv=none; b=k0nDoMYOrzzoMnY2a4p/EuXyg1SQSb+LdTAADmJeOxnyfBDsgVKKy3M9nz6ERaqtwi7UC3RHlqr91GFBUqHce8rB07V3gVvp4OY7pNcVDJoAeGRDg0v2TT9dFOQyE6zLHG4j0ke8Lc81eKc+2DGzmXUzFcyyGbbOPXWs/BEwMOc=
+	t=1746995046; cv=none; b=WvxezFqNNcwXoO49qrRi5WjWGhUY3Y+H53CU/jyR7dWdx3N3L1Kl4NZ72CUAo4pE2jWw1TAVvuX4Lx7ZLUQWve0Am02obaZXydBcKHu80Q1gab1FXtwOdVUxHOF7u3uBQyiM0fVZvU34dmwNlD11kJxoIvT/2H1u8vq/L8jXvQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746994726; c=relaxed/simple;
-	bh=cnqdJZvkmx3y60pH7Gads9qpCjZsfIaAZvT2pXmfcbU=;
+	s=arc-20240116; t=1746995046; c=relaxed/simple;
+	bh=tRxWEhXQH6/7D7QhSO417vTMTaqVXWyTQKaJLmGles4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FfuV5FXSQo5DWlcfrU1clqFhR9sw58HmEICRpRxnYyNzawb8/RkSTfkPTlH/TLFRaM/63ZvT1avQsWzEEBcDmHekCI9Bur/qlhIIiVR+18fpUHfiGvBX00xNx89PcjTIZ1odN2EqBpfaacF9TrqRpueeRdnwKwCsa9+MnLodmQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULNcqahg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=RL8OIraWPlPseThq7GgNSGskJ9Cx9E+hzdlrvFqwwCiH04cGm5yMJsOZRcz+8qn86v83JCDimGvPApr2WPu/C/WD+nms5stsQOEPFM6ilm0Tgdd8gtBrUyNx7X9k3VxMkWIWh6N/vU4ktm4Zp+wO5NFC498UdOEXdinkcD9/iC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzExSVc5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULNcqahg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 687ABC4CEE4;
-	Sun, 11 May 2025 20:18:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzExSVc5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BE64C4CEE4;
+	Sun, 11 May 2025 20:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746994725;
-	bh=cnqdJZvkmx3y60pH7Gads9qpCjZsfIaAZvT2pXmfcbU=;
+	s=k20201202; t=1746995045;
+	bh=tRxWEhXQH6/7D7QhSO417vTMTaqVXWyTQKaJLmGles4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ULNcqahgZ4ZAkuMgrqibxWGKFNDSgsyOyt9hCYIUlaqHpbW2pb3dkASKFvF0rNOeu
-	 oKAhxgqJGnYrZ5Qywyh2NJA9s65GXSo8vXJfQmtZzXMsL0qVtm8a/arL5Hx6K7AvUb
-	 9SWssS06J7OM85SDeyNJDsbvTyUsqSJ5bgNtwqREKu+vEPFZ1WB9y2jatGs6AkPZfO
-	 EArzPbAd0C1/PrnRtEZfUFA//hlJ9lG/jAJj+te/SLVTxWY7ZRegHV1G82PA1iShZI
-	 4hsbEDhug+XrqEs+XUkuNgteWutWN19GivG1lQEH53ofqEpJxctdWguuM3fk+T7MJ/
-	 ZTR+Ea7UYPXCw==
-Message-ID: <ecf3565a-e0ec-4848-a157-d0b5d1770b11@kernel.org>
-Date: Sun, 11 May 2025 22:18:41 +0200
+	b=EzExSVc50F6yemcLQEIfjy9SFbpu5Xncnka8XEH7gYGMHTKEHpZDOMzClHhT814Ae
+	 1Dsw1wEErzdQwiDp56p/td5Wdr7h8HWl9vvpmkRHTfDhgFMiZQ2va25CmDJqf+TgL/
+	 kjBxAAb7CGA63LyRM5k6VXhr5DW8TBzhmvMj471uP8APLvBelcnHvTxoEdG5FuL9Ct
+	 1DRziBWqMsaXHZWt7/fbydKJ/ce9+fzZOY5rYCvEiEtnAAgQ8fZ4qbF4O6mJ9OTweQ
+	 PgGp8aqnaqUW5srlVzn9pSZ64gFBHlusycSRgcc4HDuwEOpvN3IzRqoZXMCFh9/pU5
+	 rhM9xzg6ifv2w==
+Message-ID: <fa4c2229-e6a6-4a62-b4e3-911c935327ca@kernel.org>
+Date: Sun, 11 May 2025 22:23:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: mmc: ti-omap: convert text based binding to
- json schema
-To: Charan Pedumuru <charan.pedumuru@gmail.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250510-ti-omap-v1-1-588b0ccb1823@gmail.com>
- <b18bc629-6bf6-4490-be98-033b771ecda7@gmail.com>
+Subject: Re: [PATCH v4 1/5] dt-bindings: hwmon: Add bindings for mpq8785
+ driver
+To: Pawel Dembicki <paweldembicki@gmail.com>, linux-hwmon@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Noah Wang <noahwang.wang@outlook.com>, Fabio Estevam <festevam@gmail.com>,
+ Naresh Solanki <naresh.solanki@9elements.com>,
+ Michal Simek <michal.simek@amd.com>, Grant Peltier
+ <grantpeltier93@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Shen Lichuan <shenlichuan@vivo.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg KH <gregkh@linuxfoundation.org>, Charles Hsu <ythsu0511@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250511035701.2607947-1-paweldembicki@gmail.com>
+ <20250511035701.2607947-2-paweldembicki@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,143 +97,40 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <b18bc629-6bf6-4490-be98-033b771ecda7@gmail.com>
+In-Reply-To: <20250511035701.2607947-2-paweldembicki@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/05/2025 19:20, Charan Pedumuru wrote:
+On 11/05/2025 05:55, Pawel Dembicki wrote:
+> Add device tree bindings for Monolithic Power Systems MPQ8785, MPM82504
+> and MPM3695 PMBus-compliant voltage regulators.
 > 
-> 
-> On 10-05-2025 22:07, Charan Pedumuru wrote:
->> Convert TI MMC host controller binding to YAML format. It's a
->> straight-forward conversion of the typical mmc host controller.
-
-
-Not really - you added properties.
-
-
->>
->> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/ti-omap.txt  | 26 ---------
->>  Documentation/devicetree/bindings/mmc/ti-omap.yaml | 61 ++++++++++++++++++++++
->>  2 files changed, 61 insertions(+), 26 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap.txt b/Documentation/devicetree/bindings/mmc/ti-omap.txt
->> deleted file mode 100644
->> index 02fd31cf361d6ed893ec2f9eb8368b358ab2bae1..0000000000000000000000000000000000000000
->> --- a/Documentation/devicetree/bindings/mmc/ti-omap.txt
->> +++ /dev/null
->> @@ -1,26 +0,0 @@
->> -* TI MMC host controller for OMAP1 and 2420
->> -
-
-...
-
->> -	};
->> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap.yaml b/Documentation/devicetree/bindings/mmc/ti-omap.yaml
-
-
-Filename based on the compatible. Didn't you get exactly such feedback
-already?
-
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..3660f54550e0ee46d3a7cfa3f531d95802f1e2fb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/ti-omap.yaml
->> @@ -0,0 +1,61 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mmc/ti-omap.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: TI MMC host controller for OMAP1 and 2420
->> +
->> +description:
->> +  The MMC Host controller for TI OMAP1 and 2420 family provides
->> +  an interface for MMC, SD and SDIO types of memory cards.
->> +
->> +allOf:
->> +  - $ref: mmc-controller.yaml
->> +
->> +maintainers:
->> +  - Ulf Hansson <ulf.hansson@linaro.org>
-
-
-No, this is supposed someone responsible for the device, not subsystem
-maintainer.
-
->> +
->> +properties:
->> +  compatible:
->> +    const: ti,omap2420-mmc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  dmas:
->> +    maxItems: 2
->> +
->> +  dma-names:
->> +    items:
->> +      - const: tx
->> +      - const: rx
->> +
->> +  ti,hwmods:
->> +    items:
->> +      pattern: "^msdi[0-9]+$"
-
-Missing type: string-array
-min/maxItems?
-
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - dmas
->> +  - dma-names
-
-That's a change - binding did not mention it, did not make it required.
-Every change should be explain in commit msg.
-
->> +  - ti,hwmods
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    mmc@4809c000 {
->> +        compatible = "ti,omap2420-mmc";
->> +        ti,hwmods = "msdi1";
->> +        reg = <0x4809c000 0x80>;
->> +        interrupts = <83>;
-> 
-> Forgot to include irq interrupt-controller header and use it for the interrupts, will change in next revision.
-
-Header does not look like used...
-
-> 
-> 
->> +        dmas = <&sdma 61 &sdma 62>;
-
-But here you need two <> phandles.
-
->> +        dma-names = "tx", "rx";
->> +    };
->> +...
->>
->> ---
->> base-commit: 3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7
->> change-id: 20250502-ti-omap-12655fa9db3e
->>
->> Best regards,
+> These bindings also documents the optional
+> "mps,vout-fb-divider-ratio-permille" property.
 > 
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+---
+
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, you can skip it (please do
+not feel offended by me posting it here - no bad intentions intended).
+If you do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here. However, there's no need to repost
+patches *only* to add the tags. The upstream maintainer will do that for
+tags received on the version they apply.
+
+Full context and explanation:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+</form letter>
 
 Best regards,
 Krzysztof
