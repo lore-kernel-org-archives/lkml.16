@@ -1,76 +1,143 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EEF18FC80
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337B01AA1FF
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746952378; cv=none; b=ISyuM5/lTF5cfJOc5QBKJHUr83aMm4RCOX160eD75TES3bYbLn/D3oQvfrXraQookNFDejiubxsoskESrUu0v+aVZqndvdMOmTNhGS24MFlSGyw4Yz0kEzgfiCmAK/i6brl0nJChuLQfSsKooaLhIu3YimW2Y6ZhQc6sL2VP3X4=
+	t=1746953187; cv=none; b=aa/QdSYKxipPVeb9+eAfPZ9FERApIrWCj+iZenicMXZI6m0cC25AJ1glSlrzDstcyH6qRHDtAhLFi/jbCik9nL+WKye3OB4dbS16Yqc29rY5hPbO8rTm9wKLnmY34dBnUWvjf+E6UoVJgpbcr2Mscl0pOcXdFoQq/0gz4MHPuh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746952378; c=relaxed/simple;
-	bh=EJ+oZpbOIRUh6eg8KwjLoofSwHDEYp16eNDo73C/hic=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sC6DRsWif98PsILVJl65GvFLKzx3aULvgE7JnR38LwuIvsZi6X7oYUUAOboYJP7fkRdr39am4DcmETvVjWC/tTxop8DsfbbojfZDQs0OSUxFWIGCStuU/z233+OFStSzzpnKnLYxjefz3t/ef1nCLR+M/T23NKFkumCu1ZSV/Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=V141oJNz; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="V141oJNz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1746952002;
-	bh=EJ+oZpbOIRUh6eg8KwjLoofSwHDEYp16eNDo73C/hic=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=V141oJNzWHmHvuq1fYeNvh0N5iDxba+4Tghv1QI1qKkJcBosIe7F2I7zkWej02nNx
-	 +wAW+0+Wc69shSQCNiwVzp8kELgW4qOF1PlR9SQDPaiBBwxyxloTSIDnB5rsPmywKM
-	 2iHr8JXKqUUDPXME2n21k8bpPi+FKGt6N2TRwfVc=
-Received: from [192.168.124.38] (unknown [113.200.174.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id E219A65F62;
-	Sun, 11 May 2025 04:26:40 -0400 (EDT)
-Message-ID: <95e820cf9977b8d20d7cd3c64be463285ca57772.camel@xry111.site>
-Subject: Ping^2: [PATCH v2] arm64: Add overrride for MPAM
-From: Xi Ruoyao <xry111@xry111.site>
-To: James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>, 
- Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Mingcong Bai
- <jeffbai@aosc.io>
-Date: Sun, 11 May 2025 16:26:38 +0800
-In-Reply-To: <20250402031603.35411-1-xry111@xry111.site>
-References: <20250402031603.35411-1-xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	s=arc-20240116; t=1746953187; c=relaxed/simple;
+	bh=tdwV9uMJEf4NMRgTSEOT3PiGCISiiyNTBOB3ugi872c=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hbfLP0NgdMxMBRX9ZVWSjb93PjVvTt69Z9g49r9ecugde6l85BbsE6z4yFGk+VenClwSRThEaPAvDit9Hb5vxCNOMHCWJNyLJAc5qUfKH0iLca97Mhy8O6yEbs3zd90sxped5NX/wq7Yd4auHQLj5fiBSXDLnB9Krq49IEkQZDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da7455cb93so37496295ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 01:46:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746953185; x=1747557985;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/QSPiADpLuqs4nC4D6n6vms9x4J46qbiGQAZeQ4r3S8=;
+        b=j6er54TZ705tG0Kba29ghlZ9hj+6R8t1wvn3w/6SpaeD+Y/wQUKNDPLAgpTfI6VKla
+         dWqzFGzTNXJsQg1/5CgZB8wIY1idc2u1rGn8ll2bmoL5c2KSnm/e/yyAvj6rNj++qwNZ
+         g0s2A5GLAP7hHIseSmRIYA+oOqDn5oeiQQ1QcsVRdxLxsg/Slj6YLFZZBpOcUMLXeyRP
+         JE4KZ2C1dc5s00bCWuRrZS8ZIYrTNbQOm9x6PZuQy73eNACaZL4bwcq1Uk2eqU0CAEyc
+         Q5sYLDq4lhmYel7eQGg4JKD9Gqi0TIRQHGI5OPMaa1tAZPSY1ZIDy8ZyfuVJACrspKgB
+         0nAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7VdR0JemzsF+wMOpdrYS1TtBXtyoDWM7uiMomwlGSx/JiKiGcAXZ10QScfj18Y0/zmNOPRlCs2MzONwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9DrirmoyeeF8FXa5qqjNwhh+hhMVlVErYc6W1tAysjENmq70q
+	modwGU7i9l3hCZFqeFJZaoxAqlMoAOxtbP7FnPrs4pDB3NQKTOhpVAgYjCNypXYWPVVPt+PfIVw
+	du5Jk4rRn8icZyGTz33c0btRjB7I8EPCJcvyKgsKmqHHIvbuodQH1G5o=
+X-Google-Smtp-Source: AGHT+IEryGv/28ms8Lmi8Al5fWjAYkjejyNHiM9Dz5hl5tu930d9/HXVCxAxpTuFOaQH7O4JwCWfLmY6uL3j8Im256Sc3s/fp2qp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1293:b0:3d3:de5f:af25 with SMTP id
+ e9e14a558f8ab-3da78494c5cmr129873055ab.0.1746953185207; Sun, 11 May 2025
+ 01:46:25 -0700 (PDT)
+Date: Sun, 11 May 2025 01:46:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682063e1.050a0220.f2294.002a.GAE@google.com>
+Subject: [syzbot] [btrfs?] VFS: Busy inodes after unmount (use-after-free) (2)
+From: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2025-04-02 at 11:12 +0800, Xi Ruoyao wrote:
-> As the message of the commit 09e6b306f3ba ("arm64: cpufeature:
-> discover
-> CPU support for MPAM") already states, if a buggy firmware fails to
-> either enable MPAM or emulate the trap as if it were disabled, the
-> kernel will just fail to boot.=C2=A0 While upgrading the firmware should =
-be
-> the best solution, we have some hardware of which the vendor have made
-> no response 2 months after we requested a firmware update.=C2=A0 Allow
-> overriding it so our devices don't become some e-waste.
->=20
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> Cc: Mingcong Bai <jeffbai@aosc.io>
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
+Hello,
 
-Ping^2.
+syzbot found the following issue on:
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+HEAD commit:    e0f4c8dd9d2d Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=1481fb68580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=868079b7b8989c3c
+dashboard link: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10edfa70580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115a84d4580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/463c704c2ee6/disk-e0f4c8dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1bb99dd967d9/vmlinux-e0f4c8dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/505fe552b9a8/Image-e0f4c8dd.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/3eef91541df5/mount_0.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=176dfa70580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com
+
+BTRFS info (device loop0): last unmount of filesystem c9fe44da-de57-406a-8241-57ec7d4412cf
+VFS: Busy inodes after unmount of loop0 (btrfs)
+------------[ cut here ]------------
+kernel BUG at fs/super.c:652!
+Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
+Modules linked in:
+CPU: 1 UID: 0 PID: 6484 Comm: syz-executor107 Not tainted 6.15.0-rc4-syzkaller-ge0f4c8dd9d2d #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : generic_shutdown_super+0x2b4/0x2b8 fs/super.c:650
+lr : generic_shutdown_super+0x2b4/0x2b8 fs/super.c:650
+sp : ffff8000a43f7ba0
+x29: ffff8000a43f7ba0 x28: 00007dfe9b1ba808 x27: ffff80008f301de8
+x26: ffffffffffffffff x25: dfff800000000000 x24: 1fffe00018b9bcf0
+x23: ffff80008b2817e0 x22: dfff800000000000 x21: 0000000000000000
+x20: ffff80008fa4d4c0 x19: ffff0000c5cde000 x18: 1fffe00036711a76
+x17: ffff80008f2fe000 x16: ffff80008ada5d6c x15: 0000000000000001
+x14: 1ffff0001487eee0 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff70001487eee1 x10: 0000000000ff0100 x9 : 9c3427ac6e3c7500
+x8 : 9c3427ac6e3c7500 x7 : 0000000000000001 x6 : 0000000000000001
+x5 : ffff8000a43f7538 x4 : ffff80008f3f4fa0 x3 : ffff800082faeee4
+x2 : 0000000000000001 x1 : 0000000100000000 x0 : 000000000000002f
+Call trace:
+ generic_shutdown_super+0x2b4/0x2b8 fs/super.c:650 (P)
+ kill_anon_super+0x4c/0x7c fs/super.c:1237
+ btrfs_kill_super+0x40/0x58 fs/btrfs/super.c:2099
+ deactivate_locked_super+0xc4/0x12c fs/super.c:473
+ deactivate_super+0xe0/0x100 fs/super.c:506
+ cleanup_mnt+0x31c/0x3ac fs/namespace.c:1435
+ __cleanup_mnt+0x20/0x30 fs/namespace.c:1442
+ task_work_run+0x1dc/0x260 kernel/task_work.c:227
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ do_notify_resume+0x16c/0x1ec arch/arm64/kernel/entry-common.c:151
+ exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
+ exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
+ el0_svc+0xb0/0x150 arch/arm64/kernel/entry-common.c:745
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Code: b0051160 91350000 9119a261 97cfbb64 (d4210000) 
+---[ end trace 0000000000000000 ]---
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
