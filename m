@@ -1,104 +1,111 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BD73A1B6
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 09:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30897184E;
+	Sun, 11 May 2025 09:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746956586; cv=none; b=HUA03GLXocUvPvGVhGu58SyJtdNhhD/GB4Inr3Tac2Aw9ZFFfDvbHh2hDEDkRKTr4D+Us02xRMN599yVXpr46onpBEZieCaKVT8ctRerrN8s/ezcBB+Y82UaOVB+Xnh1QJopX0efCV9tbaiqH4iIzpLmhOrB8JMaS09L4vavhqM=
+	t=1746956836; cv=none; b=k/r83Ilp4rP5IzBp4Z8tITpEgHBHcS/7AlFk3mutPeXTg8ktQFvLcfhVsvoNGZAQnbmLcj4D0AEzct1ZLNxeS0PwrwkCZAyj5zYDB/eIY34xh7JRKIQAcFpYZWmyldRr6b4LqtpAVgos2ImpTRafERQJqhc0541kEzc8hQSxYtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746956586; c=relaxed/simple;
-	bh=SnC89AHyslSef6V2aYLkekOdGeOj9PF1IUYLzzXqRiM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=WbmkFwiZ5rYrC5fFoucB5kb2jWuRyHtVq8wx/DIrXtCvk8vVlTVCLraSQDjfBNENpIYQQCbaczPopYp6pW3SG4Cvp/9sW581w37BInfSW4+GizPQI/zcgvQOMH1X8HHodlIb4sapYvBJMYU9oVBGQ5SvYPnkA/hA4FTBSMCZDQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0CuGun+; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746956836; c=relaxed/simple;
+	bh=JgsLRPoHfVI0FmkKHM8XYJ+TGri+MUoSNGaKcxhktoM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=PaA4cOcW4AsETXb+/Dg7YdB/tXSURpKwA0bHKZhABZ+8ULwG03rlyHw4iMPphxcDJz8hsKliTgtTnIV5oZ8EE9svfJnzsmpNF61LhZOLcBWWiqPYgTLfAof4sdXTtOCU53zgZZ3hMoGFFgjbqVlvaQerYTB/zu3AYdXLrc7YoDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=21QlskRt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=euE0Iun4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0CuGun+"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so3506836b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 02:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746956583; x=1747561383; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SnC89AHyslSef6V2aYLkekOdGeOj9PF1IUYLzzXqRiM=;
-        b=i0CuGun+j1CGmSILNJkS3g7KztD2ERvhpANUsW7e2c1Xin0g2KGxDA2OScJvlrLQ4u
-         66OHbi7wS9YI+qulH4c0xGHPvNLzqEuuipPSNw+Ho18y0fdc41Rj2AdT7Eo7F2so8IIH
-         dK+C7g9dByqJ+aaykuty/eOqQe/Xg83dVAhpRFQyHlZ5vsbayYj7rJCIibyS+Cm5ck4u
-         gbcQjpMuygL5l6lOgByRYPoRUu5DMsopdhf+GLuilZVIVVlWBFynyGvE6a6BOxGZlj6U
-         U3/UdxyDRSGWudySCbdmWkg/uO8Lqooo/zlhXL0XbXCZe+GfZbfxh5MRtsdzsyOe4yMG
-         KPMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746956583; x=1747561383;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SnC89AHyslSef6V2aYLkekOdGeOj9PF1IUYLzzXqRiM=;
-        b=wvZRYnXyBqsehYR0gakymIZG7SMdrorPnLXgmXA493HgOvKN6CU+VXMbjllTs3wjnX
-         kOIgZF/mae85wM9FaQMOsevtLHpJevECxLlzTir08pZPA1D7kOao+cDw5NbAOVLMVlC5
-         NLyuAnJ3rBlhXCV1RZEVtfRS3AHr4bjRg/2g/xZqiOgR9WCVFnFjxeD03FaD/2jLjqR1
-         c4V8fCAjsLpaj7mEh0t2ZhjYHhMHuQTav/Jxe6/sWW8KNBEVgXj5wxgyF/Mo2DKbjeOu
-         mUbihkPaInesI418GvzLnzhCHLdc7m1MKbnAszaooro83f7+jAlIROAFGegs+7O22JYV
-         aRdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUv4F2AvMdS5qa8cEJ88kf9Yf6LHeo6X4PKT3JqLIHxp8QcrFyLC3egbHGCEZk/dLCNaIfVP1Da8bkc50E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5rvhA9uR76VGP0TKevDzuVuasXQa6pCmu6sxJ5jt7k3juOWdo
-	f65AyzNI6epeLHFeZcaYSqQIfWHWN29YwF/q62CNNK4BF3b6Go7KapywxM198I02t9f0r9bH1t3
-	AruADJvoYV+ju02jw3yyYnFumouQ=
-X-Gm-Gg: ASbGncvaojxw6Ec0wJabdP8p+ZCAeNgjIXqUBvi/FRjF68tyUjZiePoCnHGuGHbM00Z
-	Nr41DACWtMwswGnLxYh08eaZXsrPr1Wc0z8ZFyGlFd6orLH1DEfrdgEdlpxHndT3PYSK4ndxKir
-	NWk0O7+wjeIAPck8EL3Xxf2JIGbfuHyKSLU0De9K9Wco+SLrILQRWxFLuvqqucWv5SXE0=
-X-Google-Smtp-Source: AGHT+IH/mJ0x32ZlNKoI2eDR9O84MqogT0fzcKY9eBjFtKcEWG4I2sMg71tE4UvVNHYrlB5MENrq/i8SwY18K6OTj4U=
-X-Received: by 2002:a05:6a21:3510:b0:1f5:7cb4:b713 with SMTP id
- adf61e73a8af0-215abb3a301mr14054823637.19.1746956583393; Sun, 11 May 2025
- 02:43:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="21QlskRt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="euE0Iun4"
+Date: Sun, 11 May 2025 09:47:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746956832;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hd8PphlBAuMqIEqPyAgnkP+emeIlQvZgqNZrMmBw4lg=;
+	b=21QlskRtDuil9abS7mKtqu22Khz/KgpQhATR+ZhAcAXT9vEBsZEUJMzC2zCKm8eRqrSOH9
+	FyTNVMVlipIcadBUmvxszFUgd4/J+mwBC0nzXR3/lD8RiS0gTCs8UVn87PlynC93NAoTGi
+	TIxgTfIrofwrcW0c6kD3A0nGkUtgGuWtxRCcqovY6GQOWYi9yKMjb0/F6IfWXdymscx8L2
+	jeoSwwtG5dk5poI1i+TEcjR90gKw4oa05iRseDdnZsah/bgsfo0MKCQ+0m238+kbFsSZkD
+	R/G4HEFwIlb6uV8Dpb/IZa1aIuNtGFptDogfwJmC6mngnueGPagBITmsYkVYQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746956832;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hd8PphlBAuMqIEqPyAgnkP+emeIlQvZgqNZrMmBw4lg=;
+	b=euE0Iun4YBea9SFqIrpzttFTrzNnVxu0Hf9jBrHBUMqp1RTc47f+N3cltl7dss8fiiPYoR
+	gfuzKGMHInja2YCA==
+From: "tip-bot2 for Seongman Lee" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/sev: Fix operator precedence in
+ GHCB_MSR_VMPL_REQ_LEVEL macro
+Cc: Seongman Lee <augustus92@kaist.ac.kr>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250511092329.12680-1-cloudlee1719@gmail.com>
+References: <20250511092329.12680-1-cloudlee1719@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Date: Sun, 11 May 2025 11:42:27 +0200
-X-Gm-Features: AX0GCFuZrFjEp_RkcV0WctIvu4X1yuw5s5lS-0WHsmvO4h373KZg12qijyqjgv4
-Message-ID: <CAKR-sGezB_SEb7UfPV6o6T2yibkAzNSqK9Hry1kNM46BMsH2_g@mail.gmail.com>
-Subject: mtd: rawnand: brcmnand: exec_op patch broke < v5.0 controllers
-To: dregan@broadcom.com, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, 
-	MTD Maling List <linux-mtd@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>, 
-	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	joel.peshkin@broadcom.com, Brian Norris <computersforpeace@gmail.com>, 
-	dan.beygelman@broadcom.com, William Zhang <william.zhang@broadcom.com>, 
-	frieder.schrempf@kontron.de, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vignesh R <vigneshr@ti.com>, 
-	Richard Weinberger <richard@nod.at>, bbrezillon@kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, 
-	liao jaime <jaimeliao.tw@gmail.com>, kilobyte@angband.pl, 
-	Jonas Gorski <jonas.gorski@gmail.com>, dgcbueu <dgcbueu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174695683185.406.15235858727409884425.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi David,
+The following commit has been merged into the x86/urgent branch of tip:
 
-I've just realized that your exec_op implementation patch broke
-support of v2.1, v2.2 and v4.0 controllers.
-https://github.com/torvalds/linux/commit/3c8260ce76634291aed877032a41e37388=
-4d69e4
-https://patchwork.ozlabs.org/project/linux-mtd/patch/20231125012438.15191-4=
--dregan@broadcom.com/
-I know it's an old patch from 6.8 but I just discovered this while
-trying to add 6.12 support for bmips on OpenWrt (from 6.6):
-https://github.com/openwrt/openwrt/pull/18746
+Commit-ID:     f7387eff4bad33d12719c66c43541c095556ae4e
+Gitweb:        https://git.kernel.org/tip/f7387eff4bad33d12719c66c43541c095556ae4e
+Author:        Seongman Lee <augustus92@kaist.ac.kr>
+AuthorDate:    Sun, 11 May 2025 18:23:28 +09:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Sun, 11 May 2025 11:38:03 +02:00
 
-The issue is that low level ops always return 0 on v4.0 controllers
-and v2.1/v2.2 controllers don't even have the low level registers
-defined:
-https://github.com/torvalds/linux/blob/3ce9925823c7d6bb0e6eb951bf2db0e9e182=
-582d/drivers/mtd/nand/raw/brcmnand/brcmnand.c#L357
-https://github.com/torvalds/linux/blob/3ce9925823c7d6bb0e6eb951bf2db0e9e182=
-582d/drivers/mtd/nand/raw/brcmnand/brcmnand.c#L371
+x86/sev: Fix operator precedence in GHCB_MSR_VMPL_REQ_LEVEL macro
 
-I guess that restoring the legacy functions isn't going to happen, but
-is it possible to restore < v5.0 compatibility on the new exec_op
-implementation?
+The GHCB_MSR_VMPL_REQ_LEVEL macro lacked parentheses around the bitmask
+expression, causing the shift operation to bind too early. As a result,
+when requesting VMPL1 (e.g., GHCB_MSR_VMPL_REQ_LEVEL(1)), incorrect
+values such as 0x000000016 were generated instead of the intended
+0x100000016 (the requested VMPL level is specified in GHCBData[39:32]).
 
-Best regards,
-=C3=81lvaro.
+Fix the precedence issue by grouping the masked value before applying
+the shift.
+
+  [ bp: Massage commit message. ]
+
+Fixes: 34ff65901735 ("x86/sev: Use kernel provided SVSM Calling Areas")
+Signed-off-by: Seongman Lee <augustus92@kaist.ac.kr>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/20250511092329.12680-1-cloudlee1719@gmail.com
+---
+ arch/x86/include/asm/sev-common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
+index acb85b9..0020d77 100644
+--- a/arch/x86/include/asm/sev-common.h
++++ b/arch/x86/include/asm/sev-common.h
+@@ -116,7 +116,7 @@ enum psc_op {
+ #define GHCB_MSR_VMPL_REQ		0x016
+ #define GHCB_MSR_VMPL_REQ_LEVEL(v)			\
+ 	/* GHCBData[39:32] */				\
+-	(((u64)(v) & GENMASK_ULL(7, 0) << 32) |		\
++	((((u64)(v) & GENMASK_ULL(7, 0)) << 32) |	\
+ 	/* GHCBDdata[11:0] */				\
+ 	GHCB_MSR_VMPL_REQ)
+ 
