@@ -1,29 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70E4F188A0E;
-	Sun, 11 May 2025 23:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50DCD2620E8;
+	Sun, 11 May 2025 23:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747004888; cv=none; b=egDeEqo6nx7BclegwZv30Otto5IfF8+Z6aB2LEpNrBfwmnRfB7lxF4oniVtVFqnDl2NWoZtNUkQ2K4v8ObF7UH+m13RvhuWkMXr3MKPYcoNXT2O+s5UeOhFcy32PInF3f1QmcKIWDkGafIiiLkcuiBMr3QnUEQHoeLWY3sJS13s=
+	t=1747004889; cv=none; b=cu39GmSKNr6zdyFO7/F2c1z6OxgRv4WRLDlHHxh/+K2meFZiKBCtkLm2rb3/A5IaWesOFp12qGsIsQ2EyLJy58BPCBObNVgnEZXIfUsB5YxQR4569+ij48gONN5bMAQvqsRq96o78bbDONVtGFwpVH1FIZgDgTaxzkQzSdaQuBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747004888; c=relaxed/simple;
-	bh=yu30KY9WMPErh9DcvRVTKaLTwBXmEyfrJ1b/8XITBq8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NsncHH/ShjhShOjSd4/BT6hfgVcub4pEO4yL6fOfLFz0kh6lp36dcBA+9MPpBi8F/5qymlP9zGmL89DBTjc+M06oBzXhUKY/prTT+BNewFI1Iamw7810lZmFdRk2DP7NWhITIZSWcW42rK7tqacu1MJZmuU21ub6OIsccCBnCvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aLRNYtL5; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1747004889; c=relaxed/simple;
+	bh=MQn24UdbbevAqrHXHYeV/oktCjUW7qO5pLk5OfEPdFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=q1K4JHlRipIXEk4nYaZMZZ4M+IrrG7/q9XccVTdC8M/DznJf1HHUNQkuFznJcNdXfhmzzbnGm+e0Ip9olml8jMEcgi8oZjeaNzCRQHx7AdVVDWeyXIScFWZuS02p/sZQpEXa2lJENpN8M5Hb1x841CgwzITTKBgxqDvdR5GyMkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PzCW1yrl; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aLRNYtL5"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PzCW1yrl"
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7450C211D8B8;
-	Sun, 11 May 2025 16:08:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7450C211D8B8
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3456B211D8B9;
+	Sun, 11 May 2025 16:08:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3456B211D8B9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747004880;
-	bh=F2fG0i25TDQiWGtI7DQglXAnLSOL4mMbFNlfNGu1LF0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aLRNYtL5kOBG3kGB6vZIhQl85AE/5qTPeARbyiDUbcSGHdhJVf2jmf2pbe6r3fddL
-	 td4n6rD5jiHRC9nqxXO71MULvNvKGoZRsEKo/osnBcF119vuO5NeC3PA1dMDIpy+Nj
-	 1J41XBLPsuhdCyDHIG1GEKQFjj0Ku6AAt207kXtU=
+	s=default; t=1747004881;
+	bh=NlBiHNDCBFA2gIOS3joGMIV+HKwt3xvTaKZNTMqyrfs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PzCW1yrlgSBWFcf9ZDvqROWW59RHvobznCPyYkUchsjAvDfhkhzJGxAXr4Ut5FNta
+	 hGYnBkdDFxoWMdj8sfCOT5Mh2sQcamvpWCT/kyTAR+ttg5+dSqTXccbQwg2wUFkOh0
+	 Z8DRv91cnRv0udrfZhUoJj42V8oOQhiRjRTWEVGo=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: arnd@arndb.de,
 	bp@alien8.de,
@@ -48,10 +49,12 @@ Cc: apais@microsoft.com,
 	benhill@microsoft.com,
 	bperkins@microsoft.com,
 	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v2 0/4] Confidential VMBus
-Date: Sun, 11 May 2025 16:07:54 -0700
-Message-ID: <20250511230758.160674-1-romank@linux.microsoft.com>
+Subject: [PATCH hyperv-next v2 3/4] arch: hyperv: Get/set SynIC synth.registers via paravisor
+Date: Sun, 11 May 2025 16:07:57 -0700
+Message-ID: <20250511230758.160674-4-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250511230758.160674-1-romank@linux.microsoft.com>
+References: <20250511230758.160674-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,126 +63,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The guests running on Hyper-V can be confidential where the memory and the
-register content are encrypted, provided that the hardware supports that
-(currently support AMD SEV-SNP and Intel TDX is implemented) and the guest
-is capable of using these features. The confidential guests cannot be
-introspected by the host nor the hypervisor without the guest sharing the
-memory contents upon doing which the memory is decrypted.
+The confidential VMBus is built on the guest talking to the
+paravisor only.
 
-In the confidential guests, neither the host nor the hypervisor need to be
-trusted, and the guests processing sensitive data can take advantage of that.
+Provide functions that allow manipulating the SynIC registers
+via paravisor.
 
-Not trusting the host and the hypervisor (removing them from the Trusted
-Computing Base aka TCB) ncessitates that the method of communication
-between the host and the guest be changed. Below there is the breakdown of
-the options used in the both cases (in the diagrams below the server is
-marked as S, the client is marked as C):
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+---
+ arch/arm64/hyperv/mshyperv.c      | 19 +++++++++++++++++++
+ arch/arm64/include/asm/mshyperv.h |  3 +++
+ arch/x86/include/asm/mshyperv.h   |  3 +++
+ arch/x86/kernel/cpu/mshyperv.c    | 28 ++++++++++++++++++++++++++++
+ 4 files changed, 53 insertions(+)
 
-1. Without the paravisoor the devices are connected to the host, and the
-host provides the device emulation or translation to the guest:
-
-+---- GUEST ----+       +----- DEVICE ----+        +----- HOST -----+
-|               |       |                 |        |                |
-|               |       |                 |        |                |
-|               |       |                 ==========                |
-|               |       |                 |        |                |
-|               |       |                 |        |                |
-|               |       |                 |        |                |
-+----- C -------+       +-----------------+        +------- S ------+
-       ||                                                   ||
-       ||                                                   ||
-+------||------------------ VMBus --------------------------||------+
-|                     Interrupts, MMIO                              |
-+-------------------------------------------------------------------+
-
-2. With the paravisor, the devices are connected to the paravisor, and
-the paravisor provides the device emulation or translation to the guest.
-The guest doesn't communicate with the host directly, and the guest
-communicates with the paravisor via the VMBus. The host is not trusted
-in this model, and the paravisor is trusted:
-
-+---- GUEST ------+                                   +-- DEVICE --+
-|                 |                                   |            |
-| +- PARAVISOR -+ |                                   |            |
-| |             ==+====================================            |
-| |   OpenHCL   | |                                   |            |
-| |             | C=====================              |            |
-+-+---- C - S --+-+                   ||              +------------+
-        ||  ||                        ||
-        ||  ||      +-- VMBus Relay --||--+           +--- HOST ---+
-        ||  ||=======   Interrupts, MMIO  |           |            |
-        ||          +---------------------+           +---- S -----+
-        ||                                                  ||
-+-------||----------------- VMBus --------------------------||------+
-|                     Interrupts, MMIO                              |
-+-------------------------------------------------------------------+
-
-Note that in the second case the guest doesn't need to share the memory
-with the host as it communicates only with the paravisor within their
-partition boundary. That is precisely the raison d'etre and the value
-proposition of this patch series: equip the confidential guest to use
-private (encrypted) memory and rely on the paravisor when this is
-available to be more secure.
-
-I'd like to thank the following people for their help with this
-patch series:
-
-* Dexuan for help with validation and the fruitful discussions,
-* Easwar for reviewing the refactoring of the page allocating and
-  freeing in `hv.c`,
-* John and Sven for the design,
-* Mike for helping to avoid pitfalls when dealing with the GFP flags,
-* Sven for blazing the trail and implementing the design in few
-  codebases.
-
-I made sure to validate the patch series on
-
-    {TrustedLaunch(x86_64), OpenHCL} x
-    {SNP(x86_64), TDX(x86_64), No hardware isolation, No paravisor} x
-    {VMBus 5.0, VMBus 6.0} x
-    {arm64, x86_64}.
-
-[V2]
-    - The patch series is rebased on top of the latest hyperv-next branch.
-  
-    - Better wording in the commit messages and the Documentation.
-    **Thank you, Alok and Wei!**
-
-    - Removed the patches 5 and 6 concerning turning bounce buffering off from
-      the previous version of the patch series as they were found to be
-      architecturally unsound. The value proposition of the patch series is not
-      diminished by this removal: these patches were an optimization and only for
-      the storage (for the simplicity sake) but not for the network. These changes
-      might be proposed in the future again after revolving the issues.
-    ** Thanks you, Christoph, Dexuan, Dan, Michael, James, Robin! **
-
-[V1] https://lore.kernel.org/linux-hyperv/20250409000835.285105-1-romank@linux.microsoft.com/
-
-Roman Kisel (4):
-  Documentation: hyperv: Confidential VMBus
-  drivers: hyperv: VMBus protocol version 6.0
-  arch: hyperv: Get/set SynIC synth.registers via paravisor
-  arch: x86, drivers: hyperv: Enable confidential VMBus
-
- Documentation/virt/hyperv/vmbus.rst |  41 +++
- arch/arm64/hyperv/mshyperv.c        |  19 ++
- arch/arm64/include/asm/mshyperv.h   |   3 +
- arch/x86/include/asm/mshyperv.h     |   3 +
- arch/x86/kernel/cpu/mshyperv.c      |  51 ++-
- drivers/hv/channel.c                |  36 ++-
- drivers/hv/channel_mgmt.c           |  29 +-
- drivers/hv/connection.c             |  10 +-
- drivers/hv/hv.c                     | 485 ++++++++++++++++++++--------
- drivers/hv/hyperv_vmbus.h           |   9 +-
- drivers/hv/ring_buffer.c            |   5 +-
- drivers/hv/vmbus_drv.c              | 152 +++++----
- include/asm-generic/mshyperv.h      |   1 +
- include/linux/hyperv.h              |  71 ++--
- 14 files changed, 677 insertions(+), 238 deletions(-)
-
-
-base-commit: 9b0844d87b1407681b78130429f798beb366f43f
+diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+index 4fdc26ade1d7..8778b6831062 100644
+--- a/arch/arm64/hyperv/mshyperv.c
++++ b/arch/arm64/hyperv/mshyperv.c
+@@ -134,3 +134,22 @@ bool hv_is_hyperv_initialized(void)
+ 	return hyperv_initialized;
+ }
+ EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
++
++/*
++ * Not supported yet.
++ */
++u64 hv_pv_get_synic_register(unsigned int reg, int *err)
++{
++	*err = -ENODEV;
++	return !0ULL;
++}
++EXPORT_SYMBOL_GPL(hv_pv_get_synic_register);
++
++/*
++ * Not supported yet.
++ */
++int hv_pv_set_synic_register(unsigned int reg, u64 val)
++{
++	return -ENODEV;
++}
++EXPORT_SYMBOL_GPL(hv_pv_set_synic_register);
+diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
+index b721d3134ab6..bce37a58dff0 100644
+--- a/arch/arm64/include/asm/mshyperv.h
++++ b/arch/arm64/include/asm/mshyperv.h
+@@ -53,6 +53,9 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg)
+ 	return hv_get_msr(reg);
+ }
+ 
++u64 hv_pv_get_synic_register(unsigned int reg, int *err);
++int hv_pv_set_synic_register(unsigned int reg, u64 val);
++
+ /* SMCCC hypercall parameters */
+ #define HV_SMCCC_FUNC_NUMBER	1
+ #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index bab5ccfc60a7..0a4b01c1f094 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -307,6 +307,9 @@ static __always_inline u64 hv_raw_get_msr(unsigned int reg)
+ 	return __rdmsr(reg);
+ }
+ 
++u64 hv_pv_get_synic_register(unsigned int reg, int *err);
++int hv_pv_set_synic_register(unsigned int reg, u64 val);
++
+ #else /* CONFIG_HYPERV */
+ static inline void hyperv_init(void) {}
+ static inline void hyperv_setup_mmu_ops(void) {}
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 3e2533954675..4f6e3d02f730 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -89,6 +89,34 @@ void hv_set_non_nested_msr(unsigned int reg, u64 value)
+ }
+ EXPORT_SYMBOL_GPL(hv_set_non_nested_msr);
+ 
++/*
++ * Not every paravisor supports getting SynIC registers, and
++ * this function may fail. The caller has to make sure that this function
++ * runs on the CPU of interest.
++ */
++u64 hv_pv_get_synic_register(unsigned int reg, int *err)
++{
++	if (!hv_is_synic_msr(reg)) {
++		*err = -ENODEV;
++		return !0ULL;
++	}
++	return native_read_msr_safe(reg, err);
++}
++EXPORT_SYMBOL_GPL(hv_pv_get_synic_register);
++
++/*
++ * Not every paravisor supports setting SynIC registers, and
++ * this function may fail. The caller has to make sure that this function
++ * runs on the CPU of interest.
++ */
++int hv_pv_set_synic_register(unsigned int reg, u64 val)
++{
++	if (!hv_is_synic_msr(reg))
++		return -ENODEV;
++	return wrmsrl_safe(reg, val);
++}
++EXPORT_SYMBOL_GPL(hv_pv_set_synic_register);
++
+ u64 hv_get_msr(unsigned int reg)
+ {
+ 	if (hv_nested)
 -- 
 2.43.0
 
