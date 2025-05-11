@@ -1,30 +1,30 @@
 Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30D919CD1B;
-	Sun, 11 May 2025 20:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2652609FD;
+	Sun, 11 May 2025 20:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746996294; cv=none; b=J01r29TeDtKWLX+OUii4HaaK27oYj13o7kxLGqLkUu9XRefQTJvRRkDYLWqOQwkxta23EMc8GWvu5M7XxmlbPsKcerKROdWSrzLLugaw6bATo5Lp01RDFTy1B5Q9h0hVgaZCvEi02/5dp2KdUZUb0n8mFnh+eC/seLloGRihGIo=
+	t=1746996298; cv=none; b=aQ2a2EQCqBiYD7LTjgjfn4hBgC0qcc6n7N6gIqQN53+hJQUz0nkd9JcC7/2gpO1clZTrDbFQs+RzpPC4ZEPFoCGFLp8ssE7Bn5YBwEFJjJQyYVChY4MEOO7+aC/h4uvXQ513og9TPqfSmYIjSFgURnV1RXE8QhPCPJ3zcWAlBOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746996294; c=relaxed/simple;
-	bh=yod0QYTUWXu4beihq/PFbHrXHSx9LymHN6BEblhLqMg=;
+	s=arc-20240116; t=1746996298; c=relaxed/simple;
+	bh=kpBnwgNwczqcxbMFE6cot4862GY10n56IFvMiPvIr0Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h129NMzWmvHVYzGXrsuHGuCIVxcmamlOu4N6JM/VcXLDGgnURmNcvWc25ZHEN7yvKqpr+7UOcTCMKyhZabfY3MYOjwhcWsY1wPbSd/ylKho0cmkyS/UCYN2aq96qR7Ed43mcaerx8vgwJIn6hEHcPO1fJTrIVJEy6JWs5+pLKoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=CU86VxmU; arc=none smtp.client-ip=185.138.42.100
+	 MIME-Version; b=MMbhUbzMsNl6ZJNsUbv/xTr8RwnhmASYzUZpUyn794wBkDXoSZi+yJxot+Ai5wKB7kz4kPIIAdb09jlV13HdtzY4znPWwv0dwDTpPrVdbptG73ShvKF8SbhnUAxmBSSAR6kKDZ7yX3dZxY1CL5umdYhdyxJsTGGD/remv6w8sY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ZesEwHQ9; arc=none smtp.client-ip=185.138.42.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="CU86VxmU"
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ZesEwHQ9"
 Received: from localhost.localdomain (x5996a826.customers.hiper-net.dk [89.150.168.38])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id F1FB12E0A497;
-	Sun, 11 May 2025 23:44:44 +0300 (EEST)
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 1CD982E0A4DC;
+	Sun, 11 May 2025 23:44:52 +0300 (EEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1746996287;
-	bh=vn6mkpGqtjeko6MG3AwpTqUYV+4tOle1Wn/dLcrIDPo=; h=From:To:Subject;
-	b=CU86VxmU/cSKepiOJ8+DFMCHdRSiDtOwhFldAL2+j0QQ8xebRc2KIMBPWG6BOM0/4
-	 zOnj48znK2TjfBZ1U4AJ9KXHblONm8OuT5yK+fA900oqMBjPerkeSXQp4/WNZcUsqV
-	 x2XAyZ5Gy7XgCKLKyvAsPKBkoG1yObxE9Jonul/A=
+	s=default; t=1746996294;
+	bh=WopzrnfLWFUOpLXJ+4tce4MrUTHEiUC4E4KKMWifksY=; h=From:To:Subject;
+	b=ZesEwHQ9a65YY7n11HqOHny55dcX+0oiNB/E53vY0MSEgdlCcS85h5qBi7HdxhcnB
+	 97eyXjuqY8XUYbomVb+IV1yC4VysvIDYFvUoZtYgeuChjLOmkoL1wj7Y2HTHEPEsug
+	 Lc6SqqJ6fKGqLgdw/NOtNuZoShtUw4n9NWYM4phE=
 Authentication-Results: linux1587.grserver.gr;
 	spf=pass (sender IP is 89.150.168.38) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
 Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
@@ -41,10 +41,10 @@ Cc: Armin Wolf <W_Armin@gmx.de>,
 	linux-kernel@vger.kernel.org,
 	linux-hwmon@vger.kernel.org,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v1 04/10] platform/x86: msi-wmi-platform: Add support for fan
- control
-Date: Sun, 11 May 2025 22:44:21 +0200
-Message-ID: <20250511204427.327558-5-lkml@antheas.dev>
+Subject: [PATCH v1 07/10] platform/x86: msi-wmi-platform: Add charge_threshold
+ support
+Date: Sun, 11 May 2025 22:44:24 +0200
+Message-ID: <20250511204427.327558-8-lkml@antheas.dev>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250511204427.327558-1-lkml@antheas.dev>
 References: <20250511204427.327558-1-lkml@antheas.dev>
@@ -56,495 +56,214 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <174699628685.27760.15530964568722829701@linux1587.grserver.gr>
+ <174699629404.27973.5787412059925961155@linux1587.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
 X-Virus-Status: Clean
 
-From: Armin Wolf <W_Armin@gmx.de>
+The battery of MSI laptops supports charge threshold. Add support for it.
 
-Adds fan curve support for the MSI platform. These devices contain
-support for two fans, where they are named CPU and GPU but in the
-case of the Claw series just map to left and right fan.
-
-Co-developed-by: Antheas Kapenekakis <lkml@antheas.dev>
 Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 ---
- .../wmi/devices/msi-wmi-platform.rst          |  26 ++
- drivers/platform/x86/msi-wmi-platform.c       | 328 +++++++++++++++++-
- 2 files changed, 337 insertions(+), 17 deletions(-)
+ drivers/platform/x86/Kconfig            |   1 +
+ drivers/platform/x86/msi-wmi-platform.c | 110 ++++++++++++++++++++++++
+ 2 files changed, 111 insertions(+)
 
-diff --git a/Documentation/wmi/devices/msi-wmi-platform.rst b/Documentation/wmi/devices/msi-wmi-platform.rst
-index 73197b31926a5..704bfdac5203e 100644
---- a/Documentation/wmi/devices/msi-wmi-platform.rst
-+++ b/Documentation/wmi/devices/msi-wmi-platform.rst
-@@ -169,6 +169,32 @@ The fan RPM readings can be calculated with the following formula:
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index fd3da718731e7..51a34ab476ffc 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -744,6 +744,7 @@ config MSI_WMI
  
- If the fan speed reading is zero, then the fan RPM is zero too.
- 
-+The subfeature ``0x01`` is used to retrieve the fan speed table for the CPU fan. The output
-+data contains the fan speed table and two bytes with unknown data. The fan speed table
-+consists of six 8-bit entries, each containing a fan speed value in percent.
-+
-+The subfeature ``0x02`` is used tho retrieve the same data for the GPU fan.
-+
-+WMI method Set_Fan()
-+--------------------
-+
-+The fan speed tables can be accessed using subfeature ``0x01`` (CPU fan) and subfeature ``0x02``
-+(GPU fan). The input data has the same format as the output data of the ``Get_Fan`` WMI method.
-+
-+WMI method Get_AP()
-+-------------------
-+
-+The current fan mode can be accessed using subfeature ``0x01``. The output data contains a flag
-+byte and two bytes of unknown data. If the 7th bit inside the flag byte is cleared then all fans
-+are operating in automatic mode, otherwise the fans operate based on the fan speed tables
-+accessible thru the ``Get_Fan``/``Set_Fan`` WMI methods.
-+
-+WMI method Set_AP()
-+-------------------
-+
-+The current fan mode can be changed using subfeature ``0x01``. The input data has the same format
-+as the output data of the ``Get_AP`` WMI method.
-+
- WMI method Get_WMI()
- --------------------
- 
+ config MSI_WMI_PLATFORM
+ 	tristate "MSI WMI Platform features"
++	depends on ACPI_BATTERY
+ 	depends on ACPI_WMI
+ 	depends on HWMON
+ 	select ACPI_PLATFORM_PROFILE
 diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
-index 408d42ab19e20..9ac3c6f1b3f1d 100644
+index 6498f4b44fe53..46928fb4da8a6 100644
 --- a/drivers/platform/x86/msi-wmi-platform.c
 +++ b/drivers/platform/x86/msi-wmi-platform.c
-@@ -16,13 +16,18 @@
- #include <linux/device/driver.h>
- #include <linux/dmi.h>
- #include <linux/errno.h>
-+#include <linux/fixp-arith.h>
- #include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
- #include <linux/kernel.h>
-+#include <linux/kstrtox.h>
-+#include <linux/minmax.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/printk.h>
- #include <linux/rwsem.h>
- #include <linux/string.h>
-+#include <linux/sysfs.h>
+@@ -31,6 +31,7 @@
+ #include <linux/sysfs.h>
  #include <linux/types.h>
  #include <linux/wmi.h>
++#include <acpi/battery.h>
  
-@@ -34,9 +39,11 @@
+ #include <linux/unaligned.h>
  
- #define MSI_WMI_PLATFORM_INTERFACE_VERSION	2
+@@ -79,6 +80,7 @@
+ /* Get_Data() and Set_Data() Params */
+ #define MSI_PLATFORM_PL1_ADDR	0x50
+ #define MSI_PLATFORM_PL2_ADDR	0x51
++#define MSI_PLATFORM_BAT_ADDR	0xd7
  
-+/* Get_WMI() WMI method */
- #define MSI_PLATFORM_WMI_MAJOR_OFFSET	1
- #define MSI_PLATFORM_WMI_MINOR_OFFSET	2
- 
-+/* Get_EC() and Set_EC() WMI methods */
- #define MSI_PLATFORM_EC_FLAGS_OFFSET	1
- #define MSI_PLATFORM_EC_MINOR_MASK	GENMASK(3, 0)
- #define MSI_PLATFORM_EC_MAJOR_MASK	GENMASK(5, 4)
-@@ -44,6 +51,18 @@
- #define MSI_PLATFORM_EC_IS_TIGERLAKE	BIT(7)
- #define MSI_PLATFORM_EC_VERSION_OFFSET	2
- 
-+/* Get_Fan() and Set_Fan() WMI methods */
-+#define MSI_PLATFORM_FAN_SUBFEATURE_FAN_SPEED		0x0
-+#define MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE	0x1
-+#define MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE	0x2
-+#define MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE	0x1
-+#define MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE	0x2
-+
-+/* Get_AP() and Set_AP() WMI methods */
-+#define MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE	0x1
-+#define MSI_PLATFORM_AP_FAN_FLAGS_OFFSET	1
-+#define MSI_PLATFORM_AP_ENABLE_FAN_TABLES	BIT(7)
-+
  static bool force;
  module_param_unsafe(force, bool, 0);
- MODULE_PARM_DESC(force, "Force loading without checking for supported WMI interface versions");
-@@ -221,9 +240,201 @@ static int msi_wmi_platform_query(struct msi_wmi_platform_data *data,
- 	}
+@@ -118,6 +120,7 @@ enum msi_wmi_platform_method {
+ 
+ struct msi_wmi_platform_quirk {
+ 	bool shift_mode;	/* Shift mode is supported */
++	bool charge_threshold;	/* Charge threshold is supported */
+ 	int pl_min;		/* Minimum PLx value */
+ 	int pl1_max;		/* Maximum PL1 value */
+ 	int pl2_max;		/* Maximum PL2 value */
+@@ -128,6 +131,7 @@ struct msi_wmi_platform_data {
+ 	struct msi_wmi_platform_quirk *quirks;
+ 	struct mutex wmi_lock;	/* Necessary when calling WMI methods */
+ 	struct device *ppdev;
++	struct acpi_battery_hook battery_hook;
+ 	struct device *fw_attrs_dev;
+ 	struct kset *fw_attrs_kset;
+ };
+@@ -211,12 +215,14 @@ static const char * const msi_wmi_platform_debugfs_names[] = {
+ static struct msi_wmi_platform_quirk quirk_default = {};
+ static struct msi_wmi_platform_quirk quirk_gen1 = {
+ 	.shift_mode = true,
++	.charge_threshold = true,
+ 	.pl_min = 8,
+ 	.pl1_max = 43,
+ 	.pl2_max = 45
+ };
+ static struct msi_wmi_platform_quirk quirk_gen2 = {
+ 	.shift_mode = true,
++	.charge_threshold = true,
+ 	.pl_min = 8,
+ 	.pl1_max = 30,
+ 	.pl2_max = 37
+@@ -1013,6 +1019,94 @@ static int msi_wmi_fw_attrs_init(struct msi_wmi_platform_data *data)
+ 	return 0;
  }
  
-+static ssize_t msi_wmi_platform_fan_table_show(struct device *dev, struct device_attribute *attr,
-+					       char *buf)
++static int msi_platform_psy_ext_get_prop(struct power_supply *psy,
++					 const struct power_supply_ext *ext,
++					 void *data,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val)
 +{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
-+	u8 buffer[32] = { sattr->nr };
-+	u8 fan_percent;
++	struct msi_wmi_platform_data *msi = data;
++	u8 buffer[32] = { 0 };
 +	int ret;
 +
-+	ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
++		buffer[0] = MSI_PLATFORM_BAT_ADDR;
++		ret = msi_wmi_platform_query(msi, MSI_PLATFORM_GET_DATA,
++					     buffer, sizeof(buffer));
++		if (ret)
++			return ret;
 +
-+	fan_percent = buffer[sattr->index + 1];
-+	if (fan_percent > 100)
-+		return -EIO;
++		val->intval = buffer[1] & ~BIT(7);
++		if (val->intval > 100)
++			return -EINVAL;
 +
-+	return sysfs_emit(buf, "%d\n", fixp_linear_interpolate(0, 0, 100, 255, fan_percent));
++		return 0;
++	default:
++		return -EINVAL;
++	}
 +}
 +
-+static ssize_t msi_wmi_platform_fan_table_store(struct device *dev, struct device_attribute *attr,
-+						const char *buf, size_t count)
++static int msi_platform_psy_ext_set_prop(struct power_supply *psy,
++					 const struct power_supply_ext *ext,
++					 void *data,
++					 enum power_supply_property psp,
++					 const union power_supply_propval *val)
 +{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
-+	u8 buffer[32] = { sattr->nr };
-+	long speed;
-+	int ret;
++	struct msi_wmi_platform_data *msi = data;
++	u8 buffer[32] = { 0 };
 +
-+	ret = kstrtol(buf, 10, &speed);
-+	if (ret < 0)
-+		return ret;
-+
-+	speed = clamp_val(speed, 0, 255);
-+
-+	guard(mutex)(&data->wmi_lock);
-+
-+	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_GET_FAN,
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
++		if (val->intval > 100)
++			return -EINVAL;
++		buffer[0] = MSI_PLATFORM_BAT_ADDR;
++		buffer[1] = val->intval | BIT(7);
++		return msi_wmi_platform_query(msi, MSI_PLATFORM_SET_DATA,
 +					      buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	buffer[0] = sattr->nr;
-+	buffer[sattr->index + 1] = fixp_linear_interpolate(0, 0, 255, 100, speed);
-+
-+	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_FAN,
-+					      buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
++	default:
++		return -EINVAL;
++	}
 +}
 +
-+static ssize_t msi_wmi_platform_temp_table_show(struct device *dev, struct device_attribute *attr,
-+						char *buf)
++static int
++msi_platform_psy_prop_is_writeable(struct power_supply *psy,
++				   const struct power_supply_ext *ext,
++				   void *data, enum power_supply_property psp)
 +{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
-+	u8 buffer[32] = { sattr->nr };
-+	u8 temp_c;
-+	int ret;
-+
-+	ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_TEMPERATURE,
-+				     buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	temp_c = buffer[sattr->index + 1];
-+
-+	return sysfs_emit(buf, "%d\n", temp_c);
++	return true;
 +}
 +
-+static ssize_t msi_wmi_platform_temp_table_store(struct device *dev, struct device_attribute *attr,
-+						 const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
-+	u8 buffer[32] = { sattr->nr };
-+	long temp_c;
-+	int ret;
-+
-+	ret = kstrtol(buf, 10, &temp_c);
-+	if (ret < 0)
-+		return ret;
-+
-+	temp_c = clamp_val(temp_c, 0, 255);
-+
-+	guard(mutex)(&data->wmi_lock);
-+
-+	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_GET_TEMPERATURE,
-+					      buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	buffer[0] = sattr->nr;
-+	buffer[sattr->index + 1] = temp_c;
-+
-+	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_TEMPERATURE,
-+					      buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x7);
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x6);
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x0);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x6);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_temp, msi_wmi_platform_temp_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x7);
-+
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x1);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x2);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x3);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x4);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x5);
-+static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_pwm, msi_wmi_platform_fan_table,
-+			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x6);
-+
-+static struct attribute *msi_wmi_platform_hwmon_attrs[] = {
-+	&sensor_dev_attr_pwm1_auto_point1_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_temp.dev_attr.attr,
-+
-+	&sensor_dev_attr_pwm1_auto_point1_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_pwm.dev_attr.attr,
-+
-+	&sensor_dev_attr_pwm2_auto_point1_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point2_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point3_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point4_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point5_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point6_temp.dev_attr.attr,
-+
-+	&sensor_dev_attr_pwm2_auto_point1_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point2_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point3_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point4_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point5_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm2_auto_point6_pwm.dev_attr.attr,
-+	NULL
++static const enum power_supply_property oxp_psy_ext_props[] = {
++	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
 +};
-+ATTRIBUTE_GROUPS(msi_wmi_platform_hwmon);
 +
- static umode_t msi_wmi_platform_is_visible(const void *drvdata, enum hwmon_sensor_types type,
- 					   u32 attr, int channel)
- {
-+	if (type == hwmon_pwm && attr == hwmon_pwm_enable)
-+		return 0644;
++static const struct power_supply_ext msi_platform_psy_ext = {
++	.name			= "msi-platform-charge-control",
++	.properties		= oxp_psy_ext_props,
++	.num_properties		= ARRAY_SIZE(oxp_psy_ext_props),
++	.get_property		= msi_platform_psy_ext_get_prop,
++	.set_property		= msi_platform_psy_ext_set_prop,
++	.property_is_writeable	= msi_platform_psy_prop_is_writeable,
++};
 +
- 	return 0444;
- }
- 
-@@ -233,24 +444,102 @@ static int msi_wmi_platform_read(struct device *dev, enum hwmon_sensor_types typ
- 	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
- 	u8 buffer[32] = { 0 };
- 	u16 value;
-+	u8 flags;
- 	int ret;
- 
--	ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buf, sizeof(buf));
--	if (ret < 0)
--		return ret;
-+	switch (type) {
-+	case hwmon_fan:
-+		switch (attr) {
-+		case hwmon_fan_input:
-+			buffer[0] = MSI_PLATFORM_FAN_SUBFEATURE_FAN_SPEED;
-+			ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buffer,
-+						     sizeof(buffer));
-+			if (ret < 0)
-+				return ret;
-+
-+			value = get_unaligned_be16(&buffer[channel * 2 + 1]);
-+			if (!value)
-+				*val = 0;
-+			else
-+				*val = 480000 / value;
-+
-+			return 0;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	case hwmon_pwm:
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+			buffer[0] = MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
-+			ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_AP, buffer,
-+						     sizeof(buffer));
-+			if (ret < 0)
-+				return ret;
-+
-+			flags = buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET];
-+			if (flags & MSI_PLATFORM_AP_ENABLE_FAN_TABLES)
-+				*val = 1;
-+			else
-+				*val = 2;
-+
-+			return 0;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
- 
--	value = get_unaligned_be16(&buffer[channel * 2 + 1]);
--	if (!value)
--		*val = 0;
--	else
--		*val = 480000 / value;
-+static int msi_wmi_platform_write(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-+				  int channel, long val)
++static int msi_wmi_platform_battery_add(struct power_supply *battery,
++					struct acpi_battery_hook *hook)
 +{
-+	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
-+	u8 buffer[32] = { };
-+	int ret;
++	struct msi_wmi_platform_data *data =
++		container_of(hook, struct msi_wmi_platform_data, battery_hook);
++
++	return power_supply_register_extension(battery, &msi_platform_psy_ext,
++					       &data->wdev->dev, data);
++}
++
++static int msi_wmi_platform_battery_remove(struct power_supply *battery,
++					   struct acpi_battery_hook *hook)
++{
++	power_supply_unregister_extension(battery, &msi_platform_psy_ext);
++	return 0;
++}
++
+ static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user *input,
+ 					      size_t length, loff_t *offset)
+ {
+@@ -1245,6 +1339,13 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+ 	if (ret < 0)
+ 		return ret;
  
--	return 0;
-+	switch (type) {
-+	case hwmon_pwm:
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+			guard(mutex)(&data->wmi_lock);
-+
-+			buffer[0] = MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
-+			ret = msi_wmi_platform_query_unlocked(
-+				data, MSI_PLATFORM_GET_AP, buffer,
-+				sizeof(buffer));
-+			if (ret < 0)
-+				return ret;
-+
-+			buffer[0] = MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
-+			switch (val) {
-+			case 1:
-+				buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET] |=
-+					MSI_PLATFORM_AP_ENABLE_FAN_TABLES;
-+				break;
-+			case 2:
-+				buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET] &=
-+					~MSI_PLATFORM_AP_ENABLE_FAN_TABLES;
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			return msi_wmi_platform_query_unlocked(
-+				data, MSI_PLATFORM_SET_AP, buffer,
-+				sizeof(buffer));
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	default:
-+		return -EOPNOTSUPP;
++	if (data->quirks->charge_threshold) {
++		data->battery_hook.name = "MSI Battery";
++		data->battery_hook.add_battery = msi_wmi_platform_battery_add;
++		data->battery_hook.remove_battery = msi_wmi_platform_battery_remove;
++		battery_hook_register(&data->battery_hook);
 +	}
++
+ 	msi_wmi_platform_debugfs_init(data);
+ 
+ 	msi_wmi_platform_profile_setup(data);
+@@ -1252,6 +1353,14 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+ 	return msi_wmi_platform_hwmon_init(data);
  }
  
- static const struct hwmon_ops msi_wmi_platform_ops = {
- 	.is_visible = msi_wmi_platform_is_visible,
- 	.read = msi_wmi_platform_read,
-+	.write = msi_wmi_platform_write,
++static void msi_wmi_platform_remove(struct wmi_device *wdev)
++{
++	struct msi_wmi_platform_data *data = dev_get_drvdata(&wdev->dev);
++
++	if (data->quirks->charge_threshold)
++		battery_hook_unregister(&data->battery_hook);
++}
++
+ static const struct wmi_device_id msi_wmi_platform_id_table[] = {
+ 	{ MSI_PLATFORM_GUID, NULL },
+ 	{ }
+@@ -1265,6 +1374,7 @@ static struct wmi_driver msi_wmi_platform_driver = {
+ 	},
+ 	.id_table = msi_wmi_platform_id_table,
+ 	.probe = msi_wmi_platform_probe,
++	.remove = msi_wmi_platform_remove,
+ 	.no_singleton = true,
  };
- 
- static const struct hwmon_channel_info * const msi_wmi_platform_info[] = {
-@@ -260,6 +549,10 @@ static const struct hwmon_channel_info * const msi_wmi_platform_info[] = {
- 			   HWMON_F_INPUT,
- 			   HWMON_F_INPUT
- 			   ),
-+	HWMON_CHANNEL_INFO(pwm,
-+			   HWMON_PWM_ENABLE,
-+			   HWMON_PWM_ENABLE
-+			   ),
- 	NULL
- };
- 
-@@ -268,8 +561,8 @@ static const struct hwmon_chip_info msi_wmi_platform_chip_info = {
- 	.info = msi_wmi_platform_info,
- };
- 
--static ssize_t msi_wmi_platform_write(struct file *fp, const char __user *input, size_t length,
--				      loff_t *offset)
-+static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user *input,
-+					      size_t length, loff_t *offset)
- {
- 	struct seq_file *seq = fp->private_data;
- 	struct msi_wmi_platform_debugfs_data *data = seq->private;
-@@ -303,7 +596,7 @@ static ssize_t msi_wmi_platform_write(struct file *fp, const char __user *input,
- 	return length;
- }
- 
--static int msi_wmi_platform_show(struct seq_file *seq, void *p)
-+static int msi_wmi_platform_debugfs_show(struct seq_file *seq, void *p)
- {
- 	struct msi_wmi_platform_debugfs_data *data = seq->private;
- 	int ret;
-@@ -315,19 +608,19 @@ static int msi_wmi_platform_show(struct seq_file *seq, void *p)
- 	return ret;
- }
- 
--static int msi_wmi_platform_open(struct inode *inode, struct file *fp)
-+static int msi_wmi_platform_debugfs_open(struct inode *inode, struct file *fp)
- {
- 	struct msi_wmi_platform_debugfs_data *data = inode->i_private;
- 
- 	/* The seq_file uses the last byte of the buffer for detecting buffer overflows */
--	return single_open_size(fp, msi_wmi_platform_show, data, data->length + 1);
-+	return single_open_size(fp, msi_wmi_platform_debugfs_show, data, data->length + 1);
- }
- 
- static const struct file_operations msi_wmi_platform_debugfs_fops = {
- 	.owner = THIS_MODULE,
--	.open = msi_wmi_platform_open,
-+	.open = msi_wmi_platform_debugfs_open,
- 	.read = seq_read,
--	.write = msi_wmi_platform_write,
-+	.write = msi_wmi_platform_debugfs_write,
- 	.llseek = seq_lseek,
- 	.release = single_release,
- };
-@@ -389,7 +682,8 @@ static int msi_wmi_platform_hwmon_init(struct msi_wmi_platform_data *data)
- 	struct device *hdev;
- 
- 	hdev = devm_hwmon_device_register_with_info(&data->wdev->dev, "msi_wmi_platform", data,
--						    &msi_wmi_platform_chip_info, NULL);
-+						    &msi_wmi_platform_chip_info,
-+						    msi_wmi_platform_hwmon_groups);
- 
- 	return PTR_ERR_OR_ZERO(hdev);
- }
+ module_wmi_driver(msi_wmi_platform_driver);
 -- 
 2.49.0
 
