@@ -1,41 +1,40 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F8C1519A1
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 11:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677DF1CA84;
+	Sun, 11 May 2025 11:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746961533; cv=none; b=mWWwpvTUC57TEQASLV6rEfzq1fXch7kjM2znuie/e2tH2i4I425ESJK7hi/N52smMS4i4UefUnoUhgt8Ae3fvv+4d8Q/9iXiqyH/LhIQiTcR7snMgSCPXhoT99JYHguxjQ00rh7H7E8WdoNG3hpNHtUy7xmEhh46WwlgiocW7kY=
+	t=1746961805; cv=none; b=V8npoRGYe2xRuaEo1rbpd9rj8hf48tovPSb31ZeqluwUnybnb3KGB7oEDahKxR8/nV4FOhhEYVMkyRTKPeXo/GpnHUBx75vwEAKRq4POGbsEDJJ5n9JWRkT6fygF129EYdCHMyvGjne63W9mkI37RW91i+Cmzwjde6on1AW1ksw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746961533; c=relaxed/simple;
-	bh=xq+n9vwg1N73d5ZcbwD1g8da9s05uBFuLTMRhrTWpNw=;
+	s=arc-20240116; t=1746961805; c=relaxed/simple;
+	bh=jMQBK9nDENFw/bCN1t0pnnaMpP8NqWeKB9vcg7JDZWs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QovYe2EzeRFUd1GChAOc8mTcJkS5x0s8gqqZiKbBNaDoYQSlw6d4dISegZm1AJ19GGxWGvUV7HZicB/+kz5rgJogw1kxJpkjSD0UTbeWime6duIXMHjMFvzpfnxA/qv9evUrUqV0EpVPopSbkBcgmtoZpdf4OhGAw1+koGXXWJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=j8lCMGvk; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	 In-Reply-To:Content-Type; b=Ue9GmP0rdSu+8R6VG8do+bvu60tt8TeXmgjBKAF9U3FgOrFJPuKzCKhu6VwVqZK7Q0anIOkBZSv7i3/ey4n5CsIuVmecnUWyaGW5wg+zrbAbw/gmFH4efNQ83ufA2PW0wapZoavWt5bPPEfk84/dIowMc1O0e9mcn9Zbi1T8DCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=CVWROG4u; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="j8lCMGvk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1746961520;
- bh=ek6GBAYJeDRPIZjH28p/Q9SJdCsotpdSU7d2WoGn9tU=;
- b=j8lCMGvkLDo4UDDy3pN4fW0I5M5t+jHwJZXK2GSfa+vwNMXRnqag2u49fUKq4go0u2LNkcALa
- Zt4GvRa//f7aNI5CLulXQtkzzCVlnvnjMgPLt7L0I0XsIhgVR2AWM4otIBthIjXX3hRjQ5A3mgV
- d6YsTbmyL56kwbiLf1HwYQF1LuVFBuCNN9wcWxSi/ynHEMqAtgznampb6w3pCMQ3eZsFWMvVPhE
- hGcnkmIik+E7HmMZbbmGPrnwJPNJw8E1G9zejygsZH/6y1jtAas7e8TAPOVZE45lAYndP2IFW5P
- HpUPGangGs1VeDwnERvYN1VsEmeHE3AJksFYF4xweRBQ==
-X-Forward-Email-ID: 682084688a98caeef2469b46
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <4a4c0295-d8f1-4d8a-92e4-34a69b42c728@kwiboo.se>
-Date: Sun, 11 May 2025 13:05:08 +0200
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="CVWROG4u"
+Received: from [172.20.3.254] (unknown [213.157.19.135])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id CC9DE3FE1C;
+	Sun, 11 May 2025 11:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1746961800;
+	bh=+uL/f0wq2ESOTZKET8OH5w68gAIopfy0QxnsRwSKynA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=CVWROG4uQt7gdi6SeZNs+j1hdq8C0KxT1gYttB2rwjZ8p3p8Ve8cXz63QDccn1vgd
+	 ZufUZ6uuZryPfeGeqYwuPDA7FSnRyzekaeJv+/d8eaBTngoC57k7EUthBC44H9Xj3L
+	 Dlg70sv6C/tIwmXePcdoHKqAKnYZY+92FjQmigGcqYRy5bEv06fDqB13dDz/+EOOad
+	 moP+Hu3ogc0qdPGGRL9sYNs2WKN4GNrIO7Q85ZhngceGUIGq88+mLYuJFssK0dYKLw
+	 GCEO+9544qn7wPU4ngsei+p5UgAZSuUp9JwYLorM8SLq2ouxyze5inYAh7kAxwQw9Y
+	 FUJPaHiC1vdGw==
+Message-ID: <c8faa0ca-1cbd-439f-bdf7-0bf34c2b9d91@canonical.com>
+Date: Sun, 11 May 2025 04:09:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,94 +42,216 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: rockchip: move rk3528 i2c+uart aliases to
- board files
-To: Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250510220106.2108414-1-heiko@sntech.de>
+Subject: Re: [PATCH 1/3] Wire up the lsm_manage_policy syscall
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+ =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
+ Song Liu <song@kernel.org>, linux-security-module@vger.kernel.org,
+ paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, kees@kernel.org,
+ stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+ takedakn@nttdata.co.jp, linux-api@vger.kernel.org,
+ apparmor@lists.ubuntu.com, linux-kernel@vger.kernel.org,
+ Arnd Bergmann <arnd@arndb.de>
+References: <20250506143254.718647-1-maxime.belair@canonical.com>
+ <20250506143254.718647-2-maxime.belair@canonical.com>
+ <CAPhsuW4qY9B3KdhqrUOZoNBWQmO_RDwbH46my314WxrFwxbwkQ@mail.gmail.com>
+ <aa3c41f9-6b25-4871-a4be-e08430e59730@canonical.com>
+ <470689f0-223e-4d26-a919-8d48f383883b@I-love.SAKURA.ne.jp>
+ <7da224cd-fd9c-4c80-9a23-cb977420f50b@canonical.com>
+ <20250509.bokeiCho2oov@digikod.net>
 Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250510220106.2108414-1-heiko@sntech.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ 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 lT9Q
+Organization: Canonical
+In-Reply-To: <20250509.bokeiCho2oov@digikod.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Heiko,
+On 5/9/25 03:25, Mickaël Salaün wrote:
+> On Thu, May 08, 2025 at 12:52:55AM -0700, John Johansen wrote:
+>> On 5/7/25 15:04, Tetsuo Handa wrote:
+>>> On 2025/05/08 0:37, Maxime Bélair wrote:
+>>>> Again, each module decides which operations to expose through this syscall. In many cases
+>>>> the operation will still require CAP_SYS_ADMIN or a similar capability, so environments
+>>>> that choose this interface remain secure while gaining its advantages.
+>>>
+>>> If the interpretation of "flags" argument varies across LSMs, it sounds like ioctl()'s
+>>
+>> yes that does feel like ioctls(), on the other hand defining them at the LSM level won't
+>> offer LSMs flexibility making it so the syscall covers fewer use cases. I am not opposed
+>> to either, it just hashing out what people want, and what is acceptable.
+>>
+>>> "cmd" argument. Also, there is prctl() which can already carry string-ish parameters
+>>> without involving open(). Why can't we use prctl() instead of lsm_manage_policy() ?
+>>>
+>>
+>> prctl() can be used, I used it for the unprivileged policy demo. It has its own set of
+>> problems. While LSM policy could be associated with the process doing the load/replacement
+>> or what ever operation, it isn't necessarily tied to it. A lot of LSM policy is not
+>> process specific making prctl() a poor fit.
+>>
+>> prctl() requires allocating a global prctl()
+>>
+>> prctl() are already being filtered/controlled by LSMs making them a poort fit for
+>> use by an LSM in a stacking situation as it requires updating the policy of other
+>> LSMs on the system. Yes seccomp can filter the syscall but that still is an easier
+>> barrier to overcome than having to have instruction for how to allow your LSMs
+>> prctl() in multiple LSMs.
+>>
+>>
+>> Mickaël already argued the need for landlock to have syscalls. See
+> 
+> Landlock indeed requires syscalls mainly because of its unprivileged
+> nature.
+> 
 
-On 2025-05-11 00:01, Heiko Stuebner wrote:
-> Even though they will be the same for all boards, i2c and uart aliases
-> are supposed to live in the individual board files, to not create
-> aliases for disabled nodes.
+yes that is the dominant reason
 
-This sounds like something tooling should be able to handle, e.g. U-Boot
-use fdtgrep to filter out nodes (and aliases) for the FDT used by early
-boot phases.
+>> https://lore.kernel.org/lkml/20200511192156.1618284-7-mic@digikod.net/
+>> and the numerous iterations before that.
+> 
+> This link might be misleading though, it points to an initial version of
+> the syscall proposal (v17) and it was then decided to create one syscall
+> per operation (v34), which is why we ended with 3 syscalls.  See the
+> changelog:
+> https://lore.kernel.org/r/20210422154123.13086-9-mic@digikod.net
+> 
 
-Maybe DTC just need a feature to remove aliases to disabled nodes?
+yes and no. I am well aware landlock's syscall got split into three syscalls.
 
-Also how should overlays handle aliases? Are all overlays suppose to add
-aliases for the add-on devices they may enable?
+All I was trying to do is reference to the start of the discussion on why
+landlock needed a syscall(s). I thought the details of why you have three
+etc, really didn't add to the discussion. But yeah not also pointing to
+v34 could be considered misleading.
 
-And how should we handle boards with e.g. a 40-pin header where pins
-could be muxed to multiple functions. Is it the overlays responsibility
-to remove and replace aliases? E.g. if pins can mux between i2c1 and
-uart3, and i2c1 was enabled by default.
 
-Regards,
-Jonas
+>>
+>> Ideally those could have been LSM syscalls, with landlock leveraging them.
+> 
+> I don't agree.  The Landlock syscalls have a well-defined semantic, with
+
+First I don't begrudge Landlock its syscalls, I think at the time it was
+the only way forward.
+
+> documented security requirements, and they deal with specific kernel
+> objects identified with file descriptors, including a dedicated one:
+> [landlock-ruleset].
+
+I am aware. Those semantics could have been kept and documented, within
+a set of LSM syscalls. Yes landlock's syscalls shouldn't have been done
+behind a single LSM syscall, I am not advocating for that but maybe
+behind several LSM syscalls.
+
+>  For the features provided by these Landlock
+> syscalls, it would not have been a good idea to reuse existing syscalls,
+> nor to rely on the syscall proposed in this series because the interface
+> is too specific to some of the current privileged LSMs (i.e. ingest a
+> policy blob).  Making this interface more generic would lead to even
+> less defined semantic though.
+
+Right, so again not a generic LSM syscall. But "generic" LSM syscalls
+for certain purposes. Let me walk my statement back a little, what I
+find unfortunate was that the landlock LSM syscalls didn't get discussed
+as a set of generic LSM syscall's with landlock being the first to
+implement them.
+
+The question is hashing out where the generic semantics are vs. the
+individual LSMs. Having an LSM syscall to deal with specific kernel
+objects idenetified with file descriptors, and allowing each LSMs
+to deal with that if it needs is possible.
+
+Its a matter of figuring something out. It could be it turns out it is
+not worth it. And some individual LSM syscalls like landlocks are the
+way to go, its that it wasn't explored. I don't fault you, and think
+it really wasn't even an option at the time.
 
 > 
-> So move the newly added aliases for rk3528 over to the Radxa E20C board,
-> which is the only rk3528 board right now.
+>> AppArmor
+>> is getting to where it has similar needs to landlock. Yes we can use ioctls, prctls,
+>> netlink, the fs, etc. it doesn't mean that those are the best interfaces to do so,
 > 
-> Fixes: d3a05f490d04 ("arm64: dts: rockchip: Add I2C controllers for RK3528")
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
->  .../boot/dts/rockchip/rk3528-radxa-e20c.dts      |  2 ++
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi         | 16 ----------------
->  2 files changed, 2 insertions(+), 16 deletions(-)
+> I think it would make sense to propose AppArmor-specific syscalls.
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> index 506d54337ece..9f6ccd9dd1f7 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> @@ -18,8 +18,10 @@ / {
->  
->  	aliases {
->  		ethernet0 = &gmac1;
-> +		i2c1 = &i2c1;
->  		mmc0 = &sdhci;
->  		mmc1 = &sdmmc;
-> +		serial0 = &uart0;
->  	};
->  
->  	chosen {
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> index cd8ef389ccf3..b2724c969a76 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> @@ -24,22 +24,6 @@ aliases {
->  		gpio2 = &gpio2;
->  		gpio3 = &gpio3;
->  		gpio4 = &gpio4;
-> -		i2c0 = &i2c0;
-> -		i2c1 = &i2c1;
-> -		i2c2 = &i2c2;
-> -		i2c3 = &i2c3;
-> -		i2c4 = &i2c4;
-> -		i2c5 = &i2c5;
-> -		i2c6 = &i2c6;
-> -		i2c7 = &i2c7;
-> -		serial0 = &uart0;
-> -		serial1 = &uart1;
-> -		serial2 = &uart2;
-> -		serial3 = &uart3;
-> -		serial4 = &uart4;
-> -		serial5 = &uart5;
-> -		serial6 = &uart6;
-> -		serial7 = &uart7;
->  	};
->  
->  	cpus {
+
+that may be the case, but I think we should explore providing a more
+LSM generic interface first.
+
+>> and ideally any interface we use will be of benefit to some other LSMs in the future.
+> 
+> The LSM syscalls may make sense to deal with LSM blobs managed by the
+> LSM framework (e.g. get/set properties) when the operations are
+> common/generic.
+> 
+> Security policies are specific to each LSM and they should implement
+> their own well-defined interface (e.g. filesystem, netlink, syscall).
+> 
+policies at some level are just blobs too. It is worth at least
+exploring whether there can be a common interface.
+
+> The LSM framework doesn't provide nor manage any security policy, it
+> mainly provides a set of consistent and well-defined kernel hooks with
+> security blobs to enforce a security policy.  I don't think it makes
+> sense to add LSM syscalls to manage things not managed by the LSM
+> framework.
+
+we aren't talking about the LSM framework managing security policy,
+just whether it makes sense for it to provide a common interface that
+an LSM can choose to use to provide it a blob of policy that it
+can then manage.
+
+Its just a mechanism. This isn't all that different than using the
+filesystem, netlink, or other mechanisms to shuttle the blob
+between userspace to the kernel, and then the LSM manages its
+policy and data.
+
+The big difference is that using the syscall opens unprivileged
+policy up to the LSM more broadly. If we are going to go the syscall
+route for apparmor, we might as well see if we can't make that
+mechanism more broadly available, and make it easier for other
+LSMs in the future.
+
+Again, it might turn out its a fools errand, and we have to do
+an apparmor specific syscall, but it is worth exploring first.
+
 
