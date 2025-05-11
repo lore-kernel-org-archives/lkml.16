@@ -1,89 +1,92 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0F825C70A;
-	Sun, 11 May 2025 21:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F054C8E;
+	Sun, 11 May 2025 21:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746999766; cv=none; b=QFFqvTXuGjxvz8493mpObjLNJawsCCkfgPfctexX67W51Q4boZIG8fYjVrUG5AYKxB8AgyPh1FCpomV1/TnEVoLusiC3+ip1D0X1uVo9XoOZSvTi2h5njg5UsbvHqj5Sl9p0Wx0oqdOdtqlyh3vaLiKkASVcj4Vs7Vtx9VqA2lc=
+	t=1746999928; cv=none; b=Cqx9UIVGQc9G1vw94vfuQB8rX+bzON1+Dq6wOstN/pyzjjAA1LA79XkITA1Byju4hncywaYkqCVZY+TDJrDyP3xHOWEZXnQ+wkZKAfthOGTd6AkmdPfPDetvUhLDtRmbAi5dAjION4fERQS6JFJnOsJxLcreDROE7khrTDYpO5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746999766; c=relaxed/simple;
-	bh=L/lDF9XcO/AKcBn+DW2W9A5Fj3KSW728ejIa5Ys1Ko4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=b0HsEoAXZyf3HoD4+6VC9kd4uA4g5yWkI8I6PKBo/M2DruYPNGhdf86ETIkKgrL4sv5p094Hczfgcu1OiMWdxH5z4FGll9kHyN5M88TdvD3Uf8T92oQ2HCoxbLkPun9cHdVkl55JWXXcGgsOmW7CempmhJMSJH3dM9kd7pgfPvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=f2P5ZL8x; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746999928; c=relaxed/simple;
+	bh=n6VR74UUrkjd7Li7mn4MUpvTWHM+Fg3QJMysU96a2vU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hCH9LK0VW9ovaKYGDDHf0Sg+KDNVRkkamWzIFymbfK0E/YHGir7mRzZJMJ6TLMr+g6tJlHxBvOOQtJosnc+f2Q3ao0she9Z9zdYF5qESIdDqU12x76uVg0R/IZC8tc/kJzRAw9y+sGNZA8SvVu3Nq6cXJW5SedBmY4NrtPQ/X2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/ZRTasQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f2P5ZL8x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746999760;
-	bh=/m4poCglLhklMvQ7q10UpOJWYlII6eAFnD3+mM2VGeA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=f2P5ZL8xFAU0an4OTylMPPizs2k+a8zRfBk85EP1vQYvQYY6OpSbl+AMRCqlUWB+j
-	 Y1gB44Pizkf5KnNE47W5QtC8OPm1KazTd8EpnHYuwIcr8ziG+aT5IYcDBL3XekWnPf
-	 d9drR2wWvD4b/onvFhyRwMSua0+hMwT1M71HQkOuSq1uezTpkcxSQEYyQ/h4Aa0XRo
-	 AQOtXxs5Lz+0F9X3SVu+CtPI3vP3vNeqS7BgY+KUhWnw0Ez0EBg7sYj251HsTifJhK
-	 vVdBoAp9qhiBOumoMdOnhSNTI+hKue4dApOgKeK2EHnzclRIUcQLRXv6WatuVylHqu
-	 8Vbwhsb4oeMsg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZwbnD168Xz4x1V;
-	Mon, 12 May 2025 07:42:39 +1000 (AEST)
-Date: Mon, 12 May 2025 07:42:39 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christoffer Dall <cdall@cs.columbia.edu>, Marc Zyngier <maz@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the kvm-arm tree
-Message-ID: <20250512074239.24279712@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/ZRTasQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DD08C4CEEF;
+	Sun, 11 May 2025 21:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746999927;
+	bh=n6VR74UUrkjd7Li7mn4MUpvTWHM+Fg3QJMysU96a2vU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=D/ZRTasQquFXwKbPNKCYUM1NIuMwA6+YLiybYZawOMprx3ipPqVo6VWG2Ilfj52GF
+	 Rr5XraDpe8fZyBTv3Noz21dBSrlpDmrQZd91yutike+MoWlDi4GxDIv2dKHWnYdlVC
+	 4c8AsLyPsmHKuooiYd6PEd0mzGIo6qyWt/zFztGM79ib+cL5O6LqOvQvD/DKNUjVFn
+	 O9smap/BiePuv1E1/pL7tAOcu/ws2OzMultORce4EgQ5aKaVfJAbjxOHtllEn/sDyH
+	 RgYUbhjQsNpGB2FtShM4/G31GhUKnPZ+bTkBXxWFZs2TxVPOobN1ecSLXQodU+TONE
+	 AV+k1my09wI0Q==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-326cf24aa35so21928681fa.2;
+        Sun, 11 May 2025 14:45:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU47SderBtHetOpksGFVN2j3yXIO5OANDpBr1Lk0a/EUvaLo1xwLxCGy2cKEOvRpxHSRFbhmZI0tifBRXs=@vger.kernel.org, AJvYcCUqwqHwWXYyvkwXNHHhTF/bxO3aHGecFZ/yXNg+al4WQbGYOOjBZuSF58x8jRxSn03/BN4YPJrS@vger.kernel.org, AJvYcCV9EOJGZqASWbQUWSUYrCK+luli4m6K1AVTbn2WI+Vo9LL7MNJae8N7i8+E3xPDAEsazW9jZonjolmzIA==@vger.kernel.org, AJvYcCWVVMYMaCrdSV3FaH3lYEknB1lzyjCBtNpeuOpdY2IpA1ELbGROeVdh5/lzXda02Ds296WKWerj2itBdg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeeDQwubM/y765nCocp4U80oZatKscfB/QAcZ9KJTMDnYTf2KX
+	PHKi6L/PCnBPssDK9OQlVjQ6t0Pqo1VY6RYs6qw94oThr3j+ugQp5MrJOlwEJwDV71LkooFrErA
+	wSbt4GZULfanWR9tHzOAbbgdaOCc=
+X-Google-Smtp-Source: AGHT+IGXAKwBmsQgT+onQCTrcyVQm05O0hzEhnj9ZJ3lSI582XXe3FX+xmXCeVd+5a8Bm7iJP57f+ZUkw11acThSHag=
+X-Received: by 2002:a2e:bc08:0:b0:31e:261a:f3e2 with SMTP id
+ 38308e7fff4ca-326c459db3amr41790571fa.1.1746999925705; Sun, 11 May 2025
+ 14:45:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/O=NTMzlozE0A=__Eg=eUk4e";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20250511004110.145171-1-ebiggers@kernel.org> <b9b0f188-d873-43ff-b1e1-259e2afdda6c@lunn.ch>
+ <20250511172929.GA1239@sol> <fe9fdf65-8eb1-4e33-88ce-4856a10364b2@lunn.ch>
+In-Reply-To: <fe9fdf65-8eb1-4e33-88ce-4856a10364b2@lunn.ch>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 11 May 2025 23:45:14 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFSm9-5+uBoF3mBbZKRU6wK9jmmyh=L538FoGvZ1XVShQ@mail.gmail.com>
+X-Gm-Features: AX0GCFsoD-9jiD_NH_ReLAgqqMRiIecG31oMhtVBxXbocF6ZydM3nWnbvTXpTTA
+Message-ID: <CAMj1kXFSm9-5+uBoF3mBbZKRU6wK9jmmyh=L538FoGvZ1XVShQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 00/10] net: faster and simpler CRC32C computation
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org, 
+	linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Daniel Borkmann <daniel@iogearbox.net>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+	Sagi Grimberg <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/O=NTMzlozE0A=__Eg=eUk4e
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 11 May 2025 at 23:22, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Sun, May 11, 2025 at 10:29:29AM -0700, Eric Biggers wrote:
+> > On Sun, May 11, 2025 at 06:30:25PM +0200, Andrew Lunn wrote:
+> > > On Sat, May 10, 2025 at 05:41:00PM -0700, Eric Biggers wrote:
+> > > > Update networking code that computes the CRC32C of packets to just call
+> > > > crc32c() without unnecessary abstraction layers.  The result is faster
+> > > > and simpler code.
+> > >
+> > > Hi Eric
+> > >
+> > > Do you have some benchmarks for these changes?
+> > >
+> > >     Andrew
+> >
+> > Do you want benchmarks that show that removing the indirect calls makes things
+> > faster?  I think that should be fairly self-evident by now after dealing with
+> > retpoline for years, but I can provide more details if you need them.
+>
+> I was think more like iperf before/after? Show the CPU load has gone
+> down without the bandwidth also going down.
+>
+> Eric Dumazet has a T-Shirt with a commit message on the back which
+> increased network performance by X%. At the moment, there is nothing
+> T-Shirt quotable here.
+>
 
-Hi all,
-
-The following commit is also in Linus Torvalds' tree as a different commit
-(but the same patch):
-
-  bae247ccade0 ("KVM: arm64: Force HCR_EL2.xMO to 1 at all times in VHE mod=
-e")
-
-This is commit
-
-  859c60276e12 ("KVM: arm64: Force HCR_EL2.xMO to 1 at all times in VHE mod=
-e")
-
-in Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/O=NTMzlozE0A=__Eg=eUk4e
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmghGc8ACgkQAVBC80lX
-0GzUcAf/Ub/p/g1ECJ0BSCFGo+uhMbRhoyBKy7vmb2N7ZdDhFK0ImXVKW+zhT1aN
-e+8zqWvxJ8hD6OU2OlJy8NBgc1vcdnXGy43ckRmDhRbt/rN51ksajQKwKJi7Obd3
-Y0mYVCXOcHEVz6AcbDTHc4qVmqDg/ckEB+fASbh2pPykWye0ceY14zOv8l57/hDu
-lMFUyW7o8ThfhqTdvNl+uSZIS11rc2zl/z3v6duq8tijKuLj7u7QNe1xelkMxD7G
-bx227VsBJX0hUiEE64/6uQX6b1q/TH+f5SNQiEPECKmn81vZOD98dMMj9BTqt9qy
-NWqgWsZo6dDIDp4eoz38zP7d377MkQ==
-=43IJ
------END PGP SIGNATURE-----
-
---Sig_/O=NTMzlozE0A=__Eg=eUk4e--
+I think that removing layers of redundant code to ultimately call the
+same core CRC-32 implementation is a rather obvious win, especially
+when indirect calls are involved. The diffstat speaks for itself, so
+maybe you can print that on a T-shirt.
