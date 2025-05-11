@@ -1,63 +1,63 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E732571C1
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 13:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A74E2571C1
+	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 13:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746970849; cv=none; b=XgPhG6hhz8HKAkQXIeff9lYunAIwdpbookh+Uxx/u8Zy5LFrJotNioADJ8jGq2fMOg/0Hx1T7rau6+9phGOMBZLHiTT/mYfJrrUPPV4Y8RrdT4LWuF/2Opzv7COi9zW22tljdTdSybe25NLdqeh7KIY5xbB53K02DETdZH+PRy8=
+	t=1746970857; cv=none; b=BEBAVP5wfTTMOweEAWGO1XIPnGMpm7lmtBVpWK/vhoh3t9C8mBUcpzyj/Dkl9WW4C5yw0AABzPQBKx6Ymnugf2aSdoD8QVQTNQ+QbdGL2w48yEOXgYSIXH4XPO2e58i5/EhdZEHLYlba3ZrkUWW6wVMKnyDmUm98FsK18dLJxac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746970849; c=relaxed/simple;
-	bh=fGqVQoSMtVhWWQ8PabUdTWFq2jxdAG0U6q3YlMVbkic=;
+	s=arc-20240116; t=1746970857; c=relaxed/simple;
+	bh=g2XqVbxqcV7WBB8IUvgJxiIMFjUcEpNuvTGW42Cuh18=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BmU6CMXz0LA+Vnm/u1cCYpRyxzKWuUnSZOqbZtYHDK9x4MgW/s8Ek/lwU7fyp9Y0Zvqrr4b8vNeZ4Uuomw04Om+pN8xVNnvw2m4MTw78xd8RWB7NtgS+wcpdrHXxl9OGBo/p/KWvWnQmWH5hVu5r5a27FaFPmQXTvhgf2NmXjz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=U7vlR//F; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=FK/gmf0Bou4GX2WAVvUCAGVjUhNBA/LVdxRtbQonixIDFX1gljNN6JpPWxAn/oSh4O+8I6jBQlSGuJThKPMMpkqCTlct9lK0TOewdaU5cT+0bImHtss3j7CpYCoWlx5/2NqAZMuLFZsQhP2ZhW1MjiUXk11XW7m3N+CL0H+x3Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=agRozwxs; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="U7vlR//F"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22e033a3a07so38095705ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 06:40:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="agRozwxs"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e5df32197so36243225ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 06:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1746970846; x=1747575646; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1746970855; x=1747575655; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=js2wRDvj88k2TI/SLgNG/xNXCEurcccQBWfML9QlriM=;
-        b=U7vlR//FeIL2tb/qckD6Bbbeap6k6uP4isvIqTls/AE+IisHO4zU/Nh9TmfNs28INu
-         QE9wZ5T+tj0+sC/q/2crMnp5U0sDL3R/3thra29vlbRDgI6EOmcfkYYbvRMk8CWVMOg5
-         dXRSOrCPzhqdHUZtizeg1T2DmvyJrhf4nQsH9W4po0cUotm3eIT/ymttmz+yCIFP1t+a
-         qkBT1+nqtYLHeIsMOq2rTfUm1pAO1NOVUTocUhsW+KJII/WgrwVHtBVlHEtiacnte/xL
-         Z/t6riAlILKIgVFC9QGr4Idf6i72iHusesy/bnzysk19/zHUkXMZF+fK0rpcH9096BJL
-         WYAg==
+        bh=4cUhTlBPCx/RyxrDK4rJSeeuJgXjq8E3p5DHEKMIX0g=;
+        b=agRozwxseeyxTujk5njOVXzxEJmEF8kktN1V2P2myqsT6G/9Otl0IgP9LRxDc22048
+         xCXKinziqADqNxgeetjNSfFPFQrVrI6o2pG0Lb91C4L4ZvRoJljDRr7Sx1Kn7pjnNLs/
+         rLu8+U4PJPd5abzKth5Ulq45h6U99+2Fdlt2xDqbOs5xXc3cmr/Kn7KkebRWf/uy1J1J
+         EY72yLZtr/WlUr/A8ESrj4qAMXpN2RsaiOs8HZ1JXEvg4NKUklR4yhX+1/ioMzji5kSC
+         v1O7gxEbXcboDmv8bQFXuwzImx+UWOzVYaasa+ufJwqXO0xr+3yXDIxOSLUfxipuV+WK
+         xf8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746970846; x=1747575646;
+        d=1e100.net; s=20230601; t=1746970855; x=1747575655;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=js2wRDvj88k2TI/SLgNG/xNXCEurcccQBWfML9QlriM=;
-        b=LBs4VPjCEwZib09WLi8uIe+F0qKhSw6ErVE2Oyq33MUvgAk0IQPlQqU076yOZ2XQyN
-         PzfOKxHD1L1/x9yp3db5OuzXCr8m3L/LvDwhI1iEu+tvqoG2q6ze+rkE7B1aFcWdrC2Q
-         zfgdfWeciwAmh6kUJNZ+9hr39+VCSdsuLXFdeqZIH/Z/mqdU4r/ch1TX4QWR2HZB+6Gd
-         PSTn9YFB6e+KS3mA4MWdg8pM8RdiD9x9abrNFeopOy5x/u6uueNk74W1HwCF9giPdBqk
-         to8HdmSXN1LnMSKSL/e4jcvMB1ApWilv4YE/pc3BMjKSDbSUFRTh5AuWIos4fJQ21L2b
-         snKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnsiYJbFJFLYyEA55pO5EpIlnO/BhsIzi5H6aGUwZIh1aBtvCO3gwOntW9ihNOviHSRIFc47dLdfIP+i8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ617fGo/8hJXZcmgxZ0N6pbNFZCuOah7Xmna4cSH3wj1TeCnt
-	zZunRokqNk0c92SGWGtKfaW3+YYMvVf9xxOLzX7dCyGhN83HvkdokKzYt5go73o=
-X-Gm-Gg: ASbGncuWbeV9n98Smi7VdBRyLg72rtStZ6MRXp8Xs9I+djjZt4e4HNvxkLWZad32YuR
-	v9fh6+PqnhOct6JiPUojFdjeNnIgnT7WTCNWFrZge/BCwLmqOeTu5uIVXWCCALCk8OX6TGdgzY3
-	xgCpQKjXIlv+0TkpHG0TvWOfo9/ZBsp2uqHwcLBwlYliaOZn4UnmL/VYIP3tioDql/5entpgTGV
-	NvPiehN9BYCfpVty6/DQekZ9gsVeT7F8Sco7tfHdpTzzEUTDGmEFAqc/C3dDWFGroWvOEddXelo
-	pVjUT24YAdedMaKY3XpJdBqWeoAWorGcoUvJ1+0RaJkNjUu1l4a3V1bLLKx3uOD7/TKFSJr9xSB
-	gx7Y4l4g8eJ6nUASxfdHk2J97
-X-Google-Smtp-Source: AGHT+IHLlMfSVXjF+6NDGBGAmnvE5gBr5aeqANsPZFqUbeLJWT/B3Zg+fBKVlL1+nLWsayoo+HUozw==
-X-Received: by 2002:a17:903:2f89:b0:224:1eaa:5de1 with SMTP id d9443c01a7336-22fc8b51ac5mr118165185ad.18.1746970846131;
-        Sun, 11 May 2025 06:40:46 -0700 (PDT)
+        bh=4cUhTlBPCx/RyxrDK4rJSeeuJgXjq8E3p5DHEKMIX0g=;
+        b=EPbca5emK2CAysESsihQjoA01xTa1A8LkbKXuzuXX/geP7LlsgIcz4RFa3u8u+V3bF
+         sU5vkPxLH1Kfa/onzbpS2MLJmdNiuLNSKbC660yokEmPKUcKkCAYbdaeB7bK+dluLLWj
+         6lMV5RpTG8tpYW2D/rydW4YSIAOzsBe84eM9moWCrdiFC3lSrIY+bWQkt6TEDmW0dTNN
+         H4Z8kZwHNYnWLQT5v1TBvz3dClQQ7wdzLWaXB2cxm7m94mDl9c+xLS9WsOxEu4gr0pxJ
+         Mqt30FvD5s1r1SFhgj62L2Xa+nncwlIABzDUp+MbpXjmF45EZrbylsR5odgZ7kC5vQK4
+         A0Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkO40sexYYZUcipZYN1pIg7YprbWzIBiHhsoKQIJkrSl1YVW+5RxEeann+5tsNtNOGziSvExCe/26dEW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsitvjrOILXUMs8JzXYx5vVDlr8ne8EjNq4MRecLc5xywWhOLN
+	74w6/RvCzrgM0ZitPbJHG+XsP5mJ+wCIYMN+Od7Hc+DA3Q9cHPd0hO6SECOze/U=
+X-Gm-Gg: ASbGncsaIXf8HIO0G2htNs//BrVdDKBP+KxuU+2VRyd++IeuTE6VxA646dS3TlAOjYK
+	De3A8+ZFh38EllqzIlmJsZ/n+H5ffaLgleb0lITbT2F7MBrMlUa8stdQWuqBteMw5xjeSzYE2/1
+	NLsk9UMNt/MhWhYUpDIa4xP/dLmNspYtCuNFjgvGmFSG5GxEzK/nEGMtNzthvJVJ+H4Bv8irEST
+	JTP04TuuuFBclatoZsVmkx4hybuzbhBmTCPTX8VBkD1m0sZVD7beIon+PFGENB2Nlm0FwdaE4lH
+	Pc2lbNQ6La+/e7ZtIULYr0h5LFa+I20HW2ZowhuUWXWSpoF8EmkPI/Jg6C6qpFESDQDgUSYhGJM
+	O+zArRQbOBIGWHg==
+X-Google-Smtp-Source: AGHT+IHDFcgf/Q1YCLdknZTt9nRZWla2DHaCojWqgGJ4RbiVsHVnEoQNqVZO0AbPN3LFSDThkG8o2w==
+X-Received: by 2002:a17:902:f54d:b0:223:628c:199 with SMTP id d9443c01a7336-22fc91a8c87mr141296155ad.52.1746970854557;
+        Sun, 11 May 2025 06:40:54 -0700 (PDT)
 Received: from anup-ubuntu-vm.localdomain ([122.171.17.86])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc754785bsm46665805ad.20.2025.05.11.06.40.38
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc754785bsm46665805ad.20.2025.05.11.06.40.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 06:40:45 -0700 (PDT)
+        Sun, 11 May 2025 06:40:53 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -87,9 +87,9 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v3 05/23] mailbox: Add common header for RPMI messages sent via mailbox
-Date: Sun, 11 May 2025 19:09:21 +0530
-Message-ID: <20250511133939.801777-6-apatel@ventanamicro.com>
+Subject: [PATCH v3 06/23] mailbox: Allow controller specific mapping using fwnode
+Date: Sun, 11 May 2025 19:09:22 +0530
+Message-ID: <20250511133939.801777-7-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250511133939.801777-1-apatel@ventanamicro.com>
 References: <20250511133939.801777-1-apatel@ventanamicro.com>
@@ -101,230 +101,142 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RPMI based mailbox controller drivers and mailbox clients need to
-share defines related to RPMI messages over mailbox interface so add
-a common header for this purpose.
+Introduce optional fw_node() callback which allows a mailbox controller
+driver to provide controller specific mapping using fwnode.
 
-Co-developed-by: Rahul Pathak <rpathak@ventanamicro.com>
-Signed-off-by: Rahul Pathak <rpathak@ventanamicro.com>
+The Linux OF framework already implements fwnode operations for the
+Linux DD framework so the fw_xlate() callback works fine with device
+tree as well.
+
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- include/linux/mailbox/riscv-rpmi-message.h | 206 +++++++++++++++++++++
- 1 file changed, 206 insertions(+)
- create mode 100644 include/linux/mailbox/riscv-rpmi-message.h
+ drivers/mailbox/mailbox.c          | 48 +++++++++++++++++-------------
+ include/linux/mailbox_controller.h |  3 ++
+ 2 files changed, 31 insertions(+), 20 deletions(-)
 
-diff --git a/include/linux/mailbox/riscv-rpmi-message.h b/include/linux/mailbox/riscv-rpmi-message.h
-new file mode 100644
-index 000000000000..77e1edc569ac
---- /dev/null
-+++ b/include/linux/mailbox/riscv-rpmi-message.h
-@@ -0,0 +1,206 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2025 Ventana Micro Systems Inc.
-+ */
-+
-+#ifndef _LINUX_RISCV_RPMI_MESSAGE_H_
-+#define _LINUX_RISCV_RPMI_MESSAGE_H_
-+
-+#include <linux/mailbox_client.h>
-+
-+/** RPMI version encode/decode macros */
-+#define RPMI_VER_MAJOR(__ver)		(((__ver) >> 16) & 0xffff)
-+#define RPMI_VER_MINOR(__ver)		((__ver) & 0xffff)
-+#define RPMI_MKVER(__maj, __min)	(((__maj) << 16) | (__min))
-+
-+/** RPMI message header */
-+struct rpmi_message_header {
-+	__le16 servicegroup_id;
-+	u8 service_id;
-+	u8 flags;
-+	__le16 datalen;
-+	__le16 token;
-+};
-+
-+/** RPMI message */
-+struct rpmi_message {
-+	struct rpmi_message_header header;
-+	u8 data[];
-+};
-+
-+/** RPMI notification event */
-+struct rpmi_notification_event {
-+	__le16 event_datalen;
-+	u8 event_id;
-+	u8 reserved;
-+	u8 event_data[];
-+};
-+
-+/** RPMI error codes */
-+enum rpmi_error_codes {
-+	RPMI_SUCCESS			= 0,
-+	RPMI_ERR_FAILED			= -1,
-+	RPMI_ERR_NOTSUPP		= -2,
-+	RPMI_ERR_INVALID_PARAM		= -3,
-+	RPMI_ERR_DENIED			= -4,
-+	RPMI_ERR_INVALID_ADDR		= -5,
-+	RPMI_ERR_ALREADY		= -6,
-+	RPMI_ERR_EXTENSION		= -7,
-+	RPMI_ERR_HW_FAULT		= -8,
-+	RPMI_ERR_BUSY			= -9,
-+	RPMI_ERR_INVALID_STATE		= -10,
-+	RPMI_ERR_BAD_RANGE		= -11,
-+	RPMI_ERR_TIMEOUT		= -12,
-+	RPMI_ERR_IO			= -13,
-+	RPMI_ERR_NO_DATA		= -14,
-+	RPMI_ERR_RESERVED_START		= -15,
-+	RPMI_ERR_RESERVED_END		= -127,
-+	RPMI_ERR_VENDOR_START		= -128,
-+};
-+
-+static inline int rpmi_to_linux_error(int rpmi_error)
-+{
-+	switch (rpmi_error) {
-+	case RPMI_SUCCESS:
-+		return 0;
-+	case RPMI_ERR_INVALID_PARAM:
-+	case RPMI_ERR_BAD_RANGE:
-+	case RPMI_ERR_INVALID_STATE:
-+		return -EINVAL;
-+	case RPMI_ERR_DENIED:
-+		return -EPERM;
-+	case RPMI_ERR_INVALID_ADDR:
-+	case RPMI_ERR_HW_FAULT:
-+		return -EFAULT;
-+	case RPMI_ERR_ALREADY:
-+		return -EALREADY;
-+	case RPMI_ERR_BUSY:
-+		return -EBUSY;
-+	case RPMI_ERR_TIMEOUT:
-+		return -ETIMEDOUT;
-+	case RPMI_ERR_IO:
-+		return -ECOMM;
-+	case RPMI_ERR_FAILED:
-+	case RPMI_ERR_NOTSUPP:
-+	case RPMI_ERR_NO_DATA:
-+	case RPMI_ERR_EXTENSION:
-+	default:
-+		return -EOPNOTSUPP;
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 0593b4d03685..a7ab1b4450a3 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -399,35 +399,50 @@ EXPORT_SYMBOL_GPL(mbox_bind_client);
+  */
+ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
+ {
++	struct fwnode_reference_args fwspec;
+ 	struct device *dev = cl->dev;
+ 	struct mbox_controller *mbox;
+ 	struct of_phandle_args spec;
+ 	struct mbox_chan *chan;
+-	int ret;
++	int i, ret;
+ 
+-	if (!dev || !dev->of_node) {
+-		pr_debug("%s: No owner device node\n", __func__);
++	if (!dev || !dev->fwnode) {
++		pr_debug("%s: No owner device\n", __func__);
++		pr_debug("%s: No owner fwnode\n", __func__);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 
+-	ret = of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox-cells",
+-					 index, &spec);
++	ret = fwnode_property_get_reference_args(dev->fwnode, "mboxes",
++						 "#mbox-cells", 0, index, &fwspec);
+ 	if (ret) {
+ 		dev_dbg(dev, "%s: can't parse \"mboxes\" property\n", __func__);
+ 		return ERR_PTR(ret);
+ 	}
+ 
++	memset(&spec, 0, sizeof(spec));
++	if (dev->of_node) {
++		spec.np = to_of_node(fwspec.fwnode);
++		spec.args_count = fwspec.nargs;
++		for (i = 0; i < spec.args_count; i++)
++			spec.args[i] = fwspec.args[i];
 +	}
-+}
 +
-+/** RPMI linux mailbox attribute IDs */
-+enum rpmi_mbox_attribute_id {
-+	RPMI_MBOX_ATTR_SPEC_VERSION = 0,
-+	RPMI_MBOX_ATTR_MAX_MSG_DATA_SIZE,
-+	RPMI_MBOX_ATTR_SERVICEGROUP_ID,
-+	RPMI_MBOX_ATTR_SERVICEGROUP_VERSION,
-+	RPMI_MBOX_ATTR_MAX_ID,
-+};
-+
-+/** RPMI linux mailbox message types */
-+enum rpmi_mbox_message_type {
-+	RPMI_MBOX_MSG_TYPE_GET_ATTRIBUTE = 0,
-+	RPMI_MBOX_MSG_TYPE_SET_ATTRIBUTE,
-+	RPMI_MBOX_MSG_TYPE_SEND_WITH_RESPONSE,
-+	RPMI_MBOX_MSG_TYPE_SEND_WITHOUT_RESPONSE,
-+	RPMI_MBOX_MSG_TYPE_NOTIFICATION_EVENT,
-+	RPMI_MBOX_MSG_MAX_TYPE,
-+};
-+
-+/** RPMI linux mailbox message instance */
-+struct rpmi_mbox_message {
-+	enum rpmi_mbox_message_type type;
-+	union {
-+		struct {
-+			enum rpmi_mbox_attribute_id id;
-+			u32 value;
-+		} attr;
-+
-+		struct {
-+			u32 service_id;
-+			void *request;
-+			unsigned long request_len;
-+			void *response;
-+			unsigned long max_response_len;
-+			unsigned long out_response_len;
-+		} data;
-+
-+		struct {
-+			u16 event_datalen;
-+			u8 event_id;
-+			u8 *event_data;
-+		} notif;
-+	};
-+	int error;
-+};
-+
-+/** RPMI linux mailbox message helper routines */
-+static inline void rpmi_mbox_init_get_attribute(struct rpmi_mbox_message *msg,
-+						enum rpmi_mbox_attribute_id id)
-+{
-+	msg->type = RPMI_MBOX_MSG_TYPE_GET_ATTRIBUTE;
-+	msg->attr.id = id;
-+	msg->attr.value = 0;
-+	msg->error = 0;
-+}
-+
-+static inline void rpmi_mbox_init_set_attribute(struct rpmi_mbox_message *msg,
-+						enum rpmi_mbox_attribute_id id,
-+						u32 value)
-+{
-+	msg->type = RPMI_MBOX_MSG_TYPE_SET_ATTRIBUTE;
-+	msg->attr.id = id;
-+	msg->attr.value = value;
-+	msg->error = 0;
-+}
-+
-+static inline void rpmi_mbox_init_send_with_response(struct rpmi_mbox_message *msg,
-+						     u32 service_id,
-+						     void *request,
-+						     unsigned long request_len,
-+						     void *response,
-+						     unsigned long max_response_len)
-+{
-+	msg->type = RPMI_MBOX_MSG_TYPE_SEND_WITH_RESPONSE;
-+	msg->data.service_id = service_id;
-+	msg->data.request = request;
-+	msg->data.request_len = request_len;
-+	msg->data.response = response;
-+	msg->data.max_response_len = max_response_len;
-+	msg->data.out_response_len = 0;
-+	msg->error = 0;
-+}
-+
-+static inline void rpmi_mbox_init_send_without_response(struct rpmi_mbox_message *msg,
-+							u32 service_id,
-+							void *request,
-+							unsigned long request_len)
-+{
-+	msg->type = RPMI_MBOX_MSG_TYPE_SEND_WITHOUT_RESPONSE;
-+	msg->data.service_id = service_id;
-+	msg->data.request = request;
-+	msg->data.request_len = request_len;
-+	msg->data.response = NULL;
-+	msg->data.max_response_len = 0;
-+	msg->data.out_response_len = 0;
-+	msg->error = 0;
-+}
-+
-+static inline int rpmi_mbox_send_message(struct mbox_chan *chan,
-+					 struct rpmi_mbox_message *msg)
-+{
-+	int ret;
-+
-+	/* Send message for the underlying mailbox channel */
-+	ret = mbox_send_message(chan, msg);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Explicitly signal txdone for mailbox channel */
-+	ret = msg->error;
-+	mbox_client_txdone(chan, ret);
-+	return ret;
-+}
-+
-+#endif /* _LINUX_RISCV_RPMI_MESSAGE_H_ */
+ 	mutex_lock(&con_mutex);
+ 
+ 	chan = ERR_PTR(-EPROBE_DEFER);
+-	list_for_each_entry(mbox, &mbox_cons, node)
+-		if (mbox->dev->of_node == spec.np) {
++	list_for_each_entry(mbox, &mbox_cons, node) {
++		if (mbox->fw_xlate && mbox->dev->fwnode == fwspec.fwnode) {
++			chan = mbox->fw_xlate(mbox, &fwspec);
++			if (!IS_ERR(chan))
++				break;
++		} else if (mbox->of_xlate && mbox->dev->of_node == spec.np) {
+ 			chan = mbox->of_xlate(mbox, &spec);
+ 			if (!IS_ERR(chan))
+ 				break;
+ 		}
++	}
+ 
+-	of_node_put(spec.np);
++	fwnode_handle_put(fwspec.fwnode);
+ 
+ 	if (IS_ERR(chan)) {
+ 		mutex_unlock(&con_mutex);
+@@ -446,15 +461,8 @@ EXPORT_SYMBOL_GPL(mbox_request_channel);
+ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
+ 					      const char *name)
+ {
+-	struct device_node *np = cl->dev->of_node;
+-	int index;
+-
+-	if (!np) {
+-		dev_err(cl->dev, "%s() currently only supports DT\n", __func__);
+-		return ERR_PTR(-EINVAL);
+-	}
++	int index = device_property_match_string(cl->dev, "mbox-names", name);
+ 
+-	index = of_property_match_string(np, "mbox-names", name);
+ 	if (index < 0) {
+ 		dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
+ 			__func__, name);
+@@ -492,8 +500,8 @@ void mbox_free_channel(struct mbox_chan *chan)
+ EXPORT_SYMBOL_GPL(mbox_free_channel);
+ 
+ static struct mbox_chan *
+-of_mbox_index_xlate(struct mbox_controller *mbox,
+-		    const struct of_phandle_args *sp)
++fw_mbox_index_xlate(struct mbox_controller *mbox,
++		    const struct fwnode_reference_args *sp)
+ {
+ 	int ind = sp->args[0];
+ 
+@@ -544,8 +552,8 @@ int mbox_controller_register(struct mbox_controller *mbox)
+ 		spin_lock_init(&chan->lock);
+ 	}
+ 
+-	if (!mbox->of_xlate)
+-		mbox->of_xlate = of_mbox_index_xlate;
++	if (!mbox->fw_xlate && !mbox->of_xlate)
++		mbox->fw_xlate = fw_mbox_index_xlate;
+ 
+ 	mutex_lock(&con_mutex);
+ 	list_add_tail(&mbox->node, &mbox_cons);
+diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
+index 5fb0b65f45a2..b91379922cb3 100644
+--- a/include/linux/mailbox_controller.h
++++ b/include/linux/mailbox_controller.h
+@@ -66,6 +66,7 @@ struct mbox_chan_ops {
+  *			no interrupt rises. Ignored if 'txdone_irq' is set.
+  * @txpoll_period:	If 'txdone_poll' is in effect, the API polls for
+  *			last TX's status after these many millisecs
++ * @fw_xlate:		Controller driver specific mapping of channel via fwnode
+  * @of_xlate:		Controller driver specific mapping of channel via DT
+  * @poll_hrt:		API private. hrtimer used to poll for TXDONE on all
+  *			channels.
+@@ -79,6 +80,8 @@ struct mbox_controller {
+ 	bool txdone_irq;
+ 	bool txdone_poll;
+ 	unsigned txpoll_period;
++	struct mbox_chan *(*fw_xlate)(struct mbox_controller *mbox,
++				      const struct fwnode_reference_args *sp);
+ 	struct mbox_chan *(*of_xlate)(struct mbox_controller *mbox,
+ 				      const struct of_phandle_args *sp);
+ 	/* Internal to API */
 -- 
 2.43.0
 
