@@ -1,119 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E362AD0B
-	for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 15:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D55259CB8;
+	Sun, 11 May 2025 15:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746977810; cv=none; b=llwbXB6dEQjOScX/v9rIA0YUkFfTD/u+KTY4meslTJjRfV//6MguZNzQsdZAbvDTRkW7aMAw6msdrFoZr8sEaqCTQpiyQDksOR08UDPacta4+b/QRyK3Ou1lRdyeFbRCNH75YtET6+HWficEqXMI6MB0+x4ifPwClAMUXQx5JG4=
+	t=1746977868; cv=none; b=S+MwzceETIM16FoMDtQHE3nBDeuwwrdMSO/numbdrn+IuclgmTbGPiEjRfg0lAIaEZdibths2gxWVxLQQbmPAYAhjmYx7ha+DGq2n/e7N3EurYZkwc4h0+qqTWTunlaBqVEepUkw3+UTA8FG1JDOshZpglWSloUHVVE1gD3kH6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746977810; c=relaxed/simple;
-	bh=qGKacZFH6d9H7gZIy5574lz4sh3DAs6LJsxIoFdhtKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rYkb2c+RsRKF4AbrSzQ3PnnAtVA5tRljQzl5GYPycg5fXnaN6XZ8ZUGArafBFvMWUFdN5XCPCl9GcbZHYQ0dJGmc86FW9gyout7vhY5tRiNzc0U2dd2PEaH/dtihqNXP4HQ9Xlf6HG7pvgmvVZ6xWxbmjPch4n+jMeBtKbbz0ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EY+AUvID; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746977868; c=relaxed/simple;
+	bh=9nNTh6uI2n0PJZ3sXQWFfPFzfXZgtX+EZm6hEopK2K8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pAjGxakjk0SS04e0jFGANx/8fNvvR9jFwFCq9mpHJArqJYyqcdc0R/TQXQnzSg174tp8WDZ+eqmNPKyszQk50ERJQNjgMIUilgq3hfbYYuee57yF37PPrAQ4kroSs+omoaF4tQrqTIPmwtwjOAHm7Ax22CV+kKLeysWG353St8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9NHa5Me; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EY+AUvID"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746977806;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NpNCD9/isg8b1+k2LARZWva+SLP5Kbk/L5GpSCTXRlc=;
-	b=EY+AUvIDuP1/ToUb7OyavWjda5NAOgkLGmckDM97zfVkKWKV0f+YO+6NTb3yG/g0kD0mYz
-	z3rX36rFuWZM937ZTVuhO+pK1AurrHoHwooJRXdSn9BBPZb3K7hTxdF9ZbRekiSyYZhJ/O
-	28//JAULF5PQZz0NgiElASPTtTrjvZE=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-x60tSm8SMJy6UrRS6RTsDQ-1; Sun, 11 May 2025 11:36:44 -0400
-X-MC-Unique: x60tSm8SMJy6UrRS6RTsDQ-1
-X-Mimecast-MFC-AGG-ID: x60tSm8SMJy6UrRS6RTsDQ_1746977800
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-326c70002d0so11045621fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 08:36:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746977799; x=1747582599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NpNCD9/isg8b1+k2LARZWva+SLP5Kbk/L5GpSCTXRlc=;
-        b=bwsoSGLiH35ztG/zDNcqWgHsmOpItonmzo2Jb8+2ffuQX46e7qbHNFjXMIwN79qUtW
-         yic5NAG0qlFrhDnn8NaUKVQB842XwOumA8iTQa8/xCmZ/Lr2hY14gBCORF+tvLJZQPWB
-         XaWB93OQOCvpCebWWhCLsnBKr55rBZp/rYwSL1TJ7cz91LOsK+RKtl1iwLt8gggBa9Pc
-         IKEZtBx/xRLhsqna4Jl68UAWmD+QDc2iKekMo6zoXm/p1HdCoYhoUDgEhyBLVdnBNOQ0
-         5QrERjHwAPdJbPDZ0Nbgv0xfCqKNG6P4Bhi0tR1OHjLUjKjZ5Zykk57NaZoG1WQFF1AZ
-         FLvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgGjQONjbnfnwRNuFc5lE1qgTpeJ7L9fgxYM0/fAVmaESgIwZWHtorJ4BHCWRKMb5L+SbLUIOgDeVL7Fg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSSHWjM8T5a8P9O3NepwMUvXr/EwTA4vsalbTUqFV1Qq9H9cLT
-	u5mA3RgMqU1O7EJS6ooQUL0CV0C97mVbi9SInenochEcq1ymd5VOvH3IfNrbblraX2tVeDjtXBz
-	T8wJKS/3RviJ2YNt8sdMVBs5wP/lJ09w1VyS/iH03kgMT7AKBrILQ0xmZVBtO2VtJUF0HEA==
-X-Gm-Gg: ASbGncutAoImGcM/yY5BPPGlBv4JUGU5HXPsXUMxgaMISDdcXOZ864w5oFOp5GDE2YD
-	kdiQl2XdipI/3nru8Z1/pLEbEPdJaA7wVNBgi9lftBWUB4jBdyclYsMk7YUmDJT7F0CfevJpsvK
-	K5cFOPGc44Pgt5yH5zrH0/rGkorZh/1RNfcqSC5fdn/+16xADZlPpmxus3FwsJmDhSCulFSBsoK
-	ENsrgHJjTklbrqtFiTRVMXFCOsQRjRy6zpjOQX6iy16Nc4KRg5HlAvYuDTxPX2KZ0C2qhIYgdj5
-	x/ipxw==
-X-Received: by 2002:a05:6000:22c5:b0:3a0:9de8:88ba with SMTP id ffacd0b85a97d-3a1f64acc20mr8427883f8f.53.1746977788261;
-        Sun, 11 May 2025 08:36:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEaLhSnXG7WahQEWlAeW3ZdNW5sVr7QFEWtLXAW+865LoU/9TSABIPR1jvc6EOo3bowtzEPcw==
-X-Received: by 2002:a05:6000:4006:b0:39e:cbe3:17c8 with SMTP id ffacd0b85a97d-3a1f6427a7emr7479643f8f.12.1746977777002;
-        Sun, 11 May 2025 08:36:17 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f28f7sm9439635f8f.41.2025.05.11.08.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 08:36:16 -0700 (PDT)
-Date: Sun, 11 May 2025 11:36:13 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: SamiUddinsami.md.ko@gmail.com
-Cc: jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Sami Uddin <sami.md.ko@gmail.com>
-Subject: Re: [PATCH v2] virtio: reject shm region if length is zero
-Message-ID: <20250511113555-mutt-send-email-mst@kernel.org>
-References: <20250511114428.2061-1-sami.md.ko@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9NHa5Me"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 156D5C4CEE4;
+	Sun, 11 May 2025 15:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746977867;
+	bh=9nNTh6uI2n0PJZ3sXQWFfPFzfXZgtX+EZm6hEopK2K8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=E9NHa5MeM64PZa5pdDgGbAnvvhV5Sd55RhREXEDwQE2Lw5bTJzeaeG5ydxLrF5bSV
+	 ttAAhphVqawc03QnD+weq3CZSLSzyoMZKW1bBRMcmo5s9v6C1fEQjAWxyJJAShinqK
+	 B6WAgdifcIGrpt8UB/LRWIJeZ+8VH/M/SzhfRHirgOoWzGCWNqNw2W5JWGjaYzXzaq
+	 L7mJ5d3tah4cnqJZSs7X0moLArLJy/4SND48595JvyvSo/8p+tmiehH4ArJ8T5Mv8h
+	 vZ6qZmqF1/cHrjPhKjGoIEa+VgeWMby+V/sUtG8NYveVI+s5RbHFGXE+Z8ZU+gi1ef
+	 PzuqZNdBYe1fA==
+Date: Sun, 11 May 2025 16:37:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] Documentation: ABI: IIO: add calibconv_delay
+ documentation
+Message-ID: <20250511163739.6612ced4@jic23-huawei>
+In-Reply-To: <20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+	<20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250511114428.2061-1-sami.md.ko@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 11, 2025 at 09:14:28PM +0930, SamiUddinsami.md.ko@gmail.com wrote:
-> From: Sami Uddin <sami.md.ko@gmail.com>
+On Thu, 08 May 2025 12:06:05 +0200
+Angelo Dureghello <adureghello@baylibre.com> wrote:
+
+> From: Angelo Dureghello <adureghello@baylibre.com>
 > 
-> Prevent usage of shared memory regions where the length is zero,
-> as such configurations are not valid and may lead to unexpected behavior.
+> Add new IIO calibconv_delay documentation.
 > 
-> Signed-off-by: Sami Uddin <sami.md.ko@gmail.com>
+> The ad7606 implements a phase calibation feature, in nanoseconds.
+> Being this a time delay, using the conv_delay suffix.
+> 
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 > ---
-> v2:
-> - Fixed coding style issue: added space after 'if' statement
+>  Documentation/ABI/testing/sysfs-bus-iio | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
->  include/linux/virtio_config.h | 2 ++
->  1 file changed, 2 insertions(+)
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 190bfcc1e836b69622692d7c056c0092e00f1a9b..9ced916895fbef146d46d17b5fdc932784b4c1df 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -559,6 +559,30 @@ Description:
+>  		- a small discrete set of values like "0 2 4 6 8"
+>  		- a range specified as "[min step max]"
+>  
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay
+> +KernelVersion:  6.16
+> +Contact:        linux-iio@vger.kernel.org
+> +Description:
+> +		Delay of start of conversion in seconds from common reference
+> +		point shared by all channels. Can be writable when used to
+> +		compensate for delay variation introduced by external filters
+> +		feeding a simultaneous sampling ADC.
+> +
+> +		I.e., for the ad7606 ADC series, this value is intended as a
+> +		configurable time delay in seconds, to correct delay introduced
+
+Drop the 'in seconds' here as that is repeating the generic bit above. The rest is
+fine subject to formatting Andy noted.
+
+> +		by an optional external filtering circuit.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay_available
+> +KernelVersion:	6.16
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Available values of convdelay. Maybe expressed as:
+> +
+> +		- a range specified as "[min step max]"
+> +
+> +		If shared across all channels, <type>_calibconv_delay_available
+> +		is used.
+> +
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_calibscale
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_calibscale
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_z_calibscale
 > 
-> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> index 169c7d367fac..b641b16d42ef 100644
-> --- a/include/linux/virtio_config.h
-> +++ b/include/linux/virtio_config.h
-> @@ -329,6 +329,8 @@ static inline
->  bool virtio_get_shm_region(struct virtio_device *vdev,
->  			   struct virtio_shm_region *region, u8 id)
->  {
-> +	if (region->len == 0)
-> +		return false;
-
-if (!region->len)
-
-is more idiomatic
-
->  	if (!vdev->config->get_shm_region)
->  		return false;
->  	return vdev->config->get_shm_region(vdev, region, id);
-> -- 
-> 2.34.1
 
