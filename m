@@ -1,117 +1,101 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ED425D535;
-	Sun, 11 May 2025 17:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F361FC3;
+	Sun, 11 May 2025 17:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746984721; cv=none; b=NnQMfncGP+h943258KapMvLyPwC5HddxrEt5LS0yZ8H0xTb7r+RmmH/EopyOhLWiRAwnvlyimFZLVLSQESGCbtWoOcFKPx9HLFwdTzMI20688B8LxU48ynPJGU0VokXQRftuGHBmIR/Cl2PUoojrjagnOx9izY30lAQZUZQDF4U=
+	t=1746984952; cv=none; b=kSVW1Y+hpmWhsfUPOc2/d/xufV2fpnjL/sLfaNp1hnEMPN6XxR5XMW+XTFdjlh8INRtREOvLSqI7YPMYIeuJEg/YXQgRd+IGeo1jroishxK9xl7kAgZlx2IOFGVNA171tH1v2Ho06WLFTF0F+ElTIDhX7gPkwQyTt+HK5Kf/UDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746984721; c=relaxed/simple;
-	bh=fsE7/JDV49MxrYYFGw4WZAW/BC6kd2MsaPMufKKDvjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SjRV+99AQqp9l5YIfjHntRtKGEp5BiiKVLqNO2CSUm3kf9IWyNb7trYpQPxFJu25lJGit+8e6t8iFkB4S1sxosU+JS5WXEPu8egx78pf/FGVsr6rS0wAblpBAHsrLdgqmB70tqTe7aPlPy1Rg19yydFt47rg9Z/YShvyQ2GGabQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=slywNdRx; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746984952; c=relaxed/simple;
+	bh=ntf5jPKUWH5mcs0SPq8ZSuzRmdoDim4/t3oU1Yllkp8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O+pIWvqYFM2mHXarcpCsu5jiHvjre0rh9sdZr1aESx8kSbGe/G0xc/q1srG+RzuqFe351+EHV44clvo5kzhQNbtIZWen9A0ox68sEBz6NOYvRLXYFE1FA3y473Gg/fFwmMzVriaTizaCeVHoig5x7xHP4WI8rHQ/wWmMwfD9tro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AhOn3juR; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="slywNdRx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=TSW2pIy3xvnPWZgwqQfqFssUyi/DLc9kFN6L1e7D1rg=; b=slywNdRxQwkSdZPS
-	1olgPKfbx9nbumgffvh0e6tk9r6DMu1aupMHthUCcApsxSSBe4KSNCpXJwj/lZeUXBNdBEFz40Wl3
-	OheUcu0c4/u5O5ohEjTAWgTj9tPySZBcFAh7C4fbbwuhR5rjc7zMrDaCyM89PHwZK+f1fikvajOVA
-	O8JRxrxfPJrYhbHnp6ZexZ+9AZ/ffwQgy3Vd9UiaAfW9TMGWtqOjqQ9k+Q7bXc13ZGXd/rceCsz0Z
-	uDC1EwMgGAsRnVHsHPEgmPCFc2vrVyMIpX8f1kE6yXaC5nkUDGxSOhI6FTuetNwE6fSvb1Zd/miWk
-	ODQu3XY3wvcLh3itxg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uEAWo-002uCE-19;
-	Sun, 11 May 2025 17:31:54 +0000
-Date: Sun, 11 May 2025 17:31:54 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: perex@perex.cz, tiwai@suse.com, krzysztof.h1@wp.pl,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: question on sound/isa/msnd/msnd_midi.c
-Message-ID: <aCDfCpeaD2eDLwFI@gallifrey>
-References: <aByXJKi2j7B4b0bH@gallifrey>
- <87r00vxmjs.wl-tiwai@suse.de>
- <aCDUi3sBXHOICgs3@gallifrey>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhOn3juR"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4ddb9d80bffso2253023137.0;
+        Sun, 11 May 2025 10:35:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746984950; x=1747589750; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ntf5jPKUWH5mcs0SPq8ZSuzRmdoDim4/t3oU1Yllkp8=;
+        b=AhOn3juRBWEuUpIelq2uMoJjMcnePjDYZX9ykI1jR/CJ7FXIJ7uctRAAwBn7WH1glt
+         qs1g7j5+RC43GNiexHLuBiwf7jXZVdqp3DstmTU+gywBckpKRR4I0gsXUHinmNYLEn7Q
+         xDjA5J02suxa//KFzOCpEfJwkquVVnIZ/NPdMEJybq2v0bmfoaoTafFKrbp2uqO48E2L
+         O/WZD7bQuGpCZL91/2AfnppLbXghsyG0KVguuqSTfLOn3/7iiDV9q8fkJI36fiXSvQsl
+         x8eehBScVsfKu9g3Yywmg5aHf5gMhVQdLJ1TAGMaR3tcztiEDeDtx66//bKrHvGkYWHx
+         LyYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746984950; x=1747589750;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ntf5jPKUWH5mcs0SPq8ZSuzRmdoDim4/t3oU1Yllkp8=;
+        b=VfF1zpS9yJxSfF65t+a6i9dDGeyEyaebKfJ9FnFFZASF0VnDr+1L+xzvrPrMKSxk3S
+         /KUw3inN2ZA2/6sAViTf3DjZ8HC+4qyMTRVOsU/b7obtQx4QIlI0Wi+f3VF24AX6J1WW
+         wirSgTQxWQN8uSSjLPgCyMo+U/SsZxl13EVkzjtywXs6jYVX2vbpyCi8LR/Y/1/p632W
+         OwMqo6Qo9wRTsiDU+RV3OwspCBugx4j4FIlND+NsRmFpjL9V/4gLeZQlht4zHJkdYU6Y
+         QW768rHUJ3xT9lej5qwxAlHa2FH+TPmtpNsuYc2akEPsnjsz90oReWOdnfOb2EX/lr6C
+         Y9cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZyGh+Y/MMUijyXJxEPuDDW7WljdB3IFknPxKXArnN97DHqeKettUJF4drV1EKdm8V9E2wYh2ZilJE6ad6@vger.kernel.org, AJvYcCV8v+39H0KrTesj/uQq/1T8ng0F0OSdYo22CVnV3yRu2oLFFPOKxXryT8C1J5oMJgQ0SBHqHr8U6Zw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy74VT8s2/nXbR1pS92xVwmB3iNYayRKnrLtaP+6Ifdd+iqFzkg
+	J/jvWAaAIlTa4RalK7LqsTy4LlHfcPFRahySwBnmyGHCCmPEAlgTCbOhrlTgZc5byLiwu1+djj9
+	zSCzCK4yx1Hk6dYLwr2udT9MVJcc=
+X-Gm-Gg: ASbGncsMiI18vaX5n7EiJ4BO2egy2yAqIdEkkWgJtVTuiaCIwrC+YjF4nflxVwioyRm
+	uovN3LayOz2Fd3OYjUEzfZ201fHs/VJLyY9kwlr/YZrRB990U1g/9fqtqISlMgB66MmsP2BUFz/
+	GqJLtYusgvmF2R+KWZ6PIfZEAxxQAFICZOMqKrzej67ikha2A=
+X-Google-Smtp-Source: AGHT+IFqx/U9d6d0rFWoqyUQjqJ/LXu/A3Z0bAsqcmdMdvVWE/BoKnxnO5Rtp3ZHW7IfAHtgBp2P634nJcD3vDLVPRM=
+X-Received: by 2002:a05:6102:2d0e:b0:4da:fd05:ab54 with SMTP id
+ ada2fe7eead31-4deed33b0a1mr9174302137.10.1746984949848; Sun, 11 May 2025
+ 10:35:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <aCDUi3sBXHOICgs3@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 17:31:37 up 14 days,  1:45,  1 user,  load average: 0.07, 0.03, 0.01
-User-Agent: Mutt/2.2.12 (2023-09-09)
+References: <20250510190759.23921-1-andrew.lopes@alumni.usp.br> <CAHp75VcUK3krw4qZyUGyKYhDAW_j9UQ7_VtwEx=6V2NMd2XcNQ@mail.gmail.com>
+In-Reply-To: <CAHp75VcUK3krw4qZyUGyKYhDAW_j9UQ7_VtwEx=6V2NMd2XcNQ@mail.gmail.com>
+From: Andrew Ijano <andrew.ijano@gmail.com>
+Date: Sun, 11 May 2025 14:35:38 -0300
+X-Gm-Features: AX0GCFu0cIvrL_fJbZWk2k93Td3jHN-0IltSHfg7kVaTVzrboJJ68ZRffOBS2Ns
+Message-ID: <CANZih_TW38JC0U+4wAWTk4UqYxs40B7SKDJidnVhi4K_jr2Crw@mail.gmail.com>
+Subject: Re: [PATCH v4] iio: accel: sca3000: replace usages of internal read
+ data helpers by spi helpers
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* Dr. David Alan Gilbert (linux@treblig.org) wrote:
-> * Takashi Iwai (tiwai@suse.de) wrote:
-> > On Thu, 08 May 2025 13:36:04 +0200,
-> > Dr. David Alan Gilbert wrote:
-> > > 
-> > > Hi,
-> > >    I noticed that nothing calls snd_msndmidi_new in
-> > > sound/isa/msnd/msnd_midi.c and was about to delete it, but I'm not
-> > > too sure - I think it's actually a bug where it should be called.
-> > > 
-> > >   This code was added in 2009 by
-> > > commit f6c638350275 ("ALSA: Turtle Beach Multisound Classic/Pinnacle driver")
-> > > (Pretty new for an ISA card!)
-> > > 
-> > > Looking at msnd_midi.c the only function in there that anything
-> > > calls is snd_msndmidi_input_read() called by msnd_pinnacle.c but that
-> > > is guarded by a check:
-> > > 
-> > >   146    if (chip->msndmidi_mpu)
-> > >   147          snd_msndmidi_input_read(chip->msndmidi_mpu);   
-> > > 
-> > > but I don't think anything sets that msndmidi_mpu, since the only
-> > > thing that could is snd_msndmidi_new() which isn't called.
-> > > 
-> > > I see that the original poster didn't test the external midi:
-> > >    https://mailman.alsa-project.org/hyperkitty/list/alsa-devel@alsa-project.org/message/CWPYLPLJQEK64UU3YFCAMVXGDY42QKF2/
-> > > so I guess this has always been missing.
-> > > 
-> > > I don't have the hardware to test.
-> > > 
-> > > Thoughts?
-> > 
-> > Well, it's a very old code on an old interface, and if it's not used
-> > (even because of a typo or an overlook), then it's basically no chance
-> > to be used in future.  Let's rip off.
-> 
-> Ok, I'll cut a patch to remove snd_msndmidi_new() and then probably the whole
-> of msnd_midi.c and the call in msnd_pinnacle.c
+On Sat, May 10, 2025 at 6:40=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+>
+>
+> Changelog is missing.
 
-Patch sent, see message: 20250511172957.1001583-1-linux@treblig.org
+Sorry about that, I didn't know we could add changelogs to patches.
+I re-read the guidelines and I'll add these changelogs for next versions.
 
+Thanks for pointing this out.
+
+>
+> Also some of my comments became ignored.
+>
+> Besides that you had a question which I answered in a previous email.
+> Please, do not send new versions before settling down on the discussed
+> pieces.
+
+Got it! I'll wait until everything is settled before sending next versions.
+
+--
 Thanks,
-
-Dave
-
-> Dave
-> 
-> > 
-> > thanks,
-> > 
-> > Takashi
-> > 
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Andrew
