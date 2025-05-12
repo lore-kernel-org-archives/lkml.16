@@ -1,129 +1,130 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB2255F5E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1366255238;
+	Mon, 12 May 2025 09:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747040967; cv=none; b=HW0o8ImYOGNZZGfmyv/JVf1DY6sTh+zQBB61IA43jfg33rwKrN0G7OlyOSNasblWlxJTOrA3D8N5GltdrhItO+aA+ZXnPf3bsa29B0GRVw+gq9KczBPGPeKbYD5ot8y3b/z61HZYWvOR7llksDsZZr+dMimDBLz2tH4O3UmExjk=
+	t=1747041073; cv=none; b=LBHV/9Mzl1+MjGofzRocGqQWmdR3x2UCe00uQZa4XP2pcCpyRemPcBS4EZXo16LiyQCpJKFkltXoqxEO1AzKCy2YUS3SIA1Qzryyc9GFTeHHR3AlE5DScVrtHN5ECB28vxeTax3ihssGgt2XtrCR0RxMqPzThGSrRPX61ngrqHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747040967; c=relaxed/simple;
-	bh=QvUlU1mDRHLL75zkuyqfgBcWMeWc3nzP/iD1ya0fFbU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VlQ5o7LCQILy9yBjREgUx+ybaGMefGAx/tD9i82F8Q6S0y1NGkBJ551SUGlowkhMESCNLEYsxDZt5vIY3t4q1ZzaUQ3N6k9I4rW+53lM7OvZQo6cSVFWDxqii4bheSeodSfwJPBDrHx9TT2PguGn9/7ggJNQVsb/UM9qeYvapFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m5JC5GBL; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747041073; c=relaxed/simple;
+	bh=/351irQ8y8ezP60Hk+w0Y0B2YMEfkZWybYmmQrMUcBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PLZqrK2FH800vGVn2Xnwwj20ouOuAMwAvipe+NeLQU6O2nj6xxcI0Ehb42ERJVGo3caL9AjdLl/ds81zolo+CwSkEldbbY6GDip6/Y8LaeaVSMIyhrwD431satmTMy2zphCZJ515c4ramgUdvoWjlm56N8fCM322/apDXiy6OLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6imcgPy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m5JC5GBL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 73145433E9;
-	Mon, 12 May 2025 09:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747040962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zKsMMVg+ksWGcwsexvgT2/5MZLLsZR0fW85cr2s0QhU=;
-	b=m5JC5GBLNZAiQowwpGPPWyQX6dO93nDUwSEcLvuejGUEuVFsJ5v/pF/0iJs43P8chhxMfe
-	eWfaKop3uXCySpd6IEMeZBZV6ghvinCapzAikE8T0kmwUOMTCNlGqErybed6JvZl3Rwkom
-	psWJf/VWH2KgL4pbOYG16juvGbzNy5KG5XpK+dJl4KT9bmUrQfwZO2CmNYZgtLnDN3MhlN
-	gzxoWEESJcmXUCSjz0+Cxw8isf0Xz9PuIF0H0D6KMoR97koSPKDJsdFklOBPBp4JwUGuKS
-	bK8+aQMh39EkCSomReeYyTJjjIGNCsOgYssItzd9FZfYbYRpFHlZrW0ZTRafSA==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: wsa+renesas@sang-engineering.com,
- "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] misc: ti_fpc202: Switch to of_fwnode_handle()
-Date: Mon, 12 May 2025 11:09:17 +0200
-Message-ID: <47222064.fMDQidcC6G@fw-rgant>
-In-Reply-To: <20250512085852.2432422-1-jirislaby@kernel.org>
-References: <20250512085852.2432422-1-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6imcgPy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D7FC4CEE9;
+	Mon, 12 May 2025 09:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747041072;
+	bh=/351irQ8y8ezP60Hk+w0Y0B2YMEfkZWybYmmQrMUcBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d6imcgPyEeH74pNl7jZYG5XTA76uorqqNrNyh5zCsR9pp4qPafRkQ+SegYgVHmLF+
+	 Ul7civZsAL7AmULogl4Ro38r8AeKHsGt6rb0yBo20BQqI9/hP7/tO3rlZVeZrot6Xp
+	 VUccY3joiWutaIcYk4h2cVnfovA/pHVzIi3pLenRDLT2MwTy5aOD83yGRcUAHJz5BK
+	 yiIlY5/I80eCUhGPS1Np85jsTox6kLaQJlJaISnW+o64DIAp3OeVOxdwzu+hJOwUzX
+	 P7qcUTbw5thvIE5VCkefb5cScsqJlTtgCfhZ73EVA5HuvyJ3hp4a+4KX8qy4L8UqDI
+	 z3vAYUMb83uzA==
+Date: Mon, 12 May 2025 11:11:05 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: viro@zeniv.linux.org.uk, jack@suse.cz, akpm@linux-foundation.org, 
+	tglx@linutronix.de, jlayton@kernel.org, frederic@kernel.org, 
+	chenlinxuan@uniontech.com, xu.xin16@zte.com.cn, adrian.ratiu@collabora.com, 
+	lorenzo.stoakes@oracle.com, mingo@kernel.org, felix.moessbauer@siemens.com, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, zhanjun@uniontech.com, 
+	niecheng1@uniontech.com, guanwentao@uniontech.com
+Subject: Re: [PATCH] proc: Show the mountid associated with exe
+Message-ID: <20250512-maximal-gutmenschen-d16584a02aeb@brauner>
+References: <3885DACAB5D311F7+20250511114243.215132-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2235955.Icojqenx9y";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeikeekffdvuefgkeejgeefhfdvteeuhfdtleeiudehieeludelvdetleeggfffffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohephedprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepghhrvghgkhhhsehli
- hhnuhigfhhouhhnuggrthhiohhnrdhorhhg
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3885DACAB5D311F7+20250511114243.215132-1-wangyuli@uniontech.com>
 
---nextPart2235955.Icojqenx9y
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH] misc: ti_fpc202: Switch to of_fwnode_handle()
-Date: Mon, 12 May 2025 11:09:17 +0200
-Message-ID: <47222064.fMDQidcC6G@fw-rgant>
-In-Reply-To: <20250512085852.2432422-1-jirislaby@kernel.org>
-References: <20250512085852.2432422-1-jirislaby@kernel.org>
-MIME-Version: 1.0
-
-Hello Jiri,
-
-On Monday, 12 May 2025 10:58:52 CEST Jiri Slaby (SUSE) wrote:
-> of_node_to_fwnode() is an irqdomain's reimplementation of the
-> "officially" defined of_fwnode_handle(). The former is in the process of
-> being removed, so use the latter instead.
+On Sun, May 11, 2025 at 07:42:43PM +0800, WangYuli wrote:
+> From: Chen Linxuan <chenlinxuan@uniontech.com>
 > 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Fixes: 1e5c9b1efa1c ("misc: add FPC202 dual port controller driver")
-> Cc: Romain Gantois <romain.gantois@bootlin.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> In Linux, an fd (file descriptor) is a non-negative integer
+> representing an open file or other I/O resource associated with a
+> process. These resources are located on file systems accessed via
+> mount points.
+> 
+> A mount ID (mnt_id) is a unique identifier for a specific instance
+> of a mounted file system within a mount namespace, essential for
+> understanding the file's context, especially in complex or
+> containerized environments. The executable (exe), pointed to by
+> /proc/<pid>/exe, is the process's binary file, which also resides
+> on a file system.
+> 
+> Knowing the mount ID for both file descriptors and the executable
+> is valuable for debugging and understanding a process's resource
+> origins.
+> 
+> We can easily obtain the mnt_id for an open fd by reading
+> /proc/<pid>/fdinfo/<fd}, where it's explicitly listed.
+> 
+> However, there isn't a direct interface (like a specific field in
+> /proc/<pid}/ status or a dedicated exeinfo file) to easily get the
+> mount ID of the executable file without performing additional path
+> resolution or file operations.
+> 
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
 > ---
->  drivers/misc/ti_fpc202.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+>  fs/proc/base.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> diff --git a/drivers/misc/ti_fpc202.c b/drivers/misc/ti_fpc202.c
-> index b9c9ee4bfc4e..cc597682b89c 100644
-> --- a/drivers/misc/ti_fpc202.c
-> +++ b/drivers/misc/ti_fpc202.c
-> @@ -284,7 +284,7 @@ static int fpc202_probe_port(struct fpc202_priv *priv,
-> struct device_node *i2c_h
-> 
->  	desc.chan_id = port_id;
->  	desc.parent = dev;
-> -	desc.bus_handle = of_node_to_fwnode(i2c_handle);
-> +	desc.bus_handle = of_fwnode_handle(i2c_handle);
->  	desc.num_aliases = FPC202_ALIASES_PER_PORT;
-> 
->  	fpc202_fill_alias_table(priv->client, aliases, port_id);
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index b0d4e1908b22..fe8a2d5b3bc1 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -101,6 +101,7 @@
+>  #include <trace/events/oom.h>
+>  #include "internal.h"
+>  #include "fd.h"
+> +#include "../mount.h"
+>  
+>  #include "../../lib/kstrtox.h"
+>  
+> @@ -1790,6 +1791,28 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
+>  		return -ENOENT;
+>  }
+>  
+> +static int proc_exe_mntid(struct seq_file *m, struct pid_namespace *ns,
+> +			struct pid *pid, struct task_struct *task)
+> +{
+> +	struct file *exe_file;
+> +	struct path exe_path;
+> +
+> +	exe_file = get_task_exe_file(task);
+> +
+> +	if (exe_file) {
+> +		exe_path = exe_file->f_path;
+> +		path_get(&exe_file->f_path);
+> +
+> +		seq_printf(m, "%i\n", real_mount(exe_path.mnt)->mnt_id);
 
-Looks good to me.
+You're exposing the legacy mount id. It is only guaranteed to be valid
+while the executable is running as legacy mount ids are recycled
+quickly.
 
-Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
+And no, we're not going to expose either in this way via procfs. You can
+get the same information via:
 
---nextPart2235955.Icojqenx9y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+fd_exe = open("/proc/<pid>/exe", O_PATH | O_CLOEXEC);
+statx(fd_exe, ...)
 
------BEGIN PGP SIGNATURE-----
+or via fdinfo:
 
-iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmghur0ACgkQ3R9U/FLj
-285vuRAAjNDAQ/01mOOa99MhOI6ywCt9FVAHEOdrJWyyu8Qc5Y4Np359+L/aWARe
-f7FEwcEysYVaBJJ0VS64NEDAgm7hqvb3efdu3afj8rNIsAbalc1Byibkg4zewCo2
-7qoVaCWcsBiPM/JtBd9EFRauPg4RntGqAXgsN+2W96M7Mr8Ze6ScoFAksSlMwqn4
-pNGG8AKIHQLy4N/yb7FSDiAqbNYg3a6jECenAU2ZgYdIGJZgupSxaW0BhZm74NsF
-UA9r45a+1PxyrekPtKg3KVRUPg+veIBmSEOsSxa6tynkAWmkzGBZOMXu2h/57Oxc
-n2ijhSAlRnksMc731rwAFQnBWGMW4yKrD33G5C+tZCvVeB1dNYB0tYrXcGogYFeF
-mNBvhG21EBZJ9r5fJA95kFB22CVbi9V7U9nek0yujulTJVL03H0XAurX2YgeUTEU
-c76y2JrXgKYRW6SKruCVB635/1eFeoLct3O1dJKpUdddqQxsa61kfPfXb1Dwuupx
-DwjFyDx8XLBPJn2rFzhUfOovafoL6Sf525vyEC5J64ZfQwzQYw2tYlixBy4Unrh5
-M9egOd+FP1FfJEjWKbEF4fI6hSGqeu79X6S1rRN3NaRzLir7ThtgfomfFSWxZptn
-sZoZI+q4GEPbvPmhk+lbZuHofqX3+KGC5KZfNrvcRRGT1/z76bs=
-=zbl8
------END PGP SIGNATURE-----
+read("/proc/self/fdinfo/<fd_exe>");
 
---nextPart2235955.Icojqenx9y--
-
-
-
+A separate file for this is just not worth it.
