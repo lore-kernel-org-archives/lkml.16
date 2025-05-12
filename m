@@ -1,95 +1,138 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D0A1E51FF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CFD258CC1;
+	Mon, 12 May 2025 18:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076293; cv=none; b=oaT3aFRZgjqmD4y6I8cPWsFYPKLq2POzD39HmU3QCoxBv8QB+cTzxlARItVAly23nQ8Q9DuQBOVeTJvY7Y9qWBWQFmTDQD8aTqC+AHRV5VGb0M8JJTPbnFTcVz7UgtoIhNEfSxos9tMy+VEyzNg/gb1oDqRq3XTrIUonQkjazHM=
+	t=1747076302; cv=none; b=uRCQre4E0ZOokHaaUXAHV3OmbepLRJjuVSRx++dAHkyB/5BB4nNBF3eI2fglXrMYhzYbelhD0MdcgRYzphJ+LxBYeH8yeAC4dZb68UMpDKDEVhs3F/NsehlVNfLGs2r/wpPzOGRR4fOuk00qrIsKFeJj2BV5I0dNqpNhbasiLNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076293; c=relaxed/simple;
-	bh=KFQjHqN1oAAjo1RJOok3ueSzjmFOYcaYRIZfi3T0bSo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TZWt9l1UmMg6YVrJa0njPMboQU1udLFEuoJbV4z2adJcXoAWS8Q2bS/MsnJdIRDijafFCaSfv9C/ET2HoK8lUpXXlFkZH08PCVz7Oal2v1DZ4t+q+kCBLpBJobZzM194RwaDLzMIHmuI2soHDLUllPTe8HMgEBGp/frzfGDQTo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aEPTGW77; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747076302; c=relaxed/simple;
+	bh=DhqQMJeCz7KcqMO9pFZZ9SLZWQgVIgwsMsQ5GbkfyLE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ukXD/kkaQYHohT0n36KxMptRkRSxC63iUYeAdbzj0+KJS+iGAu7e67Nw1C1yi8bCfFHPwAh5mzbMCyGmrIQYZxjeas0mQVFHqaOoI/N5nLwfsAiMM7iy8IGTAmcukELMSB9/psho11gvBPPn5EOkVrUTilyt2/V9SUt4f9pfFUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aI81sbtS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aEPTGW77"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54CIveRZ2645208
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 13:57:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747076260;
-	bh=Qb6JfIhSW1h4eYzfuOi/aq/Oo6JyXU+LA8+sA4fY1EM=;
-	h=From:To:CC:Subject:Date;
-	b=aEPTGW77Nm0yJMUYEB67Sfa18JFqrsYzbyXC2cCwZ737aMBr86iDu8Kb7orp/BnxK
-	 BoBR4tai6/H+i7fPcnQ72Kyo41/vyGOJqXoSCVgx488xN6av7Zvd1PWgu7wfS9ZalB
-	 cze6GTp4OnFctEjPWnLS5dl2SkpM2udmv45lHl8U=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54CIveZE018109
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 May 2025 13:57:40 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- May 2025 13:57:39 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 May 2025 13:57:39 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54CIvddH072850;
-	Mon, 12 May 2025 13:57:39 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
-        Mark
- Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        Nishanth
- Menon <nm@ti.com>
-Subject: [PATCH] ASoC: tlv320aic3x: Use dev_err_probe
-Date: Mon, 12 May 2025 13:57:39 -0500
-Message-ID: <20250512185739.2907466-1-nm@ti.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aI81sbtS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB0B7C4CEE7;
+	Mon, 12 May 2025 18:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747076301;
+	bh=DhqQMJeCz7KcqMO9pFZZ9SLZWQgVIgwsMsQ5GbkfyLE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aI81sbtSYxp4ZUFqKIdL8tPZyBnf7zssH2SFPfSa0SIJFYJz67c0ycT734TIISYJe
+	 voB4FpdUmvI5jCKlBayoenOgfCh0jSLg/AQtcefz/t1E4haqPDpLhMyrjiLjBNS4GG
+	 aRepWJ37m/l4ofO8hKelcnK/eCIxAKN7wHLZB5E/Qqzj0qpEQYtOD09jXEQjBgOl88
+	 wLh1a26PSJGASXkDVEqp7SyG6BKdLBL3s43vQcnlMoxklJgpXywBNgz9D7yWtDO+QI
+	 9dvvjAQxE9RG1vETmpuf3+icNC0Gk6LEJ9jnJ3/ouoam8Eh/KDqBdrCOfkFAhTExxX
+	 MiuHB4kIAWDCQ==
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f2c45ecaffso51182266d6.2;
+        Mon, 12 May 2025 11:58:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUBKIhGX1yRAfu22fZbezZKUHwcGk8sTjaUp4ddS2cixJ1nyVqZvrkgrp/twEUjyII2RoDhbUSvTWmkJVsGzVxP@vger.kernel.org, AJvYcCUzwWfh96GGUe5Pnqcf8QtUf2aEp+DdMDWa9/pChQjAv9gyb8Ce0hIIviy4fpnddcoEReDeLVw7v0eyUZ2H@vger.kernel.org, AJvYcCV8ZHASOxLqmCqAbHP4Zk8wIuID+OpB7XPuNG9tGv9EaxexQ3hwXympBbAwhisTF+KdkCk=@vger.kernel.org, AJvYcCXK5xq8IOUjIOxgkwBsM8W137v7eBbR4G6jN2QnEwfiUh7TZ2TvdP8EJUU6xchKt+PH58RGF1VWpB/ZIVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKY9/ZLM1hGneUGBoM2iAYXlPigGT2HHggPZOHMiljDnjGfyHi
+	yx4VQnnxVj0qHqybxHXNmdOw8SSNZhzPGb5NLT1m1Bm38VZJC/cBk6GsC0wTJ7ISdu+YOWVMkWL
+	Ju16L73dvLddsh7m6c1zvuamL46E=
+X-Google-Smtp-Source: AGHT+IFyd6yL6raX/sTg46CKX63s6TNC5S7yKKUcNYsUtZqJrEQZJsF0fn7Rhu83nX52qQ9gtfsjefq2LxgweTQn6ss=
+X-Received: by 2002:a05:6214:f6d:b0:6e8:fee2:aae6 with SMTP id
+ 6a1803df08f44-6f6e48151b9mr222853596d6.41.1747076300958; Mon, 12 May 2025
+ 11:58:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250512174036.266796-1-tjmercier@google.com> <20250512174036.266796-5-tjmercier@google.com>
+In-Reply-To: <20250512174036.266796-5-tjmercier@google.com>
+From: Song Liu <song@kernel.org>
+Date: Mon, 12 May 2025 11:58:09 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6TUogokra2mJQG6jeuZ1_RZPwr4xGbBOUJZBUg9AqW3g@mail.gmail.com>
+X-Gm-Features: AX0GCFvByoV9AZSi2Y8neroJoSZ_eSUedTGCmZtmiP0XEcoch5fMWNH94wsBues
+Message-ID: <CAPhsuW6TUogokra2mJQG6jeuZ1_RZPwr4xGbBOUJZBUg9AqW3g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 4/5] selftests/bpf: Add test for dmabuf_iter
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
+	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-During probe the regulator supply drivers may not yet be available.
-Use dev_err_probe to provide just the pertinent log.
+On Mon, May 12, 2025 at 10:41=E2=80=AFAM T.J. Mercier <tjmercier@google.com=
+> wrote:
+[...]
+> +
+> +static int udmabuf;
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Testing based on next-20250512 (includes additional patch) on AM62a7-sk
-Before: https://gist.github.com/nmenon/be94f21e83b4260ad3f89e1ae8f0d188#file-before-L851
-After: https://gist.github.com/nmenon/be94f21e83b4260ad3f89e1ae8f0d188#file-after-L806
- sound/soc/codecs/tlv320aic3x.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+static int udmabuf =3D -1;
 
-diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
-index 56e795a00e22..f1649df19738 100644
---- a/sound/soc/codecs/tlv320aic3x.c
-+++ b/sound/soc/codecs/tlv320aic3x.c
-@@ -1818,10 +1818,8 @@ int aic3x_probe(struct device *dev, struct regmap *regmap, kernel_ulong_t driver
- 
- 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(aic3x->supplies),
- 				      aic3x->supplies);
--	if (ret) {
--		dev_err(dev, "Failed to request supplies: %d\n", ret);
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to request supplies\n");
- 
- 	aic3x_configure_ocmv(dev, aic3x);
- 
--- 
-2.47.0
+> +static const char udmabuf_test_buffer_name[DMA_BUF_NAME_LEN] =3D "udmabu=
+f_test_buffer_for_iter";
+> +static size_t udmabuf_test_buffer_size;
+> +static int sysheap_dmabuf;
 
+static int sysheap_dmabuf =3D -1;
+
+> +static const char sysheap_test_buffer_name[DMA_BUF_NAME_LEN] =3D "syshea=
+p_test_buffer_for_iter";
+> +static size_t sysheap_test_buffer_size;
+> +
+> +static int create_udmabuf(void)
+> +{
+> +       struct udmabuf_create create;
+
+nit: zero initialize create to be future proof.
+
+> +       int dev_udmabuf, memfd, local_udmabuf;
+> +
+> +       udmabuf_test_buffer_size =3D 10 * getpagesize();
+
+[...]
+
+> +static void subtest_dmabuf_iter_check_default_iter(struct dmabuf_iter *s=
+kel)
+> +{
+> +       bool found_test_sysheap_dmabuf =3D false;
+> +       bool found_test_udmabuf =3D false;
+> +       struct DmabufInfo bufinfo;
+> +       size_t linesize =3D 0;
+> +       char *line =3D NULL;
+> +       FILE *iter_file;
+> +       int iter_fd, f =3D INODE;
+> +
+> +       iter_fd =3D bpf_iter_create(bpf_link__fd(skel->links.dmabuf_colle=
+ctor));
+> +       ASSERT_OK_FD(iter_fd, "iter_create");
+
+Should we check ASSERT_OK_FD() and exit early on
+failures?
+
+> +
+> +       iter_file =3D fdopen(iter_fd, "r");
+> +       ASSERT_OK_PTR(iter_file, "fdopen");
+
+Same here.
+[...]
+> +/*
+> + * Fields output by this iterator are delimited by newlines. Convert any
+> + * newlines in user-provided printed strings to spaces.
+> + */
+> +static void sanitize_string(char *src, size_t size)
+> +{
+> +       for (char *c =3D src; c && (size_t)(c - src) < size; ++c)
+
+Should this be:
+
+  for (char *c =3D src; *c && (size_t)(c - src) < size; ++c)
+
+?
+
+Thanks,
+Song
+
+[...]
