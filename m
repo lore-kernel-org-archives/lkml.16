@@ -1,744 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2041.outbound.protection.outlook.com [40.107.20.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4048C78C91;
-	Mon, 12 May 2025 10:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747044225; cv=none; b=mBlDspAlzrsfrXKTfecdWbIPu4pDh9AP068LPh3ebekk+smc2QW40dj0QPxsHP5Q6nXsya4xrYr5vEgju0Bebj32QiQA9rNeaKPBeROYvH9QBsAUl8TozGtDK6/Oc+wm3xcvXv1y3ihqw6dxMSZsaR+x+EISK31wNUvrx4h3428=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747044225; c=relaxed/simple;
-	bh=+XlAbOjqVnU6gnNWWhp5IMDfURisFp7zfqokhv8N5Ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OAjbFpMU2mRySSL5E/zRV6JHabO8GP/kja6SWp4l3Xrku8MzqPEhh29AkciUC68CrNoIl2ooixJeF96Q+A/lbibX4n6PqApcCOwHDVKN7bJuPdS8FwUz2s6U2/sd5SbJ1Gzv/KfBqoEDBl8/jyv3jt2zJ5YSmTzrvm3mSl5LhkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrqH4qv+; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D3F78C91;
+	Mon, 12 May 2025 10:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747044284; cv=fail; b=UcWy7Im/HBAGRPhHuztfIy/hCbyahjizbpW4ptnr/azG0SIeRPsphomjmrDHYaheIy5VEM4a8UczpMn3U5P9JiMSCDAvfBPP0LRU+EdlFBgdNmfAsHPo4YnNK23+qbM9IOO2x85Sezu7d9u3JEZLMZj6rw0YfVKCeuTg2YgZXqY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747044284; c=relaxed/simple;
+	bh=BFFNTgy53wWvliRwVMH/onoDZHSGKXHanB0l1h8Z2vU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fje114GiJYa64odCJNzEidqcsocQcq8v3PJdZaG+UHL9Hpwi/RGJiPFVYoA62kDFzKc9TaHtQEQ0js+BXnYrdzxgri8dVkqw6XMtT0sfbl/O85eUNXQ1hCCg+wKrG/BoK9fq9EJ3MVU8kt/bD3e1xMJ9I88hzVs92YGx+RZyfb4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=ZSCYumxh; arc=fail smtp.client-ip=40.107.20.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrqH4qv+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1B3C4CEE9;
-	Mon, 12 May 2025 10:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747044224;
-	bh=+XlAbOjqVnU6gnNWWhp5IMDfURisFp7zfqokhv8N5Ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MrqH4qv+5J5wD/LW3Aa51xOu9SnY/N5/4TFokl84x/3PrGMiXLiA93+1+jzzHV7Xk
-	 Kl5n6nj4j9dUWwdi+XOs+h4omMncQ3G+AEX4pfMO5UcP3zwcphvMPTtCKVWtvbLtyE
-	 Uh1FJIwQY/EB8KWEDblFvXoHYYln9ttQlIUJZ4g1r3P4MLRd5bynG/x7JDwz5Z98b7
-	 4Y0vZf2m8zHuSX40fpdflpppqBc5QkUbu0oYZX0g/wFOQ3A3+KZou89OLZegamwKWz
-	 DDsxPAcsVqhd43sHBVCaCy4ImOVeAZUtTTpaApwQbkXnm/1ffsY2NqoCvYv7zy6wkx
-	 7ZDOYM0DfoqOg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uEQ0b-000000000wB-1cCK;
-	Mon, 12 May 2025 12:03:41 +0200
-Date: Mon, 12 May 2025 12:03:41 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Corentin Labbe <clabbe@baylibre.com>
-Cc: gregkh@linuxfoundation.org, martin.blumenstingl@googlemail.com,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	david@ixit.cz
-Subject: Re: [PATCH v8 1/2] usb: serial: add support for CH348
-Message-ID: <aCHHfY2FkVW2j0ML@hovoldconsulting.com>
-References: <20250204135842.3703751-1-clabbe@baylibre.com>
- <20250204135842.3703751-2-clabbe@baylibre.com>
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="ZSCYumxh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DOmZcxTnLOyloMyorxoikytywIohw0DvS+NrfWmMDbKiBIbrhrcJvt1e/c/RRug8n3i+eGEMv6v6YIWVd/yXIHGqaDTjfpLqY90CzAgwd2DTPS3KJIgxPivj71wMAlOoHeA2K5NNbCWcxkwD6nfdyk+WZofmYWL+tUtMxWVgrNQOsMVscg0MhSYSdTWHmbyO6R3QSS4DNR6zygfK1o9DtA3roYV2pVELBSXdb2zBXfGXsLCkS/XJ2y0fMISogVs3iLv4KZZelRkgoxywfK3RCzy1N7UbxC1G1Vp2NX2kjhno00PuNXU3YHqqPEFS5vkYEUuwdNVxuCryIMWxK5FrdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SsfpdBAiNoTFGN9JNkREh5YE5CVOUpqyAIbwFoCZFCg=;
+ b=n0Vr5c/mEe37K4cGLtgJBtNTZEgBlDzk/H1kFoeUrQA3DQzhG101EhfiqMVNz2FpXFwDN3ctj7lLwvfd9fKQQhozENsWN358cD/AXV03NMTYFm8HlB5DFM/WMLDOa0LR3NFtmRzaWf2MF6iC3QERjAsGvY9nXgR1PG+8gvjg7mD2f8XW71h+XQgV4XAgITt+1tFrpXj6IAI5NNioBEBBZvF3pZwG1NS4fyeoUlPp/omjJLx9HpPsuIQV1JMJ+6RzL+rVICSCce+gqq3gToMcmf16jhM+w0N6DVnfspyTvxX8G82UYptB+xkF++WjuxSajEUmnjJh9VsFFPqOXnImMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SsfpdBAiNoTFGN9JNkREh5YE5CVOUpqyAIbwFoCZFCg=;
+ b=ZSCYumxhnnjeUWCtALFLFsfXB1ggyYJsvVdSPJ+hgKN0hzyAgY3blCYfiT0a/FUlodUMCCLrFO2Y0wS0poz5m0O4UCfehiLrYJ9C4BvNCwtBnXDdzfeB0TMoO6kkReeQStZ8ZZQfviDUmcOu8MOv5HD9QitFL02TmmXVM8bwe18=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by DB9PR04MB8377.eurprd04.prod.outlook.com (2603:10a6:10:25c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 10:04:39 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 10:04:39 +0000
+Message-ID: <c2118ab6-a7be-4158-bb51-9b2cdd1838b2@cherry.de>
+Date: Mon, 12 May 2025 12:04:37 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] arm64: dts: rockchip: add basic mdio node to px30
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+References: <20250508150955.1897702-1-heiko@sntech.de>
+ <20250508150955.1897702-2-heiko@sntech.de>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20250508150955.1897702-2-heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0104.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a9::15) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204135842.3703751-2-clabbe@baylibre.com>
-
-On Tue, Feb 04, 2025 at 01:58:41PM +0000, Corentin Labbe wrote:
-> The CH348 is an USB octo port serial adapter.
-> The device multiplexes all 8 ports in the same pair of Bulk endpoints.
-> Since there is no public datasheet, unfortunately it remains some magic values
-
-Please wrap the commit message at 72 columns or so.
-
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * USB serial driver for USB to Octal UARTs chip ch348.
-> + *
-> + * Copyright (C) 2023 Corentin Labbe <clabbe@baylibre.com>
-> + * With the help of Neil Armstrong <neil.armstrong@linaro.org>
-> + * Copyright (C) 2024 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> + *
-> + * Based on the ch9344 driver:
-> + *   https://github.com/WCHSoftGroup/ch9344ser_linux/
-> + *   Copyright (C) 2024 Nanjing Qinheng Microelectronics Co., Ltd.
-> + */
-> +
-> +#include <linux/completion.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kfifo.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/overflow.h>
-
-I don't think you use this one currently.
-
-> +#include <linux/serial.h>
-> +#include <linux/serial_reg.h>
-> +#include <linux/slab.h>
-> +#include <linux/tty.h>
-> +#include <linux/tty_driver.h>
-> +#include <linux/tty_flip.h>
-> +#include <linux/usb.h>
-> +#include <linux/usb/serial.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define CH348_CMD_TIMEOUT   2000
-> +
-> +#define CH348_CTO_D	0x01
-> +#define CH348_CTO_R	0x02
-> +
-> +#define CH348_CTI_C	0x10
-> +#define CH348_CTI_DSR	0x20
-> +#define CH348_CTI_R	0x40
-> +#define CH348_CTI_DCD	0x80
-> +
-> +#define CMD_W_R		0xC0
-
-Lower case for consistency.
-
-> +#define CMD_W_BR	0x80
-> +
-> +#define CMD_WB_E	0x90
-> +#define CMD_RB_E	0xC0
-
-Lower case for consistency.
-
-> +
-> +#define M_NOR		0x00
-> +#define M_HF		0x03
-> +
-> +#define R_MOD		0x97
-> +#define R_IO_D		0x98
-> +#define R_IO_O		0x99
-> +#define R_IO_I		0x9b
-> +#define R_TM_O		0x9c
-> +#define R_INIT		0xa1
-> +
-> +#define CMD_VER		0x96
-> +
-> +/* 0x10 is normally UART_MCR_LOOP but for CH348 it's UART_MCR_RTS */
-> +#define UART_MCR_RTS_CH348	0x10
-
-It's good that you looked at the standard defines to make some sense of
-the magic constants you had earlier, but don't take it too far. If there
-are too many exceptions and inconsistencies, it may be better to have
-driver specific defines (more below).
-
-> +/*
-> + * The CH348 multiplexes rx & tx into a pair of Bulk USB endpoints for the 8
-> + * serial ports, and another pair of Bulk USB endpoints to set port settings
-> + * and receive port status events.
-> + *
-> + * The USB serial cores ties every Bulk endpoints pairs to each ports, In our
-> + * case it will set port 0 with the rx/tx endpoints and port 1 with the
-> + * setup/status endpoints.
-> + *
-> + * For bulk writes we skip all of USB serial core's helpers and implement it on
-> + * our own since for serial TX we need to not only wait for the URB to complete
-> + * but also for the UART_IIR_THRI signal.
-> + *
-> + * For bulk reads we use USB serial core's helpers, even for the status/int
-> + * handling as it simplifies our code.
-> + */
-> +#define CH348_MAXPORT				8
-> +#define CH348_PORTNUM_SERIAL_RX_TX		0
-> +#define CH348_PORTNUM_STATUS_INT_CONFIG		1
-> +
-> +#define CH348_RX_PORT_MAX_LENGTH	30
-> +
-> +struct ch348_rxbuf {
-> +	u8 port;
-> +	u8 length;
-> +	u8 data[CH348_RX_PORT_MAX_LENGTH];
-> +} __packed;
-> +
-> +struct ch348_txbuf {
-> +	u8 port;
-> +	__le16 length;
-> +	u8 data[];
-> +} __packed;
-> +
-> +#define CH348_TX_HDRSIZE offsetof(struct ch348_txbuf, data)
-> +
-> +struct ch348_initbuf {
-> +	u8 cmd;
-> +	u8 reg;
-> +	u8 port;
-> +	__be32 baudrate;
-> +	u8 format;
-> +	u8 paritytype;
-> +	u8 databits;
-> +	u8 rate;
-> +	u8 unknown;
-> +} __packed;
-> +
-> +#define CH348_INITBUF_FORMAT_STOPBITS		0x2
-> +#define CH348_INITBUF_FORMAT_NO_STOPBITS	0x0
-> +
-> +/*
-
-For kernel doc, you want /** here.
-
-> + * struct ch348_port - per-port information
-> + * @uartmode:		UART port current mode
-> + * @baudrate:		A cached copy of current baudrate for the RX logic
-> + */
-> +struct ch348_port {
-> +	u8 uartmode;
-> +	speed_t baudrate;
-> +};
-> +
-> +/*
-
-And here.
-
-> + * struct ch348 - main container for all this driver information
-> + * @udev:		pointer to the CH348 USB device
-> + * @ports:		List of per-port information
-> + * @serial:		pointer to the serial structure
-> + * @write_work:		worker for processing the write queues
-> + * @txbuf_completion:	indicates that the TX buffer has been fully written out
-> + * @tx_ep:		endpoint number for serial data transmit/write operation
-> + * @config_ep:		endpoint number for configure operations
-> + * @small_package:	indicates package size: small (CH348Q) or large (CH348L)
-> + */
-> +struct ch348 {
-> +	struct usb_device *udev;
-> +	struct ch348_port ports[CH348_MAXPORT];
-> +	struct usb_serial *serial;
-> +
-> +	struct work_struct write_work;
-> +	struct completion txbuf_completion;
-> +
-> +	int tx_ep;
-> +	int config_ep;
-> +
-> +	bool small_package;
-
-I noticed that you don't use this one currently, but perhaps use a type
-enum and call it type instead to make it more obvious what it is (can
-be) used for.
-
-> +};
-> +
-> +struct ch348_serial_config {
-> +	u8 action;
-> +	u8 reg;
-> +	u8 control;
-> +} __packed;
-> +
-> +struct ch348_status_entry {
-> +	u8 portnum;
-> +	u8 reg_iir;
-> +	union {
-> +		u8 lsr_signal;
-> +		u8 modem_signal;
-> +		u8 init_data[10];
-> +	};
-> +} __packed;
-> +
-> +#define CH348_STATUS_ENTRY_PORTNUM_MASK		0xf
-> +
-> +static void ch348_process_status_urb(struct usb_serial *serial, struct urb *urb)
-> +{
-> +	struct ch348 *ch348 = usb_get_serial_data(serial);
-> +	struct ch348_status_entry *status_entry;
-> +	struct usb_serial_port *port;
-> +	unsigned int i, status_len;
-> +	u8 portnum;
-> +
-> +	if (urb->actual_length < 3) {
-> +		dev_warn_ratelimited(&ch348->udev->dev,
-> +				     "Received too short status buffer with %u bytes\n",
-> +				     urb->actual_length);
-
-You should probably just demote to dev_dbg() as you do in the data path,
-not much a user can do with this warning.
-
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < urb->actual_length;) {
-> +		status_entry = urb->transfer_buffer + i;
-> +		portnum = status_entry->portnum & CH348_STATUS_ENTRY_PORTNUM_MASK;
-> +
-> +		if (portnum >= CH348_MAXPORT) {
-> +			dev_warn_ratelimited(&ch348->udev->dev,
-> +					     "Invalid port %d in status entry\n",
-> +					     portnum);
-
-Same here.
-
-> +			break;
-> +		}
-> +
-> +		port = serial->port[portnum];
-> +		status_len = 3;
-> +
-> +		if (!status_entry->reg_iir) {
-> +			dev_dbg(&port->dev, "Ignoring status with zero reg_iir\n");
-> +		} else if (status_entry->reg_iir == R_INIT) {
-> +			status_len = 12;
-> +		} else if ((status_entry->reg_iir & UART_IIR_ID) == UART_IIR_RLSI) {
-> +			if (status_entry->lsr_signal & UART_LSR_OE)
-> +				port->icount.overrun++;
-> +			if (status_entry->lsr_signal & UART_LSR_PE)
-> +				port->icount.parity++;
-> +			if (status_entry->lsr_signal & UART_LSR_FE)
-> +				port->icount.frame++;
-> +			if (status_entry->lsr_signal & UART_LSR_BI)
-> +				port->icount.brk++;
-> +		} else if ((status_entry->reg_iir & UART_IIR_ID) == UART_IIR_THRI) {
-> +			complete_all(&ch348->txbuf_completion);
-> +		} else {
-> +			dev_warn_ratelimited(&port->dev,
-> +					     "Unsupported status with reg_iir 0x%02x\n",
-> +					     status_entry->reg_iir);
-
-And here.
-
-> +		}
-> +
-> +		i += status_len;
-> +	}
-> +}
-> +
-> +static void ch348_process_serial_rx_urb(struct usb_serial *serial,
-> +					struct urb *urb)
-> +{
-> +	unsigned int portnum, serial_rx_len, i;
-> +	struct usb_serial_port *port;
-> +	struct ch348_rxbuf *rxb;
-> +
-> +	if (urb->actual_length < 2) {
-> +		dev_dbg(&serial->dev->dev, "Empty rx buffer\n");
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < urb->actual_length; i += sizeof(*rxb)) {
-> +		rxb = urb->transfer_buffer + i;
-> +		portnum = rxb->port;
-> +		if (portnum >= CH348_MAXPORT) {
-> +			dev_dbg(&serial->dev->dev, "Invalid port %d\n", portnum);
-> +			break;
-> +		}
-> +
-> +		port = serial->port[portnum];
-> +
-> +		serial_rx_len = rxb->length;
-> +		if (serial_rx_len > CH348_RX_PORT_MAX_LENGTH) {
-> +			dev_dbg(&port->dev, "Invalid length %d for port %d\n",
-> +				serial_rx_len, portnum);
-> +			break;
-> +		}
-> +
-> +		tty_insert_flip_string(&port->port, rxb->data, serial_rx_len);
-> +		tty_flip_buffer_push(&port->port);
-> +
-> +		port->icount.rx += serial_rx_len;
-> +	}
-> +}
-> +
-> +static void ch348_process_read_urb(struct urb *urb)
-> +{
-> +	struct usb_serial_port *port = urb->context;
-> +
-> +	if (port->port_number == CH348_PORTNUM_SERIAL_RX_TX)
-> +		ch348_process_serial_rx_urb(port->serial, urb);
-> +	else if (port->port_number == CH348_PORTNUM_STATUS_INT_CONFIG)
-> +		ch348_process_status_urb(port->serial, urb);
-> +	else
-> +		dev_warn_ratelimited(&port->serial->dev->dev,
-> +				     "Ignoring read URB callback for unknown port/endpoint %u\n",
-> +				     port->port_number);
-
-This can't happen since you only submit read urbs for ports 0 and 1,
-just drop.
-
-> +}
-> +
-> +static int ch348_port_config(struct usb_serial_port *port, u8 action, u8 reg,
-> +			     u8 control)
-> +{
-> +	struct ch348 *ch348 = usb_get_serial_data(port->serial);
-> +	struct ch348_serial_config *buffer;
-> +	int ret;
-> +
-> +	buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
-> +	if (!buffer)
-> +		return -ENOMEM;
-> +
-> +	if (port->port_number < 4)
-> +		reg += 0x10 * port->port_number;
-> +	else
-> +		reg += 0x10 * (port->port_number - 4) + 0x08;
-> +
-> +	buffer->action = action;
-> +	buffer->reg = reg;
-> +	buffer->control = control;
-> +
-> +	ret = usb_bulk_msg(ch348->udev, ch348->config_ep, buffer,
-> +			   sizeof(*buffer), NULL, CH348_CMD_TIMEOUT);
-> +	if (ret) {
-> +		dev_err(&ch348->udev->dev, "Failed to write port config: %d\n", ret);
-> +		goto out;
-
-No need for a goto here.
-
-> +	}
-> +
-> +out:
-> +	kfree(buffer);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ch348_write(struct tty_struct *tty, struct usb_serial_port *port,
-> +		       const unsigned char *buf, int count)
-> +{
-> +	struct ch348 *ch348 = usb_get_serial_data(port->serial);
-> +
-> +	if (!count)
-> +		return 0;
-> +
-> +	count = kfifo_in_locked(&port->write_fifo, buf, count, &port->lock);
-> +
-> +	schedule_work(&ch348->write_work);
-> +
-> +	return count;
-> +}
-> +
-> +static int ch348_set_uartmode(struct usb_serial_port *port, u8 mode)
-> +{
-> +	struct ch348 *ch348 = usb_get_serial_data(port->serial);
-> +	unsigned int portnum = port->port_number;
-> +	int ret;
-> +
-> +	if (ch348->ports[portnum].uartmode == M_NOR && mode == M_HF) {
-
-AFAICS, the M_NOR and M_HF are only used to track whether hardware flow
-control is enabled or not.
-
-I guess HF stands for hardware flow, but what does M_NOR mean? No RTS?
-
-Unless these names reflect some hardware flags, I think you should
-switch to more descriptive names. And I guess you just need a boolean
-flag.
-
-> +		ret = ch348_port_config(port, CMD_W_BR, UART_MCR,
-> +					UART_MCR_DTR | UART_MCR_RTS_CH348 |
-> +					UART_MCR_TCRTLR);
-
-This does not look a normal MCR register so shouldn't be using the
-standard defines for it.
-
-Perhaps you can make some sense of this by comparing with the vendor
-dtr_rts() implementation too.
-
-> +		if (ret)
-> +			return ret;
-> +		ch348->ports[portnum].uartmode = M_HF;
-> +	}
-> +
-> +	if (ch348->ports[portnum].uartmode == M_HF && mode == M_NOR) {
-> +		ret = ch348_port_config(port, CMD_W_BR, UART_MCR,
-> +					UART_MCR_RTS_CH348 | UART_MCR_TCRTLR);
-> +		if (ret)
-> +			return ret;
-> +		ch348->ports[portnum].uartmode = M_NOR;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void ch348_set_termios(struct tty_struct *tty, struct usb_serial_port *port,
-> +			      const struct ktermios *termios_old)
-> +{
-> +	struct ch348 *ch348 = usb_get_serial_data(port->serial);
-> +	struct ktermios *termios = &tty->termios;
-> +	int ret, portnum = port->port_number;
-> +	struct ch348_initbuf *buffer;
-> +	speed_t	baudrate;
-> +
-> +	if (termios_old && !tty_termios_hw_change(&tty->termios, termios_old))
-> +		return;
-> +
-> +	buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
-> +	if (!buffer)
-> +		goto out;
-> +
-> +	/*
-> +	 * The datasheet states that only baud rates in range of 1200..6000000
-> +	 * are supported. Tests with an oscilloscope confirm that even when
-> +	 * configuring a baud rate slower than 1200 the output stays at around
-> +	 * 1200 baud.
-> +	 */
-> +	baudrate = clamp(tty_get_baud_rate(tty), 1200, 6000000);
-> +	tty_termios_encode_baud_rate(&tty->termios, baudrate, baudrate);
-> +	ch348->ports[port->port_number].baudrate = baudrate;
-> +
-> +	if (termios->c_cflag & PARENB) {
-> +		if  (termios->c_cflag & CMSPAR) {
-> +			if (termios->c_cflag & PARODD)
-> +				buffer->paritytype = 3;
-> +			else
-> +				buffer->paritytype = 4;
-> +		} else if (termios->c_cflag & PARODD) {
-
-Just use "else" here and add an inner conditional for PARODD for
-symmetry and readability.
-
-> +			buffer->paritytype = 1;
-> +		} else {
-> +			buffer->paritytype = 2;
-> +		}
-> +	} else {
-> +		buffer->paritytype = 0;
-> +	}
-
-> +	buffer->cmd = CMD_WB_E | portnum;
-> +	buffer->reg = R_INIT;
-> +	buffer->port = portnum;
-> +	buffer->baudrate = cpu_to_be32(baudrate);
-> +
-> +	if (termios->c_cflag & CSTOPB)
-> +		buffer->format = CH348_INITBUF_FORMAT_STOPBITS;
-> +	else
-> +		buffer->format = CH348_INITBUF_FORMAT_NO_STOPBITS;
-
-CSTOPB controls whether one or two stop bits is used so these defines
-looks like they should be renamed.
-
-> +
-> +	buffer->rate = max_t(speed_t, 5, (10000 * 15 / baudrate) + 1);
-> +
-> +	ret = usb_bulk_msg(ch348->udev, ch348->config_ep, buffer,
-> +			   sizeof(*buffer), NULL, CH348_CMD_TIMEOUT);
-> +	if (ret < 0) {
-> +		dev_err(&ch348->udev->dev, "Failed to change line settings: err=%d\n",
-
-I've already asked you to drop the redundant "err=" from all error
-messages and use a consistent
-
-	"failed to <x>: %d\n"
-
-format *throughout* the driver.
-
-> +			ret);
-> +		goto out_free;
-> +	}
-> +
-> +	ret = ch348_port_config(port, CMD_W_R, UART_IER, UART_IER_RDI |
-> +				UART_IER_THRI | UART_IER_RLSI | UART_IER_MSI);
-> +	if (ret < 0)
-> +		goto out_free;
-> +
-> +	if (C_CRTSCTS(tty))
-> +		ret = ch348_set_uartmode(port, M_HF);
-> +	else
-> +		ret = ch348_set_uartmode(port, M_NOR);
-> +
-> +out_free:
-> +	kfree(buffer);
-> +out:
-> +	if (ret && termios_old)
-> +		tty->termios = *termios_old;
-
-You shouldn't restore all of termios in case it was just updating the
-uart mode (CRTSCTS) that failed.
-
-> +}
-> +
-> +static int ch348_open(struct tty_struct *tty, struct usb_serial_port *port)
-> +{
-> +	int ret;
-> +
-> +	clear_bit(USB_SERIAL_THROTTLED, &port->flags);
-
-You're not using the generic throttle implementation so no need to clear
-this flag.
-
-> +
-> +	if (tty)
-> +		ch348_set_termios(tty, port, NULL);
-> +
-> +	ret = ch348_port_config(port, CMD_W_R, UART_FCR,
-> +				UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
-> +				UART_FCR_CLEAR_XMIT | UART_FCR_T_TRIG_00 |
-> +				UART_FCR_R_TRIG_10);
-> +	if (ret) {
-> +		dev_err(&port->serial->dev->dev,
-> +			"Failed to configure UART_FCR, err=%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = ch348_port_config(port, CMD_W_BR, UART_MCR, UART_MCR_OUT2);
-
-Probably not MCR_OUT2 here either.
-
-> +	if (ret) {
-> +		dev_err(&port->serial->dev->dev,
-> +			"Failed to configure UART_MCR, err=%d\n", ret);
-> +		return ret;
-> +	}
-
-The read urbs should be submitted at first open and stopped at last
-close to avoid wasting resources when no one is using the device.
-
-I know we have a few drivers that do not do this currently, but it
-shouldn't be that hard to get this right from the start.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void ch348_close(struct usb_serial_port *port)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&port->lock, flags);
-> +	kfifo_reset_out(&port->write_fifo);
-> +	spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static void ch348_write_work(struct work_struct *work)
-> +{
-> +	struct ch348 *ch348 = container_of(work, struct ch348, write_work);
-> +	struct usb_serial_port *port, *hw_tx_port;
-> +	unsigned int i, max_bytes;
-> +	struct ch348_txbuf *rxt;
-> +	unsigned long flags;
-> +	int ret, count;
-> +
-> +	reinit_completion(&ch348->txbuf_completion);
-> +
-> +	hw_tx_port = ch348->serial->port[CH348_PORTNUM_SERIAL_RX_TX];
-> +	rxt = hw_tx_port->write_urbs[0]->transfer_buffer;
-> +
-> +	for (i = 0; i < CH348_MAXPORT; i++) {
-> +		port = ch348->serial->port[i];
-> +
-> +		if (ch348->ports[i].baudrate < 9600)
-
-Use brackets for readability due to the comments adding multiple lines
-to each branch.
-
-> +			/*
-> +			 * Writing larger buffers can take longer than the
-> +			 * hardware allows before discarding the write buffer.
-> +			 * Limit the transfer size in such cases.
-> +			 * These values have been found by empirical testing.
-> +			 */
-> +			max_bytes = 128;
-
-This is a potential buffer overflow if a (malicious) device has
-endpoints smaller than this (use min()).
-
-> +		else
-> +			/*
-> +			 * Only ingest as many bytes as we can transfer with
-> +			 * one URB at a time keeping the TX header in mind.
-> +			 */
-> +			max_bytes = hw_tx_port->bulk_out_size - CH348_TX_HDRSIZE;
-> +
-> +		count = kfifo_out_locked(&port->write_fifo, rxt->data,
-> +					 max_bytes, &port->lock);
-> +		if (count)
-> +			break;
-> +	}
-
-With this implementation writing data continuously to one port will
-starve the others. 
-
-The vendor implementation appears to write to more than one port in
-parallel and track THRE per port which would avoid the starvation issue
-and should also be much more efficient.
-
-Just track THRE per port and only submit the write urb when it the
-transmitter is empty or when it becomes empty.
-
-> +
-> +	if (!count)
-> +		return;
-> +
-> +	spin_lock_irqsave(&port->lock, flags);
-> +	port->tx_bytes += count;
-> +	spin_unlock_irqrestore(&port->lock, flags);
-> +
-> +	rxt->port = port->port_number;
-> +	rxt->length = cpu_to_le16(count);
-> +
-> +	usb_serial_debug_data(&port->dev, __func__, count + CH348_TX_HDRSIZE,
-> +			      (const unsigned char *)rxt);
-> +
-> +	ret = usb_bulk_msg(ch348->udev, ch348->tx_ep, rxt,
-> +			   count + CH348_TX_HDRSIZE, NULL, CH348_CMD_TIMEOUT);
-> +	if (ret) {
-> +		dev_err_console(port,
-> +				"Failed to bulk write TX buffer, err=%d\n",
-> +				ret);
-> +		goto write_done;
-> +	}
-> +
-> +	if (!wait_for_completion_timeout(&ch348->txbuf_completion,
-> +					 msecs_to_jiffies(CH348_CMD_TIMEOUT)))
-> +		dev_err_console(port,
-> +				"Failed to wait for TX buffer to be fully written out\n");
-
-This would also avoid blocking for extended periods of time on the
-system work queue.
-
-> +
-> +write_done:
-> +	spin_lock_irqsave(&port->lock, flags);
-> +	port->tx_bytes -= count;
-> +	spin_unlock_irqrestore(&port->lock, flags);
-> +
-> +	port->icount.tx += count;
-> +
-> +	schedule_work(&ch348->write_work);
-> +	usb_serial_port_softint(port);
-> +}
-
-> +static const struct usb_device_id ch348_ids[] = {
-> +	{ USB_DEVICE(0x1a86, 0x55d9), },
-
-No need for comma after USB_DEVICE().
-
-> +	{ /* sentinel */ }
-> +};
-
-> +static struct usb_serial_driver ch348_device = {
-> +	.driver = {
-> +		.owner = THIS_MODULE,
-> +		.name = "ch348",
-> +	},
-> +	.id_table =		ch348_ids,
-> +	.num_ports =		CH348_MAXPORT,
-> +	.num_bulk_in =		2,
-> +	.num_bulk_out =		2,
-> +	.open =			ch348_open,
-> +	.close =		ch348_close,
-> +	.set_termios =		ch348_set_termios,
-> +	.process_read_urb =	ch348_process_read_urb,
-> +	.write =		ch348_write,
-> +	.calc_num_ports =	ch348_calc_num_ports,
-> +	.attach =		ch348_attach,
-> +	.release =		ch348_release,
-> +	.suspend =		ch348_suspend,
-> +	.resume =		ch348_resume,
-> +};
-
-You should implement dtr_rts() as well.
-
-Johan
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|DB9PR04MB8377:EE_
+X-MS-Office365-Filtering-Correlation-Id: e851bcf1-cb1c-4ef5-3521-08dd913c6817
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ODdhSmVYNmNHR0ZKWFFieUZWWi9nVWQzU2YrZkhGYzlZbWRnUnQwS1d3YXVq?=
+ =?utf-8?B?dU4vSlZuYjJCR1J5QXNoQ3dKV3B2dEhIalJDemhKVjNiWDJQZGtuZ2poK2Jm?=
+ =?utf-8?B?bXdBalNxYzlZcnRlUnk0VnhsdkFJSVM3cmlweG0xdHhxcG1kSlB5anBtUzd2?=
+ =?utf-8?B?UmlrS3pESzg5OWdYejltVDdTT1dseUQyWXFNdXY1Y2o0ZitleWhOSFhpRzFy?=
+ =?utf-8?B?djJ2aWZGWmJ3cC8vZTFCckN6Ym1RaitNai9UWUN6TmdJV2RicDZnMlc1dWVu?=
+ =?utf-8?B?YXNRaDRuYWpFcnZqYS9PSnovdUxYbldqRks4SGx6ODdrd2s1M0FrUUw4dWF2?=
+ =?utf-8?B?bkcvYXBldzdBZW9jQWRWQUZiSHZFY0FzOTAxcTI5VTRsdUV0eHBEbTZ6azFw?=
+ =?utf-8?B?UEJOclBBbExqQnREOFdQQUpWV2N5SWQreXV3V0RFV0NFeE12aUdnMEQvS1lz?=
+ =?utf-8?B?WVd2a3N6czBWR2NQamVza3haLyttTmprdU4yOVJTdm5qd0Q1QjVLRS9QOHBS?=
+ =?utf-8?B?Sk1CUUVBME9SeXRTZnVaUlpGK3FrN2RPR2FIUzhlWklKaW9HYTZMSmVrRy9q?=
+ =?utf-8?B?dUJuMWVkcEVRcEVONllQdW9lVWxDMHMvQmkrQkpyZU93OWFkUzRjUVZsV3J4?=
+ =?utf-8?B?M1pVZ1ZnT0pocURNdHRleExLbmQ5NXFuSG5lTWpaaEVCUEhVOTZHNnZ2TU40?=
+ =?utf-8?B?UkZFakdXNkRWNDhPaUVMQUlVdG5ZZmNaNnRDQ0pJNTNhWWZYMzcvTkpIODgy?=
+ =?utf-8?B?THVXQjYxRGoxZlJPZXd0UUpuNDFvdi9IWmYwVXBtcFMwaUlET3MrLyswaVIr?=
+ =?utf-8?B?ajNRcUlKVTNIWHRUWWxXU2xVR3pPM3NaNldkbW0vcWJJWFFZOHNaOTNtMHg2?=
+ =?utf-8?B?T281MkRpbzMvcUFhaUNvV3k1b3VJdVVKaVYyL0F3QmI5TzJtdlNkaFc2Wjhp?=
+ =?utf-8?B?VVc0eEtOT2w3TUYxbUVWRzh5bUMweEM2S1hTQnpxc0ZLbzBuaW05WGR5d1kx?=
+ =?utf-8?B?Z0ZYeFo0dGd5REpvM1g4QUk4MU9VVGJpTmUxYitKYW80UVRLTmFwSlpDUlRp?=
+ =?utf-8?B?eWpIMTFFK2lId0o5RlZWMytVZEFSbzRFTnVqQzJ5VlpCcmVZQVZVa2JCcDBE?=
+ =?utf-8?B?b0JnMnNHVk5qdVMxSzRTbFJ0N2lreHo5bUV3VTBCRnc3ZXpLdnhDVEYvczJh?=
+ =?utf-8?B?SUROZTlyc1NKdVc5YkEydFplTUhGc09sVkVwUjI1cXNhME5xK0NlY1FEaitV?=
+ =?utf-8?B?RG01S2VpRU9UOHRiNVRLdGdYRlB4bG1mMWNxZEdHOUZ0TVR6R2xEU2l4SmYx?=
+ =?utf-8?B?RE9aOXF4YVhmMm9JeXU1clA4NW5laEg4SDFCdjA5dlNmU0tPU2FUelBYYndY?=
+ =?utf-8?B?b05QTE9FK0Y0M1Axb0luWnNtbmxiMUo3TXRGOUJxTytmdUtDQVZvZUlwb3gy?=
+ =?utf-8?B?Wk5OYWF2cTFjRkEvNi9GUFBkbzhnSjdNSk1LTWRVMjNwblNGd1VUMjJuTlNJ?=
+ =?utf-8?B?YS92TUxWSUwrWVBvNUxkMnRjaUFJVkxjNGxRNmQ5SGpzSlkvL3dmbTNBWS9V?=
+ =?utf-8?B?M0FYaVA3TGgvak1lTDFWVkxhY1dmUzZFNGUvNWZVazRhQi9UUERvcGRKekx3?=
+ =?utf-8?B?ODR2ZCtESmNMNVBnMmhJRTJhN1pyenNTUTk5Qk93MmpIVWpWdzg5UytUYmVv?=
+ =?utf-8?B?cEx2TWdrQS9ZcDRCaVcrcXM3VFk2YUlDUE9RcXJlRDJyZTlZUGYrVFdTVG85?=
+ =?utf-8?B?R2dLaDg3Vmxqanh1QlNzZFRtS3dJc2cvMDZKQW83RStrcEZQR1VLN0FYUEMr?=
+ =?utf-8?B?QmtNcm1lS3I0eFN2b1pEZ1VKUStDUm5XeWZIT0p0WldLTXJ6djRBem8wY3k0?=
+ =?utf-8?B?Y3dGQ3VVcEZ6Z2RLb0Y2bGZSekFEVUsrb254dk1FYnFFa3lYbzhzRFZlSW9z?=
+ =?utf-8?Q?3usmzvvT6Og=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YVA4VURSR0FYMThvVytWQzlsN0d0ZkswYlhIemEwdnUxYXpvVFdGd2RjcTYx?=
+ =?utf-8?B?a0ZPdll5bmVQOGRxZURGQ0tEWENiZTNXbW1OMHk5b1U3REpSUXprTlYydjVB?=
+ =?utf-8?B?cDRaUTdkUlJsWGJNY0diRnRKMnNBVEVMekR4d0FwK1BuK0svVTBObFV3d2RC?=
+ =?utf-8?B?VVV6ZHVTNXN5VFRvVWlVamdHUUR2Wm5xeENHZmVZRWVEY2RyQW5tNEpkbzR4?=
+ =?utf-8?B?bmFhd0JaenBUMWdWWEF2c2gyeDNiaXl6enhrQ0tjbTRLRTk0YUptZERIcDhJ?=
+ =?utf-8?B?czBMbHpMTnFocTFuTGhJOXNFcjN6dHh1R1ZDeTR5M2xOSE04WjBGb0Q3aHpJ?=
+ =?utf-8?B?OWxjMzhPRFQvSitISkdGVmpGUjU5d1NSc2FHbkllazVRVzJZM2pDUmp6SFVS?=
+ =?utf-8?B?RzE3NTE5dHNKSGxMU0NMcGdBWTU0MS81Nm83ODVjR1M3RVVCcTZ2dXZQTWRK?=
+ =?utf-8?B?dGhYK3h1eTcrRkFFNk91YzdWSmwvY2dwSmpvNHZuT0pBOCs4bVcvaUZSMGNX?=
+ =?utf-8?B?eUp2b3hGd1IyaHhGWk1xRzNKNStXODlrWWVMZm1RalpVZVRBcDNPMmxYcWhD?=
+ =?utf-8?B?N05pTnhjUzRJbVgvNDdKNnMzQlBGaTJmK1RIU3hTNjh3WDd2QUpsOE5Tb2JU?=
+ =?utf-8?B?R3hRS2g1eUhnZ2xXcnFBWkNnTUFEZ3RMa2VnZWxWSzVCcFlaT3ZDMGUxWElI?=
+ =?utf-8?B?a2trWE1JNTJGWmg3N0ZabHI2TkpHUjB0OURFL1NFcjMvSU9TNXBlcGVwWnhj?=
+ =?utf-8?B?UWJrbTRudVFvTXNYQ0FIaVpybGtaTFdwOU1sNm5vak9VTk96VDBRcFhvbEJS?=
+ =?utf-8?B?elJpTjk5dFQwdzc1RWNZQ09ucktDNkNWRFhLbk5QM0t3Q08xTTBQWm40ZUww?=
+ =?utf-8?B?NGtNQkZUc3gwaWNrOFFsaU9PT1FjZmd5WURwTS85RERnNVE4c1kvaitxeUNP?=
+ =?utf-8?B?ZDVGenduUWRRa1dpeEwwZTZqODBXQ1lNZ1FtOXMwU0lzTVR2VlRrUGdhOElQ?=
+ =?utf-8?B?SFQ1enBtYXo1U0VDVnRVTzhwWXRzTHMxd29pZ294QXNKMlAwcFhtRHlRczNR?=
+ =?utf-8?B?S09lQ0JVYTdsSXRNMlRPbUxqVjYrOWJXdDh1SVJ5VEljeHNPeXJjZnZtSllS?=
+ =?utf-8?B?a3lTVVhmTkRhWGFtSCtUa0Vlcm5wZHZwbmdGRFNzL2lWSS9Rd1YzL3QxWkI0?=
+ =?utf-8?B?dm9xNjZaNGR0akl6NnJUU0NTNW1Ed0tsV00wTVVDaWVSODd3cGM5U1ZMcmlI?=
+ =?utf-8?B?OXBld0g1WDRDM2NjRitiT1hqcjY3T2MxWjZGQnpPM2NGWlVaaVE1Z1NxbUhx?=
+ =?utf-8?B?Ymp1UHpFQ2Zaak5sbzhiUXBoeHdsQnV3VnY3dURUZVllUWNUaUkzUmI1YVhk?=
+ =?utf-8?B?N1hZcko1eU10OEFSOGkxd21qcnJqWlI2ay9yUU5YOTVPS3llVGpab1R1ZFRl?=
+ =?utf-8?B?TTZVc2pwZDhuNS9aWDl2dGZUKy9VaWV1RVgySXVtK1RpU2pOSCs0SThjU29Y?=
+ =?utf-8?B?azh5VnU1VkM4Tyt5VDIvUWlGdndGUjE0RUdJSUpPaGdhUHIvTUVzQUFVYjlw?=
+ =?utf-8?B?bUhPSFFHQUhIdEFkZkw2bTJvNWNSME5WMHVHSXRFQTIzR1AzbEphTEhwbE9H?=
+ =?utf-8?B?SUc5aWdySTRmdHRYTkFmbTY0MmpFYUJZTGx2emtrSkpPVTVnWkQ5VDZHYnRJ?=
+ =?utf-8?B?My9saWhiZXhWWng2V1lxL2hZSHFvUWdBSktBVkUyUGxVQTgxZ2kwVG03cmJO?=
+ =?utf-8?B?UXNrbzBKMDlXbmFPYm5nejVYMjNORVVSc1hmbG9DbWFieGJ6bElNbkw2OTlP?=
+ =?utf-8?B?QzROYzkrMmhNcTduUDg1ZTlxRktQeU4vRVBwU0pwUWt3b1VRZnNrYUJHbTZm?=
+ =?utf-8?B?L2hEMHlnU2RvRks2bjEzZkZkZVMrK2ppZE5NTVZON3Vpckk4aVhOOElUbnIv?=
+ =?utf-8?B?WDJMOU52U0EvcG92SkpiRWlqYTlndkV2MkRvRC82ZzhCdGJNa1psTWdYdjJu?=
+ =?utf-8?B?MGUzOFhBc3BPbzdodFkvZUZPWmRXNm5SVzE4aHpPemNSUEFQR3FoaTFCZ1NM?=
+ =?utf-8?B?YVN4TEZDbHgyZW43OGFHelZlU2dSanYyL0JuNmtOdHhNblpjWDkrYy9SdXZo?=
+ =?utf-8?B?ZVFjWjY3RjF5L1dCS2RrdUY2ck1tZys0UlBUWGQySVU0N1A1R0xlaFdLWmJt?=
+ =?utf-8?B?U3c9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: e851bcf1-cb1c-4ef5-3521-08dd913c6817
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 10:04:39.1603
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZbrC70eEwxhkzCbsf0M0JYti2KsHqSUhzPREeUuWK1eCuymOdYgwAHzI57ZSMgRCTSN3pVsUwoFmjFfQ8C+PwP/lZuhU9gmcshNO0N4REf8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8377
+
+Hi Heiko,
+
+On 5/8/25 5:09 PM, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> 
+> Using snps,reset-* properties for handling the phy-reset is deprecated
+> and instead a real phy node should be defined that then contains the
+> reset-gpios handling.
+> 
+> To facilitate this, add the core mdio node under the px30's gmac, similar
+> to how the other Rockchip socs already do this.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+
+Thanks!
+Quentin
