@@ -1,177 +1,223 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DDF8834;
-	Mon, 12 May 2025 02:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747017157; cv=none; b=Bnp3l9D5xskKHq8rLTEaAkkvDohjbPNumDlZBpW7QWMMrnyQ1Y0FjuMpHF2ALbKWCDnaF2o4dLUGrw036NBJk8qBGOEJgdfMBa78trplJYZ0j+xhdLTwoBOBnsJZgEcDeJDZMIJ2AlhPmuQTLeKSL1EgYwYJCluz3nWrJJby99I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747017157; c=relaxed/simple;
-	bh=Fv0oGHxn7CNZ/hNsG0S0rmMb+hGWvIVWBlE8n5pKX0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VjjIeSzOhPigiEjCQaHgYFRAyKA1SSc8Ht0M/CKat80nUMuJJ4Zt8kz4F5Onk5bwgroP1sZfg/Bv9W93g+lE8Fw8Oq8e4AcQk9ssBh84QTWhCKbY0dTr2iPTkKU/+rQvaIj/EpdM9nWSi+AJjwhWDoPBfnEdMxZ9TOenQK+priE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lG9vK+WD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BD78834;
+	Mon, 12 May 2025 02:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747017197; cv=fail; b=Y1mDXdw3IRNAJtABZz1xiRF0uyj9TTspq9hnU0Qd9l4R+DZ18WNnQlpsDJ9rEEC54oa06KVFsTJN8W2yy6gZRyhUaQbMdCk99Grn6A3MlNbF6ORXE1Dde5OtnBGkphZ0jLoXfn+/OhrM+J2h6miJgsAPUNNSd3rU/5ibuXPL8Nw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747017197; c=relaxed/simple;
+	bh=/JMg07gqYHrLPjGFjihNDimertqCm6f4vUBbYJicj2M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QWxJIi4PKrv/6U5tiGbIRCKP1T5icdzOrzHpMoaI8VtGzJ30mBOUX6T6oEC9MCQiR5VePgoyWGkCI39CpBYqeMd8siTsrGXeqfQAqLuOyHTfPBZTLo5zH2favsH9KaQ1SCkwoeaVw8dSAbDKY6cbmDmfoMfWYJF+JhoiPbRjg7Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WSpoYzPY; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lG9vK+WD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=UBLZqzzG2NXRn25JYcRLvbgMLnU60sFpxmCVgCV7MEc=; b=lG9vK+WDlOeXoIm+icXujqr+8s
-	q9Ix2WRH0h4Io6x/t8tEp+aG1ZavnUEawcjpEtNU1OB3QRHRBdFHH/NfCT4efUUiSvO2tT0EGvNSU
-	AWlozNMGlYkhaYdCsq7YkFFOwzoIqauGaRpwwqUkl6xpzfiq+7u8pV3+mYDmAg+cSgTute9jldN9M
-	wLd8QBJG3LaaXs62ZuTYjrH7immTszDLtF6VgsyXpdwaeuc9CORPoXSh8vUlrz5REc3JgXr+7ldTO
-	7F5F9Lmkq3q3fJ+ff4LXYBGSzOIfBQxP391VYrFSdD/SMVSikkszUDsixhfTiVeP5IN3tPMeYVd/E
-	2/U9MHDg==;
-Received: from [50.39.124.201] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEIy2-00000008Ck0-3Urk;
-	Mon, 12 May 2025 02:32:34 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Tom Zanussi <tzanussi@gmail.com>
-Subject: [PATCH] Docs: relay: editing cleanups
-Date: Sun, 11 May 2025 19:32:33 -0700
-Message-ID: <20250512023233.107582-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WSpoYzPY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747017195; x=1778553195;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=/JMg07gqYHrLPjGFjihNDimertqCm6f4vUBbYJicj2M=;
+  b=WSpoYzPYbCeEa85bnRiWGLHaHVQ6qGv3531XVfefHQ9+AW+WIZxcrOHI
+   dzpr74E/aBQOzHOvgNEzVtwXPZbMIZnaSQoB2ynxFBKSCfY2yV4hQZXoe
+   htuVxuK0J8+a+OdduffVP/tnNX3AU5LD418/ATXWtTiKB8PqPRFGUPNeF
+   lpip/1NDNLaq2fnZzEjFm3Mt7+soFPv4ggnT6XoAzN3MqHW5KunyYV/1l
+   2RnEjONpOV9cYCuBt79wADOO3kFuFOEbuRHAYeIrS7jfx3Q6pz0ho6cZF
+   knlT3nYJfK4g/0U+vwAqyxur0/gbUe/VdWnfcdbprgiB8KW4UEQ7hZJxu
+   g==;
+X-CSE-ConnectionGUID: 5vZ/weKnSHWrglMcoQHSzA==
+X-CSE-MsgGUID: qIzQHEf7RFuDoCF/9klfBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="36426277"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="36426277"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 19:33:13 -0700
+X-CSE-ConnectionGUID: 1rqjkSg0T8eS4qfXactM5A==
+X-CSE-MsgGUID: HZABnjAJTvuH1qz5KPgOLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="138202170"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 19:27:50 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sun, 11 May 2025 19:27:49 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Sun, 11 May 2025 19:27:49 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Sun, 11 May 2025 19:27:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VbbCiPWbehVw401v/jpYfjvh1V6eJR76nlT7Ykg86uaS7hoBP4/dDmAlts8pmHWCc2w8BWnrbZS3xnseGpQfJYyaVzjrRudvmMoPXBhngkhihTRsSrsVa4BKmlioxYjd3OsarYjeGzgsc4R+GUq4tziO4VxsCLyh/LzxFM4CNU8c5sjPAIfEi0G2amPGH5AYdEmGCA3wbpom0tVAu69ELr/P/qWZ4m/8uLBRLMRZGEQjqzb7c4IB4I738spt2JmXRVh6gndBu9amt/OnJql43ljbsqz8JCmIBn4jA0tWg/t9McCD64MrzzFeEFAXPfqKMb36/KX5DubUq+crY9jg1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tjt6woImh13PN9knVXz6Hr2QDY7iEXUBFCZ5P6osCxA=;
+ b=vH9ghOBCx4i+y6voY1Dp+vbcDnwejEvGXmUF4pQDIn7oCTmvCcMv/IVG0NuQh+KUp1j1Do0niGjcRWPCNyUNAT55+v40iY5RvnuXKKij8WDexGfLH2Pxu+P65ysWk7/peGOoTWsdF1EUEmytPeyC2VuA+hBi57zcw0oETSAw7CDn31BYTd8STw7NL05RPsD5aeYc7hFO98wu21jh0U/8A2OBuFJYwe47WXq+kdch4l9AsBlSS5RC3im8FCqjuIWF37B0t2W/unilnPKF1n2n2yW1oAbtluxs7qTiyWGEVEEQxH26mihnO5F/YBoyb2s/ev36lgRtSgVqPrwJWqU0MA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ SA0PR11MB4541.namprd11.prod.outlook.com (2603:10b6:806:94::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.29; Mon, 12 May 2025 02:27:08 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%6]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 02:27:07 +0000
+Date: Mon, 12 May 2025 10:25:01 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com"
+	<seanjc@google.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao"
+	<xiaoyao.li@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen,
+ Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com"
+	<tabba@google.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, "Du, Fan"
+	<fan.du@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "michael.roth@amd.com"
+	<michael.roth@amd.com>, "Weiny, Ira" <ira.weiny@intel.com>, "vbabka@suse.cz"
+	<vbabka@suse.cz>, "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
+	"ackerleytng@google.com" <ackerleytng@google.com>, "Yamahata, Isaku"
+	<isaku.yamahata@intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>, "jroedel@suse.de"
+	<jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com"
+	<pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [RFC PATCH 18/21] KVM: x86: Split huge boundary leafs before
+ private to shared conversion
+Message-ID: <aCFb/ecA2AR2sNm1@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030844.502-1-yan.y.zhao@intel.com>
+ <fa85ac0cf3e6fae190dca953006d57c02fac6978.camel@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <fa85ac0cf3e6fae190dca953006d57c02fac6978.camel@intel.com>
+X-ClientProxiedBy: SI2PR01CA0046.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:193::18) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|SA0PR11MB4541:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3a0af5d-85a6-497a-502b-08dd90fc7df2
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?wv904jX4B8QQ5JDaijNz1PWVxSICrJFQqxDd9LZHJIriXUxH26dw8R33g2Db?=
+ =?us-ascii?Q?UaxDpk3ymiAxOfZ7em5oyuaMxlzzq9HQPztyWvhuOiYhZ1codB5vUL9H+s2i?=
+ =?us-ascii?Q?BaBZPFNcoK9ocRt6Pizpl6nlOtncJzUy6BT/TZ0hVx1rp7cLbW7vxYTl56Ie?=
+ =?us-ascii?Q?gOF1f+3haSmZVw47QtUPA92LG+xI06QpiWOOJRRBL/ZlWHW2+r5IHiEQVsHb?=
+ =?us-ascii?Q?WWlDONWRbFGORvf8SbDgFS1i6B5Vq7GBXr0pzyFb1yTRQLeWA6azoJWYQtw5?=
+ =?us-ascii?Q?T+47X11BVm2ji6aLyRxPX+cSP+VF6GwldBLaPFgVGXOZ1/O6EURBNfIkhNph?=
+ =?us-ascii?Q?+G/CYmx8BcQXbVlLc/1XUcOmhRNfUu4UfHFJVNf6XQKhPOKtMB6Ro9/mP+jU?=
+ =?us-ascii?Q?GWmeptxOf9kciy0cmSVTSal2vzU7GWccpRvlIOrMlrY0tUl2v6hk9dUFwaSy?=
+ =?us-ascii?Q?QSSkdDHHqmP/FqaTa3/n7JK/LXfyef7S/QFcW4Y+qMGwTV3OoPwktxzflnel?=
+ =?us-ascii?Q?VhDThpCuhPLHySz3WRwzt3zLmn7sbmJ7j2hiPCpyFkq7A8so61GeD7QKEGhH?=
+ =?us-ascii?Q?NOP2PMW1cuoX0Ole5rQAGR0QfmPUGSs0TsKbthPFL2zGXSUXKc3BqpZZ6eWk?=
+ =?us-ascii?Q?CGGnXwElsZuRaU8yWppntQsSi1dyptKYxaaGXdYtTcwXMfMpeY0KfQVv9mLH?=
+ =?us-ascii?Q?OutdZGvsNriDI7F3BsywZrdKzQOw7KtyJTSDYNx0UnFYI0TWYUyhZAKXuo+S?=
+ =?us-ascii?Q?DU+jbNeohgPgJcgARdCGsfe9cnUoSe0oJOu/K6hbeCWeO2oryrnwkiqQHzCI?=
+ =?us-ascii?Q?6pHodZZ5BiflMJq01lCRKIGPaRhjZTDK+8oI3q5QYqy/L7pAEzqoJjkNgjEy?=
+ =?us-ascii?Q?lpnAmKuLUFWjhVOCmQkTeZhcL4DUHWsRA+vr6WbwBD1bP3yM4/0MIJlSSBUY?=
+ =?us-ascii?Q?aXYpnYm/2FNdRObOcy0t2nujlGakQmQahupWUMDWKsUnUtxsjRj7LAXSfAEQ?=
+ =?us-ascii?Q?cCnTU1auOqDKCDFVNiPrTvTgtr8pHmGDfrKp0WSFq54PaXryn+xNSmLlXCCN?=
+ =?us-ascii?Q?Ew6XTv0ZS58sO4T6/Ur0jeP57StL2QUzqlD1aMKlYWP7cTuuPdo9ke+rlpeC?=
+ =?us-ascii?Q?cY+ZSNmLD2xoflNeW2rW3W5rjsNLjtYpiib9y+TYmRVDSS9DeZpH1BUZ+bRA?=
+ =?us-ascii?Q?AeO+KP8C7mcI+joAF15aMFoGVT1Z+QppoF9WUIITXH3XdgOzWS/oce0pp6ru?=
+ =?us-ascii?Q?BEL/A6OaPDZR7bH3KY8A0251XJTfbARgEtyTMR8F12L7VsWdbukzbqnF/o42?=
+ =?us-ascii?Q?dSE/I5o3GGk+iMs+xrIVdS09f+KjC5skVMxyfAPcrtQxTW1Zrpof7p+Tqrmn?=
+ =?us-ascii?Q?JwAFrex0D0fHLET+RtbOG7awOAC3EqxkqD1nh3cZSA0FJyeK5jcVFauiwChK?=
+ =?us-ascii?Q?7Q2L3aRRJbk=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ztjLhbQMH8ifqKvFletjYcTfrKYokoeheJwnFxbDDMtah1QjteNWH91VVrex?=
+ =?us-ascii?Q?bmKiEqXlFtFdWQss+zcjqkiLRRvkmHeX+aRBWbeHUCCHCk784TCMQ+n3KGrq?=
+ =?us-ascii?Q?W63HlR/zw5RA2UD3fBSGko/4F88OBDahyZOaiCnAjaoFCfq8Era8l61FSIBf?=
+ =?us-ascii?Q?jKHcsHSavqXiE452OfbrFZVnvYVm6d7dOLmY8YNP1wHBbFVI5k2D6KbUejAI?=
+ =?us-ascii?Q?PnNh5rzIq6RseTfNTwP8WN9alcULlIZpiu3zQWFS0UHnZdfb7NFVJksyrpuO?=
+ =?us-ascii?Q?V2rfD1IYG0nNYbOJo+jg0NhiA/a1cyVPNMGsZTYpbjIE12QBD9c+e7CRj3xE?=
+ =?us-ascii?Q?j7v1+I3K2zAIOc/UCShfkDxq8Waz3Symo2mJAMznwn/yRqvqtSiqw9lNRqSE?=
+ =?us-ascii?Q?wvW3uhhos3Rq+/ARcdk+MbfAhr62/fk98ahLl1AHAHtnaXZuUngIQux3l9+D?=
+ =?us-ascii?Q?IapvTYFmzea5Y/fDAFhRE+Lm+92MMMvBqi6t0t5sbZbq1d8ZOYVRC5fD5TR2?=
+ =?us-ascii?Q?Lm3bak6Ud+F8nY9S740/OPfTDjqoUDJy4lErR9QaUeMYcLyB+YZZtUf6X6V0?=
+ =?us-ascii?Q?G/zHU/r+M9WytiaJwdepWf4CFbZCC+08fOgBeCxW5gCwgdjyzMsJJ1nVAVC0?=
+ =?us-ascii?Q?ct9NUhos+1yi8u/k9/qOnXW5z/dgJCon0w34W/8A2lCeUnhbNTaDJlsbAKLW?=
+ =?us-ascii?Q?NF65RWpKHVz0Hp12mbUdtMzBvY8tDgvhPNoNoCXY9UPCPt+adRVfns8+UM+S?=
+ =?us-ascii?Q?iQG8DmpvzAyiCW5ejtjl9cUb+v8xZ+FGgGXnNWrzqNA8XLN93E1PLboa+HGr?=
+ =?us-ascii?Q?TyE0R5jvTAuWWjhm857FO6vW29Abmb0RUo/gR5K+D+3zdXQPUKF+2tnLSomg?=
+ =?us-ascii?Q?reFP3CbhtxDR8yV9ixJYIKAZXO5iCnnWcs1cDQhtrXDasq9DkDK2xVDNIn36?=
+ =?us-ascii?Q?9JVp0O/shoRUTxMH54D3MBcW+U3cFlf6pzBPtI2fRc2SHLSOZKNrwLpCeaJ/?=
+ =?us-ascii?Q?TQ/rBfFuNlWMHMkN/jYqBBHARJrYdGIDVp0IYkEwCqLrNdDg3MEK1HWgzl99?=
+ =?us-ascii?Q?sAksVjMiWqRQ/iDKuALRl8yK+y8qJZri2pS95cxHFlB3ueIMBVewuikHxCJ0?=
+ =?us-ascii?Q?Swxd+NAP7HSJgHOyyx8/jYti/Xd5wxTev9JxRZFowXTtGSI6RzpB8IAWMdpY?=
+ =?us-ascii?Q?txHgPfOuxKnPYwf3b8FfDAg5AJqaVSMeYAbm2cO/IYmZ/qce3kRnbK7nUsae?=
+ =?us-ascii?Q?T1Yn2CntRo5Nc84Eu7ILFyvhqdHMXvfy3pBqKG+KuuAH1Oczt4H6XMKt7ed5?=
+ =?us-ascii?Q?6kvXNYAfCcWluMJ3po29WVD86JjnyvNjODiEAaIlGz1ekoz1slF5GNrPCbSm?=
+ =?us-ascii?Q?oZcVMNRE+QdP5CjEUXb+8s3CPdSz90SPhyb8MpkkFnvcL0HNQIzffdbrCV5+?=
+ =?us-ascii?Q?0TCoaMbCf80+nitTy573PjQmFK4tGy6e7YgRMrToG+Zd015C06RSr95A19Gh?=
+ =?us-ascii?Q?JIQrigmXSgID3Ft2roiS64ytPNLAfx6tqpf0bevMmNF8h28hRBdHC3KASxwD?=
+ =?us-ascii?Q?+ZweCvW8PD1sxQEcNEa68BzD/2c/dW4w6iEtC0tK?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3a0af5d-85a6-497a-502b-08dd90fc7df2
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 02:27:07.7538
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H3QrR2XeufW0mdDFDVlO469twhUNNFC8FFzrk5KNgm17qkT5s1DhZBtVpYZFDfS11Ffil24uFqbUNGzmJ94IaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4541
+X-OriginatorOrg: intel.com
 
-Cleanup some punctuation, capital letter, and a missing word
-in relay.rst.
+On Sat, May 10, 2025 at 07:34:39AM +0800, Edgecombe, Rick P wrote:
+> On Thu, 2025-04-24 at 11:08 +0800, Yan Zhao wrote:
+> > Before converting a GFN range from private to shared, it is necessary to
+> > zap the mirror page table. When huge pages are supported and the GFN range
+> > intersects with a huge leaf, split the huge leaf to prevent zapping GFNs
+> > outside the conversion range.
+> 
+> FALLOC_FL_PUNCH_HOLE demotion failure doesn't look like it is addressed in this
+Hmm, FALLOC_FL_PUNCH_HOLE demotion failure is handled in patch 19.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Tom Zanussi <tzanussi@gmail.com>
----
- Documentation/filesystems/relay.rst |   26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+> series. I noticed that mmu notifier failures are allowed to be handled by
+> blocking until success is possible, in most cases. KVM just doesn't need to
+> because it can't fail. We could think about doing retries for
+> FALLOC_FL_PUNCH_HOLE, while checking for signals. Or adding a ENOMEM error code
+> to fallocate.
+In patch 19, FALLOC_FL_PUNCH_HOLE could return -ENOMEM.
 
---- linux-next-20250508.orig/Documentation/filesystems/relay.rst
-+++ linux-next-20250508/Documentation/filesystems/relay.rst
-@@ -32,7 +32,7 @@ functions in the relay interface code -
- Semantics
- =========
- 
--Each relay channel has one buffer per CPU, each buffer has one or more
-+Each relay channel has one buffer per CPU; each buffer has one or more
- sub-buffers.  Messages are written to the first sub-buffer until it is
- too full to contain a new message, in which case it is written to
- the next (if available).  Messages are never split across sub-buffers.
-@@ -40,7 +40,7 @@ At this point, userspace can be notified
- sub-buffer, while the kernel continues writing to the next.
- 
- When notified that a sub-buffer is full, the kernel knows how many
--bytes of it are padding i.e. unused space occurring because a complete
-+bytes of it are padding, i.e., unused space occurring because a complete
- message couldn't fit into a sub-buffer.  Userspace can use this
- knowledge to copy only valid data.
- 
-@@ -71,7 +71,7 @@ klog and relay-apps example code
- ================================
- 
- The relay interface itself is ready to use, but to make things easier,
--a couple simple utility functions and a set of examples are provided.
-+a couple of simple utility functions and a set of examples are provided.
- 
- The relay-apps example tarball, available on the relay sourceforge
- site, contains a set of self-contained examples, each consisting of a
-@@ -91,7 +91,7 @@ registered will data actually be logged
- examples for details).
- 
- It is of course possible to use the relay interface from scratch,
--i.e. without using any of the relay-apps example code or klog, but
-+i.e., without using any of the relay-apps example code or klog, but
- you'll have to implement communication between userspace and kernel,
- allowing both to convey the state of buffers (full, empty, amount of
- padding).  The read() interface both removes padding and internally
-@@ -119,7 +119,7 @@ mmap()      results in channel buffer be
- 	    must map the entire file, which is NRBUF * SUBBUFSIZE.
- 
- read()      read the contents of a channel buffer.  The bytes read are
--	    'consumed' by the reader, i.e. they won't be available
-+	    'consumed' by the reader, i.e., they won't be available
- 	    again to subsequent reads.  If the channel is being used
- 	    in no-overwrite mode (the default), it can be read at any
- 	    time even if there's an active kernel writer.  If the
-@@ -138,7 +138,7 @@ poll()      POLLIN/POLLRDNORM/POLLERR su
- 	    notified when sub-buffer boundaries are crossed.
- 
- close()     decrements the channel buffer's refcount.  When the refcount
--	    reaches 0, i.e. when no process or kernel client has the
-+	    reaches 0, i.e., when no process or kernel client has the
- 	    buffer open, the channel buffer is freed.
- =========== ============================================================
- 
-@@ -149,7 +149,7 @@ host filesystem must be mounted.  For ex
- 
- .. Note::
- 
--	the host filesystem doesn't need to be mounted for kernel
-+	The host filesystem doesn't need to be mounted for kernel
- 	clients to create or use channels - it only needs to be
- 	mounted when user space applications need access to the buffer
- 	data.
-@@ -315,7 +315,7 @@ section, as it pertains mainly to mmap()
- In 'overwrite' mode, also known as 'flight recorder' mode, writes
- continuously cycle around the buffer and will never fail, but will
- unconditionally overwrite old data regardless of whether it's actually
--been consumed.  In no-overwrite mode, writes will fail, i.e. data will
-+been consumed.  In no-overwrite mode, writes will fail, i.e., data will
- be lost, if the number of unconsumed sub-buffers equals the total
- number of sub-buffers in the channel.  It should be clear that if
- there is no consumer or if the consumer can't consume sub-buffers fast
-@@ -334,7 +334,7 @@ initialize the next sub-buffer if approp
- sub-buffer if appropriate and 3) return a boolean value indicating
- whether or not to actually move on to the next sub-buffer.
- 
--To implement 'no-overwrite' mode, the userspace client would provide
-+To implement 'no-overwrite' mode, the userspace client provides
- an implementation of the subbuf_start() callback something like the
- following::
- 
-@@ -354,9 +354,9 @@ following::
- 	    return 1;
-     }
- 
--If the current buffer is full, i.e. all sub-buffers remain unconsumed,
-+If the current buffer is full, i.e., all sub-buffers remain unconsumed,
- the callback returns 0 to indicate that the buffer switch should not
--occur yet, i.e. until the consumer has had a chance to read the
-+occur yet, i.e., until the consumer has had a chance to read the
- current set of ready sub-buffers.  For the relay_buf_full() function
- to make sense, the consumer is responsible for notifying the relay
- interface when sub-buffers have been consumed via
-@@ -390,7 +390,7 @@ consulted.
- 
- The default subbuf_start() implementation, used if the client doesn't
- define any callbacks, or doesn't define the subbuf_start() callback,
--implements the simplest possible 'no-overwrite' mode, i.e. it does
-+implements the simplest possible 'no-overwrite' mode, i.e., it does
- nothing but return 0.
- 
- Header information can be reserved at the beginning of each sub-buffer
-@@ -457,7 +457,7 @@ rather than open and close a new channel
- can be used for this purpose - it resets a channel to its initial
- state without reallocating channel buffer memory or destroying
- existing mappings.  It should however only be called when it's safe to
--do so, i.e. when the channel isn't currently being written to.
-+do so, i.e., when the channel isn't currently being written to.
- 
- Finally, there are a couple of utility callbacks that can be used for
- different purposes.  buf_mapped() is called whenever a channel buffer
+Returning -ENOMEM may be inevitable as we can't endlessly retry. So for
+simplicity, there's no retry in this series.
+
+
+Besides that, do you think whether we need to conduct splittings before any
+unmap is invoked?
+
+As in the patch log:
+"
+The downside of this approach is that although kvm_split_boundary_leafs()        
+is invoked before kvm_unmap_gfn_range() for each GFN range, the entire           
+conversion range may consist of several GFN ranges. If an out-of-memory          
+error occurs during the splitting of a GFN range, some previous GFN ranges       
+may have been successfully split and zapped, even though their page              
+attributes remain unchanged due to the splitting failure. This may not be a      
+big problem as the user can retry the ioctl to split and zap the full            
+range.
+"
