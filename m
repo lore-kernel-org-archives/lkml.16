@@ -1,91 +1,147 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE51F3987D;
-	Mon, 12 May 2025 13:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B8C149C4A
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057179; cv=none; b=DEmQhJvbbouiDxTpgd2MRzuhf3nbeubsiOKwjBQ3m5iId31zYzW8xljos4TKRfocs6g1KoKFFZHJSzWkoU2Oy07o7B9a0A3kocQkQq72uD7rvSQ+UgSoQsXoUD5RubaYkZIxk9p5NdNcnu/8az5aA+PL/9wL8RxiqNivb2LIWl0=
+	t=1747057272; cv=none; b=GpUNHSRhkzZl/NtOPiSIOxE8IkESlhFbICeFOeE0tyz6jRwIpxQwITjsF/wq3B7DfupFCeL1oFHuk4E9OxOg2MFZgq6r8XEo+PWF1pHXKHR/t1QgvhOCpvFuh4qDDBq3dVGEBEyRXBFTOX66L9s9EO6NHezIqwKtGmGkOVfO1hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057179; c=relaxed/simple;
-	bh=AYku5jN+0OmBk98j9JNh57LME0Csb8yr4YA+DR9zGzA=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=VsrRSrRsF5DMRDgyozqH+K13Y1fmbC3WHNWcXI6j4sQBWpUcv4LZE6p5Wlkwztz8e37uiys+j75noFfx92zTjR8Tu4dV7GMfKG+pihu/iqDBFYUxb/SYOXQ2m03XudwHwJJkClXjsLSRkHMkcQ9KZE6bWoZJhJMVkZsZdN6S35U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=rpYck2It; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1747057272; c=relaxed/simple;
+	bh=8ktmtIYpT6wwtdT0zYdkBhVaJ3gPszcgYgVw1aS/E5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VPilQAX3tb8kh+obn9DXpbthQTEIlRXELNlisMg1lY4F14yujW6Yj/6vg5nZKJKgc0Cx4YMwLiti2Ln8r/1+Bu5mCjSb65G4SqejnESuDjjDSb7ej53MP/sg7YaiXjqI4xQOMeOVfxa2YnDjMKe4dsVZiI6/bjzFfTuUUPNd5YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lNK/UfBo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nJwxY6nI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lNK/UfBo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nJwxY6nI; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="rpYck2It"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1747056871;
-	bh=XiZXeriwtNmD0C5rumTsjv/pcxn0w65lxRr71QDYu34=;
-	h=From:To:Cc:Subject:Date;
-	b=rpYck2ItuM2aaeT+l5e1nfYIloPaQgPtPojYQJskHlQ07uO8tHSsVZRwnBoMAfWz5
-	 JklF771y3pWxlA4BMZK03xUnImuMxjjhrpun+kIUbQdKqbbvoLZhg4HsLDTlgDY6+i
-	 snZfcVmt5GgtWoR4k2hpoyBrClRqpO4W0SexsAew=
-Received: from localhost.localdomain ([182.245.65.132])
-	by newxmesmtplogicsvrszgpuc5-0.qq.com (NewEsmtp) with SMTP
-	id 531AAC00; Mon, 12 May 2025 21:20:49 +0800
-X-QQ-mid: xmsmtpt1747056049th6ukru0a
-Message-ID: <tencent_D5C17F39C684CD6491505763B23BACCE5106@qq.com>
-X-QQ-XMAILINFO: OAkMgjsCL21CLWoSijloNZ8D3K/VcR2BT8UYQcTgS3cymMCmEi2kyqjEkcmjST
-	 JFCA1Y75FOEsVBqYs2d1+9hsWzPfSU5S7izWMysBdY4aD+JKY6KJMkw3o9nOmKh9UjiYC8Nm+Qv5
-	 xwSll3Qhj3cihal+Y0T14XFVYc8vGmHg/YZsqA3ERRzPx2hP0GSKxtUp/HpHQF6fh8IfLgK5lDhg
-	 IdSFha+jrlZT7BBUaOycXevaiukcxrGqAkoqyqPRGyyDiZBgidUQQsp/GD0AlkfWLDIiqLH9r1Cs
-	 URGtD8YoG3RmCdBkS39q8zV2sBqG4HTl+Jw3jK9KNd7ucq2WlCdFqFeN/I8ktIx/9x7xaD8FM/6w
-	 wwCw+8ZmEIdQXo+Cs2mSU6hymk2rSZz9qNZRF6hA0VgoE8thW2ZoGUdmpmooEVucNxM92pIsDx4v
-	 aThk+IPYX4kz1Ba97zU3elCSRVCFAwZtvnU36izN7a9XyN2f8JJSZYKUbMaBnp1we6in1iC8bGnh
-	 tfYBfA7ImSEEIgWNDc8hnUFpQLDDMqcFvToUIropz7GrjmMkKEViVGf4NGNjihjG+J1JX8p2rZUv
-	 D+DuVKI/v6XTiJEKwozTlr6RzFw+6mPqgGUTCWiOZSJbmsPVra5GgmfVgO2s059NYgFdSjZv2Tj4
-	 wyR9e15gfxgjylpHeYJ3svRrfMs2HVzhIIPYn0p95yvtav93UUxbnqWO3fv8iC7oq6Ue/dLXFDSp
-	 L/DGurahKuGVHokwDtbQq0QLVDFK1x5tUXnc6Q7DjZ9vtJ1V58A6bZsnkpZfv8hR/2ezjPTmrOYb
-	 2nZ6SCtk+8BEvJD2ycLtUoYlWNAoS0YDAmFbDg7/WnIxfumbxXTqE5bR2U7hE6zG3StUZ8n2tHXT
-	 fS/pkADXaj+sgwZtIp+cC1EPexEWQeYhrq+gaXX3iFt44CyuCHLexwuz/SyvsM+ILrNJv2XEzVpW
-	 rgiSDy3gzF1AvXxL/+hzV38lEJn7f7njRAEzKGim8UxuzECD0d74BoYMQN0wD/nVYebWY36ZJEVa
-	 k+FENO5HDNArgOIdaNUqQ9yHnLxx+i/wcJzwLSeuHdZUlLZFy/rl/Bg1ag/8LLR9VM8fKpBw==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: chainsx@foxmail.com
-To: robh@kernel.org
-Cc: chainsx@foxmail.com,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	krzk+dt@kernel.org,
-	sfr@canb.auug.org.au,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH v1 0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
-Date: Mon, 12 May 2025 21:20:48 +0800
-X-OQ-MSGID: <20250512132048.312772-1-chainsx@foxmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lNK/UfBo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nJwxY6nI";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lNK/UfBo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nJwxY6nI"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 96FF521186;
+	Mon, 12 May 2025 13:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747057268; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
+	b=lNK/UfBo/xbhPN5pZ7VQCHQ9ClJ/Mqizxut2wWLXH6nVhELd5GnrllnQj/DWNsBmLW9Px3
+	aUL5cIVq9rr6hkmEwzpzmPLG8gIRsYcr7lO9LM4q6DfpgYbFFZZzHoSbqRall4gvMalYFt
+	lD+BeGQG6pOgn9deFHhKC6b+04t4AKI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747057268;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
+	b=nJwxY6nIODhzUIMNYfhvKp6oS+hmpJHRZwMuIjAju9LMe1cj/R8mEDM/ihrdLJIzq1qOLo
+	yp/TG0yo5GF/1+Cg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747057268; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
+	b=lNK/UfBo/xbhPN5pZ7VQCHQ9ClJ/Mqizxut2wWLXH6nVhELd5GnrllnQj/DWNsBmLW9Px3
+	aUL5cIVq9rr6hkmEwzpzmPLG8gIRsYcr7lO9LM4q6DfpgYbFFZZzHoSbqRall4gvMalYFt
+	lD+BeGQG6pOgn9deFHhKC6b+04t4AKI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747057268;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
+	b=nJwxY6nIODhzUIMNYfhvKp6oS+hmpJHRZwMuIjAju9LMe1cj/R8mEDM/ihrdLJIzq1qOLo
+	yp/TG0yo5GF/1+Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A575137D2;
+	Mon, 12 May 2025 13:41:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5amAHXT6IWgkLQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 12 May 2025 13:41:08 +0000
+Message-ID: <5c5ccea9-3ce4-40c5-94b4-796d4bc1f533@suse.cz>
+Date: Mon, 12 May 2025 15:41:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] mm: secretmem: convert to .mmap_prepare() hook
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Wilcox <willy@infradead.org>
+References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
+ <0f758474fa6a30197bdf25ba62f898a69d84eef3.1746792520.git.lorenzo.stoakes@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <0f758474fa6a30197bdf25ba62f898a69d84eef3.1746792520.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid]
 
-From: Hsun Lai <chainsx@foxmail.com>
+On 5/9/25 14:13, Lorenzo Stoakes wrote:
+> Secretmem has a simple .mmap() hook which is easily converted to the new
+> .mmap_prepare() callback.
+> 
+> Importantly, it's a rare instance of an driver that manipulates a VMA which
+> is mergeable (that is, not a VM_SPECIAL mapping) while also adjusting VMA
+> flags which may adjust mergeability, meaning the retry merge logic might
+> impact whether or not the VMA is merged.
+> 
+> By using .mmap_prepare() there's no longer any need to retry the merge
+> later as we can simply set the correct flags from the start.
+> 
+> This change therefore allows us to remove the retry merge logic in a
+> subsequent commit.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 
-This series add support for Firefly Station-M3/ROC-RK3588S-PC.
-
-Info of device can be found at:
-https://wiki.t-firefly.com/en/Station-M3/index.html
-
-Changes in v1:
-- Add support for Firefly ROC-RK3588S-PC
-
-Hsun Lai (2):
-  dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
-  arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
-
- .../devicetree/bindings/arm/rockchip.yaml     |   5 +
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 911 ++++++++++++++++++
- 3 files changed, 917 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-
--- 
-2.34.1
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
