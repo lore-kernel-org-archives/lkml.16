@@ -1,260 +1,172 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D1A24EF7F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81CF296D1A
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747070632; cv=none; b=V0dAT3ZMPH7knh9ZSmqTYjm4ZlBlvI8uvjpDjax5rB058b5BOO0ojl3RslLjESv8xkE0KJYusCBD3vtoGEYoke1ADhnmFKfkDFl/MEe8+7kCN1iJvsq+YIg4gQm+dxsIsu7m1POAPoAzwuX1muLHULL6+NyzK0yCKavuzmSzK9M=
+	t=1747070634; cv=none; b=hUgXwjJEdBe4yg+WT1gaGN6lniisK01Wqtb1UCHeMgTWMLEK/k5/wdjmPdg7bbgWeScLzhqS6E9IMJ3KTt7MjCgZAttXgrHCh2EPOswFAz1kZQhVfOMu9XN1uzUQN1Pel+LtX2Cmt+CIJ0Eow3xLcfyXDW3OohaO2lv8ilUJU9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747070632; c=relaxed/simple;
-	bh=LV47IlF09Kt1uj9pVkWxcgR0Ow/6c216+lD5JG8nZWQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KOxkueuLHO8JxCYskNiaOzKVDJxjZNptN3bXl0EyrWoT1A3i/lOFJNL2x5vJK/6nY1Tjx5VDtPVE/iyaNFRzXS4cslOuKRbZF6Z54nFZJsfg2K4n130Z5hzuTq5yL2/seaWj41gVhLxoxCyAyE5V6EQD26Wug32AfrCV+6Xf3RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WE18u1ut; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ZKY1yVEE; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747070634; c=relaxed/simple;
+	bh=fmY87/1sKSBJYEJaxkHq2LMm11Jc+VfeJwKi7MDyja8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JCeAG+lf0UAGW+ZNRg5BCQmniQ77Dq5akGOg85fVqBz+5/5erNbGv/JAxHxj2UMgivjQbe6A5jmRNp0V95g3bqNKwpeUFZ9Y7CNeDZB8S3wT/IB1L4kdZdFk1OocTTLnQtXQ9AXbWO/GObLEe4F1iKI74uOvmRJeG8U+CVq2IM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=337BNEfQ; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WE18u1ut";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ZKY1yVEE"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CE36D21184;
-	Mon, 12 May 2025 17:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747070611; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=40KNvHTH37gvmYUFOvfmNjkX32zb5wqsuxRJWr680Ks=;
-	b=WE18u1utupbJGttWpx/ZSyw85wFbzzP4IP44n0z7uFWB48lD+/TOf1YTW1JTLBMRwmXYYb
-	n7AOSHOvJPXUahBmEgqIL2mx8AFGodowtTskyGsWc6TMs5SeAYA/ZblSEs2SK8gDmGqLcQ
-	ThD1eoSQD+96mWzYqrqbglSJVh7L8Wk=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747070610; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=40KNvHTH37gvmYUFOvfmNjkX32zb5wqsuxRJWr680Ks=;
-	b=ZKY1yVEENClluq1aI2pPepXc3nTahf+gzFLu3oDfOIV9Qpyr3ciTYrt3Ch+pVNUMLGMSlQ
-	NTA/GgYAnoEzDrXSGxyt2pbHtoHnkwedxLBRxWhVjpB3a1WELrKvCOKh7FDK0rTmVq/SOP
-	9A1uZu0ziHFBtaS/R2Xn1s63/b4Q8kM=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B7F4A137D2;
-	Mon, 12 May 2025 17:23:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id W1JfLJIuImjfcgAAD6G6ig
-	(envelope-from <neelx@suse.com>); Mon, 12 May 2025 17:23:30 +0000
-From: Daniel Vacek <neelx@suse.com>
-To: Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Daniel Vacek <neelx@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: index buffer_tree using node size
-Date: Mon, 12 May 2025 19:23:20 +0200
-Message-ID: <20250512172321.3004779-1-neelx@suse.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="337BNEfQ"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so22235ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747070632; x=1747675432; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZorMDSdxCLNoei7VK6kPI/fQjzAXqqiD5NEjjIAeuZ0=;
+        b=337BNEfQa6NytiM+RY9GKgwT/X85yJu80OCVv2z41Cua25OQz4O0/CPUGBdoLFVUKn
+         Mv2ODAAMFSFoJMYEsrLenj64cYHXlyx7I+a4Hv1VZegRLzZ3Iut3/1OIrQEgIxtvtzK9
+         8KNaEJsPw+LnUqAvD31ZCpRyktDaaib7jbEzUj0KRwaykZ/dF9LFrjQ7teVGG+tIdyNj
+         cvMA0I7Fk6clPTlv0knWqMYSqTlojHrzEUsqts0we+lEVTokPZSWY2iAde1R0R9vclZB
+         1Hky9bLluXgbH8pzmk5EXGUnkvfAKUO8nSM2LnUhyroaru48RsxQaQw3sn5Eo1FW0p7K
+         dNtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747070632; x=1747675432;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZorMDSdxCLNoei7VK6kPI/fQjzAXqqiD5NEjjIAeuZ0=;
+        b=Oc14/c1ZXj5dy4JJPMRoMBRsDjOtuWA4dmiaKi6/UdDZcM/P2VoG2/EGMIA+bM8dQu
+         /cjUM+1n+kjYdyxg08teEFoOW534R/oOpJT8KD7S0gNvSs9bPlYQz9hUQ1Ic1xYRqVas
+         2LFS4+wtsCz1sbXDyP7dU7bN4Oz6JKf+KezrdTu4J8iVkfz7Fb1d4f0UJL+4tHVIU7n8
+         ZyyCplGZ7c9NILnl7ZjIzz1jZNo1BO6gfZJATZopt6zp1ySrYhHJADHRz8jKAtb2+t+t
+         PTXuoDpRNdKyEfJ3q6NEfcBv5LSm074y1AoMknP1Pb/zhq8bvwjDX78lcQI1Z/vnPffZ
+         scVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWd/ZJ1jLiBh/szL+OFow0QkQpIuXFoxs/U3qOwbaKw1WRscGK/AuB0eHsEfjWY2lFaMFFTONUSIhTVi7A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfwrTIL8dtrQF3bsdgHYrvHJK2sxxPANX2TYh3Eor1oa9oCt2T
+	BtThA+sPd23G1iU/SP24z1QtqHDwgTNMamOoOsv2X2GOJVCUCoknKHlYpW5ojL90QoowAiNypDV
+	5qhHg/HhZqlwGu1BIEZxyltbPfMoUY+fQxywM
+X-Gm-Gg: ASbGncupJXEa35Q3a4Nk82BEDtkB8z1tWhI98oMY03lUpiItS55bmgaDyyFgH9Wpysl
+	7DAF5g+Lpsweas/LNs7urs8sypnXxESHTlkaDjavQuthQ2WR7BGuYMBB7Evm3Xkl1Et5XglSL4D
+	9filZ6wbjeYsaZq3+vUxlXs38VoPEJYfNsAh70xEtrqONNoG/ONghEmJcnExwCvw==
+X-Google-Smtp-Source: AGHT+IEwkaoOmT0XT7gKUnkQ+2ormt40tJAccvez9SS9gKpe63m0op5hTvSJFmWSWh3spwSfwGyikLVKS3Pd/hKUiUI=
+X-Received: by 2002:a05:6e02:1562:b0:3d9:2b3e:835b with SMTP id
+ e9e14a558f8ab-3da8430d4e4mr5478165ab.25.1747070631555; Mon, 12 May 2025
+ 10:23:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:email];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
+References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
+In-Reply-To: <20250512055748.479786-5-gautam@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 12 May 2025 10:23:39 -0700
+X-Gm-Features: AX0GCFtegycvYjK-gRwyRE3BGvqRYdmDJ-ze8hRyFhYRHprKCpMHIf371Xl0jNw
+Message-ID: <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
+ counting perf events
+To: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, acme@kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, maddy@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-So far we are deriving the buffer tree index using the sector size. But each
-extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
+On Sun, May 11, 2025 at 10:58=E2=80=AFPM Gautam Menghani <gautam@linux.ibm.=
+com> wrote:
+>
+> Add counting.py - a python version of counting.c to demonstrate
+> measuring and reading of counts for given perf events.
+>
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+> v1 -> v2:
+> 1. Use existing iteration support instead of next
+> 2. Read the counters on all cpus
+> 3. Use existing helper functions
+>
+>  tools/perf/python/counting.py | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100755 tools/perf/python/counting.py
+>
+> diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.p=
+y
+> new file mode 100755
+> index 000000000000..e535e3ae8bdf
+> --- /dev/null
+> +++ b/tools/perf/python/counting.py
+> @@ -0,0 +1,34 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0
+> +# -*- python -*-
+> +# -*- coding: utf-8 -*-
+> +
+> +import perf
+> +
+> +def main():
+> +        cpus =3D perf.cpu_map()
+> +        thread_map =3D perf.thread_map(-1)
+> +        evlist =3D perf.parse_events("cpu-clock,task-clock", cpus, threa=
+d_map)
 
-For example the typical and quite common configuration uses sector size of 4KiB
-and node size of 16KiB. In this case it means the buffer tree is using up to
-the maximum of 25% of it's slots. Or in other words at least 75% of the tree
-slots are wasted as never used.
+Thanks Gautam! I think this is really good. Perhaps the events could
+be a command line option, but I can see why you want to keep this
+similar to counting.c.
 
-We can score significant memory savings on the required tree nodes by indexing
-the tree using the node size instead. As a result far less slots are wasted
-and the tree can now use up to all 100% of it's slots this way.
+> +
+> +        for ev in evlist:
+> +            ev.read_format =3D perf.FORMAT_TOTAL_TIME_ENABLED | perf.FOR=
+MAT_TOTAL_TIME_RUNNING
+> +
+> +        evlist.open()
+> +        evlist.enable()
+> +
+> +        count =3D 100000
+> +        while count > 0:
+> +            count -=3D 1
+> +
+> +        evlist.disable()
+> +
+> +        for evsel in evlist:
+> +            for cpu in cpus:
+> +                for thread in range(len(thread_map)):
 
-Signed-off-by: Daniel Vacek <neelx@suse.com>
----
- fs/btrfs/disk-io.c   |  1 +
- fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
- fs/btrfs/fs.h        |  3 ++-
- 3 files changed, 18 insertions(+), 16 deletions(-)
+I kind of wish, for the reason of being intention revealing, this could jus=
+t be:
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 5bcf11246ba66..dcea5b0a2db50 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -3395,6 +3395,7 @@ int __cold open_ctree(struct super_block *sb, struct btrfs_fs_devices *fs_device
- 	fs_info->delalloc_batch = sectorsize * 512 * (1 + ilog2(nr_cpu_ids));
- 
- 	fs_info->nodesize = nodesize;
-+	fs_info->node_bits = ilog2(nodesize);
- 	fs_info->sectorsize = sectorsize;
- 	fs_info->sectorsize_bits = ilog2(sectorsize);
- 	fs_info->csums_per_leaf = BTRFS_MAX_ITEM_SIZE(fs_info) / fs_info->csum_size;
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 4d3584790cf7f..80a8563a25add 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -1774,7 +1774,7 @@ static noinline_for_stack bool lock_extent_buffer_for_io(struct extent_buffer *e
- 	 */
- 	spin_lock(&eb->refs_lock);
- 	if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &eb->bflags)) {
--		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
-+		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_bits);
- 		unsigned long flags;
- 
- 		set_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
-@@ -1874,7 +1874,7 @@ static void set_btree_ioerr(struct extent_buffer *eb)
- static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
- {
- 	struct btrfs_fs_info *fs_info = eb->fs_info;
--	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
-+	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_bits);
- 	unsigned long flags;
- 
- 	xas_lock_irqsave(&xas, flags);
-@@ -1886,7 +1886,7 @@ static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
- static void buffer_tree_clear_mark(const struct extent_buffer *eb, xa_mark_t mark)
- {
- 	struct btrfs_fs_info *fs_info = eb->fs_info;
--	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
-+	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_bits);
- 	unsigned long flags;
- 
- 	xas_lock_irqsave(&xas, flags);
-@@ -1986,7 +1986,7 @@ static unsigned int buffer_tree_get_ebs_tag(struct btrfs_fs_info *fs_info,
- 	rcu_read_lock();
- 	while ((eb = find_get_eb(&xas, end, tag)) != NULL) {
- 		if (!eb_batch_add(batch, eb)) {
--			*start = (eb->start + eb->len) >> fs_info->sectorsize_bits;
-+			*start = (eb->start + eb->len) >> fs_info->node_bits;
- 			goto out;
- 		}
- 	}
-@@ -2008,7 +2008,7 @@ static struct extent_buffer *find_extent_buffer_nolock(
- 		struct btrfs_fs_info *fs_info, u64 start)
- {
- 	struct extent_buffer *eb;
--	unsigned long index = start >> fs_info->sectorsize_bits;
-+	unsigned long index = start >> fs_info->node_bits;
- 
- 	rcu_read_lock();
- 	eb = xa_load(&fs_info->buffer_tree, index);
-@@ -2114,8 +2114,8 @@ void btrfs_btree_wait_writeback_range(struct btrfs_fs_info *fs_info, u64 start,
- 				      u64 end)
- {
- 	struct eb_batch batch;
--	unsigned long start_index = start >> fs_info->sectorsize_bits;
--	unsigned long end_index = end >> fs_info->sectorsize_bits;
-+	unsigned long start_index = start >> fs_info->node_bits;
-+	unsigned long end_index = end >> fs_info->node_bits;
- 
- 	eb_batch_init(&batch);
- 	while (start_index <= end_index) {
-@@ -2151,7 +2151,7 @@ int btree_write_cache_pages(struct address_space *mapping,
- 
- 	eb_batch_init(&batch);
- 	if (wbc->range_cyclic) {
--		index = (mapping->writeback_index << PAGE_SHIFT) >> fs_info->sectorsize_bits;
-+		index = (mapping->writeback_index << PAGE_SHIFT) >> fs_info->node_bits;
- 		end = -1;
- 
- 		/*
-@@ -2160,8 +2160,8 @@ int btree_write_cache_pages(struct address_space *mapping,
- 		 */
- 		scanned = (index == 0);
- 	} else {
--		index = wbc->range_start >> fs_info->sectorsize_bits;
--		end = wbc->range_end >> fs_info->sectorsize_bits;
-+		index = wbc->range_start >> fs_info->node_bits;
-+		end = wbc->range_end >> fs_info->node_bits;
- 
- 		scanned = 1;
- 	}
-@@ -3037,7 +3037,7 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
- 	eb->fs_info = fs_info;
- again:
- 	xa_lock_irq(&fs_info->buffer_tree);
--	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->sectorsize_bits,
-+	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->node_bits,
- 			      NULL, eb, GFP_NOFS);
- 	if (xa_is_err(exists)) {
- 		ret = xa_err(exists);
-@@ -3353,7 +3353,7 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
- again:
- 	xa_lock_irq(&fs_info->buffer_tree);
- 	existing_eb = __xa_cmpxchg(&fs_info->buffer_tree,
--				   start >> fs_info->sectorsize_bits, NULL, eb,
-+				   start >> fs_info->node_bits, NULL, eb,
- 				   GFP_NOFS);
- 	if (xa_is_err(existing_eb)) {
- 		ret = xa_err(existing_eb);
-@@ -3456,7 +3456,7 @@ static int release_extent_buffer(struct extent_buffer *eb)
- 		 * in this case.
- 		 */
- 		xa_cmpxchg_irq(&fs_info->buffer_tree,
--			       eb->start >> fs_info->sectorsize_bits, eb, NULL,
-+			       eb->start >> fs_info->node_bits, eb, NULL,
- 			       GFP_ATOMIC);
- 
- 		btrfs_leak_debug_del_eb(eb);
-@@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
- {
- 	struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
- 	struct extent_buffer *eb;
--	unsigned long start = folio_pos(folio) >> fs_info->sectorsize_bits;
-+	unsigned long start = folio_pos(folio) >> fs_info->node_bits;
- 	unsigned long index = start;
--	unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
-+	unsigned long end = index + (PAGE_SIZE >> fs_info->node_bits) - 1;
- 	int ret;
- 
- 	xa_lock_irq(&fs_info->buffer_tree);
-diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
-index cf805b4032af3..8c9113304fabe 100644
---- a/fs/btrfs/fs.h
-+++ b/fs/btrfs/fs.h
-@@ -778,8 +778,9 @@ struct btrfs_fs_info {
- 
- 	struct btrfs_delayed_root *delayed_root;
- 
--	/* Entries are eb->start / sectorsize */
-+	/* Entries are eb->start >> node_bits */
- 	struct xarray buffer_tree;
-+	int node_bits;
- 
- 	/* Next backup root to be overwritten */
- 	int backup_root_index;
--- 
-2.47.2
+for thread in thread_map:
 
+I can see the problem though, the counts lack the thread_map and the
+thread_map is needed to turn a thread back into an index. Perhaps when
+the python counts is created we hold onto the evsel so that this is
+possible. I also suspect that in the code:
+
+for cpu in cpus:
+
+The CPU number is being used rather than its index, which is a similar
+story/problem.
+
+Arnaldo, could you give some input on what to do wrt indices, threads
+and CPUs at the API level? Perhaps we need a refactor and objects for
+perf CPU and perf thread, similar to the use of struct perf_cpu in the
+C code. The original API all pre-dates that change. The issue is that
+changing the API could break existing scripts and we can only fix
+those that ship with perf.
+
+Thanks,
+Ian
+
+> +                    counts =3D evsel.read(cpu, thread)
+> +                    print(f"For {evsel} val: {counts.val} enable: {count=
+s.ena} run: {counts.run}")
+> +
+> +        evlist.close()
+> +
+> +if __name__ =3D=3D '__main__':
+> +    main()
+> --
+> 2.49.0
+>
