@@ -1,127 +1,139 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C4C433A0;
-	Mon, 12 May 2025 09:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14E51EB3D;
+	Mon, 12 May 2025 09:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747040514; cv=none; b=q/gygBXoaN3AVQMwWroRfjo5Z20KWzNqWZiGWTKEuItYnZYLd6FYRPA4hW/kF18/bfCUlyx3D+ptLpz92ggN8QVWTMWcG/kLZ/gvdVWBfjD4WK8C91p2dzGUlBAHn3xKy9fqU4/odwtxsio+yfsdI16+TYc/gQgV2Sj9iOfkQes=
+	t=1747040613; cv=none; b=rB0j0WbL9QAODFul7rXsp+4xUuO18J1+9ZUhHbEVG0OyeeOY/YcaKop335YcHjyinLaMTM2LTgMprfIosGS2eqU5dihROvWS2XyWB/Lj/5r1fwAoHW1omL9JuIHA7rNfWUYSLiNL+Lho7hy2uA1G3M3WTZEH+28/edqPPxrm7nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747040514; c=relaxed/simple;
-	bh=xgpu6nv8xGo32K09RD5GFRpesBDnRQyLEEpj/5ovfK8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=izAPilbFHnLu6NKW2vh1x25jQ18GIQzH91v2cPWwasYjslNWWy2tLZaBSOi4jtgGnu2Vwcea67PpK8jCMaeAhabCnEl1c10C7r7wSwqs8/aq0PYHGrRTVq/KdBbvv27KJgQUKyyO7frnAiyvcJ4/ewn4KfQE/4JJKgu5ZNm82wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-400fa6b3012so3526669b6e.1;
-        Mon, 12 May 2025 02:01:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747040511; x=1747645311;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rJ9B+L/0pxk/aAA36fM5U+1DbR7T5khcLMrOecJLuZE=;
-        b=f83jHVgwkksBwnZoQOW0TcrrYUzmcnEi3RQPcTGabgC+f3rlTFwBKwwY9gbkVPvD+n
-         5OWd73ChO6sDGF54Dzxc0ODXmRKNSmr9BUqpCD1U2chxC9u5N9frxIdGRgcPNoy5LI0z
-         OihIfIBuAuITXMQtfxxB1+zyyI6d0F8x+cy2dfxXFE/nNp0c+vN828LStxUf49uh8rr3
-         /NtYKv+MWF5aZeo0ChVY0lepyKrsroVyus1N3tFN9/xZ0jwKXPIpPc3fw+Y4tL+2JCG/
-         lI8j4RGMN+wEjTxlvmV0ID0ltcUZYLJKt9mLZBEjBUE/cooJb0lyRH0IwnLzMwuSJTyE
-         urXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdwsYJQjzrD9iseE+AVcY0lFrnU7LSs36ZXMcnLaGZi7f5rep31B0IEhl2T8x/Sn4YnTb8cNAY4te5JpmE@vger.kernel.org, AJvYcCXwVEWxU7S2qatfVu4t6CfJjkeM7mcP3wDaJv1ZNk/rNtiVuk3pbSvaMkGKKYz0oH1foJC8A+19s7Os@vger.kernel.org
-X-Gm-Message-State: AOJu0YxolwIhvqEI+MrwBLg8TFANjb2TP1mVixKm44UvIophyVI3xeZA
-	8u4PEEeXuQR7eh4p+75qKrIgIaC+8aZ9PluyXOYWI/3zeh4/CkB4PQhc3h0V
-X-Gm-Gg: ASbGncsnOGOd6vFG4n467lw3CKoKBK4efrA8wNL7+U5aU5w0b0a/vSRKHJZ4M3rdShz
-	tC8RrggWcVoZOxqVG4LwYBBv3aWcctce2UHB+9C8H1yFIPuGN0laeZZlh/OBWkRcszVvJbgLlzv
-	JiPOFcWtW8VZa0ndDykSqjKztEEV0LapvRtEoLORitrMM7dWSCFW7UlSc8H9UfwDK5MQfmRIpFc
-	X37zK1wcIRJWnJiZyxFxDjZ73UjzT3Zsxk8tBUZti4wqBnUvi+40Hn5lZlXTlGfTW5Yfy0SPxzR
-	NWILeklrY5lprV9BXFAhJ4CXa1azD/JOTO8X3iYeMPf16AmkKhUtLHgPCDVBPM9zUym+7mCjVt7
-	i5tfSS59QHm9r3Q==
-X-Google-Smtp-Source: AGHT+IEvGBQ8w3Sv2wrt5hNkC3jhlCfgmsRJvtQsOBypbFgMuKy8CjNV82p2JlW9yDCJagmxUs/MBw==
-X-Received: by 2002:a05:6871:2b19:b0:2d5:2dfd:e11c with SMTP id 586e51a60fabf-2dba55bfc86mr6541901fac.7.1747040511070;
-        Mon, 12 May 2025 02:01:51 -0700 (PDT)
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com. [209.85.160.53])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba0797479sm1768906fac.21.2025.05.12.02.01.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 02:01:50 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c12b7af278so3246547fac.0;
-        Mon, 12 May 2025 02:01:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWh2ZQN9mbigyVAqNuTnTyBl+1SDdx45P3ERAC0MvAvS8BmoQEMBovOo2dgLQEdhmGLSJkin74Yn5vwdQ5b@vger.kernel.org, AJvYcCWnJ9dJcMwbQ9ytlq16Pbk6bS2A9sWNYQRuO1/vRbohXeQWq2uN+Af5MtxJtVLhsgJ3KEf2uOG+9rOV@vger.kernel.org
-X-Received: by 2002:a05:6122:4710:b0:52a:654e:bd98 with SMTP id
- 71dfb90a1353d-52c43a928a5mr15501650e0c.0.1747040499288; Mon, 12 May 2025
- 02:01:39 -0700 (PDT)
+	s=arc-20240116; t=1747040613; c=relaxed/simple;
+	bh=rsshUYA/LRWlmxUYnBypRPS7L2QMCx+Gv5FRHPTOtA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PdQmhvIXE4Eg2uyCtuWcei3whcoqa4akT1/C7FM9wYz6dIE3wmsLnwyp5/CucWD1UcEevw+patM36S+plns7jq3gk2GZ+Btob2OkkRCjMeeYKM4ZAaPzFeaHScCC1e15QniXQrlARYUs9ynDpPs37xoPLI15UWB2QmLCXoag4nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SZN6k0q9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SZN6k0q9"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BM1to9010230;
+	Mon, 12 May 2025 09:03:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	V/SjLHQBRX2ja8oprIqQBFz8Ft8CAPXfkAoMHk7fFCI=; b=SZN6k0q9EzYwlqGW
+	nY11ZtMAtGfoWR5c/fK7lNqenesB45uOL/kK+hrG/+g2/akgustWRrLU+6LJ0/DZ
+	GiEXuocpNDT1y7/axs5vegt10V6l8N3lZxHUo8U8fnYPcgvZwbJwTzN41cXu/20A
+	PwAay/60aeB15JCuIuVPTkUrg4LX7NONow1NXq4fFhgAHnFAAfSl6t//+fcx82CI
+	9fPqOO3wBUIOjMVJITjcdcvILmTCFYCWJjfH/mBa8K8GZpDrhylrFzSRR2i3V+fV
+	iFQ5WPN68n+5WgzAfUkGn1zUR+OPqqVomXkVoqPlE1K2wCeVKDT29b5MWkAFTVoZ
+	jwvC3Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hv5qc1d3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:03:20 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54C93JDu026417
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:03:19 GMT
+Received: from [10.253.34.155] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 12 May
+ 2025 02:03:13 -0700
+Message-ID: <37b5681b-ebf5-4956-8111-b53383dce755@quicinc.com>
+Date: Mon, 12 May 2025 17:03:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-sapling-exhale-72815a023ac1@spud> <20250509-dwindle-remold-98b3d03d0631@spud>
-In-Reply-To: <20250509-dwindle-remold-98b3d03d0631@spud>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 May 2025 11:01:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVWznEm4Kg-MvgCT5+cBtdwGi9YrzFK6mBaoPJ+VK8S+Q@mail.gmail.com>
-X-Gm-Features: AX0GCFspRySgDb6ycd4xRu9GZUWvVUHvETzhZOkoOpahhaSVXdE-xy2cDcixKwI
-Message-ID: <CAMuHMdVWznEm4Kg-MvgCT5+cBtdwGi9YrzFK6mBaoPJ+VK8S+Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: cache: add specific RZ/Five
- compatible to ax45mp
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, Ben Zong-You Xie <ben717@andestech.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] PCI: qcom: Add support for QCS615 SoC
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
+        <abel.vesa@linaro.org>, <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <quic_qianyu@quicinc.com>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
+References: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
+ <20250507031559.4085159-6-quic_ziyuzhan@quicinc.com>
+ <20250507-competent-meek-prawn-72badf@kuoka>
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+In-Reply-To: <20250507-competent-meek-prawn-72badf@kuoka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=DqtW+H/+ c=1 sm=1 tr=0 ts=6821b958 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=xwpoersD-4fSveQz36wA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: UlH3xmLVWF4q9bbSi8q9-QGJjGEG42fe
+X-Proofpoint-GUID: UlH3xmLVWF4q9bbSi8q9-QGJjGEG42fe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA5NSBTYWx0ZWRfX2DTo/7znvrll
+ w6MDuiEIrnfHXP4By3vbxklMKXgEB5MmWkMlUBilg+iPSo9JM9hMFvIa+8zRsShbwxMfjC0vPHv
+ Y555rcRIZcTTMzWKTjNkxUm0NAbo0uwROM57U8OeFjdKCyPLZlBvNxHVNumWysknYA86JPhqfPW
+ 9VbWrD7d1x/a839tYyYbVL0E16YYSgKY3aQqGum9Fhhqw58SqorlJpCX71bDBsD419bLLoBU1WM
+ WHnsLL45JZ4CINoxwTBohDPZG9EeYBobX8ovEBsmAeou2rLGrG49Fn6C88KA4KTdseAK9on7Wj8
+ Ilj3qTrSqoDAepOQ8OK2sCinGPWHs2Fn/vmxdFGvVMJV0fCspBi56hjQ80o56XWraziV7pI0GFR
+ v4TKYMibAMClTes8N9TpLjIWaKwwnPfMYDqah8moN5/CnpvRWI880oAflHXWP3rKXDBmZzve
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 bulkscore=0 phishscore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505120095
 
-Hi Conor,
 
-On Fri, 9 May 2025 at 17:39, Conor Dooley <conor@kernel.org> wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On 5/7/2025 1:18 PM, Krzysztof Kozlowski wrote:
+> On Wed, May 07, 2025 at 11:15:59AM GMT, Ziyue Zhang wrote:
+>> Add the compatible and the driver data for QCS615 PCIe controller.
+>> There is only one controller instance found on this platform, which
+>> is capable of up to 8.0GT/s.
+>> The version of the controller is 1.38.0 which is compatible with 1.9.0
+>> config.
+>>
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index dc98ae63362d..0ed934b0d1be 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -1862,6 +1862,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>>   	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+>>   	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
+>>   	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
+>> +	{ .compatible = "qcom,qcs615-pcie", .data = &cfg_1_9_0 },
+> Why? It's compatible with other entries, so why adding redundant entry
+> here?
 >
-> When the binding was originally written, it was assumed that all
-> ax45mp-caches had the same properties etc. This has turned out to be
-> incorrect, as the QiLai SoC has a different number of cache-sets.
->
-> Add a specific compatible for the RZ/Five for property enforcement and
-> in case there turns out to be additional differences between these
-> implementations of the cache controller.
->
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> Best regards,
+> Krzysztof
 
-Thanks for your patch!
+Hi Krzysztof
 
-> --- a/Documentation/devicetree/bindings/cache/andestech,ax45mp-cache.yaml
-> +++ b/Documentation/devicetree/bindings/cache/andestech,ax45mp-cache.yaml
-> @@ -28,6 +28,7 @@ select:
->  properties:
->    compatible:
->      items:
-> +      - const: renesas,r9a07g043f-cache
+If I use the compatible entry for qcs615 in the driver, do I need to
+add qcom,qcs615-pcie to qcom,pcie-sm8550.yaml, or should I create a new
+YAML file specifically for qcs615-pcie? Given that the PCIe cores on
+qcs615 and sm8550 require different clocks, is it acceptable to combine
+them in qcom,pcie-sm8550.yaml?
 
-This name looks a bit too generic to me, as this is not a generic
-cache on the R9A07G043F SoC, but specific to the CPU cores.
+BRs
+Ziyue
 
->        - const: andestech,ax45mp-cache
->        - const: cache
->
-> @@ -70,7 +71,7 @@ examples:
->      #include <dt-bindings/interrupt-controller/irq.h>
->
->      cache-controller@13400000 {
-> -        compatible = "andestech,ax45mp-cache", "cache";
-> +        compatible = "renesas,r9a07g043f-cache", "andestech,ax45mp-cache", "cache";
->          reg = <0x13400000 0x100000>;
->          interrupts = <508 IRQ_TYPE_LEVEL_HIGH>;
->          cache-line-size = <64>;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
