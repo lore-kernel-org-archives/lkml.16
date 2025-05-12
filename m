@@ -1,91 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB6425B68E;
-	Mon, 12 May 2025 09:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0537A25C80B;
+	Mon, 12 May 2025 09:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041634; cv=none; b=u0zuwGlFFjcMGPJUEHDjxHcbJ1dzI3tl857fgWmD70jHgYM2FkrrtGIfGXYfARsXVUPaTwgpLE4QTMh9kKOH44bWeCq3lwspEqIbYBAuruUy+IV7yaodw/1T1FlRpqOzZBkVUKoA8Kxh6PKd03tO/sULPBhU6gcfDrsK3oT81PY=
+	t=1747041698; cv=none; b=mQxgbBUk6vdilLWiT9K5RdiyelNtzy6AMj0fXywXZqK7IYwhTBRXg5gREFQaVgDJrfkvNRQM0QmiuVYUtyOk/K8BOgkxj4aCnbB6eM5XJigLl8J8UDP8/VxBclMgDslpBCWKhK94MCMSJDGQCpTUHwJkRh3vd0HfS9lXP+P2nsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041634; c=relaxed/simple;
-	bh=iXPNXOwECHF6vzmv4N3t7dpHwXal1mkPGC6CEteuntI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TmWNsJ/ZVSWW/cimEJ1SQqMGc3TTbczFGhUj0zedYAJL/PcjLOOQ64JpcBOgG9F6Y6vxpljsBZR4qZRO+uoycAh9htrJ+vd5P2kiJe2fFdfZ421JA4JsA7jWnlKy0BPjGpwg8l3AWsXlI9jgxSRFpLmBrzWRlfe6xFYtWTfLCOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDUqrjR+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747041698; c=relaxed/simple;
+	bh=YmCAbwyOKKCOtWmhkRLBy829s5QkGxOr0MC+PNYO3U0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tpp5hBHsT7OGtxjiOC8EBQ3545hOX1RclxL3JIuL+EtgdJBcD8UUOLBcJ8Aff1enzq9JuBD3IRQyARvSD51r+BxjJbhgPNOdKUtf+LOR4WM2eyt+v6Db1M9siSBtxc7HajpwwBAQjeJR6j6617wnKNPeJbWnM9bt9xGZfXG7jIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DQiymcGQ; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDUqrjR+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61FEDC4CEE7;
-	Mon, 12 May 2025 09:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747041633;
-	bh=iXPNXOwECHF6vzmv4N3t7dpHwXal1mkPGC6CEteuntI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nDUqrjR+3krhDJ5Ew/pgFcib4HULQgxv4dAlZInqyhQuuxUJBdkpuer4jT/99Wvms
-	 KeN2hLfi7CWsgMmXuelniYaUvQ7HplFyye9CGeYTj1qjgNT/cqDlI6U6tAu1gyPNlj
-	 r2aToEYKw/cggt+4zhuutClE+6TGoIzC/gLHwEixB+1tZI9dUXg1311tkCB3/6rsVH
-	 pU3MsCb6MIoOlbkCRtLrIgZMF6hSJsTLeig1rwVD2mICsjQSBHRcovAXvoG5EHnE7S
-	 bSiuynmX3XWP6EFYx0fne0Kq79PAsIOGGaOnd0If2dxi9cRv5xnIcl/hYjFlsUJ78o
-	 4hTU5HRjTENXg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>,  Rob Herring <robh@kernel.org>,
-  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
- <conor+dt@kernel.org>,  Tudor Ambarus <tudor.ambarus@linaro.org>,
-  Pratyush Yadav <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,
-  Miquel Raynal <miquel.raynal@bootlin.com>,  Richard Weinberger
- <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,  Krzysztof
- Kozlowski <krzk@kernel.org>,  linux-spi@vger.kernel.org,
-  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-mtd@lists.infradead.org,  linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/3] mtd: spi-nor: Add a driver for the VIA/WonderMedia
- serial flash controller
-In-Reply-To: <20250510-wmt-sflash-v1-2-02a1ac6adf12@gmail.com>
-References: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
-	<20250510-wmt-sflash-v1-2-02a1ac6adf12@gmail.com>
-Date: Mon, 12 May 2025 09:20:30 +0000
-Message-ID: <mafs01psu89sx.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DQiymcGQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747041696; x=1778577696;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YmCAbwyOKKCOtWmhkRLBy829s5QkGxOr0MC+PNYO3U0=;
+  b=DQiymcGQWCa0IxCvHPvu1YVBjlbUVS6Bc/iNPq2bk+XjZvv+1bHdNTta
+   ACdTR+po0A4BwTUyHeriWWnjDCedPRdEjExvttpWWd024nQ17BcV6AQRn
+   zdcVRMJQmcBCZPjRm9/oFI4FRcGTqBMnpe2hdJMQbP/agsetyIPjm//sZ
+   V0UvUchwCNhm6eQ29t+yIGPmD1hvyBF8cfIPbvOMrZG++DiFAZ0gIVkGC
+   NHy2RbhwWt1hGudbMz35glFZxgQZKugSp1tPp67qp1lKwU6Jg3uk5DEj8
+   53K8YbSgc356v2uMuJdKA8OP8gdySMCYjrnDUzprPosXjvJiIkuTxZZjK
+   Q==;
+X-CSE-ConnectionGUID: mNm96ilSQQqwEyzPGSjWeA==
+X-CSE-MsgGUID: 8LvY2hPyTAeF9dPHAqONwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48947672"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="48947672"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:21:35 -0700
+X-CSE-ConnectionGUID: /YbdnLXlRBeGXuDj1xlBgQ==
+X-CSE-MsgGUID: DwVgNY1YSkOB3zIE/HlX0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="142076489"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:21:30 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uEPLj-00000000sE1-1BwI;
+	Mon, 12 May 2025 12:21:27 +0300
+Date: Mon, 12 May 2025 12:21:27 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 02/11] mfd: Add max7360 support
+Message-ID: <aCG9lyaCGchBsqLE@smile.fi.intel.com>
+References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
+ <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Alexey,
+On Fri, May 09, 2025 at 11:14:36AM +0200, mathieu.dubois-briand@bootlin.com wrote:
+> 
+> Add core driver to support MAX7360 i2c chip, multi function device
+> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
 
-On Sat, May 10 2025, Alexey Charkov wrote:
+...
 
-> The controller is tailored to SPI NOR flash memory and abstracts away all
-> SPI communications behind a small set of MMIO registers and a physical
-> memory mapping of the actual chip contents.
->
-> It doesn't expose chip probing functions beyond reading the ID though, so
-> use lower level chip opcodes via the "programmable command mode" of the
-> controller and the kernel's SPI NOR framework to avoid hard-coding chip
-> parameters for each ID the way the vendor kernel does it.
->
-> Currently tested on a WonderMedia WM8950 SoC with a Macronix MX25L4005A
-> flash chip (APC Rock board), but should work on all VIA/WonderMedia SoCs
->
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
->  MAINTAINERS                                  |   1 +
->  drivers/mtd/spi-nor/controllers/Kconfig      |  14 +
->  drivers/mtd/spi-nor/controllers/Makefile     |   1 +
->  drivers/mtd/spi-nor/controllers/wmt-sflash.c | 525 +++++++++++++++++++++++++++
+> + * Author: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 
-Drivers in drivers/mtd/spi-nor/controllers/ are deprecated, and we want
-to eventually get rid of the API. The expected way is for drivers to use
-SPI MEM (drivers/spi/spi-mem.c). SPI MEM drivers are usually more
-general and not tailored specifically to SPI NOR flashes, so it might be
-a bit tricky to write drivers for specialized hardware with it. But I
-think the drivers/spi/spi-intel.c driver is written for similar kind of
-hardware so it should be possible.
->
-[...]
+ * Authors:
+	 Person A <...>
+	 Person B <...>
+
+?
+
+...
+
+> +	for (unsigned int i = 0; i < MAX7360_PORT_PWM_COUNT; i++) {
+> +		ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+> +					MAX7360_PORT_CFG_INTERRUPT_MASK,
+> +					MAX7360_PORT_CFG_INTERRUPT_MASK);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to write MAX7360 port configuration");
+
+I think I already pointed out the missing '\n'.
+
+> +	}
+
+...
+
+> +	/* Read GPIO in register, to ACK any pending IRQ. */
+> +	ret = regmap_read(regmap, MAX7360_REG_GPIOIN, &val);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to read GPIO values: %d\n", ret);
+
+Double ret in the message. Check all of the usages of dev_err_probe() in your code.
+
+> +	return 0;
+
+...
+
+> +#define MAX7360_REG_GPIO_LAST		0x5F
+
+> +#define MAX7360_FIFO_EMPTY		0x3f
+> +#define MAX7360_FIFO_OVERFLOW		0x7f
+
+Please, be consistent in style of the values.
 
 -- 
-Regards,
-Pratyush Yadav
+With Best Regards,
+Andy Shevchenko
+
+
