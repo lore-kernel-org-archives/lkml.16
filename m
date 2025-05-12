@@ -1,387 +1,268 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2047.outbound.protection.outlook.com [40.107.96.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D203C25D53F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747090682; cv=none; b=kq3M1dfVZk/tqMYnVYGZFjfD9TSC8DP2HZ1bQF2bBJEubspPD37ZVrG9cgrgjGTS+BG4zgPS5kMGeacjX978e64nZeZKDpG29hoIpMvBan8dy6DQeHP2eM8gxt/oMluHvQpH5Fgr6jnbWyLmE+Uh1fTreiCKf8IeiGJX27p3G0A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747090682; c=relaxed/simple;
-	bh=xDsamppNLG2r2TTwhNwg+efST2ix2Y6DasRDlfxsoEc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EaVnzRR++SOEkmbDti978YM/xKs4YK4Qjzvdwtsgmn0xEgqU7wpMba8ZiZ1F6mOOIrZ5nsVG5nvP6oGX6EV6wNAzkaCD82zkjNdhAFKnlOObc7nfLauT2+FZBZaqJ6XJAaiD/TaObkyITpBy2zRZ6ckPA9ihvg16cT3qVm953qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Vu9k25TC; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D9F2951CF;
+	Mon, 12 May 2025 23:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747091239; cv=fail; b=ly6UketoBO95HX8joiPjWNzw0upWUTnfMEMYINvkonUQtzgsJu7pnRpkalHa0yDbiLnCO7NhjHiH3661ZamkvZcgTb0v7fV+cHL7wL8QeYQXFkSVPkjDEp6ep+ibZWZKPuHUzAY0l5TG2M4bvf5d8rEIkct69afr4A0iBmAkuTU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747091239; c=relaxed/simple;
+	bh=rkHfOtOD6MVuZmKLg0XcNNqQGsVdCQQ2/fhUFs7moUM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RsQDLO/QnX2lHQzW0xiOTO6G4OBgvL4C1UbWfgGSmWG0GgjSZRU4rOdr4zWvRHH9U99t9kAc1+XQjK3O7QrQL2yndud8u/bhA+R7BidFkwA1oPi+qbqJpuqXE5qXTkASMhmLw3ZnFN7GKvf0VViKSZ9MkjTfA7wIO9eOBksM0mA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3AZONmH4; arc=fail smtp.client-ip=40.107.96.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Vu9k25TC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747090680; x=1778626680;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xF81otjobOInOhSdXoqYrbDRTXhmSwj/vhXbUO1h8W8=;
-  b=Vu9k25TC9Vryuvnxk7CW2/Q752ZMNhSP4BooBVonIA3sn4k1uhvzBhHS
-   90BPntx5cY1gIZY/XXA70niAIZUZOLF2XYNNZXIm8oYflvZfbBvPe9zD0
-   W0etVn77euX9mzBGwwEBQkUXJpSSv56fnj6x9EZ5wA7Jk4mZmMoEg1PkQ
-   Tb50yEAcKzOZTAECuJ+jXQ/xeJGuB0ueohltx9G8bgt6O1QW2pstOrPZM
-   5Q6EbdoUtlhd+3I7GGtgEj06zqN7ZgbThY8cgIBCQe8maefgRXEfKEMfI
-   eYSqucM22ysYE2huzz5gAGQDCycDSQG1eUEQrPYb8rzQf90+HIA3c7bni
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.15,283,1739836800"; 
-   d="scan'208";a="296950008"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 22:57:57 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:19210]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.28.26:2525] with esmtp (Farcaster)
- id 90511994-c75c-48bb-94f0-ca60c2fe56ca; Mon, 12 May 2025 22:57:56 +0000 (UTC)
-X-Farcaster-Flow-ID: 90511994-c75c-48bb-94f0-ca60c2fe56ca
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 12 May 2025 22:57:55 +0000
-Received: from dev-dsk-graf-1a-90d01eec.eu-west-1.amazon.com (172.19.99.218)
- by EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 12 May 2025 22:57:53 +0000
-From: Alexander Graf <graf@amazon.com>
-To: <kexec@lists.infradead.org>
-CC: <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
-	<nh-open-source@amazon.com>
-Subject: [PATCH] kexec: Enable CMA based contiguous allocation
-Date: Mon, 12 May 2025 22:57:52 +0000
-Message-ID: <20250512225752.11687-1-graf@amazon.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3AZONmH4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gPNzuA0DaNPkpNpNJmeBeQfTCTMxqY9POgc7zjEvDPSkE6anjnBLJK9Vk96CBVmyWGFrYIClGVaFFWww2iGPIrzDgm5tJXZipKzWzYU8aWMgbKWnqdLMBoAR2vAoSGtsUMymYTJRpd8TRl0LXitj+D5QZAs5mk2CTM7iyXJG3iT8ZJhmgCzPs9pl/5dGbwMxUFWmRy38VGt+ex2LE0mr8wWSVhzAAdiCiyhuetsaS1amT8GfKDsQmlRiMUKg3yCB7W4QFN9cLW0zqAzLr+MBVEv08ec3UR11a5V/zhgR6ARiiAht7YeiS/K+UTp+44G3FyQ/CXscEk1pk6u0qKzFiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JRVs/enrSl7Occ0Kf5weQZRK2syGKhbKYUQ/FbJ7FsA=;
+ b=DvhoLAJgZuwog11Uo2pqPtB1BWtrVqP+8+gHvteR+2h/IsS5/GErTNzAxk0pxmeGPuk6rIe7+/SWgsUgfl/bKW92PK/yuu4wKscUoKtUvERp+olPz3XBdBmFLBts08BttjvJFN15BK2cAoZYWapLh+27FmgOhIn5F1nnKFbOxC8OZQgW6F1yZJ0bPE2HOmrDO/O3ejtK2nHwVrcoBddGkQhkmKqYiYrxj3yD5XJJ9XoEY+NRYNU+84Pt59SWudRWTVhWv4JmXq8gDqrfsnSNuimYFsjBTP0Lr3qlDdB88Rrrn7LtzmfRxcFRNiYH1DU4pQW9U+17fMkwYoAtAB2Glw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JRVs/enrSl7Occ0Kf5weQZRK2syGKhbKYUQ/FbJ7FsA=;
+ b=3AZONmH4asNmmpkL3MhxJ0iUoYYTBkDkIGkxv4eUS47TOXfX03dV9kzWJfs1VOW+dGOM9zlsRBn1P1mgDS85QU8/kx5dp+cHUbn8lW19yjaWJFKBIequPjjeP3mJN1ncneb/zF4n74Dcppo/TXf7l18LgBCSHPME49lqXY/VOz8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SA0PR12MB4447.namprd12.prod.outlook.com (2603:10b6:806:9b::23)
+ by SJ0PR12MB7459.namprd12.prod.outlook.com (2603:10b6:a03:48d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 23:07:13 +0000
+Received: from SA0PR12MB4447.namprd12.prod.outlook.com
+ ([fe80::b4ba:6991:ab76:86d2]) by SA0PR12MB4447.namprd12.prod.outlook.com
+ ([fe80::b4ba:6991:ab76:86d2%3]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 23:07:13 +0000
+Message-ID: <708cfa2d-0a5a-4f83-bf43-97a63a8ae4ea@amd.com>
+Date: Mon, 12 May 2025 18:07:10 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] KVM: SEV: Disable SEV-SNP support on initialization
+ failure
+To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
+ pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, thomas.lendacky@amd.com, shuah@kernel.org,
+ prsampat@amd.com
+Cc: pgonda@google.com, nikunj@amd.com, pankaj.gupta@amd.com,
+ michael.roth@amd.com, sraithal@amd.com, linux-kernel@vger.kernel.org,
+ x86@kernel.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-coco@lists.linux.dev,
+ "Paluri, PavanKumar (Pavan Kumar)" <pavankumar.paluri@amd.com>
+References: <20250512221634.12045-1-Ashish.Kalra@amd.com>
+Content-Language: en-US
+From: "Paluri, PavanKumar" <papaluri@amd.com>
+In-Reply-To: <20250512221634.12045-1-Ashish.Kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DS7P220CA0070.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:8:224::33) To SA0PR12MB4447.namprd12.prod.outlook.com
+ (2603:10b6:806:9b::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D036UWC003.ant.amazon.com (10.13.139.214) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-
-When booting a new kernel with kexec_file, the kernel picks a target
-location that the kernel should live at, then allocates random pages,
-checks whether any of those patches magically happens to coincide with
-a target address range and if so, uses them for that range.
-
-For every page allocated this way, it then creates a page list that the
-relocation code - code that executes while all CPUs are off and we are
-just about to jump into the new kernel - copies to their final memory
-location. We can not put them there before, because chances are pretty
-good that at least some page in the target range is already in use by
-the currently running Linux environment.
-
-All of this is inefficient.
-
-Since kexec got introduced, Linux has gained the CMA framework which
-can perform physically contiguous memory mappings, while keeping that
-memory available for movable memory when it is not needed for contiguous
-allocations. The default CMA allocator is for DMA allocations.
-
-This patch adds logic to the kexec file loader to attempt to place the
-target payload at a location allocated from CMA. If successful, it uses
-that memory range directly instead of creating copy instructions during
-the hot phase. To ensure that there is a safety net in case anything goes
-wrong with the CMA allocation, it also adds a flag for user space to force
-disable CMA allocations.
-
-Using CMA allocations has two advantages:
-
-  1) Faster. There is no more need to copy in the hot phase.
-  2) More robust. Even if by accident some page is still in use for DMA,
-     the new kernel image will be safe from that access because it resides
-     in a memory region that is considered allocated in the old kernel and
-     has a chance to reinitialize that component.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
----
- include/linux/kexec.h      |  6 +++
- include/uapi/linux/kexec.h |  1 +
- kernel/kexec_core.c        | 82 ++++++++++++++++++++++++++++++++++++++
- kernel/kexec_file.c        | 55 +++++++++++++++++++++++--
- 4 files changed, 140 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index c8971861521a..421af2a303b6 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -91,6 +91,9 @@ struct kexec_segment {
- 	size_t bufsz;
- 	unsigned long mem;
- 	size_t memsz;
-+
-+	/* Pointer to contiguous CMA allocation or NULL */
-+	struct page *cma;
- };
- 
- #ifdef CONFIG_COMPAT
-@@ -169,6 +172,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
-  * @buf_min:	The buffer can't be placed below this address.
-  * @buf_max:	The buffer can't be placed above this address.
-  * @top_down:	Allocate from top of memory.
-+ * @cma:	CMA page if the buffer is backed by CMA.
-  */
- struct kexec_buf {
- 	struct kimage *image;
-@@ -180,6 +184,7 @@ struct kexec_buf {
- 	unsigned long buf_min;
- 	unsigned long buf_max;
- 	bool top_down;
-+	struct page *cma;
- };
- 
- int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
-@@ -331,6 +336,7 @@ struct kimage {
- 	 */
- 	unsigned int hotplug_support:1;
- #endif
-+	unsigned int no_cma : 1;
- 
- #ifdef ARCH_HAS_KIMAGE_ARCH
- 	struct kimage_arch arch;
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index 5ae1741ea8ea..8958ebfcff94 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -27,6 +27,7 @@
- #define KEXEC_FILE_ON_CRASH	0x00000002
- #define KEXEC_FILE_NO_INITRAMFS	0x00000004
- #define KEXEC_FILE_DEBUG	0x00000008
-+#define KEXEC_FILE_NO_CMA	0x00000010
- 
- /* These values match the ELF architecture values.
-  * Unless there is a good reason that should continue to be the case.
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 3e62b944c883..4c2b2ef7825d 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -40,6 +40,7 @@
- #include <linux/hugetlb.h>
- #include <linux/objtool.h>
- #include <linux/kmsg_dump.h>
-+#include <linux/dma-map-ops.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -553,6 +554,24 @@ static void kimage_free_entry(kimage_entry_t entry)
- 	kimage_free_pages(page);
- }
- 
-+static void kimage_free_cma(struct kimage *image)
-+{
-+	unsigned long i;
-+
-+	for (i = 0; i < image->nr_segments; i++) {
-+		struct page *cma = image->segment[i].cma;
-+		u32 pages = image->segment[i].memsz >> PAGE_SHIFT;
-+
-+		if (!cma)
-+			continue;
-+
-+		arch_kexec_pre_free_pages(page_address(cma), pages);
-+		dma_release_from_contiguous(NULL, cma, pages);
-+		image->segment[i].cma = NULL;
-+	}
-+
-+}
-+
- void kimage_free(struct kimage *image)
- {
- 	kimage_entry_t *ptr, entry;
-@@ -591,6 +610,9 @@ void kimage_free(struct kimage *image)
- 	/* Free the kexec control pages... */
- 	kimage_free_page_list(&image->control_pages);
- 
-+	/* Free CMA allocations */
-+	kimage_free_cma(image);
-+
- 	/*
- 	 * Free up any temporary buffers allocated. This might hit if
- 	 * error occurred much later after buffer allocation.
-@@ -716,6 +738,63 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 	return page;
- }
- 
-+static int kimage_load_cma_segment(struct kimage *image, struct kexec_segment *segment)
-+{
-+	unsigned long maddr;
-+	size_t ubytes, mbytes;
-+	int result = 0;
-+	unsigned char __user *buf = NULL;
-+	unsigned char *kbuf = NULL;
-+	char *ptr = page_address(segment->cma);
-+
-+	if (image->file_mode)
-+		kbuf = segment->kbuf;
-+	else
-+		buf = segment->buf;
-+	ubytes = segment->bufsz;
-+	mbytes = segment->memsz;
-+	maddr = segment->mem;
-+
-+	/* Initialize the buffer with zeros to allow for smaller input buffers */
-+	memset(ptr, 0, mbytes);
-+
-+	/* Then copy from source buffer to the CMA one */
-+	while (mbytes) {
-+		size_t uchunk, mchunk;
-+
-+		ptr += maddr & ~PAGE_MASK;
-+		mchunk = min_t(size_t, mbytes,
-+				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		uchunk = min(ubytes, mchunk);
-+
-+		if (uchunk) {
-+			/* For file based kexec, source pages are in kernel memory */
-+			if (image->file_mode)
-+				memcpy(ptr, kbuf, uchunk);
-+			else
-+				result = copy_from_user(ptr, buf, uchunk);
-+			ubytes -= uchunk;
-+			if (image->file_mode)
-+				kbuf += uchunk;
-+			else
-+				buf += uchunk;
-+		}
-+
-+		if (result) {
-+			result = -EFAULT;
-+			goto out;
-+		}
-+
-+		ptr    += mchunk;
-+		maddr  += mchunk;
-+		mbytes -= mchunk;
-+
-+		cond_resched();
-+	}
-+out:
-+	return result;
-+}
-+
- static int kimage_load_normal_segment(struct kimage *image,
- 					 struct kexec_segment *segment)
- {
-@@ -733,6 +812,9 @@ static int kimage_load_normal_segment(struct kimage *image,
- 	mbytes = segment->memsz;
- 	maddr = segment->mem;
- 
-+	if (segment->cma)
-+		return kimage_load_cma_segment(image, segment);
-+
- 	result = kimage_set_destination(image, maddr);
- 	if (result < 0)
- 		goto out;
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index fba686487e3b..92bf4ab7b7be 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -27,6 +27,7 @@
- #include <linux/kernel_read_file.h>
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
-+#include <linux/dma-map-ops.h>
- #include "kexec_internal.h"
- 
- #ifdef CONFIG_KEXEC_SIG
-@@ -230,6 +231,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 		ret = 0;
- 	}
- 
-+	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
-+
- 	if (cmdline_len) {
- 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
- 		if (IS_ERR(image->cmdline_buf)) {
-@@ -632,6 +635,38 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
- 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
- 
-+static int kexec_alloc_contig(struct kexec_buf *kbuf)
-+{
-+	u32 pages = (u32)(kbuf->memsz >> PAGE_SHIFT);
-+	unsigned long mem;
-+	struct page *p;
-+
-+	if (kbuf->image->no_cma)
-+		return -EPERM;
-+
-+	p = dma_alloc_from_contiguous(NULL, pages, get_order(kbuf->buf_align), true);
-+	if (!p)
-+		return -EADDRNOTAVAIL;
-+
-+	pr_debug("allocated %d DMA pages at 0x%lx", pages, page_to_boot_pfn(p));
-+
-+	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-+
-+	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
-+		/* Our region is already in use by a statically defined one. Bail out. */
-+		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
-+		dma_release_from_contiguous(NULL, p, pages);
-+		return -EADDRNOTAVAIL;
-+	}
-+
-+	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-+	kbuf->cma = p;
-+
-+	arch_kexec_post_alloc_pages(page_address(p), pages, 0);
-+
-+	return 0;
-+}
-+
- /**
-  * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
-  * @kbuf:	Parameters for the memory search.
-@@ -694,10 +729,21 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
- 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
- 
--	/* Walk the RAM ranges and allocate a suitable range for the buffer */
--	ret = arch_kexec_locate_mem_hole(kbuf);
--	if (ret)
--		return ret;
-+	/*
-+	 * Try to find a free physically contiguous block of memory first. With that, we
-+	 * can avoid any copying at kexec time.
-+	 */
-+	kbuf->cma = NULL;
-+	ret = kexec_alloc_contig(kbuf);
-+	if (ret) {
-+		/*
-+		 * Could not find one. Walk the RAM ranges and allocate pages for the
-+		 * buffer. Maybe some even get us into the target range.
-+		 */
-+		ret = arch_kexec_locate_mem_hole(kbuf);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	/* Found a suitable memory range */
- 	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
-@@ -705,6 +751,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 	ksegment->bufsz = kbuf->bufsz;
- 	ksegment->mem = kbuf->mem;
- 	ksegment->memsz = kbuf->memsz;
-+	ksegment->cma = kbuf->cma;
- 	kbuf->image->nr_segments++;
- 	return 0;
- }
--- 
-2.34.1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4447:EE_|SJ0PR12MB7459:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8a6c319-27b2-44e3-d05c-08dd91a9bb4a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dUFJM0dUNTZWZ1MwQWs4M1o3d0pHZjBHazY1YTZ6MXhrVzRqYXkxa0hWaXVO?=
+ =?utf-8?B?M2hiTU15Q2ZTOUh6cUtmcTFJcW5hVFlKVk1MVUI2Sm5uRVVDdzdBMjdSOEU4?=
+ =?utf-8?B?RkRTWUJuUmFXNEgvOEk0cEdyVjd5QWkwZjFMMWFjNUFYMzhOVVQwdmxBTzUx?=
+ =?utf-8?B?Q2FrRFJEQmRPWldQNG9OU3NKYVFobitWaEFLVUtkdFVwZUVJc2FZTWp3NGJE?=
+ =?utf-8?B?Q3lUSEhOUHAzWDE3d1FML1hHVnUzcDY3UGlycm51TUJGejNFcGhhQjFkYkJH?=
+ =?utf-8?B?Y201TVY3VEZLcmRSYjlpdVdTSnRTV0tkc21VTVEvTzRHNG5ONEdKOXZBY0ZK?=
+ =?utf-8?B?UEhKTGNVY042Ym5JbHlSc24wcDBkU1QvLzMzUUFnN1pMbitWODkvaFdEUU9x?=
+ =?utf-8?B?QXV1TzgyQlIzTHRyYytVYWdWcCtSa3hiMmszamJBQzZ0cFM0UlliNG9hUDNU?=
+ =?utf-8?B?YXlBeVQ2MkQrNkY1UG5OYjdNV29CQmxYVERDM2hxYmU2T0ZrSWtpY3kyM1hs?=
+ =?utf-8?B?K2QzVld0ZVBSYlgwdytna2ZjdXM1QWVLeDBkc2ZMSEJCQldNNm45MGh2UXZo?=
+ =?utf-8?B?ODVqM09UZ1pBOFNKREhBSnJiMXZZcXJBelNEclJOL1dSaTlld0YrbWo0aEp4?=
+ =?utf-8?B?c0Y4OXRoemt2QmtYbm5mSG9hZ0s4SzIybVdLOTkxdDRMYWU4K2xmYVpXdXRy?=
+ =?utf-8?B?RGg1OW96V3VTVDV0Qm93SlhPSi8yN0FyZEJRWEJIZDNUbTB6SlFOdGVUNi9C?=
+ =?utf-8?B?OUN1ajVQbmtIQmVVVkdYOTZuWFBhK2ErNUZNMmFMQzRhaDFmaDVtTVIvbUlO?=
+ =?utf-8?B?WkNKUytTVXNuTlI0dTd4aVVuME9qcUROalhzSTcyb3ZzVWpqNEsrd0tYTmxZ?=
+ =?utf-8?B?S1RDUWY1bWFQckVMQTk2TG5iQStqTmRoNXBndWVHbDZTcHNpcHpCZEJINktZ?=
+ =?utf-8?B?S05Gb3dURUZDR01EL1Z1ZVZYYWM5dXp4blhBaWloRDhWU2kvZEZ0TGJXMlo4?=
+ =?utf-8?B?a2tLWGlmMG93VlZ4VUdpRlhURnBucXZSVWFQRDFUQ2xGczlldGRadFFrNlhN?=
+ =?utf-8?B?b3hPSVpOUmVBWnJnSmlsdnJTRWRDMlBPQlBjWXR4cXFzSE5pVmhzbnM5RlBR?=
+ =?utf-8?B?TGQxczB5eXZqNStWNVppdldYU1VOQnhlYldoZUJzKzFGazAwek8renBXajhY?=
+ =?utf-8?B?bnpBQ3dpMTRLRURmNk44a1MrTWpEZjlFblFDTGxQV2s0UjFlUUl0Z0pTUngx?=
+ =?utf-8?B?VlBMUmhpdFAyMldRcVl6R05GMG5qV1d6QXhha2hlaytFSDRhaStWcUljZlpm?=
+ =?utf-8?B?UFZHK1dGU2ExR0JWTk5reDBjNlBFVGMrSVJjbUxHdkdJaVlxc2pqbEYzc1pG?=
+ =?utf-8?B?NFRmYWoxSTRGc2VHeHJ4Tmx0czB5RENxMGgrcjBzZlE0cjBSQVNsMzV4NzFy?=
+ =?utf-8?B?MDJmRVJvUGFkRE1zWHZKTzJVSVllNnFrbkFseEpBTTZ0d1Q5SkhQbVF0empP?=
+ =?utf-8?B?UkpIclptMFVzd1g5Mjc2NjZjb0lFVW9UY2o3S1Z3VlAxYnlTdHJ1Vmk4VnM1?=
+ =?utf-8?B?RlhvTmNuZHBYK1E0UHpnUElRSHp5VDlrZCtIdjFmd1JvZU1ZTDJDVjFNVmpL?=
+ =?utf-8?B?cjdjck03Yy9rTXBmTGdVcjg1UFlROGYzUEVEVldBc2U1YkZQUXJ6bmlQdjlQ?=
+ =?utf-8?B?UUNlWi9sUldMZERBaG91am85bGc2aVQ3R0oxd0FUbWJvOENud2g0Sk5SeGVt?=
+ =?utf-8?B?Nm1pckZHQ1JoVDJ6eEVNVlE0NU5qdmZNdTV3SzViUzVUdkJmV3JHT1M1RXkz?=
+ =?utf-8?B?eVpXVllOb21UaW1oeU9RMk13U2RzSWpDb0tNVCt3YUMrTGdVNzhmMm5NOEdB?=
+ =?utf-8?B?b1NreHUxNW1xbXZ5ZzVYZjBjMVpKUHJkS2JyT1hTNGlwd0w1MlhRd3FRSC9Z?=
+ =?utf-8?B?RDVTZmIzQjJBbnJBb1oxb1lSTnZiVTcydkY2Mnpzd1d2SkhqTXhHK1g4VXJt?=
+ =?utf-8?B?OWR5VFBHa1FRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4447.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cDBzamlVZnB2eEdVMnNFY2pMMXVCZWZad1lBK0V5Zkg5N3hlcmEybkUvdGh3?=
+ =?utf-8?B?TEhmS29mNEhjYjJTamVneGREOUpCVDZRTERQYTNJMkkvV1I3d0Q5Q05OUFJK?=
+ =?utf-8?B?UFRnWU9ua3lFOG9TbktlMEFTYTgyR3lUVmdCRUFQaGgwbUZBam94eGEweEdt?=
+ =?utf-8?B?UFRpUWsxMWFHY0pDMjN1eGttZUt6anhTRW02allZeEM5MENMMkRQcGRnejZP?=
+ =?utf-8?B?dkM2ZWNjbGp4d21DdkdiaVJCQ2wwK0hZcW92MDJ1R2ZEc0RUNUdydVkxcUJG?=
+ =?utf-8?B?WnFBeDd1dWVSWjk4K2dRMnc1dHRwVVRaSndvekRvM1N6bS9NUngzbDNacmFO?=
+ =?utf-8?B?bmpCZTJ1cVduZm1PR3QySm15eThDcW1rSkduMEgzNnFkMDFHTG9IU01DWG9C?=
+ =?utf-8?B?czVLblprUmNaQVNzZjRVb0ZtMlpXRFRNWEt0a21RM283RG9oNDZZdVBkWSs4?=
+ =?utf-8?B?TnFBbW1ZTkYzbk1veTJVcFlnMmVGT1R2bGcyWkZrOGlXdUI3TE52ejYxdThW?=
+ =?utf-8?B?YlorYUtBcVRyWHFPd2pobVRyTWNNajhyS1BoL3NXT3o0NFBEOGpaMDVwNytl?=
+ =?utf-8?B?VFZRUm1teFh6dEFDMHVOYzcwUHgyWFIwTWZkUk56OEgzMXdsS0ZhM0tkVlhG?=
+ =?utf-8?B?NXVGNXV1U29TellZWFE0NDZBb2RCZjBQaDE3S1FZekxTZUNTMEdHeWFIbjJF?=
+ =?utf-8?B?TEluOHNsaVl4TDFaOGU0UzNqc3l5RXhkM2o4WDJkc2Z3TjhtRndtOWg2YUl5?=
+ =?utf-8?B?NW5oRnUyVWxmMThmSWFva2g0MUY4T3FsenhIc3hTTHVUbDg2UWo4bnRnUzBv?=
+ =?utf-8?B?ZEF6M3ZndG5Ld3d5eVRVNlVnR3dYdjhFNVZDU280NE1PRmZta3E4cmZ3eDJX?=
+ =?utf-8?B?UG55VlNVNGZSUzJ5djJPKzVOZDc5Vy8vTWhJSHdZMldyakdWNEVzU3pZejMv?=
+ =?utf-8?B?T0x3NlRDdkpKS3lGMmhEL2xvdG9NTHBRZ3dyZEtBbkw3U2Q1dXJHKzN6c2NG?=
+ =?utf-8?B?WVpFZkM5QlBtVitsYkdsMVNPZnVhNlJLN05UUXZkM1VJU2p5Ym1YUkpxZnli?=
+ =?utf-8?B?R1Rnait4aU80M3FYQ0dxaitobW1jd2FWZ1QwdWZkSHVVSUZrcEdWUkZVcENZ?=
+ =?utf-8?B?RlNET0JZSjVoSDNvT0lRbndXcUNBUGRTVXB5TjF6MzFIbU1jdXRiN2NtZnQw?=
+ =?utf-8?B?cERkeXF3d3prb0pmRzI4QUxNNVhPdTN3K3ZqWWhnKzkwZm1QNmNPaUI1SGVX?=
+ =?utf-8?B?cjUxVkJISmpjY3V4T3J3VitLNnZvc2R6b25WSkgycTdqNUtmb2swMnZFZ0FH?=
+ =?utf-8?B?QWc3RDhabm9QV0pSM3VqQm5aRGlpNm5nQlMxd1dTMUxvOEliSmZZRURORUo0?=
+ =?utf-8?B?S3pNdWFCbHNGTFNrNC9YTm02dGtjUm5QaHN6a2Q3YWh5b0xPR0VkRUNDZ1VK?=
+ =?utf-8?B?NGJRREVIYWlJVkJUYTRHaUkwOCtNcE1Qbi9pNndqc0N0MXRFWjhnNjhCcEpV?=
+ =?utf-8?B?L2hES0ZqRENKM2IzZ3hNQkY4Vm5Cc0ZtKzR1M0Z2aEFBMkFhU25nUVZJalJy?=
+ =?utf-8?B?dlNBdUpKcXo5UlpCemUrMUJsOWJxZXQ0TmxwTWEydjZUQmJXMmsxN2phb29U?=
+ =?utf-8?B?dGQxdVJTUjNLazZnVERWakx0VHZFSzVNT25NM0tjR0xVciswMVhEc1V4OFVG?=
+ =?utf-8?B?VmUya2RpenlJVFZrVEVVUG9CZVBvbWNTQlRhUDBOZ3IzVG9FTzhxTzF4enJS?=
+ =?utf-8?B?QktkbUtMbjNIemN0RkhZNlVGWWV5Z09oanM4YVI0akoxWFd4bU9zTldTazFP?=
+ =?utf-8?B?aENnbVJMNktERk5ObXF6ZlovR2M5RSt1U2FMVDVYWndWOGdCOGRURG5RYVZo?=
+ =?utf-8?B?QmdJM2taK0c5MWFleitoNWVDTDM1QXNmKzJYa2NZRDVPZDFRKzgzeDZua3JD?=
+ =?utf-8?B?ZGxCZWF2TU1tQUdubFRQVlBkN1RwY3dvRjEzZWxwcDZENGhQVUlkQnl1QUtP?=
+ =?utf-8?B?eCt4cDcvQ2F5OWRPSlRlZTV0QkhvVEZ3NlRwdEU1WVVoRzg1T3ZnV2VIQUc0?=
+ =?utf-8?B?eTI4bnM0YmJJVXd0NDZmR3FUaG5Ldk1yUTdteFVCNERnTy9XSGVNeUNpMGR0?=
+ =?utf-8?Q?bcf5ptZpEPcuGVi28OjllQBMg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8a6c319-27b2-44e3-d05c-08dd91a9bb4a
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4447.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 23:07:13.6074
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: atVCh/cxn4or0zEyWHxgCAfABu5HQ9BET+WOTpIDF6bPEcxIHx18rh0iJFUno8UGn8G1aW9rd5q79oEqCVlwQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7459
 
 
 
+On 5/12/2025 5:16 PM, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> During platform init, SNP initialization may fail for several reasons,
+> such as firmware command failures and incompatible versions. However,
+> the KVM capability may continue to advertise support for it.
+> 
+> The platform may have SNP enabled but if SNP_INIT fails then SNP is
+> not supported by KVM.
+> 
+> During KVM module initialization query the SNP platform status to obtain
+> the SNP initialization state and use it as an additional condition to
+> determine support for SEV-SNP.
+> 
+> Co-developed-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Pratik R. Sampat <prsampat@amd.com>
+> Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+Reviewed-by: Pavan Kumar Paluri <papaluri@amd.com>
+
+Thanks,
+Pavan
+
+> ---
+>  arch/x86/kvm/svm/sev.c | 44 +++++++++++++++++++++++++++++++++---------
+>  1 file changed, 35 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index dea9480b9ff6..8c3b12e3de8c 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -2935,6 +2935,33 @@ void __init sev_set_cpu_caps(void)
+>  	}
+>  }
+>  
+> +static bool is_sev_snp_initialized(void)
+> +{
+> +	struct sev_user_data_snp_status *status;
+> +	struct sev_data_snp_addr buf;
+> +	bool initialized = false;
+> +	int ret, error = 0;
+> +
+> +	status = snp_alloc_firmware_page(GFP_KERNEL | __GFP_ZERO);
+> +	if (!status)
+> +		return false;
+> +
+> +	buf.address = __psp_pa(status);
+> +	ret = sev_do_cmd(SEV_CMD_SNP_PLATFORM_STATUS, &buf, &error);
+> +	if (ret) {
+> +		pr_err("SEV: SNP_PLATFORM_STATUS failed ret=%d, fw_error=%d (%#x)\n",
+> +		       ret, error, error);
+> +		goto out;
+> +	}
+> +
+> +	initialized = !!status->state;
+> +
+> +out:
+> +	snp_free_firmware_page(status);
+> +
+> +	return initialized;
+> +}
+> +
+>  void __init sev_hardware_setup(void)
+>  {
+>  	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
+> @@ -3039,6 +3066,14 @@ void __init sev_hardware_setup(void)
+>  	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
+>  
+>  out:
+> +	if (sev_enabled) {
+> +		init_args.probe = true;
+> +		if (sev_platform_init(&init_args))
+> +			sev_supported = sev_es_supported = sev_snp_supported = false;
+> +		else if (sev_snp_supported)
+> +			sev_snp_supported = is_sev_snp_initialized();
+> +	}
+> +
+>  	if (boot_cpu_has(X86_FEATURE_SEV))
+>  		pr_info("SEV %s (ASIDs %u - %u)\n",
+>  			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
+> @@ -3065,15 +3100,6 @@ void __init sev_hardware_setup(void)
+>  	sev_supported_vmsa_features = 0;
+>  	if (sev_es_debug_swap_enabled)
+>  		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
+> -
+> -	if (!sev_enabled)
+> -		return;
+> -
+> -	/*
+> -	 * Do both SNP and SEV initialization at KVM module load.
+> -	 */
+> -	init_args.probe = true;
+> -	sev_platform_init(&init_args);
+>  }
+>  
+>  void sev_hardware_unsetup(void)
 
