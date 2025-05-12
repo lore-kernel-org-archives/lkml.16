@@ -1,105 +1,117 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950CBB66E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4272422A1E5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065078; cv=none; b=DWFXqawR4tx0QYGN9JDu5iEBeOtXMo44BdCxuE0G0RWxsyoIhJsuxv9RhMAgkgRvVG+VQSSIVNVGBpaPMi5IbsZmOWctU4EgNgPg5wsaoGLyh/ykcoAID4hwAm896i9dVSxgffdlWOOuxchyRTgmZcfbgTcQhACjUZyJBDX6P3k=
+	t=1747065132; cv=none; b=pJqkj9bfXOajTQECVMOhovztHos8QmvDdGT+pEdJu/8iwUCxVuJrvYSX/NMrPMJi5lq3Aygh74NEgkHAnA2XwBk8Q/FQrPUXG9jFXcbVkld+8b+yBta1ad20556lfHmLYmUoEl4ULE6LjJ2qFan4UBQK6OhMtTfKOS5EOE+onzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065078; c=relaxed/simple;
-	bh=OSUg+N6ZGVNCSy/fTQXiy5e7D4HhGMikT3AsJ5G52x4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=M/nrlq/GHlgqvzlAfS9/BqM/53HaCAULSlFvT/KrHIJJMXql3pXn9TfNeOlSzmYd2yH92zPA5oDAM8e0voowADJTtdp748KX8RQMT9VDY6GLo/q5ScF21z0l9YVWRteLALOsGtRi5xohUkfUeWuMexBCfdqQE8bgpgYHT0/a6pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=IfBjpsxo; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1747065132; c=relaxed/simple;
+	bh=hs9+KggMp/U099qUIV+eyLEDo/uHUutOdEs9dFGzZOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Us+8zzNGWERGcTDahlQKw6bt3pZt4KE4mR6jyotkTG1yyhLYjkZ1xGAlCWCS4F3bXNEqzczNGcPg2XU+wdkzb+c6GGNyGaT03jLtdd75ayb4yGE8eVDGpEJaGhRhnNaKu9qEnJSwCNKhmAM25VFeO4tE21ixieIZSL/qXFFhQsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pciWP+l0; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="IfBjpsxo"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id EB095A0AC9;
-	Mon, 12 May 2025 17:51:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=fCPzAe2GOYDHU/PDRCZB
-	IwbMD0TgaIUDGr1FA9yLtAQ=; b=IfBjpsxoKu5DFgXZnszE5ZsHyO4ryROVNdiB
-	cvaonLyeidIXYQeIoNjIbLyB4tFNz+7DJ9rYMUYi0J4eDJUz3zhodY0pfAcRvOPY
-	VtgFyviRXW4ZjIoS0uNlVzDPuREDWkS5t9UNXOZOsxrFTY1H6yfksOFAgaU4CSf9
-	sTmY9CYd34jq461Lb10QQ/nD1PyBQN/cFJppw7mENJ4gmkndcMWEwuYWRwVjziZB
-	NLy3D4cTtEflC1VgxH64Opf7J+b/AfGckDEcNy3QLdQ6WOAzqIaqDZlAUDu2F6Sd
-	BIg5EZ4oc/rbuvlTUMvUkFIWynLAh7VeJZq/3hFW8IWRPKjL1l3eXnejMN1J01c7
-	8XZW0im6cNdBLkNsS/wK4yF4+C8X8BXZYuSWX1XlG/Pgg+JceFUiA4Py2s1PJ6Fk
-	JcyDfznXxjG7yLexqvYF4hBG0iD91j2l6P8Zf2/vAONoEEE/A/jMTq7zDXmGIal9
-	v2tVOJYXPh9FhqSOd108HEtenAQAvp2OZyIdKhY5/Yj/OsFOADrt8zBascFisVVh
-	oRn0RpmPiiM8TnRkDVF0juM7AGuaF6AY3H/2lDrF83XjXxNgVw4XLrDtrg30W1xx
-	FaoO25iX2R6wMIw6bwSEwj6MfHGdnBLQy8v5eSmEL7a+4QRoQBBs9e3/FUS0fztj
-	vzLrRHI=
-Message-ID: <2c2ff01f-b6e2-4b9e-958a-c4c405518a54@prolan.hu>
-Date: Mon, 12 May 2025 17:51:10 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pciWP+l0"
+Message-ID: <6d43f466-5786-4957-86c8-8297aa739030@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747065128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bQK9BG+j/hEhpu8hZi8th8YhOfeYv7OqsnL+EJuFLtI=;
+	b=pciWP+l0iQhMy02PYIChZa5nE48TTtrzBTyWxtlMx62kQYXCqczinCMiKQOby7j7FI4QCr
+	oWhVwEMkwG/ZjThwcIQ9gsEB/nmd/15Ss1qfyaxQYbRE/L/gsvv75bMs6GLR/mLaEus5h5
+	mVbDPY1qIuhagBGUqDpPeHZJViv9pcs=
+Date: Mon, 12 May 2025 11:52:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
-	<richard@nod.at>
-CC: linux-mtd <linux-mtd@lists.infradead.org>, linux-kernel
-	<linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
-References: <20250512084033.69718-1-csokas.bence@prolan.hu>
- <87frhambri.fsf@bootlin.com> <d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu>
- <1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at>
- <4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu> <87r00ugcat.fsf@bootlin.com>
- <1689545397.30901605.1747063396608.JavaMail.zimbra@nod.at>
- <87y0v1g7xz.fsf@bootlin.com>
+Subject: Re: [PATCH] arm64: cacheinfo: Report cache sets, ways, and line size
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ linux-arm-kernel@lists.infradead.org, Radu Rendec <rrendec@redhat.com>,
+ Will Deacon <will@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+References: <20250509233735.641419-1-sean.anderson@linux.dev>
+ <20250510-fresh-magenta-owl-c36fb7@sudeepholla>
+ <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
+ <20250512-straight-dexterous-oxpecker-fabbc8@sudeepholla>
 Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <87y0v1g7xz.fsf@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: sinope.intranet.prolan.hu (10.254.0.237) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94853617464
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250512-straight-dexterous-oxpecker-fabbc8@sudeepholla>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
-
-On 2025. 05. 12. 17:33, Miquel Raynal wrote:
-> On 12/05/2025 at 17:23:16 +02, Richard Weinberger <richard@nod.at> wrote:
+On 5/12/25 11:34, Sudeep Holla wrote:
+> On Mon, May 12, 2025 at 11:28:36AM -0400, Sean Anderson wrote:
+>> On 5/10/25 03:04, Sudeep Holla wrote:
+>> > On Fri, May 09, 2025 at 07:37:35PM -0400, Sean Anderson wrote:
+>> >> Cache geometry is exposed through the Cache Size ID register. There is
+>> >> one register for each cache, and they are selected through the Cache
+>> >> Size Selection register. If FEAT_CCIDX is implemented, the layout of
+>> >> CCSIDR changes to allow a larger number of sets and ways.
+>> >> 
+>> > 
+>> > Please refer
+>> > Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache information probing")
+>> > 
+>> 
+>> | The CCSIDR_EL1.{NumSets,Associativity,LineSize} fields are only for use
+>> | in conjunction with set/way cache maintenance and are not guaranteed to
+>> | represent the actual microarchitectural features of a design.
+>> | 
+>> | The architecture explicitly states:
+>> | 
+>> | | You cannot make any inference about the actual sizes of caches based
+>> | | on these parameters.
+>> 
+>> However, on many cores (A53, A72, and surely others that I haven't
+>> checked) these *do* expose the actual microarchitectural features of the
+>> design. Maybe a whitelist would be suitable.
+>> 
+>> | Furthermore, CCSIDR_EL1.{WT,WB,RA,WA} have been removed retrospectively
+>> | from ARMv8 and are now considered to be UNKNOWN.
+>> | 
+>> | Since the kernel doesn't make use of set/way cache maintenance and it is
+>> | not possible for userspace to execute these instructions, we have no
+>> | need for the CCSIDR information in the kernel.
+>> 
+>> Actually, these parameters are directly visible (and useful) to
+>> userspace in the form of the cache size. Rather than make userspace
+>> perform benchmarks, we can expose this information in a standard way.
 > 
->> ----- Ursprüngliche Mail -----
->>> Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
->>>> The problem we _have_ though happens to be a bit different: here we are
->>>> blursed with a system that corrupts data at a noticeable
->>>> probability. But the model is the same: a stochastic process introducing
->>>> bit errors on write. But I sincerely hope no one else has this problem,
->>>> and this is *not* the primary aim of this patch; it just happens to
->>>> solve our issue as well. But I intend it to be useful for the larger
->>>> Linux community, thus the primary goal is to solve the first issue.
->>>
->>> I don't have a strong opinion there but I don't dislike this idea
->>> because it might also help troubleshooting errors sometimes. It is very
->>> hard to understand issues which happen to be discovered way after they
->>> have been generated (typically during a read, way later than a "faulty"
->>> write). Having this paranoid option would give a more synchronous
->>> approach which is easier to work with sometimes.
+> Yes that is already present, which is DT or ACPI.
+> 
+>> There is of course [id]cache-size, but these properties are absent more
+>> often than not:
+>> 
+>> $ git grep arm,cortex- 'arch/arm64/**.dtsi' | wc -l
+>> 1248
+>> $ git grep d-cache-size 'arch/arm64/**.dtsi' | wc -l
+>> 320
 >>
->> UBI offers this already, there is a write self-check as part of the io
->> checks that can be enabled
->> via debugfs per UBI device.
->> So for troubleshooting this should be good enough.
->> There is room for improvement, though. Currently it uses vmalloc().
 > 
-> UBI is full of uncovered resources :-)
+> Just to be clear, I am fine with exposing to the userspace, but just
+> not reading those registers as stated in the commit message I shared
+> earlier.
+> 
+> Why can't it be done via DT/ACPI ?
+> 
 
-For sure. Plus, even though we use UBI + UBIFS, that may not necessarily 
-be the case for others. Maybe someone uses mtdblock + some 
-"conventional" FS (ext*, f2fs etc.). Or maybe they use JFFS. Or maybe no 
-FS at all. We should still allow userspace or higher FS layers to be 
-notified of the problem.
+Well, do you want to go through 200 SoCs and look up cache info in the
+documentation? I think it would be more expedient to look at the TRMs
+for two dozen cores and determine if the above registers expose the cache
+info correctly.
 
-Bence
-
+--Sean
