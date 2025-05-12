@@ -1,155 +1,137 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036C9254AF6;
-	Mon, 12 May 2025 21:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F315475E;
+	Mon, 12 May 2025 21:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747085043; cv=none; b=lVrvTp4MSFBQ+q1JLttbUODAtdV/+tpF+EjJClXzPB65a3DAl0Cznp0xLcWHy6bytRdJdXpeMWoBMoYj1PJlrheEVBoxfdct+SFboqH46KrQb4VgkjYtkKI+7fRX3rNn+uCPAAdWODJ4ENNp+yWrSEP8Q9JSGKXbZocTILrv2og=
+	t=1747085239; cv=none; b=XM9hsDoQRuIR476tasIasJUzFjZY/nBrSgjCNGWC+Jz1xbxjnbn9hpVY41+ZFuk5hotCuhEbcFWGMzik+z8r51de2fl/J16i/C6ufrSzT4Neb+Kr/E+fejrRHnqg9vWUojFhzsN4ceZdRVpLzFybMEFxoU18EsvkeaEcSdiJ2/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747085043; c=relaxed/simple;
-	bh=AgRKYtMQIMH8ehdZO9efCTgqJfzUevCpWL5LffGLj04=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=X8TFeybJPTZf4igBtaM5J3/PjqALPmiuYzaOixhQXlI+TrACQb6Zc0e6kYKk1ZRGz6MLZwsxohFthE5i1mqsuEHWlUKj7pipzSJQJzHqNUBasJulYQTdOlVcnTPo69TsywnC/XUGUuHOSuWEVnw9FRBCicN5NAO7yTZ4qAZtV2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NjhZIeRN; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747085239; c=relaxed/simple;
+	bh=MjwoJwDMlLUQ0bo4JY/L1ooY69zgG23YhBSme2DpFUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P/JCwhkJe2RMwdPWMq5tzR5vPBqGlDirQyyulWfpuQTMGy9I0kmbjDAcfIxJffW6Jd1PCtno8S92Jd0k6ynfZ0cY7KJ87OFwyGTavrX3bwYxexA7rHF01jz1oan9m4cng898R/DE00DmebQaCEJ24Szg6cQkjja2kJhuw+jhWAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fDBnXMvb; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjhZIeRN"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5240b014f47so1834425e0c.1;
-        Mon, 12 May 2025 14:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747085041; x=1747689841; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H1y8ddqUwK2mifQat1oCyUc2hwl5C0u9uYpnJo71fuE=;
-        b=NjhZIeRNC58AobS3dS5GpxTQO4ixIjZkRlzLDW+HACpJvYcGy8w/6prrhV94sJMOnI
-         vdg5ew7dWkFTfUq70ca/qel9MYjyg/BnbxBAKQ7STFLZ2mbvBaWTJOi3CX0XU5l3/FoB
-         Y9mGR65rOyZfE9RbatboQBZS/u5a93eKPBZM2GYGFcSQ5a/ROAKKhfg5RKxzRh4MN15/
-         hCSvTXAcf34NoLb6LrDBpC2ZnZIc0UE6yGbPLJoOa5tlsnn6rUa/TJujR9+Wadc7+j07
-         mrz6zlMkA6uFahjn03EetnNIfDZh/gEEODmOGG0tDhXzwo65+urDZnyCNHAGZjmXJ7Nx
-         4Ufg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747085041; x=1747689841;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H1y8ddqUwK2mifQat1oCyUc2hwl5C0u9uYpnJo71fuE=;
-        b=lAhxt4Vh185fSRWdayLT5Lp7LEjoqsqfgVH60Skj7oNCUqBgh+9Ic4qgayPftM3qfm
-         J25TJ9e/j7UEXy/4irOqu0cuzkWNCdF1VBG05r9JDF4VXcXwZ2wpr76967Rb83nMmfPE
-         Ou331HE9IgmBiF3atxv8sAHdCwkOwC0lerA0EFfxsbV2iRrznI6mNCDWhA67lxTayVOQ
-         B6Gd16fIGzo2qPZQNwWqaoaFJqqVuUuGjjHOGeQ7njOj/YtsqjsmFCaGLXJxRN9SjyNQ
-         UaLnFxXpJvltek4mn4w9BOaPqmehh6BYHIy584O8INSsHPCxsniHB8qtFhC9k4nwgJTn
-         naQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcnPOwr6JRm3guyXqgvnhIoGa8WGaPbnlUiCj1vSy0DPngaEMv534mVrX7bMwJnTCg9tU5mOixQ5Yx0q9r@vger.kernel.org, AJvYcCWB9Y2ZBfTYH3W8n7J6f5yzUBcI1BJEQcq6KCpdKmDZmCL3kgJ27cMFgr3CPpt0mI4e2JGSraMvrxU=@vger.kernel.org, AJvYcCWcMm+3L0Fqj05ATBR4EJ6qmVV72fcyOqZjL4vl8O7ehXVI0JLNV/gWWoSxzsemC7CiC+37rQ33E6S96Wo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8jJW0LfE3YZScySLhahIW4EhXuINGCDiBo/Wb//41IUh6814R
-	iRe9mVtdO44D3lizfl7l/cE77G2o/3WmHsRuvX3tpPPJrvIQedeP
-X-Gm-Gg: ASbGncvmNCNjw4GTx/o0oMTkNaZ1U4b86rXNmlcxU9asQBelaqpKfMU+iq3AkOlSxkO
-	s+p89ZLBcGXrzOvNolf+yDwQAljLZCitCRfriNsoh3TWRme5bcL1z6Rec12x9X1N50BcHHUyGeP
-	rcpd6dMzqXjxUxDh/df7Z6ZfUHvYv/pkIIgaAjkEq0a1/8UbL78yBhoTDr8k2GGtYl4/blpkQgk
-	rAAWT+g6F733zR9D9TmY9pJIuQg0bqZ5bGd1rXXE5qtd8m9LDJPWF81ME2wtNdSja1cUEaISH/o
-	4igZmDdXcnl/5DjpKrpSUyRe5FXd5E69TFMIGQjb+99L
-X-Google-Smtp-Source: AGHT+IGJNYqfAtG1JdrrcwOLDs4b80cqSTnpN61CB/xrNs82fEgIxdlKPwf178QFoQNeK9272PXodA==
-X-Received: by 2002:a05:6122:882:b0:529:2644:8c with SMTP id 71dfb90a1353d-52c53cb288cmr9706394e0c.8.1747085040746;
-        Mon, 12 May 2025 14:24:00 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c5372af6csm6394067e0c.14.2025.05.12.14.23.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 14:24:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fDBnXMvb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747085237; x=1778621237;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MjwoJwDMlLUQ0bo4JY/L1ooY69zgG23YhBSme2DpFUM=;
+  b=fDBnXMvbV35fPDnGVtA/SX5x8gSy/QPkDn1ez1giUjShLx2JFATskEKX
+   j8ufvfpvU6VDWWQIC3FSf8VcZtwOfK7VaC81SQaGYTiH9aPznq5vML2+U
+   N2qCpa/LY9TLF7CwriDn7kWR5ylcoFhh7kZP3oHBoTwRouhTtE4FKvx9K
+   y94AFtAOSu/vNpqBzLSWApnqwuXn92//zGJPE/StEr7XDwYbAOKAKSYp6
+   WEV+CjD4uBYfGrmLCfMw1Z6oMxpWZF0W7EUYMf2PSZ9rxGa3FOENPHQkd
+   TQYBv/iZcGlkMW+aZRA5XCeHKVIAxatm2XXrVgyouenDxriCSaKCbK41v
+   A==;
+X-CSE-ConnectionGUID: 66BwpoSfQZueXlXv1gPVqA==
+X-CSE-MsgGUID: DXH4lvgERgaEnXimNsEnwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="51555313"
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="51555313"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 14:27:16 -0700
+X-CSE-ConnectionGUID: EFmkp3ZhSKOT4e5wVN8G5g==
+X-CSE-MsgGUID: m8H7JVlgRC2iGeHO15JLtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="174636997"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 12 May 2025 14:27:13 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uEag2-000FR9-30;
+	Mon, 12 May 2025 21:27:10 +0000
+Date: Tue, 13 May 2025 05:26:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v6 2/2] thermal: Add support for Airoha EN7581 thermal
+ sensor
+Message-ID: <202505130415.DDziIQRY-lkp@intel.com>
+References: <20250510172509.2547273-2-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=254b8c2c11cc424654e002f764a298d777677eb2956769ac6cfe99a4f75e;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Mon, 12 May 2025 18:23:44 -0300
-Message-Id: <D9UHYC9360RO.8BN28N2MJ2G8@gmail.com>
-To: "Antheas Kapenekakis" <lkml@antheas.dev>
-Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "Jonathan Corbet" <corbet@lwn.net>, "Hans de Goede" <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Jean
- Delvare" <jdelvare@suse.com>, "Guenter Roeck" <linux@roeck-us.net>,
- <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH v1 02/10] platform/x86: msi-wmi-platform: Add unlocked
- msi_wmi_platform_query
-From: "Kurt Borja" <kuurtb@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20250511204427.327558-3-lkml@antheas.dev>
- <D9UFCPLQHE5V.UH1BAK279S5M@gmail.com>
- <CAGwozwE6-=9L2RTwipgHjmdQWzBAX7PxBYgJO_oGcWaHtLhoSA@mail.gmail.com>
-In-Reply-To: <CAGwozwE6-=9L2RTwipgHjmdQWzBAX7PxBYgJO_oGcWaHtLhoSA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250510172509.2547273-2-ansuelsmth@gmail.com>
 
---254b8c2c11cc424654e002f764a298d777677eb2956769ac6cfe99a4f75e
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Hi Christian,
 
-On Mon May 12, 2025 at 5:51 PM -03, Antheas Kapenekakis wrote:
-> On Mon, 12 May 2025 at 21:21, Kurt Borja <kuurtb@gmail.com> wrote:
->>
->> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
->> > This driver requires to be able to handle transactions that perform
->> > multiple WMI actions at a time. Therefore, it needs to be able to
->> > lock the wmi_lock mutex for multiple operations.
->> >
->> > Add msi_wmi_platform_query_unlocked() to allow the caller to
->> > perform the WMI query without locking the wmi_lock mutex, by
->> > renaming the existing function and adding a new one that only
->> > locks the mutex.
->> >
->> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
->>
->> You only use msi_wmi_platform_query_unlocked() to protect the
->> fan_curve/AP state right?
->>
->> If that's the case I think we don't need it. AFAIK sysfs reads/writes
->> are already synchronized/locked, and as I mentioned in Patch 10, I don't
->> think you need this variant in probe/remove either.
->>
->> I'd like to hear more opinions on this though.
->
-> Are sysfs reads/writes between different files of the same driver
-> synced? If not, it is better to lock.
+kernel test robot noticed the following build warnings:
 
-You are right, you definitely need locking there.
+[auto build test WARNING on rafael-pm/thermal]
+[also build test WARNING on linus/master v6.15-rc6 next-20250512]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-However, what do you think about introducing a new lock specifically for
-this state?
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/thermal-Add-support-for-Airoha-EN7581-thermal-sensor/20250511-012647
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal
+patch link:    https://lore.kernel.org/r/20250510172509.2547273-2-ansuelsmth%40gmail.com
+patch subject: [PATCH v6 2/2] thermal: Add support for Airoha EN7581 thermal sensor
+config: alpha-randconfig-r111-20250512 (https://download.01.org/0day-ci/archive/20250513/202505130415.DDziIQRY-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce: (https://download.01.org/0day-ci/archive/20250513/202505130415.DDziIQRY-lkp@intel.com/reproduce)
 
-IMO locks should never be multi-function and I don't see why all WMI
-calls have to contest the same lock that we use for fan stuff. This
-would eliminate the need for this extra function.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505130415.DDziIQRY-lkp@intel.com/
 
-Also keep in mind that by introducing this patch you are also extending
-the time the lock is held per WMI call, which is also unnecessary.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/thermal/airoha_thermal.c:317:9: sparse: sparse: statement expected after case label
 
---=20
- ~ Kurt
+vim +317 drivers/thermal/airoha_thermal.c
 
->
-> I want a second opinion here too.
->
-> You are correct on probe/remove.
->
-> Antheas
->
->> --
->>  ~ Kurt
+   297	
+   298	static irqreturn_t airoha_thermal_irq(int irq, void *data)
+   299	{
+   300		struct airoha_thermal_priv *priv = data;
+   301		enum thermal_notify_event event;
+   302		bool update = false;
+   303		u32 status;
+   304	
+   305		status = readl(priv->base + EN7581_TEMPMONINTSTS);
+   306		switch (status & (EN7581_HOFSINTSTS0 | EN7581_LOFSINTSTS0)) {
+   307		case EN7581_HOFSINTSTS0:
+   308			event = THERMAL_TRIP_VIOLATED;
+   309			update = true;
+   310			break;
+   311		case EN7581_LOFSINTSTS0:
+   312			event = THERMAL_EVENT_UNSPECIFIED;
+   313			update = true;
+   314			break;
+   315		/* Should be impossible as we enable only these interrupt */
+   316		default:
+ > 317		}
+   318	
+   319		/* reset interrupt */
+   320		writel(status, priv->base + EN7581_TEMPMONINTSTS);
+   321	
+   322		if (update)
+   323			thermal_zone_device_update(priv->tz, event);
+   324	
+   325		return IRQ_HANDLED;
+   326	}
+   327	
 
-
---254b8c2c11cc424654e002f764a298d777677eb2956769ac6cfe99a4f75e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCJm5AAKCRAWYEM49J/U
-Zi7zAP99xb45vUrqw7yJ5tFE0rSGA79wZt2Q3mTC7iPwI/xUygD9GcEHVVY7P6ss
-FG8GFO8i3rKWll1Kls500qeReLmHuwU=
-=GJbb
------END PGP SIGNATURE-----
-
---254b8c2c11cc424654e002f764a298d777677eb2956769ac6cfe99a4f75e--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
