@@ -1,108 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC922500CF;
-	Mon, 12 May 2025 10:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43B22500CF;
+	Mon, 12 May 2025 10:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747045932; cv=none; b=YZilpYC0mu9Loj2+S/wdNM5sV2UTFkutCsrpMmgQFOjeM04LPoUu7sCZYCMw6S5j6AMMTHFcjUtBvf6iqWtOCXzdDbBwpjZoEa7pdvddFNeOq4ESElbR8i/cphWczDmfreG93tDX+h5A3sOFoWg3y5yMfrNnp6d9krQhaLxKsb8=
+	t=1747046011; cv=none; b=IyfsMVe0xOXn1ZbCET7I8Zbi1WLEmVCn5deHY6ATll+yeNLr59IDS+x4k7+BYJHjSL35Nb/EZvAzAVrVGea2H4oLgf/8KPLHqcTblefLIMGR1WQbi8hj7iRVT3QPM1v0rgPV+1pwHwtGchay24TPijH8nKDZX1IDQBJOlS2YqLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747045932; c=relaxed/simple;
-	bh=LNx6d+LGN0UuAE1Kev9HiY5qljRgbBixlBjM7cy0ht4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T+0vkwfoa9BfBOz76JhyD1SCU+q72Ss5C2HyK20BqfeJk7+iUv7a/LQ1wvcY2WnHgKdzXhCUJzlYaRfFMZKZ6v56G/4k9swjBc5gEZF1s6/muhiTDWI4kPrK2bLw9IHwNo3ANgTFZWrcvHLmWvFrJKjxhTm9w5idn7TmZ06a7j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PeJ0af0/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747046011; c=relaxed/simple;
+	bh=G3Cxx0BHSe9RqF+Hv8aFljAC132Oze/gTGVIrLfY5HY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mcr3mv0fb090UaRz9Hkb5W9BEBJWA89m9VkwnQy08ZJpu52SXchD0Dlor/kkFsmh8NOW8t5gcYP79zS3+9t55HofgZLchUFgAsLa66xLsOy94pQ8Xma1txKoNTnGv4B9zhBp2yoAVXhad8PO/mC64GoVg+XVfKE4XLO951u9UMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVekFqWR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PeJ0af0/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747045931; x=1778581931;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LNx6d+LGN0UuAE1Kev9HiY5qljRgbBixlBjM7cy0ht4=;
-  b=PeJ0af0/Pxq1vXe/yO/buDoD60wqeDV6ygTuqnofUSnA69enGLFM885J
-   qZVDFvCxW0SurCPUC8qEQZ0iJDPM5HB1eC/aXuKBwdQitukTdzxzxnK9i
-   St8S2H8I7qsdHYOzmOlCbalUVMl2nvZTJz3iY6bMfc/eh7drVbsKOV05O
-   LWZm+1nxLu3KKgEamLI2xnZ6bDpFLYjc3+ymhX/dEYIzVpbbnzGm7k3+P
-   lzCDKpTT4CLyCEaZQ6TipfesuDf4XjJiGqV+uNq6D9GmhBhyb2JwTRmsG
-   51Dz4CUzhrb3h66kIjKNull7clkzbIZdumiPX+/9vGvvmEl5pAmX5dBUq
-   w==;
-X-CSE-ConnectionGUID: 7pQ8W5rsS+uyPz4g/qdM/A==
-X-CSE-MsgGUID: r+oddfWmSSCrJG5nP7+TKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48832450"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="48832450"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 03:32:10 -0700
-X-CSE-ConnectionGUID: /G0itieJSEKZW5XGggzgTA==
-X-CSE-MsgGUID: y/nPGEjAS+ypF8F9DpOSLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="174474865"
-Received: from snowacki-mobl1.ger.corp.intel.com (HELO [10.245.253.141]) ([10.245.253.141])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 03:32:04 -0700
-Message-ID: <60cf19a2-4f55-4330-991d-5ec76ab5a5f3@linux.intel.com>
-Date: Mon, 12 May 2025 12:32:01 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVekFqWR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B783C4CEE7;
+	Mon, 12 May 2025 10:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747046010;
+	bh=G3Cxx0BHSe9RqF+Hv8aFljAC132Oze/gTGVIrLfY5HY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iVekFqWRnOyc0Ak18pcmTgF0y0FaYGHT1DdYy9A/aFHOArBrsIcDfN9Ga2SMTSDyf
+	 7Pt6uD6d+TpW5IKMVHGH3gh9Rh1alm752H3rM77hLepVMCHfLjw2Ca0vg+Ca3gNDPq
+	 MUBvyV2WOLgLGTNqcYchqkKp9qsQnud6oRUvIMQwb8Gv+35i+4+DTLAnfLysIPrYpO
+	 gmkTK1P1zLEex64g3edXY5enERGP7k9+MNS6F4VN71+7XA1MfZSlKYgHHY3/Jkvvg5
+	 hQsutc0W1QXXWVYVSowvSeBTS6/VtczU3QctoD5Fd8CsOP0JUC9U63/t+b8EYwuxuj
+	 NvaJ1/M+wcpCg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Ingo Molnar" <mingo@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>,  "Thomas Gleixner" <tglx@linutronix.de>,
+  "Frederic Weisbecker" <frederic@kernel.org>,  "H . Peter Anvin"
+ <hpa@zytor.com>,  "Linus Torvalds" <torvalds@linux-foundation.org>,
+  "Peter Zijlstra" <peterz@infradead.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Anna-Maria
+ Behnsen" <anna-maria@linutronix.de>,  "Boqun Feng" <boqun.feng@gmail.com>,
+  "Lyude Paul" <lyude@redhat.com>,  "Rust ML"
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH 01/10] rust: Rename timer_container_of() to
+ hrtimer_container_of()
+In-Reply-To: <87jz6mnpnm.fsf@kernel.org> (Andreas Hindborg's message of "Mon,
+	12 May 2025 11:29:01 +0200")
+References: <20250507175338.672442-1-mingo@kernel.org>
+	<qqz686a7_ob8uzbREL3X3P-MTdPUVJo9hi33Dsv-3kgJoB1_bE0ynnuXFVLIwbZ5dNkntegTdZhkBp04syneXA==@protonmail.internalid>
+	<20250507175338.672442-2-mingo@kernel.org> <877c2spaag.fsf@kernel.org>
+	<exZlQK8ioPft3NijtFzp4A_qkGlCunbqRbqwq8STs5kyK8khboJDM8LqVH7EZTImMbpeMOnxadeRvyEnyU69kA==@protonmail.internalid>
+	<aBu2ocPIFOvq_EiA@gmail.com> <87jz6mnpnm.fsf@kernel.org>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Mon, 12 May 2025 12:33:17 +0200
+Message-ID: <87ecwunmoi.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/6] accel/ivpu: Use effective buffer size for zero
- terminator
-To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>,
- Maciej Falkowski <maciej.falkowski@linux.intel.com>,
- Oded Gabbay <ogabbay@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Nuno Sa <nuno.sa@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- linuxppc-dev@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
- Markus Burri <markus.burri@bbv.ch>
-References: <20250508130612.82270-1-markus.burri@mt.com>
- <20250508130612.82270-3-markus.burri@mt.com>
-Content-Language: en-US
-From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
- Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <20250508130612.82270-3-markus.burri@mt.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Andreas Hindborg <a.hindborg@kernel.org> writes:
 
-On 5/8/2025 3:06 PM, Markus Burri wrote:
-> Use the effective written size instead of original size as index for zero
-> termination. If the input from user-space is to larger and the input is
-> truncated, the original size is out-of-bound.
-> Since there is an upfront size check here, the change is for consistency.
-> 
-> Signed-off-by: Markus Burri <markus.burri@mt.com>
-> ---
->  drivers/accel/ivpu/ivpu_debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/accel/ivpu/ivpu_debugfs.c b/drivers/accel/ivpu/ivpu_debugfs.c
-> index f0dad0c9ce33..cd24ccd20ba6 100644
-> --- a/drivers/accel/ivpu/ivpu_debugfs.c
-> +++ b/drivers/accel/ivpu/ivpu_debugfs.c
-> @@ -455,7 +455,7 @@ priority_bands_fops_write(struct file *file, const char __user *user_buf, size_t
->  	if (ret < 0)
->  		return ret;
->  
-> -	buf[size] = '\0';
-> +	buf[ret] = '\0';
->  	ret = sscanf(buf, "%u %u %u %u", &band, &grace_period, &process_grace_period,
->  		     &process_quantum);
->  	if (ret != 4)
+> "Ingo Molnar" <mingo@kernel.org> writes:
+>
+>> * Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>>
+>>> "Ingo Molnar" <mingo@kernel.org> writes:
+>>>
+>>> > This primitive is dealing with 'struct hrtimer' objects, not
+>>> > 'struct timer_list' objects - so clarify the name.
+>>> >
+>>> > We want to introduce the timer_container_of() symbol in the kernel
+>>> > for timer_list, make sure there's no clash of namespaces, at least
+>>> > on the conceptual plane.
+>>>
+>>> Is this a resend?
+>>
+>> I noted the changes in the boilerplate:
+>>
+>>   Changes in -v3:
+>>
+>>     - Picked up review tags
+>>     - Rebased to v6.15-rc5
+>>
+>> This particular patch didn't change.
+>
+> Thanks. I didn't get the cover letter, but I should have looked for it.
+>
+>>
+>>> Again, I think this change is unnecessary. Please see my earlier reply [1].
+>>>
+>>> Best regards,
+>>> Andreas Hindborg
+>>>
+>>>
+>>> [1] https://lore.kernel.org/all/877c3cbdq2.fsf@kernel.org
+>>
+>> Yeah, saw that, but you said you are fine with it if I insist, and I'd
+>> like to have this to free up the timer_* namespace.
+>
+> Yes. I did not hear any proper insisting till now though.
+>
+>> Since I think we'd
+>> like to introduce the timer_container_of() in the future it would be
+>> nice to do this rename, as:
+>>
+>> 	$ git grep -w timer_container_of
+>>
+>> will have hrtimer related false positive hits in rust/ code, even
+>> though the namespaces are obviously independent.
+>
+> Ok, I see. I'm not used to grepping like that, but I see how that can be
+> annoying.
+>
+>>
+>> The Rust method is arguably a minor misnomer as well: you have
+>> work_container_of around struct work, but timer_container_of is around
+>> struct hrtimer?
+>
+> Yes, you are right.
+>
+> Feel free to take this through tip. Otherwise maybe Miguel can pick it
+> up in the rust PR for 6.15.
+
+Sorry, I meant 6.16 of course.
+
+
+Best regards,
+Andreas Hindborg
+
 
