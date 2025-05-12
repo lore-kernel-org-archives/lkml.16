@@ -1,208 +1,101 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A64259C8A
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD132571CC;
+	Mon, 12 May 2025 08:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038487; cv=none; b=MMOTLJIN4a6by5FtvEcvimQ6slnCfcPkDolaLXXSEaelcO8q50klcdg6neKkSDVCXLuYc20LJG57siY3eX3G5GYOee4NCLjjCrEmMm1SBuYtBKuvSlENY8EHOC5oK1qE+WfuI3CB4mb1wHsma+yQUDC7MknnRpe7MV2PZdhJKnQ=
+	t=1747038508; cv=none; b=WYwP20Tjd/Kzvc7FCoUE26BU5AZF0nWwUxS+664be1INyIwTdS59+ZF2n2AJEQhBcfHbkS5RIZT6scFBi4W0l5c5VLCvj3Jyed0OY5f+Q28rNjEx0Po5KQvBOy2yydf+20Ze2YcsdwDOkE0xJI5FvHXVo1vDSKM4kN9+nOfvSr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038487; c=relaxed/simple;
-	bh=FnqapDHA2Oh8Kjn2D4GnRbRG39bzWiagKhETfDHDPuY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vCH+4HLzRb8+eidMHiSkEe8fRCvees2JZpu81ymSIk91wYiCb8JBXB21tXbFvy+giQLLAGZsWIaHtv1lRl7SF9/UUlJU5i0pUgUa31tWElq3wW0kxo26oUxjk9e8J4YCSLDhik4xsjCAzl8wShgbgXlmosOwe1Cc3dsFVXf2aGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=upmkSWB5; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="upmkSWB5"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a0b9625662so3346639f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747038482; x=1747643282; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/GHu16VagS4Zo0QZx5ctfJMlX1e+tH9PDkYdamiUkNk=;
-        b=upmkSWB5gkuTSDiWyiVat3gk1NnkqSA8LAKDyLbn9txIzzVs1IWi6P49GiWFrv7n8n
-         DGlXR7PHJMxyZV1TKu46Dy6YTyFnKwo7R/Ij0Hhfm/U7xkoOYD7O9WzcKG+TkOgEeXG+
-         bP6AY2Jp15xy0K0/iWZlXLjOOC0EYo1yMwexZ/HVedN5CG23CJA47FerszbrhHqCObXW
-         Z1oUzJgmzcZatXdZUmDUDV77p8mJPpqV4wOUmhIUPjT49RUrrvmL/YIQ46IE2sPHKiwX
-         MLqRg2x3bAUhm70Pn/A0tDaZN50caTrz/xHC4ofGCsg8FTW8I7CQ/AFPV2WH7dzFWPKl
-         /DwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747038482; x=1747643282;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/GHu16VagS4Zo0QZx5ctfJMlX1e+tH9PDkYdamiUkNk=;
-        b=KuerRZcDw/HoFwRsS4wGrf6oEqpV0+Wm/IPaK05cANko+xPi8SWyzUmbXEVwPuATOj
-         QtLPHiAD40xHt03Um1XJexT9OQ9JC4vqLaJiAWCcv3oSYPGWpdNHbrHD3qz8UOYshGU0
-         KdCnzEIr5PvGVy2hgFtbblypKn6KUs+U+qgqkdmkKLfbStksGzIHQdE5mXLRx+y2O9mD
-         eAOE2AYwEW6R6UBwJMCPpRHfsm4xXK8fVGDZzF2gOzhZ8hcf5DD+vAJ0Mga0UkKE0D5T
-         4KaQEuvki3G9aPFLKp8YjufCTUXi+UimvWUTHloso7ZwCsO7Iei3B5vRxnRUGkSrzkel
-         qYJA==
-X-Forwarded-Encrypted: i=1; AJvYcCViK2QhbzhI9MZco1KKWYG/kVtXRpOf2aciOSTtvMaJ2+SEPDJAP97EWclPdKmsqgWI6k2tg/cAj7CZe9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIGHrLItHRizOYeWTKnSCjvw1qWco0fM2uKZqE/S98tkD6tJID
-	+9ubxxPJ576ipYMCaz0XrX7HUBNA67WIAlAOvC6QTgQCizJ2xgKsyRHicCKgUt8=
-X-Gm-Gg: ASbGnctdF25C2cR483+ZD0kOktVv0J+GraPoLZaGI17r76inUmNTAR0S6Kygxb1tUni
-	siVfM4sqNGKlFWAsEBK98t05/s92GwkSZPM1UptShfwCKoxMSp95eZw38OV65YGfjZXpq4hE+wB
-	ndMdttjH6WiSq0SJ3zitUKgHRQVRIWd5pw0yPTZez7Jz1f/2wcx71gcwzpMYJuNG59xwiuvaHWf
-	2Jk1CuwDugqZ8rbfTdbvFrnopkwkUWAnkbMKkfgJNnZDwa7Xbfp2Pw+PV/ZOG6AG0wn3gzNIDL3
-	dj4881JzqXnOH0c6oltNAXRpWgKggTokMxYNTe3IJmgtkYXydDbuIK+aBxd8dj9az+uynkmQJ9Y
-	GU/8ZXNTq8MH+2Ad7y1GF
-X-Google-Smtp-Source: AGHT+IF3cuftk1+itln34hyUlsyO+lAZrtrkx94Wsxfu0ogw4IibSZyT4oEk1i1ctGEF1Ke0Xxw6Ig==
-X-Received: by 2002:a05:6000:2410:b0:3a0:7a5d:96f6 with SMTP id ffacd0b85a97d-3a1f64b5850mr10211716f8f.38.1747038482577;
-        Mon, 12 May 2025 01:28:02 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2ab2sm11460379f8f.46.2025.05.12.01.28.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 01:28:02 -0700 (PDT)
-Message-ID: <67896719-5cbc-4bf6-8b00-3b785940952f@rivosinc.com>
-Date: Mon, 12 May 2025 10:28:01 +0200
+	s=arc-20240116; t=1747038508; c=relaxed/simple;
+	bh=VolIWPuz/u983kI8WFI2YO/i/v/5Cb6uPvsQk+u2+yc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=nDI46prcJuKZVtIY6aECPY7kgQ4+xCoZGwTNyu9Xb7xgEOL4FRoZ3Q0xC6UNusWux7YRrmg+iuQaUBeGf8B9KVTfZNXbJ8GubNttBJIGaxqf06SZT9BXspLUj3iyzn8QALjIqugq36VRr2ScsTIeqgoOr4aOKEXMV/t86rkF/0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4Zwt6J0w1qzYQvD6;
+	Mon, 12 May 2025 16:28:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6C56B1A018D;
+	Mon, 12 May 2025 16:28:23 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl8msSFo5n+zMA--.59164S3;
+	Mon, 12 May 2025 16:28:23 +0800 (CST)
+Subject: Re: [PATCH RFC md-6.16 v3 17/19] md/md-llbitmap: implement all bitmap
+ operations
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
+ <20250512011927.2809400-18-yukuai1@huaweicloud.com>
+ <20250512051810.GB1667@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <2cf0998f-6475-05d2-33a1-ebf3b3253b31@huaweicloud.com>
+Date: Mon, 12 May 2025 16:28:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 14/14] RISC-V: KVM: add support for
- SBI_FWFT_MISALIGNED_DELEG
-To: Atish Patra <atish.patra@linux.dev>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
-References: <20250424173204.1948385-1-cleger@rivosinc.com>
- <20250424173204.1948385-15-cleger@rivosinc.com>
- <87b2eade-acda-428e-81af-d4927e517ebe@linux.dev>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <87b2eade-acda-428e-81af-d4927e517ebe@linux.dev>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250512051810.GB1667@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDXOl8msSFo5n+zMA--.59164S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw13uFyUJFW7GF13WrW5GFg_yoWfWrX_ZF
+	y5GF4xKrWUGFZ8KanrX3ZxAFWUu34DG3Z8ZwsrXFWFqr17Ja95uF4kA3yqv3Z5Ja48Za1j
+	gryfWrWrtry3CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
+	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY
+	04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbzpBDUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
-
-On 09/05/2025 20:09, Atish Patra wrote:
-> On 4/24/25 10:32 AM, ClÃ©ment LÃ©ger wrote:
->> SBI_FWFT_MISALIGNED_DELEG needs hedeleg to be modified to delegate
->> misaligned load/store exceptions. Save and restore it during CPU
->> load/put.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->> Reviewed-by: Deepak Gupta <debug@rivosinc.com>
->> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->> ---
->>   arch/riscv/kvm/vcpu.c          |  3 +++
->>   arch/riscv/kvm/vcpu_sbi_fwft.c | 36 ++++++++++++++++++++++++++++++++++
->>   2 files changed, 39 insertions(+)
->>
->> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
->> index 542747e2c7f5..d98e379945c3 100644
->> --- a/arch/riscv/kvm/vcpu.c
->> +++ b/arch/riscv/kvm/vcpu.c
->> @@ -646,6 +646,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->>   {
->>       void *nsh;
->>       struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
->> +    struct kvm_vcpu_config *cfg = &vcpu->arch.cfg;
->>         vcpu->cpu = -1;
->>   @@ -671,6 +672,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->>           csr->vstval = nacl_csr_read(nsh, CSR_VSTVAL);
->>           csr->hvip = nacl_csr_read(nsh, CSR_HVIP);
->>           csr->vsatp = nacl_csr_read(nsh, CSR_VSATP);
->> +        cfg->hedeleg = nacl_csr_read(nsh, CSR_HEDELEG);
->>       } else {
->>           csr->vsstatus = csr_read(CSR_VSSTATUS);
->>           csr->vsie = csr_read(CSR_VSIE);
->> @@ -681,6 +683,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->>           csr->vstval = csr_read(CSR_VSTVAL);
->>           csr->hvip = csr_read(CSR_HVIP);
->>           csr->vsatp = csr_read(CSR_VSATP);
->> +        cfg->hedeleg = csr_read(CSR_HEDELEG);
+�� 2025/05/12 13:18, Christoph Hellwig д��:
+> On Mon, May 12, 2025 at 09:19:25AM +0800, Yu Kuai wrote:
+>> And following APIs that are not needed:
+>>   - llbitmap_write_all, used in old bitmap to mark all pages need
+>>   writeback;
+>>   - llbitmap_daemon_work, used in old bitmap, llbitmap use timer to
+>>     trigger daemon;
+>>   - llbitmap_cond_end_sync, use to end sync for completed sectors(TODO,
+>>     don't affect functionality)
+>> And following APIs that are not supported:
+>>   - llbitmap_start_behind_write
+>>   - llbitmap_end_behind_write
+>>   - llbitmap_wait_behind_writes
+>>   - llbitmap_sync_with_cluster
+>>   - llbitmap_get_from_slot
+>>   - llbitmap_copy_from_slot
+>>   - llbitmap_set_pages
+>>   - llbitmap_free
 > 
-> Can we avoid saving hedeleg in vcpu_put path by updating the cfg-
->>hedeleg in kvm_sbi_fwft_set_misaligned_delegation.
-> 
-> We already update the hedeleg in vcpu_load path from cfg->hedeleg.
-> If the next vcpu did not enable delegation it will get the correct
-> config written to hedeleg.
+> Please just make these optional instead of implementing stubs.
 
-Yeah that make sense, I'll modify that.
+Ok, I'll add a patch to check if those methods are NULL before calling
+them.
 
 Thanks,
+Kuai
 
-Clément
-
-> 
-> This will save us a csr read cost in each VM exit path for something
-> that is probably configured once in guest life time.>
->>       }
->>   }
->>   diff --git a/arch/riscv/kvm/vcpu_sbi_fwft.c b/arch/riscv/kvm/
->> vcpu_sbi_fwft.c
->> index b0f66c7bf010..d16ee477042f 100644
->> --- a/arch/riscv/kvm/vcpu_sbi_fwft.c
->> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
->> @@ -14,6 +14,8 @@
->>   #include <asm/kvm_vcpu_sbi.h>
->>   #include <asm/kvm_vcpu_sbi_fwft.h>
->>   +#define MIS_DELEG (BIT_ULL(EXC_LOAD_MISALIGNED) |
->> BIT_ULL(EXC_STORE_MISALIGNED))
->> +
->>   struct kvm_sbi_fwft_feature {
->>       /**
->>        * @id: Feature ID
->> @@ -68,7 +70,41 @@ static bool kvm_fwft_is_defined_feature(enum
->> sbi_fwft_feature_t feature)
->>       return false;
->>   }
->>   +static bool kvm_sbi_fwft_misaligned_delegation_supported(struct
->> kvm_vcpu *vcpu)
->> +{
->> +    return misaligned_traps_can_delegate();
->> +}
->> +
->> +static long kvm_sbi_fwft_set_misaligned_delegation(struct kvm_vcpu
->> *vcpu,
->> +                    struct kvm_sbi_fwft_config *conf,
->> +                    unsigned long value)
->> +{
->> +    if (value == 1)
->> +        csr_set(CSR_HEDELEG, MIS_DELEG);
->> +    else if (value == 0)
->> +        csr_clear(CSR_HEDELEG, MIS_DELEG);
->> +    else
->> +        return SBI_ERR_INVALID_PARAM;
->> +
->> +    return SBI_SUCCESS;
->> +}
->> +
->> +static long kvm_sbi_fwft_get_misaligned_delegation(struct kvm_vcpu
->> *vcpu,
->> +                    struct kvm_sbi_fwft_config *conf,
->> +                    unsigned long *value)
->> +{
->> +    *value = (csr_read(CSR_HEDELEG) & MIS_DELEG) == MIS_DELEG;
->> +
->> +    return SBI_SUCCESS;
->> +}
->> +
->>   static const struct kvm_sbi_fwft_feature features[] = {
->> +    {
->> +        .id = SBI_FWFT_MISALIGNED_EXC_DELEG,
->> +        .supported = kvm_sbi_fwft_misaligned_delegation_supported,
->> +        .set = kvm_sbi_fwft_set_misaligned_delegation,
->> +        .get = kvm_sbi_fwft_get_misaligned_delegation,
->> +    },
->>   };
->>     static struct kvm_sbi_fwft_config *
+> .
 > 
 
