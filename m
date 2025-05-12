@@ -1,37 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3009DB672
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E2F22A1D5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064247; cv=none; b=Vbon9awt6WingiQ3qddymGw/SqjdI0tet8kafGusy7ZWnZ088R42er94fPDHBOUAw4F6b7HwYIC0AQSDafYGrW/q4oAMWV0egEgcO6BaS50SK4xVHpzBWypp68yT7L7g8ZydNcqbB+qOFQVsvfMC3ubweaFH8UFvEyUUgJBC5PA=
+	t=1747064314; cv=none; b=D9gmXODVzDyNQiv8hCsbemUGcuCWaR4bvqGeW8AG+RoWZtTof49w1qge1XKAzLojPi/+FDsN4jXUjYnKU0gLeuZcNIBdG+Irh0qLU9yRu39W7+1wqc5x0p7Ynog1tBJaOQnO0ami48ckSIZjv0jAv3/B/RHpznonZjWbYn4lul4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064247; c=relaxed/simple;
-	bh=CSGL7fJhJ9GHHwnEaJ9xRGo2VYSo1ROa7Uc5Ss5VWgE=;
+	s=arc-20240116; t=1747064314; c=relaxed/simple;
+	bh=c7VadYlSEsuqBTdIq8kkgiDUoIo6e9SXKJfB7bLi/gk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=faP6xWwoPU/FvuReEPcHlDOtC9rp1q3TB8L3NbeNPXH8RuhX6luDOgNdBHAMBkaezRCRn2qwofwL2zfyGhKcUlRTwKBw1kpvM8xz1c3bA8yVGFHbWROb8NQd9WgJrHq8a9FYxlCohZ9lWlkQqUv743sorfQx/N0OmLglZekpSro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69A1014BF;
-	Mon, 12 May 2025 08:37:13 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE4AA3F63F;
-	Mon, 12 May 2025 08:37:22 -0700 (PDT)
-Date: Mon, 12 May 2025 16:36:25 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Radu Rendec <rrendec@redhat.com>, Will Deacon <will@kernel.org>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: cacheinfo: Report cache sets, ways, and line size
-Message-ID: <aCIVec7zl3tIh73h@J2N7QTR9R3>
-References: <20250509233735.641419-1-sean.anderson@linux.dev>
- <20250510-fresh-magenta-owl-c36fb7@sudeepholla>
- <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=S6I11iQHVEQnl3gTOhGJ5SDR/3jtuv9NhG3YbhpyJcabCaEyeDPz9aGMQCBLtttOfhTlUAh8Kq1CcBs9aG2jE+uQ/oQk/bFjUk0x7/JFThpYdOExE1Aw9cs9TzTqi5A9V+cLgxKwMmVO3H1jOMb9IApxS3VvxD+ISSV24ZXcGco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=upJKcuaW; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="upJKcuaW"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-74251cb4a05so2840538b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747064311; x=1747669111; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GX/eBcEChE0E34AcneN6L6Wm+rbDwi9Vmr1xiNc+L8g=;
+        b=upJKcuaWWxd/fKgm8lg/Bcs/bJzFa4ZAQ9s7jl1Jm2WuttuF4c7bqT4ECJsePjt4Vq
+         Kf96FfWXwr+oFo9E7PJ2Hjv1oTMulJRRLMMe5Tu3VznzjBdwZwXTt8O4UKR01A5NV6uk
+         6uPc8T4azaLbOtnqpckc2JNku6rMl5DHVtmlM7bAqVDdqluKLoxX5n/PbnH4nWzHmY5+
+         e/brhNvrzW6ja5jLSA6do9+bxOoIDFZdMLsYs9HntwzztJuefPgYWtnZKkTma21KieB7
+         5wQQ3UhffZ6FVQxh9KhRqECQc7ZcqFLitRw5DAddYV3SPnbeJXXcpQVh8wiY7o4HmTu2
+         s94A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747064311; x=1747669111;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GX/eBcEChE0E34AcneN6L6Wm+rbDwi9Vmr1xiNc+L8g=;
+        b=bPxMti4SwHEDLW9YQ4Si/AQt5hNMF+CzPCz62X88/yBKa25SbPwlQrW5jzPl58uYbL
+         ua8RA26qLKZHGJ6+5G7mWyBVSPMo0t1I4qe7re0Cv7NPakP3e0m2wKDV3GUHNZbQcis9
+         KY8U00aelph7Vn5vsO+U9sxhU84sfYY5h7FeyFdjEa8V4ukNDS8B4kpPvQxfO1IP+4xF
+         /GG7KH85iUMkG0ZA/nWo3nsQcRAXhJW9SFFC8d/owOuj1MAQCLcEyLjbG2IqNMtiafkt
+         ew++W2t2xqKk6pLKH13pTb4+mtXbSuP7R+525nG933SnG9MfjYXJsvVHHx0/0zDbw+yF
+         gE7w==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Snf3qWeV757vFnBBRbWiqNaoUKgccAHdtsBfg4Ys2Duzwl3DLWOxDv1qBEcTDmy2dEfwP3UgM7chqMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUeshTiD1GswCFAxibghbxwNX+6YbDIflKD1LctktzArsoDmQw
+	Zm7RvbXGOVp8oxdvELg6M3nJGn28wNpa39dfqFIore7CGvm13GuFzJdwmIQpwbc=
+X-Gm-Gg: ASbGncvBvRPcK/+Vc/9CR9NJ6eoJgLSrqET9BnSLc/ceydqTuz17dFCLBdPedaRWhWL
+	O/6i3bLKp+rKh/vkaH9NTyUjcD1lo72oubzLrSx0CSlnOd/+v692GINB2gIdHupcfND8gEU8IIO
+	1q6WT/d19hgMR6G+Qz2hcE9AnkQfeczeuj1BeiyUjSUYUedKM1NuxPS6Ef8IdnvzXSgA2xW6rm/
+	ysll00YncVTEF8tCbQ+BhdasH3s+dIkBnszYoQlVgxETYfL7T6NX75WXITFOt/hYMp5dWguKCY2
+	hYXXBv2mQSUibKBJwVp4g35kR3EyqOW1ePCVfePI6zTgpcNqVM4JEp8=
+X-Google-Smtp-Source: AGHT+IHgmuXfm+4ff1pkZtxwN/V2i999rOI889ddQtZJPLCTUGcGf7+EJOjlZmWF+IGtP6CWuzsvRA==
+X-Received: by 2002:a05:6a00:4148:b0:740:921a:3cb4 with SMTP id d2e1a72fcca58-7423bd57d80mr20337967b3a.13.1747064311520;
+        Mon, 12 May 2025 08:38:31 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:3e0c:79f5:c193:3289])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a0cfc5sm6409040b3a.91.2025.05.12.08.38.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 08:38:31 -0700 (PDT)
+Date: Mon, 12 May 2025 09:38:29 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Tanmay Shah <tanmay.shah@amd.com>
+Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] remoteproc: xlnx: avoid RPU force power down
+Message-ID: <aCIV9UJkxZAdKPE-@p14s>
+References: <20250506165944.1109534-1-tanmay.shah@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,43 +72,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
+In-Reply-To: <20250506165944.1109534-1-tanmay.shah@amd.com>
 
-On Mon, May 12, 2025 at 11:28:36AM -0400, Sean Anderson wrote:
-> On 5/10/25 03:04, Sudeep Holla wrote:
-> > On Fri, May 09, 2025 at 07:37:35PM -0400, Sean Anderson wrote:
-> >> Cache geometry is exposed through the Cache Size ID register. There is
-> >> one register for each cache, and they are selected through the Cache
-> >> Size Selection register. If FEAT_CCIDX is implemented, the layout of
-> >> CCSIDR changes to allow a larger number of sets and ways.
-> >> 
-> > 
-> > Please refer
-> > Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache information probing")
-> > 
+On Tue, May 06, 2025 at 09:59:44AM -0700, Tanmay Shah wrote:
+> Powering off RPU using force_pwrdwn call results in system failure
+> if there are multiple users of that RPU node. Better mechanism is to use
+> request_node and release_node EEMI calls. With use of these EEMI calls,
+> platform management controller will take-care of powering off RPU
+> when there is no user.
 > 
-> | The CCSIDR_EL1.{NumSets,Associativity,LineSize} fields are only for use
-> | in conjunction with set/way cache maintenance and are not guaranteed to
-> | represent the actual microarchitectural features of a design.
-> | 
-> | The architecture explicitly states:
-> | 
-> | | You cannot make any inference about the actual sizes of caches based
-> | | on these parameters.
+> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
+> ---
 > 
-> However, on many cores (A53, A72, and surely others that I haven't
-> checked) these *do* expose the actual microarchitectural features of the
-> design. Maybe a whitelist would be suitable.
+> Changes in v2:
+>   - Add comment on why version check is needed before calling EEMI call
+>     to fw.
+> 
+>  drivers/remoteproc/xlnx_r5_remoteproc.c | 34 ++++++++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
+> 
 
-Then we have to maintain a whitelist forever, and running an old/distro
-kernel on new HW won't give you useful values unless you provide
-equivalent values in DT, in which case the kernel doesn't need to read
-the registers anyway.
+I have applied this patch.
 
-The architecture explcitly tells us not to use the values in this way,
-and it's possible to place the values into DT when you know they're
-meaningful.
+Thanks,
+Mathieu
 
-I do not think we should resurrect the usage of these registers.
 
-Mark.
+> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> index 5aeedeaf3c41..1af89782e116 100644
+> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
+> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> @@ -380,6 +380,18 @@ static int zynqmp_r5_rproc_start(struct rproc *rproc)
+>  	dev_dbg(r5_core->dev, "RPU boot addr 0x%llx from %s.", rproc->bootaddr,
+>  		bootmem == PM_RPU_BOOTMEM_HIVEC ? "OCM" : "TCM");
+>  
+> +	/* Request node before starting RPU core if new version of API is supported */
+> +	if (zynqmp_pm_feature(PM_REQUEST_NODE) > 1) {
+> +		ret = zynqmp_pm_request_node(r5_core->pm_domain_id,
+> +					     ZYNQMP_PM_CAPABILITY_ACCESS, 0,
+> +					     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+> +		if (ret < 0) {
+> +			dev_err(r5_core->dev, "failed to request 0x%x",
+> +				r5_core->pm_domain_id);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	ret = zynqmp_pm_request_wake(r5_core->pm_domain_id, 1,
+>  				     bootmem, ZYNQMP_PM_REQUEST_ACK_NO);
+>  	if (ret)
+> @@ -401,10 +413,30 @@ static int zynqmp_r5_rproc_stop(struct rproc *rproc)
+>  	struct zynqmp_r5_core *r5_core = rproc->priv;
+>  	int ret;
+>  
+> +	/* Use release node API to stop core if new version of API is supported */
+> +	if (zynqmp_pm_feature(PM_RELEASE_NODE) > 1) {
+> +		ret = zynqmp_pm_release_node(r5_core->pm_domain_id);
+> +		if (ret)
+> +			dev_err(r5_core->dev, "failed to stop remoteproc RPU %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Check expected version of EEMI call before calling it. This avoids
+> +	 * any error or warning prints from firmware as it is expected that fw
+> +	 * doesn't support it.
+> +	 */
+> +	if (zynqmp_pm_feature(PM_FORCE_POWERDOWN) != 1) {
+> +		dev_dbg(r5_core->dev, "EEMI interface %d ver 1 not supported\n",
+> +			PM_FORCE_POWERDOWN);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	/* maintain force pwr down for backward compatibility */
+>  	ret = zynqmp_pm_force_pwrdwn(r5_core->pm_domain_id,
+>  				     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+>  	if (ret)
+> -		dev_err(r5_core->dev, "failed to stop remoteproc RPU %d\n", ret);
+> +		dev_err(r5_core->dev, "core force power down failed\n");
+>  
+>  	return ret;
+>  }
+> 
+> base-commit: afc760ba751c289915fe10c12d836c31d23f6ddd
+> -- 
+> 2.34.1
+> 
