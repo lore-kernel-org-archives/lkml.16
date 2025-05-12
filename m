@@ -1,140 +1,83 @@
-Received: from smtp.outgoing.loopia.se (smtp.outgoing.loopia.se [93.188.3.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12666246333
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.3.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8592472B9
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065938; cv=none; b=eSzZnT9o1UdAnpU1NKCR+cFpIiJ6JENZRVeP/Mk01cog15dOcXrHM369t9Vg5mTziJ4/F5vBBmo9QiXz8Z3pH38mSyaIdTgbH6qwge9Derx0JR6toNgWWUgG4RgKOnXknPia8hEh0fWuU7xSqECpNX8R4LhD8cjPzNfKhR2C9KQ=
+	t=1747066086; cv=none; b=ePrnkjCo5OPPQragGrjtD508q7F+7wiojBxkFq+tdNmC7EZcBDjkSDo09WZzS++83zo8L86wXgkiSbupi/uEAJ/uxlO8yCvzCRdJfN1uatYM9339NYRz50UGhrHce1OEqdmIkglSjdxlf/A/sh1FiJuQ72Al0WUznPTO+PIJLOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065938; c=relaxed/simple;
-	bh=Qww/+DGY1oh/zF5dnfoZAg4ka+2ohc4hHKxkb8WSqmI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=cJA5yl6KxoQ4CD0lEPYwVm8I+8x4Ux8r23ZrYZRVhhRTH7ZjluspCLq0MYg3jnOludtuyP6kl+c2WLI/z4A772EqJTrXKTA6xW0TN/J/LSGg9K/umJDfAQ13t3pTJZmjQSF0lku8EWyfP0/9Aa/hkZCajCOFlj61xjosf50mVa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lxm.se; spf=pass smtp.mailfrom=lxm.se; dkim=pass (2048-bit key) header.d=lxm.se header.i=@lxm.se header.b=en+5tvkJ; arc=none smtp.client-ip=93.188.3.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lxm.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lxm.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lxm.se header.i=@lxm.se header.b="en+5tvkJ"
-Received: from s807.loopia.se (localhost [127.0.0.1])
-	by s807.loopia.se (Postfix) with ESMTP id 528A638A2E7
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:55:54 +0200 (CEST)
-Received: from s934.loopia.se (unknown [172.22.191.6])
-	by s807.loopia.se (Postfix) with ESMTP id 3F1CB38AFCF;
-	Mon, 12 May 2025 17:55:54 +0200 (CEST)
-Received: from s470.loopia.se (unknown [172.22.191.5])
-	by s934.loopia.se (Postfix) with ESMTP id 3C22E7CEA49;
-	Mon, 12 May 2025 17:55:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at amavis.loopia.se
-X-Spam-Flag: NO
-X-Spam-Score: -1.2
-X-Spam-Level:
-Authentication-Results: s470.loopia.se (amavisd-new); dkim=pass (2048-bit key)
- header.d=lxm.se
-Received: from s981.loopia.se ([172.22.191.6])
- by s470.loopia.se (s470.loopia.se [172.22.190.34]) (amavisd-new, port 10024)
- with UTF8LMTP id xMWofZxMXs0z; Mon, 12 May 2025 17:55:53 +0200 (CEST)
-X-Loopia-Auth: webmail
-X-Loopia-User: henrik@lxm.se
-Received: from webmail.loopia.se (unknown [172.22.212.7])
-	(Authenticated sender: henrik@lxm.se)
-	by s981.loopia.se (Postfix) with ESMTPA id ADF0D22B179C;
-	Mon, 12 May 2025 17:55:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lxm.se;
-	s=loopiadkim1708025221; t=1747065353;
-	bh=o6tlUAAKaemR+GJxvM/NEaZspAsiJGP2uOmTEG9aDPw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=en+5tvkJv4WuqB9u7zDCv0XbJiZO+QethysUB/ciuDdW7mulkN0n3+ZBxct6kjid5
-	 Z/bXSVmIKkFSQC1dwRrFcl/667Q7zmyt5lyDuFzWJlOFOTsfFy0WX4M5uvK8me3Cfk
-	 uN4r3G7tFQwgtZb20HyJefD95LriO7AnxBnykWpMERqunAMuwaZfFBrcNvBlW0h3aW
-	 bGqvKvZ7owM4rmpp9/Cke7W1mFUIWfiW1lh0lpKC0vpVzcPm7TBZRzz35xtl0GHKC/
-	 eNJenXBl9l0+D6maeRY62+gKYPbL1nkgtXVaHFggTsHjdXbd4DMexkvvNxZacKckhz
-	 2iyDpaoAuA5WA==
+	s=arc-20240116; t=1747066086; c=relaxed/simple;
+	bh=xf2gk/7HejFkj/yUD8Rcn/c3OEV9aXKrIeQoQwgUpxI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=qLpeQsjmmDFh40V6qeBh5V6Bg+oahTqXKiIZ/I98H7qiHLzuj2CzSD4cjbXTa1jk8mJhY28LMlJEajw3Fs0qwOxczVGmgnjyxRVhC0RI4SUHJg/YqPwZ3iRxTLDKTlPTry7FWKm5z6RW2M0SbyC27UJG/7AdCodrnx3r11/YgME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3da779063a3so51174865ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:08:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747066084; x=1747670884;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gt5URQSkZsJi8HYjVkWgqYk5S7TJ2AVMXcD4Cuf60ao=;
+        b=CusEUf87BWMb5NB02V0uYoUbE1KXkk7bF6L+LjWp04Lh3zZ3v1vn41vdQGNcNo9eog
+         fPcl6ICbiN5uY8uv3EfTYmeMqFKYxqTECTWeVnezWc1S+9bvqy+CTxunhoTno5bOsOAt
+         TCmrw0UGGy/HT6VKFttFlRfXefhfkjJ543WJa86U7ThTQEnnBil/RYfcvgrhHdPnmMa8
+         g6byDag3Moh0alMLxLr1Hy6Fu5DgZAPE4F7uvP+odzZ6PH+AoQQIuy0HY6fcRzkmn76w
+         jAr60CRv0q99g40ULMS7G2GmytNIGn8tgRxR8un2E2NBlqQL+ttlK/SMzbi8dHIPbySS
+         0v/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWY8y0e0ahLWLwEf/EQNuAmcYFoi4EmVuaUH1E82Vq4AWnYiiXoc+vKejRLPOgnhOk95ycu9cr2D5tNLA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywkd8Y7IfhafGpfNAFCK+ojh7QowNQDsamSjgH48pjfpiVZDd0M
+	8QCLkT4A6VKGeImjsd2rgFKKXDR3YCniuNF2o7xxmHiNgt5ZcknzGcHxnm4heF0nAUafBcgQaoq
+	RHpZq57U3Q1fag11HDtXuFVFRrjljBrYUIXrwjZdD+dOjHS/YKAcb4TU=
+X-Google-Smtp-Source: AGHT+IGcj7hDDUl63wjXEO3+XruwNefnp47j4mhldFaZGFjrTH4hft3gln2ARkheFl41Vx6lpdU5XxwDw+Z9Lo0NO1Q33wHkRMQH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 12 May 2025 17:55:53 +0200
-From: =?UTF-8?Q?Henrik_Lindstr=C3=B6m?= <henrik@lxm.se>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: nathan@kernel.org, nicolas.schier@linux.dev,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Makefile: remove dependency on archscripts for header
- installation
-In-Reply-To: <CAK7LNASYL6VCf_JgT_ks6ZObiR1xdB8HvV0XyYrWLrfYghtzbA@mail.gmail.com>
-References: <20250510153204.11052-1-henrik@lxm.se>
- <CAK7LNASYL6VCf_JgT_ks6ZObiR1xdB8HvV0XyYrWLrfYghtzbA@mail.gmail.com>
-User-Agent: Loopia Webmail/1.6.10
-Message-ID: <8bd773107cf5a78359bcf03a0dcd2785@lxm.se>
-X-Sender: henrik@lxm.se
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1fc6:b0:3da:7161:23ec with SMTP id
+ e9e14a558f8ab-3da7e1e1a63mr160273105ab.3.1747066084202; Mon, 12 May 2025
+ 09:08:04 -0700 (PDT)
+Date: Mon, 12 May 2025 09:08:04 -0700
+In-Reply-To: <66f18d50.050a0220.c23dd.0012.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68221ce4.050a0220.f2294.0070.GAE@google.com>
+Subject: Re: [syzbot] [net?] possible deadlock in gtp_encap_enable_socket
+From: syzbot <syzbot+e953a8f3071f5c0a28fd@syzkaller.appspotmail.com>
+To: alibuda@linux.alibaba.com, danielyang32@g.ucla.edu, 
+	danielyangkang@gmail.com, davem@davemloft.net, edumazet@google.com, 
+	guwen@linux.alibaba.com, hdanton@sina.com, jaka@linux.ibm.com, 
+	kuba@kernel.org, kuniyu@amazon.com, laforge@gnumonks.org, 
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, lkp@intel.com, 
+	llvm@lists.linux.dev, netdev@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
+	osmocom-net-gprs-bounces@lists.osmocom.org, 
+	osmocom-net-gprs@lists.osmocom.org, pabeni@redhat.com, pablo@netfilter.org, 
+	syzkaller-bugs@googlegroups.com, tonylu@linux.alibaba.com, 
+	wenjia@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-That was my attempt to explain why i wanted to make this change, but 
-you're right that it's really just a small cleanup.
+syzbot suspects this issue was fixed by commit:
 
-Will go again with a simpler message, thanks.
+commit 752e2217d789be2c6a6ac66554b981cd71cd9f31
+Author: Kuniyuki Iwashima <kuniyu@amazon.com>
+Date:   Mon Apr 7 17:03:17 2025 +0000
 
-On 2025-05-12 14:23, Masahiro Yamada wrote:
-> On Sun, May 11, 2025 at 12:34 AM Henrik Lindström <henrik@lxm.se> 
-> wrote:
->> 
->> There doesn't seem to be any purpose behind this dependency, and it 
->> prevents
->> installing x86 and mips headers on non Linux systems. Doing so is 
->> useful when
->> building a cross compiler targetting Linux, which requires the header 
->> files.
->> 
->> Signed-off-by: Henrik Lindström <henrik@lxm.se>
->> ---
-> 
-> This clean-up makes sense.
-> 
-> However, I could not understand the commit description
-> about the non-Linux systems.
-> 
-> In my understanding, archscripts is not required here
-> regardless of whether it is a Linux or non-Linux system.
-> 
-> So, the following description sound good to me:
-> 
->   archscripts has nothing to do with headers_install.
-> 
-> 
-> Could you send v2 with the simplified commit log?
-> 
-> 
-> 
-> 
-> 
-> 
->>  Makefile | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/Makefile b/Makefile
->> index b29cc321ffd9..0234faafe8f0 100644
->> --- a/Makefile
->> +++ b/Makefile
->> @@ -1366,7 +1366,7 @@ PHONY += archheaders archscripts
->>  hdr-inst := -f $(srctree)/scripts/Makefile.headersinst obj
->> 
->>  PHONY += headers
->> -headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders 
->> archscripts
->> +headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders
->>  ifdef HEADER_ARCH
->>         $(Q)$(MAKE) -f $(srctree)/Makefile HEADER_ARCH= 
->> SRCARCH=$(HEADER_ARCH) headers
->>  else
->> --
->> 2.39.5
->> 
-> 
-> 
-> --
-> Best Regards
-> Masahiro Yamada
+    smc: Fix lockdep false-positive for IPPROTO_SMC.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=140462f4580000
+start commit:   9410645520e9 Merge tag 'net-next-6.12' of git://git.kernel..
+git tree:       net-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=37c006d80708398d
+dashboard link: https://syzkaller.appspot.com/bug?extid=e953a8f3071f5c0a28fd
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16215ca9980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=110c6c27980000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: smc: Fix lockdep false-positive for IPPROTO_SMC.
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
