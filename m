@@ -1,39 +1,64 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB526219A93
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558694A3C;
+	Mon, 12 May 2025 14:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060079; cv=none; b=N40XT2QB9mgyOcXyohrxZ5Jf7h54z6bqTsjYVApArdxgwyAihfYHxQtlUc4v5Pq2ZQhsiCTKcEk1iNinUB7K18iXjl9S6dWbEg8xHCvpyQ7ZQvtvKISw8Ct6DhVcP4pGEYKB8QrLI8eqI37oip5HHvG2IycF0r8Gjhw0bPQJrgM=
+	t=1747060131; cv=none; b=One/g09y85eAjugwGDfPWKd8+dbc2uTPFmN8mRk2+Nd7JEZv35Ksgi7EAJFf3rAid87lSx4ohL+Ynv/KczfV4Mqlo2zSnDc/AZeKZ/h9zndaxL125bJOwZIPzl3FgKOrJdEh0nkgMwv6yWKPUGGIg13sdOFeSv+ghjkB3pRmePE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060079; c=relaxed/simple;
-	bh=jdbV1On26NeAP38ugnOUPacBBxHEqM8aaxwgln/51Q8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lbCNewahssAgebdptkGkFBzImMlUXFj+E0jRCAEX6pFwWlukYFX485F0N5i5SY661Mk8Cip9OeI432j07zJnf9h4HwWO7VcUXmRXWL/KpCCNi5EhPtoeqgRvSQu/ZGMOywpfpsQiGt7FR/5IOQ2E9cGJl5nlmiAjc7jfNDOnUvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=XJUJ/dyd; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747060131; c=relaxed/simple;
+	bh=wAQSCOa8NKq0dKvOJ2tgxBAF7iZnMu3ypPhBo8Jdcuk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fbUFyi4ZpVmrdHRU0pmOhKgG3Wqoolb7eXr94vLzQP4fCtPaYZI27W1cL+rqHBvAzYxxDW7eOD0gqhGzn8pv938c3F1ptu0dSSL2UGNyCzNBEUOu2kFggYN/u3ntE9wHnTuMapjjFBU+n7wZV7gUlgq3/5L7y4fG5lsp/pELsg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJslSrDV; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="XJUJ/dyd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ShlYCAlpUj0EG4BFFQGzIlfptjTPq6gwYXAUM0H4Ork=; b=XJUJ/dydz3VlhW90lBogldLNUj
-	8ADonzlkFcuGd4guYD5B54jwooOTJAoaD7v9jw6aelUwd1q0UyptqECq4s28nQjxVzlFvsazZTm8Y
-	7wqAaW7zyqc+Y4GBHZ1g+3gDCYdDIDO4Ub0oqD75vdodIvwFCOfDGale5vuOj+WvkRrN2rH0WYJ7P
-	Hv4c5Hmd9duMC+T4b+863YtmsYd8iT7cqzZQLz3nPYIZXPLqRG2BX2oLAx/cnp8cIekdbDjXwbljr
-	pg2OlCQurfrhuwynRN/DCd1PmzUTaSDWyuYISEK9/viI6c7PjCkFBAcU/HUApSApeMSIY9MizQ6La
-	3ATQvYcg==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uEU2w-0077TL-6e; Mon, 12 May 2025 16:27:43 +0200
-Message-ID: <86103c8d-0cdf-4fc8-aa79-5a03b299d26e@igalia.com>
-Date: Mon, 12 May 2025 11:27:40 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJslSrDV"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442ea341570so1174985e9.1;
+        Mon, 12 May 2025 07:28:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747060128; x=1747664928; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8W12PO8Oqlmx8ERZBKdteNxpcbGu3ITArHrHNFvcMcQ=;
+        b=RJslSrDVSWOjcCI0eor9fUQkw6fz1VdWdwmY8dvPya8j/QuF2YLOU1PFhbxKni/wrr
+         fsgtPuG+OK/OzJMQDngwL8BQ+9ghDhE6RP2LVO6RCsI1RXNKq95FIazxGOhYo+IyREmQ
+         HwO3jJ1keZhV4v3DBrBXtN0jW9jsr+mulFhzpcbslI4wzeQ6lp33f3EV97+XNHa3z0P2
+         vpSCQz48v6w/WqYla/VeoNKPkP71SVDoMELQE1EjpJIvx7f29+4ALIhv/dR8S2tKmLDe
+         pNN4StQmGm81QYaa0LJi97oy/3lhJxvzvT+BnbOhx2AuGqFQN+4wNHVP21KjUJIQjxuq
+         8K0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747060128; x=1747664928;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8W12PO8Oqlmx8ERZBKdteNxpcbGu3ITArHrHNFvcMcQ=;
+        b=Py4gxnzG3Zv05RgkXeHHZzyYFI0Fb786EI6a+dB6nBErp1rh4VYREF4+AHIOIpoXU6
+         3ayXjDBHkhmwNAO6CGBPzOfGuQt2Y34wG9tnNXv2d6mQOHXfcmljZYMbTx7NZDtaYGw6
+         1hHaf6chL0GzQYWiuRwzGuQ+drany+g1/4rt3FYukURdXvH0723A1vNB8qrUfiBBRe89
+         pgNq/MBrdoWT0t5jyF3N82ctQZXcS2ueJGwI0czrnsD5LyOWJnIhUaK6j9nHuxi7Wk6F
+         qXImh+oLhomESVH42h+Ei/Ni/u6AuhM7uo31y7Npa4SD/WxLrUMpHaM1mW2pXtkolBaG
+         cQ3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVHi5jalfkKZxTm5kHUszfKU/J5YR9jTbqbRqZAlpw13Lj3ICA6x78ZbKOB790Xx2FwpmDZ7ppkVw==@vger.kernel.org, AJvYcCVzxwncshesynZWWIlagdox6t5NCCwmyNRrckoYEX12xTpEwqJ8bKIMkbXI+vw8tCkZdalxs43hNA9ku7c2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnWNq8cXZbxShirX703nD9K+X4zpePW0pe7NJP1rkSwND4nQhQ
+	mZD4A7GQzyJ0Q/Qb3uXYhnrfzSxPrL75v43DtuLJRQmIk60behQX
+X-Gm-Gg: ASbGncvOamPb4Wg2YDHlNp7+IxfC30dGqVEkyrjctVWc9uv4OqMpMaUxANOZYhO+uD5
+	CpEsc6g+oA+Qlp49VhupkRRNO+177WIHtoMX8za/aFR7x5Xdf8HyTGBGPyLeLDjfmWyvuS0MQP/
+	mAWaQ74EgIKUYpr3eNPo0v08PoKVMKdRyr1uIiwwoQv47/E7B8px4lldvbiOY2oxcdHVUoEgeeF
+	0Mb1O6yX9T8bWFKLl1ZCZjdoNtdv7kD9XFtEWUemA4U9/hzz4llyHHAvOgez0ylDKfReJaPPDTT
+	f2sxOoHOg94GOwX3eNdP5Ob5txeurxScCdCxWzcV9G91lM3xBOQYcwns3tGLYA==
+X-Google-Smtp-Source: AGHT+IE6Wl+pveujM6GjzrwRxgKqs4ai1C1+lBCqx+xXwjYNytZITfy6+2iQ9TX1sdtY4qOihXJz9w==
+X-Received: by 2002:a05:600c:4694:b0:440:94a2:95b8 with SMTP id 5b1f17b1804b1-442d6d6b65fmr123365435e9.16.1747060127359;
+        Mon, 12 May 2025 07:28:47 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.146.237])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f238sm168113455e9.11.2025.05.12.07.28.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 07:28:46 -0700 (PDT)
+Message-ID: <1cfb5382-8d1e-4c35-b8b1-fdfc69a831fd@gmail.com>
+Date: Mon, 12 May 2025 15:29:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,87 +66,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm: drm_auth: Convert mutex usage to guard(mutex)
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com, Kees Cook <keescook@chromium.org>,
- Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250509142627.639419-1-andrealmeid@igalia.com>
- <7133e9b4-c05a-4901-940e-de3e70bbbb1e@suse.de>
+Subject: Re: [syzbot] [io-uring?] BUG: unable to handle kernel NULL pointer
+ dereference in io_buffer_select
+To: Jens Axboe <axboe@kernel.dk>,
+ syzbot <syzbot+6456a99dfdc2e78c4feb@syzkaller.appspotmail.com>,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <681fed0a.050a0220.f2294.001c.GAE@google.com>
+ <3460e09f-fafd-4d59-829a-341fa47d9652@gmail.com>
+ <a132579a-b97c-4653-9ede-6fb25a6eb20c@kernel.dk>
+ <991ce8af-860b-41ec-9347-b5733d8259fe@gmail.com>
+ <69ae835b-89b2-44bf-b51c-c365d89dbb45@kernel.dk>
 Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <7133e9b4-c05a-4901-940e-de3e70bbbb1e@suse.de>
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <69ae835b-89b2-44bf-b51c-c365d89dbb45@kernel.dk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Thomas,
-
-Thanks for the feedback.
-
-Em 12/05/2025 03:52, Thomas Zimmermann escreveu:
-> Hi
-> 
-> Am 09.05.25 um 16:26 schrieb André Almeida:
->> Replace open-coded mutex handling with cleanup.h guard(mutex). This
->> simplifies the code and removes the "goto unlock" pattern.
+On 5/12/25 15:19, Jens Axboe wrote:
+> On 5/12/25 8:19 AM, Pavel Begunkov wrote:
+>> On 5/12/25 14:56, Jens Axboe wrote:
+>> ...>> this line:
+>>>>
+>>>> tail = smp_load_acquire(&br->tail);
+>>>>
+>>>> The offset of the tail field is 0xe so bl->buf_ring should be 0. That's
+>>>> while it has IOBL_BUF_RING flag set. Same goes for the other report. Also,
+>>>> since it's off io_buffer_select(), which looks up the list every time we
+>>>> can exclude the req having a dangling pointer.
+>>>
+>>> It's funky for sure, the other one is regular classic provided buffers.
+>>> Interestingly, both reports are for arm32...
 >>
->> Tested with igt tests core_auth and core_setmaster.
->>
->> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+>> The other is ring pbuf as well
 > 
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> 
-> but with questions below
-> 
->> ---
->>
->> For more information about guard(mutex):
->> https://www.kernel.org/doc/html/latest/core-api/cleanup.html
-> 
-> This page lists issues with guards, so conversion from manual locking 
-> should be decided on a case-by-case base IMHO.
-> 
+> True yes, both are pbuf. I can't hit any of this on arm64 or x86-64, fwiw.
+> Which is why I thought the arm32 connection might be interesting. Not that
+> the arch should matter at all here, but...
 
-Sure, agreed. The places that I have converted to guard(mutex) here 
-looks like a good fit for this conversion, where the scope of the mutex 
-is well defined inside a function without conditional locking.
+Yep, there is a suspicion there might be something on the
+mm / allocation side, need to find a good way to narrow it down.
+At least we can make syz test patches for us.
 
->> ---
->>   drivers/gpu/drm/drm_auth.c | 64 ++++++++++++++------------------------
->>   1 file changed, 23 insertions(+), 41 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_auth.c b/drivers/gpu/drm/drm_auth.c
->> index 22aa015df387..d6bf605b4b90 100644
->> --- a/drivers/gpu/drm/drm_auth.c
->> +++ b/drivers/gpu/drm/drm_auth.c
->> @@ -95,7 +95,7 @@ int drm_getmagic(struct drm_device *dev, void *data, 
->> struct drm_file *file_priv)
->>       struct drm_auth *auth = data;
->>       int ret = 0;
->> -    mutex_lock(&dev->master_mutex);
->> +    guard(mutex)(&dev->master_mutex);
-> 
-> These guard statements are hidden variable declarations. Shouldn't they 
-> rather go to the function top with the other declarations? This would 
-> also help to prevent the problem listed in cleanup.html to some extend.
-> 
+-- 
+Pavel Begunkov
 
-The guard statements should go exactly where the lock should be taken, 
-as it not only declares anonymous variables but also really takes the 
-lock. The lock is then release when the mutex goes out of scope. File 
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c has some usage of 
-guard(mutex) as well, where Mario did a similar cleanup:
-
-f123fda19752 drm/amd/display: Use scoped guards for handle_hpd_irq_helper()
-aca9ec9b050c drm/amd/display: Use scoped guard for 
-amdgpu_dm_update_connector_after_detect()
-f24a74d59e14 drm/amd/display: Use scoped guard for dm_resume()
-
-
-> Best regards
-> Thomas
-> 
