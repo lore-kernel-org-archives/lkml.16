@@ -1,120 +1,107 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC911258CC0
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFC5C258CDE;
+	Mon, 12 May 2025 08:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038246; cv=none; b=G/WL0Gm46WWwMct/3yfZzLBCa8WAfuSxO9aXr6NxvqEYR+v5PmVPnQzQ7Qmi8jmCCb1mIuO2TL/vMKtspVXTi2Z7aIrPeX8yMrocQjFRvDBi2QPhbPNdoJSuuOuum3LAQD5k7y7dX3RCO0GfcuCiMltgmQ8C7kK8BzmjigNMD6A=
+	t=1747038251; cv=none; b=ePodEbCTH65rCCx5ksdwL7FsEQGDlWLNuD9VmP4gtvDQ+lDXXnvJF4Lba6nHgZqEM5RH02i4cMQWwl5peiRqWYHGovykqu9IxR4cvXh9dTkgdXAxo464SGR6hAgpilw8CSmFEqvvUWwzPBRWYTulCL/ABchVsSe0CSGmcx4KgYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038246; c=relaxed/simple;
-	bh=RVERkuO+Icf4ZI8o+6mMJrekC+d+ItdWOEKd+uRXquY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MJjJOEMvGC4ynRhWeQnSMejrA0A6z6EolioNRS61TAgWr4Hivh4RSch64o3oAW/+YaxZrA/gqu0G1TU0euJ8HKuEqQ0XaV/LHxrQYCdZpvXAYjUjNi/JZhe8vvF1zLjvhjkRiGah7QYtt6WiB48IE3xYbQO0LJO/yMY0QmcIEbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mwE317VB; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mwE317VB"
-Message-ID: <1a5bc420-c716-4d0b-b767-32adf32f4958@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747038236;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TElvHhd7DydXVZlOSat7FJ7I+zBIH483XZd4jOzKuP0=;
-	b=mwE317VBw59kffo3mY/wpiIuV3gaWone3np+Bmn8zz9jaFdOrRrVrjsFE5zdUXBzaBJ+5e
-	XHyovyO4VXM2KJvMq61v5ircvRKvdL0zeE5mm7Zy/v9aDBJ5lGiif3w+FIdzvkTFiuIbTw
-	B5+PRG+PCXj4UVcKFd+HfyC9MrNpoOk=
-Date: Mon, 12 May 2025 16:23:30 +0800
+	s=arc-20240116; t=1747038251; c=relaxed/simple;
+	bh=MS0NFFRw924pnwMwbLeUEDTmXVxiKYxOyHWYyTxzUBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iuhlh303/PiIpjUFMsYVZxwvj0qQttbMSzwoIN9OQIrrWBd5hZYTXpfiYCKbTBEKDLcFJ8+pu/LyXcyJsCQzBhB9ATnM8b7pbF4Uh2fjSSAaQphIx+nP7IbC1FgadQd1XOfW9KEIEoyEyXvqPb/sVHGNU5Z+jBzBMZ4v3JXzm70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-0f-6821b0269d8f
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Rakie Kim <rakie.kim@sk.com>,
+	joshua.hahnjy@gmail.com,
+	akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Keith Busch <kbusch@kernel.org>,
+	Jerome Glisse <jglisse@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [RFC] Add per-socket weight support for multi-socket systems in weighted interleave
+Date: Mon, 12 May 2025 17:23:55 +0900
+Message-ID: <20250512082402.285-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <aB4tgSP2r-2s-1ce@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 0/3] generalize panic_print's dump function to be used
- by other kernel parts
-Content-Language: en-US
-To: Feng Tang <feng.tang@linux.alibaba.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- linux-kernel@vger.kernel.org, mhiramat@kernel.org, llong@redhat.com
-References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
- <20250511184617.85d5fe22fde831c1edb8321c@linux-foundation.org>
- <aCFnjmRWwBjgV2Hv@U-2FWC9VHC-2323.local>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <aCFnjmRWwBjgV2Hv@U-2FWC9VHC-2323.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsXC9ZZnka7aBsUMg7sftCzmrF/DZjF96gVG
+	i593j7Nb/Dy8g8Vi1cJrbBbHt85jt5h06BqjxflZp1gsLu+aw2Zxb81/VovVazIcuD12zrrL
+	7rFgU6lHd9tldo+WI29ZPRbvecnksWlVJ5vHpk+T2D1OzPjN4rHzoaXH501yAVxRXDYpqTmZ
+	ZalF+nYJXBmn529lLOjirri09x1zA+N7ji5GTg4JAROJX7e+MMHYk1p/AdkcHGwCShLH9saA
+	mCICqhJtV9y7GLk4mAVWMUu8P7sbrFxYIEHi1LxLzCA2C1DNufPXweK8AsYSb1c3MkKM1JRo
+	uHQPLM4pYCbx9uVxsHohAR6JVxv2M0LUC0qcnPmEBcRmFpCXaN46mxlkmYTAZzaJjd3voW6T
+	lDi44gbLBEb+WUh6ZiHpWcDItIpRKDOvLDcxM8dEL6MyL7NCLzk/dxMjMAKW1f6J3sH46ULw
+	IUYBDkYlHt6EtQoZQqyJZcWVuYcYJTiYlUR4pzLIZwjxpiRWVqUW5ccXleakFh9ilOZgURLn
+	NfpWniIkkJ5YkpqdmlqQWgSTZeLglGpgXDBvadt39nXpvRNPzL3y1+bNsvh/+99V79s1df7f
+	6aveskUssVuYPatgm4+mVuWqE7U5F52ND3+7dvkB79oc27S8PzGOL9+8Dqyb9MCQc8d1o/nm
+	OnfNzx9h/ed1T0ztgMBvoyk8//lZ914+y97PM08m8nnY/mtZd7MCeed2NNfG/nm6Y+WVP55K
+	LMUZiYZazEXFiQBOGpsFfAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsXCNUNNS1dtg2KGwcIvMhZz1q9hs5g+9QKj
+	xc+7x9ktPj97zWzx8/AOFotVC6+xWRzfOo/dYtKha4wWh+eeZLU4P+sUi8XlXXPYLO6t+c9q
+	cejac1aL1WsyLH5vW8HmwO+xc9Zddo8Fm0o9utsus3u0HHnL6rF4z0smj02rOtk8Nn2axO5x
+	YsZvFo+dDy09vt328Fj84gOTx+dNcgE8UVw2Kak5mWWpRfp2CVwZp+dvZSzo4q64tPcdcwPj
+	e44uRk4OCQETiUmtv5i6GDk42ASUJI7tjQExRQRUJdquuHcxcnEwC6xilnh/djcTSLmwQILE
+	qXmXmEFsFqCac+evg8V5BYwl3q5uZIQYqSnRcOkeWJxTwEzi7cvjYPVCAjwSrzbsZ4SoF5Q4
+	OfMJC4jNLCAv0bx1NvMERp5ZSFKzkKQWMDKtYhTJzCvLTczMMdUrzs6ozMus0EvOz93ECAz6
+	ZbV/Ju5g/HLZ/RCjAAejEg+vhL9ihhBrYllxZe4hRgkOZiUR3qkM8hlCvCmJlVWpRfnxRaU5
+	qcWHGKU5WJTEeb3CUxOEBNITS1KzU1MLUotgskwcnFINjBv+z2WclX4oaIJW5bYgXqdo81AJ
+	WbNWjS7NwBda3841n1n7TEKk89p3Jeedp29s7qyxE8iMUfgu8XnGHq/aICX7HzPXxW33ujx1
+	2pSDL6ZJpXDMrtSUFzCpuWV36fXVNvXmAu5ekS9uuxctyo/8zOH/itn61jVdyR9/yyOLWljd
+	UzT+u06dr8RSnJFoqMVcVJwIAKkpSYN2AgAA
+X-CFilter-Loop: Reflected
 
-
-
-On 2025/5/12 11:14, Feng Tang wrote:
-> Hi Andrew,
+On Fri, 9 May 2025 12:29:53 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Fri, May 09, 2025 at 12:31:31PM +0100, Jonathan Cameron wrote:
+> > Anyhow, short term I'd like us to revisit what info we present from HMAT
+> > (and what we get from CXL topology descriptions which have pretty much everything we
+> > might want).
+> > 
 > 
-> Thanks for the review!
+> Generally I think if there is new data to enrich the environment, we
+> should try to collect that first before laying down requirements for new
+> interfaces / policies.  So tl;dr: "This first, please!"
 > 
-> On Sun, May 11, 2025 at 06:46:17PM -0700, Andrew Morton wrote:
->> On Sun, 11 May 2025 16:52:51 +0800 Feng Tang <feng.tang@linux.alibaba.com> wrote:
->>
->>> When working on kernel stability issues, panic, task-hung and
->>> software/hardware lockup are frequently met. And to debug them, user
->>> may need lots of system information at that time, like task call stacks,
->>> lock info, memory info etc.
->>>
->>> panic case already has panic_print_sys_info() for this purpose, and has
->>> a 'panic_print' bitmask to control what kinds of information is needed,
->>> which is also helpful to debug other task-hung and lockup cases.
->>>
->>> So this patchset extract the function out, and make it usable for other
->>> cases which also need system info for debugging.
->>>
->>> Locally these have been used in our bug chasing for stablility issues
->>> and was helpful.
->>
->> Truth.  Our responses to panics, oopses, WARNs, BUGs, OOMs etc seem
->> quite poorly organized.  Some effort to clean up (and document!) all of
->> this sounds good.
->>
->> My vote is to permit the display of every scrap of information we can
->> think of in all situations.  And then to permit users to select which of
->> that information is to be displayed under each situation.
-
-Completely agreed. The tricky part is making a global knob that works for
-all situations without breaking userspace, but it's a better system-wide
-approach ;)
-
+> (I know we discussed this at LSFMM, dropped out of my memory banks)
 > 
-> Good point! Maybe one future todo is to add a gloabl system info dump
-> function with ONE global knob for selecting different kinds of information,
-> which could be embedded into some cases you mentioned above.
-
-IMHO, for features with their own knobs, we need:
-a) The global knob (if enabled) turns on all related feature-level knobs,
-b) while still allowing users to manually override individual knobs.
-
-Something like:
-
-If SYS_PRINT_ALL_CPU_BT (global knob) is on, it enables 
-hung_task_all_cpu_backtrace
-for hung-task situation automatically. But users can still disable it via
-hung_task_all_cpu_backtrace.
-
-Anyway, the global knob (when set) controls all feature-level knobs, but
-they can override it if explicitly set ;)
-
-Thanks,
-Lance
-
+> ~Gregory
 > 
->> As for this patchset - sounds good to me.  For now I'll await input
->> from reviewers.
-> 
-> Thank you!
-> 
-> - Feng
+
+Thank you for your response and for providing clear direction.
+
+I fully agree with your suggestion that we should first focus on gathering
+and exposing the relevant data before moving forward with new policies or
+interfaces.
+
+In practice, I believe many of the proposed enhancements can only function
+meaningfully if we have a solid understanding of the memory topology and
+interconnect structure?and if that information is reliably accessible in
+userspace.
+
+Without such data, there is a risk that even well-intentioned policies may
+end up diverging from real hardware behavior, or possibly degrading system
+performance.
+
+Thank you again for pointing us in the right direction. I'll continue to
+revisit my ideas along this path.
+
+Best regards,
+Rakie
 
