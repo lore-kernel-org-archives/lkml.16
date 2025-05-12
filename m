@@ -1,385 +1,329 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3622609F8
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747043956; cv=none; b=ioNNcl3Bz+MOcckm9ME0gkjhzDsmJdVMQa3Ewt64msOFFMQ+e9lN2ZTSh/XSGbKj7Qs9KsVN//BZnxXvtJT9+0ketIxacR1LQC4lJcl9WQI98CSWZ/DjInKqW71E+RR4zhbArczL4yV0YOti43EMKvsCxNzrMjSPesRvNRtgYD0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747043956; c=relaxed/simple;
-	bh=AYjiI7iDlgaKI4VfxRLB11vqsjEJ8N0oG12haWvW6Sk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cHVNy5laLZ6rL8ftJ/yMoZog9FwAimVnQtUP7NEWQb5lRGZvR5pIGG3IHOdpqWLuEU2PjqX71wgfAcvvjwwxvQHlQdXsqvCiBs73Tpn5MU3duA7iG0OfRKgGoZiDc6atddWu8zXaT7HAWP67Spa1nyJS6NpnLpojfqAn9RI/dnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=l/7SxO9q; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAEB11712;
+	Mon, 12 May 2025 10:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747044083; cv=fail; b=dURkiZHVtW7aUgbydBS6Lt+FARlX97DpA4mJs4Mxb8P7Fuz4gCaTNCsSJBL1Eo5Lfz3kfDtODPJWln7Ms62AJZRzm+dXVTOfCeQ1Emjldkkw+1v18u7MLwgzuokJqBZUWEK+Oc8FBCgQAOANQ9k6i9McG1MnrBXrvOJPuBqAnS8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747044083; c=relaxed/simple;
+	bh=en6tQ73HrRWLBsqrDKVSYS6c4GAu9A9LxDegS3s+F5E=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=p9CH7GvlRtclAo8xs0XA6pBWRfv4kULQLow+QaD0/Hl5IdEiYkKGPokl+TiGAtBmDW63ynA6HC7irVhx2IBBTw3VqmqEWevUYUlvcZ8vvguwRMAk779jwsIftZWC3OROKUz7bI6FlLQ8t3hIZsciv8pc+ZQAVVGnNofelC9qlCE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FhrAqY5a; arc=fail smtp.client-ip=40.107.220.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="l/7SxO9q"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30c7306890dso2085053a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747043953; x=1747648753; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gf3Bg40GR4NpfXrAg/Ch4DnXqg4ghwkqgvCQYfyo4D0=;
-        b=l/7SxO9qfErW3jwY3CZvB/18AvH0SGKFdGgGvxUbLrtZSFDDX8oeDcCBgKif3o7pHX
-         JqeCo0WhFs2Ko9NgMbmKf5ZxzP4V+buYvC8kKztw60XbpoRUWZb8+UE3UMCOByMioTjS
-         C5oqrtJEKKPATgi+6EzOaxk5tcmCDG6d/KNWAzk2cHOeX+rNKRHph/LVfUj8VPHFVKwy
-         Qr+2mfBtf9TIrIxueLPGU5UeQDm0W/gGMtKFHdPKi+O9GqZv2+1M2iUJzPLW45nxJJTO
-         1A0mQCyePRIBKUxmuquhR3PJNoR2RO/O4P8TnlsKde6zymUce/I6rLqNs47FnIPW78JC
-         CcJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747043953; x=1747648753;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gf3Bg40GR4NpfXrAg/Ch4DnXqg4ghwkqgvCQYfyo4D0=;
-        b=xUTsjjAXQA6GzMIoXX50xLIEkpVoDbOCtC5yR7MI5kg2kvWhYNGk/M9idnGJvrjYLQ
-         ECN1AyAVTC7uZhihkvmbluY/WN+c5Kh4U+6EHiwXHx93ewP1H1elgbR0kM4bpnnFT+Bl
-         KnbPeOGMhgBAnhnSLSAU17dkD/NXatmHmlfL0Xhm1fDqYimw8l4FytyN9E9u8X5hYjcK
-         GwhIszvdsttuRMzSFSFQFrdFXDF+5KsGxQ18Y0I3GNQJ79zM8v95KOrky0Rva+U7345V
-         Xw2N8uAds1MSkqzW+LwrWOF4iNsJQF+rMGSG1EZMnPkWhJF1TsiVbkG+xvdTf9Zyby7H
-         pSYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaNjJ46JuRHe2D8aUciSX/zsLLqU6YUU6o43pHacFExo2K40g9aEg/MtH9lGdUOiagGQwWhb7Oe7BTv/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf6sLy5rNPLvURjTrUnCLs32mCadr6M7DxL8GZx4DTC/yD2ssN
-	iYkm1wJRS60kVAJD02qO8RbVn/e+F7yxQand+GauohF075mAvvFmJSXn6qhBdL2JLEUAXjg8yAr
-	YEmAuZeeUIZCav/QPzz84ucfR/ofkxFPLdVsCAg==
-X-Gm-Gg: ASbGnctpvfZHScR3PYG/PXYzwBk/+0FxOhTw4MYpxqlJWck4uOIuFoK+QElWDV0mjO1
-	rWEo6+eDu1QxZ0AF9LdhMDaNSA5Rv1Tmn2ZKjxQIqTlhnoC8q3YPkU32os8sST0IqwIuE1Np1tY
-	mWkWrDhuKZz9RZaiNqLfowB0gsWc+1BVgzyebWAQSeUbl//ynfdK+VLIxO8wxh1EP+Hg==
-X-Google-Smtp-Source: AGHT+IFmptyqWaBaNLC9k0gsNSW1Mdny4736KNzExVRpf+rPHHgsVAfgbx/JtvVdU///OameWngynORVG+ED15XYxz0=
-X-Received: by 2002:a17:90b:164f:b0:30a:4d18:c71b with SMTP id
- 98e67ed59e1d1-30c3d3eb986mr18159261a91.20.1747043953353; Mon, 12 May 2025
- 02:59:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FhrAqY5a"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sXXQk3qqk3yLuQE/LWLbaq79/CyXsp+q+5fJsEtY6lhQWlsr/c3DM9sJNig5nWyS8MJXm+oafjGbNoce0ka+BKmaneUlstxu1Bj2b+yT8CuZcgqucksxdXAptLgBGWoEWNj9zf+sfueNLLbcWPqf3oMh76QxZm3RSqOMkq/QuZiZ3jJHCRHJhkjg9vYUgrE5Tf7ofTgrsBoKbc1newBy6c6pI3CRWTCd3osKT+zu/j7ZHXXyzwSKiZL+3e6qs1EDIe00FKiEMY6XqbpQ3O5rRvYxnlrRk+JW5AFz2BQPyeDyq4ha7Uc49UtyD6jonpKx5iCndJ+/ujsJH4O51e2Grg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s3T36J6H90NnoLN+u1r0t+1zyMQQrgXNv9i6249hYDs=;
+ b=fmWc8uiG1JjnwUsxEtWCJJaXhM+E+klNsjSsEESSXhIqebKlKHSlzg7HKkdGVxLWn+GfNaF2VtdFN0E/1pk/vO/NfQXYfhjUeiEvuOSjql++wN75fyJhfbMwOPATMLxc8kDC4ZXATLr7yD3bgyGi2FdGlT3ZGr4u32dM+M5QqME3lbTnrvB3BiXe157+WcYk7+MjxB/k6yD0h+5nP3LQPIUoMP8kbG0IyYDsC9cvRE3GFWd8s8xxSiY4/Gs2vpG6lBesmLB/hYWzpT34UIH56XtRfZyRFHdd1xFELSc4mZ6nrb4eyLBS3PtYvE6EFPsuqErbaI2VMH48SkEf8cCE0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s3T36J6H90NnoLN+u1r0t+1zyMQQrgXNv9i6249hYDs=;
+ b=FhrAqY5ajEA2xO3UA8Dfj0FLaiALP1ABOWUUehKnL5/EFFCZ54JXaeOff2wrm6A2SenXyn7v6b6bxVFVkF9XGuqof8HGbrr+/OQ84Q5Hj6OY30J9eW9I92sXi5E9ysOZH19/UIuxM1Mwv2xWeZB6aD3BYkIGot7AygXA7TBFt5o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by BY5PR12MB4049.namprd12.prod.outlook.com (2603:10b6:a03:201::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
+ 2025 10:01:19 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%7]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 10:01:19 +0000
+Message-ID: <7beb0d9e-8707-4421-a88b-cc494ef1e880@amd.com>
+Date: Mon, 12 May 2025 15:31:11 +0530
+User-Agent: Mozilla Thunderbird
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [RFC/PATCHSET 00/11] perf mem: Add new output fields for data
+ source (v1)
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ Leo Yan <leo.yan@arm.com>, Stephane Eranian <eranian@google.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250430205548.789750-1-namhyung@kernel.org>
+ <33984b44-ae3d-4fbd-b918-07289a3f1d8a@amd.com> <aB4qpAc2GThyGaqg@google.com>
+Content-Language: en-US
+In-Reply-To: <aB4qpAc2GThyGaqg@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN4PR01CA0075.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26d::12) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-11-apatel@ventanamicro.com> <aCGeTPS4WiGYMTTo@smile.fi.intel.com>
-In-Reply-To: <aCGeTPS4WiGYMTTo@smile.fi.intel.com>
-From: Rahul Pathak <rpathak@ventanamicro.com>
-Date: Mon, 12 May 2025 15:28:37 +0530
-X-Gm-Features: AX0GCFtBWusa8PQze3o0UbkP-799T9yoI70LiT3XQ9z7ouWVSYyLKKQP5YJzFHg
-Message-ID: <CA+Oz1=ZXJOrXT28V+MVSmvh-4ddnwZ8hJAFzB6tmNbcohLMT=g@mail.gmail.com>
-Subject: Re: [PATCH v3 10/23] clk: Add clock driver for the RISC-V RPMI clock
- service group
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Anup Patel <apatel@ventanamicro.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra <atish.patra@linux.dev>, 
-	Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	rahul@summations.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|BY5PR12MB4049:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9ed09ef-c2b1-4b30-b131-08dd913bf0e8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dk1BajNxUjBoK0h3dzlTM0ZtV1M4VFFRcnBrd0p1Y2Q0VE9DRisxSHJkaVR5?=
+ =?utf-8?B?clR1cHdWZ2E3WkNwRW84RmR4TWVUOUN5bDZTUjArNGNkQy9VZmJOLzcrSWN6?=
+ =?utf-8?B?SkZnRlhEZlNxU2tRU2pwSHdtM1ZscXR5MkdDbm03YVBxaWc5bk54NU1ZYzM0?=
+ =?utf-8?B?ejhyaGIwOVFOVHZ2blpSVnpBVlBNL1BVN0VrY3VPQ1NUNWVtR0ZwVzcyTzJi?=
+ =?utf-8?B?b29DTjBHWG96VzBuVmNsNldOSDNibDY2cDM1TkhZL3RRVVMwRkl0dVNpZzNy?=
+ =?utf-8?B?dHlMT1NtNXZQYU93akhaZXIxbWQvekJHWnpMbFdHMmhDWWhNQVVyQ05SNHg1?=
+ =?utf-8?B?Vm5aQ3VmM0h6VW54cTRDdXZtVmxwOHFSc2w5NThxcFVRNytTVkdZM2VER1FI?=
+ =?utf-8?B?MGl4K0lpU1dwREFCeW1SRmpOZzVZNHR2Rll5OHlVSXI1cnJJWUQvT2dra3Aw?=
+ =?utf-8?B?Q3RCY0lmVjU0bmdIcEdMNTB4R1JlUDFlem5nNGpqN3l0Y3BVL3B3dW1lTTJK?=
+ =?utf-8?B?dWtReFl0Z2FlT05ISG1xK1RpRGQ2RmZRSG4wc1VTWXVBWDJWNUJnSTdiektO?=
+ =?utf-8?B?N2FUcFRjWXhObGdtYUd2d1dJSGh0TkpVVGE3TnJRa1RmY0prTkhFMVpkZ09p?=
+ =?utf-8?B?a1FsYkE0N0pCYkhrOWRtb1UxM01GcXVxMmg1SC9rYUpxZzh1d1plNU5xcW0z?=
+ =?utf-8?B?T2kzTzc5SzhmZFkzcFpIZDV3VENMbmwvM0FqeUxRUUNDcy9wM2tIdTU3ZHp0?=
+ =?utf-8?B?TW1YRVVYc1V0ZGpuN2REVVJqNVhGbitQVFhDckdUMmdjL1c1RXN5RUMrcHdl?=
+ =?utf-8?B?UE9kN1NnMm5nbHgvS2F5L2NZcVRwMmJ4NzN3eHJYMnZzMjRGazZsNzN3bWlD?=
+ =?utf-8?B?Ym9DRmxzZnRxQi8vbVlKZEY3aFcvRVBpNGxrVXdRbDc4TUNHNU0rTmlPdUFr?=
+ =?utf-8?B?YVZEbFJXb2cvTFFScFBRdFJsU2x6NGNsaWVud3R5WDk1K3lFMWYzeWExdVlw?=
+ =?utf-8?B?eHpzVHZMUGFyV1R1RjlCSlZUTEl1Nm50MGNoZTZjNXFxSGlTaFVyL2k0SXJE?=
+ =?utf-8?B?MzVRSGxDRXBiMkdXQmpFTmY0QzRaaDU4SktNNkk0U0ZoLzdzclFTa1NWOHU3?=
+ =?utf-8?B?V0VIeFo4blZiMTM4Y3M3YlVFV3J5bjR1SkhEQWdLY3lVdXMvTzNVdktVNFRP?=
+ =?utf-8?B?ZWFzSk56YXZlZXE3d2hxKzdxZFpNRkZSdy9oWjgzNFZkaGF3VWxzWFFlSVFZ?=
+ =?utf-8?B?RGI5Z016OGpVaGNhRURlNUgrdHM1K1V2NVFMZWVYdjMyQ2hRWDU4YWNCWmhK?=
+ =?utf-8?B?T0NUR245MzNxTFNqdCtJQ0RKNzVBN25xajRxSWxHTHJ0UXhqWU9YK2JoMXho?=
+ =?utf-8?B?Q1ROajVQNXhIRDZTNzNZWEZjcllaNlR4ZFJ4NU4yVllLQzJMSWZ5MFhZYkY0?=
+ =?utf-8?B?VHQ5eFpZL0lVaHVTYVR2cmtldGlWSk1mQlY1MmJiN25BbnZmK3hYeVdUQ1Jh?=
+ =?utf-8?B?d3Q2eWZsbmlZM1ZreFE0K05lVjY2U1NDOWpGSndrTTkxSlNuajBsbEJ2d2RO?=
+ =?utf-8?B?S2dZL3NhcTdLMGhVcUhYbTlkeVhsYXByVGE5RXF0WFB5K0RoWkkyYU03NXFP?=
+ =?utf-8?B?UlNqSU0xekN1cFBFcWE0TXlIU203ZDEyRGpoMWhubmlmREw0MTBDS2duaDEy?=
+ =?utf-8?B?WGNBcU5LQUhLZHgxTE54cExjVHFzUTNLUTZjZ3lZOWVSK283M3ZkcEtwUzlS?=
+ =?utf-8?B?eDRSNlRISm5mRW5mM1JDSDZIVkpUbFBhQzNzMlh2QWN6bTkzS1FJVXdQV1J2?=
+ =?utf-8?B?OENKd05oNHBOOE1sWE1hejloTWRuTFZjbmNLdDVOU2hZYmI3WVh4c1FDZ01W?=
+ =?utf-8?B?dW1TMmZGVkZVK29NeTFEQnZNakVTT2VvbmJZVm1wZUxQeFA3Tmp4dGc4bks1?=
+ =?utf-8?Q?vLKEyYt8uPY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?emlacUk0cGdlNVJDV29yWnBIMVBrMHNyL1F0L2EyU21ncS9hcU0wUXZVNTJ0?=
+ =?utf-8?B?N0VRZEJ1cFZRejVWdG9YTGR2eElvK3ZNRk9iWDJKNGpPRFNoUmlFOUs5TVlW?=
+ =?utf-8?B?bmw5aDNubVBYUjA4UlZvUWxNR1cyTTJoUFhEd2luaDcrdE9ndTBPYnpRQmRm?=
+ =?utf-8?B?UkhoUyswbzJ1bGpHN2tDMWhOakNGT3oyU0ZDQnVUTGo0ODRkbWJHbllmNUdZ?=
+ =?utf-8?B?c2g3ald6cDlBYkJLQkt6NzFHcE1EQUU2Y2Y5MVdxaGNKQ2tMWnEyZlJzNi9n?=
+ =?utf-8?B?aGM2RVlzTzlRZnV6Rmd4YUY3VmVETThxbGwxbjRqYlVzS2UxUzZ2UUVaSkR3?=
+ =?utf-8?B?Rm9CbEFZTzdEYWpYNGl6a21oQjZDQWFiV1ZKTDJRMWUrMUwrRDFxS0h1V3dS?=
+ =?utf-8?B?ekx5NmN4SmVxSUI0dDYrcEwwc2JBdC9sWFdNYnByN1l3WUZsdlBOZlJCcCtQ?=
+ =?utf-8?B?eGQ5ZEFHVHlTQkxNbWg0NS83eHhWSWJnSXNkVnY5d0ExT1prNjZvSmxBaStB?=
+ =?utf-8?B?TFdYZXZaTG9SVHhtemttSnlrNElScm4wYzNBZEZ4STJQMGJIdEJab0lndTEz?=
+ =?utf-8?B?UFZ5dC9NNEkyWE5GYWN0Qmc3S01xN3NFQWdONFk4Z2xRSWRTdkkyRFJnYUpa?=
+ =?utf-8?B?VjFiT2krZVFDeFFNTi9TNmVpQm41ZnpoZExHMUtzcENHbVRuZDZod0FWUmpo?=
+ =?utf-8?B?cEQxcTE0cXJjbEQwM3ZNZ2tXTjdlbDJrTzl1YjV5amNzOGJoNTNjdFNvNjYv?=
+ =?utf-8?B?SFNJRU9mWm5SdVE4b0JQRlV5cnpMeDVocEVDNGdwRnpBN3pLRVNkbWhlaUps?=
+ =?utf-8?B?RWM3UFdUcVNUT0pvSzNLUkJJNkh2QSt5QndYcEpYNDJWV24xUGt6YUtVK1ds?=
+ =?utf-8?B?S2Q4MFdSdjdrS0RlQ2NGcHN2elNJQVRWSkQxMUR3cVJEc2diQ0ZwRG53cjFi?=
+ =?utf-8?B?Q0tNSmRLaTIrVFRxWW1TandEcVBGWGExa09OT1ZkN3grN0YvWE5QVlFBeFp6?=
+ =?utf-8?B?RHhRWVlaZE5GcXU0NVlGUUZ5dXdVbGR0SUpXbWhXMWV4NTAzbVROMnRiajBj?=
+ =?utf-8?B?ZEdJSmhlVVY4dWsxV2Q3MDlQalpKb2pPVnlkZFdKQkRvSUNSYlNVOFN3UEFy?=
+ =?utf-8?B?cmREMS9aYVVkTU9OMWZsQTc0K0hEdllYUzRPV1krVkFYYklrZmdRR29Qd3M0?=
+ =?utf-8?B?TStIdDJSWWk5UUdYUVE4RzRuR0VhUWdjbWQ0MHkzZkVycXhmS05tNHBvOEdj?=
+ =?utf-8?B?UjZZY2I3eXNpR016NFN6R1gxRlRZS2dXZkRYY21IRm4zTHordXh6ZXV4N084?=
+ =?utf-8?B?QUhXRWJJMVZzSFI4TklseXNRZGpMMkNyU1NTZzZFM3ROSUMyMC9RQW9iK2ND?=
+ =?utf-8?B?YzZmZ0hMSXhvNjRXVzJ2Nnp2MFI2Q2dtMERZTWhxemJ5RzMrbE4vMUxXalU0?=
+ =?utf-8?B?WEMyVFlJdjlPRUNRcEhPUVI3UThZZFN5STJQblRVUE1IV3REbE5WN2hyOHhS?=
+ =?utf-8?B?VGVOY0pMMEVYRUx3ck5tWmI5NWgvUFJLNVlVTk1TWG5xMEhGTWRzN0MwclFk?=
+ =?utf-8?B?MnhsVURaN1ZObVZCTjdMbEtEc1BQR0YzQmJrazVUSGFhSlVqVmFHdGtYT24w?=
+ =?utf-8?B?anREb3BtRnBYbUFuNDV2a3FxVFZ2dGRVSEowZUx6aGVSWmJjZDVzTjVwWGk3?=
+ =?utf-8?B?a2NQeVBPdzRLTHZxandXaXJMdVovSVVFeHU5MjFJMElWdjdQNjJEbHFuL1cv?=
+ =?utf-8?B?SlJhSGpuZVY0YWp0S3NNMHhMWTM1T3BnU3VoNHpRa2k4NENsWjlpc20wbGdv?=
+ =?utf-8?B?WDNXUUp1OE5mYUJ3eXZKSnA0Qjl5R2g2eGhsS0hOOUxsTVNBUUlYSFh2M2dD?=
+ =?utf-8?B?UVNWTEtIOW4rV28zdUlkdVVBdkhOOTRJNXhNdE9TRVp5Q1VYU3JXUnczaXd2?=
+ =?utf-8?B?dG85eUNnSXFRVDNIVW10a2xzRE1aRmpRdXR2SVp4UjY4SVJsVWcwZWNadUo3?=
+ =?utf-8?B?RENzNWhHYnZvb1RzMVJpTUhoTWdOb2lDelJzRDVLUkltNlJsdmxZVDc2U2pi?=
+ =?utf-8?B?YTF6N01pTzh2SGo2OVNDNjUwa0p4ZjU5TFk5OFpnOE1wTTQ4UEpmMnFWZFdi?=
+ =?utf-8?Q?FAgrHEYFSd2eeL1CS3SbXXKnL?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9ed09ef-c2b1-4b30-b131-08dd913bf0e8
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 10:01:19.1689
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ubvB7FFzR0VRkQ4d4Lxp/5lvsNhYHl6k/sH/TNDV8bNv5cGc2m4iyrsR/6Abqz0TZY8AIEAE1TlkGG8Dm4w06Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4049
 
-On Mon, May 12, 2025 at 12:38=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Sun, May 11, 2025 at 07:09:26PM +0530, Anup Patel wrote:
-> > From: Rahul Pathak <rpathak@ventanamicro.com>
-> >
-> > The RPMI specification defines a clock service group which can be
-> > accessed via SBI MPXY extension or dedicated S-mode RPMI transport.
-> >
-> > Add mailbox client based clock driver for the RISC-V RPMI clock
-> > service group.
->
-> ...
->
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/err.h>
-> > +#include <linux/mailbox_client.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/mailbox/riscv-rpmi-message.h>
->
-> Just to point out again that the above misses a lot of headers definition=
-s
-> and/or APIs this driver uses. Follow IWYU principle.
+Hi Namhyung,
 
-Sure
+>>> The name of some new fields are the same as the corresponding sort
+>>> keys (mem, op, snoop) so I had to change the order whether it's
+>>> applied as an output field or a sort key.  Maybe it's better to name
+>>> them differently but I couldn't come up with better ideas.
+>>
+>> 1) These semantic changes of the field name seems counter intuitive
+>>    (to me). Example:
+>>
+>>    -F mem:
+>>
+>>      Without patch:
+>>
+>>      $ perf mem report -F overhead,sample,mem --stdio
+>>      # Overhead       Samples  Memory access
+>>          39.29%             1  L3 hit
+>>          37.50%            21  N/A
+>>          23.21%            13  L1 hit
+>>
+>>      With patch:
+>>
+>>      $ perf mem report -F overhead,sample,mem --stdio
+>>      #                          Memory
+>>      # Overhead       Samples    Other
+>>         100.00%            35   100.0%
+> 
+> Yep, that's because I split the 'mem' part to 'cache' and 'mem' because
+> he_mem_stat can handle up to 8 entries.
 
->
-> ...
->
-> > +#define GET_RATE_U64(hi_u32, lo_u32) ((u64)(hi_u32) << 32 | (lo_u32))
->
-> Hmm... Perhaps add this kind of macro to wordpart.h ? IIRC not only this =
-driver
-> uses something like this.
->
++1.
 
-Sure, it makes sense.
+>  As your samples hit mostly in
+> the caches, you'd get the similar result when you run:
+> 
+>   $ perf mem report -F overhead,sample,cache --stdio
+> 
+>>
+>>    -F 'snoop':
+>>
+>>      Without patch:
+>>
+>>      $ perf mem report -F overhead,sample,snoop --stdio
+>>      # Overhead       Samples  Snoop
+>>          60.71%            34  N/A
+>>          39.29%             1  HitM
+>>    
+>>      With patchset:
+>>
+>>      $ perf mem report -F overhead,sample,snoop --stdio
+>>      #                         --- Snoop ----
+>>      # Overhead       Samples     HitM  Other
+>>         100.00%            35    39.3%  60.7%
+> 
+> This matches to 'Overhead' distribution without patch, right?
 
-> ...
->
-> > +enum rpmi_clk_type {
-> > +     RPMI_CLK_DISCRETE =3D 0,
-> > +     RPMI_CLK_LINEAR =3D 1,
->
-> > +     RPMI_CLK_TYPE_MAX_IDX,
->
-> No comma for the terminator. Please, clean all these cases.
+Right, it does.
 
-Sure
+>> 2) It was not intuitive (to me:)) that perf-mem overhead is calculated
+>>    using sample->weight by overwriting sample->period. I also don't see
+>>    it documented anywhere (or did I miss it?)
+> 
+> I don't see the documentation and I also find it confusing.  Sometimes I
+> think the weight is better but sometimes not. :(  At least we could add
+> and option to control that (like --use-weight ?).
 
->
-> > +};
->
-> ...
->
-> > +union rpmi_clk_rates {
-> > +     u64 discrete[RPMI_CLK_DISCRETE_MAX_NUM_RATES];
-> > +     struct {
-> > +             u64 min;
-> > +             u64 max;
-> > +             u64 step;
-> > +     } linear;
->
-> Have you looked at the linear ranges library we have in the kernel? Can y=
-ou
-> utilise it here?
+this and below ...
 
-Ok, i will check
+> Also we now have 'weight' output field so users can see it, althought it
+> shows averages.
+> 
+>>
+>>    perf report:
+>>
+>>      $ perf report -F overhead,sample,period,dso --stdio
+>>      # Overhead  Samples   Period  Shared Object
+>>          80.00%       28  2800000  [kernel.kallsyms]
+>>           5.71%        2   200000  ld-linux-x86-64.so.2
+>>           5.71%        2   200000  libc.so.6
+>>           5.71%        2   200000  ls
+>>           2.86%        1   100000  libpcre2-8.so.0.11.2
+>>
+>>    perf mem report:
+>>
+>>      $ perf mem report -F overhead,sample,period,dso --stdio
+>>      # Overhead  Samples   Period  Shared Object
+>>          87.50%       28       49  [kernel.kallsyms]
+>>           3.57%        2        2  ld-linux-x86-64.so.2
+>>           3.57%        2        2  libc.so.6
+>>           3.57%        2        2  ls
+>>           1.79%        1        1  libpcre2-8.so.0.11.2
+>>
+>> 3) Similarly, it was not intuitive (again, to me:)) that -F op/snoop/dtlb
+>>    percentages are calculated based on sample->weight.
+> 
+> Hmm.. ok.  Maybe better to use the original period for percentage
+> breakdown in the new output fields.  For examples, in the above result
+> you have 13 samples for L1 and 1 sample for L3 but the weight of L3
+> access is bigger.  But I guess users probably want to see L1 access was
+> dominant.
 
->
-> > +};
->
-> ...
->
-> > +struct rpmi_clk {
-> > +     struct rpmi_clk_context *context;
-> > +     u32 id;
-> > +     u32 num_rates;
-> > +     u32 transition_latency;
-> > +     enum rpmi_clk_type type;
-> > +     union rpmi_clk_rates *rates;
-> > +     char name[RPMI_CLK_NAME_LEN];
-> > +     struct clk_hw hw;
->
-> Just a reminder to use `pahole` to check that your data layout is optimis=
-ed for
-> memory consumption.
+... I'm also not sure. Logically, it makes sense to use weight as overhead.
+Also it dates back to ~2014 and nobody has complained so far. So I'm just
+being pedantic 🙂. For now, how about just document it in the perf-mem man
+page and leave it. Attaching the patch at the end.
 
-Ok, i will check
+>> 4) I've similar recommended perf-mem command in perf-amd-ibs man page.
+>>    Can you please update alternate command there.
+>>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-amd-ibs.txt?h=v6.15-rc5#n167
+> 
+> Sure will do.
 
->
-> > +};
->
-> ...
->
-> > +struct rpmi_get_supp_rates_rx {
-> > +     u32 status;
-> > +     u32 flags;
-> > +     u32 remaining;
-> > +     u32 returned;
-> > +     u32 rates[];
-> > +};
->
-> Is it ABI? (I mean if this is interface with some kind of FW)
-> If so, Use proper endianess aware types. Same Q for all data
-> types defined in this driver.
+Thanks!
 
-Sure.
+------------><---------------
+From 7e4393ab7b20f8d89a5dece08fdd925e3e50b15a Mon Sep 17 00:00:00 2001
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Date: Mon, 12 May 2025 06:22:57 +0000
+Subject: [PATCH] perf mem doc: Describe overhead calculation in brief
 
-It's the message format defined by the RISC-V RPMI spec.
+Unlike perf-report which uses sample period for overhead calculation,
+perf-mem overhead is calculated using sample weight. Describe perf-mem
+overhead calculation method in it's man page.
 
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+ tools/perf/Documentation/perf-mem.txt | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
->
-> ...
->
-> > +                     for (j =3D 0; j < rx->returned; j++) {
-> > +                             if (rateidx >=3D (clk_rate_idx + rx->retu=
-rned))
->
-> Too many parentheses.
+diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+index a9e3c71a2205..965e73d37772 100644
+--- a/tools/perf/Documentation/perf-mem.txt
++++ b/tools/perf/Documentation/perf-mem.txt
+@@ -137,6 +137,25 @@ REPORT OPTIONS
+ In addition, for report all perf report options are valid, and for record
+ all perf record options.
+ 
++OVERHEAD CALCULATION
++--------------------
++Unlike linkperf:perf-report[1], which calculates overhead from the actual
++sample period, perf-mem overhead is calculated using sample weight. E.g.
++there are two samples in perf.data file, both with the same sample period,
++but one sample with weight 180 and the other with weight 20:
++
++  $ perf script -F period,data_src,weight,ip,sym
++  100000    629080842 |OP LOAD|LVL L3 hit|...     20       7e69b93ca524 strcmp
++  100000   1a29081042 |OP LOAD|LVL RAM hit|...   180   ffffffff82429168 memcpy
++
++  $ perf report -F overhead,symbol
++  50%   [.] strcmp
++  50%   [k] memcpy
++
++  $ perf mem report -F overhead,symbol
++  90%   [k] memcpy
++  10%   [.] strcmp
++
+ SEE ALSO
+ --------
+ linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
+-- 
+2.43.0
 
-Ok, will remove
-
->
-> > +                                     break;
-> > +                             rpmi_clk->rates->discrete[rateidx++] =3D
-> > +                                     GET_RATE_U64(rate_discrete[j].hi,
-> > +                                                  rate_discrete[j].lo)=
-;
-> > +                     }
-> > +             }
->
-> ...
->
-> > +     devm_kfree(context->dev, rx);
->
-> Why?! This is a red flag to point that here is misunderstanding or abuse =
-of
-> managed resources approach. Either use __Free() from cleanup.h or don't c=
-all
-> devm_kfree(). The latter must have a very good justification to explain w=
-hy.
-
-Yeah, I think it's better to use kzalloc for this case and then free it.
-
-
->
-> > +     return 0;
->
-> (this is even not an error path, where it might have a little argument fo=
-r)
->
-> ...
->
-> > +     /* Keep the requested rate if the clock format
-> > +      * is of discrete type. Let the platform which
-> > +      * is actually controlling the clock handle that.
-> > +      */
->
-> /*
->  * Use proper style for the multi-line comments. You can
->  * refer to this comment as an example.
-
-Yes, I will correct it.
-
->  */
->
-> ...
->
-> > +out:
->
-> Redundant label. Note, the labels are recommended to be named after the f=
-low
-> they will run if goto. This one can be named as out_literally_with_return=
-_0,
-> which makes it obvious how useless it is.
-
-I will improve the flow.
-
->
-> > +     return 0;
->
-> ...
->
-> > +     rates =3D devm_kzalloc(dev, sizeof(union rpmi_clk_rates), GFP_KER=
-NEL);
->
-> sizeof(*...)
->
-> > +     if (!rates)
-> > +             return ERR_PTR(-ENOMEM);
-> > +
-> > +     rpmi_clk =3D devm_kzalloc(dev, sizeof(struct rpmi_clk), GFP_KERNE=
-L);
->
-> Ditto.
->
-> > +     if (!rpmi_clk)
-> > +             return ERR_PTR(-ENOMEM);
->
-> ...
->
-> > +     ret =3D rpmi_clk_get_supported_rates(clkid, rpmi_clk);
-> > +     if (ret)
-> > +             return dev_err_ptr_probe(dev, ret,
-> > +                     "Get supported rates failed for clk-%u, %d\n", cl=
-kid, ret);
->
-> Indentation issues. Repetitive ret in the message. Please, get familiar w=
-ith
-> the format dev_err_probe() uses.
-
-Ok, I will correct.
-
->
-> ...
->
-> > +     int ret, num_clocks, i;
->
-> Why is 'i' signed?
-
-This and num_clocks can be unsigned, will change.
->
-> ...
->
-> > +     /* Allocate RPMI clock context */
-> > +     context =3D devm_kzalloc(dev, sizeof(*context), GFP_KERNEL);
->
-> Ha-ha, you have even inconsistent style in the same file! So, go through =
-the
-> whole series and make sure that the style used in each file is consistent=
-.
-
-Yeah, that's because there are multiple devs in this series.
-I will improve that.
-
->
-> > +     if (!context)
-> > +             return -ENOMEM;
->
-> ...
->
-> > +     /* Validate RPMI specification version */
-> > +     rpmi_mbox_init_get_attribute(&msg, RPMI_MBOX_ATTR_SPEC_VERSION);
-> > +     ret =3D rpmi_mbox_send_message(context->chan, &msg);
-> > +     if (ret) {
-> > +             dev_err_probe(dev, ret, "Failed to get spec version\n");
-> > +             goto fail_free_channel;
->
-> This is simply wrong. You should not do goto before any devm_*() calls.
-> The error path and ->remove(), if present) is broken. Fix it accordingly.
->
-> Here should be
->
->                 return dev_err_probe(...);
->
-> it's your homework to understand how to achieve that. Plenty of the examp=
-les in
-> the kernel.
->
-
-Sure
-
-> > +     }
->
-> ...
->
-> > +enum rpmi_clock_service_id {
-> > +     RPMI_CLK_SRV_ENABLE_NOTIFICATION =3D 0x01,
-> > +     RPMI_CLK_SRV_GET_NUM_CLOCKS =3D 0x02,
-> > +     RPMI_CLK_SRV_GET_ATTRIBUTES =3D 0x03,
-> > +     RPMI_CLK_SRV_GET_SUPPORTED_RATES =3D 0x04,
-> > +     RPMI_CLK_SRV_SET_CONFIG =3D 0x05,
-> > +     RPMI_CLK_SRV_GET_CONFIG =3D 0x06,
-> > +     RPMI_CLK_SRV_SET_RATE =3D 0x07,
-> > +     RPMI_CLK_SRV_GET_RATE =3D 0x08,
->
-> > +     RPMI_CLK_SRV_ID_MAX_COUNT,
->
-> No comma in the terminator line.
-
-Ok
-
->
-> > +};
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
-
-
-Thanks
-
-Rahul Pathak
+Thanks,
+Ravi
