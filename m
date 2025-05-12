@@ -1,213 +1,173 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E050623C4EA
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747063094; cv=fail; b=HjsWVpUBmf5Pj29zPK3o8wdi9rRLpYBr4dLBLmCTD1y1qJpNyzpjpj5JFZMpN5tXghXeYyLOoyEpepS5FV3OvJEi8EcdS+gF8ryc1MdNA7skNzHNM3rQ/n/ByAQEQ9I5zUZPusT/IryeY1ibEEb5o7Ql0/ZjaFOqRzwHviD/Eo8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747063094; c=relaxed/simple;
-	bh=mY4Z7VZQsjms2Ih4Qcf+vczPNZHLT7lNGu+JEpavmbQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hWSHqBkL1CqtGFrw9KrGsuT/GOfgMI7QMQsHH6K/kN5c47VAfXFvFTqaFipYsBHrWE5wqOq1bDGvwV4NV/VY2h6I3Mxm/3MYchUF0xeKiURIAIfPhuyR6Bm3g8el7dkBfHvfhubynNbPJcqTmGs728lZnV7udtIZ1vILz/njRF4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DdR7Awuj; arc=fail smtp.client-ip=40.107.236.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90374239E89
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747063136; cv=none; b=J6KAFEtn2h9U9KyisIZrP6jn0xPUwciEC9dAQOB1UveEVJw74717Vep2GWac/fsVt7Mof0AjI97VTTjEi691t6KjLNADgYkHgZl2HeAf19zZLnMkOtnDq1YtL69toyrGt02Dswoiq8V9vCl4HXwiU+xIYaUIHR4SyHcIYJH3E20=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747063136; c=relaxed/simple;
+	bh=2IdpfLGKdEoZhwnQatAbCZnirWhv+nx6cgCI9SW6Ar4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxMW6GKyi0DQZn9P8hI9mdjOXziM4gKqFhz16cwQgWn7A1kUlb1vKHfyBOCpunGx7Tej6up/Es4iQA+kZy6kIrhZqUA5qBLbwpKsFwJxVjsjdP1OwTq4703QYbWvNburlfRFY9ItCGdAae3yyRdCh1LCqKvFR8krBpb0ojrKETo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iRmR1vHP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DdR7Awuj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n3C2/JXa9nUk0o/BQDQ+jTkBNrDx21xwv3BUAr3uIowArTmPytf5x5cWo+cPmSSaYHWttsgkS/wjRPob4g/mhfBBB77uzsDxSVnXuEXCOLg7lrDSgHrdf1O+hPgiAIYzjMwmgTQ/rOvUelTwp1xXb4m83yfgiidhN1wu3vIk6TPrgmLtSklXRMhO5MFc3A3W4cXgH2xzyG2iieIwInw2wqQ/7MwV3aFWmXc9sNo8bhHmJk69I1JEjXAM+lOUqmeE+LSYatXx07rNAomd/OF6J7E5SxgBM/2qfJygaw1jenzW5DtS5pLlVo7qPRnhIjEgQC/kB4pjWrLzLudraJbMXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TcIhcBHqWWD4+q8qfS7R0vePSpqJhqZLLP8uQYucC6c=;
- b=HWvT2g4qZAaVkIATxC0g52gn+xaOLZlyccs6AmwnKaIRzBopG7QnzYpBtTenTf9SbbO3qpdyxT4K6ykzwLOCwUBJz7IpYlvc5HQQOx/m/9Ha7n15dwfVrqFYX6Sn65Nb32xykN24851sk5LzRfk2EyZ7+5BReq6bO4Pc6B552dPgbYHDfr7BQJ1E4WLb3aIiTts5eyM5cBOEsEpU9T2q0iPatNzuQmKSE4Tn1m4ig3cBYcc4pmGLrpQVGlCA+GZzuc6FA30f7vbp9jkMy2xE9a3mDXpWJv72XHDjHdqVPWT9e6MtZ16hKxd2XPFcu9qP8aALu8b0hj49Wyz9LlWZxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TcIhcBHqWWD4+q8qfS7R0vePSpqJhqZLLP8uQYucC6c=;
- b=DdR7Awuj/bhV/b9AvvyuTi2+abdcU93oiZAlbqsdwhpfR/rAxB485Cijmi2jdDw9e8oTvrv3I9w17byt1yWfGfm4EFYve0ktDRnXkuX20OgaT9W1bUoaGAjNX1XIHLn5pszTLaaC4S8Cilutw4NMeHFfJBo13dF7+S8IkyA1pLEdn6JutTdDjTinXx7VlM7+sZf9bzfkH6z2AvsFYJR7ZPmTUWazCHTEEsutsqqvDltcO5mvt8UePHnZtrbJM4tWksqhbkqzVx2ebxXmKmfjSGaOqop1JEcTmXWhP4hNwcM0UiD99DlHfG8Qw1MfZV+G48FL28lSxj5mIGviTVVhQA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by LV8PR12MB9619.namprd12.prod.outlook.com (2603:10b6:408:2a1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 15:18:08 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%7]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 15:18:08 +0000
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] sched_ext/idle: Make scx_bpf_select_cpu_and() usable from any context
-Date: Mon, 12 May 2025 17:14:56 +0200
-Message-ID: <20250512151743.42988-3-arighi@nvidia.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512151743.42988-1-arighi@nvidia.com>
-References: <20250512151743.42988-1-arighi@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0008.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::13) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iRmR1vHP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747063133;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=055Mhxm3Vj10tzsgUUAv0QLPQcIdcHHdPWPHZyA4HeM=;
+	b=iRmR1vHPSdf0cDPG67yO5vOpPcA9Owy7FwUf4+Mm8pg87cmPybMEw1SASUw9gVzYu6p6W2
+	IriKLf9bPCXDSWz9dEiVYEFZ86w8YJlc7lfFjF2wR/jDTwUFxPr2N1Y2K4W3DqBcMA0j6j
+	EcbsUAiv+AQe49nbagAjOrzuaIi2W88=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-327-mJRrA0M2N6qmC_tbDPCx3g-1; Mon,
+ 12 May 2025 11:18:50 -0400
+X-MC-Unique: mJRrA0M2N6qmC_tbDPCx3g-1
+X-Mimecast-MFC-AGG-ID: mJRrA0M2N6qmC_tbDPCx3g_1747063129
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BA5C81955BCD;
+	Mon, 12 May 2025 15:18:48 +0000 (UTC)
+Received: from redhat.com (unknown [10.45.226.40])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 534E01940EB0;
+	Mon, 12 May 2025 15:18:46 +0000 (UTC)
+Date: Mon, 12 May 2025 17:18:43 +0200
+From: Kevin Wolf <kwolf@redhat.com>
+To: Martin Wilck <mwilck@suse.com>
+Cc: dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
+	snitzer@kernel.org, bmarzins@redhat.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+Message-ID: <aCIRUwt5BueQmlMZ@redhat.com>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|LV8PR12MB9619:EE_
-X-MS-Office365-Filtering-Correlation-Id: c34d9989-c9ec-4990-8402-08dd91683370
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SZUOWXDOaAhca7r7Bfh0ZIxZks1oBu8c/5sZlIPlQD1pWZZkVaq5lH7Tcv4y?=
- =?us-ascii?Q?j+XwwDV6WHQinOq95Ylkuo2EiRSTqGWyrfziNTMgb7wjkEn+FKq4BDx4V06C?=
- =?us-ascii?Q?YtTD1XmjPk9SC+t3KMNbRRjwPGBxbOcqKlJwuylCN9Als8S8roL+PBl/Gh3V?=
- =?us-ascii?Q?F4SdukLQ1Ia7UKslgKOY70/BnKgvUXK4Py6+RgZDbNhMeSoP5oXhalphQdai?=
- =?us-ascii?Q?4ZiWyZ2r32ZMtD6IzmzzHmtKBzurcKCT0eKBm74B25GlFma/FYaW/U0Mco3t?=
- =?us-ascii?Q?M3Vv3eDVPhJg1GLpF7yWXvZm5yknoQH4ESEL5gLnRVbq/tAFSJJz6b+0l1B8?=
- =?us-ascii?Q?C+NWgMHBF5LTM4sONjcqNNgUvlAOCDKTtDY/zoDA75EFttUz/rZW2XYhfrTR?=
- =?us-ascii?Q?JSRdw2D460C/d8YONSuClnu9eZU6Bc7ihSXfzQQ7nxk6Y/AC4EcXLs4tbRsn?=
- =?us-ascii?Q?YNEXdwNlcf1Y2842mQPOthB041xFoO/Xp+yen+/0y6VIW2N1Cw6D9R7L9jS9?=
- =?us-ascii?Q?SZZwThPG8e5LiuA0kufwDtNi2Ga72RHw0pJnuCVibXb3HpmtMKgQUt/mGMAe?=
- =?us-ascii?Q?RkvnIo50FQqX9soANW9kK0T6KdwLT1Vul0oseboYy3XebMWcQJtjvLm5GhVH?=
- =?us-ascii?Q?v+4Edw8dWdRJCKYD2ZHUQi8TpyWN30H9kseyyjD60JrrY1y+2m0lF2uCrPj+?=
- =?us-ascii?Q?HPyW8kcp5eGOXi5tDrxCGuzbcqNr+lsPjtvqCsf72HZk/jxQ+7MmVERt7c9W?=
- =?us-ascii?Q?PY2DvD+ItgxITX0JP+mz4gjL1SuHIhRTzUuORCaJA2e+3sJSc7ChJrTX5ow4?=
- =?us-ascii?Q?0WynILmNn2kyQGEWdUnIvDgJiqqJa9bUMYBF3pmCD0HJ+Dp99FNRmyTk9eeP?=
- =?us-ascii?Q?WibRLwCFEXkcKBB4usGpEsnmULzaqkvv2jQQZoBKXm4EBeS5GXnOgPW60D7N?=
- =?us-ascii?Q?LmxGlpmVcqEe+nugIhSNujVtS0K9UpaO/nnRjyR7OYrWoPTo+riUaVlTjRcQ?=
- =?us-ascii?Q?n5Zx59nV6VqZjxJw7RdBxWytkoTISv6RUOyLxc1R9LcExaS60MlKp9x7j7t7?=
- =?us-ascii?Q?QBnVRT9AxXvEIgr4Alxo6waPtiJNEwMkJlusxTx/mcxAEkfX/+t8wNChF+iq?=
- =?us-ascii?Q?Lh3AfAGE4IbmcY7eoyi/OrvYgDYHpGOoihwgZbSubqyrXVpuFJiyXPdKgmHf?=
- =?us-ascii?Q?4WWxiUtnUB6jt84ZWALnS11NF8Py3SMWsXB3WLKMmJK8Ysdlv+wBdsrgHoDa?=
- =?us-ascii?Q?PSvMDO0JCZsXDqwj2mXsnyc6fse0W21H17rN3FgijYbGP6NIdBICYzFOlNX4?=
- =?us-ascii?Q?wPmQ22AkCT0cyF816dvNdLkBsJbIkQo7Q4pqNbDomlswzXpxNsU4YPM69wVl?=
- =?us-ascii?Q?4RxYWZe++1BD8ENEvZwfwF00X1H0/0Rcj/djvaSHJyHpSAVWYuwYdqQSkElP?=
- =?us-ascii?Q?w3CSgXFCntI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?sUBN1hdPVf5vz7D6Wppz+FgasGdiKRAOWst8vnCGaxhmP7b56bcx3wiE07w0?=
- =?us-ascii?Q?H472uZA9zlrU22LMb5OOV4zrAYjNGZNLa1bgZRTHbUXTwaxi2VZt5xtZ7Q5q?=
- =?us-ascii?Q?ymnXAQRPD/MYSYdO9Lbu19WzmKZsuRtIHL1CBNlGUzl1B597k1adtAouwNGH?=
- =?us-ascii?Q?fwgGCbgRE6u1IgHgqjBdyr0nFThEd36owFE73a7QY/Am4kcsfWKwDqW5lHCt?=
- =?us-ascii?Q?nZC93Qp+JMztgNyLHzuGGc9kkuIILfWHeiFGJlrdWEPA9M72bAmtd5sjGAaK?=
- =?us-ascii?Q?jzGAflbVfcdF9ObvllLWRPOMQLal1DAM/b4vKa6uIIABLDDXolACG/zkoocp?=
- =?us-ascii?Q?Wja/F85I9dbwncuoCkz6oOLGFB5F/aHVd6tiYNSsVY9Iii8rv1hNUZJb+rnQ?=
- =?us-ascii?Q?/i4YLtws0s7ZwV19SnoeTvfipjRW82il0BamU79CAFhRkBH5qXUl7wWQwzmD?=
- =?us-ascii?Q?oJ9wp9RQVsJl5ibWq4LSoPOquQVd3evvIKe4xkFVKBc9tQkM6mgyuIcgzSje?=
- =?us-ascii?Q?Ge9FI5ujH97/ZHAj+ahdRgEQQ7XNRfCky6G8DsUbfZraTDFhDNixBziWnTTl?=
- =?us-ascii?Q?jLCs2Chh9cSQlh3E2EToOfCmHsQfLXxzlq/Q1wf8uW9puv/ZhzNOIp575U2R?=
- =?us-ascii?Q?U/VPyFvuXeixcTe8PiTuiqSfOmAdbnVxSuMNnmwWv/q3KLexWQ2lalWiq4PJ?=
- =?us-ascii?Q?GEoSfwyeL6byhoeMGbAhuzsNeYvzR/7ad00yYGtoJj7hjZba+edRRfbNKypi?=
- =?us-ascii?Q?TAyLiEAVWl61eSmJdmqqxjorheB62lgKjGw8kt+A/xmaWgbjIyXxlKaV99Ed?=
- =?us-ascii?Q?9r/yYO+uY9v6gpRObcFhOzyKFXjMFID0a/n/+LFvQupD3i7gxKxXTt8ekOtE?=
- =?us-ascii?Q?BPUXHiCW0G/IQDgCkUH7SwR4sbyolX5bwG62kdMclKXT0lA8JuP7/cSV72za?=
- =?us-ascii?Q?EupogV7J/7dBWBVRchkMwMWzmjIw18PxcVk0VSLu0fFrHtNHfDlKywtODtng?=
- =?us-ascii?Q?Fj/LC3WAq8Do4ZYUjyKbte4npg28m+ZiqNUFSkSYg1o/detgPY+eT0p3GduR?=
- =?us-ascii?Q?1iQHJ/Br9MiTb0/gl9hnBvSAw5jbhpZ91/arTGuEgEgG/mOjnA5Wa1+Ea11t?=
- =?us-ascii?Q?dDvtaTqxIrm2LXJXrMwv+bmXGvDKcRV1fwExJV2kFg+l1g2DBg79Pdtta3z0?=
- =?us-ascii?Q?esUewf8uSx3m8eZEmBxObeRnODRKaTfQUhmo8QkRS88JF7kQURzxM22tAbtf?=
- =?us-ascii?Q?wnTbD/MkkRvtMunDFdfc0Y8awbNowNKgFYuIJKGpn86+32GHZVeQc887QwgD?=
- =?us-ascii?Q?mu6sO/adVmNXzSwT4IZV9tfk7ciQmUeEJrWuG4nbSdXnLV9fQCre9MM8YN2X?=
- =?us-ascii?Q?P1x5KYv8F6GOwJQ5S2cITJ/Byh/SuY9I2JMKoCWkAcJmwHjkY+AJQ4JMxhJa?=
- =?us-ascii?Q?+gHIYW1XYe0k4ybENCMP3KUftpiJzJfyML0pHIwWlvgdfINfndW3kvE15In7?=
- =?us-ascii?Q?3xbT+U6SFqzdDGL1xqmWaIPdl1QvVEIwd7eLJGJOxsu7Ibdv1RbaDrxb6AJr?=
- =?us-ascii?Q?qlfyJl3GwUXn3c+eQL4Wq3LoF4qvtHwTmw8kBKhl?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c34d9989-c9ec-4990-8402-08dd91683370
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 15:18:08.3010
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yIVs3/lJvATIeNdSjgG16rC/tDOvkECaIe+3urfv0BfxCBSiPyUoD0ZwY2I29ouwFcUBr9fmrE/4CYnxQi704Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9619
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Allow scx_bpf_select_cpu_and() to be used from any context, not just
-from ops.enqueue() or ops.select_cpu().
+Am 08.05.2025 um 15:51 hat Martin Wilck geschrieben:
+> Hello Kevin,
+> 
+> [I'm sorry for the previous email. It seems that I clicked "send" in
+> the wrong window].
+> 
+> On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
+> > Multipath cannot directly provide failover for ioctls in the kernel
+> > because it doesn't know what each ioctl means and which result could
+> > indicate a path error. Userspace generally knows what the ioctl it
+> > issued means and if it might be a path error, but neither does it
+> > know
+> > which path the ioctl took nor does it necessarily have the privileges
+> > to
+> > fail a path using the control device.
+> 
+> Thanks for this effort.
+> 
+> I have some remarks about your approach. The most important one is that
+> the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous command.
+> It sends IO to possibly broken paths and waits for it to complete. In
+> the common error case of a device not responding, this might cause the
+> code to hang for a long time in the kernel ioctl code path, in
+> uninterruptible sleep (note that these probing commands will be queued
+> after other possibly hanging IO). In the past we have put a lot of
+> effort into other code paths in multipath-tools and elsewhere to avoid
+> this kind of hang to the extent possible. It seems to me that your set
+> re-introduces this risk.
 
-This enables schedulers, including user-space ones, to implement a
-consistent idle CPU selection policy and helps reduce code duplication.
+That's a fair point. I don't expect this code to be fully final, another
+thing that isn't really optimal (as mentioned in the comment message) is
+that we're not probing paths in parallel, potentially adding up timeouts
+from multiple paths.
 
-Signed-off-by: Andrea Righi <arighi@nvidia.com>
----
- kernel/sched/ext_idle.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+I don't think this is a problem of the interface, though, but we can
+improve the implementation keeping the same interface.
 
-diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
-index 6915685cd3d6b..5373132db02b6 100644
---- a/kernel/sched/ext_idle.c
-+++ b/kernel/sched/ext_idle.c
-@@ -943,10 +943,15 @@ __bpf_kfunc s32 scx_bpf_select_cpu_and(struct task_struct *p, s32 prev_cpu, u64
- 	if (!check_builtin_idle_enabled())
- 		return -EBUSY;
- 
--	if (!scx_kf_allowed(SCX_KF_SELECT_CPU | SCX_KF_ENQUEUE))
--		return -EPERM;
--
- #ifdef CONFIG_SMP
-+	/*
-+	 * If called from an unlocked context, try to acquire
-+	 * cpus_read_lock() to avoid races with CPU hotplug.
-+	 */
-+	if (scx_kf_allowed_if_unlocked())
-+		if (!cpus_read_trylock())
-+			return -EBUSY;
-+
- 	/*
- 	 * This may also be called from ops.enqueue(), so we need to handle
- 	 * per-CPU tasks as well. For these tasks, we can skip all idle CPU
-@@ -956,10 +961,16 @@ __bpf_kfunc s32 scx_bpf_select_cpu_and(struct task_struct *p, s32 prev_cpu, u64
- 	if (p->nr_cpus_allowed == 1) {
- 		if (cpumask_test_cpu(prev_cpu, cpus_allowed) &&
- 		    scx_idle_test_and_clear_cpu(prev_cpu))
--			return prev_cpu;
--		return -EBUSY;
-+			cpu = prev_cpu;
-+		else
-+			cpu = -EBUSY;
-+		goto out_unlock;
- 	}
- 	cpu = scx_select_cpu_dfl(p, prev_cpu, wake_flags, cpus_allowed, flags);
-+
-+out_unlock:
-+	if (scx_kf_allowed_if_unlocked())
-+		cpus_read_unlock();
- #else
- 	cpu = -EBUSY;
- #endif
-@@ -1266,6 +1277,7 @@ BTF_ID_FLAGS(func, scx_bpf_pick_idle_cpu_node, KF_RCU)
- BTF_ID_FLAGS(func, scx_bpf_pick_idle_cpu, KF_RCU)
- BTF_ID_FLAGS(func, scx_bpf_pick_any_cpu_node, KF_RCU)
- BTF_ID_FLAGS(func, scx_bpf_pick_any_cpu, KF_RCU)
-+BTF_ID_FLAGS(func, scx_bpf_select_cpu_and, KF_RCU)
- BTF_KFUNCS_END(scx_kfunc_ids_idle)
- 
- static const struct btf_kfunc_id_set scx_kfunc_set_idle = {
-@@ -1275,7 +1287,6 @@ static const struct btf_kfunc_id_set scx_kfunc_set_idle = {
- 
- BTF_KFUNCS_START(scx_kfunc_ids_select_cpu)
- BTF_ID_FLAGS(func, scx_bpf_select_cpu_dfl, KF_RCU)
--BTF_ID_FLAGS(func, scx_bpf_select_cpu_and, KF_RCU)
- BTF_KFUNCS_END(scx_kfunc_ids_select_cpu)
- 
- static const struct btf_kfunc_id_set scx_kfunc_set_select_cpu = {
--- 
-2.49.0
+Maybe I'm missing something, but I think the reason why it has to be
+uninterruptible is just that submit_bio_wait() has the completion on the
+stack? So I suppose we could just kmalloc() some state, submit all the
+bios, let the completion callback free it, and then we can just stop
+waiting early (i.e. wait_for_completion_interruptible/killable) and let
+the requests complete on their own in the background.
+
+Would this address your concerns or is there another part to it?
+
+> Apart from that, minor observations are that in patch 2/2 you don't
+> check whether the map is in queueing state, and I don't quite
+> understand why you only check paths in the map's active path group
+> without attempting a PG failover in the case where all paths in the
+> current PG fail.
+
+Ben already fixed up the missing check.
+
+Not attempting PG failover was also his suggestion, on the basis that it
+would be additional work for no real benefit when you can only submit
+requests for the current PG anyway. If userspace retries the SG_IO, it
+will already pick a different PG, so having the kernel do the same
+doesn't really improve anything.
+
+> I am wondering whether the DM_MPATH_PROBE_PATHS_CMD ioctl is necessary
+> at all. Rather than triggering explicit path probing, you could have
+> dm-mpath "handle" IO errors by failing the active path for "path
+> errors". That would be similar to my patch set from 2021 [1], but it
+> would avoid the extra IO and thus the additional risk of hanging in the
+> kernel.
+> 
+> Contrary to my set, you wouldn't attempt retries in the kernel, but
+> leave this part to qemu instead, like in the current set. That would
+> avoid Christoph's main criticism that "Failing over SG_IO does not make
+> sense" [2].
+
+Maybe I misunderstood, but my understanding from the feedback you got
+back then was that no SCSI-specific code was wanted in device mapper.
+This is why we kept interpreting the status codes in userspace.
+
+While discussing the approaches with Mikuláš and Ben, one option that
+was briefly discussed was a pair of ioctls: One that wraps ioctls and
+returns which path the ioctl took, and another one to fail that path if
+inspection of the result in userspace comes to the conclusion that it's
+a path error. I didn't think this could be implemented without also
+allowing an unprivileged process to DoS the device by just failing all
+paths even if they are still good, so we didn't continue there.
+
+Anyway, if it actually were acceptable for the kernel to check SG_IO
+results for path errors and fail the path while still returning the
+result unchanged, then that would work for us for the specific case, of
+course. But I don't expect this really addresses Christoph's concerns.
+If you think it does, is there another reason why you didn't try this
+before?
+
+(And it wouldn't be generic, so would we potentially have to repeat the
+exercise for other ioctls in the future?)
+
+> Doing the failover in qemu has the general disadvantage that qemu has
+> no notion about the number of available and/or healthy paths; it can
+> thus only guess the reasonable number of retries for any given I/O. But
+> that's unavoidable, given that the idea to do kernel-level failover on
+> SG_IO is rejected.
+
+Yes, it's a bit unfortunate, but we have to work with what we have. QEMU
+doesn't even necessarily know that it's dealing with a multipath device,
+so it just has to blindly try the ioctl and see if it works.
+
+Kevin
 
