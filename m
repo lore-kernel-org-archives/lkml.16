@@ -1,140 +1,250 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CE01A23B5;
-	Mon, 12 May 2025 06:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747031410; cv=none; b=VbkIF8gKv0wDU89exULhxLbOMIklmTA5Hlo+8HLlBDfzulG0kde0YgMuSX8me9LYrFFshgEvgEdbT6jDbUS5+XjKw1yYPpK8JSo2FX1XgT6QiO6lVLCaCDPhePs+mkOFPnDB/MllabRzz2RGjtPscCARKPDKo91wk+xJdn+hhFk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747031410; c=relaxed/simple;
-	bh=IyqEvFnK0atVgTZ4NurvwzVawcVS2qz/Kyx3J5TkbVI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h5OnPE8FM0B54a1rEpGcrNToylrydAFuHqV9VQKwHuUI0UEl+TugCmqLv9ngYUVtsAzA4Eu2CDZV5rtrfN9TfKoy4QymDJ6rG9pXgalr/vu4LfqdIiuRePejSzJbdn4qfe7sjSFSNMghTGS4JrFqfMhN2vNhZokncLZ+06UMrIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=EBBLXXnj; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DC51A23B5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747031443; cv=fail; b=LuJNwhfuicJ9gB3ZUnDMQToUnNbPcyOVQxjB3lqLzsfm1y5yHM3D6aGoke32Nt0rPt7yzDyFWFcL5Nw5xDyj/AzDylqlW6gNEOqIOVp9jt6BEe5bTeEaFNJ2lq60+KWguwO9poaheK25Rto8fSd5jqT1qQqHCIhNurAQj+d9iGA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747031443; c=relaxed/simple;
+	bh=X88cDkzDlm5gNLPw3Wtu57yoBmTARGQmhamv7RyjLWU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=apR5EmavmzfE+8qSUeksa9JEelsiQn/i/txSYB78RTWl+LUIwU8oh6kZLn7GBHorsN3Gr7Dh+OtjzeDHr4b7KG+qO0AIt4ZvoN8EbILSezGsF2DBuUuGKtKIO/2ZzMeSmx7dB7oB81PfiZMt/Z/xqTNllgpouw/ODBuup9Y9XEc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nVS7vTuz; arc=fail smtp.client-ip=40.107.92.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="EBBLXXnj"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C1QBch031626;
-	Sun, 11 May 2025 23:29:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=+EB6sJdhVKr4rGBMH4O7DYZ
-	xvmnpv++UCvoCoKqxmzM=; b=EBBLXXnjzX+j8UKstKq4D1IbPTWCfnMDjyV0fjr
-	JcrC0xewXb/+I1RQOe7UATh3bI1O8hJYDt3iYrvWl8VfJ4P8kipqfgWjvQoiMhpQ
-	kOvEnAJhW6RWaA1ZLkEM/516UnRzV1FEZ9VhvESIh5CW7+j/PPOosYsLeWe/4S2K
-	+ZvH1y0lMFKWYoTTCeLGBXagXRrBlHCz78ndnRwucHYZs6DLCmhssxCOps9wa2B2
-	4UVwwTNs9U1azmFZk0I0Dpzhfp0NHFwEX8MykdF5FddH7J5u6hkM9oQJgId8Btkw
-	XGbN8hMf/tNoL/5dQhuq42i8FRblcb9QgfMTM4oIUD7zF9A==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46k5rggfjn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 11 May 2025 23:29:45 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Sun, 11 May 2025 23:29:44 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Sun, 11 May 2025 23:29:44 -0700
-Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
-	by maili.marvell.com (Postfix) with ESMTP id 1F56C3F7093;
-	Sun, 11 May 2025 23:29:39 -0700 (PDT)
-From: Hariprasad Kelam <hkelam@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Hariprasad Kelam <hkelam@marvell.com>,
-        Sunil Goutham
-	<sgoutham@marvell.com>,
-        Geetha sowjanya <gakula@marvell.com>,
-        "Subbaraya
- Sundeep" <sbhatta@marvell.com>,
-        Bharat Bhushan <bbhushan2@marvell.com>,
-        "Andrew Lunn" <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Simon Horman
-	<horms@kernel.org>
-Subject: [net] octeontx2-pf: Fix ethtool support for SDP representors
-Date: Mon, 12 May 2025 11:59:01 +0530
-Message-ID: <20250512062901.629584-1-hkelam@marvell.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nVS7vTuz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=J+9HcixwaoBlasJHanYC63gNKqphLHCmwhXlbwt5cP5+Tqnj63Dp1mSDKd43nAaaWvmKHFCqow+VojLa/mcs65wEQL0bu6lsnreAxNbS4u+16CO23i7q1iykNUkqn5cocvcdeFRWTGhwEzwd6pNwi8Unae4lI+I3kw8oY/RwEMRGlsTmUVAl5BUSlY5JxOY60S8JOU37l1WU0MkpV4kfee46uj0IXbg4bStR9t2gbBhcNa8POrvPEZwuX0Ob2w0pxqCzERxE6Mrx4bkRjtnYwU+50bgbSiF6RDzYVal/W/gYTPf1sp/vNYigOsc3VN7d9Wy9czCQANYTG+bHNW7HRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ckfLZj3Lo5i4pQ0gzc/EG0AQhzECzWqOjZwhnrW3Lho=;
+ b=uxQddKuppZyezWjQ6DoNuPIXfQh6d6rY2xyoOYaJcbgJcKn80gmT2Mxagpx4FcPgm8tSdh/OHMAOqjhE2ZsewthHkEapUoqxOjCEFr/GpEz4eoMp8vOsdCQVlCFZXk2jspAsdmQzehewT9ueV2OnogrjPT6mnJGOSpY91Jw3daCeSaF1jayrnKl4tnYahvf+5EznYRpqPvECIPQy7woJj0tfOA81N6bWJBNoP2nxVcemxHYdiM8VfHwIIdcSbzNcBAo+WnzXZ/MFefbH4ZMouRLF+cqiOIVWHBeSkktNuDPDj6xfCZhr8MbB1cZNGJuyce1aoO4k9iNdOrE2T+jzKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=oracle.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ckfLZj3Lo5i4pQ0gzc/EG0AQhzECzWqOjZwhnrW3Lho=;
+ b=nVS7vTuzJE+U+QAmwOwcqdDlvx/yK7+83/aKLEzh4TcYu02faVVbl4vNoBH0kE7eke6HZK/OGEhKnuezfdhWyYNjNHyhI+tJjGr921dgtkysYBmc14Q+Iy4E+WO4fXu1RatsHgqahsuDkd7eT2Bkch/6zjf1ked5zD/S1OYPCwY=
+Received: from MN2PR10CA0022.namprd10.prod.outlook.com (2603:10b6:208:120::35)
+ by DS5PPF266051432.namprd12.prod.outlook.com (2603:10b6:f:fc00::648) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.34; Mon, 12 May
+ 2025 06:30:33 +0000
+Received: from BN3PEPF0000B36F.namprd21.prod.outlook.com
+ (2603:10b6:208:120:cafe::b7) by MN2PR10CA0022.outlook.office365.com
+ (2603:10b6:208:120::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Mon,
+ 12 May 2025 06:30:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B36F.mail.protection.outlook.com (10.167.243.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.1 via Frontend Transport; Mon, 12 May 2025 06:30:33 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 01:30:32 -0500
+Received: from amd.com (10.180.168.240) by SATLEXMB03.amd.com (10.181.40.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39 via Frontend
+ Transport; Mon, 12 May 2025 01:30:29 -0500
+Date: Mon, 12 May 2025 06:30:16 +0000
+From: Ankit Soni <Ankit.Soni@amd.com>
+To: Joao Martins <joao.m.martins@oracle.com>
+CC: <iommu@lists.linux.dev>, <suravee.suthikulpanit@amd.com>,
+	<joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+	<linux-kernel@vger.kernel.org>, Alejandro Jimenez
+	<alejandro.j.jimenez@oracle.com>, David Woodhouse <dwmw2@infradead.org>,
+	<vasant.hegde@amd.com>
+Subject: Re: [PATCH 1/2] iommu/amd: Add HATDis feature support
+Message-ID: <m5ageqedj5otmfo4yuld4es72esfmlc7vb5htolj5pcffurjl5@mi5xemcd4fgi>
+References: <cover.1745389415.git.Ankit.Soni@amd.com>
+ <6282a5c349812a311a67a8522dc5e4aabfe3ec3a.1745389415.git.Ankit.Soni@amd.com>
+ <596ed125-c995-4e2b-824c-b7929c852754@oracle.com>
+ <g3xrnjfs6zekogfohud2s7kdvphx43e6mdh3vfpllynrwokxwf@vvetz2j2nrai>
+ <4f04d596-685e-4e48-9038-8aee6c927ebc@oracle.com>
+ <lpbeiyyzoxuankxzgcms2iwkoydvj2vcpv5jftiy26nkslliwr@juykyxhdwwzv>
+ <deb1603a-96df-46d8-9cb5-86121f334a88@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: fBP8RY3Kyw662SSAWEME3Ov0XUoT0Nb6
-X-Proofpoint-ORIG-GUID: fBP8RY3Kyw662SSAWEME3Ov0XUoT0Nb6
-X-Authority-Analysis: v=2.4 cv=XIkwSRhE c=1 sm=1 tr=0 ts=68219559 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=zsvlLyDedhZcTVAtw6YA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA2OCBTYWx0ZWRfX76CBORSCbRAh vsCVfiQ7ApOxMcxwnXtpsHSWrjvmVwA4jmngOvzVovid+bBSd5xFGO7DBfuGzYKmhXJ2v9yjD4X GaumGXt6B9Bac3u0w/AsBVarC+bFMSNvlSO/hJixOIU9D/iSaSZ6Djx3EZIqXtu6D/ZbVJDQ8DS
- 3CcbrDichr0RFu6nyhI5LtPAt5MaiVSsbJLMxHX/3cNoFwlWrqZSa5nojmvkvZ7ep4g3o1sP6rX QhmDoe5cUH1ZV2F4PE4YpJcI4rMeK2NiyTwp0Z7cTvqvuzW0+fPg7AA/fwGTRdQm0W5VjgNWS8Q tvh4EADIHmECyccS1SnkNn+FFVsMMontySe+bBWt16SolBHrxqmfG9/nDGGQyX6E8EuREImWyUI
- qlDEoIASmmpMoM0YryRYFcrrGGhaebENIA3EjzO32IXakdnF98m8eqNoFY0ownVN2e+OBa/3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <deb1603a-96df-46d8-9cb5-86121f334a88@oracle.com>
+Received-SPF: None (SATLEXMB04.amd.com: Ankit.Soni@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36F:EE_|DS5PPF266051432:EE_
+X-MS-Office365-Filtering-Correlation-Id: d4b5d76a-d451-4a05-c139-08dd911e7fcc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YJ/Ru3GB6HDWIfxuyeY4fUp3o8ZCUUFPlFMpw7Rc+VuLZowUjm2hikxNdqpu?=
+ =?us-ascii?Q?uo61LL6HjcxogZmyZbz+AS1XiLtDzB4BnV4e/x72sKYdtoT+riAEld3S9tdh?=
+ =?us-ascii?Q?HKrILTCDydpbkkXnGTnRDlJeMODLqn3WxpEILzZexCv1zHjkMsHGZF+S5nvd?=
+ =?us-ascii?Q?JiS7e7FNIV2/smkoZPViJfzEzkVEm4xFcT/cu9LNVF/vJqQ7BZNW7OZ9vWXp?=
+ =?us-ascii?Q?19vicbh15CPQdA4AsF3RWUs62XGhklhv8ZGvaB1LXS8RA7DUFComYtyxqGWm?=
+ =?us-ascii?Q?C6HU2Qj75aAIpMyYCDK465h8bxGRmb4XcxPQSXtL8gbAUF0DCoqKQ3EHDnfH?=
+ =?us-ascii?Q?M4spNt5LIoTftvx927Rdqf/mNqaCiVyGP4oF1XYJHWKxwmU1Zg06gJv2wmmq?=
+ =?us-ascii?Q?6UgKYZ3KBKnu22/w64MyzGSmS9TzfVDpT9UZjOJDKw6jBzFMS6w2tdKUPc71?=
+ =?us-ascii?Q?zAMiVjGt4bWcyDEmQMUZrtNSUKwL76ph07kGXpVaK3kYVUIwJBqodm71GQZf?=
+ =?us-ascii?Q?S/SuxmHsCV5tjtKEy+KV1pQQg0Y/Blk25wniyvrg94lNRssEyfkN+dZsTNff?=
+ =?us-ascii?Q?9EfMbks9KSN6k1RjtOcap8T6kmCN5vwVE4NNso5XXsbu7eI66A4YcfflWC4h?=
+ =?us-ascii?Q?D/cX4eOaA8iNkjdaF3913LuqwvNjfeLKAEkOisxPo2KrKtBs3Qwz5G/UlI8s?=
+ =?us-ascii?Q?gXVvVtEDM9dCub7EHR5u3HMoa3JqJ8hewWUzGi6Zi9q3bSFsr3OseYFjLj65?=
+ =?us-ascii?Q?zwjeHENDcvbAXPHX06K9hBf6KHXhnkGfy9f8ZkqVvq0aaww7MDjIwoWke58f?=
+ =?us-ascii?Q?DSTLhA1BKgJRaEme8zMIvuDyeZwPtAFKyjI7EQ/72aJoKoGoYx+wD+N5jIxq?=
+ =?us-ascii?Q?FJWFEz1bzMMCaE6SEz7+6JUN+sstP8UJpPbxQSKDNfVoNJQVrYnhi3mpiyBS?=
+ =?us-ascii?Q?smhiszwKN4snABtKj5HDxQtz5hlXpOsp0oqxQqNxLDF1iNV9ZuOj1xXR//Kw?=
+ =?us-ascii?Q?1ke95r2SqMRcafXWQ9gIJ5O6l9YRWKg2RuxYt9k68RmrRN9enN1C04cA7kJ2?=
+ =?us-ascii?Q?iBy+91EtQCW1pgSqL44UWGUkIAcXOEijKmL0vZoFgju13N1i7tbvLG1ej1jU?=
+ =?us-ascii?Q?b5WqEmTuEDyuqHWAzZ9TDcsm4raAbzb4FWBklEsnUzs0wp8h+g4UYA3AwwJI?=
+ =?us-ascii?Q?9ssTjOZGZXA8QGcDKQizXOz5z6Ui/dPC2HIqHO1eJACbvu4R9lE4+ekt4aAt?=
+ =?us-ascii?Q?1CslEuWftmPS/b262iH2Ttv+s6rBXr3JWdLAgHB/HmlKZDH3PCG8SmBm/ekz?=
+ =?us-ascii?Q?uOtX25zwxubgnQ/Z3CV2lxXyjREiRUtczbW8zkG0mxJvn+jRuRAsu3C4hUkp?=
+ =?us-ascii?Q?t/+PT6v/f/RMb2PrtHibU9atJz9EkLnCwlJYnuEa06aPcs/POl/XNxrDsTBZ?=
+ =?us-ascii?Q?l3pI7UaapvEUrowngS+Jn3DeH4GjhAbWcapqV3vUiaUh+5PfkkJBojYas2wD?=
+ =?us-ascii?Q?4JdzdbW87vMRf94=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 06:30:33.5232
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4b5d76a-d451-4a05-c139-08dd911e7fcc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B36F.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF266051432
 
-The hardware supports multiple MAC types, including RPM, SDP, and LBK.
-However, features such as link settings and pause frames are only available
-on RPM MAC, and not supported on SDP or LBK.
+Hi,
 
-This patch updates the ethtool operations logic accordingly to reflect
-this behavior.
+On Thu, May 08, 2025 at 06:03:44PM +0100, Joao Martins wrote:
+> On 06/05/2025 06:12, Ankit Soni wrote:
+> > On Wed, Apr 30, 2025 at 12:41:04PM +0100, Joao Martins wrote:
+> >>> With intel patch you mentioned above, it seems that it is mostly handling 
+> >>> "second stage translation support" disable, which will eventually disable dma 
+> >>> translation. And in AMD case, HATDis bit indicates host(v1) translation is not
+> >>> available, then attempt to use guest(v2) translation, and if both page
+> >>> table modes are not available then disable dma tranlation.
+> >>
+> >> OK, I guess it makes sense if HATDis is v1 only.
+> >>
+> >> My other call out was that when we disable dma-translation all together (aka
+> >> both modes), then we shouldn't advertise the IOMMU groups (internally and to
+> >> userspace) by not calling iommu_device_register()/iommu_device_sysfs_add().
+> >>
+> > 
+> > Sorry for the late reply. I had cross-checked it; if the probe fails,
+> > then IOMMU groups will not be populated, and eventually, it will not
+> > have significance for calling iommu_device_register()/iommu_device_sysfs_add().
+> > 
+> 
+> It would nonetheless populate a ivhd entry in sysfs needlessly but with an empty
+> devices list (qemu diff at the tail end for how I checked it; it's only missing
+> the ILLEGAL_DEVICE_TABLE_ENTRY event being generated, but enough to check the
+> first patch with sw iommu) e.g. as far as I checked:
+> 
+> $ find /sys | grep ivhd
+> /sys/class/iommu/ivhd0
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0/uevent
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0/amd-iommu
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0/amd-iommu/cap
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0/amd-iommu/features
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0/devices
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0/device
+> /sys/devices/pci0000:00/0000:00:05.0/iommu/ivhd0/subsystem
+> 
 
-Fixes: 2f7f33a09516 ("octeontx2-pf: Add representors for sdp MAC")
-Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
----
- .../net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c  | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+I was assuming, since iommu is still active for interrupt remapping,
+user may need info for cap and feature using /sys fs.
+@vasant: can you please suggest on this?
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-index 010385b29988..45b8c9230184 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
-@@ -315,7 +315,7 @@ static void otx2_get_pauseparam(struct net_device *netdev,
- 	struct otx2_nic *pfvf = netdev_priv(netdev);
- 	struct cgx_pause_frm_cfg *req, *rsp;
- 
--	if (is_otx2_lbkvf(pfvf->pdev))
-+	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev))
- 		return;
- 
- 	mutex_lock(&pfvf->mbox.lock);
-@@ -347,7 +347,7 @@ static int otx2_set_pauseparam(struct net_device *netdev,
- 	if (pause->autoneg)
- 		return -EOPNOTSUPP;
- 
--	if (is_otx2_lbkvf(pfvf->pdev))
-+	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev))
- 		return -EOPNOTSUPP;
- 
- 	if (pause->rx_pause)
-@@ -941,8 +941,8 @@ static u32 otx2_get_link(struct net_device *netdev)
- {
- 	struct otx2_nic *pfvf = netdev_priv(netdev);
- 
--	/* LBK link is internal and always UP */
--	if (is_otx2_lbkvf(pfvf->pdev))
-+	/* LBK and SDP links are internal and always UP */
-+	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev))
- 		return 1;
- 	return pfvf->linfo.link_up;
- }
-@@ -1413,7 +1413,7 @@ static int otx2vf_get_link_ksettings(struct net_device *netdev,
- {
- 	struct otx2_nic *pfvf = netdev_priv(netdev);
- 
--	if (is_otx2_lbkvf(pfvf->pdev)) {
-+	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev)) {
- 		cmd->base.duplex = DUPLEX_FULL;
- 		cmd->base.speed = SPEED_100000;
- 	} else {
--- 
-2.34.1
+> -->8--
+> 
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index 59593582be23..78801672ee3d 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -2326,7 +2326,11 @@ build_amd_iommu(GArray *table_data, BIOSLinker *linker,
+> const char *oem_id,
+>      /* IOMMU info */
+>      build_append_int_noprefix(table_data, 0, 2);
+>      /* IOMMU Attributes */
+> -    build_append_int_noprefix(table_data, 0, 4);
+> +    if (!s->dma_translation) {
+> +        build_append_int_noprefix(table_data, (1UL << 0) /* HATDis */, 4);
+> +    } else {
+> +        build_append_int_noprefix(table_data, 0, 4);
+> +    }
+>      /* EFR Register Image */
+>      build_append_int_noprefix(table_data,
+>                                amdvi_extended_feature_register(s),
+> diff --git a/hw/i386/amd_iommu.c b/hw/i386/amd_iommu.c
+> index 34abb61e092e..d033d309a210 100644
+> --- a/hw/i386/amd_iommu.c
+> +++ b/hw/i386/amd_iommu.c
+> @@ -83,6 +83,9 @@ uint64_t amdvi_extended_feature_register(AMDVIState *s)
+>      if (s->xtsup) {
+>          feature |= AMDVI_FEATURE_XT;
+>      }
+> +    if (!s->dma_translation) {
+> +        feature |= AMDVI_HATS_MODE_RESERVED;
+> +    }
+> 
+>      return feature;
+>  }
+> @@ -1665,6 +1668,7 @@ static void amdvi_sysbus_realize(DeviceState *dev, Error
+> **errp)
+>  }
+> 
+>  static Property amdvi_properties[] = {
+> +    DEFINE_PROP_BOOL("dma-translation", AMDVIState, dma_translation, true),
+>      DEFINE_PROP_BOOL("xtsup", AMDVIState, xtsup, false),
+>      DEFINE_PROP_END_OF_LIST(),
+>  };
+> diff --git a/hw/i386/amd_iommu.h b/hw/i386/amd_iommu.h
+> index e0dac4d9a96c..b5358dc30533 100644
+> --- a/hw/i386/amd_iommu.h
+> +++ b/hw/i386/amd_iommu.h
+> @@ -169,6 +169,7 @@
+>  /* AMDVI paging mode */
+>  #define AMDVI_GATS_MODE                 (2ULL <<  12)
+>  #define AMDVI_HATS_MODE                 (2ULL <<  10)
+> +#define AMDVI_HATS_MODE_RESERVED        (2ULL <<  11)
+> 
+>  /* IOTLB */
+>  #define AMDVI_IOTLB_MAX_SIZE 1024
+> @@ -371,6 +372,7 @@ struct AMDVIState {
+>      /* Interrupt remapping */
+>      bool ga_enabled;
+>      bool xtsup;
+> +    bool dma_translation;
+>  };
+> 
+>  uint64_t amdvi_extended_feature_register(AMDVIState *s);
 
+Thank you for QEMU patch, i also had similar patch ready, i was waiting
+for kernel patch to be submitted.
+
+- Ankit
