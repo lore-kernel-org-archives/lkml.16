@@ -1,168 +1,141 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989CB2550B8;
-	Mon, 12 May 2025 11:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6A52566DD;
+	Mon, 12 May 2025 11:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747048304; cv=none; b=AOLjt+r53+2Vf3x8U7gZ8Tx9sIbEve/mCPSmfvqxJDpIlWeCN8ub3h1bb1MWYzyONnhoKxVKZ5gT73JJ6cJPlzzZPvefOGM872nMytYTi7/ngoxy2bNjujdw5qyuesxKQl3h53WenTFgegOvFHlm0fEgflbRWs0VpRYgc3rZSgM=
+	t=1747048305; cv=none; b=BZXe3y2G/jNWYlAwAaDbQm3r9F3LmVqr5VGZ1D8LBCHR30u2h0c4jUqk2Uf8vIk+HlIBI4aAPvdXI8yd4vg+enozyBd+sFXqKQc6LJjSL4bNABGyLp98og7LsNY3/90TSSEKyTAoWB7OoldSVeHAf3cMR3yr8AYNMNdd67kWFkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747048304; c=relaxed/simple;
-	bh=FI4fHXTigwGwniHI+YHv/YtmYhKfZ1v6wbRpBi5fe/g=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=fZNYY3rJTbsjM1p3PRNge6+ViNOZiPLFTL2r9SKTyWnDyhBlkYufI65/j/aXFTeW/Nn48qYvFNuwKFENbw5tSUgv5t/XzyLCA9MOKhzjAvg1LVAdzN4kgVxj7Cn90Hbsxf/I+uzKst7tFr23icPDMOduohZedSY/fTXNnW3WCUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gikR/UgW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747048305; c=relaxed/simple;
+	bh=s8IVsimdAxqn5dLm0HfceIPWVMmE+X8ujIEov8Zejuk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ofjl+Q3EOAHhXonv0SrcPwfLVM1PmnlMXyEW4DJD75VWTWejloQCjbC63DezjElT8o9wGiKxOay3T+UmI8w5R+E2TFmYpoRahiMbw3JTAg8+GkmcCSHoFIl9QgOQS6I4IBOJ+CFQ2GBX81WvwFy4QRCNj1mS6bD3WQ/DlpO7pzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=cMMdtW3z; arc=none smtp.client-ip=46.255.227.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gikR/UgW"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C9SR2u028882;
-	Mon, 12 May 2025 11:11:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=w8l+QaBTlwmrF3HXfFvnB+
-	cP65SG0RGLM+MaZqPRFmU=; b=gikR/UgWyG9fY/+t9zHJR/4fm604Yk8qPsn9DM
-	L4t7jEPW+6dEtcIUMffcf2ElsPa2KemKXNyqrAc2qtQu0QpPUWLGEwLiwSQPcgpy
-	Xi4eoFCmsVChskhbj5Ajm24MngVp2ggEsu3J8KXfX773A4oX/fWk2a/YyLVfBmve
-	HXKbr2BmFY3dXtLOHt5iVPyA4cg+ld5YuizkhSDRG7GmQ/kVH9RehbX6BH/fNajP
-	9dBbK8UdAafpPzKz6Vi1JdhdnxAwoxSraX08re4wgdHRP9US9+TTiSHxv9wAaFTf
-	keVazUtoU4a/YKAl5SBMuor6Umo8afm3YqWeZ/fUhfk5p5KQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hv5qcce8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 11:11:22 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54CBBLSI029673
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 11:11:21 GMT
-Received: from yuanfang4-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 12 May 2025 04:11:18 -0700
-From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Subject: [PATCH v5 0/2] coresight: Add Coresight Trace Network On Chip
- driver
-Date: Mon, 12 May 2025 19:10:36 +0800
-Message-ID: <20250512-trace-noc-v5-0-f2ef070baee5@quicinc.com>
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="cMMdtW3z"
+Received: from gmmr-2.centrum.cz (localhost [127.0.0.1])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 51FCB2106B56;
+	Mon, 12 May 2025 13:10:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1747048216; bh=qSZn8HV3F0m0d25zorvEHVYRz/lcZYAE64vPNFRU29Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cMMdtW3zzhI197smm6tobPccWMd42eQAnirYeOCf67C48mNTWAcBARc1Qe4Of7/a1
+	 LOUW/qHETLhgrt+dJvlTzZjPC+oV4q6Y8cQ8fN8k0Ob6+s7azi21mg3970XCY3NgDx
+	 fpBkRYbFz0iQ5FTPB02sd7FePKOyThoAW+e/5PLk=
+Received: from antispam37.centrum.cz (antispam37.cent [10.30.208.37])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id CD20620F55E1;
+	Mon, 12 May 2025 13:10:15 +0200 (CEST)
+X-CSE-ConnectionGUID: K9TSNbIUTFS9Yxr5BqUDYg==
+X-CSE-MsgGUID: xKK+IyrzRNGyFFe9l4fQNQ==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2FwAwAA1iFo/0vj/y5aHQEBAQEJARIBBQUBQAmBSoMDM?=
+ =?us-ascii?q?oFyhFWRcYt6hjOBIIxKDwEBAQEBAQEBAQlRBAEBPgGESItNJzgTAQIEAQEBA?=
+ =?us-ascii?q?QMCAwEBAQEBAQEBAQ0BAQYBAQEBAQEGBgECgR2FNVOCYgGEKQ8BRigNAiYCc?=
+ =?us-ascii?q?YMCgiMBAQEBEAEDMbF7gTIaAmXccgJJBVVkgSmBGy6IUAGEfIYpgg2EfYQKg?=
+ =?us-ascii?q?QaDDoJHIgSDQ4QkhCyFF4Jfgh2LeUiBBRwDWSwBVRMNCgsHBYFpAzUMCy4Vb?=
+ =?us-ascii?q?jMdgg2FGYIRggSJCIRKK0+FIoEkggdAAwsYDUgRLDcUGwY9AW4Hlg6Ce1EgW?=
+ =?us-ascii?q?jRblR+zS4QlhE6cfxozl1MfA5JkAYU8k0SkTIRpgX6BfzMiMIMiUhnXEHY8A?=
+ =?us-ascii?q?gcBCgEBAwmCO41PNIFLAQE?=
+IronPort-PHdr: A9a23:mYRZ1RH6hSzvPlJjkI6XRp1Gf7RLhN3EVzX9CrIZgr5DOp6u447ld
+ BSGo6k21hmRBc6As6sc2qL/iOPJZy8p2d65qncMcZhBBVcuqP49uEgNJvDAImDAaMDQUiohA
+ c5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFRrwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/I
+ RuooQnLqsUanYRuJ6gtxhfUvndFf/ldyH91K16Ugxvz6cC88YJ5/S9Nofwh7clAUav7f6Q8U
+ 7NVCSktPn426sP2qxTNVBOD6HQEXGoZixZFHQfL4gziUpj+riX1uOx92DKHPcLtVrA7RS6i7
+ 6ZwRxD2jioMKiM0/3vWisx0i6JbvQ6hqhliyIPafI2ZKPxzdb7GcNgEWWROQNpeVy1ZAoO9c
+ YQPCfYBPf1FpIX5vlcCsAeyCRWpCO7p1zRGhGL53bci3uohDw/LwhEuEdwNvnrTo9r6KKgcX
+ PupzKTL1zjPc+lb1Sv/5YXObxsvoeuMXbV1ccfJ00cgCR/Fjk+NooPqJTyV0PoIs2uG5OdnT
+ +2vkW0npBt0oje13MchkZPGhp4Ryl/e7iV12po6JNyhRUN9fNWrH4deuTuAOItqXsMtXXtou
+ CAix7AapZK2eDYHxIknyhPRd/GKcoaF7gz9WeieLzl1mWxpdK+jihuw7EWt1+/xW8i13VtLr
+ CdIk8TAu3AC2hHO68WKTOZ28ES52TuX2A3e6/tILV40mKfbMZIt3KA8m5gJvUnBHiL6gFv6g
+ LKYe0k+5OSk9fjrbq/4qpKTK4N4kAXzP6Uol8eiG+o3KBIOUHKe+emk0b3j+lD2T6tSg/0tl
+ 6nZrIjaJcMGpq6lGwNV0pgs6xK4Dzq+39QYmGALLElAeBKbl4jlJkzCLOrkAvihhVSsjC1rx
+ +3DPrH7HprML2DPkLbnfblj905R0AU+wNFF655KCrwMIOj/VlHvuNHaFBM0MQy5z/7iCNpn1
+ 4MeXWyPArWeMKPXqVKH/PgvI+qWa48Qojn9MeMo6OTyjX89g1AdZrOl0ocWaXygBPRpP12ZY
+ WbwgtcGCWoFpBA+TO/wh12HSzFTfW2/ULgg5jE/Eo2mFp3PSZysgbCZxie0AoVWZnxaClCLC
+ XrnbYqFVOwLaC2MOcJhkSILVaKnS4A/0RGirhL1y7l/IurO5iIYrY7j1MRy5+DLlRE96Tx0A
+ t+Z02GWU2F4hH4HSCEu0KBlvUN90kuD0bR/g/FACdNT4OlJXRwkOp7A1OF6D97zWgTbctePV
+ lmmXs2qASstQdIp398Of0F9Fs2mjhDC2SqqHrAUm6WWC5wz7q3RxGbxJ8ljxHbczqUhjEcpQ
+ tFJNWK4gq5z7Q/TB5TGk0mBjaalabwc3DLR9GeE1WeOuEBYUAhtUaTKRHwfaFDWosnn6UPcU
+ bCuDa8qMhVOycGcMKtGcN7pgktcRPflJtveZ3i9m2CqBRaH3r+Mdpble30B3CXBD0gJiwQT/
+ XeANQgjCSatumHeAyJ0FVLpfUzs9fJzqG20TkAq1QGGdU5h2KSv+h4Tm/OcT+kf3rUeuCcus
+ zl0Gk2y0MrMC9WcvwphYLlcYdQl7VpFhirlsFl5P5q9P+Vhi0QYfgBfoUzjzVN0B59GnMxsq
+ 2klnyRoLqfN6F5dbXum1JZTOfWDI3Px9RWmcYbfxlXXy5Cd6PFcu7wDt1z/sVTxRQIZ+HJ93
+ owQiiPEjqg=
+IronPort-Data: A9a23:bzgADKy6XW0NnjMlu5p6t+cPxyrEfRIJ4+MujC+fZmUNrF6WrkVSn
+ WofXz+PPayJZ2f1f40gYY3k9EpUuZPRmoNgHFdo/lhgHilAwSbn6XV1DatS0we6dJCroJdPt
+ p1GAjX4BJlpCCKa/1H1b+WJQUBUjcmgXqD7BPPPJhd/TAplTDZJoR94kobVuKYx6TSCK13L4
+ I6aT/H3Ygf/hmYpazhMsspvlTs21BjMkGJF1rABTa8T1LPuvyF9JI4SI6i3M0z5TuF8dsamR
+ /zOxa2O5WjQ+REgELuNyt4XpWVXKlJ6FVHmZkt+A8BOsDAbzsAB+vpT2M4nVKtio27hc+ZZk
+ 4wR6MPqGW/FCYWX8AgVe0Ew/yiTpsSq8pefSZS0mZT7I0Er7xIAahihZa07FdRwxwp5PY1B3
+ d9JFAsrZDG+u8yNkYOrULRGn/kPHca+aevzulk4pd3YJfkjBIvGX72TvJlT0TEsnN1LW/3MD
+ yYbQWYxKk6dPlsVYAhRV89WcOSA3xETdxVRslGcoKMty2HPyAVqlrP/WDbQUoXSGJwLwB7J+
+ goq+UzpITJZFc2F2wCj3WOCqOKemX/1YaQrQejQGvlCxQf7KnYoIBQMVlK+qOORg1K6UskZI
+ F580iM+p68/3E+mVN/wW1u0oxasvhUcc95LD6s25Wmlwa3O6QuFLmwbSHhHZcBOnMs3QyE6k
+ 1OOlPv3CjF19r6YU3SQ8vGTtzzaESwUK3ISICEfQQYb7t3Lvo4+lFTMQ8xlHarzicf6cRn0w
+ jaXvG09iq8VgMojyaq25xbEjiiqq5yPSRQ6jjg7RUr5sEUjOdPjPdb3rweGhRpdELukopC6l
+ CBss6CjAComV8DT/MBRaI3hxI2U2ss=
+IronPort-HdrOrdr: A9a23:YoIE+ao3rft7Gnp2WCqWpoMaV5o8eYIsimQD101hICG9JPb4qy
+ nOpoV/6faQsl0ssR4b6LK90cW7MBDhHOdOjrX5ZI3PYOCEghrNEGg41+XfKlTbckWVygc378
+ ddmsZFZeHNMQ==
+X-Talos-CUID: 9a23:6cT3nWAGQOY1jDz6Ewo2yHUyEOEYTlPmnUbAORKSEFtFebLAHA==
+X-Talos-MUID: =?us-ascii?q?9a23=3AaV1OEg1FqcSa8p8Vc0BTODRAgzUj84eNS2Eci4c?=
+ =?us-ascii?q?8neaVGwJ9ajPBgg2Re9py?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,282,1739833200"; 
+   d="scan'208";a="105166094"
+Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
+  by antispam37.centrum.cz with ESMTP; 12 May 2025 13:08:43 +0200
+Received: from localhost.localdomain (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id 4F66B100CD4EA;
+	Mon, 12 May 2025 13:08:43 +0200 (CEST)
+From: =?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Christoph Hellwig <hch@lst.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	=?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
+Subject: [PATCH RESEND] Documentation: fix typo in root= kernel parameter description
+Date: Mon, 12 May 2025 13:08:27 +0200
+Message-ID: <20250512110827.32530-1-arkamar@atlas.cz>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACzXIWgC/3WQS07EMBBErzLyeoz8adttVtwDsfCvGS9IIBki0
- Ch3x4lAyhBlWS2/eiXf2FiGWkb2eLqxoUx1rH3XgjmfWLqE7rXwmltmSigjQGh+HUIqvOsTJ1R
- oo25XLKy9fx8K1a+16/ml5Usdr/3wvVZPcrkysBa0QM8jYubgc+KxCMNdJBGjkoTgnj4+a6pde
- kj9G1t6Jr2yvwvcZsGkueAGoqesQg7k79jz32op/zOSpM+ZnPU+7n1w6IPGerQQKGlwEQ98Zsc
- 47zVSyZRx7zOHPtNY7chpmQhKLHvWblncsnb5G2WTlUEJR/aenef5B8EUVrf8AQAA
-X-Change-ID: 20250403-trace-noc-f8286b30408e
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>
-CC: <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Yuanfang Zhang
-	<quic_yuanfang@quicinc.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747048277; l=2245;
- i=quic_yuanfang@quicinc.com; s=20241209; h=from:subject:message-id;
- bh=FI4fHXTigwGwniHI+YHv/YtmYhKfZ1v6wbRpBi5fe/g=;
- b=pylPWcizTRa6hQalcFc+aJb/xN9YqSjzSpXyERI4qBUSexrpy1EcDVE7toX7slseZh2bqSGCQ
- kRS1/84DXsQCQuiCenNj+MJ4T3i9ZrqZqOjMJxExxuRTIChHivOLe6F
-X-Developer-Key: i=quic_yuanfang@quicinc.com; a=ed25519;
- pk=ZrIjRVq9LN8/zCQGbDEwrZK/sfnVjwQ2elyEZAOaV1Q=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=DqtW+H/+ c=1 sm=1 tr=0 ts=6821d75a cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=mTvmQVt1wvC56TrAcpsA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: _DDEcYGFIHsEbDcbK5G5GK19OWpfwbNU
-X-Proofpoint-GUID: _DDEcYGFIHsEbDcbK5G5GK19OWpfwbNU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDExNyBTYWx0ZWRfX52KGBtdRCcnU
- QCJXAdhZhddWsDWa+RunrY9BsJHRFq9hGT9wR3UC9EgGlFuzeKJWGsz18JyAH7UeeGju4BeaY/1
- qt8CHYACh1VrFsL5z1ItlTa2HxKffoHf/ip7sGgzAcRo05jGPQuuSMwJKOhgORu4sohf7XxycBA
- fBZAbdFL+RCY6bhGO0uyxS3+Fbjf+/4Fz10ffg0l2D2g4U34uvqCnJHF7SGKa9ngt7V5wOHJ8B+
- s2K9iVU8dQzIMNUFA/b2PxYCDs4Z57M+ET69kFY2ZFetVbqY0Li4jT9asQBRRiyRPmt/0hQ+7ij
- 6NoXT6mRPRYI2/f5viZkadCP2bUyp8nalEeaICpes4cqkJg+QWY9ZNKFbYydv0XD0v3/s7oFvaK
- tThSmXkyfAruYQrNjvJVkmdfwlV+Oa+CJ78rBciRMbtUP/KDb6+5emlyl0aTtmZ/Qxh1E9Re
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_04,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 bulkscore=0 phishscore=0 clxscore=1011 adultscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505120117
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The Trace Network On Chip (TNOC) is an integration hierarchy which is a
-hardware component that integrates the functionalities of TPDA and
-funnels. It collects trace from subsystems and transfers it to coresight
-sink.
+Fixes a typo in the root= parameter description, changing
+"this a a" to "this is a".
 
-In addition to the generic TNOC mentioned above, there is also a special type
-of TNOC called Interconnect TNOC. Unlike the generic TNOC, the Interconnect
-TNOC doesn't need ATID. Its primary function is to connect the source of
-subsystems to the Aggregator TNOC. Its driver is different from this patch and
-will describe it and upstream its driver separately.
-
-Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Fixes: c0c1a7dcb6f5 ("init: move the nfs/cifs/ram special cases out of name_to_dev_t")
+Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
 ---
-Changes in v5:
-- update cover-letter to describe the Interconnect TNOC.
-- Link to v4: https://lore.kernel.org/r/20250415-trace-noc-v4-0-979938fedfd8@quicinc.com
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v4:
-- Fix dt_binding warning.
-- update mask of trace_noc amba_id.
-- Modify driver comments.
-- rename TRACE_NOC_SYN_VAL to TRACE_NOC_SYNC_INTERVAL.
-- Link to v3: https://lore.kernel.org/r/20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com
-
-Changes in v3:
-- Remove unnecessary sysfs nodes.
-- update commit messages.
-- Use 'writel' instead of 'write_relaxed' when writing to the register for the last time.
-- Add trace_id ops.
-- Link to v2: https://lore.kernel.org/r/20250226-trace-noc-driver-v2-0-8afc6584afc5@quicinc.com
-
-Changes in v2:
-- Modified the format of DT binging file.
-- Fix compile warnings.
-- Link to v1: https://lore.kernel.org/r/46643089-b88d-49dc-be05-7bf0bb21f847@quicinc.com
-
----
-Yuanfang Zhang (2):
-      dt-bindings: arm: Add device Trace Network On Chip definition
-      coresight: add coresight Trace Network On Chip driver
-
- .../bindings/arm/qcom,coresight-tnoc.yaml          | 111 ++++++++++++
- drivers/hwtracing/coresight/Kconfig                |  13 ++
- drivers/hwtracing/coresight/Makefile               |   1 +
- drivers/hwtracing/coresight/coresight-tnoc.c       | 191 +++++++++++++++++++++
- drivers/hwtracing/coresight/coresight-tnoc.h       |  34 ++++
- 5 files changed, 350 insertions(+)
----
-base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
-change-id: 20250403-trace-noc-f8286b30408e
-
-Best regards,
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index d9fd26b95b34..eddb27ce3f0c 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6250,7 +6250,7 @@
+ 			port and the regular usb controller gets disabled.
+ 
+ 	root=		[KNL] Root filesystem
+-			Usually this a a block device specifier of some kind,
++			Usually this is a block device specifier of some kind,
+ 			see the early_lookup_bdev comment in
+ 			block/early-lookup.c for details.
+ 			Alternatively this can be "ram" for the legacy initial
 -- 
-Yuanfang Zhang <quic_yuanfang@quicinc.com>
+2.48.1
 
