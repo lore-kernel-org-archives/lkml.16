@@ -1,242 +1,216 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2174F25487C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED9D253335
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747022124; cv=none; b=ktqhOaJZmL5TvLRv1R5mUwAvkcDHAjh4I1v0iRap7JdufhY4C/amHf3im+6B4HA7W5BXYDier+ffDYQ/VVuIoDUafMTbrkBZwNgKbN+UB1Dw4CykT7xo6OI+S8JhT2N6H76i3BBTl57vdVTdpbLINh6r7PhSz+iNBm+0TE5RwbM=
+	t=1747022192; cv=none; b=cgG4shnxpJx0qilvtmwoOVjBwG7wv+iLMTIKMhNhrh+8c3MyjM6qPl9UylDJcT7KcE+QQiTYw3SAxysNTAHtcl8aprNRo49J1HVca2SjjJJmCWGHqscWbGxsW7jMoqRdPHQugrZJqN32iP94MqCk0UQDkRGmvGTk0+T4aGryBo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747022124; c=relaxed/simple;
-	bh=qY1qfNIBPyLYZ+bGQiDkA/ZqulShllNxYxCaOGvGIvs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WxFiyd5EBCvYniROWwuCdfG0nhrd9m8gy77a358xVJ3PmWqDJE1xZyVNCTjkT2H+YYSaCpneCQ92l2A4nAxGnGrnuJQyF0r/kDC80gzZNQPZ2dfhAMRqy1Drd96BJM7oW3RTGWIhc1/wGdPrToNLfkADDuvST1AGZ5kvFkBBTdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BfacZ1Dt; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BfacZ1Dt"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BNqj49016870
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:55:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8WDKrTckQCWr+LJBAG0kC4a97KNkNLl2PuqVbJ/lBbk=; b=BfacZ1DtiM0cdo3j
-	FqvH8yB9NKmDTWbyKEReDIzPLbWHyZ8eF7rlUUyu8Ql1kBkUmkeXaqTvSkUXQgYk
-	DMiI1gux/3cQsRNr1tbEPjDJBiepvEKeqAf3i0v+km4Ek+jrNzJM2uDsRwOjZ//g
-	f7QP7rhPTDzxoZRyz9k9Z5VEI9IjOkjIWaOCKYV7PkQYzl32jDERUjgqN4fGjX/V
-	DiJldvWPaB3JK/ZUWemeial6/CSMfkeb852C1dWNHQEDJTy+an4D4u7M/hVm6qW3
-	y5xpF8EfZYXhREfpver3qNgRBI7FxiCmtqxP/tiEyt8G1ZoeS5MY07b3V/R6C6lK
-	ugazgw==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hyjjjx59-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:55:21 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22fd4e7ea48so21938445ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 20:55:21 -0700 (PDT)
+	s=arc-20240116; t=1747022192; c=relaxed/simple;
+	bh=0RKem1urBY7NYFGEXH4inqXZR4bo+YozOaH1bEt3BsM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ggzb0TN7W/aBRezoMM/MxPCXEHeZd9I+ozrQoG9BgkbYmNlcMuxCNy3NobVbSDPwOLA1izw89ecGgI8szx4H1vmaNsViGSnSAl78SvQOG6L4B+CV0RsyBn63HEZR3YQbjFBoWL2owSzmm2TRxm5hrEvCfsduZqLyUiMyMoteXNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d81bc9b763so70646345ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 20:56:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747022120; x=1747626920;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8WDKrTckQCWr+LJBAG0kC4a97KNkNLl2PuqVbJ/lBbk=;
-        b=KlZEyMFHInI0OzT56CbtVcEgINzcLcZkivlxRd1YhcEgW2RfmBDQhcIcuuCsu3kEVG
-         8lHnMZ3e7D8vtH1YnPMW28wJka5gXboyiKf3/T6h3Uq/8hMSigp3FkBg8n6rEzkuC9/C
-         G3U+selQSMyzfJ9QnxWCzSV9AdNKi27tYygUTOT+geK1d7XrmPg4dlvYjTbIPK9w8+ID
-         euCAmRy6Fxp7QGHj9GJ6hbOz/gAoE9jpFYP3f94gyFxMjyuHrADvh807HoMcBLUUgGgh
-         M8f5y7JN+9vVBN/oEIIUqKRauoujX4NHhSVDpS0M7VihyWl3b3qZN4SKn1H96Fy8sMrB
-         nshw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLKyJJ8Y2K/08fgFheUagoSPOXm3yYZKNrR+cJLrlYfTZUk3wxgtTu2k7IOnyWMkZAls0+0282x/tgXz4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywjlk1WrDOiQmdOOsNU5+3aZAgaDmeigmvxUq66jhTcuUu+3Zcf
-	RfWMXwTi78x4m6Xi9jMH1aMFwfbRVnz0iBRGDArBKLW/tLebnANqEB9r0NQhF1F5l5Hs2ZxNf4A
-	PLSnSdvEdnzE5j9iBoC1OTecnKQ61pxVsmYWvoy7uKNp0ZZkB4m7yyqjjHGXvSc4=
-X-Gm-Gg: ASbGncuTSAK+5huFc+Og7gsYchUWQPG3drX8yZiOquUFdKqB/UipOr0l7fNNdVKdCmi
-	FRkZlgMMj79QIhvQezldDkWcgAGXGo/a8U2JTyR68bDvAtD3DrG7Io9g6hL+z8Nlndm8Df3X6cb
-	k95DdBwEWDHwtYcUAm46pQ6/CHDTrvYg4ZoR+lH5prNlMf6rPI/eg43fztIPW9n8Roo8g7LfK5R
-	3Mho8xaQW7uJTZj2RLh2Eu/b/uwFdNDSC09lV4ObzUiFrlIyhqYS/oZL55pltsIALmJFPoXcL8X
-	4tDKuLeUWxxmk5lbRXbg+3eutoSrQBWDvFyaZmE=
-X-Received: by 2002:a17:902:f68a:b0:22e:4a6c:fef2 with SMTP id d9443c01a7336-22fc91a205amr182962145ad.53.1747022120237;
-        Sun, 11 May 2025 20:55:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFOM0oX86/HShJVVt80lz+16sIC8o4F2PcAejQwrh8brWAXBr3Muwb5Bc6kA75S8GnIM8Hr3Q==
-X-Received: by 2002:a17:902:f68a:b0:22e:4a6c:fef2 with SMTP id d9443c01a7336-22fc91a205amr182961825ad.53.1747022119746;
-        Sun, 11 May 2025 20:55:19 -0700 (PDT)
-Received: from [10.206.107.125] ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82a0976sm53011635ad.227.2025.05.11.20.55.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 May 2025 20:55:19 -0700 (PDT)
-Message-ID: <effea02f-6ffb-42e9-87df-081caafab728@oss.qualcomm.com>
-Date: Mon, 12 May 2025 09:25:13 +0530
+        d=1e100.net; s=20230601; t=1747022190; x=1747626990;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NV860LwlNmWdIlSKFfzsJHQhslmNi+R9+Xj59lYo/oo=;
+        b=LWxwOZMtvLjn+Wsiyht+Ll7CO5Ex5Y6K/y8OL4ELxPzUrjFnkp+/Wml1pIUTcGRAFL
+         arnb6QIOD2N3fX6VR7We7UpaA+K4pZtmM3JQDcOM7mY0Ad267kjTksc7GW9eaooTd3Cj
+         m1Z3jP2id1hHLsvMIm1WuEavTqT90C0vKiiWWolZT4L2kyuxVi/DrBML/nBrYeyY38Zk
+         V8jB04ioh1PfoSn9EXenqAzjfUzN7AbnwrfVjPQpfUmfv4Q7fCwa9bReJkdOlgmTApjh
+         120KcTM38pP+UfI3PV8lynGvghBVTOZb74Iy/u0w1ADccWMmsRJCRxzLyaUI1s68dAwG
+         dM5A==
+X-Forwarded-Encrypted: i=1; AJvYcCV1t5XQL0Rft7Mr1m7cctPc9JCRzOHMRdtOWcyFGvAI+bVzkkAgUoWesFvrEYtEtWBCLdtBtbMxKS4M8HU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKvDPHaMbyLIR8C5iq+C9TSZL2RT4emEJzjSMVv3qk9cfkXrUD
+	utY2QhjNbiXWhO8ulZMu5549gY0JGQJmmPpvp1C1m8y7IUT15JhxMCBOwE7VggFzf1xnrs64I2A
+	+i+Pv84rPYJFEC30Jg819Dlbbnred9bDEjBSjvU5UQ1PhYuQi9eqjoDQ=
+X-Google-Smtp-Source: AGHT+IHYBXgZUSOZq/Efikl9lNORbCSYoF1xd9RUs0nDlMA0xakDHDYSg8JO5IFhCu0em0htlRfz70TF0vhBJFZ/h+6lbP7LUv8A
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Alexey Klimov <alexey.klimov@linaro.org>, andersson@kernel.org,
-        konradybcio@kernel.org, linux-arm-msm@vger.kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, srini@kernel.org,
-        quic_ekangupt@quicinc.com, krzysztof.kozlowski@linaro.org,
-        "Bharath Kumar (QUIC)" <quic_bkumar@quicinc.com>,
-        "Chenna Kesava Raju (QUIC)" <quic_chennak@quicinc.com>
-References: <20250502011539.739937-1-alexey.klimov@linaro.org>
- <10f69da3-6f94-4249-a8f3-459dc48fa5e1@oss.qualcomm.com>
- <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
- <3c0fea8d-0715-40e6-bed9-e0961bf034e0@oss.qualcomm.com>
- <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
- <pzlsbznxpfsbdsxlzvcbdy7wwba4z5hoya7fyoacwjadtpl7y4@qajecdvs3bho>
-Content-Language: en-US
-From: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-In-Reply-To: <pzlsbznxpfsbdsxlzvcbdy7wwba4z5hoya7fyoacwjadtpl7y4@qajecdvs3bho>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAzOCBTYWx0ZWRfX/5ZV/JQXwe5W
- 0rVuoyEg2q2KqWeGGpZ/3RlZzqFG1GHAN7MylLnY/U6ikljiu5zwmNObMVBrz9DpwZkT0OrF0hC
- c6sHPBLJP+UuANAgjEiH2q5G/4qzFcvSQux3gHRIpw17tB0SgfkBJppMoLNc7mXW66yAI2TeWbO
- /OdFehWEDOB7u6l3WN1MCwum8w93V69WOahkaJEs2CLScjfo7jkRPe3MbX4eB+ubKZhQwdAjWB7
- EOUornaOMfLKYj1rkkIZqknX4GW18OtLo8PRBG3EB2u6tHw8ykS+0L/CCkLsmXOQd6Vv2jeosr1
- 8HLYoAbvjHqxSdFzLRgYggzmpJ201vWVxbG0Ndh3pMuPCc84+tSI5BP4T9vr2Cil4xFhYzenGov
- i5BY0hkWjXdfRYjx/7ZFXdJQEf42j+oXUv+XHGe6AOgAd7yWGGzJdw0kHxsv3dqODIBNxqj8
-X-Proofpoint-GUID: di6q4RzbTp2--8hcqmDvTsK6pKpHANi3
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=68217129 cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=KKAkSRfTAAAA:8 a=YS6qPdkyQB3lb9F7VO0A:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: di6q4RzbTp2--8hcqmDvTsK6pKpHANi3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 clxscore=1015 spamscore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505120038
+X-Received: by 2002:a05:6e02:1648:b0:3d0:10a6:99aa with SMTP id
+ e9e14a558f8ab-3da7e1dcc61mr123319415ab.4.1747022190053; Sun, 11 May 2025
+ 20:56:30 -0700 (PDT)
+Date: Sun, 11 May 2025 20:56:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6821716e.050a0220.f2294.004a.GAE@google.com>
+Subject: [syzbot] [bpf?] [trace?] WARNING in get_bpf_raw_tp_regs
+From: syzbot <syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
+	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15010768580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b39cb28b0a399ed3
+dashboard link: https://syzkaller.appspot.com/bug?extid=45b0c89a0fc7ae8dbadc
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b28670580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159698f4580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-707df337.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f71d162685b9/vmlinux-707df337.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/940cb473e515/bzImage-707df337.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 5971 at kernel/trace/bpf_trace.c:1861 get_bpf_raw_tp_regs+0xa4/0x100 kernel/trace/bpf_trace.c:1861
+Modules linked in:
+CPU: 3 UID: 0 PID: 5971 Comm: syz-executor205 Not tainted 6.15.0-rc5-syzkaller-00038-g707df3375124 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:get_bpf_raw_tp_regs+0xa4/0x100 kernel/trace/bpf_trace.c:1861
+Code: 48 83 fb 03 77 64 48 8d 04 9b 48 8d 04 83 48 8d 5c c5 00 e8 7e 76 f4 ff 48 89 d8 5b 5d 41 5c c3 cc cc cc cc e8 6d 76 f4 ff 90 <0f> 0b 90 65 ff 0d b2 5b de 11 e8 5d 76 f4 ff 48 c7 c3 f0 ff ff ff
+RSP: 0018:ffffc90003636fa8 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: ffffffff81c6bc4c
+RDX: ffff888032efc880 RSI: ffffffff81c6bc83 RDI: 0000000000000005
+RBP: ffff88806a730860 R08: 0000000000000005 R09: 0000000000000003
+R10: 0000000000000004 R11: 0000000000000000 R12: 0000000000000004
+R13: 0000000000000001 R14: ffffc90003637008 R15: 0000000000000900
+FS:  0000000000000000(0000) GS:ffff8880d6cdf000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7baee09130 CR3: 0000000029f5a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1934 [inline]
+ bpf_get_stack_raw_tp+0x24/0x160 kernel/trace/bpf_trace.c:1931
+ bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+ bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+ __bpf_prog_run include/linux/filter.h:718 [inline]
+ bpf_prog_run include/linux/filter.h:725 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+ bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+ __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
+ __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
+ __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
+ stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
+ __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
+ ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
+ bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
+ bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
+ bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+ bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+ __bpf_prog_run include/linux/filter.h:718 [inline]
+ bpf_prog_run include/linux/filter.h:725 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+ bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+ __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
+ __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
+ __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
+ stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
+ __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
+ ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
+ bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
+ bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
+ bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+ bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+ __bpf_prog_run include/linux/filter.h:718 [inline]
+ bpf_prog_run include/linux/filter.h:725 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+ bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+ __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
+ __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
+ __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
+ stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
+ __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
+ ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
+ bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
+ bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
+ bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+ bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+ __bpf_prog_run include/linux/filter.h:718 [inline]
+ bpf_prog_run include/linux/filter.h:725 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+ bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+ __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
+ __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
+ __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_lock include/linux/mmap_lock.h:185 [inline]
+ exit_mm kernel/exit.c:565 [inline]
+ do_exit+0xf72/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7baed8cfb9
+Code: 90 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00 f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00
+RSP: 002b:00007ffd9d933998 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f7baed8cfb9
+RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
+RBP: 00007f7baee082b0 R08: ffffffffffffffb8 R09: 0000000000000000
+R10: 0000000000000012 R11: 0000000000000246 R12: 00007f7baee082b0
+R13: 0000000000000000 R14: 00007f7baee08d20 R15: 00007f7baed5e160
+ </TASK>
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On 5/10/2025 1:19 AM, Dmitry Baryshkov wrote:
-> On Fri, May 09, 2025 at 09:12:30AM +0530, Ekansh Gupta wrote:
->>
->> On 5/9/2025 4:27 AM, Konrad Dybcio wrote:
->>> On 5/9/25 12:20 AM, Alexey Klimov wrote:
->>>> On Fri May 2, 2025 at 10:38 AM BST, Konrad Dybcio wrote:
->>>>> On 5/2/25 3:15 AM, Alexey Klimov wrote:
->>>>>> While at this, also add required memory region for fastrpc.
->>>>>>
->>>>>> Tested on sm8750-mtp device with adsprpdcd.
->>>>>>
->>>>>> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
->>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>>>>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>>>>> ---
->>>>>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 ++++++++++++++++++++++++++++
->>>>>>  1 file changed, 70 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
->>>>>> index 149d2ed17641..48ee66125a89 100644
->>>>>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
->>>>>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
->>>>>> @@ -7,6 +7,7 @@
->>>>>>  #include <dt-bindings/clock/qcom,sm8750-gcc.h>
->>>>>>  #include <dt-bindings/clock/qcom,sm8750-tcsr.h>
->>>>>>  #include <dt-bindings/dma/qcom-gpi.h>
->>>>>> +#include <dt-bindings/firmware/qcom,scm.h>
->>>>>>  #include <dt-bindings/interconnect/qcom,icc.h>
->>>>>>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
->>>>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>>>> @@ -523,6 +524,14 @@ llcc_lpi_mem: llcc-lpi@ff800000 {
->>>>>>  			reg = <0x0 0xff800000 0x0 0x800000>;
->>>>>>  			no-map;
->>>>>>  		};
->>>>>> +
->>>>>> +		adsp_rpc_remote_heap_mem: adsp-rpc-remote-heap {
->>>>>> +			compatible = "shared-dma-pool";
->>>>>> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
->>>>>> +			alignment = <0x0 0x400000>;
->>>>>> +			size = <0x0 0xc00000>;
->>>>>> +			reusable;
->>>>>> +		};
->>>>>>  	};
->>>>>>  
->>>>>>  	smp2p-adsp {
->>>>>> @@ -2237,6 +2246,67 @@ q6prmcc: clock-controller {
->>>>>>  						};
->>>>>>  					};
->>>>>>  				};
->>>>>> +
->>>>>> +				fastrpc {
->>>>>> +					compatible = "qcom,fastrpc";
->>>>>> +					qcom,glink-channels = "fastrpcglink-apps-dsp";
->>>>>> +					label = "adsp";
->>>>>> +					memory-region = <&adsp_rpc_remote_heap_mem>;
->>>>> IIUC the driver only considers this on the sensor DSP
->>>> Memory region is required for audio protection domain + adsprpdcd as far as I know.
->>> next-20250508
->>>
->>> rmem_node = of_parse_phandle(rdev->of_node, "memory-region", 0);
->>> if (domain_id == SDSP_DOMAIN_ID && rmem_node) {
->>> 	// ...
->>> }
->>>
->>> maybe some driver changes are still pending?
->> Would like to add some more details here:
->>
->> Memory region is required for audio PD for dynamic loading and remote heap memory
->> requirements. Some initial memory(~2MB) is allocated initially when audio daemon
->> is getting attached[1] and this memory is added to audio PD memory pool.
-> How is being handled for the audio PD case? Could you please point it
-> out in? Currently, as Konrad pointed out, it is only being used for
-> Sensors domain (unless I miss some obvious usage handled by the core).
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-The reserved-memory support was actually first added for audio PD only[1].
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-The usage of reserved-memory is audio PD:
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-This memory is used by audio PD for it's dynamic loading and remote heap
-requirements as I had mentioned earlier. I'll give more details here:
-When audio PD starts, it expects some initial memory for it's dynamic
-loading and other allocation requirements. To fulfill this, the audio
-daemon allocates[2] some initial memory(~2MB) and moves the ownership to
-the audio specific VMIDs that are configured in DT[3]. Audio PD then uses
-this memory for it's initial operations. If there is any more memory
-needed, audio PD makes a request to allocate memory from HLOS which is
-again allocated from the same region[4] and then the ownership is moved
-to the configured VMIDs[5].
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-The sensors domain that you are pointing was an extension of this and as
-pointed earlier, it was added to support SDSP use cases on some old platform
-where there are no dedicated SDSP context banks.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=1ce91d45ba77a4f6bf9209d142d5c89c42cf877a
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1274
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/qcom/sa8775p.dtsi#n5334
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
-[5] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1927
-
-//Ekansh
-
->
->> Additionally, if there is some additional memory requirement from audio PD, the
->> PD can request for more memory using remote heap request[2]
->>
->> The support for SDSP was added sometime back[3] to support SDSP usecases on some old
->> platform as there were no dedicated context banks for SDSP there. On recent platforms,
->> context banks are available wherever SDSP is supported. 
->>
->> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1273
->> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
->> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=c3c0363bc72d4d0907a6d446d7424b3f022ce82a
->>
->> //Ekansh
->>
->>> Konrad
->>>
-
+If you want to undo deduplication, reply with:
+#syz undup
