@@ -1,179 +1,116 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5B37DA82
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D7E37DA82;
+	Mon, 12 May 2025 07:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747035530; cv=none; b=jInLuHvuFl4S/RjCTaWQwGM1VhgiX4wJxKo3IEfNlT2FEGGgs7p0+WCw6ZdSJVzqui2qvGZ7GqMgyqyRZxNbW3R6AIzT+K7+uGVv5vsypDytVJODkjtYhwBLlCp7PPBWJ5u3nhRlXmXuB05udQMtrx3zbR1Cp3C1xpZL+HfnBuU=
+	t=1747035537; cv=none; b=WleEzmAdqW+GXSnvwj82g76pqw73Aj/BLZ+ca5Q2h1TDyIeTHBeu8cPMBX7EUew7OkU7UbKnlI8h1nmH5jBzIm2GSH9vJgqTtddyLERDkEyZe8PqKsFBETOrtBZHssD0cSQzfa18lE/GYSoBR1lB1wKR8Y52KddLEkGZNAHeRRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747035530; c=relaxed/simple;
-	bh=Hcqrrn4iivC6AZRQs/SDe5WoEbqHddmWG6LWmF1Zxxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fDJhFU4zJ6lLch8iik2Sna0/X0ri6EJhaURgp2S1DPumCxO3RhVDC3xC0Kf916U+fgilFFm7IZNhWMOvVs442aQ0zqrfQTwLAqX5bBztt6o04sql5FVWtGvtxWDiNmJeP8aTZyqV5+whrsSxSEZvtupo/HYHrBIii44jXDSTMyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=i3g+Jbs0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=omWygHk3; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=i3g+Jbs0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=omWygHk3; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747035537; c=relaxed/simple;
+	bh=KNKMctxAxmRTyPlLDhq3kAG6uesIsQg9Qnqn3OmcROA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kpU00I1B1lujBYc0SIvrn3QsK4wZpng9Uj9HoUxodZx8d9yNtm9MW3wofEEQy2+5AlSqzBm3NZHKnkTHBfAqoTRzREmmEQghBs6rlMPOcogi3lChr9wb/5YK2QuYEJAAch6eR28G6vQWgNr18MJzvXlD8WPZXwM9nsyqvBN7wJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HlC68Ufk; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="i3g+Jbs0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="omWygHk3";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="i3g+Jbs0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="omWygHk3"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7C2281F745;
-	Mon, 12 May 2025 07:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747035526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
-	b=i3g+Jbs0Y2Ntf1HTmop2kulYMHKojsVuNEnKx0M/v8T7bGYIG3UetdRoUv0BYxJVMkLJx0
-	S4bdsmj+xi89vnfAvRR9iVCX0Gg79Dc89rFp+bEvkEJvO/D2J0FKntsQwy7aIpWZBePQNM
-	lIiiAwhUp1UsjzmOTGvvilL0DHFjm4Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747035526;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
-	b=omWygHk3zQGay5K940aMeKxzOMQHMvUp6X+K9x+koZu7VJBFC/qq5G2wlZm2lANPL4xuzU
-	6O6AI0kj1EtoXvDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747035526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
-	b=i3g+Jbs0Y2Ntf1HTmop2kulYMHKojsVuNEnKx0M/v8T7bGYIG3UetdRoUv0BYxJVMkLJx0
-	S4bdsmj+xi89vnfAvRR9iVCX0Gg79Dc89rFp+bEvkEJvO/D2J0FKntsQwy7aIpWZBePQNM
-	lIiiAwhUp1UsjzmOTGvvilL0DHFjm4Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747035526;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
-	b=omWygHk3zQGay5K940aMeKxzOMQHMvUp6X+K9x+koZu7VJBFC/qq5G2wlZm2lANPL4xuzU
-	6O6AI0kj1EtoXvDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 52D66137D2;
-	Mon, 12 May 2025 07:38:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wMBCEoalIWiiDgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 12 May 2025 07:38:46 +0000
-Message-ID: <eb2b0bce-6012-4019-8ff7-c35c24ba7aa1@suse.cz>
-Date: Mon, 12 May 2025 09:38:46 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HlC68Ufk"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id D9C09211D8A9; Mon, 12 May 2025 00:38:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9C09211D8A9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747035534;
+	bh=iCzTBbpF34iqkrSJNQgb27YnZ03WEMtHWiX6C1C7y7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HlC68UfkHiW5i7tFfqIlUH2OLMYsAlzaWhoQuFG+G//YihxYb786pWYAaLzFsnU+b
+	 Rl2wNOVjtzjrX7ifZDwXSWSGbqhDZOYVCCnY4MNyqRObJ2gbk5MuU0xSRZKpmBhZIx
+	 s45E2Zoc/QNT05qBIQnkWg21hglbabyNeWdMBeYs=
+Date: Mon, 12 May 2025 00:38:54 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v3 2/4] PCI: hv: Allow dynamic MSI-X vector allocation
+Message-ID: <20250512073854.GB23493@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1746785602-4600-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <plrpscito5e76t4dvtukgqm724stsfxim3zv3xqwnjewenee53@72dipu3yunlr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: add mm GUP section
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@nvidia.com>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250506173601.97562-1-lorenzo.stoakes@oracle.com>
- <20250506162113.f8fa0c00e76722a1789ec56a@linux-foundation.org>
- <c4258dfd-14ee-411a-9fa7-c4a1fa4fad1c@redhat.com> <aBshiBX_N6hhExmS@pc636>
- <13a32f52-dc5c-45ef-b45a-585586868509@lucifer.local>
- <e3e2663b-2749-44c7-8452-ffcbf2167572@redhat.com>
- <28428030-1178-469a-a4ab-f1e7179d9106@lucifer.local>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <28428030-1178-469a-a4ab-f1e7179d9106@lucifer.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,linux-foundation.org,nvidia.com,redhat.com,kvack.org,vger.kernel.org];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <plrpscito5e76t4dvtukgqm724stsfxim3zv3xqwnjewenee53@72dipu3yunlr>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 5/8/25 14:23, Lorenzo Stoakes wrote:
->>
->> M for "PAGE ALLOCATOR", hmmm ..., I was hoping that Vlastimil might have
->> capacity for that? :)
+On Mon, May 12, 2025 at 12:30:04PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, May 09, 2025 at 03:13:22AM -0700, Shradha Gupta wrote:
+> > Allow dynamic MSI-X vector allocation for pci_hyperv PCI controller
+> > by adding support for the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and using
+> > pci_msix_prepare_desc() to prepare the MSI-X descriptors.
+> > 
+> > Feature support added for both x86 and ARM64
+> > 
+> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > ---
+> >  Changes in v3:
+> >  * Add arm64 support
+> > ---
+> >  Changes in v2:
+> >  * split the patch to keep changes in PCI and pci_hyperv controller
+> >    seperate
+> >  * replace strings "pci vectors" by "MSI-X vectors"
+> > ---
+> >  drivers/pci/controller/pci-hyperv.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > index ac27bda5ba26..8c8882cb0ad2 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+> >  	return cfg->vector;
+> >  }
+> >  
+> > -#define hv_msi_prepare		pci_msi_prepare
+> > +#define hv_msi_prepare			pci_msi_prepare
+> > +#define hv_msix_prepare_desc		pci_msix_prepare_desc
 > 
-> Vlastimil? ;)
+> Please do not use custom macro unless its defintion changes based on some
+> conditional. In this case, you should use pci_msix_prepare_desc directly for
+> prepare_desc() callback.
 > 
-> I'd certainly support this.
-
-OK, can do, thanks.
-
->>
->>
->>
->> Not 100% sure what to do with
->>
->> * include/linux/page_isolation.h
->> * mm/page_isolation.c
->>
->> (I hate the word "page isolation")
->>
->> They are mostly about page migration (either for alloc_contig... or memory
->> hotunplug). Likely they should either go to the MIGRATION section or to the
->> PAGE ALLOCATOR? Maybe MIGRATION makes more sense. Thoughts?
+> - Mani
 > 
-> I mean it explicitly relates to migrate type and migration so seems to me
-> it ought to be in migration.
-> 
-> Though migrate type + the machinary around it is a product of the physical
-> page allocator (I even cover it in the 'physical memory' section of the
-> book).
-> 
-> I wonder if our soon-to-be page allocator maintainer Vlastimil has
-> thoughts? ;)
-> 
-> I'd vote for migration though to be honest.
+> --
+> ??????????????????????????? ????????????????????????
 
-I checked the code briefly and although migratetypes are related to
-migration, it seems rather page allocator code to me.
+Thanks for catching this Mani, I agree. I will fix this.
 
-In fact if I didn't miss these files, I would have included them when
-proposing the PAGE ALLOCATOR section.
-Zi Yan has a series on that topic now and is one of the R: in PAGE
-ALLOCATOR. What do you think?
-
->>
->> --
->> Cheers,
->>
->> David / dhildenb
->>
-
+regards,
+Shradha.
