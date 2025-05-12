@@ -1,112 +1,197 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41B6253B73;
-	Mon, 12 May 2025 16:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650001C84DE
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068324; cv=none; b=j0X3hlrNUSqK+CyHREULo7p4BOahDLl8T1otKw8MiO3CbHs8l3w36CSSTVcE297kC7hdSysmjmtf3yreMKfahQOtRTbo0ZYOhE5LSRH/q8mRpnDaBodwsEZDTKKcPVw/XB278+AQLsfiqodziX0GCyTk2800B2nJmae/dK5DwaM=
+	t=1747068387; cv=none; b=fZHAAjnFSU5O3iAmxmzJCy5LCFZMpXqnUDAkwZBQfbnRP7KIuKszg5iMKX17D0vAqBxx2EJ40iWslLmcEjG7h4aOq7GSW6WWpuUpnEoaugW0Rye9qSDKHNf/uOUMJc9UWAxApBHmKyh6ooXmll4oxCy/awqZZPGVxTfGG7oBGqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068324; c=relaxed/simple;
-	bh=G9uC19IB6B6f0yAjhFQ0OLv5o00h5/N5UucVN4+eq+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H4Z0OXFhhDhTI6fZBJ0fyUPmmDpb4JR/gWR9ktNox9gn1pqKLmJJ1B+XgrXBxAVcQnsSR8C9D2juyK3i4DtzZU9XKFmYuqohlvXEcrUts+21uHYw3Y3MDPZbV/TJQ8hqq5jRWuH2MPuFyxbruk7gjw0P26/RfSmTf+XpVQMXFOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KcSLFvsG; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcSLFvsG"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22fa47f295aso30549075ad.0;
-        Mon, 12 May 2025 09:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747068322; x=1747673122; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=leb36LUt2vGzy5dxLVtm7d5Xfz424GGjA1cjDpH8X4o=;
-        b=KcSLFvsGU+iTyRSPNXUOPV44JKNoFwkZxt8PBl0gfKVJbihWel6b8bcjNQhglAVWI2
-         VJlouQBk+JOmwdiZ4Srs60aEzORVL1EUJXsMpifopL/im6xVd2uoqY8pY3/wxqx1igRY
-         wQhEGu7qwdeNb8Kv9jD0qCA57KKcr2KWytLGnbjT20scwPtrEtNJZ3I/UpZzLwXgYiwd
-         VcViIVkN56TdZ/lz7hWpgbWJCspz1F4eoxQTj7HcncZ3osCZuSuVL9ad/htcFilUvjjS
-         ExS1t2wlXnJqh1q40BeHyr0hgKIzeq6PbkGeG1GS7paMPKGuk/LCkFBW7kKsNEiw6YYO
-         fUpw==
+	s=arc-20240116; t=1747068387; c=relaxed/simple;
+	bh=qukYTQ9gqsLGpARstbxnyXkpA+4LfgM/mx0IKU7X1MU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=KFUhmp3KKrO7zsbuOh0fijR8hxFWrY01TKzy2hVXMLj7GzVtlkhvEUUVD0mM5LGWb1Jhvn2T+EMxnWIur1PzK/KBP9eVNu1SG0k74rYBXWPTl407G0innOBdc88bSLfSo5I8ibLLB0bJHEsgyvpmEMTDCnu75EFuiTqvFaQOOHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3da720e0c93so111141405ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:46:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747068322; x=1747673122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=leb36LUt2vGzy5dxLVtm7d5Xfz424GGjA1cjDpH8X4o=;
-        b=QDuyOH9oJqK7COCcj4+x0TyjGyIQ4g8QOkE3VRfJkez7XbQIpgcDae/GCib36hRlj7
-         pWICnbAMR+C4tdQw8rYILvk5lh61qfhswd5W5Mk92O5GIhn/lcmZEfA8bCKP7KEq78fF
-         EWeBlQ35R/C+yPYBrYxECT7TExqAAlz0vq8vi7HbuT6M/LDPb0m411k6FJXu70BeHHlg
-         p9UjPOHlR+5FeB7LFgYG0qLLBV+PQcgGkBL5wcOsgvkcmikwWUnsQ9AIqEDPMrbhRjzv
-         M2qJBFpKkeAMm2POZ3KpHGbnrAMCfuL8L7DGo5jlvCO2ykngVnzfPr4P4AoiwPg4VX/N
-         +X9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW9XjbE/GwFbHjS7lgNNXbjT+r6dSnnhPBLBG3+tWb1WfvE1yUi8CIPZVV/4gr/G/jZjKo3CYU6xtrC@vger.kernel.org, AJvYcCX1vJvA7neHetaz7ph3IhaKzVmTMFgsHcVRYlwc/isFaTq+x+IH8DKlS8K3w6+Q1Vw6pixssPMI840BiPFA@vger.kernel.org, AJvYcCXDDVcbeMisWhU4K9AxW5XP0+prXlrlYOavxP8+qdMspmpjAJJNpZQgafZ1JLLUbgHFk0NeXB/N4ziz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRDxOLKHZIAbTLmrCGkYzX6AB3J91jNEiK7In3euw5lAt/1wYy
-	mRzrlr/838eBDIA8Cyzg/nRgc9Ji7BuObp9+Kg4Zz6HUA5fhfFOD
-X-Gm-Gg: ASbGncuFfyInuvocOXjqVHWtnmMyLC/jUjhcan0KcliJolLw25hPs88vAzmPcinwW3j
-	9R9MReVkqIaO+Uk2ttx2Pfn1GeO/1G3wQaB10r/VVipkLqJEKI64wum7WvTHmBnzQHIYN/VgKVe
-	uWwfrP+TTB6puI3yROcgPjgNLaZ00CyO0mqg77y0v3Dt4/HuFUMbWVVJUZABy/no47j+n2zIQ7s
-	HbbWiJuIWBc7fyqD9JlawUQHCY1kOwKs6rbnlK242TPktVCjImBbtJ4WgY1RCZpcRxc2oolG+9x
-	1AG7cHDe05s1D2SUXmVtRA37SVRjvGs6B/iByFNro07zAlV6ecewgg5wgRoOsZKC
-X-Google-Smtp-Source: AGHT+IF2x6rdoDlHR7WSudAXdT29fCwrnluQ58/3FaSNpzlwjKVeB6HYku6XzNHZuTMlPlBv6jL3SA==
-X-Received: by 2002:a17:902:ecc2:b0:211:e812:3948 with SMTP id d9443c01a7336-22fc8946f85mr203102535ad.0.1747068321874;
-        Mon, 12 May 2025 09:45:21 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc75469d3sm65133225ad.41.2025.05.12.09.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:45:21 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 12 May 2025 09:45:20 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Noah Wang <noahwang.wang@outlook.com>,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Grant Peltier <grantpeltier93@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Shen Lichuan <shenlichuan@vivo.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Charles Hsu <ythsu0511@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] hwmon: pmbus: mpq8785: Add support for MPM3695
- family
-Message-ID: <ac41da4c-d1e8-4648-9a4b-932e1fd50cb8@roeck-us.net>
-References: <20250511035701.2607947-1-paweldembicki@gmail.com>
- <20250511035701.2607947-6-paweldembicki@gmail.com>
+        d=1e100.net; s=20230601; t=1747068384; x=1747673184;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e79DEBw39ni0myLiGMqi2od8L0GXfqigIyanB8qli9w=;
+        b=F9ktnlG7Pessg6PKakxEXnCVCdCCwp6OxzwhdX3q59tH0rf7xj8eJ3yfmFH5YlTulT
+         Hyudz5B0a4/kXUKloErPq9DUPwwJGj1S/e2vzT6DUMQ+qBBPN577BJyCEWLWZAgZ7Itr
+         HK1tKgMl5jSkqbETH/LNAbjaIqF7rPt/7WrX1hyQCWR0PniFa5QqmtWJk2OiH/qhWN8x
+         kgK3DJ1wtydnyT+gOF2ytzftCsC4Rvd0YnqxVC8AQTZaspjmiJ/IzDQGPaVunNJW6d1n
+         WSDVHyzW5+lfZobKKkbRlSB3pF0lQXh1SoViDzmRg/lMIPZwgC1coR4+Fq5zx/qmPFtX
+         h3cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXO5BYrMz/cL23VmFeAfM+VpbgIh+Ov+T0gkL/Lk6cjJwDPnWuarPJXCFROtXbExDFmz7axoO/P5zEptp8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2s7izuKMi1tm35AttHEaFtaQ99nZuDVe4N4yF+f7jypGe5i7K
+	7pPEeXe9cw4tuzA4R/U/idqB9AAv0qFbCWpt6HnZ9xkV0vZ/RvjFY0A9D8xnFI+bnpLE3pGQp++
+	noN64jp0up8ckyNja/MCmGG9SyZ8yWTry1Pj4+PeZ4DEXG734MUlGHpc=
+X-Google-Smtp-Source: AGHT+IFXNBCoJpWUIqc40y4go3YSzmW9SL0u3Q96FgkKvHitoh8WNiTMksarST9yKwP7q5T4iCwsN4hbe1ibq60vt4FXo0QMpcSz
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250511035701.2607947-6-paweldembicki@gmail.com>
+X-Received: by 2002:a05:6e02:154e:b0:3d8:2187:5cea with SMTP id
+ e9e14a558f8ab-3da7e1e6257mr169782655ab.1.1747068384389; Mon, 12 May 2025
+ 09:46:24 -0700 (PDT)
+Date: Mon, 12 May 2025 09:46:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682225e0.050a0220.f2294.0075.GAE@google.com>
+Subject: [syzbot] [kvmarm?] KASAN: invalid-access Read in kvm_vgic_set_owner
+From: syzbot <syzbot+9993ad918a0b1c0af91c@syzkaller.appspotmail.com>
+To: catalin.marinas@arm.com, joey.gouly@arm.com, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	maz@kernel.org, oliver.upton@linux.dev, suzuki.poulose@arm.com, 
+	syzkaller-bugs@googlegroups.com, will@kernel.org, yuzenghui@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, May 11, 2025 at 05:55:48AM +0200, Pawel Dembicki wrote:
-> Add support for the Monolithic Power Systems MPM3695 family.
-> It contains four devices with suffixes: -10, -20, -25 and -100.
-> The device is PMBus compliant and shares characteristics with the
-> MPM82504.
-> 
-> MPM3695-25 has different VOLTAGE_SCALE_LOOP register size [11:0]
-> and it needs to be separated because it will be configured in the next
-> commit.
-> 
-> Tested with device tree based matching (MPM3695-10).
-> 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Hello,
 
-Aplied, after updating above statement about MPM3695-25 and the next commit.
+syzbot found the following issue on:
 
-Thanks,
-Guenter
+HEAD commit:    c4e91ea0cc7e Merge branch kvm-arm64/misc-6.16 into kvmarm-..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f27768580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2f705363127f7638
+dashboard link: https://syzkaller.appspot.com/bug?extid=9993ad918a0b1c0af91c
+compiler:       Debian clang version 20.1.3 (++20250415083350+2131242240f7-1~exp1~20250415203523.103), Debian LLD 20.1.3
+userspace arch: arm64
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/fa3fbcfdac58/non_bootable_disk-c4e91ea0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7ecf29c15547/vmlinux-c4e91ea0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/59a7b6f25d98/Image-c4e91ea0.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9993ad918a0b1c0af91c@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: invalid-access in __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+BUG: KASAN: invalid-access in _raw_spin_lock_irqsave+0x5c/0x7c kernel/locking/spinlock.c:162
+Read of size 1 at addr 00000000000013c8 by task syz.0.1041/7144
+
+CPU: 0 UID: 0 PID: 7144 Comm: syz.0.1041 Not tainted 6.15.0-rc4-syzkaller-gc4e91ea0cc7e #0 PREEMPT 
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+ __dump_stack+0x30/0x40 lib/dump_stack.c:94
+ dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
+ print_report+0x5c/0xa0 mm/kasan/report.c:524
+ kasan_report+0xb0/0x110 mm/kasan/report.c:634
+ __kasan_check_byte+0x3c/0x54 mm/kasan/common.c:557
+ kasan_check_byte include/linux/kasan.h:399 [inline]
+ lock_acquire+0xb0/0x2e0 kernel/locking/lockdep.c:5840
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x5c/0x7c kernel/locking/spinlock.c:162
+ kvm_vgic_set_owner+0x18c/0x294 arch/arm64/kvm/vgic/vgic.c:611
+ timer_irqs_are_valid arch/arm64/kvm/arch_timer.c:1573 [inline]
+ kvm_timer_enable+0x1c4/0x794 arch/arm64/kvm/arch_timer.c:1631
+ kvm_arch_vcpu_run_pid_change+0x1f0/0x458 arch/arm64/kvm/arm.c:857
+ kvm_vcpu_ioctl+0xae8/0xc24 virt/kvm/kvm_main.c:4381
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __arm64_sys_ioctl+0x18c/0x244 fs/ioctl.c:892
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+==================================================================
+Unable to handle kernel paging request at virtual address ffef80000000013b
+KASAN: maybe wild-memory-access in range [0xff000000000013b0-0xff000000000013bf]
+Mem abort info:
+  ESR = 0x0000000096000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x04: level 0 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[ffef80000000013b] address between user and kernel address ranges
+Internal error: Oops: 0000000096000004 [#1]  SMP
+Modules linked in:
+CPU: 0 UID: 0 PID: 7144 Comm: syz.0.1041 Tainted: G    B               6.15.0-rc4-syzkaller-gc4e91ea0cc7e #0 PREEMPT 
+Tainted: [B]=BAD_PAGE
+Hardware name: linux,dummy-virt (DT)
+pstate: 604020c9 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : debug_spin_lock_before kernel/locking/spinlock_debug.c:86 [inline]
+pc : do_raw_spin_lock+0x4c/0x2b4 kernel/locking/spinlock_debug.c:115
+lr : __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+lr : _raw_spin_lock_irqsave+0x64/0x7c kernel/locking/spinlock.c:162
+sp : ffff8000a8ef7930
+x29: ffff8000a8ef7940 x28: ddf00000139057c0 x27: ddf0000013906c30
+x26: 0000000000000001 x25: ddf0000013906e10 x24: 0000000000000010
+x23: a3ff8000a91ee000 x22: ddf00000139057c0 x21: ffff8000801fd8a4
+x20: 00000000000013b0 x19: efff800000000000 x18: 00000000000000ff
+x17: 000000000000001f x16: 00000000000000fe x15: 0000000000000000
+x14: 0000000000000000 x13: 00000000ffffffff x12: 0000000000000002
+x11: 0000000000000001 x10: 0ff000000000013b x9 : 0000000000000000
+x8 : 00000000000013b4 x7 : ffff8000870a9afd x6 : ffff800086582ed8
+x5 : 0000000000000000 x4 : 0000000000000000 x3 : ffff8000802a42dc
+x2 : 0000000000000001 x1 : 0000000000000000 x0 : 00000000000013b0
+Call trace:
+ debug_spin_lock_before kernel/locking/spinlock_debug.c:86 [inline] (P)
+ do_raw_spin_lock+0x4c/0x2b4 kernel/locking/spinlock_debug.c:115 (P)
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+ _raw_spin_lock_irqsave+0x64/0x7c kernel/locking/spinlock.c:162
+ kvm_vgic_set_owner+0x18c/0x294 arch/arm64/kvm/vgic/vgic.c:611
+ timer_irqs_are_valid arch/arm64/kvm/arch_timer.c:1573 [inline]
+ kvm_timer_enable+0x1c4/0x794 arch/arm64/kvm/arch_timer.c:1631
+ kvm_arch_vcpu_run_pid_change+0x1f0/0x458 arch/arm64/kvm/arm.c:857
+ kvm_vcpu_ioctl+0xae8/0xc24 virt/kvm/kvm_main.c:4381
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __arm64_sys_ioctl+0x18c/0x244 fs/ioctl.c:892
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Code: d344fd4a aa0003f4 f90007e9 d378fd09 (386a6a6a) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	d344fd4a 	lsr	x10, x10, #4
+   4:	aa0003f4 	mov	x20, x0
+   8:	f90007e9 	str	x9, [sp, #8]
+   c:	d378fd09 	lsr	x9, x8, #56
+* 10:	386a6a6a 	ldrb	w10, [x19, x10] <-- trapping instruction
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
