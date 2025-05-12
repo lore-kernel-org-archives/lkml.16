@@ -1,374 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011033.outbound.protection.outlook.com [52.103.68.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388F01D63EE;
-	Mon, 12 May 2025 23:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747092688; cv=none; b=rWfvRGb6Cqdqe4QE/6tNWw6LeqrUJ22ug1xvc4Bl+M5ON55LofbZsJHDtd6FkKpl5hv/Xt5d4o6viM4b2S4Aza60lVsdKJHCZc7wXHkrh6PhjhqW9BtmnF/Y7+6bLw3/+CdZBjAlnyGNGiO7HsLnQ88vup/b7s9+TQDt5Ah90F4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747092688; c=relaxed/simple;
-	bh=crjaYaG/pauRifZNzTDTxFso+qF6LdA+/D94Pmm1F5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hy6GpsI5PEkNlBDFJ81b1s/YsnkjltLwv/tghZ87SbO57NS4VWEoxvgAhsgbsvgmpWn4nkqqgfxFaLowROLG0uyddX8ULH4NvKWixXTAXoecBbZdblqxUD5VSjSbNLzUKKLS3voh725CfeSm0B55ZZS6J4jvJeNJvCLhVuzIrV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WAkCHu9x; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E55253F2D;
+	Mon, 12 May 2025 23:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747092903; cv=fail; b=PgdgegkruB61CSIVRGK8dMDSVEc86tJE30BDVMwDHN6yXci7p8RFSanCaaMiaXsU7n5VUnS46iQ8ih32XqIXy7w5O4s/s5wR4TOLEiSivTlL2OjknX0UxnujF1K5dpmf5Na2BU15jtDm6ctb6jpxqs4hpLv+IU2/dnKIOpvf70Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747092903; c=relaxed/simple;
+	bh=XGwUAb4kMgHd4JHEANOFe1I9Ebs+RqHQYN2ESKEaKNU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hI37G4F6EZ0W6J2b9xh6F56GzOLGcgW1BNsvDJN19KtWXEERixhybPAmRJZlWr+oQ11mpnZsuG7lLjJCLf2Gn1DYICh9ClOX0nDrtjwhStLcwI1hFrIlgy53NRcKW9l3mVh5hbaitSG7Dl77trjPvjnQJlC3ACpJZmMKzfmKnPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZCVjcz7K; arc=fail smtp.client-ip=52.103.68.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WAkCHu9x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747092686; x=1778628686;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=crjaYaG/pauRifZNzTDTxFso+qF6LdA+/D94Pmm1F5c=;
-  b=WAkCHu9xtXKw/x3sFYcIPgFChHK/eb9uPbh+u0YAqpQBoe1Tr99qK2T2
-   1eEyAcbaujwHUlOftO8/sYdVjnhkKmJ+sWUhusmVwZl6II5/jQvW8P2rl
-   oKOeUYQzylieCGgJ+GQ5bhnZeUJ56XQ9/D1cXXT3ZBVb5U67iDOl5XJz/
-   hDQjtPqpBX0yy9uiMUEXrZx6j7NuP7jm9vCOpKg8gOzNWRl4k1KDSBUkA
-   InFIK03RvP6nWr9UVrPM8R90GgaLWfs5GZQ5u+6qYXbFlCNnHwBMLPJZl
-   E7OZuAT/S3uQ4KyiQrD49dRy+KBNYfPmt7eZgHej2g1oz76W8fVmVQ+7g
-   A==;
-X-CSE-ConnectionGUID: LxUHLa5YSHa2zmgRRM/shQ==
-X-CSE-MsgGUID: bKbRHvggR6i/7B14WLO5uw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="49062203"
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="49062203"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:31:25 -0700
-X-CSE-ConnectionGUID: 0U0NR0/STmaAOg8e1mxmAA==
-X-CSE-MsgGUID: 8BuA5fzBQzGrVc3CgULG4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="142646093"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.233]) ([10.124.220.233])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:31:25 -0700
-Message-ID: <2e7302c6-f3a7-4c45-8a54-61cdb7e9e041@intel.com>
-Date: Mon, 12 May 2025 16:31:23 -0700
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZCVjcz7K"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=t5TVJNgWXOk6GirCWxcOH9CpihPERo/Pr1visrDHc004/OaQggw/xxCXJLn0UZdVJNRGyZGmnVzO5s4H3HEMHsUGEkTHdfYkRdGS0wwX0TgM1ba5A+C814+SwyzU4UdsOMqxuC/KIJQ1gL5beW0zr3tWAaJ2PjVcNgVQs6eEYRVS23oEBwXPoXk/EvF9etXfVmjT8iXDAL3+RqLtP8NI0HcUoTRLiv79JE1kXGz1FpzAMxP4KGLR/sWiZPKoo8etolaiOKtTKuZNNTqTh0R1K6ZTtLfubcKOrda/BLcZi+zvmgF8Qw83F58cCtTvF4r/zhw7MzE6itYnRCtnbulH4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ByQaxxVmotj32spGeQpF6syeRDepQ/CNJXIVMNiHDME=;
+ b=Q7jjXUbBWpDbF31pinjn8rQebUir0jNzERMi/y4BFzKRAIqcZoa2eBIAEhMZLN8e5M+jrBEQ1I6wDVRHJuHYSh0gylbZsKJziKxKG35FjlYW20o5cj3FgvK73EjtA2OrVRO+QapzeVrmhDj21qdc+Jm4JTd7mpKS5W0N6w/CKYMzykntDeJd2NjcfWmc7caBda6ClzebvtkloXxoJxsedwZGeaKPbvMw/rDcalRUdXkwanfNqLLwYN+9fG0VUj9Kyvs8fV8ot+Iu6kpVsof63qzJAd4W1YovzALV5YYm/F1FFiuPRuZ6Nz+1Fa7nWlW8R5sv1YlYM1sVXEJ1pc5cHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ByQaxxVmotj32spGeQpF6syeRDepQ/CNJXIVMNiHDME=;
+ b=ZCVjcz7KxWs6CbQBERj7q0mJiSOKauMu4lxba28Yq7NYzOVHzMdYGeF1DXuhXwD843mYkrT3wz20GgPPDxox45pHn2Z4IKQ8j6LMZa/gIPdDnLz7cEz84ZAy2hNiihMVyJC7ncDUYe6odBzTT6enMRHR+Ax9cXVsUt7zIsTbDLhnokrdvalW59sF5TAF4d/BmMeD60+KWJcyxx4ezBzi+/lGcT0XRqo2sl3DPH9/4arbV7h1GXbk633FRd1wN28NzRiKAkxK/Gap6vxcpkiTQ4GVBG9uZVF6vORe6jqrkcxkqM6jC+QPZD7UsyLl++s6Dt5/MwFGU4bzLWdwYfyKsw==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by PN3P287MB1798.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1a4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Mon, 12 May
+ 2025 23:34:53 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 23:34:53 +0000
+Message-ID:
+ <MA0P287MB22621824B2FD5E2A64006174FE97A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Tue, 13 May 2025 07:34:49 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: riscv: add Sophgo x8 EVB bindings
+To: Han Gao <rabenda.cn@gmail.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
+ sophgo@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1746811744.git.rabenda.cn@gmail.com>
+ <59c175c7bccbd4b5ad241c39b66b0303e0facf81.1746811744.git.rabenda.cn@gmail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <59c175c7bccbd4b5ad241c39b66b0303e0facf81.1746811744.git.rabenda.cn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY4P286CA0024.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:2b0::8) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <5108e6af-5d35-41ff-ae0d-160dbcc09567@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/17] cxl: docs/platform/bios-and-efi documentation
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-5-gourry@gourry.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250512162134.3596150-5-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN3P287MB1798:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54c753db-f05e-4e16-e17e-08dd91ad9851
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8060799009|7092599006|19110799006|15080799009|5072599009|6090799003|461199028|3412199025|440099028|34005399003|10035399007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T3NjM0ZxUm1YbUZBTTdJczZWSUZKcUVPYXU0YVN1cEJPMUhUdm1UL0F0R3lt?=
+ =?utf-8?B?UDZBaVJtSlc1N2Z5RHBCek5XRUkzOEQ3WHhRQTRnLzNraEFFa3l5MGttZENC?=
+ =?utf-8?B?Nmd6clNXblkvelBXeDVkSnBHQ001MFo0VWgwM0pjcUk0aXBIUkRFQTJVZWN6?=
+ =?utf-8?B?UmJKZ2FGUzZvOUgrc1dFOElOeFdzWUJ0SDA3Z1NobUsyQkQrTHFJQmpjUS9a?=
+ =?utf-8?B?V0VEbld3ZzlNc1pYbU0yZTlraEVUU1A2dlNnM0FNZnlWTFJGc0NxbVgyM0xH?=
+ =?utf-8?B?L2hoMGRMN1A3bWlHbVlycVdFSFcvb1Z6UGxlMUtlUHVRYW9ZOGxsTEJ6dW83?=
+ =?utf-8?B?RkIyZncvYmQ3QmphR0pzMFdwVW52M1k0SFVjbmRpUldEMWxxTEYxcVg5ck02?=
+ =?utf-8?B?eWYwb21rc1hzZW5BWXVGUnBHN1lzV2FnT2ZoaDB3R1pZZUQrTFRDaVhCT0ts?=
+ =?utf-8?B?TU55cjNDOW9xTkg0eDRyVFJXUlorRzNTUnJ4S2lBbWpibm5qeWxVdGVKUkxO?=
+ =?utf-8?B?V29ONWJVWlp6UHRxSmsraVBSazZ0NDVzUUtPN3ByNFNtR1J3THViZHVLbGF5?=
+ =?utf-8?B?OTdhODQzRWNWckVSUlRicTl5Ri84YSswZEpRV2NiUEIrUTlXT011VWNtRjBR?=
+ =?utf-8?B?T0lkRUlvNDZFWkkxSzNTTXVVNVJ4d0FGYlpaU0Nza1pnR2VuYzdRT2lBQ21Y?=
+ =?utf-8?B?OWFDRHNSbmVSZDRMUHFMNHpmdnVnQmhtdWRPZzRGRGFHSUZNZ1V5MXRCQTFX?=
+ =?utf-8?B?NW9wUnQxWW8yNlViek9QY0FWRmFRZ0ZqVTdGM0tFc01QeU1WUlhtRmJ3ejdj?=
+ =?utf-8?B?UTM4QVJMNUlNTVQ0cXFpTk1EWVpNWlB1eG1Zc2I3aEhXczhmdHlMeXV4MnUv?=
+ =?utf-8?B?TlFMdFpQUitLaENQUnp4Ynp0QVo5QUIwTmVpTUcyLzBBeVpucyszU2dETW5N?=
+ =?utf-8?B?aGFtTzVSR2FaU2V0ZWp2WlRudmRmZ2JFZkxWZEIybUhrQ09uZ2VZOFRDYTM2?=
+ =?utf-8?B?QkJlbDY1RnhPVmhqdnFuMkxOeGlsVnNiQjg4MkpSMldEZ0R0WkpCNjRadnVE?=
+ =?utf-8?B?SXJabjhwM0Q2TDBjVGpVWU9BeWxoWTdKL2kwdmtpa3gvTjhqaHJKU3FvcGI2?=
+ =?utf-8?B?NVNFWWUxclF4TjFCMzhuTUJsMFlRRnZCTGJVVytlWnB6ZjA2NlNaUmpneHlD?=
+ =?utf-8?B?M0trREwyQTlDczdjaXBEVGZWemMvMzVrQitUdmN1VDMyNWQvdkM2N0VEWSta?=
+ =?utf-8?B?ZzV6akkzdmpQYk5mTU1iSm1hRHN1d0hHK0g0Q3pYWUZzcFBOM3FraC81OGV3?=
+ =?utf-8?B?UmlYaGUrVUhTMlJldzNTMnM0YUZEMmdXNFZkakFjM25LQ1MxSlBVQWlGYVZV?=
+ =?utf-8?B?OTQyTXBuRGRrK1UzaHVyK0M3aGJ1UEtpMERsRGd4MkZKbkd0RitBTGxlU3BN?=
+ =?utf-8?B?T1VWUzA3ZnBoS0hheTRCSzE4UlA0SGVlV0dtVHQxNjMxTmNMcDJ0Q0lUZm5O?=
+ =?utf-8?B?WlJaRXBWeGtWeEU5MFdUVlRnK1BqVWhHazFLbjhpa2Ivckl4eURrRC90RzJE?=
+ =?utf-8?B?dllqbjF0QWxFVTNMTDlCbVNZeU4rS1E4MERhQ3lLSFo3SkdiZDJRRW05Mmlw?=
+ =?utf-8?Q?61DiQJL+zYhYtqlwY/9zmeQKUVrDP+ZYekoeULMzAIcI=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c1Y4WG96ZGRRK2dpY1RWZ3V6bERzTnlVWFBKN2FReUx1QndCdUhYZGduR1FV?=
+ =?utf-8?B?RFlBcW9GaGY1WHVRejQycVZJU1FpR0liY1hXV3VvdWVyamt6UEROWWdoSFE0?=
+ =?utf-8?B?VHU4cy9nWEdtc1l3MFpiUUZNV2NXa3ZHNTUyUzg5YUNHdE1JSXJPUzRFanZy?=
+ =?utf-8?B?RjloRUlOd01xVnJRVGhpSnRvVTBlclVCWW9EeW9NVnVEYm8rcE81ZGNDaUpj?=
+ =?utf-8?B?M3M0TkhyUXRnUlk5VTBLWVpUem94d2ZTMlNlWmNITEpiVXFvVE5GU0xQQU9W?=
+ =?utf-8?B?S1c0UDZ5MFBteEk1aWpwR3U4TzdCLzByam9FcUlqMHUzdHZqRVQvKzlsbENo?=
+ =?utf-8?B?Rk1iYys1Wmt6ZFhrUGtac1R6dVZqUjNhbXNWcTJFd3RhWEhnWGI5UlJLZS81?=
+ =?utf-8?B?SVdodUp5YW5uOEFGSUY5NGRGLzFQNXk2QytiUzFxVTdEdmQ5T3ZKaWJUMVBa?=
+ =?utf-8?B?Zmw4RnF6MHhPRnZWbnBzSW94YzdHaUF5cUhJeHcwTUJISnJUUHFoR3ZOOUFN?=
+ =?utf-8?B?aFg5UnVVYi91WUpiY2FtczVkZ3E1NUttcHlnbGVzSmV5NXExZjlYOWxHVnZh?=
+ =?utf-8?B?TTl3clg0MTlmMENLTFAvYzZlcEpKdmlLY0RPdWd2UU93Y1M5cm9JUTZyOGxK?=
+ =?utf-8?B?MndEYUNGc2JpVWhIckpMWmdoc20zY2ZiSkZ0VUJQTXliazJPeTREb1JLa3BO?=
+ =?utf-8?B?S1FpZ3RMK0RLY3FWaXBqRnVIekl6WXR2Tko4dlNNWFIrSHI3YktWdmcyWjA2?=
+ =?utf-8?B?ZEJncGYzcEpoSlpEUkpCZWtqNThDV0tQRGdzVzEzZU9NenlSb1UvckhiN0N0?=
+ =?utf-8?B?djhZVTB2WVVvb0llSHJ2SnQ2bmU4OExxSnFySGZDamVSUW9kRmVCZDltM0Fo?=
+ =?utf-8?B?U3pwa0hkSlpnWG5pTDZlZ2VTWEthUHZmL0dJOUs5cGI3WTFMRFBqbUFRQnRt?=
+ =?utf-8?B?aHB4d2RoSVdpdjdQc0o5YmF2SEdhQ2gzNCtWRGtTR29hTEVSTjRkcC9xazgw?=
+ =?utf-8?B?QWs0NC90UllyYTdUcUh1dGJMU2F3enFOU0Q4RUlsZ2VWcW9NRGhMTEpoVS9R?=
+ =?utf-8?B?ZTBhZ0ZDa05NWGlHU21uNHdZaE5GVTVDR25LTU9id3hFeEkvcjF6VjZKa091?=
+ =?utf-8?B?MklkRzJQWU4xUDJjc0NOQjJCOHBjd1N1YzA0K3BsLzlCbk5ubGdHdGtFTTZn?=
+ =?utf-8?B?Q0IxQS9pQlhNZUNmZG84NkUxMXlVQTRUTEJJdDlob2s4Q2Y1dEQrVm1pTXZm?=
+ =?utf-8?B?YWVVVFdkN0FMZUk1aEkyQ1hha3I5UDNIdXJac2NhamhYNzFMem13cWdTK0dE?=
+ =?utf-8?B?V1MvUHJPcWFqS1BRdDVSU2ZqMmhzOER1eTI0KzJ5bFpncmNnTm0rS24yVTZm?=
+ =?utf-8?B?QTArSm5uenhURnFmZW96UVZCUS9VRnNPRFpWc1ZTci9vMk1tN25HUTdVY2FV?=
+ =?utf-8?B?R1ZWeUUyVmhvOGJGQWFqL3NUdC91aHNaa2xMQlArMHBObkdpMm1SMnhOQW1j?=
+ =?utf-8?B?RG5OVG8vOGtibVU2elFDYy8wc0ZqYTBpQUQ5RzI1b3ZWS3hISktiV2RDd3M4?=
+ =?utf-8?B?WTE5V2FXUFViNVpZSzZTMzdPWUVxVU9IOExaSkxPWHYzYUk5UjBHMFYrWmRs?=
+ =?utf-8?B?bWhzV0hIYkdTSC81a2xkVUpCRDFOWjlveEF1KzQ2Q0t2LzdKeUJVQXkxbmhw?=
+ =?utf-8?B?M0pxeGdZVDRLcDNHdUtyNGUzYk91SlpDQTZlWjBRbG84TmF2OUFKcFV6R0Zz?=
+ =?utf-8?Q?nGBOjFxA6N+4AURiAeEWNmAbtxLddZJhUWYy1FV?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54c753db-f05e-4e16-e17e-08dd91ad9851
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 23:34:53.1823
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB1798
 
 
-
-On 5/12/25 9:21 AM, Gregory Price wrote:
-> Add some docs on CXL configurations done in bios/efi that affect
-> linux configuration - information vendors may care to consider.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+On 2025/5/10 2:13, Han Gao wrote:
+> Add DT binding documentation for the Sophgo x8 EVB board [1].
+>
+> Link: https://github.com/sophgo/sophgo-hardware/tree/master/SG2042/SG2042-x8-EVB [1]
+>
+> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
 > ---
->  Documentation/driver-api/cxl/index.rst        |   6 +
->  .../driver-api/cxl/platform/bios-and-efi.rst  | 262 ++++++++++++++++++
->  2 files changed, 268 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> 
-> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-> index a2d1c5b18a8a..ffa0462ad950 100644
-> --- a/Documentation/driver-api/cxl/index.rst
-> +++ b/Documentation/driver-api/cxl/index.rst
-> @@ -21,6 +21,12 @@ that have impacts on each other.  The docs here break up configurations steps.
->  
->     devices/device-types
->  
-> +.. toctree::
-> +   :maxdepth: 2
-> +   :caption: Platform Configuration
-> +
-> +   platform/bios-and-efi
-> +
->  .. toctree::
->     :maxdepth: 1
->     :caption: Linux Kernel Configuration
-> diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> new file mode 100644
-> index 000000000000..552a83992bcc
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-> @@ -0,0 +1,262 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +======================
-> +BIOS/EFI Configuration
-> +======================
-> +
-> +BIOS and EFI are largely responsible for configuring static information about
-> +devices (or potential future devices) such that Linux can build the appropriate
-> +logical representations of these devices.
-> +
-> +At a high level, this is what occurs during this phase of configuration.
-> +
-> +* The bootloader starts the BIOS/EFI.
-> +
-> +* BIOS/EFI do early device probe to determine static configuration
-> +
-> +* BIOS/EFI creates ACPI Tables that describe static config for the OS
-> +
-> +* BIOS/EFI create the system memory map (EFI Memory Map, E820, etc)
-> +
-> +* BIOS/EFI calls :code:`start_kernel` and begins the Linux Early Boot process.
-> +
-> +Much of what this section is concerned with is ACPI Table production and
-> +static memory map configuration. More detail on these tables can be found
-> +under Platform Configuration -> ACPI Table Reference.
-> +
-> +.. note::
-> +   Platform Vendors should read carefully, as this sections has recommendations
-> +   on physical memory region size and alignment, memory holes, HDM interleave,
-> +   and what linux expects of HDM decoders trying to work with these features.
-> +
-> +UEFI Settings
-> +=============
-> +If your platform supports it, the :code:`uefisettings` command can be used to
-> +read/write EFI settings. Changes will be reflected on the next reboot. Kexec
-> +is not a sufficient reboot.
-> +
-> +One notable configuration here is the EFI_MEMORY_SP (Specific Purpose) bit.
-> +When this is enabled, this bit tells linux to defer management of a memory
-> +region to a driver (in this case, the CXL driver). Otherwise, the memory is
-> +treated as "normal memory", and is exposed to the page allocator during
-> +:code:`__init`.
-> +
-> +uefisettings examples
-> +---------------------
-> +
-> +:code:`uefisettings identify` ::
-> +
-> +        uefisettings identify
-> +
-> +        bios_vendor: xxx
-> +        bios_version: xxx
-> +        bios_release: xxx
-> +        bios_date: xxx
-> +        product_name: xxx
-> +        product_family: xxx
-> +        product_version: xxx
-> +
-> +On some AMD platforms, the :code:`EFI_MEMORY_SP` bit is set via the :code:`CXL
-> +Memory Attribute` field.  This may be called something else on your platform.
-> +
-> +:code:`uefisettings get "CXL Memory Attribute"` ::
-> +
-> +        selector: xxx
-> +        ...
-> +        question: Question {
-> +            name: "CXL Memory Attribute",
-> +            answer: "Enabled",
-> +            ...
-> +        }
-> +
-> +Physical Memory Map
-> +===================
-> +
-> +Physical Address Region Alignment
-> +---------------------------------
-> +
-> +As of Linux v6.14, the hotplug memory system requires memory regions to be
-> +uniform in size and alignment.  While the CXL specification allows for memory
-> +regions as small as 256MB, the supported memory block size and alignment for
-> +hotplugged memory is architecture-defined.
-> +
-> +A Linux memory blocks may be as small as 128MB and increase in powers of two.
-> +
-> +* On ARM, the default block size and alignment is either 128MB or 256MB.
-> +
-> +* On x86, the default block size is 256MB, and increases to 2GB as the
-> +  capacity of the system increases up to 64GB.
-> +
-> +For best support across versions, platform vendors should place CXL memory at
-> +a 2GB aligned base address, and regions should be 2GB aligned.  This also helps
-> +prevent the creating thousands of memory devices (one per block).
-> +
-> +Memory Holes
-> +------------
-> +
-> +Holes in the memory map are tricky.  Consider a 4GB device located at base
-> +address 0x100000000, but with the following memory map ::
-> +
-> +  ---------------------
-> +  |    0x100000000    |
-> +  |        CXL        |
-> +  |    0x1BFFFFFFF    |
-> +  ---------------------
-> +  |    0x1C0000000    |
-> +  |    MEMORY HOLE    |
-> +  |    0x1FFFFFFFF    |
-> +  ---------------------
-> +  |    0x200000000    |
-> +  |     CXL CONT.     |
-> +  |    0x23FFFFFFF    |
-> +  ---------------------
-> +
-> +There are two issues to consider:
-> +
-> +* decoder programming, and
-> +* memory block alignment.
-> +
-> +If your architecture requires 2GB uniform size and aligned memory blocks, the
-> +only capacity Linux is capable of mapping (as of v6.14) would be the capacity
-> +from `0x100000000-0x180000000`.  The remaining capacity will be stranded, as
-> +they are not of 2GB aligned length.
-> +
-> +Assuming your architecture and memory configuration allows 1GB memory blocks,
-> +this memory map is supported and this should be presented as multiple CFMWS
-> +in the CEDT that describe each side of the memory hole separately - along with
-> +matching decoders.
-> +
-> +Multiple decoders can (and should) be used to manage such a memory hole (see
-> +below), but each chunk of a memory hole should be aligned to a reasonable block
-> +size (larger alignment is always better).  If you intend to have memory holes
-> +in the memory map, expect to use one decoder per contiguous chunk of host
-> +physical memory.
-> +
-> +As of v6.14, Linux does provide support for memory hotplug of multiple
-> +physical memory regions separated by a memory hole described by a single
-> +HDM decoder.
-> +
-> +
-> +Decoder Programming
-> +===================
-> +If BIOS/EFI intends to program the decoders to be statically configured,
-> +there are a few things to consider to avoid major pitfalls that will
-> +prevent Linux compatibility.  Some of these recommendations are not
-> +required "per the specification", but Linux makes no guarantees of support
-> +otherwise.
-> +
-> +
-> +Translation Point
-> +-----------------
-> +Per the specification, the only decoders which **TRANSLATE** Host Physical
-> +Address (HPA) to Device Physical Address (DPA) are the **Endpoint Decoders**.
-> +All other decoders in the fabric are intended to route accesses without
-> +translating the addresses.
-> +
-> +This is heavily implied by the specification, see: ::
-> +
-> +  CXL Specification 3.1
-> +  8.2.4.20: CXL HDM Decoder Capability Structure
-> +  - Implementation Note: CXL Host Bridge and Upstream Switch Port Decoder Flow
-> +  - Implementation Note: Device Decoder Logic
-> +
-> +Given this, Linux makes a strong assumption that decoders between CPU and
-> +endpoint will all be programmed with addresses ranges that are subsets of
-> +their parent decoder.
-> +
-> +Due to some ambiguity in how Architecture, ACPI, PCI, and CXL specifications
-> +"hand off" responsibility between domains, some early adopting platforms
-> +attempted to do translation at the originating memory controller or host
-> +bridge.  This configuration requires a platform specific extension to the
-> +driver and is not officially endorsed - despite being supported.
-> +
-> +It is *highly recommended* **NOT** to do this; otherwise, you are on your own
-> +to implement driver support for your platform.
-> +
-> +Interleave and Configuration Flexibility
-> +----------------------------------------
-> +If providing cross-host-bridge interleave, a CFMWS entry in the CEDT must be
-> +presented with target host-bridges for the interleaved device sets (there may
-> +be multiple behind each host bridge).
-> +
-> +If providing intra-host-bridge interleaving, only 1 CFMWS entry in the CEDT is
-> +required for that host bridge - if it covers the entire capacity of the devices
-> +behind the host bridge.
-> +
-> +If intending to provide users flexibility in programming decoders beyond the
-> +root, you may want to provide multiple CFMWS entries in the CEDT intended for
-> +different purposes.  For example, you may want to consider adding:
-> +
-> +1) A CFMWS entry to cover all interleavable host bridges.
-> +2) A CFMWS entry to cover all devices on a single host bridge.
-> +3) A CFMWS entry to cover each device.
-> +
-> +A platform may choose to add all of these, or change the mode based on a BIOS
-> +setting.  For each CFMWS entry, Linux expects descriptions of the described
-> +memory regions in the SRAT to determine the number of NUMA nodes it should
-> +reserve during early boot / init.
-> +
-> +As of v6.14, Linux will create a NUMA node for each CEDT CFMWS entry, even if
-> +a matching SRAT entry does not exist; however, this is not guaranteed in the
-> +future and such a configuration should be avoided.
-> +
-> +Memory Holes
-> +------------
-> +If your platform includes memory holes intersparsed between your CXL memory, it
+>   Documentation/devicetree/bindings/riscv/sophgo.yaml | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/sophgo.yaml b/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> index a14cb10ff3f0..ee244c9f75cc 100644
+> --- a/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> @@ -34,6 +34,7 @@ properties:
+>         - items:
+>             - enum:
+>                 - milkv,pioneer
+> +              - sophgo,sg2042-x8evb
 
-s/intersparsed/interspersed/
+I wonder the product name is x8evb or sg2042-x8evb?
 
-DJ
+The same question to x4evb.
 
-> +is recommended to utilize multiple decoders to cover these regions of memory,
-> +rather than try to program the decoders to accept the entire range and expect
-> +Linux to manage the overlap.
-> +
-> +For example, consider the Memory Hole described above ::
-> +
-> +  ---------------------
-> +  |    0x100000000    |
-> +  |        CXL        |
-> +  |    0x1BFFFFFFF    |
-> +  ---------------------
-> +  |    0x1C0000000    |
-> +  |    MEMORY HOLE    |
-> +  |    0x1FFFFFFFF    |
-> +  ---------------------
-> +  |    0x200000000    |
-> +  |     CXL CONT.     |
-> +  |    0x23FFFFFFF    |
-> +  ---------------------
-> +
-> +Assuming this is provided by a single device attached directly to a host bridge,
-> +Linux would expect the following decoder programming ::
-> +
-> +     -----------------------   -----------------------
-> +     | root-decoder-0      |   | root-decoder-1      |
-> +     |   base: 0x100000000 |   |   base: 0x200000000 |
-> +     |   size:  0xC0000000 |   |   size:  0x40000000 |
-> +     -----------------------   -----------------------
-> +                |                         |
-> +     -----------------------   -----------------------
-> +     | HB-decoder-0        |   | HB-decoder-1        |
-> +     |   base: 0x100000000 |   |   base: 0x200000000 |
-> +     |   size:  0xC0000000 |   |   size:  0x40000000 |
-> +     -----------------------   -----------------------
-> +                |                         |
-> +     -----------------------   -----------------------
-> +     | ep-decoder-0        |   | ep-decoder-1        |
-> +     |   base: 0x100000000 |   |   base: 0x200000000 |
-> +     |   size:  0xC0000000 |   |   size:  0x40000000 |
-> +     -----------------------   -----------------------
-> +
-> +With a CEDT configuration with two CFMWS describing the above root decoders.
-> +
-> +Linux makes no guarantee of support for strange memory hole situations.
-> +
-> +Multi-Media Devices
-> +-------------------
-> +The CFMWS field of the CEDT has special restriction bits which describe whether
-> +the described memory region allows volatile or persistent memory (or both). If
-> +the platform intends to support either:
-> +
-> +1) A device with multiple medias, or
-> +2) Using a persistent memory device as normal memory
-> +
-> +A platform may wish to create multiple CEDT CFMWS entries to describe the same
-> +memory, with the intent of allowing the end user flexibility in how that memory
-> +is configured. Linux does not presently have strong requirements in this area.
+Regards,
 
+Chen
+
+>             - const: sophgo,sg2042
+>   
+>   additionalProperties: true
