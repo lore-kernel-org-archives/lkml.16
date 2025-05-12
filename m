@@ -1,200 +1,211 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A9D383
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 00:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0EE2BCF5;
+	Mon, 12 May 2025 00:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747009004; cv=none; b=Qb34cfomw6jVJ2Q5NfSL71kod8P+0m6Njkzkqi2SbzQ8oVydK/yHeBEGph/s7Mn4QQVKA8/qq3nGoLXosaQvzdmRCBDz0kMok80uxP9GjG4eOKmyZNA8osoaqGi/oLNKhCmYAMHYK1DKKtnK3oF/DtYCRTjLzpCn+24M7hHRn+4=
+	t=1747009487; cv=none; b=RJKmbNFH0b8yWMv+9lbWxwIbJlUiiIDmZOHOhbKlyOLArF4Wf66ulzMwkaxXrmZshxgBYCVTreF6GiO+e9mzx4M6sGiCMnfeoh9oSDYXEH29bTdByEX843BN9bbybcImkBxJ9/Cu25wqSFLdTMJiW+qEYc6z4py7v5aM0P9+Ct8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747009004; c=relaxed/simple;
-	bh=xoV09mdiQJSToCePrGZnn9SYnxsl083jo5NzXoR2244=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dEKaqkVPRy6oCVjgChIKc78eSaCZgDhiH2dsPfKdq2L0ahlpKvYydDjZrE0Rrsq4SuHdGEN4bmCHSDWJ3IGUc4nTAPHzXu4R3CQUYTLOneVaWXykGWYuKxeH6z/eaheKgppaxtksoAEqeMiYzhyDtPubn03/8buFAVleRu4RFv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85b5878a66cso1102484039f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:16:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747009002; x=1747613802;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pvNDd4D87Qu8SBZrDX1Vdq9qCFaVvE0XZZ5qAOi2pIw=;
-        b=jLWmsBcc6qCpSeFL/yv451yCkoIZZmJ2eigeee5BMOKtLoAZe1kejli1r7d/zbCzKP
-         px1s+mAbsebtsUzrJlXsTNbx+X0uJqVPdL+NLqK6CJJEt0A9pX9OvFuWnmoZLX49iMDD
-         vfc4XnB0chcAGbni0HI6WhBRwEIuuSZl9iJKSrdlINYBUvg+SIw1XjGstxYpmce+gdO2
-         7tZHvmmmLvQKhGXEMsUG83x4/nggZ3oVB5g3g5Fq30YMLa1gUkdXvbCBylnMG1r08ixp
-         N63aU9ne/SHtIXjMbXGoNUqBjuNGOqTn+2VbZqcs9pL5SSZbId6xSTz5kRl4DSDyU9gk
-         nqEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvBOFHTV8aPmPi8UNJjI8f1p5AnyvkS5JAYsOm6JcTRZAb5KCHseE/7hoT+zTsJrZxnnMF+8EMFNqh3Zg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAGwtTo6aCjeehZ1A7BxNR4PS/kJXhoMrZ3Sp4YY8EiwOIV6xN
-	j0jkGM080VMZ5Sg71jrUOnu/6mKOzEDwFIJOFrb3eUSVxkGAhgo/jgHSf+/oXJ/r1DPuwq0UcO2
-	Hu2LlDebD6W4m+fzLfnsN1wn54bHxvvlrIU24mRruTtiTGdP42IrMpiw=
-X-Google-Smtp-Source: AGHT+IE8NHeYIwBO7AS5qW1vcN+PVxIw0m9CJiI4wLq9szZsj+L7gndcKEfJOkwoIeMcUxlDPOlUh+fopj9+g/XNczzSVaz5rJvp
+	s=arc-20240116; t=1747009487; c=relaxed/simple;
+	bh=zyF7Iz4qM9xiYXbMINiUAEmn2lyHCPT7o4H1kBogsB8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HP2gJcv81iZIK2jtKoEDfysW0VooABeiNc6cQ6wivZrlU281v04EpjRoFsmNYQaORj9Lqh+ruSzMTa5abBL5Mr8WMc8wyBHiVXxh1mL0WM6p0uRfGH4ktETjMFidOallGzLxoSK7yf1ML/OP2R1OBHnjWR59sKfRlM9Mso6YbAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=su6FYrxJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="su6FYrxJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE8EC4CEE4;
+	Mon, 12 May 2025 00:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747009487;
+	bh=zyF7Iz4qM9xiYXbMINiUAEmn2lyHCPT7o4H1kBogsB8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=su6FYrxJocYoAPvH0g6kZwkPRvxw1lMI4oJ3+4MlynnTLNKNU2X0Jgm9GU9hyknj+
+	 4+taFrXOyytSIo4ZIOJhGgr2F5zHuIfYkNjGcFFFcv/Oy8HS0oKPo+kD3Qxo/W8/PI
+	 G7UKqOrqXyQeqCBtSZyEk1rjRHQPeWYzCv/6ID0qSlTwhHsI3d1aGPGe6JKI/hFaNj
+	 RAOHgpdjlpOzA0U2GfvJCAF77Gc+kWLmt2W+1yCw0j3vBCo7Fuxp1HMZF3LNqJeSAP
+	 okkpAIStYKSrLiPSjooJ3aDF/KxSN6/Ew5V1XC6iENlwT9CYmSB/gOMF7Ga6IHe3CZ
+	 TG52I/rDpJm8Q==
+Date: Mon, 12 May 2025 09:24:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Paul Cacheux
+ <paulcacheux@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Namhyung Kim <namhyung@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: probes: Fix a possible race in trace_probe_log
+ APIs
+Message-Id: <20250512092442.32527a9e0dca2aeabcd07bf3@kernel.org>
+In-Reply-To: <174684868120.551552.3068655787654268804.stgit@devnote2>
+References: <174684868120.551552.3068655787654268804.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:148d:b0:864:a3d0:ddef with SMTP id
- ca18e2360f4ac-86763580dfdmr1341569039f.6.1747008991296; Sun, 11 May 2025
- 17:16:31 -0700 (PDT)
-Date: Sun, 11 May 2025 17:16:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68213ddf.050a0220.f2294.0045.GAE@google.com>
-Subject: [syzbot] [bpf?] KASAN: vmalloc-out-of-bounds Write in vrealloc_noprof (2)
-From: syzbot <syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me, 
-	song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Sat, 10 May 2025 12:44:41 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-syzbot found the following issue on:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Since the shared trace_probe_log variable can be accessed and
+> modified via probe event create operation of kprobe_events,
+> uprobe_events, and dynamic_events, it should be protected.
+> In the dynamic_events, all operations are serialized by
+> `dyn_event_ops_mutex`. But kprobe_events and uprobe_events
+> interfaces are not serialized.
+> 
+> To solve this issue, introduces dyn_event_create(), which runs
+> create() operation under the mutex, for kprobe_events and
+> uprobe_events. This also uses lockdep to check the mutex is
+> held when using trace_probe_log* APIs.
+> 
+> Reported-by: Paul Cacheux <paulcacheux@gmail.com>
+> Closes: https://lore.kernel.org/all/20250510074456.805a16872b591e2971a4d221@kernel.org/
 
-HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16b1b2bc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91c351a0f6229e67
-dashboard link: https://syzkaller.appspot.com/bug?extid=659fcc0678e5a1193143
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+BTW, this fixes the problem introduced by commit ab105a4fb894
+("tracing: Use tracing error_log with probe events"). However,
+this patch can be applied after commit d262271d0483 
+("tracing/dynevent: Delegate parsing to create function").
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thus, before that commit, we may need another way to fix
+this issue. (e.g. introduce a different mutex.)
+Anyway, to record the correct fixes;
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-707df337.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/bc3944720ea5/vmlinux-707df337.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7bc2f45ae23f/bzImage-707df337.xz
+Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com
+Thanks,
 
-syz.0.0 uses obsolete (PF_INET,SOCK_PACKET)
-==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in vrealloc_noprof+0x396/0x430 mm/vmalloc.c:4093
-Write of size 4064 at addr ffffc9000efa1020 by task syz.0.0/5317
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_dynevent.c |   16 +++++++++++++++-
+>  kernel/trace/trace_dynevent.h |    1 +
+>  kernel/trace/trace_kprobe.c   |    2 +-
+>  kernel/trace/trace_probe.c    |    9 +++++++++
+>  kernel/trace/trace_uprobe.c   |    2 +-
+>  5 files changed, 27 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+> index a322e4f249a5..5d64a18cacac 100644
+> --- a/kernel/trace/trace_dynevent.c
+> +++ b/kernel/trace/trace_dynevent.c
+> @@ -16,7 +16,7 @@
+>  #include "trace_output.h"	/* for trace_event_sem */
+>  #include "trace_dynevent.h"
+>  
+> -static DEFINE_MUTEX(dyn_event_ops_mutex);
+> +DEFINE_MUTEX(dyn_event_ops_mutex);
+>  static LIST_HEAD(dyn_event_ops_list);
+>  
+>  bool trace_event_dyn_try_get_ref(struct trace_event_call *dyn_call)
+> @@ -116,6 +116,20 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Locked version of event creation. The event creation must be protected by
+> + * dyn_event_ops_mutex because of protecting trace_probe_log.
+> + */
+> +int dyn_event_create(const char *raw_command, struct dyn_event_operations *type)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&dyn_event_ops_mutex);
+> +	ret = type->create(raw_command);
+> +	mutex_unlock(&dyn_event_ops_mutex);
+> +	return ret;
+> +}
+> +
+>  static int create_dyn_event(const char *raw_command)
+>  {
+>  	struct dyn_event_operations *ops;
+> diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
+> index 936477a111d3..beee3f8d7544 100644
+> --- a/kernel/trace/trace_dynevent.h
+> +++ b/kernel/trace/trace_dynevent.h
+> @@ -100,6 +100,7 @@ void *dyn_event_seq_next(struct seq_file *m, void *v, loff_t *pos);
+>  void dyn_event_seq_stop(struct seq_file *m, void *v);
+>  int dyn_events_release_all(struct dyn_event_operations *type);
+>  int dyn_event_release(const char *raw_command, struct dyn_event_operations *type);
+> +int dyn_event_create(const char *raw_command, struct dyn_event_operations *type);
+>  
+>  /*
+>   * for_each_dyn_event	-	iterate over the dyn_event list
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 2703b96d8990..3e5c47b6d7b2 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1089,7 +1089,7 @@ static int create_or_delete_trace_kprobe(const char *raw_command)
+>  	if (raw_command[0] == '-')
+>  		return dyn_event_release(raw_command, &trace_kprobe_ops);
+>  
+> -	ret = trace_kprobe_create(raw_command);
+> +	ret = dyn_event_create(raw_command, &trace_kprobe_ops);
+>  	return ret == -ECANCELED ? -EINVAL : ret;
+>  }
+>  
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 2eeecb6c95ee..424751cdf31f 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -154,9 +154,12 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
+>  }
+>  
+>  static struct trace_probe_log trace_probe_log;
+> +extern struct mutex dyn_event_ops_mutex;
+>  
+>  void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+>  {
+> +	lockdep_assert_held(&dyn_event_ops_mutex);
+> +
+>  	trace_probe_log.subsystem = subsystem;
+>  	trace_probe_log.argc = argc;
+>  	trace_probe_log.argv = argv;
+> @@ -165,11 +168,15 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+>  
+>  void trace_probe_log_clear(void)
+>  {
+> +	lockdep_assert_held(&dyn_event_ops_mutex);
+> +
+>  	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
+>  }
+>  
+>  void trace_probe_log_set_index(int index)
+>  {
+> +	lockdep_assert_held(&dyn_event_ops_mutex);
+> +
+>  	trace_probe_log.index = index;
+>  }
+>  
+> @@ -178,6 +185,8 @@ void __trace_probe_log_err(int offset, int err_type)
+>  	char *command, *p;
+>  	int i, len = 0, pos = 0;
+>  
+> +	lockdep_assert_held(&dyn_event_ops_mutex);
+> +
+>  	if (!trace_probe_log.argv)
+>  		return;
+>  
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index 3386439ec9f6..35cf76c75dd7 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -741,7 +741,7 @@ static int create_or_delete_trace_uprobe(const char *raw_command)
+>  	if (raw_command[0] == '-')
+>  		return dyn_event_release(raw_command, &trace_uprobe_ops);
+>  
+> -	ret = trace_uprobe_create(raw_command);
+> +	ret = dyn_event_create(raw_command, &trace_uprobe_ops);
+>  	return ret == -ECANCELED ? -EINVAL : ret;
+>  }
+>  
+> 
 
-CPU: 0 UID: 0 PID: 5317 Comm: syz.0.0 Not tainted 6.15.0-rc5-syzkaller-00038-g707df3375124 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xb4/0x290 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x29a/0x2b0 mm/kasan/generic.c:189
- __asan_memset+0x22/0x50 mm/kasan/shadow.c:84
- vrealloc_noprof+0x396/0x430 mm/vmalloc.c:4093
- push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
- do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
- do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
- do_check_main kernel/bpf/verifier.c:22867 [inline]
- bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
- bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
- __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
- __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f649c58e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f649d4dd038 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007f649c7b5fa0 RCX: 00007f649c58e969
-RDX: 0000000000000048 RSI: 00002000000017c0 RDI: 0000000000000005
-RBP: 00007f649c610ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f649c7b5fa0 R15: 00007fff542287e8
- </TASK>
 
-The buggy address belongs to the virtual mapping at
- [ffffc9000ef81000, ffffc9000efa3000) created by:
- kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x3ffd0 pfn:0x3efe5
-flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
-raw: 04fff00000000000 0000000000000000 dead000000000122 0000000000000000
-raw: 000000000003ffd0 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x102cc2(GFP_HIGHUSER|__GFP_NOWARN), pid 5317, tgid 5316 (syz.0.0), ts 82587533383, free_ts 81110216781
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1d8/0x230 mm/page_alloc.c:1718
- prep_new_page mm/page_alloc.c:1726 [inline]
- get_page_from_freelist+0x21ce/0x22b0 mm/page_alloc.c:3688
- __alloc_pages_slowpath+0x2fe/0xcc0 mm/page_alloc.c:4509
- __alloc_frozen_pages_noprof+0x319/0x370 mm/page_alloc.c:4983
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
- alloc_frozen_pages_noprof mm/mempolicy.c:2372 [inline]
- alloc_pages_noprof+0xa9/0x190 mm/mempolicy.c:2392
- vm_area_alloc_pages mm/vmalloc.c:3591 [inline]
- __vmalloc_area_node mm/vmalloc.c:3669 [inline]
- __vmalloc_node_range_noprof+0x8fe/0x12c0 mm/vmalloc.c:3844
- __kvmalloc_node_noprof+0x3a0/0x5e0 mm/slub.c:5034
- kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
- push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
- do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
- do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
- do_check_main kernel/bpf/verifier.c:22867 [inline]
- bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
- bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
- __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
- __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
-page last free pid 82 tgid 82 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- free_unref_folios+0xb81/0x14a0 mm/page_alloc.c:2782
- shrink_folio_list+0x3053/0x4e90 mm/vmscan.c:1552
- evict_folios+0x417b/0x5110 mm/vmscan.c:4698
- try_to_shrink_lruvec+0x705/0x990 mm/vmscan.c:4859
- shrink_one+0x21b/0x7c0 mm/vmscan.c:4904
- shrink_many mm/vmscan.c:4967 [inline]
- lru_gen_shrink_node mm/vmscan.c:5045 [inline]
- shrink_node+0x3139/0x3750 mm/vmscan.c:6016
- kswapd_shrink_node mm/vmscan.c:6867 [inline]
- balance_pgdat mm/vmscan.c:7050 [inline]
- kswapd+0x1675/0x2970 mm/vmscan.c:7315
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Memory state around the buggy address:
- ffffc9000efa0f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc9000efa0f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffffc9000efa1000: 00 00 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-                               ^
- ffffc9000efa1080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
- ffffc9000efa1100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
