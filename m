@@ -1,182 +1,351 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2080.outbound.protection.outlook.com [40.107.236.80])
+Received: from trager.us (trager.us [52.5.81.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1760C255E47
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076882; cv=fail; b=HP3Ipb78l6XgO8NScS7CnqOoU28xHjT/tK/rphxE+MP0bS2r7LnAYURllLEvvpRn//nt6IUCKoLjYqAzgYogGMz69En0q66qhTFwXLhcKioDx7jC7GeZXoDxv8djrE5RoTHF6BM3L5Zxh5lBIZ4UY9uPEo/oDtWdYPlLChD4Tq4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076882; c=relaxed/simple;
-	bh=f+fV1Nipa2LIu6o2hGksPPWAU0NmB9WPU5LH3bjCaIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Y6qMjtXdZhiFg8BuaTCwMm8vdxXZdmJ+La+FVysN7euAP3/BCs8lb5OZXJgc2MkCr1NKE2lMA96v5grTAMWrZ55gnAAI2n/AuDDsN2iO3eWj/qCwGcx89KISUKJblrQwlvhPSbH5+jyOLTzuTxyGUOCn6mY7CQhQ+fB5psn3D4M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gIFjZKk7; arc=fail smtp.client-ip=40.107.236.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gIFjZKk7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q6+bH2yXTQ60j+s2tJ/2rYZHnadG/KNP1ajqSXMngV/izvqe82ApjwsoEnPJHY/ceuV1V31Wr7dg9/Uji9BtushpKm2WIggNNn/Oe8QrHh+bCQsLe5JQe9He0+y53F7r5nJVBVQVinXVepTspFXe+a3Sy8VOEYpWXLi3BXerOhtPMN9TDyvd0ibwSnPquOtRL5erVoJh9A/znIvcoxn5RRUqcf9Ddx4N/THdW8v3BPLWstLcE5+nXDWPQRWvcavAB6tuvq7tEi0eF9oT5olFEhD7Q4QvUEfnbsC5LetPIuviQXl4x3wsTYrD0pc+reG5780Sgbi7LCPtA1ugQKSreg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lqK6tFZOQudU/tWVocNHf98dUfYGG7phoMGAX/84DVY=;
- b=ueCW+v+BYqa0NLW8Zvazbcp5GvnQ2zPwrhsbOQFKOyV8BF7EB3Lj4+NYc8/5BLhwfL2OQlyAIjo7k+PAbb2/VJfMWwuAHxRanjkO/BeRjSDkDGXpJ9jvCEErQwkJlOk11bD462Qtj+Hz+ithsRvWPnh5CxHAW/p064Kj7C48HFJMO6Bokd9n3O5wk7W6mab6eZrWSIL26pi/7G7uOCrsEc7EwUb1I43w185pbZ1M8aq/9cJmWQap6niF0BVep2LuBEHe8uSQsZm1cB8+gjD7bEIEpd39N3RgJGyIshaXOYxfN9LdVcHnSr2F8lln8VAE0356M/KPwFgQ1YFc80o30Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lqK6tFZOQudU/tWVocNHf98dUfYGG7phoMGAX/84DVY=;
- b=gIFjZKk71+bE8CpD3MPXYcY6nFOlj31ZhKj8j0ce8REL9mB3z4ykoRYQcSNqPUvF0TaD3bBeXqH1IS96YiVmEtnZ8qcMKRZ/U4lkcNlVJm2bjvy+q3/pYWBV/LdsAHC4wm08+f2ic7U/Rm2PK92Fa8KRHK8FizKRi5dshCdIRtf/v5hiAfX+NcR0w2M/opW38cRWkAg94+lfYAIrMr7dbKgyxmUn6drGUM8kq+ld+ux3bkCV54Dt5UBRV/BSGumdksu3IJIOj33y1nwdHHF7/K7XkEy/7UFgIM9YqtVvMSoi6mv7o2Ur/39K+ok98plOHNCnDTC74ka7zM/QlLne7g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by MW5PR12MB5624.namprd12.prod.outlook.com (2603:10b6:303:19d::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Mon, 12 May
- 2025 19:07:57 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%7]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 19:07:57 +0000
-Date: Mon, 12 May 2025 21:07:49 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: David Vernet <void@manifault.com>
-Cc: Tejun Heo <tj@kernel.org>, Changwoo Min <changwoo@igalia.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261C529711A;
+	Mon, 12 May 2025 19:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747076913; cv=none; b=NEfEReRAAQxq8/hEpyhfy7uyAS3FbUaKGx7vn8H0+KP1VwoLpW/f5ZjeuCG1mXRS8vvr0z6aYLlRouwruTAsyvghqhAUnA6Kj75M6xFaUg/e1ON7qi/9Kj91I1EBB47QHSz9ctdWytpbclOf9AIYMq02KhtiSvCqFWMAV2oycoo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747076913; c=relaxed/simple;
+	bh=nRW9f+eigGPoKr6+6VpHEQOXmnb6xPqosWWWmR0XTOo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T3ISrIVxNg2GeUVdCAW2tEOWtD9rx9f1nkv06IFWHmwWEkPjd5Hv9CiKpawuqS+xsBQP8x62RpJi5S/Byoi4YPJ+pSYrCAHMVqjJDzPOJ9i98b2PaMjkH1BUbtuBieDbxd2K+nom82HHLnLL+53o0MgKWdO6pEaCJoYrDlNwKLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
+Received: from [163.114.132.130] (helo=localhost)
+	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <lee@trager.us>)
+	id 1uEYVS-00072V-75; Mon, 12 May 2025 19:08:06 +0000
+From: Lee Trager <lee@trager.us>
+To: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	kernel-team@meta.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Su Hui <suhui@nfschina.com>,
+	Lee Trager <lee@trager.us>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] sched_ext/idle: Make scx_bpf_select_cpu_and() usable
- from any context
-Message-ID: <aCJHBSmb0mjCbiQ4@gpd3>
-References: <20250512151743.42988-1-arighi@nvidia.com>
- <20250512151743.42988-3-arighi@nvidia.com>
- <bylpnof6h3mmeaovba573fer4ikrr5zhr53htbso6zzuw5czzj@tihl7ajm4eaj>
- <aCI9_GBpky0cowH9@gpd3>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCI9_GBpky0cowH9@gpd3>
-X-ClientProxiedBy: MI2P293CA0002.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:45::17) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+Subject: [PATCH net-next v5 4/5] eth: fbnic: Add mailbox support for PLDM updates
+Date: Mon, 12 May 2025 11:54:00 -0700
+Message-ID: <20250512190109.2475614-5-lee@trager.us>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250512190109.2475614-1-lee@trager.us>
+References: <20250512190109.2475614-1-lee@trager.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|MW5PR12MB5624:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd5e021a-d3f4-4ac1-d153-08dd91884e43
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bn2sGJ77zmqcR7jxG9W6m9ziY5HWRfOHXZXi0JwA8KN1OUywfHlOjqxcT7Oo?=
- =?us-ascii?Q?sNJBdFsNBMRhSBZvmHR2nMJY3oQZgYfdrZVUKuOeF1NGvRuTLPWiaUc9jNJP?=
- =?us-ascii?Q?Ni/rltXW5VGai1YnJtpip5eZRYWtdnbb3kxmsvXflvqTc6s5hQJim4at3clu?=
- =?us-ascii?Q?A8GBC6E133gxCtie6N1hh9AZrqMg+KovUDYW5oQxzTYZMhzNaDE0ddC4QCQi?=
- =?us-ascii?Q?ONUM+MJv8QVbAv3VJ6Qu0zhS1w26WbKAvsT/sTJ9HTAmGqPGqjZOl+5gD9Pr?=
- =?us-ascii?Q?n1p2UutZ2uRtCjSz/hJ4rUhCOtaVm5CNCa6mhxXQJ+Poh6J8wR4TuP3o77DO?=
- =?us-ascii?Q?We7LtRhuX3YjNHV10B/I2AE8IkT8YWSnclO+gnKODW2KigiM273EX9pIZzhx?=
- =?us-ascii?Q?PtUF0k/2Go/Aive17SL3Tcf4nQF3suEqDEY4QDM37OGnnsfaxdaNo9AUF0wx?=
- =?us-ascii?Q?uH/NRCBTt41VyxhUp5345/kIOqJ8O+ZVRWzC84d5SslFIVwZwvaxEY3bvmQa?=
- =?us-ascii?Q?U4siOorEGeeXDn1nAgV0fS7spBIGqUdUt+lCyD6TqVVK64RKgTHK3Of1pAzL?=
- =?us-ascii?Q?LggvuE5Kt5EUvzsIV4JIZR5iTbaTGXyTU+33S3s1Peuc6x0eBksbwhGKtKf8?=
- =?us-ascii?Q?XJA7ycr9jS6oKENTWT7hYdMCE8PPXdqujkVoml45zzc5IZFFeiLD75K+M5Me?=
- =?us-ascii?Q?wpq7qTuCqa/5AikPOee0ySnDveozS0sR/eH0wPNXHrtQRbtYDdcg031Wpha4?=
- =?us-ascii?Q?1GeH1K53tAV7aEMRCmcOCq9sNP0f8H7wiQ+1shjwJhZ7bTmOo4zIKLTtc4JC?=
- =?us-ascii?Q?Mu4FzsxX0bnAs4g7iGn3EnJqIbLRQzFNmwmng4Qz+fAUhzxR89ouysri5nvc?=
- =?us-ascii?Q?MnFw7Sd6RybVj6ClFdCDNaEBWJ1xPQJB4Bc48LqZX2pb/dGwWNdpJ/EBwi9z?=
- =?us-ascii?Q?ViqXmd57iHMMgNYnPbTgWNvyPugE0DmTTJMeu4+tBzriEEWtlmyW57HNtAr9?=
- =?us-ascii?Q?WgG9pJv9nVRLwX1jyDwRgYDfSm7dJoSOVFUHTZ1QQg3TlG7EXqzjlP9oHQD2?=
- =?us-ascii?Q?6t+r965jKasoL4pqugjQgEmU9fnJSE+XGsXxF4cFV+DQglMMf6KNU9N+3ELV?=
- =?us-ascii?Q?nv36kad6gdXZFdxFZHcHTAv+XaBEXpeYz0c8UQsXtt0Ef0MlU+ZjsYHVw2q1?=
- =?us-ascii?Q?kB2a1e6lkqiQ8cWhMVKnaBptx5svgf/ZI5d5i1xER2TT743sk+oANObB+0/u?=
- =?us-ascii?Q?JDYPOV6lRwvn7MbtmbEFlND4LVCQQ60uQxp0J1DOwc1GF35CPbLHnxRZTt8y?=
- =?us-ascii?Q?MXLWpFw27rA+S+TfVMHPdnY61mkqxCcjCwkB2Vz0uc8+WrggkA8HhCrtKQ6h?=
- =?us-ascii?Q?nlhk85Mom9+1fo2qPXru9k/B+r+BRAPJ8W3GM6n2Qgp8bhJOAqDdwF8PL21u?=
- =?us-ascii?Q?TwVXCZ86V1U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?evSLfQBRqc+fkT3B3j1RQdwhYMMmwcWl0n1mo7TUydzuYr2MCzAOyKita8hJ?=
- =?us-ascii?Q?vkqXZNiBPOUlgrjMurRmVD9MLKq62XlIZYfMI++jTQm10EkRIogGjDLii/vt?=
- =?us-ascii?Q?H9p16C9PwR19a8O9TstTQcmoH5giWU9iY0RjBRXbaVXmcpyL1HfdnNEDu/7C?=
- =?us-ascii?Q?g1LhAzjtRIiRx3C7iuQvTEVoxdHM64b/e0YrdRdrlQa47lRzXyMEFg0lo8jX?=
- =?us-ascii?Q?HlxbMCixJgz0QMqRw8U9ZJkuUd21JrbOwijSrHKZ/hAFBV27WHo6Uf7nWOYK?=
- =?us-ascii?Q?HCrjXO7GCrXsu7NgbJ+IHmegSX/MZodKMiuzZrDu+PCRymCT5wOdLzQTHIHY?=
- =?us-ascii?Q?Wd974aruTeD7NXC6kP+/xBG1QYOYg5z8fZ8mYmweNlWd00E922AHyr796HOl?=
- =?us-ascii?Q?dhYYOP7Ni8EYUwqL+UCPbbVmBYz6PNC3zlzL//9yJKGWFe7EmTn3+MBnnJsC?=
- =?us-ascii?Q?bIVFwC4a9TN76XHlu+RXmvjIuEdTJp5TrmJwYwlimi7mVbS98IfKKbWb+SPP?=
- =?us-ascii?Q?+n8h6ly4lqDZxXIm0sXT7VpB3xX0yjwnJ/0hDNiqEeg9UnSwWqzBd1oDEkzb?=
- =?us-ascii?Q?+BuBi3E2H6Pb5bbncO1YNPk44piq+4EN3q4dCANHz0KKsngAXGCB7q56l3Vy?=
- =?us-ascii?Q?X0ZTD+4zEcFU+r7NhqoSjRw6CfcanTPr/vdxQHBw0CYKCTW/mR1eUgikBbMV?=
- =?us-ascii?Q?N89fpKqszcP1FeWcOCKGtgL+mGkPrll3tQeWj9I4tHwX9ZeQaes67zQuGylH?=
- =?us-ascii?Q?krLRJpisuE2uaxQ0chtvUsBHoDx21ON41ksKDi9aWy28rse9LkSE4SK51dwG?=
- =?us-ascii?Q?avKSC+4fgomU2SG7ip2F/b6rRN6JVuiC6/9JB4E6g43QQKUKVJjLXk8WtSbZ?=
- =?us-ascii?Q?euA21R9uaTUouxPmOiry3hbLFaljrQfrhGQPH9bg/ChUTBM8CCMruCB6Nv0r?=
- =?us-ascii?Q?eNZafUSGy9+6wu7lva6ZwqfGFavGdH4lGuSm4GTf62N5F+WzJlBX+fsPBtzN?=
- =?us-ascii?Q?2k0od3kuGXZgrxpQ/gRSHWTKmruKwEFyZ0hMXQ1tukEWaV6fKqQUVeOXO0Bq?=
- =?us-ascii?Q?myJi/5e2s0noNKt478Xc3fnUs2rbSKdU9p8h8bhIiUJiQHpUQHveFjjmta8Z?=
- =?us-ascii?Q?U822uJZlwG9Rw8eKPcAfUQBTMuGCpUG9dJoKaloxLIU0QvLKkRYxYVsKXOSW?=
- =?us-ascii?Q?zPxdc+6vb4+x/374AkSevQWMSwvMX/lp3ju+Rz8i5ETp0xIFSfsu9k7DaC/K?=
- =?us-ascii?Q?f6tDPPH5CqnE2z129ZVvC9Cb+GrzG1B8Mbw+V+FZ8MmXNIfFnZ/A/igx8SfX?=
- =?us-ascii?Q?JsF4cj8h/E2hkDANduYOFBoM8q/rzqO/r5mJKr74RK8vtibHHfavhZ2Sjjky?=
- =?us-ascii?Q?9KyfM5/unAS2UAIpkVxl6Ywka8fkRrlCsUgyzzbJkYPXTLS/UcvdJXjqfoJa?=
- =?us-ascii?Q?Gu1SaJj7/Hg86LxQNZLN4Ak9csYZbiubH7iQkbZWQsxrHwH5h8Os5A+UiSC7?=
- =?us-ascii?Q?uR+4a1fVnmYL1b1G0q4D+9xeqTFFXv92Pcr06PGGMQ/+2dd/8AawrXySgLMv?=
- =?us-ascii?Q?7c9bgHH4Ps+9A3iiKsRNx/m6FkOJDj6/P1NM4N4F?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd5e021a-d3f4-4ac1-d153-08dd91884e43
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 19:07:57.2066
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0Day74nEwaXmqCepb9ldrZkj3vIqio1abZzREQa3mrKsQrzAqyKl4hh64eoy6IHpTXJn951BosHfL2uez1Y1SA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5624
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 08:29:26PM +0200, Andrea Righi wrote:
-...
-> > > +	/*
-> > > +	 * If called from an unlocked context, try to acquire
-> > > +	 * cpus_read_lock() to avoid races with CPU hotplug.
-> > > +	 */
-> > > +	if (scx_kf_allowed_if_unlocked())
-> > > +		if (!cpus_read_trylock())
-> > > +			return -EBUSY;
-> > 
-> > Hmm, so this now assumes that this function can be called without the rq lock
-> > held. I'm not sure if that's safe, as scx_select_cpu_dfl() queries p->cpus_ptr,
-> > which is protected by the rq lock. Additionally, scx_bpf_select_cpu_and()
-> > checks p->nr_cpus_allowed which is protected sometimes by pi_lock, sometimes by
-> > the rq lock, etc depending on its state.
-> 
-> Yeah, it makes locking quite tricky. Maybe we can acquire the rq lock if
-> called from an unlocked context, instead of cpu_read_lock(), but then we
-> still have to deal with pi_lock.
+Add three new mailbox messages to support PLDM upgrades:
 
-Actually that might work, since pi_lock should never be held when
-scx_kf_allowed_if_unlocked() is true, so basically we can do:
+* FW_START_UPGRADE - Enables driver to request starting a firmware upgrade
+                     by specifying the component to be upgraded and its
+		     size.
+* WRITE_CHUNK      - Allows firmware to request driver to send a chunk of
+                     data at the specified offset.
+* FINISH_UPGRADE   - Allows firmware to cancel the upgrade process and
+                     return an error.
 
-	if (scx_kf_allowed_if_unlocked())
-		rq = task_rq_lock(p, &rf);
-	...
-	if (scx_kf_allowed_if_unlocked())
-		task_rq_unlock(rq, p, &rf);
+Signed-off-by: Lee Trager <lee@trager.us>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c | 191 +++++++++++++++++++++
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.h |  37 ++++
+ 2 files changed, 228 insertions(+)
 
-Or at least it should cover all current use cases. The tricky one is
-scx_bpf_select_cpu_and() being called via BPF test_run from a user-space
-task (scx_rustland_core).
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+index 6fcba4e8c21e..6a803a59dc25 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+@@ -766,6 +766,188 @@ void fbnic_fw_check_heartbeat(struct fbnic_dev *fbd)
+ 		dev_warn(fbd->dev, "Failed to send heartbeat message\n");
+ }
 
-If we had a way to clearly identify a test_run context, we could restrict
-this to BPF_PROG_TYPE_STRUCT_OPS and BPF_PROG_TYPE_TEST_RUN (but as far as
-I can tell, the latter doesn't exist).
-
-Thanks,
--Andrea
++int fbnic_fw_xmit_fw_start_upgrade(struct fbnic_dev *fbd,
++				   struct fbnic_fw_completion *cmpl_data,
++				   unsigned int id, unsigned int len)
++{
++	struct fbnic_tlv_msg *msg;
++	int err;
++
++	if (!fbnic_fw_present(fbd))
++		return -ENODEV;
++
++	if (!len)
++		return -EINVAL;
++
++	msg = fbnic_tlv_msg_alloc(FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ);
++	if (!msg)
++		return -ENOMEM;
++
++	err = fbnic_tlv_attr_put_int(msg, FBNIC_FW_START_UPGRADE_SECTION, id);
++	if (err)
++		goto free_message;
++
++	err = fbnic_tlv_attr_put_int(msg, FBNIC_FW_START_UPGRADE_IMAGE_LENGTH,
++				     len);
++	if (err)
++		goto free_message;
++
++	err = fbnic_mbx_map_req_w_cmpl(fbd, msg, cmpl_data);
++	if (err)
++		goto free_message;
++
++	return 0;
++
++free_message:
++	free_page((unsigned long)msg);
++	return err;
++}
++
++static const struct fbnic_tlv_index fbnic_fw_start_upgrade_resp_index[] = {
++	FBNIC_TLV_ATTR_S32(FBNIC_FW_START_UPGRADE_ERROR),
++	FBNIC_TLV_ATTR_LAST
++};
++
++static int fbnic_fw_parse_fw_start_upgrade_resp(void *opaque,
++						struct fbnic_tlv_msg **results)
++{
++	struct fbnic_fw_completion *cmpl_data;
++	struct fbnic_dev *fbd = opaque;
++	u32 msg_type;
++	s32 err;
++
++	/* Verify we have a completion pointer */
++	msg_type = FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ;
++	cmpl_data = fbnic_fw_get_cmpl_by_type(fbd, msg_type);
++	if (!cmpl_data)
++		return -ENOSPC;
++
++	/* Check for errors */
++	err = fta_get_sint(results, FBNIC_FW_START_UPGRADE_ERROR);
++
++	cmpl_data->result = err;
++	complete(&cmpl_data->done);
++	fbnic_fw_put_cmpl(cmpl_data);
++
++	return 0;
++}
++
++int fbnic_fw_xmit_fw_write_chunk(struct fbnic_dev *fbd,
++				 const u8 *data, u32 offset, u16 length,
++				 int cancel_error)
++{
++	struct fbnic_tlv_msg *msg;
++	int err;
++
++	msg = fbnic_tlv_msg_alloc(FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_RESP);
++	if (!msg)
++		return -ENOMEM;
++
++	/* Report error to FW to cancel upgrade */
++	if (cancel_error) {
++		err = fbnic_tlv_attr_put_int(msg, FBNIC_FW_WRITE_CHUNK_ERROR,
++					     cancel_error);
++		if (err)
++			goto free_message;
++	}
++
++	if (data) {
++		err = fbnic_tlv_attr_put_int(msg, FBNIC_FW_WRITE_CHUNK_OFFSET,
++					     offset);
++		if (err)
++			goto free_message;
++
++		err = fbnic_tlv_attr_put_int(msg, FBNIC_FW_WRITE_CHUNK_LENGTH,
++					     length);
++		if (err)
++			goto free_message;
++
++		err = fbnic_tlv_attr_put_value(msg, FBNIC_FW_WRITE_CHUNK_DATA,
++					       data + offset, length);
++		if (err)
++			goto free_message;
++	}
++
++	err = fbnic_mbx_map_tlv_msg(fbd, msg);
++	if (err)
++		goto free_message;
++
++	return 0;
++
++free_message:
++	free_page((unsigned long)msg);
++	return err;
++}
++
++static const struct fbnic_tlv_index fbnic_fw_write_chunk_req_index[] = {
++	FBNIC_TLV_ATTR_U32(FBNIC_FW_WRITE_CHUNK_OFFSET),
++	FBNIC_TLV_ATTR_U32(FBNIC_FW_WRITE_CHUNK_LENGTH),
++	FBNIC_TLV_ATTR_LAST
++};
++
++static int fbnic_fw_parse_fw_write_chunk_req(void *opaque,
++					     struct fbnic_tlv_msg **results)
++{
++	struct fbnic_fw_completion *cmpl_data;
++	struct fbnic_dev *fbd = opaque;
++	u32 msg_type;
++	u32 offset;
++	u32 length;
++
++	/* Verify we have a completion pointer */
++	msg_type = FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ;
++	cmpl_data = fbnic_fw_get_cmpl_by_type(fbd, msg_type);
++	if (!cmpl_data)
++		return -ENOSPC;
++
++	/* Pull length/offset pair and mark it as complete */
++	offset = fta_get_uint(results, FBNIC_FW_WRITE_CHUNK_OFFSET);
++	length = fta_get_uint(results, FBNIC_FW_WRITE_CHUNK_LENGTH);
++	cmpl_data->u.fw_update.offset = offset;
++	cmpl_data->u.fw_update.length = length;
++
++	complete(&cmpl_data->done);
++	fbnic_fw_put_cmpl(cmpl_data);
++
++	return 0;
++}
++
++static const struct fbnic_tlv_index fbnic_fw_finish_upgrade_req_index[] = {
++	FBNIC_TLV_ATTR_S32(FBNIC_FW_FINISH_UPGRADE_ERROR),
++	FBNIC_TLV_ATTR_LAST
++};
++
++static int fbnic_fw_parse_fw_finish_upgrade_req(void *opaque,
++						struct fbnic_tlv_msg **results)
++{
++	struct fbnic_fw_completion *cmpl_data;
++	struct fbnic_dev *fbd = opaque;
++	u32 msg_type;
++	s32 err;
++
++	/* Verify we have a completion pointer */
++	msg_type = FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ;
++	cmpl_data = fbnic_fw_get_cmpl_by_type(fbd, msg_type);
++	if (!cmpl_data)
++		return -ENOSPC;
++
++	/* Check for errors */
++	err = fta_get_sint(results, FBNIC_FW_FINISH_UPGRADE_ERROR);
++
++	/* Close out update by incrementing offset by length which should
++	 * match the total size of the component. Set length to 0 since no
++	 * new chunks will be requested.
++	 */
++	cmpl_data->u.fw_update.offset += cmpl_data->u.fw_update.length;
++	cmpl_data->u.fw_update.length = 0;
++
++	cmpl_data->result = err;
++	complete(&cmpl_data->done);
++	fbnic_fw_put_cmpl(cmpl_data);
++
++	return 0;
++}
++
+ /**
+  * fbnic_fw_xmit_tsene_read_msg - Create and transmit a sensor read request
+  * @fbd: FBNIC device structure
+@@ -850,6 +1032,15 @@ static const struct fbnic_tlv_parser fbnic_fw_tlv_parser[] = {
+ 			 fbnic_fw_parse_ownership_resp),
+ 	FBNIC_TLV_PARSER(HEARTBEAT_RESP, fbnic_heartbeat_resp_index,
+ 			 fbnic_fw_parse_heartbeat_resp),
++	FBNIC_TLV_PARSER(FW_START_UPGRADE_RESP,
++			 fbnic_fw_start_upgrade_resp_index,
++			 fbnic_fw_parse_fw_start_upgrade_resp),
++	FBNIC_TLV_PARSER(FW_WRITE_CHUNK_REQ,
++			 fbnic_fw_write_chunk_req_index,
++			 fbnic_fw_parse_fw_write_chunk_req),
++	FBNIC_TLV_PARSER(FW_FINISH_UPGRADE_REQ,
++			 fbnic_fw_finish_upgrade_req_index,
++			 fbnic_fw_parse_fw_finish_upgrade_req),
+ 	FBNIC_TLV_PARSER(TSENE_READ_RESP,
+ 			 fbnic_tsene_read_resp_index,
+ 			 fbnic_fw_parse_tsene_read_resp),
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+index 39dec0792090..0ab6ae3859e4 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+@@ -51,6 +51,10 @@ struct fbnic_fw_completion {
+ 	struct kref ref_count;
+ 	int result;
+ 	union {
++		struct {
++			u32 offset;
++			u32 length;
++		} fw_update;
+ 		struct {
+ 			s32 millivolts;
+ 			s32 millidegrees;
+@@ -68,6 +72,12 @@ void fbnic_mbx_flush_tx(struct fbnic_dev *fbd);
+ int fbnic_fw_xmit_ownership_msg(struct fbnic_dev *fbd, bool take_ownership);
+ int fbnic_fw_init_heartbeat(struct fbnic_dev *fbd, bool poll);
+ void fbnic_fw_check_heartbeat(struct fbnic_dev *fbd);
++int fbnic_fw_xmit_fw_start_upgrade(struct fbnic_dev *fbd,
++				   struct fbnic_fw_completion *cmpl_data,
++				   unsigned int id, unsigned int len);
++int fbnic_fw_xmit_fw_write_chunk(struct fbnic_dev *fbd,
++				 const u8 *data, u32 offset, u16 length,
++				 int cancel_error);
+ int fbnic_fw_xmit_tsene_read_msg(struct fbnic_dev *fbd,
+ 				 struct fbnic_fw_completion *cmpl_data);
+ void fbnic_fw_init_cmpl(struct fbnic_fw_completion *cmpl_data,
+@@ -99,6 +109,12 @@ enum {
+ 	FBNIC_TLV_MSG_ID_OWNERSHIP_RESP			= 0x13,
+ 	FBNIC_TLV_MSG_ID_HEARTBEAT_REQ			= 0x14,
+ 	FBNIC_TLV_MSG_ID_HEARTBEAT_RESP			= 0x15,
++	FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ		= 0x22,
++	FBNIC_TLV_MSG_ID_FW_START_UPGRADE_RESP		= 0x23,
++	FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ		= 0x24,
++	FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_RESP		= 0x25,
++	FBNIC_TLV_MSG_ID_FW_FINISH_UPGRADE_REQ		= 0x28,
++	FBNIC_TLV_MSG_ID_FW_FINISH_UPGRADE_RESP		= 0x29,
+ 	FBNIC_TLV_MSG_ID_TSENE_READ_REQ			= 0x3C,
+ 	FBNIC_TLV_MSG_ID_TSENE_READ_RESP		= 0x3D,
+ };
+@@ -154,4 +170,25 @@ enum {
+ 	FBNIC_FW_OWNERSHIP_FLAG			= 0x0,
+ 	FBNIC_FW_OWNERSHIP_MSG_MAX
+ };
++
++enum {
++	FBNIC_FW_START_UPGRADE_ERROR		= 0x0,
++	FBNIC_FW_START_UPGRADE_SECTION		= 0x1,
++	FBNIC_FW_START_UPGRADE_IMAGE_LENGTH	= 0x2,
++	FBNIC_FW_START_UPGRADE_MSG_MAX
++};
++
++enum {
++	FBNIC_FW_WRITE_CHUNK_OFFSET		= 0x0,
++	FBNIC_FW_WRITE_CHUNK_LENGTH		= 0x1,
++	FBNIC_FW_WRITE_CHUNK_DATA		= 0x2,
++	FBNIC_FW_WRITE_CHUNK_ERROR		= 0x3,
++	FBNIC_FW_WRITE_CHUNK_MSG_MAX
++};
++
++enum {
++	FBNIC_FW_FINISH_UPGRADE_ERROR		= 0x0,
++	FBNIC_FW_FINISH_UPGRADE_MSG_MAX
++};
++
+ #endif /* _FBNIC_FW_H_ */
+--
+2.47.1
