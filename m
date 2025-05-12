@@ -1,84 +1,307 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37647229B0E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E49F51E3DD6;
+	Mon, 12 May 2025 14:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747061066; cv=none; b=rMGxxKmidLRfk8uMv6OIrkRdrEhOrDl6f9+ARvxa5ERmC0dwZRuWk9u90Dlb3tbtCulklJbDL2Cv2dIW+fSzwZZyJRJI79jpwZBNr6GvBwsXp79GLiBQTtZHLnWe1bjKwWLXpDOqjsGKPgiIzY/3ti7Payk0HxXBkbDxDLj2f+M=
+	t=1747061102; cv=none; b=Cg8aP7qUbuIjRwr4QNAUY+mhcXKGqAWeg2I/cDGNiNns9FNES/OUKRxQvBXKepW/hfHkTGH/Ny0Dfedo7rHThq8czlnGIEN9TgD/uBsc61IfQpSfv+j9MQQj7Nw0DSKgY4JCXwU7Ro+ICvZpKVewh5yrTfyM1nXemDNSCTuDUSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747061066; c=relaxed/simple;
-	bh=n5u4ITr5K4JVg0SYgATbC3JFYBGncePZiQGqrLSr8Io=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ji6Jvya9h53j9yaW+b2ot/hO3svsVugl+ZjPWNqVT1lEuDCYujMmgNuVnAUL4l7g1kHqpANSo75uQICRfjFVT50qpINXYGbNbcEndbvCOwsI/18s14HLbCRmeegfvcuJzpAxjN/300n9arouMH0aiQecvUPLAxx1XKedBdIVE9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from cwcc.thunk.org (pool-173-48-112-151.bstnma.fios.verizon.net [173.48.112.151])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54CEi3xO004930
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 10:44:03 -0400
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id C548E15C022D; Mon, 12 May 2025 10:44:02 -0400 (EDT)
-Date: Mon, 12 May 2025 10:44:02 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org,
-        linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-Message-ID: <20250512144402.GA200944@mit.edu>
-References: <2025040820-REJECTED-6695@gregkh>
- <20250509072033.1335321-1-dvyukov@google.com>
- <2025050940-marrow-roundish-8b98@gregkh>
- <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
- <2025050924-marmalade-overfill-fc5a@gregkh>
- <CACT4Y+ZqToLK5R__x8O1ZctsG3wQtRn36JWF2MPRYqY+Zy_CUA@mail.gmail.com>
- <20250509121036.GA92783@mit.edu>
- <CACT4Y+Z8ANddFCpNHvNqq6u6=s_aWoYPwu_1HmH19OWeLBi47A@mail.gmail.com>
+	s=arc-20240116; t=1747061102; c=relaxed/simple;
+	bh=XAITQ9gGYPlNcp5g5iWOivskIm4vLmuGTyg7TfZHkIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RAiMJAnhZGEwFV3HWtVVBpZ+QZBmRnuJ2D5rfs6uyogNlli0JZahyrlXvlR1dQ/O+7ixmB3L3YcJQ6Z49rZBBQPSFABlC7IJ03AwEbAyPCz2zGuzSJrvTEW2ya6AupaXgACcUCYzl27Bi4W57dBIVIOSYkgPQw9+8J1EVcVY2fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39CAC14BF;
+	Mon, 12 May 2025 07:44:47 -0700 (PDT)
+Received: from [10.57.21.218] (unknown [10.57.21.218])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A08D3F673;
+	Mon, 12 May 2025 07:44:53 -0700 (PDT)
+Message-ID: <8f7ab79a-6d9e-4b66-a74e-5fb1dd2beecd@arm.com>
+Date: Mon, 12 May 2025 15:44:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Z8ANddFCpNHvNqq6u6=s_aWoYPwu_1HmH19OWeLBi47A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 13/43] arm64: RME: Support for the VGIC in realms
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-14-steven.price@arm.com>
+ <bf0b9232-36b0-41c5-89a5-6639719cd09e@arm.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <bf0b9232-36b0-41c5-89a5-6639719cd09e@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 03:22:12PM +0200, Dmitry Vyukov wrote:
+On 02/05/2025 12:04, Suzuki K Poulose wrote:
+> On 16/04/2025 14:41, Steven Price wrote:
+>> The RMM provides emulation of a VGIC to the realm guest but delegates
+>> much of the handling to the host. Implement support in KVM for
+>> saving/restoring state to/from the REC structure.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>> Changes from v5:
+>>   * Handle RMM providing fewer GIC LRs than the hardware supports.
+>> ---
+>>   arch/arm64/include/asm/kvm_rme.h |  1 +
+>>   arch/arm64/kvm/arm.c             | 16 +++++++++---
+>>   arch/arm64/kvm/rme.c             |  5 ++++
+>>   arch/arm64/kvm/vgic/vgic-init.c  |  2 +-
+>>   arch/arm64/kvm/vgic/vgic-v3.c    |  6 ++++-
+>>   arch/arm64/kvm/vgic/vgic.c       | 43 ++++++++++++++++++++++++++++++--
+>>   6 files changed, 66 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/
+>> asm/kvm_rme.h
+>> index f716b890e484..9bcad6ec5dbb 100644
+>> --- a/arch/arm64/include/asm/kvm_rme.h
+>> +++ b/arch/arm64/include/asm/kvm_rme.h
+>> @@ -92,6 +92,7 @@ struct realm_rec {
+>>     void kvm_init_rme(void);
+>>   u32 kvm_realm_ipa_limit(void);
+>> +u32 kvm_realm_vgic_nr_lr(void);
+>>     int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap
+>> *cap);
+>>   int kvm_init_realm_vm(struct kvm *kvm);
+>> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+>> index fd83efb667cc..808d7e479571 100644
+>> --- a/arch/arm64/kvm/arm.c
+>> +++ b/arch/arm64/kvm/arm.c
+>> @@ -683,19 +683,24 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+>>           kvm_call_hyp_nvhe(__pkvm_vcpu_put);
+>>       }
+>>   +    kvm_timer_vcpu_put(vcpu);
+>> +    kvm_vgic_put(vcpu);
+>> +
+>> +    vcpu->cpu = -1;
+>> +
+>> +    if (vcpu_is_rec(vcpu))
+>> +        return;
+>> +
+>>       kvm_vcpu_put_debug(vcpu);
+>>       kvm_arch_vcpu_put_fp(vcpu);
+>>       if (has_vhe())
+>>           kvm_vcpu_put_vhe(vcpu);
+>> -    kvm_timer_vcpu_put(vcpu);
+>> -    kvm_vgic_put(vcpu);
+>>       kvm_vcpu_pmu_restore_host(vcpu);
+>>       if (vcpu_has_nv(vcpu))
+>>           kvm_vcpu_put_hw_mmu(vcpu);
+>>       kvm_arm_vmid_clear_active();
+>>         vcpu_clear_on_unsupported_cpu(vcpu);
+>> -    vcpu->cpu = -1;
+>>   }
+>>     static void __kvm_arm_vcpu_power_off(struct kvm_vcpu *vcpu)
+>> @@ -912,6 +917,11 @@ int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu
+>> *vcpu)
+>>               return ret;
+>>       }
+>>   +    if (!irqchip_in_kernel(kvm) && kvm_is_realm(vcpu->kvm)) {
+>> +        /* Userspace irqchip not yet supported with Realms */
+>> +        return -EOPNOTSUPP;
+>> +    }
+>> +
+>>       mutex_lock(&kvm->arch.config_lock);
+>>       set_bit(KVM_ARCH_FLAG_HAS_RAN_ONCE, &kvm->arch.flags);
+>>       mutex_unlock(&kvm->arch.config_lock);
+>> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+>> index f4923fc3b34e..1239eb07aca6 100644
+>> --- a/arch/arm64/kvm/rme.c
+>> +++ b/arch/arm64/kvm/rme.c
+>> @@ -77,6 +77,11 @@ u32 kvm_realm_ipa_limit(void)
+>>       return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_S2SZ);
+>>   }
+>>   +u32 kvm_realm_vgic_nr_lr(void)
+>> +{
+>> +    return u64_get_bits(rmm_feat_reg0,
+>> RMI_FEATURE_REGISTER_0_GICV3_NUM_LRS);
+>> +}
+>> +
+>>   static int get_start_level(struct realm *realm)
+>>   {
+>>       return 4 - ((realm->ia_bits - 8) / (RMM_PAGE_SHIFT - 3));
+>> diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/
+>> vgic-init.c
+>> index 1f33e71c2a73..a81c7f3d1d42 100644
+>> --- a/arch/arm64/kvm/vgic/vgic-init.c
+>> +++ b/arch/arm64/kvm/vgic/vgic-init.c
+>> @@ -81,7 +81,7 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+>>        * the proper checks already.
+>>        */
+>>       if (type == KVM_DEV_TYPE_ARM_VGIC_V2 &&
+>> -        !kvm_vgic_global_state.can_emulate_gicv2)
+>> +        (!kvm_vgic_global_state.can_emulate_gicv2 || kvm_is_realm(kvm)))
+>>           return -ENODEV;
+>>         /* Must be held to avoid race with vCPU creation */
+>> diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-
+>> v3.c
+>> index b9ad7c42c5b0..c10ad817030d 100644
+>> --- a/arch/arm64/kvm/vgic/vgic-v3.c
+>> +++ b/arch/arm64/kvm/vgic/vgic-v3.c
+>> @@ -8,9 +8,11 @@
+>>   #include <linux/kvm_host.h>
+>>   #include <linux/string_choices.h>
+>>   #include <kvm/arm_vgic.h>
+>> +#include <asm/kvm_emulate.h>
+>>   #include <asm/kvm_hyp.h>
+>>   #include <asm/kvm_mmu.h>
+>>   #include <asm/kvm_asm.h>
+>> +#include <asm/rmi_smc.h>
+>>     #include "vgic.h"
+>>   @@ -758,7 +760,9 @@ void vgic_v3_put(struct kvm_vcpu *vcpu)
+>>           return;
+>>       }
+>>   -    if (likely(!is_protected_kvm_enabled()))
+>> +    if (vcpu_is_rec(vcpu))
+>> +        cpu_if->vgic_vmcr = vcpu->arch.rec.run->exit.gicv3_vmcr;
+>> +    else if (likely(!is_protected_kvm_enabled()))
+>>           kvm_call_hyp(__vgic_v3_save_vmcr_aprs, cpu_if);
+>>       WARN_ON(vgic_v4_put(vcpu));
+>>   diff --git a/arch/arm64/kvm/vgic/vgic.c b/arch/arm64/kvm/vgic/vgic.c
+>> index 8d189ce18ea0..c68a41a29917 100644
+>> --- a/arch/arm64/kvm/vgic/vgic.c
+>> +++ b/arch/arm64/kvm/vgic/vgic.c
+>> @@ -10,7 +10,9 @@
+>>   #include <linux/list_sort.h>
+>>   #include <linux/nospec.h>
+>>   +#include <asm/kvm_emulate.h>
+>>   #include <asm/kvm_hyp.h>
+>> +#include <asm/kvm_rme.h>
+>>     #include "vgic.h"
+>>   @@ -23,6 +25,8 @@ struct vgic_global kvm_vgic_global_state
+>> __ro_after_init = {
+>>     static inline int kvm_vcpu_vgic_nr_lr(struct kvm_vcpu *vcpu)
+>>   {
+>> +    if (unlikely(vcpu_is_rec(vcpu)))
+>> +        return kvm_realm_vgic_nr_lr();
+>>       return kvm_vgic_global_state.nr_lr;
+>>   }
+>>   @@ -864,10 +868,23 @@ static inline bool
+>> can_access_vgic_from_kernel(void)
+>>       return !
+>> static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif) || has_vhe();
+>>   }
+>>   +static inline void vgic_rmm_save_state(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
+>> +    int i;
+>> +
+>> +    for (i = 0; i < kvm_vcpu_vgic_nr_lr(vcpu); i++) {
+>> +        cpu_if->vgic_lr[i] = vcpu->arch.rec.run->exit.gicv3_lrs[i];
+>> +        vcpu->arch.rec.run->enter.gicv3_lrs[i] = 0;
+>> +    }
+>> +}
 > 
-> This is not even about auto-mount. Let's say I am mounting a flash
-> drive that you gave me, how do I ensure it's a safe image to mount?
-> Removable media, portable drives, and some use cases related to
-> mounting images stored in local files either deal with images with
-> unknown origin, or can't provide 100% guarantee that the image wasn't
-> tempered with.
+> We also need to save/restore gicv3_hcr/cpuif->vgic_hcr.
 
-From my perspective, the answer is simple.
+I'm not sure how I missed that. Note that the RMM spec restricts the
+fields that the normal world is allowed to set. So I'll also add a new
+define to rmi_smc.h to provide the bitmask:
 
-You run fsck -y on the file system image.  If fsck.FSTYP isn't capable
-of sanitizding the file system image to make it be safe, then that
-should be considered a security bug for fsck.FSTYP, and should be
-reported as such.
+#define RMI_PERMITTED_GICV3_HCR_BITS   (ICH_HCR_EL2_UIE |              \
+                                        ICH_HCR_EL2_LRENPIE |          \
+                                        ICH_HCR_EL2_NPIE |             \
+                                        ICH_HCR_EL2_VGrp0EIE |         \
+                                        ICH_HCR_EL2_VGrp0DIE |         \
+                                        ICH_HCR_EL2_VGrp1EIE |         \
+                                        ICH_HCR_EL2_VGrp1DIE |         \
+                                        ICH_HCR_EL2_TDIR)
 
-Does the user not have the latest version of fsck?  Well, they should.
-If they don't have the latest version of the kernel, or any other
-system software in the TCB, then they could be unsafe.  And that's on
-the user.
+>> +
+>>   static inline void vgic_save_state(struct kvm_vcpu *vcpu)
+>>   {
+>>       if (!static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
+>>           vgic_v2_save_state(vcpu);
+>> +    else if (vcpu_is_rec(vcpu))
+>> +        vgic_rmm_save_state(vcpu);
+>>       else
+>>           __vgic_v3_save_state(&vcpu->arch.vgic_cpu.vgic_v3);
+>>   }
+>> @@ -903,10 +920,28 @@ void kvm_vgic_sync_hwstate(struct kvm_vcpu *vcpu)
+>>       vgic_prune_ap_list(vcpu);
+>>   }
+>>   +static inline void vgic_rmm_restore_state(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
+>> +    int i;
+>> +
+>> +    for (i = 0; i < kvm_vcpu_vgic_nr_lr(vcpu); i++) {
+>> +        vcpu->arch.rec.run->enter.gicv3_lrs[i] = cpu_if->vgic_lr[i];
+>> +        /*
+>> +         * Also populate the rec.run->exit copies so that a late
+>> +         * decision to back out from entering the realm doesn't cause
+>> +         * the state to be lost
+>> +         */
+>> +        vcpu->arch.rec.run->exit.gicv3_lrs[i] = cpu_if->vgic_lr[i];
+>> +    }
+>> +}
+>> +
+>>   static inline void vgic_restore_state(struct kvm_vcpu *vcpu)
+>>   {
+>>       if (!static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
+>>           vgic_v2_restore_state(vcpu);
+>> +    else if (vcpu_is_rec(vcpu))
+>> +        vgic_rmm_restore_state(vcpu);
+>>       else
+>>           __vgic_v3_restore_state(&vcpu->arch.vgic_cpu.vgic_v3);
+>>   }
+>> @@ -976,7 +1011,9 @@ void kvm_vgic_flush_hwstate(struct kvm_vcpu *vcpu)
+>>     void kvm_vgic_load(struct kvm_vcpu *vcpu)
+>>   {
+>> -    if (unlikely(!irqchip_in_kernel(vcpu->kvm) || !
+>> vgic_initialized(vcpu->kvm))) {
+>> +    if (unlikely(!irqchip_in_kernel(vcpu->kvm) ||
+>> +             !vgic_initialized(vcpu->kvm) ||
+>> +             vcpu_is_rec(vcpu))) {
+> 
+> 
+>>           if (has_vhe() &&
+>> static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
+>>               __vgic_v3_activate_traps(&vcpu->arch.vgic_cpu.vgic_v3);
+>>           return;
+>> @@ -990,7 +1027,9 @@ void kvm_vgic_load(struct kvm_vcpu *vcpu)
+>>     void kvm_vgic_put(struct kvm_vcpu *vcpu)
+>>   {
+>> -    if (unlikely(!irqchip_in_kernel(vcpu->kvm) || !
+>> vgic_initialized(vcpu->kvm))) {
+>> +    if (unlikely(!irqchip_in_kernel(vcpu->kvm) ||
+>> +             !vgic_initialized(vcpu->kvm) ||
+>> +             vcpu_is_rec(vcpu))) {
+>>           if (has_vhe() &&
+>> static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
+>>               __vgic_v3_deactivate_traps(&vcpu->arch.vgic_cpu.vgic_v3);
+> 
+> We could return early here for rec, and skip the unnecessary trap steps.
+> Similar for the vgic_load case.
 
-> Question of resources for fixing is orthogonal to classification of an
-> issue (if it's a bug or not, if it's a security issue or not).
+Ack. I think this was me getting confused during a rebase ;) I'll pull
+out the "if (unlikely(vcpu_is_rec())" and return early.
 
-No, but the resources available should inform the trust model, and
-assuming that users should be able to blindly insert any random USB
-thumb drive, or blindly mounting any untrusted file system image, is
-not a trust model that is realistic.
+Steve
 
-If you want a different trust model, then give me the resources.
-Otherwise, don't try to impose an unfunded mandate on me.  Because I
-will ignore you, for the sake of my mental health if nothing else.
+> Rest looks good to me.
+> 
+> Suzuki
+> 
+> 
+>>           return;
+> 
 
-     	    	     	      	 - Ted
