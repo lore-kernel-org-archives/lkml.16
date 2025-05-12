@@ -1,25 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76BD524EF7F;
-	Mon, 12 May 2025 17:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A8D248F49;
+	Mon, 12 May 2025 17:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747070693; cv=none; b=UHVWWMLTF7TS9Pn7CPXB+rDA8cyph564AYJ5dmDQV//5xbdPyqZ4jae8fpil0XWYnoG/GfI+vohSVpsQGwg8Klc6iJ5/pgEgRr0HLhJ76pvsq/GlzuN/PkWhJW9O1/TvNJVIYKBrKLIvlET8vDO0K0V8NS8HDe1gfjPbmQo5v8U=
+	t=1747070736; cv=none; b=M0s8D594KctUUY1WcuzYX4ITo51Ed0y2MS4LR8fb1UyYrHAGDSPdidP9dtX4liSjAySdhGEItT/xNy0xJDFlQvJS8zY3iElCosAXAyaYXS2qs4WKw8b1Y0Ewq4gk9P+r3dhEyg6zbVk15r17O0pBBuqjx6DfGdmtQK2mniui0hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747070693; c=relaxed/simple;
-	bh=6TmfCMCAyxoixsYWShG6j4nRgGDyDLi3rtHlHjWz6VE=;
+	s=arc-20240116; t=1747070736; c=relaxed/simple;
+	bh=TU3XShWd/3DQZ5w580PPlAAMZ0859W3f2Np5t6/nZWM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a/y+Ct+SOVJ38HAoCgjfprlSHSQVKRjPQRXuMuQwCvQ8sA9DoK2g+aWVw3r7yOUb9fzUHqfE8z/DWZ5SvY7WkNpHHqzJjM4wNjxD1sYHF7BP0PtMOtYXdmxcE6dnuUAjihvdZTfb3Pud2kRMzacMDwLS7MFLLtEKJjVP3HMOO1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E14E14BF;
-	Mon, 12 May 2025 10:24:39 -0700 (PDT)
-Received: from [192.168.178.25] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFA493F673;
-	Mon, 12 May 2025 10:24:47 -0700 (PDT)
-Message-ID: <70cadfd8-8d5c-4685-b3d0-23cde6edc522@arm.com>
-Date: Mon, 12 May 2025 19:24:35 +0200
+	 In-Reply-To:Content-Type; b=ieYJPlpfuKbbRFUOfpu0f5DPA8ttjfpKVM2AsokOZ7XcYE1TkvCK4lT+HQLqztvT8FFbVateppQfADO7SNRbOJF2yvC9fKAzckHSIqniPJX4Egj7+6jqEQV5SQyiSZedsiCBbWz2rWmmb2yYfxmxpH4dX3H1qS6t+hqCtamYbRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursu.me; spf=pass smtp.mailfrom=ursu.me; dkim=pass (2048-bit key) header.d=ursu.me header.i=@ursu.me header.b=0iWEBcuI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tXI+SdUX; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursu.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ursu.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ursu.me header.i=@ursu.me header.b="0iWEBcuI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tXI+SdUX"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfout.stl.internal (Postfix) with ESMTP id 0D47C114018A;
+	Mon, 12 May 2025 13:25:33 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Mon, 12 May 2025 13:25:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ursu.me; h=cc:cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1747070732;
+	 x=1747157132; bh=QLAq7amBMiIEJFluFSAOTD34OZxX4AinB+6TsgCfDxs=; b=
+	0iWEBcuIlBUVvcHVKw90RjcfFBz94oAukfZ57Et7Nlmcbw2WJCPVtpaDJmk8+jQE
+	8Z01PMFvFP4DpNMjOIsjS+NHUAY63DxcFVl/jV05XDcvgM/DXPB6OuRUpwev+ky3
+	cqYgdKyuKUZEK49T3e2dAyvX1jLMSf2yiZBswI+IlQaJU+akKkXJvwDMjGyvxvmU
+	aTZd3w2o5AuD7uXmG55R87WI8fYl9Gbv1ZYxMcf7TBV4QsoYvmkkm7m5TliK2hHv
+	i4X44Yl3f3ZttTGYEdSZAQezSVTaM3slkUntBvhAvsosYFHydCUpPKHhrqfKxSF2
+	0otZyjyHAPMyfK4fGn55eQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747070732; x=
+	1747157132; bh=QLAq7amBMiIEJFluFSAOTD34OZxX4AinB+6TsgCfDxs=; b=t
+	XI+SdUXIIg5ZrZNwkarOk1C+JeriTIfTe3oOUhpogHKUf39saWiF33xYD9zLpirx
+	Z+OYtKaaRa9uZhOAIJsWYtWfGlbYQCPh/bk4JKzsgh/+ZAL0zJNRl5Ldgwk7/rvz
+	fZ4jlOweURIXXY4a8280lGp61O2OF4QncdJAOe763PAp6/mlE3qLQ8NLPhcro4Ca
+	KO0+/Xb+OULk4ALxZfIrStqq9z0VkKL1AI81P91mYLc4gPY5E+ZsXJd6uWe/dvC9
+	ZSEqWylIrx1dShJ+f4NCJBhfRQCvp3TnV6QNJAAaxrRG8c/iZ6UWSoyniOPdjbpe
+	bPk5k1XkYbbpFz7kVzq7g==
+X-ME-Sender: <xms:DC8iaGcJ2-JCC-arFCKP5MFPHK_QqT94Q2Vcr4TalyHpXHGv0jYiUQ>
+    <xme:DC8iaAOnn6bYWw9vIirHJG1inlYPO9y3ODyOVRcJR6BQ1jpFTTvyIQmOHTZ_GQTlY
+    aXI1tHg2JPdqdOeHI8>
+X-ME-Received: <xmr:DC8iaHgmK-qqWR1a2Epeac2Y6wLZN0zHMoDwOYANV-yA5lL7BJVnVwellMD3YmQ3WPOu>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddukeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddt
+    vdejnecuhfhrohhmpegglhgrugcufgftufgfuceovhhlrggusehurhhsuhdrmhgvqeenuc
+    ggtffrrghtthgvrhhnpefgudevueefveevleduvddvffeiheekkeffjefgveduudehjeet
+    gfekhffhgffhhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepvhhlrggusehurhhsuhdrmhgv
+    pdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjh
+    grtggvkhesjhgrtggvkhhkrdhinhhfohdprhgtphhtthhopegrnhhthhhonhihrdhlrdhn
+    ghhuhigvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehprhiivghmhihslhgrfidrkh
+    hithhsiigvlhesihhnthgvlhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthgu
+    vghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnh
+    gvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthht
+    ohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvug
+    hhrghtrdgtohhmpdhrtghpthhtohepihhnthgvlhdqfihirhgvugdqlhgrnheslhhishht
+    shdrohhsuhhoshhlrdhorhhg
+X-ME-Proxy: <xmx:DC8iaD-dckSOs7O1aI732q0sIGe917V5FqGd-JQ6KDNU1ukGddcZAA>
+    <xmx:DC8iaCtSa_LS5VlN7llDkqus8s4imA1tTMk-pDGOTWv4C9fwo60AEw>
+    <xmx:DC8iaKE6Dy7DpEUpgXhbtFMEbsQMl-U_K1FGaLRSsuCwetFBwPvKwQ>
+    <xmx:DC8iaBMuMmiONIg7I9mvtDBloVUo-Sp67VJFFQlpZj4El9tY9JwSRg>
+    <xmx:DC8iaExoz0glxMkW1arWs-73jVb1kCkvpsb3z0tqLwaS6Dr_iJzHkhmJ>
+Feedback-ID: i9ff147ff:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 12 May 2025 13:25:29 -0400 (EDT)
+Message-ID: <23bb365c-9d96-487f-84cc-2ca1235a97bb@ursu.me>
+Date: Mon, 12 May 2025 20:25:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,68 +84,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] cpufreq/sched: Move cpufreq-specific EAS checks to
- cpufreq
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Morten Rasmussen <morten.rasmussen@arm.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- Pierre Gondois <pierre.gondois@arm.com>,
- Christian Loehle <christian.loehle@arm.com>
-References: <2999205.e9J7NaK4W3@rjwysocki.net>
- <CGME20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0@eucas1p2.samsung.com>
- <2317800.iZASKD2KPV@rjwysocki.net>
- <1bf3df62-0641-459f-99fc-fd511e564b84@samsung.com>
- <CAJZ5v0j_fFk=EX0Z9_w1twQH-FpntHJvr4d0WSMBM6PevfEqNg@mail.gmail.com>
- <c00ec721-1193-4cfb-87ec-fd98f215720e@samsung.com>
- <CAJZ5v0iLr3JZ49gX9XbkjPNr_wRDMyAtMZDZ6Aoxz1KgQZ_moA@mail.gmail.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH] e1000e: disregard NVM checksum on tgp when valid checksum
+ mask is not set
+To: Jacek Kowalski <jacek@jacekk.info>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
 Content-Language: en-US
-In-Reply-To: <CAJZ5v0iLr3JZ49gX9XbkjPNr_wRDMyAtMZDZ6Aoxz1KgQZ_moA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Vlad URSU <vlad@ursu.me>
+In-Reply-To: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 12/05/2025 14:53, Rafael J. Wysocki wrote:
-> On Mon, May 12, 2025 at 8:48 AM Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->>
->> On 10.05.2025 13:31, Rafael J. Wysocki wrote:
->>> On Sat, May 10, 2025 at 1:49 AM Marek Szyprowski
->>> <m.szyprowski@samsung.com> wrote:
->>>> On 06.05.2025 22:37, Rafael J. Wysocki wrote:
->>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-[...]
-
->>>>    *** DEADLOCK ***
->>> Well, it turns out that trying to acquire policy->rwsem under
->>> sched_domains_mutex is a bad idea.  It was added to
->>> cpufreq_policy_is_good_for_eas() to address a theoretical race, so it
->>> can be dropped safely.  A theoretical race is better than a real
->>> deadlock.
->>>
->>> Please test the attached patch.
->>
->> This fixed the observed issue. Thanks!
->>
->> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On 22.04.2025 10:43, Jacek Kowalski wrote:
+> Some Dell Tiger Lake systems have incorrect NVM checksum. These also
+> have a bitmask that indicates correct checksum set to "invalid".
 > 
-> Thanks for the confirmation!
+> Because it is impossible to determine whether the NVM write would finish
+> correctly or hang (see https://bugzilla.kernel.org/show_bug.cgi?id=213667)
+> it makes sense to skip the validation completely under these conditions.
+> 
+> Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
+> Fixes: 4051f68318ca9 ("e1000e: Do not take care about recovery NVM 
+> checksum")
+> Cc: stable@vger.kernel.org
+> ---
+>   drivers/net/ethernet/intel/e1000e/ich8lan.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c 
+> b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> index 364378133526..df4e7d781cb1 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> @@ -4274,6 +4274,8 @@ static s32 
+> e1000_validate_nvm_checksum_ich8lan(struct e1000_hw *hw)
+>               ret_val = e1000e_update_nvm_checksum(hw);
+>               if (ret_val)
+>                   return ret_val;
+> +        } else if (hw->mac.type == e1000_pch_tgp) {
+> +            return 0;
+>           }
+>       }
+> 
 
-See this on my Hikey 960 as well. I was wondering why Christian L. and I
-didn't catch this with RFT v1.0 (*) on i7-13700K.
+This patch doesn't work for me on an Optiplex 5090 Micro (i5-10500T). I 
+did some debugging and the platform is recognized as Tiger Lake, by the 
+driver, but the checksum valid bit is set even though the checksum is 
+not valid.
 
-But it looks like that
+The network controller works fine if I patch out the validation in 
+netdev.c. The checksum word at address 0x7e read using ethtool is 0xffff.
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=experimental/intel_pstate/eas-take2-extended
-
-mentioned in the patch-header of (*) didn't have this line in its
-
-commit 9ad047cade6b ("cpufreq/sched: Move cpufreq-specific EAS checks to
-cpufreq")
+I'm also a bit confused about why the driver reports the mac type as 
+e1000_pch_tgp even though i5-10500T should be Comet Lake?
