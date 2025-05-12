@@ -1,64 +1,42 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B9612FF69
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B8E12FF69;
+	Mon, 12 May 2025 02:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747018347; cv=none; b=Ux6J1Wf62494P1tnBRqVaRqqF12Yy+QoRBFM9uT9+DPI4gmC7HGA8PrqeZnCyq2E7DFJEZwVtSOIN+M9ZSTvsfDXmoqEEMHD+a4GLpOG7kXK6MPyOt9Eoa7tUMmx0Q1W5lptboxuaN1qKC7PqIOao4aQlEYtm3fQJckT8ZJ6aVI=
+	t=1747018393; cv=none; b=GxZhVzHXN/kvFX7AhJahtX0n/6LFglgORYkOFn9QgafkoZS65mvZZPZQLTS20kqNfKNTCz5axNRSqZ1MP8tsD3JkDLLbd09SEXpdF4Czsm9ZcxQJiMNDNbwWh6WWNnp9IJZ02JqLfaWjy1f4jrdr5y+9fN9kt+3AamYEdryCshw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747018347; c=relaxed/simple;
-	bh=utyiP6vyElN81PyIMsK+us/AfakfjIQqniyhKu7KeNE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=D8+xRTn4x5K7TP7eeQ8PFllVcd79K0Qy3u1DaBXx/Zuf0+YX4wYkbVTyd02F1oUEzeaaRkwSs8X9Au/TUGCj+eEMxOLua1PAwOwNXxBww8UORRHOV4oN28uI+Nll4R4R9P2Yb3jkBKo4E/0qq21NXYD4t+d7izNaqzAoJlH7z48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ToRRi0V0; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ToRRi0V0"
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250512025216epoutp014b06f4361692e6b0881e59a1a5d775f5~_p_uoxDCj1733417334epoutp01U
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:52:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250512025216epoutp014b06f4361692e6b0881e59a1a5d775f5~_p_uoxDCj1733417334epoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747018336;
-	bh=q00Vv5B7I79wSH/4FeoH2FPbsZ9uHubVAqD5eC+PSk8=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=ToRRi0V0YSsEFNCvYiKnQU1fni4nD9QAJY2AjSw0xgPeel4IGQhgU8CR5q3fEnP9P
-	 89uu1s4qjspIKC4cyE4X31uuBOaZvihuExyZ1sqV1S+j/RaoxQfPJE73DwF/8m0/sC
-	 6NwR5mpA9E2wd2qHcwBfeHems/LHexeOsX3sflyo=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250512025215epcas1p1b45c0174b33b0282646bf8691b1f8b5b~_p_uVPfZ50051300513epcas1p1q;
-	Mon, 12 May 2025 02:52:15 +0000 (GMT)
-Received: from epcas1p2.samsung.com (unknown [182.195.36.227]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZwkfR2hkgz6B9m4; Mon, 12 May
-	2025 02:52:15 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250512025214epcas1p273986e3b3bb3451e4039094d21611e86~_p_tXTPQD0738207382epcas1p2a;
-	Mon, 12 May 2025 02:52:14 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250512025214epsmtrp25fcc27bc53954952a5831efcc4ee8ddd~_p_tWp8PT0535705357epsmtrp2m;
-	Mon, 12 May 2025 02:52:14 +0000 (GMT)
-X-AuditID: b6c32a28-46cef70000001e8a-f7-6821625e5444
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	F2.1C.07818.E5261286; Mon, 12 May 2025 11:52:14 +0900 (KST)
-Received: from wkk-400TFA-400SFA.. (unknown [10.253.99.106]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250512025214epsmtip21fa6e92cdcf182e958a8801c79f2ff27~_p_tKzLMC2663626636epsmtip2a;
-	Mon, 12 May 2025 02:52:14 +0000 (GMT)
-From: Wonkon Kim <wkon.kim@samsung.com>
-To: bvanassche@acm.org, James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: wkon.kim@samsung.com
-Subject: [PATCH] ufs: core: Print error value as hex format on
- ufshcd_err_handler()
-Date: Mon, 12 May 2025 11:52:10 +0900
-Message-Id: <20250512025210.5802-1-wkon.kim@samsung.com>
+	s=arc-20240116; t=1747018393; c=relaxed/simple;
+	bh=YMA93/Do0rPqYwX/U4VcdAsbH1ftL8fuolp56Uow/2s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S0Lz2dSonvrh0EDEzVWU8MV/AXDqojnU24tvPPIGFMdecLePfShpXw0kw+wojFPzFV14F/Xjh1Mu0VhJXV4xhk4qh1Bz1PxlVWuS07gkjX4lcKxm+JBnn45ny/nK/3wMAQ2+Sla0kdcLJC9xO0yN0r6Mt1hT9ovUGisGGxylv80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C1A3rw005877;
+	Mon, 12 May 2025 02:52:37 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46hv11hakp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 12 May 2025 02:52:36 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Sun, 11 May 2025 19:52:35 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Sun, 11 May 2025 19:52:32 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <akpm@linux-foundation.org>,
+        <osalvador@suse.de>, <hannes@cmpxchg.org>, <ying.huang@intel.com>,
+        <shy828301@gmail.com>, <linux-mm@kvack.org>, <byungchul@sk.com>,
+        <hyeongtak.ji@sk.com>, <baolin.wang@linux.alibaba.com>
+Subject: [PATCH 6.1.y] mm/vmscan: fix a bug calling wakeup_kswapd() with a wrong zone index
+Date: Mon, 12 May 2025 10:52:31 +0800
+Message-ID: <20250512025231.3328659-1-jianqi.ren.cn@windriver.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,53 +45,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKLMWRmVeSWpSXmKPExsWy7bCSvG5ckmKGwaVNqhbTPvxkttjYz2Fx
-	edccNovu6zvYLJYf/8dksfnSNxYHNo/LV7w9pk06xebx8ektFo++LasYPT5vkgtgjeKySUnN
-	ySxLLdK3S+DK6Jmym6ngIWfFm60tTA2Mszm6GDk4JARMJN59juli5OIQEtjNKLF4SzcjRFxC
-	YsuXbAhTWOLw4WKIkveMEh/mv2fuYuTkYBNQl1j87iI7SEJEYDajRFv7XbBeZqDeA7dsQWqE
-	BYIlfsx7yAJiswioSnxs+c8OYvMKWEj8WtgLFpcQkJfYf/AsM0RcUOLkzCdgcWagePPW2cwT
-	GPlmIUnNQpJawMi0ilEytaA4Nz032bDAMC+1XK84Mbe4NC9dLzk/dxMjOCS1NHYwvvvWpH+I
-	kYmD8RCjBAezkgjvVAb5DCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Kw0j0oUE0hNLUrNTUwtS
-	i2CyTBycUg1MXoHv1znM830TteJK2YV5F/e/vZ261uagca/zT4tNHflfPZVD73qcXX316Ikf
-	pTUZL5b9cVCZdjWK+Z6lha7ecwVVs5NTZ2h+1Jj16HDV04/pjfIPkl5zMKz5sz0n0Fkx9KJo
-	/n6G00f/3TsTMVXwCKPdtO98uVXVprY+989nes9vmVDfIfh626OqGjWn3HVf3e61+U7apXoz
-	nTNEgG/vJsO3O3dwNTTsOn8+bK3qbdlJAb39FQdXNdvYz+ybe+bvJ+fr6iHC/k9W2X308pBs
-	EnrVmPlWsvHrdEZVC9m255Ey5lM4j3260Thx+3ytqIMFi2L27T6y+nfApmPf2DNjOPxfz9mt
-	5nmz9u1296UlL5VYijMSDbWYi4oTAa8w4s+4AgAA
-X-CMS-MailID: 20250512025214epcas1p273986e3b3bb3451e4039094d21611e86
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-cpgsPolicy: CPGSC10-711,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250512025214epcas1p273986e3b3bb3451e4039094d21611e86
-References: <CGME20250512025214epcas1p273986e3b3bb3451e4039094d21611e86@epcas1p2.samsung.com>
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=TZCWtQQh c=1 sm=1 tr=0 ts=68216274 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=ph6IYJdgAAAA:8 a=ID6ng7r3AAAA:8 a=SRrdq9N9AAAA:8 a=QyXUC8HyAAAA:8 a=ufHFDILaAAAA:8
+ a=Z4Rwk6OoAAAA:8 a=t7CeM3EgAAAA:8 a=H6QpYm678JWB0EKp6agA:9 a=ty6LBwuTSqq6QlXLCppH:22 a=AkheI1RvQwOzcTXhi5f4:22 a=ZmIg1sZ3JBWsdXgziEIF:22 a=HkZW87K1Qel5hWWM3VKY:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: 67dy1ERlcH9PLZy0Ers4U-qDbnxz99yL
+X-Proofpoint-ORIG-GUID: 67dy1ERlcH9PLZy0Ers4U-qDbnxz99yL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAyOSBTYWx0ZWRfX9/fCTKpihrbG ARjz3102fQQH9zHIHdoPkIAxAQFSoe7LPixXTY2jHCQaFl87pRuOVKuyXP4wZbdEU9YEpPDsrUE C+b6J1yGQQIg6CjnasvE9Ltr6wjhS151el5YsWh+WIyg+a1u442hFcIP7tiFC2DBCB3717MsEIv
+ TvBuFP+Yc+fl6UGeCQiGMNyBN8DJzdeErGlf91QLxs6NtSZCpikpxfgstbDmss86JaDKCi86lrc ievwuMqa6T57JqKcgMtbAT+SxyFnlC3UXeS/xpl7ixslWpdeUfmZMYS77losSfM302TgI7hmTJv VdvXhxwuXfXPNKKWJQFXS0JiK1ydlasYX9lKfypdkrYpYkxKpXvfEY7niUMMiVypNiP6S3g2/lM
+ 7q3tGV3BGjQNrfiFOp+Spowh6epVHPw3ddG0y7i8LwITveKd9P41PvC3pxddW+XFqNK/RzYP
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ phishscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2505120029
 
-From: wkon-kim <wkon.kim@samsung.com>
+From: Byungchul Park <byungchul@sk.com>
 
-It is better to print saved_err and saved_uic_err in hex format.
-Integer format is hard to decode.
+[ Upstream commit 2774f256e7c0219e2b0a0894af1c76bdabc4f974 ]
 
-[ 1024.485428] [2: kworker/u20:13:28211] exynos-ufs 17100000.ufs: ufshcd_err_handler started; HBA state eh_fatal; powered 1; shutting down 0; saved_err = 131072; saved_uic_err = 0; force_reset = 0; link is broken
+With numa balancing on, when a numa system is running where a numa node
+doesn't have its local memory so it has no managed zones, the following
+oops has been observed.  It's because wakeup_kswapd() is called with a
+wrong zone index, -1.  Fixed it by checking the index before calling
+wakeup_kswapd().
 
-Signed-off-by: Wonkon Kim <wkon.kim@samsung.com>
+> BUG: unable to handle page fault for address: 00000000000033f3
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 0 P4D 0
+> Oops: 0000 [#1] PREEMPT SMP NOPTI
+> CPU: 2 PID: 895 Comm: masim Not tainted 6.6.0-dirty #255
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+>    rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
+> RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
+> Code: (omitted)
+> RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
+> RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
+> RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
+> R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
+> R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
+> FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+> ? __die
+> ? page_fault_oops
+> ? __pte_offset_map_lock
+> ? exc_page_fault
+> ? asm_exc_page_fault
+> ? wakeup_kswapd
+> migrate_misplaced_page
+> __handle_mm_fault
+> handle_mm_fault
+> do_user_addr_fault
+> exc_page_fault
+> asm_exc_page_fault
+> RIP: 0033:0x55b897ba0808
+> Code: (omitted)
+> RSP: 002b:00007ffeefa821a0 EFLAGS: 00010287
+> RAX: 000055b89983acd0 RBX: 00007ffeefa823f8 RCX: 000055b89983acd0
+> RDX: 00007fc2f8122010 RSI: 0000000000020000 RDI: 000055b89983acd0
+> RBP: 00007ffeefa821a0 R08: 0000000000000037 R09: 0000000000000075
+> R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
+> R13: 00007ffeefa82410 R14: 000055b897ba5dd8 R15: 00007fc4b8340000
+>  </TASK>
+
+Link: https://lkml.kernel.org/r/20240216111502.79759-1-byungchul@sk.com
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+Reported-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
+Fixes: c574bbe917036 ("NUMA balancing: optimize page placement for memory tiering system")
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
- drivers/ufs/core/ufshcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Verified the build test
+---
+ mm/migrate.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 5cb6132b8147..eb0ce35a7a9c 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -6572,7 +6572,7 @@ static void ufshcd_err_handler(struct work_struct *work)
- 	hba = container_of(work, struct ufs_hba, eh_work);
- 
- 	dev_info(hba->dev,
--		 "%s started; HBA state %s; powered %d; shutting down %d; saved_err = %d; saved_uic_err = %d; force_reset = %d%s\n",
-+		 "%s started; HBA state %s; powered %d; shutting down %d; saved_err = 0x%x; saved_uic_err = 0x%x; force_reset = %d%s\n",
- 		 __func__, ufshcd_state_name[hba->ufshcd_state],
- 		 hba->is_powered, hba->shutting_down, hba->saved_err,
- 		 hba->saved_uic_err, hba->force_reset,
+diff --git a/mm/migrate.c b/mm/migrate.c
+index e37b18376714..7b986c9f4032 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2422,6 +2422,14 @@ static int numamigrate_isolate_page(pg_data_t *pgdat, struct page *page)
+ 			if (managed_zone(pgdat->node_zones + z))
+ 				break;
+ 		}
++
++		/*
++		 * If there are no managed zones, it should not proceed
++		 * further.
++		 */
++		if (z < 0)
++			return 0;
++
+ 		wakeup_kswapd(pgdat->node_zones + z, 0, order, ZONE_MOVABLE);
+ 		return 0;
+ 	}
 -- 
 2.34.1
 
