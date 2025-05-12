@@ -1,135 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302AB1E9B26;
-	Mon, 12 May 2025 14:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D21A1EB9E1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059316; cv=none; b=LRVosaDH0DAj+NAJtJZ16FoVo5s8xZmR1AezhkZ6bPn2TrU+IWfv29K74zMPfQJtYlxiPOQCZGFUlLWz3Qyv4h/49iBCfjWI3OEMpTtfh+7qzTdvBQ1HZZyHbymTybw4YtkDjCRNa+QRKIV5afRbOHUdO6PBeOuos9jE4mmpzrk=
+	t=1747059333; cv=none; b=eph/X35pBYEO/ddDFaZRGAHpCIXcGpgYGb0GdjwLQVcCAHZWMgTWqPsC5veL5aDrWIfIBc68Bui7PqG4qcijsu7f0WBP8U+OPpStzQNH+Y2T+ALrF0gTVy/efXSRoVf5DckYdd9Sf19MA8SweXGX+plXjKh8nyVg3wMrQ0kWz3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059316; c=relaxed/simple;
-	bh=dfONP3e4U/F57uoCSRBd9jnVS+K1EGl3ODa9VLH9Bw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QHh6k0aNowWQxjFIBOzWMSg+nEqgYV921pRXd/rG9OhqkQf+qqOWWvMKLjPLjf6zwOGDUHmG0UuUETISUxH+wjrgqnA4JU08OlQYHxs1OOO8r3F0jI7fi4je52cudlmOpg9rZfTEZdbOVX8OJI8e7nFXPMbENNeCpq5AKoD7+WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E3QKam8E; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747059333; c=relaxed/simple;
+	bh=nNU/RFz2rUbNl7nLf7Z8+rvRbBvzu5h/opPgTl9yzxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=u8isVe+W+yMU45uP6iVgEiGKmt9MENWdDTpScSoPUJBRzXHtaT4gDKD6JFx3UK4Hd8olIBycGKFfp39uCE+AwjKjRrbYhqctpr7atY4YpoefT8ZOplyfQyfQIqeCDKHQTAVuUv0u6n4fPwSwspCnCu4+rL2CZBkPOhA5l1HL1aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bw8UddU/; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E3QKam8E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747059314; x=1778595314;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=dfONP3e4U/F57uoCSRBd9jnVS+K1EGl3ODa9VLH9Bw8=;
-  b=E3QKam8EBatqGjWSXWFxNOiDms54iChtt3n79BCAA3Tmofr4JAZHuwt6
-   j30yrc0QGWD52h/y/LJnB2AdZTuyzQ4/L9jJH04lfACpy2MiJFNBCFBBo
-   8992Z5OM4I3YGz+CFB1DLyhMAb1/ZCBqKERPgxiGhqnv3tBCZVdF99CQ3
-   q/Z+ZCwnxVfK6r5+iuizKdz3A7h+dDSgTveCaocfyVBCaW1nkgyRDxaKc
-   sXgf0LyRQBavL5xosluGrrUdh1crmuZIHfsUxVyT/PtKKyxtkUwbpII8G
-   TTbMZrxbQSyhk9HGyj1DP73h5pPJ8lDbuIPOJ4ovS5QJCHT1eUjyvMZTE
-   w==;
-X-CSE-ConnectionGUID: qkCkTHzyRK+gQY/aXrAeGw==
-X-CSE-MsgGUID: wCVG6ad6Q1iAgQvFI9fFMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="60201652"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="60201652"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 07:15:13 -0700
-X-CSE-ConnectionGUID: pf3t37W5TEeqZTmIlLtlPg==
-X-CSE-MsgGUID: jA0dgYZaQvCt5C0vvV/qsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="142324184"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 07:15:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uETvr-00000000vxo-21U5;
-	Mon, 12 May 2025 17:15:03 +0300
-Date: Mon, 12 May 2025 17:15:03 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rahul Pathak <rpathak@ventanamicro.com>
-Cc: Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, rahul@summations.net
-Subject: Re: [PATCH v3 10/23] clk: Add clock driver for the RISC-V RPMI clock
- service group
-Message-ID: <aCICZxMT6Y7k7Kz1@smile.fi.intel.com>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-11-apatel@ventanamicro.com>
- <aCGeTPS4WiGYMTTo@smile.fi.intel.com>
- <CA+Oz1=ZXJOrXT28V+MVSmvh-4ddnwZ8hJAFzB6tmNbcohLMT=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bw8UddU/"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72ecb4d9a10so4948137a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747059329; x=1747664129; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5ZkQGRREx70HQmMXnJ2JUFahkKh8y7M/M223iiroUNg=;
+        b=bw8UddU/wc/Hi3X8dltpVwdE0zslMaZ6BZxCPfOevQSpYb4Joy0N1owoi+5k/um9aI
+         U4oWu6+cdt2i+gWJInEiRFZQHMiv9lL2QCKq/BwsHTuIMvVCDjDSVXmSGrXqWRQJphH3
+         tBIScIESt4qK1aHJ6u3JgeXJ4xUcgBGgCZ7I22+TJ5/zxoVaVWJ95IMlZgfjnHLlJttP
+         3SMtexBUt77PkAPGk7oQibFHcWetavzBbH3xhfl1Jl3h2XM66Jl+6RUjsjb6ew4NPgHP
+         7af8EBC/c/OGFx/1MMIIKBGfI46jQ+71XfXw1Ljy+dPrQLeTTSzt7u01BAhT3yTVQ6Ff
+         ipkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747059329; x=1747664129;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5ZkQGRREx70HQmMXnJ2JUFahkKh8y7M/M223iiroUNg=;
+        b=n8zJRfquRThW3MRW3t9JHLs16XOyiomPYXI/0jNmq8jxsIsnUijNJJDQXSYa0vB748
+         i98FXGY0QXt5r4aAiW+Mw/yWoay+5PoyTBaU69Fc/mw241n/dlXFK7h791Fz25XVSpJ8
+         DXkBnXSCgWOn4c8KRADMGCZSg2h2xg+nhKWD7cxTBmeo11R2mQ2saf//1bJ7PKGBWRsg
+         SCT8Zsg/jhfl7lPVeOLqg7cjAOMQJLrjL54j8fcVOi5t7fUSRILxfPrX+Gybz9B9Uksj
+         UcNFsETgsp5PF+rKsL0eU6r/jdro7yt4aaOSc8coAOnluCuE3rfXZCO56bO5V4Fqo0rL
+         reVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDv04o3rQdjOhX1A/IbHOEHsCENyMnH5v7d5fawTm402VeRrMIj+bHWGmtJIYRqCvU287ABr2URP6MPvM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws2pN4Hem+ua7VtNJwvIwaAOcalarKi4r05n04jn57qkHVr6SJ
+	BSNZzJIijP+yhSIp66bvcwPLC55b2NkAK0VIrAtgTGcV/ileeT4Y0SYNzzh98pQ=
+X-Gm-Gg: ASbGnctr2ObwKX6r1hceo5tpmQ3qeGDNj6fVPwsDsVWukr39QXLlpKBuStkHjyxDGAQ
+	HXWjwaaEYgm1GZXU72VCxqOEpkL+Lz3aRHuWU5p5f1XCi/5NzoeGS3AckektPxvV80PRtIzOaqh
+	2EbJAPLTMCrPsTpRZiQMzMfJldhNiCIPwGgusLLe9bnHgiTfiTMDE8UVyPrFFhkKjyfGwMQkrRG
+	M2jhHn5bS4en9avuTrobm8d/TnPi8gE0Eb0ZY90jQEXJwmquzv3rZUPIzylUl6G8f4UuBBn7697
+	LlmMVfwGpIFSwNrdSoIatFLr4FBKZDblOkyUVUda7bm+QsknJ4C179mmm++4aAvuBuhFGul4GQQ
+	XVotcP8o4aNLgERIOH3CsN2tBe5Kl
+X-Google-Smtp-Source: AGHT+IHCEnMxUGxiLvsEuMQ4xMc51y5Br4FOqLhzjMrNBPxOpyphbh4RrGySc1szYHqvL/h+260LuA==
+X-Received: by 2002:a05:6830:6611:b0:72b:a465:d93c with SMTP id 46e09a7af769-73226b09920mr8559233a34.20.1747059328997;
+        Mon, 12 May 2025 07:15:28 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:fd2e:ffda:4c42:b314? ([2600:8803:e7e4:1d00:fd2e:ffda:4c42:b314])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d78fbsm1563212a34.32.2025.05.12.07.15.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 07:15:27 -0700 (PDT)
+Message-ID: <5f373faf-2ca4-405d-8709-2ec91a05f86d@baylibre.com>
+Date: Mon, 12 May 2025 09:15:25 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+Oz1=ZXJOrXT28V+MVSmvh-4ddnwZ8hJAFzB6tmNbcohLMT=g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/10] Documetation: ABI: add sinc1 and sinc5+pf1
+ filter
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
+ robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250509105019.8887-1-antoniu.miclaus@analog.com>
+ <20250509105019.8887-11-antoniu.miclaus@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250509105019.8887-11-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 03:28:37PM +0530, Rahul Pathak wrote:
-> On Mon, May 12, 2025 at 12:38 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Sun, May 11, 2025 at 07:09:26PM +0530, Anup Patel wrote:
-
-...
-
-> > > +struct rpmi_get_supp_rates_rx {
-> > > +     u32 status;
-> > > +     u32 flags;
-> > > +     u32 remaining;
-> > > +     u32 returned;
-> > > +     u32 rates[];
-> > > +};
-> >
-> > Is it ABI? (I mean if this is interface with some kind of FW)
-> > If so, Use proper endianess aware types. Same Q for all data
-> > types defined in this driver.
+On 5/9/25 5:50 AM, Antoniu Miclaus wrote:
+> Add sinc1 and sinc5+pf1 filter types used for ad4080 device.
 > 
-> Sure.
+> Add these two options into the filter_type available attribute.
 > 
-> It's the message format defined by the RISC-V RPMI spec.
-
-So, use the endianess as provided. Or is it always native endianess?
-
-...
-
-> > > +     devm_kfree(context->dev, rx);
-> >
-> > Why?! This is a red flag to point that here is misunderstanding or abuse of
-> > managed resources approach. Either use __Free() from cleanup.h or don't call
-> > devm_kfree(). The latter must have a very good justification to explain why.
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Yeah, I think it's better to use kzalloc for this case and then free it.
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index b8838cb92d38..2dfb74b5a990 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -2275,6 +2275,8 @@ Description:
+>  		Reading returns a list with the possible filter modes. Options
+>  		for the attribute:
+>  
 
-Instead of freeing it explicitly consider using cleanup.h, i.e. __free().
+Should also add:
 
--- 
-With Best Regards,
-Andy Shevchenko
+		* "none" - Filter is disabled/bypassed.
 
+> +		* "sinc1" - The digital sinc1 filter. Fast 1st
+> +		  conversion time. Poor noise performance.
+>  		* "sinc3" - The digital sinc3 filter. Moderate 1st
+>  		  conversion time. Good noise performance.
+>  		* "sinc4" - Sinc 4. Excellent noise performance. Long
+> @@ -2290,6 +2292,7 @@ Description:
+>  		* "sinc3+pf2" - Sinc3 + device specific Post Filter 2.
+>  		* "sinc3+pf3" - Sinc3 + device specific Post Filter 3.
+>  		* "sinc3+pf4" - Sinc3 + device specific Post Filter 4.
+> +		* "sinc5+pf1" - Sinc5 + device specific Post Filter 1.
+>  
+>  What:		/sys/bus/iio/devices/iio:deviceX/filter_type
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY-voltageZ_filter_type
 
