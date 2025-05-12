@@ -1,88 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B65C25B674;
-	Mon, 12 May 2025 10:43:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF962571DF;
+	Mon, 12 May 2025 10:44:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747046580; cv=none; b=eUmFBBs2zl+IoyscyUqAeq9G6CPaC5eywsIUqiD/IH8pT4hbz+KysRFUuObEfDVuivdNSCQWf4mHXtmKUu08ckcd28BsR6AABB7MmKjQZ8bdlE9STO01qtN4/jkahGQ/7fUqFamdZBfzX7ovpr+gHcNbYnfMOsr2lZWaBNyf3Tk=
+	t=1747046660; cv=none; b=FDkr/c2+l8CgCZsALZM9fyLVMhBo8tAapw5l4yW8yBL4JI9X0bp5DCk1V2v6IZ+SQEKoJeU9TzNgJLUXj26Aw+4HIUx8PWk8/RlppvdkZk11xUIo1qz0SArzGX+A21MreEcyxJBa6C5I0GZ6pfy1Ve5js3nbMUAdBjTzDzBCThw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747046580; c=relaxed/simple;
-	bh=6x1QLi7LcIsqD3IL8qJqmDDVfdxhcPb5ez1PwvD2gPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LsVbBnOJbkftma0aC6K8MvflaSL44yM2ppoyymEMvgzhQAjX9FjRyeCqhv/yYu5isE+38NIpQoZW2c6myaS18EhdVPbn9NC3A1bnsWbHpn1/ORaJRmyiHLrMFxEWfeh/6UNE5tDBIhRY0tL/z2MaMls1moytA6smZ6rNH6+eFHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIVEnHDg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747046660; c=relaxed/simple;
+	bh=xpA2W98QKz/yXqwDYFUSH3uYiK9VbI4MNRHLwNI5HJU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=oG1f0Kpj6Y8aRtv7zDG3nyJw+TVRM4qZD2sJ8IgTPIId/sesHynPrmYxMZyJCUlec/Vao4U4niLo51cyKiUo/Vf90cEwqVFC+SjGSC0kvvjsmqIMbmvAp7Ok2MrnILU3MLZ+ahee/R8VxfmVFPHOPm1XAHX8seBJKxWS452m+1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixckrZv5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIVEnHDg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AECF8C4CEE7;
-	Mon, 12 May 2025 10:42:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixckrZv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE55C4CEE7;
+	Mon, 12 May 2025 10:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747046580;
-	bh=6x1QLi7LcIsqD3IL8qJqmDDVfdxhcPb5ez1PwvD2gPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iIVEnHDgmreN03M4pVM94GM8M6XPKPEjCVjYIWFe12NeiDynEGP2x78sn6Q6FBYiJ
-	 f337hafcKQy9A0gTNaSjGN7pew+e3YOr9NXA6mBVxPfroE4f20DnNvPWqFsaNJFjbI
-	 zNAGMtgF0+biOs5OrNsYgzR+OdSY6Nx6k2z0pDBfmXl+Nil03X0xNbw68Mo5y9nBf+
-	 pGkWjZ5OG7sj3AKBwRdNEucgmFfPh2wa+FPfg1vcDbUwjF+gWkGiWaAigw5lqC0KuM
-	 sNl2x2E8PSvYYULuPiZcgzB0w+PpAZUjWfm9u/SmaIKxGfwVEZUqq2RUgrCKgW+OP9
-	 kceRFI8b3QJcw==
-Date: Mon, 12 May 2025 12:42:57 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
-Cc: Michael Tretter <m.tretter@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Aradhya Bhatia <a-bhatia1@ti.com>, Rafa?? Mi??ecki <rafal@milecki.pl>, 
-	Junhao Xie <bigfoot@classfun.cn>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Kever Yang <kever.yang@rock-chips.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, 
-	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, Gaosheng Cui <cuigaosheng1@huawei.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Uwe Kleine-K??nig <u.kleine-koenig@baylibre.com>, 
-	Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] media: allegro-dvt: Add DT-bindings for the Gen 3 IP
-Message-ID: <20250512-fabulous-provocative-raven-ec3a81@kuoka>
-References: <20250511144752.504162-1-yassine.ouaissa@allegrodvt.com>
- <20250511144752.504162-4-yassine.ouaissa@allegrodvt.com>
- <595adbaa-15b4-4917-b3ad-9bac3e2333e2@kernel.org>
- <knnumpmyq4ewvqcfor3vqynxbplynajdlmz3p6f2ywadvmz6wo@5uz53eubbkfg>
+	s=k20201202; t=1747046660;
+	bh=xpA2W98QKz/yXqwDYFUSH3uYiK9VbI4MNRHLwNI5HJU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ixckrZv5M/tUrYxIViG3YYh8oHhCJzgWCqvV9o9uv65ELj62MrsDo5vswCTioSK4d
+	 /x/ZAhxmz2bSnPiKKDiQsV8k99HfGfpH3s+NB9tnVLcRJmI63ZL5eUHKJc1Qu4VL00
+	 F3Kb3+LJ6WhvyvRe0LaV4AHTkp1da5/wtoSqoeaxrT/tSM0FpRvIYaVtgloPCGYOkW
+	 V8AMDQEgPZt4FNR2+8kjBwsp+LMUnA3fY7QTay4a8MoPOQAq7CQHsrNMQg/yveBvi6
+	 h+HXbNnQ/bF+I/e/CGcBSLrYTqbdI2tCzPROvHllb6HWp/F8HxKjfOx+7XJR5f2Lmm
+	 wSkcUgbPjd7qQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Charalampos Mitrodimas <charmitro@posteo.net>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Breno Leitao <leitao@debian.org>, Andreas Hindborg <a.hindborg@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250508-configfs-v8-0-8ebde6180edc@kernel.org>
+References: <20250508-configfs-v8-0-8ebde6180edc@kernel.org>
+Subject: Re: [PATCH v8 0/3] rust: configfs abstractions
+Message-Id: <174704662683.2171454.9300396804399742742.b4-ty@kernel.org>
+Date: Mon, 12 May 2025 12:43:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <knnumpmyq4ewvqcfor3vqynxbplynajdlmz3p6f2ywadvmz6wo@5uz53eubbkfg>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Mon, May 12, 2025 at 08:23:11AM GMT, Yassine Ouaissa wrote:
-> issue fixed also, thanks.
-> > > +  significant advancements over its predecessors. This new decoder features
-> > > +  enhanced processing capabilities with improved throughput and reduced latency.
-> > > +
-> > > +  Communication between the host driver software and the MCU is implemented through
-> > > +  a specialized mailbox interface mechanism. This mailbox system provides a
-> > > +  structured channel for exchanging commands, parameters, and status information
-> > > +  between the host CPU and the MCU controlling the codec engines.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: allegrodvt,al300-vdec
-> > 
-> > Undocumented prefix.
-> > 
-> > What is the actual device name? al300? Can you have al300-adec? or
-> > al300-dec?
-> > 
-> > 
+
+On Thu, 08 May 2025 10:52:08 +0200, Andreas Hindborg wrote:
+> Add a safe Rust API that allows Rust modules to interface the `configfs`
+> machinery.
 > 
-> the device name is al300, the vdec is for decoder driver.
+> Add an example for the samples folder to demonstrate usage of the API.
+> 
+> Add a maintainer entry for the Rust configfs abstractions in the last patch, to
+> make it absolutely clear that I will commit to maintain these abstractions, if
+> required.
+> 
+> [...]
 
-So drop vdec. Compatible should reflect device name.
+Applied, thanks!
+
+[1/3] rust: configfs: introduce rust support for configfs
+      commit: 446cafc295bfc0e89da94a482fe8290bd8b429fb
+[2/3] rust: configfs: add a sample demonstrating configfs usage
+      commit: 1bfb105051566ec5cc7c4f693362420b37a68781
+[3/3] MAINTAINERS: add configfs Rust abstractions
+      commit: c6b1908224593db76f77b904894cd51933559ae9
 
 Best regards,
-Krzysztof
+-- 
+Andreas Hindborg <a.hindborg@kernel.org>
+
 
