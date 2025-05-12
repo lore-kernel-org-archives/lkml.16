@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E35123E35D
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415A623CEFF
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064484; cv=none; b=cK031+nZOU1I68ygkI3Awzu9iupy3frllXoZWdwLIvLqvGtDSIcgnvi6h5/opvt1ObmIyBh1YXI8yzKTmhhF2Pv3ysIG01uxH72L+E66VnDfXXZ2GspboSSwJEDAlrbuLEBdWbNyMM3oOdYANiU8nDW3BW8rXKuWHK/6wJCQcmU=
+	t=1747064485; cv=none; b=AWKB9RUsUkTAP3mUv1RhAiI6USqtANP1HFTU0owttJLhkVqksOPgTxuwo3y5oKA/lWU15huCjdKzHJieFXIFbOpB2rXNmPGcilyzblxLIl3dub2sq8RUuo/OUfL1n9bAzIbQ7nADo5Vw7PyJZ3/Ly0IJk7k90USYO7sZJy91tKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064484; c=relaxed/simple;
-	bh=U9+npV2ZSJGfToBj4e6veFVrU4+srf6IpPx003Sm1w0=;
+	s=arc-20240116; t=1747064485; c=relaxed/simple;
+	bh=t4ObW6VRwmP3xQ9ZzCEL6qfciNiAzWKyqtNuoGlCcyE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V0bLSQTF5sgzCdEuUJGhTo9M1Qhx5VXw2dRvvFxgOUl2MMVT3Q2tAQA8ICcUiB6Sra2+uPPcM/gHJH23tHP4Y3KPKEkWKnAKJDLqXkzvBXEr4X2sWB4WPfpXEmSX0iTljwRXUxVQn0v31i79y7UdoYiDlhjY87NFZZr1J1UxIj0=
+	 MIME-Version; b=PsL6ihqX1DvGutaPzhTCb1EVze7PqSZcd+ongVTJOJA6dBQ3ennhFzQJvuNy1XwRgq9TJhftyZDEoK2SgAGlAuqHaL2w7SV/wl5Ireu1ch0ALdKEKhZCtVaMKPKaV0BhFUf2aDPybSSmbp6s5JcYjIBvOy0nHNo/DkVSgvwDT5A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C495B150C;
-	Mon, 12 May 2025 08:41:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 729F21F60;
+	Mon, 12 May 2025 08:41:12 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 659A33F63F;
-	Mon, 12 May 2025 08:41:20 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 136433F63F;
+	Mon, 12 May 2025 08:41:21 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>,
 	Mike Leach <mike.leach@linaro.org>,
@@ -28,9 +28,9 @@ To: Suzuki K Poulose <suzuki.poulose@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 2/5] coresight: Protect unregistration with mutex
-Date: Mon, 12 May 2025 16:41:05 +0100
-Message-Id: <20250512154108.23920-3-leo.yan@arm.com>
+Subject: [PATCH v1 3/5] coresight: Explicitly use the parent device handler
+Date: Mon, 12 May 2025 16:41:06 +0100
+Message-Id: <20250512154108.23920-4-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250512154108.23920-1-leo.yan@arm.com>
 References: <20250512154108.23920-1-leo.yan@arm.com>
@@ -42,43 +42,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The device registration is protected by CoreSight mutex to ensure the
-atomic operations when adding a device onto bus.  One the other hand,
-the locking is absent when unregister a device.
+A CoreSight device is present on the CoreSight bus, and its device node
+in the DT binding is assigned as the parent device.  Comments are added
+to document this relationship.
 
-Use mutex to ensure atomicity on device unregistration.  During
-unregistration, unbinding the associated CTI device is not included in
-the locking region, as CTI has its own locking mechanism.
+The code is refined to explicitly use the parent device handle, making
+it more readable and clearly indicating which device handle is being
+used.
 
-Fixes: 8c1d3f79d9ca ("coresight: core: Fix coresight device probe failure issue")
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index 3e3823d9f991..3eacdcf638df 100644
+index 3eacdcf638df..4f51ce152ac7 100644
 --- a/drivers/hwtracing/coresight/coresight-core.c
 +++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -1400,14 +1400,17 @@ EXPORT_SYMBOL_GPL(coresight_register);
+@@ -1313,9 +1313,13 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 	csdev->access = desc->access;
+ 	csdev->orphan = true;
  
- void coresight_unregister(struct coresight_device *csdev)
- {
--	etm_perf_del_symlink_sink(csdev);
- 	/* Remove references of that device in the topology */
- 	if (cti_assoc_ops && cti_assoc_ops->remove)
- 		cti_assoc_ops->remove(csdev);
-+
-+	mutex_lock(&coresight_mutex);
-+	etm_perf_del_symlink_sink(csdev);
- 	coresight_remove_conns(csdev);
- 	coresight_clear_default_sink(csdev);
- 	coresight_release_platform_data(csdev, csdev->dev.parent, csdev->pdata);
- 	device_unregister(&csdev->dev);
-+	mutex_unlock(&coresight_mutex);
++	/*
++	 * 'csdev->dev' is a device present on the CoreSight bus. The device
++	 * node in the device tree is assigned as the parent device.
++	 */
++	csdev->dev.parent = desc->dev;
+ 	csdev->dev.type = &coresight_dev_type[desc->type];
+ 	csdev->dev.groups = desc->groups;
+-	csdev->dev.parent = desc->dev;
+ 	csdev->dev.release = coresight_device_release;
+ 	csdev->dev.bus = &coresight_bustype;
+ 
+@@ -1334,7 +1338,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 	 * Hold the reference to our parent device. This will be
+ 	 * dropped only in coresight_device_release().
+ 	 */
+-	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
++	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(csdev->dev.parent));
+ 	dev_set_name(&csdev->dev, "%s", desc->name);
+ 
+ 	/*
+@@ -1393,7 +1397,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 
+ err_out:
+ 	/* Cleanup the connection information */
+-	coresight_release_platform_data(NULL, desc->dev, desc->pdata);
++	coresight_release_platform_data(NULL, csdev->dev.parent, desc->pdata);
+ 	return ERR_PTR(ret);
  }
- EXPORT_SYMBOL_GPL(coresight_unregister);
- 
+ EXPORT_SYMBOL_GPL(coresight_register);
 -- 
 2.34.1
 
