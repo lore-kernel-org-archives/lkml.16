@@ -1,51 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11B119CC3A;
-	Mon, 12 May 2025 14:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC3D229B2E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060273; cv=none; b=qMj4Twyvpk6jelZGH2yFb2yLDCI4xACNKVvDNljjS8V1VrDdlwOWTfGqdwfFbdkNqdSRV7DcqhRvrtQzX/p+2AN9zFhKz4UCkpO17uJMo/ZirH5f5QLoOlTB5hIBawrpb8KX4EXI9LtzgIK4Dtwofmt2h0+teWEiOi+/c48J2uQ=
+	t=1747060276; cv=none; b=a8rnFssFnzpOibc8xea+xEq+NU/lIW/Pd0y5CTv5sCE88dihyvDfWSen75omZC1KX8GtlIzycsvY7lu4KRNjuYTnlOX2ps+fH/e+atftQCtCZLQK4wtMLiCfcY5CIoLhIvyKYcwGxuvOqWOdYQ6fdjoyq8MupIkqa/nMsCMInyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060273; c=relaxed/simple;
-	bh=D22xfF7vCMy0iXUF0syExk/uQGvJjAMT981A7+9a/pA=;
+	s=arc-20240116; t=1747060276; c=relaxed/simple;
+	bh=EOi9sCZK85Y4bJopmUCYi3swoe08DUuLECCP1N+fSw4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bqFRBMQhMSpuAP6hgifV15XLVhGKmAmwHokPvT1DqVZdFj9Dn13KGlkEhSj/4AJEpoAH9GB+kCxgsNRDq65yiaXgVni9bFHvrVEcnVOoImHnhHo54J6b2LRv1jqyyN7t+M/So0WH5Gwd43bZff1Xn+YsoDmIHMSWLvC6ssmnP5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PC94YVJW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DHLIJO/ivWeCbyMX21qY56Y6pmM7FI4xdpqhG0p9fXr+b7caXkxB1Yk7Y39YE76tM9APy/KMIDdld9H1cukvHWjTk7d3BrA+M8f6ONASOxF5v7JeAS2OT2xPOntj355Mi5PPTWUHO7hKVTIrCwLhqYu2BFjn1gaE2hp8/BLk2Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=P54ffw7N; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PC94YVJW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC39BC4CEE7;
-	Mon, 12 May 2025 14:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747060273;
-	bh=D22xfF7vCMy0iXUF0syExk/uQGvJjAMT981A7+9a/pA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PC94YVJWtfERDpHpUjGuLpEBIiXd3JHOUCWKdwQmymUXdY9aQFiVmLgwaAUjoCn5V
-	 HI/MOBymy5XxT7KitVdJN/eVNbtVoSMk+4deNc5mLxsMr3XKrfEUA/UQZTsjUpi4pC
-	 X2G7EzJ1UUBkQPqfm38sB5kZDqub86EYtuCa8AvRKSiDOd0bu9SsDPh750VSW7j2GV
-	 UuEc1RVQ4Wx6SVHH15BCvl4rBhBNmk/uBgnXaNuni0Dnxiywm3NjAIwpjYfr39oO8T
-	 CxikRewOwS7NtIMKmleP+un7KX0qva5yxDZyPiQn1rptgQQaF14DyI+FtgsWl2hbkM
-	 4pc4hVm4l/f0A==
-Date: Mon, 12 May 2025 15:31:07 +0100
-From: Simon Horman <horms@kernel.org>
-To: Lee Trager <lee@trager.us>
-Cc: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>, kernel-team@meta.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Su Hui <suhui@nfschina.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 5/5] eth: fbnic: Add devlink dev flash support
-Message-ID: <20250512143107.GJ3339421@horms.kernel.org>
-References: <20250510002851.3247880-1-lee@trager.us>
- <20250510002851.3247880-6-lee@trager.us>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="P54ffw7N"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c56a3def84so488412885a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1747060273; x=1747665073; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jCXKXHReqot1wkAPOvwV0YSnLbprI4u4HniI9fLKEYk=;
+        b=P54ffw7NmT42zxMyhR4pOjV1DG7nqn43w9myW1CVDiccO7nlpShjQDHuMqRoQ2bFrx
+         Yn7a0/GBkbPPAhKykXE5jD9wYZPNl5E8871N19ws+/8DQiyvJpyAOoeZBDTx+kpgSNDw
+         KuJ2BlT+6TObuME0aSEvU8Yqm7SIzjtQQ93W1U+nX9B3HVRoUR256E0sU+4VOtBRH8dd
+         F9MUDcOqzMGwWxQwfx2GmOvsPKCzd3FyXjZw3cPn563VYMRWya5NignqQRURZFdvyhSp
+         ApNx7NVVyxSsWbosxkHdRhVH8qEPO0rFf+ThngqR3UacjCEmLRGkpw8jD7qnU46XXGxE
+         3S5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747060273; x=1747665073;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jCXKXHReqot1wkAPOvwV0YSnLbprI4u4HniI9fLKEYk=;
+        b=ffdyydgiD4aoIzAYP3r/4Wt+uiBSZB2g2nyja14IemRNNFoMuSF+x75qjWLPxW7AW0
+         LeUQCML90c1dwO0BAJ4Amo2F92OUP61KAOiCSMhebKJrjjh3sX8ZEZfY2wP3Q2yNf/sx
+         nMSX8npWpQaYnEedLWw3J0qG5R9NuF1I3+rzQ4nq0b4WmNlXaZT0atEPjT5SO9OIWM/q
+         ObTvy/9WVhX3+Yg6ukOsm65WYzxpNT1L4HiDqVPvn/MeBzzd3BsChE7KztaakQ/M8Dgy
+         zoI6FZ7Vw3JhM2b+QcaOAaJMx8TwmQm/nHXGcWo/RrmzTqCGPq1SFU7Rn2zjAbnTVuk1
+         8QVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj3ZBH3/GDOrp8xgOupZZtoBRfecajCHbaYsQN/lbdW1hLv/VP+0WsrSd4uxfqpi7hmUNbps0jBfj1AbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRfKgrvQrwogz8vuimbtl2J6dwh2NVc2u3ihaLyvJcva16OMK/
+	qobz+3JxdsiVj6ZHQ8T+IYg5jgCKB8w9E5tabfaWHxECvj0/cMCLGf4EZMsNqs0=
+X-Gm-Gg: ASbGncumSkhGIcWZXs/z3MQLEJFAmm8+VUgtKbKENPzAHhwTaiYou8LW58KgO6dsNAM
+	NopvCduukAkxcp4+Z+rpha2WOT5XNal5qMzbFj7w0BXvSZ9qq2yB3JoDHGuSEl6ZffnZ7x6oaI4
+	klw/quacmS+7J2nHwQa55lXpVCOvxzyMWKZxojHBI5DQJ8bDGGg1ZfxUUuw319AYEEl1eR5Bidq
+	QWsAcczEuFXzge2SGV1GPElDYqoykk7D9tL2JoyASkJMeApJxkd3IN4XNTKUqnBIN61qt0EuTko
+	DVngfhOe8Bh9pqcJWQpKzn+GI8/vjWajYJwbAsSRvaWhXCkLVZJX4dtRlJh0Yv2p26wnqrV7Yhc
+	VeVFIZewfH0eEfkZsousMk9gZt0MOj34ePoO8e7Dhsw==
+X-Google-Smtp-Source: AGHT+IExMbpPYOqj6/d85+ArJV2HSSzEcZuVIRRwoBeeBgUYFCOCwFPnqdn8UUbPLEJ6+FKh9oGVmA==
+X-Received: by 2002:a05:620a:f10:b0:7c5:57b2:2cb9 with SMTP id af79cd13be357-7cd0111870bmr2129679885a.26.1747060272830;
+        Mon, 12 May 2025 07:31:12 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f4e146sm555031685a.19.2025.05.12.07.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 07:31:12 -0700 (PDT)
+Date: Mon, 12 May 2025 10:31:10 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, corbet@lwn.net
+Subject: Re: [RFC PATCH v2 10/18] cxl: docs/linux/dax-driver documentation
+Message-ID: <aCIGLu6fAOC8TPuJ@gourry-fedora-PF4VCD3F>
+References: <20250430181048.1197475-1-gourry@gourry.net>
+ <20250430181048.1197475-11-gourry@gourry.net>
+ <43d957e0-f52b-4ba8-aa87-cfb8472b8b67@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,85 +79,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250510002851.3247880-6-lee@trager.us>
+In-Reply-To: <43d957e0-f52b-4ba8-aa87-cfb8472b8b67@infradead.org>
 
-On Fri, May 09, 2025 at 05:21:17PM -0700, Lee Trager wrote:
-> Add support to update the CMRT and control firmware as well as the UEFI
-> driver on fbnic using devlink dev flash.
+On Sat, May 10, 2025 at 07:18:27PM -0700, Randy Dunlap wrote:
+> >  
+> > +A Memory Device is a discrete base object that is not a port.  While it the
+> > +physical device it belongs to may host an `endpoint`, this relationship is
 > 
-> Make sure the shutdown / quiescence paths like suspend take the devlink
-> lock to prevent them from interrupting the FW flashing process.
+> I have some parsing trouble with the sentence above. Maybe s/it the/the/.
 > 
-> Signed-off-by: Lee Trager <lee@trager.us>
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-...
+Changed to the following:
 
-> diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
+  A Memory Device is a discrete base object that is not a port.  While the
+  physical device it belongs to may also host an `endpoint`, the relationship
+  between an `endpoint` and a `memdev` is not captured in sysfs.
 
-...
+Thanks for proofreading and feedback, sending a v3 today with the TODOs
+ripped out (can't circle back for a bit, better not to let this rot).
 
-> @@ -109,8 +111,264 @@ static int fbnic_devlink_info_get(struct devlink *devlink,
->  	return 0;
->  }
-> 
-> +static bool
-> +fbnic_pldm_match_record(struct pldmfw *context, struct pldmfw_record *record)
-> +{
-> +	struct pldmfw_desc_tlv *desc;
-> +	u32 anti_rollback_ver = 0;
-> +	struct devlink *devlink;
-> +	struct fbnic_dev *fbd;
-> +	struct pci_dev *pdev;
-> +
-> +	/* First, use the standard PCI matching function */
-> +	if (!pldmfw_op_pci_match_record(context, record))
-> +		return -ENODEV;
-
-Hi Lee,
-
-The return type of this function is bool, but here a negative integer is
-being returned. Perhaps this should be:
-
-		return false;
-
-Flagged by Smatch
-
-> +
-> +	pdev = to_pci_dev(context->dev);
-> +	fbd = pci_get_drvdata(pdev);
-> +	devlink = priv_to_devlink(fbd);
-> +
-> +	/* If PCI match is successful, check for vendor-specific descriptors */
-> +	list_for_each_entry(desc, &record->descs, entry) {
-> +		if (desc->type != PLDM_DESC_ID_VENDOR_DEFINED)
-> +			continue;
-> +
-> +		if (desc->size < 21 || desc->data[0] != 1 ||
-> +		    desc->data[1] != 15)
-> +			continue;
-> +
-> +		if (memcmp(desc->data + 2, "AntiRollbackVer", 15) != 0)
-> +			continue;
-> +
-> +		anti_rollback_ver = get_unaligned_le32(desc->data + 17);
-> +		break;
-> +	}
-> +
-> +	/* Compare versions and return error if they do not match */
-> +	if (anti_rollback_ver < fbd->fw_cap.anti_rollback_version) {
-> +		char buf[128];
-> +
-> +		snprintf(buf, sizeof(buf),
-> +			 "New firmware anti-rollback version (0x%x) is older than device version (0x%x)!",
-> +			 anti_rollback_ver, fbd->fw_cap.anti_rollback_version);
-> +		devlink_flash_update_status_notify(devlink, buf,
-> +						   "Anti-Rollback", 0, 0);
-> +
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-
-...
+~Gregory
