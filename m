@@ -1,108 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0CA264614;
-	Mon, 12 May 2025 09:25:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002FD25D542;
+	Mon, 12 May 2025 09:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041930; cv=none; b=NT6or0rda4EWSO1ee5j6+430u/P31TmV01nJyfOkJz/6muak/K80J1cGtik6KUfc7PAgauzkhTxJO5rjg+YjWyPnO9okNwAm1bAqN76DPs69w0LzAuzOjQVDTJF268sTLH3Vbgh7sTGCA/ZttoJIvuQGiLh81lPJEezh16+MUjg=
+	t=1747041979; cv=none; b=M4o7C+PZlOzJsQ+i39Xq/5PRuYxFg8aXBUQogpBVat8CKRXg7zjYBVVKeAl0avDGj1TJzz+3ATdgMjxaAXcVk6xLiW+quYt3ieUmwAGLor2phwV7N8tc1+bY4I+yabcFMWOUp8fTTlpn4T4n2PAitrpf0zT0He5KwULym+p73Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041930; c=relaxed/simple;
-	bh=VeGFxthv7PYqrI06vu6pYTa8wWVH2rxaKIjcbEO/qxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RA4g+O0Kl70BiIncPFdzvW4iNWyAWdphLeD8MCjlrp81ySPmzlHKkueSy0bnVAHVeudmQY3quLls8ErEAbIX4bJPOTCm8Ai0QiTmVSnY8LXNXFy54IEyxBqqjK19ZU8yWB6b5CMZ+Z/JCXAUCHgTzIQScddOnmi06qty8ZkazM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLUm+jqx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747041979; c=relaxed/simple;
+	bh=xOkKbE+DsW+L89h0Pi4g1kYeYPXXrHFk6//bhcapeQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rN/dB7fTROpedisuI1CIC8ILJ5odVImfzSUYRZl9dBE9vHGpPXSMUrvGynB8dZsi3dAsof1IrUrQMfIsE+gpEV6v7cevDQavYcxkcaFMm8qStVX8YPeBCE8fQorz8laNKWhMujYY6Kj7FUcakctQqNeCJRPN5xRMb1wYNGP0eYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMDBxr90; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLUm+jqx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A94C4CEE7;
-	Mon, 12 May 2025 09:25:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMDBxr90"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E809C4CEE7;
+	Mon, 12 May 2025 09:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747041929;
-	bh=VeGFxthv7PYqrI06vu6pYTa8wWVH2rxaKIjcbEO/qxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bLUm+jqxbtWq86ypa0XoBzPu4HEk5uslYonS1yB/ZBGc+js+JwiFqlmb4H+LWXXAW
-	 b90v9LD9PruGgAdjKSB4vs3Vg5Ntz3OcylUUrEbuG8WFS8NVkHQ1XXKoJuS9UXozDK
-	 GBUccOqaE4m+qiffJUQuXtgPcR+MZtETgEmu4IUNRu5SnbliuA4SQZx+g9OLw0U3s6
-	 g3TMXzvPfN5/IMHGQjRbSGeAlHt4hgkeCp+rkt3fEOMtj6FLjDp+33it5OEg2o/caW
-	 FSzjSWBml7EQZfovpHIGSCTROUn5w84u3qLmoLYO154FgVGjWxioH+0yXvACj+z9uY
-	 o2NrfaT6csJZA==
-Date: Mon, 12 May 2025 10:25:24 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: John Clark <inindev@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH RESEND v4 1/3] dt-bindings: vendor-prefixes: Add luckfox
- prefix
-Message-ID: <20250512-unshaken-educated-12738a347257@spud>
-References: <20250509122637.26674-1-inindev@gmail.com>
- <20250509122637.26674-2-inindev@gmail.com>
- <e3339dfd-7d79-4d86-b522-d6b31976cd2e@cherry.de>
+	s=k20201202; t=1747041977;
+	bh=xOkKbE+DsW+L89h0Pi4g1kYeYPXXrHFk6//bhcapeQM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BMDBxr90LR2I6dKBmSa6KaR17pidWwo/XO4zlB5ScPUZzqUSSYnj6UswuaMUXcAet
+	 fmz5mEYPkBqcifq2Zo9Pm3nLC2K+bBgmXxYAnTb1peaKtxdlgSG1DU8+ifKN2fNYz2
+	 AV42N9yrPXKq4zuTAmODHLaycZvCMhuf9x+p4WDhlYezEFfepS7rYCL9e+pabFU+aT
+	 Yy/tGZ67tqGm7D9Kjqcj2iBdpOJ6as3lSNjMY+J5J+LzKa5euVgM8htwwCFwpcrp+B
+	 sf1jwRSQhPUdB/skFAG+2iJiMVFPjbD5FJBTSScJvMbF+8CPD3xIBMLpOSkyFegKPU
+	 jnA72axq2/QXA==
+Message-ID: <02819d6c-a030-4987-bfcf-1d1a60ec3f00@kernel.org>
+Date: Mon, 12 May 2025 11:26:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GU6PMH/TcwUywzE1"
-Content-Disposition: inline
-In-Reply-To: <e3339dfd-7d79-4d86-b522-d6b31976cd2e@cherry.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: PCI: qcom: Document the QCS615 PCIe
+ Controller
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org,
+ abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org,
+ lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ andersson@kernel.org, konradybcio@kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ quic_qianyu@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
+ <20250507031559.4085159-3-quic_ziyuzhan@quicinc.com>
+ <20250507-astute-realistic-ferret-bcdfce@kuoka>
+ <e434124b-6975-4027-bb0d-3840fbd25a15@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <e434124b-6975-4027-bb0d-3840fbd25a15@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 12/05/2025 10:16, Ziyue Zhang wrote:
+> 
+> On 5/7/2025 1:17 PM, Krzysztof Kozlowski wrote:
+>> On Wed, May 07, 2025 at 11:15:56AM GMT, Ziyue Zhang wrote:
+>>> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>>
+>>> Add dedicated schema for the PCIe controllers found on QCS615.
+>>> Due to qcs615's clock-names do not match any of the existing
+>>> dt-bindings, a new compatible for qcs615 is needed.
+>> Other bindings for QCS615 were not finished, so I have doubts this is
+>> done as well. Send your bindings once you finish them.
+>>
+>> ...
+>>
+>>> +properties:
+>>> +  compatible:
+>>> +    const: qcom,qcs615-pcie
+>>> +
+>>> +  reg:
+>>> +    minItems: 6
+>>> +    maxItems: 6
+>>> +
+>>> +  reg-names:
+>>> +    items:
+>>> +      - const: parf # Qualcomm specific registers
+>>> +      - const: dbi # DesignWare PCIe registers
+>>> +      - const: elbi # External local bus interface registers
+>>> +      - const: atu # ATU address space
+>>> +      - const: config # PCIe configuration space
+>>> +      - const: mhi # MHI registers
+>>> +
+>>> +  clocks:
+>>> +    minItems: 5
+>> Drop or use correct value - 6. I don't understand why this changed and
+>> nothing in changelog explains this.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Hi Krzysztof
+> 
+> As discussed in qcs8300, gcc_aux_clk is recommended to be removed from PCIe PHY
+> device tree node, so I need to update the bindings.
 
---GU6PMH/TcwUywzE1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't see how this is relevant to the code you posted and to my
+comment, so comment stays valid.
 
-On Mon, May 12, 2025 at 10:12:24AM +0200, Quentin Schulz wrote:
-> Hi John,
->=20
-> On 5/9/25 2:26 PM, John Clark wrote:
-> > Add vendor prefix for Shenzhen Luckfox Technology Co., Ltd., which
-> > produces development boards like the Luckfox Omni3576.
-> >=20
-> > Signed-off-by: John Clark <inindev@gmail.com>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > ---
-> >   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/D=
-ocumentation/devicetree/bindings/vendor-prefixes.yaml
-> > index 86f6a19b28ae..9391e0c31bb8 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > @@ -892,6 +892,8 @@ patternProperties:
-> >       description: Liebherr-Werk Nenzing GmbH
-> >     "^lxa,.*":
-> >       description: Linux Automation GmbH
-> > +  "^luckfox,.*":
-> > +    description: Shenzhen Luckfox Technology Co., Ltd.
->=20
-> Looking at the file, I think we order the vendor prefixes alphanumericall=
-y?
->=20
-> So this would be the wrong location for this new vendor prefix and should
-> rather be between lsi and lunzn?
-
-Oh, I missed that. Yeah, alphanumeric ordering please.
-
---GU6PMH/TcwUywzE1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCG+gAAKCRB4tDGHoIJi
-0tsqAP4ixoSNyieeRkbazndj3nNkW+K7Q1diS68t1I/8BNuNcQD/SXduhZflon2y
-JiZDzqW/LhScPYo34ESbXVbqz9G1AwY=
-=cMJa
------END PGP SIGNATURE-----
-
---GU6PMH/TcwUywzE1--
+Best regards,
+Krzysztof
