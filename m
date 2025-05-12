@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC132253F1C;
-	Mon, 12 May 2025 16:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C8F252908;
+	Mon, 12 May 2025 16:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068870; cv=none; b=nDHJ4RmK2VJ3+nf9eTEBBoUtV57y55ODVnSRux+8QTgmpHYIFG4kvsMGrFk0CUSABjIX68GGylAcbJg2VT+8g+/l1nJHtVYNZGsj3N2GfRmue1e1zAs1osEtghH/twkxToQuij4vzXfkyta1tUl+hysUHCMx8edmtM7EdEH53ao=
+	t=1747068881; cv=none; b=otGlI6WnEV+YpCy6kDTAzv4ZZOGSp0au+kdaLSZj4iJ7Ygeu2MScwYU05k5Z8WOj75s7hpJli85RfdE149RU90E8pJXs0/10nTSmyRxo9ArzlPqjqJ9VoDWMFT28bCN5mDPnEpBKZO9kPj2uBUs6huh50QR4zqcqdUbxMFvf59Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068870; c=relaxed/simple;
-	bh=v8YP76OSQkJ+jZugp5dkNzFbI7u4ptwVFaT/PQOaqs0=;
+	s=arc-20240116; t=1747068881; c=relaxed/simple;
+	bh=DOkieu2c/As5OFutbPhmnXPXloxqiulZTsFGw/r3wro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j+nkeR2bDrLO0KE/kOC/PbP2yrpTxXYKxCgtdxCgIDS6HD9ZQ76KCEWB2+x2pLpca92UDeekolPJ+88P+Bb1fY70CSweA7rK3MZmfRFrub/1AyLjGnINGinoDCd0S/jOH8HwRL8ZDNLzLo1ZtC0VxhXfnv/dDTPgNo8IpuhEE8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHfa85kr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=akwh1qmoyqNF9COid536zTNXlbOmacQ3X3fIMYxSICUQ5SB7XX4tL1QAv1QLrxWM0s6FBWT2LsKFw+VTlaeNzT6BtFUb/FowVhSD51ZSaFc9TIOO4P+ksJ7KZGHiW5u82Cs//XsjYyQ5Akc7of0BXim2ohDj07NCJEBOLyf8mcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJoJ5l++; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHfa85kr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B954BC4CEE7;
-	Mon, 12 May 2025 16:54:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJoJ5l++"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC02CC4CEE7;
+	Mon, 12 May 2025 16:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747068870;
-	bh=v8YP76OSQkJ+jZugp5dkNzFbI7u4ptwVFaT/PQOaqs0=;
+	s=k20201202; t=1747068880;
+	bh=DOkieu2c/As5OFutbPhmnXPXloxqiulZTsFGw/r3wro=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZHfa85krTALDXckFn1ygz3B+HxjcEezmbPPlyheHYS7jESvlZPqQOJFyhpulS82IB
-	 SsvE1/XfeZbTyD8aRtz9Hav3hqWsgdnpTPqc/GxIx6tK8/0JH6l3E34N6A0A2aCPaj
-	 iZLQSUbrefiYpRE7l+aIRQphN78QPi3au0lLu7+APHIXcfCRAB8vPaf0VJWb8cuUHj
-	 sS5/cu+nf5wPf5nF5QUmmWbaINvN0XrkPwhQzB4iUe7zkLIo7BR+j8X+Tof23Yf61E
-	 9ALxd1OaQRq7NPkWU59GSrQ/FCvqsEv//btEZFH615+sRkAiYQ90nAvdTIIt1ZG7jG
-	 Yi0TXDfzIJZiw==
-Date: Mon, 12 May 2025 18:54:28 +0200
+	b=vJoJ5l++Z+dcFY6SizXnpd6EHzB6naYhpvlSsblZ51SAuS6wfPtcPLCkRGQR0s4h8
+	 5v97FKgpO3NAs8jDNfdQWdsmDSYYLH/CF4l4rAOjzeQTZlcAAIm4LKRvCgKkwqZFtZ
+	 NfTlv9g9LbWEypPlT9nxKjw4zIJ/6T+RZP+BNaxqpY7SpQQpb+W8jMZH7Su0TcCCmt
+	 shXg7d08i3t/ttvGQEtWpA2bjIakKI0vlj47i8w6shFrdkl20vuTEmepWLuVI/YkRc
+	 vBuw0jNMChoLvzO2yxPGltjbQHgmfi1EDH4iAJ4/QjRr4+KCOT4yauk2ecxXOIIdaq
+	 1CEwRKbhN2i0w==
+Date: Mon, 12 May 2025 18:54:39 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	kernel@collabora.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: arm: rockchip: add RADXA ROCK 5T
-Message-ID: <20250512-bulky-olivine-catfish-d6bcea@kuoka>
-References: <20250509-add-rock5t-v1-0-cff1de74eced@collabora.com>
- <20250509-add-rock5t-v1-1-cff1de74eced@collabora.com>
+To: Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vladimir.oltean@nxp.com
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: add bindings for QIXIS CPLD
+Message-ID: <20250512-festive-aquamarine-junglefowl-572f90@kuoka>
+References: <20250509152940.2004660-1-ioana.ciornei@nxp.com>
+ <20250509152940.2004660-2-ioana.ciornei@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,21 +44,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250509-add-rock5t-v1-1-cff1de74eced@collabora.com>
+In-Reply-To: <20250509152940.2004660-2-ioana.ciornei@nxp.com>
 
-On Fri, May 09, 2025 at 02:31:41PM GMT, Nicolas Frattaroli wrote:
-> The RADXA ROCK 5T is a single board computer aimed at industrial use.
-> Its design is similar to the ROCK 5B+, but it does away with one of the
-> USB-C PD inputs, and uses one combination USB3/SATA/PCIe PHY for an
-> additional second 2.5G PCIe network card instead of USB3.
+On Fri, May 09, 2025 at 06:29:35PM GMT, Ioana Ciornei wrote:
+> This adds device tree bindings for the board management controller -
+
+"Add devicetree bindings...."
+
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+
+> QIXIS CPLD - found on some Layerscape based boards such as LX2162A-QDS,
+> LX2160AQDS, LS1028AQDS etc.
 > 
-> Link: https://radxa.com/products/rock5/5t/
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+...
+
+> +title: NXP's QIXIS CPLD board management controller
+> +
+> +maintainers:
+> +  - Ioana Ciornei <ioana.ciornei@nxp.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  The board management controller found on some Layerscape boards contains
+> +  different IP blocks like GPIO controllers, interrupt controllers, reg-muxes
+> +  etc. The QIXIS CPLD on these boards presents itself as an I2C device.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,ls1028a-qds-qixis-cpld
+> +      - fsl,lx2160a-qds-qixis-cpld
+> +      - fsl,lx2162a-qds-qixis-cpld
+
+I think my question why existing compatibles cannot work is still valid.
+If you responded to that and I missed reply, please point me, but I see
+I replied on 7th May and you sent it later - on 9th May.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  '^mux-controller(@[a-f0-9]+)?$':
+
+Either children have bus addressing or not. This should not be flexible,
+because rarely devices differ. If devices differ, then you need separate
+schema most likely.
+
+> +    $ref: /schemas/mux/reg-mux.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
 
 Best regards,
 Krzysztof
