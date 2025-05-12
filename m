@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9917E2951D8;
-	Mon, 12 May 2025 12:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254082957AC;
+	Mon, 12 May 2025 12:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054174; cv=none; b=lFLjqZrY0sQk7QI/HfV1qmoRhApG0lrSJw6kxLYiz1FdqX5iS4ptLW80/H9NE+Qwj6JJyg9xNyd81XJ80im15z3z+vWfVhnK4is5lQiUNKajEOHd8GO9dKKnBVEdFKLVyO+ou+Wv8sLUf4e2WFzMZBAbFLu7swkHBZ2k5KxTXKQ=
+	t=1747054176; cv=none; b=jVUuVhBzbqU7pa6B+BfHY2G1bBl49zR07qEO4SwMnnoCHSlyhW6EWKEvVzClMfwsNyg3c5630Cn7Vl+31F5qNGbETdbTo6hBzvBv/PdHm/mFK78dV2jcSs+YDq6rQfbPcPbRpX0ZQUjBP4LOnvzKW/tp3O2FGPGHW2pTTPep7aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054174; c=relaxed/simple;
-	bh=4sCnrLt5+b/Nr3tQwYV/v/pzsN34z6tW/1DRdvCDkkA=;
+	s=arc-20240116; t=1747054176; c=relaxed/simple;
+	bh=tBDxyhfJLYTyQ5qc/wV3CLyT6odxMJOOJPQADjsy3/s=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Cxyfsgw3Z2C4tW+VWjAkFLa5okXLMeIqnAuUjrvLes/E189rkALSRPIHO0d3L4CVW5u2+LaN7fr3hON8RIIYYI+G1OKSTLw26q9VEFMRPlMpI8VMfxCofUI3VGqOGgjqbQA8yDSAUUCTUcTZcYrdCeofTueAiCpU9G6SPeHRhDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpbNPEA5; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=ZAZ7LYvyzdQrjnG688hTfB2L55jikOTJ+VIWrvCevV8d1X5bels/Mewb61ppsodkziMRpReBblfb21tBG/yp/8aMHgGv5otEKElpoOKFvMTj3SfStV7anXIiDsXjjirskoNv9dUoC7mlLCk5+ofd5XsxeUpE4GcWesTtsmMp64A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qp9gQWSd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpbNPEA5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DBA6C4CEEF;
-	Mon, 12 May 2025 12:49:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qp9gQWSd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40BBC4CEE7;
+	Mon, 12 May 2025 12:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747054174;
-	bh=4sCnrLt5+b/Nr3tQwYV/v/pzsN34z6tW/1DRdvCDkkA=;
+	s=k20201202; t=1747054176;
+	bh=tBDxyhfJLYTyQ5qc/wV3CLyT6odxMJOOJPQADjsy3/s=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=SpbNPEA5z2pRB9FzsA6AnqW+zN1ldKwwTpP1A7QSf77pwNFLFkdRLIJLeRXYFNa29
-	 lNBVHW6g4Nw3RXEtLg41fUKZgxCD3lCXQlNGeRA4joxIhxtMDEo5jQu8c53P52Q4B8
-	 QWIHV/bg2JS7mI+PbHNrELnmcsV+9ddogQ3IbL1xhDjcRliNubkvTTNde2rR6aZhha
-	 fc3ZLcpvyxc3ldWXcMos1NNdgBml3Kj/OHj+Qw+emSAFv/+sRGu3uxtQmOUy7g0oBd
-	 6flbpqUUip/84Hnz2wF8kb4c467bWnODW1+T+O8//ZA6Mx3e2QH0aAd8zZLp6BX2qT
-	 iFdd88Oqrb+iw==
-Date: Mon, 12 May 2025 07:49:33 -0500
+	b=qp9gQWSd854BackKxr72WZDdkTZzcGjBRIDsqZfkHss9xbkzMZRPf1SQ9XeQPro5m
+	 aRHAS1Yy6xZT2dfvAYS28pTWbvL1N7f9QSuFR14siYYztH2dGzhTIWeLnUg/+hvTWz
+	 jdWfSV0q3BDS7UZytW/1gPnqo09GDsw2ywDAsuw5ufRb3zX/NK5t01/2EqiADu08Af
+	 FaULtRmGO8WGypatSUdHV1HUfSPj9xcAmrte58VGV4qZSFF5YvaGxAlwj6wKHSBf9B
+	 uKjZt/RgIhdo4a23tY1qc0zN3HWhUmEZl2U4K8tKbMWREXVrC11UNJvPWybFcchqXM
+	 6+MZGTOVp3fqA==
+Date: Mon, 12 May 2025 07:49:34 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,65 +36,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- linux-media@vger.kernel.org, Nicholas Roth <nicholas@rothemail.net>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, imx@lists.linux.dev, 
- linux-rockchip@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Ondrej Jirman <megi@xff.cz>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
- Dragan Simic <dsimic@manjaro.org>, Conor Dooley <conor+dt@kernel.org>
-To: Olivier Benjamin <olivier.benjamin@bootlin.com>
-In-Reply-To: <20250509-camera-v3-0-dab2772d229a@bootlin.com>
-References: <20250509-camera-v3-0-dab2772d229a@bootlin.com>
-Message-Id: <174705404383.2941320.1978376350297662131.robh@kernel.org>
-Subject: Re: [PATCH v3 0/4] Describe the cameras in the PinePhone Pro dts
+Cc: Konrad Dybcio <konradybcio@kernel.org>, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+In-Reply-To: <20250509-topic-sm8x50-upstream-iris-8650-dt-v3-1-f6842e0a8208@linaro.org>
+References: <20250509-topic-sm8x50-upstream-iris-8650-dt-v3-1-f6842e0a8208@linaro.org>
+Message-Id: <174705404432.2941372.629677839808498998.robh@kernel.org>
+Subject: Re: [PATCH v3] arm64: dts: qcom: sm8650: add iris DT node
 
 
-On Fri, 09 May 2025 23:51:36 +0200, Olivier Benjamin wrote:
-> This series adds support for the Pine64 PinePhone Pro's rear and front
-> cameras in Device Tree.
-> This is based on some of Ondrej Jirman's patches hosted in his tree at
-> https://codeberg.org/megi/linux, but I have also fully reviewed and
-> re-written the code from the RK3399 datasheet, the PinePhone Pro
-> schematic, and the IMX258-0AQH5 software reference manual.
+On Fri, 09 May 2025 17:28:22 +0200, Neil Armstrong wrote:
+> Add DT entries for the sm8650 iris decoder.
 > 
-> I have tested these changes on my PinePhone Pro and am able to take
-> photos from both cameras using libcamera's cam.
+> Since the firmware is required to be signed, only enable
+> on Qualcomm development boards where the firmware is
+> available.
 > 
-> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
 > Changes in v3:
-> - Fixed new DTB warnings reported by Rob Herring's bot
-> - Link to v2: https://lore.kernel.org/r/20250302-camera-v2-0-312b44b4a89c@bootlin.com
+> - Removed useless comment
+> - Fixed opp required-opps
+> - Link to v2: https://lore.kernel.org/r/20250424-topic-sm8x50-upstream-iris-8650-dt-v2-1-dd9108bf587f@linaro.org
 > 
 > Changes in v2:
-> - Rebase on mainline
-> - Change patch subject to arm64: dts: rockchip
-> - Rename new regulators to fit preferred form for fixed regulators
-> - Link to v1: https://lore.kernel.org/r/20250228-camera-v1-0-c51869f94e97@bootlin.com
-> 
+> - removed useless firmware-name
+> - Link to v1: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org
 > ---
-> Olivier Benjamin (4):
->       dt-bindings: media: ov8858: inherit video-interface-devices properties
->       dt-bindings: media: imx258: inherit video-interface-devices properties
->       arm64: dts: rockchip: describe I2c Bus 1 and IMX258 world camera on PinePhone Pro
->       arm64: dts: rockchip: describe the OV8858 user camera on PinePhone Pro
-> 
->  .../devicetree/bindings/media/i2c/ovti,ov8858.yaml |   4 +-
->  .../devicetree/bindings/media/i2c/sony,imx258.yaml |   4 +-
->  .../boot/dts/rockchip/rk3399-pinephone-pro.dts     | 139 +++++++++++++++++++++
->  3 files changed, 145 insertions(+), 2 deletions(-)
-> ---
-> --
-> Olivier Benjamin <olivier.benjamin@bootlin.com>
-> 
-> 
+>  arch/arm64/boot/dts/qcom/sm8650-hdk.dts |  4 ++
+>  arch/arm64/boot/dts/qcom/sm8650-mtp.dts |  4 ++
+>  arch/arm64/boot/dts/qcom/sm8650-qrd.dts |  4 ++
+>  arch/arm64/boot/dts/qcom/sm8650.dtsi    | 93 +++++++++++++++++++++++++++++++++
+>  4 files changed, 105 insertions(+)
 > 
 
 
@@ -113,16 +91,27 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
+ Base: base-commit a7dca088884312d607fff89f2666c670cb7073ac not known, ignoring
  Base: attempting to guess base-commit...
- Base: tags/v6.15-rc1-102-g2332d042e9b2 (exact match)
+ Base: tags/v6.15-rc1-102-g2332d042e9b2 (best guess, 3/4 blobs matched)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250509-camera-v3-0-dab2772d229a@bootlin.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250509-topic-sm8x50-upstream-iris-8650-dt-v3-1-f6842e0a8208@linaro.org:
 
-arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dtb: camera@1a (sony,imx258): Unevaluated properties are not allowed ('clock-names' was unexpected)
-	from schema $id: http://devicetree.org/schemas/media/i2c/sony,imx258.yaml#
+arch/arm64/boot/dts/qcom/sm8650.dtsi:5395.4-27: Warning (interrupts_property): /soc@0/video-codec@aa00000:#interrupt-cells: size is (16), expected multiple of 12
+arch/arm64/boot/dts/qcom/sm8650.dtsi:5395.4-27: Warning (interrupts_property): /soc@0/video-codec@aa00000:#interrupt-cells: size is (16), expected multiple of 12
+arch/arm64/boot/dts/qcom/sm8650.dtsi:5395.4-27: Warning (interrupts_property): /soc@0/video-codec@aa00000:#interrupt-cells: size is (16), expected multiple of 12
+arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: /soc@0/video-codec@aa00000: failed to match any schema with compatible: ['qcom,sm8650-iris']
+arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: display-subsystem@ae00000 (qcom,sm8650-mdss): interconnects: [[179, 3, 7, 32, 1, 7]] is too short
+	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
+arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: /soc@0/video-codec@aa00000: failed to match any schema with compatible: ['qcom,sm8650-iris']
+arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: display-subsystem@ae00000 (qcom,sm8650-mdss): interconnects: [[188, 3, 7, 32, 1, 7]] is too short
+	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
+arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: /soc@0/video-codec@aa00000: failed to match any schema with compatible: ['qcom,sm8650-iris']
+arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: display-subsystem@ae00000 (qcom,sm8650-mdss): interconnects: [[196, 3, 7, 32, 1, 7]] is too short
+	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
 
 
 
