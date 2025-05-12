@@ -1,65 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81A02905;
-	Mon, 12 May 2025 12:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6C72AE68;
+	Mon, 12 May 2025 12:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054353; cv=none; b=hwlxlPmGmknUlmA+K5Q7TQ/ZTCi2gGbymLoRKn8vwFA8FTwk7Mz6X+zLp+n3nN9I7Q27LFen3BjX/4bdxtfn05A5WbnhkK6stGbmKPQtkITZPNgcsitcNnpS2kX3+9hjAURxem9MN2FDGm+Oqd1C7MMHs97Tph5z4nZNNFwugwU=
+	t=1747054377; cv=none; b=T2Np/elBHKSuwbsZbjTvJT305AlGaYWtprur3n5Rwxe8r94HehEmPZ6FITQPSE5jHO5ZOJU/7omB0pVPrbuCQVfMeFZ0NJDIKiYj5Ure8sfpA9E9euveSLItmNXLLvAu5/AMzU2QqiAA9z60YYikvzYQRSWGRf8dJHugTiHkp3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054353; c=relaxed/simple;
-	bh=8ZmiWEvYDdcWO94VvVuvtMz1yjFZ7HIfQWAcdyV8D+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dhJp/zuW1hWeKF1GFQdFaKagCu7okVLfz+sqcU6R2MzV1iYmvDBKlYibtlYKQcdstJAvewinQjA5uEeM39EFW9Rtz+uyhq5qgjLYaWuNDhEBJp9yrEcLo1bN7IMt06w+Ej353SVgOTa9vztjUD9O6dwqnTeGZUPPTDckObHM1f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAfVIzWs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747054377; c=relaxed/simple;
+	bh=zECTQVlS7BoMjRy+nopuy5oEj3xxBDKN5vQJhKE6xzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QGTW1wmNy/7SBv1YiGiPWDl1GAW//zoL6Nx010ma13fB+6f0+RJ23I1KZLuLQt8B+YFxZ5Tph88QTCsoAAYCdAtY8OgoNnM7R6o95dZvStmM0w1Vm/xf+fnkpTVY3bQPhO7j0e9n6MoWM7fcOXBef48Q4jA5vup7Bk+IROYwsqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=n7bDYyPR; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAfVIzWs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF990C4CEED;
-	Mon, 12 May 2025 12:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747054353;
-	bh=8ZmiWEvYDdcWO94VvVuvtMz1yjFZ7HIfQWAcdyV8D+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RAfVIzWsPVZm7gw396VeBjXGD+0F9G4XAL6WIXJE8dCziqLBFcDeROkJqAOOl0aig
-	 I9JplluoHJnSJ20Y+OE4pcJuzeX+d/hesUp2uqs7zql+0JEwvvaHXR1IwD3qrhfoJG
-	 WDQPeqRLc1gbUAe2HubdoWqxa/GduSgKWc0Jfvuh/hci39QKmYjBlqs7cFSMkalAGK
-	 ideD98/y7d6jMLrm+MLy67iGXwT7Om9+UF0U5WnZY1sjPy9ZuXpqAMyGC6pjaP6XLi
-	 Hzq5PiaYciW7O1O1aEd7uUxYYjY6kuKHJ8iRR0/7xLdQYQsW926fwweDjYiZsOx0sq
-	 xYjZyYXOv8XWw==
-Date: Mon, 12 May 2025 07:52:31 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: soc: fsl,qman-fqd: Fix reserved-memory.yaml
- reference
-Message-ID: <174705434967.2948939.9106067871185056281.robh@kernel.org>
-References: <20250507154231.1590634-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="n7bDYyPR"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uESBp-00C5t2-Df; Mon, 12 May 2025 14:23:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=qGVhATLfDHfKI3zxu6jJB+4o6rhgxGO4+J2Ibmk67sA=; b=n7bDYyPRLhNNg3V1RCrSWfCkzh
+	2Tc6oSpJceBKv6vVofPdd1P3Y+fuHPzd2ap3wSuC0QFW6Gnb/4YWRZgk5maPmG1fJ2pWQWrW1dlL3
+	k+NYZoYtsBMc365Sh7e9zsrNHvy6HGvn7ScGv4z3bE8Ko/ZL1WaVf/Q7YlM5MqggpcY/sZbsWsAEp
+	0dn1UdWh3ebefOLUcclU+J8V6ck+ne59icCt5lVC63kYZKVInmjhca+68i1veSjGm7NPJcorEbt+K
+	j0Or+l8ASbVL86mBkVfVbVugyVLBeNRgoh3Xiga+iaKoNLNlhEMBwS9Y3cLogDGxcGVBn2yzVVsqw
+	nkB90NDw==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uESBn-0000sF-KA; Mon, 12 May 2025 14:23:24 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uESBd-007iLF-FJ; Mon, 12 May 2025 14:23:13 +0200
+Message-ID: <720f6986-8b32-4d00-b309-66a6f0c1ca40@rbox.co>
+Date: Mon, 12 May 2025 14:23:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507154231.1590634-1-robh@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 3/3] vsock/test: Expand linger test to ensure
+ close() does not misbehave
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
+ <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co>
+ <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
+ <CAGxU2F59O7QK2Q7TeaP6GU9wHrDMTpcO94TKz72UQndXfgNLVA@mail.gmail.com>
+ <ff959c3e-4c47-4f93-8ab8-32446bb0e0d0@rbox.co>
+ <CAGxU2F77OT5_Pd6EUF1QcvPDC38e-nuhfwKmPSTau262Eey5vQ@mail.gmail.com>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <CAGxU2F77OT5_Pd6EUF1QcvPDC38e-nuhfwKmPSTau262Eey5vQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On Wed, 07 May 2025 10:42:31 -0500, Rob Herring (Arm) wrote:
-> The reserved-memory.yaml reference needs the full path. No warnings were
-> generated because the example has the wrong compatible string, so fix
-> that too.
+On 5/7/25 10:26, Stefano Garzarella wrote:
+> On Wed, 7 May 2025 at 00:47, Michal Luczaj <mhal@rbox.co> wrote:
+>>
+>> On 5/6/25 11:46, Stefano Garzarella wrote:
+>>> On Tue, 6 May 2025 at 11:43, Stefano Garzarella <sgarzare@redhat.com> wrote:
+>>>>
+>>>> On Thu, May 01, 2025 at 10:05:24AM +0200, Michal Luczaj wrote:
+>>>>> There was an issue with SO_LINGER: instead of blocking until all queued
+>>>>> messages for the socket have been successfully sent (or the linger timeout
+>>>>> has been reached), close() would block until packets were handled by the
+>>>>> peer.
+>>>>
+>>>> This is a new behaviour that only new kernels will follow, so I think
+>>>> it is better to add a new test instead of extending a pre-existing test
+>>>> that we described as "SOCK_STREAM SO_LINGER null-ptr-deref".
+>>>>
+>>>> The old test should continue to check the null-ptr-deref also for old
+>>>> kernels, while the new test will check the new behaviour, so we can skip
+>>>> the new test while testing an old kernel.
+>>
+>> Right, I'll split it.
+>>
+>>> I also saw that we don't have any test to verify that actually the
+>>> lingering is working, should we add it since we are touching it?
+>>
+>> Yeah, I agree we should. Do you have any suggestion how this could be done
+>> reliably?
 > 
-> Fixes: 304a90c4f75d ("dt-bindings: soc: fsl: Convert q(b)man-* to yaml format")
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/soc/fsl/fsl,qman-fqd.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Can we play with SO_VM_SOCKETS_BUFFER_SIZE like in credit-update tests?
 > 
+> One peer can set it (e.g. to 1k), accept the connection, but without
+> read anything. The other peer can set the linger timeout, send more
+> bytes than the buffer size set by the receiver.
+> At this point the extra bytes should stay on the sender socket buffer,
+> so we can do the close() and it should time out, and we can check if
+> it happens.
+> 
+> WDYT?
 
-Applied, thanks!
+Haven't we discussed this approach in [1]? I've reported that I can't make
+it work. But maybe I'm misunderstanding something, please see the code below.
+
+[1]:
+https://lore.kernel.org/netdev/df2d51fd-03e7-477f-8aea-938446f47864@rbox.co/
+
+import termios, time
+from socket import *
+
+SIOCOUTQ = termios.TIOCOUTQ
+VMADDR_CID_LOCAL = 1
+SZ = 1024
+
+def set_linger(s, timeout):
+	optval = (timeout << 32) | 1
+	s.setsockopt(SOL_SOCKET, SO_LINGER, optval)
+	assert s.getsockopt(SOL_SOCKET, SO_LINGER) == optval
+
+def set_bufsz(s, size):
+	s.setsockopt(AF_VSOCK, SO_VM_SOCKETS_BUFFER_SIZE, size)
+	assert s.getsockopt(AF_VSOCK, SO_VM_SOCKETS_BUFFER_SIZE) == size
+
+def check_lingering(addr):
+	lis = socket(AF_VSOCK, SOCK_STREAM)
+	lis.bind(addr)
+	lis.listen()
+	set_bufsz(lis, SZ)
+
+	s = socket(AF_VSOCK, SOCK_STREAM)
+	set_linger(s, 5)
+	s.connect(lis.getsockname())
+
+	p, _ = lis.accept()
+
+	s.send(b'x')
+	p.recv(1)
+
+	print("sending...")
+	s.send(b'x' * (SZ+1)) # blocks
+	print("sent")
+
+	print("closing...")
+	ts = time.time()
+	s.close()
+	print("done in %ds" % (time.time() - ts))
+
+check_lingering((VMADDR_CID_LOCAL, 1234))
 
