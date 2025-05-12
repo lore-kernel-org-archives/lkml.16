@@ -1,43 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3E42528EF;
-	Mon, 12 May 2025 16:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD88246794;
+	Mon, 12 May 2025 16:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747069027; cv=none; b=vBKu4dHCjnjy0Njgh2PHUI10GNNKCZ64DEq3NaewNwPpj9ehDzNqmTVdHoU6CpMNRzhBYBC+lw6byQ/0OHhgX9hpTY+pSiu8zqAOthpsFsR36qntYVmewuV+Jm7LtE60NE/YMJuJM7PZZKlgiKgWSfUOWs1JB+2OwLfDYBIqirI=
+	t=1747069073; cv=none; b=JUJ5hAbZ5q4VgYpz6Y6mifoG7s+shYxSdlOfw2vQ8Y7XRBAI0W8S2V+SwjPwr4gTHKccOh1Ahc+UDZHRHb2nd8gjKYEzsVN5YZmJYrb3hM7ywJvwyiXo29EsGVeOtrRvw7mNjs7oF5lcvH8ZZJ3GDW92ICfHzUidcapxDyD2wPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747069027; c=relaxed/simple;
-	bh=WmxDSQ1DuH91G8fUJbKIVxL7Ybu6v7NF21gNiUQeylA=;
+	s=arc-20240116; t=1747069073; c=relaxed/simple;
+	bh=jtmhvy+igoWarO8PIdZ3LGqvMhYkNDTKVtMcVaaeYnM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cMI3JEC6fGqPaDpt0/j9zlr+uoabBcX44eAlFuKK2oQ8yMDvRUmvpHItyVU67ruvL3lc5zdV2DdgSUFqcEG1XoZc0bGGKH0tHU+fcLMzP3JsRdAHA0ypF7iaEjEhcaQG33NqkRLgMoDejoj3FpZlcJU4nnTwarFOAFrNilftCUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gs4AhFQB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNYnEW6W8mTj8vv0FZKc+Ed/bTZP7dFYtdQjGwHc1mh/F/Cze4cJAv//Ad1w9KcJDKNJ9tTVobRyus7Vk6DYgoo3zmhRYcXc0WE3WoxZtSmsmturOQmRWZfc8Hum/NLmCNkv57usFQbVt0iyqBjspxLJkOAfimWXv2PXtj87Yns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=USwPZBGa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gs4AhFQB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20AE3C4CEE7;
-	Mon, 12 May 2025 16:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747069026;
-	bh=WmxDSQ1DuH91G8fUJbKIVxL7Ybu6v7NF21gNiUQeylA=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="USwPZBGa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F318C4CEE7;
+	Mon, 12 May 2025 16:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747069072;
+	bh=jtmhvy+igoWarO8PIdZ3LGqvMhYkNDTKVtMcVaaeYnM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gs4AhFQBIj2vEWQp8rRjwwvLgpAAGh/WTj6O92ZXoitVTrsfFYbY7bl0prdAhTW5T
-	 mEYBVUjWil88JDQK+ra6MZFvNN71dsCMYcD2RXKJgHmY6F+/zZPnwm4OV3YysQ9lzU
-	 cX3mGSJCU/L/p9NCG/b/qrZjsjw9BDCjz5agGxBoMGC6o9Z/yF5TmFNg2GAzEXmddm
-	 3l7ZadMgnQYsJ9vBM7mWpFTaZCvXaDFBOewvCDMezzrhuQNY+4KvH2U1KL5LKdW4ME
-	 cKN84WS9mFblLebPKsZH2N6AZqDSEBfud88EKlnKwmJM32YPvMDUJu4TVaw9ZMkUCG
-	 vrVsq+GowB8yA==
-Date: Mon, 12 May 2025 17:57:01 +0100
-From: Simon Horman <horms@kernel.org>
-To: Abdun Nihaal <abdun.nihaal@gmail.com>
-Cc: shshaikh@marvell.com, manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, sucheta.chakraborty@qlogic.com,
-	rajesh.borundia@qlogic.com, netdev@vger.kernel.org,
+	b=USwPZBGaCrF4OOrhmuZAcAHI13eVshZ3/K0bwJ6RiKOQGGFWJfhh5EF/FT895MSwQ
+	 niVRzkI8AudeQY5kJfVVvHZgYtIwLWNvA8SCFkMY26EKM6n+b7akU5WeJ89rD63Mr+
+	 0j/gkbhG4jaPkEpglku421lkT2l/AWzkBt+3/bO4=
+Date: Mon, 12 May 2025 18:57:49 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] qlcnic: fix memory leak in
- qlcnic_sriov_channel_cfg_cmd()
-Message-ID: <20250512165701.GT3339421@horms.kernel.org>
-References: <20250512044829.36400-1-abdun.nihaal@gmail.com>
+Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into
+ symlink
+Message-ID: <2025051203-secluded-emphases-1c76@gregkh>
+References: <20250509203430.3448-1-adobriyan@gmail.com>
+ <87frhcsrva.fsf@trenco.lwn.net>
+ <77f03295-df5d-4bc0-9a61-5be829969662@p183>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,26 +42,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250512044829.36400-1-abdun.nihaal@gmail.com>
+In-Reply-To: <77f03295-df5d-4bc0-9a61-5be829969662@p183>
 
-On Mon, May 12, 2025 at 10:18:27AM +0530, Abdun Nihaal wrote:
-> In one of the error paths in qlcnic_sriov_channel_cfg_cmd(), the memory
-> allocated in qlcnic_sriov_alloc_bc_mbx_args() for mailbox arguments is
-> not freed. Fix that by jumping to the error path that frees them, by
-> calling qlcnic_free_mbx_args(). This was found using static analysis.
+On Mon, May 12, 2025 at 07:08:53PM +0300, Alexey Dobriyan wrote:
+> On Sat, May 10, 2025 at 04:05:29AM -0600, Jonathan Corbet wrote:
+> > Alexey Dobriyan <adobriyan@gmail.com> writes:
+> > 
+> > > Every time I open Documentation/CodingStyle it says the party moved
+> > > somewhere else. :-(
+> > >
+> > > Of course, I forget where it moved to by the next time.
+> > >
+> > > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> > > ---
+> > 
+> > No 0/9 cover letter?
 > 
-> Fixes: f197a7aa6288 ("qlcnic: VF-PF communication channel implementation")
-> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
-> ---
-> This patch is only compile tested. Not tested on real hardware.
+> Not really. Cover letter would be very short:
 > 
-> V1->V2 : Added information about how the bug was found and how the 
-> patch was tested, as suggested by Simon Horman.
+> 	Tweak coding style to add things I've learned over the years of
+> 	Linux/C programming.
 > 
->  drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> 	And stop making kernel devs look like aliens from another Universe
+> 	(see static_assert() rule and especially(!) "declare ALAP" rule)
 
-Thanks for the update.
+Both of those are not valid reasons to change coding style, sorry.
+Again, learn about _why_ we have one, don't get bogged down in the
+details of _what_ it is.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+sorry,
 
+greg k-h
