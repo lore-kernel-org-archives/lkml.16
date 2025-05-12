@@ -1,120 +1,93 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF6E78C91;
-	Mon, 12 May 2025 09:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFD22550C9;
+	Mon, 12 May 2025 09:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747043722; cv=none; b=u6wONzgqF9xrgZxTrJWSI6kAzkBhRa+O68xHG55lHgA8Xakr/3rG0DVwWwpVlSqIJtGPDW5EvRn63baYoHjvs6gKRXYBmx1yZxX+nLDb2uSRo8mwmA0+vsGxHNVdx7WI/wTwW6e88VciJ9u9tyZMOxggdYsYTMYq3ZC/qbP5oPQ=
+	t=1747043722; cv=none; b=Ny1GfvVzOihn8zxFbw6sCNyr+XEvqYIpSeiyELo8AcGryBP+MStgzj278Lef8UT9CH8X7K5lZcOaKy5EoemjiLXoCGeSU30NP/S9qUutq5g+IgR6NIU4TVgIJqoQgAbhRAbFf/36k/VDvjQQOBNCW8snOoDkB4J+GWD4Nmy9MAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747043722; c=relaxed/simple;
-	bh=lFDSoNC0sMKrrqiFBKoJHQ0fiMqxBkLQFGxP2ENyndY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gmzg/Z7N+MWEzdfgrLwRH7M80Ne+VGHmG8mQ9vMSfq146ECy03u6SZdBa6R2Gcds3/U8wbj/Uu01JGjQmxAuP/Fdph2VNhGnIBWCOgSbVa+2ShCXLyfv7PDIPweHGJJMeeJYjhoBjS8Wwin71WGlRZlrOaPZ5B7AXhY1gVvMjew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=RWps8doe; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	bh=hqhnstJx2uy9f+VTTs0CnDZAuq5j2171neg9fcKEwOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qPq1HaD5mRmwruMbCBtPIkuff/lsnGJjRGFCoHsKkLFNrXa1iqTCnMwjTTOUcqwulyomhQ8EGmoG2Eo7321DEZWaq2sG+5Ma070PYCihlOMEt/5cEKa2lbRk7FHJcmzyOMl7W0G9AYtj0tdgk0MRBlzpstoBAqb6+wing3C7G0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JyJmDA9w; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="RWps8doe"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 459EA1F93F;
-	Mon, 12 May 2025 11:55:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1747043708;
-	bh=IJBW41hRfmWiDm9qdKYT5jwbJNvX98RAdJkHKkuV7Ok=; h=From:To:Subject;
-	b=RWps8doerMmsbQxK0uOsscLdBNkOlJqPFCRRs38CgAP7qcRSbWr82vGK3uw94FJZC
-	 77hvtAuq6Fml7Muhylq8sXXQL+Wj+vu4Ohw8JZuzLYUjys2IH/pyJiTeKXuIIKwz6k
-	 LQC8Ub3Ovqmr41IoBQ4la83hRkuwkkqJNWxmcZ96XlXWs0fCOZ+oBnsJGx/1gnjgaG
-	 +SWy73tQ5SRU8EqV1eIuovR5QpNXVbcsFqQfNOX6gnxcDztBXEcLPXDi2ZdW7bOBIw
-	 +JQcCCIncJkEx4De6EQVh2ksX8MajPhoUjRPoPxFGnjsqJRZbJiT2G+Jsrp70sWkwM
-	 1oLSawN2ck7tQ==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Marek Vasut <marek.vasut@gmail.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	stable@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3] gpio: pca953x: fix IRQ storm on system wake up
-Date: Mon, 12 May 2025 11:54:41 +0200
-Message-Id: <20250512095441.31645-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JyJmDA9w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747043722; x=1778579722;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hqhnstJx2uy9f+VTTs0CnDZAuq5j2171neg9fcKEwOo=;
+  b=JyJmDA9warpaiiu0pg4CAdgwl3irftG2vEpryduMkupTiq2b7DAQLG/k
+   Cr+pauaJiG097T7+BV4pFuKI2ucsW+2p1xXyKZDTToDmQ+4ngZxmD0MCP
+   s8Ogd/TDaX/zc6T++x5KdJXu4OxtrZS2jLnHMNY15mAlZh0Uu0nuESkX3
+   8D4qZyL87n+3vR4YnWgjHBZSQtucsXWjEe5u7a7NfF8UhppQs89WK+PKu
+   4vTYgSiufi0Xqji6Cvvk9kwSqBCOaaHwXw76vBm+YhoWjXQ+phMn3ihK/
+   4UPjyxWVsrrsWrLK99VFJ8Ypo4Dw+8MoqJkq9wlisDwyAp1NVVI8FTkbv
+   g==;
+X-CSE-ConnectionGUID: EwmJU3GySXCJclgDMZ/2yA==
+X-CSE-MsgGUID: bKpELjGTR32fhlJa7eGm0g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48908693"
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="48908693"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:55:21 -0700
+X-CSE-ConnectionGUID: K7gbih2JT/aONFtmFvYk7A==
+X-CSE-MsgGUID: PmzUTkOURFWqLbQFeudz4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="137349324"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 12 May 2025 02:55:17 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 3A17919D; Mon, 12 May 2025 12:55:16 +0300 (EEST)
+Date: Mon, 12 May 2025 12:55:16 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, rick.p.edgecombe@intel.com, 
+	isaku.yamahata@intel.com, kai.huang@intel.com, yan.y.zhao@intel.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, kvm@vger.kernel.org, 
+	x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC, PATCH 03/12] x86/virt/tdx: Add wrappers for
+ TDH.PHYMEM.PAMT.ADD/REMOVE
+Message-ID: <3coaqkcfp7xtpvh2x4kph55qlopupknm7dmzqox6fakzaedhem@a2oysbvbshpm>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+ <20250502130828.4071412-4-kirill.shutemov@linux.intel.com>
+ <aB3WWUSESKt9niJV@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aB3WWUSESKt9niJV@intel.com>
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+On Fri, May 09, 2025 at 06:18:01PM +0800, Chao Gao wrote:
+> > int tdx_guest_keyid_alloc(void);
+> > u32 tdx_get_nr_guest_keyids(void);
+> > void tdx_guest_keyid_free(unsigned int keyid);
+> >@@ -197,6 +202,9 @@ u64 tdh_mem_page_remove(struct tdx_td *td, u64 gpa, u64 level, u64 *ext_err1, u6
+> > u64 tdh_phymem_cache_wb(bool resume);
+> > u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td);
+> > u64 tdh_phymem_page_wbinvd_hkid(u64 hkid, struct page *page);
+> >+u64 tdh_phymem_pamt_add(unsigned long hpa, struct list_head *pamt_pages);
+> >+u64 tdh_phymem_pamt_remove(unsigned long hpa, struct list_head *pamt_pages);
+> 
+> When these SEAMCALL wrappers were added, Dave requested that a struct page
+> be passed in instead of an HPA [*]. Does this apply to
+> tdh_phymem_pamt_add/remove()?
+> 
+> [*]: https://lore.kernel.org/kvm/30d0cef5-82d5-4325-b149-0e99833b8785@intel.com/
 
-If an input changes state during wake-up and is used as an interrupt
-source, the IRQ handler reads the volatile input register to clear the
-interrupt mask and deassert the IRQ line. However, the IRQ handler is
-triggered before access to the register is granted, causing the read
-operation to fail.
+hpa here points to a 2M region that pamt_pages covers. We don't have
+struct page that represents it. Passing 4k struct page would be
+misleading IMO.
 
-As a result, the IRQ handler enters a loop, repeatedly printing the
-"failed reading register" message, until `pca953x_resume()` is eventually
-called, which restores the driver context and enables access to
-registers.
-
-Fix by disabling the IRQ line before entering suspend mode, and
-re-enabling it after the driver context is restored in `pca953x_resume()`.
-
-An IRQ can be disabled with disable_irq() and still wake the system as
-long as the IRQ has wake enabled, so the wake-up functionality is
-preserved.
-
-Fixes: b76574300504 ("gpio: pca953x: Restore registers after suspend/resume cycle")
-Cc: stable@vger.kernel.org
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2 -> v3
- - add r-b Andy, t-b Geert
- - fixed commit message
-
-v1 -> v2
- - Instead of calling PM ops with disabled interrupts, just disable the
-   irq while going in suspend and re-enable it after restoring the
-   context in resume function.
----
- drivers/gpio/gpio-pca953x.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index ab2c0fd428fb..b852e4997629 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -1226,6 +1226,8 @@ static int pca953x_restore_context(struct pca953x_chip *chip)
- 
- 	guard(mutex)(&chip->i2c_lock);
- 
-+	if (chip->client->irq > 0)
-+		enable_irq(chip->client->irq);
- 	regcache_cache_only(chip->regmap, false);
- 	regcache_mark_dirty(chip->regmap);
- 	ret = pca953x_regcache_sync(chip);
-@@ -1238,6 +1240,10 @@ static int pca953x_restore_context(struct pca953x_chip *chip)
- static void pca953x_save_context(struct pca953x_chip *chip)
- {
- 	guard(mutex)(&chip->i2c_lock);
-+
-+	/* Disable IRQ to prevent early triggering while regmap "cache only" is on */
-+	if (chip->client->irq > 0)
-+		disable_irq(chip->client->irq);
- 	regcache_cache_only(chip->regmap, true);
- }
- 
 -- 
-2.39.5
-
+  Kiryl Shutsemau / Kirill A. Shutemov
