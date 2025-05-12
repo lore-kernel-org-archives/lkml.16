@@ -1,112 +1,156 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06E9255223;
-	Mon, 12 May 2025 06:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E3B3C38
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747029964; cv=none; b=Vsyz4OeEfsYCmaO/28yVbgIaDmz9/pIobw4Hu6TJgT9PqvnY017yL6U1w0qdzpBEeMCvHqvucri3PY+ZELNZwsjvKjG9djroF6A4LkGOankAvRtmaNfk1wS5hiRlGbaJm9cpN9+1yngm+CimuwexFBvBW83yowiKKE2u+1fUdfE=
+	t=1747030117; cv=none; b=XUi1W/VxyTYw/0vrdUpravBTXzbyghzLwk9pv8CnSPPqP4CWyEPMaSOaaIhuK21vqw93z7IOGM7lsyLLir8SVaaz3Jg+/gEqaQtqNZmh1cYU2ma/2a92ddRRy/I9+AGqqlmJLIHslsCS+emoGx117haYv5ji+1b4wLH50GVLvEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747029964; c=relaxed/simple;
-	bh=bq67q7+bU5SxI5x84gX3+S/6BoUlZWkfuzP9TZlO2c0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=O5L298gWhXWd/VBXw5egVWdbOKaTDWorJNu+yWPuYGYnARY1KnYG/M82Humps4SCPjdBRGocOGjeIx2s7BImz1ZwACv8/5+Xul2Vr/WCFk7idFVmBv36/DM9ECUCfkhwarKJI4Y3X5HCLkrZ8bznm06qtoY7E4JBbbX3lYYiJmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZwpxZ5q9nz4f3jt8;
-	Mon, 12 May 2025 14:05:38 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 48CC41A13A4;
-	Mon, 12 May 2025 14:05:58 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgAHa1_EjyFo8K+pMA--.56895S3;
-	Mon, 12 May 2025 14:05:58 +0800 (CST)
-Subject: Re: [PATCH RFC md-6.16 v3 02/19] md: support discard for bitmap ops
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
- <20250512011927.2809400-3-yukuai1@huaweicloud.com>
- <20250512044125.GB868@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <2830c5d0-cc04-51eb-6785-79d0a43f4fc4@huaweicloud.com>
-Date: Mon, 12 May 2025 14:05:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747030117; c=relaxed/simple;
+	bh=FK8pEdCRQtG6bJlXiQWdi88Bu8Ab4nVxy28DqpeqP7s=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ENZ+9gaVOp79Mqy2jmcm7C+a6QOObZ22rQIg3glrLTOTN+PdcJO/zvHRGjNjPaODdICQMGPnB8+kZbCNdyvb3wqkj44VTrbDPQzln5nMce62tL23V4/+qYrjfb1r8bhbT5jOUrW8Pl2eYGgvGE9PNAejGvSlDYLzZFOX/p+t2PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P68ZAven; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X4ag0s25; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P68ZAven; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X4ag0s25; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P68ZAven";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X4ag0s25";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P68ZAven";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X4ag0s25"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 64D4D211AD;
+	Mon, 12 May 2025 06:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747030102; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
+	b=P68ZAvenefYZ4NDkzAWQDonwBFNXbXDZYtwdUfPOBWs8iBbR6DO+hrj5Vtu3tQBn+spiOY
+	q58yLInZAbDhIWmys5/OFX8u+6Ni7k73KhtjmMmPt5n5k3cDox5eBljtiIDEV+OcLlWAsX
+	torlOTa9h37E+iCwkWbtj5kDdFnw6Jc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747030102;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
+	b=X4ag0s250XMgQ+nRAVL/unRTUX8pJeSCz4LYIb78m0QmkvgTes7RIDftLdnkXs45BtG4O0
+	+vaouCEWQtpR85Cg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=P68ZAven;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=X4ag0s25
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747030102; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
+	b=P68ZAvenefYZ4NDkzAWQDonwBFNXbXDZYtwdUfPOBWs8iBbR6DO+hrj5Vtu3tQBn+spiOY
+	q58yLInZAbDhIWmys5/OFX8u+6Ni7k73KhtjmMmPt5n5k3cDox5eBljtiIDEV+OcLlWAsX
+	torlOTa9h37E+iCwkWbtj5kDdFnw6Jc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747030102;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
+	b=X4ag0s250XMgQ+nRAVL/unRTUX8pJeSCz4LYIb78m0QmkvgTes7RIDftLdnkXs45BtG4O0
+	+vaouCEWQtpR85Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 210211397F;
+	Mon, 12 May 2025 06:08:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zdDjBlaQIWgYcgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 12 May 2025 06:08:22 +0000
+Date: Mon, 12 May 2025 08:08:21 +0200
+Message-ID: <878qn2xsx6.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<13564923607@139.com>,
+	<13916275206@139.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<baojun.xu@ti.com>,
+	<Baojun.Xu@fpt.com>,
+	<jesse-ji@ti.com>
+Subject: Re: [PATCH v1] ALSA: hda/tas2781: Fix the ld issue reported by kernel test robot
+In-Reply-To: <20250511221844.1123-1-shenghao-ding@ti.com>
+References: <20250511221844.1123-1-shenghao-ding@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250512044125.GB868@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHa1_EjyFo8K+pMA--.56895S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFW7AFy5GFyDKryUur47XFb_yoW8GFW3pa
-	9FqFW3KFs8XF9Y9347X34YgF1Fqw1DGr90yFyIgr45Gw1rCr93CF4fua4YvF15uryxZF4j
-	va10y3W3Xry8WrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 64D4D211AD
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.981];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[139.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,139.com,alsa-project.org,vger.kernel.org,ti.com,fpt.com];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	REDIRECTOR_URL(0.00)[urldefense.com];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim]
+X-Rspamd-Action: no action
 
-Hi,
-
-ÔÚ 2025/05/12 12:41, Christoph Hellwig Ð´µÀ:
-> On Mon, May 12, 2025 at 09:19:10AM +0800, Yu Kuai wrote:
->> +++ b/drivers/md/md.c
->> @@ -8849,14 +8849,24 @@ static void md_bitmap_start(struct mddev *mddev,
->>   		mddev->pers->bitmap_sector(mddev, &md_io_clone->offset,
->>   					   &md_io_clone->sectors);
->>   
->> -	mddev->bitmap_ops->startwrite(mddev, md_io_clone->offset,
->> -				      md_io_clone->sectors);
->> +	if (unlikely(md_io_clone->rw == STAT_DISCARD) &&
->> +	    mddev->bitmap_ops->start_discard)
->> +		mddev->bitmap_ops->start_discard(mddev, md_io_clone->offset,
->> +						 md_io_clone->sectors);
->> +	else
->> +		mddev->bitmap_ops->startwrite(mddev, md_io_clone->offset,
->> +					      md_io_clone->sectors);
->>   }
+On Mon, 12 May 2025 00:18:44 +0200,
+Shenghao Ding wrote:
 > 
-> This interface feels weird, as it would still call into the write
-> interfaces when the discard ones are not defined instead of doing
-> nothing.  Also shouldn't discard also use a different interface
-> than md_bitmap_start in the caller?
-
-This is because the old bitmap handle discard the same as write, I
-can't do nothing in this case. Do you prefer also reuse the write
-api to new discard api for old bitmap?
-
-For the caller, I think it's fine, since bitmap framwork already
-calculate sectors and len for discard as well.
+> Fix the ld issue reported by kernel test robot, moving the implementation
+> of tasdevice_remove from tas2781-comlib-i2c.c to tas2781-comlib.c.
 > 
-> I'd also expect the final version of this to be merged with the
-> previous patch, as adding an interface without the only user is a
-> bit odd.
-
-Sure.
-
-Thanks,
-Kuai
-
-> .
+> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 > 
+> ---
+> v1:
+>  - | Reported-by: kernel test robot <lkp@intel.com>
+>    | Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505111855.FP2fScKA-lkp@intel.com/__;!!G3vK!U-wdsvrOG1iezggZ55RYi8ikBxMaJD
 
+You must put this in the patch description around your Signed-off-by
+line (without quotes).
+Also, please put the Fixes tag to point out the commit that introduced
+the regression, too.
+
+Care to resubmit?
+
+
+thanks,
+
+Takashi
