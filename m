@@ -1,105 +1,112 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10331296D3C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C5729B22F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747085562; cv=none; b=akG9n+T2WJxD1GYk1FF8qTNJqKSEcLxT4K9Ql0t1Yju3o0pfNe78GVQvcSQPcaOdXPdUj6uruj2jNp0t2kT3OyEPGUcpT9C6suYP7XIv2yLPPAbGXkabpLoqOrGxItHeQklCJt9V2wUTP73rugmdVh8LQCpdletL2ZV2wM4gWA0=
+	t=1747085566; cv=none; b=KqubuECqAq0Qkzz2nQRoahDZSXUki6HQ9USeVyFf1wv3Qza4TnzbzBhidGsCGFfbq3YeuJ2Xq0dhyPsCPkS0/fwwJii/hfO8NbpjvhFvBGKhijIDXtLkqQ8oeoADFlcx5oy5FyUAmJwlYive76h/fV+l7PGktbYqb3BDpERKgyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747085562; c=relaxed/simple;
-	bh=sFHYzOqc9ldiOIkZ5g5soXtLw0oO0wTl3DJJuDEdpCM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gvPZLbqyrF6ieYTkFhr3Ul7G2FojA5SqJZyZQ16dWjgf7jmGoY4EdujJBF6JdCN/riBOGMCj5XGWM2H4CiF6MlLQ+C4z7PAz/dkX/E2aIgSz1hERiTgiUDI7fo6Ajft7MZZwZ4pajFj/y5xFR+OIBNw5JUlKCjK/HyLpl034MZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gjpi4QHA; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747085566; c=relaxed/simple;
+	bh=f2MCs4lM3l4FrlvQEABriuyhhX5RlGGLRAtIDhd82lY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZiIAgLxZls/v+HctJbSsEBjdI6IWUU7jRIB18iwXJXgDUQNJyFsO1UGFx+S0kPmxB99V4gnEPOxMSoM9tqDRV/0ki6yJrsq6vRUMCdB3DkriDuyXrB01rmC+RUGUy7/qscyiZOnEZcfCbk8M/bxzR6x74zoOw0vEPQf/+dNqz30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QMSMi6OV; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gjpi4QHA"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73e0094706bso6949454b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:32:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QMSMi6OV"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-86142446f3fso126405339f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747085560; x=1747690360; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i+B2Elcw17Cu4CBcJZhD06N2/yMjwzCSgqlqc2Asw9k=;
-        b=gjpi4QHAwqg04/Oa8OdNdzd71Ak1lSJyPHN6CF2OukY1P3zozBAATh66FH7tHcKkHo
-         MUvX4ZK57SDQJ6+tKbu6xuvwxuBaB8zwr0MPmNkBH7I8zkXVtf1+kAV8JhPFwQsO1FQR
-         idgHAXag0E3BNPWJTVvu7AU+FmQg8WU82/LnUa8FR8vVvBR4YXPWKVtKGskZG5kI4zbC
-         qW7VbNZtpHOsznKygV4Ve+LkQl/Bh+y0xggRWEOHgxI8c16UyoBz/0iVz5ZwqmcDT+7F
-         BAjxog+6H+UB3khAj7m9ONOqk1ktDTlJLc5zEs51N4oWTOgbW/4YSxejNT+FLMme3z4K
-         RJ/w==
+        d=linuxfoundation.org; s=google; t=1747085562; x=1747690362; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aVC8CIn+kAUJC5QRXx6Je5lGhZlJWHJlDC4Z0lsVmlk=;
+        b=QMSMi6OVn9ARSr1nASQvdrzUNOqd4paa0IYSoqzEBBNDWjFaqMkYmUtzAMVSCpBCq9
+         rFZzefecxsgovMxhsXpozyE2z1KUtwslwwFX4slOvbKNbAZOeT78qXZ4yllObnb6D15d
+         IYnDImt8w3tuPbLuu5sFp0+E3cQfZQEPMjlrQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747085560; x=1747690360;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i+B2Elcw17Cu4CBcJZhD06N2/yMjwzCSgqlqc2Asw9k=;
-        b=wz2IeMb5ybeGEUwK1GLImDhOEX56S4z+LXZYwF5nZfpv+OoD86yKjqR5L/5g7fkBRg
-         NhAKFgFOIQbgVnqvMt4a+9Jj4MM60Qoquxrap2XjOhXeW7VtiiH15EvRpIDyULZ+qhU+
-         xyjGnX1PcHmXssChT5QxSkUBGdNG6Higw0D5/wbahkV/mBiRgTM1766JR6qYaIziLL+v
-         vDmBq5MrYuFBM0naWnQF8kmfGVFxQQHvT+2u/Ua5VHs0UqBFEo4h9x7m5cikPIygRKbr
-         ILi6joActOVBtW7B61MRdVy++uFtO/cwQHOvsfD/WgfGc/zhAOOzSrhhEF7zlZShL5Nv
-         T5uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFjl5YM836c+CqHHXl/AzFBRhJg27kTX53Lkcrc00YfI67XfaD90luInyicv4Jo0HZspyMaJ+mhOOEU3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBklCNmSLSdv6ggXcHytclqL7o6o9N4SBrOPvLQNup0Y9SXDOf
-	UvU2NTs0BXAmBWeQMEJCEYDEwfp7A3uXZo5Lsj7U/uTzo5rBtb6zicTlXUJLTnpcyXOz+2SVTuK
-	8oA==
-X-Google-Smtp-Source: AGHT+IEp1InJ4GD3YtvHdByU1GNNXTqDQ4FLT07UCcjYKesrglIqAhjhJEZJflXendq5wohUelB1dP7LOeQ=
-X-Received: from pgbcf9.prod.google.com ([2002:a05:6a02:849:b0:b0d:b491:d409])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3405:b0:1f6:2d39:8713
- with SMTP id adf61e73a8af0-215abc21edcmr19190748637.19.1747085560396; Mon, 12
- May 2025 14:32:40 -0700 (PDT)
-Date: Mon, 12 May 2025 14:32:38 -0700
-In-Reply-To: <20250313203702.575156-17-jon@nutanix.com>
+        d=1e100.net; s=20230601; t=1747085562; x=1747690362;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aVC8CIn+kAUJC5QRXx6Je5lGhZlJWHJlDC4Z0lsVmlk=;
+        b=XHfacZKgPoUcrM7T/OYygYy0xtcI/Ew03z3pMYvjHgEJV5OYb9JYszCxs9DYWa+DpP
+         ZGEMMKs9ahp3vk24P8KifGelGNEKUUinoYUYTfPuDAUpfyNqOmQP1/Q83vGdSE4BGveT
+         8Nvyac3oQlfhgRNxgQTBaqsIYcQHeGsnlmaOQZ88iExtirFZg/BcKCLQDieDBHBEIXaw
+         X5aGlKbSNIQDHd6ppVD1ajhePbCWv7HbaKA5o6pcGzfye+tForc+pu87F86AESEYY/F4
+         MFgotJe2W75a970+1h8pZpAq/RQn6yRR/RJBuGxiENintX7CFJ6Q8YHy5eFGZTx59U0Y
+         edvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMnJxfAjvwqbdJt6Cp5+ifnF03p2i6PVu6JgjMt0eZw9ctrX2/MNuO/j0H0KWSxikkTHxWCiZXq9QUAsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIvrsqLgVWZ3+XW6rtRWvGvbPaFBR5EEqewf0GCs7YoFNVNyZF
+	fVA+9kdydkCpSecltotjO00ZoEiKe+2Uyy5YjhSDCsNUqllXvmbDh/mWwDEH8saMfeDVQT/0lnJ
+	5
+X-Gm-Gg: ASbGnctBwGnGKZXZxT6lk+SPYjw66i/eJSg+gDRSC1BVqWIDAf9cV2vQoDiYvHTgiyz
+	jSF1Dor/8RSFoG09W3KsQ6miU4pYGjFtTM5Hs/5YfcsidFv+Q9JJQMq4+t8+mnHvoJCFhW4K8Z7
+	Ad0LG3ogPwSyKv+TZwEAo7OyF1QhhU1uFOp6piEvbYhVTYrZvwo4sVWyFrRDcgHPDNUY9DirGIE
+	dIaK6U/6lXguFjG3Kkle05fR5bsc1h21zAlTl96KABJO2EgrqWPDT5K6YFUQ1a5B7TUgHp++d0e
+	yvBwMqd88uZzC4LmdWgFMkPEA/dOgGf3vWZZVojIeCXnwogXy5lZjGaNvFecpg==
+X-Google-Smtp-Source: AGHT+IFUmfEbqs2iqJ2yUBrpmIaYJEyYGMrVR1JpfUOwjb3bm//xzfZQbCP9wt/2h1O8OE8V+0AWaQ==
+X-Received: by 2002:a05:6602:13c4:b0:85b:4ad1:70e with SMTP id ca18e2360f4ac-86763575d30mr1787891339f.6.1747085562361;
+        Mon, 12 May 2025 14:32:42 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fa2ec25bccsm1521170173.90.2025.05.12.14.32.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 14:32:41 -0700 (PDT)
+Message-ID: <a699b6d0-f028-43d1-93c9-250b6c8c4a6b@linuxfoundation.org>
+Date: Mon, 12 May 2025 15:32:40 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-17-jon@nutanix.com>
-Message-ID: <aCJo9qZdTrWBOwhf@google.com>
-Subject: Re: [RFC PATCH 16/18] KVM: nVMX: Setup Intel MBEC in nested secondary controls
-From: Sean Christopherson <seanjc@google.com>
-To: Jon Kohler <jon@nutanix.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/14] kselftest harness and nolibc compatibility
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Willy Tarreau <w@1wt.eu>, Andy Lutomirski <luto@amacapital.net>,
+ Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
+ <d8d36e51-9456-49a3-88c4-44cffdcc5c0a@t-8ch.de>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <d8d36e51-9456-49a3-88c4-44cffdcc5c0a@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 13, 2025, Jon Kohler wrote:
-> Setup Intel Mode Based Execution Control (bit 22) for nested
-> guest, gated on module parameter enablement.
-
-*This* is the enablement patch.  And it's not doing "Setup", it's advertising
-SECONDARY_EXEC_MODE_BASED_EPT_EXEC to userspace and allowing userspace to expose
-and advertise the feature to the guest.
-
-> Signed-off-by: Jon Kohler <jon@nutanix.com>
+On 5/10/25 00:54, Thomas Weißschuh wrote:
+> Hi Shuah and Kees,
 > 
-> ---
->  arch/x86/kvm/vmx/nested.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> On 2025-05-05 17:15:18+0200, Thomas Weißschuh wrote:
+>> Nolibc is useful for selftests as the test programs can be very small,
+>> and compiled with just a kernel crosscompiler, without userspace support.
+>> Currently nolibc is only usable with kselftest.h, not the more
+>> convenient to use kselftest_harness.h
+>> This series provides this compatibility by removing the usage of problematic
+>> libc features from the harness.
 > 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 931a7361c30f..ce3a6d6dfce7 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -7099,6 +7099,10 @@ static void nested_vmx_setup_secondary_ctls(u32 ept_caps,
->  		 */
->  		if (cpu_has_vmx_vmfunc())
->  			msrs->vmfunc_controls = VMX_VMFUNC_EPTP_SWITCHING;
-> +
-> +		if (enable_pt_guest_exec_control)
-> +			msrs->secondary_ctls_high |=
-> +				SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
-
-Land this above the VMFUNC stuff so that more of the secondary_ctls_high code is
-clumped together.
-
->  	}
->  
->  	/*
-> -- 
-> 2.43.0
+> I'd like to get this series into the next merge window.
+> For that I'd like to expose it to linux-next through the nolibc tree.
+> If you don't have the time for a review or issues crop up, I will drop
+> the patches again.
 > 
+> Are you fine with that?
+
+Didn't I respond to v13 saying you can include in your nolibc PR?
+If I didn't here is my Reviewed-by.
+
+> 
+> The issues reported by Mark have been fixed and tests have been written
+> for them.
+
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
