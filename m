@@ -1,70 +1,90 @@
-Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCC8299A89;
-	Mon, 12 May 2025 22:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F26014286;
+	Mon, 12 May 2025 22:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747088439; cv=none; b=AehYmHsBBe3QfXH7A3VxHimCwYT8YguIR6KAuHSxIW34W4MTW6u4Vb6DjLfsOxdT5YSzjGutQr48JqGkYXKPUfoH4JWGQfAv+S/XOtbwiGj6krZGykq3RKAOgjHrw7pqSS5MGWCYTgLVU5mkKwcyi16J15Po6IvuNKNjFlueinQ=
+	t=1747088664; cv=none; b=d5qV3Ec7GBUixAuW4YbfhOagV0tPi4jtmG+ZV59N8bInoUP7FsqlaK8rtGmQwPAUTAU5zrwT87U+PW/sVlltHeU94U0OjVXBsxBFrr83dKuDji3bWk0tpJaexkjjAk0Fq/ONcc4SnfLDsNutFb7sthLovrdKgXobDCPqawBbScg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747088439; c=relaxed/simple;
-	bh=BjWcCR3N9hkfpjvPuw/RADWmZupgdpE1gUPzbn8E3fw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WX5wuQ0oZF8pr/aJmJdbWq7gWZx6CL5xEdj50wE9IcnmUj7h2k8DoJy6eIV3yeerRjiPwXgehfHRzKttSTNUC8nIim5tflu9pzMgiWAycyAxTJGT2hyVhyQdfzec/G/+pJ7RVY15Zji7ZesJTNp7LnGm6Hsq3SaqP2Nc8WEperM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=MzstLUlO; arc=none smtp.client-ip=199.89.3.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1747088664; c=relaxed/simple;
+	bh=arM7eophhT/s+kaTx+ZV+UsjOkaDxf9zdv7JPFMbY1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pcYfK0csKzJydB9r+Q2KPgezlD9BqnvBXZCbTWKEQUV1scRkIgzYgcSAS/LHPVdwVMsRG1mpDKfI/R9tfyfpnOkHNPZqgVFfzgjDSNLLMaIVSReRGRC4HqcA7vMvh/2uD48A1SJzvD8NwssrHezxey8l60vWdClZ+hPvxXD3BaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=joEMAjNq; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="MzstLUlO"
-Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4ZxDZQ1M1Gzm0ySR;
-	Mon, 12 May 2025 22:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1747088428; x=1749680429; bh=BjWcCR3N9hkfpjvPuw/RADWm
-	ZupgdpE1gUPzbn8E3fw=; b=MzstLUlOo39QA68aQnopR3M6GdbRNAQpq8Rdxb7v
-	bwxVl9V4HJDrp3in/lxeD8tkgk5di4DLV5+HtDjFfA0oSiLK8HUszIbLQkQQ0INE
-	mvQWueipj2VjhSFm+Mhv/I6BamQj/TQx8f36l5KyiNev5bOWgTdwoIDZnqh0+nwP
-	vj2CrbgwRNZQDU9Ju+6lSASqm422OE8z3uDfQ5bsqEUEmnW0vTan6tKr11hYbIR8
-	LiyH5Pkvfdg8P6lxvxPm4DGntz9fR5PRVf+v8e5T0184is22Yn1bmWts9ddAAXi9
-	1rptlayVzufJPzgZOxqplow6GKi7UPW1agMnqdW/+dEHcA==
-X-Virus-Scanned: by MailRoute
-Received: from 004.mia.mailroute.net ([127.0.0.1])
- by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id Tv-Q7IJesitq; Mon, 12 May 2025 22:20:28 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4ZxDZK5JMGzm0yTL;
-	Mon, 12 May 2025 22:20:24 +0000 (UTC)
-Message-ID: <99c5ba18-2000-44c3-a8d8-d1a4270fc050@acm.org>
-Date: Mon, 12 May 2025 15:20:23 -0700
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="joEMAjNq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=7FYjVaYHNFCowOsnAQMDafOsP3iqwFtokZlBvgZM5f8=; b=joEMAjNq6gRMolzUoh8gUoDXj6
+	aNOg+eoPxT96Tf+r51ye9nRjqiZHh2TgRT0OBpN3MdYBsHeDGdt4nNNx22kGWyRNhiZASAIuqoy21
+	ygmC6lBi0mRsyFvLHzzxknL8YhLcQ+gf8uuu03NdOKKqSluTBiYZgRPedwnHAR2MiyaTfQ21eztR+
+	ZpAN5NtbtmHb1OwzFs7Do5x1zA/Pj1yHG8mvU8r3h3Hy01YwFHEFmz/ukkY+zuhmeG+E8pA1R21Vq
+	ipV0WdrrEGrap2k4WRorVVhiLSHgpYSW9TRmrC+MVWQNsmgmFjdhnVF82hzX+4vlry7R10OF4mFua
+	Tq6CP3UQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEbZB-0000000HHSW-2OS1;
+	Mon, 12 May 2025 22:24:09 +0000
+Date: Mon, 12 May 2025 23:24:09 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Paul Moore <paul@paul-moore.com>
+Cc: alexjlzheng@gmail.com, jmorris@namei.org, serge@hallyn.com,
+	greg@kroah.com, chrisw@osdl.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: Re: [PATCH v3] securityfs: fix missing of d_delete() in
+ securityfs_remove()
+Message-ID: <20250512222409.GD2023217@ZenIV>
+References: <20250508140438.648533-2-alexjlzheng@tencent.com>
+ <20250509032326.GJ2023217@ZenIV>
+ <20250509043712.GK2023217@ZenIV>
+ <20250509044613.GT2023217@ZenIV>
+ <CAHC9VhRp5Nb_1FPu8tF6EUsPpSEbbTT0K7a3V-Z7OWKNXy9Yyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ufs: core: Print error value as hex format on
- ufshcd_err_handler()
-To: Wonkon Kim <wkon.kim@samsung.com>, James.Bottomley@HansenPartnership.com,
- martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <CGME20250512025214epcas1p273986e3b3bb3451e4039094d21611e86@epcas1p2.samsung.com>
- <20250512025210.5802-1-wkon.kim@samsung.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250512025210.5802-1-wkon.kim@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhRp5Nb_1FPu8tF6EUsPpSEbbTT0K7a3V-Z7OWKNXy9Yyg@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On 5/11/25 7:52 PM, Wonkon Kim wrote:
-> It is better to print saved_err and saved_uic_err in hex format.
-> Integer format is hard to decode.
+On Mon, May 12, 2025 at 05:19:39PM -0400, Paul Moore wrote:
+> On Fri, May 9, 2025 at 12:46 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > On Fri, May 09, 2025 at 05:37:12AM +0100, Al Viro wrote:
+> > > On Fri, May 09, 2025 at 04:23:26AM +0100, Al Viro wrote:
+> > >
+> > > > I have fixes for some of that crap done on top of tree-in-dcache series;
+> > > > give me an hour or two and I'll separate those and rebase to mainline...
+> > >
+> > > Completely untested:
+> > > git://git.kernel.org:/pub/scm/linux/kernel/git/viro/vfs.git #untested.securityfs
+> > >
+> > > on top of v6.15-rc5.  And I'm serious about the "untested" part - it builds
+> > > with allmodconfig, but that's all I've checked.  So treat that as an outline
+> > > of what could be done, but don't use as-is without serious testing.
+> >
+> > PS: I'm really, really serious - do not use without a serious review; this
+> > is a rebase of a branch last touched back in March and it was a part of
+> > long tail, with pretty much zero testing even back then.
+> >
+> > Patches are simple enough to have a chance to be somewhere in the vicinity
+> > of being correct, but that's all I can promise.
+> 
+> Fair enough, although unfortunately I don't think anyone has anything
+> close to a securityfs test suite so I suspect this may languish on the
+> lists for a bit unless someone has the cycles to pick it up and
+> properly test it.
+> 
+> I haven't compared the patches you posted on-list with the stuff in
+> the tree above, but based on the timestamps I'm guessing the on-list
+> patches are simply the ones from the tree above?
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+git format-patch output for that branch...
