@@ -1,130 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AA724888D
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC34248883
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066203; cv=none; b=jD80ib87qTxILrYd8fa2xpVhmnQkpDXxWIpBPtI07HkKJ8SrgoOVWp+v/Uq+DIOtJHZllMo0hmhZNtWSSs+t+ernv075h/ULd1asXrjK7FLkrPGSG3sL7RJapIUT3a445a6O6OOk4/UUHmXK373pz9tBFDgEggnE9O7qDsaYLLE=
+	t=1747066238; cv=none; b=rw+paZRn2nIfb+1nQeZrWA5aMNCNNfx81bmOpAbYqw8xyaUcFuAQrpVWXTnib7WNqvqMZarHFEWqH1wFMECr2lCv3qh/7LG3mKIJSdCeDeCyIdOsO/e9HnMU8Qap1p5P3fXnTreT96JiSHHxI4QLEiMYvq1qaDzvEpUYsAJ+jts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066203; c=relaxed/simple;
-	bh=iL2V/bvrYGW9bbo4sD+uM9MvWXY78cNQRMuPYip5Pf4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HooB+N+YF1anRY++R39FZrJo41Kdr3Td3ZFFO9h4X4lDXCixJ8IMmZwDMtSx5I2mgupNWk/9BURKEGV5L5T+zY0gWQwlmIAmFiCVb6RWj84bvfKSkOrYvL29hWiZThaQRhvIT+FqrivauLq+RB2apxSOS7ZlAvSG9ndnKJsRWoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0uxskyo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747066238; c=relaxed/simple;
+	bh=B0nPLeWtQxrVBbaKk5kI+gOwm+9Hhm9hfWdjiK3tx8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lsgtFFEjXCBjp7bvSLKK/Zy/9U2gCrk9HmDYeUm6FA/txcpHDJGe/iXpnmUTV7pRjROLJYsowpQy1mr6a8nkbabjf7Z8vjuwA3ug2oTQbd/ABVzwnQiZMtvesTo8j79QG27ZqoDacMlmbeDhsI9uikvThbODV+BiMDY7Q8kBlGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PihTRmq8; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0uxskyo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CDA2C4CEE7;
-	Mon, 12 May 2025 16:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747066203;
-	bh=iL2V/bvrYGW9bbo4sD+uM9MvWXY78cNQRMuPYip5Pf4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o0uxskyoOjACJ12rcKa0ajOh1RM/FYNmekNIeB1lXBSkFcMTmF7izyYVHP8mgKsxE
-	 BenwT/plXzUpPoq4okelpfKHVfMunDBorTUMD0Ki4UcGhcyf4oPvRkuqrzkAQWdis8
-	 4c1VxVVRAtY6KGuwigB0YMH/1EN74jR9mkTMCfn54HbHxBjDh6dgUaEMk5dD+M02+H
-	 ayuM7ICDbqxuViEjLFabEhoSy5bpqiwgrfMlfAcdBj5NurZr+/1R2cdgKtL3r6EN5R
-	 MltFcTky9GZOrPZ6/Zgj/dWhISEDp68P/uqFtns4+yIhEY1ZW4gRXTYKHduyz96to5
-	 gR/zfCFzwG/OQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uEVj6-00EBmE-W1;
-	Mon, 12 May 2025 17:10:01 +0100
-Date: Mon, 12 May 2025 17:09:59 +0100
-Message-ID: <86sel9g694.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PihTRmq8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747066233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wrTzsgQ6ASxvXtJ7h6OXxE11PcMzk4mLZ/qEK0FvDWc=;
+	b=PihTRmq84zB3wgRkrOYRHSsZjVF3ryXHhzb7vmGIPyIAvWGWpFEwKBlqHSU09wATyv5AHb
+	MRwTbgMysfypIwrQcEmplcQdPb/gjx/4weib6zquC0YRXLhw1jNtduUIXsu2wAmxZXXWj1
+	Zxs4oq1OCNVPiTPflcD95dHdWTdSjF4=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: upstream@airoha.com,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Claudiu Beznea <claudiu.beznea@microchip.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Madalin Bucur <madalin.bucur@nxp.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Robert Hancock <robert.hancock@calian.com>,
+	Saravana Kannan <saravanak@google.com>,
+	UNGLinuxDriver@microchip.com,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sascha Bischoff
- <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>
-Subject: Re: [PATCH 2/4] irqchip/gic-v3-its: Implement .msi_teardown() callback
-In-Reply-To: <87ecwtlwx8.ffs@tglx>
-References: <20250511163520.1307654-1-maz@kernel.org>
-	<20250511163520.1307654-3-maz@kernel.org>
-	<87ecwtlwx8.ffs@tglx>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	linux-doc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [net-next PATCH v4 00/11] Add PCS core support
+Date: Mon, 12 May 2025 12:10:02 -0400
+Message-Id: <20250512161013.731955-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lpieralisi@kernel.org, sascha.bischoff@arm.com, timothy.hayes@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 12 May 2025 15:34:59 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> On Sun, May 11 2025 at 17:35, Marc Zyngier wrote:
-> > We currently nuke the structure representing an endpoint device
-> 
-> How is we? We means nothing as you know :)
+This series adds support for creating PCSs as devices on a bus with a
+driver (patch 3). As initial users,
 
-We means a lot to *me*.
+- The Lynx PCS (and all of its users) is converted to this system (patch 5)
+- The Xilinx PCS is broken out from the AXI Ethernet driver (patches 6-8)
+- The Cadence MACB driver is converted to support external PCSs (namely
+  the Xilinx PCS) (patches 9-10).
 
-> 
-> > translating via an ITS on freeing the last LPI allocated for it.
-> >
-> > That's an unfortunate state of affair, as it is pretty common for
-> > a driver to allocate a single MSI, do something clever, teardown
-> > this MSI, and reallocate a whole bunch of them. The nvme driver
-> > does exactly that, amongst others.
-> >
-> > What happens in that case is that the core code is buggy enough
-> > to issue another .msi_prepare() call, even if it shouldn't.
-> > This luckily cancels the above behaviour and hides the problem.
-> >
-> > In order to fix the core code, let's start by implementing the new
-> 
-> s/let's//
-> 
-> I really have to understand why everyone is so fond of "let's". It only
-> makes limited sense when the patch is proposed, but in a change log it
-> does not make sense at all.
-> 
-> > .msi_teardown() callback. Nothing calls it yet, so a side effect
-> > is that the its_dev structure will not be freed and that the DID
-> > will stay mapped. Not a big deal, and this will be solved in the
-> > following patch.
-> 
-> Now I see why you added this incomprehensible condition into the core
-> code. Bah.
-> 
-> Why don't you add this callback once you changed the prepare muck, which
-> introduces info::alloc_data?
+To build documentation without errors, this series requires commit
+de258fa8ca8d ("scripts: kernel-doc: fix parsing function-like typedefs
+(again)"), currently applied to docs-next [1].
 
-Changing prepare first breaks nvme and igbxe, amongst other things,
-for the reasons explained just above, so you need to implement
-teardown first, plug the MSI controller into it, and only then you can
-switch prepare.
+Care has been taken to ensure backwards-compatibility. The main source
+of this is that many PCS devices lack compatibles and get detected as
+PHYs. To address this, pcs_get_by_fwnode_compat allows drivers to edit
+the devicetree to add appropriate compatibles.
 
-What I can do is:
+There is another series [2] with the same goal by Christian Marangi. In
+comparison, I believe this series
 
-(1) introduce teardown without the call site in msi_remove_device_irq_domain()
+- Implements a simpler and more-robust method of PCS access.
+- Provides a more-direct upgrade path for existing MAC and PCS drivers.
 
-(2) add its implementation in the ITS driver
+[1] https://lore.kernel.org/all/e0abb103c73a96d76602d909f60ab8fd6e2fd0bd.1744106242.git.mchehab+huawei@kernel.org/
+[2] https://lore.kernel.org/netdev/20250406221423.9723-1-ansuelsmth@gmail.com/
 
-(3) move the prepare crap
+Changes in v4:
+- Add a note about the license
+- Adjust variable ordering in pcs_find_fwnode
+- Annotate pcs_wrapper.wrapped with __rcu
+- Fix PCS lookup functions missing ERR_PTR casts
+- Fix documentation for devm_pcs_register_full
+- Fix incorrect condition in pcs_post_config
+- Fix linking when PCS && !OF_DYNAMIC
+- Fix linking when PCS && OF_DYNAMIC && PHYLIB=m
+- Re-add documentation for axienet_xilinx_pcs_get that was accidentally
+  removed
+- Reduce line lengths to under 80 characters
+- Remove unused dev parameter to pcs_put
+- Use a spinlock instead of a mutex to protect pcs_wrappers
 
-(4) add the teardown call to msi_remove_device_irq_domain(), without
-    the check on info->alloc_data
+Changes in v3:
+- Add '>' modifier for paragraph to description
+- Adjust axienet_xilinx_pcs_get for changes to pcs_find_fwnode API
+- Drop patches destined for other trees, as they have either already
+  been applied or are no longer necessary.
+- Edit description to reference clocks instead of resets
+- Remove support for #pcs-cells. Upon further investigation, the
+  requested functionality can be accomplished by specifying the PCS's
+  fwnode manually.
+- Select PCS_XILINX unconditionally
 
-With that order, everything will keep working, with a temporary leak
-of ITTs in the ITS driver between patches (2) and (4).
+Changes in v2:
+- Add fallbacks for pcs_get* and pcs_put
+- Add support for #pcs-cells
+- Change base compatible to just xlnx,pcs
+- Change compatible to just xlnx,pcs
+- Defer devicetree updates for another series
+- Drop #clock-cells description
+- Drop PCS_ALTERA_TSE which was accidentally added while rebasing
+- Move #clock-cells after compatible
+- Move update to macb_pcs_get_state to previous patch
+- Remove outdated comment
+- Remove second example
+- Remove unused variable
+- Remove unused variable lynx_properties
+- Rename pcs-modes to xlnx,pcs-modes
+- Reorder pcs_handle to come before suffix props
+- Reword commit message
+- Rework xilinx_pcs_validate to just clear out half-duplex modes instead
+  of constraining modes based on the interface.
 
-Is that something you can live with?
+Sean Anderson (10):
+  dt-bindings: net: Add Xilinx PCS
+  net: phylink: Support setting PCS link change callbacks
+  net: pcs: Add subsystem
+  net: pcs: lynx: Convert to an MDIO driver
+  net: phy: Export some functions
+  net: pcs: Add Xilinx PCS driver
+  net: axienet: Convert to use PCS subsystem
+  net: macb: Move most of mac_config to mac_prepare
+  net: macb: Support external PCSs
+  of: property: Add device link support for PCS
 
-	M.
+Vladimir Oltean (1):
+  net: dsa: ocelot: suppress PHY device scanning on the internal MDIO
+    bus
+
+ .../devicetree/bindings/net/xilinx,pcs.yaml   | 114 +++
+ Documentation/networking/index.rst            |   1 +
+ Documentation/networking/kapi.rst             |   4 +
+ Documentation/networking/pcs.rst              | 102 +++
+ MAINTAINERS                                   |   8 +
+ drivers/net/dsa/ocelot/Kconfig                |   4 +
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |  15 +-
+ drivers/net/dsa/ocelot/seville_vsc9953.c      |  16 +-
+ drivers/net/ethernet/altera/Kconfig           |   2 +
+ drivers/net/ethernet/altera/altera_tse_main.c |   7 +-
+ drivers/net/ethernet/cadence/macb.h           |   1 +
+ drivers/net/ethernet/cadence/macb_main.c      | 229 ++++--
+ drivers/net/ethernet/freescale/dpaa/Kconfig   |   2 +-
+ drivers/net/ethernet/freescale/dpaa2/Kconfig  |   3 +
+ .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  |  11 +-
+ drivers/net/ethernet/freescale/enetc/Kconfig  |   2 +
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |   8 +-
+ .../net/ethernet/freescale/enetc/enetc_pf.h   |   1 -
+ .../freescale/enetc/enetc_pf_common.c         |   4 +-
+ drivers/net/ethernet/freescale/fman/Kconfig   |   4 +-
+ .../net/ethernet/freescale/fman/fman_memac.c  |  25 +-
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +
+ .../ethernet/stmicro/stmmac/dwmac-socfpga.c   |   6 +-
+ drivers/net/ethernet/xilinx/Kconfig           |   7 +
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |   4 +-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 104 +--
+ drivers/net/pcs/Kconfig                       |  45 +-
+ drivers/net/pcs/Makefile                      |   4 +
+ drivers/net/pcs/core.c                        | 686 ++++++++++++++++++
+ drivers/net/pcs/pcs-lynx.c                    | 110 +--
+ drivers/net/pcs/pcs-xilinx.c                  | 485 +++++++++++++
+ drivers/net/phy/mdio_device.c                 |   1 +
+ drivers/net/phy/phy_device.c                  |   3 +-
+ drivers/net/phy/phylink.c                     |  24 +-
+ drivers/of/property.c                         |   2 +
+ include/linux/pcs-lynx.h                      |  13 +-
+ include/linux/pcs-xilinx.h                    |  15 +
+ include/linux/pcs.h                           | 205 ++++++
+ include/linux/phy.h                           |   1 +
+ include/linux/phylink.h                       |  27 +-
+ 40 files changed, 2012 insertions(+), 296 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+ create mode 100644 Documentation/networking/pcs.rst
+ create mode 100644 drivers/net/pcs/core.c
+ create mode 100644 drivers/net/pcs/pcs-xilinx.c
+ create mode 100644 include/linux/pcs-xilinx.h
+ create mode 100644 include/linux/pcs.h
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.35.1.1320.gc452695387.dirty
+
