@@ -1,270 +1,367 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0b-0024c301.pphosted.com (mx0b-0024c301.pphosted.com [148.163.153.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157071EE7DA;
-	Mon, 12 May 2025 01:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747013299; cv=none; b=ePNGaDBEKXQ1CMohN2TZUeLEAV4kmppF9jNxaM2wJkN+mjw30FarNlONlKVK4pKHewlCbwUat4ck3xnGHn2NIM0TiZ7rmhqNP/4DLBmkZ2NjnfF5h16kDNfBncQvXJlCUNnsRdMLTabeOdxno8uoDqfYp7OSzfdTBL+JCxzg5z4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747013299; c=relaxed/simple;
-	bh=3qyIzPyheqrZy522eEuD2AFtuIz3klS4ja7thurjK0o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UGO40YC/e45Zs2W9a6QuQyKGRWh6oLMJbPfsdKRh9t53YAsp4ZW1kCgFFaKg/jjQ4/rc0zpg23T7TzicwsDfw44BMjhiD6BNFu0/RGNSapoW0FlA5n3VUyGrZUii+rMxSsD02W+xYng637B10J7BAJbUIEpf2mhzHjRUYdq23wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zwhmy6zkGz4f3lDc;
-	Mon, 12 May 2025 09:27:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2662E1A0359;
-	Mon, 12 May 2025 09:28:13 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2CdTiFoNFCWMA--.55093S23;
-	Mon, 12 May 2025 09:28:12 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: hch@lst.de,
-	xni@redhat.com,
-	colyli@kernel.org,
-	agk@redhat.com,
-	snitzer@kernel.org,
-	mpatocka@redhat.com,
-	song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH RFC md-6.16 v3 19/19] md/md-llbitmap: add Kconfig
-Date: Mon, 12 May 2025 09:19:27 +0800
-Message-Id: <20250512011927.2809400-20-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC4620C472;
+	Mon, 12 May 2025 01:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.153.153
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747013302; cv=fail; b=cvro2ZJNiW2oMdk+ILSbMxhJtMCDTSQgRd5rTvdd1rtyqjvYOF8fA9e2ra0ZiuFa84JeH0JYWjTBQH2jLyBlxhgAgFGmSIbwtaYQLvxNR30fXE7yIoMyAHy8/fEXntWKN87t4v7+03vb51Qe3Q/Ozk8ZFMsGd0wllrfwxka7+HE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747013302; c=relaxed/simple;
+	bh=b8CqXrs6aJVEOej0AuRdPTxYayQQhb2unx9+3Sc1UHo=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WtSRRxJXxJsGW6dK5/Xmrg5n4tT01Yje2V+Crt9LpfEom71ffNNRjKkDueVu9j5OCfzektNWkEUCliB/GsAih+KDZtMctFzbmUPizZ0IxY3nxD79VbM4QQjVNtaBB/2bm0pDUi9qs12E0rVC/QFGdZoUAnKuT2D5IzUUyGCbA80=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=silabs.com; spf=pass smtp.mailfrom=silabs.com; dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b=OShb8UVE; dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b=VUNnfbyl; arc=fail smtp.client-ip=148.163.153.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=silabs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=silabs.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b="OShb8UVE";
+	dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b="VUNnfbyl"
+Received: from pps.filterd (m0101742.ppops.net [127.0.0.1])
+	by mx0a-0024c301.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BNrm02027097;
+	Sun, 11 May 2025 20:28:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pps12202023;
+	 bh=iUmW6Z9NJh7Framw2XmyIpfMBUt+ypWSE2hLnuZfHWI=; b=OShb8UVEDAct
+	gmJJau718dHhdseZhRG13DstktdWcF/sasOB9buun7oTQHYO8lyyRFrVd+VFLoIR
+	baXjQd7LKbzf8u9ZZej2vYi598+Kaf0Tf5qr8ytcKR211fJGuUf4VvKcWT+ozGdV
+	jz3BsX/aNeUojQGKvE1ntOcUeMA0D29/qfVdbCDCmFEHG8mk8qYY05eRzjoKsNwn
+	E3jZHxf7zouiqCd8tiKW+u7yiaaDughZgArdNIe+oiJoTvxk5etcDbnPeFpeqSd2
+	ap0Dqwv2sQsKCiJlM6CBe4cqkc35krm5ua3diEYpv3cAl5FBXtGrPdsacS2gea0N
+	d2sHA3+XBw==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2171.outbound.protection.outlook.com [104.47.57.171])
+	by mx0a-0024c301.pphosted.com (PPS) with ESMTPS id 46j0aahxd2-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 11 May 2025 20:28:03 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JuLIZTdxo7pT7/msFyDj7mG0ARKLkIKW3RkMlodrSw2qFa6NbnmsuOwedl1lapNjHnDld2k5ZB6XfOX/SjVS0knrTAwFHmJcX12GWJU7yMFl6zSJCVzdpDB6mshAqR4vrbjZ+/4i4Rp2NsziFlVwgR5pQaQUzGbQByKkzs1Kvf9nN9zPFfUZvefVvrFfN76kgh/QXtcRBxYBMulMFfNXXmETijy2TvNo/FGDzJHYszezgGGpxqUHQkIoBpTcBGrGmiafB2D4z3I2i69sHGwaLPnsEubo3nNl9ILThLEwMNSwgTnjSMH8DLxb03Uw/zAqBLWnrSy0raN80ezdBUUadA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iUmW6Z9NJh7Framw2XmyIpfMBUt+ypWSE2hLnuZfHWI=;
+ b=s3hP8LpK9xlrNZVhOjuffKLtEOp9olTXb4WJ7Z4fuI7OcHJtF+X9wmh4lbEgZWu2i91MUBtzt46WXqynVeJHdQofSklo/euRSZnHjlTvka2FxPOghfQq0acaqaWq6QfF/CHPEUDeFDcJAWbUpnqWPq5/OVVxrbBO+JwLfXEQVkOa9wlQiBzcfFQxt8fRvCCZ/7xtO4ujarUawlbK1+eBdX0uxSCT0C8rUiiVDURtpicc3fUUXMyim7y1zbR3MGa5ggbOTTbmLfY7uIoEfw1DwjttauoeCbAEUgt73FYiQ3jRoaXZ3Oq4eIV2kNRS3sSxhO0FLSyrTttoU4PIGIRlfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iUmW6Z9NJh7Framw2XmyIpfMBUt+ypWSE2hLnuZfHWI=;
+ b=VUNnfbylhGnlM4yDREfc3LG1sHM8pRek/zsVEKju0jkCdb3oECHDXS7MR4RCAPHm7K3ajU54StVFoU1Cm7gx6Yy2ol/s9jztnngcziUYo+DT5nNkrhWcAdRvfRJNDBkyDaF9Ltgysb8C2bVbOgFLAfYETuueYtUDG45/fr0Lzbw=
+Received: from DS0PR11MB8205.namprd11.prod.outlook.com (2603:10b6:8:162::17)
+ by IA0PR11MB7953.namprd11.prod.outlook.com (2603:10b6:208:40d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
+ 2025 01:28:00 +0000
+Received: from DS0PR11MB8205.namprd11.prod.outlook.com
+ ([fe80::c508:9b04:3351:524a]) by DS0PR11MB8205.namprd11.prod.outlook.com
+ ([fe80::c508:9b04:3351:524a%4]) with mapi id 15.20.8699.026; Mon, 12 May 2025
+ 01:27:59 +0000
+From: =?UTF-8?q?Damien=20Ri=C3=A9gel?= <damien.riegel@silabs.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Silicon Labs Kernel Team <linux-devel@silabs.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC net-next 03/15] net: cpc: introduce CPC driver and bus
+Date: Sun, 11 May 2025 21:27:36 -0400
+Message-ID: <20250512012748.79749-4-damien.riegel@silabs.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250512012748.79749-1-damien.riegel@silabs.com>
+References: <20250512012748.79749-1-damien.riegel@silabs.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YT4PR01CA0451.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10d::17) To DS0PR11MB8205.namprd11.prod.outlook.com
+ (2603:10b6:8:162::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnC2CdTiFoNFCWMA--.55093S23
-X-Coremail-Antispam: 1UD129KBjvJXoWxuFWxKFW5Zr1xZrWxtry7ZFb_yoW7CFWfpF
-	WfXry3Cw15tF4xXw15A347uFyrJws3tr9Fvrn3C34ruFyUArZIqr4xKFyUtw1DWrsxJFn8
-	J3W5Kr95G3W5XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
-	daVFxhVjvjDU0xZFpf9x0JUQFxUUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8205:EE_|IA0PR11MB7953:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6601b3e7-2ca7-4cd6-385b-08dd90f43b4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cjcyY0dNWUg3Q3M5eW5KYjVKZVpLRW1mMElkOGM5MjNPOFc2UWxkVGY5WWVY?=
+ =?utf-8?B?SzhJSlN2MEc3U1BTNXhiblpLRHFCNTcrZjJOOEhXa0thODgvQit4UnJhRnlG?=
+ =?utf-8?B?ek5EQnA0Z0ZTUkxkcUo5a3oyUDZOajNGSXRRVS9sU09aMC8vMnMzYVU3ZFVs?=
+ =?utf-8?B?c2N6QzVjcW9sWmR2RVlmQjJlMURmNnZRTVZGRDRTenJJK3VXcGxRMVJEUTB3?=
+ =?utf-8?B?bXU5dzdFMEJVOS8zaFh2SE5nNkdjZzNlcDk2bkZBRDNwaWFNVnhtR285bHBY?=
+ =?utf-8?B?bm1QRVRBS1lBTWRPbFFpSmdiM0M4S1hLcXVhTTVqMkxNeWlnN0VaRCttMXd1?=
+ =?utf-8?B?UzhpMHpNekloTjVZckpVd0RDVjc3M25lNHVZQnp2ZzNzN2xWR0NnRkcwc1lk?=
+ =?utf-8?B?OWtDcDVNR2hXUXRZeitlVUhCOTRYdzc5V0V2dHF3NFBPa2JGdlRBb0J6QlJX?=
+ =?utf-8?B?YzJZOUlBTmRIV015VXduc2RHRitwYlNvTDdmRWFLMFhtOHRyZUY1a2FLUzVD?=
+ =?utf-8?B?dFozVkU2dGU4Q3NacXNtbnpUNkdodXpHWW9KZ2dUbVNjWVVOeHh0TGRtcDNX?=
+ =?utf-8?B?RlVZV2c0cmpxbm9kTjV4UUdTTW9iVEZPRS9tbGxtZ2JCN0RrcWFEZ3duNEVY?=
+ =?utf-8?B?VGZVZXJaZWJYTHJtcFN0MHd0NW1tRUt3MFZFaGdDQWUrQlBsVU9YOEZCUHJW?=
+ =?utf-8?B?MXB4SStaUkpoVHFzVjNFOFVqdHp0NXNyTXlnWHRRM21zZGowUmsvR3JPTzRE?=
+ =?utf-8?B?ZnAyd2dXNENUcHZISEQrcjVyYnRlSlBjci9mRjZIUFhWeWRoamhobGQxMUMr?=
+ =?utf-8?B?SHQ1UEwyR0laY0d3cVUyMWRLSmhNRFdTM3hwWk5XbHNrc3pwRC9XTW9Cdlls?=
+ =?utf-8?B?MTFzOG84blJDbklHNTE4UmFNaGdaWXlTY0pFMU9lYmNXbWQyV1JjUm1hWGRv?=
+ =?utf-8?B?bkNpU2RGb3ZRSEFGZmhMNUphSVNnektqdWk3SVZwS3FNY2JXSWliV1dFZ2NU?=
+ =?utf-8?B?aS8vbnA2RkxxMjhXK1cwNnE4cWtHenRKWW9NTmxUaEREbGcvd0RYV01MUko3?=
+ =?utf-8?B?bk9vNFBPTk5EcFJyRnByUXdRMW5acS9nVkFreS96OTVnUE9pM1ZSVGFnMlFz?=
+ =?utf-8?B?WnZpNEhTUFcxSVk2REdBUlpkc2o3UmZzVUhZRHp4WXlGQ2RkSWVaOXprSjVY?=
+ =?utf-8?B?TURqVUVrUHI5MnRPeTA4T25MWHU5UFhJMCswUHNURDdMNTcyYVNBUmViODRk?=
+ =?utf-8?B?aGdRYkxyQTM1bzhXaG1ON29WYU15NFA4VmltbjAvOG41QUFnbUhUNEJqbFVK?=
+ =?utf-8?B?QzhXZ1M2RC9hQTgrQVlxekxKQ2Ftc1RBMjNGTFM5R3d0NVQwWWwxUDNyd1A3?=
+ =?utf-8?B?dXN5c3c1a1hZVUQyZWIrR1dzK0duSDYydTRkZ2NERGlMQ05LMEFzQk5aUkJP?=
+ =?utf-8?B?QStHWHlpNWpTUjdIVTVKSy9JM0pxUUcwMDJvbU10MjZ3dFAzOFlsUS9lS3BM?=
+ =?utf-8?B?SWRmblhYRXVUZzJzRmR2MjF5d2t6NHJsV0xDNXNuVzkxZ0Q2bjk0cjREdVFv?=
+ =?utf-8?B?S0p4alJvYTRqQlMwcmRPWURBQSt3Ymt0ZmRtby9mNVpBU1ZFZzNja0FiL043?=
+ =?utf-8?B?Y2gxTDg0TWVJQUhsMGMwZys4VDh4NG95WkNXUm1vODB2RjlZUUllNjhhUFkx?=
+ =?utf-8?B?bmNSOStaVWJkNkwxc1RtY055OFV3UitxSTlEbDZaUnBQc09hdTl2aysxeno3?=
+ =?utf-8?B?bWVhUFpjbkRpbWFxN3VObzA3NmdHZ3NwSzRDd0ttbnRVUEN2T2drbk5hRytt?=
+ =?utf-8?B?YXdUUTRhVmtBSEtnNDhaOFlIdUMzK3BzUHlBNmpOMktwOE9zRFFBU2tNMTFz?=
+ =?utf-8?B?bVF6bjF6dnNRTFVPVHVCLzNYaE1rWG9oUC92WWUwL3I2cVk3TERyYlg4L1ho?=
+ =?utf-8?B?cHdnSm5MdjVqeTB5ZGtnckk1alZ3UzdZR1BHZ2xsME5QeHJ3MEdhR2JSQjZY?=
+ =?utf-8?Q?eEkQNVEOJZXCFHg4mhuUVBYTz06tJU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8205.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OW1QWVk3Vy82Z1JtQXVpL2JBZTBTUm44c0N4d3BYVzlJSGtFNXZEa1RUTFZt?=
+ =?utf-8?B?K3JxQlFQbUFVRG1LWDNoMWV1aDJwZG5qSUpLOU9BK0dSd2tMUEllczBFQUJ1?=
+ =?utf-8?B?UnNDczlSWGFIRFo4dS9ud0ZlcXVsZGRIbW5NQlQxRXhaMWxvSW9EZVVwcHh5?=
+ =?utf-8?B?d2xFSDUrWVgwQmlKSWsrbFE4eXFsNU1IZkJCd1pvWktEUXVjTmNROU1sRUpE?=
+ =?utf-8?B?VHFKNXJvRkxIR2lUdzFINklDUkszcmlFbjcyUEtvbEtIT2tiNEFVTlBaSHdO?=
+ =?utf-8?B?L1JtWWhDYlZVT2Rla2VicUFlblJQVlZLUmhhSkVtR3g5NVZRMG14QUN3bUpK?=
+ =?utf-8?B?dUI1S21vb1RuRWgrUG5XV0FrWjFVUFlDMkYwU3F3ZmFuVVZnVkhjeE8rQlFZ?=
+ =?utf-8?B?eHk3dUdGMjA3VXNYSnprS0VYMDVIRW5pYTZZSjNwTlVoVlA3Q3NrckVETEpQ?=
+ =?utf-8?B?bExScWxxaVIrRHE5c1poemc1NkNTZ1hHOCtpdG1SdEhTY01HVm8rdm12R251?=
+ =?utf-8?B?a1FEbHYzVG9RK2RpUVp0cHZGc1ByZG9vbmFiYnZFaWtqL1RMSXMvNEdmanhV?=
+ =?utf-8?B?ZEZ2eDVHbS9OWFpFTEhraW1OSS9xeGJ4YW9KeVFseTRRWDhkZWZ0cEs1UTNU?=
+ =?utf-8?B?TEtFTHdEQTlTa056ZU9KajR4NTVOR2hDVEY1VHI0QmxWTzlBYUtGYWZ0OCtV?=
+ =?utf-8?B?YnY5SmhkYkpUNXZ6VlhHcy9RcXMyQm9LQlBvUkh0ZWk0MnJJaW9TNU93cDRL?=
+ =?utf-8?B?YW9sS2h1QlpVaWFoVW5vdTQ1OW04TDhNVEhYUWpUTUZwSjRPdG9vYjFBQy9P?=
+ =?utf-8?B?L3R4TWJFS0Q0bm9UTmZnSDMvMU5Fc3VxdkRaK0NpYkp1OUZGMStYcFZRUDdG?=
+ =?utf-8?B?MDdDQ1p5ZlFTTFVER0JNOFBGcDZxOGw1aGN3anVPTzZ0UWNvZ3lvWmRrdXg1?=
+ =?utf-8?B?V1d0Yzk3ZU45TGxDR3F0cnNpOGR6SC9ZQkQwV2dQc1BTdUZ5WFJaUHErRE9B?=
+ =?utf-8?B?KytoTHlGUktoT2xXbGZrY3g0TytiNTFwN2JEM2k5WUpNUTVIWEtYMFJvck9M?=
+ =?utf-8?B?OUViYzUzSlplYjh4L1JFTmlpQW9MSnpuTC9qV3pIRFBQSFU3YW1LUDZCQW1q?=
+ =?utf-8?B?TW1qZ0xCUHQzZGVEWVpWbG14N0tIeisxY0l1c0F6ZXNtQU82UmZoRXgwSFRK?=
+ =?utf-8?B?b1R1YUYzeXg0RkY4VHoyams1ZmJseHJoTDIzdnR4MEpFUGthNWs0cmlZRnpH?=
+ =?utf-8?B?dlArR01NdXFYalcwMnhPRm0yWUgrRGE1UnQxTUNQaWtEbzd2aXgyem1uOE45?=
+ =?utf-8?B?OU5RZ2k3NGJ5TkNwWVBaVWppTm16M09HSWNCR2tqZElEQTcvR25xdFFlQzBE?=
+ =?utf-8?B?c0pMd0hWdjRpdC9DdnVLQ2RCL1hQZmRuNHZZVE1iSHpzZGdCcDBzeXhWQmRX?=
+ =?utf-8?B?UFFLeTVIRUhaZzNnNExCSnI2RW5EQ3FaOXBVSjF1VnpLMklpSnUyeWZPN0xE?=
+ =?utf-8?B?SWZ6eWxhV0VzWEY2dUVoZm1saXpMcTdBUnE1bkhOeTJYZXlVV2lmNXk2MXYz?=
+ =?utf-8?B?MTBTc1pTYU5Zc01FQ3lGOUlmaGlRMFVNeDlCbzZJQW9Wb2I1UEhTcDlQVG1z?=
+ =?utf-8?B?TFJGQ3dTUGdjRmtwUTluKzR2MVhYSmNGY1MvZUo1UkhnenduY3lxdExOQS9E?=
+ =?utf-8?B?bWc3M2IyN0NoRXZ6aytXQ29nR1BZMGhCUEZXanJsSmdXeHFZSjQxOThiREM3?=
+ =?utf-8?B?Tk9SV1NEcktka0FSZXlWQndJVno2a05qNGcrcmNXS3NLNUU0dENrQmdia0U2?=
+ =?utf-8?B?am1WK2R6QUkzZFA1a0puQzlJTHVTeHlSQmxiMUF4VndiTUtHcFYxOEFGNzRv?=
+ =?utf-8?B?U1ZjbFBGWUVxbEJJWW5QdElpaHBxVWphOTlnbllkbDEzNHhRZmVJYmJoV3N4?=
+ =?utf-8?B?MTR4RkdpZ0p2MnhlL1l2cVViY1VGZDU0TGlybHZ1dnpiSmN2czI4NC9DYXhs?=
+ =?utf-8?B?bUhKeDBicEpaU2l3MllSQlhDakhmVnhMTVd6dmFnRWlnM1EzWW9TQVB0ekNH?=
+ =?utf-8?B?cU92dlpRQW9EN1ppeCt2aUt0RHNJd0wwQ2JVdHVWc1JCNDRaLzNJRVphWGcw?=
+ =?utf-8?Q?XGweXOyAsWwPf98Z7xzDncbcm?=
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6601b3e7-2ca7-4cd6-385b-08dd90f43b4c
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8205.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 01:27:59.9013
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GCanxWBuBgrxMD1ku3e/gr3njaWBT6EhOkxKaqfX7mNtHpx1dr3Nude1vyi+LKJ2lZDwrME3rhyJoFxAZ3zsFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7953
+X-Proofpoint-GUID: LfvRHbvAFiDY8c0CLt3UixMGe2FuU66u
+X-Authority-Analysis: v=2.4 cv=TMNFS0la c=1 sm=1 tr=0 ts=68214ea3 cx=c_pps a=gIIqiywzzXYl0XjYY6oQCA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=M51BFTxLslgA:10 a=i1IsUcr2s-wA:10 a=2AEO0YjSAAAA:8 a=yfPTFhKnZHbw51aZTvwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: LfvRHbvAFiDY8c0CLt3UixMGe2FuU66u
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAxMyBTYWx0ZWRfX0QEACopkYO0I mbh8wwK+oEOLzPWW3GD+osLPThhu6jaiXCjQPURSEYl1KW+N/zCivrnxs9+LvxNbV7LI59vCPk/ /JjVn1k9iipWd3A4RhKw96+lIpY47koWYzddTSnMZ7iPTaTO6OsqQ849Q9jDICZ9pDprJ5jDX2G
+ AU05GudL3J3Gz4/IS1wRL+etc7fxh0HC7JxHr8SDRnAZsI2T0vLgySqFpPKuPyHS193km4nQwRT OweRYIeWhzYlpI/RWHDymo4a00I7kefHrTSyQVJa+iFX1MlrWlDHNIKKohqJLhbjdL1NZ8NRqj7 K+PKdfjG02qOIw1FbbTK/9UGkrHsSYDhNCcYGxqbmqtJNtY3FTgFH1C9zCZbCEKPqG8KJf0llCc
+ kQ88hNDyiJfR6rnLyAzPZ3sfpJBPaV/PbKiZ6Ra58nPkcRGzcp4bIkKzBmonq0T/5GaYv3RS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-11_10,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 impostorscore=0 adultscore=0 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2505120013
 
-From: Yu Kuai <yukuai3@huawei.com>
+Endpoints by itself are useless if there are no drivers to use them.
+This commit adds the final bit of infrastructure for CPC module: a new
+bus type and its associated driver.
 
-A new config MD_LLBITMAP is added, user can now using llbitmap to
-replace the old bitmap.
+As a very basic matching mechanism, the bus will match an endpoint with
+its driver if driver's name (driver.name attribute) matches endpoint's
+name.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Damien Riégel <damien.riegel@silabs.com>
 ---
- drivers/md/Kconfig       | 12 ++++++
- drivers/md/Makefile      |  1 +
- drivers/md/md-bitmap.h   | 16 ++++++++
- drivers/md/md-llbitmap.c | 80 ++++++++++++++++++++++++++++++++++++++++
- drivers/md/md.c          |  6 +++
- 5 files changed, 115 insertions(+)
+ drivers/net/cpc/cpc.h      | 39 +++++++++++++++++++++++
+ drivers/net/cpc/endpoint.c |  1 +
+ drivers/net/cpc/main.c     | 65 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 104 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index f913579e731c..655c4e381f7d 100644
---- a/drivers/md/Kconfig
-+++ b/drivers/md/Kconfig
-@@ -52,6 +52,18 @@ config MD_BITMAP
+diff --git a/drivers/net/cpc/cpc.h b/drivers/net/cpc/cpc.h
+index 529319f4339..cbd1b3d6a03 100644
+--- a/drivers/net/cpc/cpc.h
++++ b/drivers/net/cpc/cpc.h
+@@ -15,6 +15,8 @@ struct cpc_driver;
+ struct cpc_interface;
+ struct cpc_endpoint;
  
- 	  If unsure, say Y.
- 
-+config MD_LLBITMAP
-+	bool "MD RAID lockless bitmap support"
-+	default n
-+	depends on BLK_DEV_MD
-+	help
-+	  If you say Y here, support for the lockless write intent bitmap will
-+	  be enabled.
++extern const struct bus_type cpc_bus;
 +
-+	  Note, this is an experimental feature.
-+
-+	  If unsure, say N.
-+
- config MD_AUTODETECT
- 	bool "Autodetect RAID arrays during kernel boot"
- 	depends on BLK_DEV_MD=y
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 811731840a5c..e70e4d3cbe29 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -39,6 +39,7 @@ linear-y       += md-linear.o
- obj-$(CONFIG_MD_LINEAR)		+= linear.o
- obj-$(CONFIG_MD_RAID0)		+= raid0.o
- obj-$(CONFIG_MD_BITMAP)		+= md-bitmap.o
-+obj-$(CONFIG_MD_LLBITMAP)	+= md-llbitmap.o
- obj-$(CONFIG_MD_RAID1)		+= raid1.o
- obj-$(CONFIG_MD_RAID10)		+= raid10.o
- obj-$(CONFIG_MD_RAID456)	+= raid456.o
-diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 4e27f5f793b7..dd23b6fedb70 100644
---- a/drivers/md/md-bitmap.h
-+++ b/drivers/md/md-bitmap.h
-@@ -22,6 +22,9 @@ typedef __u16 bitmap_counter_t;
- enum bitmap_state {
- 	BITMAP_STALE	   = 1,  /* the bitmap file is out of date or had -EIO */
- 	BITMAP_WRITE_ERROR = 2, /* A write error has occurred */
-+	BITMAP_FIRST_USE   = 3, /* llbitmap is just created */
-+	BITMAP_CLEAN	   = 4, /* llbitmap is created with assume_clean */
-+	BITMAP_DAEMON_BUSY = 5, /* llbitmap daemon is not finished after daemon_sleep */
- 	BITMAP_HOSTENDIAN  =15,
- };
- 
-@@ -176,4 +179,17 @@ static inline void md_bitmap_exit(void)
+ /**
+  * struct cpc_endpoint - Representation of CPC endpointl
+  * @dev: Driver model representation of the device.
+@@ -98,4 +100,41 @@ static inline void cpc_endpoint_set_drvdata(struct cpc_endpoint *ep, void *data)
+ 	dev_set_drvdata(&ep->dev, data);
  }
- #endif
  
-+#ifdef CONFIG_MD_LLBITMAP
-+int md_llbitmap_init(void);
-+void md_llbitmap_exit(void);
-+#else
-+static inline int md_llbitmap_init(void)
-+{
-+	return 0;
-+}
-+static inline void md_llbitmap_exit(void)
-+{
-+}
-+#endif
++/*---------------------------------------------------------------------------*/
 +
- #endif
-diff --git a/drivers/md/md-llbitmap.c b/drivers/md/md-llbitmap.c
-index 6993be132127..5bb60340c7e2 100644
---- a/drivers/md/md-llbitmap.c
-+++ b/drivers/md/md-llbitmap.c
-@@ -1383,3 +1383,83 @@ static struct attribute *md_llbitmap_attrs[] = {
- 	&llbitmap_daemon_sleep.attr,
- 	NULL
- };
++/**
++ * struct cpc_driver - CPC endpoint driver.
++ * @driver: Internal driver for the device driver model.
++ * @probe: Binds this driver to the endpoint.
++ * @remove: Unbinds this driver from the endpoint.
++ *
++ * This represents a device driver that uses an endpoint to communicate with a remote application at
++ * the other side of the CPC interface. The way to communicate with the remote is abstracted by the
++ * interface, and drivers don't have to care if other endpoints are present or not.
++ */
++struct cpc_driver {
++	struct device_driver driver;
 +
-+static struct attribute_group md_llbitmap_group = {
-+	.name = "llbitmap",
-+	.attrs = md_llbitmap_attrs,
++	int (*probe)(struct cpc_endpoint *ep);
++	void (*remove)(struct cpc_endpoint *ep);
 +};
 +
-+static struct bitmap_operations llbitmap_ops = {
-+	.head = {
-+		.type	= MD_BITMAP,
-+		.id	= ID_LLBITMAP,
-+		.name	= "llbitmap",
-+	},
++int __cpc_driver_register(struct cpc_driver *cpc_drv, struct module *owner);
++void cpc_driver_unregister(struct cpc_driver *cpc_drv);
 +
-+	.enabled		= llbitmap_enabled,
-+	.create			= llbitmap_create,
-+	.resize			= llbitmap_resize,
-+	.load			= llbitmap_load,
-+	.destroy		= llbitmap_destroy,
++/* Convenience macro with THIS_MODULE */
++#define cpc_driver_register(driver) \
++	__cpc_driver_register(driver, THIS_MODULE)
 +
-+	.startwrite		= llbitmap_startwrite,
-+	.endwrite		= llbitmap_endwrite,
-+	.start_discard		= llbitmap_start_discard,
-+	.end_discard		= llbitmap_end_discard,
-+	.unplug			= llbitmap_unplug,
-+	.flush			= llbitmap_flush,
++/**
++ * cpc_driver_from_drv - Upcast from a device driver.
++ * @drv: Reference to a device driver.
++ *
++ * @return: Reference to the cpc driver.
++ */
++static inline struct cpc_driver *cpc_driver_from_drv(const struct device_driver *drv)
++{
++	return container_of(drv, struct cpc_driver, driver);
++}
 +
-+	.blocks_synced		= llbitmap_blocks_synced,
-+	.skip_sync_blocks	= llbitmap_skip_sync_blocks,
-+	.start_sync		= llbitmap_start_sync,
-+	.end_sync		= llbitmap_end_sync,
-+	.close_sync		= llbitmap_close_sync,
+ #endif
+diff --git a/drivers/net/cpc/endpoint.c b/drivers/net/cpc/endpoint.c
+index 5aef8d7e43c..98e49614320 100644
+--- a/drivers/net/cpc/endpoint.c
++++ b/drivers/net/cpc/endpoint.c
+@@ -48,6 +48,7 @@ struct cpc_endpoint *cpc_endpoint_alloc(struct cpc_interface *intf, u8 id)
+ 	ep->id = id;
+ 
+ 	ep->dev.parent = &intf->dev;
++	ep->dev.bus = &cpc_bus;
+ 	ep->dev.release = cpc_ep_release;
+ 
+ 	device_initialize(&ep->dev);
+diff --git a/drivers/net/cpc/main.c b/drivers/net/cpc/main.c
+index ba9ab1ccf63..dcbe6dcb651 100644
+--- a/drivers/net/cpc/main.c
++++ b/drivers/net/cpc/main.c
+@@ -3,16 +3,79 @@
+  * Copyright (c) 2025, Silicon Laboratories, Inc.
+  */
+ 
++#include <linux/device/driver.h>
+ #include <linux/module.h>
+ 
++#include "cpc.h"
 +
-+	.update_sb		= llbitmap_update_sb,
-+	.get_stats		= llbitmap_get_stats,
-+	.dirty_bits		= llbitmap_dirty_bits,
++static int cpc_bus_match(struct device *dev, const struct device_driver *driver)
++{
++	struct cpc_driver *cpc_drv = cpc_driver_from_drv(driver);
++	struct cpc_endpoint *cpc_ep = cpc_endpoint_from_dev(dev);
 +
-+	/* not needed */
-+	.write_all		= llbitmap_write_all,
-+	.daemon_work		= llbitmap_daemon_work,
-+	.cond_end_sync		= llbitmap_cond_end_sync,
++	return strcmp(cpc_drv->driver.name, cpc_ep->name) == 0;
++}
 +
-+	/* not supported */
-+	.start_behind_write	= llbitmap_start_behind_write,
-+	.end_behind_write	= llbitmap_end_behind_write,
-+	.wait_behind_writes	= llbitmap_wait_behind_writes,
-+	.sync_with_cluster	= llbitmap_sync_with_cluster,
-+	.get_from_slot		= llbitmap_get_from_slot,
-+	.copy_from_slot		= llbitmap_copy_from_slot,
-+	.set_pages		= llbitmap_set_pages,
-+	.free			= llbitmap_free,
++static int cpc_bus_probe(struct device *dev)
++{
++	struct cpc_driver *cpc_drv = cpc_driver_from_drv(dev->driver);
++	struct cpc_endpoint *ep = cpc_endpoint_from_dev(dev);
 +
-+	.group			= &md_llbitmap_group,
++	return cpc_drv->probe(ep);
++}
++
++static void cpc_bus_remove(struct device *dev)
++{
++	struct cpc_driver *cpc_drv = cpc_driver_from_drv(dev->driver);
++	struct cpc_endpoint *ep = cpc_endpoint_from_dev(dev);
++
++	cpc_drv->remove(ep);
++}
++
++const struct bus_type cpc_bus = {
++	.name = KBUILD_MODNAME,
++	.match = cpc_bus_match,
++	.probe = cpc_bus_probe,
++	.remove = cpc_bus_remove,
 +};
 +
-+int md_llbitmap_init(void)
++/**
++ * __cpc_driver_register() - Register driver to the cpc bus.
++ * @cpc_drv: Reference to the cpc driver.
++ * @owner: Reference to this module's owner.
++ *
++ * @return: 0 on success, otherwise a negative error code.
++ */
++int __cpc_driver_register(struct cpc_driver *cpc_drv, struct module *owner)
 +{
-+	md_llbitmap_io_wq = alloc_workqueue("md_llbitmap_io",
-+					 WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
-+	if (!md_llbitmap_io_wq)
-+		return -ENOMEM;
++	cpc_drv->driver.bus = &cpc_bus;
++	cpc_drv->driver.owner = owner;
 +
-+	md_llbitmap_unplug_wq = alloc_workqueue("md_llbitmap_unplug",
-+					 WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
-+	if (!md_llbitmap_unplug_wq) {
-+		destroy_workqueue(md_llbitmap_io_wq);
-+		md_llbitmap_io_wq = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	return register_md_submodule(&llbitmap_ops.head);
++	return driver_register(&cpc_drv->driver);
 +}
 +
-+void md_llbitmap_exit(void)
++/**
++ * cpc_driver_unregister() - Unregister driver from the cpc bus.
++ * @cpc_drv: Reference to the cpc driver.
++ */
++void cpc_driver_unregister(struct cpc_driver *cpc_drv)
 +{
-+	destroy_workqueue(md_llbitmap_io_wq);
-+	md_llbitmap_io_wq = NULL;
-+	destroy_workqueue(md_llbitmap_unplug_wq);
-+	md_llbitmap_unplug_wq = NULL;
-+	unregister_md_submodule(&llbitmap_ops.head);
++	driver_unregister(&cpc_drv->driver);
 +}
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index a5dd7a403ea5..6ac5747738dd 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -10191,6 +10191,10 @@ static int __init md_init(void)
- 	if (ret)
- 		return ret;
- 
-+	ret = md_llbitmap_init();
-+	if (ret)
-+		goto err_bitmap;
 +
- 	ret = -ENOMEM;
- 	md_wq = alloc_workqueue("md", WQ_MEM_RECLAIM, 0);
- 	if (!md_wq)
-@@ -10222,6 +10226,8 @@ static int __init md_init(void)
- err_misc_wq:
- 	destroy_workqueue(md_wq);
- err_wq:
-+	md_llbitmap_exit();
-+err_bitmap:
- 	md_bitmap_exit();
- 	return ret;
+ static int __init cpc_init(void)
+ {
+-	return 0;
++	int err;
++
++	err = bus_register(&cpc_bus);
++
++	return err;
  }
+ module_init(cpc_init);
+ 
+ static void __exit cpc_exit(void)
+ {
++	bus_unregister(&cpc_bus);
+ }
+ module_exit(cpc_exit);
+ 
 -- 
-2.39.2
+2.49.0
 
