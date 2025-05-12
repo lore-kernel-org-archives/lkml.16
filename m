@@ -1,154 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2858B4A3C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEE94A3C;
+	Mon, 12 May 2025 13:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057580; cv=none; b=f0o+oIx4eY2BQU7WjCD5YxpVG7KiWc+2YYodntb++IR7dvFOGO04zvbsVfyQBmk8zumCZ7Oc7tXmgJkNiMO0R1718u7+TTHvxRcIzTgYUNH5ZDcqSpg7zUkCtrAUBqZ7D+c1Qji43bgwzafPM8wgybNS8lDNHF49Ia5mE6yYWmY=
+	t=1747057657; cv=none; b=btJCmbCBndXP5QOqGnarTXhFEpxd5ganHbsunEMxOQ0WJ7RLnMiLt1m9Oi0+vtNgJNPOYE2UIHie1GvF5zXVbO7YFfmeIcpbWZbj4Qn4UhzGo0CfkPGZ9kjOYkxd6K3VrHq9waTVzHOH3EpTfXc6Q8oIZpLIwQNUntNX7vIW6Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057580; c=relaxed/simple;
-	bh=S3vdn7L5S6SPD/rZyZJ5bYNPICWxvSGryBhKvA6XtNo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QEi7jA0cp5xEiKOoVpA/bXpmcnPRmSTzV6mJLAA5M3ypRtsysSwjYwpkXZ8zxKX132NHAZc9hdrLrBAgF+ij2F4JSOBUS72etL8sT/QibSohJAmUk0qRs/d1thOwexbpVumJp2Ns40CK4/wnGmhkWb137gFyZnANKKaufdWjEx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GRKBKgVf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747057657; c=relaxed/simple;
+	bh=ff/BkoK0UAKrKgoa/SVlnryGs4F19dLoJj5SVwSUo4Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ddrXT1ReUPcEaSW7+EGfnACSjpXLqcI/acdpSGgJWjqwaAtrXpabcScg6QASBqT6u9/y1KXJma/A7yQ+2j2JfNQ89UETQvMqXVHX4T0rjziVSRrLj9IGfiKRhyb1YX4bBPItvgaQx/HjGecF7lil6lKNPsPRqRq2u4lqJihu7QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V8KnYwMf; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GRKBKgVf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747057576;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Q4vZQjuJqJokWhgIQZZUGV+LeF/CF+vN6EkzqG+T0Y=;
-	b=GRKBKgVf3axGkhdgcXdGeSEk9REQ/+drlaIY4nAQcKf1jX85KJD5IxR6g6DyZYtMPcUZk+
-	qxabqoVK31uPtgxFg9POIS5GLAMUgTfszv76tyCRYzVL29byQt4uozNq8T2EHh6OhDxb/g
-	nZnXf7nBzpZFa0/WG6e+aBaUPVM5OxI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-630-S3OV2PxyPHuLia8MSaP0TA-1; Mon,
- 12 May 2025 09:46:13 -0400
-X-MC-Unique: S3OV2PxyPHuLia8MSaP0TA-1
-X-Mimecast-MFC-AGG-ID: S3OV2PxyPHuLia8MSaP0TA_1747057572
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 323FD1800873;
-	Mon, 12 May 2025 13:46:12 +0000 (UTC)
-Received: from [10.22.80.45] (unknown [10.22.80.45])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D83EE18003FC;
-	Mon, 12 May 2025 13:46:09 +0000 (UTC)
-Date: Mon, 12 May 2025 15:46:06 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Martin Wilck <mwilck@suse.com>
-cc: Kevin Wolf <kwolf@redhat.com>, dm-devel@lists.linux.dev, hreitz@redhat.com, 
-    snitzer@kernel.org, bmarzins@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-In-Reply-To: <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
-Message-ID: <8e009e40-a1d2-5eea-3930-f81446b16722@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com> <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8KnYwMf"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b1ff8a0a13cso751303a12.0;
+        Mon, 12 May 2025 06:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747057655; x=1747662455; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nSSN0QVCB0auKOlByp57Ot7u5PowxUCeUXro48vkcbw=;
+        b=V8KnYwMfLpFoeB4+czyS+qJTUS98quvjsy0N30zx+VW4kPNo/tXLS1phAdxAV/QXdc
+         VWld9Rk5ZhGB/G+xjOWfv0LfPfllzyZWydlQWBTErg/EdvgoGowGhUcUlspcCIALMSZP
+         Rb7lrWIIUhTPx3RL8vhQ3+3z1sFD2q1kDQ2tD8qW5sr3eGCKyBeEBfC+kaQUYkTnO+mV
+         yd86DsftbEKefVIpXxfAS3wyBggozTFBkAIHqSsFTbCQrherKR8sINcKUouMMKBG4OKZ
+         Y3F+k1e7EYnvJFgFi3GLKGiXvmJVQBgmdom1hR4YzPvaxwHQQl8nSOEq6SxGfM7E522q
+         PI7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747057655; x=1747662455;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nSSN0QVCB0auKOlByp57Ot7u5PowxUCeUXro48vkcbw=;
+        b=lm/CCjeLMIXW88O+zTC0wkjp/FY8AeTPdRMUPO1RsM6uJtAG4hh0Ss14KmqRI4p3XR
+         ylgmAMn+xbd71mDZsHMS37u3lB7WCVQvbbxbvSDvTWk4d0UeaTzmxc+xTMNUMht8bjA1
+         58x9r2wHteZfjVWWdfvgEFr9aaf3ztBPeSv98ayX4J3qMMBbq0os/MvQvngO8pdWJNOH
+         lk+HijQlvmDfWKD/CvYIiEgAittokEwwkTeyyqX9+BSfn0YcLhlnoP/wVcz+AdZ6uQ9G
+         +VIwlWVynqc2PquBbJp/I7aflHLHar5hWNU15RN5GI3PtWvkNqDr4Q5PULhCt6nPrXme
+         pgbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMR+eXFvjzE4CLkvHBUhyE5ot2wOMLtW9H6UeHgGtLXOnCr2qHF6w+2r44LpUjWTN6jnbEZMVQlpHoulQ=@vger.kernel.org, AJvYcCXtwsGtDo3IzSXqbfUREBbw+b+fRduQfRBy5hBM7MhmgZZM66YmC3xQuGcpejq0MmOvJ9crgFDhDCm1rybI5SE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ/75NZdSH6KbK1+4oM0EwZ5lMZWppnehkbRw0dONXQCYMMUL+
+	CpIBDy7cOophMMAEgMg6TeFQwfZw9NZAAl9nq++Q+vI5EYi1Fks/fv1Bw4fcrllmIdKBpC8SAK8
+	kU+5SHf+Bx2hMrtDI0x68SvbbURU=
+X-Gm-Gg: ASbGnctshG+TRks98PWa/bhncwtUv1yF+rr6AiBUpHhIUwgyoEf0pIyBpYT/Q8l0E6s
+	0X0fa73nliI5Nt8FXAlNoRml1ErPPSEOMRWYcAOUQVxzdJViOTxTaPX49ZXIau/5C9B1gTFPM/a
+	gMOe4Un3aaRQTCjaBtYTFYopORbs8Ieok6
+X-Google-Smtp-Source: AGHT+IHicxSAY2ahCa82NqPdRsKS2nLtw4K9WryM+tvkR9Vd6fIZ0xjbPPFQnJMiW6iVED0G6oSwMwOYHzh4pwOBru8=
+X-Received: by 2002:a17:903:2984:b0:22e:62c3:8c5d with SMTP id
+ d9443c01a7336-22fc8c8c1bcmr74033075ad.8.1747057655140; Mon, 12 May 2025
+ 06:47:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811712-608219467-1747057571=:2446783"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250321080124.484647-1-kunwu.chan@linux.dev>
+In-Reply-To: <20250321080124.484647-1-kunwu.chan@linux.dev>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 12 May 2025 15:47:23 +0200
+X-Gm-Features: AX0GCFtjrAQIZQvRJ49eTgAfdFwyQYEsuDLwSVRff4tQTTKSn5Eq48N-yLr6Y1U
+Message-ID: <CANiq72nQuRr0+U9QkAx_d01hymgwsor3SQKQFNt0Y3SStFOfDw@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: page:: optimize rust symbol generation for Page
+To: Kunwu Chan <kunwu.chan@linux.dev>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
+	dakr@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
+	morbo@google.com, justinstitt@google.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	Kunwu Chan <kunwu.chan@hotmail.com>, Grace Deng <Grace.Deng006@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Mar 21, 2025 at 9:02=E2=80=AFAM Kunwu Chan <kunwu.chan@linux.dev> w=
+rote:
+>
+> When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
+> with ARCH=3Darm64, the following symbols are generated:
+>
+> $nm vmlinux | grep ' _R'.*Page | rustfilt
+> ffff8000805b6f98 T <kernel::page::Page>::alloc_page
+> ffff8000805b715c T <kernel::page::Page>::fill_zero_raw
+> ffff8000805b720c T <kernel::page::Page>::copy_from_user_slice_raw
+> ffff8000805b6fb4 T <kernel::page::Page>::read_raw
+> ffff8000805b7088 T <kernel::page::Page>::write_raw
+> ffff8000805b72fc T <kernel::page::Page as core::ops::drop::Drop>::drop
+>
+> These Rust symbols(alloc_page and drop) are trivial wrappers around the C
+> functions alloc_pages and __free_pages. It doesn't make sense to go
+> through a trivial wrapper for these functions, so mark them inline.
+>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1145
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
+> Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
+> Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
 
----1463811712-608219467-1747057571=:2446783
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Applied to `rust-next` -- thanks!
 
-Hi
+    [ Removed spurious colon in title. - Miguel ]
 
-
-On Thu, 8 May 2025, Martin Wilck wrote:
-
-> Hello Kevin,
-> 
-> [I'm sorry for the previous email. It seems that I clicked "send" in
-> the wrong window].
-> 
-> On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
-> > Multipath cannot directly provide failover for ioctls in the kernel
-> > because it doesn't know what each ioctl means and which result could
-> > indicate a path error. Userspace generally knows what the ioctl it
-> > issued means and if it might be a path error, but neither does it
-> > know
-> > which path the ioctl took nor does it necessarily have the privileges
-> > to
-> > fail a path using the control device.
-> 
-> Thanks for this effort.
-> 
-> I have some remarks about your approach. The most important one is that
-> the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous command.
-> It sends IO to possibly broken paths and waits for it to complete. In
-> the common error case of a device not responding, this might cause the
-> code to hang for a long time in the kernel ioctl code path, in
-> uninterruptible sleep (note that these probing commands will be queued
-
-Normal reads and writes would also hang in an uninterruptible sleep if a 
-path stops responding.
-
-> after other possibly hanging IO). In the past we have put a lot of
-> effort into other code paths in multipath-tools and elsewhere to avoid
-> this kind of hang to the extent possible. It seems to me that your set
-> re-introduces this risk.
-> 
-> Apart from that, minor observations are that in patch 2/2 you don't
-> check whether the map is in queueing state, and I don't quite
-> understand why you only check paths in the map's active path group
-> without attempting a PG failover in the case where all paths in the
-> current PG fail.
-> 
-> I am wondering whether the DM_MPATH_PROBE_PATHS_CMD ioctl is necessary
-> at all. Rather than triggering explicit path probing, you could have
-> dm-mpath "handle" IO errors by failing the active path for "path
-> errors". That would be similar to my patch set from 2021 [1], but it
-> would avoid the extra IO and thus the additional risk of hanging in the
-> kernel.
-
-What exactly do you mean? You say "you could have dm-mpath 'handle' IO 
-errors by failing the active path for "path errors".
-
-Christoph doesn't want dm-mpath can't look at the error code - so dm-mpath 
-doesn't know if path error occured or not. qemu could look at the error 
-code, but qemu doesn't know which path did the SG_IO go through - so it 
-can't instruct qemu to fail that path.
-
-One of the possibility that we discussed was to add a path-id to SG_IO, so 
-that dm-mpath would mark which path did the SG_IO go through and qemu 
-could instruct dm-mpath to fail that path. But we rejected it as being 
-more complicated than the current approach.
-
-> Contrary to my set, you wouldn't attempt retries in the kernel, but
-> leave this part to qemu instead, like in the current set. That would
-> avoid Christoph's main criticism that "Failing over SG_IO does not make
-> sense" [2].
-> 
-> Doing the failover in qemu has the general disadvantage that qemu has
-> no notion about the number of available and/or healthy paths; it can
-> thus only guess the reasonable number of retries for any given I/O. But
-> that's unavoidable, given that the idea to do kernel-level failover on
-> SG_IO is rejected.
-> 
-> Please let me know your thoughts.
-> 
-> Best Regards
-> Martin
-> 
-> [1] https://lore.kernel.org/all/20210628151558.2289-1-mwilck@suse.com/
-> [2] https://lore.kernel.org/all/20210701075629.GA25768@lst.de/
-
-Mikulas
----1463811712-608219467-1747057571=:2446783--
-
+Cheers,
+Miguel
