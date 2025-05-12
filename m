@@ -1,150 +1,116 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC7F29713F;
-	Mon, 12 May 2025 18:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6341B297A48
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073632; cv=none; b=Rp5Bw5Hx73vITAhw34eKYVlqTAGwp5fLQN3PfkDCZPWrbrfPiK4F7rn39eZMwwea3ez/U/fn+j7TbQggdU7j51wDqHzLzUf51CLiz/Uce+dzuxe7Iu/fWeriLTYy7gHLrp+Fn0f1a6FNUyeGC1z0trWTjcbi/GEZxIYMCz9EQcw=
+	t=1747073666; cv=none; b=JN/p5NSIVSFmHJstC+VV/+Jqe0Sa0C9+67bbOvnLW7+1kla5tR8zW61e06XiEa7HC6ysMXyi09rUtj39SaZTKHACUUnKLcEh+Ruc6R15x7lKyzqbP2HnK2z4cMGLw0pyXsSMGdOcwrME5wO6CceUEine3xIANa0Aga3xs8CxGno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073632; c=relaxed/simple;
-	bh=KlDznQJ9x7yYl0RQU++AFqF1z/7/ZXlbsoe7bnKuB0M=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Pew3DWwTNiZBJKc4rIllyV9pw4hYxMl2IpZPQmRf+oml1XuwXtJPKrNHhGu5M3VgnJZhoOGZqo3fwemGHnsERv2FaypyWfm58onXa3T3Hsn4eb+RyoMbKssdgZbmoAphVsbRczcua2G6gvdNqyUI87wNVPCJSZx76X/y/y8Nor4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eh9q3YJc; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747073666; c=relaxed/simple;
+	bh=ge8nSwHM2/L0C3/tgG66L21hTU30oQNN1Lla7jkdOAc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XWSWhUimDkxlSVfvdBwJrM+nFNHeg2F5A7QOuHy9n3FKIikmZVCKHlqmHFoPRHzS8axdSgSOtV68SQ9yBo02xOADnFJW/GNhF5uXaVoZMXHLd5WmiU9j47fkXksghIOc/tz+HnfG7NU8eN7UivoPEKpLGgJOYmO+483zPrUGBEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jBiXfOEo; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eh9q3YJc"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54CElKsf2039818;
-	Mon, 12 May 2025 09:47:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747061240;
-	bh=M1dbos3NxQKuT6QnfwRY9+hyVJpSnhTDpepVkHM/iHk=;
-	h=Date:From:To:CC:Subject;
-	b=eh9q3YJcKoHptui5NWsC6ktYlxkMLiUYlZFeq4cyyd7E1o0d3YKitdXZN+WI2Y0I9
-	 vi1lOCaukMwRYkfcak3RdIRdzdZ0qDSekQQ/KdF1GPvxaEpcDTP6U5+uh1yckCLq7i
-	 6mKv+biTUCCjzl167yI02EpQVwjR3rNQLAnmLCfU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54CElKMV1169212
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 12 May 2025 09:47:20 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- May 2025 09:47:19 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 May 2025 09:47:19 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54CElJAm040488;
-	Mon, 12 May 2025 09:47:19 -0500
-Date: Mon, 12 May 2025 09:47:19 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Arnd Bergmann <arnd@arndb.de>, SoC list <soc@lists.linux.dev>
-CC: Santosh Shilimkar <ssantosh@kernel.org>, Tony Lindgren <tony@atomide.com>,
-        SoC <soc@kernel.org>, <arm@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Tero
- Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
- Menon <nm@ti.com>
-Subject: [GIT PULL 1/3] soc: ti: Driver updates for v6.16
-Message-ID: <20250512144719.mpkyw2jbyzslb5hy@yearly>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jBiXfOEo"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30abb33d1d2so7526516a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747073660; x=1747678460; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DppjzGuONHUmUt6xrl/Gh7jXlRXjo91ajvJ8cLSO9UA=;
+        b=jBiXfOEomwUBjlJ9WAZ5r7XHHI7+2rnwX5D5JFGCpm96UBaGvvQ5jcUiQsRHj2dKot
+         +Z8PCaVAGyw1qDLwsecrKWw1w2ZDJ6f7eq5TF6AtjyHMEEvDfbjjuECMWgby9wT/pXeX
+         qDx+1CmpwiWD0uosMbiLBxAbTFziz4Bf/StmKyDKHSLD0I9etwYEXMLjyQlZ0R41tCYl
+         2cFM4/Rh5MBrq9HB2AYPEaFeiREs/+nmvjUTI3wATJNNUeXLaxrofsePNFrjcfF3KuDg
+         zdbmwpPfZSyHdxuVWg9OsKuLF3kvSa+8gisFzuyEYTFHGBXG//lzR7hdkn9HXocZsFsz
+         P68Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747073660; x=1747678460;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DppjzGuONHUmUt6xrl/Gh7jXlRXjo91ajvJ8cLSO9UA=;
+        b=K7LwS//PmhaXjv21Ef1x2P6zwChJ5VzP/IMdhyt8ksAmUCN39uPy5eqU5601Xg+GQ6
+         +8ANiegbevIr1pITDOv29pBONFNQs8OUJKbwcBjz7CdtQVhNtKrj1J+UhVCI57/BPOIU
+         2lcb2lWfxxJHuYmO8VzneNhbzqvJRnNvjgSifr/u8SuT9ozKqy9hR+M/6ZC4M612KD0n
+         b7arrEeq13VX4RzPUV8eJGcqUVUwZIBq8pOY0PaLdeMB0iKPFZPlRqAlwhBHfn8mAyXH
+         l6wBg1PHvRSZ0vleAtkd1eDYdJ1OK7YuntiCrfEcls+HB2yj1aDJ4pzfnLxnmHMEvIq/
+         c5yg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfJit9QOQFiusJ5jUW9ThGNX5nz84kehsZIOWEcbzgEqqMQ4R1L+S/68vONoaCvncHYcv1bYKr8DqhMYc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynEkncyrHeNkTpSZM5d/UE2KEcdXxmIsjoKWdgZ86+j2osnc4b
+	KzaSJo+Hu2M5vdooNy2Abetk28yYH2tdDn4FemSod/1y2gBgzuJwwPaAN6pLFFrt/zt0qbf0uYA
+	aVA==
+X-Google-Smtp-Source: AGHT+IFVSP9g1YX6T9SSblQiikemd9gCjFwSJSmUr0xZ8O9g7WsE/PEszOVr+Pcq7V+3+YvAiBJ1tciAERI=
+X-Received: from pjbli15.prod.google.com ([2002:a17:90b:48cf:b0:2ff:5516:6add])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d44e:b0:2f5:88bb:12f
+ with SMTP id 98e67ed59e1d1-30c3d3eb7c2mr18454811a91.21.1747073660687; Mon, 12
+ May 2025 11:14:20 -0700 (PDT)
+Date: Mon, 12 May 2025 11:14:19 -0700
+In-Reply-To: <20250313203702.575156-5-jon@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vnuongetbvaxpj52"
-Content-Disposition: inline
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-
---vnuongetbvaxpj52
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-5-jon@nutanix.com>
+Message-ID: <aCI6e6KYXmfi_Oqp@google.com>
+Subject: Re: [RFC PATCH 04/18] KVM: VMX: add cpu_has_vmx_mbec helper
+From: Sean Christopherson <seanjc@google.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Mar 13, 2025, Jon Kohler wrote:
+> From: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+>=20
+> Add 'cpu_has_vmx_mbec' helper to determine whether the cpu based VMCS
+> from hardware has Intel Mode Based Execution Control exposed, which is
+> secondary execution control bit 22.
+>=20
+> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> Co-developed-by: Jon Kohler <jon@nutanix.com>
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
 
-This PR has a couple of minor checkpatch warnings on 75 characters,
-which I have opted to ignore due to breaking URL or warning message.
+LOL, really?  There's a joke in here about how many SWEs it takes...
 
-Please pull:
+> ---
+>  arch/x86/kvm/vmx/capabilities.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilit=
+ies.h
+> index cb6588238f46..f83592272920 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -253,6 +253,12 @@ static inline bool cpu_has_vmx_xsaves(void)
+>  		SECONDARY_EXEC_ENABLE_XSAVES;
+>  }
+> =20
+> +static inline bool cpu_has_vmx_mbec(void)
+> +{
+> +	return vmcs_config.cpu_based_2nd_exec_ctrl &
+> +		SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
+> +}
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+This absolutely doesn't warrant its own patch.  Introduce it whenever its f=
+irst
+used/needed.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git tags/ti-driv=
-er-soc-for-v6.16
-
-for you to fetch changes up to 877afe1ee34df54ea62ca9746aafbb1cac946bf5:
-
-  soc: ti: wkup_m3_ipc: Use dev_err_probe (2025-05-09 06:34:27 -0500)
-
-----------------------------------------------------------------
-TI SoC driver updates for v6.16
-
-- ti_sci: Bug fix in CPU latency conversion from us to ms for TISCI protocol
-- k3-socinfo: Add JTAG ID for AM62LX
-- Code cleanups: wkup_m3_ipc: Use dev_err_probe, k3-ringacc: use
-  device_match_of_probe and knav_qmss_queue: drop unnecessary NULL check
-
-----------------------------------------------------------------
-Alexander Stein (1):
-      soc: ti: wkup_m3_ipc: Use dev_err_probe
-
-Chen Ni (1):
-      soc: ti: knav_qmss_queue: Remove unnecessary NULL check before free_p=
-ercpu()
-
-Kendall Willis (1):
-      firmware: ti_sci: Convert CPU latency constraint from us to ms
-
-Tang Dongxing (1):
-      soc: ti: k3-ringacc: Use device_match_of_node()
-
-Vignesh Raghavendra (1):
-      soc: ti: k3-socinfo: Add JTAG ID for AM62LX
-
- drivers/firmware/ti_sci.c        | 14 +++++++++++---
- drivers/soc/ti/k3-ringacc.c      |  2 +-
- drivers/soc/ti/k3-socinfo.c      |  2 ++
- drivers/soc/ti/knav_qmss_queue.c |  3 +--
- drivers/soc/ti/wkup_m3_ipc.c     |  8 +++-----
- 5 files changed, 18 insertions(+), 11 deletions(-)
-
---=20
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5=
- 849D 1736 249D
-
---vnuongetbvaxpj52
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE+KKGk1TrgjIXoxo03bWEnRc2JJ0FAmgiCe8ACgkQ3bWEnRc2
-JJ3VSg//cqLAq2iGAboinXq/KGwV3tdz8mR0MH7jjlrDV9hHTT1TDFa6UnasJmsl
-YNafSVifHYlBxi3vIMXOJ8sOt9nETw7AWPTP/YTyVaoyosw3XlkzNKoWyTYJKwzm
-uvBOb3jCBYqwqfYwCsXq8awszoN8fPxpAWJmg8NhlwJjORZICjnyBB63m8ApLB1e
-5cH/H8lhtT92fM7F1PrNI4/62woJ0srLH7sgegq24vSh0pqYdy64QFSk+ya1ZQRi
-wKAGhehUHGe7o4QQZ+BJcy9I0PJCfejJB2ZRTphtT8HMWjQhP0Aw34BZacmBtIRO
-cy3aJ0Wwc8DAtKW+yV5D1cNy4w+BuFKDgyK6XsPjVmIqaX21G+05zFePiB6bIEO4
-sbs7HlxsS5YMbor6UMMX1YLvkms1ku91lrDpyV1z/o0iN79sbXyAxPj0piDKa13r
-cLdNzIYhiOdiBCtXLxYa6y2GeZq42SNQee7XhEbLS1bhfLYLH4+cJ7MGAboJse/0
-nVG7+VoFwUUMpMl18mK6dITyr9sRz6R5tqWFV5iDJx3cklhdsowlydP1MoELJuEF
-jVcqgpFuqygrJam1qy8NDFC4xqr2ZwvDFXK9MnjcmePF2EWZmouSKROFjxr6rHNA
-QfT4hNUM8iMn4glklKPM+dNMggAmyDB1+zbdyGJdi0rw7I2vP4s=
-=npRl
------END PGP SIGNATURE-----
-
---vnuongetbvaxpj52--
+> +
+>  static inline bool cpu_has_vmx_waitpkg(void)
+>  {
+>  	return vmcs_config.cpu_based_2nd_exec_ctrl &
+> --=20
+> 2.43.0
+>=20
