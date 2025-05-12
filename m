@@ -1,84 +1,180 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26ABF1E571A
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762F71A08CA;
+	Mon, 12 May 2025 15:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065479; cv=none; b=cDI9sjXp6PCuCoHzYXNw2GgJ/GQLV+EFvNr9KRZc1DSI5QUWZMCb9ioL+p+WPd7qCV/NLXGdmzF31h1uFOMaAhJlMGPcpMbxuyXP5Sf4XByIbMYTL2gigVBBbApen7y5j8MHsm0XQBsSFj+k7PQ3DTa5zAZ8TBSypW8qxOOIo50=
+	t=1747065515; cv=none; b=J2+tKL2cwv9CoLfb4B+kDzjzjcN5IgnmYBL4Ybq7QqLIKdwXnbhI1b2cWmBukBJxKvnN3VDUc59OyE7oMxKkre/PR5wszwZCx6v+kfdufmiD6rCIJM1lElkK6I1XTYUMzmWUIvAoxWAdRAh6VX+Q8SnRHhed5WDYFyZ4KoGW5CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065479; c=relaxed/simple;
-	bh=BM5JSJOKNhTfLPEfa9NZIcPTtKYu51Ogr3Y10YAFwbw=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=dFnLLGTsiWTdXrfnHrMueakT3AuQ9DT+2856pcneB+nxr3n+5/L5SqfPSKXBf9snu229sDTS1HDUfJIkUFnZbFORl6fXEYgFGvkFosCj2Wo61VxJ62REdONa6uxUAalPJTSGt45re0v5JeRED2Kyr/u9CRqUuJ2uPm0NsQFh9tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id C633A294730;
-	Mon, 12 May 2025 17:57:54 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id WUghdvuq5KTy; Mon, 12 May 2025 17:57:54 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 6FF76298562;
-	Mon, 12 May 2025 17:57:54 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id IzOUdMxh8QkF; Mon, 12 May 2025 17:57:54 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 4D1D2294730;
-	Mon, 12 May 2025 17:57:54 +0200 (CEST)
-Date: Mon, 12 May 2025 17:57:54 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <636744371.31012717.1747065474158.JavaMail.zimbra@nod.at>
-In-Reply-To: <2c2ff01f-b6e2-4b9e-958a-c4c405518a54@prolan.hu>
-References: <20250512084033.69718-1-csokas.bence@prolan.hu> <d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu> <1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at> <4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu> <87r00ugcat.fsf@bootlin.com> <1689545397.30901605.1747063396608.JavaMail.zimbra@nod.at> <87y0v1g7xz.fsf@bootlin.com> <2c2ff01f-b6e2-4b9e-958a-c4c405518a54@prolan.hu>
-Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
+	s=arc-20240116; t=1747065515; c=relaxed/simple;
+	bh=N3IupITUGFOYIokC/XqIJ6alt8Wbz30JQtkN85VBgo8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oCy3zjkvbh6dtnIaVuPrHny5howQYs8j2PncrJB859W1dlH1SNQU4nZAvSHEqXWPud01UZIKS1242qGFWvPfir5XRQlLF9XFuKrtH0+xBc6Hri0yj1DAuzPuQhxpNAGJn4HPRN+XGE7mlME/SQNA7Iq12tOqb3btl4mYUaggBH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d8Ht2h3W; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8Ht2h3W"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-442ea341570so1916445e9.1;
+        Mon, 12 May 2025 08:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747065512; x=1747670312; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Tiu7K1d+E3ERrbWyua7cTehS3PZhz9sGhrRK35gQe8=;
+        b=d8Ht2h3W97Fpc0bUICrHdDdTJBhG4XjsJfqV8rpXCeh9hF/l8LxosyFRJDwwzyby3m
+         /2HBUUVJFdUe2JP0T98DkFJ0HtdWh2hgTZkQUPtwAkpbG+MQUVGyAv5tQIsXm650ZISk
+         kjwX6sW2FedVKDYDJn7jdWGTDJrWScrOLkusgaBSEXZhVlGGaIl/ikF/zQtd8zHIu65B
+         QhQucamzp+8S/h2ai6BPbojrM4gDpVpjuMxVa+vVQUIBP9km/X7TZuvS0B2oHwYU40MJ
+         fzTVzME60A58DLFd6gmxlDVOx+Vnfh9cTT9+uZ1DnBEctF7dEjKNwnn6gB850hAbJ8tV
+         Ac9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747065512; x=1747670312;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7Tiu7K1d+E3ERrbWyua7cTehS3PZhz9sGhrRK35gQe8=;
+        b=uBF818WZivBOh76iElWmSJI6AK2xlBD8We7FeaSUTJkKr4Ka4/etzwuwGChx02/Zw4
+         qonk/RF/oz8dBPE0LKvuVXYB2/yMTsGgh9wesvrjPF14rjtrjwq6JVAG1gV05FDgIBQA
+         giHq+kqkHxa0JE1H8F1g8C0YbZPBHUJpgnDnhFzMfG3l5Rax2Rvv9g0oPIVdyvm3gcVP
+         N73E8IarD5naz2NtF+JHJv7rmrEwEB+QV3j2OsxLQ6kF6pKWOR11gNC0SfxpXHYaD5wn
+         vpPkjnkN64BqlFmJgeLLym4/deFDt93nbkCNdAhWDClBLFwdcuJ2qINaZoahSx0Jifwr
+         MPLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVF1nG+SUH0xgUtkroqdTUoSNrd1NyNQTaVSGfwZMzd9F2rmDvEQr+QDgWAZXfuU/OLGca7mGAbUmR4FWOx@vger.kernel.org, AJvYcCVtRsUalB2m5gB9q69Gf9H74Q9I4zLebITNRbuXU/gcLNzhQXzDlUZ9TRo7yvfBhw5yvuqUcBk7ldPV@vger.kernel.org, AJvYcCWpVS6WiQ2pWdBjy202oibAGtYKhHlLzz7Tj4Pb3kwVXCwRj25hMHb7DPALItxWmz1TXCSW2v7vQAPWoJFX9g/OlWg=@vger.kernel.org, AJvYcCXyN5TDNlOpumAoEm61BGr1ycB8C5xlH16bz5sK/HGBjUJKnSWn41m31TP06Wpdb0JxgGGCP7yTAHK2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGxBZ+aY8+uay2Giyt/t6y179cR0eWrjif9b3tB1zvuF76WZja
+	vl/XbVOh4zFSpp0so9Zj4IWRM1au4n9LZwupv/ipjvYSG5slE++BuAAPcfg507mByiBULl0L+ul
+	sReEKQ9QWUfFCuYBKy0YtfjzGE7I=
+X-Gm-Gg: ASbGncuYFn+vCwhygfhYt9WBgYXtgwCna4pn9Q6JJkAGjeTGwZkfVyIcElkPaMwIW0Z
+	WPL5XPZD5lNreZIi451og1V3ovGEGxrhvD/ueFI9mYnyQUKExKSkdZWUP4nZfNYF6dNAGAmq2fK
+	6C0yvX73nphnGbyBFX9H7Idlxq3sdvJkd32cm6G7sVuQ==
+X-Google-Smtp-Source: AGHT+IFXbahmg2a+BTqiLfTc49OhOevVl2AgJz/PIJpOPa+2/Fc+7yusnDFsUzxWbWrLCDk5Ky9+6rU51Zl0bh1I2Eo=
+X-Received: by 2002:a05:600c:1c8c:b0:442:dc6f:2f11 with SMTP id
+ 5b1f17b1804b1-442de4a8ca9mr58212345e9.25.1747065511651; Mon, 12 May 2025
+ 08:58:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250430204112.342123-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250430204112.342123-15-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB113467D1EFC9C66CD94D216F3868F2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB113467D1EFC9C66CD94D216F3868F2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 12 May 2025 16:58:05 +0100
+X-Gm-Features: AX0GCFuR8rcyABea0qPHxH1BuKL66czaA5OEAqMZRwiSFyesM0ZStKGzdKFxm4Y
+Message-ID: <CA+V-a8vz-7o96s0ok2ap+Kg2=BKMv8O8Zk667bYi+0Cu8F399Q@mail.gmail.com>
+Subject: Re: [PATCH v4 14/15] drm: renesas: rz-du: mipi_dsi: Add support for
+ LPCLK handling
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, "laurent.pinchart" <laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF138 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Verify written data in paranoid mode
-Thread-Index: 75AKXALdUUz/uNm8Yjvipq4cEdAKSw==
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Cs=C3=B3k=C3=A1s Bence" <csokas.bence@prolan.hu>
->>> UBI offers this already, there is a write self-check as part of the io
->>> checks that can be enabled
->>> via debugfs per UBI device.
->>> So for troubleshooting this should be good enough.
->>> There is room for improvement, though. Currently it uses vmalloc().
->>=20
->> UBI is full of uncovered resources :-)
->=20
-> For sure. Plus, even though we use UBI + UBIFS, that may not necessarily
-> be the case for others. Maybe someone uses mtdblock + some
-> "conventional" FS (ext*, f2fs etc.). Or maybe they use JFFS. Or maybe no
-> FS at all. We should still allow userspace or higher FS layers to be
-> notified of the problem.
+Hi Biju,
 
-Nobody sane would every use a regular block based filesystem in rw mode
-on-top of mtdblock. Especially if you care about your data.
+Thank you for the review.
 
-JFFS2 has CONFIG_JFFS2_FS_WBUF_VERIFY.
-AFAIK, this origins form the old and dark age of flashes where everything
-was wonky and no good test tooling existed.
+On Sun, May 4, 2025 at 2:00=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.com=
+> wrote:
+>
+> Hi Prabhakar,
+>
+> Thanks for the patch.
+>
+> > -----Original Message-----
+> > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: 30 April 2025 21:41
+> > Subject: [PATCH v4 14/15] drm: renesas: rz-du: mipi_dsi: Add support fo=
+r LPCLK handling
+> >
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Introduce the `RZ_MIPI_DSI_FEATURE_LPCLK` feature flag in `rzg2l_mipi_d=
+si_hw_info` to indicate the
+> > need for LPCLK configuration.
+> >
+> > On the RZ/V2H(P) SoC, the LPCLK clock rate influences the required DPHY=
+ register configuration,
+> > whereas on the RZ/G2L SoC, this clock is not present. To accommodate th=
+is difference, add an `lpclk`
+> > clock handle in `rzg2l_mipi_dsi` and update the probe function to condi=
+tionally acquire LPCLK if the
+> > SoC supports it.
+> >
+> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v3->v4
+> > - No changes
+> >
+> > v2->v3:
+> > - No changes
+> >
+> > v1->v2:
+> > - Added LPCLK as feature flag
+> > ---
+> >  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
+pu/drm/renesas/rz-
+> > du/rzg2l_mipi_dsi.c
+> > index df43ff59e08e..22a386ca8ae3 100644
+> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > @@ -30,6 +30,7 @@
+> >
+> >  #define RZ_MIPI_DSI_FEATURE_DPHY_RST BIT(0)
+> >  #define RZ_MIPI_DSI_FEATURE_16BPP    BIT(1)
+> > +#define RZ_MIPI_DSI_FEATURE_LPCLK    BIT(2)
+> >
+> >  struct rzg2l_mipi_dsi;
+> >
+> > @@ -63,6 +64,7 @@ struct rzg2l_mipi_dsi {
+> >       struct drm_bridge *next_bridge;
+> >
+> >       struct clk *vclk;
+> > +     struct clk *lpclk;
+> >
+> >       enum mipi_dsi_pixel_format format;
+> >       unsigned int num_data_lanes;
+> > @@ -788,6 +790,12 @@ static int rzg2l_mipi_dsi_probe(struct platform_de=
+vice *pdev)
+> >       if (IS_ERR(dsi->vclk))
+> >               return PTR_ERR(dsi->vclk);
+> >
+> > +     if (dsi->info->features & RZ_MIPI_DSI_FEATURE_LPCLK) {
+> > +             dsi->lpclk =3D devm_clk_get(dsi->dev, "lpclk");
+> > +             if (IS_ERR(dsi->lpclk))
+> > +                     return PTR_ERR(dsi->lpclk);
+> > +     }
+> > +
+>
+> Can we use devm_clk_get_optional() and get rid of this Feature bit check
+> as DT binding check validates for a particular SoC this clk is required o=
+r not?
+> Otherwise, there is no usage for optional API's?
+>
+OK, I'll switch to devm_clk_get_optional().
 
-Long story short, I'm not convinced by this patch set.
-No ack form my side.
-At least it should be configurable per device and not being a global
-config option. If Michael or Miquel like it, I'll not block this decision.
-
-Thanks,
-//richard
+Cheers,
+Prabhakar
