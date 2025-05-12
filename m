@@ -1,123 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D0D44C63
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8547244C63;
+	Mon, 12 May 2025 18:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076131; cv=none; b=KoGyqcYP9mx4VrlSBLgpEppChHsuXSJ2dQdvvUYIW/kYCiYifmkovs3rDkY9JO3V99waYZ0GCZzD1IWbFyA7t8nodZLEYSzzlBoXOD1LqETNJ7aGin9QPkmFjv3uPwqxOT9N7LoxG+fgDxZRtY1hSrDsa3HcCEqcnInhxSJI22U=
+	t=1747076167; cv=none; b=bs10oU3HLTUS6pnFrHwM+0LemdvbATHI1HHoVoL2dmY+O2M/umG58JIcErmb0lM3EJ9nU1k8cjAhIHhT7lqX44ZDNbbws2VXzM3NZNpCnf/bDZGBfH4s2BCJZEMM0czXuMreXAGRlkvG5a4jnM0/KzYFYs7/Pky3ckYQhDn1MI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076131; c=relaxed/simple;
-	bh=M6ayjQd3gWz51QUvPEksazFGawUZNndcRZ17U3rlaY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oKlTnOmuFvCmepRMXARAVPI+Qt8Ckdq2B1hhsxmOry7n3JGmz/kAoL69WP1hiYNlaiL0Fsq5cx8gL4zjkTC63ZHhBuMU0yng2/GZ/zNiJ1VT9aqNT+1JqRlbTMBBk5h6aqtxM8b0f33VQsayaSI0xfpWVBBG2gRrTA0HfjgpqfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98462C4CEE7;
-	Mon, 12 May 2025 18:55:28 +0000 (UTC)
-Date: Mon, 12 May 2025 19:55:25 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Will Deacon <will@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/mm: Permit lazy_mmu_mode to be nested
-Message-ID: <aCJEHY609yrmoXvW@arm.com>
-References: <20250512150333.5589-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1747076167; c=relaxed/simple;
+	bh=wJ6+3T7Q+uG5JmIHX7L5AXYzO/d2+il64qc+8I4gyg0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qei6l7+iOuXuLq7945IFKaGmFArIxDgNV54d2vz26LGubwaPPQk+WZppfGJOy4HhYXQ+NSikKiopPWlUIE7UxbHrR7wTgdY3dkxa9p46XZF4RNu/3jYX7dzfW9DJQP93w4p2FQgMgcOdi82JRscVtdo7dvMsadswjCJ52fXwjhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-879ed601971so1137442241.1;
+        Mon, 12 May 2025 11:56:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747076163; x=1747680963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sQvaydtGe1SmxEZ4Zfc6DqWwo3SafcHmz1OjMvOZMDs=;
+        b=aXCDuRSNwVkjiAKMXUfIFQLIELaeCm0GRhT0eX+4UHkqA5Zm8r98/4rYPBwjjD30xe
+         U+gAIlFwZMNUu/Ytj7vgvD1dUVgLmF1QGUhFbF/BMV3f8WNFdKRCLGrTO0hoTPzWvuq4
+         /AcROcVYMhvuWhiVj9TzGhc8U8ZqephhZFHLLEaMg0DzfWKBPNl3KHWhOgpbdGRE0V3d
+         wJwpmt2tZ64U+0EDidXqL2lPAmIPDBM/k/UU2cpxN7QIUFglkd9k2sMEi0/TUSnN3iqM
+         70kjyfsTzNvoqV+VA/c71XMH0SLdRorha20fR9kLyZl0iPYBcWqJbxJ9K18+rVk3khpd
+         CdEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXZDtT0SfQf+YS8N04C6F32mYX5rFX/mQtfSY+M3c849GMu6ezTQcnHTzomY0SYMxts4YBMdeZy/Gt+KDe@vger.kernel.org, AJvYcCVjBA1IkRJP6PFyE5VM8e3YMkIROH3gIVokti2qG5jRcRHb7AzXHuQFKfN2JKTznPgdEXOQcPD10MY=@vger.kernel.org, AJvYcCXzL7B8g8MC/iiSWzHnGVqd0fU904CHwtAR8G8//Ij5G9ZlvItlGE7T1F9wru+7jsvwzgEIcKS5y+pfdkHrLH7gpuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH69H0YXaF6KT1wQLdVmYANhRJbJGui1bBp/z0EKnK1tMP+z/i
+	yyZYD6GyeVriFBiXB6//5YDGKsmcpNEY/oZ7wqJlPCcB+zuAjAO2Iww3kiHn
+X-Gm-Gg: ASbGncsQvzNUt4XkX4gh4B1j9Y6sCpsWDfQmwLt8YZ0L03jPhdbD6tbslHzyaJ2yxqZ
+	Pi3Y/Wm3ryxCPwURtfggcJvruwk5URJUAe+G1dzJ4/5Dn9ERqB4fpv0ZD3648sONdoTiRBHZsFO
+	rOCZoZnjT8X3O3SJJMk/KNWuJvi3im70JkZkGBUEQrPddzpKOnVszWf8MVPhn2YTlJtaioHIouW
+	Wq/NiV/TgXAYjVsTS+FAq1d+KP8Wt+8wArEsL95Uv9YqRv/buGbHOKnHH6Kk94RLNBsQcfEJbDc
+	koe8x+D3Kn8dMWRrgU5l4GgbOGvJhNVwR0ARrBHmAvNmsR8SB1O0vnBDc5l+EHnXZibb+5eCLi8
+	mCQKPIAlytG3Nkg==
+X-Google-Smtp-Source: AGHT+IEqVmRIAuzTPJFv68SCEYqLYQIunEo2GwPaze02sN7O/P0Q3d7nnz3ajQBbWlyY1rEIanE4uw==
+X-Received: by 2002:a05:6102:4b19:b0:4c1:76a4:aee4 with SMTP id ada2fe7eead31-4deed3d366fmr12686803137.19.1747076163471;
+        Mon, 12 May 2025 11:56:03 -0700 (PDT)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea85df68fsm5478536137.18.2025.05.12.11.56.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 11:56:02 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-87843c435f3so1314116241.3;
+        Mon, 12 May 2025 11:56:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWhv0r6U7jZJh1L9MqK7jRvejB0iXaksak2G8+tN+9qC1pPZpPK4TcBXEckAm44DeSTNR51frCrqEce9xA1w9c3jvc=@vger.kernel.org, AJvYcCXLHSs7cG3khjl/RwLyf3fSNIa6sJ+Iu4KbOh0R6CebD12VHqP8C9N+9LckIVQoSSJ3d35q/q4xCFlumsO+@vger.kernel.org, AJvYcCXf5elQriUTTk5OO+bQiCI+VC7+FShyt2x1PQ+zFEjtl5V+3A4+efdF5Lyt2pZJfZpegbV+Gcl9lzE=@vger.kernel.org
+X-Received: by 2002:a05:6102:fa8:b0:4ba:95f1:cc83 with SMTP id
+ ada2fe7eead31-4deed3d3845mr9932241137.16.1747076162395; Mon, 12 May 2025
+ 11:56:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512150333.5589-1-ryan.roberts@arm.com>
+References: <20250428184152.428908-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250428184152.428908-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWUpJHB_NsBqdvyD6=dDnZXQMr-=0aOpW0OutN9hSA5=A@mail.gmail.com> <CA+V-a8ukvn_K69h_COXS6JCqZbqXPQG1L9UAnm-gYQk7PTzb_g@mail.gmail.com>
+In-Reply-To: <CA+V-a8ukvn_K69h_COXS6JCqZbqXPQG1L9UAnm-gYQk7PTzb_g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 May 2025 20:55:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXws+KBurR+x=vpLBtgY5yBKabJRadgBU1oPMWTwi0vNA@mail.gmail.com>
+X-Gm-Features: AX0GCFsM1Y3g7ywasa4OoV3R8ypgjEoWGyMcRjYmyFXY9nLqMNXUy2UnYQ83DwM
+Message-ID: <CAMuHMdXws+KBurR+x=vpLBtgY5yBKabJRadgBU1oPMWTwi0vNA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] clk: renesas: r9a09g057: Add clock and reset
+ entries for GBETH0/1
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Richard Cochran <richardcochran@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 04:03:31PM +0100, Ryan Roberts wrote:
-> lazy_mmu_mode is not supposed to permit nesting. But in practice this
-> does happen with CONFIG_DEBUG_PAGEALLOC, where a page allocation inside
-> a lazy_mmu_mode section (such as zap_pte_range()) will change
-> permissions on the linear map with apply_to_page_range(), which
-> re-enters lazy_mmu_mode (see stack trace below).
-> 
-> The warning checking that nesting was not happening was previously being
-> triggered due to this. So let's relax by removing the warning and
-> tolerate nesting in the arm64 implementation. The first (inner) call to
-> arch_leave_lazy_mmu_mode() will flush and clear the flag such that the
-> remainder of the work in the outer nest behaves as if outside of lazy
-> mmu mode. This is safe and keeps tracking simple.
-> 
-> Code review suggests powerpc deals with this issue in the same way.
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 6 PID: 1 at arch/arm64/include/asm/pgtable.h:89 __apply_to_page_range+0x85c/0x9f8
-> Modules linked in: ip_tables x_tables ipv6
-> CPU: 6 UID: 0 PID: 1 Comm: systemd Not tainted 6.15.0-rc5-00075-g676795fe9cf6 #1 PREEMPT
-> Hardware name: QEMU KVM Virtual Machine, BIOS 2024.08-4 10/25/2024
-> pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : __apply_to_page_range+0x85c/0x9f8
-> lr : __apply_to_page_range+0x2b4/0x9f8
-> sp : ffff80008009b3c0
-> x29: ffff80008009b460 x28: ffff0000c43a3000 x27: ffff0001ff62b108
-> x26: ffff0000c43a4000 x25: 0000000000000001 x24: 0010000000000001
-> x23: ffffbf24c9c209c0 x22: ffff80008009b4d0 x21: ffffbf24c74a3b20
-> x20: ffff0000c43a3000 x19: ffff0001ff609d18 x18: 0000000000000001
-> x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000003
-> x14: 0000000000000028 x13: ffffbf24c97c1000 x12: ffff0000c43a3fff
-> x11: ffffbf24cacc9a70 x10: ffff0000c43a3fff x9 : ffff0001fffff018
-> x8 : 0000000000000012 x7 : ffff0000c43a4000 x6 : ffff0000c43a4000
-> x5 : ffffbf24c9c209c0 x4 : ffff0000c43a3fff x3 : ffff0001ff609000
-> x2 : 0000000000000d18 x1 : ffff0000c03e8000 x0 : 0000000080000000
-> Call trace:
->  __apply_to_page_range+0x85c/0x9f8 (P)
->  apply_to_page_range+0x14/0x20
->  set_memory_valid+0x5c/0xd8
->  __kernel_map_pages+0x84/0xc0
->  get_page_from_freelist+0x1110/0x1340
->  __alloc_frozen_pages_noprof+0x114/0x1178
->  alloc_pages_mpol+0xb8/0x1d0
->  alloc_frozen_pages_noprof+0x48/0xc0
->  alloc_pages_noprof+0x10/0x60
->  get_free_pages_noprof+0x14/0x90
->  __tlb_remove_folio_pages_size.isra.0+0xe4/0x140
->  __tlb_remove_folio_pages+0x10/0x20
->  unmap_page_range+0xa1c/0x14c0
->  unmap_single_vma.isra.0+0x48/0x90
->  unmap_vmas+0xe0/0x200
->  vms_clear_ptes+0xf4/0x140
->  vms_complete_munmap_vmas+0x7c/0x208
->  do_vmi_align_munmap+0x180/0x1a8
->  do_vmi_munmap+0xac/0x188
->  __vm_munmap+0xe0/0x1e0
->  __arm64_sys_munmap+0x20/0x38
->  invoke_syscall+0x48/0x104
->  el0_svc_common.constprop.0+0x40/0xe0
->  do_el0_svc+0x1c/0x28
->  el0_svc+0x4c/0x16c
->  el0t_64_sync_handler+0x10c/0x140
->  el0t_64_sync+0x198/0x19c
-> irq event stamp: 281312
-> hardirqs last  enabled at (281311): [<ffffbf24c780fd04>] bad_range+0x164/0x1c0
-> hardirqs last disabled at (281312): [<ffffbf24c89c4550>] el1_dbg+0x24/0x98
-> softirqs last  enabled at (281054): [<ffffbf24c752d99c>] handle_softirqs+0x4cc/0x518
-> softirqs last disabled at (281019): [<ffffbf24c7450694>] __do_softirq+0x14/0x20
-> ---[ end trace 0000000000000000 ]---
-> 
-> Fixes: 5fdd05efa1cd ("arm64/mm: Batch barriers when updating kernel mappings")
-> Reported-by: Catalin Marinas <catalin.marinas@arm.com>
-> Closes: https://lore.kernel.org/linux-arm-kernel/aCH0TLRQslXHin5Q@arm.com/
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Hi Prabhakar,
 
-Thanks. This works, no more warnings. The comment looks fine.
+On Fri, 9 May 2025 at 15:29, Lad, Prabhakar <prabhakar.csengg@gmail.com> wr=
+ote:
+> On Thu, May 8, 2025 at 5:13=E2=80=AFPM Geert Uytterhoeven <geert@linux-m6=
+8k.org> wrote:
+> > On Mon, 28 Apr 2025 at 20:42, Prabhakar <prabhakar.csengg@gmail.com> wr=
+ote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Add clock and reset entries for GBETH instances. Include core clocks =
+for
+> > > PTP, sourced from PLLETH, and add PLLs, dividers, and static mux cloc=
+ks
+> > > used as clock sources for the GBETH IP.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> > > ---
+> > > v2->v3:
+> > > - Used DEF_MOD_MUX_EXTERNAL() macro for external MUX clocks.
+> > > - Renamed gbe0/1 external mux clock names
+> >
+> > Thanks for the update!
+> >
+> > > --- a/drivers/clk/renesas/r9a09g057-cpg.c
+> > > +++ b/drivers/clk/renesas/r9a09g057-cpg.c
+> > > @@ -78,6 +87,19 @@ static const struct clk_div_table dtable_2_64[] =
+=3D {
+> > >         {0, 0},
+> > >  };
+> > >
+> > > +static const struct clk_div_table dtable_2_100[] =3D {
+> > > +       {0, 2},
+> > > +       {1, 10},
+> > > +       {2, 100},
+> > > +       {0, 0},
+> > > +};
+> > > +
+> > > +/* Mux clock tables */
+> > > +static const char * const smux2_gbe0_rxclk[] =3D { ".plleth_gbe0", "=
+et0_rxclk" };
+> > > +static const char * const smux2_gbe0_txclk[] =3D { ".plleth_gbe0", "=
+et0_txclk" };
+> > > +static const char * const smux2_gbe1_rxclk[] =3D { ".plleth_gbe1", "=
+et1_rxclk" };
+> > > +static const char * const smux2_gbe1_txclk[] =3D { ".plleth_gbe1", "=
+et1_txclk" };
+> > > +
+> > >  static const struct cpg_core_clk r9a09g057_core_clks[] __initconst =
+=3D {
+> > >         /* External Clock Inputs */
+> > >         DEF_INPUT("audio_extal", CLK_AUDIO_EXTAL),
+> >
+> > This patch starts to LGTM.  The only outstanding issue is how the
+> > et*_[rt]xclk will be provided.  I have read your comments on v2,
+> > and am eagerly awaiting the full patch set (CPG binding update, PHY
+> > updates, ...) to get this all to work.
+> >
+> My intention here is to get these initial patches in so that we have
+> Ethernet working on RZ/V2H (G3E/V2N) so that we have these boards on
+> LAVA and tackle et*_[rt]xclk clocks for the next cycle as this will
+> have to be discussed the -net maintainers. Are you OK with this
+> approach.
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+You mean that (1) Ethernet works with just series
+  - "[PATCH v4 0/2] clk: renesas: Skip monitor checks for external
+     clocks and add clocks for GBETH"[1] and
+  - "[PATCH v2 0/2] arm64: dts: renesas: Add GBETH support to R9A09G057
+     SoC[2]"
+applied, without any extra additions to define the et*_[rt]xclk clocks,
+and (2) you see a clear path forward that can stay backwards compatible
+with the DTS from [2]?
+
+If that is the case, then I think we can move forward with these series.
+Thanks!
+
+[1] https://lore.kernel.org/20250509160121.331073-1-prabhakar.mahadev-lad.r=
+j@bp.renesas.com/
+[2] https://lore.kernel.org/20250509153559.326603-1-prabhakar.mahadev-lad.r=
+j@bp.renesas.com/
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
