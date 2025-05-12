@@ -1,130 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCB322338;
-	Mon, 12 May 2025 23:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA39323C4FF;
+	Mon, 12 May 2025 23:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747092361; cv=none; b=U1g9gY1OL9kxcOYS+ljGjKIazSiOMVdATHyZersVgq7t3SghbhkhTeUwVHyN9eQtMcwVPhwL25xHlgga2Wijun5HP07+ZjXs2A7gQm7cjyJdcGK9MWhIPxOenQEOeUykmbd2KwYI+UeLAgg8M+GsPzecfGpqlB44sPfTI0GbavA=
+	t=1747092575; cv=none; b=YujJimo9eZqCAXtX8kNCmM/oDS8J+we+XR1Zge/8x3RlaYuMO5IsTVOxWRttT4d2qDoZyeMRnBy93a9vqE7fsjOp0g+48ExwpzRUNHFwhw26+awXHRH4nW97QsSZKjR4bHIUdLlGtbLbZej4LCpGtEyO82q6fNtt0OvoFIQ9RsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747092361; c=relaxed/simple;
-	bh=ocrZSi8DrO1EDikoZUP7oF3uAlxlKAV4CCYK0E7ESY8=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=WsHt2OKnc5WXTbQaNlS+Uz7n6phS+3UHbj78FMFkqh7prg/+ZO1RICKOd25p1P53A/rcCYIzB2u6QfL5niuOJp6ZkCQmLzgCkGCq+4q1u1k+Zl7Z9Kno0rD6AsOOLK3JgOrYNn4LZklOci+fgsKwk6xiIZThgnXfJL1ah8+Ii7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/miODGV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747092575; c=relaxed/simple;
+	bh=ctNf1TQ6KR0VwdOFZNNeClTlyGYY5GQ2nAjG+j78JXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bdDcFmNPK3/ufdAoqlBF06qoYIhEszmkiNz1yXNt2cYaka2IbAz2ykbueUpmPcYRxqgvOPCASOiy08n0aeo2a+vZCu5rZMYfXicwHCs99N/y2/9ufck/mGTo8Cr3/nO/6bBaleviH4Gn94kEL8xVLwNrHddzDPoi4xaPgQ51+/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l19nNr6w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/miODGV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD71C4CEE7;
-	Mon, 12 May 2025 23:26:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l19nNr6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 707EDC4CEE7;
+	Mon, 12 May 2025 23:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747092360;
-	bh=ocrZSi8DrO1EDikoZUP7oF3uAlxlKAV4CCYK0E7ESY8=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=G/miODGVrcGeq496mvoRikgxy5uBNnOkysR4Bjkvdh99lpImJjlM0Q5BY/YOvD2eX
-	 Tphg+iiW8oLW9MrYAirmoLLIf+pWgv0NN0Zk9AcXiXyDOzLVLNem6tdFThiaJGVPmN
-	 15PcatmTdyI7Ze3ctlGjCRzcnYK33f2W6MXt7KXMSpKfzycAYk0STYuZkp3uKIuVUI
-	 k+diB3b7yfILzHv2GmGN/ceT6plbGrTysUtzmgENfnumE3CYdoWsmKvoxqQfNfc46P
-	 D1nIFgQTzLfQuUP5n0LDuCL/V7cexibccQXFb3mQqBCAeX6jGDDqlvTPgrFGHqhPOg
-	 KR1Fk1UXvw5pQ==
-Date: Mon, 12 May 2025 18:25:58 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1747092575;
+	bh=ctNf1TQ6KR0VwdOFZNNeClTlyGYY5GQ2nAjG+j78JXg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l19nNr6wQCZK5zgN7Bl46W65PNzxkf9fhuQdxCIaolEip2xrI8YtcuF4Gq9D5cpF+
+	 O+QoGFl5kujv/HkQRAaiZ5PShJuAhFFtc0oSGD6M+DkthaFx06WHgSZ9twdSZUz7QL
+	 I7iHnSp/k7QffNeO5Bopx6vZHZFrRk4AReLdhzhkCJNelOt/w1u9Xmuqnv7sBiNiQE
+	 8r8IccrsKXDSqu6UIoG+D1VYqIdvS1eRCbTqrCMtJ3QmF2lreFxsrTt3ern/2gGYaR
+	 1odXzcOF//BZBXac8pEHM9Ib0yH8HTiU81ldM1oaUeYeFbPli8nlmWEemvzBuE7MSW
+	 oV6AbnfKjsQmA==
+Date: Tue, 13 May 2025 01:29:32 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: EnDe Tan <ende.tan@starfivetech.com>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, 
+	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, 
+	"mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "jsd@semihalf.com" <jsd@semihalf.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	"endeneer@gmail.com" <endeneer@gmail.com>
+Subject: Re: [1/1] i2c: designware: Ensure runtime suspend is invoked during
+ rapid slave unregistration and registration
+Message-ID: <j3tuira2tzqhymeufcagfk7lqhbick4iax7riiamgwkl7kueeh@atehawq2y6gb>
+References: <20250412023303.378600-1-ende.tan@starfivetech.com>
+ <6e155241-3403-49df-8f0d-5aa63e2e74ab@linux.intel.com>
+ <NTZPR01MB10182E9F6E50D679A6EAC3B4F8B92@NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn>
+ <6a3b756f-6fbd-4ee5-b511-c5a32e4a6a34@linux.intel.com>
+ <2l2tpeictfp3o2kcq5fquqkm3nyjijq65ejanafrshh7icc5c4@guynosug2ve7>
+ <NTZPR01MB1018FD0E9913437D4B34E751F88B2@NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Tommaso Merciai <tomm.merciai@gmail.com>, Liu Ying <victor.liu@nxp.com>, 
- Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org, 
- Dongcheng Yan <dongcheng.yan@intel.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Ross Burton <ross.burton@arm.com>, Will Deacon <will@kernel.org>, 
- Eric Biggers <ebiggers@google.com>, 
- Julien Massot <julien.massot@collabora.com>, linux-media@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>, 
- Taniya Das <quic_tdas@quicinc.com>, Mark Brown <broonie@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- linux-staging@lists.linux.dev, Geert Uytterhoeven <geert+renesas@glider.be>, 
- Ricardo Ribalda <ribalda@chromium.org>, 
- linux-arm-kernel@lists.infradead.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Zhi Mao <zhi.mao@mediatek.com>, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Hans Verkuil <hverkuil@xs4all.nl>, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
- Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Kieran Bingham <kieran.bingham@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, 
- Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, 
- Conor Dooley <conor+dt@kernel.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-In-Reply-To: <20250512212832.3674722-15-demonsingur@gmail.com>
-References: <20250512212832.3674722-1-demonsingur@gmail.com>
- <20250512212832.3674722-15-demonsingur@gmail.com>
-Message-Id: <174709235870.686179.16618194990565341079.robh@kernel.org>
-Subject: Re: [PATCH v3 14/19] dt-bindings: media: i2c: add MAX9296A,
- MAX96716A, MAX96792A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <NTZPR01MB1018FD0E9913437D4B34E751F88B2@NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn>
 
+Hi EnDe,
 
-On Tue, 13 May 2025 00:28:23 +0300, Cosmin Tanislav wrote:
-> The MAX9296A deserializer converts single or dual serial inputs to MIPI
-> CSI-2 outputs. The GMSL2 links operate at a fixed rate of 3Gbps or 6Gbps
-> in the forward direction and 187.5Mbps in the reverse direction.
-> In GMSL1 mode, each serial link can be paired with 3.12Gbps or 1.5Gbps
-> GMSL1 serializers or operate up to 4.5Gbps with GMSL2 serializers with
-> GMSL1 backward compatibility. The MAX9296A supports mixed GMSL2 and
-> GMSL1 links. The serial inputs operate independently, allowing videos
-> with different timings and resolutions to be received on each input.
+On Thu, May 08, 2025 at 08:30:27AM +0000, EnDe Tan wrote:
+> Hi Andi and Jarkko, thank you for the feedback.
 > 
-> MAX96716A supports both tunnel and pixel mode.
-> MAX96792A supports both tunnel and pixel mode, and has two GMSL3 links.
+> > -----Original Message-----
+> > From: Andi Shyti <andi.shyti@kernel.org>
+> > Sent: Tuesday, 6 May, 2025 5:49 AM
+> > To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> > Cc: EnDe Tan <ende.tan@starfivetech.com>; linux-i2c@vger.kernel.org;
+> ...
+> > > Good explanation and could you add it the commit log together with the
+> > > example?
+> > 
+> > If you want you can paste the new commit log as reply to this e-mail.
 > 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  .../bindings/media/i2c/maxim,max9296a.yaml    | 242 ++++++++++++++++++
->  MAINTAINERS                                   |   6 +
->  2 files changed, 248 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
+> Here is the new commit log, feel free to let me know if further changes are required:
 > 
+> Replaced pm_runtime_put() with pm_runtime_put_sync_suspend() to ensure
+> the runtime suspend is invoked immediately when unregistering a slave.
+> This prevents a race condition where suspend was skipped when
+> unregistering and registering slave in quick succession.
+> 
+> For example, consider the rapid sequence of
+> `delete_device -> new_device -> delete_device -> new_device`.
+> In this sequence, it is observed that the dw_i2c_plat_runtime_suspend() might
+> not be invoked after `delete_device` operation.
+> 
+> This is because after `delete_device` operation, when the
+> pm_runtime_put() is about to trigger suspend, the following `new_device`
+> operation might race and cancel the suspend.
+> 
+> If that happens, during the `new_device` operation,
+> dw_i2c_plat_runtime_resume() is skipped (since there was no suspend), which
+> means `i_dev->init()`, i.e. i2c_dw_init_slave(), is skipped.
+> Since i2c_dw_init_slave() is skipped, i2c_dw_configure_fifo_slave() is
+> skipped too, which leaves `DW_IC_INTR_MASK` unconfigured. If we inspect
+> the interrupt mask register using devmem, it will show as zero.
+> 
+> Example shell script to reproduce the issue:
+> ```
+>   #!/bin/sh
+> 
+>   SLAVE_LADDR=0x1010
+>   SLAVE_BUS=13
+>   NEW_DEVICE=/sys/bus/i2c/devices/i2c-$SLAVE_BUS/new_device
+>   DELETE_DEVICE=/sys/bus/i2c/devices/i2c-$SLAVE_BUS/delete_device
+> 
+>   # Create initial device
+>   echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+>   sleep 2
+> 
+>   # Rapid sequence of
+>   # delete_device -> new_device -> delete_device -> new_device
+>   echo $SLAVE_LADDR > $DELETE_DEVICE
+>   echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+>   echo $SLAVE_LADDR > $DELETE_DEVICE
+>   echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+> 
+>   # Using devmem to inspect IC_INTR_MASK will show as zero
+> ```
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Thanks, merged to i2c/i2c-host.
 
-yamllint warnings/errors:
+I just reworded the title to:
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.example.dtb: serializer@40 (maxim,max96717): compatible: 'oneOf' conditional failed, one must be fixed:
-	['maxim,max96717'] is too short
-	'maxim,max96717' is not one of ['maxim,max9295a', 'maxim,max96717f']
-	from schema $id: http://devicetree.org/schemas/media/i2c/maxim,max96717.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.example.dtb: serializer@40 (maxim,max96717): compatible: 'oneOf' conditional failed, one must be fixed:
-	['maxim,max96717'] is too short
-	'maxim,max96717' is not one of ['maxim,max9295a', 'maxim,max96717f']
-	from schema $id: http://devicetree.org/schemas/media/i2c/maxim,max96717.yaml#
+i2c: designware: Invoke runtime suspend on quick slave re-registration
 
-doc reference errors (make refcheckdocs):
+to keep it under 75 characters.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250512212832.3674722-15-demonsingur@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Thanks,
+Andi
