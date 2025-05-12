@@ -1,180 +1,268 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2074.outbound.protection.outlook.com [40.107.223.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F300C24EF6D;
-	Mon, 12 May 2025 21:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747086926; cv=none; b=KqgVyanZbmPyK8xAkOYdoREN7742txfKbUgugixK40XORwRUa3SP4uZ91/TJDP+iQdmeObvtvVWd6gLno2HbRDN+eqEC5qASR59m/AshFFkSfpwZkC9k5/thCt2gKhuj5WwYp/7U/QM9eprmIBMUNUxI+HIwghpdqyKJQlXnXYM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747086926; c=relaxed/simple;
-	bh=acx6la62AB9KY3KHMO9Po2HbenTonzSF0rqTG9tYEkI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kIVj6322nRkkOSk3au3Od+bchp8jKsrq4FUtfG8UbSapPtVM3zv/JGLTm4qOgqT6S3jbLpZeXL++hQvraJLWtvupge177wk57OU/SzMPk99OWU4fGKsowfMXeUSSQZhTEURcemXQtfDh9pLZ4jVInWeKuMuRgU7+9QhlFIz9Saw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1ekquRc; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8525024EF6D;
+	Mon, 12 May 2025 21:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747086934; cv=fail; b=A0in/yLDlq4gD6/bvlDs88bqlI2MrEFFAsnRCQyf/KnwDG7Xn0se8liwQCTwkJ+XLbjw1PMJg/2JzXN9YXwZ04Oucw1b2QzectgKBIvdwzQ0gWF6gi0HZUbgwhztMTkaQUsfKJ+fWD5RMQxxK730nzj3fRS65OkQ+sE5iGi1QzU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747086934; c=relaxed/simple;
+	bh=z4wiO0U8+oYhDMil6CvibPh+v949rIG/xUSru6e/bfo=;
+	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
+	 Content-Type:MIME-Version; b=gVD/Na3Vw7Z3I7SJyfIefJ5o9Hl1bAwp9kYxVZO0XQ+17lpH1oupabt5KuBxTJqIHlX/f2EUQkyS2G7q+gPfHitTjNpqgiO0QbsgbePFUes46SlI9Poj9Jv+jqyEfuy0vYvBGHQebhnqTK0+XTUcfgjK9E5FMEo/7RsNuXYKB2c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g5rTT+9w; arc=fail smtp.client-ip=40.107.223.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1ekquRc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B0ACC4CEE7;
-	Mon, 12 May 2025 21:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747086925;
-	bh=acx6la62AB9KY3KHMO9Po2HbenTonzSF0rqTG9tYEkI=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=M1ekquRcSvFIug0fTArU3tJ5QCVlb4wcAyvXVbZ4SzVxKBi+HcyXCR3hw9Rw4VLXF
-	 U+iXO7LsPe0WgpLHAbek6B4SOsSxP0kc3wrNsLxh89CIVMrWgKLFrVO5nHf9be5WUq
-	 faBip6ZlgbNh4QgoWRsJ2T2Bog//j2JQXJu+ajAzbvKPqQ6nCDXY78SlijFcYSflmy
-	 8BcUmYL71DyuqL4Av+MQFYGfZxbfff6BwLOxs67Z1Kj8MtQ0nlMEPdresfiHzMrU+M
-	 T+/bwWyY+2DyUH3bApmVmJzFeEZg8AkfHrTh5oZC+l4mHn2iBV+vB/TAntCKJ7ZlRc
-	 0/ViW9AfjIBXA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A778C3ABC3;
-	Mon, 12 May 2025 21:55:25 +0000 (UTC)
-From: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>
-Date: Mon, 12 May 2025 23:55:15 +0200
-Subject: [PATCH] HID: lenovo: Unbreak USB/BT keyboards on non-ACPI
- platforms
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g5rTT+9w"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x0FhfJJ80GcaZYRwbvZ40UOnrLMIeGggqmHxdFu0mWFYmLJBfwo0ZgSkHtPae2s1BEShADVZ5WjD9UCzW3dhc/XzohK7TK1Gc0Kaw+yRaZKvZ472ZnpOxeZTnpez4WGIMct5LB8BdYNQFGDXcJFpSsau+Gg4LDkB+kON49eHibyrTi2CFFkHFjy280BFzaYB7GENsj9YkKobxr4ZqoYEajWmGBq+Q2ycJypEGGvKYSDdbxaGVSCXDv7AYkL5HQnPqzrsBvj7lrQ0lw/jGvSIqn5aQWa1VebjBGmLhVkF7bhSr0UdGpXcZVYhWypQ73+IDtmwLoux8u9V3j2vnHUvQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uLYL00mVQTXO+8MhmgIAg+AZUppo4xX48gUYePXUuDo=;
+ b=JkF2tjI19ExJHW7haxToBZREVGG3gpqJpPHbxVOeVSy1A41hdY4D22iN6bonEHgP8Lc8XF7aZBW+2MUa+q9j0ub56kXu14D+ajf3WS2fTzWOrXHmONW14AWgEY5rv/2zfEfBqSU/YqKBJw17O7fQ17aRU/lODrYRlJGe4tmJ+rHNnKmynhakA4LeluodYMMLGbjrh4+Y6Mk4CLkIf1daZOoWAjWGgMs0C4LgRGvDmZGQh0Owubvkm08xaVm1elkDm4JxhJIdpKa69SJzw1elewsoCTAusPq7Cy/XZTBGtLEbGPHHRbQ9uIHib16gtkGHcpRpVamwfGWv0LbRZ/o81w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uLYL00mVQTXO+8MhmgIAg+AZUppo4xX48gUYePXUuDo=;
+ b=g5rTT+9wPVhImedj79INwLI8/Se4EWgO0eB/fySrbb9ebX1HFVYjGKvXjpC2mgawvjC0btcQZDruDz6gEpNARDq4RKPPrunPzc5X0EFRvmtSTSqLxfRNgHg7dj6M8cacwWV5/H06+PUl6TjfGFU5CvEGYnjn/Yy5WeOsLWv6yUE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by CYYPR12MB8870.namprd12.prod.outlook.com (2603:10b6:930:bb::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 21:55:30 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 21:55:30 +0000
+Message-ID: <ed6cf930-bb1d-d082-a1c7-f5699ec46565@amd.com>
+Date: Mon, 12 May 2025 16:55:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Content-Language: en-US
+To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
+ pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, shuah@kernel.org, prsampat@amd.com
+Cc: pgonda@google.com, nikunj@amd.com, pankaj.gupta@amd.com,
+ michael.roth@amd.com, sraithal@amd.com, linux-kernel@vger.kernel.org,
+ x86@kernel.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-coco@lists.linux.dev
+References: <20250512210410.10172-1-Ashish.Kalra@amd.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v2] KVM: SEV: Disable SEV-SNP support on initialization
+ failure
+In-Reply-To: <20250512210410.10172-1-Ashish.Kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0067.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:2c1::17) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-hid_lenovo_unbreak_non_acpi-v1-1-e9e37ecbfbfe@jannau.net>
-X-B4-Tracking: v=1; b=H4sIAEJuImgC/x3MSwqAIBAA0KvErBPUPouuEiE2TTUUYyhFEN09a
- fk274FEkSlBVzwQ6eLEQTJMWQCuXhZSPGWD1bbRjbFq5cntJOEK7pQxkt+cBHEeD1aoazNXiKY
- aW8jDEWnm+9/74X0/64zrI20AAAA=
-X-Change-ID: 20250512-hid_lenovo_unbreak_non_acpi-c041f3cc13b6
-To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Vishnu Sankar <vishnuocv@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Janne Grunau <j@jannau.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5604; i=j@jannau.net;
- s=yk2024; h=from:subject:message-id;
- bh=fDDp0h4tQHC+Zan4FRSlGu8S8lB9BEYY3hPbDJrYDf0=;
- b=owGbwMvMwCW2UNrmdq9+ahrjabUkhgylPB/5Q03Way/ElEVtcT1rJ/eVh3Hqo5xjq3/6nb0Qx
- J/9vE+xo5SFQYyLQVZMkSVJ+2UHw+oaxZjaB2Ewc1iZQIYwcHEKwERkDRn+J7B9DQuYyx3xgOd5
- rp7GU9FEizep0bx+Z+oY+Rbte3F9MyNDq5d2g/bWjY/mtxtc5G74snHam38v7pwX06tzuPa5ZXo
- rCwA=
-X-Developer-Key: i=j@jannau.net; a=openpgp;
- fpr=8B336A6BE4E5695E89B8532B81E806F586338419
-X-Endpoint-Received: by B4 Relay for j@jannau.net/yk2024 with auth_id=264
-X-Original-From: Janne Grunau <j@jannau.net>
-Reply-To: j@jannau.net
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CYYPR12MB8870:EE_
+X-MS-Office365-Filtering-Correlation-Id: cf04216d-21ac-440e-076c-08dd919fb619
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R0VuZW5lL0pySFNNbjhCS0JmbGhZcVFnN0VJbTd1bVVoUHV0ZUozWUpBa2to?=
+ =?utf-8?B?Q0FJRmZKV2N3S0J3VnNMTWF4RUk3L0N1R0lCMmMrWlRsRWFqSzhmV2cwa01q?=
+ =?utf-8?B?bFo5LytjN3g2S3ZLOVllTG95OXlUNWRIREFiU1pOMXVWVVAzS3RML2I2dVhn?=
+ =?utf-8?B?N3hxbkNhR2FuUElQeHNZZUpoTFE4cGI3QUlPa3R2ZnN2VzNZUElHbDdDRW1D?=
+ =?utf-8?B?MWw3THhQV2FGR29WRUROWFRXQThoN1JUSjZ5MXNCaktXeWQyNkZzV2Y3clMw?=
+ =?utf-8?B?RzNQaXhUTWtKaWJPaU1HVDU5djhacHlvWElFUTJPaGZjSTJBRit5WlIrYk9C?=
+ =?utf-8?B?SDU5QVYzRVVSdG0vL1d6M1NuYWZsbU5JR2NZdWdWT050TGNIUmN6MU9EQmNl?=
+ =?utf-8?B?ajRaT1g3eXNwUGgzRXdrVC9DdGVEcVJKaHAyYzlndk0yck1IbnZqRDNEdzBG?=
+ =?utf-8?B?b0VWQzRtV281N2dYakI5d09QSXdvc3FVTkpuRlJ0Z1Z0d3JUd2lRbUpFRjNP?=
+ =?utf-8?B?ZFNsY2VPamJDaWtjOE9oSHJkWjNpeW8wdVMxWVozSGV4ZEh5ck95UzV1MGxK?=
+ =?utf-8?B?a2wyVmRxVzJLMGxhNCs4WFcyS3FKcjd1dW04UXhrRlpWeFY3c2p1eGU0WURP?=
+ =?utf-8?B?VzIyVlZwSWpzNWgxaG5wWGlkc0IyVlU4WmJpdWZpdDVYK252TWg1dW9rdnN5?=
+ =?utf-8?B?dUVReU1UMUxyVmdkcE43ZmdUYzk5NFAvN0JjeWpUT3VWemZ0eWN4czdLVVNm?=
+ =?utf-8?B?blJXTUdRbEJicEJ2a285OEtQR2NGQTByVDFobk10M0o4R0RYbGFIVG91Yklh?=
+ =?utf-8?B?dkpGQ2luUnF0aFljcDlJdmlZUE14T1haWE10alRZalAwYmdmSCtrV21JYzZt?=
+ =?utf-8?B?bmZmOFdhMmtqTjFjWEJiTGJkT1ZWUlZTZXppd3pMR2RnaHloeloyOEl6VEJI?=
+ =?utf-8?B?TFpmbHlVNGRGanNoMHJxUjlwSUZ5RGNPUTk5Zmc3cTdmMm5tb25RS0RWdWVQ?=
+ =?utf-8?B?dGtoaWdQTzNEM2lyU2pVMm83cGVKUC80ZnA4YURmRG1xRk9IQzNaalBiWE5M?=
+ =?utf-8?B?YWZTR25oK0dkNlZkWSsyUDlRQ3ZkU2htVkdrZ2pKTk9oTjlrU3dvWVNaSStJ?=
+ =?utf-8?B?UTEvN0NHWnE1UWxCVHVRTVhHRUlTNkZ3RWdBR2hpOCtnTkFjWHlYbWpkcHpi?=
+ =?utf-8?B?TTRFL21CanQvZFdPVUZJMERrV2ZjcEdIM0J1dmZ3cjZiOWo0NzZOWEozR1l3?=
+ =?utf-8?B?YnFxK3J1OWo0azBSeWFoYW1lTGhXbmFZdDdyUU9XdXRQNjJUZ0RUeDNEaW5t?=
+ =?utf-8?B?QU1uaGpvNVBJaWp6TE5uNHZwUWc2eXpiQjVudEZkeHpXT0RtZE16KzFXRjBQ?=
+ =?utf-8?B?RzFjL0tIdmloOE9jM2xlVXRnWTdLRHAxb0FKYU4zUCs4WWI5N2JZSllMYytm?=
+ =?utf-8?B?Z1RRUnhoRzMxMmtEMDBsRTgxRFdQWFJ5VmlmQXNzR1diTTI2NzZaL0J2T2Fh?=
+ =?utf-8?B?MVNHSWFIOXBPZTI2TjB4dzBpeEpIUzNZYjRxdW9BVHhWbnk3QWlnL1BRdTZv?=
+ =?utf-8?B?L1F5WTRQcFEvQlR1eUUrQVVZQ3poODJWMVVvZXNrdXkxU2UrRDY2Q3BsbVkr?=
+ =?utf-8?B?WFh4S0NHUFg3c0c3UWlXV3JTZWpLSzNFY0cvNldPVmVCS1MrVDJ5dEtzUURz?=
+ =?utf-8?B?emFPQ2tvaUdlekhnbnU4TDMrN0ZSM2tCeEJlT2hRZWcvcnVYOEV6cFJiVDNx?=
+ =?utf-8?B?bGgrT090OGJibFljUDE4MDhGbDIxV3B6R1UxMUpHSVRUWW13RC9ieDJMclFZ?=
+ =?utf-8?B?Nmd6TXVCR1BxdVFnSTllVkNaYm5GWTA4cmwyMkdNS0wrb0xHdGRaU0wwOUVh?=
+ =?utf-8?B?NHFvazZ1UHdmaWFGUWRhYjV3RDIvcjNaWEhzaExzd1FVajNoUXlQMzNEdDVX?=
+ =?utf-8?Q?h8rnhaxCRFw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?L2JFSmhDMDdzL1c1ME15YW1zTUlSUWJXQVdxQWF3dUJMSDNlK1lHQnR2RXFx?=
+ =?utf-8?B?eEl5UFBRNVlZQ1dsbmMweGtsalM5a05Kbm8yRlNSSzUvSTJGdlJuRHNpUksx?=
+ =?utf-8?B?dVNVcTJjNnBZZVN2MytmTGsrTHVrSHRwZGtHaURQNlBiTktyUnE0Um54ZjIr?=
+ =?utf-8?B?Q1BJVkR1WEk4L0JwOXRXd2NNd0ZqWHMvS3R4TVZ6My81K3hFU0tTaGIyNXZV?=
+ =?utf-8?B?bzR5SU5WaTR2WDdQcklHQmhaYTdSdXQ1VnptUm9kR2p4K3dnNk1QdTh6OWFF?=
+ =?utf-8?B?LzJ3THNoZzZuQjQ4a2pnbzJqQ1N5T1dBN0pPeHZEUllCQWlkRy9ySVYrTTRq?=
+ =?utf-8?B?SDVhQmdjM1NKaDlybUJNaXluUWIyTDZrRlFnZlBoTUtJR09mZUVuek4yY1lD?=
+ =?utf-8?B?QzRtQllEemxHTUh5L05UZnRIMWlXamo0b3NNVDUvZm1vbDBHcXlSUENJVHBJ?=
+ =?utf-8?B?Q3JMdTVka1hFaHhYWW14UjRHQnZ5S0NkTVM5UCsvcjUvL0NXQ2lwVFYyTWpK?=
+ =?utf-8?B?cm1EbXhyRGVMVDc0c0tjMGlOcWUzQ1BWYkxaWjBOL2RJeDZwYks3SXZXckp6?=
+ =?utf-8?B?eitzYU0wWFNQT1hvNlZpR0NCdEI4OGsxV0Z6ZG5wSTE2Y0JrWTNRbDVVWXNw?=
+ =?utf-8?B?aStpaFRpUjJxbGx6WEFRK2cvamlKK0U3ejExcWVoWE9wb0UyTXBHYmhsdFBR?=
+ =?utf-8?B?OXF6azhlVTErWit0bldnT3ZLQUJWUFF6TVRGajdMVDNub0p4YjVyZTlVbWRC?=
+ =?utf-8?B?UGJXalhkdG1yRlVKbk45WlRqaVkzTmZEQkdKY2hOVnZuYlBFV3hSM01hM3lR?=
+ =?utf-8?B?L0FQWVluZ1p5S3Q0TjVjckJmMmRuOUluMDFacjNJdkZobzdtR00walNnWTNS?=
+ =?utf-8?B?Q3BCbjE4QUVFK0U4SGVOWDh5a1dwQnlTMVF5cWh4Q3NrN2Z6UnpqQ0tCbFJR?=
+ =?utf-8?B?Rlp6QVpDM2dsUUZKdHdBaGhxVWhBOGR1Y2VaNkFiSkdVM2xqNVpCQXNDTG1t?=
+ =?utf-8?B?VkozWkpud21YeXN0dDNEWkFvd1pmWVg2eC9lZWNzUUpja1RXazZENWVvZC9R?=
+ =?utf-8?B?emZQajFQa1VqaHVYMWIwZFExLzlrcWNzalEyTWtWbHBYeXNyRlBsZ0ZNUWRY?=
+ =?utf-8?B?S01JV2lZRTZlRkhEcEx6dFhwcWRUR3cxNzNWekZBUmw1bGdBL0hQUVV1MGlC?=
+ =?utf-8?B?N2h6eWRxbGY4RkoxVnlIZUQwZlNoVUY1bmdmdzFYMG0zT0pHbVVCYmorOXVm?=
+ =?utf-8?B?WFd5MktWb2wwWktxd0QzMXJhK3FNb2lTRjhUTUsrUllKZko5TFMrcVhFMFFm?=
+ =?utf-8?B?c3hBZjc0ZzNrRTQrODZ6TlZ1RGZLR00zZzRZaStBZ2FBcHZyOTN5NWhhSUVB?=
+ =?utf-8?B?TzlEVVRBSUpMcnNTRkNGc1dNck9YaWZGSC9FeWpKQlk0ZEc1UjJVeWVRbm1E?=
+ =?utf-8?B?UGdSU2VYYWliTlNvRlNlU0NYZjJFSHlmYzJuVEc1S1hnWnlhRzUzK1N1TTZF?=
+ =?utf-8?B?aVpxVW9YanZXMk5Ga2ZGZVA0VW5BKzdwempRcFVwVEtFeHNwRmIzYU56cS9P?=
+ =?utf-8?B?bDdaSGNyVTV3aVNCSmx5dVYxSU5vbUxHUlZuVDRjZUpRZy9XeUJLRnEzMU81?=
+ =?utf-8?B?S05NTTU1T2VZUkdFMDhGR3V1Zm1qd0tSbndxSEdSOVdLZ3RENlF1K3ZpMWo2?=
+ =?utf-8?B?QnZ4NkF3U29UcWhjM3VOUWl5Z0xOMmJmcm5YeEk1M0ZGaTdmWUVRT3ozelIy?=
+ =?utf-8?B?dy9OUktvbjY3cDltcWh5RE1MRlV1Q2xiU2NnSU41emRCVm0xd0Z0QXhSeExF?=
+ =?utf-8?B?STVXdi9xNnJ3bGNyTWd4c3IxOVFWWEJMcHBxNCsvWmU2Rno1dEdaVktPRUNk?=
+ =?utf-8?B?aWs1R2JicXVZcmRuRlVkREpJSVFJanNEOUExVmJKUlRrUHlWT0tFcmlpTWQy?=
+ =?utf-8?B?R0VLeWJVRTVLUldScWJ5eHpHWEloc25vZGxub3RqbkhkazNTVEJrZTd3TXNh?=
+ =?utf-8?B?dkVnblRua3JQMW5PZHQ5Mjd1c1o0QnM5YjBlOWxwaHNkeFJsa3Z5R3I0MTlN?=
+ =?utf-8?B?Rml1VVREREU1SGZyUjR0clo2WHpaN1czMFE1NVp4cXg5RzV0NGNieUtleS9S?=
+ =?utf-8?Q?TNN1+o4T+6CMMBeRZ0MLRepep?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf04216d-21ac-440e-076c-08dd919fb619
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 21:55:29.9012
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DJHf5RBQnUfl5YVSsCraWulmDtJ7PasWPnL87Fs2O3WWx+zfEAv9sDBSGJXDuGcIGLdaJsiyOua+umK0plHx4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8870
 
-From: Janne Grunau <j@jannau.net>
+On 5/12/25 16:04, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> During platform init, SNP initialization may fail for several reasons,
+> such as firmware command failures and incompatible versions. However,
+> the KVM capability may continue to advertise support for it.
+> 
+> The platform may have SNP enabled but if SNP_INIT fails then SNP is
+> not supported by KVM.
+> 
+> During KVM module initialization query the SNP platform status to obtain
+> the SNP initialization state and use it as an additional condition to
+> determine support for SEV-SNP.
+> 
+> Co-developed-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Pratik R. Sampat <prsampat@amd.com>
+> Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-Commit 84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd
-Fn keys") added a dependency on ACPI_PLATFORM_PROFILE to cycle through
-power profiles. This breaks USB and Bluetooth keyboards on non-ACPI
-platforms since platform_profile_init() fails. See the warning below for
-the visible symptom but cause is the dependency on the platform_profile
-module.
+One comment below, otherwise:
 
-[  266.225052] kernel: usb 1-1.3.2: new full-speed USB device number 9 using xhci_hcd
-[  266.316032] kernel: usb 1-1.3.2: New USB device found, idVendor=17ef, idProduct=6047, bcdDevice= 3.30
-[  266.327129] kernel: usb 1-1.3.2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[  266.327623] kernel: usb 1-1.3.2: Product: ThinkPad Compact USB Keyboard with TrackPoint
-[  266.328096] kernel: usb 1-1.3.2: Manufacturer: Lenovo
-[  266.337488] kernel: ------------[ cut here ]------------
-[  266.337551] kernel: WARNING: CPU: 4 PID: 2619 at fs/sysfs/group.c:131 internal_create_group+0xc0/0x358
-[  266.337584] kernel: Modules linked in: platform_profile(+) nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft>
-[  266.337685] kernel:  apple_sio spi_apple apple_dart soundcore spmi_apple_controller pinctrl_apple_gpio i2c_pasemi_platform apple_admac i2c_pasemi_core clk_apple_nco xhci_pla>
-[  266.337717] kernel: CPU: 4 UID: 0 PID: 2619 Comm: (udev-worker) Tainted: G S      W          6.14.4-400.asahi.fc41.aarch64+16k #1
-[  266.337750] kernel: Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
-[  266.337776] kernel: Hardware name: Apple Mac mini (M1, 2020) (DT)
-[  266.337808] kernel: pstate: 61400009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[  266.337834] kernel: pc : internal_create_group+0xc0/0x358
-[  266.337860] kernel: lr : sysfs_create_group+0x20/0x40
-[  266.337886] kernel: sp : ffff800086f877a0
-[  266.337914] kernel: x29: ffff800086f877b0 x28: 0000000000000000 x27: ffffb66d0b338348
-[  266.337939] kernel: x26: ffffb66d0b338358 x25: ffffb66d528c7c50 x24: ffffb66d507e37b0
-[  266.337965] kernel: x23: 0000fffebf6708d8 x22: 0000000000000000 x21: ffffb66d0b370340
-[  266.337991] kernel: x20: ffffb66d0b370308 x19: 0000000000000000 x18: 0000000000000000
-[  266.338029] kernel: x17: 554e514553007373 x16: ffffb66d4f8c2268 x15: 595342555300656c
-[  266.338051] kernel: x14: 69666f72702d6d72 x13: 00353236353d4d55 x12: 4e51455300737361
-[  266.338075] kernel: x11: ffff6adf91b80100 x10: 0000000000000139 x9 : ffffb66d4f8c2288
-[  266.338097] kernel: x8 : ffff800086f87620 x7 : 0000000000000000 x6 : 0000000000000000
-[  266.338116] kernel: x5 : ffff6adfc896e100 x4 : 0000000000000000 x3 : ffff6adfc896e100
-[  266.338139] kernel: x2 : ffffb66d0b3703a0 x1 : 0000000000000000 x0 : 0000000000000000
-[  266.338155] kernel: Call trace:
-[  266.338173] kernel:  internal_create_group+0xc0/0x358 (P)
-[  266.338193] kernel:  sysfs_create_group+0x20/0x40
-[  266.338206] kernel:  platform_profile_init+0x48/0x3ff8 [platform_profile]
-[  266.338224] kernel:  do_one_initcall+0x60/0x358
-[  266.338239] kernel:  do_init_module+0x94/0x260
-[  266.338257] kernel:  load_module+0x5e0/0x708
-[  266.338271] kernel:  init_module_from_file+0x94/0x100
-[  266.338290] kernel:  __arm64_sys_finit_module+0x268/0x360
-[  266.338309] kernel:  invoke_syscall+0x6c/0x100
-[  266.338327] kernel:  el0_svc_common.constprop.0+0xc8/0xf0
-[  266.338346] kernel:  do_el0_svc+0x24/0x38
-[  266.338365] kernel:  el0_svc+0x3c/0x170
-[  266.338385] kernel:  el0t_64_sync_handler+0x10c/0x138
-[  266.338404] kernel:  el0t_64_sync+0x1b0/0x1b8
-[  266.338419] kernel: ---[ end trace 0000000000000000 ]---
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-Fixes: 84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn keys")
-Cc: stable@vger.kernel.org
-Signed-off-by: Janne Grunau <j@jannau.net>
+> ---
+>  arch/x86/kvm/svm/sev.c | 44 +++++++++++++++++++++++++++++++++---------
+>  1 file changed, 35 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index dea9480b9ff6..f7d343ab9acd 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -2935,6 +2935,33 @@ void __init sev_set_cpu_caps(void)
+>  	}
+>  }
+>  
+> +static bool is_sev_snp_initialized(void)
+> +{
+> +	struct sev_user_data_snp_status *status;
+> +	struct sev_data_snp_addr buf;
+> +	bool initialized = false;
+> +	int error, ret;
+> +
+> +	status = snp_alloc_firmware_page(GFP_KERNEL | __GFP_ZERO);
+> +	if (!status)
+> +		return false;
+> +
+> +	buf.address = __psp_pa(status);
+> +	ret = sev_do_cmd(SEV_CMD_SNP_PLATFORM_STATUS, &buf, &error);
 
------->8---------
-I don't see an easy solution to keep the functionality in generic HID
-code which is used on non-ACPI platforms. Solution for this are not
-trivial so remove the functionality for now.
-Cc-ing the ACPI maintainers in the case they can think of a solution for
-this issue.
+You'll want to initialize error to 0 or you'll get a possible use of
+uninitialized variable.
 
----
- drivers/hid/Kconfig      | 1 -
- drivers/hid/hid-lenovo.c | 5 +----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+Thanks,
+Tom
 
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index a503252702b7b43c332a12b14bc8b23b83e9f028..6b4445f54b2f2818d451ff28b3f7bcc2b1c7e99f 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -596,7 +596,6 @@ config HID_LED
- config HID_LENOVO
- 	tristate "Lenovo / Thinkpad devices"
- 	depends on ACPI
--	select ACPI_PLATFORM_PROFILE
- 	select NEW_LEDS
- 	select LEDS_CLASS
- 	help
-diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-index af29ba840522f99bc2f426d4753f70d442cef3af..cff4b5ddd9aa9bad0516f8c9beb58927c24477fc 100644
---- a/drivers/hid/hid-lenovo.c
-+++ b/drivers/hid/hid-lenovo.c
-@@ -32,8 +32,6 @@
- #include <linux/leds.h>
- #include <linux/workqueue.h>
- 
--#include <linux/platform_profile.h>
--
- #include "hid-ids.h"
- 
- /* Userspace expects F20 for mic-mute KEY_MICMUTE does not work */
-@@ -729,8 +727,7 @@ static int lenovo_raw_event_TP_X12_tab(struct hid_device *hdev, u32 raw_data)
- 				report_key_event(input, KEY_RFKILL);
- 				return 1;
- 			}
--			platform_profile_cycle();
--			return 1;
-+			return 0;
- 		case TP_X12_RAW_HOTKEY_FN_F10:
- 			/* TAB1 has PICKUP Phone and TAB2 use Snipping tool*/
- 			(hdev->product == USB_DEVICE_ID_LENOVO_X12_TAB) ?
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250512-hid_lenovo_unbreak_non_acpi-c041f3cc13b6
-
-Best regards,
--- 
-Janne Grunau <j@jannau.net>
-
-
+> +	if (ret) {
+> +		pr_err("SEV: SNP_PLATFORM_STATUS failed ret=%d, fw_error=%d (%#x)\n",
+> +		       ret, error, error);
+> +		goto out;
+> +	}
+> +
+> +	initialized = !!status->state;
+> +
+> +out:
+> +	snp_free_firmware_page(status);
+> +
+> +	return initialized;
+> +}
+> +
+>  void __init sev_hardware_setup(void)
+>  {
+>  	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
+> @@ -3039,6 +3066,14 @@ void __init sev_hardware_setup(void)
+>  	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
+>  
+>  out:
+> +	if (sev_enabled) {
+> +		init_args.probe = true;
+> +		if (sev_platform_init(&init_args))
+> +			sev_supported = sev_es_supported = sev_snp_supported = false;
+> +		else if (sev_snp_supported)
+> +			sev_snp_supported = is_sev_snp_initialized();
+> +	}
+> +
+>  	if (boot_cpu_has(X86_FEATURE_SEV))
+>  		pr_info("SEV %s (ASIDs %u - %u)\n",
+>  			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
+> @@ -3065,15 +3100,6 @@ void __init sev_hardware_setup(void)
+>  	sev_supported_vmsa_features = 0;
+>  	if (sev_es_debug_swap_enabled)
+>  		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
+> -
+> -	if (!sev_enabled)
+> -		return;
+> -
+> -	/*
+> -	 * Do both SNP and SEV initialization at KVM module load.
+> -	 */
+> -	init_args.probe = true;
+> -	sev_platform_init(&init_args);
+>  }
+>  
+>  void sev_hardware_unsetup(void)
