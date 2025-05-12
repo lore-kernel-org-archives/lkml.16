@@ -1,117 +1,89 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4272422A1E5
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478D223C518;
+	Mon, 12 May 2025 15:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065132; cv=none; b=pJqkj9bfXOajTQECVMOhovztHos8QmvDdGT+pEdJu/8iwUCxVuJrvYSX/NMrPMJi5lq3Aygh74NEgkHAnA2XwBk8Q/FQrPUXG9jFXcbVkld+8b+yBta1ad20556lfHmLYmUoEl4ULE6LjJ2qFan4UBQK6OhMtTfKOS5EOE+onzY=
+	t=1747065193; cv=none; b=ftj08zaRj0wNp07tF7ZVjiHbUuzs+ZxrCMmQ1X2Gt2cvXMWAfj8kGE9aV462uSiMbiVfxOJiXWRVG2df3GcNZqTUEUOLuuX02hcms250Wf9x1xoatur+/zuESW0UJOr66MX60J03CbG3vJ3zuFEAVKXhzPSg9JwhYLXb2SYV6s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065132; c=relaxed/simple;
-	bh=hs9+KggMp/U099qUIV+eyLEDo/uHUutOdEs9dFGzZOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Us+8zzNGWERGcTDahlQKw6bt3pZt4KE4mR6jyotkTG1yyhLYjkZ1xGAlCWCS4F3bXNEqzczNGcPg2XU+wdkzb+c6GGNyGaT03jLtdd75ayb4yGE8eVDGpEJaGhRhnNaKu9qEnJSwCNKhmAM25VFeO4tE21ixieIZSL/qXFFhQsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pciWP+l0; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747065193; c=relaxed/simple;
+	bh=ruXvesyscK6Zomaq+OiPd916z2rinqKUU300GjloMCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dsM1tgTDOHC1BSvzGPD1uJnnzvHt9CZWhv1JCZAOWb2x8hpZVad2Plxgb2ZG+GcaiCncnKi80E/D4yad2h+DD0ctb9An/He1p2+6aqym44P4KS0LCC+WerrDxh69gDx84m+My5SxcZPzthP2760uFGmTUan4ez2CZ1QTOnJ3TjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFdrvjJw; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pciWP+l0"
-Message-ID: <6d43f466-5786-4957-86c8-8297aa739030@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747065128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bQK9BG+j/hEhpu8hZi8th8YhOfeYv7OqsnL+EJuFLtI=;
-	b=pciWP+l0iQhMy02PYIChZa5nE48TTtrzBTyWxtlMx62kQYXCqczinCMiKQOby7j7FI4QCr
-	oWhVwEMkwG/ZjThwcIQ9gsEB/nmd/15Ss1qfyaxQYbRE/L/gsvv75bMs6GLR/mLaEus5h5
-	mVbDPY1qIuhagBGUqDpPeHZJViv9pcs=
-Date: Mon, 12 May 2025 11:52:02 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFdrvjJw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747065191; x=1778601191;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ruXvesyscK6Zomaq+OiPd916z2rinqKUU300GjloMCU=;
+  b=hFdrvjJwxdbeHESKmK/uS6ssFuy1oWhk/z0UzHkjgZ836DqSGlvCmrmq
+   6WYDc2nVncPIFBiT3KU+ZTg+YKhe//h/26hTnp8m2kR5LhKjHpjU7pd5h
+   tIq5Jdegh3Dcw5nKZEnluHTVU2V9U/1/tJpk5RJUlLdpZP+B//aHxVET7
+   Y87pziUTZKJFq1tpTrmlYlhVqTO4WmeLC17WRpsLluG6ZsxTbLGy30E/v
+   IYZY6Inzw5nHFCJJsn8N97XtPWsvVaNb6Rza+gPEOGwvk7IuTPjmIqJ8T
+   e82hDbTe37dGN8GppO20nQVYQ0Bd0y6/CLeQYCgK9f44A0KDxH8pdZ6Z+
+   A==;
+X-CSE-ConnectionGUID: aFnk25ikSFi/8wCfTiiFng==
+X-CSE-MsgGUID: vezQiCOGQs2UX+BMyYD/6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="74263416"
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="74263416"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:53:10 -0700
+X-CSE-ConnectionGUID: hbTsKnoWRFG+q//qsg1MZw==
+X-CSE-MsgGUID: 34VyF7LYTr24wRpfrUavow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="142183080"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:53:10 -0700
+Date: Mon, 12 May 2025 08:53:08 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	Smita.KoralahalliChannabasappa@amd.com,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH v3 17/17] x86/mce: Restore poll settings after storm
+ subsides
+Message-ID: <aCIZZIsee7roLlNZ@agluck-desk3>
+References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
+ <20250415-wip-mca-updates-v3-17-8ffd9eb4aa56@amd.com>
+ <20250512074616.GSaCGnSJbBpToh2VM6@fat_crate.local>
+ <20250512154315.GC2355@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] arm64: cacheinfo: Report cache sets, ways, and line size
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
- linux-arm-kernel@lists.infradead.org, Radu Rendec <rrendec@redhat.com>,
- Will Deacon <will@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-References: <20250509233735.641419-1-sean.anderson@linux.dev>
- <20250510-fresh-magenta-owl-c36fb7@sudeepholla>
- <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
- <20250512-straight-dexterous-oxpecker-fabbc8@sudeepholla>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250512-straight-dexterous-oxpecker-fabbc8@sudeepholla>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512154315.GC2355@yaz-khff2.amd.com>
 
-On 5/12/25 11:34, Sudeep Holla wrote:
-> On Mon, May 12, 2025 at 11:28:36AM -0400, Sean Anderson wrote:
->> On 5/10/25 03:04, Sudeep Holla wrote:
->> > On Fri, May 09, 2025 at 07:37:35PM -0400, Sean Anderson wrote:
->> >> Cache geometry is exposed through the Cache Size ID register. There is
->> >> one register for each cache, and they are selected through the Cache
->> >> Size Selection register. If FEAT_CCIDX is implemented, the layout of
->> >> CCSIDR changes to allow a larger number of sets and ways.
->> >> 
->> > 
->> > Please refer
->> > Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache information probing")
->> > 
->> 
->> | The CCSIDR_EL1.{NumSets,Associativity,LineSize} fields are only for use
->> | in conjunction with set/way cache maintenance and are not guaranteed to
->> | represent the actual microarchitectural features of a design.
->> | 
->> | The architecture explicitly states:
->> | 
->> | | You cannot make any inference about the actual sizes of caches based
->> | | on these parameters.
->> 
->> However, on many cores (A53, A72, and surely others that I haven't
->> checked) these *do* expose the actual microarchitectural features of the
->> design. Maybe a whitelist would be suitable.
->> 
->> | Furthermore, CCSIDR_EL1.{WT,WB,RA,WA} have been removed retrospectively
->> | from ARMv8 and are now considered to be UNKNOWN.
->> | 
->> | Since the kernel doesn't make use of set/way cache maintenance and it is
->> | not possible for userspace to execute these instructions, we have no
->> | need for the CCSIDR information in the kernel.
->> 
->> Actually, these parameters are directly visible (and useful) to
->> userspace in the form of the cache size. Rather than make userspace
->> perform benchmarks, we can expose this information in a standard way.
-> 
-> Yes that is already present, which is DT or ACPI.
-> 
->> There is of course [id]cache-size, but these properties are absent more
->> often than not:
->> 
->> $ git grep arm,cortex- 'arch/arm64/**.dtsi' | wc -l
->> 1248
->> $ git grep d-cache-size 'arch/arm64/**.dtsi' | wc -l
->> 320
->>
-> 
-> Just to be clear, I am fine with exposing to the userspace, but just
-> not reading those registers as stated in the commit message I shared
-> earlier.
-> 
-> Why can't it be done via DT/ACPI ?
-> 
+On Mon, May 12, 2025 at 11:43:15AM -0400, Yazen Ghannam wrote:
+> On Mon, May 12, 2025 at 09:46:16AM +0200, Borislav Petkov wrote:
+> > On Tue, Apr 15, 2025 at 02:55:12PM +0000, Yazen Ghannam wrote:
+> > > Users can disable MCA polling by setting the "ignore_ce" parameter or by
+> > > setting "check_interval=0". This tells the kernel to *not* start the MCE
+> > > timer on a CPU.
+> > > 
+> > > During a CMCI storm, the MCE timer will be started with a fixed
+> > > interval.
 
-Well, do you want to go through 200 SoCs and look up cache info in the
-documentation? I think it would be more expedient to look at the TRMs
-for two dozen cores and determine if the above registers expose the cache
-info correctly.
+I think you just need some more words at the start of this second
+paragraph to avoid confusion when reading together with the previous
+one.
 
---Sean
+Perhaps:
+
+If the user did not disable CMCI, then storms can occur. When these
+happen the MCE timer will be started ...
+
+-Tony
