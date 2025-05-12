@@ -1,123 +1,122 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EF9255F5A;
-	Mon, 12 May 2025 10:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDE93D6F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747044347; cv=none; b=uaHI8iUBNpUwtZKsA9qvT0t6ANNYwWU6r3CpuJxWAHQLJ3WR0xtVUMslLq4nyDEdo9Zup/Y1arZWroWrvvk2tAuDYsDxXoS8IvCAVEKwO8OsWYn6nFq+v+H0fQRW8SeLuyDeFRJW55j00PMrOvfkR+TO1yxRz4Vxwn/AmwlUseA=
+	t=1747044392; cv=none; b=pgWibD9HVa/Wuzq55SRJIALhw22c52ksmF63+apglWzcjzxtZ1Gep9FF9KmfREvhIiQ6rVAZA1AuozdFm5r8UKVXUTrAV1YNqAEiaicjXANkaG+JYDlDR0UxHBzGXg4ekO5suBKg7AXniJXm0abdkqXCpFakP2EjtU2RJaETAVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747044347; c=relaxed/simple;
-	bh=kriW8vZy3c5r+bH7zxmwSEx9ONWQNoFoXgvOYWc6mfo=;
+	s=arc-20240116; t=1747044392; c=relaxed/simple;
+	bh=jXo2APXH+xZdQQ1LPdxw6AqlF+M7NqB6TWjVGZL1Pwk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LHrT7OS0Vvc88bD+vrLTHBOLdT8mCVPyGTceWMwPNiS0umnjHV6gyCf85j7X8gCox9T3emzsYw1Fc8aJ7+JvgPtk0zgwvlpqQF0PXg//jvzQRlg0bPfk8rICMuav+95lPHEYeTC6eD+Bm1w19uFv2PYIm9XUZjFxDBZc5w4oLNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cb5cSO3m; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=J7DALRnFRAXUd/4t5z1gX4EXLHO0rozi/KG5ljfl6sAv5H04van+XNTZu8ExFp4XnQ66PrWMrUBwg7/tD68UBpa5zvRPm1VdSdR7YLtUTPQAdBqcTSHZy6TkR8+W7eh7XFc+O0xeZ+mUm+rWgOiKbN4c/oubibCY4uWtRSjLPTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=aeUuY6JI; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cb5cSO3m"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a0b9625735so2148270f8f.2;
-        Mon, 12 May 2025 03:05:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="aeUuY6JI"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4768f90bf36so46207811cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747044344; x=1747649144; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wWrnZKTmDa27byamh1hKNbF5CE+D6DlGjHH+M4r/udk=;
-        b=cb5cSO3m0yMJQCsPqNBIdieBGQrUTx6XdOyOryysNMvNkZJSbu0Q8NTgxZ2qOYkPMh
-         HU6A9t3+dGDO+sztGy/akqmftxC3GvrvZPRnbg4WBTHV6wsOolFAmtGBd6aaGH7ndszg
-         WUzyPzRM46QE9pc11E8glW3rRyViMmNQVC6A5qN7S/7umkOLGx8szJf2iC21qCbLelxZ
-         A/SOMDpgSaILsRRBRc8zNRwGQKSLEx+DX24oKhq8nv09LvBfwhzw7MMBLMuAiS07dYWr
-         QUvOF80nzt+F3s0QbcJOm5elWBkF3OTs8oMj3xq0XxnsPDb21YTpiFk+eU8AoDRvifcK
-         Eo5Q==
+        d=szeredi.hu; s=google; t=1747044390; x=1747649190; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ao78gq3UEXd8+O1os8ysUZZc/hcTKpCJXFEJKk5K5HY=;
+        b=aeUuY6JIupNfBF+0zRN/r6ngAws7GZusdCsZvYozypCq5WBMl/WgVuhCjIQkA4vqqS
+         WxGB0ViNLMaGIdOktggHJ8P8H4Am8gNnvBq4OZ+VLg1TRT34pdfkVRDjFAOH1IQPVJ1F
+         in8dnmmbHxdmj/XEqQzpaehluL4lHC8ajmX7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747044344; x=1747649144;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wWrnZKTmDa27byamh1hKNbF5CE+D6DlGjHH+M4r/udk=;
-        b=jALAos0IPw6ZfQMS7Kk5F+LHy7jq4oJGNfOdVE3eXk8e9w9bA22VGxAqy4dF7k8jd/
-         U220FSL2AeL9cb1iuRYTw9oYri9/o+bxRj+L1Iez7EeW/c6IFWf1EQe5/mcAwvpnUEF6
-         GjJvAO2hswoCxYFaPW5c+CK5zXAJIu/R5EJ6J+ukYFgun/wl5LtF8X7YaTxHVWCB/oUK
-         EF2rkHw5f/0+v/IjTPsizTYYbWlcnGxJsAH12+xzP7uY6bm3sUduvfmW7iCqyfOrQQ6M
-         iqklpqLKKOwVVhPHcquSUvVFGL13WDuzgqzFZUwoTwQMd8L4AqTCzANhLB8Hl+OTZEtN
-         0YSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIM1T9J2/7HPehkQ+Khnog+Dvv14pKRVZEuEMzZVLGDjYkgVocima9IGpjAKp0f/SP2+/5xEZ3t4bd@vger.kernel.org, AJvYcCWTITAI7e4NdEQIGrzONkQJmU/XJUNsDjJPxO/1cXBQ3/RFKpR2TO4cDxGos1PosvHPPB8NkFyzbUl8pKR6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNDNYkMqWRqNW1JQzqWbNYb8oWEXkeCis1N21Wf040MLQV4HAF
-	ufx7Z4o9WrunLcO3vK1MDyXTAwRyTZYbDRkfHj9RJzp/+EV7QTkQdkKBWNaY01OhRfMFY7Lvwmk
-	eljekm9alQHgptOO3t83qzCYpPNs=
-X-Gm-Gg: ASbGnctsSv/bfvNLKqOYojTKoTvBIcdh6xJY3tCOluxoiTsel41bYlUkPLJLQ+DDWEj
-	QQbAG/lKZWsixDgFmX0Sci44hLLw8X1s/l3Eo1mnIEw29uO+zXIvoqykXHgv9cGe6bISDrIc9cp
-	Fs6wE2GU13yXheQbS8XVNQGqHT4zZueoQ=
-X-Google-Smtp-Source: AGHT+IF988+YYtCFKDfHfq0riU8jX0iVCIlEgn39eMhT5b0J5UZn6atp+YZiqB2f2vhp3l6T+P2n8HzWKXXURplcMAg=
-X-Received: by 2002:a05:6000:3103:b0:3a0:8495:cb75 with SMTP id
- ffacd0b85a97d-3a1f6423243mr10400388f8f.9.1747044343759; Mon, 12 May 2025
- 03:05:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747044390; x=1747649190;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ao78gq3UEXd8+O1os8ysUZZc/hcTKpCJXFEJKk5K5HY=;
+        b=cGwQdya5XM31PDDKfPmVyaSJ8nNbu1bDITDC6RqVHGeSP5wJnLaqSSZ9hrrlXPPlKY
+         dtMIOM6ypuGSVFL5bUEMV2o/rGtniooCGI/pCrSpQQmcHzjpccEFOtzN3PW+y6G57+g/
+         48YLl/4DqwpEttlkXiVPF9hP9a5MiRVxreyOJbZ6KhZX0OITbTV6eX4+RjHJPEV9WbMp
+         3xNV//jVMM+tmF0mf528Zaoh9yYeqszydussMaHWSrb/RCCtxweHAWWZ4b+9E1ga7NIB
+         dF9yzoCeV4Mco+SXjLL11uBNqMMQeHhL5bu9GPaCu/BjZS6VgxrfszP04qjNurQmEuuO
+         778g==
+X-Forwarded-Encrypted: i=1; AJvYcCUsX21NDxi2tSXxP44HiaZxTWKcOw8mqHwS20NCGXC2E/63m32QaMmWSFfqyfByxhX9jRwQbDWvaXF1kV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3rj6dLXMGNhfli5H24DkYAXkiKt8EQEvr9eyzE0pFXNLZH4EE
+	SkmNysFw/IGdZLe4v4nqU0ePmZDT+2ET+p2tq+Te2C2mfdXXQmalcEu7EP3bf7HkyMEVBi3HbpS
+	LcMl5ZSL2wEJ65YXyoiUAUdcKDrmrAVcFsiJFmw==
+X-Gm-Gg: ASbGncu+buir8BZsOjxqHt6dbVLjq95NJOM5Aes4nWmqqym/jLY2H9CsEZEDzMooGn5
+	Kp79oHgqRzIuzhF5MHSFEuLkQ/822TrRvtHR9dC3OqDtFRSRv9x1m/2+6Xqezbe2iirirnEzBsw
+	sD8rynToiiHPsi6hCPwkIW5XCgEe+GLIwFvzk=
+X-Google-Smtp-Source: AGHT+IEL+WJpAtsUDvmDFSJLle5njdmLjkHtqOT7RZHsP38BRVAq3aJtECH83tD3wgaufsVEQl9+03hZAMPCwLXkm0s=
+X-Received: by 2002:ac8:5e07:0:b0:476:8eb5:1669 with SMTP id
+ d75a77b69052e-494527d49bfmr199930401cf.32.1747044389876; Mon, 12 May 2025
+ 03:06:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-sapling-exhale-72815a023ac1@spud> <20250509-dwindle-remold-98b3d03d0631@spud>
- <CAMuHMdVWznEm4Kg-MvgCT5+cBtdwGi9YrzFK6mBaoPJ+VK8S+Q@mail.gmail.com> <20250512-disaster-plaster-9dc63205cd6e@spud>
-In-Reply-To: <20250512-disaster-plaster-9dc63205cd6e@spud>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 12 May 2025 11:05:17 +0100
-X-Gm-Features: AX0GCFvlNSGSQ3PtDGg0yEHkC9yOSWx2r_Q2w6kDcWVgBNfDLkKNDhCtbAm5VKc
-Message-ID: <CA+V-a8sJUsNsF+AT1v3ySLiH9RGwDukMHHOC44JuV4JE3YKEpg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: cache: add specific RZ/Five
- compatible to ax45mp
-To: Conor Dooley <conor@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, Ben Zong-You Xie <ben717@andestech.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+ <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
+ <CAJfpegvhZ8Pts5EJDU0efcdHRZk39mcHxmVCNGvKXTZBG63k6g@mail.gmail.com>
+ <CAC1kPDPeQbvnZnsqeYc5igT3cX=CjLGFCda1VJE2DYPaTULMFg@mail.gmail.com>
+ <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
+ <CAC1kPDPWag5oaZH62YbF8c=g7dK2_AbFfYMK7EzgcegDHL829Q@mail.gmail.com>
+ <CAJfpegu59imrvXSbkPYOSkn0k_FrE6nAK1JYWO2Gg==Ozk9KSg@mail.gmail.com> <CAOQ4uxgM+oJxp0Od=i=Twj9EN2v2+rFByEKabZybic=6gA0QgA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxgM+oJxp0Od=i=Twj9EN2v2+rFByEKabZybic=6gA0QgA@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 12 May 2025 12:06:19 +0200
+X-Gm-Features: AX0GCFvJ3rdELA9Zd75iROohvom6E7GFIBvRnwkO--uzCE2DW0agj0_PJPIYQow
+Message-ID: <CAJfpegs-SbCUA-nGnnoHr=UUwzzNKuZ9fOB86+jgxM6RH4twAA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Conor and Geert,
+On Mon, 12 May 2025 at 11:23, Amir Goldstein <amir73il@gmail.com> wrote:
 
-On Mon, May 12, 2025 at 10:59=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
-ote:
+> The way I see it is, generic vs. specialized have pros and cons
+> There is no clear winner.
+> Therefore, investing time on the getxattr() direction without consensus
+> with vfs maintainer is not wise IMO.
+
+AFAIU Christian is hung up about getting a properly sized buffer for the result.
+
+But if the data is inherently variable sized, adding specialized
+interface is not going to magically solve that.
+
+Instead we can concentrate on solving the buffer sizing problem
+generally, so that all may benefit.
+
+> The problem I see with this scheme is that it is not generic enough.
+> If lsof is to support displaying fuse backing files, then it needs to
+> know specifically about those magic xattrs.
+
+Yeah, I didn't think that through.  Need some *standard* names.
+
+> Because lsof only displays information about open files, I think
+> it would be better to come up with a standard tag in fdinfo for lsof
+> to recognize, for example:
 >
-> On Mon, May 12, 2025 at 11:01:26AM +0200, Geert Uytterhoeven wrote:
-> > Hi Conor,
-> >
-> > On Fri, 9 May 2025 at 17:39, Conor Dooley <conor@kernel.org> wrote:
-> > > From: Conor Dooley <conor.dooley@microchip.com>
-> > >
-> > > When the binding was originally written, it was assumed that all
-> > > ax45mp-caches had the same properties etc. This has turned out to be
-> > > incorrect, as the QiLai SoC has a different number of cache-sets.
-> > >
-> > > Add a specific compatible for the RZ/Five for property enforcement an=
-d
-> > > in case there turns out to be additional differences between these
-> > > implementations of the cache controller.
-> > >
-> > > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/Documentation/devicetree/bindings/cache/andestech,ax45mp-cache.=
-yaml
-> > > +++ b/Documentation/devicetree/bindings/cache/andestech,ax45mp-cache.=
-yaml
-> > > @@ -28,6 +28,7 @@ select:
-> > >  properties:
-> > >    compatible:
-> > >      items:
-> > > +      - const: renesas,r9a07g043f-cache
-> >
-> > This name looks a bit too generic to me, as this is not a generic
-> > cache on the R9A07G043F SoC, but specific to the CPU cores.
->
-> So "reneasas,r9...-cpu-cache"?
+> hidden_file: /path/to/hidden/file
+> hidden_files_list: /path/to/connections/N/backing_files
 
-Maybe "renesas,r9a07g043f-riscv-cache" ?
+Ugh.
 
-Cheers,
-Prabhakar
+> Making an interface more hierarchic than hidden_files_list:
+> is useless because lsof traverses all fds anyway to filter by
+> name pattern and I am very sceptical of anyone trying to
+> push for an API get_open_fds_by_name_pattern()...
+
+The problem is that hidden files are hidden, lsof can't traverse them
+normally.  It would be good to unhide them in some ways, and for me
+that would at least mean that you can
+
+ 1) query the path (proc/PID/fd/N link)
+ 2) query fdinfo
+ 3) query hidden files
+
+And by recursivity I mean that third point.
+
+Thanks,
+Miklos
