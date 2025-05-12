@@ -1,123 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307B518CBFC;
-	Mon, 12 May 2025 06:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CE01A23B5;
+	Mon, 12 May 2025 06:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747031389; cv=none; b=QO8Uz1nhoZua8CPZvG5a82KqNSNinmFZitNpa9+Ur79GPfD6+bOQ/PZMmR0x6CQ0Hr29ObFZrvw4jA07KTpxe9G1aKrxiMjX6CS5490ve0pGFN4WJ/rQ/rTX5Ria5mLO0EHhWDdgaXP4zLbnNp9WwsRK4T0tjuzajZEioV3ofvM=
+	t=1747031410; cv=none; b=VbkIF8gKv0wDU89exULhxLbOMIklmTA5Hlo+8HLlBDfzulG0kde0YgMuSX8me9LYrFFshgEvgEdbT6jDbUS5+XjKw1yYPpK8JSo2FX1XgT6QiO6lVLCaCDPhePs+mkOFPnDB/MllabRzz2RGjtPscCARKPDKo91wk+xJdn+hhFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747031389; c=relaxed/simple;
-	bh=/5U/prwDwYOfcxfuPRZQOBpFYNA96Fc+PyW7DOPDoUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gvBfWGjjo7tiVuJHOUMfbYhmsFza2S7YB6mBb+wsOGT5MGhlnuKvDyG52Zwv0p3fJoYlrTcrP6TshYW1d4C8Fe1sdIkqwCtFb6I4J9AGeZ2hN1C1PmE8X7eMPDieeAvKFZ0R6MIK4F9RSfIqt05Bf1zp2ZwOvk5MsxE+OmHyh7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3qLQ5aY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747031410; c=relaxed/simple;
+	bh=IyqEvFnK0atVgTZ4NurvwzVawcVS2qz/Kyx3J5TkbVI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h5OnPE8FM0B54a1rEpGcrNToylrydAFuHqV9VQKwHuUI0UEl+TugCmqLv9ngYUVtsAzA4Eu2CDZV5rtrfN9TfKoy4QymDJ6rG9pXgalr/vu4LfqdIiuRePejSzJbdn4qfe7sjSFSNMghTGS4JrFqfMhN2vNhZokncLZ+06UMrIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=EBBLXXnj; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3qLQ5aY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43786C4CEE7;
-	Mon, 12 May 2025 06:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747031388;
-	bh=/5U/prwDwYOfcxfuPRZQOBpFYNA96Fc+PyW7DOPDoUc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d3qLQ5aY1Max7FZs3dzKY1VxBDCyZeL6wmaJ7X7Jm5nIgxkComji51YeLcoXR1EtM
-	 kgR49uArmsDVJQ9LqiScXTO80hZ0m+iDUaHXQ2XY7+j7qFdL3/FyPqqfnj/CTPLYCt
-	 DMZQjerBwZ8abRElLsL5ix20Avg2vlPoZ66q10egvLf+5M+ZHmCVa3YitOrgJDJKVX
-	 d+7XWFnsL9oRzVQ+sjzQIK9LQvAeoe/LPFYrrnHFVs0toWdf3QwNxEHDYOBJAdlEPU
-	 FTf0EGFEMCUkbjONhfT6yk7lif/NDYKMLogknu16StKWJ0CcryZoyKu4lzr0j8XsCA
-	 yJX1ryo1nSz4g==
-Message-ID: <7eaaea13-a61d-4a1d-a539-6bfb70bb2fc0@kernel.org>
-Date: Mon, 12 May 2025 08:29:43 +0200
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="EBBLXXnj"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C1QBch031626;
+	Sun, 11 May 2025 23:29:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=+EB6sJdhVKr4rGBMH4O7DYZ
+	xvmnpv++UCvoCoKqxmzM=; b=EBBLXXnjzX+j8UKstKq4D1IbPTWCfnMDjyV0fjr
+	JcrC0xewXb/+I1RQOe7UATh3bI1O8hJYDt3iYrvWl8VfJ4P8kipqfgWjvQoiMhpQ
+	kOvEnAJhW6RWaA1ZLkEM/516UnRzV1FEZ9VhvESIh5CW7+j/PPOosYsLeWe/4S2K
+	+ZvH1y0lMFKWYoTTCeLGBXagXRrBlHCz78ndnRwucHYZs6DLCmhssxCOps9wa2B2
+	4UVwwTNs9U1azmFZk0I0Dpzhfp0NHFwEX8MykdF5FddH7J5u6hkM9oQJgId8Btkw
+	XGbN8hMf/tNoL/5dQhuq42i8FRblcb9QgfMTM4oIUD7zF9A==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46k5rggfjn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 11 May 2025 23:29:45 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sun, 11 May 2025 23:29:44 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Sun, 11 May 2025 23:29:44 -0700
+Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with ESMTP id 1F56C3F7093;
+	Sun, 11 May 2025 23:29:39 -0700 (PDT)
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Hariprasad Kelam <hkelam@marvell.com>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        "Subbaraya
+ Sundeep" <sbhatta@marvell.com>,
+        Bharat Bhushan <bbhushan2@marvell.com>,
+        "Andrew Lunn" <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Simon Horman
+	<horms@kernel.org>
+Subject: [net] octeontx2-pf: Fix ethtool support for SDP representors
+Date: Mon, 12 May 2025 11:59:01 +0530
+Message-ID: <20250512062901.629584-1-hkelam@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] clk: samsung: correct clock summary for hsi1 block
-To: Pritam Manohar Sutar <pritam.sutar@samsung.com>, s.nawrocki@samsung.com,
- cw00.choi@samsung.com, alim.akhtar@samsung.com, mturquette@baylibre.com,
- sboyd@kernel.org, sunyeal.hong@samsung.com
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- rosa.pila@samsung.com, dev.tailor@samsung.com, faraz.ata@samsung.com,
- stable <stable@kernel.org>
-References: <CGME20250506075413epcas5p2ce0db6da9f359e9c3bb16b03c1a5eb4f@epcas5p2.samsung.com>
- <20250506080154.3995512-1-pritam.sutar@samsung.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250506080154.3995512-1-pritam.sutar@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: fBP8RY3Kyw662SSAWEME3Ov0XUoT0Nb6
+X-Proofpoint-ORIG-GUID: fBP8RY3Kyw662SSAWEME3Ov0XUoT0Nb6
+X-Authority-Analysis: v=2.4 cv=XIkwSRhE c=1 sm=1 tr=0 ts=68219559 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=zsvlLyDedhZcTVAtw6YA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA2OCBTYWx0ZWRfX76CBORSCbRAh vsCVfiQ7ApOxMcxwnXtpsHSWrjvmVwA4jmngOvzVovid+bBSd5xFGO7DBfuGzYKmhXJ2v9yjD4X GaumGXt6B9Bac3u0w/AsBVarC+bFMSNvlSO/hJixOIU9D/iSaSZ6Djx3EZIqXtu6D/ZbVJDQ8DS
+ 3CcbrDichr0RFu6nyhI5LtPAt5MaiVSsbJLMxHX/3cNoFwlWrqZSa5nojmvkvZ7ep4g3o1sP6rX QhmDoe5cUH1ZV2F4PE4YpJcI4rMeK2NiyTwp0Z7cTvqvuzW0+fPg7AA/fwGTRdQm0W5VjgNWS8Q tvh4EADIHmECyccS1SnkNn+FFVsMMontySe+bBWt16SolBHrxqmfG9/nDGGQyX6E8EuREImWyUI
+ qlDEoIASmmpMoM0YryRYFcrrGGhaebENIA3EjzO32IXakdnF98m8eqNoFY0ownVN2e+OBa/3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
 
-On 06/05/2025 10:01, Pritam Manohar Sutar wrote:
-> clk_summary shows wrong value for "mout_hsi1_usbdrd_user".
-> It shows 400Mhz instead of 40Mhz as below.
-> 
-> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
->   mout_hsi1_usbdrd_user     0 0 0 400000000 0 0 50000 Y ...
->     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
-> 
-> Correct the clk_tree by adding correct clock parent for
-> "mout_hsi1_usbdrd_user".
-> 
-> Post this change, clk_summary shows correct value.
-> 
-> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
->   mout_clkcmu_hsi1_usbdrd   0 0 0 400000000 0 0 50000 Y ...
->     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
->       mout_hsi1_usbdrd_user 0 0 0 40000000  0 0 50000 Y ...
-> 
-> Fixes: 485e13fe2fb6 ("clk: samsung: add top clock support for ExynosAuto v920 SoC")
-> Cc: stable <stable@kernel.org>
-Run checkpatch BEFORE you send the patches.
+The hardware supports multiple MAC types, including RPM, SDP, and LBK.
+However, features such as link settings and pause frames are only available
+on RPM MAC, and not supported on SDP or LBK.
 
-WARNING: Invalid email format for stable: 'stable <stable@kernel.org>',
-prefer 'stable@kernel.org'
+This patch updates the ethtool operations logic accordingly to reflect
+this behavior.
 
-Best regards,
-Krzysztof
+Fixes: 2f7f33a09516 ("octeontx2-pf: Add representors for sdp MAC")
+Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+---
+ .../net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c  | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
+index 010385b29988..45b8c9230184 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
+@@ -315,7 +315,7 @@ static void otx2_get_pauseparam(struct net_device *netdev,
+ 	struct otx2_nic *pfvf = netdev_priv(netdev);
+ 	struct cgx_pause_frm_cfg *req, *rsp;
+ 
+-	if (is_otx2_lbkvf(pfvf->pdev))
++	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev))
+ 		return;
+ 
+ 	mutex_lock(&pfvf->mbox.lock);
+@@ -347,7 +347,7 @@ static int otx2_set_pauseparam(struct net_device *netdev,
+ 	if (pause->autoneg)
+ 		return -EOPNOTSUPP;
+ 
+-	if (is_otx2_lbkvf(pfvf->pdev))
++	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev))
+ 		return -EOPNOTSUPP;
+ 
+ 	if (pause->rx_pause)
+@@ -941,8 +941,8 @@ static u32 otx2_get_link(struct net_device *netdev)
+ {
+ 	struct otx2_nic *pfvf = netdev_priv(netdev);
+ 
+-	/* LBK link is internal and always UP */
+-	if (is_otx2_lbkvf(pfvf->pdev))
++	/* LBK and SDP links are internal and always UP */
++	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev))
+ 		return 1;
+ 	return pfvf->linfo.link_up;
+ }
+@@ -1413,7 +1413,7 @@ static int otx2vf_get_link_ksettings(struct net_device *netdev,
+ {
+ 	struct otx2_nic *pfvf = netdev_priv(netdev);
+ 
+-	if (is_otx2_lbkvf(pfvf->pdev)) {
++	if (is_otx2_lbkvf(pfvf->pdev) || is_otx2_sdp_rep(pfvf->pdev)) {
+ 		cmd->base.duplex = DUPLEX_FULL;
+ 		cmd->base.speed = SPEED_100000;
+ 	} else {
+-- 
+2.34.1
+
