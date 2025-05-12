@@ -1,101 +1,171 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC3D229B2E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03E72BCF5;
+	Mon, 12 May 2025 14:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060276; cv=none; b=a8rnFssFnzpOibc8xea+xEq+NU/lIW/Pd0y5CTv5sCE88dihyvDfWSen75omZC1KX8GtlIzycsvY7lu4KRNjuYTnlOX2ps+fH/e+atftQCtCZLQK4wtMLiCfcY5CIoLhIvyKYcwGxuvOqWOdYQ6fdjoyq8MupIkqa/nMsCMInyE=
+	t=1747060331; cv=none; b=O9A/XmtBVFep5P1QveSgUrG25TeGJLx/9SjbNuXixt7N4aDRz8rkpTF/sEC7ZUEvgX9XJzdmhzhLzhLpjM+WKPWCC921nQ0SeEI2lRy8jTN11A9DYFwgX/iIE35jKjx8pBnSXSIJhnmQCQ6wiMxRVB1T/DTdzZHP/PccyPgfCSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060276; c=relaxed/simple;
-	bh=EOi9sCZK85Y4bJopmUCYi3swoe08DUuLECCP1N+fSw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DHLIJO/ivWeCbyMX21qY56Y6pmM7FI4xdpqhG0p9fXr+b7caXkxB1Yk7Y39YE76tM9APy/KMIDdld9H1cukvHWjTk7d3BrA+M8f6ONASOxF5v7JeAS2OT2xPOntj355Mi5PPTWUHO7hKVTIrCwLhqYu2BFjn1gaE2hp8/BLk2Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=P54ffw7N; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1747060331; c=relaxed/simple;
+	bh=0TGOmwPUvCuLoM8Ba1KnsrOm/ms6+VXrMl5GWomKjGI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IkAGZJdFIhL28Oxxf5h6OalOplWAw8aIBdgol+Yt5aVNeBGha+/GjJ3HDDKszeCxvCqLKg8os9M4aaQEAshjkuWFPXQulexyKggCYDbXYHhPbej7PfC4MHzMPnn8yZ941MyZQtGDuHydAOIN7Qgm2lgzmS0d5EsGb0J26ddjtEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0j2Z+2Q; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="P54ffw7N"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c56a3def84so488412885a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:31:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0j2Z+2Q"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5fbf0324faaso9430518a12.1;
+        Mon, 12 May 2025 07:32:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747060273; x=1747665073; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jCXKXHReqot1wkAPOvwV0YSnLbprI4u4HniI9fLKEYk=;
-        b=P54ffw7NmT42zxMyhR4pOjV1DG7nqn43w9myW1CVDiccO7nlpShjQDHuMqRoQ2bFrx
-         Yn7a0/GBkbPPAhKykXE5jD9wYZPNl5E8871N19ws+/8DQiyvJpyAOoeZBDTx+kpgSNDw
-         KuJ2BlT+6TObuME0aSEvU8Yqm7SIzjtQQ93W1U+nX9B3HVRoUR256E0sU+4VOtBRH8dd
-         F9MUDcOqzMGwWxQwfx2GmOvsPKCzd3FyXjZw3cPn563VYMRWya5NignqQRURZFdvyhSp
-         ApNx7NVVyxSsWbosxkHdRhVH8qEPO0rFf+ThngqR3UacjCEmLRGkpw8jD7qnU46XXGxE
-         3S5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747060273; x=1747665073;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1747060328; x=1747665128; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jCXKXHReqot1wkAPOvwV0YSnLbprI4u4HniI9fLKEYk=;
-        b=ffdyydgiD4aoIzAYP3r/4Wt+uiBSZB2g2nyja14IemRNNFoMuSF+x75qjWLPxW7AW0
-         LeUQCML90c1dwO0BAJ4Amo2F92OUP61KAOiCSMhebKJrjjh3sX8ZEZfY2wP3Q2yNf/sx
-         nMSX8npWpQaYnEedLWw3J0qG5R9NuF1I3+rzQ4nq0b4WmNlXaZT0atEPjT5SO9OIWM/q
-         ObTvy/9WVhX3+Yg6ukOsm65WYzxpNT1L4HiDqVPvn/MeBzzd3BsChE7KztaakQ/M8Dgy
-         zoI6FZ7Vw3JhM2b+QcaOAaJMx8TwmQm/nHXGcWo/RrmzTqCGPq1SFU7Rn2zjAbnTVuk1
-         8QVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUj3ZBH3/GDOrp8xgOupZZtoBRfecajCHbaYsQN/lbdW1hLv/VP+0WsrSd4uxfqpi7hmUNbps0jBfj1AbI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRfKgrvQrwogz8vuimbtl2J6dwh2NVc2u3ihaLyvJcva16OMK/
-	qobz+3JxdsiVj6ZHQ8T+IYg5jgCKB8w9E5tabfaWHxECvj0/cMCLGf4EZMsNqs0=
-X-Gm-Gg: ASbGncumSkhGIcWZXs/z3MQLEJFAmm8+VUgtKbKENPzAHhwTaiYou8LW58KgO6dsNAM
-	NopvCduukAkxcp4+Z+rpha2WOT5XNal5qMzbFj7w0BXvSZ9qq2yB3JoDHGuSEl6ZffnZ7x6oaI4
-	klw/quacmS+7J2nHwQa55lXpVCOvxzyMWKZxojHBI5DQJ8bDGGg1ZfxUUuw319AYEEl1eR5Bidq
-	QWsAcczEuFXzge2SGV1GPElDYqoykk7D9tL2JoyASkJMeApJxkd3IN4XNTKUqnBIN61qt0EuTko
-	DVngfhOe8Bh9pqcJWQpKzn+GI8/vjWajYJwbAsSRvaWhXCkLVZJX4dtRlJh0Yv2p26wnqrV7Yhc
-	VeVFIZewfH0eEfkZsousMk9gZt0MOj34ePoO8e7Dhsw==
-X-Google-Smtp-Source: AGHT+IExMbpPYOqj6/d85+ArJV2HSSzEcZuVIRRwoBeeBgUYFCOCwFPnqdn8UUbPLEJ6+FKh9oGVmA==
-X-Received: by 2002:a05:620a:f10:b0:7c5:57b2:2cb9 with SMTP id af79cd13be357-7cd0111870bmr2129679885a.26.1747060272830;
-        Mon, 12 May 2025 07:31:12 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f4e146sm555031685a.19.2025.05.12.07.31.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 07:31:12 -0700 (PDT)
-Date: Mon, 12 May 2025 10:31:10 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, corbet@lwn.net
-Subject: Re: [RFC PATCH v2 10/18] cxl: docs/linux/dax-driver documentation
-Message-ID: <aCIGLu6fAOC8TPuJ@gourry-fedora-PF4VCD3F>
-References: <20250430181048.1197475-1-gourry@gourry.net>
- <20250430181048.1197475-11-gourry@gourry.net>
- <43d957e0-f52b-4ba8-aa87-cfb8472b8b67@infradead.org>
+        bh=/o+QnE1H2pLNv7S6QQ5Xteejy5s9NdYnzkKkX1og0ek=;
+        b=F0j2Z+2QZjN9rA3jGmiJ89iLoi6/C66z+eONut50zGazh5cRjk7Dz4Hhri0KqCoQUP
+         sr7CpTsZfx9vWzHOkH2yZtM+63bpebyyJoUGpfJuwzB3G8GzfVh2nEQ+wPpzsBmm3Crd
+         y9m0UxV8kl7UMpEMa45dN9I/HrOnD5q+UeyT1ds+joW4FixxJfzuQkHxrx8BGxGu9mVy
+         v9wa1XybfX7SGDZaNKD6r2r1IcZIPvupCrd5NrHQUfTQGVSrZH/4VPp7dieWEkpDJnwt
+         pA4fQEybkyTeiXI6shSO/OEXNq7u/R5gl7HAj4lJ/3znovt9Glp+bNMyB02n+hIxok1Z
+         um5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747060328; x=1747665128;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/o+QnE1H2pLNv7S6QQ5Xteejy5s9NdYnzkKkX1og0ek=;
+        b=sAcN9RqGWzFT84qKKbsh4gxIRM0ChxR52mdto4AWghu8nhQdMpsNOq4OjgLFlelfM9
+         EvbTgWMhDqPfNHIPR4Uuez7NvxRrQ/lmlWN2N0K7yB8AzJayyG5+mFELAF5fUuCm9Q6y
+         TzMHLoGDYN61m42pZEfVrDxRmvQw+/ZiAi5pkbB7uUQw/IPOmObsIN5kwFSPqPiBayVf
+         UqPrznuqQkJvKrTk85x1U+WDoGH3l5p7/uzNA/lhalJjBARF7iGkKuXU9VY8qGvpAjv2
+         rwQw7YzsZbAI14sJeLSov7Eue2/vnPW5SSntM9TTm9F8CfKmg1b6oAlpH2jK47GWl5tq
+         zRKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzUSrI9HmB1qrAexZt2pMpNAIVqdNU54pB0pqwM/0O7sWgN/flf9q87dT9ajSGFlLECwhPqULOxmwsl//9aTa9VAG+@vger.kernel.org, AJvYcCWxF3Wk4klIzRiAdVo/cnCbzg+2CCNLGAmNmga031mfQVOck/XOUALW7byJv20YCFpA+TGjsQcedNY5RaA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdNURbxY2xc/cIuW5N2QaRmgGdVMezUghAi3MBLiEqteNJlKbz
+	olvNIR/BBJxa/AADYn1VqlL3B8/IFxa9bMQcnnXEhJGDUSgPjsof38Kdw59aPdxgKkYPzFNpjfk
+	hunB7wwrSZ80PxaQc4nGDsq6njKs=
+X-Gm-Gg: ASbGncsNp/blSK95Pc+2UVkLctCTrY0jnUl2sLf7PSk4lYDNG0GYGuIV7H7Ycw+BfOr
+	Ys91a7CigYIBtgadZjfOUAy8G3AcpVH3Rtn0aFH2QplSoSfoR0EALTle0R1BOJ5Z5EM/CfWsURt
+	NaQHZ1o6unpaXgmYXI5lHjTAQ9G87QFEtFHg==
+X-Google-Smtp-Source: AGHT+IEvQMmXlg5joXkYhftYwVICAuYsfqMaT4UwpRyqQ51fQfivA8+syCLfw+SslSLLULkO+mmmMY+Avs68ylvAQn8=
+X-Received: by 2002:a17:907:2d14:b0:ad2:4fa0:88cf with SMTP id
+ a640c23a62f3a-ad24fa08a98mr546511766b.6.1747060326835; Mon, 12 May 2025
+ 07:32:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <43d957e0-f52b-4ba8-aa87-cfb8472b8b67@infradead.org>
+References: <20250512094246.1167956-1-dolinux.peng@gmail.com> <20250512101608.3eb16e43@gandalf.local.home>
+In-Reply-To: <20250512101608.3eb16e43@gandalf.local.home>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Mon, 12 May 2025 22:31:55 +0800
+X-Gm-Features: AX0GCFse7z9WKOQUTdN2rsFIgBsXD43pxxsjxu_ci-DGigbKiKXwDeK2f9csbks
+Message-ID: <CAErzpmtQkOjLT=tS=vUewM9fFjo75u-y14-uX3avdbXPBP2xWg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ftrace: Fix preemption acounting for stacktrace
+ trigger command
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, dolinux.peng@gmai.com, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 10, 2025 at 07:18:27PM -0700, Randy Dunlap wrote:
-> >  
-> > +A Memory Device is a discrete base object that is not a port.  While it the
-> > +physical device it belongs to may host an `endpoint`, this relationship is
-> 
-> I have some parsing trouble with the sentence above. Maybe s/it the/the/.
-> 
+On Mon, May 12, 2025 at 10:15=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Mon, 12 May 2025 17:42:45 +0800
+> pengdonglin <dolinux.peng@gmail.com> wrote:
+>
+> > From: pengdonglin <pengdonglin@xiaomi.com>
+> >
+> > While using the stacktrace trigger command to trace syscalls/sys_enter_=
+read,
+> > I noticed that the preemption count was consistently reported as 1, whi=
+ch seemed
+> > incorrect:
+>
+> FYI, the change log should always be in "imperative mood". The above is
+> fine for cover letters, but for the change log that will live forever in
+> the git history, it should not reference "I" nor "This patch". That is, i=
+t
+> should state:
+>
+>    When using the stacktrace trigger command to trace syscalls, the
+>    preemption count was consistently reported as 1 when the system call
+>    event itself had 0 (".").
+>
+>    For example:
+>
+Thanks.
 
-Changed to the following:
+> >
+> > root@ubuntu22-vm:/sys/kernel/tracing/events/syscalls/sys_enter_read
+> > $ echo stacktrace > trigger
+> > $ echo 1 > enable
+> >
+> >     sshd-416     [002] .....   232.864910: sys_read(fd: a, buf: 556b1f3=
+221d0, count: 8000)
+> >     sshd-416     [002] ...1.   232.864913: <stack trace>
+> >  =3D> ftrace_syscall_enter
+> >  =3D> syscall_trace_enter
+> >  =3D> do_syscall_64
+> >  =3D> entry_SYSCALL_64_after_hwframe
+> >
+> > The root cause is that the trace framework disables preemption in __DO_=
+TRACE before
+> > invoking the trigger callback.
+> >
+> > This patch uses tracing_gen_ctx_dec() to obtain the correct preemption
+> > count within the callback, resulting in accurate reporting:
+>
+> Instead of "This patch ..."
+>
+>    Use the tracing_gen_ctx_dec() that will accommodate for the increase o=
+f
+>    the preemption count in __DO_TRACE when calling the callback. The resu=
+lt
+>    is the accurate reporting of:
+>
+> This is FYI for when you send new patches. You don't need to resend. I'll
+> update the change logs and take these patches (unless of course I find
+> something else wrong with them).
+>
+> -- Steve
+>
+Okay, thanks.
 
-  A Memory Device is a discrete base object that is not a port.  While the
-  physical device it belongs to may also host an `endpoint`, the relationship
-  between an `endpoint` and a `memdev` is not captured in sysfs.
-
-Thanks for proofreading and feedback, sending a v3 today with the TODOs
-ripped out (can't circle back for a bit, better not to let this rot).
-
-~Gregory
+> >
+> >     sshd-410     [004] .....   210.117660: sys_read(fd: 4, buf: 559b725=
+ba130, count: 40000)
+> >     sshd-410     [004] .....   210.117662: <stack trace>
+> >  =3D> ftrace_syscall_enter
+> >  =3D> syscall_trace_enter
+> >  =3D> do_syscall_64
+> >  =3D> entry_SYSCALL_64_after_hwframe
+> >
+> > Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
+> > ---
+> >  kernel/trace/trace_events_trigger.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_e=
+vents_trigger.c
+> > index b66b6d235d91..6e87ae2a1a66 100644
+> > --- a/kernel/trace/trace_events_trigger.c
+> > +++ b/kernel/trace/trace_events_trigger.c
+> > @@ -1560,7 +1560,7 @@ stacktrace_trigger(struct event_trigger_data *dat=
+a,
+> >       struct trace_event_file *file =3D data->private_data;
+> >
+> >       if (file)
+> > -             __trace_stack(file->tr, tracing_gen_ctx(), STACK_SKIP);
+> > +             __trace_stack(file->tr, tracing_gen_ctx_dec(), STACK_SKIP=
+);
+> >       else
+> >               trace_dump_stack(STACK_SKIP);
+> >  }
+>
+>
