@@ -1,77 +1,77 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8131C2550B9
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5781625522D
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747031907; cv=none; b=sIiqa4puOngTurAbISXMjyNMkgwQc0tB+c3snl4D2tXGfWTUswT1zVgFqcV1nP0b920Ef5pQwVIRfQxMlxM/uCnqI+/USNJipL9OVQq20TMHtH5nnGwF/QbECBP0WQXAKGvaLu01kgg21LIljR5otGEH8MnCN2CtGIpqiFv8/hg=
+	t=1747031921; cv=none; b=CduL+RtWhni3z7BEGwvY1hzzuLjF6EAhTxqgrBKbRjC6MwzOfMxf8qJrhevE3fifoNSkQnWqG7ZrJWJm+BtVg/7d2bRHXvkaxJ0mZQ7EgaPH6lzRdXgUXyhoxAwraNTVv8ZEZZuYsHzc+YfWfD0abB5wHvf90M2slF6JpyhRV3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747031907; c=relaxed/simple;
-	bh=k6nyCIyilz7zfov4OFEUENE2DGQbjDDdPx3tbpfgW8I=;
+	s=arc-20240116; t=1747031921; c=relaxed/simple;
+	bh=2tzQHpDO71ESsKIR1q5UmgJ6eEXFCFbdUtWQnFs6aTo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AcBknk9Lkf+/RuHLPRgkJ1FXpM2HkEXx10FH9a2OaYtwBde7uAAnJfzXpKDe5lcJj4kh+4WDQlKOMMTRx26ahO6727Ec61E5Ep/lvPCRHACjrlOrYlPPAP582vlyGNmBg/un5MxpsUZwS6NuT9wQSP4CWvrsKSUUfaSVNe5pjKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vi1ZC6bg; arc=none smtp.client-ip=209.85.218.51
+	 MIME-Version:Content-Type; b=UZg3Of+YqzTIpqvKm6dSP0a1pFBwrmLMajrhZlNRRvrVahOx42WRvyBM/BhiC/qW7cgH1EW5u63idqszCpqmHRI7mR8LlR6NtYL68z8RR7P+4y/LG5wUUw/Vg/GOcS1zhTzuI0W0DCQPY3rOKNKVyWxfHI++pthMKEgQSAtwPhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lTBms/b3; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vi1ZC6bg"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad2407f6499so37296566b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 23:38:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lTBms/b3"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f6f86580ecso593978a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 23:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747031904; x=1747636704; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747031917; x=1747636717; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gs9qjJWfXtPIqCNTFhtaejIkA6pnbjDMF0lYDQwceAc=;
-        b=Vi1ZC6bga6JNi66kFjfQkulQJxezhF7ZoHiOllcNF8kI/aKLTyf87pw59iwMXXbKQw
-         RcRc8OXBu5LN8u29i8PxqRI0TETmyvxJ1HinuDAYXAcGmN1qx0pl+BzKevgqtT0DOOJw
-         crU8uyi5/+67Gqzk9edMcwvsBO2P5SR48n0PVJsB37mgFgn+Fr5t0mLuS2CRrH102vra
-         Fj2u7+2/HVxkfFV1Ejaw7+KTKFvbZEVsSIb7DlKGai2rziERt/UNwKzxXAUElcULa4GT
-         6Bwj3BxeYC5GcnknKU17LpSwyvX2+tJnU8BnYH6s64LpemCKNGdN8qiahykoexxXLWA/
-         BzAA==
+        bh=7vkhL0nOODbXgDR4wi4Zsc+hIMhl6G/kmLyU640sopY=;
+        b=lTBms/b39YiPFqpFB061TTbvSQ5rU7FG3cd6FTR+dyzfiEM1JHh5Zhm7sIyt30tOf3
+         gtDNVQ0DQFIXlR/C/8VQkiXOKCH1riE6VFYnr2/np0L2fcaNPxu5tlCIaY7Vdm5lbaud
+         CVVPbTcSq+DgJXBVe+M058GCdSQ/cDrawtpAFfE826lgG1i9lTMicf+lbrhJ7lwVc5d4
+         6uNahbM1pSVirNam8UgsWevf0J1hUguQIxrdi/DUsqmFGghxQcnkWsZYbl56N3QFkz9d
+         xYdas667YOBOj5fw2bazdQEjKJ979Thnu1hjH2sWHp3+Fk0MFNCfcMmujc9SyVvlBwkH
+         9/AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747031904; x=1747636704;
+        d=1e100.net; s=20230601; t=1747031917; x=1747636717;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gs9qjJWfXtPIqCNTFhtaejIkA6pnbjDMF0lYDQwceAc=;
-        b=HqN4qMVza3+YhSetW+CnVAKw+DwZWGbqWHpyqq/9ezj4fdl1qZ4oLR6KAyA+aBoOQc
-         Kaw2v071Ll6VmnOapYFnnLu10UjVYCTeWUbtRaoT6f3Hx0jJFT3J1OdE9UmqJc5Jd25A
-         VxQalXUW6k38wVHVVMCQ0rAeCW9KIzxus/TNmdSRlNdXckrknlA3XgcI/vAGHEf5Li5m
-         wDKX9PtYERxrmQE3+BEIpckoc0URDijqa+X3ILs1MhFl/ep/vHHiScxKh/36tMBaHv70
-         Yb3V23g48GJnSQ6fSr+C0yTadWgDfisiu6zwp6KBNrE5FOxOmkNvZXuh1ro1+yBJ/QYr
-         VWng==
-X-Forwarded-Encrypted: i=1; AJvYcCVzTwy+cqpKpaW7Mahz1Eg0uKyjPjovA7VHCJ10v2mBher/XW2ZWFJbMK7aPYFJf5K7ySMLHZGDiXmMwuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxD0sc8Q35CeKNMbWXzxObfm8u9kfzHTbdj0B05pv6hTX+8jfNH
-	UWWI7HJxY2AALWJQM0TAPQ+yHXsmOg1NjnkUZSpyhH18ZvIfQhJDjbdPsaUtLW0=
-X-Gm-Gg: ASbGncsc+aNKxAa2V/m1agy+qafgRehNmFZm7vRNJTeBeZE/adVSgz03acj0rzqhKhf
-	7fMKTQm0HVWgAmLostUH+3zIwmPZZ6kSGKKU+Pg2Zxgc/VWGICsSSanMSkgzlPArlj4qb5Q/K6X
-	fjHGP6PFqtTmUWDby1AY6JTL2RMapk9ghJOHR18/WZ8F5wS3kjV4hMfRgspih0Qj1FDXIXl9wuF
-	3V6rT8W/xQ4yT1rLaF45zNxD9xfI3yBoP0Z8T8EJ+2w6uYxMGrzFDt/zNz8ibUpe9f0AKaLYbqO
-	QPevbpQ9mLvceL1OvaVhnXiJvCFfz8xaOFm2o7hbPxeE1In3eJqAgXbWrn2d+FwXHQ7ZGlmqKRz
-	GIy9EHg==
-X-Google-Smtp-Source: AGHT+IHvnruoQf/zsWKz811qCbdXO6vDPHDtBmgtxIKDoHCWYrcOhWQOhDK0kiHkWvqsK39CY/vV6A==
-X-Received: by 2002:a17:906:81c5:b0:ad2:20bb:1cf4 with SMTP id a640c23a62f3a-ad220bb20abmr329227966b.15.1747031903658;
-        Sun, 11 May 2025 23:38:23 -0700 (PDT)
+        bh=7vkhL0nOODbXgDR4wi4Zsc+hIMhl6G/kmLyU640sopY=;
+        b=q5mcZswKoxtQYXCjotf6mseKZCm9FpXVXoDHuamfC0eclP4k6c6dy90DbIn64CedOq
+         rcdoV76qyQUDyzwG4abOE8Ir3aYOlTeBgXOmYWQUaqHnsW4xaEazCBDdpkn5i6b5rYyf
+         GviKAbYboR7vyZ1L5Qw4n7ifika8x8bLnOYsECauuHrPxwYR5c/8iWJc1H12iDH2j7qv
+         zdc8uuAthEm8EvLFuilYXR+vvGDniArUvYqshBqaZDCtzDmDUfcUxt4xpOjZ1r2QygRU
+         oqKWKhYGz/Tr9jfQu5hrJnm/oqt0PPUfREH9Ntmxb8gRBDwxPjuZxCTu/aGLqppEndhX
+         vTvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUb3a3lFdsbg5ZhOn8/XGhCLO3Qafo6/r7DJIxR/NNvDIXRKp5MA3xOKhkwBYpsMiQ27IzZgbbPU4YrC3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG9DUN9vFbCD/Yj3m7zewKic9m9loRejZMrTz6e8gobhHOqOrE
+	E3NAzv7utxRcjJz3wZxxAtz5SXN69vGLoznrxFBhghd4xp1DgY7IbT9Z38zXJmc=
+X-Gm-Gg: ASbGncvL/NPaizx11yjV5pnJHc90O6vbJUxs83gq4bl91se/nvCIJ1Y6I9DnIOC1EOQ
+	CPsq2CCE3XP4Iqdu1ycfs5MXeTISmPTF2m5u95hkPqCNGt/lKTdYN3HJpfKQ8hwIuLOqU3Azdqg
+	YN7bT7NRJpRHBSZyWvIkdjJS1byRYo7yqaHiWAef+CKBNITv/7n1xJUS/zaElXj43J/5GAGeV0E
+	N+PrZQkXPPimKbWNmWR4zW11RMqGEPlKC/QgN+WfZvO4KNvMs1/lENLl2hLHQ8hH6G2U/uEJ1W/
+	eDB4VSjcHUrwz6zs91/p6woHLKWG77JIyWYoW1RW5aRPSaDD4uFQxgxwiGDUFOzZe/9fL24=
+X-Google-Smtp-Source: AGHT+IFiYR8aqbHYam+4dCJWIuEBLrMR51O5qEO8DmYKMA5elm1tOP7pc2ZsyT0EJd9dssnjv/KG+A==
+X-Received: by 2002:a05:6402:4309:b0:5f8:e24b:c8c1 with SMTP id 4fb4d7f45d1cf-5fca10e40bbmr4214805a12.9.1747031917576;
+        Sun, 11 May 2025 23:38:37 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.222.234])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad21985342dsm560597966b.169.2025.05.11.23.38.21
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d700e92sm5210075a12.55.2025.05.11.23.38.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 23:38:22 -0700 (PDT)
+        Sun, 11 May 2025 23:38:37 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: krzk@kernel.org, s.nawrocki@samsung.com, cw00.choi@samsung.com, 
- alim.akhtar@samsung.com, mturquette@baylibre.com, sboyd@kernel.org, 
- sunyeal.hong@samsung.com, Pritam Manohar Sutar <pritam.sutar@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- rosa.pila@samsung.com, dev.tailor@samsung.com, faraz.ata@samsung.com, 
- stable <stable@kernel.org>
-In-Reply-To: <20250506080154.3995512-1-pritam.sutar@samsung.com>
-References: <CGME20250506075413epcas5p2ce0db6da9f359e9c3bb16b03c1a5eb4f@epcas5p2.samsung.com>
- <20250506080154.3995512-1-pritam.sutar@samsung.com>
-Subject: Re: [PATCH v2] clk: samsung: correct clock summary for hsi1 block
-Message-Id: <174703190180.30824.7869810440516124016.b4-ty@linaro.org>
-Date: Mon, 12 May 2025 08:38:21 +0200
+To: Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, 
+ Colin Ian King <colin.i.king@gmail.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250509104459.28167-1-colin.i.king@gmail.com>
+References: <20250509104459.28167-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH][next] memory: stm32: Fix spelling mistake "resset" ->
+ "reset"
+Message-Id: <174703191639.30920.15410579051169981008.b4-ty@linaro.org>
+Date: Mon, 12 May 2025 08:38:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,20 +83,15 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Tue, 06 May 2025 13:31:54 +0530, Pritam Manohar Sutar wrote:
-> clk_summary shows wrong value for "mout_hsi1_usbdrd_user".
-> It shows 400Mhz instead of 40Mhz as below.
+On Fri, 09 May 2025 11:44:58 +0100, Colin Ian King wrote:
+> There is a spelling mistake in a dev_err message. Fix it.
 > 
-> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
->   mout_hsi1_usbdrd_user     0 0 0 400000000 0 0 50000 Y ...
->     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] clk: samsung: correct clock summary for hsi1 block
-      https://git.kernel.org/krzk/linux/c/81214185e7e1fc6dfc8661a574c457accaf9a5a4
+[1/1] memory: stm32: Fix spelling mistake "resset" -> "reset"
+      https://git.kernel.org/krzk/linux-mem-ctrl/c/9c03507fcd6feae37a94eff376a1aa79700dd54a
 
 Best regards,
 -- 
