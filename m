@@ -1,79 +1,93 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B758BFF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0441C6FF2;
+	Mon, 12 May 2025 12:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747052089; cv=none; b=hG4WahgwIi15snAavYuV1xP7THvSTTgv9PJDkAink708QyhBo2vreFEgjskKC9N7+1G3omO2RQyw3pOykchXGkJXvkzgLKoFXn89Ecfrq5ChVn3FeDGqaFX+ReQJEiH5vWwYEpqfV7NbdRwgJWT0mGju/lKFQeMP7OcvYEWkTeE=
+	t=1747052123; cv=none; b=FzX6i5Is+01/GGhWLnPhFpNoDgHN+suWD51U2LeamHDAdIctnjWbJoDaKQRMaz9O8dIHZTdSOOy0cl0y485WDnvLXCN047fBjYwVWUOjgjEnEkPkrjD+UcL+/6sE3Xjd4FDxpB6Hhl4tE+EbZT4Q7uYHdrZEJJifV91WRis4k2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747052089; c=relaxed/simple;
-	bh=9SGZxg3iu/1rk/YCA0UjZ+r4MNpQ2iWRRmUuKQDbPWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iZvQD72dgk6SPyP+Aq3wuSjA5+nEsAj5LV9LXZRsUXpTrpf9hL5lATzj98JDO6VRl750EMuIa+W4w73oWpocaqG1iicFPM9tIsuhyc2feAoIQ7BsjShJ/juVeFZqrirNc15Gnm+aqrNa2wR7E6OW40K0NwGEGLLK0py+P1aCH1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wkwgEuwd; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747052123; c=relaxed/simple;
+	bh=AYku5jN+0OmBk98j9JNh57LME0Csb8yr4YA+DR9zGzA=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=dtsrDeYIli7Vsm3krPJUO7w4MkB8TZIdl2p9LKmAUI/gIr47xFneBIqxMrGW/4R0Y5rDrJoSda/dqhO0gIcw/iC8Dg8qZxsB62xO4+U2oPJwJhHQANsPqadRwMmTdgxxC+AEuKZvJ/6dY0wTJ1Cjn9nO/IpOrrmDRK1tYOkkJm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=PApiyJZR; arc=none smtp.client-ip=162.62.57.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wkwgEuwd"
-Message-ID: <5b9d9a5c-b647-4d56-ac04-d1c04a97bc30@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747052075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YIXcUY/fSCMcDvHSWI4IRhB/8040uy1a8GFVe9KfPlY=;
-	b=wkwgEuwdgorTynaAGELwho4Dfk7DDSRlySUulcM0tru1JWDeHzdZsavuVSvUxhdFBpKb1p
-	DuzHYHBPzx/9dz5LFKO0irWoBnjbjquskxzpTp6m+duI1eVbWWFkwDU0GTDOoDRiVO+ncd
-	dnIvwibYdNaa6FidajdK11ZA1i6jrZo=
-Date: Mon, 12 May 2025 13:14:32 +0100
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="PApiyJZR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1747051808;
+	bh=XiZXeriwtNmD0C5rumTsjv/pcxn0w65lxRr71QDYu34=;
+	h=From:To:Cc:Subject:Date;
+	b=PApiyJZRB8CZCN9ZHGCu5twt/oV7dpXe2osv3wXCXaAmg0etAW/ny7KtAkVDy+uvw
+	 DSrPyFCQ+LVF8QmChApI8vxEFFXLbCN133lead5wVo6PoXGNB6Vnm1cnTfUnd3176F
+	 G7kHDmISKxOep04LzrDLmHfvwT4FE9r8/2HkDkZI=
+Received: from localhost.localdomain ([116.249.112.84])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id EEBE0F2; Mon, 12 May 2025 20:03:46 +0800
+X-QQ-mid: xmsmtpt1747051426tikm1o32c
+Message-ID: <tencent_198C6C928AA0BA4E932560238E0CFE073109@qq.com>
+X-QQ-XMAILINFO: NEW4AM7T0EBsyYRwy7F7xKNKE1tnYRdimiWvJz02wiuzbc88/Xz92wEqnUEoHa
+	 nIY6Ml9xgBjxjzxhhUdxFN7WCcXupbz+XRQpb7ndOCxVymXXJCIbRxj327K6hdVmFgzhRVCdDAkU
+	 0QI0Np7STwTCSSgwveSGyq2MlOn9IC2omOFI6yk4CiqMBdUCHTMdaSV1S65Qk7X1J61MVrqFzqs3
+	 Z7rnB0RDahifL9Az9ffD0ss79ar04QQoE70VWKT5CerDeVBxZhUqv6jTRs1gZZMwejXOWcLWx6sg
+	 k+n1v0fWNwXwnW/2zXUK6UIQQpzwMipLYRelYDwBikFm+UfaePgwAmSbmRf5HEqYVxhUTQXCwksZ
+	 CXN8b7OuDU92wMJl0lIHvq69FLSS6+2Q4MGqp/N14YW2dTv5rXDVLrY0u7Bn674VyCUy7XN4Nslj
+	 3pEVQpyunv5+MvtPSwN/YhU3cFRSXVf6rczJ08UMrxqkpVvsmj9CkL1Uf9sQSQybzKOc+1b6gp3B
+	 gDpjLTZ9GhMT8A4zLO2OaUcB4PNH2IFmOcrNNgdVYaLZkVDhDP8PNUGDF7bpelQ/B5eojg/Qw22S
+	 0J3j1PkUPzSk+Az6qz/Q1+iAwGooXy57mK4NiLof+20NxiROMu4pCs2Q59afTtQbU+/gmjLperVu
+	 l1JQIzPb0hZarYDCJOgJbrdyqmNO8xH879VkygZJb2jpEqSTnpodwuAm4tgLAL9/8CE3BV0eEHx2
+	 ta/V+7qBJ/DezSLCCf49r/LAs+bAYKgP1RYN4T+V6bLHzpWzXE51ZLsp/WTK23MNpbVmaMZAhu1W
+	 1Y56yqzzeGlCoz5yQ4UP7P1JjZqzeaBtwn885tHjdukuz9TVYdygd5SD+r+IAS78chJbnD0TeToJ
+	 dFNsJ5f9KKg1dOhZRFiLWiS47P4+cACDrzX5fzSR02VdFmeQH6AIwROJlXJ5qZ66oj8fkdrZj4me
+	 gVz+KgFVgOIe1ZGfCT+TSgttlYgxvZfNTOo9nbO/x2/Qh3aH5bt8DPf0d3pHsVKNE7X0ynjvPvQu
+	 2zDwWqxAUMlU6aUrmJ3ebUEP3Mz1l7y4OfE1CyP4QXm/1A79utCHUwFpyXSCzIn+Ir1FU3YvKlBQ
+	 n3T9cR
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: chainsx@foxmail.com
+To: Fred Bloggs <f.blogs@napier.co.nz>
+Cc: Hsun Lai <chainsx@foxmail.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH v1 0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
+Date: Mon, 12 May 2025 20:03:36 +0800
+X-OQ-MSGID: <20250512120338.312496-1-chainsx@foxmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next] net: ixp4xx_eth: convert to ndo_hwtstamp_get()
- and ndo_hwtstamp_set()
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: netdev@vger.kernel.org, =?UTF-8?Q?K=C3=83=C2=B6ry_Maincent?=
- <kory.maincent@bootlin.com>, Linus Walleij <linusw@kernel.org>,
- Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org,
- Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>, linux-kernel@vger.kernel.org
-References: <20250508211043.3388702-1-vladimir.oltean@nxp.com>
- <dfb57a6c-8db7-4ab5-9d51-eec40cf8662e@linux.dev>
- <20250512120659.r7dmrugocat7ou3t@skbuf>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250512120659.r7dmrugocat7ou3t@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 12/05/2025 13:06, Vladimir Oltean wrote:
-> On Thu, May 08, 2025 at 11:45:48PM +0100, Vadim Fedorenko wrote:
->>> The remainder of eth_ioctl() is exactly equivalent to
->>> phy_do_ioctl_running(), so use that.
->>
->> One interesting fact is that phy_do_ioctl_running() will return -ENODEV
->> in case of !netif_running(netdev) while previous code would return
->> -EINVAL. Probably it's ok, but may be it's better to have consistent
->> error path for both options.
->>
->> Otherwise LGTM,
->> Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-> 
-> Thanks for the review. Indeed, I hadn't noticed the -EINVAL vs -ENODEV
-> difference.
-> 
-> Are you suggesting that I first create a patch which replaces -EINVAL
-> with -ENODEV in eth_ioctl(), so that ixp4xx_hwtstamp_get/set() is
-> consistent with phy_do_ioctl_running() in returning -ENODEV?
+From: Hsun Lai <chainsx@foxmail.com>
 
-The patch to net to make things consistent would be great, but no strong
-opinion as there were no complains I believe.
+This series add support for Firefly Station-M3/ROC-RK3588S-PC.
+
+Info of device can be found at:
+https://wiki.t-firefly.com/en/Station-M3/index.html
+
+Changes in v1:
+- Add support for Firefly ROC-RK3588S-PC
+
+Hsun Lai (2):
+  dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
+  arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 911 ++++++++++++++++++
+ 3 files changed, 917 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
+
+-- 
+2.34.1
+
