@@ -1,119 +1,72 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7B71D515A;
-	Mon, 12 May 2025 13:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE54D81720;
+	Mon, 12 May 2025 13:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058278; cv=none; b=pVVZscLECSZuW4I+m80bJOC3WWkFv99PDzKLrY2JDBlZgTn9EeQXhWjnOVpe19YuBwNuIP68+tH9cnN/Qn783fMkoGkeHLdjVL5yreEKOv8J4uRy3DGtZMIjKnEXQhQvf4Jset+jZ6DCFXKm5gOOOF6HNUZBu4fVGJcH+/S65BY=
+	t=1747058351; cv=none; b=NnHqEJED/s7S/RFUtpur4tB5fgr4TyhcE6z8dnMag3e6vSaosmawTqtJmpOvwF1LBRE/NaKAT2axSG0obBjfIWm7oK5f1p21YbR6OkNYYZyUEoh+dcM8KPwc1DI0Ebstj/CUBfe3JM3xcL0yJHxzOo3UpPziEBMBUaffvfhQaWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058278; c=relaxed/simple;
-	bh=Z6jMjE1t5RYVDM0B4EUWi7DiXy2a8XODml76LIEZWKI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F5jqYhS2TJ4WkIMl63BWDDonVVGgLmRf9q/Z/geW7O7zgBCDzd1kYPR07y3dS6+1GoY2hD1fS4G9z/rT+AHtX92JWf+kuZOLcca3jl5BioKOfAP0n2EPg6Knx/4SuA/h/twIZSBin7JWoe3hnX4ZR8/P+ISix96fkzQyYnDhyVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-878627ac2ddso1084691241.0;
-        Mon, 12 May 2025 06:57:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747058274; x=1747663074;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2kJi5+v3afPRHEEqTy/hNjhflaANAWOls6+TF20g+SQ=;
-        b=lBctvNbI5jgdKCyC5M5n6Wfp1XbXaOyYsRIgdght0MhUJZN+cnnuIDGVcU89v9XgB8
-         eSBXawIU7/V6LpwLJN7DyBq/vfwojtlREYnvZIlRyuqxXgX6s+podfbfAYjpjhC2gLgW
-         CG/Liy6Y0vjfumRbmCZECe7df2Et0wt+szN/QoGXzEGZWaan+4oyn5XKB12PmvUZ0jSR
-         5eo9kapTHEtuO6xBA5WTCIh/+u63OowmjQeVemwuf/vu4lxTEN/9d9DHa/DLmJRPpdh4
-         tKKAMstW1dMMggXG2vkKjGmjMWfsNCUYYpfk2nZ6ERMiVijUJx9bm6aKvYmjq8miMqXT
-         qj4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWuj2KSoA0eTfnCQ7igrvIFA/LpKm33kU7tmkB5O6WPx9gizVIX3XKYm60NLMo/JA5QsTmiGZXcHvmF@vger.kernel.org, AJvYcCX8zlx36eERRXAPZk+cyXCWbsckbTouSuA71oxzlFcfuV9e3yuHnVbrpKxtzQnEPV+TiilqeF4TRVsi2V5F@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGH3Me2KTVbOxXy8WTeu1BNTLKeWsCFL9MrN866AgVV023W0cN
-	fAEdZwyDFFZPO9rNFgnvO4cOxp1eYS73RTjIoknaEWOHfl8Gviutl6dXuItK
-X-Gm-Gg: ASbGncvFg/eP5z2mFxyrBw6OjTueIZESl8o4cTyQXk4NngHQ3jaeQ79Gtk9aXUqEEuS
-	x4nDmnvvGbKA0fUWUywZhFPDx1i9XZAzCSJrzQvANhXtf/sgg4DdRq1Lof2vB6To8NvmTkNHAh8
-	KYDWBpo1ZQFK1TdQxzI0SOEXXjGMqInFXfdm9+rhUG88HauxorYISCusfLQtHFdTV3fdtO4EfmX
-	hcuY8ex0VrqfcwUNJLgzNLqpGcn3Ja4YIHQRKbM/PewiIVXW7MY4h7Du6JrbUpAANwf/wtAZ8Wa
-	hYmR9IbAN3XURv0r5GMFwPjunDtu/PUd2AIcEBWQDEttHStw3rveUsAS3fYSr2y9IijtHx/SNgU
-	ALuoHhxeOwW5e/g==
-X-Google-Smtp-Source: AGHT+IEuJ1d1wpDqhMC5AsCDX4e67NWQSw+p0VO5xwhXEjcPTTdnjycA0Pt6mf9b8VIuvDENjgTQPA==
-X-Received: by 2002:a05:6102:4a8c:b0:4da:de8d:9e34 with SMTP id ada2fe7eead31-4deed3cb965mr11255480137.19.1747058273880;
-        Mon, 12 May 2025 06:57:53 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea85df68fsm5015662137.18.2025.05.12.06.57.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 06:57:53 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4def13d3f01so1168495137.1;
-        Mon, 12 May 2025 06:57:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUHZ8UMPKjUxYof72gG4QPaTMMUARvch+SAH2WvSunI8U7sl6YQUfLm3kt6WsHGqyCVbXmH05U61LL4@vger.kernel.org, AJvYcCUKMd1aC6GptDJmVkRoiWYqPcZlnaWk93aKEolVTR4NWVKN4pIJFU+KvQ0zHuaxcZr3qGKE1MP01SRmv4ZB@vger.kernel.org
-X-Received: by 2002:a05:6102:91a:b0:4dd:b32e:2d1a with SMTP id
- ada2fe7eead31-4deed3e8831mr10308655137.25.1747058272979; Mon, 12 May 2025
- 06:57:52 -0700 (PDT)
+	s=arc-20240116; t=1747058351; c=relaxed/simple;
+	bh=aS+xhCKHOW1Vbyt2IfMiIICsgpVEoputHQayuPef8e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hgUK+seooW3+8x3x4NPOjjFDj27+34hRRwvckwa2logA6p8KY7+1tkNSul0n2gi1yNAg89EEgOmUPwWo+GbC1BOiShDIM4XEK35Ni9dY5Rjw7QYAtRl1dts7hlqGP5zZAGFue1i6CKy9d/tDnt3OPmyLN5DfKN+WU0VVfd/TrHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8BwHkOM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8BwHkOM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523C1C4CEE7;
+	Mon, 12 May 2025 13:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747058350;
+	bh=aS+xhCKHOW1Vbyt2IfMiIICsgpVEoputHQayuPef8e4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8BwHkOMEkpe1zVPGiNqGu1Vi9qQbkCTdFJF6c/f/V2pLMm90vsLFRfLickZraDbX
+	 1Z6ZqXBxwm4H1hVMZhpdpVXDhqe/7ZvdIYiT56Ar5qLwBxpdC/tGmH+OiXIzUKOWuc
+	 hUSj7BRK6OuiyFc7JjOObJI3Q2Yc0nbbEl0/Kv6J03+/dYZr7CsHDHl9/J4vRmSHJu
+	 JHg3UU3s8LvnTDxIhJpouFO3RGJ4Pm+nGLvhVP4+QbKnaAxTgWGuuEU++y2L2UdFro
+	 pKJnrG40qOa27chzT3Io+i1AJM+01fIkfNaY6DUQf1TDVAWTbLSj2r/Ch9GJl7qJb1
+	 Y5trGFx0N5jow==
+Date: Mon, 12 May 2025 15:59:04 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 1/9] rust: device: Create FwNode abstraction for
+ accessing device properties
+Message-ID: <aCH-qE8wAY3X0YRK@pollux>
+References: <20250504173154.488519-1-remo@buenzli.dev>
+ <20250504173154.488519-2-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512-daily-saga-36a3a017dd42@spud> <20250512-sphere-plenty-8ce4cd772745@spud>
-In-Reply-To: <20250512-sphere-plenty-8ce4cd772745@spud>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 May 2025 15:57:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVwBqC3jHgwLJkLcNZo8W0Aw9ZfoXL1tRaL7B2EpKuWvg@mail.gmail.com>
-X-Gm-Features: AX0GCFuHkNC9VJcdMXT2KkXYhqqFctrazjyBihAGbpeEUZz4Xn1jYevzEdCrE40
-Message-ID: <CAMuHMdVwBqC3jHgwLJkLcNZo8W0Aw9ZfoXL1tRaL7B2EpKuWvg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] riscv: dts: renesas: add specific RZ/Five cache compatible
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, Ben Zong-You Xie <ben717@andestech.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250504173154.488519-2-remo@buenzli.dev>
 
-Hi Conor,
+On Sun, May 04, 2025 at 07:31:46PM +0200, Remo Senekowitsch wrote:
+> Not all property-related APIs can be exposed directly on a device.
+> For example, iterating over child nodes of a device will yield
+> fwnode_handle. Thus, in order to access properties on these child nodes,
+> the property access methods must be implemented on the abstraction over
+> fwnode_handle.
 
-On Mon, 12 May 2025 at 15:48, Conor Dooley <conor@kernel.org> wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> When the binding was originally written, it was assumed that all
-> ax45mp-caches had the same properties etc. This has turned out to be
-> incorrect, as the QiLai SoC has a different number of cache-sets.
->
-> Add a specific compatible for the RZ/Five for property enforcement and
-> in case there turns out to be additional differences between these
-> implementations of the cache controller.
->
-> Acked-by: Ben Zong-You Xie <ben717@andestech.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+This reads as if it is a snippet from a larger text.
 
-Thanks for the update!
+Please start with a brief motivation of the patch (even if it is trivial) and,
+using imperative mood, what's changed by the patch, then you can add why you do
+things a certain way (and not another).
 
-> --- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-> +++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-> @@ -143,7 +143,8 @@ plic: interrupt-controller@12c00000 {
->         };
->
->         l2cache: cache-controller@13400000 {
-> -               compatible = "andestech,ax45mp-cache", "cache";
-> +               compatible = "renesas,r9a07g043f-ax45mp-cache", "andestech,ax45mp-cache",
-> +                            "cache";
->                 reg = <0x0 0x13400000 0x0 0x100000>;
->                 interrupts = <SOC_PERIPHERAL_IRQ(476) IRQ_TYPE_LEVEL_HIGH>;
->                 cache-size = <0x40000>;
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.16 if there are no objections.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The same applies (more or less) for patch 2.
