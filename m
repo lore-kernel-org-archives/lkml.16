@@ -1,195 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2256525742B;
-	Mon, 12 May 2025 17:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C429E25742B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747072561; cv=none; b=VW1CSTUiqYhtBZsuvS1LwJgsXhfZeYMygpmJHAUNfXJZomYMhz4k83UF9f7AFHH5fGwGv9xQ7tVeM5nUFL96S4ID0uVQMB5TNYCRpkbLhoKKwd0NpX19p5orZGBN1vEVOCOCkUlNgl/SqV7OU3eMYn+gg4QVs9cm5nX0ji9qOqM=
+	t=1747072567; cv=none; b=rsYc7KT1d+YzCfqVX5HZ9G5CEEJHwXk42m+VuTfL2dmkAqwW+mEqsAfjPwMsFPVsi0NPn5Cwn5zPFAp+NhoZdRxZxaKOQdC80QDnxIggRYhgesV/N51eeIT7+3msrKhR5R9PyDCXuf3yeWeoYM9XOBWkiN8JXOkMcOsDWRnWap4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747072561; c=relaxed/simple;
-	bh=7PNc2HdbCkpyHnT6/nPDH6L5Zch1/Jzmc+ZEuFMaWqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qE61FUtb80NOdXQeHgdCxGP2PqcGhGV0iKUof5RMpKnINMAJKp+8t8VBprRCIcmN3nQoYEfooWuiOR0vReukTvuIS3CSiVAgyu2qwoZxHpkBhznw4r5iMbYizFqD1nDSwtOvbZmUU9YnHQ6q6fl19QeDLLv700KUJBMVO4opTxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i40gCx0L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747072567; c=relaxed/simple;
+	bh=+PM1XQX5taXMEXVfyMIOxtzRaXVApXcjBUSbRi9fomA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jdxqqFgLBM3ecAIHhCezg7vDl/3AKsBYukSlB+gVy6tKt5GqMDHKXPt/Oc7nZbu1zii0qdO82U3mjYyt0LEOMSPn5kXCn6/SAnj0HzREsdhH6uL5Q6DlnapwMJcQ6BJTCbY7nWVj+iizyxIRkGvoeOxWNyDbzHdm4cl0v9zVIjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FatTnEMw; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i40gCx0L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803C3C4CEE9;
-	Mon, 12 May 2025 17:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747072560;
-	bh=7PNc2HdbCkpyHnT6/nPDH6L5Zch1/Jzmc+ZEuFMaWqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i40gCx0LcEJb+P73g0+7K1tMG9pLAg0KHSjnruQrNC8JF1iDFRFk4YdlNRUI6uCr+
-	 G/Rn9G1/BZJ6yTJjXCazhowFyxoXooVmqBpLcahC39Iolmyoct5JMfVK+fn07ML52z
-	 WAx5TnvCGx1Sc7bAiGEZcXh/ZCRW0uU3yAZnZI+zdxhicTFFZEQA9Q/G5ObDuPUDZ+
-	 v/LyZnYvfFdMJPUKn6cNuoZr/bJBBTTteITj9cfNBpDGJSX8fgD0AiL2xF4h+3TKQS
-	 IzQF1Y3Rf0/VEjBqN53KqPchgyY1AoDSAC61t/0K1NQIzhQF8rWDDg2iuAa/vmZO+S
-	 eW8ZqCQcvLFlg==
-Date: Mon, 12 May 2025 14:55:58 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	German Gomez <german.gomez@arm.com>
-Subject: Re: [PATCH v3] perf tests: Harden branch stack sampling test
-Message-ID: <aCI2LnmPgauls0BN@x1>
-References: <20250318161639.34446-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FatTnEMw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747072565; x=1778608565;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+PM1XQX5taXMEXVfyMIOxtzRaXVApXcjBUSbRi9fomA=;
+  b=FatTnEMwOb4VINczR7biZ1kwNJQVDa+qLCnF8HeXf5KP9KD6acxU6/YK
+   k6JCAbaSZqbodCOfjHlZD6Z+LtzgYSzBzWC75f5tEz5mZkGPqe/bq51tn
+   ACUVCaoOQsSoYrDW50iDIXMV/0JPmSLzdYh12PkymiopgqpFyh85CykGk
+   3xqdleEpUulB6HeOEcIXFyyAAcXY3uwIfwCJUcjrr65i5zQJeTvl/P69Y
+   Zby19jbnqVfojmouCdTybeSccNho1VRofJggd1EJ4u/DTMT+7UEZbc8Jj
+   9qdxSVfyvQymWn9wbmjlnvdd/6TCf5azX7DP9cXnsqyG8bDGvTQhmGTPS
+   A==;
+X-CSE-ConnectionGUID: 9gRZyJrWT8SCkLE32pYtLA==
+X-CSE-MsgGUID: tJLrVPFATyiddBLLzI64zg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59520624"
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="59520624"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 10:56:04 -0700
+X-CSE-ConnectionGUID: mckp73vBSTeP8KmWKuZMJQ==
+X-CSE-MsgGUID: rIKCmK7zThq2uC4zZTUqlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="137909193"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa010.fm.intel.com with ESMTP; 12 May 2025 10:56:03 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-kernel@vger.kernel.org
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Subject: [RFC PATCH] perf/x86/intel: Add a check for dynamic constraints
+Date: Mon, 12 May 2025 10:55:42 -0700
+Message-Id: <20250512175542.2000708-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318161639.34446-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 18, 2025 at 09:16:39AM -0700, Ian Rogers wrote:
-> On continuous testing the perf script output can be empty, or nearly
-> empty, causing tr/grep to exit and due to "set -e" the test traps and
-> fails. Add some empty file handling that sets the test to skip and
-> make grep and other text rewriting failures non-fatal by adding
-> "|| true".
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
+The current event scheduler has a limit. If the counter constraint of an
+event is not a subset of any other counter constraint with an equal or
+higher weight. The counters may not be fully utilized.
 
-Thanks, applied to perf-tools-next,
+To workaround it, the commit bc1738f6ee83 ("perf, x86: Fix event
+scheduler for constraints with overlapping counters") introduced an
+overlap flag, which is hardcoded to the event constraint that may
+trigger the limit. It only works for static constraints.
 
-- Arnaldo
+Many features on and after Intel PMON v6 require dynamic constraints. An
+event constraint is decided by both static and dynamic constraints at
+runtime. See commit 4dfe3232cc04 ("perf/x86: Add dynamic constraint").
+The dynamic constraints are from CPUID enumeration. It's impossible to
+hardcode it in advance. It's not practical to set the overlap flag to all
+events. It's harmful to the scheduler.
 
-> ---
-> v3: Drop set -x
-> v2: Change skips to errors Leo Yan.
-> ---
->  tools/perf/tests/shell/test_brstack.sh | 72 +++++++++++++++++++-------
->  1 file changed, 52 insertions(+), 20 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-> index e01df7581393..9138fa83bf36 100755
-> --- a/tools/perf/tests/shell/test_brstack.sh
-> +++ b/tools/perf/tests/shell/test_brstack.sh
-> @@ -1,4 +1,4 @@
-> -#!/bin/sh
-> +#!/bin/bash
->  # Check branch stack sampling
->  
->  # SPDX-License-Identifier: GPL-2.0
-> @@ -17,35 +17,50 @@ fi
->  
->  skip_test_missing_symbol brstack_bench
->  
-> +err=0
->  TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
->  TESTPROG="perf test -w brstack"
->  
->  cleanup() {
->  	rm -rf $TMPDIR
-> +	trap - EXIT TERM INT
->  }
->  
-> -trap cleanup EXIT TERM INT
-> +trap_cleanup() {
-> +	set +e
-> +	echo "Unexpected signal in ${FUNCNAME[1]}"
-> +	cleanup
-> +	exit 1
-> +}
-> +trap trap_cleanup EXIT TERM INT
->  
->  test_user_branches() {
->  	echo "Testing user branch stack sampling"
->  
-> -	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- ${TESTPROG} > /dev/null 2>&1
-> -	perf script -i $TMPDIR/perf.data --fields brstacksym | tr -s ' ' '\n' > $TMPDIR/perf.script
-> +	perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u -- ${TESTPROG} > "$TMPDIR/record.txt" 2>&1
-> +	perf script -i "$TMPDIR/perf.data" --fields brstacksym > "$TMPDIR/perf.script"
->  
->  	# example of branch entries:
->  	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
->  
-> -	set -x
-> -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"	$TMPDIR/perf.script
-> -	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
-> -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
-> -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
-> -	grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"		$TMPDIR/perf.script
-> -	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
-> -	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
-> -	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
-> -	set +x
-> -
-> +	expected=(
-> +		"^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"
-> +		"^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"
-> +		"^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$"
-> +		"^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"
-> +		"^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"
-> +		"^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"
-> +		"^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"
-> +		"^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"
-> +	)
-> +	for x in "${expected[@]}"
-> +	do
-> +		if ! tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep -E -m1 -q "$x"
-> +		then
-> +			echo "Branches missing $x"
-> +			err=1
-> +		fi
-> +	done
->  	# some branch types are still not being tested:
->  	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
->  }
-> @@ -57,14 +72,28 @@ test_filter() {
->  	test_filter_expect=$2
->  
->  	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
-> -
-> -	perf record -o $TMPDIR/perf.data --branch-filter $test_filter_filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
-> -	perf script -i $TMPDIR/perf.data --fields brstack | tr -s ' ' '\n' | grep '.' > $TMPDIR/perf.script
-> +	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- ${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
-> +	perf script -i "$TMPDIR/perf.data" --fields brstack > "$TMPDIR/perf.script"
->  
->  	# fail if we find any branch type that doesn't match any of the expected ones
->  	# also consider UNKNOWN branch types (-)
-> -	if grep -E -vm1 "^[^ ]*/($test_filter_expect|-|( *))/.*$" $TMPDIR/perf.script; then
-> -		return 1
-> +	if [ ! -s "$TMPDIR/perf.script" ]
-> +	then
-> +		echo "Empty script output"
-> +		err=1
-> +		return
-> +	fi
-> +	# Look for lines not matching test_filter_expect ignoring issues caused
-> +	# by empty output
-> +	tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep '.' | \
-> +	  grep -E -vm1 "^[^ ]*/($test_filter_expect|-|( *))/.*$" \
-> +	  > "$TMPDIR/perf.script-filtered" || true
-> +	if [ -s "$TMPDIR/perf.script-filtered" ]
-> +	then
-> +		echo "Unexpected branch filter in script output"
-> +		cat "$TMPDIR/perf.script"
-> +		err=1
-> +		return
->  	fi
->  }
->  
-> @@ -80,3 +109,6 @@ test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
->  test_filter "call,cond"		"CALL|SYSCALL|COND"
->  test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
->  test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
-> +
-> +cleanup
-> +exit $err
-> -- 
-> 2.49.0.rc1.451.g8f38331e32-goog
-> 
+For the existing Intel platforms, the dynamic constraints don't trigger
+the limit. A real fix is not required.
+
+However, for virtualization, VMM may give a weird CPUID enumeration to a
+guest. It's impossible to indicate what the weird enumeration is. A
+check is introduced, which can list the possible breaks if a weird
+enumeration is used.
+
+Check the dynamic constraints enumerated for normal, branch counters
+logging, and auto-counter reload.
+Check both PEBS and non-PEBS constratins.
+
+Closes: https://lore.kernel.org/lkml/20250416195610.GC38216@noisy.programming.kicks-ass.net/
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/intel/core.c | 156 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 148 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3a319cf6d364..5928523dc96f 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5257,6 +5257,151 @@ static void intel_pmu_check_event_constraints(struct event_constraint *event_con
+ 					      u64 fixed_cntr_mask,
+ 					      u64 intel_ctrl);
+ 
++enum dyn_constr_type {
++	DYN_CONSTR_NONE,
++	DYN_CONSTR_BR_CNTR,
++	DYN_CONSTR_ACR_CNTR,
++	DYN_CONSTR_ACR_CAUSE,
++
++	DYN_CONSTR_MAX,
++};
++
++static const char * const dyn_constr_type_name[] = {
++	[DYN_CONSTR_NONE] = "a normal event",
++	[DYN_CONSTR_BR_CNTR] = "a branch counter logging event",
++	[DYN_CONSTR_ACR_CNTR] = "an auto-counter reload event",
++	[DYN_CONSTR_ACR_CAUSE] = "an auto-counter reload cause event",
++};
++
++static void __intel_pmu_check_dyn_constr(struct event_constraint *constr,
++					 enum dyn_constr_type type, u64 mask)
++{
++	struct event_constraint *c1, *c2;
++	int new_weight, check_weight;
++	u64 new_mask, check_mask;
++
++	for_each_event_constraint(c1, constr) {
++		new_mask = c1->idxmsk64 & mask;
++		new_weight = hweight64(new_mask);
++
++		/* ignore topdown perf metrics event */
++		if (c1->idxmsk64 & INTEL_PMC_MSK_TOPDOWN)
++			continue;
++
++		if (!new_weight && fls64(c1->idxmsk64) < INTEL_PMC_IDX_FIXED) {
++			pr_info("The event 0x%llx is not supported as %s.\n",
++				c1->code, dyn_constr_type_name[type]);
++		}
++
++		if (new_weight <= 1)
++			continue;
++
++		for_each_event_constraint(c2, c1 + 1) {
++			bool check_fail = false;
++
++			check_mask = c2->idxmsk64 & mask;
++			check_weight = hweight64(check_mask);
++
++			if (c2->idxmsk64 & INTEL_PMC_MSK_TOPDOWN ||
++			    !check_weight)
++				continue;
++
++			/* The same constraints or no overlap */
++			if (new_mask == check_mask ||
++			    (new_mask ^ check_mask) == (new_mask | check_mask))
++				continue;
++
++			/*
++			 * A scheduler issue may be triggered in the following cases.
++			 * - Two overlap constraints have the same weight.
++			 *   E.g., A constraints: 0x3, B constraints: 0x6
++			 *   event	counter		failure case
++			 *   B		PMC[2:1]	1
++			 *   A		PMC[1:0]	0
++			 *   A		PMC[1:0]	FAIL
++			 * - Two overlap constraints have different weight.
++			 *   The constraint has a low weight, but has high last bit.
++			 *   E.g., A constraints: 0x7, B constraints: 0xC
++			 *   event	counter		failure case
++			 *   B		PMC[3:2]	2
++			 *   A		PMC[2:0]	0
++			 *   A		PMC[2:0]	1
++			 *   A		PMC[2:0]	FAIL
++			 */
++			if (new_weight == check_weight) {
++				check_fail = true;
++			} else if (new_weight < check_weight) {
++				if ((new_mask | check_mask) != check_mask &&
++				    fls64(new_mask) > fls64(check_mask))
++					check_fail = true;
++			} else {
++				if ((new_mask | check_mask) != new_mask &&
++				    fls64(new_mask) < fls64(check_mask))
++					check_fail = true;
++			}
++
++			if (check_fail) {
++				pr_info("The two events 0x%llx and 0x%llx may not be "
++					"fully scheduled under some circumstances as "
++					"%s.\n",
++					c1->code, c2->code, dyn_constr_type_name[type]);
++			}
++		}
++	}
++}
++
++static void intel_pmu_check_dyn_constr(struct pmu *pmu,
++				       struct event_constraint *constr,
++				       u64 cntr_mask)
++{
++	enum dyn_constr_type i;
++	u64 mask;
++
++	for (i = DYN_CONSTR_NONE; i < DYN_CONSTR_MAX; i++) {
++		mask = 0;
++		switch (i) {
++		case DYN_CONSTR_NONE:
++			mask = cntr_mask;
++			break;
++		case DYN_CONSTR_BR_CNTR:
++			if (x86_pmu.flags & PMU_FL_BR_CNTR)
++				mask = x86_pmu.lbr_counters;
++			break;
++		case DYN_CONSTR_ACR_CNTR:
++			mask = hybrid(pmu, acr_cntr_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
++			break;
++		case DYN_CONSTR_ACR_CAUSE:
++			if (hybrid(pmu, acr_cntr_mask64) == hybrid(pmu, acr_cause_mask64))
++				continue;
++			mask = hybrid(pmu, acr_cause_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
++			break;
++		default:
++			pr_warn("Unsupported dynamic constraint type %d\n", i);
++		}
++
++		if (mask)
++			__intel_pmu_check_dyn_constr(constr, i, mask);
++	}
++}
++
++static void intel_pmu_check_event_constraints_all(struct pmu *pmu)
++{
++	struct event_constraint *event_constraints = hybrid(pmu, event_constraints);
++	struct event_constraint *pebs_constraints = hybrid(pmu, pebs_constraints);
++	u64 cntr_mask = hybrid(pmu, cntr_mask64);
++	u64 fixed_cntr_mask = hybrid(pmu, fixed_cntr_mask64);
++	u64 intel_ctrl = hybrid(pmu, intel_ctrl);
++
++	intel_pmu_check_event_constraints(event_constraints, cntr_mask,
++					  fixed_cntr_mask, intel_ctrl);
++
++	if (event_constraints)
++		intel_pmu_check_dyn_constr(pmu, event_constraints, cntr_mask);
++
++	if (pebs_constraints)
++		intel_pmu_check_dyn_constr(pmu, pebs_constraints, cntr_mask);
++}
++
+ static void intel_pmu_check_extra_regs(struct extra_reg *extra_regs);
+ 
+ static inline bool intel_pmu_broken_perf_cap(void)
+@@ -5319,10 +5464,7 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
+ 	else
+ 		pmu->intel_ctrl &= ~(1ULL << GLOBAL_CTRL_EN_PERF_METRICS);
+ 
+-	intel_pmu_check_event_constraints(pmu->event_constraints,
+-					  pmu->cntr_mask64,
+-					  pmu->fixed_cntr_mask64,
+-					  pmu->intel_ctrl);
++	intel_pmu_check_event_constraints_all(&pmu->pmu);
+ 
+ 	intel_pmu_check_extra_regs(pmu->extra_regs);
+ }
+@@ -7734,10 +7876,8 @@ __init int intel_pmu_init(void)
+ 	if (x86_pmu.intel_cap.anythread_deprecated)
+ 		x86_pmu.format_attrs = intel_arch_formats_attr;
+ 
+-	intel_pmu_check_event_constraints(x86_pmu.event_constraints,
+-					  x86_pmu.cntr_mask64,
+-					  x86_pmu.fixed_cntr_mask64,
+-					  x86_pmu.intel_ctrl);
++	intel_pmu_check_event_constraints_all(NULL);
++
+ 	/*
+ 	 * Access LBR MSR may cause #GP under certain circumstances.
+ 	 * Check all LBR MSR here.
+-- 
+2.38.1
+
