@@ -1,127 +1,239 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B172522BA
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0901CA84;
+	Mon, 12 May 2025 19:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747079383; cv=none; b=bb57jfaeYGTRUo9aa3N+Vxy0RS6qLlMqlgvp7yR+fqqN2ZOgw8rrgKnlNT5v/Qk6plvCm9qQMrJY8/UuLlaKBiPH3MHSnNO9WRIhmKmzqLcl0hJ96brrurjEiQ/EdKnvWNF7+J6Pw0guTxFOFLAOSc+IEyClT4cO25zpFLU7q0k=
+	t=1747079423; cv=none; b=GYuLPl0wzswJQg9InElDKGzEeLTtLcZxmmBY2YLiVTBYvaSimZbQffYN/T2aey/querks3yl/X1FvJR+sGeqcsivVbf6oSCJ4wwjPRrFvRwdl0KDK2XL+2Im9H5HpYHXX+xx6FKEn3eKVXw9t9x1Xxqt3Zzp8nE+0+t8awlMuLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747079383; c=relaxed/simple;
-	bh=N17w45e9OObph1kj0UgkzzKxjQ5h8eJTUcwmELzcFU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eKLwLLNINj2DFvpvW5cTXtQfS5QH4Yx8WXJ9He7elKzQ+EgufMYRuWYUCSHrP5QqwGuAntxoxDxMKqYBCjWl2rzAssLM4AG+IrogVzx95Wsc4rm0IeFR+X7uIV1LgBaHjAd2O3/iude9taBws4XrGrd1lLqA0SK+V4GHkiimYeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fY/sjf8m; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747079423; c=relaxed/simple;
+	bh=yQi4reQtnYQYLf5UFhxYGFIxYYxyY/Zpe3d6jmIEJyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFa5tO/lrkrYNxry5IvnihfaDlBJAP6H9uDXWVs9xl5gKDVy6dN9M+F9WtdMiVb7/hUnj7+IPrejHswz0evkW9eZHzOVp38K2fbtjVHH3okIl6XtsUMQyFV0LTw0IdXbtPfWU2Xf9WQKz7QyFBYFztCUJveUuPYor762RAU4dtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mHZLs4Yu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fY/sjf8m"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5568355ffso492153385a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747079380; x=1747684180; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dMTXikdJJ7h9MO7B+FNlh6XzfJ9Orfz34hUTKNgSUeg=;
-        b=fY/sjf8mUzoJ5vbRAcknYqZvLFtTXCspxzY0lfvs2JUoU49Q3HyIu63TPYpZYqmDVu
-         419ll0l15GseCUOwW1GIksIXOUcOFsZrVU6IXfQuixhzZI/Sk23VV1XJzEwQQOwE8Y1y
-         oA32pRYtsiWlZyhnliEhXPcvzLLYEg2EV4buGcZyFCLW6UNKp1Nb7TI0vnk2Dbl156Up
-         pNRDvKu7ybMtIGWY0HjGcZJKM1qNZk3x5lTR3kJLxOrWLkSBfI8BtuoE3vXxBQbSonZ3
-         gexeilkyLfBkmuRhr8XWr56fHKx9Atjif0vnV6F/I6cy/jGZ3sMjClWDzkKxx6B3XyrS
-         bMmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747079380; x=1747684180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dMTXikdJJ7h9MO7B+FNlh6XzfJ9Orfz34hUTKNgSUeg=;
-        b=Ytn7XH1QU2DqXpywE/csDA99DRmPjGmj9yMzkCeq/Y568QXgILE70zOvxSgwkiokvx
-         Sc0QHOEtHEifZXDjKxI5wlERW1VcgDLMbw81lCxs28k6rfvKcdg+gsGL3Qe3zEiiWb59
-         MFT9zufOLLZP1s12fWV/DlJVpZcoO8GUGAsYNDrV5JCpUe2FaPNTCxYqPJj3uWZ8dV1l
-         2WLDdzNKU2sXMbAB+roaTo2jwgqP0ULoXmqUHovTejLqFStsUcXwUdmKK5hc+Ik8NioL
-         bkbrrqY1K0b9N51frfDqsjmx3+Jwa4084GJpJZ2lQjlpyWoVMpG4LIOgprDcb66iA36c
-         D67Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWJPoNL+BkQ8XmIDyDKASJs0kqWWOAXK61EwXRKyj5irK3LQgUJHBlGWdE+O9/3sOSwIbYTyVjvYvBwTzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIheRVymQXyFWWB1C3tjLo8eb3YzvjBt4EdflMlT+mfyvXPyjA
-	UN/dexFv7TDTSidkJBPbdTX/meKGlH6ziisXNePQzOck2uyjZF+pTR1P9uxEEXfWXDepwB8FT2R
-	A12t+TJzH3UB+MvQQbYwAGU+bKYk=
-X-Gm-Gg: ASbGnctmRYJ9DdRf0qocp/R5fUTu9NVlkFfKuZZ7gj7HDpMB+FDhj4d+HDFls13GBYK
-	1Px6MpBM4Se9J8FFoS4FF0NM6eZlySzNCj/lpQKOuEI//J/hw+8jw0d+mAxsSMWePrPpXseviVe
-	BfuOe1GIfl/JsAN59pFguZd7yeAyt+oFjOyL+omK1udI0BNZaA
-X-Google-Smtp-Source: AGHT+IGrpjrSZ4lzhZLxWLUqWJbiRuSjy7nh4CVBwDjunzKDGXsvF/U9FV+Z8JwBH8udn001TPY5JktJ2bqNTe9svcc=
-X-Received: by 2002:a05:6214:2405:b0:6f4:c824:9d4a with SMTP id
- 6a1803df08f44-6f6e47c339cmr219478296d6.13.1747079380108; Mon, 12 May 2025
- 12:49:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mHZLs4Yu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C87A1C4CEE7;
+	Mon, 12 May 2025 19:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747079423;
+	bh=yQi4reQtnYQYLf5UFhxYGFIxYYxyY/Zpe3d6jmIEJyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mHZLs4YuaJOSe+zdghR3qGbYnycC0C4TjNNE5E19H1DHJvubrA9JUp6g0euX6nWj1
+	 15BrdBv7QCNBqbxRrIxFZU5ecUv6RPG3tX9mzd0+DUETJW7gxwTV3XK0sdIxmjtwCe
+	 Jylp0xSv/rRDpioRA7yfXKXrISaFVu/0W0z/Vo0S9ro2sWyzvQKxWpXkleoT2h01fi
+	 TQ8pkmF/0upftdTajVmBR/VQnlXi5ETy5qjVi1wvbnEklEaB/Jcy4uZuml/qKAUV6o
+	 EeIp/68edQ/g/bsXOOrw63ePQwXKFFnO/v81q0gX5Prpp5aHnamcAc6E6Fm28uVrw7
+	 7jXoeK2t1LTyg==
+Date: Mon, 12 May 2025 14:50:20 -0500
+From: Rob Herring <robh@kernel.org>
+To: David Bauer <mail@david-bauer.net>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: input: add Semtech SX951x binding
+Message-ID: <20250512195020.GA3882546-robh@kernel.org>
+References: <20250505203847.86714-1-mail@david-bauer.net>
+ <cbf42385-9803-4bea-bf99-a6f31f1454f6@linaro.org>
+ <8c9e5e74-966b-4969-9776-7655863fd197@david-bauer.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306205011.784787-1-nphamcs@gmail.com> <aCJF74ILruXJOAkQ@casper.infradead.org>
-In-Reply-To: <aCJF74ILruXJOAkQ@casper.infradead.org>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Mon, 12 May 2025 15:49:29 -0400
-X-Gm-Features: AX0GCFvdaGZ9PaaGs7rOIL1C_GePTsIggpX1S9q_GEMZu7HHQ7dObqQsP2beVKs
-Message-ID: <CAKEwX=PZkb4+nA0YL_jSmr66roPoAiw5ZEN9nV9KqdwymAw-rQ@mail.gmail.com>
-Subject: Re: [PATCH v4] page_io: zswap: do not crash the kernel on
- decompression failure
-To: Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosryahmed@google.com, 
-	yosry.ahmed@linux.dev, chengming.zhou@linux.dev, linux-mm@kvack.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c9e5e74-966b-4969-9776-7655863fd197@david-bauer.net>
 
-On Mon, May 12, 2025 at 3:03=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Thu, Mar 06, 2025 at 12:50:10PM -0800, Nhat Pham wrote:
-> > -static void zswap_decompress(struct zswap_entry *entry, struct folio *=
-folio)
-> > +static bool zswap_decompress(struct zswap_entry *entry, struct folio *=
-folio)
->
-> Hm, why do it this way?  I had it as:
->
-> -static void zswap_decompress(struct zswap_entry *entry, struct folio *fo=
-lio)
-> +static int zswap_decompress(struct zswap_entry *entry, struct folio *fol=
-io)
-> ...
-> +       err =3D crypto_acomp_decompress(acomp_ctx->req);
-> +       err =3D crypto_wait_req(err, &acomp_ctx->wait);
-> +       if (!err && acomp_ctx->req->dlen !=3D PAGE_SIZE)
-> +               err =3D -EIO;
->
-> which allows us to return something more meaningful than -EIO.  Or is
-> doing that a bad idea and we should squash all decompression failures
-> to EIO?
+On Tue, May 06, 2025 at 12:05:43PM +0200, David Bauer wrote:
+> Hi Krzysztof,
+> 
+> thanks for the review.
+> 
+> On 5/6/25 08:21, Krzysztof Kozlowski wrote:
+> > On 05/05/2025 22:38, David Bauer wrote:
+> > > Add device-tree binding for the Semtech SX9512/SX9513 family of touch
+> > > controllers with integrated LED driver.
+> > > 
+> > > Signed-off-by: David Bauer <mail@david-bauer.net>
+> > 
+> > You CC-ed an address, which suggests you do not work on mainline kernel
+> > or you do not use get_maintainers.pl/b4/patman. Please rebase and always
+> > work on mainline or start using mentioned tools, so correct addresses
+> > will be used.
+> I'm a bit unsure what you are referring to - maybe I've set the options
+> for get_maintainer.pl wrong, but i use
+> 
+> get_maintainer.pl --nogit --nogit-fallback --norolestats --nol
+> 
+> to determine TO recipients and
+> 
+> get_maintainer.pl --nogit --nogit-fallback --norolestats --nom
+> 
+> for CC destinations.
+> 
+> Granted, my tree was a bit out of date but it was from mainline
+> and after rebase both commands returned consistent results.
+> 
+> Hope you can provide me with some guidance there.
 
-Not a bad idea, just no usecase yet. From the POV of
-zswap_decompress()'s callers, any decompression failure is handled the
-same way, no matter the cause.
+Probably that I don't use 'robh+dt' for a while now. Just 'robh'.
 
-Where it might be useful is the debug print statement right below
-this. However, zstd and lz4 only return 0 or -EINVAL, I think - not
-super useful.
+> > 
+> > Please use scripts/get_maintainers.pl to get a list of necessary people
+> > and lists to CC (and consider --no-git-fallback argument, so you will
+> > not CC people just because they made one commit years ago). It might
+> > happen, that command when run on an older kernel, gives you outdated
+> > entries. Therefore please be sure you base your patches on recent Linux
+> > kernel.
+> > 
+> > Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> > people, so fix your workflow. Tools might also fail if you work on some
+> > ancient tree (don't, instead use mainline) or work on fork of kernel
+> > (don't, instead use mainline). Just use b4 and everything should be
+> > fine, although remember about `b4 prep --auto-to-cc` if you added new
+> > patches to the patchset.
+> > 
+> > 
+> > > ---
+> > >   .../bindings/input/semtech,sx951x.yaml        | 180 ++++++++++++++++++
+> > >   1 file changed, 180 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/input/semtech,sx951x.yaml b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+> > > new file mode 100644
+> > > index 000000000000..e4f938decd86
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+> > > @@ -0,0 +1,180 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/input/semtech,sx951x.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Semtech SX9512/SX9513 based capacitive touch sensors
+> > > +
+> > > +description: |
+> > 
+> > Do not need '|' unless you need to preserve formatting.
+> > 
+> > > +  The Semtech SX9512/SX9513 Family of capacitive touch controllers
+> > > +  with integrated LED drivers. The device communication is using I2C only.
+> > > +
+> > > +maintainers:
+> > > +  - David Bauer <mail@david-bauer.net>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - semtech,sx9512
+> > > +      - semtech,sx9513
+> > 
+> > Devices are not compatible? What are the differences?
+> 
+> The SX9513 is a cost-reduced version which does not
+> support proximity sensing. With the current support
+> of the driver they work identical. Should i add this
+> information as a comment?
 
-https://github.com/torvalds/linux/blob/master/crypto/zstd.c#L163-L165
-https://github.com/torvalds/linux/blob/master/crypto/lz4.c#L61
+In the 'description' above, but not the driver support part.
 
-Not sure about other compressors.
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  '#address-cells':
+> > > +    const: 1
+> > > +
+> > > +  '#size-cells':
+> > > +    const: 0
+> > > +
+> > > +  poll-interval:
+> > > +    default: 100
+> > > +    description: |
+> > 
+> > Do not need '|' unless you need to preserve formatting. Same comment
+> > everywhere.
+> > 
+> > > +      The polling interval for touch events in milliseconds.
+> > 
+> > Missing -ms property unit suffix... unless you are using existing
+> > property from common schema, but I do not see any reference (and thus
+> > unevaluatedProperties at the end).
+> > 
+> > > +
+> > > +patternProperties:
+> > > +  "^channel@[0-7]$":
+> > > +    $ref: input.yaml#
+> > > +    type: object
+> > > +    description: |
+> > > +      Each node represents a channel of the touch controller.
+> > > +      Each channel provides a capacitive touch sensor input and
+> > > +      an LED driver output.
+> > > +
+> > > +    properties:
+> > > +      reg:
+> > > +        enum: [0, 1, 2, 3, 4, 5, 6, 7]
 
->
-> (also i really dislike the chained approach:
->
->         decomp_ret =3D crypto_wait_req(crypto_acomp_decompress(acomp_ctx-=
->req), &acomp_ctx->wait);
->
-> that's much harder to understand than the two lines i have above)
+maximum: 7
 
-I can send a style fix sometimes if people dislike this - no big deal :)
+> > > +
+> > > +      linux,keycodes:
+> > > +        maxItems: 1
+> > > +        description: |
+> > > +          Specifies an array of numeric keycode values to
+> > > +          be used for the channels. If this property is
+> > > +          omitted, the channel is not used as a key.
+> > > +
+> > > +      semtech,cin-delta:
+> > 
+> > Use proper unit suffix and express it in pF.
+> 
+> To represent 2.3 and 3.8 pF, would it be better to represent in
+> femtofarad?
 
-BTW, hopefully you don't mind the Suggested-by: tag. I know it
-deviated a bit from your original suggestion, but the main spirit of
-that suggestion remains, so I feel like I should credit you and Yosry.
+Yes.
+
+
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        minimum: 0
+> > > +        maximum: 3
+> > > +        default: 3
+> > > +        description: |
+> > > +          The capacitance delta which is used to detect a touch
+> > > +          or release event. The property value is mapped to a
+> > > +          farad range between 7pF and 2.3pF internally. The delta
+> > > +          becomes smaller the higher the value is.
+> > > +
+> > > +      semtech,sense-threshold:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        minimum: 0
+> > > +        maximum: 255
+> > > +        default: 4
+> > > +        description: |
+> > > +          The threshold value after which the channel detects a touch.
+> > > +          Refer to the datasheet for the internal calculation of the
+> > > +          resulting touch sensitivity.
+> > > +
+> > > +      led:
+> > 
+> > I think subnode is here not needed. This should be part of the channel,
+> > probably.
+> 
+> Just to be sure - you mean to have a property "led" upon which instructs
+> the channel to be used to drive an LED and include the LED specific
+> properties in the node of the channel?
+
+Actually, I think it is fine as-is if the LED driver works 
+simultaneously with the touch input and isn't mutually exclusive. The 
+'led' node is for the LED. The parent node is the driver/controller.
+
+If they are mutually exclusive, then I'd say you want channel@[0-7] and 
+led@[0-7] nodes at the same level.
+
+Rob
+
