@@ -1,184 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823CC299A8B;
-	Mon, 12 May 2025 21:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6007324EF6D
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747087081; cv=none; b=RxKax7cqOE7w6U9zK7h1pUE1sKEWihHqyKw4lrHi0aJpP/OvSdMv84uKjtm491H+y/ALW/Y7kFQZeqLrt4svBuqcJv/s4OZcnOt5muEg3GgjqmRHGT9Jf5Y2VD2uQs7Z8J/AyGS5Aim1ZPZ6HCBTcPWZT8xswDqndzhAPWNld0g=
+	t=1747087173; cv=none; b=cVgsrAz4TkQpuhmneCD5vP4rJGkk4X6QYWIp5IADZw49egr9juTw37KsNyyLL878qdjJJ2HvKscC5tICx+N4zj1LxZIjC7iHk8C3e1P8hz+U7QlD8BGeg6hNaxputnm8tvFLPKdYCot334qWmMMZebXcnsGDO7qUFmYTuzed3QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747087081; c=relaxed/simple;
-	bh=CtWkXewTUGFLfTtKdEgy6eY4PV7fvG7VEA8GNqqqq58=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P60GFCubXzgKW7CoAkJBPYBag44xTiGflsbXtogYCv47atcBiKcKERAz6CMqN69ZFz999fvjWUjPrkIdnib6LDEVPAUQBgD1GxqKL0WX4elEva9B28DKP4a43FbyJSQojtJmPvkBMrMWX6P1XQzszSlqbYegtdhuZwvLtwHk6sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TorKSvHM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747087173; c=relaxed/simple;
+	bh=xkYHrqmdQlLIXwChgymo7Naf+IJIZhZ+EQbUpaq9llc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lzVv5ogluTD6gCvVulfbQWhqlqch1CAWIPV/RTrleitG6dJBBjYdUr/qJuWhN3rQQVqJe8Oo+xFhakzaaqEbX5VBDSDtkbPR9sVlIYfWVRtB+humSOvHfho7fgAhac/PZCiW9zWm/Nz/atN9cQcbeln7ib18bSdjsCjCFh9nbRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B5ujIh1s; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TorKSvHM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1FB5C4CEE7;
-	Mon, 12 May 2025 21:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747087080;
-	bh=CtWkXewTUGFLfTtKdEgy6eY4PV7fvG7VEA8GNqqqq58=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TorKSvHMtSY8JZ3Cxs1G/ulcZ/l56OdbmdAN9k1v8usrd9axbNraxUtWKdb/CcRN6
-	 l8sBprsr4exmnE2evYIYvqwhoGDzd4fu1gkEs/7+uOOKfnNeJi7CALzMRHEEKMt0PZ
-	 zzVxUUWcKWYlJeLbfcYfBu2t6ukWil+/YdvS4/ipk1pqYWWXsIICDRr0yN/tOPMeOK
-	 1k05RYMK1Z8VUUfRyFWm+ZSNOb99Jah6olHDUqM4CzlL1LQgbIfaDU0ObuVRPQcs6d
-	 46ij1LF06+7Ox2+hLDGjLUxhcevJ80DCLt2A5uaNMcJule4pPLiKiVro9qdM/P18LA
-	 spNuud6YiiQ9w==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: ata: Convert arasan,cf-spear1340 to DT schema
-Date: Mon, 12 May 2025 16:57:56 -0500
-Message-ID: <20250512215757.4179283-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B5ujIh1s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747087170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WIa9wdCgF8ndkq4uSm4Tu2qsgVXpc321rtvVy6nGMgo=;
+	b=B5ujIh1soM7QQOjj/hjPbEXLLGFRhCZ4ui4Oal3wWFjRPOXJO+0awGijBs45cFEtr/lTTg
+	hXPslNzCP6ILsaYXXdQZTQA3Id/5WjYMCWsRFkFPXKOh3mYUWw0+K7SizhSCuzE77sUUL6
+	70zm1l+rTQQIyInTV12UvwYOtaaDniI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-112--yZJPhBhOUWzGvDq3jPpVQ-1; Mon, 12 May 2025 17:59:28 -0400
+X-MC-Unique: -yZJPhBhOUWzGvDq3jPpVQ-1
+X-Mimecast-MFC-AGG-ID: -yZJPhBhOUWzGvDq3jPpVQ_1747087168
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a206f05150so1140409f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:59:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747087167; x=1747691967;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WIa9wdCgF8ndkq4uSm4Tu2qsgVXpc321rtvVy6nGMgo=;
+        b=aoexuiTTPh3h7PeipgctEBlK2oZ/ThBfK9/txMCjvNkrjsyesreuiyjAv6ARaEnTTX
+         KcejA6Gxg+k6+2mprVcU/JpJf8A4EQ9FSVaMPFd7zo4FGPkTor+Au5cx6/jwZF9Z8BXm
+         vwWGU3MScPbRK1Nq2GfvAe+4YC0nEm4D2n8gIUTD2vlJVWFAhNW0TUsNfzmfeCaFIrkT
+         DUR6jPQ3yOFTmfaDbQ0P29Om2sPChj0qax+JzuxjoLnpcyzXsyFqDg4/kis7tCdRNbqu
+         QgyWqO/yb4cXh41TXzITwTcRCqcS6AMathq48Zlx5sC2dLFUUM8uRwCKgwSy94a964Su
+         AIJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXp+Z545wnn37XOROplentdNufqqfDE0GppiSJfkkU+3W89s3rjUstrlo8vYMa5O2yGHTzxT2kdFBeXFO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzajjp49/OLuWpbl6+mkw7lwnM+kzaGJL88Yyd5uVncCj9ITcjX
+	8N7D8tRkkB6f+bQZu3PggJkcFjLuMxcej304knFAkTvNW5THKnDgghE96voWTQHb7Qm/DTe6QL4
+	HZD2wi+2HI9sXhfQWnXUH0WDFAlwNMg4NKE0uV3IHRN0BCmrr/dStao4uA48Xxw==
+X-Gm-Gg: ASbGncvRuhMnH1dcc4vNWylQPUvRu+eVrM9t5Jx2O2bP59OcOJng6f5XiISnUwsu0zB
+	rGHU6Wc35cEjyk3xl/Lal4DZx+OEWlfyXqBamK9p4d2E1P6qRLGwyy3cp+6at4xc8VwX9kG9Lqx
+	maK4sYA23m34SseqjpevZ0tTMZwm7f/u7pOnqyaGlotvjPcsQj2AJvMuRu8FobrwMMiS+zqEAGf
+	FGgbYplo/ULIVHQOd6KUb3Hi6wCBgFDhejHqxav/CKz6qm4Dhp3NP5JvfYmcJXI7I2nPigtTmme
+	cdjiUT/XLtoboofU7gvi3whWrsOFTgMUl9uCUhE/tQnuwgXz1KxAo6spMMrJbloD0HHWWF5hUH4
+	dR/xTSvROe7Tv2Lww5ytlFdfJTjAY068xfW+EEic=
+X-Received: by 2002:a5d:588a:0:b0:3a0:b2ff:fb00 with SMTP id ffacd0b85a97d-3a1f64b4557mr10225474f8f.44.1747087167671;
+        Mon, 12 May 2025 14:59:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFXZLVEy2AMg6+TJB/yJT5QNmiZbsx9yvU/SgKIjl83sV/WZpbpykp3nPL4GY/l6Cs/+499AA==
+X-Received: by 2002:a5d:588a:0:b0:3a0:b2ff:fb00 with SMTP id ffacd0b85a97d-3a1f64b4557mr10225466f8f.44.1747087167294;
+        Mon, 12 May 2025 14:59:27 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4a:5800:f1ae:8e20:d7f4:51b0? (p200300d82f4a5800f1ae8e20d7f451b0.dip0.t-ipconnect.de. [2003:d8:2f4a:5800:f1ae:8e20:d7f4:51b0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5a4sm13747072f8f.81.2025.05.12.14.59.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 14:59:26 -0700 (PDT)
+Message-ID: <bb31c07a-0b70-4bca-9c59-42f6233791cd@redhat.com>
+Date: Mon, 12 May 2025 23:59:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: AF_UNIX/zerocopy/pipe/vmsplice/splice vs FOLL_PIN
+To: David Howells <dhowells@redhat.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Eric Dumazet <edumazet@google.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ John Hubbard <jhubbard@nvidia.com>, Christoph Hellwig <hch@infradead.org>,
+ willy@infradead.org, Christian Brauner <brauner@kernel.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, Miklos Szeredi <mszeredi@redhat.com>,
+ torvalds@linux-foundation.org, netdev@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1069540.1746202908@warthog.procyon.org.uk>
+ <165f5d5b-34f2-40de-b0ec-8c1ca36babe8@lunn.ch>
+ <0aa1b4a2-47b2-40a4-ae14-ce2dd457a1f7@lunn.ch>
+ <1015189.1746187621@warthog.procyon.org.uk>
+ <1021352.1746193306@warthog.procyon.org.uk>
+ <2135907.1747061490@warthog.procyon.org.uk>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <2135907.1747061490@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Convert the Arasan/SPEAr Compact Flash Controller to DT schema format.
+On 12.05.25 16:51, David Howells wrote:
+> I'm looking at how to make sendmsg() handle page pinning - and also working
+> towards supporting the page refcount eventually being removed and only being
+> available with certain memory types.
+> 
+> One of the outstanding issues is in sendmsg().  Analogously with DIO writes,
+> sendmsg() should be pinning memory (FOLL_PIN/GUP) rather than simply getting
+> refs on it before it attaches it to an sk_buff.  Without this, if memory is
+> spliced into an AF_UNIX socket and then the process forks, that memory gets
+> attached to the child process, and the child can alter the data
 
-The "clock-frequency" property isn't actually used. Add a single
-"clocks" entry as the Linux driver supports a single clock though the
-platform still doesn't have clocks in DT.
+That should not be possible. Neither the child nor the parent can modify 
+the page. Any write attempt will result in Copy-on-Write.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../bindings/ata/arasan,cf-spear1340.yaml     | 70 +++++++++++++++++++
- .../devicetree/bindings/ata/pata-arasan.txt   | 37 ----------
- 2 files changed, 70 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/arasan,cf-spear1340.yaml
- delete mode 100644 Documentation/devicetree/bindings/ata/pata-arasan.txt
+The issue is that if the parent writes to some unrelated part of the 
+page after fork() but before DIO completed, the parent will trigger 
+Copy-on-Write and the DIO will essentially be lost from the parent's POV 
+(goes to the wrong page).
 
-diff --git a/Documentation/devicetree/bindings/ata/arasan,cf-spear1340.yaml b/Documentation/devicetree/bindings/ata/arasan,cf-spear1340.yaml
-new file mode 100644
-index 000000000000..4d7017452dda
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/arasan,cf-spear1340.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ata/arasan,cf-spear1340.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Arasan PATA Compact Flash Controller
-+
-+maintainers:
-+  - Viresh Kumar <viresh.kumar@linaro.org>
-+
-+properties:
-+  compatible:
-+    const: arasan,cf-spear1340
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  arasan,broken-udma:
-+    description: UDMA mode is unusable
-+    type: boolean
-+
-+  arasan,broken-mwdma:
-+    description: MWDMA mode is unusable
-+    type: boolean
-+
-+  arasan,broken-pio:
-+    description: PIO mode is unusable
-+    type: boolean
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    items:
-+      - const: data
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+allOf:
-+  - if:
-+      not:
-+        required:
-+          - arasan,broken-udma
-+          - arasan,broken-mwdma
-+    then:
-+      required:
-+        - dmas
-+        - dma-names
-+
-+examples:
-+  - |
-+    cf@fc000000 {
-+        compatible = "arasan,cf-spear1340";
-+        reg = <0xfc000000 0x1000>;
-+        interrupts = <12>;
-+        dmas = <&dma 23>;
-+        dma-names = "data";
-+    };
-diff --git a/Documentation/devicetree/bindings/ata/pata-arasan.txt b/Documentation/devicetree/bindings/ata/pata-arasan.txt
-deleted file mode 100644
-index 872edc105680..000000000000
---- a/Documentation/devicetree/bindings/ata/pata-arasan.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--* ARASAN PATA COMPACT FLASH CONTROLLER
--
--Required properties:
--- compatible: "arasan,cf-spear1340"
--- reg: Address range of the CF registers
--- interrupt: Should contain the CF interrupt number
--- clock-frequency: Interface clock rate, in Hz, one of
--       25000000
--       33000000
--       40000000
--       50000000
--       66000000
--       75000000
--      100000000
--      125000000
--      150000000
--      166000000
--      200000000
--
--Optional properties:
--- arasan,broken-udma: if present, UDMA mode is unusable
--- arasan,broken-mwdma: if present, MWDMA mode is unusable
--- arasan,broken-pio: if present, PIO mode is unusable
--- dmas: one DMA channel, as described in bindings/dma/dma.txt
--  required unless both UDMA and MWDMA mode are broken
--- dma-names: the corresponding channel name, must be "data"
--
--Example:
--
--	cf@fc000000 {
--		compatible = "arasan,cf-spear1340";
--		reg = <0xfc000000 0x1000>;
--		interrupt-parent = <&vic1>;
--		interrupts = <12>;
--		dmas = <&dma-controller 23>;
--		dma-names = "data";
--	};
+
+> probably by
+> accident, if the memory is on the stack or in the heap.
+> 
+> Further, kernel services can use MSG_SPLICE_PAGES to attach memory directly to
+> an AF_UNIX pipe (though I'm not sure if anyone actually does this).
+> 
+> (For writing to TCP/UDP with MSG_ZEROCOPY, MSG_SPLICE_PAGES or vmsplice, I
+> think we're probably fine - assuming the loopback driver doesn't give the
+> receiver the transmitter's buffers to use directly...  This may be a big
+> 'if'.)
+> 
+> Now, this probably wouldn't be a problem, but for the fact that one can also
+> splice this stuff back *out* of the socket.
+> 
+> The same issues exist for pipes too.
+> 
+> The question is what should happen here to a memory span for which the network
+> layer or pipe driver is not allowed to take reference, but rather must call a
+> destructor?  Particularly if, say, it's just a small part of a larger span.
+> 
+> It seems reasonable that we should allow pinned memory spans to be queued in a
+> socket or a pipe - that way, we only have to copy the data once in the event
+> that the data is extracted with read(), recvmsg() or similar.  But if it's
+> spliced out we then have all the fun of managing the lifetime - especially if
+> it's a big transfer that gets split into bits.  In such a case, I wonder if we
+> can just duplicate the memory at splice-out rather than trying to keep all the
+> tracking intact.
+> 
+> If the memory was copied in, then moving the pages should be fine - though the
+> memory may not be of a ref'able type (which would be fun if bits of such a
+> page get spliced to different places).
+> 
+> I'm sure there is some app somewhere (fuse maybe?) where this would be a
+> performance problem, though.
+> 
+> And then there's vmsplice().  The same goes for vmsplice() to AF_UNIX or to a
+> pipe.  That should also pin memory.  It may also be possible to vmsplice a
+> pinned page into the target process's VM or a page from a memory span with
+> some other type of destruction.
+
+IIRC, vmsplice() never does that optimization for that direction (map 
+pinned page into the target process). It would be a mess.
+
+But yes, vmsplice() should be using FOLL_PIN|FOLL_LONGTERM. Deprecation 
+is unlikely to happen, I'm afraid :(
+
 -- 
-2.47.2
+Cheers,
+
+David / dhildenb
 
