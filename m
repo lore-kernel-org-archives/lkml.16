@@ -1,102 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC33019E82A;
-	Mon, 12 May 2025 09:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2E814AD3F;
+	Mon, 12 May 2025 09:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041273; cv=none; b=WYQhdHY8fipo7vcumC+AK3aevtKwjGPfduyQrNckCgnz+g1s+PBE5wTHjTQccGnUh0cUQydoOU7muHrnrU3pQnj8dJqt3X1RfulgFKBb01Tt/52vkBNSk2Y8w58aunha0De5fOyjCtfKcVFxsHs3S/+aXX1CFMH6X5ktdDFbRAM=
+	t=1747041354; cv=none; b=ASYfdLSVF6gWb1kq5GkuyiZknaGYKi+nZov5PrsDTlt9Jyq9jpb+mS/CAZTWNlSl50bNl3wByioC47tp7xZdnSvdgUPCZeIUy6RQAkTDTB4P2HjaT8km8oCMy7QmKSeXfbza3mlA0sGpGoEXoVzeQiRw6RglCLrIZHF0+cv34dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041273; c=relaxed/simple;
-	bh=HgA23X09EOQHUFdqhgBCZBj6qKS3pvzLCSZC53aWWgQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=syBb6RsRtIw5lF8VPL19+FgtKTSwT60BuaEOxs7CGqrTQ+rkjl7qWTZ8L3Mz5hltfVZ/jnFiEZeN7fHYPPl1vN12d4h0BG9XypvAQ7195zFLfT5zsfKRksqKmNWTqmEzZ31/fp3LbPNjmnfmzbpd7cXOH6Vl7zjbA3NbJCYUEoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxApOAvI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747041354; c=relaxed/simple;
+	bh=s1SdU+enVUMgwXhMSQPUMoofHMLBjpH8AGzNpTBb3zc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ovfWLZRS+Sj1+DVbpxjF1YffoOS+QHaIKl4Z/DSkAO6zekSW0tOu654Ipm+TmCeFIJaxi0bMuJn3WVpxqdZc3tkKZC7ugHjV1Gy0+sfJdXMb839GCRCXJ5zOnUdEZG17UoIlTqkuQeaV0IaJ9diFb76ulEHINN0UqhmP242Tzws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WrLk8Ue1; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxApOAvI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B42CC4CEF3;
-	Mon, 12 May 2025 09:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747041273;
-	bh=HgA23X09EOQHUFdqhgBCZBj6qKS3pvzLCSZC53aWWgQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WxApOAvI5khzXSx79Zsp5Hahc/Z6tpb2T/q5qG4jaPyzbkjEGiU6jYZzQw+cy7FYB
-	 merz+lo5ZejorU9fQWuEsMvsGx6qsAC91DHkpSc9R2kUIbUdqxbDKbMDtVcQqSt0kO
-	 dY2xTRqejucrFyZ/VJ8uaj/6oH3Bltczpui7AmYboiNVTgGYI0eAFIC52RxdGWHFec
-	 BdGyTstPpAEqrk02K9rN6wU4qtL77DwhWX+EdUpo1elZJKBN75Pm8h2obpm8W/vT7v
-	 wWxE5Ydqo0pc+9VCNeOgenxnEv7j/ZiH67qKxh0/lGpbicV31UWhGmCVxQd1JNoExV
-	 su9zR7u5i0uOg==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30effbfaf61so51316831fa.0;
-        Mon, 12 May 2025 02:14:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVRvEW0NyObkeqjnL2756mmdPG1v32/TYdBo0nPNI0nqz+157+GFk4rnMq9rIQTAOlmnoBsXorNZ7umrGsGIoI=@vger.kernel.org, AJvYcCW1CP66mtNkX2uKERhM3dBpnUvxuiK3MjSDH8D6Wj5WXrebqwtOkpYY9vRSVXSCl+lR5vqXh8d/1rqkM+m4@vger.kernel.org, AJvYcCWkiiikO9Jlgh0vBz014p2F+WVDGB8CoNEhvtKICRrwQEFYmxbc5NByCCi5RXeKCQehXIlSmosP64I=@vger.kernel.org, AJvYcCXCwG6JidX90EnajByysIDYD8vYj7fJs3BOXHg90+PXbf8CaZ60PkYumlkGGdyKu86/Bo3pYOJraMrjrCfO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkCsbXNgPvjRLl+yZK3G73I92P1A/SzrsygQrtb4AJgEXjEFXK
-	wqxkPgjSnBtqRM4P8DyXenZSHInH7SKg4SnzXAsSM6iQfUoR5d5ttnx1ECiOhKbHoN74adPhdUd
-	0017gwhmTMkPqAZ8WefOywAXKDww=
-X-Google-Smtp-Source: AGHT+IHPEQt2Y0pz/cmLWyo9qzhRO7GhKCjDosc6S/Df5anYnXykwsDnAOCfso46oOY/2ZUEpv40Ux2NDtYMxB8jNDA=
-X-Received: by 2002:a05:651c:3254:20b0:326:cb09:8220 with SMTP id
- 38308e7fff4ca-326cb098720mr20785581fa.16.1747041271801; Mon, 12 May 2025
- 02:14:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WrLk8Ue1"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BM01QP027520;
+	Mon, 12 May 2025 09:15:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=Vw1BmvQRyJMoGE7KAHnrMxzfKsxMOp3+NcEdr10Ko
+	4c=; b=WrLk8Ue1fqUFIr+LUgSpyBwCVUQY4OrlOMcLaoYZLp/Sfhh/FVt7LMXcu
+	iOPTNpktxgSbugX/+6sYiJ3ESltGnRTKayWI0N5KHtPCvflWuwpRHgWyhFJc24H0
+	EYBoByGyZl+rHq7ADWmgTzqFWg4bbBL8cz9xVDDu4oEI1iTMhLWIh7axm4PvDd2u
+	u0LjSQAnEMRMcxbjpDR3YmkjPRuq9E07rC9tAhwVFBbON5IIhl2cFUeaezPefDMr
+	1t5Q6p9LyBdTGtjAckdGZcumOkwnGFzMrIPuWqLZLaSzHEo0wbVT3h7/I4I/yAjB
+	3Mym4OrtMDBom7/H1otB/thMJ2o5A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46k1k6jd8t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:15:21 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54C9F4lA029758;
+	Mon, 12 May 2025 09:15:20 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46k1k6jd8q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:15:20 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54C93a03016981;
+	Mon, 12 May 2025 09:15:19 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jhgywbk8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:15:19 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54C9FF6l29295150
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 09:15:16 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D331720187;
+	Mon, 12 May 2025 09:15:15 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3F5F320184;
+	Mon, 12 May 2025 09:15:12 +0000 (GMT)
+Received: from li-621bac4c-27c7-11b2-a85c-c2bf7c4b3c07.in.ibm.com (unknown [9.109.219.153])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 12 May 2025 09:15:12 +0000 (GMT)
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: gregkh@linuxfoundation.org
+Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        hbathini@linux.ibm.com, maddy@linux.ibm.com, venkat88@linux.ibm.com,
+        sfr@canb.auug.org.au, alexei.starovoitov@gmail.com,
+        daniel@iogearbox.net, mykolal@fb.com, yoong.siang.song@intel.com,
+        martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+        haoluo@google.com, jolsa@kernel.org, shuah@kernel.org
+Subject: [RESEND PATCH] selftests/bpf: Fix bpf selftest build warning
+Date: Mon, 12 May 2025 14:45:11 +0530
+Message-ID: <20250512091511.2029269-1-skb99@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511-kbuild-revert-file-prefix-map-v1-0-9ba640c8411e@weissschuh.net>
-In-Reply-To: <20250511-kbuild-revert-file-prefix-map-v1-0-9ba640c8411e@weissschuh.net>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 12 May 2025 18:13:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARq9LdeB2uGusFxSrG=enrpAk05KC2V77o8Wh191y_Z4w@mail.gmail.com>
-X-Gm-Features: AX0GCFvsK52rOeUbpqcgGKDBRYxdE-fzGACWT3JmBUy3_4FTOVNX5AXbjFlkqbE
-Message-ID: <CAK7LNARq9LdeB2uGusFxSrG=enrpAk05KC2V77o8Wh191y_Z4w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] kbuild: revert relative paths in compiler outputs
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Jonathan Corbet <corbet@lwn.net>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Matthieu Baerts <matttbe@kernel.org>, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=dNSmmPZb c=1 sm=1 tr=0 ts=6821bc29 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=rV7urDwo7b39epbSBP8A:9
+X-Proofpoint-GUID: AEiKzS3arrETV22-ON0_DJ_-wFeZ4kvs
+X-Proofpoint-ORIG-GUID: PDLZ1YpOCiHF0Ez_fx3pqkkJJgSDAOC5
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA5NSBTYWx0ZWRfX4MNw5rIJ8mXN VPoa+A6HDIz42KRQqrPfyNkpbrvCsgABqtTQiugkaABDhijXXup+5CNvWcqKdzpePOZz8N7yAFD ui+Hov2E/baHEY3qCxnASCE2oHw9MLWnZt5yI65UIQrBURHcDJ2rZMMVPZWHUNc5ENvTggK1mnQ
+ 5gAaniMh8ukDxSu47w7TTdKZ1JonojuP1KmyyYqWwAFrbG1UIprCku6rh9J8cnsNKphVOh5mguE XJEUxfhUH4pfbR2fjMBGb3If2FaEoFPWM93QJBXWlSSq2Ga+BNFTMrEjr+Q2B+YYA2MOVvOrnNF mj51V84lJVgMrxaBHPnjqv0LarbNg6UKmaxxmXhB4SJvA2cQvmgEYFdkhl2dscVxCGheXEMeaR5
+ 77D4cQMyb4glkdqwVk57mX9Gi2bKl6v2juoMVjCX+MiNG+k3PtMyh2DeBap9WAduOz8aAe9P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ adultscore=0 phishscore=0 clxscore=1011 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 mlxlogscore=667 malwarescore=0
+ suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120095
 
-On Sun, May 11, 2025 at 3:02=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@weisss=
-chuh.net> wrote:
->
-> -ffile-prefix-map/--remap-path-prefix break the ability of debuggers to
-> find the source file corresponding to object files. As there is no
-> simple or uniform way to specify the source directory explicitly, this
-> breaks developers workflows.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> ---
-> Thomas Wei=C3=9Fschuh (2):
->       Revert "kbuild: make all file references relative to source root"
->       Revert "kbuild, rust: use -fremap-path-prefix to make paths relativ=
-e"
->
->  Documentation/kbuild/reproducible-builds.rst | 17 +++++++++++++++++
->  Makefile                                     |  3 +--
->  2 files changed, 18 insertions(+), 2 deletions(-)
-> ---
-> base-commit: 3ce9925823c7d6bb0e6eb951bf2db0e9e182582d
-> change-id: 20250511-kbuild-revert-file-prefix-map-4de45dfada75
->
-> Best regards,
-> --
-> Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+On linux-next, build for bpf selftest displays a warning:
 
+Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h'
+differs from latest version at 'include/uapi/linux/if_xdp.h'.
 
-Both applied.
-(I locally fixed the doubled Fixes:)
+Commit 8066e388be48 ("net: add UAPI to the header guard in various network headers")
+changed the header guard from _LINUX_IF_XDP_H to _UAPI_LINUX_IF_XDP_H
+in include/uapi/linux/if_xdp.h.
 
-Thanks.
+To resolve the warning, update tools/include/uapi/linux/if_xdp.h
+to align with the changes in include/uapi/linux/if_xdp.h
 
+Fixes: 8066e388be48 ("net: add UAPI to the header guard in various network headers")
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Closes: https://lore.kernel.org/all/c2bc466d-dff2-4d0d-a797-9af7f676c065@linux.ibm.com/
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+---
 
+[RESEND]:
+ - Added Fixes and Tested-by tag.
+ - Added Greg as receipent for driver-core tree.
 
---=20
-Best Regards
-Masahiro Yamada
+Original patch: https://lore.kernel.org/all/20250509123802.695574-1-skb99@linux.ibm.com/
+
+ tools/include/uapi/linux/if_xdp.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/include/uapi/linux/if_xdp.h b/tools/include/uapi/linux/if_xdp.h
+index 42869770776e..44f2bb93e7e6 100644
+--- a/tools/include/uapi/linux/if_xdp.h
++++ b/tools/include/uapi/linux/if_xdp.h
+@@ -7,8 +7,8 @@
+  *	      Magnus Karlsson <magnus.karlsson@intel.com>
+  */
+ 
+-#ifndef _LINUX_IF_XDP_H
+-#define _LINUX_IF_XDP_H
++#ifndef _UAPI_LINUX_IF_XDP_H
++#define _UAPI_LINUX_IF_XDP_H
+ 
+ #include <linux/types.h>
+ 
+@@ -180,4 +180,4 @@ struct xdp_desc {
+ /* TX packet carries valid metadata. */
+ #define XDP_TX_METADATA (1 << 1)
+ 
+-#endif /* _LINUX_IF_XDP_H */
++#endif /* _UAPI_LINUX_IF_XDP_H */
+-- 
+2.43.5
+
