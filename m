@@ -1,120 +1,146 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E58227E8A
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C42227E8A;
+	Mon, 12 May 2025 15:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064461; cv=none; b=asZ/LqUqZs11ydByGDiq+hEB47DogXnEoIt0jSzMSpWy8lXXADUektDCFKzPc4scECEsTCVKKZXs7EPKYGSXhcO+tOFysXvxbZgCEB6QFWxvjEyl7tPo6Hjn7p7E1B39TAIzNBk6EkVcZK7Dqm/C/flwK5a2IYNjM8fTXEEUYkM=
+	t=1747064475; cv=none; b=mm3coPPrzIF2Yt+EXxRG0Dxl+K/9XTsUut7jlpMuWkQSVB1FezuRMy1/Lh3a3CMGmzvGmBOZ7uorxLqM4kqu3DPnp0iBqRLs8h/W/8UosekrGhvRBCrV4l/MA6IZTKlMtw7l2Bqf6Z/bgZjY6/0ojvxhZ6PwjbCGb1HK1Jl/f+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064461; c=relaxed/simple;
-	bh=eB51KYgQdyr7IwazZ3F+ybay1cyim9/w4WbmWWtX9F8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=U+ueKUYip3AWAVEbjc0E2vFSJxG0y+oh3sJndEXxh/JAoYMMhmU5RRac0MSAhsZslHLk7KHF+3qbzs1ZHPc9EqE4gKpFvBaurWYE0IIABDD3o8tG4V2dbrETOSNswp+KZrMl8xJygcl/sEovXBNngdDsq9aabOQ9VrylPS6E15U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f64XCK3w; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747064475; c=relaxed/simple;
+	bh=VDdATa+HcKdEYNH1Uezx0/g1TdiHY2c3Y9Aauwfm56M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TvlehpTpvKMj/TiHLP0uyjU5tbkQzIbcr1xOfZ1xHb4Xu6HJCXlu5QUZzluLklB3vfuttPP5sT0olB3ODpV6Wy2/0rld3tvPMoi+B4B9ajLcCOPZKjlNf30rLVrqaxK+VkxrDqVAHuiYuarw5vcT7scIYjFILgg7ly2qVgQ3Iao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BwuC18iO; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f64XCK3w"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CDnGbn001327;
-	Mon, 12 May 2025 15:40:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=J+A6k4
-	tHqMzx9b4qYee8w4KYIFOoacw1O8+M9svb7xI=; b=f64XCK3wJTu/45P8N18nSV
-	sb40aFlBa36I5GVRuhtXw5u4xoT6diTxmq69NlQbGad1FQdhtr9JLrBWSpwDdn8I
-	iCu+zm3UA1HwqjtDTqzsuz1XEtJTAaXxafz0XsHclF5Sm3+A0psPj1y2s6xDajPh
-	KBxnkFbOHIB5kfaurQ41nShtHcDq/LBjwtCGgT5xVp3rRF/cMjzJmHOFx6mSMWAC
-	d0d5SuGzL1jK8GzZFmvJHIy3oFJLv8u9rZRWcv+HuTTxJn6D1hr16Qnd1YMzv3F+
-	HgUqbX5Upw76l2E5SAl4eJOJFcOVHfXjXe/OSRkVpmVxdngoEehT0E8US7+Fn4pw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46kj758jth-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 15:40:47 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54CFZIdi018983;
-	Mon, 12 May 2025 15:40:47 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46kj758jte-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 15:40:47 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54CCfoWw016955;
-	Mon, 12 May 2025 15:40:46 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jhgyxrbm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 15:40:46 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54CFeidu44630318
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 15:40:44 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3CBF1200C8;
-	Mon, 12 May 2025 15:16:25 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 62936200C4;
-	Mon, 12 May 2025 15:16:22 +0000 (GMT)
-Received: from [9.111.90.223] (unknown [9.111.90.223])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 12 May 2025 15:16:22 +0000 (GMT)
-Message-ID: <a56f71e2-fad3-4777-b774-a43bc6fabcac@linux.ibm.com>
-Date: Mon, 12 May 2025 17:16:21 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BwuC18iO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747064474; x=1778600474;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VDdATa+HcKdEYNH1Uezx0/g1TdiHY2c3Y9Aauwfm56M=;
+  b=BwuC18iOB4+9h4tV/zMjSw2T0yhJxyTIIo6T1ZZ593LfYx7o5S/scskO
+   R6lG3JXHEACS6SQk0v7l5KqOu9kiVYiAwcfxBiebJ62PVXdWM9jq5T2Q2
+   HUoIKUSC7Hs72cagMYhvHspFbvs/17lJi7k6ehwXrddXHvHeG6YGbO5qz
+   TeA4U5KgnvMHXSa+2n2O0PkJLOlih8FHRAfSE54Yt3/X78Qg9QEsEAmeu
+   IARYW0mRyPhwteUMTZ1Rr8UYh2ca2vLKgKWwJQYA325WlXCKq8y1n6pR1
+   ZMeN4kM1TKit8YPAgliny21rykqvid/+adwEhEDv/NU5MaYCEYXveJCh0
+   g==;
+X-CSE-ConnectionGUID: kXwdPxxIQgyERjzSQDtr1A==
+X-CSE-MsgGUID: zxein/zWSnSMHdqiRvIcxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="49034608"
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="49034608"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:41:13 -0700
+X-CSE-ConnectionGUID: G3tKZJfxQ5uQJSjRtaNfig==
+X-CSE-MsgGUID: rLeN7IA+SOqPQzO+D7C2Yw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="138365264"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO svinhufvud) ([10.245.244.52])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:41:09 -0700
+Date: Mon, 12 May 2025 18:41:07 +0300
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: laurent.pinchart@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl,
+	kieran.bingham@ideasonboard.com, naush@raspberrypi.com,
+	mchehab@kernel.org, hdegoede@redhat.com,
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <aCIWk3tiTUM0TeEa@svinhufvud>
+References: <20250310122305.209534-1-mehdi.djait@linux.intel.com>
+ <aB9M4jUsGA9YAkSm@kekkonen.localdomain>
+ <urd3bng2yixuiny536imfoihhe6uyowynih7gkc4q6pkr6mijy@ggqlz5zu5isf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 2/4] sched/rt: add support for parked CPUs
-From: Tobias Huschle <huschle@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com, sshegde@linux.ibm.com
-References: <20250512115325.30022-1-huschle@linux.ibm.com>
- <20250512115325.30022-3-huschle@linux.ibm.com>
-In-Reply-To: <20250512115325.30022-3-huschle@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDE2MiBTYWx0ZWRfX/b8YtZeWEypV JQoEjfPreK6B4J24z5tl51YdPgq3L2psj6deCQ2kGCfHqvaJeDdWLWa8C1pmz5qdqOZGaAQQkwW a+B5BT2nNr9gIOmJ5iS6Y0z+/BXguYtRPZdXxdortxvryXoaHg+jnjK7MCJr5JwXzADJNna/XEH
- +COTW70zuJG6iem3/DDrckFvljIEeGgNJtMCnZH53WU1dKAlNMK7URuwFYJA/lF1rfugakuKjZn Uha/Y5JnR5xY/oDRtY2WpRccEu1Lj8Spfy/YZwyDVzvAbP/+WLtGHfe+1oWYb9ALywSU0+tHmWd sWB9IZm8IRPoDZLb3WqRpNr74P6xOxNYVPQV6/7qQ0JtULjR35OU69gb+NAHTbY+M9DEF5LNZcT
- DK9OGo3zSmUm1dDef1y0LKcopcL4c5IgMzAYu5DIptSvZ8B3eWudPRrMBX8oAu/jx3McMdyY
-X-Authority-Analysis: v=2.4 cv=J4mq7BnS c=1 sm=1 tr=0 ts=6822167f cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=IJLY_-R8i5aRopSSRXUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 3BvVJ9uvrww0HGBlnGtOMrnr4XwVbzCY
-X-Proofpoint-GUID: jsvKRcbJHe4LH6uj5GsCy1mBG_Lpubem
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=585 priorityscore=1501
- mlxscore=0 impostorscore=0 malwarescore=0 phishscore=0 clxscore=1015
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505120162
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <urd3bng2yixuiny536imfoihhe6uyowynih7gkc4q6pkr6mijy@ggqlz5zu5isf>
 
+Hi Mehdi,
 
-
-On 12/05/2025 13:53, Tobias Huschle wrote:
-> Realtime tasks must also react to the parked states of CPUs. Tasks will
-> be treated as if the parked CPUs have no free capacity to work on them.
+On Mon, May 12, 2025 at 10:21:21AM +0200, Mehdi Djait wrote:
+> Hi Sakari,
 > 
-> A dynamic change in the parked state of CPUs is handled correctly if
-> realtime tasks do not consume 100% CPU time, without any interruption.
-> If a realtime tasks runs without interruption, it will never enter the
-> load balancing code and will therefore remain on a CPU, even if the CPU
-> becomes classified as parked. Any value below 100% causes the task to
-> be migrated off a CPU which has just been classified as parked.
+> On Sat, May 10, 2025 at 12:56:02PM +0000, Sakari Ailus wrote:
+> > Hi Mehdi,
+> > 
+> > On Mon, Mar 10, 2025 at 01:23:05PM +0100, Mehdi Djait wrote:
+> > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > > platforms to retrieve a reference to the clock producer from firmware.
+> > > 
+> > > This helper behaves the same as clk_get_optional() except where there is
+> > > no clock producer like ACPI-based platforms.
+> > > 
+> > > For ACPI-based platforms the function will read the "clock-frequency"
+> > > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > > indicated in the property.
+> > > 
+> > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
 > 
-> Signed-off-by: Tobias Huschle <huschle@linux.ibm.com>
+> SNIP
+> 
+> > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+> > > +{
+> > > +	struct clk_hw *clk_hw;
+> > > +	struct clk *clk;
+> > > +	u32 rate;
+> > > +	int ret;
+> > > +
+> > > +	clk = devm_clk_get_optional(dev, id);
+> > > +	if (clk)
+> > > +		return clk;
+> > > +
+> > > +	if (!is_acpi_node(dev_fwnode(dev)))
+> > > +		return ERR_PTR(-ENOENT);
+> > > +
+> > > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> > > +	if (ret)
+> > > +		return ERR_PTR(ret);
+> > > +
+> > > +	if (!id) {
+> > > +		id = devm_kasprintf(dev, GFP_KERNEL, "clk-%s", dev_name(dev));
+> > > +		if (!id)
+> > > +			return ERR_PTR(-ENOMEM);
+> > > +	}
+> > > +
+> > > +	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
+> > 
+> > devm_clk_hw_register_fixed_rate() is only available when COMMON_CLK is
+> > enabled. You need #ifdefs here. In practice without CCF only
+> > devm_clk_get_optional() is useful I guess.
+> > 
+> 
+> I added a call to IS_REACHABLE(CONFIG_COMMON_CLK) in the v4 of this patch:
+> https://lore.kernel.org/linux-media/20250321130329.342236-1-mehdi.djait@linux.intel.com/
 
-The content of this patch was proposed by Shrikanth, so special thanks 
-to him!
+I wonder if this approach works. Depending on the compiler implementation,
+the compiler could (or even should) still run into issues in finding an
+unresolvable symbol, even if the symbol is not reachable and can be
+optimised away.
 
-<...>
+> 
+> > Another question is then how commonly COMMON_CLK is enabled e.g. on x86
+> > systems. At least Debian kernel has it. Presumably it's common elsewhere,
+> > too.
+> 
+> on Arch linux it is also enabled and Fedora also. I would also assume it
+> is also enabled in the other linux distros.
 
+Ack, thanks for checking.
+
+-- 
+Regards,
+
+Sakari Ailus
