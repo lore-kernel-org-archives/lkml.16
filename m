@@ -1,165 +1,236 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BA23C38;
-	Mon, 12 May 2025 06:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747030124; cv=none; b=nPGdawsJ0KDAas+yZZsm2lJVBBUuB4AXhj03PF7olaWtOdilsD9XdAbTVpO7nEuP4av0dGwErXclcXPq8FHmpQu2ogMEKNlaf2vgewQzQHgTv6AoOqxGQv3TMsvHHyDfIDsE1sSLf1cKMO8e/bNFw6U2waKL8OUDC3BkNgQ0fVo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747030124; c=relaxed/simple;
-	bh=aeBo/HtHc7JVSi8gCCikzWTDfo2c+IE0WmhaGHAMUcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Jy2bU1o+dY39jbq/WM7u8dZfQYwGz6FsiOdV1m0IqjT9DUGayk2CKQaRLhQwUwSZSan57KzklQPPa2vAN6QHgkJkOge/NvOaU7vZNP1yqZDz54CFee/PYWqgrf9w8n3I5KHQdTp/7VaeAmVaw/DA9NPkkpdG9oYFvQstLaUbk7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JG46GzaI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DCB80B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747030158; cv=fail; b=bFmAu/ZaGmFl7pgnrRo18e3R9oWBugfFS1vw1Is8u0+YSrybxCyB9ye6QwvNHAX6R2NfjCf3mFgYQv1pXsEq6+LPN0ChigLDYRCC6GfvdjPG2eyQ6XKbwO0r55sAaM6mCBY86AAXW8lbRclkF0YKTcgM7xPZB9rSSnFGSJnqKFU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747030158; c=relaxed/simple;
+	bh=ckUFhvJca09G4o4ploGSpxEmxt7ij29cClNEz1JOaVM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=chlqduNWxw6aj6VrLqvyfp+sTorIoWPcS7OwO5WboCocdQPToSOm7xW+KMfQGke+Y5NjcrBZbJ16wyW5fbKO6YOfM47tDV3pxQLQzPOP9MEssaL7wUoR3zzZ0othRkFSa3rRDyBVfd67YmJrNFSqG4a//yvmMai+qu0IHsCUASg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ndI+G/yY; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JG46GzaI"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BNTuoR013680;
-	Mon, 12 May 2025 06:08:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZAg73qctMdAHl6qXg7azYTSd5wdfKLHTQzj8wlUwENs=; b=JG46GzaIghBXd6z7
-	iYG15YdxYHaoaS14TUuTpN7Y1YUcFsV/tGWIy5brD3wUKWvPTvAyfwuN4AJFgZ/b
-	U+b5l/qcOpbyUhUV59M0/nBclhPpvr5tbeccPqEFTp6PlfqafPrs4+xU0PDsfj+d
-	dz3PqO7lt0CbNE5tgqWCQNl3Veh/bC1bdEPKcMuplfQrreTIB9JxpDmfl69KQzLv
-	JiYzZiYqZKxauIiwO/hTHwKGWfQ2wM9iGJ76mHDBVtKjO/SBtfkLlvLnM4gzsRCY
-	2Xzii8Q69rXappyCaeNTP2TK2/+oGI2KGLB5mvOXZd2+Qx394fpbMR71Hpv6D8zG
-	tnx4/Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hwt939hq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 06:08:38 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54C68aDw030763
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 06:08:36 GMT
-Received: from [10.50.62.222] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 11 May
- 2025 23:08:32 -0700
-Message-ID: <7de5bf3f-12e6-99ca-38fd-45435de5773f@quicinc.com>
-Date: Mon, 12 May 2025 11:38:18 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ndI+G/yY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747030157; x=1778566157;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=ckUFhvJca09G4o4ploGSpxEmxt7ij29cClNEz1JOaVM=;
+  b=ndI+G/yY1et++ONzX2qPCRbSC9SqodlnHqnd4DX5LMH6OtFd6HxjhfSi
+   wGC+wK3UDrSXvQcddfyOI+CBW1CMvLyF2vYXTZXHrIleM92udXubht2ZA
+   3PmhbhPNt4WpjwkyBDj9jhf4dvn0Txqb5jXEzFdv5ZwBq2WwZ8hSfhztU
+   Nim3hORcIF5Vqo2OV1x0OwOvTB9KcZ++EW7/Zfj+DMzDeoHbeU6sxqbOR
+   yay/CGiy+yqBeTZb1FJrXJB6TGBOLo3a1FzKCb058yd0v0cokH89QKcFb
+   If8kQBEkGAIlOMLHfnA90nrvuC2gCj9leHhjPKT7Er166gm3CbksnVE/m
+   Q==;
+X-CSE-ConnectionGUID: p0aI7EicRPmcyvobUnyqSg==
+X-CSE-MsgGUID: rjSXPrEoTzW47ko72JzMFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="36437956"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="36437956"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 23:09:15 -0700
+X-CSE-ConnectionGUID: ZASXYO/BQpih9T6LICYITw==
+X-CSE-MsgGUID: e6WjVfkCT1Sfy8q4m0p3ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="137283527"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 23:09:15 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sun, 11 May 2025 23:09:14 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Sun, 11 May 2025 23:09:14 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.42) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Sun, 11 May 2025 23:09:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x9HC0D+HDFrRhq1UixOdhyiCM8bfLXT8/r7D88yTiV+dJR5Cl9Wz3fLiiuvl0XtU5kGKGz7j+hN09iJXFBjqc775uZKP8SeKj1oiDZHEvZFpR8yJoF56/jrpQXgirEyijgPpekuqboR0OYFAFa9sFYLQx/hRSWOTq4lsGs/nvRBl9E142eUb4AfelRCn+UQBAKY+qbS3CdezqtXfwSWG5/GqlKUKpmub9QjOw/cfJiNs7BA+sbzDYUeq+WK4V0/wooUOIB/VT1mtP7LsuWroDqeOzWntt7+6bAwW0NVJm+wSueo0wY9jiMpc5lwvPoaVL4N3UP9qNpBTp7AURq3olQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Am4TwqYArpJYB610xNAtII01mxXNM0KOcq34BrnGw2o=;
+ b=Oit+/LC151x83iVNQ5+32Vf2RzFU/POpJdS0BPz4EY/w/QaymizLNrRhgBYmL0qd9XKigE9CZuE7oKt6XvE+ackUjxZUDr0iQt5lX+Hr5vzpfX59v+c5ajL39OtViR3TeVKZb/ttw9FSX3pV4LJqQLFd2bH4UPjCF5OauDu0OLGEiMXkRHIhV5ejnkW4DlT3feVZHlQVO8PGrWKwAwCg8PG5oHtzciDaVgOkr/W9u5UF/8jPl/ZbT+n3Hw48gvEANzCSIc7B2whvM6NKIc8FYzv4PfzB6n/3b6QzgKfDQzVoGNR/JeIEET/c3zbLHqJAFKLG6s8SXG1ro0BAd38Oow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB5057.namprd11.prod.outlook.com (2603:10b6:303:6c::15)
+ by CY5PR11MB6438.namprd11.prod.outlook.com (2603:10b6:930:35::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
+ 2025 06:09:11 +0000
+Received: from CO1PR11MB5057.namprd11.prod.outlook.com
+ ([fe80::4610:6d6c:9af6:2548]) by CO1PR11MB5057.namprd11.prod.outlook.com
+ ([fe80::4610:6d6c:9af6:2548%4]) with mapi id 15.20.8722.020; Mon, 12 May 2025
+ 06:09:11 +0000
+Date: Mon, 12 May 2025 06:08:59 +0000
+From: Krzysztof Karas <krzysztof.karas@intel.com>
+To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+CC: Alex Deucher <alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?=
+	<christian.koenig@amd.com>, <siqueira@igalia.com>, <airlied@gmail.com>,
+	<simona@ffwll.ch>, Raag Jadav <raag.jadav@intel.com>,
+	<rodrigo.vivi@intel.com>, <jani.nikula@linux.intel.com>, Xaver Hugl
+	<xaver.hugl@gmail.com>, "Pierre-Loup A . Griffais"
+	<pgriffais@valvesoftware.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <kernel-dev@igalia.com>,
+	<amd-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>,
+	<intel-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH v2 1/3] drm: Create an app info option for wedge events
+Message-ID: <x3ep3offdy5on6hckumvpsvnlfnmjdfqjlcyv7hojitzsn5u3k@opnou6grp7ad>
+"Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173,
+ 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316"
+References: <20250511224745.834446-1-andrealmeid@igalia.com>
+ <20250511224745.834446-2-andrealmeid@igalia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250511224745.834446-2-andrealmeid@igalia.com>
+X-ClientProxiedBy: LNXP265CA0008.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5e::20) To CO1PR11MB5057.namprd11.prod.outlook.com
+ (2603:10b6:303:6c::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v7 0/5] media: qcom: iris: add support for QCS8300
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250501-qcs8300_iris-v7-0-b229d5347990@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250501-qcs8300_iris-v7-0-b229d5347990@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA2MyBTYWx0ZWRfXx6pfsOXrxel7
- fCkaKHrTriL2FLbFdT2nR68gK5UK0sADv4ZyjYrxnkyiuJc4Arf3OTA1U73Ce50hg8DTDyVJFXg
- n6EK6gWPWsLyo6HIXsfjr9B3ly3nTT7q8ansefxscLF6nDPogPG+nj9j3hnHmWOYXZ913l9NhLl
- HiPcSKPnXQrBcnht6oJ7/AbcO6KJ5lxawtD1V3i5ABJFY2AK6rMqO6SewrVvSvs+G4HaNY0e4Zv
- zzYoyBRG7CoO3z9IO2PkZhgQJdWDi4Zfms588ajYcJcfWmXIgiGO3v+Tqt1/YnT7gJAmenGP95c
- p/Q4xzfnN0bBWe6dn5jMjrow/FQg39sqC4C0C07cXyfl+E/kRspF1Lyq7OaqXOvmISLb0uetcXV
- iK9jFNA8BhjHXQeMgqK1znsvslwYJZNSak+8/hG6lMveBGHylWqasVLh1rVPhRtPq9iwaTCC
-X-Proofpoint-ORIG-GUID: b9szylcn0rVwlWotNU-Krm6vnodLKfTs
-X-Proofpoint-GUID: b9szylcn0rVwlWotNU-Krm6vnodLKfTs
-X-Authority-Analysis: v=2.4 cv=a58w9VSF c=1 sm=1 tr=0 ts=68219066 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=-hBaU0KkIdV-hY_gRgQA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1015 impostorscore=0 mlxscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505120063
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB5057:EE_|CY5PR11MB6438:EE_
+X-MS-Office365-Filtering-Correlation-Id: fcb07e22-b859-4f12-789e-08dd911b8382
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?bFRoKzA4NHd5d3NaK3NHdDRlQjFJdEEyTGFGTm1TUCt2RGNOSUNRRThIaEx2?=
+ =?utf-8?B?d3FxbGxnQmcrcUxCa1lrZzYvUktCTzVqMVFXMVB0Z05ZT3JHT2dGUzJTRlY3?=
+ =?utf-8?B?MEU1OVIxMzJNMHZVcFZ0NjhRQnZkaUk2YXIyLzhOOEMzU2tjVDlnMTZMa1Ra?=
+ =?utf-8?B?UlBZM243aWF3WDYyeHhnczFQQkUrc1hMMkVHWTA5cjBzY24wcWFnWEhQTWxF?=
+ =?utf-8?B?OUhjOXlIczRUZTU5eDVEcU5jaHpab2EvQlQzNjQzWVI4WVlYRzdaaXIvWkFQ?=
+ =?utf-8?B?WHg5bUlTSFU0dnFmNi93eWc2bUxHeS9DMEFnUXF1bDV4d2NBQWFRQmhBd2NO?=
+ =?utf-8?B?MnBpaWxJNjlHaEdOR1ZUUFg1dkIvdEhYY1dDOHkvWGZjSDh5Z2QrRi95amxu?=
+ =?utf-8?B?U3FxcDVsY0pweWdnUU5nREh6WExaRC9hVkNnTEVBRmdsRXNJMGtoTHpURXBJ?=
+ =?utf-8?B?YS9ZclFWR0NNNzdOYnFmV0xNV3lUZ0tCRUdoQ2NjTDgyMFdSOXpaS0RtaUdi?=
+ =?utf-8?B?OTF5QytpTm9WOVhwUXd0dFdJbWZ6ckZpRHBLN1hkSFhWOVdYeTFEdUtLTTRr?=
+ =?utf-8?B?bzRtdFhBNHI5RENIUmRZYWJZcUlWczkwWG9Lc0VTSitwdEc2dEZCbUI4VG5y?=
+ =?utf-8?B?TG9rNHB0dEdmdGk5NnVrdDhpbVdrWlZhQ1JFL205RWd3dnlCWEY5WVlqeHRq?=
+ =?utf-8?B?aklJNU4yNWY1cDZQTXZXN0wzRHNmT0syQWQ4a1VlcW1idlNIUGt4YnFoYkJ2?=
+ =?utf-8?B?WklFcmVCV0kzODZPcitYdGZXTkh1N2lvRzl1MS9QUjQ5THFWSHEydGRhOHVT?=
+ =?utf-8?B?ZDlSN1F2WTdKOFZlUjFqSVVkSWZqTmFTR01OeER0MzYrd01Pc0hRMDBQOWhX?=
+ =?utf-8?B?NTg0N0MwbzNDZWxIRk52aFV2Y2xWOGp2ejk5eWdXNllEdTNxMUxTSGZTVnA5?=
+ =?utf-8?B?MUhrN25ObzBpUktTaGw2L3RrY0Qxc1puNDhNWXFQZlRMWW13WThJRWQwOHZy?=
+ =?utf-8?B?SENZZmUwcVM5WkNFRndVdVRYTnlwNHZPRkp0UGZSR0ljV20wR011OXJGWDk1?=
+ =?utf-8?B?QlFaQTFtaGV1MnA5bVplazhJUjBWZnNwdnVSRlJEVkFWYUVKa1FMazRxdVBO?=
+ =?utf-8?B?SS9WbXc0bWhseEVoaXlPdk1iTEowYWtnaDFkK2lCOFJmZTJOMUxVNW1Pb0pO?=
+ =?utf-8?B?MjJReXJJTVZ6NHRVbWk3bWREQUNQemJvRGplTlIxTUN3b3grNDdURklua2ZP?=
+ =?utf-8?B?c084MnluY3dwQUNJSnMyWFEyZ0hRbkJHMWJiRFJBcW9hWW1ob25pc3E2MG5z?=
+ =?utf-8?B?K2NyL3l6NXlnZlZxQU1uekQ3dngvVExoZDNIU0tUTUtHOFhieHRseGpPQTZQ?=
+ =?utf-8?B?R0NNcTRaV1hpUGljSWpucjdMVnFmSEJacklQY1lQQWYwRmJjODh3aTAwRzhp?=
+ =?utf-8?B?bHNUTTZYdUI4a1I3cXV2RmRkWDBacFExeWxlekRGWVhvcmtYNWJaN2lBMkpW?=
+ =?utf-8?B?K2pzczlmMG9Oc1pxTjdNUjU1ZjNPbnVBNDRQVEZ3b1Z1UlNlSThnZm84ZDFL?=
+ =?utf-8?B?aVJkTEcwNzVSRStNTGlOY3dCQUZjOVpPR1U2M2JDZjk0NTRUMUZLV3VEOXc0?=
+ =?utf-8?B?YkxDS25LWGtsMnRDeFRhZHRQc2JUYjlCTndlSGJtbmxvOHlxVXVickhaV3RX?=
+ =?utf-8?B?bEVHSUJUeHJsM1JnbUl3WDAwWkZIVzROMTQ4ei84SjB1UHJTVWNtSm1vd1c5?=
+ =?utf-8?B?bkx5QjhaSUVxZ0ZiWUhzMEZhZE9lMy9KWGwwbEJYR3NicmxQYVJjSmhsRjhi?=
+ =?utf-8?B?cTh4K1RMRnp5M2tqTTNHRlVCMnV2M1YxZ2NJcmtVdVErWm9uckRkai9VRDFC?=
+ =?utf-8?B?Q3cxWFBsODNHSDBpVCswTGZpMHhqdWNIdEZYYm9YSWI4WW84elR4Vmd1bUEx?=
+ =?utf-8?Q?hb/8ORZcIMM=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5057.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VVV3UVNyV3hSSnhYN0VybCsrdGx1R3JKNHk4ZGl2SVlzbkYzaEJpcnFVVmRs?=
+ =?utf-8?B?RU4rTDdyZkl5RzAwekN5K3l4ZkFYczJObkM3N1hjdUtja2FoemZybWFlWTNB?=
+ =?utf-8?B?Qlh2TFdzcWpQc2kxWUxLTTJWaFo2SzVWcjZSdVpnb3JYc3FGbWVtYVNMMXpZ?=
+ =?utf-8?B?THZjVWJrK1g0TGI4TlhTRU1HMDVYaWkxN0ZLRHFMTmUrVW1MQStGRVBCbytu?=
+ =?utf-8?B?cjcxbUR2MXViL0pzOS8ydUcwWHhPaHpOS001RVpiV1dXcEZ3NWtKK09FNXlw?=
+ =?utf-8?B?cWVnR0VRcTVQUE9qdGI1SDYrUDNIS1REbjZlM0JOSUlQY0JndlVVeUFKT0lh?=
+ =?utf-8?B?dU9jcXpxTzhYRjBIT0hlenBzYnI0TUwxYS8zSHIrM2VsZmNiRDd3QkFCRzUy?=
+ =?utf-8?B?Y3g2dEpveGYwY3c1a2ZLYk5uc0JqYnVFZUExb2JvOVkrN01ucHBLVGgvYnZB?=
+ =?utf-8?B?b3I0UlA3WGFoWlhGNm5CYmdjMVZkZk1PeTlRSWcyT1J2cUF0SjlWdnAyS2c4?=
+ =?utf-8?B?djYrbGpsOXFPR2FBd2ZKQksrbFhJN05KaFJVRkU0aGRZS08xSUwzb1M3S2Q4?=
+ =?utf-8?B?blh1TGcvTE1idlZvV2pxV096bS9ZdTNocjZob0lVZHN6eGFJdVY2UnVxYnpm?=
+ =?utf-8?B?WVVHSGVnb0dIODN0cXpvRkxUVTR4Zkh5UW9YSjVqU1RlMlEwZWVsKzhmZWZv?=
+ =?utf-8?B?c3ZGYStqUk9TNzZENTdCdmZwblVXWUQ3bVR2NmhRTzZlS1I2eE5rM0tOb2M4?=
+ =?utf-8?B?bTVhY2grdXF0YTBmbnVTMVJHMnJuamEwTDlZaWZaZmo3TWhBdGhTV0lNY0ZM?=
+ =?utf-8?B?VExiQzVwY3pyQTE2bG0rOGM0RW43T3RtR1hpUE1vZzloTFloR0o3SWc5aGxP?=
+ =?utf-8?B?d25NYTczdG5LNEU4TUJNbmxYbGlzMklPbFJOa295bXVzdmhjRUdLTVl3K1Zp?=
+ =?utf-8?B?TnVRUkl1RWpRYzY4N215dGFuU2NpdWw2NjdaampJNjVCOUc2UkhkOEgwN0N4?=
+ =?utf-8?B?V29nTFo0OU1qWGwwREIwamtFNm10NzhDVm1aSEdvVmdZVWR0NmVoK1QvY2Vx?=
+ =?utf-8?B?WkJXSnBLQ04vZVVXeWMzYVFCMW9Yei9ZRFliOEFZTFNJditPVEpVVHFzaEtS?=
+ =?utf-8?B?czZFVWJLazFXUGQ1UjZUdzhZdDJ3RU5Yalpua0hGOFcyNEErU2VBMmFyNk9W?=
+ =?utf-8?B?aWxhbzc0V0NqUHdwSW9FZC9sUXAxREF0TXNUTGNUbzhSMklPU3BJOGNFSm91?=
+ =?utf-8?B?QU1qRkxvN0U2ZUdneU84VXloTis3U0svK1VwZVpuc05LUGo0UytFWTVwYUNy?=
+ =?utf-8?B?bzFvV2ZDTVZ5ZmxMVHV5c3ArWGZqWjBoTlR1UWptaXNOci9yQStPWFJ0Qk5y?=
+ =?utf-8?B?aGYrSXorK3UzZU1vM3loclFvYlg1cUo3ZFN2RTlKa2paNGJDTndCeVJwSWRN?=
+ =?utf-8?B?cnFBOVJ1VDNiWVhuTC9PTCtEWTVnUy93azRDRExZMm5EM29VbjZnTDFEZlJV?=
+ =?utf-8?B?V21SaGtkNGFLSDNhbzVTZ1FvaVRURHRrem5NbUpqb1BVTWtIdnBudmUvaXdC?=
+ =?utf-8?B?dk5XdlhKY1psRW1sVk9NM1pLZG5CY3cwZFlyaHJNYTQ5TXVPMU1CaTgreElj?=
+ =?utf-8?B?bGVzZ1YxTmFkeHNjekxGWVdWb3F1djRGbTVNTWhWTFRhdkFKeU9pUFdTLzcy?=
+ =?utf-8?B?WTQvQ3R3TTV5Ky84Zllqbzc4TlYxb0N1c1o3alhZNEtWdWMyUGY4UzNXL0w0?=
+ =?utf-8?B?S2pLSXlqV1lSMmoyMlBJc3lWalJHNWdMcHVUenM2ejZjUzNKc2JtUk1PeTBN?=
+ =?utf-8?B?OHRGZ1ZCV21RUU95THBtVk5ndEVtVUR2aG8zMWhXL0pYUjJURFhmZDY1UHBL?=
+ =?utf-8?B?KzhRK3JtZ0liYWo2aEJkUjhEZ0h2dHVVWTdVanNzbzhuS1lMdFJ0WFFGbmsr?=
+ =?utf-8?B?Nmh6c3gyN1FVNE5MTXJscC9Zazg5Tm5GQ1ZmU1l4Y3dROGZYczB2QklrQU5t?=
+ =?utf-8?B?eE5kL0xDMnhXU01Tb2VjekRqSHAxdklRQzdQNmp3SWFhSmU2OU5SbWM0TTNU?=
+ =?utf-8?B?am9LYVRlVng5UWhES0NWZlZjVFRUV2dnSFliMisyNVNyYjNUOStWNXVuM2d5?=
+ =?utf-8?B?ME1NZHZxck4xdlQ4dk1lTWZ1aFdYWHc5SHhPVlF1YStEL3R5b0NSeXNDTHZT?=
+ =?utf-8?B?Y1E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: fcb07e22-b859-4f12-789e-08dd911b8382
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5057.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 06:09:11.5708
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5YMRA6ztyImOmXU6mHf+Se/uV8n/EpYFLh2Kz9W/USvNHwwptBjfWx8sCRWJBD7tYZe8PgJNot0JPUjhR33leF5UgmN87xuBF2i4nu3z3Zg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6438
+X-OriginatorOrg: intel.com
 
-Hi Bjorn,
+Hi André,
 
-On 5/1/2025 2:16 AM, Vikash Garodia wrote:
-> add support for video hardware acceleration on QCS8300 platform.
-> 
-> This series depends on
-> https://lore.kernel.org/all/20250417-topic-sm8x50-iris-v10-v7-1-f020cb1d0e98@linaro.org/
-> 
-> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-> ---
-> Changes in v7:
-> - Fix clock corner.
-> - Link to v6: https://lore.kernel.org/r/20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com
-> 
-> Changes in v6:
-> - Address a comment related the commit title.
-> - Link to v5: https://lore.kernel.org/r/20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
-> 
-> Changes in v5:
-> - Fix order in dt bindings.
-> - Drop an unrelated sentence from commit description.
-> - Link to v4: https://lore.kernel.org/r/20250424-qcs8300_iris-v4-0-6e66ed4f6b71@quicinc.com
-> 
-> Changes in v4:
-> - Introduce a patch to fix existing order of compat strings.
-> - Fix the order of header inclusions.
-> - Link to v3: https://lore.kernel.org/r/20250423-qcs8300_iris-v3-0-d7e90606e458@quicinc.com
-> 
-> Changes in v3:
-> - Fix commit description to better describe about QCS8300.
-> - Fix the order of the patch.
-> - Collect the review tags.
-> - Link to v2: https://lore.kernel.org/r/20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com
-> 
-> Changes in v2:
-> - Added dependent info in binding patch as well.
-> - Fix a sparse error.
-> - Link to v1: https://lore.kernel.org/r/20250418-qcs8300_iris-v1-0-67792b39ba21@quicinc.com
-> 
-> ---
-> Vikash Garodia (5):
->       dt-bindings: media: qcom,sm8550-iris: document QCS8300 IRIS accelerator
->       media: iris: fix the order of compat strings
->       media: iris: add qcs8300 platform data
->       arm64: dts: qcom: qcs8300: add video node
->       arm64: dts: qcom: qcs8300-ride: enable video
-> 
->  .../bindings/media/qcom,sm8550-iris.yaml           |   1 +
->  arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |   4 +
->  arch/arm64/boot/dts/qcom/qcs8300.dtsi              |  71 ++++++++++++
->  .../platform/qcom/iris/iris_platform_common.h      |   1 +
->  .../media/platform/qcom/iris/iris_platform_gen2.c  |  57 ++++++++++
->  .../platform/qcom/iris/iris_platform_qcs8300.h     | 124 +++++++++++++++++++++
->  drivers/media/platform/qcom/iris/iris_probe.c      |  16 ++-
->  7 files changed, 268 insertions(+), 6 deletions(-)
-> ---
-When do u plan to pick DT patches (4/5 and 5/5) from this series ? I just saw
-the PR for 6.16 and i did not see these patches, would like to know what is
-pending ?
+[...]
 
-Regards,
-Vikash
+> @@ -582,6 +584,14 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+>  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
+>  		 "but recovered through reset" : "needs recovery");
+>  
+> +	if (info) {
+> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
+> +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
+> +	} else {
+> +		snprintf(pid_string, sizeof(pid_string), "%s", "PID=-1");
+> +		snprintf(comm_string, sizeof(comm_string), "%s", "APP=none");
+
+I think using PID=-1 and APP=none might be misleading, because
+something did cause the wedge if we landed here. You could use
+"PID=unknown" and "APP=unknown" or ensure these arrays are
+zeroed and fill them only if "info" is available:
+
+-     char *envp[] = { event_string, NULL };
++     char pid_string[15] = {}, comm_string[TASK_COMM_LEN] = {};
++     char *envp[] = { event_string, pid_string, comm_string, NULL };
+
+[...]
+
++     if (info) {
++             snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
++             snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
++     }
+
+Then, when printing the logs later you could check if they have
+a value and only use them if they do (or handle that however
+you would see fit :) ).
+
+Best Regards,
+Krzysztof
