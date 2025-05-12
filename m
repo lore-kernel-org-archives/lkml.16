@@ -1,228 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4301D23C8A2
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 23:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8345F258CE4;
+	Mon, 12 May 2025 23:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747094375; cv=none; b=UEeiubivbp+kGSfqY6TgzpQ18XL3LmPSrMa7e5R9WogtRFb8nf3CZrqLFaboMA0/snPLv7zcVvIV4E+PImRj3YIJKdOdHm9NDlO7Zo1HjpSRueglSMYK8hvbV7xazUxFoJ7M9767BauargtYtVDJzUAotJP+tV0B7B2QcFNfROg=
+	t=1747094400; cv=none; b=oOq7Y3tyBWfoqb73bKMMlm9xktZENSmKJv3+MGUfeRbaoV2P9dGbLYj8NA3siVIyWbKpfqNzl5ezcTusUHbBofDQbecC2k1G+wMa6U0Acl/F0Mmd9wWb9GZh89UBww39nL12vkwn2PTBsHtFKJRoYqtEh0mv+S32ASqT6NrXU4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747094375; c=relaxed/simple;
-	bh=EFW4kplBfp5PvCKelCjas54b0BRGDoqSeS+17LKB2Lk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bm+6jtdQIZK8CffSwrDWIcow8/GAnsCNFfQmOdNKyXJ0T0Z7sbj8OYxpbv/+v/fswfzWwuY0QzEZMSXy7597iibMpydHenMhV9XVj5QeMmYRilfCpB7UyRNv3ZIDSgQkJFNWYNzHh4u2YJpRFUJ1SpMMptgZgZy4QVeprVS7Bbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PSPrKBy3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747094400; c=relaxed/simple;
+	bh=2J/em8HLtQvc9E3150hVUwCcvJnp4okY6FX7p2Q6hbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aUIXeCmKL6Ay4Ym/9i+jZAO59QIzWmyEkmfnAEVwnv85DdhZ+2YExEuj1vGm2lld/BZ0PqhnHwOuQgfw01NyGbZ1EHOo4rvHx/CIm2xpUamoOa7Jda/Nf3AD79sVBFhhIyo1hsRF8PHNPeXZy+LvrfSewIZeJyo7zAjFiwzK6ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XcmgrWyh; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PSPrKBy3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83BA1C4CEE7;
-	Mon, 12 May 2025 23:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747094373;
-	bh=EFW4kplBfp5PvCKelCjas54b0BRGDoqSeS+17LKB2Lk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PSPrKBy3xmNCETWcIRwwkoB0DJMRCdkgYS6KLO8QCc2oJChgW5ML7IuRokpMXlpDB
-	 U11BcEaeO9ee6VZpH2t7py4lgyxxFnQIV8TICmD4X/ol9xyHAeJAGFb7crRmhDMp/q
-	 u42NLNgIIIctcauWWPVLVMYC1HHghvnbZ75mSDfk=
-Date: Mon, 12 May 2025 16:59:33 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexander Graf <graf@amazon.com>
-Cc: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Baoquan He
- <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- <nh-open-source@amazon.com>
-Subject: Re: [PATCH] kexec: Enable CMA based contiguous allocation
-Message-Id: <20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
-In-Reply-To: <20250512225752.11687-1-graf@amazon.com>
-References: <20250512225752.11687-1-graf@amazon.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcmgrWyh"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso53684195e9.0;
+        Mon, 12 May 2025 16:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747094397; x=1747699197; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XqkHrkvohXoeATOZwyroosrjMBKBmZpV7oFref0aHQE=;
+        b=XcmgrWyhUnQzffwxalDBryr56+2TklbbjyEnN012qKhLEF7tVcagn5j46njXAUOcf3
+         whHUkYodcLJ49Ad9/AZi8jSCv7IcNQvU09yIswkAuHAt/sxerPottZTyMYl0fJ4k85TY
+         7Q0s11x/8ry4FRc4BsgjR9LXs1h34w1B+ZGXYlBo3pKjHAzy3NA/7GmWWqC+bf3SeGeY
+         mWIN3YJv6+t4KkZy9DnFsGWy6EMw3GHwsg3JU0LvO4PgpjTly8yC6YzL1d4IIwpmedhQ
+         go9XNGD/NKXnHnKEkZe4QMvHtNPExlRoQHqD28NBqNTEKQjD5ZQK1AiMeuRd6nwj1kSB
+         Z/jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747094397; x=1747699197;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XqkHrkvohXoeATOZwyroosrjMBKBmZpV7oFref0aHQE=;
+        b=CDLMyF2Qm3iSgD6EzlndPhNlkjktAnJ7/rSxN/WcSyoxQiJ9KJLOiv26yeXQJGSGmh
+         FVHbEsbA1XrdSjWgOjPgcbNTuNKQjWNSOiYSGN4MFIBGJn++agM3LUTB/zORCHIEJ8lK
+         WoI6FF6hg0H6XLp6CTkQpqqGBNBHKftxYSFf2h8uMWvObs7JbKPtWl/ZrnY/ySI/+vL9
+         LN2ERMmgdxTFe3bAS3MdvzWSQeNkOBYiP+OmKa2PWjAprBPxbScXs30X72xZUQG3KEAe
+         gn6t0IL1caoWl8N3cRHgYTK4JQZjINm36TKsZ/UquWJu5ziN9Wjy6Dl3oWmTitdK85ai
+         QlyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVkupJ4a2qNwqw2hSQMQVPkVpAIBOtNMxJP+ZKr2raxPIGi0i1t2Jpptz1bN1+RWs7cnutDf//xnsbIWjb@vger.kernel.org, AJvYcCXZBNkTXgNWeTpD+8R8UJRFD1n4YJNV2Q2x+uJ0/VgkXlvVoadxT17yBrmHl9wuGvXvxfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxed1+SfcbNc0jdTVvDijWZD/NFqsBYoHKAt2hq11UlB1RnZCWz
+	xuNHXbisUZdXrKBKfQm9uX3iJhe5G9ySRP0OadG92UhIWSo/1TB0W6iJ5YKQzd8/aOSjkB2dM/9
+	BSaeHPy32jTwAbjSWsMrF8Z6q0VY=
+X-Gm-Gg: ASbGnctNRmjz4HpFHyyRW2GBxKZ2PWUIF+oeVF+m8L5oDZXbvJOdZxqo8xVPRSx/+4a
+	roJ3UAURuzwgctpZysuc0W/0bK6X/+9AY8Zb5v3flfVg1P/Wayn2SSwRvk8dKQICRvbVO5HOFIG
+	mIJ1c26SR+uzMUlI4FAKYT+WhxGzjc7+gK3ilwlyfNC7v51SWo50xRunTbnyZy8w==
+X-Google-Smtp-Source: AGHT+IHUc1cjGA+9WC0p4KmY9aXJ3wnQCknBGLCj1rhOfrN+pLJVHyAGYd9lc567X5ES9Kd6yqHQcFQDOFI71pZEHXU=
+X-Received: by 2002:a05:6000:1ac6:b0:39e:dbee:f644 with SMTP id
+ ffacd0b85a97d-3a1f64b5a71mr11441819f8f.46.1747094396479; Mon, 12 May 2025
+ 16:59:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250512145901.691685-1-chen.dylane@linux.dev>
+In-Reply-To: <20250512145901.691685-1-chen.dylane@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 12 May 2025 16:59:45 -0700
+X-Gm-Features: AX0GCFv2mL6YyRFJjz6uEDOQtpzKiEgSaMHj8gosX_KFjGLuWx8EQHoXsRH7xw4
+Message-ID: <CAADnVQJNmS-3gDQ4=GRGzk00S-n9KOs2temi+P-7Nac_gnx5DQ@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Fix bpf_prog nested call in trace_mmap_lock_acquire_returned
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Liam Howlett <Liam.Howlett@oracle.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 12 May 2025 22:57:52 +0000 Alexander Graf <graf@amazon.com> wrote:
-
-> When booting a new kernel with kexec_file, the kernel picks a target
-> location that the kernel should live at, then allocates random pages,
-> checks whether any of those patches magically happens to coincide with
-> a target address range and if so, uses them for that range.
-> 
-> For every page allocated this way, it then creates a page list that the
-> relocation code - code that executes while all CPUs are off and we are
-> just about to jump into the new kernel - copies to their final memory
-> location. We can not put them there before, because chances are pretty
-> good that at least some page in the target range is already in use by
-> the currently running Linux environment.
-> 
-> All of this is inefficient.
-> 
-> Since kexec got introduced, Linux has gained the CMA framework which
-> can perform physically contiguous memory mappings, while keeping that
-> memory available for movable memory when it is not needed for contiguous
-> allocations. The default CMA allocator is for DMA allocations.
-> 
-> This patch adds logic to the kexec file loader to attempt to place the
-> target payload at a location allocated from CMA. If successful, it uses
-> that memory range directly instead of creating copy instructions during
-> the hot phase. To ensure that there is a safety net in case anything goes
-> wrong with the CMA allocation, it also adds a flag for user space to force
-> disable CMA allocations.
-> 
-> Using CMA allocations has two advantages:
-> 
->   1) Faster. There is no more need to copy in the hot phase.
-
-How much faster?  Kinda matters as "fast" is the whole point of the patch!
-
->   2) More robust. Even if by accident some page is still in use for DMA,
->      the new kernel image will be safe from that access because it resides
->      in a memory region that is considered allocated in the old kernel and
->      has a chance to reinitialize that component.
-
-Is this known to be a problem in current code?
-
-Some minor observations:
-
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
+On Mon, May 12, 2025 at 7:59=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
 >
-> ...
+> syzkaller reported an issue:
 >
-> @@ -331,6 +336,7 @@ struct kimage {
->  	 */
->  	unsigned int hotplug_support:1;
->  #endif
-> +	unsigned int no_cma : 1;
-
-"no_cma:1" is more conventional.
-
->  #ifdef ARCH_HAS_KIMAGE_ARCH
->  	struct kimage_arch arch;
-> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> index 5ae1741ea8ea..8958ebfcff94 100644
-> --- a/include/uapi/linux/kexec.h
-> +++ b/include/uapi/linux/kexec.h
+>  bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+>  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+>  __bpf_prog_run include/linux/filter.h:718 [inline]
+>  bpf_prog_run include/linux/filter.h:725 [inline]
+>  __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+>  bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+>  __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/m=
+map_lock.h:47
+>  __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mm=
+ap_lock.h:47
+>  __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:4=
+7 [inline]
+>  trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [in=
+line]
+>  __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+>  __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+>  mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
+>  stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
+>  __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
+>  ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
+>  bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
+>  ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
+>  bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
+>  bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+>  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+>  __bpf_prog_run include/linux/filter.h:718 [inline]
+>  bpf_prog_run include/linux/filter.h:725 [inline]
+>  __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+>  bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+>  __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/m=
+map_lock.h:47
+>  __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mm=
+ap_lock.h:47
+>  __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:4=
+7 [inline]
+>  trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [in=
+line]
+>  __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+>  __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+>  mmap_read_lock include/linux/mmap_lock.h:185 [inline]
+>  exit_mm kernel/exit.c:565 [inline]
+>  do_exit+0xf72/0x2c30 kernel/exit.c:940
+>  do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+>  __do_sys_exit_group kernel/exit.c:1113 [inline]
+>  __se_sys_exit_group kernel/exit.c:1111 [inline]
+>  __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+>  x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:=
+232
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 >
-> ...
+> mmap_read_trylock is used in stack_map_get_build_id_offset, if user
+> wants to trace trace_mmap_lock_acquire_returned tracepoint and get user
+> stack in the bpf_prog, it will call trace_mmap_lock_acquire_returned
+> again in the bpf_get_stack, which will lead to a nested call relationship=
+.
 >
-> +static int kimage_load_cma_segment(struct kimage *image, struct kexec_segment *segment)
-> +{
-> +	unsigned long maddr;
-> +	size_t ubytes, mbytes;
-> +	int result = 0;
-> +	unsigned char __user *buf = NULL;
-> +	unsigned char *kbuf = NULL;
-> +	char *ptr = page_address(segment->cma);
-> +
-> +	if (image->file_mode)
-> +		kbuf = segment->kbuf;
-> +	else
-> +		buf = segment->buf;
-> +	ubytes = segment->bufsz;
-> +	mbytes = segment->memsz;
-> +	maddr = segment->mem;
-> +
-> +	/* Initialize the buffer with zeros to allow for smaller input buffers */
-> +	memset(ptr, 0, mbytes);
-
-Would it be more efficient to zero the remainder after performing the copy?
-
-> +	/* Then copy from source buffer to the CMA one */
-> +	while (mbytes) {
-> +		size_t uchunk, mchunk;
-> +
-> +		ptr += maddr & ~PAGE_MASK;
-> +		mchunk = min_t(size_t, mbytes,
-> +				PAGE_SIZE - (maddr & ~PAGE_MASK));
-> +		uchunk = min(ubytes, mchunk);
-> +
-> +		if (uchunk) {
-> +			/* For file based kexec, source pages are in kernel memory */
-> +			if (image->file_mode)
-> +				memcpy(ptr, kbuf, uchunk);
-> +			else
-> +				result = copy_from_user(ptr, buf, uchunk);
-> +			ubytes -= uchunk;
-> +			if (image->file_mode)
-> +				kbuf += uchunk;
-> +			else
-> +				buf += uchunk;
-> +		}
-> +
-> +		if (result) {
-> +			result = -EFAULT;
-> +			goto out;
-> +		}
-> +
-> +		ptr    += mchunk;
-> +		maddr  += mchunk;
-> +		mbytes -= mchunk;
-> +
-> +		cond_resched();
-> +	}
-> +out:
-> +	return result;
-> +}
-> +
+> Reported-by: syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/bpf/8bc2554d-1052-4922-8832-e0078a033e1d@=
+gmail.com
+> Fixes: 2f1aaf3ea666 ("bpf, mm: Fix lockdep warning triggered by stack_map=
+_get_build_id_offset()")
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
+>  kernel/bpf/stackmap.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 >
-> ...
->
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
->
-> ...
->
-> @@ -632,6 +635,38 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
->  		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> index 3615c06b7dfa..eec51f069028 100644
+> --- a/kernel/bpf/stackmap.c
+> +++ b/kernel/bpf/stackmap.c
+> @@ -130,6 +130,10 @@ static int fetch_build_id(struct vm_area_struct *vma=
+, unsigned char *build_id, b
+>                          : build_id_parse_nofault(vma, build_id, NULL);
 >  }
->  
-> +static int kexec_alloc_contig(struct kexec_buf *kbuf)
+>
+> +static inline bool mmap_read_trylock_no_trace(struct mm_struct *mm)
 > +{
-> +	u32 pages = (u32)(kbuf->memsz >> PAGE_SHIFT);
-
-I don't think the cast is needed?
-
-> +	unsigned long mem;
-> +	struct page *p;
-> +
-> +	if (kbuf->image->no_cma)
-> +		return -EPERM;
-> +
-> +	p = dma_alloc_from_contiguous(NULL, pages, get_order(kbuf->buf_align), true);
-
-dma_alloc_from_contiguous()'s `count' arg is size_t.  Making `pages'
-size_t seems best here.  (And nr_pages would be a better identifier!)
-
-
-> +	if (!p)
-> +		return -EADDRNOTAVAIL;
-
-EADDRNOTAVAIL is a networking thing.  People will be surprised to see
-kexec returning networking errors.  Perhaps choose something more
-appropriate?
-
-> +	pr_debug("allocated %d DMA pages at 0x%lx", pages, page_to_boot_pfn(p));
-> +
-> +	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-> +
-> +	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
-> +		/* Our region is already in use by a statically defined one. Bail out. */
-> +		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
-> +		dma_release_from_contiguous(NULL, p, pages);
-> +		return -EADDRNOTAVAIL;
-> +	}
-> +
-> +	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-> +	kbuf->cma = p;
-> +
-> +	arch_kexec_post_alloc_pages(page_address(p), pages, 0);
-> +
-> +	return 0;
+> +       return down_read_trylock(&mm->mmap_lock) !=3D 0;
 > +}
-> +
->
-> ...
->
+>  /*
+>   * Expects all id_offs[i].ip values to be set to correct initial IPs.
+>   * They will be subsequently:
+> @@ -154,7 +158,7 @@ static void stack_map_get_build_id_offset(struct bpf_=
+stack_build_id *id_offs,
+>          * build_id.
+>          */
+>         if (!user || !current || !current->mm || irq_work_busy ||
+> -           !mmap_read_trylock(current->mm)) {
+> +           !mmap_read_trylock_no_trace(current->mm)) {
+
+This is not a fix.
+It doesn't address the issue.
+Since syzbot managed to craft such corner case,
+let's remove WARN_ON_ONCE from get_bpf_raw_tp_regs() for now.
+
+In the long run we may consider adding a per-tracepoint
+recursion count for particularly dangerous tracepoints like this one,
+but let's not do it just yet.
+Removing WARN_ON_ONCE should do it.
+
+pw-bot: cr
