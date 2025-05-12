@@ -1,84 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15718254872;
-	Mon, 12 May 2025 08:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975BD17BB6
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039646; cv=none; b=eV8iOmlpyfiJY9x0OmLRM+jBDPBMd7822N4lyppnOpImAUs0dO/+W7lOoeLxRSx1SbYjR04+B2JB31SjjvrXHxhOlaoZbZmevSwxkd2/a7s1yu/NfZDEn5no0jr0voJV7F6VycTMlheVjOoIb/vFxi/WcVjATxrhiZNqMZC8/AM=
+	t=1747039713; cv=none; b=O9Dv93UMwxFQOJBK5N3x6T+0XxlLTOjdjJMnqYthR15jOW8XvViJ3N7x3PRf0LGg2WzjSouYAoEUud+tBcBjRsjXOVluC7sGoMf9h+cqzkJlmJBQHposPl2mWs+ZopZYTkxasFErKBHym9b69NOqIJbUqt7yIH2XIPQCsVID7RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747039646; c=relaxed/simple;
-	bh=pOvpQydW9G7mOb+Bx1viFb769PJHsmY5rTbfQP3cF/g=;
+	s=arc-20240116; t=1747039713; c=relaxed/simple;
+	bh=WAOvh/4GnvFhcgh061nbP20b/JnhXfig2pIhpA4U20k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hl7ELt7A0PZdpaxTsYsd2Qkk8uw4pHgP0pL58u80pE8uxEOLz3YvOqxbfVcIt06sg1D784BGVXdZr9yyNUW/0No1mJGStolypd7X/V8bGX6QNRrcC1hM+x/kLOVXl6YlmZ4F/x+PhDcVCk1C4/NcPWR42KA17u7N/r2JP2K6tVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MV8Jd179; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pofm+GAO9bILqhKa45zW6LkvEZSVjpyiLyYVu/GMGF+6BII8BeXfPkx3Tb5cE978NEbqIMhDZ/yKr/LJRRE+nqReVySr98X/AnBbpIib3GSIL6fHWtcJLYmmf4hjdBh+44MfzHCRvR+D+QCObVMpyTdJPcRam+3h21nBzR7bj3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PJQKuorq; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MV8Jd179"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PJQKuorq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747039645; x=1778575645;
+  t=1747039711; x=1778575711;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=pOvpQydW9G7mOb+Bx1viFb769PJHsmY5rTbfQP3cF/g=;
-  b=MV8Jd17956e0I6wrDoHp77t7uMKBFrq27XpeS3k6nWx7VIYoXpYsFZWJ
-   IxMMqJDUXkizriVWWtIsO2wzNNzj6NxL2hsegRGsPtHvMaYR24NVCO1Na
-   CeOUsfTUXDorDuQlFaILKUi+j8WAbRXd7GNoleAUUYwfn29PqQqLwLgSs
-   QQaX0t20OT04AANDv5fyGGAVh/EIpWMzGX2M5vy1HZuOGknfyCBGx/hEd
-   lT3EdxjPjvPhNPZergq53j/NZ1WwXYl9SKo0aa7Dy3vdmgfGKxGyNhXPI
-   358KMid0x1bpIWW1/+3g3SDKRKSor6PYTOnsA+dQnmbs/SSuM6h0EivPm
-   Q==;
-X-CSE-ConnectionGUID: htLpHsWXSyieBPqiealx2Q==
-X-CSE-MsgGUID: q+/IkamTRMKRD29AsxjjIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48519947"
+  bh=WAOvh/4GnvFhcgh061nbP20b/JnhXfig2pIhpA4U20k=;
+  b=PJQKuorqh3cAXwJckaTgxdUfsQq49rIGjkOUbJ6hzyW1Bb9QuhRlpVmr
+   Xp4Gb3YLYvesFDu2X6tbNqBVDIPlbTTcbiea2J2eveLU6S0DTHQCuMFDD
+   6ucbbb/cDIQLKDC2RVYfl4g+YrphLJ+FmSK38jKoIgy/54Z6QRDIs3Dj5
+   QXe89yPFaNw4IT1dvD3F4YIcFgbr07T507xq2rr1e6KMoSjSl7BRyCo9l
+   jfHiwnkKdIpK2zY1IUwH+gVSdCYFzbAWRK1ImXnBe0izn0Fi+hHpz42SN
+   YG58KkWvdJ1G1DPyH7P2rZ8SwH56oPXA9dbgBWEcS5mIuLTux+Z58175i
+   g==;
+X-CSE-ConnectionGUID: ovFPYkmkSv2wZCtqTVrRZQ==
+X-CSE-MsgGUID: cChwucTGRw+RCkxHgehp1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48691073"
 X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="48519947"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:47:24 -0700
-X-CSE-ConnectionGUID: 1zLdvAZzQ9qvLMn4jpioTw==
-X-CSE-MsgGUID: l8SgDcjCRKaeYnBn8vMg7A==
+   d="scan'208";a="48691073"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:48:31 -0700
+X-CSE-ConnectionGUID: 8NVwgn5NQtK1eChsNsNmzg==
+X-CSE-MsgGUID: dZvUWkknRcOtJJ8GGXb0/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="137005543"
+   d="scan'208";a="137709382"
 Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:47:18 -0700
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:48:28 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uEOoc-00000000rkH-49kY;
-	Mon, 12 May 2025 11:47:14 +0300
-Date: Mon, 12 May 2025 11:47:14 +0300
+	id 1uEOpl-00000000rm0-2NyE;
+	Mon, 12 May 2025 11:48:25 +0300
+Date: Mon, 12 May 2025 11:48:25 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 20/23] mailbox/riscv-sbi-mpxy: Add ACPI support
-Message-ID: <aCG1kqi2w2EUKWyO@smile.fi.intel.com>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-21-apatel@ventanamicro.com>
- <aCGjEdNVH3ughITd@smile.fi.intel.com>
- <aCGzFVXFBVRbMUKz@sunil-laptop>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: tiwai@suse.de, broonie@kernel.org, 13564923607@139.com,
+	13916275206@139.com, alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org, baojun.xu@ti.com, Baojun.Xu@fpt.com,
+	jesse-ji@ti.com
+Subject: Re: [PATCH v2] ALSA: hda/tas2781: Fix the ld issue reported by
+ kernel test robot
+Message-ID: <aCG12YmBS-9Vmc7N@smile.fi.intel.com>
+References: <20250512081822.1513-1-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,34 +66,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCGzFVXFBVRbMUKz@sunil-laptop>
+In-Reply-To: <20250512081822.1513-1-shenghao-ding@ti.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 12, 2025 at 02:06:37PM +0530, Sunil V L wrote:
-> On Mon, May 12, 2025 at 10:28:17AM +0300, Andy Shevchenko wrote:
-> > On Sun, May 11, 2025 at 07:09:36PM +0530, Anup Patel wrote:
+On Mon, May 12, 2025 at 04:18:22PM +0800, Shenghao Ding wrote:
+> After commit 9fa6a693ad8d ("ALSA: hda/tas2781: Remove tas2781_spi_fwlib.c
+> and leverage SND_SOC_TAS2781_FMWLIB")created a separated lib for i2c,
+> tasdevice_remove used for not only for I2C but for SPI being still in
+> that lib caused ld issue.
 
-...
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://urldefense.com/v3/__https://lore.kernel.org/
+> |  oe-kbuild-all/202505111855.FP2fScKA-lkp@intel.com/
+> |  __;!!G3vK!U-wdsvrOG1iezggZ55RYi8ikBxMaJDVs7u17Z9-7Xa-
+> |  0lnyE4S3m2qmLCcHVK4qH1bD1JuBdzg$
 
-> > > +#ifdef CONFIG_ACPI
-> > > +	if (!acpi_disabled)
-> > 
-> > Hmm... Why do you need this check? What for?
-> > 
-> When we boot with DT, ACPI_COMPANION(dev) will return NULL which will
-> cause a crash in acpi_dev_clear_dependencies(). Let me know if I am
-> missing something.
+This should be in a tag area below, each tag is exactly one line (the same way
+as Fixes:, for example)
 
-Yes, just check that the companion is NULL, rather than the above.
-
-	struct acpi_device *adev;
-
-	adev = ACPI_COMPANION(dev);
-	if (adev)
-		acpi_dev_clear_dependencies(adev);
-
-> > > +		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
-> > > +#endif
+> All errors (new ones prefixed by >>):
+> >> ld.lld: error: undefined symbol: tasdevice_remove
+>    >>> referenced by tas2781_hda.c:33 (sound/pci/hda/tas2781_hda.c:33)
+>    >>>               vmlinux.o:(tas2781_hda_remove)
+> To fix this issue, the implementation of tasdevice_remove was moved from
+> tas2781-comlib-i2c.c to tas2781-comlib.c.
 
 -- 
 With Best Regards,
