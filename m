@@ -1,295 +1,133 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D6429826C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD41297134;
+	Mon, 12 May 2025 19:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747078718; cv=none; b=RPQ0IsdvISck6VtOgB6JISiL9iZHS7TlL8aHi4vhGzSDyEsLH1V+BA8DY9mmcuAOAOkptOfe5qM8FwEZHGHPgcTcYpSlbpLoo5Sqb/4n2GRUZGApz/fzFI9bjiIxOlKV4MTpAj51GjJ3KjBI7bFB5kZI4hCTOSDAkmzDxHnkQs4=
+	t=1747078783; cv=none; b=sqh5e1sOwimXkzGVjowC5Z+bJOw6fZ++T7yOhF7rjj5x+Vza/2nvGICIBys9At+tTvtM02n2mB8UwA7tpW0R/FfRIE6lEYc1X1+Rgx/xFoPq2ghmTAfAv0kJNv7h/gow38Oe44VsXM7gUfD5lhf/Lfqk2bDyXUj7YD0VCgum7Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747078718; c=relaxed/simple;
-	bh=XqEGdfsUGkO19mTxKg2E3payd8kgE0M8puWXFDBpZR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c7vaYbbBx2Up7jFy2h7IlKjBD61Sf5ELAnEZldr20/43kas/0G7WVYKxy+AfagqJdS8X7hUNNB2vGlgXf3iKAzcCXa9aTAZKl8wf2E6WvTh5S4dtux2Y5AqqK2gSUdCZ0aLUW+n+jmBAULKlQmCU+B7lvzlA0PmpsUntUg3ur/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c+1r64b+; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747078783; c=relaxed/simple;
+	bh=zWqwTZnS76HWtNuNUspZIDXiDCFe2LiQkTMjeRhfTaE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=LCh1rtOo8rQf2Jetzwc3p/7whtB7n/8Q2v8cdgYNlVkp0BE0hTfYpupLvjo+lClqNSz57+9hnTU4g8TkumUlrCYtpewms4nXHHOvETAEh2Q96gBYWWm1tYrhlmLEfmQvGh2EJiwzjv1O+OeK2csnRYb3n3iBj9rOhBjXo9aa5FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZJPJ6gNt; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c+1r64b+"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3da73d35c11so3295ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:38:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJPJ6gNt"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4def6955e85so1238196137.3;
+        Mon, 12 May 2025 12:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747078715; x=1747683515; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nZgqvnAFQAowltKv4MUMv8LmXy9URPFUmzmA7urdx5o=;
-        b=c+1r64b+IiTvKDNiDa5WP6E0NiJV7k3kNa5QVj7sa9/RWhpJKbVJ3qgZ4fe+jItoyy
-         ylbWBnlT9bCbp3iZCq0ZNCNjVU9vfxhVOEooAT7SWQ2b6HDEQ2/tjCMnLS+Pi/oeEHaG
-         oKSNV9+3WBlxA2O8k8QPUPSP6QluuuD05gFmhwDQi+q3k4RnQwBoG/UJYlKYp5fM3/3l
-         RidyFCf9JATBfA4VzRMq4ZGTekYtYhd7KW84Gh91E1FvJMrDAnNn76W3MoA5w2CE260h
-         Y2fvyVOFJJlpbuOQs/u68OHHFNubVe4KaS2kjXg2/ZPg/fGChMEWtnJvVrWqu8tqqhCY
-         gleA==
+        d=gmail.com; s=20230601; t=1747078780; x=1747683580; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qEOztcDFpCxbBBwmaH8iMJeEYi2msupjI4IRNdXD624=;
+        b=ZJPJ6gNtI2nFKa4B6+93LLlhWiu+3Psi1HcXgUlat8yucz3Oknx+OrBEE2z7EGS2jr
+         heuqGoGixgwqxl2d20N+yYlUmaQ9JKjUfX/FkVgLY5Nw+Xr76V9y5rJmJzdwJLBH2Iu7
+         gnaCPhTgOtOiuN3ewytZFnMc+fK7SzeXsxcQYcrRb6SJ4b0QxZh5ExFmWI/4nnzS4vsf
+         GWVZgzsBZamnxBGm8u/eggHHcuratk8G+eAxMQRMZU0sk07zNCB61r+N3gFKsXoOIWWq
+         ztmAsYwc3fg1V5PeJTpV8/RJ2C3UrABL3CDoaXa+y8wqFPBGC7OeK84E1HBBMMcgDoEN
+         n1nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747078715; x=1747683515;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nZgqvnAFQAowltKv4MUMv8LmXy9URPFUmzmA7urdx5o=;
-        b=V07e+uy0/TAseecJwQ510TunuGST/FsOjCfiVtKQkKRml1gJtrRxskl6DDc/jchlW0
-         m7SmD7YNs9Yb0YH6XK5P2CoGwdIEfgZtbsbkmDMhzM+YbFGALV9TJasWuZ2vOBmfs2FH
-         x7IurMZDFJszNzWfGflN9qIEoR3nPJsdfdjNYxn5k+u6VJrqEdPyqEvwBqUDYMvhfSj2
-         ehhTkao19/GCpvqh2hWB32Jhr7iSYloNIx+NtncVaeJmsMgqTJBjemGU4cGfOZ1ZJlLY
-         3B3wXolrwixAA0iDTRKdXMzUQDorm0cGq4EPrqnh8HrU9T4mfbt4tENj5IdYjdbBzNxx
-         21fA==
-X-Forwarded-Encrypted: i=1; AJvYcCUez/8RDeFuSMY+3U0P/OWzf8DypOEabPrlTkDgUnL4EN0yYE6/t+jR05YrtTlLgnNt9a7xlBjR1qnDK10=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0hh2/3My0KYqVTz9ZZfHqvN7KMTTi8xCf+7kUdIOPFJTuaUwm
-	/uAO1jzeCbcNyO+ZFVA2moD+0TIOVFV5TdBTsI8XK5uXuUWF8WjCcoAlluV6epnTABbQwenE2K3
-	igqTSyIaeGNVDfqIdF+yTMGJkbeB/JPOhtMTIjgWj
-X-Gm-Gg: ASbGnctMJhWlEJzakoJtbyrH47elDwH9CBAWtuf/DeTV+zU8Sy6F5R5nBD6Bk9MPrI7
-	GAcikOXDsI3YFwroQF2zqSoelCwOe0I+mSEFkvG4P/+8a0beSdsUzRK4Qd8ezAArX+SCVp5ipJB
-	pVdmjmNQQO4/EW+qYVjkG81v9ISJLVvKCEIkBq5geA5ndHOSaF5YzN5Ges4zBcYggmjCFk0P3B
-X-Google-Smtp-Source: AGHT+IFrKDVWmTu4QBNU3Dr+1Blr0vP06f5LkC9U0WmWSt+1gL6Ehj6McIF3PQQCfNjxXcfiDjTSfhOcA7cYcwDOoAw=
-X-Received: by 2002:a05:6e02:1707:b0:3d9:64e3:60d with SMTP id
- e9e14a558f8ab-3db66928053mr507155ab.20.1747078714735; Mon, 12 May 2025
- 12:38:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747078780; x=1747683580;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qEOztcDFpCxbBBwmaH8iMJeEYi2msupjI4IRNdXD624=;
+        b=c0Cz8xdddyPjhl/izxGRlRX3h49z3Bnguwkm/eIvJCkmSVXwTwbrUF0f1n5jrxckS2
+         M6XlS9BD91JHpubZYsmwUsZXISSEsSetWhivZpgTPXPxGOuzTVkU/Fs73yXtVmFaZ8o2
+         k/c5cfTn+282EVhfsK444age8+uv4N5+8qcZEBmiJUONKTMUxuGyt905E5xy7OUlAzb8
+         UfVvFcJefhgD279cMkLD7vQJBj4PEGLHnPPE4241A2Eo4/krhDJygQ+VBU8hZYJXJ28n
+         kwNO23iH9cR9tt89mn/vcb7gzDqzaUUbKpblj9aKetVNbITmVxKC2XstGbOIMcNfuagv
+         k9sg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6I8G+n5Ea2E915MAlFmvMj/xbVlL5q9wOr44vzk2X8uexjiOK0bpBuAp8C1BA/afunzu4ohQomhzF2jvhJtuC0+up2w==@vger.kernel.org, AJvYcCXMOqFl4VftLn18gdiJFnopL/om2E2Qvs9jZnyVlmpj/s24Ti6YUJGY2d7TDn8/mPnhbVtcwxkJdN0hCk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ0xCFg67rn1Teokc/BZHcCn6XN/489iyN1uS17xxJQMUXvWf2
+	xkqrqvqPOl+Jtp+/US+4G4u4yYb/fY8LAOQktlmLirHNH7H0p5+x
+X-Gm-Gg: ASbGncspq9w5ngikD63x1lBr3qsK/Fsh6Z4CxHfkq+VfwJRwwPvACd9wYPZ1vLgdCGv
+	u7DID3EUAbOx0gHeQqTPEOKVUiIXua9JEo8MHHv1N8I+m7HyqV+ZNRTYpM4dOtzWtK06JXZGeX1
+	gwslYxUK8a1SMXkCfoNGmVgE5WPdrau2jg0HVWrirZsJR8BTRdiCF1ARxHvev8sqc0Ms4vteBmP
+	PIecUZyO3WPARcIvD/AWRJag/IvgUJ8Qm252L6saajxCHvjQ5n1AlKUPXOsOWd4CpUmoqzmQ0i2
+	Q5PDuHCgehriXiB66NueJhp8g88Ux79OVHKuH31WJsGo
+X-Google-Smtp-Source: AGHT+IFHmKvVYujoDfRaGW+gYgzFRF0r8EvU+3iFPT4pOgmntvnbdDEVJmbw+LxRM/Qz/Hc08nt4Bg==
+X-Received: by 2002:a05:6102:3ca9:b0:4dd:b9ec:404e with SMTP id ada2fe7eead31-4deed375c48mr12172963137.13.1747078779923;
+        Mon, 12 May 2025 12:39:39 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f603551dsm5757258241.0.2025.05.12.12.39.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 12:39:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
- <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com> <aCI0oDBSz86S9fz-@x1>
-In-Reply-To: <aCI0oDBSz86S9fz-@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 May 2025 12:38:23 -0700
-X-Gm-Features: AX0GCFtzM5CEYYKnrd7gMGrMVs73MKrzoUVJrZgnpDoBSkWMk-0hEDLTIn3Kn2I
-Message-ID: <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
- counting perf events
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	maddy@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=6f0cc1decabd567587322599201ccc75fb70ba8e65c9007377c55730d4cd;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Mon, 12 May 2025 16:39:34 -0300
+Message-Id: <D9UFQL7OM386.2PQP7IG73O0MQ@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Joshua Grisham" <josh@joshuagrisham.com>,
+ "Mark Pearson" <mpearson-lenovo@squebb.ca>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Mario Limonciello" <mario.limonciello@amd.com>, "Antheas Kapenekakis"
+ <lkml@antheas.dev>, "Derek J. Clark" <derekjohn.clark@gmail.com>, "Prasanth
+ Ksr" <prasanth.ksr@dell.com>, "Jorge Lopez" <jorge.lopez2@hp.com>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH RFC 5/5] platform/x86: samsung-galaxybook: Transition to
+ new firmware_attributes API
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
+ <20250509-fw-attrs-api-v1-5-258afed65bfa@gmail.com>
+ <5706c07a-f8e7-4dc8-95a0-b128f1306c02@t-8ch.de>
+In-Reply-To: <5706c07a-f8e7-4dc8-95a0-b128f1306c02@t-8ch.de>
+
+--6f0cc1decabd567587322599201ccc75fb70ba8e65c9007377c55730d4cd
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Mon, May 12, 2025 at 10:49=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, May 12, 2025 at 10:23:39AM -0700, Ian Rogers wrote:
-> > On Sun, May 11, 2025 at 10:58=E2=80=AFPM Gautam Menghani <gautam@linux.=
-ibm.com> wrote:
-> > > Add counting.py - a python version of counting.c to demonstrate
-> > > measuring and reading of counts for given perf events.
->
-> > > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> > > ---
-> > > v1 -> v2:
-> > > 1. Use existing iteration support instead of next
-> > > 2. Read the counters on all cpus
-> > > 3. Use existing helper functions
-> > >
-> > >  tools/perf/python/counting.py | 34 +++++++++++++++++++++++++++++++++=
-+
-> > >  1 file changed, 34 insertions(+)
-> > >  create mode 100755 tools/perf/python/counting.py
->
-> > > diff --git a/tools/perf/python/counting.py b/tools/perf/python/counti=
-ng.py
-> > > new file mode 100755
-> > > index 000000000000..e535e3ae8bdf
-> > > --- /dev/null
-> > > +++ b/tools/perf/python/counting.py
-> > > @@ -0,0 +1,34 @@
-> > > +#!/usr/bin/env python3
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# -*- python -*-
-> > > +# -*- coding: utf-8 -*-
-> > > +
-> > > +import perf
-> > > +
-> > > +def main():
-> > > +        cpus =3D perf.cpu_map()
-> > > +        thread_map =3D perf.thread_map(-1)
-> > > +        evlist =3D perf.parse_events("cpu-clock,task-clock", cpus, t=
-hread_map)
->
-> > Thanks Gautam! I think this is really good. Perhaps the events could
-> > be a command line option, but I can see why you want to keep this
-> > similar to counting.c.
->
-> > > +
-> > > +        for ev in evlist:
-> > > +            ev.read_format =3D perf.FORMAT_TOTAL_TIME_ENABLED | perf=
-.FORMAT_TOTAL_TIME_RUNNING
-> > > +
-> > > +        evlist.open()
-> > > +        evlist.enable()
-> > > +
-> > > +        count =3D 100000
-> > > +        while count > 0:
-> > > +            count -=3D 1
-> > > +
-> > > +        evlist.disable()
-> > > +
-> > > +        for evsel in evlist:
-> > > +            for cpu in cpus:
-> > > +                for thread in range(len(thread_map)):
->
-> > I kind of wish, for the reason of being intention revealing, this could=
- just be:
->
-> > for thread in thread_map:
->
-> > I can see the problem though, the counts lack the thread_map and the
-> > thread_map is needed to turn a thread back into an index. Perhaps when
-> > the python counts is created we hold onto the evsel so that this is
-> > possible. I also suspect that in the code:
->
-> > for cpu in cpus:
->
-> > The CPU number is being used rather than its index, which is a similar
-> > story/problem.
->
-> Lemme see the rest of this code...
->
-> +static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
-> +                                 PyObject *args, PyObject *kwargs)
-> +{
-> +       struct evsel *evsel =3D &pevsel->evsel;
-> +       int cpu_map_idx =3D 0, thread =3D 0;
-> +       struct perf_counts_values counts;
-> +       struct pyrf_counts_values *count_values =3D PyObject_New(struct p=
-yrf_counts_values,
-> +                                                              &pyrf_coun=
-ts_values__type);
-> +
-> +       if (!PyArg_ParseTuple(args, "ii", &cpu_map_idx, &thread))
-> +               return NULL;
-> +
-> +       perf_evsel__read(&(evsel->core), cpu_map_idx, thread, &counts);
-> +       count_values->values =3D counts;
-> +       return (PyObject *)count_values;
-> +}
->
-> Yeah, it is expecting the cpu_map_idx but the cpu number is being used,
-> that is a bug.
->
-> The way perf_evsel__read() is implemented:
->
-> int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int threa=
-d,
->                      struct perf_counts_values *count)
->
-> It expects a cpu_map index, not a cpu and then a thread that in its
-> prototype seems to imply its not an index? But it is an index as it ends
-> up being the 'y' for:
->
->   xyarray__entry(_evsel->mmap, _cpu_map_idx, _thread))
->
-> :-/
+Hi Thomas,
 
-Yeah. In the C code we've pretty much committed to notions of cpu map
-index and CPU. We're more ambiguous with threads, but generally thread
-is actually thread index into the thread map. As you say it is for the
-xyarray so that we can densely pack things by index rather than having
-huge gaps, say between PIDs. For the python we don't have to have a
-1:1 mapping with the C code, so I was wondering if we could just
-remove the notions of index and have them be implementation details?
-This would lead to an unfortunate O(log n) translation between
-thread/CPU and index (perf_cpu_map__idx) at the API boundary in
-python.c.
+On Mon May 12, 2025 at 4:12 AM -03, Thomas Wei=C3=9Fschuh wrote:
+> On 2025-05-09 04:48:37-0300, Kurt Borja wrote:
+>> Transition to new firmware_attributes API and replace `enumeration` type=
+s
+>> with the simpler `boolean` type.
+>
+> This is an ABI change, using a newly introduced ABI.
+> Some elaboration why it does not break userspace would be good.
 
-> So probably its best to do it using indexes and when needing to know the
-> pid or cpu number then use some helper to get the entry at the given
-> entry? At least for the perf_evsel__read() API that seems to be the
-> case, right?
->
-> > Arnaldo, could you give some input on what to do wrt indices, threads
-> > and CPUs at the API level? Perhaps we need a refactor and objects for
-> > perf CPU and perf thread, similar to the use of struct perf_cpu in the
-> > C code. The original API all pre-dates that change. The issue is that
-> > changing the API could break existing scripts and we can only fix
-> > those that ship with perf.
->
-> So the original user of the perf python binding was:
->
-> https://git.kernel.org/pub/scm/utils/tuna/tuna.git/tree/tuna/gui/procview=
-.py
->
-> That does basically what the above example does:
->
->     def perf_init(self):
->         self.cpu_map =3D perf.cpu_map()
->         self.thread_map =3D perf.thread_map()
->         self.evsel_cycles =3D perf.evsel(task=3D1, comm=3D1, wakeup_event=
-s=3D1, \
->             watermark=3D1, sample_type=3Dperf.SAMPLE_CPU | perf.SAMPLE_TI=
-D)
->         self.evsel_cycles.open(cpus=3Dself.cpu_map, threads=3Dself.thread=
-_map)
->         self.evlist =3D perf.evlist(self.cpu_map, self.thread_map)
->         self.evlist.add(self.evsel_cycles)
->         self.evlist.mmap()
->         self.pollfd =3D self.evlist.get_pollfd()
->         for f in self.pollfd:
->             GObject.io_add_watch(f, GObject.IO_IN, self.perf_process_even=
-ts)
->         self.perf_counter =3D {}
->
-> Then:
->
->     def perf_process_events(self, source, condition):
->         had_events =3D True
->         while had_events:
->             had_events =3D False
->             for cpu in self.cpu_map:
->                 event =3D self.evlist.read_on_cpu(cpu)
->                 if event:
->                     had_events =3D True
->                     if event.type =3D=3D perf.RECORD_FORK:
->                         if event.pid =3D=3D event.tid:
->                             try:
->                                 self.ps.processes[event.pid] =3D procfs.p=
-rocess(event.pid)
->                             except: # short lived thread
->                                 pass
->                         else:
->                             if event.pid in self.ps.processes:
->                                 try:
->                                     self.ps.processes[event.pid].threads.=
-processes[event.tid] =3D procfs.process(event.tid)
->                                 except (AttributeError, KeyError):
->                                     try:
->                                         self.ps.processes[event.pid].thre=
-ads =3D procfs.pidstats("/proc/%d/task/" % event.pid)
->                                     except:
->                                         pass
->                     elif event.type =3D=3D perf.RECORD_EXIT:
->                         del self.ps[int(event.tid)]
->                     elif event.type =3D=3D perf.RECORD_SAMPLE:
->                         tid =3D event.sample_tid
->                         if tid in self.perf_counter:
->                             self.perf_counter[tid] +=3D event.sample_peri=
-od
->                         else:
->                             self.perf_counter[tid] =3D event.sample_perio=
-d
->
->         self.evlist_added =3D True  # Mark that event arrived, so next pe=
-riodic show() will refresh GUI
->         return True
->
->
-> So it was more for catching new/dead threads without having to process /p=
-roc.
+I thought it was not a big deal since the driver was still new. But TIL
+fwupd actually interfaces with the firmware-attributes class.
 
-Yeah. I think the sampling API is okay. The nice thing with Gautum's
-patches is adding support for counters for use-cases like perf stat.
+I won't break the ABI of this driver in the next revision.
 
-Thanks,
-Ian
+--=20
+ ~ Kurt
+
+>
+>>=20
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>>  drivers/platform/x86/samsung-galaxybook.c | 299 ++++++++++++-----------=
+-------
+>>  1 file changed, 114 insertions(+), 185 deletions(-)
+>
+> <snip>
+
+
+--6f0cc1decabd567587322599201ccc75fb70ba8e65c9007377c55730d4cd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCJOewAKCRAWYEM49J/U
+ZngQAP9ySJTGTF5F4pQBV3c6rnU43Vrxg972tsx/srVdfJAnZQD8CvXtrz8WaK/6
+waldMQy5miKuhazsWGHV6J6XdI33dQw=
+=Jldn
+-----END PGP SIGNATURE-----
+
+--6f0cc1decabd567587322599201ccc75fb70ba8e65c9007377c55730d4cd--
