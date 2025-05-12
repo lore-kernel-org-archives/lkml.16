@@ -1,76 +1,51 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8B525179E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED89250C05;
+	Mon, 12 May 2025 16:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067932; cv=none; b=oXhLAylFLYC7kS+yntLyxvvMPv2AB4iYjJfbEsTbISK4v3ktlMg6We8H5VgjMoIKBWbJ9Tu6u/zrqp3LktNf9KSlbiLHSZoKTKb8xz4RgtnMTiQ23SF3fq3qTv+bpdrZ5IgLYXX+H6K5s5/r5pdFyGemmY7X7yG7ppJArblwUGM=
+	t=1747068028; cv=none; b=RLceQLMfDeUVg85wvH793GJm4lZhohQpsF54nu6QXvE0mHlWvcH3ZvxWNTxz9o+0WIN7N5tysJSGmXjM924oQJ41HU5QYbAVSmqkq7LaGFFzqbDDOtOepueZdg6vovig77m8qUCkl5xTuoV91jSiUq4a5DvpJJ3onH+wQ2NZKWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067932; c=relaxed/simple;
-	bh=Yehlnc4ZkWKIJwXXxMMs5cwKVop6FmBrsGoE123p7sE=;
+	s=arc-20240116; t=1747068028; c=relaxed/simple;
+	bh=6tcoJxQNycyS+g+UuadukNx5hqQX0eM1s0P5TP7QSpU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hETZQKGjcnlLucBCojryv3Fd/kVnnbcry++q5ogLYkisD865AvTEjGc6MogkXKi1K68wzviT6ASk+XTcVfIDlzbYW4ktHpuO7G6cSR6Pg27CPRCKZslJWW63cBOswl2bvqeizZozIYXmNT8TPZ6bAx09m6oVopHVXp/lxdBR1Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Xm8vpCNp; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2kq2KQ2yoO503sMHtaPjIPbbIV+BPuMIa7aoPYU2gTIXxq5EF20gC/X2Dc5eFnRydwchQ7HHo4J9xp/ox1CKEoGjvPQK3aNQEjKY2PQkji9C/QAN1eFiBdwyJsD3i+dcFIWG8GF7CNsp+nF2oBAhNJyksPjAk9phup6/BXAjbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NmyYf+UT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Xm8vpCNp"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7cad6a4fae4so819390585a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:38:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747067929; x=1747672729; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1julnBD5+GcSaXU+eTIdcuLbn0p5bHzSEbl/z4yoEN0=;
-        b=Xm8vpCNpFOh21VbbJXb5ohXssAScKGNIOsMZmLyI3oxETyYNV37N+q66z/aS2xHC+o
-         /oyEKGkg8svFA9a8bvw5+7smp9Wyg+ch3Vb61GkXs6UoTX6y70/D+x8CZwGoQ7FxqJlb
-         AYDqJa5RvRQ+yzYCnifCTclasQIQqhVftHeBW6gf5+6tzvqMXUymcPdZ33KNxXLlUHvQ
-         gaPD/THBnQVMEHdbI8nLjsmLTdKtG0xrN72msZI5cHU0rotfnM7MlMJON8sBbf6fVbFR
-         j/1xNs33VRfeMW5R6x7/QymSzZgOMQ3u1YtQg31akTqS4pNkGFfUMY0V9sEq74kL0H5x
-         SfJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747067929; x=1747672729;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1julnBD5+GcSaXU+eTIdcuLbn0p5bHzSEbl/z4yoEN0=;
-        b=GsARkkd2jOrePU3k27xCPq6LZ/tR2dzv2j5Gr3Q1tnKpU9DqJX/lWxTUQM3YX2jh2p
-         bFqfOkrtqezPAjeiskf0Pmf0CPAUmEsL6vgrglJcJkhRHoe6FPnMiXNXZilaEFf7tJh6
-         28kQBfrC2zAPIUD9cCTyMjnuYYrqmBl6WBUNXZ948sjC7woT0zorm8fjq/whcJH9xhtP
-         VKQDLFUnYljARBRhwXDofdyJVDgIr6cwAYEQRTbgZHS5FzPwv9Qm+0PKY4hlhUGkDfaS
-         P5b9xjV61gOrZvo/V1e8Rtq/VnT7P74lg53n/2xNj/YU6mYy1kOOWC3R4ha0zCvJtFlr
-         7ZWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVX/+l4z7J36c7JPkRp4aBcN2fEypY5HCcj20WwMBZnRzOEfgAOg6NgwGKcRLah09+490HuJDK94p12nr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt4xHYPlJzVsOh48dUeGQorxNR/JTGjri73JACERnxXvWErH+i
-	jxQk/VBpA/AtfGIX7/8MOqy8vNgev7880ifKsu/QGOOcpS6JP6ZSF5GbTFewh64=
-X-Gm-Gg: ASbGncuIfWSvEeYZQcgvY8dkkCXH90Dm4kbwBznbQFXQ6Gqv7Cdr2ETK30+mYH5H7+g
-	x1kOwjRL7rcqrx+r8La7dfk7aK/Az0nUtN1T9jrvPuDa2JjIk0BW9KJd4OB2QKXhXdrZQ58TwCe
-	dosrHJbuFEBTdPjMyKFJzcmn/kanJOYxwCceB4asKHchJJelQgI+hy4s2XBsevviP+npF1UzlTO
-	+mZCiwOrTfKO1Ixpsd9K24Y1f6uJsZDo9Uj86s3Mo53auHqMuAf6PlqIdEWrMKhKE52/kX7I+tp
-	eW6GkJ7CbyaVJ8BZnVhKShBZnAdH+j1VjoseiJhycFyJv+608f4ra/84ehM43tC2M/xQRp6HHmh
-	1dJwwd2ZnQInxbS1z+fD1JXQOepWSoNIjfXZ+8ggDuQ==
-X-Google-Smtp-Source: AGHT+IHHMUdqgvopOB3bvhxDrzkGlwPiAUOBbIhdmlc5mYj64PucOzKQfQk92T4hzK7H4RQ84n8s7g==
-X-Received: by 2002:a05:620a:2a09:b0:7ca:d53d:af75 with SMTP id af79cd13be357-7cd01155c4bmr2207761385a.56.1747067929639;
-        Mon, 12 May 2025 09:38:49 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f4e093sm568092885a.8.2025.05.12.09.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:38:49 -0700 (PDT)
-Date: Mon, 12 May 2025 12:38:47 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, corbet@lwn.net
-Subject: Re: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
-Message-ID: <aCIkF6RZJtU0m3Ia@gourry-fedora-PF4VCD3F>
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-15-gourry@gourry.net>
- <aCIjMNooAzKaONod@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NmyYf+UT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A356C4CEE7;
+	Mon, 12 May 2025 16:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747068027;
+	bh=6tcoJxQNycyS+g+UuadukNx5hqQX0eM1s0P5TP7QSpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NmyYf+UTzTUMyJDclwm9Ra8k0Vriwlze7yPBcvq/W4d4jQNjgwbz6C6z9RkxsfCct
+	 owjG9TO+GLMSpIeCLcCmV5Zv5ZCJFcmB8PE7TDHxqW4ZVr5wo8S6dE8qzqPb9sFptK
+	 RLk0YrbmJYZWjicM8Kcoqc91EyxrN5VD2JNu9xsCgPapu9zpMl4Pio9E/2DYKNKNfo
+	 wwdjaMZteB5o1I7hWPGDWKiH2U1KpdMr0pFZSERvdhxoKDGcfj6KLsZS371rnAIPRS
+	 ayFTAgV5wRwtR9wwHybcCqKU+X92fGrR4/tFFU6ICJbZczo0ypwXUKk7QKECwJNNrT
+	 vbsMPzcjNGWCw==
+Date: Mon, 12 May 2025 11:40:25 -0500
+From: Rob Herring <robh@kernel.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>
+Subject: Re: [net-next v11 1/7] dt-bindings: net: Add MTIP L2 switch
+ description
+Message-ID: <20250512164025.GA3454904-robh@kernel.org>
+References: <20250504145538.3881294-1-lukma@denx.de>
+ <20250504145538.3881294-2-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,24 +54,230 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCIjMNooAzKaONod@casper.infradead.org>
+In-Reply-To: <20250504145538.3881294-2-lukma@denx.de>
 
-On Mon, May 12, 2025 at 05:34:56PM +0100, Matthew Wilcox wrote:
-> On Mon, May 12, 2025 at 12:21:31PM -0400, Gregory Price wrote:
-> > Document some interesting interactions that occur when exposing CXL
-> > memory capacity to page allocator.
+On Sun, May 04, 2025 at 04:55:32PM +0200, Lukasz Majewski wrote:
+> This patch provides description of the MTIP L2 switch available in some
+> NXP's SOCs - e.g. imx287.
 > 
-> We should not do this.  Asking the page allocator for memory (eg for
-> slab) should never return memory on CXL.  There need to be special
-> interfaces for clients that know they can tolerate the added latency.
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 > 
-> NAK this concept, and NAK this specific document.  I have no comment on
-> the previous documents.
+> ---
+> Changes for v2:
+> - Rename the file to match exactly the compatible
+>   (nxp,imx287-mtip-switch)
+> 
+> Changes for v3:
+> - Remove '-' from const:'nxp,imx287-mtip-switch'
+> - Use '^port@[12]+$' for port patternProperties
+> - Drop status = "okay";
+> - Provide proper indentation for 'example' binding (replace 8
+>   spaces with 4 spaces)
+> - Remove smsc,disable-energy-detect; property
+> - Remove interrupt-parent and interrupts properties as not required
+> - Remove #address-cells and #size-cells from required properties check
+> - remove description from reg:
+> - Add $ref: ethernet-switch.yaml#
+> 
+> Changes for v4:
+> - Use $ref: ethernet-switch.yaml#/$defs/ethernet-ports and remove already
+>   referenced properties
+> - Rename file to nxp,imx28-mtip-switch.yaml
+> 
+> Changes for v5:
+> - Provide proper description for 'ethernet-port' node
+> 
+> Changes for v6:
+> - Proper usage of
+>   $ref: ethernet-switch.yaml#/$defs/ethernet-ports/patternProperties
+>   when specifying the 'ethernet-ports' property
+> - Add description and check for interrupt-names property
+> 
+> Changes for v7:
+> - Change switch interrupt name from 'mtipl2sw' to 'enet_switch'
+> 
+> Changes for v8:
+> - None
+> 
+> Changes for v9:
+> - Add GPIO_ACTIVE_LOW to reset-gpios mdio phandle
+> 
+> Changes for v10:
+> - None
+> 
+> Changes for v11:
+> - None
+> ---
+>  .../bindings/net/nxp,imx28-mtip-switch.yaml   | 149 ++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> new file mode 100644
+> index 000000000000..35f1fe268de7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> @@ -0,0 +1,149 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/nxp,imx28-mtip-switch.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
+> +
+> +maintainers:
+> +  - Lukasz Majewski <lukma@denx.de>
+> +
+> +description:
+> +  The 2-port switch ethernet subsystem provides ethernet packet (L2)
+> +  communication and can be configured as an ethernet switch. It provides the
+> +  reduced media independent interface (RMII), the management data input
+> +  output (MDIO) for physical layer device (PHY) management.
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx28-mtip-switch
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  phy-supply:
+> +    description:
+> +      Regulator that powers Ethernet PHYs.
+> +
+> +  clocks:
+> +    items:
+> +      - description: Register accessing clock
+> +      - description: Bus access clock
+> +      - description: Output clock for external device - e.g. PHY source clock
+> +      - description: IEEE1588 timer clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ipg
+> +      - const: ahb
+> +      - const: enet_out
+> +      - const: ptp
+> +
+> +  interrupts:
+> +    items:
+> +      - description: Switch interrupt
+> +      - description: ENET0 interrupt
+> +      - description: ENET1 interrupt
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: enet_switch
+> +      - const: enet0
+> +      - const: enet1
+> +
+> +  pinctrl-names: true
+> +
+> +  ethernet-ports:
+> +    type: object
+> +    $ref: ethernet-switch.yaml#/$defs/ethernet-ports/patternProperties
 
-This describes what presently exists, so i'm not sure of what value a
-NAK here is.
+'patternProperties' is wrong. Drop.
 
-Feel free to submit patches that deletes the existing code if you want
-it removed from the documentation.
+> +    additionalProperties: true
 
-~Gregory
+Drop.
+
+> +
+> +    patternProperties:
+> +      '^ethernet-port@[12]$':
+> +        type: object
+> +        additionalProperties: true
+> +        properties:
+> +          reg:
+> +            items:
+> +              - enum: [1, 2]
+> +            description: MTIP L2 switch port number
+> +
+> +        required:
+> +          - reg
+> +          - label
+
+'label' shouldn't ever be required because s/w shouldn't care what the 
+value is.
+
+> +          - phy-mode
+> +          - phy-handle
+> +
+> +  mdio:
+> +    type: object
+> +    $ref: mdio.yaml#
+> +    unevaluatedProperties: false
+> +    description:
+> +      Specifies the mdio bus in the switch, used as a container for phy nodes.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - mdio
+> +  - ethernet-ports
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include<dt-bindings/interrupt-controller/irq.h>
+> +    #include<dt-bindings/gpio/gpio.h>
+> +    switch@800f0000 {
+> +        compatible = "nxp,imx28-mtip-switch";
+> +        reg = <0x800f0000 0x20000>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&mac0_pins_a>, <&mac1_pins_a>;
+> +        phy-supply = <&reg_fec_3v3>;
+> +        interrupts = <100>, <101>, <102>;
+> +        interrupt-names = "enet_switch", "enet0", "enet1";
+> +        clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
+> +        clock-names = "ipg", "ahb", "enet_out", "ptp";
+> +
+> +        ethernet-ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            mtip_port1: ethernet-port@1 {
+> +                reg = <1>;
+> +                label = "lan0";
+> +                local-mac-address = [ 00 00 00 00 00 00 ];
+> +                phy-mode = "rmii";
+> +                phy-handle = <&ethphy0>;
+> +            };
+> +
+> +            mtip_port2: ethernet-port@2 {
+> +                reg = <2>;
+> +                label = "lan1";
+> +                local-mac-address = [ 00 00 00 00 00 00 ];
+> +                phy-mode = "rmii";
+> +                phy-handle = <&ethphy1>;
+> +            };
+> +        };
+> +
+> +        mdio_sw: mdio {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            reset-gpios = <&gpio2 13 GPIO_ACTIVE_LOW>;
+> +            reset-delay-us = <25000>;
+> +            reset-post-delay-us = <10000>;
+> +
+> +            ethphy0: ethernet-phy@0 {
+> +                reg = <0>;
+> +            };
+> +
+> +            ethphy1: ethernet-phy@1 {
+> +                reg = <1>;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.39.5
+> 
