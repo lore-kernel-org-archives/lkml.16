@@ -1,167 +1,166 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E0824EF91;
-	Mon, 12 May 2025 08:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E86E2586F6;
+	Mon, 12 May 2025 08:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039730; cv=none; b=jN/XC8pVnhlPdN7V3DWpLU1t8gCkc1OkzNXJJV3P+nXtsXX1dF76smr3jknwDKZniI+so5wUWCwySsRKDlndTGduRPtfpAFBn1jNBsUQLvUbJyAxHA77M+yfl8woybJr8WjU5RKH/hL8+REpnMy3Zsee26/oF4/vvZb0mQ5TXLo=
+	t=1747039738; cv=none; b=GF6FYdsnJTTP744gq0vzxlw2j3hTeNJesDxbLrNPzmECbJZ30MfmfUPh7XJrf3tfGba9zmiMvVQTGCYGCX1Xn1KzHtIH0CvOkRubo1N8Ak+mlsjoDJRb5vhkf1jzsBVy4S28mxI4wL3lcb/98PvB2+Ovmr+svqDifDKgQXdL3/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747039730; c=relaxed/simple;
-	bh=TohzoVoujj3wMO1syJQsU0HTdp5uSqFMNi4c3YnkYAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KZqCKlzKZSSW1XhOAC2ilFS+Qn9xvnhbMEKNdAS7VE5b64N5W2C9aHy29Aq+ssScv/pSTr/NWFINsOEivYA3Wmm8/2/TmfM24LG//wnql5PwelzGp8E5uLV/AdlVw2yHbHf/HYESbsB2qawWIxbvdZIqwpJ+nObVWeT/LlvmkAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=SZ/ros5q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=G4AYecCo; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1747039738; c=relaxed/simple;
+	bh=lkeydaDQhOVDY2emwYy+Nki7xldXDJATMBo1Zd76lPI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ly1wmnxeIUDTpsGWNtN5zsy7CFCZ9jn2mlpp2DeJfensLK1Nu4XyhmW2yU2ahBbAELaJBihhpsZbvEeTz+jeesWDdh2jJMO3crEx8wYBbp0yMHk8ckXeV3Yp4/1pffs2gXdAKIvonx1Jh9cs1d3KAK3oEGzhPn7Q/OlIlDT6bm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LwTjYDGN; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="SZ/ros5q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G4AYecCo"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4087C11400DE;
-	Mon, 12 May 2025 04:48:47 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Mon, 12 May 2025 04:48:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1747039727;
-	 x=1747126127; bh=WULCfkAwHtfstIJSxGuUyz6cal8DdjdU6QnR2Oc3ZO8=; b=
-	SZ/ros5qoewusSx7EovIhw2qsm3AWHttVtHKOypd/ijyzJcfhwdTikLrGNh9Ra2B
-	/0fMSOYOuqk00zWK29iBBjzX1IBheEXSemXGTxY0HtMWZSaiMLjgqzdJU3jZccTk
-	yw3OiE+6pky6fI5dwcz8xLKCaeR5iGL20y3M9YKuPCwgsMWCVn68DgC3HHYcDY5n
-	fnVzp63R1PEjEZ2HNJiw9qeYepZ76ukT2NYsoSUEPi9Ms6eb72aAZLDAT4Tu95wn
-	mWLy8mc1eUf01g7sDomtLtfY1QMW9oc7IYQza8YGvhE8PaXhiY3MMWRNFVkxKfni
-	k2s1pkLSN4AqrEJhXY1Ofw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747039727; x=
-	1747126127; bh=WULCfkAwHtfstIJSxGuUyz6cal8DdjdU6QnR2Oc3ZO8=; b=G
-	4AYecCoowub7hP3lwF9PaaXo59rlP9OkUejaFtuMTDbN0twlVNRD35wdk/18CPYd
-	T0msMRrX3or3eghk9byKJ3qiCnOcoB0AUwVMQEPQ49SClP//J1a5CS/NexO6W65a
-	JWrZJ4hldSHr1aXoLJQOf+LyO3Ydo3W6mJtmkBBgjIFxeDbSJqJLA+SIR8c5c6fq
-	HTeqxINZ/A913EAzn4Ztp3lqYTimE2zyqzR3jJ7lWVzXezyzrWCvQpl7YGzl8sT9
-	JVAxIk2u0POulY0ZY3m9I+dsHIEX799LO9tiYULQ6WYdG2EthAUKVZYX5XpVxLsI
-	Ttdhm13hwwPZs9398f9lw==
-X-ME-Sender: <xms:7rUhaEygiFGvOS5a2_zINcfTajhFXKG1JguzTApfZqIaJR40qK3kNw>
-    <xme:7rUhaISkNm2Wb5fhp3NaJtftjbRIkagk98t3S3n7D_7Hm4yjKYkCiHOLdlZlum2kP
-    wmTKKgu-su-NgUu1lg>
-X-ME-Received: <xmr:7rUhaGX8IrEYmYqkqJXQxLcD1Ei6-tF1zlR4CFWAWwET8coYm4h_U3dN7Wp7xjE7zsBok2lnPTNk2Rl19XS9RHIatx4aZVkUdQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtkedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
-    houggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffr
-    rghtthgvrhhnpeefhfellefhffejgfefudfggeejlefhveehieekhfeulefgtdefueehff
-    dtvdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthh
-    drshgvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopegrlhhokhdrrg
-    drthhifigrrhhisehorhgrtghlvgdrtghomhdprhgtphhtthhopehmtghhvghhrggssehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehsrghkrghrihdrrghilhhusheslhhinhhugi
-    drihhnthgvlhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
-    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhgruhhrvg
-    hnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthho
-    pehlihhnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhinhhugidqrhgvnhgvshgrshdqshhotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:7rUhaCihp2K7CZtHu3f_iD8IkvxAiWNjNUr7zbMbhwbDihNr9y5AMg>
-    <xmx:7rUhaGBSTRkHsBFAG9WhigAvLz4hhL-xkaIRJoanZEk_9qrltUNzog>
-    <xmx:7rUhaDLvVO8xFbI8_jbmA8KHPFJF8xj9y5P1IfH2ZuL2VaeA8zpzRQ>
-    <xmx:7rUhaNBVxoamandMRYGWs5YrR_Ecki1Np2nAlr9NA2rTxg38D3FW_w>
-    <xmx:77UhaE7-OnrfxsxKoJmQ8euqkCkF2M7sTllfdholHIUm3F0YYQQJJCnL>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 12 May 2025 04:48:46 -0400 (EDT)
-Date: Mon, 12 May 2025 10:48:43 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: ALOK TIWARI <alok.a.tiwari@oracle.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] media: rcar-csi2: Add D-PHY support for V4H
-Message-ID: <20250512084843.GE2365307@ragnatech.se>
-References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
- <20250511174730.944524-5-niklas.soderlund+renesas@ragnatech.se>
- <10d2ae58-8da8-4802-95be-951d8b376551@oracle.com>
- <20250511200333.GA2365307@ragnatech.se>
- <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwTjYDGN"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70a32708b4eso27069697b3.3;
+        Mon, 12 May 2025 01:48:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747039735; x=1747644535; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f9owvXXSS3Z25bfsyDSETQw2QiBL7MzvlYy/z9dIazY=;
+        b=LwTjYDGNs5Zj1xpkWAVZN3g9T2Evpqz2frfre58jqvBS52v0rUPniF265feswYzVao
+         H/Nbf1C20qCZfcoT8oZF3C+ibAkjZ8cZuqcnPYFrN8phxTTGh6Nj2Yrpv4QS7YrXfi6v
+         zW40fjjqp2ImujZz9zgSnufEnRyV8kV7QpTKhDbOC2vy/qgZXygsi5NtfISj8jgIjlLf
+         E5zRN4IIZ+wNhzqlSNnSwAr/9b0JWGpy8QXYNZp7cOQhVPvInlBEfhylZRu5c1Aw5/un
+         9LnnYOmZ+GxWjsMgasWYGaLgAdIdcQruzc4eg1At6EIQtvcPHeMLwFUwjePDvzv/Rtay
+         HanQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747039735; x=1747644535;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f9owvXXSS3Z25bfsyDSETQw2QiBL7MzvlYy/z9dIazY=;
+        b=uclt0JgnM9udzS4iLh5BVyqcP1e4jd6jawUwQQzVUU489xf8grc/K3dVoHbmkSBbyr
+         Mfr9jdZgtgpb0Trv3QQWqA8VwVZnr48zVEyS6VYpsq3sujkfo9oNN+Um0ZudoAZzSEMd
+         G3anvfa3mgPb933mOrhsY2RnOkgDdH5m0jU4PNymAO+YDVyTjxdrfvzC1iBqBdTT90br
+         lJY8b0pE0GM73PPGOARqY2i2kyq/ICJLJ/Ogw6Bb4bukXDJmAvzYNNfBUgATlPtiAEbN
+         O7bh0fah8Xa6M9YnsPqvmP4o4Pqo2usmY4pqopIk2RJFehsh+qRs12RNUcjXL6TcNZvI
+         uGmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJPHXnPfT5WMqzvXYOJIU3q3gNFr+rl2B2LeqCeOS9NynJYnW2zbPiwq7rkGdEGP+QubNQxRuYvj+1@vger.kernel.org, AJvYcCUJxnPVKjGBVHphIkrvcepZfukGOX2nEAMIkHb4CPI8dJlKBotfsr5Ai3ev5SFJmn9HIQWq2qEjko29Wg==@vger.kernel.org, AJvYcCUVR92qcIR5PJxVG97DAXHd8DG+Hxe+04jW8C11Gq5YZO8RAI56vh/szMXfweO4AS5mQ4wbKqN2KUb9@vger.kernel.org, AJvYcCVNG7cAf+3ampJzkRtTp+jKlixhIHgdPrAA+G9P+ryqaxGQT7HcW7SJ7sUVEI+VP00k2sDnEapubRurjdY4@vger.kernel.org, AJvYcCVVU9Jd/XQdJHAfOziCGuD7UL6zaDbvliqMelC57qWyiacYrZ6NlrMWS2gkNO63LVHFWHTGmlqxbPk+tHI=@vger.kernel.org, AJvYcCW+hudjkRwvAHMHacecLNhrzm+L2PNATDh213l6FKarASCeiCcdivHp2GcGKvT3EKyciuK3b6787yc=@vger.kernel.org, AJvYcCW4Boupptr2ZLKRUz+AZwSijnKpm1z5c5JleT1c/HysN3MahggMuMDsyDJadKWNP2YkcABAuOkO@vger.kernel.org, AJvYcCWOXskcMjyu+iz3FWO/9Ksg/15AvUadQUOlzxQmwMuY6wYN/KuuDCLEAwuOS/5sgN0NyhZUcTocBccZ@vger.kernel.org, AJvYcCWbRypAitLKx3EdBzUpWLn2QGI2L7e7Epj3vrFrhyEMeEV+BvJuM0ov5l+9cJpNOP07DU/yc1JKd6AQWsYBu+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbbHvCBSN1t2LPwOl5xBqzeMBmVPTB8+B49E8tiTvc3vQ6vGhL
+	vfjApqtTaPspiP21vSv0nq7F+Xtyg1ZBIs9DF2X1Qw5PJezh6qsrb3wx3Er1yuMKwoQihvFb/Ks
+	cJud27p918ZBB7R+bWJAX46cEk5s=
+X-Gm-Gg: ASbGncvcGTBBFc10anjJJU+hzZNGJzzFGuo82d1CNJBW4J5P7+KXMaWeM4ZU4ykYwcj
+	wAfC7E3i8kxIdP+QMTgGK2JMclpgLtazi3fc0IuIL+SD1HlUQPYte5a+tznj4gP9cFm8nJCRSpj
+	Iqiflj4fStismdAYVNEtZXHGAtlgAqxM8S1DVF/YgVePbNtXtfDcqmsMImCN+7iJQiwIQ=
+X-Google-Smtp-Source: AGHT+IGoV/9Uhqv+Fns6NNN0/nBMkui2r5bJm6i3AohL6oVMnwKeqZTPBLmpOVCazRLyrYCpscO9SNAXRpjxx0PT0z0=
+X-Received: by 2002:a05:690c:45ca:b0:708:bfc6:c7cd with SMTP id
+ 00721157ae682-70a3f9f3123mr178533627b3.6.1747039735377; Mon, 12 May 2025
+ 01:48:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
+References: <20250423094058.1656204-1-tmyu0@nuvoton.com> <20250423094058.1656204-2-tmyu0@nuvoton.com>
+ <20250501122214.GK1567507@google.com> <CAOoeyxVL2MV83CJaYCXMiw0b5YUzk728H4B9GY1q9h_P8D43fg@mail.gmail.com>
+ <20250502080754.GD3865826@google.com> <CAOoeyxWpYmcg1_FBXYqDfMi28R5ZXp2Sk2PhUo=cL10Nn3iVEw@mail.gmail.com>
+ <20250509142819.GG2492385@google.com>
+In-Reply-To: <20250509142819.GG2492385@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Mon, 12 May 2025 16:48:44 +0800
+X-Gm-Features: AX0GCFuSSgbm9l1EHQJ-GKZ1ptNofQdnhKrnmSKJDnk1WNlyff_Q4jNqRqJqio0
+Message-ID: <CAOoeyxXxS21S-puegHiCZg-XxEz4rBtq=WJ0Veo1UvbqkbG4GQ@mail.gmail.com>
+Subject: Re: [PATCH v10 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-12 09:37:48 +0200, Geert Uytterhoeven wrote:
-> Hi Niklas,
-> 
-> On Sun, 11 May 2025 at 22:03, Niklas Söderlund
-> <niklas.soderlund+renesas@ragnatech.se> wrote:
-> > On 2025-05-12 00:37:09 +0530, ALOK TIWARI wrote:
-> > > On 11-05-2025 23:17, Niklas Söderlund wrote:
-> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0404);
-> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x040c);
-> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0414);
-> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x041c);
-> 
->  [...]
-> 
-> > > Instead of manually writing each call, it could use a loop ?
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B45=E6=9C=889=E6=97=A5 =E9=
+=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:28=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B45=E6=9C=882=E6=97=A5 =
+=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=9A
 > > >
-> > > for (int i = 0x0404; i <= 0x07fc; i += 0x08) {
-> > >     rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, i);
+> > ...
+> > > > > > +static const struct mfd_cell nct6694_devs[] =3D {
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > >
+> > > > > These are all identical.
+> > > > >
+> > > > > I thought you were going to use PLATFORM_DEVID_AUTO?  In fact, yo=
+u are
+> > > > > already using PLATFORM_DEVID_AUTO since you are calling
+> > > > > mfd_add_hotplug_devices().  So you don't need this IDs.
+> > > > >
+> > > > > MFD_CELL_NAME() should do.
+> > > > >
+> > > >
+> > > > Yes, it uses PLATFORM_DEVID_AUTO, but in my implementation, the
+> > > > sub-devices use cell->id instead of platform_device->id, so it does=
+n't
+> > > > affect the current behavior.
+> > > > However, if you think there's a better approach or that this should=
+ be
+> > > > changed for consistency or correctness, I'm happy to update it, ple=
+ase
+> > > > let me know your recommendation.
+> > > >
+> > > > When using MFD_CELL_NAME(), the platform_device->id for the GPIO
+> > > > devices is assigned values from 1 to 16, and for the I2C devices fr=
+om
+> > > > 1 to 6, but I need the ID offset to start from 0 instead.
+> > >
+> > > Oh no, don't do that.  mfd_cell isn't supposed to be used outside of =
+MFD.
+> > >
+> > > Just use the platform_device id-- if you really need to start from 0.
+> > >
+> > > As an aside, I'm surprised numbering starts from 1.
+> > >
 > >
-> > Unfortunately the values are not all sequential, see the progression
-> > 0x061c -> 0x0623 and 0x071c -> 0x0723 for example.
+> > OK, I will use platform_device->id instead. However, I'm still unsure
+> > why the ID starts from1.
 > >
-> > > or if values are not strictly sequential, iterating over the array.
-> > > static const u16 register_values[]= {0x0404, 0x040c, 0x0414 etc,,}
-> > > rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
-> > > register_values[i]);
+> > Additionally, I noticed that when calling mfd_add_devices()
+> > separately, the IDs are also assigned consecutively (e.g., GPIO: 1~16,
+> > I2C: 17~22, ...).
 > >
-> > I agree with you, a array of values would make this look a tad less
-> > silly and would reduce the number of lines. I considered this while
-> > writing it but opted for this. My reason was as most of the register
-> > writes needed to setup the PHY are not documented in the docs I have and
-> > I wanted to keep the driver as close to the table of magic values I have
-> > to make it easy to compare driver and the limited documentation.
-> >
-> > I guess it's really a matter of style. I have no real strong opinion, if
-> > people think an array would be nicer I have no issue switching to that.
-> 
-> Have you looked at the impact on kernel size?
+> > Do you have any recommendations on how I should implement this?
+>
+> If you are to use this mechanism, you'd have to submit separate
+> mfd_add_devices() calls I guess.
+>
+> However, this all seems a bit silly for simple, contextless (where
+> device 3 is identical to device 10, etc) enumeration.  Can you use IDA
+> instead?
+>
 
-That is a good point, I'm sure an array would reduce the kernel size. I 
-could possibly even craft a few clever loops to to generate the values 
-as they are almost sequential. As these are magic values I had opted to 
-keep it close to the docs, but seems people prefere something else. Will 
-change this and send new version.
+Okay, I will switch to using MFD_CELL_NAME() and adopt IDA for
+managing sub-device driver IDs in the next patch.
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
 
--- 
-Kind Regards,
-Niklas Söderlund
+Thanks,
+Ming
