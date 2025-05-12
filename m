@@ -1,84 +1,131 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EE71A317E;
-	Mon, 12 May 2025 11:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0B92900BE;
+	Mon, 12 May 2025 11:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747048733; cv=none; b=nxn0k/tWfVf76upyC9FiFLoUhz++rQNs/lbJJTvicCqg3JITfCbGvLfWF1IYvSWPRg7pAQ8dimCqa1Kr5j9Qrl7txdb8PD7vunwgbTZMLmE1wGtNwTgPCAhkB5KqnNpmJF6DZNuRboBjZUH9NasqfiMZuQUfhlT/s6MbP3uo9ao=
+	t=1747048735; cv=none; b=WkWmsUM4CihpXsxBEM1QXnKYqXXJwWWI19EQ+P3sg9H22Z8s6P5Di2reOWi+akuRVMx87pBj+Ohvdbwi8gS4ppi1OEJia1iG+sQp3zYLyqP5x/qkCsgjW06zPPATmU5jHfcz+hP0klDiIpDRFJ+SfjmiPRwM7DZpUKdg4MIN91o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747048733; c=relaxed/simple;
-	bh=ChtQ/9s+duTX3tq4uH4bQvjGWJQpVh6ASx1lije9Olc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=trd6WN5EYwLqbwmbjA27g6FZ2BX1h6FNLqNcO5lvGj9RoFzKMTOTww2gfrVGfr3L7/wfe436vLr8AK/LR34U06oiikX3Esm3mxS0fXRtLjWK0BT08/hq4L42M9egPHVBeGHPsc/xn8Euv2QMygxOwhIX1f0/P289/Ll/qozh76w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=XykPirUq; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1747048735; c=relaxed/simple;
+	bh=jBZdiSf1gf5BKRqqB+Fpy8grw8nZle3zN8U9da1iFnI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=W/jr+hocfti/oAuHA1vLyvIPr8YQHxfRHSai+mfEe4z3HKKc+goY8o+SBTjt5VWJKHNjjkmOQyE6AOVdZkULENophmsn+xH2HBQzdKmTEcBNhRHxioxMgaUALiyx0FhTkiUjHC8W7zEE5/z4vFQzpUCZy9QXoeT/9KSzGiw0qvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=ZEZoO2tC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=o71VIvkb; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="XykPirUq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=1QHb+jW4QgFhaEaixB4uVZPrgggCZCnmHUsuraUoIWE=; b=XykPirUq2Yiys8M/
-	ZBtsIQ0UJbRq0dwsIgWS0EsfqsmqJQdeOWunCFUzPH0FPxXo+ZC8qPlfPwmUZKhQ3r0D0xIaXhzXv
-	vtY0B5auPhyBczRjVPF8yGlxT8TnoYdpq6lpN+ovVRfc2lVexRi6q4K1ymxVzlmJ14ftjnw0H3XT9
-	nrP07oU2rc2sCUhpLqyd9fgmXnoShEUx3mDT9cpTsinXqibOxLETNj9J8ayTYDh6YsC96HKXqD9J4
-	DYKmhzOz1aZyLRrqexk8wUHISQzIP6VJBIwbHWNx+SG9zqnA8JwtpSyQrN6dfOEzQxq6KclJ+8F8S
-	iC8CgX7v0NZHHcoRdg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uERBD-0030yS-2r;
-	Mon, 12 May 2025 11:18:43 +0000
-Date: Mon, 12 May 2025 11:18:43 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: perex@perex.cz, tiwai@suse.com, krzysztof.h1@wp.pl,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: msnd: Remove midi code
-Message-ID: <aCHZE7G2kTeGrDlN@gallifrey>
-References: <20250511172957.1001583-1-linux@treblig.org>
- <87ldr2uush.wl-tiwai@suse.de>
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="ZEZoO2tC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o71VIvkb"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id EE918114012E;
+	Mon, 12 May 2025 07:18:51 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-04.internal (MEProxy); Mon, 12 May 2025 07:18:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1747048731; x=1747135131; bh=8R1AryTPhNH6vqIqKW5/6ef09cTbxqCZ
+	txeiuNj7wb0=; b=ZEZoO2tCNmwSdnwnJxE/d1l9NlLFeCFYdL0qlb6qL6xIlCPf
+	hF2iarJizQyLFm8x2KzLfRavW+65RwLZHkD2macXXgtP6ZkCR07kM0AsMWAp4mP5
+	b1eHvSoBA+6Y1KRtwiiXn1clD7x2diHeX+E3o0yc5ySfTSSL5vLIoE/gmVtSk1ja
+	O+2RKLohnsiXP8AftrNWX5Df2sNZ78C9D8Mx8vx1N27ZNQ9mclwYCS5j1KNa5y0C
+	WqCsmTLdTq/BdKv00MQha/vAZFHY62liGcGHS4aPPjj7oKo0bApwiTeKYHgDElX/
+	PKUzBACRUNmz8yku5JBHwNrVOlPEndAcwsBcZQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747048731; x=
+	1747135131; bh=8R1AryTPhNH6vqIqKW5/6ef09cTbxqCZtxeiuNj7wb0=; b=o
+	71VIvkbuLT3kGsowGOJJcwdT42sXnEfrYjJ481iyRenFZs/DjdVBy1erScpkFt89
+	V1mJO2Qawd1M/+e5lOfWEMYqfjig2Ouw6Wa8HDebNGC43Bgrq3nNLDGrY6DZMCaB
+	MgbEcqwwLuVMnKkI6hmhYUxjAhvJeAQbxxwe4tYjfYYVEl4m4aqY7SOzrEmiqcJA
+	YCG99UzfVsP3WUWe3s4550bBnG3SRs23K1+XUeFuSDlm7UZvXsuPVvfCLfispM03
+	QbC+S0LuaBVPM+MmzRmbSHUseByDwzim/FBz3QN6b93bmoLvzY/SEZzShopzdecr
+	TSXuPMMCQI3EZ8C36Grbw==
+X-ME-Sender: <xms:GtkhaMuxhIixs7p21gBf1a0Z3lGaLN01jbE7aoEXMUjV0ATKxr3m1g>
+    <xme:GtkhaJcxVpGSL22cNbzohzJd4xiwMe3KVqA6nHUL9mZ1CDii7lQHmbNRdtxEZHq54
+    BeKmKBo9M8LPqBzbKE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduuddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvth
+    gvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugeduudeuudeuhfefheegveek
+    ueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggp
+    rhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhmkhdokh
+    gvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepsghrghhlsegs
+    ghguvghvrdhplhdprhgtphhtthhopehnvggrlhesghhomhhprgdruggvvhdprhgtphhtth
+    hopehjsehjrghnnhgruhdrnhgvthdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgriieskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:GtkhaHwf1fLs4ujDzYRV9p3oA3Lt4JG2bsbNc20DSXmw_eocXzmFsg>
+    <xmx:GtkhaPM7O7JUWdN5Wd4NEAF-FcE-62VNd7UGjUafuz50M1xr5tBgQg>
+    <xmx:GtkhaM-cXFV8dPcEYGmRkbX2dgNTmYprkObOHjphG973E1qh_XFlPA>
+    <xmx:GtkhaHVaCx-SAYUC_qxcEr6LGzVJp6dM-85d--eaFsj7mQ3c6yV6JQ>
+    <xmx:G9khaM_l9MfNgcxlpMCOrs9zCtzwYcG-SDIeitwMfLz4Wlb9mB0NWHtw>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0A6521C20067; Mon, 12 May 2025 07:18:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <87ldr2uush.wl-tiwai@suse.de>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 11:18:29 up 14 days, 19:32,  1 user,  load average: 0.00, 0.00, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+X-ThreadId: T54af4484963dacde
+Date: Mon, 12 May 2025 13:18:29 +0200
+From: "Sven Peter" <sven@svenpeter.dev>
+To: "Alyssa Rosenzweig" <alyssa@rosenzweig.io>
+Cc: "Janne Grunau" <j@jannau.net>, "Neal Gompa" <neal@gompa.dev>,
+ "Hector Martin" <marcan@marcan.st>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
+ "Lee Jones" <lee@kernel.org>, "Marc Zyngier" <maz@kernel.org>,
+ "Russell King" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Message-Id: <50f35475-958e-481a-83f8-f19fc2259191@app.fastmail.com>
+In-Reply-To: <aCDVgI4_LtE6OfO-@blossom>
+References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
+ <20250511-smc-6-15-v5-5-f5980bdb18bd@svenpeter.dev>
+ <aCDVgI4_LtE6OfO-@blossom>
+Subject: Re: [PATCH v5 05/10] mfd: Add Apple Silicon System Management Controller
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-* Takashi Iwai (tiwai@suse.de) wrote:
-> On Sun, 11 May 2025 19:29:57 +0200,
-> linux@treblig.org wrote:
-> > 
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > Nothing calls snd_msndmidi_new()
-> >   thus nothing sets chip->msndmidi_mpu
-> >     The call to snd_msndmidi_input_read is gated on that being set,
-> >     so snd_msndmidi_input_read() won't be called either.
-> > 
-> > This is probably a missing call to snd_msndmidi_new(), but since
-> > this is ancient code, it's probably best to remove it (especially
-> > since I don't have the hardware to test it).
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> 
-> Applied now.  Thanks.
+Hi,
 
-Thanks!
 
-Dave
+On Sun, May 11, 2025, at 18:51, Alyssa Rosenzweig wrote:
+>> +struct apple_smc_key_info {
+>> +	u8 size;
+>> +	u32 type_code;
+>> +	u8 flags;
+>> +};
+>
+> This still has the padding problem from v4. With that fixed,
 
-> 
-> Takashi
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+I somehow managed to drop two !fixup commits before sending this out :-(
+One of them was moving type_code to the beginning and the other some cosmetic
+changes (mainly starting descriptions with uppercase letters) to macsmc.h.
+Will be fixed for the next version for real this time.
+
+
+>
+> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+
+Thanks,
+
+
+Sven
