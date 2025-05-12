@@ -1,216 +1,336 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2054.outbound.protection.outlook.com [40.107.249.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EBBD27E;
-	Mon, 12 May 2025 11:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747050366; cv=fail; b=BHHgR6pzj3XxSVWhJSrt7zi01MkqmcVBRzOg/73TSbAUfTeVDn09JHcmhUwsGETnxcTzJ+3UU2lA5Dpe5aa3+ms/Kx6mVtvy8vOLyAo3Y4tcGa1r0tmlfilDDn18JgLFQZ/SPlmDPN1cQzieGcK6HySorOvuvNBEB44oE0j9RKs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747050366; c=relaxed/simple;
-	bh=AsLSKIY+ul5S+Ne0AQePZwtSKZvCnXnzN7EsEdBbJAs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XAm5eLagGUvHoRfEpYMU1avoqJf9ExGtKcDKVB+uJFfDZzlHAikLE/3VlVlu79/iPI5X+nHGxFJpgac6lhboAnfTwY+R8pyi9bf0frIt1unjW28Frq77PITqvrHd7OMHfVesAEW1NXkGpp85RYZq3Vixkof7DKYe85CgtB9vfOg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lBvM5waC; arc=fail smtp.client-ip=40.107.249.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38793254B03
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747050413; cv=none; b=pHnDTa0e19J/OfLyWH0a0FMT8r6PZ49nBGHJ0WjVwgR7UROId9OkFjkj8eY9R9nA6xE5v6PCCOSvtl4aRYIBv4O70fYDCxOpr7UxSt0r9YVZG9PBMxoLzyKxzqdrbfW+EpRjXSq33VwjDe3iWRUMdWR1G42sREnHumXsv02vCWs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747050413; c=relaxed/simple;
+	bh=LxdgLa1PmyqwrZxBR80SVpmi6aR3ykrHClmBUaRmBbg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b/Axq2TuCk446mfDp+Wsk7fq0RBOFPgFBYEvpzyqFWX9CLsH7iHuJNgCrHRF21aU9f3z7aLbn771qw24kKf0eVOtsXPl3/5/1Z9UHIazPq35CMlFdLwBP2fZz+4PFe6wSB6V1I0uhdVd5JgoB5c4Qd6mPDAz9pHWWD7ju3dgH4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=k6a3d0uV; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lBvM5waC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FdXiM9hRzhIqT280FbaIvIQtgpxvuSIdNuFMwYqqgWVQ6z+RF8T8wjOPkoMPD+yXtaLl1DMit2Ts13y6YAIVmB0awl4lM8nj8pvmLpQ35ZkbS4mBOu4vJaULPInrtDIRBSDHuwf6Zkiktee0yGb5ukgo5zOiioaEJeTRJulERj9opjvsO/RM3AK/22yk6QgUJz+zCE0MAyT6zzB84dFkJrCMViT1UMUUGkpcIdWOeU63rKuEUlpjTYgcdLxtw4AhlRKeVyLmiih1z8CyWoORKrRwriNEJrec6zNYTASEnh+Wazq3AGtK1MbPYYYi+oOB/AGjCxiGsWlTkhe+lx83lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=90nPnDLqayZBKqbbrrVGrz1B4rHpGqOoqs+kKx7POh8=;
- b=eloPsVcaps2bsooC5nEv3O8L+NktQVBLlxY6Ruf1QmFQ2BS8PxStYi6V4LxwNCiM9HINAmqHbGqCGSLLk63ftxVZyccQ2v9k1bxRGrlMqsKx8d5vcDo6smTvkiwg9sCiCulZeN2h4wbgF9aDWP0Ncu2iqkizNHZIwFIPiZ9INjuwcnH0bN3MrudWSWivf2ceC9auxrnJh98CdNU9cFriHgiCQUpoB4K6IYWzehcZTLaytTlSYY18Pm3mtfXzrvgCO+6R8aD8XM5kPOzGh1oOeg9CQ95V8KlroH5Kejy6KlzDFnsihBEkIMhrBm9Lqptbj3iJtwTtfrw7BKNjr+WZYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=90nPnDLqayZBKqbbrrVGrz1B4rHpGqOoqs+kKx7POh8=;
- b=lBvM5waCd6imI8BFMmlcrgEpFnS5YbB6rUH463uXTLVDMJO5uK/5Y1f4bRRkxo6PmClg59DhXFJc2y6PPIjdhqR8C9tu3hISiIHc/p/hP+7hhXer26LfXV0rFz9UCCFi+aKLiYA+H1d+APx+p1qPcwxt0YzOCUMXONiVO+bk3I6PxdovFKNuB0YNaTtukGtu5EkevxBRw34q6kYRoxBh6lqeARoBvxr/uT+yhn9DwfKB8nsHEqo/gyvBCM44vMSA/2nOAHxxzyBDEvum42v7fm5y+iwxgAdf+9BZQ5r7N/x0KlsauaUts+MA+jwm0UImDnk42C0jyUGFdRsnUXP5HA==
-Received: from GVXPR04MB9778.eurprd04.prod.outlook.com (2603:10a6:150:110::18)
- by DUZPR04MB9982.eurprd04.prod.outlook.com (2603:10a6:10:4db::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Mon, 12 May
- 2025 11:45:59 +0000
-Received: from GVXPR04MB9778.eurprd04.prod.outlook.com
- ([fe80::9b3c:ef2d:7475:5df8]) by GVXPR04MB9778.eurprd04.prod.outlook.com
- ([fe80::9b3c:ef2d:7475:5df8%5]) with mapi id 15.20.8699.019; Mon, 12 May 2025
- 11:45:59 +0000
-From: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-i3c@lists.infradead.org"
-	<linux-i3c@lists.infradead.org>, "alexandre.belloni@bootlin.com"
-	<alexandre.belloni@bootlin.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-CC: Vikash Bansal <vikash.bansal@nxp.com>, Priyanka Jain
-	<priyanka.jain@nxp.com>, Shashank Rebbapragada
-	<shashank.rebbapragada@nxp.com>, Frank Li <frank.li@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v2 2/2] drivers: i3c: Add driver for NXP P3H2x4x
- i3c-hub device
-Thread-Topic: [EXT] Re: [PATCH v2 2/2] drivers: i3c: Add driver for NXP
- P3H2x4x i3c-hub device
-Thread-Index: AQHbv9W1RwXGJFV3KUGQHgcEBwZgX7PIP+uAgAakUnA=
-Date: Mon, 12 May 2025 11:45:59 +0000
-Message-ID:
- <GVXPR04MB9778CD46464F6BEE25D5D0529997A@GVXPR04MB9778.eurprd04.prod.outlook.com>
-References: <20250508045711.2810207-1-aman.kumarpandey@nxp.com>
- <20250508045711.2810207-2-aman.kumarpandey@nxp.com>
- <b46e3766-75b7-4635-a505-3039e4394f07@kernel.org>
-In-Reply-To: <b46e3766-75b7-4635-a505-3039e4394f07@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: GVXPR04MB9778:EE_|DUZPR04MB9982:EE_
-x-ms-office365-filtering-correlation-id: 6dfc3d11-eaed-4232-bac1-08dd914a90a1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?dq5bIDIduAeMxNbWCEahTFLfJwSGcnx+aHd690B2aQSzXkha2lmDbwPd3F9s?=
- =?us-ascii?Q?zdajCmPX6JKJdnIUzG8ZmuysqUMUlFKmS2s7+N+7BsduttNDJFAQSmwUBGeM?=
- =?us-ascii?Q?iNpF5Xw+CFOtrYCfFFsVwTFomtrYxgeldZUosC2ILFFh9MZTZMWoIzUxUpag?=
- =?us-ascii?Q?3cJ/GrxADXDxtZRiYj6+QNAuoJmUBGlsKM1idHkicSV8Qvohu+YKlkN4pPRV?=
- =?us-ascii?Q?tsSmNGskCkm+2LYdyePTP3GTU/ntHkUQRVc98p5dO10Wi9cUyNuUvD8yZhSa?=
- =?us-ascii?Q?Pe/GtyNpMeWJ6chvzi4d/W4TWAOza+1hSTuiyIOtnYA7Js+wA+XqGYs0ZvF4?=
- =?us-ascii?Q?95WrNZTVPEegBmusrV6nypzrsd4Wz7K3SX7quFTieyc4ruwnP/FzcOl9Xngm?=
- =?us-ascii?Q?KBGA5dMdlykHby0vdi401LKHriVQRQfgdlVIp6EAX1f1yfPiUAPD+K5+CFV+?=
- =?us-ascii?Q?7VGNs/5uyThj+6sgldHlatLgTuTxjAReDzJtyDOedwcrbEysaTeioGRZ9Qv8?=
- =?us-ascii?Q?y5WKZ7Xk18I3/WEyoErj3pf8qqpOhbemfgca6Nqm4hS+yZQjDTwpONklJE9D?=
- =?us-ascii?Q?C3Y9uu7Oc4pyTaSQQj6fFW7O+l1QvZLgwtjc4Ojkfoi+k3bIrI/p96pJqRyY?=
- =?us-ascii?Q?YTy/1Ym48dzd6lkgb45r6jitcx1+dq+EnpCFyW1bXz/pXY8SBayeEQuHBG91?=
- =?us-ascii?Q?XHoqHLs/QY37J5IV7FjFhlnWRdqgm+2qM8536Y7uJfC0Uqy5p+/+ij5fcY3d?=
- =?us-ascii?Q?qhxOFNpMVqQ2nN+hVHxfHS2ni5TvQWqyd54X+uIV5I36KgW5OlTkdGFRKQbY?=
- =?us-ascii?Q?l++45I88rVlcqXa9NzU7PuVo0Q+ZYcfj1NxDCPEItuKFmKVdd/BtJ2icaHVY?=
- =?us-ascii?Q?Cj5DIb60GStylbCqsAxBN09gSImssKwdhk02bAX905V9v5lkZwV8HStTe7Cq?=
- =?us-ascii?Q?pXApNHDN0yjy4XHOM6VgBNo3J1fbpjKJ9ZMAGMt3FFMS0Htb7jMy0WYUYOx3?=
- =?us-ascii?Q?WmAAyLTVamX7vuQe1a7MgeNtPDfSL8vUsTsm5/yPA5fwsV0LpKfXga9KXyVa?=
- =?us-ascii?Q?h90ockM3BXeKwBSsnxF9Fy/Dez5PbrVVTPqMYgB9lmsX1JBmUB+kh7yjCB1w?=
- =?us-ascii?Q?FYiKnlLuvqqI1qFygUj3Jj6N6BAlA4F4kIpCnA9kUj8QGOh/QC/O018PMOqK?=
- =?us-ascii?Q?RboImpMBIaXaAxYSJ/BRZcdQUGVGhO+KsKShvvJg+SOQO/q1AVbv9Bpxi2RE?=
- =?us-ascii?Q?f4GZHO3mwo+pjYbGSgkZTzVwWNaFXh+DhPrwJEb0Wx6wFiPSfaukohAM8hWu?=
- =?us-ascii?Q?9bsUGIDHBgJvEPFisNMEjYvxAQjNDSp6kWvhkCfVKjXHeZ1R6fL2DkhArXGa?=
- =?us-ascii?Q?JzJqKIdjVwIPCk+bM+YS6Yik8xAGGpemASBCDedeBEDC34bJton1QtkwM7wd?=
- =?us-ascii?Q?/F5LYMhpbiVitajcXUQ2x6/LvXBSkNdNWwfFefsKooIjJeKXFpOYdw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVXPR04MB9778.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?jBrtHHhWg1smTpTGosiXo/NEaaFiqpJdy8nilmXcgdTSRwO1t81/HlKy6SOX?=
- =?us-ascii?Q?PQDnzY0/zr7MxECaOjdxjUMrbE6Ov/Z7zdpQ8itFbeBuJD14cMSpWNOvwfc4?=
- =?us-ascii?Q?cXhajglPzbh+VstXSr+5wW9LgxMNN47NFCZsgmjRQipUDsZzR5iUFDG+pz90?=
- =?us-ascii?Q?EKBKnzvIPw4Z3IAZVjNl1SU5Wlwq5/EV4hCtA3BK9KDzyaRJnycwpcGhFJr+?=
- =?us-ascii?Q?DKkv4n3yyAELyh+rzTUhSdwi+ho7K9CvTSefPUneibQkH25YgblJ1SfbmCLR?=
- =?us-ascii?Q?vGduKSVGIpz3WIl7rXofUz9g7lHAM+J1p/EckmqVeVBMXVErb2P5HeBRhRC4?=
- =?us-ascii?Q?U59bywA9YrC6UZ5kA6KWSmR9QNd2WfQElHzjvkf2EKmtgVP9YTczDLPDHBYz?=
- =?us-ascii?Q?y+rEFS6Y3+ZRfdd5CZFSqReNYRISFA9MtThdXXnsJkwpcgJyEilqka/s+FQW?=
- =?us-ascii?Q?anU5CD3APyKLTBV4icRcsy7xj5hpwHQxve52+6GSvOIykx2dEP4z4adEktoF?=
- =?us-ascii?Q?Kj76/N2XxDlQlsg26aT0NMFgmjnIrLr61//8gZ+6GpkuwueDrPOACSHJ8dTH?=
- =?us-ascii?Q?FA7GJ6P/GOO/yN2NUzUozSb2DYSJFfKTlIvB1r4UzayTcKXOSsCI2sjxfyyf?=
- =?us-ascii?Q?AasQR8Z4kVoKIQBAerIP8io2oQzBjHRjEukx4bc88HbjslfRx5yg+lMSaTb6?=
- =?us-ascii?Q?TNoBNN2dBYKvKz1Zuz3wPKb7UMh6ijkei3DT752ROWF4sAkkj6xumLwmoXbR?=
- =?us-ascii?Q?G4Rv9sd8HHeRtrzvV13sZ5irYKAoxNWaLVF4LalMWG3QufqJ2tql3N8cDfPT?=
- =?us-ascii?Q?d/NPIYbgKDzOX7AWim2XIvivpVTdR6a9wzu+hFu2V7IkP73QJdxid40uQYST?=
- =?us-ascii?Q?wSZ0KGxk38cmg5cLhUGeu/lW95vsOvEi+J86qS8FPk7/2muKgRaGb5Nh0Wz5?=
- =?us-ascii?Q?gikZ5GGFdT+mp6WBIbm/lQfdMsKvg8+LE17ZWEvxjIPYTjHqKlzMJQsNreN3?=
- =?us-ascii?Q?fTYFZ9TkxfF6n1lr9sOAkjZVm1yqo+OJIaU0ORwmvauB/QCiS/fDWQBA3Vr+?=
- =?us-ascii?Q?QmJL/+EcQnsxHCZ/VTQECvJgsSL5h2MlTu0qmu5PptbdtCdDnd0A1YT4QRu0?=
- =?us-ascii?Q?FpZLv+tEZ7JpbZvMNSu7Lc947ZBEqOfBDauA9IZxKxjTv6cMm8b0Bfi65rY2?=
- =?us-ascii?Q?u9uh9OpWlsZ1GaGyyppJattEoXJG6TVPbrAdq7SqWdTI5L7q/RRfZWawodMp?=
- =?us-ascii?Q?5B9oNxDytfSdQrM9m+/qIy8Ax3/y9+jsqemHCsUBFoAFafQ6OeJEEV6oGJTD?=
- =?us-ascii?Q?TW1p1+MOYnxvayDfJrT/rxyRFnq0xxY34e+X03fz7n2gijke0VndsSvqMUF6?=
- =?us-ascii?Q?wkiEGsPFMRISBpHsFp+sWPTAOsxE7X10USLDriakZU3Qh6Cud2ZaBPrP6R4P?=
- =?us-ascii?Q?pe6K83NZbkJ40jcHGi7ARkiJ7BMLpuMmBFeC2FEmXHEDfuTx5AcMOaboLsiM?=
- =?us-ascii?Q?7DtsuzpofSPyzgjFK8Wt+spocSvaPnDcSouuWIPpbKMM7y927exYiQ7K8eCy?=
- =?us-ascii?Q?jD0Gs6mKGsE7XolZNSpwTVCeAuDht/4xZyzjxXt5?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="k6a3d0uV"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-605ff8aa9d2so1103744eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 04:46:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747050410; x=1747655210; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W0BtKs+KyENo9zQ4Jk0EOAFn3PtdxXJ7nAnMlqJvcbo=;
+        b=k6a3d0uVZCK/5ZzjRiRvyaIDNhMdy2pcZ4ittOTyrT7mOV9ZUH8jtBgCQW6l0Xq5yI
+         rh0Tf+cP7eOh5W4xWipz74qz5b9fnzm7fpf2QxVzSHrdr20hehiSc7Az0vReS1Vhmiwq
+         65lH8nPNAHZ+Udi0fKSBRG7nrSoVF0QSmAU3YkcKeFJT0Q04w3atYfLgtd5dfwZOiE1v
+         fkIHSBdTrU8EQKzyWuMnRJ3p6MwzPZR9ij6r69G6Bfg+6ByrTw48goffj5Ow9luMYZ73
+         fUUAaxz2LjeaZ6ELEMzrygfUsCaVeElUv/Sn3foyQ1kOeUXhMcJPrgKXUX3rPiQZKD4E
+         UxBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747050410; x=1747655210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W0BtKs+KyENo9zQ4Jk0EOAFn3PtdxXJ7nAnMlqJvcbo=;
+        b=i+jUiH1Jozcscrbbzl+kR+ERrHv6QXefqjIQg+EIjLpK6RoIz/rbnFv1+rqGGeOq/V
+         GIoZUaFhcEveHMv7eeMmG48nL2rw3/37TKVdMuWTVwiIHnSQzh5vTGta1jE5e76CkqtX
+         cu1IMITmLbzjcf2Nw+EmwZC2MCFpWS8AzLHM8UuagYrPRarM1gsMg1H4QQD4YAZwg7JK
+         j46QaHgETFqITIzvd7YxiFCd5ngbIR4rMMqVVtvHnGmMJX1vnQALYrzW9LJPZsfdHRa9
+         aBvdmja82v4q5BJwsYTODML6FyCbnQQRfsa1x9hW5QY7mj6tONMiTglTG7OV2Y38zbkV
+         JOaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEY6K4IZERxqYYdtMOtlY9RscgBgDR1fuTaU36rkaN1UFr0WoAM3wmrNJea/iFMzxD7+aM8JWEEDbwAdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzYaa9gI2Rxmp/D88R65dEhYYKxDT9InoyPAUA3FY74Bi6f6SX
+	kObWr76iKkDzsc8KGAS5eMBvX6R9yiSG8EGLyvOh1RiYXeuxTt4M9vo/ko6nlhHQHMoOMnqNXE7
+	FF8g4HwAboM7CfS49pOfgBj2vr5RvVpnag+Zktw==
+X-Gm-Gg: ASbGnctWJHxdTCTxAOTO8C4bd3elsXtNeMgqT7vStxhCrCt5fLHY9McJju6oFE5oten
+	3LzcyWZfPRMGW0cUvEG11gPUIcaTb5EGBZjdYEhrwIoPLB6mT++WzffkATwAynv+M1G6kaeiN6r
+	z8OWj/wdH4SFtRabou4IWQ1LE6lhZ2tUY7wWqSI97SK/seMv0zSw==
+X-Google-Smtp-Source: AGHT+IFPthmib6/M9suogdKo4/Vf/th9B3UhkbFWXThr8JfSQi1+bY8tuuhCQaWNOmmuP1bH1LfjSu16O/FiH2Y8/JI=
+X-Received: by 2002:a05:6820:1b09:b0:607:cc1a:572f with SMTP id
+ 006d021491bc7-6084c0e419fmr7391418eaf.6.1747050410098; Mon, 12 May 2025
+ 04:46:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: GVXPR04MB9778.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6dfc3d11-eaed-4232-bac1-08dd914a90a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2025 11:45:59.6067
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tiL0v7Apg/buiFqOJiMB7nFXfEVit6IiT7qj2jlysm5TDNhJ9Glwektxaszi7/6RNyoP1viyzbyBR1ZWElFbbBPiLkDa/WtllC/7sUsazYw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9982
+References: <20250506112321.61710-1-cuiyunhui@bytedance.com>
+ <20250506112321.61710-2-cuiyunhui@bytedance.com> <6801686d-a0b3-7093-1293-cdac6ad055e4@linux.intel.com>
+ <CAEEQ3wnouWbVvkvhV1oB8MrOADNhN6BQB4-epUXa6cLYkKFRiw@mail.gmail.com> <41066f2f-a690-83ef-5fbb-0bc1d956a19d@linux.intel.com>
+In-Reply-To: <41066f2f-a690-83ef-5fbb-0bc1d956a19d@linux.intel.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Mon, 12 May 2025 19:46:39 +0800
+X-Gm-Features: AX0GCFv2sEIMCMQ4oo-3CxQ8tK55U_wVYWQte3NiC6cUBxr4tsP5Yi2ekK3c6xI
+Message-ID: <CAEEQ3w=xPmbyaCHLPtCBgFOzz7TzDYMkOnKt=EvpdknQqot=cA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v5 2/4] serial: 8250: avoid potential
+ PSLVERR issue
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: arnd@arndb.de, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	benjamin.larsson@genexis.eu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	heikki.krogerus@linux.intel.com, Jiri Slaby <jirislaby@kernel.org>, 
+	jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
+	LKML <linux-kernel@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, 
+	markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de, 
+	paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com, 
+	sunilvl@ventanamicro.com, tim.kryger@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Ilpo,
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk@kernel.org>
-> Sent: Thursday, May 8, 2025 11:40 AM
-> To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>; linux-
-> kernel@vger.kernel.org; linux-i3c@lists.infradead.org;
-> alexandre.belloni@bootlin.com; krzk+dt@kernel.org; robh@kernel.org;
-> conor+dt@kernel.org; devicetree@vger.kernel.org
-> Cc: Vikash Bansal <vikash.bansal@nxp.com>; Priyanka Jain
-> <priyanka.jain@nxp.com>; Shashank Rebbapragada
-> <shashank.rebbapragada@nxp.com>; Frank Li <frank.li@nxp.com>
-> Subject: [EXT] Re: [PATCH v2 2/2] drivers: i3c: Add driver for NXP P3H2x4=
-x i3c-
-> hub device
->=20
-> [Some people who received this message don't often get email from
-> krzk@kernel.org. Learn why this is important at
-> https://aka.ms/LearnAboutSenderIdentification ]
->=20
-> Caution: This is an external email. Please take care when clicking links =
-or
-> opening attachments. When in doubt, report the message using the 'Report
-> this email' button
->=20
->=20
-> On 08/05/2025 06:57, Aman Kumar Pandey wrote:
-> > +
-> > +static void p3h2x4x_of_get_tp_dt_conf(struct device *dev,
-> > +                                   const struct device_node *node) {
-> > +     struct p3h2x4x *priv =3D dev_get_drvdata(dev);
-> > +     struct device_node *dev_node;
-> > +     u64 tp_port;
-> > +
-> > +     for_each_available_child_of_node(node, dev_node) {
-> > +             if (!dev_node->name || of_node_cmp(dev_node->name,
-> > + "target-port"))
->=20
->=20
-> Same NAK as before. You ignored the comment and nothing improved.
->=20
+On Mon, May 12, 2025 at 6:27=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 12 May 2025, yunhui cui wrote:
+>
+> > Hi Ilpo,
+> >
+> > On Tue, May 6, 2025 at 8:00=E2=80=AFPM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > >
+> > > On Tue, 6 May 2025, Yunhui Cui wrote:
+> > >
+> > > > Failure to check the UART_LSR_DR before reading UART_RX, or the
+> > > > non-atomic nature of clearing the FIFO and reading UART_RX, poses
+> > > > potential risks that could lead to PSLVERR.
+> > >
+> > > Don't expect reader to know the condition how PSLVERR is triggered. I=
+ know
+> > > it's worded out in the other patch but also explain it here.
+> > >
+> > > You're only explaining problem and missing what this patch does to so=
+lve
+> > > the problem.
+> > >
+> > > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> > > > ---
+> > > >  drivers/tty/serial/8250/8250.h      | 13 +++++++++
+> > > >  drivers/tty/serial/8250/8250_port.c | 43 +++++++++++++++----------=
+----
+> > > >  2 files changed, 35 insertions(+), 21 deletions(-)
+> > > >
+> > > > diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/82=
+50/8250.h
+> > > > index b861585ca02a..6f97ff3a197d 100644
+> > > > --- a/drivers/tty/serial/8250/8250.h
+> > > > +++ b/drivers/tty/serial/8250/8250.h
+> > > > @@ -162,6 +162,19 @@ static inline u16 serial_lsr_in(struct uart_82=
+50_port *up)
+> > > >       return lsr;
+> > > >  }
+> > > >
+> > > > +/*
+> > > > + * To avoid PSLVERR, check UART_LSR_DR in UART_LSR before
+> > > > + * reading UART_RX.
+> > > > + */
+> > > > +static inline void serial8250_discard_data(struct uart_8250_port *=
+up)
+> > > > +{
+> > > > +     u16 lsr;
+> > > > +
+> > > > +     lsr =3D serial_in(up, UART_LSR);
+> > > > +     if (lsr & UART_LSR_DR)
+> > > > +             serial_in(up, UART_RX);
+> > > > +}
+> > > > +
+> > > >  /*
+> > > >   * For the 16C950
+> > > >   */
+> > > > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/seri=
+al/8250/8250_port.c
+> > > > index a913135d5217..1666b965f6a0 100644
+> > > > --- a/drivers/tty/serial/8250/8250_port.c
+> > > > +++ b/drivers/tty/serial/8250/8250_port.c
+> > > > @@ -1357,9 +1357,8 @@ static void autoconfig_irq(struct uart_8250_p=
+ort *up)
+> > > >       /* Synchronize UART_IER access against the console. */
+> > > >       uart_port_lock_irq(port);
+> > > >       serial_out(up, UART_IER, UART_IER_ALL_INTR);
+> > > > +     serial8250_discard_data(up);
+> > > >       uart_port_unlock_irq(port);
+> > > > -     serial_in(up, UART_LSR);
+> > > > -     serial_in(up, UART_RX);
+> > > >       serial_in(up, UART_IIR);
+> > > >       serial_in(up, UART_MSR);
+> > > >       serial_out(up, UART_TX, 0xFF);
+> > > > @@ -2137,25 +2136,22 @@ static void wait_for_xmitr(struct uart_8250=
+_port *up, int bits)
+> > > >  static int serial8250_get_poll_char(struct uart_port *port)
+> > > >  {
+> > > >       struct uart_8250_port *up =3D up_to_u8250p(port);
+> > > > -     int status;
+> > > > +     int status =3D NO_POLL_CHAR;
+> > > >       u16 lsr;
+> > > > +     unsigned long flags;
+> > > >
+> > > >       serial8250_rpm_get(up);
+> > > >
+> > > > +     uart_port_lock_irqsave(port, &flags);
+> > > >       lsr =3D serial_port_in(port, UART_LSR);
+> > > > +     if (lsr & UART_LSR_DR)
+> > > > +             status =3D serial_port_in(port, UART_RX);
+> > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > >
+> > > > -     if (!(lsr & UART_LSR_DR)) {
+> > > > -             status =3D NO_POLL_CHAR;
+> > > > -             goto out;
+> > > > -     }
+> > > > -
+> > > > -     status =3D serial_port_in(port, UART_RX);
+> > > > -out:
+> > > >       serial8250_rpm_put(up);
+> > > >       return status;
+> > >
+> > > Not a problem that originates from you, but IMO calling this variable
+> > > "status" is quite misleading when it is the character (or NO_POLL_CHA=
+R
+> > > is no character is present).
+> > >
+> > > >  }
+> > > >
+> > > > -
+> > > >  static void serial8250_put_poll_char(struct uart_port *port,
+> > > >                        unsigned char c)
+> > > >  {
+> > > > @@ -2264,13 +2260,17 @@ int serial8250_do_startup(struct uart_port =
+*port)
+> > > >        * Clear the FIFO buffers and disable them.
+> > > >        * (they will be reenabled in set_termios())
+> > > >        */
+> > > > +     uart_port_lock_irqsave(port, &flags);
+> > > >       serial8250_clear_fifos(up);
+> > > >
+> > > >       /*
+> > > > -      * Clear the interrupt registers.
+> > > > +      * Read UART_RX to clear interrupts (e.g., Character Timeout)=
+.
+> > > > +      * No data on UART_IIR_RX_TIMEOUT, UART_LSR_DR won't set.
+> > > > +      * FIFO disabled, read UART_RX without LSR check, no PSLVERR.
+> > >
+> > > I don't understand what the last two lines mean and I don't see the
+> > > connection to the code that is below the comment either, could you tr=
+y to
+> > > rephrase the comment.
+> >
+> > The original intention was to check UART_LSR_DR first when reading
+> > UART_RX. However, the purpose of serial_port_in(port, UART_RX) here is
+> > to clear the interrupt, such as the interrupt caused by RX_TIMEOUT.
+>
+> I understood the first sentence in the comment but the rest of it is very
+> cryptic and has many grammar issues too. Also, the extent of passive voic=
+e
+> there makes it hard to know who does what (UART / kernel).
+>
+> > The logic for clearing the interrupt in the interrupt handling
+> > function of RX_TIMEOUT is !UART_LSR_DR. And to avoid PSLVERR, we need
+> > to check UART_LSR_DR first. To meet the requirements of both, the FIFO
+> > needs to be disabled.
+>
+> The grammar is so broken, it failed to convey that message.
 
-Thanks for reviewing the patch.
-As per your comment I have used proper function to get reg instead of sscan=
-f. And our driver is not having direct interface with userspace.
-What should I change here ?
+The purpose of serial_port_in(port, UART_RX) is to clear interrupts
+such as rx_timeout. In dw8250_handle_irq(), serial_port_in(p, UART_RX)
+is called when the LSR does not have the UART_LSR_DR bit set.
 
-> > +                     continue;
-> > +
-> > +             if (of_property_read_reg(dev_node, 0, &tp_port, NULL))
-> > +                     continue;
-> > +
-> > +             if (tp_port < P3H2x4x_TP_MAX_COUNT) {
-> > +                     priv->tp_bus[tp_port].dt_available =3D true;
-> > +                     priv->tp_bus[tp_port].of_node =3D dev_node;
-> > +                     priv->tp_bus[tp_port].tp_mask =3D BIT(tp_port);
-> > +                     priv->tp_bus[tp_port].priv =3D priv;
-> > +                     priv->tp_bus[tp_port].tp_port =3D tp_port;
-> > +             }
-> > +     }
-> > +}
-> > +
-=20
+To avoid PSLVERR when the FIFO is enabled, serial_in(up, UART_RX)
+should be called only when the LSR has the UART_LSR_DR bit set.
+
+These two logics are clearly contradictory. Therefore, both
+serial8250_clear_fifos() and serial_port_in(port, UART_RX) are placed
+under the protection of port->lock.
+
+If you believe this is not a potential issue, that's fine. I can
+remove this patch in the next patchset version.
+
+>
+> > Therefore, we should put serial8250_clear_fifos() and the execution of
+> > serial_port_in(port, UART_RX) without checking UART_LSR_DR under the
+> > port->lock.
+> >
+> > >
+> > > >        */
+> > > >       serial_port_in(port, UART_LSR);
+> > > >       serial_port_in(port, UART_RX);
+> > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > >       serial_port_in(port, UART_IIR);
+> > > >       serial_port_in(port, UART_MSR);
+> > > >
+> > > > @@ -2429,15 +2429,14 @@ int serial8250_do_startup(struct uart_port =
+*port)
+> > > >       }
+> > > >
+> > > >  dont_test_tx_en:
+> > > > -     uart_port_unlock_irqrestore(port, flags);
+> > > >
+> > > >       /*
+> > > >        * Clear the interrupt registers again for luck, and clear th=
+e
+> > > >        * saved flags to avoid getting false values from polling
+> > > >        * routines or the previous session.
+> > > >        */
+> > > > -     serial_port_in(port, UART_LSR);
+> > > > -     serial_port_in(port, UART_RX);
+> > > > +     serial8250_discard_data(up);
+> > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > >       serial_port_in(port, UART_IIR);
+> > > >       serial_port_in(port, UART_MSR);
+> > > >       up->lsr_saved_flags =3D 0;
+> > > > @@ -2519,7 +2518,6 @@ void serial8250_do_shutdown(struct uart_port =
+*port)
+> > > >               port->mctrl &=3D ~TIOCM_OUT2;
+> > > >
+> > > >       serial8250_set_mctrl(port, port->mctrl);
+> > > > -     uart_port_unlock_irqrestore(port, flags);
+> > > >
+> > > >       /*
+> > > >        * Disable break condition and FIFOs
+> > > > @@ -2527,6 +2525,14 @@ void serial8250_do_shutdown(struct uart_port=
+ *port)
+> > > >       serial_port_out(port, UART_LCR,
+> > > >                       serial_port_in(port, UART_LCR) & ~UART_LCR_SB=
+C);
+> > > >       serial8250_clear_fifos(up);
+> > > > +     /*
+> > > > +      * Read data port to reset things, and then unlink from
+> > > > +      * the IRQ chain.
+> > > > +      * Since reading UART_RX clears interrupts, doing so with
+> > > > +      * FIFO disabled won't trigger PSLVERR.
+> > > > +      */
+> > > > +     serial_port_in(port, UART_RX);
+> > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > >
+> > > >  #ifdef CONFIG_SERIAL_8250_RSA
+> > > >       /*
+> > > > @@ -2535,11 +2541,6 @@ void serial8250_do_shutdown(struct uart_port=
+ *port)
+> > > >       disable_rsa(up);
+> > > >  #endif
+> > > >
+> > > > -     /*
+> > > > -      * Read data port to reset things, and then unlink from
+> > > > -      * the IRQ chain.
+> > > > -      */
+> > > > -     serial_port_in(port, UART_RX);
+> > > >       serial8250_rpm_put(up);
+> > > >
+> > > >       up->ops->release_irq(up);
+> > > >
+> > >
+> > > --
+> > >  i.
+> > >
+> >
+> > Thanks,
+> > Yunhui
+> >
+>
+> --
+>  i.
+
+Thanks,
+Yunhui
