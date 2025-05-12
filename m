@@ -1,196 +1,221 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C609D258CE0;
-	Mon, 12 May 2025 22:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747088116; cv=none; b=qk94i1OYrdwUf/Esl0r/S7FTASIszBnIvClL8Vf8+jPpZPA7dVgRyZmIGDaL2b/qlbG4MVnuo83M8PydjSuAmWl4UslpqUcaXp+m9wVpueZOGBocFLm+1mbKg5ohrHnmAeO4qbk2L3rQ4DTJaIYfSnDOj/TypgxONLgpfNi5lak=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747088116; c=relaxed/simple;
-	bh=sZBCrTn+JM7RBkTquYl9mJ56BwskXyOngdAl+9L/zHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RPHTT4950SAhpjkabBraMISmHmnpYILxEmVniXvjCy95ZQPFNewGYB4Ds0BlO/YeWUT+1Y5gwQz/8mMV9owUCc6wvjH/gKt0KLXdzIqb4dz+e6NybxXSaD1su/cE3kYG9WWK/+cfmDAitf4WkG9KTDXkz25j6kT6sBsVNru5TUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=lJP/KliF; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238F824BD1F;
+	Mon, 12 May 2025 22:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747088209; cv=fail; b=md/WD3EkAHNRQy+tN/QePaH+8XU6W1u9cN0UZehjQEyZcxY084/AKOXwBFUiQKuVT4h0kPetpd/CxPBdQ/Yt5M+NLj3OVG+sjDt+q6Yo9HWOU+vWWXvfHO15KuyGSkPW499UVKmQPQQeAmGgAcLMqLyv/sTKCiUBGq+KQ4pR61U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747088209; c=relaxed/simple;
+	bh=KARAmECtdI8zyPrxu53/O8qRJf3ijeRwvRWT2nGLECg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tzbzkokENIibEx+OTrNZimaBr/OPZllOut34DLNCdQunAy6211TnBYKm/b7jOOswoJ9i4saZBnKMGddTbPdXZz7yi3l6YcayBfOOTvGDg5wK25x70PRJdlE5dccWWrNSKIl5jP7/c5cvW1fHKnFFPpNjtWwkNyVsqaBx4Jlcm3g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ngihn0ve; arc=fail smtp.client-ip=40.107.220.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="lJP/KliF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747088104; x=1747692904; i=w_armin@gmx.de;
-	bh=5calHApYEch3zGn1UjYU6krNVI7Or+OXk1n9piBTcKM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=lJP/KliFzTxS5BDY+px8blnQJmViwUWPh7NCAsxXSWLY/5ko3rQyfKavsEEbA7ae
-	 Nwzts57cZsKvMQdhBu3NpZSWQrs2Uri62eTVmq9JO8gMLoQ//+rdTJ+Lv/oI/7535
-	 luVrtpa4LijOmbRl148Ogop78jhNeNnqmDB7v/vLATw6TDvhGa/cz+1mlqYSNA1Ud
-	 ruPDxzUqN9WcJA10I55zpbIgn6nSioenKPg/Um2G6RoiPU3GIdlQ3jZJdbOSEdj3B
-	 sxSrMYsL/srbMCU+jMlp8tq5HEFDmMOClvvwRDxqSbDkGF55pa5rJMmWqxX44ZUGm
-	 kIrrVncBVoblhvpTuw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Ma24s-1uSmkl3aSq-00ZBGW; Tue, 13
- May 2025 00:15:04 +0200
-Message-ID: <af4f01e0-32d0-4502-bad9-b763bb4bc44f@gmx.de>
-Date: Tue, 13 May 2025 00:14:56 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ngihn0ve"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yfb1UJCoh3OTlDQXi40wXouB6zHJzTx/YQ/CGTC4Zq79v8TG93ixFql/vBNN5NF5e56jtm6FINqLJfYJrMcU0hgpjCW//ldIMUfhuXkCoagtfgVMumrAy8jn8jJIlwiWMXDGbii5F63ZlkAWyP5EW4CqZZChUub1iA+5LFApdiaRYzG2eCD8fDbObfid2OjjVYUH29ToC7OxZOEYdnXL+eMPMNCbEJ56aYGSe6r+xSXwdJODODEebfOk77spoLjcZssUVqs4bA9ymGlO8ziQtTxFSf7Y1gp2mFc1R+vnShZ3mPRVetjh6qxyIB+sUiv/FAVnF/lX90vCZFTqWh0D2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QO9i8JbsdHQ5K1Mnmr7CWIu+rQA8pVjLeDYUPMrTeXM=;
+ b=AxZGtvgdx+XfDwqk1COUt1sHkBbqtecYIfCWRGy+cGK7OH/ISQbjh77ZhFceN9xzwzLG8+GY1Xf+LSg25JPxU5Ohb3V9UUZqcBzffPgBOkqdg0PleUumKJHnoUxhxymP0TUZRAxr49RQ+M/qCPsy9gXc8rd7MRVsFgz79TC5kxFeVJi6wdzQOREP/Z2OPSCvd6L7WUDSHI2sZ/ZJAZK1f4e0l7ciI/KGs3uPqw/gQWP3cuRpcjCgPRh05WRkbMGLcB/xSEl6o1lznjlXTKia2FZm6LJSXEvVwZqt1sfIM7as52womOBB27LxdO3p7B0cPJWB/jJj5x4qnxaeXZBGJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QO9i8JbsdHQ5K1Mnmr7CWIu+rQA8pVjLeDYUPMrTeXM=;
+ b=ngihn0veF2mSCYtsIFxd12qdhafQlfoEvsjgFRygWnyvLQkt6UEsRIxWt5z3X/wVrDryjpMGTMXNmn5EwXcRvp18Ty7Hg5QKf4YiIkEjq93COzQlYE3ojl3gMnFFxdRxaq1p6MYC94Orzkx4ylvK/NtqCUqVDIg/SuDnGPR4H7g=
+Received: from MN2PR01CA0042.prod.exchangelabs.com (2603:10b6:208:23f::11) by
+ DM4PR12MB8572.namprd12.prod.outlook.com (2603:10b6:8:17d::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.21; Mon, 12 May 2025 22:16:44 +0000
+Received: from BL6PEPF00022573.namprd02.prod.outlook.com
+ (2603:10b6:208:23f:cafe::82) by MN2PR01CA0042.outlook.office365.com
+ (2603:10b6:208:23f::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Mon,
+ 12 May 2025 22:16:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF00022573.mail.protection.outlook.com (10.167.249.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Mon, 12 May 2025 22:16:44 +0000
+Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 17:16:43 -0500
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <shuah@kernel.org>, <prsampat@amd.com>
+CC: <pgonda@google.com>, <nikunj@amd.com>, <pankaj.gupta@amd.com>,
+	<michael.roth@amd.com>, <sraithal@amd.com>, <linux-kernel@vger.kernel.org>,
+	<x86@kernel.org>, <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>
+Subject: [PATCH v3] KVM: SEV: Disable SEV-SNP support on initialization failure
+Date: Mon, 12 May 2025 22:16:34 +0000
+Message-ID: <20250512221634.12045-1-Ashish.Kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 0/6] platform/x86: Add Lenovo WMI Gaming Series Drivers
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250508235217.12256-1-derekjohn.clark@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250508235217.12256-1-derekjohn.clark@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:XuXvuO5czMsiW0MWaSYq6MtcPirhHfVPCfxx4EgmhlrbZJv6Hcv
- 5HcXBsSWQjhueJN+iqaL3D6peZsKCGpj0Y1Z10/YcCaarwrAhWKVDqFHc8NnRWrvUUVSCUZ
- zFtuR4DBgyqNUx9qLD/dS1XCWmpmBtteLQ5yal1M5rVCk6Et/NqQj3Snxzg6Qo5M9fkfgN0
- YlbZIRrDSmtyRrcZK104g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ogMJiDGg1xg=;LxIhkWcm1kSTZPNGewIINK6czui
- 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
- oN78YZOBTBlyjBe49T/g4CIiM
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00022573:EE_|DM4PR12MB8572:EE_
+X-MS-Office365-Filtering-Correlation-Id: e7742d21-a264-4cf7-030e-08dd91a2ade8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?fbMfd8qkOhQKRSU6XSwkIYTG5vdZzfiGnBlTI5OfID5r0CQxqMqcXy5PM1mF?=
+ =?us-ascii?Q?wuW8C9FvUy6ES+udJnfpL8WB3pymf95NNKw16JJXhzR+K6ZPFnH/9Q0SdkPl?=
+ =?us-ascii?Q?tvH69Hhqba6bybv1GYPNRwUQPi7hD8VQKOcAya/Y1qXbFJJmJn8RpCS8vio3?=
+ =?us-ascii?Q?JUl6/1TmeCsJlP0TBZp3YNvPO6F4TNH4U39oZTintgnrJo1f8d+h+ruS4GTR?=
+ =?us-ascii?Q?xL2e+eZI+V9CRU5FX27p0MUQW0EuNP6eQBUYr75pigUzsFxHOTek1wOPYJGt?=
+ =?us-ascii?Q?7VFnGfgmf7A0q2SNALq6YBdq4HVwhX2EZ6cQd8HBDGWSOTFwj4LnCOhxDyes?=
+ =?us-ascii?Q?JE2hwDZMwwtYnXxTfXUYOOxQ/KSGPs+5u90IKgyd7UpfqNaKeFdCZ7GjPKzv?=
+ =?us-ascii?Q?y6Gri2XByot4xKVAtPKQHGOlihWhre4gvkMqMKXDgaNdjE/s6wzg0dZvbePv?=
+ =?us-ascii?Q?y8szNkC4Jw7W9j8MJspjj1D7hY+srl0+zMrHCYoSLYoJVJbojgyuBgedmzHY?=
+ =?us-ascii?Q?v4Y3Uvt6jHHz91SPJvgcxnp+m4EnzjGHRS/daolXY0mruF8uVRkGl5td8UeD?=
+ =?us-ascii?Q?J5v8ZvbZJ/0+a4/+9i/jZjgd35guxWi19uzRaP0lW09akovHPSu+W7G1Xyvt?=
+ =?us-ascii?Q?IPqSiRHnxCgFvuhjFMKF9EZ//FSJ7HxRjyaBSZTg+5sF7J4QCZB/IRCyufGi?=
+ =?us-ascii?Q?y3FX6+yFWueKtr4n02zXaxVhJ996ELQJBeFr9ls80IEkRIvKxeyVyuYmffy1?=
+ =?us-ascii?Q?TYQlcHYhaDn3XswvGs8pOwqQgZLWxWKTe6EvIMDqyC23lIjDg1qbn0pdxo2l?=
+ =?us-ascii?Q?NyLEWEfs8qMGHYA1LPVmxBFTfEtpzwE8Y4aThFWzv5Ss8rivSWK5CC5Qe14+?=
+ =?us-ascii?Q?rQJpDv1ddvvyN8kYYlQJtCX8UHi7W/y2hToJgOKf9eW08nKgtFoVfVD9ZQTS?=
+ =?us-ascii?Q?ctzSgKz99vFD6p7mQB5bnOpBHViT13cbUjOhKf8ppJp+a0P5sDl8JwFbqpQi?=
+ =?us-ascii?Q?9/nUG45pn3w1fl8ZeWZVr+gyzNfYlwkPfr+wYq1lyopvHKWrKtCume54dv8h?=
+ =?us-ascii?Q?k2wfaFbQ+H45xFgZOGOKYSCqXOp/0fH+q3LFeUr8u5J91HbdBW3ts7vk64OP?=
+ =?us-ascii?Q?uJGbaLs4iikUCe+7hSdSxMY++Dwj/FP4Le3oq8Y1wHFuFp3GGWCIFGqiUsp8?=
+ =?us-ascii?Q?hGxCB0Ad1NcBwHdsMyC+c0SL/OADc9iZytKOu0w2aZ3XIMvAcC5ggUXMnQUJ?=
+ =?us-ascii?Q?K71KJxeRJlzzNjsRngb7cV8dgXJu8Oipbzzan6Fabz6a1hFnbtfW04Vyjr8h?=
+ =?us-ascii?Q?ChS5xxLQEU6uqgnG0yyJLsVUwAI3GA75vJtvTssoc7ed4bYysZuhtQz4Vfza?=
+ =?us-ascii?Q?hiSPrzAP9f1CM9B24Zqw3Ys/tKfQMnqR+KUACNTbWOQXlUy0qAIdjBpLouXK?=
+ =?us-ascii?Q?3mji0dh7nL5c6u4AcTtN8tgLkztzmmVg/3R9N2roT5cZQBifHmL4Jgw7CuL1?=
+ =?us-ascii?Q?kTlWgAis5VDC1jvtH388C1zLRwYukIMyl4mz?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 22:16:44.4410
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7742d21-a264-4cf7-030e-08dd91a2ade8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00022573.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8572
 
-Am 09.05.25 um 01:51 schrieb Derek J. Clark:
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
-> WMI interfaces that control various power settings. There are multiple WMI
-> interfaces that work in concert to provide getting and setting values as
-> well as validation of input. Currently only the "Gamezone", "Other
-> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
-> I attempted to structure the driver so that adding the "Custom Mode",
-> "Lighting", and other data block interfaces would be trivial in later
-> patches.
->
-> This driver attempts to standardize the exposed sysfs by mirroring the
-> asus-armoury driver currently under review. As such, a lot of
-> inspiration has been drawn from that driver.
-> https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-luke@ljones.dev/#t
->
-> The drivers have been tested by me on the Lenovo Legion Go and Legion Go
-> S.
+During platform init, SNP initialization may fail for several reasons,
+such as firmware command failures and incompatible versions. However,
+the KVM capability may continue to advertise support for it.
 
-Good work, i think this series is ready for the mainline kernel.
+The platform may have SNP enabled but if SNP_INIT fails then SNP is
+not supported by KVM.
 
-Thanks,
-Armin Wolf
+During KVM module initialization query the SNP platform status to obtain
+the SNP initialization state and use it as an additional condition to
+determine support for SEV-SNP.
 
-> Suggested-by: Mario Limonciello <superm1@kernel.org>
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> ---
-> v8:
-> https://lore.kernel.org/platform-driver-x86/20250505010659.1450984-1-derekjohn.clark@gmail.com/
-> v7:
-> https://lore.kernel.org/platform-driver-x86/20250503000142.1190354-1-derekjohn.clark@gmail.com/
-> v6:
-> https://lore.kernel.org/platform-driver-x86/20250428012029.970017-1-derekjohn.clark@gmail.com/
-> v5:
-> https://lore.kernel.org/platform-driver-x86/20250408012815.1032357-1-derekjohn.clark@gmail.com/
-> v4:
-> https://lore.kernel.org/platform-driver-x86/20250317144326.5850-1-derekjohn.clark@gmail.com/
-> v3:
-> https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekjohn.clark@gmail.com/
-> v2:
-> https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/
-> v1:
-> https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekjohn.clark@gmail.com/
-> Derek J. Clark (6):
->    platform/x86: Add lenovo-wmi-* driver Documentation
->    platform/x86: Add lenovo-wmi-helpers
->    platform/x86: Add Lenovo WMI Events Driver
->    platform/x86: Add Lenovo Capability Data 01 WMI Driver
->    platform/x86: Add Lenovo Gamezone WMI Driver
->    platform/x86: Add Lenovo Other Mode WMI Driver
->
->   .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
->   .../wmi/devices/lenovo-wmi-other.rst          | 108 +++
->   MAINTAINERS                                   |  12 +
->   drivers/platform/x86/Kconfig                  |  41 ++
->   drivers/platform/x86/Makefile                 |   5 +
->   drivers/platform/x86/lenovo-wmi-capdata01.c   | 303 ++++++++
->   drivers/platform/x86/lenovo-wmi-capdata01.h   |  25 +
->   drivers/platform/x86/lenovo-wmi-events.c      | 196 ++++++
->   drivers/platform/x86/lenovo-wmi-events.h      |  20 +
->   drivers/platform/x86/lenovo-wmi-gamezone.c    | 408 +++++++++++
->   drivers/platform/x86/lenovo-wmi-gamezone.h    |  20 +
->   drivers/platform/x86/lenovo-wmi-helpers.c     |  75 ++
->   drivers/platform/x86/lenovo-wmi-helpers.h     |  20 +
->   drivers/platform/x86/lenovo-wmi-other.c       | 658 ++++++++++++++++++
->   drivers/platform/x86/lenovo-wmi-other.h       |  16 +
->   15 files changed, 2110 insertions(+)
->   create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
->   create mode 100644 Documentation/wmi/devices/lenovo-wmi-other.rst
->   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
->   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
->   create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
->   create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
->   create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
->   create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
->   create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
->   create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
->   create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
->   create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
->
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Co-developed-by: Pratik R. Sampat <prsampat@amd.com>
+Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ arch/x86/kvm/svm/sev.c | 44 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 35 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index dea9480b9ff6..8c3b12e3de8c 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -2935,6 +2935,33 @@ void __init sev_set_cpu_caps(void)
+ 	}
+ }
+ 
++static bool is_sev_snp_initialized(void)
++{
++	struct sev_user_data_snp_status *status;
++	struct sev_data_snp_addr buf;
++	bool initialized = false;
++	int ret, error = 0;
++
++	status = snp_alloc_firmware_page(GFP_KERNEL | __GFP_ZERO);
++	if (!status)
++		return false;
++
++	buf.address = __psp_pa(status);
++	ret = sev_do_cmd(SEV_CMD_SNP_PLATFORM_STATUS, &buf, &error);
++	if (ret) {
++		pr_err("SEV: SNP_PLATFORM_STATUS failed ret=%d, fw_error=%d (%#x)\n",
++		       ret, error, error);
++		goto out;
++	}
++
++	initialized = !!status->state;
++
++out:
++	snp_free_firmware_page(status);
++
++	return initialized;
++}
++
+ void __init sev_hardware_setup(void)
+ {
+ 	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
+@@ -3039,6 +3066,14 @@ void __init sev_hardware_setup(void)
+ 	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
+ 
+ out:
++	if (sev_enabled) {
++		init_args.probe = true;
++		if (sev_platform_init(&init_args))
++			sev_supported = sev_es_supported = sev_snp_supported = false;
++		else if (sev_snp_supported)
++			sev_snp_supported = is_sev_snp_initialized();
++	}
++
+ 	if (boot_cpu_has(X86_FEATURE_SEV))
+ 		pr_info("SEV %s (ASIDs %u - %u)\n",
+ 			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
+@@ -3065,15 +3100,6 @@ void __init sev_hardware_setup(void)
+ 	sev_supported_vmsa_features = 0;
+ 	if (sev_es_debug_swap_enabled)
+ 		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
+-
+-	if (!sev_enabled)
+-		return;
+-
+-	/*
+-	 * Do both SNP and SEV initialization at KVM module load.
+-	 */
+-	init_args.probe = true;
+-	sev_platform_init(&init_args);
+ }
+ 
+ void sev_hardware_unsetup(void)
+-- 
+2.34.1
+
