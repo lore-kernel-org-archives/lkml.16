@@ -1,112 +1,74 @@
-Received: from trager.us (trager.us [52.5.81.116])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB04D14F117;
-	Mon, 12 May 2025 19:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E541123A9BD
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076581; cv=none; b=K48qUsr8zr9YXjBddYQzpSr0ammAn0LKpSKXhYsJlbYLdbp8az1hUcoPvWeS7XcNWlSqsYEkkq+RiBclYilnjysZljZI/3sz17+zizVlYl/60KGNZU5Q1wddBguXwhhj+EnEIuYhLv+qQebccjOc9JSuporFqJMT1uw3GZG1iTY=
+	t=1747076598; cv=none; b=LdGkJCU+r1n54Ya24bTBl7lWXI+eaGZHSftalfdG7kOVOpqOrCzJT9DAW5hFgKbCMTquNOqzRlczmAFskp6541Q0sLt28rXO4/aaZnHEYCfxxqGv3B1Mmo37pKKxFAjLLat/a+L2igWgp4wcxCkw1wcmuvvC/PPmr0IOeblztm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076581; c=relaxed/simple;
-	bh=zykAR7McGLJchk9QrJBIJC7FeyUDvFErY6ke/oteXU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CWAxRgG2DDNCY4Uneq8SfdO3oWT01WuEGGY7tpJlFSUSfW7RLRCOgw4+C0Z9NqSn9J9fG1C5FqcuezaYitzu14f66nSfxuEyagv9DTa8p4FuG5jYpiN6DZep1pkVJb7S85p527FCWtlymx8Fksx2mjDtz5ww63hY4HEL+ejDz1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from [163.114.132.130] (helo=localhost)
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uEYQB-000719-V5; Mon, 12 May 2025 19:02:40 +0000
-From: Lee Trager <lee@trager.us>
-To: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	kernel-team@meta.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Su Hui <suhui@nfschina.com>,
-	Lee Trager <lee@trager.us>,
-	Al Viro <viro@zeniv.linux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v5 0/5] eth: fbnic: Add devlink dev flash support
-Date: Mon, 12 May 2025 11:53:56 -0700
-Message-ID: <20250512190109.2475614-1-lee@trager.us>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1747076598; c=relaxed/simple;
+	bh=O4H8iAzwOwN+yTMHteguWKtTAD4YhTkV/H8oa2wjqkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5LEzmBHHEmGOhfH1RAmmezdbjPnmRtHBs9CaEdME/aNP9to8q6OnGej/+lDbRb1kS+9PwhNwSw73dd4bhbmiAZEup4BPXqS+zBGDuduhv/kO/DR7KEp7JMp+wvZI23b7BIo+Tfr/T18IzTkj2QK614djRw05s8Wcfk+v9hv2dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m8nKzx19; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m8nKzx19"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6TU8lovtR+mIfquQ2rCbk6fwLvKUBUsDQ9Gbh5JlI78=; b=m8nKzx198g557xXfy33UFRw+Kr
+	qoyVHoc5J/ZHQWHjy+CmISnWIg9QilqxqRc8j5FTIC44xRVH68NBsZBcQtK0pJzqoGQ8aNBSUKezj
+	4AoX90aHZB39mu2IfgjZn4nJg61ODpbKGnlMQGDPjujcsDYFgY2ao9ddJgjrhc3+qC7gpe6Ow9ytz
+	9EpqnIuyHFh+fWWZZLlL6mGmjat0WVnJ7Fth3pWkzPpGj9onP41kYaYjM5iKCJngX659kfFbAtkxU
+	oi6USOiKVK6s1Y9R8W5CYVaxs50SuOTOrGBQA/Cd64UgKVuoz5Ju26v890On9g7o86334/Ia0xUI3
+	LwARxIjg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEYQh-0000000AAGr-304E;
+	Mon, 12 May 2025 19:03:11 +0000
+Date: Mon, 12 May 2025 20:03:11 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosryahmed@google.com,
+	yosry.ahmed@linux.dev, chengming.zhou@linux.dev, linux-mm@kvack.org,
+	kernel-team@meta.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] page_io: zswap: do not crash the kernel on
+ decompression failure
+Message-ID: <aCJF74ILruXJOAkQ@casper.infradead.org>
+References: <20250306205011.784787-1-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306205011.784787-1-nphamcs@gmail.com>
 
-fbnic supports updating firmware using signed PLDM images. PLDM images are
-written into the flash. Flashing does not interrupt the operation of the
-device.
+On Thu, Mar 06, 2025 at 12:50:10PM -0800, Nhat Pham wrote:
+> -static void zswap_decompress(struct zswap_entry *entry, struct folio *folio)
+> +static bool zswap_decompress(struct zswap_entry *entry, struct folio *folio)
 
-Changes:
-V5:
-* Make sure fbnic_pldm_match_record() always returns a bool
+Hm, why do it this way?  I had it as:
 
-V4 - https://lore.kernel.org/netdev/20250510002851.3247880-1-lee@trager.us/T/#t
-* Tested flashing in a 50x loop
-* Add devl_lock() in shutdown / quiescene paths like suspend to prevent
-  interrupting the FW flashing process.
-* Add support for multiple completion messages.
-* Removed BSD function notation from fbnic_fw_xmit_fw_start_upgrade()
-* Mailbox functions no longer return cmpl_data->result
-* Add missing error check in fbnic_fw_xmit_fw_write
-* Drop setting cmpl->u.fw_update.* to 0
-* Set offset and length before validation
-* Drop !fw check
-* Firmware upgrades are now process driven
-* Fix potential memory leak when an error is received in the mailbox when
-  updating.
-* Include anti-rollback support
-* Drop retries when updating but increase timeout to 10s
-* Use NL_SET_ERR_MSG_FMT_MOD in fbnic_devlink_flash_update()
-* Updated cover letter, commit messages, and docs as suggested
-* Dropped kdocs
-* Patched libpldmfw to not require send_package_data or send_component_table
-  which allowed stub functions to be dropped.
-* Dropped all dev_*() printks
-* Fixed Xmas tree variable declarations
+-static void zswap_decompress(struct zswap_entry *entry, struct folio *folio)
++static int zswap_decompress(struct zswap_entry *entry, struct folio *folio)
+...
++       err = crypto_acomp_decompress(acomp_ctx->req);
++       err = crypto_wait_req(err, &acomp_ctx->wait);
++       if (!err && acomp_ctx->req->dlen != PAGE_SIZE)
++               err = -EIO;
 
-V3 - https://lore.kernel.org/lkml/20241111043058.1251632-1-lee@trager.us/T/
-* Fix comments
+which allows us to return something more meaningful than -EIO.  Or is
+doing that a bad idea and we should squash all decompression failures
+to EIO?
 
-V2 - https://lore.kernel.org/all/20241022013941.3764567-1-lee@trager.us/
-* Fixed reversed Xmas tree variable declarations
-* Replaced memcpy with strscpy
+(also i really dislike the chained approach:
 
-Lee Trager (5):
-  pldmfw: Don't require send_package_data or send_component_table to be
-    defined
-  eth: fbnic: Accept minimum anti-rollback version from firmware
-  eth: fbnic: Add support for multiple concurrent completion messages
-  eth: fbnic: Add mailbox support for PLDM updates
-  eth: fbnic: Add devlink dev flash support
+        decomp_ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
 
- .../device_drivers/ethernet/meta/fbnic.rst    |  11 +
- drivers/net/ethernet/meta/Kconfig             |   1 +
- drivers/net/ethernet/meta/fbnic/fbnic.h       |   3 +-
- .../net/ethernet/meta/fbnic/fbnic_devlink.c   | 260 +++++++++++++++-
- drivers/net/ethernet/meta/fbnic/fbnic_fw.c    | 294 ++++++++++++++++--
- drivers/net/ethernet/meta/fbnic/fbnic_fw.h    |  53 +++-
- drivers/net/ethernet/meta/fbnic/fbnic_mac.c   |   2 +-
- drivers/net/ethernet/meta/fbnic/fbnic_pci.c   |   9 +
- lib/pldmfw/pldmfw.c                           |   6 +
- 9 files changed, 616 insertions(+), 23 deletions(-)
-
---
-2.47.1
+that's much harder to understand than the two lines i have above)
