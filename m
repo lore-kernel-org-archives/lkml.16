@@ -1,105 +1,156 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB7023A9;
-	Mon, 12 May 2025 07:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70C03D984
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747036660; cv=none; b=sRtoIf72uKUMizi9H1XOtqPB3uBpV21R8aJIY0SZd0ZLnW/hZrQz6n9Ub6npt+lHYcbKQYQ0P5jEcOAqehHc4NqyvuYXrEZPCWV4asOZ72vyNp7hGQx/D3+m1FgsyxA5a7ksNY3QhQ6wtSH5an13N6HHAmiOVuvHJYViSJr5HXE=
+	t=1747036697; cv=none; b=PPgVSz2yEH8c4dh4HJixAygq62S1KahRws+Ffm1J9AFCzm1gP+7Iav+vGvNnIu2kze+tQyf5COX4clYu5wIctt8K2GBh2l3Gmw0hkADJ+yORkSJe/8mFQflB5Rj4Md/iGr7VGijJ3HDo6UBbLoD3Y3mP8TJ5UdHG31czrEilQBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747036660; c=relaxed/simple;
-	bh=0UXmvT4l/lV+IOemda0bORxvLERjQAhLzRUt2IKiC9A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Rb4juYobrEcdATewEpWf9lLkNpK8Y5geOL/Ld5Apj8fJPYNXgvdP/fims9SMWD3X60mX/J7nlMocixJl4w27mIUJLxwrktDsCtkQvlo7CjXDIDdOJqKzynIz53IoRSHcSmCBZr7mAxwFFOm1D1pvsMKmVUrw8Nns+AgsT5wAtXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cXBu04rn; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cXBu04rn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4263C443B0;
-	Mon, 12 May 2025 07:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747036649;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0UXmvT4l/lV+IOemda0bORxvLERjQAhLzRUt2IKiC9A=;
-	b=cXBu04rnMwdt723IhMe6evlmHTiMH6v6VHqlcJfe8ePya2grX9TZw9ykAIElFNUeyZkPmk
-	bAq7cjWpS1oEF0Bvwny7r1eKLNMAldacyovQ2FJ4IcFWlzsDBqfhUdh76Q8XXl14ldpCHB
-	EBrPBuiX0gu9E5D5GY4Tu1Za0gh22dsg1TuGMlaore+S1z/xPWlIzZrT3/KPth+sk14Nnr
-	WR3d3fDJTlJ9+NvrGOr7Ya+eAqgrY+HzQ9aayE4Nk+NM61CLXLt679mTdNwOLttBKbm8EP
-	GboUsV5ccTuBxGV7VveZGaz6bW0L556OopZYkdrf+AlkaR+fiBM/oNE90Mq9vA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Luke Wang
- <ziniu.wang_1@nxp.com>,  "broonie@kernel.org" <broonie@kernel.org>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-  "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-  "michael@walle.cc" <michael@walle.cc>,  "p.yadav@ti.com"
- <p.yadav@ti.com>,  "richard@nod.at" <richard@nod.at>,  "vigneshr@ti.com"
- <vigneshr@ti.com>,  Bough Chen <haibo.chen@nxp.com>,  Han Xu
- <han.xu@nxp.com>
-Subject: Re: [PATCH v2 6/6] mtd: spi-nor: core: avoid odd length/address
- writes in 8D-8D-8D mode
-In-Reply-To: <mafs0zffo3gea.fsf@kernel.org> (Pratyush Yadav's message of "Wed,
-	07 May 2025 09:43:25 +0000")
-References: <DU2PR04MB85678048FE8B475B1E323E0AED802@DU2PR04MB8567.eurprd04.prod.outlook.com>
-	<10b40148-b949-442d-9d43-0db09517269a@linaro.org>
-	<mafs0zffo3gea.fsf@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 12 May 2025 09:57:27 +0200
-Message-ID: <87cycep8go.fsf@bootlin.com>
+	s=arc-20240116; t=1747036697; c=relaxed/simple;
+	bh=4RyxF+zHBde/Sh9TkHzjLmXRWl6x6RsvLNgDaryOqdM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gtU712RaJl10mB57bURMMVlMe/BUDb3XzXn8a98z1nwHlHOn5tYdN6z9ATP9tyl1MzrtMa0vdbQ8l0Tl8Rd2uAZ0M6q62Gw3Lyf5wjkwIQFA3ATZkdKKSPuqktxM3d9mBVgwWuZO24yZqn5Ib3rhun3JtXqMebpwtKAil1NwUUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 54C7wAeA024092
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:58:10 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 54C7u7LI010914;
+	Mon, 12 May 2025 15:56:07 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZwsLc3vFVz2Nm5S0;
+	Mon, 12 May 2025 15:54:00 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Mon, 12 May 2025 15:56:05 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Yu Zhao <yuzhao@google.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Zhaoyang Huang
+	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
+Subject: [RFC PATCH] mm: throttling the reclaim when LRUVEC is congested under MGLRU
+Date: Mon, 12 May 2025 15:55:57 +0800
+Message-ID: <20250512075557.2308397-1-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehprhgrthihuhhshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhuughorhdrrghmsggrrhhusheslhhinhgrrhhordhorhhgpdhrtghpthhtohepiihinhhiuhdrfigrnhhgpgdusehngihprdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgp
- dhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhsphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhitghhrggvlhesfigrlhhlvgdrtggt
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 54C7u7LI010914
 
-Hello,
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-On 07/05/2025 at 09:43:25 GMT, Pratyush Yadav <pratyush@kernel.org> wrote:
+Our v6.6 based ANDROID system with 4GB RAM and per pid based MEMCGv2
+enabled constantly experienc starving of local watchdog process [1]
+during an extreme fill data test over file system, which will generate
+enormous dirty pages on page cache along with page fault from userspace.
+Furthermore, we can see 423 out of 507 UN tasks are blocked by the same
+callstack which indicating heavy IO pressure. However, the same test
+case could get pass under legacy LRU.
+By further debug, we find that 90% reclaimed folios are dirty [2] which
+have reclaim be hard to reclaim folios and introduce extra IO by page
+thrashing(clean cold mapped page get dropped and refault quickly).
+We temporarily solving this by simulating the throttle thing as legacy
+LRU does. I think this patch works because of reclaim_throttle happens
+when all dirty pages of one round of scanning pages are all
+congested(writeback & reclaim), which is easily to reach when memcgs
+are configured in small granularity as we do(memcg for each single
+process).
 
-> Hi Luke,
->
-> On Tue, Apr 29 2025, Tudor Ambarus wrote:
->
->> On 4/29/25 10:03 AM, Luke Wang wrote:
->>> Hi Pratyush,
->>>=20
->>> I'm following up on this patch series [1] Avoid odd length/address read/
->>> writes in 8D-8D-8D mode. While some of the series has been merged, the
->>> patch 4-6 remains unmerged.
->>>=20
->>> In fact, we also encountered similar read/write issue of odd address/
->>> length with NXP FSPI controller (spi-nxp-fspi.c). Currently, we handled
->>> the odd address/length in the controller driver, but I think this should
->>> be a common issue in the octal dtr mode. Was there a technical reason
->>> for not merging the core layer solution?
->>
->> I guess I stumbled on those small comments and did not consider the
->> greater benefit of taking the patches. No one cared and we forgot about
->> it. Please address the comments and resubmit.
->
-> Yes, it should have been a simple next revision from me but apparently
-> it fell through the cracks. I do strongly agree that this should be done
-> in SPI NOR, and not in controller drivers. So it would be great if you
-> can respin the remaining patches of the series.
+[1]
+PID: 1384     TASK: ffffff80eae5e2c0  CPU: 4    COMMAND: "watchdog"
+ #0 [ffffffc088e4b9f0] __switch_to at ffffffd0817a8d34
+ #1 [ffffffc088e4ba50] __schedule at ffffffd0817a955c
+ #2 [ffffffc088e4bab0] schedule at ffffffd0817a9a24
+ #3 [ffffffc088e4bae0] io_schedule at ffffffd0817aa1b0
+ #4 [ffffffc088e4bb90] folio_wait_bit_common at ffffffd08099fe98
+ #5 [ffffffc088e4bc40] filemap_fault at ffffffd0809a36b0
+ #6 [ffffffc088e4bd60] handle_mm_fault at ffffffd080a01a74
+ #7 [ffffffc088e4bdc0] do_page_fault at ffffffd0817b5d38
+ #8 [ffffffc088e4be20] do_translation_fault at ffffffd0817b5b1c
+ #9 [ffffffc088e4be30] do_mem_abort at ffffffd0806e09f4
+ #10 [ffffffc088e4be70] el0_ia at ffffffd0817a0d94
+ #11 [ffffffc088e4bea0] el0t_64_sync_handler at ffffffd0817a0bfc
+ #12 [ffffffc088e4bfe0] el0t_64_sync at ffffffd0806b1584
 
-The fact is that we will have octal DTR support in SPI NAND as well at some
-point, hence a common solution would be welcome as we will likely face
-similar problems when performing these unaligned accesses. I don't know
-how feasible it is yet, but if we have a fix for SPI NOR, we will need
-something similar for SPI NAND.
+[2]
+crash_arm64_v8.0.4++> kmem -p|grep reclaim|wc -l
+22184
+crash_arm64_v8.0.4++> kmem -p|grep dirty|wc -l
+20484
+crash_arm64_v8.0.4++> kmem -p|grep "dirty.*reclaim"|wc -l
+20151
+crash_arm64_v8.0.4++> kmem -p|grep "writeback.*reclaim"|wc -l
+123
 
-Thanks,
-Miqu=C3=A8l
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+ mm/vmscan.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 3783e45bfc92..a863d5cb5281 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -4698,6 +4698,11 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
+ 	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
+ 	sc->nr.unqueued_dirty += stat.nr_unqueued_dirty;
+ 	sc->nr_reclaimed += reclaimed;
++	sc->nr.dirty += stat.nr_dirty;
++	sc->nr.congested += stat.nr_congested;
++	sc->nr.unqueued_dirty += stat.nr_unqueued_dirty;
++	sc->nr.writeback += stat.nr_writeback;
++	sc->nr.immediate += stat.nr_immediate;
+ 	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
+ 			scanned, reclaimed, &stat, sc->priority,
+ 			type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
+@@ -6010,10 +6015,36 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 	unsigned long nr_reclaimed, nr_scanned, nr_node_reclaimed;
+ 	struct lruvec *target_lruvec;
+ 	bool reclaimable = false;
++	unsigned long flags;
+ 
+ 	if (lru_gen_enabled() && root_reclaim(sc)) {
+ 		memset(&sc->nr, 0, sizeof(sc->nr));
+ 		lru_gen_shrink_node(pgdat, sc);
++		/*
++		 * Tag a node/memcg as congested if all the dirty pages were marked
++		 * for writeback and immediate reclaim (counted in nr.congested).
++		 *
++		 * Legacy memcg will stall in page writeback so avoid forcibly
++		 * stalling in reclaim_throttle().
++		 */
++		if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested) {
++			set_bit(LRUVEC_CGROUP_CONGESTED, &flags);
++
++			if (current_is_kswapd())
++				set_bit(LRUVEC_NODE_CONGESTED, &flags);
++		}
++
++		/*
++		 * Stall direct reclaim for IO completions if the lruvec is
++		 * node is congested. Allow kswapd to continue until it
++		 * starts encountering unqueued dirty pages or cycling through
++		 * the LRU too quickly.
++		 */
++		if (!current_is_kswapd() && current_may_throttle() &&
++				!sc->hibernation_mode &&
++				(test_bit(LRUVEC_CGROUP_CONGESTED, &flags) ||
++				 test_bit(LRUVEC_NODE_CONGESTED, &flags)))
++			reclaim_throttle(pgdat, VMSCAN_THROTTLE_CONGESTED);
+ 		return;
+ 	}
+ 
+-- 
+2.25.1
+
