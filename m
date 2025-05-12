@@ -1,294 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266F043151;
-	Mon, 12 May 2025 11:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E6D25F781;
+	Mon, 12 May 2025 11:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747050626; cv=none; b=Z9epcWzR0U3b6YYugaVcbI5/a3iO3FqHGqHMt66a+k6j1qnEi+jL/47PUWPXNmhR9RbBkR4WJgn0dAhfU2frCQzSCbxW3tij4fEwvTJjK11kX9Gaqtax8J7suRseVKXZ1QwZ0m+XR/FNFUywe2uWZt3xzX+b5A+nSNx8sVs2Npo=
+	t=1747050636; cv=none; b=kDy2ZIrBNcRP2qWDIbKffOKDw29j3E3YGmZyWSXBrUgNC1xbpMo6u7oa1BigBoKHmo20deVI5BdIbvYGtdUhTousyga1oFQe+fSDzUX68Te6F5pmCaZeJzJpCN2k/0HuVNVPwJJwNGIQOWBMfGTmc+9qd9pZasn7R0Du17dt6WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747050626; c=relaxed/simple;
-	bh=qlsm2lXyI7mGR3rZEp8nzymCQHOGCbhsBqDeR80vvZ4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=izf0QYTkCawGGlbQ55+SbB6wifSvVzA+ogkEcujlyarGkF/9fRHtNKXbp+YtRhE60v/I8H8lOqvTsz1SH+/xpwt9aHVoLC6+M/9HyoImu29qsAqShuq+vIb6Ft05Uc7wE2wdg5rDlH9nABXwaa+UYiDQeMSqnZmPbtFO0JUEhWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OumfE6uM; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747050636; c=relaxed/simple;
+	bh=JN5peLSh0AwCANNu9zwVzWJjdSn1bSj6lqHMZVB9QYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6+AzK0JHxa29i9FSlAGkD/EfEYmcpH8qaKoPeqUlfAir4wzzLLOkKAC3L7VM3z2aLoi7m2yzDtabYhPaQHujhcAouAn6kfKdRaakeByxgIxg+asFrF2UkFL43oEGFW5iVEVf+6BIcDuD9yTcDb+tnEg3dFPdzSOEBCzL+8GD6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=F4VyUJ+J; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OumfE6uM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747050625; x=1778586625;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qlsm2lXyI7mGR3rZEp8nzymCQHOGCbhsBqDeR80vvZ4=;
-  b=OumfE6uMBndui/RGQf9xkTUGZ+Y5I5gJfS7is1fRQS8NoNSQi3wljIQo
-   sCXO9L8QtbiJInIL9jPTOC2Mm79C02EbG65NtF/YBYSA8ke/ZJzKYz3VN
-   s4DQZv/+u2nt6/yJGre1ishFDbSaIGFuHlPk2luIWvLljKUs/FL1E7976
-   vNQXJMJGsDQHIYKiOCc+9Sjisv767bW4Xt8o8/8VYaIlwQ8BwHcZxmUg4
-   VXRxvLas2rxfXb7g5weVFb5xfxOf6KNAkNCwxA1nlI9a9INLLY6mju4Ct
-   8FxKs5mqM3L+KPsYiGj3ttTGyyIUYfkzJHt7nrhMhtB9vgNHlrVBDGoCF
-   w==;
-X-CSE-ConnectionGUID: G82nsaE8TaGNHIqx0iEKJw==
-X-CSE-MsgGUID: NZldsaf3Rp6mcFyBMXkAJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="60245575"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="60245575"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:50:13 -0700
-X-CSE-ConnectionGUID: bScezBlwR/qpq5GXxZqdsg==
-X-CSE-MsgGUID: dBin6FTRSbOl2zKFKNr6Jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="174489726"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:50:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 May 2025 14:50:01 +0300 (EEST)
-To: Shawn Anastasio <sanastasio@raptorengineering.com>
-cc: linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-    Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Rob Herring <robh@kernel.o>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
-    chaitanya chundru <quic_krichai@quicinc.com>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Konrad Dybcio <konradybcio@kernel.org>, 
-    cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>, 
-    Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com, 
-    amitk@kernel.org, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
-    jorge.ramirez@oss.qualcomm.com, Dmitry Baryshkov <lumag@kernel.org>, 
-    Timothy Pearson <tpearson@raptorengineering.com>
-Subject: Re: [RESEND PATCH v6] PCI: PCI: Add pcie_link_is_active() to determine
- if the PCIe link is active
-In-Reply-To: <20250509180813.2200312-1-sanastasio@raptorengineering.com>
-Message-ID: <84ce803d-b9b6-0ae7-44fa-c793dca06421@linux.intel.com>
-References: <20250509180813.2200312-1-sanastasio@raptorengineering.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="F4VyUJ+J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=gTYrY24hx52txmsL9HPT3mdHpmxzXrMYsHxWBh70XWQ=; b=F4VyUJ+JTCQfCaNu
+	4hX0qz3EorbaU4dbcAt4m9Qht58mZ45609zPcz1ZA9duLHlMG55Vv+BU8SSWHbIUNdVyvD3kAgbtK
+	frC9vcbmjKAX8jrZl3eMaX2qNNNmiWBWlgviDHpAX9ey0vlR9GLDfy+qbmTVDRJDIHX/zzmMCgy/0
+	kp9BoH+GJ4zF0dIPOUI0rl7SoLNeClUhjMvddrxT5BwYReUP1J2hz90v5O6BtKPsLiFPqHYRD3flA
+	tkkjbStGpR+9Hr1xxadHBbY6K7BL3wFasKDlsha6h++2s0dbZ8vFTBqcHgdl5r/C6w4MsJoi5Ni5y
+	/pz9rIWnIJZraOvH7g==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1uERfs-0031El-2o;
+	Mon, 12 May 2025 11:50:24 +0000
+Date: Mon, 12 May 2025 11:50:24 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	viro@zeniv.linux.org.uk, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
+Message-ID: <aCHggEc3MdlL6t7j@gallifrey>
+References: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
+ <aCFPRhfxKUeRu1Qh@gallifrey>
+ <CAL+tcoBKZ4FMk9ozFidWUgfrEyRBrHCsh4cMMbTOA_e-wn0UJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL+tcoBKZ4FMk9ozFidWUgfrEyRBrHCsh4cMMbTOA_e-wn0UJQ@mail.gmail.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
+X-Uptime: 11:25:31 up 14 days, 19:39,  1 user,  load average: 0.09, 0.03, 0.01
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Fri, 9 May 2025, Shawn Anastasio wrote:
+* Jason Xing (kerneljasonxing@gmail.com) wrote:
+> On Mon, May 12, 2025 at 9:30 AM Dr. David Alan Gilbert
+> <linux@treblig.org> wrote:
+> >
+> > * Jason Xing (kerneljasonxing@gmail.com) wrote:
+> > > Hi All,
+> >
+> > Hi Jason,
+> >
+> > > I noticed this patch "relay: Remove unused relay_late_setup_files"
+> > > appears in the mm branch already[1], which I totally missed. Sorry for
+> > > joining the party late.
+> > >
+> > > I have a different opinion on this. For me, I'm very cautious about
+> > > what those so-called legacy interfaces are and how they can work in
+> > > different cases and what the use case might be... There are still a
+> > > small number of out-of-tree users like me heavily relying on relayfs
+> > > mechanism. So my humble opinion is that if you want to remove
+> > > so-called dead code, probably clearly state why it cannot be used
+> > > anymore in the future.
+> >
+> > We've got lots of deadcode, why it's dead varies a lot; for example
+> > people forgetting to clean it up after other patches etc - so this
+> > _could_ be used but hasn't been for well over 7 years.
+> >
+> > > Dr. David, I appreciate your patch, but please do not simply do the
+> > > random cleanup work __here__. If you take a deep look at the relayfs,
+> > > you may find there are other interfaces/functions no one uses in the
+> > > kernel tree.
+> >
+> > Actually, that was the only interface in relay that I found unused.
+> 
+> Not really. More than this single one, say, __relay_write() and
+> subbuf_start_reserve()...
 
-In shortlog:
+Ah, my tools only spot unused symbols, they're header inlines; I've
+not found a way to spot those yet.
 
-PCI: PCI: ... -> PCI: ...
+> > > I'm now checking this kind of patch in relayfs one by one to avoid
+> > > such a thing happening. I'm trying to maintain it as much as possible
+> > > since we internally use it in the networking area to output useful
+> > > information in the hot paths, a little bit like blktrace. BTW, relayfs
+> > > is really a wonderful one that helps kernel modules communicate with
+> > > userspace very efficiently. I'm trying to revive it if I can.
+> >
+> > If you've got a use for that function, then I'm more than happy to suggest
+> > just dropping my patch.
+> >
+> > However, it is a fairly chunky function that is built into distro
+> > kernels - so I think it should have a little thought put to it.
+> >
+> > As I say, if you are using it, it's fine by me just to drop this patch.
+> 
+> For now, I'm not using it but still considering what the use case
+> might be in the future. As I mentioned earlier, I'm trying to make
+> relayfs more robust with more realistic functions.
+> 
+> IMHO, it's not really a dead code to me unless you can clarify why
+> it's obsolete instead of claiming "no one is using it".
 
-> From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> 
-> Date: Sat, 12 Apr 2025 07:19:56 +0530
-> 
-> Introduce a common API to check if the PCIe link is active, replacing
-> duplicate code in multiple locations.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-> ---
-> (Resent since git-send-email failed to detect the Subject field from the patch
-> file previously -- apologies!)
-> 
-> This is an updated patch pulled from Krishna's v5 series:
-> https://patchwork.kernel.org/project/linux-pci/list/?series=952665
-> 
-> The following changes to Krishna's v5 were made by me:
->   - Revert pcie_link_is_active return type back to int per Lukas' review
->     comments
->   - Handle non-zero error returns at call site of the new function in
->     pci.c/pci_bridge_wait_for_secondary_bus
-> 
->  drivers/pci/hotplug/pciehp.h      |  1 -
->  drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
->  drivers/pci/hotplug/pciehp_hpc.c  | 33 +++----------------------------
->  drivers/pci/pci.c                 | 26 +++++++++++++++++++++---
->  include/linux/pci.h               |  4 ++++
->  5 files changed, 31 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 273dd8c66f4e..acef728530e3 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -186,7 +186,6 @@ int pciehp_query_power_fault(struct controller *ctrl);
->  int pciehp_card_present(struct controller *ctrl);
->  int pciehp_card_present_or_link_active(struct controller *ctrl);
->  int pciehp_check_link_status(struct controller *ctrl);
-> -int pciehp_check_link_active(struct controller *ctrl);
->  void pciehp_release_ctrl(struct controller *ctrl);
-> 
->  int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index d603a7aa7483..4bb58ba1c766 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -260,7 +260,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	/* Turn the slot on if it's occupied or link is up */
->  	mutex_lock(&ctrl->state_lock);
->  	present = pciehp_card_present(ctrl);
-> -	link_active = pciehp_check_link_active(ctrl);
-> +	link_active = pcie_link_is_active(ctrl->pcie->port);
->  	if (present <= 0 && link_active <= 0) {
->  		if (ctrl->state == BLINKINGON_STATE) {
->  			ctrl->state = OFF_STATE;
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 8a09fb6083e2..278bc21d531d 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -221,33 +221,6 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
->  	pcie_do_write_cmd(ctrl, cmd, mask, false);
->  }
-> 
-> -/**
-> - * pciehp_check_link_active() - Is the link active
-> - * @ctrl: PCIe hotplug controller
-> - *
-> - * Check whether the downstream link is currently active. Note it is
-> - * possible that the card is removed immediately after this so the
-> - * caller may need to take it into account.
-> - *
-> - * If the hotplug controller itself is not available anymore returns
-> - * %-ENODEV.
-> - */
-> -int pciehp_check_link_active(struct controller *ctrl)
-> -{
-> -	struct pci_dev *pdev = ctrl_dev(ctrl);
-> -	u16 lnk_status;
-> -	int ret;
-> -
-> -	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-> -		return -ENODEV;
-> -
-> -	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-> -	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
-> -
-> -	return ret;
-> -}
-> -
->  static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
->  {
->  	u32 l;
-> @@ -467,7 +440,7 @@ int pciehp_card_present_or_link_active(struct controller *ctrl)
->  	if (ret)
->  		return ret;
-> 
-> -	return pciehp_check_link_active(ctrl);
-> +	return pcie_link_is_active(ctrl_dev(ctrl));
->  }
-> 
->  int pciehp_query_power_fault(struct controller *ctrl)
-> @@ -584,7 +557,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
->  	 * Synthesize it to ensure that it is acted on.
->  	 */
->  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
-> -	if (!pciehp_check_link_active(ctrl))
-> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
->  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
->  	up_read(&ctrl->reset_lock);
->  }
-> @@ -884,7 +857,7 @@ int pciehp_slot_reset(struct pcie_device *dev)
->  	pcie_capability_write_word(dev->port, PCI_EXP_SLTSTA,
->  				   PCI_EXP_SLTSTA_DLLSC);
-> 
-> -	if (!pciehp_check_link_active(ctrl))
-> +	if (!pcie_link_is_active(ctrl_dev(ctrl)))
->  		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
-> 
->  	return 0;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e77d5b53c0ce..3bb8354b14bf 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4926,7 +4926,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		return 0;
-> 
->  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> -		u16 status;
-> 
->  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
->  		msleep(delay);
-> @@ -4942,8 +4941,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		if (!dev->link_active_reporting)
->  			return -ENOTTY;
-> 
-> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-> -		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-> +		if (pcie_link_is_active(dev) <= 0)
->  			return -ENOTTY;
-> 
->  		return pci_dev_wait(child, reset_type,
-> @@ -6247,6 +6245,28 @@ void pcie_print_link_status(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL(pcie_print_link_status);
-> 
-> +/**
-> + * pcie_link_is_active() - Checks if the link is active or not
-> + * @pdev: PCI device to query
-> + *
-> + * Check whether the link is active or not.
-> + *
-> + * Return: link state, or -ENODEV if the config read failes.
+i'm very gentle about this; I'm not pushing back hard if someone
+says actually they want to keep something.
 
-"link state" is bit vague, it would be better to document the values 
-returned more precisely.
+I'd say my 'claim' is fairly good as even you say
+  'I'm not using it but still considering..'
 
-> + */
-> +int pcie_link_is_active(struct pci_dev *pdev)
-> +{
-> +	u16 lnk_status;
-> +	int ret;
-> +
-> +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-> +		return -ENODEV;
-> +
-> +	pci_dbg(pdev, "lnk_status = %x\n", lnk_status);
-> +	return !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-> +}
-> +EXPORT_SYMBOL(pcie_link_is_active);
-> +
->  /**
->   * pci_select_bars - Make BAR mask from the type of resource
->   * @dev: the PCI device for which BAR mask is made
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 51e2bd6405cd..a79a9919320c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1945,6 +1945,7 @@ pci_release_mem_regions(struct pci_dev *pdev)
->  			    pci_select_bars(pdev, IORESOURCE_MEM));
->  }
+You don't need to push back quite as hard on me!
+
+> If you insist
+> on the point, then most of relayfs would be removed, which is
+> apparently not what I'm wishing for.
+
+You could forgive me for thinking this is unused;
+  a) There are no callers in the tree - I can't possibly imagine all
+   other trees to check; especially those on someones local disk
+   or thoughts still bouncing around in your brain!
+
+  b) There's no listed maintainer, so I can't assume anyone is actively
+  working on it
+
+  c) The only changes in years in the tree are cleanups, like strcpy
+  variants.
+
+We do have other APIs that people care about and aren't in use;
+now if those are nicely thought out APIs etc I think that's fine.
+(I've had others say they want to keep some because they like them or
+they're part of a well thought out API)
+
+> Probably it will be finally removed, but not at the moment. Evidence
+> is still not clear to me :S
 > 
-> +int pcie_link_is_active(struct pci_dev *dev);
+> For sure, the last call would be made by Andrew and Jens. Please help
+> review this patch one more time. Thanks!
 
-Is this really needed in include/linux/pci.h, isn't drivers/pci/pci.h 
-enough (for pwrctrl in the Krishna's series)?
+Why don't you add a MAINTAINERS section with you added just as a 
+reviewer?   That at least gets you told if someone dares to clean it up
+in the future!
 
->  #else /* CONFIG_PCI is not enabled */
+Dave
+
+> Thanks,
+> Jason
 > 
->  static inline void pci_set_flags(int flags) { }
-> @@ -2093,6 +2094,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
->  {
->  	return -ENOSPC;
->  }
-> +
-> +static inline bool pcie_link_is_active(struct pci_dev *dev)
-> +{ return false; }
-
-This fits on one line just fine.
-
+> >
+> > Dave
+> >
+> > > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-everything&id=46aa76118ee365c25911806e34d28fc2aa5ef997
+> > >
+> > > Thanks,
+> > > Jason
+> > --
+> >  -----Open up your eyes, open up your mind, open up your code -------
+> > / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
+> > \        dave @ treblig.org |                               | In Hex /
+> >  \ _________________________|_____ http://www.treblig.org   |_______/
 -- 
- i.
-
->  #endif /* CONFIG_PCI */
-> 
->  /* Include architecture-dependent settings and functions */
-> --
-> 2.30.2
-> 
-> 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
