@@ -1,109 +1,120 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A15B257AD8;
-	Mon, 12 May 2025 08:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC911258CC0
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038243; cv=none; b=mhZpxmb+SDunuzHDm6jiaYAHHsoVyE/9YR1gZrPkaGOymDxz/gXTxxoPNiCTgkC5PDHo8fCRuPpKtR+IcVYpqLp0xzuOnIqEnr/qEsRZZ+eEvaqIfLMK+w+/cEqKfDH9BcKkC7i0nlcW8V057FdXVvQtvfaWbW1vY28fKWFK0Hk=
+	t=1747038246; cv=none; b=G/WL0Gm46WWwMct/3yfZzLBCa8WAfuSxO9aXr6NxvqEYR+v5PmVPnQzQ7Qmi8jmCCb1mIuO2TL/vMKtspVXTi2Z7aIrPeX8yMrocQjFRvDBi2QPhbPNdoJSuuOuum3LAQD5k7y7dX3RCO0GfcuCiMltgmQ8C7kK8BzmjigNMD6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038243; c=relaxed/simple;
-	bh=PGSpOJuLwDKFHcB99ZBz3OtHAgOA9XGAMJZz+sOTY48=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=G2qeho2Ka2bfDdjXF6HWheSvAlOSQ/V8pKe7x1sbnODRs8zhNWF/JxwJPa54duxu2zPYJq0HF8xDUlHV/7OSh+KBsQaHVy/WayjDXgkL/WqkW2i3585y4fA3c3XEOwrMaLtyDj0iyQdPT1CBbFtIKmY4lw1kimX5RKxBgNI8ybw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zwt0p44rXz4f3jYl;
-	Mon, 12 May 2025 16:23:38 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 0F9B81A0359;
-	Mon, 12 May 2025 16:23:58 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBHq18csCFoXjOzMA--.56018S3;
-	Mon, 12 May 2025 16:23:57 +0800 (CST)
-Subject: Re: [PATCH RFC md-6.16 v3 15/19] md/md-llbitmap: implement APIs to
- dirty bits and clear bits
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
- <20250512011927.2809400-16-yukuai1@huaweicloud.com>
- <20250512051722.GA1667@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com>
-Date: Mon, 12 May 2025 16:23:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747038246; c=relaxed/simple;
+	bh=RVERkuO+Icf4ZI8o+6mMJrekC+d+ItdWOEKd+uRXquY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MJjJOEMvGC4ynRhWeQnSMejrA0A6z6EolioNRS61TAgWr4Hivh4RSch64o3oAW/+YaxZrA/gqu0G1TU0euJ8HKuEqQ0XaV/LHxrQYCdZpvXAYjUjNi/JZhe8vvF1zLjvhjkRiGah7QYtt6WiB48IE3xYbQO0LJO/yMY0QmcIEbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mwE317VB; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mwE317VB"
+Message-ID: <1a5bc420-c716-4d0b-b767-32adf32f4958@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747038236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TElvHhd7DydXVZlOSat7FJ7I+zBIH483XZd4jOzKuP0=;
+	b=mwE317VBw59kffo3mY/wpiIuV3gaWone3np+Bmn8zz9jaFdOrRrVrjsFE5zdUXBzaBJ+5e
+	XHyovyO4VXM2KJvMq61v5ircvRKvdL0zeE5mm7Zy/v9aDBJ5lGiif3w+FIdzvkTFiuIbTw
+	B5+PRG+PCXj4UVcKFd+HfyC9MrNpoOk=
+Date: Mon, 12 May 2025 16:23:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250512051722.GA1667@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHq18csCFoXjOzMA--.56018S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtrW3Ar1kGF47urWkJrW3GFg_yoWDKFX_Xa
-	s0yrnrC34UJrs0qw1UW3WDZrZ7Cw4rJ3Z5Xay3WFykJ3sxWayDAFsY93yktry3t34xAw13
-	Kr97ta48XFWagjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY
-	04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbHa0JUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Subject: Re: [PATCH v1 0/3] generalize panic_print's dump function to be used
+ by other kernel parts
+Content-Language: en-US
+To: Feng Tang <feng.tang@linux.alibaba.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-kernel@vger.kernel.org, mhiramat@kernel.org, llong@redhat.com
+References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
+ <20250511184617.85d5fe22fde831c1edb8321c@linux-foundation.org>
+ <aCFnjmRWwBjgV2Hv@U-2FWC9VHC-2323.local>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <aCFnjmRWwBjgV2Hv@U-2FWC9VHC-2323.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
 
-ÔÚ 2025/05/12 13:17, Christoph Hellwig Ð´µÀ:
-> On Mon, May 12, 2025 at 09:19:23AM +0800, Yu Kuai wrote:
->> +static void llbitmap_unplug(struct mddev *mddev, bool sync)
->> +{
->> +	DECLARE_COMPLETION_ONSTACK(done);
->> +	struct llbitmap *llbitmap = mddev->bitmap;
->> +	struct llbitmap_unplug_work unplug_work = {
->> +		.llbitmap = llbitmap,
->> +		.done = &done,
->> +	};
->> +
->> +	if (!llbitmap_dirty(llbitmap))
->> +		return;
->> +
->> +	INIT_WORK_ONSTACK(&unplug_work.work, llbitmap_unplug_fn);
->> +	queue_work(md_llbitmap_unplug_wq, &unplug_work.work);
->> +	wait_for_completion(&done);
->> +	destroy_work_on_stack(&unplug_work.work);
+
+On 2025/5/12 11:14, Feng Tang wrote:
+> Hi Andrew,
 > 
-> Why is this deferring the work to a workqueue, but then synchronously
-> waits on it?
+> Thanks for the review!
+> 
+> On Sun, May 11, 2025 at 06:46:17PM -0700, Andrew Morton wrote:
+>> On Sun, 11 May 2025 16:52:51 +0800 Feng Tang <feng.tang@linux.alibaba.com> wrote:
+>>
+>>> When working on kernel stability issues, panic, task-hung and
+>>> software/hardware lockup are frequently met. And to debug them, user
+>>> may need lots of system information at that time, like task call stacks,
+>>> lock info, memory info etc.
+>>>
+>>> panic case already has panic_print_sys_info() for this purpose, and has
+>>> a 'panic_print' bitmask to control what kinds of information is needed,
+>>> which is also helpful to debug other task-hung and lockup cases.
+>>>
+>>> So this patchset extract the function out, and make it usable for other
+>>> cases which also need system info for debugging.
+>>>
+>>> Locally these have been used in our bug chasing for stablility issues
+>>> and was helpful.
+>>
+>> Truth.  Our responses to panics, oopses, WARNs, BUGs, OOMs etc seem
+>> quite poorly organized.  Some effort to clean up (and document!) all of
+>> this sounds good.
+>>
+>> My vote is to permit the display of every scrap of information we can
+>> think of in all situations.  And then to permit users to select which of
+>> that information is to be displayed under each situation.
 
-This is the same as old bitmap, by the fact that issue new IO and wait
-for such IO to be done from submit_bio() context will deadlock.
+Completely agreed. The tricky part is making a global knob that works for
+all situations without breaking userspace, but it's a better system-wide
+approach ;)
 
-1) bitmap bio must be done before this bio can be issued;
-2) bitmap bio will be added to current->bio_list, and wait for this bio
-to be issued;
+> 
+> Good point! Maybe one future todo is to add a gloabl system info dump
+> function with ONE global knob for selecting different kinds of information,
+> which could be embedded into some cases you mentioned above.
 
-Do you have a better sulution to this problem?
+IMHO, for features with their own knobs, we need:
+a) The global knob (if enabled) turns on all related feature-level knobs,
+b) while still allowing users to manually override individual knobs.
+
+Something like:
+
+If SYS_PRINT_ALL_CPU_BT (global knob) is on, it enables 
+hung_task_all_cpu_backtrace
+for hung-task situation automatically. But users can still disable it via
+hung_task_all_cpu_backtrace.
+
+Anyway, the global knob (when set) controls all feature-level knobs, but
+they can override it if explicitly set ;)
 
 Thanks,
-Kuai
+Lance
 
 > 
-> .
+>> As for this patchset - sounds good to me.  For now I'll await input
+>> from reviewers.
 > 
+> Thank you!
+> 
+> - Feng
 
