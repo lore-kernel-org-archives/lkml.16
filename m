@@ -1,131 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6381D17555
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989CB2550B8;
+	Mon, 12 May 2025 11:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747048245; cv=none; b=kMhxl1UU6MlttsmocyEbrs+UBSHdRMDQjyPVnalY62lxIfLkKDMt9LXD7j74d6zT+GQlnm31YT14Pjyk1nuaHz1yxSLLjuSmghH+Xft1abmZyi19eUf54sY76sZZ2YODXdQqE2Gsad5rETp+CpayFh1PCsqCdxTu6SJN9uDt984=
+	t=1747048304; cv=none; b=AOLjt+r53+2Vf3x8U7gZ8Tx9sIbEve/mCPSmfvqxJDpIlWeCN8ub3h1bb1MWYzyONnhoKxVKZ5gT73JJ6cJPlzzZPvefOGM872nMytYTi7/ngoxy2bNjujdw5qyuesxKQl3h53WenTFgegOvFHlm0fEgflbRWs0VpRYgc3rZSgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747048245; c=relaxed/simple;
-	bh=3R86o/WscK7lM10ya42CG/B/k+oINWTHPif2orUE+Ls=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FpaanotR00ontvqDulGzlAXUob0MqmjFRHgrv7QkbSYt8sNUmHrV2QpbMNBEgdJ39oGpBw3Q0OsaFmPUKqzvotJ9tRCl+1abQydlH4nNBnEQI+HUr0u2mhHbq9igYlfHEdpSrgv2UCqt3lfmMG4fEu7XXfhronArQ9NdOuuHOXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dxxXulPc; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747048304; c=relaxed/simple;
+	bh=FI4fHXTigwGwniHI+YHv/YtmYhKfZ1v6wbRpBi5fe/g=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=fZNYY3rJTbsjM1p3PRNge6+ViNOZiPLFTL2r9SKTyWnDyhBlkYufI65/j/aXFTeW/Nn48qYvFNuwKFENbw5tSUgv5t/XzyLCA9MOKhzjAvg1LVAdzN4kgVxj7Cn90Hbsxf/I+uzKst7tFr23icPDMOduohZedSY/fTXNnW3WCUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gikR/UgW; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dxxXulPc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747048243; x=1778584243;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3R86o/WscK7lM10ya42CG/B/k+oINWTHPif2orUE+Ls=;
-  b=dxxXulPcjRyfWQF41vC7UB4rqGXWrbbM860MdsVvoT+n/PLSHHh4TS80
-   5S55xHmnUV0TvAWqZ/5sjdfGT18JcoWleJb4bpUnE4fMmI+TiVkhzSaaY
-   OO61xQ5gUNkuetyeusejPC8fR3/V5KwEwDgKtfR3Nm93dbhWj9hgJA/GY
-   izf0AbX7ecdSvVzQJW4DDE2eI7SuLk9aCKf4P2Q2MJlgXFOoluxt2LsQq
-   LS19mZsltmjLlxAIas68HZb5HZSyRj0h38FEl+7xr2QcBO+36PvmIWRJB
-   vpOS/MxIvQUqfWb/0SNO9kmooSy1ANIhqOTZdOYICoN9uAnO8xbPVG3o/
-   g==;
-X-CSE-ConnectionGUID: euRq3RC0QEOfOjPaaj7L/Q==
-X-CSE-MsgGUID: WhY0VGRYTn21GBHFG16G0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="51490679"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="51490679"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:10:42 -0700
-X-CSE-ConnectionGUID: 1UCgEBFkSHGY0UulsJovMg==
-X-CSE-MsgGUID: K/xs96yhS+SPaLa7FRIoHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="142546267"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:10:40 -0700
-Date: Mon, 12 May 2025 14:10:37 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Lee Jones <lee@kernel.org>, david.m.ertman@intel.com,
-	ira.weiny@intel.com, andriy.shevchenko@linux.intel.com,
-	mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] mfd: core: Support auxiliary device
-Message-ID: <aCHXLarju7hOXL40@black.fi.intel.com>
-References: <20250428060207.3170325-1-raag.jadav@intel.com>
- <20250501125028.GM1567507@google.com>
- <aBVArb-zJ_aqicHW@black.fi.intel.com>
- <aCHL8WWV-Wt7OrII@black.fi.intel.com>
- <2025051221-gulf-schematic-26e1@gregkh>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gikR/UgW"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C9SR2u028882;
+	Mon, 12 May 2025 11:11:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=w8l+QaBTlwmrF3HXfFvnB+
+	cP65SG0RGLM+MaZqPRFmU=; b=gikR/UgWyG9fY/+t9zHJR/4fm604Yk8qPsn9DM
+	L4t7jEPW+6dEtcIUMffcf2ElsPa2KemKXNyqrAc2qtQu0QpPUWLGEwLiwSQPcgpy
+	Xi4eoFCmsVChskhbj5Ajm24MngVp2ggEsu3J8KXfX773A4oX/fWk2a/YyLVfBmve
+	HXKbr2BmFY3dXtLOHt5iVPyA4cg+ld5YuizkhSDRG7GmQ/kVH9RehbX6BH/fNajP
+	9dBbK8UdAafpPzKz6Vi1JdhdnxAwoxSraX08re4wgdHRP9US9+TTiSHxv9wAaFTf
+	keVazUtoU4a/YKAl5SBMuor6Umo8afm3YqWeZ/fUhfk5p5KQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hv5qcce8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 11:11:22 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54CBBLSI029673
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 11:11:21 GMT
+Received: from yuanfang4-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 12 May 2025 04:11:18 -0700
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Subject: [PATCH v5 0/2] coresight: Add Coresight Trace Network On Chip
+ driver
+Date: Mon, 12 May 2025 19:10:36 +0800
+Message-ID: <20250512-trace-noc-v5-0-f2ef070baee5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025051221-gulf-schematic-26e1@gregkh>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACzXIWgC/3WQS07EMBBErzLyeoz8adttVtwDsfCvGS9IIBki0
+ Ch3x4lAyhBlWS2/eiXf2FiGWkb2eLqxoUx1rH3XgjmfWLqE7rXwmltmSigjQGh+HUIqvOsTJ1R
+ oo25XLKy9fx8K1a+16/ml5Usdr/3wvVZPcrkysBa0QM8jYubgc+KxCMNdJBGjkoTgnj4+a6pde
+ kj9G1t6Jr2yvwvcZsGkueAGoqesQg7k79jz32op/zOSpM+ZnPU+7n1w6IPGerQQKGlwEQ98Zsc
+ 47zVSyZRx7zOHPtNY7chpmQhKLHvWblncsnb5G2WTlUEJR/aenef5B8EUVrf8AQAA
+X-Change-ID: 20250403-trace-noc-f8286b30408e
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>
+CC: <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Yuanfang Zhang
+	<quic_yuanfang@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747048277; l=2245;
+ i=quic_yuanfang@quicinc.com; s=20241209; h=from:subject:message-id;
+ bh=FI4fHXTigwGwniHI+YHv/YtmYhKfZ1v6wbRpBi5fe/g=;
+ b=pylPWcizTRa6hQalcFc+aJb/xN9YqSjzSpXyERI4qBUSexrpy1EcDVE7toX7slseZh2bqSGCQ
+ kRS1/84DXsQCQuiCenNj+MJ4T3i9ZrqZqOjMJxExxuRTIChHivOLe6F
+X-Developer-Key: i=quic_yuanfang@quicinc.com; a=ed25519;
+ pk=ZrIjRVq9LN8/zCQGbDEwrZK/sfnVjwQ2elyEZAOaV1Q=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=DqtW+H/+ c=1 sm=1 tr=0 ts=6821d75a cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=mTvmQVt1wvC56TrAcpsA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: _DDEcYGFIHsEbDcbK5G5GK19OWpfwbNU
+X-Proofpoint-GUID: _DDEcYGFIHsEbDcbK5G5GK19OWpfwbNU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDExNyBTYWx0ZWRfX52KGBtdRCcnU
+ QCJXAdhZhddWsDWa+RunrY9BsJHRFq9hGT9wR3UC9EgGlFuzeKJWGsz18JyAH7UeeGju4BeaY/1
+ qt8CHYACh1VrFsL5z1ItlTa2HxKffoHf/ip7sGgzAcRo05jGPQuuSMwJKOhgORu4sohf7XxycBA
+ fBZAbdFL+RCY6bhGO0uyxS3+Fbjf+/4Fz10ffg0l2D2g4U34uvqCnJHF7SGKa9ngt7V5wOHJ8B+
+ s2K9iVU8dQzIMNUFA/b2PxYCDs4Z57M+ET69kFY2ZFetVbqY0Li4jT9asQBRRiyRPmt/0hQ+7ij
+ 6NoXT6mRPRYI2/f5viZkadCP2bUyp8nalEeaICpes4cqkJg+QWY9ZNKFbYydv0XD0v3/s7oFvaK
+ tThSmXkyfAruYQrNjvJVkmdfwlV+Oa+CJ78rBciRMbtUP/KDb6+5emlyl0aTtmZ/Qxh1E9Re
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_04,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 bulkscore=0 phishscore=0 clxscore=1011 adultscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505120117
 
-On Mon, May 12, 2025 at 12:36:24PM +0200, Greg KH wrote:
-> On Mon, May 12, 2025 at 01:22:41PM +0300, Raag Jadav wrote:
-> > On Sat, May 03, 2025 at 01:01:23AM +0300, Raag Jadav wrote:
-> > > On Thu, May 01, 2025 at 01:50:28PM +0100, Lee Jones wrote:
-> > > > On Mon, 28 Apr 2025, Raag Jadav wrote:
-> > > > 
-> > > > > Extend MFD subsystem to support auxiliary child device. This is useful
-> > > > > for MFD usecases where parent device is on a discoverable bus and doesn't
-> > > > > fit into the platform device criteria. Purpose of this implementation is
-> > > > > to provide discoverable MFDs just enough infrastructure to register
-> > > > > independent child devices without abusing the platform device.
-> > > > > 
-> > > > > Current support is limited to just PCI type MFDs, but this can be further
-> > > > > extended to support other types like USB in the future.
-> > > > > 
-> > > > > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> > > > > ---
-> > > > > 
-> > > > > v2: Introduce a shared struct mfd_aux_device
-> > > > >     Introduce auxiliary device opt-in flag
-> > > > > 
-> > > > > v3: Fix device_type ABI breakage (Andy)
-> > > > >     Aesthetic adjustments (Andy)
-> > > > > 
-> > > > > v4: s/mfd_aux/maux
-> > > > >     Allow num_resources for child device (Andy)
-> > > > >     Fix build warning (Andy)
-> > > > > 
-> > > > >  drivers/mfd/Kconfig      |   2 +-
-> > > > >  drivers/mfd/Makefile     |   2 +-
-> > > > >  drivers/mfd/mfd-aux.c    | 156 +++++++++++++++++++++++++++++++
-> > > > 
-> > > > This looks like mostly duplicated platform device code.
-> > > > 
-> > > > If you are _certain_ that it needs to exist, you need to push it out to
-> > > > the auxiliary subsystem and remove any traces of it being MFD related.
-> > > > 
-> > > > If it's needed by MFD, it'll be needed by other auxiliary users.  Even
-> > > > if not now, sometime in the future.
-> > > 
-> > > Greg, if you are okay with this, please let me know. Or perhaps suggest
-> > > a better alternative.
-> > 
-> > Greg, any guidance on this?
-> 
-> I don't know what to say, I don't see the code here that is being
-> quoted, sorry.  If this should be in the aux code, add it and submit a
-> patch that uses it so we can see what you are referring to.
-> 
-> confused,
+The Trace Network On Chip (TNOC) is an integration hierarchy which is a
+hardware component that integrates the functionalities of TPDA and
+funnels. It collects trace from subsystems and transfers it to coresight
+sink.
 
-Apologies for snipping the context in attempt to reduce noise.
+In addition to the generic TNOC mentioned above, there is also a special type
+of TNOC called Interconnect TNOC. Unlike the generic TNOC, the Interconnect
+TNOC doesn't need ATID. Its primary function is to connect the source of
+subsystems to the Aggregator TNOC. Its driver is different from this patch and
+will describe it and upstream its driver separately.
 
-Original patch[1] with Lee's recommendation to move all the resource()
-helpers from MFD to auxiliary subsystem, or perhaps an alternative way
-to manage resources for the usecase.
+Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+---
+Changes in v5:
+- update cover-letter to describe the Interconnect TNOC.
+- Link to v4: https://lore.kernel.org/r/20250415-trace-noc-v4-0-979938fedfd8@quicinc.com
 
-[1] https://lore.kernel.org/r/20250428060207.3170325-1-raag.jadav@intel.com
+Changes in v4:
+- Fix dt_binding warning.
+- update mask of trace_noc amba_id.
+- Modify driver comments.
+- rename TRACE_NOC_SYN_VAL to TRACE_NOC_SYNC_INTERVAL.
+- Link to v3: https://lore.kernel.org/r/20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com
 
-I can still send out a v5 if it doesn't help. Let me know.
+Changes in v3:
+- Remove unnecessary sysfs nodes.
+- update commit messages.
+- Use 'writel' instead of 'write_relaxed' when writing to the register for the last time.
+- Add trace_id ops.
+- Link to v2: https://lore.kernel.org/r/20250226-trace-noc-driver-v2-0-8afc6584afc5@quicinc.com
 
-Raag
+Changes in v2:
+- Modified the format of DT binging file.
+- Fix compile warnings.
+- Link to v1: https://lore.kernel.org/r/46643089-b88d-49dc-be05-7bf0bb21f847@quicinc.com
+
+---
+Yuanfang Zhang (2):
+      dt-bindings: arm: Add device Trace Network On Chip definition
+      coresight: add coresight Trace Network On Chip driver
+
+ .../bindings/arm/qcom,coresight-tnoc.yaml          | 111 ++++++++++++
+ drivers/hwtracing/coresight/Kconfig                |  13 ++
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-tnoc.c       | 191 +++++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-tnoc.h       |  34 ++++
+ 5 files changed, 350 insertions(+)
+---
+base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+change-id: 20250403-trace-noc-f8286b30408e
+
+Best regards,
+-- 
+Yuanfang Zhang <quic_yuanfang@quicinc.com>
+
