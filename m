@@ -1,37 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FBAF1DB346
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF7C23C4F8
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064081; cv=none; b=vEX0LdUnqOTfhDsR9RFohhQODpiKlL4aXf+gbD8yFflzS7uhNXuFzoQk/bEIdLiU7cnXMhAnN2kK2zZ3feYSauQLs5/o7iDm3Ff4goDD73edJjgQ+k51Bd4FHt5QDjPa1PZ7E9+OjK8eaNYvwhSiHeoLZsVog1dxT9DmQUObNqE=
+	t=1747064087; cv=none; b=DsDA/nJta6DSnUb8wxkTZkOQ5hSd21gR00T6HYsWEqPPpgdDGEZvDYrRumV7DPbDuMTepSmo4uyulKfucy2m5hn3cUF1jZcWttFwOXwbO07XLjorhER7FgIpPsHF0J4kAwqhyXjWFxDFO3Ns6PxGoov4VVkPWT4d3T3KGi2c/hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064081; c=relaxed/simple;
-	bh=vn6X8kfk8KLhiRNCeU8et9vapzolDu7blq28rCHKTsQ=;
+	s=arc-20240116; t=1747064087; c=relaxed/simple;
+	bh=BUkwgzL+MSLKCC2+REuz9ThllAAWTrnd1vUtZmKWiw0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7IqNLzzwpzSK0JMrJi8RadVWjDGIMaLhr4Mi/NapE9ZSk61QDfiC7Rntl6lRXcvMc+iWl+sqqLufx8Lb7CNSPSEvVAs5s0O/UiWW/IFGKG+VlYMM8i8Lo2V/p5maZeq8AIPwDwU9cKzp3iJ3X2IiPPKYp/Uvz07Tr2KUaaWaX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C3F214BF;
-	Mon, 12 May 2025 08:34:28 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBEEE3F63F;
-	Mon, 12 May 2025 08:34:37 -0700 (PDT)
-Date: Mon, 12 May 2025 16:34:35 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Radu Rendec <rrendec@redhat.com>, Will Deacon <will@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: cacheinfo: Report cache sets, ways, and line size
-Message-ID: <20250512-straight-dexterous-oxpecker-fabbc8@sudeepholla>
-References: <20250509233735.641419-1-sean.anderson@linux.dev>
- <20250510-fresh-magenta-owl-c36fb7@sudeepholla>
- <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rsus+vOvCWe1OAf23yVHAxsvslHvpTczda+fU/gYOVH9yGD6oyRr/434Du7j4l75YqcncfBrJvcSf2I35DSFoO9z5H3v1ZA53Ot11SMbG1iTRlpufhZqlNf/bhRzSLHEBPHY7/daz/svljGQ3VWvGBh4bxJEfn2qanIrwNTB3h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=l/ds3KL6; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="l/ds3KL6"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47691d82bfbso82780721cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1747064084; x=1747668884; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=h2IEqsFP6mbIlWzLtUHadM7bvGmNt6W1aQGNu23yom0=;
+        b=l/ds3KL6tIKam7TSWf/Lf6ADIj5Swve9HbgiBkjBGdDRDKRgbbrex+Br/9SfHoGomZ
+         AB464YIvyLqxMrdFZXeC1W4OqtPmJQ8+J2OgKQxCmg+kR9zPXmLS/O5byP65rua0CXyO
+         mwl6Evy5G7nuZKDGl8GuQKKjxkkdke6fp4wDdG3mMfHXPiIWw5WZKBwrgqri7clvHs2l
+         e4oil6u/pelzIpls1rlyK5daKsVFbZ3kaYWf5Z1dnK2BBS+b60hSitx9HBLrKeMHi9Qg
+         RjuJLDDM1hK8Ij3CIghuELrU23HbS/btYr9yyTwYRXH70rKDBDKIZFhiTy452I2O9RYF
+         udKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747064084; x=1747668884;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h2IEqsFP6mbIlWzLtUHadM7bvGmNt6W1aQGNu23yom0=;
+        b=wr60wSYbT1Rp4lZHwp1Sj+C5WF/peeaVWAw8UKEfNFSsIwfSeOB1qNqK209FyU54Wi
+         noS9+B3b/teXFBQAkFRR0mt+OT4p1LYzBOnNiQKVaHMBUey85dHHJbK8DoBHpP/SVvju
+         xE1EYYAx1tsKo5BOyyhVy6K9KGgDx1S0qlrZGXGEWCTwzI8RQhJuBurb5jN0RiRlNp//
+         cwScde8jaEgIohKJuPUus77ynqJk9WiRCn+hbcUfeMqGJfxPY2ZPkf837v+ajEDwmi1+
+         qNXBqadg8T2pZezdZpq0I95/6DVAyyir35Caijrh7YntGb8cTMc/foiDdy+/KwEMWIvo
+         I+0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXM8DcVPwYYX6GiT2u8RbEFt1FCr9Pph9BCkDcyBPA7GUSSYIlQ0zUzhQ3urZFIysPqghtHFmJKQl4K1J8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+GHWOXjXf9pj0JKV5iIdP9+4TcIDekKZ2dXr2Uw7sVPQa+XxJ
+	f1gNuAkuJYaChJT5dH9vrjI6KpF0iNSxwIJd+rT/b2PB/ZUIhBsKQZgl8nzzKw==
+X-Gm-Gg: ASbGncu1QnSWgO/56shdG0TBnTtB6A9nSSuOXoNMPdvRgpo4bAHLu8f/JyC40EgcAVk
+	/Mp427iY2c/i0wmU6dvs6zKV9ya6Wi+4vnaZwcShy76oDjyi6rBaaxTUcthPVAX7+fvF3+B0V0u
+	sdMddytO0/Rvf5HvjjGne8nvH7tfbeU56ZcQBsPGoDdard1e8YgjUyUv4OTOlDlmh9t5rklVx7k
+	hjCOzuWiV9kXSfxXoLuLxiKih9lzNR2Ww9Mp6qaqVf9VLqcOYqWtrk3gQgwCXBufVYiwk7XtVm4
+	dMUxD2/t5eT603MJd31tgC46t57LqjuYPCFpBbzm7AiiOGRuFoolURxMN0qxPcT+9nawM2Akw7t
+	5aM5e
+X-Google-Smtp-Source: AGHT+IH8OuHVn8EU95Z0dn+sa4fi7WbCN1/rL8STfDNceTR/nqBxCTh41lLOcwUGLyaoM7eK6RifBA==
+X-Received: by 2002:a05:622a:14b:b0:478:f4bd:8b8e with SMTP id d75a77b69052e-494527deb21mr217626471cf.39.1747064084310;
+        Mon, 12 May 2025 08:34:44 -0700 (PDT)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4945259e3acsm51685791cf.72.2025.05.12.08.34.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 08:34:43 -0700 (PDT)
+Date: Mon, 12 May 2025 11:34:41 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	surenb@google.com, kent.overstreet@linux.dev
+Subject: Re: [RFC] USB: core/xhci: add a buffer in urb for host controller
+ private data
+Message-ID: <7fd35044-3719-44c1-b4cf-89551e27da26@rowland.harvard.edu>
+References: <20250512150724.4560-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,62 +75,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
+In-Reply-To: <20250512150724.4560-1-00107082@163.com>
 
-On Mon, May 12, 2025 at 11:28:36AM -0400, Sean Anderson wrote:
-> On 5/10/25 03:04, Sudeep Holla wrote:
-> > On Fri, May 09, 2025 at 07:37:35PM -0400, Sean Anderson wrote:
-> >> Cache geometry is exposed through the Cache Size ID register. There is
-> >> one register for each cache, and they are selected through the Cache
-> >> Size Selection register. If FEAT_CCIDX is implemented, the layout of
-> >> CCSIDR changes to allow a larger number of sets and ways.
-> >> 
-> > 
-> > Please refer
-> > Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache information probing")
-> > 
+On Mon, May 12, 2025 at 11:07:24PM +0800, David Wang wrote:
+> ---
+> I was checking memory allocation behaviors (via memory profiling[1]),
+> when I notice a high frequent memory allocation in xhci_urb_enqueue, about
+> 250/s when using a USB webcam. If those alloced buffer could be kept and
+> reused, lots of memory allocations could be avoid over time.
 > 
-> | The CCSIDR_EL1.{NumSets,Associativity,LineSize} fields are only for use
-> | in conjunction with set/way cache maintenance and are not guaranteed to
-> | represent the actual microarchitectural features of a design.
-> | 
-> | The architecture explicitly states:
-> | 
-> | | You cannot make any inference about the actual sizes of caches based
-> | | on these parameters.
+> This patch is just a POC, about 0/s memory allocation in xhci with this
+> patch, when I use my USB devices, webcam/keyboard/mouse. 
 > 
-> However, on many cores (A53, A72, and surely others that I haven't
-> checked) these *do* expose the actual microarchitectural features of the
-> design. Maybe a whitelist would be suitable.
-> 
-> | Furthermore, CCSIDR_EL1.{WT,WB,RA,WA} have been removed retrospectively
-> | from ARMv8 and are now considered to be UNKNOWN.
-> | 
-> | Since the kernel doesn't make use of set/way cache maintenance and it is
-> | not possible for userspace to execute these instructions, we have no
-> | need for the CCSIDR information in the kernel.
-> 
-> Actually, these parameters are directly visible (and useful) to
-> userspace in the form of the cache size. Rather than make userspace
-> perform benchmarks, we can expose this information in a standard way.
+> A dynamic cached memory would be better: URB keep host controller's
+> private data, if larger size buffer needed for private data, old buffer
+> released and a larger buffer alloced.
 
-Yes that is already present, which is DT or ACPI.
+This sounds like a better approach; you should try it.  Allocations and 
+dellocations from a private memory pool can be really quick.  And it 
+wouldn't waste space on buffers for URBs that don't need them (for 
+example, URBs used with other host controller drivers).
 
-> There is of course [id]cache-size, but these properties are absent more
-> often than not:
-> 
-> $ git grep arm,cortex- 'arch/arm64/**.dtsi' | wc -l
-> 1248
-> $ git grep d-cache-size 'arch/arm64/**.dtsi' | wc -l
-> 320
->
-
-Just to be clear, I am fine with exposing to the userspace, but just
-not reading those registers as stated in the commit message I shared
-earlier.
-
-Why can't it be done via DT/ACPI ?
-
--- 
-Regards,
-Sudeep
+Alan Stern
