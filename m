@@ -1,86 +1,83 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27D8295D9F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C296E2951D3
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056875; cv=none; b=OAht0A73ZjM7Zb4rlqF6nhwi0OeHF9AkBtNoddh6sSbbC5GLVIhJcABf6mDMEVqTRqoVPbf7n3SUwF0AyUzUd+6FxE/fwl8y79nQCUpTfcMHq5xcLvLG1NShgYpiVDafc51RjdIhu0H+rYVP+1J8Y9bf/wZ69CvXTWJbb94gZRI=
+	t=1747056881; cv=none; b=G5z09GMssDnrFbAMDAICuQ5rOQsqRk7YS8XgV0kf5clk3NzvjCsthMJXtFw91zXoVy3OAE95BjLr0435wKV66qIz0IMEIWWxc7+kiA8q6eRHE116jY45+KEdNljUoBwSOuAu2aBOYVFfqDi2Yh7w4W23ddgTeUpE2NuzhrHkg4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056875; c=relaxed/simple;
-	bh=wl+3F8eTpNR2nRXfBq9CGFzHjza01r4LUHMwsOEe33Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=vBCNwYQ19i8qDDHYoxg+nNmYTB+OOWIE16BHSvRNkjrUU4R4YM75NVAo3yUaQck/o4tEiXZ1J+K1gY7ww/xknAOHCRDIWTa+w1AH2aebbteDR6yRUG3a103qr1QLFqcKZxSpexLAYX3NHGZs8zfRlQoLI/6WIGEDXDk7guDhCDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+	s=arc-20240116; t=1747056881; c=relaxed/simple;
+	bh=R5GMYtFj0h4A7mc3vAohAShmVyD3Xpx77U7uj36wtYU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aPgJc0bDsDrbsNddZ/Rlz8Vv6zrqZopnawKmWbz3CMqWzuM3EuEFUi0idYLQtcKWZnfJg65nGBED0a5HqV5WuCCRM3gA0aMxOTzemQTS/94RdD/41ZOm2LJhA/mM8x2IUs6b3b+fNoXqFFeHc5wAoRBdkyh69x20FgcNO+hL89g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.160.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3da644c8ffeso50838585ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:34:33 -0700 (PDT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-476870bad3bso73635251cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:34:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747056873; x=1747661673;
+        d=1e100.net; s=20230601; t=1747056878; x=1747661678;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=b27Pk0GqEJwbCqvpgYObHkg51OVsd3f/nd7AM7iKm1E=;
-        b=oHqOZH223YxgXspPxqg8Tb3zRy5bu2HKd189+XimZmyHnTuDeyg/Dy+zsvpi4fJCmy
-         1xV3MTO3DKktYu1+IEe9IfhW/syKXSao2Hd7wa5yaV5GQf1p5tS+KRFVcKAxy3bu1wzN
-         jwHDzD4Dd04XANWKmMQ7bqxt5GjfAaHjlXmcLikPuo+wTAF0Vght09vFNRwnX5HT9wQ3
-         gJyjqlhQ7zHeqcWWni9ObHAC6TBBNKuns0wRt00hCEV8Ej5wA1ZWPEv77IHT00IQzfzn
-         ayaeubKcIKLoIZCiFbxoll+Q5a4pXXWZrFpsVbluM0u/q7GF+VRqH2HuEl7bA01YO+x/
-         jyoA==
-X-Gm-Message-State: AOJu0YzYL+ogxDn5smTPn+NZgPYdUQdigMItztUcIkX3PRfMcJPsIaQ6
-	tTkwNTUzy1zNDhc7E1F/Dn64ttNXQHsHK2G/TARgo2GffXU8acB3YsqSsCOD00ZDUQ7jfcDan9m
-	h8r3PzpxwjGeGwiXSReqFswzgoMBEF96ENd6TXoZLOSa9LpfZjZ/AEYo=
-X-Google-Smtp-Source: AGHT+IExU+RmJLuLIScj3qPHE6KbUQp9ULv9VSNxzAViRUPadJULffIFiUp+xyaXLKTBRYFXV9jb5R5DGwrQREIjHN1jPRbSR0sC
+        bh=Wpzm94ef45sTLmkJ+/qIsa0Ro4johfQXs/vt1jnkyuE=;
+        b=ZZgPmw+Ph+6BnQZvE6KZM2K7Z6Zd9KBiyDzHjF/FNA4NcMoSopAQ6humJxkXX/Zyqq
+         It/MESQTCpiloeHJWE6BpAgPDeLyoQtG5M9tubYURh/Q+6ctJ4NR9s+6xlOQZjZKytuP
+         /7SPQZ1UWygaFUxguBuDrJaMY7Pg7Qc6R+9hoA9/6DknXD5QnZynelND2pfcsRM+yu9r
+         P7S+IF3PxWnjfJwq59/Y74F9fnF7ywyEpRN4coU0eYOehT66DiIkIHcMsE8TcOQ+txue
+         JOcy0hhrUoXhMO4UgPlFl9YiQvGdu5X6ht4uiaFATdwGnzfAp+0XcoSlQFEgsRe5Kn06
+         T7RA==
+X-Forwarded-Encrypted: i=1; AJvYcCVq88YVLJcUxnHe66FWXZsyIU9b+8LglcXA6SeVgivV57CGzrEpxtbuk9Q6emfqoH40fmsUf0e8Uh5Oayw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBJhTYaGPvqrKiTFSRdSSzbuTGga4t1Py6r3lme6+KuAcIzZ2V
+	Sm3B3PXRZsVYkUNHXNiSpOiIuXLmhrYJ5YuMgg2xjx9MfGrEc/YIppfMe2MtZmRxV7BaGOMwrx8
+	L6rrDt2+vgxECjgWTLj8i709QxEpjpZfctfb+0ABNEr53v4FBJCSB/Gs=
+X-Google-Smtp-Source: AGHT+IFXdt4ENEPXB7sK2eyZrcIwteG/hOKBe3Z9UfACWApKzBiXqyWOkChvtmQx9kcBvhPizqRB+9JrJs9FVGH6Q6FAaK0s8nAg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c0e:b0:3d8:1d0e:5308 with SMTP id
- e9e14a558f8ab-3da7e1e782fmr141354655ab.6.1747056868750; Mon, 12 May 2025
- 06:34:28 -0700 (PDT)
-Date: Mon, 12 May 2025 06:34:28 -0700
+X-Received: by 2002:a05:6e02:1945:b0:3d4:70ab:f96f with SMTP id
+ e9e14a558f8ab-3da7e1e73f3mr147928045ab.8.1747056867646; Mon, 12 May 2025
+ 06:34:27 -0700 (PDT)
+Date: Mon, 12 May 2025 06:34:27 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6821f8e4.050a0220.f2294.0064.GAE@google.com>
-Subject: [syzbot] Monthly net report (May 2025)
-From: syzbot <syzbot+list13a88a54d07849545a99@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+Message-ID: <6821f8e3.050a0220.f2294.0060.GAE@google.com>
+Subject: [syzbot] Monthly gfs2 report (May 2025)
+From: syzbot <syzbot+list6c60f00c820c2d824539@syzkaller.appspotmail.com>
+To: gfs2@lists.linux.dev, linux-kernel@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello net maintainers/developers,
+Hello gfs2 maintainers/developers,
 
-This is a 31-day syzbot report for the net subsystem.
+This is a 31-day syzbot report for the gfs2 subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/net
+https://syzkaller.appspot.com/upstream/s/gfs2
 
-During the period, 26 new issues were detected and 3 were fixed.
-In total, 136 issues are still open and 1599 have already been fixed.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 13 issues are still open and 34 have already been fixed.
 
 Some of the still happening issues:
 
-Ref  Crashes Repro Title
-<1>  333909  Yes   possible deadlock in team_del_slave (3)
-                   https://syzkaller.appspot.com/bug?extid=705c61d60b091ef42c04
-<2>  312666  Yes   unregister_netdevice: waiting for DEV to become free (8)
-                   https://syzkaller.appspot.com/bug?extid=881d65229ca4f9ae8c84
-<3>  7829    Yes   WARNING: suspicious RCU usage in dev_deactivate_queue
-                   https://syzkaller.appspot.com/bug?extid=ca9ad1d31885c81155b6
-<4>  7126    Yes   KASAN: slab-use-after-free Read in __ethtool_get_link_ksettings
-                   https://syzkaller.appspot.com/bug?extid=5fe14f2ff4ccbace9a26
-<5>  7026    Yes   KMSAN: uninit-value in eth_type_trans (2)
-                   https://syzkaller.appspot.com/bug?extid=0901d0cc75c3d716a3a3
-<6>  7023    Yes   possible deadlock in team_device_event (3)
-                   https://syzkaller.appspot.com/bug?extid=b668da2bc4cb9670bf58
-<7>  6412    Yes   WARNING in inet_sock_destruct (4)
-                   https://syzkaller.appspot.com/bug?extid=de6565462ab540f50e47
-<8>  3215    Yes   INFO: task hung in linkwatch_event (4)
-                   https://syzkaller.appspot.com/bug?extid=2ba2d70f288cf61174e4
-<9>  3096    No    BUG: sleeping function called from invalid context in dev_set_allmulti
-                   https://syzkaller.appspot.com/bug?extid=368054937a6a7ead5f35
-<10> 2547    Yes   WARNING in rcu_check_gp_start_stall
-                   https://syzkaller.appspot.com/bug?extid=111bc509cd9740d7e4aa
+Ref Crashes Repro Title
+<1> 1992    Yes   kernel BUG in gfs2_withdraw
+                  https://syzkaller.appspot.com/bug?extid=ed42f17ebcb58526788c
+<2> 1376    Yes   kernel BUG in gfs2_glock_nq (2)
+                  https://syzkaller.appspot.com/bug?extid=70f4e455dee59ab40c80
+<3> 30      Yes   WARNING in gfs2_ri_update (2)
+                  https://syzkaller.appspot.com/bug?extid=7567dc5c8aa8f68bde74
+<4> 29      Yes   INFO: task hung in gfs2_glock_nq
+                  https://syzkaller.appspot.com/bug?extid=dbb72d38131e90dc1f66
+<5> 18      Yes   WARNING in gfs2_check_blk_type (2)
+                  https://syzkaller.appspot.com/bug?extid=26e96d7e92eed8a21405
+<6> 10      Yes   kernel BUG in gfs2_assert_warn_i
+                  https://syzkaller.appspot.com/bug?extid=ffe01cefd437cbde362b
+<7> 5       Yes   KMSAN: uninit-value in gfs2_quota_init (2)
+                  https://syzkaller.appspot.com/bug?extid=9fb37b567267511a9e11
+<8> 3       Yes   stack segment fault in gfs2_glock_dq
+                  https://syzkaller.appspot.com/bug?extid=e0dbe53de58ffe4a5f31
 
 ---
 This report is generated by a bot. It may contain errors.
