@@ -1,232 +1,287 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from trager.us (trager.us [52.5.81.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6A6246788;
-	Mon, 12 May 2025 19:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2831DE4E3;
+	Mon, 12 May 2025 19:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076773; cv=none; b=t+qOTNTbLDbcEirQKlT5wjQkUW5NM4Yk6oszM73gQO/9q81h0ruqPyipopJckN5973DgjPup0uw9fTSndEQJwt1bc+dhHr/kxSTO3SKpNOAa4Gtu8t9q2eSaYnY9MF/91DYBvniXplS07eSIonBKe9rky0PVG9+1WXp/xu1M7jo=
+	t=1747076819; cv=none; b=eJlrK32Xt2E+HUST4sKUUGE6ZaVgN5x+38/yDNsTRpUQ4JvQyHRWP0BTmj0A/7/1jsk33PVr9hXAvypSKtKrmbqV9+guMgmNZA9xV0r1wWWpariLkPORFbDIAkKowXGJz8I6cdPEXChoPdITujV5J+MQGWrmIkBNdnUfr1NNlQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076773; c=relaxed/simple;
-	bh=6kUXqRfl/QRDHqu7tMXUAiQxfdy3036V26oKCsXgiD4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=BPhR00M+h2twr9vajqTzKFJV7YqJS7M5dLgRnZESN57sFECSmBrFCd/54UydC05g6LubX3GS+eaWCioLxXw3A7kOE3ZXoMta3QJ6i0aJ2aucayFnw1lI8rGsUPE+xF860GhQQ6Q5Z+8YVwVF9KvINpMRU1yO58uKAvSnZ8a8Jk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzbvSqAT; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzbvSqAT"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5290be1aedcso4517221e0c.1;
-        Mon, 12 May 2025 12:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747076770; x=1747681570; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4h/HoEMxsgGlwFELk4YaCnFR/81exfwZAWd/Rc8C414=;
-        b=bzbvSqATKylbOxiUN6nz11XVoVnYI0uNTI5krVdjvAs7no+Wwlx/7m6U84KT6DjuA1
-         rfDrTkXbcYJmG+0H8gAhAn8ryc9eqTIjlHUwRxAAPMj2I3X90UpUXEliX04q9lUt4Y0S
-         ooFnJdOhTTfI3LF9zvdG6nqSSHTVVj/PO5sOtREATmmomXqOyI7BlnhMfmXywsdqviss
-         YgSCpiBbyhcILIvuIGm6h9/+3fAPyHrMwW46rY5vbueQLqcYF/D8HygFeqJFdBGmAtXv
-         we8elpRb3oV2NeERbGUnOtFFyTU3gNY+PJuIzgWKBLtqQf/81AvRqwNAU6tT+w6noR9e
-         02fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747076770; x=1747681570;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4h/HoEMxsgGlwFELk4YaCnFR/81exfwZAWd/Rc8C414=;
-        b=A2M2ARNfV6b3q7mvEkoobVKNKkDhus1NATu1ZJuDfLiE6g45GAZ/Fkwa6VzDfjhqmS
-         +0ORB0ZJECkW+LT/gi8mvTmganj9aNvaSYdmKRYCCRjU+EKDMDhJE6emKXWvGDLva4c4
-         25aVyahziNteqfzAJ8bNpEhbkghdGcCCboDJyw/N7pngqKM2rBxPKSlsPRBoNV8/Fnol
-         d3cUx1vdRCY9vUBPN0zypASHmkevfdhyEhKHcAqCo1fguz6ZaY0UPFiDCqfc4hp+i/W1
-         UUni5IzBie9Q6dBkAjnrKbrmRHzacxqvVyI/GgHPEam7It0ZI5+RLWZS6HL8S+QWEQ4l
-         B2hg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgyBTsakusVuvGAexk/cvM1Cb6OeW4xTE7D3y1faeTy7EmPNjkQGQlkVH8+fOXCXjooInuUk+jm2FuWMoR@vger.kernel.org, AJvYcCVhsO+9Fb1CPOFuzOEx6AS4FGksXpAKGP/9wRRRlWTYV0cyUXfkaE0MfNLMi2ikJMkzeYOgo9mC9X7RxW0=@vger.kernel.org, AJvYcCWGBfPZfzg8r5eVzCWc42+U2ntHu3K5EuoH8/TMLeLH+pm1mUUg3yewLvoVZ9qJlwPB2uu9Yz73gX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGzgkKOds7mK2nYjbeR9OxNtzp0oUIIHbPMPbz+Bt/nV8eUU6w
-	weczk5KZ5F7682ad4ITzqAVBGEyczv35W/NdSTDMbHC4RxVilNYQ
-X-Gm-Gg: ASbGncu3IEo2aOUFv1ywomVwR/i3LzQOISU7H2hSf4eo5InHAI6nqwe8rNC+hcFxdBE
-	EpcjaRPAWJevnva1ct6SxNPUWBCB5U6iphL8eZwBhpgjiO2vqfnx2v31MLDtQKMdTvk81T7p78J
-	Ob+1adFbWlXN0Cs60rZfRFujg3Vlnfus/kqkeYF2Wog4Z+D3ydNZFBRH+vqvCldougakQxF3m4S
-	p6Lef7ZFtDwSRko/swPoQKEqDWRytHogayNakx499cyVF2qyPVd1v/EU/MmRwJiTR4TgQDpdl8u
-	0f9GTQCxczsXYobCyMTujIS1+Qhi+wKaPr/kQSQiWllxuX+UyJjYNtA=
-X-Google-Smtp-Source: AGHT+IHhM1WuOrFfud3xHWGersrJfw6ltQOIuLsHMahLNTS+wCuSOkQbBayYZvHrZGar3gstSEYr/Q==
-X-Received: by 2002:a05:6122:318e:b0:527:67d9:100d with SMTP id 71dfb90a1353d-52c88a73545mr624984e0c.4.1747076770234;
-        Mon, 12 May 2025 12:06:10 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c537264dfsm6194990e0c.13.2025.05.12.12.05.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 12:06:09 -0700 (PDT)
+	s=arc-20240116; t=1747076819; c=relaxed/simple;
+	bh=a0QcdQTKHJ4xrXpho6L7z0NMX7sEys3gTRylNh7c86w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MeKa4dqvkQ0aQC7PU5wkY/kbjT9rUqMS61Y/42y2ErzsI9Y/Q6mjaKlvTuWalwfz34fJ1WG43W0u+F6gUwGgX0ypOeJqCmnB+5F2lAidsMnMud9STEYGbyiBj129620kIUyXX2v+1qglLoUb3cWikeplROCLClgqguuZazb7P64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
+Received: from [163.114.132.130] (helo=localhost)
+	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <lee@trager.us>)
+	id 1uEYUB-00072C-Id; Mon, 12 May 2025 19:06:47 +0000
+From: Lee Trager <lee@trager.us>
+To: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	kernel-team@meta.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Su Hui <suhui@nfschina.com>,
+	Lee Trager <lee@trager.us>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v5 3/5] eth: fbnic: Add support for multiple concurrent completion messages
+Date: Mon, 12 May 2025 11:53:59 -0700
+Message-ID: <20250512190109.2475614-4-lee@trager.us>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250512190109.2475614-1-lee@trager.us>
+References: <20250512190109.2475614-1-lee@trager.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Mon, 12 May 2025 16:05:35 -0300
-Message-Id: <D9UF0KCST7K7.23TWU22S6L09H@gmail.com>
-To: "Antheas Kapenekakis" <lkml@antheas.dev>
-Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "Jonathan Corbet" <corbet@lwn.net>, "Hans de Goede" <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Jean
- Delvare" <jdelvare@suse.com>, "Guenter Roeck" <linux@roeck-us.net>,
- <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
- curves/platform profile/tdp/battery limiting
-From: "Kurt Borja" <kuurtb@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <D9TQ0LYKISGB.3QAOHFXVL9PEO@gmail.com>
- <CAGwozwFJnR2aMhj6LJKU8aF+MDzF9FR21fXPPd7_=44M+KUJGg@mail.gmail.com>
-In-Reply-To: <CAGwozwFJnR2aMhj6LJKU8aF+MDzF9FR21fXPPd7_=44M+KUJGg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Extend fbnic mailbox to support multiple concurrent completion messages at
+once. This enables fbnic to support running multiple operations at once
+which depend on a response from firmware via the mailbox.
 
-On Mon May 12, 2025 at 7:16 AM -03, Antheas Kapenekakis wrote:
-> On Mon, 12 May 2025 at 01:30, Kurt Borja <kuurtb@gmail.com> wrote:
->>
->> Hi Antheas,
->>
->> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
->> > This draft patch series brings into parity the msi-wmi-platform driver=
- with
->> > the MSI Center M Windows application for the MSI Claw (all models).
->> > Unfortunately, MSI Center M and this interface do not have a discovery=
- API,
->> > necessitating the introduction of a quirk system.
->> >
->> > While this patch series is fully functional and tested, there are stil=
-l
->> > some issues that need to be addressed:
->> >   - Armin notes we need to disable fan curve support by default and qu=
-irk
->> >     it as well, as it is not supported on all models. However, the way
->> >     PWM enable ops work, this makes it a bit difficult, so I would lik=
-e
->> >     some suggestions on how to rework this.
->>
->> If I understood the question correctly, then you should control the
->> visibility of all "curve" related attributes with the quirk.
->
-> Yep, this is what I was wondering. I will investigate this. It would
-> be good to get some comments on the quirk naming as well.
+Signed-off-by: Lee Trager <lee@trager.us>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+ drivers/net/ethernet/meta/fbnic/fbnic.h     |  3 +-
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c  | 99 +++++++++++++++++----
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.h  |  5 +-
+ drivers/net/ethernet/meta/fbnic/fbnic_mac.c |  2 +-
+ 4 files changed, 87 insertions(+), 22 deletions(-)
 
-You can check [1] for an example of the hwmon visibility. It's a similar
-problem because some models have 2 fans and others have 4. In the
-alienware-wmi driver we also have custom hwmon attributes, see [2] for
-how to handle visibility with those.
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic.h b/drivers/net/ethernet/meta/fbnic/fbnic.h
+index ad01ed05d78b..65815d4f379e 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic.h
+@@ -19,6 +19,7 @@
+ struct fbnic_napi_vector;
 
-I would personally just name it fan_curve or has_fan_curve.
+ #define FBNIC_MAX_NAPI_VECTORS		128u
++#define FBNIC_MBX_CMPL_SLOTS		4
 
->
->> The custom hwmon attribute_group has an is_visible callback, and so do
->> the hwmon_ops.
->>
->> >   - It turns out that to fully disable the fan curve, we have to resto=
-re
->> >     the default fan values. This is also what is done on the OEM softw=
-are.
->> >     For this, the last patch in the series is used, which is a bit dir=
-ty.
->>
->> I have a couple questions about this.
->>
->> * What are the default fan curves? Can these be statically defined?
->> * Are user-defined fan curves persistent between reboots?
->>
->> I have some doubts about the approach you took on the last patch, but I
->> want to understand how the platform works first.
->
-> So do I. Essentially here is how the Windows software works: when it
-> first opens, it saves the current curve in Windows registry. Then,
-> when the user sets a fan curve, it applies it in the same way we do
-> here and sets a bit in AP. When the custom curve is removed, it unsets
-> that bit and restores the original curve in WMI.
->
-> The logical reasoning would be that that bit controls the fan curve.
-> This is how it is named in the software. However, when setting that
-> bit on its own, it seems to only partially affect the fan curve. E.g.,
-> when the fan curve is 100% in all points, unsetting that bit makes it
-> go down to 50% when no load occurs. When using the default fan curve,
-> it goes to 0%. Therefore, it seems like that bit makes the fan curve
-> semi-autonomous?
->
-> The fan curve seems to be hardware specific and resets after reboots.
-> So a straightforward way to get it is to grab it on a fresh boot.
+ struct fbnic_dev {
+ 	struct device *dev;
+@@ -42,7 +43,7 @@ struct fbnic_dev {
 
-Oh - this is interesting. Then I think it is the right approach. I'll
-add a couple more comments.
+ 	struct fbnic_fw_mbx mbx[FBNIC_IPC_MBX_INDICES];
+ 	struct fbnic_fw_cap fw_cap;
+-	struct fbnic_fw_completion *cmpl_data;
++	struct fbnic_fw_completion *cmpl_data[FBNIC_MBX_CMPL_SLOTS];
+ 	/* Lock protecting Tx Mailbox queue to prevent possible races */
+ 	spinlock_t fw_tx_lock;
 
->
-> Antheas
->
->> >
->> > Sleep was tested with all values being preserved during S0iX (platform
->> > profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, =
-at
->> > least for the Claw devices.
->> >
->> > For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since =
-if
->> > his new high level interface is merged beforehand, we can use that ins=
-tead.
->>
->> Hopefully!
->>
->> --
->>  ~ Kurt
->>
->> >
->> > Antheas Kapenekakis (8):
->> >   platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
->> >   platform/x86: msi-wmi-platform: Add quirk system
->> >   platform/x86: msi-wmi-platform: Add platform profile through shift
->> >     mode
->> >   platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
->> >     attributes
->> >   platform/x86: msi-wmi-platform: Add charge_threshold support
->> >   platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
->> >   platform/x86: msi-wmi-platform: Update header text
->> >   platform/x86: msi-wmi-platform: Restore fan curves on PWM disable an=
-d
->> >     unload
->> >
->> > Armin Wolf (2):
->> >   platform/x86: msi-wmi-platform: Use input buffer for returning resul=
-t
->> >   platform/x86: msi-wmi-platform: Add support for fan control
->> >
->> >  .../wmi/devices/msi-wmi-platform.rst          |   26 +
->> >  drivers/platform/x86/Kconfig                  |    3 +
->> >  drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++=
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+index e4f72fb730a6..6fcba4e8c21e 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+@@ -237,6 +237,44 @@ static int fbnic_mbx_map_tlv_msg(struct fbnic_dev *fbd,
+ 	return err;
+ }
+
++static int fbnic_mbx_set_cmpl_slot(struct fbnic_dev *fbd,
++				   struct fbnic_fw_completion *cmpl_data)
++{
++	struct fbnic_fw_mbx *tx_mbx = &fbd->mbx[FBNIC_IPC_MBX_TX_IDX];
++	int free = -EXFULL;
++	int i;
++
++	if (!tx_mbx->ready)
++		return -ENODEV;
++
++	for (i = 0; i < FBNIC_MBX_CMPL_SLOTS; i++) {
++		if (!fbd->cmpl_data[i])
++			free = i;
++		else if (fbd->cmpl_data[i]->msg_type == cmpl_data->msg_type)
++			return -EEXIST;
++	}
++
++	if (free == -EXFULL)
++		return -EXFULL;
++
++	fbd->cmpl_data[free] = cmpl_data;
++
++	return 0;
++}
++
++static void fbnic_mbx_clear_cmpl_slot(struct fbnic_dev *fbd,
++				      struct fbnic_fw_completion *cmpl_data)
++{
++	int i;
++
++	for (i = 0; i < FBNIC_MBX_CMPL_SLOTS; i++) {
++		if (fbd->cmpl_data[i] == cmpl_data) {
++			fbd->cmpl_data[i] = NULL;
++			break;
++		}
++	}
++}
++
+ static void fbnic_mbx_process_tx_msgs(struct fbnic_dev *fbd)
+ {
+ 	struct fbnic_fw_mbx *tx_mbx = &fbd->mbx[FBNIC_IPC_MBX_TX_IDX];
+@@ -258,6 +296,19 @@ static void fbnic_mbx_process_tx_msgs(struct fbnic_dev *fbd)
+ 	tx_mbx->head = head;
+ }
+
++int fbnic_mbx_set_cmpl(struct fbnic_dev *fbd,
++		       struct fbnic_fw_completion *cmpl_data)
++{
++	unsigned long flags;
++	int err;
++
++	spin_lock_irqsave(&fbd->fw_tx_lock, flags);
++	err = fbnic_mbx_set_cmpl_slot(fbd, cmpl_data);
++	spin_unlock_irqrestore(&fbd->fw_tx_lock, flags);
++
++	return err;
++}
++
+ static int fbnic_mbx_map_req_w_cmpl(struct fbnic_dev *fbd,
+ 				    struct fbnic_tlv_msg *msg,
+ 				    struct fbnic_fw_completion *cmpl_data)
+@@ -266,23 +317,20 @@ static int fbnic_mbx_map_req_w_cmpl(struct fbnic_dev *fbd,
+ 	int err;
+
+ 	spin_lock_irqsave(&fbd->fw_tx_lock, flags);
 -
->> >  3 files changed, 1156 insertions(+), 54 deletions(-)
->> >
->> >
->> > base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
->>
+-	/* If we are already waiting on a completion then abort */
+-	if (cmpl_data && fbd->cmpl_data) {
+-		err = -EBUSY;
+-		goto unlock_mbx;
++	if (cmpl_data) {
++		err = fbnic_mbx_set_cmpl_slot(fbd, cmpl_data);
++		if (err)
++			goto unlock_mbx;
+ 	}
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
-x86.git/tree/drivers/platform/x86/dell/alienware-wmi-wmax.c?h=3Dfor-next#n7=
-42
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
-x86.git/tree/drivers/platform/x86/dell/alienware-wmi-wmax.c?h=3Dfor-next#n9=
-42
+-	/* Record completion location and submit request */
+-	if (cmpl_data)
+-		fbd->cmpl_data = cmpl_data;
+-
+ 	err = fbnic_mbx_map_msg(fbd, FBNIC_IPC_MBX_TX_IDX, msg,
+ 				le16_to_cpu(msg->hdr.len) * sizeof(u32), 1);
 
---eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b
-Content-Type: application/pgp-signature; name="signature.asc"
+-	/* If msg failed then clear completion data for next caller */
++	/* If we successfully reserved a completion and msg failed
++	 * then clear completion data for next caller
++	 */
+ 	if (err && cmpl_data)
+-		fbd->cmpl_data = NULL;
++		fbnic_mbx_clear_cmpl_slot(fbd, cmpl_data);
 
------BEGIN PGP SIGNATURE-----
+ unlock_mbx:
+ 	spin_unlock_irqrestore(&fbd->fw_tx_lock, flags);
+@@ -304,12 +352,18 @@ fbnic_fw_get_cmpl_by_type(struct fbnic_dev *fbd, u32 msg_type)
+ {
+ 	struct fbnic_fw_completion *cmpl_data = NULL;
+ 	unsigned long flags;
++	int i;
 
-iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCJGggAKCRAWYEM49J/U
-Zh6EAQD+BliCO7QDYlUXFOISo+JdFEngBzHqoPexiF+Q+2MbhAD+P4bi/TbuhQNG
-M9RvPyR4ew+RrrgxHSJDwMYxqwWhGg4=
-=Hb/2
------END PGP SIGNATURE-----
+ 	spin_lock_irqsave(&fbd->fw_tx_lock, flags);
+-	if (fbd->cmpl_data && fbd->cmpl_data->msg_type == msg_type) {
+-		cmpl_data = fbd->cmpl_data;
+-		kref_get(&fbd->cmpl_data->ref_count);
++	for (i = 0; i < FBNIC_MBX_CMPL_SLOTS; i++) {
++		if (fbd->cmpl_data[i] &&
++		    fbd->cmpl_data[i]->msg_type == msg_type) {
++			cmpl_data = fbd->cmpl_data[i];
++			kref_get(&cmpl_data->ref_count);
++			break;
++		}
+ 	}
++
+ 	spin_unlock_irqrestore(&fbd->fw_tx_lock, flags);
 
---eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b--
+ 	return cmpl_data;
+@@ -925,10 +979,16 @@ static void __fbnic_fw_evict_cmpl(struct fbnic_fw_completion *cmpl_data)
+
+ static void fbnic_mbx_evict_all_cmpl(struct fbnic_dev *fbd)
+ {
+-	if (fbd->cmpl_data) {
+-		__fbnic_fw_evict_cmpl(fbd->cmpl_data);
+-		fbd->cmpl_data = NULL;
++	int i;
++
++	for (i = 0; i < FBNIC_MBX_CMPL_SLOTS; i++) {
++		struct fbnic_fw_completion *cmpl_data = fbd->cmpl_data[i];
++
++		if (cmpl_data)
++			__fbnic_fw_evict_cmpl(cmpl_data);
+ 	}
++
++	memset(fbd->cmpl_data, 0, sizeof(fbd->cmpl_data));
+ }
+
+ void fbnic_mbx_flush_tx(struct fbnic_dev *fbd)
+@@ -989,12 +1049,13 @@ void fbnic_fw_init_cmpl(struct fbnic_fw_completion *fw_cmpl,
+ 	kref_init(&fw_cmpl->ref_count);
+ }
+
+-void fbnic_fw_clear_compl(struct fbnic_dev *fbd)
++void fbnic_fw_clear_cmpl(struct fbnic_dev *fbd,
++			 struct fbnic_fw_completion *fw_cmpl)
+ {
+ 	unsigned long flags;
+
+ 	spin_lock_irqsave(&fbd->fw_tx_lock, flags);
+-	fbd->cmpl_data = NULL;
++	fbnic_mbx_clear_cmpl_slot(fbd, fw_cmpl);
+ 	spin_unlock_irqrestore(&fbd->fw_tx_lock, flags);
+ }
+
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+index 692dfd8746e7..39dec0792090 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+@@ -60,6 +60,8 @@ struct fbnic_fw_completion {
+
+ void fbnic_mbx_init(struct fbnic_dev *fbd);
+ void fbnic_mbx_clean(struct fbnic_dev *fbd);
++int fbnic_mbx_set_cmpl(struct fbnic_dev *fbd,
++		       struct fbnic_fw_completion *cmpl_data);
+ void fbnic_mbx_poll(struct fbnic_dev *fbd);
+ int fbnic_mbx_poll_tx_ready(struct fbnic_dev *fbd);
+ void fbnic_mbx_flush_tx(struct fbnic_dev *fbd);
+@@ -70,7 +72,8 @@ int fbnic_fw_xmit_tsene_read_msg(struct fbnic_dev *fbd,
+ 				 struct fbnic_fw_completion *cmpl_data);
+ void fbnic_fw_init_cmpl(struct fbnic_fw_completion *cmpl_data,
+ 			u32 msg_type);
+-void fbnic_fw_clear_compl(struct fbnic_dev *fbd);
++void fbnic_fw_clear_cmpl(struct fbnic_dev *fbd,
++			 struct fbnic_fw_completion *cmpl_data);
+ void fbnic_fw_put_cmpl(struct fbnic_fw_completion *cmpl_data);
+
+ #define fbnic_mk_full_fw_ver_str(_rev_id, _delim, _commit, _str, _str_sz) \
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_mac.c b/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
+index dde4a37116e2..4ba6f8d10775 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
+@@ -744,7 +744,7 @@ static int fbnic_mac_get_sensor_asic(struct fbnic_dev *fbd, int id,
+
+ 	*val = *sensor;
+ exit_cleanup:
+-	fbnic_fw_clear_compl(fbd);
++	fbnic_fw_clear_cmpl(fbd, fw_cmpl);
+ exit_free:
+ 	fbnic_fw_put_cmpl(fw_cmpl);
+
+--
+2.47.1
