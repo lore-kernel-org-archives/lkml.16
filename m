@@ -1,104 +1,396 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773771DC9BB
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA724172BD5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058367; cv=none; b=e54iicXukYLxsgFZ0uyEuytPOYk8C6RlF5zFvggwI6yqDLaJBAunTB0RBgcthT6BxA00zcbkuo3ydzdagJLlI+Q5+sUJo7Dpnx8lJavXMco++jKVMv1b25HdlEVxXItMwh+cdTT03ZuCo99i2LuSUT7V1vHdL36crm/qKybfJds=
+	t=1747058445; cv=none; b=kNqr+nVcGB9k7qXH+ufv6cJBEHyUFRZK2f/Ktj1sjnqhQc4yCpBc5LRhgxY3Q6kuqlVeWbvPLHQZFBaaxAeXhGc7bekLxPRBc1lCtDreiRSKj2GzcluQ8/ZdQo6fa/BpeAnS8FyCe+wD/WlKVMbXsOHlSApd/hvMiAYNG1hmidQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058367; c=relaxed/simple;
-	bh=HUmofXhvscOsV22HCTbEBE6mTbH7lup2/FhvFaKJTT0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YvFeUaNb/4XdEVnUsyxOSaWxpCD80ddUXXXygf0Nfds34ooM8IjaGj7YU8X0HsqTL2JPnXnZXKxBzYk4dzUVB1ILYVeqQKx4WQOwoxNE1AWqRKSjKGvAwd6CMQlgsck5wJDJjqUHKhifmO+MuneCParmgcSVXezucSGq5G0K3DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IGtGo5mr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747058445; c=relaxed/simple;
+	bh=FpSOrFTBA3zPhR8xzcPPZckD+36feXezDwiD5X0jZ7I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HQfPSvuiT6B6JB8lG7wHI0gHgHhPELWWdTdq7Kq0P6JGW74THfYMe5LpfFPzXTl4IHsoWFliNkUWlmvRRjvZAMb/fSC6QBUXw0lujLObyj+VoqEuLzq3N7hgiHeXSP7FaoN0xTyzoR1mPw+spgqKpzt/iYHoRTEX7NEshjprG8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jDBET9ag; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IGtGo5mr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3EF1E439F3;
-	Mon, 12 May 2025 13:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747058363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HUmofXhvscOsV22HCTbEBE6mTbH7lup2/FhvFaKJTT0=;
-	b=IGtGo5mrnhcTIR6KHAVd0KcciOdvRmlKgssw6BUtwGWEyYyrGWJijuB7/mfyqfmPhbRjfz
-	kNDgM6HCeU+M1QN0Tt6LK4DICFM9fOAXOTAQL+MPgeQuCANZYN3UP9PJ9ELqZBbdlmay4A
-	2dic1WtPjBbZNiN625v3i0s9okNaBwkM3BtPIcvc83YuyM3DIkIS6pCnyjGHgqEmhKK36i
-	n7T7zyII7NXZ6iCtre00RJYWswSFVYTyxgctszti/Y6asCVrR0GuqNZRHmExXt8UiCgeI8
-	2zHoUxmXGgMocFO34860z5VBRddPVLhkO/qW5ldsUrg0BmXicwoKEp9POBc7Ag==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>
-Cc: Richard Weinberger <richard@nod.at>,  linux-mtd
- <linux-mtd@lists.infradead.org>,  linux-kernel
- <linux-kernel@vger.kernel.org>,  Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
-In-Reply-To: <4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu>
- (=?utf-8?B?IkNzw7Nrw6Fz?=
-	Bence"'s message of "Mon, 12 May 2025 15:13:20 +0200")
-References: <20250512084033.69718-1-csokas.bence@prolan.hu>
-	<87frhambri.fsf@bootlin.com>
-	<d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu>
-	<1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at>
-	<4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 12 May 2025 15:59:22 +0200
-Message-ID: <87r00ugcat.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jDBET9ag"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-60658e1fedfso2109767eaf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747058442; x=1747663242; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oY5MPOFskIW58U8yakui/ToG+SoS5dGhSlJd4Y0itw4=;
+        b=jDBET9agE4STi0F9psBnCjrM4hNXKr+ppVeCJXO1ubEZ41ztJBGs6h0uEClH9heDCy
+         km22pjYc5dpeJM9so6U6tx6+sM1fumO2Lp3o9QB5nP041c3n3m7+n7055Rt1xfCqfqde
+         UY4/Gva/8FL8XOHTSqpvKaGB6fPG+w+82KYY6IExEHHCOAQ4dS+CbHCnDPBj4Es0TEg0
+         OdbSPPnhyIsRqnF8I5Wt+0/NSDvwqfZRXltFJnZqtOIBnRa8w7ZSz5u37RMETeQJnC5T
+         RsLd82SmKoc6Vve26RvEMmj2nXXW0eYQBOzt4WXnNjVOiPvfWeqGQYUs9hrMxMD6ICBp
+         pajg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747058442; x=1747663242;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oY5MPOFskIW58U8yakui/ToG+SoS5dGhSlJd4Y0itw4=;
+        b=vQ+00zTnUPGNBfB47daJsEkvCk9LkEKKkC6KnAZDoEfMTBblfS1X1y8AXGk54Ke5mk
+         mxME4KBh3RGbLCbOmYhyZROgNB6tSbiGtRGTt/zQPynNE06k3iCtgGj4NSxMciTLRb5G
+         f45bF7y0LgsvIARdmSvzvcEdyhC0CeYrxLXwUI6rCtOk0RLe2F824nzHTYnSGQH8lIhp
+         47s1gQ3gcg7BjqoLnz+73TOH07uYYdTbhF1sbXirCBmf02RiW9rA7mDk42QGC3cfg4bd
+         lYKFQOiZm+kEyB0H2/yUDmCDHoFi92p+ObCmOfHxyqvAgc3/DS3Fxe+Gt0ZA93lwyzDi
+         XGoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8m0J8luaWx06IRUAlqLCOrsILKHcTu9t+rqz/tPUHa+5cRPkk/cd0ZzpicvwgP3IaYB1nphsbtIt5hOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJh/Xszyxh6RlE7CAKKbdYNsoViGxGZxngK+PFsHOyHZoQbYAe
+	xRhZCqfvud5DARn3XVgKmn6siJCpWxfa1MfvanJr1Gk27kaeNSnCGlw/rw3TpHQ560nmm+06RZ4
+	Okt3Wc9hE891AmArkD23DITijj3fTRxPiN+RdTA==
+X-Gm-Gg: ASbGncv46SWhAwifyjt/bEEe4b8UyH8MmsOTAnYFVs5mkfkV9ujXTGszTHyEmGcYSn+
+	QV/2rXwIoXtiSiB+EZpdEjz7MkA7kMppDDR+sfDMLqw3j1Fxi4FJoHMsFeNS3c+o6xiMYRy+Apc
+	WYkyTcMR3MSZxKY7LLP9FUNGRe/snmndCH8/Bj0etBSkhpTSSpGQ==
+X-Google-Smtp-Source: AGHT+IHsSG6LFf5PiDFFo3ewFAedI003xvd4xJxMeRbQ3MH6DeQs3j9PCwinE182BXoCfinBuy0Ea+M9rZ1PRL74+a4=
+X-Received: by 2002:a05:6820:450a:b0:606:8579:4c5e with SMTP id
+ 006d021491bc7-6083ff1566bmr6867317eaf.1.1747058441567; Mon, 12 May 2025
+ 07:00:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250506112321.61710-1-cuiyunhui@bytedance.com>
+ <20250506112321.61710-2-cuiyunhui@bytedance.com> <6801686d-a0b3-7093-1293-cdac6ad055e4@linux.intel.com>
+ <CAEEQ3wnouWbVvkvhV1oB8MrOADNhN6BQB4-epUXa6cLYkKFRiw@mail.gmail.com>
+ <41066f2f-a690-83ef-5fbb-0bc1d956a19d@linux.intel.com> <CAEEQ3w=xPmbyaCHLPtCBgFOzz7TzDYMkOnKt=EvpdknQqot=cA@mail.gmail.com>
+ <34f3c38c-b224-8a4d-3235-c1df04ac1d04@linux.intel.com>
+In-Reply-To: <34f3c38c-b224-8a4d-3235-c1df04ac1d04@linux.intel.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Mon, 12 May 2025 22:00:30 +0800
+X-Gm-Features: AX0GCFtQnMyMmbX6QGe3uzimLWaCVKqkrdfQH7AzCtz4fE2y6kAPg4G42xunhNw
+Message-ID: <CAEEQ3wn8Q04ne7nqq+MTtx=ocbi16FuCR-ptZpmYx_23Xwt60Q@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v5 2/4] serial: 8250: avoid potential
+ PSLVERR issue
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: arnd@arndb.de, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	benjamin.larsson@genexis.eu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	heikki.krogerus@linux.intel.com, Jiri Slaby <jirislaby@kernel.org>, 
+	jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
+	LKML <linux-kernel@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, 
+	markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de, 
+	paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com, 
+	sunilvl@ventanamicro.com, tim.kryger@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddugeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheptghsohhkrghsrdgsvghntggvsehprhholhgrnhdrhhhupdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hello,
+Hi Ilpo,
 
-On 12/05/2025 at 15:13:20 +02, Cs=C3=B3k=C3=A1s Bence <csokas.bence@prolan.=
-hu> wrote:
-
-> Hi,
+On Mon, May 12, 2025 at 8:03=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> On 2025. 05. 12. 14:47, Richard Weinberger wrote:
->> ----- Urspr=C3=BCngliche Mail -----
->>> Von: "Cs=C3=B3k=C3=A1s Bence" <csokas.bence@prolan.hu>
->>> Well, yes, in our case. But the point is, we have a strict requirement
->>> for data integrity, which is not unique to us I believe. I would think
->>> there are other industrial control applications like ours, which dictate
->>> a high data integrity.
->> In your last patch set you said your hardware has an issue that every
->> now and that data is not properly written.
->> Now you talk about data integrity requirements. I'm confused.
+> On Mon, 12 May 2025, yunhui cui wrote:
 >
-> The two problems are not too dissimilar: in one case you have a random,
-> and _very_ low chance of data corruption, e.g. because of noise, aging
-> hardware, power supply ripple etc. But you still need to make sure that
-> the written data is absolutely correct; or if it is not, the system will
-> immediately enter some fail-safe mode. This is the problem we want to
-> solve, for everybody using Linux in high reliability environments.
+> > Hi Ilpo,
+> >
+> > On Mon, May 12, 2025 at 6:27=E2=80=AFPM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > >
+> > > On Mon, 12 May 2025, yunhui cui wrote:
+> > >
+> > > > Hi Ilpo,
+> > > >
+> > > > On Tue, May 6, 2025 at 8:00=E2=80=AFPM Ilpo J=C3=A4rvinen
+> > > > <ilpo.jarvinen@linux.intel.com> wrote:
+> > > > >
+> > > > > On Tue, 6 May 2025, Yunhui Cui wrote:
+> > > > >
+> > > > > > Failure to check the UART_LSR_DR before reading UART_RX, or the
+> > > > > > non-atomic nature of clearing the FIFO and reading UART_RX, pos=
+es
+> > > > > > potential risks that could lead to PSLVERR.
+> > > > >
+> > > > > Don't expect reader to know the condition how PSLVERR is triggere=
+d. I know
+> > > > > it's worded out in the other patch but also explain it here.
+> > > > >
+> > > > > You're only explaining problem and missing what this patch does t=
+o solve
+> > > > > the problem.
+> > > > >
+> > > > > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> > > > > > ---
+> > > > > >  drivers/tty/serial/8250/8250.h      | 13 +++++++++
+> > > > > >  drivers/tty/serial/8250/8250_port.c | 43 +++++++++++++++------=
+--------
+> > > > > >  2 files changed, 35 insertions(+), 21 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/seria=
+l/8250/8250.h
+> > > > > > index b861585ca02a..6f97ff3a197d 100644
+> > > > > > --- a/drivers/tty/serial/8250/8250.h
+> > > > > > +++ b/drivers/tty/serial/8250/8250.h
+> > > > > > @@ -162,6 +162,19 @@ static inline u16 serial_lsr_in(struct uar=
+t_8250_port *up)
+> > > > > >       return lsr;
+> > > > > >  }
+> > > > > >
+> > > > > > +/*
+> > > > > > + * To avoid PSLVERR, check UART_LSR_DR in UART_LSR before
+> > > > > > + * reading UART_RX.
+> > > > > > + */
+> > > > > > +static inline void serial8250_discard_data(struct uart_8250_po=
+rt *up)
+> > > > > > +{
+> > > > > > +     u16 lsr;
+> > > > > > +
+> > > > > > +     lsr =3D serial_in(up, UART_LSR);
+> > > > > > +     if (lsr & UART_LSR_DR)
+> > > > > > +             serial_in(up, UART_RX);
+> > > > > > +}
+> > > > > > +
+> > > > > >  /*
+> > > > > >   * For the 16C950
+> > > > > >   */
+> > > > > > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/=
+serial/8250/8250_port.c
+> > > > > > index a913135d5217..1666b965f6a0 100644
+> > > > > > --- a/drivers/tty/serial/8250/8250_port.c
+> > > > > > +++ b/drivers/tty/serial/8250/8250_port.c
+> > > > > > @@ -1357,9 +1357,8 @@ static void autoconfig_irq(struct uart_82=
+50_port *up)
+> > > > > >       /* Synchronize UART_IER access against the console. */
+> > > > > >       uart_port_lock_irq(port);
+> > > > > >       serial_out(up, UART_IER, UART_IER_ALL_INTR);
+> > > > > > +     serial8250_discard_data(up);
+> > > > > >       uart_port_unlock_irq(port);
+> > > > > > -     serial_in(up, UART_LSR);
+> > > > > > -     serial_in(up, UART_RX);
+> > > > > >       serial_in(up, UART_IIR);
+> > > > > >       serial_in(up, UART_MSR);
+> > > > > >       serial_out(up, UART_TX, 0xFF);
+> > > > > > @@ -2137,25 +2136,22 @@ static void wait_for_xmitr(struct uart_=
+8250_port *up, int bits)
+> > > > > >  static int serial8250_get_poll_char(struct uart_port *port)
+> > > > > >  {
+> > > > > >       struct uart_8250_port *up =3D up_to_u8250p(port);
+> > > > > > -     int status;
+> > > > > > +     int status =3D NO_POLL_CHAR;
+> > > > > >       u16 lsr;
+> > > > > > +     unsigned long flags;
+> > > > > >
+> > > > > >       serial8250_rpm_get(up);
+> > > > > >
+> > > > > > +     uart_port_lock_irqsave(port, &flags);
+> > > > > >       lsr =3D serial_port_in(port, UART_LSR);
+> > > > > > +     if (lsr & UART_LSR_DR)
+> > > > > > +             status =3D serial_port_in(port, UART_RX);
+> > > > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > > > >
+> > > > > > -     if (!(lsr & UART_LSR_DR)) {
+> > > > > > -             status =3D NO_POLL_CHAR;
+> > > > > > -             goto out;
+> > > > > > -     }
+> > > > > > -
+> > > > > > -     status =3D serial_port_in(port, UART_RX);
+> > > > > > -out:
+> > > > > >       serial8250_rpm_put(up);
+> > > > > >       return status;
+> > > > >
+> > > > > Not a problem that originates from you, but IMO calling this vari=
+able
+> > > > > "status" is quite misleading when it is the character (or NO_POLL=
+_CHAR
+> > > > > is no character is present).
+> > > > >
+> > > > > >  }
+> > > > > >
+> > > > > > -
+> > > > > >  static void serial8250_put_poll_char(struct uart_port *port,
+> > > > > >                        unsigned char c)
+> > > > > >  {
+> > > > > > @@ -2264,13 +2260,17 @@ int serial8250_do_startup(struct uart_p=
+ort *port)
+> > > > > >        * Clear the FIFO buffers and disable them.
+> > > > > >        * (they will be reenabled in set_termios())
+> > > > > >        */
+> > > > > > +     uart_port_lock_irqsave(port, &flags);
+> > > > > >       serial8250_clear_fifos(up);
+> > > > > >
+> > > > > >       /*
+> > > > > > -      * Clear the interrupt registers.
+> > > > > > +      * Read UART_RX to clear interrupts (e.g., Character Time=
+out).
+> > > > > > +      * No data on UART_IIR_RX_TIMEOUT, UART_LSR_DR won't set.
+> > > > > > +      * FIFO disabled, read UART_RX without LSR check, no PSLV=
+ERR.
+> > > > >
+> > > > > I don't understand what the last two lines mean and I don't see t=
+he
+> > > > > connection to the code that is below the comment either, could yo=
+u try to
+> > > > > rephrase the comment.
+> > > >
+> > > > The original intention was to check UART_LSR_DR first when reading
+> > > > UART_RX. However, the purpose of serial_port_in(port, UART_RX) here=
+ is
+> > > > to clear the interrupt, such as the interrupt caused by RX_TIMEOUT.
+> > >
+> > > I understood the first sentence in the comment but the rest of it is =
+very
+> > > cryptic and has many grammar issues too. Also, the extent of passive =
+voice
+> > > there makes it hard to know who does what (UART / kernel).
+> > >
+> > > > The logic for clearing the interrupt in the interrupt handling
+> > > > function of RX_TIMEOUT is !UART_LSR_DR. And to avoid PSLVERR, we ne=
+ed
+> > > > to check UART_LSR_DR first. To meet the requirements of both, the F=
+IFO
+> > > > needs to be disabled.
+> > >
+> > > The grammar is so broken, it failed to convey that message.
+> >
+> > The purpose of serial_port_in(port, UART_RX) is to clear interrupts
+> > such as rx_timeout. In dw8250_handle_irq(), serial_port_in(p, UART_RX)
+> > is called when the LSR does not have the UART_LSR_DR bit set.
+> >
+> > To avoid PSLVERR when the FIFO is enabled, serial_in(up, UART_RX)
+> > should be called only when the LSR has the UART_LSR_DR bit set.
+> >
+> > These two logics are clearly contradictory. Therefore, both
+> > serial8250_clear_fifos() and serial_port_in(port, UART_RX) are placed
+> > under the protection of port->lock.
+> >
+> > If you believe this is not a potential issue, that's fine. I can
+> > remove this patch in the next patchset version.
 >
-> The problem we _have_ though happens to be a bit different: here we are
-> blursed with a system that corrupts data at a noticeable
-> probability. But the model is the same: a stochastic process introducing
-> bit errors on write. But I sincerely hope no one else has this problem,
-> and this is *not* the primary aim of this patch; it just happens to
-> solve our issue as well. But I intend it to be useful for the larger
-> Linux community, thus the primary goal is to solve the first issue.
+> No, my goal is not to get this removed from the patch series.
+>
+> I meant that the comment wording needs to be fixed for the next version
+> such that it is understandable for those that are not deeply familiar wit=
+h
+> what is related to PSLVERR. Currently even I struggle to follow what's
+> written into that comment (unless I read heavily between lines and base
+> guesses on the extra knowledge I've about how this entire patchset relate=
+s
+> to PSLVERR).
+>
 
-I don't have a strong opinion there but I don't dislike this idea
-because it might also help troubleshooting errors sometimes. It is very
-hard to understand issues which happen to be discovered way after they
-have been generated (typically during a read, way later than a "faulty"
-write). Having this paranoid option would give a more synchronous
-approach which is easier to work with sometimes.
+I plan to change the commit message as follows:
+When the PSLVERR_RESP_EN parameter is set to 1, reading UART_RX while
+the FIFO is enabled and UART_LSR_DR is not set will generate a PSLVERR
+error.
+Failure to check the UART_LSR_DR before reading UART_RX, or the non -
+atomic nature of clearing the FIFO and reading UART_RX, poses
+potential risks that could lead to PSLVERR.
+PSLVERR is addressed through two methods. One is to introduce
+serial8250_discard_data() to check whether UART_LSR_DR is set before
+reading UART_RX, thus solving the PSLVERR issue when the FIFO is
+enabled. The other is to place FIFO clearing and reading of UART_RX
+under port->lock.
 
-Cheers,
-Miqu=C3=A8l
+
+The comment here will be changed as follows:
+To prevent PSLVERR, we can either disable the FIFO before reading
+UART_RX or read UART_RX only when UART_LSR_DR is set while the FIFO
+remains enabled. If using the latter approach to avoid PSLVERR, it
+creates a contradiction with the interrupt - clearing (see the
+rx_timeout handling in dw8250_handle_irq()).
+
+What do you think?
+
+> > > > Therefore, we should put serial8250_clear_fifos() and the execution=
+ of
+> > > > serial_port_in(port, UART_RX) without checking UART_LSR_DR under th=
+e
+> > > > port->lock.
+> > > >
+> > > > >
+> > > > > >        */
+> > > > > >       serial_port_in(port, UART_LSR);
+> > > > > >       serial_port_in(port, UART_RX);
+> > > > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > > > >       serial_port_in(port, UART_IIR);
+> > > > > >       serial_port_in(port, UART_MSR);
+> > > > > >
+> > > > > > @@ -2429,15 +2429,14 @@ int serial8250_do_startup(struct uart_p=
+ort *port)
+> > > > > >       }
+> > > > > >
+> > > > > >  dont_test_tx_en:
+> > > > > > -     uart_port_unlock_irqrestore(port, flags);
+> > > > > >
+> > > > > >       /*
+> > > > > >        * Clear the interrupt registers again for luck, and clea=
+r the
+> > > > > >        * saved flags to avoid getting false values from polling
+> > > > > >        * routines or the previous session.
+> > > > > >        */
+> > > > > > -     serial_port_in(port, UART_LSR);
+> > > > > > -     serial_port_in(port, UART_RX);
+> > > > > > +     serial8250_discard_data(up);
+> > > > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > > > >       serial_port_in(port, UART_IIR);
+> > > > > >       serial_port_in(port, UART_MSR);
+> > > > > >       up->lsr_saved_flags =3D 0;
+> > > > > > @@ -2519,7 +2518,6 @@ void serial8250_do_shutdown(struct uart_p=
+ort *port)
+> > > > > >               port->mctrl &=3D ~TIOCM_OUT2;
+> > > > > >
+> > > > > >       serial8250_set_mctrl(port, port->mctrl);
+> > > > > > -     uart_port_unlock_irqrestore(port, flags);
+> > > > > >
+> > > > > >       /*
+> > > > > >        * Disable break condition and FIFOs
+> > > > > > @@ -2527,6 +2525,14 @@ void serial8250_do_shutdown(struct uart_=
+port *port)
+> > > > > >       serial_port_out(port, UART_LCR,
+> > > > > >                       serial_port_in(port, UART_LCR) & ~UART_LC=
+R_SBC);
+> > > > > >       serial8250_clear_fifos(up);
+> > > > > > +     /*
+> > > > > > +      * Read data port to reset things, and then unlink from
+> > > > > > +      * the IRQ chain.
+> > > > > > +      * Since reading UART_RX clears interrupts, doing so with
+> > > > > > +      * FIFO disabled won't trigger PSLVERR.
+> > > > > > +      */
+> > > > > > +     serial_port_in(port, UART_RX);
+> > > > > > +     uart_port_unlock_irqrestore(port, flags);
+> > > > > >
+> > > > > >  #ifdef CONFIG_SERIAL_8250_RSA
+> > > > > >       /*
+> > > > > > @@ -2535,11 +2541,6 @@ void serial8250_do_shutdown(struct uart_=
+port *port)
+> > > > > >       disable_rsa(up);
+> > > > > >  #endif
+> > > > > >
+> > > > > > -     /*
+> > > > > > -      * Read data port to reset things, and then unlink from
+> > > > > > -      * the IRQ chain.
+> > > > > > -      */
+> > > > > > -     serial_port_in(port, UART_RX);
+> > > > > >       serial8250_rpm_put(up);
+> > > > > >
+> > > > > >       up->ops->release_irq(up);
+> > > > > >
+> > > > >
+> > > > > --
+> > > > >  i.
+> > > > >
+> > > >
+> > > > Thanks,
+> > > > Yunhui
+> > > >
+> > >
+> > > --
+> > >  i.
+> >
+> > Thanks,
+> > Yunhui
+> >
+>
+> --
+>  i.
+
+Thanks,
+Yunhui
