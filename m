@@ -1,149 +1,153 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C51383;
-	Mon, 12 May 2025 21:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5A324BC14
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747084598; cv=none; b=t4sGzIkRm8graJ6A9jYFUsZpdta7va4X3JBWHQF/fKXNUhqxclmt603zu+Wi0k8Qx6uNCs46wQiTNQE5ild6vySPtT52fabPM/VR8Ub/dn+HqxYIRdLvZpMm3m2S9bm9j2Uy/MpKJ8ffgOLdIauOeG3ePK3LstLcoWrzYBHngu8=
+	t=1747084619; cv=none; b=ux/UmDiX5fqFIiPjgye08sfZOlsNHwNH0P1fj2Z8q7+CCwcmBv+6oeX7MgmbZadZdpug3S5Dj4Jr3dgju44Jv704oAT7Di8IU3C16oXyo3GPNY7xX13/m6R2NQ1JMBOst8YYvlN6ocdYjYxihGUVzexCt/GAgewk3C6PL8QVX8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747084598; c=relaxed/simple;
-	bh=REsOT5/Kf4epauIk/+gj5qaRQFY+1LyOd7d456HgZ10=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OukC+dnSAa10k8DCD830B1FGGap67LK2H8Jp+iMovxStLlbgKBzZPaG1uJbm+8/jcgkWwUltxk+yV3vkqDrBfXlohn9wx1u8ggvi4Usn0IfdaokjjsLpEXq1e0Ja8WDwTwWkjN7AMwoFT5cHRkBIf8x3UTNRqV2m8zxKq6HZmno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZnRhd7ZM; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747084619; c=relaxed/simple;
+	bh=lkeykJikOeyv1ybABVyRTwjYLOxL+eJqCKaS/P2GoJI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZVhR41FLIIcteQYpmg1p1H35Kf6irsx0VgjiXF8510S0OtHXAF/uZn7/h5KMsaGjx1X8qy0jh4kmapNkrLBjW4JxFvfkAJh5kk+2ogef5zdRamJfitCb5V60LM+awVJycrSibH6VFzOzmkYaN9+ZWr7zdTWaRrFKh7pJGPzKY0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TX4MuAT1; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnRhd7ZM"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54fc35a390eso5895226e87.3;
-        Mon, 12 May 2025 14:16:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TX4MuAT1"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e0e8ba948so178447a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747084593; x=1747689393; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWbcMuS3JaNmPcNaeeeXONbeofrLDqA7Uwckra+1Fjk=;
-        b=ZnRhd7ZMRU8/MiruStLKg3znE5OwuWKDYsDQ0vY1bZ94PiVOhe2ECxh0QBVeP9HU0d
-         aIV3bnpgZKrMyxtc5WsUzGwIIoLb0vLCHCcIo2PBHaMU4jQFoL89yI5rYyk4Us3H6o7W
-         5cdbMkbYrxeBs8Mdmm976mIkNetXU/ma/DJdkbhbz98yCSzf4kM1+9py/z2VFkv28TSD
-         llujtqK2Mf7mxaPsYSiqUQ2EG46rv0qpW4eFo14Jo1iaLyC6ExnPkXnx5fRXTj7zZhH+
-         pCi/xVEe6M8q2sYKfkABiMFWDbFBhLKcSbXUgLD9MuIrR0lg/pKEyC8ooLEF9Vkdnejg
-         MlNw==
+        d=google.com; s=20230601; t=1747084617; x=1747689417; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a3JVENfn6Nw8P6AJDLTM38Bwvcoxx70DdENf7TcQSOc=;
+        b=TX4MuAT1b31EoS8GyJS/BILlK6NcqiP7AbJdVipbtIgUcUjdCXmb/nKj706wZsXE3l
+         yo25HsSoAfx1ZnFsIvUllC+Yz4YifSdXvqieCMOKGPxu3iqpNM2GJb1/177spD52qpd1
+         wYxbj0eAbfeii5rXmsd+NMtKsAJUZS/rcpgyKgVW2CBipK90enoDtUD/KjBe4rioFZGq
+         GC4skG5ysU6A0G7JY6Jxl0tp+Q3C5E9IKxj7kJTnUYN4+CoRlTqbDjqwwJ8vpBRU+FHX
+         xrbmdj+RPEhFH77bGVonaUrUpz1aY8P/+NmHCQwiVJf2hKRwYyb506nHhvemDIqt/05x
+         shnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747084593; x=1747689393;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eWbcMuS3JaNmPcNaeeeXONbeofrLDqA7Uwckra+1Fjk=;
-        b=FRiptOgInKpUCSvRW1cTverjSQ2OJV9ry4/yQGXIv/wUzoP91hbOuhoqWkbTb9rdSj
-         XNKTobe3okeCnIATeaMB4sEgpJiqpg63+KndpBBDmORiVQpN9S4taqzsXPmarzMgu2Cd
-         4f0yNhzGSzFc6vUCSJT9DI3vvI/qpmjFxCPagyb1l5IQepu2R5dqnvARA3Oh1loDslJM
-         S/s3N7rVl7UgAR3hax4741TR0cjeataU12Fh5RQdeM4YRyn1JIUEdNqJ5md/dOpaDyfL
-         EQtiCY+jrrbP/YHEkv95oZLmCNQXjniFqkQmumLtj/YpTC1MDwQ/6DN0YHfGiRhRHUAe
-         w2yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeIfkb9nqoPONqFrKdrJWqhQ4zyX/Orv5cNUInxj0rNQHFVneNSNe6ixPnK0SeI3D+E8G8lwu2@vger.kernel.org, AJvYcCVTzKNVNBn7FDI4wzlP/+L6V/JP3li0kRaatvdfDky47aI/QP7SPNc93IuGmfHnCWstamaByjohOnUD@vger.kernel.org, AJvYcCXpP1Y/ZbB9GXLzdo0v86I/w7uyKyFyjgh1LlnKdfqZPjnteZCk1ne5N+WbZD/9dJWqOoaQ9pV0H05Iri0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygZFex2i07t++V8fhUCgPXNZ0NrpTHfefEaMJwkJUtVGGoLUez
-	6pFOth9fELI9xEudgYPH8vvvqWoZLqUHg3NC6bkWO8OIdYD9gTdS/XpMfw==
-X-Gm-Gg: ASbGncvoNLKUmm77Zi2IGr/p40wNtLMZHtj1GUoZJsShU35+HYToLXrM8pg+9qM1qVH
-	qpJ+fFDWRD+xJiOE8TMg/gahGmtzIbc4vQyb0X43l+viwIwsL66VQZJEDJc8BilyQfr++nBgoJ0
-	oNinNy5/Ak7u+ICEr3WKdRtFrejBCGfuSxBVlPF5qGFBUMi0rjCHg+a+CmmnABebBEZEulK/uVJ
-	FS3jzHkUSTv5/Jrb2bBWTvdtClSk+x4Z7XaayuoWUu6gOgbrIDKMSsubHbDIrrseJP/NNJzytnZ
-	AJoWiwlzDwCrqnl0H/qkKEquKLC9PrfvYRZ6B0rubz6aYl1IPV8v2lVGU7cASpP3LWvQ
-X-Google-Smtp-Source: AGHT+IFTxOz++Epfa9FUTfKl46pds1Z1TZVgLGjtOWGgDj44Awn8Wu6umfFxWxnIFLPiy+CDrfxGQw==
-X-Received: by 2002:a05:6512:2312:b0:54f:c65f:b908 with SMTP id 2adb3069b0e04-54fc67e2368mr5082998e87.49.1747084593039;
-        Mon, 12 May 2025 14:16:33 -0700 (PDT)
-Received: from foxbook (adqk186.neoplus.adsl.tpnet.pl. [79.185.144.186])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64b6fe9sm1608430e87.149.2025.05.12.14.16.31
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 12 May 2025 14:16:32 -0700 (PDT)
-Date: Mon, 12 May 2025 23:16:28 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Sasha Levin <sashal@kernel.org>
-Cc: patches@lists.linux.dev, stable@vger.kernel.org, Jonathan Bell
- <jonathan@raspberrypi.org>, Oliver Neukum <oneukum@suse.com>, Mathias Nyman
- <mathias.nyman@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, mathias.nyman@intel.com,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.14 08/15] usb: xhci: Don't trust the EP
- Context cycle bit when moving HW dequeue
-Message-ID: <20250512231628.7f91f435@foxbook>
-In-Reply-To: <20250512180352.437356-8-sashal@kernel.org>
-References: <20250512180352.437356-1-sashal@kernel.org>
-	<20250512180352.437356-8-sashal@kernel.org>
+        d=1e100.net; s=20230601; t=1747084617; x=1747689417;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a3JVENfn6Nw8P6AJDLTM38Bwvcoxx70DdENf7TcQSOc=;
+        b=UF9lXqiEEJrmxf8v65neN+enxl7NWUxY5TKUrXxCL2Ly2R+7XfMmqARNc+U0MPVZgN
+         V5rn0Ekphu891a7+10PkwbOfPwPrR4HhOWaDK5dXhCcEr88cJ47zLcZGQrTToM6dU6Jp
+         flU3VQi+3K/JtJcl0ynem0NhzH/Y4U/PJoOb58XYnhKKKh64wmf7G3dk/mh4CS5vQbm6
+         yaEYqlRpj0oluyVxA4PMHPwzR1BQHNFc5aJPhDLAaF/Hp/OkPQeS5uXgrbhXOc3vRbm/
+         MdAldNkhhHHLy/Bb9eB8juXIoZUruYrD9TbC4aSz5XdlUNAVEpQpHucLJ+NN5aYOMVav
+         J6Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCXb1OdArS5seV4Jo847fWoQAdkTRA5DI6kwhE7kbpdsDNV53m2gh6Da32039M1MumkU2WzFa82QzW82OAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC6Vrnyf8WL5sIcWt/JpJJAV4wxw+KfUrHaGp91m2vTIUrBm3/
+	mmTv0ZqaBqkvaCzrOgUuecRnkR+kWOv3G9voIhZ06GvR+ez8GwXEaDduwWiP6Gl/Ekrch8IxFCG
+	s3A==
+X-Google-Smtp-Source: AGHT+IG8WDYQtnSlI1QQ3EJgDr8HcIQ+NM/0nbeRleJpPHBfnwbBY1zwTZNbTyzjJMnr4V6OfvawO3NNABE=
+X-Received: from pjbpl8.prod.google.com ([2002:a17:90b:2688:b0:308:670e:aa2c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d06:b0:2ee:edae:780
+ with SMTP id 98e67ed59e1d1-30c3d2e2e67mr25209634a91.15.1747084617008; Mon, 12
+ May 2025 14:16:57 -0700 (PDT)
+Date: Mon, 12 May 2025 14:16:55 -0700
+In-Reply-To: <20250313203702.575156-15-jon@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-15-jon@nutanix.com>
+Message-ID: <aCJlR9jZniZN_7cH@google.com>
+Subject: Re: [RFC PATCH 14/18] KVM: x86/mmu: Extend is_executable_pte to
+ understand MBEC
+From: Sean Christopherson <seanjc@google.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, 12 May 2025 14:03:43 -0400, Sasha Levin wrote:
-> From: Michal Pecio <michal.pecio@gmail.com>
-> 
-> [ Upstream commit 6328bdc988d23201c700e1e7e04eb05a1149ac1e ]
-> 
-> VIA VL805 doesn't bother updating the EP Context cycle bit when the
-> endpoint halts. This is seen by patching xhci_move_dequeue_past_td()
-> to print the cycle bits of the EP Context and the TRB at hw_dequeue
-> and then disconnecting a flash drive while reading it. Actual cycle
-> state is random as expected, but the EP Context bit is always 1.
-> 
-> This means that the cycle state produced by this function is wrong
-> half the time, and then the endpoint stops working.
-> 
-> Work around it by looking at the cycle bit of TD's end_trb instead
-> of believing the Endpoint or Stream Context. Specifically:
-> 
-> - rename cycle_found to hw_dequeue_found to avoid confusion
-> - initialize new_cycle from td->end_trb instead of hw_dequeue
-> - switch new_cycle toggling to happen after end_trb is found
-> 
-> Now a workload which regularly stalls the device works normally for
-> a few hours and clearly demonstrates the HW bug - the EP Context bit
-> is not updated in a new cycle until Set TR Dequeue overwrites it:
-> 
-> [  +0,000298] sd 10:0:0:0: [sdc] Attached SCSI disk
-> [  +0,011758] cycle bits: TRB 1 EP Ctx 1
-> [  +5,947138] cycle bits: TRB 1 EP Ctx 1
-> [  +0,065731] cycle bits: TRB 0 EP Ctx 1
-> [  +0,064022] cycle bits: TRB 0 EP Ctx 0
-> [  +0,063297] cycle bits: TRB 0 EP Ctx 0
-> [  +0,069823] cycle bits: TRB 0 EP Ctx 0
-> [  +0,063390] cycle bits: TRB 1 EP Ctx 0
-> [  +0,063064] cycle bits: TRB 1 EP Ctx 1
-> [  +0,062293] cycle bits: TRB 1 EP Ctx 1
-> [  +0,066087] cycle bits: TRB 0 EP Ctx 1
-> [  +0,063636] cycle bits: TRB 0 EP Ctx 0
-> [  +0,066360] cycle bits: TRB 0 EP Ctx 0
-> 
-> Also tested on the buggy ASM1042 which moves EP Context dequeue to
-> the next TRB after errors, one problem case addressed by the rework
-> that implemented this loop. In this case hw_dequeue can be enqueue,
-> so simply picking the cycle bit of TRB at hw_dequeue wouldn't work.
-> 
-> Commit 5255660b208a ("xhci: add quirk for host controllers that
-> don't update endpoint DCS") tried to solve the stale cycle problem,
-> but it was more complex and got reverted due to a reported issue.
-> 
-> Cc: Jonathan Bell <jonathan@raspberrypi.org>
-> Cc: Oliver Neukum <oneukum@suse.com>
-> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
-> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Link: https://lore.kernel.org/r/20250505125630.561699-2-mathias.nyman@linux.intel.com
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Thu, Mar 13, 2025, Jon Kohler wrote:
+> @@ -359,15 +360,17 @@ TRACE_EVENT(
+>  		__entry->sptep = virt_to_phys(sptep);
+>  		__entry->level = level;
+>  		__entry->r = shadow_present_mask || (__entry->spte & PT_PRESENT_MASK);
+> -		__entry->x = is_executable_pte(__entry->spte);
+> +		__entry->kx = is_executable_pte(__entry->spte, true, vcpu);
+> +		__entry->ux = is_executable_pte(__entry->spte, false, vcpu);
+>  		__entry->u = shadow_user_mask ? !!(__entry->spte & shadow_user_mask) : -1;
+>  	),
+>  
+> -	TP_printk("gfn %llx spte %llx (%s%s%s%s) level %d at %llx",
+> +	TP_printk("gfn %llx spte %llx (%s%s%s%s%s) level %d at %llx",
+>  		  __entry->gfn, __entry->spte,
+>  		  __entry->r ? "r" : "-",
+>  		  __entry->spte & PT_WRITABLE_MASK ? "w" : "-",
+> -		  __entry->x ? "x" : "-",
+> +		  __entry->kx ? "X" : "-",
+> +		  __entry->ux ? "x" : "-",
 
-Hi,
+I don't have a better idea, but I do worry that X vs. x will lead to confusion.
+But as I said, I don't have a better idea...
 
-This wasn't tagged for stable because the function may potentially
-still be affected by some unforeseen HW bugs, and previous attempt
-at fixing the issue ran into trouble and nobody truly knows why.
+>  		  __entry->u == -1 ? "" : (__entry->u ? "u" : "-"),
+>  		  __entry->level, __entry->sptep
+>  	)
+> diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+> index 1f7b388a56aa..fd7e29a0a567 100644
+> --- a/arch/x86/kvm/mmu/spte.h
+> +++ b/arch/x86/kvm/mmu/spte.h
+> @@ -346,9 +346,20 @@ static inline bool is_last_spte(u64 pte, int level)
+>  	return (level == PG_LEVEL_4K) || is_large_pte(pte);
+>  }
+>  
+> -static inline bool is_executable_pte(u64 spte)
+> +static inline bool is_executable_pte(u64 spte, bool for_kernel_mode,
 
-The problem is very old and not critically severe, so I think this
-can wait till 6.15. People don't like minor release regressions.
+s/for_kernel_mode/is_user_access and invert.  A handful of KVM comments describe
+supervisor as "kernel mode", but those are quite old and IMO unnecessarily imprecise.
 
-Regards,
-Michal
+> +				     struct kvm_vcpu *vcpu)
+
+This needs to be an mmu (or maybe a root role?).  Hmm, thinking about the page
+role, I don't think one new bit will suffice.  Simply adding ACC_USER_EXEC_MASK
+won't let KVM differentiate between shadow pages created with ACC_EXEC_MASK for
+an MMU without MBEC, and a page created explicitly without ACC_USER_EXEC_MASK
+for an MMU *with* MBEC.
+
+What I'm not sure about is if MBEC/GMET support needs to be captured in the base
+page role, or if it shoving it in kvm_mmu_extended_role will suffice.  I'll think
+more on this and report back, need to refresh all the shadowing paging stuff, again...
+
+
+>  {
+> -	return (spte & (shadow_x_mask | shadow_nx_mask)) == shadow_x_mask;
+> +	u64 x_mask = shadow_x_mask;
+> +
+> +	if (vcpu->arch.pt_guest_exec_control) {
+> +		x_mask |= shadow_ux_mask;
+> +		if (for_kernel_mode)
+> +			x_mask &= ~VMX_EPT_USER_EXECUTABLE_MASK;
+> +		else
+> +			x_mask &= ~VMX_EPT_EXECUTABLE_MASK;
+> +	}
+
+This is going to get messy when GMET support comes along, because the U/S bit
+would need to be inverted to do the right thing for supervisor fetches.  Rather
+than trying to shoehorn support into the existing code, I think we should prep
+for GMET and make the code a wee bit easier to follow in the process.  We can
+even implement the actual GMET semanctics, but guarded with a WARN (emulating
+GMET isn't a terrible fallback in the event of a KVM bug).
+
+	if (spte & shadow_nx_mask)
+		return false;
+
+	if (!role.has_mode_based_exec)
+		return (spte & shadow_x_mask) == shadow_x_mask;
+
+	if (WARN_ON_ONCE(!shadow_x_mask))
+		return is_user_access || !(spte & shadow_user_mask);
+
+	return spte & (is_user_access ? shadow_ux_mask : shadow_x_mask);
