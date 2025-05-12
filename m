@@ -1,527 +1,306 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01E02951C9
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCC923C4EA
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066933; cv=none; b=Fex2j79YunO9qiLBquooih2WWocuodHXlBvakZceVPQSFdr22/jDFRWVGbMrzzX/P/pgZezzEsL7d127/SBntH4SKUztlhCLlL8BZrRnxKxFPcvZjZBaQPKSzSyTiapTJvC8lKMHh/xDxmC8BNyn0D25sX9A/b6G6nAAihsja3Q=
+	t=1747066958; cv=none; b=UbiUdgqtj4kNeVG/mrr5cqLB3tZcEC9vwYs3mjvcF5vTrNbGnPAO4HSxCI4sSXkCUVgq3CL1xI0feIWBE5WA8fDS1nZNIdF/zN+inrcpGnrCmSfgA/EM2HPO+zRUWitjex4Ogeh3/dvC55BDgr62cX+g+ZKswNkcEGASo7J1Vt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066933; c=relaxed/simple;
-	bh=A6Mies9hUhfrCMV4P20s2B5vlbK+fHovsvjiHQdVYCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cJ/mY6/4c7cB9Nu+RgO+66y9j4KwhdgCHr2cAu/3+RLT8kbCk7xzV0rCbBnCeEjP4CuEkSPbL2Qj724x7av2hlcqZQmaq17XOwJnNJdF6shUMqGBReN9k8nNkMA5v/I6NIjBfh+lYWC2/EC4nNB5ny4lrso/7Eo3jPVuJakbq5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=WHZUZlq+; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1747066958; c=relaxed/simple;
+	bh=9PWx0uF4YC+E2j2VCSR2TrfDveDwhpSOtaOvyu92PQ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nOw19bNVp3tEtZbHkhyP2HRJt1iJN0kSqdrQivb/M7THD9mk1EhgX8ehQj248zNpw1NxhBT+thTQo050nnvN4AeXuumXN23V7tgCIj1QbLdz1pcbLEhpva1YPsv6+udlbzsZHy3Z4aRvrW7MQo1ou9SR0OMInvfbYJbFmYYDwNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7PcbSsw; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="WHZUZlq+"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476f4e9cf92so38856911cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:22:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7PcbSsw"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf848528aso40608465e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747066928; x=1747671728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ci6f1K89LsZ+DF6ZgFYZsgSAOzS56KH3yJTL4ef3rh0=;
-        b=WHZUZlq+1rTSFZZPWvR1HjwnFQqgSG3OpqUrEt2xKc150AA+9Qj33nRvvGMLLg44YZ
-         TM5csfL4HO9k/iW3wBUT5Ka1omzgO5kVKmNMRqYFDxpRWAnkiNYXigersQl8JmrktOAZ
-         gdGmyMU5tmijl/Ov+l6i0mIydMzZt3r1u0LQPer9wV/QTGT1N3YXHnVmU8c9hbojzHAN
-         P9cwMQ86r0a9728uYlFP4LHAARZRACZCQZxd4fDzVAFfYJH9tUy6y5WATEIM5i/l2nVS
-         Zcy2JDgiHMGnWusOVWtQt/h/j1XH22cfgwbcRDboGZh0IURpUimWtN2QgFUPZerIukcp
-         a5JA==
+        d=gmail.com; s=20230601; t=1747066954; x=1747671754; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=469LQ0cOaa76vTQtARrjWciurSdyNkBmdKmtDRwhs4s=;
+        b=V7PcbSsw0kNnkSNGyAQdnEEvWk5clO6CjoCUW4mdpAMQBSl9iPp8c/ced9wetPEjjW
+         jjA7TJ2EjnBLuDY2CATDeQuZZNjZZelZ96CDGA1bOHXLzEhiMSJ7kPBG2NM/zCZa7/zC
+         6DPwoLfdt5T8lC244CktRN2edih1fXHzoNZn+wz2T5JZ2aoBMmUahckq6Spdij8rXUTJ
+         A9lZPmlUF8Vilj4XQbzGiV9JvEjDFrYEPGz5wbhFMD9++pieKQdI097oiWlrPemG/Gnd
+         ZAn95PzX5Cw86s8QhHYl0a/jOB4z+QHwxP1WeFfZyuT08Jfr3FMhCxfzA2OwMHKHCSGH
+         sSdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066928; x=1747671728;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ci6f1K89LsZ+DF6ZgFYZsgSAOzS56KH3yJTL4ef3rh0=;
-        b=LFxQHlkNAZ2GBacNvfFiHo0nD48+ryALBoUWABx71fdrDpy2NlVBnfFmViIHrzvkR1
-         q5T4gvME8lIK7D7ifWxBdNoglj0I2hFSd1i/fAxNehaJcFzpihNlvTAvh0v/UDdXURiC
-         DegKKU7MISOqVpFeXv5R2ILLXZFHsWTfpu7YDFQiUl74J3y4yrjTavAVCGhlJ/JdW18p
-         vrMX9TVhxrtlaZX03qsoC3goHWRb3HC362VkpG8GutwMRlI3jzhH1ilxaiIx4VD12dN3
-         cvIN6TN5Bi1dBLedMYSP7YltTDHghOqb/4naWDgJJolqtpTOpsRNBmv9Lim7RuyTxZdG
-         8cVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7fgonqg0yw0VLwzaMK/fGiLX1p/ICxzvuJjNptc8B2rs9qeVIUzOzw/6atJWLxQdP5BC2zoYUvzWRtE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLyy9FZNdFPReRqmk6Np9UfyXISiehmFG5/Y2O+eh3nzJk1jdK
-	m31vQoQ4euBvDDt2Ts5AxQqkKQ81zInOnGbPsqnij8t0jAHckuxcRh1/gNotza1gK4VOGsGHTg9
-	G
-X-Gm-Gg: ASbGncs7rWtRAsje0khhpHhAuHaPIO390Eqt8Yehav40oTaP/RLikq+GOG3uRtQ79CF
-	3uqWTjyN2NFWUmIBtxJxvtqLvffupqvpKbk4pyDSGU90UK0icFGynaWOeKKenZyBG2Zw8dFrsn+
-	0xk2Ku6bUmktIvPakA5fLI8N0FQGqPf2N/f0PrNHVMwOpKdX2sVp4Lbfaoe9s4QNV8ZUUdI9+vM
-	cojlKuJCRfVpFuSCpeWCn8s5P4YujPVN0sNkzKivwAj7eyyRZuw2z9ZrAfDFS9BBTxkgt8Ij3Kr
-	UHbB3lgIFpDDutwBqZ6pcWTNjc1YkduboSZ2/c1lzDB6UhDe0qK9Jj9cdcIEhGpVd1LHe7g/6Wt
-	ENqXAtCX75Q+kP0VzV7pM+tGJt0Jwa9gT39Lj6VbjCVd6LoM=
-X-Google-Smtp-Source: AGHT+IE6kifyyq68JXmdCyyHqCef0H7CrWN95iUQ8mmLv4UnZnRRmN3QUvUDR9Mvy0G1oQqLngMKog==
-X-Received: by 2002:a05:622a:1984:b0:476:ac73:c3f3 with SMTP id d75a77b69052e-494527162demr247105181cf.1.1747066928404;
-        Mon, 12 May 2025 09:22:08 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.22.07
+        d=1e100.net; s=20230601; t=1747066954; x=1747671754;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=469LQ0cOaa76vTQtARrjWciurSdyNkBmdKmtDRwhs4s=;
+        b=ncV3OZhI/ozB+w+4cy5RrOeAT6wQiMI+ymhkr7h+bTM9iWRIRIFEbG+TynEApambu7
+         bNUOc5nu1vKBIJq66spFPuisnaspP0DU1/rqOHVjjQ0t7jfbsnMEFUgcq3+JNy3MTjBU
+         /MYWXZkdll3z09trr+GTCKtCMfeHKY4q113V8OKTuclKYnEPb4vDdg3/XBkcUwLEOKea
+         7ryzNitdX+Ysxbb5ODhQbhwTQ1JVKDLHQQrqxTIOz6qMs7K8wxfC+dPLL/MOoqy8zxYR
+         lVPGry4sZicyUmi+33jjZagyfn/qjT56xGrGaPR581MsbWzsrgCTmLfZU9rSg7mdmPzF
+         UfNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhVQlwt/EtFpECTMTWt4JN7oUSJQUBYeJyv4JEuWOcNMqAGstPlJcNEpFdNWqQ/crRFj1cDvA3WefPcPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7dMgh8yFASloWLjoTC73TaYGikGFNUTvWn7Gh2YHaL36gTnFU
+	yOOwM5j1SPf20kWopB7orp5t4sE1+U2I6AzS6MX9o7N1/vQLc9f6
+X-Gm-Gg: ASbGncvTX3RNg7oY+JtGPF/2ApbUAgcXTQFRo3yxqsxDM4rjl1G41R101oFZUXefUXK
+	PYWVFIyTYGT+K+V95a4ZiAjK9wfvrN+iiXDBldARyOiOTlRxiCWFvRVn2mv59XzGueTw2Cxnjw/
+	hYTW95PLeHFJy4pWal7FIAkzogko+KBFmyW6LTI9D+aNpCTLfSn42oIcLPliDyDLZRxmSZsuVg7
+	c4J+N94RYqUoPcKylUkIA7ia/mx5sUgHHJN3Pxx6idiEVofueCICZnD3eh5ONGGLK4s9BjG7xfB
+	YowQMkd5A4iXb/b7XO9NtffTPdkB3+KHnNc7iZkfuy/MD43QLmX8kTI4yjoAC6LPwf37i4vxWMW
+	quNPJQh+1AOP75O8EUFCsHY65Y1TDfas+FHIn9nQ9p8UTacEZgCs=
+X-Google-Smtp-Source: AGHT+IG0jZmkIPBVdcJwRfpYILK6n5e0sSPQwvN8CdyuzUpKfWnACaJDB+gpYfLrqi4bV5mh2BZPQQ==
+X-Received: by 2002:a05:600c:46d3:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-442d6d377f0mr139532545e9.12.1747066954318;
+        Mon, 12 May 2025 09:22:34 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-0400-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:400::8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde27sm13228032f8f.17.2025.05.12.09.22.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:22:08 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
+        Mon, 12 May 2025 09:22:33 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: linux-mtd@lists.infradead.org,
+	dregan@broadcom.com,
+	miquel.raynal@bootlin.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	florian.fainelli@broadcom.com,
+	rafal@milecki.pl,
+	computersforpeace@gmail.com,
+	kamal.dasu@broadcom.com,
+	dan.beygelman@broadcom.com,
+	william.zhang@broadcom.com,
+	frieder.schrempf@kontron.de,
 	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	corbet@lwn.net,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH v3 17/17] cxl: docs - add self-referencing cross-links
-Date: Mon, 12 May 2025 12:21:34 -0400
-Message-ID: <20250512162134.3596150-18-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
-References: <20250512162134.3596150-1-gourry@gourry.net>
+	vigneshr@ti.com,
+	richard@nod.at,
+	bbrezillon@kernel.org,
+	kdasu.kdev@gmail.com,
+	jaimeliao.tw@gmail.com,
+	kilobyte@angband.pl,
+	jonas.gorski@gmail.com,
+	dgcbueu@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [PATCH] mtd: rawnand: brcmnand: legacy exec_op implementation
+Date: Mon, 12 May 2025 18:22:26 +0200
+Message-Id: <20250512162226.415154-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add some crosslinks between pages in the CXL docs - mostly to the
-ACPI tables.
+Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+removed legacy interface functions, breaking < v5.0 controllers support.
+In order to fix older controllers we need to add an alternative exec_op
+implementation which doesn't rely on low level registers.
 
-Suggested-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Signed-off-by: Gregory Price <gourry@gourry.net>
+Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- .../driver-api/cxl/devices/device-types.rst   |  2 +-
- .../cxl/linux/access-coordinates.rst          |  7 ++--
- .../driver-api/cxl/linux/cxl-driver.rst       | 35 ++++++++++---------
- .../driver-api/cxl/linux/early-boot.rst       | 32 ++++++++++-------
- .../driver-api/cxl/platform/bios-and-efi.rst  | 12 +++----
- .../example-configurations/flexible.rst       | 10 +++---
- .../example-configurations/hb-interleave.rst  | 10 +++---
- .../multi-dev-per-hb.rst                      | 10 +++---
- .../example-configurations/one-dev-per-hb.rst | 10 +++---
- 9 files changed, 69 insertions(+), 59 deletions(-)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 174 ++++++++++++++++++++++-
+ 1 file changed, 168 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
-index c70564cf0be3..f5e4330c1cfe 100644
---- a/Documentation/driver-api/cxl/devices/device-types.rst
-+++ b/Documentation/driver-api/cxl/devices/device-types.rst
-@@ -115,7 +115,7 @@ A Multi-Headed Single-Logical Device (MHSLD) exposes a single logical
- device to multiple heads which may be connected to one or more discrete
- hosts.  An example of this would be a simple memory-pool which may be
- statically configured (prior to boot) to expose portions of its memory
--to Linux via the CEDT ACPI table.
-+to Linux via :doc:`CEDT <../platform/acpi/cedt>`.
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 17f6d9723df9..919e322189d5 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -2490,14 +2490,177 @@ static int brcmnand_op_is_reset(const struct nand_operation *op)
+ 	return 0;
+ }
  
- MHMLD
- ~~~~~
-diff --git a/Documentation/driver-api/cxl/linux/access-coordinates.rst b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-index e408ecbc4038..71024fa0f561 100644
---- a/Documentation/driver-api/cxl/linux/access-coordinates.rst
-+++ b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-@@ -24,7 +24,7 @@ asymmetry in properties does not happen and all paths to EPs are equal.
- 
- There can be multiple switches under an RP. There can be multiple RPs under
- a CXL Host Bridge (HB). There can be multiple HBs under a CXL Fixed Memory
--Window Structure (CFMWS).
-+Window Structure (CFMWS) in the :doc:`CEDT <../platform/acpi/cedt>`.
- 
- An example hierarchy::
- 
-@@ -83,8 +83,9 @@ also the index for the resulting xarray.
- 
- The next step is to take the min() of the per host bridge bandwidth and the
- bandwidth from the Generic Port (GP). The bandwidths for the GP are retrieved
--via ACPI tables SRAT/HMAT. The minimum bandwidth are aggregated under the same
--ACPI0017 device to form a new xarray.
-+via ACPI tables (:doc:`SRAT <../platform/acpi/srat>` and
-+:doc:`HMAT <../platform/acpi/hmat>`). The minimum bandwidth are aggregated
-+under the same ACPI0017 device to form a new xarray.
- 
- Finally, the cxl_region_update_bandwidth() is called and the aggregated
- bandwidth from all the members of the last xarray is updated for the
-diff --git a/Documentation/driver-api/cxl/linux/cxl-driver.rst b/Documentation/driver-api/cxl/linux/cxl-driver.rst
-index cf6b397abdb1..9759e90c3cf1 100644
---- a/Documentation/driver-api/cxl/linux/cxl-driver.rst
-+++ b/Documentation/driver-api/cxl/linux/cxl-driver.rst
-@@ -77,11 +77,11 @@ Root Object` Device Class is found.
- 
- The Root contains links to:
- 
--* `Host Bridge Ports` defined by ACPI CEDT CHBS.
-+* `Host Bridge Ports` defined by CHBS in the :doc:`CEDT<../platform/acpi/cedt>`
- 
- * `Downstream Ports` typically connected to `Host Bridge Ports`.
- 
--* `Root Decoders` defined by ACPI CEDT CFMWS.
-+* `Root Decoders` defined by CFMWS the :doc:`CEDT<../platform/acpi/cedt>`
- 
- ::
- 
-@@ -150,9 +150,8 @@ An `endpoint` is a terminal port in the fabric.  This is a `logical device`,
- and may be one of many `logical devices` presented by a memory device. It
- is still considered a type of `port` in the fabric.
- 
--An `endpoint` contains `endpoint decoders` available for use and the
--*Coherent Device Attribute Table* (CDAT) used to describe the capabilities
--of the device. ::
-+An `endpoint` contains `endpoint decoders` and the device's Coherent Device
-+Attribute Table (which describes the device's capabilities). ::
- 
-   # ls /sys/bus/cxl/devices/endpoint5
-     CDAT        decoders_committed  modalias      uevent
-@@ -247,17 +246,18 @@ parameter.
- Root Decoder
- ~~~~~~~~~~~~
- A `Root Decoder` is logical construct of the physical address and interleave
--configurations present in the ACPI CEDT CFMWS.  Linux presents this information
--as a decoder present in the `CXL Root`.  We consider this a `Root Decoder`,
--though technically it exists on the boundary of the CXL specification and
--platform-specific CXL root implementations.
-+configurations present in the CFMWS field of the :doc:`CEDT
-+<../platform/acpi/cedt>`.
-+Linux presents this information as a decoder present in the `CXL Root`.  We
-+consider this a `Root Decoder`, though technically it exists on the boundary
-+of the CXL specification and platform-specific CXL root implementations.
- 
- Linux considers these logical decoders a type of `Routing Decoder`, and is the
- first decoder in the CXL fabric to receive a memory access from the platform's
- memory controllers.
- 
- `Root Decoders` are created during :code:`cxl_acpi_probe`.  One root decoder
--is created per CFMWS entry in the ACPI CEDT.
-+is created per CFMWS entry in the :doc:`CEDT <../platform/acpi/cedt>`.
- 
- The :code:`target_list` parameter is filled by the CFMWS target fields. Targets
- of a root decoder are `Host Bridges`, which means interleave done at the root
-@@ -267,9 +267,11 @@ Only root decoders are capable of `Inter-Host-Bridge Interleave`.
- 
- Such interleaves must be configured by the platform and described in the ACPI
- CEDT CFMWS, as the target CXL host bridge UIDs in the CFMWS must match the CXL
--host bridge UIDs in the ACPI CEDT CHBS and ACPI DSDT.
-+host bridge UIDs in the CHBS field of the :doc:`CEDT
-+<../platform/acpi/cedt>` and the UID field of CXL Host Bridges defined in
-+the :doc:`DSDT <../platform/acpi/dsdt>`.
- 
--Interleave settings in a rootdecoder describe how to interleave accesses among
-+Interleave settings in a root decoder describe how to interleave accesses among
- the *immediate downstream targets*, not the entire interleave set.
- 
- The memory range described in the root decoder is used to
-@@ -531,10 +533,11 @@ granularity configuration.
- 
- At Root
- ~~~~~~~
--Root decoder interleave is defined by the ACPI CEDT CFMWS.  The CEDT
--may actually define multiple CFMWS configurations to describe the same
--physical capacity - with the intent to allow users to decide at runtime
--whether to online memory as interleaved or non-interleaved. ::
-+Root decoder interleave is defined by CFMWS field of the :doc:`CEDT
-+<../platform/acpi/cedt>`.  The CEDT may actually define multiple CFMWS
-+configurations to describe the same physical capacity, with the intent to allow
-+users to decide at runtime whether to online memory as interleaved or
-+non-interleaved. ::
- 
-              Subtable Type : 01 [CXL Fixed Memory Window Structure]
-        Window base address : 0000000100000000
-diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
-index 8c1c497bc772..a7fc6fc85fbe 100644
---- a/Documentation/driver-api/cxl/linux/early-boot.rst
-+++ b/Documentation/driver-api/cxl/linux/early-boot.rst
-@@ -12,8 +12,9 @@ read EFI and ACPI information throughout this process to configure logical
- representations of the devices.
- 
- During Linux Early Boot stage (functions in the kernel that have the __init
--decorator), the system takes the resources created by EFI/BIOS (ACPI tables)
--and turns them into resources that the kernel can consume.
-+decorator), the system takes the resources created by EFI/BIOS
-+(:doc:`ACPI tables <../platform/acpi>`) and turns them into resources that the
-+kernel can consume.
- 
- 
- BIOS, Build and Boot Options
-@@ -70,13 +71,14 @@ significant impact performance depending on the memory capacity of the system.
- NUMA Node Reservation
- =====================
- 
--Linux refers to the proximity domains (:code:`PXM`) defined in the SRAT to
--create NUMA nodes in :code:`acpi_numa_init`. Typically, there is a 1:1 relation
--between :code:`PXM` and NUMA node IDs.
-+Linux refers to the proximity domains (:code:`PXM`) defined in the :doc:`SRAT
-+<../platform/acpi/srat>` to create NUMA nodes in :code:`acpi_numa_init`.
-+Typically, there is a 1:1 relation between :code:`PXM` and NUMA node IDs.
- 
--SRAT is the only ACPI defined way of defining Proximity Domains. Linux chooses
--to, at most, map those 1:1 with NUMA nodes. CEDT adds a description of SPA
--ranges which Linux may wish to map to one or more NUMA nodes.
-+The SRAT is the only ACPI defined way of defining Proximity Domains. Linux
-+chooses to, at most, map those 1:1 with NUMA nodes.
-+:doc:`CEDT <../platform/acpi/cedt>` adds a description of SPA ranges which
-+Linux may map to one or more NUMA nodes.
- 
- If there are CXL ranges in the CFMWS but not in SRAT, then a fake :code:`PXM`
- is created (as of v6.15). In the future, Linux may reject CFMWS not described
-@@ -89,7 +91,8 @@ data for Linux to identify NUMA nodes their associated memory regions.
- 
- The relevant code exists in: :code:`linux/drivers/acpi/numa/srat.c`.
- 
--See the Example Platform Configurations section for more information.
-+See :doc:`Example Platform Configurations <../platform/example-configs>`
-+for more info.
- 
- Memory Tiers Creation
- =====================
-@@ -108,10 +111,13 @@ Tier membership can be inspected in ::
-   /sys/devices/virtual/memory_tiering/memory_tierN/nodelist
-   0-1
- 
--If nodes are grouped which have clear difference in performance, check the HMAT
--and CDAT information for the CXL nodes.  All nodes default to the DRAM tier,
--unless HMAT/CDAT information is reported to the memory_tier component via
--`access_coordinates`.
-+If nodes are grouped which have clear difference in performance, check the
-+:doc:`HMAT <../platform/acpi/hmat>` and CDAT information for the CXL nodes. All
-+nodes default to the DRAM tier, unless HMAT/CDAT information is reported to the
-+memory_tier component via `access_coordinates`.
++static int brcmnand_exec_instructions(struct nand_chip *chip,
++				      const struct nand_operation *op)
++{
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	unsigned int i;
++	int ret = 0;
 +
-+For more, see :doc:`CXL access coordinates documentation
-+<../linux/access-coordinates>`.
++	for (i = 0; i < op->ninstrs; i++) {
++		ret = brcmnand_exec_instr(host, i, op);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
++					     const struct nand_operation *op)
++{
++	struct mtd_info *mtd = nand_to_mtd(chip);
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
++	const struct nand_op_instr *instr;
++	unsigned int i, j;
++	int cmd = CMD_NULL, last_cmd = CMD_NULL;
++	int ret = 0;
++
++	for (i = 0; i < op->ninstrs; i++) {
++		instr = &op->instrs[i];
++
++		if (instr->type == NAND_OP_CMD_INSTR) {
++			if (instr->ctx.cmd.opcode == NAND_CMD_READID) {
++				cmd = CMD_DEVICE_ID_READ;
++			} else if (instr->ctx.cmd.opcode == NAND_CMD_READOOB) {
++				cmd = CMD_SPARE_AREA_READ;
++			} else if (instr->ctx.cmd.opcode == NAND_CMD_ERASE1) {
++				cmd = CMD_BLOCK_ERASE;
++				brcmnand_wp(mtd, 0);
++			} else if (instr->ctx.cmd.opcode == NAND_CMD_ERASE2) {
++				cmd = CMD_NULL;
++			} else if (instr->ctx.cmd.opcode == NAND_CMD_PARAM) {
++				cmd = CMD_PARAMETER_READ;
++			} else if (instr->ctx.cmd.opcode == NAND_CMD_RNDOUT) {
++				cmd = CMD_PARAMETER_CHANGE_COL;
++			} else if (instr->ctx.cmd.opcode == NAND_CMD_RNDOUTSTART) {
++				cmd = CMD_NULL;
++			} else {
++				dev_err(ctrl->dev, "unsupported cmd=%d\n",
++					instr->ctx.cmd.opcode);
++				ret = -EOPNOTSUPP;
++				break;
++			}
++		} else if (instr->type == NAND_OP_ADDR_INSTR) {
++			u64 addr = 0;
++
++			if (cmd == CMD_NULL)
++				continue;
++
++			if (instr->ctx.addr.naddrs > 8) {
++				dev_err(ctrl->dev, "unsupported naddrs=%u\n",
++					instr->ctx.addr.naddrs);
++				ret = -EOPNOTSUPP;
++				break;
++			}
++
++			for (j = 0; j < instr->ctx.addr.naddrs; j++)
++				addr |= (instr->ctx.addr.addrs[j]) << (j << 3);
++
++			if (cmd == CMD_PARAMETER_CHANGE_COL) {
++				addr &= ~((u64)(FC_BYTES - 1));
++
++				if (brcmnand_get_sector_size_1k(host)) {
++					host->hwcfg.sector_size_1k =
++						brcmnand_get_sector_size_1k(host);
++					brcmnand_set_sector_size_1k(host, 0);
++				}
++			}
++
++			host->last_addr = addr;
++
++			brcmnand_set_cmd_addr(mtd, addr);
++			brcmnand_send_cmd(host, cmd);
++			last_cmd = cmd;
++			cmd = CMD_NULL;
++			brcmnand_waitfunc(chip);
++
++			if (last_cmd == CMD_PARAMETER_READ ||
++			    last_cmd == CMD_PARAMETER_CHANGE_COL) {
++				/* Copy flash cache word-wise */
++				u32 *flash_cache = (u32 *)ctrl->flash_cache;
++
++				brcmnand_soc_data_bus_prepare(ctrl->soc, true);
++
++				/*
++				 * Must cache the FLASH_CACHE now, since changes in
++				 * SECTOR_SIZE_1K may invalidate it
++				 */
++				for (i = 0; i < FC_WORDS; i++)
++					/*
++					 * Flash cache is big endian for parameter pages, at
++					 * least on STB SoCs
++					 */
++					flash_cache[i] = be32_to_cpu(brcmnand_read_fc(ctrl, i));
++
++				brcmnand_soc_data_bus_unprepare(ctrl->soc, true);
++
++				/* Cleanup from HW quirk: restore SECTOR_SIZE_1K */
++				if (host->hwcfg.sector_size_1k)
++					brcmnand_set_sector_size_1k(host,
++								    host->hwcfg.sector_size_1k);
++			} else if (last_cmd == NAND_CMD_ERASE1) {
++				brcmnand_wp(mtd, 1);
++			}
++		} else if (instr->type == NAND_OP_DATA_IN_INSTR) {
++			u8 *in = instr->ctx.data.buf.in;
++
++			if (last_cmd == CMD_DEVICE_ID_READ) {
++				u32 val;
++
++				if (instr->ctx.data.len > 8) {
++					dev_err(ctrl->dev, "unsupported len=%u\n",
++						instr->ctx.data.len);
++					ret = -EOPNOTSUPP;
++					break;
++				}
++
++				for (j = 0; j < instr->ctx.data.len; j++) {
++					if (j == 0)
++						val = brcmnand_read_reg(ctrl, BRCMNAND_ID);
++					else if (j == 4)
++						val = brcmnand_read_reg(ctrl, BRCMNAND_ID_EXT);
++
++					in[j] = (val >> (24 - ((j % 4) << 3))) & 0xff;
++				}
++			} else if (last_cmd == CMD_SPARE_AREA_READ) {
++				for (j = 0; j < instr->ctx.data.len; j++)
++					in[j] = oob_reg_read(ctrl, j);
++			} else if (last_cmd == NAND_CMD_PARAM || last_cmd == NAND_CMD_RNDOUT) {
++				u64 addr;
++				u32 offs;
++
++				for (j = 0; j < instr->ctx.data.len; j++) {
++					addr = host->last_addr = j;
++					offs = addr & (FC_BYTES - 1);
++
++					if (j > 0 && offs == 0)
++						nand_change_read_column_op(chip, addr, NULL, 0,
++									   false);
++
++					in[j] = ctrl->flash_cache[offs];
++				}
++			}
++		} else if (instr->type == NAND_OP_WAITRDY_INSTR) {
++			ret = bcmnand_ctrl_poll_status(host, NAND_CTRL_RDY, NAND_CTRL_RDY, 0);
++		} else {
++			dev_err(ctrl->dev, "unsupported instruction type: %d\n", instr->type);
++			ret = -EINVAL;
++		}
++	}
++
++	return ret;
++}
++
+ static int brcmnand_exec_op(struct nand_chip *chip,
+ 			    const struct nand_operation *op,
+ 			    bool check_only)
+ {
+ 	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	u8 *status;
+-	unsigned int i;
+ 	int ret = 0;
  
- Contiguous Memory Allocation
- ============================
-diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-index 552a83992bcc..645322632cc9 100644
---- a/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-+++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
-@@ -22,7 +22,7 @@ At a high level, this is what occurs during this phase of configuration.
+ 	if (check_only)
+@@ -2525,11 +2688,10 @@ static int brcmnand_exec_op(struct nand_chip *chip,
+ 	if (op->deassert_wp)
+ 		brcmnand_wp(mtd, 0);
  
- Much of what this section is concerned with is ACPI Table production and
- static memory map configuration. More detail on these tables can be found
--under Platform Configuration -> ACPI Table Reference.
-+at :doc:`ACPI Tables <acpi>`.
+-	for (i = 0; i < op->ninstrs; i++) {
+-		ret = brcmnand_exec_instr(host, i, op);
+-		if (ret)
+-			break;
+-	}
++	if (ctrl->nand_version >= 0x500)
++		brcmnand_exec_instructions(chip, op);
++	else
++		brcmnand_exec_instructions_legacy(chip, op);
  
- .. note::
-    Platform Vendors should read carefully, as this sections has recommendations
-@@ -175,9 +175,9 @@ to implement driver support for your platform.
- 
- Interleave and Configuration Flexibility
- ----------------------------------------
--If providing cross-host-bridge interleave, a CFMWS entry in the CEDT must be
--presented with target host-bridges for the interleaved device sets (there may
--be multiple behind each host bridge).
-+If providing cross-host-bridge interleave, a CFMWS entry in the :doc:`CEDT
-+<acpi/cedt>` must be presented with target host-bridges for the interleaved
-+device sets (there may be multiple behind each host bridge).
- 
- If providing intra-host-bridge interleaving, only 1 CFMWS entry in the CEDT is
- required for that host bridge - if it covers the entire capacity of the devices
-@@ -193,8 +193,8 @@ different purposes.  For example, you may want to consider adding:
- 
- A platform may choose to add all of these, or change the mode based on a BIOS
- setting.  For each CFMWS entry, Linux expects descriptions of the described
--memory regions in the SRAT to determine the number of NUMA nodes it should
--reserve during early boot / init.
-+memory regions in the :doc:`SRAT <acpi/srat>` to determine the number of
-+NUMA nodes it should reserve during early boot / init.
- 
- As of v6.14, Linux will create a NUMA node for each CEDT CFMWS entry, even if
- a matching SRAT entry does not exist; however, this is not guaranteed in the
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst b/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-index e39daba65fa0..dab704b6fcc2 100644
---- a/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-@@ -18,7 +18,7 @@ Things to note:
- * This SRAT describes one node for each of the above CFMWS.
- * The HMAT describes performance for each node in the SRAT.
- 
--CEDT ::
-+:doc:`CEDT <../acpi/cedt>`::
- 
-             Subtable Type : 00 [CXL Host Bridge Structure]
-                  Reserved : 00
-@@ -137,7 +137,7 @@ CEDT ::
-                     QtgId : 0001
-              First Target : 00000006
- 
--SRAT ::
-+:doc:`SRAT <../acpi/srat>`::
- 
-          Subtable Type : 01 [Memory Affinity]
-                 Length : 28
-@@ -223,7 +223,7 @@ SRAT ::
-        Hot Pluggable : 1
-         Non-Volatile : 0
- 
--HMAT ::
-+:doc:`HMAT <../acpi/hmat>`::
- 
-                Structure Type : 0001 [SLLBI]
-                     Data Type : 00   [Latency]
-@@ -263,7 +263,7 @@ HMAT ::
-                         Entry : 0100
-                         Entry : 0100
- 
--SLIT ::
-+:doc:`SLIT <../acpi/slit>`::
- 
-      Signature : "SLIT"    [System Locality Information Table]
-     Localities : 0000000000000003
-@@ -276,7 +276,7 @@ SLIT ::
-   Locality   6 : FF FF FF FF FF FF 0A FF
-   Locality   7 : FF FF FF FF FF FF FF 0A
- 
--DSDT ::
-+:doc:`DSDT <../acpi/dsdt>`::
- 
-   Scope (_SB)
-   {
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst b/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-index ce07e6162f26..c474dcf09fb0 100644
---- a/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-@@ -13,7 +13,7 @@ Things to note:
- * This SRAT describes one node for both host bridges.
- * The HMAT describes a single node's performance.
- 
--CEDT ::
-+:doc:`CEDT <../acpi/cedt>`::
- 
-             Subtable Type : 00 [CXL Host Bridge Structure]
-                  Reserved : 00
-@@ -48,7 +48,7 @@ CEDT ::
-              First Target : 00000007
-             Second Target : 00000006
- 
--SRAT ::
-+:doc:`SRAT <../acpi/srat>`::
- 
-          Subtable Type : 01 [Memory Affinity]
-                 Length : 28
-@@ -62,7 +62,7 @@ SRAT ::
-        Hot Pluggable : 1
-         Non-Volatile : 0
- 
--HMAT ::
-+:doc:`HMAT <../acpi/hmat>`::
- 
-                Structure Type : 0001 [SLLBI]
-                     Data Type : 00   [Latency]
-@@ -80,14 +80,14 @@ HMAT ::
-                         Entry : 1200
-                         Entry : 0400
- 
--SLIT ::
-+:doc:`SLIT <../acpi/slit>`::
- 
-      Signature : "SLIT"    [System Locality Information Table]
-     Localities : 0000000000000003
-   Locality   0 : 10 20
-   Locality   1 : FF 0A
- 
--DSDT ::
-+:doc:`DSDT <../acpi/dsdt>`::
- 
-   Scope (_SB)
-   {
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst b/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-index 6adf7c639490..a7854a79dbbd 100644
---- a/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-@@ -14,7 +14,7 @@ Things to note:
- * This CEDT/SRAT describes one node for both devices.
- * There is only one proximity domain the HMAT for both devices.
- 
--CEDT ::
-+:doc:`CEDT <../acpi/cedt>`::
- 
-             Subtable Type : 00 [CXL Host Bridge Structure]
-                  Reserved : 00
-@@ -39,7 +39,7 @@ CEDT ::
-                     QtgId : 0001
-              First Target : 00000007
- 
--SRAT ::
-+:doc:`SRAT <../acpi/srat>`::
- 
-          Subtable Type : 01 [Memory Affinity]
-                 Length : 28
-@@ -53,7 +53,7 @@ SRAT ::
-        Hot Pluggable : 1
-         Non-Volatile : 0
- 
--HMAT ::
-+:doc:`HMAT <../acpi/hmat>`::
- 
-                Structure Type : 0001 [SLLBI]
-                     Data Type : 00   [Latency]
-@@ -69,14 +69,14 @@ HMAT ::
-                         Entry : 1200
-                         Entry : 0200
- 
--SLIT ::
-+:doc:`SLIT <../acpi/slit>`::
- 
-      Signature : "SLIT"    [System Locality Information Table]
-     Localities : 0000000000000003
-   Locality   0 : 10 20
-   Locality   1 : FF 0A
- 
--DSDT ::
-+:doc:`DSDT <../acpi/dsdt>`::
- 
-   Scope (_SB)
-   {
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-index b89ba3cab98f..aebda0eb3e17 100644
---- a/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-@@ -14,7 +14,7 @@ Things to note:
- * This CEDT/SRAT describes one node per device
- * The expanders have the same performance and will be in the same memory tier.
- 
--CEDT ::
-+:doc:`CEDT <../acpi/cedt>`::
- 
-             Subtable Type : 00 [CXL Host Bridge Structure]
-                  Reserved : 00
-@@ -62,7 +62,7 @@ CEDT ::
-                     QtgId : 0001
-              First Target : 00000006
- 
--SRAT ::
-+:doc:`SRAT <../acpi/srat>`::
- 
-          Subtable Type : 01 [Memory Affinity]
-                 Length : 28
-@@ -88,7 +88,7 @@ SRAT ::
-        Hot Pluggable : 1
-         Non-Volatile : 0
- 
--HMAT ::
-+:doc:`HMAT <../acpi/hmat>`::
- 
-                Structure Type : 0001 [SLLBI]
-                     Data Type : 00   [Latency]
-@@ -108,7 +108,7 @@ HMAT ::
-                         Entry : 0200
-                         Entry : 0200
- 
--SLIT ::
-+:doc:`SLIT <../acpi/slit>`::
- 
-      Signature : "SLIT"    [System Locality Information Table]
-     Localities : 0000000000000003
-@@ -116,7 +116,7 @@ SLIT ::
-   Locality   1 : FF 0A FF
-   Locality   2 : FF FF 0A
- 
--DSDT ::
-+:doc:`DSDT <../acpi/dsdt>`::
- 
-   Scope (_SB)
-   {
+ 	if (op->deassert_wp)
+ 		brcmnand_wp(mtd, 1);
 -- 
-2.49.0
+2.39.5
 
