@@ -1,100 +1,232 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699A6290BC2
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D417C295527
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056476; cv=none; b=kIHElfVJEV1A1EdAQx6W6n+QsdBf4zXawKtiqJ1KWIoZriESqM2aq3Q3tgKIf3erdb2h3SuzXr5ZRXDHrVLwFbeXc9xSzpfZ908VWb7zL8L1fBi3WGuskAeatZ9QY0OES2EHLJZdyikxxy1QEKqfPh2G3Jb6D1L4WjUES+whyVc=
+	t=1747056495; cv=none; b=C5INlLJxVspSrougI7/ZP84U81rEeJptaKMp/hcaFRKLsZE/NTDFyO3tydpN82FgKMmFRixrAzHy6X0JSLgJk0aAKa/qBiBkkiADVwrb8iAc1kV523dHdY+sWIjMNa1CBo/UnfFsrwTnZj4mri7/kw4SlzjoSsvjqS66Y7p7E/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056476; c=relaxed/simple;
-	bh=DVdODhlsrP1j5tCIx/PMlgifWBofH/BtMfVaxUqYkxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S02uUZRK7pdOCb+KvLPtZBqfexhLWyTTwrfssix1yvGFTCnyiUVjwJO/gEzIpzRHH3gdp+6iPD4Eowx5/6epHVXjgrZFkhy6bMJEVhyhSBLj0bJBWzF+o8LqgFxXIP770GHxgFWGdZ72CJXfa4TfmBCGk9hPExP9xbta2c8yyOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=hpaqU1fe; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1747056495; c=relaxed/simple;
+	bh=N3CsCOiUNSYi75zMs133iMwtQDHcERHaCi0LQeCA0w4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I/wwXk8KY2rN2f7FeZ+X3vxTFJ/UzPcR+Umy8J6kC1thIY1hwBsCumHXvuwHpLjemprzgdaCwceinzlj7SxLtrZwoAGDZ1YVRwelwEjbY2jRpOv17+CjiU+aiMQFZ34rgBcCMQj46IpvmZXtVPW9bnxTpsLQWtdGGh2gfPFsZco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JSszf/sP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="hpaqU1fe"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8647e143f28so414705539f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747056472; x=1747661272; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L9IoB62TXP9uOxncdM6rXekXVF+y8UVR94EHCzJIMOw=;
-        b=hpaqU1fesSUfIOuetYfKZXAyAJzXsfgpMwOiO4XNXyL7wpTSD9nW7U3SgeIV90ut6c
-         ydU2WiQGwljSfQXlL0uM1zUIaGg2l68kdu4U8mLYhmGZ46VRSBw1Knu/nRPEx85+flzq
-         RriMyuuBu5ih68IMovaLimNeKVkJQsdGCzxJiCVptFU23yVM+mt2rEmxggKgE1VVF+ww
-         Vq5/OIGEHfuGU7RzMJE7vo8CWWMKFBIfbmTg5h4VjVUxNWnZAaaZU+4kHXdkuh4JpSye
-         IA7XakvAh40ZbQ+82teo/RzpEGalMhY8vsfVFtKCLE7QWRY8OIUbt2GJ7JgK6Xhmv/5q
-         2btQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSszf/sP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747056492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hcnvSuplSyay+P2opMqH32jrlib56+gcaC7o9TzxSEk=;
+	b=JSszf/sPnNZxBnADfn/R8p1c6vPBDbKXr49oUeE0SfqiHX4nHa1vEdTQbFhc9cD6xsKsOc
+	EG14TUVZ3/CaIGoLnrbLHXrxQ/YgP9n3tCvnuhD0tnFllyAOL7XpXDLy/szQHAdmaIsWKF
+	P0+pZiyKT3RwLkkDNAhfBWwy1aprGQw=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-221-cvwU-Q6gPXu8hpdKgZBFog-1; Mon, 12 May 2025 09:28:11 -0400
+X-MC-Unique: cvwU-Q6gPXu8hpdKgZBFog-1
+X-Mimecast-MFC-AGG-ID: cvwU-Q6gPXu8hpdKgZBFog_1747056490
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5fc8fca20f4so3412490a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:28:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747056472; x=1747661272;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L9IoB62TXP9uOxncdM6rXekXVF+y8UVR94EHCzJIMOw=;
-        b=VPHCQPARAPmWzkIUK8DjMP+T/cIst11j/mizKRaYCZH+PbybbkqQN4XQHi5BztlZfE
-         mzbwO/fnzqZpUFhKTUj7rhfirFkbXbW6g15zMfXPynfU2mF2uRaRztTykyD+UogC6d3/
-         3Zw3KsSltdBvjQDucX4u0ybdsqo6iIkGfZqoncfzVbMj514gO6i9wk+O/YjIkUqlT0px
-         m/7X62vQuAcjB/I/xhylafupk33YVryTqsDt/sYOs/bvTRZk/myhRV8miTKnAV9o0/BT
-         RlF//QpuxNwZx+y+71yqD+uDAtAE5jeAakZLgdASUzAaOC3jP3pEGX4FNxwHFKiHRnm9
-         /CVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrt9pfNIiJQGdrYQc4a6CNC77HHLlLOL+BnpXCbU74iKE/KCn/IZkmj1tQecuIA5jqlRMi8RrU5/kVPFA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZbVE1aY6I714nBHxpWJpoXBd2mn7xezuXcnnHrm6ahWI4ifN0
-	c1BtPe5uyF8tUPm40nqt1WhB0PCVB4F72h2cPsErVvcbUEvlezjD/hVQJzITwr4=
-X-Gm-Gg: ASbGncvdAVudJhkyarbNZNQP9ZhABkjGucOynZBVTgZ+rIJreBdTbYbZo5QRuKVdMIB
-	fK55H+yi5HnmDO7MY2nBxv3501FyGR3qKaAK0Uzw6Jv9cD0Qtwf81MDN8NuHb+dV2s66lYS4Ziz
-	9G4m4tBRhxo2vl9O8iLGJnsAPL2wWbbfRQ94+MJMGaGdDOv9BFXKjl102warOPxqOO60wDySGSl
-	FOd8q20sA7oC+mVUdVv2ZPDOUT10ZkkxD4RR11xFM3eYujCleYDTzlEAlS1gR0BwYxIX8w8T0Wb
-	2KLaQOtklydEroD/UWi0U+aerbY1VVYS5M3E2unTP3WXpjXGcN/AvlXjSQ==
-X-Google-Smtp-Source: AGHT+IHdEysy2QMA5bYJRCGHWcU+SDeS600uChzxsGK4c07DtztUFdTHFIRsMuLF3zs5A/3H+h+iEw==
-X-Received: by 2002:a05:6e02:3185:b0:3d9:3a09:415e with SMTP id e9e14a558f8ab-3da7e211974mr161985485ab.19.1747056472429;
-        Mon, 12 May 2025 06:27:52 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fa2ec25bccsm1330788173.90.2025.05.12.06.27.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 06:27:51 -0700 (PDT)
-Message-ID: <4a0548f8-02aa-4aab-a81b-2399c5393776@kernel.dk>
-Date: Mon, 12 May 2025 07:27:51 -0600
+        d=1e100.net; s=20230601; t=1747056490; x=1747661290;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hcnvSuplSyay+P2opMqH32jrlib56+gcaC7o9TzxSEk=;
+        b=JauwVn1QXvegMkqfg01g3iGMZSND4Lg801KAmpOd0IIKkDkTfyyDKELwhbuke5c2j2
+         oB3h8c0HB7Rrx48sziveO0r/t/yyvZYH34bucuqvgIaFifExHCRTPq0xoVLb4jebGyp2
+         H2X0MitgKuldsPhuqFhfqzMIKOhhehwYqxcoOuHqgrwexdpT07TggTqxUiVFsVTjxzdv
+         dweTwEgaWuo2QhmYI8qhMsmEjFkYT388Nt+5QfTTRQKQh+B0AKDLbhxjeZU265vD5/iN
+         rL7PjWFDbl7TQHrxP8U1XZOZhit5WIwzeTwJbIEMbi7D2kxnj6fAaZrFox0X5Mj1jhGe
+         6TuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVU2uVN0sxJL/yprvVzkkxZxHSP4eNr1LHplVDHmmH9H/0kpicWp5a0aC0fovHGjelCMSfI04S1BZAsgqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmAkwtccMARlzPaU0sXaUW4pqMlOnq6TbtwYIUvQSrHevptCiG
+	0KX51THVFuI4rCMWvdf9zivo/lv0I99MeZ7OGSVGmGttyhKujpo28tuBkznwm1PGO+PcwNqlfIc
+	/w3TSdTU9o8pAPmOhfRFss29/fZw2rjBys5ZK0A20AX/KzzLsuYp0wUGJl7X0
+X-Gm-Gg: ASbGncsllQ3aCctrgzof4NraP6gTfwjsYvKzchw3Gd8I4LPk9oINMQSW50vcqNAYaog
+	rASpcPF2rGMKrZe6AVNUIk4uh8QuaOdJngdCglHEQOvI/0pFmoxV54CpI0sJM0FlNcSIJQ0WNwq
+	loJKxPLH3CNmRxRt1cA/WdHhzxsesA2ajgT/e2yLOld6a4P/lSJ8jcEP2VdmYMoBX+2LpnzP8vz
+	8Iaul1vT2PqgJooz6F88ePvKUAUD9hxwiDYK1tVUr7zxZHjYpkeZ+4BUer0VXxZM7ETO02QTeyl
+	1E9/Um6YmcyptY16hVo6Nd82OY3qFdbzgTssVYaE
+X-Received: by 2002:a05:6402:3587:b0:5fb:ad3c:d0c0 with SMTP id 4fb4d7f45d1cf-5fca073083emr11051406a12.1.1747056490205;
+        Mon, 12 May 2025 06:28:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF/W3zfYCJV6dhk/YZKJFqJ9p8o4bGVFJt+zvzzr59oo3YaKk/Q+HsESIm+YNLNDtoLhaP3/g==
+X-Received: by 2002:a05:6402:3587:b0:5fb:ad3c:d0c0 with SMTP id 4fb4d7f45d1cf-5fca073083emr11051305a12.1.1747056489536;
+        Mon, 12 May 2025 06:28:09 -0700 (PDT)
+Received: from thinky (109-92-26-237.static.isp.telekom.rs. [109.92.26.237])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cc2633bsm5791532a12.20.2025.05.12.06.28.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 06:28:09 -0700 (PDT)
+Date: Mon, 12 May 2025 15:28:05 +0200
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: Richard Henderson <richard.henderson@linaro.org>, 
+	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
+	selinux@vger.kernel.org, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v5 5/7] fs: make vfs_fileattr_[get|set] return -EOPNOSUPP
+Message-ID: <ayokvlxinxeoehids35l62ollqdwvai7jorefi7s4k263vvztp@hdfwbsmmfdba>
+References: <20250512-xattrat-syscall-v5-0-ffbc7c477332@kernel.org>
+ <20250512-xattrat-syscall-v5-5-ffbc7c477332@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Jason Xing <kerneljasonxing@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, corbet@lwn.net,
- linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux@treblig.org, viro@zeniv.linux.org.uk
-References: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
- <aCGR4EOcWRK6Rgfv@smile.fi.intel.com>
- <CAL+tcoDYOwmt+MqUouc=7DCpMyR3HfOhycgruX_n3+eKJxqv9Q@mail.gmail.com>
- <aCGhXcuqBDuceCqk@smile.fi.intel.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <aCGhXcuqBDuceCqk@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512-xattrat-syscall-v5-5-ffbc7c477332@kernel.org>
 
-On 5/12/25 1:21 AM, Andy Shevchenko wrote:
-> Then provide a roadmap on the upstreaming the necessary parts. Otherwise
-> there is no room for a dead code in the Linux kernel. This is the rule:
-> we do not add one, and we do not leave it dangling after removing the last
-> user.
+On 2025-05-12 15:22:52, Andrey Albershteyn wrote:
+> Future patches will add new syscalls which use these functions. As
+> this interface won't be used for ioctls only the EOPNOSUPP is more
+> appropriate return code.
+> 
+> This patch coverts return code from ENOIOCTLCMD to EOPNOSUPP for
+> vfs_fileattr_get and vfs_fileattr_set. To save old behavior
+> translate EOPNOSUPP back for current users - overlayfs, encryptfs
+> and fs/ioctl.c.
+> 
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> ---
+>  fs/ecryptfs/inode.c  |  8 +++++++-
+>  fs/file_attr.c       | 12 ++++++++++--
+>  fs/overlayfs/inode.c |  2 +-
+>  3 files changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+> index 51a5c54eb740..6bf08ff4d7f7 100644
+> --- a/fs/ecryptfs/inode.c
+> +++ b/fs/ecryptfs/inode.c
+> @@ -1124,7 +1124,13 @@ static int ecryptfs_removexattr(struct dentry *dentry, struct inode *inode,
+>  
+>  static int ecryptfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+>  {
+> -	return vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
+> +	int rc;
+> +
+> +	rc = vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
+> +	if (rc == -EOPNOTSUPP)
+> +		rc = -ENOIOCTLCMD;
+> +
+> +	return rc;
+>  }
+>  
+>  static int ecryptfs_fileattr_set(struct mnt_idmap *idmap,
+> diff --git a/fs/file_attr.c b/fs/file_attr.c
+> index d9eab553dc25..d696f440fa4f 100644
+> --- a/fs/file_attr.c
+> +++ b/fs/file_attr.c
+> @@ -79,7 +79,7 @@ int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+>  	int error;
+>  
+>  	if (!inode->i_op->fileattr_get)
+> -		return -ENOIOCTLCMD;
+> +		return -EOPNOTSUPP;
+>  
+>  	error = security_inode_file_getattr(dentry, fa);
+>  	if (error)
+> @@ -239,7 +239,7 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	int err;
+>  
+>  	if (!inode->i_op->fileattr_set)
+> -		return -ENOIOCTLCMD;
+> +		return -EOPNOTSUPP;
+>  
+>  	if (!inode_owner_or_capable(idmap, inode))
+>  		return -EPERM;
+> @@ -281,6 +281,8 @@ int ioctl_getflags(struct file *file, unsigned int __user *argp)
+>  	int err;
+>  
+>  	err = vfs_fileattr_get(file->f_path.dentry, &fa);
+> +	if (err == -EOPNOTSUPP)
+> +		err = -ENOIOCTLCMD;
+>  	if (!err)
+>  		err = put_user(fa.flags, argp);
+>  	return err;
+> @@ -302,6 +304,8 @@ int ioctl_setflags(struct file *file, unsigned int __user *argp)
+>  			fileattr_fill_flags(&fa, flags);
+>  			err = vfs_fileattr_set(idmap, dentry, &fa);
+>  			mnt_drop_write_file(file);
+> +			if (err == -EOPNOTSUPP)
+> +				err = -ENOIOCTLCMD;
+>  		}
+>  	}
+>  	return err;
+> @@ -314,6 +318,8 @@ int ioctl_fsgetxattr(struct file *file, void __user *argp)
+>  	int err;
+>  
+>  	err = vfs_fileattr_get(file->f_path.dentry, &fa);
+> +	if (err == -EOPNOTSUPP)
+> +		err = -ENOIOCTLCMD;
+>  	if (!err)
+>  		err = copy_fsxattr_to_user(&fa, argp);
+>  
+> @@ -334,6 +340,8 @@ int ioctl_fssetxattr(struct file *file, void __user *argp)
+>  		if (!err) {
+>  			err = vfs_fileattr_set(idmap, dentry, &fa);
+>  			mnt_drop_write_file(file);
+> +			if (err == -EOPNOTSUPP)
+> +				err = -ENOIOCTLCMD;
+>  		}
+>  	}
+>  	return err;
+> diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+> index 6f0e15f86c21..096d44712bb1 100644
+> --- a/fs/overlayfs/inode.c
+> +++ b/fs/overlayfs/inode.c
+> @@ -721,7 +721,7 @@ int ovl_real_fileattr_get(const struct path *realpath, struct fileattr *fa)
+>  		return err;
+>  
+>  	err = vfs_fileattr_get(realpath->dentry, fa);
+> -	if (err == -ENOIOCTLCMD)
+> +	if (err == -EOPNOTSUPP)
+>  		err = -ENOTTY;
+>  	return err;
+>  }
+> 
+> -- 
+> 2.47.2
+> 
+> 
+> -- 
+> - Andrey
 
-I don't pay a lot of attention to "roadmaps" - if the code is unused in
-the kernel, it should go. Once other codes goes upstream that needs it,
-it can get added back as a prep patch. Way too many times I've seen
-promises and roadmaps for things that never materialize, and then the
-code lingers for years before it's finally deleted.
-
-So I'd say kill it with fire, bring it back if/when needed.
+Ignore please, sorry, wrong in-reply-to
 
 -- 
-Jens Axboe
+- Andrey
+
