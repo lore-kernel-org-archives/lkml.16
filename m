@@ -1,216 +1,145 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED9D253335
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B47F33F7;
+	Mon, 12 May 2025 04:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747022192; cv=none; b=cgG4shnxpJx0qilvtmwoOVjBwG7wv+iLMTIKMhNhrh+8c3MyjM6qPl9UylDJcT7KcE+QQiTYw3SAxysNTAHtcl8aprNRo49J1HVca2SjjJJmCWGHqscWbGxsW7jMoqRdPHQugrZJqN32iP94MqCk0UQDkRGmvGTk0+T4aGryBo0=
+	t=1747022529; cv=none; b=NQ9KiRedZVKBeGs8WbRbV3ofzqj7seqZOs2vz6T3UinCYT2PuT0OhYh0p/DtdusvXDjtnEQyhc9xQHctfF/7qTJLK85xxfbBdfjB9Q+QmQVkrxPQbQdJf1mp3cNDLo9mQuY534/JfBoi6L4S5/K9AuVtWXsPDbwyJHDGNXpczII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747022192; c=relaxed/simple;
-	bh=0RKem1urBY7NYFGEXH4inqXZR4bo+YozOaH1bEt3BsM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ggzb0TN7W/aBRezoMM/MxPCXEHeZd9I+ozrQoG9BgkbYmNlcMuxCNy3NobVbSDPwOLA1izw89ecGgI8szx4H1vmaNsViGSnSAl78SvQOG6L4B+CV0RsyBn63HEZR3YQbjFBoWL2owSzmm2TRxm5hrEvCfsduZqLyUiMyMoteXNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d81bc9b763so70646345ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 20:56:30 -0700 (PDT)
+	s=arc-20240116; t=1747022529; c=relaxed/simple;
+	bh=exhwgALZtxyM8QIAfIGW2vu3ugfB8bk7RRdyn7oCExU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mJrrJUvKakbkp7qhtbipPDe2JTVJEFotma3dJbheOhmxryoF9daVR1kVTeEmB/F7AsaJf5TwXwW7crv2kcTexCYr0gCtj8NJ+LQ4uM9R3YB616E0icQzDpSN54qGTZiUn2WxS7EAD7rHAUUKtbkb9E8nAvuMepONJv9pS0NLNyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dfTQktpY; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfTQktpY"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e755cd8c333so3605952276.0;
+        Sun, 11 May 2025 21:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747022526; x=1747627326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IWMrZXfSdn2uBeEyMoDPcPf0v6LFe6cmBWApre0pkN8=;
+        b=dfTQktpY/1NeI/wDzDgpZuj3AtEARzMGsUOe7FpMRybD+SKHXKbBL+gdK4Jzql0nVj
+         0RDUJQ0cUfgQOELuYm7KPZ969Is8NTorfMOpwkE2kKs7Gm/5YWcHl1ZQDUpEXjMlHuXV
+         X6DIQFPK0EHBnTvyPpEdoODBXrxUZi1DlVceTYYndItg/M85dBUmzIqA5VA6xH3jopDK
+         bYk9Ar5gSCRYOtXu1p8WeTi1SsII0Z0Y+A0dyeKmMC7cCzxYIa3C5fX1BeKo/QSPsKIU
+         fhfMwbMRr+G1st0Jxk/sPWILwsuc5AmBUAwKNY0+S0F0f3tj4W+GJafl/h3WmygHiCJ2
+         Bjkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747022190; x=1747626990;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NV860LwlNmWdIlSKFfzsJHQhslmNi+R9+Xj59lYo/oo=;
-        b=LWxwOZMtvLjn+Wsiyht+Ll7CO5Ex5Y6K/y8OL4ELxPzUrjFnkp+/Wml1pIUTcGRAFL
-         arnb6QIOD2N3fX6VR7We7UpaA+K4pZtmM3JQDcOM7mY0Ad267kjTksc7GW9eaooTd3Cj
-         m1Z3jP2id1hHLsvMIm1WuEavTqT90C0vKiiWWolZT4L2kyuxVi/DrBML/nBrYeyY38Zk
-         V8jB04ioh1PfoSn9EXenqAzjfUzN7AbnwrfVjPQpfUmfv4Q7fCwa9bReJkdOlgmTApjh
-         120KcTM38pP+UfI3PV8lynGvghBVTOZb74Iy/u0w1ADccWMmsRJCRxzLyaUI1s68dAwG
-         dM5A==
-X-Forwarded-Encrypted: i=1; AJvYcCV1t5XQL0Rft7Mr1m7cctPc9JCRzOHMRdtOWcyFGvAI+bVzkkAgUoWesFvrEYtEtWBCLdtBtbMxKS4M8HU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKvDPHaMbyLIR8C5iq+C9TSZL2RT4emEJzjSMVv3qk9cfkXrUD
-	utY2QhjNbiXWhO8ulZMu5549gY0JGQJmmPpvp1C1m8y7IUT15JhxMCBOwE7VggFzf1xnrs64I2A
-	+i+Pv84rPYJFEC30Jg819Dlbbnred9bDEjBSjvU5UQ1PhYuQi9eqjoDQ=
-X-Google-Smtp-Source: AGHT+IHYBXgZUSOZq/Efikl9lNORbCSYoF1xd9RUs0nDlMA0xakDHDYSg8JO5IFhCu0em0htlRfz70TF0vhBJFZ/h+6lbP7LUv8A
+        d=1e100.net; s=20230601; t=1747022526; x=1747627326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IWMrZXfSdn2uBeEyMoDPcPf0v6LFe6cmBWApre0pkN8=;
+        b=U9p0vPp4ZXE5PU4a6tW7FB4FoNxqPZEROX4qK8eg8JDqT3eKrs52kWN0Qxfs4NahEh
+         6Fy5QeTA0/RQXSGxjhEvCXpTZ1oqAAh+LIiuEP/rzbWpqMrlPDUBPUKCxQcqYKf1ByzY
+         ARIsj1C8TYDX3UtY8/HgR6PRvjOpzBACT72TXFjTwnUUcO1h+IF3kO3YOB+7pRMK31EH
+         8iqO3f5oOA7rKZLrfopvbx4wvFsSsYO8xgfVpBp9k0THXmdH9fO5yzHmf2LddwZU1mHm
+         /20PFWb1VpvvUZEFHMHnKZK6LAK0dwu+Bs2Ewi7kiD9dNW75OOyW1YaHHjJ/PJEDdBCF
+         b9XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4Cb2BfqWGqjS7RmmEqXkYuZzLap+zq2z4pGoMrhm+OQRfRYaz96QJFMcCZWRtcraNt4+Z++EmHjQy2Nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTaFLrukcdoMYjCi7F136BLYjyZZ70EKQ12H3+/cHeEFmc7pAS
+	fyJQlcXHVnP5sJDCEIvueLa0ZwpzNgYlwqIC+dqMXE+Rne3xDZwiTf4XhjVzQW4uZUmY3F3WKgA
+	Ki0KuwyqWjqJlXEtRu/hsHkshJD8=
+X-Gm-Gg: ASbGncuj9ApX6ef74SXc0lnhbvQITmQa3zP+5bXOOBmEz/axVijbkGgEByQuYwT5+wM
+	GG9SeJzOvbTUQNJDNgZstJbV79YCcx4EOh2WQqUp6wa7yOQcLsfbrweKVVPS0dLrATTJ4LKNMmh
+	fiDOU6j2DQmQwBRwkKuzJ5TqvQLG8D6g==
+X-Google-Smtp-Source: AGHT+IEx6eZMsfd7agP12p1naORA8r/QacvbgUsoZx1ZTVz2eppHlVNzgrIetKQa2be6eLk70TVjk2QNkDo6pNalQx0=
+X-Received: by 2002:a05:6902:2846:b0:e72:f374:49b0 with SMTP id
+ 3f1490d57ef6-e78fdd4561emr13262362276.42.1747022526416; Sun, 11 May 2025
+ 21:02:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1648:b0:3d0:10a6:99aa with SMTP id
- e9e14a558f8ab-3da7e1dcc61mr123319415ab.4.1747022190053; Sun, 11 May 2025
- 20:56:30 -0700 (PDT)
-Date: Sun, 11 May 2025 20:56:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6821716e.050a0220.f2294.004a.GAE@google.com>
-Subject: [syzbot] [bpf?] [trace?] WARNING in get_bpf_raw_tp_regs
-From: syzbot <syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
+From: cen zhang <zzzccc427@gmail.com>
+Date: Mon, 12 May 2025 12:01:54 +0800
+X-Gm-Features: AX0GCFu19OOe3fMpa44v2yI4Q5vMgB10vbQkkL0POYpY28RLJXMip0MDthIQamc
+Message-ID: <CAFRLqsWw_6XYE5K+31UBV+DOUht1MG+6v=P587DP-Su3z8t3Rg@mail.gmail.com>
+Subject: [BUG] Data race between xfs_file_release and xfs_bmap_del_extent_delay
+ about i_delayed_blks
+To: cem@kernel.org
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	baijiaju1990@gmail.com, zhenghaoran154@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello maintainers,
 
-syzbot found the following issue on:
+I would like to report a data race bug detected in
+the Btrfs filesystem on Linux kernel 6.14-rc4.
+The issue was discovered by our tools,
+which identified unsynchronized concurrent accesses to
+`ip->i_delayed_blks`.
 
-HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15010768580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b39cb28b0a399ed3
-dashboard link: https://syzkaller.appspot.com/bug?extid=45b0c89a0fc7ae8dbadc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b28670580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159698f4580000
+Kernel panic: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+VarName 17363501701721901078, BlockLineNumber 20, IrLineNumber 2, is write =
+0
+Function: watchpoints_monitor+0x1340/0x17c0 kernel/kccwf/wp_checker.c:73
+Function: kccwf_rec_mem_access+0x7ec/0xab0 kernel/kccwf/core.c:359
+Function: xfs_file_release+0x39e/0x910 fs/xfs/xfs_file.c:1325
+Function: __fput+0x40b/0x970
+Function: task_work_run+0x1ce/0x260
+Function: do_exit+0x88c/0x2520
+Function: do_group_exit+0x1d4/0x290
+Function: get_signal+0xf7e/0x1060
+Function: arch_do_signal_or_restart+0x44/0x600
+Function: syscall_exit_to_user_mode+0x62/0x110
+Function: do_syscall_64+0xd6/0x1a0
+Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Function: 0x0
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DOTHER_INFO=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+VarName 16100634012471765034, BlockLineNumber 44, IrLineNumber 6,
+watchpoint index 22144
+Function: set_report_info+0xa6/0x1f0 kernel/kccwf/report.c:49
+Function: watchpoints_monitor+0x7e8/0x17c0 kernel/kccwf/wp_checker.c:100
+Function: kccwf_rec_mem_access+0x7ec/0xab0 kernel/kccwf/core.c:359
+Function: xfs_bmap_del_extent_delay+0x91a/0x1cf0 fs/xfs/libxfs/xfs_bmap.c:4=
+981
+Function: __xfs_bunmapi+0x2c50/0x54f0 fs/xfs/libxfs/xfs_bmap.c:5673
+Function: xfs_bunmapi_range+0x170/0x2c0 fs/xfs/libxfs/xfs_bmap.c:6437
+Function: xfs_itruncate_extents_flags+0x50a/0x1070 fs/xfs/xfs_inode.c:1066
+Function: xfs_itruncate_extents fs/xfs/xfs_inode.h:603 [inline]
+Function: xfs_setattr_size+0xd78/0x1c80 fs/xfs/xfs_iops.c:1003
+Function: xfs_vn_setattr_size+0x321/0x590 fs/xfs/xfs_iops.c:1054
+Function: xfs_vn_setattr+0x2f4/0x910 fs/xfs/xfs_iops.c:1079
+Function: notify_change+0x9f9/0xca0
+Function: do_truncate+0x18d/0x220
+Function: path_openat+0x2741/0x2db0
+Function: do_filp_open+0x230/0x440
+Function: do_sys_openat2+0xab/0x110
+Function: __x64_sys_creat+0xd7/0x100
+Function: do_syscall_64+0xc9/0x1a0
+Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-707df337.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f71d162685b9/vmlinux-707df337.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/940cb473e515/bzImage-707df337.xz
+The code locations involved in the data race are:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
+Write (fs/xfs/xfs_bmap.c):
+xfs_bmap_del_extent_delay  {
+=E2=80=A6=E2=80=A6
+    xfs_quota_unreserve_blkres(ip, del->br_blockcount);
+    ip->i_delayed_blks -=3D del->br_blockcount;
+=E2=80=A6=E2=80=A6
+}
 
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 5971 at kernel/trace/bpf_trace.c:1861 get_bpf_raw_tp_regs+0xa4/0x100 kernel/trace/bpf_trace.c:1861
-Modules linked in:
-CPU: 3 UID: 0 PID: 5971 Comm: syz-executor205 Not tainted 6.15.0-rc5-syzkaller-00038-g707df3375124 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:get_bpf_raw_tp_regs+0xa4/0x100 kernel/trace/bpf_trace.c:1861
-Code: 48 83 fb 03 77 64 48 8d 04 9b 48 8d 04 83 48 8d 5c c5 00 e8 7e 76 f4 ff 48 89 d8 5b 5d 41 5c c3 cc cc cc cc e8 6d 76 f4 ff 90 <0f> 0b 90 65 ff 0d b2 5b de 11 e8 5d 76 f4 ff 48 c7 c3 f0 ff ff ff
-RSP: 0018:ffffc90003636fa8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: ffffffff81c6bc4c
-RDX: ffff888032efc880 RSI: ffffffff81c6bc83 RDI: 0000000000000005
-RBP: ffff88806a730860 R08: 0000000000000005 R09: 0000000000000003
-R10: 0000000000000004 R11: 0000000000000000 R12: 0000000000000004
-R13: 0000000000000001 R14: ffffc90003637008 R15: 0000000000000900
-FS:  0000000000000000(0000) GS:ffff8880d6cdf000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7baee09130 CR3: 0000000029f5a000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1934 [inline]
- bpf_get_stack_raw_tp+0x24/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
- stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
- __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
- ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
- bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
- bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
- stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
- __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
- ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
- bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
- bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
- stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
- __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
- ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
- bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
- bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_lock include/linux/mmap_lock.h:185 [inline]
- exit_mm kernel/exit.c:565 [inline]
- do_exit+0xf72/0x2c30 kernel/exit.c:940
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
- __do_sys_exit_group kernel/exit.c:1113 [inline]
- __se_sys_exit_group kernel/exit.c:1111 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
- x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f7baed8cfb9
-Code: 90 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00 f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00
-RSP: 002b:00007ffd9d933998 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f7baed8cfb9
-RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
-RBP: 00007f7baee082b0 R08: ffffffffffffffb8 R09: 0000000000000000
-R10: 0000000000000012 R11: 0000000000000246 R12: 00007f7baee082b0
-R13: 0000000000000000 R14: 00007f7baee08d20 R15: 00007f7baed5e160
- </TASK>
+Reader (fs/xfs/xfs_file.c):
+xfs_file_release  {
+=E2=80=A6=E2=80=A6
+        xfs_iflags_clear(ip, XFS_EOFBLOCKS_RELEASED);
+        if (ip->i_delayed_blks > 0)
+            filemap_flush(inode->i_mapping);
+=E2=80=A6=E2=80=A6
+}
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+I=E2=80=99ve verified that this issue still exists in the latest source tre=
+e
+in xfs_file.c:1552 and xfs_bmap.c:4702
