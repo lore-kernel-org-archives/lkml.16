@@ -1,154 +1,84 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E4229826B;
-	Mon, 12 May 2025 18:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB7E245022;
+	Mon, 12 May 2025 18:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747074245; cv=none; b=swOo+pR2AOa2N4ul32v0qlP6Yj/hw2QiqwoGTD11Ma2WV1Wvzb+KDUICnbwSEKtIIH6Dz1dUvrr3dgLdW5SCcaNiJUXWReXomYIK1mRgfNIcHhCDu4ChaIz98uWLEGIRedXcAEun0efcy90xXkEqSclLw7zKO+IVbfe+IHSJmMU=
+	t=1747074372; cv=none; b=nqbqYBbLdNXqy2oMt/AGuKjn1SKDxIRbJpwxHHB88GPbjfuYQvPXNS8vgH6j+Q05pCTkTGlU9ukcdNTPuyPhvwRu79jJJHNOV5a2E9q3Oi3W8A7J2Nt9/hkIwXnI0VZLq9WZGiI6s3yS0+qoGs6nj7bEIHYpm3dZQex2+ofIpi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747074245; c=relaxed/simple;
-	bh=eusjnOGb/ZY2HpGbND1nJZHAe/yvuvFGJ5uuZR3tQYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fC6gjQeHUjhBrcXehQ8mL5K5nYG2AOFW8tiky7MyqpWdaEUfpDmz4HGhw2CNDavY1TUEdjC0a5NvOMLKKBSoWaoZaT8h8PsN2Qars3jVELsVyt1dVIusjoCzobZBqRVHHT+yxuyFUhV+d1gWMgLUP8Tq9tOmpNAYUDOfN4M6L/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cI2gGvZz; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747074372; c=relaxed/simple;
+	bh=6Q2jz1G+bUKQsb4zfDpMbTExI9ep4BLneYtxWvwjmGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dWIgoj+LtgXlys+78bwovQQmLhiZ7k9uq1mEv5Z7kD3UwGrsOxnNkKGeVf0fkeIwIYGBpUFrmypi+MaL5bpGlcYjUZZ462ywgkXnJZfO9uPaiRVFMzNy5U1ZQhtcJD4FWUYmfDTywVqU99zi9jEqfF6AdD/ux1dJ61f/rHrN5Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ia5WLQRL; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI2gGvZz"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so35480975e9.1;
-        Mon, 12 May 2025 11:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747074242; x=1747679042; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IBldqOJbxPyk01FO14zb5LuQItiiBv1hPLg4G6aZDqY=;
-        b=cI2gGvZzJDVkRGCLzthW+AfZaLcbQ9SPyHfKRUUqYuHzD2I2IMcQNKZcWjqzJ7qFco
-         evVkb5CKAuMxoK8xm+83rtP4YZq/niTaE8XiIyBgQaRtruLeXRSMzJIPEejpNdL5WBxB
-         xLEo9K3UePEW5EOVkk9Uk2VBMzIgSFw2VsRQKc0i+JS7s0T94ddQgnVNQ78gSMCxlg8U
-         XoK+RVkWL9Y66FtG8zYImNjTnTcDlUeMU/6826VC4Ndd3HWPb3U05WutefUObm7ReTlb
-         Ed0ReW/eetsMq/7A2FyZyeDz+3FsBO33kFNRFpz2/31smpMh7MELx7ZSuQlCRC6+Y1oB
-         f1ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747074242; x=1747679042;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IBldqOJbxPyk01FO14zb5LuQItiiBv1hPLg4G6aZDqY=;
-        b=BPvUwUZV+RLHCBl8nBwVXt6wL38RzcIPOY2e/xHdYGUJjJycpyYtS4IOWGv5PkteEo
-         TmkGoVl8hSQ67jQQTrTiED4xxisnc73wkb5/G7hqmrcnlWdq3vrerA0TN7/vmxQAYEc+
-         i7mhYbjgx6OJkvyFs/aydpbJyp4BEBP/PzWSXwSbM0zlwtfcY+EvoZ/kt0CQZXYNRFW5
-         HHsyf+v/hgNyJO9lYkUz7cTRxLE6Vexz6ouyAkD23UZw1vXCgsFHiXU7g4O1ll4cXfxN
-         eTBeQwTCGQvbQab32CSdSopBmzQF0hPkG4h7h4+JYX9JjyYjV30HuOav0tBN1p8eXP8o
-         CvXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcE5xouJuePVVXkPqHDRC0ycu4V/0NSEMouqMvDbvWDMB2hq2pBxiysbC177yWVkRagAWiGpPVQRuT@vger.kernel.org, AJvYcCX2bmVUje5PpU9GHnleUTm4fRHBHvneFZ+dSlQFHP83HkcSkhHS8tcigzUWviqqtyqKfP/Jb9VbUNUKHewz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUtM3Dg3AibgWySmuueOeKa9O0khb+zur2hFyaEkdX7XpyjqMO
-	EUnJrk7oZVyVGCCDDf0JQIOQyFvPOyFhJ2pnjSpTlha3yIo0l7fi
-X-Gm-Gg: ASbGncs37GolmDYj1vtqJE1aea3/P+j/z/Xnzf9DaI7PIT+xXW0EZ8WvTHfgPZIubBC
-	n5sk91KagK5+3ce7zwKjCfiInkcm/3NxTrUjSzU0uo9JTWtGSrf6RuDMgW8LnCOb0BMF1B+SX1W
-	03I7kU2iLKo6SzM8gXeRg2TKA/xJukv7LwslE2Fa/0XUlj6XX9Zh55YFTJmX38zOZf54SjxBWSD
-	cLc1jN530YMx0nNqu1p14kNMuSdtEm7Hp86C4DED7uNN/Bwsx6TkcFNhrg9aB+NA6VrcTHUUThx
-	xIP1UWU/oFYPVO5eDs9emLX/PKK9VX52sYEEZ6DlAHp5T/3CmAWQk1spJyQUi/E02j+nsl+QzG+
-	f
-X-Google-Smtp-Source: AGHT+IGqeZRKNxhHRaoSDKnh7ZHow4KAV/QyIpjtHrUPVuyzvNsX0/u3WONT1r4ZQ2DR3fjmEAYQUA==
-X-Received: by 2002:a5d:4c4a:0:b0:3a1:fa6c:4736 with SMTP id ffacd0b85a97d-3a1fa6c494emr9331963f8f.57.1747074241993;
-        Mon, 12 May 2025 11:24:01 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:581b:951a:bc46:a124])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5f6sm13175497f8f.86.2025.05.12.11.24.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 11:24:01 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Biju Das <biju.das.jz@bp.renesas.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v5 12/12] drm: renesas: rz-du: mipi_dsi: Add support for LPCLK clock handling
-Date: Mon, 12 May 2025 19:23:30 +0100
-Message-ID: <20250512182330.238259-13-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ia5WLQRL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EXLzzby17OeuImZpl0bn8vKeJixwwGVwH6DpLX/u2w8=; b=ia5WLQRLlkGcUXx76Ce9kHz5C7
+	QBr15oHXn5J/+Z8KXVnNCHhaLafwmPZWLxE/n0KJ2c0LRePodPA7S/Sb/uYU+sAlOlqcmC3JyYJqJ
+	tKft6FbTuqZjJLtfu+k/f3h9li1b8JfvlUdne8dg94G7sZlQ3Ad1kf/QnJ5Dot5fitPAv34lln4Ah
+	Rkx8T/z9JyCzFewvg3zHC3LbKcMnRbRorRvgAMeRsuT1PbO3jYWJibaM5+e9a03VwLcIi8iVc16xP
+	XrUqduRgYDDRVcsNJMkdu3wXk0x5a5HgyVfHB2pJMcJ5eIfN1OshIFvrDeOP6WUGN6ITSNWJiBrGW
+	gOdrQMtQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEXqh-0000000A8Kq-3urV;
+	Mon, 12 May 2025 18:26:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 82F05300717; Mon, 12 May 2025 20:25:59 +0200 (CEST)
+Date: Mon, 12 May 2025 20:25:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
+ conditional locking
+Message-ID: <20250512182559.GB25891@noisy.programming.kicks-ass.net>
+References: <20250507072145.3614298-1-dan.j.williams@intel.com>
+ <20250507072145.3614298-2-dan.j.williams@intel.com>
+ <20250507093224.GD4439@noisy.programming.kicks-ass.net>
+ <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250508110043.GG4439@noisy.programming.kicks-ass.net>
+ <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250509104028.GL4439@noisy.programming.kicks-ass.net>
+ <681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
+ <20250512105026.GP4439@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512105026.GP4439@noisy.programming.kicks-ass.net>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, May 12, 2025 at 12:50:26PM +0200, Peter Zijlstra wrote:
 
-Add LPCLK clock support in the RZ/G2L MIPI DSI driver via the optional
-clock API. This clock is required by some SoCs like RZ/V2H(P) for proper
-DPHY configuration, whereas it is absent on others like RZ/G2L.
+> +#define __GUARD_ERR(_ptr) \
+> +	({ long _rc = (__force unsigned long)(_ptr); \
+> +	   if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
+> +	   _rc; })
+> +
 
-Introduce a new `lpclk` field in the `rzg2l_mipi_dsi` structure and
-conditionally acquire the "lpclk" clock using `devm_clk_get_optional()`
-during probe. This allows LPCLK-aware SoCs to pass the clock via device
-tree without impacting existing platforms.
+>  #define DEFINE_GUARD(_name, _type, _lock, _unlock) \
+> -	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
+> +	DEFINE_CLASS(_name, _type, if (!__GUARD_ERR(_T)) { _unlock; }, ({ _lock; _T; }), _type _T); \
+>  	DEFINE_CLASS_IS_GUARD(_name)
 
-Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v4->v5:
-- Made use of devm_clk_get_optional() for lpclk
-- Added Reviewed tag from Biju
-
-v3->v4
-- No changes
-
-v2->v3:
-- No changes
-
-v1->v2:
-- Added LPCLK as feature flag
----
- drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-index 35f0bceac055..98d2f30ae79d 100644
---- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-+++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-@@ -62,6 +62,7 @@ struct rzg2l_mipi_dsi {
- 	struct drm_bridge *next_bridge;
- 
- 	struct clk *vclk;
-+	struct clk *lpclk;
- 
- 	enum mipi_dsi_pixel_format format;
- 	unsigned int num_data_lanes;
-@@ -790,6 +791,10 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
- 	if (IS_ERR(dsi->vclk))
- 		return PTR_ERR(dsi->vclk);
- 
-+	dsi->lpclk = devm_clk_get_optional(dsi->dev, "lpclk");
-+	if (IS_ERR(dsi->lpclk))
-+		return PTR_ERR(dsi->lpclk);
-+
- 	dsi->rstc = devm_reset_control_get_optional_exclusive(dsi->dev, "rst");
- 	if (IS_ERR(dsi->rstc))
- 		return dev_err_probe(dsi->dev, PTR_ERR(dsi->rstc),
--- 
-2.49.0
-
+GCC is 'stupid' and this generates atrocious code. I'll play with it.
