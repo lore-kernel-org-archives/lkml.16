@@ -1,84 +1,109 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DC525522D
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE12255F42;
+	Mon, 12 May 2025 06:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747031663; cv=none; b=amK7MTcwK6n4PClmsayC6vMq21zwxUzaSKs3DC2CyIMREecBd6UwLrd32LhwsL9HkDvg2l5cKvGe0AGH6Tch07skAYHKNwtFxLb36540pj4tfR7JjePEwS0jmpljRLanRWSYH1sOajR3BCWbFOE37vVHIHQJCa70Tg7v1NwHwf0=
+	t=1747031664; cv=none; b=KGbCjoNzjWwhE+3qkhAgDHKz1hqrd2GZoIoHKxo/gGrcwW/Tfj8Kr/3eAP1pBVDgNDqAfOFev4Nzz8TWOa9YEQQM1DiAOG89W2AbIW5qNJZ9ul3t3UPoKByCwPT6PjMlmxyAuFd5MCZngix/5e9eLpgaEG32QCzrHUUzpRONS6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747031663; c=relaxed/simple;
-	bh=4hTnCJZKbc6IzowhXTEn7o+qQ+7Igw0KCzxnMJkeNsE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PPB733H4xRr3IGh3G61dp/xKJgCX5IKzJ4fYhCGBYvhnHaREchCDSR1hd3JSbfgqRYC3TyvjZUkbHr+pCGCQietDBaPh0Dca0MxekNgAmXhW88Gpgp8aKnUgr/Vo0IBLEoIwCAk9NT7jIwavHh2c1Or10M63YzPAzoiPrNZn/kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86465e3f1c6so488839439f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 23:34:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747031661; x=1747636461;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aY4YPekFezEFOenoNv7QvnHL9ecGgH1YuNNn9+bqEQM=;
-        b=c+/eX5uAdw9rnM52hekiHfxg5z7x0LigB533RSZRw6N/41qd/kdJw78kAmDDmgHxVb
-         2KL78bRn6wwkVoaDpqs+H/H0LgNsWa0wc8Eh6c0+6eejYSAiVcz/MJqCQu98sSPmplxK
-         Q/jL67NSP6KkXqipB2bkMonMf1OeAd3GqIQAM0cXzmeFLd+Fsh1bLdJBRkO5TlTs7AZ2
-         T7nkqFQElziFYSgGhDMq/ZMIZgpl17eVNRV8um2IzBg12N1FUf30NXmRp4NSIHc/GyIF
-         0Z+zEwL3e2yxY3tQYezyljHZ1qnpaCsr2BJIj9yN/lXV0NttUbThJeHEy7wvQfEthJ0D
-         pI9w==
-X-Forwarded-Encrypted: i=1; AJvYcCV4gFkqJNiX0L0bgh59dQnoo84diiS6/O1I5FAmwhBDy6skwQJNv+iAwLvwBv9JK7SEDr2FmJzLcV/xKk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRx/cMDS2+8Lcr4uznx2bEbANzzAHSgdB+5Gd0dmfP1UALW298
-	UU+7mLKmKepLqC70GpcmRdlcCzng3xVM8PMkyPZgkCLrRfyvLndDhS0uwOsMpyMahIdPFk3TDtg
-	obkCPpl31xDR9c6eUBpamqeyP/t/u0AU9t6WjyFAko3r+GGnn7a9PDyc=
-X-Google-Smtp-Source: AGHT+IE/gq9tU8dDX0ASPqGXpdsRLrai6u1l1DaPlmIX4+KOGGG7M7zAz8Nc88V/zx5bwevHNOlj5Q/7zqSuQmQo1RVVNZ6/iRgI
+	s=arc-20240116; t=1747031664; c=relaxed/simple;
+	bh=84JCFKh7alnv7LYtJsUdYBxSyvpfdgMCZTfdLCREGq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KFc0JBaZlil4WSBf6ezZB/rSjA/g52mDIbuR8oxGuxSRGYOW/b6Goxoz4+yaJ/s4uglq6vrPC2pyX8nCOYR5CPydZoGeY1RFsDFecO2S0xGdYuzIthVB6tdxlSw3UP6AkDAEIynrpwzmQMy11ZeKmP4MwE11DE9lR0xgWgybFbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9ybiF8B; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9ybiF8B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278C7C4CEE9;
+	Mon, 12 May 2025 06:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747031662;
+	bh=84JCFKh7alnv7LYtJsUdYBxSyvpfdgMCZTfdLCREGq0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h9ybiF8B8XxT5TXMebdlAAYh6h8Km5VxbH9kWdMl4crdEJHl0OFEkBM84Ebm3QSsO
+	 DxzTw3TY7UeNpiR1xph2Y5AnQIkqgeb3mitwtjsJlXjKxQKQ7dfDU/13vIVY2e1vmY
+	 Z2QxbriII2wQ0jlQ9VWCxPbgOlnFzmzHrjKN2Goaas0YYvyol/fUEV1DDdX2GY7x6t
+	 fHvJMJVKhq3xM0gkuFjwg1jE1QVLkxVYtN3P5m+JEOsQR7YmSgGvajooky+4im5iAq
+	 Jyu/voOuzbW/2l5RASbAjLunAw4z3WMz2jMTmD4dVijuB3SNpYBwcCnUBbbi0K5Bio
+	 NinCDHyamMFKA==
+Message-ID: <2006c4aa-7d4e-48de-9c27-46ddb359ac48@kernel.org>
+Date: Mon, 12 May 2025 08:34:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3fca:b0:867:16f4:5254 with SMTP id
- ca18e2360f4ac-8676445406dmr1255531439f.6.1747031661405; Sun, 11 May 2025
- 23:34:21 -0700 (PDT)
-Date: Sun, 11 May 2025 23:34:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6821966d.050a0220.f2294.0051.GAE@google.com>
-Subject: [syzbot] Monthly fbdev report (May 2025)
-From: syzbot <syzbot+listee2134ca234fc0c46f91@syzkaller.appspotmail.com>
-To: deller@gmx.de, dri-devel@lists.freedesktop.org, 
-	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: duplicate patch in the dt-krzk tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250512145955.617fd207@canb.auug.org.au>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250512145955.617fd207@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello fbdev maintainers/developers,
+On 12/05/2025 06:59, Stephen Rothwell wrote:
+> Hi all,
+> 
+> The following commit is also in the arm-soc tree as a different commit
+> (but the same patch):
+> 
+>   b112d9ffaa65 ("ARM: dts: vt8500: use correct ohci/ehci node names")
+> 
+> This is commit
+> 
+>   7dc891191e64 ("ARM: dts: vt8500: use correct ohci/ehci node names")
 
-This is a 31-day syzbot report for the fbdev subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/fbdev
+I will drop mine, but I am surprised that this patch appeared in
+arm-soc. soc@ was not Cced on the patchset.
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 6 issues are still open and 25 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 1393    Yes   KASAN: vmalloc-out-of-bounds Write in imageblit (4)
-                  https://syzkaller.appspot.com/bug?extid=c4b7aa0513823e2ea880
-<2> 123     Yes   KASAN: slab-out-of-bounds Read in fbcon_prepare_logo
-                  https://syzkaller.appspot.com/bug?extid=0c815b25cdb3678e7083
-<3> 18      Yes   KASAN: global-out-of-bounds Read in bit_putcs (3)
-                  https://syzkaller.appspot.com/bug?extid=793cf822d213be1a74f2
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+Best regards,
+Krzysztof
