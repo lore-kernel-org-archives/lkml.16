@@ -1,108 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5145E1CAA66;
-	Mon, 12 May 2025 14:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAF631DF72C;
+	Mon, 12 May 2025 14:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058678; cv=none; b=NL7SmR0LFqWKD48SvDp9xJzBX/NBvIJ8gg/wvjnfq06zRWb3LU5fl6oiNu+76q87gJQNBejpaIRBp8xuIZ8HiKQIrhY+WyLIqEPQkJBQ0d6uaqu0soYOs3MafYOzSg5pFRX/rbwV+kVL6ZRUPfov3TFA0nOG/gq3G0Ra3n3Qk2w=
+	t=1747058680; cv=none; b=Tdr+pWX4Ft0rF44F49ZRdsxLcXyd+vW2quJ8qnHbuRSs6Tnz/gz3TcUBdeJEmw8mD+iybhOYxriveYsiD6ucXAwAe7Smg0GIHFkLqr8zQZ8ATMk+7K/jdOnrnuPh5XW4liawpKwNrFKEOjM1VzjZiDXJxhwL7TabJvPzAkINJlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058678; c=relaxed/simple;
-	bh=Uxj2PW0O1TTD2KNrrstcMRJzLo8Fs8+ZxH7LL/WrTU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=evWeN40rKNqh6CLIlJ8IYR3KpeRxzt0FToQ0uoIBHFdAoFmPc7L6I3KeZ/beb82j6azJDqIKuAZTo12SXd4g3N59h3a4BrnuL5lg4JCfNN9oyUQKaLeJxNg/FEjrFwwZ4wqJi05/+WP/g6ZPiZfmrIpggmt8CRMie29AdUUbuDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NbsaixxG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747058680; c=relaxed/simple;
+	bh=NI+SAgGRP2h+D/Hrzl6N9NDpENQvxz2VHaSHfMPrZFA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nTpbs+MrVwxF/+3t6loG/JitUexJtCGGZfIvPDvvgBRw7WIY1MhDg3Q6oKWUmqooU2Pu3ji9sJ1bIJ9F4K1eMHoguLGc2jr5LAVG2qE8cOJe2+6JISk6rcUWyB+V2w1uKKzKkx8nJ80E+3KD4MQ5yOtqh7M9LNt7KnMMFLeTU9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lE5pbyLD; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NbsaixxG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B72C4CEE7;
-	Mon, 12 May 2025 14:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747058677;
-	bh=Uxj2PW0O1TTD2KNrrstcMRJzLo8Fs8+ZxH7LL/WrTU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NbsaixxGigbnMLwffUpPJft3VjusVHvpIiUY16PpVh0brPxzKLEHfbx3X/2MeKl+U
-	 YSO3sjBY4IqaMZKPBafnJ9Dph62gu/0wXgM4Xkj2jWIQ1roQTweG+bAike6vc7C01D
-	 2HWSwUyrgLNH7YmtTgkxCeqDp9E16VLdkiMeCf1g=
-Date: Mon, 12 May 2025 16:04:34 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.1 00/97] 6.1.138-rc2 review
-Message-ID: <2025051219-cubicle-battalion-8dfb@gregkh>
-References: <20250508112609.711621924@linuxfoundation.org>
- <aB6uurX99AZWM9I1@finisterre.sirena.org.uk>
- <aB_-WZgMn02vgjrN@finisterre.sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lE5pbyLD"
+Received: from DESKTOP-RSFL4TU.corp.microsoft.com (unknown [167.220.238.139])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1F186211D8D1;
+	Mon, 12 May 2025 07:04:34 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1F186211D8D1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747058678;
+	bh=Ae2T/qTf75NVPbtzWkNGMvWzJ6fqDy6p9tR5bc3aNAQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lE5pbyLDYQuRBs6HWNPvl+axF3+5pExI8e+2aT3XgDysvvBv9nYX36kF4/X8tB1IR
+	 VX49Bk8Ws/YmaJ/0l82/e8MKaPMgqqa1wRS4Pd3quBBiWCgOg8phOEGRegN72v7rvU
+	 XwqfCIG0TvxfPHr0iy9Cp/uKCMbXMrbHZlRvyPOE=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Cc: Roman Kisel <romank@linux.microsoft.com>,
+	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH v2 0/2] Drivers: hv: Introduce new driver - mshv_vtl
+Date: Mon, 12 May 2025 19:34:30 +0530
+Message-Id: <20250512140432.2387503-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aB_-WZgMn02vgjrN@finisterre.sirena.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 11, 2025 at 10:33:13AM +0900, Mark Brown wrote:
-> On Sat, May 10, 2025 at 10:41:17AM +0900, Mark Brown wrote:
-> > On Thu, May 08, 2025 at 01:30:23PM +0200, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 6.1.138 release.
-> > > There are 97 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > 
-> > This breaks NFS boot on Rasperry Pi 3B - it's the previously reported
-> > issue with there apparently being no packets coming in that was seen on
-> > some of the more recent stables (not finding the mails immediately).
-> > Bisects didn't kick off automatically but I suspect it's:
-> > 
-> >    net: phy: microchip: force IRQ polling mode for lan88xx
-> > 
-> > This also seems to apply to v5.15.
-> 
-> The bisect completed, confirmed it's the above commit (though apparently
-> it was already broken so something's screwy with my automation here...):
-> 
-> # bad: [02b72ccb5f9df707a763d9f7163d7918d3aff0b7] Linux 6.1.138
-> # good: [535ec20c50273d81b2cc7985fed2108dee0e65d7] Linux 6.1.135
-> # good: [ac7079a42ea58e77123b55f5e15f1b2679f799aa] Linux 6.1.137
-> # good: [b6736e03756f42186840724eb38cb412dfb547be] Linux 6.1.136
-> git bisect start '02b72ccb5f9df707a763d9f7163d7918d3aff0b7' '535ec20c50273d81b2cc7985fed2108dee0e65d7' 'ac7079a42ea58e77123b55f5e15f1b2679f799aa' 'b6736e03756f42186840724eb38cb412dfb547be'
-> # test job: [ac7079a42ea58e77123b55f5e15f1b2679f799aa] https://lava.sirena.org.uk/scheduler/job/1356125
-> # test job: [b6736e03756f42186840724eb38cb412dfb547be] https://lava.sirena.org.uk/scheduler/job/1349213
-> # test job: [02b72ccb5f9df707a763d9f7163d7918d3aff0b7] https://lava.sirena.org.uk/scheduler/job/1375898
-> # bad: [02b72ccb5f9df707a763d9f7163d7918d3aff0b7] Linux 6.1.138
-> git bisect bad 02b72ccb5f9df707a763d9f7163d7918d3aff0b7
-> # test job: [94107259f972d2fd896dbbcaa176b3b2451ff9e5] https://lava.sirena.org.uk/scheduler/job/1379135
-> # good: [94107259f972d2fd896dbbcaa176b3b2451ff9e5] net: ethernet: mtk-star-emac: fix spinlock recursion issues on rx/tx poll
-> git bisect good 94107259f972d2fd896dbbcaa176b3b2451ff9e5
-> # test job: [8dcd4981166aedda08410a329938b11a497c7d5d] https://lava.sirena.org.uk/scheduler/job/1379203
-> # good: [8dcd4981166aedda08410a329938b11a497c7d5d] md: move initialization and destruction of 'io_acct_set' to md.c
-> git bisect good 8dcd4981166aedda08410a329938b11a497c7d5d
-> # test job: [36d4ce271b97d7d23a67e690b79e04ea853325b1] https://lava.sirena.org.uk/scheduler/job/1379282
-> # bad: [36d4ce271b97d7d23a67e690b79e04ea853325b1] Revert "drm/meson: vclk: fix calculation of 59.94 fractional rates"
-> git bisect bad 36d4ce271b97d7d23a67e690b79e04ea853325b1
-> # test job: [be9e23028113446add10a9b66cf8f15c66a6257f] https://lava.sirena.org.uk/scheduler/job/1379397
-> # good: [be9e23028113446add10a9b66cf8f15c66a6257f] sch_ets: make est_qlen_notify() idempotent
-> git bisect good be9e23028113446add10a9b66cf8f15c66a6257f
-> # test job: [88d7fd2d4623b2cb13d056e1bde1861e4dec2408] https://lava.sirena.org.uk/scheduler/job/1379447
-> # good: [88d7fd2d4623b2cb13d056e1bde1861e4dec2408] firmware: arm_ffa: Skip Rx buffer ownership release if not acquired
-> git bisect good 88d7fd2d4623b2cb13d056e1bde1861e4dec2408
-> # test job: [9b89102fbb8fc5393e2a0f981aafdb3cf43591ee] https://lava.sirena.org.uk/scheduler/job/1379515
-> # bad: [9b89102fbb8fc5393e2a0f981aafdb3cf43591ee] net: phy: microchip: force IRQ polling mode for lan88xx
-> git bisect bad 9b89102fbb8fc5393e2a0f981aafdb3cf43591ee
-> # test job: [72a797facb50aeef98a9d56b6b49674dbf53f692] https://lava.sirena.org.uk/scheduler/job/1379549
-> # good: [72a797facb50aeef98a9d56b6b49674dbf53f692] ARM: dts: opos6ul: add ksz8081 phy properties
-> git bisect good 72a797facb50aeef98a9d56b6b49674dbf53f692
-> # first bad commit: [9b89102fbb8fc5393e2a0f981aafdb3cf43591ee] net: phy: microchip: force IRQ polling mode for lan88xx
-> 
+Introduce a new mshv_vtl driver to provide an interface for Virtual
+Machine Monitor like OpenVMM and its use as OpenHCL paravisor to
+control VTL0 (Virtual trust Level).
+Expose devices and support IOCTLs for features like VTL creation,
+VTL0 memory management, context switch, making hypercalls,
+mapping VTL0 address space to VTL2 userspace, getting new VMBus
+messages and channel events in VTL2 etc.
 
-Thank you for the bisection, I'll go revert this from the 6.1.y and
-5.15.y branches.
+OpenVMM : https://openvmm.dev/guide/
 
-greg k-h
+Changes since v1:
+https://lore.kernel.org/all/20250506084937.624680-1-namjain@linux.microsoft.com/
+Addressed Saurabh's comments:
+* Split the patch in 2 to keep export symbols separate
+* Make MSHV_VTL module tristate and fixed compilation warning that would come when HYPERV is compiled as a module.
+* Remove the use of ref_count
+* Split functionality of mshv_vtl_ioctl_get_set_regs to different functions mshv_vtl_ioctl_(get|set)_regs as it actually make things simpler
+* Fixed use of copy_from_user in atomic context in mshv_vtl_hvcall_call. Added ToDo comment for info.
+* Added extra code to free memory for vtl in error scenarios in mshv_ioctl_create_vtl()
+
+Addressed Alok's comments regarding:
+* Additional conditional checks
+* corrected typo in HV_X64_REGISTER_MSR_MTRR_PHYS_MASKB case
+* empty lines before return statement
+* Added/edited comments, variable names, structure field names as suggested to improve
+  documentation - no functional change here.
+
+Naman Jain (2):
+  Drivers: hv: Export some symbols for mshv_vtl
+  Drivers: hv: Introduce mshv_vtl driver
+
+ drivers/hv/Kconfig          |   21 +
+ drivers/hv/Makefile         |    7 +-
+ drivers/hv/hv.c             |    2 +
+ drivers/hv/hyperv_vmbus.h   |    1 +
+ drivers/hv/mshv_vtl.h       |   52 +
+ drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
+ drivers/hv/vmbus_drv.c      |    3 +-
+ include/hyperv/hvgdk_mini.h |   81 ++
+ include/hyperv/hvhdk.h      |    1 +
+ include/uapi/linux/mshv.h   |   82 ++
+ 10 files changed, 2031 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/hv/mshv_vtl.h
+ create mode 100644 drivers/hv/mshv_vtl_main.c
+
+
+base-commit: ed61cb3d78d585209ec775933078e268544fe9a4
+-- 
+2.34.1
+
