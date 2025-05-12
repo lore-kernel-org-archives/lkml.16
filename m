@@ -1,253 +1,343 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFD524DFF1;
-	Mon, 12 May 2025 22:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747087217; cv=fail; b=aDBuqrSbkxBcXmch9m6U7imM0fXiK98w8pAyuDRf0v8a5oRE5Y3DPB6HJbznk0MMGITO6JA5BetfVl0oquyz7SMQ6mta3w5PlqVW05lz2XQE2+TqdBpQ3VS8gZx+zOFNBMso4lxcoo6fvtvG5XprkBk+T6P9TBzfDELGnuv+IKo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747087217; c=relaxed/simple;
-	bh=/8MOIyDKl5ArXQ1tCAR8PeP9CNV6Twktf5/hi/yqsLU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FPV7JaHg2RWMO/EMKfXhNhiDRBzTjper3YVrXW6S5aXEQs10zw9K8th4wYE5cx09fkW0gvMPVbTQvLl6hQa2CU/oO2NI0Mz7zAr6ybAL83uFE0ZKDdIZL/KLzLbqVMmD5RXDH4oEy7THGeHPhzL14qVBXTnMJpxa7tSim5NNO/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JfGKMmT7; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6672512F1;
+	Mon, 12 May 2025 22:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747087218; cv=none; b=fpiGXSQ/421cVfcfOFT3v/JQoqxZPyDx1TcDVHW9fxOWN/BySm5Q1bKHmf/iMSlKIX3iYkm1OTNjoGWeYxnd7PHcG0b3WRE8+IKgG9a85v/mZf7dWault37x6WcOA0w3+MiSiC79xzLfoTzsl6z6vlQirNnT8sM7H7YThqiMe1g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747087218; c=relaxed/simple;
+	bh=8loaMVYhJS2d2avEyYdO5ac3SbfckOfOZcW55+mMQRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=baTF88d//sjua6hTLiCpu2NVw8GPvn+sM0ZLscR9dvWO6xI7ioLx1wQYoC88yKin5fPw6vCLDJXkVu9GfEMi4ZYFuebE1eDKaEEl0id74Rbbmx7Z4+DrdsXbBH4jKMMtfJmPY63o+q7M+wq3xxXqSaUhew9KazRJp3bHyKmzNHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=tNuejeyY; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JfGKMmT7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747087216; x=1778623216;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=/8MOIyDKl5ArXQ1tCAR8PeP9CNV6Twktf5/hi/yqsLU=;
-  b=JfGKMmT7lwxvV7kLus85x51H9mBeQGAX4kt+nQWeuLQFzS5gljAb2iCw
-   A4M09rEDdqLc/HtZrKT1Y1y5BYzBx1JLiWEBCqRgCV3iEqULzmcmYasaZ
-   QpOT9dBZS+WiMtbPkCCPm55xWWm9cBGGd4SUd0q/l2DWVrsU3+blxFG+P
-   XhIzA4XvsUhUKBn19mvk/Soksw2EOEzC8Nhl3P2FFKB1xzQdW3ChM/qWK
-   VSdXcSZOqSJIola714wLRVKhoTvXPklsTL8bUFjCvaOziGNz42UFZwsm1
-   Uyy+FlYYu1Vziqt0+4znAI2kDw7qhe7ZE/QwAvJjh1Sn4F1BiAaPteXYs
-   Q==;
-X-CSE-ConnectionGUID: auHYB77xQ6CaFtSpJZpNtQ==
-X-CSE-MsgGUID: pgaH1GPaQ4O1Nl1/H4y+Sg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59911434"
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="59911434"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 15:00:01 -0700
-X-CSE-ConnectionGUID: iJj/DwSnR+2BxbI92iUkDg==
-X-CSE-MsgGUID: /gMqzd2sTmS8K6fWIZr2Qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="138016808"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 15:00:01 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 12 May 2025 15:00:00 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 12 May 2025 15:00:00 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.42) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 12 May 2025 14:59:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RPT1e/+v7ABquyKSAtwp9DaAwEZBjiNwM4DiPUU2o46MxuFibHn62qnz24cNMkY9bYCfN/E2PR7dO9W4AqB8d1hgTIu1kQvXA1cnh18PMPsGxji6DhPbIgwRSIhFBwszPjf8kj37AgfakVVSikTaJ8U4Cnw+rVnSsNA1SXm1sjPokozlPSEUZswqJjJa4VDcfjmMQPUQ7gp/xSdUfCeBXhfaIoD07SPmLihcUFixlRSudxPhosSvFk0Q4vNK54sYXv5WRiciAEnoCOQAkigQYa3nX0gf76IQwdP0kEMXPHUD8xEx7038/yHOdYzUaT1bk8y8TmCYZbUmARBPmGuPbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/8MOIyDKl5ArXQ1tCAR8PeP9CNV6Twktf5/hi/yqsLU=;
- b=c6+mbcth5iKLdahPMSNKQXqhH4PGD9q52S8aPo5GQ0rFEOaL84JPOvC/1+IoOvqK6zS+JSUF025fXk+W59v7rSxNWykQkcQg0Dg0nUec33lGg3aT+y0aOJKlQWBHEk9AWIk2jtcmK2OOCcxC8l4T3I3lxZKkr9Tnyqgq3kPLmPXZzB/nRsMpyPQIvse2xVTZjkrFyVwZkjlnObk+Nx5VbhsGGcfrHyeHs6tbPwNGwvKUwZHCbYGWSOtiROvQwCk7crcDnklczcMPHvZ34gF67eHNirEgC6Hk62F8urstcNArAzfbNqPiIr+DrmgOp8rdDw01Uk0EoSfe5i/WIIxasg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by IA3PR11MB9134.namprd11.prod.outlook.com (2603:10b6:208:573::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 21:59:57 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%6]) with mapi id 15.20.8722.020; Mon, 12 May 2025
- 21:59:57 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "Annapurve, Vishal" <vannapurve@google.com>
-CC: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao"
-	<xiaoyao.li@intel.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>,
-	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com"
-	<david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "tabba@google.com" <tabba@google.com>,
-	"Du, Fan" <fan.du@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>,
-	"seanjc@google.com" <seanjc@google.com>, "binbin.wu@linux.intel.com"
-	<binbin.wu@linux.intel.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "Weiny, Ira"
-	<ira.weiny@intel.com>, "ackerleytng@google.com" <ackerleytng@google.com>,
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "Peng, Chao P"
-	<chao.p.peng@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"jroedel@suse.de" <jroedel@suse.de>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
-	"Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com" <pgonda@google.com>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
- pages
-Thread-Topic: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
- pages
-Thread-Index: AQHbtMYat5kS3vWoBkCnVGDzEELKMbO5zpMAgAAI7ACAANlQgIAKKDEAgABHPQCAAA/NAIAAeT+AgAEy5oCAAHqYAIAAsR8AgADUaYCAANzJAIAAuGQAgACdt4CAAA+uAIAEifcA
-Date: Mon, 12 May 2025 21:59:57 +0000
-Message-ID: <d8f79605c0089049d8b942227fd9523c14fbef91.camel@intel.com>
-References: <aBAiCBmON0g0Qro1@yzhao56-desk.sh.intel.com>
-	 <CAGtprH_ggm8N-R9QbV1f8mo8-cQkqyEta3W=h2jry-NRD7_6OA@mail.gmail.com>
-	 <aBldhnTK93+eKcMq@yzhao56-desk.sh.intel.com>
-	 <CAGtprH9wi6zHJ5JeuAnjZThMAzxxibJGo=XN1G1Nx8txZRg8_w@mail.gmail.com>
-	 <aBmmirBzOZfmMOJj@yzhao56-desk.sh.intel.com>
-	 <CAGtprH9fDMiuk3JGSS12M-wFoqRj+sjdtEHJFS_5QfKX7aGkRQ@mail.gmail.com>
-	 <aBsNsZsWuVl4uo0j@yzhao56-desk.sh.intel.com>
-	 <CAGtprH-+Bo4hFxL+THiMgF5V4imdVVb0OmRhx2Uc0eom9=3JPA@mail.gmail.com>
-	 <aBwJHE/zRDvV41fH@yzhao56-desk.sh.intel.com>
-	 <CAGtprH9hwj7BvSm4DgRkHmdPnmi-1-FMH5Z7xK1VBh=s4W8VYA@mail.gmail.com>
-	 <aB10gNcmsw0TSrqh@yzhao56-desk.sh.intel.com>
-	 <CAGtprH8=-70DU2e52OJe=w0HfuW5Zg6wGHV32FWD_hQzYBa=fA@mail.gmail.com>
-	 <8d8f4d0ec970fc7c16341ee994d177d9e042c860.camel@intel.com>
-	 <CAGtprH8sn48pNC29SSNqCCV88O8mjU1JiOFvLbLrm_7LGjGRuQ@mail.gmail.com>
-In-Reply-To: <CAGtprH8sn48pNC29SSNqCCV88O8mjU1JiOFvLbLrm_7LGjGRuQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|IA3PR11MB9134:EE_
-x-ms-office365-filtering-correlation-id: 83b108de-381a-4eae-4e8c-08dd91a055a4
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?RS9Ea1kvUlRZai9Hdno3OE9TZjlOUUQ3SVNTeUxjVzZvUWYyK0F3NlIwTG4x?=
- =?utf-8?B?WFJCeSsrd1JBMzNkd0hveld2WjdVdmhva2JHY3REYzcyMlZaRlZkSEhJalhU?=
- =?utf-8?B?NjFJSjloSlYzV0U4T3VobVZmNE03di94YTJkajlpZzVVRUEwTFhBQURad3RV?=
- =?utf-8?B?d051ZzFJUUtlS2NsY2ZmSHNaN3p6YTZpOFUybnBIQVZoaEdPNE0wZWRyMEkx?=
- =?utf-8?B?LzMxZVFYaFVoZDdHSitJN3pmU2tEbTh2K2tWVTd1QjhLR3BsSWlOUEZBMFgv?=
- =?utf-8?B?YmM5NEl4MmpuWTNlU2NHMXRsVGd3R2VMRGRyM08vQncybzJoZzNTSllnRzBk?=
- =?utf-8?B?OHRkNWhndHpXeW1JNXJoempSbG5TeGxhMldFdjE0TzB0c3JrcTlaSlVuZmR2?=
- =?utf-8?B?MUFoTUJ4azA4Q3N3Qkp5VldzUERxdkIyQURlQnBBbHlPRjdjYTBiQzZzaEov?=
- =?utf-8?B?TDRpYWNxNXlQT3ZNR1B0SE1IYmhQRnZubXZNbW1jWXluSDQrcEdoVW4ydE1G?=
- =?utf-8?B?ZHBTc3ZHQ01RZVJuZDRncHJ1a3hKM0RpNDRZbXQ4aEhpODNmMS9sOHZINnZP?=
- =?utf-8?B?STAyYlBJbis3WjAzd2Q4dE5ianZLYkh4b1NQcTIyNVFSdmp3dVVMdHNTbXNU?=
- =?utf-8?B?TVh6b0ZSazlyUWtCRzhBVzQvZ2IrVnVLb1RybU9Qbk1lVGVKZlBxUi9ha2Y1?=
- =?utf-8?B?cmhJeWxoM3BsTG5vczJ4WEMveklCK1Z2KzBqeHZnQUk5L252VmRDOURLWk1x?=
- =?utf-8?B?bWxvVU1DdjcyRlJUdFBPeXVTaGU4alUzYnNOeHE5TWdSbmpzTjRybG43OTJQ?=
- =?utf-8?B?NWpFdDgwa01XNFI2cjZHWFhRSXNsUTVLek9tVW5WMEwrRzArOHY5RVkvMlBo?=
- =?utf-8?B?UEJDdDdsK3IyOUdBRCthNXRxTWtLcmZkUm9WQUxVTVZqTEZUbEFJUGJqQTVs?=
- =?utf-8?B?TVNWbDZVOEVMMTliclNqRzdXNDJJYjZnL01DdXVzMzZvQWRLaEZrL2J1MDRH?=
- =?utf-8?B?OGVoQWg5UzQ3djkxd0ZBSjIrT2pUUktFRlVNNWdWOTJhaFBUeU1tNUF2bFJO?=
- =?utf-8?B?bFFWalZYRkczR2dxTW5sd3dwRlVKK2ZCOEN3bFY0bEwrMVpLVGNYdEhRNWVL?=
- =?utf-8?B?QWczNHZYaUNOR1VnMjN5OUFiY01MTi9CTER2K2huSlhLWVR3UWVkOXJKMjVH?=
- =?utf-8?B?dTYwUThndXVmc2JIWjNJR2wrZ3RSN3QzRmtiR0NiWnJNTEkzSzZ2Z2Nzc3p5?=
- =?utf-8?B?Q1d4YU5vQXRyUjdidEc5bm9UWnhBMTFZK1NHR3JPU1poNU1sN2tHR3V2Mjhz?=
- =?utf-8?B?a1pJdEFLSkpJVVlJM0JwaEIwK1NLL2dsdWUvUVdJMXhRSExXczkrd0tTWjlD?=
- =?utf-8?B?dmYrd3pzWjBCcG11bG4rcVFGY0hBbUJuRmRwU2tjdDFBRnJmQ3hra0tqMUs4?=
- =?utf-8?B?bzJ3ZytQVE9TanZpUi9wL2diQW13NitKdFA1aDRiUmVEdHROdUF3WVZQcW4z?=
- =?utf-8?B?YmhaZTdLWDZNaGM1a0paWElvdzZNVXF0WkFYbUphOXBrNU1iR3RyaVBWY0VC?=
- =?utf-8?B?YnhNdUFxdFRkN0hJa2pjbFcwRWpQYllSa3Zsb0lldmRFOEFSalFxNWRHQk1k?=
- =?utf-8?B?M0FndW8wdTE1VUZkREgrbWQ0cU5XL1pOSjMwRTFkdm5KWHFnVzJZOGlEelFF?=
- =?utf-8?B?M2Eyd0pOb2g4dkozNTI1SkhBS2FSa0lpMHovWXQrMU1HWUcvcGMrY0xaWlJD?=
- =?utf-8?B?NEx3cW5WZGxUM1hxbzEvNnlwdjJjRklFMWJnMjgrcU1ZbTFra1JFbUNuM3Bi?=
- =?utf-8?B?bURIQkFhZTZsdjh0QkJ3ZzUrdm5JVllZV0NrbkVzcnJtR1VVMlRKZW54TExp?=
- =?utf-8?B?ckd0Y2p1VW9ndUdESWZzcTVheVFyNmJWWlM3RzRxTUNZdXJhdUE4V3lmaFA5?=
- =?utf-8?B?WlBPOTBzY2RraUphbTNiY3BxYmRwcm5NTFFPOFpRd0pCZTUvcE92b3laQzJE?=
- =?utf-8?Q?VbymzKiANbMXyWkRkDt9IksFerauWc=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Mkd6TTAxeENXbGMySGs1NVlDakYzVk1nUFl6ODNNM3lRcHJIcGJza2VCbXVo?=
- =?utf-8?B?NWF0T0R5YWVMZ1FSeHgvVGxUcFRTWmlvcGoyUnFNaG9Bem4wVEZ6bnY1bkRy?=
- =?utf-8?B?bXllR2I2TEdVRHd3OTd1akNqb2JSZzVZK2tGRHV0NnlxamgzUXBSMXhXRXQ2?=
- =?utf-8?B?S1EvRWFkNFlZdkpOTEIrME1ncmM1TnJpTHp6QnQ2ZTZqeVFuRDdpTG4zOSs2?=
- =?utf-8?B?c04yTll1ZyswdjR5VWgzY1RJcjA2bWF2YS9EeERHVm9CZGZHdE5BRUZXUmh5?=
- =?utf-8?B?amsyVDUzZkVmb01Ka0pBVzdKWVN3MnhJNzRxci8ycjVPbXBLU2t4d2pWTkRL?=
- =?utf-8?B?bS9ZeHJVbmY2bVAvRk5JQmxkWWpObVZISEliODk5RG9WRE9UVGNENzk0bU85?=
- =?utf-8?B?cWhVdHpKd0J0VHpzSDhxOWpBV3ZQRmxPZWV4RGxVUGV1a016OG42aUVKeWcz?=
- =?utf-8?B?bC9OekwraDhsdXk0dGY5SWgxZzZhZU5EcDlmdUY4azQ1K1h3c0N2bWhKTEN6?=
- =?utf-8?B?M0NxVU5oMDVIWUNkci9uREE2ZG9oWDl0VzA3MnZtWG5PeFZOL3BBZnNPdk93?=
- =?utf-8?B?UUJhN1g1dWhrcUVLaWFMMUhScjVpYWVDdFErUnhsTloxWHNZYlNyc0NsNVhN?=
- =?utf-8?B?cFhTYXRhYUlhSGo3aU1seW42NW5idmpURms3SkUrQ0R1OFBvTVB3QTd2UU16?=
- =?utf-8?B?dGtRMTNldlE3WUt3NTdsaFM2WEFyZlVLS25SRXl1bXlFeHVXejJYZForT1Rw?=
- =?utf-8?B?N0JvNXFkMk5zclppbEx4ZHBJY2E1Q3hNNi9FellSLzN6YVdURU9wTStZSGpK?=
- =?utf-8?B?Vlg4TnppTjlYdm5aWEVPQW10NlBVOUErZlI0SjU5a3NJMGdtN0d5K3E5V3A3?=
- =?utf-8?B?Vm1rSE9YbHYxTitsZVhhR2Q2a3hOVzl5d0VWdTRaZ29hbEtnREV1SkNPT1dq?=
- =?utf-8?B?cnF2ZVY2T2tnTXVmaDU4RmxWRkpEQXQ2WnViNTZsbUZFa1E4azU1dDd3ZU1G?=
- =?utf-8?B?eENMY3FBWXZ5a3JiUFoxVUZtVHVodjFYWEx3eUFaVzVsYjB0SWFKS1QzNkFh?=
- =?utf-8?B?aGZibmNNb3NObzNub01JcWhPOVNXWVU4Qm82NnpPZjZWVW9IVkdLU25xZ203?=
- =?utf-8?B?M2YwRzBYUVNZRTdSaldlMlVuVHptOWcvTmxrVVRLSGdDc2ZUanJlRDZFMkFs?=
- =?utf-8?B?c05hek5pelhIbG4rQjNUTi96RWZCbmt6R2RrZHNtQzBaYjhtQ0NyZTVMUWl5?=
- =?utf-8?B?NkVpb0VnM2tVa2U3S295d0lXcjdkSlNrWjBGbk9jOXhYRXF4d2hac0N0cHAv?=
- =?utf-8?B?ZnQweThEZWg3NjZZMkQ3SHBEd1RyMGFjWlRINFp6MHRhMDk3ZFRzekh6Skxp?=
- =?utf-8?B?Q21VRXIrSlpVMUJNckxYMWhhTzQyeXhXK01jQVVnVlNDblVFd214dGcvcVJt?=
- =?utf-8?B?d3NiTjM2cngxNXJmSGVYbDJMblhLWGZNc0FaL3hiSUVGY3BrQTF6Unl6Zkk5?=
- =?utf-8?B?MVZJdEtxZlpTWWZRVWUvb21HeTJKL0Z6VmtWN29SQ3dVeHlYL3NpQnFJMDdZ?=
- =?utf-8?B?clZyNmJXVU50MXc5MWtsQTJVZFlZc0tjTzNPU2VJNDlHdnJXZkNmUE1hTzli?=
- =?utf-8?B?U2wvVEIvNDBVays1aEVrSjBEcWRBdkdHVWQrUGt6c2RsM1ZyckNtdWdmdkkw?=
- =?utf-8?B?WnE1UHlrNzlDRmVGOWhLQ3dtdGQ2QWZjMzNRTkpOeHg4VTdDZEg0QWpnei9i?=
- =?utf-8?B?OUtTR2EvaVp5b0c3NWlkUmU3RGtmOEpUUytUdTBhRk1NQ0xlRUpnZG5VL2Jl?=
- =?utf-8?B?Q3N0TFExL09sTE9odU1VQ3hpRkpFYmI0elQxcVR6elRoL3pwMHJweCtVaHE3?=
- =?utf-8?B?YzhMN21tSFBPc21vaHdVSGRRVnp4amlFaHFZRTJGNGRtUE0wM1dnWVRtS0ps?=
- =?utf-8?B?Ni9mRXIrWXdKeE9sWDFoSmxSVzRQbWF2S25iQ1NOb1lVNHdYcy9nQUJIV0lH?=
- =?utf-8?B?YURIY1lBVUtUcGFCSkpGdTJCY2dneEZFRmhNcUNDSko0VGZBZ1J0VTM3YVRx?=
- =?utf-8?B?SHpRb3Bybk41QzY3U2ZienVodVpJaXZjeUxMTkhJSFcyUC9SaFFiRnNTbTFk?=
- =?utf-8?B?ZDUvVmRhSGJXSW4vUjhzVGUvbWdCclVoTDI1Q0txZXl6WkZLY0JrN2ZNL1A4?=
- =?utf-8?B?Mnc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6F0C3C4CFC33FF4487022C8DED034D20@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="tNuejeyY"
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id D41052E0ABA6;
+	Tue, 13 May 2025 01:00:11 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1747087212;
+	bh=fs7kKhEMM32+OPrdo58LmoyECFBC/7/Yl4xWNCl6ppo=;
+	h=Received:From:Subject:To;
+	b=tNuejeyYRKVh3oEJ5XPauL0/4Yw+AIheyhMZ+QdK2gv6iJdmXKP+UsHy4wBpge9zF
+	 6NBjTzc6lDd2zZyJpQqkKLTKVhByL2zIjfDcFvYY6S0ey9zuuKFr1a+gvVTEEAU3X2
+	 fjkVv45jLx6U8UmTOyp/DvO3zmZary1imkWwRU6E=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f181.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f181.google.com with SMTP id
+ 38308e7fff4ca-326bd400027so49393961fa.1;
+        Mon, 12 May 2025 15:00:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCV41PZetCCZCA+LEaHV4m8SbJgMjx1TCqVv0fjgSRlQKw0PsRSZHTbC80nbRFgYwIDB6hhN96k8+MVmmDQ=@vger.kernel.org,
+ AJvYcCV6ehDnrCXBCHvi1ndnc8n1+tsCJUaP6/xYSrzMphTixdEOrTck4thvsPGPP7glT+Qh/2ZCJObOw+iI29XM@vger.kernel.org,
+ AJvYcCWElGCaf+tDTp0AbSmhALNcD9Q6yOADikMh2znafJhGORfRJIvlgzxnR1fedH7hiZVMheLaMXbwnqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG8wH1qMFsuYJZ+bIKtq5PK52Oq2b8VsvAr6dSrU0GOS5HGtE9
+	JFgOl3sKsE982PReeeCAYF+0LfCjGgyO4n7bZxEBP7BcEhdKPWKbB0MKjEQAuWVa7xjablrNa7s
+	A3WCDaq5x/g1BQYe1QotbbWQtQP0=
+X-Google-Smtp-Source: 
+ AGHT+IHvdn6Lh2bCsAQjYeRWcWYH1qz5gMwm/eLHnyN6Otlm0v/joGPtCZsWOfRy9I8hqckKYUzSiVOR+7h8rp0gV3c=
+X-Received: by 2002:a2e:bd0f:0:b0:326:ca4b:1ff1 with SMTP id
+ 38308e7fff4ca-327e137d5f3mr4343071fa.19.1747087211104; Mon, 12 May 2025
+ 15:00:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83b108de-381a-4eae-4e8c-08dd91a055a4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2025 21:59:57.3880
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: btrfLKPcOimj710CHZVt0YX8+baXrtn4EkInjSWDmKp9w5n8rvVcy8gt1ieTCQoswVsRpPivtlQlK1caXdFlK60Rhx+zURj6GutYZSF+hl8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9134
-X-OriginatorOrg: intel.com
+References: <20250511204427.327558-1-lkml@antheas.dev>
+ <20250511204427.327558-6-lkml@antheas.dev>
+ <D9TQ3FWVTOBM.4GU600TZ7NZ9@gmail.com>
+In-Reply-To: <D9TQ3FWVTOBM.4GU600TZ7NZ9@gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 12 May 2025 23:59:59 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwE6J-WFCh6j79sg-ALut0_wya0m-4=Rfzf6xhKKxvf0Tw@mail.gmail.com>
+X-Gm-Features: AX0GCFs4lJTaTicCjbdPFvpIXkQxWOThjULmqRKlU4kGL-WSvnsKLXchW9bPH2U
+Message-ID: 
+ <CAGwozwE6J-WFCh6j79sg-ALut0_wya0m-4=Rfzf6xhKKxvf0Tw@mail.gmail.com>
+Subject: Re: [PATCH v1 05/10] platform/x86: msi-wmi-platform: Add platform
+ profile through shift mode
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174708721245.26007.7193891384037248410@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-T24gRnJpLCAyMDI1LTA1LTA5IGF0IDE3OjQxIC0wNzAwLCBWaXNoYWwgQW5uYXB1cnZlIHdyb3Rl
-Og0KPiA+ID4gPiBJIHNlZSB0aGUgcG9pbnQgYWJvdXQgaG93IG9wZXJhdGluZyBvbiBQRk5zIGNh
-biBhbGxvdyBzbW9vdGhlcg0KPiA+ID4gPiB0cmFuc2l0aW9uIHRvID4gPiBhDQo+ID4gPiA+IHNv
-bHV0aW9uIHRoYXQgc2F2ZXMgc3RydWN0IHBhZ2UgbWVtb3J5LCBidXQgSSB3b25kZXIgYWJvdXQg
-dGhlIHdpc2RvbSBvZg0KPiA+ID4gPiBidWlsZGluZyB0aGlzIDJNQiBURFggY29kZSBhZ2FpbnN0
-IGV2ZW50dWFsIGdvYWxzLg0KPiA+IA0KPiA+IFRoaXMgZGlzY3Vzc2lvbiB3YXMgbW9yZSBpbiBy
-ZXNwb25zZSB0byBhIGZldyBxdWVzdGlvbnMgZnJvbSBZYW4gWzFdLg0KDQpSaWdodCwgSSBmb2xs
-b3cuDQoNCj4gPiANCj4gPiBNeSBwb2ludCBvZiB0aGlzIGRpc2N1c3Npb24gd2FzIHRvIGVuc3Vy
-ZSB0aGF0Og0KPiA+IDEpIFRoZXJlIGlzIG1vcmUgYXdhcmVuZXNzIGFib3V0IHRoZSBmdXR1cmUg
-cm9hZG1hcC4NCj4gPiAyKSBUaGVyZSBpcyBhIGxpbmUgb2Ygc2lnaHQgdG93YXJkcyBzdXBwb3J0
-aW5nIGd1ZXN0IG1lbW9yeSAoYXQgbGVhc3QNCj4gPiBndWVzdCBwcml2YXRlIG1lbW9yeSkgd2l0
-aG91dCBwYWdlIHN0cnVjdHMuDQo+ID4gDQo+ID4gTm8gbmVlZCB0byBzb2x2ZSB0aGVzZSBwcm9i
-bGVtcyByaWdodCBhd2F5LCBidXQgaXQgd291bGQgYmUgZ29vZCB0bw0KPiA+IGVuc3VyZSB0aGF0
-IHRoZSBkZXNpZ24gY2hvaWNlcyBhcmUgYWxpZ25lZCB0b3dhcmRzIHRoZSBmdXR1cmUNCj4gPiBk
-aXJlY3Rpb24uDQoNCkknbSBub3Qgc3VyZSBob3cgbXVjaCB3ZSBzaG91bGQgY29uc2lkZXIgaXQg
-YXQgdGhpcyBzdGFnZS4gVGhlIGtlcm5lbCBpcyBub3Qgc2V0DQppbiBzdG9uZSwgc28gaXQncyBh
-Ym91dCBob3cgbXVjaCB5b3Ugd2FudCB0byBkbyBhdCBvbmNlLiBGb3IgdXMgd2hvIGhhdmUgYmVl
-bg0Kd29ya2luZyBvbiB0aGUgZ2lhbnQgVERYIGJhc2Ugc2VyaWVzLCBkb2luZyB0aGluZ3Mgb24g
-YSBtb3JlIGluY3JlbWVudGFsIHNtYWxsZXINCnNpemUgc291bmRzIG5pY2UgOikuIFRoYXQgc2Fp
-ZCwgdGhlIG5lY2Vzc2FyeSBjaGFuZ2VzIG1heSBoYXZlIG90aGVyIGdvb2QNCnJlYXNvbnMsIGFz
-IGRpc2N1c3NlZC4NCg0KPiA+IA0KPiA+IE9uZSB0aGluZyB0aGF0IG5lZWRzIHRvIGJlIHJlc29s
-dmVkIHJpZ2h0IGF3YXkgaXMgLSBubyByZWZjb3VudHMgb24NCj4gPiBndWVzdCBtZW1vcnkgZnJv
-bSBvdXRzaWRlIGd1ZXN0X21lbWZkIFsyXS4gKERpc2NvdW50aW5nIHRoZSBlcnJvcg0KPiA+IHNp
-dHVhdGlvbnMpDQoNClNvdW5kcyBmaW5lLg0KDQo+ID4gDQo+ID4gWzFdIGh0dHBzOi8vbG9yZS5r
-ZXJuZWwub3JnL2xrbWwvYUJsZGhuVEs5MytlS2NNcUB5emhhbzU2LWRlc2suc2guaW50ZWwuY29t
-Lw0KPiA+IFsyXSA+DQo+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC9DQUd0cHJIX2dn
-bThOLVI5UWJWMWY4bW84LWNRa3F5RXRhM1c9aDJqcnktTlJEN182T0FAbWFpbC5nbWFpbC5jb20v
-DQoNCg0K
+On Mon, 12 May 2025 at 01:34, Kurt Borja <kuurtb@gmail.com> wrote:
+>
+> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
+> > MSI's version of platform profile in Windows is called shift mode.
+> > Introduce it here, and add a profile handler to it.
+> >
+> > It has 5 modes: sport, comfort, green, eco, and user.
+> > Confusingly, for the Claw, MSI only uses sport, green, and eco,
+> > where they correspond to performance, balanced, and low-power.
+> > Therefore, comfort is mapped to balanced-performance, and user to
+> > custom.
+> >
+> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > ---
+> >  drivers/platform/x86/Kconfig            |   1 +
+> >  drivers/platform/x86/msi-wmi-platform.c | 117 ++++++++++++++++++++++++
+> >  2 files changed, 118 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > index bee98251b8f0b..57a48910c8fd4 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -746,6 +746,7 @@ config MSI_WMI_PLATFORM
+> >       tristate "MSI WMI Platform features"
+> >       depends on ACPI_WMI
+> >       depends on HWMON
+> > +     select ACPI_PLATFORM_PROFILE
+> >       help
+> >         Say Y here if you want to have support for WMI-based platform features
+> >         like fan sensor access on MSI machines.
+> > diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
+> > index 9ac3c6f1b3f1d..c0b577c95c079 100644
+> > --- a/drivers/platform/x86/msi-wmi-platform.c
+> > +++ b/drivers/platform/x86/msi-wmi-platform.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/dmi.h>
+> >  #include <linux/errno.h>
+> >  #include <linux/fixp-arith.h>
+> > +#include <linux/platform_profile.h>
+> >  #include <linux/hwmon.h>
+> >  #include <linux/hwmon-sysfs.h>
+> >  #include <linux/kernel.h>
+> > @@ -63,6 +64,16 @@
+> >  #define MSI_PLATFORM_AP_FAN_FLAGS_OFFSET     1
+> >  #define MSI_PLATFORM_AP_ENABLE_FAN_TABLES    BIT(7)
+> >
+> > +/* Get_Data() and Set_Data() Shift Mode Register */
+>
+> Maybe you can write short documentation for these methods?
+>
+> > +#define MSI_PLATFORM_SHIFT_ADDR              0xd2
+> > +#define MSI_PLATFORM_SHIFT_DISABLE   BIT(7)
+> > +#define MSI_PLATFORM_SHIFT_ENABLE    (BIT(7) | BIT(6))
+> > +#define MSI_PLATFORM_SHIFT_SPORT     (MSI_PLATFORM_SHIFT_ENABLE + 4)
+> > +#define MSI_PLATFORM_SHIFT_COMFORT   (MSI_PLATFORM_SHIFT_ENABLE + 0)
+> > +#define MSI_PLATFORM_SHIFT_GREEN     (MSI_PLATFORM_SHIFT_ENABLE + 1)
+> > +#define MSI_PLATFORM_SHIFT_ECO               (MSI_PLATFORM_SHIFT_ENABLE + 2)
+> > +#define MSI_PLATFORM_SHIFT_USER              (MSI_PLATFORM_SHIFT_ENABLE + 3)
+>
+> Instead of summing the profiles I suggest something like:
+>
+> enum MSI_PLATFORM_PROFILES {
+>         MSI_PROFILE_COMFORT,
+>         MSI_PROFILE_GREEN,
+>         MSI_PROFILE_ECO,
+>         MSI_PROFILE_USER,
+>         MSI_PROFILE_SPORT,
+> }
+>
+> And you can prepare your commands like
+>
+> command = MSI_PLATFORM_SHIT_ENABLE;
+> command |= FIELD_PREP(GENMASK(1,0), MSI_PROFILE_{profile});
+>
+> I feel that it's cleaner this way. This is only a suggestion though.
+>
+> > +
+> >  static bool force;
+> >  module_param_unsafe(force, bool, 0);
+> >  MODULE_PARM_DESC(force, "Force loading without checking for supported WMI interface versions");
+> > @@ -100,12 +111,14 @@ enum msi_wmi_platform_method {
+> >  };
+> >
+> >  struct msi_wmi_platform_quirk {
+> > +     bool shift_mode;        /* Shift mode is supported */
+> >  };
+> >
+> >  struct msi_wmi_platform_data {
+> >       struct wmi_device *wdev;
+> >       struct msi_wmi_platform_quirk *quirks;
+> >       struct mutex wmi_lock;  /* Necessary when calling WMI methods */
+> > +     struct device *ppdev;
+> >  };
+> >
+> >  struct msi_wmi_platform_debugfs_data {
+> > @@ -150,8 +163,10 @@ static const char * const msi_wmi_platform_debugfs_names[] = {
+> >
+> >  static struct msi_wmi_platform_quirk quirk_default = {};
+> >  static struct msi_wmi_platform_quirk quirk_gen1 = {
+> > +     .shift_mode = true
+> >  };
+> >  static struct msi_wmi_platform_quirk quirk_gen2 = {
+> > +     .shift_mode = true
+> >  };
+> >
+> >  static const struct dmi_system_id msi_quirks[] = {
+> > @@ -561,6 +576,90 @@ static const struct hwmon_chip_info msi_wmi_platform_chip_info = {
+> >       .info = msi_wmi_platform_info,
+> >  };
+> >
+> > +static int msi_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
+> > +{
+> > +     set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+> > +     set_bit(PLATFORM_PROFILE_BALANCED, choices);
+> > +     set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
+> > +     set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+>
+> Please, use the non-atomic __set_bit(). `choices` is not shared between
+> threads.
+>
+> > +     return 0;
+> > +}
+> > +
+> > +static int msi_wmi_platform_profile_get(struct device *dev,
+> > +                                     enum platform_profile_option *profile)
+> > +{
+> > +     struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
+> > +     int ret;
+> > +
+> > +     u8 buffer[32] = { };
+>
+> Move this to the top.
+>
+> > +
+> > +     buffer[0] = MSI_PLATFORM_SHIFT_ADDR;
+> > +
+> > +     ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_DATA, buffer, sizeof(buffer));
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     if (buffer[0] != 1)
+> > +             return -EINVAL;
+> > +
+> > +     switch (buffer[1]) {
+> > +     case MSI_PLATFORM_SHIFT_SPORT:
+> > +             *profile = PLATFORM_PROFILE_PERFORMANCE;
+> > +             return 0;
+> > +     case MSI_PLATFORM_SHIFT_COMFORT:
+> > +             *profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
+>
+> Maybe comfort can be mapped to balanced and green to cool. What do you
+> think?
+
+I forgot to comment on this one. The Claw uses ECO, GREEN, and
+PERFORMANCE as its primary modes with 8, 12, 30W respectively. Comfort
+is not used specifically for it. So I chose to push Green upwards to
+balanced.
+
+@Armin might know more about this one. If it turns out using comfort
+for balanced fits better for laptops we can do that instead.
+
+Antheas
+
+>
+> > +             return 0;
+> > +     case MSI_PLATFORM_SHIFT_GREEN:
+> > +             *profile = PLATFORM_PROFILE_BALANCED;
+> > +             return 0;
+> > +     case MSI_PLATFORM_SHIFT_ECO:
+> > +             *profile = PLATFORM_PROFILE_LOW_POWER;
+> > +             return 0;
+> > +     case MSI_PLATFORM_SHIFT_USER:
+> > +             *profile = PLATFORM_PROFILE_CUSTOM;
+> > +             return 0;
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +}
+> > +
+> > +static int msi_wmi_platform_profile_set(struct device *dev,
+> > +                                     enum platform_profile_option profile)
+> > +{
+> > +     struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
+> > +     u8 buffer[32] = { };
+> > +
+> > +     buffer[0] = MSI_PLATFORM_SHIFT_ADDR;
+> > +
+> > +     switch (profile) {
+> > +     case PLATFORM_PROFILE_PERFORMANCE:
+> > +             buffer[1] = MSI_PLATFORM_SHIFT_SPORT;
+> > +             break;
+> > +     case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+> > +             buffer[1] = MSI_PLATFORM_SHIFT_COMFORT;
+> > +             break;
+> > +     case PLATFORM_PROFILE_BALANCED:
+> > +             buffer[1] = MSI_PLATFORM_SHIFT_GREEN;
+> > +             break;
+> > +     case PLATFORM_PROFILE_LOW_POWER:
+> > +             buffer[1] = MSI_PLATFORM_SHIFT_ECO;
+> > +             break;
+> > +     case PLATFORM_PROFILE_CUSTOM:
+> > +             buffer[1] = MSI_PLATFORM_SHIFT_USER;
+> > +             break;
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     return msi_wmi_platform_query(data, MSI_PLATFORM_SET_DATA, buffer, sizeof(buffer));
+> > +}
+> > +
+> > +static const struct platform_profile_ops msi_wmi_platform_profile_ops = {
+> > +     .probe = msi_wmi_platform_profile_probe,
+> > +     .profile_get = msi_wmi_platform_profile_get,
+> > +     .profile_set = msi_wmi_platform_profile_set,
+> > +};
+> > +
+> >  static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user *input,
+> >                                             size_t length, loff_t *offset)
+> >  {
+> > @@ -742,6 +841,22 @@ static int msi_wmi_platform_init(struct msi_wmi_platform_data *data)
+> >       return 0;
+> >  }
+> >
+> > +static int msi_wmi_platform_profile_setup(struct msi_wmi_platform_data *data)
+> > +{
+> > +     int err;
+> > +
+> > +     if (!data->quirks->shift_mode)
+> > +             return 0;
+> > +
+> > +     data->ppdev = devm_platform_profile_register(
+> > +             &data->wdev->dev, "msi-wmi-platform", data,
+> > +             &msi_wmi_platform_profile_ops);
+>
+> Broken format.
+>
+> > +     if (err)
+> > +             return err;
+>
+> `err` is not initialized. Is it a leftover?
+>
+> > +
+> > +     return PTR_ERR_OR_ZERO(data->ppdev);
+> > +}
+> > +
+> >  static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+> >  {
+> >       struct msi_wmi_platform_data *data;
+> > @@ -775,6 +890,8 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+> >
+> >       msi_wmi_platform_debugfs_init(data);
+> >
+> > +     msi_wmi_platform_profile_setup(data);
+>
+> Check return value.
+>
+> --
+>  ~ Kurt
+>
+> > +
+> >       return msi_wmi_platform_hwmon_init(data);
+> >  }
+> >
+>
