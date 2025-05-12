@@ -1,126 +1,96 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D03D218845;
-	Mon, 12 May 2025 14:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8354321FF49;
+	Mon, 12 May 2025 14:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059804; cv=none; b=RCQujQs8c35ip7qwHoNI0nEAeULNkuN+gF0DGZfDI4sHWzAxzgwAOyBFiAUeM4SUwTJWRyd9tNstsOirSO702qr4LkG0Wey5cjPcPKbscPYAYRJwhQ6WlshrVyzNeZSYKR8A/oJzZ/dBlmEeeAeTORXhGmAZVRgz3PGyas6eEk0=
+	t=1747059807; cv=none; b=iri4hyhBvfqTDRCDBWVRPhNKgSFLV9NaMo8w321r8CAlIvYE8l8kGHa7MTenz+Mx2Zg20iNyfTsL1p96EjlfPu3sh04iQNFMOPEKVTzJ0X6xmNtGeckvjOA+IJ4E42KyvWtw37m+NJcZL8j8ewo9v9/zGDekQgC+oTcXzA15Rik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059804; c=relaxed/simple;
-	bh=tPQCzLZn2R2UK9DRrnxinSUKssq3JGAVyBqb0dtvrEs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MJIk1GjKyUX+UC50morS6xx8kYSQv73bp0aEvBC/ibffaZoxGWcFHGpXbQlKHGM14oclHVNwhckRSTn4ycCeI/PnVwY0YUbGSm8mJWb8YIEI67g/V30UjNDYU6s0xFlqA/n3EBZsoXn/h21QSFPbr3P1y5EUa3pD+2eY5re19y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QPcpxdVk; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747059807; c=relaxed/simple;
+	bh=duTsBJvizo9vU/fD4ogQ3/7fY2QmS2nQwF34opvHxF0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=hV7y90dZkHJX7uxK55hSbo9H8FImQN+nyEycHBYMcLyYOuOiNsDtk0+lxER3TbVwzToSbPa/R8SJcwOLHgRTk184sr+jVuZopit8k8QWg2yKr8BINzCy9Wx+JSMetWupl+WPX8bqy28xBYX3FJvWDv6yr57QbeOI8cq1UATCUec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bxaNLGZn; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPcpxdVk"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54e816aeca6so6355507e87.2;
-        Mon, 12 May 2025 07:23:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747059800; x=1747664600; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3gAHy2dqHD8XlNE+NQO8OdbzNGj6fStBzDiksNNBgM8=;
-        b=QPcpxdVkMdojOFVWdIht426iF93H/n2bHhFpVyAtCqtHE3naJoxu5rkr/PzsE1+V6r
-         f7dlJU5Y22wDM7WHZ0vyqUwMK6REcLKpfiEw+NSWLIjPzxQupDhIR/pzVVhMzggmnk9R
-         fO0KAjKrvi4eSNbeLiRYSRlLWuhYBpQ9ZdfugNOB+tJ9FmIk/Aeg2Xzq58LQASavhibL
-         W/Acs+/01K7N+99ggmzfeaakIptvAAHrdvisYCiCc27cBmhkGr5V4VuARveIU8ojTuI5
-         nVyxUSEOsAm0WyYlFJbjX10sPWl8f4VuKiavBzAcJbND8h/+CvlJSlA8N/z9f1gZHD0c
-         c71A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747059800; x=1747664600;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3gAHy2dqHD8XlNE+NQO8OdbzNGj6fStBzDiksNNBgM8=;
-        b=mK70ZacLELqUVI0QyQxeoQNu59Yip5hEAoOyvxfJwtNOV3Pv+6qLgHq/3n6cIaBl+V
-         MA86CgLNzSyl6uGAwo/3/12OVibJllt0rXRI44XwwpjlPYYaPNIAxqMD5T6M5zZ0+1wi
-         f2zuf/jdkyi83q5MV2NyaR6SIwYClhHjqu+XSiYA9+uKxYuVW6BppkjgcsqmBwVQvcb4
-         d3umRTzFMz/VlzgbTEoDEVAa/zeZRd2eEAXgVH+FeYqfEWRt+5BWdoqCOEoetbsSE7oh
-         b5QsrTmsJaDRjp08u/WI8THHl4Z3v8ojkTv0R4S0Z3BbDpJbWrH0Q8opiMylNgigyWax
-         oihQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFo7G6npiTxgCkcFxdmFl4LVgE38XpiNuve6R4yI0ASyGIb3MQy3mJnGtcfOT8PzYVKuOwptWC@vger.kernel.org, AJvYcCUM9DGTX23dSRQmyuarg8iAYwukdpqJuTMJOGNjSz4Q85oB0VHYGiZ4I1BG0jErSOYsAe3za4Il3PW9@vger.kernel.org, AJvYcCXGsugjEdmUAcMp9dg77pMknKa3a0jrZhW0gtYZnmgIl8XgAGpkvoZ/j/DfH4MeYtUjBdaGhwc7mAmLymPp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2hNBgnr9cxVyX7BpHaQ1AiVvmBw4hTZ++LVkco5ZBHaxW6pZ2
-	tJnje4yQYf27YbErNBTAzUQk3aPYV+Uk3IxsofUez/XBsygnAx2jwsBJDA==
-X-Gm-Gg: ASbGncsUm+zA11cPuL1H3IXxZldIwNer5lNcsD1zcWAA4wYt0p5NdqiDM9myF2aPE2a
-	Nmz3hM2FrEccobj32GWtELr7RLFHMmlnDROUc2GlxLI7F68x0tPIClI6o9uBeL/5NtfaS5Ma/1w
-	a99JGzT6DlTEdzgVuMzKP+Z8mAPG+y0T0p4A1n4ELueGougBRdMyj89FOVpDqwXRjKX8bwT74gj
-	bjdGSZrPqDJkc7WZg2KdkijkqKMHtubQbJRDw6mpfRX0XjneWeoyaOT7BmxzAe+3I3AD7MDTOxq
-	3yVc4F3GanVN948Md86Xqulm7RyW4qskAGTWyVPINgvrjbids4O0pbIAojnPzpwtz1PHCCo3WII
-	2R+/T
-X-Google-Smtp-Source: AGHT+IGgwLVhY4Dppc9nKpM99+nmIcpUTBUiHOn5t/pN1WR9JabBYoC8Dok1NUb/mKsm5Hmdd7j+iA==
-X-Received: by 2002:a17:907:613:b0:ace:f078:e08b with SMTP id a640c23a62f3a-ad21916975fmr1032950066b.47.1747059789964;
-        Mon, 12 May 2025 07:23:09 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad2197be0c5sm619626866b.153.2025.05.12.07.23.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 07:23:09 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Mon, 12 May 2025 16:22:41 +0200
-Subject: [PATCH 5/7] pinctrl: armada-37xx: propagate error from
- armada_37xx_pmx_gpio_set_direction()
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bxaNLGZn"
+Received: from [100.70.33.9] (unknown [172.200.70.35])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 10728211D8CE;
+	Mon, 12 May 2025 07:23:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 10728211D8CE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747059806;
+	bh=bsRyGKaV8sRJpQq5Zc/i6T71Ud1O1WM0d3J8aE2ryTI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=bxaNLGZnaWOn4pztP7LAHZSNR6oUEN7p2ff6LADZBG2eyd8ca5OtAL4bBgiy7h0zV
+	 o0LSARw9BkeXDHj54jQFDmAFSN++gqBUtXl0OyphrZ2NCOPZFaa8xaxWamWb7kAK6y
+	 SgS/N+JEflqT9Sb9poZ36Zz2ugSIGn+JBFtvNyEM=
+Message-ID: <c0dcf292-4c43-4e87-8016-34194f2bddb4@linux.microsoft.com>
+Date: Mon, 12 May 2025 07:23:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ima: Kdump kernel doesn't need IMA to do integrity
+ measurement
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com, bhe@redhat.com
+References: <20250502200337.6293-1-chenste@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20250502200337.6293-1-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-pinctrl-a37xx-fixes-v1-5-d470fb1116a5@gmail.com>
-References: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
-In-Reply-To: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>, 
- Gregory Clement <gregory.clement@bootlin.com>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>, 
- stable@vger.kernel.org, Imre Kaloz <kaloz@openwrt.org>
-X-Mailer: b4 0.14.2
 
-The armada_37xx_gpio_direction_{in,out}put() functions can fail, so
-propagate their error values back to the stack instead of silently
-ignoring those.
+On 5/2/2025 1:03 PM, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+>
+> Kdump kernel doesn't need IMA to do integrity measurement.
+> Hence the measurement list in 1st kernel doesn't need to be copied to
+> kdump kenrel.
+>
+> Here skip allocating buffer for measurement list copying if loading
+> kdump kernel. Then there won't be the later handling related to
+> ima_kexec_buffer.
+>
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+> ---
+>   security/integrity/ima/ima_kexec.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 38cb2500f4c3..7362f68f2d8b 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	void *kexec_buffer = NULL;
+>   	int ret;
+>   
+> +	if (image->type == KEXEC_TYPE_CRASH)
+> +		return;
+> +
+>   	/*
+>   	 * Reserve extra memory for measurements added during kexec.
+>   	 */
 
-Cc: stable@vger.kernel.org
-Fixes: 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Hi Baoquan,
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 2e88a0399d1a205064b58890db6477e2202bf311..aed0069b085ced5867993e95e0244df7ccda556d 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -472,16 +472,17 @@ static int armada_37xx_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
- {
- 	struct armada_37xx_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
- 	struct gpio_chip *chip = range->gc;
-+	int ret;
- 
- 	dev_dbg(info->dev, "gpio_direction for pin %u as %s-%d to %s\n",
- 		offset, range->name, offset, input ? "input" : "output");
- 
- 	if (input)
--		armada_37xx_gpio_direction_input(chip, offset);
-+		ret = armada_37xx_gpio_direction_input(chip, offset);
- 	else
--		armada_37xx_gpio_direction_output(chip, offset, 0);
-+		ret = armada_37xx_gpio_direction_output(chip, offset, 0);
- 
--	return 0;
-+	return ret;
- }
- 
- static int armada_37xx_gpio_request_enable(struct pinctrl_dev *pctldev,
+Could you tell me when will you have time to validate kdump scenario 
+using this patch?
 
--- 
-2.49.0
+This patch is based on the next-integrity branch of 
+https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/
+
+Thanks,
+
+Steven
 
