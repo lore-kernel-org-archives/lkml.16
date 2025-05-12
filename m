@@ -1,67 +1,67 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D92D21ABD3;
-	Mon, 12 May 2025 14:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3383921C170;
+	Mon, 12 May 2025 14:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059792; cv=none; b=BRif4DMU2/AVKxf4B13fVZ3fQAHmq6gOzNP6dicdMz9vAMKWPWazglU5NHisoFfPgDFKKVQUmIgeW6IltCIZdprO8qUFWOsIEPVRouEADRc4LDuXHRpSNYmPy2yPC9w++NCdbUzV6u9xVKQ8DOudWpu1vj3HwV9zs3PNcIT3F/s=
+	t=1747059794; cv=none; b=E15ibERLAqqZvKN0ZL0CCYlU3Sl4Jb7ktXLfYJHHVdVWEt4kuL78q8T9xv3IstcymAf3adFulssjlaWkTat6siaFw/ZH+h8q2lCr7FP4o6tsJUXYlhB97kfpeh5C0C0ZAaXrBYc4AHhEHRSDnIt7/CcPOdM+49Y5xwe+stS7tfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059792; c=relaxed/simple;
-	bh=GDOnWKWk4FBHNilM4Gzr5vCP9ujAJPgfrka/zdbU3zI=;
+	s=arc-20240116; t=1747059794; c=relaxed/simple;
+	bh=XxFOzwpfwLxWv53veDg6BCFF5Fv01aAKx6UgAlPxEAk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nsbh3LAh4lIQDy9vfpJIpCVPp+7TfDdrzcj3fY7o+R3ctYcuuAeilPSpuVBBPSI5Ej92tN70cCNIFAK8cVU/FZDXQZ6h7B6ylbrbj+RN9vtrpqoIrcf8fwz5O2rX2SNTsDNPRBfSn1YT7IXtuXHyC5KwcFvm5SrM0v/hDZF3vbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LhwmH9p0; arc=none smtp.client-ip=209.85.208.52
+	 In-Reply-To:To:Cc; b=rwlyB4baBzDRtIDsMHMZmLSYQsaPoAEkbcFSuxd2lt1PyBY17+EodcgdIQdV25sOgLXtsvMFIJluMe9+QzqO99mRUEbLNPqWAcxPtgmSbFNodET2iCUHjgw9cDxjV2YnN3ogWaSxNLeMUPNMhQgy3H1W56bCtEMHDkrc3+vf/s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQz9LDL/; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LhwmH9p0"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fbdf6973e7so5727144a12.2;
-        Mon, 12 May 2025 07:23:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQz9LDL/"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acae7e7587dso701503666b.2;
+        Mon, 12 May 2025 07:23:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747059789; x=1747664589; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747059791; x=1747664591; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/guz4pLuDNTxVy8lJnDBDsZGEukuirfrZgqdNdAPX1o=;
-        b=LhwmH9p0MFwtdLXgmCR2cRP3Zy72xc5Nm9jcHhMCmoN2sg9lOcGlmD6hjxsgzcYk6M
-         9Ec8bTgO7i4OFVn0TCQLv9ZKQ3DxHeUKWlOoTCO0GpxUgPCNGpI8Bludc100LK1oc+3I
-         BYt56C4exXX8L0fyGUZXmec2EjqKhshEVy5XG34z5wzVg2FCcHWLDdDX6gTIA4uLhH4U
-         HWai87jlNrI4MsJ6aOWNofW5gUYGTk0ArsI/seHwtoa9H8xtvRTvmLjMtO6B81t8xI71
-         JDzXsytT8HSFoJZaNRCAYGoGTnif6bfbhAlAL7bE7JoTcFS9Czs4sH6/gUmJvQpk/LKL
-         t3Pg==
+        bh=CStQ3me6L+6+JT5UQlE0AR5A7HHsIVocJn1DO4HPocA=;
+        b=DQz9LDL/jtmD0Oavzf2K6YSBMbC5EEFeZV6JBGFbFzMtKOVCc05wQXL7hYDvuQN3sU
+         bBjq77h6HgTnKLa27mBTe1yoftP87HsCUXZdURovs54/SzmmZnsG5+WHwcP5DzwUmzpd
+         mIVnIGi0UMP/Z0ASts12IcDkqvU6hMz8rI6Fc7EeI7IRFC7ufxV+VsFSobHZ6raZTTux
+         RqJtfZofjbBXY67lMTM/YeW5Xpp28a02PPJgS4AmjpkNTlU7tG8zFInFiXANkKfKFFo0
+         ImLXAddh6WjKRJZqmaGXOLun1fb0o41ihC4fiUink8S1JX0Q8inTCp0lJHwcmWjHee4v
+         dV3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747059789; x=1747664589;
+        d=1e100.net; s=20230601; t=1747059791; x=1747664591;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/guz4pLuDNTxVy8lJnDBDsZGEukuirfrZgqdNdAPX1o=;
-        b=JisF0gI5+jBMCvWCS/f1bH+J5PF2XSp282Ts6oOBCIYYMKyFAuuXQ+ncyFqQ9fj9kR
-         OXQV3PBARxkaSqUz9nOHQrgy1IWAmpkQJvBvn0oaqgbYlN0e+TfVLjJ/J0EfxYVnMn+B
-         u12M6GyHeswBo4hKKF9qr5KQwKb/KQVisDc7dtLJt8J7P9ZmyjuQ5kSDftQ4pNPDUUfz
-         VkOWhi4atCFfCfgdudLQ5hFVvUeqpGVn/8l3ONEXaW4TCeqZoP2/FoQBy7Qo2zNF8Tg+
-         vroCKmXASSCClYdYZLJPu8fOjAxiZUGSGLp8t30HraW2DwkBWk8bmi0MiZSqAS/zPD/m
-         1n9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVYpLEmoyuTPe+RfYKa08e1iNw+fNmzHubNYA+uLpFWzNvwhfM6L+3E6ePvoNvIXuts1lezIPnjFcJ9WXey@vger.kernel.org, AJvYcCVp+IvqSVKirnAF6P7nQyFLM1xAQhiB5ckXexHNk/49tn5dmjGDWdeWpj+Wap1qDnHEu7NZxz/U@vger.kernel.org, AJvYcCWiqqqVH0YKdcEfP7bUOgtYhNeb8+fBnmjYZuirLuE1VpRXsLQi53O9FEMYRMkFpraw6nIysbpdR7Ir@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO8l4XcTPJXdZj1AqDFI0TDqpuei/64uaX5EUKAABjTEIjTsr4
-	mkFAhzqDUS3ry4onwwgKbZ/0FQsCSxsvEye/dZIDZYb7KaTGdZf+
-X-Gm-Gg: ASbGnctKmD+O9L4QK5pUl8Ae2Lf+SLDc9Q4GBnBmhySCrtIA/ndKHELB25ANe3UQhjv
-	mooXJwd0Ie/80qh+1lURSldOUK8n04jlWsWPjxzaSukAZ6H9lQ+J1ONfQfgc7Rd2ZBze9lmH4z1
-	I7mi+9wXt4icHwNQ4nE8tDHWVkz+IrUES6RsggXC3q23APh6VGkNQhug3Yc2Xra+vgZ71T7JbWL
-	wwSsSq7k+lgNq9ni9lupV9LkvoZb0WVFYFSpNmgt0RE8uy63otZhg3UecoS5Uls+7AsriPwwfIm
-	7ZyA7KQEhtG7IKQBWGNMts10Fz6roDwyhw/EBQv943O9uBl9J3idRWuMkWelaqO7hg0TJozxKpc
-	647f6
-X-Google-Smtp-Source: AGHT+IH+FO5w31tHr6oUFBIoGn7EGEzlO+Kpe05iZvKG+L2hkO2L/WD3SeYo/NmL/boWglxIzee18Q==
-X-Received: by 2002:a17:906:d201:b0:ad2:1d1c:1c8e with SMTP id a640c23a62f3a-ad21d1c1f24mr934769966b.49.1747059788576;
-        Mon, 12 May 2025 07:23:08 -0700 (PDT)
+        bh=CStQ3me6L+6+JT5UQlE0AR5A7HHsIVocJn1DO4HPocA=;
+        b=pDh7YIJ3HcYz+f9tIOHWzcX8UK9oeqlKCRmdjGiae9JBupuQlVo6PQ049LKiBO7HGf
+         1yk5OEB30HxW0mhBKRJwZ1tAtlhhdE2eW/5rMDEISkBx3ESarj/9WDNBNFScy1Ng9EXr
+         2KQ2hM5U8v+rhBh7tIV0DOOvMuYLGCBxlPQdVrm34Pe+67vnV6DTKFtBeZFzjzs/wm6y
+         51TULbFwO0bb2IM713jMVWPbhSq5lYNxIXe4YnEZUIFKowqb90cW5FN0teiisv/H0vGM
+         gL4snHvSQxF3jHaDsKmXFg9d0UeVpVEkgPz6ASJD/mTlFa+Wtja+3HFjrTHUn2qcOrd5
+         p3oA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9qpEIJLmd7diyxDx8AY9ppa2VXvcomxupgDm9+vedOIgO9y1TNluMo5oBFh2bKQZ+kRH2ZVB5@vger.kernel.org, AJvYcCW+Ii4NM+59hQKjOiH+cZopoiXrtayLrNEweJ1mbphuUALXDdxZIHcAz/KqRb7CowK/cw2QupLaSSgI@vger.kernel.org, AJvYcCXUWcKlOxCHks1YVNQX9pMfCXYOMJKvKwvgmUYMWwPRHn3SY7uBjq24g9uuPjj9EZjzDSC80dTlY4Ui1XSb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPwUP8YOexM0boM9f4CvrdVuKKlI1vftJAbf4hNXFtMscEGBja
+	tr8loKdFg3aEdf08tmDIO37twrQBA1iwYsvCpdqDTf/0UmGvIwiw
+X-Gm-Gg: ASbGncsDJVrzv1v45nMmwQK9vNZ86NQvhkiUIlbeNDGtWcYk+cu9obJ3D1IcIpUyaIZ
+	H2610VqFJpMMPEqzuwmya5sz81Agka4NN7vu9yC701u5NEf7DtwG5T6YI5OIU/Od4te819RO9mn
+	Gzm/753VF7iNmcmJzbWehLUzQ6MhQL4m2AzWyGH+11728chdDjc+qD/H0Zt2f/leM2jIX0cnMDO
+	4g1v5D2+aG3HrFZaMQjFlCBoyq5F3voav+4D8hQ2q0iWgC/ny0XANvoz6Bn4D0AoULhc9DmwDJ7
+	ZitRV/4TQPRy+yq6HfrIp3mWmCESbxg3BxhUkZRhGxE3RlU6Gui4YNn6GSBJzE/nVkQ82i7WIHe
+	we+cF
+X-Google-Smtp-Source: AGHT+IEJ8JuqYsFOPLuXdkL4qUNKbfTaZqb+fmyTLkZmdZyKkJWiwhPAs4Y4Rf4gMO6EJazhHRUlCA==
+X-Received: by 2002:a17:907:1b1c:b0:aca:d6f0:af0c with SMTP id a640c23a62f3a-ad2192d4a49mr1292462066b.59.1747059791258;
+        Mon, 12 May 2025 07:23:11 -0700 (PDT)
 Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad2197be0c5sm619626866b.153.2025.05.12.07.23.07
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad2197be0c5sm619626866b.153.2025.05.12.07.23.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 07:23:08 -0700 (PDT)
+        Mon, 12 May 2025 07:23:10 -0700 (PDT)
 From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Mon, 12 May 2025 16:22:40 +0200
-Subject: [PATCH 4/7] pinctrl: armada-37xx: propagate error from
- armada_37xx_gpio_get()
+Date: Mon, 12 May 2025 16:22:42 +0200
+Subject: [PATCH 6/7] pinctrl: armada-37xx: propagate error from
+ armada_37xx_gpio_get_direction()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-pinctrl-a37xx-fixes-v1-4-d470fb1116a5@gmail.com>
+Message-Id: <20250512-pinctrl-a37xx-fixes-v1-6-d470fb1116a5@gmail.com>
 References: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
 In-Reply-To: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
 To: Andrew Lunn <andrew@lunn.ch>, 
@@ -95,25 +95,24 @@ Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 8d93d36af63ab9496376219454214c05db30971f..2e88a0399d1a205064b58890db6477e2202bf311 100644
+index aed0069b085ced5867993e95e0244df7ccda556d..18c6c5026b26c294ee65e3deea02d2e852e10622 100644
 --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
 +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -440,11 +440,14 @@ static int armada_37xx_gpio_get(struct gpio_chip *chip, unsigned int offset)
+@@ -402,10 +402,13 @@ static int armada_37xx_gpio_get_direction(struct gpio_chip *chip,
  	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
- 	unsigned int reg = INPUT_VAL;
+ 	unsigned int reg = OUTPUT_EN;
  	unsigned int val, mask;
 +	int ret;
  
  	armada_37xx_update_reg(&reg, &offset);
  	mask = BIT(offset);
- 
 -	regmap_read(info->regmap, reg, &val);
 +	ret = regmap_read(info->regmap, reg, &val);
 +	if (ret)
 +		return ret;
  
- 	return (val & mask) != 0;
- }
+ 	if (val & mask)
+ 		return GPIO_LINE_DIRECTION_OUT;
 
 -- 
 2.49.0
