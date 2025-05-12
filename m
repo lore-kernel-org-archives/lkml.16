@@ -1,95 +1,92 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CEAEAC7;
-	Mon, 12 May 2025 19:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7303925332D;
+	Mon, 12 May 2025 19:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747078211; cv=none; b=pWGD4X3VwiFwTwOuZE1ICsgNW98yZ7z5ltkz7XPvVOP7Y+aRY83+KphGBNuyrJDicOMB/fM7WPSVzTSP5NsaAbbAWytoFsgPJNNM2840MXSYEg1wCR5nUsjzzl/+/NxjxsHBLkEtWL2e8wp0FFVfjNjv92U+PsQoW1HCP1KQAXg=
+	t=1747078226; cv=none; b=oW9YWZ+s1p1mpZST+FFJNTgwVHtqdJ+cPFF24GSzaT8V/KoWztAYAoiCi5qgNXBC193roqJ84nPWX1ivfOUfuyaingb7CficgigBSGIa5p2Sel+pm4bP5cY9C7qngOeiCAqURBPHx5DGofbTmGBF9FM2k4IWtihadXA0NSHkO+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747078211; c=relaxed/simple;
-	bh=EAq9igK9ZsRG9y+KYZS6Syh/KUFHCf2/FcNcB//qTFw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NseYPSqQtyDMpi9eM8RAm87/S0IPnnaZvdMrqlRSpGcH3Ht0UNSbWgWg+qmg4pz7/lLEfhFrO0PxaT0Cb0XNuuvE3PCnbonGWTmZYJ2G13OKQEObpbbTRXF7nA27kqK0JTinmMXMHNCZ/SoI8VZd+5U+T2UU/yIuEhvoj5Ntq8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vSrPR2KO; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1747078226; c=relaxed/simple;
+	bh=SnfXj5AiXjTNiB+Fi6IRuaS5N/lfiblfFGY2z5N4g6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aRWUrkT1/WdaVbWzYtRuZOBT7wjiyrtmQFV4KNmEq6/Jr3X603vyDqBO+EjHiesEcRkS2gbYqnP+NMgc2A4DAd3614E8XwzVi57ZgEcGOmEiPWM/Xbi5xglo9U3KkZ2hBPDvZIsIU4yJ59bWB9q+l1J2vT/9ZH2BqFgCGdwLiAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSnwCH/0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vSrPR2KO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747078210; x=1778614210;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EAq9igK9ZsRG9y+KYZS6Syh/KUFHCf2/FcNcB//qTFw=;
-  b=vSrPR2KOSZex4Hxb/iD5+eKTFcdSj47MfYuLoE7yonDgG+Ew9BW9ETTu
-   gUX6f3YKNag4rBaWd4NyqWJltP7c9PIWi9TzwJwTNXsDR54tWOqFyl7NV
-   xgBOjKQk1wAD5EnDF8iKOjgxd9NMh5/sM7mnerbRKRwv5FURaTG8EumiP
-   bTUlzY/R2HMXRwPUA7UIZO6vAwXMf+uKT6mW7YRSSCwnfPPVI6bDGoIrK
-   CkqDMumVzsFiDkPEePWvr7YLOXtdWweo3tRAKSRFAlGJlgINFllg3fzgV
-   oOPxHxHFTx4rTxfL8GYRoAkvf+Dro+Ya401+adKiQ3bLNzQaiKdpp/pVc
-   w==;
-X-CSE-ConnectionGUID: lnPSkm7mSRKB1sBnpug5Qw==
-X-CSE-MsgGUID: z8AX82L7SnK3k23+cBcxsw==
-X-IronPort-AV: E=Sophos;i="6.15,283,1739862000"; 
-   d="scan'208";a="41049771"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 May 2025 12:30:09 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 12 May 2025 12:28:56 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Mon, 12 May 2025 12:28:56 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-	<olivia@selenic.com>
-CC: <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Ryan
- Wanner" <Ryan.Wanner@microchip.com>
-Subject: [PATCH 1/9] dt-bindings: crypto: add sama7d65 in Atmel AES
-Date: Mon, 12 May 2025 12:27:27 -0700
-Message-ID: <a5509576e211bcf528e088f78e619575a26bbd8f.1747077616.git.Ryan.Wanner@microchip.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1747077616.git.Ryan.Wanner@microchip.com>
-References: <cover.1747077616.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSnwCH/0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED12C4CEE7;
+	Mon, 12 May 2025 19:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747078225;
+	bh=SnfXj5AiXjTNiB+Fi6IRuaS5N/lfiblfFGY2z5N4g6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kSnwCH/0MiCWixLiKAZWxYQeeso/DTlx7vs8BTNUQxtyT+7yRJklPvnBUH1mFJW4z
+	 mSgN9w2RbiR8/fHK+v99pAIq6Pt9v2YSjdE/SC5gzGVm5dU2B0xKIXMO7TGyXOchzB
+	 8nzoNa0nTzfsVUoCDAlS6blZFZQKc4162/VzKPRlLn7yEx2vRRbVmJ0ToXbBCLk1xj
+	 dcWJ18azoOjXQzdKGLaWl3knqOYBwZ2xzV7v60ijiVeBHrD05j7OME+Q/kkHr83RsN
+	 LYXenR3n9MaC4D7gO8RcZIgMIfKecDsPrVMDKUqKFnZciKYmo8Oh9y3fjLe06JjeSu
+	 Y95gkvrf8aFOA==
+Date: Mon, 12 May 2025 14:30:23 -0500
+From: Rob Herring <robh@kernel.org>
+To: Vijay Balakrishna <vijayb@linux.microsoft.com>
+Cc: Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Tyler Hicks <code@tyhicks.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
+Message-ID: <20250512193023.GA3708326-robh@kernel.org>
+References: <1746404860-27069-1-git-send-email-vijayb@linux.microsoft.com>
+ <1746404860-27069-3-git-send-email-vijayb@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1746404860-27069-3-git-send-email-vijayb@linux.microsoft.com>
 
-From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On Sun, May 04, 2025 at 05:27:40PM -0700, Vijay Balakrishna wrote:
+> From: Sascha Hauer <s.hauer@pengutronix.de>
+> 
+> Some ARM Cortex CPUs like the A53, A57 and A72 have Error Detection And
+> Correction (EDAC) support on their L1 and L2 caches. This is implemented
+> in implementation defined registers, so usage of this functionality is
+> not safe in virtualized environments or when EL3 already uses these
+> registers. This patch adds a edac-enabled flag which can be explicitly
+> set when EDAC can be used.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> [vijayb: Added A72 to the commit message]
+> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index 2e666b2a4dcd..d1dc0a843d07 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -331,6 +331,12 @@ properties:
+>        corresponding to the index of an SCMI performance domain provider, must be
+>        "perf".
+>  
+> +  edac-enabled:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Some CPUs support Error Detection And Correction (EDAC) on their L1 and
+> +      L2 caches. This flag marks this function as usable.
+> +
 
-Add DT bindings for SAMA7D65 SoC in atmel AES.
+Since we don't want this on newer cores, add an if/then schema to only 
+allow this on A72 and whatever else you end up supporting.
 
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
----
- .../devicetree/bindings/crypto/atmel,at91sam9g46-aes.yaml     | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/crypto/atmel,at91sam9g46-aes.yaml b/Documentation/devicetree/bindings/crypto/atmel,at91sam9g46-aes.yaml
-index 7dc0748444fd..1de4ee70a05f 100644
---- a/Documentation/devicetree/bindings/crypto/atmel,at91sam9g46-aes.yaml
-+++ b/Documentation/devicetree/bindings/crypto/atmel,at91sam9g46-aes.yaml
-@@ -15,7 +15,9 @@ properties:
-     oneOf:
-       - const: atmel,at91sam9g46-aes
-       - items:
--          - const: microchip,sam9x7-aes
-+          - enum:
-+            - microchip,sam9x7-aes
-+            - microchip,sama7d65-aes
-           - const: atmel,at91sam9g46-aes
- 
-   reg:
--- 
-2.43.0
-
+Rob
