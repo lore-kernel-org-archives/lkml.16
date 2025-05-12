@@ -1,86 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C73C2571AB
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:32:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6923418641;
+	Mon, 12 May 2025 08:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038765; cv=none; b=T1eihONtADxUfpPSOV7gRs9kgWsFoxkUWhyoacudHtKflB9flZc3+la1FWHUIXXmsFDTZt+gFDxtGkbjqZJ0nabdkQ6ZfXGKdMSgmBmS631qC1TuMuu1ZyxPmtNGtF5Azr3gaUIXsSyEKpxZ3/6HX+sriuUalY9spSfuOLOAJb4=
+	t=1747038776; cv=none; b=HzWg1qfZoqUQwAFEAgKa1uO/Qm/KUBTeWG9L2lWxxMMbezmrSzBhNHAIZlfNZPShLrWRg7dsFSl8ihVyHmfpizRUqR6cEy/LHdSa8NA6fxiAl5g+4k+AqScvVg7uDwmWmf0lTIrFItNJcsLnEc5fpSMRgnJScN06JL6VnaatKkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038765; c=relaxed/simple;
-	bh=GX8fYHvvYUXe+jT1O2CX8/xQ4AmFtSJKyE3+LifDO/s=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=k363UercbFMqCIULMOH4YgNQG/R6S6KECDCY9D9OJdCL2FBvEWLRNCxJyK+xd3qSsswZ5vaClF3bLQwKyiE0Cw4TW5mekFxxP4QGdvDmoBscSTkQeYNTE8ZYwmpAUmlV8NMClhRVBq7ebmeEn+U5i0/OYub4gxJ8wMkRWK2o24g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNWL1fLx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747038776; c=relaxed/simple;
+	bh=3E+9roOzG0uDBJJlhQpnjD/rLvYcI1x7SJ02lswokIY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fy5cv5Ojc1K/5dZviJvhC78MiWBUFrAMKFUXIbHf523S7vELf85sVOlxXw3ukKqOnfNryie/eRW4+An20wNNcELTWBWsFwhPgpwa8qJGq9XySHM7RcGIXnW5peG4PhwUT7q/CxkBATcp6Kl0J/bWmTP9XduYIdBRVdekbIS0YjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/Z06Vmf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNWL1fLx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02563C4CEE7;
-	Mon, 12 May 2025 08:32:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/Z06Vmf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B78C4CEE7;
+	Mon, 12 May 2025 08:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747038764;
-	bh=GX8fYHvvYUXe+jT1O2CX8/xQ4AmFtSJKyE3+LifDO/s=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=TNWL1fLxQSTG+ahjZwR5I27l9cZT4zu/0hlxQ8kgnxamU3rAAN44dt4Kd4oiGcHTp
-	 9nT79CIx01TIQgT20ifARlPCz7/0OYmm5TWYCgHCDZS7ihTfbV6z4RV+Dtt8y7rYAN
-	 0XBs2GwxCM5NC4bht6Pv86/r7rJFMAaMg3VeNR4ZJpPrdxAGHlkZHsEY+uyGkjlhTN
-	 QFw/ZQzdmSLgTmcn5KqIYZWJd09mayxjTJUFNk/ndP4x6dw7tNgUxjmxSzA4xUiWI5
-	 bHFiAdbUsFe8I+4XZSlLgO9H11c20JzT4DdTLFh9URgdEcWX31t8RsTU20dgmBbK8j
-	 p1tlD4+64SgYQ==
-Message-ID: <bcb59f9d-a908-4ea4-ba24-af4cfa54145b@kernel.org>
-Date: Mon, 12 May 2025 16:32:40 +0800
+	s=k20201202; t=1747038774;
+	bh=3E+9roOzG0uDBJJlhQpnjD/rLvYcI1x7SJ02lswokIY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=F/Z06Vmf14lo5BA+l5yANEOuRLz+FeA5JPYog63df1VgYCivcLb+baKzjUZ4QRqBA
+	 +Ud++cIOyR+Og5tQgXbIhS1uJiJwDn34aSWPEjqLgJLzE9/5T2ljeMN1PP1VTK2JCy
+	 SZqlxO6BNBKEM6wzzJVBzFXSh/hnETtHJXFQofhYXdaLSt4VdH3XWtefBlnI3HWTHu
+	 Hi1akeCIT48l6ZjxppvpgsmOryuZ2hHeP7Bd5vbRRl28egnS2ViXsOzbSHa9AZ27sS
+	 kr0IWWgck8eoIlvJH8K1qWrLmvjQRTbFkIpH0yVQgW+8xpLp12o9DAPTaZmiRYwFVD
+	 /0k1wOSIzrm/Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uEOai-00E2lX-HX;
+	Mon, 12 May 2025 09:32:52 +0100
+Date: Mon, 12 May 2025 09:32:52 +0100
+Message-ID: <86wmamfcuj.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
+In-Reply-To: <aB2+TRSiGYL2eTWH@lpieralisi>
+References: <20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
+	<87zffpn5rk.ffs@tglx>
+	<86a57ohjey.wl-maz@kernel.org>
+	<87ecx0mt9p.ffs@tglx>
+	<867c2sh6jx.wl-maz@kernel.org>
+	<874ixwmpto.ffs@tglx>
+	<aBxgceQBRA6vBK7o@lpieralisi>
+	<864ixvh4ss.wl-maz@kernel.org>
+	<aByLHdktOLUk8HCN@lpieralisi>
+	<aB230INCy2h7X1KY@lpieralisi>
+	<aB2+TRSiGYL2eTWH@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, pilhyun.kim@sk.com
-Subject: Re: [PATCH v5 2/2] f2fs: add ckpt_valid_blocks to the section entry
-To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org,
- daehojeong@google.com
-References: <20250512073611.718-1-yohan.joung@sk.com>
- <20250512073611.718-2-yohan.joung@sk.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250512073611.718-2-yohan.joung@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 5/12/25 15:36, yohan.joung wrote:
-> when performing buffered writes in a large section,
-> overhead is incurred due to the iteration through
-> ckpt_valid_blocks within the section.
-> when SEGS_PER_SEC is 128, this overhead accounts for 20% within
-> the f2fs_write_single_data_page routine.
-> as the size of the section increases, the overhead also grows.
-> to handle this problem ckpt_valid_blocks is
-> added within the section entries.
+On Fri, 09 May 2025 09:35:25 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> Test
-> insmod null_blk.ko nr_devices=1 completion_nsec=1  submit_queues=8
-> hw_queue_depth=64 max_sectors=512 bs=4096 memory_backed=1
-> make_f2fs /dev/block/nullb0
-> make_f2fs -s 128 /dev/block/nullb0
-> fio --bs=512k --size=1536M --rw=write --name=1
-> --filename=/mnt/test_dir/seq_write
-> --ioengine=io_uring --iodepth=64 --end_fsync=1
+> On Fri, May 09, 2025 at 10:07:44AM +0200, Lorenzo Pieralisi wrote:
+> > On Thu, May 08, 2025 at 12:44:45PM +0200, Lorenzo Pieralisi wrote:
+> > 
+> > [...]
+> > 
+> > > I noticed that, if the irq_set_type() function is not implemented,
+> > > we don't execute (in __irq_set_trigger()):
+> > > 
+> > > irq_settings_set_level(desc);
+> > > irqd_set(&desc->irq_data, IRQD_LEVEL);
+> > 
+> > I don't get why the settings above are written only if the irqchip
+> > has an irq_set_type() method, maybe they should be updated in
+> > irqdomain code (?) where:
+> > 
+> > irqd_set_trigger_type()
+> > 
+> > is executed after creating the fwspec mapping ?
+> > 
+> > Is it possible we never noticed because we have always had irqchips that
+> > do implement irq_set_type() ?
+> > 
+> > Again, I don't know the history behind the IRQD_LEVEL flag so it is just
+> > a question, I'd need to get this clarified though please if I remove the
+> > PPI irq_set_type() callback.
 > 
-> before
-> SEGS_PER_SEC 1
-> 2556MiB/s
-> SEGS_PER_SEC 128
-> 2145MiB/s
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/powerpc/platforms/52xx/mpc52xx_pic.c?h=v6.15-rc5#n218
 > 
-> after
-> SEGS_PER_SEC 1
-> 2556MiB/s
-> SEGS_PER_SEC 128
-> 2556MiB/s
-> 
-> Signed-off-by: yohan.joung <yohan.joung@sk.com>
+> There are other examples in powerpc, this does not look right to me.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+I don't see what's wrong with this, given that PPC is about 15 years
+behind the curve when it comes to interrupt management. Better than
+Sparc or Alpha, though. So they do whatever was possible at the time
+this code was written.
 
-Thanks,
+It doesn't mean that you need to align with the worse we have in the tree!
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
