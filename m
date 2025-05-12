@@ -1,177 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA6A86352;
-	Mon, 12 May 2025 16:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95F82528FC;
+	Mon, 12 May 2025 16:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068757; cv=none; b=k+72m3EYnh0YakPEKblWqk0ZEV+lAdCYdRJji1YdD0O8/GQDOUJwa+QxJ+75PbplgogRE3V5mQsBu0PL0YBVvBSyGwhT7Apri/3hZy9Z9OlUZpCX8031dvvCvAsNS5cfKZ2V9yl9EDmgYLjRiZNBJ/0DmA4YXGjiuEIDapl84nc=
+	t=1747068778; cv=none; b=bOmRM3tDIFMFC3nRPuVnak6SF71D+11t6cWu1cqAUGPpzYHqbuiltuHTMq9N6oU7b7LxZ1CDTN0MQJC2/g4BAcW5fQkJWf2AHC2JMIPDfDNw+LNV0I3tow+6JXeF4ur0nfg80+ProFopKi1+A6js6cxmJuOtPRYVEHkXwe8ExBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068757; c=relaxed/simple;
-	bh=zJdYMJvHAhiYNICNPNsqH0wboKMQjcSXHu6LIl5OWXM=;
+	s=arc-20240116; t=1747068778; c=relaxed/simple;
+	bh=VA2k1DyRjqhjpTuXEVQSbyPFByM8zKA5P42D98FPHm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BvikDwo/Y8KhQM5ICkNVdQLJGctLgOgv0XnnopY7xKTzOF3dKEU3D8V3+lVvhQ+BZQ5DK1K+KgG/OxV3YeruUayH9z2SeWXtfTJiPfoVAluBjtV2pSlIQ9q3ymsNCUyUt/I6n4tH41UhsXpzMOxeqVwcDJvTgyCeW5J8UM1CpCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVYuGRhz; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LyKKTo8nGX5//a07CQS9IIO2B3fvZms5WD5oLqwfKUDs08aiz4oYqB5V+8Bildw4D81F7Oq1ZD+gH8kjA43zg5I3YhoEeKCV7MTcEy1EvB0/jwUKFM7DG6Tl/6ew6OqX8ZV5mv2FwyF+alLd9wq0bf5OHvPDcqCKfatlQFsjjLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YcSvvMLH; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVYuGRhz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747068756; x=1778604756;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=zJdYMJvHAhiYNICNPNsqH0wboKMQjcSXHu6LIl5OWXM=;
-  b=HVYuGRhzzNMl5Vmet90ynDOG8GQWtYn0dDOM0tSnbLdVpMmJ7eSsqKbH
-   yvtIdKv20wUhk5vSBvZG7n8CRcsoru3ftu8wJiyEQveKlWnK8/2cai0h1
-   jXsupKK2jgljBJrJtn8AN9frHve8m/171mkiGqRaWKkdw/LyPdE738g1c
-   ZC2c2DR3A+nUluTMwnczMpPgJ1MnRvkSQ06Vr/QVgqL/WSnq5NisD+gXz
-   yOs8/rvxkPE9KDDxLvrYOtI07psKnx7nmUlavjYOrxzgwQjjVU15RYyk2
-   Naiz0pfM9/YRykan6N4emlRJolfQ/4o+DXuF/7MQwduAqA1Mm5exHlUHT
-   A==;
-X-CSE-ConnectionGUID: j/U7GCE2RB6B1V7ZLD4Mfg==
-X-CSE-MsgGUID: QtItMCc4SoKW7969fIKcig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48746422"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="48746422"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 09:52:35 -0700
-X-CSE-ConnectionGUID: EZtLRt6xQlWRKBPzEUstcA==
-X-CSE-MsgGUID: EStaK6KASbaX2HgLRFV9VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="137941382"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 09:52:33 -0700
-Date: Mon, 12 May 2025 19:52:29 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
-	aravind.iddamsetty@linux.intel.com, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aCInTU5BmL0botSd@black.fi.intel.com>
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <CAJZ5v0hgpq0VmO_rDnEjDQniUiLJP3yo3-Rpy1NNxA_k8VAS2A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcSvvMLH"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so34034595e9.0;
+        Mon, 12 May 2025 09:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747068775; x=1747673575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bZNWFRrUSg91wrgDi7MuQDR/3MURApHPgoEnszpvjls=;
+        b=YcSvvMLHlc7Uaut/WqyXmuTaJmnye7LT1BK6qjl/KxB8HKu292oE52a9cTcaHGIA7R
+         aYhOLOorKuB+dRBPWW8OjYwDE3ITpNZfBjYB2XM6Sr71AXv31uqJAeKH9xJQt1W9n4Zu
+         xO6MnSrGEdNPr1/ZNJ80xNvVOyYfaSg7J+8GiEcmxWbJM907FH3eReuk8ICeOeQVBamQ
+         Q1M67f7h/EtMzp4Rx95cjWIE9eoyYRxtBvBb5EjD46eJPvTFv10xbPiFEsWP9beK5NOO
+         Cp3rW2jhES083qkDWWWvsUbN+Ph4yh3grunRiuiS8Gb4Xn4E2scVYENd33cgGoJzt/+8
+         SAng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747068775; x=1747673575;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bZNWFRrUSg91wrgDi7MuQDR/3MURApHPgoEnszpvjls=;
+        b=T+0A8q+j4kOeebQnqNLUq31cQzNVzvehup5JvPDFgbtDoryceOTNtGpvsamde4VhIr
+         YEiNOJ8YygQnXvKuk+463q/KHIacaqv+pX69nnIGCErwHlHQBIa5eJHRRuzrvxn2X7ma
+         Gz+h4uod1NUw9gN3iuauS0Krgvrts3NI7oZ33xMLrf4MnbTtv9iQLCV7HA+frdVzP+Tc
+         g74cwp84hEog01v0lYEXTCXzqfG0STgRopR9SsrVM6o0/lzN9f8Dv59W23FAob+EnBgU
+         TDInG9jxkDapYUcS+jMSyIhDAqQXwn9/1UaAWFAdRZzqjmjiMjmmGjXNHNP5Ru+0zTzz
+         hhRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyxTWQG+StKBRqvsm1NW056L1O8BIAlulQDhKoBW6rvPENjFDnKuRoMDI03MM9JfgEa8Uv8SPIaeQV2Rh3@vger.kernel.org, AJvYcCW3fSGhUX3BReo1RalQwu2frXdKUnmPf5KykAySJznBQ76aT/oOsPPJwV2YBHG9ss+iswuChFMRVqYk@vger.kernel.org, AJvYcCWjnngQuV+wGeuU76TjN+TIpiNLiFZIMVeKjfv3EGD4FJe0gCp0yqtGf2rHPVtiznee7Df51oNu2+kX4Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqSscuI6eF8R8tD8+fOnBchF2wSmjKn2T6B08JxOLy3Qekdoxn
+	K9a1ZjFGnGeO+NaFR+x32wbkWw1d3vZtgWabnVcFxM6E/hdOC7dG
+X-Gm-Gg: ASbGncstHA7AtebGfNJoGHGip+qlV8QXKrEEy8FTqchN/TfRUUdd77Uqpd++3Niulf8
+	/PYYrqVIQogrx45odPmRY24TXvKq6u3DP6uEpcmxAc5bsFWTBxmUTqxgdtOVHLY3vFhNf17k77U
+	9cAq8MDFz5Jeq/Gtl6Wv4BJpS/fMJTjdEHsuixYGCG0es7nlsiXG5DksAtTVjpB69FsPhmenkEZ
+	GtVf0SXDbrUPRrg+Zf1ZM9J7uh0i5YRIhhBMbLM4nwI22X12rEpiGkDY/ksFgiA4ETJRlPnCXgY
+	tOARG6kSnBncxNMelHcQJdMmZ6PtzQx+j4HLiq1KnKCHNIoCtA==
+X-Google-Smtp-Source: AGHT+IFgWc2wCu7S/9RbJZkXPhP5XtjOV9ZJ33dg5BwNo4gnN8tIOEohMbw4lQklsVP/+z33huQ1EA==
+X-Received: by 2002:a05:600c:528a:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-442d6d6b6ecmr121896135e9.18.1747068774592;
+        Mon, 12 May 2025 09:52:54 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:632:2600:22ea:3d6a:5919:85f8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f194sm176749815e9.10.2025.05.12.09.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 09:52:54 -0700 (PDT)
+Date: Mon, 12 May 2025 18:52:52 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: dimitri.fedrau@liebherr.com,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <20250512165252.GA11091@legfed1>
+References: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
+ <1bd48694-9760-4e6b-9138-4651d42ff032@roeck-us.net>
+ <20250512133114.GA6440@legfed1>
+ <a7a71408-c01d-4e0c-bd44-73ffbd79f716@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hgpq0VmO_rDnEjDQniUiLJP3yo3-Rpy1NNxA_k8VAS2A@mail.gmail.com>
+In-Reply-To: <a7a71408-c01d-4e0c-bd44-73ffbd79f716@roeck-us.net>
 
-On Mon, May 12, 2025 at 01:56:06PM +0200, Rafael J. Wysocki wrote:
-> On Sun, May 4, 2025 at 11:06 AM Raag Jadav <raag.jadav@intel.com> wrote:
-> >
-> > If error flags are set on an AER capable device, most likely either the
-> > device recovery is in progress or has already failed. Neither of the
-> > cases are well suited for power state transition of the device, since
-> > this can lead to unpredictable consequences like resume failure, or in
-> > worst case the device is lost because of it. Leave the device in its
-> > existing power state to avoid such issues.
-> >
-> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> > ---
-> >
-> > v2: Synchronize AER handling with PCI PM (Rafael)
-> > v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
-> >     Elaborate "why" (Bjorn)
+Am Mon, May 12, 2025 at 06:53:21AM -0700 schrieb Guenter Roeck:
+> On 5/12/25 06:31, Dimitri Fedrau wrote:
+> > Hi Guenter,
+> > 
+> > Am Mon, May 12, 2025 at 06:04:33AM -0700 schrieb Guenter Roeck:
+> > > On 5/12/25 04:26, Dimitri Fedrau via B4 Relay wrote:
+> > > > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > > > 
+> > > > The MC33XS2410 provides temperature sensors for the central die temperature
+> > > > and the four outputs. Additionally a common temperature warning threshold
+> > > > can be configured for the outputs. Add hwmon support for the sensors.
+> > > > 
+> > > > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > > > ---
+> > > 
+> > > > +
+> > > > +static int mc33xs2410_hwmon_read_out_status(struct spi_device *spi,
+> > > > +					    int channel, u16 *val)
+> > > > +{
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +
+> > > > +	/* Bits latches high */
+> > > > +	return mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
+> > > 
+> > > Is that double read of the same register needed ? If so, you'll probably
+> > > need a lock to prevent it from being executed from multiple threads at the
+> > > same time.
+> > > 
+> > > The comment "Bit latches high" doesn't really mean anything to me and doesn't
+> > > explain why the register needs to be read twice.
+> > > 
+> > > 
+> > 
+> > All bits of the output status registers are latched high. In case there
+> > was overtemperature detected, the bit stays set until read once and cleared
+> > afterwards. So I need a second read to get the "realtime" status.
+> > Otherwise I might end up returning an false positive overtemperature
+> > warning. I don't think a lock is really necessary, since I'm only
+> > interested in the "realtime" status but not if there was a warning in
+> > the past. What do you think ?
+> > 
 > 
-> I think this is reasonable, so
+> Hardware monitoring is _expected_ to report the last latched status and clear
+> it afterwards, to ensure that historic alarms are reported at least once.
+> This isn't about "false positive", it is about "report at least once if
+> possible".
+>
+Didn't know that, thanks for the explanation.
+
+> Given that, the second read is unnecessary from hwmon ABI perspective. If you
+> don't want to do that, you should explicitly document that latched (historic)
+> over-temperature alarms are not reported.
 > 
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+I would stick to hwmon ABI, just didn't know better.
 
-Thank you!
-
-> (and you might as well CC it to linux-pm@vger.kernel.org>).
-
-Cc'ing linux-pm list as requested by Rafael.
-
-> > More discussion on [1].
-> > [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
-> >
-> >  drivers/pci/pci.c      | 12 ++++++++++++
-> >  drivers/pci/pcie/aer.c | 11 +++++++++++
-> >  include/linux/aer.h    |  2 ++
-> >  3 files changed, 25 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 4d7c9f64ea24..25b2df34336c 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -9,6 +9,7 @@
-> >   */
-> >
-> >  #include <linux/acpi.h>
-> > +#include <linux/aer.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/dmi.h>
-> > @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
-> >            || (state == PCI_D2 && !dev->d2_support))
-> >                 return -EIO;
-> >
-> > +       /*
-> > +        * If error flags are set on an AER capable device, most likely either
-> > +        * the device recovery is in progress or has already failed. Neither of
-> > +        * the cases are well suited for power state transition of the device,
-> > +        * since this can lead to unpredictable consequences like resume
-> > +        * failure, or in worst case the device is lost because of it. Leave the
-> > +        * device in its existing power state to avoid such issues.
-> > +        */
-> > +       if (pci_aer_in_progress(dev))
-> > +               return -EIO;
-> > +
-> >         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> >         if (PCI_POSSIBLE_ERROR(pmcsr)) {
-> >                 pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index a1cf8c7ef628..4040770df4f0 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
-> >
-> > +bool pci_aer_in_progress(struct pci_dev *dev)
-> > +{
-> > +       u16 reg16;
-> > +
-> > +       if (!pcie_aer_is_native(dev))
-> > +               return false;
-> > +
-> > +       pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
-> > +       return !!(reg16 & PCI_EXP_AER_FLAGS);
-> > +}
-> > +
-> >  static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
-> >  {
-> >         int rc;
-> > diff --git a/include/linux/aer.h b/include/linux/aer.h
-> > index 02940be66324..e6a380bb2e68 100644
-> > --- a/include/linux/aer.h
-> > +++ b/include/linux/aer.h
-> > @@ -56,12 +56,14 @@ struct aer_capability_regs {
-> >  #if defined(CONFIG_PCIEAER)
-> >  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> >  int pcie_aer_is_native(struct pci_dev *dev);
-> > +bool pci_aer_in_progress(struct pci_dev *dev);
-> >  #else
-> >  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
-> >  {
-> >         return -EINVAL;
-> >  }
-> >  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> > +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
-> >  #endif
-> >
-> >  void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> > --
-> > 2.34.1
-> >
+Best regards,
+Dimitri Fedrau
