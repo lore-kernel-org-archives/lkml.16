@@ -1,49 +1,48 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524372581;
-	Mon, 12 May 2025 04:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BD22576;
+	Mon, 12 May 2025 04:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747022928; cv=none; b=G8SnqvckNvTwDbIY0wPwAEnYSfRpGlQhxOiuIfNMtFyjaa1ntBidOpea+3TpfZudo2jHsuMETEDZkeslVC7kBuGFijpVv/Qas6/qRgE9kUfE1ug9ZPX16r8CTc7fNrXez5YQsbb9Zv7cY3WyVjtmqGASp4j6XkcuFgJOBRhRBHM=
+	t=1747023389; cv=none; b=ULF1oi5Dq1rEQ1DB/NAbdjGfbyZ1M8jy6zMVpwpJT+NiGf3mzIgdaDBnkWUdc9mSoovLIi3LAH/xSC2rcXSU0ncMql25QHDigTXTSzI8/fYC73qpVNbvmW8Yd0UYLCLFJyGz12Em5giZSR0hpgUYBo93eF36SKo5tpQr6VcfHGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747022928; c=relaxed/simple;
-	bh=aln9DmfXRuN+tO6/0rGrimcXeQ9FUm7r0D0ZUOtk9CM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FxeAyaMFy0WSZUgmlaybaLptoMDQcZcKvliqdETLTfaMIFcp4mkppgcpcqif/CoVrtwEuGcGwebj11KEiSKsCGcjX/dAJjXk+bBlG7KLd9Y7zBmN0LM7m9sgto33rxy8N3SSwG6sJcr9A2jvPDasTcuvBYUxe3s/bmGg3kyzBxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vtlE6sfx; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747023389; c=relaxed/simple;
+	bh=CSx5GjW8qiIQ6AI5LGKRHO8jBbY0J44kUonuoOj6vpo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=gO6KpE4g/PRU72I1Kh2WW6J8YGx6MbTn+KgeZuEl5W9Ih/C04XiTxjbRUEO3W3rkRaO3na9BQGJLX0hbLLavpjonM7FYovbiR4hG2A4HBJYM6dwUvEqKQ3KoAaqfgpX4tK8cvJLeyb9Peg0l9huUV4sa/RAvo9bh3LUJqm365X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HFvYA+Tp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vtlE6sfx"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54C48PN31886591
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 11 May 2025 23:08:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747022905;
-	bh=B4jIGFFEzsxss9v5WhND1jA7Ey0iHFDYgwWdBPkL0QE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=vtlE6sfx/ufhz465nmQGFcLVwA3Uq7qLbaNdyYzg2Cf8NxVXiz59eKsDVs2J3eJYX
-	 GtjnQmUIfaNT5zwdJkSECxpvRPBUuwqYwlxGqmuXvtqlbsBLFtlLC7ISHlKUBfNY4D
-	 Pa8tFu1mO6Yck1QJjDhnaGZucbuKR10rzxGW27lI=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54C48Pqd083802
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 11 May 2025 23:08:25 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 11
- May 2025 23:08:25 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 11 May 2025 23:08:24 -0500
-Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54C48K3W045464;
-	Sun, 11 May 2025 23:08:21 -0500
-Message-ID: <df8c3e7a-a36a-4252-8825-5c66ea263236@ti.com>
-Date: Mon, 12 May 2025 09:38:20 +0530
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HFvYA+Tp"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BMHLg7022069;
+	Mon, 12 May 2025 04:15:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	w0qXQLLr+NzmGUNVJlRa+YPm19SxX0X9UG+bF3cx/Fk=; b=HFvYA+TpDHtheibJ
+	JuyDFfCHUFnxmLbHsvuUNL1X3q/hbDlhh3RD8Ca3c2EwwEK8YJh11OjiiRAqw5VS
+	IXvsi6WXtFgIVXwysHN9ksBZCBiaNAec9s+8Wz/KpXHK6oIDYWwZwW3Yg2zI2vq7
+	iuefm4XW4Q6GzfqSge968xf3WZUZu8YT4IfIYuVIFpTY6KW88It9w4JGO2NXOgVo
+	0hqoydngIRb6Gww1LKyAS2WpuVWh5jnIbCQ7OjkjfbgAssHgVRiEC2qFnG+gkKGp
+	4ws7EvwDBy8n3VClPkK5CmwQI5GIc8b7XWyxGQXKWA2dF5FQztUB2LHZzYsoOucg
+	TUWIZg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hy68k0mq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 04:15:58 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54C4FvPr008184
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 04:15:57 GMT
+Received: from [10.216.41.215] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 11 May
+ 2025 21:15:52 -0700
+Message-ID: <8ebe4439-eab8-456a-ac91-b53956eab633@quicinc.com>
+Date: Mon, 12 May 2025 09:45:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,171 +50,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 00/35] Refactor TI K3 R5, DSP and M4 Remoteproc
- Drivers
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-CC: <andersson@kernel.org>, <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>,
-        <jm@ti.com>, <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250425104135.830255-1-b-padhi@ti.com> <aB42vd1dmPn0FaJI@p14s>
+Subject: Re: [PATCH V2 1/3] scsi: ufs: dt-bindings: Document UFS Disable LPM
+ property
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <bvanassche@acm.org>, <krzk+dt@kernel.org>,
+        <robh@kernel.org>, <mani@kernel.org>, <conor+dt@kernel.org>,
+        <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+        <beanhuo@micron.com>, <peter.wang@mediatek.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20250506163705.31518-1-quic_nitirawa@quicinc.com>
+ <20250506163705.31518-2-quic_nitirawa@quicinc.com>
+ <667e43a7-a33c-491b-83ca-fe06a2a5d9c3@kernel.org>
+ <9974cf1d-6929-4c7f-8472-fd19c7a40b12@quicinc.com>
 Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <aB42vd1dmPn0FaJI@p14s>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9974cf1d-6929-4c7f-8472-fd19c7a40b12@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-
-Hi Mathieu,
-
-On 09/05/25 22:39, Mathieu Poirier wrote:
-> On Fri, Apr 25, 2025 at 04:11:00PM +0530, Beleswar Padhi wrote:
->> This series refactors a lot of functions & callbacks from
->> ti_k3_dsp_remoteproc.c, ti_k3_r5_remoteproc.c and ti_k3_m4_remoteproc.c
->> drivers. This is a consolidated and final series as part of the
->> refactoring of K3 remoteproc drivers. Below is the breakdown:
->> 1. PATCHES #1-#3 fixes important bugs in R5 and DSP drivers before refactoring
->> them into a common driver.
->> 2. PATCHES #4-#10 does the pre-cleanup and aligns R5, DSP, M4 data structures.
->> 3. PATCHES #11-#35 does the actual refactoring R5, DSP and M4 drivers into
->> ti_k3_common.c driver.
->>
->> NOTE:
->> This series supersedes below series:
->> https://lore.kernel.org/all/20250219091042.263819-1-b-padhi@ti.com/
->> https://lore.kernel.org/all/20250417182001.3903905-1-b-padhi@ti.com/
->> https://lore.kernel.org/all/20250108063727.1416324-1-b-padhi@ti.com/
->>
->> Testing Done:
->> 1. Tested boot of R5Fs, C66x DSPs, C71x DSPs across Jacinto J7* devices in
->> remoteproc mode and IPC-Only mode.
->> 2. Tested boot of M4F core _only_ in _AM62xx SK_ board in Remoteproc mode and
->> IPC-Only mode.
->> 3. Tested Core stop and detach operations from sysfs for R5Fs, C66x DSPs, C71x DSPs
->> 4. Tested device removal paths by executing 'modprobe -r ti_k3_dsp_remoteproc'
->> and 'modprobe -r ti_k3_r5_remoteproc'.
->> 5. Tested usecases where firmware not available at device probe time, but
->> later in sysfs, able to load firmware into a remotecore and start it. [R5Fs]
->> 6. Tested that each patch in this series generates no new warnings/errors.
->> 7. Tested IPC on AM64x EVM Device. [Thanks to Judith].
->>
->> v11: Changelog:
->> 1. New patches: [v11 15/35] and [v11 18/35].
->> Broken down rproc_reset() and rproc_release() refactoring patches into more
->> atomic changes.
->> 2. Carried T/B on all patches from Judith.
->> 3. Carried A/B on [PATCH v11 13/35] by Andrew.
->>
->> Link to v10:
->> https://lore.kernel.org/all/20250417182001.3903905-1-b-padhi@ti.com/
->>
->> v10: Changelog:
->> 1. Re-ordered Bug Fixes to the start of the series, before starting pre-cleanup
->> and finally the actual refactor. [Andrew]
->> 2. Broken down commits into more atomic changes for ease of review. [Andrew].
->> 3. Updated commit messages to have uniform flow throughout the series.
->> 4. Carried R/B tags in applicable patches.
->> 5. Further patch specific changelog is attached with patches.
->>
->> Link to v9:
->> https://lore.kernel.org/all/20250317120622.1746415-1-b-padhi@ti.com/
->>
->> v9: Changelog:
->> 1. Added R5 cleanup & refactoring along with existing DSP, M4 refactoring into this series. [Andrew]
->> 2. Dropped Mailbox level IPC checks across R5, DSP, M4 drivers in IPC-only mode. [Andrew] 
->>
->> Link to v8:
->> https://lore.kernel.org/all/20250103101231.1508151-1-b-padhi@ti.com/
->>
->> v8: Changelog:
->> 1. Broken down refactoring into patches, each patch dealing with one function
->> for ease in review. [Andrew]
->>
->> Links to older versions:
->> v7: https://lore.kernel.org/all/20240202175538.1705-1-hnagalla@ti.com/
->> v6: https://lore.kernel.org/all/20230913111644.29889-1-hnagalla@ti.com/
->> v5: https://lore.kernel.org/all/20230808044529.25925-1-hnagalla@ti.com/
->> v4: https://lore.kernel.org/all/20230801141117.2559-1-hnagalla@ti.com/
->> v3: https://lore.kernel.org/all/20230302171450.1598576-1-martyn.welch@collabora.com/
->> v2: https://lore.kernel.org/all/20230301111323.1532479-4-martyn.welch@collabora.com/
->> v1: https://lore.kernel.org/all/20220110040650.18186-1-hnagalla@ti.com/
->>
->> Thanks,
->> Beleswar
->>
->> Beleswar Padhi (33):
->>   remoteproc: k3-r5: Refactor sequential core power up/down operations
->>   remoteproc: k3-r5: Re-order internal memory initialization functions
->>   remoteproc: k3-r5: Re-order k3_r5_release_tsp() function
->>   remoteproc: k3-r5: Refactor Data Structures to Align with DSP and M4
->>   remoteproc: k3-r5: Use k3_r5_rproc_mem_data structure for memory info
->>   remoteproc: k3-{m4/dsp}: Add a void ptr member in rproc internal
->>     struct
->>   remoteproc: k3-m4: Add pointer to rproc struct within k3_m4_rproc
->>   remoteproc: k3-m4: Use k3_rproc_mem_data structure for memory info
->>   remoteproc: k3: Refactor shared data structures
->>   remoteproc: k3: Refactor mailbox rx_callback functions into common
->>     driver
->>   remoteproc: k3: Refactor .kick rproc ops into common driver
->>   remoteproc: k3-dsp: Correct Reset logic for devices without lresets
->>   remoteproc: k3-m4: Introduce central function to put rproc into reset
->>   remoteproc: k3: Refactor rproc_reset() implementation into common
->>     driver
->>   remoteproc: k3-dsp: Correct Reset deassert logic for devices w/o
->>     lresets
->>   remoteproc: k3-m4: Introduce central function to release rproc from
->>     reset
->>   remoteproc: k3: Refactor rproc_release() implementation into common
->>     driver
->>   remoteproc: k3-m4: Ping the mbox while acquiring the channel
->>   remoteproc: k3: Refactor rproc_request_mbox() implementations into
->>     common driver
->>   remoteproc: k3-dsp: Don't override rproc ops in IPC-only mode
->>   remoteproc: k3-dsp: Assert local reset during .prepare callback
->>   remoteproc: k3: Refactor .prepare rproc ops into common driver
->>   remoteproc: k3: Refactor .unprepare rproc ops into common driver
->>   remoteproc: k3: Refactor .start rproc ops into common driver
->>   remoteproc: k3: Refactor .stop rproc ops into common driver
->>   remoteproc: k3: Refactor .attach rproc ops into common driver
->>   remoteproc: k3: Refactor .detach rproc ops into common driver
->>   remoteproc: k3: Refactor .get_loaded_rsc_table ops into common driver
->>   remoteproc: k3: Refactor .da_to_va rproc ops into common driver
->>   remoteproc: k3: Refactor of_get_memories() functions into common
->>     driver
->>   remoteproc: k3: Refactor mem_release() functions into common driver
->>   remoteproc: k3: Refactor reserved_mem_init() functions into common
->>     driver
->>   remoteproc: k3: Refactor release_tsp() functions into common driver
->>
->> Siddharth Vadapalli (2):
->>   remoteproc: k3-r5: Drop check performed in
->>     k3_r5_rproc_{mbox_callback/kick}
->>   remoteproc: k3-dsp: Drop check performed in
->>     k3_dsp_rproc_{mbox_callback/kick}
->>
->>  drivers/remoteproc/Makefile               |    4 +-
->>  drivers/remoteproc/ti_k3_common.c         |  547 +++++++++++
->>  drivers/remoteproc/ti_k3_common.h         |  113 +++
->>  drivers/remoteproc/ti_k3_dsp_remoteproc.c |  616 +------------
->>  drivers/remoteproc/ti_k3_m4_remoteproc.c  |  583 +-----------
->>  drivers/remoteproc/ti_k3_r5_remoteproc.c  | 1012 +++++++--------------
-> I am done reviewing this set.  The work done herein is a textbook example on how
-> refactoring should be done and I commend you for it.
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA0MSBTYWx0ZWRfX5lpTx1qfLZEX
+ 9efWac04HZiyJAoUuKIOzYP384IVU5nmZuSzPcBH2pwkraycLo88cFGaxE4ky6NR3fZjaSY3jQw
+ Efm5qcrftdQRQCnNAFarbykz0VcSDo95YDBoasfbQYt3+8Wof5UksEMQ+i66rOxy9/lU5YUDPsS
+ htF8jJkvxPKiY1i5ZAf2jTpFPryfPei1J9/04nymmaY4intaEKLvtltsooZV9FCt/1aQb5aV5bW
+ rMoRSq+cdrwgNKDgXUJ8wTPGzuDpWhxdgRrkwF90CS1/nEmg4RPDVy8EROXdTpHGikWPVEJEyTW
+ TWpUDess3zEg6YeM5vxzAi3rZNl6fOsGkNDXWxqoo52uXZ88WVsbwtgqJeh03eXGf3dNhHSRFaH
+ lkegvitShDfra9dVayq+4E5p6j2QDUM6oLChtlvC6x6mi/XUCbWWvmPvKsKD4s69qWsnv+1A
+X-Proofpoint-GUID: 12Wti5JdCVsqytwACHxoaLvWRHLh0rZ1
+X-Proofpoint-ORIG-GUID: 12Wti5JdCVsqytwACHxoaLvWRHLh0rZ1
+X-Authority-Analysis: v=2.4 cv=c5irQQ9l c=1 sm=1 tr=0 ts=682175fe cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=paxrxDOAfeD8ejVehjsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505120041
 
 
-Thank you for the reviews and appreciation!
-Thanks to Andrew for constantly reviewing and pushing the series in right direction!
 
-Thanks,
-Beleswar
+On 5/7/2025 8:34 PM, Nitin Rawat wrote:
+> 
+> 
+> On 5/6/2025 11:46 PM, Krzysztof Kozlowski wrote:
+>> On 06/05/2025 18:37, Nitin Rawat wrote:
+>>> Disable UFS low power mode on emulation FPGA platforms or other 
+>>> platforms
+>>
+>> Why wouldn't you like to test LPM also on FPGA designs? I do not see
+>> here correlation.
+> 
+> Hi Krzysztof,
+> 
+> Since the FPGA platform doesn't support UFS Low Power Modes (such as the 
+> AutoHibern8 feature specified in the UFS specification), I have included 
+> this information in the hardware description (i.e dts).
 
->
-> Mathieu
->
->>  6 files changed, 1072 insertions(+), 1803 deletions(-)
->>  create mode 100644 drivers/remoteproc/ti_k3_common.c
->>  create mode 100644 drivers/remoteproc/ti_k3_common.h
+
+Hi Krzysztof,
+
+Could you please share your thoughts on my above comment? If you still 
+see concerns, I may need to consider other options like modparam.
+
+Regards,
+Nitin
+
+> 
+> Thanks,
+> Nitin
+> 
 >>
->> -- 
->> 2.34.1
+>>> where it is either unsupported or power efficiency is not a critical
+>>> requirement.
 >>
+>> That's a policy, not hardware, thus not suitable for DT.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> 
+
