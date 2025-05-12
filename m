@@ -1,187 +1,96 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8551DE4CD
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDB319049B;
+	Mon, 12 May 2025 18:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747072842; cv=none; b=XwjldEQHAvd6KrckI2hcHkEl8gcyOcXliVA1JLrssLUf7f9OY9ljxEVkBcMWAXSbVdI6lpza64M4d8sC+CBadKdlutan6iw/P1qEyNcFo5MZx2//Iky4x8JULT1T9cwDXTlWAqqlh1go+qn8Ss4hwDHliFvC/5VsMb9v++0zz3U=
+	t=1747073038; cv=none; b=dstpg1Ir6jtc+12SKrSRaAoFrvvTQYq0kcROS/VVhiZxw/IlUPXxegLqxFa/fIHwr13bqq8H3wxKYKDV8kJytVjlJFYZW7rC6FCCJZic6/bsBiudABquUHKXes1flYiAJis6FLOmUZNj5NXIV2ogujlfjNop8nYxDON2+p48wig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747072842; c=relaxed/simple;
-	bh=fGBDzm38SHotQ4ArsU6HmeU+3zz7XAVrMhlyZFy3IZs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NdtO0QeLJpAvMGQqE5i1DnjVF926LbVVmvQuVv2QkwMb9oK+X1ksh3gy4PPCjYp9TjoHEjFJLTrdkBfCNNnNABz3yqogBvkIDcfQWLlStHk7DGMh/JjWmCzpzQz1G1dZN/6aYfNIdcZVouJE9OtEm6C6HPL7C9Cs41u0U3wO3XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hGlf2DxK; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747073038; c=relaxed/simple;
+	bh=XiRHC2t043NnSSGBWQQnSJasI7hGGZVVUaHhNOhQFEk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aq5JDWM1k/vBtj4dazlJaus9xrcAwnA38mnixtADz/U+iY+84M12Jwl6wu4L8lDL+ck1PJYlY5e61AKy1gJtYWF4GwDcM7d1iu7s9K5qxh1kbqm6ZbdTgMKkk5CzfiC90+hWdOU3aRgPd3vc/ZZVq+bkeoDcgzzvy2JlLAqJxQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXm+8JkR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hGlf2DxK"
-Message-ID: <f27b0506-4841-4650-a0ee-0fe1643fdf37@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747072827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ma5n1WWRt3IZMb/J5uvgHDAZKLn3T38CaI/Jo/Q76W4=;
-	b=hGlf2DxK/ll+4zVXxruxyenHniDCnXz8vzRbFapb8hUS/itdZEy/TPz0teFHV4TatUnnP5
-	BZv20ibsOKJy8hV5P8G/DZG5leGxmgDJH5uq+u9fW1PbSJFjurDRqz8BLE1IErge+GiHcI
-	Rumre5V3Jb6JPbLB6RELqbbucJ4f7ug=
-Date: Mon, 12 May 2025 11:00:21 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXm+8JkR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A95C4CEEF;
+	Mon, 12 May 2025 18:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747073038;
+	bh=XiRHC2t043NnSSGBWQQnSJasI7hGGZVVUaHhNOhQFEk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZXm+8JkRbQykCAmP+VlflsFkYqkA0cQxXQvQx+yAfrVreqK/qFsH2aED27vHWKB5x
+	 RJEvXBfAjnTVSwbNHu5RBck00e6fWx0O/zFYRCysSVhrAR80jmI45BruQQ0Bs8SMWN
+	 umJFY9rPUOyr45udt4hQKrvug3Mt0E3DbbX2Zp/C+nCAGGOZ0vRs/jYlyreRlcUBiR
+	 1rIGsJzpt7+PpTZDjH7UzyByTf8RFE6mGJrpi0ymC3u1/BvtDs+CkktcLCJydeS5Js
+	 iu1FvQwYUYIfWeJ5RSlK69Pr22IGgT5pTbv5geJ8F2fiUhie4Catks8XaDmAfDaQ01
+	 NGtBFeLw5OqGw==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jic23@kernel.org,
+	sean@geanix.com,
+	andriy.shevchenko@linux.intel.com,
+	Frank.Li@nxp.com,
+	nuno.sa@analog.com,
+	haibo.chen@nxp.com,
+	jstephan@baylibre.com,
+	tgamblin@baylibre.com,
+	han.xu@nxp.com,
+	peterz@infradead.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 01/15] iio: accel: fxls8962af: Fix wakeup source leaks on device unbind
+Date: Mon, 12 May 2025 14:03:36 -0400
+Message-Id: <20250512180352.437356-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 04/14] riscv: sbi: add FWFT extension interface
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
-References: <20250424173204.1948385-1-cleger@rivosinc.com>
- <20250424173204.1948385-5-cleger@rivosinc.com>
- <1c385a47-0a01-4be4-a34b-51a2f168e62d@linux.dev>
- <fe9d801b-007d-476d-97fe-96d0f3d218cd@rivosinc.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <fe9d801b-007d-476d-97fe-96d0f3d218cd@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.6
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On 5/12/25 1:14 AM, Clément Léger wrote:
->
-> On 09/05/2025 02:18, Atish Patra wrote:
->> On 4/24/25 10:31 AM, ClÃ©ment LÃ©ger wrote:
->>> This SBI extensions enables supervisor mode to control feature that are
->>> under M-mode control (For instance, Svadu menvcfg ADUE bit, Ssdbltrp
->>> DTE, etc). Add an interface to set local features for a specific cpu
->>> mask as well as for the online cpu mask.
->>>
->>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->>> ---
->>>    arch/riscv/include/asm/sbi.h | 17 +++++++++++
->>>    arch/riscv/kernel/sbi.c      | 57 ++++++++++++++++++++++++++++++++++++
->>>    2 files changed, 74 insertions(+)
->>>
->>> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
->>> index 7ec249fea880..3bbef56bcefc 100644
->>> --- a/arch/riscv/include/asm/sbi.h
->>> +++ b/arch/riscv/include/asm/sbi.h
->>> @@ -503,6 +503,23 @@ int sbi_remote_hfence_vvma_asid(const struct
->>> cpumask *cpu_mask,
->>>                    unsigned long asid);
->>>    long sbi_probe_extension(int ext);
->>>    +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long
->>> flags);
->>> +int sbi_fwft_set_cpumask(const cpumask_t *mask, u32 feature,
->>> +             unsigned long value, unsigned long flags);
->>> +/**
->>> + * sbi_fwft_set_online_cpus() - Set a feature on all online cpus
->>> + * @feature: The feature to be set
->>> + * @value: The feature value to be set
->>> + * @flags: FWFT feature set flags
->>> + *
->>> + * Return: 0 on success, appropriate linux error code otherwise.
->>> + */
->>> +static inline int sbi_fwft_set_online_cpus(u32 feature, unsigned long
->>> value,
->>> +                       unsigned long flags)
->>> +{
->>> +    return sbi_fwft_set_cpumask(cpu_online_mask, feature, value, flags);
->>> +}
->>> +
->>>    /* Check if current SBI specification version is 0.1 or not */
->>>    static inline int sbi_spec_is_0_1(void)
->>>    {
->>> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
->>> index 1d44c35305a9..d57e4dae7dac 100644
->>> --- a/arch/riscv/kernel/sbi.c
->>> +++ b/arch/riscv/kernel/sbi.c
->>> @@ -299,6 +299,63 @@ static int __sbi_rfence_v02(int fid, const struct
->>> cpumask *cpu_mask,
->>>        return 0;
->>>    }
->>>    +/**
->>> + * sbi_fwft_set() - Set a feature on the local hart
->>> + * @feature: The feature ID to be set
->>> + * @value: The feature value to be set
->>> + * @flags: FWFT feature set flags
->>> + *
->>> + * Return: 0 on success, appropriate linux error code otherwise.
->>> + */
->>> +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags)
->>> +{
->>> +    return -EOPNOTSUPP;
->>> +}
->>> +
->>> +struct fwft_set_req {
->>> +    u32 feature;
->>> +    unsigned long value;
->>> +    unsigned long flags;
->>> +    atomic_t error;
->>> +};
->>> +
->>> +static void cpu_sbi_fwft_set(void *arg)
->>> +{
->>> +    struct fwft_set_req *req = arg;
->>> +    int ret;
->>> +
->>> +    ret = sbi_fwft_set(req->feature, req->value, req->flags);
->>> +    if (ret)
->>> +        atomic_set(&req->error, ret);
->> What happens when cpuX executed first reported an error but cpuY
->> executed this function later and report success.
->>
->> The error will be masked in that case.
-> We actually only set the bit if an error happened (consider it as a
-> sticky error bit). So if CPUy reports success, it won't clear the bit.
+[ Upstream commit 0cd34d98dfd4f2b596415b8f12faf7b946613458 ]
 
-Ahh yes. I missed that.
+Device can be unbound, so driver must also release memory for the wakeup
+source.
 
-> Thanks,
->
-> Clément
->
->>> +}
->>> +
->>> +/**
->>> + * sbi_fwft_set_cpumask() - Set a feature for the specified cpumask
->>> + * @mask: CPU mask of cpus that need the feature to be set
->>> + * @feature: The feature ID to be set
->>> + * @value: The feature value to be set
->>> + * @flags: FWFT feature set flags
->>> + *
->>> + * Return: 0 on success, appropriate linux error code otherwise.
->>> + */
->>> +int sbi_fwft_set_cpumask(const cpumask_t *mask, u32 feature,
->>> +                   unsigned long value, unsigned long flags)
->>> +{
->>> +    struct fwft_set_req req = {
->>> +        .feature = feature,
->>> +        .value = value,
->>> +        .flags = flags,
->>> +        .error = ATOMIC_INIT(0),
->>> +    };
->>> +
->>> +    if (feature & SBI_FWFT_GLOBAL_FEATURE_BIT)
->>> +        return -EINVAL;
->>> +
->>> +    on_each_cpu_mask(mask, cpu_sbi_fwft_set, &req, 1);
->>> +
->>> +    return atomic_read(&req.error);
->>> +}
->>> +
->>>    /**
->>>     * sbi_set_timer() - Program the timer for next timer event.
->>>     * @stime_value: The value after which next timer event should fire.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Link: https://patch.msgid.link/20250406-b4-device-wakeup-leak-iio-v1-1-2d7d322a4a93@linaro.org
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/accel/fxls8962af-core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/accel/fxls8962af-core.c b/drivers/iio/accel/fxls8962af-core.c
+index 987212a7c038e..a0ae30c86687a 100644
+--- a/drivers/iio/accel/fxls8962af-core.c
++++ b/drivers/iio/accel/fxls8962af-core.c
+@@ -1229,8 +1229,11 @@ int fxls8962af_core_probe(struct device *dev, struct regmap *regmap, int irq)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (device_property_read_bool(dev, "wakeup-source"))
+-		device_init_wakeup(dev, true);
++	if (device_property_read_bool(dev, "wakeup-source")) {
++		ret = devm_device_init_wakeup(dev);
++		if (ret)
++			return dev_err_probe(dev, ret, "Failed to init wakeup\n");
++	}
+ 
+ 	return devm_iio_device_register(dev, indio_dev);
+ }
+-- 
+2.39.5
+
