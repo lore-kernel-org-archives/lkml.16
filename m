@@ -1,95 +1,109 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B926B20322;
-	Mon, 12 May 2025 13:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB38C20322
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057749; cv=none; b=tfkCWfI3TUO258Yx89tTpKPpp1NwpllEpLBGvzgok3wCtT9Skq4qDGGpnYudZ8SWDqL2ZolUq3NFn4DaAAKeqrvefB9OX8ZdyKgdqqVwPnckOOBW1lhEUfWAUnv58DD8bjS82Js4Gb2IhJvV9zCDI4S95qiAaoXTBblS4JNwHiM=
+	t=1747057757; cv=none; b=TZF/yfZ3D6iGmuWfwi7WQZeZq7TnMAjITMB2R1z7NeEbIMxqMngB6gpY4laRFOKooGbBjQgzcDPFW9DrVxcSKY8zoR2b1GKO0xBQWevHAAFAVAzvkeCvX6CFrOKNVIOjhngK3/Gcsw3IV5YzpR7f19v4rR9OZ8WjuAtnmlFaOO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057749; c=relaxed/simple;
-	bh=ecOwOv/tl1SZggHfXmBR/Ac/gL88Z6uCeya51l7i5s4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QBe/jH5HSA4HmSBBurFN5bIVlE3JHLMq2RvmAWCc4t8HSP8T+RxLdpDUY00ykCZ5taLC7ZPzbNAIAJiPxCAAGYDeBEePIeX3hJqqH4QXeIfdYJ5h0UyMwYlzIYEjSziqBdr7cKKwcOVpHy35XyEQOxyikZF6kFOYGhsYsC2QxiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WxMTFSny; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747057757; c=relaxed/simple;
+	bh=W46sKoTAcXzSZ14kvpbvNaqoM5PlozMi0I1Gakngk3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LlpOm6Vv+QAQEsQuHv3dgwWOLvVxdyKPXA2C7sUkSrrbrg0p/LRI3WzEU0xdjSi/NqC1yTd4k5yHbSpOBJ4mrfY2TmWQPxovMKRBfVzluFVQSfsC2OfxYhURaddKMr/5biZOpPoW+oHza936d+GH4paQOppy7zT7dM/ZBi1msQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZggClBqr; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxMTFSny"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2300e7a3b71so1171455ad.0;
-        Mon, 12 May 2025 06:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747057747; x=1747662547; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ecOwOv/tl1SZggHfXmBR/Ac/gL88Z6uCeya51l7i5s4=;
-        b=WxMTFSnyaX/FGYOyxBQ30hexV8Y5M9m2r2XaZJsatQXDMTCHCVP492rv9lVJFo7Cb7
-         Ghf+r5KcW7x7dIzoovy1SMFIdqQRMn6AcTfMVTuP/0VzrE2JqWMaL3nCzDs6t27iuzvu
-         C3H4TWP9dAM7W+yXNTUR++I3JGH24Lp4ldJXxj86wCc3wdM53PcT5CX4gmyDiMRmsber
-         +8G8xItGvdYW6s+dpAgfFIqCLcMIte8OGEtMxJPgb630xed3R1ybcY/YdV5Lrl3F6Otg
-         QKGIgXban/bHUQd+R1utTPjwzTOBhXlbc2xwpPuNR7euQm/PTUybyALkc9dsJJtQQa67
-         mYvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747057747; x=1747662547;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ecOwOv/tl1SZggHfXmBR/Ac/gL88Z6uCeya51l7i5s4=;
-        b=e9FqZ/wGbbZoN2Q3ozqMblV28dUQZLwobXTgHjSDH2A3cjLGQEXpGN9RoKjvIRMiuk
-         oMNiex1LoekHF86C6SuQ0eysa0M7pE5F8cmQiM/CCUoeKOInTrX7mOP4ap9OctzYNB2P
-         +5iOJ+NxioWWxZ54aUlUXmaFPBON0R4r0TarXpmmmr5PsNI1OKu586DTHb5lZfRtFftj
-         GHDwJfarbY9NG7rc8WUKvcUTCREGf1J9/FTxh5E8//sQe85tcn+psgjoyTj2FTYXashr
-         X8LNeOmBkSds2LZCNTWTX1hxC2AuniHR9hDNjbP5HFGrk1XnFM97K4q4NlLS0cXy8zBj
-         uhUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3HBwE9gvCTYZYSTsk+ekBP7BpZr1p/uEhMWZEjGRuz6SsosWjndydwUMDYOL6hXB+msdoYVrYehblSWQPPys=@vger.kernel.org, AJvYcCWJ0I+8D5ngIBhi3iihE7gObCz6uVix3Qe1mp7tlZsDABkrvU9I3+PgqEYwffzPPj3JmTSZ58Qo9r7PjMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAMPjsuaqnkqdhdKnQEa8GAeV7RroZPr+CJdmdNC9dCJz2J4gt
-	A1RwH+7+O1R4T+zB9aIjcZXd194W5hUFqyDKbE07OMJDLOwIGKLD2Faq5qbQhAF5pxGGgWeCdoC
-	6sOh+mkX1SqK2gmNByX0OfYb2sV4=
-X-Gm-Gg: ASbGnctDifBQCASR5I7oE/a48fsQkLI/vDq9UlrnsOYoHhM1s8DotVicPsBrvYSIxiL
-	Lyp3R30yedWWNNd1t8PSsqnkTkZGW66++Pb2Ogbn9EB0+aEYKNbWM0hA2EU2+1tRomPRLuM+Gom
-	AbekvOy64IjIqSKOdTd6JPm53KtDq6zbA3
-X-Google-Smtp-Source: AGHT+IHTTag+8vW0X11zkMUQsXFhHUEewmAyyfu0IIkctyB/3aBLXt/7xM6iegzN1p9dvov24n1X5WoMWcZY0VNXDjk=
-X-Received: by 2002:a17:903:194f:b0:223:5c33:56ae with SMTP id
- d9443c01a7336-22fc917f6bemr67201325ad.11.1747057746917; Mon, 12 May 2025
- 06:49:06 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZggClBqr"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 82E3840E0241;
+	Mon, 12 May 2025 13:49:12 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 9e8mVcqvAY75; Mon, 12 May 2025 13:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747057748; bh=cPK2BZeF54LQ+QUrzr2RXlQkhK+9iLtBaUWwpT1rT3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZggClBqrBYWecc5FS45GhGuQ5qZAkFTxkI61L5BFNFlxTukcLyU6PO4o4R9TIPa4C
+	 /EhVZZOO0RcBQzin6AnMDu2zSkUfyORwXl7r9CBOuaeiya1B3zzAUZi1Ok2rJi9fak
+	 1aC2YCsGlcUNQfhnBHUKPCs9AHlVkhyD+dVQmHRkesBZeyrBBmV0OLC797AZ2jHkCb
+	 JtdRDpH8Yhltb4VYwDvMhsN6rVFuFWW7fqlM2WeTgB51h27eNjxriz/6iYO9x83SoN
+	 8YKdRJqvSv9nvFQTySXK2cY/83aYGqulk7LOIfV4udSyxlD+oMtkpO2cQP/bE+0ltz
+	 0RYuyfulHyFbWB32BN/Qbn38T32cZUxlfJBkgQVBpOwJOoYMHXn/3PHu35d9Z8F1W/
+	 Aek5KnVad+8BN5mdixcQVPzGkiaRpYuAjAFtgUVudEioglTSA04fCQGR1upig38v/4
+	 gP1Zej4HDIX52Rlsc5ObPaQE8QVmFi8pWhexlQvFky7HcNK6ZYNrKxO65n8Rkg0I1E
+	 ynn9prkYJTTWEERwdFOemP2tirYbZBdzGJBLnUp+W4WklTkXaSYw7tcoobCltm3bXX
+	 462my9EhGFrMKjMg/A1dk5XP/0JIwXbi0zG69FINrxZqFt78AUulh9ZdDwDtgpp8mt
+	 /vPt5wmTFRNE3dyzZamh0mTo=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3425240E023B;
+	Mon, 12 May 2025 13:48:54 +0000 (UTC)
+Date: Mon, 12 May 2025 15:48:53 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+Message-ID: <20250512134853.GGaCH8RUjJwgHq25qx@fat_crate.local>
+References: <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
+ <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com>
+ <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
+ <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+ <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
+ <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk>
+ <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local>
+ <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk>
+ <8C172B63-38E1-427B-8511-25ECE5B9E780@alien8.de>
+ <alpine.DEB.2.21.2505121225000.46553@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429151445.438977-1-ojeda@kernel.org>
-In-Reply-To: <20250429151445.438977-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 12 May 2025 15:48:54 +0200
-X-Gm-Features: AX0GCFsxmjZElBhRtsW5XAzgsdGMIFmsa9C1Hm1k-1Jh5fb2q-AD7f9ja3wKR8I
-Message-ID: <CANiq72=2ZLrQqzVznA5O=2SDdHHETWUtc0MiLHP_Bx7n=vzLqw@mail.gmail.com>
-Subject: Re: [PATCH] rust: uaccess: take advantage of the prelude and
- `Result`'s defaults
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2505121225000.46553@angie.orcam.me.uk>
 
-On Tue, Apr 29, 2025 at 5:15=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> The `kernel` prelude brings `Result` and the error codes; and the prelude
-> itself is already available in the examples automatically.
->
-> In addition, `Result` already defaults to `T =3D ()`.
->
-> Thus simplify.
->
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+On Mon, May 12, 2025 at 01:55:35PM +0100, Maciej W. Rozycki wrote:
+> On Thu, 8 May 2025, Borislav Petkov wrote:
+> 
+> > > NB people also fancy old cars, or boats, or trains even, not because 
+> > >they're faster, more comfortable, or have any real advantage over modern 
+> > >alternatives.
+> > 
+> > 
+> > This fits very well, IMO, with Linus' suggestion to support this stuff 
+> > out of tree. I think this solution is the optimal one for all parties 
+> > involved...
+> 
+>  Would kernel.org git infrastructure be available for such a project?
 
-Applied to `rust-next` -- thanks!
+as in hosting your repo there?
 
-Cheers,
-Miguel
+I don't see why not:
+
+https://korg.docs.kernel.org/accounts.html
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
