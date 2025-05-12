@@ -1,218 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0899029A304
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E185229A9DD;
+	Mon, 12 May 2025 18:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073082; cv=none; b=X0jRL0oqNJBcKWWdugo9OPOAI5MAkENGbyn58gDx2Grm+p+M+pYcqFwvX8mNukVo6Ox49dSSFI8eYJF6NyJsUFqvQjkf0sFwpiUGlax9euplqCEUCgUvCPgN08ydz98MTuQoHzs3vj6Ne+zVW5fqJuazqdMXcGfmuzR3bYlpOns=
+	t=1747073083; cv=none; b=Z2wQNWJwd6QYi7L7DZMmQTprAMOCuhv7mBpcgjo2rZs28mlomDUjSL1SfRz0hCiYv5OHSBijvEOtBtG/IVNSbzAa7R5dSdxP3iGiAsoWlV/tAoJ2iU7913YxxH5BCGMijMre88RTVId2MHT215uAA5ikkV1mVdunLHG/1AoyToo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073082; c=relaxed/simple;
-	bh=oBzmlHt0HTJa1iYabb2/WVIvO0yzC8VwyaNi+DS7efQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kWZURSmB0iVbuC4cXWeOjBeNQKSmGE5W5ZDeqERY8NGvZQl5Eg5GVBLCYbyjITjbcPr6B4au0RVwF34yVxsz8ZCZZS7LFssEqLR1IPfWWAgMksI5Bvu9lAzCs2Omyl8aUhoWzt1DJV57UKytHMeeQVpSLszLi4vyoK57QuvQzTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cdOvs6sn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747073083; c=relaxed/simple;
+	bh=xb7FF4IAwqMmIelFbryrjSBpRZWqcQ2jQVXTGgKyM5k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JJRu7G7PBFNDl9fWlPgX9ux2M6f/JfNnBaEOaOhkcULiPAt0oM51wc6EHlaPEzK0Ahn1yNnrcdbZEV51z7yVoh3i6x9nPM960qi9t54jIbZR8xTNQu7YVFIs73sI3gusvAZD6O+UBNARg5xbbaLXTGIAae85WNX4loUvqN5TJkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQskM/ky; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cdOvs6sn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747073078;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z2T7ycCKwqZIMsv2I6XJvuhGXIY81vCrox7I0j0GM+0=;
-	b=cdOvs6sn9uEzNzywegXP6shEo8ZBbZEgnXwfw6xyqEQCZcNO7sk3p/15wOaaG0fGxi/aqV
-	Kju2g6g1dLo6X3jKXzMsQAEWBymdQ4+BKlusM7Ah+ANVD/fnSv/kWn5aQEFjsXAQLIsesl
-	oBTa6QwdAMLHPuktw3X21NJUm40Ayl8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-418-bCO2M7_lMsCo5R7BHCagxQ-1; Mon,
- 12 May 2025 14:04:36 -0400
-X-MC-Unique: bCO2M7_lMsCo5R7BHCagxQ-1
-X-Mimecast-MFC-AGG-ID: bCO2M7_lMsCo5R7BHCagxQ_1747073066
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 987FE1955D4A;
-	Mon, 12 May 2025 18:04:25 +0000 (UTC)
-Received: from intellaptop.lan (unknown [10.22.80.5])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B654930001A1;
-	Mon, 12 May 2025 18:04:17 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sebastian Ott <sebott@redhat.com>,
-	Shusen Li <lishusen2@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Anup Patel <anup@brainfault.org>,
-	Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexander Potapenko <glider@google.com>,
-	kvmarm@lists.linux.dev,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	x86@kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	linux-riscv@lists.infradead.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	kvm-riscv@lists.infradead.org,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH v5 1/6] locking/mutex: implement mutex_trylock_nested
-Date: Mon, 12 May 2025 14:04:02 -0400
-Message-ID: <20250512180407.659015-2-mlevitsk@redhat.com>
-In-Reply-To: <20250512180407.659015-1-mlevitsk@redhat.com>
-References: <20250512180407.659015-1-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQskM/ky"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C9FDC4CEEF;
+	Mon, 12 May 2025 18:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747073082;
+	bh=xb7FF4IAwqMmIelFbryrjSBpRZWqcQ2jQVXTGgKyM5k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aQskM/kytyOkI2x9xtaSJkQ83oeXC716Tw1+fdaLnxfEg6IUWxCrAmYk/I+c9YclH
+	 mANmC38bIYIzXxkd0Hr62US0jSVVk4ErhnZQNbS+/c7KBteV279Mv4zB4vYGv3CmKJ
+	 j1k/9I+Y5miIgmPgZLEMCFGnThOlwrVsaBUYygwuFARRc2vHdwboLOUziu0FMRXDkj
+	 Lg0/MSl+5yabkQdhja9gwGBNWqyX9XDmlXMva0RLB6UjRzWAGnGMsXQBXcmk7FTsjG
+	 WaW94nkJGnpj+/8MSBjmiBySVQP75uudfGQgdM/l94AreSWURtw21B/XrxO9eS61xF
+	 +2NMnkfsS1ipg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	miriam.rachel.korenblit@intel.com,
+	emmanuel.grumbach@intel.com,
+	somashekhar.puttagangaiah@intel.com,
+	golan.ben.ami@intel.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 07/11] wifi: iwlwifi: add support for Killer on MTL
+Date: Mon, 12 May 2025 14:04:22 -0400
+Message-Id: <20250512180426.437627-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250512180426.437627-1-sashal@kernel.org>
+References: <20250512180426.437627-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.28
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Despite the fact that several lockdep-related checks are skipped when
-calling trylock* versions of the locking primitives, for example
-mutex_trylock, each time the mutex is acquired, a held_lock is still
-placed onto the lockdep stack by __lock_acquire() which is called
-regardless of whether the trylock* or regular locking API was used.
+From: Johannes Berg <johannes.berg@intel.com>
 
-This means that if the caller successfully acquires more than
-MAX_LOCK_DEPTH locks of the same class, even when using mutex_trylock,
-lockdep will still complain that the maximum depth of the held lock stack
-has been reached and disable itself.
+[ Upstream commit ebedf8b7f05b9c886d68d63025db8d1b12343157 ]
 
-For example, the following error currently occurs in the ARM version
-of KVM, once the code tries to lock all vCPUs of a VM configured with more
-than MAX_LOCK_DEPTH vCPUs, a situation that can easily happen on modern
-systems, where having more than 48 CPUs is common, and it's also common to
-run VMs that have vCPU counts approaching that number:
+For now, we need another entry for these devices, this
+will be changed completely for 6.16.
 
-[  328.171264] BUG: MAX_LOCK_DEPTH too low!
-[  328.175227] turning off the locking correctness validator.
-[  328.180726] Please attach the output of /proc/lock_stat to the bug report
-[  328.187531] depth: 48  max: 48!
-[  328.190678] 48 locks held by qemu-kvm/11664:
-[  328.194957]  #0: ffff800086de5ba0 (&kvm->lock){+.+.}-{3:3}, at: kvm_ioctl_create_device+0x174/0x5b0
-[  328.204048]  #1: ffff0800e78800b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-[  328.212521]  #2: ffff07ffeee51e98 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-[  328.220991]  #3: ffff0800dc7d80b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-[  328.229463]  #4: ffff07ffe0c980b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-[  328.237934]  #5: ffff0800a3883c78 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-[  328.246405]  #6: ffff07fffbe480b8 (&vcpu->mutex){+.+.}-{3:3}, at: lock_all_vcpus+0x16c/0x2a0
-
-Luckily, in all instances that require locking all vCPUs, the
-'kvm->lock' is taken a priori, and that fact makes it possible to use
-the little known feature of lockdep, called a 'nest_lock', to avoid this
-warning and subsequent lockdep self-disablement.
-
-The action of 'nested lock' being provided to lockdep's lock_acquire(),
-causes the lockdep to detect that the top of the held lock stack contains
-a lock of the same class and then increment its reference counter instead
-of pushing a new held_lock item onto that stack.
-
-See __lock_acquire for more information.
-
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219926
+Link: https://patch.msgid.link/20250506214258.2efbdc9e9a82.I31915ec252bd1c74bd53b89a0e214e42a74b6f2e@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mutex.h  | 15 +++++++++++++++
- kernel/locking/mutex.c | 14 +++++++++++---
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index 2143d05116be..da4518cfd59c 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -193,7 +193,22 @@ extern void mutex_lock_io(struct mutex *lock);
-  *
-  * Returns 1 if the mutex has been acquired successfully, and 0 on contention.
-  */
-+
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+extern int _mutex_trylock_nest_lock(struct mutex *lock, struct lockdep_map *nest_lock);
-+
-+#define mutex_trylock_nest_lock(lock, nest_lock)		\
-+(								\
-+	typecheck(struct lockdep_map *, &(nest_lock)->dep_map),	\
-+	_mutex_trylock_nest_lock(lock, &(nest_lock)->dep_map)	\
-+)
-+
-+#define mutex_trylock(lock) _mutex_trylock_nest_lock(lock, NULL)
-+#else
- extern int mutex_trylock(struct mutex *lock);
-+#define mutex_trylock_nest_lock(lock, nest_lock) mutex_trylock(lock)
-+#endif
-+
- extern void mutex_unlock(struct mutex *lock);
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index 9141ea57abfce..68989d183e82a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -587,6 +587,8 @@ VISIBLE_IF_IWLWIFI_KUNIT const struct iwl_dev_info iwl_dev_info_table[] = {
+ 	IWL_DEV_INFO(0x7A70, 0x1692, iwlax411_2ax_cfg_so_gf4_a0, iwl_ax411_killer_1690i_name),
+ 	IWL_DEV_INFO(0x7AF0, 0x1691, iwlax411_2ax_cfg_so_gf4_a0, iwl_ax411_killer_1690s_name),
+ 	IWL_DEV_INFO(0x7AF0, 0x1692, iwlax411_2ax_cfg_so_gf4_a0, iwl_ax411_killer_1690i_name),
++	IWL_DEV_INFO(0x7F70, 0x1691, iwlax411_2ax_cfg_so_gf4_a0, iwl_ax411_killer_1690s_name),
++	IWL_DEV_INFO(0x7F70, 0x1692, iwlax411_2ax_cfg_so_gf4_a0, iwl_ax411_killer_1690i_name),
  
- extern int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock);
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 555e2b3a665a..c75a838d3bae 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -1062,6 +1062,7 @@ __ww_mutex_lock_interruptible_slowpath(struct ww_mutex *lock,
- 
- #endif
- 
-+#ifndef CONFIG_DEBUG_LOCK_ALLOC
- /**
-  * mutex_trylock - try to acquire the mutex, without waiting
-  * @lock: the mutex to be acquired
-@@ -1077,18 +1078,25 @@ __ww_mutex_lock_interruptible_slowpath(struct ww_mutex *lock,
-  * mutex must be released by the same task that acquired it.
-  */
- int __sched mutex_trylock(struct mutex *lock)
-+{
-+	MUTEX_WARN_ON(lock->magic != lock);
-+	return __mutex_trylock(lock);
-+}
-+EXPORT_SYMBOL(mutex_trylock);
-+#else
-+int __sched _mutex_trylock_nest_lock(struct mutex *lock, struct lockdep_map *nest_lock)
- {
- 	bool locked;
- 
- 	MUTEX_WARN_ON(lock->magic != lock);
--
- 	locked = __mutex_trylock(lock);
- 	if (locked)
--		mutex_acquire(&lock->dep_map, 0, 1, _RET_IP_);
-+		mutex_acquire_nest(&lock->dep_map, 0, 1, nest_lock, _RET_IP_);
- 
- 	return locked;
- }
--EXPORT_SYMBOL(mutex_trylock);
-+EXPORT_SYMBOL(_mutex_trylock_nest_lock);
-+#endif
- 
- #ifndef CONFIG_DEBUG_LOCK_ALLOC
- int __sched
+ 	IWL_DEV_INFO(0x271C, 0x0214, iwl9260_2ac_cfg, iwl9260_1_name),
+ 	IWL_DEV_INFO(0x7E40, 0x1691, iwl_cfg_ma, iwl_ax411_killer_1690s_name),
 -- 
-2.46.0
+2.39.5
 
