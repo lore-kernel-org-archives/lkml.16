@@ -1,134 +1,109 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9611E3DE5;
-	Mon, 12 May 2025 14:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C476C120;
+	Mon, 12 May 2025 14:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059441; cv=none; b=F4BR1MfOP81rZuLCQBnEwbLmt8mIqrwBr142yuWo4jeDHEjXS0nYUyHlw1lVkI5Q9Oam5MCtBA7Z9tkr5EkZlKjRsclV45I9vRWZgIkWqDZtAdspaSDOZ5WgAkQXsjRibMfFu+PSGhCw/GGOWFdqmSc65PQIrfLG7+f/m8yUmv4=
+	t=1747059515; cv=none; b=NgvE47GvGXq/iv1ZoFWTjU6XiLgKSoDlX++77ORuKyy/41eL0y1BdpbdpR3x/jjyz00lfkw6t4L091LH/72EeO0tAQTS3UjGkv2CT/anckL/G2jToc0/ut2ygHDkVITjNiPiRs6qS0ahEehha3W5GE2oR5Y2uLFeED2ZICQD8B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059441; c=relaxed/simple;
-	bh=2IyyNXNnQSfbvykHq8rn1B+uBUbYbh7+8zI3pXsppGE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dOwcgnhkriG1uvIlUQZKR5sW0Mw+WogZmcPVe9C9iGSgonbnMIoKKzQLFaHBb9CUGa3VLVSsBFrA4vnI5EOUO/YdNO/t0c+/ra9xRu9+H+79bRcnq1XfOWI+5vQKw1wQv+NqEm63mj9eU4QyXN3bdsbrTiCtfw7wtcEKWgWj9yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1747059515; c=relaxed/simple;
+	bh=PWyCro5Arl71gS7aXicWA1gWzWOFkcIdrTuSfdRnAtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=nybOpHqBpNGSYwF7/l7pc65MC3eZ5fX9iwuYZkyfsQZ8DskG1FQibRoObQQdAbQqd581oi7WkjE3v/BQMtkcmnmIyQjMUkD0He1o5RiX9Sx62o/OHXrnPHhfNSiwC5sZmJMPlRoYZTyYQi2Pby0ThbikEDUGaCNhNbgGdRuqxYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FX1IC68h; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70a35432c21so37572527b3.0;
-        Mon, 12 May 2025 07:17:19 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FX1IC68h"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a0bd7f4cd5so3864145f8f.0;
+        Mon, 12 May 2025 07:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747059511; x=1747664311; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qntgFFlTUmZuHaXkoN3Wz1XUBmuj23hxDCYjUFK093w=;
+        b=FX1IC68h4yDejxCTn1cNQUbgIqc8be4bMBep2xHSLTidBCbsj4d7VcpKqWoYAJT5By
+         BDwMRbHDeMpBAvvQ3rw8Py4D/P6mDRdppTEq7Iz21Z2HkgzCSEgFJkdo3oZpiko2dFkP
+         hwQeN7TXU0z1ThRopZ6ZEmGgz7C5fs7VRncpt9+/D51CPkINzODbfMvDG0BgnfU9TSRH
+         BTpsH3WY7hm9BLKFSPKvjys8sCgKf2GKUOIM5kgXgcqjJReqdRbEMIJChk1cjG22ag26
+         L1GTU8RcJW6aPh7OTvGFoFqRSbv1ufA/kuKDRH0yYfx496YWvMJ7Y7SEUyVM2t3dpjm8
+         Tvyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747059438; x=1747664238;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z+uGFXyTYFqNhdsh1y5nDVvPcnH9qAzMoSdfww0Dh/E=;
-        b=gxmQ3kF8d8GURSYa+/qad8HT1B0VWwiycukVVZ3ERYFWCu+Imo6dYyBH2sN3R3sSv1
-         J/3IzgBmuCV3B2CiM64xSM59te8oFIVyAmomIwJ/bsUJK569f1fODelr1Jb8xrdsrvwD
-         6uNSyqzZxnttyTRY7f7omLEN4puI3+3wRqztwS9opcyoqthwKYR/3rSpUDJd0RqIbTX1
-         73uCRmJXjbOwylYIl3YlG1gRuN8QzpN1HstPqBx9R3wJS3apRkqd126KhhKcgl6R+rmW
-         CmcNbscaH9ebPh6gNABfWz9xCnfXkJ8WJeKRLWT+43b5/EzohNyRUJiZnowY4pKEPCOB
-         CHew==
-X-Forwarded-Encrypted: i=1; AJvYcCU2FHmHzZHvnc+sHp0tBVE7dwuEj1PT4+SkU03qV5xlZz3HewkH7Iutf8bCBkQZ6dmxQfBVC4IZwaO/r98=@vger.kernel.org, AJvYcCW5X/vICkGw5kKDve3L2qAB/bo1GCQ1iv0yqJSc90/AKyCDyPCKEew96dypVadlV1+ZDOQVOOoTtvQ0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyks2TwjqSbtuj+ZKMG02JdKSg96E/BAtDzzjGvilT3HQ9jOKk8
-	hPdhc5tm2rhBxIHPqrrRa1RGHL2H+3LmwBUfxq0idetgXV9IrA/TB52VOHR6
-X-Gm-Gg: ASbGncvjs//TMImyb4nrTGr0IMLtLl/TY7/r8hSZUfUm0iyFJYypXEpwyI8VXmwByYe
-	s9Dy6A6a6RJJaWlnGdMnwPBdDIpjPCLzNIdk9Kl7cqDkCqKArmY8VYx9OxDtS75XQQ6E0g5ca3T
-	UeInG+FSpNhQ87HsmcrFew0R4Le3GsQXV9ZL8RCzgua/ekgG9TFn9spopUVIJjN2CXDVwgItK6i
-	rlTbCc6eF+annXebGzozqBuIphwXs307+/USpngjVX0aHXefa7p/kJvc5Kt/+26KTqe/atFxG0I
-	io8A/ZwdUMb2dEUlE67gFNtBfGc1JjwvShPbIvqvz14FlhwNoVdX6AsLYnpCuTdJBDfCXAaGkCc
-	G1y9RCs5zQGtY5BntZw==
-X-Google-Smtp-Source: AGHT+IG0oAMuhT3R8lJ4MNgVuX25ZEk6AkcShmOGbeTE1tI0iPoZPalrexbJGU8biGeqQ87XzZVhiw==
-X-Received: by 2002:a05:690c:6f81:b0:708:3375:3a33 with SMTP id 00721157ae682-70a3fa1fd64mr172961307b3.12.1747059438177;
-        Mon, 12 May 2025 07:17:18 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d896049sm19563027b3.9.2025.05.12.07.17.18
+        d=1e100.net; s=20230601; t=1747059511; x=1747664311;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qntgFFlTUmZuHaXkoN3Wz1XUBmuj23hxDCYjUFK093w=;
+        b=SB/7JDz0/06NLj1t+bH3pSVcqAYu0J8mV8i7m5SXiPaLGtwQK5QD3TdwqJMwIKey/h
+         YRDxysIzrigN+S1jySvZw8LNAESTHPpuS/EcNBCT10iqy8I9mB2DOi4TFVC6T1ZWNUrV
+         scKwGwlV0IP6gq9DsEGCXl5ETYiWM2Cev6JqzK5km05bvQoK8ll9/h03RVK20DXLYWia
+         7fi5r3J5FXxoOl4Vz0zOMKogdKarnZi8Bf4aC4xXJcV/nJiwwz6NxUa8LMlHve94Jry7
+         gKsgB1qLCmyoO4f/y6leO0N7JAVo/YtVEA/CUfxNna63rwLsALhP3hKZ03+TkqMK9mO3
+         jYZw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5Wiy6+xPlimXp2G2yJkkYaNS9i1vl9DIPJW9ta2MEErUMe7aJV3w3MPqoqjhUqSZMzRWAtY3dZE/qcGLT@vger.kernel.org, AJvYcCX/CranLKaYR6EKLXGLeVHDwA/7tJZzMJtwPb53BnabAqcV50N9Q8rVVSCLDdto+Pkfxgxu1F5Cqw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEhdvRsTpky7qxvleXBv72Ani1Ki27Cv4o89WfkEYTUUYYhvKF
+	6scZNu6J49VU2yT5Gj7RJ8thiaerffo+xezvAFlYONkcVHKqlEPC
+X-Gm-Gg: ASbGnctiV7I0BFLGjBdk5IGoSpOgBgrRf6sQ2drzRt0C5DRqfsN+iSAp4Av6NkgiJs4
+	4v7Ro9MsXiMnRVImXH0PCjSSbTplM/ZOK5JEyN+52kXzNM2OiMK7YhVcavuHZdfRUE+JUgsZRtu
+	cxd/vasUMfCBFiToTgZtn9XeShM3zLS90wXCZPKbTnFlFUb8iIoXMYXAEEFLCt+WVyeEj9upSoK
+	xySJGr3ljuC2Q3cpk9ZsoVwVFG3yb7SKIyCR3EMAWzozhkhU+uRZqxAYZgUp0aXapptWshepm5H
+	Tqt4+QLT29ju6PuGZF8nBsUOlpk6t595nfY9u3sUrrzIEx7yS8tTgXuLoSW87xlUpNKjm6Nq
+X-Google-Smtp-Source: AGHT+IHnVZTjDbiztbGgUxZr7sBk1UQUuu3GZBgxDRzLralfAn92TIQzlTGKlm9O7qMKdUHTo/6s8w==
+X-Received: by 2002:a5d:5983:0:b0:3a2:202:fd93 with SMTP id ffacd0b85a97d-3a202030026mr6425894f8f.29.1747059511468;
+        Mon, 12 May 2025 07:18:31 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.146.237])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d2d3sm12751000f8f.63.2025.05.12.07.18.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 07:17:18 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7082ad1355bso37678257b3.1;
-        Mon, 12 May 2025 07:17:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVmtYrkS7KjKwH14t4/0yLlRWbkJOKkrctTLEJr6lHYxrj+YaiAh/yIUVc86Ce1LNmvfYKtMclF8FaA2E4=@vger.kernel.org, AJvYcCWaTtcceJNaz6mAl6zCByXO39FJ8tVBFragW9CGtpElxTtnYWS/6rpJSoGcqELC+gznhsGTb8tm85ig@vger.kernel.org
-X-Received: by 2002:a05:690c:7406:b0:703:afd6:42e3 with SMTP id
- 00721157ae682-70a3fb68ed7mr176247997b3.37.1747059437816; Mon, 12 May 2025
- 07:17:17 -0700 (PDT)
+        Mon, 12 May 2025 07:18:30 -0700 (PDT)
+Message-ID: <991ce8af-860b-41ec-9347-b5733d8259fe@gmail.com>
+Date: Mon, 12 May 2025 15:19:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509181737.997167-1-Raju.Rangoju@amd.com> <202505110641.zLT16Dv7-lkp@intel.com>
- <e84f5483-a203-4095-82cd-23fa94c87700@amd.com>
-In-Reply-To: <e84f5483-a203-4095-82cd-23fa94c87700@amd.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 May 2025 16:17:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUAE2umYggDdBjYZJY2-mYwim=P_=4Q00k9b8gB1tNY+Q@mail.gmail.com>
-X-Gm-Features: AX0GCFvPeCVVWJSx_u6CiKRqRCs9Wi8eoap8nT8SCO-AJVBCg084LJ1ts4ptq_o
-Message-ID: <CAMuHMdUAE2umYggDdBjYZJY2-mYwim=P_=4Q00k9b8gB1tNY+Q@mail.gmail.com>
-Subject: Re: [PATCH] spi: spi_amd: Add HIDDMA basic write support
-To: "Rangoju, Raju" <raju.rangoju@amd.com>
-Cc: kernel test robot <lkp@intel.com>, broonie@kernel.org, oe-kbuild-all@lists.linux.dev, 
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Krishnamoorthi M <krishnamoorthi.m@amd.com>, 
-	Akshata MukundShetty <akshata.mukundshetty@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [io-uring?] BUG: unable to handle kernel NULL pointer
+ dereference in io_buffer_select
+To: Jens Axboe <axboe@kernel.dk>,
+ syzbot <syzbot+6456a99dfdc2e78c4feb@syzkaller.appspotmail.com>,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <681fed0a.050a0220.f2294.001c.GAE@google.com>
+ <3460e09f-fafd-4d59-829a-341fa47d9652@gmail.com>
+ <a132579a-b97c-4653-9ede-6fb25a6eb20c@kernel.dk>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <a132579a-b97c-4653-9ede-6fb25a6eb20c@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Rangoju,
+On 5/12/25 14:56, Jens Axboe wrote:
+> On 5/11/25 6:22 AM, Pavel Begunkov wrote:
+>> On 5/11/25 01:19, syzbot wrote:
+...>> this line:
+>>
+>> tail = smp_load_acquire(&br->tail);
+>>
+>> The offset of the tail field is 0xe so bl->buf_ring should be 0. That's
+>> while it has IOBL_BUF_RING flag set. Same goes for the other report. Also,
+>> since it's off io_buffer_select(), which looks up the list every time we
+>> can exclude the req having a dangling pointer.
+> 
+> It's funky for sure, the other one is regular classic provided buffers.
+> Interestingly, both reports are for arm32...
 
-On Mon, 12 May 2025 at 09:29, Rangoju, Raju <raju.rangoju@amd.com> wrote:
-> On 5/11/2025 3:51 AM, kernel test robot wrote:
-> > kernel test robot noticed the following build warnings:
-> >
-> > [auto build test WARNING on v6.15-rc5]
-> > [also build test WARNING on linus/master]
-> > [cannot apply to broonie-spi/for-next next-20250509]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Raju-Rangoju/spi-spi_amd-Add-HIDDMA-basic-write-support/20250510-021954
-> > base:   v6.15-rc5
-> > patch link:    https://lore.kernel.org/r/20250509181737.997167-1-Raju.Rangoju%40amd.com
-> > patch subject: [PATCH] spi: spi_amd: Add HIDDMA basic write support
-> > config: m68k-randconfig-r111-20250511 (https://download.01.org/0day-ci/archive/20250511/202505110641.zLT16Dv7-lkp@intel.com/config)
-> > compiler: m68k-linux-gcc (GCC) 14.2.0
->
-> Thanks for reporting this. We do not support m68k.
+The other is ring pbuf as well
 
-All write[bwlq]() functions take a volatile void __iomem pointer
-(https://elixir.bootlin.com/linux/v6.14.6/source/include/asm-generic/io.h#L174)
-while you are passing a void *, so sparse should complain about this
-on all architectures.  And sparse is right, this driver is using MMIO
-accessors on allocated DMA memory, which is just plain wrong:
+io_uring_register$IORING_REGISTER_PBUF_RING(r0, 0x16, &(0x7f0000000040)={&(0x7f0000001000)={[{0x0, 0x0, 0x3, 0x700}]}, 0x1, 0x1}, 0x1)
 
-    amd_spi->dma_virt_addr = dma_alloc_coherent(dev, AMD_SPI_HID2_DMA_SIZE,
-            &amd_spi->phy_dma_buf, GFP_KERNEL);
+PC is at io_ring_buffers_peek+0x24/0x258 io_uring/kbuf.c:227
 
-     for (i = 0; left_data >= 8; i++, left_data -= 8)
-            *buf_64++ = readq((u8 __iomem *)amd_spi->dma_virt_addr + (i * 8));
-
-> Will re-spin v2 with necessary changes in Kconfig.
-
-Please fix the real issue instead ;-)
-
-> > reproduce: (https://download.01.org/0day-ci/archive/20250511/202505110641.zLT16Dv7-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202505110641.zLT16Dv7-lkp@intel.com/
-> >
-> > sparse warnings: (new ones prefixed by >>)
-> >>> drivers/spi/spi-amd.c:594:57: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got void * @@
-> >     drivers/spi/spi-amd.c:594:57: sparse:     expected void volatile [noderef] __iomem *addr
-> >     drivers/spi/spi-amd.c:594:57: sparse:     got void *
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Also "tail = smp_load_acquire(&br->tail);"
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Pavel Begunkov
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
