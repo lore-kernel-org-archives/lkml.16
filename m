@@ -1,135 +1,169 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E319199FAF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3922561D7;
+	Mon, 12 May 2025 07:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747033211; cv=none; b=e/gFS8PT5LIxf4yFdVEiC8H+Mo8V1x797wnSUs/yv6BmJobCTKLoQz0VBny+EWevFDo1SzIRzHVS06quc8uzvik++vTVORYigoeS0qSNwBrI+iVFR4CzSM+nhlF9EpdYr68/kW5PSL7bSvcQaF/9/5o9PMLWsGyy5qQ5CecarNo=
+	t=1747033212; cv=none; b=rqrWVkqxeg8FclpbkbnImWoxmvs2h88M6ExiipjlMAr7IY/2XWeMyUD+ZnnSnHkekXXjrLyaBGtERjJyQYeQseVa+5sQB1HoN9CmBC6TrkLKhixFToEig1vmyqMr+0rienbXC0VDSKV89R4RQD5G1nK0pxhllcV6uywL0CKaOMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747033211; c=relaxed/simple;
-	bh=Bqq1A3Sa6qHoWnzKdhLS1uicwJ9gxYebr4/OhwLudB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZbKRJQugyX/YM9I+cpGeF2mAYU1WfAbktvhIQyVSbGOyba+gisaOIeASp+S4LAWk0dCPctoYH7wCb//8jRLqxKGy60DW+LfkXi8+KX9s9kQwqvg2HH5KQtyKsfRjLtt/MF6XEuPpFQT42EFEgaBQ8U1i628uxt5Mij4SyprJP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LrRyrH4v; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747033212; c=relaxed/simple;
+	bh=UfFApR33S255gX1NEwSNsGVPkagO2UXauiNgiBYMjf8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rHidIXLAKsVLwECULrA1oJTNabtieeTa8kMHGeHH2EKDmjzp/WV+GDIUSnicQ5wzU+kgzgd1IFE+Rc2fXq/0PAcdgZye/tE62wOQPlrHjPB4mWpDl0JMiSlGrUL+NrjC1aoccWnYXnzU/WsELGwvAC8EmtyKE159VypO+bW6PZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vLSNlWEN; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LrRyrH4v"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-441ab63a415so39884895e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 00:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747033206; x=1747638006; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=f9NnMsqvqzW4Dp+QMCFVbmE2fyembB/PnH3RgqpZhfQ=;
-        b=LrRyrH4vsevmMD2hAXOiENfRTMFTaQxc0n6C9fRY3af7C0IDgC+FEXjaMpHyiTXg4d
-         W3797QZ7ZhZGTQUlHFCG8JcqKmvpBE4n3MuaBizsSiArrI7NEju1PAp7PwXhqMECQ5w7
-         mZzYfESREY/IAzPGDk5c0n40l/Vpin45AuhXFpDVTjbUUxcIy2hPNqGm0C6ATMathILL
-         kvTKeOqckeehFzAbe8B3vY3zlH/TlOkGQ1rKlvG79xg70h1eq3m9/bxxnzwE4BVhQpe4
-         S1WRjAWdXonNVqFUmJRXWq2nv+DqhZL0vjR91CpE4d4uuQcUOt7IIX74G81r66LV2oSG
-         iyUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747033206; x=1747638006;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f9NnMsqvqzW4Dp+QMCFVbmE2fyembB/PnH3RgqpZhfQ=;
-        b=K9HTIspOsQ48Ch9XwN8aotmpOnVh1Q8ZcRRKNP/62KCQN4W+vZkImEQoty8sWJtN3f
-         3aVt9iIRyeYBcDR2uI1Oh7BRYWPs3gR2gXBKLvJsVfgbG29+4tav92ve5F4kdjBKo4JA
-         POvWLLCI2IvBz9m/loCJ8Fq3JNTvqlVz2xjiLu6LSYNaRzep28fTqOSyz39jMLaE3ATD
-         sD4bpEtJ6ThJp8IfIi3HbBO3TQpJBjjn/tq0dFKHZfBaylaIA+4EpVZogYi6o3I5OpSW
-         Gf9HVFWkXSOX7Rkr1o/4ZDv3vVzM++BmNN1fBpt9NOEVrQrKAP6aSy6KCbXZHHxMFPrj
-         LyvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRLyeRtysxn/4VSa7XfB9xSKPIjOfo+aXZV0q6nwgLKL87or5b7hOz8ihuMSycPi7yNYFhOwYeibKOfsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdYWpyY9oiV6+lYAMHwF7IMzEUNNqzceZnEOqlm1X8gvpqb+Db
-	KVNtCVQjK4A1Vop+0qxf6kUDMcFyIqIythTDySRDLd8/kr0FK7y5y5EGCBJHNA==
-X-Gm-Gg: ASbGncstsN5uwTReHB20eTUt7y+r5xjZYJ2uHNmUW6FkvR+cGrgTEjdzgLWEZXA8NxL
-	Ygtv2UpatZXCBWe/84wLmUToyZKJxFYolE+jPuKJDBxb2iKxCUioWuhAGFhD0R0dLBpSHitUrq4
-	pmskkPRck5bmkFAqAkbPg+VbOipmHcHPbLdypICRhMa9TDt4gzKcDLyuEShs/rEgTr0V67Yn3mt
-	AHdhZsUaq6xVWoIg7SMMZt6bi6Jiq+ymfcpv2mEwBEaIbZB603VIwc/j1tG19I1TqaY6ohZ+2FB
-	BYvxzVHdZdo6S3Yf3cNH2BEr8LGgU27uuRmjSN/fQqsGcL9Nxevo+jH+5yRJl4EXF7e9TqWn/Q=
-	=
-X-Google-Smtp-Source: AGHT+IF0taVe2Cjr6rPU4zVe3n0h7u5iibv2A6s+QVlkQE644yCZv4nsG7uDfUXl8mm25LJJmLR7mg==
-X-Received: by 2002:a05:600c:511f:b0:43d:4686:5cfb with SMTP id 5b1f17b1804b1-442d6de2e97mr85863985e9.27.1747033206152;
-        Mon, 12 May 2025 00:00:06 -0700 (PDT)
-Received: from thinkpad ([130.93.163.156])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3aeb79sm157284445e9.27.2025.05.12.00.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 00:00:05 -0700 (PDT)
-Date: Mon, 12 May 2025 12:30:04 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=EF=BF=BD~Dski?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Nipun Gupta <nipun.gupta@amd.com>, Yury Norov <yury.norov@gmail.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Cameron <Jonathan.Cameron@huwei.com>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, 
-	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Konstantin Taranov <kotaranov@microsoft.com>, 
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Erni Sri Satya Vennela <ernis@linux.microsoft.com>, 
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	Paul Rosswurm <paulros@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v3 2/4] PCI: hv: Allow dynamic MSI-X vector allocation
-Message-ID: <plrpscito5e76t4dvtukgqm724stsfxim3zv3xqwnjewenee53@72dipu3yunlr>
-References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1746785602-4600-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vLSNlWEN"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BKH5uc007926;
+	Mon, 12 May 2025 08:59:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	6rgaWbRTM+DFYeZhCEAh/L1Os9dQNFKUxR9CFmxIXbs=; b=vLSNlWENDiCRu1IW
+	mCs6uZ/MkOw7XXzo/sb5AMWYG4NB1tpUWC+ZEj+iMvOfFr2E08Z20YlKW96gCCXm
+	gma/4apQEDcrfQmdAeyI9k0H5Y7tY0XuVp2X4TJX81sCTxLhjlB7YfSjzEqsVCCS
+	9mfrpbCFbyAgXzgKQpX6cgPH5pQZoCvnPBrJrZFtD2KTrGd3bsYjHNWdo2O80Usq
+	Yv1Wmj+24VKL45LhO2if/df+5W+TxZ+Fg4rb10T79qjZUSkWYJR++jzrrmIe8Y/x
+	Hd/Dm7qoVfvX9xzl3O6L3HhSuyAQzXNqjPci+A7MLBSm07OUuHW9loKHr4YzPuDi
+	EqJQpw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46huxa5gay-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 08:59:57 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BD04140045;
+	Mon, 12 May 2025 08:58:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0D629A79D85;
+	Mon, 12 May 2025 08:58:29 +0200 (CEST)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 08:58:28 +0200
+Message-ID: <3c655dad-270d-44e1-b20f-3b15f6cc06f1@foss.st.com>
+Date: Mon, 12 May 2025 08:58:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1746785602-4600-1-git-send-email-shradhagupta@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] spi: stm32-ospi: Make usage of
+ reset_control_acquire/release() API
+To: Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250507-b4-upstream_ospi_reset_update-v3-1-7e46a8797572@foss.st.com>
+ <ee4e3e521434a0dadce058e7e5f3bbd77f598f90.camel@pengutronix.de>
+Content-Language: en-US
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <ee4e3e521434a0dadce058e7e5f3bbd77f598f90.camel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
 
-On Fri, May 09, 2025 at 03:13:22AM -0700, Shradha Gupta wrote:
-> Allow dynamic MSI-X vector allocation for pci_hyperv PCI controller
-> by adding support for the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and using
-> pci_msix_prepare_desc() to prepare the MSI-X descriptors.
+
+
+On 5/8/25 11:16, Philipp Zabel wrote:
+> Hi Patrice,
 > 
-> Feature support added for both x86 and ARM64
+> On Mi, 2025-05-07 at 18:04 +0200, Patrice Chotard wrote:
+>> As ospi reset is consumed by both OMM and OSPI drivers, use the reset
+>> acquire/release mechanism which ensure exclusive reset usage.
+>>
+>> This avoid to call reset_control_get/put() in OMM driver each time
+>> we need to reset OSPI children and guarantee the reset line stays
+>> deasserted.
+>>
+>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+>> ---
+>> Changes in v3:
+>>   - Remove previous patch 1/2 as already merged.
+>>   - Keep the reset control acquired from probe() to remove().
+>>   - Link to v2: https://lore.kernel.org/r/20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com
+>>
+>> Changes in v2:
+>>   - Rebased on spi/for-next (7a978d8fcf57).
+>>   - Remove useless check on reset.
+>>   - Add error handling on reset_control_acquire().
+>>   - Link to v1: https://lore.kernel.org/all/20250410-b4-upstream_ospi_reset_update-v1-0-74126a8ceb9c@foss.st.com/
+>> ---
+>>  drivers/spi/spi-stm32-ospi.c | 24 ++++++++++++++++++------
+>>  1 file changed, 18 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+>> index 668022098b1eac3628f0677e6d786e5a267346be..b2597b52beb1133155e0d6f601b0632ad4b8e8f5 100644
+>> --- a/drivers/spi/spi-stm32-ospi.c
+>> +++ b/drivers/spi/spi-stm32-ospi.c
+>> @@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
+>>  		return ret;
+>>  	}
+>>  
+>> -	ospi->rstc = devm_reset_control_array_get_optional_exclusive(dev);
+>> +	ospi->rstc = devm_reset_control_array_get_exclusive_released(dev);
+>>  	if (IS_ERR(ospi->rstc))
+>>  		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
+>>  				     "Can't get reset\n");
+>> @@ -936,11 +936,13 @@ static int stm32_ospi_probe(struct platform_device *pdev)
+>>  	if (ret < 0)
+>>  		goto err_pm_enable;
+>>  
+>> -	if (ospi->rstc) {
+>> -		reset_control_assert(ospi->rstc);
+>> -		udelay(2);
+>> -		reset_control_deassert(ospi->rstc);
+>> -	}
+>> +	ret = reset_control_acquire(ospi->rstc);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
+>> +
+>> +	reset_control_assert(ospi->rstc);
+>> +	udelay(2);
+>> +	reset_control_deassert(ospi->rstc);
+>>  
+>>  	ret = spi_register_controller(ctrl);
+>>  	if (ret) {
+>> @@ -983,6 +985,8 @@ static void stm32_ospi_remove(struct platform_device *pdev)
+>>  	if (ospi->dma_chrx)
+>>  		dma_release_channel(ospi->dma_chrx);
+>>  
+>> +	reset_control_release(ospi->rstc);
+>> +
+>>  	pm_runtime_put_sync_suspend(ospi->dev);
+>>  	pm_runtime_force_suspend(ospi->dev);
+>>  }
+>> @@ -993,6 +997,8 @@ static int __maybe_unused stm32_ospi_suspend(struct device *dev)
+>>  
+>>  	pinctrl_pm_select_sleep_state(dev);
+>>  
+>> +	reset_control_release(ospi->rstc);
 > 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  Changes in v3:
->  * Add arm64 support
-> ---
->  Changes in v2:
->  * split the patch to keep changes in PCI and pci_hyperv controller
->    seperate
->  * replace strings "pci vectors" by "MSI-X vectors"
-> ---
->  drivers/pci/controller/pci-hyperv.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> It would be nice to point out in a comment that OMM will temporarily
+> take over control during resume. But either way,
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index ac27bda5ba26..8c8882cb0ad2 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
->  	return cfg->vector;
->  }
->  
-> -#define hv_msi_prepare		pci_msi_prepare
-> +#define hv_msi_prepare			pci_msi_prepare
-> +#define hv_msix_prepare_desc		pci_msix_prepare_desc
+Hi Philipp
 
-Please do not use custom macro unless its defintion changes based on some
-conditional. In this case, you should use pci_msix_prepare_desc directly for
-prepare_desc() callback.
+Right, i will send a new version by adding this information.
 
-- Mani
+Thanks
+Patrice
 
---
-மணிவண்ணன் சதாசிவம்
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+
+
+> 
+> regards
+> Philipp
