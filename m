@@ -1,113 +1,77 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558694A3C;
-	Mon, 12 May 2025 14:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2D62AD0B;
+	Mon, 12 May 2025 14:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060131; cv=none; b=One/g09y85eAjugwGDfPWKd8+dbc2uTPFmN8mRk2+Nd7JEZv35Ksgi7EAJFf3rAid87lSx4ohL+Ynv/KczfV4Mqlo2zSnDc/AZeKZ/h9zndaxL125bJOwZIPzl3FgKOrJdEh0nkgMwv6yWKPUGGIg13sdOFeSv+ghjkB3pRmePE=
+	t=1747060150; cv=none; b=c3d+MlXn9M9Uy5LJX2WRlsas8e9StpzclizIJee5uMBoAMQyUrc+++oym8LV8qlSv8bNMB4y/CqpYYwu1FeiJVFZYL65dQhn1WhzVIiBhFj/UNF3k8CcaqFfb2kmh/OHncZ/rdxrExWv9wK5V61CBr/r6+eZPDkLltagN6en9Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060131; c=relaxed/simple;
-	bh=wAQSCOa8NKq0dKvOJ2tgxBAF7iZnMu3ypPhBo8Jdcuk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fbUFyi4ZpVmrdHRU0pmOhKgG3Wqoolb7eXr94vLzQP4fCtPaYZI27W1cL+rqHBvAzYxxDW7eOD0gqhGzn8pv938c3F1ptu0dSSL2UGNyCzNBEUOu2kFggYN/u3ntE9wHnTuMapjjFBU+n7wZV7gUlgq3/5L7y4fG5lsp/pELsg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJslSrDV; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747060150; c=relaxed/simple;
+	bh=s25Ld9wvC0TwmKOQJz8UTvGzIPzuSGWY/ZfbRdJ9oig=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MQUeKavaL6bK3nFT+mcfCGjAqb46Dp+uj4M9RtHvP38nXmiB2lb8at0kfdeJBLOVutkvwN+Hzsld74evTB1Au8gHNUySUsic7EsaXa7rZpUJP1wiv6Eb5AMrb2DJlRVSq7BSJZ+QHaGr7QWqGUbRECZERABQvlEFS2p6z+fGuy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C6t4/EmE; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJslSrDV"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442ea341570so1174985e9.1;
-        Mon, 12 May 2025 07:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747060128; x=1747664928; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8W12PO8Oqlmx8ERZBKdteNxpcbGu3ITArHrHNFvcMcQ=;
-        b=RJslSrDVSWOjcCI0eor9fUQkw6fz1VdWdwmY8dvPya8j/QuF2YLOU1PFhbxKni/wrr
-         fsgtPuG+OK/OzJMQDngwL8BQ+9ghDhE6RP2LVO6RCsI1RXNKq95FIazxGOhYo+IyREmQ
-         HwO3jJ1keZhV4v3DBrBXtN0jW9jsr+mulFhzpcbslI4wzeQ6lp33f3EV97+XNHa3z0P2
-         vpSCQz48v6w/WqYla/VeoNKPkP71SVDoMELQE1EjpJIvx7f29+4ALIhv/dR8S2tKmLDe
-         pNN4StQmGm81QYaa0LJi97oy/3lhJxvzvT+BnbOhx2AuGqFQN+4wNHVP21KjUJIQjxuq
-         8K0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747060128; x=1747664928;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8W12PO8Oqlmx8ERZBKdteNxpcbGu3ITArHrHNFvcMcQ=;
-        b=Py4gxnzG3Zv05RgkXeHHZzyYFI0Fb786EI6a+dB6nBErp1rh4VYREF4+AHIOIpoXU6
-         3ayXjDBHkhmwNAO6CGBPzOfGuQt2Y34wG9tnNXv2d6mQOHXfcmljZYMbTx7NZDtaYGw6
-         1hHaf6chL0GzQYWiuRwzGuQ+drany+g1/4rt3FYukURdXvH0723A1vNB8qrUfiBBRe89
-         pgNq/MBrdoWT0t5jyF3N82ctQZXcS2ueJGwI0czrnsD5LyOWJnIhUaK6j9nHuxi7Wk6F
-         qXImh+oLhomESVH42h+Ei/Ni/u6AuhM7uo31y7Npa4SD/WxLrUMpHaM1mW2pXtkolBaG
-         cQ3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVHi5jalfkKZxTm5kHUszfKU/J5YR9jTbqbRqZAlpw13Lj3ICA6x78ZbKOB790Xx2FwpmDZ7ppkVw==@vger.kernel.org, AJvYcCVzxwncshesynZWWIlagdox6t5NCCwmyNRrckoYEX12xTpEwqJ8bKIMkbXI+vw8tCkZdalxs43hNA9ku7c2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnWNq8cXZbxShirX703nD9K+X4zpePW0pe7NJP1rkSwND4nQhQ
-	mZD4A7GQzyJ0Q/Qb3uXYhnrfzSxPrL75v43DtuLJRQmIk60behQX
-X-Gm-Gg: ASbGncvOamPb4Wg2YDHlNp7+IxfC30dGqVEkyrjctVWc9uv4OqMpMaUxANOZYhO+uD5
-	CpEsc6g+oA+Qlp49VhupkRRNO+177WIHtoMX8za/aFR7x5Xdf8HyTGBGPyLeLDjfmWyvuS0MQP/
-	mAWaQ74EgIKUYpr3eNPo0v08PoKVMKdRyr1uIiwwoQv47/E7B8px4lldvbiOY2oxcdHVUoEgeeF
-	0Mb1O6yX9T8bWFKLl1ZCZjdoNtdv7kD9XFtEWUemA4U9/hzz4llyHHAvOgez0ylDKfReJaPPDTT
-	f2sxOoHOg94GOwX3eNdP5Ob5txeurxScCdCxWzcV9G91lM3xBOQYcwns3tGLYA==
-X-Google-Smtp-Source: AGHT+IE6Wl+pveujM6GjzrwRxgKqs4ai1C1+lBCqx+xXwjYNytZITfy6+2iQ9TX1sdtY4qOihXJz9w==
-X-Received: by 2002:a05:600c:4694:b0:440:94a2:95b8 with SMTP id 5b1f17b1804b1-442d6d6b65fmr123365435e9.16.1747060127359;
-        Mon, 12 May 2025 07:28:47 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.146.237])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f238sm168113455e9.11.2025.05.12.07.28.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 07:28:46 -0700 (PDT)
-Message-ID: <1cfb5382-8d1e-4c35-b8b1-fdfc69a831fd@gmail.com>
-Date: Mon, 12 May 2025 15:29:56 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C6t4/EmE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CB5C71FCEC;
+	Mon, 12 May 2025 14:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747060146;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5JO8FMyqvxtRo7A5Z/7iXBTLAs6G75BYMdiwJxV6g2U=;
+	b=C6t4/EmEjYn0Our7hR2cpogHfq1Ae26J+qPfs6SBCrdYYUyEzWWYMx5VNBkqz8t0AGh/Cc
+	nWbVZcNda2hCK3AtYJwyHqiq5MIsZJ/SepFTgipgTPBdih3UPT1HEHtSGxlz35OI/z+MM+
+	BmhABqguGHzRnVFd+rgNI6bp6Js0WHSZdCE/Y9z20hTn06S8jY2mxemqmeO201iHzsQ3+M
+	WKeItsVqcg7CQPRedpCTmLzSdDh4uV6qNHo0zktJYIF/wg68yzaR2raOD9zW9AF9kj2JTs
+	JAZ72rqGQz5G6rEKPVPwDpBkR1wZA1VFpge7t4d12akhJotRW/4/b+h9VAuf6w==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Keguang Zhang <keguang.zhang@gmail.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Richard Weinberger <richard@nod.at>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, linux-mips@vger.kernel.org, 
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <aBSEwag_ducqOwy7@stanley.mountain>
+References: <aBSEwag_ducqOwy7@stanley.mountain>
+Subject: Re: [PATCH next] mtd: rawnand: loongson1: Fix error code in
+ ls1x_nand_dma_transfer()
+Message-Id: <174706014455.62075.9908160461728250420.b4-ty@bootlin.com>
+Date: Mon, 12 May 2025 16:29:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [io-uring?] BUG: unable to handle kernel NULL pointer
- dereference in io_buffer_select
-To: Jens Axboe <axboe@kernel.dk>,
- syzbot <syzbot+6456a99dfdc2e78c4feb@syzkaller.appspotmail.com>,
- io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-References: <681fed0a.050a0220.f2294.001c.GAE@google.com>
- <3460e09f-fafd-4d59-829a-341fa47d9652@gmail.com>
- <a132579a-b97c-4653-9ede-6fb25a6eb20c@kernel.dk>
- <991ce8af-860b-41ec-9347-b5733d8259fe@gmail.com>
- <69ae835b-89b2-44bf-b51c-c365d89dbb45@kernel.dk>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <69ae835b-89b2-44bf-b51c-c365d89dbb45@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehieffhfeulefgtdeltefgleevgffgheduledvheduudelgfehlefgheeivedvgeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrgeeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepkhgvrhhnvghlqdhjrghnihhtohhrshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehri
+ hgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehlihhnuhigqdhmihhpshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghguhgrnhhgrdiihhgrnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrnhdrtggrrhhpvghnthgvrheslhhinhgrrhhordhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 5/12/25 15:19, Jens Axboe wrote:
-> On 5/12/25 8:19 AM, Pavel Begunkov wrote:
->> On 5/12/25 14:56, Jens Axboe wrote:
->> ...>> this line:
->>>>
->>>> tail = smp_load_acquire(&br->tail);
->>>>
->>>> The offset of the tail field is 0xe so bl->buf_ring should be 0. That's
->>>> while it has IOBL_BUF_RING flag set. Same goes for the other report. Also,
->>>> since it's off io_buffer_select(), which looks up the list every time we
->>>> can exclude the req having a dangling pointer.
->>>
->>> It's funky for sure, the other one is regular classic provided buffers.
->>> Interestingly, both reports are for arm32...
->>
->> The other is ring pbuf as well
+On Fri, 02 May 2025 11:39:29 +0300, Dan Carpenter wrote:
+> The "desc" variable is NULL and PTR_ERR(NULL) is zero/success.  Return
+> a negative error code instead.
 > 
-> True yes, both are pbuf. I can't hit any of this on arm64 or x86-64, fwiw.
-> Which is why I thought the arm32 connection might be interesting. Not that
-> the arch should matter at all here, but...
+> 
 
-Yep, there is a suspicion there might be something on the
-mm / allocation side, need to find a good way to narrow it down.
-At least we can make syz test patches for us.
+Applied to nand/next, thanks!
 
--- 
-Pavel Begunkov
+[1/1] mtd: rawnand: loongson1: Fix error code in ls1x_nand_dma_transfer()
+      commit: 0d470c72bea4d9f4c24b304fefdc857979cb5ca0
+
+Patche(s) should be available on mtd/linux.git and will be
+part of the next PR (provided that no robot complains by then).
+
+Kind regards,
+Miquèl
 
