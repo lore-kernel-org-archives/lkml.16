@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C9D2918D7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D0E2918E1;
 	Mon, 12 May 2025 11:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747050019; cv=none; b=gmrNHd7oy1PxBDeyzur/UWcJbqy+kq1wmFb+KQ211i6iuB7kY8EQNlmoVwA5pfYhH/DcXQbiO11yQQdgls42kvNun7e1cM4MWWAGOypVc5drm2fyVLrU/MNZMQ+7xaha4GDtpKXs/2EM0vF0EYRMSpFUN8nGyq/HDT8mTGbprV0=
+	t=1747050019; cv=none; b=LFIwil3saMHGIFiegwe3lfck5H6pBdKVa2fkJPq3cCY0t0UCHNqmc73SONDGGtLaDnE0d4j2fQJB1iGIIYnbouLJJ8CFevNtHuO9ZIPr8uZvhbF11bVwKSkorNIFBaXubDiKtzHDWaJgM92ugbLGnELGw+kBgKIFzQXjgwsrVbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747050019; c=relaxed/simple;
-	bh=/PqeRx1G8yWgH2bpaj+v9geJqih0EWc+M09T0J5VbYU=;
+	bh=HT6/2/GedgWpF6igAvBUqPc/BsGvXccamOg4GedgCHA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=icoy6U0KI+UBXhtEw5RjafMIgNVNS189Yu9qzt4uhD09K+YPSfgA97nYd1Bj2tgPVWr3deJECkNA2ZkaODfqMcDdCXymxTjaniwnBBaYw4bSrqQxTxPLlPkDB7vbPT6+Ob5xo741fxnPsw7RcvXA9PxzOpsnAyYb9A4XLeS+Kiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVKNdRtL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=HnJk8aLdEEbT52A8AOJwppbB+J1CgTru/dwAdfTDu+EI1PSHKzCmjMKuOGNtpAKKvGWwSXtSZa7EByKVTjbsyPqw/fS7acjt70RpdW0CwKyf6jaeM7YscJI9qXBYm/kGnFGQah8h1mOrjAu3qAAXjWKTOz6hWg86fGvrn63uUU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbK4u1c8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVKNdRtL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0207CC4CEF8;
-	Mon, 12 May 2025 11:40:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbK4u1c8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B5A3C4CEFB;
+	Mon, 12 May 2025 11:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747050019;
-	bh=/PqeRx1G8yWgH2bpaj+v9geJqih0EWc+M09T0J5VbYU=;
+	bh=HT6/2/GedgWpF6igAvBUqPc/BsGvXccamOg4GedgCHA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JVKNdRtLhHEgwSwP78dDFvf8os7r2Ya+lLE7oGdI205ZB84fwV3ErJBWmiDYIuhre
-	 LxpLv7UYXsFDkbFJwryj1Ll/KJz2/PJRAdOArR0RzfNRIWY+eMw9deZpl7e54YWMNn
-	 SZUm8SOKR0dHqeQsx0L2NvRdUdj/hkwokl1Iscn1KcnOoNAMCIXVvcy1MN9jZdrMRc
-	 x4LEQcyr8KQCbHcHk1pCXFx/EXnejuOO/dPPQ/vWZRvx6y85J2ck7LO58ckuHb7w7l
-	 N7pJ6g8gj1tRrB3ytIaV9LjVL2HfjufjmBisNY0jLna1qLrCAvvX0G59ib61hUf7lS
-	 m5w1Hy9C24hzQ==
+	b=bbK4u1c8/0JLdK2Dho4yHx0OqHQnXwxztFPrd8qa0erEfP24q4lKpbT6rU0dsURQ1
+	 iOdNhUkuC1U6Fag8SSxvYYr+p3Z+SXLnV/71Btbt3outQPlSdDV+oOrPt68G/vGBcf
+	 UxP0bPyWP1otg7ojTL2pZkrc3SmX3tTy01SYJjMja63JemaxphFe58cH2SdmERCln8
+	 9BO2uigQ7+AQY/6vDchnsi7uJwN8sJ2A7dkw/SuB5THHkkaVOLARbQXw8i8++D6saO
+	 odYdZbo/Ow/7/lusarNGWS8ER90/KitoYUh9tt0b7G8z+RFnWev45ikHF6ZCCHrdav
+	 QQ+44Q6M8jbXQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E227BC3ABCD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B04C3ABD2;
 	Mon, 12 May 2025 11:40:18 +0000 (UTC)
 From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
-Date: Mon, 12 May 2025 19:39:51 +0800
-Subject: [PATCH v2 1/7] firmware: stratix10-svc: Add mutex lock and unlock
- in stratix10 memory allocation/free
+Date: Mon, 12 May 2025 19:39:52 +0800
+Subject: [PATCH v2 2/7] firmware: stratix10-svc: Implement ID pool
+ management for asynchronous operations
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-sip_svc_upstream-v2-1-fae5c45c059d@altera.com>
+Message-Id: <20250512-sip_svc_upstream-v2-2-fae5c45c059d@altera.com>
 References: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
 In-Reply-To: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
 To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -50,11 +50,11 @@ To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
 Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747050016; l=3909;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747050016; l=6225;
  i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
- bh=U7peSYw634W0vjNlQpTtWPEU2kILWkLlInRHSfUpC/A=;
- b=aATMkkE/hT3g6shV+y2mDaZrhthT/+T0kkMEPnnXPXoMKXjUSJWoV1pMj10cGJ296cr+g8+bo
- KVj5OaDNb5gCgJ8hB/JCKPGwbOSm8XTr3wIZQEVGJdkMAJ2A2E1DU2I
+ bh=5FyTpVzGBXpgVnqCoQDLP/cb2s1zL/TKwkYIX3LjCZk=;
+ b=HMc7PJb0YzedCgoO2Wrg+q63J0Z/PgIQJ8cyneJ/uRCPL6spvAaa5Xhcd/I0oduHFqqtZ2nqG
+ Rw07FAA4IjoDbC/wN/2P/3KwVtJEp9evODLYwqKfer4jMUFMgxJhqU6
 X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
  pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
 X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
@@ -64,128 +64,224 @@ Reply-To: mahesh.rao@altera.com
 
 From: Mahesh Rao <mahesh.rao@altera.com>
 
-This commit adds a mutex lock to stratix10_svc_allocate_memory
-and stratix10_svc_free_memory functions to ensure
-thread safety when allocating and freeing memory.
-This prevents potential race conditions and ensures
-synchronization.
+Implement ID pool management API's which will be
+used for Stratix10 Asynchronous communication with
+Secure Device Manager. These API's will be used
+in subsequent patches for ID management in asynchronous
+operations.
 
 Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
 Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
 ---
- drivers/firmware/stratix10-svc.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/firmware/stratix10-svc.c | 191 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 191 insertions(+)
 
 diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index e3f990d888d71829f0ab22b8a59aa7af0316bea0..3d42d4b18b7299d0a9e5110159e06253dfeddf88 100644
+index 3d42d4b18b7299d0a9e5110159e06253dfeddf88..f487b6a7ef7b7cf7fdb4b4132d7a92b601803d8a 100644
 --- a/drivers/firmware/stratix10-svc.c
 +++ b/drivers/firmware/stratix10-svc.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2017-2018, Intel Corporation
-+ * Copyright (C) 2025, Altera Corporation
-  */
+@@ -170,10 +170,201 @@ struct stratix10_svc_chan {
+ 	spinlock_t lock;
+ };
  
- #include <linux/completion.h>
-@@ -171,6 +172,7 @@ struct stratix10_svc_chan {
- 
++/**
++ * struct stratix10_sip_id_pool - Structure representing a pool of IDs for
++ *                                asynchronous operations.
++ * @head:         The head index of the ID pool.
++ * @size:         The total size of the ID pool.
++ * @id_mask:      Pointer to an array representing the mask of allocated IDs.
++ * @lock:         Mutex lock to protect access to the ID pool.
++ */
++struct stratix10_sip_id_pool {
++	unsigned long head;
++	unsigned long size;
++	unsigned long *id_mask;
++	struct mutex lock;
++};
++
  static LIST_HEAD(svc_ctrl);
  static LIST_HEAD(svc_data_mem);
-+static DEFINE_MUTEX(svc_mem_lock);
+ static DEFINE_MUTEX(svc_mem_lock);
  
++/**
++ * stratix10_id_pool_create - Create a new ID pool for Stratix10 async operation
++ * @size: The size of the ID pool to create
++ *
++ * This function allocates and initializes a new ID pool structure for
++ * Stratix10 async operations. It allocates memory for the ID pool structure
++ * and the associated bitmaps for ID management.
++ *
++ * Return: Pointer to the newly created ID pool structure, or NULL on failure.
++ */
++static struct stratix10_sip_id_pool *stratix10_id_pool_create(unsigned long size)
++{
++	struct stratix10_sip_id_pool *id_pool = NULL;
++
++	if (size == 0)
++		return NULL;
++
++	id_pool = kzalloc(sizeof(*id_pool), GFP_KERNEL);
++	if (!id_pool)
++		return NULL;
++
++	id_pool->size = size;
++
++	id_pool->id_mask = bitmap_zalloc(size, GFP_KERNEL);
++	if (!id_pool->id_mask) {
++		kfree(id_pool);
++		return NULL;
++	}
++
++	id_pool->head = 0;
++
++	mutex_init(&id_pool->lock);
++
++	return id_pool;
++}
++
++/**
++ * stratix10_id_pool_destroy - Destroy an ID pool for Stratix10 async operation
++ * @id_pool: Pointer to the ID pool structure
++ *
++ * This function destroys an ID pool for Stratix10 async operations. It first
++ * checks if the ID pool is valid, then frees the associated bitmap and the
++ * ID pool structure itself.
++ *
++ * Return: 0 on success, -EINVAL if the ID pool is invalid.
++ */
++static int stratix10_id_pool_destroy(struct stratix10_sip_id_pool *id_pool)
++{
++	if (!id_pool)
++		return -EINVAL;
++
++	mutex_lock(&id_pool->lock);
++
++	if (id_pool->id_mask)
++		bitmap_free(id_pool->id_mask);
++
++	mutex_unlock(&id_pool->lock);
++	mutex_destroy(&id_pool->lock);
++
++	kfree(id_pool);
++
++	return 0;
++}
++
++/**
++ * stratix10_reserve_id - Reserve an ID in the ID pool
++ * @id_pool: Pointer to the ID pool structure
++ * @id: The ID to be reserved
++ *
++ * This function reserves an ID in the given ID pool. It first checks if the
++ * ID pool is valid and if the ID is within the valid range.
++ *
++ * Return:
++ * 0 on success,
++ * -EINVAL if the ID pool is invalid, the ID is out of range, or the ID is
++ * already reserved.
++ */
++static int stratix10_reserve_id(struct stratix10_sip_id_pool *id_pool, unsigned long id)
++{
++	if (!id_pool)
++		return -EINVAL;
++
++	if (id >= id_pool->size)
++		return -EINVAL;
++
++	mutex_lock(&id_pool->lock);
++
++	if (test_bit(id, id_pool->id_mask)) {
++		mutex_unlock(&id_pool->lock);
++		return -EINVAL;
++	}
++	set_bit(id, id_pool->id_mask);
++
++	mutex_unlock(&id_pool->lock);
++	return 0;
++}
++
++/**
++ * stratix10_allocate_id - Allocate an ID from the ID pool
++ * @id_pool: Pointer to the ID pool structure
++ *
++ * This function allocates an ID from the given ID pool. It searches for the
++ * next available ID in the pool, marks it as allocated, and returns it.
++ *
++ * Return:
++ * A non-negative integer representing the allocated ID on success
++ * -EINVAL if the id_pool is NULL
++ * -ENOMEM if no IDs are available in the pool
++ */
++static int stratix10_allocate_id(struct stratix10_sip_id_pool *id_pool)
++{
++	unsigned long tries = 0;
++	int id;
++
++	if (!id_pool)
++		return -EINVAL;
++
++	if (id_pool->head >= id_pool->size)
++		return -ENOMEM;
++
++	mutex_lock(&id_pool->lock);
++
++	do {
++		id_pool->head = find_next_zero_bit(id_pool->id_mask,
++						   id_pool->size, id_pool->head);
++		if (id_pool->head >= id_pool->size) {
++			id_pool->head = 0;
++			tries++;
++		}
++		/* cycle through the whole bitmap at least once*/
++	} while (tries < 2 && test_bit(id_pool->head, id_pool->id_mask));
++
++	if (tries >= 2) {
++		mutex_unlock(&id_pool->lock);
++		return -ENOMEM;
++	}
++
++	set_bit(id_pool->head, id_pool->id_mask);
++	id = id_pool->head;
++	id_pool->head = (id_pool->head + 1) % id_pool->size;
++	mutex_unlock(&id_pool->lock);
++	return id;
++}
++
++/**
++ * stratix10_deallocate_id - Deallocate an ID in the ID pool
++ * @id_pool: Pointer to the ID pool structure
++ * @id: The ID to be deallocated
++ *
++ * This function deallocates an ID in the given ID pool. It first checks if the
++ * ID pool is valid and if the ID is within the valid range.
++ *
++ * Return:
++ * 0 on success,
++ * -EINVAL if the ID pool is invalid, the ID is out of range, or the ID is
++ * not set.
++ */
++static int stratix10_deallocate_id(struct stratix10_sip_id_pool *id_pool, unsigned long id)
++{
++	if (!id_pool)
++		return -EINVAL;
++
++	if (id >= id_pool->size)
++		return -EINVAL;
++
++	mutex_lock(&id_pool->lock);
++	if (!test_bit(id, id_pool->id_mask)) {
++		mutex_unlock(&id_pool->lock);
++		return -EINVAL;
++	}
++	clear_bit(id, id_pool->id_mask);
++	mutex_unlock(&id_pool->lock);
++
++	return 0;
++}
++
  /**
   * svc_pa_to_va() - translate physical address to virtual address
-@@ -182,14 +184,17 @@ static LIST_HEAD(svc_data_mem);
- static void *svc_pa_to_va(unsigned long addr)
- {
- 	struct stratix10_svc_data_mem *pmem;
-+	void *ret = NULL;
- 
- 	pr_debug("claim back P-addr=0x%016x\n", (unsigned int)addr);
-+	mutex_lock(&svc_mem_lock);
- 	list_for_each_entry(pmem, &svc_data_mem, node)
--		if (pmem->paddr == addr)
--			return pmem->vaddr;
--
--	/* physical address is not found */
--	return NULL;
-+		if (pmem->paddr == addr) {
-+			/* physical address is found */
-+			ret = pmem->vaddr;
-+		}
-+	mutex_unlock(&svc_mem_lock);
-+	return ret;
- }
- 
- /**
-@@ -990,13 +995,16 @@ int stratix10_svc_send(struct stratix10_svc_chan *chan, void *msg)
- 			p_data->flag = ct->flags;
- 		}
- 	} else {
-+		mutex_lock(&svc_mem_lock);
- 		list_for_each_entry(p_mem, &svc_data_mem, node)
- 			if (p_mem->vaddr == p_msg->payload) {
- 				p_data->paddr = p_mem->paddr;
- 				p_data->size = p_msg->payload_length;
- 				break;
- 			}
-+		mutex_unlock(&svc_mem_lock);
- 		if (p_msg->payload_output) {
-+			mutex_lock(&svc_mem_lock);
- 			list_for_each_entry(p_mem, &svc_data_mem, node)
- 				if (p_mem->vaddr == p_msg->payload_output) {
- 					p_data->paddr_output =
-@@ -1005,6 +1013,7 @@ int stratix10_svc_send(struct stratix10_svc_chan *chan, void *msg)
- 						p_msg->payload_length_output;
- 					break;
- 				}
-+			mutex_unlock(&svc_mem_lock);
- 		}
- 	}
- 
-@@ -1072,9 +1081,12 @@ void *stratix10_svc_allocate_memory(struct stratix10_svc_chan *chan,
- 	if (!pmem)
- 		return ERR_PTR(-ENOMEM);
- 
-+	mutex_lock(&svc_mem_lock);
- 	va = gen_pool_alloc(genpool, s);
--	if (!va)
-+	if (!va) {
-+		mutex_unlock(&svc_mem_lock);
- 		return ERR_PTR(-ENOMEM);
-+	}
- 
- 	memset((void *)va, 0, s);
- 	pa = gen_pool_virt_to_phys(genpool, va);
-@@ -1086,6 +1098,7 @@ void *stratix10_svc_allocate_memory(struct stratix10_svc_chan *chan,
- 	pr_debug("%s: va=%p, pa=0x%016x\n", __func__,
- 		 pmem->vaddr, (unsigned int)pmem->paddr);
- 
-+	mutex_unlock(&svc_mem_lock);
- 	return (void *)va;
- }
- EXPORT_SYMBOL_GPL(stratix10_svc_allocate_memory);
-@@ -1100,6 +1113,7 @@ EXPORT_SYMBOL_GPL(stratix10_svc_allocate_memory);
- void stratix10_svc_free_memory(struct stratix10_svc_chan *chan, void *kaddr)
- {
- 	struct stratix10_svc_data_mem *pmem;
-+	mutex_lock(&svc_mem_lock);
- 
- 	list_for_each_entry(pmem, &svc_data_mem, node)
- 		if (pmem->vaddr == kaddr) {
-@@ -1107,9 +1121,10 @@ void stratix10_svc_free_memory(struct stratix10_svc_chan *chan, void *kaddr)
- 				       (unsigned long)kaddr, pmem->size);
- 			pmem->vaddr = NULL;
- 			list_del(&pmem->node);
-+			mutex_unlock(&svc_mem_lock);
- 			return;
- 		}
--
-+	mutex_unlock(&svc_mem_lock);
- 	list_del(&svc_data_mem);
- }
- EXPORT_SYMBOL_GPL(stratix10_svc_free_memory);
+  * @addr: to be translated physical address
 
 -- 
 2.35.3
