@@ -1,150 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0925779D2;
-	Mon, 12 May 2025 23:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2558179D2
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 23:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747093633; cv=none; b=vDAbeGJ1noeu3rxK/GWBxmimekclp2fzl+lV2GKaE9ebOn/Pm2SHSzLBlYbumiV21FnXroPdprF0iIRXiQPeIbpIH0haC2XKpEEVVmFLvpej8B3fpiyxkDu+uT8mi7dCc8J9r2WoqxyOzQ2b2Qz6VrZLtetgPhS+xRUbqbMW5tk=
+	t=1747093761; cv=none; b=qmShMR2xJZJ25SwKPua2lzP5t2GDSIuILrbbiH5gHwGdiwQ8w7SA2oz0VoNpnR+PQgS9bSgP5h4scVyvm7lj7jY6YImZgPDpub1tbAPmRZlm7xeKrmRcgktFScKMGPP6WYEUk29aVpEPwronQX35WwJ9niqoLTZD7/IZXvn/SY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747093633; c=relaxed/simple;
-	bh=7Zpo5c9qWjo1T46Pm/naZnA314vpTzFNCS+RqT/f1sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CnzaQ04z5e+0KxNR6qm0LECeCy7SkfHIchBrlYxALtoSQSarkIDmMoItvOJQPYM2lMvVn4XSR8fOQDrImzed5jZeB2xVkHht+BAEzo+Pb0vbtQPWzUFrfBR2UGRuemHQN9CWzB54PBEN2KbTjbmYXLoIcSJO8FBsn+btkPzLuiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFF5XXF7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747093761; c=relaxed/simple;
+	bh=j7ThaJ6DoNp4f6FP5Vx08GnRwirFs4dn5fHGZ/vDP80=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D9mipgiWFAaW4my8qd1b4JLqC20SpWpseSR6Y13xvg6TD6oSIduzWqPnX7atIUrGvVneexYd6FWU0CiKFl+dCi40HrlMt60j5JO1yuqCMDwcDBn8kiHb6DO4fn//V2gi4bnM5xF5Oa/3C6ZS/2Nro6wv37ftoZTLD1cUPBQt6g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=az/3o0Zq; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFF5XXF7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63499C4CEE7;
-	Mon, 12 May 2025 23:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747093632;
-	bh=7Zpo5c9qWjo1T46Pm/naZnA314vpTzFNCS+RqT/f1sI=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=KFF5XXF7CyjOyoHzSsMD6uNKS/P8jAtGzsNilMLyFW+pOjfnW4leY6XDsfjldQzrd
-	 A9SvAvwQHAVmmila9TgHz1tOTtvaICs/8IIt0a9KqtuMRV3XB5Zs8NO3FvM3y3UP8+
-	 iZRDgX/C/kVwev74o6r5yWKqYHyu/aFfwQXlzmDnpP8b/+1TN5IOHABXeWb/+boTbi
-	 8+f84ohbp0KPYkLbCa9t5oWs1q9lZVwDOeLy1IRu86A6XWxg3asbf4w7Kl2oW3Js/z
-	 abySXkRxo4iLqhgBR6xVLLzpLrchyIsXAkEvrVP2fiox5zm1DAzBUozO2aqT+cV/NY
-	 iH/xAJNLnUAHg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 02A9ACE0857; Mon, 12 May 2025 16:47:12 -0700 (PDT)
-Date: Mon, 12 May 2025 16:47:11 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dmitry Vyukov <dvyukov@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-next@vger.kernel.org, linux-mm@kvack.org
-Subject: [BUG] sleeping function called from invalid context at
- ./include/linux/sched/mm.h:321
-Message-ID: <a5c939c4-b123-4b2f-8a22-130e508cbcce@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="az/3o0Zq"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54CNmft92906862
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 18:48:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747093721;
+	bh=PFrxyO8NYd8Cc14aEEJRvZuwU4+a4IQOvRHRkG3cqHA=;
+	h=From:To:CC:Subject:Date;
+	b=az/3o0ZqPQf6iYx2+sr6S0beipBqVm9hMymvyKLXP3qcPoe1H0beGVtQpyGdTs2gB
+	 LuQWXSfZOBru9tJ58fXjFoNiPNsxhJrqnnjxuLHqsq/8KUjV1kuE5kd4wJfdNzR+IX
+	 gTlu+K8Fi1+HPbyKp/SWJ6B2xgG0JhYVRcuK+zBA=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54CNmfYT065211
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 12 May 2025 18:48:41 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
+ May 2025 18:48:40 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 12 May 2025 18:48:40 -0500
+Received: from LT5CG31242FY.dhcp.ti.com ([10.250.161.59])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54CNmbHf114132;
+	Mon, 12 May 2025 18:48:37 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <tiwai@suse.de>
+CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <13564923607@139.com>, <13916275206@139.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <baojun.xu@ti.com>, <Baojun.Xu@fpt.com>, <jesse-ji@ti.com>,
+        Shenghao Ding <shenghao-ding@ti.com>
+Subject: [PATCH v3] ALSA: hda/tas2781: Fix the ld issue reported by kernel test robot
+Date: Tue, 13 May 2025 07:48:33 +0800
+Message-ID: <20250512234833.772-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello!
+After commit 9fa6a693ad8d ("ALSA: hda/tas2781: Remove tas2781_spi_fwlib.c
+and leverage SND_SOC_TAS2781_FMWLIB")created a separated lib for i2c,
+However, tasdevice_remove() used for not only for I2C but for SPI being
+still in that lib caused ld issue.
+All errors (new ones prefixed by >>):
+>> ld.lld: error: undefined symbol: tasdevice_remove
+   >>> referenced by tas2781_hda.c:33 (sound/pci/hda/tas2781_hda.c:33)
+   >>>               vmlinux.o:(tas2781_hda_remove)
+To fix this issue, the implementation of tasdevice_remove was moved from
+tas2781-comlib-i2c.c to tas2781-comlib.c.
 
-The next-20250512 release got the following while running either of the
-rcutorture TINY02 and SRCU-T scenarios with strict KCSAN enabled:
+Fixes: 9fa6a693ad8d ("ALSA: hda/tas2781: Remove tas2781_spi_fwlib.c and leverage SND_SOC_TAS2781_FMWLIB")
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-BUG: sleeping function called from invalid context at ./include/linux/sched/mm.h:321
+---
+v3:
+ - Drop the report tag in the patch description.
+v2:
+ - put the Fixes tag to point out the commit that introduced the regression
+ - Add compiling error information reported by kernel test robot into patch
+   description.
+v1:
+ - | Reported-by: kernel test robot <lkp@intel.com>
+   | Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505111855.FP2fScKA-lkp@intel.com/__;!!G3vK!U-wdsvrOG1iezggZ55RYi8ikBxMaJD
+---
+ sound/soc/codecs/tas2781-comlib-i2c.c | 6 ------
+ sound/soc/codecs/tas2781-comlib.c     | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-This is the last line of this function:
+diff --git a/sound/soc/codecs/tas2781-comlib-i2c.c b/sound/soc/codecs/tas2781-comlib-i2c.c
+index a75b812618ee..c078bb0a8437 100644
+--- a/sound/soc/codecs/tas2781-comlib-i2c.c
++++ b/sound/soc/codecs/tas2781-comlib-i2c.c
+@@ -364,12 +364,6 @@ int tascodec_init(struct tasdevice_priv *tas_priv, void *codec,
+ }
+ EXPORT_SYMBOL_GPL(tascodec_init);
+ 
+-void tasdevice_remove(struct tasdevice_priv *tas_priv)
+-{
+-	mutex_destroy(&tas_priv->codec_lock);
+-}
+-EXPORT_SYMBOL_GPL(tasdevice_remove);
+-
+ MODULE_DESCRIPTION("TAS2781 common library for I2C");
+ MODULE_AUTHOR("Shenghao Ding, TI, <shenghao-ding@ti.com>");
+ MODULE_LICENSE("GPL");
+diff --git a/sound/soc/codecs/tas2781-comlib.c b/sound/soc/codecs/tas2781-comlib.c
+index ad2f65359b15..076c1d955972 100644
+--- a/sound/soc/codecs/tas2781-comlib.c
++++ b/sound/soc/codecs/tas2781-comlib.c
+@@ -225,6 +225,12 @@ void tasdevice_dsp_remove(void *context)
+ }
+ EXPORT_SYMBOL_GPL(tasdevice_dsp_remove);
+ 
++void tasdevice_remove(struct tasdevice_priv *tas_priv)
++{
++	mutex_destroy(&tas_priv->codec_lock);
++}
++EXPORT_SYMBOL_GPL(tasdevice_remove);
++
+ MODULE_DESCRIPTION("TAS2781 common library");
+ MODULE_AUTHOR("Shenghao Ding, TI, <shenghao-ding@ti.com>");
+ MODULE_LICENSE("GPL");
+-- 
+2.43.0
 
-	static inline void might_alloc(gfp_t gfp_mask)
-	{
-		fs_reclaim_acquire(gfp_mask);
-		fs_reclaim_release(gfp_mask);
-
-		might_sleep_if(gfpflags_allow_blocking(gfp_mask));
-	}
-
-The reproducer is as follows:
-
-tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs TINY02 --kcsan --kmake-arg CC=clang
-
-I ran this on x86 with clang version 19.1.7 (CentOS 19.1.7-1.el9).
-
-See below for the full splat.  The TINY02 and SRCU-T scenarios are unique
-in setting both CONFIG_SMP=n and CONFIG_PROVE_LOCKING=y.
-
-Bisection converges here:
-
-c836e5a70c59 ("genirq/chip: Rework irq_set_msi_desc_off()")
-
-The commit reverts cleanly, but results in the following build error:
-
-kernel/irq/chip.c:98:26: error: call to undeclared function 'irq_get_desc_lock'
-
-Thoughts?
-
-						Thanx, Paul
-
-------------------------------------------------------------------------
-
-[    8.862165] BUG: sleeping function called from invalid context at ./include/linux/sched/mm.h:321 
-[    8.862706] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 1, name: swapper
-[    8.862706] preempt_count: 0, expected: 0
-[    8.862706] 1 lock held by swapper/1:
-[    8.862706]  #0: ffff99018127a1a0 (&dev->mutex){....}-{4:4}, at: __driver_attach+0x189/0x2f0 
-[    8.862706] irq event stamp: 83979
-[    8.862706] hardirqs last  enabled at (83978): [<ffffffff8b01a83d>] _raw_spin_unlock_irqrestore+0x3d/0x60
-[    8.862706] hardirqs last disabled at (83979): [<ffffffff8b01a616>] _raw_spin_lock_irqsave+0x56/0xb0
-[    8.862706] softirqs last  enabled at (83749): [<ffffffff896e22d8>] __irq_exit_rcu+0x58/0xc0
-[    8.862706] softirqs last disabled at (83740): [<ffffffff896e22d8>] __irq_exit_rcu+0x58/0xc0
-[    8.862706] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 6.15.0-rc5-next-20250508-00001-g3d99c237b0d4-dirty #4043 NONE
-[    8.862706] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-[    8.862706] Call Trace:
-[    8.862706]  <TASK>
-[    8.862706]  dump_stack_lvl+0x77/0xb0
-[    8.862706]  dump_stack+0x19/0x24
-[    8.862706]  __might_resched+0x282/0x2a0
-[    8.862706]  __kmalloc_node_track_caller_noprof+0xa1/0x2a0
-[    8.862706]  ? _pcim_request_region+0x55/0x190
-[    8.862706]  ? __pfx_pcim_addr_resource_release+0x10/0x10
-[    8.862706]  __devres_alloc_node+0x4b/0xc0
-[    8.862706]  _pcim_request_region+0x55/0x190
-[    8.862706]  pcim_request_all_regions+0x37/0x260
-[    8.862706]  ahci_init_one+0x2f0/0x1750
-[    8.862706]  ? rpm_resume+0x48d/0xc30
-[    8.862706]  ? __pm_runtime_resume+0xa7/0xc0
-[    8.862706]  pci_device_probe+0xfc/0x1b0
-[    8.862706]  really_probe+0x1ba/0x500
-[    8.862706]  __driver_probe_device+0x137/0x1a0
-[    8.862706]  driver_probe_device+0x67/0x2d0
-[    8.862706]  __driver_attach+0x194/0x2f0
-[    8.862706]  ? __pfx___driver_attach+0x10/0x10
-[    8.862706]  bus_for_each_dev+0x17a/0x1d0
-[    8.862706]  driver_attach+0x30/0x40
-[    8.862706]  bus_add_driver+0x22a/0x380
-[    8.862706]  driver_register+0xcf/0x1c0
-[    8.862706]  __pci_register_driver+0xfc/0x120
-[    8.862706]  ? __pfx_ahci_pci_driver_init+0x10/0x10
-[    8.862706]  ahci_pci_driver_init+0x24/0x40
-[    8.862706]  ? __pfx_ahci_pci_driver_init+0x10/0x10
-[    8.862706]  do_one_initcall+0xfb/0x300
-[    8.862706]  ? prb_first_seq+0x1ba/0x1f0
-[    8.862706]  ? _prb_read_valid+0x627/0x660
-[    8.862706]  ? prb_read_valid+0x47/0x70
-[    8.862706]  ? console_unlock+0x179/0x1a0
-[    8.862706]  ? vprintk_emit+0x43d/0x480
-[    8.862706]  ? _printk+0x83/0xb0
-[    8.862706]  ? parse_args+0x24f/0x5a0
-[    8.862706]  do_initcall_level+0x91/0xf0
-[    8.862706]  do_initcalls+0x60/0xa0
-[    8.862706]  ? __pfx_kernel_init+0x10/0x10
-[    8.862706]  do_basic_setup+0x41/0x50
-[    8.862706]  kernel_init_freeable+0xb3/0x120
-[    8.862706]  kernel_init+0x20/0x200
-[    8.862706]  ret_from_fork+0x13e/0x1e0
-[    8.862706]  ? __pfx_kernel_init+0x10/0x10
-[    8.862706]  ret_from_fork_asm+0x19/0x30
-[    8.862706]  </TASK>
