@@ -1,99 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54798261381;
-	Mon, 12 May 2025 09:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF59D25B669;
+	Mon, 12 May 2025 09:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747042794; cv=none; b=APi2VU6Ihhn0mJlZsL5csXwrN/AlvWkMYH+vVJevXOnqvrK9G17sTgKtrQxn4UmhI19HrJ5HZhQg/cNNHkTUsJ/MC6yI64X4O07FcHaxWpfjvYxT4GdlgFiIKry7ExvfC0yjcGVqjbreuxWMdEiZ6sytRQdw7vansKMYg59/BgU=
+	t=1747042815; cv=none; b=PpQyguij67XAUa7/wzVjj3vIZUvpd+myglD0PyA+ttOBFRI8Zn0+PujsiBLlsYmuVcVEEukqDqJ0eEt1LoLKo9IuCp7ucAxHRGbqOHNCpwp/rpQxOcKgLvdDMOHAjuF0CJ44K/k+aNztF5qCL1yHKq3u9dUGPvqJGh7QmQ1RlCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747042794; c=relaxed/simple;
-	bh=GJ9BKJd2PRiCU2kpbBVN9+TUnj1dNbBrQ3BJhhqTcmo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hySSoV9Ljl6smbiYsojLXibbJyfZ47HIN5sTATmxYHTov6f9jvdLbQbz8szGsQhxF5T7krkuseG+oBgEFF30HlXqJN0SZyAaBrYp4gIW37vK6Z6d5dYkN0X2HsOIlQ7F6cWlCsaKkVqZguzlJNByYclVWQ7uX4KR3soQW/1Z9SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XeFACxJy; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747042815; c=relaxed/simple;
+	bh=iIHf/Ip4F9B0ByfdX3mApcBxIp6w7x727g6UmnSPAik=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SmKdshuYAWOfslHTWglmOp5DORHnLlNyZHBkRacAvBP0Pif7XUMl7ptsPAqVmtdkNKQd3WD1ziOIrLNwHgBIlqZLxjIsXqicQ+xGHHLHAa+DA9jlAyhNbBC3UZelGvvu/KGFppFs4xCeTayzV+QMlr8g0Chuj9jDUsQmklH5oic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sWXf4GsG; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XeFACxJy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747042793; x=1778578793;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GJ9BKJd2PRiCU2kpbBVN9+TUnj1dNbBrQ3BJhhqTcmo=;
-  b=XeFACxJy0EQqitCNpi4d3S3y4kgK8F+Q/H8BxPpOb5oNXUt5xCm6fMm7
-   sT7rcBM8mt8hSIoeHA5trq1p71erwSkPb8zVXA2cJhV5NcK/lpbsyRB+F
-   4ggYdnMMZeuXiw/m8rjxflp2yrU8OqtPyJiA2hPE+61RPPMyKzXWq090C
-   eBLWYqqvxGzdwqyV+3Z/GirtvVPYjZWC4vdtXgotmr+vZH92/6x4dQLyM
-   j07Sv4oupvcJAH+Ua3uq1AdmH/Ro+j+4n7eFh2il3SMc63220CpzRvzmm
-   5YgvUKsT7ASLL57gEzMZncZK9iiXaIzTnAWWotcJ5BXsDd49b7c3Sz5Cm
-   A==;
-X-CSE-ConnectionGUID: hh9bdC7UTcmsSVvWNkiY4w==
-X-CSE-MsgGUID: NKDoc040Tk2rGsHNemRYug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="36457535"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="36457535"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:39:51 -0700
-X-CSE-ConnectionGUID: GOJ8cRRZS6SK52RSkifd1Q==
-X-CSE-MsgGUID: geiVIFlZTdymWDQZhjZX1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="142214310"
-Received: from bvivekan-mobl1.gar.corp.intel.com (HELO localhost.localdomain) ([10.245.245.139])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:39:49 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf scripts python: exported-sql-viewer.py: Fix pattern matching with Python 3
-Date: Mon, 12 May 2025 12:39:32 +0300
-Message-ID: <20250512093932.79854-4-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250512093932.79854-1-adrian.hunter@intel.com>
-References: <20250512093932.79854-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sWXf4GsG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747042809;
+	bh=pfHe8Q+o64Ex/RBn0WtBU883NQ4o8Ldu9qKCx3KCc5E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sWXf4GsGodSRf4b3cHSbiyjCv+Hl5Kd9kfiFkwZo63UQgIfz/zlqeuVYhI3DXYgNm
+	 TG+HTTTg6HlTy419u7P1fqhJF3QIovMBmjA5agp/okApfZJuJDzaFT2XG/ql9OaeFB
+	 Ah3NrO5sNVjATU9yTlOTvH18WfdJ/BzGHyCJqMDg2Qax0GFR0CUM13plkDzbfg7pB1
+	 V6k66416PPuTefsFWlxhnyw9jiYiGvlRdrOS2Pa5ZzB5c9UOhlxS+zaqFsVy8bQOJN
+	 NEYzDLlwu51XPPNJScMkgGvwJa6K9amYsCODg2dZXCrjhjRBfUvgdVb2Lx538uyKV6
+	 ltOJKzjifwDog==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zwvj55m8tz4wnp;
+	Mon, 12 May 2025 19:40:09 +1000 (AEST)
+Date: Mon, 12 May 2025 19:40:08 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the rust tree
+Message-ID: <20250512194008.3bf1bd47@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/of3sVe_FlIeceRug=bezX6A";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The script allows the user to enter patterns to find symbols.  The pattern
-matching characters are converted for use in SQL.  For PostgreSQL the
-conversion involves using the Python maketrans() method which is slightly
-different in Python 3 compared with Python 2.  Fix to work in Python 3.
+--Sig_/of3sVe_FlIeceRug=bezX6A
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: beda0e725e5f ("perf script python: Add Python3 support to exported-sql-viewer.py")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/scripts/python/exported-sql-viewer.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Hi all,
 
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 121cf61ba1b3..e0b2e7268ef6 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -680,7 +680,10 @@ class CallGraphModelBase(TreeModel):
- 				s = value.replace("%", "\\%")
- 				s = s.replace("_", "\\_")
- 				# Translate * and ? into SQL LIKE pattern characters % and _
--				trans = string.maketrans("*?", "%_")
-+				if sys.version_info[0] == 3:
-+					trans = str.maketrans("*?", "%_")
-+				else:
-+					trans = string.maketrans("*?", "%_")
- 				match = " LIKE '" + str(s).translate(trans) + "'"
- 			else:
- 				match = " GLOB '" + str(value) + "'"
--- 
-2.45.2
+After merging the rust tree and the other rust trees, today's linux-next
+build (x86_64 allmodconfig) failed like this:
 
+error[E0599]: no method named `cast_mut` found for raw pointer `*mut auxili=
+ary_device` in the current scope
+   --> rust/kernel/auxiliary.rs:239:83
+    |
+239 |         let adev =3D unsafe { container_of!(dev, bindings::auxiliary_=
+device, dev) }.cast_mut();
+    |                                                                      =
+             ^^^^^^^^
+    |
+help: there is a method `as_mut` with a similar name
+    |
+239 |         let adev =3D unsafe { container_of!(dev, bindings::auxiliary_=
+device, dev) }.as_mut();
+    |                                                                      =
+             ~~~~~~
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+
+Not sure what caused this and that file has not changed from
+next-20250509, so I have used the rust tree from next-20250509 for today.
+Clearly I need help with the merge resolution here.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/of3sVe_FlIeceRug=bezX6A
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmghwfkACgkQAVBC80lX
+0GwwBggAmcVkKyyZ2/0tsu3YzOd5Dy/hueYP4Hxia8+fbHLKiVz4L4qIUji97RvU
+g48Om4ifo7MScfxWVHRlpIoFHxRJ357FN6X4Ku97DgFA12QvDppyojTvCcnrZ/rE
+Zqux9QFLnn9c7r98q0eWu+J9YOqxAkNWxQp0FICgU7ROSxTgyd2ID9TGL57LwZIb
+NdJV+LD7UDhfFpvar1JGDMRly5ogHbePdnhxJITFzHpvJDT/eKgxNhsYdqf/lZ6M
+AaEjnB1fhQ5AVWPg7VF96wUzsovjxd8k9a6t6Ab96L5bV2qmi6U1Imm3Q++5akwE
+al4MEbx2tv3JdkZEyWeYS8llmKTztg==
+=59T4
+-----END PGP SIGNATURE-----
+
+--Sig_/of3sVe_FlIeceRug=bezX6A--
