@@ -1,131 +1,385 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF6F246782;
-	Mon, 12 May 2025 16:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E172524C09C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066912; cv=none; b=JahNOFsvfkL4vuiiO2bOP4zTu3FkD0Li2wqeHqSRghqWPCcdh+Y2soNro/0o9+f7qXTgbASef7OddDkQLExlgiszXLcry20Ny5GF1y6Pfo8mLuEgTlnudv2D2d9AlzrkVrOxakO7m03kM9TRQoYxUIRy/tvbSvao22rdYutUHQw=
+	t=1747066911; cv=none; b=pJnMoiEVETo9aMbTD6BC925qguIrg/GQMRVLA+oLHuNH+qWw3hJAgeL1SlH+XDdZNsz3Zej+zW68ZEFehIG4A+//3BAgqGgcVYj9UiEUV7r9HXs5Krk/rDaRlFTPh2bCUcOS7EFpWGkLzlc6W9MVB4ymeFvUKy7JQEIY1SoIQAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066912; c=relaxed/simple;
-	bh=Cw16mLp8GBEQCcOKwuFSOtn+PoZCJYu4QwEC/5THH6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pVUpAHFG6YqOcrUYKIKohocLM6I64QRWtlxg0Jc4pc/pZYHVMhosJNcNSDweJJVTFCYEO4NdmN/hjjjxKOzWr4FTTbg1adzku4NRgzxDMt/Mt0phtKZzh/8q9Titl5ehT/UdG48koBBBjE75BYNxDbrtR7i75LDRKDq/aBwE+2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qjWDW5ip; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747066911; c=relaxed/simple;
+	bh=wF1Wn6uogxrZLs0egXNeQW8IAGTYKa8Ie8NiQvbbfCA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FJDeftk8WSsocfbFCbsxh7OTNLujCCfIaUuQijR8W+E2HKvGv5pwj0s1kjNYGfnfnEAnOovsj20yTAhUnKaJH0bMFoN4Ka8VjR5YOZOq1pfPBFy9HMoLSNqS5PLzGcZikzhR29RQOHV+x3pgIYMwaaA624wknkG7sxPvK7rctR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RW0d/bQD; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qjWDW5ip"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3D0C4CEE7;
-	Mon, 12 May 2025 16:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747066912;
-	bh=Cw16mLp8GBEQCcOKwuFSOtn+PoZCJYu4QwEC/5THH6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qjWDW5ipMKXBnBTQnDL//oE57mzcvjgoU1Ton8qgojjwFyPxcD/zG/sLf/+qoX0WA
-	 onl7eoXYzFz98ul7cCauOz3vwSqHsjTMNXxy4MHoHFByrilbQ4G9jTZ/dSzd5XRBlq
-	 JoPfIQU7+w81uzvYu3dFmIRKPmCaTWTq9D31Lnn704gy42p4Ipyte1Djh82MKghM+d
-	 lJri9FOcBdfu27jie/UdYAgPVIehCS1Pmqyq5mrNMpXxxVOcM8CBzesTbQcOolL+JT
-	 /aI2JhND0tKPf20Mk8yLGONCN8t52y6fENYrsyoMvnIGT34Ki8SDew58BKGAfMIC7E
-	 P+tql2ye6ipcQ==
-Date: Mon, 12 May 2025 17:21:45 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v1 01/14] dt-bindings: net: mediatek,net: update for
- mt7988
-Message-ID: <20250512-nibble-freemason-69e0279f2f99@spud>
-References: <20250511141942.10284-1-linux@fw-web.de>
- <20250511141942.10284-2-linux@fw-web.de>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RW0d/bQD"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47690a4ec97so59023801cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:21:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1747066909; x=1747671709; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RP9DathHldScOCsDJTBc7upQEKyGa+tOLTpLEorT/Ys=;
+        b=RW0d/bQDHQyyBN4VgmEWG4GgIuzZQs8n5J0N3tbazVjgQXrND6c374KB4hzL56DnEi
+         9AGWR2lNJ4E/9f0Mo6YmIGjv/WYk76jT/T6o+rBYpojdiRVi6853nzMFAXEQOf8vtOES
+         OImCO8SsTmhj8zj4RSYJb7mmswpgxtpm3Dwxmu0Q5wkNERatgTdbnQxFiId5EdlpWgv4
+         5upw0sCCjXNUGazVo8qtjPUtrPaq/LaT+qxx35e09AKnPRBUG0e+lGIarKsZzj+oLMkN
+         ARSWWChXizR2LIdHpvxefwWNoqvN871WlpY0AwHNpzoZr3JWq1cpnNjCMB0yKBcKl2db
+         aBPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747066909; x=1747671709;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RP9DathHldScOCsDJTBc7upQEKyGa+tOLTpLEorT/Ys=;
+        b=sxaFTVZiB8VOIBBag+kS1Li/YFKKyv4HpDoxJON9hWMyIvMWFgE6TYDzxmNW9ZyJnI
+         ZsA/OG4QW/ZSvY8E8mxjYV/A8+Ewqmcj7fOxVTDgenxIDShHN99FmAVomUU2OsI2mT39
+         wOWVpFMh5R7r/Ly4qG63jn37d1SW2DLIaMh0Qp+HiA9dfwUk/pcrDs2LcaoBIlIMfSek
+         HeUO1ekD8V6j50TcKOjJUwNQwm2qk3F387GMShw1n0dYiY5vJcf64pSTIk6mxlu1mmD3
+         7gM+6b4ykaveyCllQbuGQQF8/JXaOocKBhrHwTtYVSGqO+RiZLq2ASVET6JAqt5kRIBG
+         erYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaA7yEsjRZsHlzUkXPU+WJVVQT7a1Na7xxi1MikPPF2gN0+XweS/ndGs7Wdiuvcvp9Lr7lMk7HLt98UHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrdWl9zu4a6AIM4x6DhXh75nVUlJxFZdk9y71kbM/rLpqgXFSZ
+	/UrqoQk5NZrEPssnuhW79en6pAo8LrQc2ldlxsgk2pcgQKjbUQ5Y+CTuEvE7ELM=
+X-Gm-Gg: ASbGncsUYrHSjvpzFX9igBg23NHd0QOnUQ3HHYGeKQsC4memd8m8b9Z1vvS/qw+Jwqm
+	x0EO7wNHGXsFKaU7URDFTzzhDEvx5ulVG4v05ytlNnG/XdPnr6b9KydN9NOH1yrej9t56/6qeUs
+	CCXg9AuzSagoK4C3BipakpCZg32EtyNQO24qY0SsfuAY6eTg1YUNXSAUYVCDqe9HfIN11wNQF+m
+	j3g40oJj1mxQpHspFlFwtqF9ckovl+NzVUbx8s7WPKJ14P5bqJUhJjpMhKgKKs7BuPhsyPJ1Ma0
+	rjRcDB2/srHzH2PXYpp3l9nzyWmylux7jFAvaGgC1Apk34FEl4xvgkDWiy/YS7clVeY1sWYvZSw
+	UufqtN6Czd0bsrx9CLE4H9sC14OWUlAnV0RoS
+X-Google-Smtp-Source: AGHT+IEUp9iPKick/+CTSjfkLaVSn4+KhiJqqKe4wlaHm4OX2t63Mp7RNtbQYu02g8JBVeTg55d1zQ==
+X-Received: by 2002:ac8:5885:0:b0:476:a3c8:c78d with SMTP id d75a77b69052e-494527637f9mr182733071cf.29.1747066908469;
+        Mon, 12 May 2025 09:21:48 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 09:21:48 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	corbet@lwn.net
+Subject: [PATCH v3 04/17] cxl: docs/platform/bios-and-efi documentation
+Date: Mon, 12 May 2025 12:21:21 -0400
+Message-ID: <20250512162134.3596150-5-gourry@gourry.net>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
+References: <20250512162134.3596150-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BeH6zc2zJClOlCJ9"
-Content-Disposition: inline
-In-Reply-To: <20250511141942.10284-2-linux@fw-web.de>
+Content-Transfer-Encoding: 8bit
 
+Add some docs on CXL configurations done in bios/efi that affect
+linux configuration - information vendors may care to consider.
 
---BeH6zc2zJClOlCJ9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ Documentation/driver-api/cxl/index.rst        |   6 +
+ .../driver-api/cxl/platform/bios-and-efi.rst  | 262 ++++++++++++++++++
+ 2 files changed, 268 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/platform/bios-and-efi.rst
 
-On Sun, May 11, 2025 at 04:19:17PM +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
->=20
-> Update binding for mt7988 which has 3 gmac and 2 reg items.
->=20
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  Documentation/devicetree/bindings/net/mediatek,net.yaml | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Do=
-cumentation/devicetree/bindings/net/mediatek,net.yaml
-> index 9e02fd80af83..5d249da02c3a 100644
-> --- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
-> +++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
-> @@ -28,7 +28,8 @@ properties:
->        - ralink,rt5350-eth
-> =20
->    reg:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 2
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index a2d1c5b18a8a..ffa0462ad950 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -21,6 +21,12 @@ that have impacts on each other.  The docs here break up configurations steps.
+ 
+    devices/device-types
+ 
++.. toctree::
++   :maxdepth: 2
++   :caption: Platform Configuration
++
++   platform/bios-and-efi
++
+ .. toctree::
+    :maxdepth: 1
+    :caption: Linux Kernel Configuration
+diff --git a/Documentation/driver-api/cxl/platform/bios-and-efi.rst b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+new file mode 100644
+index 000000000000..552a83992bcc
+--- /dev/null
++++ b/Documentation/driver-api/cxl/platform/bios-and-efi.rst
+@@ -0,0 +1,262 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++======================
++BIOS/EFI Configuration
++======================
++
++BIOS and EFI are largely responsible for configuring static information about
++devices (or potential future devices) such that Linux can build the appropriate
++logical representations of these devices.
++
++At a high level, this is what occurs during this phase of configuration.
++
++* The bootloader starts the BIOS/EFI.
++
++* BIOS/EFI do early device probe to determine static configuration
++
++* BIOS/EFI creates ACPI Tables that describe static config for the OS
++
++* BIOS/EFI create the system memory map (EFI Memory Map, E820, etc)
++
++* BIOS/EFI calls :code:`start_kernel` and begins the Linux Early Boot process.
++
++Much of what this section is concerned with is ACPI Table production and
++static memory map configuration. More detail on these tables can be found
++under Platform Configuration -> ACPI Table Reference.
++
++.. note::
++   Platform Vendors should read carefully, as this sections has recommendations
++   on physical memory region size and alignment, memory holes, HDM interleave,
++   and what linux expects of HDM decoders trying to work with these features.
++
++UEFI Settings
++=============
++If your platform supports it, the :code:`uefisettings` command can be used to
++read/write EFI settings. Changes will be reflected on the next reboot. Kexec
++is not a sufficient reboot.
++
++One notable configuration here is the EFI_MEMORY_SP (Specific Purpose) bit.
++When this is enabled, this bit tells linux to defer management of a memory
++region to a driver (in this case, the CXL driver). Otherwise, the memory is
++treated as "normal memory", and is exposed to the page allocator during
++:code:`__init`.
++
++uefisettings examples
++---------------------
++
++:code:`uefisettings identify` ::
++
++        uefisettings identify
++
++        bios_vendor: xxx
++        bios_version: xxx
++        bios_release: xxx
++        bios_date: xxx
++        product_name: xxx
++        product_family: xxx
++        product_version: xxx
++
++On some AMD platforms, the :code:`EFI_MEMORY_SP` bit is set via the :code:`CXL
++Memory Attribute` field.  This may be called something else on your platform.
++
++:code:`uefisettings get "CXL Memory Attribute"` ::
++
++        selector: xxx
++        ...
++        question: Question {
++            name: "CXL Memory Attribute",
++            answer: "Enabled",
++            ...
++        }
++
++Physical Memory Map
++===================
++
++Physical Address Region Alignment
++---------------------------------
++
++As of Linux v6.14, the hotplug memory system requires memory regions to be
++uniform in size and alignment.  While the CXL specification allows for memory
++regions as small as 256MB, the supported memory block size and alignment for
++hotplugged memory is architecture-defined.
++
++A Linux memory blocks may be as small as 128MB and increase in powers of two.
++
++* On ARM, the default block size and alignment is either 128MB or 256MB.
++
++* On x86, the default block size is 256MB, and increases to 2GB as the
++  capacity of the system increases up to 64GB.
++
++For best support across versions, platform vendors should place CXL memory at
++a 2GB aligned base address, and regions should be 2GB aligned.  This also helps
++prevent the creating thousands of memory devices (one per block).
++
++Memory Holes
++------------
++
++Holes in the memory map are tricky.  Consider a 4GB device located at base
++address 0x100000000, but with the following memory map ::
++
++  ---------------------
++  |    0x100000000    |
++  |        CXL        |
++  |    0x1BFFFFFFF    |
++  ---------------------
++  |    0x1C0000000    |
++  |    MEMORY HOLE    |
++  |    0x1FFFFFFFF    |
++  ---------------------
++  |    0x200000000    |
++  |     CXL CONT.     |
++  |    0x23FFFFFFF    |
++  ---------------------
++
++There are two issues to consider:
++
++* decoder programming, and
++* memory block alignment.
++
++If your architecture requires 2GB uniform size and aligned memory blocks, the
++only capacity Linux is capable of mapping (as of v6.14) would be the capacity
++from `0x100000000-0x180000000`.  The remaining capacity will be stranded, as
++they are not of 2GB aligned length.
++
++Assuming your architecture and memory configuration allows 1GB memory blocks,
++this memory map is supported and this should be presented as multiple CFMWS
++in the CEDT that describe each side of the memory hole separately - along with
++matching decoders.
++
++Multiple decoders can (and should) be used to manage such a memory hole (see
++below), but each chunk of a memory hole should be aligned to a reasonable block
++size (larger alignment is always better).  If you intend to have memory holes
++in the memory map, expect to use one decoder per contiguous chunk of host
++physical memory.
++
++As of v6.14, Linux does provide support for memory hotplug of multiple
++physical memory regions separated by a memory hole described by a single
++HDM decoder.
++
++
++Decoder Programming
++===================
++If BIOS/EFI intends to program the decoders to be statically configured,
++there are a few things to consider to avoid major pitfalls that will
++prevent Linux compatibility.  Some of these recommendations are not
++required "per the specification", but Linux makes no guarantees of support
++otherwise.
++
++
++Translation Point
++-----------------
++Per the specification, the only decoders which **TRANSLATE** Host Physical
++Address (HPA) to Device Physical Address (DPA) are the **Endpoint Decoders**.
++All other decoders in the fabric are intended to route accesses without
++translating the addresses.
++
++This is heavily implied by the specification, see: ::
++
++  CXL Specification 3.1
++  8.2.4.20: CXL HDM Decoder Capability Structure
++  - Implementation Note: CXL Host Bridge and Upstream Switch Port Decoder Flow
++  - Implementation Note: Device Decoder Logic
++
++Given this, Linux makes a strong assumption that decoders between CPU and
++endpoint will all be programmed with addresses ranges that are subsets of
++their parent decoder.
++
++Due to some ambiguity in how Architecture, ACPI, PCI, and CXL specifications
++"hand off" responsibility between domains, some early adopting platforms
++attempted to do translation at the originating memory controller or host
++bridge.  This configuration requires a platform specific extension to the
++driver and is not officially endorsed - despite being supported.
++
++It is *highly recommended* **NOT** to do this; otherwise, you are on your own
++to implement driver support for your platform.
++
++Interleave and Configuration Flexibility
++----------------------------------------
++If providing cross-host-bridge interleave, a CFMWS entry in the CEDT must be
++presented with target host-bridges for the interleaved device sets (there may
++be multiple behind each host bridge).
++
++If providing intra-host-bridge interleaving, only 1 CFMWS entry in the CEDT is
++required for that host bridge - if it covers the entire capacity of the devices
++behind the host bridge.
++
++If intending to provide users flexibility in programming decoders beyond the
++root, you may want to provide multiple CFMWS entries in the CEDT intended for
++different purposes.  For example, you may want to consider adding:
++
++1) A CFMWS entry to cover all interleavable host bridges.
++2) A CFMWS entry to cover all devices on a single host bridge.
++3) A CFMWS entry to cover each device.
++
++A platform may choose to add all of these, or change the mode based on a BIOS
++setting.  For each CFMWS entry, Linux expects descriptions of the described
++memory regions in the SRAT to determine the number of NUMA nodes it should
++reserve during early boot / init.
++
++As of v6.14, Linux will create a NUMA node for each CEDT CFMWS entry, even if
++a matching SRAT entry does not exist; however, this is not guaranteed in the
++future and such a configuration should be avoided.
++
++Memory Holes
++------------
++If your platform includes memory holes intersparsed between your CXL memory, it
++is recommended to utilize multiple decoders to cover these regions of memory,
++rather than try to program the decoders to accept the entire range and expect
++Linux to manage the overlap.
++
++For example, consider the Memory Hole described above ::
++
++  ---------------------
++  |    0x100000000    |
++  |        CXL        |
++  |    0x1BFFFFFFF    |
++  ---------------------
++  |    0x1C0000000    |
++  |    MEMORY HOLE    |
++  |    0x1FFFFFFFF    |
++  ---------------------
++  |    0x200000000    |
++  |     CXL CONT.     |
++  |    0x23FFFFFFF    |
++  ---------------------
++
++Assuming this is provided by a single device attached directly to a host bridge,
++Linux would expect the following decoder programming ::
++
++     -----------------------   -----------------------
++     | root-decoder-0      |   | root-decoder-1      |
++     |   base: 0x100000000 |   |   base: 0x200000000 |
++     |   size:  0xC0000000 |   |   size:  0x40000000 |
++     -----------------------   -----------------------
++                |                         |
++     -----------------------   -----------------------
++     | HB-decoder-0        |   | HB-decoder-1        |
++     |   base: 0x100000000 |   |   base: 0x200000000 |
++     |   size:  0xC0000000 |   |   size:  0x40000000 |
++     -----------------------   -----------------------
++                |                         |
++     -----------------------   -----------------------
++     | ep-decoder-0        |   | ep-decoder-1        |
++     |   base: 0x100000000 |   |   base: 0x200000000 |
++     |   size:  0xC0000000 |   |   size:  0x40000000 |
++     -----------------------   -----------------------
++
++With a CEDT configuration with two CFMWS describing the above root decoders.
++
++Linux makes no guarantee of support for strange memory hole situations.
++
++Multi-Media Devices
++-------------------
++The CFMWS field of the CEDT has special restriction bits which describe whether
++the described memory region allows volatile or persistent memory (or both). If
++the platform intends to support either:
++
++1) A device with multiple medias, or
++2) Using a persistent memory device as normal memory
++
++A platform may wish to create multiple CEDT CFMWS entries to describe the same
++memory, with the intent of allowing the end user flexibility in how that memory
++is configured. Linux does not presently have strong requirements in this area.
+-- 
+2.49.0
 
-This should become an items list, with an explanation of what each of
-the reg items represents.
-
-> =20
->    clocks:
->      minItems: 2
-> @@ -381,8 +382,12 @@ allOf:
->              - const: xgp2
->              - const: xgp3
-> =20
-> +        reg:
-> +          minItems: 2
-> +          maxItems: 2
-> +
->  patternProperties:
-> -  "^mac@[0-1]$":
-> +  "^mac@[0-2]$":
->      type: object
->      unevaluatedProperties: false
->      allOf:
-> --=20
-> 2.43.0
->=20
-
---BeH6zc2zJClOlCJ9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCIgGQAKCRB4tDGHoIJi
-0kdJAQD7lUldL2lyECoq6kz6Xgzpc9L4CU21TH0X3mhKWLc3KAEAkBFq4G5y02M6
-M2qDeF8a2MAP3H9Vr3AIiT3T4ZG04gg=
-=Vo8k
------END PGP SIGNATURE-----
-
---BeH6zc2zJClOlCJ9--
