@@ -1,64 +1,97 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B602566C4;
-	Mon, 12 May 2025 07:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0C0248F59
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747033961; cv=none; b=dfoIevLnLCen1nS4GNujv+8P4oHVy0DgMkm0J2h84YOSeng8koV5Bg7NWspbEWUU9Nif1fTJ3gvQHgX9j1o6ZnF/jiSXssICTjclWQn8xUKFIQZbPO+c+U8056JLXGI5hXgRp43TIM6ABGggil7glhnZKXESxl30Qw5OIwgEoyQ=
+	t=1747034101; cv=none; b=YplY0AW8uwasnCxOYnHFayRrnS3MVuKot3rywgCpdA+TjOg5vsXmNtZSGOf4sa+OqCsFdKqwIkh3l/wCHMesxAjN9VS2+LCeHg2XFlg/qYJxJGErkhdDkWytxkCNueQ/z2Nkn8LqIAnCRWnKKol5MBV5QWPuNv5yud9wMy9z0bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747033961; c=relaxed/simple;
-	bh=d7eR4iam2qZB+M+UdoyPhaDhOOPiEADZuEHlMiFzorg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t+eTBHC3n8l/sfOvFe0HognoPT5DeY3emCtb5p9WbZFTouGhOP/+z1IWOPQHee8Iy2tkcH5b7z6CfwsQng+68zefXkFr04mn4Fkc8jVJA397l16NsfTIazg9zzHmTKqv6i/nKORYKdiAQvkekHsdvlLYvl+JrR16tCPY3dS6ggA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=o17NkVG6; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="o17NkVG6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1747033954;
-	bh=d7eR4iam2qZB+M+UdoyPhaDhOOPiEADZuEHlMiFzorg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o17NkVG6g7dr3hPrfuBN1+tCueULJ90xVPC2gxnIEy9VaagKGZTQsewF2NwMY4C1D
-	 mHEj0z7cYXPIvOgmqWDp8bq1Q83F8dh23rQ2Gjuk2+aJWqFKRZyVpDFS0jZQd2G9je
-	 yZjHrLvUhlkPrlu5NDPp8NsbZNaOAzby0Sd3skWk=
-Date: Mon, 12 May 2025 09:12:33 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Joshua Grisham <josh@joshuagrisham.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Antheas Kapenekakis <lkml@antheas.dev>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Prasanth Ksr <prasanth.ksr@dell.com>, 
-	Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH RFC 5/5] platform/x86: samsung-galaxybook: Transition to
- new firmware_attributes API
-Message-ID: <5706c07a-f8e7-4dc8-95a0-b128f1306c02@t-8ch.de>
-References: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
- <20250509-fw-attrs-api-v1-5-258afed65bfa@gmail.com>
+	s=arc-20240116; t=1747034101; c=relaxed/simple;
+	bh=Cbw+2lbNzTl44Wt8GRwA6T8D6WhEeQvbiA9InX1p4+I=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ZvC6Aq/yZtpuougaHovUlHBPTdU/LjjO/uvy3/foDjBfZWXDxj67uU7prtNJ0gR0WgbCjiU4+joR1E9F4jyX0ECX+MbWZdqFMJvuSHJNLpSJR0U7vroI4F0zzU51MR8CG6AMyKjnIlVu38xD8e49IYlvHdWtRh214dXwM67Acbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 09:14:50 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Mon, 12 May 2025 09:14:50 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>
+CC: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Christoph
+ Hellwig" <hch@infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	John Ernberg <john.ernberg@actia.se>
+Subject: [PATCH v2] xen: swiotlb: Wire up map_resource callback
+Thread-Topic: [PATCH v2] xen: swiotlb: Wire up map_resource callback
+Thread-Index: AQHbww2MQ91Fme3GEU6/lmK+Crf+Dw==
+Date: Mon, 12 May 2025 07:14:50 +0000
+Message-ID: <20250512071440.3726697-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.49.0
+x-esetresult: clean, is OK
+x-esetid: 37303A2956B14453617466
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509-fw-attrs-api-v1-5-258afed65bfa@gmail.com>
 
-On 2025-05-09 04:48:37-0300, Kurt Borja wrote:
-> Transition to new firmware_attributes API and replace `enumeration` types
-> with the simpler `boolean` type.
+When running Xen on iMX8QXP, an Arm SoC without IOMMU, DMA performed via
+its eDMA v3 DMA engine fail with a mapping error.
 
-This is an ABI change, using a newly introduced ABI.
-Some elaboration why it does not break userspace would be good.
+The eDMA performs DMA between RAM and MMIO space, and it's the MMIO side
+that cannot be mapped.
 
-> 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/samsung-galaxybook.c | 299 ++++++++++++------------------
->  1 file changed, 114 insertions(+), 185 deletions(-)
+MMIO->RAM DMA access cannot be bounce buffered if it would straddle a page
+boundary and on Xen the MMIO space is 1:1 mapped for Arm, and x86 PV Dom0.
+Cases where MMIO space is not 1:1 mapped, such as x86 PVH Dom0, requires an
+IOMMU present to deal with the mapping.
 
-<snip>
+Considering the above the map_resource callback can just be wired to the
+existing dma_direct_map_resource() function.
+
+There is nothing to do for unmap so the unmap callback is not needed.
+
+Signed-off-by: John Ernberg <john.ernberg@actia.se>
+
+---
+
+v2:
+ - Just use dma_direct_map_resource() directly (Stefano Stabellini)
+ - Incorporate some of the discussion and explanations from v1 into the
+    commit message (Stefano, Christoph)
+ - General English improvements in the commit message.
+ - Just this patch now, 1/2 in the previous set was applied
+
+v1: (series) https://lore.kernel.org/xen-devel/20250502114043.1968976-1-joh=
+n.ernberg@actia.se/
+---
+ drivers/xen/swiotlb-xen.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index ef56a2500ed6..da1a7d3d377c 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -426,4 +426,5 @@ const struct dma_map_ops xen_swiotlb_dma_ops =3D {
+ 	.alloc_pages_op =3D dma_common_alloc_pages,
+ 	.free_pages =3D dma_common_free_pages,
+ 	.max_mapping_size =3D swiotlb_max_mapping_size,
++	.map_resource =3D dma_direct_map_resource,
+ };
+--=20
+2.49.0
