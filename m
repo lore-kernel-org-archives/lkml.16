@@ -1,243 +1,156 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3795266566
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6877C253B64
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747069080; cv=none; b=gTnct9sfzAUMFc6cYFVrJ1N0HnkGvPUXz2S0TRnvLR6SouYlWZRcC9LLV6AWme9riBAMAs8O2jvefDGledMzrCkGDccRQJEM0StCv4298+CcC0CgUqV4a5c8pWcnum4yVzwp+U9520mJ2cqXam8nMCdBcY0qfZqBaQDVE8DlPI4=
+	t=1747069113; cv=none; b=b3A9Qd1rDK/X60gX+VCDWCPcCRCSjL04r6KqL4k7eMlSnWmaZg18ymBcSPAmGFuV8XolV30oFcF92I45gc1cwXRA5otShdYjXaoM5RNHSTH20ZIQZsGfiSv9kpHCoelgecf1ZpPIlpPzOHZmC5D95XT3N+wa0qmPef7iaDdLwzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747069080; c=relaxed/simple;
-	bh=ynLKaaUGTDfAgS+nKrfsEg6ldDlqJS7zqgcK18hXF3Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TIU6neP6t57R637gH2ANIdH/D6voYXC5Ea080Y+WxlhgCfBd8OZt6wiPZWSXlWNFlueo2fKNoueK5le8dmZkpwl3NM5rM5CoZNmYs7gkj+2zdco8gdlvWpktPkW5bvRljaTs+PrmWgq35zktyOYpFYRvK/aFP5sfqDIn4a4NcEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w1+O3fQJ; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w1+O3fQJ"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so9785ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747069078; x=1747673878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QRIADOe4MgrN1DSQVCN+js6hsUX4yX+bQNoO/gFotgI=;
-        b=w1+O3fQJ5LR/BHWSHTwekkVH4eUC8KFRSN9MZaZv2EKdS2CxhIf0d8vIPr12Cl5Fpz
-         T4Jc5ZjEoEuXvkwDrHJ/9DZs7yRoFVUnJCgIlo7TzjQfR0y7pr6ZARXWtJzxZpMSkyBo
-         sH+P6fNVrtVWh2Nif5kgg1tuCoowZfCmA9cO3WRPWQJxA+WWBcvpVbHjf1yenLqLvOAb
-         GTCQm+nM4HZg0LM/yJ6AnfdNqp15OqucL+FnCWF8u514aU63KmgN3sgqUCkpR7BHdPne
-         SCrDjXxCRGIgxpVH9Titr2umDXKilXEOvQ8A2EesGBebJCdRDPn82JTkRUuuUDnmZ/78
-         d+Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747069078; x=1747673878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QRIADOe4MgrN1DSQVCN+js6hsUX4yX+bQNoO/gFotgI=;
-        b=YGkKP6JM8P9mUX2VVd99hxA3ZTEyH4rl9TNWwtchxDTJZaZLMDPru0wj443lh5WZgx
-         dAxd+Asz2OXkyR5ZylsqhrshzaKp4BLLvJ88RlJheoEw/4A37ZGEy7+qEik+E7iz1T5W
-         4FnBOj12s2XTivuEBIZid0CXFMCmoaUj9LiTTyQaREEs4YvLeiXjGJOW35uAwzbfaM+m
-         qrf3494t3frCD3sC6n0S3NcVDoe0lLFWi9VZqBaUF0+r6ZQNz9v0MFXoxds8sbT/eV5e
-         gWrhy20PPxqQkpVPOU/oh0gQhT+eeINACi6drEVGMgQTFScWY+vRKYgmV33bcTJD6Qqm
-         k5gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAriyyXYkBkBtIFzb2Bt+4w76uxSlLQCQBUWAZqbmwOCpZE08WCtZbuOTpiGpHhH19IvbQYIPJhZ3OWlM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAKeFOV7GFtobfA6rRAAJbGvxQY5STjCx8DuBq+rlpZqoBKHOx
-	bbCWNYPdEttxB2BJcp9eHMZ65VmXVKeNRfPCp/7q/3u7wsxX626UuGi55+9NCUaPsoDr76hz3Wg
-	U7iEV3oODzgMlhF+u8w8t0mxqv5J/bGRzRuEI
-X-Gm-Gg: ASbGncsrjeAi290OTwg3MHQLM6rOsivWnw3iyCkqVMejUW+J/EkTD77M5Hm3QfyHsYx
-	MIRhRvfKhli0DpA3I0h3LgNMrLKsnPxuKzM35QzWWXKLRdwWOQyLU1AxtjxO2famrbScVMTCLTa
-	REP3ErX7jjrFsUq7wDpadZg5dmVLE8MqGlrhdPv22xV1ehEbKT6xJKluZoYCIeyA==
-X-Google-Smtp-Source: AGHT+IHOngqmXBHGtgDCgZ0Zmv/o9X5U7f+4TuL2mpqS+AYX3UuzMeZWZaipLe4DNzhn/mmMpggQ1O8fDNScBbxv59s=
-X-Received: by 2002:a05:6e02:1a6e:b0:3d4:2a4e:1283 with SMTP id
- e9e14a558f8ab-3da842eee9dmr5412375ab.1.1747069077404; Mon, 12 May 2025
- 09:57:57 -0700 (PDT)
+	s=arc-20240116; t=1747069113; c=relaxed/simple;
+	bh=G9r/xNz3qPTnKCCzs0klOz9xAugo03yXKKnCDVhaRF4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=keThT6v2dQ7VfJPXvjsYsIZIlzaJCXlToQL3Zn/N1QMHNBvh3m40LZB/00DIkST9/B/QBKgJWVFxotxYn4He18DFhoseF0Qm8nXJT8hJHH8YfmmTYp+/egZWFwMfbLBzz60irFLoUuiD4LLhyH/cmLo7om5Bq45b/gEQHqC1iHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+Received: from localhost (unknown [82.64.135.138])
+	by smtp2-g21.free.fr (Postfix) with ESMTP id 38CBE2003ED;
+	Mon, 12 May 2025 18:58:16 +0200 (CEST)
+Received: by localhost (Postfix, from userid 1502)
+	id 878C9C4CE; Mon, 12 May 2025 16:58:15 +0000 (GMT)
+Date: Mon, 12 May 2025 16:58:15 +0000
+From: Etienne Buira <etienne.buira@free.fr>
+To: Maxime Ripard <mripard@kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: RaspberryPi4B, VC4 fails to output on HDMI
+Message-ID: <aCIopzfzbckMQFLj@Z926fQmE5jqhFMgp6>
+Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410044532.52017-1-irogers@google.com> <Z_dp7E2wtSek-KHo@z2>
- <CAP-5=fU6NM4LZWt9SdTFX9JKTgfghwAVvtXc-qBuUb0vpUeTQA@mail.gmail.com> <aCIkl8Skof--Of99@x1>
-In-Reply-To: <aCIkl8Skof--Of99@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 May 2025 09:57:45 -0700
-X-Gm-Features: AX0GCFsL9F-NeeIrpp99ODVTrLtBx-sFYJbvO6TOvca_AxerUk3-e4rvEPQ3qKI
-Message-ID: <CAP-5=fWFRtnVjeNu97jW6DYyE8S7o8RkSn87jpQDE4zw==HVSQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Metric related performance improvements
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	John Garry <john.g.garry@oracle.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, May 12, 2025 at 9:40=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Wed, Apr 23, 2025 at 01:48:22PM -0700, Ian Rogers wrote:
-> > On Wed, Apr 9, 2025 at 11:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Wed, Apr 09, 2025 at 09:45:29PM -0700, Ian Rogers wrote:
-> > > > The "PMU JSON event tests" have been running slowly, these changes
-> > > > target improving them with an improvement of the test running 8 to =
-10
-> > > > times faster.
-> > > >
-> > > > The first patch changes from searching through all aliases by name =
-in
-> > > > a list to using a hashmap. Doing a fast hashmap__find means testing
-> > > > for having an event needn't load from disk if an event is already
-> > > > present.
-> > > >
-> > > > The second patch switch the fncache to use a hashmap rather than it=
-s
-> > > > own hashmap with a limited number of buckets. When there are many
-> > > > filename queries, such as with a test, there are many collisions wi=
-th
-> > > > the previous fncache approach leading to linear searching of the
-> > > > entries.
-> > > >
-> > > > The final patch adds a find function for metrics. Normally metrics =
-can
-> > > > match by name and group, however, only name matching happens when o=
-ne
-> > > > metric refers to another. As we test every "id" in a metric to see =
-if
-> > > > it is a metric, the find function can dominate performance as it
-> > > > linearly searches all metrics. Add a find function for the metrics
-> > > > table so that a metric can be found by name with a binary search.
-> > > >
-> > > > Before these changes:
-> > > > ```
-> > > > $ time perf test -v 10
-> > > >  10: PMU JSON event tests                                          =
-  :
-> > > >  10.1: PMU event table sanity                                      =
-  : Ok
-> > > >  10.2: PMU event map aliases                                       =
-  : Ok
-> > > >  10.3: Parsing of PMU event table metrics                          =
-  : Ok
-> > > >  10.4: Parsing of PMU event table metrics with fake PMUs           =
-  : Ok
-> > > >  10.5: Parsing of metric thresholds with fake PMUs                 =
-  : Ok
-> > > >
-> > > > real    0m18.499s
-> > > > user    0m18.150s
-> > > > sys     0m3.273s
-> > > > ```
-> > > >
-> > > > After these changes:
-> > > > ```
-> > > > $ time perf test -v 10
-> > > >  10: PMU JSON event tests                                          =
-  :
-> > > >  10.1: PMU event table sanity                                      =
-  : Ok
-> > > >  10.2: PMU event map aliases                                       =
-  : Ok
-> > > >  10.3: Parsing of PMU event table metrics                          =
-  : Ok
-> > > >  10.4: Parsing of PMU event table metrics with fake PMUs           =
-  : Ok
-> > > >  10.5: Parsing of metric thresholds with fake PMUs                 =
-  : Ok
-> > > >
-> > > > real    0m2.338s
-> > > > user    0m1.797s
-> > > > sys     0m2.186s
-> > > > ```
-> > >
-> > > Great, I also see the speedup on my machine from 32s to 3s.
-> > >
-> > > Tested-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Ping.
->
-> I'll try to fix up it later, if you don't beat me to it, will continue
-> with the other patches you listed to get the ones that applies merged:
->
-> Total patches: 3
-> ---
-> Cover: ./20250409_irogers_metric_related_performance_improvements.cover
->  Link: https://lore.kernel.org/r/20250410044532.52017-1-irogers@google.co=
-m
->  Base: not specified
->        git am ./20250409_irogers_metric_related_performance_improvements.=
-mbx
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$        git am ./20250409_irogers=
-_metric_related_performance_improvements.mbx
-> Applying: perf pmu: Change aliases from list to hashmap
-> error: patch failed: tools/perf/util/pmu.c:532
-> error: tools/perf/util/pmu.c: patch does not apply
-> Patch failed at 0001 perf pmu: Change aliases from list to hashmap
-> hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
-> hint: When you have resolved this problem, run "git am --continue".
-> hint: If you prefer to skip this patch, run "git am --skip" instead.
-> hint: To restore the original branch and stop patching, run "git am --abo=
-rt".
-> hint: Disable this message with "git config set advice.mergeConflict fals=
-e"
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ git am --abort
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < ./20250409_irogers_m=
-etric_related_performance_improvements.mbx
-> patching file tools/perf/tests/pmu-events.c
-> patching file tools/perf/util/hwmon_pmu.c
-> patching file tools/perf/util/pmu.c
-> Hunk #3 succeeded at 417 (offset 11 lines).
-> Hunk #4 succeeded at 451 (offset 11 lines).
-> Hunk #5 FAILED at 541.
-> Hunk #6 succeeded at 657 (offset 41 lines).
-> Hunk #7 succeeded at 1146 (offset 41 lines).
-> Hunk #8 succeeded at 1238 (offset 41 lines).
-> Hunk #9 succeeded at 1259 (offset 41 lines).
-> Hunk #10 succeeded at 2018 (offset 48 lines).
-> Hunk #11 succeeded at 2033 (offset 48 lines).
-> Hunk #12 succeeded at 2502 (offset 59 lines).
-> Hunk #13 succeeded at 2522 (offset 59 lines).
-> 1 out of 13 hunks FAILED -- saving rejects to file tools/perf/util/pmu.c.=
-rej
-> patching file tools/perf/util/pmu.h
-> Hunk #3 succeeded at 295 (offset 5 lines).
-> patching file tools/perf/util/tool_pmu.c
-> Hunk #1 succeeded at 502 (offset 6 lines).
-> patching file tools/perf/util/fncache.c
-> patching file tools/perf/util/fncache.h
-> patching file tools/perf/util/srccode.c
-> patching file tools/perf/builtin-stat.c
-> Hunk #1 succeeded at 1854 (offset -2 lines).
-> Hunk #2 succeeded at 1888 (offset -2 lines).
-> Hunk #3 succeeded at 1978 (offset -2 lines).
-> patching file tools/perf/pmu-events/empty-pmu-events.c
-> Hunk #1 succeeded at 449 (offset 6 lines).
-> Hunk #2 succeeded at 495 (offset 6 lines).
-> Hunk #3 succeeded at 552 (offset 6 lines).
-> patching file tools/perf/pmu-events/jevents.py
-> Hunk #1 succeeded at 972 (offset 6 lines).
-> Hunk #2 succeeded at 1018 (offset 6 lines).
-> Hunk #3 succeeded at 1075 (offset 6 lines).
-> patching file tools/perf/pmu-events/pmu-events.h
-> Hunk #1 succeeded at 74 (offset 3 lines).
-> Hunk #2 succeeded at 89 (offset 3 lines).
-> Hunk #3 succeeded at 105 (offset 3 lines).
-> patching file tools/perf/util/metricgroup.c
-> patching file tools/perf/util/metricgroup.h
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+Hi all (and i hope you won't feel spammed).
 
-Thanks Arnaldo! Happy to send a rebase on tmp.perf-tools-next if useful.
+I have a Raspberry Pi 4B i want to use with HDMI0, but i can't make it
+work (tried lot of kernel versions), and i'd appreciate some guidance.
 
-Thanks,
-Ian
+Overview of dmesg (6.15-rc6 with some trace/stack dump of mine):
+[    0.212555] simple-framebuffer 3e40f000.framebuffer: framebuffer at 0x3e40f000, 0x6e7000 bytes
+[    0.212569] simple-framebuffer 3e40f000.framebuffer: format=a8r8g8b8, mode=1824x984x32, linelength=7296
+[    0.216036] Console: switching to colour frame buffer device 228x61
+[    0.219382] simple-framebuffer 3e40f000.framebuffer: fb0: simplefb registered!
+...
+[    1.923879] raspberrypi-firmware soc:firmware: Attached to firmware from 2025-02-17T20:03:07
+...
+[    1.957445] v3d fec00000.gpu: [drm] Using Transparent Hugepages
+[    1.964814] [drm] Initialized v3d 1.0.0 for fec00000.gpu on minor 0
+[    1.972428] Console: do_bind_con_driver, backtrace:
+[    1.972437] CPU: 0 UID: 0 PID: 44 Comm: kworker/u16:2 Not tainted 6.15.0-rc6-00001-gb4f861e88093-dirty #2 PREEMPT 
+[    1.972446] Hardware name: Raspberry Pi 4 Model B Rev 1.5 (DT)
+[    1.972449] Workqueue: events_unbound deferred_probe_work_func
+[    1.972465] Call trace:
+[    1.972467]  show_stack+0x2c/0xc0 (C)
+[    1.972476]  dump_stack_lvl+0x60/0x94
+[    1.972483]  dump_stack+0x18/0x30
+[    1.972488]  do_bind_con_driver.isra.0+0x40/0x294
+[    1.972497]  do_unbind_con_driver+0x1b8/0x1dc
+[    1.972506]  fbcon_fb_unbind+0x108/0x1d8
+[    1.972512]  unregister_framebuffer+0x110/0x120
+[    1.972522]  simplefb_remove+0x14/0x2c
+[    1.972527]  platform_remove+0x28/0x5c
+[    1.972533]  device_remove+0x4c/0xa0
+[    1.972538]  device_release_driver_internal+0x1fc/0x250
+[    1.972543]  device_release_driver+0x18/0x40
+[    1.972548]  bus_remove_device+0xd4/0x17c
+[    1.972552]  device_del+0x150/0x3b8
+[    1.972559]  platform_device_del+0x28/0xbc
+[    1.972564]  platform_device_unregister+0x18/0x50
+[    1.972570]  aperture_detach_platform_device+0x14/0x2c
+[    1.972575]  aperture_detach_devices+0xb8/0x120
+[    1.972581]  aperture_remove_conflicting_devices+0x10/0x2c
+[    1.972587]  vc4_drm_bind+0x110/0x364
+[    1.972592]  try_to_bring_up_aggregate_device+0x22c/0x308
+[    1.972597]  __component_add+0xec/0x224
+[    1.972602]  component_add+0x14/0x30
+[    1.972607]  vc4_hdmi_dev_probe+0x1c/0x40
+[    1.972614]  platform_probe+0x68/0xf0
+[    1.972620]  really_probe+0xc0/0x3ac
+[    1.972624]  __driver_probe_device+0x7c/0x174
+[    1.972629]  driver_probe_device+0x40/0x100
+[    1.972634]  __device_attach_driver+0x10c/0x1e0
+[    1.972639]  bus_for_each_drv+0x88/0x100
+[    1.972643]  __device_attach+0xa0/0x1c8
+[    1.972647]  device_initial_probe+0x14/0x30
+[    1.972652]  bus_probe_device+0xc8/0xcc
+[    1.972656]  deferred_probe_work_func+0xb8/0x12c
+[    1.972661]  process_one_work+0x160/0x2d4
+[    1.972668]  worker_thread+0x2d8/0x400
+[    1.972673]  kthread+0x12c/0x208
+[    1.972678]  ret_from_fork+0x10/0x20
+[    1.972720] Console: switching to colour dummy device 80x25
+[    3.115665] vc4-drm gpu: bound fe400000.hvs (ops 0xffffffd14312f480)
+[    3.122490] Registered IR keymap rc-cec
+[    3.125869] rc rc0: vc4-hdmi-0 as /devices/platform/soc/fef00700.hdmi/rc/rc0
+[    3.133033] input: vc4-hdmi-0 as /devices/platform/soc/fef00700.hdmi/rc/rc0/input0
+[    3.141737] vc4-drm gpu: bound fef00700.hdmi (ops 0xffffffd14312bc68)
+[    3.148700] Registered IR keymap rc-cec
+[    3.152074] rc rc1: vc4-hdmi-1 as /devices/platform/soc/fef05700.hdmi/rc/rc1
+[    3.159241] input: vc4-hdmi-1 as /devices/platform/soc/fef05700.hdmi/rc/rc1/input1
+[    3.168548] vc4-drm gpu: bound fef05700.hdmi (ops 0xffffffd14312bc68)
+[    3.174671] vc4-drm gpu: bound fe004000.txp (ops 0xffffffd1431307d0)
+[    3.181044] vc4-drm gpu: bound fe206000.pixelvalve (ops 0xffffffd1431296f0)
+[    3.188070] vc4-drm gpu: bound fe207000.pixelvalve (ops 0xffffffd1431296f0)
+[    3.195114] vc4-drm gpu: bound fe20a000.pixelvalve (ops 0xffffffd1431296f0)
+[    3.202132] vc4-drm gpu: bound fe216000.pixelvalve (ops 0xffffffd1431296f0)
+[    3.210213] [drm] Initialized vc4 0.0.0 for gpu on minor 1
+...
+[   12.308295] EDID block 1 read ok (drivers/gpu/drm/drm_edid.c:edid_block_status_print case EDID_BLOCK_OK)
+
+The EDID is fetched ok (but strangely late according to dmesg), and edid-decode
+softly complains about it (and it lists a wide range of modes it does not
+complain about):
+Warnings:
+
+Block 1, CTA-861 Extension Block:
+  Display Product Serial Number is set, so the Serial Number in the Base EDID should be 0.
+  Add a Colorimetry Data Block with the sRGB colorimetry bit set to avoid interop issues.
+
+Failures:
+
+Block 1, CTA-861 Extension Block:
+  Missing VCDB, needed for Set Selectable RGB Quantization to avoid interop issues.
+EDID:
+  Base EDID: Some timings are out of range of the Monitor Ranges:
+    Vertical Freq: 50.000 - 75.029 Hz (Monitor: 56.000 - 76.000 Hz)
+    Horizontal Freq: 15.625 - 79.976 kHz (Monitor: 30.000 - 83.000 kHz)
+
+
+Interestingly enough, while EDID seems to have parsed ok, there is zero
+entry in /sys/class/drm/card1-HDMI-A-1/modes (the hdmi node i took the
+edid from).
+
+
+Can someone give me some hint(s) on how to get this hdmi output working?
+I can obviously give more informations if needed.
+
+Regards.
+
