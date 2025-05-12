@@ -1,146 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55550298CA9
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7D8298CA2;
+	Mon, 12 May 2025 18:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073072; cv=none; b=Jr2mKpX8Z46JxY5n49DMt9PbmiRZ2x/sH2C9TohNxzWl5YY0wQmlBjpJq/WTL8Oi9w7t/HpBFdLFNJyFHLgjv7Lhz26gSOOh56SsBBlVXsUgr1O3yjFifhaXsA/i5vlKrzKQuajHeXBHBpKVv4qfqnurrstonQyTg5P6eNn90us=
+	t=1747073073; cv=none; b=DszWDZxPwa5aleup5mHHhBvoVnmOlnnTwreXHzr0sACk2axEqU8PgxURLGghCtW0WHUz4tVJGF+GW7s3asAKOWrISw01nP0hSi2YvJTBBCKvVwsSQAerVq5amP6MEHQzoBkWvLvGDjZ3omBMV0gDx7MqelNntsXuZ/6ISyu8TUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073072; c=relaxed/simple;
-	bh=01AxGl5y9sewo+AjNmG3P95dBC2IXR63aHqvqvehehg=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ROOq+bx+hVGsGTtJEmzpZdD6d21cW71Mz/lDLFWGXEV/m67DuKTBqLm6RGD6qQtyYAF+EV2wZMl+ch+A1pbc9jineA6bcypCtBfzf8bm2BfiUtV2yrWFdYcREPTDiec8gPDh4NLlg+sjMtjifadCWb/LqYVQIU1US5FvCsyhjFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ANocxE/M; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747073073; c=relaxed/simple;
+	bh=xStKnA6U9lcfKhZ6B+oTjTHUZ7Bca6fjfZlrc3KxMfk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ezB2cmFKoUgcJMh4uFxH3x3j14D8WIA26LciBWF68L+AbeHNTz/cp0Yll9sv7FiXmHYACiwm4owAbZF0IdA4fSO8EPS48dgr0lrGLnm+yYVto0K4gQsb5vB92uAR4+CpyPMgU3aFk7wAmxK0+eNgZEZDAcNUMhheSqpEbVQLv4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUEo4rib; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANocxE/M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747073068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Jzez9beQL600E+agH2Z2p3TWupq3wuiKJM0KPUz5arQ=;
-	b=ANocxE/M7PEoUH4mScO/CsNDklfs07uizBWJLuoVbXFX/83YBkaPXqXVVazb20PVpQLEOt
-	wu3kVCkBiVBegNaPWJ3UUfWSdd63ooYXG5zeVh15a4oXa12J5uM7rxLMuyBa67V7hsYNtC
-	bZkW80o0bUTII3rXffHb+lQQt5PsGLo=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-Mc8z2qJpM0WcOmyyGPFIow-1; Mon,
- 12 May 2025 14:04:25 -0400
-X-MC-Unique: Mc8z2qJpM0WcOmyyGPFIow-1
-X-Mimecast-MFC-AGG-ID: Mc8z2qJpM0WcOmyyGPFIow_1747073061
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7837C1800263;
-	Mon, 12 May 2025 18:04:17 +0000 (UTC)
-Received: from intellaptop.lan (unknown [10.22.80.5])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B909630002D4;
-	Mon, 12 May 2025 18:04:08 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sebastian Ott <sebott@redhat.com>,
-	Shusen Li <lishusen2@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Anup Patel <anup@brainfault.org>,
-	Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexander Potapenko <glider@google.com>,
-	kvmarm@lists.linux.dev,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	x86@kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	linux-riscv@lists.infradead.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUEo4rib"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9013C4CEF0;
+	Mon, 12 May 2025 18:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747073073;
+	bh=xStKnA6U9lcfKhZ6B+oTjTHUZ7Bca6fjfZlrc3KxMfk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tUEo4rib7EQg/oMjHZ67Xs6epRAgH5nR56umEtHd8v/yU7ceLfo1UAPYNTA5rqVbg
+	 ouAnWILBX5K1P92KJz3quD4UtpxT2fR/U5XnxJRLMkKiYx3JdoORfgbAsPf79sjroE
+	 I/GpXe33HO1KgN9cUBlPbrpspmVmBL8I5qf0kdbl+v5Rko21E4iC+NvMwtyhLcrKol
+	 QOLiDaMcZM+IbtN7fVsTUsXYbCk1csytkoN9NzEe2cqcSoMBw8+yN8/v2h1tBOEe1s
+	 UffmQvAMnIUEZyClbTBnA1km5hzgaBrqUOyUIq/LJYPv8uWnuEaVMLJJlw7MK69KXg
+	 Qhmqn7j0clgtg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Goldwyn Rodrigues <rgoldwyn@suse.de>,
+	Goldwyn Rodrigues <rgoldwyn@suse.com>,
+	David Sterba <dsterba@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	clm@fb.com,
+	josef@toxicpanda.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	linux-btrfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	kvm-riscv@lists.infradead.org,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH v5 0/6] KVM: lockdep improvements
-Date: Mon, 12 May 2025 14:04:01 -0400
-Message-ID: <20250512180407.659015-1-mlevitsk@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 02/11] btrfs: correct the order of prelim_ref arguments in btrfs__prelim_ref
+Date: Mon, 12 May 2025 14:04:17 -0400
+Message-Id: <20250512180426.437627-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250512180426.437627-1-sashal@kernel.org>
+References: <20250512180426.437627-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.28
+Content-Transfer-Encoding: 8bit
 
-This is	a continuation of my 'extract lock_all_vcpus/unlock_all_vcpus'=0D
-patch series.=0D
-=0D
-Implement the suggestion of using lockdep's "nest_lock" feature=0D
-when locking all KVM vCPUs by adding mutex_trylock_nest_lock() and=0D
-mutex_lock_killable_nest_lock() and use these functions	in the=0D
-implementation of the=0D
-kvm_trylock_all_vcpus()/kvm_lock_all_vcpus()/kvm_unlock_all_vcpus().=0D
-=0D
-Those changes allow removal of a custom workaround that was needed to=0D
-silence the lockdep warning in the SEV code and also stop lockdep from=0D
-complaining in case of ARM and RISC-V code which doesn't include the above=
-=0D
-mentioned workaround.=0D
-=0D
-Finally, it's worth noting that this patch series removes a fair=0D
-amount of duplicate code by implementing the logic in one place.=0D
-=0D
-V5: addressed review feedback.=0D
-=0D
-Best regards,=0D
-	Maxim Levitsky=0D
-=0D
-Maxim Levitsky (6):=0D
-  locking/mutex: implement mutex_trylock_nested=0D
-  locking/mutex: implement mutex_lock_killable_nest_lock=0D
-  KVM: add kvm_lock_all_vcpus and kvm_trylock_all_vcpus=0D
-  x86: KVM: SVM: use kvm_lock_all_vcpus instead of a custom=0D
-    implementation=0D
-  KVM: arm64: use kvm_trylock_all_vcpus when locking all vCPUs=0D
-  RISC-V: KVM: use kvm_trylock_all_vcpus when locking all vCPUs=0D
-=0D
- arch/arm64/include/asm/kvm_host.h     |  3 --=0D
- arch/arm64/kvm/arch_timer.c           |  4 +-=0D
- arch/arm64/kvm/arm.c                  | 43 ----------------=0D
- arch/arm64/kvm/vgic/vgic-init.c       |  4 +-=0D
- arch/arm64/kvm/vgic/vgic-its.c        |  8 +--=0D
- arch/arm64/kvm/vgic/vgic-kvm-device.c | 12 ++---=0D
- arch/riscv/kvm/aia_device.c           | 34 +------------=0D
- arch/x86/kvm/svm/sev.c                | 72 ++-------------------------=0D
- include/linux/kvm_host.h              |  4 ++=0D
- include/linux/mutex.h                 | 32 ++++++++++--=0D
- kernel/locking/mutex.c                | 21 +++++---=0D
- virt/kvm/kvm_main.c                   | 59 ++++++++++++++++++++++=0D
- 12 files changed, 126 insertions(+), 170 deletions(-)=0D
-=0D
--- =0D
-2.46.0=0D
-=0D
+From: Goldwyn Rodrigues <rgoldwyn@suse.de>
+
+[ Upstream commit bc7e0975093567f51be8e1bdf4aa5900a3cf0b1e ]
+
+btrfs_prelim_ref() calls the old and new reference variables in the
+incorrect order. This causes a NULL pointer dereference because oldref
+is passed as NULL to trace_btrfs_prelim_ref_insert().
+
+Note, trace_btrfs_prelim_ref_insert() is being called with newref as
+oldref (and oldref as NULL) on purpose in order to print out
+the values of newref.
+
+To reproduce:
+echo 1 > /sys/kernel/debug/tracing/events/btrfs/btrfs_prelim_ref_insert/enable
+
+Perform some writeback operations.
+
+Backtrace:
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 115949067 P4D 115949067 PUD 11594a067 PMD 0
+ Oops: Oops: 0000 [#1] SMP NOPTI
+ CPU: 1 UID: 0 PID: 1188 Comm: fsstress Not tainted 6.15.0-rc2-tester+ #47 PREEMPT(voluntary)  7ca2cef72d5e9c600f0c7718adb6462de8149622
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:trace_event_raw_event_btrfs__prelim_ref+0x72/0x130
+ Code: e8 43 81 9f ff 48 85 c0 74 78 4d 85 e4 0f 84 8f 00 00 00 49 8b 94 24 c0 06 00 00 48 8b 0a 48 89 48 08 48 8b 52 08 48 89 50 10 <49> 8b 55 18 48 89 50 18 49 8b 55 20 48 89 50 20 41 0f b6 55 28 88
+ RSP: 0018:ffffce44820077a0 EFLAGS: 00010286
+ RAX: ffff8c6b403f9014 RBX: ffff8c6b55825730 RCX: 304994edf9cf506b
+ RDX: d8b11eb7f0fdb699 RSI: ffff8c6b403f9010 RDI: ffff8c6b403f9010
+ RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000010
+ R10: 00000000ffffffff R11: 0000000000000000 R12: ffff8c6b4e8fb000
+ R13: 0000000000000000 R14: ffffce44820077a8 R15: ffff8c6b4abd1540
+ FS:  00007f4dc6813740(0000) GS:ffff8c6c1d378000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000018 CR3: 000000010eb42000 CR4: 0000000000750ef0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  prelim_ref_insert+0x1c1/0x270
+  find_parent_nodes+0x12a6/0x1ee0
+  ? __entry_text_end+0x101f06/0x101f09
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  btrfs_is_data_extent_shared+0x167/0x640
+  ? fiemap_process_hole+0xd0/0x2c0
+  extent_fiemap+0xa5c/0xbc0
+  ? __entry_text_end+0x101f05/0x101f09
+  btrfs_fiemap+0x7e/0xd0
+  do_vfs_ioctl+0x425/0x9d0
+  __x64_sys_ioctl+0x75/0xc0
+
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/trace/events/btrfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
+index af6b3827fb1d0..3b16b0cc1b7a6 100644
+--- a/include/trace/events/btrfs.h
++++ b/include/trace/events/btrfs.h
+@@ -1924,7 +1924,7 @@ DECLARE_EVENT_CLASS(btrfs__prelim_ref,
+ 	TP_PROTO(const struct btrfs_fs_info *fs_info,
+ 		 const struct prelim_ref *oldref,
+ 		 const struct prelim_ref *newref, u64 tree_size),
+-	TP_ARGS(fs_info, newref, oldref, tree_size),
++	TP_ARGS(fs_info, oldref, newref, tree_size),
+ 
+ 	TP_STRUCT__entry_btrfs(
+ 		__field(	u64,  root_id		)
+-- 
+2.39.5
 
