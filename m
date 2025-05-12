@@ -1,87 +1,77 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47C021578F;
-	Mon, 12 May 2025 14:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20CF217719
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059916; cv=none; b=twovr1POrdrbrRA9ERRw+kv66Ihpxssj4bK69HKNTpKMC0xaOVffPjMplTiEIjfgkoax2IxAg3bal4pwt1Dy6J+4k2Ag1QUNfh8Rpkyxu94+mPz91sDsjr6S7Z5w2pUbbznlNgS+j/rDprGls09yeOzSistPW3zledYRrV1yQ+g=
+	t=1747060018; cv=none; b=anASM6iECsoRcbypqOmjYtZ7VCcPOTBYJesxT6+RmwkOhWxHiYFkUPmonvtFCymv4NeQvGUOYO0X7fysKEsOy6c32l+R8AnMV0U8iCdD/CgeQrQBm4pXT5AcTEJTectM93BSZknM0gsbuynlrfD2BZfa+WlnvK1yaLPOv6KT754=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059916; c=relaxed/simple;
-	bh=oUlvs94RBEXAj4to71NbS+RWY1nXlo5GOjnk4NPjH1A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R683ZzD/7DsK7CF9nTD6vRiPMRpr0ryb6rvOMTBo33RlgoambLLjf8VwOUQ83bl3+xCkR70Br88H7CKgLFvJ0elMnxYFXCRHA2C/7ZxoF7ya0W4tOrFlhfrlMfAZDuGJmWLvDj3ggyCTPqSx6mmHoh85+cNgIFfDUUcxmIuNAHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQL/zkOM; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747060018; c=relaxed/simple;
+	bh=6T2kDON1dhsNnU+XjIY2oPcsXbHsrN2ApoTFS8oDyVs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bCLiHLAzIKP8xTuUZUiukTR91pmJHWXWbSx5Xk1RKlOefY4+IwX6TdLvLkubvSCXfFyBEr1sMcMhdixiHmPDadbQ+64LPfeXwpTG5dEXsakVTypuW+ar+NrdLhEBrqbQ2OcL4UGzKSUh+PQaGxWi9nbzCjQdovEuw+sVKfR0vYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=XKPL7R/Z; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQL/zkOM"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7082ad1355bso37794737b3.1;
-        Mon, 12 May 2025 07:25:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="XKPL7R/Z"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ecf99dd567so66572196d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747059913; x=1747664713; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oZbRl8KS+BWf2EIYeCK4PxGhnOATtqeKgkvhRlCYPQw=;
-        b=AQL/zkOMIVJmsCuccWzm1+szFHa/q/K0QgbRXxlf4wY1Fju79K3oS8FY2PAoNhea0O
-         ywH2rYhTsMzhTSzXIhcNSfMZazsAfUUZIfyKmx66UdMbgGWNmE6oVTeQ+ol1vcwmcXxd
-         3tQELtWyzCgF922r4yId/9eGnsBelxADAj3HzguxYEiFju1lG1luO6nRezsFj6lsIPhX
-         Cm8GT4DBa2NFCM02xld5BpA4+kVgQQkbU5RIGNlLL+FRHI8Q/kUWM/AswjByRaW0IcBE
-         9LyFwNN8H/pubzB/hhU7fxL1p/krtTIAsPg5k1UmJ8YC5GdX9YMhtjgmglAAxg38DD+A
-         Js2Q==
+        d=libre.computer; s=google; t=1747060015; x=1747664815; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RKMd5G0cFDMucPOpi+tWbuy3t/lyFnn71icIWCgXypM=;
+        b=XKPL7R/ZhanEz962li/zfhA6mK3Kl4Wt4vgXw4oWSqjQdvTjwsg1UByr6HxxrH+HEK
+         78lp9LNx4oZxILKw/eBgl2TF4mK8j5WtEXf1h4EY0c07yNDTkyJRK145B/Sm84JkTMFc
+         h9fNZ7BrufrfHJdbkFPb1MX+40dPVKMUNPEKr9sGKC466AQRDO2MsJaohVgdnbvIeB2W
+         EFJjgTG/CB2DXl6m14GG6uot9gOkQvg050Yfnydg+o75fcpufAAO/J3yJROqdUUTA6H7
+         nDODuaXp4gm/AKOVdi3zoGF98PBqmAbPg+IPi01j9ZUcCRuc8CcsbsGXtD4Pikh5TOsa
+         tgNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747059913; x=1747664713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oZbRl8KS+BWf2EIYeCK4PxGhnOATtqeKgkvhRlCYPQw=;
-        b=aCmH8LKVEmlOo35a9CL01A573Xn1gIH2FnZ7gh5Jhv0DweCWqSV4uduFThd8YiAzcw
-         P6AY7CiQMFreV8j/5VX1BXf0etIHbCUSSdgF9joD8133GNU79wS7j7XkLiXQWPrk7tPR
-         O5GrNb6DOzca1K7eDzTAEfoAw1PONZdg5Ib5BzpDw6cEPB/rV+dx/jOxym/I0m2tf/6I
-         ayv/eJnADcu+M8efonxrBa7w5Dix0vMON9OHuwVIjufuRhXcYFSOpZxWFYoTGhLfc13Z
-         /AX6BkTHREsxBYEDDdQQwYJ+fa6ts+HR6KTqyrqWnrkhvOd3sm0R4qQMGfndfWOtr4cz
-         rzlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUXAgtSURlRBWVunK7T3sPH/LrTmcCvQRO5Xh77gU+kGxXYZknI7MiuVidRg5ZtGRBOwpqdl7+JMaZ9Oon@vger.kernel.org, AJvYcCUr6BWSOiCAU0SaS+heov62jINjxaKBZinEqWFrg5AJvKtFjuKbWCbNwsNsJbuOLy5E028FmeTs8bxY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywi3hBUXcbz5W1fJPLO9edRN3BfJ8ufodJchBn4CJa85iljXi+
-	LhWtaO/zGVECMj2NZ4ab2TLewzizYzI1YAfCQsOfyVj/HHjeBJ4B
-X-Gm-Gg: ASbGncs5WXKgdFJKOEt289ExxLoC0ld7nVPO3tsVDxPoMIOQIFY0clgKRPRZGNrQiVC
-	VcY/MFtf0ysbOrM5zTF6wmuHxs1JPlHeTwM6CcUiK9sFQO4V7/D0OzbMA565IpcTQmwSffVoHI4
-	kbVvr7UQGQy8WB72q9BRKJ90yBrMTtusLNES0j7tC0z/xX79ooB0YeBrsWzuK8MtTjJrF816wOu
-	43sj6hMlRtIU5F9sFCpeUyKKeq0KdFQ2VS2AfzikE05xkAQp6a/bG0gXEJ0w6+xN3dwAO0DBifB
-	zN4h3PxQEIjHgaBMJ203NgnKBu6rfjgLygRiyEcIaKva8O9PXg==
-X-Google-Smtp-Source: AGHT+IGPXvFglFcBwoDsiyaAhXCH6w3uRi1CS1sCn8IeFG9vKgl1qLkLZR6tArD3ragmQdU3BAw4QA==
-X-Received: by 2002:a05:690c:6c89:b0:6ef:6f24:d093 with SMTP id 00721157ae682-70a3f9eab47mr190835947b3.6.1747059913522;
-        Mon, 12 May 2025 07:25:13 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:3::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d89a2cfsm19522327b3.12.2025.05.12.07.25.12
+        d=1e100.net; s=20230601; t=1747060015; x=1747664815;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RKMd5G0cFDMucPOpi+tWbuy3t/lyFnn71icIWCgXypM=;
+        b=Bl4CorGac73q52Vtrieb7aoWM3gNI/xHXdoQ08fI1Z9jPgelXUzX+Dd90SZom2LXc+
+         b++ZpZR1IVhBoJOKtjW9XylQiHTxUyWkAOKHcahKrVg6fieSl4Tn0hvPaa93P+eoNlbP
+         WQAAeAmFgzAUaJL9bzO6YF0g1HgvqFBQp3Mtkw0dflo9lIqdPdOnE5eOGTIrsldKJ/dL
+         pWikPEI0rNK7SuAcV1/mPLpMpz77HkzRv6KjvZvAkB3vC/Fw/ddTcxgOLMaRxpaMsZZD
+         /7e4R7IXJ9T9OtZpiSdgjNV6cjQE+eTc6OzZyYTrZSBfFy5LjCzCrZWJoT9kgiPieuwe
+         pw2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUdWqZBCqhYP5SO5FfkzeUvDxnw0jCr3bBlVLmOpKT5U4yQ/Dy9JfvV1tYqi4r+pj8HIVlcFxdKK/jo+OA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+zM0dw09/sRxsdGlMhJ/3hkTlX4de7gWcdKmVztbZ3kUDMuUh
+	JDv1ztNenHNCLNXubSq4NwR+uLvv/NSrTv6cJFnbunYj7M1bO4DaqFs2QZsyZw==
+X-Gm-Gg: ASbGnctNQMnYahPU8lSRqa0Ee7VTzSZhW2vNIfHkkMwuh8zh+vpbXLMEz5TGpgy7M6H
+	oOjPHn27E5wD3LB/Tl3p+s/7/1t8OfIpFILmMeaY91PjxatYMxMPoHBOlEGHlZg9DcBaRc7JyRz
+	5Xq0OIdfJYS08dgqd75o4nxYl0VyeQFNIlJtW3/Zww5DLgxezMgD6ozqpcfMLf1wO5nTkKRWjd4
+	gDtzAUHKgQ8Tdw8lrCdFP/IqOHtm7DZHHeFt4aWxAZVt4eu9LMLNXyFJtBt9Te3aVG9DrjsMMM2
+	zdgYNfNj7XvKJlcPP3c54ZAvJuI+jpn+IlylZgSxMDrnqpGn
+X-Google-Smtp-Source: AGHT+IHwLWxHT8fQlj2kksRDBg+A0JhtXKo+AreGOwt+ETP5hLx/Dy37l3apsuA9OkV+nl0kGKBq4w==
+X-Received: by 2002:a05:6214:300e:b0:6cb:ee08:c1e8 with SMTP id 6a1803df08f44-6f6e47fa918mr229336596d6.23.1747060013390;
+        Mon, 12 May 2025 07:26:53 -0700 (PDT)
+Received: from localhost ([2607:fb91:214c:42a4:3793:dd95:dfa1:719a])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e393df31sm53362726d6.0.2025.05.12.07.26.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 07:25:13 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: "Huang, Ying" <ying.huang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	gourry@gourry.net,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	osalvador@suse.de,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
-Date: Mon, 12 May 2025 07:25:10 -0700
-Message-ID: <20250512142511.3959833-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <87zffizk4r.fsf@DESKTOP-5N7EMDA>
-References: 
+        Mon, 12 May 2025 07:26:53 -0700 (PDT)
+From: Da Xue <da@libre.computer>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Da Xue <da@libre.computer>,
+	stable@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] clk: meson-g12a: add missing fclk_div2 to spicc
+Date: Mon, 12 May 2025 10:26:16 -0400
+Message-Id: <20250512142617.2175291-1-da@libre.computer>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,55 +80,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 12 May 2025 09:35:16 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
+SPICC is missing fclk_div2 which causes the spicc module to output sclk at
+2.5x the expected rate. Adding the missing fclk_div2 resolves this.
 
-> Hi, Joshua,
-> 
-> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
-> 
-> [snip]
-> 
-> > @@ -3707,8 +3720,12 @@ static void wi_state_free(void)
-> >  	kfree(&wi_group->wi_kobj);
-> >  }
-> >
-> > +static struct kobj_attribute wi_auto_attr =
-> > +	__ATTR(auto, 0664, weighted_interleave_auto_show,
-> > +			   weighted_interleave_auto_store);
-> > +
-> >  static void wi_cleanup(void) {
-> > -	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
-> > +	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
-> 
-> If we use wi_auto_attr directly here, we can remove auto_kobj_attr field
-> from struct sysfs_wi_group?
+Fixes: a18c8e0b7697 ("clk: meson: g12a: add support for the SPICC SCLK Source clocks")
+Cc: <stable@vger.kernel.org> # 6.1
+Signed-off-by: Da Xue <da@libre.computer>
+---
+Changelog:
 
-Hi Ying, thank you for this comment. I should have caught it as well.
-Removing the last users / setters doesn't seem complicated.
+v2 -> v3: remove gp0
+v1 -> v2: add Fixes as an older version of the patch was sent as v1
+---
+ drivers/clk/meson/g12a.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Andrew, I'm very sorry -- do you think you can fold this fixlet in as well?
-This is a minor change that removes the only users of this variable.
-
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index d5ae36d2eda8..8581cc861945 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3543,7 +3543,6 @@ struct iw_node_attr {
- struct sysfs_wi_group {
-        struct kobject wi_kobj;
-        struct mutex kobj_lock;
--       struct kobj_attribute auto_kobj_attr;
-        struct iw_node_attr *nattrs[];
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index 4f92b83965d5a..b72eebd0fa474 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -4099,6 +4099,7 @@ static const struct clk_parent_data spicc_sclk_parent_data[] = {
+ 	{ .hw = &g12a_clk81.hw },
+ 	{ .hw = &g12a_fclk_div4.hw },
+ 	{ .hw = &g12a_fclk_div3.hw },
++	{ .hw = &g12a_fclk_div2.hw },
+ 	{ .hw = &g12a_fclk_div5.hw },
+ 	{ .hw = &g12a_fclk_div7.hw },
  };
+-- 
+2.39.5
 
-@@ -3833,7 +3832,6 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-        err = sysfs_create_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
-        if (err)
-                goto err_put_kobj;
--       wi_group->auto_kobj_attr = wi_auto_attr
-
-        for_each_online_node(nid) {
-                if (!node_state(nid, N_MEMORY))
-
-Thank you both, I hope you have a great day!
-Joshua
