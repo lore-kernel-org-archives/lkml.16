@@ -1,101 +1,104 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD132571CC;
-	Mon, 12 May 2025 08:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE94259C8E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038508; cv=none; b=WYwP20Tjd/Kzvc7FCoUE26BU5AZF0nWwUxS+664be1INyIwTdS59+ZF2n2AJEQhBcfHbkS5RIZT6scFBi4W0l5c5VLCvj3Jyed0OY5f+Q28rNjEx0Po5KQvBOy2yydf+20Ze2YcsdwDOkE0xJI5FvHXVo1vDSKM4kN9+nOfvSr0=
+	t=1747038607; cv=none; b=dfy2yN9nbZVa/9TT0RPkR+NnOi0c1ym63OwnokQIId3KAvaWAxaSXKnQ4uPJzGFX/qnZ0ZsRklLsfHgMnYwcUYneX3USnGZnd7vJ38rNBHVRMjJyP61WuUaJRg+zk1EmgPLU1JVqw7YWtYdFNIkaW3bmimKsHK/UFw0YOGERDDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038508; c=relaxed/simple;
-	bh=VolIWPuz/u983kI8WFI2YO/i/v/5Cb6uPvsQk+u2+yc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=nDI46prcJuKZVtIY6aECPY7kgQ4+xCoZGwTNyu9Xb7xgEOL4FRoZ3Q0xC6UNusWux7YRrmg+iuQaUBeGf8B9KVTfZNXbJ8GubNttBJIGaxqf06SZT9BXspLUj3iyzn8QALjIqugq36VRr2ScsTIeqgoOr4aOKEXMV/t86rkF/0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4Zwt6J0w1qzYQvD6;
-	Mon, 12 May 2025 16:28:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6C56B1A018D;
-	Mon, 12 May 2025 16:28:23 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl8msSFo5n+zMA--.59164S3;
-	Mon, 12 May 2025 16:28:23 +0800 (CST)
-Subject: Re: [PATCH RFC md-6.16 v3 17/19] md/md-llbitmap: implement all bitmap
- operations
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
- <20250512011927.2809400-18-yukuai1@huaweicloud.com>
- <20250512051810.GB1667@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <2cf0998f-6475-05d2-33a1-ebf3b3253b31@huaweicloud.com>
-Date: Mon, 12 May 2025 16:28:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747038607; c=relaxed/simple;
+	bh=6+27UqtIAuXsrQRytHGvGEU0E7pMUGZoMAMeVNyh2hg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RhV2nBSPuEq9C8F/sddVxeh1aRae5G0eSk6eF/I62YNU93DWMh+vjRw73+5G0ZzBlkqbISNTHJnpCDiNLG3e1BvpazUIlThwVtEviTduExJ0mjj56W6T3eOf1sXpja2DVUaxDqrEKz69bGoPjcmJLKW3hUGdxZ4hq0P0yRITc3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XusKEt2E; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XusKEt2E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15112C4CEE7;
+	Mon, 12 May 2025 08:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747038606;
+	bh=6+27UqtIAuXsrQRytHGvGEU0E7pMUGZoMAMeVNyh2hg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XusKEt2EtznrRmCEyUwsID7LVRF56jCq7TNjd0gFnIw4TdLq5obyG4nvGpenBl8Nj
+	 RQmJJwG2D6LgmUZiI9+SOOTtR2RqEMiPfJ6gINakjWK6zPCYzvutxiyTFAWOoajrKF
+	 aEPjWxFmFlpgvI55IoYres4P/d6VsNYM/VSeMwnxGNwRbnsF20uMYVpxL9tDylaYwO
+	 enRAEWYwrvXttTXDIq0G9Qn7tdaZS2K3c14Ejta23kqIpir8cHombAAHIANLFcKHK8
+	 /v1I8DZYyoV0W8ywY+bXgtL2u3siRm71Vjj8QMOSRXW5OVQa/EoFs4ogq64/uxm7Ay
+	 tTfv06g42LStA==
+Message-ID: <34defcf4-a1ab-43ba-bf89-02d47a945f18@kernel.org>
+Date: Mon, 12 May 2025 10:30:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250512051810.GB1667@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl8msSFo5n+zMA--.59164S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw13uFyUJFW7GF13WrW5GFg_yoWfWrX_ZF
-	y5GF4xKrWUGFZ8KanrX3ZxAFWUu34DG3Z8ZwsrXFWFqr17Ja95uF4kA3yqv3Z5Ja48Za1j
-	gryfWrWrtry3CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY
-	04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbzpBDUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] irqchip/econet-en751221: Switch to
+ irq_domain_create_linear()
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Caleb James DeLisle <cjd@cjdns.fr>
+References: <877c2top39.ffs@tglx>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <877c2top39.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-ÔÚ 2025/05/12 13:18, Christoph Hellwig Ð´µÀ:
-> On Mon, May 12, 2025 at 09:19:25AM +0800, Yu Kuai wrote:
->> And following APIs that are not needed:
->>   - llbitmap_write_all, used in old bitmap to mark all pages need
->>   writeback;
->>   - llbitmap_daemon_work, used in old bitmap, llbitmap use timer to
->>     trigger daemon;
->>   - llbitmap_cond_end_sync, use to end sync for completed sectors(TODO,
->>     don't affect functionality)
->> And following APIs that are not supported:
->>   - llbitmap_start_behind_write
->>   - llbitmap_end_behind_write
->>   - llbitmap_wait_behind_writes
->>   - llbitmap_sync_with_cluster
->>   - llbitmap_get_from_slot
->>   - llbitmap_copy_from_slot
->>   - llbitmap_set_pages
->>   - llbitmap_free
+On 06. 05. 25, 15:17, Thomas Gleixner wrote:
+> irq_domain_add_linear() is about to be removed. Switch to
+> irq_domain_create_linear().
 > 
-> Please just make these optional instead of implementing stubs.
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Ok, I'll add a patch to check if those methods are NULL before calling
-them.
+Late, but:
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-Thanks,
-Kuai
+Thanks for fixing this new one.
 
-> .
-> 
-
+-- 
+js
+suse labs
