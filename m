@@ -1,150 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4240E264FB9
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2332525A32A;
+	Mon, 12 May 2025 10:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747045377; cv=none; b=RqSW7MI5r7QlfJsYpWm+u3RLuAPkuUzdjer7tqFch1tXOTPjVxVrRTnfR4SDn3WtXpVK7cT2A+65JwNcu6eO4XJ1nnXLoHab0bIjTQU1sdqdj1haWPG/+Y4rRPhTUmHNxHKAhD00VDgDb7+c+cYWvRGUfZ8AWULY4j/MHue5vFE=
+	t=1747045434; cv=none; b=EkePP+9Jv6AID20JeO6VYtVD/QRlw/2KsMREy/Ask1rDvDlSdc51KFGgvMuPscY5cysNY/gX2/zw9wEcDK7EIdpH2raetPHEf8MRl2DsCCELog+nRSmzSqR+MpnUMtEzrabFIWN07CFB5rGltWtaz/249hh59noiwLbqiL6Yil4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747045377; c=relaxed/simple;
-	bh=IcscS5J/JFjr+j2IZmxv4ZVsrp9aZk2gu9rwc/Em9q4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TMrZo/9xDsU37VRUig/4FrsQEKFOLs6kkypgWk+KP5L/NFoHTl/YFUJqzipj+fl2SHTOv0mZ6NkeB+QZ4XhfUZzP5PnKD368QzebI0A279IZpjqIVcvEZ4o7axozp3yVaHKnYajKyHoQ54BToD7Xk19BD25B5gQCsQL7zpYI1XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F05D150C;
-	Mon, 12 May 2025 03:22:43 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5014F3F673;
-	Mon, 12 May 2025 03:22:52 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+5c0d9392e042f41d45c5@syzkaller.appspotmail.com
-Subject: [PATCH] arm64/mm: Disable barrier batching in interrupt contexts
-Date: Mon, 12 May 2025 11:22:40 +0100
-Message-ID: <20250512102242.4156463-1-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747045434; c=relaxed/simple;
+	bh=bUjI6qlVAAceceFnl6Zz3aGArQVeBhgk7QdxtcLy908=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d9lXuzXCSVb06YgWbhJt4JWM4upAkGmWMirfSODYxNCxXjLyhbOfDzQanbMjZY+BqCVKokmqkMS/WadiKnXlJvmcks+Nw4PcgqceUmf/7+uQRKsO514gNGSaiWFXIru3RKRuVP8tr/0DpFgNKPl5o9Zok+oDIUh3Xuu5nA2agAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cBcoFfOY; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cBcoFfOY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747045434; x=1778581434;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bUjI6qlVAAceceFnl6Zz3aGArQVeBhgk7QdxtcLy908=;
+  b=cBcoFfOYqh5cCJ4hwInI/hiEpbcCVCbs1u6F3HmY6/oh86VdZlnwFNFe
+   QChOpsFCQCdf6c3TenTNGeXxvi/EpGW8EIXVZZ0+GYkAfkjIzF7un1E5G
+   OrKpZBGEo2Qj06bFwr9L+0vJANTfEK3TFk3j5B89anJM1Y84f95bssDEh
+   LpszC20IpXst92ftKsq0ZCUY9E1dlxsNNPEFFHGsBnC42CCwQlyQTUm3L
+   vibXKrql2BWS45Wiy3+eCifoPoAYn70azeVLzZF6Y1RhMNgy9Cdv711fd
+   xqX+a6P5kW6FuvOcqflf2iorebAZ03TTa2EKifvHPRgkfVEWKZ/DY+/qN
+   Q==;
+X-CSE-ConnectionGUID: W5q2ocv9SCqgTgiBWd1KSQ==
+X-CSE-MsgGUID: RI1wjHKQRfiK6Fjfc3C+dg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48529605"
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="48529605"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 03:23:53 -0700
+X-CSE-ConnectionGUID: 2dtO5S7tRveWfCh3fJCTig==
+X-CSE-MsgGUID: /AnlC+2hQCG/f2eqCdUuGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="138297538"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 03:23:50 -0700
+Date: Mon, 12 May 2025 13:23:47 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
+	bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
+	aravind.iddamsetty@linux.intel.com
+Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
+ device
+Message-ID: <aCHMM7YMqT8onaKl@black.fi.intel.com>
+References: <20250504090444.3347952-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250504090444.3347952-1-raag.jadav@intel.com>
 
-Commit 5fdd05efa1cd ("arm64/mm: Batch barriers when updating kernel
-mappings") enabled arm64 kernels to track "lazy mmu mode" using TIF
-flags in order to defer barriers until exiting the mode. At the same
-time, it added warnings to check that pte manipulations were never
-performed in interrupt context, because the tracking implementation
-could not deal with nesting.
+On Sun, May 04, 2025 at 02:34:44PM +0530, Raag Jadav wrote:
+> If error flags are set on an AER capable device, most likely either the
+> device recovery is in progress or has already failed. Neither of the
+> cases are well suited for power state transition of the device, since
+> this can lead to unpredictable consequences like resume failure, or in
+> worst case the device is lost because of it. Leave the device in its
+> existing power state to avoid such issues.
+> 
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> ---
+> 
+> v2: Synchronize AER handling with PCI PM (Rafael)
+> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
+>     Elaborate "why" (Bjorn)
+> 
+> More discussion on [1].
+> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
 
-But it turns out that some debug features (e.g. KFENCE, DEBUG_PAGEALLOC)
-do manipulate ptes in softirq context, which triggered the warnings.
+Bump. Anything I can do to move this forward?
 
-So let's take the simplest and safest route and disable the batching
-optimization in interrupt contexts. This makes these users no worse off
-than prior to the optimization. Additionally the known offenders are
-debug features that only manipulate a single PTE, so there is no
-performance gain anyway.
-
-There may be some obscure case of encrypted/decrypted DMA with the
-dma_free_coherent called from an interrupt context, but again, this is
-no worse off than prior to the commit.
-
-Some options for supporting nesting were considered, but there is a
-difficult to solve problem if any code manipulates ptes within interrupt
-context but *outside of* a lazy mmu region. If this case exists, the
-code would expect the updates to be immediate, but because the task
-context may have already been in lazy mmu mode, the updates would be
-deferred, which could cause incorrect behaviour. This problem is avoided
-by always ensuring updates within interrupt context are immediate.
-
-Fixes: 5fdd05efa1cd ("arm64/mm: Batch barriers when updating kernel mappings")
-Reported-by: syzbot+5c0d9392e042f41d45c5@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-arm-kernel/681f2a09.050a0220.f2294.0006.GAE@google.com/
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
-
-Hi Will,
-
-I've tested before and after with KFENCE enabled and it solves the issue. I've
-also run all the mm-selftests which all continue to pass.
-
-Catalin suggested a Fixes patch targetting the SHA as it is in for-next/mm was
-the preferred approach, but shout if you want something different. I'm hoping
-that with this fix we can still make it for this cycle, subject to not finding
-any more issues.
-
-Thanks,
-Ryan
-
-
- arch/arm64/include/asm/pgtable.h | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index ab4a1b19e596..e65083ec35cb 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -64,7 +64,11 @@ static inline void queue_pte_barriers(void)
- {
- 	unsigned long flags;
-
--	VM_WARN_ON(in_interrupt());
-+	if (in_interrupt()) {
-+		emit_pte_barriers();
-+		return;
-+	}
-+
- 	flags = read_thread_flags();
-
- 	if (flags & BIT(TIF_LAZY_MMU)) {
-@@ -79,7 +83,9 @@ static inline void queue_pte_barriers(void)
- #define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
- static inline void arch_enter_lazy_mmu_mode(void)
- {
--	VM_WARN_ON(in_interrupt());
-+	if (in_interrupt())
-+		return;
-+
- 	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
-
- 	set_thread_flag(TIF_LAZY_MMU);
-@@ -87,12 +93,18 @@ static inline void arch_enter_lazy_mmu_mode(void)
-
- static inline void arch_flush_lazy_mmu_mode(void)
- {
-+	if (in_interrupt())
-+		return;
-+
- 	if (test_and_clear_thread_flag(TIF_LAZY_MMU_PENDING))
- 		emit_pte_barriers();
- }
-
- static inline void arch_leave_lazy_mmu_mode(void)
- {
-+	if (in_interrupt())
-+		return;
-+
- 	arch_flush_lazy_mmu_mode();
- 	clear_thread_flag(TIF_LAZY_MMU);
- }
---
-2.43.0
-
+Raag
