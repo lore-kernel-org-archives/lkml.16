@@ -1,97 +1,157 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDBF257421;
-	Mon, 12 May 2025 10:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BBD268FF1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747047551; cv=none; b=QSkAFx07WfrnXGLO+kL0PM08xG2IKwAfgxPJ4qYYSMaKRGAULN/P0sQxjxEHSachCPbhuUnGPhVCNHkv7V0JOBcEmge4uG/mg0+wHS02G44k0WCeIdi9wsmfLaUU+aRQ4cmKK8QhI5GchSWGuWdehdAtrgsMj70hryTv3Wv5Hhc=
+	t=1747047555; cv=none; b=a3RjSGxxf9o1opRl46xRbiA5vxNaiN59jNwgmKeyb0gZ2II0p7R8qswzCBM1bzj4cAwIESm6SWQVbqYE19o8vFSGlJ5okHzYDiwudaKWxK0neoY6ErLkKZL+WasyCJ6pFVHb8WrHQOnn0RrV+3ckwxAF+yd1StC3FnodTdGVdlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747047551; c=relaxed/simple;
-	bh=4/+nYIavSGBPQsFYxBmx94FmpN+jC3OU90H56s+8yZA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uEldjWMY6cb999AbynD73mMCN05IkTmAHOiqXQy2f+wczTzEYu3THYbHKpmdD2jcZ7SfQ8ZbkuXICpvp70M+1rL3yZPikv1QXh0y3VMmFAji1AqMF7Nhsafuo8yrvfYBs0/Hwp4NFcT0lDbifydob0Fy7I7qYQnWbajKjzJ7D+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=Dp+OqmMs; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	s=arc-20240116; t=1747047555; c=relaxed/simple;
+	bh=KOKI1TT7Ffxa/5Huul2yUCdIH6bNQbnt9ywZxg209f0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=eq6+MgxgtEWTlX4VWUjg7ahNZwqcYtakWzAP07GyurxsuL8x2xSQU/AEPKGBEpbLeuluHVZIR+BJkp1iliUvli5FsqoC3G2p7whStcQsiQiuWmxW4ynPrL5BpXDytrtYh+C6yjeOoWbjLjMawQlMOsQv6MDomH202SowN9ZtBCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=ShP2Q1lh; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="Dp+OqmMs"
-Received: from localhost.localdomain (unknown [202.119.23.198])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 14be5404c;
-	Mon, 12 May 2025 18:58:58 +0800 (GMT+08:00)
-From: Zilin Guan <zilin@seu.edu.cn>
-To: anthony.l.nguyen@intel.com
-Cc: przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jianhao.xu@seu.edu.cn,
-	Zilin Guan <zilin@seu.edu.cn>
-Subject: [PATCH] ixgbe/ipsec: use memzero_explicit() for stack SA structs
-Date: Mon, 12 May 2025 10:58:55 +0000
-Message-Id: <20250512105855.3748230-1-zilin@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="ShP2Q1lh"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSklOVksdHk5LQhlLSUJMS1YeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJS0lVSkpCVUlIVUpCQ1lXWRYaDxIVHRRZQVlPS0hVSktISk9ITFVKS0tVSk
-	JLS1kG
-X-HM-Tid: 0a96c425df0403a1kunm14be5404c
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mz46KQw6SDJPP04JMzo5UR4B
-	TDEwCxhVSlVKTE9MS09MTkhCT0xDVTMWGhIXVQESFxIVOwgeDlUeHw5VGBVFWVdZEgtZQVlJS0lV
-	SkpCVUlIVUpCQ1lXWQgBWUFJSkJKNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=Dp+OqmMs+HCNLUNn7YaKyh51Z9VXNrgFmexOevUqdC4v+I7o+5NW6iXKeOd9E56Jt33nFE7pmGqbE87zz7ToGaJEpHVn1rlMdAO/crSQ63BhNNxA7E3L/pJlzHucjeINp3HykJmT4xzu30FqCFXQdYz00G6wArd+HR5izBIJ43g=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
-	bh=xgaKnY3N+wlSUsO6sprGPeWrMvmvHTly9bSd0D3f3gk=;
-	h=date:mime-version:subject:message-id:from;
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1747047550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T8/Ht4vLH47yQgnyA3aHoKEjFyY3IKH+TxDUhnG4Pis=;
+	b=ShP2Q1lh0QUy9ERDnw/XyUESNdFmosr43cn7zNMQgNobgnz3j/jedkv9j5CKVBYNm+8vDn
+	N0gyToplqVDXrQrVDcUo6cyt5E4+/YT8KJ5L9dFRdOWn2PZXu6NEvup8tYnORw9ZAUZpov
+	VBU9NUrFQ69gEAFU4nxCCclW/gFw4YVNjlPQD19mamiA/0ygoD4YmyVflSybIMuGtxGRbb
+	Gc17pDEGSpSW9spEv7cHsnlo+Uy1UYeDbt4WgEBK4KiHyKOTaeX1RbQkohfqK/VXiiRBOx
+	vhvHoPWtq25Yuek/wANmqPZYLaLtTNlXPQF/SbXXdC9/fLBBJNlNr1jTIdOMhA==
+Content-Type: multipart/signed;
+ boundary=f5128d620a41dad2d3ab473cb7c3567b2921ffecd91198bee2646459e69b;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Mon, 12 May 2025 12:58:51 +0200
+Message-Id: <D9U4NW0TLBIE.2WTOIETA78EVQ@cknow.org>
+Subject: Re: [PATCH 0/1] arm64: dts: rockchip: rk3568: Move PCIe3 MSI to use
+ GIC ITS
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Chukun Pan" <amadeus@jmu.edu.cn>, <linux-pci@vger.kernel.org>
+Cc: <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+ <dsimic@manjaro.org>, <heiko@sntech.de>, <krzk+dt@kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <linux-rockchip@lists.infradead.org>
+References: <D9RSA5K547DD.1LYPIZZM4XALS@cknow.org>
+ <20250512070009.336989-1-amadeus@jmu.edu.cn>
+In-Reply-To: <20250512070009.336989-1-amadeus@jmu.edu.cn>
+X-Migadu-Flow: FLOW_OUT
 
-The function ixgbe_ipsec_add_sa() currently uses memset() to zero out
-stack-allocated SA structs (rsa and tsa) before return, but the gcc-11.4.0
-compiler optimizes these calls away. This leaves sensitive key and salt
-material on the stack after return.
+--f5128d620a41dad2d3ab473cb7c3567b2921ffecd91198bee2646459e69b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Replace these memset() calls with memzero_explicit() to prevent the
-compiler from optimizing them away. This guarantees that the SA key and
-salt are reliably cleared from the stack.
+Hi,
 
-Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Added linux-pci ML to "To".
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-index 07ea1954a276..e8c84f7e937b 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-@@ -678,7 +678,7 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
- 		} else {
- 			/* no match and no empty slot */
- 			NL_SET_ERR_MSG_MOD(extack, "No space for SA in Rx IP SA table");
--			memset(&rsa, 0, sizeof(rsa));
-+			memzero_explicit(&rsa, sizeof(rsa));
- 			return -ENOSPC;
- 		}
- 
-@@ -727,7 +727,7 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
- 		ret = ixgbe_ipsec_parse_proto_keys(xs, tsa.key, &tsa.salt);
- 		if (ret) {
- 			NL_SET_ERR_MSG_MOD(extack, "Failed to get key data for Tx SA table");
--			memset(&tsa, 0, sizeof(tsa));
-+			memzero_explicit(&tsa, sizeof(tsa));
- 			return ret;
- 		}
- 
--- 
-2.34.1
+On Mon May 12, 2025 at 9:00 AM CEST, Chukun Pan wrote:
+>> > With this patch I get the following kernel warnings:
+>> >
+>> > pci 0001:10:00.0: Primary bus is hard wired to 0
+>> > pci 0002:20:00.0: Primary bus is hard wired to 0
+>> >
+>> > If I 'unapply' this patch, I don't see those warnings.
+>
+>> I was pretty sure I had seen those messages before, but couldn't find
+>> them before. But now I have: on my rk3588-rock-5b.
+>
+> Thanks for the reminder, I didn't notice this before.
+> The BSP kernel also has this warning.
+>
+> Before this patch:
+> [    2.997725] pci_bus 0001:01: busn_res: can not insert [bus 01-ff] unde=
+r [bus 00-0f] (conflicts with (null) [bus 00-0f])
+> [    3.009990] pci 0001:00:00.0: BAR 6: assigned [mem 0xf2200000-0xf220ff=
+ff pref]
+> [    3.018100] pci 0001:00:00.0: PCI bridge to [bus 01-ff]
+> ...
+> [    3.401416] pci_bus 0002:01: busn_res: can not insert [bus 01-ff] unde=
+r [bus 00-0f] (conflicts with (null) [bus 00-0f])
+> ...
+> [    3.545459] pci 0002:00:00.0: PCI bridge to [bus 01-ff]
+>
+> After this patch:
+> [    3.037779] pci 0001:10:00.0: Primary bus is hard wired to 0
+> [    3.044120] pci 0001:10:00.0: bridge configuration invalid ([bus 01-ff=
+]), reconfiguring
+> [    3.053362] pci_bus 0001:11: busn_res: [bus 11-1f] end is updated to 1=
+1
+> [    3.068920] pci 0001:10:00.0: PCI bridge to [bus 11]
+> ...
+> [    3.451429] pci 0002:20:00.0: Primary bus is hard wired to 0
+> [    3.457793] pci 0002:20:00.0: bridge configuration invalid ([bus 01-ff=
+]), reconfiguring
+> ...
+> [    3.535794] pci_bus 0002:21: busn_res: [bus 21-2f] end is updated to 2=
+1
+> ...
+> [    3.612893] pci 0002:20:00.0: PCI bridge to [bus 21]
+>
+> Looks like a harmless warning.
 
+I see various messages which look odd or suboptimal to me:
+- (conflicts with (null) [bus 00-0f])
+- bridge configuration invalid ([bus 01-ff]), reconfiguring
+
+But those are informational messages, so I guess that is considered
+normal. Looking a bit further and it does look that the severities in
+``drivers/pci/probe.c`` are chosen deliberately. So even though my NVMe
+drives seem to work, I'm not ready yet to ignore a WARNING.
+
+In my view, a warning is something that should be fixed or if it's
+indeed harmless, then its severity should be downgraded.
+
+So I looked where that warning came from and found commit
+71f6bd4a2313 ("PCI: workaround hard-wired bus number V2")
+
+And its commit message does not make it clear to *me* if it's valid:
+
+    Fixes PCI device detection on IBM xSeries IBM 3850 M2 / x3950 M2
+    when using ACPI resources (_CRS).
+    This is default, a manual workaround (without this patch)
+    would be pci=3Dnocrs boot param.
+
+    V2: Add dev_warn if the workaround is hit. This should reveal
+    how common such setups are (via google) and point to possible
+    problems if things are still not working as expected.
+
+This could be interpreted as "let's make it a warning so people will put
+it in a search engine (and not just ignore it) and then we can find out
+via that, if it's a common issue".
+
+It would be helpful if the people (way) more familiar with the PCI
+subsystem then me to tell me/us whether the severity is appropriate (and
+thus should be fixed?) or if this should be an info or dbg level message
+instead.
+
+Cheers,
+  Diederik
+
+--f5128d620a41dad2d3ab473cb7c3567b2921ffecd91198bee2646459e69b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaCHUdwAKCRDXblvOeH7b
+brPcAQDFLvLOr4MVv6bPcn//tl4F4G7GpE+qkYliDw8IQiSYpAEAmxHUXv878qId
+zZdpqj/69uyB2oVZDR5clQaoGkkD7wU=
+=2NDu
+-----END PGP SIGNATURE-----
+
+--f5128d620a41dad2d3ab473cb7c3567b2921ffecd91198bee2646459e69b--
