@@ -1,145 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD07610D;
-	Mon, 12 May 2025 07:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FDB610D
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747034469; cv=none; b=JqoJUz1TGdMBEifxkjxQw4mBC1SKW3MyquyUWRm+feAQwfSM3cpNBI8Xy8Td5cI04QJJ9ORjZindxq+MGpHVZXQ7BWvPVXnJCpgWnAldGlBxKshc+8/LSTagfEa+gQq4hGR15cbOPblepe5EcDG8ivloFGIH17lk4xiikFEFX9k=
+	t=1747034725; cv=none; b=FmNZC/Nqeudx6K63u6A51rGOSe4aDoem0BcwRj1N+PAT82wYBuABreLmQekGXfzdvWDVKEXAyjTUPLlpB98LrUJXC0PBUYyZfyRIszvAMwCZSXOPd4CQh60stIcSVQl7+bWxqrDjAhyX9dFVVK7p4yC+c29cbJSC64vmHXKSXVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747034469; c=relaxed/simple;
-	bh=eF0FqKnVhO8GoltT+ZFMvKgjKuVLYtXTdM20AOWMwyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qJC0+M/B/iahrD4xIYEBXHiqohKoCnyEvM6CdWxxo+3hUyOI2IgynBlzirZ8BumRchq1IwdFzudO+Je7/PUGPyvA+McHyI2ooAsiJiY/bu5DfHF6O164bwDUNMLMwtUajYWcM7QiS2+Mt3xKPRpRfEejUDyqTsmOFzWxPGYOHcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XU/tH/h9; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747034725; c=relaxed/simple;
+	bh=crPLgghiOnNAL85BUbI/KFRTiOOI9zFhY8oyGArgjIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nnLszBrNS1URhp2ZMBtQNQR3QH8/ClaIzG1Ty3/zhRWwzzqp8NQZpFiE2gL8trXk2beUDIwcUhWxEUBFo40Hh4v5Bi3zbL867qMlbP2j+QNu3fyaokZPXnMucUbYqN9X+HZBpQ88qNUxMLKY4DVu8+Q0ZfWYYUki3tUeRgaZtmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gefRfbrc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XU/tH/h9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747034467; x=1778570467;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=eF0FqKnVhO8GoltT+ZFMvKgjKuVLYtXTdM20AOWMwyY=;
-  b=XU/tH/h9xalOruc+hf2frwIt60WCPwW3kLIUdwD1MsskIAaaOUWzBwju
-   CmNEFwRHPSV1fp+DCos4vXP4jSkHXPUQk0xkRge6vJdzrwRWx3tWRDiv4
-   3uiFuf5DYYy1nru1tSVqHOAiAv4ossjPy9J9UNPjyjAyYMoaM0fYUn3fB
-   Nd5jRiBv88pNw5HnT2w2UayhoaE6kR63LApSIf99zBqghUtluamMg0Rem
-   HeV3CbVBvkRSsGZYMcsUJhjuHcBhAP6Df9puiljHYoX4chdZwhq7ZhSXx
-   Uiz39HKHqzoZmVVkTbBqAh8r1FMA30ad8ODDfVtKXQjS3P3qyG4Hm2jJE
-   A==;
-X-CSE-ConnectionGUID: ozZapiraSCm4qjRr16qD1Q==
-X-CSE-MsgGUID: IyqEX1KHTF6H6dSos5xJhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48968605"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="48968605"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:21:06 -0700
-X-CSE-ConnectionGUID: 0ko3IX0jT5myWjtqQ2lVbg==
-X-CSE-MsgGUID: WlHOkBL0Qz2iSHb+zLrwAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="137142560"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:21:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uENTB-00000000qUl-1C0e;
-	Mon, 12 May 2025 10:21:01 +0300
-Date: Mon, 12 May 2025 10:21:01 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, corbet@lwn.net,
-	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux@treblig.org, viro@zeniv.linux.org.uk,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
-Message-ID: <aCGhXcuqBDuceCqk@smile.fi.intel.com>
-References: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
- <aCGR4EOcWRK6Rgfv@smile.fi.intel.com>
- <CAL+tcoDYOwmt+MqUouc=7DCpMyR3HfOhycgruX_n3+eKJxqv9Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gefRfbrc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485DAC4CEE7;
+	Mon, 12 May 2025 07:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747034724;
+	bh=crPLgghiOnNAL85BUbI/KFRTiOOI9zFhY8oyGArgjIY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gefRfbrcCkPL8q3XQo1al8dMQlsdLGjAYBbQQ3O5+FRVH77bH1/eB8UXK9cxyh9QA
+	 Qq9hGSvKRDX8h0vAPky+V0/ZHCmsiSijYqmUhfOUbmMklTtijrGXxLDGGOL2rDLCFN
+	 2pgbLoQj24pwQuEjLEEJu45DU7qJw/2KrVXDbTcyej/2oCvivvDe5Qv2EGM/qjoF8f
+	 fcZsBZ/aU7PUhVMRy5PuChaoYv6DXqRSBWEPyHPjr4u1QNPvz2KyeAmXKriuc1+m5/
+	 cfHmI0S1bj7vI/ln6nUMuvUfHstF5vxz8P8iYiuv6QjuzhPWQQRilCdUHqJ5WXnExY
+	 o63BmDSjEmjnA==
+Message-ID: <0a61672b-1782-43ea-bf10-b6088a1fd2fd@kernel.org>
+Date: Mon, 12 May 2025 09:25:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL+tcoDYOwmt+MqUouc=7DCpMyR3HfOhycgruX_n3+eKJxqv9Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [patch V2 26/45] genirq/chip: Rework irq_set_handler() variants
+To: Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, tglx@linutronix.de
+References: <20250509132211.GA3618294@ax162>
+ <20250511172911.1008109-1-ojeda@kernel.org> <20250511174923.GA3193067@ax162>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250511174923.GA3193067@ax162>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 02:53:56PM +0800, Jason Xing wrote:
-> On Mon, May 12, 2025 at 2:15 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, May 12, 2025 at 09:12:56AM +0800, Jason Xing wrote:
-> > >
-> > > I noticed this patch "relay: Remove unused relay_late_setup_files"
-> > > appears in the mm branch already[1], which I totally missed. Sorry for
-> > > joining the party late.
-> > >
-> > > I have a different opinion on this. For me, I'm very cautious about
-> > > what those so-called legacy interfaces are and how they can work in
-> > > different cases and what the use case might be... There are still a
-> > > small number of out-of-tree users like me heavily relying on relayfs
-> > > mechanism. So my humble opinion is that if you want to remove
-> > > so-called dead code, probably clearly state why it cannot be used
-> > > anymore in the future.
-> > >
-> > > Dr. David, I appreciate your patch, but please do not simply do the
-> > > random cleanup work __here__. If you take a deep look at the relayfs,
-> > > you may find there are other interfaces/functions no one uses in the
-> > > kernel tree.
-> > >
-> > > I'm now checking this kind of patch in relayfs one by one to avoid
-> > > such a thing happening. I'm trying to maintain it as much as possible
-> > > since we internally use it in the networking area to output useful
-> > > information in the hot paths, a little bit like blktrace. BTW, relayfs
-> > > is really a wonderful one that helps kernel modules communicate with
-> > > userspace very efficiently. I'm trying to revive it if I can.
-> >
-> > Jason, with all of the respect, if you are interested in keeping things going
-> > on, please add yourself to the MAINTAINERS. It will makes the users of the
-> > legacy code, Andrew and others, who are doing maintainer's/reviewer's job,
-> > and you happy.
+On 11. 05. 25, 19:49, Nathan Chancellor wrote:
+> On Sun, May 11, 2025 at 07:29:11PM +0200, Miguel Ojeda wrote:
+>> On Fri, 09 May 2025 14:22:11 +0100 Nathan Chancellor <nathan@kernel.org> wrote:
+>>>
+>>> I am investigating some cases where
+>>>
+>>> WARN(!irqs_disabled(), "Interrupts were enabled early\n");
+>>>
+>>> in start_kernel() in init/main.c is triggered in certain builds with
+>>> clang after patch 23 of this series (very bizarre since the conversion
+>>> seems to be correct) and I happened to notice that this conversion seems
+>>> to be incorrect? Should this be scoped_irqdesc_get_and_buslock() like
+>>> below?
+>>
+>> Yeah, I am also seeing this in next-20250509 in a LLVM=1 arm64 defconfig + Rust
+>> build under QEMU.
 > 
-> I didn't subscribe to LKML because they're too many emails everyday.
-> Because of this, I missed most of changes in relayfs.
-
-And how is this relevant to my proposal?
-
-Moreover with `lei` you can filter out from time to time the lore archive for
-these, no need to be subscribed and read LKML in full.
-
-> Sure, I'm happy to do so, but I'm not sure how/what the detailed
-> process is here. I would like to ask the core maintainers/developers
-> in advance.
+> I noticed that the warning was reproducible with just the first patch of
+> the series that adds the lock guards and patch 23 but also several other
+> individual patches within the series, as I could not just revert patch
+> 23 on next-20250509 to fix it. I have no idea why yet because I have not
+> had the chance to actually sit down and dig into it but this diff fixes
+> every instance of the warning that I saw in my tests... :/ could be a
+> compiler bug or just some difference in behavior between compilers.
 > 
-> Any thoughts on this? Andrew, Jens.
+> diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+> index bd2db6ebb98e..94f463de8f26 100644
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -176,10 +176,9 @@ __DEFINE_UNLOCK_GUARD(irqdesc_lock, struct irq_desc,
+>   static inline class_irqdesc_lock_t class_irqdesc_lock_constructor(unsigned int irq, bool bus,
+>   								  unsigned int check)
+>   {
+> -	class_irqdesc_lock_t _t = {
+> -		.bus	= bus,
+> -		.lock	= __irq_get_desc_lock(irq, &_t.flags, bus, check),
 
-Just send a patch to the LKML which adds a relevant record into MAINTAINERS.
-I believe all stakeholders here will be happy to accept that kind of change.
+I assume the value stored by __irq_get_desc_lock() to &_t.flags is 
+overwritten by 0 by the initializer. class_irqdesc_lock_t::flags is 
+later than ::lock in the structure, so __irq_get_desc_lock() should be 
+called, setting ::flags, then the initializer should set flags to 0.
 
-At least you can get my Ack, FWIW (I am not a stakeholder here).
+> -	};
+> +	class_irqdesc_lock_t _t = {};
+> +	_t.bus	= bus;
+> +	_t.lock	= __irq_get_desc_lock(irq, &_t.flags, bus, check);
 
-> > Also note, we usually do not care about the out-of-tree users. The main Q here
-> > why are they out-of-tree for so long time?
-> 
-> It's due to the history problem. Back then, developers were trying to
-> develop various file systems to add more debuginfo. As you may notice,
-> blktrace is the one which manifests the answer.
+That's why this works ^^.
 
-Then provide a roadmap on the upstreaming the necessary parts. Otherwise
-there is no room for a dead code in the Linux kernel. This is the rule:
-we do not add one, and we do not leave it dangling after removing the last
-user.
+>   	return _t;
+>   }
+>   
 
-> > > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-everything&id=46aa76118ee365c25911806e34d28fc2aa5ef997
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+js
+suse labs
