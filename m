@@ -1,98 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975BD17BB6
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E0824EF91;
+	Mon, 12 May 2025 08:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039713; cv=none; b=O9Dv93UMwxFQOJBK5N3x6T+0XxlLTOjdjJMnqYthR15jOW8XvViJ3N7x3PRf0LGg2WzjSouYAoEUud+tBcBjRsjXOVluC7sGoMf9h+cqzkJlmJBQHposPl2mWs+ZopZYTkxasFErKBHym9b69NOqIJbUqt7yIH2XIPQCsVID7RM=
+	t=1747039730; cv=none; b=jN/XC8pVnhlPdN7V3DWpLU1t8gCkc1OkzNXJJV3P+nXtsXX1dF76smr3jknwDKZniI+so5wUWCwySsRKDlndTGduRPtfpAFBn1jNBsUQLvUbJyAxHA77M+yfl8woybJr8WjU5RKH/hL8+REpnMy3Zsee26/oF4/vvZb0mQ5TXLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747039713; c=relaxed/simple;
-	bh=WAOvh/4GnvFhcgh061nbP20b/JnhXfig2pIhpA4U20k=;
+	s=arc-20240116; t=1747039730; c=relaxed/simple;
+	bh=TohzoVoujj3wMO1syJQsU0HTdp5uSqFMNi4c3YnkYAQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pofm+GAO9bILqhKa45zW6LkvEZSVjpyiLyYVu/GMGF+6BII8BeXfPkx3Tb5cE978NEbqIMhDZ/yKr/LJRRE+nqReVySr98X/AnBbpIib3GSIL6fHWtcJLYmmf4hjdBh+44MfzHCRvR+D+QCObVMpyTdJPcRam+3h21nBzR7bj3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PJQKuorq; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KZqCKlzKZSSW1XhOAC2ilFS+Qn9xvnhbMEKNdAS7VE5b64N5W2C9aHy29Aq+ssScv/pSTr/NWFINsOEivYA3Wmm8/2/TmfM24LG//wnql5PwelzGp8E5uLV/AdlVw2yHbHf/HYESbsB2qawWIxbvdZIqwpJ+nObVWeT/LlvmkAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=SZ/ros5q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=G4AYecCo; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PJQKuorq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747039711; x=1778575711;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WAOvh/4GnvFhcgh061nbP20b/JnhXfig2pIhpA4U20k=;
-  b=PJQKuorqh3cAXwJckaTgxdUfsQq49rIGjkOUbJ6hzyW1Bb9QuhRlpVmr
-   Xp4Gb3YLYvesFDu2X6tbNqBVDIPlbTTcbiea2J2eveLU6S0DTHQCuMFDD
-   6ucbbb/cDIQLKDC2RVYfl4g+YrphLJ+FmSK38jKoIgy/54Z6QRDIs3Dj5
-   QXe89yPFaNw4IT1dvD3F4YIcFgbr07T507xq2rr1e6KMoSjSl7BRyCo9l
-   jfHiwnkKdIpK2zY1IUwH+gVSdCYFzbAWRK1ImXnBe0izn0Fi+hHpz42SN
-   YG58KkWvdJ1G1DPyH7P2rZ8SwH56oPXA9dbgBWEcS5mIuLTux+Z58175i
-   g==;
-X-CSE-ConnectionGUID: ovFPYkmkSv2wZCtqTVrRZQ==
-X-CSE-MsgGUID: cChwucTGRw+RCkxHgehp1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48691073"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="48691073"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:48:31 -0700
-X-CSE-ConnectionGUID: 8NVwgn5NQtK1eChsNsNmzg==
-X-CSE-MsgGUID: dZvUWkknRcOtJJ8GGXb0/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="137709382"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:48:28 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uEOpl-00000000rm0-2NyE;
-	Mon, 12 May 2025 11:48:25 +0300
-Date: Mon, 12 May 2025 11:48:25 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: tiwai@suse.de, broonie@kernel.org, 13564923607@139.com,
-	13916275206@139.com, alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org, baojun.xu@ti.com, Baojun.Xu@fpt.com,
-	jesse-ji@ti.com
-Subject: Re: [PATCH v2] ALSA: hda/tas2781: Fix the ld issue reported by
- kernel test robot
-Message-ID: <aCG12YmBS-9Vmc7N@smile.fi.intel.com>
-References: <20250512081822.1513-1-shenghao-ding@ti.com>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="SZ/ros5q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G4AYecCo"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4087C11400DE;
+	Mon, 12 May 2025 04:48:47 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Mon, 12 May 2025 04:48:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1747039727;
+	 x=1747126127; bh=WULCfkAwHtfstIJSxGuUyz6cal8DdjdU6QnR2Oc3ZO8=; b=
+	SZ/ros5qoewusSx7EovIhw2qsm3AWHttVtHKOypd/ijyzJcfhwdTikLrGNh9Ra2B
+	/0fMSOYOuqk00zWK29iBBjzX1IBheEXSemXGTxY0HtMWZSaiMLjgqzdJU3jZccTk
+	yw3OiE+6pky6fI5dwcz8xLKCaeR5iGL20y3M9YKuPCwgsMWCVn68DgC3HHYcDY5n
+	fnVzp63R1PEjEZ2HNJiw9qeYepZ76ukT2NYsoSUEPi9Ms6eb72aAZLDAT4Tu95wn
+	mWLy8mc1eUf01g7sDomtLtfY1QMW9oc7IYQza8YGvhE8PaXhiY3MMWRNFVkxKfni
+	k2s1pkLSN4AqrEJhXY1Ofw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747039727; x=
+	1747126127; bh=WULCfkAwHtfstIJSxGuUyz6cal8DdjdU6QnR2Oc3ZO8=; b=G
+	4AYecCoowub7hP3lwF9PaaXo59rlP9OkUejaFtuMTDbN0twlVNRD35wdk/18CPYd
+	T0msMRrX3or3eghk9byKJ3qiCnOcoB0AUwVMQEPQ49SClP//J1a5CS/NexO6W65a
+	JWrZJ4hldSHr1aXoLJQOf+LyO3Ydo3W6mJtmkBBgjIFxeDbSJqJLA+SIR8c5c6fq
+	HTeqxINZ/A913EAzn4Ztp3lqYTimE2zyqzR3jJ7lWVzXezyzrWCvQpl7YGzl8sT9
+	JVAxIk2u0POulY0ZY3m9I+dsHIEX799LO9tiYULQ6WYdG2EthAUKVZYX5XpVxLsI
+	Ttdhm13hwwPZs9398f9lw==
+X-ME-Sender: <xms:7rUhaEygiFGvOS5a2_zINcfTajhFXKG1JguzTApfZqIaJR40qK3kNw>
+    <xme:7rUhaISkNm2Wb5fhp3NaJtftjbRIkagk98t3S3n7D_7Hm4yjKYkCiHOLdlZlum2kP
+    wmTKKgu-su-NgUu1lg>
+X-ME-Received: <xmr:7rUhaGX8IrEYmYqkqJXQxLcD1Ei6-tF1zlR4CFWAWwET8coYm4h_U3dN7Wp7xjE7zsBok2lnPTNk2Rl19XS9RHIatx4aZVkUdQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtkedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
+    houggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffr
+    rghtthgvrhhnpeefhfellefhffejgfefudfggeejlefhveehieekhfeulefgtdefueehff
+    dtvdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthh
+    drshgvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopegrlhhokhdrrg
+    drthhifigrrhhisehorhgrtghlvgdrtghomhdprhgtphhtthhopehmtghhvghhrggssehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehsrghkrghrihdrrghilhhusheslhhinhhugi
+    drihhnthgvlhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
+    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhgruhhrvg
+    hnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthho
+    pehlihhnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    eplhhinhhugidqrhgvnhgvshgrshdqshhotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:7rUhaCihp2K7CZtHu3f_iD8IkvxAiWNjNUr7zbMbhwbDihNr9y5AMg>
+    <xmx:7rUhaGBSTRkHsBFAG9WhigAvLz4hhL-xkaIRJoanZEk_9qrltUNzog>
+    <xmx:7rUhaDLvVO8xFbI8_jbmA8KHPFJF8xj9y5P1IfH2ZuL2VaeA8zpzRQ>
+    <xmx:7rUhaNBVxoamandMRYGWs5YrR_Ecki1Np2nAlr9NA2rTxg38D3FW_w>
+    <xmx:77UhaE7-OnrfxsxKoJmQ8euqkCkF2M7sTllfdholHIUm3F0YYQQJJCnL>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 12 May 2025 04:48:46 -0400 (EDT)
+Date: Mon, 12 May 2025 10:48:43 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] media: rcar-csi2: Add D-PHY support for V4H
+Message-ID: <20250512084843.GE2365307@ragnatech.se>
+References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
+ <20250511174730.944524-5-niklas.soderlund+renesas@ragnatech.se>
+ <10d2ae58-8da8-4802-95be-951d8b376551@oracle.com>
+ <20250511200333.GA2365307@ragnatech.se>
+ <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512081822.1513-1-shenghao-ding@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
 
-On Mon, May 12, 2025 at 04:18:22PM +0800, Shenghao Ding wrote:
-> After commit 9fa6a693ad8d ("ALSA: hda/tas2781: Remove tas2781_spi_fwlib.c
-> and leverage SND_SOC_TAS2781_FMWLIB")created a separated lib for i2c,
-> tasdevice_remove used for not only for I2C but for SPI being still in
-> that lib caused ld issue.
+On 2025-05-12 09:37:48 +0200, Geert Uytterhoeven wrote:
+> Hi Niklas,
+> 
+> On Sun, 11 May 2025 at 22:03, Niklas Söderlund
+> <niklas.soderlund+renesas@ragnatech.se> wrote:
+> > On 2025-05-12 00:37:09 +0530, ALOK TIWARI wrote:
+> > > On 11-05-2025 23:17, Niklas Söderlund wrote:
+> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0404);
+> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x040c);
+> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0414);
+> > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x041c);
+> 
+>  [...]
+> 
+> > > Instead of manually writing each call, it could use a loop ?
+> > >
+> > > for (int i = 0x0404; i <= 0x07fc; i += 0x08) {
+> > >     rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, i);
+> >
+> > Unfortunately the values are not all sequential, see the progression
+> > 0x061c -> 0x0623 and 0x071c -> 0x0723 for example.
+> >
+> > > or if values are not strictly sequential, iterating over the array.
+> > > static const u16 register_values[]= {0x0404, 0x040c, 0x0414 etc,,}
+> > > rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
+> > > register_values[i]);
+> >
+> > I agree with you, a array of values would make this look a tad less
+> > silly and would reduce the number of lines. I considered this while
+> > writing it but opted for this. My reason was as most of the register
+> > writes needed to setup the PHY are not documented in the docs I have and
+> > I wanted to keep the driver as close to the table of magic values I have
+> > to make it easy to compare driver and the limited documentation.
+> >
+> > I guess it's really a matter of style. I have no real strong opinion, if
+> > people think an array would be nicer I have no issue switching to that.
+> 
+> Have you looked at the impact on kernel size?
 
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://urldefense.com/v3/__https://lore.kernel.org/
-> |  oe-kbuild-all/202505111855.FP2fScKA-lkp@intel.com/
-> |  __;!!G3vK!U-wdsvrOG1iezggZ55RYi8ikBxMaJDVs7u17Z9-7Xa-
-> |  0lnyE4S3m2qmLCcHVK4qH1bD1JuBdzg$
+That is a good point, I'm sure an array would reduce the kernel size. I 
+could possibly even craft a few clever loops to to generate the values 
+as they are almost sequential. As these are magic values I had opted to 
+keep it close to the docs, but seems people prefere something else. Will 
+change this and send new version.
 
-This should be in a tag area below, each tag is exactly one line (the same way
-as Fixes:, for example)
-
-> All errors (new ones prefixed by >>):
-> >> ld.lld: error: undefined symbol: tasdevice_remove
->    >>> referenced by tas2781_hda.c:33 (sound/pci/hda/tas2781_hda.c:33)
->    >>>               vmlinux.o:(tas2781_hda_remove)
-> To fix this issue, the implementation of tasdevice_remove was moved from
-> tas2781-comlib-i2c.c to tas2781-comlib.c.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Kind Regards,
+Niklas Söderlund
