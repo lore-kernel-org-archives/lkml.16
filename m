@@ -1,103 +1,185 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540AD2AE68
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297E32AE68;
+	Mon, 12 May 2025 22:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747089247; cv=none; b=iYQRrob5K9uPpoMxIKlehye30OPCWDIh6PFbUF91DC2o5OatTdP0bmHWgV/b93oSH+27JRfqsNuj3LKh5CPByjq4Bwb6E4ioeN/scCkQ0clVi6Qpvb5UdqicPKD57YAtdROWv4L+J1OpYsHFaAB4jFKSoiZ+OLv7t9L8xVjebJs=
+	t=1747089253; cv=none; b=lsYZWn4YEt7JaobOs6SYTFp6fv4IYU2OdiXPvlIXWO+f8fHuyoGoAeKLUa2nhPbIXoedciPwn0p/K9Uzq0zB0Ow0VLSVDdjpHjQMCiHVVhpCVSAY4Vp6klfPEzHPDPLQPMA0uSx4RTqvjeCLb9+2MvPAEyHYGEkJHzo5XQJ7fV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747089247; c=relaxed/simple;
-	bh=A7GYuU5S8XhF1VDVZzU9l/kxFV62Z1n6qxJiHG7VNb8=;
+	s=arc-20240116; t=1747089253; c=relaxed/simple;
+	bh=Uyv5f8G97uaVPehcv/OXsR7F2iqwhtMOvls3KtiMBGI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QhoM6qp9ENXmSjYuWBP+8+ulIE+/qqXGIdqcBBiYnGNNiw4zcuaHJrsDwKXT191e3rWTZIQb2ix0B8a96VLUBWElccGJfYrzi/Yas+Oxq+n1QggdmDewaCT+Gp6NIvsFAEdmiuKb3ooU+nWugi/LGEVS6FqT8PBhkxfqHJ64pt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pd7ap0zv; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=kC9GnALJaAnKrN0KffH4CdQKtcEnv0AfLy3rQCDffb3W3UFtCiVOloZsYtBYdQuIFsYgdMbKHJa2tF403G7U+2jX1HPFXkKiMMZdTjnDiQsldF4pkiUJCdIEzfAfOBX+S5cXlcvK1Tlhvhsg//E+5F7h8oanEJ7nM3yk8k4wyiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JCoelINx; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pd7ap0zv"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7b2c28f661so304149276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:34:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCoelINx"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22fa414c478so27561805ad.0;
+        Mon, 12 May 2025 15:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747089245; x=1747694045; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747089251; x=1747694051; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=J8NvmZ4t3qL9Eye01seggkdjFmX2M4YFQw5Fn8XZFvI=;
-        b=Pd7ap0zv89W2zj3j+5qRFM8THTtmFoJpOF70syXx9PnCWnC7SB6idcnKkp6L3jv1iF
-         jvfVo/kekoas2uVMOBvkdWnAQ2a7FCDC2YODb0JX5DAuTz8+pPy7tN7PH63SNhemAuqg
-         r8kC24WHSqysImnm0IIrr1E4kRNveoz5y5GPnKqbeJBGNMwCPm0yjJNJNh/K5kMMq8nT
-         hPK651Ld2RDKsw+Z5/3I2Bg8EyuNP2Gl1eEKYCujmsBD5R7MgHZ3TabMcOsGUg0n9o/e
-         miUSZz6V9JTFJbtrSXvEjconl4n0+vXenAtE4NGPs9Lc/24CeSrnwxMqEkm7Kr4kZlB2
-         4JdQ==
+        bh=Hd7t/cvsRC7PGuAegEDcr4Z+BMlJi19aw0rDaj30gSo=;
+        b=JCoelINxF1QBLDqbNFL7EFVozs4RPR4kHiY1pFAoZUv2n2v3zDYrPtkUnobbVr9DhU
+         zY872BFJV5ciN99B2IBVIk7e+aHGhFpuZoank1RM7yVOdeBkmeMfEw73A4PPeN8+Jrtv
+         Zyu7yLsaE0EnGEPdE35r3TXBAm3rZ/VXpfARblLftxwaoKMRn9cCFYKSxnAj2r73+J1j
+         Q5ttfgp3baOqyqfTd2SMKV0riNRMUelFiZR9Z66ID+AcUCRo00nZAu0OiqNRbbVwtL8y
+         tzgI2oncGCnq+KMhNt4aUhjG1iWtBFt+XLNXEF8a/n94pZYpw6+ZXkHgc+5oX2lbLlv0
+         mhag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747089245; x=1747694045;
+        d=1e100.net; s=20230601; t=1747089251; x=1747694051;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=J8NvmZ4t3qL9Eye01seggkdjFmX2M4YFQw5Fn8XZFvI=;
-        b=acuPQd8kN4UFs01Ima4UV3B0Jo2AEnYde7iAzQG459zYbH5byBOxQ3BoNJSfqn9651
-         kxTdXp+zfZAtXgBWQyKAqM3m2asIFliN4TvAqOJ+X58BhQlkaQmEAWq5C/Fxj52x7/OC
-         DBryfcPvBvPZhL8zZ6SdH0VA9o5dfEsr8g8XeBDmelwVxgzUrM64cUEjfx5eyhKG20nb
-         rEVIwyxg1lh69Dmr7omQWH0fvf213w7v8KQ9pPc0JNvdU0wAT1HgFHHvR4wOvXVaCjmC
-         C4m42RPrUU39X1bjnualL1cMRgU0lkh5AZpip4r4eZtzBJ4Lofzw1NLzdFcERFmxve0X
-         kG3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVEEsFolj+3DylHsr6vglzDYlW27zwKrVgoBBTNNWktJSSg9Xovag7V9qVpZXGTie5XkxNcV6ac/XBQNpE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX1U9ULiDxBkC+z4OizuJZF9pzT6mZAgHQIkd5mzWnHoP/TT0N
-	t5V+mQ0rkH765Vy79R1GdASiIifF7rsE9wdNDGFLrcTYupef/Q4kiI0zvMIjujwj3YSBebthG5X
-	D2wpdEfi+Ax6QWYfmAhZFxzPbMUe/sfDEMsDP
-X-Gm-Gg: ASbGncuJtpVnA3cpqfl5JYMT5w9EDgPbVZewo19EGbkq+jUoqbIMd3L9HzSbDZAdUrn
-	xBThlWtAiqZlbe0csam/YjxIPIPTocuVLn6hyskg7D/tQ4YL+UqnsEC7W0GqHO61ZJNHLgCRJCk
-	U/pHf/vdro8htk1p86vZh/p+qRMACABdEhX3UPGDAwZa4nRRdmzXsRCOWOEsj++jQ=
-X-Google-Smtp-Source: AGHT+IHeFZuz1GT0pyYV9KRgJiE7kVcoZ8mYUC97W8Uis3XkL8RZr56UHHc0eEJMA4/5nNTsncrykr7QBqACs6gvE0Y=
-X-Received: by 2002:a05:690c:4881:b0:708:c18d:e6ac with SMTP id
- 00721157ae682-70a3fa373e6mr212777607b3.18.1747089245033; Mon, 12 May 2025
- 15:34:05 -0700 (PDT)
+        bh=Hd7t/cvsRC7PGuAegEDcr4Z+BMlJi19aw0rDaj30gSo=;
+        b=mt0y0eTNtCShX2VZp2RtemiBtUtLB8EAxC3qtYxcfbvGHs1KD+KxJgqW3zfVaIynQJ
+         q89RJUgESrpxIFE6jEt9O5MM1nciKFlhTmQ6BlhrVfekXJlW/h2ypM94RhykljTraWH+
+         xlJNji9KQZnZNZ4bCOOXKdmAvkBA/2NsRIALMQ66smo7zB+LNOh77bgQmAyT+VDEhQEg
+         ouuCZvN0y0wXXF3YU/CzLkPRS6nZxa9LQVDgySynQooiw4wHFBHc3rTD1QHJAKJLKQsR
+         m4EneMw1EbT2XVVwSxYBoQm+ru5z4hye3OlccjHQHbcJL2nV+wYBri6GQRmqpPnZaRQu
+         ZF/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU7CthOk1p+EVc3xZoTthbDyOOuTViK+MNrwQYU0jpBYCAooISrDXKBPi8uh0QtuGZNq9ylhXywsl9wOX2D@vger.kernel.org, AJvYcCWG+jEr+cK5844JP2s0smjuevt4v/9pmYnLlQfh41/JCX9ww3xzyekEBpr4sXCU4RXgJJ2vIW58ewC78w==@vger.kernel.org, AJvYcCWpJmZraB9msOQw+TbffjWtT017a+Q+pCNqG50PARPWPuvQc7P3TYjGrNvVr+SPdisFQQE=@vger.kernel.org, AJvYcCXlWn1vSLUxo4JMVY/FacnUNtgYt86srqvEtdcDgDoIJp+rMHPEzeyxYqVy0wTRutUX8hRsGovQN9d6TpGU0/R/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW/7S9ZjLlrGW19ROrcUmn7nMgt5IZIODYWytK36cGUhCxMfza
+	u7xpuFTqPE719eX1gvhDheiM3ldkBgGhbGQ8l+tEx95cGblqe9cQrivMb8Z+b5FQiYG7m3VtslA
+	nCLR2FZnv8zx0iFHYdKh2zGWv7oM=
+X-Gm-Gg: ASbGnctWWrpCvOE97g1em6IgI2eSw5ZZZIYG2Ly7FdOeqMG29aMK6wJHZDiAFscv1bx
+	tnvRB3Wu0dsUdNsfD5yQeM1X0j6Ss5AXicDpVhwn6zfJws3fl5DNXp4K1xtdRmq++s5OJhGeNDG
+	uZMDcNK2gnQ2pdQQ68kPApESXaAnJZM3xGdol9mJCB0FaArA/1
+X-Google-Smtp-Source: AGHT+IG9nP0sPemMz+mmWcUwXeMKEGdKp44GT6mDHAkt7BEDOgfWF3AG5/vRgejvfA1WpxbSaaNXVTFychn8Mqfvx3g=
+X-Received: by 2002:a17:902:e94d:b0:22e:6d46:a5d7 with SMTP id
+ d9443c01a7336-22fc91862ffmr245029525ad.35.1747089251387; Mon, 12 May 2025
+ 15:34:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508141012.1411952-1-seanjc@google.com> <20250508141012.1411952-6-seanjc@google.com>
-In-Reply-To: <20250508141012.1411952-6-seanjc@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Mon, 12 May 2025 15:33:29 -0700
-X-Gm-Features: AX0GCFshITqfMDo56zZ68RKI2JYQJwtS2D7bd8OPkNI7R9wgfKIsD_-OmUB-WOs
-Message-ID: <CADrL8HWwJqt+XL88_SYGta=AbOm=n6Zpt2jwHowkCbBkA+DOmg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] KVM: Use mask of harvested dirty ring entries to
- coalesce dirty ring resets
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>
+References: <20250510-vmlinux-mmap-v4-0-69e424b2a672@isovalent.com> <20250510-vmlinux-mmap-v4-3-69e424b2a672@isovalent.com>
+In-Reply-To: <20250510-vmlinux-mmap-v4-3-69e424b2a672@isovalent.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 12 May 2025 15:33:58 -0700
+X-Gm-Features: AX0GCFtbigaQt8b_TAnC8H-D6wLcJ88JLWb2gTUYC6ZTQTmYJwn564hP9GMIw7I
+Message-ID: <CAEf4BzaPKc_ocE+XTEw6bU0GQ1KOVp+UosZkVKZcqWcJed2ebg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 3/3] libbpf: Use mmap to parse vmlinux BTF
+ from sysfs
+To: Lorenz Bauer <lmb@isovalent.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 7:12=E2=80=AFAM Sean Christopherson <seanjc@google.c=
-om> wrote:
+On Sat, May 10, 2025 at 5:35=E2=80=AFAM Lorenz Bauer <lmb@isovalent.com> wr=
+ote:
 >
-> Use "mask" instead of a dedicated boolean to track whether or not there
-> is at least one to-be-reset entry for the current slot+offset.  In the
-> body of the loop, mask is zero only on the first iteration, i.e. !mask is
-> equivalent to first_round.
+> Teach libbpf to use mmap when parsing vmlinux BTF from /sys. We don't
+> apply this to fall-back paths on the regular file system because there
+> is no way to ensure that modifications underlying the MAP_PRIVATE
+> mapping are not visible to the process.
 >
-> Opportunstically combine the adjacent "if (mask)" statements into a singl=
-e
-> if-statement.
+> Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
+> ---
+>  tools/lib/bpf/btf.c | 85 +++++++++++++++++++++++++++++++++++++++++++----=
+------
+>  1 file changed, 69 insertions(+), 16 deletions(-)
 >
-> No function change intended.
 
-nit: "Opportunistically" and "functional" :)
+Almost there, see below. With those changes feel free to add my ack
 
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+> +static struct btf *btf_parse_raw_mmap(const char *path, struct btf *base=
+_btf)
+> +{
+> +       struct stat st;
+> +       void *data;
+> +       struct btf *btf;
+> +       int fd, err;
+> +
+> +       fd =3D open(path, O_RDONLY);
+> +       if (fd < 0)
+> +               return libbpf_err_ptr(-errno);
+> +
+> +       if (fstat(fd, &st) < 0) {
+> +               err =3D -errno;
+> +               close(fd);
+> +               return libbpf_err_ptr(err);
+> +       }
+> +
+> +       data =3D mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+
+err =3D -errno;
+
+> +       close(fd);
+> +
+> +       if (data =3D=3D MAP_FAILED)
+> +               return NULL;
+
+s/return NULL;/libbpf_err_ptr(err);/
+
+> +
+> +       btf =3D btf_new(data, st.st_size, base_btf, true);
+> +       if (IS_ERR(btf))
+> +               munmap(data, st.st_size);
+> +
+> +       return btf;
+> +}
+> +
+>  static struct btf *btf_parse(const char *path, struct btf *base_btf, str=
+uct btf_ext **btf_ext)
+>  {
+>         struct btf *btf;
+> @@ -1618,7 +1669,7 @@ struct btf *btf_get_from_fd(int btf_fd, struct btf =
+*base_btf)
+>                 goto exit_free;
+>         }
 >
-> Cc: Peter Xu <peterx@redhat.com>
-> Cc: Yan Zhao <yan.y.zhao@intel.com>
-> Cc: Maxim Levitsky <mlevitsk@redhat.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> -       btf =3D btf_new(ptr, btf_info.btf_size, base_btf);
+> +       btf =3D btf_new(ptr, btf_info.btf_size, base_btf, false);
+>
+>  exit_free:
+>         free(ptr);
+> @@ -1659,8 +1710,7 @@ struct btf *btf__load_from_kernel_by_id(__u32 id)
+>  static void btf_invalidate_raw_data(struct btf *btf)
+>  {
+>         if (btf->raw_data) {
+> -               free(btf->raw_data);
+> -               btf->raw_data =3D NULL;
+> +               btf_free_raw_data(btf);
+>         }
 
-Thanks, Sean! This logic is much easier to read now.
+drop now unnecessary {} ?
 
-Feel free to add to the entire series if you'd like:
+>         if (btf->raw_data_swapped) {
+>                 free(btf->raw_data_swapped);
+> @@ -5331,7 +5381,10 @@ struct btf *btf__load_vmlinux_btf(void)
+>                 pr_warn("kernel BTF is missing at '%s', was CONFIG_DEBUG_=
+INFO_BTF enabled?\n",
+>                         sysfs_btf_path);
+>         } else {
+> -               btf =3D btf__parse(sysfs_btf_path, NULL);
+> +               btf =3D btf_parse_raw_mmap(sysfs_btf_path, NULL);
+> +               if (IS_ERR_OR_NULL(btf))
 
-Reviewed-by: James Houghton <jthoughton@google.com>
+just IS_ERR() with the fixes I pointed out above
+
+> +                       btf =3D btf__parse(sysfs_btf_path, NULL);
+> +
+>                 if (!btf) {
+>                         err =3D -errno;
+>                         pr_warn("failed to read kernel BTF from '%s': %s\=
+n",
+>
+> --
+> 2.49.0
+>
