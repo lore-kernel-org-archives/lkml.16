@@ -1,168 +1,170 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8CB179BF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525FC256C73;
+	Mon, 12 May 2025 07:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747036354; cv=none; b=rQCTZg//kN3uBLdVn8GQINRT82ZGtesSas0fFt131755ybxOvV8dXLmFmhqQnlR1J645pTkE5HGXjDTIzpEUTqiJ5RdGSN4K7nZNPVV1MXUKTfRJaax7YT+JgxKqZBE5tPPmIslsK/QqRhK1oPO4v/6AcHMni34cCd7qhzOOf+A=
+	t=1747036386; cv=none; b=hZCoAH2vmn5aYoDAeoWVjobjdj5mQysEMtOGCplSfWrbQVzFuuTaDB0WXoeRfe4leDrtt4BbI7OTleXZnEnI7tpPvQq6l6Djd6WWlrWwcPb4fwpfgrO+3ryUvhbNdJXAdTcjjZ0QCmKq4VKhaviwRfBtG9gMGuDI9y64zj2rHKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747036354; c=relaxed/simple;
-	bh=z1uS3IgkRK+fsWfnV12oLxVL8sX9WYzCdRTjVJEdXvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZLhyxXoy6tT6bWu4ejdvyce0LfIB3fmknunJVQkd7j4MqXojA3eEje9IAEnQAsuU9Ryn8YP4gHMvBUeW2cgvFBDKWy8hKTQcwaQfxoYn3q7bdER4LUIq0c96C8pPdI9KgGMkz+3VsZ6RixnETX+Q+aIcRDAIybLfPjbOuQ5Fd0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=De9rjKWX; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
+	s=arc-20240116; t=1747036386; c=relaxed/simple;
+	bh=isnbYV8jTH6SMpXcosxx1uwezjwExTjsCQIyI0kAwLo=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=n+IGU0mctGOscAnEFYlDTFNU854WVMDtLXVCqY4bhgfpo0781oiX7LV3HVJobVGJTuEcFVHKbeI9lfLYaYudpSVWMzHQB5QlhzKCEfbS17lL7LCwexlnuS77V4/90jEGO1AP4SaIHtu7vpOUj4axOHrHJPOmAczUP7oyOyCqcMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h23yl+ZA; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="De9rjKWX"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so47065385e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 00:52:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h23yl+ZA"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0bd7f4cd5so3475738f8f.0;
+        Mon, 12 May 2025 00:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1747036350; x=1747641150; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y6dV607UHZMlya+8fS0IcgPOSDSCXxkhRJBLWphOTew=;
-        b=De9rjKWXkrmWyHTG2q8r2qRL+bNfcVFXP/Z7WhGXV76bIPKiCVuvOBuOsefSJef1h0
-         1awGQax390V7fgiFQSh86fM+2k9Qgqfodnqalx16MSImeKyE1qHjo8emTaOtNNUkBE9+
-         Np/zYel/ZnEae52T9rtx3aYxiEl9YbgwINzW3lSclHQZyd6KVEgjAhsmKz1OWbnqzS62
-         c6UU58d5R5xxhaHKv5B+x6rqOcOYB6Sa1YYDCyd8JwY6WA8wTMx2d5ub+J+Y39YzdNEt
-         aYTQ4D9xMpyLLys3VyC5RZsizsavBdlx2KECBkRjxIi2bL2dXv8qaAJtDnLf/d0ROygq
-         HI7w==
+        d=gmail.com; s=20230601; t=1747036382; x=1747641182; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zPk+W/jcKj4KahuD3Ov6QRv0TumK9Na5GoaM8Yh7J6k=;
+        b=h23yl+ZAcu2jaUvdupzmj+1h3Sf+aUuDIwvMpZiiZNlKOQqQhFk2BxselezgLX56/C
+         iSer2FigSc1G2/PTG5zGbzToCc0ANPtqHECm1faRauDPmKtJYuY6coYzypWJcjVLuraN
+         xfBt7RlyZG9n032Qv3Jpwynrjuu3QOyJwwGfNAb2MzixfgeeiDHDdh14Ud2rxL1Hzsuj
+         o2k+Duz4sTFJM3CmW/usw01Ig7sChSYfMK7L2KExmQ4yEfLuvRcwuenAM5kDn/EsqW7j
+         sZU2XpvCSDo/rnPZqSk8XXZEipDL60FZAkFLsn6YcrtcpigNmbC4y1B8WYdYBLAEHXgd
+         mTsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747036350; x=1747641150;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y6dV607UHZMlya+8fS0IcgPOSDSCXxkhRJBLWphOTew=;
-        b=D1tDQJ7vW2b26aJz7dBZaQwSkPNJ6qW0Azrn/1vOi9Oxp9kltS5TJV1nlHjt5pgAW7
-         9LCIkGo7mtSNanoqAVt78NbA/2XTJ6oEPkd0QpYyD+41SGJznPeGMcbqMxu8tC3HND1N
-         y8k9ItdDX6R64kAXG1tGWzd4EPYOltRmLkp8xPeav05/NRNPaKR8QxOe4pJD1JECEolU
-         Wr3tu7DP/oT9gMEHrgQTVEIhlnzvaFYs2dCNFSnpJxjhPjfpbBpsnM/Z2v+ScoQXtWLa
-         6Nzv87/xHesmOeEb1Xd2j5QzwK0uqKghm1uHRFEl1U8vU+ab2rDq6d64X1gTwDbrKFJK
-         3vbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAIo02COMMpYUsRdBvCgq4DQz+sDyu961+9ifAPtDFV3N+7XLbMr1KjecKGGrWq292VQ2aifOY2mpcXbc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyxTF9X4eXg1cD0eEEav+tETvJKh34R8j0a5WAq2MVm4ysuN6T
-	R5Xx4iRivXkwmO7KvUarvP5JqSf1aino+ZCLpf38cF+dW1NYKpgl4Qyd72zAl70=
-X-Gm-Gg: ASbGnctQuhhZNPpklwxKELTYGOpdRzDQ9E+eBxVys2HPk/lsWSy3NikwZLqn6eXEqSp
-	217qRuzz5XIlwpk2gOcfadKnAZ14lbKsZmYEV7Sxtnbgp2F4fVln8pCN/uOkMJ+MjjfEx9+7gqP
-	K/tZjccqWvFjPXw6t9dzmj95VpKIORF8v+4/0De98ecWCvSpYIKq3QuUy4p8I140PaRFcPr3ssz
-	dx+mS4hNsLC8tGkQjo224e9gZLRNjN2Tw/54pi7drM0/8xj94URHp+QjOj7gm+lmSFqPJIm5zY/
-	JhajaQ5M4XBtvzGJMyxCuMK4mwtL2fd7NWOSbdJ+qg/bkkwCEl3yi1Jb7lIXAHyQag==
-X-Google-Smtp-Source: AGHT+IEcQ2vTdjkVJJfeqWwpeF5uH1q35HnkAVFXZV3V/18SxGeFROcAXX7AmB5sQ2NYa+ldDl7y7Q==
-X-Received: by 2002:a05:600c:b93:b0:442:e109:3032 with SMTP id 5b1f17b1804b1-442e10930dbmr53828855e9.24.1747036350182;
-        Mon, 12 May 2025 00:52:30 -0700 (PDT)
-Received: from [192.168.0.101] ([81.79.92.254])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67ed1c9sm116203075e9.21.2025.05.12.00.52.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 00:52:29 -0700 (PDT)
-Message-ID: <a3b3e8d2-ada8-4b34-91d4-e9dc22b83b46@ursulin.net>
-Date: Mon, 12 May 2025 08:52:29 +0100
+        d=1e100.net; s=20230601; t=1747036382; x=1747641182;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zPk+W/jcKj4KahuD3Ov6QRv0TumK9Na5GoaM8Yh7J6k=;
+        b=kMVdP49lxvVRGOJ3Mn5Wj04bI1PKNaFLvl4tyOiaatMM3rQ//pe83pTd99XdvbT7zd
+         4oj3wlxUzn714m3SC6sNYYFwyUv6OO3iqWU3j/QTFP7QIa2HkVPzZa9OrJxBE3IWZojk
+         +VgJpqw0LhVYHMdN5jx+bo57f91iSl9v5I4dUcJFA2mETzgaTqdvmSoyn6CSn/U0F+TC
+         6OXqURu9MBvQsUVzY/0k+n2kkbLK4Whqd3FPLglNTgMo2HRuZESzbIXFW6F69ySbYDO5
+         qNgZrgTsBn1s+i3RNZBtfDEFAcrsdaXlQma9/uDskUGQp1dzGhi5mvYZvmNPHbLTeMv6
+         xaKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQoAqve/MAltGwlguTCquV6nnyWGVlAJ8b7KPXtStPhQaPrllhYv7WMDpoAHCrOH9S5kvksFtCcPIh@vger.kernel.org, AJvYcCWSQ146PDzCqzddIsIAEr8asl6NfCUobYCl23XfBx2o77wKfQd7KjFcfWCKLpWL3+Rug+Lb66oJiMIM@vger.kernel.org, AJvYcCWSYxNCAMTZM/VhjENNbU1NQfCVuSExDAyefDIay5yf5z6P8PdhU1lkfRYYH15DKT7kxUETZebI4q2NHnTr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwunfbCEg6lruyzrK3X4ugTLuir4QwSjAbS2h4+yk8EyNSo5w8I
+	62lPFY59Iv9LkQ0G9CVJ83dlw7BazJ6FBHrIoHPM9FStHtgW6Thv
+X-Gm-Gg: ASbGnctx2drIOS7xVhcQMypFyb4ylD9IsVDTL9nAzCrKD0LOUa0wozDvWaNStS+802b
+	zIvFucPG2apn1EXwOqEvTZlSfCaiTVaKSyHCZphIc0BUPugmqsCEQSRq+sxaw4GzP6Ow6UezBCM
+	1BCxDuJ0snsPIaZW7o8CCxb6pc5cp9AHcwTauR6zDJsl2pCCHvCunsc5R7VCdScAoYqrhhHvxur
+	mxtLOhfikExsuYs+X9bPlYHVWvkm9jpx/zTlL3+xl/rnkTO2NS6gku+Hs5tqwpXe4fD3j5Bknht
+	YxbRjWfQ9mdxiFRkU98iZPTcP7QE76tTv4aEKfgLaZWYLLT/D5r4RLikncCgedYcWI1sSuuL/iJ
+	5VUooMf39fW0nNmZSQk+RzNnOqw==
+X-Google-Smtp-Source: AGHT+IGOQ+EFDLGkYtWQu+16fjBJc63uVRNsF6+99EfyeVrzgyeYWZISjDFaq+Wr5JblZR6ChVMnXg==
+X-Received: by 2002:a05:6000:186f:b0:39f:fd4:aec7 with SMTP id ffacd0b85a97d-3a1f643a593mr9745003f8f.7.1747036382394;
+        Mon, 12 May 2025 00:53:02 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf1bsm11686801f8f.72.2025.05.12.00.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 00:53:01 -0700 (PDT)
+Message-ID: <cb2eabee32d1cb6128a7ef15aae749806ca19541.camel@gmail.com>
+Subject: Re: [PATCH v5 02/10] iio: backend: add support for data alignment
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
+	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 12 May 2025 07:53:27 +0100
+In-Reply-To: <20250509105019.8887-3-antoniu.miclaus@analog.com>
+References: <20250509105019.8887-1-antoniu.miclaus@analog.com>
+	 <20250509105019.8887-3-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/sched: Fix UAF in drm_sched_fence_get_timeline_name()
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: Rob Clark <robdclark@chromium.org>,
- Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
- Philipp Stanner <phasta@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250509212936.490048-1-robdclark@gmail.com>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tursulin@ursulin.net>
-In-Reply-To: <20250509212936.490048-1-robdclark@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-
-On 09/05/2025 22:29, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> The fence can outlive the sched, so it is not safe to dereference the
-> sched in drm_sched_fence_get_timeline_name()
-
-Funny I've been working in the same problem space:
-
-See 
-https://lore.kernel.org/dri-devel/20250509153352.7187-1-tvrtko.ursulin@igalia.com/
-
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+On Fri, 2025-05-09 at 13:50 +0300, Antoniu Miclaus wrote:
+> Add backend support for staring the capture synchronization.
+> When activated, it initates a proccess that aligns the sample's most
+> significant bit (MSB) based solely on the captured data, without
+> considering any other external signals.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
->   drivers/gpu/drm/scheduler/sched_fence.c |  3 ++-
->   include/drm/gpu_scheduler.h             | 11 +++++++++++
->   2 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/scheduler/sched_fence.c b/drivers/gpu/drm/scheduler/sched_fence.c
-> index e971528504a5..4e529c3ba6d4 100644
-> --- a/drivers/gpu/drm/scheduler/sched_fence.c
-> +++ b/drivers/gpu/drm/scheduler/sched_fence.c
-> @@ -92,7 +92,7 @@ static const char *drm_sched_fence_get_driver_name(struct dma_fence *fence)
->   static const char *drm_sched_fence_get_timeline_name(struct dma_fence *f)
->   {
->   	struct drm_sched_fence *fence = to_drm_sched_fence(f);
-> -	return (const char *)fence->sched->name;
-> +	return fence->name;
->   }
->   
->   static void drm_sched_fence_free_rcu(struct rcu_head *rcu)
-> @@ -226,6 +226,7 @@ void drm_sched_fence_init(struct drm_sched_fence *fence,
->   	unsigned seq;
->   
->   	fence->sched = entity->rq->sched;
-> +	fence->name  = fence->sched->name;
->   	seq = atomic_inc_return(&entity->fence_seq);
->   	dma_fence_init(&fence->scheduled, &drm_sched_fence_ops_scheduled,
->   		       &fence->lock, entity->fence_context, seq);
-> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> index 0ae108f6fcaf..d830ffe083f1 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -295,6 +295,9 @@ struct drm_sched_fence {
->           /**
->            * @sched: the scheduler instance to which the job having this struct
->            * belongs to.
-> +         *
-> +         * Some care must be taken as to where the sched is derefed, as the
-> +         * fence can outlive the sched.
->            */
->   	struct drm_gpu_scheduler	*sched;
->           /**
-> @@ -305,6 +308,14 @@ struct drm_sched_fence {
->            * @owner: job owner for debugging
->            */
->   	void				*owner;
+
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+
+> changes in v5:
+> =C2=A0- add description for data_align function
+> =C2=A0- add suffix for timeout parameter.
+> =C2=A0drivers/iio/industrialio-backend.c | 23 +++++++++++++++++++++++
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 3 +++
+> =C2=A02 files changed, 26 insertions(+)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index 038c9e1e2857..545923310f1f 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -796,6 +796,29 @@ int iio_backend_filter_type_set(struct iio_backend *=
+back,
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_NS_GPL(iio_backend_filter_type_set, "IIO_BACKEND");
+> =C2=A0
+> +/**
+> + * iio_backend_data_align - Perform the data alignment process.
+> + * @back: Backend device
+> + * @timeout_us: Timeout value in us.
+> + *
+> + * When activated, it initates a proccess that aligns the sample's most
+> + * significant bit (MSB) based solely on the captured data, without
+> + * considering any other external signals.
+> + *
+> + * The timeout_us value must be greater than 0.
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_interface_data_align(struct iio_backend *back, u32 timeo=
+ut_us)
+> +{
+> +	if (!timeout_us)
+> +		return -EINVAL;
 > +
-> +	/**
-> +	 * @name: the timeline name
-> +	 *
-> +	 * This comes from the @sched, but since the fence can outlive the
-> +	 * sched, we need to keep our own copy.
-> +	 */
-> +	const char			*name;
-
-With drivers such as xe, fence->sched can indeed be freed, but so can 
-sched->name, so it is not safe to store a copy of it. AFAICT only safe 
-way is to simply give up on the real names for signalled fences.
-
-Could you see if my series fixes the issue in your use case? I *think* 
-by using the driver/timeline name wrappers I did catch all external 
-access points and made them safe.
-
-Regards,
-
-Tvrtko
-
->   };
->   
->   struct drm_sched_fence *to_drm_sched_fence(struct dma_fence *f);
+> +	return iio_backend_op_call(back, interface_data_align, timeout_us);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_interface_data_align, "IIO_BACKEND");
+> +
+> =C2=A0/**
+> =C2=A0 * iio_backend_ddr_enable - Enable interface DDR (Double Data Rate)=
+ mode
+> =C2=A0 * @back: Backend device
+> diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
+> index 5526800f5d4a..a971a83121b7 100644
+> --- a/include/linux/iio/backend.h
+> +++ b/include/linux/iio/backend.h
+> @@ -109,6 +109,7 @@ enum iio_backend_filter_type {
+> =C2=A0 * @debugfs_print_chan_status: Print channel status into a buffer.
+> =C2=A0 * @debugfs_reg_access: Read or write register value of backend.
+> =C2=A0 * @filter_type_set: Set filter type.
+> + * @interface_data_align: Perform the data alignment process.
+> =C2=A0 * @ddr_enable: Enable interface DDR (Double Data Rate) mode.
+> =C2=A0 * @ddr_disable: Disable interface DDR (Double Data Rate) mode.
+> =C2=A0 * @data_stream_enable: Enable data stream.
+> @@ -161,6 +162,7 @@ struct iio_backend_ops {
+> =C2=A0				=C2=A0 unsigned int writeval, unsigned int *readval);
+> =C2=A0	int (*filter_type_set)(struct iio_backend *back,
+> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum iio_backend_filter_typ=
+e type);
+> +	int (*interface_data_align)(struct iio_backend *back, u32 timeout_us);
+> =C2=A0	int (*ddr_enable)(struct iio_backend *back);
+> =C2=A0	int (*ddr_disable)(struct iio_backend *back);
+> =C2=A0	int (*data_stream_enable)(struct iio_backend *back);
+> @@ -203,6 +205,7 @@ int devm_iio_backend_request_buffer(struct device *de=
+v,
+> =C2=A0				=C2=A0=C2=A0=C2=A0 struct iio_dev *indio_dev);
+> =C2=A0int iio_backend_filter_type_set(struct iio_backend *back,
+> =C2=A0				enum iio_backend_filter_type type);
+> +int iio_backend_interface_data_align(struct iio_backend *back, u32 timeo=
+ut_us);
+> =C2=A0int iio_backend_ddr_enable(struct iio_backend *back);
+> =C2=A0int iio_backend_ddr_disable(struct iio_backend *back);
+> =C2=A0int iio_backend_data_stream_enable(struct iio_backend *back);
 
