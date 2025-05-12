@@ -1,157 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB29629372F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F018467;
+	Mon, 12 May 2025 17:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747069236; cv=none; b=dFll+rZd7h/CPCWUxeHNdsLq63w9foFi3La8G6GMb4dnxkJ323xGBDMyn1uNZkf1egFEbHq/w6ceyzSVXbIjqP+xteOjuGr5uEHgsMj6bwV1GeEz/mUUaDigQ2/N6ENlKZHoqkRBpw4/6r98/Z+NMQl7OtS4WbHG5ooIV7asaps=
+	t=1747069676; cv=none; b=CkM8tCkKBFmm5JaMEcfMJ+GRx6hoDQPgV1leT8zQfAygsTji8rNJFxWJXxRmgTMmyXM09sDDHwUmz7ZWXcnkFBlab39vLYjD27VH/SXkjF4/DAK1RgErFgOo5tUR1nOUp62pCCuDFVKNSWUNOrxQrrfrnN4aI1fZ4OiAqgSQ/vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747069236; c=relaxed/simple;
-	bh=KQIZyE7ntXiGJDC5dfeopzXGz3HkaLlbEgheY2J+Wks=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=alumJcN4nl0shBAuXkHXt8VZ+CplxMSxbrMHQP244lxUTSar3jcFbZ/cm+ka+A5do0r2/rBYLJ6mVsyECiVUliTNOztaa0mWCLTVtM2rKlEV3iY2t2wK78BXmPDJwimywbCx6YsFP3Rs6jhHeH4T12X5JT5VQkBaCpZwFMb7WRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpIjjeX4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747069676; c=relaxed/simple;
+	bh=mLmEqOzVCecMhSZ9SrTL+1guOX+BsjLm7ABFb3jdDGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OFFERQbjTg4XteUVKluBGC4nBKXzzsGerWBkBuT1LntsXOLv3rrxc2WtFdrBib32C6TvAq2l4hQj5GWF512dLlRtENBp4ZILbZRjADXnHTH5iI7GFPxqPSrHiS0M0NHFWIh6tSVt/g4cRdcIKWqxCPLqlz1wFC59VOne1eB4Ipg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mkoks5cL; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpIjjeX4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6F2C4CEF0;
-	Mon, 12 May 2025 17:00:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747069236;
-	bh=KQIZyE7ntXiGJDC5dfeopzXGz3HkaLlbEgheY2J+Wks=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JpIjjeX4Nc3b9HvWSd7Hsi0oBARYSvVuUV29uiy+gWXB671StuJLvvY4icxonTtGt
-	 Oven5nTGHOYj/gubMRpX+uBgDdgYWwEvPIv2BSU9jZxcUMdFSHsA35mN3tUh8YvVEc
-	 EQQBawp2bRuzLue9LeBXIqZR9aHqSjJ+DuzsIKlk1j39493cWjU5sjoXDK1IMoxO/8
-	 VKh3a2M8xTcO4RzReOClEFtzpb5zLvhfvaO0Ez8V9tQhd01lj3BiQ/sELMq1znP2ry
-	 SPPOhA/hu5rZeUYPG6rgqPkYVFvrb5sN21yWp4g3rL0CubctJvzVJ8uOhOyETlGCcF
-	 llKkKBRIJPD+g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uEWW2-00ED1E-EE;
-	Mon, 12 May 2025 18:00:34 +0100
-Date: Mon, 12 May 2025 18:00:33 +0100
-Message-ID: <86r00tg3wu.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>
-Subject: Re: [PATCH 2/4] irqchip/gic-v3-its: Implement .msi_teardown() callback
-In-Reply-To: <aCIiQmfDUNrOCC2y@lpieralisi>
-References: <20250511163520.1307654-1-maz@kernel.org>
-	<20250511163520.1307654-3-maz@kernel.org>
-	<aCIiQmfDUNrOCC2y@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mkoks5cL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=AIX9i9XOoogJsxM2MKGz+jWDm2A2YEEjwp/MY1BWXgM=; b=mk
+	oks5cLithMxuvu28S06tNcTQiAzT/5r6o6bwui5XQdulLQr352SjyHoSJnO5cbfs9qO2h0SIGat5q
+	sgW7QMmNRAsLza8+iTgsIcYO09hzsLjmQfBTmZyeQzYDm2FfDZxlBjOG1WXI9K7LwRUWsqpULe4av
+	eqqrJLe6239WeTk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uEWcr-00CMd6-AR; Mon, 12 May 2025 19:07:37 +0200
+Date: Mon, 12 May 2025 19:07:37 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Damien =?iso-8859-1?Q?Ri=E9gel?= <damien.riegel@silabs.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Silicon Labs Kernel Team <linux-devel@silabs.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	greybus-dev@lists.linaro.org
+Subject: Re: [RFC net-next 00/15] Add support for Silicon Labs CPC
+Message-ID: <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
+References: <20250512012748.79749-1-damien.riegel@silabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, sascha.bischoff@arm.com, timothy.hayes@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512012748.79749-1-damien.riegel@silabs.com>
 
-On Mon, 12 May 2025 17:30:58 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Sun, May 11, 2025 at 09:27:33PM -0400, Damien Riégel wrote:
+> Hi,
 > 
-> On Sun, May 11, 2025 at 05:35:18PM +0100, Marc Zyngier wrote:
-> > We currently nuke the structure representing an endpoint device
-> > translating via an ITS on freeing the last LPI allocated for it.
-> > 
-> > That's an unfortunate state of affair, as it is pretty common for
-> > a driver to allocate a single MSI, do something clever, teardown
-> > this MSI, and reallocate a whole bunch of them. The nvme driver
-> > does exactly that, amongst others.
-> > 
-> > What happens in that case is that the core code is buggy enough
-> > to issue another .msi_prepare() call, even if it shouldn't.
-> > This luckily cancels the above behaviour and hides the problem.
-> > 
-> > In order to fix the core code, let's start by implementing the new
-> > .msi_teardown() callback. Nothing calls it yet, so a side effect
-> > is that the its_dev structure will not be freed and that the DID
-> > will stay mapped. Not a big deal, and this will be solved in the
-> > following patch.
-> > 
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  drivers/irqchip/irq-gic-v3-its-msi-parent.c | 10 ++++
-> >  drivers/irqchip/irq-gic-v3-its.c            | 56 +++++++++++++--------
-> >  2 files changed, 45 insertions(+), 21 deletions(-)
 > 
-> First off, thanks a lot for putting this together, it makes an awful
-> lot of sense to me.
-> 
-> > index 0115ad6c82593..3472b97477104 100644
-> > --- a/drivers/irqchip/irq-gic-v3-its.c
-> > +++ b/drivers/irqchip/irq-gic-v3-its.c
-> > @@ -3620,8 +3620,43 @@ static int its_msi_prepare(struct irq_domain *domain, struct device *dev,
-> >  	return err;
-> >  }
-> >  
-> > +static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
-> > +{
-> > +	struct msi_domain_info *msi_info;
-> > +	struct its_device *its_dev;
-> > +	struct its_node *its;
-> > +	u32 dev_id;
-> > +
-> > +	dev_id = info->scratchpad[0].ul;
-> 
-> I have just managed to get to a keyboard :), I don't think the dev_id
-> makes it to this point, we overwrite it with the its_dev pointer in
-> its_msi_prepare() (could use second scratchpad for the pointer maybe ?).
-> 
-> I was bitten by this while removing the old IWB code into the new one
-> (unrelated to this code but that's how I noticed scratchpad is a union).
+> This patchset brings initial support for Silicon Labs CPC protocol,
+> standing for Co-Processor Communication. This protocol is used by the
+> EFR32 Series [1]. These devices offer a variety for radio protocols,
+> such as Bluetooth, Z-Wave, Zigbee [2].
 
-Gah, this is missing the fixup I had on top and that I didn't squash:
+Before we get too deep into the details of the patches, please could
+you do a compare/contrast to Greybus.
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index d8c4d3b8256f3..7e0e7f0160936 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3622,19 +3622,9 @@ static int its_msi_prepare(struct irq_domain *domain, struct device *dev,
- 
- static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
- {
--	struct msi_domain_info *msi_info;
--	struct its_device *its_dev;
--	struct its_node *its;
--	u32 dev_id;
--
--	dev_id = info->scratchpad[0].ul;
--
--	msi_info = msi_get_domain_info(domain);
--	its = msi_info->data;
--
--	guard(mutex)(&its->dev_alloc_lock);
-+	struct its_device *its_dev = info->scratchpad[0].ptr;
- 
--	its_dev = its_find_device(its, dev_id);
-+	guard(mutex)(&its_dev->its->dev_alloc_lock);
- 
- 	/* If the device is shared, keep everything around */
- 	if (its_dev->shared)
+The core of Greybus is already in the kernel, with some more bits
+being in staging. I don't know it too well, but at first glance it
+looks very similar. We should not duplicate that.
 
+Also, this patch adds Bluetooth, you talk about Z-Wave and Zigbee. But
+the EFR32 is a general purpose SoC, with I2C, SPI, PWM, UART. Greybus
+has support for these, although the code is current in staging. But
+for staging code, it is actually pretty good.
 
-So no need for another scratchpad entry -- the device structure has
-everything we need. I'll repost things with tglx's comments addressed
-and this fix correctly squashed in.
+Why should we add a vendor implementation when we already appear to
+have something which does most of what is needed?
 
-Sorry for the noise,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+	Andrew
