@@ -1,141 +1,146 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0FF254879;
-	Mon, 12 May 2025 17:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB91245022;
+	Mon, 12 May 2025 17:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747072241; cv=none; b=mcxBk9Samq1kFxK9AtRmqfWla4N/WQr3Vf2ZxNgk0ltdkakcGBrC0O1hcl83ueK0GpBY/NMm5xPHDqb5io29Vcs2V8KtflO7Jchz8F82UxASYAUzE4x8J03Pzj2UhfTL+m4yx3KjYw4ZayHa72mzuL4amH/ef6rHNhOYKyVZTds=
+	t=1747072297; cv=none; b=MwcarUy2Ze8yhvyiHuxTTEDrUYk2b6p2D8Xo3QbSPKh+qsDrqKTAraG9+rI3ydKXXraqXDzhHMMoLSNSD8v6MoVmLsdIB0ShPYN4SNj3MzouCnD2SiHzDBjMbTqSBTJ9pROHqyiW+JlLIQtct2Ee5lJRPOIg4ozWVIpN0iOSjnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747072241; c=relaxed/simple;
-	bh=50J+L6yppvWnD5FxHuOHSb8jlzLe4Y+CMyEYV6+hIsY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YJGnN1gNx+dPygB+Mq4mDlZ2S5Zq71/RC0pBXj8qfax7CLZWKIIzXe16CGdzmRg4YH8NDNpVIA5MZMaGf3VjnlKwQRJMIlkb5Eyuf9JoIdc0z27RIb0BtCylBmYgVWsqJZKZfUHpnYjDjF/iGYJVEw7ImIUZznkdF3yS8Zg+xPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ljFQYBCR; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747072297; c=relaxed/simple;
+	bh=nsQDG1JcQ5amYajbq7Hsmujpg7BCALH6xd/P+umfcgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VC7lyJWgdJCnRb3cVM/lNfNZnJ2oWsFB3SsktGlOGYOwm504xCdCCRb3q8Gb1DpOST/loXKsEtD9b4ft8GX9K+OZH1My+ezWgimNDHrG45BPyghi5dvhmWtUlT0sg7PrGznX10wP8c4QktA+iSCBdekgMVSHNmoFWXwiZ1dgcQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btgB4YDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljFQYBCR"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4768f90bf36so51318811cf.0;
-        Mon, 12 May 2025 10:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747072238; x=1747677038; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iSoxyHvUrLiSc3/psAWBZmLYF3TjkhwktVK+c+jvBxs=;
-        b=ljFQYBCRYzWPi+svJQW+dLUgjPLRPrvmbTS3kHl1a/fCEAdSKyvT4HCYuEWxnF9k8L
-         Lm/+PwEqXMFoxzvjPzZSHBKu5BiR80h0KTBzpcmsIGZe+2SCQ0f7+cpXylQBNSlN28ft
-         0WjaHjp/L187d33UxQJRA39XaAVe1IbEfWWsscQhg7n+yUgEO6DrxCjIYYxGs9HNm9tG
-         rvC1+Hl2rhf0Me5++u89fJBuWcEaxt9g1mJD+glRln0qE+r4NcmsPBp7+fo22DJgof8D
-         SpsebPLpui6CuWRy4PwtSm4T59HaxGPBn01quwqHnyCc08FBxzWycaidj4xD8E3Z1QVS
-         FAMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747072238; x=1747677038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iSoxyHvUrLiSc3/psAWBZmLYF3TjkhwktVK+c+jvBxs=;
-        b=tB6J9e2rfy8p+IEkVl1P85WKs/XPlrBX2GBtwbLizrzwVbFOY14bUIRto9pwsf7I7A
-         Qgoa7CAzuORCpVFvVhp2GcoMnZQFM+aP5G4t/3yuUdSz1JPKu0/4LYz05wik3o5NO8Wj
-         KLx9ByyQiSuY302yV9FR+LglVgkCiaYtDRKG+yDpfnwm0S30igvKrSDHAHahUWT+dqsx
-         IPPhkJFJeSuQvhyNeZZeIPQ8sJmL/JvjBZr9NoqffCMBb8ZtE9vuh2hZ9z2fhBXgktif
-         fIcI5BY/L3YdLKvUvNmPR543R2PI213EKEEcSd5yL25l7qqFSH/99wa5o7XSDC0LEsWL
-         XZZg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7s/RI9IVLxHqN8Oav3HhHOzgID1axgnVvk/TLjKf5VWQvB0vbGJ9hhe9PelPcUfHM4E68AqG4vN05uCRy@vger.kernel.org, AJvYcCVogW6vZrkIN+tUS4+qiwfBE59YG1EuG4mlEWQdpSoP/MWe55BXCoMGZFkPj2+FHj1g72CXjQYSn7KH@vger.kernel.org, AJvYcCX5C7SmtzGsuFkYTt31tfr5swiazETnUN0Te44RVGk3elzr3IePA6AM9RyAUu64rv8BBUl04W/UecJR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrrwQZw/6ACD+7rcn6RrfE2t8wbO/3+Izk3ZXYSwN+7FYbFN1k
-	Wiuw2kwfnHjla/QzPYNeTLQBipYICBApFkqj1egMCLvAmQAYMjrWxgyyBzP1LiTMN2I2qXAurQx
-	sdZyaF48GASE3jKfHB+JZAGjooqQ=
-X-Gm-Gg: ASbGncvmMXItb5DRfpC0YB/PTCe37XZcue29sukFkrHYiocMZNELc8m3Z2dbJAQdbng
-	GgyP77R65tRPdpw2gt8enU9u//ClXHKIe3xLepQ4hcaYhmm/NaThnI4XbWWhEP8TJUXckn4yD35
-	MueXfaTh0lqp/heR/PdoWB3HFWHtZf/vQ=
-X-Google-Smtp-Source: AGHT+IGkeH40cXRztWXpSrCJ5q6XKPbNvx7k9EkmvL+Je1u1a0S2VQUWKi48NLpznn1NHqP6LSPKlLPZSwHilThRqUc=
-X-Received: by 2002:ac8:5f91:0:b0:476:a895:7e87 with SMTP id
- d75a77b69052e-494527f40e7mr184965391cf.48.1747072237855; Mon, 12 May 2025
- 10:50:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btgB4YDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D4BC4CEE7;
+	Mon, 12 May 2025 17:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747072296;
+	bh=nsQDG1JcQ5amYajbq7Hsmujpg7BCALH6xd/P+umfcgk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=btgB4YDPs8Z6d7ZDPwdIkYoruJhFcv6L/893Y0UDZf0xDGmvYLnY1SlKwE8Zx+CLg
+	 /Mgg/ynnM6Y4ctYtoiBOTgMcvklaS3iDk4g+K8ADFg88MAtGRk4V6yx1XTDJva67cv
+	 Ao9nmy6HJV2EmMp5VaWnAEha+7zE4zWtYYb7wdAZuHdOXtSB7f6o2pdE6fiLomJI+3
+	 ZsRasjVhum5RxAsYifN0Md8R4yHCkVi81XBztwqlPrE59xcAeEZk4UA7rwN1/8V0hC
+	 c4esgacDz/9HXiZj+P90PKmib7Q8VjFB9021U7UMiUnOJtoQVBJOyGwFxh5xQ/4o3t
+	 JwPAXCAEeJmXw==
+Date: Mon, 12 May 2025 14:51:33 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
+	peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, howardchu95@gmail.com,
+	yeoreum.yun@arm.com, linux@treblig.org, james.clark@linaro.org,
+	ak@linux.intel.com, weilin.wang@intel.com, asmadeus@codewreck.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] perf evlist: Make uniquifying counter names
+ consistent
+Message-ID: <aCI1JRjBBINe0set@x1>
+References: <20250327225651.642965-1-ctshao@google.com>
+ <20250327225651.642965-2-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
- <20250510-wmt-sflash-v1-2-02a1ac6adf12@gmail.com> <mafs01psu89sx.fsf@kernel.org>
-In-Reply-To: <mafs01psu89sx.fsf@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Mon, 12 May 2025 21:50:26 +0400
-X-Gm-Features: AX0GCFuTn2-A7ifRuVywFd5v331R4uCu7HoPZVJQ7gQFF2XE3zSvat71MlVoTDs
-Message-ID: <CABjd4YyRScBgDbi8Sk0D3vxcmLF8+YBetUdkfhrS_4Y7M+gS1g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mtd: spi-nor: Add a driver for the VIA/WonderMedia
- serial flash controller
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Michael Walle <mwalle@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-spi@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250327225651.642965-2-ctshao@google.com>
 
-Hi Pratyush,
+On Thu, Mar 27, 2025 at 03:48:16PM -0700, Chun-Tse Shao wrote:
+> From: Ian Rogers <irogers@google.com>
+> 
+> perf stat has different uniquification logic to perf record and perf
+> top. In the case of perf record and perf top all hybrid event
+> names are uniquified. Perf stat is more disciplined respecting
+> name config terms, libpfm4 events, etc. Perf stat will uniquify
+> hybrid events and the non-core PMU cases shouldn't apply to perf
+> record or perf top. For consistency, remove the uniquification for
+> perf record and perf top and reuse the perf stat uniquification,
+> making the code more globally visible for this.
+> 
+> Fix the detection of cross-PMU for disabling uniquify by correctly
+> setting last_pmu. When setting uniquify on an evsel, make sure the
+> PMUs between the 2 considered events differ otherwise the uniquify
+> isn't adding value.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Tested-by: Chun-Tse Shao <ctshao@google.com>
 
-On Mon, May 12, 2025 at 1:20=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
-> wrote:
->
-> Hi Alexey,
->
-> On Sat, May 10 2025, Alexey Charkov wrote:
->
-> > The controller is tailored to SPI NOR flash memory and abstracts away a=
-ll
-> > SPI communications behind a small set of MMIO registers and a physical
-> > memory mapping of the actual chip contents.
-> >
-> > It doesn't expose chip probing functions beyond reading the ID though, =
-so
-> > use lower level chip opcodes via the "programmable command mode" of the
-> > controller and the kernel's SPI NOR framework to avoid hard-coding chip
-> > parameters for each ID the way the vendor kernel does it.
-> >
-> > Currently tested on a WonderMedia WM8950 SoC with a Macronix MX25L4005A
-> > flash chip (APC Rock board), but should work on all VIA/WonderMedia SoC=
-s
-> >
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >  MAINTAINERS                                  |   1 +
-> >  drivers/mtd/spi-nor/controllers/Kconfig      |  14 +
-> >  drivers/mtd/spi-nor/controllers/Makefile     |   1 +
-> >  drivers/mtd/spi-nor/controllers/wmt-sflash.c | 525 +++++++++++++++++++=
-++++++++
->
-> Drivers in drivers/mtd/spi-nor/controllers/ are deprecated, and we want
-> to eventually get rid of the API. The expected way is for drivers to use
-> SPI MEM (drivers/spi/spi-mem.c). SPI MEM drivers are usually more
-> general and not tailored specifically to SPI NOR flashes, so it might be
-> a bit tricky to write drivers for specialized hardware with it. But I
-> think the drivers/spi/spi-intel.c driver is written for similar kind of
-> hardware so it should be possible.
+Can you please refresh this series?
 
-Oops. I've had a look at spi-mem, and it seems like it's not a
-particularly fitting abstraction for this controller.
+Total patches: 3
+---
+Cover: ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.cover
+ Link: https://lore.kernel.org/r/20250327225651.642965-1-ctshao@google.com
+ Base: not specified
+       git am ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.mbx
+⬢ [acme@toolbx perf-tools-next]$        git am ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.mbx
+Applying: perf evlist: Make uniquifying counter names consistent
+error: patch failed: tools/perf/util/evlist.h:19
+error: tools/perf/util/evlist.h: patch does not apply
+Patch failed at 0001 perf evlist: Make uniquifying counter names consistent
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+⬢ [acme@toolbx perf-tools-next]$ git am --abort
+⬢ [acme@toolbx perf-tools-next]$ patch -p1 < ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.mbx
+patching file tools/perf/builtin-record.c
+Hunk #2 succeeded at 2485 (offset 1 line).
+patching file tools/perf/builtin-top.c
+patching file tools/perf/util/evlist.c
+Hunk #1 succeeded at 2565 (offset 13 lines).
+patching file tools/perf/util/evlist.h
+Hunk #1 succeeded at 19 with fuzz 2.
+Hunk #2 succeeded at 435 with fuzz 1 (offset 1 line).
+patching file tools/perf/util/evsel.c
+Hunk #1 succeeded at 3954 (offset 15 lines).
+patching file tools/perf/util/evsel.h
+Hunk #2 succeeded at 549 (offset 6 lines).
+patching file tools/perf/util/stat-display.c
+Hunk #1 succeeded at 915 (offset -14 lines).
+Hunk #2 succeeded at 1005 (offset -9 lines).
+Hunk #3 succeeded at 1579 (offset -14 lines).
+Hunk #4 succeeded at 1590 (offset -14 lines).
+patching file tools/perf/util/evsel.c
+Hunk #2 succeeded at 3964 (offset 15 lines).
+Hunk #3 succeeded at 3992 (offset 15 lines).
+patching file tools/perf/util/evsel.h
+patching file tools/perf/util/parse-events.c
+Hunk #1 FAILED at 228.
+Hunk #2 FAILED at 262.
+Hunk #3 succeeded at 318 (offset 31 lines).
+Hunk #4 succeeded at 329 (offset 31 lines).
+Hunk #5 succeeded at 454 (offset 31 lines).
+Hunk #6 FAILED at 433.
+Hunk #7 FAILED at 449.
+Hunk #8 FAILED at 480.
+Hunk #9 succeeded at 1387 (offset 52 lines).
+Hunk #10 FAILED at 1363.
+Hunk #11 succeeded at 1435 (offset 54 lines).
+Hunk #12 succeeded at 1446 (offset 54 lines).
+Hunk #13 succeeded at 1478 (offset 54 lines).
+Hunk #14 succeeded at 1515 (offset 55 lines).
+Hunk #15 FAILED at 1530.
+Hunk #16 succeeded at 1623 (offset 60 lines).
+Hunk #17 succeeded at 1656 (offset 60 lines).
+Hunk #18 succeeded at 1672 (offset 60 lines).
+Hunk #19 succeeded at 1709 (offset 60 lines).
+Hunk #20 succeeded at 1720 (offset 60 lines).
+Hunk #21 succeeded at 1737 (offset 60 lines).
+7 out of 21 hunks FAILED -- saving rejects to file tools/perf/util/parse-events.c.rej
+patching file tools/perf/util/stat-display.c
+Hunk #1 succeeded at 1002 (offset -9 lines).
+patching file tools/perf/util/stat.c
+patching file tools/perf/tests/shell/stat+event_uniquifying.sh
+⬢ [acme@toolbx perf-tools-next]$ 
 
-From what I understood, spi-mem primarily expects to be talking SPI
-opcodes to the controller, and for the controller/driver to bring
-their own chip probing routines. This controller on the other hand
-abstracts the opcodes away, and wants someone to tell it what its
-flash chip can do (the controller itself can only get a chip ID in
-"normal" mode, and it needs to somehow know the chip size and
-standard/fast read capability of the chip). So pretty much the
-opposite, huh.
 
-In the end, I only need something like spi_nor_detect() and can do the
-rest directly on top of the MTD framework without touching any SPI
-opcodes after the detection is done. Is there any other non-deprecated
-framework that can provide something like this? Maybe physmap? It
-looks even older than SPI NOR though :)
-
-Best regards,
-Alexey
