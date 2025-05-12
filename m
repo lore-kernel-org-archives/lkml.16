@@ -1,274 +1,403 @@
-Received: from sonic314-26.consmr.mail.ne1.yahoo.com (sonic314-26.consmr.mail.ne1.yahoo.com [66.163.189.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C292C23C50B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.189.152
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064626; cv=none; b=BDhPg97zeJMOgfPkhsTUuS1WcMZjutpCqZC9k2iLx6s8fbfkfYMEMDb7MWmyUtRDlvL2+YhH7TNlpcukegbTBiJEZv7lzhACSllB664mwDDz37AdknrWJtWhaHEIk44PwingdAExmoAzzdCQzFehNbtjLx3zTc3sIWsE5KyW7BM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064626; c=relaxed/simple;
-	bh=1gBUpbibTjYzRxZM991IHxsllk2DYccgIV54Tgef7vI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ok4RdE32DYJCUnoQaDlyt1x1PZFhzhJglV/+4kRlJa3lLQ0GPu63OodkzIY9c8zshCtlizzdL+c3deUBNMtK5aRJjJAIqetG4SQVHf5uEXhvtXXO62F6032j89e06FNa9MzNR9PGGhJDyBzAnpS84BqXPH5STyXdNtyMwzKc7EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ntyjDWB6; arc=none smtp.client-ip=66.163.189.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CDC1A3175;
+	Mon, 12 May 2025 15:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747064661; cv=fail; b=n+ZcMkty2OtBjHrBdmFUQXKbdABHn948fP8FvXTWH7j3i4tSsFOuxPRTlfDax6ewDyLJYGg2ikeIS6sCv9R9m5dDAZhcxhNDwDfxuDgw/921pde8uMggau3z49qcQ2qdpMr/0MsPTHdCqIcTn652UaMfDMoYNFnOYHuYEem7Q9c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747064661; c=relaxed/simple;
+	bh=31n2hEwOjhbRjzUYWNDntJnzeWEdVqEK6DLsxEEzvOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dy4SI0o2znY7yI2WlJUHClUB4P66PxSVmBx2v9YCHwPDUbcBsVkCEFydpap1xObO5mcbQPgRerM4Zj0NA2rfVnHYn+D8+ULPucwpRTk1xE85s1EsFll2b7Sb0tfFgsaRicUaDBqNmsBbjn76QrdOIR/yckStPbZO5uP6TyzKlOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BUObKzBM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=V/WpT1cf; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ntyjDWB6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747064617; bh=QKPRXBWiP6vdtfxBDOOQtpUp6zIgN5XDA7BfuJSNLwU=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=ntyjDWB6dZv+7X3N+X5yr8pc8QkaeC0EnNEnTjw4j/LhW/o5uxeNqWWaQjHa7TLz0TS2PETV/CDYnYbEmQ/bnq86BJyiMylNlNp6owf1AWCcIDUqcow5jZlmnPPkEivipb8eZNQkjGt0Hy/R95hTcaurNsuxxeInpDw6w3Dblgu/lfHPngbLdlFFOQ593HTotqRgI/YKiping4wg+KPDwR867sRRPcdMxo7eRLA0uyxKFkbYcSKPAkOm/wnDoAgNiXRjT7MuBU+1acqEfzjpNTi2KGV+AqM8oLnThoB+rZYplU+kCGpImYX0vvM9TKYgGjl0+1cvDQjDCWa/GrW6jg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747064617; bh=8redTxGWiikRY2d9LbwTHUnouBcNgByzMEi97v7vI8H=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=nRUEtVeR4NHmVxZuFNuV/CkPDcetgpdNnyk9EeNGbJ1z4LCvrEyKLj6H8RTiJkyOQN/P5zBUNxOVPAjh5QulBI/SJPN/Ud6wBlVsLaIC8xvan/klygJyE8eJtafxegFIY23HdWuxsAYB/Eq3YvAZb37diwk+DN7Od77ETwbBNs5gWnSYXVm6HOzFOMmrOo8AZ/6vyX2kCiwag/vSvEPzkRitY18IzIjweHRfAm/ur/cA3dbgliY4eRe+PwajjzZmRv1kTIPvRbBSfeld/7dp00DXMzA0qODLuk2ccuA6P6cB/Ahqtt/pgOIW/8rN66ENfhIwHVW8FmbqBU2EWO8GZA==
-X-YMail-OSG: WM0Uc6IVM1nokahWIeUzSYQROtDJ9qeYMqEm7._cOi5dW2OQxX1llQWOhl5Htkw
- pjqZQRdX6mFRJ5HACZZsjO4D7uqCqBCGc1hISzip1nkT5f0JbgEYn5DwLsVF_zNN9h5.ljwLXxHG
- MLEdCtBfxijdLgBKpmOBQmdL.6E7I63B67qzw4fTZCtYY87Y2sG7n9V2G3IcXkpSRmCdOjGj35kd
- 6wZhNQBHe_zsRK93qaekXH6G3rQ0llGNpd69ZxMX2YgwokTwHrEjucGbV3zA4aY1A0usOxMeI.5Q
- g_Y7ZfRYb9f_iaOkE0C3wlun.ML7bLz9TNs7LR6hUbiKfS7R_xnua7CMPYcos52uVZESl04Yj8HT
- SgkSN.HPDPy_mTbQODVWMFUR1kwxRfSu6y1pp.8Kf1JHOedaNvoTnKdsWbPX1eDMeTG44MWJnkFp
- BreWN8tfY1ZWTOpSF.UrHsF_M45pb7610HXwrW01_zFezmO9sZ6Hs_IswvhcPI2f8roAsMEnEVsy
- YQcqrMHUb3SKNShsH_B2KvZO1q29_1FgKtCbTknNAsW3JhjznDOIhQFqZz1pKTCgMudVmxsaDaEK
- uXPO8GZ66zJhG.Db_2RCAUOkdgg04QsHPqt_Jv9aFJUu_GC1x0ByCnk7LWRO6Eze_PUMZcFCYE.j
- 7u_q4Ny66FNycDqi0JYh4V2eak0XQ.9fUIs5N.ZtM5.mPEJbU._veqQCv4eeX0PnjmcH6_6jLlvC
- cMnrhKZeSaJvH7jVwQ3Gy8WBtNc3J7SrdTYTIzsVXb57JuhulLTYcW7gANxy5__UCyzz9yrI_Sle
- dDyaQzYAU6eKo3_thzIur1cqBiA0xfbn7YzjFTflnwaTmB9s8Z5cXoi7qL.IrFiNDg8typtgdpiS
- obXp643ZT.cennx8.wg6MfeSxHio3cUCDwnTIxV3dwv_kwKVD0CIotga4WI52Bvi7MXD_t.vbVlW
- AmlnBrxupeN_f_QhVkf0DGOXGVECOMEt3zs5rw5yb_1kx.JHYf4DyYrvh51Rz8vePzxA9IfRbX1d
- 8NITO0GqX7FPEACmRoN9um44C1.b0XjtyqCql7CXQP0P._JiwvpvvNh38RWC7s7RNeG5IFN.JFIf
- jD9l2jK.Vl7WgBphg.Bo.BpPoTBNZh5Jg1Tr_k0e9b4_cTmbpy6fdxwrPF08ENXp.m6DQExcEf0F
- oFaIAzVBYgjolQOlfdgMECkYvUNBAsbdocO00OGFdqxau74UdkBgVM1awnBMUwAflj_Fu_.M1.sg
- svpD5b6Z4HD6d4ILD1C.G9smUlbD1SWuK6KbptHvZqepNB3GTexWWjVem0Z05STHxPGSHOkl.zIN
- _BJDI4ly8NC1S74hHfu4bq.wF..fsPsq1JjyeQLGljkI7SeonIuMRktURm5XxIhdsrFsxNILEzF_
- gJQtx78kT1Vro4YDrt.6wlJGeiPvSnoNDpeAga7Ftm7hQV6zn9cz_M7lAxvvMksUI0_6RWqhrwMa
- Qln6rPUfOOpWXN5KlqhwkU1lcFLoAiqgNtNjxbYrE5pBda3jH3sQBc2fk6ONYxXTmLKR1smptkTh
- zBR2KISLTGFvfO4fypux_tUy.zDVWgQHb.hBwsxdoq.lQQi6P8xIJejgomrkjC_mfNkLwx6ujady
- K2k_12wDulVH7DMfGgH7tb.iriJjz93IfXsXbuzmgQBfGYzFkd7WOlfB2hddSAoJUP5ipAxHtAgU
- 0saYraZitFaM4ggkxcTrL9UzkIb5Fud59DW1FRPZqb_l04XEzkx5pQIkhkGF.oi73yquM24q_dBY
- AAgrnSL8tRBalM_LvCniSz9571Y8kjMjA6G8y7jZJWj4DNh_fi_aozx4Eu9P.XS4OLtgA7AE109t
- SKpkzRlBrUnm505ojZRoLVA4qqYnDwusVoD7K0s9Lcq2S6kopzsptsEHsmWfub0DTOCnlXMbattC
- KavPkZytUKqA2cLl9D7_0ncFvzCOUQvBsilxK0gEUd.994raVMJgtdlMDz_REtm0uROPRIW.KQy2
- RS0hypGIAfb1KSV_lnQxl85e9J.aJ2qxtH99GYclfQrVqxriF0RachyDZaCxsN7tIdHMcP_USx6X
- .nnn.bcWn_Vy3tJDwXoR42hyd27mJSLy4ok3.1BDA0LuOMH6u3y0JPOT0pN6Y1PslOdSw4PUUwOl
- X7cSpTQsWS7ZfnQNOno1IGB.d2nDRZkiy9QB9fsqP6KpY5DGbGaBmtw1ug6xXdzV4o8lYcDW8kcy
- lDxB6hRTPgSCzq62cPOd1UJqAv3_xYrAJp7509YQy8Ef.L.75s27NGiAipeIkuudzCObUkBNkMVK
- z238o0uQ-
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 4a184068-b4a9-4c89-b0eb-f26242664d7e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Mon, 12 May 2025 15:43:37 +0000
-Received: by hermes--production-gq1-74d64bb7d7-mh87r (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9937c2f444744075ac11cc686b78df22;
-          Mon, 12 May 2025 15:43:34 +0000 (UTC)
-Message-ID: <f700845d-f332-4336-a441-08f98cd7f075@schaufler-ca.com>
-Date: Mon, 12 May 2025 08:43:32 -0700
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BUObKzBM";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="V/WpT1cf"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CC9spF004037;
+	Mon, 12 May 2025 15:43:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=A3qsoTVBmlmDiup/lD
+	YX6I4BIKG9TKE+XyPynM4cFnc=; b=BUObKzBMhKpi5Su/SwzANGtlp+IIkUx3MN
+	J8dqaE4gIQ9Oeoc4FSe1gAHcv1RQeFzjJ5D8dLkWqtAPlXD1qlCIVTlpP6MvJAJ3
+	uuy9Dm1KILpV6N+HmRphqAGWwTwLIn+wN7IP384CTEiEijdLHude85E6lbeWUmuU
+	j2txVijr8Ps7JXJC6cy7walOOb4lYa/kkcjqrBQjwL3EFp2kKE3e4U29YZwQL0SB
+	W1mQNl7fXxiOivryKtWi2+1tDP1dAfb39AHPxAiUsvzZAga8dbgc2D/jPm7wlOIe
+	WBkRdkO+XmytDjbeqA4+9883f245KzqyvXFCRMgWiP5bOYlPszkA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46j0epjt6d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 15:43:37 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54CFRCRr033163;
+	Mon, 12 May 2025 15:43:36 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2042.outbound.protection.outlook.com [104.47.74.42])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46hw8dhtsw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 15:43:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eFK7xb0Ozst1Lo+VS3swXxNKaNCeagWS/a06+kFdpXXPW83P3DpKZ97g2Y5CNSrQDF3Uu2/x85xysXMWsFUiBDXPEDZTOSQf2gE5xyCKm2KF2QIbuIzQoboJBCULgWNciY+W+ZfqNAKE/FG7pA8HA/VoXrpaE1Tre4jP1q8xXincocfeKSCchiEAajedh5A0RdxSIzgAu6KoeDys3akT6C9knp7dJufwwlWO4wJEjpOQ5K0d2rCA0k+3+pffhavwVRKul5CthWQNia6LtLQkR0dMdWvtcs9XS5d3cQ2mQb9KoHsv7B1XL18iBCa7aQh5b+eJqhZDvDYZ4LGRmbuGWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A3qsoTVBmlmDiup/lDYX6I4BIKG9TKE+XyPynM4cFnc=;
+ b=C0hngW8Qwnl1UhiZzmQVWHGzk+6xSp3gJCiNO1WZ/4/DBPO1HCisuYwbJvEcmFPYGQrKzglIjiE20d8oltYrLPuNDhP/jWb+ZQ0OuNTYY90IvyViqLposFwFRh8uKfoZ250Dz6es2yZCcvxDqXJMk/8W+hC6egy7TCGG4Ns6OQJvkGQ+MheEq8vMW0z0RcAaHc2mb3lCn+r4zObyUlKJfdFip8TQDquJEdSJDhLBu6Be0L/+zWRCJoS+CbSEXMSmmBL11Qp7Xo0tLKGK6GRHXxos+Qif75xTek26kDWbuscaLG0HINmev9BWp/Ao3+NMEwdtkI5+6iCLdVUiaU+lqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A3qsoTVBmlmDiup/lDYX6I4BIKG9TKE+XyPynM4cFnc=;
+ b=V/WpT1cfNov2j95NpYRRsCviaJyCq7udpB3S3teD/6Z9V4WYai8O3kZqoJw8bClKG+WJnyGi6TommdCtjx4qNgVMN00ogmTdcj0QiL9Ces+D5JPYMlOgFWz2XUPEjPmvCuaP4TqzfH4tBHMS8YvwpDSW7LOKdT5eHkKDxW5eaYU=
+Received: from CH3PR10MB8215.namprd10.prod.outlook.com (2603:10b6:610:1f5::7)
+ by PH7PR10MB6507.namprd10.prod.outlook.com (2603:10b6:510:202::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 15:43:32 +0000
+Received: from CH3PR10MB8215.namprd10.prod.outlook.com
+ ([fe80::e4f5:cb34:9b58:be90]) by CH3PR10MB8215.namprd10.prod.outlook.com
+ ([fe80::e4f5:cb34:9b58:be90%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 15:43:32 +0000
+Date: Mon, 12 May 2025 16:43:30 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-trace-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 02/11] mm: convert track_pfn_insert() to
+ pfnmap_setup_cachemode*()
+Message-ID: <b8b9c0ec-3654-4231-aad9-fec702bcebda@lucifer.local>
+References: <20250512123424.637989-1-david@redhat.com>
+ <20250512123424.637989-3-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512123424.637989-3-david@redhat.com>
+X-ClientProxiedBy: LO4P123CA0120.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:192::17) To CH3PR10MB8215.namprd10.prod.outlook.com
+ (2603:10b6:610:1f5::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/7] lsm: introduce new hooks for setting/getting inode
- fsxattr
-To: Andrey Albershteyn <aalbersh@redhat.com>,
- Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>,
- Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
- selinux@vger.kernel.org, ecryptfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
- Andrey Albershteyn <aalbersh@kernel.org>,
- Casey Schaufler <casey@schaufler-ca.com>
-References: <20250512-xattrat-syscall-v5-0-4cd6821e8ff7@kernel.org>
- <20250512-xattrat-syscall-v5-2-4cd6821e8ff7@kernel.org>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <20250512-xattrat-syscall-v5-2-4cd6821e8ff7@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.23772 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB8215:EE_|PH7PR10MB6507:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12d2e903-3864-4746-1795-08dd916bc01c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?k0ZDgotjcBdOljkiNa7Ki9zPWYy2YyT1mc1pdyZthX5l8XzgljK0EGrl++AA?=
+ =?us-ascii?Q?TJTfy598FqgLB9aVatCBy1Xm9ASxzN1uTV7oS7Ovo6X71/pyOBRGNy5VUDdq?=
+ =?us-ascii?Q?NzbVisJluoj0uAnfnm5S4V/fzVL9FPzQNK7VXp3oTsDRJCzdVSaLR6bMwNwe?=
+ =?us-ascii?Q?6hRaCnz6BQvoNRXu26RBF9VT42ruWU70FsqwtKeSq7/ahRgnp8F5lTFnu0mu?=
+ =?us-ascii?Q?yZi1fdCrXxrYIj4jhkM9Rf32unLnsOCKGmWrIIFEqRAzMNQol1sOTyTmCYyK?=
+ =?us-ascii?Q?zQeZ+116ltcgPp51oKuCpGc2SKt0Td8QRgebj7IqpKCLpKibSpNAyJByu6CY?=
+ =?us-ascii?Q?HgptBpk75E3FHi8puRjEPBXNPEH+B4q0qBotrBcTO29Dqj4/AmiKZizWmU0f?=
+ =?us-ascii?Q?lJtGLrQuQwCoIP2KcI8HywiYP3BqeBV2zyOjkLkOBv7iQ57nhmA9OiUUdGsq?=
+ =?us-ascii?Q?gzHrj94kRLY8d52v0TP4gLmX9B/hiy8sAx/+LOhY9Ovm0sBeSlkWb7vtMhz3?=
+ =?us-ascii?Q?17CzGrsc2IbYmYXxBVQiDkx8VUE684w1AUno+ZNj/TPrdM9v3gws8jMP+r9Y?=
+ =?us-ascii?Q?+wW3yjqd9GZDlEcyxOhBsik8f1DVifSdsidOKd5YZbP/9HJOIhdUh3lx4Djp?=
+ =?us-ascii?Q?aRMhP/x0UnRw3I5tXrf6FqQvDd2N17ZjtyKu4fs4c5pIYKujGZ6gHR5vwatM?=
+ =?us-ascii?Q?fi+4txWrXYTXjQ7WQpJf6bHeJjsABZPY0MF3DwUnj15rIcfX239tzITvBd5n?=
+ =?us-ascii?Q?7U787VfQJpVLuZyu9S4VztC+UbEcW6Z2ffeHqFoXv8/TPmECrw39ZQCQJ+vj?=
+ =?us-ascii?Q?M7sC/w/5oXEVE6PLFnP7DU3utDI6p5Ry87XbtV/hNLiPtZL1btbKfSEKAkQC?=
+ =?us-ascii?Q?wyY+Tvx3NNYVuFgD0Nmu0ZFei4+CMJgODb6iRUlUfBf3tF7nM+D7Y8Xm/tdE?=
+ =?us-ascii?Q?MjR6mfgcaf4IktVL/rkUBEsMS9voWu8xWOgAHx0TIt545fb5ZfGHZ8dJHeGo?=
+ =?us-ascii?Q?fSsf2U+yFCQ0kkepJhNQQKHmEdb2Jkc7Ru3tdH/x9dHQFLJX10j/GJauuGoT?=
+ =?us-ascii?Q?DyidK9xbPY6rvrrlLvELgGG1uxaCfnv8X+fnp7R0xo1p2DMNXT9aAiVKjt7X?=
+ =?us-ascii?Q?YPA17x8/Au+zM55gKOKM9Ijux0E5TkGNeE7+PYQEJ5bOcs2rhnQFKZIuAQxX?=
+ =?us-ascii?Q?fCsp+/hLvZyjUHQ/1tdoj+CiTKTNc8wTMYu7WZWE6zHdoKFD51MYF4JdM6Lc?=
+ =?us-ascii?Q?U7RduodtmjaCXYsTc4WFRoRmWH+SgoOAQLpJZZjIGXLNgiucfeoVf63odZDG?=
+ =?us-ascii?Q?GJ7JogiASG1d0ICITDl57gcX6gGJJk2S/4Yujf3S/FWFRRSS4EymDO1eF9+J?=
+ =?us-ascii?Q?D+bNCzrJBBig0CIJ3Aa91gcJL9pU8YS4LgVEtoEhsCg28cpk8H+VpN1oVat2?=
+ =?us-ascii?Q?JRM6+OPfLH0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB8215.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TM4tRA4L2gUqdApUEaUxD7cv1m32zg7R08aZFhasSA26dbPTHFAEccqh5fMW?=
+ =?us-ascii?Q?N/a0aPhkWIolfrWU17ZYdn29xAJ997cg0sOLPKgh8vZ5sGadop2QUEKrKGx0?=
+ =?us-ascii?Q?OiRPE6SIR6SmKobYnyom9cxs2MHYsAnKSEijWY4lHQu/j4Uw8AOC2BUKdkmC?=
+ =?us-ascii?Q?xKMFWVdsjpDJyiW3JMiO6iJygz+pSK7Dja2Dbrw+B2ZcfvhfKj/AEZRzo6oF?=
+ =?us-ascii?Q?z30rhPc4bLy2ScNWTiEY7yCSFEQzZB1AOrGYQeehylawVXCxI7RQpjeQRRYy?=
+ =?us-ascii?Q?qoRfq0OYS2BhyL0BAX7OZZAEho24mvkgQk3kR4NI7+L8IsJ3Cfo2WBhXB+Je?=
+ =?us-ascii?Q?9BgNVjyiFRfBa+DV1LS315aDYMTAyCOUFtVH625TbOdgs4KRrYJ1WRKXYVbH?=
+ =?us-ascii?Q?qcybGJkc0Rx6VbvOvlMfpOFey7i46Zg6emleA7B+/ScvaaU+bEUweK6Aj1iK?=
+ =?us-ascii?Q?UXwazaexHb4xzPsJsGpQdWJ6ptLls+SdK9GGReEr7LQzqwFYjZXTswoV6/bv?=
+ =?us-ascii?Q?yU+gkm47RdmIuwMfCWQKaw7nCFQxA0hIA+F24PeB5cVB8BfvveuzHqAW18vA?=
+ =?us-ascii?Q?eKdZM83g+rSsJXm5NalExdIBwfCNW/FpEH7nwXWogNzZjFM5q12T3eBMFRWU?=
+ =?us-ascii?Q?u95YEkdJFp4duJXQ+yBy00ohx92oAnSeJuw0GbjcsW5aMQLXkGUlF1pUdP/O?=
+ =?us-ascii?Q?+lhE5ElQ7wHXsQW5o7FVEt6oMYuU5JMNqyMLgDMN66xfal592f+2mu26t4TT?=
+ =?us-ascii?Q?HIktzsmn14VDL8bgL7aWLWSo3sPqBp3Sty4c5o75Slp3itHNyGHOoaTdtFRV?=
+ =?us-ascii?Q?0EpYLc1DsUytTJSyg6QAVma1JiCQJnKCepihNER25XiP92/Hit5ohC72hCCG?=
+ =?us-ascii?Q?Iql7W6mNXF42D7hQzUl1kmt4EQRS9hsnUNUeM5sC9Mwk8e7ftNTZ73+tD8m1?=
+ =?us-ascii?Q?sv1tGWjNhzc9D9ZTuMXdF/IKni+W9c82JFkzO6G4XyR12GYAEuPYsWNTtqmX?=
+ =?us-ascii?Q?cI4Is4kP3yG4Wvn4A8jkFeGLebQxD64KRpn17pZ9d29qXqLQXptUageArxEV?=
+ =?us-ascii?Q?IMuc4Oe3w6zNlBWFHZ7Tn6Kr/RNMlwmF5dbaebiqPIYGqnbMyh/XRhmQte0+?=
+ =?us-ascii?Q?ut80yHFe413E1FBG/H7tGlN+F/7M0S9yOdt6p2f+/La6/kr1NMS/luKZJjDv?=
+ =?us-ascii?Q?2KRzKG2ziEW2L5gv8aFmEo25U7G6UIQe08ZHljcyNv1MOP9pW+/cX4lwIIri?=
+ =?us-ascii?Q?ZFeN2Mq0k6jc6P963Ryg9nvvNi7XuZ7qmoQt5REBk/AJkVS285fhaNsnlykq?=
+ =?us-ascii?Q?GrEB8sOnAFuZpeWJ6T+euwayDsGwK4U8pOiE5VtPR5bTCLp/l+FPqps8GNQ0?=
+ =?us-ascii?Q?bfkExhOPwH439QahLIheOsV6b+w8kWIXUrIsFyL9hJYq86pIo9j+G2tVWhs/?=
+ =?us-ascii?Q?vGywAEy3DnOJSDTNB9LSn3NIeIUFMV1xAFlslsIDY6BT/2hU09RBxSxKlslp?=
+ =?us-ascii?Q?zJ8VBe1mXv5cK7KAxUSabRCaktC80Y5WfCs7Pmo7Qtl3nZGRabhrjMiOEwnC?=
+ =?us-ascii?Q?WeTzxLrpAkA7G1BnMciVdtsBSXfuSyANBGZpwSFIHuNWdr36A/4BuvZT8KE5?=
+ =?us-ascii?Q?8w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	qGhiFafj3y/NaBts6751ySjCaAdBB49G+HnPznJItB/UvsVyeBDtHK6fYCQUYCzFKw+uTNZ8ynFGfIe6s9tPIEwwMXSFKGS36uY2UqfrIkYxLDH6AQKlviBjwMLVdgpvQbFYoxGBcEoVaDGFi2cMPPfxeYlGG6WxKOq3nWdFEPETQB6MKHiwL28ZtmPju/LXCQHBwfbEBoh7c0eW/MQ6VamFGNOZWGNPj4xsGbmowFrtmyb3n2mIOjCkwQnfjkA38a1K9S1jlCsu6dzkpI58zjQR/old7vdxjbcfWY41L6Snhry9Z6HO4J0HHIu2HiOEJnHHUWBciSWbjfQoZusNypX1Tb391bqgqw1rVZvHb+AHv/Bh2KbktiTH9R01o85C7f9WU1P+XGuTIjGCn4rS+GpilY7OkHSa66hDIcpkQgu4AxkNwlBHr+lyVTuNNWQ7R2bVbifsuO4CivhOoFHkUGcse7v0kB3VXpV3MCrQG8PH1/pxx1Tov8X0WpHZYKFmyvIlf3OdxXGdFs0HVYuGBQMNTnWSUWVM8BQUBERFgSDwh0b7jlqyUPOrgZbZoMnyhycfPTnMVa8PasCcadd1aCKmXBh0Kz6bFeunPaEHROk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12d2e903-3864-4746-1795-08dd916bc01c
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB8215.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 15:43:32.8144
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b+H05wATqNg0YRAwaXw5CAuoyPHC/BToWQ0M+/oCtpukSQA1vKGnRlcGI6qKQUv9VQbD3/1kBblfmeHocrs4hnoDsjOu5jmtO1o1TOT+lpg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6507
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 phishscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2505120162
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDE2MiBTYWx0ZWRfX1houyvQNevmw aSeHWgXGBGjCtG9V9JVcFLLv4/GrkUE6RlOl67BmwRgdjRlnik83eoV6TuH1NRycaJMfmOsetMy wIKVoFacOoZRhgIvnBH/uUejGm6c+O5ruE9MOgm3CfDPOVQr/MVxpLJmwh4k9lxRHhKrjxWYvys
+ uuPrq3UaOa3TZ4aBtD5/kYxr/7pRWkIML9WMZJVXjikEBlGJOIy8VLKhh6fkn1nwnfzpXJXGk5/ JFS930dH2HAbJzYjwBhIWIAFTK2aVEUDXEM83SxB7nfFX12fsRkbVS9Hdkf4i4z6dtlM5TfMUCJ l8KrtOGEr8cnYTXIMkncPiVtpBXojfyb+vUr2OdItqHc6Gw9sAcZFoJK1dlcn1kl8uDTFsACnd3
+ FKkdY1FnfQFnwzbDXOQHmDxmyXbEBw0cnFe7lS4XXyd0K84qGEL8yUtOXTXRjRxlpzZnZxm9
+X-Authority-Analysis: v=2.4 cv=DO6P4zNb c=1 sm=1 tr=0 ts=68221729 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=dohQ5Pe4HFVHix1OcWsA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:14694
+X-Proofpoint-ORIG-GUID: -jPkpoIjVjINaCvZ7C4cOSzKQ1-7eRs3
+X-Proofpoint-GUID: -jPkpoIjVjINaCvZ7C4cOSzKQ1-7eRs3
 
-On 5/12/2025 6:25 AM, Andrey Albershteyn wrote:
-> Introduce new hooks for setting and getting filesystem extended
-> attributes on inode (FS_IOC_FSGETXATTR).
+On Mon, May 12, 2025 at 02:34:15PM +0200, David Hildenbrand wrote:
+> ... by factoring it out from track_pfn_remap() into
+> pfnmap_setup_cachemode() and provide pfnmap_setup_cachemode_pfn() as
+> a replacement for track_pfn_insert().
 >
-> Cc: selinux@vger.kernel.org
-> Cc: Paul Moore <paul@paul-moore.com>
+> For PMDs/PUDs, we keep checking a single pfn only. Add some documentation,
+> and also document why it is valid to not check the whole pfn range.
 >
-> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> We'll reuse pfnmap_setup_cachemode() from core MM next.
+>
+> Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+I've gone through carefully and checked and this looks good to me :)
+
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
 > ---
->  fs/file_attr.c                | 19 ++++++++++++++++---
->  include/linux/lsm_hook_defs.h |  2 ++
->  include/linux/security.h      | 16 ++++++++++++++++
->  security/security.c           | 30 ++++++++++++++++++++++++++++++
->  4 files changed, 64 insertions(+), 3 deletions(-)
+>  arch/x86/mm/pat/memtype.c | 24 ++++++------------
+>  include/linux/pgtable.h   | 52 +++++++++++++++++++++++++++++++++------
+>  mm/huge_memory.c          |  5 ++--
+>  mm/memory.c               |  4 +--
+>  4 files changed, 57 insertions(+), 28 deletions(-)
 >
-> diff --git a/fs/file_attr.c b/fs/file_attr.c
-> index 2910b7047721..be62d97cc444 100644
-> --- a/fs/file_attr.c
-> +++ b/fs/file_attr.c
-> @@ -76,10 +76,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
->  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+> diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+> index edec5859651d6..fa78facc6f633 100644
+> --- a/arch/x86/mm/pat/memtype.c
+> +++ b/arch/x86/mm/pat/memtype.c
+> @@ -1031,7 +1031,6 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+>  		    unsigned long pfn, unsigned long addr, unsigned long size)
 >  {
->  	struct inode *inode = d_inode(dentry);
-> +	int error;
->  
->  	if (!inode->i_op->fileattr_get)
->  		return -ENOIOCTLCMD;
->  
-> +	error = security_inode_file_getattr(dentry, fa);
-> +	if (error)
-> +		return error;
-> +
-
-If you're changing VFS behavior to depend on LSMs supporting the new
-hooks I'm concerned about the impact it will have on the LSMs that you
-haven't supplied hooks for. Have you tested these changes with anything
-besides SELinux?
-
->  	return inode->i_op->fileattr_get(dentry, fa);
->  }
->  EXPORT_SYMBOL(vfs_fileattr_get);
-> @@ -242,12 +247,20 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
->  		} else {
->  			fa->flags |= old_ma.flags & ~FS_COMMON_FL;
->  		}
-> +
->  		err = fileattr_set_prepare(inode, &old_ma, fa);
-> -		if (!err)
-> -			err = inode->i_op->fileattr_set(idmap, dentry, fa);
-> +		if (err)
-> +			goto out;
-> +		err = security_inode_file_setattr(dentry, fa);
-> +		if (err)
-> +			goto out;
-> +		err = inode->i_op->fileattr_set(idmap, dentry, fa);
-> +		if (err)
-> +			goto out;
+>  	resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
+> -	enum page_cache_mode pcm;
+>
+>  	/* reserve the whole chunk starting from paddr */
+>  	if (!vma || (addr == vma->vm_start
+> @@ -1044,13 +1043,17 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+>  		return ret;
 >  	}
+>
+> +	return pfnmap_setup_cachemode(pfn, size, prot);
+> +}
 > +
-> +out:
->  	inode_unlock(inode);
+> +int pfnmap_setup_cachemode(unsigned long pfn, unsigned long size, pgprot_t *prot)
+> +{
+> +	resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
+> +	enum page_cache_mode pcm;
+> +
+>  	if (!pat_enabled())
+>  		return 0;
+>
+> -	/*
+> -	 * For anything smaller than the vma size we set prot based on the
+> -	 * lookup.
+> -	 */
+>  	pcm = lookup_memtype(paddr);
+>
+>  	/* Check memtype for the remaining pages */
+> @@ -1065,17 +1068,6 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+>  	return 0;
+>  }
+>
+> -void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot, pfn_t pfn)
+> -{
+> -	enum page_cache_mode pcm;
 > -
->  	return err;
+> -	if (!pat_enabled())
+> -		return;
+> -
+> -	pcm = lookup_memtype(pfn_t_to_phys(pfn));
+> -	pgprot_set_cachemode(prot, pcm);
+> -}
+> -
+>  /*
+>   * untrack_pfn is called while unmapping a pfnmap for a region.
+>   * untrack can be called for a specific region indicated by pfn and size or
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index f1e890b604609..be1745839871c 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -1496,13 +1496,10 @@ static inline int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+>  	return 0;
 >  }
->  EXPORT_SYMBOL(vfs_fileattr_set);
-> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> index bf3bbac4e02a..9600a4350e79 100644
-> --- a/include/linux/lsm_hook_defs.h
-> +++ b/include/linux/lsm_hook_defs.h
-> @@ -157,6 +157,8 @@ LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
->  	 struct dentry *dentry, const char *name)
->  LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
->  	 const char *name)
-> +LSM_HOOK(int, 0, inode_file_setattr, struct dentry *dentry, struct fileattr *fa)
-> +LSM_HOOK(int, 0, inode_file_getattr, struct dentry *dentry, struct fileattr *fa)
->  LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
->  	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
->  LSM_HOOK(void, LSM_RET_VOID, inode_post_set_acl, struct dentry *dentry,
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index cc9b54d95d22..d2da2f654345 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -451,6 +451,10 @@ int security_inode_listxattr(struct dentry *dentry);
->  int security_inode_removexattr(struct mnt_idmap *idmap,
->  			       struct dentry *dentry, const char *name);
->  void security_inode_post_removexattr(struct dentry *dentry, const char *name);
-> +int security_inode_file_setattr(struct dentry *dentry,
-> +			      struct fileattr *fa);
-> +int security_inode_file_getattr(struct dentry *dentry,
-> +			      struct fileattr *fa);
->  int security_inode_need_killpriv(struct dentry *dentry);
->  int security_inode_killpriv(struct mnt_idmap *idmap, struct dentry *dentry);
->  int security_inode_getsecurity(struct mnt_idmap *idmap,
-> @@ -1053,6 +1057,18 @@ static inline void security_inode_post_removexattr(struct dentry *dentry,
->  						   const char *name)
->  { }
->  
-> +static inline int security_inode_file_setattr(struct dentry *dentry,
-> +					      struct fileattr *fa)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int security_inode_file_getattr(struct dentry *dentry,
-> +					      struct fileattr *fa)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int security_inode_need_killpriv(struct dentry *dentry)
+>
+> -/*
+> - * track_pfn_insert is called when a _new_ single pfn is established
+> - * by vmf_insert_pfn().
+> - */
+> -static inline void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
+> -				    pfn_t pfn)
+> +static inline int pfnmap_setup_cachemode(unsigned long pfn, unsigned long size,
+> +		pgprot_t *prot)
 >  {
->  	return cap_inode_need_killpriv(dentry);
-> diff --git a/security/security.c b/security/security.c
-> index fb57e8fddd91..09c891e6027d 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -2622,6 +2622,36 @@ void security_inode_post_removexattr(struct dentry *dentry, const char *name)
->  	call_void_hook(inode_post_removexattr, dentry, name);
+> +	return 0;
 >  }
->  
-> +/**
-> + * security_inode_file_setattr() - check if setting fsxattr is allowed
-> + * @dentry: file to set filesystem extended attributes on
-> + * @fa: extended attributes to set on the inode
-> + *
-> + * Called when file_setattr() syscall or FS_IOC_FSSETXATTR ioctl() is called on
-> + * inode
-> + *
-> + * Return: Returns 0 if permission is granted.
-> + */
-> +int security_inode_file_setattr(struct dentry *dentry, struct fileattr *fa)
-> +{
-> +	return call_int_hook(inode_file_setattr, dentry, fa);
-> +}
+>
+>  /*
+> @@ -1552,8 +1549,32 @@ static inline void untrack_pfn_clear(struct vm_area_struct *vma)
+>  extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+>  			   unsigned long pfn, unsigned long addr,
+>  			   unsigned long size);
+> -extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
+> -			     pfn_t pfn);
 > +
 > +/**
-> + * security_inode_file_getattr() - check if retrieving fsxattr is allowed
-> + * @dentry: file to retrieve filesystem extended attributes from
-> + * @fa: extended attributes to get
+> + * pfnmap_setup_cachemode - setup the cachemode in the pgprot for a pfn range
+> + * @pfn: the start of the pfn range
+> + * @size: the size of the pfn range in bytes
+> + * @prot: the pgprot to modify
 > + *
-> + * Called when file_getattr() syscall or FS_IOC_FSGETXATTR ioctl() is called on
-> + * inode
+> + * Lookup the cachemode for the pfn range starting at @pfn with the size
+> + * @size and store it in @prot, leaving other data in @prot unchanged.
 > + *
-> + * Return: Returns 0 if permission is granted.
+> + * This allows for a hardware implementation to have fine-grained control of
+> + * memory cache behavior at page level granularity. Without a hardware
+> + * implementation, this function does nothing.
+> + *
+> + * Currently there is only one implementation for this - x86 Page Attribute
+> + * Table (PAT). See Documentation/arch/x86/pat.rst for more details.
+> + *
+> + * This function can fail if the pfn range spans pfns that require differing
+> + * cachemodes. If the pfn range was previously verified to have a single
+> + * cachemode, it is sufficient to query only a single pfn. The assumption is
+> + * that this is the case for drivers using the vmf_insert_pfn*() interface.
+> + *
+> + * Returns 0 on success and -EINVAL on error.
 > + */
-> +int security_inode_file_getattr(struct dentry *dentry, struct fileattr *fa)
+> +int pfnmap_setup_cachemode(unsigned long pfn, unsigned long size,
+> +		pgprot_t *prot);
+>  extern int track_pfn_copy(struct vm_area_struct *dst_vma,
+>  		struct vm_area_struct *src_vma, unsigned long *pfn);
+>  extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
+> @@ -1563,6 +1584,21 @@ extern void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
+>  extern void untrack_pfn_clear(struct vm_area_struct *vma);
+>  #endif
+>
+> +/**
+> + * pfnmap_setup_cachemode_pfn - setup the cachemode in the pgprot for a pfn
+> + * @pfn: the pfn
+> + * @prot: the pgprot to modify
+> + *
+> + * Lookup the cachemode for @pfn and store it in @prot, leaving other
+> + * data in @prot unchanged.
+> + *
+> + * See pfnmap_setup_cachemode() for details.
+> + */
+> +static inline void pfnmap_setup_cachemode_pfn(unsigned long pfn, pgprot_t *prot)
 > +{
-> +	return call_int_hook(inode_file_getattr, dentry, fa);
+> +	pfnmap_setup_cachemode(pfn, PAGE_SIZE, prot);
 > +}
 > +
->  /**
->   * security_inode_need_killpriv() - Check if security_inode_killpriv() required
->   * @dentry: associated dentry
+>  #ifdef CONFIG_MMU
+>  #ifdef __HAVE_COLOR_ZERO_PAGE
+>  static inline int is_zero_pfn(unsigned long pfn)
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 2780a12b25f01..d3e66136e41a3 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1455,7 +1455,8 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+>  			return VM_FAULT_OOM;
+>  	}
+>
+> -	track_pfn_insert(vma, &pgprot, pfn);
+> +	pfnmap_setup_cachemode_pfn(pfn_t_to_pfn(pfn), &pgprot);
+> +
+>  	ptl = pmd_lock(vma->vm_mm, vmf->pmd);
+>  	error = insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write,
+>  			pgtable);
+> @@ -1577,7 +1578,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+>  	if (addr < vma->vm_start || addr >= vma->vm_end)
+>  		return VM_FAULT_SIGBUS;
+>
+> -	track_pfn_insert(vma, &pgprot, pfn);
+> +	pfnmap_setup_cachemode_pfn(pfn_t_to_pfn(pfn), &pgprot);
+>
+>  	ptl = pud_lock(vma->vm_mm, vmf->pud);
+>  	insert_pfn_pud(vma, addr, vmf->pud, pfn, write);
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 99af83434e7c5..064fc55d8eab9 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2564,7 +2564,7 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
+>  	if (!pfn_modify_allowed(pfn, pgprot))
+>  		return VM_FAULT_SIGBUS;
+>
+> -	track_pfn_insert(vma, &pgprot, __pfn_to_pfn_t(pfn, PFN_DEV));
+> +	pfnmap_setup_cachemode_pfn(pfn, &pgprot);
+>
+>  	return insert_pfn(vma, addr, __pfn_to_pfn_t(pfn, PFN_DEV), pgprot,
+>  			false);
+> @@ -2627,7 +2627,7 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+>  	if (addr < vma->vm_start || addr >= vma->vm_end)
+>  		return VM_FAULT_SIGBUS;
+>
+> -	track_pfn_insert(vma, &pgprot, pfn);
+> +	pfnmap_setup_cachemode_pfn(pfn_t_to_pfn(pfn), &pgprot);
+>
+>  	if (!pfn_modify_allowed(pfn_t_to_pfn(pfn), pgprot))
+>  		return VM_FAULT_SIGBUS;
+> --
+> 2.49.0
 >
