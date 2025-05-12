@@ -1,86 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB30E25B660
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E131A25C715;
+	Mon, 12 May 2025 09:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041573; cv=none; b=F3r5pXpqIhjh3RliD6CEaiCDRBE5Lcf+RnOFE7iCFlah2qWSGglQusz0NmeOcavdjUwrM2h1p8QM4t3f/76S2YZquCeZN0jL5DvrHGLsF/hFDHAfVhkPqraahQxNJUdzFgcrVo6aX3ZyvrPR9fDfu8PSBnryyRxqr3fvZ+kZXkQ=
+	t=1747041611; cv=none; b=omhmFMEwEOc4R5qi58zkUCB9icppEiP5bm2JNUyEJU+8bV6/UprVcrgQ587MvTkxoj0YHsKrl09UeT4i/qJfdOH9/VCLeqztkIBgCbzMNk5os36/UGOl2wIx3XFOD+kyVZnsTWmYITKRLKJuC/RHC49UzNEQ+MOQxOtTMf7nO6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041573; c=relaxed/simple;
-	bh=YxLD1j4n3jsjoJWjaT3zn792WhB6FdopTXqDGpDpVcI=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=IC6W4GKW2g4jX3LG3Q0E74/dwHn3nN4fa5fZ3f3v+DTmA4t0CzYQM4Ncp/kMKE6o/wCpKXdjqfaayMJIjmBObc8Qr+pHkcDhOP+l3OCIhee/yIj6RynmxhYBvXOqh0iugT1Av/7Bh0dSMg/3DsPKbyGZXWn/RSXbZSJNv7jwBEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AwNciXP5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747041611; c=relaxed/simple;
+	bh=52aKOno0EL7URiPWvaUs3aD3TypLQPuRkCsQEHt1V7I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jcVi87hcALFYwlL6L93MYVU8c+StLIQ0umrm3HcRyjGyTcee+2euA4T0NMFy/WJXdQWcuNkWC0aQ/xBblXz9guKwhqKhgdWxD7v2sercc/ZYOMFbr+2mn09spWO28ronPYJ1smPQw7cl7W4pVltKeXCtsFzElSOesUYBa/rz628=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+r9GNDk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AwNciXP5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747041570;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R7ANbHDvc+a0P3LueAyyoaMPrtCdaSJ4PfO4ZIxUKOQ=;
-	b=AwNciXP5Uy2O0Ncg9XH30MCe6W4BSUSmA3U0eJuSGSfmZYCoWgIsI7gQCKWaLhzGMzMNX3
-	lfkEwBHY+eJrja92BHCfiPA+DrH4dOZ9yXzFjHAvZwmcQKr7llcHho5CNdE1fMXmwnagD2
-	HhIcxX++6BLDJWVlKAJhTYtoh5l6kMU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-107-mu5ziLm7P4OARDt12UYFfg-1; Mon,
- 12 May 2025 05:19:26 -0400
-X-MC-Unique: mu5ziLm7P4OARDt12UYFfg-1
-X-Mimecast-MFC-AGG-ID: mu5ziLm7P4OARDt12UYFfg_1747041564
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BF0A118001CC;
-	Mon, 12 May 2025 09:19:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3397F1800570;
-	Mon, 12 May 2025 09:19:15 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <aB3OsMWScE2I9DhG@gondor.apana.org.au>
-References: <aB3OsMWScE2I9DhG@gondor.apana.org.au> <aBccz2nJs5Asg6cN@gondor.apana.org.au> <202505091721.245cbe78-lkp@intel.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: dhowells@redhat.com, kernel test robot <oliver.sang@intel.com>,
-    oe-lkp@lists.linux.dev, lkp@intel.com, keyrings@vger.kernel.org,
-    Jarkko Sakkinen <jarkko@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-    Ignat Korchagin <ignat@cloudflare.com>,
-    "David S.
- Miller" <davem@davemloft.net>,
-    Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-    Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-    "Serge E. Hallyn" <serge@hallyn.com>,
-    James Bottomley <James.Bottomley@hansenpartnership.com>,
-    Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
-    linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-    linux-security-module@vger.kernel.org
-Subject: Re: [v3 PATCH] KEYS: Invert FINAL_PUT bit
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+r9GNDk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CFCCC4CEEF;
+	Mon, 12 May 2025 09:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747041610;
+	bh=52aKOno0EL7URiPWvaUs3aD3TypLQPuRkCsQEHt1V7I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=h+r9GNDk5Npg/xucrTc5NBwbu9B9JgGx1VO8Ml5T6khBC/1OrkYtYp+/A51AmuD5t
+	 yVqwo42vij7yFasxXteweV2t8wLJMx3RhIASLq7S4VcWqD0rTtTYhJAPxikqeZOixx
+	 FJE+zojJCZdk0Ab/+mF+LUEI9OIPqZ0HmZFGcxX+L4RrNxhfapbpeKaDSn/FK5rzav
+	 z9pqqLxCk3XLPfG7LSQILdWo0XAHLt8lVyEIMqVGWJnSnPrjBE2Glm4CGjvq6+zIu3
+	 GKsE6fyOLzg1t0t9MrBYTiPlSXRR/kT3izpMTzvceYTZlIVJNu+bRXnH06oRb+LhSH
+	 kNsXi9DMyfAug==
+From: Christian Brauner <brauner@kernel.org>
+To: "Dmitry V. Levin" <ldv@strace.io>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] statmount: update STATMOUNT_SUPPORTED macro
+Date: Mon, 12 May 2025 11:20:04 +0200
+Message-ID: <20250512-beinbruch-hasten-ab36c2eb1b66@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250511224953.GA17849@strace.io>
+References: <20250511224953.GA17849@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1960112.1747041554.1@warthog.procyon.org.uk>
-Date: Mon, 12 May 2025 10:19:14 +0100
-Message-ID: <1960113.1747041554@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1003; i=brauner@kernel.org; h=from:subject:message-id; bh=52aKOno0EL7URiPWvaUs3aD3TypLQPuRkCsQEHt1V7I=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQo7nXbUazCZVO00Gv6wb180r3SDF9nNjUfm3KsJe957 YM9ysurO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbyvoDhf+Sp97s3J5S+vXb4 Tghb68oUrv+r1wo5PPymON/k19Z3WmcZ/qeu5dZ0WJvtekIqJXep57TDGyf+bPQKC5Wfqfteu3y 3AAcA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
-
-> Invert the FINAL_PUT bit so that test_bit_acquire and clear_bit_unlock
-> can be used instead of smp_mb.
+On Mon, 12 May 2025 01:49:53 +0300, Dmitry V. Levin wrote:
+> According to commit 8f6116b5b77b ("statmount: add a new supported_mask
+> field"), STATMOUNT_SUPPORTED macro shall be updated whenever a new flag
+> is added.
 > 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
 
-Acked-by: David Howells <dhowells@redhat.com>
+Applied to the vfs-6.16.mount branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.mount branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.mount
+
+[1/1] statmount: update STATMOUNT_SUPPORTED macro
+      https://git.kernel.org/vfs/vfs/c/ed3453bed26a
