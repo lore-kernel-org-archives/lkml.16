@@ -1,191 +1,145 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C2A7464;
-	Mon, 12 May 2025 08:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932642AEE1;
+	Mon, 12 May 2025 08:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037739; cv=none; b=LkeF02q4vhX084V3bEu1zDFS2+158EM4BvIaKxMhR/cEjPQV6J/tYR2ptI8fOXEtMIPLwpjtcs9kqA3CXpJN8USWf6jxHcUtHbyzvsg4pftciU9I7l2rlzpxfsc3t4i98n2WuSHMw8vwoRztZhf9pp2foO0avMuU+pqH35xjStM=
+	t=1747037783; cv=none; b=hu6sLJ4I9VpKzPgo1sP6qIPhyZC6FeuZDqPPqmur7+BaUS+kmkWQLZCudZOOPqq8KZq449yQjSj1Z5lgiI0uWaEjdKtTdtKdZx0K14f9/Y+jpg0XTOlSWwWcE7PLk7SrwFrWV7+JlK3ss4uZkpsIV7P13vx6mmDzc5ZZwV1XbDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037739; c=relaxed/simple;
-	bh=huCY6/i1yQNO1K1PIJZjLeUstF8M43oL4i4aa9uBajs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lxz97804AHLKUqFRjrK6f9npESg27xjS9Qm67BCquRZlkDjkEHgwKUf8f3p4Pm7G6dhGebBGjYj0wXGNSQ75u4F4NDcR6qjW06k/OEa0g8P3Y7lakut5ZmEpEVKwGlMDfARZSFkXVOclTCumBTeiqx56DjwMhWKQ7KMVRpVyMHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZwsqX5r6XzKHMpf;
-	Mon, 12 May 2025 16:15:36 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7A8F01A1030;
-	Mon, 12 May 2025 16:15:35 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgB32l4mriFoBKSyMA--.52941S3;
-	Mon, 12 May 2025 16:15:35 +0800 (CST)
-Subject: Re: [PATCH RFC md-6.16 v3 11/19] md/md-llbitmap: implement bitmap IO
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
- <20250512011927.2809400-12-yukuai1@huaweicloud.com>
- <20250512051519.GA1555@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <a2d1a5c4-c041-064f-307e-eaa677e5a81c@huaweicloud.com>
-Date: Mon, 12 May 2025 16:15:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747037783; c=relaxed/simple;
+	bh=emBuZer2FeLc8X6hMB1rIrKH91yoxdgCpR/nZiBSk3o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oEdicpFZsTMG8H7tj7xw1huRni4QYPguv5fnKzTLevy4u4seAyLwYDqJEgjrzxQjdkzE2L2RyFIyz8LOcMhkE3dz+5qwxT0uBNuAOxO5mNkZbWVQA95UDvZ3OKFyxFBVIrgF2jN74VyGV59WviytD6Bpz5u12pO+ZteNLF4ixVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PlQimwUY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PlQimwUY"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BMLk7O015839;
+	Mon, 12 May 2025 08:16:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7l2dkG0n9j+CsoG1wnaET0QWA0eavfqlFSf8kRou3tw=; b=PlQimwUY7BKOKoqG
+	y/9yR95dgL0N0aQ8IGR8AhsFfRzA4/ZRD2nowQBYgdgnxFNfh3mdWrUSxooI4Rvr
+	rkkxtUstgdVoS3UjkyaNQZKHitnGaI/OPh/YlQ+II7JTk6YqugyBYt3PiV7LRqq2
+	76WkBTTF+a1m0nHGctJKo48Q9gs3RIlo2XdIQaVe62/W3GFVkMTqQN6CNetKkLOL
+	unTZkdEZJ/rUk4fNRxf8omS26OK/DMmKXMresp2W8M6YdWLsfErOqzpC3953JlDU
+	1JuRofoN6SSIXRJJw+sGZHhspIoFrQdDS+FKSHY1gGF4BgDG9Fp2tc4grhwXirlp
+	RUVE1g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hx4k3p9a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 08:16:10 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54C8G9nm012278
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 08:16:09 GMT
+Received: from [10.253.34.155] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 12 May
+ 2025 01:16:02 -0700
+Message-ID: <e434124b-6975-4027-bb0d-3840fbd25a15@quicinc.com>
+Date: Mon, 12 May 2025 16:16:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250512051519.GA1555@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB32l4mriFoBKSyMA--.52941S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr18GFWrAF4UWw4xJr4rGrg_yoW5WrykpF
-	Z7JFy2kF45JFy5Xr47JrZFya4Syrs7Grsxur97Cas3Cr9Ivrsak34xWFyrG34xury8CFs8
-	Zw45Gr13uw15WFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: PCI: qcom: Document the QCS615 PCIe
+ Controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
+        <abel.vesa@linaro.org>, <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <quic_qianyu@quicinc.com>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
+References: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
+ <20250507031559.4085159-3-quic_ziyuzhan@quicinc.com>
+ <20250507-astute-realistic-ferret-bcdfce@kuoka>
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+In-Reply-To: <20250507-astute-realistic-ferret-bcdfce@kuoka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ReqQC0tv c=1 sm=1 tr=0 ts=6821ae4a cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=BJE1r2VZsCeTiZ4UBNQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: V5s_apCAjcq1Od78LL7jE0-zWqwPirK2
+X-Proofpoint-ORIG-GUID: V5s_apCAjcq1Od78LL7jE0-zWqwPirK2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA4NiBTYWx0ZWRfX+VftKDg6Txx+
+ R+tRpQqwZCVxaDNwRPrFZU0/+Nzyl0LRPKPjE5KJ8eOI+5WvvzUgxAhDzZ+ZMaHVlWKbd0bdgn+
+ l1pStK923YA+goPIqypVxgvVVA72ave/ojyCdqbbeI3S9cUe77yVA+03Orh69xypywX90IYTbck
+ Wal4d5TjPmibMbhivRUAjpQDczZbgFCT3KfkjXKymwxEYvlDFoL+aErFYY6Lxw+j69FZmOyyLa6
+ RLDYecqGLOBv5OqpxoNN8jfnIqScpfTJWFXkMUK5gQNEvc5DLP2yobd15CaJIxfHryY/IVGcpkE
+ J4G0n5Q+UiLiahDjXe75eImfhJinWRqTaR5DoZjarEBxTd0YvoOsHPwuo7BQVNwzRtLge1woADh
+ Qir0NxU8M8EmkSDilqRhKdvbcLt117fSKuVSQVnaL23NP/3Gf9R3o++Vtgp55Jv+8JJ3Alue
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120086
 
-Hi,
 
-ÔÚ 2025/05/12 13:15, Christoph Hellwig Ð´µÀ:
-> On Mon, May 12, 2025 at 09:19:19AM +0800, Yu Kuai wrote:
->> +static bool is_raid456(struct mddev *mddev)
->> +{
->> +	return (mddev->level == 4 || mddev->level == 5 || mddev->level == 6);
->> +}
-> 
-> This really should be in a common helper somewhere..
-
-Perhaps md.h?
-> 
->> +static int llbitmap_read(struct llbitmap *llbitmap, enum llbitmap_state *state,
->> +			 loff_t pos)
->> +{
->> +	pos += BITMAP_SB_SIZE;
->> +	*state = llbitmap->barrier[pos >> PAGE_SHIFT].data[offset_in_page(pos)];
->> +	return 0;
->> +}
-> 
-> This always return 0, and could just return void.
-
-Ok
-> 
->> +static void llbitmap_set_page_dirty(struct llbitmap *llbitmap, int idx, int offset)
-> 
-> Overly long line.
-> 
-> Also should the second and third argument be unsigned?
-
-Ok
-> 
->> +	/*
->> +	 * if the bit is already dirty, or other page bytes is the same bit is
->> +	 * already BitDirty, then mark the whole bytes in the bit as dirty
->> +	 */
->> +	if (test_and_set_bit(bit, barrier->dirty)) {
->> +		infectious = true;
->> +	} else {
->> +		for (pos = bit * io_size; pos < (bit + 1) * io_size - 1;
->> +		     pos++) {
->> +			if (pos == offset)
->> +				continue;
->> +			if (barrier->data[pos] == BitDirty ||
->> +			    barrier->data[pos] == BitNeedSync) {
->> +				infectious = true;
->> +				break;
->> +			}
->> +		}
+On 5/7/2025 1:17 PM, Krzysztof Kozlowski wrote:
+> On Wed, May 07, 2025 at 11:15:56AM GMT, Ziyue Zhang wrote:
+>> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>
+>> Add dedicated schema for the PCIe controllers found on QCS615.
+>> Due to qcs615's clock-names do not match any of the existing
+>> dt-bindings, a new compatible for qcs615 is needed.
+> Other bindings for QCS615 were not finished, so I have doubts this is
+> done as well. Send your bindings once you finish them.
+>
+> ...
+>
+>> +properties:
+>> +  compatible:
+>> +    const: qcom,qcs615-pcie
 >> +
->> +	}
->> +	if (!infectious)
->> +		return;
-> 
-> Mabe use a goto and/or a helper function containing the for loop to
-> clean up the control flow here a bit?
-
-Ok, I;ll add a helper function.
-> 
->> +static int llbitmap_write(struct llbitmap *llbitmap, enum llbitmap_state state,
->> +			  loff_t pos)
->> +{
->> +	int idx;
->> +	int offset;
-> 
-> Unsigned?
-> 
+>> +  reg:
+>> +    minItems: 6
+>> +    maxItems: 6
 >> +
->> +	pos += BITMAP_SB_SIZE;
->> +	idx = pos >> PAGE_SHIFT;
->> +	offset = offset_in_page(pos);
+>> +  reg-names:
+>> +    items:
+>> +      - const: parf # Qualcomm specific registers
+>> +      - const: dbi # DesignWare PCIe registers
+>> +      - const: elbi # External local bus interface registers
+>> +      - const: atu # ATU address space
+>> +      - const: config # PCIe configuration space
+>> +      - const: mhi # MHI registers
 >> +
->> +	llbitmap->barrier[idx].data[offset] = state;
->> +	if (state == BitDirty || state == BitNeedSync)
->> +		llbitmap_set_page_dirty(llbitmap, idx, offset);
->> +	return 0;
-> 
-> and this could also be a void return.
+>> +  clocks:
+>> +    minItems: 5
+> Drop or use correct value - 6. I don't understand why this changed and
+> nothing in changelog explains this.
+>
+> Best regards,
+> Krzysztof
 
-Ok.
-> 
->> +		sector = mddev->bitmap_info.offset + (idx << PAGE_SECTORS_SHIFT);
-> 
-> Overly long line.
-> 
->> +			if (rdev->raid_disk < 0 || test_bit(Faulty, &rdev->flags))
-> 
-> Same here.
-> 
->> +	int nr_pages = (llbitmap->chunks + BITMAP_SB_SIZE + PAGE_SIZE - 1) / PAGE_SIZE;
-> 
-> Unsigned for the type, and DIV_ROUND_UP for the calculation.
+Hi Krzysztof
 
-Ok.
-> 
->> +	struct page *page;
->> +	int i = 0;
->> +
->> +	llbitmap->nr_pages = nr_pages;
->> +	while (i < nr_pages) {
->> +		page = llbitmap_read_page(llbitmap, i);
->> +		if (IS_ERR(page)) {
->> +			llbitmap_free_pages(llbitmap);
->> +			return PTR_ERR(page);
->> +		}
->> +
->> +		if (percpu_ref_init(&llbitmap->barrier[i].active, active_release,
->> +				    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
->> +			__free_page(page);
->> +			return -ENOMEM;
-> 
-> Doesn't this also need a llbitmap_free_pages for the error case?
+As discussed in qcs8300, gcc_aux_clk is recommended to be removed from PCIe PHY
+device tree node, so I need to update the bindings.
 
-Of course, my bad that I forgot this.
-
-Thanks again for the review!
-Kuai
-
-> 
-> .
-> 
+BRs
+Ziyue
 
