@@ -1,244 +1,226 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2088.outbound.protection.outlook.com [40.107.247.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6010F4315E;
-	Mon, 12 May 2025 18:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747074622; cv=fail; b=rOoUTLNw8jSo72VOD3BhGI5EXj6SgzorOM+FtXnVHDmezW59GYD/CQie/6E54DIPZWfgfnfNMl0Mwp7aVzoqzBFL0ccXKXyq3+g2V0AjH4TRX4gwk7JMCEnrSZMyrctHwn2i6sxozY8Ns4ZhxrM1IFMgrtiWzihxLDC0z7LSDEo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747074622; c=relaxed/simple;
-	bh=5/5z17QPnYRZuw64HJhkXYm9HQ/ofnGcALCskH4gips=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pqniWg1TKS7VHbiPaqvIPYxBENOoETLi1gb0LpSzqQQE7RPzZLVsMVqEqfv0JdLDi9bUwGqRB2exbzjc88EDIKuV24p6FRnEpnp3B3BdC4BbexQcjcRtyJRq+0e0I5DBO7hzt/aF78EY2ZjzSUogMTx+6wD6AvQ8/ebCiFrq+lY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=D7ge26ne; arc=fail smtp.client-ip=40.107.247.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A904E1C8639
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747074739; cv=none; b=nz5pNaFnkHY4IV7l4U64tvRm1MGstN5pFtpkV22M7LkNmBKHbg5myKSCeaJeZ/Zb2JStHQDDnc35t6CYnyXtRxTn1vvGef1Jkdf6pf+kfJn85L+gFYj+P34gGgV/SLiFoRCha+HI3YirnT4Xjyn3Jpq/DTnnYD1s3Io0VysE92M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747074739; c=relaxed/simple;
+	bh=cNV23VwDv69uP/6gK3LiM6nRmaksJESB2bF4ACMarY4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oObiRsQ8GJIOUWFDJDLTJIXqwzK0iFVXVent+oVgOvStD7bqoo+/VluTLA+bbnG/+lWzJoZ0gYBIHcBiJuCYZPyUyFRwX7WiMZncCojD8tRxBfPelwaNM7mzHlBMs6nCjhrrZZkd+jJFhaPEofSaAjEEXbgpVSRU3/uHHNKrpow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=cU749Irc; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="D7ge26ne"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vaWE+jyaJMftCrmpTfgoAzsGhQma+uDNjLqcKwoua7FYguH9/EHqCRNENxB+eFZsauXYTPoN8XxojLBWptdUFaisPP7H9VX1tejrtxtZVG3pyeLqJBmeC0/kjOGWNyKgv7rHDbLb3ah83vbPbrYclompwq/FbJi8iwsI6G5xQ9vZ4FIFJ1Aa8iT63HYPg+qx0ubDEOEK66/3dEZ0N3m4q3RN9Q+5DR1mljXezEMDzSXkiHwFrXL3AM7ecEKdBvzC4DB6qETZWocZUjGIV0xUIe+pBc6CIVMD7ulBJKTt1eRgzEncq84x7IB3RN9UAygUdZQRlLV7gTWiZuNKGXBZ4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LJ43Mp6wQ3aSoMPaJBIsiNftQHIvZaND5UcfQwG8Rn0=;
- b=NbtXIROTp3foCuzqLup2LPkYEcFoRpNMZesQe6mZW3llhOkd5/Fw1WwB0kqBD85lmavv/zI15th/k/zcDA8KpTlsOkJHa6Ri13G6Y74clmsj+vRI41q/HPr9ovlQTQBGdsRAylrlwRAbSeGjiAlr8hPyJmpxcZDM90rQdhS7PYKYxJicPWPwMijA0JHqDi+mxoJQ/mTX6VPz3QeScGQ5kLvEuVK9qhRva4L6gjkMVZeDA469//MsSSaJgIfm8ABLbEg9Fz4Q3660SVvk6DorJiAw06mACisweRSVEx/COzyTXluvPecbGxYdJrkCQVVV9zXuC2iPZvcNsncGHks+Dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LJ43Mp6wQ3aSoMPaJBIsiNftQHIvZaND5UcfQwG8Rn0=;
- b=D7ge26neaphH1IQDURriKq8cJ3i8RiZ2cgU1Rn6+veZI3mXxpOPrueH88B4Y1BriRksIk69wF0RBaFhhq1/eV4KUdejSyqgl75nv5Wm8nCslhxo3gc26CylXLXvEO4NJ5c5CK8hStgCI0jokt21MoEIBE4nYy++p4nC/K1pQnFw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by VI2PR04MB10545.eurprd04.prod.outlook.com (2603:10a6:800:270::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
- 2025 18:30:15 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 18:30:14 +0000
-Message-ID: <a23bbc22-6bfd-46e0-b114-fc14ee66e74a@cherry.de>
-Date: Mon, 12 May 2025 20:30:12 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] arm64: dts: rockchip: move reset to dedicated eth-phy
- node on ringneck
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Heiko Stuebner <heiko.stuebner@cherry.de>
-References: <20250508150955.1897702-1-heiko@sntech.de>
- <20250508150955.1897702-3-heiko@sntech.de>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250508150955.1897702-3-heiko@sntech.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR09CA0131.eurprd09.prod.outlook.com
- (2603:10a6:803:12c::15) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="cU749Irc"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3da73998419so16421645ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:32:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1747074737; x=1747679537; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=H5sF5S4WoA46QFbSi1L1CMmO0LFLi0JLWxGsdZ5Mz7U=;
+        b=cU749IrciPjXrHx2fhWyvGMb/qTrNjvRZpEZGr893F5i03EpAfAQyclrTRVEJfYsAE
+         k9QWG3o5SURb1ZU2EEvErQ1mW/A6ItF7WOu2T+zZq3iaLtiExL3Mm9Itj61YzJZmPr5t
+         1HltxQqK1CH06+HtfP1ax6IHlvV54ydBSVTRHplFmYAovm5Csqxb/wkgvX7PzDnXgF/k
+         C8F5BHIZkTrayr0bXLZF3UTbuanU7H4jf7F/ZFW+3DVLJYNAx0Wy9S1Fik9Boqiy4RLB
+         xA47f784jXjsU6kvI6c2ywYo1BICwRrG/58NPsoR0zUwiSUQKx+j0EpaS1Xxm0iiNach
+         z9bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747074737; x=1747679537;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H5sF5S4WoA46QFbSi1L1CMmO0LFLi0JLWxGsdZ5Mz7U=;
+        b=nMTK8mYqitmfniVNjJvop4fe3Sp1gY1wCheSfe4hxBmTJYTMBjymk/PO2IuAx3PSgV
+         RRZFNc+yo4N6kwgTQSs5Sbo3WSbe+N6EgeW5WIDfb7j1rdnyJOLwmJfMuRLOp2qG2pft
+         WIEr02JI5yJPFj7SpSRcxVYK//+Bh14ZkL9ItCcDlhnQxFAnYEtDOqpKCnCP56Y1cN6d
+         4tJ+mHcvrrOUctbJe/2gVzaa1brf+/6/QEQ3sSNpCY8aQJzQMTCILTaNXSb2VjwoAVs+
+         cNdjIMT8AJUyV0lGexqP6/AYtlx75IrRa5rNa1UAKW5eLVRYb17zmJwTfljA7Do8Nhuz
+         d6GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWi+zbUC+cb0RU06rsr7sg/2ri0kNuhs4SXXP/mgB94Q4VsiJ9xxC4/ZIYyMcS76Dyn47BWrV5IEckpWlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEP9laOb3+H9tqcKJ2irOmXrrDQySN3NR/JIN24t5EXaeaeHsl
+	0CJiGrUZz8EpAXYXPmOS7jPYUogkap65DX4Tye6JsA14EgEYXCkwXmljki9mf6w=
+X-Gm-Gg: ASbGnctb/gGgT8rT1yNB52ia3eg5tCbjDonsyhKO1C4GeKUsHNT09iWstufFDDt3u2a
+	yMgcoEgF+TBKD3lG0GAGB0LJB/vd6Ws+Spx3hfJe2/v+eskmQiIW1xOtuUxDNm5+BckOFgWQx+h
+	zPaE3EKcYBIyF6ISAZzUfXp/R/8oQCKaz2ljZsAcsx+FSRlNSy7Qrl3qaLVm85XjaFWZQx03MD/
+	qJJb2KHs72ibryAGNV21fYdqXLOEWf+hpFEe0VOYbdBExaKwpw2FWw0FqlpF3QNf3TTal/jTYZT
+	+9+P0dX7J2APsIpqU0ABnfxB6ovjZ5ZsGPURaJ7Zw/E8ai8pwelqK3zUe6HuPhWas14l3MJh21E
+	gDxfb4adNkvYaWU2BhfzjrR9P
+X-Google-Smtp-Source: AGHT+IH8SMFCBxxWn3abIuKGOB7o7zwQCx8+T8NAJEP1pyotvXX4Tn/Jp/UkbpGJ3ju1m6yqyuZcVA==
+X-Received: by 2002:a05:6e02:1fc5:b0:3d6:cbed:3305 with SMTP id e9e14a558f8ab-3da7e1e7608mr156233785ab.10.1747074736564;
+        Mon, 12 May 2025 11:32:16 -0700 (PDT)
+Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fa22496e9fsm1740333173.11.2025.05.12.11.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 11:32:16 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	dlan@gentoo.org
+Cc: heylenay@4d2.org,
+	inochiama@outlook.com,
+	guodong@riscstar.com,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/6] reset: spacemit: add K1 reset support
+Date: Mon, 12 May 2025 13:32:05 -0500
+Message-ID: <20250512183212.3465963-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|VI2PR04MB10545:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c64d0f8-3387-4e94-73f7-08dd918308e2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q1ZJNzROMXdJNUZhYnhXSnJYY3NXZlptR2drUWkwMlozaVlvY0lRcmkvYnhm?=
- =?utf-8?B?VEFVd2dTRkhtZURzaEY2V0wzajgrYjhvSFNZa3BySkRzdXBkcys0N01jU1pV?=
- =?utf-8?B?aTFXVExwWG5HOHFnUFBvNktXS294WGo1NEYwN0ZCVkdsTVZ2YW5VQzlSK3VF?=
- =?utf-8?B?VVpIRmRLUEEwemhadUVwNDd0WHk4VXd5ck5hNCtLbnZzS29yWDhIWFUzMDlD?=
- =?utf-8?B?a0Y3NHFKcnlDMHEvU1RWcmVwVFBYMHpsVVZEQU82L1ZLNXZqOUhqMldTVjYw?=
- =?utf-8?B?RkdDQ29yS1puSGV0NE1sMXNZR1RNUGY5K21hSDNDZlFsc09HZWFUenNMSkt4?=
- =?utf-8?B?RUV2MHo5WVEzM3dzTGpETVIrSUQ0anhOendCU2F5azM1RlZnUTkyNTlEQUt1?=
- =?utf-8?B?eVA3TmJzK0xPMGNtNzdLb3JaM3M2Vkd4cXJXL25vMXZXanUwY090U1VtUTF3?=
- =?utf-8?B?S0hxS21TVjU5dzh1Z1Z1T0dLT1d3dm91Y2JIY2hYVnQ4NkhpZDIzWmVSWWkz?=
- =?utf-8?B?cmFzbzUyeVhzZVJnRHd4VUNoVGtmTnpwRHpXZWRoNjhPdWxRU1JXOGJjTU1R?=
- =?utf-8?B?empiTFFpaTZJOWFkTitvbndLdkJMYU55SFArb1RTU1MyeHdQK2Fidkk4LzZQ?=
- =?utf-8?B?b1VGYVdJYWlzZkpwbmRoSUtxR3FsV3QxZWRBSGRsUHh0WXM4QXc1Tjg1V0Ry?=
- =?utf-8?B?bUE2cFJpOVFTcUpydFAvcTBqWkJORjhMUWFpbGVpdERoL05EMVNrYzVXdm1w?=
- =?utf-8?B?OUxKWUFPQy9DZ3p4VWI0ejJNUnYrcU1nV2tTcWZVTGk0Ry9xNWtHZGRtN1Rz?=
- =?utf-8?B?YXJaRm1SSm9CdVdFbEpTSWZqVXdlTnBLVCtDcklVRGVxVWs2OThpUGJyeDdY?=
- =?utf-8?B?a0pWQ3NEWE5rbVJTYlYydGszcXRQU21kUjczSnJJOHJYY3h0MkdnQ2JLL3NM?=
- =?utf-8?B?WDYrNFVrRnRRNVpWV2lWVGxhdTlhRXNHQmNPK2NXMzdtbm1NS2NpUGJGWThr?=
- =?utf-8?B?S3d2cVlWN09OWEdVQXgwQWVXMGx3RTJxVnB6b0VwWTZqN2Y2ZVNjamIyS05j?=
- =?utf-8?B?Q00wVU52SzA1Z3QxeHpWWFN3OVdFV1ZMcklYdmRqbWRUTWlTSnQ5WmR1eXVn?=
- =?utf-8?B?czJmZDhqaUZiTWRld054SnZvS3FrblE1QXMvNURDTG5SNUh5TzBJRUEreWxo?=
- =?utf-8?B?ZFNRS3pmMWtSVHFyWHlqNVovZ2lOVjFnV2JTclBzYjNoVDBCd096Z0xZN0RZ?=
- =?utf-8?B?VWthZ0U3aFZlZjdrZ1NIUGRseVBreS9RdXZUR2p0anpkS1VDV08rQklYV0lU?=
- =?utf-8?B?eEV2SzRSbHQ3MjFUME5KakdoUFRPYjdmTy9PYUVBZFdoSHZUN3J6VHBPbFlV?=
- =?utf-8?B?ODdDYThFcG11VytIeWdlNlM1WW14Q1RWZHYxaG9GV3ovWU95UllDcWNNVVBz?=
- =?utf-8?B?cnJHTHV2NDROaUFaUGVtUW40THJQQnVDQ3JqM3FsOHZGcmlYSC9pK2xxSkJp?=
- =?utf-8?B?SW5LSzJhd3p0NWJYL3hUMDlGMVhpZXdCSFpuSDhGZVlsVGc5T0xVdHRKVUh5?=
- =?utf-8?B?N2I0WXhFQ2lkTG5SbFBZUWFQYmdiNXBBRXRwbmpEbFFhZWtvOTVLWmhQM0I5?=
- =?utf-8?B?T0dRbkJoR1ZDU2NZSWpwU09NY09hQVdldFhwci81K0FRYzRhNEx0RWpIK2xG?=
- =?utf-8?B?R2pmMzYwbjhHY2VxZWdGSWdhQUxVbHBMQ0YralNTVEZoTENuSXhySVU2R3pq?=
- =?utf-8?B?cTBkWUk5ejQ0aU4wRmp1dWZUbDdlVEFCS3lPVjlCaVZEZG0wRXlDYTZzUzc4?=
- =?utf-8?B?R2E5ZUo4RkQvOWEyaWsweUNzNitwOG00TWJINmprdlFCOWcvTnVNZXpsTC80?=
- =?utf-8?B?MU9RckRRK3dBVDJqSXRKVVBCY0gySnB5N1RpV0pTK1dwUDFxU2hRdC95RHNa?=
- =?utf-8?Q?WVUhrsgpHfk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L0FVei8zNzA3bWhrUmRqcGxiMlVBRlBNdGdqeGRCWW1YYnlieGlyUktkbjhq?=
- =?utf-8?B?OEtMTmFjclBYb3lLZFh6dVNaeEhGS083VlRvTS9qbzlqek1vZjVWc1hNUFU2?=
- =?utf-8?B?azYvaVBPUlg3SGc2aXNiTE83dzdWa2FhU1RwTm0xR3F3RWMvZHFUaDVhbW5x?=
- =?utf-8?B?SnpiWnUzNHV0OFpUUWZiMUVRK1dSTnluQlFGc1lSZzNRUUlzbzJhYlF6WG41?=
- =?utf-8?B?WUwwcXpvcmJuSCtwcEV5bk51bFRPZlhBSERTOFMwRTZVOUlIcUx1R0l3YXpJ?=
- =?utf-8?B?Slp1aFQ3eXRYcHN5TzJJNGoxZVJ2b0hpV1p1YTJHZkxVaGJFbUJJRy85ZWxC?=
- =?utf-8?B?bUFLWk9QRVo5TDhNa0xIUmtBRnVPUjhxcWZPNW9NR292a2xibm4xajYxWkRL?=
- =?utf-8?B?T1RNTzJMY2prUGcwRWpuNW1aZ2xLaUN2VVpyMmVZZkdmYUFkMjZRbkNsQzVM?=
- =?utf-8?B?UUptMlB3blBKd01oY3NIL21ibmFjRTZDcU5aZXJKRkYwNkVGN09NK1RaeUFD?=
- =?utf-8?B?OE1wKzJPa29MMXQwUHFyUEIrbnBVWFpxOXlvOC9NTExTWnhwbkxqL2trNURJ?=
- =?utf-8?B?RFo0aWRUUzN1M08vVS8xK29PK2VWSzNGbWI5R21LaENVNnpNWmdDOEdYeGF2?=
- =?utf-8?B?Z2MwTUJ3NG4rbXpETVNVaXRwY0UvZzV5ZmdYclloVHBBaysrYW1GeGdIQ1Qx?=
- =?utf-8?B?OUwxb04vUTdHTjFQZElkeWpTWEprTm16SE40MnB1ZFFJUmFURFVGSDlrejUv?=
- =?utf-8?B?NXA3MSt5S1FQMWZQa0Y1OGoraFJmYTNzeXJCTEFlRFY3WGJVZzdhS0UzU1ll?=
- =?utf-8?B?eTE1ZE8zaDErMHNUblZXVFlhUElndURERkxlSXRXSlgvTnZyRHRKMWdWMkJw?=
- =?utf-8?B?YWxuN28zaXFKV1FtcWhKZHBoSWFmZnY0SE0rMlR1NzhWYWZmRC9HZTBEUkl5?=
- =?utf-8?B?U0d5U01rTE9Na1RsZXBGZExIRFlVZ1lRcDBzNCtZZTA0TmFzMDM4Z2RNUEl4?=
- =?utf-8?B?ZlI2TXJlalZZWkI2SFNQQld3SHNDZThwNnI1aGgvbFUvN2YxNWN4NWlzYmFN?=
- =?utf-8?B?eEw0UmtBMkFHM2t0Q2Z1Qk8rTDBKcXNQUHJvWklwVnQ3Z3lLdlVOV2RuMVkz?=
- =?utf-8?B?Ujd1WXREaFVTdERIaEk3SGNKeWc4ZDZTWThKM05zdHovQUF2QjduL0FGRjlR?=
- =?utf-8?B?T3lWc3FGVktFblpqdGRWNzZoYjdwbjF5amdHa0hrbUFlK2JkSDZkMWN6QXJV?=
- =?utf-8?B?THRRUHlMTVpkeE1rUmdIbFZxL3YvRXU2UXVUUFU0d3hDZndNQkhacC9hUjZY?=
- =?utf-8?B?bFhBek00ZmNBVW1lZGorVHhDTHJNS01ISEVnUHRGQWdQYVFjYnEyWllTdEx1?=
- =?utf-8?B?WlA2RDJkS3ZWS1ZKY0tWVCtKZGJ1bFFIajl6T2x6TUN5Mm1LMCtsVGVrdXJX?=
- =?utf-8?B?TGdwK0hMR1ZWeHhSZkV5NVlaRjZ1cFVzMVZWdjltbnNSRU85aXlsZ1hldjdR?=
- =?utf-8?B?aUpSYXBMek8rSjAwVysxMGZlMGdhQzMyWjYxZmY5MEw5QUxhV3JNc1NkdEFu?=
- =?utf-8?B?ekcyWlBFMGsrbGZNNUR1MVNOSGY3bmxYbHNQSmdPWHBuRVBNME1WSXNFQXQy?=
- =?utf-8?B?dTVPbW5EL3R5ZHFyVU8xaTFIdWNMUEhQOWlhcnBkN09HbVlNSjdoRUpQejlR?=
- =?utf-8?B?dHVrSU02WUNQM1JKV29QUHhmblVadmxKWm5hRXhPYnM3MU96N2d6NmNadW5i?=
- =?utf-8?B?UWwyWlovUWdZNmQ5aDMxMHNwM2Z5STBVMzQ0MDlPYk03OU5rNlRkOHQxTVdQ?=
- =?utf-8?B?b3E0WmVTdkVndWFqOE1zYVJWcXU0MlpQNVF3eU0raXQyQzN4SkRDUFh6MzJE?=
- =?utf-8?B?aHFDaGZyK1pEM3ZmUkM0cXBaNk9Lak5MeVBaWS9pbWQ0MUhEeDF3K0N6Z3ha?=
- =?utf-8?B?RWRMQ0RtME9ZQ093YThSeUoyU0xjd1lHSWthQkV6LzR3UUJTNFdsMkkrYmd1?=
- =?utf-8?B?a2dyTmdGaDZqbWR6c2habTlIUERueVM1UnVlZEI2OFYrU1J2QU9CZWFrOVFz?=
- =?utf-8?B?anNIZlIvMmNuRW9JSUhxYno3dHUvL3BFOFlBck1iTHRCMWx6RkVDc2RCNVBH?=
- =?utf-8?B?ek05dkVBaC90ZjM2Mm9lenBYd2tqelZ0TjRmM3ViMFdIdldNYUk0ZVFmN0hY?=
- =?utf-8?B?Ync9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c64d0f8-3387-4e94-73f7-08dd918308e2
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 18:30:14.7087
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XwA/ImfWtnFdKh+xYi0wyZJfuQz5PDJJXzZ9xXN+Klkj4ROTBrPEJuce4H46m2hUdXopKwc98xkQJVCFA54hn+Mk4tz3Pr9duG6MYkgd2LQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10545
+Content-Transfer-Encoding: 8bit
 
-Hi Heiko,
+This series adds reset controller support for the SpacemiT K1 SoC.
+A SpacemiT reset controller is implemented as an auxiliary device
+associated with a clock controller (CCU).  A new header file
+holds definitions used by both the clock and reset drivers.
 
-On 5/8/25 5:09 PM, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
-> 
-> Using snps,reset-* properties to handle the ethernet-phy resets is
-> deprecated and instead a real phy node should be used.
-> 
-> Move the Ringneck phy-reset properties to such a node
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+This code builds upon the clock controller driver from Haylen Chu.
 
-Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+This version uses ida_alloc() to assign a unique auxiliary device
+ID rather than the value of an ever-incrementing static variable.
 
-PHY is still detected after a cold reset and a reboot, iperf3 works in 
-both scenario, therefore:
-Tested-by: Quentin Schulz <quentin.schulz@cherry.de>
+This series is based on the "for-next" branch in the SpacemiT
+repository:
+  https://github.com/spacemit-com/linux/tree/for-next
 
-We'll need to do some work in U-Boot to prepare for this change I 
-believe, will try to figure things out ahead of merging the device tree 
-in U-Boot :)
+All of these patches are available here:
+  https://github.com/riscstar/linux/tree/outgoing/reset-v9
 
-Some nitpicks below.
+					-Alex
 
-> ---
->   .../boot/dts/rockchip/px30-ringneck.dtsi      | 22 ++++++++++++++++---
->   1 file changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi b/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-> index 142244d52706..ab232e5c7ad6 100644
-> --- a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-> @@ -83,9 +83,7 @@ &emmc {
->   
->   /* On-module TI DP83825I PHY but no connector, enable in carrierboard */
->   &gmac {
-> -	snps,reset-gpio = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
-> -	snps,reset-active-low;
-> -	snps,reset-delays-us = <0 50000 50000>;
-> +	phy-handle = <&dp83825>;
->   	phy-supply = <&vcc_3v3>;
->   	clock_in_out = "output";
->   };
-> @@ -344,6 +342,18 @@ &io_domains {
->   	status = "okay";
->   };
->   
-> +&mdio {
-> +	dp83825: ethernet-phy@0 {
+Between version 8 and version 9:
+  - The auxiliary device ID is now allocated using ida_alloc(), to
+    avoid colliding device IDs, as suggested by Philipp.
 
-Not sure we would ever need a label? We don't expose the MDIO bus on the 
-Q7 connector, so it's either the internal PHY for Ethernet or no 
-Ethernet (or USB Ethernet or whatnot), so if you want to disable 
-Ethernet you only need to NOT have &gmac { status= "okay";} in the final 
-DTS?
+Here is version 8 of this series.
+  https://lore.kernel.org/lkml/20250509112032.2980811-1-elder@riscstar.com/
 
-> +		compatible = "ethernet-phy-ieee802.3-c22";
-> +		reg = <0x0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&phy_rst>;
-> +		reset-assert-us = <50000>;
-> +		reset-deassert-us = <50000>;
-> +		reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> +
->   &pinctrl {
->   	emmc {
->   		emmc_reset: emmc-reset {
-> @@ -351,6 +361,12 @@ emmc_reset: emmc-reset {
->   		};
->   	};
->   
-> +	ethernet {
-> +		phy_rst: phy-rst {
+Between version 7 and version 8:
+  - The structure containing the auxiliary device is now allocated
+    using kzalloc().  That means its lifetime is not tied to the
+    parent device, and auxiliary device's release function is
+    correct in freeing the structure.
 
-Maybe have eth somewhere in the name, there are many PHYs from different 
-controllers available :)
+Here is version 7 of this series.
+  https://lore.kernel.org/lkml/20250508195409.2962633-1-elder@riscstar.com/
 
-Thanks!
-Quentin
+Between version 6 and version 7:
+  - The new shared header file is now named "k1-syscon.h" (suggested
+    by Haylen Chu)
+  - The SPACEMIT_CCU_K1 config option has been removed (suggested
+    by Philipp Zabel)
+  - The SPACEMIT_CCU config option is now tristate, and selects
+    AUXILIARY_BUS (suggested by Haylen Chu)
+  - All code is concentrated into a single file "reset-spacemit.c"
+    rather than in a directory (suggested by Philipp Zabel)
+  - A bogus return value has been fixed, and a few irrelevant comments
+    have been removed (suggested by Philipp Zabel)
+  - MODULE_AUTHOR(), MODULE_DESCRIPTION(), and MODULE_LICENSE() are
+    now supplied (suggested by Haylen Chu)
+
+Here is version 6 of this series.
+  https://lore.kernel.org/lkml/20250506210638.2800228-1-elder@riscstar.com/
+
+Between version 5 and version 6:
+  - Reworked the code to use the auxiliary device framework.
+  - Moved the code supporting reset under drivers/reset/spacemit.
+  - Created a new header file shared by reset and clock.
+  - Separated generic from SoC-specific code in the reset driver.
+  - Dropped two Reviewed-by tags.
+
+Here is version 5 of this series.
+  https://lore.kernel.org/lkml/20250418145401.2603648-1-elder@riscstar.com/
+
+Between version 4 and version 5:
+  - Added Haylen's Reviewed-by on the second patch.
+  - Added Philipp's Reviewed-by on the third patch.
+  - In patch 4, added a const qualifier to some structures, and removed
+    parentheses surrounding integer constants, as suggested by Philipp
+  - Now based on the SpacemiT for-next branch
+
+Here is version 4 of this series.
+  https://lore.kernel.org/lkml/20250414191715.2264758-1-elder@riscstar.com/
+
+Between version 3 and version 4:
+  - Now based on Haylen Chu's v7 clock code, built on v6.15-rc2.
+  - Added Krzysztof's Reviewed-by on the first patch.
+
+Here is version 3 of this series.
+  https://lore.kernel.org/lkml/20250409211741.1171584-1-elder@riscstar.com/
+
+Between version 2 and version 3 there was no feedback, however:
+  - Haylen posted v6 of the clock series, and it included some changes
+    that affected the logic in this reset code.
+  - I was informed that defining CCU nodes without any clocks led to
+    warnings about "clocks" being a required property when running
+    "make dtbs_check".  For that reason, I made clock properties
+    optional for reset-only CCU nodes.
+  - This code is now based on v6.15-rc1, which includes a few commits
+    that were listed as dependencies previously.
+
+Here is version 2 of this series.
+  https://lore.kernel.org/lkml/20250328210233.1077035-1-elder@riscstar.com/
+
+Between version 1 and version 2:
+  - Added Rob's Reviewed-by tag on the first patch
+  - Renamed the of_match_data data type (and one or two other symbols) to
+    use "spacemit" rather than "k1".
+  - Replaced the abbreviated "rst" or "RST" in names of newly-defined
+    sympols with "reset" or "RESET" respectively.
+  - Eliminated rcdev_to_controller(), which was only used once.
+  - Changed a function that unsafely did a read/modify/write of a register
+    to use regmap_update_bits() instead as suggested by Haylen.
+  - Eliminated a null check for a pointer known to be non-null.
+  - Reordered the assignment of reset controller device fields.
+  - Added a "sentinel" comment as requested by Yixun.
+  - Updated to be based on Linux v6.14 final.
+
+Here is the first version of this series.
+  https://lore.kernel.org/lkml/20250321151831.623575-1-elder@riscstar.com/
+
+
+Alex Elder (6):
+  dt-bindings: soc: spacemit: define spacemit,k1-ccu resets
+  soc: spacemit: create a header for clock/reset registers
+  clk: spacemit: set up reset auxiliary devices
+  reset: spacemit: add support for SpacemiT CCU resets
+  reset: spacemit: define three more CCUs
+  riscv: dts: spacemit: add reset support for the K1 SoC
+
+ .../soc/spacemit/spacemit,k1-syscon.yaml      |  29 +-
+ arch/riscv/boot/dts/spacemit/k1.dtsi          |  18 ++
+ drivers/clk/spacemit/Kconfig                  |   1 +
+ drivers/clk/spacemit/ccu-k1.c                 | 239 +++++++-------
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-spacemit.c                | 297 ++++++++++++++++++
+ .../dt-bindings/clock/spacemit,k1-syscon.h    | 128 ++++++++
+ include/soc/spacemit/k1-syscon.h              | 160 ++++++++++
+ 9 files changed, 755 insertions(+), 127 deletions(-)
+ create mode 100644 drivers/reset/reset-spacemit.c
+ create mode 100644 include/soc/spacemit/k1-syscon.h
+
+
+base-commit: 3f7ca16338830d8726b0b38458b2916b3b303aad
+-- 
+2.45.2
+
