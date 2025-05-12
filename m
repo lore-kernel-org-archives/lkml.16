@@ -1,111 +1,131 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06071299AA4
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBD023C4E7;
+	Mon, 12 May 2025 18:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073400; cv=none; b=IvIUJCke1cifcP+FlrPX1p1LHfF35szGtu7Pt1NN8nIgRB9ZvV5ejR1KNCyqzB8d3Kxky0jU3+JOfv7hfZZkLXSttdP5TAExe9sFmeUlWDYpFhuquFs0Ylv9udWjFR1qxZsF4rZP2eHSyUPrtk7Fb1nHSBJFwJBY/7rjNoOkIs0=
+	t=1747073410; cv=none; b=oFW5zP1mAN8oAz8WsvJfiLMu7NBWHAsNUs/fQ1nQ+K1dp/ph16wHB0MbyOr6Rx18lRwUC7fyGHNzbuQdyU5As2DVrjieVNEY0YUC1tmSgShsPWhbZ92z8VI89SeFPVCYpJydIQdkPJYchpIIHkPcktG50M6QxUox/BAREwM424Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073400; c=relaxed/simple;
-	bh=cWcnF6hGE/Ye6ZO375UdjwJyHtfdTGvvw2msT1AGNEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MtXU63u2Bzn2mW3kLIOGoCbxkED5mmQLCaERaYXdKQXSly3YRyqHg30ieiYyyBQtp8sGfuU/WTvleu5vOlYIBvcRUI8erWqBwd8p8ZZDkKoKfuBS59qZ1PjetfYnXLHq6c/hHsxQtykq3AlTJppKGiW15zbhDk+Ywa+942Cd/4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DXcBYu4u; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1747073410; c=relaxed/simple;
+	bh=uFUaSVYNAvXIYAUNz+Rx/NPSaWzGUE/AKMdPflMdRX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GC5EOWXJiTK1MoNPnRdhpX+ajEEp63TfTLgv8YjannDxubk/6McI0ymvHWNnxrxn410HBnmWerR5nMu6DyKsVB6CrlZa/+QDog+9ZkjM0kLxDLQGPdDWfSWbiQEjgSILRQj3KcgHukEOcqCidf4i/BUBrLTXJuKuB6LmeaTx3yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fkPMOGuT; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DXcBYu4u"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f0ad744811so35934866d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:09:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkPMOGuT"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad24677aaf6so242798366b.2;
+        Mon, 12 May 2025 11:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747073398; x=1747678198; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/iDvEsSNRwi1aH8iKQVOJMR248bXxybzmXa6GTNy2M=;
-        b=DXcBYu4ur+MLYeTARtLxuSjGH0G8R3OlmLybrW/19tyVtnmpPM4AUr2/oKZ+Z4cP2c
-         War7lY9LK4tXjpahUK9j01otA7YguUdEWLtB0eV0OLigUsvEM6lMp62CxJ3VRD+7iq61
-         g1st8fzKYVLAI3nktlTffEf4KG56/IvJl22/LO5W+ChSNZxpm4HvEj9D2vFMWNORG/fg
-         FWYHso+brd7AtIuDYnDROPK8vTB0eRAiTqh7eS3lbs77dPyFjJo+M0Ec/B2J91imbvqY
-         PfEp/B5u6ynu0YDN90VbBHatQa+Ducqm2FEoJ4YJvTeE1ZJ8Khz10TNR6p9mTEzkGsKA
-         2Jmw==
+        d=gmail.com; s=20230601; t=1747073406; x=1747678206; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZmBBbW75s2tlX7b8l6/8ObAx8ZWM6smBqykkodUDjYg=;
+        b=fkPMOGuTPO+VnZhJWW+v1co8w5t7ZUxNi/kjz+bMbSHWtT0+Aby66U4jDa8mcG5fz0
+         2zP79ZxTzhB/r4qTmx3PgFf/3gZoI8R4vBLgzjJnzZ9orLtkf2CO6FieiQNW207iG7cb
+         9Hq4jHVVGlEXQEYwmyQSCtyRMWMqrhpViIq640LmzBZNPy7bUJcksPcbjLNUPVISfTzl
+         I0MGhNf7FEwjIG5WVIeYvjHT4hYNEMNEnvvMOjGr+wMSJuZD/HtpdkccLH+EjRxa2e/N
+         lUooAhtRPwD0c2R5JwqJFCY1NIUiZT9SPO3AuHlw4/Wtbe+zhQRwsALjzwpFTY1xF1Vs
+         Pc/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747073398; x=1747678198;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e/iDvEsSNRwi1aH8iKQVOJMR248bXxybzmXa6GTNy2M=;
-        b=MiWnqiIxC89+YnwxkKC81958saC58KS3U5L0lhHKExTvNuzgLGbfdH+8c8HGLhwu9J
-         Ee7aEbcf1WhMPfEMuaNbs3RKlXMulrDNmwexWkdKLkYsGEGOPL5pqTi4fJCtkeaI5pnZ
-         8/c+NNTpiYjVjB8HmHdeoDd53pzq6pqOCaopiQQjR0iGhxiBX+atgfaQpjPkPXpjSEv9
-         OZFMneYBu/95ETIuZKhjHfYAIgbUNAyiBOg6Ps1CnlzFiTEQCHU9qiZEzJP979uCr4a6
-         OqvYjfT2dUFyKvBOdDxD4HdRB0STWt9o81j4LBozUWbe6P7nbTl52FWMH4U+gNH6qmL2
-         6kDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMqnYtkrbQW8wkHt6gaA3CzvyJt9z7LrVW2zYmO7/NIlsY9076tW5TgY2bBgtBlxVuBlRPnE+GMPIooWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy43qtSu7RguLmiG6ZOXfXrxJTg4JYwjCf+/w+k92SmnjppYM6D
-	Ly+cqpTQhBkNZ2EY5ky3m8MRwYX03kDEIXIa3Wf3vcIIF01hot50+nwGlkGFebA=
-X-Gm-Gg: ASbGnctcTdNMfEMZjw0AsVk7dmoJVk0BmJ2pAAN+tGgRFyt7scsdB5sLRbQ2oad/wzf
-	a6eEV9TkzqzgXOYVKWfpV+mjKP3iXwJToTNpsdZrk2Z/LCYOBg0+bkRjYFq4AHgh2mXF5hSmWzu
-	+JCYfw5xrx9kyG8S04KGAovlVe5QJZmcj6CIeltTR3jX143z7ceIje9u4gRhGzORRLP69DM6nHt
-	IjSGJf/r5HoekumBaxDdAUA6eyIuYNkf/9my3ZIXx5OPxsllxjU1qKSOWP9nJDEPC4iRDrROr1t
-	hsfPL0EzxCS5ATdCCaK74wQOxv9S4dAvb6i5Jn8BmJ9b46HM8gEdfLc81GLpQvbay+r6b5Ws4M0
-	xLgQ9HICXItgACQomFDgJvRinD7eNV4I=
-X-Google-Smtp-Source: AGHT+IHfNuX0QzD4BdSUhiyIBeelzyTiA39KqOo6r6tn5oIPKGjpRdvxCGpkFc3YRqf63eD/EfUW2g==
-X-Received: by 2002:a05:6214:234e:b0:6e6:5bd5:f3c3 with SMTP id 6a1803df08f44-6f6e4821690mr177034106d6.44.1747073397756;
-        Mon, 12 May 2025 11:09:57 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a4729bsm54875686d6.70.2025.05.12.11.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 11:09:57 -0700 (PDT)
-Date: Mon, 12 May 2025 14:09:55 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, corbet@lwn.net
-Subject: Re: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
-Message-ID: <aCI5c_hIS8bWgAaC@gourry-fedora-PF4VCD3F>
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-15-gourry@gourry.net>
- <aCIjMNooAzKaONod@casper.infradead.org>
- <aCIkF6RZJtU0m3Ia@gourry-fedora-PF4VCD3F>
- <aCI1X3NZwuagNOqS@casper.infradead.org>
+        d=1e100.net; s=20230601; t=1747073406; x=1747678206;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZmBBbW75s2tlX7b8l6/8ObAx8ZWM6smBqykkodUDjYg=;
+        b=G4qFiCWoDRK5ZW7rBiXuygafjZVxYTfRas8CEQKVaD4zq6jnN/l9hfaTohorGzLIFG
+         jN6OOEbdbw41YrEm15QuRYhM5kfTQU+i1BzxD12OBMfLhoCSeL/rW3SYoJGRWe+Z1JHI
+         zZ6C/osnHqk6rL2Vh4ADVTRZUbicQadfq0ijDyWn0hwjkGH33QMEIsJ9321IN+SYnqUc
+         Ho+YIgrKS0XJuJIVzEX9ZQUcGIg1tUK3rrs1XxU0SBO6fM9C0zh8EyolT6hOoth/09LY
+         cw1wEMkDKkEHwxMXLZVx6aO4F5pAR4K4cfV4WwxxZkbgg03fj2OuKDo1qVQO6qKv/CPN
+         OaNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWm2eSN2DZ/7Q+w3DR2XUGVo7uUL7aPTjFKJ3bV+JRXVurze2I/r7Ub4ZPnp8/+AqPTFCC2z3iK8X6NMok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoXJVcViLl9kOYZl8uYy6aeG8hYT5pyrsQNIhMlra2ZRzWngd5
+	SyLhN7Tb9S3TBSC7rzTpe4lVsvatWX7/ZnyxiWBLE557pE5YmnHx
+X-Gm-Gg: ASbGncux+zuWgVlUBrf7y8xba/VKGR747V1cGiei9jzHyHECK39NKjHbAj+KkDrjnmL
+	T/FyDJO+dJXWkJShOcFL91LkXL35VFPEsO9M2lBboJNg2zg/+ViNFbJFp8NJxDYKyX2ftpGAEVZ
+	kQoEQdyb649q38+xapZDesMCAXqI1BYz3f0abeCmh1JeW7tpwCaCgl+OoJq5mENqPWrGaWa1fKO
+	6G0RDTo+v0iizl+W4/23RjNzFevJmNtPcZ580dyX1dRM8bQ+9WSdiIJkU7rf36p9hQwst1RYXqA
+	T+B/QyY+VlobT52mkAjed91njlzgw7pCAjP49jwiWjAh+4ZkfiqUsgxpBfNXQY5t
+X-Google-Smtp-Source: AGHT+IHPlyAlfrTqN1w3LVNPrQcr8DnOtPZtyVS9h3hXu/7aJDgKkYIIkXZJU+QeSspXhQoWh6PZ0Q==
+X-Received: by 2002:a17:907:9453:b0:aca:a3da:80b8 with SMTP id a640c23a62f3a-ad21917d128mr1642453866b.55.1747073406421;
+        Mon, 12 May 2025 11:10:06 -0700 (PDT)
+Received: from [192.168.0.131] ([194.183.54.57])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad24085b44fsm391903966b.149.2025.05.12.11.10.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 11:10:05 -0700 (PDT)
+Message-ID: <0bf10848-0fa2-438a-92dc-6d3b29760b64@gmail.com>
+Date: Mon, 12 May 2025 20:10:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCI1X3NZwuagNOqS@casper.infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
+To: Johan Adolfsson <Johan.Adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>
+Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Kernel <Kernel@axis.com>
+References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
+ <62a74e0e-f5a1-40b5-a855-6e9bd620cbd5@gmail.com>
+ <PAWPR02MB92814A311B18A6FD8A448D249B97A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+Content-Language: en-US
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In-Reply-To: <PAWPR02MB92814A311B18A6FD8A448D249B97A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 06:52:31PM +0100, Matthew Wilcox wrote:
-> > 
-> > Feel free to submit patches that deletes the existing code if you want
-> > it removed from the documentation.
+On 5/12/25 12:59, Johan Adolfsson wrote:
 > 
-> Who sneaked that in when?
+> From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Sent: Saturday, May 10, 2025 17:32
+> To: Johan Adolfsson; Lee Jones; Pavel Machek
+> Cc: linux-leds@vger.kernel.org; linux-kernel@vger.kernel.org; Kernel
+> Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct multi_index
+> 
+>> Hi Johan,
+>>
+>> On 5/6/25 12:39, Johan Adolfsson wrote:
+>>> mc_subled used for multi_index needs well defined array indexes,
+>>> to guarantee the desired result, optionally use reg for that.
+>>>
+>>> If devicetree child nodes is processed in random or reverse order
+>>> you may end up with multi_index "blue green red" instead of the expected
+>>> "red green blue".
+>>> If user space apps uses multi_index to deduce how to control the leds
+>>> they would most likely be broken without this patch if devicetree
+>>> processing is reversed (which it appears to be).
+>>
+>> Are you trying to solve some real problem that occurred to you?
+> 
+> Yes! Since the subled is indexed by the processing order, it gets reversed if devicetree processing is reversed
+> (which I understand is a "feature"), so instead of "red green blue" I would get "blue green red" in the multi_index file without this patch.
+> The mapping to the hardware does not match that, so writing "255 0 0" to multi_intensity will give me red and not blue.
 
-The ACPI and EFI folks when they allowed for CXL memory to be marked 
-EFI_CONVENTIONAL_MEMORY - which means Linux can't actually differentiate
-between DRAM and CXL during __init and brings it online in the page
-allocator as SystemRAM in ZONE_NORMAL (attached to the NUMA node that
-maps to the Proximity Domain in the SRAT).
+You are expected to write intensities to the multi_intensity file
+according to the order of colors listed in multi_index file.
 
-Not sure there's anything you can do about that.
+>> The order of DT nodes parsing is not a problem here - we save
+>> color index in subled_info to be able to figure out which color
+>> is on which position. This information can be retrieved in sysfs
+>> by reading multi_index file.
+> 
+> Maybe the bug is somewhere else in the leds-lp50xx if that is supposed to work,
+> but I still think it's a good thing to be able to get the expected order in the multi_index file.
 
-And for DAX:
+Please make sure you read Documentation/leds/leds-class-multicolor.rst.
+There is no such term as "expected order in the multi_index file".
+The framework is called multicolor, not rgb. The order of colors does
+not need to be RGB.
 
-09d09e04d2 (cxl/dax: Create dax devices for CXL RAM regions)
+-- 
+Best regards,
+Jacek Anaszewski
 
-Which allows for EFI_MEMORY_SP / Soft Reserved CXL regions to be brought
-up as a DAX devices (which can be bound to SystemRAM via DAX kmem).
-
-Wasn't much sneaking going on here - DAX kmem has been around and hacked
-on since 2019, and probably some years before that.
-
-~Gregory
