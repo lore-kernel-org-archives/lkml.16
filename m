@@ -1,107 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC8B24DFFD;
-	Mon, 12 May 2025 22:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0864B25E44B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747088234; cv=none; b=c2RV/5jJwVbjHP9D8Vsn+Nnjyup4pBUo4WRoNy9MqJB4Rt7AceNOUf03PvwVZ43KR/rizdMvN1D1wyEBJqwpKUrdTGkr/ffoin4YcYdH9GUebLGNTdZUKFa25Ja2URNackNOD6z8ILuHP9JoayhOwxEWAkW5tRYXuGg+NdInBb0=
+	t=1747088370; cv=none; b=p2y/vKD72uQOk8ztryN/Qqrn5AZeabxwMaU1zaaT2ap5dqvxmgbLwywV6oB5PZGOqBx7AGSNeyBOnUxiHlL3n8mghm28kfkYrLHfe4r3KfeAQQHHYXKtOas0kz9/Q3Cq9C5VWYmmrDkfcHTE/9pQeG/1dP9aYScGG6novDYuYfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747088234; c=relaxed/simple;
-	bh=V2RN0phQQ4I6fxeWpbMqgRtPQ1lwTUdTOKAtatK8rtk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fWO36MYr7QQuZ3h0UXmK2MhSa7aCtquY2g6L4AxdCyje7EItQ3c8C0FmDy+NaLVIo9+dT7+TfjRpbY9oywmW36jbJ01My8A5gOf7mO8C5rGfCuDSj0xASA4bDTbwzbztjXOCZjAB4+DytLliluvUy+H/w85mlRQ0PC24PSSCeOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFhXpCK8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747088370; c=relaxed/simple;
+	bh=k8/nvWoQBDS74TcSAvwlywR3Y8vzPERh3+Yp934zYmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=P3cwIzfWvQGKJuTRzqVxKNvA6myhpSMJDbRRD/G0TjigXYlK4TKLDZaQoEQ4dMOY0A/8rCsZQhBbZ4HMLf3JIkFCV+vAb5tFAhMxp0VZygQE/+qaXeSbkz7GjEETvsvMzvNHL5i+QMV/SM+Yqoih749Ci21/TIOfCEqXRlBP5Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dpELYkv5; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFhXpCK8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0353AC4CEE7;
-	Mon, 12 May 2025 22:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747088234;
-	bh=V2RN0phQQ4I6fxeWpbMqgRtPQ1lwTUdTOKAtatK8rtk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=FFhXpCK82kRf8eK/WzKD0IeqVtLK/1q7ThAGAfoP3K+vCD/ZAUWawRP5+Hbq6UNqc
-	 /iXECd67SpUj9e5wTtxbdlRsLW97qFEc0/dkukhvZLIkydmqKvRfeQ0rKQYzBjCDXC
-	 5o+BRGT5jUTe/bvpQxNfJ4GUxuqY8bg85l4BATNkdzSOMpNZTHMZxsEqb/DoWSXamx
-	 eFGK93te7sGc3grV+nxdZcgrCvaw/7diIOXg6Q9aRhIhR2DIsV9gS8/T/P47yZ8hAg
-	 qVExCteZmUJutC8uNser/IhIUVA1bY7DN/sVfRzvu6NYDXWypj4QlCKJDvIwFQRNBj
-	 yrmWbnOXMVt4w==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 13 May 2025 00:16:55 +0200
-Subject: [PATCH] genirq: Ensure flags in lock guard is consistently
- initialized
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dpELYkv5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747088368; x=1778624368;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=k8/nvWoQBDS74TcSAvwlywR3Y8vzPERh3+Yp934zYmA=;
+  b=dpELYkv5xPKu6TdAxzcSoljKUblxTQaYa3Zy3GA90iUAjj83JuX6KW34
+   PWPbfWFT4j6Wdx698Hj/KUIokILAHpgSpAoSyOnQKkk+7hzIxc3tvr5+n
+   VSNK7qWedCZOyktmnLVY6efGLSHuCkcI1tBKpUAeKNSVwY6XHUqvjTCGf
+   lLEaC9GeNQsLW2am6tjk0I6YUq3jJpQGwFK9U/NDWxoHXqXoft32GcFO1
+   gIIIe1lSeM4dw8teCn6RkRI/JpLRK3jEVe9uDBsdLtCu9z1jzmF88j9T6
+   /3pk9dPple2vWjZmRwveQj/4KHmE8ejaGEGqt6vyQepxz+lXoT/wx90BR
+   A==;
+X-CSE-ConnectionGUID: vtKqdJkKS1WM3JwyK9X+iA==
+X-CSE-MsgGUID: +yyGMwWPSzmwItgObvg+Ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52560917"
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="52560917"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 15:19:27 -0700
+X-CSE-ConnectionGUID: DYyIZgkOQJaPBQb85oha5A==
+X-CSE-MsgGUID: oitVPF4QTASWgrdkTT9QSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="137429576"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 12 May 2025 15:19:26 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uEbUZ-000FTf-2P;
+	Mon, 12 May 2025 22:19:23 +0000
+Date: Tue, 13 May 2025 06:18:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
+Subject: include/linux/ftrace.h:138:9: warning: returning 'int' from a
+ function with return type 'struct pt_regs *' makes pointer from integer
+ without a cast
+Message-ID: <202505130656.8jnCz1rM-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250513-irq-guards-fix-flags-init-v1-1-1dca3f5992d6@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAFZzImgC/x2MQQqAMAzAviI9W9imXvyKeJiuzoJMbVUE8e8Oj
- 4EkDygJk0JbPCB0sfKaMtiygHH2KRJyyAzOuMY01iHLjvH0EhQnvnFafFTkxAdaV1fkB6pqYyH
- 3m1A2/nfXv+8H0JYo/msAAAA=
-X-Change-ID: 20250512-irq-guards-fix-flags-init-1243eabe3401
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
- Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1792; i=nathan@kernel.org;
- h=from:subject:message-id; bh=V2RN0phQQ4I6fxeWpbMqgRtPQ1lwTUdTOKAtatK8rtk=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBlKxRnFHEqvjYKm3PvAJfRUX+PSNLEHrfnTk2pf/oy0W
- HOGU4Sto5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAExkhQfDP7Omfdefpl/UrOJo
- 13rVwvVj25YvDfI81W/M97Vb1GaFlTL8s78Vf8Ywov/jCWsHfRnNlEWNco0zz6g9rhfp+XU24Js
- DFwA=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-After the conversion to locking guards within the interrupt core code,
-several builds with clang show the "Interrupts were enabled early"
-WARN() in start_kernel() on boot.
+Hi Puranjay,
 
-In class_irqdesc_lock_constructor(), _t.flags is initialized via
-__irq_get_desc_lock() within the _t initializer list. However, the C11
-standard 6.7.9.23 states that the evaluation of the initialization list
-expressions are indeterminately sequenced relative to one another,
-meaning _t.flags could be initialized by __irq_get_desc_lock() then be
-initialized to zero due to flags being absent from the initializer list.
+FYI, the error/warning still remains.
 
-To ensure _t.flags is consistently initialized, move the call to
-__irq_get_desc_lock() and the assignment of its result to _t.lock out of
-the designated initializer.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   627277ba7c2398dc4f95cc9be8222bb2d9477800
+commit: 7caa9765465f60b6d88e22264892cee12d971888 ftrace: riscv: move from REGS to ARGS
+date:   12 months ago
+config: riscv-randconfig-r063-20250513 (https://download.01.org/0day-ci/archive/20250513/202505130656.8jnCz1rM-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250513/202505130656.8jnCz1rM-lkp@intel.com/reproduce)
 
-Fixes: 0f70a49f3fa3 ("genirq: Provide conditional lock guards")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- kernel/irq/internals.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505130656.8jnCz1rM-lkp@intel.com/
 
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index bd2db6ebb98e..476a20fd9bfc 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -176,10 +176,10 @@ __DEFINE_UNLOCK_GUARD(irqdesc_lock, struct irq_desc,
- static inline class_irqdesc_lock_t class_irqdesc_lock_constructor(unsigned int irq, bool bus,
- 								  unsigned int check)
- {
--	class_irqdesc_lock_t _t = {
--		.bus	= bus,
--		.lock	= __irq_get_desc_lock(irq, &_t.flags, bus, check),
--	};
-+	class_irqdesc_lock_t _t = { .bus = bus, };
-+
-+	_t.lock = __irq_get_desc_lock(irq, &_t.flags, bus, check);
-+
- 	return _t;
- }
- 
+All warnings (new ones prefixed by >>):
 
----
-base-commit: c1ab449df871d6ce9189cb0a9efcd37d2ead10f0
-change-id: 20250512-irq-guards-fix-flags-init-1243eabe3401
+   In file included from arch/riscv/kernel/asm-offsets.c:12:
+   include/linux/ftrace.h: In function 'ftrace_get_regs':
+   include/linux/ftrace.h:138:9: error: implicit declaration of function 'arch_ftrace_get_regs'; did you mean 'ftrace_get_regs'? [-Werror=implicit-function-declaration]
+     return arch_ftrace_get_regs(fregs);
+            ^~~~~~~~~~~~~~~~~~~~
+            ftrace_get_regs
+>> include/linux/ftrace.h:138:9: warning: returning 'int' from a function with return type 'struct pt_regs *' makes pointer from integer without a cast [-Wint-conversion]
+     return arch_ftrace_get_regs(fregs);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+   make[3]: *** [scripts/Makefile.build:117: arch/riscv/kernel/asm-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1203: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
 
-Best regards,
+
+vim +138 include/linux/ftrace.h
+
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  132) 
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  133) static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  134) {
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  135) 	if (!fregs)
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  136) 		return NULL;
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  137) 
+02a474ca266a47 Steven Rostedt (VMware  2020-10-27 @138) 	return arch_ftrace_get_regs(fregs);
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  139) }
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  140) 
+
+:::::: The code at line 138 was first introduced by commit
+:::::: 02a474ca266a47ea8f4d5a11f4ffa120f83730ad ftrace/x86: Allow for arguments to be passed in to ftrace_regs by default
+
+:::::: TO: Steven Rostedt (VMware) <rostedt@goodmis.org>
+:::::: CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
 -- 
-Nathan Chancellor <nathan@kernel.org>
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
