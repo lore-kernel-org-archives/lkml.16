@@ -1,132 +1,105 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939A1B66E;
-	Mon, 12 May 2025 15:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950CBB66E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064942; cv=none; b=pSvFbRsrffiJt4HOJJILkvqedts1JnG5gvIVojPuYBFNtL/Kqwc891NlUpawWH7I/DzKjq4PtMO/dItI9+tuy98xWWzpApuZ2Z9OIi8tvvcwfb1vuHRJcOOP8bau7rvZ2CzhqgBnccz2wbPFLDP2LhQUH/Opx5GiVLlIebTwyBs=
+	t=1747065078; cv=none; b=DWFXqawR4tx0QYGN9JDu5iEBeOtXMo44BdCxuE0G0RWxsyoIhJsuxv9RhMAgkgRvVG+VQSSIVNVGBpaPMi5IbsZmOWctU4EgNgPg5wsaoGLyh/ykcoAID4hwAm896i9dVSxgffdlWOOuxchyRTgmZcfbgTcQhACjUZyJBDX6P3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064942; c=relaxed/simple;
-	bh=ZxtctWw3jWkEiCBJ6DMB5IpH+iqs5G/Twj0JOx7tcsM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mO+mHoYXvfXcnX2au99VVkVaey18m9vRtOoYn2OOZUwQN4G2mvjOHFFtGzRJavNubNa8271HjAe25RVKEsODTmcXxB6L2+0avdFc1GT5BTyNagDoB4ZtIftbsddhWUeKuys16bRvlWfwa1l7kINcis/Mkpo/VSbt4uUlqKkAX2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SdGzU+Kh; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747065078; c=relaxed/simple;
+	bh=OSUg+N6ZGVNCSy/fTQXiy5e7D4HhGMikT3AsJ5G52x4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=M/nrlq/GHlgqvzlAfS9/BqM/53HaCAULSlFvT/KrHIJJMXql3pXn9TfNeOlSzmYd2yH92zPA5oDAM8e0voowADJTtdp748KX8RQMT9VDY6GLo/q5ScF21z0l9YVWRteLALOsGtRi5xohUkfUeWuMexBCfdqQE8bgpgYHT0/a6pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=IfBjpsxo; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdGzU+Kh"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2300e7a3b71so1398485ad.0;
-        Mon, 12 May 2025 08:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747064940; x=1747669740; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1toMIC5cZ80kbGTeUrqsXajhHvT1yGhs13QyNN+QB4o=;
-        b=SdGzU+KhwJmH2lGeJzDlZE1Bex6/78UgyB9nuS9UdHNDMuUvRsGUdwE5qY7xojX8tQ
-         eID+j9B0OCG2HHkVKZQBzXg4zCZEFMKxZyZ61GRtzSzW/YlSTB2NYHVldq1XAeaLWZOT
-         kdj9P4oodkDx/eY62rtKnm1nO6a7D1EiPLGFC86ugq1VdpgWP+z5hrdmLZR97JWzHApd
-         v6a5h9lN/jiQFrPs6yrZp3h4co0pvRgFGQlBsRNnD6qlW+klVERPz6n8Pk+mb9pKhhFH
-         V7VlhKUsBZ90ey9pFnDsx2abQ13YqaVQRO25llkbtCvwS9iKGoi/cUZjJGAib7fkS3lC
-         OypQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747064940; x=1747669740;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1toMIC5cZ80kbGTeUrqsXajhHvT1yGhs13QyNN+QB4o=;
-        b=K3BGMPXuwK1c4vj3h+oZtnBQ346W2/xjXrIqaHDCTRAHdYbLdhhoD4FoLLgcKA+LTe
-         eqSOE0xz2artyZTds1vyqJMuXo6o+y5iJ2/D6eTHAJhzYQUz0XrsTDNEyxF+vDwjxK+1
-         Yeyh0FXBQQUdNm/YYUYd+X7LXtLWp276QoE0AjpKo2idutFGgJahJNVnoyAwY2honNgD
-         /OJJhK8DcG6rk1kS0vbQa2Y7JxN8FoXBZum103aKLNhoD5gWy+yoOL5b35anesq7pRgh
-         DBcPMUMNx1Q658TvUAJbAC1H091zJ15hq2FB8cdZDsCKF+F8JJB6/rMxs/2VodfTVyMF
-         GtuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUk5XeUxsmj14whQsIaxit6oFCc+kl07xYraWuhv+pLhQKkhoDmIzKaX6yU2uMDChOXoP6P1YqaeJg=@vger.kernel.org, AJvYcCVQB1Sia1/vru5q/kfHe9frdBuFS9GyWeOOBoSFlTWDhoiup0WjttF5kKMqhItVsT6iy63abPhRduDErUc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFBLI5CPgB2JLE1NP2oH+HPpWvvz9NhribQT77bdZtk/wsZVR5
-	nb7A57Fs2fwthSYfHaKrj5amXLbtCoav1cpuHPU7ZV0vKlvC4yDr7eV1Ta3rnt1FlOiiuV5q1UA
-	ySE9Wzi9dZJYo6tpnRLO5fHXUqVQ=
-X-Gm-Gg: ASbGncvQLd1MJmJIwyu0nZ4/5BajCNIgsgZePdob2B6RkM8fZe5A2hpFIF5GpsegnZo
-	NrRkmeQ+hvmxZuMSn77B7JxJqNlf2dR05HMV0EvsZ/kpb+NjaFI+XZpE9G73eHz+RqM3lrZiHws
-	lXtNy1IzJ3MftNbACJwT/bPIJuJkgxyO6wtK8n6zYjUSc=
-X-Google-Smtp-Source: AGHT+IEf6tEKjFeycq+UPlsS94TJHt5DH6CFc9vHqIPjnQk1kbzxBAOujdq7+fVBzkSYWm7S9YFoxapZxqZHVDT5E44=
-X-Received: by 2002:a17:902:e88d:b0:22e:5bdc:fe24 with SMTP id
- d9443c01a7336-22fc894997cmr73958435ad.0.1747064939757; Mon, 12 May 2025
- 08:48:59 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="IfBjpsxo"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id EB095A0AC9;
+	Mon, 12 May 2025 17:51:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=fCPzAe2GOYDHU/PDRCZB
+	IwbMD0TgaIUDGr1FA9yLtAQ=; b=IfBjpsxoKu5DFgXZnszE5ZsHyO4ryROVNdiB
+	cvaonLyeidIXYQeIoNjIbLyB4tFNz+7DJ9rYMUYi0J4eDJUz3zhodY0pfAcRvOPY
+	VtgFyviRXW4ZjIoS0uNlVzDPuREDWkS5t9UNXOZOsxrFTY1H6yfksOFAgaU4CSf9
+	sTmY9CYd34jq461Lb10QQ/nD1PyBQN/cFJppw7mENJ4gmkndcMWEwuYWRwVjziZB
+	NLy3D4cTtEflC1VgxH64Opf7J+b/AfGckDEcNy3QLdQ6WOAzqIaqDZlAUDu2F6Sd
+	BIg5EZ4oc/rbuvlTUMvUkFIWynLAh7VeJZq/3hFW8IWRPKjL1l3eXnejMN1J01c7
+	8XZW0im6cNdBLkNsS/wK4yF4+C8X8BXZYuSWX1XlG/Pgg+JceFUiA4Py2s1PJ6Fk
+	JcyDfznXxjG7yLexqvYF4hBG0iD91j2l6P8Zf2/vAONoEEE/A/jMTq7zDXmGIal9
+	v2tVOJYXPh9FhqSOd108HEtenAQAvp2OZyIdKhY5/Yj/OsFOADrt8zBascFisVVh
+	oRn0RpmPiiM8TnRkDVF0juM7AGuaF6AY3H/2lDrF83XjXxNgVw4XLrDtrg30W1xx
+	FaoO25iX2R6wMIw6bwSEwj6MfHGdnBLQy8v5eSmEL7a+4QRoQBBs9e3/FUS0fztj
+	vzLrRHI=
+Message-ID: <2c2ff01f-b6e2-4b9e-958a-c4c405518a54@prolan.hu>
+Date: Mon, 12 May 2025 17:51:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512074215.40928-2-bagasdotme@gmail.com>
-In-Reply-To: <20250512074215.40928-2-bagasdotme@gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 12 May 2025 11:48:47 -0400
-X-Gm-Features: AX0GCFsa3NVdD9o69w_BNRqPm2ZbQH3a8ks0cMWBhi2YgHQxsTH8KYq-3IVam30
-Message-ID: <CADnq5_O9X-rTUOPdaQEh_G3DajbSBwdxoDfDLVmDiyh-YT=ptQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/gpu: Disambiguate SPI term
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Documentation <linux-doc@vger.kernel.org>, 
-	Linux DRI Development <dri-devel@lists.freedesktop.org>, 
-	Linux AMDGPU <amd-gfx@lists.freedesktop.org>, 
-	Linux Media Subsystem <linux-media@vger.kernel.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Jonathan Corbet <corbet@lwn.net>, Rodrigo Siqueira <siqueira@igalia.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>
+CC: linux-mtd <linux-mtd@lists.infradead.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
+References: <20250512084033.69718-1-csokas.bence@prolan.hu>
+ <87frhambri.fsf@bootlin.com> <d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu>
+ <1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at>
+ <4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu> <87r00ugcat.fsf@bootlin.com>
+ <1689545397.30901605.1747063396608.JavaMail.zimbra@nod.at>
+ <87y0v1g7xz.fsf@bootlin.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <87y0v1g7xz.fsf@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: sinope.intranet.prolan.hu (10.254.0.237) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94853617464
 
-On Mon, May 12, 2025 at 3:58=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.com=
-> wrote:
->
-> Documentation/userspace-api/media/glossary.rst:170: WARNING: duplicate te=
-rm description of SPI, other instance in gpu/amdgpu/amdgpu-glossary
->
-> That's because SPI of amdgpu (Shader Processor Input) shares the same
-> global glossary term as SPI of media subsystem (which is Serial
-> Peripheral Interface Bus). Disambiguate the former from the latter to
-> fix the warning.
->
-> Note that adding context qualifiers in the term is strictly necessary
-> in order to make Sphinx happy.
->
-> Fixes: dd3d035a7838 ("Documentation/gpu: Add new entries to amdgpu glossa=
-ry")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/linux-next/20250509185845.60bf5e7b@canb.a=
-uug.org.au/
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Hi,
 
-Applied.  Thanks.
+On 2025. 05. 12. 17:33, Miquel Raynal wrote:
+> On 12/05/2025 at 17:23:16 +02, Richard Weinberger <richard@nod.at> wrote:
+> 
+>> ----- Ursprüngliche Mail -----
+>>> Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
+>>>> The problem we _have_ though happens to be a bit different: here we are
+>>>> blursed with a system that corrupts data at a noticeable
+>>>> probability. But the model is the same: a stochastic process introducing
+>>>> bit errors on write. But I sincerely hope no one else has this problem,
+>>>> and this is *not* the primary aim of this patch; it just happens to
+>>>> solve our issue as well. But I intend it to be useful for the larger
+>>>> Linux community, thus the primary goal is to solve the first issue.
+>>>
+>>> I don't have a strong opinion there but I don't dislike this idea
+>>> because it might also help troubleshooting errors sometimes. It is very
+>>> hard to understand issues which happen to be discovered way after they
+>>> have been generated (typically during a read, way later than a "faulty"
+>>> write). Having this paranoid option would give a more synchronous
+>>> approach which is easier to work with sometimes.
+>>
+>> UBI offers this already, there is a write self-check as part of the io
+>> checks that can be enabled
+>> via debugfs per UBI device.
+>> So for troubleshooting this should be good enough.
+>> There is room for improvement, though. Currently it uses vmalloc().
+> 
+> UBI is full of uncovered resources :-)
 
-Alex
+For sure. Plus, even though we use UBI + UBIFS, that may not necessarily 
+be the case for others. Maybe someone uses mtdblock + some 
+"conventional" FS (ext*, f2fs etc.). Or maybe they use JFFS. Or maybe no 
+FS at all. We should still allow userspace or higher FS layers to be 
+notified of the problem.
 
-> ---
-> Also Cc: media maintainers.
->
->  Documentation/gpu/amdgpu/amdgpu-glossary.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/gpu/amdgpu/amdgpu-glossary.rst b/Documentation=
-/gpu/amdgpu/amdgpu-glossary.rst
-> index 2040da593b1490..30812d9d53c645 100644
-> --- a/Documentation/gpu/amdgpu/amdgpu-glossary.rst
-> +++ b/Documentation/gpu/amdgpu/amdgpu-glossary.rst
-> @@ -182,7 +182,7 @@ we have a dedicated glossary for Display Core at
->      SMU/SMC
->        System Management Unit / System Management Controller
->
-> -    SPI
-> +    SPI (AMDGPU)
->        Shader Processor Input
->
->      SRLC
->
-> base-commit: afc6053d4c4b0a6be500b9e643aa17221e93a57b
-> --
-> An old man doll... just what I always wanted! - Clara
->
+Bence
+
