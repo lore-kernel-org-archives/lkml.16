@@ -1,127 +1,73 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431C319ADBF;
-	Mon, 12 May 2025 01:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03A0231839
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747014259; cv=none; b=YWyAQozB4f0I4s7yIMxKJxYYmrbj5SxZLoz37PPIzXh2p6QNJ1ibB6/br1L1zLMz9GjH24V7QaLUHiZX/n+1GBiAQdgg5JG7TMnYbJxQWSzYIkSjbyZDNKqE4mMKcrOhc5qOY2CZR7paIjJiJaC2Q2+UGIIVWCyEq4VxjxFH02M=
+	t=1747014378; cv=none; b=rY+I+qbaRHUXqbRahQw3QiVFHAuAl49Z6b0CqmsydlHhewCnKDkxEhh12g39m7eW5JFUok5mWG/edqvIDHVc92pJKLEEEgiaaQlv/8HE9tipVWWaM5g4oz30IL83487QPPrrm3Ue3DdYyaR1i2oC5e8NDOJhYJRakZ7iOhkNiZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747014259; c=relaxed/simple;
-	bh=0mT8DlaWI12QuYR22vdiS2VrGXGQuHagI8VyzE8UDCA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=grB+5CnT/HkUZoxwXsKJ19V9+5OHGds+d1CCQi36/SFi7X0CkPHUTBUBvUob0pDgmCmBxqgwSiDmiExmhORmlIBFLv0uhoSeY5luNVTtRyx4+Xw4Tw+5d1FpRB0KysTqWnnMuzqszrHcyYJVCDK/aMH17mxvAeS6xqf1kBAX+2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C0o2xG020116;
-	Sun, 11 May 2025 18:44:05 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46j6ajry0w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 11 May 2025 18:44:04 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Sun, 11 May 2025 18:44:04 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Sun, 11 May 2025 18:44:01 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <paul@paul-moore.com>, <stephen.smalley.work@gmail.com>,
-        <eparis@parisplace.org>, <selinux@vger.kernel.org>,
-        <cgzones@googlemail.com>, <patches@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>
-Subject: [PATCH 6.1.y] selinux: avoid dereference of garbage after mount failure
-Date: Mon, 12 May 2025 09:44:00 +0800
-Message-ID: <20250512014400.3326099-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747014378; c=relaxed/simple;
+	bh=Ak4dzELf5kEsukPxNB4VDMA9t4KUdN4WRnwZznKNFYI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=N5DVoavKzyshcs/lDHT6Tv4Ftnk2sj6IxzZf+svBYhpNLyoQuMKkAgWSkvHs09v+/I5X8bvEBrs9/05K6EzkhG2jBZBWpDiaB1xJ6OE4rKTLReigTVGz0xafgvqFJKQPNOrCUTiK3H4bFNyTt2XklunalesyIhThlYPa+/OeQLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=q+fcA6mu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="q+fcA6mu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F06C4CEE4;
+	Mon, 12 May 2025 01:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747014378;
+	bh=Ak4dzELf5kEsukPxNB4VDMA9t4KUdN4WRnwZznKNFYI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q+fcA6muJawGYbXd5twcfC0AtVQQbBKAJIs9kjHD5Xgfb2k898Qe1hQs3iwTtszh9
+	 Vc9oIXc8R//WCcAFHGfJ4+kbfzfHeWQuMkiU29QVufqXl+kHuYaRG4Hj1/ZaQPADdr
+	 2iUVmiQh+sJbUXDHYqkRz2M0MnzIip+g65qsl32Q=
+Date: Sun, 11 May 2025 18:46:17 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Lance Yang <lance.yang@linux.dev>, linux-kernel@vger.kernel.org,
+ mhiramat@kernel.org, llong@redhat.com
+Subject: Re: [PATCH v1 0/3]  generalize panic_print's dump function to be
+ used by other kernel parts
+Message-Id: <20250511184617.85d5fe22fde831c1edb8321c@linux-foundation.org>
+In-Reply-To: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
+References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: bWqgFcOGb7hump8Huo0Qw5MjQvG-2bAP
-X-Authority-Analysis: v=2.4 cv=c8irQQ9l c=1 sm=1 tr=0 ts=68215264 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=mK_AVkanAAAA:8 a=VwQbUJbxAAAA:8 a=xVhDTqbCAAAA:8 a=t7CeM3EgAAAA:8
- a=thR52bMICH2RcI1Q_pYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=3gWm3jAn84ENXaBijsEo:22 a=GrmWmAYt4dzCMttCBZOh:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAxNiBTYWx0ZWRfX7VGszB0ay/nh fOV9Q4hpe4WVC4IJfRAJrGs7qt+grUh2bvnJRFjhqDecgW81bkF1XibOzwRbtQNPRa0RDQpoL+G ClTNQ6L1wp5ILTQyi8pbirijwRIR4R4WUvX69aOvvd3vXjX0RliSIU6l6/MzRrZxgN3aIUDZGvH
- 0ilvjEGQBMc8Ypmdj/Eh+1HNw2uIOFWGo2HhabFSci0XBW2HU95GeFoJWcnswROu2YGUfGnH4gz /WB7rvMh3iKw3NrA+jN4Z4Z04Eeb9hri+rrrsyI9drgjbNXzGjfaWCAZxT+MwI4BzFPAvRuZdtf pg1KrPQnLKLcAKX8RafFm/bktPF5YNXbz2cvlk4QhGO3KhVzzqnNihkK0A9OMBhfkI8bbI0d7Pr
- 7EpyhZzrhrP+0YRkfYRUkHrlnRLCIro9DcabRbsBsAhRDlZyzCc/Y9ghhfOTNHvENw2Bss48
-X-Proofpoint-GUID: bWqgFcOGb7hump8Huo0Qw5MjQvG-2bAP
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-11_10,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxscore=0 clxscore=1011 bulkscore=0 adultscore=0
- mlxlogscore=859 malwarescore=0 spamscore=0 priorityscore=1501
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2505120016
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Christian Göttsche <cgzones@googlemail.com>
+On Sun, 11 May 2025 16:52:51 +0800 Feng Tang <feng.tang@linux.alibaba.com> wrote:
 
-commit 37801a36b4d68892ce807264f784d818f8d0d39b upstream.
+> When working on kernel stability issues, panic, task-hung and 
+> software/hardware lockup are frequently met. And to debug them, user
+> may need lots of system information at that time, like task call stacks,
+> lock info, memory info etc. 
+> 
+> panic case already has panic_print_sys_info() for this purpose, and has
+> a 'panic_print' bitmask to control what kinds of information is needed,
+> which is also helpful to debug other task-hung and lockup cases.
+> 
+> So this patchset extract the function out, and make it usable for other
+> cases which also need system info for debugging. 
+> 
+> Locally these have been used in our bug chasing for stablility issues
+> and was helpful.
 
-In case kern_mount() fails and returns an error pointer return in the
-error branch instead of continuing and dereferencing the error pointer.
+Truth.  Our responses to panics, oopses, WARNs, BUGs, OOMs etc seem
+quite poorly organized.  Some effort to clean up (and document!) all of
+this sounds good.
 
-While on it drop the never read static variable selinuxfs_mount.
+My vote is to permit the display of every scrap of information we can
+think of in all situations.  And then to permit users to select which of
+that information is to be displayed under each situation.
 
-Cc: stable@vger.kernel.org
-Fixes: 0619f0f5e36f ("selinux: wrap selinuxfs state")
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- security/selinux/selinuxfs.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index ab804d4ea911..c236f3cd2dd7 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -2210,7 +2210,6 @@ static struct file_system_type sel_fs_type = {
- 	.kill_sb	= sel_kill_sb,
- };
- 
--static struct vfsmount *selinuxfs_mount __ro_after_init;
- struct path selinux_null __ro_after_init;
- 
- static int __init init_sel_fs(void)
-@@ -2232,18 +2231,21 @@ static int __init init_sel_fs(void)
- 		return err;
- 	}
- 
--	selinux_null.mnt = selinuxfs_mount = kern_mount(&sel_fs_type);
--	if (IS_ERR(selinuxfs_mount)) {
-+	selinux_null.mnt = kern_mount(&sel_fs_type);
-+	if (IS_ERR(selinux_null.mnt)) {
- 		pr_err("selinuxfs:  could not mount!\n");
--		err = PTR_ERR(selinuxfs_mount);
--		selinuxfs_mount = NULL;
-+		err = PTR_ERR(selinux_null.mnt);
-+		selinux_null.mnt = NULL;
-+		return err;
- 	}
-+
- 	selinux_null.dentry = d_hash_and_lookup(selinux_null.mnt->mnt_root,
- 						&null_name);
- 	if (IS_ERR(selinux_null.dentry)) {
- 		pr_err("selinuxfs:  could not lookup null!\n");
- 		err = PTR_ERR(selinux_null.dentry);
- 		selinux_null.dentry = NULL;
-+		return err;
- 	}
- 
- 	return err;
--- 
-2.34.1
-
+As for this patchset - sounds good to me.  For now I'll await input
+from reviewers.
