@@ -1,99 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62D255E20;
-	Mon, 12 May 2025 12:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59041256C82
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747051771; cv=none; b=TltW6+7X0xDFVGluHGYJ7/V/1PBrcTMOJ+caKOoNvoXfeULc/796IDvX4EQflAh8I0c02Gbc6V6myrBvGw68A3v5G9jIMap9/oyqkpSQAhVdqNrdE/eHEW7fwy7XrVeTsJRkdB3c5to1IeRjvhEeAeTaEGQdtTF1gbYNwdRNRXA=
+	t=1747051818; cv=none; b=tMOKyvNBgl2izq0wOkyRknq60CTLFm2C0AqajKMmZLkZ5mJA88/YXc1p2tixp84/E3qUCpUNihbxKsm6sz9T6/bT0YefAGsB8vJUUUudKj+iKjLCyGeUDhCPPxFA+4Vafq5njIHfO35SjUanPnjJ8nFcMd8pR7gJ3CfgxgAfxbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747051771; c=relaxed/simple;
-	bh=xE99g38G05kWVWQVsEMeTHQ9yIJhHcnUagPODqbgZOg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hvRnfKlZdLpqRm3V5bz+u346iP7vp0u83/CJXSKXKxDrxRmzdSaJsHy13d/kDhNKe2B8uUYBrcn4mYo9YXaODTfdZ5k8ypwSr53PPjy2/PLPxhf+RjKsa5Np4j32td8h2oapcZ2TaC3qXXHIq3GdlvZjlql//FjgGOBnsPdp0nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGOHXBEy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747051818; c=relaxed/simple;
+	bh=5+sRuUOndWQTxHpJp2OMZ7JfOUoH6ishomRZ1ikfcCU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KxaTn5dy1zag2p7x5ICvjsB8YBTyrVmrFhAFnj0CwytOnED5stHoFElEi+tszMjK2ufqdZoGYZ5B8m7uKwGVT4DBp5Xkb9DxLZkEQAGJBOFwj0RHASonyNBcY19OhEvLRtgbwmzDEMJL/zzvtVvb2AhLAx+H7i4wGdj4cqSAg9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oy8D1/22; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGOHXBEy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E736C4CEE7;
-	Mon, 12 May 2025 12:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747051770;
-	bh=xE99g38G05kWVWQVsEMeTHQ9yIJhHcnUagPODqbgZOg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=RGOHXBEyhlL/RenWdnEwRHp4GPMF3l/O7Myx9N6q/RAyYvnDMHr8sQI2RJI442eAD
-	 zElNcSxvAYgxHpdDUiZqLoE1Ym+qXiAlCvIugJeCGqXhzXGfn/bcIXAuHdW5dJL8+s
-	 npsLsnrHI29OzhIwCAh0EEuRd+doMgd33N80EHT52lX5QBApwHrr77yInbLITnt8VC
-	 304GObjTuHaR62aYAc08rfb9dmlWwBVeIuohv2A2DInmB7v6is4GxdSXnBsBm/U3my
-	 yuZnC69785WoPNilRc8RMyv25iVqQGbd8IjrbtFl3iKq49YHw+BOXeQAYqaCtK5Yr/
-	 MxWp8lP1iAhgw==
-From: Mark Brown <broonie@kernel.org>
-To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Varshini Rajendran <varshini.rajendran@microchip.com>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, linux-spi@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Danilo Krummrich <dakr@kernel.org>, Alexander Dahl <ada@thorsis.com>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20250327195928.680771-2-csokas.bence@prolan.hu>
-References: <20250327195928.680771-2-csokas.bence@prolan.hu>
-Subject: Re: [PATCH v6 0/2] Add more devm_ functions to fix PM imbalance in
- spi/atmel-quadspi.c
-Message-Id: <174705176600.71095.8384606721205945217.b4-ty@kernel.org>
-Date: Mon, 12 May 2025 21:09:26 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oy8D1/22"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so4388707e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 05:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747051814; x=1747656614; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aIck6w/SQcMp6NBvZ4p8uUe4Mbt0UjWOnha54tKWvJ8=;
+        b=Oy8D1/22qHsIt3Ui2lX+NALyii1SYCYO1+Qt5gmCRQ7AzE6dJ3QfeshC8afc49yiKo
+         dtLm0KvbMS5DZ7wg/f4lPCmpRV2/9noOt2xxrUGfjTn6x6ZPFm2tYoWEV6nWLDsdtOg7
+         lU+Ue7Qn/5h8qzuBOAjfEChw0uXYn5IwqlNgMe8ORpVhMakJdwS6hUJVgPuSGhyiZSmR
+         /qNjKqOBqJTAM6Ztw1p+mYiFEw3oYcNzMwTj3shNDES1WdYokUDCyszLzq8HIouaAth/
+         VTDKkagGNaejtTCvsS/fnhJkNgLtfAJsJLiaves+NPNJNXCdbi0bNAW9+whgdD7amIoR
+         8cDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747051814; x=1747656614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aIck6w/SQcMp6NBvZ4p8uUe4Mbt0UjWOnha54tKWvJ8=;
+        b=Hyr10ZyPBjmLesboVv1P62wLAtf59TBE/L/6+rriSmvjjkNLqiNrHf/x7kTskOwgMJ
+         pveiqQw/L5x8sKY2um3GgvKAsnK1sjJC1333B9W/vxaVh3D3GB3v7/EBkfkhZ/GBWg7i
+         3jk6/RqbVPBcLyjLze56cgxbMMvKlwjN6m1wCG+McD5Dr1zPx9nxvwvpZQjGnJxlAe3u
+         b8WVJH+Cnx3KY1PUqokrFGzldkD5usoPeKMevCiJtVeHCEycg2SHQc5yC11DoiwnAnO7
+         k9R8ujz5D/jhpI+DnoaqE1r3yGN5IpbCRHFokEeJtRQFtNTFk2yrQQX9JtDLdYhJRx4Y
+         lW6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXkBu8O0oauB9h8taohxltIx85BrpaokykYjPAonC3pMV0xAwh6Bu1Chh11Ab5NVKUSfklBiQVJJ+j1ovo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEpzfgrL5sFsovxUw4tUwmQT1fuQX4lq8PttmeoI+FNlDSfHEn
+	mZEvgP/kwgwa7cxSYUxJt5/2UjE7dCYwg8Ix6rn6xvusCI0IWZ0OtnlfkQscNsIKR/VRGIDE2Do
+	2sxdRzq5ZZl0g4kFnNwBB7xoB9Q==
+X-Gm-Gg: ASbGncvi5Jra90RQed5g7cCFQAeT2CsA2VYOD58dA0O3w5IbYrq/yBDwqtHXBlMbBF2
+	Uoj+6XV7W3K4VGcBTZoNu7G72EPe4TbzMkKqe5E0HqetdbdBi4whjuHUabgOpJJTzbrz4O00QcH
+	Xu2IKS67Nl/lpXQBAOql3IN8+WysCTY1bzwL4jM3ebhAsN6JI=
+X-Google-Smtp-Source: AGHT+IF8G7oFBg31h5jCts7XIgAlODcS4luBIOQVuH/IDjNjsiFi00Yb134A5wUkhl4vvlreGdGUypfDko72bBWOs7s=
+X-Received: by 2002:a05:6512:4408:b0:545:944:aae1 with SMTP id
+ 2adb3069b0e04-54fc67ad8bemr4587151e87.12.1747051814065; Mon, 12 May 2025
+ 05:10:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-c25d1
+References: <20250512064353.1535984-1-xin@zytor.com> <20250512064353.1535984-2-xin@zytor.com>
+ <20250512093033.GO4439@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250512093033.GO4439@noisy.programming.kicks-ass.net>
+From: Brian Gerst <brgerst@gmail.com>
+Date: Mon, 12 May 2025 08:10:02 -0400
+X-Gm-Features: AX0GCFv5SFfslEnc_8LF-H7gFfEYQHs37hBNAHrGT6hBY1szsJZOZl9ofHlCNSE
+Message-ID: <CAMzpN2j1zk854JnoFSP4uh+xJQpz3qfwE6T21J+ic7YrKJJ8yQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] x86/fred: Allow variable-sized event frame
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org, luto@kernel.org, 
+	tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 27 Mar 2025 20:59:25 +0100, Bence Csókás wrote:
-> The probe() function of the atmel-quadspi driver got quite convoluted,
-> especially since the addition of SAMA7G5 support, that was forward-ported
-> from an older vendor kernel. During the port, a bug was introduced, where
-> the PM get() and put() calls were imbalanced. To alleivate this - and
-> similar problems in the future - an effort was made to migrate as many
-> functions as possible, to their devm_ managed counterparts. The few
-> functions, which did not yet have a devm_ variant, are added in patch 1 of
-> this series. Patch 2 then uses these APIs to fix the probe() function.
-> 
-> [...]
+On Mon, May 12, 2025 at 5:30=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Sun, May 11, 2025 at 11:43:52PM -0700, Xin Li (Intel) wrote:
+>
+>
+> > -#define INIT_THREAD_INFO(tsk)                        \
+> > -{                                            \
+> > -     .flags          =3D 0,                    \
+> > +extern unsigned long __top_init_kernel_stack[];
+> > +
+> > +#define INIT_THREAD_INFO(tsk)                                         =
+       \
+> > +{                                                                    \
+> > +     .flags          =3D 0,                                           =
+ \
+> > +     .user_pt_regs   =3D (struct pt_regs *)__top_init_kernel_stack,   =
+ \
+>
+> Should that not have a -1 on or something?
 
-Applied to
+No, that symbol already accounts for subtracting the size of pt_regs.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Thanks!
-
-[1/2] pm: runtime: Add new devm functions
-      (no commit info)
-[2/2] spi: atmel-quadspi: Fix unbalanced pm_runtime by using devm_ API
-      commit: 8856eafcc05ecf54d6dd2b6c67804fefd276472c
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Brian Gerst
