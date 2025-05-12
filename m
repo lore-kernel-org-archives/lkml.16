@@ -1,97 +1,130 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87420267F5C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 23:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCB322338;
+	Mon, 12 May 2025 23:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747092169; cv=none; b=Pk0/rCjXLTFt4+75B1bXwbP96vt0RlO2w8DAN3onQGymZ/imsZR6wzK7t5rxaHqZCCQCXZVxUaOgTOsKkiFPgZ/oPlLit9jj24Ppq9hiBedGnfLzUXzm67ITGL0U0d0SIfiygekx0t/XS0IZvKvsRHXNIiUU+tZf+GwmlEBBR6g=
+	t=1747092361; cv=none; b=U1g9gY1OL9kxcOYS+ljGjKIazSiOMVdATHyZersVgq7t3SghbhkhTeUwVHyN9eQtMcwVPhwL25xHlgga2Wijun5HP07+ZjXs2A7gQm7cjyJdcGK9MWhIPxOenQEOeUykmbd2KwYI+UeLAgg8M+GsPzecfGpqlB44sPfTI0GbavA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747092169; c=relaxed/simple;
-	bh=8QV63ZeK82zaeUMGjGSCyyi7ZPB6N83H+neOuJEIHNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H1tBYAxix7fVnZg9UJjjBymBAulV2C1H7NWo8THpSRQ9uF916TARUCK2WvslvYmFJCMKjewi0xzUlXNUCuRJwA9p3QOcgDFdPl+0uoJKURWEvxz7pHFRntnhB6yjNsxSPa6cgKS9yeYLdMKDq+ZaYhzYunAqXqzScYGcSCjEe7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=e8x/qITM; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1747092361; c=relaxed/simple;
+	bh=ocrZSi8DrO1EDikoZUP7oF3uAlxlKAV4CCYK0E7ESY8=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=WsHt2OKnc5WXTbQaNlS+Uz7n6phS+3UHbj78FMFkqh7prg/+ZO1RICKOd25p1P53A/rcCYIzB2u6QfL5niuOJp6ZkCQmLzgCkGCq+4q1u1k+Zl7Z9Kno0rD6AsOOLK3JgOrYNn4LZklOci+fgsKwk6xiIZThgnXfJL1ah8+Ii7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/miODGV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="e8x/qITM"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f54584456fso46880306d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747092165; x=1747696965; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5jkt0ZTtnxVT0Fjxc3OfhXNx+LgFr799Cqodw+ag0XE=;
-        b=e8x/qITMzwPV1wzZMPV8Qmx9mUcwWFLDZ1hIkQ1dfCx+LHOkvxCdtNSCXG0yB9U2Tt
-         4agILe4LTSI4jyH+k8GroLvtGh3hU7mkRyPsGih4aw8CfRSSpJKR+xIhASl0ybawnBA9
-         EcNxdIQdrUK5ffQDm6kTHh/WeL7JUCN4AWtz8YsETW3vEt+LlSRl7JJr8rgtT8r1mpuS
-         hY0ZSqZdvY2f/yWyUaCtLQlGoQ/kmAJMpuzIv1gWzwGVpqJN1Yjlgq5OMUYuzoe23KSz
-         +cbv8XR/hUTuRGj6QwYS7kXZQ38n2/lqnTMBiPUT9exbHCMwXJRkYGtDnUofe95VydK+
-         /nhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747092165; x=1747696965;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5jkt0ZTtnxVT0Fjxc3OfhXNx+LgFr799Cqodw+ag0XE=;
-        b=onsai08E8BT4U4/0/fH7KCMyqWqSy1CY5yJLPe2AFZnu8OA7Ub6wxdBv5dVdP/rr6b
-         kkY/nNSQipgpoHcI2dTU12anEo2wWSV4pRStjA7I4cGIlK4icgtnhyk3POS4oxqbA7WH
-         uHNWXJIE/tGfiaG33xJHBMHQ01SGJpYA50VAts+AJFTTozGy5amx625xFlJXAnLR7/hd
-         HL9BttDeZ5shNSr42K2tSTuswH7cAmBoxQK9AdOq6fh3Pb6fsPt0o3nSxVjYcQoDZED7
-         1sYWLwHUuyAWdUUIXtOpR+LNZ0t8jDxUJs6Jxl72twWvCWlatar6IFIX/eI87+Gphw91
-         qKfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPun73HEQ2gQrMetTx2yrrBnvSTiij0dzTJyS4fQphd8v1B8nCn5uggoXOG/qH84Ku8hafUycfXxYUl+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkoNdc/pwZzldlmVa+oIArY1kvIcfsi+ltFhNNgigAmeIV7Nzo
-	4hpHFjkvM7gEykcO2hIIATqnGX32yp+ucB9xYTlBXNxXhVimdAYBUcRTFKNvo0E=
-X-Gm-Gg: ASbGncvq4BlvnBYEJAV70z2Y3aPemDUPnvC2hIoQ05EHo5RgFMiPgRdJELEFgXqPYNz
-	8ME16aGYHWlAQ7qpqnNhK/shiVgfzT1kMQe3CZVZygrsNMS0vm7+AJSWbLzqzWb3cKu+DsXomkn
-	i3FpUHx7SiP2kyOp1r+M583o4EcXWQgEPxatBdjmJff+3HFBQ0zrptiZNERbpi8h86i0ZQaVwRs
-	5e4Y0c4nxDOSUZx2nfNI46tzZANqKbz3LGd9jN7Att0jWU2rsgkBnCNpFTDBGHnt/mzn2Vsf2lh
-	rhnOr01Lxm1o2IoZqZ7nOdnJGGtDAunde7028F+xALyKCTY4okpA0s0esJ0pNUXLZqoXbxhLZNB
-	qelI3yIKnRwGQC/mJZVEZoncAtorp8aA=
-X-Google-Smtp-Source: AGHT+IEpJbFQRhO+lDwtLTNlPn4mXIlKeDMD51VI/PuTcgz1q8t124IwQ59ij5lyVuEVA/gq3wvZ8g==
-X-Received: by 2002:a05:6214:2405:b0:6f4:c824:9d4a with SMTP id 6a1803df08f44-6f6e47c339cmr228299066d6.13.1747092165369;
-        Mon, 12 May 2025 16:22:45 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a52490sm58716856d6.96.2025.05.12.16.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 16:22:44 -0700 (PDT)
-Date: Mon, 12 May 2025 19:22:43 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
-Subject: Re: [PATCH v3 03/17] cxl: docs/devices - add cxl device and protocol
- reference
-Message-ID: <aCKCw7wvvfiad0Q2@gourry-fedora-PF4VCD3F>
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-4-gourry@gourry.net>
- <e5211a03-617b-43f8-8ba4-b75557e283da@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/miODGV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD71C4CEE7;
+	Mon, 12 May 2025 23:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747092360;
+	bh=ocrZSi8DrO1EDikoZUP7oF3uAlxlKAV4CCYK0E7ESY8=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=G/miODGVrcGeq496mvoRikgxy5uBNnOkysR4Bjkvdh99lpImJjlM0Q5BY/YOvD2eX
+	 Tphg+iiW8oLW9MrYAirmoLLIf+pWgv0NN0Zk9AcXiXyDOzLVLNem6tdFThiaJGVPmN
+	 15PcatmTdyI7Ze3ctlGjCRzcnYK33f2W6MXt7KXMSpKfzycAYk0STYuZkp3uKIuVUI
+	 k+diB3b7yfILzHv2GmGN/ceT6plbGrTysUtzmgENfnumE3CYdoWsmKvoxqQfNfc46P
+	 D1nIFgQTzLfQuUP5n0LDuCL/V7cexibccQXFb3mQqBCAeX6jGDDqlvTPgrFGHqhPOg
+	 KR1Fk1UXvw5pQ==
+Date: Mon, 12 May 2025 18:25:58 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5211a03-617b-43f8-8ba4-b75557e283da@intel.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Tommaso Merciai <tomm.merciai@gmail.com>, Liu Ying <victor.liu@nxp.com>, 
+ Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, devicetree@vger.kernel.org, 
+ Dongcheng Yan <dongcheng.yan@intel.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Ross Burton <ross.burton@arm.com>, Will Deacon <will@kernel.org>, 
+ Eric Biggers <ebiggers@google.com>, 
+ Julien Massot <julien.massot@collabora.com>, linux-media@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>, 
+ Taniya Das <quic_tdas@quicinc.com>, Mark Brown <broonie@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ linux-staging@lists.linux.dev, Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Ricardo Ribalda <ribalda@chromium.org>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Zhi Mao <zhi.mao@mediatek.com>, 
+ Cosmin Tanislav <cosmin.tanislav@analog.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Hans Verkuil <hverkuil@xs4all.nl>, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+ Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Kieran Bingham <kieran.bingham@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, 
+ Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, 
+ Conor Dooley <conor+dt@kernel.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+In-Reply-To: <20250512212832.3674722-15-demonsingur@gmail.com>
+References: <20250512212832.3674722-1-demonsingur@gmail.com>
+ <20250512212832.3674722-15-demonsingur@gmail.com>
+Message-Id: <174709235870.686179.16618194990565341079.robh@kernel.org>
+Subject: Re: [PATCH v3 14/19] dt-bindings: media: i2c: add MAX9296A,
+ MAX96716A, MAX96792A
 
-On Mon, May 12, 2025 at 04:08:24PM -0700, Dave Jiang wrote:
-> > +As of v6.14, Linux does not provide a formalized interface to manage DCD
-> > +devices, however there is active work on LKML targeting future release.
+
+On Tue, 13 May 2025 00:28:23 +0300, Cosmin Tanislav wrote:
+> The MAX9296A deserializer converts single or dual serial inputs to MIPI
+> CSI-2 outputs. The GMSL2 links operate at a fixed rate of 3Gbps or 6Gbps
+> in the forward direction and 187.5Mbps in the reverse direction.
+> In GMSL1 mode, each serial link can be paired with 3.12Gbps or 1.5Gbps
+> GMSL1 serializers or operate up to 4.5Gbps with GMSL2 serializers with
+> GMSL1 backward compatibility. The MAX9296A supports mixed GMSL2 and
+> GMSL1 links. The serial inputs operate independently, allowing videos
+> with different timings and resolutions to be received on each input.
 > 
-> I wonder instead of referring to a kernel version, maybe refer to the CXL maturity map on support status.
+> MAX96716A supports both tunnel and pixel mode.
+> MAX96792A supports both tunnel and pixel mode, and has two GMSL3 links.
 > 
-> DJ
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  .../bindings/media/i2c/maxim,max9296a.yaml    | 242 ++++++++++++++++++
+>  MAINTAINERS                                   |   6 +
+>  2 files changed, 248 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
 > 
 
-This is a good idea for cxl-specific stuff.  There was another patch or
-two with working like this.  Might be worth collecting these all and
-just updating the wording in a follow up patch.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-~Gregory
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.example.dtb: serializer@40 (maxim,max96717): compatible: 'oneOf' conditional failed, one must be fixed:
+	['maxim,max96717'] is too short
+	'maxim,max96717' is not one of ['maxim,max9295a', 'maxim,max96717f']
+	from schema $id: http://devicetree.org/schemas/media/i2c/maxim,max96717.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.example.dtb: serializer@40 (maxim,max96717): compatible: 'oneOf' conditional failed, one must be fixed:
+	['maxim,max96717'] is too short
+	'maxim,max96717' is not one of ['maxim,max9295a', 'maxim,max96717f']
+	from schema $id: http://devicetree.org/schemas/media/i2c/maxim,max96717.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250512212832.3674722-15-demonsingur@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
