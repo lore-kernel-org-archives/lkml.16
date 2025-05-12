@@ -1,454 +1,154 @@
-Received: from trager.us (trager.us [52.5.81.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2A0297B95;
-	Mon, 12 May 2025 19:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201CD29713B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076980; cv=none; b=Nwy+1fQtN3o64BlHUDolQyFBYZ1tauMqxs4Qa6eKoTy7z+L8EGRI6YupgCzSKzPOTWVSGV07Fb+1CwGPwWF1TzXINvGSvP+4NmQaiN3lHHbCO3L7wkfZMLlU1wCANaAuAOB20exkJ6e2oeK/VWOYt9gLLWnAL5dJeiY1VGx9C4s=
+	t=1747077023; cv=none; b=Clzbc2bkVg3beOrhGtkf5Msy8vBABv2MaMOo3dpqOSdRxkHIRQUd0Ipj8fcoVlUJhdgv2+mRf+lPeJa4Ks1OdGIcpy08pLqfSkYcneBHKgYgvO/l6EBbCITzRGf7dFCNPbZOElmU4vwe9Yoa/mmGvCpG20B+nMiik331nqjoHi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076980; c=relaxed/simple;
-	bh=DJ+l5QzZw9VZQNabyv3jkwLGwtMY56b2MtxyzuPKzcw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nwMsDA6XQfbBUZ70lvQWJwwH1OLOifPq89WClrbxAYMISMtiKzm/D74/vptpFLwYzdIlMo6DLNthYjsb9+6YuK9Ijk6xR7FhI8zHvUuellECdMhFefDNUw6IbJ1tsjmgw4NSLv7bY1nis+k95R/9p22/pHKJ4B7sseGlcuVnmXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from [163.114.132.130] (helo=localhost)
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uEYWm-00072w-UD; Mon, 12 May 2025 19:09:29 +0000
-From: Lee Trager <lee@trager.us>
-To: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	kernel-team@meta.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Su Hui <suhui@nfschina.com>,
-	Lee Trager <lee@trager.us>,
-	Al Viro <viro@zeniv.linux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v5 5/5] eth: fbnic: Add devlink dev flash support
-Date: Mon, 12 May 2025 11:54:01 -0700
-Message-ID: <20250512190109.2475614-6-lee@trager.us>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250512190109.2475614-1-lee@trager.us>
-References: <20250512190109.2475614-1-lee@trager.us>
+	s=arc-20240116; t=1747077023; c=relaxed/simple;
+	bh=wSSePSSFWXHCvtu8SYuUqUMJvmE4cuWdk3lZOY2BEX8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tMR8LKZE83HuwqFeD8nT+FoBptKOWf0jTfTDFnHm4u6G0ovwV4bL+llL1Cp/WB/FK7wDvVDFwWMB3sLqTyaXqZfc/IfPZAv6GW34vo/WMH//VqtBn9E5t1HAzWiOYHWSFQ5zxnJC4ql7EXUk00sX2+GtxJ7uNgVrOV4AZYJtrkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UL2uAYR6; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UL2uAYR6"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso2259a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747077020; x=1747681820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N5AiAQRzff+Fnpyk4hqCxjXcsP8Fivam44x9/hbBNxI=;
+        b=UL2uAYR6kWxnby54S21H9f1T14bilUeyORYK6ItNKSfCejnj+2WYdXjYq9spkP2kGS
+         XHxbXrrC8NdjhkoV/4PmBaAOaeZpx15GACX1DJ5IO14SOtpp9CbSUs2BoGZXrIujFPCo
+         14qj6nWSebG5CcavfO5nSyGLGaZ3MfTNXDDI/s4MxOEthZovpGZswug3mMmIbuWnkQ1S
+         eiNE56ui3n5xvxmJFBBKp6tlLLxlF/nXwsJsvMiD27koPlRsela5KdBLYuLZu/zMzvS1
+         5jRVP0JtiSX039C12LhLonV/LfPmNmxhIWoAyE2569peNiV7aNEtVvPRhj7j0Hr4cWOI
+         jS8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747077020; x=1747681820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N5AiAQRzff+Fnpyk4hqCxjXcsP8Fivam44x9/hbBNxI=;
+        b=jxzx6XVffoT99E4Zu+RWawgycpSttjMQb7cuH67dLoDsPm+aHh+Y3gIPN9ZeQ5jiR0
+         dwbiYXMFIEZUk/HQ+ZhKjFkpYifr5Q5aw0cZy8G45uEoq5iI5WvQwj4hYUikP64WMPa0
+         OnY1cZ2/RnJG3QpNSdXz6dNHisSU/0zDduXtxeuhaGQTZy53JwC6bnOP2kj1VG3s3N2p
+         ruC0Q3bCv12dbcynrn+9dGSl7Si06Ez8GqNaCLC0YspiNkc1QTeihD3jta+cKbRS+FG9
+         3MZg9jumjjoLdYPsM+jnbed1Eq4nI+RwinUX9GApeGTRaLraVX4q24bbzRljXwgNa7mT
+         xdUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyR0gwLdubO1vbfwME6NPvQoYvae/0PZwg9VxjaKSvJ9ynBrqRlF9x/vIR26yVNu9C8xow7unvAxyU2S0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx83eUv2fuAK2+jIsFsRcRzFKDYJBFIHK3qqyriQKxvVt9Gn7rz
+	ibIg2vGNlhQ/T4ZXrx76EtP1JcCl8uQpNGdFEMw4nM6fpgcCAdbV4eQyLAzCcqMnhof4dfETf7L
+	r0ZAY9DbQeFuN11rBgsYUcAc6q2elP/bl/cUGz/Kd
+X-Gm-Gg: ASbGncskhIeq3NeUkSBu/oTlsJpQCgbJiro9PQaKtxIeIiVDU36Gm79euLqvLGZCpV6
+	YupDlv1UYCSNjPFdLGho8bM5PluiTqA1/kMipLmaCXBLa4kzK+lpOt7XERRauh5wGA7jcTDkn2I
+	LlLyg/NlJbWl2k8gMGxPH3KwdhvnNe/biHHmuZooscy54oeKNkEEB/raPTe7ZkoI4=
+X-Google-Smtp-Source: AGHT+IH0X7OXY2c2wm3vHcfj6eREiCHt0sfaqRAvXgUgcOFWWbKYOjtzsyI4MgBbRRSFkgBiNpZNXPI800gGZwDDcdg=
+X-Received: by 2002:aa7:d94d:0:b0:5fc:e6a6:6a34 with SMTP id
+ 4fb4d7f45d1cf-5ff356e3dcbmr11772a12.6.1747077020206; Mon, 12 May 2025
+ 12:10:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250509115126.63190-1-byungchul@sk.com> <20250509115126.63190-20-byungchul@sk.com>
+ <CAHS8izMoS4wwmc363TFJU_XCtOX9vOv5ZQwD_k2oHx40D8hAPA@mail.gmail.com>
+ <aB5FUKRV86Tg92b6@casper.infradead.org> <CAHS8izMJx=+229iLt7GphUwioeAK5=CL0Fxi7TVywS2D+c-PKw@mail.gmail.com>
+ <aB5b_FmBlcqQk09l@casper.infradead.org>
+In-Reply-To: <aB5b_FmBlcqQk09l@casper.infradead.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 12 May 2025 12:10:05 -0700
+X-Gm-Features: AX0GCFvoPJJcQzET5ZShS86HbjuJ2f-9-4APyukZLguKBpnLzWbvE5OAdk4p78Q
+Message-ID: <CAHS8izOL_L3fjB1YutDm8xvp1hboyO9_ng0pOVESUqDew9N96w@mail.gmail.com>
+Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct page
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Byungchul Park <byungchul@sk.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
+	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
+	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support to update the CMRT and control firmware as well as the UEFI
-driver on fbnic using devlink dev flash.
+On Fri, May 9, 2025 at 12:48=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Fri, May 09, 2025 at 12:04:37PM -0700, Mina Almasry wrote:
+> > Right, all I'm saying is that if it's at all possible to keep net_iov
+> > something that can be extended with fields unrelated to struct page,
+> > lets do that. net_iov already has fields that should not belong in
+> > struct page like net_iov_owner and I think more will be added.
+>
+> Sure, that's fine.
+>
 
-Make sure the shutdown / quiescence paths like suspend take the devlink
-lock to prevent them from interrupting the FW flashing process.
+Excellent!
 
-Signed-off-by: Lee Trager <lee@trager.us>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
-V5:
-* Make sure fbnic_pldm_match_record() always returns a bool
+> > I'm thinking netmem_desc can be the fields that are shared between
+> > struct net_iov and struct page (but both can have more specific to the
+> > different memory types). As you say, for now netmem_desc can currently
+> > overlap fields in struct page and struct net_iov, and a follow up
+> > change can replace it with something that gets kmalloced and (I
+> > guess?) there is a pointer in struct page or struct net_iov that
+> > refers to the netmem_desc that contains the shared fields.
+>
+> I'm sure I've pointed you at
+> https://kernelnewbies.org/MatthewWilcox/Memdescs before.
+>
 
- .../device_drivers/ethernet/meta/fbnic.rst    |  11 +
- drivers/net/ethernet/meta/Kconfig             |   1 +
- .../net/ethernet/meta/fbnic/fbnic_devlink.c   | 260 +++++++++++++++++-
- drivers/net/ethernet/meta/fbnic/fbnic_fw.h    |   9 +
- drivers/net/ethernet/meta/fbnic/fbnic_pci.c   |   9 +
- 5 files changed, 289 insertions(+), 1 deletion(-)
+I've gone through that again. Some of it is a bit over my head
+(sorry), but this page does say that page->compound_head will have a
+link to memdesc:
 
-diff --git a/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst b/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst
-index 3483e498c08e..f8592dec8851 100644
---- a/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst
-+++ b/Documentation/networking/device_drivers/ethernet/meta/fbnic.rst
-@@ -28,6 +28,17 @@ devlink dev info provides version information for all three components. In
- addition to the version the hg commit hash of the build is included as a
- separate entry.
+https://kernelnewbies.org/MatthewWilcox/Memdescs/Path
 
-+Upgrading Firmware
-+------------------
-+
-+fbnic supports updating firmware using signed PLDM images with devlink dev
-+flash. PLDM images are written into the flash. Flashing does not interrupt
-+the operation of the device.
-+
-+On host boot the latest UEFI driver is always used, no explicit activation
-+is required. Firmware activation is required to run new control firmware. cmrt
-+firmware can only be activated by power cycling the NIC.
-+
- Statistics
- ----------
+That's an approach that sounds fine to me. We can have net_iov follow
+that pattern if necessary (have in it a field that points to the
+memdesc).
 
-diff --git a/drivers/net/ethernet/meta/Kconfig b/drivers/net/ethernet/meta/Kconfig
-index 831921b9d4d5..3ba527514f1e 100644
---- a/drivers/net/ethernet/meta/Kconfig
-+++ b/drivers/net/ethernet/meta/Kconfig
-@@ -27,6 +27,7 @@ config FBNIC
- 	select NET_DEVLINK
- 	select PAGE_POOL
- 	select PHYLINK
-+	select PLDMFW
- 	help
- 	  This driver supports Meta Platforms Host Network Interface.
+> But I wouldn't expect to have net_iov contain a pointer to netmem_desc,
+> rather it would embed a netmem_desc.  Unless there's a good reason to
+> separate them.
+>
 
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-index 0072d612215e..71d9461a0d1b 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-@@ -3,10 +3,12 @@
+net_iov embedding netmem_desc sounds fine as well to me.
 
- #include <linux/unaligned.h>
- #include <linux/pci.h>
-+#include <linux/pldmfw.h>
- #include <linux/types.h>
- #include <net/devlink.h>
+> Actually, I'd hope to do away with net_iov entirely.  Networking should
+> handle memory-on-PCI-devices the same way everybody else does (as
+> hotplugged memory) rather than with its own special structures.
+>
 
- #include "fbnic.h"
-+#include "fbnic_tlv.h"
+Doing away with net_iov entirely is a different conversation. From the
+devmem TCP side, you're much more of an expert than me but my
+experience is that the GPU devices we initially net_iovs for, dmabuf
+is the standard way of sharing memory, and the dma-buf importer just
+gets a scatterlist, and has to either work with the scatterlist
+directly or create descriptors (like net_iov) to handle chunks of the
+scatterlist.
 
- #define FBNIC_SN_STR_LEN	24
+I think we discussed this before and you said to me you have long term
+plans to get rid of scatterlists. Once that is done we may be able to
+do away with the dma-buf use case for net_iovs, but the conversation
+about migrating scatterlists to something new is well over my head and
+probably needs discussion with the dma-buf maintainers.
 
-@@ -109,8 +111,264 @@ static int fbnic_devlink_info_get(struct devlink *devlink,
- 	return 0;
- }
+Note also that the users of net_iov have expanded and io_uring has a
+dependency on it as well.
 
-+static bool
-+fbnic_pldm_match_record(struct pldmfw *context, struct pldmfw_record *record)
-+{
-+	struct pldmfw_desc_tlv *desc;
-+	u32 anti_rollback_ver = 0;
-+	struct devlink *devlink;
-+	struct fbnic_dev *fbd;
-+	struct pci_dev *pdev;
-+
-+	/* First, use the standard PCI matching function */
-+	if (!pldmfw_op_pci_match_record(context, record))
-+		return false;
-+
-+	pdev = to_pci_dev(context->dev);
-+	fbd = pci_get_drvdata(pdev);
-+	devlink = priv_to_devlink(fbd);
-+
-+	/* If PCI match is successful, check for vendor-specific descriptors */
-+	list_for_each_entry(desc, &record->descs, entry) {
-+		if (desc->type != PLDM_DESC_ID_VENDOR_DEFINED)
-+			continue;
-+
-+		if (desc->size < 21 || desc->data[0] != 1 ||
-+		    desc->data[1] != 15)
-+			continue;
-+
-+		if (memcmp(desc->data + 2, "AntiRollbackVer", 15) != 0)
-+			continue;
-+
-+		anti_rollback_ver = get_unaligned_le32(desc->data + 17);
-+		break;
-+	}
-+
-+	/* Compare versions and return error if they do not match */
-+	if (anti_rollback_ver < fbd->fw_cap.anti_rollback_version) {
-+		char buf[128];
-+
-+		snprintf(buf, sizeof(buf),
-+			 "New firmware anti-rollback version (0x%x) is older than device version (0x%x)!",
-+			 anti_rollback_ver, fbd->fw_cap.anti_rollback_version);
-+		devlink_flash_update_status_notify(devlink, buf,
-+						   "Anti-Rollback", 0, 0);
-+
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static int
-+fbnic_flash_start(struct fbnic_dev *fbd, struct pldmfw_component *component)
-+{
-+	struct fbnic_fw_completion *cmpl;
-+	int err;
-+
-+	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
-+	if (!cmpl)
-+		return -ENOMEM;
-+
-+	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ);
-+	err = fbnic_fw_xmit_fw_start_upgrade(fbd, cmpl,
-+					     component->identifier,
-+					     component->component_size);
-+	if (err)
-+		goto cmpl_free;
-+
-+	/* Wait for firmware to ack firmware upgrade start */
-+	if (wait_for_completion_timeout(&cmpl->done, 10 * HZ))
-+		err = cmpl->result;
-+	else
-+		err = -ETIMEDOUT;
-+
-+	fbnic_fw_clear_cmpl(fbd, cmpl);
-+cmpl_free:
-+	fbnic_fw_put_cmpl(cmpl);
-+
-+	return err;
-+}
-+
-+static int
-+fbnic_flash_component(struct pldmfw *context,
-+		      struct pldmfw_component *component)
-+{
-+	const u8 *data = component->component_data;
-+	const u32 size = component->component_size;
-+	struct fbnic_fw_completion *cmpl;
-+	const char *component_name;
-+	struct devlink *devlink;
-+	struct fbnic_dev *fbd;
-+	struct pci_dev *pdev;
-+	u32 offset = 0;
-+	u32 length = 0;
-+	char buf[32];
-+	int err;
-+
-+	pdev = to_pci_dev(context->dev);
-+	fbd = pci_get_drvdata(pdev);
-+	devlink = priv_to_devlink(fbd);
-+
-+	switch (component->identifier) {
-+	case QSPI_SECTION_CMRT:
-+		component_name = "boot1";
-+		break;
-+	case QSPI_SECTION_CONTROL_FW:
-+		component_name = "boot2";
-+		break;
-+	case QSPI_SECTION_OPTION_ROM:
-+		component_name = "option-rom";
-+		break;
-+	default:
-+		snprintf(buf, sizeof(buf), "Unknown component ID %u!",
-+			 component->identifier);
-+		devlink_flash_update_status_notify(devlink, buf, NULL, 0,
-+						   size);
-+		return -EINVAL;
-+	}
-+
-+	/* Once firmware receives the request to start upgrading it responds
-+	 * with two messages:
-+	 * 1. An ACK that it received the message and possible error code
-+	 *    indicating that an upgrade is not currently possible.
-+	 * 2. A request for the first chunk of data
-+	 *
-+	 * Setup completions for write before issuing the start message so
-+	 * the driver can catch both messages.
-+	 */
-+	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
-+	if (!cmpl)
-+		return -ENOMEM;
-+
-+	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ);
-+	err = fbnic_mbx_set_cmpl(fbd, cmpl);
-+	if (err)
-+		goto cmpl_free;
-+
-+	devlink_flash_update_timeout_notify(devlink, "Initializing",
-+					    component_name, 15);
-+	err = fbnic_flash_start(fbd, component);
-+	if (err)
-+		goto err_no_msg;
-+
-+	while (offset < size) {
-+		if (!wait_for_completion_timeout(&cmpl->done, 15 * HZ)) {
-+			err = -ETIMEDOUT;
-+			break;
-+		}
-+
-+		err = cmpl->result;
-+		if (err)
-+			break;
-+
-+		/* Verify firmware is requesting the next chunk in the seq. */
-+		if (cmpl->u.fw_update.offset != offset + length) {
-+			err = -EFAULT;
-+			break;
-+		}
-+
-+		offset = cmpl->u.fw_update.offset;
-+		length = cmpl->u.fw_update.length;
-+
-+		if (length > TLV_MAX_DATA || offset + length > size) {
-+			err = -EFAULT;
-+			break;
-+		}
-+
-+		devlink_flash_update_status_notify(devlink, "Flashing",
-+						   component_name,
-+						   offset, size);
-+
-+		/* Mailbox will set length to 0 once it receives the finish
-+		 * message.
-+		 */
-+		if (!length)
-+			continue;
-+
-+		reinit_completion(&cmpl->done);
-+		err = fbnic_fw_xmit_fw_write_chunk(fbd, data, offset, length,
-+						   0);
-+		if (err)
-+			break;
-+	}
-+
-+	if (err) {
-+		fbnic_fw_xmit_fw_write_chunk(fbd, NULL, 0, 0, err);
-+err_no_msg:
-+		snprintf(buf, sizeof(buf), "Mailbox encountered error %d!",
-+			 err);
-+		devlink_flash_update_status_notify(devlink, buf,
-+						   component_name, 0, 0);
-+	}
-+
-+	fbnic_fw_clear_cmpl(fbd, cmpl);
-+cmpl_free:
-+	fbnic_fw_put_cmpl(cmpl);
-+
-+	return err;
-+}
-+
-+static const struct pldmfw_ops fbnic_pldmfw_ops = {
-+	.match_record = fbnic_pldm_match_record,
-+	.flash_component = fbnic_flash_component,
-+};
-+
-+static int
-+fbnic_devlink_flash_update(struct devlink *devlink,
-+			   struct devlink_flash_update_params *params,
-+			   struct netlink_ext_ack *extack)
-+{
-+	struct fbnic_dev *fbd = devlink_priv(devlink);
-+	const struct firmware *fw = params->fw;
-+	struct device *dev = fbd->dev;
-+	struct pldmfw context;
-+	char *err_msg;
-+	int err;
-+
-+	context.ops = &fbnic_pldmfw_ops;
-+	context.dev = dev;
-+
-+	err = pldmfw_flash_image(&context, fw);
-+	if (err) {
-+		switch (err) {
-+		case -EINVAL:
-+			err_msg = "Invalid image";
-+			break;
-+		case -EOPNOTSUPP:
-+			err_msg = "Unsupported image";
-+			break;
-+		case -ENOMEM:
-+			err_msg = "Out of memory";
-+			break;
-+		case -EFAULT:
-+			err_msg = "Invalid header";
-+			break;
-+		case -ENOENT:
-+			err_msg = "No matching record";
-+			break;
-+		case -ENODEV:
-+			err_msg = "No matching device";
-+			break;
-+		case -ETIMEDOUT:
-+			err_msg = "Timed out waiting for reply";
-+			break;
-+		default:
-+			err_msg = "Unknown error";
-+			break;
-+		}
-+
-+		NL_SET_ERR_MSG_FMT_MOD(extack,
-+				       "Failed to flash PLDM Image: %s (error: %d)",
-+				       err_msg, err);
-+	}
-+
-+	return err;
-+}
-+
- static const struct devlink_ops fbnic_devlink_ops = {
--	.info_get = fbnic_devlink_info_get,
-+	.info_get	= fbnic_devlink_info_get,
-+	.flash_update	= fbnic_devlink_flash_update,
- };
+The good news (I think) is that Byungchul's effort does not require
+the removal of net_iov. From looking at this patchset I think what
+he's trying to do is very compatible with net_iovs with minor
+modifications.
 
- void fbnic_devlink_free(struct fbnic_dev *fbd)
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-index 0ab6ae3859e4..6baac10fd688 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-@@ -100,6 +100,15 @@ do {									\
- #define fbnic_mk_fw_ver_str(_rev_id, _str) \
- 	fbnic_mk_full_fw_ver_str(_rev_id, "", "", _str, sizeof(_str))
-
-+enum {
-+	QSPI_SECTION_CMRT			= 0,
-+	QSPI_SECTION_CONTROL_FW			= 1,
-+	QSPI_SECTION_UCODE			= 2,
-+	QSPI_SECTION_OPTION_ROM			= 3,
-+	QSPI_SECTION_USER			= 4,
-+	QSPI_SECTION_INVALID,
-+};
-+
- #define FW_HEARTBEAT_PERIOD		(10 * HZ)
-
- enum {
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-index 70a852b3e99d..249d3ef862d5 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-@@ -6,6 +6,7 @@
- #include <linux/pci.h>
- #include <linux/rtnetlink.h>
- #include <linux/types.h>
-+#include <net/devlink.h>
-
- #include "fbnic.h"
- #include "fbnic_drvinfo.h"
-@@ -388,8 +389,12 @@ static int fbnic_pm_suspend(struct device *dev)
- 	rtnl_unlock();
-
- null_uc_addr:
-+	devl_lock(priv_to_devlink(fbd));
-+
- 	fbnic_fw_free_mbx(fbd);
-
-+	devl_unlock(priv_to_devlink(fbd));
-+
- 	/* Free the IRQs so they aren't trying to occupy sleeping CPUs */
- 	fbnic_free_irqs(fbd);
-
-@@ -420,11 +425,15 @@ static int __fbnic_pm_resume(struct device *dev)
-
- 	fbd->mac->init_regs(fbd);
-
-+	devl_lock(priv_to_devlink(fbd));
-+
- 	/* Re-enable mailbox */
- 	err = fbnic_fw_request_mbx(fbd);
- 	if (err)
- 		goto err_free_irqs;
-
-+	devl_unlock(priv_to_devlink(fbd));
-+
- 	/* No netdev means there isn't a network interface to bring up */
- 	if (fbnic_init_failure(fbd))
- 		return 0;
---
-2.47.1
+--=20
+Thanks,
+Mina
