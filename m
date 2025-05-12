@@ -1,221 +1,107 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238F824BD1F;
-	Mon, 12 May 2025 22:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747088209; cv=fail; b=md/WD3EkAHNRQy+tN/QePaH+8XU6W1u9cN0UZehjQEyZcxY084/AKOXwBFUiQKuVT4h0kPetpd/CxPBdQ/Yt5M+NLj3OVG+sjDt+q6Yo9HWOU+vWWXvfHO15KuyGSkPW499UVKmQPQQeAmGgAcLMqLyv/sTKCiUBGq+KQ4pR61U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747088209; c=relaxed/simple;
-	bh=KARAmECtdI8zyPrxu53/O8qRJf3ijeRwvRWT2nGLECg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tzbzkokENIibEx+OTrNZimaBr/OPZllOut34DLNCdQunAy6211TnBYKm/b7jOOswoJ9i4saZBnKMGddTbPdXZz7yi3l6YcayBfOOTvGDg5wK25x70PRJdlE5dccWWrNSKIl5jP7/c5cvW1fHKnFFPpNjtWwkNyVsqaBx4Jlcm3g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ngihn0ve; arc=fail smtp.client-ip=40.107.220.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC8B24DFFD;
+	Mon, 12 May 2025 22:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747088234; cv=none; b=c2RV/5jJwVbjHP9D8Vsn+Nnjyup4pBUo4WRoNy9MqJB4Rt7AceNOUf03PvwVZ43KR/rizdMvN1D1wyEBJqwpKUrdTGkr/ffoin4YcYdH9GUebLGNTdZUKFa25Ja2URNackNOD6z8ILuHP9JoayhOwxEWAkW5tRYXuGg+NdInBb0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747088234; c=relaxed/simple;
+	bh=V2RN0phQQ4I6fxeWpbMqgRtPQ1lwTUdTOKAtatK8rtk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fWO36MYr7QQuZ3h0UXmK2MhSa7aCtquY2g6L4AxdCyje7EItQ3c8C0FmDy+NaLVIo9+dT7+TfjRpbY9oywmW36jbJ01My8A5gOf7mO8C5rGfCuDSj0xASA4bDTbwzbztjXOCZjAB4+DytLliluvUy+H/w85mlRQ0PC24PSSCeOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFhXpCK8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ngihn0ve"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yfb1UJCoh3OTlDQXi40wXouB6zHJzTx/YQ/CGTC4Zq79v8TG93ixFql/vBNN5NF5e56jtm6FINqLJfYJrMcU0hgpjCW//ldIMUfhuXkCoagtfgVMumrAy8jn8jJIlwiWMXDGbii5F63ZlkAWyP5EW4CqZZChUub1iA+5LFApdiaRYzG2eCD8fDbObfid2OjjVYUH29ToC7OxZOEYdnXL+eMPMNCbEJ56aYGSe6r+xSXwdJODODEebfOk77spoLjcZssUVqs4bA9ymGlO8ziQtTxFSf7Y1gp2mFc1R+vnShZ3mPRVetjh6qxyIB+sUiv/FAVnF/lX90vCZFTqWh0D2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QO9i8JbsdHQ5K1Mnmr7CWIu+rQA8pVjLeDYUPMrTeXM=;
- b=AxZGtvgdx+XfDwqk1COUt1sHkBbqtecYIfCWRGy+cGK7OH/ISQbjh77ZhFceN9xzwzLG8+GY1Xf+LSg25JPxU5Ohb3V9UUZqcBzffPgBOkqdg0PleUumKJHnoUxhxymP0TUZRAxr49RQ+M/qCPsy9gXc8rd7MRVsFgz79TC5kxFeVJi6wdzQOREP/Z2OPSCvd6L7WUDSHI2sZ/ZJAZK1f4e0l7ciI/KGs3uPqw/gQWP3cuRpcjCgPRh05WRkbMGLcB/xSEl6o1lznjlXTKia2FZm6LJSXEvVwZqt1sfIM7as52womOBB27LxdO3p7B0cPJWB/jJj5x4qnxaeXZBGJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QO9i8JbsdHQ5K1Mnmr7CWIu+rQA8pVjLeDYUPMrTeXM=;
- b=ngihn0veF2mSCYtsIFxd12qdhafQlfoEvsjgFRygWnyvLQkt6UEsRIxWt5z3X/wVrDryjpMGTMXNmn5EwXcRvp18Ty7Hg5QKf4YiIkEjq93COzQlYE3ojl3gMnFFxdRxaq1p6MYC94Orzkx4ylvK/NtqCUqVDIg/SuDnGPR4H7g=
-Received: from MN2PR01CA0042.prod.exchangelabs.com (2603:10b6:208:23f::11) by
- DM4PR12MB8572.namprd12.prod.outlook.com (2603:10b6:8:17d::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.21; Mon, 12 May 2025 22:16:44 +0000
-Received: from BL6PEPF00022573.namprd02.prod.outlook.com
- (2603:10b6:208:23f:cafe::82) by MN2PR01CA0042.outlook.office365.com
- (2603:10b6:208:23f::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Mon,
- 12 May 2025 22:16:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF00022573.mail.protection.outlook.com (10.167.249.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Mon, 12 May 2025 22:16:44 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
- 2025 17:16:43 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<thomas.lendacky@amd.com>, <shuah@kernel.org>, <prsampat@amd.com>
-CC: <pgonda@google.com>, <nikunj@amd.com>, <pankaj.gupta@amd.com>,
-	<michael.roth@amd.com>, <sraithal@amd.com>, <linux-kernel@vger.kernel.org>,
-	<x86@kernel.org>, <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-coco@lists.linux.dev>
-Subject: [PATCH v3] KVM: SEV: Disable SEV-SNP support on initialization failure
-Date: Mon, 12 May 2025 22:16:34 +0000
-Message-ID: <20250512221634.12045-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFhXpCK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0353AC4CEE7;
+	Mon, 12 May 2025 22:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747088234;
+	bh=V2RN0phQQ4I6fxeWpbMqgRtPQ1lwTUdTOKAtatK8rtk=;
+	h=From:Date:Subject:To:Cc:From;
+	b=FFhXpCK82kRf8eK/WzKD0IeqVtLK/1q7ThAGAfoP3K+vCD/ZAUWawRP5+Hbq6UNqc
+	 /iXECd67SpUj9e5wTtxbdlRsLW97qFEc0/dkukhvZLIkydmqKvRfeQ0rKQYzBjCDXC
+	 5o+BRGT5jUTe/bvpQxNfJ4GUxuqY8bg85l4BATNkdzSOMpNZTHMZxsEqb/DoWSXamx
+	 eFGK93te7sGc3grV+nxdZcgrCvaw/7diIOXg6Q9aRhIhR2DIsV9gS8/T/P47yZ8hAg
+	 qVExCteZmUJutC8uNser/IhIUVA1bY7DN/sVfRzvu6NYDXWypj4QlCKJDvIwFQRNBj
+	 yrmWbnOXMVt4w==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Tue, 13 May 2025 00:16:55 +0200
+Subject: [PATCH] genirq: Ensure flags in lock guard is consistently
+ initialized
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00022573:EE_|DM4PR12MB8572:EE_
-X-MS-Office365-Filtering-Correlation-Id: e7742d21-a264-4cf7-030e-08dd91a2ade8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fbMfd8qkOhQKRSU6XSwkIYTG5vdZzfiGnBlTI5OfID5r0CQxqMqcXy5PM1mF?=
- =?us-ascii?Q?wuW8C9FvUy6ES+udJnfpL8WB3pymf95NNKw16JJXhzR+K6ZPFnH/9Q0SdkPl?=
- =?us-ascii?Q?tvH69Hhqba6bybv1GYPNRwUQPi7hD8VQKOcAya/Y1qXbFJJmJn8RpCS8vio3?=
- =?us-ascii?Q?JUl6/1TmeCsJlP0TBZp3YNvPO6F4TNH4U39oZTintgnrJo1f8d+h+ruS4GTR?=
- =?us-ascii?Q?xL2e+eZI+V9CRU5FX27p0MUQW0EuNP6eQBUYr75pigUzsFxHOTek1wOPYJGt?=
- =?us-ascii?Q?7VFnGfgmf7A0q2SNALq6YBdq4HVwhX2EZ6cQd8HBDGWSOTFwj4LnCOhxDyes?=
- =?us-ascii?Q?JE2hwDZMwwtYnXxTfXUYOOxQ/KSGPs+5u90IKgyd7UpfqNaKeFdCZ7GjPKzv?=
- =?us-ascii?Q?y6Gri2XByot4xKVAtPKQHGOlihWhre4gvkMqMKXDgaNdjE/s6wzg0dZvbePv?=
- =?us-ascii?Q?y8szNkC4Jw7W9j8MJspjj1D7hY+srl0+zMrHCYoSLYoJVJbojgyuBgedmzHY?=
- =?us-ascii?Q?v4Y3Uvt6jHHz91SPJvgcxnp+m4EnzjGHRS/daolXY0mruF8uVRkGl5td8UeD?=
- =?us-ascii?Q?J5v8ZvbZJ/0+a4/+9i/jZjgd35guxWi19uzRaP0lW09akovHPSu+W7G1Xyvt?=
- =?us-ascii?Q?IPqSiRHnxCgFvuhjFMKF9EZ//FSJ7HxRjyaBSZTg+5sF7J4QCZB/IRCyufGi?=
- =?us-ascii?Q?y3FX6+yFWueKtr4n02zXaxVhJ996ELQJBeFr9ls80IEkRIvKxeyVyuYmffy1?=
- =?us-ascii?Q?TYQlcHYhaDn3XswvGs8pOwqQgZLWxWKTe6EvIMDqyC23lIjDg1qbn0pdxo2l?=
- =?us-ascii?Q?NyLEWEfs8qMGHYA1LPVmxBFTfEtpzwE8Y4aThFWzv5Ss8rivSWK5CC5Qe14+?=
- =?us-ascii?Q?rQJpDv1ddvvyN8kYYlQJtCX8UHi7W/y2hToJgOKf9eW08nKgtFoVfVD9ZQTS?=
- =?us-ascii?Q?ctzSgKz99vFD6p7mQB5bnOpBHViT13cbUjOhKf8ppJp+a0P5sDl8JwFbqpQi?=
- =?us-ascii?Q?9/nUG45pn3w1fl8ZeWZVr+gyzNfYlwkPfr+wYq1lyopvHKWrKtCume54dv8h?=
- =?us-ascii?Q?k2wfaFbQ+H45xFgZOGOKYSCqXOp/0fH+q3LFeUr8u5J91HbdBW3ts7vk64OP?=
- =?us-ascii?Q?uJGbaLs4iikUCe+7hSdSxMY++Dwj/FP4Le3oq8Y1wHFuFp3GGWCIFGqiUsp8?=
- =?us-ascii?Q?hGxCB0Ad1NcBwHdsMyC+c0SL/OADc9iZytKOu0w2aZ3XIMvAcC5ggUXMnQUJ?=
- =?us-ascii?Q?K71KJxeRJlzzNjsRngb7cV8dgXJu8Oipbzzan6Fabz6a1hFnbtfW04Vyjr8h?=
- =?us-ascii?Q?ChS5xxLQEU6uqgnG0yyJLsVUwAI3GA75vJtvTssoc7ed4bYysZuhtQz4Vfza?=
- =?us-ascii?Q?hiSPrzAP9f1CM9B24Zqw3Ys/tKfQMnqR+KUACNTbWOQXlUy0qAIdjBpLouXK?=
- =?us-ascii?Q?3mji0dh7nL5c6u4AcTtN8tgLkztzmmVg/3R9N2roT5cZQBifHmL4Jgw7CuL1?=
- =?us-ascii?Q?kTlWgAis5VDC1jvtH388C1zLRwYukIMyl4mz?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 22:16:44.4410
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7742d21-a264-4cf7-030e-08dd91a2ade8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00022573.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8572
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250513-irq-guards-fix-flags-init-v1-1-1dca3f5992d6@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFZzImgC/x2MQQqAMAzAviI9W9imXvyKeJiuzoJMbVUE8e8Oj
+ 4EkDygJk0JbPCB0sfKaMtiygHH2KRJyyAzOuMY01iHLjvH0EhQnvnFafFTkxAdaV1fkB6pqYyH
+ 3m1A2/nfXv+8H0JYo/msAAAA=
+X-Change-ID: 20250512-irq-guards-fix-flags-init-1243eabe3401
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1792; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=V2RN0phQQ4I6fxeWpbMqgRtPQ1lwTUdTOKAtatK8rtk=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBlKxRnFHEqvjYKm3PvAJfRUX+PSNLEHrfnTk2pf/oy0W
+ HOGU4Sto5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAExkhQfDP7Omfdefpl/UrOJo
+ 13rVwvVj25YvDfI81W/M97Vb1GaFlTL8s78Vf8Ywov/jCWsHfRnNlEWNco0zz6g9rhfp+XU24Js
+ DFwA=
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+After the conversion to locking guards within the interrupt core code,
+several builds with clang show the "Interrupts were enabled early"
+WARN() in start_kernel() on boot.
 
-During platform init, SNP initialization may fail for several reasons,
-such as firmware command failures and incompatible versions. However,
-the KVM capability may continue to advertise support for it.
+In class_irqdesc_lock_constructor(), _t.flags is initialized via
+__irq_get_desc_lock() within the _t initializer list. However, the C11
+standard 6.7.9.23 states that the evaluation of the initialization list
+expressions are indeterminately sequenced relative to one another,
+meaning _t.flags could be initialized by __irq_get_desc_lock() then be
+initialized to zero due to flags being absent from the initializer list.
 
-The platform may have SNP enabled but if SNP_INIT fails then SNP is
-not supported by KVM.
+To ensure _t.flags is consistently initialized, move the call to
+__irq_get_desc_lock() and the assignment of its result to _t.lock out of
+the designated initializer.
 
-During KVM module initialization query the SNP platform status to obtain
-the SNP initialization state and use it as an additional condition to
-determine support for SEV-SNP.
-
-Co-developed-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Co-developed-by: Pratik R. Sampat <prsampat@amd.com>
-Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Fixes: 0f70a49f3fa3 ("genirq: Provide conditional lock guards")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
- arch/x86/kvm/svm/sev.c | 44 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 35 insertions(+), 9 deletions(-)
+ kernel/irq/internals.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index dea9480b9ff6..8c3b12e3de8c 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -2935,6 +2935,33 @@ void __init sev_set_cpu_caps(void)
- 	}
- }
- 
-+static bool is_sev_snp_initialized(void)
-+{
-+	struct sev_user_data_snp_status *status;
-+	struct sev_data_snp_addr buf;
-+	bool initialized = false;
-+	int ret, error = 0;
-+
-+	status = snp_alloc_firmware_page(GFP_KERNEL | __GFP_ZERO);
-+	if (!status)
-+		return false;
-+
-+	buf.address = __psp_pa(status);
-+	ret = sev_do_cmd(SEV_CMD_SNP_PLATFORM_STATUS, &buf, &error);
-+	if (ret) {
-+		pr_err("SEV: SNP_PLATFORM_STATUS failed ret=%d, fw_error=%d (%#x)\n",
-+		       ret, error, error);
-+		goto out;
-+	}
-+
-+	initialized = !!status->state;
-+
-+out:
-+	snp_free_firmware_page(status);
-+
-+	return initialized;
-+}
-+
- void __init sev_hardware_setup(void)
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index bd2db6ebb98e..476a20fd9bfc 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -176,10 +176,10 @@ __DEFINE_UNLOCK_GUARD(irqdesc_lock, struct irq_desc,
+ static inline class_irqdesc_lock_t class_irqdesc_lock_constructor(unsigned int irq, bool bus,
+ 								  unsigned int check)
  {
- 	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
-@@ -3039,6 +3066,14 @@ void __init sev_hardware_setup(void)
- 	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
- 
- out:
-+	if (sev_enabled) {
-+		init_args.probe = true;
-+		if (sev_platform_init(&init_args))
-+			sev_supported = sev_es_supported = sev_snp_supported = false;
-+		else if (sev_snp_supported)
-+			sev_snp_supported = is_sev_snp_initialized();
-+	}
+-	class_irqdesc_lock_t _t = {
+-		.bus	= bus,
+-		.lock	= __irq_get_desc_lock(irq, &_t.flags, bus, check),
+-	};
++	class_irqdesc_lock_t _t = { .bus = bus, };
 +
- 	if (boot_cpu_has(X86_FEATURE_SEV))
- 		pr_info("SEV %s (ASIDs %u - %u)\n",
- 			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
-@@ -3065,15 +3100,6 @@ void __init sev_hardware_setup(void)
- 	sev_supported_vmsa_features = 0;
- 	if (sev_es_debug_swap_enabled)
- 		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
--
--	if (!sev_enabled)
--		return;
--
--	/*
--	 * Do both SNP and SEV initialization at KVM module load.
--	 */
--	init_args.probe = true;
--	sev_platform_init(&init_args);
++	_t.lock = __irq_get_desc_lock(irq, &_t.flags, bus, check);
++
+ 	return _t;
  }
  
- void sev_hardware_unsetup(void)
+
+---
+base-commit: c1ab449df871d6ce9189cb0a9efcd37d2ead10f0
+change-id: 20250512-irq-guards-fix-flags-init-1243eabe3401
+
+Best regards,
 -- 
-2.34.1
+Nathan Chancellor <nathan@kernel.org>
 
