@@ -1,128 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7925A25C80B;
-	Mon, 12 May 2025 09:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B7C25D526;
+	Mon, 12 May 2025 09:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747042157; cv=none; b=TL0DLhxebGysUS5qGGk0ulbmYM6G6vegN8lzjiz/YAg99/rO5qhUeFqJC40Zjx+rIPbSejj7xbKbECkHTpGnLWKeVOBGP3y+zVJQehFALbv1RSy3XBfFFsfi4sS0kJI1WVesfX7Pg/rZ1PSAT8+4c4Rjj0bJj/cpGpN3aKTeKGI=
+	t=1747042173; cv=none; b=VKgZZIyNZv77E9qlxz0gOSQMqvag2pBsH1i45i51vykafou/o17DsRLSei0TZaaQOlaGztskGshrtNfCpQNWaptIAxMz7brjM1TxevRm7avuJriGssVBhwOp8HoUXNMtejWIT5LPbnVTzL8PNJ5ugQax2SVVdbDireC2QE7Focs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747042157; c=relaxed/simple;
-	bh=YoFP98jJRr0F64My2fRMIusw9vmWrrP/FVPPIlYjxR0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TNY29hQdRk+GRgdfM0zuT4vtWPbFmLeQCtKKsSBLNXZdfX9WxZCLRlwU1ADwrpo2yhw1segbkQeJye0fn+R2Re/X++1sixbnUd81S0hJfqJSsjcl6/7CKvvjQ/rX+2Aw8SFdsQqwIqtSYQCTHx4CbHS9nmK73VnPdPdfvwHfvVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pR2oqz9W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747042173; c=relaxed/simple;
+	bh=uA/bjrzzQG7eMN/hwUZQzo6cKMvMjHSVAhAY1sOfp7Y=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qqX1CqLVgY4duSs8ROhfgwyvpahmyXwoIeuMSuZuibpR8345SYDHq5JmyxUcGh33pDcN1LVNzpslp3QB1y7DUqvarQjiHl3UlyCUp8UJsDfSwQWUSwcRaYb81lOrwujmj/KLeXOAreKwyxo0Ufv/ifQmNinPLwhOuG+Ni/0X2O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYy0luue; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pR2oqz9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6072C4CEE7;
-	Mon, 12 May 2025 09:29:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747042155;
-	bh=YoFP98jJRr0F64My2fRMIusw9vmWrrP/FVPPIlYjxR0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pR2oqz9WRy6IHfP4dmMBu4l4ojFFud5bn7tYkwsdFCcXPrk9d3hvmCNTk3PtIVTx7
-	 BfsDoP3MsaUhEld5BKPvzcQ6nyoWFYYabBTTNB1vouvENWI8f0Riv50fpd32279xqG
-	 7Swq2gyP4m8O+uEixaE2VjGxc0m8zrwAZ2e0A3QkzlfVLCQ1YhqFkgQ86SxbsQv4OW
-	 R16KMvXQtm9tkH5LtoJEHzWjNvgsyS4+wnC9nwCrOsQ/2nhsFWpHD9/trLG2rPE/QE
-	 TON4gOP2OA5+kRDaElaq2zMKP6AA8t/bIRJqIEzZH9BGREymwoZ4aPqNKJ6wls5Jaq
-	 S1j5EvLlQAcoA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Ingo Molnar" <mingo@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>,  "Thomas Gleixner" <tglx@linutronix.de>,
-  "Frederic Weisbecker" <frederic@kernel.org>,  "H . Peter Anvin"
- <hpa@zytor.com>,  "Linus Torvalds" <torvalds@linux-foundation.org>,
-  "Peter Zijlstra" <peterz@infradead.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Anna-Maria
- Behnsen" <anna-maria@linutronix.de>,  "Boqun Feng" <boqun.feng@gmail.com>,
-  "Lyude Paul" <lyude@redhat.com>,  "Rust ML"
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 01/10] rust: Rename timer_container_of() to
- hrtimer_container_of()
-In-Reply-To: <aBu2ocPIFOvq_EiA@gmail.com> (Ingo Molnar's message of "Wed, 07
-	May 2025 21:38:09 +0200")
-References: <20250507175338.672442-1-mingo@kernel.org>
-	<qqz686a7_ob8uzbREL3X3P-MTdPUVJo9hi33Dsv-3kgJoB1_bE0ynnuXFVLIwbZ5dNkntegTdZhkBp04syneXA==@protonmail.internalid>
-	<20250507175338.672442-2-mingo@kernel.org> <877c2spaag.fsf@kernel.org>
-	<exZlQK8ioPft3NijtFzp4A_qkGlCunbqRbqwq8STs5kyK8khboJDM8LqVH7EZTImMbpeMOnxadeRvyEnyU69kA==@protonmail.internalid>
-	<aBu2ocPIFOvq_EiA@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Mon, 12 May 2025 11:29:01 +0200
-Message-ID: <87jz6mnpnm.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYy0luue"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so637665e9.3;
+        Mon, 12 May 2025 02:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747042170; x=1747646970; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nd8TTTPpuhPv6JEY+T0EMF/g2hoFO/+rGDPodo/b3cE=;
+        b=fYy0luueK8rU0XzqR8cnMP6jN3o61sqzjmkY0i3KROLpDvGxbmWxkqVQfzgT+xpqNh
+         8nyHhXAZb34HtUstMmWo1hutuwQ74RfiKBhuwJYVycXDLrieW7ZiJw+cfvHSal7ey86a
+         oDCX98K71Y41PfdnfivEEjxw6KpH9UulmSfqZOXI+DKcEObciYwvCT3TFD6cA82K98uo
+         XzrTU/WRhOVfCF/UalKsTySzxy3+WfMZS7yllek0bMzyoFAv+7A9s6eyeOAGa3TKrdAt
+         hu3gZtvzB+zPk7GbZjwNC+EKGdcpAmO8R+LX20ikXbRtjQLCXkWhrXVTLy6TtAwCLMWX
+         5i1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747042170; x=1747646970;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nd8TTTPpuhPv6JEY+T0EMF/g2hoFO/+rGDPodo/b3cE=;
+        b=D2j4IwyjoWpfcwW6F8eMPyuHmDlbPsPSYAckepJsMNSx+SKRGv6y+YMz5i3yB0t2AG
+         A0HCoK0v3vdoHmoShtok6PPJs0ZHTkIomLaxY/ixAvH+cxHUYOsLLVJp/ZEC+rOyoveY
+         WqHOnHlgGz0/5VJZDn+KWCKza6tBXBFgTLbWH74XmbGXefWCA5zZEMHvRT4WHfb+aoFk
+         uABGgfYt4fXLnbzp4X4Pnu8mwZMNfa+8/cZy/+5OezumrBxsYl3Jpe1CyfZTIfi+F/Q4
+         boQVfkWU/JLNp++5JnvCyp3iOKekDIa7aYk7qZwGdnZYXQ4p3/MGIbdpoCSJ3IMmrzM4
+         kHYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTJ129713dlc/7fXAgbDuTQ0Q8sd+Nxo/cd/z4dMKs289s906yY3IzMF/dBAeIxtDcbds=@vger.kernel.org, AJvYcCUee9PZC8pUq/7GefWAm6tZtH2prkpIGYcFP3A8KlS5QD/4z8pEHf+V3KkWnovWkcZOYCw59nHYGL1l6nws@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvGz4+lbYkixVQNPw2fH7utawQgsvQ9JZb4hvqTE7XVbW8+vlW
+	RXdIHTykuxLQ20FWQYiV+/n/i/+rGfEw9f144hNb5P94IZX/Xwtf
+X-Gm-Gg: ASbGnct+FpZJ0kdlW01HtMLI4u6ujUrtPZ1cJhSWlJf1TnX+tUGQFgaLk/Zo/wGBY6Q
+	679wZLyHrxn2mBPLANWGXoNDQtq8R/pIuYSnDzJvhsNS+ja3INhJl6i4AimHr+qKu3e9r8pllOy
+	MT3aY1R40o3pEs3pv6IV4gCwV1WViGzWDjuqqvxvndhYEGG/nFru6jeFzqP8SHcMEtZ7j1SAFjf
+	FoP//zwYHzKmUUfedjG3XUxlAD5h50nPfdVFFe7tI+wF5UHHyqbkAewGx9Rq+2VsbjreyDP18Vm
+	vS7LGigN2mtutYotexWV9nwE442NA1g/fxYTxgEKa9UKSfXCcJ/X38V0iIfcXgbyEE5xPlmNRRV
+	sDGdwkWI=
+X-Google-Smtp-Source: AGHT+IFHhb80V8vUQZEwb04PyfWMfXMEuVgvCMYP1AjbTd4plf7jZskkeNy6rkNelRjoUUpdJNmCnA==
+X-Received: by 2002:a05:600c:681b:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-442d6d44d27mr96631565e9.11.1747042169128;
+        Mon, 12 May 2025 02:29:29 -0700 (PDT)
+Received: from [192.168.8.119] (54-240-197-238.amazon.com. [54.240.197.238])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d14e6d74sm151355005e9.21.2025.05.12.02.29.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 02:29:28 -0700 (PDT)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <7fedbeac-300f-48a3-9860-e05b6d286cd1@xen.org>
+Date: Mon, 12 May 2025 10:29:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: KVM: x86/xen: Allow 'out of range' event channel ports in IRQ
+ routing table.
+To: David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org,
+ Sean Christopherson <seanjc@google.com>, "Orlov, Ivan" <iorlov@amazon.co.uk>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org
+References: <e489252745ac4b53f1f7f50570b03fb416aa2065.camel@infradead.org>
+Content-Language: en-US
+Organization: Xen Project
+In-Reply-To: <e489252745ac4b53f1f7f50570b03fb416aa2065.camel@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-"Ingo Molnar" <mingo@kernel.org> writes:
+On 08/05/2025 21:30, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> To avoid imposing an ordering constraint on userspace, allow 'invalid'
+> event channel targets to be configured in the IRQ routing table.
+> 
+> This is the same as accepting interrupts targeted at vCPUs which don't
+> exist yet, which is already the case for both Xen event channels *and*
+> for MSIs (which don't do any filtering of permitted APIC ID targets at
+> all).
+> 
+> If userspace actually *triggers* an IRQ with an invalid target, that
+> will fail cleanly, as kvm_xen_set_evtchn_fast() also does the same range
+> check.
+> 
+> If KVM enforced that the IRQ target must be valid at the time it is
+> *configured*, that would force userspace to create all vCPUs and do
+> various other parts of setup (in this case, setting the Xen long_mode)
+> before restoring the IRQ table.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>   arch/x86/kvm/xen.c | 14 ++++++++++++--
+>   1 file changed, 12 insertions(+), 2 deletions(-)
+> 
 
-> * Andreas Hindborg <a.hindborg@kernel.org> wrote:
->
->> "Ingo Molnar" <mingo@kernel.org> writes:
->>
->> > This primitive is dealing with 'struct hrtimer' objects, not
->> > 'struct timer_list' objects - so clarify the name.
->> >
->> > We want to introduce the timer_container_of() symbol in the kernel
->> > for timer_list, make sure there's no clash of namespaces, at least
->> > on the conceptual plane.
->>
->> Is this a resend?
->
-> I noted the changes in the boilerplate:
->
->   Changes in -v3:
->
->     - Picked up review tags
->     - Rebased to v6.15-rc5
->
-> This particular patch didn't change.
-
-Thanks. I didn't get the cover letter, but I should have looked for it.
-
->
->> Again, I think this change is unnecessary. Please see my earlier reply [1].
->>
->> Best regards,
->> Andreas Hindborg
->>
->>
->> [1] https://lore.kernel.org/all/877c3cbdq2.fsf@kernel.org
->
-> Yeah, saw that, but you said you are fine with it if I insist, and I'd
-> like to have this to free up the timer_* namespace.
-
-Yes. I did not hear any proper insisting till now though.
-
-> Since I think we'd
-> like to introduce the timer_container_of() in the future it would be
-> nice to do this rename, as:
->
-> 	$ git grep -w timer_container_of
->
-> will have hrtimer related false positive hits in rust/ code, even
-> though the namespaces are obviously independent.
-
-Ok, I see. I'm not used to grepping like that, but I see how that can be
-annoying.
-
->
-> The Rust method is arguably a minor misnomer as well: you have
-> work_container_of around struct work, but timer_container_of is around
-> struct hrtimer?
-
-Yes, you are right.
-
-Feel free to take this through tip. Otherwise maybe Miguel can pick it
-up in the rust PR for 6.15.
-
-
-Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
-
-
-Best regards,
-Andreas Hindborg
-
-
+Reviewed-by: Paul Durrant <paul@xen.org>
