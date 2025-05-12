@@ -1,189 +1,181 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C70F1E5705
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E8E23A578
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747075616; cv=none; b=KSfQAgL8ZFernbWOyw8cxTnO8GGhbaJZQh+XrhAlLJj80CdEBKhbD6BpHNkE0vSqhMNIIKkDbD4xsNevS0REuRfUTaZbos4nQ9O4wHYApsgLBgQ2zqMSzUI7zHuYs4PeupWB261inTcaMAc7H94WhBS7QACTQP6LamxYQudOyEo=
+	t=1747075631; cv=none; b=oqHhIr0xxLNdp3AzjwqwGSC2U7KA0+wT5KgSpoVHS62d6MkjQrUqiGeOghY/K6XnKvdBBe//d9EDExE1e0Boj10Jtm724/6pNw7WlV25RvdTTckV7+uSKbGqde55M/sh0vjC9yo0MRJNtDkyluf5I2ziavT8pqXVZEtCohAfDC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747075616; c=relaxed/simple;
-	bh=WC0QSSHSaDJIeTky6FYZ5/aW/w4NwUet7G5HfGnRlTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jw5BTkmE3RcjUZcaasnGaV/zxLT/BVAXwox5eWnK8/6gLA6bbCJVItK7wL+de8j2r6aKxKtvs/7vLQKhcdBre3QqqzYouia5WR/y9Pprqwjra0evMXuExaEp8SVnWJp3YbkZELn6vcDR2f4cxNa80H+BQpQLP4cEPeZbpeOubBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W0l+3+AP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747075631; c=relaxed/simple;
+	bh=SEhKerd/haNl7wlB6BoA97ehO97jOk7VpGMWJZEARTs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=ZFfRUZb9BIJjVjkMBcWa6l17cfc3i7XCR/FXE2YeR7bfWL5fmcn0PbQZKf6QhkEAwhJYg0VdTI+xS8dX3kwRnowj6RfBI6oA34SuzDzIXfqbjsWh8DO+rQRU1+alIwdy/N285P9h1yN6I0pGHSbL/ld5wJSgwBbHuky27+q43J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S1Tgzn0+; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W0l+3+AP"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CILjNh025317
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:46:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/r5mtaG20KhfYaNuwC8Nolf7zQua6agNHT2giYdPbbo=; b=W0l+3+APuqQo0LFX
-	g236I3NUxXGKMXbpA9Ke8JlmNzDqNPDyW4VzT/UwxtmB7CTbs6741vrCtp3yQhxv
-	LE3WZP5kQs2r/ac/oIMXrwbK8yZqcKruQ0t5vn32fCUeGvoPyVAGhNxk0dWJJ1UU
-	RWjxbP/p/7x8udGOocwqsc+TUG+5tcNpSSQJjcI/Z2mlLNLKMp+0AZ2bxsGgHCr5
-	v9gT2V+ETI9JA/WGD4qw3d86DbfmQicXYFccIp/6wsOBKLbynlBxgfI2QOT7Rwz6
-	x3foFKY+dql18044P/cwdSvDVc+13ffx1rPJUwChZaXZ4Iw2xmX6pFB/vfJAMgw2
-	Q8wYWw==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hyynw6h1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:46:54 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22e68e50f80so32968665ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:46:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1Tgzn0+"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e79128cf56cso2960110276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747075628; x=1747680428; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=N7h6b26N/R/NGxMDZ3ohDUFhbT1oVCZDTo7x++LTbwc=;
+        b=S1Tgzn0+2+6tmZ3vsEOC81GJiaTGUuDqTnyEZXhk6ruUiknWCDMk+6StZqW00KFs7g
+         n7LFhtun4cNn4L3HLfEw7sK4uNmA2wapyT8vna7htbjn8CRflJiAZDKMzehvysAY5tzx
+         QGjX30RvGRTiPEf9Jb/sczA8XOaEWMc2RGA/pra2fC2oKuyXV45178VJK4aYEWi0PQX4
+         ZhdFkpe63H2wgEbSccSl5nA4AnG4B5F2e/G2mg+Qpt2svAROHJVAeQZ/XiHheLkSp6G5
+         u8QxhmV6125PpVqjgGu3Kmf+gq5KaXzH0xEOWpCf0gS1aWI4fmzs/Qls6rwHTNTszgJP
+         P+Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747075613; x=1747680413;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/r5mtaG20KhfYaNuwC8Nolf7zQua6agNHT2giYdPbbo=;
-        b=hcgTFS+Dza5sD+tzDJblnljZBkCI5H3s3Cam0+IdD83qM70bgI4U/ZKz89WF8jDB3Y
-         VD7h+0R0BNUCUUG2ueO2GdvK5f0dOzmxSrDm804MI92umObBQEGa0YK3E8Q/MxdcbiKi
-         4HdZXBxmYyIi6Aj1skZjhMIDlMRz+qZGfUuKO1dzweNY9VHhmReMnCoTCWs7vCXbVEWi
-         11ZxT3vfDwS9d5V+/DXwQalpir4wg9dHLB7NXtX6G/Cffnql+I4eujVhvsGAq9dcix2J
-         qiUZQHmjRKb2h8eznFmW7wf1BiysHHJlpciTU6i+YO+KG++YrBlgV2TNk5N+C9GrP3Z+
-         rg6w==
-X-Forwarded-Encrypted: i=1; AJvYcCU3WiDDqMNNKhYdydcxfU6+lPySrhu51o/8WD4JyLP1x3gVW/KD84O6UtbIwEejoDjLIq7n9hOUdaLyO+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVCHp32cnJwRiXwKNNJqCVmAfHyXRSMPCs6bZbfd2R0knzu+Te
-	zVt3YTX8jss8tWCdDXV0z7TvEj4szzLvdM5/4H6ikj/kr2/Fklc8A1zrXo76ZpjMiLGLONAPj6a
-	l2VlhbwAybBxTHyQqNH150uYKWI9tFwU0iuJu42lpwcHXazaYcCCU9lW1mjyCnVc=
-X-Gm-Gg: ASbGncscI2A7O8S+eZDfsFhhRgJmzH69C6mJ8G0j9bfLsR9NJyAl08NeEmW8wF+5COV
-	yZYX5QUgC1RVJ/dBDvgmZCnwsNUeq19yF41aNesVKGj294Ql6vAKQNybP9+hGKfxqGJuC607j6e
-	lfP0MREjV9AdlESiypo4ybhpJ7Xrs/vAxTDgkSfA1zVJURMuuaZaQsW4xKelWoicZeDrkoCA+/S
-	RPcOOwZ5FFm+dMpWGdz+yNjFSKgW90BgOWwUZLTd7KOsl8RwWtQ+ivwm9Ph+S8j8fGaaeG6wam7
-	7iqK0Pq9T4n248PrfjMbNOGAfP0TM6yDTa35sUa9u7Ni7c4nT1710tGfc/Hf4A==
-X-Received: by 2002:a17:902:ce86:b0:223:39ae:a98 with SMTP id d9443c01a7336-22fc8b56fdfmr213280565ad.22.1747075613184;
-        Mon, 12 May 2025 11:46:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFsWqOd3L30u9cjxgIPmURHi+KkJtpXwBIuouO1S+U1W3n2h4To43nTOBZ4I/fyhCvVNGYpGg==
-X-Received: by 2002:a17:902:ce86:b0:223:39ae:a98 with SMTP id d9443c01a7336-22fc8b56fdfmr213280045ad.22.1747075612588;
-        Mon, 12 May 2025 11:46:52 -0700 (PDT)
-Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7544f5esm66669185ad.36.2025.05.12.11.46.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 11:46:52 -0700 (PDT)
-Message-ID: <4a6b83f4-885a-46e1-ae31-21a4f3959bae@oss.qualcomm.com>
-Date: Mon, 12 May 2025 12:46:49 -0600
+        d=1e100.net; s=20230601; t=1747075628; x=1747680428;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N7h6b26N/R/NGxMDZ3ohDUFhbT1oVCZDTo7x++LTbwc=;
+        b=Bi6j5NikydAr3K3RTgLP9v0PauQHXYbG4rrBPTBdRc3vRkTCcimPNFKb9Jwn+/6d5Y
+         dOBmh7E85am0sbvXkgVOmU2ZpZTewytK3n62c2SXQcwkJuF1dtzezPbeKrA4kJ03bVm4
+         hE+OKJZhMAkESrls+uhdYpVYdfCikBOIxIHbOh/DoP7LwI0sUOrAiDzmDel4NSTdLyGS
+         VbndxF28e05dDd/+vz07ryrAMtCc5K6H9g7MW8M1TxSxEUy/nwExZQfUVG9zzTRlQQ2e
+         OM5h2OVDTVlA/6n0l/Zrgwz7mHNK3CoISKHmT01pHDlVuGBGKJbDiTfxbkBXtyopkvCb
+         Bzkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVH8EnucBVnNUGJPx4ECp7C5B/m7d9+EmmDALOm9CXK9Gcu8i21tXCHLrfWBafifb08txloC6gqa25I2DY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzzGotq44jTKFDsQVKB0qe5C/WRCMzFIeGMC/qIbGFUVCnqD77
+	2C6MdUAJHUc3ZWMLE3FzEBqJPuAQp00u0IzzT+5QA2/FGx5vBRvqJpBorLr7zm26M9PAJ3ag+z1
+	Alnu4FA==
+X-Google-Smtp-Source: AGHT+IGy8/5DMSVrm1V5Nn0D6X/7V833WTU9rhXyBdG3tq8u/sFgcEV4161bk8fXo788cImQuMct0zF75g0R
+X-Received: from ybbgv9.prod.google.com ([2002:a05:6902:4389:b0:e79:cbca:44e5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:2585:b0:e75:6432:4b26
+ with SMTP id 3f1490d57ef6-e78fdbe9926mr17317084276.13.1747075628248; Mon, 12
+ May 2025 11:47:08 -0700 (PDT)
+Date: Mon, 12 May 2025 11:46:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] bus: mhi: host: don't free bhie tables during
- suspend/hibernation
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        Youssef Samir
- <quic_yabdulra@quicinc.com>,
-        Matthew Leung <quic_mattleun@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
-        Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,
-        Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-        Kunwu Chan <chentao@kylinos.cn>,
-        Troy Hanson <quic_thanson@quicinc.com>,
-        "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: kernel@collabora.com, sebastian.reichel@collabora.com,
-        Carl Vanderlip <quic_carlv@quicinc.com>, Alex Elder <elder@kernel.org>,
-        mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, ath12k@lists.infradead.org
-References: <20250506144941.2715345-1-usama.anjum@collabora.com>
-Content-Language: en-US
-From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-In-Reply-To: <20250506144941.2715345-1-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDE5MyBTYWx0ZWRfXztG6li0e/jhT
- 8Jr8tJOpcJEvusfYcNMALxY04zqZFXppyxPsVbupDB+Ss4jK0Mi6Dre088zWfJseK3Ya0KFkhYO
- /YTN9GTuUDX1GUcWCX9PWlN/GKm8N/k+ukQRSvn66bZ+Qy43Kr0gbc1lHcNwaUGtvW+TIXAeeAV
- 1SjaMdnnupAQwPnNCNcANXRqQx3eLby1S9ttKQEZHA2ViVoiqJq+UnqAImglhthPsoQE2joT3FV
- ieM0xj+ydJiyZrMjd/0WHvibojAp1qaHhzGFvOFY0xCOkhah04ORl65usijSykoerVNGBZrdTWQ
- HqB2ZWi37t7moepecGglAgmQWL/V2/vy7oWFL05tiOZZrnYdDnAErC7t+Xwu+JulAXfnxdIOq17
- fcP2PpAcDBMjFt6z4iaj9CUynaKj/Mv355SP41Jowx7Rh8mLC5zmG+lwWLp7VeIwttEPfzkP
-X-Proofpoint-ORIG-GUID: 0jDpYQocr7DS_Q49D_crIDzsFFYKjls2
-X-Authority-Analysis: v=2.4 cv=Uo9jN/wB c=1 sm=1 tr=0 ts=6822421e cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=mx74GWaVK5euFb1038QA:9
- a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-GUID: 0jDpYQocr7DS_Q49D_crIDzsFFYKjls2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_06,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 phishscore=0 mlxscore=0 adultscore=0
- impostorscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505120193
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
+Message-ID: <20250512184700.11691-1-irogers@google.com>
+Subject: [PATCH v1 1/2] perf list: Display the PMU name associated with a perf
+ metric in json
+From: Ian Rogers <irogers@google.com>
+To: Weilin Wang <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/6/2025 8:49 AM, Muhammad Usama Anjum wrote:
-> Fix dma_direct_alloc() failure at resume time during bhie_table
-> allocation because of memory pressure. There is a report where at
-> resume time, the memory from the dma doesn't get allocated and MHI
-> fails to re-initialize.
-> 
-> To fix it, don't free the memory at power down during suspend /
-> hibernation. Instead, use the same allocated memory again after every
-> resume / hibernation. This patch has been tested with resume and
-> hibernation both.
-> 
-> The rddm is of constant size for a given hardware. While the fbc_image
-> size depends on the firmware. If the firmware changes, we'll free and
-> allocate new memory for it.
+The perf stat --cputype option can be used to filter which metrics
+will be applied, for this reason the json metrics have an associated
+PMU. List this PMU name in the perf list output in json mode so that
+tooling may access it.
 
-Why is it valid to load new firmware as a result of suspend?  I don't 
-users would expect that.
+An example of the new field is:
+```
+{
+        "MetricGroup": "Backend",
+        "MetricName": "tma_core_bound",
+        "MetricExpr": "max(0, tma_backend_bound - tma_memory_bound)",
+        "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.2",
+        "ScaleUnit": "100%",
+        "BriefDescription": "This metric represents fraction of slots where ...
+        "PublicDescription": "This metric represents fraction of slots where ...
+        "Unit": "cpu_core"
+},
+```
 
-> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
-> index efa3b6dddf4d2..bc8459798bbee 100644
-> --- a/drivers/bus/mhi/host/boot.c
-> +++ b/drivers/bus/mhi/host/boot.c
-> @@ -584,10 +584,17 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
->   	 * device transitioning into MHI READY state
->   	 */
->   	if (fw_load_type == MHI_FW_LOAD_FBC) {
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-list.c      | 12 ++++++++++--
+ tools/perf/util/metricgroup.c  |  5 ++++-
+ tools/perf/util/print-events.h |  3 ++-
+ 3 files changed, 16 insertions(+), 4 deletions(-)
 
-Why is this FBC specific?
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index fed482adb039..e9b595d75df2 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -197,7 +197,8 @@ static void default_print_metric(void *ps,
+ 				const char *long_desc,
+ 				const char *expr,
+ 				const char *threshold,
+-				const char *unit __maybe_unused)
++				const char *unit __maybe_unused,
++				const char *pmu_name __maybe_unused)
+ {
+ 	struct print_state *print_state = ps;
+ 	FILE *fp = print_state->fp;
+@@ -433,7 +434,8 @@ static void json_print_event(void *ps, const char *topic, const char *pmu_name,
+ static void json_print_metric(void *ps __maybe_unused, const char *group,
+ 			      const char *name, const char *desc,
+ 			      const char *long_desc, const char *expr,
+-			      const char *threshold, const char *unit)
++			      const char *threshold, const char *unit,
++			      const char *pmu_name)
+ {
+ 	struct json_print_state *print_state = ps;
+ 	bool need_sep = false;
+@@ -483,6 +485,12 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
+ 				   long_desc);
+ 		need_sep = true;
+ 	}
++	if (pmu_name) {
++		fix_escape_fprintf(fp, &buf, "%s\t\"Unit\": \"%S\"",
++				   need_sep ? ",\n" : "",
++				   pmu_name);
++		need_sep = true;
++	}
+ 	fprintf(fp, "%s}", need_sep ? "\n" : "");
+ 	strbuf_release(&buf);
+ }
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 126a631686b0..43d35f956a33 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -396,6 +396,7 @@ struct mep {
+ 	const char *metric_expr;
+ 	const char *metric_threshold;
+ 	const char *metric_unit;
++	const char *pmu_name;
+ };
+ 
+ static int mep_cmp(struct rb_node *rb_node, const void *entry)
+@@ -476,6 +477,7 @@ static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
+ 			me->metric_expr = pm->metric_expr;
+ 			me->metric_threshold = pm->metric_threshold;
+ 			me->metric_unit = pm->unit;
++			me->pmu_name = pm->pmu;
+ 		}
+ 	}
+ 	free(omg);
+@@ -551,7 +553,8 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
+ 				me->metric_long_desc,
+ 				me->metric_expr,
+ 				me->metric_threshold,
+-				me->metric_unit);
++				me->metric_unit,
++				me->pmu_name);
+ 		next = rb_next(node);
+ 		rblist__remove_node(&groups, node);
+ 	}
+diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
+index 445efa1636c1..8f19c2bea64a 100644
+--- a/tools/perf/util/print-events.h
++++ b/tools/perf/util/print-events.h
+@@ -25,7 +25,8 @@ struct print_callbacks {
+ 			const char *long_desc,
+ 			const char *expr,
+ 			const char *threshold,
+-			const char *unit);
++			const char *unit,
++			const char *pmu_name);
+ 	bool (*skip_duplicate_pmus)(void *print_state);
+ };
+ 
+-- 
+2.49.0.1045.g170613ef41-goog
 
-> -		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
-> -		if (ret) {
-> -			release_firmware(firmware);
-> -			goto error_fw_load;
-> +		if (mhi_cntrl->fbc_image && fw_sz != mhi_cntrl->prev_fw_sz) {
-> +			mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
-> +			mhi_cntrl->fbc_image = NULL;
-> +		}
-> +		if (!mhi_cntrl->fbc_image) {
-> +			ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
-> +			if (ret) {
-> +				release_firmware(firmware);
-> +				goto error_fw_load;
-> +			}
-> +			mhi_cntrl->prev_fw_sz = fw_sz;
->   		}
->   
->   		/* Load the firmware into BHIE vec table */
-> diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
-> index e6c3ff62bab1d..107d71b4cc51a 100644
-> --- a/drivers/bus/mhi/host/pm.c
-> +++ b/drivers/bus/mhi/host/pm.c
-> @@ -1259,10 +1259,19 @@ void mhi_power_down(struct mhi_controller *mhi_cntrl, bool graceful)
->   }
->   EXPORT_SYMBOL_GPL(mhi_power_down);
->   
-> +static void __mhi_power_down_unprepare_keep_dev(struct mhi_controller *mhi_cntrl)
-> +{
-> +	mhi_cntrl->bhi = NULL;
-> +	mhi_cntrl->bhie = NULL;
-
-Why?
-
-> +
-> +	mhi_deinit_dev_ctxt(mhi_cntrl);
-> +}
