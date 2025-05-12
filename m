@@ -1,37 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E3225A2B7;
-	Mon, 12 May 2025 08:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6506D25A2BE;
+	Mon, 12 May 2025 08:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039594; cv=none; b=ScEwW81rbfPQkeRo59ucZbU8bCGQ0Arwtft45+yI5n/zQyGK+0F1cRCk6+LnUbtRCrLFKbsOZXL49RUxgjyBimdrhRNWMyk9IgWRN4+TPbICdnbP2nmc8LJ3EJnleIiFE77aawIYezS9Ep9l/MGwnU2F8/8HRud/tQpzfpLSLJw=
+	t=1747039594; cv=none; b=cmmXtHNrNl8oc3FpnM+rkAqzrId8S0rfB9NyC/qDG91cMNJ/dbLAF1PgLzHQ0C9h/rFcMV22uAoiBaRlzshlhjXG73u0AGv4GTiuFmm/WwqOFRjzh4hmL1V/I767nAOoaTUb4ud+0xkSDdD4U3GaGoGmIXTWGX9IU4h7KqRQAC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747039594; c=relaxed/simple;
-	bh=mNrvlVy7n4m/KddWEReBiHCLsCEcSbh6FGrWwUy2B7w=;
+	bh=PkHHRi91TsmNgeDiiqGzH6MLxD+zfbPOyGJVIBdp9bU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EB7lqTBT6zPV3OBihutujlR925lz3Lg/WAOOYyOOQUcAFvc/Jk35tL+rl6vvjFhpH2jmLjld0syXIp6oxpgoh/qnZqMT9KnG0xwzmBZFy8kekqyeX48iHhnwcxk4uyd5NVA2AS6nt0gXL1INaTgeDyCNqevGF09m0yceq6tNQC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Wqu4jU+G; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=tVcNq3EiLv4rnXHFbBrmEpqxr+HaW5DFO1+wM8sHkraSy3oJrMrGr7yBxZ5BZql4XutFC/r/LdAQ7aAKb8mT63/F+QTegFH20yNF9rPDVYryE9cbB5tcSUguziXCpYlEePnklelab6Rybo5JzZoIeTWBZMD3yvHyDoj5Z5i9eaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=VcTDFlAM; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Wqu4jU+G"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VcTDFlAM"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54C8jqc71586901
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54C8jqc51586901
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 12 May 2025 01:46:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54C8jqc71586901
+	Mon, 12 May 2025 01:46:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54C8jqc51586901
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747039563;
-	bh=SJyp7okD30HInZ1fgTptAjmwrX1aqps8vhA1kdAJWhk=;
+	s=2025042001; t=1747039561;
+	bh=irTR9cBZ/bUuJJE/VFD2XvoxgAwJuCqUqRaQbxDTnhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wqu4jU+G5jmxtcMoxZU7xxTMdvYR6zp4VYJGyttTpRKojR4aUWkuBntnRPy95mMNP
-	 TdZY/WjcOubxB+VWkDSGvR2bQ2PxqfaD5oWLx5oeN+NwmwkfwQIUZulba428YPa6+d
-	 a4AmbXGRcZ1fxkw8DveEBEf6vdK9sioL+MwfJHOFQAN6ndlCoGnFJkOa79chbmM/8k
-	 1WrQiT23ytcFJl83Qmf/PRSdkQRCO12iTFRgpvQMjzhTN1Kupv6cOH9+fDYRg2byiA
-	 tWnUdW/sgtBWnr7GH/hZQsLfWNgCHqZh3Zuo+gLz+y09m/2TX32FcNb1vZHCeyNmv1
-	 7DFsocyxduIZw==
+	b=VcTDFlAMSO7tiJedpeu3nDD6gS5DKigxV5zB3FuQKYZuCYrH0Lnq6AyaDavtFxQ+5
+	 ivDulsoeXhp5fga7oMz3GqsLoQUCH7YHtAGOBPydV4CeUV1qfkYmG4WfTZ17vkHC8X
+	 RH3QbWUsZGXrV8DJbo7Rs8XEeCcGNJQYuntOy9EF5GEngLsIAzmYPxRn2BDdyqkMbx
+	 w3IxvetoI01oDeyxtBGKYR7xymh7giIgJSqj4+DupWNwLFA0keD5peqp4UGQ3ZbuxD
+	 Id5FCpC5mxUpyYR4tLAS4sui06LZxoaL6E9/ixZj6OIz3pKprWQZgCloVU3I3ImoLP
+	 o3GbZYpLKgr/g==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-acpi@vger.kernel.org
@@ -39,9 +39,9 @@ Cc: tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
         rafael@kernel.org, lenb@kernel.org
-Subject: [PATCH v1 3/3] x86/msr: Convert a native_wrmsr() use to native_wrmsrq()
-Date: Mon, 12 May 2025 01:45:52 -0700
-Message-ID: <20250512084552.1586883-4-xin@zytor.com>
+Subject: [PATCH v1 1/3] x86/msr: Remove a superfluous inclusion of <asm/asm.h>
+Date: Mon, 12 May 2025 01:45:50 -0700
+Message-ID: <20250512084552.1586883-2-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512084552.1586883-1-xin@zytor.com>
 References: <20250512084552.1586883-1-xin@zytor.com>
@@ -53,32 +53,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert a native_wrmsr() use to native_wrmsrq() to zap meaningless type
-conversions when a u64 MSR value is splitted into two u32.
+The following commit:
+
+  efef7f184f2e ("x86/msr: Add explicit includes of <asm/msr.h>")
+
+added a superfluous inclusion of <asm/asm.h> to
+
+  drivers/acpi/processor_throttling.c.
+
+Remove it.
 
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 ---
- arch/x86/coco/sev/core.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/acpi/processor_throttling.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index ff82151f7718..b3ce6fc8b62d 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -282,12 +282,7 @@ static inline u64 sev_es_rd_ghcb_msr(void)
- 
- static __always_inline void sev_es_wr_ghcb_msr(u64 val)
- {
--	u32 low, high;
--
--	low  = (u32)(val);
--	high = (u32)(val >> 32);
--
--	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
-+	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
- }
- 
- static int vc_fetch_insn_kernel(struct es_em_ctxt *ctxt,
+diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
+index ecd7fe256153..d1541a386fbc 100644
+--- a/drivers/acpi/processor_throttling.c
++++ b/drivers/acpi/processor_throttling.c
+@@ -21,7 +21,6 @@
+ #include <linux/uaccess.h>
+ #include <acpi/processor.h>
+ #include <asm/io.h>
+-#include <asm/asm.h>
+ #ifdef CONFIG_X86
+ #include <asm/msr.h>
+ #endif
 -- 
 2.49.0
 
