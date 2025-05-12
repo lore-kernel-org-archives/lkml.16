@@ -1,110 +1,339 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4476F4C9F;
-	Mon, 12 May 2025 13:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C2D295517
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056418; cv=none; b=DgwASnCQTzupq9aXyZaVECvmseoeEduaXcA+S02zKHja3UXbHjf8eL+YpEn1o+KL743ZKvAOm4UyqL3JshwCw1Ttez7Am2O4NJNDRDRe5flH851lG3l7LCcQM5VjebUWxk+k8NraSIp4fAiAGQR9GQs8atRTb4Pxl+pskdnpJhs=
+	t=1747056435; cv=none; b=OvWgWLvtp8T3B2P8/WO7+kuGMTWi6TTlQPwOYweMnczpsxCvi1K4LXOH0zgX3Kq072/xSw1lzvp/Qzfebvk6rAUCTTRDfNGKeUoR8DZ2K83rW6+twlqexbQsemVQJDIiZwBi+HM8t3cwCLXXrgJZ85/wrN18oUHsi1bIvbv9/SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056418; c=relaxed/simple;
-	bh=5SYSxtirN3S0+dRopywjB9WAaqvLRtBwRqG/ATTUwMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PRSHODpFoORKWalGiiHZzLHdFvdW5/55TvvxCZ/9xNAWT9JcnTWH22vaRv3Vbn/DHdqSL+QoD6gSCSdxjhZJZRbW6pv7EfctnsJToyhCKLsM44P3zpqrXYzU65wpm3Er0Vezp0tMxdFjVCPQVShGFKQAaz3IqaeumcCon6yjkog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=MBXUqKSe; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1747056435; c=relaxed/simple;
+	bh=BkEoFCauMqjqdF99XOQ04bTcBlErPYvxw1BKLlXKtUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c2DeFoXvPMU4zHTFioVESj4hG2zpBSZlMt8OOxzzwNMN2/dNgAB9T6wOtj3Sdve3s0uBduqirPx0+fECKrzN3BPnjTyTFIuMFQ2hXk6HTMZz9fVzndx18AA+dyvovNx5DU4T/9HCJpfJuUWTixVssObo7FDylP0s3U9U6jxA6R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d246ZmiN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="MBXUqKSe"
-Received: from kreacher.localnet (unknown [217.114.34.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id AD92A666D36;
-	Mon, 12 May 2025 15:26:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1747056414;
-	bh=5SYSxtirN3S0+dRopywjB9WAaqvLRtBwRqG/ATTUwMM=;
-	h=From:Subject:Date;
-	b=MBXUqKSeBe68Qa6GWehjFXth20CtjVIVKN546eRr9nDz+sZoHyPAtHDgACUPqoG2Y
-	 VmogAeGXvg3ymWjYmfa3NBfNg3nK7BKZuNvMCtRrnGSYsLQK6B7nTRZiQNfXEaqeq/
-	 FNrHnzidEm+gqA8Ej8pRa/H2ibirjZJ3tVgbkscGFbvpUxTJ8KGnHD70MknQTovYPG
-	 obx/AArd235ZvJrVBafSD7rK4/zB7eNxjpWfvlziBdwGvP5iqpkCgJyBvIF8ze6s7b
-	 UFHU9LKvrMDV/2F5QIsv2WtclQ7QRR97CpVEDCnFOi7Ds1LfNjqISk1q1fjcECStSk
-	 y+NhVxMAmf7jQ==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>,
- Saravana Kannan <saravanak@google.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
-Subject: [PATCH v1] ucsi_ccg: Disable async suspend in ucsi_ccg_probe()
-Date: Mon, 12 May 2025 15:26:53 +0200
-Message-ID: <6180608.lOV4Wx5bFT@rjwysocki.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d246ZmiN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747056432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xT/FjlwzeW/dIJrII1zg+QW6Nufx9n56t4jpFPeTrX8=;
+	b=d246ZmiNsw2rF83nAb1Nz3KB7U7JlkwB+cGoXxZIFwQUDEQ5sElyDxHOq1e9lZTTuEAGBE
+	bZzj0SQDJlF28NbfKv07p1/gMflT7sB2tS0NxpP4N9Os7gVQ03CXM40WoXW5vnblVdsjZ5
+	3cL4BVo8qEbcOw4VvjhVs/QloIzgb50=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-bcAi9QyPOJWV_atio5bOAA-1; Mon, 12 May 2025 09:27:11 -0400
+X-MC-Unique: bcAi9QyPOJWV_atio5bOAA-1
+X-Mimecast-MFC-AGG-ID: bcAi9QyPOJWV_atio5bOAA_1747056430
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad239523a14so161557266b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:27:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747056427; x=1747661227;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xT/FjlwzeW/dIJrII1zg+QW6Nufx9n56t4jpFPeTrX8=;
+        b=AFy7ye0jRRBYHhvjR2k35wR9ipjL2UJIK9VcOd5tIu1B/zJZ7e3//WouninEiHCIuc
+         Ygwwxj9DtzI/OphUN7dP2IkyoB051Ne2eqKYU4W9RZ0ycl+ZST+rIaAKBpRTqsuwtURC
+         r1NlIm6zdJ7WAvZ1duX4vVSbSXEZziGfrz7Tx1Mb5FdDWxt+QMtdLDrm6lS7skCyX0x9
+         qs7r1W9S3+JNCkw/91mcpenBBm2ZcENfUmKIMKUKfUkcIYlS8AzR+6dz53qPS6oHFjZl
+         bIIsfPW9AH/N2S1vlxtiQblV2MmCMygPoCyzXiT4HJydqQIPgrd3AvFVXybYG7fVPIWy
+         1fgw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9Gg0rFUdnBywT1qEFUKcl0i0DKfP1NDE16EfK48e+5ALQd0cybe/3iRwjL4KX4kcrjTvxJ7HSas75R8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcMr1JF3t98vs0NDwr3iRSSsErg7myaPqXSbT4pCsIsxA6IDSj
+	sOjdIg40FATc3Oq92FLctNqB3cdmGNjdNIZ1SVufCnZQwOZD+A+D64+jwNMJ9AFX/WOgmRzfhrj
+	WESb86s5F+1duyUa0XZbHCP2yh3KzIikD5Qo6tPiwxjM63F4d374dTD44N3KG
+X-Gm-Gg: ASbGncuSzpo9u5H73NC3Y55p3cen8BgXYYLRzwXCdknbyOtJdqH0IDyy3RjnaLu91Da
+	1XTTUBaIQc7hB0oI3WcGeE20mM0u5HeeAU2VjMM6yu8o191ywiqf0A0oxtrd+s65PhvB/qhiOqz
+	eAgJedrUzjwCd8RU0EY/L8hndA3dmb4OUeffW0vjMVmY4rq8z3FuhjLn0CCWoJUgTxtU0OQf3mD
+	Q84AOBUsrAsWJ/2BekkB4blDy6x9sqEKqS7ZNcHwG05kI3/TOgXj2XObmdFhqoRy3odLgqx+g9Q
+	ElQoFP291IEyumW1DTQmpAZaouIfIgTCyPoaghdL
+X-Received: by 2002:a17:907:a08a:b0:ad2:2547:b0ae with SMTP id a640c23a62f3a-ad22547c02amr990458866b.20.1747056426553;
+        Mon, 12 May 2025 06:27:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IETa07MPJhXdQUe1GZPoJZWirIoiPraReBRPjm3PreIn0eeyX6QhW4ZzkdEEjDverm1SFgl6A==
+X-Received: by 2002:a17:907:a08a:b0:ad2:2547:b0ae with SMTP id a640c23a62f3a-ad22547c02amr990449666b.20.1747056425990;
+        Mon, 12 May 2025 06:27:05 -0700 (PDT)
+Received: from thinky (109-92-26-237.static.isp.telekom.rs. [109.92.26.237])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219746730sm625109766b.94.2025.05.12.06.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 06:27:05 -0700 (PDT)
+Date: Mon, 12 May 2025 15:27:02 +0200
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: Richard Henderson <richard.henderson@linaro.org>, 
+	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
+	selinux@vger.kernel.org, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <vxjuophuvmvqloczajfyjd5jvvcbvcty2fpvfmcaz5xuh5vyqv@fxiymeww26mf>
+References: <20250512-xattrat-syscall-v5-0-a88b20e37aae@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 217.114.34.19
-X-CLIENT-HOSTNAME: 217.114.34.19
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddufeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhonhgrthhhrghnhhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepshgrrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhgvihhkkhhirdhkrhh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512-xattrat-syscall-v5-0-a88b20e37aae@kernel.org>
 
-From: Jon Hunter <jonathanh@nvidia.com>
+On 2025-05-12 15:18:53, Andrey Albershteyn wrote:
+> This patchset introduced two new syscalls file_getattr() and
+> file_setattr(). These syscalls are similar to FS_IOC_FSSETXATTR ioctl()
+> except they use *at() semantics. Therefore, there's no need to open the
+> file to get a fd.
+> 
+> These syscalls allow userspace to set filesystem inode attributes on
+> special files. One of the usage examples is XFS quota projects.
+> 
+> XFS has project quotas which could be attached to a directory. All
+> new inodes in these directories inherit project ID set on parent
+> directory.
+> 
+> The project is created from userspace by opening and calling
+> FS_IOC_FSSETXATTR on each inode. This is not possible for special
+> files such as FIFO, SOCK, BLK etc. Therefore, some inodes are left
+> with empty project ID. Those inodes then are not shown in the quota
+> accounting but still exist in the directory. This is not critical but in
+> the case when special files are created in the directory with already
+> existing project quota, these new inodes inherit extended attributes.
+> This creates a mix of special files with and without attributes.
+> Moreover, special files with attributes don't have a possibility to
+> become clear or change the attributes. This, in turn, prevents userspace
+> from re-creating quota project on these existing files.
+> 
+> NAME
+> 
+> 	file_getattr/file_setattr - get/set filesystem inode attributes
+> 
+> SYNOPSIS
+> 
+> 	#include <sys/syscall.h>    /* Definition of SYS_* constants */
+> 	#include <unistd.h>
+> 
+> 	long syscall(SYS_file_getattr, int dirfd, const char *pathname,
+> 		struct fsxattr *fsx, size_t size, unsigned int at_flags);
+> 	long syscall(SYS_file_setattr, int dirfd, const char *pathname,
+> 		struct fsxattr *fsx, size_t size, unsigned int at_flags);
+> 
+> 	Note: glibc doesn't provide for file_getattr()/file_setattr(),
+> 	use syscall(2) instead.
+> 
+> DESCRIPTION
+> 
+> 	The syscalls take fd and path. If path is absolute, fd is not
+> 	used. If path is empty, fd can be AT_FDCWD or any valid fd which
+> 	will be used to get/set attributes on.
+> 
+> 	This is an alternative to FS_IOC_FSGETXATTR/FS_IOC_FSSETXATTR
+> 	ioctl with a difference that file don't need to be open as we
+> 	can reference it with a path instead of fd. By having this we
+> 	can manipulated filesystem inode attributes not only on regular
+> 	files but also on special ones. This is not possible with
+> 	FS_IOC_FSSETXATTR ioctl as with special files we can not call
+> 	ioctl() directly on the filesystem inode using file descriptor.
+> 
+> 	at_flags can be set to AT_SYMLINK_NOFOLLOW or AT_EMPTY_PATH.
+> 
+> RETURN VALUE
+> 
+> 	On success, 0 is returned.  On error, -1 is returned, and errno
+> 	is set to indicate the error.
+> 
+> ERRORS
+> 
+> 	EINVAL		Invalid at_flag specified (only
+> 			AT_SYMLINK_NOFOLLOW and AT_EMPTY_PATH is
+> 			supported).
+> 
+> 	EINVAL		Size was smaller than any known version of
+> 			struct fsxattr.
+> 
+> 	EINVAL		Invalid combination of parameters provided in
+> 			fsxattr for this type of file.
+> 
+> 	E2BIG		Size of input argument **struct fsxattr** is too
+> 			big.
+> 
+> 	EBADF		Invalid file descriptor was provided.
+> 
+> 	EPERM		No permission to change this file.
+> 
+> 	EOPNOTSUPP	Filesystem does not support setting attributes
+> 			on this type of inode
+> 
+> HISTORY
+> 
+> 	Added in Linux 6.15.
+> 
+> EXAMPLE
+> 
+> Create directory and file "mkdir ./dir && touch ./dir/foo" and then
+> execute the following program:
+> 
+> 	#include <fcntl.h>
+> 	#include <errno.h>
+> 	#include <string.h>
+> 	#include <linux/fs.h>
+> 	#include <stdio.h>
+> 	#include <sys/syscall.h>
+> 	#include <unistd.h>
+> 
+> 	int
+> 	main(int argc, char **argv) {
+> 		int dfd;
+> 		int error;
+> 		struct fsxattr fsx;
+> 
+> 		dfd = open("./dir", O_RDONLY);
+> 		if (dfd == -1) {
+> 			printf("can not open ./dir");
+> 			return dfd;
+> 		}
+> 
+> 		error = syscall(467, dfd, "./foo", &fsx, 0);
+> 		if (error) {
+> 			printf("can not call 467: %s", strerror(errno));
+> 			return error;
+> 		}
+> 
+> 		printf("dir/foo flags: %d\n", fsx.fsx_xflags);
+> 
+> 		fsx.fsx_xflags |= FS_XFLAG_NODUMP;
+> 		error = syscall(468, dfd, "./foo", &fsx, 0);
+> 		if (error) {
+> 			printf("can not call 468: %s", strerror(errno));
+> 			return error;
+> 		}
+> 
+> 		printf("dir/foo flags: %d\n", fsx.fsx_xflags);
+> 
+> 		return error;
+> 	}
+> 
+> SEE ALSO
+> 
+> 	ioctl(2), ioctl_iflags(2), ioctl_xfs_fsgetxattr(2)
+> 
+> ---
+> Changes in v5:
+> - Remove setting of LOOKUP_EMPTY flags which does not have any effect
+> - Return -ENOSUPP from vfs_fileattr_set()
+> - Add fsxattr masking (by Amir)
+> - Fix UAF issue dentry
+> - Fix getname_maybe_null() issue with NULL path
+> - Implement file_getattr/file_setattr hooks
+> - Return LSM return code from file_setattr
+> - Rename from getfsxattrat/setfsxattrat to file_getattr/file_setattr
+> - Link to v4: https://lore.kernel.org/r/20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org
+> 
+> Changes in v4:
+> - Use getname_maybe_null() for correct handling of dfd + path semantic
+> - Remove restriction for special files on which flags are allowed
+> - Utilize copy_struct_from_user() for better future compatibility
+> - Add draft man page to cover letter
+> - Convert -ENOIOCTLCMD to -EOPNOSUPP as more appropriate for syscall
+> - Add missing __user to header declaration of syscalls
+> - Link to v3: https://lore.kernel.org/r/20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org
+> 
+> Changes in v3:
+> - Remove unnecessary "dfd is dir" check as it checked in user_path_at()
+> - Remove unnecessary "same filesystem" check
+> - Use CLASS() instead of directly calling fdget/fdput
+> - Link to v2: https://lore.kernel.org/r/20250122-xattrat-syscall-v2-1-5b360d4fbcb2@kernel.org
+> 
+> v1:
+> https://lore.kernel.org/linuxppc-dev/20250109174540.893098-1-aalbersh@kernel.org/
+> 
+> Previous discussion:
+> https://lore.kernel.org/linux-xfs/20240520164624.665269-2-aalbersh@redhat.com/
+> 
+> ---
+> Amir Goldstein (1):
+>       fs: prepare for extending file_get/setattr()
+> 
+> Andrey Albershteyn (6):
+>       fs: split fileattr related helpers into separate file
+>       lsm: introduce new hooks for setting/getting inode fsxattr
+>       selinux: implement inode_file_[g|s]etattr hooks
+>       fs: split fileattr/fsxattr converters into helpers
+>       fs: make vfs_fileattr_[get|set] return -EOPNOSUPP
+>       fs: introduce file_getattr and file_setattr syscalls
+> 
+>  arch/alpha/kernel/syscalls/syscall.tbl      |   2 +
+>  arch/arm/tools/syscall.tbl                  |   2 +
+>  arch/arm64/tools/syscall_32.tbl             |   2 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |   2 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |   2 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |   2 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |   2 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |   2 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |   2 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |   2 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |   2 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |   2 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |   2 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |   2 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |   2 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |   2 +
+>  fs/Makefile                                 |   3 +-
+>  fs/ecryptfs/inode.c                         |   8 +-
+>  fs/file_attr.c                              | 475 ++++++++++++++++++++++++++++
+>  fs/ioctl.c                                  | 309 ------------------
+>  fs/overlayfs/inode.c                        |   2 +-
+>  include/linux/fileattr.h                    |  26 ++
+>  include/linux/lsm_hook_defs.h               |   2 +
+>  include/linux/security.h                    |  16 +
+>  include/linux/syscalls.h                    |   6 +
+>  include/uapi/asm-generic/unistd.h           |   8 +-
+>  include/uapi/linux/fs.h                     |   3 +
+>  security/security.c                         |  30 ++
+>  security/selinux/hooks.c                    |  14 +
+>  29 files changed, 621 insertions(+), 313 deletions(-)
+> ---
+> base-commit: 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
+> change-id: 20250114-xattrat-syscall-6a1136d2db59
+> 
+> Best regards,
+> -- 
+> Andrey Albershteyn <aalbersh@kernel.org>
+> 
 
-Commit aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending
-children") had triggered a suspend issue on Tegra boards because it had
-reordered the syspend of devices with async suspend enabled with respect
-to some other devices.  Specifically, the devices with async suspend
-enabled that have no children are now suspended before any other devices
-unless there are device links pointing to them as suppliers.
+Ignore please, somehow b4 crashed with timeout on gmail
 
-The investigation that followed the failure report uncovered that async
-suspend was enabled for the cypd4226 device that was a Type-C controller
-with a dependency on USB PHY and it turned out that disabling async
-suspend for that device made the issue go away.  Since async suspend
-takes dependencies between parents and children into account as well
-as other dependencies between devices represented by device links, this
-means that the cypd4226 has a dependency on another device that is
-not represented in any form in the kernel (a "hidden" dependency), in
-which case async suspend should not be enabled for it.
-
-Accordingly, make ucsi_ccg_probe() disable async suspend for the
-devices handled by, which covers the cypd4226 device on the Tegra
-boards as well as other devices likely to have similar "hidden"
-dependencies.
-
-Fixes: aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending children")
-Closes: https://lore.kernel.org/linux-pm/c6cd714b-b0eb-42fc-b9b5-4f5f396fb4ec@nvidia.com/
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Commit aa7a9275ab81 is in linux-next and it has not reached the mainline yet.
-
-Thanks!
-
----
- drivers/usb/typec/ucsi/ucsi_ccg.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/usb/typec/ucsi/ucsi_ccg.c
-+++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
-@@ -1483,6 +1483,8 @@
- 
- 	i2c_set_clientdata(client, uc);
- 
-+	device_disable_async_suspend(uc->dev);
-+
- 	pm_runtime_set_active(uc->dev);
- 	pm_runtime_enable(uc->dev);
- 	pm_runtime_use_autosuspend(uc->dev);
-
-
+-- 
+- Andrey
 
