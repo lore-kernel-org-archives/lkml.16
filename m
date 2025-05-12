@@ -1,130 +1,152 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF9228751B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066162676CD;
+	Mon, 12 May 2025 11:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747048368; cv=none; b=ITao7wbUQYD+xINFGTj+eXWodL3T0HvRG5Y7C1pSDESpNhpit1w+c6MWKVU2/M0jiYDxTBFsTrOzDQf7fXwf18JeeU+sXhw4UB+tj1n6rtUtO/se3jTUDwwRqAuRydlUDCeIki85EDzDEvZXF6Tq7l4kdaiz8tQlEW6M1dme99w=
+	t=1747048486; cv=none; b=UylQVuDiz7ihpe+IuCpmdgvNEnX2j9u4VJ8yrhx+HS+5L8RZDY69h/tU9LYYGcxQ9pBPB9gmRcUPoVCY9Kul0V7Wgno1LTAk/bw+Px3fAilHaj4pn7iy4XfEIm56alFncdtPhoCGhAa8NL92i/nSrT38whL0wYk9jAoYjyZ9zf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747048368; c=relaxed/simple;
-	bh=UXsGPjbIjT2Q+Vx36fvDfQmztUaeHoTuX/wiNjNrBDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 References; b=QuQOizDXXXiDHSFosBEXY8tvczWjj1ucpwjcPh17CB2ttxNTQxlwNvaitbXZuGBqlvjjZF5xaUa/Wg0iYni8EyryiRwf5s7mTO+J9X7wty0+8fhzMMB90FCg5HP9f5v14NW8hxEC5Sl+ET7Ecvy5naiKECZky/oY3Xup3Zd44WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HLhOhsPF; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747048486; c=relaxed/simple;
+	bh=6EmgmCvjRa47+4NjQxLC6tai47iBwAe4uyjQHadtNMA=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=NyQxUEVx9cv2hHdhrP6pYIGrepmUZBGDV/8+QKW1tNzAiEVBSz866vAu2QX169INvzS0YmFWfJgRoByjX3HrLw1UQBknbMplMr3KwA/h6UXvrIzfYFAwcUHYyc3YCa9HMl0NhWoFA+Oh8jHg4RWI7SIWKSym53+X5+Qyp0x76Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g5eWEKNp; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HLhOhsPF"
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250512111242epoutp01003e78948568e6996bb88aa61d818535~_wzqzUGLg0549505495epoutp010
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:12:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250512111242epoutp01003e78948568e6996bb88aa61d818535~_wzqzUGLg0549505495epoutp010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747048362;
-	bh=aU9i3dBQgzAlWJBwoW6G3R01WqDZbFqbjugEi5QzTsE=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=HLhOhsPFrQ2sm0YCh4j/TofPkLZVFJwBym8VrGMI7Q7n7l3TCGW/5Fzk96qdRF4ez
-	 p/g2R5whDG/KcWJhFgFmUajgG4LOqO1+v5tiv6zdBmz8d3vsbR5FRumHGiR2YeNuXZ
-	 hX25gtJc+5NgPfFWSZJC7YhKiUw3M+Y66iLpD1sY=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250512111242epcas2p135cb6bfca174823f8e4271e3d5bc3cca~_wzqfBpMJ1017410174epcas2p1I;
-	Mon, 12 May 2025 11:12:42 +0000 (GMT)
-Received: from epcas2p2.samsung.com (unknown [182.195.36.88]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4Zwxls1Q1wz3hhT4; Mon, 12 May
-	2025 11:12:41 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250512111240epcas2p321f5121e34f63383e1724de05e55420d~_wzpQZbUQ2154921549epcas2p3L;
-	Mon, 12 May 2025 11:12:40 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250512111240epsmtrp2f4f4b891f6db2f34c5dc39b38e090c95~_wzpPrwNx0925709257epsmtrp2f;
-	Mon, 12 May 2025 11:12:40 +0000 (GMT)
-X-AuditID: b6c32a28-460ee70000001e8a-8f-6821d7a8d820
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	EB.E0.07818.8A7D1286; Mon, 12 May 2025 20:12:40 +0900 (KST)
-Received: from au1-maretx-p37.eng.sarc.samsung.com (unknown
-	[105.148.41.227]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250512111238epsmtip245157d6170dc74a8e23b596dbbd6a0fc~_wzna81Re0917709177epsmtip25;
-	Mon, 12 May 2025 11:12:38 +0000 (GMT)
-Date: Mon, 12 May 2025 06:12:31 -0500
-From: Hyejeong Choi <hjeong.choi@samsung.com>
-To: sumit.semwal@linaro.org, christian.koenig@amd.com
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-	hjeong.choi@samsung.com
-Subject: [PATCH] dma-buf: insert memory barrier before updating num_fences
-Message-ID: <20250512111231.GA1265534@au1-maretx-p37.eng.sarc.samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g5eWEKNp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747048485; x=1778584485;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6EmgmCvjRa47+4NjQxLC6tai47iBwAe4uyjQHadtNMA=;
+  b=g5eWEKNp46KDi9Zz1JLJx/vbHkhUV0pLArwg70LCFXAKLxnekaLQTBdH
+   2oITXdcNUp7vWS0JuKASZDPg0wluQxECJ5y+IufNWZWrhPp5Ff8UiIjZF
+   eMOK4iBQNtMf3DrSg8S+YqLIpiePTr0DtO0vRAK1TLt1sPO9rCBRnuOar
+   E2zwLjbV2FFkCbqONdlDzfpBlPCNRl99p9m0cn81BQjaeK/m7TL507C2C
+   IDDHjW5bAYxUP7PqOzC1Rw8hjuYxEMv50lVaUGy+YHoq+m5tuSH+WndTS
+   t70fAto1QEbRtwlgR8eSlEcYycM7twyGgElDcqHBMDBV7Z+/0go/djVLb
+   w==;
+X-CSE-ConnectionGUID: RHCiMNCpScuXCIyisTIjFQ==
+X-CSE-MsgGUID: 9adHrIygTYeoaXv/WAmTlA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48959469"
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="48959469"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:14:44 -0700
+X-CSE-ConnectionGUID: fEAUJk9iTtitR3u5+nmJWQ==
+X-CSE-MsgGUID: Sbeo6BClRZ+pwou8bB0Fhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="137371079"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 04:14:41 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Mon, 12 May 2025 14:12:46 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.15-5
+Message-ID: <pdx86-pr-20250512141246-1833516743@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSvO6K64oZBi8eKVu8vb+b1eLK1/ds
-	Fhd7vrJZfLnykMni8q45bBY9G7ayWpy6+5ndgd2j9dJfNo871/awedzvPs7kcfvfY2aPvi2r
-	GD0+b5ILYIvisklJzcksSy3St0vgyjj3aAd7wTX2iv+H/7M1MO5h62Lk5JAQMJE4t7KRtYuR
-	i0NIYDejxPwdi9m7GDmAEtISHcfSIWqEJe63HGEFsYUEGpgkPsyvArFZBFQlfrW8B4uzCehK
-	bPt0A2ymiICpxNF1/WwgM5kFZjNK9L9tBisSFvCSWLhkEzuIzQtk7758nBnCFpQ4OfMJC4jN
-	LKAlcePfSyaQG5iBblj+jwPEFBVQkfi8QGACI/8sJA2zkDTMQmhYwMi8ilEytaA4Nz032bDA
-	MC+1XK84Mbe4NC9dLzk/dxMjOLC1NHYwvvvWpH+IkYmD8RCjBAezkghv43bFDCHelMTKqtSi
-	/Pii0pzU4kOM0hwsSuK8Kw0j0oUE0hNLUrNTUwtSi2CyTBycUg1MZp02d25qtn8//+ndr/dq
-	HwxNFBJMDasKH3fVT2uJ7RcNaYnwZtEvqnn03+4Sr6bkrmmR7+srC/nTWZcmGmWfW/62/mb5
-	h2PR2RpsPLtqFyTUb33RvP9zc/y/ogSeL4bTf7JxVaw6vWRJUb63Uv+5RBmnFyUmJ98GV+so
-	5ayZYzuxb2783hfPWIufT96ts8ok9uKM1L5zW9vaPDddL5VLeGS2fXJ9lPXxja37Jyfvfy2c
-	G7vCMCplm9GnYqkvSx1+OeUbWSv9lviyftVn1TXLp+9jcHN/zay/7NjhZy0zpliJxzVctKyM
-	ZE415//6xuS5sR7zog87Z9gtbcvZX6TyUqjJ0y07ccbaSxtDDnxRYinOSDTUYi4qTgQALqrd
-	ftsCAAA=
-X-CMS-MailID: 20250512111240epcas2p321f5121e34f63383e1724de05e55420d
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----vXMtb.xJEBdKRg-x-G_2.bLfm7.PUyBosmRElnm._zJRPIlO=_25ec9_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250512111240epcas2p321f5121e34f63383e1724de05e55420d
-References: <CGME20250512111240epcas2p321f5121e34f63383e1724de05e55420d@epcas2p3.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-------vXMtb.xJEBdKRg-x-G_2.bLfm7.PUyBosmRElnm._zJRPIlO=_25ec9_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+Hi Linus,
 
-smp_store_mb() inserts memory barrier after storing operation.
-It is different with what the comment is originally aiming so Null
-pointer dereference can be happened if memory update is reordered.
+Here is a platform-drivers-x86 fixes PR for v6.15.
 
-Signed-off-by: Hyejeong Choi <hjeong.choi@samsung.com>
----
- drivers/dma-buf/dma-resv.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Fixes and new HW support
 
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index 5f8d010516f0..52af5c7430da 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -320,8 +320,9 @@ void dma_resv_add_fence(struct dma_resv *obj, struct dma_fence *fence,
- 	count++;
+ - amd/pmc: Use spurious 8042 quirk with MECHREVO Wujie 14XA
+
+ - amd/pmf:
+   - Ensure Smart PC policies are valid
+   - Fix memory leak when the engine fails to start
+
+ - amd/hsmp: Make amd_hsmp and hsmp_acpi as mutually exclusive drivers
+
+ - asus-wmi: Fix wlan_ctrl_by_user detection
+
+ - thinkpad_acpi: Add support for NEC Lavie X1475JAS
  
- 	dma_resv_list_set(fobj, i, fence, usage);
--	/* pointer update must be visible before we extend the num_fences */
--	smp_store_mb(fobj->num_fences, count);
-+	/* fence update must be visible before we extend the num_fences */
-+	smp_wmb();
-+	WRITE_ONCE(fobj->num_fences, count);
- }
- EXPORT_SYMBOL(dma_resv_add_fence);
- 
--- 
-2.31.1
+Regards, i.
 
 
-------vXMtb.xJEBdKRg-x-G_2.bLfm7.PUyBosmRElnm._zJRPIlO=_25ec9_
-Content-Type: text/plain; charset="utf-8"
+The following changes since commit 02c6e43397c39edd0c172859bf8c851b46be09a8:
 
+  platform/x86: ideapad-laptop: add support for some new buttons (2025-04-23 13:05:26 +0300)
 
-------vXMtb.xJEBdKRg-x-G_2.bLfm7.PUyBosmRElnm._zJRPIlO=_25ec9_--
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-5
+
+for you to fetch changes up to bfcfe6d335a967f8ea0c1980960e6f0205b5de6e:
+
+  platform/x86: asus-wmi: Fix wlan_ctrl_by_user detection (2025-05-07 15:46:34 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.15-5
+
+Fixes and new HW support
+
+ - amd/pmc: Use spurious 8042 quirk with MECHREVO Wujie 14XA
+
+ - amd/pmf:
+   - Ensure Smart PC policies are valid
+   - Fix memory leak when the engine fails to start
+
+ - amd/hsmp: Make amd_hsmp and hsmp_acpi as mutually exclusive drivers
+
+ - asus-wmi: Fix wlan_ctrl_by_user detection
+
+ - thinkpad_acpi: Add support for NEC Lavie X1475JAS
+
+The following is an automated shortlog grouped by driver:
+
+amd/hsmp:
+ -  Make amd_hsmp and hsmp_acpi as mutually exclusive drivers
+
+amd/pmc:
+ -  Declare quirk_spurious_8042 for MECHREVO Wujie 14XA (GX4HRXL)
+
+asus-wmi:
+ -  Fix wlan_ctrl_by_user detection
+
+drivers/platform/x86/amd: pmf:
+ -  Check for invalid sideloaded Smart PC Policies
+ -  Check for invalid Smart PC Policies
+
+thinkpad_acpi:
+ -  Support also NEC Lavie X1475JAS
+
+----------------------------------------------------------------
+Hans de Goede (1):
+      platform/x86: asus-wmi: Fix wlan_ctrl_by_user detection
+
+John Chau (1):
+      platform/x86: thinkpad_acpi: Support also NEC Lavie X1475JAS
+
+Mario Limonciello (2):
+      drivers/platform/x86/amd: pmf: Check for invalid sideloaded Smart PC Policies
+      drivers/platform/x86/amd: pmf: Check for invalid Smart PC Policies
+
+Runhua He (1):
+      platform/x86/amd/pmc: Declare quirk_spurious_8042 for MECHREVO Wujie 14XA (GX4HRXL)
+
+Suma Hegde (1):
+      platform/x86/amd/hsmp: Make amd_hsmp and hsmp_acpi as mutually exclusive drivers
+
+ drivers/platform/x86/amd/hsmp/acpi.c      |  3 +--
+ drivers/platform/x86/amd/hsmp/hsmp.h      |  1 +
+ drivers/platform/x86/amd/hsmp/plat.c      |  6 +++++-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c |  7 +++++++
+ drivers/platform/x86/amd/pmf/tee-if.c     | 23 ++++++++++++++++++++++-
+ drivers/platform/x86/asus-wmi.c           |  3 ++-
+ drivers/platform/x86/thinkpad_acpi.c      |  2 ++
+ 7 files changed, 40 insertions(+), 5 deletions(-)
