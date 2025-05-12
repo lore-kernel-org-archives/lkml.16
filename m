@@ -1,179 +1,311 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E832550D0;
-	Mon, 12 May 2025 07:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A184E2AD11;
+	Mon, 12 May 2025 07:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747033414; cv=none; b=c03KCBqh/95z2pRhg6iq4AedYDXTE3K8oQy8qO+unfLPP4LebMqB9EWBXXS2K2C0/czv48nd8Vy+5Hg4MVjWoLRcp6Z+0qXeSkqDl/r9Q3fm+pZuny2TE6g1Bw10zsgcIa2yCuUDMLob8MJo4MIK+InWxm3rXj2oEzMg6BvNREw=
+	t=1747033689; cv=none; b=d+GXmGQgk1tzTu9RXxOtsuOnIdIrostni356XBsJ8X8FUj5TXOyNBE8QOP/nwyAXV2aGrrusgVLoXTERhWVJnAUP7QSfZe2E/ZTYEn6AmgKdT+gu7IfhrfZPKIix7KJtc3m5WLliu9MXTsgzBl8bwGkpUIpLtd+mNos8X3Rzqe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747033414; c=relaxed/simple;
-	bh=nDptblRdB6kbWyDdFocql4XJth9/Hrh1Kx84cdZ9fKQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=f0XVwI4Gzj6dCdkcUZXItFaoN8Fp8pMLGn132OxaiPh8W4+laJQ6JjPyO5OrhX8fyBStNcVXJY7OH/o9I+utmyboVzBCdnfRCI/+4hX/12UZtYQvxpxLZ/W3l/Nxt+RPHDmT39molhVMqwsHatWxOyHfJEAuU+kfJQrnuTefza4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kd7B7NGk; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747033689; c=relaxed/simple;
+	bh=Mul8tNeRrypv/NSAZe83gZO8+DlWm98zYe0h3LwG4jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UL8PbMYg2E7YyvxAF8VPg+9dI2xGOoK52wNA3wR7PpnD7GsxVJGweH1FiNfx+HrQZped0R7TK14YQU+DzN94m+53gZJ518WsCySWUX6IRsL/FwsNpy4prY4TKrwuxpPl2PJt9cAjrTyVYVdMVCTjFaFNilTWaAd3frpZwymoIng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mb5DRkWr; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kd7B7NGk"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BLMiVR021016;
-	Mon, 12 May 2025 09:03:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=3fdcVl0cGdqaLl1bpQLUPK
-	GXcr9zQxv8eka5RMO2E4A=; b=kd7B7NGkyVWhD4WVakC/n/+fN8BQm9r9jUPPND
-	4KrEIbE/H289Y03oJcowrq4pY+Lx4New6FvDMhFNveK1ucJYcQDfCzIceLfP4AF1
-	H6Ui44dQTxFOj+x2fGHY/mC8DB4x3lcI2ylLl44KBV89EEd4kPQt/2bn7CEpevzJ
-	mnE4Kv6PdX8PiPR+mbDhfu4hEz0iqBEX5TeOeewZqnVZr/ajSDfmgobpUZ945O5p
-	BpdlFP7JV/YJS5MBuHN3gw4KwjhcSkVyqnt1Q7Inymhc6wZ1zqEh4eY5dLZ3UU6D
-	WGxXP1pP/KlpuY2952S8H6eMzHf3dhAhR6+IA7SE56nzRaqQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46jhrmu28k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 09:03:19 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5C5B24007D;
-	Mon, 12 May 2025 09:02:25 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 40714A644DF;
-	Mon, 12 May 2025 09:01:11 +0200 (CEST)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
- 2025 09:01:10 +0200
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Mon, 12 May 2025 09:01:04 +0200
-Subject: [PATCH v4] spi: stm32-ospi: Make usage of
- reset_control_acquire/release() API
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mb5DRkWr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747033688; x=1778569688;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Mul8tNeRrypv/NSAZe83gZO8+DlWm98zYe0h3LwG4jg=;
+  b=mb5DRkWrGJvnAdL32F2ztPSRwxcEv2tViRGrHjaAGQ24+FmHhs/HKR3+
+   mLCJEfsE/iHsSdnklQeASC+EpJGfWplDSNpEe7P8cPTjk8nZLj/Fp0/nC
+   adD8hEXTm0Sa3IS+eLg5lhdwn7LxdL5F0E6AAp39odijDeDpF6z/tu9uo
+   U6+sSzUvP9g59bQqO+rh3L3Mt3XjA+o9/MqYTVcLlev9EMWxV3KaSD28F
+   zEgfvOtRTx59/dTMQpnK0iy/KqJqXB0ArZmUw6XtH/OsOLMWDCz3roMEG
+   uxm3SiijVAl1QGBdCxzt0XNi8e2H8TR+HqIN6LzjWAlE6r6Yn1cSGKo75
+   A==;
+X-CSE-ConnectionGUID: /AgWA6jBSoqMKjcNtP1ZwQ==
+X-CSE-MsgGUID: 6u7NJRIGSg6CfnnJzRhREg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="66355112"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="66355112"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:08:07 -0700
+X-CSE-ConnectionGUID: +NC4/pH6QHKeJIQkvRlB3Q==
+X-CSE-MsgGUID: zFExEVxoRFiOmm8OdIwj5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="174434482"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:08:00 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uENGX-00000000qLL-0P5S;
+	Mon, 12 May 2025 10:07:57 +0300
+Date: Mon, 12 May 2025 10:07:56 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/23] clk: Add clock driver for the RISC-V RPMI clock
+ service group
+Message-ID: <aCGeTPS4WiGYMTTo@smile.fi.intel.com>
+References: <20250511133939.801777-1-apatel@ventanamicro.com>
+ <20250511133939.801777-11-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250512-b4-upstream_ospi_reset_update-v4-1-982c6f7886ef@foss.st.com>
-X-B4-Tracking: v=1; b=H4sIAK+cIWgC/43NsQ6DIBSF4VdpmIsRBKmd+h5NY6hcK4NCuEjaG
- N+96NJ0asf/DN9ZCEKwgOR8WEiAZNG6KYc4Hkg36OkB1JrchJdcloIxehd09hgD6LF16G0bACG
- 2szc6ApVN3QEXUhvNSDZ8gN4+d/96yz1YjC689rvEt/VfOXFaUmFA9dIYrht26R1igbHo3Eg2O
- 1UfT5bql1dRRhWIWp9Uo6Ti3966rm+dAZfqHAEAAA==
-X-Change-ID: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
-To: Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Patrice Chotard
-	<patrice.chotard@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250511133939.801777-11-apatel@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-As ospi reset is consumed by both OMM and OSPI drivers, use the reset
-acquire/release mechanism which ensure exclusive reset usage.
+On Sun, May 11, 2025 at 07:09:26PM +0530, Anup Patel wrote:
+> From: Rahul Pathak <rpathak@ventanamicro.com>
+> 
+> The RPMI specification defines a clock service group which can be
+> accessed via SBI MPXY extension or dedicated S-mode RPMI transport.
+> 
+> Add mailbox client based clock driver for the RISC-V RPMI clock
+> service group.
 
-This avoid to call reset_control_get/put() in OMM driver each time
-we need to reset OSPI children and guarantee the reset line stays
-deasserted.
+...
 
-During resume, OMM driver takes temporarily control of reset.
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mailbox/riscv-rpmi-message.h>
 
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-Changes in v4:
-  - Add a comment about reset sharing between OSPI and OMM drivers durig resume.
-  - Link to v3: https://lore.kernel.org/r/20250507-b4-upstream_ospi_reset_update-v3-1-7e46a8797572@foss.st.com
+Just to point out again that the above misses a lot of headers definitions
+and/or APIs this driver uses. Follow IWYU principle.
 
-Changes in v3:
-  - Remove previous patch 1/2 as already merged.
-  - Keep the reset control acquired from probe() to remove().
-  - Link to v2: https://lore.kernel.org/r/20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com
+...
 
-Changes in v2:
-  - Rebased on spi/for-next (7a978d8fcf57).
-  - Remove useless check on reset.
-  - Add error handling on reset_control_acquire().
-  - Link to v1: https://lore.kernel.org/all/20250410-b4-upstream_ospi_reset_update-v1-0-74126a8ceb9c@foss.st.com/
----
- drivers/spi/spi-stm32-ospi.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+> +#define GET_RATE_U64(hi_u32, lo_u32)	((u64)(hi_u32) << 32 | (lo_u32))
 
-diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
-index 668022098b1eac3628f0677e6d786e5a267346be..b2597b52beb1133155e0d6f601b0632ad4b8e8f5 100644
---- a/drivers/spi/spi-stm32-ospi.c
-+++ b/drivers/spi/spi-stm32-ospi.c
-@@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ospi->rstc = devm_reset_control_array_get_optional_exclusive(dev);
-+	ospi->rstc = devm_reset_control_array_get_exclusive_released(dev);
- 	if (IS_ERR(ospi->rstc))
- 		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
- 				     "Can't get reset\n");
-@@ -936,11 +936,13 @@ static int stm32_ospi_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_pm_enable;
- 
--	if (ospi->rstc) {
--		reset_control_assert(ospi->rstc);
--		udelay(2);
--		reset_control_deassert(ospi->rstc);
--	}
-+	ret = reset_control_acquire(ospi->rstc);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
-+
-+	reset_control_assert(ospi->rstc);
-+	udelay(2);
-+	reset_control_deassert(ospi->rstc);
- 
- 	ret = spi_register_controller(ctrl);
- 	if (ret) {
-@@ -983,6 +985,8 @@ static void stm32_ospi_remove(struct platform_device *pdev)
- 	if (ospi->dma_chrx)
- 		dma_release_channel(ospi->dma_chrx);
- 
-+	reset_control_release(ospi->rstc);
-+
- 	pm_runtime_put_sync_suspend(ospi->dev);
- 	pm_runtime_force_suspend(ospi->dev);
- }
-@@ -993,6 +997,8 @@ static int __maybe_unused stm32_ospi_suspend(struct device *dev)
- 
- 	pinctrl_pm_select_sleep_state(dev);
- 
-+	reset_control_release(ospi->rstc);
-+
- 	return pm_runtime_force_suspend(ospi->dev);
- }
- 
-@@ -1012,6 +1018,12 @@ static int __maybe_unused stm32_ospi_resume(struct device *dev)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = reset_control_acquire(ospi->rstc);
-+	if (ret) {
-+		dev_err(dev, "Can not acquire reset\n");
-+		return ret;
-+	}
-+
- 	writel_relaxed(ospi->cr_reg, regs_base + OSPI_CR);
- 	writel_relaxed(ospi->dcr_reg, regs_base + OSPI_DCR1);
- 	pm_runtime_mark_last_busy(ospi->dev);
+Hmm... Perhaps add this kind of macro to wordpart.h ? IIRC not only this driver
+uses something like this.
 
----
-base-commit: 1c64de886b8893c0158097edd6ba08d527a2c97a
-change-id: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
+...
 
-Best regards,
+> +enum rpmi_clk_type {
+> +	RPMI_CLK_DISCRETE = 0,
+> +	RPMI_CLK_LINEAR = 1,
+
+> +	RPMI_CLK_TYPE_MAX_IDX,
+
+No comma for the terminator. Please, clean all these cases.
+
+> +};
+
+...
+
+> +union rpmi_clk_rates {
+> +	u64 discrete[RPMI_CLK_DISCRETE_MAX_NUM_RATES];
+> +	struct {
+> +		u64 min;
+> +		u64 max;
+> +		u64 step;
+> +	} linear;
+
+Have you looked at the linear ranges library we have in the kernel? Can you
+utilise it here?
+
+> +};
+
+...
+
+> +struct rpmi_clk {
+> +	struct rpmi_clk_context *context;
+> +	u32 id;
+> +	u32 num_rates;
+> +	u32 transition_latency;
+> +	enum rpmi_clk_type type;
+> +	union rpmi_clk_rates *rates;
+> +	char name[RPMI_CLK_NAME_LEN];
+> +	struct clk_hw hw;
+
+Just a reminder to use `pahole` to check that your data layout is optimised for
+memory consumption.
+
+> +};
+
+...
+
+> +struct rpmi_get_supp_rates_rx {
+> +	u32 status;
+> +	u32 flags;
+> +	u32 remaining;
+> +	u32 returned;
+> +	u32 rates[];
+> +};
+
+Is it ABI? (I mean if this is interface with some kind of FW)
+If so, Use proper endianess aware types. Same Q for all data
+types defined in this driver.
+
+...
+
+> +			for (j = 0; j < rx->returned; j++) {
+> +				if (rateidx >= (clk_rate_idx + rx->returned))
+
+Too many parentheses.
+
+> +					break;
+> +				rpmi_clk->rates->discrete[rateidx++] =
+> +					GET_RATE_U64(rate_discrete[j].hi,
+> +						     rate_discrete[j].lo);
+> +			}
+> +		}
+
+...
+
+> +	devm_kfree(context->dev, rx);
+
+Why?! This is a red flag to point that here is misunderstanding or abuse of
+managed resources approach. Either use __Free() from cleanup.h or don't call
+devm_kfree(). The latter must have a very good justification to explain why.
+
+> +	return 0;
+
+(this is even not an error path, where it might have a little argument for)
+
+...
+
+> +	/* Keep the requested rate if the clock format
+> +	 * is of discrete type. Let the platform which
+> +	 * is actually controlling the clock handle that.
+> +	 */
+
+/*
+ * Use proper style for the multi-line comments. You can
+ * refer to this comment as an example.
+ */
+
+...
+
+> +out:
+
+Redundant label. Note, the labels are recommended to be named after the flow
+they will run if goto. This one can be named as out_literally_with_return_0,
+which makes it obvious how useless it is.
+
+> +	return 0;
+
+...
+
+> +	rates = devm_kzalloc(dev, sizeof(union rpmi_clk_rates), GFP_KERNEL);
+
+sizeof(*...)
+
+> +	if (!rates)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	rpmi_clk = devm_kzalloc(dev, sizeof(struct rpmi_clk), GFP_KERNEL);
+
+Ditto.
+
+> +	if (!rpmi_clk)
+> +		return ERR_PTR(-ENOMEM);
+
+...
+
+> +	ret = rpmi_clk_get_supported_rates(clkid, rpmi_clk);
+> +	if (ret)
+> +		return dev_err_ptr_probe(dev, ret,
+> +			"Get supported rates failed for clk-%u, %d\n", clkid, ret);
+
+Indentation issues. Repetitive ret in the message. Please, get familiar with
+the format dev_err_probe() uses.
+
+...
+
+> +	int ret, num_clocks, i;
+
+Why is 'i' signed?
+
+...
+
+> +	/* Allocate RPMI clock context */
+> +	context = devm_kzalloc(dev, sizeof(*context), GFP_KERNEL);
+
+Ha-ha, you have even inconsistent style in the same file! So, go through the
+whole series and make sure that the style used in each file is consistent.
+
+> +	if (!context)
+> +		return -ENOMEM;
+
+...
+
+> +	/* Validate RPMI specification version */
+> +	rpmi_mbox_init_get_attribute(&msg, RPMI_MBOX_ATTR_SPEC_VERSION);
+> +	ret = rpmi_mbox_send_message(context->chan, &msg);
+> +	if (ret) {
+> +		dev_err_probe(dev, ret, "Failed to get spec version\n");
+> +		goto fail_free_channel;
+
+This is simply wrong. You should not do goto before any devm_*() calls.
+The error path and ->remove(), if present) is broken. Fix it accordingly.
+
+Here should be
+
+		return dev_err_probe(...);
+
+it's your homework to understand how to achieve that. Plenty of the examples in
+the kernel.
+
+> +	}
+
+...
+
+> +enum rpmi_clock_service_id {
+> +	RPMI_CLK_SRV_ENABLE_NOTIFICATION = 0x01,
+> +	RPMI_CLK_SRV_GET_NUM_CLOCKS = 0x02,
+> +	RPMI_CLK_SRV_GET_ATTRIBUTES = 0x03,
+> +	RPMI_CLK_SRV_GET_SUPPORTED_RATES = 0x04,
+> +	RPMI_CLK_SRV_SET_CONFIG = 0x05,
+> +	RPMI_CLK_SRV_GET_CONFIG = 0x06,
+> +	RPMI_CLK_SRV_SET_RATE = 0x07,
+> +	RPMI_CLK_SRV_GET_RATE = 0x08,
+
+> +	RPMI_CLK_SRV_ID_MAX_COUNT,
+
+No comma in the terminator line.
+
+> +};
+
 -- 
-Patrice Chotard <patrice.chotard@foss.st.com>
+With Best Regards,
+Andy Shevchenko
+
 
