@@ -1,125 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F501BD035
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1F021B9F8;
+	Mon, 12 May 2025 14:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060184; cv=none; b=iLLW08Wf2YOgUk/zZBFwBCRU8KegsIBtOQCGlWyu2D6yNOqyj2uGFxwMdaKjn/VcRYh+bgK5uy4hiuPfHO86rsJdnnKKun9Ar6tBfVv3+N/ZgmhU6DWM22SxY1vhcnuldht+sxh15lKDpcggTveH4QutBCLoFwE/4Mx7YV26TOw=
+	t=1747060223; cv=none; b=pGhZfcffCn4NoIAdA8KwiO/gWOdog8sGhtqAjmHQgrFE/9C0cPUlQf4Cy6C55FJEt6pLzwtwEEiuxO4xPO2Pfou94phvdUG46lZ3PkdevcSMjtcK9WP0CTx7AWu/ST0d75QtFPHAHfawFLPEsdOFW46GgsraHKBhQVmrgUqNlFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060184; c=relaxed/simple;
-	bh=EcI0vp4wo0rPFoOwXHb46js93DbpKg70V1aJeQEW+rQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nso9y9M/5DJ+qfHm6nMKqvAXQywgVQDc1aaL1wh8SISwfEH6PxeB6It9YGIqBVHHoPst6Q+7KlC+dliPArnCeKUYAmezq0ysskyhPPVTYMBW08al+BxqcjcaV2L2kCfNaI5NfUr9otXBDPdDhX2XcprwT8a05JauzZ/EXMxc3zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4rinRmW/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hdgwawyo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747060223; c=relaxed/simple;
+	bh=dJLSXh6NRrH5GVSoNm8+zlgpZoDi2lHurrmrZhGWPo0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ug2f3B4XJhONaorznfr+JO3Hnl0OgqfcAPYVR+FoishP9PFtvAKsVHascat7mj1VkgS6orkR2L/9ExhJN1G/BWhTfH7LtbcDvqJ1dEeA9BkYxRU4qZ07KoWioy36PwbYGjYkhXy7x8UvBbBXqRCQtph3dqexq0yzLzM/BXbQB2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=igdHCSr5; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4rinRmW/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hdgwawyo"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747060180;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="igdHCSr5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 999A441C93;
+	Mon, 12 May 2025 14:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747060218;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Bulm+OAY6G9mwFtOIOO/nNbm8lthx9J/UosG91L7fxY=;
-	b=4rinRmW/uHX018N9DTYr1SW3h7Gu25O2gbpdwtFNhPlVbNQvUwcr9VHWmVpF3nfsYzqqmc
-	KVce5f4CcEK9fIKVKT0LGr1vwauRVdMqo6Zeosa4WxKBPuKdxrWmxXQWRU53sNvP4Eg04H
-	bdMUpaO2SBM1JzYM/GpCWzXbxomu1h5XIHxQAIktWV1ZeTSoz1iq1xqYBBv+ZH1YyXah0c
-	ml30ow+kz8VjwD9/kmNpLQGMa5ssSvMRjk6UjPiYbiTCyp3Wx908+6gCvMd5QKcf9Kfrev
-	mFrJwvC8ijh/viUhHQRt3bhXB22TGZ6tSwCvbt5Szvg+Di3gbkrMvnnSP4OEEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747060180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bulm+OAY6G9mwFtOIOO/nNbm8lthx9J/UosG91L7fxY=;
-	b=hdgwawyoaz9LAbwRHhGPcvSIjfXofFwW37OX343vDtRGeIc57x8igVldAwumhSllL9Gpi1
-	3YktCIBb4sSGy1Bg==
-To: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Sascha Bischoff
- <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>
-Subject: Re: [PATCH 1/4] genirq/msi: Add .msi_teardown() callback as the
- reverse of .msi_prepare()
-In-Reply-To: <20250511163520.1307654-2-maz@kernel.org>
-References: <20250511163520.1307654-1-maz@kernel.org>
- <20250511163520.1307654-2-maz@kernel.org>
-Date: Mon, 12 May 2025 16:29:39 +0200
-Message-ID: <87h61plx64.ffs@tglx>
+	bh=7/Ui6oc5Nm+KkKzPZxG2CxXKG9UmNd43w4GiVI/YA3I=;
+	b=igdHCSr5lt6uEPkbP9bms8179TGIn+n4NhO03e7kSzvUIcXmIdYS4VTrDzsW3Guoa6D0S/
+	2B5q4fKplnv/PXqB6D90WwPdiD2EopmH373ZIip+wyuKthhCdficB8+QALLRyqvzIzVtnd
+	E139KHdhArmwwO/Hm9Km/P2Lclo4ca2FNlyydyDtrMJhItKitJPvDCOjjE5wTwPfWLb96l
+	Y4tayxl/RAPnND9+axz+gzLvqNnmYLjyF61bKxf4nd5zBSAn9KX9u79v6+lXGvGaR6QMgi
+	UL3KwZtEMrBayhJdb6OrQjzEI5xfK8aomNdIBQUHpPi72nNtkBKD2leJ5X9N8A==
+Message-ID: <b5b24b98-ae89-4d50-90cb-c2bbc38aafba@bootlin.com>
+Date: Mon, 12 May 2025 16:30:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+ <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
+ <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
+ <aCIBoSi84NnwEA2s@smile.fi.intel.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <aCIBoSi84NnwEA2s@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigq
+ dhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Sun, May 11 2025 at 17:35, Marc Zyngier wrote:
+On 5/12/25 16:11, Andy Shevchenko wrote:
+> On Mon, May 12, 2025 at 04:08:35PM +0200, Thomas Richard wrote:
+>> On 5/9/25 11:07, Geert Uytterhoeven wrote:
+>>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
+> 
+> ...
+> 
+>>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
+>>>> +                       unsigned long config);
+>>>> +
+>>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
+>>>
+>>> I would expect all of these to take gpiochip_fwd pointers instead of
+>>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
+>>> that does not correspond to a gpiochip_fwd object, causing a crash?
+>>
+>> Indeed nothing prevents from passing gpio_chip pointer which does not
+>> correspond to a gpiochip_fwd object.
+>> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
+>> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
+>>
+>> I can keep GPIO operations as is, and create exported wrappers which
+>> take a gpiochip_fwd pointer as parameter, for example:
+>>
+>> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
+>> 			      unsigned long *mask,
+>> 			      unsigned long *bits)
+>> {
+>> 	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
+>>
+>> 	return gpio_fwd_get_multiple_locked(chip, mask, bits);
+>> }
+>> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
+>>
+>> So exported functions are gpiochip_fwd_*().
+> 
+> Sounds good for me. Let's wait for Geert's opinoin on this.
 
-> While the MSI ops do have a .msi_prepare() callback that is
-> responsible for setting up the relevant (usually per-device)
-> allocation, we don't have a callback reversing this setup.
+Regarding Geert's comment for patch 9/12, an other proposal for naming:
+As mentioned above, exported functions gpiochip_fwd_*() take a
+gpiochip_fwd as parameter.
 
-..., there is no callback reversing ...
+But for all functions corresponding to a GPIO operation add the gpio
+word, and for functions to add/remove GPIO descriptor add the desc word:
 
-> For this purpose, let's a .msi_teardown() callback. This is
+devm_gpiochip_fwd_alloc()
+gpiochip_fwd_register()
 
-'let's a ...' is not a sentence. Just say: add a .... calback.
+gpiochip_fwd_desc_add()
+gpiochip_fwd_desc_free()
 
-> reliying on the msi_domain_info structure having a non-NULL
+gpiochip_fwd_get_gpiochip()
+gpiochip_fwd_get_data()
 
-  ^^^^^ spell check is your friend.
+gpiochip_fwd_gpio_request()
+gpiochip_fwd_gpio_get_direction()
+gpiochip_fwd_gpio_direction_input()
+gpiochip_fwd_gpio_direction_output()
+gpiochip_fwd_gpio_get()
+gpiochip_fwd_gpio_set()
+gpiochip_fwd_gpio_set_multiple()
+gpiochip_fwd_gpio_get_multiple()
+gpiochip_fwd_gpio_set_config()
+gpiochip_fwd_gpio_to_irq()
 
-> alloc_data field.
->
-> Nobody is populating this field yet, so there is no change
+Regards,
 
-No driver is ..
-
->  
-> +static void msi_domain_ops_teardown(struct irq_domain *domain,
-> +				    msi_alloc_info_t *arg)
-
-No line break required.
-
-> +{
-> +}
-> +
->  static void msi_domain_ops_set_desc(msi_alloc_info_t *arg,
->  				    struct msi_desc *desc)
->  {
-> @@ -821,6 +826,7 @@ static struct msi_domain_ops msi_domain_ops_default = {
->  	.get_hwirq		= msi_domain_ops_get_hwirq,
->  	.msi_init		= msi_domain_ops_init,
->  	.msi_prepare		= msi_domain_ops_prepare,
-> +	.msi_teardown		= msi_domain_ops_teardown,
->  	.set_desc		= msi_domain_ops_set_desc,
->  };
->  
-> @@ -842,6 +848,8 @@ static void msi_domain_update_dom_ops(struct msi_domain_info *info)
->  		ops->msi_init = msi_domain_ops_default.msi_init;
->  	if (ops->msi_prepare == NULL)
->  		ops->msi_prepare = msi_domain_ops_default.msi_prepare;
-> +	if (ops->msi_teardown == NULL)
-> +		ops->msi_teardown = msi_domain_ops_default.msi_teardown;
->  	if (ops->set_desc == NULL)
->  		ops->set_desc = msi_domain_ops_default.set_desc;
->  }
-> @@ -1088,6 +1096,10 @@ void msi_remove_device_irq_domain(struct device *dev, unsigned int domid)
->  
->  	dev->msi.data->__domains[domid].domain = NULL;
->  	info = domain->host_data;
-> +
-> +	if (info->alloc_data)
-> +		info->ops->msi_teardown(domain, info->alloc_data);
-
-Hmm, that's weird.
-
-Why not call it unconditionally. The empty teardown() default callback
-does not care about @arg being NULL. No?
-
-Thanks,
-
-        tglx
+Thomas
