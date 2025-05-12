@@ -1,94 +1,70 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA0A79D2;
-	Mon, 12 May 2025 23:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2ADF268FD9;
+	Mon, 12 May 2025 23:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747093235; cv=none; b=j65UcWDpIvFhFOFjFf16tr9Jz+McUyBZ/g8Y26u48RLczi9MqJHaENtIMRPthjkw7M1KrFFrnam5NFAF3BfZuNE7hdx81diibhS86hHg0f/PUa5C4rAdUUon1g9ZPjBq241nOb1Q6i8waeMijYIQFktmKH6/dNYTjfRImnkNgGU=
+	t=1747093332; cv=none; b=tGdo5wdHVVOtLKe2/eQEUMlEvAn4cEOh2nGtd1RM6K+Brn1lnSIhk0YwyG/B9INFGa1TP5otGTL/kU9hzRsvAXxIrcSQa5Ud6CgaPn7aewcXm3HkKz7isT0IAcgbOI34a5QxFITOd0J7QmjdG7grfxlOTnKIcoSWVwFaXxjUgYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747093235; c=relaxed/simple;
-	bh=XpFUmPLDn67gUJ5IU2ERgA2EBgtYyvY1tJex1tyNjac=;
+	s=arc-20240116; t=1747093332; c=relaxed/simple;
+	bh=uB0Bc4rD+TwerQ3zQGH6pog9tQKgYejBcH2+E1XrBSQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fDaTHe8t7+zAAwi2k9CA53crjm6DwJ0edlQLhoAayXhh7QyI8WXZeiVefAc/pKgmfsLdKmhShH4Ucae+wrtXAB/MQnDbvne+G94u7BDv2VpXQInPpbkEp2xo4qjJWF8sFzJMPd9emSD6Qd86gZMpeNLGGMsxEDr+3s/PeUlvBBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e8zKnU2n; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKybHo+cYBJ0d6yu06rzDQKTlTLqfHueF+tpzDTjBtjeRatbXJ97YmE+pfWaPDBUkSwB559pgqJerxSFnX8OWBOiA5df0I8KcjsHLCa5V7cwF+Yhe28QgKmCB6iYEB2ctjaOlNYOS6djsfEBYPTGVd8dcVPTuICq0VxAS2Rio1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVNQ2vAj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8zKnU2n"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-8783d2bf386so1317555241.0;
-        Mon, 12 May 2025 16:40:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747093233; x=1747698033; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XpFUmPLDn67gUJ5IU2ERgA2EBgtYyvY1tJex1tyNjac=;
-        b=e8zKnU2najObSWctvBvgGeRGleFn2Hyy/jgD8uTOZapRVMkm7X3UTQSuszw8TJEq2v
-         Shr+gvPoKoR1pU55EIkR62QCJ51JVJqSS5GB7m1+nIgdxabMrlY7XP6q/w46wEZyKdzd
-         yGoAskrRDSNGjkTxV+JBB7jP8rFdlzMH273KThwnixsjRYT4Qy3ZEwGS/bc8jU9XrEbQ
-         2gFQahfFuYRe4i5HnzqeFdHUAB0F48YE9YPZPzOAMrlfGUmHq+NzSRsjb6MkSLNoI7nP
-         bhgaAWD15p+UpiATM3DsJYqPwUiOGKF5Pbu/QIILK3YJJ1yV1iEJzo2h2Q2pTXq3bV1G
-         nE+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747093233; x=1747698033;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XpFUmPLDn67gUJ5IU2ERgA2EBgtYyvY1tJex1tyNjac=;
-        b=ZEZuwzecsWOslMMBkzCRE5tXCo/cRsCRrcpn3DWNqlcsot4+j+srOG1u3grATnqKt3
-         7bScHz5Rc04L6jyBjAnXnTDQYiDUhhsZs0Es9f1qtTR4PUqmOL6po4JpAR/fBZABXj7l
-         kcNQxdTBYWos7NEJ+Exus+m7mPqN/09MnzE2Xj+uQlGEzkNTrhhq4Oiy9YlpyskWBQhx
-         VBDqBVbXMSli1u022evXzRBQZIfcDGid6413QULkojjPejeN8cQGAxijGU7ilTNePwox
-         n2ww/6cLrQqp9sd7QGnfnRrJNb0icl1yzE/XaYBJbK8RfHQ/xijatvPy8J/qJJwkXcDy
-         lIAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEn04s738ihQTesCxzkfEaXgrEr+D3pyRkEtiFUq8AlS/sXBNVRqZyIWzlTOEdBqVaN6DOb32Wnuu8JYJ3@vger.kernel.org, AJvYcCV+oEhZMCf9FOJ/3JgvjmjTARlXWhwmlFRMB0ZkAKAwuHNorJQ8coVMHv+HhNSFBRQ6N8L4mketP2JrwIIB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEvc5U9s+uH2/C5/WrQ+q8AxSYVO8HgoMkfKO7UJ9vEAeLZBYp
-	SzlrR/kRTYVwzB8Uu3JEwSwDqK3xq6LUDfytQyEB/nUhLvetPX/q
-X-Gm-Gg: ASbGncsM6OjW/XbrYuV2fnnbFZOXaSoUNlyekkxu/ItsZVn05Lo29iCqQqfgmDrteGd
-	g4JzuO4D7d2WahtZpqs89q6Yrn6lMpn+9cOucHrnqrwXaUm3I7ie42pbFehQm6zpnUaW+etKwxv
-	BHCM28g1QemQ2EUHSEDL/a8Yog+paVRGCe+W0rETHCUehwDRR6I/6FO640bl3E2t24cXwGsp3TS
-	5hQYa53bq8xPc5caNarHoN4XZKclflginKg3SNADz302L5s/Va+8KSPirqJ18b9dgdu30S+2Cda
-	khU0oqXICWedQzosqk5qIkq8S33v+jv8muZVrfpm859eW4PZWSdjC88FbwDj
-X-Google-Smtp-Source: AGHT+IGoypguHEsX6HpvemdJ88QptMQH6H/Q9D2t7EN+1BBtVIyJSPv44Lv+/lxCrY1e1SpOMmMQTA==
-X-Received: by 2002:a67:e7cc:0:b0:4c1:85d9:5641 with SMTP id ada2fe7eead31-4deed370764mr13126706137.11.1747093232903;
-        Mon, 12 May 2025 16:40:32 -0700 (PDT)
-Received: from eaf ([2802:8010:d51f:e600:10da:2fb3:1edf:2e90])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f603551dsm6063651241.0.2025.05.12.16.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 16:40:32 -0700 (PDT)
-Date: Mon, 12 May 2025 20:40:24 -0300
-From: Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= <ernesto.mnd.fernandez@gmail.com>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: ethan@ethancedwards.com, asahi@lists.linux.dev, brauner@kernel.org,
-	dan.carpenter@linaro.org, ernesto@corellium.com,
-	gargaditya08@live.com, gregkh@linuxfoundation.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev, sven@svenpeter.dev, tytso@mit.edu,
-	viro@zeniv.linux.org.uk, willy@infradead.org, slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de
-Subject: Re: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem
- support
-Message-ID: <20250512234024.GA19326@eaf>
-References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
- <20250512101122.569476-1-frank.li@vivo.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVNQ2vAj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8169C4CEEF;
+	Mon, 12 May 2025 23:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747093331;
+	bh=uB0Bc4rD+TwerQ3zQGH6pog9tQKgYejBcH2+E1XrBSQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hVNQ2vAjAv0FgF94fvYyc+GKqciyzuvouLYbrF9iY6tJFsMZcZYh5nhZfx3yPEZEF
+	 vC3Lft79wehcZeSzTvNoHBq2hEQNZVoJmno2VrhU8QAS4/X0BFspUcy1d2U5ha9S33
+	 2Niba2MDWTNX6KWOH82Jv2vZPm79tHimhEARt8lNULtqmc6rwV2e3y3rSLB3WJrb85
+	 Q0idzqGWaXgL3afyjCkKbfi9Zq3UH5nUUE4VqMGL7MtQY+swKJ1KMwbcQw2yvLc6oQ
+	 5RAj/bretvBHjO0M7axfqss2SeLgnks7teCSI7z7u4R72Icsq0vlAR6s18wuJQvIqL
+	 MFH3DoDNQ/dhg==
+Date: Tue, 13 May 2025 01:42:07 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, 
+	linux-i2c@vger.kernel.org, 
+	prashanth kumar burujukindi <prashanthkumar.burujukindi@microchip.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] i2c: microchip-corei2c: add smbus support
+Message-ID: <xgmyz5ztxcsy2jzo7dh6rw5gvzvngbjuj7o6kpcmyqmsqx5jzv@6aawywepqu3b>
+References: <20250430-preview-dormitory-85191523283d@spud>
+ <3421bf4a-afa1-4b4c-8421-bad7187d3d8e@quicinc.com>
+ <7q4gdh3jcbnsptmdv6fywnwqta5nekof4wtut35apw5wphhkio@veeu4ogcm44h>
+ <20250506-bunny-puma-996aafbf3f56@spud>
+ <4xyehpobtsyj2k5xlhupq7x6z7es7bvzek4zsf4roramy5h7kn@duxhfxd4gxsq>
+ <20250508-unrefined-outhouse-3ff09d1e46b5@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512101122.569476-1-frank.li@vivo.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250508-unrefined-outhouse-3ff09d1e46b5@spud>
 
-Hi Yangtao,
+Hi Conor,
 
-On Mon, May 12, 2025 at 04:11:22AM -0600, Yangtao Li wrote:
-> I'm interested in bringing apfs upstream to the community, and perhaps
-> slava and adrian too.
+> > (No need to resend—you can just reply to this mail with your
+> > updated commit log.)
+> 
+> I was just about to do this, but noticed you picked the patch up
+> already. Sorry for the delay there, I meant to do it yesterday but
+> crashed out early. I'd just have changed it to
+> "Add hardware support for the SMBUS commands smbus_quick, smbus_byte,
+> smbus_byte_data, smbus_word_data and smbus_block_data, replacing the
+> fallback to software emulation"
+> or similar. If you fancy rebasing, maybe use that?
 
-Do you have any particular use case in mind here? I don't mind putting in
-the work to get the driver upstream, but I don't want to be fighting people
-to convince them that it's needed. I'm not even sure about it myself.
+Done! Thanks for following up!
 
-Ernesto
+Andi
