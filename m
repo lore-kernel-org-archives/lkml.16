@@ -1,184 +1,208 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3432561C5;
-	Mon, 12 May 2025 06:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561DB381BA
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747032298; cv=none; b=CPeJ7ZTUyUMr+AszmrWBKdZmY2S31BTGYza+rkHg+htaxvu4LUdVuDQo9wLc2UDzuyGRjMiKHdikj/lfVfhYLBUfaKU4QocPT0zG2NAGxOeTdSfcc9Q0U4INN7wSDTSqS3h3rqTXZGiMqTfLGnPrxmgg8j+IkN4mo7QVBTLHuPo=
+	t=1747032538; cv=none; b=mZJEEhlL4+eVcsR337F7TEpzUifdoBSDkcAE50C22q6kVjgtqo6OWf/PMeitfqfzS1qjLtsZMNfGOkXEy2s7yzXGrqzlYtSo7WqeYEsC5Oro44yQvGRnY7LXvH6txAaz+sDqsQpZzqJgXfT/toI75NjHM9QMseLwSjkhlcbdCrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747032298; c=relaxed/simple;
-	bh=jmTUtCBUwJFTXU+jbvgxFCS7ttqFbymd5WbFWGx46O0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ussY8lD8c2JQa9rgQQoqXz2z6Gwi+VpjkMolMbtHAIp0fu5pJ8qTTbAS8M43qWQ5eIFSDL/6N7d/g7kJq9i6bCb3S7xdIZBXYsMNUPoV7ZPD48jiBT3WCLBM/RwwzxlJIRnrdrsk6QqvLL3ae1JmnPRhDHRkPA5mYqePVOoJlAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZwqpJ5BqSz4f3jXm;
-	Mon, 12 May 2025 14:44:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 672B21A0359;
-	Mon, 12 May 2025 14:44:49 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgDHK2DXmCFoxF6sMA--.62010S6;
-	Mon, 12 May 2025 14:44:49 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	willy@infradead.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	libaokun1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2 2/8] ext4: make regular file's buffered write path support large folios
-Date: Mon, 12 May 2025 14:33:13 +0800
-Message-ID: <20250512063319.3539411-3-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1747032538; c=relaxed/simple;
+	bh=3hWNywDm1rmDL3n5pqpD/ttJsvAhh/MKDQWNxinnzr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=fcCiT6DAvWR9cFXinMGil26SxevwcNMYo6dvUjS4gyq5jllQtKfxqc6GokknjXgf6yu4yrtxvEsdtINbjcTn1FA3FgDbvbg6RlnrT2kX9PXcSCzsacly0fed6PBKmGdNFMQJhPLU2Hrx+a22QLVZwNBEvoTFSu3Ynm71qhS1eIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OgUgEmMS; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OgUgEmMS"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250512064848euoutp0262e16b9ac82c0bf367a42f2831a92628~_tNQdk-QD0203602036euoutp02c
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:48:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250512064848euoutp0262e16b9ac82c0bf367a42f2831a92628~_tNQdk-QD0203602036euoutp02c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747032528;
+	bh=xk2dkJToJKLhJspcQw7pjNVsjfwwtKPzo+HUohnIT6M=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=OgUgEmMSNCxMAJbxUvdPOZfQTIFZvL+QDxB9S3nWErrYh1jqy5apScBOxr7grJKyQ
+	 lgy2so3X7k8FxN1AXf5s5nHOOJRKK5wAK1mQ/AsDYfGKYHlEHWx3F2oNur25pAOoKS
+	 kBzadlvILnNb59zJkptnRS6tXnz0/c5+eGXbz87Q=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250512064848eucas1p14e6a595306293484fdfe4be546ba48a0~_tNQNSiEw1439814398eucas1p1E;
+	Mon, 12 May 2025 06:48:48 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250512064847eusmtip1dc87bbb74bd18adbf01a8797b75f3e88~_tNPlHGIz0641506415eusmtip1O;
+	Mon, 12 May 2025 06:48:47 +0000 (GMT)
+Message-ID: <c00ec721-1193-4cfb-87ec-fd98f215720e@samsung.com>
+Date: Mon, 12 May 2025 08:48:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/7] cpufreq/sched: Move cpufreq-specific EAS checks
+ to cpufreq
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+	<linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Lukasz Luba
+	<lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas
+	Pandruvada <srinivas.pandruvada@linux.intel.com>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Ricardo Neri
+	<ricardo.neri-calderon@linux.intel.com>, Pierre Gondois
+	<pierre.gondois@arm.com>, Christian Loehle <christian.loehle@arm.com>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <CAJZ5v0j_fFk=EX0Z9_w1twQH-FpntHJvr4d0WSMBM6PevfEqNg@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHK2DXmCFoxF6sMA--.62010S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFy8ur13ZF48XFyUXw4UCFg_yoWrWry5pr
-	Z8K3Z7GrW7Zw1q9FWkXFnxXr1Y934xJ3yUCa4fWw1S9F98G3W3Ka1Fka45tFyFqrW8XF48
-	XF4jyry8W3WjyrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUl9a9UUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-CMS-MailID: 20250512064848eucas1p14e6a595306293484fdfe4be546ba48a0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0
+X-EPHeader: CA
+X-CMS-RootMailID: 20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0
+References: <2999205.e9J7NaK4W3@rjwysocki.net>
+	<CGME20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0@eucas1p2.samsung.com>
+	<2317800.iZASKD2KPV@rjwysocki.net>
+	<1bf3df62-0641-459f-99fc-fd511e564b84@samsung.com>
+	<CAJZ5v0j_fFk=EX0Z9_w1twQH-FpntHJvr4d0WSMBM6PevfEqNg@mail.gmail.com>
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On 10.05.2025 13:31, Rafael J. Wysocki wrote:
+> On Sat, May 10, 2025 at 1:49 AM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+>> On 06.05.2025 22:37, Rafael J. Wysocki wrote:
+>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>
+>>> Doing cpufreq-specific EAS checks that require accessing policy
+>>> internals directly from sched_is_eas_possible() is a bit unfortunate,
+>>> so introduce cpufreq_ready_for_eas() in cpufreq, move those checks
+>>> into that new function and make sched_is_eas_possible() call it.
+>>>
+>>> While at it, address a possible race between the EAS governor check
+>>> and governor change by doing the former under the policy rwsem.
+>>>
+>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+>>> Tested-by: Christian Loehle <christian.loehle@arm.com>
+>>> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+>> In my tests I've noticed that this patch, merged as commit 4854649b1fb4
+>> ("cpufreq/sched: Move cpufreq-specific EAS checks to cpufreq"), causes a
+>> regression on ARM64 Amlogic Meson SoC based OdroidN2 board. The board
+>> finally lockups. Reverting $subject on top of next-20250509 fixes this
+>> issue. Here is the lockdep warning observed before the lockup:
+> Thanks for the report!
+>
+>> ======================================================
+>> WARNING: possible circular locking dependency detected
+>> 6.15.0-rc5-next-20250509-dirty #10335 Tainted: G         C
+>> cpufreq: cpufreq_policy_online: CPU2: Running at unlisted initial
+>> frequency: 999999 kHz, changing to: 1000000 kHz
+>> ------------------------------------------------------
+>> kworker/3:1/79 is trying to acquire lock:
+>> ffff00000494b380 (&policy->rwsem){++++}-{4:4}, at:
+>> cpufreq_ready_for_eas+0x60/0xbc
+>>
+>> but task is already holding lock:
+>> ffff8000832887a0 (sched_domains_mutex){+.+.}-{4:4}, at:
+>> partition_sched_domains+0x54/0x938
+>>
+>> which lock already depends on the new lock.
+>>
+>> the existing dependency chain (in reverse order) is:
+>>
+>> -> #2 (sched_domains_mutex){+.+.}-{4:4}:
+>>          __mutex_lock+0xa8/0x598
+>>          mutex_lock_nested+0x24/0x30
+>>          partition_sched_domains+0x54/0x938
+>>          rebuild_sched_domains_locked+0x2d4/0x900
+>>          rebuild_sched_domains+0x2c/0x48
+>>          rebuild_sched_domains_energy+0x3c/0x58
+>>          rebuild_sd_workfn+0x10/0x1c
+>>          process_one_work+0x208/0x604
+>>          worker_thread+0x244/0x388
+>>          kthread+0x150/0x228
+>>          ret_from_fork+0x10/0x20
+>>
+>> -> #1 (cpuset_mutex){+.+.}-{4:4}:
+>>          __mutex_lock+0xa8/0x598
+>>          mutex_lock_nested+0x24/0x30
+>>          cpuset_lock+0x1c/0x28
+>>          __sched_setscheduler+0x31c/0x830
+>>          sched_setattr_nocheck+0x18/0x24
+>>          sugov_init+0x1b4/0x388
+>>          cpufreq_init_governor.part.0+0x58/0xd4
+>>          cpufreq_set_policy+0x2c8/0x3ec
+>>          cpufreq_online+0x520/0xb20
+>>          cpufreq_add_dev+0x80/0x98
+>>          subsys_interface_register+0xfc/0x118
+>>          cpufreq_register_driver+0x150/0x238
+>>          dt_cpufreq_probe+0x148/0x488
+>>          platform_probe+0x68/0xdc
+>>          really_probe+0xbc/0x298
+>>          __driver_probe_device+0x78/0x12c
+>>          driver_probe_device+0xdc/0x164
+>>          __device_attach_driver+0xb8/0x138
+>>          bus_for_each_drv+0x80/0xdc
+>>          __device_attach+0xa8/0x1b0
+>>          device_initial_probe+0x14/0x20
+>>          bus_probe_device+0xb0/0xb4
+>>          deferred_probe_work_func+0x8c/0xc8
+>>          process_one_work+0x208/0x604
+>>          worker_thread+0x244/0x388
+>>          kthread+0x150/0x228
+>>          ret_from_fork+0x10/0x20
+>>
+>> -> #0 (&policy->rwsem){++++}-{4:4}:
+>>          __lock_acquire+0x1408/0x2254
+>>          lock_acquire+0x1c8/0x354
+>>          down_read+0x60/0x180
+>>          cpufreq_ready_for_eas+0x60/0xbc
+>>          sched_is_eas_possible+0x144/0x170
+>>          partition_sched_domains+0x504/0x938
+>>          rebuild_sched_domains_locked+0x2d4/0x900
+>>          rebuild_sched_domains+0x2c/0x48
+>>          rebuild_sched_domains_energy+0x3c/0x58
+>>          rebuild_sd_workfn+0x10/0x1c
+>>          process_one_work+0x208/0x604
+>>          worker_thread+0x244/0x388
+>>          kthread+0x150/0x228
+>>          ret_from_fork+0x10/0x20
+>>
+>> other info that might help us debug this:
+>>
+>> Chain exists of:
+>>     &policy->rwsem --> cpuset_mutex --> sched_domains_mutex
+>>
+>>    Possible unsafe locking scenario:
+>>
+>>          CPU0                    CPU1
+>>          ----                    ----
+>>     lock(sched_domains_mutex);
+>>                                  lock(cpuset_mutex);
+>>                                  lock(sched_domains_mutex);
+>>     rlock(&policy->rwsem);
+>>
+>>    *** DEADLOCK ***
+> Well, it turns out that trying to acquire policy->rwsem under
+> sched_domains_mutex is a bad idea.  It was added to
+> cpufreq_policy_is_good_for_eas() to address a theoretical race, so it
+> can be dropped safely.  A theoretical race is better than a real
+> deadlock.
+>
+> Please test the attached patch.
 
-The current buffered write path in ext4 can only allocate and handle
-folios of PAGE_SIZE size. To support larger folios, modify
-ext4_da_write_begin() and ext4_write_begin() to allocate higher-order
-folios, and trim the write length if it exceeds the folio size.
-Additionally, in ext4_da_do_write_end(), use offset_in_folio() instead
-of PAGE_SIZE.
+This fixed the observed issue. Thanks!
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- fs/ext4/inode.c | 31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 94c7d2d828a6..4d8187f3814e 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -1027,7 +1027,7 @@ int ext4_block_write_begin(handle_t *handle, struct folio *folio,
- 			   loff_t pos, unsigned len,
- 			   get_block_t *get_block)
- {
--	unsigned from = pos & (PAGE_SIZE - 1);
-+	unsigned int from = offset_in_folio(folio, pos);
- 	unsigned to = from + len;
- 	struct inode *inode = folio->mapping->host;
- 	unsigned block_start, block_end;
-@@ -1041,8 +1041,7 @@ int ext4_block_write_begin(handle_t *handle, struct folio *folio,
- 	bool should_journal_data = ext4_should_journal_data(inode);
- 
- 	BUG_ON(!folio_test_locked(folio));
--	BUG_ON(from > PAGE_SIZE);
--	BUG_ON(to > PAGE_SIZE);
-+	BUG_ON(to > folio_size(folio));
- 	BUG_ON(from > to);
- 
- 	head = folio_buffers(folio);
-@@ -1152,6 +1151,7 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
- 	struct folio *folio;
- 	pgoff_t index;
- 	unsigned from, to;
-+	fgf_t fgp = FGP_WRITEBEGIN;
- 
- 	ret = ext4_emergency_state(inode->i_sb);
- 	if (unlikely(ret))
-@@ -1164,8 +1164,6 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
- 	 */
- 	needed_blocks = ext4_writepage_trans_blocks(inode) + 1;
- 	index = pos >> PAGE_SHIFT;
--	from = pos & (PAGE_SIZE - 1);
--	to = from + len;
- 
- 	if (ext4_test_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA)) {
- 		ret = ext4_try_to_write_inline_data(mapping, inode, pos, len,
-@@ -1184,10 +1182,18 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
- 	 * the folio (if needed) without using GFP_NOFS.
- 	 */
- retry_grab:
--	folio = __filemap_get_folio(mapping, index, FGP_WRITEBEGIN,
--					mapping_gfp_mask(mapping));
-+	fgp |= fgf_set_order(len);
-+	folio = __filemap_get_folio(mapping, index, fgp,
-+				    mapping_gfp_mask(mapping));
- 	if (IS_ERR(folio))
- 		return PTR_ERR(folio);
-+
-+	if (pos + len > folio_pos(folio) + folio_size(folio))
-+		len = folio_pos(folio) + folio_size(folio) - pos;
-+
-+	from = offset_in_folio(folio, pos);
-+	to = from + len;
-+
- 	/*
- 	 * The same as page allocation, we prealloc buffer heads before
- 	 * starting the handle.
-@@ -2920,6 +2926,7 @@ static int ext4_da_write_begin(struct file *file, struct address_space *mapping,
- 	struct folio *folio;
- 	pgoff_t index;
- 	struct inode *inode = mapping->host;
-+	fgf_t fgp = FGP_WRITEBEGIN;
- 
- 	ret = ext4_emergency_state(inode->i_sb);
- 	if (unlikely(ret))
-@@ -2945,11 +2952,15 @@ static int ext4_da_write_begin(struct file *file, struct address_space *mapping,
- 	}
- 
- retry:
--	folio = __filemap_get_folio(mapping, index, FGP_WRITEBEGIN,
--			mapping_gfp_mask(mapping));
-+	fgp |= fgf_set_order(len);
-+	folio = __filemap_get_folio(mapping, index, fgp,
-+				    mapping_gfp_mask(mapping));
- 	if (IS_ERR(folio))
- 		return PTR_ERR(folio);
- 
-+	if (pos + len > folio_pos(folio) + folio_size(folio))
-+		len = folio_pos(folio) + folio_size(folio) - pos;
-+
- 	ret = ext4_block_write_begin(NULL, folio, pos, len,
- 				     ext4_da_get_block_prep);
- 	if (ret < 0) {
-@@ -3038,7 +3049,7 @@ static int ext4_da_do_write_end(struct address_space *mapping,
- 		unsigned long end;
- 
- 		i_size_write(inode, new_i_size);
--		end = (new_i_size - 1) & (PAGE_SIZE - 1);
-+		end = offset_in_folio(folio, new_i_size - 1);
- 		if (copied && ext4_da_should_update_i_disksize(folio, end)) {
- 			ext4_update_i_disksize(inode, new_i_size);
- 			disksize_changed = true;
+
+Best regards
 -- 
-2.46.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
