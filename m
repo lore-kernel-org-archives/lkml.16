@@ -1,163 +1,146 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218B3253F1F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3BF1804A;
+	Mon, 12 May 2025 07:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747035186; cv=none; b=B9GXmVRWyoKY/K0I7rz1VezRCey9Ee/v+RyRRF1OGCcO++t8xIO88MQz9XxNNOIIPxikV6KhUmsDmXLESBPLo8I011K4wMsb6xZ/AGdO7kk4R9M2H9jawRhTNFRdYfSbhJGyvd7HF/eSQHqwHYoJMCff9ezI0y5sAgG5KK+qqQ0=
+	t=1747035268; cv=none; b=kQ+PUWPwsxlr5tCToMCQ8j4L1wiGP9lmXh0UlGquUGBgxc7Q6obE29BCcIZ/GSOkZF7MieydvNlRG5vDpmZOz48/NaxISdeXcUS2lF7azxPvRs3bz7EsUf3k3rHjEyi6fD50+sOhRklAQSP+uD9XcVana5mHbSWRJ5DYX3F4idg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747035186; c=relaxed/simple;
-	bh=MgUAJ+sEJUyyPDU8wMX6qVYqkHmu/ToCy1fkimOk138=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Eojo4DHmy2tiUoohi3Ywj6YYjHHzSjtNRrS9OpB/Nn7VK71TTyhJi17VRORaQEYiWu8Zs0k7fT/Bg1dVF0bmooFWr6A6hPDhgwdJWMxoGIa7otLurBteUkXjd0/Dxn2hAPkTrMLmjQzW9mMPr1SsR2rfL5qngwuuXmknvixKG0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=o9JJ+kUZ; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1747035268; c=relaxed/simple;
+	bh=028RP0yDMQgC4nJR+FUCOYUcj4/V6uAUEiZ9iXxV4Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sa+ZICsTo2CTw2l70OjrR28x2DHQ+TtTd/lbB+yH3VB02T02U6w5RbWE+0chPbvDnq6mpvv0Nnce8z+tz73XcepEmg44gp6DaOMG+JLA3ZU/eLMCW9Ihr67h59s1e0Q288aZAR7F5Abbapw59GNv0KoWyefJtGkP4b9SOaRT0vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BHWwrKyO; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="o9JJ+kUZ"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZwrtG0ClFz9spx;
-	Mon, 12 May 2025 09:32:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1747035174; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=znH0XG7Kmtp8lN5ws28mSnlA5VbiwL23iVss3nnn1Jo=;
-	b=o9JJ+kUZU8PHH7UBOjwTrtK7Q4hIMyITCfkHKi1P67T3dhBxYRgHrj3CiPP2O5FzMLRDfi
-	xFR+lYeWEZfpcy/CTnhOt7we6AGH+1E1D/7Rg1FusaptD7//2Zelbxdsp/40CPOzIDxcK+
-	bdbvM+cyzW75afo5bwYE2XZrhd9byRjVozdk18Vpeljj3XkDqWr1RTHxe4cacS+cFaA8T6
-	FtobJHQFty09Lep4xmvQRep48Xku6D/fquC5XAsToNM9+VEOuHp0ASG9vd6PyvMxHfnR8v
-	6cb6Wvr0Q1a1HDKaeHvsjCRxp7dfpNqQXbKhtoyt7wnrrNG/huvOul8dK78Ung==
-Message-ID: <7d1d03702f4dffd68b18afa4f5ef242b4042188f.camel@mailbox.org>
-Subject: Re: [PATCH] drm/sched: Fix UAF in
- drm_sched_fence_get_timeline_name()
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: Rob Clark <robdclark@chromium.org>, Matthew Brost
- <matthew.brost@intel.com>,  Danilo Krummrich <dakr@kernel.org>, Philipp
- Stanner <phasta@kernel.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, open list <linux-kernel@vger.kernel.org>
-Date: Mon, 12 May 2025 09:32:49 +0200
-In-Reply-To: <20250509212936.490048-1-robdclark@gmail.com>
-References: <20250509212936.490048-1-robdclark@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BHWwrKyO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747035266; x=1778571266;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=028RP0yDMQgC4nJR+FUCOYUcj4/V6uAUEiZ9iXxV4Xk=;
+  b=BHWwrKyOJuLFh3IV+I8/IMqkXYqXmYijuJniq04O+Q3RkozjiZ8LH/6m
+   rdeCRdUTCmtZE5hZXwRbu6S4vp+V/6etCFeyS5jkTaEUG2/4XLpJvlx9Y
+   qt7iat4n0DsyjmQXqBv9gCo65Dzbhm6iTRFczTYAAc6JIBUiUj3/18j9Y
+   7JkBMlbSfJsCp60y1fx+LwZtJIeJzmZsHPH7DaiSUSnB4p5BDCfd22v/R
+   H9lM5sWoLM8FtSpF5gQ89MYVec55pu5cxz5WGMv5XI5CBnRnWqBN1YRog
+   KMRPm2cTOZv8lWJRTkB6BmywohNNWwH28TwcBzcfS6zqaiCmgqFrzUQny
+   A==;
+X-CSE-ConnectionGUID: 3HutcHyOQbqBnPAwbM5nBg==
+X-CSE-MsgGUID: NPTGSXc2Q+6I3mMNes3+uw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="52627781"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="52627781"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:34:24 -0700
+X-CSE-ConnectionGUID: qoc1OzjqRr+uQOLA1U/SYA==
+X-CSE-MsgGUID: Y4XJzRPFQk2CkC5gCJrTRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="136990025"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:34:18 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uENfy-00000000qhH-31ST;
+	Mon, 12 May 2025 10:34:14 +0300
+Date: Mon, 12 May 2025 10:34:14 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 21/23] irqchip/riscv-rpmi-sysmsi: Add ACPI support
+Message-ID: <aCGkdqcLhPVXSSLq@smile.fi.intel.com>
+References: <20250511133939.801777-1-apatel@ventanamicro.com>
+ <20250511133939.801777-22-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 2eac22a50541d63a9ad
-X-MBO-RS-META: fagip3zimdb6a6bhbm8so988516ptigt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250511133939.801777-22-apatel@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
+On Sun, May 11, 2025 at 07:09:37PM +0530, Anup Patel wrote:
+> 
+> Add ACPI support for the RISC-V RPMI system MSI based irqchip driver.
 
-On Fri, 2025-05-09 at 14:29 -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
->=20
-> The fence can outlive the sched, so it is not safe to dereference the
-> sched in drm_sched_fence_get_timeline_name()
+...
 
-Thx for the fix. Looks correct to me. Some nits
+	struct fwnode_handle *fwnode;
+	...
+	fwnode = dev_fwnode(dev);
 
->=20
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-
-This is clearly a bug. So please provide a Fixes: tag and +Cc the
-stable kernel.
-
-> ---
-> =C2=A0drivers/gpu/drm/scheduler/sched_fence.c |=C2=A0 3 ++-
-> =C2=A0include/drm/gpu_scheduler.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 11 +++++++++++
-> =C2=A02 files changed, 13 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/scheduler/sched_fence.c
-> b/drivers/gpu/drm/scheduler/sched_fence.c
-> index e971528504a5..4e529c3ba6d4 100644
-> --- a/drivers/gpu/drm/scheduler/sched_fence.c
-> +++ b/drivers/gpu/drm/scheduler/sched_fence.c
-> @@ -92,7 +92,7 @@ static const char
-> *drm_sched_fence_get_driver_name(struct dma_fence *fence)
-> =C2=A0static const char *drm_sched_fence_get_timeline_name(struct
-> dma_fence *f)
-> =C2=A0{
-> =C2=A0	struct drm_sched_fence *fence =3D to_drm_sched_fence(f);
-> -	return (const char *)fence->sched->name;
-> +	return fence->name;
-
-Adding an empty line while we're here already would be neat.
-
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void drm_sched_fence_free_rcu(struct rcu_head *rcu)
-> @@ -226,6 +226,7 @@ void drm_sched_fence_init(struct drm_sched_fence
-> *fence,
-> =C2=A0	unsigned seq;
-> =C2=A0
-> =C2=A0	fence->sched =3D entity->rq->sched;
-> +	fence->name=C2=A0 =3D fence->sched->name;
-> =C2=A0	seq =3D atomic_inc_return(&entity->fence_seq);
-> =C2=A0	dma_fence_init(&fence->scheduled,
-> &drm_sched_fence_ops_scheduled,
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &fence->lock, entity->fence_=
-context, seq);
-> diff --git a/include/drm/gpu_scheduler.h
-> b/include/drm/gpu_scheduler.h
-> index 0ae108f6fcaf..d830ffe083f1 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -295,6 +295,9 @@ struct drm_sched_fence {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /**
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * @sched: the sche=
-duler instance to which the job having
-> this struct
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * belongs to.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Some care must be tak=
-en as to where the sched is derefed,
-> as the
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * fence can outlive the=
- sched.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-
-Just briefly hinting at the lifetime is enough here. Every developer
-understands what that implicates.
-
-"Might have a lifetime shorter than the owning &struct drm_sched_fence"
-
-
-Thx
-P.
-
-> =C2=A0	struct drm_gpu_scheduler	*sched;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /**
-> @@ -305,6 +308,14 @@ struct drm_sched_fence {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * @owner: job owne=
-r for debugging
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> =C2=A0	void				*owner;
+> +	if (is_acpi_node(dev_fwnode(dev))) {
+> +		u32 nr_irqs;
 > +
-> +	/**
-> +	 * @name: the timeline name
-> +	 *
-> +	 * This comes from the @sched, but since the fence can
-> outlive the
-> +	 * sched, we need to keep our own copy.
-> +	 */
-> +	const char			*name;
-> =C2=A0};
-> =C2=A0
-> =C2=A0struct drm_sched_fence *to_drm_sched_fence(struct dma_fence *f);
+> +		rc = riscv_acpi_get_gsi_info(dev_fwnode(dev), &priv->gsi_base, &id,
+> +					     &nr_irqs, NULL);
+
+		...(fwnode, ...)
+
+...and so on...
+
+> +		if (rc) {
+> +			dev_err(dev, "failed to find GSI mapping\n");
+> +			return rc;
+> +		}
+> +
+> +		/* Update with actual GSI range */
+> +		if (nr_irqs != priv->nr_irqs)
+> +			riscv_acpi_update_gsi_range(priv->gsi_base, priv->nr_irqs);
+> +	}
+
+> -		if (is_of_node(dev_fwnode(dev)))
+> +		if (is_of_node(dev_fwnode(dev))) {
+>  			of_msi_configure(dev, to_of_node(dev_fwnode(dev)));
+> +		} else {
+
+		} else if (is_acpi_..._node(...)) {
+
+> +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
+> +							      DOMAIN_BUS_PLATFORM_MSI);
+> +			dev_set_msi_domain(dev, msi_domain);
+> +		}
+
+...
+
+> +#ifdef CONFIG_ACPI
+> +	if (!acpi_disabled)
+
+Why?
+
+> +		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
+> +#endif
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
