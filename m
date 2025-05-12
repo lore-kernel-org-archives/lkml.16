@@ -1,200 +1,487 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCCAB66E;
-	Mon, 12 May 2025 14:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4BF22A7F8;
+	Mon, 12 May 2025 14:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747061288; cv=none; b=Ut82yIYrikX7sGOCdYyHtThrGN+vYfJlMO62Y5QeUwq6aDqhVGEsF39gFY/MYFBUfeZnpxONG4b4Oh8svvyEXKCWV0hfuK0golrup+rzEMSc88SDVCpeb3GdRvBBAnbzWQ5vldSo0XPxlbcwKLf9m5FNUf0Wqs4bA8Wrnen+GnE=
+	t=1747061297; cv=none; b=jLA+h5TDw+0AW51ghg3cfn5FthUtu9+SjjCD10HoczXJSV+7KSTh5fIY4df0Dc5Kl71jjg83I6EksQ9QGDhSyAlUVkQHnKuSjBt/vlTJ5y29R1MphZ+WzrVDj4UalBbB7LIqiPwVmnpgp1EEjz8+bmr3IF9E31I/nXkvu0lqw5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747061288; c=relaxed/simple;
-	bh=xQyQu/FRlNL+ULjmzkrL2nUUTe8lDVX8t3KVQe1yqp0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DzZpKg0Mrx/UekXFDWdnm80XGp3z2SHFh1HJOb97E2er7PsRi73j2KfSUypOai8piJCtvWDrVcj/Dwv3ZT22iLGdIHfKopHHzPOr7Go09l9P7uSlEUymT6+kHQTVpryhGJSWusBenG3DBHa+XbOD6axDufRfUEZRurGgvfhUfJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.36] (g36.guest.molgen.mpg.de [141.14.220.36])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id F243D601EBF02;
-	Mon, 12 May 2025 16:47:28 +0200 (CEST)
-Message-ID: <4286c852-c5c5-468b-a8f5-fc226e71d5e9@molgen.mpg.de>
-Date: Mon, 12 May 2025 16:47:28 +0200
+	s=arc-20240116; t=1747061297; c=relaxed/simple;
+	bh=WiqhKAM7UjsMIX7HmujWDPPo4vY4tdGPQZZNtz751mY=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QZDZFTBtA1bhZfkntYCIP+jsHB/WXkta0QGYgOzpPmpZSZO99Kh92gnv55+ZJAx2osikRyJYjZ1NfjvAL8Zi0FwQdb6JLueAz0uv/awPeKwzg1Dlp507Cw+zsa2IN/8WB63hl0d+wS2vCGm9UIoDG2p7CDiHKxxIWP1d6yLVQfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KKIUftop; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KKIUftop"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54CEm7oc2039866
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 09:48:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747061287;
+	bh=mBAPoRnu79Kki7ZV6VFllJxIv4+SrHJ+sjXGWIyDWqc=;
+	h=Date:From:To:CC:Subject;
+	b=KKIUftop43zQv9e6yVFSaVg9FJHJEXe4zwCkx2rATj6nHFeYnnIwxX/AwUwrMyoYN
+	 y1qq+2Af2ql9msdgXCGiaRQbXWrEeYEa1r8gtViVRMy/PjA+GR65eXbVtve/wvsJM5
+	 PBzGDuZ29oUQUhEhqQSvvXD3gzwILpvbPhFlW6lM=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54CEm7C1077865
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 12 May 2025 09:48:07 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
+ May 2025 09:48:07 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 12 May 2025 09:48:07 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54CEm7Xi015641;
+	Mon, 12 May 2025 09:48:07 -0500
+Date: Mon, 12 May 2025 09:48:07 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Arnd Bergmann <arnd@arndb.de>, SoC list <soc@lists.linux.dev>
+CC: SoC <soc@kernel.org>, <arm@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>
+Subject: [GIT PULL 3/3] arm64: dts: ti: K3 devicetree updates for v6.16
+Message-ID: <20250512144807.yn64klchtmjjl6ac@protrude>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel WARNING (RCU) with btnxpuart on TI AM62 platform
-To: Francesco Dolcini <francesco@dolcini.it>,
- Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Amitkumar Karwar <amitkumar.karwar@nxp.com>,
- Neeraj Kale <neeraj.sanjaykale@nxp.com>, Nishanth Menon <nm@ti.com>,
- Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-serial@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
- linux-serial@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20250408083512.GA26035@francesco-nb>
- <24b28bda-e294-4680-bed5-c44efcb6c455@ti.com>
- <20250410062006.GA7506@francesco-nb>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250410062006.GA7506@francesco-nb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ugjf7cm6tlk43njq"
+Content-Disposition: inline
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Dear Vignesh, dear Francesco,
+--ugjf7cm6tlk43njq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-Am 10.04.25 um 08:20 schrieb Francesco Dolcini:
+This PR has the usual 75 char warnings around pinctrl usage and couple
+of other places which I have chosen to ignore in favor of readability,
+couple of places where regex related eeprom compatible lookup failed
+(but dtbs_check passes).
 
-> On Tue, Apr 08, 2025 at 09:15:26PM +0530, Vignesh Raghavendra wrote:
->> On 08/04/25 14:05, Francesco Dolcini wrote:
->>> I do have the following kernel warning with 6.15-rc1, on a TI AM62
->>> platform (arm64), single CPU core, using btnxpuart driver, any idea?
->>> PREEMPT_RT is enabled, if it matters.
->>>
->>> Either the issue is not systematic, or multi cores SoCs are not affected
->>> (no error on the exact same image on a dual nor on quad core TI AM62).
->>>
->>>
->>> [   23.139080] Voluntary context switch within RCU read-side critical section!
->>> [   23.139119] WARNING: CPU: 0 PID: 61 at /kernel/rcu/tree_plugin.h:332 rcu_note_context_switch+0x3c4/0x430
->>> [   23.139172] Modules linked in: uas onboard_usb_dev optee_rng dwc3 evdev btnxpuart spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card snd_soc_simple_card_utils optee spi_cadence_quadspi tee gpio_keys usb_conn_gpio display_connector roles dwc3_am62 mwifiex_sdio k3_j72xx_bandgap mwifiex rtc_ti_k3 cfg80211 tidss sa2ul sha512_generic snd_soc_davinci_mcasp authenc drm_display_helper snd_soc_ti_udma crypto_null snd_soc_ti_edma sha1_generic snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx snd_soc_wm8904 ti_ads1015 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c tps65219_pwrbutton crc_ccitt tpm_tis_core tpm rng_core tc358768 m_can_platform pwm_tiehrpwm m_can spi_omap2_mcspi can_dev bluetooth ecdh_generic ecc rfkill libaes loop fuse ipv6 autofs4
->>> [   23.139459] CPU: 0 UID: 0 PID: 61 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT_RT
->>> [   23.139471] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
->>> [   23.139478] Workqueue: hci0 hci_power_off [bluetooth]
->>> [   23.139615] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->>> [   23.139625] pc : rcu_note_context_switch+0x3c4/0x430
->>> [   23.139647] lr : rcu_note_context_switch+0x3c4/0x430
->>> [   23.139658] sp : ffff8000819fb740
->>> [   23.139661] x29: ffff8000819fb740 x28: 0000000000000000 x27: ffff0000079d2010
->>> [   23.139673] x26: ffff0000011e7810 x25: ffff000001c2c200 x24: 0000000000000000
->>> [   23.139688] x23: 0000000000000000 x22: ffff000001c2c200 x21: ffff000001c2c200
->>> [   23.139700] x20: ffff800081083ec0 x19: ffff00001da9fec0 x18: fffffffffffe7e78
->>> [   23.139712] x17: ffff7fff9ca1c000 x16: ffff800080000000 x15: ffff00001da9f8c0
->>> [   23.139726] x14: fffffffffffc7e77 x13: 216e6f6974636573 x12: 206c616369746972
->>> [   23.139738] x11: 6320656469732d64 x10: 6165722055435220 x9 : 206e696874697720
->>> [   23.139750] x8 : ffff80008113f040 x7 : ffff8000819fb4e0 x6 : 000000000000000c
->>> [   23.139761] x5 : ffff00001da95888 x4 : 0000000000000000 x3 : 0000000000000027
->>> [   23.139775] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000001c2c200
->>> [   23.139788] Call trace:
->>> [   23.139793]  rcu_note_context_switch+0x3c4/0x430 (P)
->>> [   23.139813]  __schedule+0xa0/0x7dc
->>> [   23.139830]  schedule+0x34/0x11c
->>> [   23.139841]  schedule_timeout+0x8c/0x110
->>> [   23.139861]  wait_for_completion_timeout+0x78/0x14c
->>> [   23.139873]  ti_sci_set_device_state+0x120/0x1fc
->>> [   23.139886]  ti_sci_cmd_get_device_exclusive+0x18/0x30
->>> [   23.139899]  ti_sci_pd_power_on+0x28/0x54
->>> [   23.139916]  _genpd_power_on+0x98/0x188
->>> [   23.139927]  genpd_power_on+0xa8/0x168
->>> [   23.139940]  genpd_runtime_resume+0xc0/0x298
->>> [   23.139957]  __rpm_callback+0x48/0x1a4
->>> [   23.139974]  rpm_callback+0x74/0x80
->>> [   23.139987]  rpm_resume+0x3b0/0x698
->>> [   23.140000]  __pm_runtime_resume+0x48/0x88
->>> [   23.140012]  omap8250_set_mctrl+0x2c/0xbc
->>> [   23.140030]  serial8250_set_mctrl+0x20/0x40
->>> [   23.140046]  uart_update_mctrl+0x80/0x110
->>
->> I think issue is that uart_update_mctrl() holds a spinlock:
->>
->> 	uart_port_lock_irqsave(port, &flags);
->>
->> and then omap8250_set_mctrl() calls pm_runtime APIs which on K3 SoC
->> needs to talk to a Firmware to enable pd. This IPC call is a sleeping
->> call leading to scheduling with IRQs disabled.
->>
->> I guess this is what RT linux is complaining? I dont have a solution
->> though, maybe serdev delays pm_runtime_put till the port is closed?
-> 
-> Our CI reproduced what looks like the same issue also on current
-> torvalds/master (6.15-rc1+) branch, without PREEMPT_RT.
-> 
-> The call trace seems just the same, but attaching it here for
-> completeness.
-> 
-> 
-> [   20.931923] BUG: scheduling while atomic: kworker/u5:0/42/0x00000002
-> [   20.938429] Modules linked in: sd_mod uas onboard_usb_dev btnxpuart optee_rng dwc3 evdev spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card snd_soc_simple_card_utils mwifiex_sdio mwifiex display_connector spi_cadence_quadspi optee usb_conn_gpio tee gpio_keys roles k3_j72xx_bandgap cfg80211 rtc_ti_k3 dwc3_am62 bluetooth ecdh_generic ecc sa2ul sha512_generic rfkill authenc tidss crypto_null libaes snd_soc_davinci_mcasp sha1_generic drm_display_helper snd_soc_ti_udma snd_soc_ti_edma snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx ti_ads1015 snd_soc_wm8904 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c crc_ccitt tps65219_pwrbutton tpm_tis_core tpm m_can_platform m_can rng_core tc358768 can_dev pwm_tiehrpwm spi_omap2_mcspi loop fuse ipv6 autofs4
-> [   20.938865] CPU: 0 UID: 0 PID: 42 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT
-> [   20.938878] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
-> [   20.938895] Workqueue: hci0 hci_power_off [bluetooth]
-> [   20.939032] Call trace:
-> [   20.939037]  show_stack+0x2c/0x84 (C)
-> [   20.939063]  dump_stack_lvl+0x60/0x80
-> [   20.939084]  dump_stack+0x18/0x24
-> [   20.939096]  __schedule_bug+0x54/0x70
-> [   20.939116]  __schedule+0x628/0x7dc
-> [   20.939129]  schedule+0x34/0x11c
-> [   20.939138]  rpm_resume+0x17c/0x6a0
-> [   20.939155]  __pm_runtime_resume+0x50/0x9c
-> [   20.939168]  omap8250_set_mctrl+0x2c/0xc0
-> [   20.939183]  serial8250_set_mctrl+0x20/0x40
-> [   20.939193]  uart_update_mctrl+0x88/0x11c
-> [   20.939215]  uart_dtr_rts+0x104/0x120
-> [   20.939226]  tty_port_shutdown+0xd4/0xdc
-> [   20.939236]  tty_port_close+0x40/0xc0
-> [   20.939248]  uart_close+0x34/0x9c
-> [   20.939259]  ttyport_close+0x50/0xa0
-> [   20.939272]  serdev_device_close+0x40/0x5c
-> [   20.939283]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
-> [   20.939309]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
-> [   20.939376]  hci_dev_do_close+0x2c/0x70 [bluetooth]
-> [   20.939441]  hci_power_off+0x20/0x64 [bluetooth]
-> [   20.939508]  process_one_work+0x148/0x290
-> [   20.939528]  worker_thread+0x2c8/0x3e4
-> [   20.939541]  kthread+0x12c/0x204
-> [   20.939554]  ret_from_fork+0x10/0x20
-> [   20.943567] BUG: scheduling while atomic: kworker/u5:0/42/0x00000000
-> [   20.950126] Modules linked in: sd_mod uas onboard_usb_dev btnxpuart optee_rng dwc3 evdev spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card snd_soc_simple_card_utils mwifiex_sdio mwifiex display_connector spi_cadence_quadspi optee usb_conn_gpio tee gpio_keys roles k3_j72xx_bandgap cfg80211 rtc_ti_k3 dwc3_am62 bluetooth ecdh_generic ecc sa2ul sha512_generic rfkill authenc tidss crypto_null libaes snd_soc_davinci_mcasp sha1_generic drm_display_helper snd_soc_ti_udma snd_soc_ti_edma snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx ti_ads1015 snd_soc_wm8904 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c crc_ccitt tps65219_pwrbutton tpm_tis_core tpm m_can_platform m_can rng_core tc358768 can_dev pwm_tiehrpwm spi_omap2_mcspi loop fuse ipv6 autofs4
-> [   20.950550] CPU: 0 UID: 0 PID: 42 Comm: kworker/u5:0 Tainted: G        W           6.15.0-rc1-0.0.0-devel #1 PREEMPT
-> [   20.950566] Tainted: [W]=WARN
-> [   20.950570] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
-> [   20.950584] Workqueue: hci0 hci_power_off [bluetooth]
-> [   20.950721] Call trace:
-> [   20.950726]  show_stack+0x2c/0x84 (C)
-> [   20.950747]  dump_stack_lvl+0x60/0x80
-> [   20.950771]  dump_stack+0x18/0x24
-> [   20.950783]  __schedule_bug+0x54/0x70
-> [   20.950798]  __schedule+0x628/0x7dc
-> [   20.950815]  schedule+0x34/0x11c
-> [   20.950824]  schedule_timeout+0xd4/0x110
-> [   20.950838]  wait_for_completion+0x78/0x140
-> [   20.950853]  __flush_work+0x250/0x340
-> [   20.950868]  flush_work+0x14/0x20
-> [   20.950879]  omap_8250_shutdown+0x2c/0x1a4
-> [   20.950903]  serial8250_shutdown+0x18/0x40
-> [   20.950913]  uart_port_shutdown+0x40/0x58
-> [   20.950926]  uart_tty_port_shutdown+0x5c/0x178
-> [   20.950940]  tty_port_shutdown+0x84/0xdc
-> [   20.950950]  tty_port_close+0x40/0xc0
-> [   20.950958]  uart_close+0x34/0x9c
-> [   20.950969]  ttyport_close+0x50/0xa0
-> [   20.950990]  serdev_device_close+0x40/0x5c
-> [   20.951001]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
-> [   20.951017]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
-> [   20.951082]  hci_dev_do_close+0x2c/0x70 [bluetooth]
-> [   20.951149]  hci_power_off+0x20/0x64 [bluetooth]
-> [   20.951214]  process_one_work+0x148/0x290
-> [   20.951227]  worker_thread+0x2c8/0x3e4
-> [   20.951242]  kthread+0x12c/0x204
-> [   20.951258]  ret_from_fork+0x10/0x20
+More importantly, J721S2 GPU commits are based off drm-next tree
+commit 2c01d9099859 which has been in the queue for a few weeks
+now - so this warns for commit 2c01d9099859 not being present and
+compatibles img,img-axe-1-16m, img,img-bxs-4-64, ti,j721s2-gpu,
+img,img-rogue not being present. I chose to pick them up considering
+the benefit our community has with the driver support now being
+enabled in upstream.
 
-Not that this gets forgotten. Vignesh, is your theory still valid with 
-PREEMPT_RT not set?
+This PR also has fixes that finally makes the ti dts tree almost clear
+of all dtbs_check warnings (pending one fixup in the serdes binding
+which is pending to be picked up).
 
-Francesco, were you able to test older Linux kernels in the meantime?
+Please let me know if there are concerns, else:
 
+Please pull:
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-Kind regards,
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-Paul
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git tags/ti-k3-d=
+t-for-v6.16
+
+for you to fetch changes up to 6a9d340b1f9910f0f88e0819c464938b91610765:
+
+  arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI OV5640 (2025-05-09 06:=
+21:57 -0500)
+
+----------------------------------------------------------------
+TI K3 device tree updates for v6.16
+
+Generic Fixups/Cleanups:
+* am62*: emmc - drop disable-wp, Add bootphase tags to support MMC boot
+
+SoC Specific features and Fixes:
+AM62Ax:
+* C7x and R5F support added
+* Bug fix for emmc clock to point to default
+* CPUFreq thermal throttling on thermal alert
+
+AM62P5:
+* Add RNG Node (common to J722s)
+* Bug fix for emmc clock to point to default (common to J722S)
+
+AM625:
+* Wakeup R5 node
+* Bug fix for emmc clock to point to default
+* PRUSS-M support
+* New GPU bindings
+
+AM64:
+* Switch to 64-bit address space for PCIe0
+* Add PCIe control nodes for main_conf region
+* Reserve timer nodes used by MCU F/w.
+
+AM65:
+* MMC: Add missing delay timing values for SDR and legacy modes
+* Add compatible for AM65x syscon and PCIe control properties
+  (dtbs_check fixes)
+
+J7200:
+* PCIe control node to scm_conf, switch to 64-bit address space for PCIe1.
+
+J721E:
+* PCIe control node to scm_conf, switch to 64-bit address space for PCIe0,1.
+
+J721S2:
+* GPU node for Imagination Tech Rouge BXS GPU.
+* PCIe control node to scm_conf, switch to 64-bit address space for PCIe1.
+
+J722s/AM67A:
+* Switch serdes status to be enabled by board file than at SoC level.
+* Switch to 64-bit address space for PCIe0.
+
+J784S4/J742S2/AM69:
+* Add ASPCIE0 and enable output for PCIe1
+* Fix length of serdes_ln_ctrl.
+* Switch to 64-bit address space for PCIe0,1.
+
+Board Specific:
+AM62Ax:
+* SK: co-processors C7x, R5, PWM support added
+* phycore-som: co-processors C7x, R5
+
+AM62P5:
+* Add Toradex Verdin AM62P boards with Dahlia, Ivy, Mallow and Yavia suppor=
+t.
+* SK: Add remote processor support, PWM
+
+AM625:
+* Add BeagleBoard.org PocketBeagle-2 support
+* phycore-som: Enable R5F support
+* Verdin: Add eeprom compatible fallback
+* SK: Enable PWM, voltage supplies, clock, i2cmux rename for camera overlays
+  (dtbs_check fixes)
+* BeaglePlay: Add voltage supplies for camera overlays (dtbs_check fixes)
+* phyboard-lyra: Add cooling maps for fan
+* emmc bug fixes: add non-removable flag for eMMC.
+
+AM65:
+* EVM: Add missing power supply description ofr Rocktech panel
+  (dtbs_check fixes)
+
+J721E:
+* EVM: Enable OSPI1
+* EVM/SK: Dt nodes description for mandatory power suplpies for panel and
+  sensors (dtbs_check fixes)
+
+J721S2/AM68:
+* Add phyBOARD-Izar-AM68x
+* am68-SK: Fix regulator hierarchy
+
+J722s/AM67A:
+* EVM: Add mux controls for CSI2, power regulator nodes and add overlays for
+  quad IMX219 and TEVI OV5640.
+* BeagleY-AI: Add bootph for main_gpio1
+
+J784S4/J742S2/AM69:
+* usxgmii expansion board: Drop un-necessary pinctrl-names
+* evm: Add overlay for USB0 Type-A option
+
+----------------------------------------------------------------
+Andrew Davis (7):
+      dt-bindings: soc: ti: ti,j721e-system-controller: Add PCIe ctrl prope=
+rty
+      arm64: dts: ti: k3-j721e: Add PCIe ctrl node to scm_conf region
+      arm64: dts: ti: k3-j7200: Add PCIe ctrl node to scm_conf region
+      arm64: dts: ti: k3-j721s2: Add PCIe ctrl node to scm_conf region
+      arm64: dts: ti: k3-am64: Add PCIe ctrl node to main_conf region
+      dt-bindings: mfd: ti,j721e-system-controller: Add compatible string f=
+or AM654
+      arm64: dts: ti: am65x: Add missing power-supply for Rocktech-rk101 pa=
+nel
+
+Daniel Schultz (6):
+      arm64: dts: ti: k3-am62a: Enable CPU freq throttling on thermal alert
+      arm64: dts: ti: k3-am62x-phyboard-lyra-gpio-fan: Update cooling maps
+      arm64: dts: ti: k3-am62-phycore-som: Enable Co-processors
+      arm64: dts: ti: k3-am62a-phycore-som: Enable Co-processors
+      arm64: dts: ti: k3-am62a-phycore-som: Reserve main_rti4 for C7x DSP
+      arm64: dts: ti: k3-am62a-phycore-som: Reserve main_timer2 for C7x DSP
+
+Devarsh Thakkar (3):
+      arm64: dts: ti: k3-am62a-wakeup: Add R5F device node
+      arm64: dts: ti: k3-am62a7-sk: Enable IPC with remote processors
+      arm64: dts: ti: k3-am62p5-sk: Enable IPC with remote processors
+
+Dominik Haller (2):
+      dt-bindings: arm: ti: Add bindings for PHYTEC AM68x based hardware
+      arm64: dts: ti: Add basic support for phyBOARD-Izar-AM68x
+
+Francesco Dolcini (7):
+      arm64: dts: ti: k3-am625-verdin: Add EEPROM compatible fallback
+      dt-bindings: arm: ti: Add Toradex Verdin AM62P
+      arm64: dts: ti: Add Toradex Verdin AM62P
+      arm64: dts: ti: am62p-verdin: Add dahlia
+      arm64: dts: ti: am62p-verdin: Add mallow
+      arm64: dts: ti: am62p-verdin: Add yavia
+      arm64: dts: ti: am62p-verdin: Add ivy
+
+Hari Nagalla (6):
+      arm64: dts: ti: k3-am62-wakeup: Add wakeup R5F node
+      arm64: dts: ti: k3-am62a-mcu: Add R5F remote proc node
+      arm64: dts: ti: k3-am62x-sk-common: Enable IPC with remote processors
+      arm64: dts: ti: k3-am62a7-sk: Reserve main_timer2 for C7x DSP
+      arm64: dts: ti: k3-am62a7-sk: Reserve main_rti4 for C7x DSP
+      arm64: dts: ti: k3-am64: Reserve timers used by MCU FW
+
+Jai Luthra (1):
+      arm64: dts: ti: k3-am62a-main: Add C7xv device node
+
+Jan Kiszka (1):
+      arm64: dts: ti: k3-am65-main: Add system controller compatible
+
+Jayesh Choudhary (1):
+      arm64: dts: ti: k3-j721e-common-proc-board-infotainment: Update to co=
+mply with device tree schema
+
+Judith Mendez (11):
+      arm64: dts: ti: k3-am62p5-sk: Enable PWM
+      arm64: dts: ti: k3-am62a7-sk: Enable PWM
+      arm64: dts: ti: k3-am625-sk: Enable PWM
+      arm64: dts: ti: k3-am6*: Add boot phase flag to support MMC boot
+      arm64: dts: ti: k3-am62*: Add non-removable flag for eMMC
+      arm64: dts: ti: k3-am6*: Remove disable-wp for eMMC
+      arm64: dts: ti: k3-am62-main: Set eMMC clock parent to default
+      arm64: dts: ti: k3-am62a-main: Set eMMC clock parent to default
+      arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parent to =
+default
+      arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
+      arm64: dts: ti: k3-am62: Add ATCM and BTCM cbass ranges
+
+Kishon Vijay Abraham I (1):
+      arm64: dts: ti: k3-am62-main: Add PRUSS-M node
+
+Matt Coster (2):
+      arm64: dts: ti: k3-am62: New GPU binding details
+      arm64: dts: ti: k3-j721s2: Add GPU node
+
+Michael Walle (1):
+      arm64: dts: ti: k3-am62p-j722s: Add rng node
+
+Nishanth Menon (1):
+      arm64: dts: ti: k3-am67a-beagley-ai: Add bootph for main_gpio1
+
+Prasanth Babu Mantena (1):
+      arm64: dts: ti: k3-j721e-common-proc-board: Enable OSPI1 on J721E
+
+Rishikesh Donadkar (6):
+      arm64: dts: ti: k3-am62p5-sk: Add regulator nodes for AM62P
+      arm64: dts: ti: k3-am62x: Add required voltage supplies for IMX219
+      arm64: dts: ti: k3-am62x: Add required voltage supplies for OV5640
+      arm64: dts: ti: k3-am62x: Add required voltage supplies for TEVI-OV56=
+40
+      arm64: dts: ti: k3-am625-beagleplay: Add required voltage supplies fo=
+r OV5640
+      arm64: dts: ti: k3-am625-beagleplay: Add required voltage supplies fo=
+r TEVI-OV5640
+
+Robert Nelson (2):
+      dt-bindings: arm: ti: Add PocketBeagle2
+      arm64: dts: ti: Add k3-am62-pocketbeagle2
+
+Siddharth Vadapalli (16):
+      arm64: dts: ti: k3-j784s4-evm-usxgmii-exp1-exp2: drop pinctrl-names
+      arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0" and "serdes_wiz1"
+      arm64: dts: ti: k3-j722s-main: Disable "serdes_wiz0" and "serdes_wiz1"
+      arm64: dts: ti: k3-j722s-main: Don't disable serdes0 and serdes1
+      arm64: dts: ti: k3-j722s-evm: Drop redundant status within serdes0/se=
+rdes1
+      arm64: dts: ti: k3-j784s4-j742s2-evm: Add overlay to enable USB0 Type=
+-A
+      arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix length of serdes_ln=
+_ctrl
+      arm64: dts: ti: k3-am64-main: Switch to 64-bit address space for PCIe0
+      arm64: dts: ti: k3-j7200-main: Switch to 64-bit address space for PCI=
+e1
+      arm64: dts: ti: k3-j721e: Add ranges for PCIe0 DAT1 and PCIe1 DAT1
+      arm64: dts: ti: k3-j721e-main: Switch to 64-bit address space for PCI=
+e0 and PCIe1
+      arm64: dts: ti: k3-j721s2-main: Switch to 64-bit address space for PC=
+Ie1
+      arm64: dts: ti: k3-j722s-main: Switch to 64-bit address space for PCI=
+e0
+      arm64: dts: ti: k3-j784s4-j742s2-main-common: Switch to 64-bit addres=
+s space for PCIe0 and PCIe1
+      arm64: dts: ti: k3-j784s4-j742s2-main-common: Add ACSPCIE0 node
+      arm64: dts: ti: k3-j784s4-j742s2-evm-common: Enable ACSPCIE0 output f=
+or PCIe1
+
+Vaishnav Achath (2):
+      arm64: dts: ti: k3-j722s-evm: Add overlay for quad IMX219
+      arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI OV5640
+
+Yemike Abhilash Chandra (9):
+      arm64: dts: ti: k3-j721e-sk: Add DT nodes for power regulators
+      arm64: dts: ti: k3-am68-sk: Fix regulator hierarchy
+      arm64: dts: ti: k3-j721e-sk: Remove clock-names property from IMX219 =
+overlay
+      arm64: dts: ti: k3-j721e-sk: Add requiried voltage supplies for IMX219
+      arm64: dts: ti: k3-am62x: Remove clock-names property from IMX219 ove=
+rlay
+      arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in IMX219 over=
+lay
+      arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640 over=
+lay
+      arm64: dts: ti: j722s-evm: Add DT nodes for power regulators
+      arm64: dts: ti: j722s-evm: Add MUX to control CSI2RX
+
+ Documentation/devicetree/bindings/arm/ti/k3.yaml   |   32 +
+ .../soc/ti/ti,j721e-system-controller.yaml         |   23 +
+ arch/arm64/boot/dts/ti/Makefile                    |   28 +
+ arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts           |   12 +
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi           |   96 +-
+ arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi    |   36 +-
+ arch/arm64/boot/dts/ti/k3-am62-pocketbeagle2.dts   |  521 ++++++++
+ arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi  |    2 +-
+ arch/arm64/boot/dts/ti/k3-am62-verdin-yavia.dtsi   |    2 +-
+ arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi         |   25 +
+ arch/arm64/boot/dts/ti/k3-am62.dtsi                |    8 +-
+ .../dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso    |   31 +
+ .../ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso   |   31 +
+ arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts     |    2 +-
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi          |   14 +-
+ arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi           |   25 +
+ arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi   |  107 +-
+ arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi       |   57 +-
+ arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi        |   25 +
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts            |  149 ++-
+ arch/arm64/boot/dts/ti/k3-am62a7.dtsi              |    4 +
+ .../boot/dts/ti/k3-am62p-j722s-common-main.dtsi    |   11 +-
+ arch/arm64/boot/dts/ti/k3-am62p-verdin-dahlia.dtsi |  228 ++++
+ arch/arm64/boot/dts/ti/k3-am62p-verdin-dev.dtsi    |  245 ++++
+ arch/arm64/boot/dts/ti/k3-am62p-verdin-ivy.dtsi    |  629 +++++++++
+ arch/arm64/boot/dts/ti/k3-am62p-verdin-mallow.dtsi |  213 +++
+ .../arm64/boot/dts/ti/k3-am62p-verdin-nonwifi.dtsi |   15 +
+ arch/arm64/boot/dts/ti/k3-am62p-verdin-wifi.dtsi   |   31 +
+ arch/arm64/boot/dts/ti/k3-am62p-verdin-yavia.dtsi  |  219 +++
+ arch/arm64/boot/dts/ti/k3-am62p-verdin.dtsi        | 1404 ++++++++++++++++=
+++++
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts            |  128 +-
+ .../dts/ti/k3-am62p5-verdin-nonwifi-dahlia.dts     |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-nonwifi-dev.dts   |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-nonwifi-ivy.dts   |   22 +
+ .../dts/ti/k3-am62p5-verdin-nonwifi-mallow.dts     |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-nonwifi-yavia.dts |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-wifi-dahlia.dts   |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-wifi-dev.dts      |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-wifi-ivy.dts      |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-wifi-mallow.dts   |   22 +
+ .../boot/dts/ti/k3-am62p5-verdin-wifi-yavia.dts    |   22 +
+ .../dts/ti/k3-am62x-phyboard-lyra-gpio-fan.dtso    |   14 +-
+ arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi     |   76 +-
+ .../arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso |   34 +-
+ .../arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso |   34 +-
+ .../boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso  |   34 +-
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi           |   13 +-
+ arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso  |    2 +-
+ arch/arm64/boot/dts/ti/k3-am642-evm.dts            |   21 +-
+ arch/arm64/boot/dts/ti/k3-am642-sk.dts             |   20 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi           |    4 +-
+ .../k3-am654-base-board-rocktech-rk101-panel.dtso  |   12 +
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts     |    1 -
+ .../dts/ti/k3-am6548-iot2050-advanced-common.dtsi  |    1 -
+ arch/arm64/boot/dts/ti/k3-am67a-beagley-ai.dts     |    1 +
+ arch/arm64/boot/dts/ti/k3-am68-phyboard-izar.dts   |  575 ++++++++
+ arch/arm64/boot/dts/ti/k3-am68-phycore-som.dtsi    |  601 +++++++++
+ .../dts/ti/k3-am68-sk-base-board-pcie1-ep.dtso     |    2 +-
+ arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts   |   13 +-
+ arch/arm64/boot/dts/ti/k3-am69-sk.dts              |    1 -
+ arch/arm64/boot/dts/ti/k3-j7200-evm-pcie1-ep.dtso  |    2 +-
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi          |   13 +-
+ .../k3-j721e-common-proc-board-infotainment.dtso   |   57 +-
+ .../boot/dts/ti/k3-j721e-common-proc-board.dts     |    7 +-
+ arch/arm64/boot/dts/ti/k3-j721e-evm-pcie0-ep.dtso  |    2 +-
+ arch/arm64/boot/dts/ti/k3-j721e-evm-pcie1-ep.dtso  |    2 +-
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi          |   40 +-
+ .../boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  |   35 +-
+ arch/arm64/boot/dts/ti/k3-j721e-sk.dts             |   31 +
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi               |    2 +
+ arch/arm64/boot/dts/ti/k3-j721s2-evm-pcie1-ep.dtso |    2 +-
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi         |   27 +-
+ .../ti/k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtso  |  329 +++++
+ .../dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso |  323 +++++
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts            |   46 +-
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi          |   14 +-
+ .../dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso    |    1 -
+ .../boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi   |    6 +
+ .../dts/ti/k3-j784s4-j742s2-evm-usb0-type-a.dtso   |   29 +
+ .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi  |   19 +-
+ 80 files changed, 6886 insertions(+), 133 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62-pocketbeagle2.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-dahlia.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-dev.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-ivy.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-mallow.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-nonwifi.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-wifi.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-yavia.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-dahlia.=
+dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-dev.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-ivy.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-mallow.=
+dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-yavia.d=
+ts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-dahlia.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-dev.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-ivy.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-mallow.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-yavia.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am68-phyboard-izar.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am68-phycore-som.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-rpi-cam-i=
+mx219.dtso
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov56=
+40.dtso
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-usb0-type-a=
+=2Edtso
+--=20
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5=
+ 849D 1736 249D
+
+--ugjf7cm6tlk43njq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE+KKGk1TrgjIXoxo03bWEnRc2JJ0FAmgiCh4ACgkQ3bWEnRc2
+JJ3gEBAArMScgAhCl89T6Mcu3xbWoXkA7edgjKpKGaSz+ZlAtsp7xUVZUNU/rIQZ
+a4bFOkcevkILRTn+DmunusUfa4vTwXXCcq5MXyIzhthOl0zY6rSw1QqnM5Oqs4Y0
+TvDR7CQRb54nEh3X2qg/Kr7/XXMutfRnxVYB4jnjr95VEy3ZKryGkjK4eA67LIRV
+SqkkSXhK6HTCOkXK+EGbI1edTdc/Xqnew2aTQUXgx9m9f1lsqM/68TjFvddXDy+C
+E6AaILXUofWS3ZXMHtio0JGcwQcrwC99MhlGo40+SNWHNZH2Qi0cF0fQiOzFCf69
+yjCwXkSBx56ZURO5CoZEbFOWAEmsnD/lBB3toV6oCZf3ipit85Upj0Xhec1AKlTb
+3NmQW1CsGgWpam5fdZdatSwG/19oXKmvkVsL7d/zimDRfDAo3bId6pEY2XXZQvUP
+xCvLgXM7r7spk6lsZiRRyeohBi9qMt26w8BiN6uipf4IaZucS5wGfkdNb1MiTsQP
+hCkwEA1J4awZRkjnzP86JJko04jMiFCOHWTbrlR81cdOHwq/b4EQ19SflTMOm2wD
+5/CCH+9Y1HIJCKEW0AFJ4Ho3piCUQTTKHcbiiugmDfykWgdZk3f6a476nWNI789E
+uj2pMN0aLPMGp6uZbfuyfzIT7G2VUMei37N2ZKPYKlEebMWMS/k=
+=UPnO
+-----END PGP SIGNATURE-----
+
+--ugjf7cm6tlk43njq--
