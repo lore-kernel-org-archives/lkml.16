@@ -1,127 +1,99 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815E5255E46
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2A412F399
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747046210; cv=none; b=rorbdLN3XF19gkFfp0B2YEuDV476C6du33NTopwzv0hTOV3g4xvf4eRwriLnwy10fiyHH0WT4jCN43ffRgWiR3bJ4bZXViVBVKVgABG/qC8nr0nTV4jCGC8ZDU2ZqkGfAbp6Llv4n6icgoinaqOlJ3MK16jfsn5vfw1DLttsiQE=
+	t=1747046331; cv=none; b=S4NnDkKOGx7icT7CYJLVkKLOp73NUxhvQRHbBUmtLwlH9ZFKG8LBKRngkq5h239AGXpaUGIOFk2hfHCPKvuEkaPI4hiw//sKnSQcQjR3P5xQyOzUWRZyce+iZAOvrMUZNo4rUuBQJNI4LAEGFU8ELJD/ZT/lPbWnC+nbSr2BpHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747046210; c=relaxed/simple;
-	bh=grWKcuszBYfX5XjvmYER5UpUwXN2KPvsZQy+qbn88KY=;
+	s=arc-20240116; t=1747046331; c=relaxed/simple;
+	bh=uPYoh2qd9twXv2t/5rtKA9T/rK7iFC3czNcd8n+Ldl8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=td9URQI/8xiS5URnV53ESj/stVeL5llKPRt4YU2Y6QllHT3uK1/QWAFrX6fK8WBPFp1Gt6xr/EjJW7ImkpVug7uBjJjF5DvQ0iYIDVz14tGhN3I6/dsnXBcqUPg+4E7OZM0BUkNfqOeCbw2dhMUhW4LitNDxtilL1e2O/xmBeJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RqLZha3W; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BspURFCJLUgaY2caFckae6roJAtgPqvkpji3eLUFeQwF0fBQ64QpbXLtQtlTXse/9hJSgm4lIRbT3jrtOPWCcDEdiSyVc6tevMR4XyM8vq3U7TRZmaxTBQQKqbSddpO0adPq4nvxxaCFA5VcBX8XOf8bGwMuIs2Ip7kUE4Kcu1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=frYmQFVC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RqLZha3W"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so812898166b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747046207; x=1747651007; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=grWKcuszBYfX5XjvmYER5UpUwXN2KPvsZQy+qbn88KY=;
-        b=RqLZha3WoHdCgSW6yGKjpDGnL0IcUoRQiujPU1QXs1mlDOXuAFx2YO48aau3pwkwnE
-         gLKj45LtuORUQO2ewNWeCXY2G8IuhdCgToOOqYJjjLVlsTYLstvqO6OeJwxz/qHLA4oO
-         hkSdwARTIuLU6cDnE9GrR8Kk2z79rSY9mpBANhqhvMi0qjyi6RHdFLvQq87QAK1c4x+u
-         x2yd8BxZfCXH6lk6yNB7S9R18OS7YfrjEyQQSaiOTsnDvPI5T+4/1iPMu9/XBaDz3vmj
-         05/2TMmgfF/aYBi/QjX2BkzcSodYlNmKKWtMDWEbBrwZ0B/wjaf/NgJDZRoPaVchncSx
-         NBKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747046207; x=1747651007;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=grWKcuszBYfX5XjvmYER5UpUwXN2KPvsZQy+qbn88KY=;
-        b=V3Kr0WD1x0wiRp6SHvepz+89IovLhhWpj/d14ik149e0USSfWrP0qn2gzbd8LgMapB
-         vjoVX2wfMvpfImoBH5oyUnaFMgKzNwP0bKKRHooI9LI1wK52D8/TRPfT+ted1tES/m2G
-         zPxGcTaXPYRb7c7b6KZVdTgrw14genbtffX5W4TiGTss5a0lVLqg0Jb5c8LNzz9BpSlg
-         jTi4ZYW+LXAImVr5VCjFvkloXS+PTYnAjgfVKe2KcLv813m/k4+wCiUTcruukOacm8r1
-         qkxKBK4vdqViPAwPnTgzPluFIqytwzMeEh54b7n0y2ipKasqLWARpE8P7CMAmthNreox
-         3YIw==
-X-Gm-Message-State: AOJu0YxaNT9Fiia4rjmPhyoslvRfVCloG23U2FMxUGdpUWFECeRm28ZE
-	x0cfcBFs/VB3QdXtti6/LS+d7g1BsKl5cPOWLu9GiThykmuULVDObRA6jHqSKRnvnmlbQKT2GHG
-	m
-X-Gm-Gg: ASbGncsA8UaHDoruxL31T1+SUTWxq/D/ouwWVIA36dw49fBkRiFoIROgdO6x3/DUkCH
-	883By23zYBSIAoDc/VC1feUr/WK+MhAn2HmUvdS6zEi0IcHMf5Ao9N4SbgE0Ok4ZTs1hQP34Iaw
-	ijCG4eK6d/ERJo5ZtWio9xwGmVg6EQDE4acA3dqyoiCmHFsOE/DaAZQIX3fu9ngRD/usul9lUWd
-	v5hvtmq/FT0ZjLt3n3vqk+YtYuEbBHv1NfODUNrbn5P+tWXzeZ1dRMdrtqsyq77Z5xJrHzuhevs
-	ej99pZmFSCvmmfjaop2hZh8esKWEpat23lRN+ejdEwqJ4vS25JZFbA==
-X-Google-Smtp-Source: AGHT+IHPn3opWPuGz4biVathI6IuKk2eNFCTG4feYuGEpgYqHsGeEkZnfVt67vF/3B+VhYi0n3xoQw==
-X-Received: by 2002:a17:907:7fa6:b0:ad2:54c5:42e8 with SMTP id a640c23a62f3a-ad254c54483mr208102766b.8.1747046206673;
-        Mon, 12 May 2025 03:36:46 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad22a3a1501sm475507966b.121.2025.05.12.03.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 03:36:46 -0700 (PDT)
-Date: Mon, 12 May 2025 12:36:44 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Xi Wang <xii@google.com>
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, David Rientjes <rientjes@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Lai Jiangshan <jiangshanlai@gmail.com1>, Frederic Weisbecker <frederic@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Chen Yu <yu.c.chen@intel.com>, Kees Cook <kees@kernel.org>, Yu-Chun Lin <eleanor15x@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
-Message-ID: <avxk2p2dr3bywzhujwnvbakjyv4gsnshssvgwj5276aojh7qbl@llhdz2e55iai>
-References: <20250506183533.1917459-1-xii@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="frYmQFVC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14A2C4CEE7;
+	Mon, 12 May 2025 10:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747046331;
+	bh=uPYoh2qd9twXv2t/5rtKA9T/rK7iFC3czNcd8n+Ldl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=frYmQFVC+tRLHpAdv/XV0hLF+311U1qxNzvjyC0Cyp4TWIBhtnqc4Qu/inaXwS574
+	 FRM7CWGtE1IcXy75061fW4yhBF+JKVp4VtikrFHSx5d2Bj7R8Wp8BSb3hI6kPy8Gog
+	 CAPQpDAeU0ArAXV+zhRlD8ofsgYhen/0ou82C3ow=
+Date: Mon, 12 May 2025 12:36:24 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: Lee Jones <lee@kernel.org>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, andriy.shevchenko@linux.intel.com,
+	mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] mfd: core: Support auxiliary device
+Message-ID: <2025051221-gulf-schematic-26e1@gregkh>
+References: <20250428060207.3170325-1-raag.jadav@intel.com>
+ <20250501125028.GM1567507@google.com>
+ <aBVArb-zJ_aqicHW@black.fi.intel.com>
+ <aCHL8WWV-Wt7OrII@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7glneb545a7qokgx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506183533.1917459-1-xii@google.com>
+In-Reply-To: <aCHL8WWV-Wt7OrII@black.fi.intel.com>
 
+On Mon, May 12, 2025 at 01:22:41PM +0300, Raag Jadav wrote:
+> On Sat, May 03, 2025 at 01:01:23AM +0300, Raag Jadav wrote:
+> > On Thu, May 01, 2025 at 01:50:28PM +0100, Lee Jones wrote:
+> > > On Mon, 28 Apr 2025, Raag Jadav wrote:
+> > > 
+> > > > Extend MFD subsystem to support auxiliary child device. This is useful
+> > > > for MFD usecases where parent device is on a discoverable bus and doesn't
+> > > > fit into the platform device criteria. Purpose of this implementation is
+> > > > to provide discoverable MFDs just enough infrastructure to register
+> > > > independent child devices without abusing the platform device.
+> > > > 
+> > > > Current support is limited to just PCI type MFDs, but this can be further
+> > > > extended to support other types like USB in the future.
+> > > > 
+> > > > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> > > > ---
+> > > > 
+> > > > v2: Introduce a shared struct mfd_aux_device
+> > > >     Introduce auxiliary device opt-in flag
+> > > > 
+> > > > v3: Fix device_type ABI breakage (Andy)
+> > > >     Aesthetic adjustments (Andy)
+> > > > 
+> > > > v4: s/mfd_aux/maux
+> > > >     Allow num_resources for child device (Andy)
+> > > >     Fix build warning (Andy)
+> > > > 
+> > > >  drivers/mfd/Kconfig      |   2 +-
+> > > >  drivers/mfd/Makefile     |   2 +-
+> > > >  drivers/mfd/mfd-aux.c    | 156 +++++++++++++++++++++++++++++++
+> > > 
+> > > This looks like mostly duplicated platform device code.
+> > > 
+> > > If you are _certain_ that it needs to exist, you need to push it out to
+> > > the auxiliary subsystem and remove any traces of it being MFD related.
+> > > 
+> > > If it's needed by MFD, it'll be needed by other auxiliary users.  Even
+> > > if not now, sometime in the future.
+> > 
+> > Greg, if you are okay with this, please let me know. Or perhaps suggest
+> > a better alternative.
+> 
+> Greg, any guidance on this?
 
---7glneb545a7qokgx
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
-MIME-Version: 1.0
+I don't know what to say, I don't see the code here that is being
+quoted, sorry.  If this should be in the aux code, add it and submit a
+patch that uses it so we can see what you are referring to.
 
-Hello.
+confused,
 
-On Tue, May 06, 2025 at 11:35:32AM -0700, Xi Wang <xii@google.com> wrote:
-> In theory we should be able to manage kernel tasks with cpuset
-> cgroups just like user tasks, would be a flexible way to limit
-> interferences to real-time and other sensitive workloads.
-
-I can see that this might be good for PF_USER_WORKER type of kernel
-tasks. However, generic kernel tasks are spawned by kernel who
-knows/demands which should run where and therefore they should not be
-subject to cpuset restrictions. When limiting interference is
-considered, there's CPU isolation for that.
-
-The migratable kthreadd seems too coarse grained approach to me (also
-when compared with CPU isolation).
-I'd mostly echo Tejun's comment [1].
-
-Regards,
-Michal
-
-[1] https://lore.kernel.org/r/aBqmmtST-_9oM9rF@slm.duckdns.org/
-
---7glneb545a7qokgx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaCHPOQAKCRAt3Wney77B
-SVYEAP0Z/JUxAkFu4aDyuiT90IBTasBvJ2EsEmMP4MGjnahpUAEA1KAPjq8QHIRv
-YGcQlipcEFx4WvZFEk5JBaHodIcCvQA=
-=LnfL
------END PGP SIGNATURE-----
-
---7glneb545a7qokgx--
+greg k-h
