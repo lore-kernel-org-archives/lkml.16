@@ -1,159 +1,232 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A48A1E25F2;
-	Mon, 12 May 2025 14:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1019C1E25F2;
+	Mon, 12 May 2025 14:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060966; cv=none; b=PLYNXeYPc+OHQdm1JD1z+nyzttvs3plnaXj73hjaFYuS02SnMRiOsDWNRQYBr+z7afltk0GP1D5JKPOt/8wanXub0ADto4fUqF0rdeuGh+6Z5dlgVFs16ijybE8D6AUf9VVGZfos0uhZChP0noK2Wa2ankyjsGcNhNdrLDNhjek=
+	t=1747060976; cv=none; b=aT0qAa54OpHQh01p2DKJY2bsvN2JcWt3VPhj0k6BbdtknRPJnnFtFZne6xlJb537J3nM1QWtXrHXyp19yb532vXJa2aOrQHKImqUK2Art7dORh5DQa7MjLWcTsrg/z7Nu3Gg663OHx5FGJWdb1VlLeuU9sdppoKLM3d1Lthncuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060966; c=relaxed/simple;
-	bh=/zeZk37/Sv3KCF0ywu3fxUm22KdgIlQIHMvT60KwLw0=;
+	s=arc-20240116; t=1747060976; c=relaxed/simple;
+	bh=+MJuFyHlrR+N6ADcybjZTr/tKCQxt58f7yFbm/GyQdc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LJcMDPyJuzwQMIh4UMrAx7tH1gl/x/GTozKJHTk4IrKW7druRC0nsHzFj/3VYYRaaegYAt8KNVGp+6/R3uB9PxY5ASIbu5wM0Z4hwx+S0sFINjkIOnyM9m4s/XIP8yBCuTH69XYhPanxvv3XkXIU44v32xOGmzI6mRERJv/St08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=Y36GIrm1yn3kFBsgyp6zuzaFmQ/1ZyzIqwDyJ4SqrI/sqzvT/ONsjUqOYzMmX5A3DKMtFM+U8PJw6SGNUPUeYGmVys9KeE/NbIkxFlnB538cNV250ZxiboyA6TuLOzcnK2iJ8FjfEJqRqD/k9McKuEeOxb7Cm9DJIRmfjEMipOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CyZfOtlZ; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52934f4fb23so3801068e0c.1;
-        Mon, 12 May 2025 07:42:44 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyZfOtlZ"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0b7fbdde7so4330133f8f.2;
+        Mon, 12 May 2025 07:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747060973; x=1747665773; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dgS0gFzPJkgOZrUm2WjFUj6B4kBtJbfFOU+fHqfvDz4=;
+        b=CyZfOtlZMwhI2ytBYVolpJukcDTKDduV605WV+0VWL175F46c3JmRJown1ZW2C5PiS
+         KJwVngu2N9q45UQZw0Kq69+ZPLXBGNrswWnpV4evdYJqE9veefR2oxGKDdmhdrQWIrOe
+         DlUyIgPpmlEnznE3Amhk72cFEDR1aOmZTR3230ERn5UiFCVlNacPfLrLiRifyKPe7m8M
+         eiM+5IK7XVj/dThrua4eYzBB09M8znrA9FDx5GBBdS/GwQEisYFFrLK7OL1sNRp7iRuv
+         XWDbIUSWgs4C7nZYbAiJqvY6eWMl+N+/0YYunxFpW3eHzGPnNhuTUeTB9tmGUP3qloch
+         FfGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747060963; x=1747665763;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+YmUH1CSfFZhqrgXJQPbodZECFT0KSPOD8Th8GJ69tE=;
-        b=WZ4il+mzlfd0oSiwYnRyvLWKx5NNOpr6at25tR3VKq/7rmv+Tp0AE96IiTnwgeYiui
-         18Ks3MytL/NRn7xUy6s14sXAEuQolWtpVG8ldSGroYAXHmqAToyRF067ARLTKqFbX4eo
-         OFcAllpJFVYIE6+E908c3EUaNlnJQ/OHXn6tct36ZUWQXsqrowXWlFAWb6ZzVmPYxTUr
-         L5O2F1yIiLaAeMCKKP52LN5F0pD5/+MVhgbEYNXRmHbjM520x5yHSAgFO5f1lp7+igSO
-         VOI7eeSD00PiocWsCTvD79VZp614DzBcv24kRtKu7U/nGkbVS73Jcikd7RR2jYz/s8Gy
-         ERYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOZyw1J3TvJsU6s8pMGmf7XN0ZjNEHsKJVmrklHUoyDk+pAh6zUhjnprRxrin8CswpzTaVVRS232EvcEgP8DYA@vger.kernel.org, AJvYcCVIIodkDrG2VkMUe9EYu+POCctPnYE1v1qzPLVzJ9pf6RWem420JH8oznmZn2rNTLX9EZUTG5/scFTsnA4A@vger.kernel.org, AJvYcCXApXYjC03y8iCF1/lToTRJt1M92Ti884ab0G7uIwwrnVz/2Xeh0kLmWcjBcfD3zYOQzE467fPKLrhH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxOghhTukGL2cTuzcDCusgm2M0cE024gb1j/9GDHi7ta18uXPL
-	qzRr4UyvVRVx1jWqOH8qGhM5/l26AycKBCLpYBHkcBcWQX6tvuLwxlqERUgk
-X-Gm-Gg: ASbGncuxJFDkqwZqESpP2n8WWqVwftW2ZnaWaNGO+H5nW3uZJHqvIUlsEIjjgJVsB4H
-	nF5QpgMJMvuKO1h2WpLeyQ3WucybsgcWo6tzOzfvG3LnZDsxIZLgjdoAUvOBFIsaqkXhXMvv4ya
-	snfASq2EN4WnJo/aklgDl+lFow+/OZ/mGX7cSYLJgKY0O2oHGIyn7B7VDUPTVB5eZEcxvG03Nnp
-	KpwTEv1InV+SqFBQcE7Rl5UrDHwVdIi3MqwGQbHCmfmOkgOo/JwFwpbmoDlwtfPpoOxBgU4hh3j
-	SIdpRIyFwagtFUtwud3739xaBtfuzwJI6bzIofKxNguIORHZV+j8tJBN/ehqhllEb7mWpSkEl5i
-	MvB8eQrhfahBcXQ==
-X-Google-Smtp-Source: AGHT+IEJCAYBKjmFK0kALYhBAXU+qHXb1nvr8z7J+qvSff8tIG+exRgQKlDVNWnKIwDSrogi7HOf7g==
-X-Received: by 2002:a05:6122:a17:b0:52a:7749:b517 with SMTP id 71dfb90a1353d-52c53dde312mr9520646e0c.10.1747060962733;
-        Mon, 12 May 2025 07:42:42 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c53758c87sm5789613e0c.21.2025.05.12.07.42.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 07:42:41 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86fea8329cdso3214297241.1;
-        Mon, 12 May 2025 07:42:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUBbrj+B6xW+BJ/EbmC9Fbl/psvXRyOvosbAM8AcBKqcl2VMfxFRk4HenXgQAuOfrhlLupO62gyo1xNrUiW@vger.kernel.org, AJvYcCVnLGCOHrvWge3FIUUJalpenrYgfY5I8/LfJRLzxDOo3HbGmGbKcIvmVf1YKP2u9FA0U/s7XNoXPtwb@vger.kernel.org, AJvYcCWQGeRS+RQSNoJY6/wemOckvglnP+WjoGnM5sryeuQzq3e2ldZtLQLg194EnE0gN44TMS59PB7/Ay3UGRmgcYoO@vger.kernel.org
-X-Received: by 2002:a05:6102:f96:b0:4c1:869b:7db4 with SMTP id
- ada2fe7eead31-4deed340270mr10798768137.9.1747060961078; Mon, 12 May 2025
- 07:42:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747060973; x=1747665773;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dgS0gFzPJkgOZrUm2WjFUj6B4kBtJbfFOU+fHqfvDz4=;
+        b=GyEz+E+ve8agk8+GSuiaUY60+gasNBycJ42PJx9c4X9TlRmmoDM1L5PKOuLwRuf8dq
+         PjXsXf2DG+I+iVx0hkt1P92UtbNHdR9x/hWknX4oDK71kbH1ugzDbXrSQbJ7zl3I8AMd
+         sr6bgm32ZZxjyTMHWzuu2fOJMpgnN7hqqRm2Hoc295J78wW7jkRGKA33Ovf0gmH0ZJhh
+         b9zt5FS1kYoo6PSIT9kKJ0TJBRs7maaZEKSUhYH7tROTpf2Acl3IYOgLfeNv6GAiv0vu
+         W7Iunnh6JhEKjcMz3BitvBh1+NJaLom50lFZLEYvSNFmNrcN+hLxnASur7ViydESqiPJ
+         YLxg==
+X-Forwarded-Encrypted: i=1; AJvYcCURQMAESDR+iIbEEk3TSu3SdyOgW7kOE3acGm67q7+P1CcKEL9tRNhluUGzSdXgFYjapuggBKE5W866@vger.kernel.org, AJvYcCUSJGTC+baqO+rmCxKfGKey8FLWP9QdM2Fkxb3GCz+gLFRyGayPDnvq0OW5EgdPfwAyAtX0lbu1oVxa@vger.kernel.org, AJvYcCWk7IvrAWAI8ggtK5hCOMidx1YcufsHGIcZShhDrwtOLshpT2Rj/9paF0cpZAPet0Tdn5AxC5qdLtkUDnZMPiMc9MY=@vger.kernel.org, AJvYcCXGuNAw90yxeoA6BS2Nqt/kul7g9AqzX4YJHAbkoavRP1koHFiJKLQ4GSCII14RjjQiVP6LobJqKUnQE8HA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2VcaRCSC5xnfG12yXnT6sOcGKmfH6kAs6/hGe7OVlzuDH5Xi5
+	fw2vIwV4+l/ldZQ0dZ9ZnRy2/1qNrZAV2i/pnaSOC1xUlBeJAL6ifTonnNe1JFrO1FBgcYOyN6o
+	K7GUwd/Z4NEWlaOzVI0o8DqmHmrQ=
+X-Gm-Gg: ASbGncsbha4xoh7aRlqiBgsKrJorsWjVyJHw7oxDdg8vzukznctO9P/FcECjmDlXAb9
+	E0uRNOSahMkI+qPED1AV7nXGC85Ibj2OHmpgsEr+A1UWZBuf5kOWdUHrFTza3+x1cm4WAv1JegZ
+	UMjFbvSQVhTFq7O6B1DECVphUoGfpY47w=
+X-Google-Smtp-Source: AGHT+IGgeCmhN6ZRg/tTj5xtux+YtjBRmxlsL0nR+eKs2oGnS9tHIOYCy15h6BCp659yOebsuWHJvxi2oHiACilW0rA=
+X-Received: by 2002:a05:6000:420d:b0:3a2:39d:f51d with SMTP id
+ ffacd0b85a97d-3a2039df76fmr5286273f8f.23.1747060972990; Mon, 12 May 2025
+ 07:42:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
- <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com> <aCIBoSi84NnwEA2s@smile.fi.intel.com>
- <b5b24b98-ae89-4d50-90cb-c2bbc38aafba@bootlin.com>
-In-Reply-To: <b5b24b98-ae89-4d50-90cb-c2bbc38aafba@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 May 2025 16:42:28 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWzHqdFyLB1YTK59y81khWxs2Kbev69qbQULBCGw7RcfA@mail.gmail.com>
-X-Gm-Features: AX0GCFu1xBr7zMqK6ypaMPPajLwN01lziJdcwKnBBfj-ACqTX8-JAXYo_Ubth6E
-Message-ID: <CAMuHMdWzHqdFyLB1YTK59y81khWxs2Kbev69qbQULBCGw7RcfA@mail.gmail.com>
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
+References: <20250430204112.342123-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250430204112.342123-9-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB11346F143A2F83CAD8733BD2E868F2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB11346F143A2F83CAD8733BD2E868F2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 12 May 2025 15:42:26 +0100
+X-Gm-Features: AX0GCFtIfNOD3yNLytAtJM5Aw-ApuQ_ToGcv-oRoFGArlVXSiaJ6rYqqvhWKN_4
+Message-ID: <CA+V-a8sCY38_KZTaEsEyF2cXNA=+3R4405FdJwx+GbgUcogWeA@mail.gmail.com>
+Subject: Re: [PATCH v4 08/15] drm: renesas: rz-du: mipi_dsi: Use VCLK for
+ HSFREQ calculation
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, "laurent.pinchart" <laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
+Hi Biju,
 
-On Mon, 12 May 2025 at 16:30, Thomas Richard <thomas.richard@bootlin.com> wrote:
-> On 5/12/25 16:11, Andy Shevchenko wrote:
-> > On Mon, May 12, 2025 at 04:08:35PM +0200, Thomas Richard wrote:
-> >> On 5/9/25 11:07, Geert Uytterhoeven wrote:
-> >>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
+Thank you for the review.
+
+On Sun, May 4, 2025 at 1:33=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.com=
+> wrote:
+>
+> Hi Prabhakar,
+>
+> > -----Original Message-----
+> > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: 30 April 2025 21:41
+> > Subject: [PATCH v4 08/15] drm: renesas: rz-du: mipi_dsi: Use VCLK for H=
+SFREQ calculation
 > >
-> > ...
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > >
-> >>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-> >>>> +                       unsigned long config);
-> >>>> +
-> >>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
-> >>>
-> >>> I would expect all of these to take gpiochip_fwd pointers instead of
-> >>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
-> >>> that does not correspond to a gpiochip_fwd object, causing a crash?
-> >>
-> >> Indeed nothing prevents from passing gpio_chip pointer which does not
-> >> correspond to a gpiochip_fwd object.
-> >> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
-> >> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
-> >>
-> >> I can keep GPIO operations as is, and create exported wrappers which
-> >> take a gpiochip_fwd pointer as parameter, for example:
-> >>
-> >> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
-> >>                            unsigned long *mask,
-> >>                            unsigned long *bits)
-> >> {
-> >>      struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
-> >>
-> >>      return gpio_fwd_get_multiple_locked(chip, mask, bits);
-> >> }
-> >> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
-> >>
-> >> So exported functions are gpiochip_fwd_*().
+> > Update the RZ/G2L MIPI DSI driver to calculate HSFREQ using the actual =
+VCLK rate instead of the mode
+> > clock. The relationship between HSCLK and VCLK is:
 > >
-> > Sounds good for me. Let's wait for Geert's opinoin on this.
+> >     vclk * bpp <=3D hsclk * 8 * lanes
+> >
+> > Retrieve the VCLK rate using `clk_get_rate(dsi->vclk)`, ensuring that H=
+SFREQ accurately reflects the
+> > clock rate set in hardware, leading to better precision in data transmi=
+ssion.
+> >
+> > Additionally, use `DIV_ROUND_CLOSEST_ULL` for a more precise division w=
+hen computing `hsfreq`. Also,
+> > update unit conversions to use correct scaling factors for better clari=
+ty and correctness.
+> >
+> > Since `clk_get_rate()` returns the clock rate in Hz, update the HSFREQ =
+threshold comparisons to use Hz
+> > instead of kHz to ensure correct behavior.
+> >
+> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v3->v4:
+> > - Used MILLI instead of KILO
+> >
+> > v2->v3:
+> > - No changes
+> >
+> > v1->v2:
+> > - No changes
+> > ---
+> >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 27 ++++++++++---------
+> >  1 file changed, 15 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
+pu/drm/renesas/rz-
+> > du/rzg2l_mipi_dsi.c
+> > index c5f698cd74f1..911c955a3a76 100644
+> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/delay.h>
+> >  #include <linux/io.h>
+> >  #include <linux/iopoll.h>
+> > +#include <linux/math.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_graph.h>
+> > @@ -15,6 +16,7 @@
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/reset.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/units.h>
+> >
+> >  #include <drm/drm_atomic.h>
+> >  #include <drm/drm_atomic_helper.h>
+> > @@ -199,7 +201,7 @@ static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mi=
+pi_dsi *dsi,
+> >       /* All DSI global operation timings are set with recommended sett=
+ing */
+> >       for (i =3D 0; i < ARRAY_SIZE(rzg2l_mipi_dsi_global_timings); ++i)=
+ {
+> >               dphy_timings =3D &rzg2l_mipi_dsi_global_timings[i];
+> > -             if (hsfreq <=3D dphy_timings->hsfreq_max)
+> > +             if (hsfreq <=3D (dphy_timings->hsfreq_max * MILLI))
+> >                       break;
+> >       }
+> >
+> > @@ -258,7 +260,7 @@ static void rzg2l_mipi_dsi_dphy_exit(struct rzg2l_m=
+ipi_dsi *dsi)  static int
+> > rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+> >                                 const struct drm_display_mode *mode)  {
+> > -     unsigned long hsfreq;
+> > +     unsigned long hsfreq, vclk_rate;
+> >       unsigned int bpp;
+> >       u32 txsetr;
+> >       u32 clstptsetr;
+> > @@ -269,6 +271,12 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mip=
+i_dsi *dsi,
+> >       u32 golpbkt;
+> >       int ret;
+> >
+> > +     ret =3D pm_runtime_resume_and_get(dsi->dev);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     clk_set_rate(dsi->vclk, mode->clock * MILLI);
+> >       /*
+> >        * Relationship between hsclk and vclk must follow
+> >        * vclk * bpp =3D hsclk * 8 * lanes
+> > @@ -280,13 +288,8 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mip=
+i_dsi *dsi,
+> >        * hsclk(bit) =3D hsclk(byte) * 8 =3D hsfreq
+> >        */
+> >       bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
+> > -     hsfreq =3D (mode->clock * bpp) / dsi->lanes;
+> > -
+> > -     ret =3D pm_runtime_resume_and_get(dsi->dev);
+> > -     if (ret < 0)
+> > -             return ret;
+> > -
+> > -     clk_set_rate(dsi->vclk, mode->clock * 1000);
+> > +     vclk_rate =3D clk_get_rate(dsi->vclk);
 >
-> Regarding Geert's comment for patch 9/12, an other proposal for naming:
-> As mentioned above, exported functions gpiochip_fwd_*() take a
-> gpiochip_fwd as parameter.
+> Not sure, If there is a requested vclk for example, 108.45 MHz and get_ra=
+te() is returning
+> only 108MHz, do we need to propagate/print this error(like requested vs a=
+ctual, if there is a mismatch)
+> as there is change in resolution?
 >
-> But for all functions corresponding to a GPIO operation add the gpio
-> word, and for functions to add/remove GPIO descriptor add the desc word:
->
-> devm_gpiochip_fwd_alloc()
-> gpiochip_fwd_register()
->
-> gpiochip_fwd_desc_add()
-> gpiochip_fwd_desc_free()
->
-> gpiochip_fwd_get_gpiochip()
-> gpiochip_fwd_get_data()
->
-> gpiochip_fwd_gpio_request()
-> gpiochip_fwd_gpio_get_direction()
-> gpiochip_fwd_gpio_direction_input()
-> gpiochip_fwd_gpio_direction_output()
-> gpiochip_fwd_gpio_get()
-> gpiochip_fwd_gpio_set()
-> gpiochip_fwd_gpio_set_multiple()
-> gpiochip_fwd_gpio_get_multiple()
-> gpiochip_fwd_gpio_set_config()
-> gpiochip_fwd_gpio_to_irq()
+OK, I'll add the below:
 
-Sounds good to me (from a quick glance).
+       if (vclk_rate !=3D mode->clock * MILLI)
+               dev_info(dsi->dev, "Requested vclk rate %lu, actual %lu
+mismatch\n",
+                        mode->clock * MILLI, vclk_rate);
 
-Gr{oetje,eeting}s,
+> Otherwise LGTM
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+>
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Cheers,
+Prabhakar
