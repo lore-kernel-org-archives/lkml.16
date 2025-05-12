@@ -1,564 +1,190 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DAC429992B;
-	Mon, 12 May 2025 22:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F05B299A9F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747089603; cv=none; b=WrrNY1ubTVumyNE0oRT/hlA27M4PeKY+rs8hJgHK4JLQQHBBMISi3cWiO4azfrcIrTFgq7LNdNO1zx+GW2Z1FcI2iQ7uT1LL7xN1lk8V/opgXxu0IChVUO8O8ji+nRO6OJyRS/SEZvLwD0Gf0EIgRR06cf+0sKb1eL5UjC0KccU=
+	t=1747089632; cv=none; b=cVKGcPNXJRZb022CiJVbiW9Jh7WzY1PQmu7B9i414Qt63vCRpnuUqolyOt6OaqrVYQDNCXRFDRpnp9hazd9B/UGpOyJMTWKYDxvd5MVH5VbzTm+2+gFpYDhCDyFiekJOGwvHZZ3B3McTDnH7OGHTP7DTbxM/ldYTuvBYRPIX+1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747089603; c=relaxed/simple;
-	bh=5/NlNpOwwThFo9h5o52kA/iDUj+kYd+KqcU8pcuV3Kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mayoYfTBO9jjLE6qH7jIDnt3yQfFiq1ZHezkpdf3v3cN9sGwRcIo1eXDiOtz/vufzn/tRTyA7lkB1f5Rgh4puCCwuJmR08wJSn9H+ccNzlCvODW8D2YVPGOfjcc+/0Dk8aQMQQiHL5fsPb9YagqjXh77pUPK2QIuU38FcZco1ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 773C9150C;
-	Mon, 12 May 2025 15:39:47 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3FA73F63F;
-	Mon, 12 May 2025 15:39:55 -0700 (PDT)
-Date: Mon, 12 May 2025 23:39:44 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Aleksandr Shubin <privatesub2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Brandon Cheo Fusi
- <fusibrandon13@gmail.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
-Message-ID: <20250512233944.06bc1cb7@minigeek.lan>
-In-Reply-To: <20250427142500.151925-3-privatesub2@gmail.com>
-References: <20250427142500.151925-1-privatesub2@gmail.com>
-	<20250427142500.151925-3-privatesub2@gmail.com>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1747089632; c=relaxed/simple;
+	bh=OC6BNt/psi1pvdmQlAGy6RuvzoX+VEKdlfEKsTmj/NI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MA5yqL0WJ9BJAGvk1E9evCuYnGM0B/aBXTW4JPURrNOA3+dQErmBkWlxkosftk1i/QFCags5EFqZBGsg14CUg7EGkSOrqpvPnu5XpgZi4Y2A2V86GjC+xq4Q02g16KAh3PF02wWL/Y5hZUNpFBQQ0WO73xIw1p++A5Zr4WoF5GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fFEsME3/; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fFEsME3/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747089630; x=1778625630;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=OC6BNt/psi1pvdmQlAGy6RuvzoX+VEKdlfEKsTmj/NI=;
+  b=fFEsME3/HLdJrh8t0mnJkIAy4qPwCGbhwIfIhSbuoI2Gr4lQd9grDjQr
+   Whl/1Q4EArnm5CuwE5ZN5PP2lpZpHtFDFbjwhKsjPmglPoZAGmTeYgcKC
+   9X1zV1Vv3mVp9NwdJkGMn6NL69YYEfvQHfT7Flm9LXyEE6B2yJPMG+6fw
+   GMBEda1Kx9z4Q/DoeSDqHYxDrxW9lJRQr2RxbUirVQl2u29rjWLn17Q/L
+   OOZAgsK0FKaKmrXYaueggVhsBQHtDrToUIGiyqSVj2+qKZAPQ0S4ciyQs
+   ENF6AncFHThRE/Dox9R8hKN8x33ppnSm+Sc5CbBGhMCzBkS0rU5VlfM4v
+   g==;
+X-CSE-ConnectionGUID: hVN87y3YRJWBbWyKUNlFfg==
+X-CSE-MsgGUID: 4fkEE2Q8TZ2s8UXgMjSZRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59571286"
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="59571286"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 15:40:30 -0700
+X-CSE-ConnectionGUID: hSa9TGkHSB6uX6uu4R7NWA==
+X-CSE-MsgGUID: g3a6eKhNTGGRcB7KIxOL9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="137981744"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 12 May 2025 15:40:28 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uEbow-000FUZ-0w;
+	Mon, 12 May 2025 22:40:26 +0000
+Date: Tue, 13 May 2025 06:39:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Nirmoy Das <nirmoy.das@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>
+Subject: ERROR: modpost: "gt_reset_failure" [drivers/gpu/drm/xe/xe.ko]
+ undefined!
+Message-ID: <202505130641.mslg7QUr-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sun, 27 Apr 2025 17:24:54 +0300
-Aleksandr Shubin <privatesub2@gmail.com> wrote:
+Hi Lucas,
 
-Hi Aleksandr,
+FYI, the error/warning still remains.
 
-thanks for your patience and persistence with this series! It seems
-like some people have some motivation now for getting mainline, so
-hopefully we can use this momentum now. Also the "new" Allwinner A523
-uses the same IP as the D1, just with all 16 channels.=20
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   627277ba7c2398dc4f95cc9be8222bb2d9477800
+commit: 08b5a4798713f4331317272752b27b1c4f6a246d drm/xe: Allow to compile out debugfs
+date:   9 months ago
+config: parisc-randconfig-001-20250513 (https://download.01.org/0day-ci/archive/20250513/202505130641.mslg7QUr-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250513/202505130641.mslg7QUr-lkp@intel.com/reproduce)
 
-> Allwinner's D1, T113-S3 and R329 SoCs have a quite different PWM
-> controllers with ones supported by pwm-sun4i driver.
->=20
-> This patch adds a PWM controller driver for Allwinner's D1,
-> T113-S3 and R329 SoCs. The main difference between these SoCs
-> is the number of channels defined by the DT property.
->=20
-> Co-developed-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> Signed-off-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
-> ---
->  drivers/pwm/Kconfig      |  10 ++
->  drivers/pwm/Makefile     |   1 +
->  drivers/pwm/pwm-sun20i.c | 379 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 390 insertions(+)
->  create mode 100644 drivers/pwm/pwm-sun20i.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 4731d5b90d7e..230a5561385b 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -662,6 +662,16 @@ config PWM_SUN4I
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-sun4i.
-> =20
-> +config PWM_SUN20I
-> +	tristate "Allwinner D1/T113s/R329 PWM support"
-> +	depends on ARCH_SUNXI || COMPILE_TEST
-> +	depends on COMMON_CLK
-> +	help
-> +	  Generic PWM framework driver for Allwinner D1/T113s/R329 SoCs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-sun20i.
-> +
->  config PWM_SUNPLUS
->  	tristate "Sunplus PWM support"
->  	depends on ARCH_SUNPLUS || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 539e0def3f82..ef7515d2f974 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -61,6 +61,7 @@ obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
->  obj-$(CONFIG_PWM_STM32_LP)	+=3D pwm-stm32-lp.o
->  obj-$(CONFIG_PWM_STMPE)		+=3D pwm-stmpe.o
->  obj-$(CONFIG_PWM_SUN4I)		+=3D pwm-sun4i.o
-> +obj-$(CONFIG_PWM_SUN20I)	+=3D pwm-sun20i.o
->  obj-$(CONFIG_PWM_SUNPLUS)	+=3D pwm-sunplus.o
->  obj-$(CONFIG_PWM_TEGRA)		+=3D pwm-tegra.o
->  obj-$(CONFIG_PWM_TIECAP)	+=3D pwm-tiecap.o
-> diff --git a/drivers/pwm/pwm-sun20i.c b/drivers/pwm/pwm-sun20i.c
-> new file mode 100644
-> index 000000000000..22486617f1ef
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sun20i.c
-> @@ -0,0 +1,379 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PWM Controller Driver for sunxi platforms (D1, T113-S3 and R329)
-> + *
-> + * Limitations:
-> + * - When the parameters change, the current running period is not compl=
-eted
-> + *   and new settings are applied immediately.
-> + * - The PWM output goes to a HIGH-Z state when the channel is disabled.
-> + * - Changing the clock configuration (SUN20I_PWM_CLK_CFG)
-> + *   may cause a brief output glitch.
-> + *
-> + * Copyright (c) 2023 Aleksandr Shubin <privatesub2@gmail.com>
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/reset.h>
-> +
-> +#define SUN20I_PWM_CLK_CFG(pair)		(0x20 + ((pair) * 0x4))
-> +#define SUN20I_PWM_CLK_CFG_SRC			GENMASK(8, 7)
-> +#define SUN20I_PWM_CLK_CFG_DIV_M		GENMASK(3, 0)
-> +#define SUN20I_PWM_CLK_DIV_M_MAX		8
-> +
-> +#define SUN20I_PWM_CLK_GATE			0x40
-> +#define SUN20I_PWM_CLK_GATE_BYPASS(chan)	BIT((chan) + 16)
-> +#define SUN20I_PWM_CLK_GATE_GATING(chan)	BIT(chan)
-> +
-> +#define SUN20I_PWM_ENABLE			0x80
-> +#define SUN20I_PWM_ENABLE_EN(chan)		BIT(chan)
-> +
-> +#define SUN20I_PWM_CTL(chan)			(0x100 + (chan) * 0x20)
-> +#define SUN20I_PWM_CTL_ACT_STA			BIT(8)
-> +#define SUN20I_PWM_CTL_PRESCAL_K		GENMASK(7, 0)
-> +#define SUN20I_PWM_CTL_PRESCAL_K_MAX		field_max(SUN20I_PWM_CTL_PRESCAL_K)
-> +
-> +#define SUN20I_PWM_PERIOD(chan)			(0x104 + (chan) * 0x20)
-> +#define SUN20I_PWM_PERIOD_ENTIRE_CYCLE		GENMASK(31, 16)
-> +#define SUN20I_PWM_PERIOD_ACT_CYCLE		GENMASK(15, 0)
-> +
-> +#define SUN20I_PWM_PCNTR_SIZE			BIT(16)
-> +
-> +/*
-> + * SUN20I_PWM_MAGIC is used to quickly compute the values of the clock d=
-ividers
-> + * div_m (SUN20I_PWM_CLK_CFG_DIV_M) & prescale_k (SUN20I_PWM_CTL_PRESCAL=
-_K)
-> + * without using a loop. These dividers limit the # of cycles in a period
-> + * to SUN20I_PWM_PCNTR_SIZE (65536) by applying a scaling factor of
-> + * 1/(div_m * (prescale_k + 1)) to the clock source.
-> + *
-> + * SUN20I_PWM_MAGIC is derived by solving for div_m and prescale_k
-> + * such that for a given requested period,
-> + *
-> + * i) div_m is minimized for any prescale_k =E2=89=A4 SUN20I_PWM_CTL_PRE=
-SCAL_K_MAX,
-> + * ii) prescale_k is minimized.
-> + *
-> + * The derivation proceeds as follows, with val =3D # of cycles for requ=
-ested
-> + * period:
-> + *
-> + * for a given value of div_m we want the smallest prescale_k such that
-> + *
-> + * (val >> div_m) // (prescale_k + 1) =E2=89=A4 65536 (=3D SUN20I_PWM_PC=
-NTR_SIZE)
-> + *
-> + * This is equivalent to:
-> + *
-> + * (val >> div_m) =E2=89=A4 65536 * (prescale_k + 1) + prescale_k
-> + * =E2=9F=BA (val >> div_m) =E2=89=A4 65537 * prescale_k + 65536
-> + * =E2=9F=BA (val >> div_m) - 65536 =E2=89=A4 65537 * prescale_k
-> + * =E2=9F=BA ((val >> div_m) - 65536) / 65537 =E2=89=A4 prescale_k
-> + *
-> + * As prescale_k is integer, this becomes
-> + *
-> + * ((val >> div_m) - 65536) // 65537 =E2=89=A4 prescale_k
-> + *
-> + * And is minimized at
-> + *
-> + * ((val >> div_m) - 65536) // 65537
-> + *
-> + * Now we pick the smallest div_m that satifies prescale_k =E2=89=A4 255
-> + * (i.e SUN20I_PWM_CTL_PRESCAL_K_MAX),
-> + *
-> + * ((val >> div_m) - 65536) // 65537 =E2=89=A4 255
-> + * =E2=9F=BA (val >> div_m) - 65536 =E2=89=A4 255 * 65537 + 65536
-> + * =E2=9F=BA val >> div_m =E2=89=A4 255 * 65537 + 2 * 65536
-> + * =E2=9F=BA val >> div_m < (255 * 65537 + 2 * 65536 + 1)
-> + * =E2=9F=BA div_m =3D fls((val) / (255 * 65537 + 2 * 65536 + 1))
-> + *
-> + * Suggested by Uwe Kleine-K=C3=B6nig
-> + */
-> +#define SUN20I_PWM_MAGIC			(255 * 65537 + 2 * 65536 + 1)
-> +#define SUN20I_PWM_DIV_CONST			65537
-> +
-> +struct sun20i_pwm_chip {
-> +	struct clk *clk_hosc, *clk_apb;
-> +	void __iomem *base;
-> +};
-> +
-> +static inline struct sun20i_pwm_chip *to_sun20i_pwm_chip(struct pwm_chip=
- *chip)
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> +static inline u32 sun20i_pwm_readl(struct sun20i_pwm_chip *chip,
-> +				   unsigned long offset)
-> +{
-> +	return readl(chip->base + offset);
-> +}
-> +
-> +static inline void sun20i_pwm_writel(struct sun20i_pwm_chip *chip,
-> +				     u32 val, unsigned long offset)
-> +{
-> +	writel(val, chip->base + offset);
-> +}
-> +
-> +static int sun20i_pwm_get_state(struct pwm_chip *chip,
-> +				struct pwm_device *pwm,
-> +				struct pwm_state *state)
-> +{
-> +	struct sun20i_pwm_chip *sun20i_chip =3D to_sun20i_pwm_chip(chip);
-> +	u16 ent_cycle, act_cycle, prescale_k;
-> +	u64 clk_rate, tmp;
-> +	u8 div_m;
-> +	u32 val;
-> +
-> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm / 2=
-));
-> +	div_m =3D FIELD_GET(SUN20I_PWM_CLK_CFG_DIV_M, val);
-> +	if (div_m > SUN20I_PWM_CLK_DIV_M_MAX)
-> +		div_m =3D SUN20I_PWM_CLK_DIV_M_MAX;
-> +
-> +	/*
-> +	 * If CLK_CFG_SRC is 0, use the hosc clock;
-> +	 * otherwise (any nonzero value) use the APB clock.
-> +	 */
-> +	if (FIELD_GET(SUN20I_PWM_CLK_CFG_SRC, val) =3D=3D 0)
-> +		clk_rate =3D clk_get_rate(sun20i_chip->clk_hosc);
-> +	else
-> +		clk_rate =3D clk_get_rate(sun20i_chip->clk_apb);
-> +
-> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(pwm->hwpwm));
-> +	state->polarity =3D (SUN20I_PWM_CTL_ACT_STA & val) ?
-> +			   PWM_POLARITY_NORMAL : PWM_POLARITY_INVERSED;
-> +
-> +	prescale_k =3D FIELD_GET(SUN20I_PWM_CTL_PRESCAL_K, val) + 1;
-> +
-> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE);
-> +	state->enabled =3D (SUN20I_PWM_ENABLE_EN(pwm->hwpwm) & val) ? true : fa=
-lse;
-> +
-> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_PERIOD(pwm->hwpwm));
-> +	act_cycle =3D FIELD_GET(SUN20I_PWM_PERIOD_ACT_CYCLE, val);
-> +
-> +	ent_cycle =3D FIELD_GET(SUN20I_PWM_PERIOD_ENTIRE_CYCLE, val);
-> +
-> +	/*
-> +	 * The duration of the active phase should not be longer
-> +	 * than the duration of the period
-> +	 */
-> +	if (act_cycle > ent_cycle)
-> +		act_cycle =3D ent_cycle;
-> +
-> +	/*
-> +	 * We have act_cycle <=3D ent_cycle <=3D 0xffff, prescale_k <=3D 0x100,
-> +	 * div_m <=3D 8. So the multiplication fits into an u64 without
-> +	 * overflow.
-> +	 */
-> +	tmp =3D ((u64)(act_cycle) * prescale_k << div_m) * NSEC_PER_SEC;
-> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(tmp, clk_rate);
-> +	tmp =3D ((u64)(ent_cycle) * prescale_k << div_m) * NSEC_PER_SEC;
-> +	state->period =3D DIV_ROUND_UP_ULL(tmp, clk_rate);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sun20i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct sun20i_pwm_chip *sun20i_chip =3D to_sun20i_pwm_chip(chip);
-> +	u64 bus_rate, hosc_rate, val, ent_cycle, act_cycle;
-> +	u32 clk_gate, clk_cfg, pwm_en, ctl, reg_period;
-> +	u32 prescale_k, div_m;
-> +	bool use_bus_clk;
-> +
-> +	pwm_en =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE);
-> +	clk_gate =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_GATE);
-> +
-> +	if (!state->enabled) {
-> +		if (state->enabled !=3D pwm->state.enabled) {
-> +			clk_gate &=3D ~SUN20I_PWM_CLK_GATE_GATING(pwm->hwpwm);
-> +			pwm_en &=3D ~SUN20I_PWM_ENABLE_EN(pwm->hwpwm);
-> +			sun20i_pwm_writel(sun20i_chip, pwm_en, SUN20I_PWM_ENABLE);
-> +			sun20i_pwm_writel(sun20i_chip, clk_gate, SUN20I_PWM_CLK_GATE);
-> +		}
-> +		return 0;
-> +	}
-> +
-> +	ctl =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(pwm->hwpwm));
-> +	clk_cfg =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm=
- / 2));
-> +	hosc_rate =3D clk_get_rate(sun20i_chip->clk_hosc);
-> +	bus_rate =3D clk_get_rate(sun20i_chip->clk_apb);
-> +	if (pwm_en & SUN20I_PWM_ENABLE_EN(pwm->hwpwm ^ 1)) {
-> +		/* If the neighbor channel is enabled, use the current clock settings =
-*/
-> +		use_bus_clk =3D FIELD_GET(SUN20I_PWM_CLK_CFG_SRC, clk_cfg) !=3D 0;
-> +		val =3D mul_u64_u64_div_u64(state->period,
-> +					  (use_bus_clk ? bus_rate : hosc_rate),
-> +					  NSEC_PER_SEC);
-> +
-> +		div_m =3D FIELD_GET(SUN20I_PWM_CLK_CFG_DIV_M, clk_cfg);
-> +	} else {
-> +		/*
-> +		 * Select the clock source based on the period.
-> +		 * Since bus_rate > hosc_rate, which means bus_rate
-> +		 * can provide a higher frequency than hosc_rate.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505130641.mslg7QUr-lkp@intel.com/
 
-What does that mean, exactly? That we should prefer the faster clock?
-Because that's not what the code does, is it?
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-> +		 */
-> +		use_bus_clk =3D false;
-> +		val =3D mul_u64_u64_div_u64(state->period, hosc_rate, NSEC_PER_SEC);
-> +		/*
-> +		 * If the calculated value is =E2=89=A4 1, the period is too short
-> +		 * for proper PWM operation
-> +		 */
-> +		if (val <=3D 1) {
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp1255.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-13.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-14.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-15.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-r.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-u.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_koi8-ru.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_utf8.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-centeuro.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-croatian.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-greek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-iceland.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-romanian.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-roman.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/autofs/autofs4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/math/rational.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/crypto/libdes.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ubsan.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/irqchip/irq-ts4800.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pci-host-generic.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera-msi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mt7621.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/dmatest.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/imx/soc-imx8m.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/ixp4xx/ixp4xx-qmgr.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/qcom/spm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/virtio/virtio_dma_buf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/da9121-regulator.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/rt4831-regulator.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/8250/8250_base.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/8250/8250_parisc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/8250/8250_pxa.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/esp32_acm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/owl-uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/ttynull.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap-rng.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap3-rom-rng.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iommu/iova.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-slimbus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/rt4831.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/qcom-pm8008.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/parsers/brcm_u-boot.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/parsers/tplink_safeloader.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_cmdset_0020.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_netx.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/vivaldi-fmap.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/watchdog/twl4030_wdt.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/host/tmio_mmc_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/mmc_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_emmc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/sdio_uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/coreboot_table.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/memconsole.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/memconsole-coreboot.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-a4tech.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-apple.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-aureal.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-belkin.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-cypress.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-dr.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-elecom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-evision.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-vivaldi-common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-google-stadiaff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gyration.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ite.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kensington.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-keytouch.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lcpower.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ortek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-primax.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-redragon.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-saitek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sjoy.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-speedlink.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-steam.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-twinhan.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-xinmo.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zpff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-waltop.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-bootrom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-hid.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-log.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-loopback.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-audio-manager.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-sdio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_performance.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_userspace.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_u-boot-env.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/interconnect/imx/imx-interconnect.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/interconnect/imx/imx8mp-interconnect.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/corsair-cpro.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/counter/ftm-quaddec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/fsl/imx-pcm-dma.o
+>> ERROR: modpost: "gt_reset_failure" [drivers/gpu/drm/xe/xe.ko] undefined!
 
-So if I get the code correctly, it prefers HOSC over APB? Is that
-really the best way? Shouldn't it be the other way around: we use the
-faster clock, since this will not limit the sibling channel?
-
-And another thing to consider are rounding errors due to integer
-division: certain period rates might be better achievable with one or
-the other source clock: 3 MHz works best as 24MHz/8, 3.125MHz as
-100MHz/32.
-So shall we calculate the values and compare the errors instead?
-Oh, and also we need to consider bypassing, I feel like this should be
-checked first.
-
-In any case I think there should be a comment describing the strategy
-and give some rationale, I think.
-
-> +			use_bus_clk =3D true;
-> +			val =3D mul_u64_u64_div_u64(state->period, bus_rate, NSEC_PER_SEC);
-> +			if (val <=3D 1)
-> +				return -EINVAL;
-> +		}
-> +		div_m =3D fls(DIV_ROUND_DOWN_ULL(val, SUN20I_PWM_MAGIC));
-> +		if (div_m > SUN20I_PWM_CLK_DIV_M_MAX)
-> +			return -EINVAL;
-> +
-> +		/* Set up the CLK_DIV_M and clock CLK_SRC */
-> +		clk_cfg =3D FIELD_PREP(SUN20I_PWM_CLK_CFG_DIV_M, div_m);
-> +		clk_cfg |=3D FIELD_PREP(SUN20I_PWM_CLK_CFG_SRC, use_bus_clk);
-> +
-> +		sun20i_pwm_writel(sun20i_chip, clk_cfg, SUN20I_PWM_CLK_CFG(pwm->hwpwm =
-/ 2));
-> +	}
-> +
-> +	/* Calculate prescale_k and determine the number of cycles for a full P=
-WM period */
-> +	ent_cycle =3D val >> div_m;
-> +	prescale_k =3D DIV_ROUND_DOWN_ULL(ent_cycle, SUN20I_PWM_DIV_CONST);
-> +	if (prescale_k > SUN20I_PWM_CTL_PRESCAL_K_MAX)
-> +		prescale_k =3D SUN20I_PWM_CTL_PRESCAL_K_MAX;
-> +
-> +	do_div(ent_cycle, prescale_k + 1);
-> +
-> +	/* ent_cycle must not be zero */
-> +	if (ent_cycle =3D=3D 0)
-> +		return -EINVAL;
-> +
-> +	/* For N cycles, PPRx.PWM_ENTIRE_CYCLE =3D (N-1) */
-> +	reg_period =3D FIELD_PREP(SUN20I_PWM_PERIOD_ENTIRE_CYCLE, ent_cycle - 1=
-);
-> +
-> +	/* Calculate the active cycles (duty cycle) */
-> +	val =3D mul_u64_u64_div_u64(state->duty_cycle,
-> +				  (use_bus_clk ? bus_rate : hosc_rate),
-> +				  NSEC_PER_SEC);
-> +	act_cycle =3D val >> div_m;
-> +	do_div(act_cycle, prescale_k + 1);
-> +
-> +	/*
-> +	 * The formula of the output period and the duty-cycle for PWM are as f=
-ollows.
-> +	 * T period =3D PWM0_PRESCALE_K / PWM01_CLK * (PPR0.PWM_ENTIRE_CYCLE + =
-1)
-> +	 * T high-level =3D PWM0_PRESCALE_K / PWM01_CLK * PPR0.PWM_ACT_CYCLE
-> +	 * Duty-cycle =3D T high-level / T period
-> +	 */
-> +	reg_period |=3D FIELD_PREP(SUN20I_PWM_PERIOD_ACT_CYCLE, act_cycle);
-> +	sun20i_pwm_writel(sun20i_chip, reg_period, SUN20I_PWM_PERIOD(pwm->hwpwm=
-));
-> +
-> +	ctl =3D FIELD_PREP(SUN20I_PWM_CTL_PRESCAL_K, prescale_k);
-> +	if (state->polarity =3D=3D PWM_POLARITY_NORMAL)
-> +		ctl |=3D SUN20I_PWM_CTL_ACT_STA;
-> +
-> +	sun20i_pwm_writel(sun20i_chip, ctl, SUN20I_PWM_CTL(pwm->hwpwm));
-> +
-> +	if (state->enabled !=3D pwm->state.enabled) {
-> +		clk_gate &=3D ~SUN20I_PWM_CLK_GATE_BYPASS(pwm->hwpwm);
-> +		clk_gate |=3D SUN20I_PWM_CLK_GATE_GATING(pwm->hwpwm);
-> +		pwm_en |=3D SUN20I_PWM_ENABLE_EN(pwm->hwpwm);
-> +		sun20i_pwm_writel(sun20i_chip, pwm_en, SUN20I_PWM_ENABLE);
-> +		sun20i_pwm_writel(sun20i_chip, clk_gate, SUN20I_PWM_CLK_GATE);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops sun20i_pwm_ops =3D {
-> +	.apply =3D sun20i_pwm_apply,
-> +	.get_state =3D sun20i_pwm_get_state,
-> +};
-> +
-> +static const struct of_device_id sun20i_pwm_dt_ids[] =3D {
-> +	{ .compatible =3D "allwinner,sun20i-d1-pwm" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sun20i_pwm_dt_ids);
-> +
-> +static int sun20i_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_chip *chip;
-> +	struct sun20i_pwm_chip *sun20i_chip;
-> +	struct clk *clk_bus;
-> +	struct reset_control *rst;
-> +	u32 npwm;
-> +	int ret;
-> +
-> +	ret =3D of_property_read_u32(pdev->dev.of_node, "allwinner,npwms", &npw=
-m);
-> +	if (ret < 0)
-> +		npwm =3D 8; /* Default value */
-> +
-> +	if (npwm > 16) {
-> +		dev_info(&pdev->dev, "Limiting number of PWM lines from %u to 16", npw=
-m);
-
-I don't think we should proceed if the firmware information is clearly
-wrong. Just bail out with -EINVAL or so here, so that gets fixed in the
-DT.
-
-> +		npwm =3D 16;
-> +	}
-> +
-> +	chip =3D devm_pwmchip_alloc(&pdev->dev, npwm, sizeof(*sun20i_chip));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	sun20i_chip =3D to_sun20i_pwm_chip(chip);
-> +
-> +	sun20i_chip->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(sun20i_chip->base))
-> +		return PTR_ERR(sun20i_chip->base);
-> +
-> +	clk_bus =3D devm_clk_get_enabled(&pdev->dev, "bus");
-> +	if (IS_ERR(clk_bus))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(clk_bus),
-> +				     "Failed to get bus clock\n");
-> +
-> +	sun20i_chip->clk_hosc =3D devm_clk_get_enabled(&pdev->dev, "hosc");
-> +	if (IS_ERR(sun20i_chip->clk_hosc))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_hosc),
-> +				     "Failed to get hosc clock\n");
-> +
-> +	ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->clk_hosc);
-
-Just ignoring for a bit that the 24 MHz oscillator is a fixed clock
-anyway, but why would we want exclusivity already at probe time? Isn't
-that too limiting, as no one might ever use any PWM channels, but it
-would still "belong to us"?
-
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Failed to get hosc exclusive rate\n");
-> +
-> +	sun20i_chip->clk_apb =3D devm_clk_get_enabled(&pdev->dev, "apb");
-> +	if (IS_ERR(sun20i_chip->clk_apb))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_apb),
-> +				     "Failed to get apb clock\n");
-> +
-> +	ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->clk_apb);
-
-Just for the records: APB is practically also a fixed clock, set up
-once in firmware and never changed, since it drives a lot of other
-peripherals.
-But same question as above, why do we lock its rate already here?
-
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Failed to get apb exclusive rate\n");
-> +
-> +	if (clk_get_rate(sun20i_chip->clk_apb) <=3D clk_get_rate(sun20i_chip->c=
-lk_hosc))
-> +		dev_info(&pdev->dev, "APB clock must be greater than hosc clock");
-
-Why this check? Does the code make any assumptions about this relation?
-If yes, we must surely deny this and bail out.
-If not (and I feel we should handle it this way), we can just ignore
-this and not print anything.
-
-Cheers,
-Andre
-
-> +
-> +	rst =3D devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
-> +	if (IS_ERR(rst))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(rst),
-> +				     "Failed to get reset control\n");
-> +
-> +	chip->ops =3D &sun20i_pwm_ops;
-> +
-> +	ret =3D devm_pwmchip_add(&pdev->dev, chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver sun20i_pwm_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "sun20i-pwm",
-> +		.of_match_table =3D sun20i_pwm_dt_ids,
-> +	},
-> +	.probe =3D sun20i_pwm_probe,
-> +};
-> +module_platform_driver(sun20i_pwm_driver);
-> +
-> +MODULE_AUTHOR("Aleksandr Shubin <privatesub2@gmail.com>");
-> +MODULE_DESCRIPTION("Allwinner sun20i PWM driver");
-> +MODULE_LICENSE("GPL");
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
