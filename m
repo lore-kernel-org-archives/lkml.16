@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D480A267B6B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EA426A0E3;
 	Mon, 12 May 2025 10:51:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747047086; cv=none; b=ufFpvLhafGcFSmAnha8FpV3frdZEeNwhDTK3u+5j3Y+tcGru0ECWIe2eYYL9bRKZDORUI8h0PM2OhBD0fIxO/HIk8jxh+owbM8vS66yJb+zVnHFywLPzj+L+0ND1PoxFYePOg/Ffe/xEG5tQ/8GMtk7gN6csjioGSd9Va1RYYyA=
+	t=1747047086; cv=none; b=GQHXeQRHlyYFV/xHilmd+gozrVpnbJ8goUSBsYOeWMdirO/VR4p5zt8Y2CAzCqtEP60QuznetRX+I12F3qLfzvrK/lhO8nWg5F24vcq8+GJQB9o9NZdMlfmc1aZPnrXIH90sEo2r7qta/xti8cFtTiKIEUg5rYyE6ic6NbTHM28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747047086; c=relaxed/simple;
-	bh=Y48uXabUH99TBkNxzaqx5llOk1VJ5s73Xa4v4vzPMkI=;
+	bh=Iw07wFt0+gQYOcEanYE2hryxh819INzn0JbhVVIGwJM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m6c1YCEz62s1VidmMkwjV6VEx2eh9SFiTROREB0oKeOEDcAkdgVHeWlGQLrvPx2WKRwBAXmnACURM6/8dFt0BnQIZaOrlM3Ni7rsbO84lMNU2SE6x5qGATw3SBwxPeFbRtLWtYAGFFbX2otD/PGSe0xjGBCVkN3LCPHpkCYiN+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sdSfaiUD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MQF1zn8+; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=r5BYTyvuIFB9WG9YIkeFaU8Ry7fHRvuAuECQx3La9+1K/gZHGtKF5lEofvM/98SUixcwRTFyzmDbpVGnXyzhm87MY0OVctuTfdFSGEalpVe0wbvuD1cNi7RqULsKIY2qbXXjbS6R26BaWeswb08zlToXcVnefV3pOTKIC+HxtfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NM4cbR/1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NKvPR8YI; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sdSfaiUD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MQF1zn8+"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NM4cbR/1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NKvPR8YI"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1747047081;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c3lLMnlXZAC8rwfNbmgNzWdnLdrJgtNCafB+AReq92I=;
-	b=sdSfaiUDQZkLqu8xKWf6wbT+YPSmGXix8KByOaisOxPeDfeVbC5Epg77rQnjRh1d/IiOTZ
-	/WCVxfEPyH/dlIgVRt9uRlAbRMuEJQjE41WVzOaLap+/7hgqddYUV30y9OQAYZM9gy/8fn
-	pRCVSbt8EquFn79paOzPsN1rtivMAHvgC4XJbivwDWM/oiNxUcE81pW/0Kd37zy95zKSjS
-	IfTiYr9CSYgQHcW295zbED59je7pXUAjIUnl3yB82bd2fHno35vlFAZTZ96hLf+wARBU2X
-	wVs/2IP0bIu+3U7JvR2HvlI7W/WFoxKZdJSzX73Qi6ZDP1B2tr+ynj9v9rgDxA==
+	bh=iXCyrOTzBm4Kc/gaphbbedDVfX2Yv/YjdhR7XjDB+pI=;
+	b=NM4cbR/1EB7ija5elslU8EJj8kirB44KKtOH9yNxi3Ue1O3GmIOeqoDpS+IoxYjnN5Nn2/
+	YOyuhJteW9AqFMAS7zBz+VZ22sZZsSd6qYkqsXvUG6bTzKRZD5GPn2fA+ydIaNo7+WzeVg
+	JyAGyzCZXVbOyWuKBJfGxf31cEN98N2L2hwURA+ml9m9rrqwfAHvMUlQMGjYlqEjoNW7eO
+	F2wdbPHZWs9GyL+QgF1WWM6zLDonDk72I1nhUvx/PFd2wJHbYzkroMKeWdz7yRhX3LI+Kl
+	oMrMjM1BGbi9cNKZGBqPwoBnhvhfKjmvCauvmJiheD0b8hx0sxKQ/G1751FVow==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1747047081;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c3lLMnlXZAC8rwfNbmgNzWdnLdrJgtNCafB+AReq92I=;
-	b=MQF1zn8+2QdR+upymNUitAuSQ1lpTC12KENpvLAPafsOgP8DaPbmY0A8+R3h3PK6eGXAZR
-	KeE181mgcu39LPCg==
+	bh=iXCyrOTzBm4Kc/gaphbbedDVfX2Yv/YjdhR7XjDB+pI=;
+	b=NKvPR8YIxaOp1trvc/MXQxr0orWnuY6o17ErKxpeA2U78P/X5f1ah4IYtv2G/QzNPjP1fN
+	uOdcRhWrmPHRWhBQ==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v8 22/22] rv: Allow to configure the number of per-task monitor
-Date: Mon, 12 May 2025 12:51:05 +0200
-Message-Id: <298231ac7df5fad1cd17011081d2aad40748b0fa.1747046848.git.namcao@linutronix.de>
+Subject: [PATCH v8 21/22] rv: Add documentation for rtapp monitor
+Date: Mon, 12 May 2025 12:51:04 +0200
+Message-Id: <9963a4e8307fbf0bbb0937a33b0880af23ba6141.1747046848.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747046848.git.namcao@linutronix.de>
 References: <cover.1747046848.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,131 +58,195 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Now that there are 2 monitors for real-time applications, users may want to
-enable both of them simultaneously. Make the number of per-task monitor
-configurable. Default it to 2 for now.
+Add documentation describing the rtapp monitor.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- include/linux/rv.h                     | 9 +--------
- include/linux/sched.h                  | 8 +++-----
- kernel/trace/rv/Kconfig                | 9 +++++++++
- kernel/trace/rv/monitors/rtapp/Kconfig | 1 +
- kernel/trace/rv/rv.c                   | 8 ++++----
- 5 files changed, 18 insertions(+), 17 deletions(-)
+ Documentation/trace/rv/index.rst         |   1 +
+ Documentation/trace/rv/monitor_rtapp.rst | 116 +++++++++++++++++++++++
+ 2 files changed, 117 insertions(+)
+ create mode 100644 Documentation/trace/rv/monitor_rtapp.rst
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 2897aad16883..099b23c14e54 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -74,14 +74,7 @@ struct ltl_monitor {};
-=20
- #endif /* CONFIG_RV_LTL_MONITOR */
-=20
--/*
-- * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
-- * If we find justification for more monitors, we can think about
-- * adding more or developing a dynamic method. So far, none of
-- * these are justified.
-- */
--#define RV_PER_TASK_MONITORS		1
--#define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
-+#define RV_PER_TASK_MONITOR_INIT	(CONFIG_RV_PER_TASK_MONITORS)
-=20
- union rv_task_monitor {
- 	struct da_monitor	da_mon;
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f96ac1982893..55fb32ce9657 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1634,12 +1634,10 @@ struct task_struct {
-=20
- #ifdef CONFIG_RV
- 	/*
--	 * Per-task RV monitor. Nowadays fixed in RV_PER_TASK_MONITORS.
--	 * If we find justification for more monitors, we can think
--	 * about adding more or developing a dynamic method. So far,
--	 * none of these are justified.
-+	 * Per-task RV monitor, fixed in CONFIG_RV_PER_TASK_MONITORS.
-+	 * If memory becomes a concern, we can think about a dynamic method.
- 	 */
--	union rv_task_monitor		rv[RV_PER_TASK_MONITORS];
-+	union rv_task_monitor		rv[CONFIG_RV_PER_TASK_MONITORS];
- #endif
-=20
- #ifdef CONFIG_USER_EVENTS
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 942d57575e67..c11bf7e61ebf 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -32,6 +32,15 @@ menuconfig RV
- 	  For further information, see:
- 	    Documentation/trace/rv/runtime-verification.rst
-=20
-+config RV_PER_TASK_MONITORS
-+	int "Maximum number of per-task monitor"
-+	depends on RV
-+	range 1 8
-+	default 2
-+	help
-+	  This option configures the maximum number of per-task RV monitors that =
-can run
-+	  simultaneously.
+diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
+x.rst
+index 2a27f6bc9429..a2812ac5cfeb 100644
+--- a/Documentation/trace/rv/index.rst
++++ b/Documentation/trace/rv/index.rst
+@@ -14,3 +14,4 @@ Runtime Verification
+    monitor_wip.rst
+    monitor_wwnr.rst
+    monitor_sched.rst
++   monitor_rtapp.rst
+diff --git a/Documentation/trace/rv/monitor_rtapp.rst b/Documentation/trace=
+/rv/monitor_rtapp.rst
+new file mode 100644
+index 000000000000..fb0ca0bf33a1
+--- /dev/null
++++ b/Documentation/trace/rv/monitor_rtapp.rst
+@@ -0,0 +1,116 @@
++Real-time application monitors
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
 +
- source "kernel/trace/rv/monitors/wip/Kconfig"
- source "kernel/trace/rv/monitors/wwnr/Kconfig"
- source "kernel/trace/rv/monitors/sched/Kconfig"
-diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
-ors/rtapp/Kconfig
-index 94689d66a79c..6a521c95a03f 100644
---- a/kernel/trace/rv/monitors/rtapp/Kconfig
-+++ b/kernel/trace/rv/monitors/rtapp/Kconfig
-@@ -1,5 +1,6 @@
- config RV_MON_RTAPP
- 	depends on RV
-+	depends on RV_PER_TASK_MONITORS >=3D 2
- 	bool "rtapp monitor"
- 	help
- 	  Collection of monitors to check for common problems with real-time appl=
-ication that cause
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index e25d65fe432a..108429d16ec1 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -165,7 +165,7 @@ struct dentry *get_monitors_root(void)
- LIST_HEAD(rv_monitors_list);
-=20
- static int task_monitor_count;
--static bool task_monitor_slots[RV_PER_TASK_MONITORS];
-+static bool task_monitor_slots[CONFIG_RV_PER_TASK_MONITORS];
-=20
- int rv_get_task_monitor_slot(void)
- {
-@@ -173,12 +173,12 @@ int rv_get_task_monitor_slot(void)
-=20
- 	lockdep_assert_held(&rv_interface_lock);
-=20
--	if (task_monitor_count =3D=3D RV_PER_TASK_MONITORS)
-+	if (task_monitor_count =3D=3D CONFIG_RV_PER_TASK_MONITORS)
- 		return -EBUSY;
-=20
- 	task_monitor_count++;
-=20
--	for (i =3D 0; i < RV_PER_TASK_MONITORS; i++) {
-+	for (i =3D 0; i < CONFIG_RV_PER_TASK_MONITORS; i++) {
- 		if (task_monitor_slots[i] =3D=3D false) {
- 			task_monitor_slots[i] =3D true;
- 			return i;
-@@ -194,7 +194,7 @@ void rv_put_task_monitor_slot(int slot)
- {
- 	lockdep_assert_held(&rv_interface_lock);
-=20
--	if (slot < 0 || slot >=3D RV_PER_TASK_MONITORS) {
-+	if (slot < 0 || slot >=3D CONFIG_RV_PER_TASK_MONITORS) {
- 		WARN_ONCE(1, "RV releasing an invalid slot!: %d\n", slot);
- 		return;
- 	}
++- Name: rtapp
++- Type: container for multiple monitors
++- Author: Nam Cao <namcao@linutronix.de>
++
++Description
++-----------
++
++Real-time applications may have design flaws such that they experience une=
+xpected latency and fail
++to meet their time requirements. Often, these flaws follow a few patterns:
++
++  - Page faults: A real-time thread may access memory that does not have a=
+ mapped physical backing
++    or must first be copied (such as for copy-on-write). Thus a page fault=
+ is raised and the kernel
++    must first perform the expensive action. This causes significant delay=
+s to the real-time thread
++  - Priority inversion: A real-time thread blocks waiting for a lower-prio=
+rity thread. This causes
++    the real-time thread to effectively take on the scheduling priority of=
+ the lower-priority
++    thread. For example, the real-time thread needs to access a shared res=
+ource that is protected by
++    a non-pi-mutex, but the mutex is currently owned by a non-real-time th=
+read.
++
++The `rtapp` monitor detects these patterns. It aids developers to identify=
+ reasons for unexpected
++latency with real-time applications. It is a container of multiple sub-mon=
+itors described in the
++following sections.
++
++Monitor pagefault
+++++++++++++++++++
++
++The `pagefault` monitor reports real-time tasks raising page faults. Its s=
+pecification is::
++
++  RULE =3D always (RT imply not PAGEFAULT)
++
++To fix warnings reported by this monitor, `mlockall()` or `mlock()` can be=
+ used to ensure physical
++backing for memory.
++
++This monitor may have false negatives because the pages used by the real-t=
+ime threads may just
++happen to be directly available during testing. To minimize this, the syst=
+em can be put under memory
++pressure (e.g. invoking the OOM killer using a program that does `ptr =3D =
+malloc(SIZE_OF_RAM);
++memset(ptr, 0, SIZE_OF_RAM);`) so that the kernel executes aggressive stra=
+tegies to recycle as much
++physical memory as possible.
++
++Monitor sleep
+++++++++++++++
++
++The `sleep` monitor reports real-time threads sleeping in a manner that ma=
+y cause undesirable
++latency. Real-time applications should only put a real-time thread to slee=
+p for one of the following
++reasons:
++
++  - Cyclic work: real-time thread sleeps waiting for the next cycle. For t=
+his case, only the
++    `clock_nanosleep` syscall should be used with `TIMER_ABSTIME` (to avoi=
+d time drift) and
++    `CLOCK_MONOTONIC` (to avoid the clock being changed). No other method =
+is safe for real-time. For
++    example, threads waiting for timerfd can be woken by softirq which pro=
+vides no real-time
++    guarantee.
++  - Real-time thread waiting for something to happen (e.g. another thread =
+releasing shared
++    resources, or a completion signal from another thread). In this case, =
+only futexes
++    (FUTEX_LOCK_PI, FUTEX_LOCK_PI2 or one of FUTEX_WAIT_*) should be used.=
+  Applications usually do
++    not use futexes directly, but use PI mutexes and PI condition variable=
+s which are built on top
++    of futexes. Be aware that the C library might not implement conditiona=
+l variables as safe for
++    real-time. As an alternative, the librtpi library exists to provide a =
+conditional variable
++    implementation that is correct for real-time applications in Linux.
++
++Beside the reason for sleeping, the eventual waker should also be real-tim=
+e-safe. Namely, one of:
++
++  - An equal-or-higher-priority thread
++  - Hard interrupt handler
++  - Non-maskable interrupt handler
++
++This monitor's warning usually means one of the following:
++
++  - Real-time thread is blocked by a non-real-time thread (e.g. due to con=
+tention on a mutex without
++    priority inheritance). This is priority inversion.
++  - Time-critical work waits for something which is not safe for real-time=
+ (e.g. timerfd).
++  - The work executed by the real-time thread does not need to run at real=
+-time priority at all.
++    This is not a problem for the real-time thread itself, but it is poten=
+tially taking the CPU away
++    from other important real-time work.
++
++Application developers may purposely choose to have their real-time applic=
+ation sleep in a way that
++is not safe for real-time. It is debatable whether that is a problem. Appl=
+ication developers must
++analyze the warnings to make a proper assessment.
++
++The monitor's specification is::
++
++  RULE =3D always ((RT and SLEEP) imply (RT_FRIENDLY_SLEEP or ALLOWLIST))
++
++  RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THREAD)
++                  and ((not WAKE) until RT_FRIENDLY_WAKE)
++
++  RT_VALID_SLEEP_REASON =3D FUTEX_WAIT
++                       or RT_FRIENDLY_NANOSLEEP
++
++  RT_FRIENDLY_NANOSLEEP =3D CLOCK_NANOSLEEP
++                      and NANOSLEEP_TIMER_ABSTIME
++                      and NANOSLEEP_CLOCK_MONOTONIC
++
++  RT_FRIENDLY_WAKE =3D WOKEN_BY_EQUAL_OR_HIGHER_PRIO
++                  or WOKEN_BY_HARDIRQ
++                  or WOKEN_BY_NMI
++                  or KTHREAD_SHOULD_STOP
++
++  ALLOWLIST =3D BLOCK_ON_RT_MUTEX
++           or FUTEX_LOCK_PI
++           or TASK_IS_RCU
++           or TASK_IS_MIGRATION
++
++Beside the scenarios described above, this specification also handle some =
+special cases:
++
++  - `KERNEL_THREAD`: kernel tasks do not have any pattern that can be reco=
+gnized as valid real-time
++    sleeping reasons. Therefore sleeping reason is not checked for kernel =
+tasks.
++  - `KTHREAD_SHOULD_STOP`: a non-real-time thread may stop a real-time ker=
+nel thread by waking it
++    and waiting for it to exit (`kthread_stop()`). This wakeup is safe for=
+ real-time.
++  - `ALLOWLIST`: to handle known false positives with the kernel.
++  - `BLOCK_ON_RT_MUTEX` is included in the allowlist due to its implementa=
+tion. In the release path
++    of rt_mutex, a boosted task is de-boosted before waking the rt_mutex's=
+ waiter. Consequently, the
++    monitor may see a real-time-unsafe wakeup (e.g. non-real-time task wak=
+ing real-time task). This
++    is actually real-time-safe because preemption is disabled for the dura=
+tion.
++  - `FUTEX_LOCK_PI` is included in the allowlist for the same reason as `B=
+LOCK_ON_RT_MUTEX`.
 --=20
 2.39.5
 
