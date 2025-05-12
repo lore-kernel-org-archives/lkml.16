@@ -1,76 +1,78 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1E72550AE
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A67A2561A6
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747031923; cv=none; b=PTK1D4CoZUvAaqAipl0L2yF5bcI4utmq+Tv6oNsLiYXyPwHGR7IQd/mHhFMttC2tPsJhBB+lcxLIkWnWiOqB4tQcE/CSMEpUu6+0EItQYEKj2bvs6zj+V+YyABJ1AdBxpu30C1iqk5iw8/xQBzvxz9Xjznr9+yQLsrD1A/B0NJg=
+	t=1747031929; cv=none; b=jdmpcwkFevzlf9XPKLTF4OauJYz5/0Uk+pUp6taG9QeaFWazeSRq02AfaJ0BZnj6lQEj5EnjhvXSiwFNjATQ5ZCM3oXCqEuHTe8LBY9ntLBY7CZtpikbmudzba2UNcYGkq30y9/uDZ9lkkH+zf5/qfgvLULl8RFkYbWT2dhswo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747031923; c=relaxed/simple;
-	bh=kQOegFGMTftIm0x0f4VdJt9xKHxpuzflODW8BI7Oz2s=;
+	s=arc-20240116; t=1747031929; c=relaxed/simple;
+	bh=SRofOzVkLTrjhEafbeny8N/bESQdDcOpa1YIDYgmAQ4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=h8uXt8oCwC3Zkj+Sl3inpPQcY5eXzgqrxn8tZiNMNvDdT3NTBRAmerlwKSHywz/laF/T+4RitxX+G5OzyKdWJQeXTLHX4babwNKuxnT9qDrJ96bQ9b+74WoUGrhd1t3l2FGwVvxrJsd52k6IZIlNXzFfPZHRfy8HtYL1MmXPL7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mxm3yj+x; arc=none smtp.client-ip=209.85.208.49
+	 MIME-Version:Content-Type; b=b/ja+Zpm1cFovD7A8uffO8ZB3rIiuQ4o+ESH5wvKlA3o7/DbbEiPoBkoExXFJu0CkJLcjl+hQ2HKViEZyVQ2nVdCeE4YU6ZDnjb5VCv2Otz5AbJzHq2VMOSqJocXFjU5vTSoctHPcPGU924DQwYNLowWKWmVvN4JsEKI8Y8Daw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vpAZ3/Wm; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mxm3yj+x"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5faaa717cfbso563827a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 23:38:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vpAZ3/Wm"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad241d7680eso3081066b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 23:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747031919; x=1747636719; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747031926; x=1747636726; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m54qQDPPwUYYIp+I0ulLXNvjU7U+yLbsnGmwxSAZCM0=;
-        b=Mxm3yj+xQEIp8mjtM4f+wY2Ojoal8H5DMI+sxPGCJVMkwy5Sp6y3f8ldOIzGXqTDfn
-         ObyW61ni37PHVLmIW3oZvJmzsNTQ0Fy/AM8QQ/rpQsbfLjobtnwtr1hxvnHz1AHH0uNi
-         wB25R8kWGHxdhFBnuA4aio50QkKluwj1FAiyrnpjkVMh1DVGiF505Zbjc+P+850Zwiie
-         84XIQhHTd++ZxMihpX12VWKc3Vm95FwM+9W+D5XehtaWH/t47p8ePJPcmo/ieZA7LXln
-         1CmRjEPd1/zVipxwwsU3WO88I0PpK3mFn3LzQpWuAfwUpvPoUFbcJ/99/GSKoDAi52RP
-         e9Bg==
+        bh=EJjA/FXfjTD2FQE71QWuHDCBdzjs/ZNL3lM7sCOkk4k=;
+        b=vpAZ3/Wm/OSsNODrduuEB52zBBcYzTxvdXIvIxfQiNt83ye7nHKdjKn0WYTfouEmEH
+         zsHjsburAnQooOfn865sQ9P6L8wWpHNE6wGi7AZjv60ewrhuuZVlv3P6S31IcjHMIIQW
+         MxXaCPmVZBOauuupi6woAUhFNQYqbgWeVtsCqh+2yr35O2lARUa+dNIb/Utxw0bM3AHF
+         6J96Ma58WMk7DMJPwyAIv7YMgPQe712DMaHTqYLJjPMn9pUI9jHc1lf/MLkoUBZrHseG
+         QgMtV5gRTHdOx/IXJ71OUKMehLpyI07C+ssINUq0AxAf4bZNZvdrtkoZcVaRCzmOkNUh
+         OPCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747031919; x=1747636719;
+        d=1e100.net; s=20230601; t=1747031926; x=1747636726;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m54qQDPPwUYYIp+I0ulLXNvjU7U+yLbsnGmwxSAZCM0=;
-        b=ZGTiWjh3z98M4LczHWd9UTzpd7wON4/BTasaezQolmbxhMGnXd2eq34VFZ3ji3Gw7I
-         j0l2PDZ4Qzxi6tUCSRCQObA6t5WX9OY+t254MiiO38QsJLY6kzHlDjgYNHvhEMgjhqpf
-         99ythqEnX7FA6sD37AjMwwYAqkN7Yd+hC1aGGtPhQQG+P9GwdJiPsIBgXBtwSC7l4ss2
-         CIkizQu5MqVFZpEpIMapQObvaOkfHoxeM93UMrCIBQ3P6Lpt83FS6rCGp2NfCkPjZOXo
-         Xy97oZNWzzwNjrcVhs0gkBbKCVaSjJpHMyVJAbT7nmGUrR+Mv1q5exZ8s/dmjgNJYw1B
-         M5Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXEKgwEUjHGGGIi6B3U4JhgS/0QDZWhLDGSuZLTDKudbEegZOmMtyEsGZEDabFA+BxbH2NJxO3WDq+/+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6dIa3qmwTIl8d/dKpqY31OAu2tQfuV6BSE23HeKsP5TX9bsNG
-	XznPjJojHVwcX5SLGLZkEvFpTuWD44KVNZVP49fwheGNApareDw6Pn/RBjtJwl4=
-X-Gm-Gg: ASbGncv+lmxQuX31YEmK1TeILoYgAl7wTOyBrZp2dKqji2Y29jaWdCZchOrHmF1OQl7
-	26xA2xzmedpqsNhqRwbsUCt7E23QXjNuL9DmCzM7jKZrUgTRqBPIuXhiCpY4kLVNE6Kocu7XQ0b
-	tb8f/HTFR3mb5LEWKkRQ5Y3KurDpY0QT6cVuui0dR5NPtdZDs4PJlIfVtPpIBOo2dn35c7M8MuJ
-	HA1JQxkNsbMXT2Hjk2rVsr+Lv1sRy5OStbNVb5rFuYWRVTH/D5ahUqmEipbJBO9QhzpFKZwN8QR
-	/fn6QhOt3oQjKx6sI+t16jbdDZ7O0fxgaUq/BCmoSys2z3VK8dU2u5hyN6E/7LFFehmr7NY=
-X-Google-Smtp-Source: AGHT+IFllBd+sniRuVcx7zlk+9/gEDgyoPcBo885hliuUygqoRqkFUwovnLuRvDW0FgmF20AaaF4RA==
-X-Received: by 2002:a05:6402:26d2:b0:5fc:4043:dade with SMTP id 4fb4d7f45d1cf-5fca0793fa6mr4040273a12.5.1747031919022;
-        Sun, 11 May 2025 23:38:39 -0700 (PDT)
+        bh=EJjA/FXfjTD2FQE71QWuHDCBdzjs/ZNL3lM7sCOkk4k=;
+        b=fzXgIZdAuiOUerjrFgUubHx5JzHqvvssNPUXmJKi2AB/METNRbLGfiz3SusVj5LD+R
+         xgta2KvkZ4ysVS/d120RFf8swKEqTTX5Cqp7sMoqSgey2O5AUY6eWjSWGzfW8Nrf7kjd
+         IzvnprnwlS3Okwdh0zo+5UV5vMeoox4j3umhKxiKJW+DdiePD/5VsoL7vFQX6sW2v2Gj
+         iWAT0we9SOkIJCWV6fIEKOgmHJltNI+nTaaDIzbYYk578fZZ2CKrUCAY4qVp+qRw6RVL
+         LVWAzzEIg66FUGrU63P92GceqfONKBprP/Jy61FTOjc58lxSqSOBiz7Agbv9PiEgm2LB
+         ynvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLD2VtH33Wr93mNSwrM0bl9874Hnhnmq7KyDdFWgO63UOLyD4bsbO3Omt0KVhXPbl3qBsGeO7tW9IieEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUAaU9EwwPy8qVfJ8fsiVWEGUxd7YFJCzx9MZTWGmB/E+J3DeX
+	UW/KNl0GRWU+ciEBupFtr65PTwLk3Zv+ZF0A+icHZSMBnjQ+jPQGIBheWT2a2g4=
+X-Gm-Gg: ASbGnct8J6sSrTjSGSgj4sRy4Q1WWxOSPbglQ6VGaRYbQYX+qnLzsYTxP9cWWg+HOPp
+	eNmjIElGkR7GGuo9GCDqOQ/LhzcCsK++7JLCqR09/FfoIRtD386dHJp5Aqkw8kMHC+/d+9Xj/Gn
+	5cCcH0owtKMGjEwyIToWU8CVQ3Gpp18QG8BazDFbMFMOO36Jk7Ep6f3d+NCS4VWRshN8dd1/0z5
+	8NAiRTA7TvrRXy5/VP9KqYXEaTcGisFEIalZLvbMdAvW4gODcSW0PS3vRRiBFpOxp6NhDYZQ96n
+	RQ+HZI+EhRtk6dhPGj0jP+SsIdPlBhjtVS+CI/nZGpB4xvHpaOVNiXvdytcAdM5SJd5ZeeU=
+X-Google-Smtp-Source: AGHT+IHbNmFFgqP2TaNoo3r8XCJ2lXf2VHRvee7H9H7Ew0FqMOfSppy5wk3G+RtUy3MhkVtZA75gyQ==
+X-Received: by 2002:a17:907:2894:b0:acb:7dde:d88f with SMTP id a640c23a62f3a-ad21975a11fmr359134666b.5.1747031925716;
+        Sun, 11 May 2025 23:38:45 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.222.234])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d700e92sm5210075a12.55.2025.05.11.23.38.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219851314sm565951966b.161.2025.05.11.23.38.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 23:38:38 -0700 (PDT)
+        Sun, 11 May 2025 23:38:45 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Patrice Chotard <patrice.chotard@foss.st.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Christophe Kerello <christophe.kerello@foss.st.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>
-In-Reply-To: <cover.1746781081.git.dan.carpenter@linaro.org>
-References: <cover.1746781081.git.dan.carpenter@linaro.org>
-Subject: Re: [PATCH 0/2] memory: stm32_omm: Fix error handling bugs
-Message-Id: <174703191772.30920.1274669600667314405.b4-ty@linaro.org>
-Date: Mon, 12 May 2025 08:38:37 +0200
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Alexey Charkov <alchark@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org
+In-Reply-To: <20250507-vt8500-timer-updates-v2-4-65e5d1b0855e@gmail.com>
+References: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
+ <20250507-vt8500-timer-updates-v2-4-65e5d1b0855e@gmail.com>
+Subject: Re: (subset) [PATCH v2 4/4] ARM: dts: vt8500: list all four timer
+ interrupts
+Message-Id: <174703192445.30990.13638059295757874601.b4-ty@linaro.org>
+Date: Mon, 12 May 2025 08:38:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,22 +84,23 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 09 May 2025 14:04:19 +0300, Dan Carpenter wrote:
-> These are a couple bugs which were detected using the Smatch static
-> checker.
+On Wed, 07 May 2025 10:58:33 +0400, Alexey Charkov wrote:
+> VIA/WonderMedia SoC timer can generate up to four interrupts corresponding
+> to four timer match registers (firing when the 32-bit freerunning clock
+> source counter matches either of the match registers, respectively).
 > 
-> Dan Carpenter (2):
->   memory: stm32_omm: Fix error handling in stm32_omm_configure()
->   memory: stm32_omm: Fix NULL vs IS_ERR() check in probe()
+> List all four interrupts in device trees.
+> 
+> This also enables the system event timer to use a match register other
+> than 0, which can then in turn be used as a system watchdog (watchdog
+> function is not available on other channels)
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] memory: stm32_omm: Fix error handling in stm32_omm_configure()
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/d44eeb20d9bedce11297a09628ba5dd39db236be
-[2/2] memory: stm32_omm: Fix NULL vs IS_ERR() check in probe()
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/0169a24036848cf18205301673259bb6879eef97
+[4/4] ARM: dts: vt8500: list all four timer interrupts
+      https://git.kernel.org/krzk/linux-dt/c/e58afb3e1f365badd69aad6f0d53a2c66a63f689
 
 Best regards,
 -- 
