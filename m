@@ -1,329 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9EA6292933
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF2028D857;
+	Mon, 12 May 2025 13:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054991; cv=none; b=cWY0qFbEev5CcHhs2urtDZ4OjCFkiEtUbCPIJGeKGm0t5iysNOmSCMHCafNlAUStn70cxSFm0+nK/3XBlSl0CyS8tEUjEXB4NPt4tV7LeDHw6kRgxIcD5pF2iQ9NiljIyEVBwlBfdj866JF2ZUyWJaJIzZQLTTM20W9R//z2fA8=
+	t=1747055078; cv=none; b=Qt7c6jGndD/DyL4C0IVXp0x7sxeZg04FmnQoUVwNb+CiY9mUcI5LGM48mrDfvvraGxDom1zZE68Q9kFwGGYA6IEPmmGO7mphczIY+ET895ZRNUIoZ3k3p1lNV30L5siZkc13PqmXNr4blr60aW+ZLi/qosKxSKszpkNmLkLhDZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054991; c=relaxed/simple;
-	bh=1WUEWHEolQwC8720ZZECWxHjReWB0vujNXYAmpR1iCc=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=HVGymZgOaBhNn8A/dJeXK65deCp3vp4cOguMKcy8Ni+smHQvK+p5nqccSdaHg5qEAUm8pqs9CIf8PBBTf+MJHGGZd1zzjbzfsT0WsoYpbNE348v7os0iN3fO0afIGHYIL4G2VViEoqFCM57A0bCQmnG5ZVW8S332Mfj0rfc8o+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fvcSHSeN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747055078; c=relaxed/simple;
+	bh=iLFgRRCO39Q3JxxWL8w5P9PLXG/ljboEiy5Wwh+FfG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=itNlG6HOIjqsXQBcpJSawjAZglZYs1Gk2V+22b1yZjBDcIMGjMnwyVS04sVBfl5vlqxwWjd2BSHkP75+miCFPsiKkYbAWIUF5JrucX7ouc2xRTaTjcAmYiHu4Nx4Z1blwTIdVUG0Dp5FnXJrflimxT9GmNSa7qih2mmTafJLljg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enxGZekW; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fvcSHSeN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747054988;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rHw3xY0JnT4h9Q3NaKNlwMtkuyY4mD1BTf/wtxHKiQk=;
-	b=fvcSHSeNNbzI3IxXwlzkFHJv4cHVEtfAdpFEv1AY3eqdx7vvdXlyrm66u9SnfP8bZCQZ3W
-	oCkT9waTs81caxBRhs5Mryycoq2YrGuMtoVs/h8Q6mHKNvnzLCA5mEXvWQtn2k9rZALHZ9
-	LAoWHz39jWvOX2ECpjr2MEZhvJW8WsM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-wCVkiRG3N6Cctfq4p2e1Lg-1; Mon,
- 12 May 2025 09:02:54 -0400
-X-MC-Unique: wCVkiRG3N6Cctfq4p2e1Lg-1
-X-Mimecast-MFC-AGG-ID: wCVkiRG3N6Cctfq4p2e1Lg_1747054966
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB4CA180048E;
-	Mon, 12 May 2025 13:02:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ED1C81956095;
-	Mon, 12 May 2025 13:02:38 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250509-deckung-glitschig-8d27cb12f09f@brauner>
-References: <20250509-deckung-glitschig-8d27cb12f09f@brauner> <20250505-erproben-zeltlager-4c16f07b96ae@brauner> <433928.1745944651@warthog.procyon.org.uk> <1209711.1746527190@warthog.procyon.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-    Etienne Champetier <champetier.etienne@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Jeffrey Altman <jaltman@auristor.com>,
-    Chet Ramey <chet.ramey@case.edu>, Steve French <sfrench@samba.org>,
-    linux-afs@lists.infradead.org, openafs-devel@openafs.org,
-    linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH v2] afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enxGZekW"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b200047a6a5so3181431a12.0;
+        Mon, 12 May 2025 06:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747055076; x=1747659876; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=bcZBEPLgYelBgurqIkIwecDbVtaz0AyfAL2PfCIE6TE=;
+        b=enxGZekW+b0dtXjR6L85dOPle+cQfTGzvcAVvh5hUdlMEHorGwGyWkUW9K7ZDOeEfQ
+         F2aEREK/O4Z8ceKhVK7hii4H801fubk2etqBg1DCpHDnS17q8k+/PccqWZHslBQEwAcG
+         96gzYJVw7hhcqoTjo5TX6dpoGrt6qgPLXA/pIQta8Lx+w4TAZQS0LSUdPlUzcP1gkSIQ
+         cu4tcjw5jsMAJ+LZg7gBRvj5paicXzeY9XrHXlB5b5ztDbb5otX5NTpFWFaZmA1F/rgD
+         Tp/2Lgeal0/jA8OC/uWdbaRV6UcO5IIJbYWqcgmwSTEmjVj+2izNTdE6uQ3Co9Ra1rK2
+         cvtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747055076; x=1747659876;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bcZBEPLgYelBgurqIkIwecDbVtaz0AyfAL2PfCIE6TE=;
+        b=WF+LDnqBgl7LgqTb0x8LBSl97Lc/FXZyKCYLUR7EqjR0oah3Uf+bW03FsnOJhw1Bxz
+         rm0fFRWS0/6nhVlj3/RonoxsiqSAkbr5AxPOyHs93ipItgtp3Bepg3Dv78l/0QaNV9aX
+         qj4687pKKktmPltHs7RNBOXiMbI/YSCekBwB2KLmjM9gdtrkCxKdDM5W6zyokCiP1ZVb
+         GT6FGV0AsvffETdX7QTGaArOi11MCfU1nqD/8zUhtevpRFc0w3zTFzUMnESW0iOje3d9
+         XgN9WGzVJG+MgVzEOFbppjJxDiVdDQrTA3ki7Xh9tzAn6MUZmMZZONPQZeeuLGEjEECJ
+         GXEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUP/ji6KvSrrJYFne1NOdKcN4pL/yUgTugdEcNq0YgZgx0sA4sf+p//BOu/BTrQGY4g+VGp08eEmsk/RMxV@vger.kernel.org, AJvYcCVZebdIUS6O1eB+zXgKjRgwOrpsDEb3DQZSi5WOx3MF9NTqfOWnBKrpPwNVk6GD2f1tbTywsBRi8/f7uA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG5HpbC6meXIHYB3qNYEkTvT2IyG3u+u7sDKSqm0bqZQVemgNN
+	6AyJfc0Zv6Ghd26QWRwBxMymb1SOQQdRkFzqC/1i8BqbWBdPGeK1
+X-Gm-Gg: ASbGnctfCljtNzUy4zVgyFpG8K9zWHoY0NZ6TeTghM/YHtzUbZM2o7VteJGOPQJGoc0
+	x2xipLEH/atPXPQZO+IqQICMno1wyWcyS3Wi8LxUOvMSPNsaOsn58w7rKJKnCeF9+IQ/i9lioE2
+	R5CUr7AxHR8nsv1BTa3r5pKKxlzH5HShfn1sUifI7Lamq4exiujLzu2Az9UD5Zq8uCzqG8FE/el
+	pCDYDqZv/YssEOm/jHWBJg1dXBIMQLjUUhBA/7pq2rBYv8VvjUPYzXqdtVTr+vwl6F1aha/6LN4
+	R+rClUoX7FJiX3QE5MN6tNWC2m73HTAUKq7DBWNMZSnKanBD6VpTa78q7epjI009janc1P5O1Wg
+	QtOjbBqEQvYSlSachGzRc/Eaiaw8nTXyYuZo=
+X-Google-Smtp-Source: AGHT+IEh4n7WUIlN4lBRkc4MY6FOslGRlNjCYuvS48v9F/yGyB3Mgvl5H8BHCvZh0GQqsYJfqVtv8A==
+X-Received: by 2002:a17:90b:2d8e:b0:2fa:6793:e860 with SMTP id 98e67ed59e1d1-30adb0eb0bamr25415489a91.0.1747055075879;
+        Mon, 12 May 2025 06:04:35 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4ffb6f1sm8823525a91.47.2025.05.12.06.04.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 06:04:35 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <1bd48694-9760-4e6b-9138-4651d42ff032@roeck-us.net>
+Date: Mon, 12 May 2025 06:04:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2086611.1747054957.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 May 2025 14:02:37 +0100
-Message-ID: <2086612.1747054957@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pwm: mc33xs2410: add support for temperature sensors
+To: dimitri.fedrau@liebherr.com, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Jean Delvare <jdelvare@suse.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, Dimitri Fedrau <dima.fedrau@gmail.com>
+References: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Christian Brauner <brauner@kernel.org> wrote:
+On 5/12/25 04:26, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> 
+> The MC33XS2410 provides temperature sensors for the central die temperature
+> and the four outputs. Additionally a common temperature warning threshold
+> can be configured for the outputs. Add hwmon support for the sensors.
+> 
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> ---
 
-> > Now, in my patch, I added two inode ops because they VFS code involved=
- makes
-> > two distinct evaluations and so I made an op for each and, as such, th=
-ose
-> > evaluations may be applicable elsewhere, but I could make a combined o=
-p that
-> > handles that specific situation instead.
-> =
+> +
+> +static int mc33xs2410_hwmon_read_out_status(struct spi_device *spi,
+> +					    int channel, u16 *val)
+> +{
+> +	int ret;
+> +
+> +	ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Bits latches high */
+> +	return mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
 
-> Try to make it one, please.
+Is that double read of the same register needed ? If so, you'll probably
+need a lock to prevent it from being executed from multiple threads at the
+same time.
 
-Okay, see attached.
+The comment "Bit latches high" doesn't really mean anything to me and doesn't
+explain why the register needs to be read twice.
 
-David
-----
-Bash has a work around in redir_open() that causes open(O_CREAT) of a file
-in a sticky directory to be retried without O_CREAT if bash was built with
-AFS workarounds configured:
-
-        #if defined (AFS)
-              if ((fd < 0) && (errno =3D=3D EACCES))
-            {
-              fd =3D open (filename, flags & ~O_CREAT, mode);
-              errno =3D EACCES;    /* restore errno */
-            }
-
-        #endif /* AFS */
-
-This works around the kernel not being able to validly check the
-current_fsuid() against i_uid on the file or the directory because the
-uidspaces of the system and of AFS may well be disjoint.  The problem lies
-with the uid checks in may_create_in_sticky().
-
-However, the bash work around is going to be removed:
-
-        https://git.savannah.gnu.org/cgit/bash.git/tree/redir.c?h=3Dbash-5=
-.3-rc1#n733
-
-Fix this in the kernel by providing a ->may_create_in_sticky() inode op,
-similar to ->permission(), that, if provided, is called to:
-
- (1) see if an inode has the same owner as the parent on the path walked;
-
- (2) determine if the caller owns the file instead of checking the i_uid t=
-o
-     current_fsuid().
-
-For kafs, the hook is implemented to see if:
-
- (1) the AFS owner IDs retrieved on the file and its parent directory by
-     FS.FetchStatus match;
-
- (2) if the server set the ADMINISTER bit in the access rights returned by
-     the FS.FetchStatus and suchlike for the key, indicating ownership by
-     the user specified by the key.
-
-(Note that the owner IDs retrieved from an AuriStor YFS server may not fit
-in the kuid_t being 64-bit, so they need comparing directly).
-
-This can be tested by creating a sticky directory (the user must have a
-token to do this) and creating a file in it.  Then strace bash doing "echo
-foo >>file" and look at whether bash does a single, successful O_CREAT ope=
-n
-on the file or whether that one fails and then bash does one without
-O_CREAT that succeeds.
-
-Reported-by: Etienne Champetier <champetier.etienne@gmail.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jeffrey Altman <jaltman@auristor.com>
-cc: Chet Ramey <chet.ramey@case.edu>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: Christian Brauner <brauner@kernel.org>
-cc: Steve French <sfrench@samba.org>
-cc: linux-afs@lists.infradead.org
-cc: openafs-devel@openafs.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
----
- fs/afs/dir.c       |    1 +
- fs/afs/file.c      |    1 +
- fs/afs/internal.h  |    2 ++
- fs/afs/security.c  |   52 +++++++++++++++++++++++++++++++++++++++++++++++=
-+++++
- fs/namei.c         |   17 ++++++++++++-----
- include/linux/fs.h |    2 ++
- 6 files changed, 70 insertions(+), 5 deletions(-)
-
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 9e7b1fe82c27..27e565612bde 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -65,6 +65,7 @@ const struct inode_operations afs_dir_inode_operations =3D=
- {
- 	.permission	=3D afs_permission,
- 	.getattr	=3D afs_getattr,
- 	.setattr	=3D afs_setattr,
-+	.may_create_in_sticky =3D afs_may_create_in_sticky,
- };
- =
-
- const struct address_space_operations afs_dir_aops =3D {
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index fc15497608c6..dff48d0adec3 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -47,6 +47,7 @@ const struct inode_operations afs_file_inode_operations =
-=3D {
- 	.getattr	=3D afs_getattr,
- 	.setattr	=3D afs_setattr,
- 	.permission	=3D afs_permission,
-+	.may_create_in_sticky =3D afs_may_create_in_sticky,
- };
- =
-
- const struct address_space_operations afs_file_aops =3D {
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 440b0e731093..4a5bb01606a8 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -1495,6 +1495,8 @@ extern struct key *afs_request_key(struct afs_cell *=
-);
- extern struct key *afs_request_key_rcu(struct afs_cell *);
- extern int afs_check_permit(struct afs_vnode *, struct key *, afs_access_=
-t *);
- extern int afs_permission(struct mnt_idmap *, struct inode *, int);
-+int afs_may_create_in_sticky(struct mnt_idmap *idmap, struct inode *inode=
-,
-+			     struct path *path);
- extern void __exit afs_clean_up_permit_cache(void);
- =
-
- /*
-diff --git a/fs/afs/security.c b/fs/afs/security.c
-index 6a7744c9e2a2..9fd6e4b5c228 100644
---- a/fs/afs/security.c
-+++ b/fs/afs/security.c
-@@ -477,6 +477,58 @@ int afs_permission(struct mnt_idmap *idmap, struct in=
-ode *inode,
- 	return ret;
- }
- =
-
-+/*
-+ * Perform the ownership checks for a file in a sticky directory on AFS.
-+ *
-+ * In the case of AFS, this means that:
-+ *
-+ * (1) the file and the directory have the same AFS ownership or
-+ *
-+ * (2) the file is owned by the AFS user represented by the token (e.g. f=
-rom a
-+ *     kerberos server) held in a key.
-+ *
-+ * Returns 0 if owned by me or has same owner as parent dir, 1 if not; ca=
-n also
-+ * return an error.
-+ */
-+int afs_may_create_in_sticky(struct mnt_idmap *idmap, struct inode *inode=
-,
-+			     struct path *path)
-+{
-+	struct afs_vnode *dvnode, *vnode =3D AFS_FS_I(inode);
-+	struct dentry *parent;
-+	struct key *key;
-+	afs_access_t access;
-+	int ret;
-+	s64 owner;
-+
-+	key =3D afs_request_key(vnode->volume->cell);
-+	if (IS_ERR(key))
-+		return PTR_ERR(key);
-+
-+	/* Get the owner's ID for the directory.  Ideally, we'd use RCU to
-+	 * access the parent rather than getting a ref.
-+	 */
-+	parent =3D dget_parent(path->dentry);
-+	dvnode =3D AFS_FS_I(d_backing_inode(parent));
-+	owner =3D dvnode->status.owner;
-+	dput(parent);
-+
-+	if (vnode->status.owner =3D=3D owner) {
-+		ret =3D 0;
-+		goto error;
-+	}
-+
-+	/* Get the access rights for the key on this file. */
-+	ret =3D afs_check_permit(vnode, key, &access);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* We get the ADMINISTER bit if we own the file. */
-+	ret =3D (access & AFS_ACE_ADMINISTER) ? 1 : 0;
-+error:
-+	key_put(key);
-+	return ret;
-+}
-+
- void __exit afs_clean_up_permit_cache(void)
- {
- 	int i;
-diff --git a/fs/namei.c b/fs/namei.c
-index 84a0e0b0111c..e52c91cbed2a 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1316,13 +1316,20 @@ static int may_create_in_sticky(struct mnt_idmap *=
-idmap, struct nameidata *nd,
- 	if (S_ISFIFO(inode->i_mode) && !sysctl_protected_fifos)
- 		return 0;
- =
-
--	i_vfsuid =3D i_uid_into_vfsuid(idmap, inode);
-+	if (unlikely(inode->i_op->may_create_in_sticky)) {
-+		int ret =3D inode->i_op->may_create_in_sticky(idmap, inode, &nd->path);
- =
-
--	if (vfsuid_eq(i_vfsuid, dir_vfsuid))
--		return 0;
-+		if (ret <=3D 0) /* 1 if not owned by me or by parent dir. */
-+			return ret;
-+	} else {
-+		i_vfsuid =3D i_uid_into_vfsuid(idmap, inode);
- =
-
--	if (vfsuid_eq_kuid(i_vfsuid, current_fsuid()))
--		return 0;
-+		if (vfsuid_eq(i_vfsuid, dir_vfsuid))
-+			return 0;
-+
-+		if (vfsuid_eq_kuid(i_vfsuid, current_fsuid()))
-+			return 0;
-+	}
- =
-
- 	if (likely(dir_mode & 0002)) {
- 		audit_log_path_denied(AUDIT_ANOM_CREAT, "sticky_create");
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 016b0fe1536e..11122e169719 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2236,6 +2236,8 @@ struct inode_operations {
- 			    struct dentry *dentry, struct fileattr *fa);
- 	int (*fileattr_get)(struct dentry *dentry, struct fileattr *fa);
- 	struct offset_ctx *(*get_offset_ctx)(struct inode *inode);
-+	int (*may_create_in_sticky)(struct mnt_idmap *idmap, struct inode *inode=
-,
-+				    struct path *path);
- } ____cacheline_aligned;
- =
-
- static inline int call_mmap(struct file *file, struct vm_area_struct *vma=
-)
+Thanks,
+Guenter
 
