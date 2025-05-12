@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF962571DF;
-	Mon, 12 May 2025 10:44:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4CA136988;
+	Mon, 12 May 2025 10:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747046660; cv=none; b=FDkr/c2+l8CgCZsALZM9fyLVMhBo8tAapw5l4yW8yBL4JI9X0bp5DCk1V2v6IZ+SQEKoJeU9TzNgJLUXj26Aw+4HIUx8PWk8/RlppvdkZk11xUIo1qz0SArzGX+A21MreEcyxJBa6C5I0GZ6pfy1Ve5js3nbMUAdBjTzDzBCThw=
+	t=1747046719; cv=none; b=Ieqg0gBK6okw2r3vCEs8GplxzPx7DA142mLIxlqmIWwsnvYYY1LgU78ZgzKSfjpthdhfwXGMhtiJb+xN67ltFAtAz/m+a3MFgJDYkxdV2Ggq5oyC/84+JvryGLb4goWT9WVQ1fyqRSFqO5w7mrrh1yF4D/HEWDAfmXwits5iW0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747046660; c=relaxed/simple;
-	bh=xpA2W98QKz/yXqwDYFUSH3uYiK9VbI4MNRHLwNI5HJU=;
+	s=arc-20240116; t=1747046719; c=relaxed/simple;
+	bh=GcdRKqkJp370DYiTOA6/0TyNO36BlGXmi7v+/vQvjSs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oG1f0Kpj6Y8aRtv7zDG3nyJw+TVRM4qZD2sJ8IgTPIId/sesHynPrmYxMZyJCUlec/Vao4U4niLo51cyKiUo/Vf90cEwqVFC+SjGSC0kvvjsmqIMbmvAp7Ok2MrnILU3MLZ+ahee/R8VxfmVFPHOPm1XAHX8seBJKxWS452m+1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixckrZv5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uQ12dpep1NjwSGvvFQlINbB5aNWTOKTqfXI1lhnBHar+2pM2+FpPT0IwxtP3UkQM9vBWG/pzJk8nws/HgJqvby4f/58GBNlR0NM2MZpdHlNfdDgJemSpRwngNAFf8lczZrwDa9Yj5oP+S4stqmyNf3zN60V/MQszW8LvCWdCIgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7O2Y98s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixckrZv5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE55C4CEE7;
-	Mon, 12 May 2025 10:44:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7O2Y98s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC294C4CEE7;
+	Mon, 12 May 2025 10:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747046660;
-	bh=xpA2W98QKz/yXqwDYFUSH3uYiK9VbI4MNRHLwNI5HJU=;
+	s=k20201202; t=1747046717;
+	bh=GcdRKqkJp370DYiTOA6/0TyNO36BlGXmi7v+/vQvjSs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ixckrZv5M/tUrYxIViG3YYh8oHhCJzgWCqvV9o9uv65ELj62MrsDo5vswCTioSK4d
-	 /x/ZAhxmz2bSnPiKKDiQsV8k99HfGfpH3s+NB9tnVLcRJmI63ZL5eUHKJc1Qu4VL00
-	 F3Kb3+LJ6WhvyvRe0LaV4AHTkp1da5/wtoSqoeaxrT/tSM0FpRvIYaVtgloPCGYOkW
-	 V8AMDQEgPZt4FNR2+8kjBwsp+LMUnA3fY7QTay4a8MoPOQAq7CQHsrNMQg/yveBvi6
-	 h+HXbNnQ/bF+I/e/CGcBSLrYTqbdI2tCzPROvHllb6HWp/F8HxKjfOx+7XJR5f2Lmm
-	 wSkcUgbPjd7qQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
- Fiona Behrens <me@kloenk.dev>, 
- Charalampos Mitrodimas <charmitro@posteo.net>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Breno Leitao <leitao@debian.org>, Andreas Hindborg <a.hindborg@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250508-configfs-v8-0-8ebde6180edc@kernel.org>
-References: <20250508-configfs-v8-0-8ebde6180edc@kernel.org>
-Subject: Re: [PATCH v8 0/3] rust: configfs abstractions
-Message-Id: <174704662683.2171454.9300396804399742742.b4-ty@kernel.org>
-Date: Mon, 12 May 2025 12:43:46 +0200
+	b=R7O2Y98sziU7KHeRfZDKFZAUutqIae391s/JoHN1Hz1qBXyUx6QzLX1Hg5kl6jUJV
+	 QGEm6A2YCQaI60DThDxi77zltC5n2hAY9jfjBjcx6y2xRbawFKXMHzJqU07kSeaHE3
+	 F2yV5d3g35JcXlQ5cy3PZf5D+2e0H24jngYDDCtDtV9dWFLrpz3apdOjvVFAFPXwKv
+	 OeHW+pXDTep4W77JohxZxf+MmD3hNKGh50h1BMc6Da9wr72Jy4OsPV3C8sNMKjJRkM
+	 XhNN/IzpljTRzxa1sInAG2TiNkr314gjJsBoTU/mGdQ2kUztF4TLpqgU3tT9vvZHEm
+	 30dIFdVdlAAKg==
+From: Leon Romanovsky <leon@kernel.org>
+To: kotaranov@microsoft.com, pabeni@redhat.com, haiyangz@microsoft.com, 
+ kys@microsoft.com, edumazet@google.com, kuba@kernel.org, 
+ davem@davemloft.net, decui@microsoft.com, wei.liu@kernel.org, 
+ longli@microsoft.com, jgg@ziepe.ca, 
+ Konstantin Taranov <kotaranov@linux.microsoft.com>
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org
+In-Reply-To: <1746633545-17653-1-git-send-email-kotaranov@linux.microsoft.com>
+References: <1746633545-17653-1-git-send-email-kotaranov@linux.microsoft.com>
+Subject: Re: [PATCH rdma-next v4 0/4] RDMA/mana_ib: allow separate mana_ib
+ for each mana client
+Message-Id: <174704671342.585128.135566447814981798.b4-ty@kernel.org>
+Date: Mon, 12 May 2025 06:45:13 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,32 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+X-Mailer: b4 0.15-dev-37811
 
 
-On Thu, 08 May 2025 10:52:08 +0200, Andreas Hindborg wrote:
-> Add a safe Rust API that allows Rust modules to interface the `configfs`
-> machinery.
+On Wed, 07 May 2025 08:59:01 -0700, Konstantin Taranov wrote:
+> From: Konstantin Taranov <kotaranov@microsoft.com>
 > 
-> Add an example for the samples folder to demonstrate usage of the API.
-> 
-> Add a maintainer entry for the Rust configfs abstractions in the last patch, to
-> make it absolutely clear that I will commit to maintain these abstractions, if
-> required.
+> Microsoft mana adapter has 2 devices in the HW: mana ethernet device and RNIC device.
+> Both devices can implement RDMA drivers and, so far, they have been sharing
+> one ib device context. However, they are different devices with different
+> capabilities in the HW and have different lifetime model.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/3] rust: configfs: introduce rust support for configfs
-      commit: 446cafc295bfc0e89da94a482fe8290bd8b429fb
-[2/3] rust: configfs: add a sample demonstrating configfs usage
-      commit: 1bfb105051566ec5cc7c4f693362420b37a68781
-[3/3] MAINTAINERS: add configfs Rust abstractions
-      commit: c6b1908224593db76f77b904894cd51933559ae9
+[1/4] net: mana: Probe rdma device in mana driver
+      https://git.kernel.org/rdma/rdma/c/ced82fce77e933
+[2/4] RDMA/mana_ib: Add support of mana_ib for RNIC and ETH nic
+      https://git.kernel.org/rdma/rdma/c/c390828d4d7b45
+[3/4] RDMA/mana_ib: unify mana_ib functions to support any gdma device
+      https://git.kernel.org/rdma/rdma/c/d4293f96ce0b6d
+[4/4] net: mana: Add support for auxiliary device servicing events
+      https://git.kernel.org/rdma/rdma/c/51bb42e5db2b2f
 
 Best regards,
 -- 
-Andreas Hindborg <a.hindborg@kernel.org>
-
+Leon Romanovsky <leon@kernel.org>
 
