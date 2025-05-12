@@ -1,235 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E072951D2
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD0FAD58;
+	Mon, 12 May 2025 13:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056182; cv=none; b=ZaKlneCpdPr8Ub13f40M1bYK13lQz/D6oYcJKVFNCUJwxXp4LzKruaSOt1klVr7jKtQT2UOuq3/yS1Qqot474Xpst6Z0Y1+tjBwmOYJzEZ+wXKu56rmgAB/AppVk395LxfJymKxw4H8AfCZ5FKpTytfkcIbhpDCjOMA6dbiUaH8=
+	t=1747056221; cv=none; b=DvD1OYXuRDUxPlV+YA04omjdyLtyDdbIZ7vHkqan/DSGtYFxaxAg6pGwLCqD6pPG4aULl1znRckkx8/GNX/Ig5mJQ1wIO6vNJsSVbLARx1nrvCU2FtVx2NBD8QYbAjz9WuhbjR6/pIyCaAEJCouVsSwqO9zW9/C4ltBS3EK3QNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056182; c=relaxed/simple;
-	bh=bzJZzvvRpjn9CYUnburWeDj8PO5yPP+Ob2vNmYc/qsA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tjDsVDVmNmnvvU7wpMILeOwJKS1z4EVvDha46XCc8qezLu6aPNHIfv2Zj6UY/hj5UOtZ6vZA7Qm0gmfvtzFRym2tOcp7WsAq1wVczGtQeqEwMN35CRPMcF0eE+JtDwnjrk1BIHiDfmqqrN37lOcWUmgoBohCXDgrUjcKoprtBUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q5TG11IN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747056221; c=relaxed/simple;
+	bh=cBwH3AMY+j1loh80XQyMwRSXd1cJWPgyALHwqOGeA3w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=itdBl2Yua3u5o2hizM2m9ImEH95F32Z/3M6n1BJLg/UwDRBZG7hjDyc14b+e0BfY8+EWfbovCNqILqQdlJZ/msswY3qNSgA+A/Hc85s+6jVJrZTPOsLQMBFMnOSza+fG8LpXdV3kHQhcMeNbrohdSWEsHQCuTvTDUOEuxirrYAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=NHtBkkYQ; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q5TG11IN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747056179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rt9GtFBQJVx2og2U+6x9mcRi6vq6T7dh1csKu94DEVk=;
-	b=Q5TG11INiTWo6N09iqEhF0dcEJzieqKaCkgyuBXVH2hy8osnjZwRrBTb0r5JCY5Ad3CaMR
-	iz4GVz9Kh9BnCOuTmXoRYHJDCT+y0mRB4o08fTv7o8p065ngLR12SNhi/XkCWE1eWRaRlh
-	0sy8wxLQ8ofjKRVDXqRhrWQ4BaBH9QU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-QjaU9c4lPgKyEnREsmOk9Q-1; Mon, 12 May 2025 09:22:57 -0400
-X-MC-Unique: QjaU9c4lPgKyEnREsmOk9Q-1
-X-Mimecast-MFC-AGG-ID: QjaU9c4lPgKyEnREsmOk9Q_1747056177
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad22c5408e7so246168766b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:22:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747056176; x=1747660976;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rt9GtFBQJVx2og2U+6x9mcRi6vq6T7dh1csKu94DEVk=;
-        b=HzaBkpbqgbukFXPM4I4+YkxhbcdqlmBsbzvg7PCFMTGTgWYGR1uvzViWRpDiYXFFCV
-         aj5fJGqDJjuzyikmdC9zSNTvjYrx3Y7J5+qib9TdO+TNm5/d28uTgghTaM5O+NwKGATy
-         3lfR/YdMsr12F6VOH5ZS9fYJQJ6aHpdOWrd4RixvXTH+D0idquBA07TEWG0+KXlDZ/3W
-         0D7rC7b+i8ZD9q0zvBCqT0E+troP2twL/Vhypn/G/T2zFESerSlQFNEPV72mxTcswE9J
-         9alDfYbseTeJkNDMhvp5EKFlyuh5oxN0S1/Xgsx1rbh+JRSwWsgYzcL8VfkslV3ZRut7
-         WEKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvlJXYWnnk/GiG4GYvSnweM4TUZQpPhBVYymA+SnlC4vdd78WMrWYiBlGYfVPoRdc2a9vc4Pz6jzrO4J8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzunypcdomMLqdtserHvvDplbWvVVrHZNWZyGujtN4a7/Fy5L3Z
-	8N7rMzaRDlhdvBh9z8YVzVWXKxJfalQUyYhD9/ig+9KnhAG3HziFwBAeIr6LZLbyseyX2x4vIjB
-	CzX+nYpSN9zEKg5w66gL3bZ/2hCfekVTBYyr56pvVWpr0JusBNNHtZCHP3PZv
-X-Gm-Gg: ASbGncveiaXhUQaybBL6VElVuBRAWosoWdXvQphkBx5POdzQkUdHglz+pAVlUaF346T
-	l+EbMb2fUjbGMjdyICDCyitK9qzQobiHZ+0h+aaJ9yNpho6IXLh2VoaLxz0LXLame80ZU5FX1cA
-	iDmqdmFZbBRadaCNA76+qhnDT2EKe29PirSxhQ0sK45Gv4wuN6y3FzNVYu4u7pez0eoe1c5nJjj
-	4kIBsuil81FDWVHG3Pbm50xMEYf9frKYdNbPG/NXV+L8oYhJ/MZjrHAoviwtRO0Zla5lKitAfl6
-	2f6Ut7l1xoQmOCf3a2QpVvMWVi5XqgBfcL4K+7H7
-X-Received: by 2002:a17:907:6ea4:b0:ad4:d00f:b4ca with SMTP id a640c23a62f3a-ad4d00fb8fcmr36842966b.50.1747056176274;
-        Mon, 12 May 2025 06:22:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJ1H/zptS/AHQGJ0FK52hePcKQfFfrpXhxDrhZE1E6E4AE2JiwqXtAXQ7n2gKkCn93DDW/NA==
-X-Received: by 2002:a17:907:6ea4:b0:ad4:d00f:b4ca with SMTP id a640c23a62f3a-ad4d00fb8fcmr36835166b.50.1747056175640;
-        Mon, 12 May 2025 06:22:55 -0700 (PDT)
-Received: from thinky (109-92-26-237.static.isp.telekom.rs. [109.92.26.237])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd28dsm613933766b.128.2025.05.12.06.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 06:22:55 -0700 (PDT)
-From: Andrey Albershteyn <aalbersh@redhat.com>
-X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Mon, 12 May 2025 15:22:52 +0200
-To: Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	selinux@vger.kernel.org, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Subject: [PATCH v5 5/7] fs: make vfs_fileattr_[get|set] return -EOPNOSUPP
-Message-ID: <20250512-xattrat-syscall-v5-5-ffbc7c477332@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3357; i=aalbersh@kernel.org;
- h=from:subject:message-id; bh=xNZgMi4eRRk641oOEdpKdfQ/bF05YfbIRMmgusqStnI=;
- b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIYMhS/7gpUUlnz86nTDU79jiMuhmaSU5Y0X4uZXFdRe
- Vmc8dGRozkdpSwMYlwMsmKKLOuktaYmFUnlHzGokYeZw8oEMoSBi1MAJtIRzsjwXWjjY7HXi7bl
- PFdbzGTT97Nn+gxH75Rvx4wCZ9h+erijleGfefXLzfMlHhZ1SRydlrlHbP8WO6cPJmv/zTu7xuT
- VWu893ACrBku/
-X-Developer-Key: i=aalbersh@kernel.org; a=openpgp;
- fpr=AE1B2A9562721A6FC4307C1F46A7EA18AC33E108
-References: <20250512-xattrat-syscall-v5-0-ffbc7c477332@kernel.org>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="NHtBkkYQ"
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5F8BD666D2F;
+	Mon, 12 May 2025 15:23:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1747056210;
+	bh=cBwH3AMY+j1loh80XQyMwRSXd1cJWPgyALHwqOGeA3w=;
+	h=From:Subject:Date;
+	b=NHtBkkYQR2Eu20UISoxPZJzBoTVe46L8yX4VpfLN4xmlOef1/YSG81DwTV0GlCJ1y
+	 MxnydAazwwCCMw46LTn7XVqOGh8d3F1fXEgkkRx5pithF89eQxBKblRG7NWaOlmACv
+	 btCUKU0vJhpd1k5vc2KiKFjIHNii42dsR2YLzLk4lvvyrXCrtnIXaexRnUSY48ylT0
+	 6GMs40dcka8mBfR6IFXz/pJHIGSsHLYJu5CXfOg9zTaNZ406oNvQpiSKvNnP4SR4sn
+	 pE0qD+zuwU5ERzhpvcjr2T5Ip63UcetZILpu8H0tmoBYOdHiVnKJVUqLRoE4GJHKCE
+	 f8wvRvdxyUjbQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ Christian Loehle <christian.loehle@arm.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Subject:
+ [PATCH v1] cpufreq: Drop policy locking from cpufreq_policy_is_good_for_eas()
+Date: Mon, 12 May 2025 15:23:30 +0200
+Message-ID: <2806514.mvXUDI8C0e@rjwysocki.net>
+In-Reply-To: <3344336.aeNJFYEL58@rjwysocki.net>
+References: <3344336.aeNJFYEL58@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512-xattrat-syscall-v5-0-ffbc7c477332@kernel.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddufeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepfeduudeutdeugfelffduieegiedtueefledvjeegffdttefhhffhtefhleejgfetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopeguihgvthhmrghrrdgvghhgvghmrghnnhesrghrmhdrtghomhdprhgtphhtthhopehrihgtrgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-Future patches will add new syscalls which use these functions. As
-this interface won't be used for ioctls only the EOPNOSUPP is more
-appropriate return code.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-This patch coverts return code from ENOIOCTLCMD to EOPNOSUPP for
-vfs_fileattr_get and vfs_fileattr_set. To save old behavior
-translate EOPNOSUPP back for current users - overlayfs, encryptfs
-and fs/ioctl.c.
+Policy locking was added to cpufreq_policy_is_good_for_eas() by commit
+4854649b1fb4 ("cpufreq/sched: Move cpufreq-specific EAS checks to
+cpufreq") to address a theoretical race condition, but it turned out to
+introduce a circular locking dependency between the policy rwsem and
+sched_domains_mutex via cpuset_mutex. This leads to a board lockup on
+OdroidN2 that is based on the ARM64 Amlogic Meson SoC.
 
-Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+Drop the policy locking from cpufreq_policy_is_good_for_eas() to address
+this issue.
+
+Fixes: 4854649b1fb4 ("cpufreq/sched: Move cpufreq-specific EAS checks to cpufreq")
+Closes: https://lore.kernel.org/linux-pm/1bf3df62-0641-459f-99fc-fd511e564b84@samsung.com/
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- fs/ecryptfs/inode.c  |  8 +++++++-
- fs/file_attr.c       | 12 ++++++++++--
- fs/overlayfs/inode.c |  2 +-
- 3 files changed, 18 insertions(+), 4 deletions(-)
+ drivers/cpufreq/cpufreq.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
-index 51a5c54eb740..6bf08ff4d7f7 100644
---- a/fs/ecryptfs/inode.c
-+++ b/fs/ecryptfs/inode.c
-@@ -1124,7 +1124,13 @@ static int ecryptfs_removexattr(struct dentry *dentry, struct inode *inode,
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -3067,8 +3067,6 @@
+ 		return false;
+ 	}
  
- static int ecryptfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
- {
--	return vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
-+	int rc;
-+
-+	rc = vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
-+	if (rc == -EOPNOTSUPP)
-+		rc = -ENOIOCTLCMD;
-+
-+	return rc;
+-	guard(cpufreq_policy_read)(policy);
+-
+ 	return sugov_is_governor(policy);
  }
  
- static int ecryptfs_fileattr_set(struct mnt_idmap *idmap,
-diff --git a/fs/file_attr.c b/fs/file_attr.c
-index d9eab553dc25..d696f440fa4f 100644
---- a/fs/file_attr.c
-+++ b/fs/file_attr.c
-@@ -79,7 +79,7 @@ int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
- 	int error;
- 
- 	if (!inode->i_op->fileattr_get)
--		return -ENOIOCTLCMD;
-+		return -EOPNOTSUPP;
- 
- 	error = security_inode_file_getattr(dentry, fa);
- 	if (error)
-@@ -239,7 +239,7 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
- 	int err;
- 
- 	if (!inode->i_op->fileattr_set)
--		return -ENOIOCTLCMD;
-+		return -EOPNOTSUPP;
- 
- 	if (!inode_owner_or_capable(idmap, inode))
- 		return -EPERM;
-@@ -281,6 +281,8 @@ int ioctl_getflags(struct file *file, unsigned int __user *argp)
- 	int err;
- 
- 	err = vfs_fileattr_get(file->f_path.dentry, &fa);
-+	if (err == -EOPNOTSUPP)
-+		err = -ENOIOCTLCMD;
- 	if (!err)
- 		err = put_user(fa.flags, argp);
- 	return err;
-@@ -302,6 +304,8 @@ int ioctl_setflags(struct file *file, unsigned int __user *argp)
- 			fileattr_fill_flags(&fa, flags);
- 			err = vfs_fileattr_set(idmap, dentry, &fa);
- 			mnt_drop_write_file(file);
-+			if (err == -EOPNOTSUPP)
-+				err = -ENOIOCTLCMD;
- 		}
- 	}
- 	return err;
-@@ -314,6 +318,8 @@ int ioctl_fsgetxattr(struct file *file, void __user *argp)
- 	int err;
- 
- 	err = vfs_fileattr_get(file->f_path.dentry, &fa);
-+	if (err == -EOPNOTSUPP)
-+		err = -ENOIOCTLCMD;
- 	if (!err)
- 		err = copy_fsxattr_to_user(&fa, argp);
- 
-@@ -334,6 +340,8 @@ int ioctl_fssetxattr(struct file *file, void __user *argp)
- 		if (!err) {
- 			err = vfs_fileattr_set(idmap, dentry, &fa);
- 			mnt_drop_write_file(file);
-+			if (err == -EOPNOTSUPP)
-+				err = -ENOIOCTLCMD;
- 		}
- 	}
- 	return err;
-diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-index 6f0e15f86c21..096d44712bb1 100644
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -721,7 +721,7 @@ int ovl_real_fileattr_get(const struct path *realpath, struct fileattr *fa)
- 		return err;
- 
- 	err = vfs_fileattr_get(realpath->dentry, fa);
--	if (err == -ENOIOCTLCMD)
-+	if (err == -EOPNOTSUPP)
- 		err = -ENOTTY;
- 	return err;
- }
-
--- 
-2.47.2
 
 
--- 
-- Andrey
 
