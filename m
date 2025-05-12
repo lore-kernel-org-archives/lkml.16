@@ -1,187 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E66224FBFF;
-	Mon, 12 May 2025 16:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717D7251796;
+	Mon, 12 May 2025 16:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068058; cv=none; b=GOUvFf+fzqQIFIblAG8PhfkF7qPqkFxfEOUeojhUSVN570vtKkXiDpd+Cw3pprt8qOua+LCEfZQcbkkCbmegiaL+MHBJ6B1M1vWzTRGcg/NO+zD+ynWNTPQa9RN101PHKrCy08WI0Asy1hSHE9bGh+InJ66iyVggk/YPV42QAUg=
+	t=1747068110; cv=none; b=dAEniNYU4Fy8ubjiclwmmsSWCEIDMiTHhSzdHdodeRGU7774YiwG0lIw23pYhScmQmobQR+z7K7Gs+w1E8I24KB+0oAbUNs8a4ZXJHUTMHV+ZP4sW/As8M1oNgT3yQnAkt9myoNYky1sccwAlIh3yigZoAvBxoBMg35GmW4O0nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068058; c=relaxed/simple;
-	bh=Lk3Qyi2Jh3RaX5DGTgnwgbgZSVy/HqI9XT5UMipzj5Q=;
+	s=arc-20240116; t=1747068110; c=relaxed/simple;
+	bh=MVEKVvU8wln4WeikOwg5MCVLzaoZkDBaYedxbUKGv2E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4Br3H/PGoe0lu07lcAAQAbwcv5czYviMd+u1dPSGbHoN3OEOwhOvBUm8pLb/HjGj10UcdcNwiQB1vKWHCQ28NAkcyS/b/ePLoGDinhi5mVbsCG6yeZHWYhpYSRx9zR6rpyGKf3G/NmwctzZo/Evlju+q2xs9o85EZAN5ktzK28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIccRPeW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4LsFh4+MEJdOcX1qNhtH0mXQsyFzdiM0NdiMfBMZJ6kseTSH9T5MzGTWk6SlXs2T+pDIJU/ksAIHj6jQqxTBQ0H5kUwTFjdhZAScBqGU58wOpULk0K+1J29eQ6V2EyLf0UK28Wq3UCTJVl5VBNB4hkKWZMrng5B5m+ZnHW3hDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=glk/wsK3; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIccRPeW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACA6FC4CEE7;
-	Mon, 12 May 2025 16:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747068058;
-	bh=Lk3Qyi2Jh3RaX5DGTgnwgbgZSVy/HqI9XT5UMipzj5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GIccRPeWg0aFmGv36OjxR1Je8Xz8005GkV1MiRXcGRuacClhZ8za4rZNegZ1aGjdT
-	 hckPEeZ/ho7aaj7+BGNKvJuOYOTtARvQxHHDzxvixrVcu1ur/6Fcqi7pmHu4nmvK3x
-	 rC0tzGnpgkHE760j/6wbmwN3xLjh+c/YiWRXg6mY23Q0zpzjTytzfAxquohonCkS5s
-	 RR26/9PnlyEO3gXW/0shIRGJZbeHTiwjSccyXsgwp+hfke6xq2k3W+h7W3bGC664g1
-	 LJ/7Z2ul3dnMS+EGx9ZCPLkGEIvSHOIuwfdSBEx7pLk6orvVQgHU/7+Gb4Lt8BCIJl
-	 oU1EFzL6o4rlA==
-Date: Mon, 12 May 2025 13:40:55 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glk/wsK3"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30df7c98462so801952a91.3;
+        Mon, 12 May 2025 09:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747068109; x=1747672909; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8Ho1+sWUxrZunIm7xVJaVhyOUyUjDCcQuzmWPi/TOO0=;
+        b=glk/wsK3g19atcpFI7ZCtnwnMAyNt+LBON5UAw/yv07BwZTOTmVXuGXP+w2UovKjBr
+         nK4BdznG+Fh7xiVVYEqA7G9WoTHQ44yR64D7SFNiljhekr3yN/Q57prGbOIvHnFHzysa
+         aXi0lTsMuw1KAmXoNzFYqwJsaAQbRmQiS/C8m71EPJLkkWYRd/4biPfVjGHetkEQIsY6
+         N7VzpqD5v+mS5ucQy2uGl9cdWdm15gswT0Hkk50+cn8+LVvK4Sv86ag6WXumr+qAfbRe
+         mFx9GobtvBpDbqC4fYpYy0HeKY1t8iy4QLZ8+wVp1ZLwGBeUfmpVV9beEesOYikVkBpV
+         MGbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747068109; x=1747672909;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Ho1+sWUxrZunIm7xVJaVhyOUyUjDCcQuzmWPi/TOO0=;
+        b=wBPudUaslna9hAQ9N+BxsVIFceWK39O5zVCDVrDcRBC6232yWF4RzwKY/O+qPjYvJu
+         6/MYdefHF4xB4i7IqIxa1ksOAyU/zI9Hs7xuQ8uEmM9ybN1op+4Si7VDao7CnJp7FAOW
+         UGTzof5kAzJA/aQ2BtcsGtxggOM6FjPwSlyN8neIw9x5V6g4BG7G+IJOuNDB2tEmMIb7
+         iXBa22SbQQqQ74aUxmLKtZHMRXF+HLvgFzbH7lHtdlO8Lq2Oicw3XbFnRMtDo5XZ2D6v
+         vimPUDrPAMrKWDrLCvBAXeOgHPAhHR5ny6TuVjwO0QfBmnzetvIRoXt59VBMeAKzmaKL
+         rkMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPXmzVxoI4nugNwVf9QRWzcVfWLdo0y7CCe8YxDv3h1asd4JLiNRVOazjOVT/blfqdOvvRvH+3w7Rd@vger.kernel.org, AJvYcCX4danvgFiA/x548bJsOK/YVxgT7TjqQiEfXPNhYMMSIDhA3betbfSThpB6An9worR4k8OqFC0BKhYD/Adh@vger.kernel.org, AJvYcCXuucBgsB16viOymyS/oP/QH/6jIfFlGwXODW3pc7avryXsw0sZFKKaDcYjOa1Mb85A28dI6l/H0Pq/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHKtRkW4mjXzbZMBrXkKAfAJ8A0n5JhFrJBJ1f9YOQDKn6Oji8
+	Gnrbn2OFeY+LhEpl2YrwJT8c5d1yjTF3k3ajWOc0UkJEr5EOMNkV
+X-Gm-Gg: ASbGncuqHwFhzcGSpmYBwlmAsiTUY45/+K8awpl5vgCOr2Hjzhcn1KsxlVyjewpeBpK
+	ESLsd0NsCjs0t/MudJEReqBWaFx7VM8XDUT0Teji88Zmi6SI8tehzurw+I+aS0zU5AhFTWbqd+J
+	gxm7NYJ5Fymz74SoJfGRNnKFD/qy7/tpKXJjYagnguzht830dZLLxsnH604K7fhJYz7PIiPn4Vc
+	dZRJud0kalb55zkN+PR2iZHwJXLRIJpF+XKoWvY6r4d8pp0pSAexYVN/MM+fVlyZQnjvpAfAkC6
+	iAPFy1LGWf6EtNp1TsttX7G+Lbm0b/TfzPIYH9pBdxX/KgTuhpj7p6ed3ZHZoIBJ
+X-Google-Smtp-Source: AGHT+IGyV6kzMmUJlWY64hon5equcz8iXxorRqUeTgzorRXqzNsma+/QO8tm6yVrzqDARqUHdHc4FQ==
+X-Received: by 2002:a17:90b:3fc7:b0:2fe:955d:cdb1 with SMTP id 98e67ed59e1d1-30c3d629f6amr18579099a91.23.1747068108694;
+        Mon, 12 May 2025 09:41:48 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad483f438sm9028830a91.10.2025.05.12.09.41.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 09:41:48 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 12 May 2025 09:41:47 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Noah Wang <noahwang.wang@outlook.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Grant Peltier <grantpeltier93@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Shen Lichuan <shenlichuan@vivo.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Metric related performance improvements
-Message-ID: <aCIkl8Skof--Of99@x1>
-References: <20250410044532.52017-1-irogers@google.com>
- <Z_dp7E2wtSek-KHo@z2>
- <CAP-5=fU6NM4LZWt9SdTFX9JKTgfghwAVvtXc-qBuUb0vpUeTQA@mail.gmail.com>
+	Greg KH <gregkh@linuxfoundation.org>,
+	Charles Hsu <ythsu0511@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: hwmon: Add bindings for mpq8785
+ driver
+Message-ID: <5327a94c-1080-49c0-a442-90ee92b2426b@roeck-us.net>
+References: <20250511035701.2607947-1-paweldembicki@gmail.com>
+ <20250511035701.2607947-2-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU6NM4LZWt9SdTFX9JKTgfghwAVvtXc-qBuUb0vpUeTQA@mail.gmail.com>
+In-Reply-To: <20250511035701.2607947-2-paweldembicki@gmail.com>
 
-On Wed, Apr 23, 2025 at 01:48:22PM -0700, Ian Rogers wrote:
-> On Wed, Apr 9, 2025 at 11:49 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Wed, Apr 09, 2025 at 09:45:29PM -0700, Ian Rogers wrote:
-> > > The "PMU JSON event tests" have been running slowly, these changes
-> > > target improving them with an improvement of the test running 8 to 10
-> > > times faster.
-> > >
-> > > The first patch changes from searching through all aliases by name in
-> > > a list to using a hashmap. Doing a fast hashmap__find means testing
-> > > for having an event needn't load from disk if an event is already
-> > > present.
-> > >
-> > > The second patch switch the fncache to use a hashmap rather than its
-> > > own hashmap with a limited number of buckets. When there are many
-> > > filename queries, such as with a test, there are many collisions with
-> > > the previous fncache approach leading to linear searching of the
-> > > entries.
-> > >
-> > > The final patch adds a find function for metrics. Normally metrics can
-> > > match by name and group, however, only name matching happens when one
-> > > metric refers to another. As we test every "id" in a metric to see if
-> > > it is a metric, the find function can dominate performance as it
-> > > linearly searches all metrics. Add a find function for the metrics
-> > > table so that a metric can be found by name with a binary search.
-> > >
-> > > Before these changes:
-> > > ```
-> > > $ time perf test -v 10
-> > >  10: PMU JSON event tests                                            :
-> > >  10.1: PMU event table sanity                                        : Ok
-> > >  10.2: PMU event map aliases                                         : Ok
-> > >  10.3: Parsing of PMU event table metrics                            : Ok
-> > >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > >
-> > > real    0m18.499s
-> > > user    0m18.150s
-> > > sys     0m3.273s
-> > > ```
-> > >
-> > > After these changes:
-> > > ```
-> > > $ time perf test -v 10
-> > >  10: PMU JSON event tests                                            :
-> > >  10.1: PMU event table sanity                                        : Ok
-> > >  10.2: PMU event map aliases                                         : Ok
-> > >  10.3: Parsing of PMU event table metrics                            : Ok
-> > >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > >
-> > > real    0m2.338s
-> > > user    0m1.797s
-> > > sys     0m2.186s
-> > > ```
-> >
-> > Great, I also see the speedup on my machine from 32s to 3s.
-> >
-> > Tested-by: Namhyung Kim <namhyung@kernel.org>
+On Sun, May 11, 2025 at 05:55:44AM +0200, Pawel Dembicki wrote:
+> Add device tree bindings for Monolithic Power Systems MPQ8785, MPM82504
+> and MPM3695 PMBus-compliant voltage regulators.
 > 
-> Ping.
+> These bindings also documents the optional
+> "mps,vout-fb-divider-ratio-permille" property.
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I'll try to fix up it later, if you don't beat me to it, will continue
-with the other patches you listed to get the ones that applies merged:
+Applied.
 
-Total patches: 3
----
-Cover: ./20250409_irogers_metric_related_performance_improvements.cover
- Link: https://lore.kernel.org/r/20250410044532.52017-1-irogers@google.com
- Base: not specified
-       git am ./20250409_irogers_metric_related_performance_improvements.mbx
-⬢ [acme@toolbx perf-tools-next]$        git am ./20250409_irogers_metric_related_performance_improvements.mbx
-Applying: perf pmu: Change aliases from list to hashmap
-error: patch failed: tools/perf/util/pmu.c:532
-error: tools/perf/util/pmu.c: patch does not apply
-Patch failed at 0001 perf pmu: Change aliases from list to hashmap
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config set advice.mergeConflict false"
-⬢ [acme@toolbx perf-tools-next]$ 
-⬢ [acme@toolbx perf-tools-next]$ git am --abort
-⬢ [acme@toolbx perf-tools-next]$ patch -p1 < ./20250409_irogers_metric_related_performance_improvements.mbx
-patching file tools/perf/tests/pmu-events.c
-patching file tools/perf/util/hwmon_pmu.c
-patching file tools/perf/util/pmu.c
-Hunk #3 succeeded at 417 (offset 11 lines).
-Hunk #4 succeeded at 451 (offset 11 lines).
-Hunk #5 FAILED at 541.
-Hunk #6 succeeded at 657 (offset 41 lines).
-Hunk #7 succeeded at 1146 (offset 41 lines).
-Hunk #8 succeeded at 1238 (offset 41 lines).
-Hunk #9 succeeded at 1259 (offset 41 lines).
-Hunk #10 succeeded at 2018 (offset 48 lines).
-Hunk #11 succeeded at 2033 (offset 48 lines).
-Hunk #12 succeeded at 2502 (offset 59 lines).
-Hunk #13 succeeded at 2522 (offset 59 lines).
-1 out of 13 hunks FAILED -- saving rejects to file tools/perf/util/pmu.c.rej
-patching file tools/perf/util/pmu.h
-Hunk #3 succeeded at 295 (offset 5 lines).
-patching file tools/perf/util/tool_pmu.c
-Hunk #1 succeeded at 502 (offset 6 lines).
-patching file tools/perf/util/fncache.c
-patching file tools/perf/util/fncache.h
-patching file tools/perf/util/srccode.c
-patching file tools/perf/builtin-stat.c
-Hunk #1 succeeded at 1854 (offset -2 lines).
-Hunk #2 succeeded at 1888 (offset -2 lines).
-Hunk #3 succeeded at 1978 (offset -2 lines).
-patching file tools/perf/pmu-events/empty-pmu-events.c
-Hunk #1 succeeded at 449 (offset 6 lines).
-Hunk #2 succeeded at 495 (offset 6 lines).
-Hunk #3 succeeded at 552 (offset 6 lines).
-patching file tools/perf/pmu-events/jevents.py
-Hunk #1 succeeded at 972 (offset 6 lines).
-Hunk #2 succeeded at 1018 (offset 6 lines).
-Hunk #3 succeeded at 1075 (offset 6 lines).
-patching file tools/perf/pmu-events/pmu-events.h
-Hunk #1 succeeded at 74 (offset 3 lines).
-Hunk #2 succeeded at 89 (offset 3 lines).
-Hunk #3 succeeded at 105 (offset 3 lines).
-patching file tools/perf/util/metricgroup.c
-patching file tools/perf/util/metricgroup.h
-⬢ [acme@toolbx perf-tools-next]$
+Thanks,
+Guenter
