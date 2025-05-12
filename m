@@ -1,64 +1,39 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2464B4A3C;
-	Mon, 12 May 2025 14:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB526219A93
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060075; cv=none; b=ltkIKlzmSBpHXmUHdKPqDKtVDxe/M4yTspdX41SIvKMo9O+fb9Y8nLdRnBvPd6EH7SnAAEMLo7RhMvTCxybC4A84zCrVAyXeg7USk11WeYAZFRAVkVeE+58VFmWBgm8mRavTiAFAhnIaS0FI3vOwUfl/L7Cn2+qhIPmGX/rgMrs=
+	t=1747060079; cv=none; b=N40XT2QB9mgyOcXyohrxZ5Jf7h54z6bqTsjYVApArdxgwyAihfYHxQtlUc4v5Pq2ZQhsiCTKcEk1iNinUB7K18iXjl9S6dWbEg8xHCvpyQ7ZQvtvKISw8Ct6DhVcP4pGEYKB8QrLI8eqI37oip5HHvG2IycF0r8Gjhw0bPQJrgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060075; c=relaxed/simple;
-	bh=wrYbJIgdDlhw9cxvmVJt4hGuLDKKXkSC6QXIYwjksdA=;
+	s=arc-20240116; t=1747060079; c=relaxed/simple;
+	bh=jdbV1On26NeAP38ugnOUPacBBxHEqM8aaxwgln/51Q8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a/aJaZ9CUDY14XPiZLkgmUMBimcgrzoM3sU80czyOvoLTbltc2/ggh+P4weC3x40boEtry47Hk0EX6TMqkWbZKetI6jR7oZEiedGyC/LQLmqJTng9tq7VitCCsunUj4Gvb+0EbMIpuqNedBMR/v208TwOPujOldrTRlecNPq1Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pi5cKQKP; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=lbCNewahssAgebdptkGkFBzImMlUXFj+E0jRCAEX6pFwWlukYFX485F0N5i5SY661Mk8Cip9OeI432j07zJnf9h4HwWO7VcUXmRXWL/KpCCNi5EhPtoeqgRvSQu/ZGMOywpfpsQiGt7FR/5IOQ2E9cGJl5nlmiAjc7jfNDOnUvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=XJUJ/dyd; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pi5cKQKP"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad243cdbe98so300182366b.0;
-        Mon, 12 May 2025 07:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747060072; x=1747664872; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mqD5wGql76sXnlATbZ5iOStKuZGXz9IAXso+5X9hYxY=;
-        b=Pi5cKQKP8nYho2NBBk1R6RBYSFPSrBCAuApy0F2+lPX9Wf0GzVGTfWGOsT+x72rCDk
-         qkOGQqFtovvdh7tBuqmVUVngCW5G2XMOqgFXwyw0j/uPIvH1b5k74lsfEd1RTzEwZQfh
-         shi3j1RuMnVwLn9TCjG7gvIyGcodcUBy671ZSBwqwhLdhrVHYh0vFVOlR+aCW+xGIIKE
-         VmyzZF+M6gbACRQM4yiP5womAe7hpF4KYoXO0OOs5v7esmyLfgr+SBWmH8IGP0ZqNkGx
-         BsmFKEN8tObVTdZtouIjrlQYatnyLFlQMGsNhtLs7XHDVyRJS79z6NK3N1VxUB8k+hZv
-         nuHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747060072; x=1747664872;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqD5wGql76sXnlATbZ5iOStKuZGXz9IAXso+5X9hYxY=;
-        b=AnxoRUnviMiw60UhxgIqiWCe7/wgBGOzdF0QsCGTFrZQDvWqSSU5K/18CxNxKAYmDd
-         h+IZADYwypvNDgYl8HnJ5/zmqUxqwuTnCTvvxxuB8WnNMKsJb2Er3b6WaJG4k8k2VWva
-         RHXY20ZyAiw4fLCeIX+x5xFZjirRg4pDpfcIA2eeMrccXvoSHCWLiHdCPnl7Pg9o8GG1
-         lx1xgCUhql0lbdZhSxZkRAS+KM1nIVe2OKeiS04qWdlMMTmnrCLSlEBGlfPqsu1olvUX
-         BHp2+SN6mphNudbkXeFPjM3HkACnHS5ULlQQHxqHTGubYGXrGrUjYveE5ojymTpDeVwg
-         CXbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzfVth/RUvAJ+tfXthfv/YiIPi8xEmVZSRbHQNPNL5EShy0XnFEzKkKABWNmiy4r5l1X3UUbQfnDr91FhC@vger.kernel.org, AJvYcCV0GX7rl+jvHwPFWLEqm7n3Qg0MhGOfMYx8auQeXgPbx9vZc74IYHqqg6nja9tIh6iXES3+OGl5xgY=@vger.kernel.org, AJvYcCVSQPzidtlKNviyBAxlGoObUBE1U3EfGBvvvi2YQ68B3lWX1Klunpw0BSmBaY1GBripv90FjXEF@vger.kernel.org, AJvYcCVvOSe02HEZnoY4ZrWIQX0Q14uVhU+U30i6vKFq+tKhVYF5u0uZJGypVW9foLZSZX85hKlNKCs4FIF8Gw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY6yhVsyGYiyvR1ETZZwuVidvncFLQGoMtZlQvmHWg9Yp+getR
-	Xg+ISF02WWPT+EOvgg51qri3ajadqi/atRK4BHouHqg9ZT0v6DnX
-X-Gm-Gg: ASbGncs29iJJJiUHzDcR7HW92q/OGuYWUHA+SiKXTG9J35eP8U98dpxTy7BpfWzAMo3
-	6SQ6xPzuw9CHfePoMcHQW3zHkynS66mMquKxWUXbhnAl4YBlU78R0c+z6JusqWf+MiCJAyOxTs6
-	/C9d72DCStZ4uiUJ8dQs/bBe7QXRUiK5BA/sqDVCqEBfDde4cJifJz4a07oyJ42e52Ej1dNBSwA
-	mZY3gpTj4UAsArDFjgScUjm/oqyUJCLzkCKTaBsxmOoJKltgqFniNoPjHdbVleI5YBO/v17kcGn
-	twZAKB76SDJSjdXB2xUBML/nar522wuGKXPSHIQZvxR22O/fAaNDkbsnFTaDbwnaCfvT
-X-Google-Smtp-Source: AGHT+IGj3fjTQReHuc5YhyvjBSiLTj9JvTTuTTRhjDoH1puY3E+pAcuTYhwFCamMNs47LPqZtpbz5g==
-X-Received: by 2002:a17:907:3e12:b0:ad2:3bfc:232 with SMTP id a640c23a62f3a-ad23bfc9e4dmr749244266b.32.1747060071910;
-        Mon, 12 May 2025 07:27:51 -0700 (PDT)
-Received: from [10.80.1.87] ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2290a4cc2sm516075966b.183.2025.05.12.07.27.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 07:27:51 -0700 (PDT)
-Message-ID: <98386cab-11c0-4f74-9925-8230af2e65c8@gmail.com>
-Date: Mon, 12 May 2025 17:27:48 +0300
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="XJUJ/dyd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ShlYCAlpUj0EG4BFFQGzIlfptjTPq6gwYXAUM0H4Ork=; b=XJUJ/dydz3VlhW90lBogldLNUj
+	8ADonzlkFcuGd4guYD5B54jwooOTJAoaD7v9jw6aelUwd1q0UyptqECq4s28nQjxVzlFvsazZTm8Y
+	7wqAaW7zyqc+Y4GBHZ1g+3gDCYdDIDO4Ub0oqD75vdodIvwFCOfDGale5vuOj+WvkRrN2rH0WYJ7P
+	Hv4c5Hmd9duMC+T4b+863YtmsYd8iT7cqzZQLz3nPYIZXPLqRG2BX2oLAx/cnp8cIekdbDjXwbljr
+	pg2OlCQurfrhuwynRN/DCd1PmzUTaSDWyuYISEK9/viI6c7PjCkFBAcU/HUApSApeMSIY9MizQ6La
+	3ATQvYcg==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uEU2w-0077TL-6e; Mon, 12 May 2025 16:27:43 +0200
+Message-ID: <86103c8d-0cdf-4fc8-aa79-5a03b299d26e@igalia.com>
+Date: Mon, 12 May 2025 11:27:40 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,84 +41,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next V9 1/5] devlink: Extend devlink rate API with
- traffic classes bandwidth management
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Jiri Pirko <jiri@nvidia.com>, Gal Pressman <gal@nvidia.com>,
- Leon Romanovsky <leonro@nvidia.com>, Donald Hunter
- <donald.hunter@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- Jonathan Corbet <corbet@lwn.net>, Saeed Mahameed <saeedm@nvidia.com>,
- Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-rdma@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
- Mark Bloch <mbloch@nvidia.com>, Carolina Jubran <cjubran@nvidia.com>,
- Cosmin Ratiu <cratiu@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Dragos Tatulea <dtatulea@nvidia.com>
-References: <1746769389-463484-1-git-send-email-tariqt@nvidia.com>
- <1746769389-463484-2-git-send-email-tariqt@nvidia.com>
- <20250509081625.5d4589a5@kernel.org>
+Subject: Re: [PATCH] drm: drm_auth: Convert mutex usage to guard(mutex)
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-dev@igalia.com, Kees Cook <keescook@chromium.org>,
+ Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250509142627.639419-1-andrealmeid@igalia.com>
+ <7133e9b4-c05a-4901-940e-de3e70bbbb1e@suse.de>
 Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <20250509081625.5d4589a5@kernel.org>
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <7133e9b4-c05a-4901-940e-de3e70bbbb1e@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi Thomas,
 
+Thanks for the feedback.
 
-On 09/05/2025 18:16, Jakub Kicinski wrote:
-> On Fri, 9 May 2025 08:43:05 +0300 Tariq Toukan wrote:
->> +  -
->> +    name:  devlink-rate-tc-index-max
->> +    header: uapi/linux/devlink.h
->> +    type: const
->> +    value: 7
-
-Hi Jakub,
-
+Em 12/05/2025 03:52, Thomas Zimmermann escreveu:
+> Hi
 > 
-> Ugh, still wrong, the user space headers don't have uAPI in the path
-> when installed. They go to /usr/include/linux/$name.h
-> But for defines "local" to the family you don't have to specify header:
-> at all, just drop it.
+> Am 09.05.25 um 16:26 schrieb André Almeida:
+>> Replace open-coded mutex handling with cleanup.h guard(mutex). This
+>> simplifies the code and removes the "goto unlock" pattern.
+>>
+>> Tested with igt tests core_auth and core_setmaster.
+>>
+>> Signed-off-by: André Almeida <andrealmeid@igalia.com>
 > 
-> And please do build tests the next version:
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 > 
-> 	make -C tools/net/ynl/ W=1 -j
+> but with questions below
+> 
+>> ---
+>>
+>> For more information about guard(mutex):
+>> https://www.kernel.org/doc/html/latest/core-api/cleanup.html
+> 
+> This page lists issues with guards, so conversion from manual locking 
+> should be decided on a case-by-case base IMHO.
 > 
 
-Noted.
+Sure, agreed. The places that I have converted to guard(mutex) here 
+looks like a good fit for this conversion, where the scope of the mutex 
+is well defined inside a function without conditional locking.
 
-> I'm going to also give you a hint that my next complaint will be that
-> there are no selftests in this series, and it extends uAPI.
+>> ---
+>>   drivers/gpu/drm/drm_auth.c | 64 ++++++++++++++------------------------
+>>   1 file changed, 23 insertions(+), 41 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/drm_auth.c b/drivers/gpu/drm/drm_auth.c
+>> index 22aa015df387..d6bf605b4b90 100644
+>> --- a/drivers/gpu/drm/drm_auth.c
+>> +++ b/drivers/gpu/drm/drm_auth.c
+>> @@ -95,7 +95,7 @@ int drm_getmagic(struct drm_device *dev, void *data, 
+>> struct drm_file *file_priv)
+>>       struct drm_auth *auth = data;
+>>       int ret = 0;
+>> -    mutex_lock(&dev->master_mutex);
+>> +    guard(mutex)(&dev->master_mutex);
+> 
+> These guard statements are hidden variable declarations. Shouldn't they 
+> rather go to the function top with the other declarations? This would 
+> also help to prevent the problem listed in cleanup.html to some extend.
+> 
 
-I have some questions, looking for answers in an official source.
+The guard statements should go exactly where the lock should be taken, 
+as it not only declares anonymous variables but also really takes the 
+lock. The lock is then release when the mutex goes out of scope. File 
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c has some usage of 
+guard(mutex) as well, where Mario did a similar cleanup:
 
-Most importantly, it is unclear to me when a selftest is required. What 
-is the guideline?
+f123fda19752 drm/amd/display: Use scoped guards for handle_hpd_irq_helper()
+aca9ec9b050c drm/amd/display: Use scoped guard for 
+amdgpu_dm_update_connector_after_detect()
+f24a74d59e14 drm/amd/display: Use scoped guard for dm_resume()
 
-Please point me to any guidance for this selftest requirement. Is it 
-generic, or networking subsystem specific?
 
-Let's make sure these things are well-defined, so we plan the extra 
-effort accordingly in future features, and improve predictability.
-
-I reviewed
-Documentation/process/maintainer-netdev.rst
-Documentation/dev-tools/testing-overview.rst
-Documentation/dev-tools/testing-devices.rst
-Documentation/dev-tools/kselftest.rst
-but couldn't find all answers.
-
-BTW, some sources like the webpage link 
-https://kselftest.wiki.kernel.org/ in 
-Documentation/dev-tools/kselftest.rst is marked "OBSOLETE CONTENT". 
-Should be totally ignored?
-
-Also, should the selftests require vendor-specific hardware to run? or 
-they imply adding netdevsim implementation?
-
-Regards,
-Tariq
-
+> Best regards
+> Thomas
+> 
