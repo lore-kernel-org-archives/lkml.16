@@ -1,96 +1,114 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C88735953;
-	Mon, 12 May 2025 16:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F73246768;
+	Mon, 12 May 2025 16:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067606; cv=none; b=Zw+U2WhFirGjsa9NRsEf6dNcZni5MK8HtPulvkPBMB53aKeU68ikNeAsgUinGZlRGYEm84+FAp61zqGog+6Wjg3PWNGwFu/8FNYzWa7fVXY/EJOc62IZIC0zGyt8RzZT7zsZSFkJDbQrgJA7PsrJ87FODkLe7fO91Ia73XXoZ00=
+	t=1747067655; cv=none; b=sqQ6yUkvOZW6K9uoR9AjXNCuTiKNiX1cj9wmWNDxfpYEI9/1GLGO5+B3XigQClQKK2dXwgzonltAo+DUWzlpqZ5uWH0vXY3dAx/j45muzuHqSBofuruG+sInwDbonazZdluzFWc7fO293Y8kFCnVniN/P2ajlsy/tBBks2th3Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067606; c=relaxed/simple;
-	bh=kUGQH80AVrhfyjYADjSapWJYo4WQT0Hfu6z+RAxTtrM=;
+	s=arc-20240116; t=1747067655; c=relaxed/simple;
+	bh=Lk35CP8LZmPslpsnxWnA0SM9IdKc0rO8t7ScWnmdFIQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eV9EZxZJ103PXFcPqfDTMEGyeFejoRn+snjIoI/tjdcymTYOsfRHVyWNBasY74WeOypNBmgwzrDstSPYUafgNGDXkbye87a19dz/2iJTNlkVj801LRIflNn3XhrIcQhSBuZs6atThOKxpftMxd5C7o/h3sjl/iQVBw02Kh9k0Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NX3S+MH3; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=egDWN2DWvE3OqM+V2cKgvh+Hpie1Q0notlRXLH8jDhT32ufui9ER5dOliun5VfiEGZY1BPH1gNScg15WXSO7CcVmf2kIxGgOew9T3nafDnJ/zDANoezqQINtgMOZ0t5jg1YeA9aQjsZTAgnZ/VyZr9qTsNsbCPbH9OCaUhvLH2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmcUDIuu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NX3S+MH3"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-74019695377so3444183b3a.3;
-        Mon, 12 May 2025 09:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747067603; x=1747672403; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9pxnN/Jo3ePwIGeY3IKNLYP76fzUcGfkSoLqkEqCf8o=;
-        b=NX3S+MH3XSwG8zOE5Vz0zqFv2nmjoNwu0RKACt9s+Day83s6EezV0wlK3nBHSUtw7m
-         1AwHBaWmSu7/X4zxpfTEQllqz86mJCGkUIgXNhaCLxtOLWRsRJEITrmPRhIO4xRgR/Iw
-         HSSzclvwGFQdJTqrIgH1OIRl+O/PIzhaxDhdGcpw62iAY2Un0W/1s/S4/3AHLqKUSsib
-         IpDd7lemaJZVMymR5CWTvj35oP7PcpABlTrKFBmQ0isyXjrBDOU0DRKtVQKmqBPiQcEd
-         zurFl2mBvYFm9V4DZdGNk3j3jIw4mY/VEWJSBQGvSSh/yAgUKD/xA92ry1Ub4ANPYTqp
-         Y2ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747067603; x=1747672403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9pxnN/Jo3ePwIGeY3IKNLYP76fzUcGfkSoLqkEqCf8o=;
-        b=C4FKePSMNmUSUkaSf6411mn86tHUl4WdFDSJ1FLqDaLusGBDvW2eZdjPrGOCrZVPdg
-         SMmBaM2PMQ/N5viMz4kucp52j2fEMu4VsWHwYZrdcF3nKvV2kblXegnWpDjazA1CXsOZ
-         B7UeaFN58ck2hhUWfbMgePU7lhhPIGMhN6yV8qLAKRWDny3SHvhWLo+sFsni8kRD0U2h
-         EPVjKhKvTXAiLoo9ZykgMCsGIojdBa5BP36XyRbEU/QZ4fz2jc1ftHv6m2FkmRYD4tuN
-         6VMJ9IUIW5PqdokjaxpSAd1yAYD22NBOLsU5FXoO63VBALvx0pd5GlvmwufvWvGRu01E
-         tvQA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/HII7E6Y/ers2ywRavQop0n68gPehSdiwWaBIT5MUt6SsmpIXjjcEskOKNtIYyxDAN3TgzghtFxlVjaM1@vger.kernel.org, AJvYcCXxPA4ThXZTWr2w7Dt5+l0L34TmiUhtVatDwQnC2MQ/ywVGq7JKbiH8EmFmDAIq9fu5gYVzUkeWE1JHGA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXAF1XyKLd29lve9yVdwephxhxZyqf6W7juxvCArOTGuxhAo+x
-	lxInA8tQzEkg/MLmrFlKueuCawj9VEbXAGkBqzNpUNoMGKCwUcG/M1z76g==
-X-Gm-Gg: ASbGnctST9lWgk3IJ4vfrsw6J+8W8GGHXHQMGXdesJRyWJnMgQQ2aVn+J9VgJm3a8n5
-	rkyUiUsecAOsEzNqYIQpeFzwjn3qAve/jEWfrD7+phw0ozY1C9g4ZF6Tnv9J4ssoXpKaQG+SEwA
-	TZaQreiijo+6+fzObSvLHBClsYC1EaLDNkCU6lldDiML0n2DiYjK09pJWww6I+PA988QK6LShui
-	3UzMBc6Jcz9EQKdKp9xExcO/NYAEEuz+QkMeiAFnWb/Vy3aYKBZ4irb7Z0uqG7tLaT/tjkB0Vcq
-	gzkQcRyJiFhsjP48FC6MoLhWkHW+4+xIGEK4BWCJ+Rt/vbMHQe7g98sobs88vOQj
-X-Google-Smtp-Source: AGHT+IFjmAbwrOYag+kN/+vzM6kABryvuUOjAjD0uCEns0APGqDfpk59xG8VsWfMDkyxKTG4QuVksA==
-X-Received: by 2002:a05:6a20:149f:b0:215:df57:8fde with SMTP id adf61e73a8af0-215df579056mr2784370637.25.1747067603319;
-        Mon, 12 May 2025 09:33:23 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a405b9sm6436426b3a.142.2025.05.12.09.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:33:22 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 12 May 2025 09:33:21 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Wenliang Yan <wenliang202407@163.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, derek.lin@silergycorp.com,
-	miguel.lee@silergycorp.com, chris.ho@silergycorp.com,
-	eason.liao@silergycorp.com
-Subject: Re: [PATCH v7 1/4] hwmon:(ina238)Add ina238_config to save
- configurations for different chips
-Message-ID: <5b673485-7a70-450e-a766-acd7b3da2078@roeck-us.net>
-References: <20250506053741.4837-1-wenliang202407@163.com>
- <20250506053741.4837-2-wenliang202407@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmcUDIuu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE71C4CEE7;
+	Mon, 12 May 2025 16:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747067655;
+	bh=Lk35CP8LZmPslpsnxWnA0SM9IdKc0rO8t7ScWnmdFIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CmcUDIuuOHPFo4k8FQ8G660Ixz6AEAHLKmXznOPhu0w0IXzB0oyIo5gjHB01vB9kf
+	 ZchRsFHHKQpLt/VVANRBPVZYqXRTnWqWPU2zcKLHTDYvIFv+ul1xY9uXlOi+LLHf8y
+	 xRxnBw/xgR9adwcF8zmQdxatg3PK6EFXJ2biKECNfwpjjj23ICfFDJN9koeofULoXz
+	 XuC8I/qBi3Yfm/PMN14RdTUPyyU3m7vlaL0agLpC8441DvNvEHz6qoA1JqeSwdPxhs
+	 54zCmta26CjV6GuGl2lZY0SkCTFwvn0gh9nwUYc65IV8w/jgTA5/JOjfAqwyjSQf2h
+	 SbTXqSvYG8BIw==
+Date: Mon, 12 May 2025 17:34:09 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yunfei Dong <yunfei.dong@mediatek.com>
+Cc: =?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Nathan Hebert <nhebert@chromium.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH 01/14] dt-bindings: media: mediatek: vcodec: add decoder
+ dt-bindings for mt8196
+Message-ID: <20250512-cilantro-aviation-4328d79e02b6@spud>
+References: <20250510075357.11761-1-yunfei.dong@mediatek.com>
+ <20250510075357.11761-2-yunfei.dong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sMtwU4b+uIOkGgh2"
+Content-Disposition: inline
+In-Reply-To: <20250510075357.11761-2-yunfei.dong@mediatek.com>
+
+
+--sMtwU4b+uIOkGgh2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506053741.4837-2-wenliang202407@163.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 01:37:38AM -0400, Wenliang Yan wrote:
-> Add structure ina238_config to store proprietary properties for different
-> chips to meet different chip adaptations
-> 
-> Signed-off-by: Wenliang Yan <wenliang202407@163.com>
+On Sat, May 10, 2025 at 03:53:31PM +0800, Yunfei Dong wrote:
+> Add compatible for video decoder on MT8196 platform, which is a
+> lat + single core architecture.
 
-Applied.
+Please mention what makes this different from the existing devices since
+a fallback compatible is not permitted.
 
-Thanks,
-Guenter
+>=20
+> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+> ---
+>  .../bindings/media/mediatek,vcodec-subdev-decoder.yaml           | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,vcodec-subd=
+ev-decoder.yaml b/Documentation/devicetree/bindings/media/mediatek,vcodec-s=
+ubdev-decoder.yaml
+> index bf8082d87ac0..74e1d88d3056 100644
+> --- a/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-deco=
+der.yaml
+> +++ b/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-deco=
+der.yaml
+> @@ -76,6 +76,7 @@ properties:
+>        - mediatek,mt8186-vcodec-dec
+>        - mediatek,mt8188-vcodec-dec
+>        - mediatek,mt8195-vcodec-dec
+> +      - mediatek,mt8196-vcodec-dec
+> =20
+>    reg:
+>      minItems: 1
+> --=20
+> 2.46.0
+>=20
+>=20
+
+--sMtwU4b+uIOkGgh2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCIjAQAKCRB4tDGHoIJi
+0k0QAQDsVpMhJhlm50bTaTI++/O1PIGlsmy6yib9ZYoDAbRqIgEA3qnCMVVPvuhw
+eIG5A1Me4vqECJW3lsXvK002oVvo+gg=
+=OPXB
+-----END PGP SIGNATURE-----
+
+--sMtwU4b+uIOkGgh2--
