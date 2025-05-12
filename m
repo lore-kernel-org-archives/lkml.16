@@ -1,156 +1,165 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E3B3C38
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BA23C38;
+	Mon, 12 May 2025 06:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747030117; cv=none; b=XUi1W/VxyTYw/0vrdUpravBTXzbyghzLwk9pv8CnSPPqP4CWyEPMaSOaaIhuK21vqw93z7IOGM7lsyLLir8SVaaz3Jg+/gEqaQtqNZmh1cYU2ma/2a92ddRRy/I9+AGqqlmJLIHslsCS+emoGx117haYv5ji+1b4wLH50GVLvEg=
+	t=1747030124; cv=none; b=nPGdawsJ0KDAas+yZZsm2lJVBBUuB4AXhj03PF7olaWtOdilsD9XdAbTVpO7nEuP4av0dGwErXclcXPq8FHmpQu2ogMEKNlaf2vgewQzQHgTv6AoOqxGQv3TMsvHHyDfIDsE1sSLf1cKMO8e/bNFw6U2waKL8OUDC3BkNgQ0fVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747030117; c=relaxed/simple;
-	bh=FK8pEdCRQtG6bJlXiQWdi88Bu8Ab4nVxy28DqpeqP7s=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ENZ+9gaVOp79Mqy2jmcm7C+a6QOObZ22rQIg3glrLTOTN+PdcJO/zvHRGjNjPaODdICQMGPnB8+kZbCNdyvb3wqkj44VTrbDPQzln5nMce62tL23V4/+qYrjfb1r8bhbT5jOUrW8Pl2eYGgvGE9PNAejGvSlDYLzZFOX/p+t2PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P68ZAven; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X4ag0s25; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P68ZAven; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X4ag0s25; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747030124; c=relaxed/simple;
+	bh=aeBo/HtHc7JVSi8gCCikzWTDfo2c+IE0WmhaGHAMUcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Jy2bU1o+dY39jbq/WM7u8dZfQYwGz6FsiOdV1m0IqjT9DUGayk2CKQaRLhQwUwSZSan57KzklQPPa2vAN6QHgkJkOge/NvOaU7vZNP1yqZDz54CFee/PYWqgrf9w8n3I5KHQdTp/7VaeAmVaw/DA9NPkkpdG9oYFvQstLaUbk7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JG46GzaI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P68ZAven";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X4ag0s25";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P68ZAven";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X4ag0s25"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 64D4D211AD;
-	Mon, 12 May 2025 06:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747030102; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
-	b=P68ZAvenefYZ4NDkzAWQDonwBFNXbXDZYtwdUfPOBWs8iBbR6DO+hrj5Vtu3tQBn+spiOY
-	q58yLInZAbDhIWmys5/OFX8u+6Ni7k73KhtjmMmPt5n5k3cDox5eBljtiIDEV+OcLlWAsX
-	torlOTa9h37E+iCwkWbtj5kDdFnw6Jc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747030102;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
-	b=X4ag0s250XMgQ+nRAVL/unRTUX8pJeSCz4LYIb78m0QmkvgTes7RIDftLdnkXs45BtG4O0
-	+vaouCEWQtpR85Cg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=P68ZAven;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=X4ag0s25
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747030102; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
-	b=P68ZAvenefYZ4NDkzAWQDonwBFNXbXDZYtwdUfPOBWs8iBbR6DO+hrj5Vtu3tQBn+spiOY
-	q58yLInZAbDhIWmys5/OFX8u+6Ni7k73KhtjmMmPt5n5k3cDox5eBljtiIDEV+OcLlWAsX
-	torlOTa9h37E+iCwkWbtj5kDdFnw6Jc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747030102;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=39IvRBcW+cJ8NVSVS1ljrzz9mXA6cTtMOoBmdCkC5GE=;
-	b=X4ag0s250XMgQ+nRAVL/unRTUX8pJeSCz4LYIb78m0QmkvgTes7RIDftLdnkXs45BtG4O0
-	+vaouCEWQtpR85Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 210211397F;
-	Mon, 12 May 2025 06:08:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zdDjBlaQIWgYcgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 12 May 2025 06:08:22 +0000
-Date: Mon, 12 May 2025 08:08:21 +0200
-Message-ID: <878qn2xsx6.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: <broonie@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>,
-	<13564923607@139.com>,
-	<13916275206@139.com>,
-	<alsa-devel@alsa-project.org>,
-	<linux-kernel@vger.kernel.org>,
-	<baojun.xu@ti.com>,
-	<Baojun.Xu@fpt.com>,
-	<jesse-ji@ti.com>
-Subject: Re: [PATCH v1] ALSA: hda/tas2781: Fix the ld issue reported by kernel test robot
-In-Reply-To: <20250511221844.1123-1-shenghao-ding@ti.com>
-References: <20250511221844.1123-1-shenghao-ding@ti.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JG46GzaI"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BNTuoR013680;
+	Mon, 12 May 2025 06:08:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZAg73qctMdAHl6qXg7azYTSd5wdfKLHTQzj8wlUwENs=; b=JG46GzaIghBXd6z7
+	iYG15YdxYHaoaS14TUuTpN7Y1YUcFsV/tGWIy5brD3wUKWvPTvAyfwuN4AJFgZ/b
+	U+b5l/qcOpbyUhUV59M0/nBclhPpvr5tbeccPqEFTp6PlfqafPrs4+xU0PDsfj+d
+	dz3PqO7lt0CbNE5tgqWCQNl3Veh/bC1bdEPKcMuplfQrreTIB9JxpDmfl69KQzLv
+	JiYzZiYqZKxauIiwO/hTHwKGWfQ2wM9iGJ76mHDBVtKjO/SBtfkLlvLnM4gzsRCY
+	2Xzii8Q69rXappyCaeNTP2TK2/+oGI2KGLB5mvOXZd2+Qx394fpbMR71Hpv6D8zG
+	tnx4/Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hwt939hq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 06:08:38 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54C68aDw030763
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 06:08:36 GMT
+Received: from [10.50.62.222] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 11 May
+ 2025 23:08:32 -0700
+Message-ID: <7de5bf3f-12e6-99ca-38fd-45435de5773f@quicinc.com>
+Date: Mon, 12 May 2025 11:38:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 64D4D211AD
-X-Spam-Flag: NO
-X-Spam-Score: -3.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.981];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[139.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,139.com,alsa-project.org,vger.kernel.org,ti.com,fpt.com];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	REDIRECTOR_URL(0.00)[urldefense.com];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim]
-X-Rspamd-Action: no action
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v7 0/5] media: qcom: iris: add support for QCS8300
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250501-qcs8300_iris-v7-0-b229d5347990@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250501-qcs8300_iris-v7-0-b229d5347990@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA2MyBTYWx0ZWRfXx6pfsOXrxel7
+ fCkaKHrTriL2FLbFdT2nR68gK5UK0sADv4ZyjYrxnkyiuJc4Arf3OTA1U73Ce50hg8DTDyVJFXg
+ n6EK6gWPWsLyo6HIXsfjr9B3ly3nTT7q8ansefxscLF6nDPogPG+nj9j3hnHmWOYXZ913l9NhLl
+ HiPcSKPnXQrBcnht6oJ7/AbcO6KJ5lxawtD1V3i5ABJFY2AK6rMqO6SewrVvSvs+G4HaNY0e4Zv
+ zzYoyBRG7CoO3z9IO2PkZhgQJdWDi4Zfms588ajYcJcfWmXIgiGO3v+Tqt1/YnT7gJAmenGP95c
+ p/Q4xzfnN0bBWe6dn5jMjrow/FQg39sqC4C0C07cXyfl+E/kRspF1Lyq7OaqXOvmISLb0uetcXV
+ iK9jFNA8BhjHXQeMgqK1znsvslwYJZNSak+8/hG6lMveBGHylWqasVLh1rVPhRtPq9iwaTCC
+X-Proofpoint-ORIG-GUID: b9szylcn0rVwlWotNU-Krm6vnodLKfTs
+X-Proofpoint-GUID: b9szylcn0rVwlWotNU-Krm6vnodLKfTs
+X-Authority-Analysis: v=2.4 cv=a58w9VSF c=1 sm=1 tr=0 ts=68219066 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=-hBaU0KkIdV-hY_gRgQA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120063
 
-On Mon, 12 May 2025 00:18:44 +0200,
-Shenghao Ding wrote:
+Hi Bjorn,
+
+On 5/1/2025 2:16 AM, Vikash Garodia wrote:
+> add support for video hardware acceleration on QCS8300 platform.
 > 
-> Fix the ld issue reported by kernel test robot, moving the implementation
-> of tasdevice_remove from tas2781-comlib-i2c.c to tas2781-comlib.c.
+> This series depends on
+> https://lore.kernel.org/all/20250417-topic-sm8x50-iris-v10-v7-1-f020cb1d0e98@linaro.org/
 > 
-> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> ---
+> Changes in v7:
+> - Fix clock corner.
+> - Link to v6: https://lore.kernel.org/r/20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com
+> 
+> Changes in v6:
+> - Address a comment related the commit title.
+> - Link to v5: https://lore.kernel.org/r/20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
+> 
+> Changes in v5:
+> - Fix order in dt bindings.
+> - Drop an unrelated sentence from commit description.
+> - Link to v4: https://lore.kernel.org/r/20250424-qcs8300_iris-v4-0-6e66ed4f6b71@quicinc.com
+> 
+> Changes in v4:
+> - Introduce a patch to fix existing order of compat strings.
+> - Fix the order of header inclusions.
+> - Link to v3: https://lore.kernel.org/r/20250423-qcs8300_iris-v3-0-d7e90606e458@quicinc.com
+> 
+> Changes in v3:
+> - Fix commit description to better describe about QCS8300.
+> - Fix the order of the patch.
+> - Collect the review tags.
+> - Link to v2: https://lore.kernel.org/r/20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com
+> 
+> Changes in v2:
+> - Added dependent info in binding patch as well.
+> - Fix a sparse error.
+> - Link to v1: https://lore.kernel.org/r/20250418-qcs8300_iris-v1-0-67792b39ba21@quicinc.com
 > 
 > ---
-> v1:
->  - | Reported-by: kernel test robot <lkp@intel.com>
->    | Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505111855.FP2fScKA-lkp@intel.com/__;!!G3vK!U-wdsvrOG1iezggZ55RYi8ikBxMaJD
+> Vikash Garodia (5):
+>       dt-bindings: media: qcom,sm8550-iris: document QCS8300 IRIS accelerator
+>       media: iris: fix the order of compat strings
+>       media: iris: add qcs8300 platform data
+>       arm64: dts: qcom: qcs8300: add video node
+>       arm64: dts: qcom: qcs8300-ride: enable video
+> 
+>  .../bindings/media/qcom,sm8550-iris.yaml           |   1 +
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |   4 +
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi              |  71 ++++++++++++
+>  .../platform/qcom/iris/iris_platform_common.h      |   1 +
+>  .../media/platform/qcom/iris/iris_platform_gen2.c  |  57 ++++++++++
+>  .../platform/qcom/iris/iris_platform_qcs8300.h     | 124 +++++++++++++++++++++
+>  drivers/media/platform/qcom/iris/iris_probe.c      |  16 ++-
+>  7 files changed, 268 insertions(+), 6 deletions(-)
+> ---
+When do u plan to pick DT patches (4/5 and 5/5) from this series ? I just saw
+the PR for 6.16 and i did not see these patches, would like to know what is
+pending ?
 
-You must put this in the patch description around your Signed-off-by
-line (without quotes).
-Also, please put the Fixes tag to point out the commit that introduced
-the regression, too.
-
-Care to resubmit?
-
-
-thanks,
-
-Takashi
+Regards,
+Vikash
