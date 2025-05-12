@@ -1,244 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DC5266F09;
-	Mon, 12 May 2025 08:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCCE25A625
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747040273; cv=none; b=JqIZsMgtqBq0JOI3RXb7TNtcN+7rPhmnne9D8y/Jye4rDU7wYC4BRcHHY9mKi8jS1HzYGF/02ONl5MmjFRjK7SYBA5AW5UhrvU/USj90syJl3vA1V0iaPCYjjm5kw1bmAvHjoTh8sdCT8Szg0clpDwhEhAepF1krNgFbdI3BFS8=
+	t=1747040291; cv=none; b=KV7kZM6dGMbNTp9l+cEbxgc95TQEoVO3gKs9CpbtX4VxV5tfEUmS+zevfeBg+PzdFWw2VNCi7+vLKRTBLjiF1fsYavjsMSrHqbWfXjyJDhMAEtTP35t0Ojf39dB7FFWtyT9lhRkfxfcyHwRJun9G5p/YY8YFB4X9KzHcWafSCkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747040273; c=relaxed/simple;
-	bh=SlxEBFvzTBZ9T/ujcuKgXBKVk73IYIx38GKTZR1Hk7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=igf/BKPH/JLksc7BEuxuh+RuINef+BxLxbE/em73AulfnJrU0XhdjZDY/Ry5m4k+QeuiyIc5CktjPlH+ZmcZsfApshGo1ZTwpx+r3kLNgWDJaz8MTNsofXEz2zclgF6pBXJfqgtWgv3VmzYykzkLhYvupXqb3mLToVTB+jjvo6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ILA3uqDR; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747040291; c=relaxed/simple;
+	bh=kc5GSFFX/O1pk4VfeAAu72fqhvLdEcPt+XSmat/prac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EBZ61Imi+QznxoFpdkqeQzumuL9/FUlufHQoiLdakwnZSh6je5J9GlTBJodu0bTUD2eUMhgvhpw6Q6vusmKxdGlcbx+w2MGSsVYVUw9AdDg4ZLE23UsqNYanQehxFsYTLMB7Okdr1hbb7MTzkacpw9y297ut8X9rGW2ywJWRsBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZUdcBvsQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ILA3uqDR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747040271; x=1778576271;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SlxEBFvzTBZ9T/ujcuKgXBKVk73IYIx38GKTZR1Hk7g=;
-  b=ILA3uqDRktpydzjHf0Fm6JGRQlESQxTA7ckVjCD/XQzR4Eh7zJlCMbrr
-   698n04NVFAsxYJi7jpn2eU0b7TsF9vUVp5ObijqGKBGp5mvm4C4i5CWzh
-   18SvaFCn9qnW1iLLxJD9f/iSLMrIHTzbpnAmoXyjj7qMr66m6cUqEON51
-   rehsmm1ieZbgK7nHVALrU0uuwufMQLW9xokii3f13j+IsOEX7lqsaAUqE
-   EG1F/3gfZ69ZFh5EpACZP4aqaiUDhon+WLIJK1/gGp3yDlGJKxcAwxr5N
-   Wt6R7OiURRnavhm5B8HQQ2Mr4VN0etcEgP97+W7/8PjntclKOIsn9yiG5
-   g==;
-X-CSE-ConnectionGUID: lvHSOnx1Ru+p2L+PSm2MFg==
-X-CSE-MsgGUID: urlAg1bZRUCLOG7jzmiE4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="59488769"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="59488769"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:57:50 -0700
-X-CSE-ConnectionGUID: EYMdIFAqR/eWtRQkBTgJ3A==
-X-CSE-MsgGUID: z4ON7Q2jSMuzrNK1IcQudw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="138235802"
-Received: from 984fee019967.jf.intel.com ([10.165.54.94])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:57:50 -0700
-From: Chao Gao <chao.gao@intel.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	tglx@linutronix.de,
-	dave.hansen@intel.com,
-	seanjc@google.com,
-	pbonzini@redhat.com
-Cc: peterz@infradead.org,
-	rick.p.edgecombe@intel.com,
-	weijiang.yang@intel.com,
-	john.allen@amd.com,
-	bp@alien8.de,
-	chang.seok.bae@intel.com,
-	xin3.li@intel.com,
-	Chao Gao <chao.gao@intel.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Vignesh Balasubramanian <vigbalas@amd.com>
-Subject: [PATCH v7 6/6] x86/fpu/xstate: Add CET supervisor xfeature support as a guest-only feature
-Date: Mon, 12 May 2025 01:57:09 -0700
-Message-ID: <20250512085735.564475-7-chao.gao@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250512085735.564475-1-chao.gao@intel.com>
-References: <20250512085735.564475-1-chao.gao@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZUdcBvsQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747040285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/itYxELyk+TdH5HSQhUSdXuubPJi4gcF7E7JylRYM9w=;
+	b=ZUdcBvsQhOV2Ile2LS58jOf9FM8qPAiX3d+9UNt76gLfx24To8ShURrp124V9/QE2yy3yR
+	7AdE2hkM1heL42U//EnsU9v38GZIGEKjkh4m0ZqiZe6XTkcPct6nrwRsnJDd4bKtKrUxde
+	0m9vTFP/yrlmAb1WX765b+o9+5sCnpg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-361-D5DDTtu7O1qb0IrEGVFMtg-1; Mon,
+ 12 May 2025 04:58:01 -0400
+X-MC-Unique: D5DDTtu7O1qb0IrEGVFMtg-1
+X-Mimecast-MFC-AGG-ID: D5DDTtu7O1qb0IrEGVFMtg_1747040280
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7FDC5195609E;
+	Mon, 12 May 2025 08:57:59 +0000 (UTC)
+Received: from localhost (unknown [10.43.135.229])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 045E718001DA;
+	Mon, 12 May 2025 08:57:56 +0000 (UTC)
+Date: Mon, 12 May 2025 10:57:54 +0200
+From: Miroslav Lichvar <mlichvar@redhat.com>
+To: John Stultz <jstultz@google.com>
+Cc: Keno Goertz <contact@kenogo.org>, tglx@linutronix.de,
+	zippel@linux-m68k.org, mingo@elte.hu, linux-kernel@vger.kernel.org
+Subject: Re: ntp: Adjustment of time_maxerror with 500ppm instead of 15ppm
+Message-ID: <aCG4El4aub9TEKWo@localhost>
+References: <4a6f1494-c6fe-4f66-a376-b6389538ef9f@kenogo.org>
+ <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+On Thu, May 08, 2025 at 12:45:13PM -0700, John Stultz wrote:
+> Looking back through the commit history, we used to increment
+> time_maxerror by (time_tolerance >> SHIFT_USEC), but all the way back
+> in the git history (2.6.12, and seemingly back as far as 2.3?)
+> time_tolerance was always set to MAXFREQ.
 
-== Background ==
+This 500 ppm increment goes all way back to the original nanokernel
+implementation by David Mills, on which IIRC was based the Linux and
+other systems' timekeeping code:
+https://www.eecis.udel.edu/~mills/ntp/html/kern.html
 
-CET defines two register states: CET user, which includes user-mode control
-registers, and CET supervisor, which consists of shadow-stack pointers for
-privilege levels 0-2.
+I think the idea to use MAXFREQ (reported as tolerance in timex) was
+to cover the case when the clock is not synchronized at all with the
+frequency offset set to any value in the +/- 500 ppm range. The Linux
+adjtimex also allows setting the tick length, which gives it a much
+wider range of +/-10% adjustment, so that is not fully covered.
 
-Current kernels disable shadow stacks in kernel mode, making the CET
-supervisor state unused and eliminating the need for context switching.
+Changing the hardcoded rate to 15 ppm to match RFC5905 doesn't seem
+like a good idea to me. The kernel doesn't know how well the clock is
+synchronized and I'm sure in some cases it would be too small.
 
-== Problem ==
+The best solution would be to add a new mode to adjtimex to make it
+configurable, e.g. named ADJ_MAXERRORRATE and the actual value
+provided in the timex tolerance field. For compatibility with existing
+NTP/PTP clients the rate could be reset to the default 500 ppm on
+every ADJ_MAXERROR setting. To get a reduced rate updated applications
+could set both ADJ_MAXERROR and ADJ_MAXERRORRATE at the same time.
 
-To virtualize CET for guests, KVM must accurately emulate hardware
-behavior. A key challenge arises because there is no CPUID flag to indicate
-that shadow stack is supported only in user mode. Therefore, KVM cannot
-assume guests will not enable shadow stacks in kernel mode and must
-preserve the CET supervisor state of vCPUs.
-
-== Solution ==
-
-An initial proposal to manually save and restore CET supervisor states
-using raw RDMSR/WRMSR in KVM was rejected due to performance concerns and
-its impact on KVM's ABI. Instead, leveraging the kernel's FPU
-infrastructure for context switching was favored [1].
-
-The main question then became whether to enable the CET supervisor state
-globally for all processes or restrict it to vCPU processes. This decision
-involves a trade-off between a 24-byte XSTATE buffer waste for all non-vCPU
-processes and approximately 100 lines of code complexity in the kernel [2].
-The agreed approach is to first try this optimal solution [3], i.e.,
-restricting the CET supervisor state to guest FPUs only and eliminating
-unnecessary space waste.
-
-The guest-only xfeature infrastructure has already been added. Now,
-introduce CET supervisor xstate support as the first guest-only feature
-to prepare for the upcoming CET virtualization in KVM.
-
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Link: https://lore.kernel.org/kvm/ZM1jV3UPL0AMpVDI@google.com/ [1]
-Link: https://lore.kernel.org/kvm/1c2fd06e-2e97-4724-80ab-8695aa4334e7@intel.com/ [2]
-Link: https://lore.kernel.org/kvm/2597a87b-1248-b8ce-ce60-94074bc67ea4@intel.com/ [3]
----
-v5:
-Introduce CET supervisor xfeature directly as a guest-only feature, rather
-than first introducing it in one patch and then converting it to guest-only
-in a subsequent patch. (Chang)
-Add new features after cleanups/bug fixes (Chang, Dave, Ingo)
-Improve the commit message to follow the suggested
-background-problem-solution pattern.
----
- arch/x86/include/asm/fpu/types.h  | 14 ++++++++++++--
- arch/x86/include/asm/fpu/xstate.h |  5 ++---
- arch/x86/kernel/fpu/xstate.c      |  5 ++++-
- 3 files changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
-index 54ba567258d6..93e99d2583d6 100644
---- a/arch/x86/include/asm/fpu/types.h
-+++ b/arch/x86/include/asm/fpu/types.h
-@@ -118,7 +118,7 @@ enum xfeature {
- 	XFEATURE_PKRU,
- 	XFEATURE_PASID,
- 	XFEATURE_CET_USER,
--	XFEATURE_CET_KERNEL_UNUSED,
-+	XFEATURE_CET_KERNEL,
- 	XFEATURE_RSRVD_COMP_13,
- 	XFEATURE_RSRVD_COMP_14,
- 	XFEATURE_LBR,
-@@ -142,7 +142,7 @@ enum xfeature {
- #define XFEATURE_MASK_PKRU		(1 << XFEATURE_PKRU)
- #define XFEATURE_MASK_PASID		(1 << XFEATURE_PASID)
- #define XFEATURE_MASK_CET_USER		(1 << XFEATURE_CET_USER)
--#define XFEATURE_MASK_CET_KERNEL	(1 << XFEATURE_CET_KERNEL_UNUSED)
-+#define XFEATURE_MASK_CET_KERNEL	(1 << XFEATURE_CET_KERNEL)
- #define XFEATURE_MASK_LBR		(1 << XFEATURE_LBR)
- #define XFEATURE_MASK_XTILE_CFG		(1 << XFEATURE_XTILE_CFG)
- #define XFEATURE_MASK_XTILE_DATA	(1 << XFEATURE_XTILE_DATA)
-@@ -268,6 +268,16 @@ struct cet_user_state {
- 	u64 user_ssp;
- };
- 
-+/*
-+ * State component 12 is Control-flow Enforcement supervisor states.
-+ * This state includes SSP pointers for privilege levels 0 through 2.
-+ */
-+struct cet_supervisor_state {
-+	u64 pl0_ssp;
-+	u64 pl1_ssp;
-+	u64 pl2_ssp;
-+} __packed;
-+
- /*
-  * State component 15: Architectural LBR configuration state.
-  * The size of Arch LBR state depends on the number of LBRs (lbr_depth).
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index a3cd25453f94..7a7dc9d56027 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -47,7 +47,7 @@
- #define XFEATURE_MASK_USER_DYNAMIC	XFEATURE_MASK_XTILE_DATA
- 
- /* Supervisor features which are enabled only in guest FPUs */
--#define XFEATURE_MASK_GUEST_SUPERVISOR	0
-+#define XFEATURE_MASK_GUEST_SUPERVISOR	XFEATURE_MASK_CET_KERNEL
- 
- /* All currently supported supervisor features */
- #define XFEATURE_MASK_SUPERVISOR_SUPPORTED (XFEATURE_MASK_PASID | \
-@@ -79,8 +79,7 @@
-  * Unsupported supervisor features. When a supervisor feature in this mask is
-  * supported in the future, move it to the supported supervisor feature mask.
-  */
--#define XFEATURE_MASK_SUPERVISOR_UNSUPPORTED (XFEATURE_MASK_PT | \
--					      XFEATURE_MASK_CET_KERNEL)
-+#define XFEATURE_MASK_SUPERVISOR_UNSUPPORTED (XFEATURE_MASK_PT)
- 
- /* All supervisor states including supported and unsupported states. */
- #define XFEATURE_MASK_SUPERVISOR_ALL (XFEATURE_MASK_SUPERVISOR_SUPPORTED | \
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index e77cbfd18094..549cc8929407 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -56,7 +56,7 @@ static const char *xfeature_names[] =
- 	"Protection Keys User registers",
- 	"PASID state",
- 	"Control-flow User registers",
--	"Control-flow Kernel registers (unused)",
-+	"Control-flow Kernel registers (KVM only)",
- 	"unknown xstate feature",
- 	"unknown xstate feature",
- 	"unknown xstate feature",
-@@ -80,6 +80,7 @@ static unsigned short xsave_cpuid_features[] __initdata = {
- 	[XFEATURE_PKRU]				= X86_FEATURE_OSPKE,
- 	[XFEATURE_PASID]			= X86_FEATURE_ENQCMD,
- 	[XFEATURE_CET_USER]			= X86_FEATURE_SHSTK,
-+	[XFEATURE_CET_KERNEL]			= X86_FEATURE_SHSTK,
- 	[XFEATURE_XTILE_CFG]			= X86_FEATURE_AMX_TILE,
- 	[XFEATURE_XTILE_DATA]			= X86_FEATURE_AMX_TILE,
- 	[XFEATURE_APX]				= X86_FEATURE_APX,
-@@ -371,6 +372,7 @@ static __init void os_xrstor_booting(struct xregs_state *xstate)
- 	 XFEATURE_MASK_BNDCSR |			\
- 	 XFEATURE_MASK_PASID |			\
- 	 XFEATURE_MASK_CET_USER |		\
-+	 XFEATURE_MASK_CET_KERNEL |		\
- 	 XFEATURE_MASK_XTILE |			\
- 	 XFEATURE_MASK_APX)
- 
-@@ -572,6 +574,7 @@ static bool __init check_xstate_against_struct(int nr)
- 	case XFEATURE_PASID:	  return XCHECK_SZ(sz, nr, struct ia32_pasid_state);
- 	case XFEATURE_XTILE_CFG:  return XCHECK_SZ(sz, nr, struct xtile_cfg);
- 	case XFEATURE_CET_USER:	  return XCHECK_SZ(sz, nr, struct cet_user_state);
-+	case XFEATURE_CET_KERNEL: return XCHECK_SZ(sz, nr, struct cet_supervisor_state);
- 	case XFEATURE_APX:        return XCHECK_SZ(sz, nr, struct apx_state);
- 	case XFEATURE_XTILE_DATA: check_xtile_data_against_struct(sz); return true;
- 	default:
 -- 
-2.47.1
+Miroslav Lichvar
 
