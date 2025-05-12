@@ -1,219 +1,191 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D0D24BBFC
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C2A7464;
+	Mon, 12 May 2025 08:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037681; cv=none; b=UhInaedvYFf+GGov0AlBWvmL9ewYgKinDnpDZklLmQiqOx4LDrLM2ZdOtT/7SKnhEs4ptW8RdwWypWgVDLbGnD7s79rADqNL9RltsYvQ+lWqxwXkqdEuq5OIrCXcMnJIjsC1wD35C0Ppj2M3Ap3R/WIOlErGZ5U/Rioo82VIIjI=
+	t=1747037739; cv=none; b=LkeF02q4vhX084V3bEu1zDFS2+158EM4BvIaKxMhR/cEjPQV6J/tYR2ptI8fOXEtMIPLwpjtcs9kqA3CXpJN8USWf6jxHcUtHbyzvsg4pftciU9I7l2rlzpxfsc3t4i98n2WuSHMw8vwoRztZhf9pp2foO0avMuU+pqH35xjStM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037681; c=relaxed/simple;
-	bh=ZTzMqrn1URom1KwjBf0pttZCkEBA9ZhKUjt81jZvKpI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uBhKuQktFjyIPh0ezgQQ8gEqG3BZVC7+FBi19pq5ACtUiSXv8rZIrIvkpn5oXdifnXNm55LAiGL5vEPLzraSoKiXbO/rxgi9FrRdWJv+Fve5wGWx96zKEMkDwGu/e+6BjXsGeTFmEBw+w8CEfQ4oCzZTBfr9y6pEVj2GcUHvFkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ar35yTb7; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ar35yTb7"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so47292085e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747037677; x=1747642477; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KUWtnXREtfU0bglSJPdPg3dSI06mpwAnzzgVNIScr4k=;
-        b=ar35yTb7To8DY9zWyhaj6CjMROYLdYrYlJZcHgm8BIoBZKjBvh9TZEgkQaroHM/MrB
-         0wf28gvakTOoSeYMpA6KMAbG08lbGK/ok2kSq9L1ZmyJh5KXFFlmffG9UELfgi7zB18U
-         jP0ErP40tITWcyfs3kIvcjv1BmmqBu8kTyM33P+c6cGRxbXKDOPAGGWPp5h6uRx3cHTR
-         31XQCxU138vYBdRT6Hm9wTWKs8uVODmvhntVgrSj6w4mpYbUxROsxbTkO9u26UyFwdNq
-         WgXQxFMF4ViuxbOgxtOkjQNkhJhJpamWjzsewC/ctHdizn8euM/TQ+GmPG+em6a4ObwO
-         c+ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747037677; x=1747642477;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KUWtnXREtfU0bglSJPdPg3dSI06mpwAnzzgVNIScr4k=;
-        b=Q8dAUMTCtbACnXOr2rJu/HauNJ0z+F5PjroFcQMJBfe4jQcZHkkE336dR5zVPzxKZY
-         hqdPMTRYawVgeSoxZYZCRwHEWaxzrfV8PBao0HFi9jLKoFy3VEK4mgQI6pSjBAuxbQdW
-         kmr9f0dydhw94B64nWX/xTbviphVCRyGx9h/YGgZ+dSMy30qGb+5WthZ9S4F7dMmNnf1
-         1+02Vd8m/nsU5hndyBoL3rU2AyB5JuT9xO4kfcaEK1mPtkClVKx2xxqRwt/k5MvTt7WD
-         3ytu1VdWquOkDQLfyhWfNOMSXiyjGnwsJqwsdfDt/XInq7v3Yxs6AhN92l4a3lWkQu3l
-         /UdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5JiuDzEJVmI0XiGsaMvREYM6CIRlHEXwGL3eD48Jtooxt1S2/wcQe+9oCe06iBD7Z7WGKWqflJZj2WC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygKwyQXBEoXasRRBAmVjqcaEZiPSMjHyd1mf31HaamgLzptZ41
-	rrWHONPYF6WjohojDdjqbGOWWV6B7qu2jWH9usZuMXGZGEfnJ1/ANkYmC0W3m3E=
-X-Gm-Gg: ASbGncsASFv/ox8lQcFSMWBH4pcYDrH1H/LZXXHEp+ZfvCOfhqJJUGsTT0saGKeTS/o
-	aAJ0xZ9gjff28HS4bdSUUy8nP2wmJMbBau8fqgQGo29zr9+F47j/B0pcex0Zhkns7+rdoMO0aay
-	UaXI1qyQ/Qu4VT1aAD087DOD2KRyBnDk57Bou2z2zlhXEH/ZzGdZVWc9bBAMO194udiKBHopQDY
-	ZJTZNyhkjjX9LdUDdiBTvotx5ffxDgo7hWwXQkaJrSJXgnikd1DnGjdmyL7Ig/GzpIFjPcYflU5
-	FSTCI18qm1p5IJXg5mj3BY3sWmLB4wv4wVVuDNV7myPgxwOeXPTz3ZxLYxcGq+ypJJxOwJDPzjA
-	0JebuzGfmvtMGG0yDuP13
-X-Google-Smtp-Source: AGHT+IF5FdpyihNwkP+pz8qwsSi03YYChIIL/diT4CyeFnMpdYT9qUG8HkxnvNgaNA1vzLlpCGu/5Q==
-X-Received: by 2002:a05:6000:186f:b0:399:6dd9:9f40 with SMTP id ffacd0b85a97d-3a1f643acbemr9221007f8f.9.1747037676817;
-        Mon, 12 May 2025 01:14:36 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf43sm11626947f8f.70.2025.05.12.01.14.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 01:14:36 -0700 (PDT)
-Message-ID: <fe9d801b-007d-476d-97fe-96d0f3d218cd@rivosinc.com>
-Date: Mon, 12 May 2025 10:14:35 +0200
+	s=arc-20240116; t=1747037739; c=relaxed/simple;
+	bh=huCY6/i1yQNO1K1PIJZjLeUstF8M43oL4i4aa9uBajs=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lxz97804AHLKUqFRjrK6f9npESg27xjS9Qm67BCquRZlkDjkEHgwKUf8f3p4Pm7G6dhGebBGjYj0wXGNSQ75u4F4NDcR6qjW06k/OEa0g8P3Y7lakut5ZmEpEVKwGlMDfARZSFkXVOclTCumBTeiqx56DjwMhWKQ7KMVRpVyMHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZwsqX5r6XzKHMpf;
+	Mon, 12 May 2025 16:15:36 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 7A8F01A1030;
+	Mon, 12 May 2025 16:15:35 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgB32l4mriFoBKSyMA--.52941S3;
+	Mon, 12 May 2025 16:15:35 +0800 (CST)
+Subject: Re: [PATCH RFC md-6.16 v3 11/19] md/md-llbitmap: implement bitmap IO
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
+ <20250512011927.2809400-12-yukuai1@huaweicloud.com>
+ <20250512051519.GA1555@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <a2d1a5c4-c041-064f-307e-eaa677e5a81c@huaweicloud.com>
+Date: Mon, 12 May 2025 16:15:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 04/14] riscv: sbi: add FWFT extension interface
-To: Atish Patra <atish.patra@linux.dev>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
-References: <20250424173204.1948385-1-cleger@rivosinc.com>
- <20250424173204.1948385-5-cleger@rivosinc.com>
- <1c385a47-0a01-4be4-a34b-51a2f168e62d@linux.dev>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <1c385a47-0a01-4be4-a34b-51a2f168e62d@linux.dev>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250512051519.GA1555@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB32l4mriFoBKSyMA--.52941S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr18GFWrAF4UWw4xJr4rGrg_yoW5WrykpF
+	Z7JFy2kF45JFy5Xr47JrZFya4Syrs7Grsxur97Cas3Cr9Ivrsak34xWFyrG34xury8CFs8
+	Zw45Gr13uw15WFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
-
-On 09/05/2025 02:18, Atish Patra wrote:
-> On 4/24/25 10:31 AM, ClÃ©ment LÃ©ger wrote:
->> This SBI extensions enables supervisor mode to control feature that are
->> under M-mode control (For instance, Svadu menvcfg ADUE bit, Ssdbltrp
->> DTE, etc). Add an interface to set local features for a specific cpu
->> mask as well as for the online cpu mask.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->> ---
->>   arch/riscv/include/asm/sbi.h | 17 +++++++++++
->>   arch/riscv/kernel/sbi.c      | 57 ++++++++++++++++++++++++++++++++++++
->>   2 files changed, 74 insertions(+)
->>
->> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
->> index 7ec249fea880..3bbef56bcefc 100644
->> --- a/arch/riscv/include/asm/sbi.h
->> +++ b/arch/riscv/include/asm/sbi.h
->> @@ -503,6 +503,23 @@ int sbi_remote_hfence_vvma_asid(const struct
->> cpumask *cpu_mask,
->>                   unsigned long asid);
->>   long sbi_probe_extension(int ext);
->>   +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long
->> flags);
->> +int sbi_fwft_set_cpumask(const cpumask_t *mask, u32 feature,
->> +             unsigned long value, unsigned long flags);
->> +/**
->> + * sbi_fwft_set_online_cpus() - Set a feature on all online cpus
->> + * @feature: The feature to be set
->> + * @value: The feature value to be set
->> + * @flags: FWFT feature set flags
->> + *
->> + * Return: 0 on success, appropriate linux error code otherwise.
->> + */
->> +static inline int sbi_fwft_set_online_cpus(u32 feature, unsigned long
->> value,
->> +                       unsigned long flags)
+�� 2025/05/12 13:15, Christoph Hellwig д��:
+> On Mon, May 12, 2025 at 09:19:19AM +0800, Yu Kuai wrote:
+>> +static bool is_raid456(struct mddev *mddev)
 >> +{
->> +    return sbi_fwft_set_cpumask(cpu_online_mask, feature, value, flags);
+>> +	return (mddev->level == 4 || mddev->level == 5 || mddev->level == 6);
 >> +}
->> +
->>   /* Check if current SBI specification version is 0.1 or not */
->>   static inline int sbi_spec_is_0_1(void)
->>   {
->> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
->> index 1d44c35305a9..d57e4dae7dac 100644
->> --- a/arch/riscv/kernel/sbi.c
->> +++ b/arch/riscv/kernel/sbi.c
->> @@ -299,6 +299,63 @@ static int __sbi_rfence_v02(int fid, const struct
->> cpumask *cpu_mask,
->>       return 0;
->>   }
->>   +/**
->> + * sbi_fwft_set() - Set a feature on the local hart
->> + * @feature: The feature ID to be set
->> + * @value: The feature value to be set
->> + * @flags: FWFT feature set flags
->> + *
->> + * Return: 0 on success, appropriate linux error code otherwise.
->> + */
->> +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags)
->> +{
->> +    return -EOPNOTSUPP;
->> +}
->> +
->> +struct fwft_set_req {
->> +    u32 feature;
->> +    unsigned long value;
->> +    unsigned long flags;
->> +    atomic_t error;
->> +};
->> +
->> +static void cpu_sbi_fwft_set(void *arg)
->> +{
->> +    struct fwft_set_req *req = arg;
->> +    int ret;
->> +
->> +    ret = sbi_fwft_set(req->feature, req->value, req->flags);
->> +    if (ret)
->> +        atomic_set(&req->error, ret);
 > 
-> What happens when cpuX executed first reported an error but cpuY
-> executed this function later and report success.
+> This really should be in a common helper somewhere..
+
+Perhaps md.h?
 > 
-> The error will be masked in that case.
-
-We actually only set the bit if an error happened (consider it as a
-sticky error bit). So if CPUy reports success, it won't clear the bit.
-
-Thanks,
-
-Clément
-
-> 
->> +}
->> +
->> +/**
->> + * sbi_fwft_set_cpumask() - Set a feature for the specified cpumask
->> + * @mask: CPU mask of cpus that need the feature to be set
->> + * @feature: The feature ID to be set
->> + * @value: The feature value to be set
->> + * @flags: FWFT feature set flags
->> + *
->> + * Return: 0 on success, appropriate linux error code otherwise.
->> + */
->> +int sbi_fwft_set_cpumask(const cpumask_t *mask, u32 feature,
->> +                   unsigned long value, unsigned long flags)
+>> +static int llbitmap_read(struct llbitmap *llbitmap, enum llbitmap_state *state,
+>> +			 loff_t pos)
 >> +{
->> +    struct fwft_set_req req = {
->> +        .feature = feature,
->> +        .value = value,
->> +        .flags = flags,
->> +        .error = ATOMIC_INIT(0),
->> +    };
->> +
->> +    if (feature & SBI_FWFT_GLOBAL_FEATURE_BIT)
->> +        return -EINVAL;
->> +
->> +    on_each_cpu_mask(mask, cpu_sbi_fwft_set, &req, 1);
->> +
->> +    return atomic_read(&req.error);
+>> +	pos += BITMAP_SB_SIZE;
+>> +	*state = llbitmap->barrier[pos >> PAGE_SHIFT].data[offset_in_page(pos)];
+>> +	return 0;
 >> +}
+> 
+> This always return 0, and could just return void.
+
+Ok
+> 
+>> +static void llbitmap_set_page_dirty(struct llbitmap *llbitmap, int idx, int offset)
+> 
+> Overly long line.
+> 
+> Also should the second and third argument be unsigned?
+
+Ok
+> 
+>> +	/*
+>> +	 * if the bit is already dirty, or other page bytes is the same bit is
+>> +	 * already BitDirty, then mark the whole bytes in the bit as dirty
+>> +	 */
+>> +	if (test_and_set_bit(bit, barrier->dirty)) {
+>> +		infectious = true;
+>> +	} else {
+>> +		for (pos = bit * io_size; pos < (bit + 1) * io_size - 1;
+>> +		     pos++) {
+>> +			if (pos == offset)
+>> +				continue;
+>> +			if (barrier->data[pos] == BitDirty ||
+>> +			    barrier->data[pos] == BitNeedSync) {
+>> +				infectious = true;
+>> +				break;
+>> +			}
+>> +		}
 >> +
->>   /**
->>    * sbi_set_timer() - Program the timer for next timer event.
->>    * @stime_value: The value after which next timer event should fire.
+>> +	}
+>> +	if (!infectious)
+>> +		return;
+> 
+> Mabe use a goto and/or a helper function containing the for loop to
+> clean up the control flow here a bit?
+
+Ok, I;ll add a helper function.
+> 
+>> +static int llbitmap_write(struct llbitmap *llbitmap, enum llbitmap_state state,
+>> +			  loff_t pos)
+>> +{
+>> +	int idx;
+>> +	int offset;
+> 
+> Unsigned?
+> 
+>> +
+>> +	pos += BITMAP_SB_SIZE;
+>> +	idx = pos >> PAGE_SHIFT;
+>> +	offset = offset_in_page(pos);
+>> +
+>> +	llbitmap->barrier[idx].data[offset] = state;
+>> +	if (state == BitDirty || state == BitNeedSync)
+>> +		llbitmap_set_page_dirty(llbitmap, idx, offset);
+>> +	return 0;
+> 
+> and this could also be a void return.
+
+Ok.
+> 
+>> +		sector = mddev->bitmap_info.offset + (idx << PAGE_SECTORS_SHIFT);
+> 
+> Overly long line.
+> 
+>> +			if (rdev->raid_disk < 0 || test_bit(Faulty, &rdev->flags))
+> 
+> Same here.
+> 
+>> +	int nr_pages = (llbitmap->chunks + BITMAP_SB_SIZE + PAGE_SIZE - 1) / PAGE_SIZE;
+> 
+> Unsigned for the type, and DIV_ROUND_UP for the calculation.
+
+Ok.
+> 
+>> +	struct page *page;
+>> +	int i = 0;
+>> +
+>> +	llbitmap->nr_pages = nr_pages;
+>> +	while (i < nr_pages) {
+>> +		page = llbitmap_read_page(llbitmap, i);
+>> +		if (IS_ERR(page)) {
+>> +			llbitmap_free_pages(llbitmap);
+>> +			return PTR_ERR(page);
+>> +		}
+>> +
+>> +		if (percpu_ref_init(&llbitmap->barrier[i].active, active_release,
+>> +				    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+>> +			__free_page(page);
+>> +			return -ENOMEM;
+> 
+> Doesn't this also need a llbitmap_free_pages for the error case?
+
+Of course, my bad that I forgot this.
+
+Thanks again for the review!
+Kuai
+
+> 
+> .
 > 
 
