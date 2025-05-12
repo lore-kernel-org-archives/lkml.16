@@ -1,153 +1,217 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423FF253932;
-	Mon, 12 May 2025 05:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3D0EEBB
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 05:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747028799; cv=none; b=MN+FsEPJT2+k+/Ja60MbhMiiP6LSKMnZTi207gu/mN8K+yGWIbru/wIElZ018bL7WSGuNGh/yrgp8tsj70gLGTXgZw4qyqjZP8j8pNt7xpa2BN084wURGWZHSJs3Y3v2Qaw0a6OfMx4sZfGmkPIEuE8nDbWwlZ9dj+vbpF3CIVA=
+	t=1747028923; cv=none; b=H8uLxghRFG7SUhudFtXCrjJZ7UAlSV1y1pyi9mFNmQY4e4jl2fotX28xH42QFhxvwCPpxXmRnZrWCbfIFg0H+8ZNTX8isXQdq92qtHsJByQ4ry3zlhFtF9ln23cGFlVHb/EeYOpAy0nR9f/cGE5EsfAWOr8GQSF+9vmpU9l/2fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747028799; c=relaxed/simple;
-	bh=/nxomLNQ0uR4756qgYMiNejXzmAfeJg1aKFobJ1To/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MCwDr4B+yFhT/KBs532PV4b2Y7mxD1VjDO7o0JGN19F3PBBCb04H6k9o1OAg6+Or5h2jvDHHEOlubzLh0VAW1oxKoGtbJTzsitwqAfTENegZldnbh/+7RzL4Kc1F0Yan8U5qTB6opqnIwIFiEaDlwTodKyykHWxM3h9g6dBcrP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=a7pSxBUY; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747028923; c=relaxed/simple;
+	bh=AludmXvqJax0cCwzc+uc9DR9zmVbzmwgDWiDCxHkpLM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jxmSobhFU9FCefSTtdILamv4SaCWJ3EfvTpGRdRa4QvZ1v+IT8QBzul736PxoL55b9rQQGouFxWdXrdGyl6wKeyNuNO5dWuw1c4NNxdlMWFn3lPkcXJpWj9QAgPNBYR5k9uNMkgMtALHUsm44AJGuDlV35Z8O+iaAY8pwHpHRaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Asr/+Znb; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="a7pSxBUY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=IVoKLm0TRMU7MgXCmk2aD2suHFOk0S0fqlqkmCky9gk=; b=a7pSxBUYs71NsUkQRx2c561NfL
-	a6XU4EIpqP6UfctAZ2VPJS70+MApcGN5KXCgPujjxmngM8RWPPPgfj7NfzM8Nc9/wN+NlW0D1m59h
-	2Fj7Gy5zxrh5/4Iou5Gvjqdi8KRnJCuRFKpnPDKphWGuXXI4tKXjDdfcZo2H0rcppUI1enL9hZPQW
-	jw0YaIMY1S49JLORLgGeaHs2Ge4iPr8XCPn2zjq0fSdT5KghQ8u/j5b0LEm20vBWoYHq/mGI5DPEp
-	zxARVFK1xndm4MNVErYhSHVaykRjQl+JzXAzELRqQxtgxFknH9LShTaC7V36Bl1QW/0oSZz7o8DLb
-	H4cufN+w==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uELzl-005Lo3-11;
-	Mon, 12 May 2025 13:46:34 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 12 May 2025 13:46:33 +0800
-Date: Mon, 12 May 2025 13:46:33 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] Clean up the crypto testing options
-Message-ID: <aCGLOd2B5MB0tpPQ@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Asr/+Znb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747028922; x=1778564922;
+  h=date:from:to:cc:subject:message-id;
+  bh=AludmXvqJax0cCwzc+uc9DR9zmVbzmwgDWiDCxHkpLM=;
+  b=Asr/+ZnbgXIAOLghPOLl+Dx3E6er9GWLC3YWF7zZNLyHh8wSiifkicM+
+   OntiVAKySQBKoXvsObSWurMOPkH/w0xsIcNYvktB7C8jpdlPB6TbwrPfj
+   GhFOnCa4+GUF+BjvXzFp2axqx6QP1idLdMxf2HYUJRaiDyVOTffHzA2oT
+   Bf9EQN3X3SmOXmaqHNPKnvwaMwNa9gV18hz0ZLBy/TwObRIrqBQG5PcZD
+   l8GX+PIzULqMPMgnzVLN8RzUIHPGs84AGeKS60e7xD2oO/TgCaoPq7pLm
+   Ts/0frrs+pZgLRlItYiHy+lcnal9YZhergPofgkhUooAT4oPvg45D0eBa
+   w==;
+X-CSE-ConnectionGUID: uA2vafdHS4GDABbZVHLneg==
+X-CSE-MsgGUID: TNZ1Xmn7TaG8XCveFmD7sQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="60215593"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="60215593"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 22:48:41 -0700
+X-CSE-ConnectionGUID: nEjXZVJdQ9ehm89WtViisg==
+X-CSE-MsgGUID: oZihMtOfQRakYIduyMJOiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="141310582"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 11 May 2025 22:48:39 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uEM1l-000ED1-1U;
+	Mon, 12 May 2025 05:48:37 +0000
+Date: Mon, 12 May 2025 13:48:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 132e896f0ee5608d44e0fe1405d8fbd650c0973b
+Message-ID: <202505121358.eKogWZ8t-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505203345.802740-1-ebiggers@kernel.org>
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-Eric Biggers <ebiggers@kernel.org> wrote:
-> This series reworks the crypto testing kconfig options to fix some
-> longstanding issues:
-> 
-> - Replace the inverted option CONFIG_CRYPTO_MANAGER_DISABLE_TESTS with a
->  regular option CONFIG_CRYPTO_SELFTESTS.
-> 
-> - Make CONFIG_CRYPTO_SELFTESTS enable the full set of tests by default,
->  removing CONFIG_CRYPTO_MANAGER_EXTRA_TESTS.
-> 
-> - Automatically enable CONFIG_CRYPTO_MANAGER when needed for the tests.
-> 
-> - Rename cryptomgr.noextratests to cryptomgr.noslowtests.
-> 
-> - Remove cryptomgr.panic_on_fail, as panic_on_warn can be used instead.
-> 
-> - Rename CONFIG_CRYPTO_TEST to CONFIG_CRYPTO_BENCHMARK.
-> 
-> Changed in v3:
->  - Keep options in defconfigs.
->  - Make CRYPTO_SELFTESTS depend on DEBUG_KERNEL.
-> 
-> Changed in v2:
->  - Moved selftest lines in lib/crypto/Makefile to appropriate places.
->  - Fixed a commit message.
-> 
-> Eric Biggers (7):
->  crypto: tcrypt - rename CRYPTO_TEST to CRYPTO_BENCHMARK
->  crypto: testmgr - remove panic_on_fail
->  crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with
->    CRYPTO_SELFTESTS
->  crypto: testmgr - make it easier to enable the full set of tests
->  crypto: testmgr - rename noextratests to noslowtests
->  crypto: Kconfig - make CRYPTO_MANAGER a hidden symbol
->  crypto: testmgr - enable CRYPTO_MANAGER when CRYPTO_SELFTESTS
-> 
-> arch/arm/configs/exynos_defconfig           |   2 +-
-> arch/arm/configs/milbeaut_m10v_defconfig    |   3 +-
-> arch/arm/configs/pxa_defconfig              |   3 +-
-> arch/arm/configs/spitz_defconfig            |   2 +-
-> arch/arm64/configs/defconfig                |   2 +-
-> arch/loongarch/configs/loongson3_defconfig  |   2 +-
-> arch/m68k/configs/amiga_defconfig           |   2 +-
-> arch/m68k/configs/apollo_defconfig          |   2 +-
-> arch/m68k/configs/atari_defconfig           |   2 +-
-> arch/m68k/configs/bvme6000_defconfig        |   2 +-
-> arch/m68k/configs/hp300_defconfig           |   2 +-
-> arch/m68k/configs/mac_defconfig             |   2 +-
-> arch/m68k/configs/multi_defconfig           |   2 +-
-> arch/m68k/configs/mvme147_defconfig         |   2 +-
-> arch/m68k/configs/mvme16x_defconfig         |   2 +-
-> arch/m68k/configs/q40_defconfig             |   2 +-
-> arch/m68k/configs/sun3_defconfig            |   2 +-
-> arch/m68k/configs/sun3x_defconfig           |   2 +-
-> arch/mips/configs/decstation_64_defconfig   |   1 -
-> arch/mips/configs/decstation_defconfig      |   1 -
-> arch/mips/configs/decstation_r4k_defconfig  |   1 -
-> arch/mips/configs/gpr_defconfig             |   2 +-
-> arch/mips/configs/ip28_defconfig            |   1 -
-> arch/mips/configs/lemote2f_defconfig        |   2 +-
-> arch/mips/configs/mtx1_defconfig            |   2 +-
-> arch/mips/configs/rb532_defconfig           |   2 +-
-> arch/parisc/configs/generic-32bit_defconfig |   2 +-
-> arch/parisc/configs/generic-64bit_defconfig |   1 -
-> arch/powerpc/configs/g5_defconfig           |   2 +-
-> arch/powerpc/configs/powernv_defconfig      |   2 +-
-> arch/powerpc/configs/ppc64_defconfig        |   2 +-
-> arch/powerpc/configs/ppc64e_defconfig       |   2 +-
-> arch/powerpc/configs/ppc6xx_defconfig       |   2 +-
-> arch/s390/configs/debug_defconfig           |   4 +-
-> arch/s390/configs/defconfig                 |   4 +-
-> arch/sh/configs/migor_defconfig             |   1 -
-> arch/sparc/configs/sparc64_defconfig        |   2 +-
-> crypto/Kconfig                              |  45 ++++----
-> crypto/Makefile                             |   2 +-
-> crypto/algapi.c                             |   5 +-
-> crypto/algboss.c                            |   2 +-
-> crypto/api.c                                |   3 +-
-> crypto/hkdf.c                               |   2 +-
-> crypto/internal.h                           |   5 +-
-> crypto/kdf_sp800108.c                       |   2 +-
-> crypto/tcrypt.c                             |   8 +-
-> crypto/tcrypt.h                             |   4 +-
-> crypto/testmgr.c                            | 115 +++++---------------
-> include/crypto/internal/simd.h              |   6 +-
-> lib/crypto/Makefile                         |  11 +-
-> lib/crypto/aescfb.c                         |   2 +-
-> lib/crypto/aesgcm.c                         |   2 +-
-> lib/crypto/blake2s.c                        |   2 +-
-> lib/crypto/chacha20poly1305.c               |   2 +-
-> lib/crypto/curve25519.c                     |   2 +-
-> 55 files changed, 111 insertions(+), 183 deletions(-)
-> 
-> 
-> base-commit: 64745a9ca890ed60d78162ec511e1983e1946d73
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 132e896f0ee5608d44e0fe1405d8fbd650c0973b  Merge branch into tip/master: 'x86/urgent'
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+elapsed time: 799m
+
+configs tested: 140
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                   randconfig-001-20250512    gcc-14.2.0
+arc                   randconfig-002-20250512    gcc-11.5.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    clang-21
+arm                        keystone_defconfig    gcc-14.2.0
+arm                            mmp2_defconfig    gcc-14.2.0
+arm                         nhk8815_defconfig    clang-21
+arm                   randconfig-001-20250512    gcc-7.5.0
+arm                   randconfig-002-20250512    clang-17
+arm                   randconfig-003-20250512    gcc-6.5.0
+arm                   randconfig-004-20250512    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250512    gcc-7.5.0
+arm64                 randconfig-002-20250512    clang-21
+arm64                 randconfig-003-20250512    clang-21
+arm64                 randconfig-004-20250512    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250512    gcc-9.3.0
+csky                  randconfig-002-20250512    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250512    clang-20
+hexagon               randconfig-002-20250512    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250512    gcc-11
+i386        buildonly-randconfig-002-20250512    clang-20
+i386        buildonly-randconfig-003-20250512    clang-20
+i386        buildonly-randconfig-004-20250512    gcc-12
+i386        buildonly-randconfig-005-20250512    clang-20
+i386        buildonly-randconfig-006-20250512    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250512    gcc-13.3.0
+loongarch             randconfig-002-20250512    gcc-13.3.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                        mvme16x_defconfig    gcc-14.2.0
+m68k                        stmark2_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250512    gcc-7.5.0
+nios2                 randconfig-002-20250512    gcc-11.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+openrisc                    or1ksim_defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                generic-64bit_defconfig    gcc-14.2.0
+parisc                randconfig-001-20250512    gcc-12.4.0
+parisc                randconfig-002-20250512    gcc-10.5.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                       eiger_defconfig    clang-21
+powerpc                 mpc832x_rdb_defconfig    gcc-14.2.0
+powerpc                  mpc866_ads_defconfig    clang-21
+powerpc                      pasemi_defconfig    clang-21
+powerpc               randconfig-001-20250512    gcc-5.5.0
+powerpc               randconfig-002-20250512    clang-21
+powerpc               randconfig-003-20250512    gcc-7.5.0
+powerpc                     tqm5200_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250512    clang-21
+powerpc64             randconfig-002-20250512    gcc-5.5.0
+powerpc64             randconfig-003-20250512    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250512    gcc-7.5.0
+riscv                 randconfig-002-20250512    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250512    clang-18
+s390                  randconfig-002-20250512    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250512    gcc-11.5.0
+sh                    randconfig-002-20250512    gcc-9.3.0
+sh                          rsk7264_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250512    gcc-10.3.0
+sparc                 randconfig-002-20250512    gcc-8.5.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250512    gcc-6.5.0
+sparc64               randconfig-002-20250512    gcc-10.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250512    gcc-12
+um                    randconfig-002-20250512    clang-21
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250512    gcc-12
+x86_64      buildonly-randconfig-002-20250512    gcc-12
+x86_64      buildonly-randconfig-003-20250512    clang-20
+x86_64      buildonly-randconfig-004-20250512    clang-20
+x86_64      buildonly-randconfig-005-20250512    clang-20
+x86_64      buildonly-randconfig-006-20250512    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                  nommu_kc705_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250512    gcc-12.4.0
+xtensa                randconfig-002-20250512    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
