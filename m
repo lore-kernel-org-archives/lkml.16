@@ -1,790 +1,89 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D4028D837
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DC528D837;
+	Mon, 12 May 2025 12:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054069; cv=none; b=WThWJjyZwkIKJij+cLjAvRBBEr/gHtKWDBSthIkEke7qxWefOWw8ECWwMoS990TY7xIowpJUVPDTcSrJ0iSpbyJdiB4BWockhTJXcUmu8v7jogPQ0sCgfhWtGMbuu7HmXN0KlevZBTHd6hnH4O2MEIjXXvXIH0Gro+YaHqh+0Pg=
+	t=1747054154; cv=none; b=H7hsLvPLmIBl6XQ+ctUI53RIp1tUU72LWOB1kpzNeOdwBd2xbx7pG9zt9tJZSFTPiq0b9/jnlCKOzPCXYm6Go2sxBhF8Jp4bwAVveF3TBVxjjvFr4FE0/4FlmRhKczy3setIXZXjF1yHJB1AsVN7A54R9/xLq7WlU4fT6W1CM84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054069; c=relaxed/simple;
-	bh=UibPm8JFsOkoI4f4W52fxAdZnmRa6FyaB/wIa4lehxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZxSbbzcoWVI6HHtbHuysczQZ5L8IAss9DizLw2J/LRLb+uaZH8qyj+IZe7iO3jDNbiafS2swo4iAXCDG3kZX0yfkqIgM0AN8Z9SyIwNxAnvh1SvMoijvL67IGKrk2q7P0z8TuMJiNprF1VGOPuJMenMcfHJtHFOQraRwd2djd1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WUQAbnRU; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747054154; c=relaxed/simple;
+	bh=uXEcchTcO63su+JbMHctt2KTy/tOE1VE6ZfMeTnDk1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OuJeQnmwhju2qk+lLiHg0aEurfn/XYCjI6VJisNv7r2QKK6kPPiosJVMydHlOrl7r9gePqSiUwDkViGOuMaz0ip17xDKvUAkrZOvvkSHOfPYZ6oSG0TQrKrt1fAOfaUw2A5SIop8Pl6PFYiuDculIbffmQuxEn4cX2oKZ6UuJvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwMJlLjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WUQAbnRU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=oI
-	GW/8ytkikXM0KlGUnSyE/r45nPY+JC9Vsvc+ssHxQ=; b=WUQAbnRUSIOvQdZBB1
-	kKX15J6wMLpGO+YZFs2AIdwxu3Q0ILJzACDNvtVtL6kVWohEPNTfxOhDHphVurja
-	Cb7XC+Bl1Jx9VzhgaXatwJ7GYLf4j2UIpDZ/JHM7vySIiw2MNKLTBi62p9WD7HKC
-	BcTD1rkN7B8DU8x9VpK/Ok+jQ=
-Received: from ProDesk.. (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgC3chWY7SFoQ+_OAQ--.62400S3;
-	Mon, 12 May 2025 20:46:23 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: dmitry.baryshkov@oss.qualcomm.com,
-	heiko@sntech.de
-Cc: jonas@kwiboo.se,
-	Laurent.pinchart@ideasonboard.com,
-	mripard@kernel.org,
-	neil.armstrong@linaro.org,
-	hjc@rock-chips.com,
-	tzimmermann@suse.de,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v5 01/10] drm/rockchip: inno_hdmi: Merge register definition to c file
-Date: Mon, 12 May 2025 20:46:02 +0800
-Message-ID: <20250512124615.2848731-2-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250512124615.2848731-1-andyshrk@163.com>
-References: <20250512124615.2848731-1-andyshrk@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwMJlLjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3731FC4CEE7;
+	Mon, 12 May 2025 12:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747054153;
+	bh=uXEcchTcO63su+JbMHctt2KTy/tOE1VE6ZfMeTnDk1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uwMJlLjYQGzc0DdFsmf6RtXqsHabVagYiHF9JKeEXSPeEOIThqkuQyMFu2Po1nvxt
+	 ByirJmikQ3bCxGfTpM5fd7773amvGS2RTOAwDpqD9QhtNxPSnGEl3bSICbeYz14Dxr
+	 JQXqFaby7WFAycfSFR1zEzq4S7Hy6sg8DsKVEv6vFBiIha4jxqLHoSnqQOr4rdlYX6
+	 qrCJmTKFxxZ0K6qqHBtfCuvAMwWzNA0xCbF9YvwWc3bEsPxdwQ0XPYaN7bGhzAYgXO
+	 eB9lDrzS22MiqLcg7daBEihH221ofrW3WpyGZYJY1C4bJVDZ8i/YYohu2CZBKJEpQW
+	 W+6divt6VYZDg==
+Date: Mon, 12 May 2025 13:49:06 +0100
+From: Simon Horman <horms@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>
+Subject: Re: [PATCH iwl-next v3 00/15] Introduce iXD driver
+Message-ID: <20250512124906.GA1417107@horms.kernel.org>
+References: <20250509134319.66631-1-larysa.zaremba@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgC3chWY7SFoQ+_OAQ--.62400S3
-X-Coremail-Antispam: 1Uf129KBjvAXoWfury8Cw1xAr4rtFy8Zry7Wrg_yoW8ur17Xo
-	W7XFnxXw1UJw1xAw4DC342qrnrAr1kJr1rtr48JaykZFyxJF1q9r13XrW0vw13t348K3s8
-	Ga40gF1DC3sYyFZ8n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUIlksUUUUU
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0hBLXmgh5MDGhQAAs5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509134319.66631-1-larysa.zaremba@intel.com>
 
-From: Andy Yan <andy.yan@rock-chips.com>
+On Fri, May 09, 2025 at 03:42:57PM +0200, Larysa Zaremba wrote:
+> This patch series adds the iXD driver, which supports the Intel(R)
+> Control Plane PCI Function on Intel E2100 and later IPUs and FNICs.
+> It facilitates a centralized control over multiple IDPF PFs/VFs/SFs
+> exposed by the same card. The reason for the separation is to be able
+> to offload the control plane to the host different from where the data
+> plane is running.
+> 
+> This is the first phase in the release of this driver where we implement the
+> initialization of the core PCI driver. Subsequent phases will implement
+> advanced features like usage of idpf ethernet aux device, link management,
+> NVM update via devlink, switchdev port representors, data and exception path,
+> flow rule programming, etc.
 
-Since this register definition is only use in one single c
-file, there is no need to put it in a separate header.
+Hi Larysa,
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-
----
-
-Changes in v5:
-- Split from patch 9/10
-
- drivers/gpu/drm/rockchip/inno_hdmi.c | 343 +++++++++++++++++++++++++-
- drivers/gpu/drm/rockchip/inno_hdmi.h | 349 ---------------------------
- 2 files changed, 340 insertions(+), 352 deletions(-)
- delete mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.h
-
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-index db4b4038e51d5..bc25f5358bef6 100644
---- a/drivers/gpu/drm/rockchip/inno_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-@@ -29,11 +29,348 @@
- 
- #include "rockchip_drm_drv.h"
- 
--#include "inno_hdmi.h"
-+#define INNO_HDMI_MIN_TMDS_CLOCK  25000000U
- 
--#define HIWORD_UPDATE(val, mask)	((val) | (mask) << 16)
-+#define DDC_SEGMENT_ADDR		0x30
-+
-+#define HDMI_SCL_RATE			(100 * 1000)
-+
-+#define DDC_BUS_FREQ_L			0x4b
-+#define DDC_BUS_FREQ_H			0x4c
-+
-+#define HDMI_SYS_CTRL			0x00
-+#define m_RST_ANALOG			(1 << 6)
-+#define v_RST_ANALOG			(0 << 6)
-+#define v_NOT_RST_ANALOG		(1 << 6)
-+#define m_RST_DIGITAL			(1 << 5)
-+#define v_RST_DIGITAL			(0 << 5)
-+#define v_NOT_RST_DIGITAL		(1 << 5)
-+#define m_REG_CLK_INV			(1 << 4)
-+#define v_REG_CLK_NOT_INV		(0 << 4)
-+#define v_REG_CLK_INV			(1 << 4)
-+#define m_VCLK_INV			(1 << 3)
-+#define v_VCLK_NOT_INV			(0 << 3)
-+#define v_VCLK_INV			(1 << 3)
-+#define m_REG_CLK_SOURCE		(1 << 2)
-+#define v_REG_CLK_SOURCE_TMDS		(0 << 2)
-+#define v_REG_CLK_SOURCE_SYS		(1 << 2)
-+#define m_POWER				(1 << 1)
-+#define v_PWR_ON			(0 << 1)
-+#define v_PWR_OFF			(1 << 1)
-+#define m_INT_POL			(1 << 0)
-+#define v_INT_POL_HIGH			1
-+#define v_INT_POL_LOW			0
-+
-+#define HDMI_VIDEO_CONTRL1		0x01
-+#define m_VIDEO_INPUT_FORMAT		(7 << 1)
-+#define m_DE_SOURCE			(1 << 0)
-+#define v_VIDEO_INPUT_FORMAT(n)		(n << 1)
-+#define v_DE_EXTERNAL			1
-+#define v_DE_INTERNAL			0
-+enum {
-+	VIDEO_INPUT_SDR_RGB444 = 0,
-+	VIDEO_INPUT_DDR_RGB444 = 5,
-+	VIDEO_INPUT_DDR_YCBCR422 = 6
-+};
- 
--#define INNO_HDMI_MIN_TMDS_CLOCK  25000000U
-+#define HDMI_VIDEO_CONTRL2		0x02
-+#define m_VIDEO_OUTPUT_COLOR		(3 << 6)
-+#define m_VIDEO_INPUT_BITS		(3 << 4)
-+#define m_VIDEO_INPUT_CSP		(1 << 0)
-+#define v_VIDEO_OUTPUT_COLOR(n)		(((n) & 0x3) << 6)
-+#define v_VIDEO_INPUT_BITS(n)		(n << 4)
-+#define v_VIDEO_INPUT_CSP(n)		(n << 0)
-+enum {
-+	VIDEO_INPUT_12BITS = 0,
-+	VIDEO_INPUT_10BITS = 1,
-+	VIDEO_INPUT_REVERT = 2,
-+	VIDEO_INPUT_8BITS = 3,
-+};
-+
-+#define HDMI_VIDEO_CONTRL		0x03
-+#define m_VIDEO_AUTO_CSC		(1 << 7)
-+#define v_VIDEO_AUTO_CSC(n)		(n << 7)
-+#define m_VIDEO_C0_C2_SWAP		(1 << 0)
-+#define v_VIDEO_C0_C2_SWAP(n)		(n << 0)
-+enum {
-+	C0_C2_CHANGE_ENABLE = 0,
-+	C0_C2_CHANGE_DISABLE = 1,
-+	AUTO_CSC_DISABLE = 0,
-+	AUTO_CSC_ENABLE = 1,
-+};
-+
-+#define HDMI_VIDEO_CONTRL3		0x04
-+#define m_COLOR_DEPTH_NOT_INDICATED	(1 << 4)
-+#define m_SOF				(1 << 3)
-+#define m_COLOR_RANGE			(1 << 2)
-+#define m_CSC				(1 << 0)
-+#define v_COLOR_DEPTH_NOT_INDICATED(n)	((n) << 4)
-+#define v_SOF_ENABLE			(0 << 3)
-+#define v_SOF_DISABLE			(1 << 3)
-+#define v_COLOR_RANGE_FULL		(1 << 2)
-+#define v_COLOR_RANGE_LIMITED		(0 << 2)
-+#define v_CSC_ENABLE			1
-+#define v_CSC_DISABLE			0
-+
-+#define HDMI_AV_MUTE			0x05
-+#define m_AVMUTE_CLEAR			(1 << 7)
-+#define m_AVMUTE_ENABLE			(1 << 6)
-+#define m_AUDIO_MUTE			(1 << 1)
-+#define m_VIDEO_BLACK			(1 << 0)
-+#define v_AVMUTE_CLEAR(n)		(n << 7)
-+#define v_AVMUTE_ENABLE(n)		(n << 6)
-+#define v_AUDIO_MUTE(n)			(n << 1)
-+#define v_VIDEO_MUTE(n)			(n << 0)
-+
-+#define HDMI_VIDEO_TIMING_CTL		0x08
-+#define v_HSYNC_POLARITY(n)		(n << 3)
-+#define v_VSYNC_POLARITY(n)		(n << 2)
-+#define v_INETLACE(n)			(n << 1)
-+#define v_EXTERANL_VIDEO(n)		(n << 0)
-+
-+#define HDMI_VIDEO_EXT_HTOTAL_L		0x09
-+#define HDMI_VIDEO_EXT_HTOTAL_H		0x0a
-+#define HDMI_VIDEO_EXT_HBLANK_L		0x0b
-+#define HDMI_VIDEO_EXT_HBLANK_H		0x0c
-+#define HDMI_VIDEO_EXT_HDELAY_L		0x0d
-+#define HDMI_VIDEO_EXT_HDELAY_H		0x0e
-+#define HDMI_VIDEO_EXT_HDURATION_L	0x0f
-+#define HDMI_VIDEO_EXT_HDURATION_H	0x10
-+#define HDMI_VIDEO_EXT_VTOTAL_L		0x11
-+#define HDMI_VIDEO_EXT_VTOTAL_H		0x12
-+#define HDMI_VIDEO_EXT_VBLANK		0x13
-+#define HDMI_VIDEO_EXT_VDELAY		0x14
-+#define HDMI_VIDEO_EXT_VDURATION	0x15
-+
-+#define HDMI_VIDEO_CSC_COEF		0x18
-+
-+#define HDMI_AUDIO_CTRL1		0x35
-+enum {
-+	CTS_SOURCE_INTERNAL = 0,
-+	CTS_SOURCE_EXTERNAL = 1,
-+};
-+#define v_CTS_SOURCE(n)			(n << 7)
-+
-+enum {
-+	DOWNSAMPLE_DISABLE = 0,
-+	DOWNSAMPLE_1_2 = 1,
-+	DOWNSAMPLE_1_4 = 2,
-+};
-+#define v_DOWN_SAMPLE(n)		(n << 5)
-+
-+enum {
-+	AUDIO_SOURCE_IIS = 0,
-+	AUDIO_SOURCE_SPDIF = 1,
-+};
-+#define v_AUDIO_SOURCE(n)		(n << 3)
-+
-+#define v_MCLK_ENABLE(n)		(n << 2)
-+enum {
-+	MCLK_128FS = 0,
-+	MCLK_256FS = 1,
-+	MCLK_384FS = 2,
-+	MCLK_512FS = 3,
-+};
-+#define v_MCLK_RATIO(n)			(n)
-+
-+#define AUDIO_SAMPLE_RATE		0x37
-+enum {
-+	AUDIO_32K = 0x3,
-+	AUDIO_441K = 0x0,
-+	AUDIO_48K = 0x2,
-+	AUDIO_882K = 0x8,
-+	AUDIO_96K = 0xa,
-+	AUDIO_1764K = 0xc,
-+	AUDIO_192K = 0xe,
-+};
-+
-+#define AUDIO_I2S_MODE			0x38
-+enum {
-+	I2S_CHANNEL_1_2 = 1,
-+	I2S_CHANNEL_3_4 = 3,
-+	I2S_CHANNEL_5_6 = 7,
-+	I2S_CHANNEL_7_8 = 0xf
-+};
-+#define v_I2S_CHANNEL(n)		((n) << 2)
-+enum {
-+	I2S_STANDARD = 0,
-+	I2S_LEFT_JUSTIFIED = 1,
-+	I2S_RIGHT_JUSTIFIED = 2,
-+};
-+#define v_I2S_MODE(n)			(n)
-+
-+#define AUDIO_I2S_MAP			0x39
-+#define AUDIO_I2S_SWAPS_SPDIF		0x3a
-+#define v_SPIDF_FREQ(n)			(n)
-+
-+#define N_32K				0x1000
-+#define N_441K				0x1880
-+#define N_882K				0x3100
-+#define N_1764K				0x6200
-+#define N_48K				0x1800
-+#define N_96K				0x3000
-+#define N_192K				0x6000
-+
-+#define HDMI_AUDIO_CHANNEL_STATUS	0x3e
-+#define m_AUDIO_STATUS_NLPCM		(1 << 7)
-+#define m_AUDIO_STATUS_USE		(1 << 6)
-+#define m_AUDIO_STATUS_COPYRIGHT	(1 << 5)
-+#define m_AUDIO_STATUS_ADDITION		(3 << 2)
-+#define m_AUDIO_STATUS_CLK_ACCURACY	(2 << 0)
-+#define v_AUDIO_STATUS_NLPCM(n)		((n & 1) << 7)
-+#define AUDIO_N_H			0x3f
-+#define AUDIO_N_M			0x40
-+#define AUDIO_N_L			0x41
-+
-+#define HDMI_AUDIO_CTS_H		0x45
-+#define HDMI_AUDIO_CTS_M		0x46
-+#define HDMI_AUDIO_CTS_L		0x47
-+
-+#define HDMI_DDC_CLK_L			0x4b
-+#define HDMI_DDC_CLK_H			0x4c
-+
-+#define HDMI_EDID_SEGMENT_POINTER	0x4d
-+#define HDMI_EDID_WORD_ADDR		0x4e
-+#define HDMI_EDID_FIFO_OFFSET		0x4f
-+#define HDMI_EDID_FIFO_ADDR		0x50
-+
-+#define HDMI_PACKET_SEND_MANUAL		0x9c
-+#define HDMI_PACKET_SEND_AUTO		0x9d
-+#define m_PACKET_GCP_EN			(1 << 7)
-+#define m_PACKET_MSI_EN			(1 << 6)
-+#define m_PACKET_SDI_EN			(1 << 5)
-+#define m_PACKET_VSI_EN			(1 << 4)
-+#define v_PACKET_GCP_EN(n)		((n & 1) << 7)
-+#define v_PACKET_MSI_EN(n)		((n & 1) << 6)
-+#define v_PACKET_SDI_EN(n)		((n & 1) << 5)
-+#define v_PACKET_VSI_EN(n)		((n & 1) << 4)
-+
-+#define HDMI_CONTROL_PACKET_BUF_INDEX	0x9f
-+enum {
-+	INFOFRAME_VSI = 0x05,
-+	INFOFRAME_AVI = 0x06,
-+	INFOFRAME_AAI = 0x08,
-+};
-+
-+#define HDMI_CONTROL_PACKET_ADDR	0xa0
-+#define HDMI_MAXIMUM_INFO_FRAME_SIZE	0x11
-+enum {
-+	AVI_COLOR_MODE_RGB = 0,
-+	AVI_COLOR_MODE_YCBCR422 = 1,
-+	AVI_COLOR_MODE_YCBCR444 = 2,
-+	AVI_COLORIMETRY_NO_DATA = 0,
-+
-+	AVI_COLORIMETRY_SMPTE_170M = 1,
-+	AVI_COLORIMETRY_ITU709 = 2,
-+	AVI_COLORIMETRY_EXTENDED = 3,
-+
-+	AVI_CODED_FRAME_ASPECT_NO_DATA = 0,
-+	AVI_CODED_FRAME_ASPECT_4_3 = 1,
-+	AVI_CODED_FRAME_ASPECT_16_9 = 2,
-+
-+	ACTIVE_ASPECT_RATE_SAME_AS_CODED_FRAME = 0x08,
-+	ACTIVE_ASPECT_RATE_4_3 = 0x09,
-+	ACTIVE_ASPECT_RATE_16_9 = 0x0A,
-+	ACTIVE_ASPECT_RATE_14_9 = 0x0B,
-+};
-+
-+#define HDMI_HDCP_CTRL			0x52
-+#define m_HDMI_DVI			(1 << 1)
-+#define v_HDMI_DVI(n)			(n << 1)
-+
-+#define HDMI_INTERRUPT_MASK1		0xc0
-+#define HDMI_INTERRUPT_STATUS1		0xc1
-+#define	m_INT_ACTIVE_VSYNC		(1 << 5)
-+#define m_INT_EDID_READY		(1 << 2)
-+
-+#define HDMI_INTERRUPT_MASK2		0xc2
-+#define HDMI_INTERRUPT_STATUS2		0xc3
-+#define m_INT_HDCP_ERR			(1 << 7)
-+#define m_INT_BKSV_FLAG			(1 << 6)
-+#define m_INT_HDCP_OK			(1 << 4)
-+
-+#define HDMI_STATUS			0xc8
-+#define m_HOTPLUG			(1 << 7)
-+#define m_MASK_INT_HOTPLUG		(1 << 5)
-+#define m_INT_HOTPLUG			(1 << 1)
-+#define v_MASK_INT_HOTPLUG(n)		((n & 0x1) << 5)
-+
-+#define HDMI_COLORBAR                   0xc9
-+
-+#define HDMI_PHY_SYNC			0xce
-+#define HDMI_PHY_SYS_CTL		0xe0
-+#define m_TMDS_CLK_SOURCE		(1 << 5)
-+#define v_TMDS_FROM_PLL			(0 << 5)
-+#define v_TMDS_FROM_GEN			(1 << 5)
-+#define m_PHASE_CLK			(1 << 4)
-+#define v_DEFAULT_PHASE			(0 << 4)
-+#define v_SYNC_PHASE			(1 << 4)
-+#define m_TMDS_CURRENT_PWR		(1 << 3)
-+#define v_TURN_ON_CURRENT		(0 << 3)
-+#define v_CAT_OFF_CURRENT		(1 << 3)
-+#define m_BANDGAP_PWR			(1 << 2)
-+#define v_BANDGAP_PWR_UP		(0 << 2)
-+#define v_BANDGAP_PWR_DOWN		(1 << 2)
-+#define m_PLL_PWR			(1 << 1)
-+#define v_PLL_PWR_UP			(0 << 1)
-+#define v_PLL_PWR_DOWN			(1 << 1)
-+#define m_TMDS_CHG_PWR			(1 << 0)
-+#define v_TMDS_CHG_PWR_UP		(0 << 0)
-+#define v_TMDS_CHG_PWR_DOWN		(1 << 0)
-+
-+#define HDMI_PHY_CHG_PWR		0xe1
-+#define v_CLK_CHG_PWR(n)		((n & 1) << 3)
-+#define v_DATA_CHG_PWR(n)		((n & 7) << 0)
-+
-+#define HDMI_PHY_DRIVER			0xe2
-+#define v_CLK_MAIN_DRIVER(n)		(n << 4)
-+#define v_DATA_MAIN_DRIVER(n)		(n << 0)
-+
-+#define HDMI_PHY_PRE_EMPHASIS		0xe3
-+#define v_PRE_EMPHASIS(n)		((n & 7) << 4)
-+#define v_CLK_PRE_DRIVER(n)		((n & 3) << 2)
-+#define v_DATA_PRE_DRIVER(n)		((n & 3) << 0)
-+
-+#define HDMI_PHY_FEEDBACK_DIV_RATIO_LOW		0xe7
-+#define v_FEEDBACK_DIV_LOW(n)			(n & 0xff)
-+#define HDMI_PHY_FEEDBACK_DIV_RATIO_HIGH	0xe8
-+#define v_FEEDBACK_DIV_HIGH(n)			(n & 1)
-+
-+#define HDMI_PHY_PRE_DIV_RATIO		0xed
-+#define v_PRE_DIV_RATIO(n)		(n & 0x1f)
-+
-+#define HDMI_CEC_CTRL			0xd0
-+#define m_ADJUST_FOR_HISENSE		(1 << 6)
-+#define m_REJECT_RX_BROADCAST		(1 << 5)
-+#define m_BUSFREETIME_ENABLE		(1 << 2)
-+#define m_REJECT_RX			(1 << 1)
-+#define m_START_TX			(1 << 0)
-+
-+#define HDMI_CEC_DATA			0xd1
-+#define HDMI_CEC_TX_OFFSET		0xd2
-+#define HDMI_CEC_RX_OFFSET		0xd3
-+#define HDMI_CEC_CLK_H			0xd4
-+#define HDMI_CEC_CLK_L			0xd5
-+#define HDMI_CEC_TX_LENGTH		0xd6
-+#define HDMI_CEC_RX_LENGTH		0xd7
-+#define HDMI_CEC_TX_INT_MASK		0xd8
-+#define m_TX_DONE			(1 << 3)
-+#define m_TX_NOACK			(1 << 2)
-+#define m_TX_BROADCAST_REJ		(1 << 1)
-+#define m_TX_BUSNOTFREE			(1 << 0)
-+
-+#define HDMI_CEC_RX_INT_MASK		0xd9
-+#define m_RX_LA_ERR			(1 << 4)
-+#define m_RX_GLITCH			(1 << 3)
-+#define m_RX_DONE			(1 << 0)
-+
-+#define HDMI_CEC_TX_INT			0xda
-+#define HDMI_CEC_RX_INT			0xdb
-+#define HDMI_CEC_BUSFREETIME_L		0xdc
-+#define HDMI_CEC_BUSFREETIME_H		0xdd
-+#define HDMI_CEC_LOGICADDR		0xde
-+
-+#define HIWORD_UPDATE(val, mask)	((val) | (mask) << 16)
- 
- #define RK3036_GRF_SOC_CON2	0x148
- #define RK3036_HDMI_PHSYNC	BIT(4)
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.h b/drivers/gpu/drm/rockchip/inno_hdmi.h
-deleted file mode 100644
-index 8b7ef3fac4853..0000000000000
---- a/drivers/gpu/drm/rockchip/inno_hdmi.h
-+++ /dev/null
-@@ -1,349 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright (C) Rockchip Electronics Co., Ltd.
-- *    Zheng Yang <zhengyang@rock-chips.com>
-- *    Yakir Yang <ykk@rock-chips.com>
-- */
--
--#ifndef __INNO_HDMI_H__
--#define __INNO_HDMI_H__
--
--#define DDC_SEGMENT_ADDR		0x30
--
--#define HDMI_SCL_RATE			(100*1000)
--#define DDC_BUS_FREQ_L			0x4b
--#define DDC_BUS_FREQ_H			0x4c
--
--#define HDMI_SYS_CTRL			0x00
--#define m_RST_ANALOG			(1 << 6)
--#define v_RST_ANALOG			(0 << 6)
--#define v_NOT_RST_ANALOG		(1 << 6)
--#define m_RST_DIGITAL			(1 << 5)
--#define v_RST_DIGITAL			(0 << 5)
--#define v_NOT_RST_DIGITAL		(1 << 5)
--#define m_REG_CLK_INV			(1 << 4)
--#define v_REG_CLK_NOT_INV		(0 << 4)
--#define v_REG_CLK_INV			(1 << 4)
--#define m_VCLK_INV			(1 << 3)
--#define v_VCLK_NOT_INV			(0 << 3)
--#define v_VCLK_INV			(1 << 3)
--#define m_REG_CLK_SOURCE		(1 << 2)
--#define v_REG_CLK_SOURCE_TMDS		(0 << 2)
--#define v_REG_CLK_SOURCE_SYS		(1 << 2)
--#define m_POWER				(1 << 1)
--#define v_PWR_ON			(0 << 1)
--#define v_PWR_OFF			(1 << 1)
--#define m_INT_POL			(1 << 0)
--#define v_INT_POL_HIGH			1
--#define v_INT_POL_LOW			0
--
--#define HDMI_VIDEO_CONTRL1		0x01
--#define m_VIDEO_INPUT_FORMAT		(7 << 1)
--#define m_DE_SOURCE			(1 << 0)
--#define v_VIDEO_INPUT_FORMAT(n)		(n << 1)
--#define v_DE_EXTERNAL			1
--#define v_DE_INTERNAL			0
--enum {
--	VIDEO_INPUT_SDR_RGB444 = 0,
--	VIDEO_INPUT_DDR_RGB444 = 5,
--	VIDEO_INPUT_DDR_YCBCR422 = 6
--};
--
--#define HDMI_VIDEO_CONTRL2		0x02
--#define m_VIDEO_OUTPUT_COLOR		(3 << 6)
--#define m_VIDEO_INPUT_BITS		(3 << 4)
--#define m_VIDEO_INPUT_CSP		(1 << 0)
--#define v_VIDEO_OUTPUT_COLOR(n)		(((n) & 0x3) << 6)
--#define v_VIDEO_INPUT_BITS(n)		(n << 4)
--#define v_VIDEO_INPUT_CSP(n)		(n << 0)
--enum {
--	VIDEO_INPUT_12BITS = 0,
--	VIDEO_INPUT_10BITS = 1,
--	VIDEO_INPUT_REVERT = 2,
--	VIDEO_INPUT_8BITS = 3,
--};
--
--#define HDMI_VIDEO_CONTRL		0x03
--#define m_VIDEO_AUTO_CSC		(1 << 7)
--#define v_VIDEO_AUTO_CSC(n)		(n << 7)
--#define m_VIDEO_C0_C2_SWAP		(1 << 0)
--#define v_VIDEO_C0_C2_SWAP(n)		(n << 0)
--enum {
--	C0_C2_CHANGE_ENABLE = 0,
--	C0_C2_CHANGE_DISABLE = 1,
--	AUTO_CSC_DISABLE = 0,
--	AUTO_CSC_ENABLE = 1,
--};
--
--#define HDMI_VIDEO_CONTRL3		0x04
--#define m_COLOR_DEPTH_NOT_INDICATED	(1 << 4)
--#define m_SOF				(1 << 3)
--#define m_COLOR_RANGE			(1 << 2)
--#define m_CSC				(1 << 0)
--#define v_COLOR_DEPTH_NOT_INDICATED(n)	((n) << 4)
--#define v_SOF_ENABLE			(0 << 3)
--#define v_SOF_DISABLE			(1 << 3)
--#define v_COLOR_RANGE_FULL		(1 << 2)
--#define v_COLOR_RANGE_LIMITED		(0 << 2)
--#define v_CSC_ENABLE			1
--#define v_CSC_DISABLE			0
--
--#define HDMI_AV_MUTE			0x05
--#define m_AVMUTE_CLEAR			(1 << 7)
--#define m_AVMUTE_ENABLE			(1 << 6)
--#define m_AUDIO_MUTE			(1 << 1)
--#define m_VIDEO_BLACK			(1 << 0)
--#define v_AVMUTE_CLEAR(n)		(n << 7)
--#define v_AVMUTE_ENABLE(n)		(n << 6)
--#define v_AUDIO_MUTE(n)			(n << 1)
--#define v_VIDEO_MUTE(n)			(n << 0)
--
--#define HDMI_VIDEO_TIMING_CTL		0x08
--#define v_HSYNC_POLARITY(n)		(n << 3)
--#define v_VSYNC_POLARITY(n)		(n << 2)
--#define v_INETLACE(n)			(n << 1)
--#define v_EXTERANL_VIDEO(n)		(n << 0)
--
--#define HDMI_VIDEO_EXT_HTOTAL_L		0x09
--#define HDMI_VIDEO_EXT_HTOTAL_H		0x0a
--#define HDMI_VIDEO_EXT_HBLANK_L		0x0b
--#define HDMI_VIDEO_EXT_HBLANK_H		0x0c
--#define HDMI_VIDEO_EXT_HDELAY_L		0x0d
--#define HDMI_VIDEO_EXT_HDELAY_H		0x0e
--#define HDMI_VIDEO_EXT_HDURATION_L	0x0f
--#define HDMI_VIDEO_EXT_HDURATION_H	0x10
--#define HDMI_VIDEO_EXT_VTOTAL_L		0x11
--#define HDMI_VIDEO_EXT_VTOTAL_H		0x12
--#define HDMI_VIDEO_EXT_VBLANK		0x13
--#define HDMI_VIDEO_EXT_VDELAY		0x14
--#define HDMI_VIDEO_EXT_VDURATION	0x15
--
--#define HDMI_VIDEO_CSC_COEF		0x18
--
--#define HDMI_AUDIO_CTRL1		0x35
--enum {
--	CTS_SOURCE_INTERNAL = 0,
--	CTS_SOURCE_EXTERNAL = 1,
--};
--#define v_CTS_SOURCE(n)			(n << 7)
--
--enum {
--	DOWNSAMPLE_DISABLE = 0,
--	DOWNSAMPLE_1_2 = 1,
--	DOWNSAMPLE_1_4 = 2,
--};
--#define v_DOWN_SAMPLE(n)		(n << 5)
--
--enum {
--	AUDIO_SOURCE_IIS = 0,
--	AUDIO_SOURCE_SPDIF = 1,
--};
--#define v_AUDIO_SOURCE(n)		(n << 3)
--
--#define v_MCLK_ENABLE(n)		(n << 2)
--enum {
--	MCLK_128FS = 0,
--	MCLK_256FS = 1,
--	MCLK_384FS = 2,
--	MCLK_512FS = 3,
--};
--#define v_MCLK_RATIO(n)			(n)
--
--#define AUDIO_SAMPLE_RATE		0x37
--enum {
--	AUDIO_32K = 0x3,
--	AUDIO_441K = 0x0,
--	AUDIO_48K = 0x2,
--	AUDIO_882K = 0x8,
--	AUDIO_96K = 0xa,
--	AUDIO_1764K = 0xc,
--	AUDIO_192K = 0xe,
--};
--
--#define AUDIO_I2S_MODE			0x38
--enum {
--	I2S_CHANNEL_1_2 = 1,
--	I2S_CHANNEL_3_4 = 3,
--	I2S_CHANNEL_5_6 = 7,
--	I2S_CHANNEL_7_8 = 0xf
--};
--#define v_I2S_CHANNEL(n)		((n) << 2)
--enum {
--	I2S_STANDARD = 0,
--	I2S_LEFT_JUSTIFIED = 1,
--	I2S_RIGHT_JUSTIFIED = 2,
--};
--#define v_I2S_MODE(n)			(n)
--
--#define AUDIO_I2S_MAP			0x39
--#define AUDIO_I2S_SWAPS_SPDIF		0x3a
--#define v_SPIDF_FREQ(n)			(n)
--
--#define N_32K				0x1000
--#define N_441K				0x1880
--#define N_882K				0x3100
--#define N_1764K				0x6200
--#define N_48K				0x1800
--#define N_96K				0x3000
--#define N_192K				0x6000
--
--#define HDMI_AUDIO_CHANNEL_STATUS	0x3e
--#define m_AUDIO_STATUS_NLPCM		(1 << 7)
--#define m_AUDIO_STATUS_USE		(1 << 6)
--#define m_AUDIO_STATUS_COPYRIGHT	(1 << 5)
--#define m_AUDIO_STATUS_ADDITION		(3 << 2)
--#define m_AUDIO_STATUS_CLK_ACCURACY	(2 << 0)
--#define v_AUDIO_STATUS_NLPCM(n)		((n & 1) << 7)
--#define AUDIO_N_H			0x3f
--#define AUDIO_N_M			0x40
--#define AUDIO_N_L			0x41
--
--#define HDMI_AUDIO_CTS_H		0x45
--#define HDMI_AUDIO_CTS_M		0x46
--#define HDMI_AUDIO_CTS_L		0x47
--
--#define HDMI_DDC_CLK_L			0x4b
--#define HDMI_DDC_CLK_H			0x4c
--
--#define HDMI_EDID_SEGMENT_POINTER	0x4d
--#define HDMI_EDID_WORD_ADDR		0x4e
--#define HDMI_EDID_FIFO_OFFSET		0x4f
--#define HDMI_EDID_FIFO_ADDR		0x50
--
--#define HDMI_PACKET_SEND_MANUAL		0x9c
--#define HDMI_PACKET_SEND_AUTO		0x9d
--#define m_PACKET_GCP_EN			(1 << 7)
--#define m_PACKET_MSI_EN			(1 << 6)
--#define m_PACKET_SDI_EN			(1 << 5)
--#define m_PACKET_VSI_EN			(1 << 4)
--#define v_PACKET_GCP_EN(n)		((n & 1) << 7)
--#define v_PACKET_MSI_EN(n)		((n & 1) << 6)
--#define v_PACKET_SDI_EN(n)		((n & 1) << 5)
--#define v_PACKET_VSI_EN(n)		((n & 1) << 4)
--
--#define HDMI_CONTROL_PACKET_BUF_INDEX	0x9f
--enum {
--	INFOFRAME_VSI = 0x05,
--	INFOFRAME_AVI = 0x06,
--	INFOFRAME_AAI = 0x08,
--};
--
--#define HDMI_CONTROL_PACKET_ADDR	0xa0
--#define HDMI_MAXIMUM_INFO_FRAME_SIZE	0x11
--enum {
--	AVI_COLOR_MODE_RGB = 0,
--	AVI_COLOR_MODE_YCBCR422 = 1,
--	AVI_COLOR_MODE_YCBCR444 = 2,
--	AVI_COLORIMETRY_NO_DATA = 0,
--
--	AVI_COLORIMETRY_SMPTE_170M = 1,
--	AVI_COLORIMETRY_ITU709 = 2,
--	AVI_COLORIMETRY_EXTENDED = 3,
--
--	AVI_CODED_FRAME_ASPECT_NO_DATA = 0,
--	AVI_CODED_FRAME_ASPECT_4_3 = 1,
--	AVI_CODED_FRAME_ASPECT_16_9 = 2,
--
--	ACTIVE_ASPECT_RATE_SAME_AS_CODED_FRAME = 0x08,
--	ACTIVE_ASPECT_RATE_4_3 = 0x09,
--	ACTIVE_ASPECT_RATE_16_9 = 0x0A,
--	ACTIVE_ASPECT_RATE_14_9 = 0x0B,
--};
--
--#define HDMI_HDCP_CTRL			0x52
--#define m_HDMI_DVI			(1 << 1)
--#define v_HDMI_DVI(n)			(n << 1)
--
--#define HDMI_INTERRUPT_MASK1		0xc0
--#define HDMI_INTERRUPT_STATUS1		0xc1
--#define	m_INT_ACTIVE_VSYNC		(1 << 5)
--#define m_INT_EDID_READY		(1 << 2)
--
--#define HDMI_INTERRUPT_MASK2		0xc2
--#define HDMI_INTERRUPT_STATUS2		0xc3
--#define m_INT_HDCP_ERR			(1 << 7)
--#define m_INT_BKSV_FLAG			(1 << 6)
--#define m_INT_HDCP_OK			(1 << 4)
--
--#define HDMI_STATUS			0xc8
--#define m_HOTPLUG			(1 << 7)
--#define m_MASK_INT_HOTPLUG		(1 << 5)
--#define m_INT_HOTPLUG			(1 << 1)
--#define v_MASK_INT_HOTPLUG(n)		((n & 0x1) << 5)
--
--#define HDMI_COLORBAR                   0xc9
--
--#define HDMI_PHY_SYNC			0xce
--#define HDMI_PHY_SYS_CTL		0xe0
--#define m_TMDS_CLK_SOURCE		(1 << 5)
--#define v_TMDS_FROM_PLL			(0 << 5)
--#define v_TMDS_FROM_GEN			(1 << 5)
--#define m_PHASE_CLK			(1 << 4)
--#define v_DEFAULT_PHASE			(0 << 4)
--#define v_SYNC_PHASE			(1 << 4)
--#define m_TMDS_CURRENT_PWR		(1 << 3)
--#define v_TURN_ON_CURRENT		(0 << 3)
--#define v_CAT_OFF_CURRENT		(1 << 3)
--#define m_BANDGAP_PWR			(1 << 2)
--#define v_BANDGAP_PWR_UP		(0 << 2)
--#define v_BANDGAP_PWR_DOWN		(1 << 2)
--#define m_PLL_PWR			(1 << 1)
--#define v_PLL_PWR_UP			(0 << 1)
--#define v_PLL_PWR_DOWN			(1 << 1)
--#define m_TMDS_CHG_PWR			(1 << 0)
--#define v_TMDS_CHG_PWR_UP		(0 << 0)
--#define v_TMDS_CHG_PWR_DOWN		(1 << 0)
--
--#define HDMI_PHY_CHG_PWR		0xe1
--#define v_CLK_CHG_PWR(n)		((n & 1) << 3)
--#define v_DATA_CHG_PWR(n)		((n & 7) << 0)
--
--#define HDMI_PHY_DRIVER			0xe2
--#define v_CLK_MAIN_DRIVER(n)		(n << 4)
--#define v_DATA_MAIN_DRIVER(n)		(n << 0)
--
--#define HDMI_PHY_PRE_EMPHASIS		0xe3
--#define v_PRE_EMPHASIS(n)		((n & 7) << 4)
--#define v_CLK_PRE_DRIVER(n)		((n & 3) << 2)
--#define v_DATA_PRE_DRIVER(n)		((n & 3) << 0)
--
--#define HDMI_PHY_FEEDBACK_DIV_RATIO_LOW		0xe7
--#define v_FEEDBACK_DIV_LOW(n)			(n & 0xff)
--#define HDMI_PHY_FEEDBACK_DIV_RATIO_HIGH	0xe8
--#define v_FEEDBACK_DIV_HIGH(n)			(n & 1)
--
--#define HDMI_PHY_PRE_DIV_RATIO		0xed
--#define v_PRE_DIV_RATIO(n)		(n & 0x1f)
--
--#define HDMI_CEC_CTRL			0xd0
--#define m_ADJUST_FOR_HISENSE		(1 << 6)
--#define m_REJECT_RX_BROADCAST		(1 << 5)
--#define m_BUSFREETIME_ENABLE		(1 << 2)
--#define m_REJECT_RX			(1 << 1)
--#define m_START_TX			(1 << 0)
--
--#define HDMI_CEC_DATA			0xd1
--#define HDMI_CEC_TX_OFFSET		0xd2
--#define HDMI_CEC_RX_OFFSET		0xd3
--#define HDMI_CEC_CLK_H			0xd4
--#define HDMI_CEC_CLK_L			0xd5
--#define HDMI_CEC_TX_LENGTH		0xd6
--#define HDMI_CEC_RX_LENGTH		0xd7
--#define HDMI_CEC_TX_INT_MASK		0xd8
--#define m_TX_DONE			(1 << 3)
--#define m_TX_NOACK			(1 << 2)
--#define m_TX_BROADCAST_REJ		(1 << 1)
--#define m_TX_BUSNOTFREE			(1 << 0)
--
--#define HDMI_CEC_RX_INT_MASK		0xd9
--#define m_RX_LA_ERR			(1 << 4)
--#define m_RX_GLITCH			(1 << 3)
--#define m_RX_DONE			(1 << 0)
--
--#define HDMI_CEC_TX_INT			0xda
--#define HDMI_CEC_RX_INT			0xdb
--#define HDMI_CEC_BUSFREETIME_L		0xdc
--#define HDMI_CEC_BUSFREETIME_H		0xdd
--#define HDMI_CEC_LOGICADDR		0xde
--
--#endif /* __INNO_HDMI_H__ */
--- 
-2.43.0
-
+I am having a bit of trouble figuring out where to cleanly apply this
+series to. Could you help me out?
