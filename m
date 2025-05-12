@@ -1,108 +1,161 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A67A2561A6
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8667228F3;
+	Mon, 12 May 2025 06:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747031929; cv=none; b=jdmpcwkFevzlf9XPKLTF4OauJYz5/0Uk+pUp6taG9QeaFWazeSRq02AfaJ0BZnj6lQEj5EnjhvXSiwFNjATQ5ZCM3oXCqEuHTe8LBY9ntLBY7CZtpikbmudzba2UNcYGkq30y9/uDZ9lkkH+zf5/qfgvLULl8RFkYbWT2dhswo4=
+	t=1747031998; cv=none; b=pAOoU4wxms8qiS/SqaUvh0hwRzOMY6rKIxZUSYdDvO3nm8004ox582pS5Kk2wStjfgSjo4+80Hdc1pMXT5Uviksj7Hmin1LFG1eMGbglAODoIApNPCxaK7gZbTvo3CKgVzKA+l2MzXLu1oSOLay7CMTotR+ocQqVFi1RwbE9hMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747031929; c=relaxed/simple;
-	bh=SRofOzVkLTrjhEafbeny8N/bESQdDcOpa1YIDYgmAQ4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=b/ja+Zpm1cFovD7A8uffO8ZB3rIiuQ4o+ESH5wvKlA3o7/DbbEiPoBkoExXFJu0CkJLcjl+hQ2HKViEZyVQ2nVdCeE4YU6ZDnjb5VCv2Otz5AbJzHq2VMOSqJocXFjU5vTSoctHPcPGU924DQwYNLowWKWmVvN4JsEKI8Y8Daw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vpAZ3/Wm; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vpAZ3/Wm"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad241d7680eso3081066b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 23:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747031926; x=1747636726; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EJjA/FXfjTD2FQE71QWuHDCBdzjs/ZNL3lM7sCOkk4k=;
-        b=vpAZ3/Wm/OSsNODrduuEB52zBBcYzTxvdXIvIxfQiNt83ye7nHKdjKn0WYTfouEmEH
-         zsHjsburAnQooOfn865sQ9P6L8wWpHNE6wGi7AZjv60ewrhuuZVlv3P6S31IcjHMIIQW
-         MxXaCPmVZBOauuupi6woAUhFNQYqbgWeVtsCqh+2yr35O2lARUa+dNIb/Utxw0bM3AHF
-         6J96Ma58WMk7DMJPwyAIv7YMgPQe712DMaHTqYLJjPMn9pUI9jHc1lf/MLkoUBZrHseG
-         QgMtV5gRTHdOx/IXJ71OUKMehLpyI07C+ssINUq0AxAf4bZNZvdrtkoZcVaRCzmOkNUh
-         OPCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747031926; x=1747636726;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EJjA/FXfjTD2FQE71QWuHDCBdzjs/ZNL3lM7sCOkk4k=;
-        b=fzXgIZdAuiOUerjrFgUubHx5JzHqvvssNPUXmJKi2AB/METNRbLGfiz3SusVj5LD+R
-         xgta2KvkZ4ysVS/d120RFf8swKEqTTX5Cqp7sMoqSgey2O5AUY6eWjSWGzfW8Nrf7kjd
-         IzvnprnwlS3Okwdh0zo+5UV5vMeoox4j3umhKxiKJW+DdiePD/5VsoL7vFQX6sW2v2Gj
-         iWAT0we9SOkIJCWV6fIEKOgmHJltNI+nTaaDIzbYYk578fZZ2CKrUCAY4qVp+qRw6RVL
-         LVWAzzEIg66FUGrU63P92GceqfONKBprP/Jy61FTOjc58lxSqSOBiz7Agbv9PiEgm2LB
-         ynvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLD2VtH33Wr93mNSwrM0bl9874Hnhnmq7KyDdFWgO63UOLyD4bsbO3Omt0KVhXPbl3qBsGeO7tW9IieEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUAaU9EwwPy8qVfJ8fsiVWEGUxd7YFJCzx9MZTWGmB/E+J3DeX
-	UW/KNl0GRWU+ciEBupFtr65PTwLk3Zv+ZF0A+icHZSMBnjQ+jPQGIBheWT2a2g4=
-X-Gm-Gg: ASbGnct8J6sSrTjSGSgj4sRy4Q1WWxOSPbglQ6VGaRYbQYX+qnLzsYTxP9cWWg+HOPp
-	eNmjIElGkR7GGuo9GCDqOQ/LhzcCsK++7JLCqR09/FfoIRtD386dHJp5Aqkw8kMHC+/d+9Xj/Gn
-	5cCcH0owtKMGjEwyIToWU8CVQ3Gpp18QG8BazDFbMFMOO36Jk7Ep6f3d+NCS4VWRshN8dd1/0z5
-	8NAiRTA7TvrRXy5/VP9KqYXEaTcGisFEIalZLvbMdAvW4gODcSW0PS3vRRiBFpOxp6NhDYZQ96n
-	RQ+HZI+EhRtk6dhPGj0jP+SsIdPlBhjtVS+CI/nZGpB4xvHpaOVNiXvdytcAdM5SJd5ZeeU=
-X-Google-Smtp-Source: AGHT+IHbNmFFgqP2TaNoo3r8XCJ2lXf2VHRvee7H9H7Ew0FqMOfSppy5wk3G+RtUy3MhkVtZA75gyQ==
-X-Received: by 2002:a17:907:2894:b0:acb:7dde:d88f with SMTP id a640c23a62f3a-ad21975a11fmr359134666b.5.1747031925716;
-        Sun, 11 May 2025 23:38:45 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.222.234])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219851314sm565951966b.161.2025.05.11.23.38.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 23:38:45 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Alexey Charkov <alchark@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org
-In-Reply-To: <20250507-vt8500-timer-updates-v2-4-65e5d1b0855e@gmail.com>
-References: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
- <20250507-vt8500-timer-updates-v2-4-65e5d1b0855e@gmail.com>
-Subject: Re: (subset) [PATCH v2 4/4] ARM: dts: vt8500: list all four timer
- interrupts
-Message-Id: <174703192445.30990.13638059295757874601.b4-ty@linaro.org>
-Date: Mon, 12 May 2025 08:38:44 +0200
+	s=arc-20240116; t=1747031998; c=relaxed/simple;
+	bh=tG3i34NXkJj0qQvZ6/E4WhLAPBSDdSQVOh3UElbonBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f2dREMu3FaAWhVBkl85h2nd9pub6RJFHiA9Ek40geOCIJgdyEbSFTAMK1U0hcWvWn/S8KI/dcz1VPe3ne9IvatAlM4A/bDxM/WNjhIgIRXhWZ2WnoUNpraOlFO6N0PCMXMoKKLqG/mgWCFvMVXQwn0VCuJ3/WhSa0/pBmh9+kuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zwqhh4s3Bz4f3jv0;
+	Mon, 12 May 2025 14:39:32 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 295BA1A0DE9;
+	Mon, 12 May 2025 14:39:52 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgAni1+xlyFoYAesMA--.11556S4;
+	Mon, 12 May 2025 14:39:51 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-mm@kvack.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	akpm@linux-foundation.org,
+	ziy@nvidia.com,
+	wangkefeng.wang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] mm/truncate: fix out-of-bounds when doing a right-aligned split
+Date: Mon, 12 May 2025 14:28:25 +0800
+Message-ID: <20250512062825.3533342-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAni1+xlyFoYAesMA--.11556S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxur1kCrWrurWxZw48ury5XFb_yoWrJFWUp3
+	4UKr1DCr4kGr17Gr47ZF45Aw45tasrCFWUAFyxGr17JFn8Xw1DKF18Ka4j93yUJw1kZryx
+	Gr1Dta1IgF1UJaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUotCzDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
+From: Zhang Yi <yi.zhang@huawei.com>
 
-On Wed, 07 May 2025 10:58:33 +0400, Alexey Charkov wrote:
-> VIA/WonderMedia SoC timer can generate up to four interrupts corresponding
-> to four timer match registers (firing when the 32-bit freerunning clock
-> source counter matches either of the match registers, respectively).
-> 
-> List all four interrupts in device trees.
-> 
-> This also enables the system event timer to use a match register other
-> than 0, which can then in turn be used as a system watchdog (watchdog
-> function is not available on other channels)
-> 
-> [...]
+When performing a right split on a folio, the split_at2 may point to a
+not-present page if the offset + length equals the original folio size,
+which will trigger the following error:
 
-Applied, thanks!
+ BUG: unable to handle page fault for address: ffffea0006000008
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 143ffb9067 P4D 143ffb9067 PUD 143ffb8067 PMD 0
+ Oops: Oops: 0000 [#1] SMP PTI
+ CPU: 0 UID: 0 PID: 502640 Comm: fsx Not tainted 6.15.0-rc3-gc6156189fc6b #889 PR
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40 04/01/4
+ RIP: 0010:truncate_inode_partial_folio+0x208/0x620
+ Code: ff 03 48 01 da e8 78 7e 13 00 48 83 05 10 b5 5a 0c 01 85 c0 0f 85 1c 02 001
+ RSP: 0018:ffffc90005bafab0 EFLAGS: 00010286
+ RAX: 0000000000000000 RBX: ffffea0005ffff00 RCX: 0000000000000002
+ RDX: 000000000000000c RSI: 0000000000013975 RDI: ffffc90005bafa30
+ RBP: ffffea0006000000 R08: 0000000000000000 R09: 00000000000009bf
+ R10: 00000000000007e0 R11: 0000000000000000 R12: 0000000000001633
+ R13: 0000000000000000 R14: ffffea0005ffff00 R15: fffffffffffffffe
+ FS:  00007f9f9a161740(0000) GS:ffff8894971fd000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: ffffea0006000008 CR3: 000000017c2ae000 CR4: 00000000000006f0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  <TASK>
+  truncate_inode_pages_range+0x226/0x720
+  truncate_pagecache+0x57/0x90
+  ...
 
-[4/4] ARM: dts: vt8500: list all four timer interrupts
-      https://git.kernel.org/krzk/linux-dt/c/e58afb3e1f365badd69aad6f0d53a2c66a63f689
+Fix this issue by skipping the split if truncation aligns with the folio
+size, make sure the split page number lies within the folio.
 
-Best regards,
+Fixes: 7460b470a131 ("mm/truncate: use folio_split() in truncate operation")
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ mm/truncate.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/mm/truncate.c b/mm/truncate.c
+index 5d98054094d1..f2aaf99f2990 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -191,6 +191,7 @@ int truncate_inode_folio(struct address_space *mapping, struct folio *folio)
+ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+ {
+ 	loff_t pos = folio_pos(folio);
++	size_t size = folio_size(folio);
+ 	unsigned int offset, length;
+ 	struct page *split_at, *split_at2;
+ 
+@@ -198,14 +199,13 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+ 		offset = start - pos;
+ 	else
+ 		offset = 0;
+-	length = folio_size(folio);
+-	if (pos + length <= (u64)end)
+-		length = length - offset;
++	if (pos + size <= (u64)end)
++		length = size - offset;
+ 	else
+ 		length = end + 1 - pos - offset;
+ 
+ 	folio_wait_writeback(folio);
+-	if (length == folio_size(folio)) {
++	if (length == size) {
+ 		truncate_inode_folio(folio->mapping, folio);
+ 		return true;
+ 	}
+@@ -224,16 +224,20 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+ 		return true;
+ 
+ 	split_at = folio_page(folio, PAGE_ALIGN_DOWN(offset) / PAGE_SIZE);
+-	split_at2 = folio_page(folio,
+-			PAGE_ALIGN_DOWN(offset + length) / PAGE_SIZE);
+-
+ 	if (!try_folio_split(folio, split_at, NULL)) {
+ 		/*
+ 		 * try to split at offset + length to make sure folios within
+ 		 * the range can be dropped, especially to avoid memory waste
+ 		 * for shmem truncate
+ 		 */
+-		struct folio *folio2 = page_folio(split_at2);
++		struct folio *folio2;
++
++		if (offset + length == size)
++			goto no_split;
++
++		split_at2 = folio_page(folio,
++				PAGE_ALIGN_DOWN(offset + length) / PAGE_SIZE);
++		folio2 = page_folio(split_at2);
+ 
+ 		if (!folio_try_get(folio2))
+ 			goto no_split;
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.46.1
 
