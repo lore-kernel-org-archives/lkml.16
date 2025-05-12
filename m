@@ -1,72 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE54D81720;
-	Mon, 12 May 2025 13:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773771DC9BB
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058351; cv=none; b=NnHqEJED/s7S/RFUtpur4tB5fgr4TyhcE6z8dnMag3e6vSaosmawTqtJmpOvwF1LBRE/NaKAT2axSG0obBjfIWm7oK5f1p21YbR6OkNYYZyUEoh+dcM8KPwc1DI0Ebstj/CUBfe3JM3xcL0yJHxzOo3UpPziEBMBUaffvfhQaWI=
+	t=1747058367; cv=none; b=e54iicXukYLxsgFZ0uyEuytPOYk8C6RlF5zFvggwI6yqDLaJBAunTB0RBgcthT6BxA00zcbkuo3ydzdagJLlI+Q5+sUJo7Dpnx8lJavXMco++jKVMv1b25HdlEVxXItMwh+cdTT03ZuCo99i2LuSUT7V1vHdL36crm/qKybfJds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058351; c=relaxed/simple;
-	bh=aS+xhCKHOW1Vbyt2IfMiIICsgpVEoputHQayuPef8e4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hgUK+seooW3+8x3x4NPOjjFDj27+34hRRwvckwa2logA6p8KY7+1tkNSul0n2gi1yNAg89EEgOmUPwWo+GbC1BOiShDIM4XEK35Ni9dY5Rjw7QYAtRl1dts7hlqGP5zZAGFue1i6CKy9d/tDnt3OPmyLN5DfKN+WU0VVfd/TrHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8BwHkOM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747058367; c=relaxed/simple;
+	bh=HUmofXhvscOsV22HCTbEBE6mTbH7lup2/FhvFaKJTT0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YvFeUaNb/4XdEVnUsyxOSaWxpCD80ddUXXXygf0Nfds34ooM8IjaGj7YU8X0HsqTL2JPnXnZXKxBzYk4dzUVB1ILYVeqQKx4WQOwoxNE1AWqRKSjKGvAwd6CMQlgsck5wJDJjqUHKhifmO+MuneCParmgcSVXezucSGq5G0K3DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IGtGo5mr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8BwHkOM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523C1C4CEE7;
-	Mon, 12 May 2025 13:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747058350;
-	bh=aS+xhCKHOW1Vbyt2IfMiIICsgpVEoputHQayuPef8e4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M8BwHkOMEkpe1zVPGiNqGu1Vi9qQbkCTdFJF6c/f/V2pLMm90vsLFRfLickZraDbX
-	 1Z6ZqXBxwm4H1hVMZhpdpVXDhqe/7ZvdIYiT56Ar5qLwBxpdC/tGmH+OiXIzUKOWuc
-	 hUSj7BRK6OuiyFc7JjOObJI3Q2Yc0nbbEl0/Kv6J03+/dYZr7CsHDHl9/J4vRmSHJu
-	 JHg3UU3s8LvnTDxIhJpouFO3RGJ4Pm+nGLvhVP4+QbKnaAxTgWGuuEU++y2L2UdFro
-	 pKJnrG40qOa27chzT3Io+i1AJM+01fIkfNaY6DUQf1TDVAWTbLSj2r/Ch9GJl7qJb1
-	 Y5trGFx0N5jow==
-Date: Mon, 12 May 2025 15:59:04 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 1/9] rust: device: Create FwNode abstraction for
- accessing device properties
-Message-ID: <aCH-qE8wAY3X0YRK@pollux>
-References: <20250504173154.488519-1-remo@buenzli.dev>
- <20250504173154.488519-2-remo@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IGtGo5mr"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3EF1E439F3;
+	Mon, 12 May 2025 13:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747058363;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HUmofXhvscOsV22HCTbEBE6mTbH7lup2/FhvFaKJTT0=;
+	b=IGtGo5mrnhcTIR6KHAVd0KcciOdvRmlKgssw6BUtwGWEyYyrGWJijuB7/mfyqfmPhbRjfz
+	kNDgM6HCeU+M1QN0Tt6LK4DICFM9fOAXOTAQL+MPgeQuCANZYN3UP9PJ9ELqZBbdlmay4A
+	2dic1WtPjBbZNiN625v3i0s9okNaBwkM3BtPIcvc83YuyM3DIkIS6pCnyjGHgqEmhKK36i
+	n7T7zyII7NXZ6iCtre00RJYWswSFVYTyxgctszti/Y6asCVrR0GuqNZRHmExXt8UiCgeI8
+	2zHoUxmXGgMocFO34860z5VBRddPVLhkO/qW5ldsUrg0BmXicwoKEp9POBc7Ag==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>
+Cc: Richard Weinberger <richard@nod.at>,  linux-mtd
+ <linux-mtd@lists.infradead.org>,  linux-kernel
+ <linux-kernel@vger.kernel.org>,  Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
+In-Reply-To: <4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu>
+ (=?utf-8?B?IkNzw7Nrw6Fz?=
+	Bence"'s message of "Mon, 12 May 2025 15:13:20 +0200")
+References: <20250512084033.69718-1-csokas.bence@prolan.hu>
+	<87frhambri.fsf@bootlin.com>
+	<d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu>
+	<1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at>
+	<4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 12 May 2025 15:59:22 +0200
+Message-ID: <87r00ugcat.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250504173154.488519-2-remo@buenzli.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddugeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheptghsohhkrghsrdgsvghntggvsehprhholhgrnhdrhhhupdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Sun, May 04, 2025 at 07:31:46PM +0200, Remo Senekowitsch wrote:
-> Not all property-related APIs can be exposed directly on a device.
-> For example, iterating over child nodes of a device will yield
-> fwnode_handle. Thus, in order to access properties on these child nodes,
-> the property access methods must be implemented on the abstraction over
-> fwnode_handle.
+Hello,
 
-This reads as if it is a snippet from a larger text.
+On 12/05/2025 at 15:13:20 +02, Cs=C3=B3k=C3=A1s Bence <csokas.bence@prolan.=
+hu> wrote:
 
-Please start with a brief motivation of the patch (even if it is trivial) and,
-using imperative mood, what's changed by the patch, then you can add why you do
-things a certain way (and not another).
+> Hi,
+>
+> On 2025. 05. 12. 14:47, Richard Weinberger wrote:
+>> ----- Urspr=C3=BCngliche Mail -----
+>>> Von: "Cs=C3=B3k=C3=A1s Bence" <csokas.bence@prolan.hu>
+>>> Well, yes, in our case. But the point is, we have a strict requirement
+>>> for data integrity, which is not unique to us I believe. I would think
+>>> there are other industrial control applications like ours, which dictate
+>>> a high data integrity.
+>> In your last patch set you said your hardware has an issue that every
+>> now and that data is not properly written.
+>> Now you talk about data integrity requirements. I'm confused.
+>
+> The two problems are not too dissimilar: in one case you have a random,
+> and _very_ low chance of data corruption, e.g. because of noise, aging
+> hardware, power supply ripple etc. But you still need to make sure that
+> the written data is absolutely correct; or if it is not, the system will
+> immediately enter some fail-safe mode. This is the problem we want to
+> solve, for everybody using Linux in high reliability environments.
+>
+> The problem we _have_ though happens to be a bit different: here we are
+> blursed with a system that corrupts data at a noticeable
+> probability. But the model is the same: a stochastic process introducing
+> bit errors on write. But I sincerely hope no one else has this problem,
+> and this is *not* the primary aim of this patch; it just happens to
+> solve our issue as well. But I intend it to be useful for the larger
+> Linux community, thus the primary goal is to solve the first issue.
 
-The same applies (more or less) for patch 2.
+I don't have a strong opinion there but I don't dislike this idea
+because it might also help troubleshooting errors sometimes. It is very
+hard to understand issues which happen to be discovered way after they
+have been generated (typically during a read, way later than a "faulty"
+write). Having this paranoid option would give a more synchronous
+approach which is easier to work with sometimes.
+
+Cheers,
+Miqu=C3=A8l
