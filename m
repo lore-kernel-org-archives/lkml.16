@@ -1,63 +1,64 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1271C3BF1
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EFC8632B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057866; cv=none; b=Bbpt0Ip+k7t+L51/RWbwxC1E5u2Q3A1t9H3hrmJQBHLeBIEcqKxPX3vCJAzuZMyrhGv7nfkWBKwVHzQ927Vtu2DEDNJA+hc/KiHS16xpd9JVOWaUD2dmIBWVzyu5QWHtw3UlCiN9S/JvAQgToErgBw//RkkT81yVCYm1BA8Vvs8=
+	t=1747057875; cv=none; b=O7bZX+X7/A/TVSRuT2rgxKl9/jWw1lRWcGeRotJqsb6N81dHcqvVTs3DKS4lrvEWZ/B3r0W8PeXCv3v8pllTgmyQpGIlDeDLa//qeH0tIn/3oQoBM7ojpNRn3kamF9JAyjpWKXP9p8gqRQO8GCCxfNunbhSz0RKe2DcsX47F3ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057866; c=relaxed/simple;
-	bh=M0qY9xASQl3sMPmGY+Z6Jq1lZYzU4PUno3mTkxevcas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mBBo2G64Eb+buE+xr09MgIjlbM4tMjIdsrZDm75iN5i1t9UbJh7/oa9Ml2hxIwk9Djm4OGpeW1UCS5NDoqjoLgofytBCt+dAvCj4BZ6D2SxcZUjFHZDI1OgO3dVBU3UfGN63XRQI7b3SlQxV1kRUB2Enuk6Qvjy+HAJGIx/3jTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=evupK3vl; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747057875; c=relaxed/simple;
+	bh=C82JNmBmQl6nDVtsLrlq7/LXhus7b0Co1S/FnhbyocA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=D/HMDpYnOBqHYcGB15awd1X/VZoC70QO7Ormszxxw4HTk6l5/wxFyo7XHzY/wMuoD28LEDsZsnQY4TEkQExlrkoDOPVlk7UgUEiQeXNBOfvkCDXFiI6iM4ueTBkJiEL0pa4ZxeRT1CjF9yfzbGSdwonz/NMtgkp+utEMseBHIGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=TvmC/Pu+; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="evupK3vl"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad243b49ef1so349469066b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:51:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="TvmC/Pu+"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85dac9728cdso114413739f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747057862; x=1747662662; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747057872; x=1747662672; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=29eGmWMi3cXBalMuLxzLgCqk70S1I8r77vQCVbCu3NQ=;
-        b=evupK3vl1fns5KUna4K5mk8+Eb3mLhey9y9dRy1lpEo1v9bkr8CTx0DyIkHpyAFyus
-         ubl3Ys2BorahMQZGUSzoXDVxGeFyfFBqSSRx+FO4F3ufEf5AawSaEv/CDmFKq92+o4gJ
-         ZUHjKlO7zLkWavduVoItnmPwT4Mih7yUiKXnRvvwdOf9YksBSRe7JUzN/W9lXVff41ES
-         PdTK+JzArJej9NWe7GAM/dgbC81R9Ly9BCYe0Icq3Tf3N35u8YUTh14lPT+q2pw6c1OV
-         H7+cIhhBs1ayr38oW7jguk0lBFePCKrtRRvg9JjcUIoE8NPnJKXmYZ7jPoY2PdC8fEu+
-         0u8g==
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wbHfL50ZIpw0AwwIWTOCCssdnZ8GxKKWCXgL835qDjY=;
+        b=TvmC/Pu+ZPH14cEDYxMiwt2bXGPBrjPObe/+H3Qe7YeZHi8QXcdzPQ8RvKJ51E6Amr
+         viPgw4rM0RmeE1bTYiJLxo5vYJ9RShUU5xBY9hzeX+MhpY13U6czehslyTJkncd1v6dM
+         vK2LBqXPzUNU76XqM8DbmzQkRCYZIWx/awPOPg3MlN7c24PmT6DSXE6IC/14TrSRviYJ
+         uTxL6WDS9/vVF2q0h7ifu40YGPTSfI5CDd2SaXImHC4cC1dkvMFsWDPWPBnSDZNUB/Ju
+         Tuls4fCpfyYm40JGh1KEumN8aRB2ertm6B9c9hmT4qTRb93NGIh1OppqsChZ7VRIVE9Z
+         IDXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747057862; x=1747662662;
+        d=1e100.net; s=20230601; t=1747057872; x=1747662672;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=29eGmWMi3cXBalMuLxzLgCqk70S1I8r77vQCVbCu3NQ=;
-        b=kWLyFmemlLnUpZKHpKEpHeoIlb9EQ+jroyn06ryBHu8Gu7KeozCemsM3KPpWPARoY1
-         1i0TsqpiEvEROLEUV4YpTayE6GMk/O4ogt/LDr06KH3jNVvNrqNxd6T6aB04RrWNWERn
-         eHcc22bBcfFkqA610Z+4jg8zUF+osMITuOT44Ee0o6I/l2XSG+eKBwoBLBNlQQ/jU0Xx
-         zSksEsiCQBWt5SeqWe/jYuYf4rEZiBWIGzJJK8uecZK5PAlB6AdUCWOWhnvULRc103/D
-         OhptZGIp1CIrzbwBd+bV6PIVGDTfGR9WpUEewXxboZqLjttv3KHokC739uW4QpiNzB+X
-         W3OA==
-X-Gm-Message-State: AOJu0YxaqcK36ggZqCsbEWwMa4p8oNog6tTQ6YbMAZ22AWLDUg2LCbwb
-	urb+EGeb2sIvnqi4oztXrBGWZ6W64xuilfy6T72XBb9s5zuYeh+S3g7t3hz4LKY=
-X-Gm-Gg: ASbGncsrQQKsKQa07ANknx53K05JbDxWaeA7Nkt1x+5WBRy1PvEsqt0tDyFYMUTRJRI
-	iCzWM0S0AMDpz3Bck/L5ksvBX5qYztIKrJyAXA9pmSAP+u16ONuJvBNLoxizCuzbqTVjnrxIxy4
-	6gIuxwOpp3CPtq8WHTG7h43BBCyWY7Va25oP0lRKvBdAgzVVjSh/jVbhPL+rrFSC6F3l8Q77aLn
-	51ckjcXaMZDDxA3ZJcs2JcYoUChFNWOP6+2ud5sCIzdHIyvzGppO+NwbTnE/v3EcNqUPXisNtvL
-	ZE0R23ofcRdqNxGYuwqd7Kl84GJof5r3BvgOGXHi+gg9jXgRk3elVA==
-X-Google-Smtp-Source: AGHT+IGxQPj5ISBYHxqt+HceKg1I62fXSPEHJam9X16oVLfXwLKnJ68H26ifn/2iMofAcnp7vupTZg==
-X-Received: by 2002:a17:907:2da1:b0:ad2:3f21:a092 with SMTP id a640c23a62f3a-ad23f21b4f2mr801324866b.56.1747057861905;
-        Mon, 12 May 2025 06:51:01 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197466adsm624739166b.92.2025.05.12.06.51.01
+        bh=wbHfL50ZIpw0AwwIWTOCCssdnZ8GxKKWCXgL835qDjY=;
+        b=K0xmoWcdozQ48DmDlz+2bCl3snnxDdof5RVg6tCDMjUSAiM7ttQH9/U+KUYnfzuORY
+         NLF9G2xKqZwE0NvFKUamSUsiq+pxMXsMuBc0zgA3qnvrEIL2Sm+FqIw5WDrl9vqtzFmD
+         O32Ir9m6PTEPk9oU22QaOE8tomR6urEnr8yG50NO32LUcdkQU82NYC7T5qIdGhrRhRHB
+         ib7GKpY6bM8aAdaVkUsYVk+MOm6ASzWBth/sIL02GJDdNNDoKQ1zkdir3QmeydXBa3Xc
+         TmuEsfv5DXBoul4gx8HxMN15RNm/iDziHCpIh8TOZiNexETdmMmFDABpnYLfFvLAqkK/
+         /LhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGlea5kWO3HGq3rPjP43nkol1oega6kvpasbzsPSaB5HelNsEF0TDbnC2rtwILzwEum4fE7c+TdranE+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzEOF9+Xtu0dPnekvnxUBuikaczN+FsRoyuejvV4ieHsQ32hpI
+	jw9RveKopUh9PyqzGBL7GONjEIUV0YhLfeUWYmMc4ktfg8sS4WNsVLYwIQlgsNA=
+X-Gm-Gg: ASbGncv+PCU7QjztbTn5fryqvbYBKF+sUa7ktY/t1gdqiFXXnzJbSsWxi7TpYGdwPmH
+	tw9jFPCwlPrwPEpTk56iYELMZS2MlNTmAcci4Gc9YiuEcytniX1NIouie2T8RdIDK0cfBSaNHTE
+	39fep8RBGvMpCSZozWD8XePsnqU3UyWmLko6HmR5P3Yy+N4l5cf8aP15NaFkDN1bePf9y3c3f2q
+	X3KT9MCLe8pAnahET7eHLXuyWqUldT5G4umKn8OIYDPOzrBkHwA5i5Rbd29w0Scgoer2kDu6OBx
+	guL4dIevouokgVmVVincWvuukaP3CJI7+Qlx8YUKFWYUBEY=
+X-Google-Smtp-Source: AGHT+IGe7PYh1BarNM3QwA7lUBGDLJIk/X9Q5I71uCCD1EP/LavNJSCXLZMijyLjXK6KPxsyQurmMA==
+X-Received: by 2002:a05:6e02:1fc5:b0:3d6:cbed:3305 with SMTP id e9e14a558f8ab-3da7e1e7608mr142451495ab.10.1747057871986;
+        Mon, 12 May 2025 06:51:11 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3da7e10472fsm22357855ab.28.2025.05.12.06.51.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 06:51:01 -0700 (PDT)
-Message-ID: <84e82d74-312f-4c6c-b197-b44e59e9470c@suse.com>
-Date: Mon, 12 May 2025 15:51:00 +0200
+        Mon, 12 May 2025 06:51:11 -0700 (PDT)
+Message-ID: <81a0d2da-d863-4a6e-8d3b-b899d38ea605@kernel.dk>
+Date: Mon, 12 May 2025 07:51:10 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,139 +66,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] params: Add support for static keys
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-modules@vger.kernel.org
-References: <20250510210126.4032840-1-kent.overstreet@linux.dev>
+Subject: Re: [syzbot] [io-uring] KCSAN: data-race in copy_mm /
+ percpu_counter_destroy_many
+To: syzbot <syzbot+8be9bf36c3cf574426c8@syzkaller.appspotmail.com>,
+ asml.silence@gmail.com, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ Linux-MM <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+ dennis@kernel.org
+References: <682196ed.050a0220.f2294.0053.GAE@google.com>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250510210126.4032840-1-kent.overstreet@linux.dev>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <682196ed.050a0220.f2294.0053.GAE@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/10/25 23:01, Kent Overstreet wrote:
-> Static keys can now be a module parameter, e.g.
+On 5/12/25 12:36 AM, syzbot wrote:
+> Hello,
 > 
-> module_param_named(foo, foo.key, static_key_t, 0644)
+> syzbot found the following issue on:
 > 
-> bcachefs is now using this.
+> HEAD commit:    3ce9925823c7 Merge tag 'mm-hotfixes-stable-2025-05-10-14-2..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14ff74d4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6154604431d9aaf9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8be9bf36c3cf574426c8
+> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 > 
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Petr Pavlu <petr.pavlu@suse.com>
-> Cc: Sami Tolvanen <samitolvanen@google.com>
-> Cc: Daniel Gomez <da.gomez@samsung.com>
-> Cc: linux-modules@vger.kernel.org
-
-Please Cc also the "STATIC BRANCH/CALL" folks on the next version.
-
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> ---
->  include/linux/jump_label.h  |  2 ++
->  include/linux/moduleparam.h |  6 ++++++
->  kernel/params.c             | 35 +++++++++++++++++++++++++++++++++++
->  3 files changed, 43 insertions(+)
+> Unfortunately, I don't have any reproducer for this issue yet.
 > 
-> diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-> index fdb79dd1ebd8..0fc9b71db56f 100644
-> --- a/include/linux/jump_label.h
-> +++ b/include/linux/jump_label.h
-> @@ -107,6 +107,8 @@ struct static_key {
->  #endif	/* CONFIG_JUMP_LABEL */
->  };
->  
-> +typedef struct static_key static_key_t;
-> +
->  #endif /* __ASSEMBLY__ */
->  
->  #ifdef CONFIG_JUMP_LABEL
-> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-> index bfb85fd13e1f..2494e7e67453 100644
-> --- a/include/linux/moduleparam.h
-> +++ b/include/linux/moduleparam.h
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/afdc6302fc05/disk-3ce99258.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/fc7f98d3c420/vmlinux-3ce99258.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/ea7ca2da2258/bzImage-3ce99258.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+8be9bf36c3cf574426c8@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in copy_mm / percpu_counter_destroy_many
+> 
+> write to 0xffff8881045e19d8 of 8 bytes by task 2123 on cpu 0:
+>  __list_del include/linux/list.h:195 [inline]
+>  __list_del_entry include/linux/list.h:218 [inline]
+>  list_del include/linux/list.h:229 [inline]
+>  percpu_counter_destroy_many+0xc7/0x2b0 lib/percpu_counter.c:244
+>  __mmdrop+0x22e/0x350 kernel/fork.c:947
+>  mmdrop include/linux/sched/mm.h:55 [inline]
+>  io_ring_ctx_free+0x31e/0x360 io_uring/io_uring.c:2740
+>  io_ring_exit_work+0x529/0x560 io_uring/io_uring.c:2962
+>  process_one_work kernel/workqueue.c:3238 [inline]
+>  process_scheduled_works+0x4cb/0x9d0 kernel/workqueue.c:3319
+>  worker_thread+0x582/0x770 kernel/workqueue.c:3400
+>  kthread+0x486/0x510 kernel/kthread.c:464
+>  ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> 
+> read to 0xffff8881045e1600 of 1344 bytes by task 5051 on cpu 1:
+>  dup_mm kernel/fork.c:1728 [inline]
+>  copy_mm+0xfb/0x1310 kernel/fork.c:1786
+>  copy_process+0xcf1/0x1f90 kernel/fork.c:2429
+>  kernel_clone+0x16c/0x5b0 kernel/fork.c:2844
+>  __do_sys_clone kernel/fork.c:2987 [inline]
+>  __se_sys_clone kernel/fork.c:2971 [inline]
+>  __x64_sys_clone+0xe6/0x120 kernel/fork.c:2971
+>  x64_sys_call+0x2c59/0x2fb0 arch/x86/include/generated/asm/syscalls_64.h:57
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xd0/0x1a0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 1 UID: 0 PID: 5051 Comm: syz.1.494 Not tainted 6.15.0-rc5-syzkaller-00300-g3ce9925823c7 #0 PREEMPT(voluntary) 
 
-The module_param() macro in this file has a kernel-doc that describes
-all currently supported standard types:
+This doesn't look like an io_uring issue, it's successive setup and teardown
+of a percpu counter. Adding some relevant folks.
 
- * Standard types are:
- *	byte, hexint, short, ushort, int, uint, long, ulong
- *	charp: a character pointer
- *	bool: a bool, values 0/1, y/n, Y/N.
- *	invbool: the above, only sense-reversed (N = true).
-
-The static_key_t should be added to this list.
-
-> @@ -488,6 +488,12 @@ extern int param_set_bint(const char *val, const struct kernel_param *kp);
->  #define param_get_bint param_get_int
->  #define param_check_bint param_check_int
->  
-> +/* A static key, which can only be set like a bool */
-> +extern const struct kernel_param_ops param_ops_static_key_t;
-> +extern int param_set_static_key_t(const char *val, const struct kernel_param *kp);
-> +extern int param_get_static_key_t(char *buffer, const struct kernel_param *kp);
-> +#define param_check_static_key_t(name, p) __param_check(name, p, struct static_key)
-> +
->  /**
->   * module_param_array - a parameter which is an array of some type
->   * @name: the name of the array variable
-> diff --git a/kernel/params.c b/kernel/params.c
-> index 2509f216c9f3..991f49e138e7 100644
-> --- a/kernel/params.c
-> +++ b/kernel/params.c
-> @@ -14,6 +14,7 @@
->  #include <linux/overflow.h>
->  #include <linux/security.h>
->  #include <linux/slab.h>
-> +#include <linux/static_key.h>
->  #include <linux/string.h>
->  
->  #ifdef CONFIG_SYSFS
-> @@ -412,6 +413,40 @@ const struct kernel_param_ops param_ops_bint = {
->  };
->  EXPORT_SYMBOL(param_ops_bint);
->  
-> +int param_set_static_key_t(const char *val, const struct kernel_param *kp)
-> +{
-> +	/* Match bool exactly, by re-using it. */
-> +	struct kernel_param boolkp = *kp;
-> +	bool v;
-> +	int ret;
-> +
-> +	boolkp.arg = &v;
-> +
-> +	ret = param_set_bool(val, &boolkp);
-> +	if (ret)
-> +		return ret;
-> +	if (v)
-> +		static_key_enable(kp->arg);
-> +	else
-> +		static_key_disable(kp->arg);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(param_set_static_key_t);
-> +
-> +int param_get_static_key_t(char *buffer, const struct kernel_param *kp)
-> +{
-> +	struct static_key *key = kp->arg;
-> +	return sprintf(buffer, "%c\n", static_key_enabled(key) ? 'N' : 'Y');
-
-The 'N'/'Y' values are the other way around.
-
-> +}
-> +EXPORT_SYMBOL(param_get_static_key_t);
-> +
-> +const struct kernel_param_ops param_ops_static_key_t = {
-> +	.flags = KERNEL_PARAM_OPS_FL_NOARG,
-> +	.set = param_set_static_key_t,
-> +	.get = param_get_static_key_t,
-> +};
-> +EXPORT_SYMBOL(param_ops_static_key_t);
-> +
->  /* We break the rule and mangle the string. */
->  static int param_array(struct module *mod,
->  		       const char *name,
+#syz set subsystems: kernel
 
 -- 
-Thanks
-Petr
+Jens Axboe
+
