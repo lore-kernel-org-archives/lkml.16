@@ -1,202 +1,121 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2048.outbound.protection.outlook.com [40.107.92.48])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD05AD5E;
-	Mon, 12 May 2025 05:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747029271; cv=fail; b=W/Bhg+niKUliFx0Ifv71ftHobifFeoN+VV+5QUsCXZ1TIh1WsUqMPSYekcQfnal4uN1/iU602rskEUdkycY7ehjdXnw6rDuiN0+YhyaGUwG4lLpdLq5LrMl+xhVN2Io9DZpQZWyvWX9J8wPwgPnTZYwpTY4YsayaDFtwB4t/pg8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747029271; c=relaxed/simple;
-	bh=nU4fJf3C/i7KObEX976nKjAA3NuEcfG8FiVdpWtYd9w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AAWxjSFHg0PdpiBMitFpjKvBx7rTI4FsQRODesQq5QyqKPfTzhUPpd6s3t4GD3TSfFoZ6gGv1Gin+bmFVD1Iy3bYYbdTVw8VsddQhI9I26wMU9/EVVASVbMRz2ej5GTMo2lbwoD1OdU6Q2mIVbNHmxGXVhwgdstrqIkdIlT4RDI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y+am50wB; arc=fail smtp.client-ip=40.107.92.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9973B3D76
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 05:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747029383; cv=none; b=R0A4OsSNBGlTlZ7pLPm7n2iRAniLdHzEQsOEL9D2wq+WX7tM1sDvZX/kHtqCLsQpxOc7480BS9iAHznsI/tFRrjjIZ5of3PNRhcl6yrjWJAS1vcRcasPHmvqmjA7/5+KkbpCrfmIcvI1VD+50LzyaFGUghR8p2vDuyDgcDyW/i0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747029383; c=relaxed/simple;
+	bh=Ne/RJyqB+WZ/oZKbI1ydKl8xRpgv3LqrMv+pDtRXe/M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pM0QLlRygCTfgsAgYB1N1dhTzE30cFncS3n7HQqt8VLJ1JPjiY3+PrTL4qfdmasW0hJsY3vviEBc6FD8srSuLiMIuyxeS2WIk19GbZbfZzHrlQSPT4ZXbm1C1TgefW6uQr/l9yT5lSDD0QQdT766poZTwgC12uJwWUpQ0lR9dcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cYZHNKPR; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y+am50wB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e/g2kupmI1oTrg2TIxBIMkA17+RaUTmxuFSb8vDUnWM1bvEQQ/wlZGCxBUXxJGVJD9v8lY3ocHPxRJuX7AJ55pNYRWaxussVoAmi0Ld0Zp+7GYM8Dcd91ZDeC/96Ih4HLm0iadKPoa5R6AhAcSfmvPRkQjsimvXTBu/MN3215WMGN1bJgBHjBRVMAqs7dh46VvO4dIIUQs308vt5vksaoaqQLtXOQ6Dzfcn7BGEBzuZo9Cr6HdxEMphTsx0WkYBdY+TnXCmGCzD0GJHfzmQAR5OqjN87dsLpMy/I1RHRc42CFkQtmaHZ+bJKbugzXSwYU/xRaF29txtRcFZ2RtLL6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eVTpfO5iiPlh7ARWpeh9H+sde8JHE49J3z0dwbuG17k=;
- b=AeHmpzfzT+qAHb5d2T8ZC75QYyDDlgiOlHphSyqgg/Y+NctJWG1tBLMaFnRiq0E6u0ladJsrRHABV/434LWQnzpn3qSsywOmoFdmIfK69S0IHOaLw0xkO23+xDZYGOQBp4Dpjia1C1xgKPqXQwBA3bTj3VJsrW2XsGv/NLNQm7F+psCIn1k/Et+5Ugot5m8BnTzkUoea/kV82AtjNfACGjbvkmFb7oHm6lt5AHAngaTazmfSiWirXNjY+3cPzYhteBPtfelaFYeOc5I/reFud4mKmFERfHeeNUleugRM8kk8FYoLAKbRJIL59AT5qaQgUS1Oa2hgwMind84OjLs5kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eVTpfO5iiPlh7ARWpeh9H+sde8JHE49J3z0dwbuG17k=;
- b=y+am50wBd3onEkcJAyMVd3JR6e5+auFRtLRJDOAglpJBRspmrjjy8QSed4enHU0nC3W+N1O3wnSOqop5WpMY4z/Yyrhm2pYMyw3vxX6mfM4nLPO1p01DSKiUhnVJ+Ouo3iB+50paJmtCNHnVyMmhkdfKhBoTWCsQ/+Dynq6CqRM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com (2603:10b6:208:3a8::19)
- by MN0PR12MB5715.namprd12.prod.outlook.com (2603:10b6:208:372::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
- 2025 05:54:27 +0000
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3]) by IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3%6]) with mapi id 15.20.8722.024; Mon, 12 May 2025
- 05:54:27 +0000
-Message-ID: <70d63971-6b74-41ae-bde3-b08b5f244672@amd.com>
-Date: Mon, 12 May 2025 11:24:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2 14/14] RDMA/ionic: Add Makefile/Kconfig to kernel build
- environment
-Content-Language: en-US
-To: Simon Horman <horms@kernel.org>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
- jgg@ziepe.ca, leon@kernel.org, andrew+netdev@lunn.ch, allen.hubbe@amd.com,
- nikhil.agarwal@amd.com, linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250508045957.2823318-1-abhijit.gangurde@amd.com>
- <20250508045957.2823318-15-abhijit.gangurde@amd.com>
- <20250509203352.GS3339421@horms.kernel.org>
-From: Abhijit Gangurde <abhijit.gangurde@amd.com>
-In-Reply-To: <20250509203352.GS3339421@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0095.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::8) To IA1PR12MB9064.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::19)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cYZHNKPR"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BIsxvG017744;
+	Mon, 12 May 2025 05:55:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/HZBne
+	Fh885hFHtK+mIFsmXRT5LG1VxJtuXyYUQ6Rvg=; b=cYZHNKPRQY/5iOvCivKtb2
+	dd/VMS1tCZKuOeFJHecJQv/vZU+28Z5p02TtRxWLFQWfgGGcPsDXlnUCEcfcm+vs
+	2aSdTYhZOdN/Ih84tmYodBA/joVpfKFRgISh8kKi6G+ke60huL0NnWbCkTmGpdpN
+	oGN9MOgiylneV3APiC5UYhNhKkxcnpljNhuEEdzqrJjzWYG7YYHxMJ6srPMI30yd
+	SNKWHdZhMkQt+TG0nMtVoij9A025EDcyZX8LmzhfMASCQsAp3ilumrgovw0Dua0U
+	sY5ztlhnYSC6vcRAoDfLWWWuu993jRukJBUk5Ri0XvEn/1L4CtlPHsMkjtPn96PA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46k1k6hjt1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 05:55:40 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54C1YAjE011591;
+	Mon, 12 May 2025 05:55:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jku24867-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 05:55:40 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54C5tbcg54133184
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 05:55:38 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6368E20175;
+	Mon, 12 May 2025 05:05:12 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EF62520171;
+	Mon, 12 May 2025 05:05:11 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 12 May 2025 05:05:11 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4DBF06057F;
+	Mon, 12 May 2025 15:05:08 +1000 (AEST)
+Message-ID: <7f40b03a926145e79c060f5a0cfdab829b2a5f1c.camel@linux.ibm.com>
+Subject: Re: [PATCH v14 00/11] Support page table check on PowerPC
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, akpm@linux-foundation.org,
+        maddy@linux.ibm.com
+Cc: x86@kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        pasha.tatashin@soleen.com, sweettea-kernel@dorminy.me,
+        christophe.leroy@csgroup.eu
+Date: Mon, 12 May 2025 15:04:55 +1000
+In-Reply-To: <20250411054354.511145-1-ajd@linux.ibm.com>
+References: <20250411054354.511145-1-ajd@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9064:EE_|MN0PR12MB5715:EE_
-X-MS-Office365-Filtering-Correlation-Id: beb541d2-1c67-4f0a-aa15-08dd91197488
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VUZkWHRwcXdLSk42V3hhWjg0ZUNROU9KaW5oU25veG9pVml5TGFlRnRjcGlZ?=
- =?utf-8?B?amw2MHFjQUl0YXVMeHFCdHBzQWpDMjBUVkxRY1duT290WFZON005alJvK3Bx?=
- =?utf-8?B?RVdvM0NNblpVWTBQaWpJS2tXL0NaM2M2bU9JanJ3TzkvczNNOEU2ZlJjbnM1?=
- =?utf-8?B?a0pJNWdNT1N4NUN5SXJzLy9SN2pmSFV4YURjaXNTTEpERDUvK1dVZUFoM09X?=
- =?utf-8?B?bEdrcXZJUW1lcTl6Y0RpY1ZBQ1RrL0VBaUVwMTFlQWVOZHRlcGpqNld2QWYx?=
- =?utf-8?B?ZjJlMmJKTy9MeXJySTNPVkh1U0FuU2lRejRnTjBlWFIxOFV3emxuYmxtRWF1?=
- =?utf-8?B?RkFYZ2pkMURFdFFxaXl0K0RLNHpzV3ZqZzFmeUd3Vkc1b05KbW9TYWhxVWF1?=
- =?utf-8?B?MzdRWVZsOUhtUUFNeEovT2NWdW1GcS9ObEx0QS8vYWVOOGVzT3VYVnJ6RHpO?=
- =?utf-8?B?Q3UxNXFBbGg5QzJDbHhyamVmOE1VWU5aSDJYNnd6QmM4YmJhczZ4YmljNFVT?=
- =?utf-8?B?NWU1UTU5YjFnVmIxaVN1eVJpZDN6ckJzWGQ1TXlyaUZobklvTlpoc1AwVzRx?=
- =?utf-8?B?NVhySkYyNUNxbkxldGhLUlRaZUNtRHYyVy81TDJJd29ic2U4eDR1S09jU3VM?=
- =?utf-8?B?Y05kTkIzRW9pT0J1MzhzMXpaUDlOem0weWVtMk1LQUJFZVdiOXlKbUI3eXZI?=
- =?utf-8?B?TGVrRzUva3dLOHlqT0dqM09YWGlaVkc0RXBtRllPakJic1JwQzFGUWFuWjNN?=
- =?utf-8?B?V2hocldKSmZIeFJlTGgralpJY1lxVVZFWFdiZlIwNzJnQy9rWkEyM0dKOW80?=
- =?utf-8?B?aWhSVjNZU0h6cS9qQk9pVHlRTmFNNzJnblZGWm1TYzBEK2o2ZS9QTDNZemRi?=
- =?utf-8?B?SjNWeTRhb0ZLYWQzWWhZdHcwcW1GSEZkbnNFNkZvWGNhdlhlWnlTZUNOVTk5?=
- =?utf-8?B?bSt3d2Z1T0EvWFZiY0RTL2VZVWtWMjMzeGx1SVRTNGdaODVub0g3NVlUYzNv?=
- =?utf-8?B?bm9tQm1JcjUvYzhIYWZFQVZ6K3VHU2p1bEJoNG5XOVhaV0NXbEhOVEdFQ1RP?=
- =?utf-8?B?M0Q3VGxUNEJwdjlTSlF0SC85bWpZdHNOZEx6aFhOcEpkWjdFRzhjQmpIRjln?=
- =?utf-8?B?MHNrVnNqakJPdHNmYy9COEowdG5VTm96WmRjb0VYakFweU5za3JKdU5PYlRm?=
- =?utf-8?B?d2RNRkRqNnVmT0pMUHVLSU9yYXZmcmtENFBxd054SXQwa2F3QWUrYUpjaC9y?=
- =?utf-8?B?alFLc01kZXhxZjFiZUt5ajdXbEtxc2xwMlFsVjBkczlQazh4OU5peEV6MXZ3?=
- =?utf-8?B?Q0RaYnc2QXQzakYwakxsZ3ZYSzd6ejBlaDdNQWJUVHp3aEpMaXM3L284aStC?=
- =?utf-8?B?SkFDTXI2ZmxoTHlTVU56V2VsSzdTZUhYV3g2UG44WWtlZXhnQUlWMUNjMjJY?=
- =?utf-8?B?eU9sSG4rellZMDcwMXBFVVp4YWErd0FOeUxDcFdhS3JrRW54Y2VTc203WmRm?=
- =?utf-8?B?VmgwazJxd0FER0RrKzBnYnpkNVVxMnVSY3RxRFJwdjNKSTNzblBLQmVQUzRS?=
- =?utf-8?B?bjhJYVoyeXdtbDFkK28xWjZOa1NWSnhaUUdpS2RNOFZLRityZCtSMW5rU3A4?=
- =?utf-8?B?N2cwNnI1b2ZZZWtza0Nma3lxYUxBblpaSDVCTmtFQzJIZ1VkbXdwbXM0ay9r?=
- =?utf-8?B?UzFjRENzSzlZenl2Q0J6a2lpcnhvUFY5a2xOWDNrZWw5MjQwL3VDbkJwRU1r?=
- =?utf-8?B?dzBxR3pVa1BWemh4SWJRaDMzVDJYc2FsVTJaUUtpV2JHVEEvb1lKWC8wYXhk?=
- =?utf-8?B?b3V5dVNWNHZEZTNybzFoVXFsdUo3Mnh3aXJ3RWFmM25tRUZ6VmVyc1A0K2h0?=
- =?utf-8?B?TU10YTJrR2E3K1ZkQW5nWENpbVhqbjZJVUtLSlV4L2pySXlHbnJETjc1Q1pk?=
- =?utf-8?Q?oSMuZN4e9XY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9064.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cGhxY3RkRzllZVhpZ3dWWXpIQTVtRjNCLzNzZUNZVGIvUWNLTG9DSmxBWC80?=
- =?utf-8?B?MmVRbFBsUHJULzVJVFZlREkrcFdPTEZuME5lYmxDZEtKM1RHZVJYSDgyNTRw?=
- =?utf-8?B?MG5CMDgvSmgxME5vWjBhMGgzQ0t5WXNNc3FIWXNvLzA5Nmxia0xpYjF0NUlY?=
- =?utf-8?B?TnFNVWw3bmpJa1FtNjFqcnpjVWZ3VU1URkgxSWNxdGFLdkZ3MndLMUZsamZv?=
- =?utf-8?B?LzRUaCtKTzFzSjBDMUFLRytoS3phdHkrdVM3SHFYNWNXSk5qeUVja1ViVG8r?=
- =?utf-8?B?ajZFV3dzOUJQUk9YenpBZmovZTRRWnJUR1NrOGdFbFJTc0xZck5LUmF4NytL?=
- =?utf-8?B?SlpETk8rTUVYVW1ZWGg5VkNmUXU1RnlXUnNzYTRScmFMVldyNmJmNmpUbGI4?=
- =?utf-8?B?WVFuZDU3TDJvVmxyREhmWFlHRWZqLy8zdFdmays5VTJVZEdaVXEvV1UrOHc4?=
- =?utf-8?B?Mnc4d216UUR2WDdla3pBMHQ3UlBlNndEMFhsYTM3aXg2N2Y5cTBvN0NFNDFN?=
- =?utf-8?B?SmlvNitWMVhmWTBVd2VBMS9obUxWckVkTzZsK282Y3pQaDN3Y1Z0WlR3MHFD?=
- =?utf-8?B?ZkR4bXcxckRPN2I3UjRDcHhUMlRnRmJBNFcwbGpGdVJpeUFUbUxvV3J0ci9j?=
- =?utf-8?B?SGwzWG9GY0ZMaEpWMldxUW5DUW11Uk9Rdm9uUWc1eUFwdnF4UnBobHAwVlFC?=
- =?utf-8?B?SVlKeHJFUFNBWDliSWRtckduN3NpT2NZWHRQdi91ZW5OU3J5d3kvN2FRU3ZR?=
- =?utf-8?B?Z09Td1FBdVhFeWhQNTBMQ0IxblNTN25UM3VJL2Mzd1pMaXIvQXJkejlxUFFl?=
- =?utf-8?B?VStGanR3N0g2Um5LdUhDQjc5Q20xUTJSNjY0M0VyU3o0Tm1PTmZreFQvMGNs?=
- =?utf-8?B?Nk1uVW5FcHBvZVpRNXdkbk82MFI3UkVOTk1JcUlzelUrcTZJRDdkWTFRRzBB?=
- =?utf-8?B?WDBFaWhHc1B2OFVPRFFIYzVrbmV5RjZJR0wwMDVrQ09oOEhHSE83WVkwaGNm?=
- =?utf-8?B?WVd5S002RnowbGVVeWJ1dTE2TlRXYlFYZkc1NnpPT0dWT2FMNC9LbklZd1J2?=
- =?utf-8?B?Njd5dDh4STNVMm1Oc1NKZmZjdDRta211RWxJK1ZIRmNOR200TWcwb3c0T1hG?=
- =?utf-8?B?Vkc0aXM2a2pkTmF4TW5BMy9sU1BUSEdPN01yc3Bxd3NQRm8rNnp6WisxcTZz?=
- =?utf-8?B?aHhZLzRFN1M3T2J2QUlFNTFWZzB2akQ5M01ydmg3Z1VuL3pkeHVVdXVaSURO?=
- =?utf-8?B?SGRhZGplMGdXR3NEUHdGK1hwSlNVZlliZkJjYkpHdmR6MU9wenJ3Y3V0SHZE?=
- =?utf-8?B?NVpTUDU1VVlSVDNobVhJVjdvc3E0WERucHYwRnQ1a0ZtalNjNS80RmFGUHpo?=
- =?utf-8?B?ZlB5ckl2aWpWR3Uybk4zUjc3T0duV0RBS0dUTFU0RFp4bFh1S1l3R1kzc2xM?=
- =?utf-8?B?Y2hRaTJhQXB4OWRUb2ZDbFdiTTkrRlc5TTdLT3NrVVRZLzh6TzhvQXV2c2Yx?=
- =?utf-8?B?RDJHTXRhNmovMUxOWVpNWDFSSkIxVGdNT1NFay8wVDhFY0dpOExBaUNVdVAy?=
- =?utf-8?B?K256WUhTQzhqSnozeEpzNXorSWFlazkzLzFYR2I0OFdrd29TNVFJR2hKUXdE?=
- =?utf-8?B?bjFmS1pTM3lhZ3JUdElaUEF2T3Rmc09NM3VmakIwZFY2TjA0MWJaSC9BTWJF?=
- =?utf-8?B?UzdkNDBSV0w0QjhLa1pKVWdNTGZ1SUNteW83dS9KTUZvcHU0c3JpemhHekpT?=
- =?utf-8?B?MVU0K0dJYld5NVhQRnJ1S0lLWU5MRzhXUUxVZWJjbEpZaEVKQWd3K1pwSjQ5?=
- =?utf-8?B?VnpOakNQcWo5c2RKZzFzV3FHaDZKcit6ZDNBa0VZaGorU3Q0U0dIRWZ0SFcr?=
- =?utf-8?B?enYwZTRXRmJBaXR2RjVERlppbHQwclhxcjNkVzRWL0daa1BnNWdZVzR1MDlM?=
- =?utf-8?B?eWE3bi9qWk5kbHZpQ1Q4NlprU1NCbWVnVFRLakl4TXpoZUtxRlpMQktJR29q?=
- =?utf-8?B?NDJnNUNWWHN4enovZFo5T09QMkxHbi9sTi8yTmtyeld1N2dFdnVBSXZ1Tkla?=
- =?utf-8?B?VnBNRlJDZ3VTZ3V1a3VOeGlUeU85a3k3dXdLaUNHV0hza2N0R0ZnQ3dFTmsz?=
- =?utf-8?Q?MnbIu1E+P8DX6Pr21kBvkN8xv?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: beb541d2-1c67-4f0a-aa15-08dd91197488
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9064.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 05:54:27.2933
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QHZ+mlvbFkU9z+F6XJ6RD/n0cGqWi+nrnz2SzUk62BIonKTDgfACWjTycLTdyyTqGK4yQmswFUqOV52XShtlPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5715
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=dNSmmPZb c=1 sm=1 tr=0 ts=68218d5c cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=VlGTkuFJ5WdtLxIKyCAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: BEhtyqcew9NhysJzzJPiJH-Y-nhqpckr
+X-Proofpoint-ORIG-GUID: BEhtyqcew9NhysJzzJPiJH-Y-nhqpckr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA1MiBTYWx0ZWRfXxkgdbtEmf1nz dwd7yYAc5Bva+GTN20ZcaaRJI8dRBGYqlLgSgKVPxDqPaR6nHfb8HftYw/MUT5Pccf9AOHh+lXm Q2he+N8skgs1knm9yr1SAniMXxWCEQptEdIyRFgofwnKH7Nr65r5FhKvJ5t+WWz0934l5Z0tSXx
+ tBO9kzHyy+03JWmDebEltQ0cA1lYhj6PZ+L8R4UBJsehl3Zmloz92oOZ/OBmyEFjB2OUUFpK5Rl g1bOX8IeClFPgllsfpqzZToIVTmXeFfH3VYdhTg8VnVAUuJ6hmP2ygvjHKgKEtqVg1as+SRjpS/ 2bL0qEl5fFyE5HechMx2LuOeZwKveA98APYPOmYvGo9/L36yZEqLjdx2r8tmKXFdxVisOTxvYgw
+ Wsrx2E6M6AW3YRzLDj4mxn8pJsIydIwqWdGM+L7EnvZyMDNVB1iB4wq/1SVLvacjZ6dPiz1/
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ adultscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 mlxlogscore=953 malwarescore=0
+ suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120052
 
+On Fri, 2025-04-11 at 15:43 +1000, Andrew Donnellan wrote:
+> Support page table check on all PowerPC platforms. This works by
+> serialising assignments, reassignments and clears of page table
+> entries at each level in order to ensure that anonymous mappings
+> have at most one writable consumer, and likewise that file-backed
+> mappings are not simultaneously also anonymous mappings.
+>=20
+> In order to support this infrastructure, a number of stubs must be
+> defined for all powerpc platforms. Additionally, separate
+> set_pte_at()
+> and set_pte_at_unchecked(), to allow for internal, uninstrumented
+> mappings.
+>=20
+> (This series was written by Rohan McLure, who has left IBM and is no
+> longer
+> working on powerpc.)
 
-On 5/10/25 02:03, Simon Horman wrote:
-> On Thu, May 08, 2025 at 10:29:57AM +0530, Abhijit Gangurde wrote:
->> Add ionic to the kernel build environment.
->>
->> Co-developed-by: Allen Hubbe <allen.hubbe@amd.com>
->> Signed-off-by: Allen Hubbe <allen.hubbe@amd.com>
->> Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
->> ---
->>   .../ethernet/pensando/ionic_rdma.rst          | 43 +++++++++++++++++++
->>   MAINTAINERS                                   |  9 ++++
->>   drivers/infiniband/Kconfig                    |  1 +
->>   drivers/infiniband/hw/Makefile                |  1 +
->>   drivers/infiniband/hw/ionic/Kconfig           | 17 ++++++++
->>   drivers/infiniband/hw/ionic/Makefile          |  9 ++++
->>   6 files changed, 80 insertions(+)
->>   create mode 100644 Documentation/networking/device_drivers/ethernet/pensando/ionic_rdma.rst
->>   create mode 100644 drivers/infiniband/hw/ionic/Kconfig
->>   create mode 100644 drivers/infiniband/hw/ionic/Makefile
->>
->> diff --git a/Documentation/networking/device_drivers/ethernet/pensando/ionic_rdma.rst b/Documentation/networking/device_drivers/ethernet/pensando/ionic_rdma.rst
->> new file mode 100644
->> index 000000000000..80c4d9876d3e
->> --- /dev/null
->> +++ b/Documentation/networking/device_drivers/ethernet/pensando/ionic_rdma.rst
-> Please add this new file to
-> Documentation/networking/device_drivers/ethernet/index.rst
-> (or some other index.rst).
->
-> Flagged by make htmldocs
->
-> ...
-Thanks for pointing this. Will add the new file to
-Documentation/networking/device_drivers/index.rst
-in next spin.
+Anything more we need to get this merged?
 
-Abhijit
-
+Thanks,
+--=20
+Andrew Donnellan    OzLabs, ADL Canberra
+ajd@linux.ibm.com   IBM Australia Limited
