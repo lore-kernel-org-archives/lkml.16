@@ -1,113 +1,177 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABD08834
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DDF8834;
+	Mon, 12 May 2025 02:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747017150; cv=none; b=dLZBFpBSuLE75yjqkmqTIgR+q/QPJ6u0LYR1gJBwlhd6kOk44N1GOAmdcxyoA2Hi15erOHcw9RybzZOwiELAVls16xRVK5i0xlIhZuZd2QtmEzGxyxa0Gd9R8w404r6NSkcS5rUzj4X7DVUtYmufLPP6+mcNpNeZ620paSBDrcM=
+	t=1747017157; cv=none; b=Bnp3l9D5xskKHq8rLTEaAkkvDohjbPNumDlZBpW7QWMMrnyQ1Y0FjuMpHF2ALbKWCDnaF2o4dLUGrw036NBJk8qBGOEJgdfMBa78trplJYZ0j+xhdLTwoBOBnsJZgEcDeJDZMIJ2AlhPmuQTLeKSL1EgYwYJCluz3nWrJJby99I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747017150; c=relaxed/simple;
-	bh=ZTdg2sSQi0ffs1RvHu8BvvcVGRC3HE8ZGpgUqNo1bOg=;
-	h=From:To:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=lzLo27rTrih58374j2HZYGRsya/arIY25M1LPAMpJeYB1iXwniUHp+t9yxwJyErh59YSOf8ItII6NK83H+N3pqGXOH4sJWiqtGhT1qGG0HqiMG5nUmTF1Iw0cfJd41IxmCRbuFRoxDO5Nz5rq7ATn9kqOmGpeFBdVuteD/EUgxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=m2RG8j+g; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747017157; c=relaxed/simple;
+	bh=Fv0oGHxn7CNZ/hNsG0S0rmMb+hGWvIVWBlE8n5pKX0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VjjIeSzOhPigiEjCQaHgYFRAyKA1SSc8Ht0M/CKat80nUMuJJ4Zt8kz4F5Onk5bwgroP1sZfg/Bv9W93g+lE8Fw8Oq8e4AcQk9ssBh84QTWhCKbY0dTr2iPTkKU/+rQvaIj/EpdM9nWSi+AJjwhWDoPBfnEdMxZ9TOenQK+priE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lG9vK+WD; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m2RG8j+g"
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250512023220epoutp035ec8a786bce6b66f8053e85c9d509429~_ptVGCIpp2201922019epoutp03f
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:32:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250512023220epoutp035ec8a786bce6b66f8053e85c9d509429~_ptVGCIpp2201922019epoutp03f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747017140;
-	bh=HVd3PQKx9PrYIr1S2MjQOwqL7uw5Z1zN7d+Gt9MXQSI=;
-	h=From:To:In-Reply-To:Subject:Date:References:From;
-	b=m2RG8j+gpeXX3neDFfy/vrfwE8R1TeZag8F5MxEYA70h+M6ZGAZMdeOCF0CX0wlAv
-	 dP21AgVVuEaguqMUHlFSxETzg6cWBPXa71W52UjM9XeSZ+8XRZv01puzlEet1ND6H2
-	 MukClJfllxS5V1XuAo374eFpi7Y7W6hvQoW+X5M0=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250512023220epcas1p38ef2deb78d3f631138f8b86c351d6bbf~_ptU2w5iA1239912399epcas1p3g;
-	Mon, 12 May 2025 02:32:20 +0000 (GMT)
-Received: from epcas1p1.samsung.com (unknown [182.195.36.224]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZwkCS0BxFz6B9mL; Mon, 12 May
-	2025 02:32:20 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250512023219epcas1p2409388bd504ff09e9b5775a2aa804cd0~_ptUPZ6ox1887618876epcas1p2q;
-	Mon, 12 May 2025 02:32:19 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250512023219epsmtrp1c11261ea91e9ae9e2dfd8bd12e83b8ce~_ptUOnnxm1564315643epsmtrp1z;
-	Mon, 12 May 2025 02:32:19 +0000 (GMT)
-X-AuditID: b6c32a28-460ee70000001e8a-c3-68215db32ad7
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C1.4A.07818.3BD51286; Mon, 12 May 2025 11:32:19 +0900 (KST)
-Received: from wkonkim01 (unknown [10.253.100.198]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250512023219epsmtip2d08680cc5b6fb3d4684ed4a92cfd37da~_ptT-tdiM1484314843epsmtip2H;
-	Mon, 12 May 2025 02:32:19 +0000 (GMT)
-From: =?UTF-8?B?6rmA7JuQ6rOkL1N5c3RlbSBEZXZpY2XqsJzrsJzqt7jro7ko66y07ISgKS9Fbmdp?=
-	=?UTF-8?B?bmVlci/sgrzshLHsoITsnpA=?= <wkon.kim@samsung.com>
-To: "'Bart Van Assche'" <bvanassche@acm.org>,
-	<James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
-	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <3b41510d-cd82-4c80-9651-ba9744f6ffc6@acm.org>
-Subject: RE: [PATCH] ufs: core: Print error value as hex format on
- ufshcd_err_handler()
-Date: Mon, 12 May 2025 11:32:19 +0900
-Message-ID: <3b4d01dbc2e6$15423a10$3fc6ae30$@samsung.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lG9vK+WD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=UBLZqzzG2NXRn25JYcRLvbgMLnU60sFpxmCVgCV7MEc=; b=lG9vK+WDlOeXoIm+icXujqr+8s
+	q9Ix2WRH0h4Io6x/t8tEp+aG1ZavnUEawcjpEtNU1OB3QRHRBdFHH/NfCT4efUUiSvO2tT0EGvNSU
+	AWlozNMGlYkhaYdCsq7YkFFOwzoIqauGaRpwwqUkl6xpzfiq+7u8pV3+mYDmAg+cSgTute9jldN9M
+	wLd8QBJG3LaaXs62ZuTYjrH7immTszDLtF6VgsyXpdwaeuc9CORPoXSh8vUlrz5REc3JgXr+7ldTO
+	7F5F9Lmkq3q3fJ+ff4LXYBGSzOIfBQxP391VYrFSdD/SMVSikkszUDsixhfTiVeP5IN3tPMeYVd/E
+	2/U9MHDg==;
+Received: from [50.39.124.201] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEIy2-00000008Ck0-3Urk;
+	Mon, 12 May 2025 02:32:34 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Tom Zanussi <tzanussi@gmail.com>
+Subject: [PATCH] Docs: relay: editing cleanups
+Date: Sun, 11 May 2025 19:32:33 -0700
+Message-ID: <20250512023233.107582-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQKj/Hkc2gGrd+gl3yr8ZRpthH+1fQIhzdNLApfHxWmyGAYB0A==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWy7bCSvO7mWMUMg5OLRS2mffjJbLGxn8Pi
-	8q45bBbd13ewWSw//o/JgdXj8hVvj2mTTrF5fHx6i8Xj8ya5AJYoLpuU1JzMstQifbsEroy5
-	R54zFixjqrhy5A1rA+Mdxi5GTg4JAROJP1/ug9lCArsZJeZPt+hi5ACKS0hs+ZINYQpLHD5c
-	3MXIBVTxjFHiyp9vjCAOm8AERolJm2eCOSICOxklHu+7wApRBuS0P5vFAjKVU8Ba4kzvXGYQ
-	W1ggXOLEv6nsIDaLgKrEpa6vYDW8ApYSj6ftZ4KwBSVOznwCFmcW0JbofdjKCGHLS2x/O4cZ
-	4moFid2fjrKC2CICThJHli9jhagRkZjd2cY8gVFoFpJRs5CMmoVk1CwkLQsYWVYxSqYWFOem
-	5yYbFhjmpZbrFSfmFpfmpesl5+duYgRHhZbGDsZ335r0DzEycTAeYpTgYFYS4Z3KIJ8hxJuS
-	WFmVWpQfX1Sak1p8iFGag0VJnHelYUS6kEB6YklqdmpqQWoRTJaJg1OqgUn2u4Ayr76CmpS9
-	gQKX/nT/y1nfpr3vPnlAcOq5sOV+vdHp0mLtTIvlttVxu56fNO2FW/SjlOMrOW6W8z7Y+ktc
-	e8dDQ8vA9ACX4q5JJd5zf6w9rTjZpeysI5eh4aHzc3uDb3KcmLzHfM1U+W1Xl+ZV7nZ5X+Y4
-	+eftfdWhj86H3zzn1WzO/MJlfVTpA/G1X5+fLvhV/JXV4vK69rkTmm/s2DU3tXeOzhzruXJ+
-	X/xfLvmW63x5XYhhgqeer7fdykn+NZmNaxeszfx297jP7TX7ZUPqg2NE9hiFJzgfso00fPI9
-	0iugZRFv1csPTbkma99l/H943cVlt2K10Ay9GzNLy7IWvT684/TxTZZ6b+qVWIozEg21mIuK
-	EwERID3d+QIAAA==
-X-CMS-MailID: 20250512023219epcas1p2409388bd504ff09e9b5775a2aa804cd0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-cpgsPolicy: CPGSC10-711,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf
-References: <CGME20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf@epcas1p1.samsung.com>
-	<20250507020718.7446-1-wkon.kim@samsung.com>
-	<3b41510d-cd82-4c80-9651-ba9744f6ffc6@acm.org>
+Content-Transfer-Encoding: 8bit
 
-> On 5/6/25 7:07 PM, wkon-kim wrote:
-> > It is better to print saved_err and saved_uic_err in hex format.
-> > Integer format is hard to spot.
-> 
-> spot -> decode
-> 
-> Anyway:
-> 
-> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Cleanup some punctuation, capital letter, and a missing word
+in relay.rst.
 
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Tom Zanussi <tzanussi@gmail.com>
+---
+ Documentation/filesystems/relay.rst |   26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-Okay, I'll modify it.
-
-Thank you.
-Wonkon Kim
-
+--- linux-next-20250508.orig/Documentation/filesystems/relay.rst
++++ linux-next-20250508/Documentation/filesystems/relay.rst
+@@ -32,7 +32,7 @@ functions in the relay interface code -
+ Semantics
+ =========
+ 
+-Each relay channel has one buffer per CPU, each buffer has one or more
++Each relay channel has one buffer per CPU; each buffer has one or more
+ sub-buffers.  Messages are written to the first sub-buffer until it is
+ too full to contain a new message, in which case it is written to
+ the next (if available).  Messages are never split across sub-buffers.
+@@ -40,7 +40,7 @@ At this point, userspace can be notified
+ sub-buffer, while the kernel continues writing to the next.
+ 
+ When notified that a sub-buffer is full, the kernel knows how many
+-bytes of it are padding i.e. unused space occurring because a complete
++bytes of it are padding, i.e., unused space occurring because a complete
+ message couldn't fit into a sub-buffer.  Userspace can use this
+ knowledge to copy only valid data.
+ 
+@@ -71,7 +71,7 @@ klog and relay-apps example code
+ ================================
+ 
+ The relay interface itself is ready to use, but to make things easier,
+-a couple simple utility functions and a set of examples are provided.
++a couple of simple utility functions and a set of examples are provided.
+ 
+ The relay-apps example tarball, available on the relay sourceforge
+ site, contains a set of self-contained examples, each consisting of a
+@@ -91,7 +91,7 @@ registered will data actually be logged
+ examples for details).
+ 
+ It is of course possible to use the relay interface from scratch,
+-i.e. without using any of the relay-apps example code or klog, but
++i.e., without using any of the relay-apps example code or klog, but
+ you'll have to implement communication between userspace and kernel,
+ allowing both to convey the state of buffers (full, empty, amount of
+ padding).  The read() interface both removes padding and internally
+@@ -119,7 +119,7 @@ mmap()      results in channel buffer be
+ 	    must map the entire file, which is NRBUF * SUBBUFSIZE.
+ 
+ read()      read the contents of a channel buffer.  The bytes read are
+-	    'consumed' by the reader, i.e. they won't be available
++	    'consumed' by the reader, i.e., they won't be available
+ 	    again to subsequent reads.  If the channel is being used
+ 	    in no-overwrite mode (the default), it can be read at any
+ 	    time even if there's an active kernel writer.  If the
+@@ -138,7 +138,7 @@ poll()      POLLIN/POLLRDNORM/POLLERR su
+ 	    notified when sub-buffer boundaries are crossed.
+ 
+ close()     decrements the channel buffer's refcount.  When the refcount
+-	    reaches 0, i.e. when no process or kernel client has the
++	    reaches 0, i.e., when no process or kernel client has the
+ 	    buffer open, the channel buffer is freed.
+ =========== ============================================================
+ 
+@@ -149,7 +149,7 @@ host filesystem must be mounted.  For ex
+ 
+ .. Note::
+ 
+-	the host filesystem doesn't need to be mounted for kernel
++	The host filesystem doesn't need to be mounted for kernel
+ 	clients to create or use channels - it only needs to be
+ 	mounted when user space applications need access to the buffer
+ 	data.
+@@ -315,7 +315,7 @@ section, as it pertains mainly to mmap()
+ In 'overwrite' mode, also known as 'flight recorder' mode, writes
+ continuously cycle around the buffer and will never fail, but will
+ unconditionally overwrite old data regardless of whether it's actually
+-been consumed.  In no-overwrite mode, writes will fail, i.e. data will
++been consumed.  In no-overwrite mode, writes will fail, i.e., data will
+ be lost, if the number of unconsumed sub-buffers equals the total
+ number of sub-buffers in the channel.  It should be clear that if
+ there is no consumer or if the consumer can't consume sub-buffers fast
+@@ -334,7 +334,7 @@ initialize the next sub-buffer if approp
+ sub-buffer if appropriate and 3) return a boolean value indicating
+ whether or not to actually move on to the next sub-buffer.
+ 
+-To implement 'no-overwrite' mode, the userspace client would provide
++To implement 'no-overwrite' mode, the userspace client provides
+ an implementation of the subbuf_start() callback something like the
+ following::
+ 
+@@ -354,9 +354,9 @@ following::
+ 	    return 1;
+     }
+ 
+-If the current buffer is full, i.e. all sub-buffers remain unconsumed,
++If the current buffer is full, i.e., all sub-buffers remain unconsumed,
+ the callback returns 0 to indicate that the buffer switch should not
+-occur yet, i.e. until the consumer has had a chance to read the
++occur yet, i.e., until the consumer has had a chance to read the
+ current set of ready sub-buffers.  For the relay_buf_full() function
+ to make sense, the consumer is responsible for notifying the relay
+ interface when sub-buffers have been consumed via
+@@ -390,7 +390,7 @@ consulted.
+ 
+ The default subbuf_start() implementation, used if the client doesn't
+ define any callbacks, or doesn't define the subbuf_start() callback,
+-implements the simplest possible 'no-overwrite' mode, i.e. it does
++implements the simplest possible 'no-overwrite' mode, i.e., it does
+ nothing but return 0.
+ 
+ Header information can be reserved at the beginning of each sub-buffer
+@@ -457,7 +457,7 @@ rather than open and close a new channel
+ can be used for this purpose - it resets a channel to its initial
+ state without reallocating channel buffer memory or destroying
+ existing mappings.  It should however only be called when it's safe to
+-do so, i.e. when the channel isn't currently being written to.
++do so, i.e., when the channel isn't currently being written to.
+ 
+ Finally, there are a couple of utility callbacks that can be used for
+ different purposes.  buf_mapped() is called whenever a channel buffer
