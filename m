@@ -1,164 +1,148 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17684F9CB
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CDD255F21;
+	Mon, 12 May 2025 08:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038670; cv=none; b=aCNEgMShYhyfNV1yLt/hZYDLfbt+bE7CUTWP/dXSv2zduS41blAXhYaEXvci/8i1mtoiC7aCzbGFv2jLWed4xGoe60AUwTPfbhOJO4VdL3+R5I1liPWwAae30+2FnjWIIWfE37B1d2L0QmeHbsYzKzbH59/kIkz4SIsryhzP7OA=
+	t=1747038704; cv=none; b=reL2159idetJjqKCBmVsMCvve9fj6jOw01aS9xRfWhIYEzQOs80GWMnRQLgu+BknUo2tCgRJmFF4mPRMlJx/KUzg+HiLNEr1+AfAonJqLNRyY/ABaqwshKQlN/7lmEQUySX211JEjpZtMj7z07gJd2jIbuleZ4CfTiOW46pWE+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038670; c=relaxed/simple;
-	bh=VbIsCmNofx1yYvLRGUCQKtW0w8/8EizRNsmeIZAEhcc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MKgJhaMydGLo6jA1LoE89Wv9J1/jhROgKYcWkH8RTxTiaO6QAZ15J8PgSuDPU66zQ6cyaqMk3dolE2ilQtvDKvTfqNA/1VEU7vaLUZDP5cPKMsdxbMBf41hDfqNptz7z0pkuOA0oRahfHD9sjkZLNEHb0rYviQXsYoMQGFkO1w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=N987vsIX; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747038704; c=relaxed/simple;
+	bh=f8pYJrR7b0v7xVq/4odwpNWdLzpTrC9MBNDWyIHFjZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fTPnrYG3/y0iwJegUcC16vHuhTVXS891kjJgOCADFAVHkDEEUQC1Xchag6ucamu4w8UYemS7dqkiS16gSNFBKQbShSuoCE7BROElPVVHShHm4517NHHhiDT+7Zbf5lt83BKXbNqVU33C6uBdj0Z+y2CdrJ3n4CaX+UdAGrU1NYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PdabjSit; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="N987vsIX"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30a9718de94so3911493a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747038668; x=1747643468; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IzzZU6pvyYy7YIZ/GFIFCMgtFSutDNrqjC/VQVHvmcs=;
-        b=N987vsIX6LpBw0SS18D9yiW/8DRwzA6CgPE+ns/F5ohGEQ29zi6a83pTaTqflqioeG
-         KS+Fak6H8zfA7f8xR1JhZHXDdSP8xAbqUtZAPre+sASSwZ+9AuLXYHO1XIHeZQLbW9dg
-         zTtjur3pdhurmiFcWOfeWzznqU6/cvXmTsTZDb9bkIpZrfsBX7KOPeGZBN/czeZyaGne
-         dU2ArzdeEJFNNXudyH+HEKMC2NZSGbRX5rFULJWFkmlR0pbD2O9axXYMeDF6WIBJp/RP
-         0/yJayE3Vnk2CILa7XIFZsFHwHIZfMHEk2TiLj4q+ZcbyWQeL+329VBwyyjLmy58J/+f
-         klgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747038668; x=1747643468;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IzzZU6pvyYy7YIZ/GFIFCMgtFSutDNrqjC/VQVHvmcs=;
-        b=DEbD3rmeznJV73nrL5E56oriw26qeE7RLQaaf5/S/+LXsP65sz4ZP0oTy5FCTdeGey
-         iY64VEx8U59L3ZElRdAW2J9fM9gpJR7C4siSx31u2SRt23EykcQ9aR5S0tjGONEnD81L
-         uSH7cX6I8/TDF0qPHbLyTb6KEHBZGZYZbv8flaYM6NbmeO0yfyB8iV2RVtzg1ev+YgDp
-         U0sCUtiE8M4degBcMgnxntxs22c2fUW5wZuu8TKjPrTbMElpRCqPRY3biC8FPB15+LJz
-         YmfIJ/YiUGXCcXCc69WX3Jd1JRAFCNlvL9Aj+DayXdPUU/8/cS9492BWgnuER6Sl+Zp2
-         MYuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2u4nRL+62zQBqaNgWiihOkaMUBgvzl3MNg2LZE1pUQYNv49fYBoWeTdt8qOfThgpkf4OmHArWVcTl/0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyspVlVPjBMDvNi/Mn/VmJJW4iVjyPuGzSaFkIhRdFJ37Plmu/L
-	Xr9sGirH2eF4W1cAbjq0XHLr7pCmZhV/VzKtoKnNsX/g71D6QaHv3YqIeKMkSC4=
-X-Gm-Gg: ASbGncv3WYqxsj6weKYd+OdQQxb9nqbgCSTw0Vi9DgotO+iIqZqWYoKeyqLoH6w59N3
-	qTae3cyE7t+pl3T7i4MHBchEmvbRrQQ6vKlx3xFK76QDXraOEQ8AMdGmr7GethJ/Z4loyG6YVYY
-	XhbfxueT58cELL/7hXpJhDzkziDlzWB0wGgvvjxPv3eeiCEAXPzVJ3biZWN+ofvdBVOHT4xRQLM
-	amKEcvUmG+4mpaR6kZXHVpNHdF3wy8mOAM3WoENr/Tdx7Q8BMj4xmYx/GfzyCgB5Qzf37Iu0xFO
-	L+T25YDM4pZIkdG7TJ5PMqu3rIrtaErPRKam+a2viOHSpBMggeFaqFHJYIY=
-X-Google-Smtp-Source: AGHT+IGHNaTbk9KHcwLFc1JRN2apw3Jv/AHhjSrIdSWvDZ8yqVhUcJckbF0S8Q0geEc46Wby78RCbQ==
-X-Received: by 2002:a17:90b:3945:b0:2ee:c6c8:d89f with SMTP id 98e67ed59e1d1-30c3cefe5c1mr22528948a91.14.1747038668235;
-        Mon, 12 May 2025 01:31:08 -0700 (PDT)
-Received: from sunil-laptop ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4fe21a6sm9135565a91.31.2025.05.12.01.30.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 01:31:07 -0700 (PDT)
-Date: Mon, 12 May 2025 14:00:54 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 15/23] ACPI: property: Add support for cells property
-Message-ID: <aCGxvuHwd7TzfDOS@sunil-laptop>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-16-apatel@ventanamicro.com>
- <aCGgZPJUQdAnWa-z@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PdabjSit"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747038703; x=1778574703;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=f8pYJrR7b0v7xVq/4odwpNWdLzpTrC9MBNDWyIHFjZ4=;
+  b=PdabjSit3/EtNRkCTJ+KffjYl+dteylWSpjxlNROpr86znUYFeUsjgXV
+   9uNf3DkpMPYmOWb3H5eeLHCWq+A3NVlfXnggiIouaqBnyaNqbjJGTIbwW
+   l8VVWdVA1CzMsDVbKh3yAkOsSvnVDByRgYeFX5GjR11PyhI/8Mt8+rDvK
+   sHSX1jV9xGXKB97XC7JjjaeFBNR3YoZY2CpTkoaN6bYPPrO2AItL4vV2F
+   jgmrieNFLuWWrECKvyPWRU2FhncsSOTJ09+X6ZBuTRKAPl2YSz+bgCfHx
+   XrNivUcXKaKxAIB1Pq55wu58C8TODLQ4QQbvNKfFTi9ptMZwoS/8miNJH
+   g==;
+X-CSE-ConnectionGUID: /UjcI638STGqUvk+WI74Dg==
+X-CSE-MsgGUID: k5KZTtARTXqroimaMVNuow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48820259"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="48820259"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:31:42 -0700
+X-CSE-ConnectionGUID: Wt0JH0LnR4aVGkyff9QzVA==
+X-CSE-MsgGUID: s45XHkb/TjiYI+IeSrrSfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="137000875"
+Received: from jiaqingz-mobl.ccr.corp.intel.com (HELO [10.124.249.161]) ([10.124.249.161])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:31:40 -0700
+Message-ID: <0ec52e49-3996-48e2-a16b-5d7eb0a4c8a6@linux.intel.com>
+Date: Mon, 12 May 2025 16:31:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCGgZPJUQdAnWa-z@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86/mtrr: Check if fixed-range MTRR exists in
+ mtrr_save_fixed_ranges()
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Bernhard Kaindl <bk@suse.de>,
+ Andi Kleen <ak@linux.intel.com>, Li Fei <fei1.li@intel.com>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250509170633.3411169-2-jiaqing.zhao@linux.intel.com>
+ <20250509173225.GDaB48KZvZSA9QLUaR@fat_crate.local>
+Content-Language: en-US
+From: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+In-Reply-To: <20250509173225.GDaB48KZvZSA9QLUaR@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+On 2025-05-10 01:32, Borislav Petkov wrote:
+> On Fri, May 09, 2025 at 05:06:33PM +0000, Jiaqing Zhao wrote:
+>> When suspending, save_processor_state() calls mtrr_save_fixed_ranges()
+>> to save fixed-range MTRRs. On platforms without fixed-range MTRRs,
+>> accessing these MSRs will trigger unchecked MSR access error. Make
+>> sure fixed-range MTRRs are supported before access to prevent such
+>> error.
+>>
+>> Since mtrr_state.have_fixed is only set when MTRRs are present and
+>> enabled, checking the CPU feature flag in mtrr_save_fixed_ranges()
+>> is unnecessary.
+>>
+>> Fixes: 3ebad5905609 ("[PATCH] x86: Save and restore the fixed-range MTRRs of the BSP when suspending")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+> 
+> Next question: this is CC:stable, meaning it'll go to Linus now.
+> 
+> What exactly is it fixing?
+> 
+> Because the patch in Fixes: is from 2007. :-\
 
-On Mon, May 12, 2025 at 10:16:52AM +0300, Andy Shevchenko wrote:
-> On Sun, May 11, 2025 at 07:09:31PM +0530, Anup Patel wrote:
-> > 
-> > Currently, ACPI doesn't support cells property when
-> > fwnode_property_get_reference_args() is called. ACPI always expects the
-> > number of arguments to be passed. However,
-> > fwnode_property_get_reference_args() being a common interface for OF and
-> > ACPI, it is better to have single calling convention which works for
-> > both. Hence, add support for cells property on the reference device to
-> > get the number of arguments dynamically.
-> 
-> You can reformat above to make it deviate less (in terms of line lengths):
-> 
-> Currently, ACPI doesn't support cells property when
-> fwnode_property_get_reference_args() is called. ACPI always expects
-> the number of arguments to be passed. However, the above mentioned
-> call being a common interface for OF and ACPI, it is better to have
-> single calling convention which works for both. Hence, add support
-> for cells property on the reference device to get the number of
-> arguments dynamically.
->
-Sure. Let me update in the next revision. Thanks!
- 
-> ...
-> 
-> > +			if (nargs_prop) {
-> > +				if (!acpi_dev_get_property(device, nargs_prop,
-> > +							   ACPI_TYPE_INTEGER, &obj)) {
-> > +					args_count = obj->integer.value;
-> > +				}
-> > +			}
-> > +
-> 
-> > +			if (nargs_prop) {
-> > +				device = to_acpi_device_node(ref_fwnode);
-> > +				if (!acpi_dev_get_property(device, nargs_prop,
-> > +							   ACPI_TYPE_INTEGER, &obj)) {
-> > +					args_count = obj->integer.value;
-> > +				}
-> > +			}
-> 
-> These two seems to me enough duplicative to have a common helper:
-> 
-> static unsigned int ...(struct acpi_dev *adev, ...)
-> {
-> 	// define an obj variable?
-> 
-> 	if (!nargs_prop)
-> 		return 0;
-> 
-> 	if (acpi_dev_get_property(adev, nargs_prop, ACPI_TYPE_INTEGER, &obj))
-> 		return 0;
-> 
-> 	return obj->integer.value;
-> }
-> 
-> Yes, the nember of LoCs most likely will increase, but the point here is better
-> maintenance experience.
-> 
-Makes sense. Let me do it in the next version.
+Hi, Boris
 
-Thanks!
-Sunil
+This fixes unchecked MSR access error on platform without fixed-range
+MTRRs when doing ACPI S3 suspend. IMHO, though it is handled and won't
+panic kernel, it is worth getting fixed, and it matches the stable rule
+that
+
+"It fixes a problem like an oops, a hang, data corruption, a real
+security issue, a hardware quirk, a build error (but not for things
+marked CONFIG_BROKEN), or some “oh, that’s not good” issue."
+
+Kernel log is attached below.
+
+Thanks,
+Jiaqing
+
+[ 173.115706] ACPI: PM: Saving platform NVS memory
+[ 173.115818] Disabling non-boot CPUs ...
+[ 173.126530] unchecked MSR access error: RDMSR from 0x250 at rIP: 0xffffffffa90a15ff (get_fixed_ranges+0x)
+[ 173.126749] Call Trace:
+[ 173.126806] <TASK>
+[ 173.126858] ? show_stack_regs+0x23/0x30
+[ 173.126946] ? fixup_exception+0x5a4/0x610
+[ 173.127037] ? printk_get_next_message+0x105/0x350
+[ 173.127141] ? gp_try_fixup_and_notify+0x37/0x100
+[ 173.127244] ? exc_general_protection+0xe1/0x1f0
+[ 173.127346] ? asm_exc_general_protection+0x27/0x30
+[ 173.127452] ? __cfi_x86_acpi_suspend_lowlevel+0x10/0x10
+[ 173.127567] ? get_fixed_ranges+0x5f/0x390
+[ 173.127657] mtrr_save_fixed_ranges+0x1b/0x40
+[ 173.127753] save_processor_state+0x111/0x220
+[ 173.127849] do_suspend_lowlevel+0xf/0xb70
+[ 173.127939] x86_acpi_suspend_lowlevel+0x14c/0x180
+[ 173.128042] acpi_suspend_enter+0x17e/0x1e0
+[ 173.128133] suspend_devices_and_enter+0x62d/0x950
+[ 173.128236] pm_suspend+0x2cf/0x4c0
+[ 173.128314] state_store+0x109/0x130
+[ 173.128393] kobj_attr_store+0x1e/0x40
+[ 173.128477] sysfs_kf_write+0x45/0x60
+[ 173.128559] kernfs_fop_write_iter+0x113/0x1a0
+[ 173.128698] vfs_write+0x38a/0x470
+[ 173.128775] ksys_write+0x87/0x100
+[ 173.128851] __x64_sys_write+0x1b/0x30
+[ 173.128932] x64_sys_call+0x17f1/0x25e0
+[ 173.129017] do_syscall_64+0x74/0x120
+[ 173.129098] entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[ 173.129206] RIP: 0033:0x7d6a19d82687
+[ 173.129288] Code: 00 00 00 b8 00 00 00 00 0f 05 48 3d 01 f0 ff ff 72 09 f7 d8 89 c7 e8 e8 fa ff ff c3 0f0
+[ 173.129661] RSP: 002b:00007d66c7a7f668 EFLAGS: 00000213 ORIG_RAX: 0000000000000001
+[ 173.129819] RAX: ffffffffffffffda RBX: 00007d68a8858450 RCX: 00007d6a19d82687
+[ 173.129967] RDX: 0000000000000003 RSI: 00007d680881a2a0 RDI: 00000000000000a8
+[ 173.130115] RBP: 00007d66c7a7f6e0 R08: ffffffffffffffff R09: 0000000000000000
+[ 173.130262] R10: 0000000000020000 R11: 0000000000000213 R12: 0000000000000000
+[ 173.130410] R13: 0000000070ec9fb8 R14: 00000000000000a8 R15: 00007d66c7a7f75c
+[ 173.130559] </TASK>
+
