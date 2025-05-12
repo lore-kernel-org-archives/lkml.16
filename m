@@ -1,64 +1,63 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17E524C098
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8227F2522AA
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066922; cv=none; b=LCH+zEvN9u8endvWIQxHT70EyWny2zmf6Dc3K0LJDaeBXFHWwmpRhbIGO2Os0JJXjhz+xQb92lu8S1NptHsqpb7A+cLKVIUG5V3BP1kJGGzb8dkQrR+FnToSCBA5rUkX+ODTNeOJfVdKuVo40BwN+W59A0P13uSgzPmbUhLwhsU=
+	t=1747066920; cv=none; b=C/iF4xhVFhCBj+k3JYIcitPQCIJo2dDfgFLeR7nkgXQN5lnzF9wXB4ICR0gTNiY7XbjXoCwJ9f5yRaWSCdQ+o04XzZcnzjr6v6DYj427YWAkZLrYZEEsZhTPKZs742x9Xtc7ZZqpfc3b2ZOgw33SWGoEd9N0PX+gnFXee6A6pvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066922; c=relaxed/simple;
-	bh=5OMS59Fls7yssVe/eBHwNamMLgl3UdidmTKUG9C1bZ8=;
+	s=arc-20240116; t=1747066920; c=relaxed/simple;
+	bh=5Ue75lEdqSibBVW5GkwS0ZQh2GWuV+mXYj0OqZr29CQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lPxdSWCPebzHRcqt9cQeQn4q/coRxu7ckZ02kbjj/L0r4ASYTpUInjArgXqFYGzkctHo6O4V4yjyhUmLEctWfD5OcOZ/k+qXC/OJVdbvAYMTKgFEyqqAA5TyHTUcFdwomq5f3QeTxP+venYaliA3dDpkQGI5Ki+cZVZVT4wCyyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mFsOy4j0; arc=none smtp.client-ip=209.85.222.173
+	 MIME-Version; b=Lew4fLa20y8HRvH+ySf/eY91xrjkhZ7XJ44P5U6h2um5PMfcoxhF2avheA+VMx/7ybTqPit4ctP6yySAecabivW8kBweh4lg4nNwqL4J+oReTg+C0mVVTqNhV+mew+q5qLhkAhUVhRSvVDnUTUjPDe1uCV1V1MFXjCJhr3noblg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RU+hlgJR; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mFsOy4j0"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c53b9d66fdso706846685a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:21:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RU+hlgJR"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5568355ffso471786085a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:21:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747066918; x=1747671718; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1747066916; x=1747671716; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jt/521w64tsazt1m4c92762k12ji8Xm+LaBsIndvwlE=;
-        b=mFsOy4j0KvZ0bocaq58Obuup0nHhCHj3IgvdtUDb5fxmpVd6r7hHigAw9e11FPk6YD
-         Cb4i6nr0MsRUF+4K5SXE9VFbUlefd9f3BB02RwcxX0BW3fbChWVf5xhE0ypCLfiQVZAh
-         gBJQ9DGea3goKPqyg8/xSB/i5VOOYsGyMvZie+swdflErQffxdbgjCH5UNEXIyIi0beR
-         /ePzKNLtwyeCQrfBkDPS0E3PHOdM6yW1EIx+U2H7NUh3s+mmaFuLHqGFkYTtVtZ64Hi+
-         4inFfMPOmpncr8e7bzDNg1jv1h6H8PzgxVqaCQGJAQLF+0fFQ0rb2M8EIPsuTrY7jcXn
-         VxWg==
+        bh=TdYPxmRTQBr2SToQVjzj/rfZTRXuhIOxx9QxYTy/CPQ=;
+        b=RU+hlgJRQ5GeZ2RL7rYZ9XWR30VN7Chou7TqsP8eqdPGgiITgxd8rhFmmPNYmciyE6
+         TUgn3b/kBE85JlsJvX3GY4PmXbWlmn1S9msahfhqiR91wlgig3XYQfijgI3EMhDJWVA3
+         x/wL1zIuln2bKxrkzsWDVsbNDxtn9QxvBGN2eJhHGgQjJXXqlTk+pF3PY+X+acayz5ye
+         xrTn3kQTn7UYhZZNNmoqIieYz5LWjjSZzEYX+wQSD1yAAsMOPQUQMMzjoyuIALS0Ba2A
+         YZRSPsDcVa7H8W7HHVQBVM0bDoQwLppBsTNBsw6BVRwmpMjMHpJJfLOQdkcRUWxQk9pM
+         wp/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066918; x=1747671718;
+        d=1e100.net; s=20230601; t=1747066916; x=1747671716;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jt/521w64tsazt1m4c92762k12ji8Xm+LaBsIndvwlE=;
-        b=NCuUFugDlyVv48Ho8RsQW+WUtEkBIQ6LDH8+zxmScUqXl7DKmqvB3Jvkg+Y+0ZHD4q
-         XFeoBaRrj7BHu69ytO3pBsORwUENDiGPrtR07AAeZqkgMhwhwaQ22Vs6rQ53tjoZeZLP
-         RMegxSDRdB7ZfgkE3DdPiHWmEK4/5CLe2VwyKVKuozByNKjTHD7lZnLxQ7pSk76RvG9Y
-         gJmR7t5W+MFUlveAIIW7BhFfiIET1eDwQy8uGxzMw47A/A14uAcAR/zy98+A72c39pzG
-         X5b3yaBwiuuftui8p0b3rtkwPZhw7lcF92TmFI6tn1EmyAlAf/a8yYYsqqFLHl7MCXu3
-         m4FA==
-X-Forwarded-Encrypted: i=1; AJvYcCUj6O8cG2YHeNF13kkD9T41wkpGUXTLShxYqrnGEf72ukZ1nMrAGngyc0D6Bn4T0N7ytM97Tcb91YCfcVc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8SG+nEUFY2k8qBallXiEMrwgMQQ72wWynq9Mi5I4faHY1Qzd+
-	XgR/omMDTEo7BNd8Q2w5IEXoRqUI0BDEYmA2DxGUvldQt1VvK8cSgvomOJLaLas0+fnxbfQjNNp
-	Z
-X-Gm-Gg: ASbGncvj+zMHQ0+HlRmS5d1VIsm6kHxUotilkbu6DeQlDxaxJzODzxM2Oso4PBvjmxw
-	0Y0EGudkDqO9qSa3d2WTNX7NUYHLPOwZBy4yGyXgGWfaJ6CpBPrI9sFVkZVtvIhtLVaTCB1hRe3
-	WZA8ORDQJpgaClpZfY47w/2FtlMDXlTRt8PzIX92BfCYAqLvfi5GQxqIf1EaD0umlJ5RbkN0HST
-	O1uS6bv/jUNLUXJi5r4e02A2Tz7M9YyzLFtyTaTGFkNMMBRaRa6vJKduR0vEnurtxtW9YUpBJPl
-	FE87WkeimQIHuhmLv1EYHczuhTaveeRYC2wdru6aI6i1bFfhd1iYFI/9DHM45ite6m3xxpcvbQW
-	o+RrfjzpSJPgTGo2TQo/I6w61sXdSvIKF5FzkkgIIbt3hmwk=
-X-Google-Smtp-Source: AGHT+IGgq4dX8u+VS136dy5RsF6lNNfBNEBuuVYsuUsKinYkKNcF5+J+dn7L3DuanbNeTbM5peQhrw==
-X-Received: by 2002:a05:6214:400b:b0:6e4:2dcb:33c8 with SMTP id 6a1803df08f44-6f6e4802e14mr217368156d6.29.1747066906925;
-        Mon, 12 May 2025 09:21:46 -0700 (PDT)
+        bh=TdYPxmRTQBr2SToQVjzj/rfZTRXuhIOxx9QxYTy/CPQ=;
+        b=J4gdH/XbTMLGnKW2T8yndDIBJ8CMiiKmuxU6KrRkKyKokqdUfl2J4foTcf731ja8XC
+         sljPxvcmg40OliOmZOed3BgC5Gk0PDzV6z2GmVcyPrKV4QPmMrEvk3BDbd17vUnXSlzG
+         /g6LKzWXV1AScYlY5D01FGdgqndmpVBMZ+CIzD2RzcA0M88SzrTCLBLN+OT6NNoa6B/t
+         0Ze0XDHP5tHMlGBMyhA2cQUrmqAzFA0V+7KQRdK4b/M+eKu9YomIy7NtiqAtegWSFxZ3
+         WTS/Dtdq4q42S+gA9vZiYYfYDB4Zc8Huu6sjb5clRf6y3Bpcu5kk9MO107EO7Ro5B31/
+         RAhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbK1YMj61CBbdy054EFA+NRqk8zZklPTMg9FIpzrD8+/zLNhXrm7Nm9DqADlYBNhHTkZLIwAVYCCudUHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqO1JI6fR8Qt1NYkDIlhHeGs5rMXIeF071pqtp2NGogHDi7NMb
+	TcUy8xM1vZOHmmOzj9fDD8INlz+rvnlSe6MLGRo/tJIqibUuizJm6IGDwx1INQw=
+X-Gm-Gg: ASbGncuuyItA6zCjsSKF0kHIo0vOnT/AG1ff0nQusMLJj6c2gJop20+b8Vfal5n7fnD
+	SH9rJZ0baWfxgpquvhFwT3sVKJuskpIGVuf++NN1PMrZ7nSCuWrK0SbqpO6hdHXGu5qMX4dFWe9
+	Qjx0SvHC7pnyQzDq2yTNmyPslA8lPlo7C1XDpZki/QsTreo3FIrY1lZKVYem17BFvRqYw8fDa06
+	j/6rmOmXVrNdQq+rlKtOxs/tw8lxO8AUX7YPpMUdtSJFcA/fQPhIteniK5Ta6kGTyIYA3AtXqYP
+	B9/1HHjZdFrAJ4flWrqLekvh/U+L7ocnfJB2kI5VqBdbimbwA0yzCznGjh3dVFdB+NwD3hiPj38
+	IFckknJ18OB0e2N17UUsT5uoxxYWVjg1+7LAv
+X-Google-Smtp-Source: AGHT+IFGiC4TMp5febt1S8WPaXPgYyYZtF9kkuCKnul5xWkzo1fW30oS2yCihMZHRO+YNuTqABsugg==
+X-Received: by 2002:a05:620a:288e:b0:7ca:ca5d:779e with SMTP id af79cd13be357-7cd0116e26fmr2344069285a.47.1747066916138;
+        Mon, 12 May 2025 09:21:56 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.46
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:21:46 -0700 (PDT)
+        Mon, 12 May 2025 09:21:55 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -72,9 +71,9 @@ Cc: linux-doc@vger.kernel.org,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	corbet@lwn.net
-Subject: [PATCH v3 03/17] cxl: docs/devices - add cxl device and protocol reference
-Date: Mon, 12 May 2025 12:21:20 -0400
-Message-ID: <20250512162134.3596150-4-gourry@gourry.net>
+Subject: [PATCH v3 09/17] cxl: docs/linux - add cxl-driver theory of operation
+Date: Mon, 12 May 2025 12:21:26 -0400
+Message-ID: <20250512162134.3596150-10-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
 References: <20250512162134.3596150-1-gourry@gourry.net>
@@ -86,204 +85,557 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a simple device primer sufficient to understand the theory
-of operation documentation.
+Add docs for the CXL driver that explains the base devices,
+decoder types, region types, mailbox interfaces, and decoder
+programming.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- .../driver-api/cxl/devices/device-types.rst   | 165 ++++++++++++++++++
- Documentation/driver-api/cxl/index.rst        |   6 +
- 2 files changed, 171 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
+ Documentation/driver-api/cxl/index.rst        |   1 +
+ .../driver-api/cxl/linux/cxl-driver.rst       | 522 ++++++++++++++++++
+ 2 files changed, 523 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/linux/cxl-driver.rst
 
-diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
-new file mode 100644
-index 000000000000..c70564cf0be3
---- /dev/null
-+++ b/Documentation/driver-api/cxl/devices/device-types.rst
-@@ -0,0 +1,165 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+Devices and Protocols
-+=====================
-+
-+The type of CXL device (Memory, Accelerator, etc) dictates many configuration steps. This section
-+covers some basic background on device types and on-device resources used by the platform and OS
-+which impact configuration.
-+
-+Protocols
-+=========
-+
-+There are three core protocols to CXL.  For the purpose of this documentation,
-+we will only discuss very high level definitions as the specific hardware
-+details are largely abstracted away from Linux.  See the CXL specification
-+for more details.
-+
-+CXL.io
-+------
-+The basic interaction protocol, similar to PCIe configuration mechanisms.
-+Typically used for initialization, configuration, and I/O access for anything
-+other than memory (CXL.mem) or cache (CXL.cache) operations.
-+
-+The Linux CXL driver exposes access to .io functionalty via the various sysfs
-+interfaces and /dev/cxl/ devices (which exposes direct access to device
-+mailboxes).
-+
-+CXL.cache
-+---------
-+The mechanism by which a device may coherently access and cache host memory.
-+
-+Largely transparent to Linux once configured.
-+
-+CXL.mem
-+---------
-+The mechanism by which the CPU may coherently access and cache device memory.
-+
-+Largely transparent to Linux once configured.
-+
-+
-+Device Types
-+============
-+
-+Type-1
-+------
-+
-+A Type-1 CXL device:
-+
-+* Supports cxl.io and cxl.cache protocols
-+* Implements a fully coherent cache
-+* Allows Device-to-Host coherence and Host-to-Device snoops.
-+* Does NOT have host-managed device memory (HDM)
-+
-+Typical examples of type-1 devices is a Smart NIC - which may want to
-+directly operate on host-memory (DMA) to store incoming packets. These
-+devices largely rely on CPU-attached memory.
-+
-+Type-2
-+------
-+
-+A Type-2 CXL Device:
-+
-+* Supports cxl.io, cxl.cache, and cxl.mem protocols
-+* Optionally implements coherent cache and Host-Managed Device Memory
-+* Is typically an accelerator device w/ high bandwidth memory.
-+
-+The primary difference between a type-1 and type-2 device is the presence
-+of host-managed device memory, which allows the device to operate on a
-+local memory bank - while the CPU sill has coherent DMA to the same memory.
-+
-+The allows things like GPUs to expose their memory via DAX devices or file
-+descriptors, allows drivers and programs direct access to device memory
-+rather than use block-transfer semantics.
-+
-+Type-3
-+------
-+
-+A Type-3 CXL Device
-+
-+* Supports cxl.io and cxl.mem
-+* Implements Host-Managed Device Memory
-+* May provide either Volatile or Persistent memory capacity (or both).
-+
-+A basic example of a type-3 device is a simple memory expander, whose
-+local memory capacity is exposed to the CPU for access directly via
-+basic coherent DMA.
-+
-+Switch
-+------
-+
-+A CXL switch is a device capacity of routing any CXL (and by extension, PCIe)
-+protocol between an upstream, downstream, or peer devices.  Many devices, such
-+as Multi-Logical Devices, imply the presence of switching in some manner.
-+
-+Logical Devices and Heads
-+-------------------------
-+
-+A CXL device may present one or more "Logical Devices" to one or more hosts
-+(via physical "Heads").
-+
-+A Single-Logical Device (SLD) is a device which presents a single device to
-+one or more heads.
-+
-+A Multi-Logical Device (MLD) is a device which may present multiple devices
-+to one or more devices.
-+
-+A Single-Headed Device exposes only a single physical connection.
-+
-+A Multi-Headed Device exposes multiple physical connections.
-+
-+MHSLD
-+~~~~~
-+A Multi-Headed Single-Logical Device (MHSLD) exposes a single logical
-+device to multiple heads which may be connected to one or more discrete
-+hosts.  An example of this would be a simple memory-pool which may be
-+statically configured (prior to boot) to expose portions of its memory
-+to Linux via the CEDT ACPI table.
-+
-+MHMLD
-+~~~~~
-+A Multi-Headed Multi-Logical Device (MHMLD) exposes multiple logical
-+devices to multiple heads which may be connected to one or more discrete
-+hosts.  An example of this would be a Dynamic Capacity Device or which
-+may be configured at runtime to expose portions of its memory to Linux.
-+
-+Example Devices
-+===============
-+
-+Memory Expander
-+---------------
-+The simplest form of Type-3 device is a memory expander.  A memory expander
-+exposes Host-Managed Device Memory (HDM) to Linux.  This memory may be
-+Volatile or Non-Volatile (Persistent).
-+
-+Memory Expanders will typically be considered a form of Single-Headed,
-+Single-Logical Device - as its form factor will typically be an add-in-card
-+(AIC) or some other similar form-factor.
-+
-+The Linux CXL driver provides support for static or dynamic configuration of
-+basic memory expanders.  The platform may program decoders prior to OS init
-+(e.g. auto-decoders), or the user may program the fabric if the platform
-+defers these operations to the OS.
-+
-+Multiple Memory Expanders may be added to an external chassis and exposed to
-+a host via a head attached to a CXL switch.  This is a "memory pool", and
-+would be considered an MHSLD or MHMLD depending on the management capabilities
-+provided by the switch platform.
-+
-+As of v6.14, Linux does not provide a formalized interface to manage non-DCD
-+MHSLD or MHMLD devices.
-+
-+Dynamic Capacity Device (DCD)
-+-----------------------------
-+
-+A Dynamic Capacity Device is a Type-3 device which provides dynamic management
-+of memory capacity. The basic premise of a DCD to provide an allocator-like
-+interface for physical memory capacity to a "Fabric Manager" (an external,
-+privileged host with privileges to change configurations for other hosts).
-+
-+A DCD manages "Memory Extents", which may be volatile or persistent. Extents
-+may also be exclusive to a single host or shared across multiple hosts.
-+
-+As of v6.14, Linux does not provide a formalized interface to manage DCD
-+devices, however there is active work on LKML targeting future release.
 diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index fe1594dc6778..a2d1c5b18a8a 100644
+index d2eefe575604..df3c7763c79a 100644
 --- a/Documentation/driver-api/cxl/index.rst
 +++ b/Documentation/driver-api/cxl/index.rst
-@@ -15,6 +15,12 @@ that have impacts on each other.  The docs here break up configurations steps.
-    theory-of-operation
-    maturity-map
+@@ -35,6 +35,7 @@ that have impacts on each other.  The docs here break up configurations steps.
  
-+.. toctree::
-+   :maxdepth: 2
-+   :caption: Device Reference
+    linux/overview
+    linux/early-boot
++   linux/cxl-driver
+    linux/access-coordinates
+ 
+ 
+diff --git a/Documentation/driver-api/cxl/linux/cxl-driver.rst b/Documentation/driver-api/cxl/linux/cxl-driver.rst
+new file mode 100644
+index 000000000000..9a9e8ecee578
+--- /dev/null
++++ b/Documentation/driver-api/cxl/linux/cxl-driver.rst
+@@ -0,0 +1,522 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+   devices/device-types
++====================
++CXL Driver Operation
++====================
 +
- .. toctree::
-    :maxdepth: 1
-    :caption: Linux Kernel Configuration
++The devices described in this section are present in ::
++
++  /sys/bus/cxl/devices/
++  /dev/cxl/
++
++The :code:`cxl-cli` library, maintained as part of the NDTCL project, may
++be used to script interactions with these devices.
++
++Drivers
++=======
++The CXL driver is split into a number of drivers.
++
++* cxl_core  - fundamental init interface and core object creation
++* cxl_port  - initializes root and provides port enumeration interface.
++* cxl_acpi  - initializes root decoders and interacts with ACPI data.
++* cxl_p/mem - initializes memory devices
++* cxl_pci   - uses cxl_port to enumates the actual fabric hierarchy.
++
++Driver Devices
++==============
++Here is an example from a single-socket system with 4 host bridges. Two host
++bridges have a single memory device attached, and the devices are interleaved
++into a single memory region. The memory region has been converted to dax. ::
++
++  # ls /sys/bus/cxl/devices/
++    dax_region0  decoder3.0  decoder6.0  mem0   port3
++    decoder0.0   decoder4.0  decoder6.1  mem1   port4
++    decoder1.0   decoder5.0  endpoint5   port1  region0
++    decoder2.0   decoder5.1  endpoint6   port2  root0
++
++For this section we'll explore the devices present in this configuration, but
++we'll explore more configurations in-depth in example configurations below.
++
++Base Devices
++------------
++Most devices in a CXL fabric are a `port` of some kind (because each
++device mostly routes request from one device to the next, rather than
++provide a manageable service).
++
++Root
++~~~~
++The `CXL Root` is logical object created by the `cxl_acpi` driver during
++:code:`cxl_acpi_probe` - if the :code:`ACPI0017` `Compute Express Link
++Root Object` Device Class is found.
++
++The Root contains links to:
++
++* `Host Bridge Ports` defined by ACPI CEDT CHBS.
++
++* `Root Decoders` defined by ACPI CEDT CFMWS.
++
++::
++
++  # ls /sys/bus/cxl/devices/root0
++    decoder0.0          dport0  dport5    port2  subsystem
++    decoders_committed  dport1  modalias  port3  uevent
++    devtype             dport4  port1     port4  uport
++
++  # cat /sys/bus/cxl/devices/root0/devtype
++    cxl_port
++
++  # cat port1/devtype
++    cxl_port
++
++  # cat decoder0.0/devtype
++    cxl_decoder_root
++
++The root is first `logical port` in the CXL fabric, as presented by the Linux
++CXL driver.  The `CXL root` is a special type of `switch port`, in that it
++only has downstream port connections.
++
++Port
++~~~~
++A `port` object is better described as a `switch port`.  It may represent a
++host bridge to the root or an actual switch port on a switch. A `switch port`
++contains one or more decoders used to route memory requests downstream ports,
++which may be connected to another `switch port` or an `endpoint port`.
++
++::
++
++  # ls /sys/bus/cxl/devices/port1
++    decoder1.0          dport0    driver     parent_dport  uport
++    decoders_committed  dport113  endpoint5  subsystem
++    devtype             dport2    modalias   uevent
++
++  # cat devtype
++    cxl_port
++
++  # cat decoder1.0/devtype
++    cxl_decoder_switch
++
++  # cat endpoint5/devtype
++    cxl_port
++
++CXL `Host Bridges` in the fabric are probed during :code:`cxl_acpi_probe` at
++the time the `CXL Root` is probed.  The allows for the immediate logical
++connection to between the root and host bridge.
++
++* The root has a downstream port connection to a host bridge
++
++* The host bridge has an upstream port connection to the root.
++
++* The host bridge has one or more downstream port connections to switch
++  or endpoint ports.
++
++A `Host Bridge` is a special type of CXL `switch port`. It is explicitly
++defined in the ACPI specification via `ACPI0016` ID.  `Host Bridge` ports
++will be probed at `acpi_probe` time, while similar ports on an actual switch
++will be probed later.  Otherwise, switch and host bridge ports look very
++similar - the both contain switch decoders which route accesses between
++upstream and downstream ports.
++
++Endpoint
++~~~~~~~~
++An `endpoint` is a terminal port in the fabric.  This is a `logical device`,
++and may be one of many `logical devices` presented by a memory device. It
++is still considered a type of `port` in the fabric.
++
++An `endpoint` contains `endpoint decoders` available for use and the
++*Coherent Device Attribute Table* (CDAT) used to describe the capabilities
++of the device. ::
++
++  # ls /sys/bus/cxl/devices/endpoint5
++    CDAT        decoders_committed  modalias      uevent
++    decoder5.0  devtype             parent_dport  uport
++    decoder5.1  driver              subsystem
++
++  # cat /sys/bus/cxl/devices/endpoint5/devtype
++    cxl_port
++
++  # cat /sys/bus/cxl/devices/endpoint5/decoder5.0/devtype
++    cxl_decoder_endpoint
++
++
++Memory Device (memdev)
++~~~~~~~~~~~~~~~~~~~~~~
++A `memdev` is probed and added by the `cxl_pci` driver in :code:`cxl_pci_probe`
++and is managed by the `cxl_mem` driver. It primarily provides the `IOCTL`
++interface to a memory device, via :code:`/dev/cxl/memN`, and exposes various
++device configuration data. ::
++
++  # ls /sys/bus/cxl/devices/mem0
++    dev       firmware_version    payload_max  security   uevent
++    driver    label_storage_size  pmem         serial
++    firmware  numa_node           ram          subsystem
++
++
++Decoders
++--------
++A `Decoder` is short for a CXL Host-Managed Device Memory (HDM) Decoder. It is
++a device that routes accesses through the CXL fabric to an endpoint, and at
++the endpoint translates a `Host Physical` to `Device Physical` Addressing.
++
++The CXL 3.1 specification heavily implies that only endpoint decoders should
++engage in translation of `Host Physical Address` to `Device Physical Address`.
++::
++
++  8.2.4.20 CXL HDM Decoder Capability Structure
++
++  IMPLEMENTATION NOTE
++  CXL Host Bridge and Upstream Switch Port Decode Flow
++
++  IMPLEMENTATION NOTE
++  Device Decode Logic
++
++These notes imply that there are two logical groups of decoders.
++
++* Routing Decoder - a decoder which routes accesses but does not translate
++  addresses from HPA to DPA.
++
++* Translating Decoder - a decoder which translates accesses from HPA to DPA
++  for an endpoint to service.
++
++The CXL drivers distinguish 3 decoder types: root, switch, and endpoint. Only
++endpoint decoders are Translating Decoders, all others are Routing Decoders.
++
++.. note:: PLATFORM VENDORS BE AWARE
++
++   Linux makes a strong assumption that endpoint decoders are the only decoder
++   in the fabric that actively translates HPA to DPA.  Linux assumes routing
++   decoders pass the HPA unchanged to the next decoder in the fabric.
++
++   It is therefore assumed that any given decoder in the fabric will have an
++   address range that is a subset of its upstream port decoder. Any deviation
++   from this scheme undefined per the specification.  Linux prioritizes
++   spec-defined / architectural behavior.
++
++Decoders may have one or more `Downstream Targets` if configured to interleave
++memory accesses.  This will be presented in sysfs via the :code:`target_list`
++parameter.
++
++Root Decoder
++~~~~~~~~~~~~
++A `Root Decoder` is logical construct of the physical address and interleave
++configurations present in the ACPI CEDT CFMWS.  Linux presents this information
++as a decoder present in the `CXL Root`.  We consider this a `Root Decoder`,
++though technically it exists on the boundary of the CXL specification and
++platform-specific CXL root implementations.
++
++Linux considers these logical decoders a type of `Routing Decoder`, and is the
++first decoder in the CXL fabric to receive a memory access from the platform's
++memory controllers.
++
++`Root Decoders` are created during :code:`cxl_acpi_probe`.  One root decoder
++is created per CFMWS entry in the ACPI CEDT.
++
++The :code:`target_list` parameter is filled by the CFMWS target fields. Targets
++of a root decoder are `Host Bridges`, which means interleave done at the root
++decoder level is an `Inter-Host-Bridge Interleave`.
++
++Only root decoders are capable of `Inter-Host-Bridge Interleave`.
++
++Such interleaves must be configured by the platform and described in the ACPI
++CEDT CFMWS, as the target CXL host bridge UIDs in the CFMWS must match the CXL
++host bridge UIDs in the ACPI CEDT CHBS and ACPI DSDT.
++
++Interleave settings in a rootdecoder describe how to interleave accesses among
++the *immediate downstream targets*, not the entire interleave set.
++
++The memory range described in the root decoder is used to
++
++1) Create a memory region (:code:`region0` in this example), and
++
++2) Associate the region with an IO Memory Resource (:code:`kernel/resource.c`)
++
++::
++
++  # ls /sys/bus/cxl/devices/decoder0.0/
++    cap_pmem           devtype                 region0
++    cap_ram            interleave_granularity  size
++    cap_type2          interleave_ways         start
++    cap_type3          locked                  subsystem
++    create_ram_region  modalias                target_list
++    delete_region      qos_class               uevent
++
++  # cat /sys/bus/cxl/devices/decoder0.0/region0/resource
++    0xc050000000
++
++The IO Memory Resource is created during early boot when the CFMWS region is
++identified in the EFI Memory Map or E820 table (on x86).
++
++Root decoders are defined as a separate devtype, but are also a type
++of `Switch Decoder` due to having downstream targets. ::
++
++  # cat /sys/bus/cxl/devices/decoder0.0/devtype
++    cxl_decoder_root
++
++Switch Decoder
++~~~~~~~~~~~~~~
++Any non-root, translating decoder is considered a `Switch Decoder`, and will
++present with the type :code:`cxl_decoder_switch`. Both `Host Bridge` and `CXL
++Switch` (device) decoders are of type :code:`cxl_decoder_switch`. ::
++
++  # ls /sys/bus/cxl/devices/decoder1.0/
++    devtype                 locked    size       target_list
++    interleave_granularity  modalias  start      target_type
++    interleave_ways         region    subsystem  uevent
++
++  # cat /sys/bus/cxl/devices/decoder1.0/devtype
++    cxl_decoder_switch
++
++  # cat /sys/bus/cxl/devices/decoder1.0/region
++    region0
++
++A `Switch Decoder` has associations between a region defined by a root
++decoder and downstream target ports.  Interleaving done within a switch decoder
++is a multi-downstream-port interleave (or `Intra-Host-Bridge Interleave` for
++host bridges).
++
++Interleave settings in a switch decoder describe how to interleave accesses
++among the *immediate downstream targets*, not the entire interleave set.
++
++Switch decoders are created during :code:`cxl_switch_port_probe` in the
++:code:`cxl_port` driver, and is created based on a PCI device's DVSEC
++registers.
++
++Switch decoder programming is validated during probe if the platform programs
++them during boot (See `Auto Decoders` below), or on commit if programmed at
++runtime (See `Runtime Programming` below).
++
++
++Endpoint Decoder
++~~~~~~~~~~~~~~~~
++Any decoder attached to a *terminal* point in the CXL fabric (`An Endpoint`) is
++considered an `Endpoint Decoder`. Endpoint decoders are of type
++:code:`cxl_decoder_endpoint`. ::
++
++  # ls /sys/bus/cxl/devices/decoder5.0
++    devtype                 locked    start
++    dpa_resource            modalias  subsystem
++    dpa_size                mode      target_type
++    interleave_granularity  region    uevent
++    interleave_ways         size
++
++  # cat /sys/bus/cxl/devices/decoder5.0/devtype
++    cxl_decoder_endpoint
++
++  # cat /sys/bus/cxl/devices/decoder5.0/region
++    region0
++
++An `Endpoint Decoder` has an association with a region defined by a root
++decoder and describes the device-local resource associated with this region.
++
++Unlike root and switch decoders, endpoint decoders translate `Host Physical` to
++`Device Physical` address ranges.  The interleave settings on an endpoint
++therefore describe the entire *interleave set*.
++
++`Device Physical Address` regions must be committed in-order. For example, the
++DPA region starting at 0x80000000 cannot be committed before the DPA region
++starting at 0x0.
++
++As of Linux v6.15, Linux does not support *imbalanced* interleave setups, all
++endpoints in an interleave set are expected to have the same interleave
++settings (granularity and ways must be the same).
++
++Endpoint decoders are created during :code:`cxl_endpoint_port_probe` in the
++:code:`cxl_port` driver, and is created based on a PCI device's DVSEC registers.
++
++Regions
++-------
++
++Memory Region
++~~~~~~~~~~~~~
++A `Memory Region` is a logical construct that connects a set of CXL ports in
++the fabric to an IO Memory Resource.  It is ultimately used to expose the memory
++on these devices to the DAX subsystem via a `DAX Region`.
++
++An example RAM region: ::
++
++  # ls /sys/bus/cxl/devices/region0/
++    access0      devtype                 modalias  subsystem  uuid
++    access1      driver                  mode      target0
++    commit       interleave_granularity  resource  target1
++    dax_region0  interleave_ways         size      uevent
++
++A memory region can be constructed during endpoint probe, if decoders were
++programmed by BIOS/EFI (see `Auto Decoders`), or by creating a region manually
++via a `Root Decoder`'s :code:`create_ram_region` or :code:`create_pmem_region`
++interfaces.
++
++The interleave settings in a `Memory Region` describe the configuration of the
++`Interleave Set` - and are what can be expected to be seen in the endpoint
++interleave settings.
++
++
++DAX Region
++~~~~~~~~~~
++A `DAX Region` is used to convert a CXL `Memory Region` to a DAX device. A
++DAX device may then be accessed directly via a file descriptor interface, or
++converted to System RAM via the DAX kmem driver.  See the DAX driver section
++for more details. ::
++
++  # ls /sys/bus/cxl/devices/dax_region0/
++    dax0.0      devtype  modalias   uevent
++    dax_region  driver   subsystem
++
++
++Mailbox Interfaces
++------------------
++A mailbox command interface for each device is exposed in ::
++
++  /dev/cxl/mem0
++  /dev/cxl/mem1
++
++These mailboxes may receive any specification-defined command. Raw commands
++(custom commands) can only be sent to these interfaces if the build config
++:code:`CXL_MEM_RAW_COMMANDS` is set.  This is considered a debug and/or
++development interface, not an officially supported mechanism for creation
++of vendor-specific commands (see the `fwctl` subsystem for that).
++
++Decoder Programming
++===================
++
++Runtime Programming
++-------------------
++During probe, the only decoders *required* to be programmed are `Root Decoders`.
++In reality, `Root Decoders` are a logical construct to describe the memory
++region and interleave configuration at the host bridge level - as described
++in the ACPI CEDT CFMWS.
++
++All other `Switch` and `Endpoint` decoders may be programmed by the user
++at runtime - if the platform supports such configurations.
++
++This interaction is what creates a `Software Defined Memory` environment.
++
++See the :code:`cxl-cli` documentation for more information about how to
++configure CXL decoders at runtime.
++
++Auto Decoders
++-------------
++Auto Decoders are decoders programmed by BIOS/EFI at boot time, and are
++almost always locked (cannot be changed).  This is done by a platform
++which may have a static configuration - or certain quirks which may prevent
++dynamic runtime changes to the decoders (such as requiring additional
++controller programming within the CPU complex outside the scope of CXL).
++
++Auto Decoders are probed automatically as long as the devices and memory
++regions they are associated with probe without issue.  When probing Auto
++Decoders, the driver's primary responsibility is to ensure the fabric is
++sane - as-if validating runtime programmed regions and decoders.
++
++If Linux cannot validate auto-decoder configuration, the memory will not
++be surfaced as a DAX device - and therefore not be exposed to the page
++allocator - effectively stranding it.
++
++Interleave
++----------
++
++The Linux CXL driver supports `Cross-Link First` interleave. This dictates
++how interleave is programmed at each decoder step, as the driver validates
++the relationships between a decoder and it's parent.
++
++For example, in a `Cross-Link First` interleave setup with 16 endpoints
++attached to 4 host bridges, linux expects the following ways/granularity
++across the root, host bridge, and endpoints respectively. ::
++
++                   ways   granularity
++  root              4        256
++  host bridge       4       1024
++  endpoint         16        256
++
++At the root, every a given access will be routed to the
++:code:`((HPA / 256) % 4)th` target host bridge. Within a host bridge, every
++:code:`((HPA / 1024) % 4)th` target endpoint.  Each endpoint will translate
++the access based on the entire 16 device interleave set.
++
++Unbalanced interleave sets are not supported - decoders at a similar point
++in the hierarchy (e.g. all host bridge decoders) must have the same ways and
++granularity configuration.
++
++At Root
++~~~~~~~
++Root decoder interleave is defined by the ACPI CEDT CFMWS.  The CEDT
++may actually define multiple CFMWS configurations to describe the same
++physical capacity - with the intent to allow users to decide at runtime
++whether to online memory as interleaved or non-interleaved. ::
++
++             Subtable Type : 01 [CXL Fixed Memory Window Structure]
++       Window base address : 0000000100000000
++               Window size : 0000000100000000
++  Interleave Members (2^n) : 00
++     Interleave Arithmetic : 00
++              First Target : 00000007
++
++             Subtable Type : 01 [CXL Fixed Memory Window Structure]
++       Window base address : 0000000200000000
++               Window size : 0000000100000000
++  Interleave Members (2^n) : 00
++     Interleave Arithmetic : 00
++              First Target : 00000006
++
++             Subtable Type : 01 [CXL Fixed Memory Window Structure]
++       Window base address : 0000000300000000
++               Window size : 0000000200000000
++  Interleave Members (2^n) : 01
++     Interleave Arithmetic : 00
++              First Target : 00000007
++               Next Target : 00000006
++
++In this example, the CFMWS defines two discrete non-interleaved 4GB regions
++for each host bridge, and one interleaved 8GB region that targets both. This
++would result in 3 root decoders presenting in the root. ::
++
++  # ls /sys/bus/cxl/devices/root0
++    decoder0.0  decoder0.1  decoder0.2
++
++  # cat /sys/bus/cxl/devices/decoder0.0/target_list start size
++    7
++    0x100000000
++    0x100000000
++
++  # cat /sys/bus/cxl/devices/decoder0.1/target_list start size
++    6
++    0x200000000
++    0x100000000
++
++  # cat /sys/bus/cxl/devices/decoder0.2/target_list start size
++    7,6
++    0x300000000
++    0x200000000
++
++These decoders are not runtime programmable.  They are used to generate a
++`Memory Region` to bring this memory online with runtime programmed settings
++at the `Switch` and `Endpoint` decoders.
++
++At Host Bridge or Switch
++~~~~~~~~~~~~~~~~~~~~~~~~
++`Host Bridge` and `Switch` decoders are programmable via the following fields:
++
++- :code:`start` - the HPA region associated with the memory region
++- :code:`size` - the size of the region
++- :code:`target_list` - the list of downstream ports
++- :code:`interleave_ways` - the number downstream ports to interleave across
++- :code:`interleave_granularity` - the granularity to interleave at.
++
++Linux expects the :code:`interleave_granularity` of switch decoders to be
++derived from their upstream port connections. In `Cross-Link First` interleave
++configurations, the :code:`interleave_granularity` of a decoder is equal to
++:code:`parent_interleave_granularity * parent_interleave_ways`.
++
++At Endpoint
++~~~~~~~~~~~
++`Endpoint Decoders` are programmed similar to Host Bridge and Switch decoders,
++with the exception that the ways and granularity are defined by the interleave
++set (e.g. the interleave settings defined by the associated `Memory Region`).
++
++- :code:`start` - the HPA region associated with the memory region
++- :code:`size` - the size of the region
++- :code:`interleave_ways` - the number endpoints in the interleave set
++- :code:`interleave_granularity` - the granularity to interleave at.
++
++These settings are used by endpoint decoders to *Translate* memory requests
++from HPA to DPA.  This is why they must be aware of the entire interleave set.
++
++Linux does not support unbalanced interleave configurations.  As a result, all
++endpoints in an interleave set must have the same ways and granularity.
 -- 
 2.49.0
 
