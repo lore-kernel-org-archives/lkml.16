@@ -1,175 +1,274 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2069.outbound.protection.outlook.com [40.107.220.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic314-26.consmr.mail.ne1.yahoo.com (sonic314-26.consmr.mail.ne1.yahoo.com [66.163.189.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046BD23C516;
-	Mon, 12 May 2025 15:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064603; cv=fail; b=JNx4Erk6X8Yryzt43W50EiM7Ga5OpJBu+foYRsdAy+F4RQNp1UA4Ge8hEXWpphruql9Zl8Xp9v+i4eSfhOJOagUXxN3rLYxOWvTcfRkixIEJfUWR4tBg8ELAmmKMIz8A+NYlW0T1WHcmdT3b2yLyQNzXrNCr8acXboTX+3YHXsE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064603; c=relaxed/simple;
-	bh=IO0VWVvn/gWUvGZwH87nFf5Ti4yG70iG77fqqet5N6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WKsibV7fNu1wiv5raO6HriHv9qZrx5LHhIaqx33VgIupJnSAjNpBesftglSB/BjRWJLBvL4yeu7e/BfFUnO6UPOq+Wxm7undyfMGSbqbL6YzKeQBqHY5YRl0SSHfWgW6hmksDAw5rfbfiTr2in3+iKQS+sbSPuM04zz66UnKscY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1ELQHCei; arc=fail smtp.client-ip=40.107.220.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C292C23C50B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.189.152
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747064626; cv=none; b=BDhPg97zeJMOgfPkhsTUuS1WcMZjutpCqZC9k2iLx6s8fbfkfYMEMDb7MWmyUtRDlvL2+YhH7TNlpcukegbTBiJEZv7lzhACSllB664mwDDz37AdknrWJtWhaHEIk44PwingdAExmoAzzdCQzFehNbtjLx3zTc3sIWsE5KyW7BM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747064626; c=relaxed/simple;
+	bh=1gBUpbibTjYzRxZM991IHxsllk2DYccgIV54Tgef7vI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ok4RdE32DYJCUnoQaDlyt1x1PZFhzhJglV/+4kRlJa3lLQ0GPu63OodkzIY9c8zshCtlizzdL+c3deUBNMtK5aRJjJAIqetG4SQVHf5uEXhvtXXO62F6032j89e06FNa9MzNR9PGGhJDyBzAnpS84BqXPH5STyXdNtyMwzKc7EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ntyjDWB6; arc=none smtp.client-ip=66.163.189.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1ELQHCei"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KTv/5X8Wh7taxXdaQSQfO+cVbwjDxu9FNSostrV9e8VML+lgqXg9HUY5ekPKicd3Wr9mBkMgWcaOqgMddrnMWi38RSETEvdao1I/QTOa2oKConiWFN/fZvppyZf2SmfVqw4Kfl9xGW3NLdiRUpbcM3dRglCh+CE4vVETPJkECLyrliriFmJnwBJNrL5j/QikwTjdF2RHCTE/M/1SwfjIzZ/Z1T9T68EDcidwmp/X+nXykaTaI3GvCxE5H4Aym2gluWYYiLXj4ZSqRFVfBOn+UJ0LzX3Vo8sUwOeFWqivNMAerLWczwRd6grsRspejArkJjEb8HYwv8SPlh6FQUfbQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4DcGu+oNHHuGqoYZw1J4zpB008+X1f+1nQXmV4fOI70=;
- b=vulL4XltDOs9NT6XV8sZqmXFTgJjh3f45DmLcl8Izprq//MxvGiLTXY9mDK7Zcg2YhcPQ5POfTE0wWDuOHa/MDGzBNbdmea2lZ8YgnGwK8QnemewTX3lWEws1oqiSPod7pdhwyG2MTMQYvIIjWofYpGKbKP7qd/lmCphqysNmU5ssxWiQ60q9ueiPle/LhvrDTJ2bI78fDk6WtcCfZmXzsRzh9D81Jbu/CmA4KBm2nIA+V6v3Q8WCae4jNUlUL1yG3ZgRP5HstoXGNcXo5VSzKz8ciycMck6wT3miOHTXxy/bXMcMCvsLglTgSis3/wmq55SCdvXUow4T2AUDrM0vQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4DcGu+oNHHuGqoYZw1J4zpB008+X1f+1nQXmV4fOI70=;
- b=1ELQHCeiKTOrzhnbfS4/JNABV8iBKBw1hzNyGjvEMhGKokFZpjGhVr6ISK+zDE3JAS1ZoDsHvdWsjWFDXiOSySi5BuQchJ3Gh8NxnEH9/W7IvqjOBSMyczW4rb0DMvCeRfQ8McOQAQbFuFt22ewoHXa9LNffj+mcCtUUNQ7HTeo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- SA1PR12MB6797.namprd12.prod.outlook.com (2603:10b6:806:259::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 15:43:19 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 15:43:19 +0000
-Date: Mon, 12 May 2025 11:43:15 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH v3 17/17] x86/mce: Restore poll settings after storm
- subsides
-Message-ID: <20250512154315.GC2355@yaz-khff2.amd.com>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
- <20250415-wip-mca-updates-v3-17-8ffd9eb4aa56@amd.com>
- <20250512074616.GSaCGnSJbBpToh2VM6@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512074616.GSaCGnSJbBpToh2VM6@fat_crate.local>
-X-ClientProxiedBy: BN1PR10CA0021.namprd10.prod.outlook.com
- (2603:10b6:408:e0::26) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ntyjDWB6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747064617; bh=QKPRXBWiP6vdtfxBDOOQtpUp6zIgN5XDA7BfuJSNLwU=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=ntyjDWB6dZv+7X3N+X5yr8pc8QkaeC0EnNEnTjw4j/LhW/o5uxeNqWWaQjHa7TLz0TS2PETV/CDYnYbEmQ/bnq86BJyiMylNlNp6owf1AWCcIDUqcow5jZlmnPPkEivipb8eZNQkjGt0Hy/R95hTcaurNsuxxeInpDw6w3Dblgu/lfHPngbLdlFFOQ593HTotqRgI/YKiping4wg+KPDwR867sRRPcdMxo7eRLA0uyxKFkbYcSKPAkOm/wnDoAgNiXRjT7MuBU+1acqEfzjpNTi2KGV+AqM8oLnThoB+rZYplU+kCGpImYX0vvM9TKYgGjl0+1cvDQjDCWa/GrW6jg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747064617; bh=8redTxGWiikRY2d9LbwTHUnouBcNgByzMEi97v7vI8H=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=nRUEtVeR4NHmVxZuFNuV/CkPDcetgpdNnyk9EeNGbJ1z4LCvrEyKLj6H8RTiJkyOQN/P5zBUNxOVPAjh5QulBI/SJPN/Ud6wBlVsLaIC8xvan/klygJyE8eJtafxegFIY23HdWuxsAYB/Eq3YvAZb37diwk+DN7Od77ETwbBNs5gWnSYXVm6HOzFOMmrOo8AZ/6vyX2kCiwag/vSvEPzkRitY18IzIjweHRfAm/ur/cA3dbgliY4eRe+PwajjzZmRv1kTIPvRbBSfeld/7dp00DXMzA0qODLuk2ccuA6P6cB/Ahqtt/pgOIW/8rN66ENfhIwHVW8FmbqBU2EWO8GZA==
+X-YMail-OSG: WM0Uc6IVM1nokahWIeUzSYQROtDJ9qeYMqEm7._cOi5dW2OQxX1llQWOhl5Htkw
+ pjqZQRdX6mFRJ5HACZZsjO4D7uqCqBCGc1hISzip1nkT5f0JbgEYn5DwLsVF_zNN9h5.ljwLXxHG
+ MLEdCtBfxijdLgBKpmOBQmdL.6E7I63B67qzw4fTZCtYY87Y2sG7n9V2G3IcXkpSRmCdOjGj35kd
+ 6wZhNQBHe_zsRK93qaekXH6G3rQ0llGNpd69ZxMX2YgwokTwHrEjucGbV3zA4aY1A0usOxMeI.5Q
+ g_Y7ZfRYb9f_iaOkE0C3wlun.ML7bLz9TNs7LR6hUbiKfS7R_xnua7CMPYcos52uVZESl04Yj8HT
+ SgkSN.HPDPy_mTbQODVWMFUR1kwxRfSu6y1pp.8Kf1JHOedaNvoTnKdsWbPX1eDMeTG44MWJnkFp
+ BreWN8tfY1ZWTOpSF.UrHsF_M45pb7610HXwrW01_zFezmO9sZ6Hs_IswvhcPI2f8roAsMEnEVsy
+ YQcqrMHUb3SKNShsH_B2KvZO1q29_1FgKtCbTknNAsW3JhjznDOIhQFqZz1pKTCgMudVmxsaDaEK
+ uXPO8GZ66zJhG.Db_2RCAUOkdgg04QsHPqt_Jv9aFJUu_GC1x0ByCnk7LWRO6Eze_PUMZcFCYE.j
+ 7u_q4Ny66FNycDqi0JYh4V2eak0XQ.9fUIs5N.ZtM5.mPEJbU._veqQCv4eeX0PnjmcH6_6jLlvC
+ cMnrhKZeSaJvH7jVwQ3Gy8WBtNc3J7SrdTYTIzsVXb57JuhulLTYcW7gANxy5__UCyzz9yrI_Sle
+ dDyaQzYAU6eKo3_thzIur1cqBiA0xfbn7YzjFTflnwaTmB9s8Z5cXoi7qL.IrFiNDg8typtgdpiS
+ obXp643ZT.cennx8.wg6MfeSxHio3cUCDwnTIxV3dwv_kwKVD0CIotga4WI52Bvi7MXD_t.vbVlW
+ AmlnBrxupeN_f_QhVkf0DGOXGVECOMEt3zs5rw5yb_1kx.JHYf4DyYrvh51Rz8vePzxA9IfRbX1d
+ 8NITO0GqX7FPEACmRoN9um44C1.b0XjtyqCql7CXQP0P._JiwvpvvNh38RWC7s7RNeG5IFN.JFIf
+ jD9l2jK.Vl7WgBphg.Bo.BpPoTBNZh5Jg1Tr_k0e9b4_cTmbpy6fdxwrPF08ENXp.m6DQExcEf0F
+ oFaIAzVBYgjolQOlfdgMECkYvUNBAsbdocO00OGFdqxau74UdkBgVM1awnBMUwAflj_Fu_.M1.sg
+ svpD5b6Z4HD6d4ILD1C.G9smUlbD1SWuK6KbptHvZqepNB3GTexWWjVem0Z05STHxPGSHOkl.zIN
+ _BJDI4ly8NC1S74hHfu4bq.wF..fsPsq1JjyeQLGljkI7SeonIuMRktURm5XxIhdsrFsxNILEzF_
+ gJQtx78kT1Vro4YDrt.6wlJGeiPvSnoNDpeAga7Ftm7hQV6zn9cz_M7lAxvvMksUI0_6RWqhrwMa
+ Qln6rPUfOOpWXN5KlqhwkU1lcFLoAiqgNtNjxbYrE5pBda3jH3sQBc2fk6ONYxXTmLKR1smptkTh
+ zBR2KISLTGFvfO4fypux_tUy.zDVWgQHb.hBwsxdoq.lQQi6P8xIJejgomrkjC_mfNkLwx6ujady
+ K2k_12wDulVH7DMfGgH7tb.iriJjz93IfXsXbuzmgQBfGYzFkd7WOlfB2hddSAoJUP5ipAxHtAgU
+ 0saYraZitFaM4ggkxcTrL9UzkIb5Fud59DW1FRPZqb_l04XEzkx5pQIkhkGF.oi73yquM24q_dBY
+ AAgrnSL8tRBalM_LvCniSz9571Y8kjMjA6G8y7jZJWj4DNh_fi_aozx4Eu9P.XS4OLtgA7AE109t
+ SKpkzRlBrUnm505ojZRoLVA4qqYnDwusVoD7K0s9Lcq2S6kopzsptsEHsmWfub0DTOCnlXMbattC
+ KavPkZytUKqA2cLl9D7_0ncFvzCOUQvBsilxK0gEUd.994raVMJgtdlMDz_REtm0uROPRIW.KQy2
+ RS0hypGIAfb1KSV_lnQxl85e9J.aJ2qxtH99GYclfQrVqxriF0RachyDZaCxsN7tIdHMcP_USx6X
+ .nnn.bcWn_Vy3tJDwXoR42hyd27mJSLy4ok3.1BDA0LuOMH6u3y0JPOT0pN6Y1PslOdSw4PUUwOl
+ X7cSpTQsWS7ZfnQNOno1IGB.d2nDRZkiy9QB9fsqP6KpY5DGbGaBmtw1ug6xXdzV4o8lYcDW8kcy
+ lDxB6hRTPgSCzq62cPOd1UJqAv3_xYrAJp7509YQy8Ef.L.75s27NGiAipeIkuudzCObUkBNkMVK
+ z238o0uQ-
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 4a184068-b4a9-4c89-b0eb-f26242664d7e
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Mon, 12 May 2025 15:43:37 +0000
+Received: by hermes--production-gq1-74d64bb7d7-mh87r (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9937c2f444744075ac11cc686b78df22;
+          Mon, 12 May 2025 15:43:34 +0000 (UTC)
+Message-ID: <f700845d-f332-4336-a441-08f98cd7f075@schaufler-ca.com>
+Date: Mon, 12 May 2025 08:43:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|SA1PR12MB6797:EE_
-X-MS-Office365-Filtering-Correlation-Id: db24c5a6-dee8-4322-f75f-08dd916bb81e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aYQmJAcbEWJLSVwyDPJ3rq+D7ubZFYYwEhp+DqL4O3s48RX5SGXKX6ShnZPc?=
- =?us-ascii?Q?hJOhHaW2JggViM/QvqtTlXGEXFkUhYp/0Jo1SxuHo8Re3K7c/1XOmvBsem6f?=
- =?us-ascii?Q?I3i9yNd9RYWeyAFt2md48cVmSZ4XkToWMDqD7hOu2Gy861ZlwUO7avsup5qQ?=
- =?us-ascii?Q?vriaWlsj0sSAI6J1cRaQGZiJbPiORchHGtdSXUk8SmYQo1ISxR093gWVoNfd?=
- =?us-ascii?Q?N+IWGiBq5C7FZ9kEyXBHBRUShPEa2H2VW/XsErTD5s8iQWe0kCRteFVmz8I7?=
- =?us-ascii?Q?xReUly86Svm59nkhZzNsvhzNcA2CfEPZCFRbhwWWkRJOurtq+ksa2aWrqrM9?=
- =?us-ascii?Q?p/f/cFj1PZOQy9ieZ97bMbMFMRqIgugC5Qyk04T5nuqs+Ks54uutFHDaPFQI?=
- =?us-ascii?Q?SNMSw05rLAxMZ33/+tvVLRAEaAwh3jY8eTjbGBccVhNG1KhNzYPUsPpSBb95?=
- =?us-ascii?Q?oNQD4kct6opInW1NJrcsqdNH95rYUcRqi6mf0Y/ecoMhhperLMueLmFGq4S8?=
- =?us-ascii?Q?xJjD0PV/qmKDC1KiuEwYbBkYTlvz2pP5uti+X9DMZpCH45UiVdcgOD3Fk2tX?=
- =?us-ascii?Q?Jme2+9F39KPFEK5qdIURnNWeyrM0pxam0/N3eoq/eZ8mng+paGRHob8BiN6a?=
- =?us-ascii?Q?x8tEYSxwt/90ARbpsNk9mkw+wxX3yZy6aeo/78twXR0TTXvZAH9fkiqwi1++?=
- =?us-ascii?Q?ibdZKZZmM08OgJTx0wlolrFWwbrskjwiuV5u/U4TiJZ0j/WZGyVHcAiC8Cdr?=
- =?us-ascii?Q?kGfcsr+W2MbB9S1uBkqUTNybccS8v5i9tZlQXD/LqUr7r2CGWUsE3bRLpv5J?=
- =?us-ascii?Q?H8c6Rbl0/cftwxMGIhe03PT/HzG64gP3LBgPfBnHC5uEQ2G+sFu6ZKmupEq4?=
- =?us-ascii?Q?YI5zqLpSIDatO+LBXc5KOsFSISXLeGkHTmKyNfzSdyuGOVGBoacCywzP/9Xe?=
- =?us-ascii?Q?atyHKJFk6dkaIobqSkhNnUO1nlvOw1Uxwr+Wmv7jPYh3EuhsU6sGQcgYyo7F?=
- =?us-ascii?Q?03lL5j22/XrpCVMUcrVYrnDhhPUCZNsyrpg6eAc97zI810YlxSg4fCUQxo6Q?=
- =?us-ascii?Q?Bkgg9n7a+1JF7AJp5LpIddxORULmrsNIB/0AmkrKJyVJNz1UxFiWuWMPW44P?=
- =?us-ascii?Q?Nmm3jwUq0IdjEKL+SKtFLOjczKzYQUAJMnAttKXtgs5BwZHKDD+vU125VAls?=
- =?us-ascii?Q?Gh1L62qq9dgum19dKDW+utBz5gBqk6sgP7TBxAbn6Q8gWo/BHz044kNjOHMI?=
- =?us-ascii?Q?vDEVEoj5Oh7jLsSgGUFz+3L+z3XOsza21wnCYUhPFYS+Cw7kP5rveMJtE4EP?=
- =?us-ascii?Q?2roagswgdP9tLg8PibpUJmWq+RZAy7bgij/3jv7u+sjpkg3DB2rZWzS0IzOo?=
- =?us-ascii?Q?rSBBfC1fdKLuq8yRG/J0jFdbJB35lFAQteC/rhu5e7cXMLIEj51k67SStSBF?=
- =?us-ascii?Q?Ihidfln3iBI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vxMpPe/0Evl26YN6y2laqLAU39Or875rvSWyFqwOePOfKZq11XhWlSv1Z8Rc?=
- =?us-ascii?Q?At+AA/M6TazQqIc1ed5u+V5GQP1FCF8C21rSmW/Z9KmEyNYnTCDkgr+B+Dd+?=
- =?us-ascii?Q?5TeoZFmJGNzpanYL/VDqGbIM5i3S4EfdhfwvYQTK1OvTlUT8V6mXErEmiGNd?=
- =?us-ascii?Q?28KKV1wGb5bufZUgq202xw59etv1GROTqQjfepqZN8r2tuxAnwusUSGBzpZ+?=
- =?us-ascii?Q?wHsVRiORISkByx/rN9Cd4nibEkNsZy4rk1L1MmJNBhuMg1kEaLlGe3R0sAnE?=
- =?us-ascii?Q?HCsDRCc+RI0e1qItyi4SDWpngAN7oDTvIu8IENKlWGLJ7sWywx+KDihyT+g/?=
- =?us-ascii?Q?qJP8yr1ap+Q7t2366ufYGYhj8gWyPjjNWsoEEKHOUkoS36Ag259Dk3AZF2xD?=
- =?us-ascii?Q?1LrXCygKzqG2MEOPnR6EAV5ujYRX/vttJfZJt5PJ+XrI+/N5piSA43w29AaF?=
- =?us-ascii?Q?9RSfjqUoloHCyfaSccxEbdHarkgL3jb4i76QFI/XpeIEipHr41eoL8hs05dZ?=
- =?us-ascii?Q?zg24blvojAD/5JijVIQwpjRK8DmMWL46Xw2jzUP667I2O/5H8YpbJA8bszcD?=
- =?us-ascii?Q?0k7fGG5T8P3i/1K7P7k+JSMrt180GeSoQ0oJcxgaKwHAbRRflhkj2Ld0fmHC?=
- =?us-ascii?Q?gP3KyF4GNhQ2fLptl2Z+hv3CNjhMcElndLVKZgzxcwNib+J3/XXaB8gZLHId?=
- =?us-ascii?Q?cCv4C8PLoQEidIxjUvuuku7muLZOzcwwfDvhVkViJklHPL9/FjkJZDZ3wBsc?=
- =?us-ascii?Q?XLJ25L4QOMJUT6zvco2V2G6Km/i1QRSnfzhJx+gmtcDCaehIVKg5zcNsKn2T?=
- =?us-ascii?Q?ovu1v6WdYi85xRuyTGb+fZyw26LtQCNQGN8pPavFLavYoMqkbXVTP2JJlrlY?=
- =?us-ascii?Q?J7gcVPRNZX5rFVtyGJbLTmvfVPgQN+FqXDSOzybZ1HPk3QO1FXvLWIFlugB8?=
- =?us-ascii?Q?5D16+73UFVouG8UKm+MGdj4rNpOvPcZNaNij50Yek6+Q5rr67sxes40B8KIN?=
- =?us-ascii?Q?GyA5pF50roqIdGkVA96tIVLgbssRCjaG1y/W5M2tCiHAyPsFnigYKwZ6Tzx0?=
- =?us-ascii?Q?YYYZ9PbG3VyVWO71u+OwM1w3WGlLd8otOryCcSOZK7wzGNz4TdqF0tyoXRjy?=
- =?us-ascii?Q?7Zi8qsRFmJVohhtiwoGuJxylyQICMQ0MOoXkNuH0bPt30V63Atez6MtB8U3r?=
- =?us-ascii?Q?DKVd9SR7mIrZWC4n9YtyVawj3AMhcLF5TV9BcOBDtToVaGyAmEBgUrEGL5nN?=
- =?us-ascii?Q?4II9BT8I4L3T/p7BZInbfatcPHc3ThVOnWCT/mXriYNh9rc8/Czr6mkS/d8J?=
- =?us-ascii?Q?an0O2dD/ss8wp2LjUo4PzlA1uGWyAyYESYOeyKZEr8/by+uJgtgjgBqcyzn2?=
- =?us-ascii?Q?yLh5uuhPSS6bjL7L+KDqjVnAcmDHC6KIE2Lw0ZqqsQrRRMH8U+T086QRZNg1?=
- =?us-ascii?Q?cIDc/sO+FaBaRsfoq7G0YXccZvQ/ayM/Kh6CB9n8aAaGLXZ4ictlZKaQNSLG?=
- =?us-ascii?Q?GOQkJZ0xi+xYeMxL2VY/Ip26dO0GsNtTiSuHQb0HY9emKK25eF0pTeLicRk4?=
- =?us-ascii?Q?otuL5PjEw19UZzZbB5KndN3Z0LNfVFLLLfTagX/t?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db24c5a6-dee8-4322-f75f-08dd916bb81e
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 15:43:19.4759
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nmTtis8M+vywACzeFfWv8mvYRFtZUfvjAMPCdZQAY3XzqEbpbhQUcXPYeG9tZzG2ih3dSmatIHs7rpKprpK7Yg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6797
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/7] lsm: introduce new hooks for setting/getting inode
+ fsxattr
+To: Andrey Albershteyn <aalbersh@redhat.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>,
+ Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+ selinux@vger.kernel.org, ecryptfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+ Andrey Albershteyn <aalbersh@kernel.org>,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20250512-xattrat-syscall-v5-0-4cd6821e8ff7@kernel.org>
+ <20250512-xattrat-syscall-v5-2-4cd6821e8ff7@kernel.org>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20250512-xattrat-syscall-v5-2-4cd6821e8ff7@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.23772 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Mon, May 12, 2025 at 09:46:16AM +0200, Borislav Petkov wrote:
-> On Tue, Apr 15, 2025 at 02:55:12PM +0000, Yazen Ghannam wrote:
-> > Users can disable MCA polling by setting the "ignore_ce" parameter or by
-> > setting "check_interval=0". This tells the kernel to *not* start the MCE
-> > timer on a CPU.
-> > 
-> > During a CMCI storm, the MCE timer will be started with a fixed
-> > interval.
-> 
-> Why?
-> 
-> If a user doesn't want CEs, why are we even bothering with CMCI storms?
-> 
-> Might as well disable the storm handling code altogether...
-> 
+On 5/12/2025 6:25 AM, Andrey Albershteyn wrote:
+> Introduce new hooks for setting and getting filesystem extended
+> attributes on inode (FS_IOC_FSGETXATTR).
+>
+> Cc: selinux@vger.kernel.org
+> Cc: Paul Moore <paul@paul-moore.com>
+>
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> ---
+>  fs/file_attr.c                | 19 ++++++++++++++++---
+>  include/linux/lsm_hook_defs.h |  2 ++
+>  include/linux/security.h      | 16 ++++++++++++++++
+>  security/security.c           | 30 ++++++++++++++++++++++++++++++
+>  4 files changed, 64 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/file_attr.c b/fs/file_attr.c
+> index 2910b7047721..be62d97cc444 100644
+> --- a/fs/file_attr.c
+> +++ b/fs/file_attr.c
+> @@ -76,10 +76,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
+>  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+>  {
+>  	struct inode *inode = d_inode(dentry);
+> +	int error;
+>  
+>  	if (!inode->i_op->fileattr_get)
+>  		return -ENOIOCTLCMD;
+>  
+> +	error = security_inode_file_getattr(dentry, fa);
+> +	if (error)
+> +		return error;
+> +
 
-The use case is "disable MCA polling". I just gave two examples of how
-this can be done.
+If you're changing VFS behavior to depend on LSMs supporting the new
+hooks I'm concerned about the impact it will have on the LSMs that you
+haven't supplied hooks for. Have you tested these changes with anything
+besides SELinux?
 
-We can focus on "check_interval=0". The user wants to disable MCA
-polling and rely only on interrupts. They still want to see the CEs.
-
-If an interrupt storm happens, the kernel will switch to polling with
-our MCE timer.
-
-When the storm ends, the kernel should go back to how things were before
-the storm. If there was a timer before, then go back to the old
-interval. If there was *not* a timer before, then delete/remove the
-timer.
-
-Thanks,
-Yazen
+>  	return inode->i_op->fileattr_get(dentry, fa);
+>  }
+>  EXPORT_SYMBOL(vfs_fileattr_get);
+> @@ -242,12 +247,20 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
+>  		} else {
+>  			fa->flags |= old_ma.flags & ~FS_COMMON_FL;
+>  		}
+> +
+>  		err = fileattr_set_prepare(inode, &old_ma, fa);
+> -		if (!err)
+> -			err = inode->i_op->fileattr_set(idmap, dentry, fa);
+> +		if (err)
+> +			goto out;
+> +		err = security_inode_file_setattr(dentry, fa);
+> +		if (err)
+> +			goto out;
+> +		err = inode->i_op->fileattr_set(idmap, dentry, fa);
+> +		if (err)
+> +			goto out;
+>  	}
+> +
+> +out:
+>  	inode_unlock(inode);
+> -
+>  	return err;
+>  }
+>  EXPORT_SYMBOL(vfs_fileattr_set);
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> index bf3bbac4e02a..9600a4350e79 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -157,6 +157,8 @@ LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
+>  	 struct dentry *dentry, const char *name)
+>  LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
+>  	 const char *name)
+> +LSM_HOOK(int, 0, inode_file_setattr, struct dentry *dentry, struct fileattr *fa)
+> +LSM_HOOK(int, 0, inode_file_getattr, struct dentry *dentry, struct fileattr *fa)
+>  LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
+>  	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
+>  LSM_HOOK(void, LSM_RET_VOID, inode_post_set_acl, struct dentry *dentry,
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index cc9b54d95d22..d2da2f654345 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -451,6 +451,10 @@ int security_inode_listxattr(struct dentry *dentry);
+>  int security_inode_removexattr(struct mnt_idmap *idmap,
+>  			       struct dentry *dentry, const char *name);
+>  void security_inode_post_removexattr(struct dentry *dentry, const char *name);
+> +int security_inode_file_setattr(struct dentry *dentry,
+> +			      struct fileattr *fa);
+> +int security_inode_file_getattr(struct dentry *dentry,
+> +			      struct fileattr *fa);
+>  int security_inode_need_killpriv(struct dentry *dentry);
+>  int security_inode_killpriv(struct mnt_idmap *idmap, struct dentry *dentry);
+>  int security_inode_getsecurity(struct mnt_idmap *idmap,
+> @@ -1053,6 +1057,18 @@ static inline void security_inode_post_removexattr(struct dentry *dentry,
+>  						   const char *name)
+>  { }
+>  
+> +static inline int security_inode_file_setattr(struct dentry *dentry,
+> +					      struct fileattr *fa)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int security_inode_file_getattr(struct dentry *dentry,
+> +					      struct fileattr *fa)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int security_inode_need_killpriv(struct dentry *dentry)
+>  {
+>  	return cap_inode_need_killpriv(dentry);
+> diff --git a/security/security.c b/security/security.c
+> index fb57e8fddd91..09c891e6027d 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2622,6 +2622,36 @@ void security_inode_post_removexattr(struct dentry *dentry, const char *name)
+>  	call_void_hook(inode_post_removexattr, dentry, name);
+>  }
+>  
+> +/**
+> + * security_inode_file_setattr() - check if setting fsxattr is allowed
+> + * @dentry: file to set filesystem extended attributes on
+> + * @fa: extended attributes to set on the inode
+> + *
+> + * Called when file_setattr() syscall or FS_IOC_FSSETXATTR ioctl() is called on
+> + * inode
+> + *
+> + * Return: Returns 0 if permission is granted.
+> + */
+> +int security_inode_file_setattr(struct dentry *dentry, struct fileattr *fa)
+> +{
+> +	return call_int_hook(inode_file_setattr, dentry, fa);
+> +}
+> +
+> +/**
+> + * security_inode_file_getattr() - check if retrieving fsxattr is allowed
+> + * @dentry: file to retrieve filesystem extended attributes from
+> + * @fa: extended attributes to get
+> + *
+> + * Called when file_getattr() syscall or FS_IOC_FSGETXATTR ioctl() is called on
+> + * inode
+> + *
+> + * Return: Returns 0 if permission is granted.
+> + */
+> +int security_inode_file_getattr(struct dentry *dentry, struct fileattr *fa)
+> +{
+> +	return call_int_hook(inode_file_getattr, dentry, fa);
+> +}
+> +
+>  /**
+>   * security_inode_need_killpriv() - Check if security_inode_killpriv() required
+>   * @dentry: associated dentry
+>
