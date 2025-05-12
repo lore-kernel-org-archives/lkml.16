@@ -1,272 +1,387 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBEE29A9C5;
-	Mon, 12 May 2025 22:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D203C25D53F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747090601; cv=none; b=bWaTrELqLItsTq/1Se2hw5cn7dGgxLNzKoeYQgvFWiSPViL10QEahS8xTo1tu3i+WmiQF0t4RiawtwW0gfFCs6JvVPA5AtgxlWQ0xVnIlBAJB6VJhbwry7ujVLzSuRac3defQn6rZICLO3QQtip7zhXiKRRFNw1rx5wipeGRWVw=
+	t=1747090682; cv=none; b=kq3M1dfVZk/tqMYnVYGZFjfD9TSC8DP2HZ1bQF2bBJEubspPD37ZVrG9cgrgjGTS+BG4zgPS5kMGeacjX978e64nZeZKDpG29hoIpMvBan8dy6DQeHP2eM8gxt/oMluHvQpH5Fgr6jnbWyLmE+Uh1fTreiCKf8IeiGJX27p3G0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747090601; c=relaxed/simple;
-	bh=1s9Vf3Fkit3adzUezvQrcVB4lHl6eD+qJRdC61oFkSQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nLJb6nFg4Wb+v4VaJkHDPxpocfZQLVIjXb3zbpKweVCo9edJivnSZKTlOyw8ZggmkKIIvTeso0Bm/aIzhcavvhy+Q96fdJuRwV+T5qvvmsaFh6DKwmstZO9PAz31cZ+G4kU6E2twZY9Yo+AKZiNuASurz1o/ZPqtdVqorMxxM9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nlyiSpoL; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747090682; c=relaxed/simple;
+	bh=xDsamppNLG2r2TTwhNwg+efST2ix2Y6DasRDlfxsoEc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EaVnzRR++SOEkmbDti978YM/xKs4YK4Qjzvdwtsgmn0xEgqU7wpMba8ZiZ1F6mOOIrZ5nsVG5nvP6oGX6EV6wNAzkaCD82zkjNdhAFKnlOObc7nfLauT2+FZBZaqJ6XJAaiD/TaObkyITpBy2zRZ6ckPA9ihvg16cT3qVm953qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Vu9k25TC; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlyiSpoL"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72ecc30903cso2762544a34.0;
-        Mon, 12 May 2025 15:56:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Vu9k25TC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747090598; x=1747695398; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JQnYHyU/oLYkT3/eFqR+0DIJ/IUt+t8l37AqbBxcuEw=;
-        b=nlyiSpoLsFwZFyjtnAd+BpDp8OrmJJJIV4ouGmEjuVGU6wTCUZBzaTSu7/WSEjKrx6
-         I2vvDWn9cU0hlF/CvuP5kH0UhwxQ8Peuvsp26YgryZC9+VdtqIIiOwyjOw14/1h1rauX
-         lOUYEhOe8N5W0nW1zcNJurY8ZJ05gsrq9B8ESkGJYoDxi36pZvhJNPfWntaY9XmmCxc2
-         ItpadFfw6o3qt4hosgjGGZVTMZ8YoXMpI0jv1gyD2zah/nB+TfxAGip2JxMn9hX3qQuO
-         bevKcvLVgk6g0CyHhopLAdGXEY9fS74iIsTCD0/pGCd0V4D0I9Qiij/tetqcgyLum+3l
-         eurw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747090598; x=1747695398;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JQnYHyU/oLYkT3/eFqR+0DIJ/IUt+t8l37AqbBxcuEw=;
-        b=UMWOrvRkxFMlBYrUr++GLRQ/h3VExto7qpCvg6OhM3Tq6WUQW0oQwZTsGziKVK6upP
-         AYtrC0J/m9UUQ5bNR7BakbWrDTIX29r4Qz7+Mfkch7P0LKZ1flcJqTffkah6+Bir+G2h
-         nsx1msUIK0u/5JZFrnS03IWYYfKD8Pw7Yawy+FtbxDQO1zSUW5jTp+edCoBm/UYwd8sz
-         +3h/jHXlxY9GrCxbpxQECtccO0I+eb8K1oMC++Lubm+NeJUVXoBHlX1Lx/vAcIo5oi/c
-         k/m5WmANSwEz7icd0KeCiu4NrBiZ2gf00OfvX1Xl2RnKoc8mhXMSwmi2c66ELKDwhuDI
-         aGDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaFbIqHq3BVk9ERpamBzzJn9sNxujKJBUZEeWRkeAZZTi8XXXMbmTpQBUHR9YGNP+ibhCWhr2dj94Nop59@vger.kernel.org, AJvYcCVnLXKX9pY1/8rr11HuR9+Dywm+3e6HRWIDmi5ptOQ5VbNr9t221hQ5tPEaCiGMHvGgg6Ol8pbNqiVk@vger.kernel.org, AJvYcCWKDUHZacrMCcWsW/CCk/4hiJxmpnZBmemXApZ/0Kz+2/pLADipiypL0TbfvXd70OeJWqcCKJo3mv/qdZPZiQ==@vger.kernel.org, AJvYcCXAYD8jPI8UPnW4l6qEYGyyTqo6uXTnGtrzkbRHlXzp4QepeOAmpjlw050WHScb/euJHhxJlcEs@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGq2rik9zYMHQTAhXcCwl/5mKwZcuweMM8JIaX/QyGQ9Sq6DA5
-	Wfm2U4Fo3+Ch9W9ChJX/1eFk6mdvMJL58SIx67h96s5pacOdql0N
-X-Gm-Gg: ASbGncuJy/HoDbymSf0lrY+rv2FRhUANia3IdMrNc2K5+IzHUcaP3ee1AHgMo4q5YCt
-	XHy9LEOJovdXvWUhZdKcMtZp0MJHmxyuXsiAqYESg/5ovU+MiOesaZX59S9eBnK50OzdCst9+r0
-	8TJsWBVYz2wJYek7l4e3z9gBTA3NHMTMUnmlYr3D6Dx7dmpcsYG0+6PoXbYG79SLX5QLfBGSww8
-	jkQ0O1x0hGfXhnbyKPHngFy19/Kz/aw964I6dqMW08ibb70bUyaWqXwGyWAiROsTSrnFsluUX7P
-	YmbGCr98OQ+6FoXGPutH6FiithzejqJqpnrkAeiOHCk3NdTwjx8f09aQPm0XfTK1fVDNAP9A2Fv
-	a4xT3AwKUusJh0g==
-X-Google-Smtp-Source: AGHT+IE39odtp4AvZWbxjsbViiNWCTwsEhcIlK8o+5Hl0Hjx72MLayBL+nVAD4vihtkwI3e3H49Ahw==
-X-Received: by 2002:a05:6830:398d:b0:72b:9965:d994 with SMTP id 46e09a7af769-73226b000camr9090654a34.23.1747090598305;
-        Mon, 12 May 2025 15:56:38 -0700 (PDT)
-Received: from [192.168.7.203] (c-98-57-15-22.hsd1.tx.comcast.net. [98.57.15.22])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732265cd91bsm1755336a34.50.2025.05.12.15.56.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 15:56:37 -0700 (PDT)
-Message-ID: <0c1a0dbd-fd24-40d7-bec9-c81583be1081@gmail.com>
-Date: Mon, 12 May 2025 17:56:35 -0500
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747090680; x=1778626680;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xF81otjobOInOhSdXoqYrbDRTXhmSwj/vhXbUO1h8W8=;
+  b=Vu9k25TC9Vryuvnxk7CW2/Q752ZMNhSP4BooBVonIA3sn4k1uhvzBhHS
+   90BPntx5cY1gIZY/XXA70niAIZUZOLF2XYNNZXIm8oYflvZfbBvPe9zD0
+   W0etVn77euX9mzBGwwEBQkUXJpSSv56fnj6x9EZ5wA7Jk4mZmMoEg1PkQ
+   Tb50yEAcKzOZTAECuJ+jXQ/xeJGuB0ueohltx9G8bgt6O1QW2pstOrPZM
+   5Q6EbdoUtlhd+3I7GGtgEj06zqN7ZgbThY8cgIBCQe8maefgRXEfKEMfI
+   eYSqucM22ysYE2huzz5gAGQDCycDSQG1eUEQrPYb8rzQf90+HIA3c7bni
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,283,1739836800"; 
+   d="scan'208";a="296950008"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 22:57:57 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:19210]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.28.26:2525] with esmtp (Farcaster)
+ id 90511994-c75c-48bb-94f0-ca60c2fe56ca; Mon, 12 May 2025 22:57:56 +0000 (UTC)
+X-Farcaster-Flow-ID: 90511994-c75c-48bb-94f0-ca60c2fe56ca
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 12 May 2025 22:57:55 +0000
+Received: from dev-dsk-graf-1a-90d01eec.eu-west-1.amazon.com (172.19.99.218)
+ by EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 12 May 2025 22:57:53 +0000
+From: Alexander Graf <graf@amazon.com>
+To: <kexec@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+	<nh-open-source@amazon.com>
+Subject: [PATCH] kexec: Enable CMA based contiguous allocation
+Date: Mon, 12 May 2025 22:57:52 +0000
+Message-ID: <20250512225752.11687-1-graf@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 0/5] Add PCS support for Qualcomm IPQ9574 SoC
-To: Lei Wei <quic_leiwei@quicinc.com>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, quic_kkumarcs@quicinc.com,
- quic_suruchia@quicinc.com, quic_pavir@quicinc.com, quic_linchen@quicinc.com,
- quic_luoj@quicinc.com, srinivas.kandagatla@linaro.org,
- bartosz.golaszewski@linaro.org, vsmuthu@qti.qualcomm.com, john@phrozen.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250207-ipq_pcs_6-14_rc1-v5-0-be2ebec32921@quicinc.com>
- <20250211195934.47943371@kernel.org> <Z6x1xD0krK0_eycB@shell.armlinux.org.uk>
- <71a69eb6-9e24-48ab-8301-93ec3ff43cc7@quicinc.com>
-Content-Language: en-US
-From: mr.nuke.me@gmail.com
-In-Reply-To: <71a69eb6-9e24-48ab-8301-93ec3ff43cc7@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D036UWC003.ant.amazon.com (10.13.139.214) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On 2/19/25 4:46 AM, Lei Wei wrote:
-> 
-> On 2/12/2025 6:19 PM, Russell King (Oracle) wrote:
->> On Tue, Feb 11, 2025 at 07:59:34PM -0800, Jakub Kicinski wrote:
->>> On Fri, 7 Feb 2025 23:53:11 +0800 Lei Wei wrote:
->>>> The 'UNIPHY' PCS block in the Qualcomm IPQ9574 SoC provides Ethernet
->>>> PCS and SerDes functions. It supports 1Gbps mode PCS and 10-Gigabit
->>>> mode PCS (XPCS) functions, and supports various interface modes for
->>>> the connectivity between the Ethernet MAC and the external PHYs/Switch.
->>>> There are three UNIPHY (PCS) instances in IPQ9574, supporting the six
->>>> Ethernet ports.
->>>>
->>>> This patch series adds base driver support for initializing the PCS,
->>>> and PCS phylink ops for managing the PCS modes/states. Support for
->>>> SGMII/QSGMII (PCS) and USXGMII (XPCS) modes is being added initially.
->>>>
->>>> The Ethernet driver which handles the MAC operations will create the
->>>> PCS instances and phylink for the MAC, by utilizing the API exported
->>>> by this driver.
->>>>
->>>> While support is being added initially for IPQ9574, the driver is
->>>> expected to be easily extendable later for other SoCs in the IPQ
->>>> family such as IPQ5332.
->>>
->>> Could someone with PHY, or even, dare I say, phylink expertise
->>> take a look here?
->>
->> I've not had the time, sorry. Looking at it now, I have lots of
->> questions over this.
->>
->> 1) clocks.
->>
->> - Patch 2 provides clocks from this driver which are exported to the
->>    NSCCC block that are then used to provide the MII clocks.
->> - Patch 3 consumes clocks from the NSCCC block for use with each PCS.
->>
->> Surely this leads to a circular dependency, where the MSCCC driver
->> can't get the clocks it needs until this driver has initialised, but
->> this driver can't get the clocks it needs for each PCS from the NSCCC
->> because the MSCCC driver needs this driver to initialise.
->>
-> 
-> Sorry for the delay in response. Below is a description of the 
-> dependencies between the PCS/NSSCC drivers during initialization time 
-> and how the clock relationships are set up. Based on this, there should 
-> not any issue due to circular dependency, but please let me know if any 
-> improvement is possible here given the hardware clock dependency. The 
-> module loading order is as follows:
-> 
-> Step 1.) NSCC driver module
-> Step 2.) PCS driver module
-> Step 3.) Ethernet driver module
-> 
-> The 'UNIPHY' PCS clocks (from Serdes to NSSCC) are not needed to be 
-> available at the time of registration of PCS MII clocks (NSSCC to PCS 
-> MII) by the NSSCC driver (Step 1). The PCS MII clocks is registered 
-> before 'UNIPHY' PCS clock is registered, since by default the parent is 
-> initialized to 'xo' clock. Below is the output of clock tree on the 
-> board before the PCS driver is loaded.
-> 
-> xo-board-clk
->      nss_cc_port1_rx_clk_src
->          nss_cc_port1_rx_div_clk_src
->              nss_cc_uniphy_port1_rx_clk
->              nss_cc_port1_rx_clk
-> 
-> The 'UNIPHY' PCS clock is later configured as a parent to the PCS MII 
-> clock at the time when the Ethernet and PCS drivers are enabled (step3) 
-> and the MAC links up. At link up time, the NSSCC driver sets the NSSCC 
-> port clock rate (by configuring the divider) based on the link speed, 
-> during which time the NSSCC port clock's parent is switched to 'UNIPHY' 
-> PCS clock. Below is the clock tree dump after this step.
-> 
-> 7a00000.ethernet-pcs::rx_clk
->      nss_cc_port1_rx_clk_src
->          nss_cc_port1_rx_div_clk_src
->              nss_cc_uniphy_port1_rx_clk
->              nss_cc_port1_rx_clk
-> 
+When booting a new kernel with kexec_file, the kernel picks a target
+location that the kernel should live at, then allocates random pages,
+checks whether any of those patches magically happens to coincide with
+a target address range and if so, uses them for that range.
 
-I tried this PCS driver, and I am seeing a circular dependency in the 
-clock init. If the clock tree is:
-     GCC -> NSSCC -> PCS(uniphy) -> NSSCC -> PCS(mii)
+For every page allocated this way, it then creates a page list that the
+relocation code - code that executes while all CPUs are off and we are
+just about to jump into the new kernel - copies to their final memory
+location. We can not put them there before, because chances are pretty
+good that at least some page in the target range is already in use by
+the currently running Linux environment.
 
-The way I understand it, the UNIPHY probe depends on the MII probe. If 
-MII .probe() returns -EPROBE_DEFER, then so will the UNIPHY .probe(). 
-But the MII cannot probe until the UNIPHY is done, due to the clock 
-dependency. How is it supposed to work?
+All of this is inefficient.
 
-The way I found to resolve this is to move the probing of the MII clocks 
-to ipq_pcs_get().
+Since kexec got introduced, Linux has gained the CMA framework which
+can perform physically contiguous memory mappings, while keeping that
+memory available for movable memory when it is not needed for contiguous
+allocations. The default CMA allocator is for DMA allocations.
 
-This is the kernel log that I see:
+This patch adds logic to the kexec file loader to attempt to place the
+target payload at a location allocated from CMA. If successful, it uses
+that memory range directly instead of creating copy instructions during
+the hot phase. To ensure that there is a safety net in case anything goes
+wrong with the CMA allocation, it also adds a flag for user space to force
+disable CMA allocations.
 
-[   12.008754] platform 39b00000.clock-controller: deferred probe 
-pending: platform: supplier 7a00000.ethernet-pcs not ready
-[   12.008788] mdio_bus 90000.mdio-1:18: deferred probe pending: 
-mdio_bus: supplier 7a20000.ethernet-pcs not ready
-[   12.018704] mdio_bus 90000.mdio-1:00: deferred probe pending: 
-mdio_bus: supplier 90000.mdio-1:18 not ready
-[   12.028588] mdio_bus 90000.mdio-1:01: deferred probe pending: 
-mdio_bus: supplier 90000.mdio-1:18 not ready
-[   12.038310] mdio_bus 90000.mdio-1:02: deferred probe pending: 
-mdio_bus: supplier 90000.mdio-1:18 not ready
-[   12.047943] mdio_bus 90000.mdio-1:03: deferred probe pending: 
-mdio_bus: supplier 90000.mdio-1:18 not ready
-[   12.057579] platform 7a00000.ethernet-pcs: deferred probe pending: 
-ipq9574_pcs: Failed to get MII 0 RX clock
-[   12.067209] platform 7a20000.ethernet-pcs: deferred probe pending: 
-ipq9574_pcs: Failed to get MII 0 RX clock
-[   12.077200] platform 3a000000.qcom-ppe: deferred probe pending: 
-platform: supplier 39b00000.clock-controller not ready
+Using CMA allocations has two advantages:
+
+  1) Faster. There is no more need to copy in the hot phase.
+  2) More robust. Even if by accident some page is still in use for DMA,
+     the new kernel image will be safe from that access because it resides
+     in a memory region that is considered allocated in the old kernel and
+     has a chance to reinitialize that component.
+
+Signed-off-by: Alexander Graf <graf@amazon.com>
+---
+ include/linux/kexec.h      |  6 +++
+ include/uapi/linux/kexec.h |  1 +
+ kernel/kexec_core.c        | 82 ++++++++++++++++++++++++++++++++++++++
+ kernel/kexec_file.c        | 55 +++++++++++++++++++++++--
+ 4 files changed, 140 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c8971861521a..421af2a303b6 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -91,6 +91,9 @@ struct kexec_segment {
+ 	size_t bufsz;
+ 	unsigned long mem;
+ 	size_t memsz;
++
++	/* Pointer to contiguous CMA allocation or NULL */
++	struct page *cma;
+ };
+ 
+ #ifdef CONFIG_COMPAT
+@@ -169,6 +172,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+  * @buf_min:	The buffer can't be placed below this address.
+  * @buf_max:	The buffer can't be placed above this address.
+  * @top_down:	Allocate from top of memory.
++ * @cma:	CMA page if the buffer is backed by CMA.
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+@@ -180,6 +184,7 @@ struct kexec_buf {
+ 	unsigned long buf_min;
+ 	unsigned long buf_max;
+ 	bool top_down;
++	struct page *cma;
+ };
+ 
+ int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
+@@ -331,6 +336,7 @@ struct kimage {
+ 	 */
+ 	unsigned int hotplug_support:1;
+ #endif
++	unsigned int no_cma : 1;
+ 
+ #ifdef ARCH_HAS_KIMAGE_ARCH
+ 	struct kimage_arch arch;
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 5ae1741ea8ea..8958ebfcff94 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -27,6 +27,7 @@
+ #define KEXEC_FILE_ON_CRASH	0x00000002
+ #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+ #define KEXEC_FILE_DEBUG	0x00000008
++#define KEXEC_FILE_NO_CMA	0x00000010
+ 
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 3e62b944c883..4c2b2ef7825d 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -40,6 +40,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/dma-map-ops.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -553,6 +554,24 @@ static void kimage_free_entry(kimage_entry_t entry)
+ 	kimage_free_pages(page);
+ }
+ 
++static void kimage_free_cma(struct kimage *image)
++{
++	unsigned long i;
++
++	for (i = 0; i < image->nr_segments; i++) {
++		struct page *cma = image->segment[i].cma;
++		u32 pages = image->segment[i].memsz >> PAGE_SHIFT;
++
++		if (!cma)
++			continue;
++
++		arch_kexec_pre_free_pages(page_address(cma), pages);
++		dma_release_from_contiguous(NULL, cma, pages);
++		image->segment[i].cma = NULL;
++	}
++
++}
++
+ void kimage_free(struct kimage *image)
+ {
+ 	kimage_entry_t *ptr, entry;
+@@ -591,6 +610,9 @@ void kimage_free(struct kimage *image)
+ 	/* Free the kexec control pages... */
+ 	kimage_free_page_list(&image->control_pages);
+ 
++	/* Free CMA allocations */
++	kimage_free_cma(image);
++
+ 	/*
+ 	 * Free up any temporary buffers allocated. This might hit if
+ 	 * error occurred much later after buffer allocation.
+@@ -716,6 +738,63 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 	return page;
+ }
+ 
++static int kimage_load_cma_segment(struct kimage *image, struct kexec_segment *segment)
++{
++	unsigned long maddr;
++	size_t ubytes, mbytes;
++	int result = 0;
++	unsigned char __user *buf = NULL;
++	unsigned char *kbuf = NULL;
++	char *ptr = page_address(segment->cma);
++
++	if (image->file_mode)
++		kbuf = segment->kbuf;
++	else
++		buf = segment->buf;
++	ubytes = segment->bufsz;
++	mbytes = segment->memsz;
++	maddr = segment->mem;
++
++	/* Initialize the buffer with zeros to allow for smaller input buffers */
++	memset(ptr, 0, mbytes);
++
++	/* Then copy from source buffer to the CMA one */
++	while (mbytes) {
++		size_t uchunk, mchunk;
++
++		ptr += maddr & ~PAGE_MASK;
++		mchunk = min_t(size_t, mbytes,
++				PAGE_SIZE - (maddr & ~PAGE_MASK));
++		uchunk = min(ubytes, mchunk);
++
++		if (uchunk) {
++			/* For file based kexec, source pages are in kernel memory */
++			if (image->file_mode)
++				memcpy(ptr, kbuf, uchunk);
++			else
++				result = copy_from_user(ptr, buf, uchunk);
++			ubytes -= uchunk;
++			if (image->file_mode)
++				kbuf += uchunk;
++			else
++				buf += uchunk;
++		}
++
++		if (result) {
++			result = -EFAULT;
++			goto out;
++		}
++
++		ptr    += mchunk;
++		maddr  += mchunk;
++		mbytes -= mchunk;
++
++		cond_resched();
++	}
++out:
++	return result;
++}
++
+ static int kimage_load_normal_segment(struct kimage *image,
+ 					 struct kexec_segment *segment)
+ {
+@@ -733,6 +812,9 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 	mbytes = segment->memsz;
+ 	maddr = segment->mem;
+ 
++	if (segment->cma)
++		return kimage_load_cma_segment(image, segment);
++
+ 	result = kimage_set_destination(image, maddr);
+ 	if (result < 0)
+ 		goto out;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index fba686487e3b..92bf4ab7b7be 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -27,6 +27,7 @@
+ #include <linux/kernel_read_file.h>
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
++#include <linux/dma-map-ops.h>
+ #include "kexec_internal.h"
+ 
+ #ifdef CONFIG_KEXEC_SIG
+@@ -230,6 +231,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		ret = 0;
+ 	}
+ 
++	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
++
+ 	if (cmdline_len) {
+ 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
+ 		if (IS_ERR(image->cmdline_buf)) {
+@@ -632,6 +635,38 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
+ 
++static int kexec_alloc_contig(struct kexec_buf *kbuf)
++{
++	u32 pages = (u32)(kbuf->memsz >> PAGE_SHIFT);
++	unsigned long mem;
++	struct page *p;
++
++	if (kbuf->image->no_cma)
++		return -EPERM;
++
++	p = dma_alloc_from_contiguous(NULL, pages, get_order(kbuf->buf_align), true);
++	if (!p)
++		return -EADDRNOTAVAIL;
++
++	pr_debug("allocated %d DMA pages at 0x%lx", pages, page_to_boot_pfn(p));
++
++	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++
++	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
++		/* Our region is already in use by a statically defined one. Bail out. */
++		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
++		dma_release_from_contiguous(NULL, p, pages);
++		return -EADDRNOTAVAIL;
++	}
++
++	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++	kbuf->cma = p;
++
++	arch_kexec_post_alloc_pages(page_address(p), pages, 0);
++
++	return 0;
++}
++
+ /**
+  * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
+  * @kbuf:	Parameters for the memory search.
+@@ -694,10 +729,21 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+ 
+-	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+-	ret = arch_kexec_locate_mem_hole(kbuf);
+-	if (ret)
+-		return ret;
++	/*
++	 * Try to find a free physically contiguous block of memory first. With that, we
++	 * can avoid any copying at kexec time.
++	 */
++	kbuf->cma = NULL;
++	ret = kexec_alloc_contig(kbuf);
++	if (ret) {
++		/*
++		 * Could not find one. Walk the RAM ranges and allocate pages for the
++		 * buffer. Maybe some even get us into the target range.
++		 */
++		ret = arch_kexec_locate_mem_hole(kbuf);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/* Found a suitable memory range */
+ 	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
+@@ -705,6 +751,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
++	ksegment->cma = kbuf->cma;
+ 	kbuf->image->nr_segments++;
+ 	return 0;
+ }
+-- 
+2.34.1
 
 
-PHY:
-&mdio {
-	qca8k_nsscc: clock-controller@18 {
-		compatible = "qcom,qca8084-nsscc";
-		...
-	};
 
-	ethernet-phy-package@0 {
-		compatible = "qcom,qca8084-package";
-		...
 
-		qca8084_0: ethernet-phy@0 {
-			compatible = "ethernet-phy-id004d.d180";
-			reg = <0>;
-			clocks = <&qca8k_nsscc NSS_CC_GEPHY0_SYS_CLK>;
-			resets = <&qca8k_nsscc NSS_CC_GEPHY0_SYS_ARES>;
-		};
-		qca8084_1: ethernet-phy@1 {
-			compatible = "ethernet-phy-id004d.d180";
-			reg = <1>;
-			clocks = <&qca8k_nsscc NSS_CC_GEPHY1_SYS_CLK>;
-			resets = <&qca8k_nsscc NSS_CC_GEPHY1_SYS_ARES>;
-		};
-		qca8084_2: ethernet-phy@2 {
-			compatible = "ethernet-phy-id004d.d180";
-			reg = <2>;
-			clocks = <&qca8k_nsscc NSS_CC_GEPHY2_SYS_CLK>;
-			resets = <&qca8k_nsscc NSS_CC_GEPHY2_SYS_ARES>;
-		};
-		qca8084_3: ethernet-phy@3 {
-			compatible = "ethernet-phy-id004d.d180";
-			reg = <3>;
-			clocks = <&qca8k_nsscc NSS_CC_GEPHY3_SYS_CLK>;
-			resets = <&qca8k_nsscc NSS_CC_GEPHY3_SYS_ARES>;
-		};
-	};
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
-	qca8081_12: ethernet-phy@12 {
-		reset-gpios = <&tlmm 36 GPIO_ACTIVE_LOW>;
-		reg = <12>;
-	};
-
-PCS:
-	pcs_uniphy0: ethernet-pcs@7a00000 {
-		compatible = "qcom,ipq9574-pcs";
-		...
-		pcsuniphy0_ch0: pcs-mii@0 {
-			reg = <0>;
-			clocks = <&nsscc NSS_CC_UNIPHY_PORT1_RX_CLK>,
-				 <&nsscc NSS_CC_UNIPHY_PORT1_TX_CLK>;
-			clock-names = "rx",
-				      "tx";
-		};
-		...
-
-MAC:
-		port@1 {
-			reg = <1>;
-			phy-mode = "usxgmii";
-			managed = "in-band-status";
-			phy-handle = <&qca8084_0>;
-			pcs-handle = <&pcsuniphy0_ch0>;
-			...
-		};
