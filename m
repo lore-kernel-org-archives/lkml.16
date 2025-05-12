@@ -1,128 +1,115 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6EE255F4F;
-	Mon, 12 May 2025 07:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F12256C63
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747035353; cv=none; b=oviKvWUoYbb5HpbIaeOmgMMAahIhEwxliSi9HeK+Z3KRUrkvfr8UVr8tLFiK61dHgSQPU1Bi+T6z7wq5ZEOOUSvO8Fw/TAs1YsEcV/fjAsZp/UkPmdX6UP6i2caEsACYblRbW0lcEas5BbavN9dDGAEWOG0eYXM+LmhX25s50u0=
+	t=1747035414; cv=none; b=DL3yGr54CnMaEFVoZD0Ou6d3pKq0F46wiD5QoKpPSASzOvnDe2CZuUF8dkUEpSDn//lcURNDALqE7nmaPi1S9TKL4Dmhs52RIcBBIoQqz24jSb2zMpCDXCq9gtOKnjsmmLSt+kzu/bu9t/8uY6ZTCvcWF5K7Yz74mb25ZnuTLgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747035353; c=relaxed/simple;
-	bh=zThPDjsAtVrDoxY89PisLPnV3mz6OPMwqflpMidXKdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eZ8FEg9WS90ANhtpRt73eckIlmYPDd6c4hexLP0SfDJ1R1AnTFP5VAxZsyi4UEEvjhsTZKEO9Q8XKIshEJjGNjHsJ5IBcwCHVYqLB+L4mZaNwMvdFtkY0pSOlghYRUn7upjgQav+GVA6aOpZlCyhcmb+V2VJPPi5JyM0jVr6oCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=TBV7i6gq; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="TBV7i6gq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1747035348;
-	bh=zThPDjsAtVrDoxY89PisLPnV3mz6OPMwqflpMidXKdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TBV7i6gqVq6TeLRnHc1vsuBvzG00bAGXz3AmvZZ+Ro4djFoPH3FL5zC2QpKVmN93p
-	 N2tip4L1hZgNYYgwuL5fYW4yBo6oGm+28ocvfkV3vXwIsbkRbRgJhvRTbKcEyCDC81
-	 wlclcmPfmej/Wyi2hlEAs/wn+5sYQxgIPEOSJCag=
-Date: Mon, 12 May 2025 09:35:47 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: lschyi@chromium.org
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Sung-Chi Li <lschyi@google.com>
-Subject: Re: [PATCH v3 3/3] hwmon: (cros_ec) register fans into thermal
- framework cooling devices
-Message-ID: <7309c804-19e3-4715-b8c9-efa31c8ea9e1@t-8ch.de>
-References: <20250512-cros_ec_fan-v3-0-a9f2b255f0cd@chromium.org>
- <20250512-cros_ec_fan-v3-3-a9f2b255f0cd@chromium.org>
+	s=arc-20240116; t=1747035414; c=relaxed/simple;
+	bh=o3fHYXSX29gp6NajjYFvmoa1IPO4JtSlTwtofFKNh2U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ngSv9FUypiVBzDjp3aop3Xg0pvXJMCsgbcbtUJpN+zeAeijPp6iuT2pxNYZRzTl1IFXSHG7gWMZUr05jhEmiRqs16uJ4K+ii560gRmI6kFBnGSPpTFg87Af3pUmA02Z8VXFE4DZhj7frIBMMZN5xUmUfwBH2Yl/CK9jnV+iUWEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc59-03fff7000000aab6-aa-6821a5092cf9
+From: "yohan.joung" <yohan.joung@sk.com>
+To: jaegeuk@kernel.org,
+	chao@kernel.org,
+	daehojeong@google.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	pilhyun.kim@sk.com,
+	"yohan.joung" <yohan.joung@sk.com>
+Subject: [PATCH v5 1/2] f2fs: add a method for calculating the remaining blocks in the current segment in LFS mode.
+Date: Mon, 12 May 2025 16:36:09 +0900
+Message-ID: <20250512073611.718-1-yohan.joung@sk.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512-cros_ec_fan-v3-3-a9f2b255f0cd@chromium.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJLMWRmVeSWpSXmKPExsXC9ZZnkS7nUsUMgzsHpSxOTz3LZDG1fS+j
+	xZP1s5gtLi1yt7i8aw6bA6vHgk2lHptWdbJ57F7wmcnj8ya5AJYoLpuU1JzMstQifbsErowZ
+	i3pZCjYJVjStqW5gXMzXxcjJISFgItHWNY0dxr56+SGYzSagIfGnt5cZxBYRcJL4f6MdKM7F
+	wSzQxijRfrSJFSQhLFAscfXhYxYQm0VAVeL76WdgzbwCphJLj2xlhhiqKbHjy3kmiLigxMmZ
+	T8DqmQXkJZq3zmYGGSoh8JJVYtPvNywQDZISB1fcYJnAyDsLSc8sJD0LGJlWMYpk5pXlJmbm
+	GOsVZ2dU5mVW6CXn525iBAbYsto/kTsYv10IPsQowMGoxMObsFYhQ4g1say4MvcQowQHs5II
+	71QG+Qwh3pTEyqrUovz4otKc1OJDjNIcLErivEbfylOEBNITS1KzU1MLUotgskwcnFINjJ2i
+	ljurnVOPM1+evOnifGtRkad+DpXF/ZXbC2YtVD/RvXVXi9tuU5uyNwabNXo4rvQuUN++tqUt
+	cHt+4Vfj51te2/e07Vr1c8qdH/tu1Ez9HN/2jcOy6MGlLTkv4/L3vJ+7Ye+JaA6OmU1S81RK
+	5Fq67/6ZFN7tJ/M43GFjTTxn8CrxGy8bapRYijMSDbWYi4oTAVtD1IMsAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpiluLIzCtJLcpLzFFi42LhmqEyR5dzqWKGwYp2XovTU88yWUxt38to
+	8WT9LGaLS4vcLS7vmsNmMWHuVSaL91vvMTqweyzYVOqxaVUnm8fuBZ+ZPL7d9vD4vEkugDWK
+	yyYlNSezLLVI3y6BK2PGol6Wgk2CFU1rqhsYF/N1MXJySAiYSFy9/JAdxGYT0JD409vLDGKL
+	CDhJ/L/RDhTn4mAWaGOUaD/axAqSEBYolrj68DELiM0ioCrx/fQzsGZeAVOJpUe2MkMM1ZTY
+	8eU8E0RcUOLkzCdg9cwC8hLNW2czT2DkmoUkNQtJagEj0ypGkcy8stzEzBwzveLsjMq8zAq9
+	5PzcTYzAkFlW+2fSDsZvl90PMQpwMCrx8CasVcgQYk0sK67MPcQowcGsJMI7lUE+Q4g3JbGy
+	KrUoP76oNCe1+BCjNAeLkjivV3hqgpBAemJJanZqakFqEUyWiYNTqoEx48+ElVePPm1kSap6
+	v39HwxQhL/GdsgvfmW7Wn/koc+pqE7nfM04925q8VOtrMePmDY+YFL7/6BEISM9cckGg3KPl
+	xIK9UVH7IhZEVlzRCeFh2Gads3Zrv6fizi3qc331qm0vhR3MfKC0wnq/o+/yE5mqJ+pX1ZQ1
+	clnHyKg3/VMoXnQi5IWTEktxRqKhFnNRcSIAO1q9hRUCAAA=
+X-CFilter-Loop: Reflected
 
-On 2025-05-12 15:11:57+0800, Sung-Chi Li via B4 Relay wrote:
-> From: Sung-Chi Li <lschyi@chromium.org>
-> 
-> Register fans connected under EC as thermal cooling devices as well, so
-> these fans can then work with the thermal framework.
-> 
-> During the driver probing phase, we will also try to register each fan
-> as a thermal cooling device based on previous probe result (whether the
-> there are fans connected on that channel, and whether EC supports fan
-> control). The basic get max state, get current state, and set current
-> state methods are then implemented as well.
-> 
-> Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
-> ---
->  Documentation/hwmon/cros_ec_hwmon.rst |  2 +
->  drivers/hwmon/cros_ec_hwmon.c         | 78 +++++++++++++++++++++++++++++++++++
->  2 files changed, 80 insertions(+)
+In LFS mode, the previous segment cannot use invalid blocks,
+so the remaining blocks from the next_blkoff of the current segment
+to the end of the section are calculated.
 
-<snip>
+Signed-off-by: yohan.joung <yohan.joung@sk.com>
+---
+ fs/f2fs/segment.h | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-> +static void cros_ec_hwmon_register_fan_cooling_devices(struct device *dev,
-> +						       struct cros_ec_hwmon_priv *priv)
-> +{
-> +	struct thermal_cooling_device *cdev;
-> +	struct cros_ec_hwmon_cooling_priv *cpriv;
-> +	size_t i;
-> +	char *type;
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 03c0f59be5a8..5777b385e7d2 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -102,6 +102,8 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+ #define CAP_SEGS_PER_SEC(sbi)					\
+ 	(SEGS_PER_SEC(sbi) -					\
+ 	BLKS_TO_SEGS(sbi, (sbi)->unusable_blocks_per_sec))
++#define GET_START_SEG_FROM_SEC(sbi, segno)			\
++	(rounddown(segno, SEGS_PER_SEC(sbi)))
+ #define GET_SEC_FROM_SEG(sbi, segno)				\
+ 	(((segno) == -1) ? -1 : (segno) / SEGS_PER_SEC(sbi))
+ #define GET_SEG_FROM_SEC(sbi, secno)				\
+@@ -582,8 +584,14 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+ 		if (unlikely(segno == NULL_SEGNO))
+ 			return false;
+ 
+-		left_blocks = CAP_BLKS_PER_SEC(sbi) -
+-				get_ckpt_valid_blocks(sbi, segno, true);
++		if (f2fs_lfs_mode(sbi) && __is_large_section(sbi)) {
++			left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				SEGS_TO_BLKS(sbi, (segno - GET_START_SEG_FROM_SEC(sbi, segno))) -
++				CURSEG_I(sbi, i)->next_blkoff;
++		} else {
++			left_blocks = CAP_BLKS_PER_SEC(sbi) -
++					get_ckpt_valid_blocks(sbi, segno, true);
++		}
+ 
+ 		blocks = i <= CURSEG_COLD_DATA ? data_blocks : node_blocks;
+ 		if (blocks > left_blocks)
+@@ -596,8 +604,15 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+ 	if (unlikely(segno == NULL_SEGNO))
+ 		return false;
+ 
+-	left_blocks = CAP_BLKS_PER_SEC(sbi) -
+-			get_ckpt_valid_blocks(sbi, segno, true);
++	if (f2fs_lfs_mode(sbi) && __is_large_section(sbi)) {
++		left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				SEGS_TO_BLKS(sbi, (segno - GET_START_SEG_FROM_SEC(sbi, segno))) -
++				CURSEG_I(sbi, CURSEG_HOT_DATA)->next_blkoff;
++	} else {
++		left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				get_ckpt_valid_blocks(sbi, segno, true);
++	}
++
+ 	if (dent_blocks > left_blocks)
+ 		return false;
+ 	return true;
+-- 
+2.33.0
 
-Ordering.
-
-> +
-> +	if (!IS_ENABLED(CONFIG_THERMAL))
-> +		return;
-> +
-> +	if (!priv->fan_control_supported)
-> +		return;
-> +
-> +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
-> +		if (!(priv->usable_fans & BIT(i)))
-> +			continue;
-> +
-> +		cpriv = devm_kzalloc(dev, sizeof(*cpriv), GFP_KERNEL);
-> +		if (!cpriv)
-> +			return;
-
-The failures are swallowed silently. They should be propagated.
-
-> +
-> +		type = devm_kasprintf(dev, GFP_KERNEL, "%s-fan%zu", dev_name(dev), i);
-> +		if (!type)
-> +			return;
-> +
-> +		cpriv->hwmon_priv = priv;
-> +		cpriv->index = i;
-> +		cdev = devm_thermal_of_cooling_device_register(dev, NULL, type, cpriv,
-> +							       &cros_ec_thermal_cooling_ops);
-> +		if (!cdev)
-
-..._cooling_device_register() returns an error pointer on failure, not NULL.
-
-> +			return;
-> +	}
-> +}
-> +
->  static int cros_ec_hwmon_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -412,6 +489,7 @@ static int cros_ec_hwmon_probe(struct platform_device *pdev)
->  	cros_ec_hwmon_probe_temp_sensors(dev, priv, thermal_version);
->  	cros_ec_hwmon_probe_fans(priv);
->  	priv->fan_control_supported = cros_ec_hwmon_probe_fan_control_supported(priv->cros_ec);
-> +	cros_ec_hwmon_register_fan_cooling_devices(dev, priv);
->  
->  	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cros_ec", priv,
->  							 &cros_ec_hwmon_chip_info, NULL);
-> 
-> -- 
-> 2.49.0.1015.ga840276032-goog
-> 
-> 
