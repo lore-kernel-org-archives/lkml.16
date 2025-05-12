@@ -1,104 +1,274 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC46E21770B;
-	Mon, 12 May 2025 16:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED2E24886E;
+	Mon, 12 May 2025 16:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066139; cv=none; b=gI6vGmu19IoxFqAyNmJnosq5NG9N8SNsDZJxj/bBpilnlpAldLuJDghiHhCqbxbikAYbwzo2cbfm+SmseDS/5Ht4SG2j8xZZFrsHYWSkR5cIlkVNzk7kJoIXWygXD5CqUv5PGeg652x/iYmQeg8NG925xnM3HUUd2/BAO59Dv5s=
+	t=1747066193; cv=none; b=fJUU5WOv/cBSKj9RaeKulfaQD71SVTWFV/rUXAN8uQIu3VeNYCGjf19ec02kDmJgoX9l37BPQYK5lGE9b//UlKbVD4poq+MoUh9T3YsgZM1TVXLQ06nhgyNhIMsuxfqEHn0gPfEc90Bga1gwLkrmdnMVwKXgSX04CRizbCf8mdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066139; c=relaxed/simple;
-	bh=GtFHCpKmWgumg5kfjLlUPZMRhZodvVQlEjZCqCQOXug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifWqQQ9KYxgSC0khVETBM877S2HoLnpIJLj8CHz/fG2KbgK1bs55oPYH5qlBtNC1jOEFftY/KK/suAwpzgjg0Dyxu4mf0cKfSKL/caT01ySpIkwRUeKC+teEeXoWqVAqwYptXKcuw5JB+cniQCGAhoKAvI9G7ogzDe1qWJ63wJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SteE+40c; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747066193; c=relaxed/simple;
+	bh=HPkbizzJPBBZVxpQgpvMoa7T4QCDgny19Bvar4SBW/E=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=bbtc/VYEssWnjcRkKVfuAI/BZFOYsfk5vXiGaxxyfcsU0CASQYzlSF9yGgCa/ICIjUxUFyKIWgHXgbsijXLTVT+G1EqmoYlwQEe2NYmIaCwWEA1Klg8Zf28xHYw3hKYsoUJHtfG6xJ+bTPf7BQzmhcI7PT5e0UmEoDuYo1N3ZoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=VvXRuTHy; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SteE+40c"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so9730630a12.1;
-        Mon, 12 May 2025 09:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747066136; x=1747670936; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qEsAI2COF0r2HL5oebsAQkXwVMnRApoak0sIere6jr0=;
-        b=SteE+40cv8Jzn7g+JsFpanycsU/3p90GzAL+GyGclA1YLZUkxa0Hn80l5Azvh5VfIH
-         BhlxeHiUUwl4uJk6zBtVext8litfJM3R5JZpAKWXdGf3e9QznpSipg1kyOJcrjtiYTm5
-         Pyxwo/P+8XMN5Q+ljQFz43JVTTr9blN9cRByYKrHS1mfS1gxC4aJZ+KknE0RbTSemSHj
-         RLEUyeHld257MvtproyOOQsSLHR3ljrFQuCSaC093sZZCZ/1qXL78DtNQvTZGB5Hpgpr
-         S5PJI1Nc2y3Hr9emKAIaZe75I+khxCC4ozHNirVVytRO1CCBl1x7eIJcwogboOr7tmmI
-         c0+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066136; x=1747670936;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qEsAI2COF0r2HL5oebsAQkXwVMnRApoak0sIere6jr0=;
-        b=DaJ6jOwiu7/zO8b7ETiJ0t1UXiacg4PyTmrCKqZgLe3PlnBdtQtKK5t+o3znt+Oxub
-         KcQVNLpVWZYSDruGjBlOpR48rKOZMcqIJxE6+UbCEUBHl83Eqpyl5mpgrdbYpHcwZyfJ
-         XOP+Y4KV0/2A5y6UcYIpWbPIjlJJd5Fv+Q4isGxym+YH/3EJ6qumTRtWTZFvdocbA0Vd
-         f79m4ljkM7gB/xzyjUARxfI7MkTbDFr2ApajcTvIAWmSt5cL6mjhx8Vu0GvF55Je2mLg
-         pW88VfoWPFfFcoPQGV4lSN4Y77lTNLcZ0uHFAf051ls/rsy8YLlAIEoSnLfE+nZ2BOvB
-         RRtA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWDspmVQx6Nf12sZD1/ESTuYRl2LFroDBmBZ+ttIZ8/Fg1cNki+SEYrS6t186RwTYkhRYV9hmKEDP5DU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr8AGXl+WpYmudT+s9GqY0j/5xtU0J5xnChDBbK4cToHlc9DoX
-	gTL7jsVqL1DVAbpKJqkL+MMdTRIYvsFwrPhbWbeG2o9NloS10a4=
-X-Gm-Gg: ASbGnctePHYs86tfjbg+ONbIpb/smZtjDlLVBXxMAdrGqkfT0I90ux0GmSSCuaj1hmJ
-	nVN3oB4Cl/AWG00m7NwqRSjmtANfWUGwIVDipBnPa85Z0Q0dq+cVY/1QslUp5v0uavkjvYMwO3c
-	B/HqOV6wHI0PmqZAda/LByvXlXyCdOxme5MsdPQymUFHqR67Esz6rUcVsXeTlKhnCiJG1jpdi1w
-	BnO0JsSs2/aY9njImmST85ZWjTn0EQTV234mB/ycZHJJjqlOYLt16XujmS1cRhVmKou0GMxg0H1
-	ezpdO4/PwzYiW1iL5t3ujh0HBCySRlfUdUS6
-X-Google-Smtp-Source: AGHT+IFgYQSOmtOhWap/5tgAF1XXuzAr+ZzRiPgyJCaorz27QzuB/tXqUB1fLyiM3jt+oZ3oCU0PRw==
-X-Received: by 2002:a05:6402:27d3:b0:5fb:cdd2:8040 with SMTP id 4fb4d7f45d1cf-5fca075dd1fmr11288270a12.12.1747066135724;
-        Mon, 12 May 2025 09:08:55 -0700 (PDT)
-Received: from p183 ([46.53.249.8])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fd29adb7absm2528711a12.32.2025.05.12.09.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:08:55 -0700 (PDT)
-Date: Mon, 12 May 2025 19:08:53 +0300
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: workflows@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into
- symlink
-Message-ID: <77f03295-df5d-4bc0-9a61-5be829969662@p183>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
- <87frhcsrva.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="VvXRuTHy"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CBSAd1030870;
+	Mon, 12 May 2025 18:09:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	TQF/4z87M6Zev4BTJ0Pi8MpOAsMnb3E7xkduvvN1r+k=; b=VvXRuTHypFhS946I
+	hXJUhnrSozdE5ib6zQ8hb9tSBWEmrq6CEE1RSDYmypvtI47ghJrWsxpUCQEZw336
+	qM92Yo7fiNBGPfySZOq9C8I9QvLb4rqhnYfK35anvCYOBdpULYLJZprmaHmyT4+o
+	QWbrMMTh7pfAf4g5SZk9mn7SFknuQ0NaO/yVJBP0oaGfqudQ2XJB5JX4YcJP/Lch
+	0GhYtyjIR93b+NgXcX+vCFa12VWm3Xs9OmrIi30FJM5tY4+kl+dfTTzL/ha2OMod
+	uOlDhYA1FHGtyNDGd2/RzMbvr0KVWbQAV4CeUvc9Ur8othH34MF2IFuiOkSw8jA4
+	I9Cl7g==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46jhrmwc1u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 18:09:19 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1BFB540048;
+	Mon, 12 May 2025 18:07:37 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CCDF6B2C9B7;
+	Mon, 12 May 2025 18:06:18 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 18:06:18 +0200
+Message-ID: <619756c5-1a61-4aa9-b7fb-6be65175ded2@foss.st.com>
+Date: Mon, 12 May 2025 18:06:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87frhcsrva.fsf@trenco.lwn.net>
+User-Agent: Mozilla Thunderbird
+From: Christian Bruel <christian.bruel@foss.st.com>
+Subject: Re: [PATCH v8 4/9] PCI: stm32: Add PCIe Endpoint support for
+ STM32MP25
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
+ <20250423090119.4003700-5-christian.bruel@foss.st.com>
+ <tdgyva6qyn6qwzvft4f7r3tgp5qswuv4q5swoaeomnnbxtmz5j@zo3gvevx2skp>
+Content-Language: en-US
+In-Reply-To: <tdgyva6qyn6qwzvft4f7r3tgp5qswuv4q5swoaeomnnbxtmz5j@zo3gvevx2skp>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
 
-On Sat, May 10, 2025 at 04:05:29AM -0600, Jonathan Corbet wrote:
-> Alexey Dobriyan <adobriyan@gmail.com> writes:
+Hello Manivannan,
+
+On 4/30/25 09:50, Manivannan Sadhasivam wrote:
+> On Wed, Apr 23, 2025 at 11:01:14AM +0200, Christian Bruel wrote:
+>> Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
+>> controller based on the DesignWare PCIe core in endpoint mode.
+>>
+>> Uses the common reference clock provided by the host.
+>>
+>> The PCIe core_clk receives the pipe0_clk from the ComboPHY as input,
+>> and the ComboPHY PLL must be locked for pipe0_clk to be ready.
+>> Consequently, PCIe core registers cannot be accessed until the ComboPHY is
+>> fully initialised and refclk is enabled and ready.
+>>
+>> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig         |  12 +
+>>   drivers/pci/controller/dwc/Makefile        |   1 +
+>>   drivers/pci/controller/dwc/pcie-stm32-ep.c | 414 +++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-stm32.h    |   1 +
+>>   4 files changed, 428 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 2aec5d2f9a46..aceff7d1ef33 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -422,6 +422,18 @@ config PCIE_STM32_HOST
+>>   	  This driver can also be built as a module. If so, the module
+>>   	  will be called pcie-stm32.
+>>   
+>> +config PCIE_STM32_EP
+>> +	tristate "STMicroelectronics STM32MP25 PCIe Controller (endpoint mode)"
+>> +	depends on ARCH_STM32 || COMPILE_TEST
+>> +	depends on PCI_ENDPOINT
+>> +	select PCIE_DW_EP
+>> +	help
+>> +	  Enables endpoint support for DesignWare core based PCIe controller
+>> +	  found in STM32MP25 SoC.
 > 
-> > Every time I open Documentation/CodingStyle it says the party moved
-> > somewhere else. :-(
-> >
-> > Of course, I forget where it moved to by the next time.
-> >
-> > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> > ---
+> Can you please use similar description for the RC driver also?
 > 
-> No 0/9 cover letter?
+> "Enables Root Complex (RC) support for the DesignWare core based PCIe host
+> controller found in STM32MP25 SoC."
 
-Not really. Cover letter would be very short:
+Yes, will align the messages
 
-	Tweak coding style to add things I've learned over the years of
-	Linux/C programming.
+>> +
+>> +	  This driver can also be built as a module. If so, the module
+>> +	  will be called pcie-stm32-ep.
+>> +
+>>   config PCI_DRA7XX
+>>   	tristate
+>>   
+> 
+> [...]
+> 
+>> +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
+>> +			     struct platform_device *pdev)
+>> +{
+>> +	struct dw_pcie_ep *ep = &stm32_pcie->pci.ep;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	ret = pm_runtime_resume_and_get(dev);
+> 
+> This needs to be called before devm_pm_runtime_enable().
 
-	And stop making kernel devs look like aliens from another Universe
-	(see static_assert() rule and especially(!) "declare ALAP" rule)
+OK. Also and we must use pm_runtime_get_noresume() here.
 
-> Just FYI, I won't apply coding-style patches without a strong sense that
-> there is a consensus behind them...I suspect that could prove to be a
-> high bar here.
+> 
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>> +				 STM32MP25_PCIECR_TYPE_MASK,
+>> +				 STM32MP25_PCIECR_EP);
+>> +	if (ret) {
+>> +		goto err_pm_put_sync;
+>> +		return ret;
+>> +	}
+>> +
+>> +	reset_control_assert(stm32_pcie->rst);
+>> +	reset_control_deassert(stm32_pcie->rst);
+>> +
+>> +	ep->ops = &stm32_pcie_ep_ops;
+>> +
+>> +	ret = dw_pcie_ep_init(ep);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to initialize ep: %d\n", ret);
+>> +		goto err_pm_put_sync;
+>> +	}
+>> +
+>> +	ret = stm32_pcie_enable_resources(stm32_pcie);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable resources: %d\n", ret);
+>> +		goto err_ep_deinit;
+>> +	}
+>> +
+>> +	ret = dw_pcie_ep_init_registers(ep);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+>> +		goto err_disable_resources;
+>> +	}
+>> +
+>> +	pci_epc_init_notify(ep->epc);
+>> +
+> 
+> Hmm, looks like you need to duplicate dw_pcie_ep_init_registers() and
+> pci_epc_init_notify() in stm32_pcie_perst_deassert() for hw specific reasons.
+> So can you drop these from there?
 
-I split them like referendum ballots to see where the consensus at and
-not have big single discussion thread.
+We cannot remove dw_pcie_ep_init_registers() and 
+dw_pcie_ep_init_registers() here because the PCIe registers need to be 
+ready at the end of pcie_stm32_probe, as the host might already be 
+running. In that case the host enumerates with /sys/bus/pci/rescan 
+rather than asserting/deasserting PERST#.
+Therefore, we do not need to reboot the host after initializing the EP."
+
+
+> 
+>> +	return 0;
+>> +
+>> +err_disable_resources:
+>> +	stm32_pcie_disable_resources(stm32_pcie);
+>> +
+>> +err_ep_deinit:
+>> +	dw_pcie_ep_deinit(ep);
+>> +
+>> +err_pm_put_sync:
+>> +	pm_runtime_put_sync(dev);
+>> +	return ret;
+>> +}
+>> +
+>> +static int stm32_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	struct stm32_pcie *stm32_pcie;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
+>> +	if (!stm32_pcie)
+>> +		return -ENOMEM;
+>> +
+>> +	stm32_pcie->pci.dev = dev;
+>> +	stm32_pcie->pci.ops = &dw_pcie_ops;
+>> +
+>> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
+>> +	if (IS_ERR(stm32_pcie->regmap))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
+>> +				     "No syscfg specified\n");
+>> +
+>> +	stm32_pcie->phy = devm_phy_get(dev, NULL);
+>> +	if (IS_ERR(stm32_pcie->phy))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
+>> +				     "failed to get pcie-phy\n");
+>> +
+>> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(stm32_pcie->clk))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
+>> +				     "Failed to get PCIe clock source\n");
+>> +
+>> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
+>> +	if (IS_ERR(stm32_pcie->rst))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
+>> +				     "Failed to get PCIe reset\n");
+>> +
+>> +	stm32_pcie->perst_gpio = devm_gpiod_get(dev, "reset", GPIOD_IN);
+>> +	if (IS_ERR(stm32_pcie->perst_gpio))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
+>> +				     "Failed to get reset GPIO\n");
+>> +
+>> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	platform_set_drvdata(pdev, stm32_pcie);
+>> +
+>> +	ret = devm_pm_runtime_enable(dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to enable pm runtime %d\n", ret);
+> 
+> Use dev_err_probe() please for consistency.
+
+OK
+
+thank you
+
+Christian
+> 
+> - Mani
+> 
