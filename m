@@ -1,98 +1,179 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C22B255E39;
-	Mon, 12 May 2025 07:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E832550D0;
+	Mon, 12 May 2025 07:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747033226; cv=none; b=Vmep4TxwArO8aTHqVwCfG+zLmV4TwAfScGCwlB95E8BPi4CyZXGBklBn75Wg4yGBD7t+AZ5Wii0VNWGKg0OE/M6avusmgz+hCN5pGxKNFicdx7lRR5OzMknQj9vMnpfj4gswlsJ1nNpe0EC+fULnwvCTIguvhCZ/3SI+7sS001U=
+	t=1747033414; cv=none; b=c03KCBqh/95z2pRhg6iq4AedYDXTE3K8oQy8qO+unfLPP4LebMqB9EWBXXS2K2C0/czv48nd8Vy+5Hg4MVjWoLRcp6Z+0qXeSkqDl/r9Q3fm+pZuny2TE6g1Bw10zsgcIa2yCuUDMLob8MJo4MIK+InWxm3rXj2oEzMg6BvNREw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747033226; c=relaxed/simple;
-	bh=/8mUMEKY+320EmFxybGlI+uJJOEXNwZXDzQvFhzS7co=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W/UJ5eyxhVlzJhvmG0AI4Fzka36n3A2HODE0NzRFh0RKExYT8bNyAw6/JHSXbSwrLa5MgOV2nnAxFUzasm/+I1E+DyIXts9ODnAkUQaFNqVBiHtIAXlYYNtMbW/b1DSWcYZY7fQZolw7B8AccuJ1z1iKyLmgzPsTcdh/VgLki7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c03:9b0:a65:40ce:ae50:9398])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 14b61caf7;
-	Mon, 12 May 2025 15:00:11 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: didi.debian@cknow.org
-Cc: amadeus@jmu.edu.cn,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dsimic@manjaro.org,
-	heiko@sntech.de,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 0/1] arm64: dts: rockchip: rk3568: Move PCIe3 MSI to use GIC ITS
-Date: Mon, 12 May 2025 15:00:09 +0800
-Message-Id: <20250512070009.336989-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <D9RSA5K547DD.1LYPIZZM4XALS@cknow.org>
-References: <D9RSA5K547DD.1LYPIZZM4XALS@cknow.org>
+	s=arc-20240116; t=1747033414; c=relaxed/simple;
+	bh=nDptblRdB6kbWyDdFocql4XJth9/Hrh1Kx84cdZ9fKQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=f0XVwI4Gzj6dCdkcUZXItFaoN8Fp8pMLGn132OxaiPh8W4+laJQ6JjPyO5OrhX8fyBStNcVXJY7OH/o9I+utmyboVzBCdnfRCI/+4hX/12UZtYQvxpxLZ/W3l/Nxt+RPHDmT39molhVMqwsHatWxOyHfJEAuU+kfJQrnuTefza4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kd7B7NGk; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kd7B7NGk"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BLMiVR021016;
+	Mon, 12 May 2025 09:03:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=3fdcVl0cGdqaLl1bpQLUPK
+	GXcr9zQxv8eka5RMO2E4A=; b=kd7B7NGkyVWhD4WVakC/n/+fN8BQm9r9jUPPND
+	4KrEIbE/H289Y03oJcowrq4pY+Lx4New6FvDMhFNveK1ucJYcQDfCzIceLfP4AF1
+	H6Ui44dQTxFOj+x2fGHY/mC8DB4x3lcI2ylLl44KBV89EEd4kPQt/2bn7CEpevzJ
+	mnE4Kv6PdX8PiPR+mbDhfu4hEz0iqBEX5TeOeewZqnVZr/ajSDfmgobpUZ945O5p
+	BpdlFP7JV/YJS5MBuHN3gw4KwjhcSkVyqnt1Q7Inymhc6wZ1zqEh4eY5dLZ3UU6D
+	WGxXP1pP/KlpuY2952S8H6eMzHf3dhAhR6+IA7SE56nzRaqQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46jhrmu28k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:03:19 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5C5B24007D;
+	Mon, 12 May 2025 09:02:25 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 40714A644DF;
+	Mon, 12 May 2025 09:01:11 +0200 (CEST)
+Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 09:01:10 +0200
+From: Patrice Chotard <patrice.chotard@foss.st.com>
+Date: Mon, 12 May 2025 09:01:04 +0200
+Subject: [PATCH v4] spi: stm32-ospi: Make usage of
+ reset_control_acquire/release() API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTRkfVkJLHkJCGB4YHk0fH1YeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtIQUIZS0EaTU5BT0sYHkEaHk5LQUJIQkNZV1kWGg8SFR
-	0UWUFZT0tIVUpLSEpOTE5VSktLVUpCS0tZBg++
-X-HM-Tid: 0a96c34b42d603a2kunm14b61caf7
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MRg6Tzo5IjJMCU8#OApPLBhL
-	HykKCRBVSlVKTE9MS0hISUpJQ05PVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0hBQhlLQRpNTkFPSxgeQRoeTktBQkhCQ1lXWQgBWUFJSENJNwY+
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250512-b4-upstream_ospi_reset_update-v4-1-982c6f7886ef@foss.st.com>
+X-B4-Tracking: v=1; b=H4sIAK+cIWgC/43NsQ6DIBSF4VdpmIsRBKmd+h5NY6hcK4NCuEjaG
+ N+96NJ0asf/DN9ZCEKwgOR8WEiAZNG6KYc4Hkg36OkB1JrchJdcloIxehd09hgD6LF16G0bACG
+ 2szc6ApVN3QEXUhvNSDZ8gN4+d/96yz1YjC689rvEt/VfOXFaUmFA9dIYrht26R1igbHo3Eg2O
+ 1UfT5bql1dRRhWIWp9Uo6Ti3966rm+dAZfqHAEAAA==
+X-Change-ID: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
+To: Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrice Chotard
+	<patrice.chotard@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
 
-Hi,
+As ospi reset is consumed by both OMM and OSPI drivers, use the reset
+acquire/release mechanism which ensure exclusive reset usage.
 
-> > With this patch I get the following kernel warnings:
-> >
-> > pci 0001:10:00.0: Primary bus is hard wired to 0
-> > pci 0002:20:00.0: Primary bus is hard wired to 0
-> >
-> > If I 'unapply' this patch, I don't see those warnings.
+This avoid to call reset_control_get/put() in OMM driver each time
+we need to reset OSPI children and guarantee the reset line stays
+deasserted.
 
-> I was pretty sure I had seen those messages before, but couldn't find
-> them before. But now I have: on my rk3588-rock-5b.
+During resume, OMM driver takes temporarily control of reset.
 
-Thanks for the reminder, I didn't notice this before.
-The BSP kernel also has this warning.
+Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes in v4:
+  - Add a comment about reset sharing between OSPI and OMM drivers durig resume.
+  - Link to v3: https://lore.kernel.org/r/20250507-b4-upstream_ospi_reset_update-v3-1-7e46a8797572@foss.st.com
 
-Before this patch:
-[    2.997725] pci_bus 0001:01: busn_res: can not insert [bus 01-ff] under [bus 00-0f] (conflicts with (null) [bus 00-0f])
-[    3.009990] pci 0001:00:00.0: BAR 6: assigned [mem 0xf2200000-0xf220ffff pref]
-[    3.018100] pci 0001:00:00.0: PCI bridge to [bus 01-ff]
-...
-[    3.401416] pci_bus 0002:01: busn_res: can not insert [bus 01-ff] under [bus 00-0f] (conflicts with (null) [bus 00-0f])
-...
-[    3.545459] pci 0002:00:00.0: PCI bridge to [bus 01-ff]
+Changes in v3:
+  - Remove previous patch 1/2 as already merged.
+  - Keep the reset control acquired from probe() to remove().
+  - Link to v2: https://lore.kernel.org/r/20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com
 
-After this patch:
-[    3.037779] pci 0001:10:00.0: Primary bus is hard wired to 0
-[    3.044120] pci 0001:10:00.0: bridge configuration invalid ([bus 01-ff]), reconfiguring
-[    3.053362] pci_bus 0001:11: busn_res: [bus 11-1f] end is updated to 11
-[    3.068920] pci 0001:10:00.0: PCI bridge to [bus 11]
-...
-[    3.451429] pci 0002:20:00.0: Primary bus is hard wired to 0
-[    3.457793] pci 0002:20:00.0: bridge configuration invalid ([bus 01-ff]), reconfiguring
-...
-[    3.535794] pci_bus 0002:21: busn_res: [bus 21-2f] end is updated to 21
-...
-[    3.612893] pci 0002:20:00.0: PCI bridge to [bus 21]
+Changes in v2:
+  - Rebased on spi/for-next (7a978d8fcf57).
+  - Remove useless check on reset.
+  - Add error handling on reset_control_acquire().
+  - Link to v1: https://lore.kernel.org/all/20250410-b4-upstream_ospi_reset_update-v1-0-74126a8ceb9c@foss.st.com/
+---
+ drivers/spi/spi-stm32-ospi.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-Looks like a harmless warning.
+diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+index 668022098b1eac3628f0677e6d786e5a267346be..b2597b52beb1133155e0d6f601b0632ad4b8e8f5 100644
+--- a/drivers/spi/spi-stm32-ospi.c
++++ b/drivers/spi/spi-stm32-ospi.c
+@@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ospi->rstc = devm_reset_control_array_get_optional_exclusive(dev);
++	ospi->rstc = devm_reset_control_array_get_exclusive_released(dev);
+ 	if (IS_ERR(ospi->rstc))
+ 		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
+ 				     "Can't get reset\n");
+@@ -936,11 +936,13 @@ static int stm32_ospi_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_pm_enable;
+ 
+-	if (ospi->rstc) {
+-		reset_control_assert(ospi->rstc);
+-		udelay(2);
+-		reset_control_deassert(ospi->rstc);
+-	}
++	ret = reset_control_acquire(ospi->rstc);
++	if (ret)
++		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
++
++	reset_control_assert(ospi->rstc);
++	udelay(2);
++	reset_control_deassert(ospi->rstc);
+ 
+ 	ret = spi_register_controller(ctrl);
+ 	if (ret) {
+@@ -983,6 +985,8 @@ static void stm32_ospi_remove(struct platform_device *pdev)
+ 	if (ospi->dma_chrx)
+ 		dma_release_channel(ospi->dma_chrx);
+ 
++	reset_control_release(ospi->rstc);
++
+ 	pm_runtime_put_sync_suspend(ospi->dev);
+ 	pm_runtime_force_suspend(ospi->dev);
+ }
+@@ -993,6 +997,8 @@ static int __maybe_unused stm32_ospi_suspend(struct device *dev)
+ 
+ 	pinctrl_pm_select_sleep_state(dev);
+ 
++	reset_control_release(ospi->rstc);
++
+ 	return pm_runtime_force_suspend(ospi->dev);
+ }
+ 
+@@ -1012,6 +1018,12 @@ static int __maybe_unused stm32_ospi_resume(struct device *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = reset_control_acquire(ospi->rstc);
++	if (ret) {
++		dev_err(dev, "Can not acquire reset\n");
++		return ret;
++	}
++
+ 	writel_relaxed(ospi->cr_reg, regs_base + OSPI_CR);
+ 	writel_relaxed(ospi->dcr_reg, regs_base + OSPI_DCR1);
+ 	pm_runtime_mark_last_busy(ospi->dev);
 
-Thanks,
-Chukun
+---
+base-commit: 1c64de886b8893c0158097edd6ba08d527a2c97a
+change-id: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
 
---
-2.25.1
+Best regards,
+-- 
+Patrice Chotard <patrice.chotard@foss.st.com>
 
