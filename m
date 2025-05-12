@@ -1,106 +1,158 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEF1265CA3;
-	Mon, 12 May 2025 08:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F56D25D1F8;
+	Mon, 12 May 2025 08:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747040270; cv=none; b=K9LUe784lE1JUi/1MxajK36p4/onoQFHVHmkuL+RUSVUH6lOhItMY3DRvpsNEH829azO2zEc6FbJN4PruIkBpmBEDlYHY1QUOBZU9d4ldVNQngfnFh7L9GIQukgXehSp32gmSlxYsYppFPEOZsdCnK+scVSxBGo5ko9Xce1hgmM=
+	t=1747040271; cv=none; b=JsnUOu6U49leQpvChgcLLE5UpqgXde+VQIzAerzMm2LwzAIZl37S8ciqqt+y/UIft7PP5LeJSpFVzQ/UJYsng7xhzS0KKXkqVI/qkWksJamoMy7jBmEYliv4v/VMTVAR0CDVM0FrC2fZGzxejmk+BIQiA8CALV4t5fmP8ciukP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747040270; c=relaxed/simple;
-	bh=qCiOc2lGEPA6wS0ywTwxLfWN66tfkPb8n12/TLdqL3k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BNoHkeeL0Qxp5H4SAS67EabXJN6Dl3TNbLUUo/vlUh5oGazrBjN5B7y0YrMrdUtyg5u2rJxAdWlYjCpJ63T3I/PPFgrZsoQijVIBK+WST41q4ORKDiGajaCi/YD+KWQaSYhN2YU2nyqemSwlOawBPEENXndviZ3lb8s3iP7lsoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WyhxcAIb; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747040271; c=relaxed/simple;
+	bh=0KNdT4K2HwqU0ZdMB4peGWxDogoI8jp/u9JVa2ytbX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Cv7eCWKS5+FYzuvV9eMevv2VcJG1Q/OSaJjLobF/KlMn019HKl1e5KZ/FhxEXeRF57fIjW0qckJ4N31U/nk4z/LXjCWPQeD1gDc2GBAhmjoChCHmQdHSGZDvQbBv3TPC3OxKPe8sphjPfcet/PbmRCzgF4LaK1ylCdt9LeQ4eAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IqweOwXN; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyhxcAIb"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acb5ec407b1so732796566b.1;
-        Mon, 12 May 2025 01:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747040267; x=1747645067; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qCiOc2lGEPA6wS0ywTwxLfWN66tfkPb8n12/TLdqL3k=;
-        b=WyhxcAIblIrbetgEpJN72aIIzpnHeRVv5HHk/lpMAzxuSuOkZYpVktK6CMfjbil8Qk
-         w1uW9SXgGLXSmDTLtb7PhFvyxwxHf7Kxs5RyILqG75IT+fpcKjKqrpCuNqryPX/P5I7R
-         ZGfe6veZ9Zc1Itabxjc0sClh8iMnDK0CV5nn4RUHps7uJWF2EL1SZzYISctAV5WwjOB/
-         bM+/vVc7s2FUJIKfx9e6ryBOyQQtIupFseamrqHqGDF1tDBjVhJK+rUgk4EVrwf6/GRw
-         UijC1M9ZQFmBtDtpChPW2AMapDv3nXOQEplneO7Cv6OaeZjGjavTJqmVrDJ3olFMSQQU
-         Reiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747040267; x=1747645067;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qCiOc2lGEPA6wS0ywTwxLfWN66tfkPb8n12/TLdqL3k=;
-        b=JjF7hmcczQ8CNl2trHEUKKTdiMZiYtngtfomm6nLq8P6YICQ+6FIPUVCu5Kwau6fAI
-         jMc+k8KaRtoyx7VwlXkQlMmdzGdj5B2xdfZZBjPPWPwvb59DMeOK8gN/7VFoC885SPE+
-         AZA5i9n6/L5t3Orecjt+PjJsJ5DD0/6TvCufJE3yDFGG+cHjqaVFi/zxCDGDBzfq6lxM
-         fowNMzKLpoD7CD0TzHcl2CyFSf2Glyl7TIRX8PErhbIIoLKHu4AFAdIaprWTAcDK8RJM
-         Hx/h4SC/3BNXOa88G/jqgHVGWE2mKb5nMYrxzTPte7rn3DCb2Qx2oIHJLJtuhG8BG9YI
-         nfJw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9qZCyQnuVMMql2bGBrW7fCNsUwONhfEoZiiCgtiOT1XreVm1dbk1oKbLdPccNMw/GIAD6t7WFa44ENCQ=@vger.kernel.org, AJvYcCXYxANixajhKEi6X3lvoTR3GmonElk0dXuQQe0vfWxx1X0behTFTl+cMY2sAxKJUMeaaDuQWVHWU356sQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB3IfBKAdmVjM1e8YiQaiGzFW1qX4mzGUZX3WnVNKqoOi6ZOak
-	D3waaBSaFeNI7F8JCIiSPFIj9AIOVS9XEHgdhO8ccMidBCFUqSPM
-X-Gm-Gg: ASbGncvMaB5uO3/YajpnHWOwovtT4yQnKQyYHdhmRvKD+mu4Fs/tR4c/dOce7AxVIaE
-	VLI7IAU8Ocw/WUhGdtsQphkWqeJpr4fole8LbCjVvbG1Jy1qz5+L5/XNVSU5jkZzcQ8pXl64a/c
-	z/4DUp5tOKs/nWFB9/VxVaN2hp1mJO0wjzRZNXhGhoZwJWJ9UR3lvY9uThzoGeQdncsLpRBKUum
-	qwtXhr34+XsfFVatnuAFcqJLiRgkM2nZZwk1xstq1Ajhs47UbQaqGH645qBs2Taq0A5q6ppobos
-	wW5tjFj7a61Ombba6k0o/oK6zoGn5KCIpnipxIsUjggA22XRlklqCg==
-X-Google-Smtp-Source: AGHT+IGJBdps9c8bdW4GuYaz6tfF93ydrZ6lD3tOaY3CcqSNDXObZagPFTfmNPLmYXrOY46TTm5x3g==
-X-Received: by 2002:a17:907:a810:b0:ad2:5499:75a1 with SMTP id a640c23a62f3a-ad254997932mr280618466b.32.1747040266634;
-        Mon, 12 May 2025 01:57:46 -0700 (PDT)
-Received: from [10.176.234.34] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad21985b026sm588720366b.177.2025.05.12.01.57.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 01:57:46 -0700 (PDT)
-Message-ID: <9df429e159b3933566c386a4464536ec2982f5f5.camel@gmail.com>
-Subject: Re: [PATCH v3 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro
- Core Clock freq
-From: Bean Huo <huobean@gmail.com>
-To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
- bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
- avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
- quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
- quic_rampraka@quicinc.com, neil.armstrong@linaro.org, 
- luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com, 
- peter.wang@mediatek.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Manivannan
-	Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
-	 <James.Bottomley@HansenPartnership.com>, open list
-	 <linux-kernel@vger.kernel.org>
-Date: Mon, 12 May 2025 10:57:44 +0200
-In-Reply-To: <20250509075029.3776419-3-quic_ziqichen@quicinc.com>
-References: <20250509075029.3776419-1-quic_ziqichen@quicinc.com>
-	 <20250509075029.3776419-3-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IqweOwXN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747040267; x=1778576267;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0KNdT4K2HwqU0ZdMB4peGWxDogoI8jp/u9JVa2ytbX4=;
+  b=IqweOwXNZp4+HuGrYzWtlXPpkBA+4Gr5YWrc+fNy0Zs5FEBzZnY+JGEy
+   3M0OsHBJmVgF36RGbYLs06TTPpS+TfaNsLbL4btiqXUHIDFicu4DN3NrE
+   hqBuPK+AI+8IB1BitMOr2uvFa0BN4K8kb3G1nSf2Lr/AVhEHZXBNZXwdl
+   pt7irpSk6jOwPpk9MR2IfHvbYkf7u7aPbWLTSeehu8rHvet0zO8P4msOt
+   rCPzU1k/GGoSVKLHYyuH72TkyTh83dJh4Rm3FBjrwNBCpolmimT4LCbD5
+   PH75C+hImz1J5LuuAMfHQCDep515xHNhQTCybxlW8VnKccR138j34m20q
+   A==;
+X-CSE-ConnectionGUID: KfU7m4ykR+mzrUy9MSb/Zw==
+X-CSE-MsgGUID: eMqnrVoyR4W9ErGRl2ZzLw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="59488731"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="59488731"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:57:46 -0700
+X-CSE-ConnectionGUID: WRlz5RKLQWufey33GcoE5A==
+X-CSE-MsgGUID: D04i/FHNSvWzKMcTrXMsTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="138235787"
+Received: from 984fee019967.jf.intel.com ([10.165.54.94])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:57:46 -0700
+From: Chao Gao <chao.gao@intel.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	tglx@linutronix.de,
+	dave.hansen@intel.com,
+	seanjc@google.com,
+	pbonzini@redhat.com
+Cc: peterz@infradead.org,
+	rick.p.edgecombe@intel.com,
+	weijiang.yang@intel.com,
+	john.allen@amd.com,
+	bp@alien8.de,
+	chang.seok.bae@intel.com,
+	xin3.li@intel.com,
+	Chao Gao <chao.gao@intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <kees@kernel.org>,
+	Stanislav Spassov <stanspas@amazon.de>,
+	Eric Biggers <ebiggers@google.com>
+Subject: [PATCH v7 4/6] x86/fpu: Remove xfd argument from __fpstate_reset()
+Date: Mon, 12 May 2025 01:57:07 -0700
+Message-ID: <20250512085735.564475-5-chao.gao@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250512085735.564475-1-chao.gao@intel.com>
+References: <20250512085735.564475-1-chao.gao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-05-09 at 15:50 +0800, Ziqi Chen wrote:
-> From: Can Guo <quic_cang@quicinc.com>
->=20
-> On some platforms, the devfreq OPP freq may be different than the unipro
-> core clock freq. Implement ufs_qcom_opp_freq_to_clk_freq() and use it to
-> find the unipro core clk freq.
->=20
-> Fixes: c02fe9e222d1 ("scsi: ufs: qcom: Implement the freq_to_gear_speed()=
- vop")
-> Signed-off-by: Can Guo <quic_cang@quicinc.com>
-> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-> Tested-by: Luca Weiss <luca.weiss@fairphone.com>
+The initial values for fpstate::xfd differ between guest and host fpstates.
+Currently, the initial values are passed as an argument to
+__fpstate_reset(). But, __fpstate_reset() already assigns different default
+features and sizes based on the type of fpstates (i.e., guest or host). So,
+handle fpstate::xfd in a similar way to highlight the differences in the
+initial xfd value between guest and host fpstates
 
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Chao Gao <chao.gao@intel.com>
+Link: https://lore.kernel.org/all/aBuf7wiiDT0Wflhk@google.com/
+---
+v7: new.
 
-Looks good to me:
+ arch/x86/kernel/fpu/core.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 0d501bd25d79..a3cafed350e0 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -211,7 +211,7 @@ void fpu_reset_from_exception_fixup(void)
+ }
+ 
+ #if IS_ENABLED(CONFIG_KVM)
+-static void __fpstate_reset(struct fpstate *fpstate, u64 xfd);
++static void __fpstate_reset(struct fpstate *fpstate);
+ 
+ static void fpu_lock_guest_permissions(void)
+ {
+@@ -246,8 +246,7 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
+ 	fpstate->is_valloc	= true;
+ 	fpstate->is_guest	= true;
+ 
+-	/* Leave xfd to 0 (the reset value defined by spec) */
+-	__fpstate_reset(fpstate, 0);
++	__fpstate_reset(fpstate);
+ 	fpstate_init_user(fpstate);
+ 
+ 	gfpu->fpstate		= fpstate;
+@@ -536,7 +535,7 @@ void fpstate_init_user(struct fpstate *fpstate)
+ 		fpstate_init_fstate(fpstate);
+ }
+ 
+-static void __fpstate_reset(struct fpstate *fpstate, u64 xfd)
++static void __fpstate_reset(struct fpstate *fpstate)
+ {
+ 	/*
+ 	 * Initialize sizes and feature masks. Supervisor features and
+@@ -546,21 +545,23 @@ static void __fpstate_reset(struct fpstate *fpstate, u64 xfd)
+ 	if (fpstate->is_guest) {
+ 		fpstate->size		= guest_default_cfg.size;
+ 		fpstate->xfeatures	= guest_default_cfg.features;
++		/* Leave xfd to 0 (the reset value defined by spec) */
++		fpstate->xfd		= 0;
+ 	} else {
+ 		fpstate->size		= fpu_kernel_cfg.default_size;
+ 		fpstate->xfeatures	= fpu_kernel_cfg.default_features;
++		fpstate->xfd		= init_fpstate.xfd;
+ 	}
+ 
+ 	fpstate->user_size	= fpu_user_cfg.default_size;
+ 	fpstate->user_xfeatures	= fpu_user_cfg.default_features;
+-	fpstate->xfd		= xfd;
+ }
+ 
+ void fpstate_reset(struct fpu *fpu)
+ {
+ 	/* Set the fpstate pointer to the default fpstate */
+ 	fpu->fpstate = &fpu->__fpstate;
+-	__fpstate_reset(fpu->fpstate, init_fpstate.xfd);
++	__fpstate_reset(fpu->fpstate);
+ 
+ 	/* Initialize the permission related info in fpu */
+ 	fpu->perm.__state_perm		= fpu_kernel_cfg.default_features;
+-- 
+2.47.1
+
