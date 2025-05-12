@@ -1,43 +1,39 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7289443
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43F252309B3;
+	Mon, 12 May 2025 15:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747062227; cv=none; b=VckBfm9y5SKXKa+gqZih/sdLAS378VWoPYbN/mNqWyPAT9zyqugfBPPTmmJqXUef5a+ykY0BRTRdkaXf837TiUA3D77AwmvLV2JdpsJ/yNa/9ZLX47mQriYTbGcDcJt/r3OG+mqoLBrtYSLWkAisnWkHm9sj8FO5zw55Jy6r9Z0=
+	t=1747062490; cv=none; b=jr/oBAQXsQZnQZCx7VUNY0cYlMV+UH9MzFnPrrh2BnGkPrX3IEyJJPuDEgKX5tlE2DNF58SSi2L/9fFHczdV/GUULISzf2ARC2ZAl/qiWhi1dz96Jb49htvaWlZ9inqzHluYOENeyTirdbP9l1mQPFHFMbT/UYxeoQMn3cibaOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747062227; c=relaxed/simple;
-	bh=9Wfop2MOPQSAsOyl90xelaA+Bw0b5Yzsd2BXlyKjbP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=douVPVHyVn/H0YGQDMH4CKBFlgtphJa+v1W1HsCevD1GsnYARI8esJj3h8mymb5i2KGUOHmuTkhu3DQG6rVNHVopwiVTWDKsGMMHzjX/moJfzVAGh8+jk5+NHiSHultFnS3jT4jj1E+HWsSrcj53CpuC1A1Mh85eYy7TaS0rqjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C1814BF;
-	Mon, 12 May 2025 08:03:34 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 147DB3F63F;
-	Mon, 12 May 2025 08:03:42 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64/mm: Permit lazy_mmu_mode to be nested
-Date: Mon, 12 May 2025 16:03:31 +0100
-Message-ID: <20250512150333.5589-1-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747062490; c=relaxed/simple;
+	bh=ya1PXoj6K1yoFGFHvgkn8xDzl0UKTfF4IP9FQz7gfNs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kvtGDw9HDOCubZ2RRpwUpVaWotiXJgPVn5q5zehgY3uEdXHL2PNG3CF+2MM5/7mNVcYsk8/DkuBB2dLRoBM91SO9wrVLyJfR8LME/BtmC2DWP5rSnl4pChs33UiIdgMM2bv/dxNGHQZjX9ahFGStGpKjjK9EPWG7z2KuuT3oFVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nmKtDF93; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nmKtDF93"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=tI
+	4q0Mc1q4PSwYa2K29AJnW0a4yN6ijZ6Fj4djm0HFA=; b=nmKtDF93rDpQ17gVa6
+	LHve6SWf169npfoby0DPhj40Ux6ZaNPIoC0K1jVoGJ7X4ctvEU1om/QYqnxVPAvU
+	CmWPWJybn5Fb0chCPdWuB+OSlzABWDetUpDE89yg6vVF4jkPcxwd2WEnWi0D1uUz
+	2h8p7voICjyLd+X5GeLBazEl8=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD3H+itDiJo1qybAw--.5044S4;
+	Mon, 12 May 2025 23:07:40 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: mathias.nyman@intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	surenb@google.com,
+	kent.overstreet@linux.dev,
+	David Wang <00107082@163.com>
+Subject: [RFC] USB: core/xhci: add a buffer in urb for host controller private data
+Date: Mon, 12 May 2025 23:07:24 +0800
+Message-Id: <20250512150724.4560-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,124 +41,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3H+itDiJo1qybAw--.5044S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWxWF4UtF1rKrWUXFyrJFb_yoWrAr4xpF
+	Z5Wry8Kr1rtr47XFZ8Gw1kAa1fJw4kuF9FgFWxC345Zr12yw17W3s2yF4S9Fn7Xr4kCrsY
+	q3Wqg3y8Wr1UJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pE1vVZUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAZLqmgh6hWauQABsb
 
-lazy_mmu_mode is not supposed to permit nesting. But in practice this
-does happen with CONFIG_DEBUG_PAGEALLOC, where a page allocation inside
-a lazy_mmu_mode section (such as zap_pte_range()) will change
-permissions on the linear map with apply_to_page_range(), which
-re-enters lazy_mmu_mode (see stack trace below).
-
-The warning checking that nesting was not happening was previously being
-triggered due to this. So let's relax by removing the warning and
-tolerate nesting in the arm64 implementation. The first (inner) call to
-arch_leave_lazy_mmu_mode() will flush and clear the flag such that the
-remainder of the work in the outer nest behaves as if outside of lazy
-mmu mode. This is safe and keeps tracking simple.
-
-Code review suggests powerpc deals with this issue in the same way.
-
-------------[ cut here ]------------
-WARNING: CPU: 6 PID: 1 at arch/arm64/include/asm/pgtable.h:89 __apply_to_page_range+0x85c/0x9f8
-Modules linked in: ip_tables x_tables ipv6
-CPU: 6 UID: 0 PID: 1 Comm: systemd Not tainted 6.15.0-rc5-00075-g676795fe9cf6 #1 PREEMPT
-Hardware name: QEMU KVM Virtual Machine, BIOS 2024.08-4 10/25/2024
-pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __apply_to_page_range+0x85c/0x9f8
-lr : __apply_to_page_range+0x2b4/0x9f8
-sp : ffff80008009b3c0
-x29: ffff80008009b460 x28: ffff0000c43a3000 x27: ffff0001ff62b108
-x26: ffff0000c43a4000 x25: 0000000000000001 x24: 0010000000000001
-x23: ffffbf24c9c209c0 x22: ffff80008009b4d0 x21: ffffbf24c74a3b20
-x20: ffff0000c43a3000 x19: ffff0001ff609d18 x18: 0000000000000001
-x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000003
-x14: 0000000000000028 x13: ffffbf24c97c1000 x12: ffff0000c43a3fff
-x11: ffffbf24cacc9a70 x10: ffff0000c43a3fff x9 : ffff0001fffff018
-x8 : 0000000000000012 x7 : ffff0000c43a4000 x6 : ffff0000c43a4000
-x5 : ffffbf24c9c209c0 x4 : ffff0000c43a3fff x3 : ffff0001ff609000
-x2 : 0000000000000d18 x1 : ffff0000c03e8000 x0 : 0000000080000000
-Call trace:
- __apply_to_page_range+0x85c/0x9f8 (P)
- apply_to_page_range+0x14/0x20
- set_memory_valid+0x5c/0xd8
- __kernel_map_pages+0x84/0xc0
- get_page_from_freelist+0x1110/0x1340
- __alloc_frozen_pages_noprof+0x114/0x1178
- alloc_pages_mpol+0xb8/0x1d0
- alloc_frozen_pages_noprof+0x48/0xc0
- alloc_pages_noprof+0x10/0x60
- get_free_pages_noprof+0x14/0x90
- __tlb_remove_folio_pages_size.isra.0+0xe4/0x140
- __tlb_remove_folio_pages+0x10/0x20
- unmap_page_range+0xa1c/0x14c0
- unmap_single_vma.isra.0+0x48/0x90
- unmap_vmas+0xe0/0x200
- vms_clear_ptes+0xf4/0x140
- vms_complete_munmap_vmas+0x7c/0x208
- do_vmi_align_munmap+0x180/0x1a8
- do_vmi_munmap+0xac/0x188
- __vm_munmap+0xe0/0x1e0
- __arm64_sys_munmap+0x20/0x38
- invoke_syscall+0x48/0x104
- el0_svc_common.constprop.0+0x40/0xe0
- do_el0_svc+0x1c/0x28
- el0_svc+0x4c/0x16c
- el0t_64_sync_handler+0x10c/0x140
- el0t_64_sync+0x198/0x19c
-irq event stamp: 281312
-hardirqs last  enabled at (281311): [<ffffbf24c780fd04>] bad_range+0x164/0x1c0
-hardirqs last disabled at (281312): [<ffffbf24c89c4550>] el1_dbg+0x24/0x98
-softirqs last  enabled at (281054): [<ffffbf24c752d99c>] handle_softirqs+0x4cc/0x518
-softirqs last disabled at (281019): [<ffffbf24c7450694>] __do_softirq+0x14/0x20
----[ end trace 0000000000000000 ]---
-
-Fixes: 5fdd05efa1cd ("arm64/mm: Batch barriers when updating kernel mappings")
-Reported-by: Catalin Marinas <catalin.marinas@arm.com>
-Closes: https://lore.kernel.org/linux-arm-kernel/aCH0TLRQslXHin5Q@arm.com/
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
+I was checking memory allocation behaviors (via memory profiling[1]),
+when I notice a high frequent memory allocation in xhci_urb_enqueue, about
+250/s when using a USB webcam. If those alloced buffer could be kept and
+reused, lots of memory allocations could be avoid over time.
 
-Hi Will,
+This patch is just a POC, about 0/s memory allocation in xhci with this
+patch, when I use my USB devices, webcam/keyboard/mouse. 
 
-I'm sending this as an additional fix to the one I provided this morning. They
-are both required for correct operation. This one goes on top of the first.
+A dynamic cached memory would be better: URB keep host controller's
+private data, if larger size buffer needed for private data, old buffer
+released and a larger buffer alloced.
 
-Sorry again for all the hassle here. At least I now have 2 new debug KConfigs in
-my test setup.
+I did not observe any nagative impact with xhci's 250/s allocations
+when using my system, hence no measurement of how useful this changes
+can make to user. Just want to collect feedbacks before putting more
+effort.
 
-Thanks,
-Ryan
 
- arch/arm64/include/asm/pgtable.h | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+[1] https://lore.kernel.org/all/20240221194052.927623-1-surenb@google.com/
+---
+xhci keeps allocing new memory when enque a urb for private data,
+and enque frequency could be high, about 250/s when using a usb
+webcam, about 30/s for high pace USB keyboard/mouse usage.
+Using a cache/buffer for those private data could avoid
+lots memory allocations.
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index e65083ec35cb..43457940a388 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -83,11 +83,21 @@ static inline void queue_pte_barriers(void)
- #define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
- static inline void arch_enter_lazy_mmu_mode(void)
- {
-+	/*
-+	 * lazy_mmu_mode is not supposed to permit nesting. But in practice this
-+	 * does happen with CONFIG_DEBUG_PAGEALLOC, where a page allocation
-+	 * inside a lazy_mmu_mode section (such as zap_pte_range()) will change
-+	 * permissions on the linear map with apply_to_page_range(), which
-+	 * re-enters lazy_mmu_mode. So we tolerate nesting in our
-+	 * implementation. The first call to arch_leave_lazy_mmu_mode() will
-+	 * flush and clear the flag such that the remainder of the work in the
-+	 * outer nest behaves as if outside of lazy mmu mode. This is safe and
-+	 * keeps tracking simple.
-+	 */
-+
- 	if (in_interrupt())
- 		return;
+Signed-off-by: David Wang <00107082@163.com>
+---
+ drivers/usb/host/xhci-ring.c |  3 ++-
+ drivers/usb/host/xhci.c      | 14 +++++++++++---
+ include/linux/usb.h          |  1 +
+ 3 files changed, 14 insertions(+), 4 deletions(-)
 
--	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
--
- 	set_thread_flag(TIF_LAZY_MMU);
- }
-
---
-2.43.0
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 423bf3649570..bc350b307758 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -831,7 +831,8 @@ static void xhci_giveback_urb_in_irq(struct xhci_hcd *xhci,
+ 				usb_amd_quirk_pll_enable();
+ 		}
+ 	}
+-	xhci_urb_free_priv(urb_priv);
++	if (urb_priv != (void *)urb->hcpriv_buffer)
++		xhci_urb_free_priv(urb_priv);
+ 	usb_hcd_unlink_urb_from_ep(hcd, urb);
+ 	trace_xhci_urb_giveback(urb);
+ 	usb_hcd_giveback_urb(hcd, urb, status);
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 90eb491267b5..85aa5fe526c8 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1539,6 +1539,7 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
+ 	unsigned int *ep_state;
+ 	struct urb_priv	*urb_priv;
+ 	int num_tds;
++	size_t private_size;
+ 
+ 	ep_index = xhci_get_endpoint_index(&urb->ep->desc);
+ 
+@@ -1552,7 +1553,13 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
+ 	else
+ 		num_tds = 1;
+ 
+-	urb_priv = kzalloc(struct_size(urb_priv, td, num_tds), mem_flags);
++	private_size = struct_size(urb_priv, td, num_tds);
++	if (private_size <= sizeof(urb->hcpriv_buffer)) {
++		memset(urb->hcpriv_buffer, 0, sizeof(urb->hcpriv_buffer));
++		urb_priv = (struct urb_priv *)urb->hcpriv_buffer;
++	} else {
++		urb_priv = kzalloc(private_size, mem_flags);
++	}
+ 	if (!urb_priv)
+ 		return -ENOMEM;
+ 
+@@ -1626,7 +1633,8 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
+ 
+ 	if (ret) {
+ free_priv:
+-		xhci_urb_free_priv(urb_priv);
++		if (urb_priv != (void *)urb->hcpriv_buffer)
++			xhci_urb_free_priv(urb_priv);
+ 		urb->hcpriv = NULL;
+ 	}
+ 	spin_unlock_irqrestore(&xhci->lock, flags);
+@@ -1789,7 +1797,7 @@ static int xhci_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
+ 	return ret;
+ 
+ err_giveback:
+-	if (urb_priv)
++	if (urb_priv &&  urb_priv != (void *)urb->hcpriv_buffer)
+ 		xhci_urb_free_priv(urb_priv);
+ 	usb_hcd_unlink_urb_from_ep(hcd, urb);
+ 	spin_unlock_irqrestore(&xhci->lock, flags);
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index b46738701f8d..4f82bb69081c 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -1602,6 +1602,7 @@ struct urb {
+ 	struct kref kref;		/* reference count of the URB */
+ 	int unlinked;			/* unlink error code */
+ 	void *hcpriv;			/* private data for host controller */
++	u8 hcpriv_buffer[4096];         /* small buffer if private data can fit */
+ 	atomic_t use_count;		/* concurrent submissions counter */
+ 	atomic_t reject;		/* submissions will fail */
+ 
+-- 
+2.39.2
 
