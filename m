@@ -1,203 +1,151 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2083.outbound.protection.outlook.com [40.107.244.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA77D1E32B9
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054501; cv=fail; b=VP6P/9lM+kufrv8X4+vRAQUvrAet6+1oqu5lUcWvRMtzTL5tgNBaotPj+ndW7LgG/PCxsF7tQ/2q541A+dSAo75kXvQ+hsWc8okUns2I8O+mZFYuCeRkS4ju1V6orp+FkkgHIE/VQPxc7o/VnL+c46rfuaF5U/SsDGwPOwgCR10=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054501; c=relaxed/simple;
-	bh=NiwfLnMVp3qcrwNmsz1rMMvF4O7WSKm7bxZ791zmFqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AngzDwfa6TXZfmMh62Ia3X0lNAybKBPpkFUWTNLf4AdfudiC7XIuY9fhVrB9T/hZ8Wp16OHw99khjbmqiYiefo3wfaIVSuRx96ozoRnWXz+AA34ewglNaojqhQ6EXzGpULUJQAbVYUfKG6lu8opu6lFqmSGRVJt6RfywBGh5iTs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VqHUXE33; arc=fail smtp.client-ip=40.107.244.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VqHUXE33"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CqMCfRtbZ7DmAcgegB3nznqBJb049dIA0+hbNjZarRjWmQxMc1Qlsh62oJ8pZ8bFUnyUi3M4YONp3XRE/9/SkzQ38hItP5tOXhcZCutkonSC4n6p42J8/o/lPU6qinGvX5h1iUQM+Tvlw/UKW2ra6Cfm00FnYP43syY3hHahDnL8AoTVh+l6R5XZ+hTxEHN+o3s2S87vM9DdcSdmCn0aMAEsM8Od3ZnRXwOZk+J5cTcpuSzCn6gKZ/FJjrlZqf1MxJWWm2XNWOUm2kF7gxoMJLpvI8PF9LiUvg65mP0dgZKEDhPdMf+BFs4oB4qqFfau+cLnu4CAa2acNBSxnLz+Kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NiwfLnMVp3qcrwNmsz1rMMvF4O7WSKm7bxZ791zmFqg=;
- b=g6gmjc94AK+ZTwD8QGhJ2ToLpvVRvbzRMaUlrbKOxyG98P9ejemUQ6XRvOjaTe+tPv+ClClTR49KBi5mODPFS+roWSrBkDx6Sl+6Vy1/Ss/sdFznwdV/fDztMrZEN4CB+NqfJx/u//jiAZqNUnearO+ZpAkcBnk0bozL35ZcVtkvYDuWXSJD9UQs0g14mUpCXBE6BWGFQSYul7wnPtkPKAfbGP/oandNzgKz1704ede+43SS5GnXiUnLM/cY80DUY+fnugPzycuL6dtmN7uMZ0uUsYPxHZ/1a+s6qWkCNNPesJZuEhw/hRLq6WpEjdYEHi0dZ6M8rI5iEkXEfmM9kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NiwfLnMVp3qcrwNmsz1rMMvF4O7WSKm7bxZ791zmFqg=;
- b=VqHUXE33kVHHlmle8vcvUjacd5owynzoJpeRnlQHYqy3WixNc2tRKD5uyHmHZ/svIVuICe4VcE17jayM7NzJ8gghuE5x+L5JzU/Z0aCmmlV5pV70QtAqKr3VrpgnXotBWT8Hzrn1akAOdKmnctc7hTzzIEG70oL/6xXoZKs3sAkL2cLtyeXeW+nBM49tKelv9S6zc6znfBp75os3noPccivA8hp0x0OEE4Y3urkWpzAAIYZM/Xdzddxm9rjRA1dVv4nWZMOYpYG/SL+OvahfOweH5IdNOkDwhGiXFbD08BQPy6AegtTNfSFrg/9EQHwr3K57UiLc5yFo89nxR+Lxvw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- IA0PR12MB7601.namprd12.prod.outlook.com (2603:10b6:208:43b::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.27; Mon, 12 May
- 2025 12:54:55 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 12:54:55 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>, Uladzislau Rezki <urezki@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@nvidia.com>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add mm GUP section
-Date: Mon, 12 May 2025 08:54:53 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <9AF9CF7D-D4A3-4D97-9B7D-F259E33E982C@nvidia.com>
-In-Reply-To: <eb2b0bce-6012-4019-8ff7-c35c24ba7aa1@suse.cz>
-References: <20250506173601.97562-1-lorenzo.stoakes@oracle.com>
- <20250506162113.f8fa0c00e76722a1789ec56a@linux-foundation.org>
- <c4258dfd-14ee-411a-9fa7-c4a1fa4fad1c@redhat.com> <aBshiBX_N6hhExmS@pc636>
- <13a32f52-dc5c-45ef-b45a-585586868509@lucifer.local>
- <e3e2663b-2749-44c7-8452-ffcbf2167572@redhat.com>
- <28428030-1178-469a-a4ab-f1e7179d9106@lucifer.local>
- <eb2b0bce-6012-4019-8ff7-c35c24ba7aa1@suse.cz>
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR19CA0032.namprd19.prod.outlook.com
- (2603:10b6:208:178::45) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6083C293B6D;
+	Mon, 12 May 2025 12:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747054517; cv=none; b=sd5XAD4RWbtNcv9LuVgjgq678Cm5/59asG2/aFLS/zf494XKwqeE7/EINd6Xug6GOIyD3oOKWo6jpsc/VshGcZF9KTBLP6Ula6/rxyr7FrwAe4shVZ67OrxrI1HvOjhmvDNsFW6evC9yUXw6lW5YoxIO7bPDImWzf4tmcb1AtN4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747054517; c=relaxed/simple;
+	bh=JZK5oFWObg94lBWmpshd/yy6m2fsIFigEGBxlOLncrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V643j9v2EGoyq4s2LJjd4NtersVSBKA0oxzIFUfcLai9X9X2N9bAYWiDtTWkJLCQyQT1YyfmaqKBkXHJvVqtm/DomIdvuMwz4oFGOmsbFLCNWu2Lub7eenrPoIfLLuXBt68KqAw4UyZ4/YhNBkhG4sgj+KoX0tSbAtZdabolzq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-41-6821efb0d2f7
+Date: Mon, 12 May 2025 21:55:06 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net,
+	davem@davemloft.net, john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
+	vishal.moola@gmail.com
+Subject: Re: [RFC 13/19] page_pool: expand scope of is_pp_{netmem,page}() to
+ global
+Message-ID: <20250512125506.GD45370@system.software.com>
+References: <20250509115126.63190-1-byungchul@sk.com>
+ <20250509115126.63190-14-byungchul@sk.com>
+ <87y0v22dzn.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|IA0PR12MB7601:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3bb1e6d-8676-43f9-4d1c-08dd915431d2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ocyom6BRw2RLgzVILdI67YbTNqoTlmwag0aT9gWfgR7B/5+uYt7LTQdqBpbm?=
- =?us-ascii?Q?KAtiTFG1OZlWU5khOJUClXBCzraUptjF0+Zk+7HT4f3+CNwLswaEHu/3thx7?=
- =?us-ascii?Q?MruHNumgbxDY9RqhCPoSEoJTVeac9KbajclzL4eer/M1bPDotUh3qWuh+yRb?=
- =?us-ascii?Q?ZZ02ND6912mI8cfCxD/M0GPoaRAnZ2q362joU3aQvXpn1Tq69OOGDD53DLmH?=
- =?us-ascii?Q?1a7IQpG8qGwLuaejMDMfayZ/6d/Yx9VhzmyNFnP9yty9peAnjos9jlHgtkdn?=
- =?us-ascii?Q?Qe0SkRpYDsxcxvSBk+J5r98ZCsv951+bdpmq7w5n4uxO5EUutZIk/1KspRD1?=
- =?us-ascii?Q?xxsWsl5Le27hLgMUdUVJx70bBDs+prJaRf00XM8fpPpxgbC9yEf9fTL2ZEeC?=
- =?us-ascii?Q?IKvhyLoir7vrhdNI1tIsFvulIMoXoxN6GN17WKkxJYnQp3iG1Rw7kj256Zw/?=
- =?us-ascii?Q?qZ6uYV8uGIC0UI2cz/YbghUxwxfj+jr5UmStUZhuJB9Xurv7n1o08aohb5IZ?=
- =?us-ascii?Q?51LWjaE17KMEnn7lul23IESkwdwo2r/BLdY1Vr3SP4jVWv91wFhfCgHztSap?=
- =?us-ascii?Q?ZPmm5QxN4jhV3WZWFZSwQ2uVrsGgpNkWtQeYfAaZFymhcHc5yuAXT6cCo6DA?=
- =?us-ascii?Q?X3zTnOiEtoPOMlAnoFG2TdTAhl6JrPTkh8s5+kvUem9dA/9F9XoZnJuUORD0?=
- =?us-ascii?Q?X7HDE+g8irLiQ0qqDpsCv1zsc5N2vtqgfAVoFcvVGjjkTfyUW7s/y6abj657?=
- =?us-ascii?Q?ZfdMjlET6/ONK4J1F+vNl//s1Q0+GqjXoSIQtFSt57P0uZ/HKsUkLnxY3H8a?=
- =?us-ascii?Q?ow7qnzZBjFwhwjgFJqgqj5G1SjCCVpzbgNRsanf6XJTCrrMKA7Pntw8hGe2o?=
- =?us-ascii?Q?eM+2HNqu2LY1CBUpOhcJCTypXwE3bJH1loMF719K37iSiENTyBA1q7Bm0v0I?=
- =?us-ascii?Q?g6vd+xRRg01GJW5TktoFTLM3O4ertSUUwAUsV9IG7zikY2jQ67O2+deCWeBl?=
- =?us-ascii?Q?ubBTUFQQFxPeyltdIJw0Iz4ncTXo2exPLBgTshXizkLjIQPEhb3w/NVF2NSr?=
- =?us-ascii?Q?zmptLPpcBMh7UC0BzxXvPZP9p7+Z+h19+uKqOb6bFOfpdpFfNgTa4UAMVAYh?=
- =?us-ascii?Q?PZMt2yB08ZCXij1UtFVf0lKdrMIlv29psIqzvjyAWH8qQvmjSLSBqEfWmKfd?=
- =?us-ascii?Q?w66yMWcU7nDEJ9rfiXe1J2Pg/vJAjZsNCZO6rmcmHWJNCwk7onrEvNn3xLIh?=
- =?us-ascii?Q?Qa9L/lWQk+baVgTc+CWh5aKx2z7P/OBRA7JTJGKUoRhbRfaACcbz8H6TVmNO?=
- =?us-ascii?Q?tjBDfXZAgx6nDxVwOYC5HyAOz492zToEMzPz/SukTm56b1nOTQ53ntduIo2/?=
- =?us-ascii?Q?4y46uv+9xpPxDfXF7X3MlG00++ff1hVxag8jxL4/iFqJKwcotHEWiH9oKAr6?=
- =?us-ascii?Q?z5eoxdVJ/t8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QscAXGy5poRaKlCV12PHkcEvqDOAmhCy2mRRykUNJpBIPPLsNKjM4d++SKks?=
- =?us-ascii?Q?ZS8sCieXZsi/ND9mwcx6ovLEVbGCzXv8VoiKV/jnyMzkSbYA0+X9V97thSnz?=
- =?us-ascii?Q?iXwwpga1ccxeiqmyYKNHF5HXtBcoo9piLAnen9gjn1oK7mQggMs3SuXQ/UDb?=
- =?us-ascii?Q?MmEAUYrK479ko8gQ+jy7PvKi7MeTby/d7JD1C9TzN60HqiytPrS1qtoLGzOH?=
- =?us-ascii?Q?KnwK8VxpQ42lb4Gt6uOAHIKtCOfMKNIglkaO56aS8FcbPUKHKAiEd662xr2k?=
- =?us-ascii?Q?2hgonoAUMeFjnuA+sOCrpk4xe5hK8cqXqJnyU+A7j1ameU/eMl3OYicTZONZ?=
- =?us-ascii?Q?ei10h5AGYGg739fcDXoZZ/sT3K4SeJ1OPA8mt8etcNjH+tXrpacWDvSro2nz?=
- =?us-ascii?Q?Y7IFlbxPx0rKBTJpeRGPNcSLJ9aRepqKc99naqt7HTUUsBh22zJ2HaDlERcV?=
- =?us-ascii?Q?32EutUCcnZ62JWxbTnMrCt4Rt4fmQuKx0Z+V9OQ2PrKhkLd5DsYPRhOfwCnW?=
- =?us-ascii?Q?iTpRmX296gsfEV1+JTA21R3Pb2OqIRPjjeuk2njENiyqDz3HESEK63aQS9Ny?=
- =?us-ascii?Q?46mEbzpbEjlCYwhU7R48f5mpDFIFxbuyAj0bb51PsfYzlqU/QlruhaZFntfv?=
- =?us-ascii?Q?coJrMwcD3a0ldNcn+5UanpruNgTckpd7/0rq1dZ4H6n7Q89B7T7qhc56xCMS?=
- =?us-ascii?Q?Ab41csOaarVJu5GjnW1PR1ZLKZtn9UgwZZZlcYf3tqbwXJtyWoMYqTOBBFvS?=
- =?us-ascii?Q?9eq2Arp85DnaKZJ6i1ocW4OKrNX3dIOWgUlkvq6EsTWdBcq9Rd9/l0rInjpa?=
- =?us-ascii?Q?yEeolmwIuKFA/MULlhuy6fQqzHlrc30RrG6F6rytgcCdlECsE9WSbiaD3guQ?=
- =?us-ascii?Q?oK7W7p/lV6nMgJg807mqoAsYYsObiCoO5gjOodnP/1laWgVTjwrTFs2Mj8FA?=
- =?us-ascii?Q?Nz0fbTJHCqY7/iDYxXAJEcjlvGDpt8i7usdNaV6AXHI+7EW9sCQrdaPg9O0b?=
- =?us-ascii?Q?7FI+7JyKnqdydRNtX3Nq7PTz6x/M/lPb7++EAb9Yc5FZf+YfiQiBO1hjew4s?=
- =?us-ascii?Q?y/QaYQzZgESXiSo/zRdC5GHqI9SC3TUxNMeOvIRptqu43wR332J7up/H+UZw?=
- =?us-ascii?Q?7GgQ5owkmLLl0FXSjaOIy8Fl2J+KSH6vWsIEWyILBeFgEyf5lPjL8kbdNZ7O?=
- =?us-ascii?Q?Bc24prSx0C3b+YNoAsRNBpSinl2WJErNa1+Iu8kBXJP7l5WjeO48fZ61Ahsg?=
- =?us-ascii?Q?sZbw/gxtUretq9IEDktsmj8kVPC9LZb8HPxoTJtmoZl90tOkJbOcI2+tQgxv?=
- =?us-ascii?Q?NsirCCDJrTta3lzW6kdMZ1cCdxS8Q6qLXHvJm9ktHNi8nO4QGWtKOTeX2Axu?=
- =?us-ascii?Q?CbRNQr1VgOV1Q77wME7YFBCE0mtxDg2OJbQEieukOngzlWdsKrjOLz2QP5t0?=
- =?us-ascii?Q?n3akq75jJX160MjPwnJFfmDzRvqe2KCbAjNixj93OtJf2Z2BWYBWe8OlqvIM?=
- =?us-ascii?Q?R6b+xUIJ2Km1WjPO8LLkI1Z/h2tLDMkR33zYcjaWGVaxAC6C27XkOY8Oq9UB?=
- =?us-ascii?Q?ZEuCZ6fxfujphytIwzxktq+7oRUqKasuY9zVInyu?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3bb1e6d-8676-43f9-4d1c-08dd915431d2
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 12:54:55.7030
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rjCS5SaAMM4ISpA/oJLxftFFvGRU6YjKTnwZivJaL4ssi6sH/kHK9PfckNE3mMXC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7601
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87y0v22dzn.fsf@toke.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsXC9ZZnke6G94oZBkdvcVjMWb+GzWL1jwqL
+	5Q92sFp8+Xmb3WLxwm/MFnPOt7BYPD32iN3i/rJnLBZ72rczW/S2/Ga2aNqxgsniwrY+VovL
+	u+awWdxb85/V4tgCMYtvp98wWlw6/IjFYv2+G6wWv3/MYXMQ9tiy8iaTx85Zd9k9Fmwq9di8
+	Qsuj68YlZo9NqzrZPDZ9msTucefaHjaPEzN+s3js3PGZyePj01ssHu/3XWXz+LxJLoA3issm
+	JTUnsyy1SN8ugStj0ZPKgoPiFVfu7GduYPwg1MXIySEhYCIx9/QLVhh72uTJTCA2i4CqRP/9
+	k4wgNpuAusSNGz+Zuxg5OEQEHCVO/0jvYuTiYBbYwyxx+ex0sBphgVCJ078amEFsXgELid1z
+	J4DZQgK1Em+2XmOHiAtKnJz5hAXEZhbQkdi59Q4byExmAWmJ5f84IMLyEs1bZ4O1cgKdcO/g
+	dzYQW1RAWeLAtuNMIHslBE6xS1y908ACcbOkxMEVN1gmMArOQrJiFpIVsxBWzEKyYgEjyypG
+	ocy8stzEzBwTvYzKvMwKveT83E2MwEheVvsnegfjpwvBhxgFOBiVeHhPvFTMEGJNLCuuzD3E
+	KMHBrCTC27gdKMSbklhZlVqUH19UmpNafIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNT
+	qoGRt7fpyY+/nQ8djtirs7Ddjbl3taUzaRmb563tz83jS2V5p8oe/SfFUZXv9blm5dS6Wa+O
+	/L+4RU7mA3/Pq9mbufoPrpjJM2UxC6OL/34nFdlTRx53eMcJye5aOu+2n8gWdZ6FTyS6Hq3e
+	cX33zZBlgXzegfJTvkxakjpn0jKzEJWT1kvCGL94KLEUZyQaajEXFScCADsTC0DgAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsXC5WfdrLv+vWKGweR5phZz1q9hs1j9o8Ji
+	+YMdrBZfft5mt1i88BuzxZzzLSwWT489Yre4v+wZi8We9u3MFr0tv5ktmnasYLI4PPckq8WF
+	bX2sFpd3zWGzuLfmP6vFsQViFt9Ov2G0uHT4EYvF+n03WC1+/5jD5iDisWXlTSaPnbPusnss
+	2FTqsXmFlkfXjUvMHptWdbJ5bPo0id3jzrU9bB4nZvxm8di54zOTx8ent1g83u+7yuax+MUH
+	Jo/Pm+QC+KK4bFJSczLLUov07RK4MhY9qSw4KF5x5c5+5gbGD0JdjJwcEgImEtMmT2YCsVkE
+	VCX6759kBLHZBNQlbtz4ydzFyMEhIuAocfpHehcjFwezwB5mictnp4PVCAuESpz+1cAMYvMK
+	WEjsnjsBzBYSqJV4s/UaO0RcUOLkzCcsIDazgI7Ezq132EBmMgtISyz/xwERlpdo3jobrJUT
+	6IR7B7+zgdiiAsoSB7YdZ5rAyDcLyaRZSCbNQpg0C8mkBYwsqxhFMvPKchMzc0z1irMzKvMy
+	K/SS83M3MQLjclntn4k7GL9cdj/EKMDBqMTDe+KlYoYQa2JZcWXuIUYJDmYlEd7G7UAh3pTE
+	yqrUovz4otKc1OJDjNIcLErivF7hqQlCAumJJanZqakFqUUwWSYOTqkGRt6dm05vcOxluWEk
+	tDlhfr/Ni938+48silm9juGT6QeN24cVLtzSU9DjvaxxxU1p6Q8/9scaV5KMttpP/30nZV6R
+	VmV9VUkin3noispMqWf+hQwWd0znC29hsDCU+Hn1RcvZ3het0qsfpcXWMl4QWhRyRPD8FHUv
+	4y+rG0UuzTv+q2rNrG/XfZRYijMSDbWYi4oTAf8CLeTHAgAA
+X-CFilter-Loop: Reflected
 
-On 12 May 2025, at 3:38, Vlastimil Babka wrote:
+On Mon, May 12, 2025 at 02:46:36PM +0200, Toke Høiland-Jørgensen wrote:
+> Byungchul Park <byungchul@sk.com> writes:
+> 
+> > Other than skbuff.c might need to check if a page or netmem is for page
+> > pool, for example, page_alloc.c needs to check the page state, whether
+> > it comes from page pool or not for their own purpose.
+> >
+> > Expand the scope of is_pp_netmem() and introduce is_pp_page() newly, so
+> > that those who want to check the source can achieve the checking without
+> > accessing page pool member, page->pp_magic, directly.
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > ---
+> >  include/net/page_pool/types.h |  2 ++
+> >  net/core/page_pool.c          | 10 ++++++++++
+> >  net/core/skbuff.c             |  5 -----
+> >  3 files changed, 12 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.h
+> > index 36eb57d73abc6..d3e1a52f01e09 100644
+> > --- a/include/net/page_pool/types.h
+> > +++ b/include/net/page_pool/types.h
+> > @@ -299,4 +299,6 @@ static inline bool is_page_pool_compiled_in(void)
+> >  /* Caller must provide appropriate safe context, e.g. NAPI. */
+> >  void page_pool_update_nid(struct page_pool *pool, int new_nid);
+> >  
+> > +bool is_pp_netmem(netmem_ref netmem);
+> > +bool is_pp_page(struct page *page);
+> >  #endif /* _NET_PAGE_POOL_H */
+> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> > index b61c1038f4c68..9c553e5a1b555 100644
+> > --- a/net/core/page_pool.c
+> > +++ b/net/core/page_pool.c
+> > @@ -1225,3 +1225,13 @@ void net_mp_niov_clear_page_pool(struct netmem_desc *niov)
+> >  
+> >  	page_pool_clear_pp_info(netmem);
+> >  }
+> > +
+> > +bool is_pp_netmem(netmem_ref netmem)
+> > +{
+> > +	return (netmem_get_pp_magic(netmem) & ~0x3UL) == PP_SIGNATURE;
+> > +}
+> > +
+> > +bool is_pp_page(struct page *page)
+> > +{
+> > +	return is_pp_netmem(page_to_netmem(page));
+> > +}
+> > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> > index 6cbf77bc61fce..11098c204fe3e 100644
+> > --- a/net/core/skbuff.c
+> > +++ b/net/core/skbuff.c
+> > @@ -893,11 +893,6 @@ static void skb_clone_fraglist(struct sk_buff *skb)
+> >  		skb_get(list);
+> >  }
+> >  
+> > -static bool is_pp_netmem(netmem_ref netmem)
+> > -{
+> > -	return (netmem_get_pp_magic(netmem) & ~0x3UL) == PP_SIGNATURE;
+> > -}
+> > -
+> 
+> This has already been moved to mm.h (and the check changed) by commit:
+> 
+> cd3c93167da0 ("page_pool: Move pp_magic check into helper functions")
+> 
+> You should definitely rebase this series on top of that (and the
+> subsequent ee62ce7a1d90 ("page_pool: Track DMA-mapped pages and unmap
+> them when destroying the pool")), as these change the semantics of how
+> page_pool interacts with struct page.
+> 
+> Both of these are in net-next, which Mina already asked you to rebase
+> on, so I guess you'll pick it up there, put flagging it here just for
+> completeness :)
 
-> On 5/8/25 14:23, Lorenzo Stoakes wrote:
->>>
->>> M for "PAGE ALLOCATOR", hmmm ..., I was hoping that Vlastimil might have
->>> capacity for that? :)
->>
->> Vlastimil? ;)
->>
->> I'd certainly support this.
->
-> OK, can do, thanks.
->
->>>
->>>
->>>
->>> Not 100% sure what to do with
->>>
->>> * include/linux/page_isolation.h
->>> * mm/page_isolation.c
->>>
->>> (I hate the word "page isolation")
->>>
->>> They are mostly about page migration (either for alloc_contig... or memory
->>> hotunplug). Likely they should either go to the MIGRATION section or to the
->>> PAGE ALLOCATOR? Maybe MIGRATION makes more sense. Thoughts?
->>
->> I mean it explicitly relates to migrate type and migration so seems to me
->> it ought to be in migration.
->>
->> Though migrate type + the machinary around it is a product of the physical
->> page allocator (I even cover it in the 'physical memory' section of the
->> book).
->>
->> I wonder if our soon-to-be page allocator maintainer Vlastimil has
->> thoughts? ;)
->>
->> I'd vote for migration though to be honest.
->
-> I checked the code briefly and although migratetypes are related to
-> migration, it seems rather page allocator code to me.
->
-> In fact if I didn't miss these files, I would have included them when
-> proposing the PAGE ALLOCATOR section.
-> Zi Yan has a series on that topic now and is one of the R: in PAGE
-> ALLOCATOR. What do you think?
+I will not miss it.  Thanks.
 
-I agree with Vlastimil that these two files belong to PAGE ALLOCATOR
-section. Page isolation (actually should be pageblock isolation) is
-doing work on pageblock migratetype, which IMHO is an important part
-of anti-fragmentation mechanism for page allocation.
-
---
-Best Regards,
-Yan, Zi
+	Byungchul
+> 
+> -Toke
+> 
