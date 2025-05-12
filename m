@@ -1,142 +1,134 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95F82528FC;
-	Mon, 12 May 2025 16:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4512522B9
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068778; cv=none; b=bOmRM3tDIFMFC3nRPuVnak6SF71D+11t6cWu1cqAUGPpzYHqbuiltuHTMq9N6oU7b7LxZ1CDTN0MQJC2/g4BAcW5fQkJWf2AHC2JMIPDfDNw+LNV0I3tow+6JXeF4ur0nfg80+ProFopKi1+A6js6cxmJuOtPRYVEHkXwe8ExBU=
+	t=1747068839; cv=none; b=LuWX/N29p7x/WxsMJgQ3RoqoG0U2IiLUmR9Un4wu+hJzGt/JpbaRJ+kmuASwI12ZHJ8k5FBqdRkkBbQp0Tx2LXs6xoJYyeelmV+0qnKx+XJCytguVqVYHs9cELB+YD5HT0og18NMSE8cuiOwE3rn8ohekRMVqadH7r/DEprnIWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068778; c=relaxed/simple;
-	bh=VA2k1DyRjqhjpTuXEVQSbyPFByM8zKA5P42D98FPHm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LyKKTo8nGX5//a07CQS9IIO2B3fvZms5WD5oLqwfKUDs08aiz4oYqB5V+8Bildw4D81F7Oq1ZD+gH8kjA43zg5I3YhoEeKCV7MTcEy1EvB0/jwUKFM7DG6Tl/6ew6OqX8ZV5mv2FwyF+alLd9wq0bf5OHvPDcqCKfatlQFsjjLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YcSvvMLH; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747068839; c=relaxed/simple;
+	bh=+7g8C9pigGg8HsLVGgE/yY/8hL62ZtMTebzLDdJrqQQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jtVebI9LqWsxazhOrGZNN+mZyLCAMm0w0CJcd1xe3xwLu1thS7vg26cBsfmEigTDkKVWG8cwWhDsDEbA/CrhKCabZT3SI8PAO2QJxLoZBr9aEUixOh2kyDVvmeoL23yjRxtUacAdbxFzh4Jt0CP64GrZadknnVFQskj4Gq66/2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PZXUEKjQ; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcSvvMLH"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so34034595e9.0;
-        Mon, 12 May 2025 09:52:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PZXUEKjQ"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22e39fbad5fso7685ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747068775; x=1747673575; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bZNWFRrUSg91wrgDi7MuQDR/3MURApHPgoEnszpvjls=;
-        b=YcSvvMLHlc7Uaut/WqyXmuTaJmnye7LT1BK6qjl/KxB8HKu292oE52a9cTcaHGIA7R
-         aYhOLOorKuB+dRBPWW8OjYwDE3ITpNZfBjYB2XM6Sr71AXv31uqJAeKH9xJQt1W9n4Zu
-         xO6MnSrGEdNPr1/ZNJ80xNvVOyYfaSg7J+8GiEcmxWbJM907FH3eReuk8ICeOeQVBamQ
-         Q1M67f7h/EtMzp4Rx95cjWIE9eoyYRxtBvBb5EjD46eJPvTFv10xbPiFEsWP9beK5NOO
-         Cp3rW2jhES083qkDWWWvsUbN+Ph4yh3grunRiuiS8Gb4Xn4E2scVYENd33cgGoJzt/+8
-         SAng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747068775; x=1747673575;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747068837; x=1747673637; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bZNWFRrUSg91wrgDi7MuQDR/3MURApHPgoEnszpvjls=;
-        b=T+0A8q+j4kOeebQnqNLUq31cQzNVzvehup5JvPDFgbtDoryceOTNtGpvsamde4VhIr
-         YEiNOJ8YygQnXvKuk+463q/KHIacaqv+pX69nnIGCErwHlHQBIa5eJHRRuzrvxn2X7ma
-         Gz+h4uod1NUw9gN3iuauS0Krgvrts3NI7oZ33xMLrf4MnbTtv9iQLCV7HA+frdVzP+Tc
-         g74cwp84hEog01v0lYEXTCXzqfG0STgRopR9SsrVM6o0/lzN9f8Dv59W23FAob+EnBgU
-         TDInG9jxkDapYUcS+jMSyIhDAqQXwn9/1UaAWFAdRZzqjmjiMjmmGjXNHNP5Ru+0zTzz
-         hhRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyxTWQG+StKBRqvsm1NW056L1O8BIAlulQDhKoBW6rvPENjFDnKuRoMDI03MM9JfgEa8Uv8SPIaeQV2Rh3@vger.kernel.org, AJvYcCW3fSGhUX3BReo1RalQwu2frXdKUnmPf5KykAySJznBQ76aT/oOsPPJwV2YBHG9ss+iswuChFMRVqYk@vger.kernel.org, AJvYcCWjnngQuV+wGeuU76TjN+TIpiNLiFZIMVeKjfv3EGD4FJe0gCp0yqtGf2rHPVtiznee7Df51oNu2+kX4Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqSscuI6eF8R8tD8+fOnBchF2wSmjKn2T6B08JxOLy3Qekdoxn
-	K9a1ZjFGnGeO+NaFR+x32wbkWw1d3vZtgWabnVcFxM6E/hdOC7dG
-X-Gm-Gg: ASbGncstHA7AtebGfNJoGHGip+qlV8QXKrEEy8FTqchN/TfRUUdd77Uqpd++3Niulf8
-	/PYYrqVIQogrx45odPmRY24TXvKq6u3DP6uEpcmxAc5bsFWTBxmUTqxgdtOVHLY3vFhNf17k77U
-	9cAq8MDFz5Jeq/Gtl6Wv4BJpS/fMJTjdEHsuixYGCG0es7nlsiXG5DksAtTVjpB69FsPhmenkEZ
-	GtVf0SXDbrUPRrg+Zf1ZM9J7uh0i5YRIhhBMbLM4nwI22X12rEpiGkDY/ksFgiA4ETJRlPnCXgY
-	tOARG6kSnBncxNMelHcQJdMmZ6PtzQx+j4HLiq1KnKCHNIoCtA==
-X-Google-Smtp-Source: AGHT+IFgWc2wCu7S/9RbJZkXPhP5XtjOV9ZJ33dg5BwNo4gnN8tIOEohMbw4lQklsVP/+z33huQ1EA==
-X-Received: by 2002:a05:600c:528a:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-442d6d6b6ecmr121896135e9.18.1747068774592;
-        Mon, 12 May 2025 09:52:54 -0700 (PDT)
-Received: from legfed1 ([2a00:79c0:632:2600:22ea:3d6a:5919:85f8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f194sm176749815e9.10.2025.05.12.09.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:52:54 -0700 (PDT)
-Date: Mon, 12 May 2025 18:52:52 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: dimitri.fedrau@liebherr.com,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] pwm: mc33xs2410: add support for temperature sensors
-Message-ID: <20250512165252.GA11091@legfed1>
-References: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
- <1bd48694-9760-4e6b-9138-4651d42ff032@roeck-us.net>
- <20250512133114.GA6440@legfed1>
- <a7a71408-c01d-4e0c-bd44-73ffbd79f716@roeck-us.net>
+        bh=3wFf0hJ9R+brtsQBQCeNTypwNssDSYUtK88BdgqA/I4=;
+        b=PZXUEKjQ5IxWlfIKCT+b7bBMJ/J6p0qeN+8hk7efAEE7bluh+t3b0SJC+m8xzaPWCF
+         IyvXr9o08fBNSHkUNF2hLUQb2GN5LlN300ZL1LzHPnU3vVkGKzJX0RyWxukmiKRHLdxe
+         d1CGlvWK5+R5BQ7BBh/O0dXjRq064LumbUSzfnbbpSuLS8bDmm8IAK7Qdk4Lq+uJoyDM
+         4C/DmkFeToAXLmdy4MvROBc/tYbYYFpTetpJ9gy9rTQiFpJxRDlTFCio7LkIxpLDMjYK
+         fSvNXkeygJREIxJhUN2gKVdRep0OLFOBatlS1XN0ab9VH0kuuAu/N0TjCCoqW+c+nPyh
+         BoaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747068837; x=1747673637;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3wFf0hJ9R+brtsQBQCeNTypwNssDSYUtK88BdgqA/I4=;
+        b=SdVtJ+f3Vy0r2uMo+xhyrtWBGQiP47NjwaXW9vOn6gTN8OL3dpu3Ed0sRdmSkO+DlB
+         3ddrgrE7k4s2jpXIERT4j8xT4u5hL80c5Hvi/J/fjsCS9j9gvxY/ILBbfgwaBz16tenQ
+         KhvXC2drGqpkwK3BGtqtI0+DJwGyq6yZVTXWqstj066fF55hJJ2h8asivL9isjAxRK5Y
+         Fth5JlB6Bg06673Ac01LRUxgOQrq6KT0IwCl6AAnF4LL1/s/p/BZmsbkSzKd7TuKtn2H
+         r3rvNUEJziB28OvW5sQsumYsUMCcU748MHLu7PnCIjSB4kALPQBmQjf+vP4GV2+vOz4p
+         DPdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlG0TQJ/DMBvP7suW3euNV0/zn8+1SRmyLZvDQPuN/ejGzFQ8aqeqdTJE02HX/Y6k3jxU1MUDRwCYP3Qs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtZyLkm66DsaUs72v6TLsp5UXmaoq1tj0UfuhBorwWu0tf7CAG
+	ArglAPbdJ42BTbYqLx7BjyHFzz9wTfQ8IX9mQ3OgxwHCgEnzgDs5471IuPaYzMkh3WBUkd2sHN5
+	vs/HpaXeJURm8QZY3qR95DcEJJ6aET5ZOO6KP
+X-Gm-Gg: ASbGncvEs2Wv7HkcnGLhHkH6rJGIfgxNvWxB7z8B/NPXwM38hdNUMUjkIwna7Bcr8su
+	Ph443vfmCJErNV1GrpRbHWC/XmbMUMAiLCJxzdA0LdplizVWQJ3jfxJPaYGTfvMAB+ggrTQ47Bd
+	z3K6DyIkc5LTtqKrm0G0dxtNcFx/OEyGLMWu40sJsYvxIAts05pydMiFumpnWJ
+X-Google-Smtp-Source: AGHT+IFGUkMo72XtIDtRZQxsg8iEIpPOalHrRQb2UF7dbfk05jKrnWFz19mVH5FaHif/YNRD3lIjfVB88vVhiMYfmvE=
+X-Received: by 2002:a17:902:d48b:b0:215:9ab0:402 with SMTP id
+ d9443c01a7336-22ff003c410mr4741835ad.18.1747068835998; Mon, 12 May 2025
+ 09:53:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a7a71408-c01d-4e0c-bd44-73ffbd79f716@roeck-us.net>
+References: <aBldhnTK93+eKcMq@yzhao56-desk.sh.intel.com> <CAGtprH9wi6zHJ5JeuAnjZThMAzxxibJGo=XN1G1Nx8txZRg8_w@mail.gmail.com>
+ <aBmmirBzOZfmMOJj@yzhao56-desk.sh.intel.com> <CAGtprH9fDMiuk3JGSS12M-wFoqRj+sjdtEHJFS_5QfKX7aGkRQ@mail.gmail.com>
+ <aBsNsZsWuVl4uo0j@yzhao56-desk.sh.intel.com> <CAGtprH-+Bo4hFxL+THiMgF5V4imdVVb0OmRhx2Uc0eom9=3JPA@mail.gmail.com>
+ <aBwJHE/zRDvV41fH@yzhao56-desk.sh.intel.com> <CAGtprH9hwj7BvSm4DgRkHmdPnmi-1-FMH5Z7xK1VBh=s4W8VYA@mail.gmail.com>
+ <aB10gNcmsw0TSrqh@yzhao56-desk.sh.intel.com> <CAGtprH8=-70DU2e52OJe=w0HfuW5Zg6wGHV32FWD_hQzYBa=fA@mail.gmail.com>
+ <aCFZ1V/T3DyJEVLu@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aCFZ1V/T3DyJEVLu@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 12 May 2025 09:53:43 -0700
+X-Gm-Features: AX0GCFueALu8dJdQCA5WbTVkWsnl6wrCmPn80alX3VDZ-GSW6LusKy119rLdREM
+Message-ID: <CAGtprH8GfY2NjVM4=iVoWOenoexB1vs8=ALYTC-y7suf__+3iA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com, 
+	dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com, 
+	ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, 
+	david@redhat.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
+	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, ira.weiny@intel.com, isaku.yamahata@intel.com, 
+	xiaoyao.li@intel.com, binbin.wu@linux.intel.com, chao.p.peng@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am Mon, May 12, 2025 at 06:53:21AM -0700 schrieb Guenter Roeck:
-> On 5/12/25 06:31, Dimitri Fedrau wrote:
-> > Hi Guenter,
-> > 
-> > Am Mon, May 12, 2025 at 06:04:33AM -0700 schrieb Guenter Roeck:
-> > > On 5/12/25 04:26, Dimitri Fedrau via B4 Relay wrote:
-> > > > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> > > > 
-> > > > The MC33XS2410 provides temperature sensors for the central die temperature
-> > > > and the four outputs. Additionally a common temperature warning threshold
-> > > > can be configured for the outputs. Add hwmon support for the sensors.
-> > > > 
-> > > > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> > > > ---
-> > > 
-> > > > +
-> > > > +static int mc33xs2410_hwmon_read_out_status(struct spi_device *spi,
-> > > > +					    int channel, u16 *val)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +
-> > > > +	/* Bits latches high */
-> > > > +	return mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
-> > > 
-> > > Is that double read of the same register needed ? If so, you'll probably
-> > > need a lock to prevent it from being executed from multiple threads at the
-> > > same time.
-> > > 
-> > > The comment "Bit latches high" doesn't really mean anything to me and doesn't
-> > > explain why the register needs to be read twice.
-> > > 
-> > > 
-> > 
-> > All bits of the output status registers are latched high. In case there
-> > was overtemperature detected, the bit stays set until read once and cleared
-> > afterwards. So I need a second read to get the "realtime" status.
-> > Otherwise I might end up returning an false positive overtemperature
-> > warning. I don't think a lock is really necessary, since I'm only
-> > interested in the "realtime" status but not if there was a warning in
-> > the past. What do you think ?
-> > 
-> 
-> Hardware monitoring is _expected_ to report the last latched status and clear
-> it afterwards, to ensure that historic alarms are reported at least once.
-> This isn't about "false positive", it is about "report at least once if
-> possible".
+On Sun, May 11, 2025 at 7:18=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wro=
+te:
+> ...
+> >
+> > I might be wrongly throwing out some terminologies here then.
+> > VM_PFNMAP flag can be set for memory backed by folios/page structs.
+> > udmabuf seems to be working with pinned "folios" in the backend.
+> >
+> > The goal is to get to a stage where guest_memfd is backed by pfn
+> > ranges unmanaged by kernel that guest_memfd owns and distributes to
+> > userspace, KVM, IOMMU subject to shareability attributes. if the
+> OK. So from point of the reset part of kernel, those pfns are not regarde=
+d as
+> memory.
 >
-Didn't know that, thanks for the explanation.
+> > shareability changes, the users will get notified and will have to
+> > invalidate their mappings. guest_memfd will allow mmaping such ranges
+> > with VM_PFNMAP flag set by default in the VMAs to indicate the need of
+> > special handling/lack of page structs.
+> My concern is a failable invalidation notifer may not be ideal.
+> Instead of relying on ref counts (or other mechanisms) to determine wheth=
+er to
+> start shareabilitiy changes, with a failable invalidation notifier, some =
+users
+> may fail the invalidation and the shareability change, even after other u=
+sers
+> have successfully unmapped a range.
 
-> Given that, the second read is unnecessary from hwmon ABI perspective. If you
-> don't want to do that, you should explicitly document that latched (historic)
-> over-temperature alarms are not reported.
-> 
-I would stick to hwmon ABI, just didn't know better.
+Even if one user fails to invalidate its mappings, I don't see a
+reason to go ahead with shareability change. Shareability should not
+change unless all existing users let go of their soon-to-be-invalid
+view of memory.
 
-Best regards,
-Dimitri Fedrau
+>
+> Auditing whether multiple users of shared memory correctly perform unmapp=
+ing is
+> harder than auditing reference counts.
+>
+> > private memory backed by page structs and use a special "filemap" to
+> > map file offsets to these private memory ranges. This step will also
+> > need similar contract with users -
+> >    1) memory is pinned by guest_memfd
+> >    2) users will get invalidation notifiers on shareability changes
+> >
+> > I am sure there is a lot of work here and many quirks to be addressed,
+> > let's discuss this more with better context around. A few related RFC
+> > series are planned to be posted in the near future.
+> Ok. Thanks for your time and discussions :)
+> ...
