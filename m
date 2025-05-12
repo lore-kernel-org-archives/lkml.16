@@ -1,142 +1,144 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D50298CDF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24FF1B6CF1;
+	Mon, 12 May 2025 20:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747082131; cv=none; b=eIMoJw9UJeKbTfKthChojObvJ53yrtnDPGMUmnhBV9RnWc5RJzaZiiCQlOL1ktEWrhvg20Zetv37yzp9EPwT4uctn46j4FMFMT+Qjhi7H5mI7Kn2RaDskOiukwjTumb12OCGIgeSdewpJaUl/5lgXU59T6dFfs8G0WyEyFZB3n4=
+	t=1747082250; cv=none; b=Sc7gjiOuCeq69Z7ZFNTyJYm4ga8RCq8X20vH9vLLrOBpVhMUQ2njTOy3SkWbr01vn12c8GUfwSP6zbYt1Gj611ltLNa/uCcKefn1up6dDd5MZz/F28pJ7NaaoJ3SHEAoVtlkbeOUt2tL81jiGd/T93hbQp6KZrqQ35kzhcoKtRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747082131; c=relaxed/simple;
-	bh=vmLwhuTwTvt7eMs50a6cBYCilwolKWR9eHExvgLaBtA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gVC1KZwENU4lBDfHo9sNa9+9qw3hWs8DUxHwrpnbnPbzRIuyKRbDHeY2wzv1YNYK5ZOuJiP+bS4ACgzc4Vyyxi7K9nx3svQ2OODQN56Cb8TkCCU2mTVhnWpkcDUVHc+5n1Mvw8MANO/YfX+9pi9MaqvS1a1e+TIXpF2xhLnOTyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=p2WGpxig; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747082250; c=relaxed/simple;
+	bh=Jnbhu+3zpTMBTqhYWevRyYw6xUl7YSnfNgdoVlvygmE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RFn0smFk3QCq3g5xnFRqJWa5Sr1VNjMBo87LtvHf+oHBhfSO/mDc98Xswx1JNnptONU47G+gpsVOhQomftcBykYoaQnVugujUWkcKDtn2CR+vIcRaNeO8rNBeS5WF10m8JBdJzpFklCHKxXnmX+rBuoO4DTbncB14l0Ot2cRhLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=xGAtQcr2; arc=none smtp.client-ip=212.227.126.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="p2WGpxig"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=OL4xibm39jmfI8uxvEjCXO513VYShvHZZAZJDGQ0FxA=; b=p2WGpxigHBx3gau2Yiw/fhKIZ7
-	syFZ3DMhwlt50o7TW2Gsq+dULtvOm+gdRv0yEH2et50uYrkPHvumZB+O7IGhwukZijURDlpLLXE/O
-	8OkJjji2YSYY9B3fKZyYGisXBJ/G6kseBpE7Z5MceL3DMlxGdkrrXkPMExbN22vTFw+t7AtKiVWh+
-	++KWftimb2oSknkJ4pSgJoSea2yofIts4XIQJT55WpIqfltcAOKJmg2JC/55Ovx/6Rxykm/G9A9gd
-	yHm84PlZsFwufmB+tJTXrLNgAmdJRky3SO37ZdzbuTm9tHuClB3RI5XNYhpjsDNzbZJQFBPQ4H1Ke
-	ac5hVHGA==;
-Received: from [191.204.192.64] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uEZma-007G93-A4; Mon, 12 May 2025 22:35:17 +0200
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: "Alex Deucher" <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	siqueira@igalia.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	"Raag Jadav" <raag.jadav@intel.com>,
-	rodrigo.vivi@intel.com,
-	jani.nikula@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com,
-	amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH v3 3/3] drm/amdgpu: Make use of drm_wedge_app_info
-Date: Mon, 12 May 2025 17:34:37 -0300
-Message-ID: <20250512203437.989894-4-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512203437.989894-1-andrealmeid@igalia.com>
-References: <20250512203437.989894-1-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="xGAtQcr2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1747082245; x=1747687045; i=christian@heusel.eu;
+	bh=v5IPjjPdS4AX/054+2XWNWZoam2uEJChhCqsehtFEcc=;
+	h=X-UI-Sender-Class:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:To:Cc:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=xGAtQcr2blQh9ZKWRIofwcFetiyxmjpHGr1I6d23foOIjhzbrTF4s9fGfsWGJ917
+	 jFvhYx52dnFHr3M1eBoaS2GVq1Ql0KELA6PUy2lkLAdGti3P1KKC8ps3OL/yghpTt
+	 LFdasN6um/7McWXhGQy4/DztQNOw+vx21ZQyKCXS1miQGo5FYRlJWzgAkIjXCwVSi
+	 AyYIuzlGYSwK+3/HLbTuQzqiX4uF24SWuIm3h4ZOkzgo6OMy59935n3pSm1Jb/Nce
+	 YTLO7GRiGxuiJ/jyjevc5E+80TtRq3jyUItOEATmXwn6WFRJtCXn9V6DGBqIf9Pdj
+	 PKNBXz00BEfn3AIkmQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from meterpeter.localdomain ([89.244.90.40]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MNtGq-1ucg7f47I0-00UEIt; Mon, 12 May 2025 22:24:12 +0200
+From: Christian Heusel <christian@heusel.eu>
+Date: Mon, 12 May 2025 22:23:37 +0200
+Subject: [PATCH] ALSA: usb-audio: Add sample rate quirk for Audioengine D1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20250512-audioengine-quirk-addition-v1-1-4c370af6eff7@heusel.eu>
+X-B4-Tracking: v=1; b=H4sIAMhYImgC/x3MQQqAIBBG4avErBtIwYquEi1Ep/oJrLQiiO6et
+ PwW7z2UJEISdcVDUS4krCFDlQW52YZJGD6bdKVNZZRme3qsEiYE4f1EXNh6jyNn3KhWatfWVjt
+ HebBFGXH/83543w/8U/gObAAAAA==
+X-Change-ID: 20250512-audioengine-quirk-addition-718e6c86a2cc
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Christian Heusel <christian@heusel.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1691; i=christian@heusel.eu;
+ h=from:subject:message-id; bh=T9nyqPOg2vRW5mnTPvD+UoZUWmgIkXbcc2Hb0EE8f7Q=;
+ b=owEBbQKS/ZANAwAIAcBH1PMotSWFAcsmYgBoIljhEuX+ZbwJp5mNldpSXNG31Ogx3W9URffKQ
+ mmuo9yXpDGJAjMEAAEIAB0WIQRvd5reJHprig9yzBPAR9TzKLUlhQUCaCJY4QAKCRDAR9TzKLUl
+ hWj7D/4yaYeUzOtd1rmbaZCWY/HA9EUntN7fjTblqHu3Sn9ocKfV3K3DETws9yiEj2+joXJ3dvl
+ ZgWDvKcniPT6VkE/KUywU7sWpwwLjbqiX1Udqs8g7cPz6mWUx8+ybAYBjUYixKcBZQ1f/hhvvd/
+ ehnlP0BH2fOSnpWDuqOAQZYwjOQa18QG8cgnLX75qvg8E9Gk+ScuMjL38J75Kfx3SNAGBTxJiZB
+ +nJPa1UKqxRvJoNLDTCze4tseS59f+miYSICcIGdHL07T0ptU1ZXzNnuxPCjGiUglTSZd/3YOUE
+ SkZ3wox7OXs90JxvrBsMPk44sNMeX8QX6oT9QSBJxbtHZgHJrV1JfxwQL4ZJ0+HgUmeMd8L3WTp
+ 55Zzq9+Hl9FoMjeRtQcbCqwD6GaL36pTKw8vDrFaoDbW1M4kvkd26NSAHAvWFyehfqqcRy/ivoJ
+ Q0MKYbQDZTO3pVFqaBVIfEeChZRwaz86NSAT4wFinRV4TlxcsbJ9/JbYAz7MhcObqnKFqY5oYZC
+ 5dVgt/AkhUxt2szo+W8ilVsl4JqqRYN0y4tAir6Ukp4fonYVqcJggMBl3DtcgAJoI0n7DmpB03H
+ 2wvgkJX6Jvxvz0Irxe2s3joeAA2v4wR8CXd8WvusiVcO2RwT4KR0cljXyQss/gXC+UVQ5/7ivJQ
+ EdoirFaE9iqVl1A==
+X-Developer-Key: i=christian@heusel.eu; a=openpgp;
+ fpr=6F779ADE247A6B8A0F72CC13C047D4F328B52585
+X-Provags-ID: V03:K1:r8gcN1SJNqU2hfw9rpVP9dmQjgonF9wWrAaxjZinHlO8OVGHD1q
+ riFc/XpBp5PUm5fjg09BmSOwsifudYg0xSw6QHB2qPd0YkxITE1bBC4QmUhAuL4OD06Hi6J
+ 20MEU52wKtudEsu9ssppGaC8FLYob4PgsZAyrnarCX0h8IL1BTntg1aTr0W6bP0uuZOBsCB
+ wkzZ0TfVTTRecrhe1uFNg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PhcBKGKJ6Is=;TjiN0bfpIoCVwFhSucg1BiU4x2K
+ V7aaJkd/JyqT8em96jir+tfgSef+fMrsGyRayLvkmJGdXzyRGFdKi0KlDRbCsJTO3fdmLKNE6
+ cHdDS20qxNisFTw3GXK17o86QeTgmaqvxmYSc2WARAbSo82Wt5wLQwssmBXexmobxenSSU8CZ
+ 1Dk9dR7hbuUcpR5ho/zIrklCtkubSog0d2LGN2eC24piWdWCkAFvBzqibd+IqZn7pLZcs5C03
+ 8h1hSM0a4OK75UPk+vQj1Q8ebJ1E4sc8T7ZDYS/6LLqhidOhPurVIV+FYCmmi5KFEtttThtwN
+ eCc0vJiZNrujR0XdU8cHbLkidR8ThR2KMMwC1sR8ot+Ku6dIwme0myK8xcJcw1KeuCwnb0mcO
+ crbwq2G9JOPqlcbi0sqaNUuZszLSL6or624WOCr30bl+TytMg6Ygkr+XYKcz82wCN1AuezdnX
+ Ivlk+dIKxErThGZCdpvEkQqWWx34eW3hHMaceiMvWJ99ywFpVgo6eeEKsucp11BYMdysWIkkE
+ KXEfavVCjiRQyYpjYq0iIB935Z7n2hmLpNg26pETRLm04XG4V40I1r2MqLIpsk/l8Y8kI6fJZ
+ WR8W5/W3xCAlX96CvH/46OVebE/DlFOU9NLH3/vBQQzpewVTuNNjZNj6HCjV1NvJZp1avPtgx
+ PKkub2tN7Jrmft0jSQzRbka8d7xXRT3fP8MUB1wMKKpUNLtDFRKTXIHhAyTHU7kgUpM79nI5d
+ kjbMNfGIB0OAo20vYJG0yKpP6wTNGVX8nwvfB2LdiOZLp9yAIr63ZeqAii3aneHUlft8f3VP+
+ Nuv2Xq7U66Omg4szXYmcw3hWU3NKWQ8z/l+EVrEbhDY713DsKwJpKH0rNdkcZybhScOnjPhMf
+ cR8sJDJ6/lBsZvvAG0vTAJ9G6suhOnU7tV5iPYuMFbf19nMwwUyF3isf23vpzKp4Wd0dWIzdR
+ E+DtyQTTOySP2HI2G/b8LAZl1uE6GEV/Kp+AjgnS6feDlVs2zHxD+C7Y3I7aWPUJahOBpG0Wu
+ EFU4/koP4ig8/6lLZaj4djFuLWhi9roZjLUh4zkrgYeZVJ4RGpFhtfiu0ehIkSBAYGPdiCRmV
+ qbRfOxrDKL5NgvaBUJ9+/XtBuKp6wdFeTFXb1fWiwDzHVsoPaDpa4kgmQD0WG8rqROD46V22/
+ pOltJmpdAfLuMaEOKiS/0ySvrMIfU5vBqzZkY4CpmEJF6RqT7gR342qb0+jo0iQ/CntRKjJ85
+ nrofFZvXQzXi5dJ0HTs3KvkU2RSCQynx3m1pMcFuvXy6mp+e++1+zXzlOZGs95TL9oJboerI5
+ 2TUy8AHPb9wbEh7cRPj7sUaDuQLIjfyPITAHJCMNB9bmgDzQz2N88Q+hjKB5nlD3c2BxdYXUt
+ LnTxHDqZSCFFi1PTpsRyUeDhwEp5nQlPxpFAZpX6AtiKkgA1ObTQ03RyzC
 
-To notify userspace about which app (if any) made the device get in a
-wedge state, make use of drm_wedge_app_info parameter, filling it with
-the app PID and name.
+A user reported on the Arch Linux Forums that their device is emitting
+the following message in the kernel journal, which is fixed by adding
+the quirk as submitted in this patch:
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 19 +++++++++++++++++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  6 +++++-
- 2 files changed, 22 insertions(+), 3 deletions(-)
+    > kernel: usb 1-2: current rate 8436480 is different from the runtime =
+rate 48000
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index c8a51418d0e7..e6d8f6d0ec47 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -6215,8 +6215,23 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
- 
- 	atomic_set(&adev->reset_domain->reset_res, r);
- 
--	if (!r)
--		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
-+	if (!r) {
-+		struct drm_wedge_app_info aux, *info = NULL;
-+
-+		if (job) {
-+			struct amdgpu_task_info *ti;
-+
-+			ti = amdgpu_vm_get_task_info_pasid(adev, job->pasid);
-+			if (ti) {
-+				aux.pid = ti->pid;
-+				aux.comm = ti->process_name;
-+				info = &aux;
-+				amdgpu_vm_put_task_info(ti);
-+			}
-+		}
-+
-+		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
-+	}
- 
- 	return r;
- }
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-index a47b2eb301e5..98efa3318ddb 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-@@ -89,6 +89,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- {
- 	struct amdgpu_ring *ring = to_amdgpu_ring(s_job->sched);
- 	struct amdgpu_job *job = to_amdgpu_job(s_job);
-+	struct drm_wedge_app_info aux, *info = NULL;
- 	struct amdgpu_task_info *ti;
- 	struct amdgpu_device *adev = ring->adev;
- 	int idx;
-@@ -127,6 +128,9 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 		dev_err(adev->dev,
- 			"Process information: process %s pid %d thread %s pid %d\n",
- 			ti->process_name, ti->tgid, ti->task_name, ti->pid);
-+		aux.pid = ti->pid;
-+		aux.comm = ti->process_name;
-+		info = &aux;
- 		amdgpu_vm_put_task_info(ti);
- 	}
- 
-@@ -166,7 +170,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 			if (amdgpu_ring_sched_ready(ring))
- 				drm_sched_start(&ring->sched, 0);
- 			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
--			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
-+			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
- 			goto exit;
- 		}
- 		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
--- 
-2.49.0
+There also is an entry for this product line added long time ago.
+Their specific device has the following ID:
+
+    $ lsusb | grep Audio
+    Bus 001 Device 002: ID 1101:0003 EasyPass Industrial Co., Ltd Audioeng=
+ine D1
+
+Link: https://bbs.archlinux.org/viewtopic.php?id=3D305494
+Fixes: 93f9d1a4ac593 ("ALSA: usb-audio: Apply sample rate quirk for Audioe=
+ngine D1")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Heusel <christian@heusel.eu>
+=2D--
+ sound/usb/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 9112313a9dbc005d8ab6076a6f2f4b0c0cecc64f..eb192834db68ca599770055cb5=
+63201e648f20ba 100644
+=2D-- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -2250,6 +2250,8 @@ static const struct usb_audio_quirk_flags_table quir=
+k_flags_table[] =3D {
+ 		   QUIRK_FLAG_FIXED_RATE),
+ 	DEVICE_FLG(0x0fd9, 0x0008, /* Hauppauge HVR-950Q */
+ 		   QUIRK_FLAG_SHARE_MEDIA_DEVICE | QUIRK_FLAG_ALIGN_TRANSFER),
++	DEVICE_FLG(0x1101, 0x0003, /* Audioengine D1 */
++		   QUIRK_FLAG_GET_SAMPLE_RATE),
+ 	DEVICE_FLG(0x1224, 0x2a25, /* Jieli Technology USB PHY 2.0 */
+ 		   QUIRK_FLAG_GET_SAMPLE_RATE | QUIRK_FLAG_MIC_RES_16),
+ 	DEVICE_FLG(0x1395, 0x740a, /* Sennheiser DECT */
+
+=2D--
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+change-id: 20250512-audioengine-quirk-addition-718e6c86a2cc
+
+Best regards,
+=2D-=20
+Christian Heusel <christian@heusel.eu>
 
