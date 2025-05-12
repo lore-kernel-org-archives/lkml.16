@@ -1,552 +1,150 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA19929D0B;
-	Mon, 12 May 2025 10:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4240E264FB9
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747045370; cv=none; b=RZ41yiTpa/uvy/2JKoJFv/cGfcYukceccglb14ScFWhbFtMxSzR0iLkwFHMEAQ8fqywbiWJwfORqIynCSGsdX1G2u7IdlE//iENeyjYyM9aaVHIIn9GOQcXDyu5eNctN2rY7EfGwekkrL1uptLxNV+9c8iy4mh1jcHd2e1ofnD4=
+	t=1747045377; cv=none; b=RqSW7MI5r7QlfJsYpWm+u3RLuAPkuUzdjer7tqFch1tXOTPjVxVrRTnfR4SDn3WtXpVK7cT2A+65JwNcu6eO4XJ1nnXLoHab0bIjTQU1sdqdj1haWPG/+Y4rRPhTUmHNxHKAhD00VDgDb7+c+cYWvRGUfZ8AWULY4j/MHue5vFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747045370; c=relaxed/simple;
-	bh=y++feBpYS2yhJbLN7RauAAM0tm/rlodrzGivJXlk+aM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VelJd2HpJ/8tGLPI1Jq0uCVGgvGJs+JoPGVYfKnDf+WRQgt4A9J+w62iAwa+BteC9Nc3k6fRWkjCg14CUz2+M663su5auEaso3ZRmSvMB4Lo9EyObj33BRS9e9wn/y3eyCrLoV6vc642youZ5XZOaBWRPZ287XHsUjcRF9HnsH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=uOTtc1wE; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="uOTtc1wE"
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 3C9C32E09F0E;
-	Mon, 12 May 2025 13:22:42 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1747045364;
-	bh=IaG5h+uHMEU3JCbpf+1PwbXCW59K43zhFj3arQhtd/o=;
-	h=Received:From:Subject:To;
-	b=uOTtc1wE1OaRRx2NN/w01OJZnZzefqIlxImA1Oe01ly0iEZDoJ2hmIgx8Z9uC7nrx
-	 QGnnFsnBjNzA0gNkAUFsRLxZWxwOH62TwHZAYjkAFoATaJ/rbPExOhmY8tQHmdH0WH
-	 kn+BGjhlZcmbBbHxk+MLX2vu3aXDoYrNSkZI0t9M=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f179.google.com with SMTP id
- 38308e7fff4ca-326d67aacc4so18200231fa.3;
-        Mon, 12 May 2025 03:22:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU18mLf2Pdz77g7JT3q74z2Ikad0g2lHLhS9CfEpoQiuCfNmu6+mDsczaaAvkpto1mZQchgaLS+eDjqJgE=@vger.kernel.org,
- AJvYcCUwsVj4RdgKh3v7e8bkZRy0TXbNvO0ZY2Gk9NhDXXDW8swEcV66bSw6ORoSLuJlf/smCgVKVDv6oXc=@vger.kernel.org,
- AJvYcCW3bRmpjUfbZvysf+cve4JMh+4vtH7cD98q/QfsHYAl/0qY5WojThKu+IIyTlH+sbWJBxDzlOKmx9WxnT9t@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu6njCUbQThz2Os5pLMxwS4jzVxnOJOAH/vjecOOUQsvJryvRa
-	Y07G3pSQMTiyLoKxK6z+BmT/K4bCuMe+q7RozVDDfCmPiXHDbMwygX0jZPtWzvmqURaejE/gp0l
-	Y2AfXqgA+CORif6dmZnUAkF6BfRs=
-X-Google-Smtp-Source: 
- AGHT+IEfOMQPGHpM16kbGmKH72oODVzy3/QrmWs19fr7mNbji++6YukQx4EKzq3Y5LYS1ccLiLwJtnywY8F8kkQVz1M=
-X-Received: by 2002:a2e:be9c:0:b0:30b:b7c3:ea71 with SMTP id
- 38308e7fff4ca-326c45da855mr40172211fa.15.1747045361445; Mon, 12 May 2025
- 03:22:41 -0700 (PDT)
+	s=arc-20240116; t=1747045377; c=relaxed/simple;
+	bh=IcscS5J/JFjr+j2IZmxv4ZVsrp9aZk2gu9rwc/Em9q4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TMrZo/9xDsU37VRUig/4FrsQEKFOLs6kkypgWk+KP5L/NFoHTl/YFUJqzipj+fl2SHTOv0mZ6NkeB+QZ4XhfUZzP5PnKD368QzebI0A279IZpjqIVcvEZ4o7axozp3yVaHKnYajKyHoQ54BToD7Xk19BD25B5gQCsQL7zpYI1XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F05D150C;
+	Mon, 12 May 2025 03:22:43 -0700 (PDT)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5014F3F673;
+	Mon, 12 May 2025 03:22:52 -0700 (PDT)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+5c0d9392e042f41d45c5@syzkaller.appspotmail.com
+Subject: [PATCH] arm64/mm: Disable barrier batching in interrupt contexts
+Date: Mon, 12 May 2025 11:22:40 +0100
+Message-ID: <20250512102242.4156463-1-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20250511204427.327558-7-lkml@antheas.dev>
- <D9TQ3YPQDD4W.3JQOYGQB5GS7P@gmail.com>
-In-Reply-To: <D9TQ3YPQDD4W.3JQOYGQB5GS7P@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 12 May 2025 12:22:29 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwHo61uX_Xy3g-YtQg1dgs7bXu9uFqF0BrK3ThkpUUtmHA@mail.gmail.com>
-X-Gm-Features: AX0GCFs87ueiENXcgrg2D_nbN4EwykAcuqDzXVMMPWwsA-toAfHwNpOTJuy1894
-Message-ID: 
- <CAGwozwHo61uX_Xy3g-YtQg1dgs7bXu9uFqF0BrK3ThkpUUtmHA@mail.gmail.com>
-Subject: Re: [PATCH v1 06/10] platform/x86: msi-wmi-platform: Add PL1/PL2
- support via firmware attributes
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174704536359.7951.12336531955247682423@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-On Mon, 12 May 2025 at 01:34, Kurt Borja <kuurtb@gmail.com> wrote:
->
-> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
-> > Adds PL1, and PL2 support through the firmware attributes interface.
-> > The min and max values are quirked, and the attributes are only defined
-> > if they are set to a non-zero value. These values are meant to be set
-> > in conjunction with shift mode, where shift mode automatically sets
-> > an upper bound on PL1/PL2 (e.g., low-power would be used with 8W).
-> >
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/platform/x86/Kconfig            |   1 +
-> >  drivers/platform/x86/msi-wmi-platform.c | 361 +++++++++++++++++++++++-
-> >  2 files changed, 360 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index 57a48910c8fd4..fd3da718731e7 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -747,6 +747,7 @@ config MSI_WMI_PLATFORM
-> >       depends on ACPI_WMI
-> >       depends on HWMON
-> >       select ACPI_PLATFORM_PROFILE
-> > +     select FW_ATTR_CLASS
-> >       help
-> >         Say Y here if you want to have support for WMI-based platform features
-> >         like fan sensor access on MSI machines.
-> > diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
-> > index c0b577c95c079..6498f4b44fe53 100644
-> > --- a/drivers/platform/x86/msi-wmi-platform.c
-> > +++ b/drivers/platform/x86/msi-wmi-platform.c
-> > @@ -34,6 +34,8 @@
-> >
-> >  #include <linux/unaligned.h>
-> >
-> > +#include "firmware_attributes_class.h"
-> > +
-> >  #define DRIVER_NAME  "msi-wmi-platform"
-> >
-> >  #define MSI_PLATFORM_GUID    "ABBC0F6E-8EA1-11d1-00A0-C90629100000"
-> > @@ -74,6 +76,10 @@
-> >  #define MSI_PLATFORM_SHIFT_ECO               (MSI_PLATFORM_SHIFT_ENABLE + 2)
-> >  #define MSI_PLATFORM_SHIFT_USER              (MSI_PLATFORM_SHIFT_ENABLE + 3)
-> >
-> > +/* Get_Data() and Set_Data() Params */
-> > +#define MSI_PLATFORM_PL1_ADDR        0x50
-> > +#define MSI_PLATFORM_PL2_ADDR        0x51
-> > +
-> >  static bool force;
-> >  module_param_unsafe(force, bool, 0);
-> >  MODULE_PARM_DESC(force, "Force loading without checking for supported WMI interface versions");
-> > @@ -112,6 +118,9 @@ enum msi_wmi_platform_method {
-> >
-> >  struct msi_wmi_platform_quirk {
-> >       bool shift_mode;        /* Shift mode is supported */
-> > +     int pl_min;             /* Minimum PLx value */
-> > +     int pl1_max;            /* Maximum PL1 value */
-> > +     int pl2_max;            /* Maximum PL2 value */
-> >  };
-> >
-> >  struct msi_wmi_platform_data {
-> > @@ -119,6 +128,44 @@ struct msi_wmi_platform_data {
-> >       struct msi_wmi_platform_quirk *quirks;
-> >       struct mutex wmi_lock;  /* Necessary when calling WMI methods */
-> >       struct device *ppdev;
-> > +     struct device *fw_attrs_dev;
-> > +     struct kset *fw_attrs_kset;
-> > +};
-> > +
-> > +enum msi_fw_attr_id {
-> > +     MSI_ATTR_PPT_PL1_SPL,
-> > +     MSI_ATTR_PPT_PL2_SPPT,
-> > +};
-> > +
-> > +static const char *const msi_fw_attr_name[] = {
-> > +     [MSI_ATTR_PPT_PL1_SPL] = "ppt_pl1_spl",
-> > +     [MSI_ATTR_PPT_PL2_SPPT] = "ppt_pl2_sppt",
-> > +};
-> > +
-> > +static const char *const msi_fw_attr_desc[] = {
-> > +     [MSI_ATTR_PPT_PL1_SPL] = "CPU Steady package limit (PL1/SPL)",
-> > +     [MSI_ATTR_PPT_PL2_SPPT] = "CPU Boost slow package limit (PL2/SPPT)",
-> > +};
-> > +
-> > +#define MSI_ATTR_LANGUAGE_CODE "en_US.UTF-8"
-> > +
-> > +struct msi_fw_attr {
-> > +     struct msi_wmi_platform_data *data;
-> > +     enum msi_fw_attr_id fw_attr_id;
-> > +     struct attribute_group attr_group;
-> > +     struct kobj_attribute display_name;
-> > +     struct kobj_attribute current_value;
-> > +     struct kobj_attribute min_value;
-> > +     struct kobj_attribute max_value;
-> > +
-> > +     u32 min;
-> > +     u32 max;
-> > +
-> > +     int (*get_value)(struct msi_wmi_platform_data *data,
-> > +                      struct msi_fw_attr *fw_attr, char *buf);
-> > +     ssize_t (*set_value)(struct msi_wmi_platform_data *data,
-> > +                          struct msi_fw_attr *fw_attr, const char *buf,
-> > +                          size_t count);
-> >  };
-> >
-> >  struct msi_wmi_platform_debugfs_data {
-> > @@ -163,10 +210,16 @@ static const char * const msi_wmi_platform_debugfs_names[] = {
-> >
-> >  static struct msi_wmi_platform_quirk quirk_default = {};
-> >  static struct msi_wmi_platform_quirk quirk_gen1 = {
-> > -     .shift_mode = true
-> > +     .shift_mode = true,
-> > +     .pl_min = 8,
-> > +     .pl1_max = 43,
-> > +     .pl2_max = 45
-> >  };
-> >  static struct msi_wmi_platform_quirk quirk_gen2 = {
-> > -     .shift_mode = true
-> > +     .shift_mode = true,
-> > +     .pl_min = 8,
-> > +     .pl1_max = 30,
-> > +     .pl2_max = 37
-> >  };
-> >
-> >  static const struct dmi_system_id msi_quirks[] = {
-> > @@ -660,6 +713,306 @@ static const struct platform_profile_ops msi_wmi_platform_profile_ops = {
-> >       .profile_set = msi_wmi_platform_profile_set,
-> >  };
-> >
-> > +/* Firmware Attributes setup */
-> > +static int data_get_addr(struct msi_wmi_platform_data *data,
-> > +                      const enum msi_fw_attr_id id)
-> > +{
-> > +     switch (id) {
-> > +     case MSI_ATTR_PPT_PL1_SPL:
-> > +             return MSI_PLATFORM_PL1_ADDR;
-> > +     case MSI_ATTR_PPT_PL2_SPPT:
-> > +             return MSI_PLATFORM_PL2_ADDR;
-> > +     default:
-> > +             pr_warn("Invalid attribute id %d\n", id);
-> > +             return -EINVAL;
-> > +     }
-> > +}
-> > +
-> > +static ssize_t data_set_value(struct msi_wmi_platform_data *data,
-> > +                           struct msi_fw_attr *fw_attr, const char *buf,
-> > +                           size_t count)
-> > +{
-> > +     u8 buffer[32] = { 0 };
-> > +     int ret, fwid;
-> > +     u32 value;
-> > +
-> > +     fwid = data_get_addr(data, fw_attr->fw_attr_id);
-> > +     if (fwid < 0)
-> > +             return fwid;
-> > +
-> > +     ret = kstrtou32(buf, 10, &value);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (fw_attr->min >= 0 && value < fw_attr->min)
-> > +             return -EINVAL;
-> > +     if (fw_attr->max >= 0 && value > fw_attr->max)
-> > +             return -EINVAL;
->
-> Maybe clamp instead of failing?
->
-> > +
-> > +     buffer[0] = fwid;
-> > +     put_unaligned_le32(value, &buffer[1]);
-> > +
-> > +     ret = msi_wmi_platform_query(data, MSI_PLATFORM_SET_DATA, buffer, sizeof(buffer));
-> > +     if (ret) {
-> > +             pr_warn("Failed to set_data with id %d: %d\n",
-> > +                     fw_attr->fw_attr_id, ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return count;
-> > +}
-> > +
-> > +static int data_get_value(struct msi_wmi_platform_data *data,
-> > +                       struct msi_fw_attr *fw_attr, char *buf)
-> > +{
-> > +     u8 buffer[32] = { 0 };
-> > +     u32 value;
-> > +     int ret, addr;
-> > +
-> > +     addr = data_get_addr(data, fw_attr->fw_attr_id);
-> > +     if (addr < 0)
-> > +             return addr;
-> > +
-> > +     buffer[0] = addr;
-> > +
-> > +     ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_DATA, buffer, sizeof(buffer));
-> > +     if (ret) {
-> > +             pr_warn("Failed to show set_data for id %d: %d\n",
-> > +                     fw_attr->fw_attr_id, ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     value = get_unaligned_le32(&buffer[1]);
-> > +
-> > +     return sysfs_emit(buf, "%d\n", value);
-> > +}
-> > +
-> > +static ssize_t display_name_language_code_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                                            char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n", MSI_ATTR_LANGUAGE_CODE);
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_display_name_language_code =
-> > +     __ATTR_RO(display_name_language_code);
-> > +
-> > +static ssize_t scalar_increment_show(struct kobject *kobj,
-> > +                                            struct kobj_attribute *attr,
-> > +                                            char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "1\n");
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_scalar_increment =
-> > +     __ATTR_RO(scalar_increment);
-> > +
-> > +static ssize_t pending_reboot_show(struct kobject *kobj,
-> > +                                  struct kobj_attribute *attr, char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "0\n");
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_pending_reboot = __ATTR_RO(pending_reboot);
-> > +
-> > +static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, display_name);
-> > +
-> > +     return sysfs_emit(buf, "%s\n", msi_fw_attr_desc[fw_attr->fw_attr_id]);
-> > +}
-> > +
-> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, current_value);
-> > +
-> > +     return fw_attr->get_value(fw_attr->data, fw_attr, buf);
-> > +}
-> > +
-> > +static ssize_t current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                                const char *buf, size_t count)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, current_value);
-> > +
-> > +     return fw_attr->set_value(fw_attr->data, fw_attr, buf, count);
-> > +}
-> > +
-> > +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                      char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "integer\n");
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_type_int = {
-> > +     .attr = { .name = "type", .mode = 0444 },
-> > +     .show = type_show,
-> > +};
->
-> Use __ATTR_RO().
->
-> > +
-> > +static ssize_t min_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                           char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, min_value);
-> > +
-> > +     return sysfs_emit(buf, "%d\n", fw_attr->min);
-> > +}
-> > +
-> > +static ssize_t max_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                           char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, max_value);
-> > +
-> > +     return sysfs_emit(buf, "%d\n", fw_attr->max);
-> > +}
-> > +
-> > +#define FW_ATTR_ENUM_MAX_ATTRS  7
-> > +
-> > +static int
-> > +msi_fw_attr_init(struct msi_wmi_platform_data *data,
-> > +              const enum msi_fw_attr_id fw_attr_id,
-> > +              struct kobj_attribute *fw_attr_type, const s32 min,
-> > +              const s32 max,
-> > +              int (*get_value)(struct msi_wmi_platform_data *data,
-> > +                               struct msi_fw_attr *fw_attr, char *buf),
-> > +              ssize_t (*set_value)(struct msi_wmi_platform_data *data,
-> > +                                   struct msi_fw_attr *fw_attr,
-> > +                                   const char *buf, size_t count))
-> > +{
-> > +     struct msi_fw_attr *fw_attr;
-> > +     struct attribute **attrs;
-> > +     int idx = 0;
-> > +
-> > +     fw_attr = devm_kzalloc(&data->wdev->dev, sizeof(*fw_attr), GFP_KERNEL);
-> > +     if (!fw_attr)
-> > +             return -ENOMEM;
-> > +
-> > +     attrs = devm_kcalloc(&data->wdev->dev, FW_ATTR_ENUM_MAX_ATTRS + 1,
-> > +                          sizeof(*attrs), GFP_KERNEL);
-> > +     if (!attrs)
-> > +             return -ENOMEM;
-> > +
-> > +     fw_attr->data = data;
-> > +     fw_attr->fw_attr_id = fw_attr_id;
-> > +     fw_attr->attr_group.name = msi_fw_attr_name[fw_attr_id];
-> > +     fw_attr->attr_group.attrs = attrs;
-> > +     fw_attr->get_value = get_value;
-> > +     fw_attr->set_value = set_value;
-> > +
-> > +     attrs[idx++] = &fw_attr_type->attr;
-> > +     if (fw_attr_type == &fw_attr_type_int)
-> > +             attrs[idx++] = &fw_attr_scalar_increment.attr;
-> > +     attrs[idx++] = &fw_attr_display_name_language_code.attr;
-> > +
-> > +     sysfs_attr_init(&fw_attr->display_name.attr);
-> > +     fw_attr->display_name.attr.name = "display_name";
-> > +     fw_attr->display_name.attr.mode = 0444;
-> > +     fw_attr->display_name.show = display_name_show;
-> > +     attrs[idx++] = &fw_attr->display_name.attr;
-> > +
-> > +     sysfs_attr_init(&fw_attr->current_value.attr);
-> > +     fw_attr->current_value.attr.name = "current_value";
-> > +     fw_attr->current_value.attr.mode = 0644;
-> > +     fw_attr->current_value.show = current_value_show;
-> > +     fw_attr->current_value.store = current_value_store;
-> > +     attrs[idx++] = &fw_attr->current_value.attr;
-> > +
-> > +     if (min >= 0) {
-> > +             fw_attr->min = min;
-> > +             sysfs_attr_init(&fw_attr->min_value.attr);
-> > +             fw_attr->min_value.attr.name = "min_value";
-> > +             fw_attr->min_value.attr.mode = 0444;
-> > +             fw_attr->min_value.show = min_value_show;
-> > +             attrs[idx++] = &fw_attr->min_value.attr;
-> > +     } else {
-> > +             fw_attr->min = -1;
-> > +     }
-> > +
-> > +     if (max >= 0) {
-> > +             fw_attr->max = max;
-> > +             sysfs_attr_init(&fw_attr->max_value.attr);
-> > +             fw_attr->max_value.attr.name = "max_value";
-> > +             fw_attr->max_value.attr.mode = 0444;
-> > +             fw_attr->max_value.show = max_value_show;
-> > +             attrs[idx++] = &fw_attr->max_value.attr;
-> > +     } else {
-> > +             fw_attr->max = -1;
-> > +     }
-> > +
-> > +     attrs[idx] = NULL;
->
-> kcalloc already sets this to 0.
->
-> > +     return sysfs_create_group(&data->fw_attrs_kset->kobj, &fw_attr->attr_group);
->
-> This group is never removed.
->
-> I think it's not that big of a deal? But you should probably do it
-> anyway.
->
-> > +}
-> > +
-> > +static void msi_kset_unregister(void *data)
-> > +{
-> > +     struct kset *kset = data;
-> > +
-> > +     sysfs_remove_file(&kset->kobj, &fw_attr_pending_reboot.attr);
-> > +     kset_unregister(kset);
-> > +}
-> > +
-> > +static void msi_fw_attrs_dev_unregister(void *data)
-> > +{
-> > +     struct device *fw_attrs_dev = data;
-> > +
-> > +     device_unregister(fw_attrs_dev);
-> > +}
-> > +
-> > +static int msi_wmi_fw_attrs_init(struct msi_wmi_platform_data *data)
-> > +{
-> > +     int err;
-> > +
-> > +     data->fw_attrs_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
-> > +                                              NULL, "%s", DRIVER_NAME);
->
-> Set the wmi device as the parent.
->
-> > +     if (IS_ERR(data->fw_attrs_dev))
-> > +             return PTR_ERR(data->fw_attrs_dev);
-> > +
-> > +     err = devm_add_action_or_reset(&data->wdev->dev,
-> > +                                    msi_fw_attrs_dev_unregister,
-> > +                                    data->fw_attrs_dev);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     data->fw_attrs_kset = kset_create_and_add("attributes", NULL,
-> > +                                               &data->fw_attrs_dev->kobj);
-> > +     if (!data->fw_attrs_kset)
-> > +             return -ENOMEM;
-> > +
-> > +     err = sysfs_create_file(&data->fw_attrs_kset->kobj,
-> > +                             &fw_attr_pending_reboot.attr);
->
-> If it's always 0 why include it? It's not mandatory anyway.
+Commit 5fdd05efa1cd ("arm64/mm: Batch barriers when updating kernel
+mappings") enabled arm64 kernels to track "lazy mmu mode" using TIF
+flags in order to defer barriers until exiting the mode. At the same
+time, it added warnings to check that pte manipulations were never
+performed in interrupt context, because the tracking implementation
+could not deal with nesting.
 
-fwupd complained. I am fine either way but without this there is no
-userspace tooling to test the interface with. Ack for the rest.
+But it turns out that some debug features (e.g. KFENCE, DEBUG_PAGEALLOC)
+do manipulate ptes in softirq context, which triggered the warnings.
 
-Antheas
+So let's take the simplest and safest route and disable the batching
+optimization in interrupt contexts. This makes these users no worse off
+than prior to the optimization. Additionally the known offenders are
+debug features that only manipulate a single PTE, so there is no
+performance gain anyway.
 
-> --
->  ~ Kurt
->
-> > +     if (err) {
-> > +             kset_unregister(data->fw_attrs_kset);
-> > +             return err;
-> > +     }
-> > +
-> > +     err = devm_add_action_or_reset(&data->wdev->dev, msi_kset_unregister,
-> > +                                    data->fw_attrs_kset);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     if (data->quirks->pl1_max) {
-> > +             err = msi_fw_attr_init(data, MSI_ATTR_PPT_PL1_SPL,
-> > +                                     &fw_attr_type_int, data->quirks->pl_min,
-> > +                                     data->quirks->pl1_max, &data_get_value,
-> > +                                     &data_set_value);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     if (data->quirks->pl2_max) {
-> > +             err = msi_fw_attr_init(data, MSI_ATTR_PPT_PL2_SPPT,
-> > +                                    &fw_attr_type_int, data->quirks->pl_min,
-> > +                                    data->quirks->pl2_max, &data_get_value,
-> > +                                    &data_set_value);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user *input,
-> >                                             size_t length, loff_t *offset)
-> >  {
-> > @@ -888,6 +1241,10 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > +     ret = msi_wmi_fw_attrs_init(data);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> >       msi_wmi_platform_debugfs_init(data);
-> >
-> >       msi_wmi_platform_profile_setup(data);
->
+There may be some obscure case of encrypted/decrypted DMA with the
+dma_free_coherent called from an interrupt context, but again, this is
+no worse off than prior to the commit.
+
+Some options for supporting nesting were considered, but there is a
+difficult to solve problem if any code manipulates ptes within interrupt
+context but *outside of* a lazy mmu region. If this case exists, the
+code would expect the updates to be immediate, but because the task
+context may have already been in lazy mmu mode, the updates would be
+deferred, which could cause incorrect behaviour. This problem is avoided
+by always ensuring updates within interrupt context are immediate.
+
+Fixes: 5fdd05efa1cd ("arm64/mm: Batch barriers when updating kernel mappings")
+Reported-by: syzbot+5c0d9392e042f41d45c5@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/linux-arm-kernel/681f2a09.050a0220.f2294.0006.GAE@google.com/
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+---
+
+Hi Will,
+
+I've tested before and after with KFENCE enabled and it solves the issue. I've
+also run all the mm-selftests which all continue to pass.
+
+Catalin suggested a Fixes patch targetting the SHA as it is in for-next/mm was
+the preferred approach, but shout if you want something different. I'm hoping
+that with this fix we can still make it for this cycle, subject to not finding
+any more issues.
+
+Thanks,
+Ryan
+
+
+ arch/arm64/include/asm/pgtable.h | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index ab4a1b19e596..e65083ec35cb 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -64,7 +64,11 @@ static inline void queue_pte_barriers(void)
+ {
+ 	unsigned long flags;
+
+-	VM_WARN_ON(in_interrupt());
++	if (in_interrupt()) {
++		emit_pte_barriers();
++		return;
++	}
++
+ 	flags = read_thread_flags();
+
+ 	if (flags & BIT(TIF_LAZY_MMU)) {
+@@ -79,7 +83,9 @@ static inline void queue_pte_barriers(void)
+ #define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+ static inline void arch_enter_lazy_mmu_mode(void)
+ {
+-	VM_WARN_ON(in_interrupt());
++	if (in_interrupt())
++		return;
++
+ 	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
+
+ 	set_thread_flag(TIF_LAZY_MMU);
+@@ -87,12 +93,18 @@ static inline void arch_enter_lazy_mmu_mode(void)
+
+ static inline void arch_flush_lazy_mmu_mode(void)
+ {
++	if (in_interrupt())
++		return;
++
+ 	if (test_and_clear_thread_flag(TIF_LAZY_MMU_PENDING))
+ 		emit_pte_barriers();
+ }
+
+ static inline void arch_leave_lazy_mmu_mode(void)
+ {
++	if (in_interrupt())
++		return;
++
+ 	arch_flush_lazy_mmu_mode();
+ 	clear_thread_flag(TIF_LAZY_MMU);
+ }
+--
+2.43.0
+
