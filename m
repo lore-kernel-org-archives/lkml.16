@@ -1,135 +1,144 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1312B1DB125
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47C021578F;
+	Mon, 12 May 2025 14:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059884; cv=none; b=PshA1bCgQyvHk1880pICZ2O0xddxdRlz3ZRpZMyS8G++TsTK3vv75bQhtP3WwkL54BNKm3GGE2W6ExXeokJM0u0AZdOw4O1b1x3efy1sR1+/zskUulVOeE+c9IqOpXJi3Zd0gVZpFkDb48rlT1b7Go8AfRTaUBtqJwYna5DlgRc=
+	t=1747059916; cv=none; b=twovr1POrdrbrRA9ERRw+kv66Ihpxssj4bK69HKNTpKMC0xaOVffPjMplTiEIjfgkoax2IxAg3bal4pwt1Dy6J+4k2Ag1QUNfh8Rpkyxu94+mPz91sDsjr6S7Z5w2pUbbznlNgS+j/rDprGls09yeOzSistPW3zledYRrV1yQ+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059884; c=relaxed/simple;
-	bh=11QPqRLdD1jSx6Ddqs+FG9Kf+M08IkOtR4+wgtp/NpI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=K+JHzvF3909FkIZI1jeDiSy0XfLuqfowniqYJ18asQBG6CcBt5YegbkNVBWdaZfDLcyHHOi2M85fRJH6VZAskXqMQEyCQts59mrpgwVuG2Ul4d21N4o/teeu+3p5gWWdjRJqp14mxj0IB7Cv4ZrPu6f+8ehBxh28WYPNEVoKKII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ynR0ViI9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hUqPEX1Y; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747059916; c=relaxed/simple;
+	bh=oUlvs94RBEXAj4to71NbS+RWY1nXlo5GOjnk4NPjH1A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=R683ZzD/7DsK7CF9nTD6vRiPMRpr0ryb6rvOMTBo33RlgoambLLjf8VwOUQ83bl3+xCkR70Br88H7CKgLFvJ0elMnxYFXCRHA2C/7ZxoF7ya0W4tOrFlhfrlMfAZDuGJmWLvDj3ggyCTPqSx6mmHoh85+cNgIFfDUUcxmIuNAHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQL/zkOM; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ynR0ViI9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hUqPEX1Y"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747059880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Nu6e7u4zlEaPLOwI3OMMxF8f3AfgQopTfH9NxUGGPeA=;
-	b=ynR0ViI9LVzx68V4gW83WzzLgoAXtjBBlPCJ4V/aRqIbqP3ZwPCEE12ncdQ3nvbqN3VcMH
-	3Jo5W0sBzYNfIWiu4Y9yupFDWloPxOX9a/4lc59bcC0D98QOK7qFyRx5GpHeUxjzBm8GiI
-	mBI4TSNyc6FwaYTqNAAf6h/qBUEufXotJhiBjt6JFOVk6NFFXM4YFtXE6LALa72EELjfY5
-	7bHhsMeVGE60GvJKZzPpmZYOxh4cNbiGc5tsXDVEOy5ZzG9LrRTjPdTglo7UMjRvThl9yj
-	22D2Tn6bi8Yb46z263s7DdZSY3S20sKYPBNBmVcb3FSVWYK3WecFxeu5kNJHSQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747059880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Nu6e7u4zlEaPLOwI3OMMxF8f3AfgQopTfH9NxUGGPeA=;
-	b=hUqPEX1Ytc3z55oLoyPx9rrmwlywl/Bkxiedg7qUAH0+sBE5ICcZeaBi/nUywnfuSKDmOr
-	eq+I/DxAhXWcRNBQ==
-To: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Sascha Bischoff
- <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>
-Subject: Re: [PATCH 3/4] genirq/msi: Move prepare() call to per-device
- allocation
-In-Reply-To: <20250511163520.1307654-4-maz@kernel.org>
-References: <20250511163520.1307654-1-maz@kernel.org>
- <20250511163520.1307654-4-maz@kernel.org>
-Date: Mon, 12 May 2025 16:24:39 +0200
-Message-ID: <87jz6llxeg.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQL/zkOM"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7082ad1355bso37794737b3.1;
+        Mon, 12 May 2025 07:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747059913; x=1747664713; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oZbRl8KS+BWf2EIYeCK4PxGhnOATtqeKgkvhRlCYPQw=;
+        b=AQL/zkOMIVJmsCuccWzm1+szFHa/q/K0QgbRXxlf4wY1Fju79K3oS8FY2PAoNhea0O
+         ywH2rYhTsMzhTSzXIhcNSfMZazsAfUUZIfyKmx66UdMbgGWNmE6oVTeQ+ol1vcwmcXxd
+         3tQELtWyzCgF922r4yId/9eGnsBelxADAj3HzguxYEiFju1lG1luO6nRezsFj6lsIPhX
+         Cm8GT4DBa2NFCM02xld5BpA4+kVgQQkbU5RIGNlLL+FRHI8Q/kUWM/AswjByRaW0IcBE
+         9LyFwNN8H/pubzB/hhU7fxL1p/krtTIAsPg5k1UmJ8YC5GdX9YMhtjgmglAAxg38DD+A
+         Js2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747059913; x=1747664713;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oZbRl8KS+BWf2EIYeCK4PxGhnOATtqeKgkvhRlCYPQw=;
+        b=aCmH8LKVEmlOo35a9CL01A573Xn1gIH2FnZ7gh5Jhv0DweCWqSV4uduFThd8YiAzcw
+         P6AY7CiQMFreV8j/5VX1BXf0etIHbCUSSdgF9joD8133GNU79wS7j7XkLiXQWPrk7tPR
+         O5GrNb6DOzca1K7eDzTAEfoAw1PONZdg5Ib5BzpDw6cEPB/rV+dx/jOxym/I0m2tf/6I
+         ayv/eJnADcu+M8efonxrBa7w5Dix0vMON9OHuwVIjufuRhXcYFSOpZxWFYoTGhLfc13Z
+         /AX6BkTHREsxBYEDDdQQwYJ+fa6ts+HR6KTqyrqWnrkhvOd3sm0R4qQMGfndfWOtr4cz
+         rzlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUXAgtSURlRBWVunK7T3sPH/LrTmcCvQRO5Xh77gU+kGxXYZknI7MiuVidRg5ZtGRBOwpqdl7+JMaZ9Oon@vger.kernel.org, AJvYcCUr6BWSOiCAU0SaS+heov62jINjxaKBZinEqWFrg5AJvKtFjuKbWCbNwsNsJbuOLy5E028FmeTs8bxY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yywi3hBUXcbz5W1fJPLO9edRN3BfJ8ufodJchBn4CJa85iljXi+
+	LhWtaO/zGVECMj2NZ4ab2TLewzizYzI1YAfCQsOfyVj/HHjeBJ4B
+X-Gm-Gg: ASbGncs5WXKgdFJKOEt289ExxLoC0ld7nVPO3tsVDxPoMIOQIFY0clgKRPRZGNrQiVC
+	VcY/MFtf0ysbOrM5zTF6wmuHxs1JPlHeTwM6CcUiK9sFQO4V7/D0OzbMA565IpcTQmwSffVoHI4
+	kbVvr7UQGQy8WB72q9BRKJ90yBrMTtusLNES0j7tC0z/xX79ooB0YeBrsWzuK8MtTjJrF816wOu
+	43sj6hMlRtIU5F9sFCpeUyKKeq0KdFQ2VS2AfzikE05xkAQp6a/bG0gXEJ0w6+xN3dwAO0DBifB
+	zN4h3PxQEIjHgaBMJ203NgnKBu6rfjgLygRiyEcIaKva8O9PXg==
+X-Google-Smtp-Source: AGHT+IGPXvFglFcBwoDsiyaAhXCH6w3uRi1CS1sCn8IeFG9vKgl1qLkLZR6tArD3ragmQdU3BAw4QA==
+X-Received: by 2002:a05:690c:6c89:b0:6ef:6f24:d093 with SMTP id 00721157ae682-70a3f9eab47mr190835947b3.6.1747059913522;
+        Mon, 12 May 2025 07:25:13 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:3::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d89a2cfsm19522327b3.12.2025.05.12.07.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 07:25:13 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: "Huang, Ying" <ying.huang@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	gourry@gourry.net,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	osalvador@suse.de,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
+Date: Mon, 12 May 2025 07:25:10 -0700
+Message-ID: <20250512142511.3959833-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <87zffizk4r.fsf@DESKTOP-5N7EMDA>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 11 2025 at 17:35, Marc Zyngier wrote:
-> The current device MSI infrastructure is subtly broken, as it
-> will issue an .msi_prepare() callback into the MSI controller
-> driver every time it needs to allocate an MSI. That's pretty wrong,
-> as the contract between the MSI controller and the core code is that
-> .msi_prepare() is called exactly once per device.
+On Mon, 12 May 2025 09:35:16 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
 
-That contract is nowhere written in stone.
+> Hi, Joshua,
+> 
+> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
+> 
+> [snip]
+> 
+> > @@ -3707,8 +3720,12 @@ static void wi_state_free(void)
+> >  	kfree(&wi_group->wi_kobj);
+> >  }
+> >
+> > +static struct kobj_attribute wi_auto_attr =
+> > +	__ATTR(auto, 0664, weighted_interleave_auto_show,
+> > +			   weighted_interleave_auto_store);
+> > +
+> >  static void wi_cleanup(void) {
+> > -	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
+> > +	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
+> 
+> If we use wi_auto_attr directly here, we can remove auto_kobj_attr field
+> from struct sysfs_wi_group?
 
-There are some MSI controller which get confused about that, but that's
-a problem of said controllers
+Hi Ying, thank you for this comment. I should have caught it as well.
+Removing the last users / setters doesn't seem complicated.
 
-> diff --git a/include/linux/msi.h b/include/linux/msi.h
-> index 0a44a2cba3105..68a8b2d03eba9 100644
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -513,12 +513,14 @@ struct msi_domain_info {
->   * @chip:	Interrupt chip for this domain
->   * @ops:	MSI domain ops
->   * @info:	MSI domain info data
-> + * @arg:	MSI domain allocation data (arch specific)
+Andrew, I'm very sorry -- do you think you can fold this fixlet in as well?
+This is a minor change that removes the only users of this variable.
 
-arg is a horrible name. Can this please be alloc_info or such?
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index d5ae36d2eda8..8581cc861945 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -3543,7 +3543,6 @@ struct iw_node_attr {
+ struct sysfs_wi_group {
+        struct kobject wi_kobj;
+        struct mutex kobj_lock;
+-       struct kobj_attribute auto_kobj_attr;
+        struct iw_node_attr *nattrs[];
+ };
 
-> @@ -1025,6 +1026,7 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
->  	bundle->info.ops = &bundle->ops;
->  	bundle->info.data = domain_data;
->  	bundle->info.chip_data = chip_data;
-> +	bundle->info.alloc_data = &bundle->arg;
->  
->  	pops = parent->msi_parent_ops;
->  	snprintf(bundle->name, sizeof(bundle->name), "%s%s-%s",
-> @@ -1053,21 +1055,28 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
->  	msi_lock_descs(dev);
+@@ -3833,7 +3832,6 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+        err = sysfs_create_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
+        if (err)
+                goto err_put_kobj;
+-       wi_group->auto_kobj_attr = wi_auto_attr
 
-Please work against tip irq/msi which carries the guard() replacement
-for msi_lock_descs(). This patch heavily conflicts with the queued
-changes.
+        for_each_online_node(nid) {
+                if (!node_state(nid, N_MEMORY))
 
-> +static int __populate_alloc_info(struct irq_domain *domain, struct device *dev,
-> +				 unsigned int nirqs, msi_alloc_info_t *arg)
-> +{
-
-Why does this need double underscores?
-
-> +	struct msi_domain_info *info = domain->host_data;
-> +	int ret = 0;
-> +
-> +	/*
-> +	 * If the caller has provided a template alloc info, use that. Once
-> +	 * all users of msi_create_irq_domain() have been eliminated, this
-> +	 * should be the only source of allocation information, and the
-> +	 * prepare call below should be finally removed.
-
-That's only a matter of decades :)
-
-> +	 */
-> +	if (info->alloc_data)
-> +		*arg = *info->alloc_data;
-> +	else
-> +		ret = msi_domain_prepare_irqs(domain, dev, nirqs, arg);
-> +
-> +	return ret;
-
-	if (!info->alloc_data)
-        	return msi_domain_prepare_irqs(domain, dev, nirqs, arg);
-
-	*arg = *info->alloc_data;
-        return 0;
-
-perhaps?
-
-Thanks,
-
-        tglx
-
-         
+Thank you both, I hope you have a great day!
+Joshua
