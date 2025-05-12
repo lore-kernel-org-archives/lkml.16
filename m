@@ -1,179 +1,161 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A65242923
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7496134D4
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065373; cv=none; b=pVmC4SfdfQWbRJMhLFxLsicJq1exQjHJq7UDAtDDtspDvE/sUQSK1gTzOwNd4rsH4o07A7RaXjTgI8vFv/zJxiRGpTxeWNl0XaN6TKxBTJihwLFbE7jy1CIWy94Hxiyo36BlECFNkSoFE92erME94tnWCOfBvZF6ZgR648l1Qkk=
+	t=1747065424; cv=none; b=HKKUnzXTHGl16aSrE8umIdci8z95XzDGqTZioR3mI9nahPILpmmmPBzFBw6i21kNO7iQLXa+9RZ0P5rg+UFDj3qPtS9ScZ3kLGxZbPeZuaOPJsSeSAk001sSReVxLkHLabDB+SGZZvke13MMQtwiCUenJUGGiyLCgZRFiy0D6XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065373; c=relaxed/simple;
-	bh=f2jWGaOfJzxueHAb4yFdMaMw58Z+YVOXeRTOkExZLiI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mOcKV1PCqKEExYSmDWQZ1V26E0F9JYmUXTN7MsFHuYSRbGErNtFMRPCRPqwhDN5ItGBbtBowZbIzh40osXGFuvKa+4sHzP0xsFwI/1/zDKUx2AdueMPIPm2JL0jwqZFJx6iMB5RKR9G5BHpuha1uafcGdYPeOt9xR494GC2Yuq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KKMaIo2j; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=q3vtoZ/D; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KKMaIo2j; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=q3vtoZ/D; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747065424; c=relaxed/simple;
+	bh=vIJFy1J5IitTiA0zWWnMwAXixJjGYXx9yRIC4TtCy9Y=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AMcZwLZM7WyqlYy7AH0OTrkPqVF5Pm0wwIoQDJL1r6V0hwpecGHO41HeC/leOkMzI0ZC6wfyYm61Kg5kyedfgBdJbsg1MzgAIn3vRjx0FwRrTPdIS5/PtbHuTimcdqqsOjg+8wSxmpXU7c2QXz+X1/EFI7dWMBEuDXbSv4qJrr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJilTLEz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KKMaIo2j";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="q3vtoZ/D";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KKMaIo2j";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="q3vtoZ/D"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5FB3F21180;
-	Mon, 12 May 2025 15:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747065369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
-	b=KKMaIo2jKbpBGkx/fBNsQS+Z+VWI5kTkYrJ95CpK/fczbBsRUOv/rYInjEW9AJI4aoHvrs
-	lLG4L1aBQDT76uppQxClwIgM+FL/XJolkekRaTfzbGh62Y78KrotxQIshRcfWptXEDW236
-	X65jU5Iatd2FJ/CmTGr7VsiDW5yDjZ0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747065369;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
-	b=q3vtoZ/DRldVfOtcjsrqEFeV3/LXb691myGUPK/O6Fd8T2qHtzagR6dYbrz3pElKtNVUFM
-	7MKhYj+/BF0H8LAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747065369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
-	b=KKMaIo2jKbpBGkx/fBNsQS+Z+VWI5kTkYrJ95CpK/fczbBsRUOv/rYInjEW9AJI4aoHvrs
-	lLG4L1aBQDT76uppQxClwIgM+FL/XJolkekRaTfzbGh62Y78KrotxQIshRcfWptXEDW236
-	X65jU5Iatd2FJ/CmTGr7VsiDW5yDjZ0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747065369;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
-	b=q3vtoZ/DRldVfOtcjsrqEFeV3/LXb691myGUPK/O6Fd8T2qHtzagR6dYbrz3pElKtNVUFM
-	7MKhYj+/BF0H8LAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4739B1397F;
-	Mon, 12 May 2025 15:56:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WZAPERkaImhdWQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 12 May 2025 15:56:09 +0000
-Message-ID: <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
-Date: Mon, 12 May 2025 17:56:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJilTLEz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B32C4CEEF;
+	Mon, 12 May 2025 15:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747065423;
+	bh=vIJFy1J5IitTiA0zWWnMwAXixJjGYXx9yRIC4TtCy9Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cJilTLEzWJ+5/y/u6z/HiA2WABgTOZS+kDBIWyxXNQ9S8F0u5VUcSDqSd0dmfDjdU
+	 /oEmw7yBQMJ4ttM1993SPmSECYK9szAuh/vwTtkQh96XzsvGyugingJXYGyWqSALbm
+	 edeGk/SoxtjTZ1HzqcfNrp8T93fsNg7ouDzRfR53T4QxjKJocHj8tIboenGYx//J2T
+	 qgVBtzL/FlweuDhwKv5KGg8VWSd5WoMO/eUxEu+x3TF8x6UVT8TH9d44Mx57eb6z3b
+	 qacoxTFdyq1Y6QCfUILmPmBzRpR0+WUMFvInHLpjUN5/K6ngCQuL9SuAObmYr7UyTn
+	 WhzuegTndAoLA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uEVWX-00EBWw-LB;
+	Mon, 12 May 2025 16:57:01 +0100
+Date: Mon, 12 May 2025 16:57:00 +0100
+Message-ID: <86tt5pg6ur.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sascha Bischoff
+ <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH 1/4] genirq/msi: Add .msi_teardown() callback as the reverse of .msi_prepare()
+In-Reply-To: <87h61plx64.ffs@tglx>
+References: <20250511163520.1307654-1-maz@kernel.org>
+	<20250511163520.1307654-2-maz@kernel.org>
+	<87h61plx64.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
-Content-Language: en-US
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org,
- linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- Meta kernel team <kernel-team@meta.com>
-References: <20250509232859.657525-1-shakeel.butt@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250509232859.657525-1-shakeel.butt@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lpieralisi@kernel.org, sascha.bischoff@arm.com, timothy.hayes@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 5/10/25 01:28, Shakeel Butt wrote:
-> BPF programs can trigger memcg charged kernel allocations in nmi
-> context. However memcg charging infra for kernel memory is not equipped
-> to handle nmi context. This series adds support for kernel memory
-> charging for nmi context.
+On Mon, 12 May 2025 15:29:39 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> The initial prototype tried to make memcg charging infra for kernel
-> memory re-entrant against irq and nmi. However upon realizing that
-> this_cpu_* operations are not safe on all architectures (Tejun), this
+> On Sun, May 11 2025 at 17:35, Marc Zyngier wrote:
+> 
+> > While the MSI ops do have a .msi_prepare() callback that is
+> > responsible for setting up the relevant (usually per-device)
+> > allocation, we don't have a callback reversing this setup.
+> 
+> ..., there is no callback reversing ...
+> 
+> > For this purpose, let's a .msi_teardown() callback. This is
+> 
+> 'let's a ...' is not a sentence. Just say: add a .... calback.
+>
+> > reliying on the msi_domain_info structure having a non-NULL
+> 
+>   ^^^^^ spell check is your friend.
 
-I assume it was an off-list discussion?
-Could we avoid this for the architectures where these are safe, which should
-be the major ones I hope?
-
-> series took a different approach targeting only nmi context. Since the
-> number of stats that are updated in kernel memory charging path are 3,
-> this series added special handling of those stats in nmi context rather
-> than making all >100 memcg stats nmi safe.
-
-Hmm so from patches 2 and 3 I see this relies on atomic64_add().
-But AFAIU lib/atomic64.c has the generic fallback implementation for
-architectures that don't know better, and that would be using the "void
-generic_atomic64_##op" macro, which AFAICS is doing:
-
-        local_irq_save(flags);                                          \
-        arch_spin_lock(lock);                                           \
-        v->counter c_op a;                                              \
-        arch_spin_unlock(lock);                                         \
-        local_irq_restore(flags);                                       \
-
-so in case of a nmi hitting after the spin_lock this can still deadlock?
-
-Hm or is there some assumption that we only use these paths when already
-in_nmi() and then another nmi can't come in that context?
-
-But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
-atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
-irq_save+spin_lock. So can't we deadlock there?
+I rely on humans for that. But maybe I should ask someone to put these
+recommendations into one of these AI bots, and generate the stuff
+automatically. It will be devoid of any actual reasoning, but at least
+it will have the "officially sanctioned" verbiage.
 
 > 
-> There will be a followup series which will make kernel memory charging
-> reentrant for irq and will be able to do without disabling irqs.
+> > alloc_data field.
+> >
+> > Nobody is populating this field yet, so there is no change
 > 
-> We ran network intensive workload on this series and have not seen any
-> significant performance differences with and without the series.
-> 
-> Shakeel Butt (4):
->   memcg: add infra for nmi safe memcg stats
->   memcg: add nmi-safe update for MEMCG_KMEM
->   memcg: nmi-safe slab stats updates
->   memcg: make objcg charging nmi safe
-> 
->  include/linux/memcontrol.h |  6 +++
->  mm/memcontrol.c            | 87 +++++++++++++++++++++++++++++++++++---
->  2 files changed, 88 insertions(+), 5 deletions(-)
-> 
+> No driver is ..
 
+No. There is definitely no driver populating this, nor there will ever
+be. That's 100% MSI infrastructure.
+
+> 
+> >  
+> > +static void msi_domain_ops_teardown(struct irq_domain *domain,
+> > +				    msi_alloc_info_t *arg)
+> 
+> No line break required.
+
+You mean...
+
+> 
+> > +{
+> > +}
+> > +
+> >  static void msi_domain_ops_set_desc(msi_alloc_info_t *arg,
+> >  				    struct msi_desc *desc)
+
+... not like this?
+
+> >  {
+> > @@ -821,6 +826,7 @@ static struct msi_domain_ops msi_domain_ops_default = {
+> >  	.get_hwirq		= msi_domain_ops_get_hwirq,
+> >  	.msi_init		= msi_domain_ops_init,
+> >  	.msi_prepare		= msi_domain_ops_prepare,
+> > +	.msi_teardown		= msi_domain_ops_teardown,
+> >  	.set_desc		= msi_domain_ops_set_desc,
+> >  };
+> >  
+> > @@ -842,6 +848,8 @@ static void msi_domain_update_dom_ops(struct msi_domain_info *info)
+> >  		ops->msi_init = msi_domain_ops_default.msi_init;
+> >  	if (ops->msi_prepare == NULL)
+> >  		ops->msi_prepare = msi_domain_ops_default.msi_prepare;
+> > +	if (ops->msi_teardown == NULL)
+> > +		ops->msi_teardown = msi_domain_ops_default.msi_teardown;
+> >  	if (ops->set_desc == NULL)
+> >  		ops->set_desc = msi_domain_ops_default.set_desc;
+> >  }
+> > @@ -1088,6 +1096,10 @@ void msi_remove_device_irq_domain(struct device *dev, unsigned int domid)
+> >  
+> >  	dev->msi.data->__domains[domid].domain = NULL;
+> >  	info = domain->host_data;
+> > +
+> > +	if (info->alloc_data)
+> > +		info->ops->msi_teardown(domain, info->alloc_data);
+> 
+> Hmm, that's weird.
+> 
+> Why not call it unconditionally. The empty teardown() default callback
+> does not care about @arg being NULL. No?
+
+Because at this point, nothing populates that pointer. It is only
+after patch 3 that this pointer is valid. After patch 2, we get a
+non-default callback, which should never be presented with a NULL
+allocation context.
+
+And since I value keeping things bisectable, it has to happen in this
+order.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
