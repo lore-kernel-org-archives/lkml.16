@@ -1,94 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCCE25A625
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9253725A63D;
+	Mon, 12 May 2025 08:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747040291; cv=none; b=KV7kZM6dGMbNTp9l+cEbxgc95TQEoVO3gKs9CpbtX4VxV5tfEUmS+zevfeBg+PzdFWw2VNCi7+vLKRTBLjiF1fsYavjsMSrHqbWfXjyJDhMAEtTP35t0Ojf39dB7FFWtyT9lhRkfxfcyHwRJun9G5p/YY8YFB4X9KzHcWafSCkc=
+	t=1747040319; cv=none; b=tlKKEvxVrKfKu8vzRSQni85Gn5RPJWAoqNDkALfb1azcmvbVRy0yi+Xi3+LSd8OxivfqKPP9ua55ijHpyGxbecSo7BaZ3DBMNw8BmODadRg1ZbtdQJtQuddD42Uv0h3ZiqWYaLCBptV5h0GtBMeAUJV8NCSjHqBoylwhtdFUCeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747040291; c=relaxed/simple;
-	bh=kc5GSFFX/O1pk4VfeAAu72fqhvLdEcPt+XSmat/prac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EBZ61Imi+QznxoFpdkqeQzumuL9/FUlufHQoiLdakwnZSh6je5J9GlTBJodu0bTUD2eUMhgvhpw6Q6vusmKxdGlcbx+w2MGSsVYVUw9AdDg4ZLE23UsqNYanQehxFsYTLMB7Okdr1hbb7MTzkacpw9y297ut8X9rGW2ywJWRsBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZUdcBvsQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747040319; c=relaxed/simple;
+	bh=A7P8XUPXv6zRLcCTZFqD9dlTu6yVWVAX4HC3mjQThoU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gsKjr9a6ujLnBjVGxHl2p5phxLQHVy67rX2BbD/yfOfc/tgnxwM4NYmtgeC4BKNFEuc8HqJJ3VVe1YzkoV80zk+rCm+fxLpRISX6kIEQJgslj48wOaNUk5JA4+EFEd8MsdmXP1AyOCuUCV7R/neRwEIayjxyqlUrBpyRlnP9Zx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msGuLrHp; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZUdcBvsQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747040285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/itYxELyk+TdH5HSQhUSdXuubPJi4gcF7E7JylRYM9w=;
-	b=ZUdcBvsQhOV2Ile2LS58jOf9FM8qPAiX3d+9UNt76gLfx24To8ShURrp124V9/QE2yy3yR
-	7AdE2hkM1heL42U//EnsU9v38GZIGEKjkh4m0ZqiZe6XTkcPct6nrwRsnJDd4bKtKrUxde
-	0m9vTFP/yrlmAb1WX765b+o9+5sCnpg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-361-D5DDTtu7O1qb0IrEGVFMtg-1; Mon,
- 12 May 2025 04:58:01 -0400
-X-MC-Unique: D5DDTtu7O1qb0IrEGVFMtg-1
-X-Mimecast-MFC-AGG-ID: D5DDTtu7O1qb0IrEGVFMtg_1747040280
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7FDC5195609E;
-	Mon, 12 May 2025 08:57:59 +0000 (UTC)
-Received: from localhost (unknown [10.43.135.229])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 045E718001DA;
-	Mon, 12 May 2025 08:57:56 +0000 (UTC)
-Date: Mon, 12 May 2025 10:57:54 +0200
-From: Miroslav Lichvar <mlichvar@redhat.com>
-To: John Stultz <jstultz@google.com>
-Cc: Keno Goertz <contact@kenogo.org>, tglx@linutronix.de,
-	zippel@linux-m68k.org, mingo@elte.hu, linux-kernel@vger.kernel.org
-Subject: Re: ntp: Adjustment of time_maxerror with 500ppm instead of 15ppm
-Message-ID: <aCG4El4aub9TEKWo@localhost>
-References: <4a6f1494-c6fe-4f66-a376-b6389538ef9f@kenogo.org>
- <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msGuLrHp"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ace94273f0dso806655666b.3;
+        Mon, 12 May 2025 01:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747040316; x=1747645116; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A7P8XUPXv6zRLcCTZFqD9dlTu6yVWVAX4HC3mjQThoU=;
+        b=msGuLrHpi06fJXS4DEn6xwwPl3KbLOBlCVy4meK+POOkU26oLfs9YUpyrhTSBcTYC5
+         jG2Hq1Xn72oVvuSjXY/n19xHH1wLcsRYQNOp9/NmQPePlG3yXHnWOKmqACqIomv0zOrV
+         whqnO+Zqv5P5VcOIjtcvi9PF594K1mpd6Bh02x4ybk8jprQESBOlXtyotu9naR8xf5sS
+         bEGBRhxQzSKARuvsInvbFXJik2wd7XsvRCQYSXqlcpFiBx/khTi0OTQ7hL2Iir5g6bJu
+         VWrmv45IclDN7kmW7+8AChZT00qEGx2tmB5p/jTWbGWFoq0BU8dwP9tmdHTYwtgMThEA
+         JdfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747040316; x=1747645116;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A7P8XUPXv6zRLcCTZFqD9dlTu6yVWVAX4HC3mjQThoU=;
+        b=qEvI03bfQPRL2gpETQevfy22m+UBch/ZH4t9+eIkHx2tktZ8RZW0KSQkj1X8JFfnHN
+         aGErN5BPv4K9dglsd6NvySzYGV5Go3EtXFFhMH8gUwIAZiwSUq0tnVb6n/f27JC25PIT
+         D4X+IfAkjkLbPmO+dgveDBdGtWt+xrmxR06mBXPywG0ejOCEscVCxIgyM1esm+qec7zV
+         BHIJZablEYr00VjCHmYgPPMeo7jNaQUQV+vzyVAUEpmQbBeDHgOK7JO+Dfb9O/7l5wxh
+         lWxnY7D6jCyvmU7GvtKTPcpxqEI2cWFoSebo0lsoSsA2JOyD2foO5Cm9dIf67zDdnXiU
+         i6pw==
+X-Forwarded-Encrypted: i=1; AJvYcCWo8yBVZkT6tg4lcKL59wgvOw9V2xK3RiurShNm8y5VsNspocu8wddirQ6wg4NbHUwAHR6uOzBlnw6oIg==@vger.kernel.org, AJvYcCX15gV7azWWdv6N/vL4YRP5yQeag00K3QMhweH5Jut4Ct/pa4z7P60VzmsTx09aOuYnA60YOIIP/YAIooU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz7LsNhUaXoDKXiK2m4MJPuN573vowo3CuD5n4pjQY9XklkmBy
+	+DdjMdA/FocH1BHtIXDxMRadkwHr+SF2pB3HLxCfN06K7CEv1KwC
+X-Gm-Gg: ASbGncsfWPhd0Ur0OnjQnufqsVbTws/dBp+D49XnutVsOUVmt8nKlJXpFW4v8Jkepa3
+	5o/iDiKJ7j0oq3WP0W/I5jH4IaBxrT/k3glNO02ujqrnZuyFlwbshKh3jIpmqgT3yO+t95kefVR
+	HayjrWFx1Tl+1npOmurIeE8JBE2KvWxdS9Zwyhq8OXYPG4G3yLu/Yifcab7b6/HTtdhCWIZERM2
+	wQTiWTGnvFcd1U+3KfYVAH9eU9IZHIPRKFf6CdmIsDWYJ6v+kJwmM1HkW7mpf1kNMyQ1elWlj90
+	udIfgma6TtrlY3db0mN7M8TXqyyLWlsEiTvgTCKlSHSYc9944Xm6Tg==
+X-Google-Smtp-Source: AGHT+IGeqWIQDxmfP89wFb+3ktXSBHf1gFxheovUtgKj4Mon4MoBshJI9dMIu/Mj07TgMoIJaG8i+A==
+X-Received: by 2002:a17:907:6a13:b0:ace:8004:2a87 with SMTP id a640c23a62f3a-ad218f1e3d7mr1226887666b.16.1747040315688;
+        Mon, 12 May 2025 01:58:35 -0700 (PDT)
+Received: from [10.176.234.34] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2198b6ebcsm582162766b.185.2025.05.12.01.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 01:58:35 -0700 (PDT)
+Message-ID: <93ff21984da1fcc67a5d99e4f68fff00572cf59a.camel@gmail.com>
+Subject: Re: [PATCH v3 3/3] scsi: ufs: qcom: Call ufs_qcom_cfg_timers() in
+ clock scaling path
+From: Bean Huo <huobean@gmail.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com, neil.armstrong@linaro.org, 
+ luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com, 
+ peter.wang@mediatek.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Manivannan
+	Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+	 <James.Bottomley@HansenPartnership.com>, open list
+	 <linux-kernel@vger.kernel.org>
+Date: Mon, 12 May 2025 10:58:33 +0200
+In-Reply-To: <20250509075029.3776419-4-quic_ziqichen@quicinc.com>
+References: <20250509075029.3776419-1-quic_ziqichen@quicinc.com>
+	 <20250509075029.3776419-4-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, May 08, 2025 at 12:45:13PM -0700, John Stultz wrote:
-> Looking back through the commit history, we used to increment
-> time_maxerror by (time_tolerance >> SHIFT_USEC), but all the way back
-> in the git history (2.6.12, and seemingly back as far as 2.3?)
-> time_tolerance was always set to MAXFREQ.
+On Fri, 2025-05-09 at 15:50 +0800, Ziqi Chen wrote:
+> From: Can Guo <quic_cang@quicinc.com>
+>=20
+> ufs_qcom_cfg_timers() is clock freq dependent like ufs_qcom_set_core_clk_
+> ctrl(), hence move ufs_qcom_cfg_timers() call to clock scaling path. In
+> addition, do not assume the devfreq OPP freq is always the 'core_clock'
+> freq although 'core_clock' is the first clock phandle in device tree, use
+> ufs_qcom_opp_freq_to_clk_freq() to find the core clk freq.
+>=20
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Tested-by: Luca Weiss <luca.weiss@fairphone.com>
 
-This 500 ppm increment goes all way back to the original nanokernel
-implementation by David Mills, on which IIRC was based the Linux and
-other systems' timekeeping code:
-https://www.eecis.udel.edu/~mills/ntp/html/kern.html
-
-I think the idea to use MAXFREQ (reported as tolerance in timex) was
-to cover the case when the clock is not synchronized at all with the
-frequency offset set to any value in the +/- 500 ppm range. The Linux
-adjtimex also allows setting the tick length, which gives it a much
-wider range of +/-10% adjustment, so that is not fully covered.
-
-Changing the hardcoded rate to 15 ppm to match RFC5905 doesn't seem
-like a good idea to me. The kernel doesn't know how well the clock is
-synchronized and I'm sure in some cases it would be too small.
-
-The best solution would be to add a new mode to adjtimex to make it
-configurable, e.g. named ADJ_MAXERRORRATE and the actual value
-provided in the timex tolerance field. For compatibility with existing
-NTP/PTP clients the rate could be reset to the default 500 ppm on
-every ADJ_MAXERROR setting. To get a reduced rate updated applications
-could set both ADJ_MAXERROR and ADJ_MAXERRORRATE at the same time.
-
--- 
-Miroslav Lichvar
-
+Reviewed-by: Bean Huo <beanhuo@micron.com>
