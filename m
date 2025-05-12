@@ -1,82 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110551DE8A6;
-	Mon, 12 May 2025 15:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A2C21517C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747063390; cv=none; b=IwyJusQq6DSd/FDkX7g7uXsKmQtK/czBnDlqdwye9Hh6SgwydwFuYq7u55bNi7YR+2MZBX/402uujl/FTd3hLbYs4NRxxnbEDuSjVYAHKonAbrZpjiUpnU7UZM+t3xQwuTYQv6OgbyzKmWF8nBggLBIaNqJcXsCKM/c5EE42IIo=
+	t=1747063404; cv=none; b=Tp+H+ujl5gsJcua9jKkQgbWdAUTWY9HuiyQTY1IyK1gXoUzzLPz/by0FWBoAtTk0Fr4BDlBcsGT4CiJaxugREf/NpeXuT0TeJcXo4car7VuQhrMCgNKK8qvQruQYnUYMSbh877aeGQATi5uSDZlT434NNZfh3r1Ovm/GRTdIpr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747063390; c=relaxed/simple;
-	bh=bTluUh+XxqovVbRY+Sbpmqom/EmKfFvjwLJ8AnpA5YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lq7Iby1o5+w2yoBUzMu+PKKA4qsHUcg+YVA9YktlEndH1hdMmHx29r1UAnjUb0A6rwXMb3jGZWubi0N49NTYWT3FWep2I0h4sUyyHQAnHGiiCCHW580HjxTOLWXvVeh1xdT9RxpOQJVF2M6jkxStBxEA+8iSLxHjZKePSJxGYlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iY74upwZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iY74upwZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 397C8C4CEE7;
-	Mon, 12 May 2025 15:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747063389;
-	bh=bTluUh+XxqovVbRY+Sbpmqom/EmKfFvjwLJ8AnpA5YA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iY74upwZEVgnMWkd6DFuihA0PhEb03hzXLjWuL6d6mEXu5y2mDo8EZyjD2jy+9w+Q
-	 2pb1yePe6EczYRs2HXQKPr9ElYKqReLG9dbeDJYfd0y8njYBizl3TOmHtEWya6v6MC
-	 eM5hBveawqia8ow+DPKHr84/PfOvxFgMH/HI/BX/6bsECCREbU7YBgxsdtg1al7fZe
-	 r08yz0Q8gq4i1bnie8vmGLBcbk4f9mzmnUxNk6kt/SPkxwqT0i0oGTRb5qR976Bhsb
-	 iiIb/v7kck8BDKVDdQXc1fmYd4wkAC1SRRAR4y83o5GM58UQtzMwwrDgLL5l79mWIu
-	 LiMVwdvCOqCGA==
-Date: Mon, 12 May 2025 10:23:07 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Parvathi Pudi <parvathi@couthit.com>
-Cc: diogo.ivo@siemens.com, rogerq@ti.com, conor+dt@kernel.org,
-	richardcochran@gmail.com, devicetree@vger.kernel.org, srk@ti.com,
-	basharath@couthit.com, pabeni@redhat.com, horms@kernel.org,
-	linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com,
-	rogerq@kernel.org, s-anna@ti.com, tony@atomide.com, kuba@kernel.org,
-	pratheesh@ti.com, jacob.e.keller@intel.com, danishanwar@ti.com,
-	netdev@vger.kernel.org, glaroque@baylibre.com,
-	s.hauer@pengutronix.de, schnelle@linux.ibm.com, krzk+dt@kernel.org,
-	afd@ti.com, rdunlap@infradead.org, edumazet@google.com,
-	pmohan@couthit.com, ssantosh@kernel.org, andrew+netdev@lunn.ch,
-	javier.carrasco.cruz@gmail.com, vigneshr@ti.com,
-	krishna@couthit.com, linux-kernel@vger.kernel.org, nm@ti.com,
-	m-malladi@ti.com, davem@davemloft.net, mohan@couthit.com,
-	prajith@ti.com, praneeth@ti.com
-Subject: Re: [PATCH net-next v7 01/11] dt-bindings: net: ti: Adds DUAL-EMAC
- mode support on PRU-ICSS2 for AM57xx, AM43xx and AM33xx SOCs
-Message-ID: <174706338693.3372878.17398563182195678411.robh@kernel.org>
-References: <20250503121107.1973888-1-parvathi@couthit.com>
- <20250503121107.1973888-2-parvathi@couthit.com>
+	s=arc-20240116; t=1747063404; c=relaxed/simple;
+	bh=ZNatpBKMgJMasDTggw6oWww3VlbuD17EyjIJyveeAek=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=VfyNwk58DikTN6ZhzlPwUqk6IYaoLS7J0owlk270aZEV8ocnKTW3+zX9vTMo9gAyNg5Z2KyjYhZK5A+08bA5uJjTUy49wnnxJDApKS/C0Y/hR/zNvudQYo6JPi4RfRFTRGXLKTshSUWq/2EBN2cmjVGU1DDTWdgGZyhJqIl34TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 597E5294730;
+	Mon, 12 May 2025 17:23:17 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id Ahisx6RyHIWl; Mon, 12 May 2025 17:23:17 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id E64F3298562;
+	Mon, 12 May 2025 17:23:16 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id XhBcJvTwNc9D; Mon, 12 May 2025 17:23:16 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id C669F294730;
+	Mon, 12 May 2025 17:23:16 +0200 (CEST)
+Date: Mon, 12 May 2025 17:23:16 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>, 
+	linux-mtd <linux-mtd@lists.infradead.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <1689545397.30901605.1747063396608.JavaMail.zimbra@nod.at>
+In-Reply-To: <87r00ugcat.fsf@bootlin.com>
+References: <20250512084033.69718-1-csokas.bence@prolan.hu> <87frhambri.fsf@bootlin.com> <d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu> <1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at> <4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu> <87r00ugcat.fsf@bootlin.com>
+Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250503121107.1973888-2-parvathi@couthit.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF138 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Verify written data in paranoid mode
+Thread-Index: 3qRrT5QGF7Kng0yuxs4zby6CU3+jIA==
 
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
+>> The problem we _have_ though happens to be a bit different: here we are
+>> blursed with a system that corrupts data at a noticeable
+>> probability. But the model is the same: a stochastic process introducing
+>> bit errors on write. But I sincerely hope no one else has this problem,
+>> and this is *not* the primary aim of this patch; it just happens to
+>> solve our issue as well. But I intend it to be useful for the larger
+>> Linux community, thus the primary goal is to solve the first issue.
+>=20
+> I don't have a strong opinion there but I don't dislike this idea
+> because it might also help troubleshooting errors sometimes. It is very
+> hard to understand issues which happen to be discovered way after they
+> have been generated (typically during a read, way later than a "faulty"
+> write). Having this paranoid option would give a more synchronous
+> approach which is easier to work with sometimes.
 
-On Sat, 03 May 2025 17:40:57 +0530, Parvathi Pudi wrote:
-> Documentation update for the newly added "pruss2_eth" device tree
-> node and its dependencies along with compatibility for PRU-ICSS
-> Industrial Ethernet Peripheral (IEP), PRU-ICSS Enhanced Capture
-> (eCAP) peripheral and using YAML binding document for AM57xx SoCs.
-> 
-> Co-developed-by: Basharath Hussain Khaja <basharath@couthit.com>
-> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
-> ---
->  .../devicetree/bindings/net/ti,icss-iep.yaml  |  10 +-
->  .../bindings/net/ti,icssm-prueth.yaml         | 233 ++++++++++++++++++
->  .../bindings/net/ti,pruss-ecap.yaml           |  32 +++
->  .../devicetree/bindings/soc/ti/ti,pruss.yaml  |   9 +
->  4 files changed, 281 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
->  create mode 100644 Documentation/devicetree/bindings/net/ti,pruss-ecap.yaml
-> 
+UBI offers this already, there is a write self-check as part of the io
+checks that can be enabled
+via debugfs per UBI device.
+So for troubleshooting this should be good enough.
+There is room for improvement, though. Currently it uses vmalloc().
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-
+Thanks,
+//richard
