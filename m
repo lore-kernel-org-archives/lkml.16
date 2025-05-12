@@ -1,368 +1,359 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E8B23C4F8
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064095; cv=none; b=jdK1sXlnU55qJtiOjgzJT4rcnlEwZ5mscTvi1LMUADwQMUEkj1iE/k6qLpaLqSVDZrFSblCu8ei0s7yflOypJYA1uQzkZc3X9xDALBurt+6fd2iEB4+Ma7BwWAJ/V69SZz0es+9dI78tvnIxMlyIGFzHm40kZhaDi55N1sI++68=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064095; c=relaxed/simple;
-	bh=pv78F9stsJ8G3bZB63UkFBcvn8rAZ1R9f12eL6IUMao=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dmIQZG9a067XYnb2aoksfxw1LqowSraUDxDEW+IyslpgeUYChTqxbseq17VMiLHmyAqixyKrgTx/lBh6enaStXJ3QLdnGYlOpRO8KP2KXbESWpLOmlMUTaexAlkR26E43iWzhgOu4ksEzkj27v3rqR4Aa2pX3TEAyTqYbimYmz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=bqXCYsgA; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBF2215773
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747064096; cv=fail; b=FTPk+ng7WshQTbURuENTTOLvBl6Mq0QfOHVUIWI6FXeoLRW8Tu/QiwYW6i07bGd+HhozXH+LTnB9MDlCD8EQ5Jmq4KVVXynyL4ETU4UnaGKkyhZelrjgmV7uvWduppoNGBljVKNaUoT9BF3qkSNoZcqTixgaCyF+6ZPwavxaZ58=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747064096; c=relaxed/simple;
+	bh=gGhqWBoBilE7mH17MPX9VsZqPRmmR+2mk9uC+olHhio=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Sx7ABFhsdzR9nRz6Mf5zM0Z0VVyy/6me1vQYDkcJgDCzPEjRAwHwMzsCdnw7yYBUWLY+dPoFwThtG/FySkXNP+sglZf0hUyf354Me2Z/2ff8VE0f1m8fMACEATixgzvvKpf8VT2iXgjDhxQubPaxFD47KaYngDYhvCqNqbG/BRc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cL2kZxHw; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="bqXCYsgA"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-86135ad7b4cso245097739f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1747064092; x=1747668892; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lYJaGZXZUyw5dmv6C4SZsZQfI6bTO70Cjj2nmUvqWrc=;
-        b=bqXCYsgAGSH15OPeC9/2Sjd7vlz+0DP06PBgoe6rV8oMSSNBvAxIr4+acYol0IUXZC
-         S6asXE4dKPa6B6wxclr3X8f4L+DTuRFkroIxjR6mQIewQCjsrO6pUVPOBitqPO6haWSp
-         RSXbiQqF5UxCrsGfD7H0v7ozAqZ5XrjOKFeyVmpbip1LeoGAJ5aCOuzbhP0dbjgV8hWT
-         yCOvra/zUGWNOXF3+ACrd1LQSenI76wZm/jTsNK/LrVXtZURdbPYP1D4X3nBh5h0A+Pt
-         pTXlcxtDMHnp/cuCoGXaLwnabqg9+hNaa8fTOLhJYMMDMGLk81OSqa3cUPXuWIjNH1FI
-         9a2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747064092; x=1747668892;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lYJaGZXZUyw5dmv6C4SZsZQfI6bTO70Cjj2nmUvqWrc=;
-        b=uVh+2RCThMMnmyC1qSgQQEh6YGeijfHBcJ4q+5AL2UwSdUO+LyYiAFnIk9eIr6pdmg
-         sFSDWII+ZQ3MD1NSZx5zmhYpYppWsfFtvZlGXb/8FL7JtefS7wUZIiL7DwoYoEiVuiT+
-         pJkl5HGwhqi2nZFmc5vto1+F1BrQgUOA/Ms/OhucypG9uPy4rlyIaskr5vMZVeDdFxYO
-         dHBdfXljhVQJWSW+AR6YQwRXtUUurxAtZ8DOhcs6j6WGCZgcKOTLH9u+qLX7oo/CvdFO
-         zc6ahNl2vzi5dPPJ/EU25Knoxleqng+ThyV5UTpNnHpQeYSZzKiVs3I8BUypog2W66C/
-         zPuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxBUvMLKz2cYAqV/BQFdIqAJiN9wH76tWl5AIZcm2N1z0nkM/elG9+iGK/OvlFWdfdqvYoANxlg7izzEU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCW3XlHBWaafHEiUYL1ZFPvLLjUjzAiCajIlvktdQ4Xx6bklVf
-	fdH9rWVJgKMhzJ+fxIPKS0TY9g494XUnJbgGbtR1H2HKXPM5GmrsbPzo1B+kzBw=
-X-Gm-Gg: ASbGnctUzwzn/AXH9JxQB9AJZ+Eh3w/qqlo/VP7HPIN49Ys77q5h3ES7L6pyaMbz6C7
-	IPjH4dv3UVbAcxCSfxHRfquOJJhyn3lkXf+MCnLes9P9GOE12efL3CHBiJxzsMAr5HbxPe5BlY2
-	PBNWlYP6EwhD9zkb12ysOZ/AumDIsSqRI5qFzLjELCqOwub3F8rKlRe05QomwUKkWU10R0aupxx
-	MN7nm18BcHXr2d09+20XJahNjRrEO6siQYzkcaU9mhCKcOIQrUIyqctkhUVAz5kamPdWkVH0kXJ
-	FNn65eVga3p45BWG9xLonoOmcBTviS6e48onG+78a+vvQ/aAinV71/S0BraoVt38l1UiCs6vr8i
-	30GtR0ysVL17Ovxw=
-X-Google-Smtp-Source: AGHT+IH16NsP5SQEwuJ4If2aiYvLrNSPMhqtNtOBoBzqL+qXeoZ6Dn+0ikRgSmuBULdjkG/IsIjvIw==
-X-Received: by 2002:a05:6e02:154e:b0:3d6:d18b:868c with SMTP id e9e14a558f8ab-3da7e1e71a0mr134648155ab.10.1747064092279;
-        Mon, 12 May 2025 08:34:52 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3da7e10477csm23785295ab.27.2025.05.12.08.34.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 08:34:51 -0700 (PDT)
-Message-ID: <abfd4c78-2592-4b8a-97be-109a8fd1bed6@riscstar.com>
-Date: Mon, 12 May 2025 10:34:50 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cL2kZxHw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747064095; x=1778600095;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=gGhqWBoBilE7mH17MPX9VsZqPRmmR+2mk9uC+olHhio=;
+  b=cL2kZxHwXBPsyo7uyVB7GVwhK0Aq78dENpUQhgF1vBq0jYty9cNXWqX7
+   D8DtdUgZhcMjyutsbDGmZRl6lDihOYdx6KeRnINhxeKxLxNfSa6zqSluC
+   u6pxWGXId+mKvpUhzM26XBLR1HCKyEMdiBNSkCxlAfpmz4pkJl0nfFTPA
+   sY8dpHFi5AJlg0JG3AUaM/lO4a5+cKd/GLCD6xa18Jl4YHdjep2QiWww9
+   D5gT1dhxnvM9H/Or80EsYIXN+9N7rf2mfN/hdO0ARCrMuAZQ77PhvSEEB
+   +QjH5o37iC46EOPuWDySrPrT9cTFVvoBTW6dlsSlE/SGYmSrqwk3qrWAE
+   Q==;
+X-CSE-ConnectionGUID: gn7LJFqOST6UgYNQjCQLpg==
+X-CSE-MsgGUID: 0mRGKMgaSh+tMoJNXsfGAA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48736816"
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="48736816"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:34:54 -0700
+X-CSE-ConnectionGUID: nT3kMNbbQ3K9M0c8dyfKKw==
+X-CSE-MsgGUID: dofz1QrwR3OrA+ihrwSFzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
+   d="scan'208";a="141459053"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:34:53 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 12 May 2025 08:34:52 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 12 May 2025 08:34:52 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 12 May 2025 08:34:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DbWIPartWz5T/aKVQ4ozwvRHvlWQQLh3JUaDoQ+mkdhtbXRil47f7U3JoW43jCiDH6Fhxd3Uwg6mJKOpkOg1RZY7zFsrVLy6lj/H9PjvuEsrcexqTHl+/AJbPiYIRqtxezy8uOd5rL0YJ5EiQ9fwtGqsPBtxlzDyVPBAip6p2ulX0NaPD2KJeYIts1D1m8gX9W+QqcDn8x+uqJn4p+V/AijJvf2Ov9W2oI0i02Q5Ep+BvUzdyz9kap7OLME6KdU+PmtoYr/Bq2cgIZxcitJUETQPSXitIpdN4K/1H6Nm3xOo1fj5A/nFIbva1uh9+PQNm9nAjdGF81YQ3a74BdiHJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OK+5CGFyAbprm6k/CoNOo9x0XMwUwQN4zeB3tBZpvKo=;
+ b=nADqBtVYy8Qo4vi7Kl2Noxx+hWxa+lOEsbC6JztsHDTrTb7JyBFVR3C1S1NXtwGUDleUf6776I1pvozzd4MhK5tGTA4ltyOi7PtLVsG7U5umrD6bzPP4CRfWO/9stOGjb5iDUcgjMnGwFrFLj7POG6PdikFbngeQyRKvnVRMONmUcE2oKhHkrER9OTlg/A27BBB8b4TzJopTWQk5oHNgng+N2GCWDZ0EawRcNnlFO+uHfgNn7/QEdyovBSjQxjSvNhBdC6gTLr74Fe4h9Pxx+xWvK6khfDOPnjAOmv/nfAhPVkLAayOhinjCpZ+cJFwVbhH/vUwRcLra6rT93LYYJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
+ by IA4PR11MB9108.namprd11.prod.outlook.com (2603:10b6:208:567::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
+ 2025 15:34:50 +0000
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563%3]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 15:34:50 +0000
+Date: Mon, 12 May 2025 11:34:44 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
+CC: Alex Deucher <alexander.deucher@amd.com>, Christian
+ =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, <siqueira@igalia.com>,
+	<airlied@gmail.com>, <simona@ffwll.ch>, Raag Jadav <raag.jadav@intel.com>,
+	<jani.nikula@linux.intel.com>, Xaver Hugl <xaver.hugl@gmail.com>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-dev@igalia.com>, <amd-gfx@lists.freedesktop.org>,
+	<intel-xe@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH v2 1/3] drm: Create an app info option for wedge events
+Message-ID: <aCIVFMcJB6T4IjW8@intel.com>
+References: <20250511224745.834446-1-andrealmeid@igalia.com>
+ <20250511224745.834446-2-andrealmeid@igalia.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250511224745.834446-2-andrealmeid@igalia.com>
+X-ClientProxiedBy: SJ0P220CA0022.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::33) To CYYPR11MB8430.namprd11.prod.outlook.com
+ (2603:10b6:930:c6::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 3/6] clk: spacemit: set up reset auxiliary devices
-To: Yixun Lan <dlan@gentoo.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
- guodong@riscstar.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250509112032.2980811-1-elder@riscstar.com>
- <20250509112032.2980811-4-elder@riscstar.com>
- <20250512135429-GYA517867@gentoo>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250512135429-GYA517867@gentoo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|IA4PR11MB9108:EE_
+X-MS-Office365-Filtering-Correlation-Id: a8dc44e3-5c83-485c-3113-08dd916a8870
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?Ee0qAhppleLD5UZYdrG338hzzpsva+YJO5gt6z7vzncux7AoZhQt9YDOwW?=
+ =?iso-8859-1?Q?oxgleJYMXDm3KxJJl0/7JZpBgnF2/IWW0yjeg+OXxZacahTbD4ykmGGjK4?=
+ =?iso-8859-1?Q?STNIFLVzMLd8av7QbjhI9vAb8AMNQb5mpekaE3SehrucBCZ0SyOHdQgssx?=
+ =?iso-8859-1?Q?rC9VBMxENz9K6APmQ3Vkh5WCo6pV9MVi0BnXMqf8vILwMW+CXA3D8Diptn?=
+ =?iso-8859-1?Q?EUGTRJKLFbnRK2LjWhm7XXJZ2pCHkdtNWh5NVIqz3j8Qt78xpS2E6Hgq3C?=
+ =?iso-8859-1?Q?Vdfq9tDLQLeU9IHoMPlSpMAB51k6ahPyFBSC1LZmMErfB/LgsGyiyBezH/?=
+ =?iso-8859-1?Q?dMzad7z3i7J7PuVA1SgQ9qdW7ETicmxZef4fG16SbNnYS0918UFikVO/x8?=
+ =?iso-8859-1?Q?VhhQ16+NDsQbn0aysvLI6NeQfwsSglqyfv3YS+4L1fgLqqaROvWiSYSGaL?=
+ =?iso-8859-1?Q?aWz9CFrqb90ov5Z28aUEj4UWB8r9BtH/mTISTGlVAk3gpKUbAI9qfbchKS?=
+ =?iso-8859-1?Q?KBxuazgl2yfpwR4jr48A/wl5VA7J0aRiRqPzVMqyVP5V4bPIxh6jCcNr29?=
+ =?iso-8859-1?Q?iEKIJ9pdLd9FHeQ5bAHqcQyMJN15Pdj7miwEoKpXOxuWcDsT1tOaqDHL08?=
+ =?iso-8859-1?Q?PmCTtrHIIkNnAE/0sLiiHEbKbafaQDgtweS/394P59AgFe7wCB8YDqte6S?=
+ =?iso-8859-1?Q?Kzfn98HebUHSBkoyv8rolE7zcJxTsit5naoEc5MHQMQhBSGOm+7K3dVjfB?=
+ =?iso-8859-1?Q?+bCL7g0fOSY20SURwuOhETSYEthecYJw5FONqkoFH7PLocKbWrdecS2Gl4?=
+ =?iso-8859-1?Q?JVDWcSYDhp8Kf2oO+ttMtughzueMNvNPa4IwicXYGxfHK/yaT8O9cr5ACT?=
+ =?iso-8859-1?Q?BdVIhO6MzK5tseP/H3H24vN3Y5hfUBMnioJt+AdPBvB2SpUP1o9XQ/YzMA?=
+ =?iso-8859-1?Q?CKR+ZVMe7VQIIktGoPFhFXvUZ6/bHWmNzBN+WBKuPKbbtRx7PwISHsnQ8t?=
+ =?iso-8859-1?Q?dboKTnYlaDZklmlRbpH37CDRvolVueKQB0IkoHGDV92H6HzKkBRFIfQyCO?=
+ =?iso-8859-1?Q?Nc4NOAgUbmm2v3ylol0/66v/uLyhvskWLu/ajpKxXlPU/qWZ1zCKLO2rJr?=
+ =?iso-8859-1?Q?FCr7fsYq6P+O1Pi32F60UN/g3jKduhBD8q/Np2pHM5F3/HD3L7C3wY223l?=
+ =?iso-8859-1?Q?ST+68WtXfJNYLATqt1BCiiiRkVMUh5dExIHd9ZchCPKaKbjIyZGp8Su5Mi?=
+ =?iso-8859-1?Q?FCKwv756bQHUAihMh1YxboKr7YhShzf0aLv38tPhBBoB4/F+1E+USpmBbA?=
+ =?iso-8859-1?Q?/3zpIDuk1qm0dYGv4lUs/aNm689pmDls2jG8nTNOKigKmbYyg1OIrhH5Pu?=
+ =?iso-8859-1?Q?RFXIFHl7Af9utqvcGkpbJpf1HamNJl3JRZ4kfCYYdWR2hGFwirVVI0uSqH?=
+ =?iso-8859-1?Q?LuIJFF2YTpIiBY7uRcRk7c3fm+TmwcLJ7LyWED4O4JtllRZdt5s1bqkk/A?=
+ =?iso-8859-1?Q?I=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?iQd+7musFuOORmlEZTTAgC00JBgp+GZFD3iwMZCUKSfiUjvH6k8OeLZm9O?=
+ =?iso-8859-1?Q?zQEFapI9Tj2NnMzTUNo8MT/c9OmaR5IViwYRy5rjPLaWZrsb1MmFG81fxw?=
+ =?iso-8859-1?Q?eB60jryO1TKzeo8X6rOKEAOacFXIEFqcZmubbAFJGDR6gMARPkdrJVFNOH?=
+ =?iso-8859-1?Q?p+osxVd9NiJ/CvTqArvW+GKT7zY19UT6M2LjvItOCMc81okJ/KRxSDDgc+?=
+ =?iso-8859-1?Q?ZczKJrh7vetCuLwQbNNa9WMY14WthJlzgyh9CMkzjLAM0wlFQxi697Dgw0?=
+ =?iso-8859-1?Q?z/uDDuxpoJiRag0bV0LZj1isU4CHsS7mqD8NQ1gbW++qmGXfnZcqYBab5h?=
+ =?iso-8859-1?Q?Fh15lyMjU+ABNcCPwdq3WFea/AY/yyDgPw1SwuEz43ObrQAjYV+0kbGAfN?=
+ =?iso-8859-1?Q?yJh4SRSEIaVSaeAMZDOlreflleOOHv/RRS65CqLzlViGfJGt3SwMJuWQwC?=
+ =?iso-8859-1?Q?sYmArSWzEAlT998JDyl61YVXqzF2zYIVf1cRt/yGqs256XdcNDTJCommRV?=
+ =?iso-8859-1?Q?YGK0A6xtrNnv6nWbbIrp5SVlzTPDdOmeRBHZ1ZcYPFAaFkGP8usZR2EQ7k?=
+ =?iso-8859-1?Q?miRHARgtwKw7Vg9cIKaO6xFXZYSvC+YA/37SxnwHTQxQ+9F03dm/RQZgBC?=
+ =?iso-8859-1?Q?Xj248/n2EY4SzSlOR5qMh1fObx2niGB2ZvMJifYpahYSpe6vciUboib3wS?=
+ =?iso-8859-1?Q?ZIEIkGDfFWdVhpDLK6kPGoWwKt73RL613l0qQRZvn6NdiQxiHAVPRWg5b1?=
+ =?iso-8859-1?Q?rTEP/TUBLj/spvZ0YUDoQ68z+hho1hgJJNAIvobZ41MMjoKRmY+DrqX6ra?=
+ =?iso-8859-1?Q?BZGrKpznS4/dT4Xo8qlHIoiIBTm4YQTqfaEYc/U2TglgySLs7Dyr5mJGwX?=
+ =?iso-8859-1?Q?Oe4s+LB/PP9VknCj4qtPnH0d6Welxq02QMciE4QAoHrr70eOMlPc9PQncR?=
+ =?iso-8859-1?Q?dZiNdo7TX0T5Lns/f8/LoIIr6E7W2Cfnehg10Hj6fg0pcMysrOWvuiKH+6?=
+ =?iso-8859-1?Q?VsjnaOQdK/I73Y1RUm+dYDkmWiN+RTbM+k8+ufCi+fIXGlBmbg3OjcSc2k?=
+ =?iso-8859-1?Q?yxz2FUv1dhsEE65mx4nu9WQ+161MibiR91UBDd2A1vTekowQ3mfySTjULk?=
+ =?iso-8859-1?Q?IacmCct1N4yvyFevSmzCC4Ly8/DkvJo/zrNltwdpt0vc00UyBNCdDJDChR?=
+ =?iso-8859-1?Q?56/PFqo+OkieN6em26r/3CGcTI/XRbhWNKsEy9+KwBRa6rVDXIxwU4c2eG?=
+ =?iso-8859-1?Q?dmrpbE5b1Eb3/QyJUVeS1uXanek+NMGzjZbPYjx3osTLLTnWVEATL+puxa?=
+ =?iso-8859-1?Q?TOSi0zVGzsuvydMelxCPp+RbJzdiLUO1eDE2BTgIufqBmzjeR7cDYnfmUV?=
+ =?iso-8859-1?Q?8UVFEwJsctMesBMSh/GEshuFCcXNTc01UuvkB667skp54hcsQnOt/ZCiDt?=
+ =?iso-8859-1?Q?vCTiJgllG7p2tXSE3NnxDDC4TPmKAz6nJh+tfl5QTivS1jARHe2SBp6mpi?=
+ =?iso-8859-1?Q?pBWJQ3ixFqENdzUzjH/E7uNf96icdS3sDtvDeDErzh5eQZimcthEz5jn6E?=
+ =?iso-8859-1?Q?AbzdoVtNuGtK8ej8gEjxMTDXe5VWQRVYFgJXXx9x4tw3PYlQ+9TJ81R8f7?=
+ =?iso-8859-1?Q?IqiDQrKlanMDK5z7jzFAxxTpecb/WsFsxJ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8dc44e3-5c83-485c-3113-08dd916a8870
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 15:34:50.0889
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M7HSbnHxlA0L/wx0gilzKciOXZiBfuZaE2EKLcU/RXLOdqLOcNi2pVrqXxql7R6BY0UTOdu4/Zxp+7CrD2YMVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9108
+X-OriginatorOrg: intel.com
 
-On 5/12/25 8:54 AM, Yixun Lan wrote:
-> On 06:20 Fri 09 May     , Alex Elder wrote:
->> Add a new reset_name field to the spacemit_ccu_data structure.  If it is
->> non-null, the CCU implements a reset controller, and the name will be
->> used in the name for the auxiliary device that implements it.
->>
->> Define a new type to hold an auxiliary device as well as the regmap
->> pointer that will be needed by CCU reset controllers.  Set up code to
->> initialize and add an auxiliary device for any CCU that implements reset
->> functionality.
->>
->> Make it optional for a CCU to implement a clock controller.  This
->> doesn't apply to any of the existing CCUs but will for some new ones
->> that will be added soon.
->>
->> Signed-off-by: Alex Elder <elder@riscstar.com>
->> ---
->> v8: Allocate the auxiliary device using kzalloc(), not devm_kzalloc()
->>
->>   drivers/clk/spacemit/Kconfig     |  1 +
->>   drivers/clk/spacemit/ccu-k1.c    | 90 ++++++++++++++++++++++++++++----
->>   include/soc/spacemit/k1-syscon.h | 12 +++++
->>   3 files changed, 93 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
->> index 4c4df845b3cb2..3854f6ae6d0ea 100644
->> --- a/drivers/clk/spacemit/Kconfig
->> +++ b/drivers/clk/spacemit/Kconfig
->> @@ -3,6 +3,7 @@
->>   config SPACEMIT_CCU
->>   	tristate "Clock support for SpacemiT SoCs"
->>   	depends on ARCH_SPACEMIT || COMPILE_TEST
->> +	select AUXILIARY_BUS
->>   	select MFD_SYSCON
->>   	help
->>   	  Say Y to enable clock controller unit support for SpacemiT SoCs.
->> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
->> index 801150f4ff0f5..551df9d076859 100644
->> --- a/drivers/clk/spacemit/ccu-k1.c
->> +++ b/drivers/clk/spacemit/ccu-k1.c
->> @@ -5,12 +5,14 @@
->>    */
->>   
->>   #include <linux/array_size.h>
->> +#include <linux/auxiliary_bus.h>
->>   #include <linux/clk-provider.h>
->>   #include <linux/delay.h>
->>   #include <linux/mfd/syscon.h>
->>   #include <linux/minmax.h>
->>   #include <linux/module.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/slab.h>
->>   #include <soc/spacemit/k1-syscon.h>
->>   
->>   #include "ccu_common.h"
->> @@ -21,6 +23,7 @@
->>   #include <dt-bindings/clock/spacemit,k1-syscon.h>
->>   
->>   struct spacemit_ccu_data {
->> +	const char *reset_name;
-> see my comment below..
+On Sun, May 11, 2025 at 07:47:43PM -0300, André Almeida wrote:
+> When a device get wedged, it might be caused by a guilty application.
+> For userspace, knowing which app was the cause can be useful for some
+> situations, like for implementing a policy, logs or for giving a chance
+> for the compositor to let the user know what app caused the problem.
+> This is an optional argument, when `PID=-1` there's no information about
+> the app caused the problem, or if any app was involved during the hang.
 > 
->>   	struct clk_hw **hws;
->>   	size_t num;
->>   };
->> @@ -710,8 +713,9 @@ static struct clk_hw *k1_ccu_pll_hws[] = {
->>   };
->>   
->>   static const struct spacemit_ccu_data k1_ccu_pll_data = {
->> -	.hws	= k1_ccu_pll_hws,
->> -	.num	= ARRAY_SIZE(k1_ccu_pll_hws),
->> +	/* The PLL CCU implements no resets */
->> +	.hws		= k1_ccu_pll_hws,
->> +	.num		= ARRAY_SIZE(k1_ccu_pll_hws),
->>   };
->>   
->>   static struct clk_hw *k1_ccu_mpmu_hws[] = {
->> @@ -751,8 +755,9 @@ static struct clk_hw *k1_ccu_mpmu_hws[] = {
->>   };
->>   
->>   static const struct spacemit_ccu_data k1_ccu_mpmu_data = {
->> -	.hws	= k1_ccu_mpmu_hws,
->> -	.num	= ARRAY_SIZE(k1_ccu_mpmu_hws),
->> +	.reset_name	= "mpmu-reset",
->> +	.hws		= k1_ccu_mpmu_hws,
->> +	.num		= ARRAY_SIZE(k1_ccu_mpmu_hws),
->>   };
->>   
->>   static struct clk_hw *k1_ccu_apbc_hws[] = {
->> @@ -859,8 +864,9 @@ static struct clk_hw *k1_ccu_apbc_hws[] = {
->>   };
->>   
->>   static const struct spacemit_ccu_data k1_ccu_apbc_data = {
->> -	.hws	= k1_ccu_apbc_hws,
->> -	.num	= ARRAY_SIZE(k1_ccu_apbc_hws),
->> +	.reset_name	= "apbc-reset",
->> +	.hws		= k1_ccu_apbc_hws,
->> +	.num		= ARRAY_SIZE(k1_ccu_apbc_hws),
->>   };
->>   
->>   static struct clk_hw *k1_ccu_apmu_hws[] = {
->> @@ -929,8 +935,9 @@ static struct clk_hw *k1_ccu_apmu_hws[] = {
->>   };
->>   
->>   static const struct spacemit_ccu_data k1_ccu_apmu_data = {
->> -	.hws	= k1_ccu_apmu_hws,
->> -	.num	= ARRAY_SIZE(k1_ccu_apmu_hws),
->> +	.reset_name	= "apmu-reset",
->> +	.hws		= k1_ccu_apmu_hws,
->> +	.num		= ARRAY_SIZE(k1_ccu_apmu_hws),
->>   };
->>   
->>   static int spacemit_ccu_register(struct device *dev,
->> @@ -941,6 +948,10 @@ static int spacemit_ccu_register(struct device *dev,
->>   	struct clk_hw_onecell_data *clk_data;
->>   	int i, ret;
->>   
->> +	/* Nothing to do if the CCU does not implement any clocks */
->> +	if (!data->hws)
->> +		return 0;
->> +
->>   	clk_data = devm_kzalloc(dev, struct_size(clk_data, hws, data->num),
->>   				GFP_KERNEL);
->>   	if (!clk_data)
->> @@ -981,9 +992,63 @@ static int spacemit_ccu_register(struct device *dev,
->>   	return ret;
->>   }
->>   
->> +static void spacemit_cadev_release(struct device *dev)
-> why this function define as _cadev_ prefix, while below as _adev_
-> is it a typo? or c short for ccu, I just feel it isn't consistent..
-
-It is not a typo.  Yes, it was intended to represent CCU
-Auxiliary device, while "adev" represents just Auxiliary
-Device.  It is releasing (freeing) a spacemit_ccu_adev
-structure.
-
->> +{
->> +	struct auxiliary_device *adev = to_auxiliary_dev(dev);
->> +
->> +	kfree(to_spacemit_ccu_adev(adev));
->> +}
->> +
-
-This function is operating on an auxiliary_device structure,
-so "adev" is used in its name.
-
->> +static void spacemit_adev_unregister(void *data)
->> +{
->> +	struct auxiliary_device *adev = data;
->> +
->> +	auxiliary_device_delete(adev);
->> +	auxiliary_device_uninit(adev);
->> +}
->> +
->> +static int spacemit_ccu_reset_register(struct device *dev,
->> +				       struct regmap *regmap,
->> +				       const char *reset_name)
->> +{
->> +	struct spacemit_ccu_adev *cadev;
->> +	struct auxiliary_device *adev;
->> +	static u32 next_id;
->> +	int ret;
->> +
->> +	/* Nothing to do if the CCU does not implement a reset controller */
->> +	if (!reset_name)
->> +		return 0;
->> +
->> +	cadev = kzalloc(sizeof(*cadev), GFP_KERNEL);
->> +	if (!cadev)
->> +		return -ENOMEM;
-> add one blank line here?
-
-If I do a new version that's easy but this was intentional.
-
->> +	cadev->regmap = regmap;
->> +
->> +	adev = &cadev->adev;
->> +	adev->name = reset_name;
->> +	adev->dev.parent = dev;
->> +	adev->dev.release = spacemit_cadev_release;
->> +	adev->dev.of_node = dev->of_node;
-> [..]
->> +	adev->id = next_id++;
-> so I'd assume the underlying device doesn't really care the id?
-> but with different order of registration, it will result random id for the device
-
-These things are identified in DTS files by their index values
-defined in "spacemit,k1-syscon.h".  If there is a need for the
-assigned device ID to be consistent, I'm not aware of it.  Can
-you think of one?  I think all that matters is that they're
-unique, and this ensures that (for up to 2^32 PMICs).
-
-> how about define a reset struct, and group reset_name and next_id together,
-> then we can intialize them with fixed value
-> (this will also let us dropping 'static next_id' variable)
-
-I don't see why isolating the visibility of the next_id variable
-inside here is a problem.
-
-> with this change, it's more easy to extend in the future (a weak reason)..
-
-How does this make it easier to extend?  How do you anticipate
-it will need to be extended?
-
-
-If you can explain why it's necessary to use fixed IDs for the
-auxiliary devices I'll gladly post a new version.  But outside
-that I would really prefer to just leave this code as-is.
-
-					-Alex
-
->> +
->> +	ret = auxiliary_device_init(adev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = auxiliary_device_add(adev);
->> +	if (ret) {
->> +		auxiliary_device_uninit(adev);
->> +		return ret;
->> +	}
->> +
->> +	return devm_add_action_or_reset(dev, spacemit_adev_unregister, adev);
->> +}
->> +
->>   static int k1_ccu_probe(struct platform_device *pdev)
->>   {
->>   	struct regmap *base_regmap, *lock_regmap = NULL;
->> +	const struct spacemit_ccu_data *data;
->>   	struct device *dev = &pdev->dev;
->>   	int ret;
->>   
->> @@ -1012,11 +1077,16 @@ static int k1_ccu_probe(struct platform_device *pdev)
->>   					     "failed to get lock regmap\n");
->>   	}
->>   
->> -	ret = spacemit_ccu_register(dev, base_regmap, lock_regmap,
->> -				    of_device_get_match_data(dev));
->> +	data = of_device_get_match_data(dev);
->> +
->> +	ret = spacemit_ccu_register(dev, base_regmap, lock_regmap, data);
->>   	if (ret)
->>   		return dev_err_probe(dev, ret, "failed to register clocks\n");
->>   
->> +	ret = spacemit_ccu_reset_register(dev, base_regmap, data->reset_name);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "failed to register resets\n");
->> +
->>   	return 0;
->>   }
->>   
->> diff --git a/include/soc/spacemit/k1-syscon.h b/include/soc/spacemit/k1-syscon.h
->> index 039a448c51a07..53eff7691f33d 100644
->> --- a/include/soc/spacemit/k1-syscon.h
->> +++ b/include/soc/spacemit/k1-syscon.h
->> @@ -5,6 +5,18 @@
->>   #ifndef __SOC_K1_SYSCON_H__
->>   #define __SOC_K1_SYSCON_H__
->>   
->> +/* Auxiliary device used to represent a CCU reset controller */
->> +struct spacemit_ccu_adev {
->> +	struct auxiliary_device adev;
->> +	struct regmap *regmap;
->> +};
->> +
->> +static inline struct spacemit_ccu_adev *
->> +to_spacemit_ccu_adev(struct auxiliary_device *adev)
->> +{
->> +	return container_of(adev, struct spacemit_ccu_adev, adev);
->> +}
->> +
->>   /* APBS register offset */
->>   #define APBS_PLL1_SWCR1			0x100
->>   #define APBS_PLL1_SWCR2			0x104
->> -- 
->> 2.45.2
->>
->>
+> Sometimes just the PID isn't enough giving that the app might be already
+> dead by the time userspace will try to check what was this PID's name,
+> so to make the life easier also notify what's the app's name in the user
+> event.
 > 
+> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  2 +-
+>  drivers/gpu/drm/drm_drv.c                  | 16 +++++++++++++---
+>  drivers/gpu/drm/i915/gt/intel_reset.c      |  3 ++-
+>  drivers/gpu/drm/xe/xe_device.c             |  3 ++-
+>  include/drm/drm_device.h                   |  8 ++++++++
+>  include/drm/drm_drv.h                      |  3 ++-
+>  7 files changed, 29 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> index 7f354cd532dc..c8a51418d0e7 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> @@ -6216,7 +6216,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+>  	atomic_set(&adev->reset_domain->reset_res, r);
+>  
+>  	if (!r)
+> -		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
+> +		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
+>  
+>  	return r;
+>  }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+> index acb21fc8b3ce..a47b2eb301e5 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+> @@ -166,7 +166,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
+>  			if (amdgpu_ring_sched_ready(ring))
+>  				drm_sched_start(&ring->sched, 0);
+>  			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
+> -			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
+> +			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
+>  			goto exit;
+>  		}
+>  		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
+> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+> index 3dc7acd56b1d..1816ef4251e7 100644
+> --- a/drivers/gpu/drm/drm_drv.c
+> +++ b/drivers/gpu/drm/drm_drv.c
+> @@ -542,6 +542,7 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
+>   * drm_dev_wedged_event - generate a device wedged uevent
+>   * @dev: DRM device
+>   * @method: method(s) to be used for recovery
+> + * @info: optional information about the guilty app
+>   *
+>   * This generates a device wedged uevent for the DRM device specified by @dev.
+>   * Recovery @method\(s) of choice will be sent in the uevent environment as
+> @@ -554,13 +555,14 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
+>   *
+>   * Returns: 0 on success, negative error code otherwise.
+>   */
+> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
+> +			 struct drm_wedge_app_info *info)
+>  {
+>  	const char *recovery = NULL;
+>  	unsigned int len, opt;
+>  	/* Event string length up to 28+ characters with available methods */
+> -	char event_string[32];
+> -	char *envp[] = { event_string, NULL };
+> +	char event_string[32], pid_string[15], comm_string[TASK_COMM_LEN];
+> +	char *envp[] = { event_string, pid_string, comm_string, NULL };
+>  
+>  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
+>  
+> @@ -582,6 +584,14 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+>  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
+>  		 "but recovered through reset" : "needs recovery");
+>  
+> +	if (info) {
+> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
+> +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
+> +	} else {
+> +		snprintf(pid_string, sizeof(pid_string), "%s", "PID=-1");
+> +		snprintf(comm_string, sizeof(comm_string), "%s", "APP=none");
+> +	}
+> +
+>  	return kobject_uevent_env(&dev->primary->kdev->kobj, KOBJ_CHANGE, envp);
+>  }
+>  EXPORT_SYMBOL(drm_dev_wedged_event);
+> diff --git a/drivers/gpu/drm/i915/gt/intel_reset.c b/drivers/gpu/drm/i915/gt/intel_reset.c
+> index dbdcfe130ad4..ba1d8fdc3c7b 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_reset.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_reset.c
+> @@ -1448,7 +1448,8 @@ static void intel_gt_reset_global(struct intel_gt *gt,
+>  		kobject_uevent_env(kobj, KOBJ_CHANGE, reset_done_event);
+>  	else
+>  		drm_dev_wedged_event(&gt->i915->drm,
+> -				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET);
+> +				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET,
+> +				     NULL);
 
+(For future) I believe we can later modify the gt_reset handles here
+to get ctx->id when we are coming from reset paths with context and
+NULL when we don't have pid.
+
+Perhaps one possibility could be strings to make this flexible
+'pid:%d'
+
+'path:debugfs'
+
+But just a brainstorm kind of idea... not a strong feeling or need.
+
+>  }
+>  
+>  /**
+> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+> index c02c4c4e9412..f329613e061f 100644
+> --- a/drivers/gpu/drm/xe/xe_device.c
+> +++ b/drivers/gpu/drm/xe/xe_device.c
+> @@ -1168,7 +1168,8 @@ void xe_device_declare_wedged(struct xe_device *xe)
+>  
+>  		/* Notify userspace of wedged device */
+>  		drm_dev_wedged_event(&xe->drm,
+> -				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET);
+> +				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET,
+> +				     NULL);
+
+similarly here, for the paths where we come to the wedge declaration from
+exeq_queue, we could get q->vm->xef->pid...
+
+But again, no blocker from my side. For both i915 and Xe:
+
+Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+
+>  	}
+>  
+>  	for_each_gt(gt, xe, id)
+> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+> index e2f894f1b90a..b87401d5079e 100644
+> --- a/include/drm/drm_device.h
+> +++ b/include/drm/drm_device.h
+> @@ -30,6 +30,14 @@ struct pci_controller;
+>  #define DRM_WEDGE_RECOVERY_REBIND	BIT(1)	/* unbind + bind driver */
+>  #define DRM_WEDGE_RECOVERY_BUS_RESET	BIT(2)	/* unbind + reset bus device + bind */
+>  
+> +/**
+> + * struct drm_wedge_app_info - information about the guilty app of a wedge dev
+> + */
+> +struct drm_wedge_app_info {
+> +	pid_t pid;
+> +	char *comm;
+> +};
+> +
+>  /**
+>   * enum switch_power_state - power state of drm device
+>   */
+> diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
+> index a43d707b5f36..8fc6412a6345 100644
+> --- a/include/drm/drm_drv.h
+> +++ b/include/drm/drm_drv.h
+> @@ -482,7 +482,8 @@ void drm_put_dev(struct drm_device *dev);
+>  bool drm_dev_enter(struct drm_device *dev, int *idx);
+>  void drm_dev_exit(int idx);
+>  void drm_dev_unplug(struct drm_device *dev);
+> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method);
+> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
+> +			 struct drm_wedge_app_info *info);
+>  
+>  /**
+>   * drm_dev_is_unplugged - is a DRM device unplugged
+> -- 
+> 2.49.0
+> 
