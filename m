@@ -1,986 +1,531 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967B529187D;
-	Mon, 12 May 2025 11:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747050019; cv=none; b=opx4xwsbB4QdGJftERiwAxqWxq7ShMi8sFhLhBYIUwzAOzpaNX9fl77wiBIuSpH80D5BLzYMsWvluNe5JtpxgXzHaOHAe0trDTUgWrHjN0/3lEjlQQVgmnUuwcqEENhTx24Y8IM0OQ0Hgje9w3JA5GJPqIYNy7y+lKDttoFZjt0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747050019; c=relaxed/simple;
-	bh=mpTtBpToadTUR++68U6PVUrV0GgS9pXERm9BA80Jzfk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MYZNHDJecxRMleL5GnzRd716l+h8dZ7Pm6Kh34XDg2krYgNQU8wyUZdF3wsBZDfGntP93xiU6Ml5re2+C/NmKtKuYdy+664N87Zb7ZZ+g6dwLFhRFDv7XbG7uYf7pDY/bVlvRsj+Y2SACptUqm6Uu15nxxNE3T3qwK4HLs/WN+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xth1hggS; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606932920BB;
+	Mon, 12 May 2025 11:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747050058; cv=pass; b=dPdii/lRqjSQ6x6ILfugO/G4125/VuxLVJBKC6kEAjBPTTyHqOm+7jktlTejUiXmGGx80JrhdKKbO5rJ4INr3Fc0vp8vXsPk1bf7u4vy9p7vuRaQfEjNK32ug8zYvjj8uT2QWCyAqG7Jl7PkPoJx25zfT0VXCAfy2QF4g8TDa9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747050058; c=relaxed/simple;
+	bh=UYf2oyQ/NLxkABw1mepobORwzL7Tq//9bbO8hq69gqg=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=VmECeShHy0ofjjTAzFrfv6du7cFhh71XD+VRPmcLd1cLKBJ4rJ3zpo64VNNxsa6sdcVjMzw1OF8DQFth5A4iWH4acD60Swyx3b8kmwLv7SGMDubuZ/0+iUSg0W+5yH5+bes8eF8N/XYxLuR6GgNaHXfLL+F4ddkt1rN2FWlhdA8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=C8nVbFDW; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xth1hggS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C6FAC4CEEF;
-	Mon, 12 May 2025 11:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747050019;
-	bh=mpTtBpToadTUR++68U6PVUrV0GgS9pXERm9BA80Jzfk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Xth1hggSLZbpo2FFu+bbuDRjhh1ZlMlIn4BOgpQzWddvhv8LV3sUeZmXzylrvXGrh
-	 BXoBxWZC6X48Xz2cXz0tJCBkhQiTKI/zEQQ1B6kiMiAz0BPgM6y4s5wVkgRyO7EWUG
-	 STe1j2idjkyC6D7WSrUFY3uUocKEls/5R8tFwgDZK3QEuaxAYcgKlMufapetqa98D0
-	 cmxWJbflBa/Aed7khvWDwXzpHQC7U8Xk59auZltOyWy5scX2Jta3xTacqivLwCUgwQ
-	 G4i8GV1kRRfZkDIwvvN6cpzacyG3IVsp5btdZp8ep7SrAZ2hOvH1xYU0CqTbw94nwx
-	 y2yF7YmpGkpNQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10671C3ABC3;
-	Mon, 12 May 2025 11:40:19 +0000 (UTC)
-From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
-Date: Mon, 12 May 2025 19:39:53 +0800
-Subject: [PATCH v2 3/7] firmware: stratix10-svc: Add initial support for
- asynchronous communication with Stratix 10 service channel
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="C8nVbFDW"
+ARC-Seal: i=1; a=rsa-sha256; t=1747049996; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JAFuyNkJHi2Yd9FRz94SBCnbBHMF+0lR/Xc5NOeoHBScm92l6JzVZAtPXJX4SGl3kHDGDFpKOUnsneWIVUhTsEczN3rfHyg+PZUL98FS+cvg6UfDe/pIPq8M3S74THRGtPwDRIZQunIuggRXS8RDpHGBPhDTatQhy04u38BR2q8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747049996; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=BU9MLc37uG9xUwQT3nIi5E2jvqZnsiURS1FSSweAuXk=; 
+	b=XTIZzV1B1iMVCJOWExSPZKELt4hr8Xt5CXrM7OQx0xL83CGs4c6M00vqZkJB0e7IIn4qPNaUY4cNWlFqZwBPnxcMgniQk9OOD1JNXeB/2qF9h1o/0hq7VEwqdL8t3ThzvGPZ21jKyfLYo7yf3+8ddZ2gRcn8rCYoPV06DxWejp4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747049996;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=BU9MLc37uG9xUwQT3nIi5E2jvqZnsiURS1FSSweAuXk=;
+	b=C8nVbFDWo58aSfMdh5NDkUHhfV55MxD+64Eo+mgn1AknHKoYURs3G0R6EaWPfmUP
+	mSKQyO+CrWskCKuUbj5uYcZ388N+QzK15dLZuJP0yHADE/G/UbvIQui7c3ltafHMauR
+	980V0nayZCdlrrQWTtUyMwL9qzn0YKIXuq/DI3fk=
+Received: by mx.zohomail.com with SMTPS id 1747049994257794.1632307548268;
+	Mon, 12 May 2025 04:39:54 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-sip_svc_upstream-v2-3-fae5c45c059d@altera.com>
-References: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
-In-Reply-To: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
-To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Mahesh Rao <mahesh.rao@altera.com>
-Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747050016; l=34685;
- i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
- bh=p16xUf4USi6AG8uqn6EV4ct1CZ/lhX5iCuAfglmj83s=;
- b=9go51Nk+klStYlxvaFaDkovRiXooMzCYDmN2tWJxknvwbNJNdg5SJV/NXiftDQLOPvF9Z87LF
- XV2uPGi0HDGAH9ApfygWMIhHvokdzc1BgaEjLoW7RzfiT+lmS5TXtVJ
-X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
- pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
-X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
- auth_id=337
-X-Original-From: Mahesh Rao <mahesh.rao@altera.com>
-Reply-To: mahesh.rao@altera.com
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [RFC PATCH 1/2] rust: add initial scatterlist bindings
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250512095544.3334680-2-abdiel.janulgue@gmail.com>
+Date: Mon, 12 May 2025 08:39:36 -0300
+Cc: dakr@kernel.org,
+ lyude@redhat.com,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>,
+ airlied@redhat.com,
+ rust-for-linux@vger.kernel.org,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ Petr Tesarik <petr@tesarici.cz>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B3564D77-9E26-4019-9B75-B0C53B26B64F@collabora.com>
+References: <20250512095544.3334680-1-abdiel.janulgue@gmail.com>
+ <20250512095544.3334680-2-abdiel.janulgue@gmail.com>
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
-From: Mahesh Rao <mahesh.rao@altera.com>
+Hi Abdiel,
 
-This commit adds support for asynchronous communication
-with the Stratix 10 service channel. It introduces
-new definitions to enable asynchronous messaging to
-the Secure Device Manager (SDM). The changes include
-the adding/removing of asynchronous support to existing
-channels, initializing/exit-cleanup of the new asynchronous
-framework and sending/polling of messages to SDM.
+> On 12 May 2025, at 06:53, Abdiel Janulgue <abdiel.janulgue@gmail.com> =
+wrote:
+>=20
+> Add the rust abstraction for scatterlist. This allows use of the C
+> scatterlist within Rust code which the caller can allocate themselves
+> or to wrap existing kernel sg_table objects.
+>=20
+> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+> ---
+> rust/bindings/bindings_helper.h |   1 +
+> rust/helpers/helpers.c          |   1 +
+> rust/helpers/scatterlist.c      |  25 +++
+> rust/kernel/lib.rs              |   1 +
+> rust/kernel/scatterlist.rs      | 275 ++++++++++++++++++++++++++++++++
+> 5 files changed, 303 insertions(+)
+> create mode 100644 rust/helpers/scatterlist.c
+> create mode 100644 rust/kernel/scatterlist.rs
+>=20
+> diff --git a/rust/bindings/bindings_helper.h =
+b/rust/bindings/bindings_helper.h
+> index ab37e1d35c70..a7d3b97cd4e0 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -14,6 +14,7 @@
+> #include <linux/cred.h>
+> #include <linux/device/faux.h>
+> #include <linux/dma-mapping.h>
+> +#include <linux/dma-direction.h>
+> #include <linux/errname.h>
+> #include <linux/ethtool.h>
+> #include <linux/file.h>
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index 1e7c84df7252..f45a15f88e25 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -28,6 +28,7 @@
+> #include "rbtree.c"
+> #include "rcu.c"
+> #include "refcount.c"
+> +#include "scatterlist.c"
+> #include "security.c"
+> #include "signal.c"
+> #include "slab.c"
+> diff --git a/rust/helpers/scatterlist.c b/rust/helpers/scatterlist.c
+> new file mode 100644
+> index 000000000000..5ab0826f7c0b
+> --- /dev/null
+> +++ b/rust/helpers/scatterlist.c
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/dma-direction.h>
+> +
+> +void rust_helper_sg_set_page(struct scatterlist *sg, struct page =
+*page,
+> +     unsigned int len, unsigned int offset)
+> +{
+> + return sg_set_page(sg, page, len, offset);
+> +}
+> +
+> +dma_addr_t rust_helper_sg_dma_address(struct scatterlist *sg)
+> +{
+> + return sg_dma_address(sg);
+> +}
+> +
+> +unsigned int rust_helper_sg_dma_len(struct scatterlist *sg)
+> +{
+> + return sg_dma_address(sg);
+> +}
+> +
+> +void rust_helper_dma_unmap_sgtable(struct device *dev, struct =
+sg_table *sgt,
+> +   enum dma_data_direction dir, unsigned long attrs)
+> +{
+> + return dma_unmap_sgtable(dev, sgt, dir, attrs);
+> +}
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index fa852886d4d1..a8d5fcb55388 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -87,6 +87,7 @@
+> pub mod print;
+> pub mod rbtree;
+> pub mod revocable;
+> +pub mod scatterlist;
+> pub mod security;
+> pub mod seq_file;
+> pub mod sizes;
+> diff --git a/rust/kernel/scatterlist.rs b/rust/kernel/scatterlist.rs
+> new file mode 100644
+> index 000000000000..122a6f94bf56
+> --- /dev/null
+> +++ b/rust/kernel/scatterlist.rs
+> @@ -0,0 +1,275 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Scatterlist
+> +//!
+> +//! C header: =
+[`include/linux/scatterlist.h`](srctree/include/linux/scatterlist.h)
+> +
+> +use crate::{
+> +    bindings,
+> +    device::Device,
+> +    error::{Error, Result},
+> +    page::Page,
+> +    types::{ARef, Opaque},
+> +};
+> +use core::ops::{Deref, DerefMut};
+> +
+> +/// A single scatter-gather entry, representing a span of pages in =
+the device's DMA address space.
+> +///
+> +/// # Invariants
+> +///
+> +/// The `scatterlist` pointer is valid for the lifetime of an SGEntry =
+instance.
+> +#[repr(transparent)]
+> +pub struct SGEntry(Opaque<bindings::scatterlist>);
+> +
+> +impl SGEntry {
+> +    /// Convert a raw `struct scatterlist *` to a `&'a SGEntry`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that the `struct scatterlist` pointed to =
+by `ptr` is valid for the lifetime
+> +    /// of the returned reference.
+> +    pub unsafe fn as_ref<'a>(ptr: *mut bindings::scatterlist) -> &'a =
+Self {
+> +        // SAFETY: The pointer is valid and guaranteed by the safety =
+requirements of the function.
+> +        unsafe { &*ptr.cast() }
+> +    }
 
-The new public functions added are:
-- stratix10_svc_add_async_client: Adds an client
-        to the service channel.
-- stratix10_svc_remove_async_client: Removes an
-        asynchronous client from the service channel.
-- stratix10_svc_async_send: Sends an asynchronous
-        message to the SDM mailbox in EL3 secure firmware.
-- stratix10_svc_async_poll: Polls the status of an
-        asynchronous service request in EL3 secure firmware.
-- stratix10_svc_async_done: Marks an asynchronous
-        transaction as complete and free's up the
-        resources.
+Hmm, this name is not good. When people see as_ref() they will think of =
+the
+standard library where it is used to convert from &T to &U. This is not =
+what is
+happening here. Same in other places where as_ref() is used in this =
+patch.
 
-These changes enhance the functionality of the
-Stratix 10 service channel by allowing for more
-efficient and flexible communication with the firmware.
+> +
+> +    /// Convert a raw `struct scatterlist *` to a `&'a mut SGEntry`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// See safety requirements of [`SGEntry::as_ref`]. In addition, =
+callers must ensure that only
+> +    /// a single mutable reference can be taken from the same raw =
+pointer, i.e. for the lifetime of the
+> +    /// returned reference, no other call to this function on the =
+same `struct scatterlist *` should
+> +    /// be permitted.
+> +    unsafe fn as_mut<'a>(ptr: *mut bindings::scatterlist) -> &'a mut =
+Self {
+> +        // SAFETY: The pointer is valid and guaranteed by the safety =
+requirements of the function.
+> +        unsafe { &mut *ptr.cast() }
+> +    }
+> +
+> +    /// Returns the DMA address of this SG entry.
+> +    pub fn dma_address(&self) -> bindings::dma_addr_t {
+> +        // SAFETY: By the type invariant of `SGEntry`, ptr is valid.
+> +        unsafe { bindings::sg_dma_address(self.0.get()) }
+> +    }
+> +
+> +    /// Returns the length of this SG entry.
+> +    pub fn dma_len(&self) -> u32 {
+> +        // SAFETY: By the type invariant of `SGEntry`, ptr is valid.
+> +        unsafe { bindings::sg_dma_len(self.0.get()) }
+> +    }
+> +
+> +    /// Set this entry to point at a given page.
+> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) =
+{
+> +        let c: *mut bindings::scatterlist =3D self.0.get();
+> +        // SAFETY: according to the `SGEntry` invariant, the =
+scatterlist pointer is valid.
+> +        // `Page` invariant also ensure the pointer is valid.
 
-Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
-Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
----
- drivers/firmware/stratix10-svc.c                   | 646 ++++++++++++++++++++-
- include/linux/firmware/intel/stratix10-smc.h       |  24 +
- .../linux/firmware/intel/stratix10-svc-client.h    |  88 +++
- 3 files changed, 755 insertions(+), 3 deletions(-)
+Nit: =E2=80=9C[..] ensures that the pointer is valid.=E2=80=9D, but =
+perhaps a native speaker should chime in.
 
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index f487b6a7ef7b7cf7fdb4b4132d7a92b601803d8a..e25493db074930dcc16964fbb427be7168a841e6 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -4,9 +4,11 @@
-  * Copyright (C) 2025, Altera Corporation
-  */
- 
-+#include <linux/atomic.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
- #include <linux/genalloc.h>
-+#include <linux/hashtable.h>
- #include <linux/io.h>
- #include <linux/kfifo.h>
- #include <linux/kthread.h>
-@@ -44,6 +46,35 @@
- #define STRATIX10_RSU				"stratix10-rsu"
- #define INTEL_FCS				"intel-fcs"
- 
-+/*Maximum number of SDM client IDs.*/
-+#define MAX_SDM_CLIENT_IDS 16
-+/*Client ID for SIP Service Version 1.*/
-+#define SIP_SVC_V1_CLIENT_ID 0x1
-+/*Maximum number of SDM job IDs.*/
-+#define MAX_SDM_JOB_IDS 16
-+/*Number of bits used for asynchronous transaction hashing.*/
-+#define ASYNC_TRX_HASH_BITS 3
-+/*Total number of transactions-id's which is a combination of client id and job id.*/
-+#define TOTAL_TRANSACTION_IDS (MAX_SDM_CLIENT_IDS * MAX_SDM_JOB_IDS)
-+
-+/*Minimum major version of the ATF for Asynchronous transactions.*/
-+#define ASYNC_ATF_MINIMUM_MAJOR_VERSION 0x3
-+/*Minimum minor version of the ATF for Asynchronous transactions.*/
-+#define ASYNC_ATF_MINIMUM_MINOR_VERSION 0x0
-+
-+/*Macro to extract the job ID from a transaction ID.*/
-+#define STRATIX10_GET_JOBID(transaction_id) ((transaction_id) & 0xf)
-+/*Macro to set a transaction ID using a client ID and a transaction ID.*/
-+#define STRATIX10_SET_TRANSACTIONID(clientid, transaction_id) \
-+	((((clientid) & 0xf) << 4) | ((transaction_id) & 0xf))
-+
-+/* Macro to set a transaction ID for SIP SMC using the lower 8 bits of the transaction ID.*/
-+#define STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(transaction_id) \
-+	((transaction_id) & 0xff)
-+
-+/* Macro to get the SDM mailbox error status */
-+#define STRATIX10_GET_SDM_STATUS_CODE(status) ((status) & 0x3ff)
-+
- typedef void (svc_invoke_fn)(unsigned long, unsigned long, unsigned long,
- 			     unsigned long, unsigned long, unsigned long,
- 			     unsigned long, unsigned long,
-@@ -64,7 +95,7 @@ struct stratix10_svc {
-  * @sync_complete: state for a completion
-  * @addr: physical address of shared memory block
-  * @size: size of shared memory block
-- * @invoke_fn: function to issue secure monitor or hypervisor call
-+ * @invoke_fn: service clients to handle secure monitor or hypervisor calls
-  *
-  * This struct is used to save physical address and size of shared memory
-  * block. The shared memory blocked is allocated by secure monitor software
-@@ -122,6 +153,64 @@ struct stratix10_svc_data {
- 	u64 arg[3];
- };
- 
-+/**
-+ * struct stratix10_svc_async_handler - Asynchronous handler for Stratix 10 service layer
-+ * @transaction_id: Unique identifier for the transaction
-+ * @achan: Pointer to the asynchronous channel structure
-+ * @cb_arg: Argument to be passed to the callback function
-+ * @cb: Callback function to be called upon completion
-+ * @msg: Pointer to the client message structure
-+ * @next: Node in the hash list
-+ *
-+ * This structure is used to handle asynchronous transactions in the
-+ * Stratix 10 service layer. It maintains the necessary information
-+ * for processing and completing asynchronous requests.
-+ */
-+
-+struct stratix10_svc_async_handler {
-+	u8 transaction_id;
-+	struct stratix10_async_chan *achan;
-+	void *cb_arg;
-+	async_callback_t cb;
-+	struct stratix10_svc_client_msg *msg;
-+	struct hlist_node next;
-+	struct arm_smccc_1_2_regs res;
-+};
-+
-+/**
-+ * struct stratix10_async_chan - Structure representing an asynchronous channel
-+ * @async_client_id: Unique client identifier for the asynchronous operation
-+ * @job_id_pool: Pointer to the job ID pool associated with this channel
-+ */
-+
-+struct stratix10_async_chan {
-+	unsigned long async_client_id;
-+	struct stratix10_sip_id_pool *job_id_pool;
-+};
-+
-+/**
-+ * struct stratix10_async_ctrl - Control structure for Stratix 10 asynchronous operations
-+ * @initialized: Flag indicating whether the control structure has been initialized
-+ * @invoke_fn: Function pointer for invoking Stratix 10 service calls to EL3 secure firmware
-+ * @async_id_pool: Pointer to the ID pool used for asynchronous operations
-+ * @common_achan_refcount: Atomic reference count for the common asynchronous channel usage
-+ * @common_async_chan: Pointer to the common asynchronous channel structure
-+ * @trx_list_wr_lock: Spinlock for protecting the transaction list write operations
-+ * @trx_list: Hash table for managing asynchronous transactions
-+ */
-+
-+struct stratix10_async_ctrl {
-+	bool initialized;
-+	void (*invoke_fn)(struct stratix10_async_ctrl *actrl,
-+			  const struct arm_smccc_1_2_regs *args, struct arm_smccc_1_2_regs *res);
-+	struct stratix10_sip_id_pool *async_id_pool;
-+	atomic_t common_achan_refcount;
-+	struct stratix10_async_chan *common_async_chan;
-+	/* spinlock to protect the writes to trx_list hash table */
-+	spinlock_t trx_list_wr_lock;
-+	DECLARE_HASHTABLE(trx_list, ASYNC_TRX_HASH_BITS);
-+};
-+
- /**
-  * struct stratix10_svc_controller - service controller
-  * @dev: device
-@@ -135,6 +224,7 @@ struct stratix10_svc_data {
-  * @complete_status: state for completion
-  * @svc_fifo_lock: protect access to service message data queue
-  * @invoke_fn: function to issue secure monitor call or hypervisor call
-+ * @actrl: async control structure
-  *
-  * This struct is used to create communication channels for service clients, to
-  * handle secure monitor or hypervisor call.
-@@ -151,6 +241,7 @@ struct stratix10_svc_controller {
- 	struct completion complete_status;
- 	spinlock_t svc_fifo_lock;
- 	svc_invoke_fn *invoke_fn;
-+	struct stratix10_async_ctrl actrl;
- };
- 
- /**
-@@ -159,15 +250,17 @@ struct stratix10_svc_controller {
-  * @scl: pointer to service client which owns the channel
-  * @name: service client name associated with the channel
-  * @lock: protect access to the channel
-+ * @async_chan: reference to asynchronous channel object for this channel
-  *
-- * This struct is used by service client to communicate with service layer, each
-- * service client has its own channel created by service controller.
-+ * This struct is used by service client to communicate with service layer.
-+ * Each service client has its own channel created by service controller.
-  */
- struct stratix10_svc_chan {
- 	struct stratix10_svc_controller *ctrl;
- 	struct stratix10_svc_client *scl;
- 	char *name;
- 	spinlock_t lock;
-+	struct stratix10_async_chan *async_chan;
- };
- 
- /**
-@@ -1118,6 +1211,546 @@ struct stratix10_svc_chan *stratix10_svc_request_channel_byname(
- }
- EXPORT_SYMBOL_GPL(stratix10_svc_request_channel_byname);
- 
-+/**
-+ * stratix10_svc_add_async_client - Add an asynchronous client to the Stratix10 service channel.
-+ * @chan: Pointer to the Stratix10 service channel structure.
-+ * @use_unique_clientid: Boolean flag indicating whether to use a unique client ID.
-+ *
-+ * This function adds an asynchronous client to the specified Stratix10 service channel.
-+ * If the `use_unique_clientid` flag is set to true, a unique client ID is allocated for
-+ * the asynchronous channel. Otherwise, a common asynchronous channel is used.
-+ *
-+ * Return: 0 on success, or a negative error code on failure:
-+ *         -EINVAL if the channel is NULL or the async controller is not initialized.
-+ *         -EALREADY if the async channel is already allocated.
-+ *         -ENOMEM if memory allocation fails.
-+ *         Other negative values if ID allocation fails.
-+ */
-+int stratix10_svc_add_async_client(struct stratix10_svc_chan *chan,
-+				   bool use_unique_clientid)
-+{
-+	int ret = 0;
-+	struct stratix10_async_chan *achan;
-+
-+	if (!chan)
-+		return -EINVAL;
-+
-+	struct stratix10_svc_controller *ctrl = chan->ctrl;
-+	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
-+
-+	if (!actrl->initialized) {
-+		dev_err(ctrl->dev, "Async controller not initialized\n");
-+		return -EINVAL;
-+	}
-+
-+	if (chan->async_chan) {
-+		dev_err(ctrl->dev, "async channel already allocated\n");
-+		return -EALREADY;
-+	}
-+
-+	if (use_unique_clientid) {
-+		achan = kzalloc(sizeof(*achan), GFP_KERNEL);
-+		if (!achan)
-+			return -ENOMEM;
-+
-+		achan->job_id_pool = stratix10_id_pool_create(MAX_SDM_JOB_IDS);
-+		if (!achan->job_id_pool) {
-+			dev_err(ctrl->dev, "Failed to create job id pool\n");
-+			kfree(achan);
-+			return -ENOMEM;
-+		}
-+
-+		ret = stratix10_allocate_id(actrl->async_id_pool);
-+		if (ret < 0) {
-+			dev_err(ctrl->dev,
-+				"Failed to allocate async client id\n");
-+			stratix10_id_pool_destroy(achan->job_id_pool);
-+			kfree(achan);
-+			return ret;
-+		}
-+		achan->async_client_id = ret;
-+		chan->async_chan = achan;
-+	} else {
-+		if (atomic_read(&actrl->common_achan_refcount) == 0) {
-+			achan = kzalloc(sizeof(*achan), GFP_KERNEL);
-+			if (!achan)
-+				return -ENOMEM;
-+
-+			achan->job_id_pool =
-+				stratix10_id_pool_create(MAX_SDM_JOB_IDS);
-+			if (!achan->job_id_pool) {
-+				dev_err(ctrl->dev,
-+					"Failed to create job id pool\n");
-+				kfree(achan);
-+				return -ENOMEM;
-+			}
-+
-+			ret = stratix10_allocate_id(actrl->async_id_pool);
-+			if (ret < 0) {
-+				dev_err(ctrl->dev,
-+					"Failed to allocate async client id\n");
-+				stratix10_id_pool_destroy(achan->job_id_pool);
-+				kfree(achan);
-+				return ret;
-+			}
-+			achan->async_client_id = ret;
-+			actrl->common_async_chan = achan;
-+			dev_info(ctrl->dev,
-+				 "Common async channel allocated with id %ld\n",
-+				 achan->async_client_id);
-+		}
-+		chan->async_chan = actrl->common_async_chan;
-+		atomic_inc(&actrl->common_achan_refcount);
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(stratix10_svc_add_async_client);
-+
-+/**
-+ * stratix10_svc_remove_async_client - Remove an asynchronous client from
-+ *                                     the Stratix10 service channel.
-+ * @chan: Pointer to the Stratix10 service channel structure.
-+ *
-+ * This function removes an asynchronous client associated with the given service channel.
-+ * It checks if the channel and the asynchronous channel are valid, and then proceeds to
-+ * decrement the reference count for the common asynchronous channel if applicable. If the
-+ * reference count reaches zero, it destroys the job ID pool and deallocates the asynchronous
-+ * client ID. For non-common asynchronous channels, it directly destroys the job ID pool,
-+ * deallocates the asynchronous client ID, and frees the memory allocated for the asynchronous
-+ * channel.
-+ *
-+ * Return: 0 on success, -EINVAL if the channel or asynchronous channel is invalid.
-+ */
-+int stratix10_svc_remove_async_client(struct stratix10_svc_chan *chan)
-+{
-+	if (!chan)
-+		return -EINVAL;
-+
-+	struct stratix10_svc_controller *ctrl = chan->ctrl;
-+	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
-+	struct stratix10_async_chan *achan = chan->async_chan;
-+
-+	if (!achan) {
-+		dev_err(ctrl->dev, "async channel not allocated\n");
-+		return -EINVAL;
-+	}
-+
-+	if (achan == actrl->common_async_chan) {
-+		atomic_dec(&actrl->common_achan_refcount);
-+		if (atomic_read(&actrl->common_achan_refcount) == 0) {
-+			stratix10_id_pool_destroy(achan->job_id_pool);
-+			stratix10_deallocate_id(actrl->async_id_pool, achan->async_client_id);
-+		}
-+	} else {
-+		stratix10_id_pool_destroy(achan->job_id_pool);
-+		stratix10_deallocate_id(actrl->async_id_pool, achan->async_client_id);
-+		kfree(achan);
-+	}
-+	chan->async_chan = NULL;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(stratix10_svc_remove_async_client);
-+
-+/**
-+ * stratix10_svc_async_send - Send an asynchronous message to the Stratix10 service
-+ * @chan: Pointer to the service channel structure
-+ * @msg: Pointer to the message to be sent
-+ * @handler: Pointer to the handler for the asynchronous message used by caller for later reference.
-+ * @cb: Callback function to be called upon completion
-+ * @cb_arg: Argument to be passed to the callback function
-+ *
-+ * This function sends an asynchronous message to the SDM mailbox in EL3 secure
-+ * firmware. It performs various checks and setups, including allocating a job ID,
-+ * setting up the transaction ID and packaging it to El3 firmware.
-+ * The function handles different commands by setting up the appropriate
-+ * arguments for the SMC call. If the SMC call is successful, the handler
-+ * is set up and the function returns 0. If the SMC call fails, appropriate
-+ * error handling is performed along with cleanup of resources.
-+ *
-+ * Return: 0 on success,-EINVAL for invalid argument,-ENOMEM if memory is not available,
-+ *         -EAGAIN if EL3 firmware is busy, -EBADF if the message is rejected
-+ *         by EL3 firmware and -EIO on ther errors from EL3 firmware.
-+ */
-+int stratix10_svc_async_send(struct stratix10_svc_chan *chan, void *msg, void **handler,
-+			     async_callback_t cb, void *cb_arg)
-+{
-+	struct stratix10_svc_client_msg *p_msg = (struct stratix10_svc_client_msg *)msg;
-+	struct arm_smccc_1_2_regs args = { 0 }, res = { 0 };
-+	struct stratix10_svc_async_handler *handle = NULL;
-+	int ret = 0;
-+
-+	if (!chan || !msg || !handler)
-+		return -EINVAL;
-+
-+	struct stratix10_async_chan *achan = chan->async_chan;
-+	struct stratix10_svc_controller *ctrl = chan->ctrl;
-+	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
-+
-+	if (!actrl->initialized) {
-+		dev_err(ctrl->dev, "Async controller not initialized\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!achan) {
-+		dev_err(ctrl->dev, "Async channel not allocated\n");
-+		return -EINVAL;
-+	}
-+
-+	handle =
-+		kzalloc(sizeof(struct stratix10_svc_async_handler), GFP_KERNEL);
-+	if (!handle)
-+		return -ENOMEM;
-+
-+	ret = stratix10_allocate_id(achan->job_id_pool);
-+	if (ret < 0) {
-+		dev_err(ctrl->dev, "Failed to allocate job id\n");
-+		kfree(handle);
-+		return -ENOMEM;
-+	}
-+
-+	handle->transaction_id =
-+		STRATIX10_SET_TRANSACTIONID(achan->async_client_id, ret);
-+	handle->cb = cb;
-+	handle->msg = p_msg;
-+	handle->cb_arg = cb_arg;
-+	handle->achan = achan;
-+
-+	/*set the transaction jobid in args.a1*/
-+	args.a1 =
-+		STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(handle->transaction_id);
-+
-+	switch (p_msg->command) {
-+	default:
-+		dev_err(ctrl->dev, "Invalid command ,%d\n", p_msg->command);
-+		ret = -EINVAL;
-+		goto deallocate_id;
-+	}
-+
-+	/**
-+	 * There is a chance that during the execution of async_send() in one core,
-+	 * an interrupt might be received in another core; to mitigate this we are
-+	 * adding the handle to the DB and then send the smc call. If the smc call
-+	 * is rejected or busy then we will deallocate the handle for the client
-+	 * to retry again.
-+	 */
-+	spin_lock(&actrl->trx_list_wr_lock);
-+	hash_add_rcu(actrl->trx_list, &handle->next, handle->transaction_id);
-+	spin_unlock(&actrl->trx_list_wr_lock);
-+	synchronize_rcu();
-+
-+	actrl->invoke_fn(actrl, &args, &res);
-+
-+	switch (res.a0) {
-+	case INTEL_SIP_SMC_STATUS_OK:
-+		dev_dbg(ctrl->dev,
-+			"Async message sent with transaction_id 0x%02x\n",
-+			handle->transaction_id);
-+			*handler = handle;
-+		return 0;
-+	case INTEL_SIP_SMC_STATUS_BUSY:
-+		dev_warn(ctrl->dev, "Mailbox is busy, try after some time\n");
-+		ret = -EAGAIN;
-+		break;
-+	case INTEL_SIP_SMC_STATUS_REJECTED:
-+		dev_err(ctrl->dev, "Async message rejected\n");
-+		ret = -EBADF;
-+		break;
-+	default:
-+		dev_err(ctrl->dev,
-+			"Failed to send async message ,got status as %ld\n",
-+			res.a0);
-+		ret = -EIO;
-+	}
-+
-+	spin_lock(&actrl->trx_list_wr_lock);
-+	hash_del_rcu(&handle->next);
-+	spin_unlock(&actrl->trx_list_wr_lock);
-+	synchronize_rcu();
-+
-+deallocate_id:
-+	stratix10_deallocate_id(achan->job_id_pool,
-+				STRATIX10_GET_JOBID(handle->transaction_id));
-+	kfree(handle);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(stratix10_svc_async_send);
-+
-+/**
-+ * stratix10_svc_async_prepare_response - Prepare the response data for an asynchronous transaction.
-+ * @chan: Pointer to the service channel structure.
-+ * @handle: Pointer to the asynchronous handler structure.
-+ * @data: Pointer to the callback data structure.
-+ *
-+ * This function prepares the response data for an asynchronous transaction. It
-+ * extracts the response data from the SMC response structure and stores it in
-+ * the callback data structure. The function also logs the completion of the
-+ * asynchronous transaction.
-+ *
-+ * Return: 0 on success, -ENOENT if the command is invalid
-+ */
-+static int stratix10_svc_async_prepare_response(struct stratix10_svc_chan *chan,
-+						struct stratix10_svc_async_handler *handle,
-+						struct stratix10_svc_cb_data *data)
-+{
-+	struct stratix10_svc_client_msg *p_msg =
-+		(struct stratix10_svc_client_msg *)handle->msg;
-+	struct stratix10_svc_controller *ctrl = chan->ctrl;
-+
-+	data->status = STRATIX10_GET_SDM_STATUS_CODE(handle->res.a1);
-+
-+	switch (p_msg->command) {
-+	default:
-+		dev_alert(ctrl->dev, "Invalid command\n ,%d", p_msg->command);
-+		return -ENOENT;
-+	}
-+	dev_dbg(ctrl->dev, "Async message completed transaction_id 0x%02x\n",
-+		handle->transaction_id);
-+	return 0;
-+}
-+
-+/**
-+ * stratix10_svc_async_poll - Polls the status of an asynchronous transaction.
-+ * @chan: Pointer to the service channel structure.
-+ * @tx_handle: Handle to the transaction being polled.
-+ * @data: Pointer to the callback data structure.
-+ *
-+ * This function polls the status of an asynchronous transaction identified by the
-+ * given transaction handle. It ensures that the necessary structures are initialized
-+ * and valid before proceeding with the poll operation. The function sets up the
-+ * necessary arguments for the SMC call, invokes the call, and prepares the response
-+ * data if the call is successful. If the call fails, the function returns
-+ * the error mapped the SVC status error.
-+ *
-+ * Return: 0 on success, -EINVAL if any input parameter is invalid, -EAGAIN if the
-+ *         transaction is still in progress,-EPERM if the command is invalid.
-+ *         or other negative error codes on failure.
-+ */
-+int stratix10_svc_async_poll(struct stratix10_svc_chan *chan, void *tx_handle,
-+			     struct stratix10_svc_cb_data *data)
-+{
-+	int ret;
-+	struct arm_smccc_1_2_regs args = { 0 };
-+
-+	if (!chan || !tx_handle || !data)
-+		return -EINVAL;
-+
-+	struct stratix10_svc_controller *ctrl = chan->ctrl;
-+	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
-+	struct stratix10_async_chan *achan = chan->async_chan;
-+
-+	if (!achan) {
-+		dev_err(ctrl->dev, "Async channel not allocated\n");
-+		return -EINVAL;
-+	}
-+
-+	struct stratix10_svc_async_handler *handle =
-+		(struct stratix10_svc_async_handler *)tx_handle;
-+	if (!hash_hashed(&handle->next)) {
-+		dev_err(ctrl->dev, "Invalid transaction handler\n");
-+		return -EINVAL;
-+	}
-+
-+	args.a0 = INTEL_SIP_SMC_ASYNC_POLL;
-+	args.a1 =
-+		STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(handle->transaction_id);
-+
-+	actrl->invoke_fn(actrl, &args, &handle->res);
-+
-+	data->status = 0;
-+	if (handle->res.a0 == INTEL_SIP_SMC_STATUS_OK) {
-+		ret = stratix10_svc_async_prepare_response(chan, handle, data);
-+		if (ret) {
-+			dev_err(ctrl->dev, "Error in preparation of response,%d\n", ret);
-+			WARN_ON_ONCE(1);
-+		}
-+		return 0;
-+	} else if (handle->res.a0 == INTEL_SIP_SMC_STATUS_BUSY) {
-+		dev_dbg(ctrl->dev, "async message is still in progress\n");
-+		return -EAGAIN;
-+	}
-+
-+	dev_err(ctrl->dev,
-+		"Failed to poll async message ,got status as %ld\n",
-+		handle->res.a0);
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(stratix10_svc_async_poll);
-+
-+/**
-+ * stratix10_svc_async_done - Completes an asynchronous transaction.
-+ * @chan: Pointer to the service channel structure.
-+ * @tx_handle: Handle to the transaction being completed.
-+ *
-+ * This function completes an asynchronous transaction identified by the given
-+ * transaction handle. It ensures that the necessary structures are initialized
-+ * and valid before proceeding with the completion operation. The function
-+ * deallocates the transaction ID, frees the memory allocated for the handler,
-+ * and removes the handler from the transaction list.
-+ *
-+ * Return: 0 on success, -EINVAL if any input parameter is invalid, or other
-+ *         negative error codes on failure.
-+ */
-+int stratix10_svc_async_done(struct stratix10_svc_chan *chan, void *tx_handle)
-+{
-+	if (!chan || !tx_handle)
-+		return -EINVAL;
-+
-+	struct stratix10_svc_controller *ctrl = chan->ctrl;
-+	struct stratix10_async_chan *achan = chan->async_chan;
-+
-+	if (!achan) {
-+		dev_err(ctrl->dev, "async channel not allocated\n");
-+		return -EINVAL;
-+	}
-+
-+	struct stratix10_svc_async_handler *handle =
-+		(struct stratix10_svc_async_handler *)tx_handle;
-+	if (!hash_hashed(&handle->next)) {
-+		dev_err(ctrl->dev, "Invalid transaction handle\n");
-+		return -EINVAL;
-+	}
-+
-+	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
-+
-+	spin_lock(&actrl->trx_list_wr_lock);
-+	hash_del_rcu(&handle->next);
-+	spin_unlock(&actrl->trx_list_wr_lock);
-+	synchronize_rcu();
-+	stratix10_deallocate_id(achan->job_id_pool,
-+				STRATIX10_GET_JOBID(handle->transaction_id));
-+	kfree(handle);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(stratix10_svc_async_done);
-+
-+static inline void stratix10_smc_1_2(struct stratix10_async_ctrl *actrl,
-+				     const struct arm_smccc_1_2_regs *args,
-+				     struct arm_smccc_1_2_regs *res)
-+{
-+	arm_smccc_1_2_smc(args, res);
-+}
-+
-+/**
-+ * stratix10_svc_async_init - Initialize the Stratix 10 service controller
-+ *                            for asynchronous operations.
-+ * @controller: Pointer to the Stratix 10 service controller structure.
-+ *
-+ * This function initializes the asynchronous service controller by setting up
-+ * the necessary data structures, initializing the transaction list, and
-+ *
-+ * Return: 0 on success, -EINVAL if the controller is NULL or already initialized,
-+ *         -ENOMEM if memory allocation fails, -EADDRINUSE if the client ID is already
-+ *         reserved, or other negative error codes on failure.
-+ */
-+static int stratix10_svc_async_init(struct stratix10_svc_controller *controller)
-+{
-+	int ret;
-+	struct arm_smccc_res res;
-+
-+	if (!controller)
-+		return -EINVAL;
-+
-+	struct stratix10_async_ctrl *actrl = &controller->actrl;
-+
-+	if (actrl->initialized)
-+		return -EINVAL;
-+
-+	struct device *dev = controller->dev;
-+
-+	controller->invoke_fn(INTEL_SIP_SMC_SVC_VERSION, 0, 0, 0, 0, 0, 0, 0, &res);
-+	if (res.a0 != INTEL_SIP_SMC_STATUS_OK &&
-+	    !(res.a1 > ASYNC_ATF_MINIMUM_MAJOR_VERSION ||
-+	      (res.a1 == ASYNC_ATF_MINIMUM_MAJOR_VERSION &&
-+	       res.a2 >= ASYNC_ATF_MINIMUM_MINOR_VERSION))) {
-+		dev_err(dev,
-+			"Intel Service Layer Driver: ATF version is not compatible for async operation\n");
-+		return -EINVAL;
-+	}
-+
-+	actrl->invoke_fn = stratix10_smc_1_2;
-+
-+	actrl->async_id_pool = stratix10_id_pool_create(MAX_SDM_CLIENT_IDS);
-+	if (!actrl->async_id_pool)
-+		return -ENOMEM;
-+
-+	/**
-+	 * SIP_SVC_V1_CLIENT_ID is used by V1 clients/stratix10_svc_send()
-+	 * for communicating with SDM synchronously. We need to restrict this
-+	 * in V3 usage to distinguish the V1 and V3 messages in El3 firmware.
-+	 */
-+	ret = stratix10_reserve_id(actrl->async_id_pool, SIP_SVC_V1_CLIENT_ID);
-+	if (ret < 0) {
-+		dev_err(dev,
-+			"Intel Service Layer Driver: Error on reserving SIP_SVC_V1_CLIENT_ID\n");
-+		stratix10_id_pool_destroy(actrl->async_id_pool);
-+		actrl->invoke_fn = NULL;
-+		return -EADDRINUSE;
-+	}
-+
-+	spin_lock_init(&actrl->trx_list_wr_lock);
-+	hash_init(actrl->trx_list);
-+	atomic_set(&actrl->common_achan_refcount, 0);
-+
-+	actrl->initialized = true;
-+	return 0;
-+}
-+
-+/**
-+ * stratix10_svc_async_exit - Clean up and exit the asynchronous service controller
-+ * @ctrl: Pointer to the stratix10_svc_controller structure
-+ *
-+ * This function performs the necessary cleanup for the asynchronous service
-+ * controller. It checks if the controller is valid and if it has been
-+ * initialized. If the controller has an IRQ assigned, it frees the IRQ and
-+ * flushes any pending asynchronous work. It then locks the transaction list
-+ * and safely removes and deallocates each handler in the list. The function
-+ * also removes any asynchronous clients associated with the controller's
-+ * channels and destroys the asynchronous ID pool. Finally, it resets the
-+ * asynchronous ID pool and invoke function pointers to NULL.
-+ *
-+ * Return: 0 on success, -EINVAL if the controller is invalid or not initialized.
-+ */
-+static int stratix10_svc_async_exit(struct stratix10_svc_controller *ctrl)
-+{
-+	int i;
-+	struct hlist_node *tmp;
-+	struct stratix10_svc_async_handler *handler;
-+
-+	if (!ctrl)
-+		return -EINVAL;
-+
-+	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
-+
-+	if (!actrl->initialized)
-+		return -EINVAL;
-+
-+	actrl->initialized = false;
-+
-+	spin_lock(&actrl->trx_list_wr_lock);
-+	hash_for_each_safe(actrl->trx_list, i, tmp, handler, next) {
-+		stratix10_deallocate_id(handler->achan->job_id_pool,
-+					STRATIX10_GET_JOBID(handler->transaction_id));
-+		hash_del_rcu(&handler->next);
-+		kfree(handler);
-+	}
-+	spin_unlock(&actrl->trx_list_wr_lock);
-+
-+	for (i = 0; i < SVC_NUM_CHANNEL; i++) {
-+		if (ctrl->chans[i].async_chan) {
-+			stratix10_svc_remove_async_client(&ctrl->chans[i]);
-+			ctrl->chans[i].async_chan = NULL;
-+		}
-+	}
-+
-+	stratix10_id_pool_destroy(actrl->async_id_pool);
-+	actrl->async_id_pool = NULL;
-+	actrl->invoke_fn = NULL;
-+
-+	return 0;
-+}
-+
- /**
-  * stratix10_svc_free_channel() - free service channel
-  * @chan: service channel to be freed
-@@ -1380,6 +2013,11 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
- 	controller->invoke_fn = invoke_fn;
- 	init_completion(&controller->complete_status);
- 
-+	ret = stratix10_svc_async_init(controller);
-+	if (ret)
-+		dev_dbg(dev, "Intel Service Layer Driver: Error on stratix10_svc_async_init %d\n",
-+			ret);
-+
- 	fifo_size = sizeof(struct stratix10_svc_data) * SVC_NUM_DATA_IN_FIFO;
- 	ret = kfifo_alloc(&controller->svc_fifo, fifo_size, GFP_KERNEL);
- 	if (ret) {
-@@ -1465,6 +2103,8 @@ static void stratix10_svc_drv_remove(struct platform_device *pdev)
- 	struct stratix10_svc *svc = dev_get_drvdata(&pdev->dev);
- 	struct stratix10_svc_controller *ctrl = platform_get_drvdata(pdev);
- 
-+	stratix10_svc_async_exit(ctrl);
-+
- 	of_platform_depopulate(ctrl->dev);
- 
- 	platform_device_unregister(svc->intel_svc_fcs);
-diff --git a/include/linux/firmware/intel/stratix10-smc.h b/include/linux/firmware/intel/stratix10-smc.h
-index ee80ca4bb0d0c6d3aa99aeeca6a4980a315dcc43..c98ed992d23bed5aa344868ca0c77a2d19d94c06 100644
---- a/include/linux/firmware/intel/stratix10-smc.h
-+++ b/include/linux/firmware/intel/stratix10-smc.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2017-2018, Intel Corporation
-+ * Copyright (C) 2025, Altera Corporation
-  */
- 
- #ifndef __STRATIX10_SMC_H
-@@ -47,6 +48,10 @@
- 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_64, \
- 	ARM_SMCCC_OWNER_SIP, (func_num))
- 
-+#define INTEL_SIP_SMC_ASYNC_VAL(func_name)	\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL, ARM_SMCCC_SMC_64, \
-+	ARM_SMCCC_OWNER_SIP, (func_name))
-+
- /**
-  * Return values in INTEL_SIP_SMC_* call
-  *
-@@ -620,4 +625,23 @@ INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_FPGA_CONFIG_COMPLETED_WRITE)
- #define INTEL_SIP_SMC_FCS_GET_PROVISION_DATA \
- 	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_FCS_GET_PROVISION_DATA)
- 
-+/**
-+ * Request INTEL_SIP_SMC_ASYNC_POLL
-+ * Async call used by service driver at EL1 to query mailbox response from SDM.
-+ *
-+ * Call register usage:
-+ * a0 INTEL_SIP_SMC_ASYNC_POLL
-+ * a1 transaction job id
-+ * a2-17 will be used to return the response data
-+ *
-+ * Return status
-+ * a0 INTEL_SIP_SMC_STATUS_OK
-+ * a1-17 will contain the response values from mailbox for the previous send transaction
-+ * Or
-+ * a0 INTEL_SIP_SMC_STATUS_NO_RESPONSE
-+ * a1-17 not used
-+ */
-+#define INTEL_SIP_SMC_ASYNC_FUNC_ID_POLL (0xC8)
-+#define INTEL_SIP_SMC_ASYNC_POLL \
-+	INTEL_SIP_SMC_ASYNC_VAL(INTEL_SIP_SMC_ASYNC_FUNC_ID_POLL)
- #endif
-diff --git a/include/linux/firmware/intel/stratix10-svc-client.h b/include/linux/firmware/intel/stratix10-svc-client.h
-index 60ed82112680e3674b6b7e9852d315922ffff33e..bda837815bae35fbf4df6280dba5bc02d747426e 100644
---- a/include/linux/firmware/intel/stratix10-svc-client.h
-+++ b/include/linux/firmware/intel/stratix10-svc-client.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2017-2018, Intel Corporation
-+ * Copyright (C) 2025, Altera Corporation
-  */
- 
- #ifndef __STRATIX10_SVC_CLIENT_H
-@@ -284,5 +285,92 @@ int stratix10_svc_send(struct stratix10_svc_chan *chan, void *msg);
-  * request process.
-  */
- void stratix10_svc_done(struct stratix10_svc_chan *chan);
-+
-+/**
-+ * typedef async_callback_t - A type definition for an asynchronous callback function.
-+ *
-+ * This type defines a function pointer for an asynchronous callback.
-+ * The callback function takes a single argument, which is a pointer to
-+ * user-defined data.
-+ *
-+ * @param cb_arg A pointer to user-defined data passed to the callback function.
-+ */
-+typedef void (*async_callback_t)(void *cb_arg);
-+
-+/**
-+ * stratix10_svc_add_async_client - Add an asynchronous client to a Stratix 10
-+ *                                  service channel.
-+ * @chan: Pointer to the Stratix 10 service channel structure.
-+ * @use_unique_clientid: Boolean flag indicating whether to use a unique client ID.
-+ *
-+ * This function registers an asynchronous client with the specified Stratix 10
-+ * service channel. If the use_unique_clientid flag is set to true, a unique client
-+ * ID will be assigned to the client.
-+ *
-+ * Return: 0 on success, or a negative error code on failure:
-+ *         -EINVAL if the channel is NULL or the async controller is not initialized.
-+ *         -EALREADY if the async channel is already allocated.
-+ *         -ENOMEM if memory allocation fails.
-+ *         Other negative values if ID allocation fails
-+ */
-+int stratix10_svc_add_async_client(struct stratix10_svc_chan *chan, bool use_unique_clientid);
-+
-+/**
-+ * stratix10_svc_remove_async_client - Remove an asynchronous client from the Stratix 10
-+ *                                     service channel.
-+ * @chan: Pointer to the Stratix 10 service channel structure.
-+ *
-+ * This function removes an asynchronous client from the specified Stratix 10 service channel.
-+ * It is typically used to clean up and release resources associated with the client.
-+ *
-+ * Return: 0 on success, -EINVAL if the channel or asynchronous channel is invalid.
-+ */
-+int stratix10_svc_remove_async_client(struct stratix10_svc_chan *chan);
-+
-+/**
-+ * stratix10_svc_async_send - Send an asynchronous message to the SDM mailbox
-+ *                            in EL3 secure firmware.
-+ * @chan: Pointer to the service channel structure.
-+ * @msg: Pointer to the message to be sent.
-+ * @handler: Pointer to the handler object used by caller to track the transaction.
-+ * @cb: Callback function to be called upon completion.
-+ * @cb_arg: Argument to be passed to the callback function.
-+ *
-+ * This function sends a message asynchronously to the SDM mailbox in EL3 secure firmware.
-+ * and registers a callback function to be invoked when the operation completes.
-+ *
-+ * Return: 0 on success,and negative error codes on failure.
-+ */
-+int stratix10_svc_async_send(struct stratix10_svc_chan *chan, void *msg, void **handler,
-+			     async_callback_t cb, void *cb_arg);
-+
-+/**
-+ * stratix10_svc_async_poll - Polls the status of an asynchronous service request.
-+ * @chan: Pointer to the service channel structure.
-+ * @tx_handle: Handle to the transaction being polled.
-+ * @data: Pointer to the callback data structure to be filled with the result.
-+ *
-+ * This function checks the status of an asynchronous service request
-+ * and fills the provided callback data structure with the result.
-+ *
-+ * Return: 0 on success, -EINVAL if any input parameter is invalid or if the
-+ *         async controller is not initialized, -EAGAIN if the transaction is
-+ *         still in progress, or other negative error codes on failure.
-+ */
-+int stratix10_svc_async_poll(struct stratix10_svc_chan *chan, void *tx_handle,
-+			     struct stratix10_svc_cb_data *data);
-+
-+/**
-+ * stratix10_svc_async_done - Complete an asynchronous transaction
-+ * @chan: Pointer to the service channel structure
-+ * @tx_handle: Pointer to the transaction handle
-+ *
-+ * This function completes an asynchronous transaction by removing the
-+ * transaction from the hash table and deallocating the associated resources.
-+ *
-+ * Return: 0 on success, -EINVAL on invalid input or errors.
-+ */
-+int stratix10_svc_async_done(struct stratix10_svc_chan *chan, void *tx_handle);
-+
- #endif
- 
+> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, =
+offset) };
+> +    }
+> +
+> +    /// Obtain the raw `struct scatterlist *`.
+> +    pub fn as_raw(&self) -> *mut bindings::scatterlist {
+> +        self.0.get()
+> +    }
+> +}
+> +
+> +/// DMA mapping direction.
+> +///
+> +/// Corresponds to the kernel's [`enum dma_data_direction`].
+> +///
+> +/// [`enum dma_data_direction`]: =
+srctree/include/linux/dma-direction.h
+> +#[derive(Copy, Clone, PartialEq, Eq)]
+> +#[repr(u32)]
+> +pub enum DmaDataDirection {
+> +    /// Direction isn't known.
+> +    DmaBidirectional =3D =
+bindings::dma_data_direction_DMA_BIDIRECTIONAL,
+> +    /// Data is going from the memory to the device.
+> +    DmaToDevice =3D bindings::dma_data_direction_DMA_TO_DEVICE,
+> +    /// Data is coming from the device to the memory.
+> +    DmaFromDevice =3D bindings::dma_data_direction_DMA_FROM_DEVICE,
+> +    /// No direction (used for debugging).
+> +    DmaNone =3D bindings::dma_data_direction_DMA_NONE,
+> +}
+> +
+> +/// The base interface for a scatter-gather table of DMA address =
+spans.
+> +///
+> +/// This structure represents the Rust abstraction for a C `struct =
+sg_table`. This implementation
+> +/// abstracts the usage of an already existing C `struct sg_table` =
+within Rust code that we get
+> +/// passed from the C side.
 
--- 
-2.35.3
+This is a bit hard to parse.
 
+> +///
+> +/// # Invariants
+> +///
+> +/// The `sg_table` pointer is valid for the lifetime of an SGTable =
+instance.
+> +#[repr(transparent)]
+> +pub struct SGTable(Opaque<bindings::sg_table>);
+> +
+> +impl SGTable {
+> +    /// Convert a raw `struct sg_table *` to a `&'a SGTable`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that the `struct sg_table` pointed to by =
+`ptr` is initialized and valid for
+> +    /// the lifetime of the returned reference.
+> +    pub unsafe fn as_ref<'a>(ptr: *mut bindings::sg_table) -> &'a =
+Self {
+> +        // SAFETY: Guaranteed by the safety requirements of the =
+function.
+> +        unsafe { &*ptr.cast() }
+> +    }
+
+If you take my suggestion of introducing a new type, of the safety =
+requirements
+will be to correctly identify whether dma_map() has already been called.
+
+> +
+> +    /// Obtain the raw `struct sg_table *`.
+> +    pub fn as_raw(&self) -> *mut bindings::sg_table {
+> +        self.0.get()
+> +    }
+> +
+> +    /// Returns a mutable iterator over the scather-gather table.
+> +    pub fn iter_mut(&mut self) -> SGTableIterMut<'_> {
+> +        SGTableIterMut {
+> +            // SAFETY: dereferenced pointer is valid due to the type =
+invariants on `SGTable`.
+> +            pos: Some(unsafe { SGEntry::as_mut((*self.0.get()).sgl) =
+}),
+
+Same comment as `as_ref` here. Perhaps `from_ptr`?
+
+> +        }
+> +    }
+> +
+> +    /// Returns an iterator over the scather-gather table.
+> +    pub fn iter(&self) -> SGTableIter<'_> {
+> +        SGTableIter {
+> +            // SAFETY: dereferenced pointer is valid due to the type =
+invariants on `SGTable`.
+> +            pos: Some(unsafe { SGEntry::as_ref((*self.0.get()).sgl) =
+}),
+> +        }
+> +    }
+> +}
+> +
+> +/// SAFETY: The `SGTable` should be `Send` across threads.
+> +unsafe impl Send for SGTable {}
+> +
+> +/// A mutable iterator through `SGTable` entries.
+> +pub struct SGTableIterMut<'a> {
+> +    pos: Option<&'a mut SGEntry>,
+> +}
+> +
+> +impl<'a> IntoIterator for &'a mut SGTable {
+> +    type Item =3D &'a mut SGEntry;
+> +    type IntoIter =3D SGTableIterMut<'a>;
+> +
+> +    fn into_iter(self) -> Self::IntoIter {
+> +        self.iter_mut()
+> +    }
+> +}
+> +
+> +impl<'a> Iterator for SGTableIterMut<'a> {
+> +    type Item =3D &'a mut SGEntry;
+> +
+> +    fn next(&mut self) -> Option<Self::Item> {
+> +        self.pos.take().map(|entry| {
+> +            let sg =3D entry.as_raw();
+> +            // SAFETY: `sg` is guaranteed to be valid and non-NULL =
+while inside this closure. The calls
+> +            // to `SGEntry::as_mut` are unique for each scatterlist =
+entry object as well.
+> +            unsafe {
+> +                let next =3D bindings::sg_next(sg);
+> +                self.pos =3D (!next.is_null()).then(|| =
+SGEntry::as_mut(next));
+> +                SGEntry::as_mut(sg)
+> +            }
+> +        })
+> +    }
+> +}
+> +
+> +/// An iterator through `SGTable` entries.
+> +pub struct SGTableIter<'a> {
+> +    pos: Option<&'a SGEntry>,
+> +}
+> +
+> +impl<'a> IntoIterator for &'a SGTable {
+> +    type Item =3D &'a SGEntry;
+> +    type IntoIter =3D SGTableIter<'a>;
+> +
+> +    fn into_iter(self) -> Self::IntoIter {
+> +        self.iter()
+> +    }
+> +}
+> +
+> +impl<'a> Iterator for SGTableIter<'a> {
+> +    type Item =3D &'a SGEntry;
+> +
+> +    fn next(&mut self) -> Option<Self::Item> {
+> +        self.pos.map(|entry| {
+> +            let sg =3D entry.as_raw();
+> +            // SAFETY: `sg` is guaranteed to be valid and non-NULL =
+while inside this closure.
+> +            unsafe {
+> +                let next =3D bindings::sg_next(sg);
+> +                self.pos =3D (!next.is_null()).then(|| =
+SGEntry::as_ref(next));
+> +                SGEntry::as_ref(sg)
+> +            }
+> +        })
+> +    }
+> +}
+> +
+> +/// A scatter-gather table that owns the allocation and can be mapped =
+for DMA operation using `Device`.
+> +pub struct DeviceSGTable {
+> +    sg: SGTable,
+> +    dir: DmaDataDirection,
+> +    dev: ARef<Device>,
+> +}
+> +
+> +impl DeviceSGTable {
+> +    /// Allocate and construct the scatter-gather table.
+> +    pub fn alloc_table(dev: &Device, nents: usize, flags: =
+kernel::alloc::Flags) -> Result<Self> {
+> +        let sgt: Opaque<bindings::sg_table> =3D Opaque::uninit();
+> +
+> +        // SAFETY: The sgt pointer is from the Opaque-wrapped =
+`sg_table` object hence is valid.
+> +        let ret =3D unsafe { bindings::sg_alloc_table(sgt.get(), =
+nents as _, flags.as_raw()) };
+> +        if ret !=3D 0 {
+> +            return Err(Error::from_errno(ret));
+> +        }
+> +
+> +        Ok(Self {
+> +            sg: SGTable(sgt),
+> +            dir: DmaDataDirection::DmaNone,
+> +            dev: dev.into(),
+> +        })
+> +    }
+> +
+> +    /// Map this scatter-gather table describing a buffer for DMA.
+> +    pub fn dma_map(&mut self, dir: DmaDataDirection) -> Result {
+> +        // SAFETY: Invariants on `Device` and `SGTable` ensures that =
+the `self.dev` and `self.sg`
+> +        // pointers are valid.
+> +        let ret =3D unsafe {
+> +            bindings::dma_map_sgtable(
+> +                self.dev.as_raw(),
+> +                self.sg.as_raw(),
+> +                dir as _,
+> +                bindings::DMA_ATTR_NO_WARN as _,
+> +            )
+> +        };
+> +        if ret !=3D 0 {
+> +            return Err(Error::from_errno(ret));
+> +        }
+> +        self.dir =3D dir;
+> +        Ok(())
+> +    }
+> +}
+> +
+> +// TODO: Implement these as macros for objects that want to derive =
+from `SGTable`.
+> +impl Deref for DeviceSGTable {
+> +    type Target =3D SGTable;
+> +
+> +    fn deref(&self) -> &Self::Target {
+> +        &self.sg
+> +    }
+> +}
+> +
+> +impl DerefMut for DeviceSGTable {
+> +    fn deref_mut(&mut self) -> &mut Self::Target {
+> +        &mut self.sg
+> +    }
+> +}
+> +
+> +impl Drop for DeviceSGTable {
+> +    fn drop(&mut self) {
+> +        if self.dir !=3D DmaDataDirection::DmaNone {
+
+Hmm, I am not sure that we should be using DMA_NONE for this.
+
+I mean, it possibly works, but it's probably not what it's meant for?
+
+> +            // SAFETY: Invariants on `Device` and `SGTable` ensures =
+that the `self.dev` and `self.sg`
+> +            // pointers are valid.
+> +            unsafe {
+> +                bindings::dma_unmap_sgtable(self.dev.as_raw(), =
+self.sg.as_raw(), self.dir as _, 0)
+> +            };
+> +        }
+> +        // SAFETY: Invariant on `SGTable` ensures that the `self.sg` =
+pointer is valid.
+> +        unsafe { bindings::sg_free_table(self.sg.as_raw()) };
+> +    }
+> +}
+> --=20
+> 2.43.0
+>=20
+>=20
+
+Other than the minor comments I made, this looks good on a first glance.
+
+=E2=80=94 Daniel
 
