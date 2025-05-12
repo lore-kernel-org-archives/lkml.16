@@ -1,91 +1,114 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016EB2920B9
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E872B29550B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057416; cv=none; b=eMMU5+toPb+x0I2sehSKMZNXFQASe02xzV+RNPysYXUDqHpaLJ4l04p07wLsH37rXJ2zFX6xJPOfaW/+IidNAqZNGBP+lw+PvGhP73erzy4+3mLr097ldu10kWGdJemmWOcE+rnyDN05eIowrhmYLjXULBmwvqJ9DNQinbnVXCI=
+	t=1747057424; cv=none; b=a5hio4oDmzlcifv3sXXDuB4FgRV6L5BLGD6EcMvRK8WM4GtNL3D3KO82J+zjR5+WHV5MYGvAX3+r4hPMFL7R8Hx8bGeo423qXSuwFbEdt8G3rl7bvYANmDqTsIxrTxoBGEeakvclUi+PQwpHkh6vwey8CQxNH9I376bp+vLM+hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057416; c=relaxed/simple;
-	bh=8MkZIe3Qbp+RcKdC6k7z0xCo7nQ7E5S6LK6DBi0+XKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JbZsuRT7Ueh3fZgjsn7bw0N+zZ8Xv+V+fzYgLxb7ESBOOY6wtOsosVcAnd9L50P4h9XfwtvoMUdlr9Lplz3xlnGN3agWvZGgedAT3sqsB4hvInwJ/n1986D149cSKugsRBhsMuFXJxAB981kV8evjEo91GnPxNFuWhUMTsNomxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eE4mhAz2; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747057424; c=relaxed/simple;
+	bh=DIkq7mdvxGhBOJFBrxOyEybYOHqdPTblIBg1vS+0Vmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LnWE/AEA8+/E6SXF0klw2FbnwwkAk1ahofmP3hzHFRqkdSW8IquzDiONroZkeQbDG85cAdd0pdfY3cXfSEeJ3QKYC7rUcfL7zmRA4kvFyQ3qhcJ4BZWVpk1Ygss498wNvKPhJNfjZvfge9/Hwvnll5AFT4oicAFjofFyRAQZ5fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lxrewr28; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eE4mhAz2"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EEFCC40E0241;
-	Mon, 12 May 2025 13:43:29 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id O_dZuhafoLZV; Mon, 12 May 2025 13:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747057405; bh=LUM0TIYK6V7MxGqCziEXETvadDUqaxdImRi2b8LllN0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eE4mhAz2TzgI7BSAFJtAYYb+DgMQUtlErUsSY/MIHfGdER1pC/gaFN2Cvcv09VSag
-	 g3Q5kTVCHN94VPDIWKnc5C5gM60XZPIAP6wxqFich4jCPwSZ3acIMPoAVm7rQtwK0J
-	 4iujfJ7ZrVfu/gRPZBCwrQM6LU7y8P62jq1lsHZ19MNN7vuxb1HzLzajcSmNPXO+KS
-	 AUHRRV2qm/vuX9mIHHYhFrF8+efwIOiOyy7rghnC15FEmlHOLgdALvvm1EfQjL8mJc
-	 8O3Q1E44JToqwmJimBIcWS/s+/dtrkmniG4ewC6MWm6rJ6ixHO885eV9StNI2dtIyI
-	 GPxJuC+fST9YRFPvQK8lOVzXwMzpxqbhxTOA6FjgDN1a4NarnTXQA1LCaKuv1MKHqG
-	 YIw/VK+kk7TZYkeU7TqFFCyUE3DZihDSzi+f+P0VM5NdWbHvem+sGwfzKW67MOIUsL
-	 CJUtddf5RFW4PkVVe/+dLm53hmWX6eiwq8Y1uu6KclsXPEQBKe79kr72/ecVMkacF8
-	 CnlJLrScOgIXmaw8NtiyFur9QqTzNJAefyfJCc5lXgpU4ATsCG4KJYqJXQsTZob3Sf
-	 0HCT3wmy7T1TB6591cn/VqHbscbneiph4SFkb2zk9hSTjdDoWthRUHOuFBDAzB49qR
-	 OThac9YX1W46vvEtAbuyG0Zk=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F14840E0192;
-	Mon, 12 May 2025 13:43:13 +0000 (UTC)
-Date: Mon, 12 May 2025 15:43:06 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Lin, Wayne" <Wayne.Lin@amd.com>
-Cc: Alex Deucher <alexdeucher@gmail.com>,
-	"Wentland, Harry" <Harry.Wentland@amd.com>,
-	"Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	"Deucher, Alexander" <Alexander.Deucher@amd.com>,
-	"Koenig, Christian" <Christian.Koenig@amd.com>,
-	"Zhang, Hawking" <Hawking.Zhang@amd.com>,
-	"Lazar, Lijo" <Lijo.Lazar@amd.com>,
-	"Khatri, Sunil" <Sunil.Khatri@amd.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: amdgpu RENOIR funky complaints in dmesg
-Message-ID: <20250512134306.GEaCH66l4S5qKzYpsH@fat_crate.local>
-References: <20250512121836.GDaCHnHNjeBwfyV0hh@fat_crate.local>
- <CADnq5_Nq0yzyaYGMHHjjvmZdAAup4PHvvxTLjH9+KbMeeQkneA@mail.gmail.com>
- <CO6PR12MB548999B70BA6108AA111D656FC97A@CO6PR12MB5489.namprd12.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lxrewr28"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747057420;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kceEV5H6KvQLNqsOUbeqe5/B8K16InTUHSahrshNDTA=;
+	b=Lxrewr2814gA76BTIXhzlA50N2/wNCeTZeUkhfAPsE9mvRb6xsmo6pwFt2Me4t4nbCQ0tB
+	2eIpG5kwVUVX8i5mqhjZ1taP6y4ZxfePmvphcDbNbPBflMbW8qCl0OBh9l636tWbbh7u+D
+	aw92I1Cn2LoAo9XNeSNjJDY+HrOpP98=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-613-Rh2lhDyKO6u_gmWY_RpLhA-1; Mon, 12 May 2025 09:43:39 -0400
+X-MC-Unique: Rh2lhDyKO6u_gmWY_RpLhA-1
+X-Mimecast-MFC-AGG-ID: Rh2lhDyKO6u_gmWY_RpLhA_1747057418
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a0b394504cso2229752f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:43:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747057417; x=1747662217;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kceEV5H6KvQLNqsOUbeqe5/B8K16InTUHSahrshNDTA=;
+        b=dNhaEYoTzYZ0RQGDU2bxHnoqnuep1Wp0ivIm4AfWRl/t9ZTVnyx/r9g3ZY5m5HSJcY
+         VuKLsxoGUN3vm4BwHU6X3c2sLygbGAKpr5d2Axxm7ylOy3S+XRlPgYG2FnLiyE7s7/Fs
+         QJFeA0T3JfeyrPPUf0/lFDNvV5fblr0BrexqAagbv1ykHelPX/WD3PhMmstNQPEzlRb0
+         FfIY7/vjrNwervdXUoRo6Zvx92HLlwtn5B0NmMCmHVrLCgBm5x0Oef7dQsO0cz9uVFyx
+         bmdeLymJVNF0nfkwXoqpgHVWVxM8psyzWUzRlIRO9AHx+9FYx387vzpqhrm5Ujgdq1+X
+         cFEg==
+X-Forwarded-Encrypted: i=1; AJvYcCWafXPTazWUOw4mx710HJ8TJobJGO7vNl9ct0lYVvbAZc/8j9eMp9ILTnelVP3zLGO5ES0hzyLhHUjdJP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwiqIlW96KTWeLZFNTNgQ2WAUm1eiFiDCV2hPKjoEc5UKwWHQP
+	C/pDlQH9ENj3PRatAgP8A2nHWjqaGPFkzpSAO4ehajy0dJyHY6rPDrzB/0f7cryVsrtvDa/Z4Gc
+	RjSDcvmcmNeOU8y1I4KKDmxu4z3na1IkYpw4OcemiJm+v6fG9Q9nLaHIzFphUaA==
+X-Gm-Gg: ASbGncuEIcUpAX4NmEQuIu/eqXifqJR4Q3GDol09CdK0M7GD6+0QaB6q7vHmZ51Bzq7
+	ZSrwBL3TsnwXoOMS7ZSQrzEla7jEVHRBB+9mw/hFCJIYwNKzabF9OM9HN04Ix8GlYTq/ZyZ7LqT
+	Wp1Vy/RvQ/4kmIYVVRDG8tYoCF+qJV1PzEfYp5LUsDjDTjUjTPbleHIepfhGI/jux0S1CNmHyQ1
+	nrXsbXP4uFuDiCfbZSeZartuhWuqxch7G991DMKY9DwmjIXT8F88wa3tcUHqblcb5Pnipbfo+rD
+	8dzBsIhzJEVSvKEUkHsGXJmGD7WzJnEncYlOTuqzY9vuvz4HjeT/05hMag==
+X-Received: by 2002:a05:6000:1885:b0:3a0:92d9:dbf with SMTP id ffacd0b85a97d-3a1f6a0fecemr9538726f8f.3.1747057417706;
+        Mon, 12 May 2025 06:43:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9GrRsQVcleOZ+a3jzIYyFjnvFHc9WWiVYWigIgCkWCb9s1ctlCszrZn/+QgiDGFa4grcYmw==
+X-Received: by 2002:a05:6000:1885:b0:3a0:92d9:dbf with SMTP id ffacd0b85a97d-3a1f6a0fecemr9538710f8f.3.1747057417366;
+        Mon, 12 May 2025 06:43:37 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c599sm12700074f8f.94.2025.05.12.06.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 06:43:36 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Mahesh Rao <mahesh.rao@intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: adjust file entry in INTEL STRATIX10 FIRMWARE DRIVERS
+Date: Mon, 12 May 2025 15:43:32 +0200
+Message-ID: <20250512134332.36366-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CO6PR12MB548999B70BA6108AA111D656FC97A@CO6PR12MB5489.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 01:22:01PM +0000, Lin, Wayne wrote:
-> It's due to a newly merged patch which adds more logs indicating exceptions
-> while doing AUX transactions. These exceptions might be temporary state with
-> the DPRx.
-> Will give another patch to adjust the log. Sorry for any inconvenience.
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-No worries. If you want me to test it, lemme know.
+Commit fbfb64987062 ("dt-bindings: firmware: stratix10: Convert to
+json-schema") renames intel,stratix10-svc.txt to intel,stratix10-svc.yaml
+in Documentation/devicetree/bindings/firmware/ as part of this dt-binding
+conversion, but misses to adjust the file entry in INTEL STRATIX10 FIRMWARE
+DRIVERS.
 
-Thx.
+Adjust the file entry after the conversion.
 
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 49826646c38f..2c04cce07a9d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12383,7 +12383,7 @@ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git
+ F:	Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+-F:	Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
++F:	Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
+ F:	drivers/firmware/stratix10-rsu.c
+ F:	drivers/firmware/stratix10-svc.c
+ F:	include/linux/firmware/intel/stratix10-smc.h
 -- 
-Regards/Gruss,
-    Boris.
+2.49.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
