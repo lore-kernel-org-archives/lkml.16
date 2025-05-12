@@ -1,126 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F55257436;
-	Mon, 12 May 2025 08:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538383234;
+	Mon, 12 May 2025 08:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039446; cv=none; b=p41qb4KA/qUntD2oFpkcgqORB4BimTM7jSY8nD+sNV9wxqj9iZAkTUhu2KwYc0/tO9qZXeOV9VBf7eKd/NrsqjNBnj+bsRIkfr2133lv9gdl57Gm1AgT6rb/uIMjRsVpITDTNozaMCvK8WPSRIB07aJsaGsvWCcp9gjwcYx9ZUE=
+	t=1747039591; cv=none; b=npS0ZklR+oTl2MmbNhJE3JZHPRUi927GhSlC3Cgege2GU8ve23J4ufa3RF/MWm2Bv5IOXVaW4IL6TJ8DoEDSiYMoNX4BLsIDB4Bfc6FrYceuqBxdr7WS08b17uPe1ybbaLQBgDV3qC7YaorWTmBQ4Gt+5RsHoGR0LRHAgzhXboI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747039446; c=relaxed/simple;
-	bh=aO0nrrJS8HORN2b0dkbOEnZb76TM/1Rz49FnYj/O6R4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d82B4qJN2DNjm0NHVNDIWalk5xp0rhLa1dIbn7F1hBwemRlb4ZOlkYocKURv4P7EXjLkPezEZSLbaOZIX8g3sf2O9VdaccnGaNesjZlTQuYgt9hQt+gH6E/3R6OqIKZ8wXxRtfu+pZVB6ENwYwj5sWu+RKDjx9jBwlS/KIZmLX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IUp0IBgq; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IUp0IBgq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747039445; x=1778575445;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aO0nrrJS8HORN2b0dkbOEnZb76TM/1Rz49FnYj/O6R4=;
-  b=IUp0IBgqWpQpPRkxkVT3VFolzu+GMmnOKZKxN0EZn10+3wK7c9tB80of
-   IQJC8dk3e2wMf2/2IpOneynGxeLBC8FcDWQMTOoD5Yb+NyBcJd14NG6ak
-   chdSqk4pE+XszP26nJF5xp5hNNjxAzHMoyOklEl+0iO0WqJpnNX1Me159
-   M0vn/myo/vuPEuF4f7J0UEShnbKJtuhRne+yHLrft2ndKQfjnjucna74b
-   ZGUZzyNwA7e9/YoD2pl1Smv7hnGVBc4nQy0HEl4hqUOCbWGSbgkqGOqXX
-   Q2Gj1cVNp7I0xvt4D6/6OXu7vBu4kGUpZ5XJA9NGid3tO+uUotokM5jTl
-   Q==;
-X-CSE-ConnectionGUID: 7JmZqgajTD+b2mFLsFXJOQ==
-X-CSE-MsgGUID: 34tskvRBRWyYWjS6+E3ohQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48901664"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="48901664"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:44:04 -0700
-X-CSE-ConnectionGUID: sVxN3AVHRf2RESn32JKGZQ==
-X-CSE-MsgGUID: nsx9lkCuRn6kBHgYj8UcUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="137205262"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:43:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uEOlO-00000000rhm-1X7N;
-	Mon, 12 May 2025 11:43:54 +0300
-Date: Mon, 12 May 2025 11:43:54 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 14/23] ACPI: property: Refactor
- acpi_fwnode_get_reference_args()
-Message-ID: <aCG0ykZt-DcEG2kr@smile.fi.intel.com>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-15-apatel@ventanamicro.com>
+	s=arc-20240116; t=1747039591; c=relaxed/simple;
+	bh=Io5UFZTqm8Lw9JYk0VCOf0VK26C26TuHAeEeKuuS8hg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KdTQIfctZh+/lUo7iF1qBXDvmqA4cfMDjEXynhpmwiSWue39iMvrYMxgDqBURDJBsbb4/V05jnAYj6U9CNMTObkhf0DYi/FWDY8pvGIxCfk62KBOFks3xFKZaQNt4NWlXgks5KXb8VLM+P6Bhoug8FHD3t5+Tpv+9cPQQO8/5WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5259327a93bso1464942e0c.2;
+        Mon, 12 May 2025 01:46:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747039587; x=1747644387;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jKOi5KiEbUlTkmRJMN7ZFl6uLQWf/hx3AnyYinhNvrk=;
+        b=rmqWvetrfQeveikRgD+kT1FNvPaUgbLpkJceSelYBd+xfO4lzgwI5QfDxZsSMHTx4g
+         Q6Naf0BhVQHn4EoPRtTY8txhMCfaPqNcZxaLQrQbKq5gS1VgFhcHwAXqnIOsNzPLsl+8
+         xTrv4mZSB245bBCfaq0VmUiUe+LxUdOX3cDzqvuHrq45FSDPe0qUOV7l+b0CUoP2J+zO
+         ZejKaNelH2JKvFddOicHcMhBH7QuqfSbIKhmIrFl8V9ebjadutZF78f3LIR3FefvH7ZV
+         7DltzQDMjBakrTTaafJSwf68Pg6QdJypkB1dAWyQHFQs2akyKpiVotAxZP4zfzooCGqU
+         9bgA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1G+Ov+3CyPln2XeKnnpF9fark4Gq/M8H6rkp4H675II+P7bo/eCtsjq5B4c4IWvoeEY7zrQk2PNx7Sg==@vger.kernel.org, AJvYcCVgPLJdrq328xFOdO302k0Q73IKA78tzexBQGEqtDVJTL/VzW8VvpQaLZRaJyYbSKvyOB5c1Tkf+lfBgjZ/@vger.kernel.org, AJvYcCVj+93n6O9WNcAKUQ8fNwJzHLxUkmjc9Cx8K1/a5nnG4nDscsohc+fFGpPtGMySruA5HiXYvK4mZoFmsQ==@vger.kernel.org, AJvYcCWepsTvNM5U+B95GNomOU3+IUQYTpqxYdDxbTKBTBcYyE+LV7Q4cpPJYBFnFX1UiaSYzXmDwpLqBwV2BePrY4ulCg1f@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe4aD3lB4GugW7nzU/rG/S85Tzmn9s6nW4ZBbEHdo9FwcCfy2X
+	dxE+Qud8dFB0qGVg4493b+XUMx2PE5LjZUWtfyk8TWNFOq1cXQutDWTre5Tc
+X-Gm-Gg: ASbGncv9t3nrGqC3tN6CvHr6Za0v0ZRjC7NlOWhMaMjEDC+iAMg3tL678INtNDphwbN
+	clfqSCQ//a2M7sYukqz24gDt/V+CBQc70Z5/tRS/Ew4XcnjNXCn7wUtir0BUtf53DzV3QztzARA
+	ac9pRsbxoCVCEvSyS4FZzQ2urTnLKbAPtEOjJtjYTizZ9bXkicipGvvccUSCNnBWuk9dOs8s8yx
+	yNx9CAl2IlfQJN7NF+Y25Ph6I7J7RDucVf/RLchkyNqrmDjurEXAoG65o0gascbf5SM7gru04lo
+	iEmLf2P1xWi3wibVAXCmI4DqFwO/VswVZsJhg3J9RPfR0TWnziray3TZu+oCGNNUJhhXyNg/P5F
+	lglanPaXxTZxsGg==
+X-Google-Smtp-Source: AGHT+IHpKG/i4WSB6zhjanRq5d5u8RVaYmC5MGxRr8rBFabaILxB80pEi39pX72QSQxvrPQ6+JDbDA==
+X-Received: by 2002:a05:6122:1da4:b0:529:373:fcb7 with SMTP id 71dfb90a1353d-52c53cebf52mr7705752e0c.10.1747039587359;
+        Mon, 12 May 2025 01:46:27 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c538a6f4fsm5237087e0c.43.2025.05.12.01.46.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 01:46:26 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4def13d3f01so1028733137.1;
+        Mon, 12 May 2025 01:46:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9l2OFEUve0PySFuztN1nDsv0bBNijNbeI1sFh9YeZU47U3awebwvhWC+bwudvVQTZ5A0SW0jZTzDVs83NVJhuQ8H6@vger.kernel.org, AJvYcCWEArj0bnTOAc1kjpmROmmZ/fRCnMt0Tl9qUerIybbt+64vGPHDUEWVDFqb1xfh8Ef7DvWZPUfM6S24euKm@vger.kernel.org, AJvYcCWMhjqV8AkRgaLLMJpJTiUwEedSEx2AZWg2goLvSZJlWnSFoAuCdwTw9Rvla/SyIsIn7c7hx9Pwv23dBg==@vger.kernel.org, AJvYcCWNBM2b9KNNigcz6CByJMjBiCECnbqh+kIrmY3B+BEHiT74Tfsk0GEPbE0lKOmREIbFOIHcssx+qonbRA==@vger.kernel.org
+X-Received: by 2002:a05:6102:fa8:b0:4c3:6568:3e18 with SMTP id
+ ada2fe7eead31-4deed37048dmr8678078137.15.1747039586713; Mon, 12 May 2025
+ 01:46:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250511133939.801777-15-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250506192033.77338015@canb.auug.org.au> <CAMuHMdX_K7EA4kE2mqxv+BkfR_oQmcpek2B3LxiYxMjSMfwjAw@mail.gmail.com>
+ <CAL_JsqJRw18vN+gXL1H11hMRNQ-6HGS1z2533z7Rb293tSvW6g@mail.gmail.com>
+In-Reply-To: <CAL_JsqJRw18vN+gXL1H11hMRNQ-6HGS1z2533z7Rb293tSvW6g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 May 2025 10:46:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXiVW0p5J5tki47YzvYz5eU87kGVdx8dFq522Zv5Qdw5w@mail.gmail.com>
+X-Gm-Features: AX0GCFufQxBxiXNWp_ZGdOOrG3lhvKdPMrPtLr8VTsff-VdHayWXxDxwfI2YNk0
+Message-ID: <CAMuHMdXiVW0p5J5tki47YzvYz5eU87kGVdx8dFq522Zv5Qdw5w@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the renesas tree
+To: Rob Herring <robh@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, 
+	Devicetree Compiler <devicetree-compiler@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 11, 2025 at 07:09:30PM +0530, Anup Patel wrote:
-> 
-> Currently acpi_fwnode_get_reference_args() calls the public function
-> __acpi_node_get_property_reference() which ignores the nargs_prop
-> parameter. To fix this, make __acpi_node_get_property_reference() to
-> call the static acpi_fwnode_get_reference() so that callers of
-> fwnode_get_reference_args() can still pass a valid property name to
-> fetch the number of arguments.
+Hi Rob,
 
-...
+On Fri, 9 May 2025 at 20:25, Rob Herring <robh@kernel.org> wrote:
+> On Tue, May 6, 2025 at 5:05=E2=80=AFAM Geert Uytterhoeven <geert@linux-m6=
+8k.org> wrote:
+> > On Tue, 6 May 2025 at 11:20, Stephen Rothwell <sfr@canb.auug.org.au> wr=
+ote:
+> > > After merging the renesas tree, today's linux-next build (arm64 defco=
+nfig)
+> > > produced these warnings:
+> > >
+> > > arch/arm64/boot/dts/renesas/r8a779g0.dtsi:1269.24-1283.5: Warning (sp=
+i_bus_bridge): /soc/spi@e6ea0000: incorrect #address-cells for SPI bus
+> > >   also defined at arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.d=
+ts:463.9-478.3
+> > > arch/arm64/boot/dts/renesas/r8a779g0.dtsi:1269.24-1283.5: Warning (sp=
+i_bus_bridge): /soc/spi@e6ea0000: incorrect #size-cells for SPI bus
+> > >   also defined at arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.d=
+ts:463.9-478.3
+> > > arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dtb: Warning (spi_b=
+us_reg): Failed prerequisite 'spi_bus_bridge'
+> > >
+> > > Introduced by commit
+> > >
+> > >   c29748ccad88 ("arm64: dts: renesas: sparrow-hawk: Add MSIOF Sound s=
+upport")
+> >
+> > Thanks, this is a known conflict between SPI bus bindings and dtc:
+> >   - Serial engines that can be SPI controllers must use "spi" as their
+> >     node names,
+> >   - Dtc assumes nodes named "spi" are always SPI controllers.
+>
+> I think you can disable 'spi_bus_bridge' warning by overriding or
+> appending DTC_FLAGS in arch/arm64/boot/dts/renesas/Makefile.
 
-> +static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
-> +					  const char *prop, const char *nargs_prop,
+Thx, I've sent a fix
+https://lore.kernel.org/fbad3581f297d5b95a3b2813bbae7dba25a523fd.1747039399=
+.git.geert+renesas@glider.be
 
-Why prop and not propname?
+Gr{oetje,eeting}s,
 
-> +					  unsigned int args_count, unsigned int index,
-> +					  struct fwnode_reference_args *args)
+                        Geert
 
-...
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-> -	ret = acpi_data_get_property(data, propname, ACPI_TYPE_ANY, &obj);
-> +	ret = acpi_data_get_property(data, prop, ACPI_TYPE_ANY, &obj);
-
-Ditto.
-
-Sounds like an unneeded churn.
-
->  	if (ret)
->  		return ret == -EINVAL ? -ENOENT : -EINVAL;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
