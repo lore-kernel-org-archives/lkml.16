@@ -1,87 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B046724BD02;
-	Mon, 12 May 2025 16:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B1A241674
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066240; cv=none; b=dHKvOQ/8na92SHRea80PrdlDIhhyLcru8gT99uZYN5bHZqQH1Y7pHmbtaBaOa/w+NWvIEgCYJXIhw68pZqf1PHpzyryv70yHhPcSuQRQ/E6fpELydEnXds8UNVLFQQoylzVp8QcP/FUgMGHZHpptChvapirF8XMCCZehSJISEnQ=
+	t=1747066240; cv=none; b=hCQYyaAEbTUmC1KVZTKKl0Mzd06MClLcGn9R9ApQmCCW1uOeebJUyriVepscBPQdAEC55Un8UntdPhnar1Oq/IcmKS/kQF+Cvu9i5fbBof3ruHDowY3aZhEdXuCyc/VBHp4gswhWFSuISt/lbXgXqh3N/jIMmCbzxEkJUJQ+mlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747066240; c=relaxed/simple;
-	bh=x5dkzsUmSGXFdAIE2vpjG06+LOXWs2VUeJtC+t8/c3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ItE1NR6lt8y9L1FMg4DY2RwH9x2LX1QlnaKA5kV9k0lg5/GJxtuotWSKJBS1zKbTLruy8XPuAekWcmtfBd92glEJ+fercX9bp1Kmly2ojzOuSsluUu/nrU2r9/Ql+L7HqL1bsoK8d4CKGezSRZ7B1lC6fBqsj4t+MRPuW/3iEGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA81C4CEF2;
-	Mon, 12 May 2025 16:10:39 +0000 (UTC)
-Date: Mon, 12 May 2025 12:11:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kassey Li <quic_yingangl@quicinc.com>
-Cc: <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH] scsi: trace: change the rtn log in hex format
-Message-ID: <20250512121100.1b3a77b0@gandalf.local.home>
-In-Reply-To: <20250509053840.2990227-1-quic_yingangl@quicinc.com>
-References: <20250509053840.2990227-1-quic_yingangl@quicinc.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	bh=4Rk4PcZp/P0dgRokTbY66gQ53B57GAnzFe0P29JFxrQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FicA0bOthC784Aq6C8xdhz70Il/pWZCpDN8WwgfHl+q9oOCZskrggIf9N5XJJvdTAXJSzHY7WicK5/6rsoVI5Fu97oljOOm6H+jUxe1dyjfhLT9BeMUhIg2SpsMsHEgGcWBjaREfDgGP6MLNYNGyyPjRsG2F5WLu9Z+ORGGcAcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=btn+rEVb; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="btn+rEVb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747066236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nOaKt+XhutGsACo0AIeTjd+wJVp9zlX2M1zDj3epVuo=;
+	b=btn+rEVbuF9TDxdCq2flDLh0OIGPp4vCF9PEdd9hJ68oS7Ub9qns+T+Jq7EjNZYfiMLkOx
+	HSXh3orwZlFIo4KcbKb+qiddjOQIwS5rL7LgocnPUvZ+em58tAO1wQQoArSjniT/yeOJd7
+	h9belUu1D6lTp355gELF+KyxiNfxX2Y=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: upstream@airoha.com,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Robert Hancock <robert.hancock@calian.com>,
+	devicetree@vger.kernel.org
+Subject: [net-next PATCH v4 01/11] dt-bindings: net: Add Xilinx PCS
+Date: Mon, 12 May 2025 12:10:03 -0400
+Message-Id: <20250512161013.731955-2-sean.anderson@linux.dev>
+In-Reply-To: <20250512161013.731955-1-sean.anderson@linux.dev>
+References: <20250512161013.731955-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 9 May 2025 13:38:40 +0800
-Kassey Li <quic_yingangl@quicinc.com> wrote:
+Add a binding for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII LogiCORE
+IP. This device is a soft device typically used to adapt between GMII
+and SGMII or 1000BASE-X (possbilty in combination with a serdes).
+pcs-modes reflects the modes available with the as configured when the
+device is synthesized. Multiple modes may be specified if dynamic
+reconfiguration is supported.
 
-> In default it showed rtn in decimal.
-> 
-> kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
-> 
-> In source code we define these possible value as hexadecimal:
-> 
-> include/scsi/scsi.h
-> 
-> SCSI_MLQUEUE_HOST_BUSY   0x1055
-> SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-> SCSI_MLQUEUE_EH_RETRY    0x1057
-> SCSI_MLQUEUE_TARGET_BUSY 0x1058
+One PCS may contain "shared logic in core" which can be connected to
+other PCSs with "shared logic in example design." This primarily refers
+to clocking resources, allowing a reference clock to be shared by a bank
+of PCSs. To support this, if #clock-cells is defined then the PCS will
+register itself as a clock provider for other PCSs.
 
-Hmm, would you want to make this show text?
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
 
-> 
-> This change converts the rtn in hexadecimal.
-> 
-> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
-> ---
->  include/trace/events/scsi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-> index bf6cc98d9122..a4c089ac834c 100644
-> --- a/include/trace/events/scsi.h
-> +++ b/include/trace/events/scsi.h
-> @@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
->  
->  	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
->  		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
-> -		  " rtn=%d",
-> +		  " rtn=0x%x",
+(no changes since v3)
 
-		  " rtn=%s",
+Changes in v3:
+- Add '>' modifier for paragraph to description
+- Edit description to reference clocks instead of resets
 
->  		  __entry->host_no, __entry->channel, __entry->id,
->  		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
->  		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+Changes in v2:
+- Change base compatible to just xlnx,pcs
+- Drop #clock-cells description
+- Move #clock-cells after compatible
+- Remove second example
+- Rename pcs-modes to xlnx,pcs-modes
+- Reword commit message
 
-		__print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-				      { SCSI_MLQUEUE_DEVICE_BUSY, "DEVICE_BUSY" },
-				      { SCSI_MLQUEUE_EH_RETRY, "EH_RETRY" },
-				      { SCSI_MLQUEUE_TARGET_BUSY, "TARGET_BUSY" })
+ .../devicetree/bindings/net/xilinx,pcs.yaml   | 114 ++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
 
-?
+diff --git a/Documentation/devicetree/bindings/net/xilinx,pcs.yaml b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+new file mode 100644
+index 000000000000..11bbae6936eb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+@@ -0,0 +1,114 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/xilinx,pcs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII LogiCORE IP
++
++maintainers:
++  - Sean Anderson <sean.anderson@seco.com>
++
++description: >
++  This is a soft device which implements the PCS and (depending on
++  configuration) PMA layers of an IEEE Ethernet PHY. On the MAC side, it
++  implements GMII. It may have an attached SERDES (internal or external), or
++  may directly use LVDS IO resources. Depending on the configuration, it may
++  implement 1000BASE-X, SGMII, 2500BASE-X, or 2.5G SGMII.
++
++  This device has a notion of "shared logic" such as reset and clocking
++  resources which must be shared between multiple PCSs using the same I/O
++  banks. Each PCS can be configured to have the shared logic in the "core"
++  (instantiated internally and made available to other PCSs) or in the "example
++  design" (provided by another PCS). PCSs with shared logic in the core provide
++  a clock for other PCSs in the same bank.
++
++properties:
++  compatible:
++    items:
++      - const: xlnx,pcs-16.2
++      - const: xlnx,pcs
++
++  reg:
++    maxItems: 1
++
++  "#clock-cells":
++    const: 0
++
++  clocks:
++    items:
++      - description:
++          The reference clock for the PCS. Depending on your setup, this may be
++          the gtrefclk, refclk, clk125m signal, or clocks from another PCS.
++
++  clock-names:
++    const: refclk
++
++  done-gpios:
++    maxItems: 1
++    description:
++      GPIO connected to the reset-done output, if present.
++
++  interrupts:
++    items:
++      - description:
++          The an_interrupt autonegotiation-complete interrupt.
++
++  interrupt-names:
++    const: an
++
++  xlnx,pcs-modes:
++    description:
++      The interfaces that the PCS supports. Multiple interfaces may be
++      specified if dynamic reconfiguration is enabled.
++    oneOf:
++      - const: sgmii
++      - const: 1000base-x
++      - const: 2500base-x
++      - items:
++          - const: sgmii
++          - const: 1000base-x
++
++  reset-gpios:
++    maxItems: 1
++    description:
++      GPIO connected to the reset input.
++
++required:
++  - compatible
++  - reg
++  - xlnx,pcs-modes
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pcs0: ethernet-pcs@0 {
++            compatible = "xlnx,pcs-16.2", "xlnx,pcs";
++            reg = <0>;
++            #clock-cells = <0>;
++            clocks = <&si570>;
++            clock-names = "refclk";
++            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "an";
++            reset-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
++            done-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
++            xlnx,pcs-modes = "sgmii", "1000base-x";
++        };
++
++        pcs1: ethernet-pcs@1 {
++            compatible = "xlnx,pcs-16.2", "xlnx,pcs";
++            reg = <1>;
++            xlnx,pcs-modes = "sgmii";
++            clocks = <&pcs0>;
++            clock-names = "refclk";
++        };
++    };
+-- 
+2.35.1.1320.gc452695387.dirty
 
--- Steve
