@@ -1,126 +1,143 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A717422ACD3
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1FDB66E;
+	Mon, 12 May 2025 14:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747061242; cv=none; b=qIYc24tVnvtmFKq/4apSHP9W+ZeUZWNCAaeWeCPe2TzK6kBfh9IWPmu7x5jnIEV6t8qPyYRiXN18rTE1ERPmPTM98fdXRjoLzq63vBa9esHh/Kkz98Myka8wUAll6yFqvK/BX+4LMdhqbnJHoX4MTw8b1ScpKsjDmyEPqEA12JI=
+	t=1747061270; cv=none; b=rEvzhWEQXj8meiiObOQ2lFq96343DN53tvScOl/1voS2X2NmIcRY/KKWEdOd0+cJJtPq2e5oLOOO3l2aUXhUbYr3cfGbnw0JPwsMNTcgi/Zw6KAa5CMtAuFj97kyYIqwEgAoHw6RRdMQdcXXGQw846SppqXbVroohv16YM2T7XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747061242; c=relaxed/simple;
-	bh=V4Ph5xtnAXExwa0AvHsQNBY96hLABXlDrBOSwKl/GUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pq9gBh4Wzhu57VsIOyimWopIBiHijGlS/vuoIgMMuwzoFGiYX8n/QSQzpUEmlmVD22aSWEYRZ03bLc2qzpdnsZIw6CwhifJXw8N082PZ3p3hn0D9zIALDW/lg33rvsCnwJvV/Y8gCQn5+YfRhymz6Gz78wy4n3oB4/9AE3RLHn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=BN/zqeUq; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1747061270; c=relaxed/simple;
+	bh=51CBeNSbYFhz+5nXX3XkcH7Be6A0cByKUPwxeeWYY7s=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XkM8JglfBpAPyYN9Q7Xx1r4rR9VGRAB8VoFa0u+ZFHRrW7QjqxqRytZmumpiUSSduuJaExHkJCepffdtp1Atx7F3QM5/GzEmlX2NNg+SdCjrJG+23SOey5LPfsS1DTO/LWICVwMYpkIxMdDgE/QLj9bbsV/FuZj7jIyK62uGpGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tu6QReio; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="BN/zqeUq"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5fbee322ddaso8478668a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747061239; x=1747666039; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m14oScEaTjZatQKNom70YWJQE9ioUexgQ6aHqmSRsUg=;
-        b=BN/zqeUqrqXDS3i7sbj4A93tntjS2lUYe4YIdTli//alO9Xe1SMlTSE0PBmdP84AOY
-         dZqKTZoRLYC7GV/TYX+i3D0dJG6f42cLJfoQXuHhYeOZoqumQSdr0KdIiMH9wPfiQ5lx
-         QY2wZdc5R5Lw0mciAi2Q84Jqs0kA4xbc9v2y9z34F8OzwFvyCMuH5xlioSOYCbkEvbc4
-         Xdk2o2Gw6+Z/M4KGjMlaPnZmyfcct6klZ4EpuP/o3BsDd/8J9UcygcNenNOL7bLb9GE8
-         bfmc1Zx+xnZXVHclRebhHpgiQBOARVoXKjSZjx6rQqv5GvuFHrEyMB4v3G1DKNZK7hJ4
-         xSXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747061239; x=1747666039;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m14oScEaTjZatQKNom70YWJQE9ioUexgQ6aHqmSRsUg=;
-        b=DNu4u+f50KlnV3lmAbEDCIeOFUt/kdkMoOR0Lw+GNgZNdGuQ1AkVCcwufqcY7U3sHB
-         EP3Llt+uoKT7oG2+XOC2xuJIQl8FieHwKKhjyYjtGrOEZHSbg8Cv/WjGd85s/z9RvdOU
-         xw245EzP7kh15btMYWropynqmFPwKqx+oe++piO5T2/Uf0/yYNeuDxVt1rpI2/pK1r+l
-         ypxMoL6T/nZgtvonu/C43hKSG6eHjJWbwTeHgH02IJGgiuKJ4/1amffSJGRd4L4kGopp
-         Siym1Ym0gZ0rzN2odOypq5RbrFVSckFf0pC4Vo1kVfJNiK6IJr5QcqoxxlSXobLL4q92
-         AEvg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5R6an3Imw5D9KgcxqhVpyDOucX93/kfrG7mdBNd1cH/haG4BG0aweUJcXphd/DSfAgqkePZPaeIMHsH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCwFUa30eylTm9XFb+90I3LcVrnZEkgmdLs246ZEy+SfFz0qgL
-	ughalk3DGK1YNOVGIYZZNN7D7fKWOpqdfuwbZe2Fo/lhMs/Aczw1XZAvfCjXFX8=
-X-Gm-Gg: ASbGnctqi6XgB3cpSNcSgrHeLr5yaJnQVYnglno4zJ3ndVF4tvKfO64cwP8FltjwAYe
-	9I9bfj20mqN2rXjTUYGNkHcN3XUVdKe9e/Hv3FxFpZgt5nbmmVkX/0nHmhgkbbcd3ngH2yQu7Cm
-	3MEMcpXuT67vwnYbZW54+iBMhVmSBcHzFl30oL2mMsMMJffVjLhwWIRQF4Lem8k398Dh+IKicxc
-	jzBmhA4+19iixPcKrDK2PZP9yd3kuuvvdRXVRS9jMs+QX/lHdGtzuKcOV+m5hJpAzMIRj9pdMpt
-	ek7SWYC89tM0GO4uYOYKoRTrwarzJpksQIx3OM5YqYO42ks77PXCzcHE01w=
-X-Google-Smtp-Source: AGHT+IE/hLZQy5Y7DCvbr4+of/4o1aU9oPBRNPSjrbd3z0hNDt9f/aX/QapKka7eYc2tafxRyG/spA==
-X-Received: by 2002:a05:6402:42c9:b0:5fc:954e:efb6 with SMTP id 4fb4d7f45d1cf-5fca073136fmr10674228a12.6.1747061238595;
-        Mon, 12 May 2025 07:47:18 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cc26483sm5844513a12.22.2025.05.12.07.47.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 07:47:18 -0700 (PDT)
-Message-ID: <bcf3089b-04d3-40ad-8673-db0e727fa72e@tuxon.dev>
-Date: Mon, 12 May 2025 17:47:16 +0300
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tu6QReio"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54CElcY22022622;
+	Mon, 12 May 2025 09:47:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747061259;
+	bh=qA4c873aAVyx8lV3+U1OKyUnt9VrihjZK+lZcde/Hjc=;
+	h=Date:From:To:CC:Subject;
+	b=tu6QReio2UDWSa10tmE6vULdqvHbWEpF7hvhH9dC6VTCoZPVYq0amG50npOsSunnd
+	 5d+8q+Z6dasQYdZlpKl1uE/xpytU3vzSuDyLWVKJXz//x2qLXpoxdq6NpHGxtqCy22
+	 DYvm8zjUpfuFRobXUyoRsGGDzf6ODDeGApU48MbU=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54CElc031169308
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 12 May 2025 09:47:38 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
+ May 2025 09:47:38 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 12 May 2025 09:47:38 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54CElcfY040746;
+	Mon, 12 May 2025 09:47:38 -0500
+Date: Mon, 12 May 2025 09:47:38 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Arnd Bergmann <arnd@arndb.de>, SoC list <soc@lists.linux.dev>
+CC: SoC <soc@kernel.org>, <arm@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>
+Subject: [GIT PULL 2/3] arm64: defconfig: Updates for TI K3 platforms for
+ v6.16
+Message-ID: <20250512144738.dv63fd4fyuly3s44@diocese>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] clk: at91: sama7d65: Add missing clk_hw to
- parent_data
-To: Ryan.Wanner@microchip.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, mturquette@baylibre.com, sboyd@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-References: <cover.1746561722.git.Ryan.Wanner@microchip.com>
- <41611e4b1eb2abd867523f707791292c6cdbc8b5.1746561722.git.Ryan.Wanner@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <41611e4b1eb2abd867523f707791292c6cdbc8b5.1746561722.git.Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cfdheb7zkavebeha"
+Content-Disposition: inline
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi, Ryan,
+--cfdheb7zkavebeha
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 06.05.2025 23:04, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> The main_xtal clk_hw struct is not passed into parent_data.hw causing
-> the main_osc to not have a parent causing a corrupted clock tree.
-> Passing the main_xtal struct into the parent_data struct will
-> ensure the correct parent structure for main_osc and a correct clock
-> tree.
-> 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-> ---
->  drivers/clk/at91/sama7d65.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/at91/sama7d65.c b/drivers/clk/at91/sama7d65.c
-> index a5d40df8b2f2..1e9d3c393883 100644
-> --- a/drivers/clk/at91/sama7d65.c
-> +++ b/drivers/clk/at91/sama7d65.c
-> @@ -1100,7 +1100,7 @@ static void __init sama7d65_pmc_setup(struct device_node *np)
->  	struct regmap *regmap;
->  	struct clk_hw *hw, *main_rc_hw, *main_osc_hw, *main_xtal_hw;
->  	struct clk_hw *td_slck_hw, *md_slck_hw;
-> -	static struct clk_parent_data parent_data;
-> +	static struct clk_parent_data parent_data = {0};
->  	struct clk_hw *parent_hws[10];
->  	bool bypass;
->  	int i, j;
-> @@ -1138,6 +1138,7 @@ static void __init sama7d65_pmc_setup(struct device_node *np)
->  
->  	parent_data.name = main_xtal_name;
->  	parent_data.fw_name = main_xtal_name;
-> +	parent_data.hw = main_xtal_hw;
+Hi,
+Please pull:
 
-Is this line still needed with the initialization of parent data above:
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-	static struct clk_parent_data parent_data = {0};
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
->  	main_osc_hw = at91_clk_register_main_osc(regmap, "main_osc", NULL,
->  						 &parent_data, bypass);
->  	if (IS_ERR(main_osc_hw))
+are available in the Git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git tags/ti-k3-c=
+onfig-for-v6.16
+
+for you to fetch changes up to 42cfb00c919e5951ba5c4067a058c7e2cf2ccbc0:
+
+  arm64: defconfig: Enable TPIC2810 GPIO expander (2025-05-02 08:14:39 -050=
+0)
+
+----------------------------------------------------------------
+TI K3 defconfig updates for v6.16
+
+- Enable Cadence DSI and PHY driver support for DSI support on BeagleBone-A=
+I64,
+  BeaglePlay, BeagleY-AI, All TI EVMs etc.
+- Enable hardware spinlock and Quadrature Encoder Pulse (QEP) support for
+  AM64-SK and other boards.
+- Enable TMP102 driver to support Phytec phyCORE-AM68x/TDA4x and the
+  phyGATE-Tauri-L-iMX8MM
+- Enable TPIC2810 for AM64-SK LED GPIO control.
+
+----------------------------------------------------------------
+Dominik Haller (1):
+      arm64: defconfig: Enable TMP102 as module
+
+Jayesh Choudhary (1):
+      arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
+
+Judith Mendez (1):
+      arm64: defconfig: Enable hwspinlock and eQEP for K3
+
+Nishanth Menon (1):
+      arm64: defconfig: Enable TPIC2810 GPIO expander
+
+ arch/arm64/configs/defconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--=20
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5=
+ 849D 1736 249D
+
+--cfdheb7zkavebeha
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE+KKGk1TrgjIXoxo03bWEnRc2JJ0FAmgiCgAACgkQ3bWEnRc2
+JJ3DQw//aXvm4zB+oAiQY85ggQLaVA0iEPn5l7TPc/HAqjAiuKoFqtF1JEYEmMwO
+8oY6/91lR/rxUWDF5d9zy+8uCNCEZd1qVq3G4HoPtpFA//Y/n8aPb+V2OPchM+Zb
+6b+BLJk3xsLLZRUq81chgroYPENAIargTTM7WOMKHVRjq8GTrRiOLABQy2DJ80Ls
+BF1iMGAoN3mO7msWGycyZjqs/UoUrB4l9RFtGJlnZDocnHzaXUY8J5TxQHAQDtrJ
+W1+q+1+zqqe4aN3qERV8ZbW4Vd1C8JSX6N4izMLu7vpO2lt09bfLVfnSLXKdWDuM
+ky/YpVOh6zHnYaQxPcHfZjfzxf1/KWJvqFCW9rXJc37SzdlIRHQfwVNuF9gYYhhA
+G20Wvm/6+Rjxa0Ve+clUgFWBaYzdu5Bv2w7yh2gzmJwqeIaQ9YCu1lNvygQjlWm0
+/pLM9hjS1juhEkaMAI93wknyQ5sUQ5KnYdtb2uF816CmYWENMvfVWMQdyDfHL9SH
+XUz3eoUS8f/wwM8bRel5+2xC2Qft68k7zdC5TRqbRqyIF54hX65Rc3GPauqbST8d
+MIAoNBbKZkdDvCpcf871UnD0kQdd9CvoIyeVFsWu6QJCxAuFhCZ6yQWc39lfy8wZ
+mOdRz2sEsQV7nzYWlJe3okJd7QmzPwBxGUJbpnTIuGwe3GUjP20=
+=AVfw
+-----END PGP SIGNATURE-----
+
+--cfdheb7zkavebeha--
