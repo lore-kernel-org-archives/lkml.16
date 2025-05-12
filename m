@@ -1,125 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6923418641;
-	Mon, 12 May 2025 08:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A128194AD5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038776; cv=none; b=HzWg1qfZoqUQwAFEAgKa1uO/Qm/KUBTeWG9L2lWxxMMbezmrSzBhNHAIZlfNZPShLrWRg7dsFSl8ihVyHmfpizRUqR6cEy/LHdSa8NA6fxiAl5g+4k+AqScvVg7uDwmWmf0lTIrFItNJcsLnEc5fpSMRgnJScN06JL6VnaatKkQ=
+	t=1747038800; cv=none; b=OO2j7UD678h92s23xqKJVuR2Uo6KRgbaPsQmZFF2VOjUiiNkINfPu/2VJ93UGwfzVD5FcXEVflEzir+qFeu3GvQ51p4cGD+yCoB8nt4F3XnFymIg0JynapgghdXzzFiVcrtvk66MwdcFTN/MRsENsQsnLoZLnKb+E4hOjN78c7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038776; c=relaxed/simple;
-	bh=3E+9roOzG0uDBJJlhQpnjD/rLvYcI1x7SJ02lswokIY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fy5cv5Ojc1K/5dZviJvhC78MiWBUFrAMKFUXIbHf523S7vELf85sVOlxXw3ukKqOnfNryie/eRW4+An20wNNcELTWBWsFwhPgpwa8qJGq9XySHM7RcGIXnW5peG4PhwUT7q/CxkBATcp6Kl0J/bWmTP9XduYIdBRVdekbIS0YjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/Z06Vmf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747038800; c=relaxed/simple;
+	bh=Hik7OtedaFZAkiGMlum5kZXS39nxblKMLG+OT8C0c1U=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=O3Z9KaxtEgw8PLSoBJcOrXr44dn6QRBnj1MFy4/afv6BjKFDP4WqrLIOYI4izCXh+Spgleu1CFqEhs/h4QmV6Wrtg705NGtf3DfUrcOa8rmyw1FzwZJ5eL3yaMRsn351hjNyQNI3Oy4Rc766c6fYcPeHLBFPiUlnAHm5LPddVMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fFaFn33M; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/Z06Vmf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B78C4CEE7;
-	Mon, 12 May 2025 08:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747038774;
-	bh=3E+9roOzG0uDBJJlhQpnjD/rLvYcI1x7SJ02lswokIY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=F/Z06Vmf14lo5BA+l5yANEOuRLz+FeA5JPYog63df1VgYCivcLb+baKzjUZ4QRqBA
-	 +Ud++cIOyR+Og5tQgXbIhS1uJiJwDn34aSWPEjqLgJLzE9/5T2ljeMN1PP1VTK2JCy
-	 SZqlxO6BNBKEM6wzzJVBzFXSh/hnETtHJXFQofhYXdaLSt4VdH3XWtefBlnI3HWTHu
-	 Hi1akeCIT48l6ZjxppvpgsmOryuZ2hHeP7Bd5vbRRl28egnS2ViXsOzbSHa9AZ27sS
-	 kr0IWWgck8eoIlvJH8K1qWrLmvjQRTbFkIpH0yVQgW+8xpLp12o9DAPTaZmiRYwFVD
-	 /0k1wOSIzrm/Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uEOai-00E2lX-HX;
-	Mon, 12 May 2025 09:32:52 +0100
-Date: Mon, 12 May 2025 09:32:52 +0100
-Message-ID: <86wmamfcuj.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
-In-Reply-To: <aB2+TRSiGYL2eTWH@lpieralisi>
-References: <20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
-	<87zffpn5rk.ffs@tglx>
-	<86a57ohjey.wl-maz@kernel.org>
-	<87ecx0mt9p.ffs@tglx>
-	<867c2sh6jx.wl-maz@kernel.org>
-	<874ixwmpto.ffs@tglx>
-	<aBxgceQBRA6vBK7o@lpieralisi>
-	<864ixvh4ss.wl-maz@kernel.org>
-	<aByLHdktOLUk8HCN@lpieralisi>
-	<aB230INCy2h7X1KY@lpieralisi>
-	<aB2+TRSiGYL2eTWH@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fFaFn33M"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe574976so29089215e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747038795; x=1747643595; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wTzHIKjFiKmyPbI4xGH6KvZ5G+KJhLs/y1YftexbnRA=;
+        b=fFaFn33MwB3gI1IuKOXjYBCJzWaTVklB5nqN3D8AfEHBg5ofDxXrv73imhBfNGuKiX
+         gTjZN/jgV/zSFyEJdKm08atmU3S5vgLU77HxP/aDqahGOrRH0Pq43Q3eDxL99egwpJoe
+         XCodrigCgwSLtshb5QnhXqGYqAWU0dAZ+aB0GuLbPlS9mmBISqKFLlAMrJID2UTJ87pA
+         7bgkzT3/NhgMiW2rmg1w0mmj6yeK1ZL1bsya3co/+f0SFY8BPZOFWnzfPqgb34AJv0Ni
+         ZfBfEC8EOZwZ6pCiblarXF5dV3+K92prz8t+6ipc2UFAGonjBbaVKu+3lqx/xU/Fi0bO
+         yWsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747038795; x=1747643595;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wTzHIKjFiKmyPbI4xGH6KvZ5G+KJhLs/y1YftexbnRA=;
+        b=CVxdURSqypRVynFuAAccPMphcoP7z7Ou57uDRgyYKp/KwB7g01CZwwxno+TEUfGHb7
+         9GQLAlNGWsSBzJ0EJr4nCfaG6gg0G0rOk7+g4vy7W9YoFkUFT8g8V1isCEaM7at7+dWd
+         BkbzjHY2pnNFp6691Vm8VF3jMhOWiKN/Gw7dys5Cgujw2hT/h6BmHIUhmWKNFX+zDrNg
+         wm8oTJX7z1BypTYjH66Na02lXyXHhaIsg1yZl3cmr3pMpkla0XirrTvyOSt0Dg8m+rA1
+         TqA6cPTb0QIbR0xb5QgJ/FYza9XEXn3z8Cwf+1iyLS5qtBZwb8KbSlTRtrqtQJlLUq/l
+         1xpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnHmXkD+b87LeOoDTFY/j3bYnoaE8gIR3dPjW0EvpNOGf4dVVrym9bnY6tvX1eRnJlYYZHstTMsqAcOeA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHSGgbmUYoHohwgD3nF8rKX+bCum+SUwXaYwiweVAs/ZJB8003
+	TZU3SqbF3mG+PlZhnrxfrf4HKXNqF3Is02hXCNi7ylOmbAe1ToM6VzR931iVNUw=
+X-Gm-Gg: ASbGnctp2mLPovMY+YFKfqb2MJoqm3jnc6tZ96fLPsRcVwuX+sblH6yQ+ukbQbevuFz
+	iPgBasGv13kzWUd9J7n44kS+yBgq0JwDWFjsWdLaX6q/VvRbysxtd5ugg+sj78l6ymBwpELR4hd
+	INVHvyoENtAiGEFzsEjdMcbAMnR9Ilw/dcAxqgNBUDpNcE/6A/znyrT+jzfYb+RG53BWu7ejFnD
+	jp0pl1r4gDn8JUYNyakaGf5Wkh49srv6tzBgKP6H2RtNyezq3gYzTJ25rhD0A/G/elDabB9S9uu
+	sgiRW+JN6AsYdfdpqWyjws1twA4MelNYHqX2bAHURteOMix10laHcnv7j0/NZxaa0L3NMBL5G/h
+	c1/mxSiOiZ4viRBw+QMgxGmcIbGyt
+X-Google-Smtp-Source: AGHT+IFuQDvMvD9YeofWnuHOmfxKE1aBgD/3Qr8iHneAgHf//6SuN6jkgPv2gPV91PBlbLB7la43DA==
+X-Received: by 2002:a05:600c:8012:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-442d6d3e6e8mr115012785e9.14.1747038795575;
+        Mon, 12 May 2025 01:33:15 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:a88a:91be:2fd8:4f9f? ([2a01:e0a:3d9:2080:a88a:91be:2fd8:4f9f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3b7b83sm156129235e9.33.2025.05.12.01.33.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 01:33:15 -0700 (PDT)
+Message-ID: <9d72fe73-3b71-4f40-a34e-fc7bdb907cc6@linaro.org>
+Date: Mon, 12 May 2025 10:33:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v2] clk: meson-g12a: fix missing spicc clks to clk_sel
+To: Da Xue <da@libre.computer>, Jerome Brunet <jbrunet@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: stable@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250511173926.1468374-1-da@libre.computer>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250511173926.1468374-1-da@libre.computer>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 09 May 2025 09:35:25 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+Hi,
+
+On 11/05/2025 19:39, Da Xue wrote:
+> HHI_SPICC_CLK_CNTL bits 25:23 controls spicc clk_sel.
+
+This sentence can be removed, this patch doesn't change anything in this= regard.
+
 > 
-> On Fri, May 09, 2025 at 10:07:44AM +0200, Lorenzo Pieralisi wrote:
-> > On Thu, May 08, 2025 at 12:44:45PM +0200, Lorenzo Pieralisi wrote:
-> > 
-> > [...]
-> > 
-> > > I noticed that, if the irq_set_type() function is not implemented,
-> > > we don't execute (in __irq_set_trigger()):
-> > > 
-> > > irq_settings_set_level(desc);
-> > > irqd_set(&desc->irq_data, IRQD_LEVEL);
-> > 
-> > I don't get why the settings above are written only if the irqchip
-> > has an irq_set_type() method, maybe they should be updated in
-> > irqdomain code (?) where:
-> > 
-> > irqd_set_trigger_type()
-> > 
-> > is executed after creating the fwspec mapping ?
-> > 
-> > Is it possible we never noticed because we have always had irqchips that
-> > do implement irq_set_type() ?
-> > 
-> > Again, I don't know the history behind the IRQD_LEVEL flag so it is just
-> > a question, I'd need to get this clarified though please if I remove the
-> > PPI irq_set_type() callback.
+> It is missing fclk_div 2 and gp0_pll which causes the spicc module to
+> output the incorrect clocks for spicc sclk at 2.5x the expected rate.
+
+The sentence is not correct, the spicc sclk will be at the freq computed but CCF,
+it simply can't achieve the requested rate without the missing parents.
+
+But I'm against adding the GP0 PLL since this PLL is required to drive DSI panels.
+
+And GP0 isn't needed since on G12, the SPICC has the "enhance_clk_div" which should be
+able to to reach much more rates with the fclk_divX clocks.
+
+Neil
+
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/powerpc/platforms/52xx/mpc52xx_pic.c?h=v6.15-rc5#n218
+> Add the missing clocks resolves this.
 > 
-> There are other examples in powerpc, this does not look right to me.
+> Fixes: a18c8e0b7697 ("clk: meson: g12a: add support for the SPICC SCLK Source clocks")
+> Cc: <stable@vger.kernel.org> # 6.1
+> Signed-off-by: Da Xue <da@libre.computer>
+> ---
+> Changelog:
+> 
+> v1 -> v2: add Fixes as an older version of the patch was incorrectly sent as v1
+> ---
+>   drivers/clk/meson/g12a.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 4f92b83965d5a..892862bf39996 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -4099,8 +4099,10 @@ static const struct clk_parent_data spicc_sclk_parent_data[] = {
+>   	{ .hw = &g12a_clk81.hw },
+>   	{ .hw = &g12a_fclk_div4.hw },
+>   	{ .hw = &g12a_fclk_div3.hw },
+> +	{ .hw = &g12a_fclk_div2.hw },
+>   	{ .hw = &g12a_fclk_div5.hw },
+>   	{ .hw = &g12a_fclk_div7.hw },
+> +	{ .hw = &g12a_gp0_pll.hw, },
+>   };
+>   
+>   static struct clk_regmap g12a_spicc0_sclk_sel = {
 
-I don't see what's wrong with this, given that PPC is about 15 years
-behind the curve when it comes to interrupt management. Better than
-Sparc or Alpha, though. So they do whatever was possible at the time
-this code was written.
-
-It doesn't mean that you need to align with the worse we have in the tree!
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
