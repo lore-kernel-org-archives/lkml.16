@@ -1,556 +1,247 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from FR5P281CU006.outbound.protection.outlook.com (mail-germanywestcentralazon11022087.outbound.protection.outlook.com [40.107.149.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F5C25C6EC
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747087538; cv=none; b=tINf0RMpJgAEi3oT/Eng+dWgUr+YcHXPKUdNzCXi7n0RilOkiP+QcUHQoyFVTl+hlm2sV0NfcLNnBbQjCfSmEYsWBAcrW4qxL8Zp8nB73FR9qwr7fcEndNRnF8KVjTjBc+aJAS6e6+BgyLEyO+o17Sd36rujXUwN1pI+PRJMtj0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747087538; c=relaxed/simple;
-	bh=uHKmf3YLs15MStx3Gr5ci3Tk6Ry/lcgBkxd8TjPmoHo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TJkKxXRYOaihtrMAhm+wzsvO+rEsu1kigx8Ar/204oWJ0ZCp5c5yudngf1QOTlVY3jxo6XgA0RtGDjRTvQiwjXazMhiFA8mXK99cWIXlcmjqOOzvvxyiDkv53JP5aKZsL08z3W6IMnu1Ydf5yRc937lBSWtOYf0SmzIJcsP6A8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mmls7J7D; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E13425C71C;
+	Mon, 12 May 2025 22:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.149.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747087554; cv=fail; b=NmcyWNEg6+0L7I/BUqwu3uKSlsEp6+7/saaC+Nv4sKIJkR2PedUzmrXVUC4XiMmG+Xks6hfnoXoqyTmYvaegMRO5gs9VyFwQcMXjEQC9CpHaMcA9bMrYknuGeeWroXWtgUwkQ1zX0gpPV0mzcMeDybZD/vd4EsVlDNuvHd70Fx0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747087554; c=relaxed/simple;
+	bh=a9X/NYPm9vFzYiG5SLrdDmvCA6jmCT3ZleYcEEp24O4=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZCg9CDiehiPTl3mEagDih5tcWAnGzqOAFOL19LHtIDz1SiLkfSwNrcpQNd6VbTGXpG2ycr+FpYD5NtpZqBrJ4wgXbiWQEwzKqmGLeyVmbklG/DKakp27OIwuBOfrU0JxWjtNJdp/dROba+0UlZFRHxWFD6lKSFV8Yd07aHKhJD4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adtran.com; spf=pass smtp.mailfrom=adtran.com; dkim=pass (1024-bit key) header.d=adtran.com header.i=@adtran.com header.b=lO45Yjaz; arc=fail smtp.client-ip=40.107.149.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adtran.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=adtran.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mmls7J7D"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e544a4c83so47801895ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747087536; x=1747692336; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNt9Nqh7aG+sWjmf+y5k1WB5lhej4gp1QMamy/5Kujg=;
-        b=Mmls7J7DY7gR6fxIfykb/r0qYSwYyAtCQxrKIp4cwZtlfRzLmNcZQjdq8gZt60y0ow
-         1E4yqTLOdd3O1aXQjrafqKZVAM2690inGmw7fnY7mG/9gqmkpH4QgZL3VfvrziWur9mz
-         A+JZJf9FSMorw8wIb96HjM3k7TMeJfa9rr9e8h/UrwnAc3v6YTolimiaC5yb73Q1Uhc9
-         IqbxNTfNExLVbjLY3lM9V0Jmz9I7K9Bh+otUKYFSiLO5tnfzKKpIx3bABGvSouIo6aCU
-         u+Qyg1fdp98eIOJGPU7VlY1VaguOsQwc/DssoMMQ5d1/GDneWIFxa08oSQuUgh21Z4ZI
-         qJ1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747087536; x=1747692336;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNt9Nqh7aG+sWjmf+y5k1WB5lhej4gp1QMamy/5Kujg=;
-        b=fhAZH8LWLsQaT8vqMZV8O1QBLsPYA3AWEmx8YwnfDBn5n5ICHnlk+voyTJhoc0APzp
-         rRmCGinzgHda4X/VuR3dZmu/pRbCytkfQ/BALflk/IHOdDbkAm/AUKWdT7hT0QtiW979
-         13QlWEz9tQUbmUbdys82m6r3SCdtL8F/DeoDEkhq5ctNx9jmcoUhtZVZ9XUhptPROgAS
-         OYt7OvxzKmNFrh2tdX2MiIMhpoxc7Sc8GHqBwLE6x7KFnjSDW0hI/WQ+Nb0+0ICPGk3z
-         O8p8nNa8mWMvviodkPLhYFm4vgCUDMj4WFiSc6g5xjBmnPhJiNx4Yx7xg0K3Z1cAkBGE
-         Rksw==
-X-Gm-Message-State: AOJu0YxoKyonC+5isKUkGl6mn2mikl2oUcJ6glZX2uEtcVYrdxXp72/A
-	4qzNanKySYgOWhlEfgvF4kf/NxacjVRGAH0+5zU4HYXhPpWT50AZxrdXgU6Pq9t5bMGvHf2biQy
-	X9TbPR26EBDDXXWixxh3WzOEktm+1GEDkooVA5MPH6zJ3lgd5CcI0PVsptwixWGQkv9RHKgfbry
-	LdyxFEnxxi0jdM9jNIchIhpZSNc/x1lmteF3BHasKB
-X-Google-Smtp-Source: AGHT+IGNYIGd31vH2o9vLzllYAm/mop+7w6Wjh+GgDD62lQ89rmTG/vNFJvHqq6peNePl0lsfjcjFjxBPmg=
-X-Received: from plhw5.prod.google.com ([2002:a17:903:2f45:b0:220:ca3c:96bc])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:228e:b0:215:b1e3:c051
- with SMTP id d9443c01a7336-2317cb041eemr14423085ad.11.1747087535804; Mon, 12
- May 2025 15:05:35 -0700 (PDT)
-Date: Mon, 12 May 2025 14:50:31 -0700
-In-Reply-To: <20250512215929.2098240-1-ctshao@google.com>
+	dkim=pass (1024-bit key) header.d=adtran.com header.i=@adtran.com header.b="lO45Yjaz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aKeq2KRoETL+qxXBUX4F5ou0egi/86r9+8OM5WJVwQ+rjhENZ8QNmMzr8EomAzyQqgyZVx/Kp4WTX2qK3WmX/Hcr7UQRYsUWyCgoOcud+avvKJCkJC0vPWcsbDKwgvKR+epFKbCwH8Y0S1GStMMxJOGHevOzMtXMedKzOXs2gyTw7/x+km6mpmFGo7QSUuEMV8w5tubBb1N2qOmqlnVR6GoE4kzxq4oKGzISjWQ/s5eaFSs73SW5aKovccgpNUnNCrbOoqH/UHYliLjKE7nifuu6goqq1JNx4HnyeP4F1wffEdvvSVt5Y+v4HLbWN1gkkFG8wHDWskTHAEaQUU+cLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a9X/NYPm9vFzYiG5SLrdDmvCA6jmCT3ZleYcEEp24O4=;
+ b=Hz5WdybSWpYep/p8KtHLs5hJ5VyNztAVWGdto1ypMTx9uoMFFD/Wg/kwRekI3c7H9r0kDjCY/r2WdwSPiK8O2KHmqivddePLo0gsOvO2BWokudHAwDHuxHzfvYItv0iA+zL1VmsOupq4mNceBBirQ90n16/v2P2c2OUUMEZQHHuJT94UV/Vns7uWyP8Q2U7Gcr7dlF8am8OCldpJ4Sg55jxxZm7fycJogpbqf6t/Uoeu7OrRrVr46KTEB1Q8eZGRDYt54U8wJkivfBct/aePeYN/TFIoiUxTW3rMUZO5TZ/AOYZSn94yElR+dMHqHHrCuWAPiQWUsWvcWWWBdxnYEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=adtran.com; dmarc=pass action=none header.from=adtran.com;
+ dkim=pass header.d=adtran.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=adtran.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a9X/NYPm9vFzYiG5SLrdDmvCA6jmCT3ZleYcEEp24O4=;
+ b=lO45YjazX6jkUO5GfD3ndLQQrUcpey04nm8HNKWUMzWnQ85hunHJiOV0Yu7Z6Svvho2Uf2MnZwLgX00QlNubg3ISo7m+diYU3wWW4lQQe+A3T7Tf7zCzHBOm5kbyNA4cPmxkvVr8eO9/Lo48yhvnmZJ1pp5WSEnej+LI3QylOHw=
+Received: from FRYP281MB2224.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:43::5) by
+ BEYP281MB3892.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:b7::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.30; Mon, 12 May 2025 22:05:49 +0000
+Received: from FRYP281MB2224.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::8232:294d:6d45:7192]) by FRYP281MB2224.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::8232:294d:6d45:7192%5]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 22:05:49 +0000
+From: Piotr Kubik <piotr.kubik@adtran.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Kory Maincent
+	<kory.maincent@bootlin.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 1/2] dt-bindings: net: pse-pd: Add bindings for
+ Si3474 PSE controller
+Thread-Topic: [PATCH net-next 1/2] dt-bindings: net: pse-pd: Add bindings for
+ Si3474 PSE controller
+Thread-Index: AQHbw4oFAO3g15YsTkGGTqTEXILqOg==
+Date: Mon, 12 May 2025 22:05:49 +0000
+Message-ID: <259ad93b-9cc2-4b5d-8323-b427417af747@adtran.com>
+References: <bf9e5c77-512d-4efb-ad1d-f14120c4e06b@adtran.com>
+In-Reply-To: <bf9e5c77-512d-4efb-ad1d-f14120c4e06b@adtran.com>
+Accept-Language: pl-PL, en-US
+Content-Language: pl-PL
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=adtran.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: FRYP281MB2224:EE_|BEYP281MB3892:EE_
+x-ms-office365-filtering-correlation-id: e049be51-e9f0-4a12-de78-08dd91a12788
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?NDEyeFl2STJoSFUxV2tsL3FqdTFOYmtoK3Nmc0lJTUJEL2pka09tNGd2VTdt?=
+ =?utf-8?B?WGpTSkREbWN2bUpkcE5PdUZyMm9XUDlOb3ZUWlI5eGRjcS9NNHZ6Z0hITjhm?=
+ =?utf-8?B?MGw0ZW4zTlBSZS96WjI2Uktvckd4NjdVMlJyQm12cG9BbllSKytWMDBad2VC?=
+ =?utf-8?B?enV3ZjZNVWdUSWY0TUlZUFBKQlJtWnVsRG5PVXdQR2txKzRCWWFabEF1YUFW?=
+ =?utf-8?B?MFRGbDhlb2FONmgyWCt3bFZjOGNMbk9VRXJBQk9ya1h1dFhMc3YxNWZueFVr?=
+ =?utf-8?B?VERWUExDR2pEbFhmdWFVWDMxcE5HVkk2cVJhL0NReStpKy9qL1owYURXTVZV?=
+ =?utf-8?B?cklXK0h1Sno2UU10ZUNNcnYvbW5rNmpxdDJiOTRkb0FBeEoxRXU3L0lwUThM?=
+ =?utf-8?B?NVFUQUhEbnlDQXUzUFBwektYdGswRFBiRTNBcm1oM3BnVTk2bVBsS2Y2WmQr?=
+ =?utf-8?B?NE50eFAwekJEaWxCTm1CZmVnN3NucEJnUzkyOTJlbUZHMm1lU1NTYzlGNTNq?=
+ =?utf-8?B?UkFjUHp6eW4yc0U3SHVad2xEeUtRKy92VFQzTGVFdVozdGNsVDFoR1NyZHRF?=
+ =?utf-8?B?RUtLcVV1bW1rWThYK0ptT2hScnpTR1F2dUNwaU02TThmNUhaQUVHZXIvK1Zv?=
+ =?utf-8?B?MUlCcUJPcGNkMWdRRmc1bW5kZEdmSXd5TnRsMkJFc2RVeG03V2JUUkJDNlFP?=
+ =?utf-8?B?V21WM1hQWkNsb3BEMWVOamhDUkxjV09VQ3hUL3V0VXdwSUJJZEZnTnp2SE1Q?=
+ =?utf-8?B?VTZ3aUZzdW1WSjRUL2UwOHFUeWljdllXRFZWaFpOMEpZdTZxSEJHWEhDNENy?=
+ =?utf-8?B?NExDVVUwTHlMV1grcVloOVNxYUIrVlZIUmFKMFh4TlJuWkdwREZsaGVnOThi?=
+ =?utf-8?B?UFNzTXVxczgxU3ptckM2MUtidmJjS21VSHR4T1JDV2NyQmlQTk93ZXBKdmhw?=
+ =?utf-8?B?dGtIaGoxQS92dW5VRmRrTlowbkdBU3Rtd3FkYmZPcjF3cE5ldGhVQ2lIakZP?=
+ =?utf-8?B?TnRMVFdZcE8yM2NTMk5JbWl0VjJNY2M0UVUrRlE4OEZyMkF0ckM4REltelU5?=
+ =?utf-8?B?NSsxUXV6L3IyblhuRzA1V1BmNmxERERFUGZPbUY5bmFMVlE4T1luWDAxaDVH?=
+ =?utf-8?B?dXNVaXQ1bm82N1BsbCtDMEZVc1BjWXg2YjhtazZOcktaUUx3ZWF2MlJGWWNR?=
+ =?utf-8?B?RlRDU2kyeFh5YXEwb2ZBM0Q1MDBnblF1NkNIWlBtYW00TzlHU2RFRmxON1dH?=
+ =?utf-8?B?VDJZVXlvL1FBVGk1T3VwVXFGMFJSeDB2VCtnQnpHaVMvOFFRRmh1L1F5QnYx?=
+ =?utf-8?B?YlV1S2E2RU53dS9XM1J3V0pGdmFSNlRDbGU1eVAwazl2b2t2aGJRNkhvRHpz?=
+ =?utf-8?B?NlFKVGhpS01LMklyUldnQjEvdVJURDhHaE9CZFAvQ25pY05ZcStPcUhoWEZB?=
+ =?utf-8?B?dlBONkRQNWpkZWpDalRSaHhPamFjcVFIQXRzSU9Ca3RoVUU5bXNXMzFJN0Ny?=
+ =?utf-8?B?N3JOSnE0aFg1bGRLZ2tDYllHdEMra0NkNmhDeG9sN2tlVkdXNFVzanFnUDdo?=
+ =?utf-8?B?YmJuT1NqNVhqdUF3cUtQdDVlamdYYWFLMmdyQ2Urb2VLVno2dHdBVmNzWmlx?=
+ =?utf-8?B?MWVZbzF5UWx4bXJMYVBMa01USWN3c2t2ck1DUEdUV0lSNkgzcTJVTWVLOW01?=
+ =?utf-8?B?eTFIcEdaWnNwNVZ6b0srSVM2QzBnT1g2NERSQUw4U3NjbEJPSzdYSnpqK1RY?=
+ =?utf-8?B?L1VodGJOa3hsYk05SWlQeUpQa2k5NkxEUURvb1hlamE3M0xsY0t5bjdnR2Y0?=
+ =?utf-8?B?aGl5RmVkM2xYSHZCK2VxbGowVUd2Qk1QVFFtNmxtb1pteUZXWGVNdVhmY2I4?=
+ =?utf-8?B?ak9oN2JYREFyKy9mMlZXeGVQMzRiVXp1eGs5WWpWaXRnRUVGcUJzTEgxcU95?=
+ =?utf-8?Q?ioHXTKUIphHqU+YzClp7RkMDdD2KrSup?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FRYP281MB2224.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?djliN3VsWkZyVWtRSE1zTnA5eUx4RXJWY2daVlBLWXNhVlYrcFF6Q0pMMmg3?=
+ =?utf-8?B?K1JOV3NhSVJoeGxrNngvVFBzcjBLUHBQMklSR0kwbTZqWTI1aDBYeUZqd0Zi?=
+ =?utf-8?B?WGRHd2Y5T2JJRjhVSk5QWisrQVJrMUszeDEyR2NpdU1pZjkrSHB2M0NFQ25n?=
+ =?utf-8?B?bzRubEZvaHBGcFVDbk02NksyQWlOeFJVcDE3ZDlTYmpRZTRJSUQ0QmFzRWxN?=
+ =?utf-8?B?ampyeTJOK1pwSSttdlBaQWVaYXI2QlF2SU0vY210b0NIMVQ4TTZkUVdOZUxx?=
+ =?utf-8?B?cGJHWENPZktmUDZodU45QktTZGFZYjV5YkIva1pwUVpjOE1QRG1YY2NkT0Fv?=
+ =?utf-8?B?b0dYMDRlaCs4SXdmdGRHbHBJQVFYUEcwMGR0VE53a09LZG10NG00dUNxb2ZQ?=
+ =?utf-8?B?YmJXZVVBUDBaY0diM0dyWVYvWFZZQ2QwSGtFQWpJQitpR2wrbFFtQWx2c3R2?=
+ =?utf-8?B?TlNXQ2RVcW0xN3NOSW0rQy9KazRETjg4U08vVUUwV3ptTGIzaVJvcHJNbTBn?=
+ =?utf-8?B?OENPZEdzREhHQVBOSW1WQWtxMG1GMGF3aVBUaiswajhzZlBIdnRhSTZCaWhS?=
+ =?utf-8?B?YytrSW93NGkrY2JGRXJ0amJnclh4RXMyMW5waGFHUVAzUSt0ZnRsWDJ5cW9E?=
+ =?utf-8?B?YWhicTkxaWFFeHlNSDRUS1RVeDVzZTlmRlo2Z013dWI5eEJoMHNuN25DSUsy?=
+ =?utf-8?B?QytDWFk0eWxOQjNOMXpHa3J2Y2t4M2V6NEYwckZmeXhwdlY4VWdPTDM1ZGkw?=
+ =?utf-8?B?UzdWUGoyQTI3eC9DcFordWI3aCtaak82SS9jbFQ5eUNBbTJvMDdXSGFRZXEv?=
+ =?utf-8?B?WncxclhQKytiMWRHNlA4YUVWYXVhOGJsVFlnY29heWJTcStUZ2Y0V1ZiQTI0?=
+ =?utf-8?B?VkQwaUFHaEI1Q3BkajNEUDRIbG96a2hoNWN4SVVkbi9VdktNMkVpSGJlWnRC?=
+ =?utf-8?B?Z1BpcS9INU5NVFU3SGxVMnFVRDBLNGt6anhDR3B4dm90UUxZTnVRcnFFT1lO?=
+ =?utf-8?B?OTY0Zzd1czZ6T2N6YUhGTFRSNnFGOXdFekJUS3BHUWZoT3hiVVFSd2JKdEI4?=
+ =?utf-8?B?L09RNGVseGExc1pWRnVBTDh6YmgzMlJ2ZHExMVRpRnlKd0VJc213Q2tSTjVZ?=
+ =?utf-8?B?RmhLc2NHN0RkeXpFNlFzS3pOMmlwV0NGeVVjQmZpdkNPMUoxeDlOcXBxSE95?=
+ =?utf-8?B?ZTZJSmh2N3AvMEU1c2MreDdiWitTcktseE5kcTlIOHZSSjFkNWs2dzZSelNZ?=
+ =?utf-8?B?SGE1WnJBTnVaMmZqWk9GKytNODJkQmM2ZG9leER4ZndWZGpidGNZQkNSUzhY?=
+ =?utf-8?B?N0lBQWlSajdERGZqN0F4YVZIcFBvUzd2bWFodjdtOHdXdFF0WTV2ZDhPakZs?=
+ =?utf-8?B?R1VBenh3aFRPQjRGWTBIREpsM2NxcGcvR01nL2RLYzkvRmNVQm1IaFNvV0NG?=
+ =?utf-8?B?UWl2MXRhOTAwWUxRbng2UU1EczFHdnZESmJOd1RPZDh3RW94SU5DeWMrb3NK?=
+ =?utf-8?B?M1BvUy9icjJTSk4rNW5WNm9SMWhwaTV2azNFeEVnZFM1OVUwYWVTS2d1NEpO?=
+ =?utf-8?B?N3ZYeVFhMzNuc2RjRno0eUNZeGdUeGVjNTlzL0FqWlAybGZTVlNMTDZpV1hn?=
+ =?utf-8?B?bDE5ekVVWjlpS2szc3V6bkJCS1FIN09RejNqZzMwWk1TRTkyM3laMnROVTRV?=
+ =?utf-8?B?cFVQSHh0cWFMSE40Q1RCWG9aeXZ2TWVUNEFITDVTc3lyenhiVW1NMXVLbTF4?=
+ =?utf-8?B?RnFUZjNiZ09HUjV6dnNzd05LcVMvL3ZrekZseWZjUXhxZEJxci9wOFBZL1dn?=
+ =?utf-8?B?Y3VRTEhtajg5cWFJdEcrc0pHaENwRTB5c0ppT0I5Wm9nSUxidTIzOUdvT2Zk?=
+ =?utf-8?B?cnpJR1lPZUxWejhaOWExMHVTdTVMK2JBcE40RUNZSWpiTEM5Vys0QkFLcm1L?=
+ =?utf-8?B?SHgyclc5WDU2clJqUEoxREVBVmQrSTVuR1lvbVV1ZzR3TEV1bTg3NWdXY2gy?=
+ =?utf-8?B?VXVESWxMVGdveS9rQ25STUF6eElTQzFLQmFXUEVYMS8yZkw4ajJ2b1d4SGVW?=
+ =?utf-8?B?bXdqSE5ySVBxVnJTSjVGbE5wcDRuRmNhYStNdGo1eHNKK0hNMmJDYVB0TjF0?=
+ =?utf-8?Q?xHn5VGLYX7Ro0EhF6xVK5DMR/?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ABCC4A847DEC4347B3CBE4CF521596CB@DEUP281.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250512215929.2098240-1-ctshao@google.com>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250512215929.2098240-3-ctshao@google.com>
-Subject: [PATCH v3 2/3] perf parse-events: Use wildcard processing to set an
- event to merge into
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>, Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, howardchu95@gmail.com, yeoreum.yun@arm.com, 
-	linux@treblig.org, james.clark@linaro.org, weilin.wang@intel.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-OriginatorOrg: adtran.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: FRYP281MB2224.DEUP281.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: e049be51-e9f0-4a12-de78-08dd91a12788
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2025 22:05:49.5407
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 423946e4-28c0-4deb-904c-a4a4b174fb3f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t4QvcN3TA1YCLTJ/QgZ0DrbWYAft67FhAuyBmiY9ndmWQnyIkmBRc7xRJz640mRF/+YFyeRcyIVZf+RTye3/IQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BEYP281MB3892
 
-From: Ian Rogers <irogers@google.com>
-
-The merge stat code fails for uncore events if they are repeated
-twice, for example `perf stat -e clockticks,clockticks -I 1000` as the
-counts of the second set of uncore events will be merged into the
-first counter. Reimplement the logic to have a first_wildcard_match so
-that merged later events correctly merge into the first wildcard event
-that they will be aggregated into.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/util/evsel.c        | 18 ++++---
- tools/perf/util/evsel.h        |  7 ++-
- tools/perf/util/parse-events.c | 86 ++++++++++++++++++++++++----------
- tools/perf/util/stat-display.c | 11 ++++-
- tools/perf/util/stat.c         | 40 ++--------------
- 5 files changed, 89 insertions(+), 73 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 34409828f8ec..d55482f094bf 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -552,11 +552,11 @@ struct evsel *evsel__clone(struct evsel *dest, struct evsel *orig)
- 
- 	evsel->exclude_GH = orig->exclude_GH;
- 	evsel->sample_read = orig->sample_read;
--	evsel->auto_merge_stats = orig->auto_merge_stats;
- 	evsel->collect_stat = orig->collect_stat;
- 	evsel->weak_group = orig->weak_group;
- 	evsel->use_config_name = orig->use_config_name;
- 	evsel->pmu = orig->pmu;
-+	evsel->first_wildcard_match = orig->first_wildcard_match;
- 
- 	if (evsel__copy_config_terms(evsel, orig) < 0)
- 		goto out_err;
-@@ -3964,11 +3964,6 @@ bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_con
- 		return true;
- 	}
- 
--	if (counter->merged_stat) {
--		/* Counter won't be shown. */
--		return false;
--	}
--
- 	if (counter->use_config_name || counter->is_libpfm_event) {
- 		/* Original name will be used. */
- 		return false;
-@@ -3997,12 +3992,21 @@ bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_con
- 		return true;
- 	}
- 
-+	if (counter->first_wildcard_match != NULL) {
-+		/*
-+		 * If stats are merged then only the first_wildcard_match is
-+		 * displayed, there is no need to uniquify this evsel as the
-+		 * name won't be shown.
-+		 */
-+		return false;
-+	}
-+
- 	/*
- 	 * Do other non-merged events in the evlist have the same name? If so
- 	 * uniquify is necessary.
- 	 */
- 	evlist__for_each_entry(counter->evlist, evsel) {
--		if (evsel == counter || evsel->merged_stat || evsel->pmu == counter->pmu)
-+		if (evsel == counter || evsel->first_wildcard_match || evsel->pmu == counter->pmu)
- 			continue;
- 
- 		if (evsel__name_is(counter, evsel__name(evsel))) {
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index df8d2eea0465..6dbc9690e0c9 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -70,6 +70,11 @@ struct evsel {
- 		const char		*unit;
- 		struct cgroup		*cgrp;
- 		const char		*metric_id;
-+		/*
-+		 * This point to the first evsel with the same name, intended to store the
-+		 * aggregated counts in aggregation mode.
-+		 */
-+		struct evsel		*first_wildcard_match;
- 		/* parse modifier helper */
- 		int			exclude_GH;
- 		int			sample_read;
-@@ -78,7 +83,6 @@ struct evsel {
- 		bool			percore;
- 		bool			precise_max;
- 		bool			is_libpfm_event;
--		bool			auto_merge_stats;
- 		bool			collect_stat;
- 		bool			weak_group;
- 		bool			bpf_counter;
-@@ -115,7 +119,6 @@ struct evsel {
- 	bool			ignore_missing_thread;
- 	bool			forced_leader;
- 	bool			cmdline_group_boundary;
--	bool			merged_stat;
- 	bool			reset_group;
- 	bool			errored;
- 	bool			needs_auxtrace_mmap;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 177d045577c4..2380de56a207 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -250,13 +250,34 @@ __add_event(struct list_head *list, int *idx,
- 	    struct perf_event_attr *attr,
- 	    bool init_attr,
- 	    const char *name, const char *metric_id, struct perf_pmu *pmu,
--	    struct list_head *config_terms, bool auto_merge_stats,
-+	    struct list_head *config_terms, struct evsel *first_wildcard_match,
- 	    struct perf_cpu_map *cpu_list, u64 alternate_hw_config)
- {
- 	struct evsel *evsel;
- 	bool is_pmu_core;
- 	struct perf_cpu_map *cpus;
- 
-+	/*
-+	 * Ensure the first_wildcard_match's PMU matches that of the new event
-+	 * being added. Otherwise try to match with another event further down
-+	 * the evlist.
-+	 */
-+	if (first_wildcard_match) {
-+		struct evsel *pos = list_prev_entry(first_wildcard_match, core.node);
-+
-+		first_wildcard_match = NULL;
-+		list_for_each_entry_continue(pos, list, core.node) {
-+			if (perf_pmu__name_no_suffix_match(pos->pmu, pmu->name)) {
-+				first_wildcard_match = pos;
-+				break;
-+			}
-+			if (pos->pmu->is_core && (!pmu || pmu->is_core)) {
-+				first_wildcard_match = pos;
-+				break;
-+			}
-+		}
-+	}
-+
- 	if (pmu) {
- 		is_pmu_core = pmu->is_core;
- 		cpus = perf_cpu_map__get(perf_cpu_map__is_empty(cpu_list) ? pmu->cpus : cpu_list);
-@@ -293,9 +314,9 @@ __add_event(struct list_head *list, int *idx,
- 	evsel->core.own_cpus = perf_cpu_map__get(cpus);
- 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
- 	evsel->core.is_pmu_core = is_pmu_core;
--	evsel->auto_merge_stats = auto_merge_stats;
- 	evsel->pmu = pmu;
- 	evsel->alternate_hw_config = alternate_hw_config;
-+	evsel->first_wildcard_match = first_wildcard_match;
- 
- 	if (name)
- 		evsel->name = strdup(name);
-@@ -318,7 +339,7 @@ struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
- {
- 	return __add_event(/*list=*/NULL, &idx, attr, /*init_attr=*/false, name,
- 			   metric_id, pmu, /*config_terms=*/NULL,
--			   /*auto_merge_stats=*/false, /*cpu_list=*/NULL,
-+			   /*first_wildcard_match=*/NULL, /*cpu_list=*/NULL,
- 			   /*alternate_hw_config=*/PERF_COUNT_HW_MAX);
- }
- 
-@@ -329,7 +350,7 @@ static int add_event(struct list_head *list, int *idx,
- {
- 	return __add_event(list, idx, attr, /*init_attr*/true, name, metric_id,
- 			   /*pmu=*/NULL, config_terms,
--			   /*auto_merge_stats=*/false, /*cpu_list=*/NULL,
-+			   /*first_wildcard_match=*/NULL, /*cpu_list=*/NULL,
- 			   alternate_hw_config) ? 0 : -ENOMEM;
- }
- 
-@@ -454,7 +475,7 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
- static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 				struct list_head *list, struct perf_pmu *pmu,
- 				const struct parse_events_terms *const_parsed_terms,
--				bool auto_merge_stats, u64 alternate_hw_config);
-+				struct evsel *first_wildcard_match, u64 alternate_hw_config);
- 
- int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 			   struct parse_events_state *parse_state,
-@@ -466,6 +487,7 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 	const char *metric_id = get_config_metric_id(parsed_terms);
- 	struct perf_cpu_map *cpus = get_config_cpu(parsed_terms);
- 	int ret = 0;
-+	struct evsel *first_wildcard_match = NULL;
- 
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 		LIST_HEAD(config_terms);
-@@ -481,10 +503,13 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 			 */
- 			ret = parse_events_add_pmu(parse_state, list, pmu,
- 						   parsed_terms,
--						   perf_pmu__auto_merge_stats(pmu),
-+						   first_wildcard_match,
- 						   /*alternate_hw_config=*/PERF_COUNT_HW_MAX);
- 			if (ret)
- 				goto out_err;
-+			if (first_wildcard_match == NULL)
-+				first_wildcard_match =
-+					container_of(list->prev, struct evsel, core.node);
- 			continue;
- 		}
- 
-@@ -515,10 +540,12 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 		}
- 
- 		if (__add_event(list, idx, &attr, /*init_attr*/true, config_name ?: name,
--				metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
-+				metric_id, pmu, &config_terms, first_wildcard_match,
- 				cpus, /*alternate_hw_config=*/PERF_COUNT_HW_MAX) == NULL)
- 			ret = -ENOMEM;
- 
-+		if (first_wildcard_match == NULL)
-+			first_wildcard_match = container_of(list->prev, struct evsel, core.node);
- 		free_config_terms(&config_terms);
- 		if (ret)
- 			goto out_err;
-@@ -1387,7 +1414,8 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
- static int __parse_events_add_numeric(struct parse_events_state *parse_state,
- 				struct list_head *list,
- 				struct perf_pmu *pmu, u32 type, u32 extended_type,
--				u64 config, const struct parse_events_terms *head_config)
-+				u64 config, const struct parse_events_terms *head_config,
-+				struct evsel *first_wildcard_match)
- {
- 	struct perf_event_attr attr;
- 	LIST_HEAD(config_terms);
-@@ -1416,7 +1444,7 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
- 	metric_id = get_config_metric_id(head_config);
- 	cpus = get_config_cpu(head_config);
- 	ret = __add_event(list, &parse_state->idx, &attr, /*init_attr*/true, name,
--			metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
-+			metric_id, pmu, &config_terms, first_wildcard_match,
- 			cpus, /*alternate_hw_config=*/PERF_COUNT_HW_MAX) ? 0 : -ENOMEM;
- 	perf_cpu_map__put(cpus);
- 	free_config_terms(&config_terms);
-@@ -1434,6 +1462,7 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 
- 	/* Wildcards on numeric values are only supported by core PMUs. */
- 	if (wildcard && perf_pmus__supports_extended_type()) {
-+		struct evsel *first_wildcard_match = NULL;
- 		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 			int ret;
- 
-@@ -1443,15 +1472,20 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 
- 			ret = __parse_events_add_numeric(parse_state, list, pmu,
- 							 type, pmu->type,
--							 config, head_config);
-+							 config, head_config,
-+							 first_wildcard_match);
- 			if (ret)
- 				return ret;
-+			if (first_wildcard_match == NULL)
-+				first_wildcard_match =
-+					container_of(list->prev, struct evsel, core.node);
- 		}
- 		if (found_supported)
- 			return 0;
- 	}
- 	return __parse_events_add_numeric(parse_state, list, perf_pmus__find_by_type(type),
--					type, /*extended_type=*/0, config, head_config);
-+					type, /*extended_type=*/0, config, head_config,
-+					/*first_wildcard_match=*/NULL);
- }
- 
- static bool config_term_percore(struct list_head *config_terms)
-@@ -1469,7 +1503,7 @@ static bool config_term_percore(struct list_head *config_terms)
- static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 				struct list_head *list, struct perf_pmu *pmu,
- 				const struct parse_events_terms *const_parsed_terms,
--				bool auto_merge_stats, u64 alternate_hw_config)
-+				struct evsel *first_wildcard_match, u64 alternate_hw_config)
- {
- 	struct perf_event_attr attr;
- 	struct perf_pmu_info info;
-@@ -1506,7 +1540,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		evsel = __add_event(list, &parse_state->idx, &attr,
- 				    /*init_attr=*/true, /*name=*/NULL,
- 				    /*metric_id=*/NULL, pmu,
--				    /*config_terms=*/NULL, auto_merge_stats,
-+				    /*config_terms=*/NULL, first_wildcard_match,
- 				    /*cpu_list=*/NULL, alternate_hw_config);
- 		return evsel ? 0 : -ENOMEM;
- 	}
-@@ -1577,7 +1611,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	evsel = __add_event(list, &parse_state->idx, &attr, /*init_attr=*/true,
- 			    get_config_name(&parsed_terms),
- 			    get_config_metric_id(&parsed_terms), pmu,
--			    &config_terms, auto_merge_stats, term_cpu, alternate_hw_config);
-+			    &config_terms, first_wildcard_match, term_cpu, alternate_hw_config);
- 	perf_cpu_map__put(term_cpu);
- 	if (!evsel) {
- 		parse_events_terms__exit(&parsed_terms);
-@@ -1614,6 +1648,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 	int ok = 0;
- 	const char *config;
- 	struct parse_events_terms parsed_terms;
-+	struct evsel *first_wildcard_match = NULL;
- 
- 	*listp = NULL;
- 
-@@ -1646,17 +1681,14 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 	INIT_LIST_HEAD(list);
- 
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		bool auto_merge_stats;
--
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
- 
- 		if (!perf_pmu__have_event(pmu, event_name))
- 			continue;
- 
--		auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
- 		if (!parse_events_add_pmu(parse_state, list, pmu,
--					  &parsed_terms, auto_merge_stats, hw_config)) {
-+					  &parsed_terms, first_wildcard_match, hw_config)) {
- 			struct strbuf sb;
- 
- 			strbuf_init(&sb, /*hint=*/ 0);
-@@ -1665,11 +1697,13 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			strbuf_release(&sb);
- 			ok++;
- 		}
-+		if (first_wildcard_match == NULL)
-+			first_wildcard_match = container_of(list->prev, struct evsel, core.node);
- 	}
- 
- 	if (parse_state->fake_pmu) {
- 		if (!parse_events_add_pmu(parse_state, list, perf_pmus__fake_pmu(), &parsed_terms,
--					  /*auto_merge_stats=*/true, hw_config)) {
-+					 first_wildcard_match, hw_config)) {
- 			struct strbuf sb;
- 
- 			strbuf_init(&sb, /*hint=*/ 0);
-@@ -1700,6 +1734,7 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 	struct perf_pmu *pmu;
- 	int ok = 0;
- 	char *help;
-+	struct evsel *first_wildcard_match = NULL;
- 
- 	*listp = malloc(sizeof(**listp));
- 	if (!*listp)
-@@ -1710,14 +1745,14 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 	/* Attempt to add to list assuming event_or_pmu is a PMU name. */
- 	pmu = perf_pmus__find(event_or_pmu);
- 	if (pmu && !parse_events_add_pmu(parse_state, *listp, pmu, const_parsed_terms,
--					 /*auto_merge_stats=*/false,
-+					 first_wildcard_match,
- 					 /*alternate_hw_config=*/PERF_COUNT_HW_MAX))
- 		return 0;
- 
- 	if (parse_state->fake_pmu) {
- 		if (!parse_events_add_pmu(parse_state, *listp, perf_pmus__fake_pmu(),
- 					  const_parsed_terms,
--					  /*auto_merge_stats=*/false,
-+					  first_wildcard_match,
- 					  /*alternate_hw_config=*/PERF_COUNT_HW_MAX))
- 			return 0;
- 	}
-@@ -1727,15 +1762,16 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 		if (!parse_events__filter_pmu(parse_state, pmu) &&
- 		    perf_pmu__wildcard_match(pmu, event_or_pmu)) {
--			bool auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
--
- 			if (!parse_events_add_pmu(parse_state, *listp, pmu,
- 						  const_parsed_terms,
--						  auto_merge_stats,
-+						  first_wildcard_match,
- 						  /*alternate_hw_config=*/PERF_COUNT_HW_MAX)) {
- 				ok++;
- 				parse_state->wild_card_pmus = true;
- 			}
-+			if (first_wildcard_match == NULL)
-+				first_wildcard_match =
-+					container_of((*listp)->prev, struct evsel, core.node);
- 		}
- 	}
- 	if (ok)
-@@ -2267,7 +2303,7 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 		if (verbose > 0) {
- 			struct strbuf sb = STRBUF_INIT;
- 
--			evlist__uniquify_name(evlist);
-+			evlist__uniquify_evsel_names(evlist, &stat_config);
- 			evlist__format_evsels(evlist, &sb, 2048);
- 			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
- 			strbuf_release(&sb);
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index c022afb28514..729ad5cd52cb 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1002,8 +1002,15 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	os->evsel = counter;
- 
- 	/* Skip already merged uncore/hybrid events */
--	if (counter->merged_stat)
--		return;
-+	if (config->aggr_mode != AGGR_NONE) {
-+		if (evsel__is_hybrid(counter)) {
-+			if (config->hybrid_merge && counter->first_wildcard_match != NULL)
-+				return;
-+		} else {
-+			if (counter->first_wildcard_match != NULL)
-+				return;
-+		}
-+	}
- 
- 	val = aggr->counts.val;
- 	ena = aggr->counts.ena;
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 1f7abd8754c7..355a7d5c8ab8 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -535,35 +535,6 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
- 
- 	return 0;
- }
--/*
-- * Events should have the same name, scale, unit, cgroup but on different core
-- * PMUs or on different but matching uncore PMUs.
-- */
--static bool evsel__is_alias(struct evsel *evsel_a, struct evsel *evsel_b)
--{
--	if (strcmp(evsel__name(evsel_a), evsel__name(evsel_b)))
--		return false;
--
--	if (evsel_a->scale != evsel_b->scale)
--		return false;
--
--	if (evsel_a->cgrp != evsel_b->cgrp)
--		return false;
--
--	if (strcmp(evsel_a->unit, evsel_b->unit))
--		return false;
--
--	if (evsel__is_clock(evsel_a) != evsel__is_clock(evsel_b))
--		return false;
--
--	if (evsel_a->pmu == evsel_b->pmu || evsel_a->pmu == NULL || evsel_b->pmu == NULL)
--		return false;
--
--	if (evsel_a->pmu->is_core)
--		return evsel_b->pmu->is_core;
--
--	return perf_pmu__name_no_suffix_match(evsel_a->pmu, evsel_b->pmu->name);
--}
- 
- static void evsel__merge_aliases(struct evsel *evsel)
- {
-@@ -572,10 +543,9 @@ static void evsel__merge_aliases(struct evsel *evsel)
- 
- 	alias = list_prepare_entry(evsel, &(evlist->core.entries), core.node);
- 	list_for_each_entry_continue(alias, &evlist->core.entries, core.node) {
--		/* Merge the same events on different PMUs. */
--		if (evsel__is_alias(evsel, alias)) {
-+		if (alias->first_wildcard_match == evsel) {
-+			/* Merge the same events on different PMUs. */
- 			evsel__merge_aggr_counters(evsel, alias);
--			alias->merged_stat = true;
- 		}
- 	}
- }
-@@ -588,11 +558,7 @@ static bool evsel__should_merge_hybrid(const struct evsel *evsel,
- 
- static void evsel__merge_stats(struct evsel *evsel, struct perf_stat_config *config)
- {
--	/* this evsel is already merged */
--	if (evsel->merged_stat)
--		return;
--
--	if (evsel->auto_merge_stats || evsel__should_merge_hybrid(evsel, config))
-+	if (!evsel->pmu || !evsel->pmu->is_core || evsel__should_merge_hybrid(evsel, config))
- 		evsel__merge_aliases(evsel);
- }
- 
--- 
-2.49.0.1045.g170613ef41-goog
-
+RnJvbTogUGlvdHIgS3ViaWsgPHBpb3RyLmt1YmlrQGFkdHJhbi5jb20+DQoNCkFkZCB0aGUgU2kz
+NDc0IEkyQyBQb3dlciBTb3VyY2luZyBFcXVpcG1lbnQgY29udHJvbGxlciBkZXZpY2UgdHJlZQ0K
+YmluZGluZ3MgZG9jdW1lbnRhdGlvbi4NCg0KU2lnbmVkLW9mZi1ieTogUGlvdHIgS3ViaWsgPHBp
+b3RyLmt1YmlrQGFkdHJhbi5jb20+DQotLS0NCiAuLi4vYmluZGluZ3MvbmV0L3BzZS1wZC9za3l3
+b3JrcyxzaTM0NzQueWFtbCAgfCAxNDYgKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5n
+ZWQsIDE0NiBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcHNlLXBkL3NreXdvcmtzLHNpMzQ3NC55YW1sDQoNCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3BzZS1wZC9z
+a3l3b3JrcyxzaTM0NzQueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9u
+ZXQvcHNlLXBkL3NreXdvcmtzLHNpMzQ3NC55YW1sDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5k
+ZXggMDAwMDAwMDAwMDAwLi42NDY5MjRhM2NmYjANCi0tLSAvZGV2L251bGwNCisrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcHNlLXBkL3NreXdvcmtzLHNpMzQ3NC55
+YW1sDQpAQCAtMCwwICsxLDE0NiBAQA0KKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwt
+Mi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KKyVZQU1MIDEuMg0KKy0tLQ0KKyRpZDogaHR0cDov
+L2RldmljZXRyZWUub3JnL3NjaGVtYXMvbmV0L3BzZS1wZC9za3l3b3JrcyxzaTM0NzQueWFtbCMN
+Ciskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMN
+CisNCit0aXRsZTogU2t5d29ya3MgU2kzNDc0IFBvd2VyIFNvdXJjaW5nIEVxdWlwbWVudCBjb250
+cm9sbGVyDQorDQorbWFpbnRhaW5lcnM6DQorICAtIFBpb3RyIEt1YmlrIDxwaW90ci5rdWJpa0Bh
+ZHRyYW4uY29tPg0KKw0KK2FsbE9mOg0KKyAgLSAkcmVmOiBwc2UtY29udHJvbGxlci55YW1sIw0K
+Kw0KK3Byb3BlcnRpZXM6DQorICBjb21wYXRpYmxlOg0KKyAgICBlbnVtOg0KKyAgICAgIC0gc2t5
+d29ya3Msc2kzNDc0DQorDQorICByZWctbmFtZXM6DQorICAgIGl0ZW1zOg0KKyAgICAgIC0gY29u
+c3Q6IG1haW4NCisgICAgICAtIGNvbnN0OiBzbGF2ZQ0KKw0KKyAgcmVnOg0KKyAgICBtYXhJdGVt
+czogMg0KKw0KKyAgY2hhbm5lbHM6DQorICAgIGRlc2NyaXB0aW9uOiBUaGUgU2kzNDc0IGlzIGEg
+c2luZ2xlLWNoaXAgUG9FIFBTRSBjb250cm9sbGVyIG1hbmFnaW5nDQorICAgICAgOCBwaHlzaWNh
+bCBwb3dlciBkZWxpdmVyeSBjaGFubmVscy4gSW50ZXJuYWxseSwgaXQncyBzdHJ1Y3R1cmVkDQor
+ICAgICAgaW50byB0d28gbG9naWNhbCAiUXVhZHMiLg0KKyAgICAgIFF1YWQgMCBNYW5hZ2VzIHBo
+eXNpY2FsIGNoYW5uZWxzICgncG9ydHMnIGluIGRhdGFzaGVldCkgMCwgMSwgMiwgMw0KKyAgICAg
+IFF1YWQgMSBNYW5hZ2VzIHBoeXNpY2FsIGNoYW5uZWxzICgncG9ydHMnIGluIGRhdGFzaGVldCkg
+NCwgNSwgNiwgNy4NCisgICAgICBUaGlzIHBhcmFtZXRlciBkZXNjcmliZXMgdGhlIHJlbGF0aW9u
+c2hpcCBiZXR3ZWVuIHRoZSBsb2dpY2FsIGFuZA0KKyAgICAgIHRoZSBwaHlzaWNhbCBwb3dlciBj
+aGFubmVscy4NCisNCisgICAgdHlwZTogb2JqZWN0DQorICAgIGFkZGl0aW9uYWxQcm9wZXJ0aWVz
+OiBmYWxzZQ0KKw0KKyAgICBwcm9wZXJ0aWVzOg0KKyAgICAgICIjYWRkcmVzcy1jZWxscyI6DQor
+ICAgICAgICBjb25zdDogMQ0KKw0KKyAgICAgICIjc2l6ZS1jZWxscyI6DQorICAgICAgICBjb25z
+dDogMA0KKw0KKyAgICBwYXR0ZXJuUHJvcGVydGllczoNCisgICAgICAnXmNoYW5uZWxAWzAtN10k
+JzoNCisgICAgICAgIHR5cGU6IG9iamVjdA0KKyAgICAgICAgYWRkaXRpb25hbFByb3BlcnRpZXM6
+IGZhbHNlDQorDQorICAgICAgICBwcm9wZXJ0aWVzOg0KKyAgICAgICAgICByZWc6DQorICAgICAg
+ICAgICAgbWF4SXRlbXM6IDENCisNCisgICAgICAgIHJlcXVpcmVkOg0KKyAgICAgICAgICAtIHJl
+Zw0KKw0KKyAgICByZXF1aXJlZDoNCisgICAgICAtICIjYWRkcmVzcy1jZWxscyINCisgICAgICAt
+ICIjc2l6ZS1jZWxscyINCisNCityZXF1aXJlZDoNCisgIC0gY29tcGF0aWJsZQ0KKyAgLSByZWcN
+CisgIC0gcHNlLXBpcw0KKw0KK3VuZXZhbHVhdGVkUHJvcGVydGllczogZmFsc2UNCisNCitleGFt
+cGxlczoNCisgIC0gfA0KKyAgICBpMmMgew0KKyAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0K
+KyAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KKw0KKyAgICAgIGV0aGVybmV0LXBzZUAyNiB7DQor
+ICAgICAgICBjb21wYXRpYmxlID0gInNreXdvcmtzLHNpMzQ3NCI7DQorICAgICAgICByZWctbmFt
+ZXMgPSAibWFpbiIsICJzbGF2ZSI7DQorICAgICAgICByZWcgPSA8MHgyNj4sIDwweDI3PjsNCisN
+CisgICAgICAgIGNoYW5uZWxzIHsNCisgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQor
+ICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KKyAgICAgICAgICBwaHlzMF8wOiBjaGFubmVs
+QDAgew0KKyAgICAgICAgICAgIHJlZyA9IDwwPjsNCisgICAgICAgICAgfTsNCisgICAgICAgICAg
+cGh5czBfMTogY2hhbm5lbEAxIHsNCisgICAgICAgICAgICByZWcgPSA8MT47DQorICAgICAgICAg
+IH07DQorICAgICAgICAgIHBoeXMwXzI6IGNoYW5uZWxAMiB7DQorICAgICAgICAgICAgcmVnID0g
+PDI+Ow0KKyAgICAgICAgICB9Ow0KKyAgICAgICAgICBwaHlzMF8zOiBjaGFubmVsQDMgew0KKyAg
+ICAgICAgICAgIHJlZyA9IDwzPjsNCisgICAgICAgICAgfTsNCisgICAgICAgICAgcGh5czBfNDog
+Y2hhbm5lbEA0IHsNCisgICAgICAgICAgICByZWcgPSA8ND47DQorICAgICAgICAgIH07DQorICAg
+ICAgICAgIHBoeXMwXzU6IGNoYW5uZWxANSB7DQorICAgICAgICAgICAgcmVnID0gPDU+Ow0KKyAg
+ICAgICAgICB9Ow0KKyAgICAgICAgICBwaHlzMF82OiBjaGFubmVsQDYgew0KKyAgICAgICAgICAg
+IHJlZyA9IDw2PjsNCisgICAgICAgICAgfTsNCisgICAgICAgICAgcGh5czBfNzogY2hhbm5lbEA3
+IHsNCisgICAgICAgICAgICByZWcgPSA8Nz47DQorICAgICAgICAgIH07DQorICAgICAgICB9Ow0K
+KyAgICAgICAgcHNlLXBpcyB7DQorICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KKyAg
+ICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCisgICAgICAgICAgcHNlX3BpMDogcHNlLXBpQDAg
+ew0KKyAgICAgICAgICAgIHJlZyA9IDwwPjsNCisgICAgICAgICAgICAjcHNlLWNlbGxzID0gPDA+
+Ow0KKyAgICAgICAgICAgIHBhaXJzZXQtbmFtZXMgPSAiYWx0ZXJuYXRpdmUtYSIsICJhbHRlcm5h
+dGl2ZS1iIjsNCisgICAgICAgICAgICBwYWlyc2V0cyA9IDwmcGh5czBfMD4sIDwmcGh5czBfMT47
+DQorICAgICAgICAgICAgcG9sYXJpdHktc3VwcG9ydGVkID0gIk1ESS1YIiwgIlMiOw0KKyAgICAg
+ICAgICAgIHZwd3Itc3VwcGx5ID0gPCZyZWdfcHNlPjsNCisgICAgICAgICAgfTsNCisgICAgICAg
+ICAgcHNlX3BpMTogcHNlLXBpQDEgew0KKyAgICAgICAgICAgIHJlZyA9IDwxPjsNCisgICAgICAg
+ICAgICAjcHNlLWNlbGxzID0gPDA+Ow0KKyAgICAgICAgICAgIHBhaXJzZXQtbmFtZXMgPSAiYWx0
+ZXJuYXRpdmUtYSIsICJhbHRlcm5hdGl2ZS1iIjsNCisgICAgICAgICAgICBwYWlyc2V0cyA9IDwm
+cGh5czBfMj4sIDwmcGh5czBfMz47DQorICAgICAgICAgICAgcG9sYXJpdHktc3VwcG9ydGVkID0g
+Ik1ESS1YIiwgIlMiOw0KKyAgICAgICAgICAgIHZwd3Itc3VwcGx5ID0gPCZyZWdfcHNlPjsNCisg
+ICAgICAgICAgfTsNCisgICAgICAgICAgcHNlX3BpMjogcHNlLXBpQDIgew0KKyAgICAgICAgICAg
+IHJlZyA9IDwyPjsNCisgICAgICAgICAgICAjcHNlLWNlbGxzID0gPDA+Ow0KKyAgICAgICAgICAg
+IHBhaXJzZXQtbmFtZXMgPSAiYWx0ZXJuYXRpdmUtYSIsICJhbHRlcm5hdGl2ZS1iIjsNCisgICAg
+ICAgICAgICBwYWlyc2V0cyA9IDwmcGh5czBfND4sIDwmcGh5czBfNT47DQorICAgICAgICAgICAg
+cG9sYXJpdHktc3VwcG9ydGVkID0gIk1ESS1YIiwgIlMiOw0KKyAgICAgICAgICAgIHZwd3Itc3Vw
+cGx5ID0gPCZyZWdfcHNlPjsNCisgICAgICAgICAgfTsNCisgICAgICAgICAgcHNlX3BpMzogcHNl
+LXBpQDMgew0KKyAgICAgICAgICAgIHJlZyA9IDwzPjsNCisgICAgICAgICAgICAjcHNlLWNlbGxz
+ID0gPDA+Ow0KKyAgICAgICAgICAgIHBhaXJzZXQtbmFtZXMgPSAiYWx0ZXJuYXRpdmUtYSIsICJh
+bHRlcm5hdGl2ZS1iIjsNCisgICAgICAgICAgICBwYWlyc2V0cyA9IDwmcGh5czBfNj4sIDwmcGh5
+czBfNz47DQorICAgICAgICAgICAgcG9sYXJpdHktc3VwcG9ydGVkID0gIk1ESS1YIiwgIlMiOw0K
+KyAgICAgICAgICAgIHZwd3Itc3VwcGx5ID0gPCZyZWdfcHNlPjsNCisgICAgICAgICAgfTsNCisg
+ICAgICAgIH07DQorICAgICAgfTsNCisgICAgfTsNCi0tIA0KMi40My4wDQoNCg==
