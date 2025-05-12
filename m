@@ -1,75 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E131A25C715;
-	Mon, 12 May 2025 09:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB6425B68E;
+	Mon, 12 May 2025 09:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041611; cv=none; b=omhmFMEwEOc4R5qi58zkUCB9icppEiP5bm2JNUyEJU+8bV6/UprVcrgQ587MvTkxoj0YHsKrl09UeT4i/qJfdOH9/VCLeqztkIBgCbzMNk5os36/UGOl2wIx3XFOD+kyVZnsTWmYITKRLKJuC/RHC49UzNEQ+MOQxOtTMf7nO6Y=
+	t=1747041634; cv=none; b=u0zuwGlFFjcMGPJUEHDjxHcbJ1dzI3tl857fgWmD70jHgYM2FkrrtGIfGXYfARsXVUPaTwgpLE4QTMh9kKOH44bWeCq3lwspEqIbYBAuruUy+IV7yaodw/1T1FlRpqOzZBkVUKoA8Kxh6PKd03tO/sULPBhU6gcfDrsK3oT81PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041611; c=relaxed/simple;
-	bh=52aKOno0EL7URiPWvaUs3aD3TypLQPuRkCsQEHt1V7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jcVi87hcALFYwlL6L93MYVU8c+StLIQ0umrm3HcRyjGyTcee+2euA4T0NMFy/WJXdQWcuNkWC0aQ/xBblXz9guKwhqKhgdWxD7v2sercc/ZYOMFbr+2mn09spWO28ronPYJ1smPQw7cl7W4pVltKeXCtsFzElSOesUYBa/rz628=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+r9GNDk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747041634; c=relaxed/simple;
+	bh=iXPNXOwECHF6vzmv4N3t7dpHwXal1mkPGC6CEteuntI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=TmWNsJ/ZVSWW/cimEJ1SQqMGc3TTbczFGhUj0zedYAJL/PcjLOOQ64JpcBOgG9F6Y6vxpljsBZR4qZRO+uoycAh9htrJ+vd5P2kiJe2fFdfZ421JA4JsA7jWnlKy0BPjGpwg8l3AWsXlI9jgxSRFpLmBrzWRlfe6xFYtWTfLCOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDUqrjR+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+r9GNDk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CFCCC4CEEF;
-	Mon, 12 May 2025 09:20:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDUqrjR+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61FEDC4CEE7;
+	Mon, 12 May 2025 09:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747041610;
-	bh=52aKOno0EL7URiPWvaUs3aD3TypLQPuRkCsQEHt1V7I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h+r9GNDk5Npg/xucrTc5NBwbu9B9JgGx1VO8Ml5T6khBC/1OrkYtYp+/A51AmuD5t
-	 yVqwo42vij7yFasxXteweV2t8wLJMx3RhIASLq7S4VcWqD0rTtTYhJAPxikqeZOixx
-	 FJE+zojJCZdk0Ab/+mF+LUEI9OIPqZ0HmZFGcxX+L4RrNxhfapbpeKaDSn/FK5rzav
-	 z9pqqLxCk3XLPfG7LSQILdWo0XAHLt8lVyEIMqVGWJnSnPrjBE2Glm4CGjvq6+zIu3
-	 GKsE6fyOLzg1t0t9MrBYTiPlSXRR/kT3izpMTzvceYTZlIVJNu+bRXnH06oRb+LhSH
-	 kNsXi9DMyfAug==
-From: Christian Brauner <brauner@kernel.org>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] statmount: update STATMOUNT_SUPPORTED macro
-Date: Mon, 12 May 2025 11:20:04 +0200
-Message-ID: <20250512-beinbruch-hasten-ab36c2eb1b66@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250511224953.GA17849@strace.io>
-References: <20250511224953.GA17849@strace.io>
+	s=k20201202; t=1747041633;
+	bh=iXPNXOwECHF6vzmv4N3t7dpHwXal1mkPGC6CEteuntI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=nDUqrjR+3krhDJ5Ew/pgFcib4HULQgxv4dAlZInqyhQuuxUJBdkpuer4jT/99Wvms
+	 KeN2hLfi7CWsgMmXuelniYaUvQ7HplFyye9CGeYTj1qjgNT/cqDlI6U6tAu1gyPNlj
+	 r2aToEYKw/cggt+4zhuutClE+6TGoIzC/gLHwEixB+1tZI9dUXg1311tkCB3/6rsVH
+	 pU3MsCb6MIoOlbkCRtLrIgZMF6hSJsTLeig1rwVD2mICsjQSBHRcovAXvoG5EHnE7S
+	 bSiuynmX3XWP6EFYx0fne0Kq79PAsIOGGaOnd0If2dxi9cRv5xnIcl/hYjFlsUJ78o
+	 4hTU5HRjTENXg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,  Rob Herring <robh@kernel.org>,
+  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  Tudor Ambarus <tudor.ambarus@linaro.org>,
+  Pratyush Yadav <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,
+  Miquel Raynal <miquel.raynal@bootlin.com>,  Richard Weinberger
+ <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,  Krzysztof
+ Kozlowski <krzk@kernel.org>,  linux-spi@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-mtd@lists.infradead.org,  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/3] mtd: spi-nor: Add a driver for the VIA/WonderMedia
+ serial flash controller
+In-Reply-To: <20250510-wmt-sflash-v1-2-02a1ac6adf12@gmail.com>
+References: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
+	<20250510-wmt-sflash-v1-2-02a1ac6adf12@gmail.com>
+Date: Mon, 12 May 2025 09:20:30 +0000
+Message-ID: <mafs01psu89sx.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1003; i=brauner@kernel.org; h=from:subject:message-id; bh=52aKOno0EL7URiPWvaUs3aD3TypLQPuRkCsQEHt1V7I=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQo7nXbUazCZVO00Gv6wb180r3SDF9nNjUfm3KsJe957 YM9ysurO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbyvoDhf+Sp97s3J5S+vXb4 Tghb68oUrv+r1wo5PPymON/k19Z3WmcZ/qeu5dZ0WJvtekIqJXep57TDGyf+bPQKC5Wfqfteu3y 3AAcA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Mon, 12 May 2025 01:49:53 +0300, Dmitry V. Levin wrote:
-> According to commit 8f6116b5b77b ("statmount: add a new supported_mask
-> field"), STATMOUNT_SUPPORTED macro shall be updated whenever a new flag
-> is added.
-> 
-> 
+Hi Alexey,
 
-Applied to the vfs-6.16.mount branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.mount branch should appear in linux-next soon.
+On Sat, May 10 2025, Alexey Charkov wrote:
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+> The controller is tailored to SPI NOR flash memory and abstracts away all
+> SPI communications behind a small set of MMIO registers and a physical
+> memory mapping of the actual chip contents.
+>
+> It doesn't expose chip probing functions beyond reading the ID though, so
+> use lower level chip opcodes via the "programmable command mode" of the
+> controller and the kernel's SPI NOR framework to avoid hard-coding chip
+> parameters for each ID the way the vendor kernel does it.
+>
+> Currently tested on a WonderMedia WM8950 SoC with a Macronix MX25L4005A
+> flash chip (APC Rock board), but should work on all VIA/WonderMedia SoCs
+>
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  MAINTAINERS                                  |   1 +
+>  drivers/mtd/spi-nor/controllers/Kconfig      |  14 +
+>  drivers/mtd/spi-nor/controllers/Makefile     |   1 +
+>  drivers/mtd/spi-nor/controllers/wmt-sflash.c | 525 +++++++++++++++++++++++++++
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Drivers in drivers/mtd/spi-nor/controllers/ are deprecated, and we want
+to eventually get rid of the API. The expected way is for drivers to use
+SPI MEM (drivers/spi/spi-mem.c). SPI MEM drivers are usually more
+general and not tailored specifically to SPI NOR flashes, so it might be
+a bit tricky to write drivers for specialized hardware with it. But I
+think the drivers/spi/spi-intel.c driver is written for similar kind of
+hardware so it should be possible.
+>
+[...]
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.mount
-
-[1/1] statmount: update STATMOUNT_SUPPORTED macro
-      https://git.kernel.org/vfs/vfs/c/ed3453bed26a
+-- 
+Regards,
+Pratyush Yadav
