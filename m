@@ -1,110 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA94E7E9;
-	Mon, 12 May 2025 16:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C7B246333;
+	Mon, 12 May 2025 16:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065656; cv=none; b=ewA/G54JZRy6j4fVkhELI7cQUYkYMD9ChTRhN4XHb9EN7cIq/+saoh3OY/oI5Tg2ddEGw78TuvCtypWjRfuOjYgfO54oh6hq4giT5RWNxnCp7Ys1L29OgCG967/sJ4aRBr4bTKFI3ef51E20Vl98e60N3eSgqYUZioeTfnObI5w=
+	t=1747065733; cv=none; b=qs7UbJxUbbabn1tLU8F4PU6v3jFqhwIv/QtxPasrvE7K2sLKHabfBIPc73+L/nI/+XJTyUPhsncAAk+Ovk1XrRntjjaWjMqe51oWfViPh9VPIF44L6wy8nchLPDSDjoA8Q3mBN7dWXNtg+71nL3Ja2+BTJxGnpy9q/1UXiPKjhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065656; c=relaxed/simple;
-	bh=5ULX35j9SB3R6eiMUzUDP5ujKYpZ2GypHAV7cJiBd7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eB5B6Plp0krcLMw7no1I58yDLuZeJNsHaprdYJxmf5X/CAdKvPNZQXGqRHYfvc2j6aYAwyxEbiBxu4RohbS7jP7oF4DeqM6gLXd84uOU+u2OIMr/Fhjv+mYjEwl7Ejg/cHQjPy9fkb8yPNnqeFJ407gglSjVO/SxJH2nyPMhTnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5DMF1CC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747065733; c=relaxed/simple;
+	bh=+dtNDq8JdWpoZSwzwIh6d8nZ0BLajzNUKA6ws+hcvJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f8J9J4B8AebnIMVKifzKEwbSQvohqhTk6Vx/tOoFXJz7XKICG+RrZk1/aroGRwy/dpyTs17ELsEd1T1E/CUcqUiMRjuQtv++WbfolVNIcKGlYI1Xgo+ODNr/30M9vsKh5/QF7spAyD0FTk1znGxEhf0fZ37Hll1O4fXtRCMhTyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZmRysR/w; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5DMF1CC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30853C4CEE7;
-	Mon, 12 May 2025 16:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747065656;
-	bh=5ULX35j9SB3R6eiMUzUDP5ujKYpZ2GypHAV7cJiBd7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b5DMF1CCQwsfnuCZaPECRkzPsK/Ylv2qXn7ckN/KWEtDtYIrlbcOMYTq8jpsWcCVQ
-	 tTfYxCeg0COyKSK1Wk/ihRFGbww2B4gp5WRNa4aaAxduRShX6TyZqZdh4mQPO4l6Gk
-	 UTf/wOh/sVwG66z9zT+nlVfg7Y2PBtI2yLeVJl/SWjbvjWejrtfcpC/4fuz7fiK8F7
-	 xR5MXrl4muuymo/c0jQeRjoUeVgWK8Q+uWXs2CgvbsQIFr4yHWEYKOH048D+e8twQS
-	 Vm+oHutQCDbw5BPW/keHAd0aQPcyYL1/mJj8nFkI5/DzRpjzmDzKqwMT4M1DXfdmvq
-	 LJTBcngtPWtbA==
-Date: Mon, 12 May 2025 17:00:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Sirius Wang <sirius.wang@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, wenst@chromium.org,
-	xavier.chang@mediatek.com
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: Add compatible for MediaTek
- MT8189
-Message-ID: <20250512-ferret-willed-348cdc19fe4e@spud>
-References: <20250512115355.923342-1-sirius.wang@mediatek.com>
- <20250512115355.923342-2-sirius.wang@mediatek.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZmRysR/w"
+Message-ID: <e2bd2bd0-cb0f-4eef-896e-f1569b40243f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747065727;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I2zAFQNz0bghz2/85QYfjphfPosBf1kHql5f0jIwCo8=;
+	b=ZmRysR/wKLdb7+g1mzsNpBR05OzJPFedyOjTHQDaX+CSf4XO5OaaDRMx9BTaPLzf+m5txr
+	vqo+3HmYchHxiuFWPEXRFWimqTGOPHqVA4+nT7QBHboegUwkmx2rahPA8VGOsk5ilu2qjI
+	epmBe0dsNuc/pMZtzzFUGeFnchzzBow=
+Date: Tue, 13 May 2025 00:01:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BrIJKWHwbpK/JFHA"
-Content-Disposition: inline
-In-Reply-To: <20250512115355.923342-2-sirius.wang@mediatek.com>
+Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
+ raw tracepoint programs
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Kafai Wan <mannkafai@gmail.com>, Song Liu <song@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ bpf <bpf@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+References: <20250426160027.177173-1-mannkafai@gmail.com>
+ <20250426160027.177173-2-mannkafai@gmail.com>
+ <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+ <CALqUS-6XtJ0Bb9jiykdC3jAY_OHjGuirj06Kzssjvo7eW_so2A@mail.gmail.com>
+ <f951b81f-1b46-4219-82fd-0839e27ab3f3@linux.dev>
+ <CAADnVQ+FANha0fO_BF+iHJ4iZSCPtDfoUkzR8mMFwOakw8+eCg@mail.gmail.com>
+ <f1f23c1a-f4a8-4807-8028-87e247775ec8@linux.dev>
+ <CAEf4BzZcuCrK4UVv2qpp7LAL=uXg+YqFopNW3EzCCpUBNPq-ag@mail.gmail.com>
+ <16eafae1-5014-42a9-b6c4-8be40b26cf31@linux.dev>
+ <CAADnVQJNekoXnai0VGOVj8Q3e5RPtTXhNRjdfxF_PxjoQLDYRA@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <CAADnVQJNekoXnai0VGOVj8Q3e5RPtTXhNRjdfxF_PxjoQLDYRA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
---BrIJKWHwbpK/JFHA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 07:53:48PM +0800, Sirius Wang wrote:
-> This commit adds dt-binding documentation for the MediaTek MT8189
-> reference board.
->=20
-> Signed-off-by: Sirius Wang <sirius.wang@mediatek.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
+On 2025/5/12 23:25, Alexei Starovoitov wrote:
+> On Mon, May 12, 2025 at 4:12 AM Leon Hwang <leon.hwang@linux.dev> wrote:
+>>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+[...]
 
-> ---
->  Documentation/devicetree/bindings/arm/mediatek.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Docume=
-ntation/devicetree/bindings/arm/mediatek.yaml
-> index fa1646bc0bac..05e827076a7f 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-> @@ -372,6 +372,10 @@ properties:
->            - enum:
->                - mediatek,mt8188-evb
->            - const: mediatek,mt8188
-> +      - items:
-> +          - enum:
-> +              - mediatek,mt8189-evb
-> +          - const: mediatek,mt8189
->        - description: Google Hayato
->          items:
->            - const: google,hayato-rev1
-> --=20
-> 2.45.2
->=20
+>>
+>> However, since bpf_rdonly_cast() is a kfunc, it causes registers r1–r5
+>> to be considered volatile.
+> 
+> It is not.
+> See:
+> BTF_ID_FLAGS(func, bpf_rdonly_cast, KF_FASTCALL)
+> and relevant commits.
 
---BrIJKWHwbpK/JFHA
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks for the reminder — you're right, bpf_rdonly_cast() is marked with
+KF_FASTCALL, so it doesn't make r1–r5 volatile.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Leon
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCIbMgAKCRB4tDGHoIJi
-0kTOAQDIrab/1dzT8IHi2s3bi/oJO11J04QcoOlpQG0eV2hgJwD/Xw8+792O52zo
-lP7EobzCjq5NJW4XO0avY+MeprkoxA0=
-=6Pyl
------END PGP SIGNATURE-----
-
---BrIJKWHwbpK/JFHA--
