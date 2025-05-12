@@ -1,63 +1,63 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6680E24E019
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867382AD0B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066914; cv=none; b=BqdIjgwkFYlAvgfAXzO1+UUH6FxDNs3YLGcEhoWrxGTB0Hwx4Gu1R5gYhJ+fryZHJd/0I2vkSFsAXFr9bx7G3UhS0XcBOVb1qPyb72oNqftkZwvan8InNldPshljmDe2k9X8vlhO3aHuwMEidLAzxHfAzKz4Nf2zEzyNfsRWXS0=
+	t=1747066917; cv=none; b=XNDbLvNlkvfiXXMES51val4I5fhJxWLSUFDBkvtxT42U0/hYiDTDIm7vyjsYPaeNUaB+bvibU999lOonyoqRCFhjqKOtWBJLflBa0/AxMziqJv7POpCgQwVfO/zz5WldCkCBNRNCD+ohHL/vSjTbk3OKyYX97N46IjLNR3h8HmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066914; c=relaxed/simple;
-	bh=RGhVDgyehlt1h7tJJr4eY1F6OZVuspdxbrtcQQV9us0=;
+	s=arc-20240116; t=1747066917; c=relaxed/simple;
+	bh=X7EJbGzB/GZuOpW1q7+z422dxgR1XteIB0LGULxl5oA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MbNJ829qvsf6bQouzE/Nzypes4pSNWZa+T56YG3pjShoKI6qQqFuGf5lXQF79WgRRr7vaRVwBHMewMIv+P3/AOJ5oZOzN1Hwnplbq65CnP5Giv0TD3YWT0yATYzsjmutEsMxVaw81aNCypl3hRYXBvRYIxh229MuxgU0wWE22B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cSlVw25l; arc=none smtp.client-ip=209.85.160.182
+	 MIME-Version; b=o9ccg6Ymna0eeLjCnr2QFbKyyTNmc3jvu5U4k3T20KvmEh6u3O250RC+HXL9ZL1kMWlcAgr4eia1wdjSfPqW9ltzcXaOdbnRWyDuhHvC2eTwLDJcr3eorlb4JTryvNLxy7bljgqwwi69XwCc8tFFnyhigm4Xfu1sXMtn/GxbmHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DwqkKUAA; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cSlVw25l"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4774ce422easo51303231cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:21:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DwqkKUAA"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-476f4e9cf92so38854671cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747066910; x=1747671710; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1747066913; x=1747671713; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZmsySYwzr8ASsnG753Kt6yv0ZfK1vSiBlGJnWd4881Q=;
-        b=cSlVw25l+w5KpIT/BWeIJEHRnZKiatpz+xmn43rD776CiOSklbzIbXO+2jq5qtNTFL
-         o1hDclluHOsYEIEbTtPtvS/mI3A7BAj3O0qPKVe0o48kB1KuiXjr5seV5cPPrERob0s1
-         btL6GuXGDH9nKt5fn2MZ5nMOPlGjaNH5hPLZpXMonLJ1XRPyyWmh8rQCpuEeo5++bogc
-         KhjyULUogI5AglZcZR4YSkS5feUmQtFGLP8ciTAGW9YDHpNVHV3k0BXbp6Z4hH/t9UEx
-         hwArzv93f+yz/nCyBcx9A/zUrJxCOU4bJNDVSVl65Z/vukckjkZ9iRUrUqZrt/Axsvhd
-         2laQ==
+        bh=DC0/ofhj7JKy32BqrO/IxOiR9eJ+JSl3w3qlcKUJ5PI=;
+        b=DwqkKUAANeIBbwyvQzlwlIuNpBJVvkgTnpCd0sDKvoe2+0yj6V6DWSf4zetopIVXlv
+         LTR6EGW375cNiPZasD9HJc/4TpfkFn/HV0UWg+/k0lT/Sh1Dg218ru1iAivXhUPvq3kW
+         NfDHAjuRBj8QpkHkC+wKu7wWTVak2UO/piS6//vtpmEF9bqDyzSKVr6sFZq/+FgGY9yA
+         yVfkzXDUP8g42X9FB/US3vnhYDtp/g3LtUBPIiN/LZy/fjodCQWsTWYgeMdNUFNipK3R
+         XchGsjfdhQ3Y5dfADeD8uIQAjaRuyiW1VUo44s/dMeQM98hNwQTlFKFHq1+WzHuSzWOI
+         BIIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066910; x=1747671710;
+        d=1e100.net; s=20230601; t=1747066913; x=1747671713;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZmsySYwzr8ASsnG753Kt6yv0ZfK1vSiBlGJnWd4881Q=;
-        b=m91GLODDZoFJO4KhxteRo/HWei6fVLi1h59TqxujGJhfH0TYNTc8cYSsQlcoDyl1gy
-         bArjS0UV+hsQ0VZyjwIiMEE3pcBYqM7J0HgkeQZzJpOBOXQBrsUDkLwwhqTOMqzlGNq0
-         67yct6PdAM+HEkpy7guwqO1na0i/s6WDUc/jqS9MknLdOKPJicuI0Zpl7ZNuVlMFnH7h
-         YRh5ATJM0qAB5M0CyXYJ5nwLGZ7bmiU0VVo6wWhgyq3EK3jzd/nbhcraenMmDWh/MxyY
-         wMVrSYqmp3VgaKRk7DYztXkctG/jHE1HWz9RhLwsWxhgfQN5O0ZUoEUPRfRSq/BPnugg
-         m6fw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXps01cBEE2zU7sAcBvrYPaXgoKwlzTLI5prlezW40N/DNafSpkfn8rpb8/rUpSWYZgqevJkjwsquc6l8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtjQD2rsPjDqqbkkFK4UO8GNrIc6etFbKuGKTIp1ehg2JTjw1v
-	R1Z4dUcF5CqpC1VtNKmyiv5Q7VqLZ5mvCcxkQCc49e4ET0ahMtfAZXX/0PJHUI0=
-X-Gm-Gg: ASbGncvT3xVVkZgyVtaNjHlAkm0BQf2FpzZux3+DWrNQAtIGv2AtGcZFXlopv5LyRM/
-	wEGWY3AN/yA39Mf7rVErnYv6qrTHUPydigonKl6B3LXKkiy5MC9349RV63MkuumjBifvYxTzZuf
-	NXs2HtQnHpo+Nqv/zcmNHjPird/UO9QcvA8jYuE1pctY7ISE/9kCbExmYpdBjLRLcjpphpPK39E
-	EZ8rNqiVvUk0I0wCAUvLB9P3CiR7qDQgr5A40ZTM2YW474RYJtl06yv+nI4B5N0JVAEtr5hSqxI
-	cG5HPeelQmUbf3I+hN7MXnlUEC5ZPwoqwVhihee6a16NYLctK0Fwh0G1XWyb8VUxnfo31px0bUm
-	jlKAtEBDMAxu0O9l5QOyC+RpehWssOOhsOacD
-X-Google-Smtp-Source: AGHT+IF+OivR0X4TPDn7AvlMeNBQTyORAez0itQvzGPdTovbk4Yo4gDHd+0NMcBEZbAsD4L74z3+ow==
-X-Received: by 2002:ac8:5e07:0:b0:476:8eb5:1669 with SMTP id d75a77b69052e-494527d49bfmr219231491cf.32.1747066910149;
-        Mon, 12 May 2025 09:21:50 -0700 (PDT)
+        bh=DC0/ofhj7JKy32BqrO/IxOiR9eJ+JSl3w3qlcKUJ5PI=;
+        b=bYdvg5T7bLs/JQMiA2vHT7x2ssAy1Mpwjfzcjpy9qxd02OhDVLXUE8MDkFsdLyY7GE
+         Zf1vOrzihFlWjCX3cdfzlATyJ0CRBbDSyppOZkzQmO2WYHd3DGCDmtST/5Tvl6+vdOeu
+         R55bcvtTxROSaxH5Q5ymbXqXOKkO0m2H1CaBFIL5hl7MhNvhM8PDxtscZnts8A1lTkDa
+         evv2+Bux2PhfAbM/hXkYUZ8a9dUsb4KIsiFSu0T+OT1dCBkDE4TAvKBmeakt9/cJLhhL
+         LvdKypD4RGHeatKfT1XY22o7Ha3PYCC+fkEDCxn/M+qn4p+iIzEVgOuD5W/gcSWuOwWT
+         C5nw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2rzlfUR2Vi22CyE7l+zOAAsBL3MRJwaNxgcBcJaGbi5b72ao14+/QtKBTt/eKlvtinGH8nA7x+0L+q8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznGnnY26QsDVavUnlwpchhhM0s71BOCGN1rrccDfgqRwhhkZQ1
+	gywBqatwXdXgTYDySNdsZ+U8lRy3RjGDvt9W4e0TmcnLI7bJrzGkMwGtlKDqO/c=
+X-Gm-Gg: ASbGncss5NWTijWjreLF/Z6l6pr+QjrmRdk+umgc1hAsMtuwWfMij1gdic+jT2pYRj5
+	xpLhlkj4XnWZ2GoznbRgS+f46wMUnQTeHtyhcd0SenDk1owD9g8+sBGmwmBw8RzDdfjAwqF6omY
+	6Vf/y/7HeRQi30aGY2ZZFAV/Xaji/ohjtijyJHk1S+Qe5bzaYPtkMqvaSZDSakcIuzasPlQeFrt
+	QUspLK7J07UR63m8BHY9y+a3iVLwY5oS9bWJ8gobPAGcLP5erQ8ilnm23vKFicKmDqnvqZ7lCv4
+	EeuD+oPkFBHVfQ0XOoKIn250hDFaK0ueJeqnA1fL8/A4TgrzeLYkfFXwFsljqUaO+ZAykaqT9a8
+	mC1SbmfUN29kT6rnlhrF4JmR80Ai1XIWC8cer
+X-Google-Smtp-Source: AGHT+IHRtIB0fCjA+A9cMknQMzSETec9axcuV/yvNPBERr6Pc5t0djPvfI94QTi3RZ4eSxuBkXdaIw==
+X-Received: by 2002:ac8:7e95:0:b0:477:64b0:6a26 with SMTP id d75a77b69052e-4945273c329mr213344211cf.22.1747066913103;
+        Mon, 12 May 2025 09:21:53 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.49
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:21:49 -0700 (PDT)
+        Mon, 12 May 2025 09:21:52 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -71,9 +71,9 @@ Cc: linux-doc@vger.kernel.org,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	corbet@lwn.net
-Subject: [PATCH v3 05/17] cxl: docs/platform/acpi reference documentation
-Date: Mon, 12 May 2025 12:21:22 -0400
-Message-ID: <20250512162134.3596150-6-gourry@gourry.net>
+Subject: [PATCH v3 07/17] cxl: docs/linux - overview
+Date: Mon, 12 May 2025 12:21:24 -0400
+Message-ID: <20250512162134.3596150-8-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
 References: <20250512162134.3596150-1-gourry@gourry.net>
@@ -85,337 +85,141 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add basic ACPI table information needed to understand the CXL
-driver probe process.
+Add type-3 device configuration overview that explains the probe
+process for a type-3 device from early-boot through memory-hotplug.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- Documentation/driver-api/cxl/index.rst        |  1 +
- .../driver-api/cxl/platform/acpi.rst          | 76 +++++++++++++++++++
- .../driver-api/cxl/platform/acpi/cedt.rst     | 62 +++++++++++++++
- .../driver-api/cxl/platform/acpi/dsdt.rst     | 28 +++++++
- .../driver-api/cxl/platform/acpi/hmat.rst     | 32 ++++++++
- .../driver-api/cxl/platform/acpi/slit.rst     | 21 +++++
- .../driver-api/cxl/platform/acpi/srat.rst     | 44 +++++++++++
- 7 files changed, 264 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/platform/acpi.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/cedt.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/dsdt.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/hmat.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/slit.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/srat.rst
+ Documentation/driver-api/cxl/index.rst        |   3 +-
+ .../driver-api/cxl/linux/overview.rst         | 103 ++++++++++++++++++
+ 2 files changed, 105 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/driver-api/cxl/linux/overview.rst
 
 diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index ffa0462ad950..336322dc35a0 100644
+index 6a5fb7e00c52..bc2228c77c32 100644
 --- a/Documentation/driver-api/cxl/index.rst
 +++ b/Documentation/driver-api/cxl/index.rst
-@@ -26,6 +26,7 @@ that have impacts on each other.  The docs here break up configurations steps.
-    :caption: Platform Configuration
- 
-    platform/bios-and-efi
-+   platform/acpi
+@@ -30,9 +30,10 @@ that have impacts on each other.  The docs here break up configurations steps.
+    platform/example-configs
  
  .. toctree::
-    :maxdepth: 1
-diff --git a/Documentation/driver-api/cxl/platform/acpi.rst b/Documentation/driver-api/cxl/platform/acpi.rst
+-   :maxdepth: 1
++   :maxdepth: 2
+    :caption: Linux Kernel Configuration
+ 
++   linux/overview
+    linux/access-coordinates
+ 
+ 
+diff --git a/Documentation/driver-api/cxl/linux/overview.rst b/Documentation/driver-api/cxl/linux/overview.rst
 new file mode 100644
-index 000000000000..ee7e6bd4c43d
+index 000000000000..648beb2c8c83
 --- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/acpi.rst
-@@ -0,0 +1,76 @@
++++ b/Documentation/driver-api/cxl/linux/overview.rst
+@@ -0,0 +1,103 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+===========
-+ACPI Tables
-+===========
++========
++Overview
++========
 +
-+ACPI is the "Advanced Configuration and Power Interface", which is a standard
-+that defines how platforms and OS manage power and configure computer hardware.
-+For the purpose of this theory of operation, when referring to "ACPI" we will
-+usually refer to "ACPI Tables" - which are the way a platform (BIOS/EFI)
-+communicates static configuration information to the operation system.
++This section presents the configuration process of a CXL Type-3 memory device,
++and how it is ultimately exposed to users as either a :code:`DAX` device or
++normal memory pages via the kernel's page allocator.
 +
-+The Following ACPI tables contain *static* configuration and performance data
-+about CXL devices.
++Portions marked with a bullet are points at which certain kernel objects
++are generated.
 +
-+.. toctree::
-+   :maxdepth: 1
++1) Early Boot
 +
-+   acpi/cedt.rst
-+   acpi/srat.rst
-+   acpi/hmat.rst
-+   acpi/slit.rst
-+   acpi/dsdt.rst
++  a) BIOS, Build, and Boot Parameters
 +
-+The SRAT table may also contain generic port/initiator content that is intended
-+to describe the generic port, but not information about the rest of the path to
-+the endpoint.
++    i) EFI_MEMORY_SP
++    ii) CONFIG_EFI_SOFT_RESERVE
++    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE
++    iv) nosoftreserve
 +
-+Linux uses these tables to configure kernel resources for statically configured
-+(by BIOS/EFI) CXL devices, such as:
++  b) Memory Map Creation
 +
-+- NUMA nodes
-+- Memory Tiers
-+- NUMA Abstract Distances
-+- SystemRAM Memory Regions
-+- Weighted Interleave Node Weights
++    i) EFI Memory Map / E820 Consulted for Soft-Reserved
 +
-+ACPI Debugging
-+==============
++      * CXL Memory is set aside to be handled by the CXL driver
 +
-+The :code:`acpidump -b` command dumps the ACPI tables into binary format.
++      * Soft-Reserved IO Resource created for CFMWS entry
 +
-+The :code:`iasl -d` command disassembles the files into human readable format.
++  c) NUMA Node Creation
 +
-+Example :code:`acpidump -b && iasl -d cedt.dat` ::
++    * Nodes created from ACPI CEDT CFMWS and SRAT Proximity domains (PXM)
 +
-+   [000h 0000   4]   Signature : "CEDT"    [CXL Early Discovery Table]
++  d) Memory Tier Creation
 +
-+Common Issues
-+-------------
-+Most failures described here result in a failure of the driver to surface
-+memory as a DAX device and/or kmem.
++    * A default memory_tier is created with all nodes.
 +
-+* CEDT CFMWS targets list UIDs do not match CEDT CHBS UIDs.
-+* CEDT CFMWS targets list UIDs do not match DSDT CXL Host Bridge UIDs.
-+* CEDT CFMWS Restriction Bits are not correct.
-+* CEDT CFMWS Memory regions are poorly aligned.
-+* CEDT CFMWS Memory regions spans a platform memory hole.
-+* CEDT CHBS UIDs do not match DSDT CXL Host Bridge UIDs.
-+* CEDT CHBS Specification version is incorrect.
-+* SRAT is missing regions described in CEDT CFMWS.
++  e) Contiguous Memory Allocation
 +
-+  * Result: failure to create a NUMA node for the region, or
-+    region is placed in wrong node.
++    * Any requested CMA is allocated from Online nodes
 +
-+* HMAT is missing data for regions described in CEDT CFMWS.
++  f) Init Finishes, Drivers start probing
 +
-+  * Result: NUMA node being placed in the wrong memory tier.
++2) ACPI and PCI Drivers
 +
-+* SLIT has bad data.
++  a) Detects PCI device is CXL, marking it for probe by CXL driver
 +
-+  * Result: Lots of performance mechanisms in the kernel will be very unhappy.
++3) CXL Driver Operation
 +
-+All of these issues will appear to users as if the driver is failing to
-+support CXL - when in reality they are all the failure of a platform to
-+configure the ACPI tables correctly.
-diff --git a/Documentation/driver-api/cxl/platform/acpi/cedt.rst b/Documentation/driver-api/cxl/platform/acpi/cedt.rst
-new file mode 100644
-index 000000000000..1d9c9d3592dc
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/acpi/cedt.rst
-@@ -0,0 +1,62 @@
-+.. SPDX-License-Identifier: GPL-2.0
++  a) Base device creation
 +
-+================================
-+CEDT - CXL Early Discovery Table
-+================================
++    * root, port, and memdev devices created
++    * CEDT CFMWS IO Resource creation
 +
-+The CXL Early Discovery Table is generated by BIOS to describe the CXL memory
-+regions configured at boot by the BIOS.
++  b) Decoder creation
 +
-+CHBS
-+====
-+The CXL Host Bridge Structure describes CXL host bridges.  Other than describing
-+device register information, it reports the specific host bridge UID for this
-+host bridge.  These host bridge ID's will be referenced in other tables.
++    * root, switch, and endpoint decoders created
 +
-+Example ::
++  c) Logical device creation
 +
-+          Subtable Type : 00 [CXL Host Bridge Structure]
-+               Reserved : 00
-+                 Length : 0020
-+ Associated host bridge : 00000007    <- Host bridge _UID
-+  Specification version : 00000001
-+               Reserved : 00000000
-+          Register base : 0000010370400000
-+        Register length : 0000000000010000
++    * memory_region and endpoint devices created
 +
-+CFMWS
-+=====
-+The CXL Fixed Memory Window structure describes a memory region associated
-+with one or more CXL host bridges (as described by the CHBS).  It additionally
-+describes any inter-host-bridge interleave configuration that may have been
-+programmed by BIOS.
++  d) Devices are associated with each other
 +
-+Example ::
++    * If auto-decoder (BIOS-programmed decoders), driver validates
++      configurations, builds associations, and locks configs at probe time.
 +
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 000000C050000000   <- Memory Region
-+              Window size : 0000003CA0000000
-+ Interleave Members (2^n) : 01                 <- Interleave configuration
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007           <- Host Bridge _UID
-+              Next Target : 00000006           <- Host Bridge _UID
++    * If user-configured, validation and associations are built at
++      decoder-commit time.
 +
-+The restriction field dictates what this SPA range may be used for (memory type,
-+voltile vs persistent, etc). One or more bits may be set. ::
++  e) Regions surfaced as DAX region
 +
-+  Bit[0]: CXL Type 2 Memory
-+  Bit[1]: CXL Type 3 Memory
-+  Bit[2]: Volatile Memory
-+  Bit[3]: Persistent Memory
-+  Bit[4]: Fixed Config (HPA cannot be re-used)
++    * dax_region created
 +
-+INTRA-host-bridge interleave (multiple devices on one host bridge) is NOT
-+reported in this structure, and is solely defined via CXL device decoder
-+programming (host bridge and endpoint decoders).
-diff --git a/Documentation/driver-api/cxl/platform/acpi/dsdt.rst b/Documentation/driver-api/cxl/platform/acpi/dsdt.rst
-new file mode 100644
-index 000000000000..b4583b01d67d
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/acpi/dsdt.rst
-@@ -0,0 +1,28 @@
-+.. SPDX-License-Identifier: GPL-2.0
++    * DAX device created via DAX driver
 +
-+==============================================
-+DSDT - Differentiated system Description Table
-+==============================================
++4) DAX Driver Operation
 +
-+This table describes what peripherals a machine has.
++  a) DAX driver surfaces DAX region as one of two dax device modes
 +
-+This table's UIDs for CXL devices - specifically host bridges, must be
-+consistent with the contents of the CEDT, otherwise the CXL driver will
-+fail to probe correctly.
++    * kmem - dax device is converted to hotplug memory blocks
 +
-+Example Compute Express Link Host Bridge ::
++      * DAX kmem IO Resource creation
 +
-+    Scope (_SB)
-+    {
-+        Device (S0D0)
-+        {
-+            Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+            Name (_CID, Package (0x02)  // _CID: Compatible ID
-+            {
-+                EisaId ("PNP0A08") /* PCI Express Bus */,
-+                EisaId ("PNP0A03") /* PCI Bus */
-+            })
-+            ...
-+            Name (_UID, 0x05)  // _UID: Unique ID
-+            ...
-+      }
-diff --git a/Documentation/driver-api/cxl/platform/acpi/hmat.rst b/Documentation/driver-api/cxl/platform/acpi/hmat.rst
-new file mode 100644
-index 000000000000..095a26f02a37
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/acpi/hmat.rst
-@@ -0,0 +1,32 @@
-+.. SPDX-License-Identifier: GPL-2.0
++    * hmem - dax device is left as daxdev to be accessed as a file.
 +
-+===========================================
-+HMAT - Heterogeneous Memory Attribute Table
-+===========================================
++      * If hmem, journey ends here.
 +
-+The Heterogeneous Memory Attributes Table contains information such as cache
-+attributes and bandwidth and latency details for memory proximity domains.
-+For the purpose of this document, we will only discuss the SSLIB entry.
++  b) DAX kmem surfaces memory region to Memory Hotplug to add to page
++     allocator as "driver managed memory"
 +
-+SLLBI
-+=====
-+The System Locality Latency and Bandwidth Information records latency and
-+bandwidth information for proximity domains.
++5) Memory Hotplug
 +
-+This table is used by Linux to configure interleave weights and memory tiers.
++  a) mhp component surfaces a dax device memory region as multiple memory
++     blocks to the page allocator
 +
-+Example (Heavily truncated for brevity) ::
++    * blocks appear in :code:`/sys/bus/memory/devices` and linked to a NUMA node
 +
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 00         <- Latency
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+                        Entry : 0080       <- DRAM LTC
-+                        Entry : 0100       <- CXL LTC
++  b) blocks are onlined into the requested zone (NORMAL or MOVABLE)
 +
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 03         <- Bandwidth
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+                        Entry : 1200       <- DRAM BW
-+                        Entry : 0200       <- CXL BW
-diff --git a/Documentation/driver-api/cxl/platform/acpi/slit.rst b/Documentation/driver-api/cxl/platform/acpi/slit.rst
-new file mode 100644
-index 000000000000..a56768e8fe41
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/acpi/slit.rst
-@@ -0,0 +1,21 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+========================================
-+SLIT - System Locality Information Table
-+========================================
-+
-+The system locality information table provides "abstract distances" between
-+accessor and memory nodes.  Node without initiators (cpus) are infinitely (FF)
-+distance away from all other nodes.
-+
-+The abstract distance described in this table does not describe any real
-+latency of bandwidth information.
-+
-+Example ::
-+
-+    Signature : "SLIT"    [System Locality Information Table]
-+   Localities : 0000000000000004
-+ Locality   0 : 10 20 20 30
-+ Locality   1 : 20 10 30 20
-+ Locality   2 : FF FF 0A FF
-+ Locality   3 : FF FF FF 0A
-diff --git a/Documentation/driver-api/cxl/platform/acpi/srat.rst b/Documentation/driver-api/cxl/platform/acpi/srat.rst
-new file mode 100644
-index 000000000000..56d7bbb18c3b
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/acpi/srat.rst
-@@ -0,0 +1,44 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================================
-+SRAT - Static Resource Affinity Table
-+=====================================
-+
-+The System/Static Resource Affinity Table describes resource (CPU, Memory)
-+affinity to "Proximity Domains". This table is technically optional, but for
-+performance information (see "HMAT") to be enumerated by linux it must be
-+present.
-+
-+There is a careful dance between the CEDT and SRAT tables and how NUMA nodes are
-+created.  If things don't look quite the way you expect - check the SRAT Memory
-+Affinity entries and CEDT CFMWS to determine what your platform actually
-+supports in terms of flexible topologies.
-+
-+The SRAT may statically assign portions of a CFMWS SPA range to a specific
-+proximity domains.  See linux numa creation for more information about how
-+this presents in the NUMA topology.
-+
-+Proximity Domain
-+================
-+A proximity domain is ROUGHLY equivalent to "NUMA Node" - though a 1-to-1
-+mapping is not guaranteed.  There are scenarios where "Proximity Domain 4" may
-+map to "NUMA Node 3", for example.  (See "NUMA Node Creation")
-+
-+Memory Affinity
-+===============
-+Generally speaking, if a host does any amount of CXL fabric (decoder)
-+programming in BIOS - an SRAT entry for that memory needs to be present.
-+
-+Example ::
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000001          <- NUMA Node 1
-+             Reserved1 : 0000
-+          Base Address : 000000C050000000  <- Physical Memory Region
-+        Address Length : 0000003CA0000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+              Enabled : 1
-+        Hot Pluggable : 1
-+         Non-Volatile : 0
++    * Memory is marked "Driver Managed" to avoid kexec from using it as region
++      for kernel updates
 -- 
 2.49.0
 
