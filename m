@@ -1,111 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BF52185BC;
-	Mon, 12 May 2025 20:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAF32517BE;
+	Mon, 12 May 2025 20:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747082447; cv=none; b=lQgW/ssg9kIbCH5VeWxDl4RTq3oVbB0rFxtCviawhdCEAHCQfYmM+W+FLrafZlcvKYQC5ZvarhDRkpIQKD/BNko9mfqqeRDiD9rtIi12qMaIMLFr2mTVXcCSKlhzMhGcABGvZ3d2j/W72enDFpdjkeLFr164F8uYzqaUcKJe7os=
+	t=1747082558; cv=none; b=nxO3g8ZwhX9N1qKwr0zoW5FfMSll2AroAWVoteamllQVRfzAhspQl6RU+gyDxzqZWMHMuuBzcia3CyLeURwsNM71Yriv6LMW4EO7/tE6t5GYnqqO/QxxgylzmWSb+3ycHS+H6CBT+bxlaOP6pDEB7lmUy8GYZw1JDKwFSAhYzfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747082447; c=relaxed/simple;
-	bh=bf5PIRNk9xJap20uZgQzAP7S5TiH/EgmMIGZvh3z444=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aa4/6IKZMM6f6uo4a0+7TkzwpZun0SNcmCM6gjcdcepdVy1yH62rT6mqZOs0xKqZr2Tu1CiOkDBcAZDeAUDqR+W3auHwiAoMwGAOE/GDTi2BmesGzfs8ptGqpLMbhror5FATe4KMfDm1w5j9raUNGtj1b9cH/qEkdJRcI1eihiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6m4aQvr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747082558; c=relaxed/simple;
+	bh=Qhq3A+I3T/dhIKwOPy/tKP8hXlbgx08lP5ODo0zafgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JXs30jA3iCX8IDImMcdVpsLLnLckw3HUvKa8U8hWINM0YK9cz50lFYLKhJFw1EwpQZPbig5LXK+HVnrTevqzGQSkPLYuzEOTMqJoVS/En/nEmWrt1CaO25SbiSs+3khg7gxrB/mfrhK/kyARbEQFKrJf/ku2izJcEMvO15q71bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=RFQZ02rB; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=jwQwBf28; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6m4aQvr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA003C4CEE7;
-	Mon, 12 May 2025 20:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747082446;
-	bh=bf5PIRNk9xJap20uZgQzAP7S5TiH/EgmMIGZvh3z444=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i6m4aQvrd6TLCpXv8P4z74bpm8a6flnmv2MsHpjztJTaUKYwJWnIR0P39740sP39M
-	 Gj1E+DeExSU8PhNNJXxDGBPl7g8z3EPtGUnRtVIWX2jQ5zbrnNRijtNcm5roFBDk37
-	 fayuA+aMQFo8HAz2xhA3mYsI39fO+VY1T3dRl2tzlku1feXUNeAsIqRXFHPfyoAgPd
-	 BGxHei/iCuj+GuYDx40SVK24QuS+Bl0uXwCGMS4qJ9MiOTjBSnt9Y8Qb/3qjvxCETJ
-	 Nv525B5gzF76FqoPoZ7ErA6kyaW+mVukXNut5aDUiqRzUeAkTNHWdB7jsmcolmIl2Z
-	 4C5cSv2B5zxzg==
-Date: Mon, 12 May 2025 13:40:44 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Ali Saidi <alisaidi@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] binfmt_elf: Move brk for static PIE even if ASLR
- disabled
-Message-ID: <202505121340.7CA14D4C@keescook>
-References: <20250502001820.it.026-kees@kernel.org>
- <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
- <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="RFQZ02rB";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="jwQwBf28"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZxBPJ0fRnz9t0N;
+	Mon, 12 May 2025 22:42:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1747082548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wWLL8SXxaDrHsmjoDkrhtKmQby8WHNCD8s1a74YU7+8=;
+	b=RFQZ02rBHjUQCIZLYQEaMZn38oPSVM1/LuHrmeQlJffCxoISGZ/KZihlMGeuvbo5RQgfzj
+	bqZPnC8AjlZxZ99NAk9cDcX1e9ajfPzBCDg/mWT5JEriDylCQmtRDmJuVppLFPCGIFkB4O
+	cO8mOV4eQrWx5l1GMFbPrvZplUS3cykWjoqI+OwnHemmGepBoy6hugM15Oh+krT3woDj3N
+	1A5o3aQ727yR2ZZpB95qeqeg3IaroRYFkwNXsWpowWYn+1+Lh0pDWGGmS2n87BQocflIKe
+	DcdE3NFmxRiEYwAmDExAH7FPht2ybOWPudu8w5tXaZuIrfMUWYgeWTMVLI6VhA==
+Message-ID: <84cc6341-a2c1-4e3c-8c9e-2bc6589c52a6@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1747082545;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wWLL8SXxaDrHsmjoDkrhtKmQby8WHNCD8s1a74YU7+8=;
+	b=jwQwBf28noG1EfxvsMWTvb8VBv6jfgaoj3Z2EzGnVRAZe4uPzWVo1ot8ZAzoxLgPV3QfsO
+	xI1oymiEb6QlZwcZGx295e+uM6GlsVvUyxRlcF11nQGo3ALXUyLS7DlLBYL7BOlpct8BCm
+	z+t6wcUpHy/m8qeOv6PhtZTzLrmR1eYrlQxp+2JRKh4i2XIGM9WOkcnT39qeDbalGSXovL
+	3ZnMMiic0RrOMxKTPe2NI0TUGQOsQc/W152jwmGseOZX71eAgzEQme6/QpU9RiuWWg03h1
+	wN97+CQGpg2ri3oWCIG+oiLjSrNRSBZV3mJtdrJ9y1bEljAUhX/v8UmKcNk79A==
+Date: Mon, 12 May 2025 22:42:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
+ optional aux clock
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Magnus Damm <magnus.damm@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
+ <20250406144822.21784-2-marek.vasut+renesas@mailbox.org>
+ <2ny7jhcp2g5ixo75donutncxnjdawzev3mw7cytvhbk6szl3ue@vixax5lwpycw>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <2ny7jhcp2g5ixo75donutncxnjdawzev3mw7cytvhbk6szl3ue@vixax5lwpycw>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: 39ed119621876b7bcad
+X-MBO-RS-META: 18mqeswom1weurmm9iatqr45af155u75
 
-On Mon, May 12, 2025 at 04:17:12PM +0100, Ryan Roberts wrote:
-> Hi Andrew,
+On 5/9/25 9:37 PM, Manivannan Sadhasivam wrote:
+> On Sun, Apr 06, 2025 at 04:45:21PM +0200, Marek Vasut wrote:
+>> Document 'aux' clock which are used to supply the PCIe bus. This
+>> is useful in case of a hardware setup, where the PCIe controller
+>> input clock and the PCIe bus clock are supplied from the same
+>> clock synthesiser, but from different differential clock outputs:
 > 
-> 
-> On 02/05/2025 11:01, Ryan Roberts wrote:
-> > On 02/05/2025 01:18, Kees Cook wrote:
-> >> In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
-> >> direct loader exec"), the brk was moved out of the mmap region when
-> >> loading static PIE binaries (ET_DYN without INTERP). The common case
-> >> for these binaries was testing new ELF loaders, so the brk needed to
-> >> be away from mmap to avoid colliding with stack, future mmaps (of the
-> >> loader-loaded binary), etc. But this was only done when ASLR was enabled,
-> >> in an attempt to minimize changes to memory layouts.
-> >>
-> >> After adding support to respect alignment requirements for static PIE
-> >> binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
-> >> for static PIE"), it became possible to have a large gap after the
-> >> final PT_LOAD segment and the top of the mmap region. This means that
-> >> future mmap allocations might go after the last PT_LOAD segment (where
-> >> brk might be if ASLR was disabled) instead of before them (where they
-> >> traditionally ended up).
-> >>
-> >> On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
-> >> a static PIE, has alignment requirements that leaves a gap large enough
-> >> after the last PT_LOAD segment to fit the vdso and vvar, but still leave
-> >> enough space for the brk (which immediately follows the last PT_LOAD
-> >> segment) to be allocated by the binary.
-> >>
-> >> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-> >> ***[brk will go here at fffff7ffa000]***
-> >> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-> >> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-> >> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
-> >>
-> >> After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
-> >> implementation"), the arm64 vvar grew slightly, and suddenly the brk
-> >> collided with the allocation.
-> >>
-> >> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
-> >> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-> >> ***[oops, no room any more, vvar is at fffff7ffa000!]***
-> >> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-> >> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-> >> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
-> 
-> This change is fixing a pretty serious bug that appeared in v6.15-rc1 so I was
-> hoping it would make it into the v6.15 final release. I'm guessing mm is the
-> correct route in? But I don't currently see this in linus's tree or in any of
-> your mm- staging branches. Is there still time to get this in?
+> How different is this clock from the 'reference clock'? I'm not sure what you
+> mean by 'PCIe bus clock' here. AFAIK, endpoint only takes the reference clock
+> and the binding already has 'ref' clock for that purpose. So I don't understand
+> how this new clock is connected to the endpoint device.
 
-I'll be sending it to Linus this week. I've been letting it bake in
--next for a while just to see if anything shakes out.
+See the ASCII art below , CLK_DIF0 is 'ref' clock that feeds the 
+controller side, CLK_DIF1 is the bus (or 'aux') clock which feeds the 
+bus (or endpoint) side. Both clock come from the same clock synthesizer, 
+but from two separate clock outputs of the synthesizer.
 
--- 
-Kees Cook
+>>   ____________                    _____________
+>> | R-Car PCIe |                  | PCIe device |
+>> |            |                  |             |
+>> |    PCIe RX<|==================|>PCIe TX     |
+>> |    PCIe TX<|==================|>PCIe RX     |
+>> |            |                  |             |
+>> |   PCIe CLK<|======..  ..======|>PCIe CLK    |
+>> '------------'      ||  ||      '-------------'
+>>                      ||  ||
+>>   ____________       ||  ||
+>> |  9FGV0441  |      ||  ||
+>> |            |      ||  ||
+>> |   CLK DIF0<|======''  ||
+>> |   CLK DIF1<|==========''
+>> |   CLK DIF2<|
+>> |   CLK DIF3<|
+>> '------------'
