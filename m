@@ -1,55 +1,55 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFBA298C36
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8765298CC1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747077104; cv=none; b=pUWjuPkOTD1zaAM8d0jjduSWiyHaGkOWX8AbQOnbZ0WC6ebj8cgFmcfQUBQCav8XL72aEZpWzekzl0mAt4p+OkcuGrt36O3wMouX9LDuQ9TIDAtxJIOayv0LgLBeuwCnQ+4GdgJkWGmsRRntgWiivJXJMMlnyy9/HnUq8Tucw5c=
+	t=1747077108; cv=none; b=FGqxZbq4MZSiWv7vr1y/JytE3FkQl+WFVzhVkp+fP3FWgsfanWHEuAs4jPs7Cb7o7yLW/Up5w8zePLNj1CXb2uo7UxaPeMjwB26+edJXeOwJSG1vLq1xi5CmyqJNm0IotkNVUn0Wr4c22gFZZj95Fu85BEAUNfllMtNlboOdlmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747077104; c=relaxed/simple;
-	bh=N8lIrN6QnYWQRxj3loyK87tJKBDaO7dJNOxuR7UZwmY=;
+	s=arc-20240116; t=1747077108; c=relaxed/simple;
+	bh=RRnMIw5g/jrAb0W13Erg+CyjBnpxxydYbxaGL2P/YX4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NHzc+dUkgarwqyde1ffuZjQvqMf+BN1HqSlHi0DjGwsl8ZQQdMG/3+IegZNfoCXi3pQyJYGnDWYRwPFt0qJ0TtIUz8tiF2AYBHQYO8otIFig8EDa3VTCJxhrONffkaNeK84DFOjSsqDRAmazvGv58nb+kMw3sgaezQfZKcarlfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wUtImQtJ; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=YwoM2FBWCv8lNuh2fjW+jbm1Ft7zPloIVYynCDdopWrgFJdZ0I/Qxnksy8KCVb3ewi6AJ/XXjBSQjXn+VUtBKSCZi/LXtHO4DF4ovdMCMh+5FyH271kYuCJddwvZi1QdnzXP85YCo9NsgGD8mQotP5SLNxjmGRDqKUdFN8aCFec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3+8XNM5f; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wUtImQtJ"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a2046b5e75so532726f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:11:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3+8XNM5f"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-441c122fa56so19034485e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747077101; x=1747681901; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747077105; x=1747681905; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yAKS3akGBR/9SddxoYh5t/3Kaeg1HbH4Cc4GvmNf7kc=;
-        b=wUtImQtJBDXmt4kjPAk33q0f3OAdM1UB9jlrtKhPnGg3zpPfnXRJehSnUe2qoFDXcU
-         OBjAvVO13mYD13vYlTkJBXTVDDES8inZHj7ODljrq9uwWWu6vYSVTfVc4xAAd1uk5hP8
-         XmUlvtSZoM4EaYhvPsX/l4BhvmDs3ZU6MgUylx6Z5KanRJlN/dDMit53TpItxxDynsTM
-         IdtThM6XN97A11VkGM/uu+MjhmjbMnB6VIVc4h6p1T1tkXL5POZvoEMgeQvpEebaRDZy
-         g53GxnAIq2W/2UylK+zYESBdlGYxTmoWb3HQRg8Lo5ALgaKx8QGPl/jqp1mbTS2d70wm
-         yRdg==
+        bh=71xIGwXHz9m/rl1b5tE1mHXI8wzc1cOO1kDEHCl0Ovk=;
+        b=3+8XNM5fO0HVrV6nUuPA3EILKQqkWJiq4sgzCSreX1zAp26zdB2jCj9I8ggGMB7paO
+         UYk3riMN1meluBLIMy/ay12+AVZxfzAHkauT7ZBO3iPdORPVl7L81BZVuVr+iA8feg1r
+         jVQGv3/U2zxilnKSheyxLJ8JCg788PM1/LpMjm3hnTCzYrH9CCRxHFuMsCXWII9Ah85u
+         yMUK9bshQTHKpQFD4h3A5jOqZserBztVhopLjXiR1ehNpluVlcmUasqYBNWAxoYaDX8F
+         CAwMBrahYOw6k59App4JS2z8iJXJ3TVd4e8YDlbuxksLuSTDXErNrkF7hCam/5jlv1Hz
+         2xEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747077101; x=1747681901;
+        d=1e100.net; s=20230601; t=1747077105; x=1747681905;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yAKS3akGBR/9SddxoYh5t/3Kaeg1HbH4Cc4GvmNf7kc=;
-        b=oHUbhTu+xorw7S7C/EsJGwqSgaYgVnhTlLQschiYWqBrVhj/0s9Hv/dgJ6TPy1NlAn
-         HFhOG3uwySe3M37XVJGoNfT0abhEI6RaOfBwClcyxpD8adCvyUTi9WuqpRNP+S/mC1g7
-         W4aO1Iarm6hSy13FXVPpVG9imJlHri33I8IqQJFbHq0p/Yfq5VvzNZ2lDzPR+i9proT0
-         zOPHhOhMEO9T0gcIf2y/OlcOdlHZ85sz4W89G3Yfps9xcregPdcvUSpBb223FjGVAtF6
-         sfX/WUy3FoGHhZk8hdiKXg54iPUahZkENUMV+OowVKNyVzgTgKHsfmxD8k5PKQRmdzdG
-         dOyQ==
-X-Gm-Message-State: AOJu0YxuN9OiwzxDjTPsJmunnGyrlRLXmDA1Nuq8Ev20nnD/hac0p/tp
-	Qdkn6shoKFNnHb4rSEyjLhplmDrSSw6muDErZRXn7bniXWsH7+jTshUhNiMJxtRjPni/Dkk0csq
-	cQ1XK92OE8TxTBsF19rJXsP92YiM8U7aLu8e8Q6SKMGjNgr6QDoQd8Xm+2YkicPt9fgbjb38WYL
-	7pJ7282kk+hkemjPIDLJUlWmXiVZHJOQ==
-X-Google-Smtp-Source: AGHT+IGX1Wukqh3EK0YfLcD9ed759VITS0iUHJbGg2BkqMIQpCmp8NgTxMLsY1cSzdbBmJab7Amumzsu
-X-Received: from wmbhh12.prod.google.com ([2002:a05:600c:530c:b0:440:626b:cdc])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:3103:b0:39e:e217:28c0
- with SMTP id ffacd0b85a97d-3a1f642217dmr11281761f8f.10.1747077100813; Mon, 12
- May 2025 12:11:40 -0700 (PDT)
-Date: Mon, 12 May 2025 21:08:39 +0200
+        bh=71xIGwXHz9m/rl1b5tE1mHXI8wzc1cOO1kDEHCl0Ovk=;
+        b=F2oo31q0j6EY3TGJaPTLFrJJmQPhXf6JadnwqsHxAjTPcuGATXySu2nTurb+9r1HC3
+         0wIkdS7DHkTj+qBr/fyaOeVPzxK1sKybWIg9k3hEN8nmDZI3sH7OtgwaM0gMncFYj9Hd
+         vrgBsOXcpvlhQ56gSlNs3LJy/ENhIvWKXFrI6I7jU/XDDC9qhqDATld6+mS+LM2V6kJA
+         Lwy2mwd+nvXqNDos/VHNYlZi4ylHJzM2yQQpPfFGxe5LGzm3K+GR/dcmYFVjRwmLLoTC
+         +4QpSXPcHUbdV/iPIahPKzPh6UZGKK3UfzWpaAnvxX19+Tpb1b/Xvuqrac4Jfj2yfjgJ
+         jeGg==
+X-Gm-Message-State: AOJu0Yya3DwMfeAxs0PqLjoZB7lYVoMXexhh4sr33XJAE5bdFiRm5F53
+	Un0gIslDS2sWn5YebXg2OHh1LzpuPKXjwd0bEnrS7dq/jRRkslNAMi0uE2LuiVw+Ol/X1Ew0URI
+	6FO0gjY5GSZ0yQCKeaZHK4WPHdW4fbPK0+wqnjwg98L6xgM3e1sfwZDaO2vzOGQpSVEacCPozZK
+	zgws+5ErDdafXLuKPufHPw34iuiitALQ==
+X-Google-Smtp-Source: AGHT+IFFqCt+fsBqPngsdQyiVskwd9ConFlbUeF25rdan8MOxzENvfrbYyiCj4mVU1L3lcsff9F8yZql
+X-Received: from wrbcc8.prod.google.com ([2002:a5d:5c08:0:b0:39a:be1a:5df9])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:2dc4:b0:39c:dfa:c3de
+ with SMTP id ffacd0b85a97d-3a1f64a383dmr11163957f8f.47.1747077104992; Mon, 12
+ May 2025 12:11:44 -0700 (PDT)
+Date: Mon, 12 May 2025 21:08:41 +0200
 In-Reply-To: <20250512190834.332684-23-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250512190834.332684-23-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2831; i=ardb@kernel.org;
- h=from:subject; bh=gyvK1vVt7xT2yPdX1EeqNZBgIdQd81Ru1FpgpHIYf3o=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPJ3UbMLaG9Z8ePSUG7V/zZ0Gt39cOFEv7j8hw9drPiU
- 6MfbdvSUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACZy+R4jw8Iq14cHUy47Hbwz
- /Rz3Uw7zD7whh9wn1m5f/oA/IbNv80WG36y1Ghd9X/WmWtx/u+rrCY73Ykmx/t9O7yz0eWXFs7L 7CC8A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6919; i=ardb@kernel.org;
+ h=from:subject; bh=bBn+bWoiPv9ap4MhobATz6OEPk63e0DgR5JHkfb8XMQ=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPJ3WHqFU2915K2656WWP98v+/q7/p5s3rlMyyLov8rS
+ QZc42PuKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABP518/IcP/zIeVrPTfDVUI3
+ XHM/tvDCk4N35K+uv2b8U+Cxw6vAFS8YGd4u3205lU+KR0X7a5TeoZN3hbY5JizO6f+6bFdzNdu jUCYA
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250512190834.332684-27-ardb+git@google.com>
-Subject: [RFT PATCH v3 04/21] x86/sev: Run RMPADJUST on SVSM calling area page
- to test VMPL
+Message-ID: <20250512190834.332684-29-ardb+git@google.com>
+Subject: [RFT PATCH v3 06/21] x86/sev: Avoid global variable to store virtual
+ address of SVSM area
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, x86@kernel.org, 
@@ -78,71 +78,190 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Determining the VMPL at which the kernel runs involves performing a
-RMPADJUST operation on an arbitary page of memory, and observing whether
-it succeeds.
+The boottime SVSM calling area is used both by the startup code running
+from a 1:1 mapping, and potentially later on running from the ordinary
+kernel mapping.
 
-The use of boot_ghcb_page in the core kernel in this case is completely
-arbitary, but results in the need to provide a PIC alias for it. So use
-boot_svsm_ca_page instead, which already needs this alias for other
-reasons.
+This SVSM calling area is statically allocated, and so its physical
+address doesn't change. However, its virtual address depends on the
+calling context (1:1 mapping or kernel virtual mapping), and even though
+the variable that holds the virtual address of this calling area gets
+updated from 1:1 address to kernel address during the boot, it is hard
+to reason about why this is guaranteed to be safe.
+
+So instead, take the RIP-relative address of the boottime SVSM calling
+area whenever its virtual address is required, and only use a global
+variable for the physical address.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/sev.c      | 2 +-
- arch/x86/boot/startup/sev-shared.c  | 5 +++--
- arch/x86/boot/startup/sev-startup.c | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/boot/compressed/sev.c      | 5 ++---
+ arch/x86/boot/startup/sev-shared.c  | 6 ------
+ arch/x86/boot/startup/sev-startup.c | 4 ++--
+ arch/x86/coco/sev/core.c            | 9 ---------
+ arch/x86/include/asm/sev-internal.h | 3 +--
+ arch/x86/include/asm/sev.h          | 2 --
+ arch/x86/mm/mem_encrypt_amd.c       | 6 ------
+ 7 files changed, 5 insertions(+), 30 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index bc4ec45d9935..2141936daba7 100644
+index 2141936daba7..70c3f4fc4349 100644
 --- a/arch/x86/boot/compressed/sev.c
 +++ b/arch/x86/boot/compressed/sev.c
-@@ -327,7 +327,7 @@ static bool early_snp_init(struct boot_params *bp)
- 	 * running at VMPL0. The CA will be used to communicate with the
- 	 * SVSM and request its services.
- 	 */
--	svsm_setup_ca(cc_info);
-+	svsm_setup_ca(cc_info, rip_rel_ptr(&boot_ghcb_page));
+@@ -37,12 +37,12 @@ struct ghcb *boot_ghcb;
  
- 	/*
- 	 * Pass run-time kernel a pointer to CC info via boot_params so EFI
+ #define __BOOT_COMPRESSED
+ 
+-extern struct svsm_ca *boot_svsm_caa;
+ extern u64 boot_svsm_caa_pa;
+ 
+ struct svsm_ca *svsm_get_caa(void)
+ {
+-	return boot_svsm_caa;
++	/* The decompressor is mapped 1:1 so VA == PA */
++	return (struct svsm_ca *)boot_svsm_caa_pa;
+ }
+ 
+ u64 svsm_get_caa_pa(void)
+@@ -530,7 +530,6 @@ bool early_is_sevsnp_guest(void)
+ 
+ 			/* Obtain the address of the calling area to use */
+ 			boot_rdmsr(MSR_SVSM_CAA, &m);
+-			boot_svsm_caa = (void *)m.q;
+ 			boot_svsm_caa_pa = m.q;
+ 
+ 			/*
 diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
-index 297d2abe8e3d..9c8dd6bfe833 100644
+index 7884884c0898..9e0573aa29c1 100644
 --- a/arch/x86/boot/startup/sev-shared.c
 +++ b/arch/x86/boot/startup/sev-shared.c
-@@ -782,7 +782,8 @@ static void __head pvalidate_4k_page(unsigned long vaddr, unsigned long paddr,
-  * Maintain the GPA of the SVSM Calling Area (CA) in order to utilize the SVSM
-  * services needed when not running in VMPL0.
+@@ -26,7 +26,6 @@
+  *   early boot, both with identity mapped virtual addresses and proper kernel
+  *   virtual addresses.
   */
--static bool __head svsm_setup_ca(const struct cc_blob_sev_info *cc_info)
-+static bool __head svsm_setup_ca(const struct cc_blob_sev_info *cc_info,
-+				 void *page)
- {
- 	struct snp_secrets_page *secrets_page;
- 	struct snp_cpuid_table *cpuid_table;
-@@ -805,7 +806,7 @@ static bool __head svsm_setup_ca(const struct cc_blob_sev_info *cc_info)
- 	 * routine is running identity mapped when called, both by the decompressor
- 	 * code and the early kernel code.
- 	 */
--	if (!rmpadjust((unsigned long)rip_rel_ptr(&boot_ghcb_page), RMP_PG_SIZE_4K, 1))
-+	if (!rmpadjust((unsigned long)page, RMP_PG_SIZE_4K, 1))
- 		return false;
+-struct svsm_ca *boot_svsm_caa __ro_after_init;
+ u64 boot_svsm_caa_pa __ro_after_init;
  
- 	/*
+ /*
+@@ -648,11 +647,6 @@ static bool __head svsm_setup_ca(const struct cc_blob_sev_info *cc_info,
+ 	if (caa & (PAGE_SIZE - 1))
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_SVSM_CAA);
+ 
+-	/*
+-	 * The CA is identity mapped when this routine is called, both by the
+-	 * decompressor code and the early kernel code.
+-	 */
+-	boot_svsm_caa = (struct svsm_ca *)caa;
+ 	boot_svsm_caa_pa = caa;
+ 
+ 	/* Advertise the SVSM presence via CPUID. */
 diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
-index a1d5a5632d58..1f928e8264bb 100644
+index 0000885dc24c..24e7082e1a50 100644
 --- a/arch/x86/boot/startup/sev-startup.c
 +++ b/arch/x86/boot/startup/sev-startup.c
-@@ -303,7 +303,7 @@ static __head void svsm_setup(struct cc_blob_sev_info *cc_info)
- 	 * running at VMPL0. The CA will be used to communicate with the
- 	 * SVSM to perform the SVSM services.
- 	 */
--	if (!svsm_setup_ca(cc_info))
-+	if (!svsm_setup_ca(cc_info, rip_rel_ptr(&boot_svsm_ca_page)))
- 		return;
+@@ -252,6 +252,7 @@ static __head struct cc_blob_sev_info *find_cc_blob(struct boot_params *bp)
  
- 	/*
+ static __head void svsm_setup(struct cc_blob_sev_info *cc_info)
+ {
++	struct snp_secrets_page *secrets = (void *)cc_info->secrets_phys;
+ 	struct svsm_call call = {};
+ 	int ret;
+ 	u64 pa;
+@@ -280,7 +281,7 @@ static __head void svsm_setup(struct cc_blob_sev_info *cc_info)
+ 	 *   RAX = 0 (Protocol=0, CallID=0)
+ 	 *   RCX = New CA GPA
+ 	 */
+-	call.caa = svsm_get_caa();
++	call.caa = (struct svsm_ca *)secrets->svsm_caa;
+ 	call.rax = SVSM_CORE_CALL(SVSM_CORE_REMAP_CA);
+ 	call.rcx = pa;
+ 	do {
+@@ -289,7 +290,6 @@ static __head void svsm_setup(struct cc_blob_sev_info *cc_info)
+ 	if (ret)
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_SVSM_CA_REMAP_FAIL);
+ 
+-	boot_svsm_caa = (struct svsm_ca *)pa;
+ 	boot_svsm_caa_pa = pa;
+ }
+ 
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 310d867be4dc..0e0ddf4c92aa 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1496,15 +1496,6 @@ void sev_show_status(void)
+ 	pr_cont("\n");
+ }
+ 
+-void __init snp_update_svsm_ca(void)
+-{
+-	if (!snp_vmpl)
+-		return;
+-
+-	/* Update the CAA to a proper kernel address */
+-	boot_svsm_caa = &boot_svsm_ca_page;
+-}
+-
+ #ifdef CONFIG_SYSFS
+ static ssize_t vmpl_show(struct kobject *kobj,
+ 			 struct kobj_attribute *attr, char *buf)
+diff --git a/arch/x86/include/asm/sev-internal.h b/arch/x86/include/asm/sev-internal.h
+index 4269d9dbefdf..e3b203c280aa 100644
+--- a/arch/x86/include/asm/sev-internal.h
++++ b/arch/x86/include/asm/sev-internal.h
+@@ -60,7 +60,6 @@ void early_set_pages_state(unsigned long vaddr, unsigned long paddr,
+ DECLARE_PER_CPU(struct svsm_ca *, svsm_caa);
+ DECLARE_PER_CPU(u64, svsm_caa_pa);
+ 
+-extern struct svsm_ca *boot_svsm_caa;
+ extern u64 boot_svsm_caa_pa;
+ 
+ static __always_inline struct svsm_ca *svsm_get_caa(void)
+@@ -68,7 +67,7 @@ static __always_inline struct svsm_ca *svsm_get_caa(void)
+ 	if (sev_cfg.use_cas)
+ 		return this_cpu_read(svsm_caa);
+ 	else
+-		return boot_svsm_caa;
++		return rip_rel_ptr(&boot_svsm_ca_page);
+ }
+ 
+ static __always_inline u64 svsm_get_caa_pa(void)
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 07081bb85331..ae2502253bd3 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -501,7 +501,6 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end);
+ u64 snp_get_unsupported_features(u64 status);
+ u64 sev_get_status(void);
+ void sev_show_status(void);
+-void snp_update_svsm_ca(void);
+ int prepare_pte_enc(struct pte_enc_desc *d);
+ void set_pte_enc_mask(pte_t *kpte, unsigned long pfn, pgprot_t new_prot);
+ void snp_kexec_finish(void);
+@@ -629,7 +628,6 @@ static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end) { }
+ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
+ static inline u64 sev_get_status(void) { return 0; }
+ static inline void sev_show_status(void) { }
+-static inline void snp_update_svsm_ca(void) { }
+ static inline int prepare_pte_enc(struct pte_enc_desc *d) { return 0; }
+ static inline void set_pte_enc_mask(pte_t *kpte, unsigned long pfn, pgprot_t new_prot) { }
+ static inline void snp_kexec_finish(void) { }
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+index faf3a13fb6ba..2f8c32173972 100644
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -536,12 +536,6 @@ void __init sme_early_init(void)
+ 		x86_init.resources.dmi_setup = snp_dmi_setup;
+ 	}
+ 
+-	/*
+-	 * Switch the SVSM CA mapping (if active) from identity mapped to
+-	 * kernel mapped.
+-	 */
+-	snp_update_svsm_ca();
+-
+ 	if (sev_status & MSR_AMD64_SNP_SECURE_TSC)
+ 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+ }
 -- 
 2.49.0.1045.g170613ef41-goog
 
