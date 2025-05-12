@@ -1,64 +1,25 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EFC8632B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F41D61B95B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057875; cv=none; b=O7bZX+X7/A/TVSRuT2rgxKl9/jWw1lRWcGeRotJqsb6N81dHcqvVTs3DKS4lrvEWZ/B3r0W8PeXCv3v8pllTgmyQpGIlDeDLa//qeH0tIn/3oQoBM7ojpNRn3kamF9JAyjpWKXP9p8gqRQO8GCCxfNunbhSz0RKe2DcsX47F3ok=
+	t=1747057997; cv=none; b=u9oVgbjXQSPKkc7xusPQBIgIOokEBNuVcv0TtFXusiF6rHXcMP88Q/OX6vVUw6pwL6Ol3YBr86pkgyg+VnUVvKFkUSDV6/SsOjJKU2cPra5njc3JLiwu1oQzw+IBqpwvDIeyE+rBGV8n1UzIHqFqY/lt+HJanqAk8D+wKriuPUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057875; c=relaxed/simple;
-	bh=C82JNmBmQl6nDVtsLrlq7/LXhus7b0Co1S/FnhbyocA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=D/HMDpYnOBqHYcGB15awd1X/VZoC70QO7Ormszxxw4HTk6l5/wxFyo7XHzY/wMuoD28LEDsZsnQY4TEkQExlrkoDOPVlk7UgUEiQeXNBOfvkCDXFiI6iM4ueTBkJiEL0pa4ZxeRT1CjF9yfzbGSdwonz/NMtgkp+utEMseBHIGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=TvmC/Pu+; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="TvmC/Pu+"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85dac9728cdso114413739f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747057872; x=1747662672; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wbHfL50ZIpw0AwwIWTOCCssdnZ8GxKKWCXgL835qDjY=;
-        b=TvmC/Pu+ZPH14cEDYxMiwt2bXGPBrjPObe/+H3Qe7YeZHi8QXcdzPQ8RvKJ51E6Amr
-         viPgw4rM0RmeE1bTYiJLxo5vYJ9RShUU5xBY9hzeX+MhpY13U6czehslyTJkncd1v6dM
-         vK2LBqXPzUNU76XqM8DbmzQkRCYZIWx/awPOPg3MlN7c24PmT6DSXE6IC/14TrSRviYJ
-         uTxL6WDS9/vVF2q0h7ifu40YGPTSfI5CDd2SaXImHC4cC1dkvMFsWDPWPBnSDZNUB/Ju
-         Tuls4fCpfyYm40JGh1KEumN8aRB2ertm6B9c9hmT4qTRb93NGIh1OppqsChZ7VRIVE9Z
-         IDXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747057872; x=1747662672;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wbHfL50ZIpw0AwwIWTOCCssdnZ8GxKKWCXgL835qDjY=;
-        b=K0xmoWcdozQ48DmDlz+2bCl3snnxDdof5RVg6tCDMjUSAiM7ttQH9/U+KUYnfzuORY
-         NLF9G2xKqZwE0NvFKUamSUsiq+pxMXsMuBc0zgA3qnvrEIL2Sm+FqIw5WDrl9vqtzFmD
-         O32Ir9m6PTEPk9oU22QaOE8tomR6urEnr8yG50NO32LUcdkQU82NYC7T5qIdGhrRhRHB
-         ib7GKpY6bM8aAdaVkUsYVk+MOm6ASzWBth/sIL02GJDdNNDoKQ1zkdir3QmeydXBa3Xc
-         TmuEsfv5DXBoul4gx8HxMN15RNm/iDziHCpIh8TOZiNexETdmMmFDABpnYLfFvLAqkK/
-         /LhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGlea5kWO3HGq3rPjP43nkol1oega6kvpasbzsPSaB5HelNsEF0TDbnC2rtwILzwEum4fE7c+TdranE+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzEOF9+Xtu0dPnekvnxUBuikaczN+FsRoyuejvV4ieHsQ32hpI
-	jw9RveKopUh9PyqzGBL7GONjEIUV0YhLfeUWYmMc4ktfg8sS4WNsVLYwIQlgsNA=
-X-Gm-Gg: ASbGncv+PCU7QjztbTn5fryqvbYBKF+sUa7ktY/t1gdqiFXXnzJbSsWxi7TpYGdwPmH
-	tw9jFPCwlPrwPEpTk56iYELMZS2MlNTmAcci4Gc9YiuEcytniX1NIouie2T8RdIDK0cfBSaNHTE
-	39fep8RBGvMpCSZozWD8XePsnqU3UyWmLko6HmR5P3Yy+N4l5cf8aP15NaFkDN1bePf9y3c3f2q
-	X3KT9MCLe8pAnahET7eHLXuyWqUldT5G4umKn8OIYDPOzrBkHwA5i5Rbd29w0Scgoer2kDu6OBx
-	guL4dIevouokgVmVVincWvuukaP3CJI7+Qlx8YUKFWYUBEY=
-X-Google-Smtp-Source: AGHT+IGe7PYh1BarNM3QwA7lUBGDLJIk/X9Q5I71uCCD1EP/LavNJSCXLZMijyLjXK6KPxsyQurmMA==
-X-Received: by 2002:a05:6e02:1fc5:b0:3d6:cbed:3305 with SMTP id e9e14a558f8ab-3da7e1e7608mr142451495ab.10.1747057871986;
-        Mon, 12 May 2025 06:51:11 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3da7e10472fsm22357855ab.28.2025.05.12.06.51.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 06:51:11 -0700 (PDT)
-Message-ID: <81a0d2da-d863-4a6e-8d3b-b899d38ea605@kernel.dk>
-Date: Mon, 12 May 2025 07:51:10 -0600
+	s=arc-20240116; t=1747057997; c=relaxed/simple;
+	bh=nB85RuFBNsM/6djL4CI+WUsQIJEBz5sF04yhaipuhm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lXigvW8M0aXD4x/1YXCa1h/ubMea+zKZ1W7xOY+y39Ka/ynvt6pS0zDSE/6UEtujpkt6ynAz9q4DDbFKIP1uK8XR2YvFy5Yfl4qmSAp8ew6ljeosElFVmpJKbjnB6hZZTPRnl1shQHRUEq19JKsv5u9lU4jGISg24BB9hytg7yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59A05150C;
+	Mon, 12 May 2025 06:53:03 -0700 (PDT)
+Received: from [10.57.90.222] (unknown [10.57.90.222])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B76E63F673;
+	Mon, 12 May 2025 06:53:11 -0700 (PDT)
+Message-ID: <7852c047-e8da-44d4-8220-68c2ebca5206@arm.com>
+Date: Mon, 12 May 2025 14:53:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,82 +27,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [io-uring] KCSAN: data-race in copy_mm /
- percpu_counter_destroy_many
-To: syzbot <syzbot+8be9bf36c3cf574426c8@syzkaller.appspotmail.com>,
- asml.silence@gmail.com, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- Linux-MM <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
- dennis@kernel.org
-References: <682196ed.050a0220.f2294.0053.GAE@google.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <682196ed.050a0220.f2294.0053.GAE@google.com>
+Subject: Re: [PATCH] arm64/mm: Disable barrier batching in interrupt contexts
+Content-Language: en-GB
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Kevin Brodsky <kevin.brodsky@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ syzbot+5c0d9392e042f41d45c5@syzkaller.appspotmail.com
+References: <20250512102242.4156463-1-ryan.roberts@arm.com>
+ <aCH0TLRQslXHin5Q@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <aCH0TLRQslXHin5Q@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/12/25 12:36 AM, syzbot wrote:
-> Hello,
+On 12/05/2025 14:14, Catalin Marinas wrote:
+> On Mon, May 12, 2025 at 11:22:40AM +0100, Ryan Roberts wrote:
+>> @@ -79,7 +83,9 @@ static inline void queue_pte_barriers(void)
+>>  #define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+>>  static inline void arch_enter_lazy_mmu_mode(void)
+>>  {
+>> -	VM_WARN_ON(in_interrupt());
+>> +	if (in_interrupt())
+>> +		return;
+>> +
+>>  	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
 > 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    3ce9925823c7 Merge tag 'mm-hotfixes-stable-2025-05-10-14-2..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14ff74d4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6154604431d9aaf9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8be9bf36c3cf574426c8
-> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/afdc6302fc05/disk-3ce99258.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/fc7f98d3c420/vmlinux-3ce99258.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/ea7ca2da2258/bzImage-3ce99258.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+8be9bf36c3cf574426c8@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KCSAN: data-race in copy_mm / percpu_counter_destroy_many
-> 
-> write to 0xffff8881045e19d8 of 8 bytes by task 2123 on cpu 0:
->  __list_del include/linux/list.h:195 [inline]
->  __list_del_entry include/linux/list.h:218 [inline]
->  list_del include/linux/list.h:229 [inline]
->  percpu_counter_destroy_many+0xc7/0x2b0 lib/percpu_counter.c:244
->  __mmdrop+0x22e/0x350 kernel/fork.c:947
->  mmdrop include/linux/sched/mm.h:55 [inline]
->  io_ring_ctx_free+0x31e/0x360 io_uring/io_uring.c:2740
->  io_ring_exit_work+0x529/0x560 io_uring/io_uring.c:2962
->  process_one_work kernel/workqueue.c:3238 [inline]
->  process_scheduled_works+0x4cb/0x9d0 kernel/workqueue.c:3319
->  worker_thread+0x582/0x770 kernel/workqueue.c:3400
->  kthread+0x486/0x510 kernel/kthread.c:464
->  ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> 
-> read to 0xffff8881045e1600 of 1344 bytes by task 5051 on cpu 1:
->  dup_mm kernel/fork.c:1728 [inline]
->  copy_mm+0xfb/0x1310 kernel/fork.c:1786
->  copy_process+0xcf1/0x1f90 kernel/fork.c:2429
->  kernel_clone+0x16c/0x5b0 kernel/fork.c:2844
->  __do_sys_clone kernel/fork.c:2987 [inline]
->  __se_sys_clone kernel/fork.c:2971 [inline]
->  __x64_sys_clone+0xe6/0x120 kernel/fork.c:2971
->  x64_sys_call+0x2c59/0x2fb0 arch/x86/include/generated/asm/syscalls_64.h:57
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xd0/0x1a0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 1 UID: 0 PID: 5051 Comm: syz.1.494 Not tainted 6.15.0-rc5-syzkaller-00300-g3ce9925823c7 #0 PREEMPT(voluntary) 
+> I still get this warning trigger with some debugging enabled (more
+> specifically, CONFIG_DEBUG_PAGEALLOC). Patch applied on top of the arm64
+> for-kernelci.
 
-This doesn't look like an io_uring issue, it's successive setup and teardown
-of a percpu counter. Adding some relevant folks.
+Thanks for the report...
 
-#syz set subsystems: kernel
+I'll admit I didn't explicitly test CONFIG_DEBUG_PAGEALLOC since I thought we
+concluded when talking that the failure mode was the same as KFENCE in that it
+was due to pte manipulations in the interrupt context.
 
--- 
-Jens Axboe
+But that's not what this trace shows...
+
+The warning is basically saying we have nested lazy mmu mode regions, both in
+task context, which is completely illegal as far as lazy mmu is concerned.
+
+Looks like the first nest is zap_pte_range(), which is batching with mmu_gather
+and that allocates memory in tlb_next_batch(). And when CONFIG_DEBUG_PAGEALLOC
+is enabled, it calls into the arch to make the allocated page valid in the
+linear map. arm64 does that with apply_to_page_range(), which does a second lazy
+mmu nest.
+
+I need to have a think about what the right fix is. Will get back to you shortly.
+
+Thanks,
+Ryan
+
+> 
+> Is it because the unmap code uses arch_enter_lazy_mmu_mode() already and
+> __apply_to_page_range() via __kernel_map_pages() is attempting another
+> nested call? I think it's still safe, we just drop the optimisation in
+> the outer code and issue the barriers immediately. So maybe drop this
+> warning as well but add a comment on how nesting works.
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 6 PID: 1 at arch/arm64/include/asm/pgtable.h:89 __apply_to_page_range+0x85c/0x9f8
+> Modules linked in: ip_tables x_tables ipv6
+> CPU: 6 UID: 0 PID: 1 Comm: systemd Not tainted 6.15.0-rc5-00075-g676795fe9cf6 #1 PREEMPT 
+> Hardware name: QEMU KVM Virtual Machine, BIOS 2024.08-4 10/25/2024
+> pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : __apply_to_page_range+0x85c/0x9f8
+> lr : __apply_to_page_range+0x2b4/0x9f8
+> sp : ffff80008009b3c0
+> x29: ffff80008009b460 x28: ffff0000c43a3000 x27: ffff0001ff62b108
+> x26: ffff0000c43a4000 x25: 0000000000000001 x24: 0010000000000001
+> x23: ffffbf24c9c209c0 x22: ffff80008009b4d0 x21: ffffbf24c74a3b20
+> x20: ffff0000c43a3000 x19: ffff0001ff609d18 x18: 0000000000000001
+> x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000003
+> x14: 0000000000000028 x13: ffffbf24c97c1000 x12: ffff0000c43a3fff
+> x11: ffffbf24cacc9a70 x10: ffff0000c43a3fff x9 : ffff0001fffff018
+> x8 : 0000000000000012 x7 : ffff0000c43a4000 x6 : ffff0000c43a4000
+> x5 : ffffbf24c9c209c0 x4 : ffff0000c43a3fff x3 : ffff0001ff609000
+> x2 : 0000000000000d18 x1 : ffff0000c03e8000 x0 : 0000000080000000
+> Call trace:
+>  __apply_to_page_range+0x85c/0x9f8 (P)
+>  apply_to_page_range+0x14/0x20
+>  set_memory_valid+0x5c/0xd8
+>  __kernel_map_pages+0x84/0xc0
+>  get_page_from_freelist+0x1110/0x1340
+>  __alloc_frozen_pages_noprof+0x114/0x1178
+>  alloc_pages_mpol+0xb8/0x1d0
+>  alloc_frozen_pages_noprof+0x48/0xc0
+>  alloc_pages_noprof+0x10/0x60
+>  get_free_pages_noprof+0x14/0x90
+>  __tlb_remove_folio_pages_size.isra.0+0xe4/0x140
+>  __tlb_remove_folio_pages+0x10/0x20
+>  unmap_page_range+0xa1c/0x14c0
+>  unmap_single_vma.isra.0+0x48/0x90
+>  unmap_vmas+0xe0/0x200
+>  vms_clear_ptes+0xf4/0x140
+>  vms_complete_munmap_vmas+0x7c/0x208
+>  do_vmi_align_munmap+0x180/0x1a8
+>  do_vmi_munmap+0xac/0x188
+>  __vm_munmap+0xe0/0x1e0
+>  __arm64_sys_munmap+0x20/0x38
+>  invoke_syscall+0x48/0x104
+>  el0_svc_common.constprop.0+0x40/0xe0
+>  do_el0_svc+0x1c/0x28
+>  el0_svc+0x4c/0x16c
+>  el0t_64_sync_handler+0x10c/0x140
+>  el0t_64_sync+0x198/0x19c
+> irq event stamp: 281312
+> hardirqs last  enabled at (281311): [<ffffbf24c780fd04>] bad_range+0x164/0x1c0
+> hardirqs last disabled at (281312): [<ffffbf24c89c4550>] el1_dbg+0x24/0x98
+> softirqs last  enabled at (281054): [<ffffbf24c752d99c>] handle_softirqs+0x4cc/0x518
+> softirqs last disabled at (281019): [<ffffbf24c7450694>] __do_softirq+0x14/0x20
+> ---[ end trace 0000000000000000 ]---
+> 
 
