@@ -1,67 +1,72 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF9B944F;
-	Mon, 12 May 2025 03:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2174F25487C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747022093; cv=none; b=WilzXW+1Pww6PWoSRe9mxHNzJsyhpMxecKoSmP6+AySZ3so9Q7fn1uHq6hUtT5CMXruVT6qYcg3BMQEltlftZKdyC6NksZ/zal4Jb90mpH3CyqtlmLxttKULDeyfvqcCoiE9ln/owclC7yvsUOR1ls2bbPLEenBIyZYH3/1WYDI=
+	t=1747022124; cv=none; b=ktqhOaJZmL5TvLRv1R5mUwAvkcDHAjh4I1v0iRap7JdufhY4C/amHf3im+6B4HA7W5BXYDier+ffDYQ/VVuIoDUafMTbrkBZwNgKbN+UB1Dw4CykT7xo6OI+S8JhT2N6H76i3BBTl57vdVTdpbLINh6r7PhSz+iNBm+0TE5RwbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747022093; c=relaxed/simple;
-	bh=0v9W9RBPsn5Fo6KgpbwzBT/xhGWK6pHDmicDk+tWJw8=;
+	s=arc-20240116; t=1747022124; c=relaxed/simple;
+	bh=qY1qfNIBPyLYZ+bGQiDkA/ZqulShllNxYxCaOGvGIvs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C9ZCuRqsl47FGS9m2kzAZTw57KaP+ALZWZcmxVvzwdhO88tbrrOnG8VL5bEycY48uiEs0Fzp2UMBx7bESFisKKsgBqhgqmcXJj+b/+umyY4XJs6+Yjc0MgL2ZSJcO+18mxG84i8svjeunc846qaTD+uIcOrXA28kdWS71bc6GnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=piKulDmQ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=WxFiyd5EBCvYniROWwuCdfG0nhrd9m8gy77a358xVJ3PmWqDJE1xZyVNCTjkT2H+YYSaCpneCQ92l2A4nAxGnGrnuJQyF0r/kDC80gzZNQPZ2dfhAMRqy1Drd96BJM7oW3RTGWIhc1/wGdPrToNLfkADDuvST1AGZ5kvFkBBTdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BfacZ1Dt; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="piKulDmQ"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BIftvB020816;
-	Mon, 12 May 2025 03:54:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=QKYhG7
-	3DgTzdzGbCDN3buAMRRvqorJzXDUPZ8hgusWg=; b=piKulDmQFceuNnPByx+JJK
-	NFwRc//jrMpfzH/+Qi7AKY8dTwt7IvHZAzjz5sm4FzEo5nHu57rvHkRK2sJDuwEH
-	4NlwIvp9uVrYEHZgK2CuZnrtx4dLEd96ro1txixgXCE7G6EKaUI1NJZBkwJzGH1c
-	lYUPWw9D9wblqlgR0b5DqVnBJWgQcIUrOkS7M7EotdhjtEsCxzDEoAJ2z2lW0ncb
-	I/6Fq56SFaOFS+hS9gZQnSd5r5XIovYcUfaiF3MpkjRU9bHDSVzEHjbTyt8oDgzn
-	Y7NDrlQqumZ0GbPngQfuv/U3YcuGcle3LZRCPQc3p21dbhvL7EqZSxaJSyYgVvPA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jue6a1yd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 03:54:23 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54C3lJmk029084;
-	Mon, 12 May 2025 03:54:23 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jue6a1ya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 03:54:23 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54C0UGDc024537;
-	Mon, 12 May 2025 03:54:22 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jjmkv3ev-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 03:54:22 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54C3sKRD21234270
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 03:54:21 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A6BC958052;
-	Mon, 12 May 2025 03:54:20 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A404258056;
-	Mon, 12 May 2025 03:54:12 +0000 (GMT)
-Received: from [9.61.250.60] (unknown [9.61.250.60])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 12 May 2025 03:54:12 +0000 (GMT)
-Message-ID: <fb39efbc-9045-4fbd-a5d6-ababc320b9ef@linux.ibm.com>
-Date: Mon, 12 May 2025 09:24:10 +0530
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BfacZ1Dt"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BNqj49016870
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:55:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	8WDKrTckQCWr+LJBAG0kC4a97KNkNLl2PuqVbJ/lBbk=; b=BfacZ1DtiM0cdo3j
+	FqvH8yB9NKmDTWbyKEReDIzPLbWHyZ8eF7rlUUyu8Ql1kBkUmkeXaqTvSkUXQgYk
+	DMiI1gux/3cQsRNr1tbEPjDJBiepvEKeqAf3i0v+km4Ek+jrNzJM2uDsRwOjZ//g
+	f7QP7rhPTDzxoZRyz9k9Z5VEI9IjOkjIWaOCKYV7PkQYzl32jDERUjgqN4fGjX/V
+	DiJldvWPaB3JK/ZUWemeial6/CSMfkeb852C1dWNHQEDJTy+an4D4u7M/hVm6qW3
+	y5xpF8EfZYXhREfpver3qNgRBI7FxiCmtqxP/tiEyt8G1ZoeS5MY07b3V/R6C6lK
+	ugazgw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hyjjjx59-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 03:55:21 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22fd4e7ea48so21938445ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 20:55:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747022120; x=1747626920;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8WDKrTckQCWr+LJBAG0kC4a97KNkNLl2PuqVbJ/lBbk=;
+        b=KlZEyMFHInI0OzT56CbtVcEgINzcLcZkivlxRd1YhcEgW2RfmBDQhcIcuuCsu3kEVG
+         8lHnMZ3e7D8vtH1YnPMW28wJka5gXboyiKf3/T6h3Uq/8hMSigp3FkBg8n6rEzkuC9/C
+         G3U+selQSMyzfJ9QnxWCzSV9AdNKi27tYygUTOT+geK1d7XrmPg4dlvYjTbIPK9w8+ID
+         euCAmRy6Fxp7QGHj9GJ6hbOz/gAoE9jpFYP3f94gyFxMjyuHrADvh807HoMcBLUUgGgh
+         M8f5y7JN+9vVBN/oEIIUqKRauoujX4NHhSVDpS0M7VihyWl3b3qZN4SKn1H96Fy8sMrB
+         nshw==
+X-Forwarded-Encrypted: i=1; AJvYcCVLKyJJ8Y2K/08fgFheUagoSPOXm3yYZKNrR+cJLrlYfTZUk3wxgtTu2k7IOnyWMkZAls0+0282x/tgXz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjlk1WrDOiQmdOOsNU5+3aZAgaDmeigmvxUq66jhTcuUu+3Zcf
+	RfWMXwTi78x4m6Xi9jMH1aMFwfbRVnz0iBRGDArBKLW/tLebnANqEB9r0NQhF1F5l5Hs2ZxNf4A
+	PLSnSdvEdnzE5j9iBoC1OTecnKQ61pxVsmYWvoy7uKNp0ZZkB4m7yyqjjHGXvSc4=
+X-Gm-Gg: ASbGncuTSAK+5huFc+Og7gsYchUWQPG3drX8yZiOquUFdKqB/UipOr0l7fNNdVKdCmi
+	FRkZlgMMj79QIhvQezldDkWcgAGXGo/a8U2JTyR68bDvAtD3DrG7Io9g6hL+z8Nlndm8Df3X6cb
+	k95DdBwEWDHwtYcUAm46pQ6/CHDTrvYg4ZoR+lH5prNlMf6rPI/eg43fztIPW9n8Roo8g7LfK5R
+	3Mho8xaQW7uJTZj2RLh2Eu/b/uwFdNDSC09lV4ObzUiFrlIyhqYS/oZL55pltsIALmJFPoXcL8X
+	4tDKuLeUWxxmk5lbRXbg+3eutoSrQBWDvFyaZmE=
+X-Received: by 2002:a17:902:f68a:b0:22e:4a6c:fef2 with SMTP id d9443c01a7336-22fc91a205amr182962145ad.53.1747022120237;
+        Sun, 11 May 2025 20:55:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFOM0oX86/HShJVVt80lz+16sIC8o4F2PcAejQwrh8brWAXBr3Muwb5Bc6kA75S8GnIM8Hr3Q==
+X-Received: by 2002:a17:902:f68a:b0:22e:4a6c:fef2 with SMTP id d9443c01a7336-22fc91a205amr182961825ad.53.1747022119746;
+        Sun, 11 May 2025 20:55:19 -0700 (PDT)
+Received: from [10.206.107.125] ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82a0976sm53011635ad.227.2025.05.11.20.55.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 May 2025 20:55:19 -0700 (PDT)
+Message-ID: <effea02f-6ffb-42e9-87df-081caafab728@oss.qualcomm.com>
+Date: Mon, 12 May 2025 09:25:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,156 +74,169 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/bpf: Fix bpf selftest build error
-Content-Language: en-GB
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-next@vger.kernel.org
-Cc: ast@kernel.org, hbathini@linux.ibm.com, maddy@linux.ibm.com,
-        andrii@kernel.org, daniel@iogearbox.net, mykolal@fb.com,
-        martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
-        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-        haoluo@google.com, jolsa@kernel.org, shuah@kernel.org
-References: <20250509122348.649064-1-skb99@linux.ibm.com>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <20250509122348.649064-1-skb99@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dwbpe1-9DBWSf9jxrLtyGxDhLR4w5eDv
-X-Authority-Analysis: v=2.4 cv=TbmWtQQh c=1 sm=1 tr=0 ts=682170ef cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=rOUgymgbAAAA:8 a=CcSt_Cs7RvpnTRKdI0oA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=MP9ZtiD8KjrkvI0BhSjB:22
-X-Proofpoint-GUID: SeUpvmWKQ7SNL2oqQIzFx069GANDB4xi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAzNSBTYWx0ZWRfX3J8rMnm/4r9H a0X0lU/EeRTB1mLTX2WUe+0QgUN24/RoQqRhs0vDdGXUqwTH8/+iz1Ua0KqbDUcJTds7p/U7QzT +LOPZE8lLZ2ukU2lmI2LSuln9WJorDH68S4U64NIMm2fFORAGCWIsxtVC8Awm5lja8kefPVK2DS
- 5s4aVMViIYF9KhffoOMF3xMo/rB/Qk8EiobUYCWvElyT3TXqn36hHcQJjmXd8RnOyq4KAunfKsM JUzo3Oqe5gketyDlF/2f0wqwmg9fWMzl1XbhjE5yRQ9DYG5w4+BCIdraYT4u6IWhpPX7iAYqto6 22QraxsSY620kNR1hv6Eq3h1bS/SBOcJlDVDMv4cuVB3Y4WS9OSnZevp+nPoR+sXTX9W/uoNH6P
- TeCleuUGv/7/4MCJV5YaavhL1dCPphxr44dIEgQdvHVRPwohTAWsN4Bb6lvmqGC5YSqkNIzj
+Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Alexey Klimov <alexey.klimov@linaro.org>, andersson@kernel.org,
+        konradybcio@kernel.org, linux-arm-msm@vger.kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, srini@kernel.org,
+        quic_ekangupt@quicinc.com, krzysztof.kozlowski@linaro.org,
+        "Bharath Kumar (QUIC)" <quic_bkumar@quicinc.com>,
+        "Chenna Kesava Raju (QUIC)" <quic_chennak@quicinc.com>
+References: <20250502011539.739937-1-alexey.klimov@linaro.org>
+ <10f69da3-6f94-4249-a8f3-459dc48fa5e1@oss.qualcomm.com>
+ <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
+ <3c0fea8d-0715-40e6-bed9-e0961bf034e0@oss.qualcomm.com>
+ <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
+ <pzlsbznxpfsbdsxlzvcbdy7wwba4z5hoya7fyoacwjadtpl7y4@qajecdvs3bho>
+Content-Language: en-US
+From: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+In-Reply-To: <pzlsbznxpfsbdsxlzvcbdy7wwba4z5hoya7fyoacwjadtpl7y4@qajecdvs3bho>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAzOCBTYWx0ZWRfX/5ZV/JQXwe5W
+ 0rVuoyEg2q2KqWeGGpZ/3RlZzqFG1GHAN7MylLnY/U6ikljiu5zwmNObMVBrz9DpwZkT0OrF0hC
+ c6sHPBLJP+UuANAgjEiH2q5G/4qzFcvSQux3gHRIpw17tB0SgfkBJppMoLNc7mXW66yAI2TeWbO
+ /OdFehWEDOB7u6l3WN1MCwum8w93V69WOahkaJEs2CLScjfo7jkRPe3MbX4eB+ubKZhQwdAjWB7
+ EOUornaOMfLKYj1rkkIZqknX4GW18OtLo8PRBG3EB2u6tHw8ykS+0L/CCkLsmXOQd6Vv2jeosr1
+ 8HLYoAbvjHqxSdFzLRgYggzmpJ201vWVxbG0Ndh3pMuPCc84+tSI5BP4T9vr2Cil4xFhYzenGov
+ i5BY0hkWjXdfRYjx/7ZFXdJQEf42j+oXUv+XHGe6AOgAd7yWGGzJdw0kHxsv3dqODIBNxqj8
+X-Proofpoint-GUID: di6q4RzbTp2--8hcqmDvTsK6pKpHANi3
+X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=68217129 cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=KKAkSRfTAAAA:8 a=YS6qPdkyQB3lb9F7VO0A:9 a=QEXdDO2ut3YA:10
+ a=1OuFwYUASf3TG4hYMiVC:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: di6q4RzbTp2--8hcqmDvTsK6pKpHANi3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-12_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505120035
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 clxscore=1015 spamscore=0 phishscore=0
+ mlxlogscore=999 impostorscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505120038
 
 
-On 09/05/25 5:53 pm, Saket Kumar Bhaskar wrote:
-> On linux-next, build for bpf selftest displays an error due to
-> mismatch in the expected function signature of bpf_testmod_test_read
-> and bpf_testmod_test_write.
+
+On 5/10/2025 1:19 AM, Dmitry Baryshkov wrote:
+> On Fri, May 09, 2025 at 09:12:30AM +0530, Ekansh Gupta wrote:
+>>
+>> On 5/9/2025 4:27 AM, Konrad Dybcio wrote:
+>>> On 5/9/25 12:20 AM, Alexey Klimov wrote:
+>>>> On Fri May 2, 2025 at 10:38 AM BST, Konrad Dybcio wrote:
+>>>>> On 5/2/25 3:15 AM, Alexey Klimov wrote:
+>>>>>> While at this, also add required memory region for fastrpc.
+>>>>>>
+>>>>>> Tested on sm8750-mtp device with adsprpdcd.
+>>>>>>
+>>>>>> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
+>>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>>>>>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>>>>>> ---
+>>>>>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 ++++++++++++++++++++++++++++
+>>>>>>  1 file changed, 70 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>>> index 149d2ed17641..48ee66125a89 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>>> @@ -7,6 +7,7 @@
+>>>>>>  #include <dt-bindings/clock/qcom,sm8750-gcc.h>
+>>>>>>  #include <dt-bindings/clock/qcom,sm8750-tcsr.h>
+>>>>>>  #include <dt-bindings/dma/qcom-gpi.h>
+>>>>>> +#include <dt-bindings/firmware/qcom,scm.h>
+>>>>>>  #include <dt-bindings/interconnect/qcom,icc.h>
+>>>>>>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
+>>>>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>>> @@ -523,6 +524,14 @@ llcc_lpi_mem: llcc-lpi@ff800000 {
+>>>>>>  			reg = <0x0 0xff800000 0x0 0x800000>;
+>>>>>>  			no-map;
+>>>>>>  		};
+>>>>>> +
+>>>>>> +		adsp_rpc_remote_heap_mem: adsp-rpc-remote-heap {
+>>>>>> +			compatible = "shared-dma-pool";
+>>>>>> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
+>>>>>> +			alignment = <0x0 0x400000>;
+>>>>>> +			size = <0x0 0xc00000>;
+>>>>>> +			reusable;
+>>>>>> +		};
+>>>>>>  	};
+>>>>>>  
+>>>>>>  	smp2p-adsp {
+>>>>>> @@ -2237,6 +2246,67 @@ q6prmcc: clock-controller {
+>>>>>>  						};
+>>>>>>  					};
+>>>>>>  				};
+>>>>>> +
+>>>>>> +				fastrpc {
+>>>>>> +					compatible = "qcom,fastrpc";
+>>>>>> +					qcom,glink-channels = "fastrpcglink-apps-dsp";
+>>>>>> +					label = "adsp";
+>>>>>> +					memory-region = <&adsp_rpc_remote_heap_mem>;
+>>>>> IIUC the driver only considers this on the sensor DSP
+>>>> Memory region is required for audio protection domain + adsprpdcd as far as I know.
+>>> next-20250508
+>>>
+>>> rmem_node = of_parse_phandle(rdev->of_node, "memory-region", 0);
+>>> if (domain_id == SDSP_DOMAIN_ID && rmem_node) {
+>>> 	// ...
+>>> }
+>>>
+>>> maybe some driver changes are still pending?
+>> Would like to add some more details here:
+>>
+>> Memory region is required for audio PD for dynamic loading and remote heap memory
+>> requirements. Some initial memory(~2MB) is allocated initially when audio daemon
+>> is getting attached[1] and this memory is added to audio PD memory pool.
+> How is being handled for the audio PD case? Could you please point it
+> out in? Currently, as Konrad pointed out, it is only being used for
+> Sensors domain (unless I miss some obvious usage handled by the core).
+
+The reserved-memory support was actually first added for audio PD only[1].
+
+The usage of reserved-memory is audio PD:
+
+This memory is used by audio PD for it's dynamic loading and remote heap
+requirements as I had mentioned earlier. I'll give more details here:
+When audio PD starts, it expects some initial memory for it's dynamic
+loading and other allocation requirements. To fulfill this, the audio
+daemon allocates[2] some initial memory(~2MB) and moves the ownership to
+the audio specific VMIDs that are configured in DT[3]. Audio PD then uses
+this memory for it's initial operations. If there is any more memory
+needed, audio PD makes a request to allocate memory from HLOS which is
+again allocated from the same region[4] and then the ownership is moved
+to the configured VMIDs[5].
+
+The sensors domain that you are pointing was an extension of this and as
+pointed earlier, it was added to support SDSP use cases on some old platform
+where there are no dedicated SDSP context banks.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=1ce91d45ba77a4f6bf9209d142d5c89c42cf877a
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1274
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/qcom/sa8775p.dtsi#n5334
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
+[5] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1927
+
+//Ekansh
+
 >
-> Commit 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attribute::read/write()")
-> changed the required type for struct bin_attribute to const struct bin_attribute.
->
-> To resolve the error, update corresponding signature for the callback.
->
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Closes: https://lore.kernel.org/all/e915da49-2b9a-4c4c-a34f-877f378129f6@linux.ibm.com/
-> Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-> ---
->   tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> index 2e54b95ad898..194c442580ee 100644
-> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> @@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
->   
->   noinline ssize_t
->   bpf_testmod_test_read(struct file *file, struct kobject *kobj,
-> -		      struct bin_attribute *bin_attr,
-> +		      const struct bin_attribute *bin_attr,
->   		      char *buf, loff_t off, size_t len)
->   {
->   	struct bpf_testmod_test_read_ctx ctx = {
-> @@ -465,7 +465,7 @@ ALLOW_ERROR_INJECTION(bpf_testmod_test_read, ERRNO);
->   
->   noinline ssize_t
->   bpf_testmod_test_write(struct file *file, struct kobject *kobj,
-> -		      struct bin_attribute *bin_attr,
-> +		      const struct bin_attribute *bin_attr,
->   		      char *buf, loff_t off, size_t len)
->   {
->   	struct bpf_testmod_test_write_ctx ctx = {
-
-
-Tested this patch by applying on top of next-20250508 and if fixes the 
-build issue. Hence,
-
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-
-commit f48887a98b78880b7711aca311fbbbcaad6c4e3b (tag: next-20250508, 
-origin/master, origin/HEAD, bpf_arena)
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Thu May 8 18:45:50 2025 +1000
-
-     Add linux-next specific files for 20250508
-
-
-After this patch:
-
-
-   TEST-OBJ [test_progs-cpuv4] xdp_flowtable.test.o
-   TEST-OBJ [test_progs-cpuv4] xdp_info.test.o
-   TEST-OBJ [test_progs-cpuv4] xdp_link.test.o
-   TEST-OBJ [test_progs-cpuv4] xdp_metadata.test.o
-   TEST-OBJ [test_progs-cpuv4] xdp_noinline.test.o
-   TEST-OBJ [test_progs-cpuv4] xdp_perf.test.o
-   TEST-OBJ [test_progs-cpuv4] xdp_synproxy.test.o
-   TEST-OBJ [test_progs-cpuv4] xdp_vlan.test.o
-   TEST-OBJ [test_progs-cpuv4] xdpwall.test.o
-   TEST-OBJ [test_progs-cpuv4] xfrm_info.test.o
-   BINARY   bench
-   BINARY   test_maps
-   BINARY   test_progs
-   BINARY   test_progs-no_alu32
-   BINARY   test_progs-cpuv4
-
-
-
-Before this patch:
-
-
-   CLANG 
-/root/linux-next/tools/testing/selftests/bpf/tools/build/bpftool/profiler.bpf.o
-bpf_testmod.c:494:17: error: initialization of ‘ssize_t (*)(struct file 
-*, struct kobject *, const struct bin_attribute *, char *, loff_t,  
-size_t)’ {aka ‘long int (*)(struct file *, struct kobject *, const 
-struct bin_attribute *, char *, long long int,  long unsigned int)’} 
-from incompatible pointer type ‘ssize_t (*)(struct file *, struct 
-kobject *, struct bin_attribute *, char *, loff_t, size_t)’ {aka ‘long 
-int (*)(struct file *, struct kobject *, struct bin_attribute *, char *, 
-long long int,  long unsigned int)’} [-Wincompatible-pointer-types]
-   494 |         .read = bpf_testmod_test_read,
-       |                 ^~~~~~~~~~~~~~~~~~~~~
-bpf_testmod.c:494:17: note: (near initialization for 
-‘bin_attr_bpf_testmod_file.read’)
-bpf_testmod.c:495:18: error: initialization of ‘ssize_t (*)(struct file 
-*, struct kobject *, const struct bin_attribute *, char *, loff_t,  
-size_t)’ {aka ‘long int (*)(struct file *, struct kobject *, const 
-struct bin_attribute *, char *, long long int,  long unsigned int)’} 
-from incompatible pointer type ‘ssize_t (*)(struct file *, struct 
-kobject *, struct bin_attribute *, char *, loff_t, size_t)’ {aka ‘long 
-int (*)(struct file *, struct kobject *, struct bin_attribute *, char *, 
-long long int,  long unsigned int)’} [-Wincompatible-pointer-types]
-   495 |         .write = bpf_testmod_test_write,
-       |                  ^~~~~~~~~~~~~~~~~~~~~~
-bpf_testmod.c:495:18: note: (near initialization for 
-‘bin_attr_bpf_testmod_file.write’)
-make[4]: *** [/root/linux-next/scripts/Makefile.build:203: 
-bpf_testmod.o] Error 1
-make[3]: *** [/root/linux-next/Makefile:2009: .] Error 2
-make[2]: *** [Makefile:248: __sub-make] Error 2
-make[1]: *** [Makefile:18: all] Error 2
-make: *** [Makefile:282: test_kmods/bpf_testmod.ko] Error 2
-
-
-Regards,
-
-Venkat.
+>> Additionally, if there is some additional memory requirement from audio PD, the
+>> PD can request for more memory using remote heap request[2]
+>>
+>> The support for SDSP was added sometime back[3] to support SDSP usecases on some old
+>> platform as there were no dedicated context banks for SDSP there. On recent platforms,
+>> context banks are available wherever SDSP is supported. 
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1273
+>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
+>> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=c3c0363bc72d4d0907a6d446d7424b3f022ce82a
+>>
+>> //Ekansh
+>>
+>>> Konrad
+>>>
 
