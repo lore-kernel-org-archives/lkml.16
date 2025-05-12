@@ -1,106 +1,84 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8EF1E571A
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26ABF1E571A
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065442; cv=none; b=NEjNB5kxHefrpz6Jh6cKfj5xD/nUY9T4VW+D7EO5pMzL94rOTzdjm1cXgHocy5QqJdb0F10rv39y/gfmWu3yCsiJhZiM+I3FTgDygqYoPASu8YfPI/FIE7v0YlM1XfziIYDLrvxHUiA1f1YEeVD6xf4N3qKoMqm5MHfBakrVhf8=
+	t=1747065479; cv=none; b=cDI9sjXp6PCuCoHzYXNw2GgJ/GQLV+EFvNr9KRZc1DSI5QUWZMCb9ioL+p+WPd7qCV/NLXGdmzF31h1uFOMaAhJlMGPcpMbxuyXP5Sf4XByIbMYTL2gigVBBbApen7y5j8MHsm0XQBsSFj+k7PQ3DTa5zAZ8TBSypW8qxOOIo50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065442; c=relaxed/simple;
-	bh=U4tsIGaAhFhKkb5JREm+VTu9w0Hs7XSxl+UdCmwNueA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TdqNj0hwHGnGxXCnFBQWA9mBgtFDqIjRhqYirpMSXLspUqLhyyLIFpzMO8BIJfiLAAGpiUYU1ccHH8OknKc2bMy8go6XQOsa6N2yZvTYSu1OeRuF/7CiszMbRow36U1IsbB8NSajNGi/I+rNlY9+xfXjypA6QUCX/E/hViLJt8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wyYPULal; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wyYPULal"
-Message-ID: <d67d893e-9c7e-487e-a14b-419a7cdc6158@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747065437;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=17odisrwVfR0WePoUlbvwrcF9+//6rg8N9uv1K3pM+M=;
-	b=wyYPULalvB5fw0HIs6OkuKNaoOUo7Kslcz0usqpRkEFIbRxwxoAs/d174CaJG7RJjq2OaB
-	WF71loshhbaA0InlldeiJFIhQiL41liHQ6zZeX3zEB7nHQtVpMSek3fZV5dvixIEG6Mup3
-	FWhuddWmJsCFS0tUSCovNruAb3qV7FY=
-Date: Mon, 12 May 2025 11:56:28 -0400
+	s=arc-20240116; t=1747065479; c=relaxed/simple;
+	bh=BM5JSJOKNhTfLPEfa9NZIcPTtKYu51Ogr3Y10YAFwbw=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=dFnLLGTsiWTdXrfnHrMueakT3AuQ9DT+2856pcneB+nxr3n+5/L5SqfPSKXBf9snu229sDTS1HDUfJIkUFnZbFORl6fXEYgFGvkFosCj2Wo61VxJ62REdONa6uxUAalPJTSGt45re0v5JeRED2Kyr/u9CRqUuJ2uPm0NsQFh9tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id C633A294730;
+	Mon, 12 May 2025 17:57:54 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id WUghdvuq5KTy; Mon, 12 May 2025 17:57:54 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 6FF76298562;
+	Mon, 12 May 2025 17:57:54 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id IzOUdMxh8QkF; Mon, 12 May 2025 17:57:54 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 4D1D2294730;
+	Mon, 12 May 2025 17:57:54 +0200 (CEST)
+Date: Mon, 12 May 2025 17:57:54 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
+	linux-mtd <linux-mtd@lists.infradead.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <636744371.31012717.1747065474158.JavaMail.zimbra@nod.at>
+In-Reply-To: <2c2ff01f-b6e2-4b9e-958a-c4c405518a54@prolan.hu>
+References: <20250512084033.69718-1-csokas.bence@prolan.hu> <d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu> <1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at> <4ebe2146-ee1c-4325-8259-be3803475f1f@prolan.hu> <87r00ugcat.fsf@bootlin.com> <1689545397.30901605.1747063396608.JavaMail.zimbra@nod.at> <87y0v1g7xz.fsf@bootlin.com> <2c2ff01f-b6e2-4b9e-958a-c4c405518a54@prolan.hu>
+Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] arm64: cacheinfo: Report cache sets, ways, and line size
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- linux-arm-kernel@lists.infradead.org, Radu Rendec <rrendec@redhat.com>,
- Will Deacon <will@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-References: <20250509233735.641419-1-sean.anderson@linux.dev>
- <20250510-fresh-magenta-owl-c36fb7@sudeepholla>
- <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
- <aCIVec7zl3tIh73h@J2N7QTR9R3>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <aCIVec7zl3tIh73h@J2N7QTR9R3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF138 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Verify written data in paranoid mode
+Thread-Index: 75AKXALdUUz/uNm8Yjvipq4cEdAKSw==
 
-On 5/12/25 11:36, Mark Rutland wrote:
-> On Mon, May 12, 2025 at 11:28:36AM -0400, Sean Anderson wrote:
->> On 5/10/25 03:04, Sudeep Holla wrote:
->> > On Fri, May 09, 2025 at 07:37:35PM -0400, Sean Anderson wrote:
->> >> Cache geometry is exposed through the Cache Size ID register. There is
->> >> one register for each cache, and they are selected through the Cache
->> >> Size Selection register. If FEAT_CCIDX is implemented, the layout of
->> >> CCSIDR changes to allow a larger number of sets and ways.
->> >> 
->> > 
->> > Please refer
->> > Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache information probing")
->> > 
->> 
->> | The CCSIDR_EL1.{NumSets,Associativity,LineSize} fields are only for use
->> | in conjunction with set/way cache maintenance and are not guaranteed to
->> | represent the actual microarchitectural features of a design.
->> | 
->> | The architecture explicitly states:
->> | 
->> | | You cannot make any inference about the actual sizes of caches based
->> | | on these parameters.
->> 
->> However, on many cores (A53, A72, and surely others that I haven't
->> checked) these *do* expose the actual microarchitectural features of the
->> design. Maybe a whitelist would be suitable.
-> 
-> Then we have to maintain a whitelist forever,
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Cs=C3=B3k=C3=A1s Bence" <csokas.bence@prolan.hu>
+>>> UBI offers this already, there is a write self-check as part of the io
+>>> checks that can be enabled
+>>> via debugfs per UBI device.
+>>> So for troubleshooting this should be good enough.
+>>> There is room for improvement, though. Currently it uses vmalloc().
+>>=20
+>> UBI is full of uncovered resources :-)
+>=20
+> For sure. Plus, even though we use UBI + UBIFS, that may not necessarily
+> be the case for others. Maybe someone uses mtdblock + some
+> "conventional" FS (ext*, f2fs etc.). Or maybe they use JFFS. Or maybe no
+> FS at all. We should still allow userspace or higher FS layers to be
+> notified of the problem.
 
-There's no maintenance involved. The silicon is already fabbed, so it's
-not like it's going to change any time soon.
+Nobody sane would every use a regular block based filesystem in rw mode
+on-top of mtdblock. Especially if you care about your data.
 
-> and running an old/distro
-> kernel on new HW won't give you useful values unless you provide
-> equivalent values in DT, in which case the kernel doesn't need to read
-> the registers anyway.
+JFFS2 has CONFIG_JFFS2_FS_WBUF_VERIFY.
+AFAIK, this origins form the old and dark age of flashes where everything
+was wonky and no good test tooling existed.
 
-Conversely (and far more likely IMO), running an old/distro devicetree
-on a new kernel won't give you usefult values. Bootloaders tend not be
-be updated very often (if ever), whereas kernels can (ideally) be
-updated without changing userspace.
+Long story short, I'm not convinced by this patch set.
+No ack form my side.
+At least it should be configurable per device and not being a global
+config option. If Michael or Miquel like it, I'll not block this decision.
 
-> The architecture explcitly tells us not to use the values in this way,
-> and it's possible to place the values into DT when you know they're
-> meaningful.
-
-Well, maybe we can just use these registers for the hundreds of existing
-devicetrees that lack values.
-
---Sean
+Thanks,
+//richard
