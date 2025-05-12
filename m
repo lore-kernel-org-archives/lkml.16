@@ -1,70 +1,260 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833FB296D32
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D1A24EF7F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747070395; cv=none; b=nTRYh4oYxZ3Qz/brABd3ujLld85lAWvW4adJr/jSmiJnD0rgjtIawLzmSiS14ulZoSXQqu3H4Jl7CoG9wIcVRh845ABc/lbrhoe1iZqe53XyGDgHy6RxNxMpEoWWn576E4ixUIt0XDvxbOpC+3Bv/MD0kVElHgxJQcREdlBzPVU=
+	t=1747070632; cv=none; b=V0dAT3ZMPH7knh9ZSmqTYjm4ZlBlvI8uvjpDjax5rB058b5BOO0ojl3RslLjESv8xkE0KJYusCBD3vtoGEYoke1ADhnmFKfkDFl/MEe8+7kCN1iJvsq+YIg4gQm+dxsIsu7m1POAPoAzwuX1muLHULL6+NyzK0yCKavuzmSzK9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747070395; c=relaxed/simple;
-	bh=2KGHEqoUXoSNT3Av3wticQPT6uCXsOqGUANUSuTE0cM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LaBVJ2BobDjp8Uby8LQ0XsuTaDuCbDpHOpevipXpaZc79usdBnxJiWlEbJdrBZIHoJ7e9/zR8tRhOGAU3sv8VCmNGDbFv4STwXDnkvqnG6zCO4D+EGHAXcJZiRktbYjp+Fdn3AlEhBSyGg3bSQwU2lIxkRw2uItjYZO3kW0XdlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4BfCBpO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747070632; c=relaxed/simple;
+	bh=LV47IlF09Kt1uj9pVkWxcgR0Ow/6c216+lD5JG8nZWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KOxkueuLHO8JxCYskNiaOzKVDJxjZNptN3bXl0EyrWoT1A3i/lOFJNL2x5vJK/6nY1Tjx5VDtPVE/iyaNFRzXS4cslOuKRbZF6Z54nFZJsfg2K4n130Z5hzuTq5yL2/seaWj41gVhLxoxCyAyE5V6EQD26Wug32AfrCV+6Xf3RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WE18u1ut; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ZKY1yVEE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4BfCBpO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFA3C4CEE7;
-	Mon, 12 May 2025 17:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747070394;
-	bh=2KGHEqoUXoSNT3Av3wticQPT6uCXsOqGUANUSuTE0cM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N4BfCBpOdyWcGd5VTWAcziXqh8e7nZScn2XpARli4xKBP/ygC+gMLRxzhD/WMSle/
-	 33elWYYkhBdnPh+IKwsgb9B1YZ6BAyvejXwFDI8OpTCHUGlSsEYHnZHXTsaoglW/Mr
-	 CDEPBiM2U+q7TJ4hoa0O9UwSfdtJbyi8qctOBjXcGEL4ZLiznVE3+yHTb332Y51Tva
-	 0wGMUgpYTBA/VK7b2tQFVv+9bzvM1QUgIHcf4s6Jt7V0LQMG7E8Pc4xOA1pxxiEHmN
-	 YUHaRpqBhy13L5d2MdhsFXeBWnGZzqF2fzT0qUBgQWE6lhvYlWFOx3b+Z+D+LXN6ZQ
-	 dw9j2YPzOOvtw==
-Date: Mon, 12 May 2025 07:19:53 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WE18u1ut";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ZKY1yVEE"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CE36D21184;
+	Mon, 12 May 2025 17:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747070611; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=40KNvHTH37gvmYUFOvfmNjkX32zb5wqsuxRJWr680Ks=;
+	b=WE18u1utupbJGttWpx/ZSyw85wFbzzP4IP44n0z7uFWB48lD+/TOf1YTW1JTLBMRwmXYYb
+	n7AOSHOvJPXUahBmEgqIL2mx8AFGodowtTskyGsWc6TMs5SeAYA/ZblSEs2SK8gDmGqLcQ
+	ThD1eoSQD+96mWzYqrqbglSJVh7L8Wk=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747070610; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=40KNvHTH37gvmYUFOvfmNjkX32zb5wqsuxRJWr680Ks=;
+	b=ZKY1yVEENClluq1aI2pPepXc3nTahf+gzFLu3oDfOIV9Qpyr3ciTYrt3Ch+pVNUMLGMSlQ
+	NTA/GgYAnoEzDrXSGxyt2pbHtoHnkwedxLBRxWhVjpB3a1WELrKvCOKh7FDK0rTmVq/SOP
+	9A1uZu0ziHFBtaS/R2Xn1s63/b4Q8kM=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B7F4A137D2;
+	Mon, 12 May 2025 17:23:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id W1JfLJIuImjfcgAAD6G6ig
+	(envelope-from <neelx@suse.com>); Mon, 12 May 2025 17:23:30 +0000
+From: Daniel Vacek <neelx@suse.com>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>
+Cc: Daniel Vacek <neelx@suse.com>,
+	linux-btrfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] sched_ext/idle: Make scx_bpf_select_cpu_and() usable
- from any context
-Message-ID: <aCItuWh-BLp3jC6h@slm.duckdns.org>
-References: <20250512151743.42988-1-arighi@nvidia.com>
- <20250512151743.42988-3-arighi@nvidia.com>
+Subject: [PATCH] btrfs: index buffer_tree using node size
+Date: Mon, 12 May 2025 19:23:20 +0200
+Message-ID: <20250512172321.3004779-1-neelx@suse.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512151743.42988-3-arighi@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:email];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -2.80
 
-Hello,
+So far we are deriving the buffer tree index using the sector size. But each
+extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
 
-On Mon, May 12, 2025 at 05:14:56PM +0200, Andrea Righi wrote:
->  #ifdef CONFIG_SMP
-> +	/*
-> +	 * If called from an unlocked context, try to acquire
-> +	 * cpus_read_lock() to avoid races with CPU hotplug.
-> +	 */
-> +	if (scx_kf_allowed_if_unlocked())
-> +		if (!cpus_read_trylock())
-> +			return -EBUSY;
+For example the typical and quite common configuration uses sector size of 4KiB
+and node size of 16KiB. In this case it means the buffer tree is using up to
+the maximum of 25% of it's slots. Or in other words at least 75% of the tree
+slots are wasted as never used.
 
-Is this meaningful? The idle CPU selection is already racy against CPU
-hotplugs and we depend on the scheduler core to fix it up afterwards. Even
-if scx_bpf_select_cpu_and() is not racy, it will drop the cpus lock before
-returning and becomes racy again right there. ie. This doesn't add any
-meaningful protection.
+We can score significant memory savings on the required tree nodes by indexing
+the tree using the node size instead. As a result far less slots are wasted
+and the tree can now use up to all 100% of it's slots this way.
 
-Thanks.
+Signed-off-by: Daniel Vacek <neelx@suse.com>
+---
+ fs/btrfs/disk-io.c   |  1 +
+ fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
+ fs/btrfs/fs.h        |  3 ++-
+ 3 files changed, 18 insertions(+), 16 deletions(-)
 
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 5bcf11246ba66..dcea5b0a2db50 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3395,6 +3395,7 @@ int __cold open_ctree(struct super_block *sb, struct btrfs_fs_devices *fs_device
+ 	fs_info->delalloc_batch = sectorsize * 512 * (1 + ilog2(nr_cpu_ids));
+ 
+ 	fs_info->nodesize = nodesize;
++	fs_info->node_bits = ilog2(nodesize);
+ 	fs_info->sectorsize = sectorsize;
+ 	fs_info->sectorsize_bits = ilog2(sectorsize);
+ 	fs_info->csums_per_leaf = BTRFS_MAX_ITEM_SIZE(fs_info) / fs_info->csum_size;
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 4d3584790cf7f..80a8563a25add 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -1774,7 +1774,7 @@ static noinline_for_stack bool lock_extent_buffer_for_io(struct extent_buffer *e
+ 	 */
+ 	spin_lock(&eb->refs_lock);
+ 	if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &eb->bflags)) {
+-		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
++		XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_bits);
+ 		unsigned long flags;
+ 
+ 		set_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
+@@ -1874,7 +1874,7 @@ static void set_btree_ioerr(struct extent_buffer *eb)
+ static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
+ {
+ 	struct btrfs_fs_info *fs_info = eb->fs_info;
+-	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
++	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_bits);
+ 	unsigned long flags;
+ 
+ 	xas_lock_irqsave(&xas, flags);
+@@ -1886,7 +1886,7 @@ static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_mark_t mark)
+ static void buffer_tree_clear_mark(const struct extent_buffer *eb, xa_mark_t mark)
+ {
+ 	struct btrfs_fs_info *fs_info = eb->fs_info;
+-	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sectorsize_bits);
++	XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_bits);
+ 	unsigned long flags;
+ 
+ 	xas_lock_irqsave(&xas, flags);
+@@ -1986,7 +1986,7 @@ static unsigned int buffer_tree_get_ebs_tag(struct btrfs_fs_info *fs_info,
+ 	rcu_read_lock();
+ 	while ((eb = find_get_eb(&xas, end, tag)) != NULL) {
+ 		if (!eb_batch_add(batch, eb)) {
+-			*start = (eb->start + eb->len) >> fs_info->sectorsize_bits;
++			*start = (eb->start + eb->len) >> fs_info->node_bits;
+ 			goto out;
+ 		}
+ 	}
+@@ -2008,7 +2008,7 @@ static struct extent_buffer *find_extent_buffer_nolock(
+ 		struct btrfs_fs_info *fs_info, u64 start)
+ {
+ 	struct extent_buffer *eb;
+-	unsigned long index = start >> fs_info->sectorsize_bits;
++	unsigned long index = start >> fs_info->node_bits;
+ 
+ 	rcu_read_lock();
+ 	eb = xa_load(&fs_info->buffer_tree, index);
+@@ -2114,8 +2114,8 @@ void btrfs_btree_wait_writeback_range(struct btrfs_fs_info *fs_info, u64 start,
+ 				      u64 end)
+ {
+ 	struct eb_batch batch;
+-	unsigned long start_index = start >> fs_info->sectorsize_bits;
+-	unsigned long end_index = end >> fs_info->sectorsize_bits;
++	unsigned long start_index = start >> fs_info->node_bits;
++	unsigned long end_index = end >> fs_info->node_bits;
+ 
+ 	eb_batch_init(&batch);
+ 	while (start_index <= end_index) {
+@@ -2151,7 +2151,7 @@ int btree_write_cache_pages(struct address_space *mapping,
+ 
+ 	eb_batch_init(&batch);
+ 	if (wbc->range_cyclic) {
+-		index = (mapping->writeback_index << PAGE_SHIFT) >> fs_info->sectorsize_bits;
++		index = (mapping->writeback_index << PAGE_SHIFT) >> fs_info->node_bits;
+ 		end = -1;
+ 
+ 		/*
+@@ -2160,8 +2160,8 @@ int btree_write_cache_pages(struct address_space *mapping,
+ 		 */
+ 		scanned = (index == 0);
+ 	} else {
+-		index = wbc->range_start >> fs_info->sectorsize_bits;
+-		end = wbc->range_end >> fs_info->sectorsize_bits;
++		index = wbc->range_start >> fs_info->node_bits;
++		end = wbc->range_end >> fs_info->node_bits;
+ 
+ 		scanned = 1;
+ 	}
+@@ -3037,7 +3037,7 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
+ 	eb->fs_info = fs_info;
+ again:
+ 	xa_lock_irq(&fs_info->buffer_tree);
+-	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->sectorsize_bits,
++	exists = __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info->node_bits,
+ 			      NULL, eb, GFP_NOFS);
+ 	if (xa_is_err(exists)) {
+ 		ret = xa_err(exists);
+@@ -3353,7 +3353,7 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
+ again:
+ 	xa_lock_irq(&fs_info->buffer_tree);
+ 	existing_eb = __xa_cmpxchg(&fs_info->buffer_tree,
+-				   start >> fs_info->sectorsize_bits, NULL, eb,
++				   start >> fs_info->node_bits, NULL, eb,
+ 				   GFP_NOFS);
+ 	if (xa_is_err(existing_eb)) {
+ 		ret = xa_err(existing_eb);
+@@ -3456,7 +3456,7 @@ static int release_extent_buffer(struct extent_buffer *eb)
+ 		 * in this case.
+ 		 */
+ 		xa_cmpxchg_irq(&fs_info->buffer_tree,
+-			       eb->start >> fs_info->sectorsize_bits, eb, NULL,
++			       eb->start >> fs_info->node_bits, eb, NULL,
+ 			       GFP_ATOMIC);
+ 
+ 		btrfs_leak_debug_del_eb(eb);
+@@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
+ {
+ 	struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
+ 	struct extent_buffer *eb;
+-	unsigned long start = folio_pos(folio) >> fs_info->sectorsize_bits;
++	unsigned long start = folio_pos(folio) >> fs_info->node_bits;
+ 	unsigned long index = start;
+-	unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
++	unsigned long end = index + (PAGE_SIZE >> fs_info->node_bits) - 1;
+ 	int ret;
+ 
+ 	xa_lock_irq(&fs_info->buffer_tree);
+diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
+index cf805b4032af3..8c9113304fabe 100644
+--- a/fs/btrfs/fs.h
++++ b/fs/btrfs/fs.h
+@@ -778,8 +778,9 @@ struct btrfs_fs_info {
+ 
+ 	struct btrfs_delayed_root *delayed_root;
+ 
+-	/* Entries are eb->start / sectorsize */
++	/* Entries are eb->start >> node_bits */
+ 	struct xarray buffer_tree;
++	int node_bits;
+ 
+ 	/* Next backup root to be overwritten */
+ 	int backup_root_index;
 -- 
-tejun
+2.47.2
+
