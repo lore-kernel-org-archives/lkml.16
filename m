@@ -1,92 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9A819CC3A;
-	Mon, 12 May 2025 15:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C531134D4;
+	Mon, 12 May 2025 15:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747062063; cv=none; b=FgAwKo0LZE48yYOzbnQZPRaXpC0MC9uGiW9CescIyeykAONI60LzxpMI1fCnTmYyTOjZWnY40K67idstjsB6LYJcPy55/B5h1x9z+ABxQNlEREWsk2BF1Ji2ozbeizYmR4FfFVFhXjgMx163H/z12/yzRntGqRiBIePTKganJHU=
+	t=1747062064; cv=none; b=RNNXlIILRA0xXNhKhURc0qUBSKeJZEKz+EYMVwBmpANAkCDdVRcKQ1mKBZRuKH5LqdYzbg7b/++scpDGGAkBR9wzIweA3KJNQmMK24nLBDY7/L6N0YHM0nM4HiHdvGB+WFYZG+1F2lcZkzNffGAiEHrCuKpr1Au+uMoyAMVy4gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747062063; c=relaxed/simple;
-	bh=5C7uw2IAzf+0ahfXX4uyiw4RInjyFvh4Zkir6Ku/wHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fjFS3o2l+weOLkD0UsSJ6QyebVaJyHPqGyIOd5lM72ZZCqltCM0SQcmKIFO6bU3WzUhjoiDJdlkgwj7NeSTrRmJeqdsJhmKikt2X8rdaNra88mKlfDdyrZqO8LE9PKowuUmQV/SbafQElRcTCNYCmvKWizPslpiPW9pQueUtPFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYvK4ft2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747062064; c=relaxed/simple;
+	bh=BpVAMfgxeWrcHIBM77sPD51+M1orCvMXMQ5loTu3QLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iRgr0Z4SOcv1AopcVF9CigZD/0syoOVx94+sjmfzJWORez+CfnpzT9H5mqGxHiy9wih2gI/4xeusqI82m4Sidc0YBAlLHSR3vQwoDyTwDDx77yVnFtWi8GxdhIVG31awjDWKkR7x4D2vJxWf4zE1MQUiOfvmClNtgc1qokJeZ9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IDWIfuPV; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYvK4ft2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 786BCC4CEF2;
-	Mon, 12 May 2025 15:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747062062;
-	bh=5C7uw2IAzf+0ahfXX4uyiw4RInjyFvh4Zkir6Ku/wHo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gYvK4ft2GqhQv20+FT1wp5aUuEc6T1B9JqsClPd9XNOJneKgc1yFmDSf23LIZyAbw
-	 2X4Bdb+dAvMrvelWtS4qmVUkXAHIqHrlMo/XelGJmbk/jHgiXfxgve41fE3vHkN3Ie
-	 9PduUHH2Rv1ycZsMB7rLXT5O/SVYAk3ma1/ZqwKBJf8KNKAT1QC5dFEXtjVxRMthtc
-	 U7LV5qSbK1I4eYHvdFqEmvM13kTSuC1xSeabn7mX/J3x7V8VNL6gB0hRRrFZ6HHsbv
-	 8Pgw6s+yK8EOa8ZHIqjVJBMp1ugHny5zvwWfkdnZTpMZeZz83MMdSN6xD03y7iDNiC
-	 bcGm0et8s6h7A==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f6fb95f431so10753842a12.0;
-        Mon, 12 May 2025 08:01:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUJ2CLrKB2JKFxQn0pSLET43AxZVFfByUFa8z4/KplHoApxhWYYGU9/uGirYqJ6fCuKc5TFWetVMZ8@vger.kernel.org, AJvYcCW6Rs//ROvR7RWINq/7U8AgpqOEUBzL0ktr9a51QOUdd9ubp84ZHpo2oQnO3yKe79LB31Js/MNqQsZG0Pd8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDn0+mzdye/B4r6xHo3OpCr2+ii17+gF6Ujo9W0sEV5bUXqJE2
-	ojkNPSUeYEtoV/3ZQpxRIdT4EeNtnzS+cRS1FIOKJdU9otDVouRoa4EVVCylTHutj96AIS6aZus
-	VbWLL0sYPznPncBEPize+4HYE8g==
-X-Google-Smtp-Source: AGHT+IFZbfWKF0hU1sr3jQtNq4U5pRwRKJjmtoMDmn21t01KNRswIOplfLvn34abEZt/poBPFf25QG0+oFit4G41q2A=
-X-Received: by 2002:a17:906:f142:b0:ad2:1255:d95a with SMTP id
- a640c23a62f3a-ad21255f466mr1132229266b.30.1747062061044; Mon, 12 May 2025
- 08:01:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IDWIfuPV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E1C1C43A33;
+	Mon, 12 May 2025 15:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747062060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o3FbUwJDtVYEZp145ab6kdJucg73/MeorJWo0dy1T+o=;
+	b=IDWIfuPV/MHbtEClxe47NJ2Gy9AtBrn9FvHI9dRMzz/YGvXQ6ExPLODm2QmEmzetp8FF+1
+	sDwRarjUROcoud7QIb4rELwN9VncNKGFmLC1dNbTvk3YgTB30nBSWVZLhxbtPBM0cj6lzZ
+	4qJaXDyBB2SW/gtPsdOeDMLdnz9i9LRnBn/+5ru7nUOlxN1VENB3hGZW5ibCRfs3YKt4B3
+	0JQk/qY1Ihas1nrCqD8EeFCkOP8fQ5ekPVuEC2Ukq4p3ugg2z6IDJK69Je5q88rp3mUN2a
+	Ggjd9F/fdstjkAQKPfv/U3zVfnndde6gmdD3bZ2tLDq1yKx8LTUP+lSqP+0Etw==
+Message-ID: <93425f2f-9496-4d18-ad7d-7e631a80e6cf@bootlin.com>
+Date: Mon, 12 May 2025 17:00:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509222815.7082-1-james.quinlan@broadcom.com> <20250509222815.7082-2-james.quinlan@broadcom.com>
-In-Reply-To: <20250509222815.7082-2-james.quinlan@broadcom.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 12 May 2025 10:00:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKrbCtiMdxCusBwX8-xewQbi1_X6V8rTN+2vfxh4e=Hjw@mail.gmail.com>
-X-Gm-Features: AX0GCFuumEiFtgCX1SqyapCoe6c8e5kN11_tTXkwoByqbbccTk1WS35qw-28a4Y
-Message-ID: <CAL_JsqKrbCtiMdxCusBwX8-xewQbi1_X6V8rTN+2vfxh4e=Hjw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: brcm,stb-pcie: Add num-lanes property
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+ <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
+ <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
+ <CAMuHMdUtEtZH0MuS7TA6RTa1-LB=K47sEGzo9BJM_RvfCRmRAw@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAMuHMdUtEtZH0MuS7TA6RTa1-LB=K47sEGzo9BJM_RvfCRmRAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduheeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgp
+ dhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Fri, May 9, 2025 at 5:28=E2=80=AFPM Jim Quinlan <james.quinlan@broadcom.=
-com> wrote:
->
-> Add optional num-lanes property Broadcom STB PCIe host controllers.
->
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/D=
-ocumentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 29f0e1eb5096..f31d654ac3a0 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -107,6 +107,8 @@ properties:
->        - const: bridge
->        - const: swinit
->
-> +  num-lanes: true
+On 5/12/25 16:39, Geert Uytterhoeven wrote:
+> Hi Thomas,
+> 
+> On Mon, 12 May 2025 at 16:08, Thomas Richard <thomas.richard@bootlin.com> wrote:
+>> On 5/9/25 11:07, Geert Uytterhoeven wrote:
+>>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
+>>>> Export all symbols and create header file for the GPIO forwarder library.
+>>>> It will be used in the next changes.
+>>>>
+>>>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+>>
+>> ...
+>>
+>>>> +
+>>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
+>>>> +                       unsigned long config);
+>>>> +
+>>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
+>>>
+>>> I would expect all of these to take gpiochip_fwd pointers instead of
+>>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
+>>> that does not correspond to a gpiochip_fwd object, causing a crash?
+>>
+>> Indeed nothing prevents from passing gpio_chip pointer which does not
+>> correspond to a gpiochip_fwd object.
+>> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
+>> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
+>>
+>> I can keep GPIO operations as is, and create exported wrappers which
+>> take a gpiochip_fwd pointer as parameter, for example:
+>>
+>> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
+>>                               unsigned long *mask,
+>>                               unsigned long *bits)
+>> {
+>>         struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
+>>
+>>         return gpio_fwd_get_multiple_locked(chip, mask, bits);
+>> }
+>> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
+>>
+>> So exported functions are gpiochip_fwd_*().
+> 
+> That sounds fine to me.
+> 
+> BTW, do you need to use these functions as gpio_chip callbacks?
+> If that is the case, they do no need to take struct gpio_chip pointers.
+> 
+I'm not sure to understand the question, or the idea behind the question.
 
-Why do you need this? It is already allowed by the referenced schemas.
-Though maybe you don't support 16 lanes and need to limit this to
-something less? I would also set 'default' if you do that.
+Regards,
 
-Rob
+Thomas
