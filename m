@@ -1,44 +1,88 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E831AAA2F;
-	Mon, 12 May 2025 04:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9623C2576;
+	Mon, 12 May 2025 04:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747025874; cv=none; b=MvtpbJjYv2M6mo0q2SxUdwaJYkdUOKh780AnYK3Nti9z/TFDPdjrHSRxc7d4aWfbEhCgRnhrFde4maZa+dFfX6/RgmoQgwvCaRG8qjgAu9nSJduxecxJu1fAmqZfGIVs4CRUV/perTzJf9viELXtHbrHdmfZGNvSPHbK8qmDz/8=
+	t=1747026001; cv=none; b=GVOL0zp573H1/cqGBTFZMYIS4/i67xPx3B9Pf02DyUzAGZHMb6hYiDMYob5jq0EvL8B6rTkTukKNCLDhKuLz5CcKBYkU/MOLmIP2oKvYvyiiMI8NNe7NbvjcWQ8gd20916dNsaqdOrSlBF1IKd6j1eKTBAST0JdzoNxCdSoIL4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747025874; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sozxxhi0mByUbGG2t6laykhLllJiLdr3ifpn72FZSeUkpGo8Qk9LlJxrmwY0x0C38NLiamMuEHQS+ewmBNSGx79VQJjS+7k7AVnRyHlQ6bQ3WrbOQKuh344nStXYGthNfYDtWrQnfZK7ees9UIcM38TRsMtm3ZVBBfO+OQlx/Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 89E9168AA6; Mon, 12 May 2025 06:57:48 +0200 (CEST)
-Date: Mon, 12 May 2025 06:57:48 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
-	yukuai3@huawei.com, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
-Subject: Re: [PATCH RFC md-6.16 v3 09/19] md: add a new recovery_flag
- MD_RECOVERY_LAZY_RECOVER
-Message-ID: <20250512045748.GI868@lst.de>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com> <20250512011927.2809400-10-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1747026001; c=relaxed/simple;
+	bh=ykWKrufQ0dMbuXkuIxPpctFtUq6dfgKiscLuigvbZTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nD277c661wMKajLGuBtjR2Nd315ft1YNHaYUcYgFcWCH6RPv4txjyjZag8He4X+g6n6NRaoKAaVcs3ukCBLAgl+d/xI77Y6prsE1yipDfm4Nz+qdpJrcH4LE+wJlIeKroE9Z08AXnuacK9zyIG+Mk0rH28AKMOq0PXcyZmmY6KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=SdNl0N98; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SdNl0N98"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747025996;
+	bh=S5qjjpGj8L93gzacq4gjUyXCTFYMtYUSw2NjsD+Uzs4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=SdNl0N98LAQB70GWoJTSNCAar7COzr2dmFWKvfOA5a4E7jBHvgS6TNgxNbaLPdIr+
+	 GU+6MR/fQFNGvFi63DCpV4xXZH42DlDIlCKtv1jL021df1UyVcPNiJQaILiWLLOMoF
+	 2mR7JQnx/xmOei9+ZBJT4eGWACuICVTTAFgmlBNQWLdNHJoehIhSNWco9k29Ogi+7R
+	 tlnIOaXUQ7CKtKYnl5ETCl4hQczobbbNZXBKubezzEHdMsILmNjB1aTKP80ZZVKJPn
+	 +mlnu9PoEtGgm9XwFzZmkrUHItnszb2wPul8Z1XyD6HR87M8VH1WG2b6/+5rEAgX35
+	 Bgrimt+ZAGAnA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZwnTm1PJ0z4x07;
+	Mon, 12 May 2025 14:59:56 +1000 (AEST)
+Date: Mon, 12 May 2025 14:59:55 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the dt-krzk tree
+Message-ID: <20250512145955.617fd207@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512011927.2809400-10-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/signed; boundary="Sig_/CVJ1apr.sNYeeCjClOwSlRX";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Looks good:
+--Sig_/CVJ1apr.sNYeeCjClOwSlRX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Hi all,
+
+The following commit is also in the arm-soc tree as a different commit
+(but the same patch):
+
+  b112d9ffaa65 ("ARM: dts: vt8500: use correct ohci/ehci node names")
+
+This is commit
+
+  7dc891191e64 ("ARM: dts: vt8500: use correct ohci/ehci node names")
+
+in the arm-soc tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CVJ1apr.sNYeeCjClOwSlRX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmghgEsACgkQAVBC80lX
+0GxxLQf/ZUm3ITcmWskPpu42TrKRZe/HqM9gGBoY5Mpj8FrUfYROhtvOYodAXydO
+Q/KJjEkqO6tKdjI5+1dHnZOLb3ezYr1UFlX9K1G/7klj0uag9kdxJcYbEsIM3W9S
+5e1lLgIedtZjB1qamag2GPCv/dByw9cDa3WmxBJaYZiIzuckxJeXgkT6YcNeeKyh
+2xBhkOhESKYIJHUGGvWn7C4Qkt32cr7uVCUZ9N6aXHXyCnekPbocQsZAou3QMGw+
+5RTx0kcNdMEQxJhYhjRpUF5GlH95+0lXS+L4qNvcgQ1hHMgXoyU0c8kPxfPRHyNH
+RHBcwsDLZ5Ch+BsOI6x9hcw96QSCNQ==
+=xddM
+-----END PGP SIGNATURE-----
+
+--Sig_/CVJ1apr.sNYeeCjClOwSlRX--
