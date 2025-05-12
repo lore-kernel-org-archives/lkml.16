@@ -1,384 +1,185 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2045.outbound.protection.outlook.com [40.107.92.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DC4299942
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747083332; cv=none; b=nk/Kl4hMG22/sFMIski7cCMFQ/BorwpDJwZLlS6Ia35jjumiHqGO+l3mSIageVgM87rklcmOpb4T+/z6AVJ2v+ZlXJZkUNtjImYDdbRL26EXJFkpj15PpJhIDP5tREeLmhPD6N4EaX2ZuHyOG8VyeYrYEo7J3iKIOP96JejMnLI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747083332; c=relaxed/simple;
-	bh=pqJbaLjgQnRiwaboHM/aTnZwIq7DmB5rNttCV0+tin4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Z+XfXgtHTsZNd2AjXuk7HgM+9mDLUL23p7hVxYJJyxjmxCae1BF/VQsVc9uTJS7Zg6NGwP06Atd5gEf/wpKpD/vkM4WzymgZMtzqPGlWtXFuSw0+kXODWPSZLCKW9Cjjid8BrZsJ1PhXr4tTAAwxa0eraSxtj3hwMn0HutDUKEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85ed07f832dso425633739f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:55:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747083330; x=1747688130;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xRCuNfqzh47nkMPckKjPNSykBAeA7pWOWECUUlhtnEk=;
-        b=BqibGMlypBhQd8ypKPhZqcwz546TQ5nL0N/rCoE8jmlC2KqOJhPR1SfMGUcQczMMbS
-         UcARridCt7m84w7itE4TKFoqtxNLSkQ92M4zbWMYHtcnUsZVPa/FVYDUIeiZx5Y+aG9O
-         DyddKchKDVVCaWmPSbIVeBv2sWLFmRX2R0MIxSndjmkQXw6UnAZ8NCz42+gDGkPUJsSf
-         YitoIqHr9/v3W9xbrXGgqDk/a7oyVaN+JWg0aeOb0YFnY9s8pDytBjUaBUHNttQz6vD6
-         Labxc03D8Ze3gnL7Nm2ypa4mUfKdXKPB1DbMI5EN+Rtfz76Gyb9zFPd9q/eDJXWT1/Vk
-         u2Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJEAPN2NT5Pf8oLTto9ntDzy117A3ONGh2uSi0lflPlJrbO5A4PI3OMVUfF0U5JhwVEHhoyN1uKfZxtcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRIP4VUt5ufzAsCuJj1Nl0j3li0512xUkzNy5ZLY7ssObMWbSk
-	XGX5/BM5Jz6g6Haq+Hr84ZLHou5g06nEAKZl/H6LbzBI3LfW5ChnUaMmIQZQaeL4t5Q7kiYkJLS
-	WFwEXvtn/HvCznTYAyYcJ6Ms+WdlderxGEQzmQepzG9HAigezFPE1JGs=
-X-Google-Smtp-Source: AGHT+IH/3LtD55t9PyxZ315pAO6kSBSIySD7onGoASNJK7NM2p10S2/QLcsECwasGTGsmzAJJ/DyzWy4Yv7LqpekD0YewzxA6bFf
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7144255F23;
+	Mon, 12 May 2025 20:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747083411; cv=fail; b=HWbpKPWghB1bv/ViW2mvkAdpcTlNCaj/eqyg8pPpmit+Lg1xXGZY5nuIMedri4QIjbPHP8JcHpqE/wX5FvGVhaN+WV63DUQ2Ejz2hL7oQ2xaAFhIlkjv4sRl2a+SDsd4LPCVyzq8HnRETi2CsYYJ4KJPhVjovFlhgVKj+UaPXz0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747083411; c=relaxed/simple;
+	bh=vmO1dyqjX+zSgblK5oYjSpckS/9eaMGFrnyE9sN4gvQ=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=HOoNijiKAggpV/Tg1ea9ULgXcz/8ESuuqlkQz92igHy3kEcefS0083/yxSr58CdLezA9kmVjV6Vh80H7lhC2Mb5sFuvlwi9qh/g7C2FuflL3gqVLjNzs9F4l48hntdyzXzDKzCuh1CWLxMFu0Q0bXWf42jrD0dbknLQxM5O5kx0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MCU2uYFy; arc=fail smtp.client-ip=40.107.92.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MCU2uYFy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pTCvdVmX3faCRkOD/PYQ88PZN8ZbUmaxQARNlJuPmnYYAiIet5bkyL+iYgjrO+FG3uY5PqXf3TSYpVflLDpppToGtqokWJXNncBHN6Ty1ZJBi0sONRAF9WoBIAYSCSGvyLJ7miIu8lXwbTyRYFJflygikxyL0VUqyhABr3RM/26FFpMkrF4ITwSVbcGDgtCm28KP1ye4ER3cMOmakLy9rojZQD4dCLKxMq6GgFtx1HVbVvjM9JVJDVEBeuEnKpn2jU2KDSo+M827VwLuaBQe/elsIJqwh1oAC+uOXzrmFMd2SwkzLHGfcqdFEMw7CXyOFDujsL4ApdgB3xL2bQV7Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9BjOW2mzje5LsOPitI0PAvQmTlw/tSRxeiwcKxB/Huw=;
+ b=EiV4VtEzPPhQEvlYuJHbiobJaLEgJQzy+Nxze67HNWTNKE1P+cXjiIc2tNBDXTuzju6Dgc3aTk+l9zuhabzs2t0od73EtcDNaoGvHaiDT08ooNiXWVNAvFOb5bAtVDlN64wdtdc9ciC/jr7UNMSERE8DecFMa8jjVOx+ZzloqNYOdSjRxhDepvokJ8pl3wEUGJsyHAesNarxvFc3MRYx9czZVMDXJgGzG9F4J1RSvCZiIeba8PpgVriWqDFeGDDbDdPVRHsx3H077pAwCyojVapQt1W2bVcKOZDJ7Q0XitQmYaiLn7uvXZ4DeNeslyfs2DXesPDfCdTl1m1yE1+34Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9BjOW2mzje5LsOPitI0PAvQmTlw/tSRxeiwcKxB/Huw=;
+ b=MCU2uYFyYtDdGUX/zPFMWjplanri5Es9xngu8dFyjJpQM4keh6omYOfPQ5zrGLmLKPyyt4PmiJsLPw2GC4oFQq3rNFaPE4TFKVi95enmXKlfI6IiqacCaUPgB/oAKh++8/8c6nCelztCfVkpMT+1hNzaCYrUQ6tbMr3G153cnaevlMqEATbLsGr3oYU7UxydhvQYEUC85xyAAJ8NjHDQiY82YtEbcx90tJMfDJ0E+ZCKI+6UWdqP+8QbrCEpCZ/VAt5rhvAMNj8QaHHzeBIHeYihlyNwbq99qSsIkKiBJOwkQhitYAGxiKCkJnPd/dbF0DkK0vRhmyPyfBcQUyiWCg==
+Received: from PH7PR17CA0042.namprd17.prod.outlook.com (2603:10b6:510:323::21)
+ by DS0PR12MB7777.namprd12.prod.outlook.com (2603:10b6:8:153::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.24; Mon, 12 May
+ 2025 20:56:45 +0000
+Received: from SN1PEPF00036F3C.namprd05.prod.outlook.com
+ (2603:10b6:510:323:cafe::46) by PH7PR17CA0042.outlook.office365.com
+ (2603:10b6:510:323::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.28 via Frontend Transport; Mon,
+ 12 May 2025 20:56:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SN1PEPF00036F3C.mail.protection.outlook.com (10.167.248.20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Mon, 12 May 2025 20:56:45 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 12 May
+ 2025 13:56:33 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 12 May 2025 13:56:32 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 12 May 2025 13:56:32 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.15 00/54] 5.15.183-rc1 review
+In-Reply-To: <20250512172015.643809034@linuxfoundation.org>
+References: <20250512172015.643809034@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2b8a:b0:862:ba37:eb0e with SMTP id
- ca18e2360f4ac-8676368bf21mr1731695339f.12.1747083329871; Mon, 12 May 2025
- 13:55:29 -0700 (PDT)
-Date: Mon, 12 May 2025 13:55:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68226041.050a0220.f2294.00ac.GAE@google.com>
-Subject: [syzbot] [bcachefs?] possible deadlock in __bch2_folio_reservation_get
- (2)
-From: syzbot <syzbot+bfdc0e00ec47a6f7f6a5@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <8eb67167-0e45-40f4-a827-790050cd19bb@drhqmail201.nvidia.com>
+Date: Mon, 12 May 2025 13:56:32 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3C:EE_|DS0PR12MB7777:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6abc44ef-8ffc-406b-9998-08dd91978168
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|376014|1800799024|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S0h2MndtV2J1a2J6RXJBV3grVnVPYUJEUHVEMFR1QVRqUWxkVmx1aGVaV01r?=
+ =?utf-8?B?MVk4MW5sMkt0RE9BaGRSS0tOMzErdWJnUXFySEMwbkdUQjEwdGpORkVleVZ0?=
+ =?utf-8?B?V2xOeTdNblhwQm5WT1VpSGM3K3dKR0YyRWw2SHdyWkpKa21EYkRyRCswVU9v?=
+ =?utf-8?B?eW9GLzlFUE4rYzl5RzFQYk1ROGNRZXYzUXcvWW9mdHI5VWpxNkFLSGllSEZD?=
+ =?utf-8?B?QUZvMzV1Q3B6K3BwODhMTEhIRFJyaThtSzZrd2tOKzNJMGJaWjZLYWw2cUw0?=
+ =?utf-8?B?clp0VkJPcjRtOXBhSExpaXkwdFZIMFJFQnN0c3dmRlRjdjkyL2phTWgyZ1RF?=
+ =?utf-8?B?MXZQVytCdkRyL0xwbUsxWlFaSTNyTzdPL2cxVzl3YzQ0WVg4S0o3bjVYa0dT?=
+ =?utf-8?B?SHU1dE9jRVd0UE5WU2tFS2NLcWozWWhnWnZQbUtnTlFaYzlTTFBKSnBoRDRm?=
+ =?utf-8?B?a3dqRkd0N3cyR3pEWjNNQkNKem55V1VYL2w2UU83OExSK2ZZaW1uajBiSjly?=
+ =?utf-8?B?YkRxOFpUUy9IUEJjcU8rZnV0T0tSNkFKcHExZXAxR0U1Wjd0cXVXQVV0YWZa?=
+ =?utf-8?B?WEZyR0NFSE1zcWIxNEFuZEZKZVNYSjBXc0tROG85RTVwK2pNU0VsMzBTc1N5?=
+ =?utf-8?B?S0l4ZysyRnB4MVcvNEtSQXFlOFlUVXhabWxWZkVGc3Nubk51Q0xmanRSbmZI?=
+ =?utf-8?B?cnRKSXkvRFhsZmVzT29GMWs2Sld4UzMybSt4M0xMYkRNRVdBSFRPa0xHZTJk?=
+ =?utf-8?B?cHdpbmM0YzdtUmlHMUM1dWx6TzBxcDRuMHJtUCswbTlteVhRenZBVGhPb0lF?=
+ =?utf-8?B?UnNkQ2RuRFFrb1ZtZmVCQTRscnVXTWd6MlRvOTRWaWZlZzdHM2dvMm00Mm15?=
+ =?utf-8?B?WDVwSzIwdjE4clkyeUtPdlNGaUZlbWZldFZOeVVIa2VMSXZjV0ttMjhjMGxQ?=
+ =?utf-8?B?aEpVc0krOE4yVFoxMzNqV3JCRUZvUVA4bHdGS2hWS2EwaW5ERldUejhMOHZE?=
+ =?utf-8?B?R3FiUVFiVFNCT2xqaDhSelpIaEd4V20rVzllc1JyVit0SHRrTEJybkhTOGM2?=
+ =?utf-8?B?Q3JrNjZyRldhTzNIVER5Z0FzWHJEa0tJaVBqbFp0eGdGbGJBN3VRaHo3NzBS?=
+ =?utf-8?B?Z1hhZjFuc1BMaXBDZFZKNC9hUVJCSHJROE1SdHlyMERmeFlFNzZsNjliT1Zx?=
+ =?utf-8?B?WHpjSVFDbVdmT1p1VkxyVllaY0tCbXJMSUczWUpDLzhsdXhKYlhWT1RaQ25i?=
+ =?utf-8?B?Q3BsRWhSVU0vYkgvcDFvZ2NCQVAvTUNsRXdsQldvM1BISHRlWkxUdVNBWTJR?=
+ =?utf-8?B?SFpSS2JDY2pNTys0bm5kZDhLNFUrY3NnaER5cml2VHBQN21kMDhHcnk4MS9V?=
+ =?utf-8?B?UWx6MEtZK0M0ejN0czVMT3F1WmEvOEZnbktVQUtPV01UdlVYazl3SXZzUTYr?=
+ =?utf-8?B?UWIxZVdWWWhCQlNlVUNJeWpieGxNQUl4NkorL21JY0R1SGl4R0VFVm1VY01O?=
+ =?utf-8?B?RlRtbGhVQXc2L2hvb3dQdFQ2YlVYaExDV1BLWDlyL2Y3WENVTW85aVpMTlhW?=
+ =?utf-8?B?SmxuYUJmUGVmVDZEQ0JzOGtEM2JxZHYzNXAwdzJ6VXZEaXpNMkxQSFRwdUZZ?=
+ =?utf-8?B?VElhT3ZXQ29aczZoc3BiUjlIS0hISC9uOVNQK1o5T0FNSnVUb3B4N1l3TDUz?=
+ =?utf-8?B?dlozUXVVVnhFRkJXN0NRUzZJZzZRRWRtWENwZmx5ZkMrcDMrd2NILzI1Rldm?=
+ =?utf-8?B?blFGWVFiL3oyV09teUpVdjk0N2l0ckZTSm1BYkNQK0ZTamFVRFNSZThIaHdN?=
+ =?utf-8?B?bFhaWnFHc3lKREpVRWljMnRvNGh6V056Q09pc0wxQUlBa1gwN3NnTksrZHlp?=
+ =?utf-8?B?OVBwREg3NDE3ajJZVmkrMWpLaWJQc0ZhVmNDVEJuL1F4VURNRTBoTEdtb29B?=
+ =?utf-8?B?Z1RFOW5pNWxnRlVmRkpmMnJNTWhyU3JNZVhEMUVlU0RCQXd4TkE1eDlIUGRm?=
+ =?utf-8?B?YWFqUUlKWngxM2Foai9JZldOSUJKUnVXbWtyWTg2UmdXWWVHdTJIT2lkTTl5?=
+ =?utf-8?B?N0RaallKSzMxMkQ3WThmYXRsWlR2aWs4SExqdz09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(376014)(1800799024)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 20:56:45.2393
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6abc44ef-8ffc-406b-9998-08dd91978168
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00036F3C.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7777
 
-Hello,
+On Mon, 12 May 2025 19:29:12 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.183 release.
+> There are 54 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.183-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-syzbot found the following issue on:
+All tests passing for Tegra ...
 
-HEAD commit:    c32f8dc5aaf9 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=143862f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4635ffd6ad5b4a
-dashboard link: https://syzkaller.appspot.com/bug?extid=bfdc0e00ec47a6f7f6a5
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-userspace arch: arm64
+Test results for stable-v5.15:
+    10 builds:	10 pass, 0 fail
+    28 boots:	28 pass, 0 fail
+    101 tests:	101 pass, 0 fail
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Linux version:	5.15.183-rc1-g5aa355897d1b
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
+                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b921498959d4/disk-c32f8dc5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/04e6ad946c4b/vmlinux-c32f8dc5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d4f0d8db50ee/Image-c32f8dc5.gz.xz
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+bfdc0e00ec47a6f7f6a5@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 Not tainted
-------------------------------------------------------
-syz.1.118/7224 is trying to acquire lock:
-ffff0000dde633b8 (&inode->ei_quota_lock){+.+.}-{4:4}, at: bch2_quota_reservation_add fs/bcachefs/fs-io.h:97 [inline]
-ffff0000dde633b8 (&inode->ei_quota_lock){+.+.}-{4:4}, at: __bch2_folio_reservation_get+0x5c0/0xa00 fs/bcachefs/fs-io-pagecache.c:460
-
-but task is already holding lock:
-ffff0000d5030518 (sb_pagefaults#3){.+.+}-{0:0}, at: do_page_mkwrite+0x138/0x2b8 mm/memory.c:3287
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #8 (sb_pagefaults#3){.+.+}-{0:0}:
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_pagefault include/linux/fs.h:1948 [inline]
-       bch2_page_mkwrite+0x260/0xd60 fs/bcachefs/fs-io-pagecache.c:614
-       do_page_mkwrite+0x138/0x2b8 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x1998/0x4cec mm/memory.c:6309
-       do_page_fault+0x598/0x1554 arch/arm64/mm/fault.c:690
-       do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:783
-       do_mem_abort+0x70/0x194 arch/arm64/mm/fault.c:919
-       el0_da+0x64/0x160 arch/arm64/kernel/entry-common.c:627
-       el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:789
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #7 (&mm->mmap_lock){++++}-{4:4}:
-       __might_fault+0xc4/0x124 mm/memory.c:7151
-       drm_mode_object_get_properties+0x1f0/0x524 drivers/gpu/drm/drm_mode_object.c:407
-       drm_mode_getconnector+0xd78/0x1254 drivers/gpu/drm/drm_connector.c:3399
-       drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
-       drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #6 (crtc_ww_class_mutex){+.+.}-{4:4}:
-       ww_acquire_init include/linux/ww_mutex.h:162 [inline]
-       drm_modeset_acquire_init+0x1d8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
-       drmm_mode_config_init+0xb0c/0x10d8 drivers/gpu/drm/drm_mode_config.c:462
-       vkms_modeset_init drivers/gpu/drm/vkms/vkms_drv.c:146 [inline]
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:207 [inline]
-       vkms_init+0x2c0/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #5 (crtc_ww_class_acquire){+.+.}-{0:0}:
-       ww_acquire_init include/linux/ww_mutex.h:161 [inline]
-       drm_modeset_acquire_init+0x1b8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
-       drm_client_modeset_commit_atomic+0xcc/0x6ac drivers/gpu/drm/drm_client_modeset.c:1018
-       drm_client_modeset_commit_locked+0xd0/0x4a0 drivers/gpu/drm/drm_client_modeset.c:1182
-       drm_client_modeset_commit+0x50/0x7c drivers/gpu/drm/drm_client_modeset.c:1208
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x94/0x198 drivers/gpu/drm/drm_fb_helper.c:237
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #4 (&client->modeset_mutex){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       drm_client_modeset_probe+0x2f0/0x4e88 drivers/gpu/drm/drm_client_modeset.c:843
-       __drm_fb_helper_initial_config_and_unlock+0xf0/0x159c drivers/gpu/drm/drm_fb_helper.c:1828
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #3 (&helper->lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x74/0x198 drivers/gpu/drm/drm_fb_helper.c:228
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #2 (console_lock){+.+.}-{0:0}:
-       console_lock+0x194/0x1ec kernel/printk/printk.c:2849
-       __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
-       bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
-       __bch2_fsck_err+0xb5c/0xdd0 fs/bcachefs/error.c:562
-       __need_discard_or_freespace_err+0x14c/0x1cc fs/bcachefs/alloc_background.c:678
-       bch2_bucket_do_index+0x320/0x490 fs/bcachefs/alloc_background.c:729
-       bch2_trigger_alloc+0xd1c/0x2d54 fs/bcachefs/alloc_background.c:885
-       bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
-       bch2_key_trigger_new fs/bcachefs/bkey_methods.h:116 [inline]
-       run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:516 [inline]
-       bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:550 [inline]
-       __bch2_trans_commit+0x634/0x62d0 fs/bcachefs/btree_trans_commit.c:990
-       bch2_trans_commit fs/bcachefs/btree_update.h:195 [inline]
-       btree_update_nodes_written fs/bcachefs/btree_update_interior.c:705 [inline]
-       btree_interior_update_work+0xb80/0x1cfc fs/bcachefs/btree_update_interior.c:843
-       process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
-       process_scheduled_works kernel/workqueue.c:3319 [inline]
-       worker_thread+0x958/0xed8 kernel/workqueue.c:3400
-       kthread+0x5fc/0x75c kernel/kthread.c:464
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #1 (&c->fsck_error_msgs_lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __bch2_count_fsck_err+0x58/0x98 fs/bcachefs/error.c:385
-       __bch2_i_sectors_acct+0x328/0x3c4 fs/bcachefs/fs-io.c:155
-       bch2_i_sectors_acct fs/bcachefs/fs-io.h:138 [inline]
-       bchfs_truncate+0x684/0xa70 fs/bcachefs/fs-io.c:510
-       bch2_setattr+0x198/0x20c fs/bcachefs/fs.c:1245
-       notify_change+0x9a4/0xc50 fs/attr.c:552
-       do_truncate+0x178/0x1f0 fs/open.c:65
-       handle_truncate fs/namei.c:3501 [inline]
-       do_open fs/namei.c:3884 [inline]
-       path_openat+0x25a0/0x2c40 fs/namei.c:4039
-       do_filp_open+0x18c/0x36c fs/namei.c:4066
-       do_sys_openat2+0x11c/0x1b4 fs/open.c:1429
-       do_sys_open fs/open.c:1444 [inline]
-       __do_sys_openat fs/open.c:1460 [inline]
-       __se_sys_openat fs/open.c:1455 [inline]
-       __arm64_sys_openat+0x120/0x158 fs/open.c:1455
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #0 (&inode->ei_quota_lock){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
-       lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       bch2_quota_reservation_add fs/bcachefs/fs-io.h:97 [inline]
-       __bch2_folio_reservation_get+0x5c0/0xa00 fs/bcachefs/fs-io-pagecache.c:460
-       bch2_folio_reservation_get fs/bcachefs/fs-io-pagecache.c:477 [inline]
-       bch2_page_mkwrite+0xa48/0xd60 fs/bcachefs/fs-io-pagecache.c:637
-       do_page_mkwrite+0x138/0x2b8 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x1998/0x4cec mm/memory.c:6309
-       do_page_fault+0x598/0x1554 arch/arm64/mm/fault.c:690
-       do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:783
-       do_mem_abort+0x70/0x194 arch/arm64/mm/fault.c:919
-       el0_da+0x64/0x160 arch/arm64/kernel/entry-common.c:627
-       el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:789
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-other info that might help us debug this:
-
-Chain exists of:
-  &inode->ei_quota_lock --> &mm->mmap_lock --> sb_pagefaults#3
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  rlock(sb_pagefaults#3);
-                               lock(&mm->mmap_lock);
-                               lock(sb_pagefaults#3);
-  lock(&inode->ei_quota_lock);
-
- *** DEADLOCK ***
-
-2 locks held by syz.1.118/7224:
- #0: ffff0000cdb392d0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_read_trylock include/linux/mmap_lock.h:203 [inline]
- #0: ffff0000cdb392d0 (&mm->mmap_lock){++++}-{4:4}, at: get_mmap_lock_carefully mm/memory.c:6346 [inline]
- #0: ffff0000cdb392d0 (&mm->mmap_lock){++++}-{4:4}, at: lock_mm_and_find_vma+0x38/0x2d8 mm/memory.c:6406
- #1: ffff0000d5030518 (sb_pagefaults#3){.+.+}-{0:0}, at: do_page_mkwrite+0x138/0x2b8 mm/memory.c:3287
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 7224 Comm: syz.1.118 Not tainted 6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- print_circular_bug+0x324/0x32c kernel/locking/lockdep.c:2079
- check_noncircular+0x154/0x174 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
- __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
- __mutex_lock kernel/locking/mutex.c:746 [inline]
- mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
- bch2_quota_reservation_add fs/bcachefs/fs-io.h:97 [inline]
- __bch2_folio_reservation_get+0x5c0/0xa00 fs/bcachefs/fs-io-pagecache.c:460
- bch2_folio_reservation_get fs/bcachefs/fs-io-pagecache.c:477 [inline]
- bch2_page_mkwrite+0xa48/0xd60 fs/bcachefs/fs-io-pagecache.c:637
- do_page_mkwrite+0x138/0x2b8 mm/memory.c:3287
- do_shared_fault mm/memory.c:5594 [inline]
- do_fault mm/memory.c:5656 [inline]
- do_pte_missing mm/memory.c:4160 [inline]
- handle_pte_fault mm/memory.c:5997 [inline]
- __handle_mm_fault mm/memory.c:6140 [inline]
- handle_mm_fault+0x1998/0x4cec mm/memory.c:6309
- do_page_fault+0x598/0x1554 arch/arm64/mm/fault.c:690
- do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:783
- do_mem_abort+0x70/0x194 arch/arm64/mm/fault.c:919
- el0_da+0x64/0x160 arch/arm64/kernel/entry-common.c:627
- el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:789
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Jon
