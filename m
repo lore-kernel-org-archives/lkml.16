@@ -1,83 +1,86 @@
-Received: from mail.aparecida.go.gov.br (mail.aparecida.go.gov.br [191.222.184.197])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2511B134AC
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=191.222.184.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB30E25B660
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041554; cv=none; b=M0Oz6RDe1G880CCIlN/wXP2ndyIIW5OJIF2Of7jetCjfQEgy1HwEK1G8LMWN/3qm9k180hsUNiOOMRw1NHVdkp+6PXo+KXFoISdvcFV/pvA+oyecctqp78POdcynI3gRFZPXZ8xB7OIZHuDumzEetx5ll81IWN1N2Mj4tFsr4Q0=
+	t=1747041573; cv=none; b=F3r5pXpqIhjh3RliD6CEaiCDRBE5Lcf+RnOFE7iCFlah2qWSGglQusz0NmeOcavdjUwrM2h1p8QM4t3f/76S2YZquCeZN0jL5DvrHGLsF/hFDHAfVhkPqraahQxNJUdzFgcrVo6aX3ZyvrPR9fDfu8PSBnryyRxqr3fvZ+kZXkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041554; c=relaxed/simple;
-	bh=ifqe93bWW7NB+h2TBef/9+FHgSnJ2rp3RC2sDlIhwOY=;
-	h=Content-Type:MIME-Version:To:From:Subject:Message-Id:Date; b=gh21BA43qU9omswL9UBrtuPWNLcmGfHkw1Nbdr86nkGyaHw8j7kuGm7Y7auJItTjMPP0T92dRcMKMtLtvl9HDrFRgvXWHfg74vpAvWjkl96krgZHrtoAY2CeqUFSzJTKZn+S0/TAkmBZgP2a5DwZ50N62G3RbdYgh84uypSrVoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aparecida.go.gov.br; spf=pass smtp.mailfrom=aparecida.go.gov.br; dkim=pass (2048-bit key) header.d=aparecida.go.gov.br header.i=@aparecida.go.gov.br header.b=OTBeX+dI; arc=none smtp.client-ip=191.222.184.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aparecida.go.gov.br
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aparecida.go.gov.br
+	s=arc-20240116; t=1747041573; c=relaxed/simple;
+	bh=YxLD1j4n3jsjoJWjaT3zn792WhB6FdopTXqDGpDpVcI=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=IC6W4GKW2g4jX3LG3Q0E74/dwHn3nN4fa5fZ3f3v+DTmA4t0CzYQM4Ncp/kMKE6o/wCpKXdjqfaayMJIjmBObc8Qr+pHkcDhOP+l3OCIhee/yIj6RynmxhYBvXOqh0iugT1Av/7Bh0dSMg/3DsPKbyGZXWn/RSXbZSJNv7jwBEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AwNciXP5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aparecida.go.gov.br header.i=@aparecida.go.gov.br header.b="OTBeX+dI"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.aparecida.go.gov.br (Postfix) with ESMTP id 989DF23D21933
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:09:45 -0300 (-03)
-Received: from mail.aparecida.go.gov.br ([127.0.0.1])
- by localhost (mail.aparecida.go.gov.br [127.0.0.1]) (amavis, port 10032)
- with ESMTP id CAJYXRRs1ObF for <linux-kernel@vger.kernel.org>;
- Mon, 12 May 2025 06:09:45 -0300 (-03)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.aparecida.go.gov.br (Postfix) with ESMTP id 1953420724B25
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:09:45 -0300 (-03)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.aparecida.go.gov.br 1953420724B25
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aparecida.go.gov.br;
-	s=83049786-2A36-11EE-A10D-0A99322757AD; t=1747040985;
-	bh=ifqe93bWW7NB+h2TBef/9+FHgSnJ2rp3RC2sDlIhwOY=;
-	h=MIME-Version:To:From:Message-Id:Date;
-	b=OTBeX+dIZqJY6E60hGHH8P15seMwFtAn7NBvhikqKwHCRPbO5jd0YgaO4h8yTVn5c
-	 i8egq3kQFADBOznpbFtPTtYbv69YaMpy0Z7/+5Sj9vc3Aba4y1Cr+pKTk7vMP1930b
-	 kcaPE4ktLm+czX+ThxevXz8aq52s6POf/lD2qC3HRpuOhPfqR70TxJ9s+TwSX0InNU
-	 YacIMBVVeOoPyNOo7i74VHTeiIgW4Up6g5lL1oi6rYh/ZmyFVM4/fGgN5OXOCaO+9w
-	 Ma/0USE5lML8HijQzEzLtVvMmNsHsmVwggTuRShGVraB1/wZQP6q/qwkW6e1BBW+yR
-	 JRWl27MBFihBQ==
-X-Virus-Scanned: amavis at aparecida.go.gov.br
-Received: from mail.aparecida.go.gov.br ([127.0.0.1])
- by localhost (mail.aparecida.go.gov.br [127.0.0.1]) (amavis, port 10026)
- with ESMTP id yIojzo1BDtDu for <linux-kernel@vger.kernel.org>;
- Mon, 12 May 2025 06:09:45 -0300 (-03)
-Received: from [127.0.0.1] (unknown [62.60.239.155])
-	by mail.aparecida.go.gov.br (Postfix) with ESMTPSA id 7DC6D23D21933
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:09:44 -0300 (-03)
-Reply-To: b_ellis@meilookv.com
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.6-Rev75
-X-Originating-Client: open-xchange-appsuite
-X-OX-Marker: f83629b2-24bc-446f-acd4-3aa376d19cae
-Content-Type: multipart/mixed; boundary="===============4545382915492903781=="
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AwNciXP5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747041570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R7ANbHDvc+a0P3LueAyyoaMPrtCdaSJ4PfO4ZIxUKOQ=;
+	b=AwNciXP5Uy2O0Ncg9XH30MCe6W4BSUSmA3U0eJuSGSfmZYCoWgIsI7gQCKWaLhzGMzMNX3
+	lfkEwBHY+eJrja92BHCfiPA+DrH4dOZ9yXzFjHAvZwmcQKr7llcHho5CNdE1fMXmwnagD2
+	HhIcxX++6BLDJWVlKAJhTYtoh5l6kMU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-107-mu5ziLm7P4OARDt12UYFfg-1; Mon,
+ 12 May 2025 05:19:26 -0400
+X-MC-Unique: mu5ziLm7P4OARDt12UYFfg-1
+X-Mimecast-MFC-AGG-ID: mu5ziLm7P4OARDt12UYFfg_1747041564
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BF0A118001CC;
+	Mon, 12 May 2025 09:19:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3397F1800570;
+	Mon, 12 May 2025 09:19:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <aB3OsMWScE2I9DhG@gondor.apana.org.au>
+References: <aB3OsMWScE2I9DhG@gondor.apana.org.au> <aBccz2nJs5Asg6cN@gondor.apana.org.au> <202505091721.245cbe78-lkp@intel.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: dhowells@redhat.com, kernel test robot <oliver.sang@intel.com>,
+    oe-lkp@lists.linux.dev, lkp@intel.com, keyrings@vger.kernel.org,
+    Jarkko Sakkinen <jarkko@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+    Ignat Korchagin <ignat@cloudflare.com>,
+    "David S.
+ Miller" <davem@davemloft.net>,
+    Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+    Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+    "Serge E. Hallyn" <serge@hallyn.com>,
+    James Bottomley <James.Bottomley@hansenpartnership.com>,
+    Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
+    linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+    linux-security-module@vger.kernel.org
+Subject: Re: [v3 PATCH] KEYS: Invert FINAL_PUT bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From: "antonio.netto@aparecida.go.gov.br" <antonio.netto@aparecida.go.gov.br>
-Subject: Request for Clarification on Unknown Charge
-Message-Id: <20250512090944.7DC6D23D21933@mail.aparecida.go.gov.br>
-Date: Mon, 12 May 2025 06:09:44 -0300 (-03)
-
---===============4545382915492903781==
 Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-ID: <1960112.1747041554.1@warthog.procyon.org.uk>
+Date: Mon, 12 May 2025 10:19:14 +0100
+Message-ID: <1960113.1747041554@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hola,
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-I just saw that I was charged two times for my recent transaction on your online store.
+> Invert the FINAL_PUT bit so that test_bit_acquire and clear_bit_unlock
+> can be used instead of smp_mb.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Transaction is listed repeated on my payment history, and I want to request a reversal for the duplicate transaction.
+Acked-by: David Howells <dhowells@redhat.com>
 
-Please investigate this and correct the problem soonest possible time? I would be grateful for an update as fast as possible.
-
-Thank you for your assistance in advance. Hoping for your response.
-
-With appreciation,
-Bennett Ellis
---===============4545382915492903781==--
