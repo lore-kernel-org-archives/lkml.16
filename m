@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96822292080;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D732918F3;
 	Mon, 12 May 2025 11:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747050019; cv=none; b=tWRfplfiN21/sBY1AbVVSI3XNfmisPzM/z1SzfDTavUIbDrBeQHI1fpHCutUKVQPWCJRQ6gDEzRLt1CR5dHgsuA+SryZalpvtSHh2ps96b1Cf2iuMmjV/aNYTj7Nk4jjZvVRQ4D+laZBEuZ1aD9EAm7KyaGiFR1zaOGSox/OUE0=
+	t=1747050019; cv=none; b=gecH5+3wHD5SWwBqUi4XfGxLS6G98Luv8t3llcdzpJqsjZ5JLuGlJgP/S8jSRLuL+lSyBAqTBKQPJA1zPdk3S00o6tgUeFwEe4QCXQB/f+GVPAJx9Oi5oHQDtUnunR1YmTvmCyOArqRCYcQJdWZ71j8XGUEu20JH9Mk9uFFGvLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747050019; c=relaxed/simple;
-	bh=CLMpKrTrD+1F6YeWwuDcqlirxHopHnUHK3PKeL3Qewc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iv8bk4JrUEzBrM61tJQ8f7QCmugf417f6tQWssksfiwzP7XUCmCA/8WdPFh3ocz7NktX31g6CaQIaug9BJQ7Ko5O+X/tT+BcMhg9IxcpSzjIEXLiGbJLKY56aqhSzXaZEFgNgnxVv6AmwNdACcj9msMSIEWtlVokjBZv6y8mlyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUYrYvoM; arc=none smtp.client-ip=10.30.226.201
+	bh=xrLqGr/A7KBzm6992uLWeERh4hVm6A4U+dV5uqSfpIQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UmkjDgDmHzkBKjwVQE8L+3sNx/8vRilCyuo1s18aPkSeiLDluNInnOrfhyHJ9H1jyisDy/5PhJVmULqgbE8mkFQVu56TOm3KagRjUiu0TPaH+6x44K9NNZh8bjh+0B7z1i+lTOdLHM/YS/wmB7PlWWP3Y3SC/QOX38rzoEe34fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3Ay/FpS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUYrYvoM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 29A51C4CEF7;
-	Mon, 12 May 2025 11:40:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3Ay/FpS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E00A5C4CEED;
+	Mon, 12 May 2025 11:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747050019;
-	bh=CLMpKrTrD+1F6YeWwuDcqlirxHopHnUHK3PKeL3Qewc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=jUYrYvoMl5raBTYUl5TA+QGdRDcbX5/lrjmTMSOMcJTvxOs3Wnl3fwQZia5teMhu2
-	 0byE8YfwMaam2kYcB4BS/QkF2fXIXX0GZEHWgdEv/Sv/Q0zOOrBEWiO1Up7PIEp2Ek
-	 B4oD70ibqHgBpEBqt+5g1SYNHNaDMLddS1ervcKOHeX4VfvWqOEVLYdTOVHW7g7z3J
-	 2zhM8UWbaF+vKnHiYLAS6uwzeGZ+z7Hhkki0nQA6EzSBjs1Y1gFUoaJKl5Ntwje1zU
-	 mDJ+zNKY1pJRooT1UNYDofP1uH8UMB8uq01DLo7sIGc0FYv3voW6GTAx727w2tK9+A
-	 ifCMgnK81vxiA==
+	s=k20201202; t=1747050018;
+	bh=xrLqGr/A7KBzm6992uLWeERh4hVm6A4U+dV5uqSfpIQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=D3Ay/FpSmJxBhmUzRkeFDrk219bgrsI5vlhJGZ0DZqVo8MHWquLY0epeG37h0Ds3y
+	 lWBVoNHjIdRNr0l+QV0iLzwEnZDawP7wXwpdIEU4dQbFnWJLJG/SWdJXwQz4b1Yx2/
+	 vagFxZoqafPEOPKYfEiqzxNHtQ7VDZB20S0dhHRXxSjXUA+dQg87hrw4/kEi/N6wCG
+	 jhxwYrbvyazUi48MWcFD52ASkrnjQpwLZcf142CV/Kd5PG5jy6hRnlnzOlcFvWW28I
+	 5AgmlSF8BE3DKfMy2NDyBsm4gDs9rSALlElHn+bnFJvYHjFMxw0VySH26xZWQQnJ85
+	 RZewM+3fhRBfw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D54EC3ABD4;
-	Mon, 12 May 2025 11:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50BDC3ABBC;
+	Mon, 12 May 2025 11:40:18 +0000 (UTC)
 From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
-Date: Mon, 12 May 2025 19:39:54 +0800
-Subject: [PATCH v2 4/7] dt-bindings: firmware: Add interrupt specification
- for Intel Stratix 10 Service Layer.
+Subject: [PATCH v2 0/7] stratix10: Add framework for asynchronous
+ communication with SDM
+Date: Mon, 12 May 2025 19:39:50 +0800
+Message-Id: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,20 +41,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-sip_svc_upstream-v2-4-fae5c45c059d@altera.com>
-References: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
-In-Reply-To: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
+X-B4-Tracking: v=1; b=H4sIAAbeIWgC/2WP3YrCMBCFX6XkeiP5aWzrle+xSIlxogOm7WZiU
+ KTvvmlkr/ZuzsD5Ps6bEUQEYofmzSJkJJynEtRXw9zNTlfgeCmZKaGMkFpywmWk7MbHQimCDRy
+ 6/tK74dxqbVipLRE8Pivy+/TJEX4ehZw+TxaAyFZyEW1cJVpOs/PL1Y5//IDkeNZc8P3Q+c5Lo
+ 523R5wS3HduDpvqbAl4uQOmQ5P3O2l4dC3brDekNMdX3ZVl1VZVq9T/CVkWjeh7YQY5CK/l0d4
+ TRFs9p3VdfwEs7PruJwEAAA==
+X-Change-ID: 20250131-sip_svc_upstream-e78d8c9b4335
 To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Mahesh Rao <mahesh.rao@altera.com>
 Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747050016; l=1851;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747050016; l=2502;
  i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
- bh=AOemBCgdL+N65O4/Not6GZwfFLWHmbGOTOms8z2w2Jo=;
- b=BV5ewUJ5op6igt7FS8Q7vHHWVKc+xb+Cc0CLiZvtsc4/zyaXufjOyi4UfKNyh0yyXsZplvwKF
- Wr0tKCNSc8XBl3I/dk99nteZ2+xM0mJwYhjorSbIrINFuhcYZD8HSNx
+ bh=xrLqGr/A7KBzm6992uLWeERh4hVm6A4U+dV5uqSfpIQ=;
+ b=ku0EdbMV76Oe+dVxInq5QTEgMFlwm/BkweImQTxhU9f8QuQqXAS3feO94whUR0VMLdUoPGpd5
+ /2U5IhU7RMHAPtyftESsvyQ32G7bINQQCmpHC6EVhZJ1qj3MHqzCHyf
 X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
  pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
 X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
@@ -62,55 +65,59 @@ X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
 X-Original-From: Mahesh Rao <mahesh.rao@altera.com>
 Reply-To: mahesh.rao@altera.com
 
-From: Mahesh Rao <mahesh.rao@altera.com>
+The patch set includes the following changes:
 
-Add interrupt specification for Intel Stratix10 Service
-layer for asynchronous communication.
+- Add protection for querying memory objects in
+  multi-threaded flow.
+- Add support to generate and maintain message id
+  and client id for asynchronous communication with SDM.
+- Add framework to communicate with Secure Device
+  Manager(SDM) asynchronously by sending a request
+  and polling for response.
+- Add interrupt definition in Agilex devicetree
+  for asynchronous communication.
+- Add SDM interrupt support for Agilex platform
+  supporting asynchronous communication.
+- Add support to optionally notify the clients if
+  response is available using interrupts from SDM.
+- Add commands for querying temperature and voltage
+  from SDM.
 
-Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
 ---
- .../devicetree/bindings/firmware/intel,stratix10-svc.yaml      | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Changes in v2:
+- Added Reviewed by tag from Rob Herring for dt-binding
+  patch.
+- Resending the patch-set as there is no response from
+  the maintainers for the previous patch submission.
 
-diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
-index fac1e955852e4f9b966c991dcfac56222c5f7315..656cc50fd08217f270f95ae39010152423315ed1 100644
---- a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
-+++ b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.yaml
-@@ -54,6 +54,12 @@ properties:
-       reserved memory region for the service layer driver to
-       communicate with the secure device manager.
- 
-+  interrupts:
-+    maxItems: 1
-+    description:
-+      This interrupt is used by the Secure Device Manager (SDM) to signal
-+      completion of an asynchronous operation to service layer driver.
-+
-   fpga-mgr:
-     $ref: /schemas/fpga/intel,stratix10-soc-fpga-mgr.yaml
-     description: Optional child node for fpga manager to perform fabric configuration.
-@@ -67,6 +73,8 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-     reserved-memory {
-       #address-cells = <2>;
-       #size-cells = <2>;
-@@ -84,6 +92,8 @@ examples:
-         compatible = "intel,stratix10-svc";
-         method = "smc";
-         memory-region = <&service_reserved>;
-+        interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-parent = <&intc0>;
- 
-         fpga-mgr {
-           compatible = "intel,stratix10-soc-fpga-mgr";
+- Link to v1: https://lore.kernel.org/r/20250422-sip_svc_upstream-v1-0-088059190f31@altera.com
 
+---
+Mahesh Rao (7):
+      firmware: stratix10-svc: Add mutex lock and unlock in stratix10 memory allocation/free
+      firmware: stratix10-svc: Implement ID pool management for asynchronous operations
+      firmware: stratix10-svc: Add initial support for asynchronous communication with Stratix 10 service channel
+      dt-bindings: firmware: Add interrupt specification for Intel Stratix 10 Service Layer.
+      dts: agilex: Add support for SDM mailbox interrupt for Intel Agilex SoC FPGA.
+      firmware: stratix10-svc: Add for SDM mailbox doorbell interrupt
+      firmware: stratix10-svc: Add support for HWMON temperature and voltage read command.
+
+ .../bindings/firmware/intel,stratix10-svc.yaml     |  10 +
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi      |   2 +
+ drivers/firmware/stratix10-svc.c                   | 981 ++++++++++++++++++++-
+ include/linux/firmware/intel/stratix10-smc.h       |  84 ++
+ .../linux/firmware/intel/stratix10-svc-client.h    |  99 +++
+ 5 files changed, 1165 insertions(+), 11 deletions(-)
+---
+base-commit: 39d6783f6488786301f36b0e7c619f220c3e8d2c
+change-id: 20250131-sip_svc_upstream-e78d8c9b4335
+prerequisite-message-id: 20250204-socfpga_sip_svc_misc-v3-0-697f7f153cfa@intel.com
+prerequisite-patch-id: 6a4223bd2c01a0fd20925e597c906dc64e11ec2f
+prerequisite-patch-id: 33ca4dbe8b8e18d3e51145c6bcaae55170878b22
+prerequisite-patch-id: a02bca91874f4405191e60704574a0c99f37d184
+
+Best regards,
 -- 
-2.35.3
+Mahesh Rao <mahesh.rao@altera.com>
 
 
