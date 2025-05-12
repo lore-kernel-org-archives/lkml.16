@@ -1,103 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2046.outbound.protection.outlook.com [40.107.102.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBF2215773
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB0723A99F;
+	Mon, 12 May 2025 15:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064096; cv=fail; b=FTPk+ng7WshQTbURuENTTOLvBl6Mq0QfOHVUIWI6FXeoLRW8Tu/QiwYW6i07bGd+HhozXH+LTnB9MDlCD8EQ5Jmq4KVVXynyL4ETU4UnaGKkyhZelrjgmV7uvWduppoNGBljVKNaUoT9BF3qkSNoZcqTixgaCyF+6ZPwavxaZ58=
+	t=1747064118; cv=fail; b=RoQ9/iH4qfQ7fVxqlul2p0bs5RYH3lagxji2ugIdrybf1qg/Lulwb+gOgBfE7Tut4QEULcSt1bljD23YriAhzBBulUWnuTc7qGo82wrEUU4NTd0J5M9VbGtEy/uvw4Hy1NivdHk1iBzscREMYKctgCqjCjmp5MWmaJYHG0wX3ik=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064096; c=relaxed/simple;
-	bh=gGhqWBoBilE7mH17MPX9VsZqPRmmR+2mk9uC+olHhio=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Sx7ABFhsdzR9nRz6Mf5zM0Z0VVyy/6me1vQYDkcJgDCzPEjRAwHwMzsCdnw7yYBUWLY+dPoFwThtG/FySkXNP+sglZf0hUyf354Me2Z/2ff8VE0f1m8fMACEATixgzvvKpf8VT2iXgjDhxQubPaxFD47KaYngDYhvCqNqbG/BRc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cL2kZxHw; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747064118; c=relaxed/simple;
+	bh=wUARdmRtt8jq/57EgJZH5uTixPmGEtrdquPM3VJ0Ktg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PHK6rgDvpo9e9iCJDZ2bW1fI20s2DfL/o1i35jm9k9Xw+8p/k++uRQjpEsfAjAqXgCpP7ANfAU74A10031KkBg/R0ZMJN+3bCUcIjBNqFQvmaFTFbBcJFBII4j/prEUqSUJ8eZrQe1X7id0R1gPjTw/eDGXt/oluPxS14u/Qrjg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vggVx81B; arc=fail smtp.client-ip=40.107.102.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cL2kZxHw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747064095; x=1778600095;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=gGhqWBoBilE7mH17MPX9VsZqPRmmR+2mk9uC+olHhio=;
-  b=cL2kZxHwXBPsyo7uyVB7GVwhK0Aq78dENpUQhgF1vBq0jYty9cNXWqX7
-   D8DtdUgZhcMjyutsbDGmZRl6lDihOYdx6KeRnINhxeKxLxNfSa6zqSluC
-   u6pxWGXId+mKvpUhzM26XBLR1HCKyEMdiBNSkCxlAfpmz4pkJl0nfFTPA
-   sY8dpHFi5AJlg0JG3AUaM/lO4a5+cKd/GLCD6xa18Jl4YHdjep2QiWww9
-   D5gT1dhxnvM9H/Or80EsYIXN+9N7rf2mfN/hdO0ARCrMuAZQ77PhvSEEB
-   +QjH5o37iC46EOPuWDySrPrT9cTFVvoBTW6dlsSlE/SGYmSrqwk3qrWAE
-   Q==;
-X-CSE-ConnectionGUID: gn7LJFqOST6UgYNQjCQLpg==
-X-CSE-MsgGUID: 0mRGKMgaSh+tMoJNXsfGAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48736816"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="48736816"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:34:54 -0700
-X-CSE-ConnectionGUID: nT3kMNbbQ3K9M0c8dyfKKw==
-X-CSE-MsgGUID: dofz1QrwR3OrA+ihrwSFzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="141459053"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:34:53 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 12 May 2025 08:34:52 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 12 May 2025 08:34:52 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 12 May 2025 08:34:51 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vggVx81B"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DbWIPartWz5T/aKVQ4ozwvRHvlWQQLh3JUaDoQ+mkdhtbXRil47f7U3JoW43jCiDH6Fhxd3Uwg6mJKOpkOg1RZY7zFsrVLy6lj/H9PjvuEsrcexqTHl+/AJbPiYIRqtxezy8uOd5rL0YJ5EiQ9fwtGqsPBtxlzDyVPBAip6p2ulX0NaPD2KJeYIts1D1m8gX9W+QqcDn8x+uqJn4p+V/AijJvf2Ov9W2oI0i02Q5Ep+BvUzdyz9kap7OLME6KdU+PmtoYr/Bq2cgIZxcitJUETQPSXitIpdN4K/1H6Nm3xOo1fj5A/nFIbva1uh9+PQNm9nAjdGF81YQ3a74BdiHJA==
+ b=LPQp51NGwGoA0dbXeYvgwZU0+CwnIQseVm3VzwOrfrj+QRJCGyGXfjU42mQvNPtwHL96txmvoIhC5XWnRBs9zE8/ULICJ9I0IYLkEV2235CqIjHSV5h4QK3SR1Uu0Y1NChjQDgm65I0GfwcQP5uHR/wNjeNbrYA2AeqPg6PEzjQy9nNhfivdhxZZXaSRaU8wlOYrsVrI/wh0TZFPFN45eNCDs+TxckOY4LlsV0sQAoSBlFL7c0ZkI6Sx60jsLt6qROMOkjPv3WcGotesUAroKK9vRbGSuKRUwd7WavDvfW+DODdmfc3vQFbsj6kGHhRrWCNiym7VRFXF81X9+sXNwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OK+5CGFyAbprm6k/CoNOo9x0XMwUwQN4zeB3tBZpvKo=;
- b=nADqBtVYy8Qo4vi7Kl2Noxx+hWxa+lOEsbC6JztsHDTrTb7JyBFVR3C1S1NXtwGUDleUf6776I1pvozzd4MhK5tGTA4ltyOi7PtLVsG7U5umrD6bzPP4CRfWO/9stOGjb5iDUcgjMnGwFrFLj7POG6PdikFbngeQyRKvnVRMONmUcE2oKhHkrER9OTlg/A27BBB8b4TzJopTWQk5oHNgng+N2GCWDZ0EawRcNnlFO+uHfgNn7/QEdyovBSjQxjSvNhBdC6gTLr74Fe4h9Pxx+xWvK6khfDOPnjAOmv/nfAhPVkLAayOhinjCpZ+cJFwVbhH/vUwRcLra6rT93LYYJg==
+ bh=XNlnUF3NAKxPJY9fEhI8o/lJX/AR/J1uJYILJrUv8bg=;
+ b=a3KNpPnfVf3uJBIWvGZhhrV4vQzZ9joiJ0S3iHhEdg+9eKVlHh648SeBIqQm9dwM6tDMarhPmBMRhn9u1GZinQp7YoicC+x9Ibr42HDzAS4T/jDjXiV4tN9AOE5gaUUsdNQ+rHvYXPAUoYv3Zf5Qy0y7tZzNpS8HCXPHj0zDgKehoTUmsx2SkXJFCNdpeucv1Aih6z1oKRuu+uKv47rovo7Cd8floQfvOMZfnlYRjrTb6va1NceyMe+tneUbpJCLJyGpnzE8tXUeRE+3CUEc0+sn189rkOh+Gcvk/M0KveypAuBD+4r9RaWI8ehwvyGAqhvUeLntBQEZCviKkFmRXg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XNlnUF3NAKxPJY9fEhI8o/lJX/AR/J1uJYILJrUv8bg=;
+ b=vggVx81BxDthUFCCbFZ/FdCY2Tkm5xchAUwCkAgdtQyjx5kgcSzxey8zNnko47PtMZiEinnV5BNcgie8Qri/NdKNHgdUF1C+xmxNL5RR9p7D5aovr4ZQ2LM7fdg3op5OvvJgPwMyPjY/jtH9sGyx4T7yiMzHsUUUO+ZVw7Xsi70=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
- by IA4PR11MB9108.namprd11.prod.outlook.com (2603:10b6:208:567::17) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ MN2PR12MB4096.namprd12.prod.outlook.com (2603:10b6:208:1dc::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 15:34:50 +0000
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563%3]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 15:34:50 +0000
-Date: Mon, 12 May 2025 11:34:44 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-CC: Alex Deucher <alexander.deucher@amd.com>, Christian
- =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, <siqueira@igalia.com>,
-	<airlied@gmail.com>, <simona@ffwll.ch>, Raag Jadav <raag.jadav@intel.com>,
-	<jani.nikula@linux.intel.com>, Xaver Hugl <xaver.hugl@gmail.com>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<kernel-dev@igalia.com>, <amd-gfx@lists.freedesktop.org>,
-	<intel-xe@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH v2 1/3] drm: Create an app info option for wedge events
-Message-ID: <aCIVFMcJB6T4IjW8@intel.com>
-References: <20250511224745.834446-1-andrealmeid@igalia.com>
- <20250511224745.834446-2-andrealmeid@igalia.com>
-Content-Type: text/plain; charset="iso-8859-1"
+ 2025 15:35:13 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 15:35:13 +0000
+Date: Mon, 12 May 2025 11:35:08 -0400
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	Smita.KoralahalliChannabasappa@amd.com,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH v3 15/17] x86/mce/amd: Support SMCA Corrected Error
+ Interrupt
+Message-ID: <20250512153508.GB2355@yaz-khff2.amd.com>
+References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
+ <20250415-wip-mca-updates-v3-15-8ffd9eb4aa56@amd.com>
+ <20250509193721.GRaB5ZccvAs9ST_3IM@fat_crate.local>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250511224745.834446-2-andrealmeid@igalia.com>
-X-ClientProxiedBy: SJ0P220CA0022.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::33) To CYYPR11MB8430.namprd11.prod.outlook.com
- (2603:10b6:930:c6::19)
+In-Reply-To: <20250509193721.GRaB5ZccvAs9ST_3IM@fat_crate.local>
+X-ClientProxiedBy: BN1PR12CA0005.namprd12.prod.outlook.com
+ (2603:10b6:408:e1::10) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -105,255 +67,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|IA4PR11MB9108:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8dc44e3-5c83-485c-3113-08dd916a8870
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|MN2PR12MB4096:EE_
+X-MS-Office365-Filtering-Correlation-Id: c6c06c9d-c84d-42a1-5b20-08dd916a964d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?Ee0qAhppleLD5UZYdrG338hzzpsva+YJO5gt6z7vzncux7AoZhQt9YDOwW?=
- =?iso-8859-1?Q?oxgleJYMXDm3KxJJl0/7JZpBgnF2/IWW0yjeg+OXxZacahTbD4ykmGGjK4?=
- =?iso-8859-1?Q?STNIFLVzMLd8av7QbjhI9vAb8AMNQb5mpekaE3SehrucBCZ0SyOHdQgssx?=
- =?iso-8859-1?Q?rC9VBMxENz9K6APmQ3Vkh5WCo6pV9MVi0BnXMqf8vILwMW+CXA3D8Diptn?=
- =?iso-8859-1?Q?EUGTRJKLFbnRK2LjWhm7XXJZ2pCHkdtNWh5NVIqz3j8Qt78xpS2E6Hgq3C?=
- =?iso-8859-1?Q?Vdfq9tDLQLeU9IHoMPlSpMAB51k6ahPyFBSC1LZmMErfB/LgsGyiyBezH/?=
- =?iso-8859-1?Q?dMzad7z3i7J7PuVA1SgQ9qdW7ETicmxZef4fG16SbNnYS0918UFikVO/x8?=
- =?iso-8859-1?Q?VhhQ16+NDsQbn0aysvLI6NeQfwsSglqyfv3YS+4L1fgLqqaROvWiSYSGaL?=
- =?iso-8859-1?Q?aWz9CFrqb90ov5Z28aUEj4UWB8r9BtH/mTISTGlVAk3gpKUbAI9qfbchKS?=
- =?iso-8859-1?Q?KBxuazgl2yfpwR4jr48A/wl5VA7J0aRiRqPzVMqyVP5V4bPIxh6jCcNr29?=
- =?iso-8859-1?Q?iEKIJ9pdLd9FHeQ5bAHqcQyMJN15Pdj7miwEoKpXOxuWcDsT1tOaqDHL08?=
- =?iso-8859-1?Q?PmCTtrHIIkNnAE/0sLiiHEbKbafaQDgtweS/394P59AgFe7wCB8YDqte6S?=
- =?iso-8859-1?Q?Kzfn98HebUHSBkoyv8rolE7zcJxTsit5naoEc5MHQMQhBSGOm+7K3dVjfB?=
- =?iso-8859-1?Q?+bCL7g0fOSY20SURwuOhETSYEthecYJw5FONqkoFH7PLocKbWrdecS2Gl4?=
- =?iso-8859-1?Q?JVDWcSYDhp8Kf2oO+ttMtughzueMNvNPa4IwicXYGxfHK/yaT8O9cr5ACT?=
- =?iso-8859-1?Q?BdVIhO6MzK5tseP/H3H24vN3Y5hfUBMnioJt+AdPBvB2SpUP1o9XQ/YzMA?=
- =?iso-8859-1?Q?CKR+ZVMe7VQIIktGoPFhFXvUZ6/bHWmNzBN+WBKuPKbbtRx7PwISHsnQ8t?=
- =?iso-8859-1?Q?dboKTnYlaDZklmlRbpH37CDRvolVueKQB0IkoHGDV92H6HzKkBRFIfQyCO?=
- =?iso-8859-1?Q?Nc4NOAgUbmm2v3ylol0/66v/uLyhvskWLu/ajpKxXlPU/qWZ1zCKLO2rJr?=
- =?iso-8859-1?Q?FCr7fsYq6P+O1Pi32F60UN/g3jKduhBD8q/Np2pHM5F3/HD3L7C3wY223l?=
- =?iso-8859-1?Q?ST+68WtXfJNYLATqt1BCiiiRkVMUh5dExIHd9ZchCPKaKbjIyZGp8Su5Mi?=
- =?iso-8859-1?Q?FCKwv756bQHUAihMh1YxboKr7YhShzf0aLv38tPhBBoB4/F+1E+USpmBbA?=
- =?iso-8859-1?Q?/3zpIDuk1qm0dYGv4lUs/aNm689pmDls2jG8nTNOKigKmbYyg1OIrhH5Pu?=
- =?iso-8859-1?Q?RFXIFHl7Af9utqvcGkpbJpf1HamNJl3JRZ4kfCYYdWR2hGFwirVVI0uSqH?=
- =?iso-8859-1?Q?LuIJFF2YTpIiBY7uRcRk7c3fm+TmwcLJ7LyWED4O4JtllRZdt5s1bqkk/A?=
- =?iso-8859-1?Q?I=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/u4GqyeQg1TeprjvTpWeyTrVQx1I3IKoWRTeUmS7B848FlK6vcWtyIzl+NtZ?=
+ =?us-ascii?Q?hRzabiZQVyCC3F4iBxzFL3kbkmiup3GpKE532N1C9e7TkUrFWByr5I7COAdE?=
+ =?us-ascii?Q?76a6AKde/tGMdcHjUDMwqn/8uaMBSZG5EZHnR7xWBuP099DJ94yFevF9aaXG?=
+ =?us-ascii?Q?8gTOIvv5Wo0fpGkAOTO4/myy7nN+w8IVBvLjI0qrqW/67GHFWyx7W3k/PpSO?=
+ =?us-ascii?Q?+zMxdQcovVji8fg8iyUrMy2oBAuDq05bLpQWe4ToU0jGY7+87E6gyhczAC/s?=
+ =?us-ascii?Q?v6COZ8e8JTUvSF3+vFc+6+RyLnxkSyUqRklB+UFlK3OoBHTxsEOcVCRIwXap?=
+ =?us-ascii?Q?J053hcTooZl9qyn5hv7dHvwbKRjm5LmfQVkbOWqiJaEIs2/JRfwc17Xsy1EX?=
+ =?us-ascii?Q?dYu6+ahr0f8xmRdu9ORHerdDUUeqOWZpUBfcFKTDNJuoPYRICt2bbE0sriQa?=
+ =?us-ascii?Q?SH/2A4I7Z4fAsGVdz9IXvVVMAYAGiKF2rmp0i0dwokFjcXAcCeGnoNNHOd84?=
+ =?us-ascii?Q?C0pykNHWbDmHzwhdsmI87f1JbBQxcRusqa3I7ERC8CdbwykgOJEneSTgibcT?=
+ =?us-ascii?Q?ehhf21inbXM2+FIwYMnrZuQMn+eVxo3dwxESHmXgNonvxoOmVlSxzsryKiN3?=
+ =?us-ascii?Q?B1sER2stim6calCl1hLkQOswNd7ISDCkg49k/cWSVdY929efhdGk2iiRB/Ja?=
+ =?us-ascii?Q?Z03gWHzB8jQ2ENWwX8xfZYXCAvjwin73wuzClmTr6UjHJWhWlrgMQiAbCX3p?=
+ =?us-ascii?Q?6J8OY5nuMZPRW9Hm1N99WqmnYEDK/uW4ePg3xG3ADLtf2wnAuLA2mWy9oTis?=
+ =?us-ascii?Q?tCmH8W0AKRAnn0wOLLXelAH9OgiSDsEKTfNk5rHvwYYiXWwtDX9mbbp9rbxN?=
+ =?us-ascii?Q?h9UTp8oas9sGqSmtq2SJwVCrkEahwGtwt2bsWLwCH/aCPsnnnKnf1z10leP1?=
+ =?us-ascii?Q?laNy4t25N/CPrpjG2zOyYJVP1xeEm9EwXCPJaDeKhhBgBtcS6lyGsDlM0ftQ?=
+ =?us-ascii?Q?bDtwaSMN/FgTQWKv21wuDmYhPFGPmfOlQktDp6vJNHE0tn+SDWBj4ogkKUmf?=
+ =?us-ascii?Q?omiNMq9W0lICoycyfSdyyfX9xgzkH0hXvy2J6tfolG6TftXAqxCSIyjdAuS8?=
+ =?us-ascii?Q?BesL95BZRiFcxBQP0No0tCePc/4H+JsfFqb24e25MvVJhwW6wqBTi2SgJ/pm?=
+ =?us-ascii?Q?a9xgSVhKlAlN8pbLg7AP6ytlCQMOH2GyJQNEOCpODTHuB4NNentF6TKFKNtz?=
+ =?us-ascii?Q?fd1wkiKVfv1M6fJC1JsFYcAYh5qCKiuaiV4zFsoy6ntIk0Ic8ksUgrz4+I8s?=
+ =?us-ascii?Q?suLytiiN0SdDXqtyQ7P6oiSo0CnGqaSZuXV8YN/ieBFA7goTmTtwg/t3sSQi?=
+ =?us-ascii?Q?OzMYgMyAUefBCuKurC6BQIpaV41pcBQCTEAL2OOzvFQFcLiEKk9IFFP2UUoP?=
+ =?us-ascii?Q?JZl74WzfDkI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?iQd+7musFuOORmlEZTTAgC00JBgp+GZFD3iwMZCUKSfiUjvH6k8OeLZm9O?=
- =?iso-8859-1?Q?zQEFapI9Tj2NnMzTUNo8MT/c9OmaR5IViwYRy5rjPLaWZrsb1MmFG81fxw?=
- =?iso-8859-1?Q?eB60jryO1TKzeo8X6rOKEAOacFXIEFqcZmubbAFJGDR6gMARPkdrJVFNOH?=
- =?iso-8859-1?Q?p+osxVd9NiJ/CvTqArvW+GKT7zY19UT6M2LjvItOCMc81okJ/KRxSDDgc+?=
- =?iso-8859-1?Q?ZczKJrh7vetCuLwQbNNa9WMY14WthJlzgyh9CMkzjLAM0wlFQxi697Dgw0?=
- =?iso-8859-1?Q?z/uDDuxpoJiRag0bV0LZj1isU4CHsS7mqD8NQ1gbW++qmGXfnZcqYBab5h?=
- =?iso-8859-1?Q?Fh15lyMjU+ABNcCPwdq3WFea/AY/yyDgPw1SwuEz43ObrQAjYV+0kbGAfN?=
- =?iso-8859-1?Q?yJh4SRSEIaVSaeAMZDOlreflleOOHv/RRS65CqLzlViGfJGt3SwMJuWQwC?=
- =?iso-8859-1?Q?sYmArSWzEAlT998JDyl61YVXqzF2zYIVf1cRt/yGqs256XdcNDTJCommRV?=
- =?iso-8859-1?Q?YGK0A6xtrNnv6nWbbIrp5SVlzTPDdOmeRBHZ1ZcYPFAaFkGP8usZR2EQ7k?=
- =?iso-8859-1?Q?miRHARgtwKw7Vg9cIKaO6xFXZYSvC+YA/37SxnwHTQxQ+9F03dm/RQZgBC?=
- =?iso-8859-1?Q?Xj248/n2EY4SzSlOR5qMh1fObx2niGB2ZvMJifYpahYSpe6vciUboib3wS?=
- =?iso-8859-1?Q?ZIEIkGDfFWdVhpDLK6kPGoWwKt73RL613l0qQRZvn6NdiQxiHAVPRWg5b1?=
- =?iso-8859-1?Q?rTEP/TUBLj/spvZ0YUDoQ68z+hho1hgJJNAIvobZ41MMjoKRmY+DrqX6ra?=
- =?iso-8859-1?Q?BZGrKpznS4/dT4Xo8qlHIoiIBTm4YQTqfaEYc/U2TglgySLs7Dyr5mJGwX?=
- =?iso-8859-1?Q?Oe4s+LB/PP9VknCj4qtPnH0d6Welxq02QMciE4QAoHrr70eOMlPc9PQncR?=
- =?iso-8859-1?Q?dZiNdo7TX0T5Lns/f8/LoIIr6E7W2Cfnehg10Hj6fg0pcMysrOWvuiKH+6?=
- =?iso-8859-1?Q?VsjnaOQdK/I73Y1RUm+dYDkmWiN+RTbM+k8+ufCi+fIXGlBmbg3OjcSc2k?=
- =?iso-8859-1?Q?yxz2FUv1dhsEE65mx4nu9WQ+161MibiR91UBDd2A1vTekowQ3mfySTjULk?=
- =?iso-8859-1?Q?IacmCct1N4yvyFevSmzCC4Ly8/DkvJo/zrNltwdpt0vc00UyBNCdDJDChR?=
- =?iso-8859-1?Q?56/PFqo+OkieN6em26r/3CGcTI/XRbhWNKsEy9+KwBRa6rVDXIxwU4c2eG?=
- =?iso-8859-1?Q?dmrpbE5b1Eb3/QyJUVeS1uXanek+NMGzjZbPYjx3osTLLTnWVEATL+puxa?=
- =?iso-8859-1?Q?TOSi0zVGzsuvydMelxCPp+RbJzdiLUO1eDE2BTgIufqBmzjeR7cDYnfmUV?=
- =?iso-8859-1?Q?8UVFEwJsctMesBMSh/GEshuFCcXNTc01UuvkB667skp54hcsQnOt/ZCiDt?=
- =?iso-8859-1?Q?vCTiJgllG7p2tXSE3NnxDDC4TPmKAz6nJh+tfl5QTivS1jARHe2SBp6mpi?=
- =?iso-8859-1?Q?pBWJQ3ixFqENdzUzjH/E7uNf96icdS3sDtvDeDErzh5eQZimcthEz5jn6E?=
- =?iso-8859-1?Q?AbzdoVtNuGtK8ej8gEjxMTDXe5VWQRVYFgJXXx9x4tw3PYlQ+9TJ81R8f7?=
- =?iso-8859-1?Q?IqiDQrKlanMDK5z7jzFAxxTpecb/WsFsxJ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8dc44e3-5c83-485c-3113-08dd916a8870
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LFXu/6Bnuw0WqgxI2+uUtYROG5angwBuhmY6ALVrU5Ox+iMk7CRLh7+NibFt?=
+ =?us-ascii?Q?VxPGPYZCQ26av95cOdC4RF/9zQUYPOVBFI+Gvqge1JynRSikA8/e0x1I+gbe?=
+ =?us-ascii?Q?cEoXREB4PIvMTDhNrxFdfb5Cz81w1rs6OET6l0pRGJOK6wNPm83AVgamqe+Q?=
+ =?us-ascii?Q?ZMIX2sbnGO8kiBAiIkcLq5Gmm304OqvIZ1Bly306Sse8Xsm6m3pG4YmQq3W9?=
+ =?us-ascii?Q?5tuFEY8Na6LxeBK3JPE7rnuYmzyRkia6bEmsbxK54bV7orXcjsmeINFFx4l9?=
+ =?us-ascii?Q?zQ+ebE3AZBjE9SD8bidq1UhE7hu1RuhJn1CtOqFK/NTyzo7QqgR/Sep5gZjQ?=
+ =?us-ascii?Q?bbCdgejklmnY5AOKPuM4HABaYQd62wJTx00mQzaT7o+TtYokvOI8HIa1hZ4h?=
+ =?us-ascii?Q?PtdBWFlBVgibf/8WVynbl6XTxOkRbCKmX93MxDQPR6HQXX6/8pvJzd2YNfsw?=
+ =?us-ascii?Q?mbu0mBdr+RmyPHv5edSJVVNSqQydGCyGri0jMPS3mfQLFeAXGGAi/d2mfSAp?=
+ =?us-ascii?Q?XYCm+7TgV/QM6YwQ52L4hwwli5CKVfF7+lctqnP05k31ix+gs6RgLFEXOXRa?=
+ =?us-ascii?Q?eXvWdOxTgXq/y+1bNbT5mRL1j6Z/PXLjnhM9EjfPIkwqXwNSl+S+TE3wUzoE?=
+ =?us-ascii?Q?KJOYlNH8oiElfkfhYdIUUDFlr7tMLk+Z2I0tBZQk83oqZlrTzMwFkAU8MOw0?=
+ =?us-ascii?Q?kskpQnLQhtvxWvABbyLc+E/qt4Xw+kBJHCpQ5P4C6IlmJUzY9JRAgNKO9dmd?=
+ =?us-ascii?Q?8h2PB7M/QSgD7QVK0Jd+Q+SSXlhMIoTwMrAIIdnwt/pdDuzzpqFrUoAe6ZvD?=
+ =?us-ascii?Q?qRqx547t+U9rU57sOZn2Ml0HU+bi4lWb6BsfeoODrkaThPe2v4nDSGJSJGaR?=
+ =?us-ascii?Q?s/nOzqaT/B2NgFiPRwbk3CvcvfEEZrUXhikoHAUrF4RuLo6K6jq6f93hGUyy?=
+ =?us-ascii?Q?kB/NC0skY294BMKURva9wkVlz4/ff6zS5/XM22UZeQ9XjiJxgg1VjsgXS0pd?=
+ =?us-ascii?Q?m1UYprjpKsvoOXn8m/O7hiufZd3NjXlAcQT0o3j62nKX9V0spyd4iKTfVsRh?=
+ =?us-ascii?Q?qq1rVZibHkj8g5ReSU6Fgoaau+yNjZ2FP9oW/9L0YCqk9pPl4Iw3rBsIqr5A?=
+ =?us-ascii?Q?F1bP48hecuWgKCz+ZeOv3nJ74+OiK8ghf+5y7DfFlbJaQjvIRDi5GgYtWpls?=
+ =?us-ascii?Q?Hi/jiwORAY7SfU8lBJbYpMYFqIBrPs8Tf6di7VtBeRLAmHgPIc4oEI0ptFIz?=
+ =?us-ascii?Q?5Sf/TPs4ik+3Yt2BtiCVPkFyE+/huhkEIqqBCHWPjlWnkJGLpLRzI0HZkc4j?=
+ =?us-ascii?Q?yOm0ezISQvV25ZFrdOCpBW4fXr4q73zIslVhCWc5MX+lIcfiUgLOBDZMiB+G?=
+ =?us-ascii?Q?6aTQIoeGNLg57aHtqtXOQa0ERWFcZqie+uzeQXPP3xwauyteZAT0PVphhzaH?=
+ =?us-ascii?Q?NiK4J0JSF0Z3MkuRkPbzOk/Kltjm0QeO4P4ivyIgciw8I1pXBNY296PWkxR5?=
+ =?us-ascii?Q?XUBJmMRC0v0Txk5L3GtmhrqK6227x6sVVS8L11OQTNh7TYprwSSy7FNqgj5p?=
+ =?us-ascii?Q?6ayTplTH+4nheM3603k6N52rU1tEyfD8rOhniUv/?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6c06c9d-c84d-42a1-5b20-08dd916a964d
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 15:34:50.0889
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 15:35:13.3453
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M7HSbnHxlA0L/wx0gilzKciOXZiBfuZaE2EKLcU/RXLOdqLOcNi2pVrqXxql7R6BY0UTOdu4/Zxp+7CrD2YMVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9108
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y8WW8YW86sd3YjNG8p+Pb1aIrxABa+CHwLWzP6p1YlSlz0TjGSY6eUK3/JfwUf5grcZTUcbjl+1Cy+yoSazDmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4096
 
-On Sun, May 11, 2025 at 07:47:43PM -0300, André Almeida wrote:
-> When a device get wedged, it might be caused by a guilty application.
-> For userspace, knowing which app was the cause can be useful for some
-> situations, like for implementing a policy, logs or for giving a chance
-> for the compositor to let the user know what app caused the problem.
-> This is an optional argument, when `PID=-1` there's no information about
-> the app caused the problem, or if any app was involved during the hang.
+On Fri, May 09, 2025 at 09:37:21PM +0200, Borislav Petkov wrote:
+> On Tue, Apr 15, 2025 at 02:55:10PM +0000, Yazen Ghannam wrote:
+> > @@ -306,6 +306,11 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
+> >  			high |= BIT(5);
+> >  		}
 > 
-> Sometimes just the PID isn't enough giving that the app might be already
-> dead by the time userspace will try to check what was this PID's name,
-> so to make the life easier also notify what's the app's name in the user
-> event.
+> Yeah, the above statements explain in comments what they do so that we don't
+> have to define the bits but use them straight "naked" with the BIT macro.
+> I think you'd need to put something along the lines of that text...
 > 
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  2 +-
->  drivers/gpu/drm/drm_drv.c                  | 16 +++++++++++++---
->  drivers/gpu/drm/i915/gt/intel_reset.c      |  3 ++-
->  drivers/gpu/drm/xe/xe_device.c             |  3 ++-
->  include/drm/drm_device.h                   |  8 ++++++++
->  include/drm/drm_drv.h                      |  3 ++-
->  7 files changed, 29 insertions(+), 8 deletions(-)
+> > Check for the feature bit in the MCA_CONFIG register and confirm that
+> > the MCA thresholding interrupt handler is already enabled. If successful,
+> > set the feature enable bit in the MCA_CONFIG register to indicate to the
+> > Platform that the OS is ready for the interrupt.
 > 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index 7f354cd532dc..c8a51418d0e7 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -6216,7 +6216,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
->  	atomic_set(&adev->reset_domain->reset_res, r);
->  
->  	if (!r)
-> -		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
-> +		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
->  
->  	return r;
->  }
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-> index acb21fc8b3ce..a47b2eb301e5 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-> @@ -166,7 +166,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
->  			if (amdgpu_ring_sched_ready(ring))
->  				drm_sched_start(&ring->sched, 0);
->  			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
-> -			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
-> +			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
->  			goto exit;
->  		}
->  		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
-> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-> index 3dc7acd56b1d..1816ef4251e7 100644
-> --- a/drivers/gpu/drm/drm_drv.c
-> +++ b/drivers/gpu/drm/drm_drv.c
-> @@ -542,6 +542,7 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->   * drm_dev_wedged_event - generate a device wedged uevent
->   * @dev: DRM device
->   * @method: method(s) to be used for recovery
-> + * @info: optional information about the guilty app
->   *
->   * This generates a device wedged uevent for the DRM device specified by @dev.
->   * Recovery @method\(s) of choice will be sent in the uevent environment as
-> @@ -554,13 +555,14 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->   *
->   * Returns: 0 on success, negative error code otherwise.
->   */
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_app_info *info)
->  {
->  	const char *recovery = NULL;
->  	unsigned int len, opt;
->  	/* Event string length up to 28+ characters with available methods */
-> -	char event_string[32];
-> -	char *envp[] = { event_string, NULL };
-> +	char event_string[32], pid_string[15], comm_string[TASK_COMM_LEN];
-> +	char *envp[] = { event_string, pid_string, comm_string, NULL };
->  
->  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
->  
-> @@ -582,6 +584,14 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
->  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
->  		 "but recovered through reset" : "needs recovery");
->  
-> +	if (info) {
-> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
-> +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
-> +	} else {
-> +		snprintf(pid_string, sizeof(pid_string), "%s", "PID=-1");
-> +		snprintf(comm_string, sizeof(comm_string), "%s", "APP=none");
-> +	}
-> +
->  	return kobject_uevent_env(&dev->primary->kdev->kobj, KOBJ_CHANGE, envp);
->  }
->  EXPORT_SYMBOL(drm_dev_wedged_event);
-> diff --git a/drivers/gpu/drm/i915/gt/intel_reset.c b/drivers/gpu/drm/i915/gt/intel_reset.c
-> index dbdcfe130ad4..ba1d8fdc3c7b 100644
-> --- a/drivers/gpu/drm/i915/gt/intel_reset.c
-> +++ b/drivers/gpu/drm/i915/gt/intel_reset.c
-> @@ -1448,7 +1448,8 @@ static void intel_gt_reset_global(struct intel_gt *gt,
->  		kobject_uevent_env(kobj, KOBJ_CHANGE, reset_done_event);
->  	else
->  		drm_dev_wedged_event(&gt->i915->drm,
-> -				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET);
-> +				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET,
-> +				     NULL);
-
-(For future) I believe we can later modify the gt_reset handles here
-to get ctx->id when we are coming from reset paths with context and
-NULL when we don't have pid.
-
-Perhaps one possibility could be strings to make this flexible
-'pid:%d'
-
-'path:debugfs'
-
-But just a brainstorm kind of idea... not a strong feeling or need.
-
->  }
->  
->  /**
-> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-> index c02c4c4e9412..f329613e061f 100644
-> --- a/drivers/gpu/drm/xe/xe_device.c
-> +++ b/drivers/gpu/drm/xe/xe_device.c
-> @@ -1168,7 +1168,8 @@ void xe_device_declare_wedged(struct xe_device *xe)
->  
->  		/* Notify userspace of wedged device */
->  		drm_dev_wedged_event(&xe->drm,
-> -				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET);
-> +				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET,
-> +				     NULL);
-
-similarly here, for the paths where we come to the wedge declaration from
-exeq_queue, we could get q->vm->xef->pid...
-
-But again, no blocker from my side. For both i915 and Xe:
-
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-
->  	}
->  
->  	for_each_gt(gt, xe, id)
-> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
-> index e2f894f1b90a..b87401d5079e 100644
-> --- a/include/drm/drm_device.h
-> +++ b/include/drm/drm_device.h
-> @@ -30,6 +30,14 @@ struct pci_controller;
->  #define DRM_WEDGE_RECOVERY_REBIND	BIT(1)	/* unbind + bind driver */
->  #define DRM_WEDGE_RECOVERY_BUS_RESET	BIT(2)	/* unbind + reset bus device + bind */
->  
-> +/**
-> + * struct drm_wedge_app_info - information about the guilty app of a wedge dev
-> + */
-> +struct drm_wedge_app_info {
-> +	pid_t pid;
-> +	char *comm;
-> +};
-> +
->  /**
->   * enum switch_power_state - power state of drm device
->   */
-> diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
-> index a43d707b5f36..8fc6412a6345 100644
-> --- a/include/drm/drm_drv.h
-> +++ b/include/drm/drm_drv.h
-> @@ -482,7 +482,8 @@ void drm_put_dev(struct drm_device *dev);
->  bool drm_dev_enter(struct drm_device *dev, int *idx);
->  void drm_dev_exit(int idx);
->  void drm_dev_unplug(struct drm_device *dev);
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method);
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_app_info *info);
->  
->  /**
->   * drm_dev_is_unplugged - is a DRM device unplugged
-> -- 
-> 2.49.0
+> ... here.
 > 
+> <---
+> 
+
+Okay, will do.
+
+Thanks,
+Yazen
