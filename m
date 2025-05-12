@@ -1,131 +1,150 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBD023C4E7;
-	Mon, 12 May 2025 18:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC7F29713F;
+	Mon, 12 May 2025 18:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073410; cv=none; b=oFW5zP1mAN8oAz8WsvJfiLMu7NBWHAsNUs/fQ1nQ+K1dp/ph16wHB0MbyOr6Rx18lRwUC7fyGHNzbuQdyU5As2DVrjieVNEY0YUC1tmSgShsPWhbZ92z8VI89SeFPVCYpJydIQdkPJYchpIIHkPcktG50M6QxUox/BAREwM424Y=
+	t=1747073632; cv=none; b=Rp5Bw5Hx73vITAhw34eKYVlqTAGwp5fLQN3PfkDCZPWrbrfPiK4F7rn39eZMwwea3ez/U/fn+j7TbQggdU7j51wDqHzLzUf51CLiz/Uce+dzuxe7Iu/fWeriLTYy7gHLrp+Fn0f1a6FNUyeGC1z0trWTjcbi/GEZxIYMCz9EQcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073410; c=relaxed/simple;
-	bh=uFUaSVYNAvXIYAUNz+Rx/NPSaWzGUE/AKMdPflMdRX0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GC5EOWXJiTK1MoNPnRdhpX+ajEEp63TfTLgv8YjannDxubk/6McI0ymvHWNnxrxn410HBnmWerR5nMu6DyKsVB6CrlZa/+QDog+9ZkjM0kLxDLQGPdDWfSWbiQEjgSILRQj3KcgHukEOcqCidf4i/BUBrLTXJuKuB6LmeaTx3yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fkPMOGuT; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747073632; c=relaxed/simple;
+	bh=KlDznQJ9x7yYl0RQU++AFqF1z/7/ZXlbsoe7bnKuB0M=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Pew3DWwTNiZBJKc4rIllyV9pw4hYxMl2IpZPQmRf+oml1XuwXtJPKrNHhGu5M3VgnJZhoOGZqo3fwemGHnsERv2FaypyWfm58onXa3T3Hsn4eb+RyoMbKssdgZbmoAphVsbRczcua2G6gvdNqyUI87wNVPCJSZx76X/y/y8Nor4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eh9q3YJc; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkPMOGuT"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad24677aaf6so242798366b.2;
-        Mon, 12 May 2025 11:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747073406; x=1747678206; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmBBbW75s2tlX7b8l6/8ObAx8ZWM6smBqykkodUDjYg=;
-        b=fkPMOGuTPO+VnZhJWW+v1co8w5t7ZUxNi/kjz+bMbSHWtT0+Aby66U4jDa8mcG5fz0
-         2zP79ZxTzhB/r4qTmx3PgFf/3gZoI8R4vBLgzjJnzZ9orLtkf2CO6FieiQNW207iG7cb
-         9Hq4jHVVGlEXQEYwmyQSCtyRMWMqrhpViIq640LmzBZNPy7bUJcksPcbjLNUPVISfTzl
-         I0MGhNf7FEwjIG5WVIeYvjHT4hYNEMNEnvvMOjGr+wMSJuZD/HtpdkccLH+EjRxa2e/N
-         lUooAhtRPwD0c2R5JwqJFCY1NIUiZT9SPO3AuHlw4/Wtbe+zhQRwsALjzwpFTY1xF1Vs
-         Pc/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747073406; x=1747678206;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmBBbW75s2tlX7b8l6/8ObAx8ZWM6smBqykkodUDjYg=;
-        b=G4qFiCWoDRK5ZW7rBiXuygafjZVxYTfRas8CEQKVaD4zq6jnN/l9hfaTohorGzLIFG
-         jN6OOEbdbw41YrEm15QuRYhM5kfTQU+i1BzxD12OBMfLhoCSeL/rW3SYoJGRWe+Z1JHI
-         zZ6C/osnHqk6rL2Vh4ADVTRZUbicQadfq0ijDyWn0hwjkGH33QMEIsJ9321IN+SYnqUc
-         Ho+YIgrKS0XJuJIVzEX9ZQUcGIg1tUK3rrs1XxU0SBO6fM9C0zh8EyolT6hOoth/09LY
-         cw1wEMkDKkEHwxMXLZVx6aO4F5pAR4K4cfV4WwxxZkbgg03fj2OuKDo1qVQO6qKv/CPN
-         OaNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWm2eSN2DZ/7Q+w3DR2XUGVo7uUL7aPTjFKJ3bV+JRXVurze2I/r7Ub4ZPnp8/+AqPTFCC2z3iK8X6NMok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoXJVcViLl9kOYZl8uYy6aeG8hYT5pyrsQNIhMlra2ZRzWngd5
-	SyLhN7Tb9S3TBSC7rzTpe4lVsvatWX7/ZnyxiWBLE557pE5YmnHx
-X-Gm-Gg: ASbGncux+zuWgVlUBrf7y8xba/VKGR747V1cGiei9jzHyHECK39NKjHbAj+KkDrjnmL
-	T/FyDJO+dJXWkJShOcFL91LkXL35VFPEsO9M2lBboJNg2zg/+ViNFbJFp8NJxDYKyX2ftpGAEVZ
-	kQoEQdyb649q38+xapZDesMCAXqI1BYz3f0abeCmh1JeW7tpwCaCgl+OoJq5mENqPWrGaWa1fKO
-	6G0RDTo+v0iizl+W4/23RjNzFevJmNtPcZ580dyX1dRM8bQ+9WSdiIJkU7rf36p9hQwst1RYXqA
-	T+B/QyY+VlobT52mkAjed91njlzgw7pCAjP49jwiWjAh+4ZkfiqUsgxpBfNXQY5t
-X-Google-Smtp-Source: AGHT+IHPlyAlfrTqN1w3LVNPrQcr8DnOtPZtyVS9h3hXu/7aJDgKkYIIkXZJU+QeSspXhQoWh6PZ0Q==
-X-Received: by 2002:a17:907:9453:b0:aca:a3da:80b8 with SMTP id a640c23a62f3a-ad21917d128mr1642453866b.55.1747073406421;
-        Mon, 12 May 2025 11:10:06 -0700 (PDT)
-Received: from [192.168.0.131] ([194.183.54.57])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad24085b44fsm391903966b.149.2025.05.12.11.10.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 11:10:05 -0700 (PDT)
-Message-ID: <0bf10848-0fa2-438a-92dc-6d3b29760b64@gmail.com>
-Date: Mon, 12 May 2025 20:10:04 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eh9q3YJc"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54CElKsf2039818;
+	Mon, 12 May 2025 09:47:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747061240;
+	bh=M1dbos3NxQKuT6QnfwRY9+hyVJpSnhTDpepVkHM/iHk=;
+	h=Date:From:To:CC:Subject;
+	b=eh9q3YJcKoHptui5NWsC6ktYlxkMLiUYlZFeq4cyyd7E1o0d3YKitdXZN+WI2Y0I9
+	 vi1lOCaukMwRYkfcak3RdIRdzdZ0qDSekQQ/KdF1GPvxaEpcDTP6U5+uh1yckCLq7i
+	 6mKv+biTUCCjzl167yI02EpQVwjR3rNQLAnmLCfU=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54CElKMV1169212
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 12 May 2025 09:47:20 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
+ May 2025 09:47:19 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 12 May 2025 09:47:19 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54CElJAm040488;
+	Mon, 12 May 2025 09:47:19 -0500
+Date: Mon, 12 May 2025 09:47:19 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Arnd Bergmann <arnd@arndb.de>, SoC list <soc@lists.linux.dev>
+CC: Santosh Shilimkar <ssantosh@kernel.org>, Tony Lindgren <tony@atomide.com>,
+        SoC <soc@kernel.org>, <arm@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>
+Subject: [GIT PULL 1/3] soc: ti: Driver updates for v6.16
+Message-ID: <20250512144719.mpkyw2jbyzslb5hy@yearly>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
- multi_index
-To: Johan Adolfsson <Johan.Adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>
-Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Kernel <Kernel@axis.com>
-References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
- <62a74e0e-f5a1-40b5-a855-6e9bd620cbd5@gmail.com>
- <PAWPR02MB92814A311B18A6FD8A448D249B97A@PAWPR02MB9281.eurprd02.prod.outlook.com>
-Content-Language: en-US
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-In-Reply-To: <PAWPR02MB92814A311B18A6FD8A448D249B97A@PAWPR02MB9281.eurprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vnuongetbvaxpj52"
+Content-Disposition: inline
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 5/12/25 12:59, Johan Adolfsson wrote:
-> 
-> From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Sent: Saturday, May 10, 2025 17:32
-> To: Johan Adolfsson; Lee Jones; Pavel Machek
-> Cc: linux-leds@vger.kernel.org; linux-kernel@vger.kernel.org; Kernel
-> Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct multi_index
-> 
->> Hi Johan,
->>
->> On 5/6/25 12:39, Johan Adolfsson wrote:
->>> mc_subled used for multi_index needs well defined array indexes,
->>> to guarantee the desired result, optionally use reg for that.
->>>
->>> If devicetree child nodes is processed in random or reverse order
->>> you may end up with multi_index "blue green red" instead of the expected
->>> "red green blue".
->>> If user space apps uses multi_index to deduce how to control the leds
->>> they would most likely be broken without this patch if devicetree
->>> processing is reversed (which it appears to be).
->>
->> Are you trying to solve some real problem that occurred to you?
-> 
-> Yes! Since the subled is indexed by the processing order, it gets reversed if devicetree processing is reversed
-> (which I understand is a "feature"), so instead of "red green blue" I would get "blue green red" in the multi_index file without this patch.
-> The mapping to the hardware does not match that, so writing "255 0 0" to multi_intensity will give me red and not blue.
+--vnuongetbvaxpj52
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You are expected to write intensities to the multi_intensity file
-according to the order of colors listed in multi_index file.
+Hi,
 
->> The order of DT nodes parsing is not a problem here - we save
->> color index in subled_info to be able to figure out which color
->> is on which position. This information can be retrieved in sysfs
->> by reading multi_index file.
-> 
-> Maybe the bug is somewhere else in the leds-lp50xx if that is supposed to work,
-> but I still think it's a good thing to be able to get the expected order in the multi_index file.
+This PR has a couple of minor checkpatch warnings on 75 characters,
+which I have opted to ignore due to breaking URL or warning message.
 
-Please make sure you read Documentation/leds/leds-class-multicolor.rst.
-There is no such term as "expected order in the multi_index file".
-The framework is called multicolor, not rgb. The order of colors does
-not need to be RGB.
+Please pull:
 
--- 
-Best regards,
-Jacek Anaszewski
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git tags/ti-driv=
+er-soc-for-v6.16
+
+for you to fetch changes up to 877afe1ee34df54ea62ca9746aafbb1cac946bf5:
+
+  soc: ti: wkup_m3_ipc: Use dev_err_probe (2025-05-09 06:34:27 -0500)
+
+----------------------------------------------------------------
+TI SoC driver updates for v6.16
+
+- ti_sci: Bug fix in CPU latency conversion from us to ms for TISCI protocol
+- k3-socinfo: Add JTAG ID for AM62LX
+- Code cleanups: wkup_m3_ipc: Use dev_err_probe, k3-ringacc: use
+  device_match_of_probe and knav_qmss_queue: drop unnecessary NULL check
+
+----------------------------------------------------------------
+Alexander Stein (1):
+      soc: ti: wkup_m3_ipc: Use dev_err_probe
+
+Chen Ni (1):
+      soc: ti: knav_qmss_queue: Remove unnecessary NULL check before free_p=
+ercpu()
+
+Kendall Willis (1):
+      firmware: ti_sci: Convert CPU latency constraint from us to ms
+
+Tang Dongxing (1):
+      soc: ti: k3-ringacc: Use device_match_of_node()
+
+Vignesh Raghavendra (1):
+      soc: ti: k3-socinfo: Add JTAG ID for AM62LX
+
+ drivers/firmware/ti_sci.c        | 14 +++++++++++---
+ drivers/soc/ti/k3-ringacc.c      |  2 +-
+ drivers/soc/ti/k3-socinfo.c      |  2 ++
+ drivers/soc/ti/knav_qmss_queue.c |  3 +--
+ drivers/soc/ti/wkup_m3_ipc.c     |  8 +++-----
+ 5 files changed, 18 insertions(+), 11 deletions(-)
+
+--=20
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5=
+ 849D 1736 249D
+
+--vnuongetbvaxpj52
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE+KKGk1TrgjIXoxo03bWEnRc2JJ0FAmgiCe8ACgkQ3bWEnRc2
+JJ3VSg//cqLAq2iGAboinXq/KGwV3tdz8mR0MH7jjlrDV9hHTT1TDFa6UnasJmsl
+YNafSVifHYlBxi3vIMXOJ8sOt9nETw7AWPTP/YTyVaoyosw3XlkzNKoWyTYJKwzm
+uvBOb3jCBYqwqfYwCsXq8awszoN8fPxpAWJmg8NhlwJjORZICjnyBB63m8ApLB1e
+5cH/H8lhtT92fM7F1PrNI4/62woJ0srLH7sgegq24vSh0pqYdy64QFSk+ya1ZQRi
+wKAGhehUHGe7o4QQZ+BJcy9I0PJCfejJB2ZRTphtT8HMWjQhP0Aw34BZacmBtIRO
+cy3aJ0Wwc8DAtKW+yV5D1cNy4w+BuFKDgyK6XsPjVmIqaX21G+05zFePiB6bIEO4
+sbs7HlxsS5YMbor6UMMX1YLvkms1ku91lrDpyV1z/o0iN79sbXyAxPj0piDKa13r
+cLdNzIYhiOdiBCtXLxYa6y2GeZq42SNQee7XhEbLS1bhfLYLH4+cJ7MGAboJse/0
+nVG7+VoFwUUMpMl18mK6dITyr9sRz6R5tqWFV5iDJx3cklhdsowlydP1MoELJuEF
+jVcqgpFuqygrJam1qy8NDFC4xqr2ZwvDFXK9MnjcmePF2EWZmouSKROFjxr6rHNA
+QfT4hNUM8iMn4glklKPM+dNMggAmyDB1+zbdyGJdi0rw7I2vP4s=
+=npRl
+-----END PGP SIGNATURE-----
+
+--vnuongetbvaxpj52--
