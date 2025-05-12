@@ -1,133 +1,124 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E49F9CB
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BF22580DB;
+	Mon, 12 May 2025 08:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037942; cv=none; b=gJ8UE+IrX/lUmVj7PExwyzlw6jn0aCCjMJ6xGVWFfojQGcRBnQtdLIE1AqaQeStmi3NXDswDrrdeBeYt1SsSsmWRBV3OJ7J3cFaEjPQzdThRXmyl9aGQpWS8xdZI9VVlHmxhSFwlpJ+qlkry6cMOnb/C/a7cOnvq0G3lntoJ+iw=
+	t=1747037991; cv=none; b=dfFklgSymeft77MtgCj5q153C6WVnAw2U7Y0MkJ3mhfDhtr3CCkMAotY7yNZeUdcCrqSh3+2DYrbuHu+TvAI0BZeFiGucwCCR41ZEUmL3FcnRgkN1JO1BGbUfCqbAxSESxbpOrFc4PGc2lXQKgQGmHXHZMA8E50CjIPeui3kTs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037942; c=relaxed/simple;
-	bh=2jepknxWjE/0XKgZzfXVHNANqnmrBGpNCfDIqn35WIw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=p/Tkae6iwlfHgmDpzecUAdgDq50oqFs4fSK3kxKSK89mftUv+SIauRKiVNR0oqGuDm0U3IPOX9RkHq/SIh+hb50uKsjIwXrvJfynpVAM9Xa7FZRv80RMoWRoq7fBRjkynMw+4OyuJ8s2t53cFyCasXkuq36z55GxGvB2cPpARIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ayaLAO/w; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747037991; c=relaxed/simple;
+	bh=jOmPHw3PxpWmkFBx5yjdgmw5MHCKuJi6JPgf/knFaTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZDwiNxPA4WKQTYlOPKToCUosEG+yKpSgsdx/7Q6r26NwuJ+gseB4ZDo8QevJysJXQTO8/bV589bhNnTNSjfi/F+yfHIm5QllZCXuaJwUEAR3Hqy3Vq+vLXBGKBzRzOR6n2Ok0vjanfsVqTmujS/zkI7o1pE5yQU1NW9pthW9/ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JcP35AC7; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ayaLAO/w"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54C8IUXV1928408
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 03:18:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747037910;
-	bh=ge8Dl/TyFR3+BosL2y3ZH63GxgS1a+2mlep3avVb4D8=;
-	h=From:To:CC:Subject:Date;
-	b=ayaLAO/wtOTUI15x3sTy3JRN4CN7GWgM/ATYqfqv5Q4yO2Ods0rCwOJZvB8S2QSWy
-	 tRVSWA+MjquKKekduWwYyACHradaVr5EI4NWcQVopIPXsLjy18mu4fTpLYYOZc3Eux
-	 OJ/XlakOgV2tam64ncgN3FWEVot4nTrHBIti0KKc=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54C8IUaY003426
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 May 2025 03:18:30 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- May 2025 03:18:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 May 2025 03:18:30 -0500
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.161.59])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54C8IQUV095806;
-	Mon, 12 May 2025 03:18:26 -0500
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <tiwai@suse.de>
-CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <13564923607@139.com>, <13916275206@139.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <baojun.xu@ti.com>, <Baojun.Xu@fpt.com>, <jesse-ji@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v2] ALSA: hda/tas2781: Fix the ld issue reported by kernel test robot
-Date: Mon, 12 May 2025 16:18:22 +0800
-Message-ID: <20250512081822.1513-1-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JcP35AC7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5B00B43280;
+	Mon, 12 May 2025 08:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747037986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SJCWwWMnHakM0Z3fFPJDLj8fjIwn2K6+QB1baGulYEc=;
+	b=JcP35AC7cvlmoFIoGXOw1UKnJI3bYvWsi4unol/cpHkmvPSgpdvCsdEuwOMvcExQC02C9p
+	4b3E/cLEPGDASs8hGQpvKYG5/fWLVuzYOWf8B+QBRFmn9sX8e7c5aaB4ebIQw4F5LqaiQt
+	WMR3wW/z48LqumyhX4jke0rwihzQ/TESWYjspXl2dHOOzbNYfZSMPvDJcA9wkp2e/sDGoa
+	lLAQ6HCUd/9pZzRYAKzUKHPUodYGF/YZgn4jgAVN14mS/Wvhx/TnzZWNWJgvELMi2CtkDk
+	/4teA16FpJ3t0JQcnAW472HONr4UmualZPH5Xb62fLHUsrOGyDzy+gIV52GQFw==
+Date: Mon, 12 May 2025 10:19:42 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Jason Xing <kernelxing@tencent.com>, Richard Cochran
+ <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, "Russell King (Oracle)"
+ <linux@armlinux.org.uk>
+Subject: Re: [PATCH net-next v2] net: Add support for providing the PTP
+ hardware source in tsinfo
+Message-ID: <20250512101942.4a5b80a1@kmaincent-XPS-13-7390>
+In-Reply-To: <20250508193645.78e1e4d9@kernel.org>
+References: <20250506-feature_ptp_source-v2-1-dec1c3181a7e@bootlin.com>
+	<20250508193645.78e1e4d9@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtjeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgri
+ igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllhgvmhguvggsrhhuihhjnhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-After commit 9fa6a693ad8d ("ALSA: hda/tas2781: Remove tas2781_spi_fwlib.c
-and leverage SND_SOC_TAS2781_FMWLIB")created a separated lib for i2c,
-tasdevice_remove used for not only for I2C but for SPI being still in
-that lib caused ld issue.
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://urldefense.com/v3/__https://lore.kernel.org/
-|  oe-kbuild-all/202505111855.FP2fScKA-lkp@intel.com/
-|  __;!!G3vK!U-wdsvrOG1iezggZ55RYi8ikBxMaJDVs7u17Z9-7Xa-
-|  0lnyE4S3m2qmLCcHVK4qH1bD1JuBdzg$
-All errors (new ones prefixed by >>):
->> ld.lld: error: undefined symbol: tasdevice_remove
-   >>> referenced by tas2781_hda.c:33 (sound/pci/hda/tas2781_hda.c:33)
-   >>>               vmlinux.o:(tas2781_hda_remove)
-To fix this issue, the implementation of tasdevice_remove was moved from
-tas2781-comlib-i2c.c to tas2781-comlib.c.
+On Thu, 8 May 2025 19:36:45 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Fixes: 9fa6a693ad8d ("ALSA: hda/tas2781: Remove tas2781_spi_fwlib.c and leverage SND_SOC_TAS2781_FMWLIB")
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+> On Tue, 06 May 2025 14:18:45 +0200 Kory Maincent wrote:
+> > +  -
+> > +    name: ts-hwtstamp-source
+> > +    enum-name: hwtstamp-source
+> > +    header: linux/ethtool.h
+> > +    type: enum
+> > +    name-prefix: hwtstamp-source
+> > +    entries: [ netdev, phylib ] =20
+>=20
+> You're missing value: 1, you should let YNL generate this to avoid
+> the discrepancies.
+>=20
+> diff --git a/Documentation/netlink/specs/ethtool.yaml
+> b/Documentation/netlink/specs/ethtool.yaml index 20c6b2bf5def..3e2f470fb2=
+13
+> 100644 --- a/Documentation/netlink/specs/ethtool.yaml
+> +++ b/Documentation/netlink/specs/ethtool.yaml
+> @@ -99,12 +99,21 @@ uapi-header: linux/ethtool_netlink_generated.h
+>      type: enum
+>      entries: [ unknown, disabled, enabled ]
+>    -
+> -    name: ts-hwtstamp-source
+> -    enum-name: hwtstamp-source
+> -    header: linux/ethtool.h
+> +    name: hwtstamp-source
+> +    name-prefix: hwtstamp-source-
+>      type: enum
+> -    name-prefix: hwtstamp-source
 
----
-v2:
- - put the Fixes tag to point out the commit that introduced the regression
- - Add compiling error information reported by kernel test robot into patch
-   description.
-v1:
- - | Reported-by: kernel test robot <lkp@intel.com>
-   | Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505111855.FP2fScKA-lkp@intel.com/__;!!G3vK!U-wdsvrOG1iezggZ55RYi8ikBxMaJD
----
- sound/soc/codecs/tas2781-comlib-i2c.c | 6 ------
- sound/soc/codecs/tas2781-comlib.c     | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Should we keep the enum-name property as is is already use, or do you prefe=
+r to
+rename all its use to ethtool-hwtstamp-source?
 
-diff --git a/sound/soc/codecs/tas2781-comlib-i2c.c b/sound/soc/codecs/tas2781-comlib-i2c.c
-index a75b812618ee..c078bb0a8437 100644
---- a/sound/soc/codecs/tas2781-comlib-i2c.c
-+++ b/sound/soc/codecs/tas2781-comlib-i2c.c
-@@ -364,12 +364,6 @@ int tascodec_init(struct tasdevice_priv *tas_priv, void *codec,
- }
- EXPORT_SYMBOL_GPL(tascodec_init);
- 
--void tasdevice_remove(struct tasdevice_priv *tas_priv)
--{
--	mutex_destroy(&tas_priv->codec_lock);
--}
--EXPORT_SYMBOL_GPL(tasdevice_remove);
--
- MODULE_DESCRIPTION("TAS2781 common library for I2C");
- MODULE_AUTHOR("Shenghao Ding, TI, <shenghao-ding@ti.com>");
- MODULE_LICENSE("GPL");
-diff --git a/sound/soc/codecs/tas2781-comlib.c b/sound/soc/codecs/tas2781-comlib.c
-index ad2f65359b15..076c1d955972 100644
---- a/sound/soc/codecs/tas2781-comlib.c
-+++ b/sound/soc/codecs/tas2781-comlib.c
-@@ -225,6 +225,12 @@ void tasdevice_dsp_remove(void *context)
- }
- EXPORT_SYMBOL_GPL(tasdevice_dsp_remove);
- 
-+void tasdevice_remove(struct tasdevice_priv *tas_priv)
-+{
-+	mutex_destroy(&tas_priv->codec_lock);
-+}
-+EXPORT_SYMBOL_GPL(tasdevice_remove);
-+
- MODULE_DESCRIPTION("TAS2781 common library");
- MODULE_AUTHOR("Shenghao Ding, TI, <shenghao-ding@ti.com>");
- MODULE_LICENSE("GPL");
--- 
-2.43.0
+> -    entries: [ netdev, phylib ]
+> +    entries:
+> +      -
+> +        name: netdev
+> +        doc: |
+> +          Hardware timestamp comes from a MAC or a device
+> +          which has MAC and PHY integrated
+> +        value: 1
+> +      -
+> +        name: phylib
+> +        doc: |
+> +          Hardware timestamp comes from one PHY device
+> +          of the network topology
 
+Oh ok, thanks for the pointers!
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
