@@ -1,62 +1,63 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BBA2512F1
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9DE2517AF
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066916; cv=none; b=By2icAlHpDMeZZg9lQUjxqMqPC7n0AKyS21IEMBApMtgVIW76k3zBrkzcqI7iMSI/utGUMgVTL2yP+EfvexMt/K4K93Hdw2WoIojj39J8jBbEhOs69z08Q1aI3EXMNmCEh6JV89d66gCVHE6mltYkbEODVipERUDKESzqWItQfo=
+	t=1747066918; cv=none; b=Ydet1b26l/sbXEKX0vSYBvyFibJw9D9ueVI4Y1qIQuahXlGBOrxDZ7B+UTJ+eS7aBsmuhgaPq08cw7lXB1qh5ucsErh8h3SW1eH/tou29SZPKlI1RKOI4U+kFYnhyMhg3XckzTbyODSCaEutS/p0F9OlbXaj2wlFTxMV/3dNqow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066916; c=relaxed/simple;
-	bh=aJTqpTx6bsWfmRdt6o+xFOaEEnNMGOmHb4T2fWSWHmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tzmOvfohurR861D7pE9EGEudhudxnSudFXsI93vzrev1aUlZwfTPPvTQ97MqAG+hfZJM6fRlwNgne0lN43aCNmBcku90ehAhRk6DYZNk89bKhTbC60pv1wQ9suAsnTVzU3lf7Ayec/Pe5Ikzse/spZNRh1sYulmq+8H1M3QSjIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LmK7QMWn; arc=none smtp.client-ip=209.85.161.42
+	s=arc-20240116; t=1747066918; c=relaxed/simple;
+	bh=LxQydT9NcYzB9rb63wpRt/UEayoX55pNcemCp/ExSaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u2xCVcpfgyxQ2R209gk7C4WWkZEWxvxYUAdRgN7bLoYCxbdleCIjfECMzy6OafZJ3+414I13JFTKLbXMx1JdS49OwSHvwGBxrLWUlRdyGWw8L8/mUqdK9qnq24tHuAhl1l8E1nBd8/0s5QO1wsdCordntZenrp2MDIgX+pF3+QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=po0pglis; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LmK7QMWn"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-60219d9812bso1208479eaf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:21:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="po0pglis"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-477282401b3so51492431cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747066913; x=1747671713; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LfCbmkU3+1+JpMWzgtmMUQbf359Bf8sTjX9QYifoLuE=;
-        b=LmK7QMWn2ihvZtP+AkX+chFCS7wDMkRvRkF9o4r7H5+6BWYo/+pYuoK6bzX4RmG+rj
-         RLaBCBkOWZaLq2DMvM44i2OIq86ELMDf4W+IV1EkN30sgzcE6Pa3RBrNLfQfIgZTiZt0
-         MBnzEiI4YV/z7PEzaZfwbQuTL5rcywsVNWKJXbQQVKb+Oq/5dQAdzeaPSc5SmVHZYuwm
-         dipcjwgxO+h3vzPiqGxAjK7Ble6sZaVyfBg4cn6/Y2UPTJBJYpOOC94oecbSFMbDkHDM
-         PRZ1u5dWKzhHDPg+O/QXqq5Gtmbi2r1rJ0QnFj+MFyYFPUDyJJEhCdcJTcW2Et8uZX9i
-         TzhQ==
+        d=gourry.net; s=google; t=1747066915; x=1747671715; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I8UJn+qPm/CqygOdsDrWlSFpuesufqB+7bgKD2LpNho=;
+        b=po0pglis75+crhbyCE2FcAprMvwOg40U9SHx8P42y+uEvjdRKHAtbErMjYNOeWhTPf
+         /+YhXybyGWPnfz2RY1GwX25x+s/JZR9xtyP7cqG9PBaN7m/yyZQ/S2/LB8y/m/+x9RVh
+         zQN1HRj3Ho54UEKAN8TF4QbS+3yf7bQOPcM4YfYUg9LBv9Hkid4uoYNsyOVeM1835u/H
+         1vvDTxi2DpqyEoh4g5fgrQZzMFX8/GBb4b+uL/e6crq/O+KhUyXuWTekTTfz+2W5hLek
+         IhfStyNH9MmnsJSyVjxkWQF5tV/4KIeyf02DvmgE7W+nCktJ+IqTydhv94WNhX7iEhKt
+         h+2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066913; x=1747671713;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LfCbmkU3+1+JpMWzgtmMUQbf359Bf8sTjX9QYifoLuE=;
-        b=sNX+jodBprVTVuaG2c6oKhGrFQOChlNEJO5f/SQDJsZJd0PlPvQfgLLfNqvAAH+/yA
-         CNWjK8YA4Xlk58aKhEXKRXLO7eonuju0SnG+EzYrO5vLh39X0bcb7U7tdkbKBBAVHgAN
-         63H9A9q5bod9U2T87ppVAR2S9KBBnngys/i8NdpYYGECSYaD0+6uHYuAvXyMbGkiDdkx
-         8/OelsNgEZWBsrMOLmy/RXYChgo7GibK/aeuZYCVPpD4pz0VdqHIkFuPVsK0f7wzOon9
-         kzTaNzfXQdRJMRERzzqE02w0fgi8ibkIsoA1XpmTGXFPS/MCsSURHjiQUZS0BhDtnUKp
-         veGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9nnOvmuPvb9RMSammdGtIWhN+tGWeuyKNfk0iqvwaWp78r9FhPx9/EbICggWYHvXDICuIGad6/uU79fI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSGmXvj7Q252DHP4zgcWOjlKpjimKdll2YRk31tBnlPETtoLXC
-	AxvKnMAaa/EIOJeoE6a/6e5uMAZn/qZuniyVhgIKOfbY/whwupTJnQEy592R+BbyerBnByAtqkQ
-	O
-X-Gm-Gg: ASbGnctOsaE0dFeMkaK2Jya8RXzx6DmpE/6rPDmfSLdRB2BvfXecn7+g9XRe+Cz6JIO
-	FTUVYG+cdMah7eIIuOXXz3DuGjQECF3K2EHYI/EbpEVmS+YEBd5IULiGOOUS3+55QG4yFdkC3a7
-	/jFCq3dlW9917QDnHcdoNvFaObifNQ0VIPnpL9k67NqjK9oybuPaWAVPS85caOs/yYG2rx28Dja
-	sJ+KkNKthegf0WLr5vR9s5LLN7OqqOwVG45/2VQ13Cqc81ni3iBtEPOhRgMwAy336hcyw1lOnJ9
-	1Ybhza849dkLfAKKntatgbgZqvy4jylqlje2/S51ZQGZVd1Dpd5Fgg36eR37TrWs1VXyNQIonI+
-	DjzgBkjubKEr0G5xgyx6lKSit7XCO+eRpToJ7
-X-Google-Smtp-Source: AGHT+IHO7t1VbUCTPu6DVA/SlLwYVzQqHMVMwNjRYWU53OeT2fIkETuEfRSvxBaltK+a88WEj8r0vg==
-X-Received: by 2002:a05:622a:1aa0:b0:476:838c:b0ce with SMTP id d75a77b69052e-4945273c308mr238827611cf.13.1747066901870;
-        Mon, 12 May 2025 09:21:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747066915; x=1747671715;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I8UJn+qPm/CqygOdsDrWlSFpuesufqB+7bgKD2LpNho=;
+        b=sZwZHv8SlUBg3OfIZ2O7lGjlKiPByoj3lhQwFxBB5ew4hZgoRO0msbg5FjDun6M7mm
+         wkJd++O0scID+MpDtsq/nUJv/CWmY2Mmx85hB6F2U6UGckste25+E+oPKsUYnk3wJZMB
+         KcQiRUPlRi3+W59Kht4z+NOgid8GPPOzqxpwUbNWFQLWhAnY8M0w8LoiAIfDsOqUg/mD
+         8p5R0zcmA9J0kFfQUCvkoHWBeRcrZDeRsedDJWhUiDGjJMSAdLgaFvYHUPZRM7Yck3PA
+         Oy4gzzAk+j/t1UgN8qDFH4LotYFNaqQALwKYs8Ua6MF36A5/P9yjm9HBfvYADCgJujWj
+         Ftzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnC/3O1kVpYFOm6AySsBSzPKna354PFsc2yti8MUSBxc6qvAp8NALaMb8yuLkIBtLIvV5jP8teq+ARzEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw53ertahdKC31cdCJoG1geRdLmlA72Ig0K2a/F9i5N8uYCVef4
+	w0I+hjG1PQOou9XOkB8x7VRSkgmuZloZTISgqPGLtya6mzMzJhfR65rvpaMEMSg=
+X-Gm-Gg: ASbGncsMPHEhBqq8Fg689dddSVyS+ERJtb4Fbj2FymopC8av5QHRFU4OkW6Zha0b6HY
+	vk4S0yVHSnqlZsUO5uGD2L7gELwMcF0twLN601zc/Sp82um+kd/DTXGKl7rNFldEEHVon3FJlyX
+	r8wwI8RepFuoi/GZ+gjVoVvTAwI9O9d/XQ8CU9f/ZTdH4IZyRFZsa/UDbKQUzkP+g1S3+KhWXY5
+	v6+slrWtlYc0/zr+IvlWZY5rbW6GsR5aR83Ea1zDF/PjUfc5iG0/6KqCo68d4w+VWxQH0mR4Cfx
+	rRgjgmhI4/N3TZCPBxy+RCOfP2ujPfah9UNSEaB/KFkYTfh9+wA6UsSz7fgsWxPetG0peMUg1Vm
+	n4HM8kPdpKvRs1D+pt452bW9kHc+FlpVm9R9G
+X-Google-Smtp-Source: AGHT+IF/Ciuu/RnaIzilFe33rOYM7yb8qG2/RD4RLkfHTbIO9NZZVIDaDNHHl1sBRQgVDQ1Sb37DNw==
+X-Received: by 2002:a05:622a:11d5:b0:48c:428c:5b5b with SMTP id d75a77b69052e-49452712ee1mr237385871cf.1.1747066914598;
+        Mon, 12 May 2025 09:21:54 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.41
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:21:41 -0700 (PDT)
+        Mon, 12 May 2025 09:21:54 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -69,12 +70,13 @@ Cc: linux-doc@vger.kernel.org,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
-	corbet@lwn.net,
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: [PATCH v3 00/17] CXL Boot to Bash Documentation
-Date: Mon, 12 May 2025 12:21:17 -0400
-Message-ID: <20250512162134.3596150-1-gourry@gourry.net>
+	corbet@lwn.net
+Subject: [PATCH v3 08/17] cxl: docs/linux - early boot configuration
+Date: Mon, 12 May 2025 12:21:25 -0400
+Message-ID: <20250512162134.3596150-9-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
+References: <20250512162134.3596150-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,118 +85,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v3:
-- Cross-links (Bagas)
-- Grammar and spelling (Randy)
-- added fixups to access-coordinates (Bagas)
-- Drop TODO sections (use-case, memory-tiering, CDAT/UEFI, SRAT Genport)
-  I unfortunately won't be able to come back around to this for
-  a while, so I'd rather not let this rot.
+Document __init time configurations that affect CXL driver probe
+process and memory region configuration.
 
----
-
-This series converts CXL Boot to Bash Docs from LSFMM '25 to Linux
-Kernel Docs.  In brief, this document covers (almost) everything Linux
-expects from platforms to successfully bring volatile CXL memory
-capacity online as a DAX device and/or SystemRAM.
-
-It covers:
-
-- Platform configuration data (ACPI Tables, EFI Memory Map, EFI Configs)
-- Linux Build and Boot Parameters
-- Linux consumption of Platform, Build, and Boot params
-- Linux creation of base resources (NUMA nodes, memory tiers, etc)
-- CXL Driver probe process and sysfs structure
-- DAX Driver interactions between the CXL driver and memory hotplug
-- Memory hotplug interactions
-- Page allocator interactions (NUMA nodes, Memory Zones, Reclaim, etc).
-
-Included are example platform configurations (ACPI tables) and cxl
-decoder configurations to guide platform developers on expected
-configurations (which may be more strict than the CXL spec).
-
-Co-developed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 Signed-off-by: Gregory Price <gourry@gourry.net>
-
-Gregory Price (17):
-  cxl: update documentation structure in prep for new docs
-  cxl: docs - access-coordinates doc fixups
-  cxl: docs/devices - add cxl device and protocol reference
-  cxl: docs/platform/bios-and-efi documentation
-  cxl: docs/platform/acpi reference documentation
-  cxl: docs/platform/example-configs documentation
-  cxl: docs/linux - overview
-  cxl: docs/linux - early boot configuration
-  cxl: docs/linux - add cxl-driver theory of operation
-  cxl: docs/linux/cxl-driver - add example configurations
-  cxl: docs/linux/dax-driver documentation
-  cxl: docs/linux/memory-hotplug
-  cxl: docs/allocation/dax
-  cxl: docs/allocation/page-allocator
-  cxl: docs/allocation/reclaim
-  cxl: docs/allocation/hugepages
-  cxl: docs - add self-referencing cross-links
-
- .../driver-api/cxl/allocation/dax.rst         |  60 ++
- .../driver-api/cxl/allocation/hugepages.rst   |  32 +
- .../cxl/allocation/page-allocator.rst         |  85 +++
- .../driver-api/cxl/allocation/reclaim.rst     |  51 ++
- .../driver-api/cxl/devices/device-types.rst   | 165 +++++
- Documentation/driver-api/cxl/index.rst        |  45 +-
- .../cxl/{ => linux}/access-coordinates.rst    |  35 +-
- .../driver-api/cxl/linux/cxl-driver.rst       | 630 ++++++++++++++++++
- .../driver-api/cxl/linux/dax-driver.rst       |  43 ++
- .../driver-api/cxl/linux/early-boot.rst       | 137 ++++
- .../example-configurations/hb-interleave.rst  | 314 +++++++++
- .../intra-hb-interleave.rst                   | 291 ++++++++
- .../multi-interleave.rst                      | 401 +++++++++++
- .../example-configurations/single-device.rst  | 246 +++++++
- .../driver-api/cxl/linux/memory-hotplug.rst   |  78 +++
- .../driver-api/cxl/linux/overview.rst         | 103 +++
- .../driver-api/cxl/platform/acpi.rst          |  76 +++
- .../driver-api/cxl/platform/acpi/cedt.rst     |  62 ++
- .../driver-api/cxl/platform/acpi/dsdt.rst     |  28 +
- .../driver-api/cxl/platform/acpi/hmat.rst     |  32 +
- .../driver-api/cxl/platform/acpi/slit.rst     |  21 +
- .../driver-api/cxl/platform/acpi/srat.rst     |  44 ++
- .../driver-api/cxl/platform/bios-and-efi.rst  | 262 ++++++++
- .../cxl/platform/example-configs.rst          |  13 +
- .../example-configurations/flexible.rst       | 296 ++++++++
- .../example-configurations/hb-interleave.rst  | 107 +++
- .../multi-dev-per-hb.rst                      |  90 +++
- .../example-configurations/one-dev-per-hb.rst | 136 ++++
- ...ry-devices.rst => theory-of-operation.rst} |  10 +-
- 29 files changed, 3867 insertions(+), 26 deletions(-)
- create mode 100644 Documentation/driver-api/cxl/allocation/dax.rst
- create mode 100644 Documentation/driver-api/cxl/allocation/hugepages.rst
- create mode 100644 Documentation/driver-api/cxl/allocation/page-allocator.rst
- create mode 100644 Documentation/driver-api/cxl/allocation/reclaim.rst
- create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
- rename Documentation/driver-api/cxl/{ => linux}/access-coordinates.rst (84%)
- create mode 100644 Documentation/driver-api/cxl/linux/cxl-driver.rst
- create mode 100644 Documentation/driver-api/cxl/linux/dax-driver.rst
+---
+ Documentation/driver-api/cxl/index.rst        |   1 +
+ .../driver-api/cxl/linux/early-boot.rst       | 131 ++++++++++++++++++
+ 2 files changed, 132 insertions(+)
  create mode 100644 Documentation/driver-api/cxl/linux/early-boot.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/hb-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/intra-hb-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/multi-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/single-device.rst
- create mode 100644 Documentation/driver-api/cxl/linux/memory-hotplug.rst
- create mode 100644 Documentation/driver-api/cxl/linux/overview.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/cedt.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/dsdt.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/hmat.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/slit.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/srat.rst
- create mode 100644 Documentation/driver-api/cxl/platform/bios-and-efi.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configs.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
- rename Documentation/driver-api/cxl/{memory-devices.rst => theory-of-operation.rst} (98%)
 
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index bc2228c77c32..d2eefe575604 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -34,6 +34,7 @@ that have impacts on each other.  The docs here break up configurations steps.
+    :caption: Linux Kernel Configuration
+ 
+    linux/overview
++   linux/early-boot
+    linux/access-coordinates
+ 
+ 
+diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
+new file mode 100644
+index 000000000000..8c1c497bc772
+--- /dev/null
++++ b/Documentation/driver-api/cxl/linux/early-boot.rst
+@@ -0,0 +1,131 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=======================
++Linux Init (Early Boot)
++=======================
++
++Linux configuration is split into two major steps: Early-Boot and everything else.
++
++During early boot, Linux sets up immutable resources (such as numa nodes), while
++later operations include things like driver probe and memory hotplug.  Linux may
++read EFI and ACPI information throughout this process to configure logical
++representations of the devices.
++
++During Linux Early Boot stage (functions in the kernel that have the __init
++decorator), the system takes the resources created by EFI/BIOS (ACPI tables)
++and turns them into resources that the kernel can consume.
++
++
++BIOS, Build and Boot Options
++============================
++
++There are 4 pre-boot options that need to be considered during kernel build
++which dictate how memory will be managed by Linux during early boot.
++
++* EFI_MEMORY_SP
++
++  * BIOS/EFI Option that dictates whether memory is SystemRAM or
++    Specific Purpose.  Specific Purpose memory will be deferred to
++    drivers to manage - and not immediately exposed as system RAM.
++
++* CONFIG_EFI_SOFT_RESERVE
++
++  * Linux Build config option that dictates whether the kernel supports
++    Specific Purpose memory.
++
++* CONFIG_MHP_DEFAULT_ONLINE_TYPE
++
++  * Linux Build config that dictates whether and how Specific Purpose memory
++    converted to a dax device should be managed (left as DAX or onlined as
++    SystemRAM in ZONE_NORMAL or ZONE_MOVABLE).
++
++* nosoftreserve
++
++  * Linux kernel boot option that dictates whether Soft Reserve should be
++    supported.  Similar to CONFIG_EFI_SOFT_RESERVE.
++
++Memory Map Creation
++===================
++
++While the kernel parses the EFI memory map, if :code:`Specific Purpose` memory
++is supported and detected, it will set this region aside as
++:code:`SOFT_RESERVED`.
++
++If :code:`EFI_MEMORY_SP=0`, :code:`CONFIG_EFI_SOFT_RESERVE=n`, or
++:code:`nosoftreserve=y` - Linux will default a CXL device memory region to
++SystemRAM.  This will expose the memory to the kernel page allocator in
++:code:`ZONE_NORMAL`, making it available for use for most allocations (including
++:code:`struct page` and page tables).
++
++If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
++dictates whether the memory is onlined by default (:code:`_OFFLINE` or
++:code:`_ONLINE_*`), and if online which zone to online this memory to by default
++(:code:`_NORMAL` or :code:`_MOVABLE`).
++
++If placed in :code:`ZONE_MOVABLE`, the memory will not be available for most
++kernel allocations (such as :code:`struct page` or page tables).  This may
++significant impact performance depending on the memory capacity of the system.
++
++
++NUMA Node Reservation
++=====================
++
++Linux refers to the proximity domains (:code:`PXM`) defined in the SRAT to
++create NUMA nodes in :code:`acpi_numa_init`. Typically, there is a 1:1 relation
++between :code:`PXM` and NUMA node IDs.
++
++SRAT is the only ACPI defined way of defining Proximity Domains. Linux chooses
++to, at most, map those 1:1 with NUMA nodes. CEDT adds a description of SPA
++ranges which Linux may wish to map to one or more NUMA nodes.
++
++If there are CXL ranges in the CFMWS but not in SRAT, then a fake :code:`PXM`
++is created (as of v6.15). In the future, Linux may reject CFMWS not described
++by SRAT due to the ambiguity of proximity domain association.
++
++It is important to note that NUMA node creation cannot be done at runtime. All
++possible NUMA nodes are identified at :code:`__init` time, more specifically
++during :code:`mm_init`. The CEDT and SRAT must contain sufficient :code:`PXM`
++data for Linux to identify NUMA nodes their associated memory regions.
++
++The relevant code exists in: :code:`linux/drivers/acpi/numa/srat.c`.
++
++See the Example Platform Configurations section for more information.
++
++Memory Tiers Creation
++=====================
++Memory tiers are a collection of NUMA nodes grouped by performance characteristics.
++During :code:`__init`, Linux initializes the system with a default memory tier that
++contains all nodes marked :code:`N_MEMORY`.
++
++:code:`memory_tier_init` is called at boot for all nodes with memory online by
++default. :code:`memory_tier_late_init` is called during late-init for nodes setup
++during driver configuration.
++
++Nodes are only marked :code:`N_MEMORY` if they have *online* memory.
++
++Tier membership can be inspected in ::
++
++  /sys/devices/virtual/memory_tiering/memory_tierN/nodelist
++  0-1
++
++If nodes are grouped which have clear difference in performance, check the HMAT
++and CDAT information for the CXL nodes.  All nodes default to the DRAM tier,
++unless HMAT/CDAT information is reported to the memory_tier component via
++`access_coordinates`.
++
++Contiguous Memory Allocation
++============================
++The contiguous memory allocator (CMA) enables reservation of contiguous memory
++regions on NUMA nodes during early boot.  However, CMA cannot reserve memory
++on NUMA nodes that are not online during early boot. ::
++
++  void __init hugetlb_cma_reserve(int order) {
++    if (!node_online(nid))
++      /* do not allow reservations */
++  }
++
++This means if users intend to defer management of CXL memory to the driver, CMA
++cannot be used to guarantee huge page allocations.  If enabling CXL memory as
++SystemRAM in `ZONE_NORMAL` during early boot, CMA reservations per-node can be
++made with the :code:`cma_pernuma` or :code:`numa_cma` kernel command line
++parameters.
 -- 
 2.49.0
 
