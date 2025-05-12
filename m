@@ -1,122 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D42E29ACDA;
-	Mon, 12 May 2025 18:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5725D29ACDE
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073087; cv=none; b=Xo+ZYiSw9kSBkreMnd2j5UK6xAh5lv66vcl0sPRsC9SXdPNiadt7ArzSEOJ7q8RRyYc0U3hcY+VaDsNybde0YBmYupw+N2s8b0y44fej2aL4W2VqgLYjYf6x/MljOxY4TrGB7jZuWNJgQI2DPQ39ARuTxRL0yR+j9a14Ui4Rntk=
+	t=1747073089; cv=none; b=haSO9rMS9/p9cmPU4UQXcw22MbJ6Eiq0BhuHmy3DkKgG5Wa0vcnXr2osfZxuRNAoYFR0BYGkyIZEYKbwYnFYz7FxSQUOpwh51APV0mtgoe+cHNqi1Z2v5jg4xRBRU9iT5PycBi+UCso36iv546J9tlnC0nbxCxeJyuOThcsdLK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073087; c=relaxed/simple;
-	bh=lCTxzM5mPtEqEUhqg9mBz2nbnDEbWNQdOwqtwsH/FcI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qJRWeQ7LCDks61n7imdpMj7RfA7aTm5aPbWtVXrTumzPpOE+8u4Sjme6CoCyJtp/uEm4h7vxdBLm4+zqy5GRblGNWDX37ABHrt4CQxIfQJOeP/RbsybPeDqY0Df62rYWhR8j0V/KNG0n7uLAQtyBKMLmdNj1KiYz63LPqo1nTeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENRtZKMX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747073089; c=relaxed/simple;
+	bh=XPAu0owr6qLu2CRArDhyhARm8Q7J10RVyq9f44dogdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=joj2F02goQZAzHMDlBMg6PmTB3KJZeDj5zrCcCTb0e9d+elquLDOnA1dnxbU8WsHDW62Pe91JASeFecm7Sebi5nC03WTI09p1UuAJHaNbsba/4k4LOVnF4OFNTshVOE7ZKAripUVmyKGD+wCaxjreEWzG6OdN866zSMxBwIqpy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FuFnNH9m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENRtZKMX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6BCDC4CEF0;
-	Mon, 12 May 2025 18:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747073087;
-	bh=lCTxzM5mPtEqEUhqg9mBz2nbnDEbWNQdOwqtwsH/FcI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ENRtZKMXwWza3chzqhxjc8H8mGmRL/Bz1M+Rr6NeobL0kj/Ew6VlWjTIwLk7lPd3p
-	 UC0yazS2b+t0Ha0lkfBb3NOOiwRlQMGlDZm1ZkL8XKB/gQoZxh/SJcBSMvZhfQ6dZK
-	 DHtUnayTofw+quRQn+/jY0mO0655OXvB1JM0+Tmh1tExm2gudfnWPjw1zwrj0mvNHq
-	 ngBI8UAjz/A5c65wJhRnhxClf85ZBKuV49Z80ejI/S43s4oEinsjoHcnU/GDZhK7FJ
-	 BlPkQp0ZVdkypn0N02ukbalB6cNmYZy06lG6h8RyjxCdo/1N8f4KaY2SNxYeetGfL+
-	 jS5RsK6iQH37Q==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Jason Andryuk <jason.andryuk@amd.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Sasha Levin <sashal@kernel.org>,
-	chenqiuji666@gmail.com,
-	michal.orzel@amd.com,
-	xin.wang2@amd.com,
-	gregkh@linuxfoundation.org,
-	xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 09/11] xenbus: Allow PVH dom0 a non-local xenstore
-Date: Mon, 12 May 2025 14:04:24 -0400
-Message-Id: <20250512180426.437627-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250512180426.437627-1-sashal@kernel.org>
-References: <20250512180426.437627-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FuFnNH9m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747073086;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g9ERlWy//d3vXfM6qe6RwNpiSNHM8JyZPnWWfaO2iUE=;
+	b=FuFnNH9mitAxxCNeVHQZJfHr+0USpo/jPRcUy1kgWVf8fTWB+487LxQdlOK9fGTaWRptnV
+	ISQXpWB8BQt0Qh7ZbMVu/zM9Heb4Fo0lhOW3oncgT8Bc02DQnz7ubU3728iI5WlD5awzGf
+	Ri8VxvZMNEqHmNjW65eR9FgYaTcIpss=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-9fb_4R8jOiSlXgEcXCHh-w-1; Mon,
+ 12 May 2025 14:04:44 -0400
+X-MC-Unique: 9fb_4R8jOiSlXgEcXCHh-w-1
+X-Mimecast-MFC-AGG-ID: 9fb_4R8jOiSlXgEcXCHh-w_1747073080
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6C0C18002A5;
+	Mon, 12 May 2025 18:04:39 +0000 (UTC)
+Received: from intellaptop.lan (unknown [10.22.80.5])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C18530001A1;
+	Mon, 12 May 2025 18:04:33 +0000 (UTC)
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: kvm@vger.kernel.org
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Sebastian Ott <sebott@redhat.com>,
+	Shusen Li <lishusen2@huawei.com>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-arm-kernel@lists.infradead.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Anup Patel <anup@brainfault.org>,
+	Will Deacon <will@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexander Potapenko <glider@google.com>,
+	kvmarm@lists.linux.dev,
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	x86@kernel.org,
+	Marc Zyngier <maz@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	linux-riscv@lists.infradead.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	kvm-riscv@lists.infradead.org,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: [PATCH v5 3/6] KVM: add kvm_lock_all_vcpus and kvm_trylock_all_vcpus
+Date: Mon, 12 May 2025 14:04:04 -0400
+Message-ID: <20250512180407.659015-4-mlevitsk@redhat.com>
+In-Reply-To: <20250512180407.659015-1-mlevitsk@redhat.com>
+References: <20250512180407.659015-1-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.28
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Jason Andryuk <jason.andryuk@amd.com>
+In a few cases, usually in the initialization code, KVM locks all vCPUs
+of a VM to ensure that userspace doesn't do funny things while KVM performs
+an operation that affects the whole VM.
 
-[ Upstream commit 90989869baae47ee2aa3bcb6f6eb9fbbe4287958 ]
+Until now, all these operations were implemented using custom code,
+and all of them share the same problem:
 
-Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
-currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
-xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
-late init path.
+Lockdep can't cope with simultaneous locking of a large number of locks of
+the same class.
 
-Ideally we'd drop the use of xen_initial_domain() and just check for the
-event channel instead.  However, ARM has a xen,enhanced no-xenstore
-mode, where the event channel and PFN would both be 0.  Retain the
-xen_initial_domain() check, and use that for an additional check when
-the event channel is 0.
+However if these locks are taken while another lock is already held,
+which is luckily the case, it is possible to take advantage of little known
+_nest_lock feature of lockdep which allows in this case to have an
+unlimited number of locks of same class to be taken.
 
-Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
-chance that high bits are set for the 32bit event channel.
+To implement this, create two functions:
+kvm_lock_all_vcpus() and kvm_trylock_all_vcpus()
 
-Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
-Change-Id: I5506da42e4c6b8e85079fefb2f193c8de17c7437
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Message-ID: <20250506204456.5220-1-jason.andryuk@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Both functions are needed because some code that will be replaced in
+the subsequent patches, uses mutex_trylock, instead of regular mutex_lock.
+
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ include/linux/kvm_host.h |  4 +++
+ virt/kvm/kvm_main.c      | 59 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
-diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-index 6d32ffb011365..86fe6e7790566 100644
---- a/drivers/xen/xenbus/xenbus_probe.c
-+++ b/drivers/xen/xenbus/xenbus_probe.c
-@@ -966,9 +966,15 @@ static int __init xenbus_init(void)
- 	if (xen_pv_domain())
- 		xen_store_domain_type = XS_PV;
- 	if (xen_hvm_domain())
-+	{
- 		xen_store_domain_type = XS_HVM;
--	if (xen_hvm_domain() && xen_initial_domain())
--		xen_store_domain_type = XS_LOCAL;
-+		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
-+		if (err)
-+			goto out_error;
-+		xen_store_evtchn = (int)v;
-+		if (!v && xen_initial_domain())
-+			xen_store_domain_type = XS_LOCAL;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 1dedc421b3e3..a6140415c693 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1015,6 +1015,10 @@ static inline struct kvm_vcpu *kvm_get_vcpu_by_id(struct kvm *kvm, int id)
+ 
+ void kvm_destroy_vcpus(struct kvm *kvm);
+ 
++int kvm_trylock_all_vcpus(struct kvm *kvm);
++int kvm_lock_all_vcpus(struct kvm *kvm);
++void kvm_unlock_all_vcpus(struct kvm *kvm);
++
+ void vcpu_load(struct kvm_vcpu *vcpu);
+ void vcpu_put(struct kvm_vcpu *vcpu);
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 69782df3617f..d660a7da3baa 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1368,6 +1368,65 @@ static int kvm_vm_release(struct inode *inode, struct file *filp)
+ 	return 0;
+ }
+ 
++int kvm_trylock_all_vcpus(struct kvm *kvm)
++{
++	struct kvm_vcpu *vcpu;
++	unsigned long i, j;
++
++	lockdep_assert_held(&kvm->lock);
++
++	kvm_for_each_vcpu(i, vcpu, kvm)
++		if (!mutex_trylock_nest_lock(&vcpu->mutex, &kvm->lock))
++			goto out_unlock;
++	return 0;
++
++out_unlock:
++	kvm_for_each_vcpu(j, vcpu, kvm) {
++		if (i == j)
++			break;
++		mutex_unlock(&vcpu->mutex);
 +	}
- 	if (xen_pv_domain() && !xen_start_info->store_evtchn)
- 		xen_store_domain_type = XS_LOCAL;
- 	if (xen_pv_domain() && xen_start_info->store_evtchn)
-@@ -987,10 +993,6 @@ static int __init xenbus_init(void)
- 		xen_store_interface = gfn_to_virt(xen_store_gfn);
- 		break;
- 	case XS_HVM:
--		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
--		if (err)
--			goto out_error;
--		xen_store_evtchn = (int)v;
- 		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
- 		if (err)
- 			goto out_error;
++	return -EINTR;
++}
++EXPORT_SYMBOL_GPL(kvm_trylock_all_vcpus);
++
++int kvm_lock_all_vcpus(struct kvm *kvm)
++{
++	struct kvm_vcpu *vcpu;
++	unsigned long i, j;
++	int r;
++
++	lockdep_assert_held(&kvm->lock);
++
++	kvm_for_each_vcpu(i, vcpu, kvm) {
++		r = mutex_lock_killable_nest_lock(&vcpu->mutex, &kvm->lock);
++		if (r)
++			goto out_unlock;
++	}
++	return 0;
++
++out_unlock:
++	kvm_for_each_vcpu(j, vcpu, kvm) {
++		if (i == j)
++			break;
++		mutex_unlock(&vcpu->mutex);
++	}
++	return r;
++}
++EXPORT_SYMBOL_GPL(kvm_lock_all_vcpus);
++
++void kvm_unlock_all_vcpus(struct kvm *kvm)
++{
++	struct kvm_vcpu *vcpu;
++	unsigned long i;
++
++	lockdep_assert_held(&kvm->lock);
++
++	kvm_for_each_vcpu(i, vcpu, kvm)
++		mutex_unlock(&vcpu->mutex);
++}
++EXPORT_SYMBOL_GPL(kvm_unlock_all_vcpus);
++
+ /*
+  * Allocation size is twice as large as the actual dirty bitmap size.
+  * See kvm_vm_ioctl_get_dirty_log() why this is needed.
 -- 
-2.39.5
+2.46.0
 
