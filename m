@@ -1,119 +1,151 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C32D1DED5C;
-	Mon, 12 May 2025 13:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D361DDA1B
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058239; cv=none; b=EE1J82KRWJDbTvcfJn9qkgpzWUDx0A87wVJkd/FtIMFhRHQ4LTBtwxS99kB0zbSlNaKa8Uj/M+zXo6UJqQ00kREvVmINjFUkLiJL0oSY2PohIl9T8QEj74k7dBMMvPnUeXnQM0zONa2wB5Z2iSVmfEzIaqb3cQJUpxFKaVXeD5s=
+	t=1747058251; cv=none; b=WE1nkv9QvTARD9goVqrTXVq9OYAnbmcdVrdudytSNqAzmmAnl4mKBeoxw+vwz+YQGRMJ0ds7+Lz9G86MMnLp/fMZc4Wy5pC19eawgvRJElTV97FYirtTrfH+AAe6tK+hiYwnh6QiEFhGLlxLm/dIa7Q0PmZ548gzIqsciIbIric=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058239; c=relaxed/simple;
-	bh=05H8JpjKY35SdPO8KI6iVeXLxFQWAJS1wj4NnitynvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u4E7D2asep+LykUmpPX1FcxNwvTgfN+V4VYyyDv13qJXGDaze/aZBZ1WcXjod2gXC/6BeQupsp0JnHgbGvInrTWL0KOY5P+6rRuqIfrFlr3MET4JXXOyizYcAbkLh/2LA4M+Jw1dd806T3gJ+cvLcoTCcwqOTsLauC2eCLdJCTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jjHw1tWd; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjHw1tWd"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22c33e4fdb8so37315635ad.2;
-        Mon, 12 May 2025 06:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747058236; x=1747663036; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dN5gSHLw3iiOyOm7rZHDOXQuNi2nQ5wWFGqnZaf6CLM=;
-        b=jjHw1tWd8TfVPcSJxovY9k5pJzq/GhkOx4IOlwreSKiFsaFhWlm0Wx1vuPOQAdkAyb
-         4HyKlNnb7SgSMcguduQ0ozkmYPUWJ2J7XCQvwFiBMJadqVe9PYIKgSAIS7SKaBfOHQkM
-         jUUWWw11M7iINZVcigpxDi0sb1pmG0sFKp/qUaFlRc2G9y/sv75c3MlYpSuoIAksNAf7
-         b8DbPa/NMikS4S4keMnY0AcPVG7HYKETU9zt2Xq4GbYbGxwZoLHpoPixUAXDbkpeHK4T
-         S29c+qfD3UJTS1R0z798k9meuVqbVVmbmUs98GsdyOJi3zTOOyPhxqNFu+62vgdWDDh4
-         jMcQ==
+	s=arc-20240116; t=1747058251; c=relaxed/simple;
+	bh=7RAlISt8/E2mtYY1m8sG1WhEzq6hte6h11oIGnvZSlo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CvPc9PvwW4aAh0il/mS9VOW7uXWc+ASDpm9y32n2uvuf/RrqaBVZltZtb7phD1lylYhTMAKBicGd6GSCKa4LjGnQikwcHZMmcFobwLeTMpfmG8AyZv61o6oMwlQiMZoCYCX0fXqN/vTp0jZpX2jQLPesSOMjD3M0HwDlUA8Of1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da73fb0a23so54012015ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:57:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747058236; x=1747663036;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dN5gSHLw3iiOyOm7rZHDOXQuNi2nQ5wWFGqnZaf6CLM=;
-        b=FKkE6XzuQEgSiQXrW44x2bz891pu/jY69KCDaN/TgQNMsNd3dEcS1i5Fb6imoe6tjv
-         NdBJAt8lEDj/ao5455WEFQzh74wwbW03Q/LB8U80XCPbeImQCrWxSVTz5LFWl1CATVlf
-         CFdXhxV0zYs7fsssyfZDPh6seeOfV3If9TAd9ynnGhzn0sdUAcFXOfsAWpvpH5tBGSO9
-         DUCUx5T5N+r0s3VhNpSSLz45QLlaISc4sOmC0A38/6H1ou2Z+lTActezdqCJz+JgseTN
-         jJG+4Ub9reG7O4W6eFhbb1LUIRgZC8vCTganufnVgTZO9OBbIvvFZcQZBEZSh84wEFie
-         b/jg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2F1jGkGyXVJyNMsgg+rum+FL63NG5OnwoCW3aoG8C/4o5q6cuxb8bkdKW6swQgTfhirmnT0mZk79Mvss=@vger.kernel.org, AJvYcCVeFCDUBhIdVjQ4zHXgkeQI6jeDJZWR0A5MQRL8aoXqFkrGv4RpNbsFjXvgzs4FLkV+UA/Z+ei7EVN2P9ZY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHRRNkKan59iDgFz93KfxNJjrTKB9tlYFpKr4TsmWigwbemfTU
-	UZGR4bhNzRUbZ5Orw+Lg/iNVxK/fraonwSEbOOX8cRZiCZsDG7vu
-X-Gm-Gg: ASbGnct+xLwJMMeWjbq5wAXRKqZENGjJIvfY7vr9FWyk2NaTGAo03oI5yk/LmJe74jK
-	WzPDPIEuiRbu8j5h2A/xc15B4pcq+r8QXS5OofsYgIBaXojxBe69QKUNCkEu+EygORkjvKDCMLJ
-	t6O9JSRQYj2Bt1aAqpL5pQlJpmTFeeWHo1xShXI/ZBvyqBkVUEMtYOOVtCOGnL7vh3iZE9+1tRG
-	UnnMIFZxBLXQ/bcHiaT9H+wUtvCu8QHHDnb14Si6GREEvy2PmyauW4laXxgOl0RHsdqTZWMyDtq
-	XTMK4JgmOAN18yFXzi7OFyYCqE7ochMrg1ODMiNTvFklHIis4nrQKoXPHtWLU6mP7+c4mDIx6JK
-	o+ZEqR+qOp5KGMcfoz/NdBp9J7WSADmtmD5IFtNqjm9lZYdHln+I2eOBu6mc=
-X-Google-Smtp-Source: AGHT+IFywl13Dph106GWlo1h3hEoMGAJaBIrJd19Hxw1kXTgrE5Xd4uuO/U4r97s3z0wwStvtpT8fw==
-X-Received: by 2002:a17:903:166b:b0:224:c47:b6c3 with SMTP id d9443c01a7336-22fc8b0fa27mr156037045ad.6.1747058235694;
-        Mon, 12 May 2025 06:57:15 -0700 (PDT)
-Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82a38ccsm62985465ad.235.2025.05.12.06.57.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 06:57:15 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: pmladek@suse.com
-Cc: Jason@zx2c4.com,
-	gregkh@linuxfoundation.org,
-	john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	lkp@intel.com,
-	oe-lkp@lists.linux.dev,
-	oliver.sang@intel.com,
-	ryotkkr98@gmail.com
-Subject: Re: [PATCH] rslib: Add scheduling points during the test
-Date: Mon, 12 May 2025 22:57:11 +0900
-Message-Id: <20250512135711.5307-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <aCHfvBOY0vQ58uaC@pathway.suse.cz>
-References: <aCHfvBOY0vQ58uaC@pathway.suse.cz>
+        d=1e100.net; s=20230601; t=1747058248; x=1747663048;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2qEldaJQrN1XLSdI/YZ+WwSugx3cmBfgPCd9rN1E+8Y=;
+        b=LRHcpvKvqMjCAHBPIxuWx7RXjmcrO0c1g1WEa7SBrTCbqmEiLbDcNqQpIF1u2L6jmP
+         tScgkrHkrpnaw1P1GQVx8D2VMtOoD6pIFioALoDCub8XSac/0Kku3sUktPFU0JNcmcSb
+         lgZ2QfmjqYIE1wzd3lrTXA/TbZPZZFeXU78+FSd736vTiflLW96s8apFQiz/yeyBzEat
+         0QVvRdeoMdd5RCyYZFlNUUEvZqBWbDymTvvVAhpheb/xQod8k7y2tDpsIite9rV+jQ0r
+         jw1411Q9mH5PHpbFscslUHA2OsFFISKwEzHkQgH7II9QRP/Ogcj/tQzHwWHUr9OSx6sO
+         TFjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdl/qwsqEyquA/eFaqkUgbwZoMkXLTxaJ88ne04TVm6w2o+UrBt/disrSg6iIT1Y4uFc3mTcbPxUnutz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYLWHBI4m8XlfkeJIBc71oKE76d6kNKXBlacQyDwh0BsKM3JK3
+	rLR/v04KEO5iJRdvcX8TAJojMiN4uF+zlzQI3HLr6tR3OH5lx34IK09dOvvhRGiMHZyLYPjhnlm
+	lzyXIaJU5A3rt0R1b9/ngNhCmZ8Ld70hEHqPFw01BvaulW+rLSvrhPKM=
+X-Google-Smtp-Source: AGHT+IH/Oyi5JeTmBjORfU3yO+4b8SgajjuQWgF+82RhcxjkDnIy4C73RhL8Jai9ANy2dzU1rGCya6P2yKiINqQrEMlUlHgC9wAH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:190e:b0:3d5:890b:d9df with SMTP id
+ e9e14a558f8ab-3da7e20d8a3mr137789365ab.15.1747058248293; Mon, 12 May 2025
+ 06:57:28 -0700 (PDT)
+Date: Mon, 12 May 2025 06:57:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6821fe48.050a0220.f2294.0065.GAE@google.com>
+Subject: [syzbot] [wireless?] WARNING in ieee80211_tdls_oper
+From: syzbot <syzbot+f73f203f8c9b19037380@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 12 May 2025 13:47:08 +0200, Petr Mladek wrote:
->On Sat 2025-05-10 10:35:15, Ryo Takakura wrote:
->> The test has been prone to softlockup but stayed unnoticed because
->> of the printk calls during the test resets the soflockup watchdog by
->> calling touch_nmi_watchdog(). With the commit b63e6f60eab4 ("serial:
->> 8250: Switch to nbcon console"), the printk calls no longer suppress
->> the softlockup and warnings can be observed more evidently that shows
->> the test needs more scheduling points.
->> 
->> Provide scheduling points by adding cond_resched() for each test
->> iteration on their up to/beyond error correction capacity.
->> 
->
->We should add here:
->
->Reported-by: kernel test robot <oliver.sang@intel.com>
->Closes: https://lore.kernel.org/oe-lkp/202501221029.fb0d574d-lkp@intel.com
->
->> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
->
->Otherwise, it looks good to me:
->
->Reviewed-by: Petr Mladek <pmladek@suse.com>
->
->Thanks a lot for nailing it down.
+Hello,
 
-I totally forgot the Reported-by and Closes, thanks!
-I'll add them along with your Reviewed-by.
+syzbot found the following issue on:
 
-Sincerely,
-Ryo Takakura
+HEAD commit:    d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17814670580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91c351a0f6229e67
+dashboard link: https://syzkaller.appspot.com/bug?extid=f73f203f8c9b19037380
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1744c4d4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a5e4f4580000
 
->Best Regards,
->Petr
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-d76bb1eb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/21f7d4121801/vmlinux-d76bb1eb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/453c9d554035/bzImage-d76bb1eb.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f73f203f8c9b19037380@syzkaller.appspotmail.com
+
+mac80211_hwsim: wmediumd released netlink socket, switching to perfect channel medium
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5415 at net/mac80211/tdls.c:1461 ieee80211_tdls_oper+0x364/0x640 net/mac80211/tdls.c:1460
+Modules linked in:
+CPU: 0 UID: 0 PID: 5415 Comm: syz-executor228 Not tainted 6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:ieee80211_tdls_oper+0x364/0x640 net/mac80211/tdls.c:1460
+Code: 6f 01 00 00 e8 4d 83 d7 f6 eb 22 e8 46 83 d7 f6 4c 89 e2 eb 21 e8 3c 83 d7 f6 b8 bd ff ff ff e9 1c fe ff ff e8 2d 83 d7 f6 90 <0f> 0b 90 4c 8b 7c 24 08 48 8b 14 24 4d 8d a7 2a 1d 00 00 4c 89 e0
+RSP: 0018:ffffc9000d3d7380 EFLAGS: 00010293
+RAX: ffffffff8ae84d23 RBX: dffffc0000000000 RCX: ffff88801f6f4880
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffff8880435d8187 R09: 1ffff110086bb030
+R10: dffffc0000000000 R11: ffffed10086bb031 R12: ffff888044381d2e
+R13: ffff888044380d80 R14: 1ffff110088702e4 R15: 0000000000000000
+FS:  000055556871b380(0000) GS:ffff88808d6cb000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff650f3fe8 CR3: 000000001e235000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rdev_tdls_oper net/wireless/rdev-ops.h:940 [inline]
+ nl80211_tdls_oper+0x282/0x440 net/wireless/nl80211.c:12586
+ genl_family_rcv_msg_doit+0x212/0x300 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1c4a288aa9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff650f5058 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f1c4a288aa9
+RDX: 00000000000000c0 RSI: 0000200000000240 RDI: 0000000000000003
+RBP: 0000200000000240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00002000000001c0
+R13: 00002000000001c8 R14: 00007fff650f508c R15: 0000200000000188
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
