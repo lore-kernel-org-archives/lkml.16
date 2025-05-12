@@ -1,78 +1,76 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6240418BBBB;
-	Mon, 12 May 2025 16:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8B525179E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067923; cv=none; b=j+BHZyy4zw7P95i4HIxYfoFo7FjGqH5fE8UpVY+cUa/TFX1YLfMOMflMJ0B5XFHIMUvuCPrPFW9CAsumo0v9BJTFs7rqh/LPaDa1M34MDSmsQ/glloJpt/XmdC3Vz9Qz+mcYxVq1uua49aJjTQy8m4286ZwRA1xOhnfH8ti1jVI=
+	t=1747067932; cv=none; b=oXhLAylFLYC7kS+yntLyxvvMPv2AB4iYjJfbEsTbISK4v3ktlMg6We8H5VgjMoIKBWbJ9Tu6u/zrqp3LktNf9KSlbiLHSZoKTKb8xz4RgtnMTiQ23SF3fq3qTv+bpdrZ5IgLYXX+H6K5s5/r5pdFyGemmY7X7yG7ppJArblwUGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067923; c=relaxed/simple;
-	bh=CIOtdu/IvMkLPBA3/to9NrXGt5ja3IJHu0x1zv4Q6Ic=;
+	s=arc-20240116; t=1747067932; c=relaxed/simple;
+	bh=Yehlnc4ZkWKIJwXXxMMs5cwKVop6FmBrsGoE123p7sE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X5l2r/qpwbM7J4ltH3dNaDDXuu0awvy2wMHxgZiouTQPpdF6wd8P+arp+T1SXipmtGvWGO5hCkHVky4d+dv9PP4tj+SMRv/Wdmfk7lJMoJYa3NuI8/zAGS2pFVd8+DuIJy1dEPLDn81XHu0lFd0ffMkJOcOYVtHUG6L3X8Wk3UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bdcY4f1M; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hETZQKGjcnlLucBCojryv3Fd/kVnnbcry++q5ogLYkisD865AvTEjGc6MogkXKi1K68wzviT6ASk+XTcVfIDlzbYW4ktHpuO7G6cSR6Pg27CPRCKZslJWW63cBOswl2bvqeizZozIYXmNT8TPZ6bAx09m6oVopHVXp/lxdBR1Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Xm8vpCNp; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdcY4f1M"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso1438768b3a.0;
-        Mon, 12 May 2025 09:38:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Xm8vpCNp"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7cad6a4fae4so819390585a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:38:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747067920; x=1747672720; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1747067929; x=1747672729; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RIpnjWRJt7q90APexuDR2vW0P5kZLkNgW+BoGqmUkW4=;
-        b=bdcY4f1M0ru3KozjNH2iyHja+JFJGo/24aRx7sEUZHty8PB7FOr8fewKKP7GVGSsYR
-         ihgunumw120KG+4ZHNJ5cDKQunzLPKdrDac9cI4srfwaf0wyuoc8SolW88fjyr4S/t1W
-         O7sPkSMFaMd71YbWzu8buPgAQ3XQseVpA53N8Vo4PrzVwnxwEixG+ziyvFnXsqRbrgBq
-         Pm/SBLUXQgCyuuF0og6m+hCq+IT6Xzg6xW5YE+Dm3X+kXq8Aquo4dUndk1HJ9t6qpWU7
-         inhZPvgkWHXjkDetkwJu0PfIUh5+i8p6nJTJmpY70Wo5IREt1GIdtWfJQ+FuNIvEaZ6C
-         vGHQ==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1julnBD5+GcSaXU+eTIdcuLbn0p5bHzSEbl/z4yoEN0=;
+        b=Xm8vpCNpFOh21VbbJXb5ohXssAScKGNIOsMZmLyI3oxETyYNV37N+q66z/aS2xHC+o
+         /oyEKGkg8svFA9a8bvw5+7smp9Wyg+ch3Vb61GkXs6UoTX6y70/D+x8CZwGoQ7FxqJlb
+         AYDqJa5RvRQ+yzYCnifCTclasQIQqhVftHeBW6gf5+6tzvqMXUymcPdZ33KNxXLlUHvQ
+         gaPD/THBnQVMEHdbI8nLjsmLTdKtG0xrN72msZI5cHU0rotfnM7MlMJON8sBbf6fVbFR
+         j/1xNs33VRfeMW5R6x7/QymSzZgOMQ3u1YtQg31akTqS4pNkGFfUMY0V9sEq74kL0H5x
+         SfJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747067920; x=1747672720;
+        d=1e100.net; s=20230601; t=1747067929; x=1747672729;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RIpnjWRJt7q90APexuDR2vW0P5kZLkNgW+BoGqmUkW4=;
-        b=L0gfZWo7yyUq9ca61/pjkiUjhBj0lb1/qfwDVHm7UoleXk8PndghCbgGo3S2rJEdxC
-         qxex5PL3NcWi4N/Xmtl7t9LFiwIjlqPm36+r5eysrSo971QgZihgCaNR6OrDQHrA0JwG
-         GfLV28Pn3DKniJsp4Hk/sl44ZCEgGlgDa1mAja3mvH9hbSXZpMr4I5m4vDDSjrVx0l6L
-         6Jxg0qp/Iwkp2q6KqAr4B2tPXQHaXVqPYpPyF5iYgVRXmeMSv4y5Q1+tywOrgF1gQu/L
-         NuC4D9bNAXn9eURRh9ZVJhMn5LuNePPsSfMeRWOae35vv3v7+k5jY/tV+xctwqMAoOP6
-         jbcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVj1K8RQ9JWFhlabapGO754vwM6f4y4KVmjBke7GwhPphWJzdtVtRcDqc1eBMIyL2N4KFxTMXmGwv1Tsg==@vger.kernel.org, AJvYcCXtEZA8fJ1odfHXFSOwVVvmwlgKKJU8WV6WkTlLDvIhx9mZkZ+fRldTmc/U8vzi6zv3kgBtepbES+26eFLH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc6qsp35jsEnpmn781YO0jo6mvgQCAgmuId+GUuHEhnVcLYpNw
-	/HdMC9XC/4RcUoqDlZSGknhwirYjpUlRLrb0Vu+CRI3NOZoA8pzN
-X-Gm-Gg: ASbGncseFm5ukWesS0BiaSxZljJOCjzAojJIjB0vqtSg6ecsO8veqNtYUPPtccT7uZw
-	Vf6EaKNzei1FgyVktD0DVqDv87Z17GjrnodG5Vp9JolsQzA9fvB8OTsoU/ZmBXD+W4caedq6qkB
-	i7Dpvwqmy4JaBrP8SIhmnv59lYzb9HQhjxVEBFcKWVNsTn6OB1wTbKqv2zT6Akc4qqQB5vz0fL8
-	1z5RpIPJu40mIHZy2dpivf2mzpycPHyEh/sIoXzr0zWa7JfM/t2C1lVQIR/jfvrf9G5O6Zc1b0d
-	e/qKl/vNP1/nA81U5y6nGATJN7hpqvvpsOG2fha97u0um4JAGL7zYP+7JEEvjP0u
-X-Google-Smtp-Source: AGHT+IFE1+jMqkzYHryOh0pPi/hhYh35D7tu3zwEi1tFlpu4Zh5T86LwR/18p7jFuRnBgG/MFunjFg==
-X-Received: by 2002:a05:6a00:410e:b0:740:5977:7efd with SMTP id d2e1a72fcca58-7423bf8a975mr16945353b3a.13.1747067920461;
-        Mon, 12 May 2025 09:38:40 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237703f2asm6236690b3a.35.2025.05.12.09.38.39
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1julnBD5+GcSaXU+eTIdcuLbn0p5bHzSEbl/z4yoEN0=;
+        b=GsARkkd2jOrePU3k27xCPq6LZ/tR2dzv2j5Gr3Q1tnKpU9DqJX/lWxTUQM3YX2jh2p
+         bFqfOkrtqezPAjeiskf0Pmf0CPAUmEsL6vgrglJcJkhRHoe6FPnMiXNXZilaEFf7tJh6
+         28kQBfrC2zAPIUD9cCTyMjnuYYrqmBl6WBUNXZ948sjC7woT0zorm8fjq/whcJH9xhtP
+         VKQDLFUnYljARBRhwXDofdyJVDgIr6cwAYEQRTbgZHS5FzPwv9Qm+0PKY4hlhUGkDfaS
+         P5b9xjV61gOrZvo/V1e8Rtq/VnT7P74lg53n/2xNj/YU6mYy1kOOWC3R4ha0zCvJtFlr
+         7ZWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVX/+l4z7J36c7JPkRp4aBcN2fEypY5HCcj20WwMBZnRzOEfgAOg6NgwGKcRLah09+490HuJDK94p12nr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt4xHYPlJzVsOh48dUeGQorxNR/JTGjri73JACERnxXvWErH+i
+	jxQk/VBpA/AtfGIX7/8MOqy8vNgev7880ifKsu/QGOOcpS6JP6ZSF5GbTFewh64=
+X-Gm-Gg: ASbGncuIfWSvEeYZQcgvY8dkkCXH90Dm4kbwBznbQFXQ6Gqv7Cdr2ETK30+mYH5H7+g
+	x1kOwjRL7rcqrx+r8La7dfk7aK/Az0nUtN1T9jrvPuDa2JjIk0BW9KJd4OB2QKXhXdrZQ58TwCe
+	dosrHJbuFEBTdPjMyKFJzcmn/kanJOYxwCceB4asKHchJJelQgI+hy4s2XBsevviP+npF1UzlTO
+	+mZCiwOrTfKO1Ixpsd9K24Y1f6uJsZDo9Uj86s3Mo53auHqMuAf6PlqIdEWrMKhKE52/kX7I+tp
+	eW6GkJ7CbyaVJ8BZnVhKShBZnAdH+j1VjoseiJhycFyJv+608f4ra/84ehM43tC2M/xQRp6HHmh
+	1dJwwd2ZnQInxbS1z+fD1JXQOepWSoNIjfXZ+8ggDuQ==
+X-Google-Smtp-Source: AGHT+IHHMUdqgvopOB3bvhxDrzkGlwPiAUOBbIhdmlc5mYj64PucOzKQfQk92T4hzK7H4RQ84n8s7g==
+X-Received: by 2002:a05:620a:2a09:b0:7ca:d53d:af75 with SMTP id af79cd13be357-7cd01155c4bmr2207761385a.56.1747067929639;
+        Mon, 12 May 2025 09:38:49 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f4e093sm568092885a.8.2025.05.12.09.38.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:38:39 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 12 May 2025 09:38:39 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Wenliang Yan <wenliang202407@163.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, derek.lin@silergycorp.com,
-	miguel.lee@silergycorp.com, chris.ho@silergycorp.com,
-	eason.liao@silergycorp.com
-Subject: Re: [PATCH v7 2/4] hwmon:(ina238)Add support for SQ52206
-Message-ID: <7156ed82-d2df-455f-b92b-f177e79c99b3@roeck-us.net>
-References: <20250506053741.4837-1-wenliang202407@163.com>
- <20250506053741.4837-3-wenliang202407@163.com>
+        Mon, 12 May 2025 09:38:49 -0700 (PDT)
+Date: Mon, 12 May 2025 12:38:47 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, corbet@lwn.net
+Subject: Re: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
+Message-ID: <aCIkF6RZJtU0m3Ia@gourry-fedora-PF4VCD3F>
+References: <20250512162134.3596150-1-gourry@gourry.net>
+ <20250512162134.3596150-15-gourry@gourry.net>
+ <aCIjMNooAzKaONod@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,16 +79,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506053741.4837-3-wenliang202407@163.com>
+In-Reply-To: <aCIjMNooAzKaONod@casper.infradead.org>
 
-On Tue, May 06, 2025 at 01:37:39AM -0400, Wenliang Yan wrote:
-> Add support for SQ52206 to the Ina238 driver. Add registers,
-> increase compatibility, add compatibility programs for
-> multiple chips.
+On Mon, May 12, 2025 at 05:34:56PM +0100, Matthew Wilcox wrote:
+> On Mon, May 12, 2025 at 12:21:31PM -0400, Gregory Price wrote:
+> > Document some interesting interactions that occur when exposing CXL
+> > memory capacity to page allocator.
 > 
-> Signed-off-by: Wenliang Yan <wenliang202407@163.com>
+> We should not do this.  Asking the page allocator for memory (eg for
+> slab) should never return memory on CXL.  There need to be special
+> interfaces for clients that know they can tolerate the added latency.
+> 
+> NAK this concept, and NAK this specific document.  I have no comment on
+> the previous documents.
 
-Applied.
+This describes what presently exists, so i'm not sure of what value a
+NAK here is.
 
-Thanks,
-Guenter
+Feel free to submit patches that deletes the existing code if you want
+it removed from the documentation.
+
+~Gregory
