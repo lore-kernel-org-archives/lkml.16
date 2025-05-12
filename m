@@ -1,103 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC08EED8;
-	Mon, 12 May 2025 20:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747081796; cv=none; b=Qp2/VsgloK/hFuzmjhpKtjB+o7Cg9BWErzwIiXdiKC0PmHmRwJxcxNKpJS1+MK87W14hZgl/bL9CU4swlmfd4qRYTLSZfe2LOC1fGDF0bj3URHfzIDuXsF778aW2Acf2bCQ9r6rXwb/o3ydepkEOUNCMldCygljIzbls/2fudV8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747081796; c=relaxed/simple;
-	bh=Q1AuxTQ7799vYv+9kB6vXV1iWDTncQh/7UoL2uX/9No=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vm8rZqtF+8URTz0hEIEjYFdRo7YxrbFVTdIp+0Lq8IAUoCxoRSNKbv1TW5QVvmaoMm9AEI1VSytKDXRUFkNp7w1vsdRbow976O5BZHioOQju66lFBs8iMpICWS698kI4YGNVyRXVBi+fyZpHlnCbplSp8incNJI2mW4GmKDvTW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBx4KgqP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EA23FE7
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747081836; cv=pass; b=k70ZTYdStv/7mXRHTIgpgqQVFs0ASQp8Wqo8DyJQIjqKOhz+pI69QDKdFAOOMWVgiM2zFKcW7rg92DaoejB5kIN6t4bs7ULrdhuN6gOb2WfoXAMVLd4upjEu9MaXzbr7SxP/bAHxE47pqj3oZiPOE3ZOAkO0c8m+UK7VgERteRc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747081836; c=relaxed/simple;
+	bh=dVcW4spjNBdoQ8twfGcmvjbost0R99zAeDwoVzfneqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=p2SkuCa6v687ufoth2BDfUf40O2GAAwMDfjpSmoW4wu4ZHBj+MQlkreK8C05FI2C83VrV69mgxHUToNd6XAczUGZWpPu0Spz7pXG4NmAIhceYp9HoHH3PQfeDUxsqfIwJQmwXyoWr08SmOFSdXDlxsDFIMYJmXJv9MzOygmXU9c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=fossekall.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=i869kQLF; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=VlXzukrp; arc=pass smtp.client-ip=85.215.255.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fossekall.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBx4KgqP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C8BC4CEEF;
-	Mon, 12 May 2025 20:29:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747081796;
-	bh=Q1AuxTQ7799vYv+9kB6vXV1iWDTncQh/7UoL2uX/9No=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tBx4KgqPJq4VQ1ebPq+sGhfPYt+EgimgZpb7ffjTzWptg3sC1RNUxs6d7gcCf1ufJ
-	 +jlhrT716R8b0aYG9sWKZd0UA1Cq6JqGv1sdbR1gEIHEm8/3uwnkLWEgPJ1aPzIWT3
-	 +iKaXca7/KFAsH4ypGp05neMEmdp38FQR2qkMH8M+NzEicX3hGT1WQxyLT9JJR+//4
-	 otYETItWVpkNIl6AeGX04cTSdNpS4loTUB2NTey0KCTnF3+ZpslrhVlfMu47rLC67/
-	 k8LUu+e+fJAY1GqKc8l/W5F8rgp9XCrSIqM3pFl6+aV3aOg1i22ccZTVVw91I7fuxK
-	 a3X25K5bACSGw==
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so70787596d6.0;
-        Mon, 12 May 2025 13:29:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUMc2oomiT8Hj9uf8ECuH+AzdM25SQlFPkW6b7+mvS5L4eggCiA01Dgcg2JRaKeeAyLaH4=@vger.kernel.org, AJvYcCV4Ssw6UAo+5exiedMNhKgO3Rof70k+4yKM7JgCcRMX3/5ySyHqJczBCDShwOpfUjNKdsij5ba90m8ZhFQ=@vger.kernel.org, AJvYcCWTRfRhYFUF7y8XHKtfSr1wRlo0TxqrVnL5OwYrgQQArByqD4dlLBgUTMDuL9+bR2E+3Q6rjuWHce6jtG01@vger.kernel.org, AJvYcCWsWCKAMCq24o3/xcxacVGfJfJKOzc3E+4IE8BSz5bgL9LFU6GLn3b5xx+Y/szXHuoO+fpOWxsB/LzV4EbziLK7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOQkj9xv3IFbRj442L+X2+WBHJHcu/up1v7JrbYsd8AUCWMz4n
-	PmsOZAn3s5KGLENV+mKs8M4mprzGDYpa6LreI8T54+HupNO8HQeXWU6P+VQmAmYBGxhdu4BrkAX
-	0dOs1P2BGIMh1T0rFgvlU/LbPTqA=
-X-Google-Smtp-Source: AGHT+IG5rkCx/hpDMtSKvEl8qMX6hPk0sGnzSeyFBD0wIK4YZybCKppA5Uh0VUx57tW/L441bM7HGxWCyQByM39LevM=
-X-Received: by 2002:ad4:5bc9:0:b0:6e8:f17e:e00d with SMTP id
- 6a1803df08f44-6f6e47aa755mr234448176d6.14.1747081795541; Mon, 12 May 2025
- 13:29:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="i869kQLF";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="VlXzukrp"
+ARC-Seal: i=1; a=rsa-sha256; t=1747081629; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=tARlmZoyuwgXiJ2bKrmPM5iavTSVlKTpXww+TMyIb5QQig9upe76/vGR/8LfWtYQ1K
+    vZJuhZjelIKE+WYzl8GO+6XRrzE0kPtZvjAkKDEoBGzdMFVUupusizSN0ea6YrbkXK0d
+    Q++piAtFMaaf/x7xOElkrjcXJIFJBp9CZdlV5zSfGE4XbVlMunBrCezJpgObUKc5DbIO
+    bPkncbSSEs6JsvJj8CQoUzsGpgipwfqUga9pAIF5gVoTPZzqhbMV/oQCE+0TPZRCYLov
+    EPayvF41G8/e45KuUnZAhUrsYoqovT69u+BW8e6HcZ4OWmbt1aCv8Cd4PvssQd0/zSvR
+    4hEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1747081629;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=E2vS+B7LB+AFC3F4dP3OSB23QlahSAk3A/y+OJVKLCw=;
+    b=lcBpbyfI2r5+LH/yMihvuOpaXWp/smIR1tKvuYwhFZSq/64g6a61ikbKF5nvyl8Dxz
+    AeyABbjJWorgMWlNP0tU1mfBaIGKzFrwNyhQ+SErpsSGNPUlfzsokPC8sp9IZQgBYY/F
+    zgEhGG+aCQj/kHfc7Kr96GmRSAqWPPUhj4WMN22juGqpbP45la5de/Ht04J+eYEJNTnr
+    Mm4hlx3d7FFCvv3xQBir9264zMcV1Lg9EfFU4a8SRYeucJ78nPKtZoANi2m6vML/4yLx
+    MM/WpfiQZ/GV4g5gsHEmOVSbZu6hOVWMnfoMeGdUqCIvc+pLM7UqkoLm0zkT5Qh+eGXH
+    vFPg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1747081629;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=E2vS+B7LB+AFC3F4dP3OSB23QlahSAk3A/y+OJVKLCw=;
+    b=i869kQLFtIoAtFkdzXT9SNX/PAK8AlAvg6UMDIYSS+ijuPO25FAnDaT7OflcuovSs4
+    8gNlxgqDy4ov4FTRd8zYynB1erwa/dArl6/Q17LxuucMgwSrg33HYm/D/OmmUMlW5uuX
+    R+CGN3pXVNAjzkHLYt2GT3/GtM0gkGc9/MZO4yrDnqYK8mhle7RrzHLTIGs/6GVvKA6J
+    ruO6tCr/qlQUBpWtXfgdoyFSQPTROFXqSmI1+GLd9wE5ueHqBvK6X5OtRWd9G9oKQnHG
+    MPeeTdL3FZ2JaMA84g6NTdqmsT57IlF044rN62KnWvyImq9sgGycgOfRCap2KZL6rfRV
+    HZtQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1747081629;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=E2vS+B7LB+AFC3F4dP3OSB23QlahSAk3A/y+OJVKLCw=;
+    b=VlXzukrpPaXIfwjqkZgo4O5jRiTbh8HkYhEGnXP40OHvbcrZfBX34LFFpzl/QzHvFd
+    IPNgRnwgy7twlaqBI3DQ==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3514CKR8d9R
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 12 May 2025 22:27:08 +0200 (CEST)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <michael@fossekall.de>)
+	id 1uEZjv-0005UG-34;
+	Mon, 12 May 2025 22:27:07 +0200
+Date: Mon, 12 May 2025 22:27:06 +0200
+From: Michael <michael@fossekall.de>
+To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
+ BananaPI M1 on 6.9
+Message-ID: <aCJZmm8rC0RwbcBX@a98shuttle.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512174036.266796-1-tjmercier@google.com> <20250512174036.266796-6-tjmercier@google.com>
-In-Reply-To: <20250512174036.266796-6-tjmercier@google.com>
-From: Song Liu <song@kernel.org>
-Date: Mon, 12 May 2025 13:29:43 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6KEtKu5C+Y_X3EFkUFSg8=LnQ9nJFUD81rYgwvBvqzHg@mail.gmail.com>
-X-Gm-Features: AX0GCFvzZHZSPJCVC-VLXwXHh9XY0gCw1pbH1Gr6Gl6YMKHnqA26hCVsNML8Mo4
-Message-ID: <CAPhsuW6KEtKu5C+Y_X3EFkUFSg8=LnQ9nJFUD81rYgwvBvqzHg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 5/5] selftests/bpf: Add test for open coded dmabuf_iter
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 10:41=E2=80=AFAM T.J. Mercier <tjmercier@google.com=
-> wrote:
->
-> Use the same test buffers as the traditional iterator and a new BPF map
-> to verify the test buffers can be found with the open coded dmabuf
-> iterator.
->
-> Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+Hi,
 
-Acked-by: Song Liu <song@kernel.org>
+with v6.9 and later there is no output on the BananaPI HDMI connector.
 
-With a nitpick below.
+I have bisected the issue to the following commit:
 
-[...]
+   358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid")
 
->
-> -static int create_test_buffers(void)
-> +static int create_test_buffers(int map_fd)
->  {
-> +       bool f =3D false;
-> +
->         udmabuf =3D create_udmabuf();
->         sysheap_dmabuf =3D create_sys_heap_dmabuf();
->
->         if (udmabuf < 0 || sysheap_dmabuf < 0)
->                 return -1;
->
-> -       return 0;
-> +       return bpf_map_update_elem(map_fd, udmabuf_test_buffer_name, &f, =
-BPF_ANY) ||
-> +              bpf_map_update_elem(map_fd, sysheap_test_buffer_name, &f, =
-BPF_ANY);
+With this patch, sun4i_hdmi_connector_clock_valid() is occasionally 
+called with clock=0, causing the function to return MODE_NOCLOCK.
+In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is 
+always!=0, maybe that gives someone a hint.
 
-nit: Instead of passing map_fd in here, we can just call
-bpf_map_update_elem() in test_dmabuf_iter()
-
-[...]
+-- 
+Michael
