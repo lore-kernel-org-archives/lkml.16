@@ -1,138 +1,87 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DEC257434;
-	Mon, 12 May 2025 08:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1F02561B8;
+	Mon, 12 May 2025 08:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037275; cv=none; b=no63GvTR04/2Ok/BVlMpupwfCh6Z+hESqAgzl24wwWjYACIdYe5WRw5BqBYXTDAwn9f9E96oYVIV1NdLNs6V5iL0tPsLL3zVJlzJ2aO3uDJZgYwTX0Uk1p84VPgps3EKnQnzCoOKJ/AaQpHAglt+XxikN+1zOLOwjAeE0vfezw0=
+	t=1747037283; cv=none; b=L++g5scJZs1qni1ZYKj9v1f4FIlQoW1sMmtDP5ugycT35HB0ELrpaPUbixHV0juABJISqkRdekGMPGLJSvsOUtHg2YvnZ9j+PqaX1RRMkT1yhuKRHDWFvsWvRuY2YXkoWRwRSdrcqTU5uCI1EFqZsfgiRJUvpqRCy9yi6iuw5mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037275; c=relaxed/simple;
-	bh=+Bkrbf8JC8XOlzKL+Xal4nNMV4lUwDPuoUt0WTb4lnQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JCv8PJPkSsOOOqz0u3SEGmZZ9i9M6U48t3qmPYqqVBXPAhup30XS7yMM8GLjqI1TAZOgdpJeBbHWIjlJQmFp1Tg8rfelMhsatTdzrCqrTrh+iYxhKyLylJzUbI8LvuI5iIh2phJf92oRDLwMIlPrL2l0fzJDvbm1uZv16DiGRmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZwsbR33MNz6L578;
-	Mon, 12 May 2025 16:05:07 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id CDCCF140145;
-	Mon, 12 May 2025 16:07:49 +0800 (CST)
-Received: from a2303103017.china.huawei.com (10.47.30.10) by
- frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 12 May 2025 10:07:48 +0200
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: <devicetree@vger.kernel.org>
-CC: <robh@kernel.org>, <alireza.sanaee@huawei.com>,
-	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<krzk@kernel.org>, <dianders@chromium.org>, <catalin.marinas@arm.com>,
-	<suzuki.poulose@arm.com>, <mike.leach@linaro.org>, <james.clark@linaro.org>,
-	<linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
-	<gshan@redhat.com>, <ruanjinjie@huawei.com>, <saravanak@google.com>
-Subject: [PATCH v3 1/7] of: add infra for finding CPU id from phandle
-Date: Mon, 12 May 2025 09:07:09 +0100
-Message-ID: <20250512080715.82-2-alireza.sanaee@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250512080715.82-1-alireza.sanaee@huawei.com>
-References: <20250512080715.82-1-alireza.sanaee@huawei.com>
+	s=arc-20240116; t=1747037283; c=relaxed/simple;
+	bh=A2stEFFTyjCo1kwOBEy50M2t1+vj64LTf8/SATGT/5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eMBupjwqaOPYEcV05jSZslpKkO+/e5XSonhDWtyRPhtDLd41eukcHzTWAJdirU2xpXcl4PyCQHAHfMHsl8GynCi5IIdxhxcBYFc13QyBIxLGttGn5gOgQAVMroIaC2iWy6PzkknQ3EJcp7oHpyPzAovGsnGGYrvNy8BTbruQDlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=XfcpP+8u; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XfcpP+8u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747037276;
+	bh=eDk/RBPxp7qiD91+5iU7Pf/RaVAHsmLMufawATiRJ9M=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XfcpP+8uvTFT9MKgwaHhvtTiEOiLlsmUNyIZ4AsgAL8+/slpQxUSUgb3jkmnMZXnG
+	 CnbpjbVTS/WGcWKRO0uywjrezEs7GUC5Jz9i8/YLOc+ky82qXnHkZg/pFYhkrRc7UG
+	 TTMVEyPdVfWe/wFHtHS0G4SF6/U2BfcubS/EUNjWLcFChXLqRGkq43IFSDtC6AC79m
+	 UalwWjhQH92efmw6ytzejKr7tLOAWo+YQf1VEWa2l3HkIxCKq++8en50MeyCH2fnA0
+	 A2WY7P3k41trmTLc/xd/OBkWfIXa7CjI1ULkMOhjFgqwtGgY/ESp7C9Vl3v2soflvc
+	 0BnPWNdNgRnwg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zwsfh1CnNz4wbr;
+	Mon, 12 May 2025 18:07:55 +1000 (AEST)
+Date: Mon, 12 May 2025 18:07:53 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Tejun Heo <tj@kernel.org>, Christian Brauner <brauner@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the cgroup tree
+Message-ID: <20250512180753.2e6a5249@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Type: multipart/signed; boundary="Sig_/=GX3OkrjU5kcXB7.2hO8KI/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Get CPU id from phandle. Many drivers get do this by getting hold of CPU
-node first through a phandle and then find the CPU ID using the relevant
-function. This commit encapsulates cpu node finding and improves
-readability.
+--Sig_/=GX3OkrjU5kcXB7.2hO8KI/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The API interface requires two parameters, 1) node, 2) pointer to CPU
-node. API sets the pointer to the CPU node and allows the driver to play
-with the CPU itself, for logging purposes for instance.
+Hi all,
 
-Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
----
- drivers/of/cpu.c   | 29 +++++++++++++++++++++++++++++
- include/linux/of.h |  9 +++++++++
- 2 files changed, 38 insertions(+)
+The following commit is also in the vfs-bauner tree as a different commit
+(but the same patch):
 
-diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
-index 5214dc3d05ae..fba17994fc20 100644
---- a/drivers/of/cpu.c
-+++ b/drivers/of/cpu.c
-@@ -173,6 +173,35 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
- }
- EXPORT_SYMBOL(of_cpu_node_to_id);
- 
-+/**
-+ * of_cpu_phandle_to_id: Get the logical CPU number for a given device_node
-+ *
-+ * @node: Pointer to the device_node containing CPU phandle.
-+ * @cpu_np: Pointer to the device_node for CPU.
-+ * @cpu_idx: The index of the CPU in the list of CPUs.
-+ *
-+ * Return: The logical CPU number of the given CPU device_node or -ENODEV if
-+ * the CPU is not found, or if the node is NULL, it returns -1. On success,
-+ * cpu_np will always point to the retrieved CPU device_node with refcount
-+ * incremented, use of_node_put() on it when done.
-+ */
-+int of_cpu_phandle_to_id(const struct device_node *node,
-+			 struct device_node **cpu_np,
-+			 uint8_t cpu_idx)
-+{
-+	if (!node)
-+		return -1;
-+
-+	*cpu_np = of_parse_phandle(node, "cpu", 0);
-+	if (!*cpu_np)
-+		*cpu_np = of_parse_phandle(node, "cpus", cpu_idx);
-+			if (!*cpu_np)
-+				return -ENODEV;
-+
-+	return of_cpu_node_to_id(*cpu_np);
-+}
-+EXPORT_SYMBOL(of_cpu_phandle_to_id);
-+
- /**
-  * of_get_cpu_state_node - Get CPU's idle state node at the given index
-  *
-diff --git a/include/linux/of.h b/include/linux/of.h
-index eaf0e2a2b75c..194f1cb0f6c6 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -360,6 +360,8 @@ extern const void *of_get_property(const struct device_node *node,
- extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
- extern struct device_node *of_cpu_device_node_get(int cpu);
- extern int of_cpu_node_to_id(struct device_node *np);
-+extern int of_cpu_phandle_to_id(const struct device_node *np,
-+				struct device_node **cpu_np, uint8_t cpu_idx);
- extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
- extern struct device_node *of_get_cpu_state_node(const struct device_node *cpu_node,
- 						 int index);
-@@ -662,6 +664,13 @@ static inline int of_cpu_node_to_id(struct device_node *np)
- 	return -ENODEV;
- }
- 
-+static inline int of_cpu_phandle_to_id(const struct device_node *np,
-+				       struct device_node **cpu_np,
-+				       uint8_t cpu_idx)
-+{
-+	return -ENODEV;
-+}
-+
- static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
- {
- 	return NULL;
--- 
-2.34.1
+  c8e7e056366a ("include/cgroup: separate {get,put}_cgroup_ns no-op case")
 
+This is comit
+
+  79fb8d8d93e4 ("include/cgroup: separate {get,put}_cgroup_ns no-op case")
+
+in the vfs-brauner tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/=GX3OkrjU5kcXB7.2hO8KI/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmghrFkACgkQAVBC80lX
+0Gy6bQf4/kA/eyiH/NaEpHpOfGljoUEGVqAmftNbnF1kauB6U4MVJWctwR8UkDwN
+GMjj8UucTMMinfZIYqe1yTsAM/xHMSzKSesHO2dyEI23xF+sJVXSicWY6FG3QLOB
+sV+bKuCfBjAqulwuom/Rgzo9YssmZryCdI8E6onrtVyIYVwLbxYqmLpDICMvLllK
+mxjkEfGpXp46HJbfMgfJV6VCmP/k8Lj+6staT69LjO1rufTbwDW4QWBlvVlVCj9u
+TXyjhhFNzHXDurc+1AxoZ0TeDDg1pn+GdC9EiHMfg+bbTC8YTkd0X2ePEfmF8/Oh
++InS1+TBF5DhW6gwW4a7uv8RLJoN
+=db6c
+-----END PGP SIGNATURE-----
+
+--Sig_/=GX3OkrjU5kcXB7.2hO8KI/--
