@@ -1,89 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478D223C518;
-	Mon, 12 May 2025 15:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3585C23D29F;
+	Mon, 12 May 2025 15:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065193; cv=none; b=ftj08zaRj0wNp07tF7ZVjiHbUuzs+ZxrCMmQ1X2Gt2cvXMWAfj8kGE9aV462uSiMbiVfxOJiXWRVG2df3GcNZqTUEUOLuuX02hcms250Wf9x1xoatur+/zuESW0UJOr66MX60J03CbG3vJ3zuFEAVKXhzPSg9JwhYLXb2SYV6s8=
+	t=1747065249; cv=none; b=LbX/VZZGbEarKnR2b6bRCdKyRzin4Z+/+ooCTvWMfNkNWCsrS8yq6yWnDtTUBvDSgDocFdox3jbEDluT5xA2MtXh/rLHDmSz4rW7LHanKpoU5IJVqYsAFliHF8tMx3uH/E85eCMECZ2GUROVxo7Aaj/kPDvffCkldaiqetM1eco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065193; c=relaxed/simple;
-	bh=ruXvesyscK6Zomaq+OiPd916z2rinqKUU300GjloMCU=;
+	s=arc-20240116; t=1747065249; c=relaxed/simple;
+	bh=ardgSaLF+Xzy6IuCgpd3Vkzram81Uc0c2cE1fOWBWbI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dsM1tgTDOHC1BSvzGPD1uJnnzvHt9CZWhv1JCZAOWb2x8hpZVad2Plxgb2ZG+GcaiCncnKi80E/D4yad2h+DD0ctb9An/He1p2+6aqym44P4KS0LCC+WerrDxh69gDx84m+My5SxcZPzthP2760uFGmTUan4ez2CZ1QTOnJ3TjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFdrvjJw; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KpvkLEEN6NgzLwkvWnDQH/5YCVvRgcUX2jWc7GqhSzowg2TwVUASGP74WI4xDB6PKf0VAA/HDglLV3UjxRdLjzP7HuwPx/NWYz6IXfNXGZSwr5sJ6ydhros9zBJSCU2CEtlkJsmpyMFy0UQ9sTxxx8B6oW6Sdc52YuCXIETX8OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJQuR80l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFdrvjJw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747065191; x=1778601191;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ruXvesyscK6Zomaq+OiPd916z2rinqKUU300GjloMCU=;
-  b=hFdrvjJwxdbeHESKmK/uS6ssFuy1oWhk/z0UzHkjgZ836DqSGlvCmrmq
-   6WYDc2nVncPIFBiT3KU+ZTg+YKhe//h/26hTnp8m2kR5LhKjHpjU7pd5h
-   tIq5Jdegh3Dcw5nKZEnluHTVU2V9U/1/tJpk5RJUlLdpZP+B//aHxVET7
-   Y87pziUTZKJFq1tpTrmlYlhVqTO4WmeLC17WRpsLluG6ZsxTbLGy30E/v
-   IYZY6Inzw5nHFCJJsn8N97XtPWsvVaNb6Rza+gPEOGwvk7IuTPjmIqJ8T
-   e82hDbTe37dGN8GppO20nQVYQ0Bd0y6/CLeQYCgK9f44A0KDxH8pdZ6Z+
-   A==;
-X-CSE-ConnectionGUID: aFnk25ikSFi/8wCfTiiFng==
-X-CSE-MsgGUID: vezQiCOGQs2UX+BMyYD/6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="74263416"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="74263416"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:53:10 -0700
-X-CSE-ConnectionGUID: hbTsKnoWRFG+q//qsg1MZw==
-X-CSE-MsgGUID: 34VyF7LYTr24wRpfrUavow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="142183080"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 08:53:10 -0700
-Date: Mon, 12 May 2025 08:53:08 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH v3 17/17] x86/mce: Restore poll settings after storm
- subsides
-Message-ID: <aCIZZIsee7roLlNZ@agluck-desk3>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
- <20250415-wip-mca-updates-v3-17-8ffd9eb4aa56@amd.com>
- <20250512074616.GSaCGnSJbBpToh2VM6@fat_crate.local>
- <20250512154315.GC2355@yaz-khff2.amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJQuR80l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B0F0C4CEEE;
+	Mon, 12 May 2025 15:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747065248;
+	bh=ardgSaLF+Xzy6IuCgpd3Vkzram81Uc0c2cE1fOWBWbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GJQuR80lByNZISu3PMcvRfdar/46craiwyvRfxH6qwaBIaKgVN9lld7eN6lMOenYm
+	 nYxeWccZ1cW4nZCKj2VchptdnthkDFu/uEesq1e9irdeXR/Xfwa4g1liYvMm2QQabc
+	 syC5HEpxoUPK5Za/KRD5vYFMMYCznB0U2cbH1bDqNajhPeqaxTQpcvuFZR38gn8Kr7
+	 elQ9XuucoHOSFEIhetmwBTlVPGDs9klgcQHSr9hNPsWVGnNcySwKn5KIGxK7iYGCfi
+	 +cuj5O0+5l1OHUiqLy2ROwMtTQyXUSRuuMZyTvtm/p4bi/cfnmm22o3Pq1WBZV/xX0
+	 Hu7OYGL3mXhCg==
+Date: Mon, 12 May 2025 16:54:04 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Ben Zong-You Xie <ben717@andestech.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] riscv: dts: renesas: add specific RZ/Five cache
+ compatible
+Message-ID: <20250512-neglector-scope-65dd0e24db8f@spud>
+References: <20250512-daily-saga-36a3a017dd42@spud>
+ <20250512-sphere-plenty-8ce4cd772745@spud>
+ <CAMuHMdVwBqC3jHgwLJkLcNZo8W0Aw9ZfoXL1tRaL7B2EpKuWvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Z6jVGgc2yAbBL/YK"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVwBqC3jHgwLJkLcNZo8W0Aw9ZfoXL1tRaL7B2EpKuWvg@mail.gmail.com>
+
+
+--Z6jVGgc2yAbBL/YK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250512154315.GC2355@yaz-khff2.amd.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 11:43:15AM -0400, Yazen Ghannam wrote:
-> On Mon, May 12, 2025 at 09:46:16AM +0200, Borislav Petkov wrote:
-> > On Tue, Apr 15, 2025 at 02:55:12PM +0000, Yazen Ghannam wrote:
-> > > Users can disable MCA polling by setting the "ignore_ce" parameter or by
-> > > setting "check_interval=0". This tells the kernel to *not* start the MCE
-> > > timer on a CPU.
-> > > 
-> > > During a CMCI storm, the MCE timer will be started with a fixed
-> > > interval.
+On Mon, May 12, 2025 at 03:57:41PM +0200, Geert Uytterhoeven wrote:
+> Hi Conor,
+>=20
+> On Mon, 12 May 2025 at 15:48, Conor Dooley <conor@kernel.org> wrote:
+> > From: Conor Dooley <conor.dooley@microchip.com>
+> >
+> > When the binding was originally written, it was assumed that all
+> > ax45mp-caches had the same properties etc. This has turned out to be
+> > incorrect, as the QiLai SoC has a different number of cache-sets.
+> >
+> > Add a specific compatible for the RZ/Five for property enforcement and
+> > in case there turns out to be additional differences between these
+> > implementations of the cache controller.
+> >
+> > Acked-by: Ben Zong-You Xie <ben717@andestech.com>
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Thanks for the update!
+>=20
+> > --- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+> > +++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+> > @@ -143,7 +143,8 @@ plic: interrupt-controller@12c00000 {
+> >         };
+> >
+> >         l2cache: cache-controller@13400000 {
+> > -               compatible =3D "andestech,ax45mp-cache", "cache";
+> > +               compatible =3D "renesas,r9a07g043f-ax45mp-cache", "ande=
+stech,ax45mp-cache",
+> > +                            "cache";
+> >                 reg =3D <0x0 0x13400000 0x0 0x100000>;
+> >                 interrupts =3D <SOC_PERIPHERAL_IRQ(476) IRQ_TYPE_LEVEL_=
+HIGH>;
+> >                 cache-size =3D <0x40000>;
+>=20
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-devel for v6.16 if there are no objections.
 
-I think you just need some more words at the start of this second
-paragraph to avoid confusion when reading together with the previous
-one.
+I'll grab the binding then on that basis. :+1:
 
-Perhaps:
+--Z6jVGgc2yAbBL/YK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If the user did not disable CMCI, then storms can occur. When these
-happen the MCE timer will be started ...
+-----BEGIN PGP SIGNATURE-----
 
--Tony
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCIZnAAKCRB4tDGHoIJi
+0qXTAPwP/YNKxUjnsoWI2eR0P927XpvMHJh8iXZEVodQF9EU0wEAtk1y4MXzjY2B
+SKRgAqtfnm7hZ972QpmZqhPgXVaxGwk=
+=xOTE
+-----END PGP SIGNATURE-----
+
+--Z6jVGgc2yAbBL/YK--
