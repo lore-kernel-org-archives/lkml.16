@@ -1,66 +1,105 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D6F299AB9;
-	Mon, 12 May 2025 21:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10331296D3C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747085536; cv=none; b=VQ+M6GAMT/BKCMMMy/u/GX/Ah8foQ0l84TBfelbJuHqgAqdb1H/aCqiEe55QECg0hfkx9FD5BjBHa4YXgcKSeEafpUVMgNRzVHtHzXz7mU68BurqFJl36FkIetq4lxx+f160gaBH1y6oIpJnteWSHLsQpxCSndyHgLC+LTOhd78=
+	t=1747085562; cv=none; b=akG9n+T2WJxD1GYk1FF8qTNJqKSEcLxT4K9Ql0t1Yju3o0pfNe78GVQvcSQPcaOdXPdUj6uruj2jNp0t2kT3OyEPGUcpT9C6suYP7XIv2yLPPAbGXkabpLoqOrGxItHeQklCJt9V2wUTP73rugmdVh8LQCpdletL2ZV2wM4gWA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747085536; c=relaxed/simple;
-	bh=g2DzMktddjyfi6jAbHCSq1OVtmmUdC3QMtq3v2I0DnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PxCyqvfUzGbNangQWGzp4yBQUhHhjachOD/BsqstOatqlK8qM7euVCCkp/mZGGWOpJfImhYCv7vLtXFg5Uvof22yVNiFA7dCXmF3GuOfwkodspqp4Etjoa7ZpnNHoiMRmNciYxbJAX5PR5DAzrezSl44CItlMvyqCoXMY7u1+uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4FCyK6XY; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747085562; c=relaxed/simple;
+	bh=sFHYzOqc9ldiOIkZ5g5soXtLw0oO0wTl3DJJuDEdpCM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gvPZLbqyrF6ieYTkFhr3Ul7G2FojA5SqJZyZQ16dWjgf7jmGoY4EdujJBF6JdCN/riBOGMCj5XGWM2H4CiF6MlLQ+C4z7PAz/dkX/E2aIgSz1hERiTgiUDI7fo6Ajft7MZZwZ4pajFj/y5xFR+OIBNw5JUlKCjK/HyLpl034MZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gjpi4QHA; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4FCyK6XY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=KhSlUCo/MY/IK5ARlS+anjyhtV9qBFHpdoCvCWxFhmY=; b=4FCyK6XYvs5oqYzhabmxefyBXm
-	0CcKUDbxaz1dKEPc1U1f5xnd8r59E/y8DCIzHLq7A7TTAx5HRYRTZHy4Thu1vSSlUHi8JcDHl1mF3
-	kv16oibHSQOwgPjdRrAAnoarusRLbgIRa1g5PghZfA33ltJpWZhoMXuzEWC+IG9gBDEY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uEakt-00CNuD-V1; Mon, 12 May 2025 23:32:11 +0200
-Date: Mon, 12 May 2025 23:32:11 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Imre Kaloz <kaloz@openwrt.org>
-Subject: Re: [PATCH 7/7] pinctrl: armada-37xx: propagate error from
- armada_37xx_pmx_set_by_name()
-Message-ID: <e8b9f3a0-980d-4045-ae23-f796e852fde6@lunn.ch>
-References: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
- <20250512-pinctrl-a37xx-fixes-v1-7-d470fb1116a5@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gjpi4QHA"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73e0094706bso6949454b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747085560; x=1747690360; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i+B2Elcw17Cu4CBcJZhD06N2/yMjwzCSgqlqc2Asw9k=;
+        b=gjpi4QHAwqg04/Oa8OdNdzd71Ak1lSJyPHN6CF2OukY1P3zozBAATh66FH7tHcKkHo
+         MUvX4ZK57SDQJ6+tKbu6xuvwxuBaB8zwr0MPmNkBH7I8zkXVtf1+kAV8JhPFwQsO1FQR
+         idgHAXag0E3BNPWJTVvu7AU+FmQg8WU82/LnUa8FR8vVvBR4YXPWKVtKGskZG5kI4zbC
+         qW7VbNZtpHOsznKygV4Ve+LkQl/Bh+y0xggRWEOHgxI8c16UyoBz/0iVz5ZwqmcDT+7F
+         BAjxog+6H+UB3khAj7m9ONOqk1ktDTlJLc5zEs51N4oWTOgbW/4YSxejNT+FLMme3z4K
+         RJ/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747085560; x=1747690360;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i+B2Elcw17Cu4CBcJZhD06N2/yMjwzCSgqlqc2Asw9k=;
+        b=wz2IeMb5ybeGEUwK1GLImDhOEX56S4z+LXZYwF5nZfpv+OoD86yKjqR5L/5g7fkBRg
+         NhAKFgFOIQbgVnqvMt4a+9Jj4MM60Qoquxrap2XjOhXeW7VtiiH15EvRpIDyULZ+qhU+
+         xyjGnX1PcHmXssChT5QxSkUBGdNG6Higw0D5/wbahkV/mBiRgTM1766JR6qYaIziLL+v
+         vDmBq5MrYuFBM0naWnQF8kmfGVFxQQHvT+2u/Ua5VHs0UqBFEo4h9x7m5cikPIygRKbr
+         ILi6joActOVBtW7B61MRdVy++uFtO/cwQHOvsfD/WgfGc/zhAOOzSrhhEF7zlZShL5Nv
+         T5uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFjl5YM836c+CqHHXl/AzFBRhJg27kTX53Lkcrc00YfI67XfaD90luInyicv4Jo0HZspyMaJ+mhOOEU3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBklCNmSLSdv6ggXcHytclqL7o6o9N4SBrOPvLQNup0Y9SXDOf
+	UvU2NTs0BXAmBWeQMEJCEYDEwfp7A3uXZo5Lsj7U/uTzo5rBtb6zicTlXUJLTnpcyXOz+2SVTuK
+	8oA==
+X-Google-Smtp-Source: AGHT+IEp1InJ4GD3YtvHdByU1GNNXTqDQ4FLT07UCcjYKesrglIqAhjhJEZJflXendq5wohUelB1dP7LOeQ=
+X-Received: from pgbcf9.prod.google.com ([2002:a05:6a02:849:b0:b0d:b491:d409])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3405:b0:1f6:2d39:8713
+ with SMTP id adf61e73a8af0-215abc21edcmr19190748637.19.1747085560396; Mon, 12
+ May 2025 14:32:40 -0700 (PDT)
+Date: Mon, 12 May 2025 14:32:38 -0700
+In-Reply-To: <20250313203702.575156-17-jon@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512-pinctrl-a37xx-fixes-v1-7-d470fb1116a5@gmail.com>
+Mime-Version: 1.0
+References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-17-jon@nutanix.com>
+Message-ID: <aCJo9qZdTrWBOwhf@google.com>
+Subject: Re: [RFC PATCH 16/18] KVM: nVMX: Setup Intel MBEC in nested secondary controls
+From: Sean Christopherson <seanjc@google.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, May 12, 2025 at 04:22:43PM +0200, Gabor Juhos wrote:
-> The regmap_update_bits() function can fail, so propagate its error
-> up to the stack instead of silently ignoring that.
+On Thu, Mar 13, 2025, Jon Kohler wrote:
+> Setup Intel Mode Based Execution Control (bit 22) for nested
+> guest, gated on module parameter enablement.
+
+*This* is the enablement patch.  And it's not doing "Setup", it's advertising
+SECONDARY_EXEC_MODE_BASED_EPT_EXEC to userspace and allowing userspace to expose
+and advertise the feature to the guest.
+
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
-> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 931a7361c30f..ce3a6d6dfce7 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -7099,6 +7099,10 @@ static void nested_vmx_setup_secondary_ctls(u32 ept_caps,
+>  		 */
+>  		if (cpu_has_vmx_vmfunc())
+>  			msrs->vmfunc_controls = VMX_VMFUNC_EPTP_SWITCHING;
+> +
+> +		if (enable_pt_guest_exec_control)
+> +			msrs->secondary_ctls_high |=
+> +				SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Land this above the VMFUNC stuff so that more of the secondary_ctls_high code is
+clumped together.
 
-    Andrew
+>  	}
+>  
+>  	/*
+> -- 
+> 2.43.0
+> 
