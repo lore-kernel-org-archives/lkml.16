@@ -1,34 +1,48 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B7431EB3D;
-	Mon, 12 May 2025 12:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A63478F43;
+	Mon, 12 May 2025 12:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054708; cv=none; b=Bh0RIY4CKpx09pAuU9lU5A1jqraR9B/OonUz1pwMv3K0HpPPXfAoWJ9GbZB4byWxzxAhJ3d7EfbT/Gx0aPQVP1oO1nckmIC6brqhdQuwzEgFqlSdKBZKZzxmHe/FS5Mdm41Qg2V1b+sOV+6DqsGTbgXGlOPAvQGroqsPswLILcc=
+	t=1747054784; cv=none; b=hsfTXy1HMSN8bDLHUDG7YbCRFSLcwVAtgzVfAzK/rE798CzacIcrd25q06+HL7eZBSd/uolWlw6lIvMxqgO9g3M1t/qgwPe/Eic6rOuM/AB4g88sy5oZBtZSG/zrJ+abJnm2jaToYLvJZOvD4IDezjl25bZZB+10E+v108SVFec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054708; c=relaxed/simple;
-	bh=5682P/V1yDxx7hI8HSB8iUFfbhIQqqzTSuLza0F69jA=;
+	s=arc-20240116; t=1747054784; c=relaxed/simple;
+	bh=Sl9HhishayHhuvvB5bQuDThhoqmbFaMgmkYIGRlpRog=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liG+JRac4Y4oXlED+kFOJNPp08A9X9BX7apq33FBwdOWWGRX5kvpn1dQafMhbiVFvLiWwFty+Zb7Bi0OEsa8toOd+GWTAT2+fJ9zGqCowSvIfXnysBPyVXyzvd+AQV2UepxwYaytdROi0ewDDyYho1xXl2axu8oXtfMMRqk3fI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-13-6821f067eaad
-Date: Mon, 12 May 2025 21:58:10 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
-	harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
-	ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
-Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct
- page
-Message-ID: <20250512125810.GE45370@system.software.com>
-References: <20250509115126.63190-1-byungchul@sk.com>
- <20250509115126.63190-20-byungchul@sk.com>
- <CAC_iWj+vweve6V33cqHGZ6tSehs85vXd7VKAGNiEjLoK2pc+PQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bz13aRkb17Oned2NuzkVEf7pWwqEH7l+6M/LybfjeejdWOGGAGG4BX/iGNleurF31IDIa8UNxlQjJmgPWe5103/YqaW6Y8kj8rObHuOin3yyQ4ilA4T6Lw9jGSlsps/oZS13c/wT46rGKdlg95ZgM6nJhkIq6l5Cd/Ae+ZhXg40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsdY9hbU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsdY9hbU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7B9C4CEE7;
+	Mon, 12 May 2025 12:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747054783;
+	bh=Sl9HhishayHhuvvB5bQuDThhoqmbFaMgmkYIGRlpRog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VsdY9hbUj7lzvgCG+qD3jMnd/6+YmALHBCgEFxiAI5SeZV0QsLiluVIisah5mqeQJ
+	 caJXV365FgBEgoe/qhzjhhu7c3uteuwTTdTE3bRKWDQ5K3dNAqMTjp94iGN/dcDq5M
+	 dPlrnJtUEJTnW0mCls7X2FaBzWgrV2yiQNPfv0cdFuXUnMbhqlTChttFa4QXMIDG+/
+	 BB8J4IKc2qJUPnTY6PslvQOhR2xmcm2HEPMRJ3G04adrg2HGyCg3xA/wYv5+4TMwpm
+	 889vc2UYfKPbKuRjWHqDQwoOLvnXaMtx57t8OGRjD4w5t36XsqpPMiGGg+BbLyKttv
+	 LZAAXBB1X+qRg==
+Date: Mon, 12 May 2025 07:59:41 -0500
+From: Rob Herring <robh@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	marcelo.schmitt1@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	lgirdwood@gmail.com, broonie@kernel.org, jonath4nns@gmail.com,
+	dlechner@baylibre.com, David Lechner <dlechner@baylirbe.com>
+Subject: Re: [PATCH v7 03/12] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <20250512125941.GA2952373-robh@kernel.org>
+References: <cover.1746662899.git.Jonathan.Santos@analog.com>
+ <731196750f27eee0bad5493647edb2f67a05a6e2.1746662899.git.Jonathan.Santos@analog.com>
+ <20250509-gala-unfiled-fd273655b89d@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,105 +51,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAC_iWj+vweve6V33cqHGZ6tSehs85vXd7VKAGNiEjLoK2pc+PQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEIsWRmVeSWpSXmKPExsXC9ZZnkW7GB8UMg6YDnBZz1q9hs1j9o8Ji
-	+YMdrBZfft5mt1i88BuzxZzzLSwWT489Yre4v+wZi8We9u3MFr0tv5ktmnasYLK4sK2P1eLy
-	rjlsFvfW/Ge1OLZAzOLb6TeMFuv33WC1+P1jDpuDkMeWlTeZPHbOusvusWBTqcfmFVoeXTcu
-	MXtsWtXJ5rHp0yR2jzvX9rB5nJjxm8Vj547PTB4fn95i8Xi/7yqbx+dNcgG8UVw2Kak5mWWp
-	Rfp2CVwZh6/vZSr4K1jx4dsXpgbGY7xdjJwcEgImEisWrWWGsT/8+sEGYrMIqEos/XuUFcRm
-	E1CXuHHjJ1ANB4eIgJHE3YPVXYxcHMwCc5klZn2cygRSIywQJDH58UN2EJtXwELi4NXb7CBF
-	QgIrGSWOvO1mg0gISpyc+YQFxGYW0JK48e8lE8hQZgFpieX/OEDCnAKBEj8XnQW7R1RAWeLA
-	tuNMIHMkBPaxS3Q+3s0IcaikxMEVN1gmMArMQjJ2FpKxsxDGLmBkXsUolJlXlpuYmWOil1GZ
-	l1mhl5yfu4kRGJPLav9E72D8dCH4EKMAB6MSD++Jl4oZQqyJZcWVuYcYJTiYlUR4G7cDhXhT
-	EiurUovy44tKc1KLDzFKc7AoifMafStPERJITyxJzU5NLUgtgskycXBKNTCyKeUySk3u9Rb/
-	kx8rfP/exTu2p//d4d5zfMm681n2f+4rZWW+q5zUseJuJ/+SudPOXdixu0dt48TysCvyz+rr
-	fUWkrGaLfdMwzGc7vOd/r+2BqugK84N7XsXNYz0Rkbsxe314rOelYxzXZi/kkXxXlPx+i+Tz
-	wI4f/yxdy/X2LY0xfF35kvWLEktxRqKhFnNRcSIA5d6Zd8UCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsXC5WfdrJv+QTHDYM4Ec4s569ewWaz+UWGx
-	/MEOVosvP2+zWyxe+I3ZYs75FhaLp8cesVvcX/aMxWJP+3Zmi96W38wWTTtWMFkcnnuS1eLC
-	tj5Wi8u75rBZ3Fvzn9Xi2AIxi2+n3zBarN93g9Xi9485bA7CHltW3mTy2DnrLrvHgk2lHptX
-	aHl03bjE7LFpVSebx6ZPk9g97lzbw+ZxYsZvFo+dOz4zeXx8eovF4/2+q2wei198YPL4vEku
-	gC+KyyYlNSezLLVI3y6BK+Pw9b1MBX8FKz58+8LUwHiMt4uRk0NCwETiw68fbCA2i4CqxNK/
-	R1lBbDYBdYkbN34ydzFycIgIGEncPVjdxcjFwSwwl1li1sepTCA1wgJBEpMfP2QHsXkFLCQO
-	Xr3NDlIkJLCSUeLI2242iISgxMmZT1hAbGYBLYkb/14ygQxlFpCWWP6PAyTMKRAo8XPRWWYQ
-	W1RAWeLAtuNMExh5ZyHpnoWkexZC9wJG5lWMIpl5ZbmJmTmmesXZGZV5mRV6yfm5mxiBEbas
-	9s/EHYxfLrsfYhTgYFTi4T3xUjFDiDWxrLgy9xCjBAezkghv43agEG9KYmVValF+fFFpTmrx
-	IUZpDhYlcV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA2NobY18zNmgMzbKPU4mvFpSRplOAjwc
-	Bn+unpy+Y2W7W/t6tcrDD914/1VaS1c8XX9ebMYehZLyYr45t0P2L9n/JV4u5e/tk1xBef+O
-	e4bwzJ97ZQdj++EdK3ZPOLpQ9vQxRufbN8Li963fNdGoIYxfNkxjakyG4U6DyFMK5/bvONOw
-	LnaCyi4lluKMREMt5qLiRADkUyCsrAIAAA==
-X-CFilter-Loop: Reflected
+In-Reply-To: <20250509-gala-unfiled-fd273655b89d@spud>
 
-On Sat, May 10, 2025 at 10:26:00AM +0300, Ilias Apalodimas wrote:
-> Hi Byungchul
+On Fri, May 09, 2025 at 05:18:55PM +0100, Conor Dooley wrote:
+> On Thu, May 08, 2025 at 02:03:30PM -0300, Jonathan Santos wrote:
+> > +dependencies:
+> > +  adi,sync-in-gpios:
+> > +    not:
+> > +      required:
+> > +        - trigger-sources
+> > +  trigger-sources:
+> > +    not:
+> > +      required:
+> > +        - adi,sync-in-gpios
 > 
-> On Fri, 9 May 2025 at 14:51, Byungchul Park <byungchul@sk.com> wrote:
-> >
-> > Now that all the users of the page pool members in struct page have been
-> > gone, the members can be removed from struct page.  However, the space
-> > in struct page needs to be kept using a place holder with the same size,
-> > until struct netmem_desc has its own instance, not overlayed onto struct
-> > page, to avoid conficting with other members within struct page.
-> >
-> 
-> FWIW similar mirroring was intially proposed [0] a few years ago
-> 
-> > Remove the page pool members in struct page and replace with a place
-> > holder.  The place holder should be removed once struct netmem_desc has
-> > its own instance.
-> 
-> instance? To make sure I understand this, the netmem_descs are
-> expected to be allocated in the future right?
+> Actually, this is normally not written like this. Usually it is done as
+> an allOf entry:
+>   - if:
+>       required:
+>         - maxim,gpio-poc
+>     then:
+>       properties:
+>         poc-supply: false
+>         gpio-controller: false
 
-Yes.
+Using 'dependencies' is fine here. It's actually shorter.
 
-> [...]
-> 
-> > -
-> >  static inline struct net_iov_area *net_iov_owner(const struct netmem_desc *niov)
-> >  {
-> >         return niov->owner;
-> > diff --git a/include/net/netmem_type.h b/include/net/netmem_type.h
-> > new file mode 100644
-> > index 0000000000000..6a3ac8e908515
-> > --- /dev/null
-> > +++ b/include/net/netmem_type.h
-> > @@ -0,0 +1,22 @@
-> > +/* SPDX-License-Identifier: GPL-2.0
-> > + *
-> > + *     Author: Byungchul Park <max.byungchul.park@gmail.com>
-> 
-> Shouldn't Minas authorship be preserved here?
-
-Ah.  I dunno what I'm supposed to do in the case.  I will remove the
-author part :) if it's still okay.
-
-	Byungchul
-
-> > + */
-> > +
-> > +#ifndef _NET_NETMEM_TYPE_H
-> > +#define _NET_NETMEM_TYPE_H
-> > +
-> > +#include <linux/stddef.h>
-> > +
-> > +struct netmem_desc {
-> > +       unsigned long __unused_padding;
-> > +       struct_group_tagged(__netmem_desc, actual_data,
-> > +               unsigned long pp_magic;
-> > +               struct page_pool *pp;
-> > +               struct net_iov_area *owner;
-> > +               unsigned long dma_addr;
-> > +               atomic_long_t pp_ref_count;
-> > +       );
-> > +};
-> > +
-> > +#endif /* _NET_NETMEM_TYPE_H */
-> > --
-> > 2.17.1
-> >
-> 
-> [0] https://lore.kernel.org/netdev/1549550196-25581-1-git-send-email-ilias.apalodimas@linaro.org/
-> Thanks
-> /Ilias
+Rob
