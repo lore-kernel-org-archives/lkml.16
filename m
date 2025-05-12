@@ -1,141 +1,111 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BFF28382
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A6CF9CB
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039013; cv=none; b=b35KFrLvhgOXzv3TwydL5CIabe5+yPPgN4q1kdj3VVOBvZogj92/HgWDCLLIAAtL2DpyBosHNmM+IBZJSpx8R3ZSsgZK3eqr1egDfMeFRdgrNyUfOwvqCKRxMZebZqGeh3qAKKd0oKUkHGljvXFRVZaDa4HaLUXGeh1eZ3NDPjQ=
+	t=1747039096; cv=none; b=Ij16v+8f3CqdtEJ6WcLVTtxciCgLZEL7rwXnf774uIASW6coto339KaZyz5ICvomxOZuLexGriv1y9XEOSWgGcTD3rAB/JmH8ZcUsYesaP2c7R+6ZFPYcabCCPHo0PsetlnQoWpVQFIOsaT4mT9YA1NHyjDcg+oJAp07Q990PbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747039013; c=relaxed/simple;
-	bh=TRB7eQyt2VOil6Xd2YCPJj+sLe3Q8um9y22xx0V3P2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nN1EivTpKzfW53lG73r69kKHZhZFrvzMF5uOvHPfVFv7IBHhUP7wnJlpwFzR5ZS42utzh4PD5UBLZrgR6n4CmTmxKLmGfIYlf+/9KIQ7++udnrzvUt/AYTXtD1Yco3gJUNpS0KE1qLM0zMPTWnxDc7SeQFxGaPWzdCZ0JmSWwoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=JbbxPg21; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747039096; c=relaxed/simple;
+	bh=8ZUFfo6Z4p5uyO+h1mAz3NIcnzMIS8i9vzdULPQEIuI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qNnRwsZxSXXF5vH4ZWlCOuS5w1NhlWS5PtgYBtXDYQmo9PnLOnt+PxZjs79eZmSwSZH+n3aZYYHGNpRS3UtDeW/RIgIYz9ulHC4EeGSc6U7332sPr3Mcc7ZvB/3bxMvVH1WYmQnIHQYwuwiO9sM/IXe3ctRvS3wXUh05TK+hTwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZfyG7WCI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="JbbxPg21"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30c1c4a8224so3030910a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:36:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747039011; x=1747643811; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ejc+fT9oBiZc6vlLfCLO2KcJoR0VUYj8MUaNRpcLSKk=;
-        b=JbbxPg21aN72Mm5UnW3XeSQWJcsGn+Sx2dGUY88ooALtbgIjFedL4tsQyXIKdj+lTL
-         w+d1c2skjR7ZGtRAxsdpT2rycGOQSNl9PThEE5nzu+QVJZ5zMHqXMGWEirowPVUm9zg1
-         BfXc+bOSVijZPVqqdVOF6tfaJf+JCB6nQmLRuE46B41Vj6uqXAiAjdHVxsRUOt9dyLyR
-         oW3zaLFa25713dYD4SdUrN7rwBgsNadJi7AcYCONBfpbaVEJF4YLRmTopD8cPcK5ZRBh
-         vPfG5SlJHEfbS+xOH5bIS89dUfM8ZX0tS8593BLr4mqi+3lMu9cBNYshqT5B96sU8FH/
-         nrIQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZfyG7WCI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747039093;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PP89qRhPkoWIIYcgVm1wnfv4RdTsHvtgvKByma5wHQw=;
+	b=ZfyG7WCISM2oeTUoqWba29Vj3x356zv4+g6OsJnJe07/uaxBAR0vdk7jtkb3TvEfb+Y9d6
+	jZwc3V9AiaikG3MtZop1tBthEPJgEJRNbaiz6mi9zbtrCnwVJhuQMPnFyqjyem5s7XjGx8
+	GKykPrzXR7nzcfUAd9JezdOesTwaQL8=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-427-o6vHl1yQNxGj2jj0J1Vukg-1; Mon, 12 May 2025 04:38:11 -0400
+X-MC-Unique: o6vHl1yQNxGj2jj0J1Vukg-1
+X-Mimecast-MFC-AGG-ID: o6vHl1yQNxGj2jj0J1Vukg_1747039091
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7caee990715so1272272985a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:38:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747039011; x=1747643811;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ejc+fT9oBiZc6vlLfCLO2KcJoR0VUYj8MUaNRpcLSKk=;
-        b=Vyb4dZKK7gunnT7gjXygA5jhBX5l0sFU2UPb8AdDJJ3ULVoiab3vzgtMSwYIzmczoX
-         iTusX8RGvcx0twhVCZdyAAQe00lXhdca4Dpa5kCFY3qXnkSG/H05nMK1RwkAZIeBPina
-         NUHCf+bzFhiY40jhuzvJEiMWiovZ6bEahe0NqcXhhnCTdVP6MG63temTnHsqEJrREyxR
-         rauUtTxC1HwSaNDw+aMY6/D7tOsXpK3TqdTRPqAbbQAO+qehhzFX4r1M8l5bAe6/Mhrn
-         iQHwjUs0Dftk2OE6PBH4dRCnkrfvK5vopcNjR2+zzKRdrv0buBusIkUPvdPWxxIRk2Zh
-         x1ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU61goXNDoozgk6aTOk4TgeJR10DmrWoVNn1DpWCth4P+icezhfqUPQmQSUntzhc7rpQWmY9gPmxUfIWXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYwKp6WmweS2huUuvarxuxjb/9yI7hMjrjT2REVUlw90U9hpF9
-	z30a8AN2KcHYv2oJnt+8Vm8y2iPbnn5ZWaHGe/UjagQQZwQqnwL18rpIjYw+0p8=
-X-Gm-Gg: ASbGncstVnuOjmQUt0FbPv4qlJT3k7bH1sHfjCG02qJTzoIPcCzOZNtX51YnoORYIxB
-	gnaNFmGwNkDWmWJi5KvnW37HAupn4NvhXRD1zq5z7aDSYlx9g3gjyrEW6gR+DHwDlctZWEyaJ5+
-	b18SRLj7dyZf5YJpxAQgVcwijyxCOvwq1Osj3Ax7Zr0ImL9bgrW6drEKw0k2AnTtGuwA8Ks950o
-	rd5Z4pR2UMMjInUju2zRlQR55XNdD30pVYmhV0zP+s0/cJBTAYglu5hdMU0vncLomhzUwZTMnSz
-	2hL2JXZJUqvhD/yD4xmyeuqq36KPeKWc9tH/PCdwQvkV9nV6PRH6YBPFrig=
-X-Google-Smtp-Source: AGHT+IETI+63sqf5lJSJNfnuKUbP5ALGJFrOUXpQSYU1rR9FXckU+YWdjPI/7RMywkT9jw7jl9sPHg==
-X-Received: by 2002:a17:90b:4c8d:b0:2f2:ab09:c256 with SMTP id 98e67ed59e1d1-30c3d65e2a5mr21634709a91.33.1747039010926;
-        Mon, 12 May 2025 01:36:50 -0700 (PDT)
-Received: from sunil-laptop ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39e760acsm6089961a91.47.2025.05.12.01.36.40
+        d=1e100.net; s=20230601; t=1747039091; x=1747643891;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PP89qRhPkoWIIYcgVm1wnfv4RdTsHvtgvKByma5wHQw=;
+        b=iUcCeAmyGMV4PxJE6P2nu83fJi2zp5XVUg4bZB3wjAOcu/r5FEz1VGgm5is+8hKsfA
+         DrbhoLeHIMeW4L6DQ2Y8/+UtUOj7x7y41e37QMeEICiSMcFhlQW7o5onMF1YQFIjR7Md
+         IMZJZlK+PEwWLZKzx4/g/jZVbRlALfymPD6hZ6lrGkkIcwR6oZkJK0oeDqyh3IyRBfWH
+         xhsWQwd7ouAvLQbCAea4922S3GUYB7n+F57GXG5rs5b8aXRfyEL+DfwKuNw1KxmJNfI/
+         LYBrRqZ2g2alGyS6fw0Gjd4Uk2mBPpaUf3HFe/Asn96XBHwdAjcDZuIxwx6wx3+XcICC
+         z4oQ==
+X-Gm-Message-State: AOJu0YyJfZaD4uaBtxTjUBcedufD1CWuj5N+mMAHlwTOqboy1iIDAlM3
+	CjRpCK7OBxcuhicN9iqAS81Fop9a/+7J/7wXwUU4YCXhWTlCjE5Lck16/CvW3A6v6M1Xt7zpmdS
+	NEG0wLhGl8MQAoU1PoiabYvCQ3NjFiFUaaUE1Pgkp5kIDJ2E47bs3Ly3wsU4CIQ==
+X-Gm-Gg: ASbGncvjitIPoCIkgVUDsOobpI0H3P7yt6VwnpUmuKiU/GpL9ApoOb6fgEwiCAHPeoT
+	LWv9yNvdEERViRB4usae8RFWpe8Dq+5S4T1jWLg4PubsVvl3Rohc4iBNih/54AkTFePf/MVbtXB
+	aJ4MB6Y7ToboymOH9VhlidF9iZ1jI/Qi+nN9iIh0Fjfl3oDFJCIRBkwPpC9AqZxISOExPr7ECqv
+	K5wwsI2XGkL+crtBXtsSjmRIvqcjuh6lq1sBQn2DIxSPOdUB3QknbiK/EmdrBcgxyOxIA5f+DfH
+	93O3TGyTW809WuIbXEVmvXecY8PPYcQTcYvu8ZmsQQ==
+X-Received: by 2002:a05:620a:28d2:b0:7ca:f04b:3fa2 with SMTP id af79cd13be357-7cd0114ef36mr1842632185a.38.1747039091408;
+        Mon, 12 May 2025 01:38:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHEXjH17/jNl/oMK1ZTPoobma2pz5XZPziKyHswuWD5nTF/iKW1+p6YuEGPTvLqK5Yg5zg9BQ==
+X-Received: by 2002:a05:620a:28d2:b0:7ca:f04b:3fa2 with SMTP id af79cd13be357-7cd0114ef36mr1842630785a.38.1747039091183;
+        Mon, 12 May 2025 01:38:11 -0700 (PDT)
+Received: from localhost ([195.166.127.210])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f63a63sm527858985a.37.2025.05.12.01.38.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 01:36:50 -0700 (PDT)
-Date: Mon, 12 May 2025 14:06:37 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 20/23] mailbox/riscv-sbi-mpxy: Add ACPI support
-Message-ID: <aCGzFVXFBVRbMUKz@sunil-laptop>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-21-apatel@ventanamicro.com>
- <aCGjEdNVH3ughITd@smile.fi.intel.com>
+        Mon, 12 May 2025 01:38:10 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, Marcus Folkesson
+ <marcus.folkesson@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, David
+ Lechner <david@lechnology.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3] drm/sitronix: move tiny Sitronix drivers to their
+ own subdir
+In-Reply-To: <8c717f94-5b7f-476a-895a-c5b0969eb208@suse.de>
+References: <20250512-sitronix-v3-1-bbf6cc413698@gmail.com>
+ <8c717f94-5b7f-476a-895a-c5b0969eb208@suse.de>
+Date: Mon, 12 May 2025 10:38:08 +0200
+Message-ID: <87h61qp6kv.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCGjEdNVH3ughITd@smile.fi.intel.com>
+Content-Type: text/plain
 
-On Mon, May 12, 2025 at 10:28:17AM +0300, Andy Shevchenko wrote:
-> On Sun, May 11, 2025 at 07:09:36PM +0530, Anup Patel wrote:
-> > From: Sunil V L <sunilvl@ventanamicro.com>
-> > 
-> > Add ACPI support for the RISC-V SBI message proxy (MPXY) based
-> > mailbox driver.
-> 
-> ...
-> 
-> > -		if (is_of_node(dev_fwnode(dev)))
-> > +		if (is_of_node(dev_fwnode(dev))) {
-> >  			of_msi_configure(dev, to_of_node(dev_fwnode(dev)));
-> > +		} else {
-> 
-> You probably want to have this as
-> 
-> 		} else if (is_acpi_..._node()) { // you should decide if it is data, device or any type of ACPI node you match with
-> 
-Sure.
+Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-> > +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
-> > +							      DOMAIN_BUS_PLATFORM_MSI);
-> > +			dev_set_msi_domain(dev, msi_domain);
-> > +		}
-> >  	}
-> 
-> ...
-> 
-> > +#ifdef CONFIG_ACPI
-> > +	if (!acpi_disabled)
-> 
-> Hmm... Why do you need this check? What for?
-> 
-When we boot with DT, ACPI_COMPANION(dev) will return NULL which will
-cause a crash in acpi_dev_clear_dependencies(). Let me know if I am
-missing something.
+Hello Marcus,
 
-> > +		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
-> > +#endif
-> 
-Thanks,
-Sunil
+> Am 12.05.25 um 09:15 schrieb Marcus Folkesson:
+>> We start to have support many Sitronix displays in the tiny directory,
+>> and we expect more to come.
+>>
+>> Move them to their own subdirectory.
+>>
+>> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+>> Suggested-by: Javier Martinez Canillas <javierm@redhat.com>
+>> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+>
+> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>
+
+Pushed to drm-misc (drm-misc-next). Thanks!
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
