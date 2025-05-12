@@ -1,112 +1,61 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C5729B22F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D91629A329;
+	Mon, 12 May 2025 21:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747085566; cv=none; b=KqubuECqAq0Qkzz2nQRoahDZSXUki6HQ9USeVyFf1wv3Qza4TnzbzBhidGsCGFfbq3YeuJ2Xq0dhyPsCPkS0/fwwJii/hfO8NbpjvhFvBGKhijIDXtLkqQ8oeoADFlcx5oy5FyUAmJwlYive76h/fV+l7PGktbYqb3BDpERKgyU=
+	t=1747085640; cv=none; b=mCIovrx79ofvlpKOs8XL3ilCBqg64WDFP5Ppj6LqfXUBHQOvJGaglXjfdsCS1ixzaXPJ232QBG8XAy07QS7Jft6NgJghkXLENTBlZo9c2RKFekVupHndXF8OxK0k+8byUbWWZ8De4Gou6OSi9AHOdupbDzVQBIqBnI1TIOZilk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747085566; c=relaxed/simple;
-	bh=f2MCs4lM3l4FrlvQEABriuyhhX5RlGGLRAtIDhd82lY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZiIAgLxZls/v+HctJbSsEBjdI6IWUU7jRIB18iwXJXgDUQNJyFsO1UGFx+S0kPmxB99V4gnEPOxMSoM9tqDRV/0ki6yJrsq6vRUMCdB3DkriDuyXrB01rmC+RUGUy7/qscyiZOnEZcfCbk8M/bxzR6x74zoOw0vEPQf/+dNqz30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QMSMi6OV; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747085640; c=relaxed/simple;
+	bh=nbp8bTTY/n884ercsSxWxx8OhU+1JG7YDr7R5L6ZKPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hyjF2GkAbIwpVfPzyS0Jpwz/iF/jbOvNCHs8ZLEFf7tUAK/kEbPRmlA3uDug0dKRTnO7BJ7Kd3Sy4a18QT2U/yKrMR4La49suKk6BVsAlV9guvnHlTPTEgR5VdeCApGQqtKr2l+mlUpEIIlEP9XRfWEhPuh6hGJIaj0E8cOsDtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ehK2iGAc; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QMSMi6OV"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-86142446f3fso126405339f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747085562; x=1747690362; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aVC8CIn+kAUJC5QRXx6Je5lGhZlJWHJlDC4Z0lsVmlk=;
-        b=QMSMi6OVn9ARSr1nASQvdrzUNOqd4paa0IYSoqzEBBNDWjFaqMkYmUtzAMVSCpBCq9
-         rFZzefecxsgovMxhsXpozyE2z1KUtwslwwFX4slOvbKNbAZOeT78qXZ4yllObnb6D15d
-         IYnDImt8w3tuPbLuu5sFp0+E3cQfZQEPMjlrQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747085562; x=1747690362;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aVC8CIn+kAUJC5QRXx6Je5lGhZlJWHJlDC4Z0lsVmlk=;
-        b=XHfacZKgPoUcrM7T/OYygYy0xtcI/Ew03z3pMYvjHgEJV5OYb9JYszCxs9DYWa+DpP
-         ZGEMMKs9ahp3vk24P8KifGelGNEKUUinoYUYTfPuDAUpfyNqOmQP1/Q83vGdSE4BGveT
-         8Nvyac3oQlfhgRNxgQTBaqsIYcQHeGsnlmaOQZ88iExtirFZg/BcKCLQDieDBHBEIXaw
-         X5aGlKbSNIQDHd6ppVD1ajhePbCWv7HbaKA5o6pcGzfye+tForc+pu87F86AESEYY/F4
-         MFgotJe2W75a970+1h8pZpAq/RQn6yRR/RJBuGxiENintX7CFJ6Q8YHy5eFGZTx59U0Y
-         edvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMnJxfAjvwqbdJt6Cp5+ifnF03p2i6PVu6JgjMt0eZw9ctrX2/MNuO/j0H0KWSxikkTHxWCiZXq9QUAsc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIvrsqLgVWZ3+XW6rtRWvGvbPaFBR5EEqewf0GCs7YoFNVNyZF
-	fVA+9kdydkCpSecltotjO00ZoEiKe+2Uyy5YjhSDCsNUqllXvmbDh/mWwDEH8saMfeDVQT/0lnJ
-	5
-X-Gm-Gg: ASbGnctBwGnGKZXZxT6lk+SPYjw66i/eJSg+gDRSC1BVqWIDAf9cV2vQoDiYvHTgiyz
-	jSF1Dor/8RSFoG09W3KsQ6miU4pYGjFtTM5Hs/5YfcsidFv+Q9JJQMq4+t8+mnHvoJCFhW4K8Z7
-	Ad0LG3ogPwSyKv+TZwEAo7OyF1QhhU1uFOp6piEvbYhVTYrZvwo4sVWyFrRDcgHPDNUY9DirGIE
-	dIaK6U/6lXguFjG3Kkle05fR5bsc1h21zAlTl96KABJO2EgrqWPDT5K6YFUQ1a5B7TUgHp++d0e
-	yvBwMqd88uZzC4LmdWgFMkPEA/dOgGf3vWZZVojIeCXnwogXy5lZjGaNvFecpg==
-X-Google-Smtp-Source: AGHT+IFUmfEbqs2iqJ2yUBrpmIaYJEyYGMrVR1JpfUOwjb3bm//xzfZQbCP9wt/2h1O8OE8V+0AWaQ==
-X-Received: by 2002:a05:6602:13c4:b0:85b:4ad1:70e with SMTP id ca18e2360f4ac-86763575d30mr1787891339f.6.1747085562361;
-        Mon, 12 May 2025 14:32:42 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fa2ec25bccsm1521170173.90.2025.05.12.14.32.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 14:32:41 -0700 (PDT)
-Message-ID: <a699b6d0-f028-43d1-93c9-250b6c8c4a6b@linuxfoundation.org>
-Date: Mon, 12 May 2025 15:32:40 -0600
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ehK2iGAc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=p39rJHQ8AzeK+WJsX2y7EKX2VVM4p/4mCnZmjamECbI=; b=ehK2iGAcS5aPnTGjJTnqU6Q0ia
+	/Tg53DNuq7cZrXR5U7SzHUX7OGIz+MHMTrU7+Sgyj1+8qPbu499qwB1/3fTMmllnT7TrJvPzc9hI+
+	qEnntpwsYvzv3s31StaJBYfkvvxsIiEcplmapZIeRSlP8ApHKaIBUzUmKFOOQlUPctJ4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uEamZ-00CNux-OT; Mon, 12 May 2025 23:33:55 +0200
+Date: Mon, 12 May 2025 23:33:55 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Imre Kaloz <kaloz@openwrt.org>
+Subject: Re: [PATCH 0/7] pinctrl: armada-37xx: a couple of small fixes
+Message-ID: <60ef3803-4f8b-4d9b-bef8-6cf3708af057@lunn.ch>
+References: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/14] kselftest harness and nolibc compatibility
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Willy Tarreau <w@1wt.eu>, Andy Lutomirski <luto@amacapital.net>,
- Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
- <d8d36e51-9456-49a3-88c4-44cffdcc5c0a@t-8ch.de>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <d8d36e51-9456-49a3-88c4-44cffdcc5c0a@t-8ch.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
 
-On 5/10/25 00:54, Thomas Weißschuh wrote:
-> Hi Shuah and Kees,
-> 
-> On 2025-05-05 17:15:18+0200, Thomas Weißschuh wrote:
->> Nolibc is useful for selftests as the test programs can be very small,
->> and compiled with just a kernel crosscompiler, without userspace support.
->> Currently nolibc is only usable with kselftest.h, not the more
->> convenient to use kselftest_harness.h
->> This series provides this compatibility by removing the usage of problematic
->> libc features from the harness.
-> 
-> I'd like to get this series into the next merge window.
-> For that I'd like to expose it to linux-next through the nolibc tree.
-> If you don't have the time for a review or issues crop up, I will drop
-> the patches again.
-> 
-> Are you fine with that?
+On Mon, May 12, 2025 at 04:22:36PM +0200, Gabor Juhos wrote:
+> The series contains several small patches to fix various
+> issues in the pinctrl driver for Armada 3700.
 
-Didn't I respond to v13 saying you can include in your nolibc PR?
-If I didn't here is my Reviewed-by.
+I'm not sure all these should be for stable. Some are clear bugs, but
+not propagating the errors has not bothered anybody so far, a
+requirement for stable.
 
-> 
-> The issues reported by Mark have been fixed and tests have been written
-> for them.
-
-Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+	    Andrew
