@@ -1,111 +1,75 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC61259C94
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009C022338;
+	Mon, 12 May 2025 21:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747086413; cv=none; b=ajndVyfUsE1UAMEetbhFixn1JjvOSOLb9g1OeExh0PJMjP8cFlnjBJdyhz5s4h5oRHZCMkibSIs3fzhc+Y1CG12A2lW8v3UjLVLdzKgJu4p9PyhBKyu79Fk06DPcvNkfXApulO8NwRvhUKaELVtzTJmUFw/EeY12gW/y3VtDUJs=
+	t=1747086543; cv=none; b=fXRV8AzIcMKeYHU2Ct5sHKWOKfTxPQ+fyyb1u0Yrcd49AmzuW/NtUcY9R/CjK3umCy7+0CQza7EGauIINjRvkOQ+PfkOaJADKGAletq2ZfU8AshNLHvlLRV9RKcJG9xZPwJLr3/O5ldr6kkwRFg7gt/t50jfo1riBz1RCUocQ+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747086413; c=relaxed/simple;
-	bh=eHjBlSf0Yo67RxAYR+5ZeL9Px5CimRi4shTlnQY8VI8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=emgerah9SsjyGJPcAJLiqu+iOo6hO3ZqPHK4Vob98cFeMrbpNYY8K0KLLwkOrqxQMJ9Omz7/Zh0oBk6Lh99q/DCWBfX5T1/I+So9wdUqYLF9m8p4YTzcgPCfBE3TxRE6v8sprbPM++8mU58UEdayDZW1C7b6g8QjM8u0khVSZWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oAwcybVB; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747086543; c=relaxed/simple;
+	bh=LuAOPUZgGmqT5sqplzTtEFTdMTPrEXMUaf/Wgr76LTg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eLkVojxUhdpHmhWJQUzOo8KT8fsrbUw54WMsGlhUNDqbiNy3Recdpm2kE+kcy+0TjheTM10OLDcjExz7l/Yxym6Te8H4KflxQsRH+WAhRGDeBuaV54jQQGOYeEXmxNllrHCcGTRsAGmgFvnIt6ClqFEGfCgUaDK/xLa9kOEqcEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hteDYr8U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oAwcybVB"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c8c9070d2so3201468a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747086411; x=1747691211; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ZyjmXW5jKvAlN/pWhonx8KRiAcF2mwvw/0SN0Q5lTE=;
-        b=oAwcybVBkPAwSvSz1YIWMg/6rSlkxWQxyga61AQwFt/HbVogIkctW7HVFY8nGpa0ZD
-         OhR+Vbf1LqmoI61Ak5guhikOuw4OtonesWqTGnuq3zmhY9LG752nIczH9TjXBLhmoT1a
-         xWUMwofc+sElP5rjMUyE3d3hKFFHndVOfGG5s1bTRcKHIqNb4VCWkYUHEeoaotk3uurV
-         Iz386SSUZxhmfbhjjfAM436uX0uOO17yWaH4rTl+//1iUdTpYwBt0M7UJq0AyOvYzIb/
-         OZVjyoMwRTaX1GgANKMqZkuLGM7dwR1nV3TDpsOhv6frQdSPNSz2rw/b/JnrUZpaMWgG
-         hYRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747086411; x=1747691211;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ZyjmXW5jKvAlN/pWhonx8KRiAcF2mwvw/0SN0Q5lTE=;
-        b=D08/z4dNyEXLC6NYvjdAnRJiC1AcPdFWhMd+Dzd9muvJIZWN/sxzZwNGns8VbN535U
-         pUtwZQ1F8VlkcNPavaXkBkeP+uleHUBTTN9dpLI25bRI1HRiDS9XmFSczfiihvVXchpR
-         m9wmgnc4ZxsGjPdLMh3uUv88bgurWq832f24sydX0SEH35f0NGRJVWWkNy5o0Y9u3R8J
-         +elymUhHwjKy9CHvbTNhBkaczkNltjMdQAPiIy9pH55fM4WyCUDBCilwCbQcUfBk6Wk5
-         yJH0qigJ9475GGR4t68G06EuTIk8BcEZVeykFUnJIeqzWAsgso/aui2d5NrY4ynrWlyB
-         rYaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVt88ssAa8EzWvLPK7Z34Mh6qU+dqknvBHTBrp7oei2P++S6L4B+wNCF5PomMYkQ+EQ/s3P86/QygdrWDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrH5ZKwNGYx9TSeO1mKq7Gh9XJwnZ7YAw2RwDT2XoFo3BVU58S
-	a2Q2+sc5/qdxEZBwfVHiqqT/bpGKq6D0a4sZ8puoytzsykZee4kePFeSGYErslegI0EE1IOD56p
-	xug==
-X-Google-Smtp-Source: AGHT+IFQhYV59Z1j+BjuZQ420OFrQUmxJS4zl0EI8unm/GdkiYFWDALZeHSngOByGJrTSeAaw8MU9XM38Gw=
-X-Received: from pjbta13.prod.google.com ([2002:a17:90b:4ecd:b0:2fa:15aa:4d1e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1d85:b0:306:b65e:13a8
- with SMTP id 98e67ed59e1d1-30c3ce03418mr22071502a91.8.1747086411652; Mon, 12
- May 2025 14:46:51 -0700 (PDT)
-Date: Mon, 12 May 2025 14:46:50 -0700
-In-Reply-To: <20250313203702.575156-1-jon@nutanix.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hteDYr8U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FCE9C4CEE7;
+	Mon, 12 May 2025 21:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747086542;
+	bh=LuAOPUZgGmqT5sqplzTtEFTdMTPrEXMUaf/Wgr76LTg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hteDYr8UbIqtSpmDpi//Sm6v3/BOIM97fYkz+iFZr8MUZ71/BwEmiAB0LKzKDko+z
+	 iNCvoG7adDNx/4A1S8f2Vmb8oj4LdqKOpAJVTd8DSvuPW5S93d0FnHiMKgPi+ryPki
+	 F+Omv5eWLtP0CO2jl6/f1P4nZjnMw+O1I+GZ4HebNTIwKW+GJ5y5znobdFedGhybVG
+	 ZMiF/D041d17Yu+KaScZsO1FeOwFh4oHOA1U0k7RNzv1R4mgqV34LtL8CqaTsfg2ct
+	 bvFs2N4VPLs0Oj3W+iwEyjDdnn3uLBzuBg9rBBc52S5OknRlJoCnhW/g46BYeB0CIO
+	 oCnFUHJ8vbJWw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Luca Weiss <luca.weiss@fairphone.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v2 0/4] Add video clock controller for SM6350
+Date: Mon, 12 May 2025 22:48:49 +0100
+Message-ID: <174708642734.3671.5958647502216393277.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
+References: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313203702.575156-1-jon@nutanix.com>
-Message-ID: <aCJsSvc4_azZNrKI@google.com>
-Subject: Re: [RFC PATCH 00/18] KVM: VMX: Introduce Intel Mode-Based Execute
- Control (MBEC)
-From: Sean Christopherson <seanjc@google.com>
-To: Jon Kohler <jon@nutanix.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexander Grest <Alexander.Grest@microsoft.com>, Nicolas Saenz Julienne <nsaenz@amazon.es>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
-	"=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>, Tao Su <tao1.su@linux.intel.com>, 
-	Xiaoyao Li <xiaoyao.li@intel.com>, Zhao Liu <zhao1.liu@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 13, 2025, Jon Kohler wrote:
-> ## Summary
-> This series introduces support for Intel Mode-Based Execute Control
-> (MBEC) to KVM and nested VMX virtualization, aiming to significantly
-> reduce VMexits and improve performance for Windows guests running with
-> Hypervisor-Protected Code Integrity (HVCI).
 
-...
+On Mon, 24 Mar 2025 09:41:00 +0100, Luca Weiss wrote:
+> The driver for the SM6350 videocc has been lying around in some branches
+> of my git tree for a long time, let's upstream it. It doesn't get any
+> better by letting it age!
+> 
+> 
 
-> ## Testing
-> Initial testing has been on done on 6.12-based code with:
->   Guests
->     - Windows 11 24H2 26100.2894
->     - Windows Server 2025 24H2 26100.2894
->     - Windows Server 2022 W1H2 20348.825
->   Processors:
->     - Intel Skylake 6154
->     - Intel Sapphire Rapids 6444Y
+Applied, thanks!
 
-This series needs testcases, and lots of 'em.  A short list off the top of my head:
+[2/4] dt-bindings: clock: add SM6350 QCOM video clock bindings
+      commit: b887afb9b2362b15c1ee5585df1fb8cf3a3384c6
 
- - New KVM-Unit-Test (KUT) ept_access_xxx testcases to verify KVM does the right
-   thing with respect to user and supervisor code fetches when MBEC is:
-
-     1. Supported and Enabled
-     2. Supported but Disabled
-     3. Unsupported
-
- - KUT testcases to verify VMLAUNCH/VMRESUME consistency checks.
-
- - KUT testcases to verify KVM treats WRITABLE+USER_EXEC as an illegal combination,
-   i.e. that MBEC doesn't affect the W=1,R=0 behavior.
-
-The access tests in particular absolutely need to be provided along with the next
-version.  Unless I'm missing something, this RFC implementation is buggy throughout
-due to tracking MBEC on a per-vCPU basis, and all of those bugs should be exposed
-by even relative basic testcases.
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
