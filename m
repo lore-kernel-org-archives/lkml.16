@@ -1,106 +1,114 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BE2298C2D
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B202980BE
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747077138; cv=none; b=Km/a9H42qsp7UsNmxLM6UG84JsOIHnEHQtMbtwHUXCYVIB79SIkKtl0Ay0wYZplk1qVf6TeDerYYH5oXoeYpB4YMJlUVr3QpHIfkpUglNkavgRB7VHKeA/zXvHaZNK7teQdEQ+P6+0JS+pgD0I9dwIDvqL4nzUBxHwPjOb8jfTM=
+	t=1747077188; cv=none; b=AINxEiMttsVlE+VFXMfOvJDoAtWHMomeUFL7RKR9xcxWinrZiFpeCAVMifLAN1B9f2N4iaqQ8WZ1JF+IKqUkgv5/yt8e9sm55tOc5kK8EnCdq4WCJONyEeO86t8G5r98Oy+SV0Uiq0/Oiww0sATNYG0/OOsR4itQ/F3kIoLii30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747077138; c=relaxed/simple;
-	bh=oNpZWzxML1Y9AUwsTEbmGl1GQM0zru5fkRJMmLZ/LBs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GCE450xvAtE6vujsmMoBn/PvNHZLV7lbiPkCGULcnIo6Lnf8Xq/9J/4kE81QUXpJncnWXEb6VdBOQLRnYkI58pHNv+GGYQD8btA9dotyyQENkC1K3IZtrJP0T98ditBJ8J4E+Tf+LeUbcW5KU8ICmN9HIX8R7iD+uVxOPcrtBwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MtsJcUvQ; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1747077188; c=relaxed/simple;
+	bh=x23mxA82De3cXdZgj34aQv76fZozL81umdIXokRJ4MM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XMg2/m1LsGekRhLRRXIVQGA85Gpjr+Hzkdpjdl5c0qGHnmyNe1W6xaEq2DcvOalITyMNPFb9sC/BlNNM7kZAf2oIHpLMhofjffabXVM5r9m5wAU3KSYftNJzxZeP5Vje+wdSytGCu809dg8pAu14DgoDJrKzZDETh+iJrQPrwRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GEWi9xep; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MtsJcUvQ"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so19129455e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:12:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747077135; x=1747681935; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WI3lpf4o3BFZ6Wf9RXkL6mjd94Q743aLN5UBFJjS89I=;
-        b=MtsJcUvQhXAhY2LIUETIUwb+OIdcX1QVmkHNJ0w343mGKoeY5C+rAJeMAL3fQ9nRHb
-         X3sEeS8vFbWrNaV0plKR9x3IX4qbn1srRvgR7umXIuEnQoKDRsksQFtqiImYjqdmNoTm
-         M09AB0uyaPi5dY69XjgXZ5guavtrjJKgfKmiZtYhDbw+PkVXk+iF8+OBpUoUvU99y+X3
-         66QwzWRHi1825l8Kp8/m15PzRAk6Cx1CQkjHbpqaEAqNzn04y0xJMjjaO9Yg0lgO0HAJ
-         Q/dR8276IIR+39eeVzct4xkJkJ/VS8NeDCaFi9TGEuZ6J78KRrehUptQaiEZ2iLW3VXL
-         UuQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747077135; x=1747681935;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WI3lpf4o3BFZ6Wf9RXkL6mjd94Q743aLN5UBFJjS89I=;
-        b=JdISO1f/3seGCd/uxJAGlFe/nTRFghpfGuWDbuG672mh643EbfT0JXgXTZHPwfvn4j
-         U7UcVU0X1QM/UY42/J2SEt1IwbPs5mWHEiffmrLYfNr410vdC3vaypyOKAo+TnVfgOkX
-         +m828YSPdLdrUJ21ocbZ7YCDTM99vBj686bGh45URub9cFnjZoUJmgvVJiopMcSyyRA8
-         3znYS1qX3s1qUwGWowrjSotM0VZgpKzdX5PEAR6C8qWiOFCkwNIY4DgEb0ruC2wkuQsT
-         jQAA/b/cnJSLMDLxjl8sY7bg9VjvyAkIfWDjS3Wy2KwSJvvC6pqXMvj33FpK+CekFY6+
-         BR2A==
-X-Gm-Message-State: AOJu0YxO/zYLliUW9QhvTxzw5BEc5Ax7IDINrq7hK0WePeXzQ+7Eywpb
-	7x/tcDXAn+xYrI7YrCxUIqwkTzcsrEFFE+HkFM3OpgAAhMF9bsQmj46az2oCFVhKOMzelrb+/1y
-	4YLTm/SJiyq84PhPVC+CK/moEY4c1EaVK7y3CHOpuI0Sbu+1JXbeHcecl7lrFXv4Du1ljaJtNme
-	+TV+Ch1ig+O4V5gvmQc61jCt9+8pNlpQ==
-X-Google-Smtp-Source: AGHT+IGCXNDr+jh6bOr352X5CVhqqUzwrHtlwyq9ZxtmuJ2vjkk6u7svwBp8YAU1ah6nGYR5VkFGnYjf
-X-Received: from wmbej12.prod.google.com ([2002:a05:600c:3e8c:b0:43d:b30:d2df])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3481:b0:439:9737:675b
- with SMTP id 5b1f17b1804b1-442eacba7b1mr5246275e9.7.1747077135091; Mon, 12
- May 2025 12:12:15 -0700 (PDT)
-Date: Mon, 12 May 2025 21:08:56 +0200
-In-Reply-To: <20250512190834.332684-23-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GEWi9xep"
+Date: Mon, 12 May 2025 12:12:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747077174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sqVwqlZm0Qlg6KxhYJj/U/iuxKDNt6d7QLnu+Tbwxmg=;
+	b=GEWi9xepBuUD84Xj6HySZwI1fUdZ1NMcdnQxSfPl28Sz4E2JabYfQWGfYtVKaSfs3gWfd7
+	vZzse9fB54pbGKa9+vqFt0R8nEldYEJgJ5Js2BD3+rLgFEvvnPZYyDi4aM+W4h8F978mTp
+	R2WWBjsuU51IuooEqJXc7vpYirmx8dM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
+Message-ID: <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
+References: <20250509232859.657525-1-shakeel.butt@linux.dev>
+ <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250512190834.332684-23-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=738; i=ardb@kernel.org;
- h=from:subject; bh=mya2OfKi8dRdyM/BzZK5KhM5tXbVnj0PSSJLpQKVmKE=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPJPbrBNeicjUn71hpXK/sM4ZOafjuMfpxY/9nIk4/HT
- +4bp0tHKQuDGAeDrJgii8Dsv+92np4oVes8SxZmDisTyBAGLk4BmEjKaYb/LgGWLmtaFzQ3CGX8
- tUvRCXJm3rvm6ftch41KG3U+N/zrYfjv6VhheMg93PVbFsMto/XvKj5a2Um8Ym9SjL0+O2D1f2M OAA==
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250512190834.332684-44-ardb+git@google.com>
-Subject: [RFT PATCH v3 21/21] x86/boot: Get rid of the .head.text section
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-efi@vger.kernel.org, x86@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
+X-Migadu-Flow: FLOW_OUT
 
-From: Ard Biesheuvel <ardb@kernel.org>
+I forgot to CC Tejun, so doing it now.
 
-The .head.text section is now empty, so it can be dropped from the
-linker script.
+On Mon, May 12, 2025 at 05:56:09PM +0200, Vlastimil Babka wrote:
+> On 5/10/25 01:28, Shakeel Butt wrote:
+> > BPF programs can trigger memcg charged kernel allocations in nmi
+> > context. However memcg charging infra for kernel memory is not equipped
+> > to handle nmi context. This series adds support for kernel memory
+> > charging for nmi context.
+> > 
+> > The initial prototype tried to make memcg charging infra for kernel
+> > memory re-entrant against irq and nmi. However upon realizing that
+> > this_cpu_* operations are not safe on all architectures (Tejun), this
+> 
+> I assume it was an off-list discussion?
+> Could we avoid this for the architectures where these are safe, which should
+> be the major ones I hope?
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/kernel/vmlinux.lds.S | 5 -----
- 1 file changed, 5 deletions(-)
+Yes it was an off-list discussion. The discussion was more about the
+this_cpu_* ops vs atomic_* ops as on x86 this_cpu_* does not have lock
+prefix and how I should prefer this_cpu_* over atomic_* for my series on
+objcg charging without disabling irqs. Tejun pointed out this_cpu_* are
+not nmi safe for some archs and it would be better to handle nmi context
+separately. So, I am not that worried about optimizing for NMI context
+but your next comment on generic_atomic64_* ops is giving me headache.
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 4aaa1693b262..af8bc4a6f6c3 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -160,11 +160,6 @@ SECTIONS
- 
- 	} :text = 0xcccccccc
- 
--	/* bootstrapping code */
--	.head.text : AT(ADDR(.head.text) - LOAD_OFFSET) {
--		HEAD_TEXT
--	} :text = 0xcccccccc
--
- 	/* End of text section, which should occupy whole number of pages */
- 	_etext = .;
- 	. = ALIGN(PAGE_SIZE);
--- 
-2.49.0.1045.g170613ef41-goog
+> 
+> > series took a different approach targeting only nmi context. Since the
+> > number of stats that are updated in kernel memory charging path are 3,
+> > this series added special handling of those stats in nmi context rather
+> > than making all >100 memcg stats nmi safe.
+> 
+> Hmm so from patches 2 and 3 I see this relies on atomic64_add().
+> But AFAIU lib/atomic64.c has the generic fallback implementation for
+> architectures that don't know better, and that would be using the "void
+> generic_atomic64_##op" macro, which AFAICS is doing:
+> 
+>         local_irq_save(flags);                                          \
+>         arch_spin_lock(lock);                                           \
+>         v->counter c_op a;                                              \
+>         arch_spin_unlock(lock);                                         \
+>         local_irq_restore(flags);                                       \
+> 
+> so in case of a nmi hitting after the spin_lock this can still deadlock?
+> 
+> Hm or is there some assumption that we only use these paths when already
+> in_nmi() and then another nmi can't come in that context?
+> 
+> But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
+> atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
+> irq_save+spin_lock. So can't we deadlock there?
 
+I was actually assuming that atomic_* ops are safe against nmis for all
+archs. I looked at atomic_* ops in include/asm-generic/atomic.h and it
+is using arch_cmpxchg() for CONFIG_SMP and it seems like for archs with
+cmpxchg should be fine against nmi. I am not sure why atomic64_* are not
+using arch_cmpxchg() instead. I will dig more.
+
+I also have the followup series on objcg charging without irq almost
+ready. I will send it out as rfc soon.
+
+Thanks a lot for awesome and insightful comments.
+Shakeel
