@@ -1,137 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF75C296D23;
-	Mon, 12 May 2025 17:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CE078F52
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747070999; cv=none; b=QhqLKDjw8nY4TnWUyWx+Cp48B9S1OIzS6Ngn2IwPebmsUF3motMOni7VM/425YIFetGgrrCuTmZz5zJQmVRtX64nzu9Y5AtTVDttVgY7VqCSEKNugCzUIqryz4B+xcAlMdyYcqtw1ioVzlQxo2RAMx79RgekdkB6spLCczOGsmI=
+	t=1747071060; cv=none; b=QMmwIhLFxprq6ZkR0Pbz0Aj0tItPKXh1c16oUkfQU51hBr9Whd0OvHi6U4mkr2+SRIEWFeW9SCL9coDYy2lZVlJ25AQEKHowABoaWta2Umjl8LjO++ZpcTDwjq1yF3d9IXyZgcj2EXhR0pAy4JgbA+dCSyy+SHv+a1UDkCqEfZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747070999; c=relaxed/simple;
-	bh=ohP3qwU/g292m6VUOxkkeEfG4yKASr7Uz6QM0jrslJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NtxvCG127PIrhEnx03aPrZ8SRuqy2m8ESlk96VzmD05vyfIDkq56B/MNxxXZrNDVEvBSz9vV7XPATC8ciytvFk0SkH4cQayDV753jhN9TNeglnnovG8zy6j48IQYaiVjkNY/OYnRTNRba7R1wyExvuQ3opob4XEc6rLLvyQqm7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCCPTbi7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747071060; c=relaxed/simple;
+	bh=E9ESfUj2WpfAG3ZXR2IjD+sEGB/Jc66yklwYO9G2ZtM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QvEaUAIZqgH26cPombHC6fnlmnuaa5KSYfyj/MiRo2izMYznjXUhnoflQ2N0vJmyMZbkh6lWMirTkzgDeMLYAHpoilG8wSrYnWHcB++YBZrcTmwn5JUrIB5K+Ouahon3mAaOdFDEIWLMvD3Ewk5eRr10czAV+buxZXLYKkXkOio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=hnU0z3mv; arc=none smtp.client-ip=109.224.244.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCCPTbi7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFB6C4CEE7;
-	Mon, 12 May 2025 17:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747070999;
-	bh=ohP3qwU/g292m6VUOxkkeEfG4yKASr7Uz6QM0jrslJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RCCPTbi7SjeUkqsta7xtU0G8ZJkwCEaeIhgmNOGdlIBXZTqqKIGTUahgIx8fY/T2+
-	 8W/EJzP0D+7cA+QqLG9BSmlnb/Mp4/8OQADhfnY1vg3kQCUiC23CdDl8ZBPC35i/OE
-	 whsVWKEpMii9g7p4cZ7xhUOC1MzOvwD3RS2cQADZIQAyRk1CzUAEiBbbNwsicjZZjV
-	 sKuqnKFB6sLK9+KqU9wECDoDraj2HHWFuEli+e2rDP/AEZy5+m+Jvhw6FadWPNWWbe
-	 4kbxza4L8O1gnhgBdL+cSs8TGhMcCoxsK2iQ4eR1wgHL2yhSINlX8f0ihGuVallwol
-	 toQ1zqJOvaa0Q==
-Date: Mon, 12 May 2025 12:29:57 -0500
-From: Rob Herring <robh@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] rust: device: Move property_present() to FwNode
-Message-ID: <20250512172957.GB3463681-robh@kernel.org>
-References: <20250504173154.488519-1-remo@buenzli.dev>
- <20250504173154.488519-4-remo@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="hnU0z3mv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1747071049; x=1747330249;
+	bh=jZB1nicxWGlckxXy4g4z7NQCQ6SF2nkWYs9QJ8KThJg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=hnU0z3mv0v1aQKbYN4eYUoAu1Cn2A0EOwpQz2VOqoUbf7FMZffgduPBswVNAg2bO1
+	 AlIX8FUJlImsDUZIvAWZlveHZjnDkSsRD6JSolNg/sLCe/gEzRYTE4aKshjC9vQzjB
+	 /PKN5KM3sGFubVCVwYZEgXGM+9Y+zRRCz3hQaHuFJ/iqJKGEY0/8YldpLiJ/FHP5bP
+	 RoGHqM0F2D3qPPTcr/VYORXpO3tXWoeYQzRmg9A7mLEwMuGCJUGtzc0XaMQ2GXwzLg
+	 YRoGkltyvzu0+7qC1aCQ3SXdKVIpfWB1VTMuJ3hvygC7pDdXQdNXkDDATPvyammK4I
+	 p4iYIQXl8KVFQ==
+Date: Mon, 12 May 2025 17:30:45 +0000
+To: Vignesh Raman <vignesh.raman@collabora.com>
+From: dmkhn@proton.me
+Cc: Ingo Molnar <mingo@kernel.org>, dmukhin@ford.com, mingo@redhat.com, andriy.shevchenko@linux.intel.com, x86@kernel.org, daniels <daniels@collabora.com>, Daniel Stone <daniel@fooishbar.org>, robdclark <robdclark@gmail.com>, lumag@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: x86: Boot failure on select chromebooks with v6.15-rc5
+Message-ID: <aCIwQHABCPufAQWr@kraken>
+In-Reply-To: <45450eeb-1866-4bf6-a83b-1f28e26f311c@collabora.com>
+References: <a8638f85-1cc2-4f51-97ba-7106a4662885@collabora.com> <aB2bStp8efMHPjet@gmail.com> <d966d626-458b-4a29-abe1-b645317e15d2@collabora.com> <aB2itc2-5h3LEJi6@gmail.com> <45450eeb-1866-4bf6-a83b-1f28e26f311c@collabora.com>
+Feedback-ID: 123220910:user:proton
+X-Pm-Message-ID: a49518909be0c153ec45816968a30cf2458eeb5e
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250504173154.488519-4-remo@buenzli.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 04, 2025 at 07:31:48PM +0200, Remo Senekowitsch wrote:
-> The new FwNode abstraction will be used for accessing all device
-> properties, so it must have the property_present method.
-> 
-> It's possible to duplicate the methods on the device itself, but since
-> some of the methods on Device would have different type sigatures as the
-> ones on FwNode, this would only lead to inconsistency and confusion.
-> Hence, remove the method from Device.
-> 
-> There aren't any users to update yet.
+Hi,=20
 
-But there is one going into 6.16 most likely with the cpufreq stuff[1] 
-which complicates merging.
+On Fri, May 09, 2025 at 01:07:54PM +0530, Vignesh Raman wrote:
+> Hi Ingo,
+>=20
+> On 09/05/25 12:07, Ingo Molnar wrote:
+> >=20
+> > * Vignesh Raman <vignesh.raman@collabora.com> wrote:
+> >=20
+> > > > What boot cmdline does your kernel have? The MMIO-UART patches shou=
+ld
+> > > > only have an effect if the feature is specifically enabled via a bo=
+ot
+> > > > option:
+> > > >=20
+> > > > +               if (!strncmp(buf, "mmio32", 6)) {
+> > > > +=09=09=09buf +=3D 6;
+> > > > +                       early_mmio_serial_init(buf);
+> > > > +                       early_console_register(&early_serial_consol=
+e, keep);
+> > > > +                       buf +=3D 4;
+> > > > +               }
+> > > >=20
+> > >=20
+> > > amdgpu:stoney:
+> > > earlyprintk=3Duart8250,mmio32,0xfedc6000,115200n8  console=3DttyS0,11=
+5200n8
+> > > root=3D/dev/nfs rw nfsroot=3D192.168.201.1:/var/lib/lava/dispatcher/t=
+mp/18598802/extract-nfsrootfs-wgn1xjer,tcp,hard,v3
+> > > init=3D/init rootwait usbcore.quirks=3D0bda:8153:k ip=3Ddhcp
+> > > tftpserverip=3D192.168.201.1
+> > >=20
+> > > i915:amly:
+> > > earlyprintk=3Duart8250,mmio32,0xde000000,115200n8  console=3DttyS0,11=
+5200n8
+> > > root=3D/dev/nfs rw nfsroot=3D192.168.201.1:/var/lib/lava/dispatcher/t=
+mp/18598804/extract-nfsrootfs-5rlm_b6z,tcp,hard,v3
+> > > init=3D/init rootwait usbcore.quirks=3D0bda:8153:k ip=3Ddhcp
+> > > tftpserverip=3D192.168.201.1
+> > >=20
+> > > i915:whl:
+> > > earlyprintk=3Duart8250,mmio32,0xde000000,115200n8  console=3DttyS0,11=
+5200n8
+> > > root=3D/dev/nfs rw nfsroot=3D192.168.201.1:/var/lib/lava/dispatcher/t=
+mp/18598833/extract-nfsrootfs-3w0w5_mi,tcp,hard,v3
+> > > init=3D/init rootwait usbcore.quirks=3D0bda:8153:k ip=3Ddhcp
+> > > tftpserverip=3D192.168.201.1
+> >=20
+> > Well, if you remove the earlyprintk option then it will boot fine,
+> > right?
+>=20
+> Yes, it works when mmio32 option is removed.
+>=20
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76005338
+>=20
+> earlyprintk=3Duart8250,0xde000000,115200n8  console=3DttyS0,115200n8
+> root=3D/dev/nfs rw nfsroot=3D192.168.201.1:/var/lib/lava/dispatcher/tmp/1=
+8599938/extract-nfsrootfs-neuejjq0,tcp,hard,v3
+> init=3D/init rootwait usbcore.quirks=3D0bda:8153:k ip=3Ddhcp
+> tftpserverip=3D192.168.201.1
 
-Rob
+For the above example, can you please try something like
 
-[1] https://lore.kernel.org/all/f7e96b7da77ac217be5ccb09b9309da28fd96c90.1745218976.git.viresh.kumar@linaro.org/
+  earlyprintk=3Dmmio32,0xde000000,nocfg
 
-> 
-> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> ---
->  rust/kernel/device/mod.rs      | 7 -------
->  rust/kernel/device/property.rs | 8 +++++++-
->  2 files changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/rust/kernel/device/mod.rs b/rust/kernel/device/mod.rs
-> index b4b7056eb80f8..15d89cd45e871 100644
-> --- a/rust/kernel/device/mod.rs
-> +++ b/rust/kernel/device/mod.rs
-> @@ -6,7 +6,6 @@
->  
->  use crate::{
->      bindings,
-> -    str::CStr,
->      types::{ARef, Opaque},
->  };
->  use core::{fmt, marker::PhantomData, ptr};
-> @@ -200,12 +199,6 @@ pub fn fwnode(&self) -> Option<&property::FwNode> {
->          // defined as a `#[repr(transparent)]` wrapper around `fwnode_handle`.
->          Some(unsafe { &*fwnode_handle.cast() })
->      }
-> -
-> -    /// Checks if property is present or not.
-> -    pub fn property_present(&self, name: &CStr) -> bool {
-> -        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
-> -        unsafe { bindings::device_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
-> -    }
->  }
->  
->  // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
-> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-> index e75d55f5856cf..70593343bd811 100644
-> --- a/rust/kernel/device/property.rs
-> +++ b/rust/kernel/device/property.rs
-> @@ -6,7 +6,7 @@
->  
->  use core::ptr;
->  
-> -use crate::{bindings, types::Opaque};
-> +use crate::{bindings, str::CStr, types::Opaque};
->  
->  /// A reference-counted fwnode_handle.
->  ///
-> @@ -31,6 +31,12 @@ impl FwNode {
->      pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
->          self.0.get()
->      }
-> +
-> +    /// Checks if property is present or not.
-> +    pub fn property_present(&self, name: &CStr) -> bool {
-> +        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
-> +        unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
-> +    }
->  }
->  
->  // SAFETY: Instances of `FwNode` are always reference-counted.
-> -- 
-> 2.49.0
-> 
+?
+
+In my case, configuring exact baud rate did not work. I started to dig that=
+,
+but did not finish, because `nocfg` worked (firmware happened to configure =
+the
+UART correctly). Using `nocfg` was sufficient for the system bringup debugg=
+ing.
+
+>=20
+> >=20
+> > The earlyprintk=3Dmmio32 in v6.15 is a new debugging feature that was
+> > tested on a single board by Denis Mukhin AFAIK, and it may or may not
+> > work on your particular UART - even assuming that all the parameters
+> > are correct.
+
+Correct, I have tested with one board only and with limited UART configurat=
+ion
+combinations.
+
+>=20
+> So the earlyprintk=3Dmmio32 debugging feature is needed only for v6.15 an=
+d is
+> not necessary in previous kernels (e.g., v6.14 and earlier). Is my
+> understanding correct?
+>=20
+> Regards,
+> Vignesh
+>=20
+> >=20
+> > Thanks,
+> >=20
+> > =09Ingo
+>=20
+
+Thanks,
+Denis
+
