@@ -1,115 +1,127 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550A32E645;
-	Mon, 12 May 2025 09:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C048E258CE6;
+	Mon, 12 May 2025 09:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747042943; cv=none; b=tYI7B6GFyH0MKd3bmaBZBG3KfVcGu8Xke1cPu+GeBXsYx+w26bFu36QiOJysqA65bC835quNlkStd0+bnJ3zfLsC+htheHsGh5OSfMLnCyafiiE9sk2lhMgcjnwaHQEpbParao2SMPqiyjWJnP5wNlBLCU8fmk1gu/M+NrxmbA8=
+	t=1747042974; cv=none; b=lL11b94OHyeSFyuV7Ay2V9obdl8BPe4N+8Uf89qXl3Gol3n2jLSM89Ai+JkqlKVu503BRExzTL3koWuuWkKyNhVTH/gDkKqM6mXGj+pBPkt0R6dHaJsPMo6dOAoeKl4VeNnNm5KDYrJ5/ZST3FtMiisSilIn/qi1CmT1cKZgX5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747042943; c=relaxed/simple;
-	bh=hLrvNZ8i+JktglQb7ZFqPXFRMH1hMkoqvVZhP0Ghm7E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hsreLTyB0w9AxAQsyWIbKlrQQ6296padS86a60lcc+Bfsf0bMDHr2y3eMoc3aga1Ln1Ky5Y5Qi9/pto8e0if/x7Bt1bvAGyRRBmUEzSDB3SnfLr+GGfTTCA1O6QXKOIIUIYshMYhtr/fyU/DxiBuyhzE3OGGd5B2KLncvCtI1Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1747042974; c=relaxed/simple;
+	bh=8LASTqAvpEekTiicfwi+mOmYj6T+ZLHwoM/UxVWX0s0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LToz6BXM8S2c1MsIQZxmX64SuxLiWJjMeeaDlno6+gEZchEcp77vvr0aXSI6+opWN3A82vxw24BPHjGRJylHdkcVn3FttKTKBX9h52dUVP8818S+WEfCOlcQLOWdOBdbZO+W1JyAA+ZFZ4iG0KBM7GFVNTz4d+i3H2nM7ul8qtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bYDL3UPQ; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-51eb1a714bfso3652083e0c.3;
-        Mon, 12 May 2025 02:42:22 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYDL3UPQ"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7426c44e014so492869b3a.3;
+        Mon, 12 May 2025 02:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747042972; x=1747647772; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZtKo/BrEUjpAzcnHm9yhSMQhqU2TQ+B8EC9VEWsvZBc=;
+        b=bYDL3UPQxOdimGyVM9EoWBLn2gTV0UltAjp8yzVHrZb+DieHPIoELdgrxp4KkQqyIG
+         AtPTY1c0CYPBJ0PXzKLgRGDWlmXIXBMZftMznd/qQqSVFCPlH3M9EWHAJDx2lLgr9uPw
+         nHXpQ6EkA1MHr9VHeBFIl4JcxfulbdTDndke4Ef3xqVGjxaI34Qs/WRmiqLYrLcn/1P4
+         NBEKBcYJqtripVy/ZiR1LT/bGupx3Upc3P7algf1vpFtQzcWEuxR0xSPyiCz3jhhpWc+
+         Cdy5iEYnFjIW2OaGF7mthaupyhH8pOmA7q4bjCdr3AD0G3ejRhXrpClUU2hR3kOq24Eu
+         dizQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747042940; x=1747647740;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747042972; x=1747647772;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oxaXUnTJQ9X/sSRmLTkqCU/OLmyikEnIJW6UNmEyAnw=;
-        b=uefM0nyasF+jE/+ARnvu40JYaRzXf4XG9iwsNoRdIAUh9ZyQDZyU38AhLOoIboYf8K
-         0FgAi4l6LTEcre44+x2tlFA7vU1Mb/erXS9VopiTwoqZg4mu4XlU3injepuhcb+8KMEP
-         Wh8TvbBBqaH/AD0ih7NMFiBS7iNQJK6vQJTKvHPfE20SfooHF8giczsCXrnJdlOK6iWh
-         fpCJ0pP0FqQ+RijrLV6sO7Ysh2dtjcXBfQDXrbBbFb43m2Y1LsA7mX2Idc0rDRC5b9oi
-         RzMPGx0FTU+aR9Fm73GJ8ATuePtxIKSnM5KenoqMWQV0uR4IUqGa1qVK9HDB8/HTgadr
-         Gnow==
-X-Forwarded-Encrypted: i=1; AJvYcCXP1c9X6xGboTOUVUUS7In7UEwJip+WmY1vDyFgjuKibohSUMRIFClJnvLltmSYzoE5XJZMv/iEXokGHRNB@vger.kernel.org, AJvYcCXizEBHKf5Hkui9s1kSco2g9hoTAAtkhiAiROHsEwpGOZTAWaYDaplpwhC/hBGK4b9YJpxdtmEd@vger.kernel.org, AJvYcCXv+LidbnVYex8Cq+4mQbodPj6NncvERbYpMKKjHvszxW0mWRuchOsg4CKvn9kDjizpF70+1xObMQG/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwLAn2m+F12rlIEt5KPRjJSlOMZqB9kDC1ot380mdKTk56qARq
-	J0SQJ1Ocx+PyURPcY7T9ZI1LKvgXu4K9NPs4Jl9RYtxTOeOBq9aOnQnP+bKO
-X-Gm-Gg: ASbGncuuQRlFO1x/XnItnw9OY2dnCtcByXCeP2s0JlEq/+Wg2sIChYwY9ALaKz4A99t
-	WANLn4k8uc6VWxafvjyG7d5YgXJRLqEjvUtk53sYhf81t9VZC5JZmL9VnhW9Tr4VNTpftM5gbhl
-	KVAbApKMqkUZ4aaarcvrbkjn/7LQsadHF4rL5rMEmQ2ycNkGsQTYi6Ul88/Y5CJgm3WL0QURRSj
-	w8KJfcxj3RniQyq85ikSMVU9vPY0TPAxWFSr0LI/yQxZ3ETXtYMp9/QibeXMDAoAji3JpLxWohG
-	8Ouob08kru+NdrsGre3RSgJkkqdLJLbEdxeeyQTdqL75VP/TkdtdjOXZa82lW1pNpD/wq0X4bBW
-	6h/YtTdJ5Wkv8A3OwI5WDWp50
-X-Google-Smtp-Source: AGHT+IEadcD6TXY2NzIdfqdmxG92rAujjPc1OiAwO2m5KMF/ewl/ia24KEYQDcrmivkMAL5dVWaXvA==
-X-Received: by 2002:a05:6122:17aa:b0:523:e2bd:b937 with SMTP id 71dfb90a1353d-52c53ba78a5mr8343001e0c.3.1747042939721;
-        Mon, 12 May 2025 02:42:19 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f603551dsm4864872241.0.2025.05.12.02.42.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 02:42:19 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86fea8329cdso3048338241.1;
-        Mon, 12 May 2025 02:42:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUIjC570aWR63LwozpR/DFQu8KSWJoTF9TX2B4VMkiyQyiHp7IuS81UIp8p3/9mpuwRlZZxhsO/@vger.kernel.org, AJvYcCW6NeTwAVBnDFnpjdNOgANyFpkr3AhZ0G+YfYN2rnr/bUD2rG8OW5ZnK8rOva3Ya0OYPaXB0yFqOrP/9gh6@vger.kernel.org, AJvYcCXLz8i6WwGEgIuIf6LIIEPK3a6/YgSdp9ikmDN9A11wO+j5K1VusSsdY+dOVKsYh5GMR5iMEwGVWQtp@vger.kernel.org
-X-Received: by 2002:a05:6102:8082:b0:4da:e6e1:c343 with SMTP id
- ada2fe7eead31-4deed3ec6f2mr10435052137.23.1747042938966; Mon, 12 May 2025
- 02:42:18 -0700 (PDT)
+        bh=ZtKo/BrEUjpAzcnHm9yhSMQhqU2TQ+B8EC9VEWsvZBc=;
+        b=aHNdNdPYd4Ej8xBlxRxkojZQ7DuQbUtggk4Serq+LW3muZiqJsYq4IJCsVZuJSokhV
+         3/rYYV3hGVe3Q1L2/BjFrIWPUH3TfB6/nuM8epY0R2vZ1XC/GhO/YxEzzf3Z1QX1C9WL
+         7yqxzdz79tT2mplCvoQ0wEm/a727lDbwoYSwRzQ88wg3+Flx1l95kMvoehXsNPWTYR/6
+         84JySf5SOWmc8fMpvh3kE2Ic9CYGmb/Sm9YevziG4S4eI6aTb78Cbuozr0XPfHzpSGws
+         /lChaUbSOdZ+TUDZ7jrB4rEAi9nxPr7MZ30+T6+zpwxnts+6HrBSU5uZgtBLh2aOi1i2
+         /eXw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7m8cRzoy2Np+JyhhVtbom4vRERGmMOvcZcR8V0SjVTfMFxLY1R8wELLg/M8yP9lQ1S1bYfCwvgDS9fgI=@vger.kernel.org, AJvYcCWNNxeKypdAYoSClBfs3RLhRQ2uPpTgVtv2siel+OrqDaBM6JUwjSGAMurWcRFrX/6I7SHhH3briTAOf5S7jMsIkLQu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsSDAdBt55pb83btgA02SgqIMlVg1CTlwnTlY05BzEG+GcSZZZ
+	/JpWM7/aTpw3SJqllDohOq41W/WdJaYaLFIz+0KXKRNLF4vR+hoC
+X-Gm-Gg: ASbGncsMTRZZ+5peAlUkbQaX9ycxkQbTcofiC8Q+pUHhiXJUTBveATS+s9lDIEFsfAJ
+	bV5gTY5gxWeXh8+PHk2lPW3NZYquZF2YyThT5jJMel1xn8kNY0QKQZceyWI5DSqsbG+gfbomP+5
+	An79LzXzNBJw7pFgmYJW50T+LXC/G0xEWZh93BOmWeLzCEGKDEvuR3uZDpfcoVXRO9XYC51jmSX
+	OLK8JZHwNcbT1pV+u17sN8u+6brIlOBixX3QxX0nN/6HXCQvuCJLw6ji9LTv0woH8Dcy+CQO7Ph
+	TPH5WB0NwLmixYi1g7syM386UzI+LcymXSxikXEdHA27dIuXknXoQrF85p5Zaq7WDpKy
+X-Google-Smtp-Source: AGHT+IGPzYCMf7scDLohrgoy/AafkhLgNaeTVd8pn6YrqynEQa9d5vN6I4UjmrLZnmR2JwFNkwX9KQ==
+X-Received: by 2002:a05:6a00:17a7:b0:730:79bf:c893 with SMTP id d2e1a72fcca58-7423bc1d336mr18706592b3a.4.1747042971925;
+        Mon, 12 May 2025 02:42:51 -0700 (PDT)
+Received: from pengdl-HP.mioffice.cn ([43.224.245.227])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237703f2asm5649809b3a.35.2025.05.12.02.42.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 02:42:51 -0700 (PDT)
+From: pengdonglin <dolinux.peng@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	dolinux.peng@gmai.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pengdonglin <dolinux.peng@gmail.com>
+Subject: [PATCH 1/2] ftrace: Fix preemption acounting for stacktrace trigger command
+Date: Mon, 12 May 2025 17:42:45 +0800
+Message-Id: <20250512094246.1167956-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509141828.57851-1-francesco@dolcini.it> <CAMuHMdXqRpuy8gsz+0a0xTp6VWfMD0=WWdS84jWvF31O9i4MZw@mail.gmail.com>
- <aCG-DZI4fexZGy2H@smile.fi.intel.com> <10caddc8-7dc1-4579-9edb-4514efa540cd@gmail.com>
-In-Reply-To: <10caddc8-7dc1-4579-9edb-4514efa540cd@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 May 2025 11:42:07 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUL0vd16C6=pr8UQV3+t2E0fJLqgtUWgm908VEsCYkyiw@mail.gmail.com>
-X-Gm-Features: AX0GCFsYAjhVktfUQcp6VZbHccrljkdyDEuNs8jjvL7H95OWlSLpFlXPvZyNCqk
-Message-ID: <CAMuHMdUL0vd16C6=pr8UQV3+t2E0fJLqgtUWgm908VEsCYkyiw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: pca953x: fix IRQ storm on system wake up
-To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Francesco Dolcini <francesco@dolcini.it>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, 
-	stable@vger.kernel.org, Francesco Dolcini <francesco.dolcini@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Emanuele,
+From: pengdonglin <pengdonglin@xiaomi.com>
 
-On Mon, 12 May 2025 at 11:38, Emanuele Ghidoli
-<ghidoliemanuele@gmail.com> wrote:
-> On 12/05/2025 11:23, Andy Shevchenko wrote:
-> > On Mon, May 12, 2025 at 11:17:48AM +0200, Geert Uytterhoeven wrote:
-> >> On Fri, 9 May 2025 at 16:18, Francesco Dolcini <francesco@dolcini.it> wrote:
-> >>> An irq can be disabled with disable_irq() and still wake the system as
-> >>> long as the irq has wake enabled, so the wake-up functionality is
-> >>> preserved.
-> >
-> > ...
-> >
-> >> While this does not cause the regression seen on Salvator-XS with
-> >> the earlier approach[1], I expect this will break using a GPIO as a
-> >> wake-up source?
-> >
-> > Good point! Have this code been checked for that kind of scenarios?
-> >
-> >> [1] https://lore.kernel.org/linux-gpio/CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com
-> >
-> Yes, I tested this specific scenario with its GPIOs as wake-up sources, and it
-> worked as expected. I already included the note in the commit message.
+While using the stacktrace trigger command to trace syscalls/sys_enter_read,
+I noticed that the preemption count was consistently reported as 1, which seemed
+incorrect:
 
-Sorry, I missed that.
+root@ubuntu22-vm:/sys/kernel/tracing/events/syscalls/sys_enter_read
+$ echo stacktrace > trigger
+$ echo 1 > enable
 
-Then I have no objections from my side.
+    sshd-416     [002] .....   232.864910: sys_read(fd: a, buf: 556b1f3221d0, count: 8000)
+    sshd-416     [002] ...1.   232.864913: <stack trace>
+ => ftrace_syscall_enter
+ => syscall_trace_enter
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The root cause is that the trace framework disables preemption in __DO_TRACE before
+invoking the trigger callback.
 
-Gr{oetje,eeting}s,
+This patch uses tracing_gen_ctx_dec() to obtain the correct preemption
+count within the callback, resulting in accurate reporting:
 
-                        Geert
+    sshd-410     [004] .....   210.117660: sys_read(fd: 4, buf: 559b725ba130, count: 40000)
+    sshd-410     [004] .....   210.117662: <stack trace>
+ => ftrace_syscall_enter
+ => syscall_trace_enter
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
 
+Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
+---
+ kernel/trace/trace_events_trigger.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index b66b6d235d91..6e87ae2a1a66 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -1560,7 +1560,7 @@ stacktrace_trigger(struct event_trigger_data *data,
+ 	struct trace_event_file *file = data->private_data;
+ 
+ 	if (file)
+-		__trace_stack(file->tr, tracing_gen_ctx(), STACK_SKIP);
++		__trace_stack(file->tr, tracing_gen_ctx_dec(), STACK_SKIP);
+ 	else
+ 		trace_dump_stack(STACK_SKIP);
+ }
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
