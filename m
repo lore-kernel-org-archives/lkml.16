@@ -1,110 +1,200 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB8F1EA90;
-	Sun, 11 May 2025 23:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A9D383
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 00:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747006882; cv=none; b=BJb8pVcPERCBvkMwT/QrreVFLDeTCKDeX1PWEB4DCrTWGsTKYBSUxoxAd/to8gyzlw1lCKrXunuHdjqQZjdSPLN1pCcluO5+1tWnhgCqdnhtMgEv7xjTf6TvixksqlF+l+wf1KvEF3j+lK3rln2jZfyyfqiiEFOgjqYUJHbe7uY=
+	t=1747009004; cv=none; b=Qb34cfomw6jVJ2Q5NfSL71kod8P+0m6Njkzkqi2SbzQ8oVydK/yHeBEGph/s7Mn4QQVKA8/qq3nGoLXosaQvzdmRCBDz0kMok80uxP9GjG4eOKmyZNA8osoaqGi/oLNKhCmYAMHYK1DKKtnK3oF/DtYCRTjLzpCn+24M7hHRn+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747006882; c=relaxed/simple;
-	bh=0R0M+myRXeKGjxYxVnKG4ZZnr/07Vyid04ibtBzNR9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Avzvu8yZ+bf3+plVub7AjWxuP/cq1EVRlO3dE7/apb9u1Sea5LGoShMLKWzyD0yTPGIqaKHVNWdvwKSJ3kVHYOPep7qqn19Vfo1pfr5puzwxCT+Evgrd6f88E8M2ryGymkuRzOH/MApc1GoTN0t0fjIYk9QJmji6gGBDtYFD0Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aVP3oA6O; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVP3oA6O"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54fc36323c5so3409873e87.0;
-        Sun, 11 May 2025 16:41:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747006878; x=1747611678; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HPWRfhQwF7Zu8+M/PG63eaG39ARSOy+14QLGOkMXq70=;
-        b=aVP3oA6OrdfdgcfVR2BqwH60JZcdpBH2C0g6vXeDzuFYVgcVPGA5qCnbUsNtlkUbif
-         henOPMUeY45qmjSlis9iATKigXdN3dffOY7eFlpBT9cqa2jcd1P2+yxGFxPrRzuhGaGV
-         xNsbTj3nrJU1D0O2uiepiiDCwlCPvSPsnl33PwUWdIpEhOLImt2u7QssZzkAkf0Lemkk
-         sEtfBhRFA8uilwJN6IlbDsAIcOZmmG0bXD5CfmXbLQcURekukOpAA/UKUQX/rB6h4GTJ
-         OcFGP2he7KuSPmndHOE96PMb3v6DyuIA8AUktVqz/FuwrSGUKO0w15R+8tkQB6cjjOYd
-         Kq/Q==
+	s=arc-20240116; t=1747009004; c=relaxed/simple;
+	bh=xoV09mdiQJSToCePrGZnn9SYnxsl083jo5NzXoR2244=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dEKaqkVPRy6oCVjgChIKc78eSaCZgDhiH2dsPfKdq2L0ahlpKvYydDjZrE0Rrsq4SuHdGEN4bmCHSDWJ3IGUc4nTAPHzXu4R3CQUYTLOneVaWXykGWYuKxeH6z/eaheKgppaxtksoAEqeMiYzhyDtPubn03/8buFAVleRu4RFv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85b5878a66cso1102484039f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 17:16:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747006878; x=1747611678;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HPWRfhQwF7Zu8+M/PG63eaG39ARSOy+14QLGOkMXq70=;
-        b=w6ld7TzLnbDWa+PK80j2v1e5+aeywS3/V1IDpxgoM4gB57zL9Z/klKOZxoS2/xECGC
-         jQQgCbkrj6gxE92xwONw7IyZ1udgRJH3DHUnGebsKzg+hJ1GvfsdDvJtxfGfCokP2OS+
-         LrFur9u9CdKrouKohyOl/wrLGfban5dke/1+plAMfnRNlIYhodAodIfZhvzI1Dyxv6Gr
-         /fWE4sIof2JswTNkp4biFU31S0Qytn1mI+h+QGa5Lyz/nf0eHoGyaIftwyjcCpkERzSy
-         klwEPYWrL+e9pbPx8eeXp2C7Negf9fmK3+h2e+fjhapikZm19DOsTq1hdlYvdkzht/RL
-         Mr+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVaHDvFG+CQfkrbRjeu0ZsSUhrSOKLUkqJPP5tG0lEfEmzXyb5oS1by86aTubK7DGZZOeuafdhlbUblbTA=@vger.kernel.org, AJvYcCWjcmceSrk5pAzDsS7VgzRlFYR5iK2pVdMtjmw3z8+5+p+w8Vz62C+hjs3ecac3s+atPduyJLR6b4eIYA8=@vger.kernel.org, AJvYcCWprDYd7NuFbfQNAGhbrSRAvCYvVNk7DR03WK1w7C3pFz8OiKAyCDZbR+FZFJda1Huq8WcnukjeCKx77Xu0VULwQA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNNvpqDJMJhjVum6dz6DzzL9Cs31xXzln7n+DcR+RERm7zzydw
-	PdIcpGrRXS3xNkAp4dmRRby+5w+blCpzkVsBPcHcZF7TqxouFsjDZh9bvg==
-X-Gm-Gg: ASbGncsxpJnnNvBTSefRwsoeDo6rPCTa4KfvdBAdI+rQPY41w0wIK4tuzLM9svtPR5Z
-	MBW6wFZGzIL4olOwye7s+i7gObqHFq2WNyQcYzdtwJJrTBFqCFkkZTYgo4pM+89/DzorpdhS3u+
-	/kFXL+AnIYrMRTgmlm0ns6wLpuVqv6FJ8UTij3meMR6y0HGS0qOv7puh/84gOArlomD8TZU66HF
-	7qD7fKaLQdE/GCDtWviO1YDcC0RoKF76t+JXJHFRohuigVUxadBuaNhdFTN6e/Ladz1b2F5QgUu
-	xpz3Wefvef6bIq2MSBRnNsM4Po8h2yxGp8gfIE9HAzZpgzC12yhntKKwW6bb6oEi05rtv12UDaH
-	UkcMH4hHU2vYvVDyCRM3oVJfQPq629lFY
-X-Google-Smtp-Source: AGHT+IFlCwg+gnvFBun6b+eU0+J5Y+9FqyOBU2eBSiYY8olg/D31X7Bmj9O64BqihX8M4yDiuQbOUg==
-X-Received: by 2002:a2e:a103:0:b0:30b:fc16:d482 with SMTP id 38308e7fff4ca-326b75709d7mr59190011fa.3.1747006878052;
-        Sun, 11 May 2025 16:41:18 -0700 (PDT)
-Received: from i-vetokaappi.home.lan (dsl-hkibng42-56733b-36.dhcp.inet.fi. [86.115.59.36])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c33b80b6sm11159451fa.37.2025.05.11.16.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 May 2025 16:41:16 -0700 (PDT)
-From: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
-To: linux-arm-msm@vger.kernel.org
-Cc: ~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org,
-	=?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Luca Weiss <luca@lucaweiss.eu>,
-	linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] remoteproc: qcom_wcnss: Fix on platforms without fallback regulators
-Date: Mon, 12 May 2025 02:40:15 +0300
-Message-ID: <20250511234026.94735-1-matti.lehtimaki@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1747009002; x=1747613802;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pvNDd4D87Qu8SBZrDX1Vdq9qCFaVvE0XZZ5qAOi2pIw=;
+        b=jLWmsBcc6qCpSeFL/yv451yCkoIZZmJ2eigeee5BMOKtLoAZe1kejli1r7d/zbCzKP
+         px1s+mAbsebtsUzrJlXsTNbx+X0uJqVPdL+NLqK6CJJEt0A9pX9OvFuWnmoZLX49iMDD
+         vfc4XnB0chcAGbni0HI6WhBRwEIuuSZl9iJKSrdlINYBUvg+SIw1XjGstxYpmce+gdO2
+         7tZHvmmmLvQKhGXEMsUG83x4/nggZ3oVB5g3g5Fq30YMLa1gUkdXvbCBylnMG1r08ixp
+         N63aU9ne/SHtIXjMbXGoNUqBjuNGOqTn+2VbZqcs9pL5SSZbId6xSTz5kRl4DSDyU9gk
+         nqEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvBOFHTV8aPmPi8UNJjI8f1p5AnyvkS5JAYsOm6JcTRZAb5KCHseE/7hoT+zTsJrZxnnMF+8EMFNqh3Zg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAGwtTo6aCjeehZ1A7BxNR4PS/kJXhoMrZ3Sp4YY8EiwOIV6xN
+	j0jkGM080VMZ5Sg71jrUOnu/6mKOzEDwFIJOFrb3eUSVxkGAhgo/jgHSf+/oXJ/r1DPuwq0UcO2
+	Hu2LlDebD6W4m+fzLfnsN1wn54bHxvvlrIU24mRruTtiTGdP42IrMpiw=
+X-Google-Smtp-Source: AGHT+IE8NHeYIwBO7AS5qW1vcN+PVxIw0m9CJiI4wLq9szZsj+L7gndcKEfJOkwoIeMcUxlDPOlUh+fopj9+g/XNczzSVaz5rJvp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:148d:b0:864:a3d0:ddef with SMTP id
+ ca18e2360f4ac-86763580dfdmr1341569039f.6.1747008991296; Sun, 11 May 2025
+ 17:16:31 -0700 (PDT)
+Date: Sun, 11 May 2025 17:16:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68213ddf.050a0220.f2294.0045.GAE@google.com>
+Subject: [syzbot] [bpf?] KASAN: vmalloc-out-of-bounds Write in vrealloc_noprof (2)
+From: syzbot <syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me, 
+	song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Recent change to handle platforms with only single power domain broke
-pronto-v3 which requires power domains and doesn't have fallback voltage
-regulators in case power domains are missing. Add a check to verify
-the number of fallback voltage regulators before using the code which
-handles single power domain situation.
+Hello,
 
-Fixes: 65991ea8a6d1 ("remoteproc: qcom_wcnss: Handle platforms with only single power domain")
-Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b1b2bc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91c351a0f6229e67
+dashboard link: https://syzkaller.appspot.com/bug?extid=659fcc0678e5a1193143
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-707df337.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/bc3944720ea5/vmlinux-707df337.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7bc2f45ae23f/bzImage-707df337.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com
+
+syz.0.0 uses obsolete (PF_INET,SOCK_PACKET)
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in vrealloc_noprof+0x396/0x430 mm/vmalloc.c:4093
+Write of size 4064 at addr ffffc9000efa1020 by task syz.0.0/5317
+
+CPU: 0 UID: 0 PID: 5317 Comm: syz.0.0 Not tainted 6.15.0-rc5-syzkaller-00038-g707df3375124 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xb4/0x290 mm/kasan/report.c:521
+ kasan_report+0x118/0x150 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:-1 [inline]
+ kasan_check_range+0x29a/0x2b0 mm/kasan/generic.c:189
+ __asan_memset+0x22/0x50 mm/kasan/shadow.c:84
+ vrealloc_noprof+0x396/0x430 mm/vmalloc.c:4093
+ push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
+ do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
+ do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
+ do_check_main kernel/bpf/verifier.c:22867 [inline]
+ bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
+ bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
+ __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
+ __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f649c58e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f649d4dd038 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007f649c7b5fa0 RCX: 00007f649c58e969
+RDX: 0000000000000048 RSI: 00002000000017c0 RDI: 0000000000000005
+RBP: 00007f649c610ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f649c7b5fa0 R15: 00007fff542287e8
+ </TASK>
+
+The buggy address belongs to the virtual mapping at
+ [ffffc9000ef81000, ffffc9000efa3000) created by:
+ kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x3ffd0 pfn:0x3efe5
+flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
+raw: 04fff00000000000 0000000000000000 dead000000000122 0000000000000000
+raw: 000000000003ffd0 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x102cc2(GFP_HIGHUSER|__GFP_NOWARN), pid 5317, tgid 5316 (syz.0.0), ts 82587533383, free_ts 81110216781
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1d8/0x230 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x21ce/0x22b0 mm/page_alloc.c:3688
+ __alloc_pages_slowpath+0x2fe/0xcc0 mm/page_alloc.c:4509
+ __alloc_frozen_pages_noprof+0x319/0x370 mm/page_alloc.c:4983
+ alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
+ alloc_frozen_pages_noprof mm/mempolicy.c:2372 [inline]
+ alloc_pages_noprof+0xa9/0x190 mm/mempolicy.c:2392
+ vm_area_alloc_pages mm/vmalloc.c:3591 [inline]
+ __vmalloc_area_node mm/vmalloc.c:3669 [inline]
+ __vmalloc_node_range_noprof+0x8fe/0x12c0 mm/vmalloc.c:3844
+ __kvmalloc_node_noprof+0x3a0/0x5e0 mm/slub.c:5034
+ kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
+ push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
+ do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
+ do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
+ do_check_main kernel/bpf/verifier.c:22867 [inline]
+ bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
+ bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
+ __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
+ __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
+page last free pid 82 tgid 82 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ free_unref_folios+0xb81/0x14a0 mm/page_alloc.c:2782
+ shrink_folio_list+0x3053/0x4e90 mm/vmscan.c:1552
+ evict_folios+0x417b/0x5110 mm/vmscan.c:4698
+ try_to_shrink_lruvec+0x705/0x990 mm/vmscan.c:4859
+ shrink_one+0x21b/0x7c0 mm/vmscan.c:4904
+ shrink_many mm/vmscan.c:4967 [inline]
+ lru_gen_shrink_node mm/vmscan.c:5045 [inline]
+ shrink_node+0x3139/0x3750 mm/vmscan.c:6016
+ kswapd_shrink_node mm/vmscan.c:6867 [inline]
+ balance_pgdat mm/vmscan.c:7050 [inline]
+ kswapd+0x1675/0x2970 mm/vmscan.c:7315
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffffc9000efa0f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc9000efa0f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffffc9000efa1000: 00 00 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+                               ^
+ ffffc9000efa1080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+ ffffc9000efa1100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+==================================================================
+
+
 ---
- drivers/remoteproc/qcom_wcnss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-index 775b056d795a..2c7e519a2254 100644
---- a/drivers/remoteproc/qcom_wcnss.c
-+++ b/drivers/remoteproc/qcom_wcnss.c
-@@ -456,7 +456,8 @@ static int wcnss_init_regulators(struct qcom_wcnss *wcnss,
- 	if (wcnss->num_pds) {
- 		info += wcnss->num_pds;
- 		/* Handle single power domain case */
--		num_vregs += num_pd_vregs - wcnss->num_pds;
-+		if (wcnss->num_pds < num_pd_vregs)
-+			num_vregs += num_pd_vregs - wcnss->num_pds;
- 	} else {
- 		num_vregs += num_pd_vregs;
- 	}
--- 
-2.43.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
