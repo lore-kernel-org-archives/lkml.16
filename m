@@ -1,209 +1,146 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB4F25D52F;
-	Mon, 12 May 2025 09:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921B425B1CD;
+	Mon, 12 May 2025 09:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041790; cv=none; b=lJWwIJkrc5XJCm3n5kNuhgoMGePCun6aw+bbI4nN2zICEfLc37EIr/WKDTB2sAjJ0nu+1sThhEvkEfk8dMWqGzqj1iL2qoKlGMoKMAw2aJ/gMurz+CWG1AVOE064HXePv3Shq0YQ7HVvOFyEy092RiDTstjSiA0wtBOM9ECF+zQ=
+	t=1747041812; cv=none; b=CsxpL/dODDMZk+tCTrq2FJA3JRSUqFeWoqZpW5FSGwlTLKYkHqnx4gLUVotOUR56JmouhIPno6dY3Q/pg0eAUrZZgMiLWCeNcHDVtyOG7TCPuEmct2lCWrONwcBS2mVp73rCmvVHrOX6qQJ/heN1NL4YKfFuvrimhjBYYZSi8Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041790; c=relaxed/simple;
-	bh=w0ZltfLOtsJpFYBgWPh7vi71urnoDKXxN1oFYbIwY9U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tCUfKS+Irh1yHJ1ubCiwJk8OrhZr14pbLSzlyxP54tMi86wGqAUbHdkcaWIkYH/8uotXxep/I1fZbvMqQNtU7U/gKXn/cC9TGSsgW5iOUzsPFiHCc3Ji/ENDjMG7tTpKtrp6v/1NTbyUpsuWxjM7cBSC0N4eNgF5KGMm7s2h4A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=aPQm2zhL; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1747041812; c=relaxed/simple;
+	bh=89sZqGuNSkvdpj6n9MXwDCPpmTPbDyYHg6keMS4GHqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L5sGpnu03iJ1DN2KFNV2fZtlGUCB7ssVlRwOgpELRZTIa/YO9rzZH/bJZf14VZgYB8nZ0OQTF21vfRZARlKgc7F6VxxHUOOB8ssyaI47c3Vkd7B6wM1qGM9Z45NIF3c9gT7Ob31bMYIuKDpgzgaHjdordwM9yItbL/pk+ahxrAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/WNNIav; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aPQm2zhL"
-X-UUID: b0a4ea642f1211f082f7f7ac98dee637-20250512
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=m+IUEz94ha9tzpIf5diXNYx0EEgvKeMrSzQ2Gsv9lsg=;
-	b=aPQm2zhLsadUH5ybnqNLZYcfQK2hOi6UjCSVAU51sti7Za46BYzldUcsYtSd/YuLEHkSFBLqN1MYI07SQcne42toO+E2JMdvHkPTm8bj8LKT+6t4Aub+mAHaZq9higgVWZNjoHHzU/lpPrjMFABJb9gHJsPBzjq8gRY/9iD3zzU=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:32a711c2-e1b9-443a-be11-95aab5af8335,IP:0,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-5
-X-CID-META: VersionHash:0ef645f,CLOUDID:e3b5dce0-512b-41ef-ab70-9303a9a81417,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b0a4ea642f1211f082f7f7ac98dee637-20250512
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 805055988; Mon, 12 May 2025 17:22:56 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 12 May 2025 17:22:53 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 12 May 2025 17:22:53 +0800
-From: Jason-JH Lin <jason-jh.lin@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, Jason-JH Lin
-	<jason-jh.lin@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>, Singo Chang
-	<singo.chang@mediatek.com>, Paul-PL Chen <paul-pl.chen@mediatek.com>, Moudy
- Ho <moudy.ho@mediatek.com>, Xavier Chang <xavier.chang@mediatek.com>,
-	Xiandong Wang <xiandong.wang@mediatek.com>, Sirius Wang
-	<sirius.wang@mediatek.com>, Fei Shao <fshao@chromium.org>, Chen-yu Tsai
-	<wenst@chromium.org>, <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>
-Subject: [PATCH RESEND v5 11/20] mailbox: mtk-cmdq: Add GCE hardware virtualization configuration
-Date: Mon, 12 May 2025 17:19:33 +0800
-Message-ID: <20250512092252.905629-12-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250512092252.905629-1-jason-jh.lin@mediatek.com>
-References: <20250512092252.905629-1-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/WNNIav"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5fc9c49c8adso3994931a12.3;
+        Mon, 12 May 2025 02:23:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747041809; x=1747646609; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VeVC66rQDN7pvLPMFsPPWmT1oKHoJXZc3cx0+31yGWk=;
+        b=E/WNNIav7ArdICItLCvfgTERbkWK/LMVX8KfOrjQHUTbCxBUVbhh7Da5DkQWPh86XI
+         2z7NDyMOOBUfYhoIdICdEot0WK2t4qDfK4pIKgOqEcq5bomRs68Vh61pRacgMYcayPp+
+         Whsbu/O2Jcip7M6EQSkB0EnKTWhmJCaAk1BvVFsST49HDUiQy8DXJ0FSUDAAZORCB/nH
+         Tms0psGM8bjzdkdbG5fc991yiEzklsxe9l+v3SBqgw2DXc5nSxriqKlagll2Wa6GDiAT
+         x1bqqsdg4Sf7s2+50pCqYI9/YqJbPsIQM5pGcCw0gvlPk9pNAq+Jbg3hT+KBHb0JOuF6
+         pp/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747041809; x=1747646609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VeVC66rQDN7pvLPMFsPPWmT1oKHoJXZc3cx0+31yGWk=;
+        b=U0r1QAAdrHrLu1DgjS5LJ3MDQrIU/7S7ZQwx5cGK+0n0ZSY9E6Jm4ffBBpbaeHamZ0
+         yyU4CYrpW7Jw2k5lnByLtVkuqxzcTzIGKYJ7GsJb3xcYZz6S8PUT9AEJyD8Pdpc9eEID
+         xBH9gH3HGaIu/dBfMNLyQXrJrnq43ZUTjtoi/1311QY5cZI3zqB5zC/S2nwTGlPSwEKn
+         GZ6olcQfq0/huToDu4B1A2ZLcGab6wqMVZjClEbzLFu+tT4elrGuYkOwJv2GOma7tCeg
+         4qK4IjxlRyUUPp5BeWrinWSyhHEvXgDV2CQtf+F/e2QowxQtoaSxzt3n4t3l9i83tLng
+         cumg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBzBPJ9JX0EZPKbF1oLuAeU6owhZKk/JfKYhzBn3i13nzrenpnK5L3U44U3HGfvRtNhjDYPVNgQoHVMN3E@vger.kernel.org, AJvYcCXHWkNr7Y39uXF6JirO/q79MosmzmWLLDRE4WVPyZJop4DTGT+Oma7+cyxdDv+I3XB3XlCSfRsc/W734n2v@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ0pQzNhrfYYrnBi3KRcowSTdk87/kh3S1hA1I6cgcV0EAPaRi
+	ZvTUtZLoI2lQ+jgxQGm3thK9Yb0iMYzClSG+91xzJukIEkzC/GyBYkdKK4gwJr6tP1P3+TPWebN
+	ZK+glTCRrqOh7W2hsktr2UpKAAmM=
+X-Gm-Gg: ASbGncv8LpY//Mft82lczCne7W5wklHdBdnXXt3w9CIasEjGdNgakvivZqJAI/KtU5i
+	hls2n5zdm2rEEcwaDiHGhMONXeRXXYreRc0H3C/73ACk44dLTLBLzdPc8NBzhee/C52HX3oa/xf
+	ZqA12Ofy8kaWOzi7APp/iMnXe8Xjmok8rO
+X-Google-Smtp-Source: AGHT+IFgfcOzZ/ZrpapltWUFPPSovtg1lPh2QGS5fNadobB3/uric5qh0Sh0mvSJJEez27Ujl1s3Ouq3Wn1auVG3r9k=
+X-Received: by 2002:a17:907:9729:b0:ad2:54c5:42ef with SMTP id
+ a640c23a62f3a-ad254c545cemr274632466b.5.1747041808134; Mon, 12 May 2025
+ 02:23:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+ <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
+ <CAJfpegvhZ8Pts5EJDU0efcdHRZk39mcHxmVCNGvKXTZBG63k6g@mail.gmail.com>
+ <CAC1kPDPeQbvnZnsqeYc5igT3cX=CjLGFCda1VJE2DYPaTULMFg@mail.gmail.com>
+ <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
+ <CAC1kPDPWag5oaZH62YbF8c=g7dK2_AbFfYMK7EzgcegDHL829Q@mail.gmail.com> <CAJfpegu59imrvXSbkPYOSkn0k_FrE6nAK1JYWO2Gg==Ozk9KSg@mail.gmail.com>
+In-Reply-To: <CAJfpegu59imrvXSbkPYOSkn0k_FrE6nAK1JYWO2Gg==Ozk9KSg@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 12 May 2025 11:23:15 +0200
+X-Gm-Features: AX0GCFso4tMDxIW78HKWY_HNHtLI9t31XfP6g-OaXqjofsiOCFHpDFG1Yc6uBKg
+Message-ID: <CAOQ4uxgM+oJxp0Od=i=Twj9EN2v2+rFByEKabZybic=6gA0QgA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The GCE hardware virtualization configuration supports the isolation of
-GCE hardware resources across different OS environments. Each OS is
-treated as a virtual machine (VM) for GCE purposes.
-There are 6 VMs and 1 host VM. The host VM has main control over the
-GCE virtualization settings for all VMs.
+On Mon, May 12, 2025 at 10:27=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu>=
+ wrote:
+>
+> On Sun, 11 May 2025 at 11:56, Chen Linxuan <chenlinxuan@uniontech.com> wr=
+ote:
+>
+> > I noticed that the current extended attribute names already use the
+> > namespace.value format.
+> > Perhaps we could reuse this naming scheme and extend it to support
+> > features like nested namespaces.
+>
+> Right.  Here's a link to an old and long thread about this:
+>
+>    https://lore.kernel.org/all/YnEeuw6fd1A8usjj@miu.piliscsaba.redhat.com=
+/#r
+>
 
-To properly access the GCE thread registers, it is necessary to
-configure access permissions for specific GCE threads assigned to
-different VMs.
-Currently, since only the host VM is being used, it is required to
-enable access permissions for all GCE threads for the host VM.
+The way I see it is, generic vs. specialized have pros and cons
+There is no clear winner.
+Therefore, investing time on the getxattr() direction without consensus
+with vfs maintainer is not wise IMO.
 
-There are 2 VM configurations:
-1. VM_ID_MAP
-There are 4 registers to allocate 32 GCE threads across different VMs:
-VM_ID_MAP0 for threads 0-9, VM_ID_MAP1 for threads 10-19,
-VM_ID_MAP2 for threads 20-29, and VM_ID_MAP3 for threads 30-31.
-Each thread has a 3-bit configuration, where setting all bits to 1
-configures the thread for the host VM.
+> >
+> > For instance, in a situation like this:
+> >
+> > A fixed file 0 in an io_uring is a FUSE fd.
+> > This FUSE fd belongs to FUSE connection 64.
+> > This FUSE fd has a backing file.
+> > This backing file is actually provided by mnt_id=3D36.
+> >
+> > Running getfattr -m '-' /proc/path/to/the/io_uring/fd could return
+> > something like:
+> >
+> > io_uring.fixed_files.0.fuse.conn=3D"64"
+> > io_uring.fixed_files.0.fuse.backing_file.mnt_id=3D"36"
+> > io_uring.fixed_files.0.fuse.backing_file.path=3D"/path/to/real/file"
+>
+> Yeah, except listxattr wouldn't be able to properly work in such
+> cases: it lacks support for hierarchy.
+>
+> The proposed solution was something like making getxattr on the
+> "directory" return a listing of child object names.
+>
+> I.e. getxattr("/proc/123/fd/12", "io_uring.fixed_files.") would return
+> the list of instantiated fixed file slots, etc...
 
-2. VM_CPR_GSIZE
-It is used to allocate the CPR SRAM size to each VM. Each VM has 4-bit
-configuration, where setting bit 0-3 to configures the size of host VM.
-This setting must be configured before the VM configuration to prevent
-resource leakage.
+The problem I see with this scheme is that it is not generic enough.
+If lsof is to support displaying fuse backing files, then it needs to
+know specifically about those magic xattrs.
 
-Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 52 ++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Because lsof only displays information about open files, I think
+it would be better to come up with a standard tag in fdinfo for lsof
+to recognize, for example:
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index b18808855680..c946766c215a 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -43,6 +43,13 @@
- #define GCE_CTRL_BY_SW				GENMASK(2, 0)
- #define GCE_DDR_EN				GENMASK(18, 16)
- 
-+#define GCE_VM_ID_MAP(n)		(0x5018 + (n) / 10 * 4)
-+#define GCE_VM_ID_MAP_THR_FLD_SHIFT(n)		((n) % 10 * 3)
-+#define GCE_VM_ID_MAP_HOST_VM			GENMASK(2, 0)
-+#define GCE_VM_CPR_GSIZE		0x50c4
-+#define GCE_VM_CPR_GSIZE_FLD_SHIFT(vm_id)	((vm_id) * 4)
-+#define GCE_VM_CPR_GSIZE_MAX			GENMASK(3, 0)
-+
- #define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
- #define CMDQ_THR_ENABLED		0x1
- #define CMDQ_THR_DISABLED		0x0
-@@ -89,6 +96,7 @@ struct gce_plat {
- 	u8 shift;
- 	bool control_by_sw;
- 	bool sw_ddr_en;
-+	bool gce_vm;
- 	u32 gce_num;
- };
- 
-@@ -110,6 +118,47 @@ void cmdq_get_mbox_priv(struct mbox_chan *chan, struct cmdq_mbox_priv *priv)
- }
- EXPORT_SYMBOL(cmdq_get_mbox_priv);
- 
-+static void cmdq_vm_toggle(struct cmdq *cmdq, bool enable)
-+{
-+	int i;
-+	u32 vm_cpr_gsize = 0, vm_id_map = 0;
-+	u32 *vm_map = NULL;
-+
-+	if (!cmdq->pdata->gce_vm)
-+		return;
-+
-+	vm_map = kcalloc(cmdq->pdata->thread_nr, sizeof(*vm_map), GFP_KERNEL);
-+	if (!vm_map)
-+		return;
-+
-+	if (enable) {
-+		/* only configure the max CPR SRAM size to host vm (vm_id = 0) currently */
-+		vm_cpr_gsize = GCE_VM_CPR_GSIZE_MAX << GCE_VM_CPR_GSIZE_FLD_SHIFT(0);
-+
-+		/* set all thread mapping to host vm currently */
-+		for (i = 0; i < cmdq->pdata->thread_nr; i++)
-+			vm_map[i] = GCE_VM_ID_MAP_HOST_VM << GCE_VM_ID_MAP_THR_FLD_SHIFT(i);
-+	}
-+
-+	/* set the amount of CPR SRAM to allocate to each VM */
-+	writel(vm_cpr_gsize, cmdq->base + GCE_VM_CPR_GSIZE);
-+
-+	/* config CPR_GSIZE before setting VM_ID_MAP to avoid data leakage */
-+	for (i = 0; i < cmdq->pdata->thread_nr; i++) {
-+		vm_id_map |= vm_map[i];
-+		/* config every 10 threads, e.g., thread id=0~9, 10~19, ..., into one register */
-+		if ((i + 1) % 10 == 0) {
-+			writel(vm_id_map, cmdq->base + GCE_VM_ID_MAP(i));
-+			vm_id_map = 0;
-+		}
-+	}
-+	/* config remaining threads settings */
-+	if (cmdq->pdata->thread_nr % 10 != 0)
-+		writel(vm_id_map, cmdq->base + GCE_VM_ID_MAP(cmdq->pdata->thread_nr - 1));
-+
-+	kfree(vm_map);
-+}
-+
- static void cmdq_gctl_value_toggle(struct cmdq *cmdq, bool ddr_enable)
- {
- 	u32 val = cmdq->pdata->control_by_sw ? GCE_CTRL_BY_SW : 0;
-@@ -154,6 +203,7 @@ static void cmdq_init(struct cmdq *cmdq)
- 
- 	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
- 
-+	cmdq_vm_toggle(cmdq, true);
- 	cmdq_gctl_value_toggle(cmdq, true);
- 
- 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-@@ -327,6 +377,7 @@ static int cmdq_runtime_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	cmdq_vm_toggle(cmdq, true);
- 	cmdq_gctl_value_toggle(cmdq, true);
- 	return 0;
- }
-@@ -336,6 +387,7 @@ static int cmdq_runtime_suspend(struct device *dev)
- 	struct cmdq *cmdq = dev_get_drvdata(dev);
- 
- 	cmdq_gctl_value_toggle(cmdq, false);
-+	cmdq_vm_toggle(cmdq, false);
- 	clk_bulk_disable(cmdq->pdata->gce_num, cmdq->clocks);
- 	return 0;
- }
--- 
-2.43.0
+hidden_file: /path/to/hidden/file
+hidden_files_list: /path/to/connections/N/backing_files
 
+and then conform to the same fdinfo standard from fuse_dev_fd,
+io_uring_fd, unix_socket_fd.
+
+Making an interface more hierarchic than hidden_files_list:
+is useless because lsof traverses all fds anyway to filter by
+name pattern and I am very sceptical of anyone trying to
+push for an API get_open_fds_by_name_pattern()...
+
+Thanks,
+Amir.
