@@ -1,103 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922F325EF9B;
-	Mon, 12 May 2025 09:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F44225FA31;
+	Mon, 12 May 2025 09:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747043760; cv=none; b=S40bsU4ZQU75PMcpYd2Kr87D0siHKtQfPYm3m2lWi8T9Mmv934/gKUwEPCKE4nWKqIKZ6lQQx/vFAdg9Vy0EiEcMQChlsxU8l51VwHoTAeREVDRk65yhkS44dcnkxzpNgybt5fwAHxg4zO5a9QvIxGCn2PMlEk9LWmNQmyfJMw4=
+	t=1747043763; cv=none; b=KtpXkz0/6X6fNVEX6/Kq/J9aHIE0qHcZ76eY7M5Er/1vIIS6oU6hfM3XuNG/U74LvTDCnMO0CJLAkLP3FIJaAzXN3Zikli5sEZwx0FqwT8W36YpM7wLy19rR9U+JLAvu5fRqgM/muZ6bY/cB070+DDIZwkUGnffJnWQja+eRf30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747043760; c=relaxed/simple;
-	bh=H15JpCve/uOg7AG6u4IHz17Kkvl9qX3LKOv8nt8A0Jc=;
+	s=arc-20240116; t=1747043763; c=relaxed/simple;
+	bh=T09OpNp+FNllmJC9eYYpHGyRexTCIm6KmP6tjZc0pjo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hasqhU8B2Jr71eqXIyu8IsGpGOUcs7LrZEfjgp9RL+ElkkjQrz/jZtKr9vv9LWPwn8tvmnu68c5Y2IaA+IzWiEiPd5SY4xYuX/7hJ4KS3dA0IWXahMZhH0o5jpQJpYQuO29HmVChohhNTLpjVCUmkfEuk6ZfDLduzcWXHeFcYJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GrN0c8Wa; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vbla/X9h3eZ2VztPQUDEabHycNfqGlFD6mT4R+jw80djOf8SYfoHRFxUity3nB1pyisPw+5KktxE6p05esfNzdxfWanS0uM/MXQi8WonnXG0M4eLGrcM5SMNdqn4ncmwd/RzQLxJuYqTADvmgQynPQfNKLhrczgfIesUw6sKfKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=R/ZrP73b; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GrN0c8Wa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747043758; x=1778579758;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=H15JpCve/uOg7AG6u4IHz17Kkvl9qX3LKOv8nt8A0Jc=;
-  b=GrN0c8WaDjxVSxoZD+hQFIYvrnfXy551IcUtpvx04ShdseJ+QeFWf93u
-   zvnRrGMVw+rt+XFNRkyYB6WCGIbHKbNFokvNRLTX/9hY53KUtvW6YwVd2
-   2okf/1H0LThOdfAxhmvgadlFDScchIElMl5kfmgAZHDxOl7nufuIpL04W
-   BE3w3N42rOtLdALP/M/loaCM+Ar1HUMEUTZ/s4XYu9ZUUE1kzITl4t3+Q
-   +Jy7brq9Xms0AC9r2UBAPSrbI9IM1Oz2D7QDZlFRJNX2ywibTGdceaM90
-   GLmt6uMof4Fc9pddp5c5JxGACXDTo7cojb3kOIGmSUIwwn4//UXwURabw
-   A==;
-X-CSE-ConnectionGUID: Hg42At2LRNqVRlrzdcQPQQ==
-X-CSE-MsgGUID: ncFBooY9RLKo44SbwqkQsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48827963"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="48827963"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:55:55 -0700
-X-CSE-ConnectionGUID: +YZWL2W+QxGi3EkMfaEIBw==
-X-CSE-MsgGUID: R8xRixuFRzqkv6hTcmCW9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="137788596"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 12 May 2025 02:55:52 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id C060919D; Mon, 12 May 2025 12:55:50 +0300 (EEST)
-Date: Mon, 12 May 2025 12:55:50 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, rick.p.edgecombe@intel.com, 
-	isaku.yamahata@intel.com, kai.huang@intel.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, kvm@vger.kernel.org, x86@kernel.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC, PATCH 08/12] KVM: x86/tdp_mmu: Add phys_prepare() and
- phys_cleanup() to kvm_x86_ops
-Message-ID: <2bi4cz2ulrki62odprol253mhxkvjdu3xtq4p6dbndowsufnmu@7kzlzywmi22s>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-9-kirill.shutemov@linux.intel.com>
- <aBn4pfn4aMXcFHd7@yzhao56-desk.sh.intel.com>
- <t2im27kgcfsl2qltxbf3cear35szyoafczgvmmwootxthnbcdp@dasmg4bdfd6i>
- <aB1ZplDCPkDCkhQr@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="R/ZrP73b"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C5A4210272092;
+	Mon, 12 May 2025 11:55:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1747043758; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=a2idZBdlZFTg/YbhlRsED1K0jykkLCJPk4JtmA9TXLs=;
+	b=R/ZrP73b9jX4WIfnSjXMLZOANedt1Idj4lQHG5FCmsUb8MFIFCM27gAmun0KscjZ+TJx6S
+	aAwQXa88arCHeXUwX5DaNlJp6TJFPCIcmQmoqq0lfB//f4DvCewxJ2oHxPs9s/adDPFeac
+	LESUTyFscYisYvfV0xFGe23I71gW490iXMLj9NK3nenEW4gEpa7Ne5jhjHFXitGXE7dUU4
+	iqGQwtFZ8o0PO0H5DyTFqhEvAeY+cgxlbPGCbAVCIcOVukZ4c+xcvuES0ZLDVe0nmDVsvq
+	xeOuy58NFd7O+9L2ZsXsESKkbkHOT4+MGLsU9nXT6a7Y+LJ7V55EJPYS8Cp//g==
+Date: Mon, 12 May 2025 11:55:50 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, jonathanh@nvidia.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.1 000/569] 6.1.129-rc2 review
+Message-ID: <aCHFpvebEucllGq5@duo.ucw.cz>
+References: <20250220104545.805660879@linuxfoundation.org>
+ <80ab673f-aa94-43e2-899a-0c5a22f3f1e0@gmail.com>
+ <2025022221-revert-hubcap-f519@gregkh>
+ <Z7mXDolRS+3nLAse@duo.ucw.cz>
+ <2025022213-brewery-synergy-b4bf@gregkh>
+ <aCG9kFjnZrMd4sy8@duo.ucw.cz>
+ <2025051205-return-blame-ba79@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2O7SBi5KcP6k6vqT"
+Content-Disposition: inline
+In-Reply-To: <2025051205-return-blame-ba79@gregkh>
+X-Last-TLS-Session-Version: TLSv1.3
+
+
+--2O7SBi5KcP6k6vqT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aB1ZplDCPkDCkhQr@yzhao56-desk.sh.intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 09:25:58AM +0800, Yan Zhao wrote:
-> On Thu, May 08, 2025 at 04:23:56PM +0300, Kirill A. Shutemov wrote:
-> > On Tue, May 06, 2025 at 07:55:17PM +0800, Yan Zhao wrote:
-> > > On Fri, May 02, 2025 at 04:08:24PM +0300, Kirill A. Shutemov wrote:
-> > > > The functions kvm_x86_ops::link_external_spt() and
-> > > > kvm_x86_ops::set_external_spte() are used to assign new memory to a VM.
-> > > > When using TDX with Dynamic PAMT enabled, the assigned memory must be
-> > > > covered by PAMT.
-> > > > 
-> > > > The new function kvm_x86_ops::phys_prepare() is called before
-> > > > link_external_spt() and set_external_spte() to ensure that the memory is
-> > > > ready to be assigned to the virtual machine. In the case of TDX, it
-> > > > makes sure that the memory is covered by PAMT.
-> > > > 
-> > > > kvm_x86_ops::phys_prepare() is called in a context where struct kvm_vcpu
-> > > > is available, allowing the implementation to allocate memory from a
-> > > > per-VCPU pool.
-> > > > 
-> > > Why not invoke phys_prepare() and phys_cleanup() in set_external_spte_present()?
-> > > Or in tdx_sept_set_private_spte()/tdx_sept_link_private_spt()?
-> > 
-> > Because the memory pool we allocated from is per-vcpu and we lost access
-> > to vcpu by then. And not all callers provide vcpu.
-> Maybe we can get vcpu via kvm_get_running_vcpu(), as in [1].
-> Then for callers not providing vcpu (where vcpu is NULL), we can use per-KVM
-> cache? 
+On Mon 2025-05-12 11:31:20, Greg Kroah-Hartman wrote:
+> On Mon, May 12, 2025 at 11:21:20AM +0200, Pavel Machek wrote:
+> > On Sat 2025-02-22 10:39:23, Greg Kroah-Hartman wrote:
+> > > On Sat, Feb 22, 2025 at 10:21:18AM +0100, Pavel Machek wrote:
+> > > > On Sat 2025-02-22 07:28:10, Greg Kroah-Hartman wrote:
+> > > > > On Fri, Feb 21, 2025 at 09:45:15AM -0800, Florian Fainelli wrote:
+> > > > > >=20
+> > > > > >=20
+> > > > > > On 2/20/2025 2:57 AM, Greg Kroah-Hartman wrote:
+> > > > > > > This is the start of the stable review cycle for the 6.1.129 =
+release.
+> > > > > > > There are 569 patches in this series, all will be posted as a=
+ response
+> > > > > > > to this one.  If anyone has any issues with these being appli=
+ed, please
+> > > > > > > let me know.
+> > > > > > >=20
+> > > > > > > Responses should be made by Sat, 22 Feb 2025 10:44:04 +0000.
+> > > > > > > Anything received after that time might be too late.
+> > > > > >=20
+> > > > > > And yet there was a v6.1.29 tag created already?
+> > > > >=20
+> > > > > Sometimes I'm faster, which is usually the case for -rc2 and late=
+r, I go
+> > > > > off of the -rc1 date if the people that had problems with -rc1 ha=
+ve
+> > > > > reported that the newer -rc fixes their reported issues.
+> > > >=20
+> > > > Well, quoting time down to second then doing something completely
+> > > > different is quite confusing. Please fix your scripts.
+> > >=20
+> > > Patches gladly welcome :)
+> >=20
+> > It is not okay to send misleading emails just because script generated
+> > them.
+>=20
+> *plonk*
 
-Hm. I was not aware of kvm_get_running_vcpu(). Will play with it, thanks.
+Yeah. Cooperation with you is wonderful and I'll gladly copy&paste
+=66rom the internet in case you don't have internet access and remove
+blank lanks for you next time you ask.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+BR,
+								Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--2O7SBi5KcP6k6vqT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaCHFpgAKCRAw5/Bqldv6
+8m7SAKC1gQ++k6DXs+0CokEuWs/nHR2xYwCfSuKLefx9tNtHUmrhTVmHZaulW30=
+=B+rO
+-----END PGP SIGNATURE-----
+
+--2O7SBi5KcP6k6vqT--
