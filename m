@@ -1,116 +1,142 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A661E2845
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579E3230BE8
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747061943; cv=none; b=h9P3rIkLc9TE43NePTGBkHboLQ2lsKcjXs9yNEYLJAyOPj76wB5CfN5kx6byb07eWt4wO7K3pXiogxetScpBUSvvJu2ecGbACM/q5oX3P1Ad/Nvbz/uke9EVxFPq5Auu8pvU6WgEhO3R71UkALF7OqT8tmhG/AFeBw4IuGxM02k=
+	t=1747061993; cv=none; b=gn6D4/ctd8dA6PwP5NLPlawpAdIlp/oqEtNS/1PSmQbqlNWMtNNrC6drRKB9ePiNASphVkHm9Qr/mZy6XXXeK/Rv0eHhXr4QmZf6UKhrKRUA9dGn3u9W9c2huV8L047hQzn/Fk0+8gBJX/H8Zchg1UGP5srRHdMa2XXrmyENZ74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747061943; c=relaxed/simple;
-	bh=nX4mrCmrV7a8TXs8dMRqXfhV5Pu7RxOI1NSvV5NmIJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QM80CY56Dck3STrFKIE5AcLgmwtuyQCDbaF6GICAQf4TnkPFlXGxF1RJ5c1vF1lBU6jvAlqVdfuw8h1PIMhm9RziQuUdLwUUL5YKeVVmWc/f70LA3WA2fgK39gi9D3SQQeW8tSW3o8F7MzhR81CJRIMIwoecZc8AtI8EQ/dIRhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IvI9wS1d; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747061993; c=relaxed/simple;
+	bh=BCBD1wYqokyqr2aiQMrpy1uVk1gZBlvuJ2ouwPMITC0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ew+vu2iS+VBvDga7joll6Hm62iXcoXQIJ8iBRp9CNLk8hUUhzgR4z2yod2SvwISMOuaX/UXS0nnDzdaDCySkfeI1rwoKfDrzNtl/KX5+oxWwow976B27kejjklIkVJwc0xd7AQfOxMW8JDv7BTEws5jRQ0IuFLa4lNzz116C7BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=utUCRfVN; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IvI9wS1d"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so2752205f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747061939; x=1747666739; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DtZnGYGPMyogZRHWWFnmILYOBdf7NNPZ8lnkGuF8Wjs=;
-        b=IvI9wS1dpKj6UHWGd1+70O1qPuh9JujYeb0BnF/xf6IRPaGWNO/hSTOG1SZxu7yAAn
-         et9o8kdEzr0WaqIno5HxASO1odfUUoSdeYuNMZOXDVKSfo5eKCPCMPicP8fCBxUS1WE7
-         MZsEbNS1vlw7A8Ku40j8LsrFe83CGmjIzK7Mn6yC001MAesy8MdHLtNPhu9Ye7okDxHx
-         +s/cSzINi5KkOi9BtzP5OfoUU8Wy1V9zHf0vzBqwor7Z0XvRUt98s4NYlN138oqBveLH
-         /NU1UGTkVCToK2vM7lH81lKYTdc9sjgr1+9czZxJk+naJ1HtIljNovLjoA6cBcQSw+dD
-         njJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747061939; x=1747666739;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DtZnGYGPMyogZRHWWFnmILYOBdf7NNPZ8lnkGuF8Wjs=;
-        b=rJoK//itKdpDNBpyp5/FfDS9RVVMDhyojp9i3c1tIcyN7+Y4LZ/iD/YgyUIpnveb9r
-         2obFlm7d2wyIgY1dZOFDpOZ/UDpJy7gWiiC6XZHa+pKxgiUvkFnuzFSRun8CWvcINK8W
-         VoT5MeFfRE/ourmY5ktBR50mmZYfvuKVj/64Q0GUYfBHjCXyKHbIDd/tkmhWDeTqOGIJ
-         ItZo9Kn8HqcmPJek8sKtMgsfRsrOlU8W/w8YWN5dpw/w01Q1E4M4eu/CkZaPrCcyAhUE
-         MBbbco5p67RhZH8LEwWVzSZIDKBhEV06eVTpNhL6XRFgHQeR7u6JUcDWkHuf6GngOkbH
-         P7Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqMMEJKzGG5pJgRe3DP7DK2g2cjSbToeAlLhZyfdThA9b+0CbSCjHMEWXiO7O1mAvVFdGdeK2fiZb4hyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXb0m6cPqQeB/ujGctR5c5gCGcoz+7dZULVJq1C4Jjq2s2wPCu
-	8LyBNoRcWSiVkde6JBx1RNDs16zzEcQ8GOMiSpei6pav1DyvBrzqijWQ0AVKKfI=
-X-Gm-Gg: ASbGnctbaiRjI0fofiT/VRAY1FUBcHn23XMDXNERqQ3ivvKzFSvn372Yza4GUuh3ZDh
-	Gv03UCq1k5C+jS5nWY1MvFTejXRjNcCSqYc2B7a4NTPZu93bgdnxbBXdh+xd/6WQa78eIVLSyxC
-	3lyzSJFzvUnoLUuZA7YtQsEziiI9JMLspE1KavKvryU+RZwKjxNkqsF8G2Cdguhb8e1Ida93Fgj
-	j1Cf03EWUEDYVYzzBR0ppN1RsGeHL+jHvF/GmtcFltk2aVAFf+ho6Dpn0etxBchA9pVteQ3LG47
-	ZLKDBskFBeqSDqoLDjS10HqQRvr2isLkQ9GVFb6qy4ZWOqhTpT6YcH9ixikKoMVsB0+qOpUHI0K
-	nXtHBjA==
-X-Google-Smtp-Source: AGHT+IFK2Io9T0LoWMfGqVukVC0DwlRDYE+gJbyTdOM/SShFC3RaE97AQZzfdNXn4Tu00BPTMA461g==
-X-Received: by 2002:a05:6000:1882:b0:39c:30c9:822 with SMTP id ffacd0b85a97d-3a1f6488d3dmr10395567f8f.30.1747061939570;
-        Mon, 12 May 2025 07:58:59 -0700 (PDT)
-Received: from localhost (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ec8f1sm12519850f8f.26.2025.05.12.07.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 07:58:59 -0700 (PDT)
-Date: Mon, 12 May 2025 17:58:58 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Thomas Andreatta <thomasandreatta2000@gmail.com>
-Cc: dpenkler@gmail.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: Re: [PATCH] Staging: gpib: iblib: iboffline check if board is in use
-Message-ID: <9632c958-9c35-4282-9e20-ce84d10a6b20@suswa.mountain>
-References: <20250510172419.274616-1-thomas.andreatta2000@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="utUCRfVN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747061989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pN5YUwiMpNiv+3vgH4ZuR+WEDhGNjxfxrY55N9N2w9U=;
+	b=utUCRfVN+IN7BPDWwcN7ke1nZKX9pJR587ZE26+1rVMhO2di8ySVR6yInPh6oQKwGhhjMA
+	x1OkPUp6EQa1EB3KQ0o/IZT6tufcbpz14pX8e/TWjKWEvFEgdvydQcUy3z31kymT4K3wHt
+	ap5u6HuksgFShHav4LBxRcjmAT3+sbk=
+From: Tao Chen <chen.dylane@linux.dev>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	Liam.Howlett@oracle.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>,
+	syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
+Subject: [PATCH] bpf: Fix bpf_prog nested call in trace_mmap_lock_acquire_returned
+Date: Mon, 12 May 2025 22:59:01 +0800
+Message-Id: <20250512145901.691685-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250510172419.274616-1-thomas.andreatta2000@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, May 10, 2025 at 07:24:20PM +0200, Thomas Andreatta wrote:
-> Ensures that a board cannot be taken offline while it's still in use.
-> 
-> Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-> ---
->  drivers/staging/gpib/common/iblib.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/gpib/common/iblib.c b/drivers/staging/gpib/common/iblib.c
-> index 7a44517464ab..0ab5680457ac 100644
-> --- a/drivers/staging/gpib/common/iblib.c
-> +++ b/drivers/staging/gpib/common/iblib.c
-> @@ -240,7 +240,6 @@ int ibonline(struct gpib_board *board)
->  	return 0;
->  }
->  
-> -/* XXX need to make sure board is generally not in use (grab board lock?) */
->  int iboffline(struct gpib_board *board)
->  {
->  	int retval;
-> @@ -250,6 +249,15 @@ int iboffline(struct gpib_board *board)
->  	if (!board->interface)
->  		return -ENODEV;
->  
-> +	/* Ensure board is not in use */
-> +	if (mutex_lock_interruptible(&board->user_mutex))
-> +		return -ERESTARTSYS;
-> +
-> +	if (board->use_count > 0) {
+syzkaller reported an issue:
 
-We're not holding this mutex in ibopen() and not necessarily
-in ibclose() either so this doesn't work.  It's racy.
+ bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+ bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+ __bpf_prog_run include/linux/filter.h:718 [inline]
+ bpf_prog_run include/linux/filter.h:725 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+ bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+ __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
+ __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
+ __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
+ stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
+ __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
+ ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
+ bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
+ bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
+ bpf_prog_ec3b2eefa702d8d3+0x43/0x47
+ bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+ __bpf_prog_run include/linux/filter.h:718 [inline]
+ bpf_prog_run include/linux/filter.h:725 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
+ bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
+ __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
+ __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
+ __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_lock include/linux/mmap_lock.h:185 [inline]
+ exit_mm kernel/exit.c:565 [inline]
+ do_exit+0xf72/0x2c30 kernel/exit.c:940
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-You'd have to change the ioctl as well.
+mmap_read_trylock is used in stack_map_get_build_id_offset, if user
+wants to trace trace_mmap_lock_acquire_returned tracepoint and get user
+stack in the bpf_prog, it will call trace_mmap_lock_acquire_returned
+again in the bpf_get_stack, which will lead to a nested call relationship.
 
-regards,
-dan carpenter
+Reported-by: syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/bpf/8bc2554d-1052-4922-8832-e0078a033e1d@gmail.com
+Fixes: 2f1aaf3ea666 ("bpf, mm: Fix lockdep warning triggered by stack_map_get_build_id_offset()")
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ kernel/bpf/stackmap.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 3615c06b7dfa..eec51f069028 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -130,6 +130,10 @@ static int fetch_build_id(struct vm_area_struct *vma, unsigned char *build_id, b
+ 			 : build_id_parse_nofault(vma, build_id, NULL);
+ }
+ 
++static inline bool mmap_read_trylock_no_trace(struct mm_struct *mm)
++{
++	return down_read_trylock(&mm->mmap_lock) != 0;
++}
+ /*
+  * Expects all id_offs[i].ip values to be set to correct initial IPs.
+  * They will be subsequently:
+@@ -154,7 +158,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+ 	 * build_id.
+ 	 */
+ 	if (!user || !current || !current->mm || irq_work_busy ||
+-	    !mmap_read_trylock(current->mm)) {
++	    !mmap_read_trylock_no_trace(current->mm)) {
+ 		/* cannot access current->mm, fall back to ips */
+ 		for (i = 0; i < trace_nr; i++) {
+ 			id_offs[i].status = BPF_STACK_BUILD_ID_IP;
+-- 
+2.43.0
 
