@@ -1,118 +1,112 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC9A2550D4
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0636255E31;
+	Mon, 12 May 2025 06:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747030484; cv=none; b=SMwWEK2WzIwc7IHNdTYaJXhHmTu/UzvTHofvz6V0swEmnD/0I3qg2VhqmEaiqrGbJJe9ea37eu3OoK22AScBk8uMci4ndDR+t1j9igwdsT85zhKD+nNusKXKcQsYw+bbMpX3HkM4iZ8IkesA5UzRlymKIM+xT1eWu7JoB6HeZ0E=
+	t=1747030504; cv=none; b=gNSvL0O+DL/xA3i/TW8SdOqDKDokA1bUeE93UheJ/qC2oXzqnYTIRJUC6SGseSnRnf5YOA4p5dmacmiUkkwFxcKh9kh5oqGxDJJQMHWlQgAW/M4BnMS5yeU7Xi/UGiUs6CUseaKATYGjyImGOdzvgHKZ4mSGE54qz7zJsAUJ+mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747030484; c=relaxed/simple;
-	bh=6VGOHiXeKIYDYPQCVUYnbq52DEqZeDk54QiYjrq8AmM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gOB9VYq+iemcAo1KJNMAWIBnM+a/v+sNtmZmG7h/IQDX16naUmWk7t78Qcde/FarXlfqC2AwWWErC3gbK3xWfnPqI9lIY78QJ1JWftTomJHrnoyz1TVQyWSijLUWMzMkYSWm3upqcMadgU3FRhxUggqKRNMRSzf1ejX2hZl8kK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Yh2/Ei4h; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747030504; c=relaxed/simple;
+	bh=EKooAhtiHoAdagaXrnTxzsRLYeyjI1K+szXTpWSueog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qnq+Wafu1vEBjwtya4LyH+eayL9SZcFirPa5bX4JxzX6QnLdFygdTpEk7CAxmKb9xn0ksL70wZ5zORIDq60Mhw8oU5G56IP65llVEDHpVhbxH8oxkbMvIWROnlv95/3VqQU/R0b/Uoq0t9VZ+SMWFHKGelNdQGIztbPU8SPhFek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHafz06P; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Yh2/Ei4h"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54C6Diur1524315
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sun, 11 May 2025 23:13:45 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54C6Diur1524315
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747030426;
-	bh=OdItbHs5YyBIEsuHQA8Bv8vb+bsaWnlWSRLvKjXyLDE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yh2/Ei4ha8TuYH0PLwXMFYNI2wsdwbs6QvJhuVjPjOhKhW++rea92KACWsFwZshCY
-	 ruXE0awuXKE01wfuJye6wUJpqf5Voy5MTrCiF8f6q84LWRZEomL/7fR7EhGmTk7EMk
-	 2QLr7FRtlNEvypTp805qM068vqvBl5Jza8FteMnKZw8ilJKUsKk7RnDDPKCkPU7MNY
-	 1wOX+mc/vI3Vz0T97TcX127fUIqJ0UBhy8crh8uHIylQqlt1nTrVqGkHIagRp9/aWN
-	 rWkmdu+6pNJTr6qYybU7vkMl9agHr/V8rtduYed+m8WGdXzWKjADQV4ET1RV+t2jMg
-	 tunK8P9jizPkg==
-Message-ID: <8925f277-a173-47c4-95e3-ed6234a45043@zytor.com>
-Date: Sun, 11 May 2025 23:13:44 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHafz06P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747030503; x=1778566503;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EKooAhtiHoAdagaXrnTxzsRLYeyjI1K+szXTpWSueog=;
+  b=SHafz06PfQqo25hXe1WoQirQ7DqYXaLZwAYq1Wi2HdMdu06NDF8rMNtB
+   CQy8cu8WONS2lMYMspa5XvZ945zjRZ7rNpVS+13fsQ32YDvpCtjanbJjp
+   nE0mt+Iq3nWTOuF2W8XdgIafplOzvFwcsqXPQj0BJZkRDUwlaQDVVXghF
+   5Y21/5DYGauje24SryNjslhbQrQWSYiyJEOGBQBLsjoptvLRwGPSlVD8+
+   OauJJDntX2Ow4LEA9mxs7bOuUOHHo7S4CnRh8yZA4Beot7ZwSr7JSQpr7
+   tWIY8p0Oh9fpXojADhUwDdu8iMqdlUGNy/w1vThN78fSYNyut5hKaQBqd
+   A==;
+X-CSE-ConnectionGUID: 9Qlyr9LxSzW/eky7v95Vdg==
+X-CSE-MsgGUID: skn284UrQueum6WDOmYl6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48963861"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="48963861"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 23:15:02 -0700
+X-CSE-ConnectionGUID: RuIH5MOIQwOXiOJET7kgrA==
+X-CSE-MsgGUID: 4LQsgkggQIiMuXFNqyoKyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="137203318"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 23:14:59 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uEMRE-00000000pO8-2Q94;
+	Mon, 12 May 2025 09:14:56 +0300
+Date: Mon, 12 May 2025 09:14:56 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, corbet@lwn.net,
+	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux@treblig.org, viro@zeniv.linux.org.uk,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
+Message-ID: <aCGR4EOcWRK6Rgfv@smile.fi.intel.com>
+References: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] x86: Zap TOP_OF_KERNEL_STACK_PADDING on x86_64
-To: "H. Peter Anvin" <hpa@zytor.com>, Brian Gerst <brgerst@gmail.com>
-Cc: linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, peterz@infradead.org
-References: <20250319071009.1390984-1-xin@zytor.com>
- <20250319071009.1390984-4-xin@zytor.com>
- <CAMzpN2jFv8KE97ymEWAX1setxdgXy0jZGn_7JVp9fFEBfZ2ynA@mail.gmail.com>
- <8b920da6-0c9a-43b4-bd50-79c057a01932@zytor.com>
- <1106B557-4AA2-410F-A990-C0C3BB7E675B@zytor.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
- 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
- Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
- bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
- raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
- VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
- wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
- 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
- NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
- AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
- tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
- v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
- sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
- QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
- wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
- oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
- vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
- MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
- g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
- cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
- jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
- Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
- m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
- bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
- JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
- /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
- OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
- dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
- 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
- Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
- PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
- gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
- l75w1xInsg==
-In-Reply-To: <1106B557-4AA2-410F-A990-C0C3BB7E675B@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 3/21/2025 1:14 AM, H. Peter Anvin wrote:
-> On March 20, 2025 10:47:25 PM PDT, Xin Li <xin@zytor.com> wrote:
->> On 3/19/2025 12:17 PM, Brian Gerst wrote:
->>> I'm not sure it's worth fully removing TOP_OF_KERNEL_STACK_PADDING for
->>> 64-bit if it results in needing separate definitions of
->>> task_top_of_stack().  Leaving it at zero is fine.  The other changes
->>> are fine though.
->>
->> Let's leave it to x86 maintainers ;-)
->>
->> But to me, TOP_OF_KERNEL_STACK_PADDING no longer makes sense on 64-bit,
->> and it makes it simpler to remove it.  On the other side, 32-bit is to
->> be zapped...
->>
->> Thanks!
->>     Xin
->>
+On Mon, May 12, 2025 at 09:12:56AM +0800, Jason Xing wrote:
+> Hi All,
 > 
-> For what it's worth, it was there as 0 before the FRED changes, so ...
+> I noticed this patch "relay: Remove unused relay_late_setup_files"
+> appears in the mm branch already[1], which I totally missed. Sorry for
+> joining the party late.
 > 
+> I have a different opinion on this. For me, I'm very cautious about
+> what those so-called legacy interfaces are and how they can work in
+> different cases and what the use case might be... There are still a
+> small number of out-of-tree users like me heavily relying on relayfs
+> mechanism. So my humble opinion is that if you want to remove
+> so-called dead code, probably clearly state why it cannot be used
+> anymore in the future.
+> 
+> Dr. David, I appreciate your patch, but please do not simply do the
+> random cleanup work __here__. If you take a deep look at the relayfs,
+> you may find there are other interfaces/functions no one uses in the
+> kernel tree.
+> 
+> I'm now checking this kind of patch in relayfs one by one to avoid
+> such a thing happening. I'm trying to maintain it as much as possible
+> since we internally use it in the networking area to output useful
+> information in the hot paths, a little bit like blktrace. BTW, relayfs
+> is really a wonderful one that helps kernel modules communicate with
+> userspace very efficiently. I'm trying to revive it if I can.
 
-Okay, I will drop this patch and send the patch set as v4.
+Jason, with all of the respect, if you are interested in keeping things going
+on, please add yourself to the MAINTAINERS. It will makes the users of the
+legacy code, Andrew and others, who are doing maintainer's/reviewer's job,
+and you happy.
 
-Thanks!
-     Xin
+Also note, we usually do not care about the out-of-tree users. The main Q here
+why are they out-of-tree for so long time?
+
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-everything&id=46aa76118ee365c25911806e34d28fc2aa5ef997
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
