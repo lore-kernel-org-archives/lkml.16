@@ -1,81 +1,97 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B678B291163;
-	Mon, 12 May 2025 13:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47E5294A13
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056704; cv=none; b=ViKlQhoCRUV1hjW+xYSbUEohw+PXlnbIpqEdRySclA/mbI/1hnajUvLy2Cr6fZsXgBxOR3G4fAT6a/85NerX40suNjgKGWJDT57tpC2wjBoDLLcMQeSr77onSGJcI0jmU2/eBqgWMZvcnmmedps8FSxuiY7dUZyEMK8/g59/e08=
+	t=1747056870; cv=none; b=KipURHn7x+xueJMX5Bd0tkZyLTru6EFIbTBhqinWvuEfh9nTQZ7FrVzbYZ82uUwf/2j8wemawSY8JIL1H6BQ2WrmcZBzGduvlbOh2RgLDO2pq3jXdcJNj1lb6WNHzuiy+F04BBjHCMIX65R8HPRLa/sI4T9OUrHSzva02mF0fq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056704; c=relaxed/simple;
-	bh=hglYuKmxN4zcQEW7/ROUv/QWojJ+3PZfbTHmGdPFU10=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s7aW4y3EYFh3YgJ/pu2TVEAWeEkh68mm2XSHBfOiJrXzn45ktwMlEn9DjNDIZeRRC/yV20/NxmLNKZNllcjMuIWSC1w3EZIFrZodfv5s6nTgoUT6/riR5wMzr+YKSq1Qc5oQtt43GMc+LL0hmrs7Gce0H+oGH7odEmJLTVyJUkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Co6n9zSv; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Co6n9zSv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=O+V+RCvpoAaGRFT4GZBhiApWS5v7S4yG0iss69ry+Po=; b=Co6n9zSvwNUsxs6gnNNk3Jo6KX
-	xK5oFL4yQV10FygzxSVW0Lc9tRJk7exKi9G5xm2wAlQXL4BVmCeMdoc2Cw50s/XYPw5+hoEAz/Jh9
-	HMfEey7XQqTz+Yt9jo6VIYtS8bziHyuO67q8DSaFZWsJH5erR2/8vTPEi6flXiM1bPXC9uFZVfKsa
-	GrH7rIRVtUiGinhT8ZV/LUq+kDmXJRasTmq//5IT06hbOkOj8YJNbFyKazqHA5HpNekXp4+1z0wab
-	2/9t/z5auo5hpJXvVA5VzCyuO3NALLe3R8vDuGqhk4E0H3uFMcFJJSEewW296QKk7sEArOw/w1Vd1
-	YsgwY3Qw==;
-Received: from i53875a50.versanet.de ([83.135.90.80] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uETFV-0006NF-9J; Mon, 12 May 2025 15:31:17 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: robh@kernel.org, chainsx@foxmail.com
-Cc: chainsx@foxmail.com, conor+dt@kernel.org, krzk+dt@kernel.org,
- sfr@canb.auug.org.au, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v1 0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
-Date: Mon, 12 May 2025 15:31:16 +0200
-Message-ID: <3612514.V25eIC5XRa@diego>
-In-Reply-To: <tencent_D5C17F39C684CD6491505763B23BACCE5106@qq.com>
-References: <tencent_D5C17F39C684CD6491505763B23BACCE5106@qq.com>
+	s=arc-20240116; t=1747056870; c=relaxed/simple;
+	bh=9LaT8jpMDsO0x/0Nqzjg5EOM711aSAdddO9qszVV5k8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kF8MnKHgPSwV97cjmPvnvbBWAwh+fTEwJXdsUbfvtzmqpAuahC04fBZOUAITe49N90gjlX7TSE2hAPVDuqAZyF7wDq4DID8qz0jKgSbw++V/CA9HS19rQ6p+tNf8/S87GwMvgMJ6Ef3ofwlSjRqnq84R6oyh4LBElDDUGX3JP94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3da76423b9cso51204575ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:34:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747056868; x=1747661668;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N5Jsy2OEKlJIXsAudq58rYcIWaWdiHscV+wnkzGpNzo=;
+        b=mDBSb6WRlkEHmwkupfndhwvm3hDYfk7dcIr64AR2wtsgcO7tRcaXrVWBKVNqo8MYK8
+         qBxFvudnuY3tOsW2Qa/6f3K82+mP/Ro3CODKXkfm1LiMuT4NXSM1cqwev0/G2Dlec39A
+         xwGbQgurA4ArwnGpXku2qGC38JpaSecaFOERNfbIMO9M9eoAXzWMvxueSwq+TXcQzNQT
+         I214NlSVfVhXX7SpziWpRtO2BMSMVpieT7C43hQMCeWF9NnGh1zCCrwGfzDXOEIJgquc
+         UgfOPy/XMKks+rEVXEI/7TKk0eaA01GDcWXXlq0EnSpU7z/YQw6G1+TilE0PqLj5QeBl
+         aFtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWC2WrpByqz91h+e+TXkkNlf1TClYMnVJ1TwLYlcgFIcKkSmzKsQpRl1MxRsHDp9MQ7IObw9Nm2OUMq4c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaaDqz9f/WaJFz5CwSPJJIhBGzladOQ4gfIRElFk7CBXrPVfNu
+	ViX5BoAA8Pw50CDIQK/H7ox10H82XF2w8RYIphh89Kfoi29SkjJ5CSefniT4NUnlzfRESLucUBo
+	XslGovZQ9y0tipyBnIwEcfa7mzEiKcfkl7FjcSJ7kyaFIMRHcg7sMeeM=
+X-Google-Smtp-Source: AGHT+IECV7osDVIrJ+ZByHa1VnrQa26YYhTwEGq12zIt0CegPoH35EnLWtvqfi5x5AfsOhWU4F7+jPdHKuocSKMakLBIPc327aLY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-Received: by 2002:a05:6e02:1a06:b0:3d9:39ae:b23c with SMTP id
+ e9e14a558f8ab-3da7e21751dmr157403935ab.20.1747056867911; Mon, 12 May 2025
+ 06:34:27 -0700 (PDT)
+Date: Mon, 12 May 2025 06:34:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6821f8e3.050a0220.f2294.0061.GAE@google.com>
+Subject: [syzbot] Monthly input report (May 2025)
+From: syzbot <syzbot+listce35d07e50216cd75a3a@syzkaller.appspotmail.com>
+To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hello input maintainers/developers,
 
-Am Montag, 12. Mai 2025, 15:20:48 Mitteleurop=C3=A4ische Sommerzeit schrieb=
- chainsx@foxmail.com:
-> From: Hsun Lai <chainsx@foxmail.com>
->=20
-> This series add support for Firefly Station-M3/ROC-RK3588S-PC.
->=20
-> Info of device can be found at:
-> https://wiki.t-firefly.com/en/Station-M3/index.html
->=20
-> Changes in v1:
-> - Add support for Firefly ROC-RK3588S-PC
->=20
-> Hsun Lai (2):
->   dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
->   arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
+This is a 31-day syzbot report for the input subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/input
 
-hmm, you seem to be using git-send-email, but your mails did not
-get in-reply-to headers. Normally git-send-email should detect the
-cover-letter + patches thing and tie them together to a mail thread
-when you send them with a "git send-email *.patch" or similar .
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 27 issues are still open and 58 have already been fixed.
 
+Some of the still happening issues:
 
-Heiko
+Ref  Crashes Repro Title
+<1>  24829   Yes   UBSAN: shift-out-of-bounds in __kfifo_alloc
+                   https://syzkaller.appspot.com/bug?extid=d5204cbbdd921f1f7cad
+<2>  1915    Yes   WARNING in cm109_urb_irq_callback/usb_submit_urb
+                   https://syzkaller.appspot.com/bug?extid=2d6d691af5ab4b7e66df
+<3>  1120    No    possible deadlock in evdev_pass_values (2)
+                   https://syzkaller.appspot.com/bug?extid=13d3cb2a3dc61e6092f5
+<4>  731     Yes   WARNING in enable_work
+                   https://syzkaller.appspot.com/bug?extid=7053fbd8757fecbbe492
+<5>  396     Yes   KASAN: slab-out-of-bounds Read in mcp2221_raw_event
+                   https://syzkaller.appspot.com/bug?extid=52c1a7d3e5b361ccd346
+<6>  54      Yes   WARNING in cm109_input_open/usb_submit_urb (3)
+                   https://syzkaller.appspot.com/bug?extid=ac0f9c4cc1e034160492
+<7>  38      Yes   possible deadlock in uinput_request_submit
+                   https://syzkaller.appspot.com/bug?extid=159077b1355b8cd72757
+<8>  21      Yes   WARNING in bcm5974_start_traffic/usb_submit_urb (2)
+                   https://syzkaller.appspot.com/bug?extid=b064b5599f18f7ebb1e1
+<9>  18      Yes   INFO: rcu detected stall in console_callback
+                   https://syzkaller.appspot.com/bug?extid=32af18ae7b894a681f2d
+<10> 4       Yes   INFO: rcu detected stall in call_timer_fn (5)
+                   https://syzkaller.appspot.com/bug?extid=03dd0f0cbfcf5c5c24f1
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
