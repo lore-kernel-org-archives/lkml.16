@@ -1,79 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BCC186A;
-	Mon, 12 May 2025 22:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540AD2AE68
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747089184; cv=none; b=d34MhThXQ05YY705fntZxXUM3/aCWfpZvf71ovMtIUT/9XQMYCCMTxt65+QwibZRXXzXNnktwmKm/vkgm5/ElRK7gpTa0OJ8yEO6sf1YH147obE5sXLIBi1WC/A5wxFbr09btVSae1tJoXVDRhTzJXfSJvBz7TdKGY/6x1EY0ac=
+	t=1747089247; cv=none; b=iYQRrob5K9uPpoMxIKlehye30OPCWDIh6PFbUF91DC2o5OatTdP0bmHWgV/b93oSH+27JRfqsNuj3LKh5CPByjq4Bwb6E4ioeN/scCkQ0clVi6Qpvb5UdqicPKD57YAtdROWv4L+J1OpYsHFaAB4jFKSoiZ+OLv7t9L8xVjebJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747089184; c=relaxed/simple;
-	bh=7uaPkVruATXm9Huody3+3MZx6tE8WbKbRuYqnjKm0pI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6L0Oa6RfpotKk2a/7URWTjFPE9sJ1IwANHcOSJEsblALhs/aIc4qp1KM7ysixxaCTXjuVkzX/JmWZL9tg3Zduv2i4GXqBEvnXXxGr9tqqrZNat/78ocipwnnX8CphjQruPjpg6fs6mTIEcjAbvkk5i+ILw1PuSGde2mfDOhB54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLZ1KgzQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747089247; c=relaxed/simple;
+	bh=A7GYuU5S8XhF1VDVZzU9l/kxFV62Z1n6qxJiHG7VNb8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QhoM6qp9ENXmSjYuWBP+8+ulIE+/qqXGIdqcBBiYnGNNiw4zcuaHJrsDwKXT191e3rWTZIQb2ix0B8a96VLUBWElccGJfYrzi/Yas+Oxq+n1QggdmDewaCT+Gp6NIvsFAEdmiuKb3ooU+nWugi/LGEVS6FqT8PBhkxfqHJ64pt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pd7ap0zv; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLZ1KgzQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80E1C4CEE7;
-	Mon, 12 May 2025 22:33:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747089183;
-	bh=7uaPkVruATXm9Huody3+3MZx6tE8WbKbRuYqnjKm0pI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MLZ1KgzQOJhVUAg9HL/gG+/R//L7FAoO/kB/yvK5yZYA02+YkydJW15gu7HC4e1/l
-	 TwDqKmCGX8QJ1BMBsPkhEMfaHO0CeBjM16ODGskLNGUuuwssFGg9Zg2pN2cZMZhkxz
-	 yZftrJotY5E5fl3AFwbv/ZA0XqmSjhZUZ3j4L05gEo4q0Gd71DcA7BPV0j+n88AqC/
-	 /lXlbS0VrgwPwF4yyi7g4nUmRvIHmlMf4NUEQUPT6Bwunk1fLQ09V4q/NQG5V8APL6
-	 zyyz1I7mHgeS9gkiYzuw+Zlc0XZcHmMtcT8e3ZxeSTWAKYT4a64llabhgqhbPyg1lX
-	 Ent9sEQe4ZTww==
-Date: Tue, 13 May 2025 00:32:59 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Wolfram Sang <wsa@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 19/26] i2c: busses: at91: Add MCHP_LAN966X_PCI
- dependency
-Message-ID: <t362y4tvg3y2q5yop3vnqme3qi6wxxehpbyzbx6qp7zbrihqkr@5bvsxvd2ti7i>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-20-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pd7ap0zv"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7b2c28f661so304149276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747089245; x=1747694045; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J8NvmZ4t3qL9Eye01seggkdjFmX2M4YFQw5Fn8XZFvI=;
+        b=Pd7ap0zv89W2zj3j+5qRFM8THTtmFoJpOF70syXx9PnCWnC7SB6idcnKkp6L3jv1iF
+         jvfVo/kekoas2uVMOBvkdWnAQ2a7FCDC2YODb0JX5DAuTz8+pPy7tN7PH63SNhemAuqg
+         r8kC24WHSqysImnm0IIrr1E4kRNveoz5y5GPnKqbeJBGNMwCPm0yjJNJNh/K5kMMq8nT
+         hPK651Ld2RDKsw+Z5/3I2Bg8EyuNP2Gl1eEKYCujmsBD5R7MgHZ3TabMcOsGUg0n9o/e
+         miUSZz6V9JTFJbtrSXvEjconl4n0+vXenAtE4NGPs9Lc/24CeSrnwxMqEkm7Kr4kZlB2
+         4JdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747089245; x=1747694045;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J8NvmZ4t3qL9Eye01seggkdjFmX2M4YFQw5Fn8XZFvI=;
+        b=acuPQd8kN4UFs01Ima4UV3B0Jo2AEnYde7iAzQG459zYbH5byBOxQ3BoNJSfqn9651
+         kxTdXp+zfZAtXgBWQyKAqM3m2asIFliN4TvAqOJ+X58BhQlkaQmEAWq5C/Fxj52x7/OC
+         DBryfcPvBvPZhL8zZ6SdH0VA9o5dfEsr8g8XeBDmelwVxgzUrM64cUEjfx5eyhKG20nb
+         rEVIwyxg1lh69Dmr7omQWH0fvf213w7v8KQ9pPc0JNvdU0wAT1HgFHHvR4wOvXVaCjmC
+         C4m42RPrUU39X1bjnualL1cMRgU0lkh5AZpip4r4eZtzBJ4Lofzw1NLzdFcERFmxve0X
+         kG3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVEEsFolj+3DylHsr6vglzDYlW27zwKrVgoBBTNNWktJSSg9Xovag7V9qVpZXGTie5XkxNcV6ac/XBQNpE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX1U9ULiDxBkC+z4OizuJZF9pzT6mZAgHQIkd5mzWnHoP/TT0N
+	t5V+mQ0rkH765Vy79R1GdASiIifF7rsE9wdNDGFLrcTYupef/Q4kiI0zvMIjujwj3YSBebthG5X
+	D2wpdEfi+Ax6QWYfmAhZFxzPbMUe/sfDEMsDP
+X-Gm-Gg: ASbGncuJtpVnA3cpqfl5JYMT5w9EDgPbVZewo19EGbkq+jUoqbIMd3L9HzSbDZAdUrn
+	xBThlWtAiqZlbe0csam/YjxIPIPTocuVLn6hyskg7D/tQ4YL+UqnsEC7W0GqHO61ZJNHLgCRJCk
+	U/pHf/vdro8htk1p86vZh/p+qRMACABdEhX3UPGDAwZa4nRRdmzXsRCOWOEsj++jQ=
+X-Google-Smtp-Source: AGHT+IHeFZuz1GT0pyYV9KRgJiE7kVcoZ8mYUC97W8Uis3XkL8RZr56UHHc0eEJMA4/5nNTsncrykr7QBqACs6gvE0Y=
+X-Received: by 2002:a05:690c:4881:b0:708:c18d:e6ac with SMTP id
+ 00721157ae682-70a3fa373e6mr212777607b3.18.1747089245033; Mon, 12 May 2025
+ 15:34:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507071315.394857-20-herve.codina@bootlin.com>
+References: <20250508141012.1411952-1-seanjc@google.com> <20250508141012.1411952-6-seanjc@google.com>
+In-Reply-To: <20250508141012.1411952-6-seanjc@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Mon, 12 May 2025 15:33:29 -0700
+X-Gm-Features: AX0GCFshITqfMDo56zZ68RKI2JYQJwtS2D7bd8OPkNI7R9wgfKIsD_-OmUB-WOs
+Message-ID: <CADrL8HWwJqt+XL88_SYGta=AbOm=n6Zpt2jwHowkCbBkA+DOmg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] KVM: Use mask of harvested dirty ring entries to
+ coalesce dirty ring resets
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Herve,
+On Thu, May 8, 2025 at 7:12=E2=80=AFAM Sean Christopherson <seanjc@google.c=
+om> wrote:
+>
+> Use "mask" instead of a dedicated boolean to track whether or not there
+> is at least one to-be-reset entry for the current slot+offset.  In the
+> body of the loop, mask is zero only on the first iteration, i.e. !mask is
+> equivalent to first_round.
+>
+> Opportunstically combine the adjacent "if (mask)" statements into a singl=
+e
+> if-statement.
+>
+> No function change intended.
 
-On Wed, May 07, 2025 at 09:13:01AM +0200, Herve Codina wrote:
-> The AT91 I2C driver depends on ARCH_AT91.
-> 
-> This I2C controller can be used by the LAN966x PCI device and so
-> it needs to be available when the LAN966x PCI device is enabled.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+nit: "Opportunistically" and "functional" :)
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
+>
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Yan Zhao <yan.y.zhao@intel.com>
+> Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Thanks,
-Andi
+Thanks, Sean! This logic is much easier to read now.
+
+Feel free to add to the entire series if you'd like:
+
+Reviewed-by: James Houghton <jthoughton@google.com>
