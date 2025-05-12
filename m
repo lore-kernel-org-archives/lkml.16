@@ -1,63 +1,63 @@
-Received: from mx0b-0024c301.pphosted.com (mx0b-0024c301.pphosted.com [148.163.153.153])
+Received: from mx0a-0024c301.pphosted.com (mx0a-0024c301.pphosted.com [148.163.149.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFDC1E25F2;
-	Mon, 12 May 2025 01:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.153.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC75D20DD51;
+	Mon, 12 May 2025 01:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.149.154
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747013303; cv=fail; b=WUiDyiyXq28StzmrDb7Ab5Mv7rtaVPaHCN9Q8SQqW3ua/ZAbBzToEogqv5bJwGfRFouL/3o6NtPr25NRtuyaFjP1YF5O4EttoF4sOCrVWj7nUWRwHHUs/dEn1HvfIvXo6O3piWg3JSJySJMyJCvTiuVkTow3j4h+6Xtp2T0i3nU=
+	t=1747013305; cv=fail; b=njipegHrCNvf45b6lhUr6rivvsImj3zHcziu0OJWjYbmHJv7UptWw3GUASbmztYJzAaAObJ4gQMadiVMiXKSDDVopMAma0KNZ3NOKwe5HnmbWz+cFRIbUuk94eZ+SqETiScMpj+W2KCPIo/o1lsl9smtAIWZW9/eHofA05248Fw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747013303; c=relaxed/simple;
-	bh=eK/k7EIovkmSZVjKEIsFaBDoRXRMlAFp2GgYQCnyZ7c=;
+	s=arc-20240116; t=1747013305; c=relaxed/simple;
+	bh=dAKWjc1lp0N+4UoGb8D/DAdkichT0/NtezYZCn+Pnzw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U0K78WxVbftQEqDxytx9X2C6AaYhSPrRzyiOdiVZr9QZ/iinNyPrzcXo5IpSRvp7SIXQ47888qrMajfrJExcjql3pVZe4Up895WAwsOAWjueVCSVS9wAQ/OlRHiZL38MXV3iw2e9xJWXHwS2TNYvdwsfIej4Ah9ys2u7XO15sYo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=silabs.com; spf=pass smtp.mailfrom=silabs.com; dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b=mnFpCRkH; dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b=WBTbl9ow; arc=fail smtp.client-ip=148.163.153.153
+	 Content-Type:MIME-Version; b=m/GQWqjCfW4VH2AW+XmHweqL3ZAhTdq5XMK41VKIFLXh34YqHrgnlWsSUqd7ghfqZ+cc9sbAfRyKXS5U/rpwqrB4oGNTu8V76cHB7/dSOHnJzYimlOD1re3QOaeWxY5Eof5iAwu119BczaDQGoV15qMZI2FEgahjOnc3p5HJk2c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=silabs.com; spf=pass smtp.mailfrom=silabs.com; dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b=rHnqG32i; dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b=UE6xHzEJ; arc=fail smtp.client-ip=148.163.149.154
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=silabs.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=silabs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b="mnFpCRkH";
-	dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b="WBTbl9ow"
-Received: from pps.filterd (m0101742.ppops.net [127.0.0.1])
-	by mx0a-0024c301.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BNrm01027097;
-	Sun, 11 May 2025 20:28:03 -0500
+	dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b="rHnqG32i";
+	dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b="UE6xHzEJ"
+Received: from pps.filterd (m0101743.ppops.net [127.0.0.1])
+	by mx0a-0024c301.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BMe1Ru027700;
+	Sun, 11 May 2025 20:28:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com; h=
 	content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=pps12202023;
-	 bh=M/DQRublAT2MI+0O6RjdaAVpBmczJipl8PbsdN2HZEM=; b=mnFpCRkHLxs2
-	sHPsNCBJ90O8W/x3xQZE7y2gUlKX6uUW6pQX3dVHMCp46nmFCHR/nlMbJGk77/SD
-	hw1mTy3TxnJ1RANZUsvI70u7k6Tdb54fJ7f3KFeOPZTUk23D8C6qBe9Www7hxmC/
-	gIGuBc0HqkSg1hEIcR4R27FipmuJqZWc3MHAzI0Aq0h5Wi0ekKmdfxuG9Zk5Gvq+
-	lFS6VRwTwJBd/VHFH5v34p+QFzHKeB+ImQmSSLVCb5gP27Yhzd7gT+7YvQ0Cic00
-	RZq34x0k5Fu5nf1GX0DmCHBdT6q350TPRSonDSZXg2BOaRo0fsyx8iasOurKWSGA
-	7cyUMeajpQ==
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2171.outbound.protection.outlook.com [104.47.57.171])
-	by mx0a-0024c301.pphosted.com (PPS) with ESMTPS id 46j0aahxd2-3
+	 bh=mzwLE/RoXF6S94UGYe2XD8Gl0bdLPmQo5X+hh2M9HfY=; b=rHnqG32iUT4r
+	9Wu8VxciI8qoJ2RQzYfucTFIgdXJDDFiSIbi+/Yk2gmDYjUSqWdgy69GyBGWgr1m
+	iIdTSOCGdbe39UPh+BTRpBkWsMv8/ir5ZyZVLF6p45TLkf+qX8ClwAw/69ZBKuMq
+	0qRsAgjIXUdbdv538xFaIPasgAZ/8Zn6RH82EN3iReZ9Pczb74ZpQ3yorc6vekLA
+	6ia+1ZwZ8ka/x2R5JfAw9IsSWiw3waP5qKZiUwurXC7twrn/hXJA2hSZvk3H9DPC
+	R9F2qErpUo1Qma88dMZ00TTPV7yvuQhirapLO4r6AkKdmOV7YAHEcOQIF2MBSCuz
+	+c5ZXx4QiQ==
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2044.outbound.protection.outlook.com [104.47.73.44])
+	by mx0a-0024c301.pphosted.com (PPS) with ESMTPS id 46j34csvw9-6
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 11 May 2025 20:28:02 -0500 (CDT)
+	Sun, 11 May 2025 20:28:11 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jLHwkanHtXH7I+o/C4TtK7/y9UqoOLPO5yULjYwNSse8DeCQvDX9PBKah8JYSqfJ1P2Yso9uwCt78Wf5inwaiF5WhF4Zf2qO8dFK4/AGWhLY+qETvY1SIOqreCjSx7p4zUI0QgLawO8WPj1Y2qCWe9JRFJbnDSnX2RbPqYGxbM7P/FvX2I7A13WQLB213+JWQuANQP70qsdVnoqs7jKnWCAoIEMC9PD+NBdBrqL7eOnRiVfd/mH5apEmPc+ICKZPwLz9jZr/LfzBjaCJG0xz3hmsDg77pjOGfkNtEN3BE/qXPdx8KX8UA3ToCMnRlncMrN5F2oYMZBgO3c3H9J4Waw==
+ b=CGjcFxc4Wa5NFVoWxQfU7po18tlsx1dtD6WTQWiPwLcJaaGFQi0An+2FeMwxitcYOrniLf4rzGRL5h3C7Hv3mRDDkwR/S2hNDuIGi13zfYdDdB4l6YpvmbuwGDTJAio4sTb1Gbvl2HRj3461Klpvo+JCOgCClLJm/FYySLcQhM7PI4wJWbq/M4JnYoSc0lxFgFZ30QeRzdnETrLIaR/Wk1wG0kc/kr/f7DcHVa75G6Zxx9PEM4OO1paoLgqMCV5ZzB+YlRCaIWmEjZrGrpYj8c5prb0RkkGKqPAa3qDHvDwzNzcQ1TVzPGMwoqkOwiZzt4CCw2uQ+OQGhPIZs4RjTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M/DQRublAT2MI+0O6RjdaAVpBmczJipl8PbsdN2HZEM=;
- b=KeuM7yv3ey87F+AxQLsqfYlMjlOqm2R6RD13LCF/lMu7oJDei4/LWHmJQeXF5s08DN7vn49LSwyIDRGjC31bjYm+qNWCjikX31QgYfzAopFkeGnAYmApNs8iQLlxyYrYZYkBXAvZI3R6YQ7nzAs1WL5N8EZymz/QEGYBrOZ6SjN3wJs0xOFJ9QY4Fcy5HYWW7a+cIQeeW1hsQmLOq5D/rooGVAS1Req2sxKSgIyraQZfNyI/TOLRVvdo6Vo90XG5R8arhkTNPxrju+JccoNxF39KvaBxOryhQFFASactVNnAV5JYKNMaBc7mbdViZiuhjfne/JnrK2brTZh3Nc0TrA==
+ bh=mzwLE/RoXF6S94UGYe2XD8Gl0bdLPmQo5X+hh2M9HfY=;
+ b=ZkCpdkJZeHbi7HvOmOzcfwKKWcs+U+09X8gheDFNY8OdnuG6Wtj4PSUlReKqZfVakVxaej0WQPuwdgj8Pnyf0g9PAiIRMu/QmuTqKfq7wytHFxLaUFC5daVw+VJouz7+qmEU854k3G4YpaAPG9xEu5Zud/kme9ksLunRCmpkQPm7ySIWrLLUH/JNxTNWMnLuR1psKcFR8wDetnd5mRnqKn0RGLx0VgAM1xgw9xykSc/rypGbRP+0veG30abHwz81ktqHXso40KDr41IMptFjhki10WAQYPMWU1I6qZZ9Ry4c+s8GXyCzQBwQQoUil8taw8jB5eVM38rEBhTjhZdSvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
  dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M/DQRublAT2MI+0O6RjdaAVpBmczJipl8PbsdN2HZEM=;
- b=WBTbl9ow0gfJ4WyUV8r10HNYz/hQ8IUxfOeLNmTXZM4jeyFnJan84VSI3xcqeohxKbuaLDqrQ8I1WI7bEa7aT0cgVycGIoJi33lWYgHTaQaBk7+KFvhwbklNrbg6bTHfUnVn/P5s2spJNJOQI87HSsFR3fuXaTry+KvUXWo3MUM=
+ bh=mzwLE/RoXF6S94UGYe2XD8Gl0bdLPmQo5X+hh2M9HfY=;
+ b=UE6xHzEJsaofjf/giU2gK5Oj7VufRfRnnloO1RcwUIwj+Is/TD5+ARGCzO5WeXvIZ9HYsYiOs84SimSl//9xmJfmmtplUuLHvhpXylMZyc0aH9E4etMwm5ZhNHt0kfhpqJzmbDEzKJj4B+zrJyBUYLnGU1SUSE3XxZMEv0fF4uw=
 Received: from DS0PR11MB8205.namprd11.prod.outlook.com (2603:10b6:8:162::17)
- by IA0PR11MB7953.namprd11.prod.outlook.com (2603:10b6:208:40d::13) with
+ by PH0PR11MB4920.namprd11.prod.outlook.com (2603:10b6:510:41::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 01:27:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.27; Mon, 12 May
+ 2025 01:28:07 +0000
 Received: from DS0PR11MB8205.namprd11.prod.outlook.com
  ([fe80::c508:9b04:3351:524a]) by DS0PR11MB8205.namprd11.prod.outlook.com
  ([fe80::c508:9b04:3351:524a%4]) with mapi id 15.20.8699.026; Mon, 12 May 2025
- 01:27:58 +0000
+ 01:28:07 +0000
 From: =?UTF-8?q?Damien=20Ri=C3=A9gel?= <damien.riegel@silabs.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
         "David S . Miller" <davem@davemloft.net>,
@@ -68,9 +68,9 @@ To: Andrew Lunn <andrew+netdev@lunn.ch>,
         Silicon Labs Kernel Team <linux-devel@silabs.com>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC net-next 01/15] net: cpc: add base skeleton driver
-Date: Sun, 11 May 2025 21:27:34 -0400
-Message-ID: <20250512012748.79749-2-damien.riegel@silabs.com>
+Subject: [RFC net-next 13/15] dt-bindings: net: cpc: add silabs,cpc-spi.yaml
+Date: Sun, 11 May 2025 21:27:46 -0400
+Message-ID: <20250512012748.79749-14-damien.riegel@silabs.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512012748.79749-1-damien.riegel@silabs.com>
 References: <20250512012748.79749-1-damien.riegel@silabs.com>
@@ -86,440 +86,184 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8205:EE_|IA0PR11MB7953:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1990e2da-79fd-48a5-55dd-08dd90f43a75
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8205:EE_|PH0PR11MB4920:EE_
+X-MS-Office365-Filtering-Correlation-Id: c672eb6a-1857-4520-df6f-08dd90f43fbf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014|921020;
+	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aXJ3RXJ6WDZHSU9wRHhoSm5XdmlPR2ovZGxvZy9QOG05YTh2WW1nWG5pa0pI?=
- =?utf-8?B?YmRBL1JqS0FjdEVTU2E3ZWhYWGxqU1cwWm1zWTh4UWM1N1R5S0w2OFNBYWJw?=
- =?utf-8?B?UWw4Wmt0SWNHS1A0di9UUWg1LzZCdHh1QlUxN2o0Nlc4bE5SRHVOcGJPaTcw?=
- =?utf-8?B?amVCQWZyOUlSN1JobitpdlBEblU1VEtUcVVsQ3d6MnJoMW1NKzFreU1xdzV5?=
- =?utf-8?B?TGpuNmVnTHdpT0VRZUZpMVdRbm80KzE4VlBUaVlFZmFCTUVycSsrSkxNdWFW?=
- =?utf-8?B?d3NQMGthUUI2TUtscTRtbDRaU1NjYkpuaXFHbExJSXgrazQ2bXRLMDJWL0gx?=
- =?utf-8?B?Nm45cmJqUG9kdHZsc1J4ZmxOMDNmdHhuendBV1hobkwyc1VXRGl6K0dQUzFz?=
- =?utf-8?B?YVc3TXZuczgwTEhTQ1kwc2EvWVJlNEZIbGNYSzFrVGh5RWhQRVdtc1ZlUzdj?=
- =?utf-8?B?YmdEU1dLaEpPcDR2TUJwaGRPdXJMem5sRnRyRTRpS2VXZ2RIU3ZTM1pOYStk?=
- =?utf-8?B?aXZsRTd3TUdFUEJ2RjlGb1N4RDFGQVh5d1BZT2xqTms4WVB6d1ZUMkh1eVlZ?=
- =?utf-8?B?NytvbXI3UlY1ZXlPK2ZMT3B1MGtYcCtrcXkreFhIMzVqNU9iR0FNTk1yaWsr?=
- =?utf-8?B?RjRsYmw2L01qZHRQdDB1YXBqUWlkK0U3TW9nRlI1STBqbGUyZjFwL2VpWDdF?=
- =?utf-8?B?cFR6K2drdHN5WWhtdElEbWkwZE9IZ1NLbng3RkxkaEJLRGpkelhJTkJlU2tx?=
- =?utf-8?B?MkVQMVVaWHYvOUdKSk1ZaGcwcHc3VHRiOTdKS0hlOENOazRhVUFDK1pnbHZy?=
- =?utf-8?B?RmZyNkpRQUgrVDhsME5UUVUxVHVmM3lDWVpReEcvZXFNZUZiMkFUdlFQYkxu?=
- =?utf-8?B?djg5amJjZWlzRUJIOUhZejJyOXFnSDh0dkd4bFNnY2dEbHhkTCtSamtsV0Zt?=
- =?utf-8?B?MU5GMjBhWHhGVWgrc3dYT0xldlZ4d1ErUmhqMWFWMnpQUjNOYm8xenpLN0N2?=
- =?utf-8?B?cGhaSTVncHFaSGtnVWlsZ2crV0l4c3QyQjZMcUZoZUIrUitjc2hUODk4VURr?=
- =?utf-8?B?Yy9UK1B6SmQ0Y3I1UmJoZVJieHFSTk9tYk1WYnJGZTRQSzFvSDkzdEF5ZGVu?=
- =?utf-8?B?ZTRic2czWERCcllxZ1JldHJiQmtVamJRRUI1MW5QWmswcFNkL1Q2dUxNS2h3?=
- =?utf-8?B?NjFyTEh0L3ltMTNCZC9SU2hxUFNXVHdSMFhjTmpORUtWdXJZNEIwR3RKSHVU?=
- =?utf-8?B?Q1dScFpVWWRMWmdKUS9HOEUvVk03YnFCYjA2Mlh2aktKK2RiWkExclBTcjQ4?=
- =?utf-8?B?bGl1ZlBseTR1ekdxaUVmM2kyZ3ZqWU5PY2VHSjh1QmlvRnBwTXlYYks5WjB1?=
- =?utf-8?B?djFTREtUYXBXWGNDUzVuYnF1QXM2MnpiNFJDRUR3a3VyYXd1NHNyb21nSml1?=
- =?utf-8?B?Z3Jrd2lySlZoZGE4OFVTaUdnVXB5REhIaHR1a0hTV2VTeUhUK2k1bWo1ZmdY?=
- =?utf-8?B?S0FuM3R6VWZTWDJaQWNaRStYZFdwN0U5UUxKZ1IrdCtIb0JNcWszRTMzVXFn?=
- =?utf-8?B?TE1uQmh2N01ibXN0MzF0YVNSU1l2WkxwMXJHRWVOSVQ5ZFFZNTE3TkdyaG1X?=
- =?utf-8?B?bDZKVEJvTERodmZ2TmJDNHhJNnV1a2RFY1RXNlVEUnRndG9RczBPbWRBVlpr?=
- =?utf-8?B?OC9GamZ4MFpZb3kwL1B2SlUxbXhYWHFIUDYzcm02UTNEeDZRU3ZNNDBFTlVl?=
- =?utf-8?B?OEUxaTBIK1k0S1FFcjNqcUM1ZkNRM0VxUXRzcCs2Wnd3cUpoN3pwbWRsZFE2?=
- =?utf-8?B?bXBLM3Z3bElqZ3Ezd0tWdzczdE96OVIwcEJESHRvRXJOclBFOGIwQXVoUklp?=
- =?utf-8?B?dlNWRnVwRlJESnlrMS9FMm4vdDl0RTAra3NuQksxQ3hwekRjaVRKZkxxbnhk?=
- =?utf-8?B?dXRqYlJOQjlpM0x3bmIzUy9LSkZqL2FqaWQyZmNMYmhDdUVyZ2FzQzNCMmY2?=
- =?utf-8?Q?B9wuQgOEs8nYJY5y836txS7tUcz9BE=3D?=
+	=?utf-8?B?aXN0M2xadWRFZGRsU1ZtanJMQjBEcVBmaEk1SC9kWUtVQ0FVdWZoR0Zna3Jk?=
+ =?utf-8?B?Tkx2TGNKek5hNXhQZ1JMbFZTVGZWcmJRaXhxWHZocEhkRE1aRVhTWTZPTVc4?=
+ =?utf-8?B?WDQrWnJ6R09TQnQvZEtINXdIS1ZDVUtXWFNUL284dnRTajQxNEZuRFF1cDc3?=
+ =?utf-8?B?NTZ2b1FoZExldEg5KzdpeEJWblNTME05SHBHQUtsc2RjU0Rqbzdzbm1RcVZi?=
+ =?utf-8?B?UFhPRU5qNktDMWdnbHJoczJURExQYWs2ZTVRcXBNVVBkbGNKWU9GdEJVTmZv?=
+ =?utf-8?B?TEFwb1ptWXdNMW9lN0RrN3FsS1Q1cnlHV0NDVVo2VXpaYjhOWW04MW0rblN4?=
+ =?utf-8?B?QVVZbDh0bzkxY3c0WWpFbVAwRGVmTGM2VjE3d0cvNFBNUkZhMkNOVW4vck1O?=
+ =?utf-8?B?dGxTckRIVk8zMmtYRy9sdkxwcC9aTVZmR0IwYlNFclJHUHkzYzl6b2FSRGw5?=
+ =?utf-8?B?czBHOUI5STJZOE9mbXcza3EycHdWbGpBK2xnNzUwcm1QdVRXcUJ6bjgzOXU0?=
+ =?utf-8?B?M1dNajlDb2VrdGxyc2U5bmlXOWo2R2pRaDRxWFJtOENPa212YzM5WGJmUG1k?=
+ =?utf-8?B?L0lrKzlta3JCZnFIYnNYZVFCV0VlL0NEUU95cnVsSXRId3dSTnJmMEk2RTBJ?=
+ =?utf-8?B?b3hFUGY4N1lCYW1OUnI4UXMxd1BzOGoxUVJIMWRXdlI3cW42VDdlTzJqMjgz?=
+ =?utf-8?B?VXlibGp4NlRjeWhwYU5Zc1AyNHQ3QUJHQ0pOWjA4MEhRQXFPUURaR0F2aGFo?=
+ =?utf-8?B?b2h0OUFIMmRqRW5jTXhIeDR3WHMzbkhLSThtbGFsaGlmcDBNZDVsUVEyaDFE?=
+ =?utf-8?B?U0NVRHdhcHc2c3pNNEpneDlhdzdBSE9COVhhM1lMcmtEbGc4Lys3NGRUWWd4?=
+ =?utf-8?B?NjMvUU8yZ2loSUlQdVVCcmZET0ZMMlJPQXJPYUhWeHNHdWdLa1czU3FFeDVG?=
+ =?utf-8?B?cEd5UWk3dEE4dHBqVFlPcFBGTzNFK3RpbktXUmxDUEFxK0RmNmtEU1Y5aVFK?=
+ =?utf-8?B?eHN4VHFoVkNwTkZ6N0pIamt5dnhyZnNVUDRGaXM1VmNNYWZIUDBiWTFvd0th?=
+ =?utf-8?B?THdwckJWd0xJTlk5MDYvL3dvT0YwdCtKMlM0UFRQQVR3bGRqMzIxbFkyVUdn?=
+ =?utf-8?B?b0ZvMXo4SEVKT0kwcERrOTROQmZoUE9jR0h0VXV5bStHNzJlN1FJWlJReTBv?=
+ =?utf-8?B?NDMvckV2bnFhYW1DdXM2QUtDZHVROXdJaVArSXkyRHpRYnc1VkNOTnFYSGI2?=
+ =?utf-8?B?NUVvbHVpMmxHQTZIU2Vsd0pOZTJ5dzdOMW1yVFUrVkR6WVd1QTVVZzNlbFV6?=
+ =?utf-8?B?K0NzVkMyR1Qyb2dnY0lTWjc3OFBtbDFFdVJITW5YSjdYbHU5T3BrS3l6bCt2?=
+ =?utf-8?B?WWhrcDAxU3NPby9FT090cGVJeDJJUTNxNzhtL1doSVBWL2NTSVhtM2pKZ1Rk?=
+ =?utf-8?B?dVFZTmVKZm5PWFJCOXl5ZmVNb0NOQU5Mbm50Q2drNkZPWUNpYkMzVE1nd292?=
+ =?utf-8?B?RkpSZSt5QkN1bHVncGFNb0ZaQXNjNjhsOHowZWNsSUUwSmVYNEpJVWFiV3NQ?=
+ =?utf-8?B?ZFprWmRSMGlqZnBWejBkeWFGREJZY0sxVmdHRmhMaEVwNTlLQTgvZ0lLMTVi?=
+ =?utf-8?B?eVF6MFRsSjI3N0hzVHU2cmkrSEk2NTBSYk92VmF1bXc3L09oUU03WW9XUXVs?=
+ =?utf-8?B?Vm00VWJkM09hcDhYWGhuSTBMZW16Wko1UWlpVXFwYUVhb2tjNE1lVHRwaE1p?=
+ =?utf-8?B?dWxtOXlZYVFMOExua1NNaUVJclhMTzk0ZVRvQmdXckd3S1FqaUsxb1ZjKzVJ?=
+ =?utf-8?B?K3B1Zk9pSjY3dFlWbzhrQU9CcitLNUkzNlNLcVVzZDJBOGZMZjVXdkhwbTlm?=
+ =?utf-8?B?Y1cwUktpMVprWmptTkVuMEh3SVBrb01ubUN6SE1uS2t2S0FnRCtCZjhoUkRD?=
+ =?utf-8?Q?LadlKfb5g6k=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8205.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014)(921020);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8205.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TzNGd1NJV2J2d3U2SkdhUlNIVldSMHlnSU16b3FDUXNWWWVuTXl2UXVoVFZH?=
- =?utf-8?B?dW11a2VXZ3VYdjFxTUJoajE3d1BITSs1RUY1b1doWkNZeWNhbGhLMjZ5UzNY?=
- =?utf-8?B?elRZbTBBcEthUWE5dWRnMmtUa3A4NkgyYUhHZmJiZ2Y0TTdPNUdRK05tZGN0?=
- =?utf-8?B?cjFlYzdnQTFTVHNCRmV6N2h2ZTczRjFsaEgyYkkrMlVQZytnbHhYRXhMYWV0?=
- =?utf-8?B?aWFEK1ErQ0tUV2lYT1NCZWZSRndLbkVwQjlRRGNkdUhibldiY2h4WkJUM0h6?=
- =?utf-8?B?d3lTbDN4N3NiMk9XbFAyMXlaWHErSlJzQWNJbE85Q29NbEplazZqZTFCMTZ3?=
- =?utf-8?B?L0dkMEhrUlJqY0dKT21UQ0Jtdml4alhUVkZ5akpzaEdtSEM1aUF3Ri9oRFVS?=
- =?utf-8?B?SmtqOUxsT1RnQ1E0VE9zLzZvVmQ0V1ZYbzdIbytFWXFyRi9kZnQ2bXNLY1Fi?=
- =?utf-8?B?T1VmME1SRlV0K1MwR3IwQjFZcmh2dEJaMXEwa0N0d0FsRW1lQyt6K3ZTZGhV?=
- =?utf-8?B?MDFpczNsbFdpNEI0UUg2VVhjRTlDVmQ2YlB5MkwxYWRPUDVXck1OclpZcEpK?=
- =?utf-8?B?enpBNzVDZUJHY0F4d1o0a2E4SFpKeEs4S2JHMVhYdHNqVWkzOE9UK1lqM2Jv?=
- =?utf-8?B?bXBKZUVodkVQR1JuVXRNUTRJc3dFSlNMUmpiMVh4NkQwUWkveFRQVWpaSDdp?=
- =?utf-8?B?dSszR1h3WVlua3dyakh6VllBN2t4UzJhUFJIK2dtbEVmZDcwS09abmNUSlV1?=
- =?utf-8?B?dXJPYXllQXZtQ0JTQVZrYndySjhvc0NWb3hGQjVDaTAybXgxYXZkQllaRmha?=
- =?utf-8?B?N0ZsWFM0UnBzU0NtRVh3SkEvUEp0YmtvZzdpSmxIVlJNS045MHFhelRDTlVY?=
- =?utf-8?B?ZEFzeVpKS3hnY01FTG9XNlNDVk82TWxMOEZqTkxzcktReC9zelc4UzJxOVpu?=
- =?utf-8?B?S3QxdlJuOWhqdUJtYUlRQnp4N2hFenhQV2tGallQaUt3WUJlR0Z5bk5pSTZY?=
- =?utf-8?B?SGVxVUVmQm93T3JlWmZaZDZQQTB0N0E2WnIrOEg0V0RLVmtzRTJDVWtPcWJN?=
- =?utf-8?B?K2VTY2V5enNCWFdsOXFmcjRKYzBUMHQzVEhrdjBXRXFUc3UrZENWcHFiVE1y?=
- =?utf-8?B?akNNYVJwZUlrREFhSHNvR0ZQejl2K0daZWh4Qmp1cGE1NzEyVjFMY1R0ZUI5?=
- =?utf-8?B?MXdMVVM2NXd1cE5SR01CS0tQMFZHR3JkVnFSdEdmRC9hY1pSUSs1Q2RKMFp3?=
- =?utf-8?B?cUxnRmUvNGdvbEpzaU11M2paK08wRzRkRllCVkgxM1kxa2NCaWUreHJYcDhr?=
- =?utf-8?B?bWs1VEd4UCt0bDEyaHcxendMNzdadCtkdHZTVVB0SDRxdEx0cENrWi84WnBv?=
- =?utf-8?B?UlBJSDdXbWhqWi9ncEFTWHFDaUE2N1pKeEp5bTRRQXIvMWVOTDdSSVNZSDZK?=
- =?utf-8?B?R3VTVXNiOUZyNkhLV0pyTDhhZWhGUmlsNHgzbWhWR1RnSXZrOWx6SlRpREpm?=
- =?utf-8?B?ODl4RitwZDlOcDFHeXNiSzNNYlZ4SUdoRHE1eFR1by9JNDdYQWVCRnRVYVA0?=
- =?utf-8?B?TzlwNURGeGlTeFBMcWtqajUwMEN0MURKS1VvdmF2ZUNCU0JyVkdTcDhwRzNy?=
- =?utf-8?B?M3VJdFlKOTUrZGdXNWIxL1U5VkJ6ZUgrdUN2WEJ6SjJLOG0rQVdEaHZKL3lT?=
- =?utf-8?B?QThJVEowYit5RGM2SkduZGZpQ1RaUFBlaWZKcUFZekhEVkduQ2thT1hab3Nw?=
- =?utf-8?B?WDdDTTNLTFBaaVZnSm0wWmRkdENzVGVjbktKUlMrUmgzWU5SL1cxM2o1djBK?=
- =?utf-8?B?QWM1TFd4WEM0MFF0VEhEK2FKVUZWMDkxRzlic0Q5Nkg0ejVOMlFua0ErYStr?=
- =?utf-8?B?d0NHaVRYb3J0anZnd3lBL2ZnUUtINUtXeUpDWmFYbmpYejBjUFZKcjkyM0Zn?=
- =?utf-8?B?L0JmZndLOHo1U0podWFyWFVtMDJJYlNDTm1zVGNYenlUUElidWtwanV3Z1dK?=
- =?utf-8?B?R3A2a1hMdXI5Q2JvMHlQSUZoenZEK3RlQW1qeVJOQU8vU2FRNHJpUFR3U3JM?=
- =?utf-8?B?cUM1WkRteDlGQnFBaHNIaTNlUlFGNFRXWWJiNkthQnYvTHU0WVFLcE9nTldF?=
- =?utf-8?Q?TWSZ4J0DjLAmu8X/xUFGSfvn2?=
+	=?utf-8?B?bUpQZnBXNlF6L2trYXhsRmF4dVA1RENRNUp1MGdya0tMazBLU3ZVZW84eVlQ?=
+ =?utf-8?B?ZGt6b2dEaTJuVlJ5TE4rVTRjY0ZBR1BUcVVyc2RFSlREVDdBNHEvZkFUNkJE?=
+ =?utf-8?B?Nzh2ZkcrejJUVnk2b0t6U3A3SWhFbFdLMlpUTTF6MVZwaGZtNmN5czlVNERG?=
+ =?utf-8?B?Zk8xYWpSREtLVnMzUnJlUVUya1dSTml1Rlc3b20xU3FrNE42VGlaYll1OFBh?=
+ =?utf-8?B?dk1aVlQ0Z1ZJTS9KN01vK3R2eFRBczlYMWtaQy9FeFpoVUtqTWwvS2xqU3dz?=
+ =?utf-8?B?ZHBQWlJQS2I0VjNMUXlJdS8yYlhwTWVieGk4TW9nK0tiSHVjT2tHTWpibVlp?=
+ =?utf-8?B?eXlkNnZtMTNVWVBRYTdVdHhabCtxZUlvMXEvQXU0RVpCenZEeVcrNWU3elJL?=
+ =?utf-8?B?dWZJYnIxOWxMd0xXZE43dzd2S0VxRCs0MDVyWEtLZlg1TTNZNmQyeTF6ZE4y?=
+ =?utf-8?B?Y0h5VlFJT0dCN0dIRWtaNHpZWmdHQkptS2g4Q2Zua1RnNktIMHAxODdFTjVn?=
+ =?utf-8?B?N21sZ280S0RBdTdHUmZFMm1EdG0xUHl6a1pUbktFSGQzdStvbXBTUy9CM3Vz?=
+ =?utf-8?B?WUc3SnJBaTNIL1RDdWR3emY5czRUSWxteGVVUGw4cjFpQjFDU2M2NkdDUHBB?=
+ =?utf-8?B?OHdrbFJjU1BsdFNqVVNzdG5BR2V5b2dKVmQxaVlpdGMxdWtUd3YxNVRSTlJM?=
+ =?utf-8?B?dWsxbFRvSXFzU2tHZ2dPNk1Hb0FLTTFlYWRLQXBJazY5dVVSc2dNVDdaeXJC?=
+ =?utf-8?B?L1pZY0prdUljT3NSM3liWkpsS2NCaGFMTXd2Ty85VllEdE5sbFVFbjFmV1hT?=
+ =?utf-8?B?emNsaEMyWld3U0pkK05TQ1Z4VVZONVhWUTVVYldMSUxLWlphSGNpak5FK2Nn?=
+ =?utf-8?B?YjBFdmpmTURtM2lyUnhEODBhcm9oNTBmNXN0TXFqSVNBNVladUNNbDlxUFUz?=
+ =?utf-8?B?UjBaczluQWlWZlhsbktwUHBzRER3bW9GRFJtZ3lTY1RjanBMQlVQVFRSSW5G?=
+ =?utf-8?B?NTRvT3ptdmNzSlRCWHYyZkJsNkl2MTNtVmpmRzZVSGdWKy9GOTJIcFQ2aCt2?=
+ =?utf-8?B?dWh1VzVaMVhvQW9xR1gwVldlK2szeWdKRFo4TEZrQUIraGpMOS81UjlVVVpY?=
+ =?utf-8?B?d1NuZFVpeXJFMlQ5UlJnbjJjZzFseER6NllDc3NSbHRjNXpYV0twc1VoTlY1?=
+ =?utf-8?B?ZGxpWG01cWR5NlJHd3pXSUFHSW4yTnFkb2JTRTFqOEtERTJVL1hROWp5ekFa?=
+ =?utf-8?B?NUhTa1o4VWZKNTIyd2VkWEhXSEJsdXA4TU4rbUxNQTNZL2xUMFZFTUtIdGFO?=
+ =?utf-8?B?V0dodlFsWFoxcE10d2tFVlQ3MDRNaWh1aWlaVENmZ1JISWRDZ1VseURNdjdn?=
+ =?utf-8?B?Tk4yTldaYWJiRG5JM0F5QVdOdVNHZ1RzVHlWWXNrTTV1TWZLdzBmUStFblhx?=
+ =?utf-8?B?S2hud3ZGUWZjUUxzM2daY2U0bjZyWUt0akhDVVhyeU1TYk5XeVZtZXJ4YXB0?=
+ =?utf-8?B?bUdKeUFHRStOWEFxZWJ5QitmL1lxTnUwNjI2d0dxMmpsdTZiaURGcnBXWnoy?=
+ =?utf-8?B?UHN5eUY0cVJTY2U1S2NhYXFyZVlxOXpoamRQcXhWdE9CbzYreTlMekEzYXU3?=
+ =?utf-8?B?MzF6eXY0YVpaVkpkQW5VSE1aU0llWGlrcGpUUFBwOWhheTBhNGlJa3N5b0pz?=
+ =?utf-8?B?NUtvQ3F1Zk1VcXFrQXJTdnd6VHhmRjIxaE4yT2QxanhLdVFYbHAvamZVQ1RP?=
+ =?utf-8?B?VFBpNGZNT2RpbnBUdUVkcDAzWVFNNGw5aU44N1hlMWM5QnplVklVeVVOK29E?=
+ =?utf-8?B?aFkrVHBPb0xwckk4MFdINlM0RTFhSkh3SzQ5K1VEOUNpV2VJREpKQjVJblJu?=
+ =?utf-8?B?WSt5SDZIZ1RUT0Y1WW5OaTMvUlVhbVFZR0tncDZpMnpjQTE4K0hSVWZKaWJn?=
+ =?utf-8?B?NFg1V1d4L3R0aEFUWEh5RXA1c3paeGNYUnVyS2pORVdpWXN1bXFuM2w5Vndx?=
+ =?utf-8?B?U213SFp2T0k2S05QV0xMeXZKdVFFTHhENFBZUjRwWDZZWWNlOVlUKzltZGd6?=
+ =?utf-8?B?U241WlFkWVl1d01rL1JLYkMzZC9kWTFVeUNoaStrYXF3V1RBVmRQQUd2RkI1?=
+ =?utf-8?Q?nQRt+yz2lvMmYztb2KBPLuy8X?=
 X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1990e2da-79fd-48a5-55dd-08dd90f43a75
+X-MS-Exchange-CrossTenant-Network-Message-Id: c672eb6a-1857-4520-df6f-08dd90f43fbf
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8205.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 01:27:58.4845
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 01:28:07.4097
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ov1QQEtAB5OpM5UVyX474qRjkNo/dxdU60QID3tzuBDH5lPzAAwO/kty36a1ChmoHASVQ2JtlzbYIQp8MsjgzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7953
-X-Proofpoint-GUID: 4y9mDwosoPb03cOtU86rCcxVcf-p3tNI
-X-Authority-Analysis: v=2.4 cv=TMNFS0la c=1 sm=1 tr=0 ts=68214ea2 cx=c_pps a=gIIqiywzzXYl0XjYY6oQCA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=M51BFTxLslgA:10 a=i1IsUcr2s-wA:10 a=2AEO0YjSAAAA:8 a=amLC3slWZ4KB8aZvhWUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 4y9mDwosoPb03cOtU86rCcxVcf-p3tNI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAxMyBTYWx0ZWRfX49B7FK/slHNO v+NX+sJE28SKuqwTD9mV0HtV5WB1tERCDqpUaW2goGudfiF58Z7qgCdwrfFTNWIYErBf2A1TBcz jMOLFRRxef7Z9cVDg7chKxZtHIch+EGxRusS4mLsapGKj+QobXOER/wftZ1HY4iube8vB8LIiwn
- v9WalYBksouOsL1aSBYtItl7w3TVR945cwQtwym3SWHK4COqdHzNP7ZuIdymj886zMpJvNGukbm aDlM3ORcOdpjFOKlQh3/NsO4wNdx7Pj2GOCDxKLWs6UiPdpHfDdVi22qkSzHIuTBSlfc9XwBow3 Aw9BbqzxruiuB1qtEd5l6uhzBy5LND42R54koOyNVAROEns7FtCQPxHFVKZ7BfAnD9xtSABSaop
- eQPLjH0lz7u01NxtNsWays4iucF0jWFDgyCRRpKNDDmw9aw1ikaNBgzBIFvgAtiT9LNFRsSb
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9XU8Xwofv1qsSksqt5HIX8pBf52z4K3qfL3kgQTIIcoLgjDmx5w12ketE9QrDF4kU5cTEBVVrqtmOJCbWSiY5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4920
+X-Proofpoint-GUID: Pb8nVnCeIUgcu_DQuRxBFQOuONtgEqnU
+X-Proofpoint-ORIG-GUID: Pb8nVnCeIUgcu_DQuRxBFQOuONtgEqnU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAxMyBTYWx0ZWRfX2RmBqwW70Wwi K7lYPFkTsHBM+NuYebHh+WmJ0LIWm5qejXbkaxAsyJkvvRvyBbotWc+2GTPlYp6jRzlOdulPmzt /VqHEDL7M7hHBkxW4aOPEFrC1seYvpIN7oF5Gc2BU8rzsHHmgLEJ5lpwzWADhnSdkD2A6IcShsv
+ muo2XQTJ+c+91Le8rvfjOVs/6cDvj4CgY3ndbHkJVL7DFIeuM+JWHn/Ao7IvfbaBamLSrcBKJY1 +kXK7We19k0CdvtWL19hfsM/VM5CN3gQn6noM7b0xK4YCI2uGQZxkmgOgD4ci2QwmQMWe9QYEhL 4Pnfq3PIGvbI32rbr30YBp3cemK1gRzIR6Rcwu4JAuGAECMzICBEvAf/6ah9v4/Pqa/yG7UFHri
+ YRvMagMhP/Tqhxs0OhoK/IYoiTTx/aTADpt7TsFFkilX0LP+oz6C47k2oPivBLzlGMVhCGAn
+X-Authority-Analysis: v=2.4 cv=L/gdQ/T8 c=1 sm=1 tr=0 ts=68214eab cx=c_pps a=coA4Samo6CBVwaisclppwQ==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=M51BFTxLslgA:10 a=i1IsUcr2s-wA:10 a=gEfo2CItAAAA:8 a=2AEO0YjSAAAA:8 a=BkuTzMVKkkJGYDtwCjMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-11_10,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 bulkscore=0
- spamscore=0 clxscore=1011 impostorscore=0 adultscore=0 malwarescore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=764
+ clxscore=1015 mlxscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2504070000
  definitions=main-2505120013
 
-This commit prepares the addition of a CPC driver. CPC, standing for
-Co-Processor Communication, enables users to have multiple stack
-protocols over a shared physical link using multiple endpoints.
-
-This patch adds the basic infrastructure for the new module, and
-introduces a new structure `cpc_interface`. The goal of this structure
-is to abstract a physical link like an SPI device, a SDIO function, or a
-UART for instance.
+Document device tree bindings for Silicon Labs CPC over a SPI bus. This
+device requires both a chip select and an interrupt line to be able to
+work.
 
 Signed-off-by: Damien Riégel <damien.riegel@silabs.com>
 ---
- MAINTAINERS                 |  6 +++
- drivers/net/Kconfig         |  2 +
- drivers/net/Makefile        |  1 +
- drivers/net/cpc/Kconfig     | 15 ++++++
- drivers/net/cpc/Makefile    |  5 ++
- drivers/net/cpc/interface.c | 98 +++++++++++++++++++++++++++++++++++++
- drivers/net/cpc/interface.h | 88 +++++++++++++++++++++++++++++++++
- drivers/net/cpc/main.c      | 21 ++++++++
- 8 files changed, 236 insertions(+)
- create mode 100644 drivers/net/cpc/Kconfig
- create mode 100644 drivers/net/cpc/Makefile
- create mode 100644 drivers/net/cpc/interface.c
- create mode 100644 drivers/net/cpc/interface.h
- create mode 100644 drivers/net/cpc/main.c
+ .../bindings/net/silabs,cpc-spi.yaml          | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/silabs,cpc-spi.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 00e94bec401..8256ec0ff8a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21731,6 +21731,12 @@ S:	Maintained
- F:	drivers/input/touchscreen/silead.c
- F:	drivers/platform/x86/touchscreen_dmi.c
- 
-+SILICON LABS CPC DRIVERS
-+M:	Damien Riégel <damien.riegel@silabs.com>
-+R:	Silicon Labs Kernel Team <linux-devel@silabs.com>
-+S:	Supported
-+F:	drivers/net/cpc/*
-+
- SILICON LABS WIRELESS DRIVERS (for WFxxx series)
- M:	Jérôme Pouiller <jerome.pouiller@silabs.com>
- S:	Supported
-diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index 1fd5acdc73c..d78ca2f4de5 100644
---- a/drivers/net/Kconfig
-+++ b/drivers/net/Kconfig
-@@ -508,6 +508,8 @@ source "drivers/atm/Kconfig"
- 
- source "drivers/net/caif/Kconfig"
- 
-+source "drivers/net/cpc/Kconfig"
-+
- source "drivers/net/dsa/Kconfig"
- 
- source "drivers/net/ethernet/Kconfig"
-diff --git a/drivers/net/Makefile b/drivers/net/Makefile
-index 13743d0e83b..19878d11c62 100644
---- a/drivers/net/Makefile
-+++ b/drivers/net/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_MHI_NET) += mhi_net.o
- obj-$(CONFIG_ARCNET) += arcnet/
- obj-$(CONFIG_CAIF) += caif/
- obj-$(CONFIG_CAN) += can/
-+obj-$(CONFIG_CPC) += cpc/
- ifdef CONFIG_NET_DSA
- obj-y += dsa/
- endif
-diff --git a/drivers/net/cpc/Kconfig b/drivers/net/cpc/Kconfig
+diff --git a/Documentation/devicetree/bindings/net/silabs,cpc-spi.yaml b/Documentation/devicetree/bindings/net/silabs,cpc-spi.yaml
 new file mode 100644
-index 00000000000..f31b6837b49
+index 00000000000..82d3cd47daa
 --- /dev/null
-+++ b/drivers/net/cpc/Kconfig
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/net/silabs,cpc-spi.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2024 Silicon Labs Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/silabs,cpc-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+menuconfig CPC
-+	tristate "Silicon Labs Co-Processor Communication (CPC) Protocol"
-+	depends on NET
-+	help
-+	  Provide support for the CPC protocol to Silicon Labs EFR32 devices.
++title: SPI driver for CPC
 +
-+	  CPC provides a way to multiplex data channels over a shared physical
-+	  link. These data channels can carry Bluetooth, Wi-Fi, or any arbitrary
-+	  data. Depending on the part and the firmware, the set of available
-+	  channels may differ.
++maintainers:
++  - Damien Riégel <damien.riegel@silabs.com>
 +
-+	  Say Y here to compile support for CPC into the kernel or say M to
-+	  compile as a module.
-diff --git a/drivers/net/cpc/Makefile b/drivers/net/cpc/Makefile
-new file mode 100644
-index 00000000000..1ce7415f305
---- /dev/null
-+++ b/drivers/net/cpc/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
++description: |
++  This binding is for the implementation of CPC protocol over SPI. The protocol
++  consists of a chain of header+payload frames. The interrupt is used by the
++  device to signal it has a frame to transmit, but also between headers and
++  payloads to signal that it is ready to receive payload.
 +
-+cpc-y := interface.o main.o
++properties:
++  compatible:
++    enum:
++      - silabs,cpc-spi
 +
-+obj-$(CONFIG_CPC)	+= cpc.o
-diff --git a/drivers/net/cpc/interface.c b/drivers/net/cpc/interface.c
-new file mode 100644
-index 00000000000..4fdc78a0868
---- /dev/null
-+++ b/drivers/net/cpc/interface.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025, Silicon Laboratories, Inc.
-+ */
++  reg:
++    maxItems: 1
 +
-+#include <linux/module.h>
++  interrupts:
++    maxItems: 1
 +
-+#include "interface.h"
++required:
++  - compatible
++  - reg
++  - interrupt
 +
-+#define to_cpc_interface(d) container_of(d, struct cpc_interface, dev)
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
 +
-+static DEFINE_IDA(cpc_ida);
++unevaluatedProperties: false
 +
-+/**
-+ * cpc_intf_release() - Actual release of interface.
-+ * @dev: Device embedded in struct cpc_interface
-+ *
-+ * This function should not be called directly, users are expected to use cpc_interface_put()
-+ * instead. This function will be called when the last reference to the CPC device is released.
-+ */
-+static void cpc_intf_release(struct device *dev)
-+{
-+	struct cpc_interface *intf = to_cpc_interface(dev);
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spi {
++            #address-cells = <1>;
++            #size-cells = <0>;
 +
-+	ida_free(&cpc_ida, intf->index);
-+	kfree(intf);
-+}
-+
-+/**
-+ * cpc_interface_alloc() - Allocate memory for new CPC interface.
-+ *
-+ * @parent: Parent device.
-+ * @ops: Callbacks for this device.
-+ * @priv: Pointer to private structure associated with this device.
-+ *
-+ * Context: Process context as allocations are done with @GFP_KERNEL flag
-+ *
-+ * Return: allocated CPC interface or %NULL.
-+ */
-+struct cpc_interface *cpc_interface_alloc(struct device *parent,
-+					  const struct cpc_interface_ops *ops,
-+					  void *priv)
-+{
-+	struct cpc_interface *intf;
-+
-+	intf = kzalloc(sizeof(*intf), GFP_KERNEL);
-+	if (!intf)
-+		return NULL;
-+
-+	intf->index = ida_alloc(&cpc_ida, GFP_KERNEL);
-+	if (intf->index < 0) {
-+		kfree(intf);
-+		return NULL;
-+	}
-+
-+	intf->ops = ops;
-+
-+	intf->dev.parent = parent;
-+	intf->dev.release = cpc_intf_release;
-+
-+	device_initialize(&intf->dev);
-+
-+	dev_set_name(&intf->dev, "cpc%d", intf->index);
-+	dev_set_drvdata(&intf->dev, priv);
-+
-+	return intf;
-+}
-+
-+/**
-+ * cpc_interface_register() - Register CPC interface.
-+ * @intf: CPC device to register.
-+ *
-+ * Context: Process context.
-+ *
-+ * Return: 0 if successful, otherwise a negative error code.
-+ */
-+int cpc_interface_register(struct cpc_interface *intf)
-+{
-+	int err;
-+
-+	err = device_add(&intf->dev);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+/**
-+ * cpc_interface_unregister() - Unregister a CPC interface.
-+ * @intf: CPC device to unregister.
-+ *
-+ * Context: Process context.
-+ */
-+void cpc_interface_unregister(struct cpc_interface *intf)
-+{
-+	device_del(&intf->dev);
-+	cpc_interface_put(intf);
-+}
-diff --git a/drivers/net/cpc/interface.h b/drivers/net/cpc/interface.h
-new file mode 100644
-index 00000000000..797f70119a8
---- /dev/null
-+++ b/drivers/net/cpc/interface.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2025, Silicon Laboratories, Inc.
-+ */
-+
-+#ifndef __CPC_INTERFACE_H
-+#define __CPC_INTERFACE_H
-+
-+#include <linux/device.h>
-+#include <linux/list.h>
-+#include <linux/mutex.h>
-+#include <linux/skbuff.h>
-+
-+struct cpc_interface;
-+struct cpc_interface_ops;
-+
-+/**
-+ * struct cpc_interface - Representation of a CPC interface.
-+ * @dev: Device structure for bookkeeping..
-+ * @ops: Callbacks for this device.
-+ * @index: Device index.
-+ */
-+struct cpc_interface {
-+	struct device dev;
-+
-+	const struct cpc_interface_ops *ops;
-+
-+	int index;
-+};
-+
-+/**
-+ * struct cpc_interface_ops - Callbacks from CPC core to physical bus driver.
-+ * @wake_tx: Called by CPC core to wake up the transmit task of that interface.
-+ * @csum: Callback to calculate checksum over the payload.
-+ *
-+ * This structure contains various callbacks that the bus (SDIO, SPI) driver must implement.
-+ */
-+struct cpc_interface_ops {
-+	int (*wake_tx)(struct cpc_interface *intf);
-+	void (*csum)(struct sk_buff *skb);
-+};
-+
-+struct cpc_interface *cpc_interface_alloc(struct device *parent,
-+					  const struct cpc_interface_ops *ops,
-+					  void *priv);
-+
-+int cpc_interface_register(struct cpc_interface *intf);
-+void cpc_interface_unregister(struct cpc_interface *intf);
-+
-+/**
-+ * cpc_interface_get() - Get a reference to interface and return its pointer.
-+ * @intf: Interface to get.
-+ *
-+ * Return: Interface pointer with its reference counter incremented, or %NULL.
-+ */
-+static inline struct cpc_interface *cpc_interface_get(struct cpc_interface *intf)
-+{
-+	if (!intf || !get_device(&intf->dev))
-+		return NULL;
-+	return intf;
-+}
-+
-+/**
-+ * cpc_interface_put() - Release reference to an interface.
-+ * @intf: CPC interface
-+ *
-+ * Context: Process context.
-+ */
-+static inline void cpc_interface_put(struct cpc_interface *intf)
-+{
-+	if (intf)
-+		put_device(&intf->dev);
-+}
-+
-+/**
-+ * cpc_interface_get_priv() - Get driver data associated with this interface.
-+ * @intf: Interface pointer.
-+ *
-+ * Return: Driver data, set at allocation via cpc_interface_alloc().
-+ */
-+static inline void *cpc_interface_get_priv(struct cpc_interface *intf)
-+{
-+	if (!intf)
-+		return NULL;
-+	return dev_get_drvdata(&intf->dev);
-+}
-+
-+#endif
-diff --git a/drivers/net/cpc/main.c b/drivers/net/cpc/main.c
-new file mode 100644
-index 00000000000..ba9ab1ccf63
---- /dev/null
-+++ b/drivers/net/cpc/main.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025, Silicon Laboratories, Inc.
-+ */
-+
-+#include <linux/module.h>
-+
-+static int __init cpc_init(void)
-+{
-+	return 0;
-+}
-+module_init(cpc_init);
-+
-+static void __exit cpc_exit(void)
-+{
-+}
-+module_exit(cpc_exit);
-+
-+MODULE_DESCRIPTION("Silicon Labs CPC Protocol");
-+MODULE_AUTHOR("Damien Riégel <damien.riegel@silabs.com>");
-+MODULE_LICENSE("GPL");
++            cpcspi@0 {
++                  compatible = "silabs,cpc-spi";
++                  reg = <0>;
++                  spi-max-frequency = <1000000>;
++                  interrupt-parent = <&gpio>;
++                  interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
++            };
++    };
 -- 
 2.49.0
 
