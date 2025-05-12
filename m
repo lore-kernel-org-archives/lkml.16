@@ -1,103 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C53299AA4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C9129B215;
 	Mon, 12 May 2025 21:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747085351; cv=none; b=gDzKdUhlkLGi8E1wfx6sVJIzBPHzuz9ATH+ifXBWppTew/YbNkMTxSuIyFQsGEpqBHwA693zv4mDnOZXOmMQognFTm/+/RxYw4Gi/5s2s//MmVveLprvCQRTBrm7MR04W8NcxdCxnowgqAvcbC/3qR+4pwYXgwn3EWJFNqHfzNY=
+	t=1747085353; cv=none; b=JQOXpWxH/yZ4BTiVphuQiRy/0iTcLhebWEbYUSyVjKt6sYXfp3OmX/IiDqZ/0UghHCAW6kUcNanoNvgw2tOXZmM/0Xgr3H8y+0TiaINzTLe8aE3T90eSbhT6kvGee5njzbHX0SujSRDJCMG3xLny6kMAoRoEdTXrnREB8ackYus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747085351; c=relaxed/simple;
-	bh=awwXn2TAbBoaYGo+e+KQV3s1Vl5rprM8b1Qcv70cHOc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LI04Uu38G4/utUrdlCvfaABq4wK0MmoI94UYCRCPIKSCryL5S9/VORuToj0iHTLFD26NOIVBbdxjEikrlrCCION1OsdBqkK9P+PAInmBaGP9FBqvZ8GFXXXHIq4zIB/5e+knIwUjd+1sbufTnFioRhkMca/Q8BWlUdmHa5+B5hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ke/5ibqI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747085353; c=relaxed/simple;
+	bh=5+JO0vRYD+fNefwX+fbceUZ0uXE+29KVob5wwF7490I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=thZvLMixpfgP48vngyGY+Bunn3mm2TKxbb/EMH/vyDULBx5bbEIPqm1ZxfyFKRe71NricvDr4kqDNldkajLz0dxBykEKXjR6t393O9n9azBa4v0rL5qnEFxh0LeesK9Uglz/h/hx2kKI1uSc9nTL04CtcyKYoQwF0Ya2ur36q5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SxOeJ/XM; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ke/5ibqI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DFB8C4CEF4;
-	Mon, 12 May 2025 21:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747085351;
-	bh=awwXn2TAbBoaYGo+e+KQV3s1Vl5rprM8b1Qcv70cHOc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=ke/5ibqIxWZIGCfnstPdWuLJxGt6VqLdV8S7+5X6WU/w7r27Y8KBN0COjW3baioVk
-	 Z7ENjzNHG5U01R5BRxaA1sHeFzAl7IU3HZqRJLanE357WZ/1v9Xl+EuH3Sjj/Uncsu
-	 cfWS7GCGlRjtItjKVGmZ9FxgnHU3wwOdQxwPODB9ZDx4tXbmq+os8i8+tk87wzqOUU
-	 URUdK2ggwfgWZmaDZy7x/0ASlyIVSctQL84AZ7xnpPSqsb5AOUB8TB8taFtY5SrpAN
-	 JuJrLtxl54sILH7N9vCsgjDREL5fljH1ko7dhcByEu+eew3wpW2FhFapjh79UCu06W
-	 IA/J6wAnJbXlQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 12 May 2025 23:28:55 +0200
-Subject: [PATCH] cpufreq/amd-pstate: Avoid shadowing ret in
- amd_pstate_ut_check_driver()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxOeJ/XM"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fcac09313cso5655216a12.2;
+        Mon, 12 May 2025 14:29:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747085350; x=1747690150; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rwu29EMYbHZnZ2ingPRlXQV8GOHy8olFZlFGRco0m+E=;
+        b=SxOeJ/XMd7B6IOBPic9BAoT1du2eLFe3NslZ8xYixXg4LE4AoFPbnpfvQG9JTiPXf7
+         7X4M2vcMf+zBT2/kzUn2qg/5gwEDxiDYmXT8wKq3gLLf+UY0CEOVp+dWJmF8vE/T8pcW
+         wkL0JXituh2544M3V0Ulkx7ewxyfBJPYi7zKpa6rv9KPvAATprUAcwcxKhRvcuE29/PB
+         ebbH0Ogs2DRBSQ8KOuacWDfUKcMTC9oyuqzJ2ZNCAdgwnaDfY43Zphkg3IBWzUCsSSt7
+         +GNmQUkUJM+xFHl08W/08vxg6Q7RS+6J9yguujKq2A8Kkgpn6xC44/KyhE3z484XqqdI
+         FMAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747085350; x=1747690150;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rwu29EMYbHZnZ2ingPRlXQV8GOHy8olFZlFGRco0m+E=;
+        b=skZMfFqVnS4KmF1QKfZybZn49B8Omm/ZE2IxEICmWaH+n2rYVHcpDUOb6RtaoAe6T0
+         QZfKo1zTrOvvZBUIpXMV0sV/qLUfzEP2mxIMc2tUMdkHf87tI5dFjEwXRK+pVTg4yyPc
+         e2GT8ciaGqDRTsfU4JSloep9Bpjta4SgqrgvI4CEkEkZVB4BErQNeN30DgTypu0p2Pid
+         NUX6w2S9aCkyj1N9BVDXpUkM9TLkR+suIJs1t3vZ2pQBjG2GR9bjmmB2YnC8ZaOJm78k
+         UYFxR1j8JUu+dtBUDdXu7eg9k9FkQeYueDzLPyT43aaMhZ5I7dGuweu8R23DDmcz/NM9
+         HrwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUK71/s1YvFX8fR/DqeCjAodNsULxLh7t2z0TO3BNr7pEoOUh2uXabFXZJMaDFkDTA0bZUvkKfYX0UV3qI=@vger.kernel.org, AJvYcCUnIYHRp8JOBFVaYUlmWJj+91AYnZ0+BsJfIHlL5iNgAAVN1BfIWrhH25Fod+aLM+FtI+YQDTjgxksa@vger.kernel.org, AJvYcCX32XXTyKecgq/xPaBRgjWecyAMQvwDxk0jWfsIo80AjOeSQPiphfmFmFIPTdllAW0jpMsRRveW7KWie68d@vger.kernel.org, AJvYcCXNyy2WDjvXT+LSkid3I3OOmimLszjGZo2Fyeqkkdy790iXcxfWzAzEyZAhFkDB7a6Rmc4ydLyl7SeRNA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGtArkPQC3UqNTTJ2LPzrrSuCuZK32nlfKj7euLo0Te04kRH5o
+	OpHOnZhv+hW13JPCSHi8J2a2amZ9TqWWizvjJSjaUi5C/1aBJ/DO
+X-Gm-Gg: ASbGnctNsun5wbaEN3KzZcE8x3fGbH6T60S2mhLjRKDqU0ya/AO2kA9KF1nsNEOKFc/
+	klWBjYk7xSf3VejMBZV6mq3jqZmjL3SRMZnJa1iiIqed/MuSV02OKcD4yGgchywwQMz1dFGrByW
+	EViZS7lvbP9ZlKu29XOoDHKHmD/xPwctJUm1aWKRBIex/kebGr4OseJwmb4EP/Mi9KSgx/jFUqP
+	AwyHb9m4+pkN2WZTc9W7dlUXWiiFWG+PbX1ElIMUEAN4IwAQb2rD+yawqaf8ND/9kAC0LO5N2ab
+	6Lpgxm8bw9bGC9hVhzX27mu1Ntm4ZDrKYW6M5eY/JDZq3X8mxWQ+BPxaJvaqyuY=
+X-Google-Smtp-Source: AGHT+IFh9UpWB73Gif9/RG0hEasXz8yA7Q30IuXmnkfuwvL7LMAjJqRJGSW/yg1R6sWeJzfxK/H2Rg==
+X-Received: by 2002:a17:907:1c17:b0:ad2:455e:6ec0 with SMTP id a640c23a62f3a-ad2455e72bdmr811477866b.20.1747085349950;
+        Mon, 12 May 2025 14:29:09 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.27.128.5])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad23a5552a6sm472861466b.30.2025.05.12.14.29.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 14:29:09 -0700 (PDT)
+From: Cosmin Tanislav <demonsingur@gmail.com>
+To: 
+Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Julien Massot <julien.massot@collabora.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Liu Ying <victor.liu@nxp.com>,
+	Ross Burton <ross.burton@arm.com>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH v3 08/19] dt-bindings: media: i2c: max96712: add support for I2C ATR
+Date: Tue, 13 May 2025 00:28:17 +0300
+Message-ID: <20250512212832.3674722-9-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250512212832.3674722-1-demonsingur@gmail.com>
+References: <20250512212832.3674722-1-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-amd-pstate-ut-uninit-ret-v1-1-fcb4104f502e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIABZoImgC/x3MQQ4CIQxA0auQrqcJoKDOVSYuGqnahTiBYkwId
- 5e4fIv/O1QuwhVW06HwR6q884RbDNyelB+MkqbBWx9scB7plXCvSsrYFFuWLIqFFY+R/IHcJcT
- zCWa+F77L97/ermP8ACZKtfdqAAAA
-X-Change-ID: 20250512-amd-pstate-ut-uninit-ret-46a23a195687
-To: Huang Rui <ray.huang@amd.com>, 
- "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
- Mario Limonciello <mario.limonciello@amd.com>, 
- Perry Yuan <perry.yuan@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Swapnil Sapkal <swapnil.sapkal@amd.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, kernel test robot <lkp@intel.com>, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1520; i=nathan@kernel.org;
- h=from:subject:message-id; bh=awwXn2TAbBoaYGo+e+KQV3s1Vl5rprM8b1Qcv70cHOc=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBlKGSq/J7pqtxw/uqaAVcJYSjhjpztfTHfd3ya2WcZbr
- 18MOfqro5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAEyk8BbD/wIxRt+1yqsWee5c
- UDw363DGh3tLEudPf/d6lp336xXzzm1h+F+4o8ZLzbf/I7dz6iz59F9RSl/fhIVwbDwh0R2p3tl
- 2hQcA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Transfer-Encoding: 8bit
 
-Clang warns (or errors with CONFIG_WERROR=y):
+MAX96712 and MAX96724 have more than one GMSL2 link, and each link is
+capable of connecting to a separate serializer. If these serializers
+have the same CFG pins configuration, they will also have the same I2C
+address, causing conflicts unless the deserializer changes the address
+of the connected serializers.
 
-  drivers/cpufreq/amd-pstate-ut.c:262:6: error: variable 'ret' is uninitialized when used here [-Werror,-Wuninitialized]
-    262 |         if (ret)
-        |             ^~~
+The MAX96712 and MAX96724 support changing the I2C address of the
+connected serializers.
 
-ret is declared at the top of the function and in the for loop so the
-initialization of ret is local to the loop. Remove the declaration in
-the for loop so that ret is always used initialized.
+Document this capability.
 
-Fixes: d26d16438bc5 ("amd-pstate-ut: Reset amd-pstate driver mode after running selftests")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505072226.g2QclhaR-lkp@intel.com/
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 ---
- drivers/cpufreq/amd-pstate-ut.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/media/i2c/maxim,max96712.yaml    | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
-index 30835d0e4994..65f9d2bae2d3 100644
---- a/drivers/cpufreq/amd-pstate-ut.c
-+++ b/drivers/cpufreq/amd-pstate-ut.c
-@@ -246,7 +246,7 @@ static int amd_pstate_ut_check_driver(u32 index)
- 	int ret;
+diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+index f712d7cfc35f..758c0223977d 100644
+--- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+@@ -37,6 +37,30 @@ properties:
  
- 	for (mode1 = AMD_PSTATE_DISABLE; mode1 < AMD_PSTATE_MAX; mode1++) {
--		int ret = amd_pstate_set_mode(mode1);
-+		ret = amd_pstate_set_mode(mode1);
- 		if (ret)
- 			return ret;
- 		for (mode2 = AMD_PSTATE_DISABLE; mode2 < AMD_PSTATE_MAX; mode2++) {
-
----
-base-commit: b01fc4eca73cbd7946181255a95dbe64ff83bc5f
-change-id: 20250512-amd-pstate-ut-uninit-ret-46a23a195687
-
-Best regards,
+   enable-gpios: true
+ 
++  i2c-alias-pool:
++    maxItems: 4
++
++  i2c-atr:
++    type: object
++    additionalProperties: false
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      '^i2c@[0-3]$':
++        $ref: /schemas/i2c/i2c-controller.yaml#
++        unevaluatedProperties: false
++        properties:
++          reg:
++            items:
++              minimum: 0
++              maximum: 3
++
+   ports:
+     $ref: /schemas/graph.yaml#/properties/ports
+ 
+@@ -79,6 +103,13 @@ required:
+ 
+ additionalProperties: false
+ 
++allOf:
++  - $ref: /schemas/i2c/i2c-atr.yaml#
++
++dependentRequired:
++  i2c-atr: [i2c-alias-pool]
++  i2c-alias-pool: [i2c-atr]
++
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
 -- 
-Nathan Chancellor <nathan@kernel.org>
+2.49.0
 
