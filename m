@@ -1,132 +1,179 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9119B7DA82;
-	Mon, 12 May 2025 07:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5B37DA82
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747035484; cv=none; b=q2vXxHlXPAgA4NsJCIdep0Z5+/a3mfbesLjCVX2Uv5OjxWuxvu6PUB17pMMs0Ok8gHX/GJ3UJEI/6y+1Rk1cncE68cY8yGQvgTb1CjtytGjYS02iEqEz/t1X32fwEZ5/ruon6z6Wqiexgsdq9VY2QQlq/4iTE4ju/0lM9/iM4NE=
+	t=1747035530; cv=none; b=jInLuHvuFl4S/RjCTaWQwGM1VhgiX4wJxKo3IEfNlT2FEGGgs7p0+WCw6ZdSJVzqui2qvGZ7GqMgyqyRZxNbW3R6AIzT+K7+uGVv5vsypDytVJODkjtYhwBLlCp7PPBWJ5u3nhRlXmXuB05udQMtrx3zbR1Cp3C1xpZL+HfnBuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747035484; c=relaxed/simple;
-	bh=5Drhw0lH7JV00K5Rc+7Xb4PSYZ5KlaumagsBoyqZTeI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qMeRLpDKNLnaRk1sS+LXsq1OhKtyfUs9ZeubTMTwO37yvH3VSuz1DkXrPPr9P3px1Zi5bbIgkZtULJ8svbctikGZktVEehZC2lcjW8YY/AuN180H+MGMkf7UISmSGR6Ry9IasDxjZWFZQ5Z4uFR5ciuPWt4Oeo7YqNk/WkMEGtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-52b2290e290so2946431e0c.1;
-        Mon, 12 May 2025 00:38:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747035480; x=1747640280;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SLp975Qg2zkffLQn42JrqGLDxS+SB9/EcWihl2VTt2c=;
-        b=Fjo1UeTUw2UOyKTpEvmeUaUHp9RnDLig9ElVskRuYLpFjYsIAJg4dRYoQROLs4BGWB
-         8GCUKJOFHo+o43HeZloG8eSnjCaXLQzspu8/A/Sg37TpXnduLpomiHfSgA559wfU/vpr
-         vv8cpLnba3zvaUlDaz9qPK/7azxqyVj5/ZAhpLNx0P7RHjZaat3oHBHOzHHAJpFEnXc3
-         HOFFutocjwJbV7Vqoa99tV7ordUUk3X1ABGOUZNCR1I7lRGL5OLTVb8NZ2TJMGg1qlxU
-         gais4/YdnseH5N2t80xDxxthlZrTHWTbu1mFzQUMG4YSmejdvofqYQSQcsO5ZDpDiGZR
-         xirg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPosIoUL3U5OkoLpHb2wOwjwM08B+nXRFpmdep/iuWPUWZ+57NBlWrqhaVnZ+8HoOeqUQuJlV+IR7+Vmo=@vger.kernel.org, AJvYcCVYr/p9ADONXrE1dewPuK1DJijuDYfELv6H0aOwYr2vVdvp3Zok/nrRUJZWQMLk245WlzPxjHZ3CVHfu/0=@vger.kernel.org, AJvYcCWAcpt5NhMTzjCm8OSu886jbP3bdNgYn9aU+bzdMR3yV4ANy8RDnrF1oMkoLuS8pRnPXC1hR750A8HISG9y1tOip2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwmY20O8K268y7PhtJ4GPbKWpbDX3E0nuB83TmZGJTx2sKTxF9
-	9CPXqZgWIQNEaTze3fsj+iyKZKTaXzvfJg76CuNJT/SAxFCsUwEczTdQtbX8
-X-Gm-Gg: ASbGnctXg2B2AMd2zMY+kN5svVnFOJZJ9AzXwbxoGQXMtcNuZzpxB3YZ4chyROsFWvQ
-	xZ68M53XVM+kbzMX+OdCjhEj2tkXXkryJ5cDTx2242oWXSl2Jy8Ix0eZsB5VzvTtcmyh0vH1Dy+
-	WTWEcYEyXEbcaM6JtkIcwPB041maU8/X6lH0R0354o0pG+7AhnDFGc7jzmsmEJRsMIByddysyJq
-	QuUSdCghWVvtqez6g1iEch3YbSoQhLGx6tO26rRSFeMBf5trsTiEzDi7uGmcBBlfg4qzhoPa3x7
-	yPV5ovLv3QKY2yD746uhcIuQMpDme0SR4O2rCKg77+4vx/4ExVo2w9XXFv1xvgI/yP9DjgAw9xa
-	sViK/O4UcGhGDDw==
-X-Google-Smtp-Source: AGHT+IHxx7MEDaAesY0paOqmuyej7DqN+tfa0P+HDkgtIvrOk6hrZ1Dyw4h+Okl7joKm/RR7iXy9+w==
-X-Received: by 2002:a05:6122:3117:b0:520:5185:1c71 with SMTP id 71dfb90a1353d-52c53ca9ddbmr9989881e0c.7.1747035480516;
-        Mon, 12 May 2025 00:38:00 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f6297d64sm4672760241.30.2025.05.12.00.38.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 00:38:00 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-8797ade0b5aso2470250241.3;
-        Mon, 12 May 2025 00:38:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXKUv4mw5yrxhHtmBK5FzuJb8hUhNyCfLcoJloRvzjAYxPSOyXY7EN70VhoLxCD0isI1enB6TC9SOqYsnI=@vger.kernel.org, AJvYcCXe1+a/9b1wlXugcxEgA764z5TkBd3Y7aG+54YYyb5Snu4gPzaWMFzMXzPOj2OT2HyReimghMk4dOjxEVirfZvgSs8=@vger.kernel.org, AJvYcCXrqPRO9h3cQ67FAJz+RLXSqlObRh6bWnlFkvMBXeR4J3K4Vb6GhbDzc6Xbx8IIUlw9at9KmPZsxhf0x9s=@vger.kernel.org
-X-Received: by 2002:a05:6102:1586:b0:4c1:a15c:ab5c with SMTP id
- ada2fe7eead31-4deed3cf763mr8900141137.20.1747035479952; Mon, 12 May 2025
- 00:37:59 -0700 (PDT)
+	s=arc-20240116; t=1747035530; c=relaxed/simple;
+	bh=Hcqrrn4iivC6AZRQs/SDe5WoEbqHddmWG6LWmF1Zxxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fDJhFU4zJ6lLch8iik2Sna0/X0ri6EJhaURgp2S1DPumCxO3RhVDC3xC0Kf916U+fgilFFm7IZNhWMOvVs442aQ0zqrfQTwLAqX5bBztt6o04sql5FVWtGvtxWDiNmJeP8aTZyqV5+whrsSxSEZvtupo/HYHrBIii44jXDSTMyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=i3g+Jbs0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=omWygHk3; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=i3g+Jbs0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=omWygHk3; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="i3g+Jbs0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="omWygHk3";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="i3g+Jbs0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="omWygHk3"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7C2281F745;
+	Mon, 12 May 2025 07:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747035526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
+	b=i3g+Jbs0Y2Ntf1HTmop2kulYMHKojsVuNEnKx0M/v8T7bGYIG3UetdRoUv0BYxJVMkLJx0
+	S4bdsmj+xi89vnfAvRR9iVCX0Gg79Dc89rFp+bEvkEJvO/D2J0FKntsQwy7aIpWZBePQNM
+	lIiiAwhUp1UsjzmOTGvvilL0DHFjm4Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747035526;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
+	b=omWygHk3zQGay5K940aMeKxzOMQHMvUp6X+K9x+koZu7VJBFC/qq5G2wlZm2lANPL4xuzU
+	6O6AI0kj1EtoXvDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747035526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
+	b=i3g+Jbs0Y2Ntf1HTmop2kulYMHKojsVuNEnKx0M/v8T7bGYIG3UetdRoUv0BYxJVMkLJx0
+	S4bdsmj+xi89vnfAvRR9iVCX0Gg79Dc89rFp+bEvkEJvO/D2J0FKntsQwy7aIpWZBePQNM
+	lIiiAwhUp1UsjzmOTGvvilL0DHFjm4Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747035526;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JoDpL4KkrG8kp8IAvPXB0yhKZ6iYox4XDgz1pC3w6iw=;
+	b=omWygHk3zQGay5K940aMeKxzOMQHMvUp6X+K9x+koZu7VJBFC/qq5G2wlZm2lANPL4xuzU
+	6O6AI0kj1EtoXvDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 52D66137D2;
+	Mon, 12 May 2025 07:38:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wMBCEoalIWiiDgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 12 May 2025 07:38:46 +0000
+Message-ID: <eb2b0bce-6012-4019-8ff7-c35c24ba7aa1@suse.cz>
+Date: Mon, 12 May 2025 09:38:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
- <20250511174730.944524-5-niklas.soderlund+renesas@ragnatech.se>
- <10d2ae58-8da8-4802-95be-951d8b376551@oracle.com> <20250511200333.GA2365307@ragnatech.se>
-In-Reply-To: <20250511200333.GA2365307@ragnatech.se>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 May 2025 09:37:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
-X-Gm-Features: AX0GCFv4mK9yFSt4H6ZSbJXJ35sEvvzAc6m6xC4P1ntDvWSO0by1MSAp2bcf0I0
-Message-ID: <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] media: rcar-csi2: Add D-PHY support for V4H
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: ALOK TIWARI <alok.a.tiwari@oracle.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add mm GUP section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@nvidia.com>,
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250506173601.97562-1-lorenzo.stoakes@oracle.com>
+ <20250506162113.f8fa0c00e76722a1789ec56a@linux-foundation.org>
+ <c4258dfd-14ee-411a-9fa7-c4a1fa4fad1c@redhat.com> <aBshiBX_N6hhExmS@pc636>
+ <13a32f52-dc5c-45ef-b45a-585586868509@lucifer.local>
+ <e3e2663b-2749-44c7-8452-ffcbf2167572@redhat.com>
+ <28428030-1178-469a-a4ab-f1e7179d9106@lucifer.local>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <28428030-1178-469a-a4ab-f1e7179d9106@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,linux-foundation.org,nvidia.com,redhat.com,kvack.org,vger.kernel.org];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid]
 
-Hi Niklas,
+On 5/8/25 14:23, Lorenzo Stoakes wrote:
+>>
+>> M for "PAGE ALLOCATOR", hmmm ..., I was hoping that Vlastimil might have
+>> capacity for that? :)
+> 
+> Vlastimil? ;)
+> 
+> I'd certainly support this.
 
-On Sun, 11 May 2025 at 22:03, Niklas S=C3=B6derlund
-<niklas.soderlund+renesas@ragnatech.se> wrote:
-> On 2025-05-12 00:37:09 +0530, ALOK TIWARI wrote:
-> > On 11-05-2025 23:17, Niklas S=C3=B6derlund wrote:
-> > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0=
-x0404);
-> > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0=
-x040c);
-> > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0=
-x0414);
-> > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0=
-x041c);
+OK, can do, thanks.
 
- [...]
+>>
+>>
+>>
+>> Not 100% sure what to do with
+>>
+>> * include/linux/page_isolation.h
+>> * mm/page_isolation.c
+>>
+>> (I hate the word "page isolation")
+>>
+>> They are mostly about page migration (either for alloc_contig... or memory
+>> hotunplug). Likely they should either go to the MIGRATION section or to the
+>> PAGE ALLOCATOR? Maybe MIGRATION makes more sense. Thoughts?
+> 
+> I mean it explicitly relates to migrate type and migration so seems to me
+> it ought to be in migration.
+> 
+> Though migrate type + the machinary around it is a product of the physical
+> page allocator (I even cover it in the 'physical memory' section of the
+> book).
+> 
+> I wonder if our soon-to-be page allocator maintainer Vlastimil has
+> thoughts? ;)
+> 
+> I'd vote for migration though to be honest.
 
-> > Instead of manually writing each call, it could use a loop ?
-> >
-> > for (int i =3D 0x0404; i <=3D 0x07fc; i +=3D 0x08) {
-> >     rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, i);
->
-> Unfortunately the values are not all sequential, see the progression
-> 0x061c -> 0x0623 and 0x071c -> 0x0723 for example.
->
-> > or if values are not strictly sequential, iterating over the array.
-> > static const u16 register_values[]=3D {0x0404, 0x040c, 0x0414 etc,,}
-> > rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
-> > register_values[i]);
->
-> I agree with you, a array of values would make this look a tad less
-> silly and would reduce the number of lines. I considered this while
-> writing it but opted for this. My reason was as most of the register
-> writes needed to setup the PHY are not documented in the docs I have and
-> I wanted to keep the driver as close to the table of magic values I have
-> to make it easy to compare driver and the limited documentation.
->
-> I guess it's really a matter of style. I have no real strong opinion, if
-> people think an array would be nicer I have no issue switching to that.
+I checked the code briefly and although migratetypes are related to
+migration, it seems rather page allocator code to me.
 
-Have you looked at the impact on kernel size?
+In fact if I didn't miss these files, I would have included them when
+proposing the PAGE ALLOCATOR section.
+Zi Yan has a series on that topic now and is one of the R: in PAGE
+ALLOCATOR. What do you think?
 
-Gr{oetje,eeting}s,
+>>
+>> --
+>> Cheers,
+>>
+>> David / dhildenb
+>>
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
