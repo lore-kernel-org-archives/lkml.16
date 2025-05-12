@@ -1,65 +1,50 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C279622A4DB
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE21EDA11;
+	Mon, 12 May 2025 15:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747062591; cv=none; b=Will08UmnvF+xE3dcUjNj7txWf8ygmqv5vcx2gwxw/IFyS3yHkYoYXk34YBvZaLLxTfxNDQXi13GsZQ+OC215SK0wl2dD+kyoUElCjBVZV3Sd3tBqSW7dzd0i5ZSqHE9Btg+GSThb7+yPVyf8WIQ2KvOYXTb7RX1rvNljkbHct4=
+	t=1747062716; cv=none; b=hfRd0XZUkNMqF2RYlUEv+jruF+GaLM06Pf7o1WfrncOT3IZ1L3YZ8zJNas40cM97z5AZLhxh17ObSiMqE6jfKULyzh0EygigYzGVdbpXFMGB5zOboPzV0xSjJlR6pAhWcxsg6A6aC1I+4QFokrBYQuRfYR2eNneKwCJB+wEpYEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747062591; c=relaxed/simple;
-	bh=k60H86/2TOfisvhuVVqcLzOZmbD3frwSLryqfVsbxkE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PNRmPETcm4pZir0PBSv/FCO0E7sfdnKgvKFrvvUo2dW7hWFC7sR4KVCX5Kjm8+rIpSmRy1rQHIbwz0uiZ9ZcjtYJzBMomAgq/4qdcXL95KKqqGAsY4G3lpQaDw0iZKtViwxjfp9c8N4EeCi1zuXyx0SLllnbPQiwUMAJTx34Fgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lwdLh4Y8; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747062716; c=relaxed/simple;
+	bh=oRZq7V38BDPzrnIKHLulsvxYYp+PkT3EdJDnzIgMVNQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=eITQrbsg+hu+Ye3fGniVEu+UENkJRQbL4pSKrc3VO9bIVVSCjIv63hLgCUpVdYRTJ0w41HkspF5E+pTsmXGUlgOJRv46YtRm7P3Y9M1MGAIL/XFbuLtsRc8llxTdDFa5l4e2IdRVGZwY3A7HxFEi5pp4oX9WXfKWJHcHS1+BNh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rnuUverq; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lwdLh4Y8"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3feaedb39e9so1339645b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747062588; x=1747667388; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=B2Y26Nzcl7Qs/OhOSkM2rPMa1VcnEkiaJ844dzirBYo=;
-        b=lwdLh4Y806ei7O+4IsIsSdPS7BWMVBBKGeOLMdkZJZ7jIqETK+kZxIRpNlxunJ49mF
-         /nQNzJTCAP9N6e3P45w2qYFz6Fth88I3fJMVTK2/f0RFWWPdIY7U0B+Al6JSdHUNIKUJ
-         TnXJevZ1nGQVbp+oiD47IKqYQXIHqNMJQZTUiE/PchyOWMMEolgfhOxg8hbLOa2XZg0s
-         dIrxEWZ9V2Zgi7OIH8kiAslF/bTlRoNv4zEtPu+nA5OLoWJ8lSeChE8mamqA96CxPMPV
-         2Lyg+Riliul7w7dOER6tdNxSXfvBOwzDbagVn9JSaXWTFrGFDwa9c2chXchzCWNOhvt3
-         Fe+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747062588; x=1747667388;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B2Y26Nzcl7Qs/OhOSkM2rPMa1VcnEkiaJ844dzirBYo=;
-        b=TF80oLwsSF/THzTj499lhn8i7bX8JtoG4I9CHsu5opOKAmVlLYZfnfTyEKL/GVgpBX
-         VIZYRtw0Feoa3l0FXvm3Xi9UIwAtMWr6EgA4IPeQKdnwL1zPtbYgYc51J/ZhcyoS7ZG2
-         lohLkcaXPLKt4mB8uM7W0YAPRINm3yNWWRoI6RVQLD+QT/y+n1NB0yp4iKvVBOGlg96L
-         tWG+ynvD7PhmjyTGw4FA9YvKs9MZx3HsEjdoNgHpV8UMDFJ9Q4kh8xqjqP7oB9+/ET4q
-         DCYnz0tzVJVuaHrp32dx2xzcuMmHc67mdGvWdbXKTjDI0iJQw38q9m6bItbb0ulL5KKw
-         sC1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVmUpapEl6ztgiCnTq1echU/nCw4RP/6jq/5iy8VQvNXps/LzsGYzUzPWY6ICUuzLK9gOlFfKkx8bfknT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBHFyIWYS3lQe9sUXgBqEh7NaWZoZjAbOYf1gJEBObM179Uog1
-	d8cFDb6sWh2Y45WTbJY1IWI53QFXRgocqdZ7kX6qSv7wCeNuStG3vCrVplpYPkM=
-X-Gm-Gg: ASbGncsBQfkRr17aMo0jHOBcykWuQaLm9y45mWpruFDtra1bQLPoiSTs3hLGnMzXkbe
-	YAKumGFlIzfyn5DIOWd2FynDuzY+DATFB1PUIC7AcMZlqLSPyW8b83QtWZfHmQ/EuY0bqieMLbp
-	QZUV/lTcgNuXLp5Xd9Ek8Qd4LyyWOV5LfzO7brBOT1q64hu8pOTC7OgR1NIDEEmee6SypCPlr3w
-	eKR8FVb380SMVo+ziUFtuLL5IY9rcfVTPoNxW0mG7oZ4obIQDM6E1WT50A3Oj6piF9wvlGtEs+y
-	smWf29TbN+fiOGQwpr347h9NB8gq+BYhyos9U2duXgko46+s1zGomFsAoCUDsnIqpCSSL1r8RTU
-	u9R7HYuIqxcm+R8VyAqltzlAm2v7txoKM3RQOey8=
-X-Google-Smtp-Source: AGHT+IGamPIMN3SMlof91E6fX5EdgWJKMxdjC7rJ6OPUPdUmImzkNAFqy3X6YNXm9ZrbNwPpZZ+lQw==
-X-Received: by 2002:a05:6808:2213:b0:400:b402:2403 with SMTP id 5614622812f47-4037feaedc9mr7710176b6e.32.1747062587418;
-        Mon, 12 May 2025 08:09:47 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:fd2e:ffda:4c42:b314? ([2600:8803:e7e4:1d00:fd2e:ffda:4c42:b314])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-403802d2ae5sm1554451b6e.15.2025.05.12.08.09.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 08:09:45 -0700 (PDT)
-Message-ID: <86d73027-6ab2-4751-8839-e7905a6b4e34@baylibre.com>
-Date: Mon, 12 May 2025 10:09:44 -0500
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rnuUverq"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CD4kW1025877;
+	Mon, 12 May 2025 17:11:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	BsohuFHL0A1uGoWvntQ5+Cuy1yzn6J9UrbSwG2edDAA=; b=rnuUverqE269o+TQ
+	pLW8NzKc9m5dDDkRw+fVwCvwLK9Aw4KkSzKfPSEDSpoMdaa6/vDn9pF6CX7Kx4Y6
+	BokEFE2Ycmt6iokXnRg7lvVZ7A0TTIp3A5jbKjI4g6owBUKGynNHyfJMTbseNzGa
+	4YxoABtAZSUNcV1z3r2o5/Z1kjsdluS+oHSrAT5ObUIgr0vk2ipLSYEVvl+Vxewi
+	BZdFVyBwBTGXEIi9+srPgDi7Wa25O/3K+SUilx250eeAP6ROgacOH3eDoxKnKGL7
+	XbKOMz5tqaTVVIpZH3XaGM39OlvUQNj8EExDTEUfW5cf0qjZB2g7mOMslDCtzK80
+	BbR3Hw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46hv7kqvq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 17:11:19 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0094F40045;
+	Mon, 12 May 2025 17:09:42 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 75DB7B20C2D;
+	Mon, 12 May 2025 17:08:25 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
+ 2025 17:08:24 +0200
+Message-ID: <c01d0d72-e43c-4e10-b298-c8ed4f5d1942@foss.st.com>
+Date: Mon, 12 May 2025 17:08:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,273 +52,143 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/10] iio: adc: ad4080: add driver support
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
- robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250509105019.8887-1-antoniu.miclaus@analog.com>
- <20250509105019.8887-10-antoniu.miclaus@analog.com>
+From: Christian Bruel <christian.bruel@foss.st.com>
+Subject: Re: [PATCH v8 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
+ <20250423090119.4003700-3-christian.bruel@foss.st.com>
+ <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250509105019.8887-10-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
 
-On 5/9/25 5:50 AM, Antoniu Miclaus wrote:
-> Add support for AD4080 high-speed, low noise, low distortion,
-> 20-bit, Easy Drive, successive approximation register (SAR)
-> analog-to-digital converter (ADC).
+Hi Manivannan,
+
+On 4/30/25 09:30, Manivannan Sadhasivam wrote:
+> On Wed, Apr 23, 2025 at 11:01:12AM +0200, Christian Bruel wrote:
+>> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+>> controller based on the DesignWare PCIe core.
+>>
+>> Supports MSI via GICv2m, Single Virtual Channel, Single Function
+>>
+>> Supports WAKE# GPIO.
+>>
 > 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
+> Mostly looks good. Just a couple of comments below.
+> 
+>> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig      |  12 +
+>>   drivers/pci/controller/dwc/Makefile     |   1 +
+>>   drivers/pci/controller/dwc/pcie-stm32.c | 368 ++++++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-stm32.h |  15 +
+>>   4 files changed, 396 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
+>>
+> 
+> [...]
+> 
+>> +static int stm32_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	struct stm32_pcie *stm32_pcie;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
+>> +	if (!stm32_pcie)
+>> +		return -ENOMEM;
+>> +
+>> +	stm32_pcie->pci.dev = dev;
+>> +	stm32_pcie->pci.ops = &dw_pcie_ops;
+>> +	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
+>> +
+>> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
+>> +	if (IS_ERR(stm32_pcie->regmap))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
+>> +				     "No syscfg specified\n");
+>> +
+>> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(stm32_pcie->clk))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
+>> +				     "Failed to get PCIe clock source\n");
+>> +
+>> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
+>> +	if (IS_ERR(stm32_pcie->rst))
+>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
+>> +				     "Failed to get PCIe reset\n");
+>> +
+>> +	ret = stm32_pcie_parse_port(stm32_pcie);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	platform_set_drvdata(pdev, stm32_pcie);
+>> +
+>> +	ret = pm_runtime_set_active(dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to activate runtime PM %d\n", ret);
+> 
+> Please use dev_err_probe() here and below.
 
-...
+OK, will report this in the EP driver also.
 
-> +static const char *const ad4080_filter_type_iio_enum[] = {
-> +	[FILTER_NONE]      = "none",
-> +	[SINC_1]           = "sinc1",
-> +	[SINC_5]           = "sinc5",
-> +	[SINC_5_COMP]      = "sinc5+pf1",
-> +};
-> +
-> +static const int ad4080_dec_rate_iio_enum[] = {
+> 
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = devm_pm_runtime_enable(dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to enable runtime PM %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pm_runtime_get_noresume(dev);
+>> +
+> 
+> I know that a lot of the controller drivers do this for no obvious reason. But
+> in this case, I believe you want to enable power domain or genpd before
+> registering the host bridge. Is that right? 
 
-Would make more sense to call this _avail instead of _iio_enum.
+We call pm_runtime_enable() before stm32_add_pcie_port() and 
+dw_pcie_host_init(). This ensures that PCIe is active during the PERST# 
+sequence and before accessing the DWC registers.
 
-> +	2, 4, 8, 16, 32, 64, 128, 256, 512, 1024,
-> +};
-> +
-> +static const char * const ad4080_power_supplies[] = {
-> +	"vdd33", "vdd11", "vddldo", "iovdd", "vrefin",
-> +};
-> +
-> +struct ad4080_chip_info {
-> +	const char *name;
-> +	unsigned int product_id;
-> +	int num_scales;
-> +	const unsigned int (*scale_table)[2];
-> +	const struct iio_chan_spec *channels;
-> +	unsigned int num_channels;
-> +};
-> +
-> +struct ad4080_state {
-> +	struct regmap			*regmap;
-> +	struct clk			*clk;
+ > And the fact that you are not
+> decrementing the runtime usage count means, you want to keep it ON all the time?
+> Beware that your system suspend/resume calls would never get executed.
 
-clk isn't used outside of probe and can be removed.
+We do not support PM runtime autosuspend, so we must notify PM runtime 
+that PCIe is always active. Without invoking pm_runtime_get_noresume(), 
+PCIe would mistakenly be marked as suspended.
+The function stm32_pcie_suspend_noirq() is triggered when the system 
+transitions to Stop or Standby power states, (from /sys/power/state)
 
-> +	struct iio_backend		*back;
-> +	const struct ad4080_chip_info	*info;
-> +	/*
-> +	 * Synchronize access to members the of driver state, and ensure
-> +	 * atomicity of consecutive regmap operations.
-> +	 */
-> +	struct mutex			lock;
-> +	unsigned int			num_lanes;
-> +	unsigned int			dec_rate;
-> +	unsigned long			clk_rate;
-> +	enum ad4080_filter_type		filter_type;
-> +	bool				lvds_cnv_en;
-> +};
-> +
+> 
+> Also in any case, you need to call this before devm_pm_runtime_enable().
+> Otherwise, PM core will suspend the parent and enable it during
+> pm_runtime_get_noresume(), which is redundant.
 
-...
+OK, I will invert the calls.
 
-> +static int ad4080_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long m)
-> +{
-> +	struct ad4080_state *st = iio_priv(indio_dev);
-> +	unsigned int dec_rate;
-> +
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return ad4080_get_scale(st, val, val2);
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		dec_rate = ad4080_get_dec_rate(indio_dev, chan);
+Thank you
 
-Need to check return value for negative error code.
+Christian
 
-> +		if (st->filter_type == SINC_5_COMP)
-> +			dec_rate *= 2;
-> +		if (st->filter_type)
-> +			*val = DIV_ROUND_CLOSEST(st->clk_rate, dec_rate);
-> +		else
-> +			*val = st->clk_rate;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*val = ad4080_get_dec_rate(indio_dev, chan);
-
-Ditto.
-
-Also, should set *val = 1 in the case of st->filter_type == FILTER_NONE.
-
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad4080_write_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan,
-> +			    int val, int val2, long mask)
-> +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-
-This has no effect when st->filter_type == FILTER_NONE and should only
-allow 1 in that case.
-
-> +		return ad4080_set_dec_rate(indio_dev, chan, val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-
-...
-
-> +static int ad4080_set_filter_type(struct iio_dev *dev,
-> +				  const struct iio_chan_spec *chan,
-> +				  unsigned int mode)
-> +{
-> +	struct ad4080_state *st = iio_priv(dev);
-> +	unsigned int dec_rate;
-> +	int ret;
-> +
-> +	guard(mutex)(&st->lock);
-> +
-> +	dec_rate = ad4080_get_dec_rate(dev, chan);
-
-Again, need to check for negative error code.
-
-> +
-> +	if (mode >= SINC_5 && dec_rate >= 512)
-> +		return -EINVAL;
-> +
-> +	ret = iio_backend_filter_type_set(st->back, mode);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(st->regmap, AD4080_REG_FILTER_CONFIG,
-> +				 AD4080_FILTER_CONFIG_FILTER_SEL_MSK,
-> +				 FIELD_PREP(AD4080_FILTER_CONFIG_FILTER_SEL_MSK,
-> +					    mode));
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->filter_type = mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad4080_read_avail(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     const int **vals, int *type, int *length,
-> +			     long mask)
-> +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-
-Would make sense to have a separate case for st->filter_type == FILTER_NONE
-simialar to suggestions above. 1 is the only available value in that case.
-
-Also, in the st->filter_type != FILTER_NONE case, would make sense to set
-*length based on st->filter_type since 256 is the max value for the sinc5
-filters.
-
-> +		*vals = ad4080_dec_rate_iio_enum;
-> +		*length = ARRAY_SIZE(ad4080_dec_rate_iio_enum);
-> +		*type = IIO_VAL_INT;
-> +		return IIO_AVAIL_LIST;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-
-...
-
-> +
-> +static int ad4080_setup(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4080_state *st = iio_priv(indio_dev);
-> +	struct device *dev = regmap_get_device(st->regmap);
-> +	unsigned int id;
-> +	int ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4080_REG_INTERFACE_CONFIG_A,
-> +			   AD4080_INTERFACE_CONFIG_A_SW_RESET);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4080_REG_INTERFACE_CONFIG_A,
-> +			   AD4080_INTERFACE_CONFIG_A_SDO_ENABLE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_read(st->regmap, AD4080_REG_CHIP_TYPE, &id);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (id != AD4080_CHIP_ID)
-> +		dev_info(dev, "Unrecognized CHIP_ID 0x%X\n", id);
-> +
-> +	ret = regmap_set_bits(st->regmap, AD4080_REG_GPIO_CONFIG_A,
-> +			      AD4080_GPIO_CONFIG_A_GPO_1_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4080_REG_GPIO_CONFIG_B,
-> +			   FIELD_PREP(AD4080_GPIO_CONFIG_B_GPIO_1_SEL_MSK, 3));
-
-Would be nice to have a macro or comment to explain what 3 is here so that
-we don't have to look at the datasheet to figure out that this is configuring
-the pin as "Filter Result Ready (Active Low)".
-
-I would also expect to have some devictree bindings that describe that GPIO 1
-on the ADC is connected to the sync_n input of the ad408x (AXI ADC) IP block.
-Or at the very least, some comments here explaining that this is the assumed
-default and if we ever add another backend or someone wants to wire up a part
-a bit differently, then we might need to make this more generic.
-
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = iio_backend_num_lanes_set(st->back, st->num_lanes);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!st->lvds_cnv_en)
-> +		return 0;
-> +
-> +	ret = regmap_update_bits(st->regmap,
-> +				 AD4080_REG_ADC_DATA_INTF_CONFIG_B,
-> +				 AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_CLK_CNT_MSK,
-> +				 FIELD_PREP(AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_CLK_CNT_MSK, 7));
-
-Similar here, it looks like the 7 here is the result of some calulation
-based on the external CLK signal, So I would expec to see that caluclation
-done in code using st->clk_rate or explain why hard-coding 7 is OK and
-how that value was calculated.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (st->num_lanes > 1) {
-> +		ret = regmap_set_bits(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> +				      AD4080_ADC_DATA_INTF_CONFIG_A_SPI_LVDS_LANES);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = regmap_set_bits(st->regmap,
-> +			      AD4080_REG_ADC_DATA_INTF_CONFIG_B,
-> +			      AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ad4080_lvds_sync_write(st);
-> +}
-> +
+> 
+> - Mani
+> 
