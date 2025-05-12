@@ -1,116 +1,108 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward500b.mail.yandex.net (forward500b.mail.yandex.net [178.154.239.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6341B297A48
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC0B297A45;
+	Mon, 12 May 2025 18:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073666; cv=none; b=JN/p5NSIVSFmHJstC+VV/+Jqe0Sa0C9+67bbOvnLW7+1kla5tR8zW61e06XiEa7HC6ysMXyi09rUtj39SaZTKHACUUnKLcEh+Ruc6R15x7lKyzqbP2HnK2z4cMGLw0pyXsSMGdOcwrME5wO6CceUEine3xIANa0Aga3xs8CxGno=
+	t=1747073704; cv=none; b=JDWrX1qYFSXfiFUKWKOknfgh2RRzgOCOWTzZLRLUJObaKgOyfw+ykYwFaVfdjhe21425sse3JZKjbbPm4Qj+Y1V94HsnCSVeqhdo/4ySqNmXgFyab+YrOaKnKHkf4cpxcDY+1G1LDv3V5QjUgW5HYmgxM3f1KNHPE0fw6s/nMoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073666; c=relaxed/simple;
-	bh=ge8nSwHM2/L0C3/tgG66L21hTU30oQNN1Lla7jkdOAc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XWSWhUimDkxlSVfvdBwJrM+nFNHeg2F5A7QOuHy9n3FKIikmZVCKHlqmHFoPRHzS8axdSgSOtV68SQ9yBo02xOADnFJW/GNhF5uXaVoZMXHLd5WmiU9j47fkXksghIOc/tz+HnfG7NU8eN7UivoPEKpLGgJOYmO+483zPrUGBEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jBiXfOEo; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747073704; c=relaxed/simple;
+	bh=Vqe5AmLOxv2544pzcRLMoQPFYWzIjs2Axn9+CmQDJUE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=Wxjj8I3qrtbJprCzk2fAAxSG0STrZ9FTM752bePQW/UOZeVKuswjd6YjC9XuDz3IRBxq51hjA60gJCS1mlrC4TNYgj5wAIzyHws+8cGUfJbL1t0SyRHMHn0pn8rnUHj8PxqhbGtsV06ZK996vGC7r3opiZHxFWmdOLw+DRvZv54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=MI4gu6RF; arc=none smtp.client-ip=178.154.239.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jBiXfOEo"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30abb33d1d2so7526516a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747073660; x=1747678460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DppjzGuONHUmUt6xrl/Gh7jXlRXjo91ajvJ8cLSO9UA=;
-        b=jBiXfOEomwUBjlJ9WAZ5r7XHHI7+2rnwX5D5JFGCpm96UBaGvvQ5jcUiQsRHj2dKot
-         +Z8PCaVAGyw1qDLwsecrKWw1w2ZDJ6f7eq5TF6AtjyHMEEvDfbjjuECMWgby9wT/pXeX
-         qDx+1CmpwiWD0uosMbiLBxAbTFziz4Bf/StmKyDKHSLD0I9etwYEXMLjyQlZ0R41tCYl
-         2cFM4/Rh5MBrq9HB2AYPEaFeiREs/+nmvjUTI3wATJNNUeXLaxrofsePNFrjcfF3KuDg
-         zdbmwpPfZSyHdxuVWg9OsKuLF3kvSa+8gisFzuyEYTFHGBXG//lzR7hdkn9HXocZsFsz
-         P68Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747073660; x=1747678460;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DppjzGuONHUmUt6xrl/Gh7jXlRXjo91ajvJ8cLSO9UA=;
-        b=K7LwS//PmhaXjv21Ef1x2P6zwChJ5VzP/IMdhyt8ksAmUCN39uPy5eqU5601Xg+GQ6
-         +8ANiegbevIr1pITDOv29pBONFNQs8OUJKbwcBjz7CdtQVhNtKrj1J+UhVCI57/BPOIU
-         2lcb2lWfxxJHuYmO8VzneNhbzqvJRnNvjgSifr/u8SuT9ozKqy9hR+M/6ZC4M612KD0n
-         b7arrEeq13VX4RzPUV8eJGcqUVUwZIBq8pOY0PaLdeMB0iKPFZPlRqAlwhBHfn8mAyXH
-         l6wBg1PHvRSZ0vleAtkd1eDYdJ1OK7YuntiCrfEcls+HB2yj1aDJ4pzfnLxnmHMEvIq/
-         c5yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfJit9QOQFiusJ5jUW9ThGNX5nz84kehsZIOWEcbzgEqqMQ4R1L+S/68vONoaCvncHYcv1bYKr8DqhMYc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynEkncyrHeNkTpSZM5d/UE2KEcdXxmIsjoKWdgZ86+j2osnc4b
-	KzaSJo+Hu2M5vdooNy2Abetk28yYH2tdDn4FemSod/1y2gBgzuJwwPaAN6pLFFrt/zt0qbf0uYA
-	aVA==
-X-Google-Smtp-Source: AGHT+IFVSP9g1YX6T9SSblQiikemd9gCjFwSJSmUr0xZ8O9g7WsE/PEszOVr+Pcq7V+3+YvAiBJ1tciAERI=
-X-Received: from pjbli15.prod.google.com ([2002:a17:90b:48cf:b0:2ff:5516:6add])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d44e:b0:2f5:88bb:12f
- with SMTP id 98e67ed59e1d1-30c3d3eb7c2mr18454811a91.21.1747073660687; Mon, 12
- May 2025 11:14:20 -0700 (PDT)
-Date: Mon, 12 May 2025 11:14:19 -0700
-In-Reply-To: <20250313203702.575156-5-jon@nutanix.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="MI4gu6RF"
+Received: from mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:2ea3:0:640:da3e:0])
+	by forward500b.mail.yandex.net (Yandex) with ESMTPS id 8248660F73;
+	Mon, 12 May 2025 21:14:52 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id oEKTJA2LjeA0-igIVqRQm;
+	Mon, 12 May 2025 21:14:51 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1747073691; bh=sKWFY9qzdW+cQL8kjiBG6SWhUDBg0xlq9ULolK89XaU=;
+	h=In-Reply-To:Subject:To:From:Cc:Date:References:Message-ID;
+	b=MI4gu6RF6+85eSlPYRhUhzGaC+5VKy5S0DDvYSq6CcDZ3TI12P0OrVgd3Bo3EhWpx
+	 4PFzWocdvxM7l0KxySacO4gpOBPW5gxRWrDy7vshPN8O5+7zjaSYev2jzZuAQhUx3N
+	 mizfOsMaon039aNX6epo/RKBTraI7p5sFRw8YNBg=
+Authentication-Results: mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <f40c3d5c-edf8-4d3d-a50a-506c5b6d7bc0@yandex.ru>
+Date: Mon, 12 May 2025 21:14:50 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-5-jon@nutanix.com>
-Message-ID: <aCI6e6KYXmfi_Oqp@google.com>
-Subject: Re: [RFC PATCH 04/18] KVM: VMX: add cpu_has_vmx_mbec helper
-From: Sean Christopherson <seanjc@google.com>
-To: Jon Kohler <jon@nutanix.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-MW
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Petr Pavlu <petr.pavlu@suse.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <0e82be0f-a305-4aba-b9ab-79596f595277@suse.com>
+ <CAHk-=wjNj0vHh9v6-LTrbgtq=o6OS+RN3u3m03nV3n9V+urGtg@mail.gmail.com>
+From: Dmitry Antipov <dmantipov@yandex.ru>
+Autocrypt: addr=dmantipov@yandex.ru; keydata=
+ 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
+ A/UwwXBRuvydGV0=
+Subject: Re: [GIT PULL] Modules fixes for v6.15-rc6
+In-Reply-To: <CAHk-=wjNj0vHh9v6-LTrbgtq=o6OS+RN3u3m03nV3n9V+urGtg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025, Jon Kohler wrote:
-> From: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
->=20
-> Add 'cpu_has_vmx_mbec' helper to determine whether the cpu based VMCS
-> from hardware has Intel Mode Based Execution Control exposed, which is
-> secondary execution control bit 22.
->=20
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Co-developed-by: Jon Kohler <jon@nutanix.com>
-> Signed-off-by: Jon Kohler <jon@nutanix.com>
+On 5/9/25 7:19 PM, Linus Torvalds wrote:
 
-LOL, really?  There's a joke in here about how many SWEs it takes...
+> At a minimum, the *description* of this bug is garbage.
+> 
+> It talks about an "uninitialized completion pointer", but then the fix
+> actually depends on it being initialized - just initialized to NULL.
+> 
+> I do believe that it always is initialized, and I have pulled this.
+> but I really think the explanations here are actively misleading.
+> 
+> Because there's a big difference between "uninitialized" and "not
+> pointing to a completion".
 
-> ---
->  arch/x86/kvm/vmx/capabilities.h | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilit=
-ies.h
-> index cb6588238f46..f83592272920 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -253,6 +253,12 @@ static inline bool cpu_has_vmx_xsaves(void)
->  		SECONDARY_EXEC_ENABLE_XSAVES;
->  }
-> =20
-> +static inline bool cpu_has_vmx_mbec(void)
-> +{
-> +	return vmcs_config.cpu_based_2nd_exec_ctrl &
-> +		SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
-> +}
+Technically speaking you're right, and I will take notice on that for
+further commits. OTOH replying with "please adjust commit message and
+send v2" could be the way faster.
 
-This absolutely doesn't warrant its own patch.  Introduce it whenever its f=
-irst
-used/needed.
+Dmitry
 
-> +
->  static inline bool cpu_has_vmx_waitpkg(void)
->  {
->  	return vmcs_config.cpu_based_2nd_exec_ctrl &
-> --=20
-> 2.43.0
->=20
