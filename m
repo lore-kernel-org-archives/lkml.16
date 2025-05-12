@@ -1,174 +1,143 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00975298261
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EB6175BF;
+	Mon, 12 May 2025 18:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747074799; cv=none; b=VVz6a8vf3Baaa5dG6R2qj6bpU9rLdqzpJVVjcL3Ed5oC3MJVPND5AGcQ7t/zgb+P/cM41YG4tGcYs9S7k26uuzvxY2x3LaBqkggSOXD7SgQnTwridrIMECFJcvj6tb5gaf0312KyqDqE/YifLiVKNOGtLGHpHRQJmhAl+sRigKQ=
+	t=1747074909; cv=none; b=t69SIU1HicCM41x/Eo4EfuxELVLhj9eA45MjUwXqDjaVuVYRShYoBOxBJq30c9hHdv5JrFMrX0oDs7cmLpNxM1x5BCG6nQ8Iom3dzG1LQ8Pla7Q6bQhT+PlVIGR6ZoG7QvZ30DJ+LgeqEoQvF7Cr0eWpz0toyA34rTncl8Qbsf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747074799; c=relaxed/simple;
-	bh=Jfr+rPTF9YEL6CXsRLZkDVbD7zeE5o9vHdvBe29mjQ8=;
+	s=arc-20240116; t=1747074909; c=relaxed/simple;
+	bh=t9E7jaIRgmZ+jhjkrMSLZufPgigLkMJGG8vibrwiY9A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HQJQ68DP54At8jQCr0POsSE99+XsVJPt2mmAAOWcrzJRNKswmD/M1cw1xACJz/eYFJPbqcl2Q0q7oNNjH1h861Bsx0sFw8v5wzWLVruUhuD+x85N6E2nitHwmjH7xvmWX9GGvKC3xcmdyyO9hs/hI0ukuwSYBC1EWjtUJ5AkUL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dFz9Usrl; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dFz9Usrl"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso1782a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 11:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747074794; x=1747679594; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t3p3BzNnsNOsVRctsx25cVwnAL8OxJuAKNOd3s8OQK4=;
-        b=dFz9Usrlk6W0+4FfXN6+pCYVOjinjywuZ09QGRwLnyyNK3ZEyoZ68tT6j5iW0pps9y
-         ercBWsyltBRjwGlivCDYfbjlPWnViU0OxYQEzKsr7DOETQ9HuHK80RwHnHvKuBCVQ7UO
-         8NE9NQTCfrPzglw8S7/ZRdM9nHKb4YRzkYqinrxfqxQ2jUomP1mlduwhUFtusHS0PW9r
-         TCu7P/sE7TEHNVZ5xWYS3cErV0kxUouEdumkMCsu278UpdNKxh9pu6UXz88m8VgSGp6K
-         gxLBo+JfEC0oR8mbl+lsR+O7drKwjLnhbOj7UxiZA34FBO93uu+3RLSw6lxByB1azAWt
-         LPxA==
+	 To:Cc:Content-Type; b=e+VoSKg1F96Qlyya+MlttTu5dO71aagILBTDkgQb/ezyW6rHA80EE8sGjelSbu6kft7h+d2il8I+zbXi324tvmeBCkJEvoeT/Jvf9GbTS0dJs9Y7FVcoN5/RfLQKNf6SqY5/9P2grzWS8gekP1thCQ42bdEQk9ohybhOFRDWQJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-8783bce9f84so1235614241.2;
+        Mon, 12 May 2025 11:35:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747074794; x=1747679594;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t3p3BzNnsNOsVRctsx25cVwnAL8OxJuAKNOd3s8OQK4=;
-        b=KRSOg0dAbltp+eYvCp9mmB7gernvKBYr4KD5R01g+FGIrbv8UCf4tWcpD0p8POfCRP
-         gFrafTynKZ5qo22xe/aRrRfV/lxfA+Pr8D3fNf8AgquaUqPmf4q5dagVeHezBC2qRkga
-         faAkSDx0XXjAdL16Q2sVpt8wzEj4TY9N9T0nhXBxIuuoXHDFM/KUZJ9zyaynndiJ7Xgq
-         RbVyiwAIvaRL75yeXb6/jnnLZBbaKrH03oKVv1NvisaRnpkLCWNiJqTEOZFAkj6sL6f4
-         a3Q6Z58ARJHkS51LS5EZDeQY+oqMLHt6k0P7AQHfOEftKLLJINWCXv9mfhZWFoYmMD3f
-         2Kpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVSGYqjLvvlS00BC6D/1Y3qoAMTidSl+y0TgFnew2YBFH20+kmp44dDzEugc1/4ei0NvPmFzBXhhIDIJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyupe9hGAwvo332s3aiV8cl/imayOqNcWaGnpwlMUeVbsrVEvw9
-	fWt50ca6a0lGjP2NyjRXuTLDYpa8wEfC4YI9/Wuh3Hg6g/r2xT/kpVoDyLRQl6Fof53WiWlcevA
-	jY/O2E6YCFsPQaBaE5Oofv/QyQcr1807P+abNrf5b
-X-Gm-Gg: ASbGncsDH/briQ0dGmjSHd9fd9xoUuYXFPEe5X95QZ/jzWHHtfsT/xIgNoNd7Z72eSc
-	TWU/PMgo/Te+1cAkaHgHe0hFbWYILligeboozuDWEUw8uDi86JGB69zr97c+4qiKHtG0zQ4HcLH
-	JDTyDfqqDzl2RmFZgN1hTauqEx1+wFcaaqUhFCXVAj3qDJkntUgMEcu8mk1pI=
-X-Google-Smtp-Source: AGHT+IFdiDpC7ixGH7SkseAzHJ3JVL3BGJru908mNuJ0aTnwNHxNi+WZFqYvXJP8Y9CtGHbMSokBExFJQL+IShP4N3c=
-X-Received: by 2002:aa7:c487:0:b0:5fb:eab6:cdb0 with SMTP id
- 4fb4d7f45d1cf-5ff356e3dd6mr10105a12.4.1747074793804; Mon, 12 May 2025
- 11:33:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747074906; x=1747679706;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=faDWq4SXHnuv6JR8rza3bg7AFXqM/F53I5xb503DYJA=;
+        b=DWRxmg7uBvsWUAxnD3meLSTpQXi1ClsJ7VQ6Tt/0+OV9F+FxT7dGHGHT67R0VmXxNm
+         voLpakFWLL2rZoUbNRbxM8UH0PAy4xXb6yECuwyd8i88aRy3vriULgRLHFkjg4sNXE98
+         79upgFrtUnhRYIrXOKUQIFi7mf79ltrogR6+KgNRQr7HpfF7baNToawkHw3GRGiWOg1t
+         Eu6pisGb44trL6hh5cV7CQNo+I2PPZQEJI1K0FabMBldn4RbPZ5ECklDXJzlYzHYD6OA
+         wOQMsGjmjJR3KaoVy2Hn4Z2kDqvVcvoTaVPTcQph6JRFM2kDq17RAFdqSUFqwjznmB6V
+         41jg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoDGP+mOSqJcbv1Oioox3YDTr8M+vbUZvgUcn2oOONU+illYyKV7Ipg6WTzjSXSFyNJBIOkgdNXUv3@vger.kernel.org, AJvYcCVUVVeDgDJLPmJ0aPC1E5x/X2eJBrcRKrvtSQIQAzY2w8RfuUR+SU2nOGBSBwszX81mCqw8ba13HldW0OA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTwg6thpDt0EsTCP7yEW/c+tGKJ6Ih63tymJW9vsJpuRzUHR2Z
+	YIikRcV4Bfyg9S2unZNd5GTcZjBcvwnE38GDvHBCUx07i8JHgfeLhkfYVmbw
+X-Gm-Gg: ASbGnctNDaMl9oei7gV+N8LZNH6hNlBDly1ajN5zNKxUO44tOyDgnUR9K2KvEp+uKFS
+	wS643+MO0qvgzLzt3SzQkaj7uY8m5AMtznHaBE1wlRm5LM9KpIo+E4JqP3UFR+APyfG6ex0OCcr
+	A7vHrOvCI+I7k17Anlxklg9Fqk88JUPBdN0SnKAUPsBfuJ4RqGhcidxrASa7gnex0tJLOZz6TJk
+	UnG8DD4L6nGr8rLvU2sLheqiixzp6CK/IAM2DFLO441Xvt46aoC+mx7ZP/fLeTv5Md2/M8LI2u4
+	Nn4XR3vt0UCKmRxe5VBwjOU7uGY0nZt2n4YRUnum2/Lfhfg+L91G56i7c98o9/gWQl8jssRc4NO
+	nMtBJse3+PoVBSw==
+X-Google-Smtp-Source: AGHT+IG/Baza7umAn+ya2o1lnut6yQn9jj5gSstGFTFrs+dHvbM44monQFWD669h+oRYGD7XbZhA7Q==
+X-Received: by 2002:a05:6102:800f:b0:4bb:9b46:3f87 with SMTP id ada2fe7eead31-4deed3374d9mr10491936137.6.1747074905969;
+        Mon, 12 May 2025 11:35:05 -0700 (PDT)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4deb2016d22sm5382267137.19.2025.05.12.11.35.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 11:35:05 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4def152384eso1064942137.1;
+        Mon, 12 May 2025 11:35:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUDgvJGtubwoP7MUrLUKEqvRwXPTfoAcVdmhs820/8VJDh/G9xGIC7+SyTFrqHKxmyNLjSHkuxmILp1@vger.kernel.org, AJvYcCUJ6xIqvnJyHxKytjpA3FjATlYm/zgAyNGzj9mmdysdJJvYDUU5BwbYCULsBfOTzAGvSSz10nBbg0ymM8g=@vger.kernel.org
+X-Received: by 2002:a05:6102:5345:b0:4dd:c8f6:c479 with SMTP id
+ ada2fe7eead31-4deed337524mr12552678137.7.1747074904660; Mon, 12 May 2025
+ 11:35:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6819bfbb.050a0220.a19a9.0007.GAE@google.com> <CAG48ez2pOt_Zf28CnLbVCzo1uBhWfqUjgh4fzDaQo+qceM6kSQ@mail.gmail.com>
-In-Reply-To: <CAG48ez2pOt_Zf28CnLbVCzo1uBhWfqUjgh4fzDaQo+qceM6kSQ@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 12 May 2025 20:32:37 +0200
-X-Gm-Features: AX0GCFuNzImgrwkQ8XRKQ84YMx3R5FRAZw32CIxRTGh4nx36LK_p_qKSG8M7NiE
-Message-ID: <CAG48ez1BGFn7jw+FYZJxRyyjnR+rrqx1AtNQoR_Jup3tZ-dADQ@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] KCSAN: data-race in copy_page_from_iter_atomic / pagecache_isize_extended
-To: syzkaller <syzkaller@googlegroups.com>, 
-	syzbot <syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com, hughd@google.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20250509181737.997167-1-Raju.Rangoju@amd.com> <202505110641.zLT16Dv7-lkp@intel.com>
+ <e84f5483-a203-4095-82cd-23fa94c87700@amd.com> <CAMuHMdUAE2umYggDdBjYZJY2-mYwim=P_=4Q00k9b8gB1tNY+Q@mail.gmail.com>
+ <8c89410b-80f2-47ad-97fd-6ac10752c040@amd.com>
+In-Reply-To: <8c89410b-80f2-47ad-97fd-6ac10752c040@amd.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 May 2025 20:34:52 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX_ugjS475udqa1oOOfbOJ+0s_JAKcCyCcdQfPhhaWOTQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvM4NO1qlCePh4MALJ9BqQGETeVVgnvPLy3fBf6nSRJBizZ7wMT2W-NF_U
+Message-ID: <CAMuHMdX_ugjS475udqa1oOOfbOJ+0s_JAKcCyCcdQfPhhaWOTQ@mail.gmail.com>
+Subject: Re: [PATCH] spi: spi_amd: Add HIDDMA basic write support
+To: "Rangoju, Raju" <raju.rangoju@amd.com>
+Cc: kernel test robot <lkp@intel.com>, broonie@kernel.org, oe-kbuild-all@lists.linux.dev, 
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Krishnamoorthi M <krishnamoorthi.m@amd.com>, 
+	Akshata MukundShetty <akshata.mukundshetty@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 7:44=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
-> On Tue, May 6, 2025 at 9:52=E2=80=AFAM syzbot
-> <syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com> wrote:
-> > HEAD commit:    01f95500a162 Merge tag 'uml-for-linux-6.15-rc6' of git:=
-//g..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D17abbb68580=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D6154604431d=
-9aaf9
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D189d4742d07e9=
-37d68ea
-> > compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89=
-dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-> [...]
-> > IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
-> > Reported-by: syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com
+Hi Raju,
+
+On Mon, 12 May 2025 at 19:55, Rangoju, Raju <raju.rangoju@amd.com> wrote:
+> On 5/12/2025 7:47 PM, Geert Uytterhoeven wrote:
+> > On Mon, 12 May 2025 at 09:29, Rangoju, Raju <raju.rangoju@amd.com> wrote:
+> >> On 5/11/2025 3:51 AM, kernel test robot wrote:
+> >>> kernel test robot noticed the following build warnings:
+> >>>
+> >>> [auto build test WARNING on v6.15-rc5]
+> >>> [also build test WARNING on linus/master]
+> >>> [cannot apply to broonie-spi/for-next next-20250509]
+> >>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> >>> And when submitting patch, we suggest to use '--base' as documented in
+> >>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> >>>
+> >>> url:    https://github.com/intel-lab-lkp/linux/commits/Raju-Rangoju/spi-spi_amd-Add-HIDDMA-basic-write-support/20250510-021954
+> >>> base:   v6.15-rc5
+> >>> patch link:    https://lore.kernel.org/r/20250509181737.997167-1-Raju.Rangoju%40amd.com
+> >>> patch subject: [PATCH] spi: spi_amd: Add HIDDMA basic write support
+> >>> config: m68k-randconfig-r111-20250511 (https://download.01.org/0day-ci/archive/20250511/202505110641.zLT16Dv7-lkp@intel.com/config)
+> >>> compiler: m68k-linux-gcc (GCC) 14.2.0
+> >>
+> >> Thanks for reporting this. We do not support m68k.
 > >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > BUG: KCSAN: data-race in copy_page_from_iter_atomic / pagecache_isize_e=
-xtended
+> > All write[bwlq]() functions take a volatile void __iomem pointer
+> > (https://elixir.bootlin.com/linux/v6.14.6/source/include/asm-generic/io.h#L174)
+> > while you are passing a void *, so sparse should complain about this
+> > on all architectures.
 >
-> I think this is a problem with the KCSAN implementation.
+> My bad, with the following flags included, sparse now complains this on
+> all architectures.
 >
-> This is a race between writing to a userspace-owned page and reading
-> from a userspace-owned page.
+> -fmax-errors=unlimited -fmax-warnings=unlimited
 >
-> This kind of pattern should be fairly trivial to trigger: If userspace
-> tells the kernel to read from a GUP'd page or pagecache on one thread,
-> and simultaneously tells the kernel to write to the same page on
-> another thread, we'll get a data race. This is not really a kernel
-> data race; it is more like a userspace race whose memory accesses
-> happen to go through the kernel.
->
-> So I think the fix would be for KCSAN to ignore anything in such
-> pages. The hard part is, I'm not sure how to tell what kind of page
-> we're dealing with from the kernel, some MM people might know...
-
-Or alternatively, if we really do want data_race() operations around
-any memset() or memcpy() on userspace-controlled pages, I guess we'd
-have to pepper a lot of those around the kernel.
-
-Also, I didn't really think about some of what I wrote here - we
-certainly wouldn't want to ignore unannotated accesses to some struct
-located in pagecache that userspace can concurrently write to.
-
-Maybe it would actually make sense to do the opposite of what I said
-to some extent, special-case userspace-mapped pages such that KCSAN
-_always_ alerts on plain access to them...
-
-> distinguishing normal pagecache/anon pages from other pages might be
-> doable, but I guess it probably gets hard when thinking about
-> driver-allocated pages that were mapped into userspace vs
-> driver-allocated pages that are used internally in the driver...
-
-
-> > read to 0xffff88811d47e000 of 2048 bytes by task 37 on cpu 0:
-> >  memcpy_from_iter lib/iov_iter.c:73 [inline]
-> >  iterate_bvec include/linux/iov_iter.h:123 [inline]
-> >  iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
-> >  iterate_and_advance include/linux/iov_iter.h:328 [inline]
-> >  __copy_from_iter lib/iov_iter.c:249 [inline]
-> >  copy_page_from_iter_atomic+0x77f/0xff0 lib/iov_iter.c:483
-> >  copy_folio_from_iter_atomic include/linux/uio.h:210 [inline]
-> >  generic_perform_write+0x2c2/0x490 mm/filemap.c:4121
-> >  shmem_file_write_iter+0xc5/0xf0 mm/shmem.c:3464
-> >  lo_rw_aio+0x5f7/0x7c0 drivers/block/loop.c:-1
-> >  do_req_filebacked drivers/block/loop.c:-1 [inline]
-> >  loop_handle_cmd drivers/block/loop.c:1866 [inline]
-> >  loop_process_work+0x52d/0xa60 drivers/block/loop.c:1901
-> >  loop_workfn+0x31/0x40 drivers/block/loop.c:1925
-> >  process_one_work kernel/workqueue.c:3238 [inline]
-> >  process_scheduled_works+0x4cb/0x9d0 kernel/workqueue.c:3319
-> >  worker_thread+0x582/0x770 kernel/workqueue.c:3400
-> >  kthread+0x486/0x510 kernel/kthread.c:464
-> >  ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
-> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> And sparse is right, this driver is using MMIO
+> > accessors on allocated DMA memory, which is just plain wrong:
 > >
-> > write to 0xffff88811d47e018 of 4072 bytes by task 4432 on cpu 1:
-> >  zero_user_segments include/linux/highmem.h:278 [inline]
-> >  folio_zero_segment include/linux/highmem.h:635 [inline]
-> >  pagecache_isize_extended+0x26f/0x340 mm/truncate.c:850
-> >  ext4_alloc_file_blocks+0x4ad/0x720 fs/ext4/extents.c:4545
-> >  ext4_do_fallocate fs/ext4/extents.c:4694 [inline]
-> >  ext4_fallocate+0x2b8/0x660 fs/ext4/extents.c:4750
-> >  vfs_fallocate+0x410/0x450 fs/open.c:338
-> >  ksys_fallocate fs/open.c:362 [inline]
-> >  __do_sys_fallocate fs/open.c:367 [inline]
-> >  __se_sys_fallocate fs/open.c:365 [inline]
-> >  __x64_sys_fallocate+0x7a/0xd0 fs/open.c:365
-> >  x64_sys_call+0x2b88/0x2fb0 arch/x86/include/generated/asm/syscalls_64.=
-h:286
-> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >  do_syscall_64+0xd0/0x1a0 arch/x86/entry/syscall_64.c:94
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >      amd_spi->dma_virt_addr = dma_alloc_coherent(dev, AMD_SPI_HID2_DMA_SIZE,
+> >              &amd_spi->phy_dma_buf, GFP_KERNEL);
+> >
+> >       for (i = 0; left_data >= 8; i++, left_data -= 8)
+> >              *buf_64++ = readq((u8 __iomem *)amd_spi->dma_virt_addr + (i * 8));
+> >
+> >> Will re-spin v2 with necessary changes in Kconfig.
+> >
+> > Please fix the real issue instead ;-)
+>
+> We are using read*/write* calls instead of memcpy to copy data to/from
+> DMA memory due to performance concerns, as we observed better throughput
+> during continuous read/write compared to the memcpy functions.
+
+Perhaps your memcpy() copies backwards?
+https://lwn.net/Articles/1016300/
+
+There is no guarantee that read*/write* calls work on normal RAM on
+all architectures. It may just crash, as some architectures return
+cookies instead of real pointers when mapping MMIO.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
