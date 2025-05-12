@@ -1,154 +1,268 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A051C84DE;
-	Mon, 12 May 2025 16:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068575; cv=none; b=Uy3B23i5m7/Er15/0sZUlhWqPp/XRfoBAkT9XINXyB2Pncm2AITLSGKqicpvnhEH0ALyMTW6jv6GOpBrxSWSZIRhFSXdqf6IvAzR8SagNoW5baI6dLJ/JFoWGky6Hqse49RVuQBOkXcDfGHfGSc0qc/lX9ojYIdzFTlc0bSNE3U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068575; c=relaxed/simple;
-	bh=/yvw1nnqbyiVtf/uj+S0pMN9yyaV6992GcjalVXEwT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=utt2Rj1e7PPGcQQ7o3C6M6PsDszAl3jNM/btye0a157KvO14HnXGOAas3wHdn7x4kriQ4yM8DrOiqm+iQ9v9pai5y+s3lE1/KTJ/rPYDvcW8B3ku6JW7Z0sCe74ri7xSetBVU/HrvaPT/saMNR4M2Y+0/7PUQIMFDleBdNLchJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJny5x2q; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0765B86352;
+	Mon, 12 May 2025 16:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747068632; cv=fail; b=tEJSQ7U02Gr4iFOKmCdOyxk6CblgtRMHDmfAcBcG7Ww7yZ7kirZJnF2QbBWySXRO2cdb2eQ0l3CJCyU7Nga4H8HqUebGT77C/UmHIXTMVb953NTwIu/p7VGFNYcPLX+7prnNZOcRxOQ/+LRyITX1jPlHTVhmjG4fBff9woXJBcM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747068632; c=relaxed/simple;
+	bh=hUpxp11Oel7thcTJeP96TJTFcYtNmLwiE4pmlZrqv1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Of1l0AJQEoAG2tIqiE0VkR582vIwNtPZZFCHtlEmQbin2OzMTGTeBYkpvm1oCPrgJb03UtTE8L3uGe/4dcA3+aCLruTQ4hJNfQp3wMi+I+KC36mZx0tpQalkGQvg03AhmGovZqxg+5KyWxO1DrYAZ71N9ft9OHc15sBVlkpZ6xM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=R5w/yMSd; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=IcueM12m; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJny5x2q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B91D2C4CEE7;
-	Mon, 12 May 2025 16:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747068574;
-	bh=/yvw1nnqbyiVtf/uj+S0pMN9yyaV6992GcjalVXEwT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vJny5x2q4gf3xJGNPgU7Nodhe9m8fzdkqw1uAIgor8FXemN3ONwapqcMFXU6eg9TB
-	 oi7xEmSdK3lZmS198wi6IcnsyuAjpL3everT/F5Jr/aCrZIv5FA+HPC/4gJA1ZSYi1
-	 WO+VY0tI/K1XOZCEKOiQLYjoPLBEQG0mYUXWtG/4IWfDo9kUi4RuwW2nWam7yatAu/
-	 KPw0Uy76pKNWj28mdBAs0VxE30hHwxm1+2j0QxxCN7KI1hYsEYNmbbTq2fWzsxqF6y
-	 30dVyAr1lloZ2irFv5PaLcLE7hwbNitqbDc4rcEwpk1b1TS1bc/+54UDmTtk9GGs4V
-	 ONXt0r+xl2iNg==
-Date: Mon, 12 May 2025 17:49:29 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Vishwaroop A <va@nvidia.com>
-Cc: krzk@kernel.org, broonie@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
-	jonathanh@nvidia.com, skomatineni@nvidia.com, ldewangan@nvidia.com,
-	kyarlagadda@nvidia.com, smangipudi@nvidia.com, bgriffis@nvidia.com,
-	linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 RESEND 1/2] dt-bindings: spi: tegra: Document IOMMU
- property for Tegra234 QSPI
-Message-ID: <20250512-observant-rental-21927c85c709@spud>
-References: <20250509165409.311912-1-va@nvidia.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R5w/yMSd";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="IcueM12m"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CGXxtM021678;
+	Mon, 12 May 2025 16:49:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=sg06d0sTlys1uinGKd
+	ObbwSTvOdQef6rARna20e9TFM=; b=R5w/yMSdX8jSusT5uTR7fffVIqbIDTFqON
+	LDJxLYFBMkQq1/NjYezOGFU8VELwm6tIEM+SJo6StTrnNwPVA8JRZ64NXj7kLalC
+	tGk/mxM8+HkZlV9mO2jLv1mCcOfEIOwGXFzo02RIiWDJNa0ccFH7MI/97m32uEZI
+	M/rbbWFP7YAZDMFb7/nf8qQzTGulaQQhQwyVoreS5EZL6NGz55KFMv7OGri3oCIS
+	48dw9FbeMUsvHx3SUT+7lUUor/7y40LlGCUwXLsRU9gPSH5NSZkRCJjkZN9lDcDk
+	/NZYVwMYL8QZzN1IfmUOf5YViJSSYNNH3UMfGgjnNp5T4lvPYQZw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46j0gwk16k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 16:49:56 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54CFGUw3022376;
+	Mon, 12 May 2025 16:49:55 GMT
+Received: from cy4pr02cu008.outbound.protection.outlook.com (mail-westcentralusazlp17011028.outbound.protection.outlook.com [40.93.6.28])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46hw88mf2q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 16:49:55 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P8BymJ9OyrDOJFw+NThVQKJPVQfHwEFIRc7IStlrN+u1bre8tanrjNWrtrr/E/19m/zqYQ2PnPjzOxzLHVWS64pnQ4GSjcdHbIyTuXpvEMLNM2rrmA3KVc9cw9LrqTCMO8/BsYoHUfflEEdnga5iTB3p2RLIt+UY8D/nQ2f45H15NX6w41eMcOIy/7XlUCAyCsUfcaBsbepFVhpKp2LSzepa/O04Nz5/+HIF7LQmhS5gE+23lZ7Ceo275+tiT3PChDBj3Z244tnrFBJEiYSMdJgI5gb8GDbZyWOWv1Y8VWbC8hWU3vLJhnQMBaijI1QcYDB5XF9e2WpTO4D71HZuPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sg06d0sTlys1uinGKdObbwSTvOdQef6rARna20e9TFM=;
+ b=sl2HVQeHpsgnHTqC69jYlT1vJiEGSbh/N/TiuR+ThEolqdPK2LUrHGeVX14+MmuxguPbbJ/u9FuLsnHGgXDa9d2C8HpK8oq2dyR3mIaEVT+QCprcefVXJ9u2WcGSFrbf5N6v0Fpk1xzvnrMeyttsw5EUtIn2+zBvb5Pl5BUnkR3P05sibRpVSBB5CAlFPA+LHFn2tW7oRb4pvj5g3jQPS0L2FcFaQ5/cr1/o8u8lHOHfDXkjJDVvqU/jPptwzIgvq0RanVgWvlAchSVZDU1fWrYGiNiQN3ba9BaDwqpHkwSBUryjgRVBl/3he5O2hpvFMR76m6i2zRoa5TiLN78Nzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sg06d0sTlys1uinGKdObbwSTvOdQef6rARna20e9TFM=;
+ b=IcueM12mBib0TNXMNcXM+QX8P6SKXbDhUCz/+CJZlBanCd6ZR6OOqSj7wOWQzlxvHLUnKJlxY49klCg6pLJUIHZ/faup8AQTguVhmDAqxhkjjVn6HxP21pPkieeh/MrBGXqViC20FsN5NhnBYD+Jsh5Fyxadd6KnP5vIcTemmEE=
+Received: from CH3PR10MB8215.namprd10.prod.outlook.com (2603:10b6:610:1f5::7)
+ by PH8PR10MB6316.namprd10.prod.outlook.com (2603:10b6:510:1cf::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 16:49:52 +0000
+Received: from CH3PR10MB8215.namprd10.prod.outlook.com
+ ([fe80::e4f5:cb34:9b58:be90]) by CH3PR10MB8215.namprd10.prod.outlook.com
+ ([fe80::e4f5:cb34:9b58:be90%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 16:49:52 +0000
+Date: Mon, 12 May 2025 17:49:49 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-trace-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v2 09/11] x86/mm/pat: inline memtype_match() into
+ memtype_erase()
+Message-ID: <81aa38a0-ae35-41b1-900a-cc60f5367d06@lucifer.local>
+References: <20250512123424.637989-1-david@redhat.com>
+ <20250512123424.637989-10-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512123424.637989-10-david@redhat.com>
+X-ClientProxiedBy: LO4P123CA0532.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c5::14) To CH3PR10MB8215.namprd10.prod.outlook.com
+ (2603:10b6:610:1f5::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="b7v6v0TWl91jPaKU"
-Content-Disposition: inline
-In-Reply-To: <20250509165409.311912-1-va@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB8215:EE_|PH8PR10MB6316:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9adb7177-63b3-4e92-2c34-08dd917503de
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FsYo/eixUh1eUl9cW23ZDM1dA3dwOUSQxMV06Ky7YQqrOVOBNsTKBvYIlaND?=
+ =?us-ascii?Q?KBXpMJpk/7PUQbV5D/LrmUrslPP5WYUlxdcsceiiJJ3aDcCDE9MgliTXlQmv?=
+ =?us-ascii?Q?fNHB8NySlx3PGVLHJx2DVDlChgiwyLK7biUMCSfB37tVm1LJvf9UxWfPfpA8?=
+ =?us-ascii?Q?FUMsROdgOSC80dFTCPDw7YMHo25yd2xmHsgMdo87rgJYbMgNUjFiYG9jXXKN?=
+ =?us-ascii?Q?UGvlI4zGD5TPAGQ4Juvg5yF2aGlWCMEEpHx0zuCPG6pVr1QT2gNSojIU4Eu7?=
+ =?us-ascii?Q?uky/FOnkWGQcllzsoeUMmxZxSdBLiSTcl8efE/CwX0B3CH9yHPY5/2pvcz9q?=
+ =?us-ascii?Q?qqW5cgJjBqYpEQI8tbPdp9gwKrao2sMBM8c0K9j8D/L8VOu960q2bvGJM602?=
+ =?us-ascii?Q?ww/8t6Oga6XX++0G2gEthVFfuln5vnoUUdKK8vpYSvYeai0jI3SteYqOsExS?=
+ =?us-ascii?Q?C5XoopeAWKDOFrFvOp8A172rW62P7GWHws2u/jcDIbZTcAaNq0VpllBWQEe8?=
+ =?us-ascii?Q?5iulZgPG6Xn7FJF7S2isb6zA+zjxTT8lsG0FwXA+1lfb30X9YiP58RDQkKZc?=
+ =?us-ascii?Q?gnQAeRolJorj3CmuXg4cqB4eMAEVC2nLIzIRbxVv4fyGrN25z5UsUsJUnHro?=
+ =?us-ascii?Q?TtCFCwCSy3VisS6WDTrHS6BhdWY4VfaNKJWgjs0hdSpA3KrtdoSEWFr+sj+e?=
+ =?us-ascii?Q?x879EsNczIEdz9Qc9nR6jgqv3T377r2Z7+zb7H9/6awOxSJu1MYBXdsR9o9I?=
+ =?us-ascii?Q?mLGVb5VVNWzPkMv1JC5Exl94gqm1g/0XYvdpsEbvYHnXEFmNRU0SswecafCI?=
+ =?us-ascii?Q?po0GqIqrl6ct6mb9NtY8kSFkA9ggnTM7CL65y6v3SFKCvw6DQJjoorp4dE8y?=
+ =?us-ascii?Q?+9gvqpPhjgXYcOsGxi5CFbEgAN1aKlM8JYOFFqfRws5Ir6xyDGTblwQhkSGQ?=
+ =?us-ascii?Q?l/kTZqq0H4W8fVNNPlUikcuY1jAz67ticvSg9hahpmDC90zMALxp0TyN5YVC?=
+ =?us-ascii?Q?vsl5HV2+WW1AzSx36PFH8kASxRqZTCrtsSQhe+GRXTj6ZsKfF8ILMXkV1vm2?=
+ =?us-ascii?Q?fKqzJGg+pyT89ubnfHE5qm9C1DPJBm+xKSCOsRreiG0URNZBrdpo3ztpJd5D?=
+ =?us-ascii?Q?Rp7hlV6M0Fp3i0mkIK/H1JM6yn3mwhWTDUx5VFS9rJ4czRPBsAvwQFc5fVKI?=
+ =?us-ascii?Q?sdLnjPk3tPxUXa/+GxZZIUGIFBQ/0S4LlIW5nGVxsF/C9BWF/7Lrg93ksR/v?=
+ =?us-ascii?Q?wWOyrORRRrpO77hDK0h/s5efcf+YVnJGUX+/lM5mGhVwL7PNLAGoewxwIQRv?=
+ =?us-ascii?Q?kGUpQjzyr0d/5beqokGpbCIWsKSJfy7g9CgZL1lX6X+ZnQZWxoOlc4DCdI3m?=
+ =?us-ascii?Q?UUnPuIcPHqUe7tCHT1fCkBjWFbCUN0gu+8iUwqYNArp0fuBPMzexwvxRaBvm?=
+ =?us-ascii?Q?MAlfMo6Y0PM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB8215.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0vA3R5YjZ+WQS4P8qP8eqnsb/CRoznfb8Ty5ygGTpyK+Nvh0mLKEFQfKPu9Y?=
+ =?us-ascii?Q?wXY/vykOVVGoDt9soNje5SSb/qD+r/QTk6kBt3A1Pdx9H6sPtB3gSNNBWfJL?=
+ =?us-ascii?Q?E8PMdBUO2M7crDvzvNW4TP3HThawE714il3Av97B69fptfo65XvL80y2sFFM?=
+ =?us-ascii?Q?j37XyALLQMKwb/u2YmtwkQGw9pZPdUH0xkwBFOg0TIl59obHvDu/nR6iPsY8?=
+ =?us-ascii?Q?KYm7d6VEtrSZb9axik/tIkBzbgrPjdu1Fvyq1DqNc0K2R6KbAxYg3LysYQoh?=
+ =?us-ascii?Q?trn5pcRKSDq11YBMZuZp2tPCEimBAh87hoDWpaJMHRi/4NxMkCEx2sYMgmN2?=
+ =?us-ascii?Q?dcaAimMHpeXZFhwILSpjEykYmsJXlgZLV46Gx6qZcs9GKCuSp5DrMMjJplTG?=
+ =?us-ascii?Q?CjrZbT27nFTZI4MsVDe6uiZnoGQbPl3lCNoXm/GJamAUuZ2nrYi3lCKXaT4f?=
+ =?us-ascii?Q?HRG9fumcB4xqL7/4RIfZB8RGsw5PvtZgOrA5cHpoXedajFZX28oleF7JxJgZ?=
+ =?us-ascii?Q?SHSGF6MSa8AbA4x0ScbkJbWd57lEHEP/R4ou2rtwH/7oIjWumAJReog+mIjZ?=
+ =?us-ascii?Q?03dJRyg4hc9zX0N57MJ1KqEX62ufWAga+7rbAfH0baVRD7rcTW3P5IERw0Mk?=
+ =?us-ascii?Q?RlRnyjyBiEBDpmnF4EkyACzT5kht1S/LsKDjPNHhsIaF09eyHNT2EnREsZ+C?=
+ =?us-ascii?Q?oDqwyUqHYSj9XvVXRnjQ2Mo6Xh7uGUCHUZjBkEo1futu2DG5dlGBZy6Xz1xW?=
+ =?us-ascii?Q?EpmIxOwlqhC1+XWnQis9nF/i4ogGHak8r59Lw1v3vB6BBI2ZhjQieYBg4rWb?=
+ =?us-ascii?Q?6J2rI5e6mBicv00v2+v/u6J6WsvPXDHi48zQgc2ilEYYoJTNnlvuJWsaIwlq?=
+ =?us-ascii?Q?IS31/iwpAwasQMDHagWpWwCbMvLLN/To1GlmPt+VvBBFgrZlDaGBARBt4qzM?=
+ =?us-ascii?Q?lHplcvsE3lpAazxIkCE8xRF90zx+FELMY7XhiEnLnYZ2fx4xpa7QDFncioTk?=
+ =?us-ascii?Q?FIrioR4Nx27PvQmls/byB5v6Lu+mbkWOXS01+SexH9R9kfUxU+M3sc38kPeT?=
+ =?us-ascii?Q?MyRfasC+rDFZhYnrfHvfZM4VnzxOvHsFRrbZZwoZaPwmZMPABlWtjMpWzO0j?=
+ =?us-ascii?Q?Z8afIXMnobgYEHBuTpza0z7XjDfIORgSOnzZnXaO8wMULwvUrV0HCblt7nXN?=
+ =?us-ascii?Q?xnjEsLGRLGFW6+oBZ8WniJV0J5yeLEeNdgbSPNs1blW1tra+bbj3fGt7YbU0?=
+ =?us-ascii?Q?Nxu9d/fwedx2nx2CNk74IVINANPVWGnpDHjq2v3LwAKVUngLZEhicv9GOH8i?=
+ =?us-ascii?Q?/5TOx2BQn3DvygLI2EjvwWHJ2CFFS2K/D/U/xhRAO/Nh0KOHnzkBh6ZRBZwt?=
+ =?us-ascii?Q?9MXvy2bQwFZXJV3zf20DAgWH9CgPgRnUUlTNudjrJBAVBU00ScOyaqRhumjy?=
+ =?us-ascii?Q?V6vOAB9lD82q4w0iuJEsbmQYkw/SMvR6iaD9wNKy0nLE9kvdKLIgACS0g4D5?=
+ =?us-ascii?Q?5v19NKmnUk+sa0B5vSvy0IJVAGdeZZNWrRyXpxughnF5g4t9wpW4oQJJybMf?=
+ =?us-ascii?Q?k6posYqjtPixh+lk3ony7EkfRm+2hisc4hbhbXbQbKHTXMm8i53foTFVH+CV?=
+ =?us-ascii?Q?kg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	XtPKiztstNXrCCrXPxTMBvSC84gwRA7xmEabCO/wDHsWrTI3TB6d/JWtnUQ65rdRco3ieRs/pgeWZO2aO9o9ZBEcIKuHnh/tkrULxb1kv8Y2aSPDD7s873WYF5s3dzCthLhrC0zfIC1Q/X/ZdNPaxVf0mvN2pDjcf9UuBnVIbBitktBh26ogNRavMWhGxgUxPNGcIrF/P5PPXmAkRVn56UkOQkphlzKHOdXxcnPpHfSqV8jOXssb1fNrtGQ+4ZNHtzjoZ5hlQ2yqHg2TB51THf/U7oZhRiTFVqOm0/IUEqK4XNdf0X/AAYZleZlfTN2246pCLW4G6nn0TphgpmvxRwERLP8q+kzz/FZt/+fhm1CwFC0WVwy44BlB1WiUjywKAFXo88ZpHfwgK2p/Df+utFYBqtiJ0FVVDIX9MSim9LB1ADWQmnvQcJex11I14y1guW58pImwfmlXI1LiGZ/L5LJnp3/47blt3a9P8Tc/Q3CPUphGyoVg/y05JrDLVj26CfoirYscJLvqCJ3fW3xCWhclMrMAyToJx3yN9js3AH9Q6JlW4akMLQpsO+BoqweKI1CY+x5Q345mX+ibV6S6zXvkVqD9OVEsjwwyoDBRurc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9adb7177-63b3-4e92-2c34-08dd917503de
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB8215.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 16:49:51.9472
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BwJRK78g9GwX+JPoBeJllxXiCY97VMIrKv6cq3xCY059NRk4sXvR0iz9hNMFST9FGuhbdcV+AzAM9+h5mLtDVP5s8F1ltWYjgkqRYHeA3X8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6316
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ spamscore=0 malwarescore=0 mlxscore=0 phishscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2505120173
+X-Authority-Analysis: v=2.4 cv=M8hNKzws c=1 sm=1 tr=0 ts=682226b4 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=xsQxrDdK8mqNjbTR4KcA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: m0vLTn5urEhmYLcp7c1WxPPx6vApvx5u
+X-Proofpoint-ORIG-GUID: m0vLTn5urEhmYLcp7c1WxPPx6vApvx5u
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDE3MiBTYWx0ZWRfXyuC84BIRXNVr DjoIUF2tkyic3D+CII4F77qlxbvOcGy0USGPqMmzr+owPXO6xAb6I2ojwUKPjKVDbK2Fo332EfW 38ANbZLvg4ZW1m5QKVLG/KSTFwDBCQ48F0IM47p060Y6hbiVNUFZaL5UuSL+4YnrR+XtZsE1b1A
+ i4yvvc11Vazeofbe/oal+0XqBHmHD0aoWcY7LgDG7PZM60+G85Mb7gBkdbqEQyxTevLsVrGUOlL hU/boDMb/qqiWaoWmzHzuY+IloBuPVf6CzwbfQeyO/LE6nG2cMZ6VlFlh2CDK2wooQs7VvXbLmc U7d4dRgPRs7xXc8NlbwTLzDsUqrQV4NRhu+XzdQ+LKMegOrLCHW/arehAhi/h9nugB5jwNSi9Dn
+ XvQvAJHo9ymizYP05whGGGbr+koqTgqAZunREEWmGfqndZE/dWGCH3P0JunnBGD157ORxwhl
 
+On Mon, May 12, 2025 at 02:34:22PM +0200, David Hildenbrand wrote:
+> Let's just have it in a single function. The resulting function is
+> certainly small enough and readable.
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
---b7v6v0TWl91jPaKU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Nice, great bit of refactoring :) the new version is considerably clearer.
 
-On Fri, May 09, 2025 at 04:54:08PM +0000, Vishwaroop A wrote:
-> Add the 'iommus' property to the Tegra QSPI device tree binding.
-> The property is needed for Tegra234 when using the internal DMA
-> controller, and is not supported on other Tegra chips, as DMA is
-> handled by an external controller.
->=20
-> Signed-off-by: Vishwaroop A <va@nvidia.com>
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
 > ---
->  .../bindings/spi/nvidia,tegra210-quad.yaml    | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
->=20
-> Changes since v2:
-> - Fixed version number to match the actual version
-> - Added proper changelog section
-> - No functional changes from v2
->=20
-> Changes since v1:
-> - Fixed subject prefix to match subsystem (dt-bindings: spi: tegra)
-> - Improved commit message formatting to follow Linux coding style
-> - Clarified that IOMMU is only required for Tegra234 platform
-> - Added explicit disallow for IOMMU on other platforms
-> - Removed redundant explanations of what the patch does
-> - Fixed commit message to use imperative mood
->=20
-> Initial Version:
-> - Initial implementation of IOMMU property documentation
-> - Added iommus property to device tree binding
-> - Added support for Tegra234 platform
-> - Added explanation of DMA and IOMMU requirements
->=20
-> diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.y=
-aml b/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
-> index 48e97e240265..04d3b1a47392 100644
-> --- a/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
-> +++ b/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
-> @@ -10,9 +10,6 @@ maintainers:
->    - Thierry Reding <thierry.reding@gmail.com>
->    - Jonathan Hunter <jonathanh@nvidia.com>
-> =20
-> -allOf:
-> -  - $ref: spi-controller.yaml#
+>  arch/x86/mm/pat/memtype_interval.c | 33 +++++++++---------------------
+>  1 file changed, 10 insertions(+), 23 deletions(-)
+>
+> diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
+> index 9d03f0dbc4715..e5844ed1311ed 100644
+> --- a/arch/x86/mm/pat/memtype_interval.c
+> +++ b/arch/x86/mm/pat/memtype_interval.c
+> @@ -49,21 +49,6 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
+>
+>  static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
+>
+> -static struct memtype *memtype_match(u64 start, u64 end)
+> -{
+> -	struct memtype *entry_match;
 > -
->  properties:
->    compatible:
->      enum:
-> @@ -47,6 +44,9 @@ properties:
->        - const: rx
->        - const: tx
-> =20
-> +  iommus:
-> +    maxItems: 1
+> -	entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
+> -
+> -	while (entry_match != NULL && entry_match->start < end) {
+> -		if (entry_match->start == start && entry_match->end == end)
+> -			return entry_match;
+> -		entry_match = interval_iter_next(entry_match, start, end-1);
+> -	}
+> -
+> -	return NULL; /* Returns NULL if there is no match */
+> -}
+> -
+>  static int memtype_check_conflict(u64 start, u64 end,
+>  				  enum page_cache_mode reqtype,
+>  				  enum page_cache_mode *newtype)
+> @@ -119,14 +104,16 @@ int memtype_check_insert(struct memtype *entry_new, enum page_cache_mode *ret_ty
+>
+>  struct memtype *memtype_erase(u64 start, u64 end)
+>  {
+> -	struct memtype *entry_old;
+> -
+> -	entry_old = memtype_match(start, end);
+> -	if (!entry_old)
+> -		return ERR_PTR(-EINVAL);
+> -
+> -	interval_remove(entry_old, &memtype_rbroot);
+> -	return entry_old;
+> +	struct memtype *entry = interval_iter_first(&memtype_rbroot, start, end - 1);
 > +
->  patternProperties:
->    "@[0-9a-f]+$":
->      type: object
-> @@ -69,6 +69,19 @@ required:
-> =20
->  unevaluatedProperties: false
-> =20
-> +allOf:
-> +  - $ref: spi-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: nvidia,tegra234-qspi
-
-> +    then:
-> +      properties:
-> +        iommus: true
-
-This is a NOP, no?
-Just invert the case above and drop a clause.
-
-> +    else:
-> +      properties:
-> +        iommus: false
-> +
->  examples:
->    - |
->      #include <dt-bindings/clock/tegra210-car.h>
-> --=20
-> 2.17.1
->=20
-
---b7v6v0TWl91jPaKU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCImmQAKCRB4tDGHoIJi
-0nCdAP0SwhcOv3w78KUp3q+/132CGvA5hXO8+nprMYHRBeAVJwD/Z4Jiu2d4tJ6/
-Q3o7E6/SGMTjBqGnVwJK9M/+r8H+XwQ=
-=qS0d
------END PGP SIGNATURE-----
-
---b7v6v0TWl91jPaKU--
+> +	while (entry && entry->start < end) {
+> +		if (entry->start == start && entry->end == end) {
+> +			interval_remove(entry, &memtype_rbroot);
+> +			return entry;
+> +		}
+> +		entry = interval_iter_next(entry, start, end - 1);
+> +	}
+> +	return ERR_PTR(-EINVAL);
+>  }
+>
+>  struct memtype *memtype_lookup(u64 addr)
+> --
+> 2.49.0
+>
