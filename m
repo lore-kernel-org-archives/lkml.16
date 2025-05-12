@@ -1,43 +1,50 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B8E12FF69;
-	Mon, 12 May 2025 02:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C293C381AF
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747018393; cv=none; b=GxZhVzHXN/kvFX7AhJahtX0n/6LFglgORYkOFn9QgafkoZS65mvZZPZQLTS20kqNfKNTCz5axNRSqZ1MP8tsD3JkDLLbd09SEXpdF4Czsm9ZcxQJiMNDNbwWh6WWNnp9IJZ02JqLfaWjy1f4jrdr5y+9fN9kt+3AamYEdryCshw=
+	t=1747018645; cv=none; b=RSL53mIh3SSJv3Eoma4ADP1ojAqjhkwyi7URVLpTzRGI3wY3FnNuV+s294Y8GpSfLXXyeEaYTevLEMEEVEH/JTDy8LjcY7rrg7gorvNIN+ilFTMB+ZqxZRK47c3lTlEadLpwXT3ma36vW8o61EXadATdfoyPUognU8rqMmzfOoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747018393; c=relaxed/simple;
-	bh=YMA93/Do0rPqYwX/U4VcdAsbH1ftL8fuolp56Uow/2s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S0Lz2dSonvrh0EDEzVWU8MV/AXDqojnU24tvPPIGFMdecLePfShpXw0kw+wojFPzFV14F/Xjh1Mu0VhJXV4xhk4qh1Bz1PxlVWuS07gkjX4lcKxm+JBnn45ny/nK/3wMAQ2+Sla0kdcLJC9xO0yN0r6Mt1hT9ovUGisGGxylv80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C1A3rw005877;
-	Mon, 12 May 2025 02:52:37 GMT
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46hv11hakp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 12 May 2025 02:52:36 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Sun, 11 May 2025 19:52:35 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Sun, 11 May 2025 19:52:32 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <akpm@linux-foundation.org>,
-        <osalvador@suse.de>, <hannes@cmpxchg.org>, <ying.huang@intel.com>,
-        <shy828301@gmail.com>, <linux-mm@kvack.org>, <byungchul@sk.com>,
-        <hyeongtak.ji@sk.com>, <baolin.wang@linux.alibaba.com>
-Subject: [PATCH 6.1.y] mm/vmscan: fix a bug calling wakeup_kswapd() with a wrong zone index
-Date: Mon, 12 May 2025 10:52:31 +0800
-Message-ID: <20250512025231.3328659-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747018645; c=relaxed/simple;
+	bh=8jcCbCGPRF9j9gxfu7C7ogkon8w/3qpLF/dFLtryrXg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ixQdS1B6SbZirkvvFOV2J76hBWDa7PYhSN5mHXPdTm1KQrtM9LgGHQnlo+7a3CgjVk01bFOEnw2/V+9zUjoC7B6w/Sdh0YyFSKB3Vab3eI5Qey5UXpY8TP5+l+b83Gs6fUa2LRH5fEsQiSyEN5H314LxVHoXrXsruTQ1uX8TgHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ckT1JmUG; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ckT1JmUG"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747018640; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=PyJc3K6r4UwcpFe6wy9ZHDQCmkxdwkGl4rZwFtFT4DI=;
+	b=ckT1JmUG077NnRQ8v54MPlKwDp1+PQ4z7Am2V11FM+lQQukyFaaTYKuDU9igaF2ghUh0uW3MIgdEQN50pV+45NOC5TnNZK3UiuUKTh7SKRLdkEJS7pgiftLRaDEgUNwlBhDQQzOAmQKXhkQP+GAtaZNimEO/3VU32GlK+OacVtE=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WaChNWA_1747018637 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 12 May 2025 10:57:18 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	david@redhat.com
+Cc: hannes@cmpxchg.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	ziy@nvidia.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] mm: khugepaged: convert set_huge_pmd() to take a folio
+Date: Mon, 12 May 2025 10:57:11 +0800
+Message-ID: <110c3e1ec5fe7854a0e2c95ffcbc985817180ed7.1747017104.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,118 +52,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=TZCWtQQh c=1 sm=1 tr=0 ts=68216274 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=ph6IYJdgAAAA:8 a=ID6ng7r3AAAA:8 a=SRrdq9N9AAAA:8 a=QyXUC8HyAAAA:8 a=ufHFDILaAAAA:8
- a=Z4Rwk6OoAAAA:8 a=t7CeM3EgAAAA:8 a=H6QpYm678JWB0EKp6agA:9 a=ty6LBwuTSqq6QlXLCppH:22 a=AkheI1RvQwOzcTXhi5f4:22 a=ZmIg1sZ3JBWsdXgziEIF:22 a=HkZW87K1Qel5hWWM3VKY:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: 67dy1ERlcH9PLZy0Ers4U-qDbnxz99yL
-X-Proofpoint-ORIG-GUID: 67dy1ERlcH9PLZy0Ers4U-qDbnxz99yL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAyOSBTYWx0ZWRfX9/fCTKpihrbG ARjz3102fQQH9zHIHdoPkIAxAQFSoe7LPixXTY2jHCQaFl87pRuOVKuyXP4wZbdEU9YEpPDsrUE C+b6J1yGQQIg6CjnasvE9Ltr6wjhS151el5YsWh+WIyg+a1u442hFcIP7tiFC2DBCB3717MsEIv
- TvBuFP+Yc+fl6UGeCQiGMNyBN8DJzdeErGlf91QLxs6NtSZCpikpxfgstbDmss86JaDKCi86lrc ievwuMqa6T57JqKcgMtbAT+SxyFnlC3UXeS/xpl7ixslWpdeUfmZMYS77losSfM302TgI7hmTJv VdvXhxwuXfXPNKKWJQFXS0JiK1ydlasYX9lKfypdkrYpYkxKpXvfEY7niUMMiVypNiP6S3g2/lM
- 7q3tGV3BGjQNrfiFOp+Spowh6epVHPw3ddG0y7i8LwITveKd9P41PvC3pxddW+XFqNK/RzYP
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- phishscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2505120029
 
-From: Byungchul Park <byungchul@sk.com>
+We've already gotten the stable locked folio in collapse_pte_mapped_thp(),
+so just use folio for set_huge_pmd() to set the PMD entry, which is more
+straightforward.
 
-[ Upstream commit 2774f256e7c0219e2b0a0894af1c76bdabc4f974 ]
+Moreover, we will check the folio size in do_set_pmd(), so we can remove
+the unnecessary VM_BUG_ON() in set_huge_pmd(). While we are at it, we can
+also remove the PageTransHuge(), as it currently has no callers.
 
-With numa balancing on, when a numa system is running where a numa node
-doesn't have its local memory so it has no managed zones, the following
-oops has been observed.  It's because wakeup_kswapd() is called with a
-wrong zone index, -1.  Fixed it by checking the index before calling
-wakeup_kswapd().
-
-> BUG: unable to handle page fault for address: 00000000000033f3
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0
-> Oops: 0000 [#1] PREEMPT SMP NOPTI
-> CPU: 2 PID: 895 Comm: masim Not tainted 6.6.0-dirty #255
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
->    rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
-> Code: (omitted)
-> RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
-> RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
-> RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
-> R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
-> R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
-> FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
-> ? __die
-> ? page_fault_oops
-> ? __pte_offset_map_lock
-> ? exc_page_fault
-> ? asm_exc_page_fault
-> ? wakeup_kswapd
-> migrate_misplaced_page
-> __handle_mm_fault
-> handle_mm_fault
-> do_user_addr_fault
-> exc_page_fault
-> asm_exc_page_fault
-> RIP: 0033:0x55b897ba0808
-> Code: (omitted)
-> RSP: 002b:00007ffeefa821a0 EFLAGS: 00010287
-> RAX: 000055b89983acd0 RBX: 00007ffeefa823f8 RCX: 000055b89983acd0
-> RDX: 00007fc2f8122010 RSI: 0000000000020000 RDI: 000055b89983acd0
-> RBP: 00007ffeefa821a0 R08: 0000000000000037 R09: 0000000000000075
-> R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-> R13: 00007ffeefa82410 R14: 000055b897ba5dd8 R15: 00007fc4b8340000
->  </TASK>
-
-Link: https://lkml.kernel.org/r/20240216111502.79759-1-byungchul@sk.com
-Signed-off-by: Byungchul Park <byungchul@sk.com>
-Reported-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
-Fixes: c574bbe917036 ("NUMA balancing: optimize page placement for memory tiering system")
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Acked-by: David Hildenbrand <david@redhat.com>
 ---
-Verified the build test
----
- mm/migrate.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes from v2:
+ - Update the releated comments.
+ - Pass the 'page' for set_huge_pmd().
+ - Add acked tag from David.
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index e37b18376714..7b986c9f4032 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2422,6 +2422,14 @@ static int numamigrate_isolate_page(pg_data_t *pgdat, struct page *page)
- 			if (managed_zone(pgdat->node_zones + z))
- 				break;
- 		}
-+
-+		/*
-+		 * If there are no managed zones, it should not proceed
-+		 * further.
-+		 */
-+		if (z < 0)
-+			return 0;
-+
- 		wakeup_kswapd(pgdat->node_zones + z, 0, order, ZONE_MOVABLE);
- 		return 0;
- 	}
+Changes from v1:
+ - Remove the unnecessary VM_BUG_ON().
+ - Remove the PageTransHuge().
+---
+ include/linux/page-flags.h | 15 ---------------
+ mm/khugepaged.c            | 11 +++++------
+ 2 files changed, 5 insertions(+), 21 deletions(-)
+
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 37b11f15dbd9..1c1d49554c71 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -907,20 +907,6 @@ FOLIO_FLAG_FALSE(partially_mapped)
+ #define PG_head_mask ((1UL << PG_head))
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-/*
+- * PageHuge() only returns true for hugetlbfs pages, but not for
+- * normal or transparent huge pages.
+- *
+- * PageTransHuge() returns true for both transparent huge and
+- * hugetlbfs pages, but not normal pages. PageTransHuge() can only be
+- * called only in the core VM paths where hugetlbfs pages can't exist.
+- */
+-static inline int PageTransHuge(const struct page *page)
+-{
+-	VM_BUG_ON_PAGE(PageTail(page), page);
+-	return PageHead(page);
+-}
+-
+ /*
+  * PageTransCompound returns true for both transparent huge pages
+  * and hugetlbfs pages, so it should only be called when it's known
+@@ -931,7 +917,6 @@ static inline int PageTransCompound(const struct page *page)
+ 	return PageCompound(page);
+ }
+ #else
+-TESTPAGEFLAG_FALSE(TransHuge, transhuge)
+ TESTPAGEFLAG_FALSE(TransCompound, transcompound)
+ #endif
+ 
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index b04b6a770afe..33daea8f667e 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1465,9 +1465,9 @@ static void collect_mm_slot(struct khugepaged_mm_slot *mm_slot)
+ }
+ 
+ #ifdef CONFIG_SHMEM
+-/* hpage must be locked, and mmap_lock must be held */
++/* folio must be locked, and mmap_lock must be held */
+ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
+-			pmd_t *pmdp, struct page *hpage)
++			pmd_t *pmdp, struct folio *folio, struct page *page)
+ {
+ 	struct vm_fault vmf = {
+ 		.vma = vma,
+@@ -1476,13 +1476,12 @@ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 		.pmd = pmdp,
+ 	};
+ 
+-	VM_BUG_ON(!PageTransHuge(hpage));
+ 	mmap_assert_locked(vma->vm_mm);
+ 
+-	if (do_set_pmd(&vmf, hpage))
++	if (do_set_pmd(&vmf, page))
+ 		return SCAN_FAIL;
+ 
+-	get_page(hpage);
++	folio_get(folio);
+ 	return SCAN_SUCCEED;
+ }
+ 
+@@ -1689,7 +1688,7 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ maybe_install_pmd:
+ 	/* step 5: install pmd entry */
+ 	result = install_pmd
+-			? set_huge_pmd(vma, haddr, pmd, &folio->page)
++			? set_huge_pmd(vma, haddr, pmd, folio, &folio->page)
+ 			: SCAN_SUCCEED;
+ 	goto drop_folio;
+ abort:
 -- 
-2.34.1
+2.43.5
 
