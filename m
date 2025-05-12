@@ -1,51 +1,101 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A96F2576;
-	Mon, 12 May 2025 04:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3049C2576;
+	Mon, 12 May 2025 04:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747025720; cv=none; b=ePOZlbvEigvK+h2QZnBI+TDsGVbmjqILtuKJj3ZucM1VL1cOKPYIyhl8UaNH/CpGS9kIBdVADxu04RFQPRX+0TtFD0o+RMKt+SsdLR87SlJk8eobuC3Fn2gLrTsHu0DTSVQMHC/C9OfVprZVkwADRBzltMD8BsyOLJHcL8XXMWc=
+	t=1747025727; cv=none; b=A2Qwu0v5g/Sp3xlmR2HwArw+mSDrKXloKn0JKxgvNj/Vv6Yddu0ZjfW0FVZPpaAtqY8HAH+bh4Sg8LtRLP4XaqeSD4ejECLcDdPkq0wfDWQlfc3ehpX2i5t8VR0bWx0Ndd/vKt9Q1d3F4zEjSnl0iq0ECdhAYLvlgebQJAwyXrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747025720; c=relaxed/simple;
-	bh=FbVLm8YO5siWQNVRJw0xf5O1P1qFxSqSIuicHSt+ZTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WVe/ZyO38U4fT8LO12EXSZYMwQUYvCXmTW5Zu6etjOGNWohyGxbpHYw3GZZsnX/t0tP2nDOMQyIsTUBcTYCsxxzDOsPfiYs6oz+G3wcdO/5Vw0To70JGuFFC+TPBBFd+kkuPvmn5Af679+AZofxRwrvs/K8NjTvxWcfdkAm+4QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id B804868AA6; Mon, 12 May 2025 06:55:11 +0200 (CEST)
-Date: Mon, 12 May 2025 06:55:11 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
-	yukuai3@huawei.com, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
-Subject: Re: [PATCH RFC md-6.16 v3 06/19] md: add a new parameter 'offset'
- to md_super_write()
-Message-ID: <20250512045511.GF868@lst.de>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com> <20250512011927.2809400-7-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1747025727; c=relaxed/simple;
+	bh=aWvgqyTC8MhHf2LqWcH7hQ6q+Mzcz9kpTWIwdqKNqGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Nt2ZyWqfhcMsX/r55O5x7jP7glFR8ryUSUOJ2jN0Heb/bsOam93SrWZlJ09X2CtPn47vEBeIDwl3hsgVrn9rtbQyMEIALgr0COi8LFfIR/l7xzZQQ/Kks/tzzYsorblbH27Bs3eq/AiRTgIWJeGfP62Ah1gOJa2ugBUx3il1pmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fyELNxIP; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fyELNxIP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747025720;
+	bh=KHNM5tuWH1IMFWNPTSt9SaxzCvgGT7Fvi7521vVDN/E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=fyELNxIPyXoQtOMPrZvcAZ99udgWVH/dDoWXJlci6/nJu99xGYcoKrs60x35t66ok
+	 navm/yNKCbUVct3jgObOZl6OUx+Je48Vh1LwnttQ54mvQF/ilqunOXruo5DwvUMZR1
+	 uju+5orSzPYp4DbeFdJPMnqdsBnUh+OgfoH48/KwEje11rRK/2u3ghOUIDZN4W0fiv
+	 9uLT5r32m7vhyR0JytFQk6tAo/cxeEbcJwGk5WdBOMzQVEoIasIYKxrXF/2CSJPoGu
+	 o60WjO1ElR37zD7kafD6pSGP+qHlx8vn1HnU+RbyNrouD01vIUOmxNJMIIaf9Kv++Z
+	 tLrIojwN8+vIA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZwnNR4Dydz4wbY;
+	Mon, 12 May 2025 14:55:18 +1000 (AEST)
+Date: Mon, 12 May 2025 14:55:17 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: linux-next: manual merge of the tip tree with the pm tree
+Message-ID: <20250512145517.6e0666e3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512011927.2809400-7-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/signed; boundary="Sig_/kp3oECkJ7=G9nQOS1=v7s45";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, May 12, 2025 at 09:19:14AM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> The parameter is always set to 0 for now, following patches will use
-> this helper to write llbitmap to underlying disks, allow writing
-> dirty sectors instead of the whole page.
+--Sig_/kp3oECkJ7=G9nQOS1=v7s45
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Givne that there is nothing super-block specific in md_super_write,
-maybe use the chance to rename it?
+Hi all,
 
+Today's linux-next merge of the tip tree got a conflict in:
+
+  drivers/cpufreq/amd-pstate.c
+
+between commit:
+
+  608a76b65288 ("cpufreq/amd-pstate: Add support for the "Requested CPU Min=
+ frequency" BIOS option")
+
+from the pm tree and commit:
+
+  d7484babd2c4 ("x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu()'")
+
+from the tip tree.
+
+I fixed it up (the former removed a line updated by the latter) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kp3oECkJ7=G9nQOS1=v7s45
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmghfzUACgkQAVBC80lX
+0GwbpAf/btTTeKTge1jMTuIsJRb7Wv8+nXP0JiM4O7rpJ0Wbbh0cSaGTaKzWaFmk
+Vc/4CJNy8fNG3F7aE0M/LqJvPIJHZ2Kuq/Puvgud+ZSIWRDXtKOzH6mJkij43Ru2
+oLb1S66pN3ZyIq6EJCWYxaQoxeYW2q5tily+HIXRk34A6Fisml3nJL2J0swe6TNu
+jB8etizHORzgjViwKXZb+60FNnUHuovK/dUO0MLW4T7M7fKwFQ1YzAIWplIjlWY6
+3uZVgVt0PHunKaea7ci9n/0jTfCOfTj3DssbpdeSf85pcuMfAmSUzCuPQ6staL8N
++uFeUA9sAyndy9E0whyo+PNaYpTs2g==
+=39v9
+-----END PGP SIGNATURE-----
+
+--Sig_/kp3oECkJ7=G9nQOS1=v7s45--
