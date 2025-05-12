@@ -1,77 +1,131 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A20C25522B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29CD0268FEF
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054032; cv=none; b=UHPxNP1ZPu4JsI4yz4KWSLbNYyJKMwzM6X6fdo2ZSPbv/HxI0biOnda8jyTYkTGhr1K0Eq1RT5R4lCxZgPGbam+2wy2GPEeBE0QerFy0gqlQe7B7BE14amhCNIRNlKDxqvVGHkBJxt31CZB8u4/IdJrY6pdvtZjOor0DTPQ2E5g=
+	t=1747054069; cv=none; b=ueG8i2rIIbIVVmFQeloR0i8EZ6i7tYaJHsgloXmjIA01+4ToLYazQLBkubEsE1MnGyBVsHpQFEPaY5Ap6pSnKbfvo8fOIiXfYyR3GzcDhP+pdC5qYWRT6Ut22+4mBx6Tp7w89b9sJpFB2jQn6rceOtE+lmn23j+nVZ+2xJoFQRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054032; c=relaxed/simple;
-	bh=C7JmtKNbL4VlUTmVWKpTRF/arfLWMbhWSzhlo+JxnHg=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=QOTkS/xlF2BzIu9P49A2MZixpuM/sCEoAVEZoREuTxDfcqU+3ujNak8NvCH6PGJefv17q24oR9S/SVIJBEv7XETkxTh3iwUno2Qzny7Tn5rRXdEhue0EC5SDPkcwR2fJLXWvREn2rgz4Kt9408qFTMYEO63YTUMKCN02qeqZzOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id A607C294730;
-	Mon, 12 May 2025 14:47:06 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id f6iLu6qRFOPt; Mon, 12 May 2025 14:47:06 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 0542F298563;
-	Mon, 12 May 2025 14:47:06 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RLjzZz2HeF-r; Mon, 12 May 2025 14:47:05 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id DA437294730;
-	Mon, 12 May 2025 14:47:05 +0200 (CEST)
-Date: Mon, 12 May 2025 14:47:05 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <1200504110.30346467.1747054025727.JavaMail.zimbra@nod.at>
-In-Reply-To: <d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu>
-References: <20250512084033.69718-1-csokas.bence@prolan.hu> <87frhambri.fsf@bootlin.com> <d70952c1-e4ca-4f09-ac23-2ad13e0facc0@prolan.hu>
-Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
+	s=arc-20240116; t=1747054069; c=relaxed/simple;
+	bh=3m6kRTDNq2S8HTnX+DD72JLmY6w1xe6OW0/zxiDhR4o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QlFPxa9JzfS7NSFCGd3zXG17V3sC6388OEfqcctH4yQ610EEqiYJQmCVtPirVI7upC55gFgm+IWZXED6+eeHw6JL3DrN3oWN6fDbmFjRT9PBMxLQkmH7goRwi6QBBUfa1jwiMetwo7iQ7q47diCs5J3r3iiMsfBR6hUJhrZv6oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SyabuS8O; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SyabuS8O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Rk
+	lIkmPrOmsT98b/PoJKEZlaxWXv3nBZ0SUzoEELd/Y=; b=SyabuS8OJkdWRTSru6
+	CLzuLZvTm+YP3ZkThzxcfpGyu+kKt4UD0vJQoH3fjUSajZrNgZFSzcA50aWc7h1g
+	tXT38zqg/nEqkyPtrUDzTifxXlMpWqsbtQHCmHI7pYs1fvECQDc/IloTt1jQRHxM
+	H3wFyyFaAnVLVe+MkL7yJv190=
+Received: from ProDesk.. (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgC3chWY7SFoQ+_OAQ--.62400S7;
+	Mon, 12 May 2025 20:46:27 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: dmitry.baryshkov@oss.qualcomm.com,
+	heiko@sntech.de
+Cc: jonas@kwiboo.se,
+	Laurent.pinchart@ideasonboard.com,
+	mripard@kernel.org,
+	neil.armstrong@linaro.org,
+	hjc@rock-chips.com,
+	tzimmermann@suse.de,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v5 05/10] drm/rockchip: inno_hdmi: Move ddc/i2c configuration and HOTPLUG unmute to inno_hdmi_init_hw
+Date: Mon, 12 May 2025 20:46:06 +0800
+Message-ID: <20250512124615.2848731-6-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250512124615.2848731-1-andyshrk@163.com>
+References: <20250512124615.2848731-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF138 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Verify written data in paranoid mode
-Thread-Index: vdlBgtKgU0/G1AOofAbE/k3HO+5Ouw==
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgC3chWY7SFoQ+_OAQ--.62400S7
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uFW3Zw1rJF48KF43Cw45ZFb_yoW8Kr47pr
+	ZxCF15tr4fGFy8Xr17ZF1kArZIya4fJ3WYkrWxGw1Syr1UWr9Ykr93AFWfXF98ArWxZ3Z3
+	trWkKay5Wa4jvaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07je38nUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0g5LXmgh5MDG2wAAs5
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Cs=C3=B3k=C3=A1s Bence" <csokas.bence@prolan.hu>
-> Well, yes, in our case. But the point is, we have a strict requirement
-> for data integrity, which is not unique to us I believe. I would think
-> there are other industrial control applications like ours, which dictate
-> a high data integrity.
+From: Andy Yan <andy.yan@rock-chips.com>
 
-In your last patch set you said your hardware has an issue that every
-now and that data is not properly written.
-Now you talk about data integrity requirements. I'm confused.
+Putting these scattered initialization code together is helpful
+for the following migration to the DRM bridge driver mode.
 
-My point is that at some level we need to trust hardware,
-if your flash memory is so broken that you can't rely on the write
-path you're in deep trouble.
-What is the next step, reading it back every five seconds to make
-sure it is still there? (just kidding).
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-We do have plenty of tests to verify this for *testing*
-to find broken drivers or hardware.
-e.g. mtd/ubi tests, UBI verify at runtime.
+---
 
-Thanks,
-//richard
+Changes in v5:
+- Split from PATCH 9/10
+
+ drivers/gpu/drm/rockchip/inno_hdmi.c | 30 ++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
+index 2d41cf59752f2..82f2904ed7a3b 100644
+--- a/drivers/gpu/drm/rockchip/inno_hdmi.c
++++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
+@@ -620,6 +620,21 @@ static void inno_hdmi_init_hw(struct inno_hdmi *hdmi)
+ 	hdmi_modb(hdmi, HDMI_SYS_CTRL, msk, val);
+ 
+ 	inno_hdmi_standby(hdmi);
++
++	/*
++	 * When the controller isn't configured to an accurate
++	 * video timing and there is no reference clock available,
++	 * then the TMDS clock source would be switched to PCLK_HDMI,
++	 * so we need to init the TMDS rate to PCLK rate, and
++	 * reconfigure the DDC clock.
++	 */
++	if (hdmi->refclk)
++		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->refclk));
++	else
++		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->pclk));
++
++	/* Unmute hotplug interrupt */
++	hdmi_modb(hdmi, HDMI_STATUS, m_MASK_INT_HOTPLUG, v_MASK_INT_HOTPLUG(1));
+ }
+ 
+ static int inno_hdmi_disable_frame(struct drm_connector *connector,
+@@ -1299,27 +1314,12 @@ static int inno_hdmi_bind(struct device *dev, struct device *master,
+ 		goto err_disable_clk;
+ 	}
+ 
+-	/*
+-	 * When the controller isn't configured to an accurate
+-	 * video timing and there is no reference clock available,
+-	 * then the TMDS clock source would be switched to PCLK_HDMI,
+-	 * so we need to init the TMDS rate to PCLK rate, and
+-	 * reconfigure the DDC clock.
+-	 */
+-	if (hdmi->refclk)
+-		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->refclk));
+-	else
+-		inno_hdmi_i2c_init(hdmi, clk_get_rate(hdmi->pclk));
+-
+ 	ret = inno_hdmi_register(drm, hdmi);
+ 	if (ret)
+ 		goto err_put_adapter;
+ 
+ 	dev_set_drvdata(dev, hdmi);
+ 
+-	/* Unmute hotplug interrupt */
+-	hdmi_modb(hdmi, HDMI_STATUS, m_MASK_INT_HOTPLUG, v_MASK_INT_HOTPLUG(1));
+-
+ 	ret = devm_request_threaded_irq(dev, irq, inno_hdmi_hardirq,
+ 					inno_hdmi_irq, IRQF_SHARED,
+ 					dev_name(dev), hdmi);
+-- 
+2.43.0
+
