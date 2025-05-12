@@ -1,89 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCF323C4EA;
-	Mon, 12 May 2025 16:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB29629372F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747069169; cv=none; b=HZomGIoP9NH8BWfoOY8g8jq0YOxqNrQp1T82puw5YqUUxvjwWRGq7AfKKKl79zft2VzjqALkvdwKgq55QKCarsm9lEcxrJG+6rS6poTF9NUGoNhFCvUmwGHs+sH6S+Lp8BQXB/rm4V1cF524Zr7TSWybKAolZuz/nCJ6kYBxMRQ=
+	t=1747069236; cv=none; b=dFll+rZd7h/CPCWUxeHNdsLq63w9foFi3La8G6GMb4dnxkJ323xGBDMyn1uNZkf1egFEbHq/w6ceyzSVXbIjqP+xteOjuGr5uEHgsMj6bwV1GeEz/mUUaDigQ2/N6ENlKZHoqkRBpw4/6r98/Z+NMQl7OtS4WbHG5ooIV7asaps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747069169; c=relaxed/simple;
-	bh=Wq80m5q5Px4bcqigue9JimLJdgSCi2I32BoHv1eBu5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERf/RZ11XtJHBfG++nbrLzWfaFuzAvQyeDEh/oNiwtRvB+QCTtGneTR1WsuymDWcK9dh/Eoe2NARPdYxImwrBIRKpCivy2fr/cTLzDs/RhcpGIsvcCEzZJTGpLq0/UNSLfDFmJDphG2Z2cQ2K7AnwnYI3/azvcIk9CxjSo0KJkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dnU9WAb3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747069236; c=relaxed/simple;
+	bh=KQIZyE7ntXiGJDC5dfeopzXGz3HkaLlbEgheY2J+Wks=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=alumJcN4nl0shBAuXkHXt8VZ+CplxMSxbrMHQP244lxUTSar3jcFbZ/cm+ka+A5do0r2/rBYLJ6mVsyECiVUliTNOztaa0mWCLTVtM2rKlEV3iY2t2wK78BXmPDJwimywbCx6YsFP3Rs6jhHeH4T12X5JT5VQkBaCpZwFMb7WRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpIjjeX4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dnU9WAb3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CA0AC4CEE7;
-	Mon, 12 May 2025 16:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747069168;
-	bh=Wq80m5q5Px4bcqigue9JimLJdgSCi2I32BoHv1eBu5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dnU9WAb3AkQPLhYGXlySAlIQRFbACvqpQffV1dz+aUnw2dQ1FQUMvXNBKKYQNBPbI
-	 u0Aoa1AapfZYerPUl/7IeOG+5QVyfcvak7x7XPiBNSLMPTfzlnykcvv0NNlOFjVc6K
-	 OgILiZ5Z/dxfNGVxeN9yy5D9LOncXbtG3fJAim9o=
-Date: Mon, 12 May 2025 18:59:25 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: David Laight <david.laight.linux@gmail.com>, corbet@lwn.net,
-	workflows@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/9] CodingStyle: tell people how to split long "for"
- loops
-Message-ID: <2025051216-flammable-lubricant-59a2@gregkh>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
- <20250509203430.3448-8-adobriyan@gmail.com>
- <20250510195603.37279af3@pumpkin>
- <cefe24b6-c1a1-4fe4-826d-e08a856aa8e0@p183>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpIjjeX4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6F2C4CEF0;
+	Mon, 12 May 2025 17:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747069236;
+	bh=KQIZyE7ntXiGJDC5dfeopzXGz3HkaLlbEgheY2J+Wks=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JpIjjeX4Nc3b9HvWSd7Hsi0oBARYSvVuUV29uiy+gWXB671StuJLvvY4icxonTtGt
+	 Oven5nTGHOYj/gubMRpX+uBgDdgYWwEvPIv2BSU9jZxcUMdFSHsA35mN3tUh8YvVEc
+	 EQQBawp2bRuzLue9LeBXIqZR9aHqSjJ+DuzsIKlk1j39493cWjU5sjoXDK1IMoxO/8
+	 VKh3a2M8xTcO4RzReOClEFtzpb5zLvhfvaO0Ez8V9tQhd01lj3BiQ/sELMq1znP2ry
+	 SPPOhA/hu5rZeUYPG6rgqPkYVFvrb5sN21yWp4g3rL0CubctJvzVJ8uOhOyETlGCcF
+	 llKkKBRIJPD+g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uEWW2-00ED1E-EE;
+	Mon, 12 May 2025 18:00:34 +0100
+Date: Mon, 12 May 2025 18:00:33 +0100
+Message-ID: <86r00tg3wu.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH 2/4] irqchip/gic-v3-its: Implement .msi_teardown() callback
+In-Reply-To: <aCIiQmfDUNrOCC2y@lpieralisi>
+References: <20250511163520.1307654-1-maz@kernel.org>
+	<20250511163520.1307654-3-maz@kernel.org>
+	<aCIiQmfDUNrOCC2y@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cefe24b6-c1a1-4fe4-826d-e08a856aa8e0@p183>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, sascha.bischoff@arm.com, timothy.hayes@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, May 12, 2025 at 07:20:23PM +0300, Alexey Dobriyan wrote:
-> On Sat, May 10, 2025 at 07:56:03PM +0100, David Laight wrote:
-> > On Fri,  9 May 2025 23:34:29 +0300
-> > Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> > 
-> > > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> > > ---
-> > >  Documentation/process/coding-style.rst | 16 +++++++++++++++-
-> > >  1 file changed, 15 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> > > index e17de69845ff..494ab3201112 100644
-> > > --- a/Documentation/process/coding-style.rst
-> > > +++ b/Documentation/process/coding-style.rst
-> > > @@ -183,7 +183,21 @@ Descendants are always substantially shorter than the parent and
-> > >  are placed substantially to the right.  A very commonly used style
-> > >  is to align descendants to a function open parenthesis.
-> > >  
-> > > -These same rules are applied to function headers with a long argument list.
-> > > +These same rules are applied to function prototypes with a long argument list.
-> > > +
-> > > +Very long ``for`` loops are split at the ``;`` characters making it easier
-> > > +to see which code goes to which clause:
-> > > +
-> > > +.. code-block:: c
-> > > +
-> > > +	for (int i = 0;
-> > > +	     i < N;
-> > > +	     i += 1)
-> > > +	{
-> > > +	}
-> > > +
-> > > +Opening curly is placed on a separate line then to make it easier to tell
-> > > +loop body from iteration clause.
-> > 
-> > Is that actually the style - I don't remember seeing it.
+On Mon, 12 May 2025 17:30:58 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> Check include/linux/list.h.
+> On Sun, May 11, 2025 at 05:35:18PM +0100, Marc Zyngier wrote:
+> > We currently nuke the structure representing an endpoint device
+> > translating via an ITS on freeing the last LPI allocated for it.
+> > 
+> > That's an unfortunate state of affair, as it is pretty common for
+> > a driver to allocate a single MSI, do something clever, teardown
+> > this MSI, and reallocate a whole bunch of them. The nvme driver
+> > does exactly that, amongst others.
+> > 
+> > What happens in that case is that the core code is buggy enough
+> > to issue another .msi_prepare() call, even if it shouldn't.
+> > This luckily cancels the above behaviour and hides the problem.
+> > 
+> > In order to fix the core code, let's start by implementing the new
+> > .msi_teardown() callback. Nothing calls it yet, so a side effect
+> > is that the its_dev structure will not be freed and that the DID
+> > will stay mapped. Not a big deal, and this will be solved in the
+> > following patch.
+> > 
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/irqchip/irq-gic-v3-its-msi-parent.c | 10 ++++
+> >  drivers/irqchip/irq-gic-v3-its.c            | 56 +++++++++++++--------
+> >  2 files changed, 45 insertions(+), 21 deletions(-)
+> 
+> First off, thanks a lot for putting this together, it makes an awful
+> lot of sense to me.
+> 
+> > index 0115ad6c82593..3472b97477104 100644
+> > --- a/drivers/irqchip/irq-gic-v3-its.c
+> > +++ b/drivers/irqchip/irq-gic-v3-its.c
+> > @@ -3620,8 +3620,43 @@ static int its_msi_prepare(struct irq_domain *domain, struct device *dev,
+> >  	return err;
+> >  }
+> >  
+> > +static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
+> > +{
+> > +	struct msi_domain_info *msi_info;
+> > +	struct its_device *its_dev;
+> > +	struct its_node *its;
+> > +	u32 dev_id;
+> > +
+> > +	dev_id = info->scratchpad[0].ul;
+> 
+> I have just managed to get to a keyboard :), I don't think the dev_id
+> makes it to this point, we overwrite it with the its_dev pointer in
+> its_msi_prepare() (could use second scratchpad for the pointer maybe ?).
+> 
+> I was bitten by this while removing the old IWB code into the new one
+> (unrelated to this code but that's how I noticed scratchpad is a union).
 
-That is a complex #define, not a "normal" for loop.
+Gah, this is missing the fixup I had on top and that I didn't squash:
 
-greg k-h
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index d8c4d3b8256f3..7e0e7f0160936 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3622,19 +3622,9 @@ static int its_msi_prepare(struct irq_domain *domain, struct device *dev,
+ 
+ static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
+ {
+-	struct msi_domain_info *msi_info;
+-	struct its_device *its_dev;
+-	struct its_node *its;
+-	u32 dev_id;
+-
+-	dev_id = info->scratchpad[0].ul;
+-
+-	msi_info = msi_get_domain_info(domain);
+-	its = msi_info->data;
+-
+-	guard(mutex)(&its->dev_alloc_lock);
++	struct its_device *its_dev = info->scratchpad[0].ptr;
+ 
+-	its_dev = its_find_device(its, dev_id);
++	guard(mutex)(&its_dev->its->dev_alloc_lock);
+ 
+ 	/* If the device is shared, keep everything around */
+ 	if (its_dev->shared)
+
+
+So no need for another scratchpad entry -- the device structure has
+everything we need. I'll repost things with tglx's comments addressed
+and this fix correctly squashed in.
+
+Sorry for the noise,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
