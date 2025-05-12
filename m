@@ -1,45 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7892BD5AB;
-	Mon, 12 May 2025 18:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D147297A76;
+	Mon, 12 May 2025 18:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073118; cv=none; b=ah3i2j/jcUUwSwvHthsPrls51bikxSN95Iz6lI7a3f1QLp6Efni7ff7uMv0Z4Yn2EjvqFPWEViW+iuxUfEoWQAYpVUMFHlsoZoOvVhPRAIBm0ukOdRre6piAEgYfCdaJ31Q0GcxvIq1+/Iv9Zn721B39pySAv4OTClATjyqm2Oo=
+	t=1747073124; cv=none; b=bYy9NkD7QDsempQMutzZ00TielZFfQiTT64SXoXQTC6qv3EB1dP9mYsQ1J4eIP+w4Ak9DasBEsD52tiJawe1ccNloFJG1azsWKw+QQC4Y6ruPENXUy3YnkxPns6vxJls5r4JksNzrlOzy42D77c/eykhhhm5sIeuZzNbVBwLb0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073118; c=relaxed/simple;
-	bh=bOnQEdYThpYqJSXsbDNSJRuDppx3jO9r6VhGfGNxQFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jAFt7KbScvxKxG+QGRFAR+U9Y08tvcQOhQLnjJBE1m2gP1P7SBA0DDj2oI0ftYm//1MdCPisNWNiJy9ZHIRVfLsgBp9R8+QXlv/oBRzafqPrHdYzbIW7Jr5QrA/NnIwFxYBvbTSk7a6ASq3xe+Oc/3ohWdp/rzwl4ivva7TNWlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFtU2ryU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747073124; c=relaxed/simple;
+	bh=c1zh+yjHIHQUJetlMqiEaDrBOq5R6MpNy2YGpI5k8BA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VJsRZ3pzKUbcdn0zwTT1ehKMFn1eveV1q5pITKcNibbENmxx1cQWAaSzCWgAphKy/dtW57K8AmtaI2p5j+xkRwq/m5ASFyR6EL//y3OtDPnNxIVTbIJNyp8tAxciYunhXBX+dbRhoCVSQVJMcHfD6mvm7hDylBXEExDqTPcf+5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIL/9tBU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFtU2ryU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A5F4C4CEEF;
-	Mon, 12 May 2025 18:05:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIL/9tBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA81C4CEE7;
+	Mon, 12 May 2025 18:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747073118;
-	bh=bOnQEdYThpYqJSXsbDNSJRuDppx3jO9r6VhGfGNxQFk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tFtU2ryUvbAifO6YAfkcksIl9QYgbkAerOSEGUcu4bY71XG/8DaAPa8v4vI8/RkYK
-	 4Q+Cp6KXt7FzNqHCo+FYEkykkG55s6bpYUlskTMUDGjwntAEeiv5ft0/sDaowhXH32
-	 rtKKkhwsB8qsaxUkiCRjTp8l4ICJe2ph0fI1T9ecgoi+QRu0EqqgwoO/We9TGWxySd
-	 zjmCX0m36YVfa9GvZfLdfoI6gcqWD6AC0LeKbFxaAzr6ZVagFbITK/8Bp7ZQnteXil
-	 L8LC9pmwnAp2gQgEHcecfEayTXkK6VmMgmHftMQnoDbtF2n+JMu/YK/yw/v0pGHuMd
-	 Q5JVijYWFF4SQ==
+	s=k20201202; t=1747073124;
+	bh=c1zh+yjHIHQUJetlMqiEaDrBOq5R6MpNy2YGpI5k8BA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vIL/9tBUllgCMoRiIe1Y+l982D8rY7/WTKg3uBxySJ/7vue+fJ47UDRRR5uZQfu/m
+	 Lb4wntfDD2sw+BqPMbnVQkvTP8ZFtwK8h2/C4U9JOuYnXrhOODGswtEx6rD4+8kAL4
+	 2LXyxVzC/8xzrVXWa4HtGwE7ZqZtrFDnY6gmZ2gNTsxrgLlejcyu3LhBTuAvkJiwGD
+	 InHWhj8vKaKlAKjbLVNQNXH3E07H7pYxL9rlw74rKn2FoyolSEjq/B73LKsDQHA55+
+	 EHGsCv/WaoQFUi+yy34mTRP/T+m/arJJOo06050vFb48jejIaMMiwVwHHHDE28mJAE
+	 /+vW3SQ/zB3CA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Goldwyn Rodrigues <rgoldwyn@suse.de>,
+	Goldwyn Rodrigues <rgoldwyn@suse.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 4/4] __legitimize_mnt(): check for MNT_SYNC_UMOUNT should be under mount_lock
-Date: Mon, 12 May 2025 14:05:07 -0400
-Message-Id: <20250512180508.437991-4-sashal@kernel.org>
+	clm@fb.com,
+	josef@toxicpanda.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 1/3] btrfs: correct the order of prelim_ref arguments in btrfs__prelim_ref
+Date: Mon, 12 May 2025 14:05:16 -0400
+Message-Id: <20250512180518.438085-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250512180508.437991-1-sashal@kernel.org>
-References: <20250512180508.437991-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,48 +51,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.138
+X-stable-base: Linux 5.15.182
 Content-Transfer-Encoding: 8bit
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Goldwyn Rodrigues <rgoldwyn@suse.de>
 
-[ Upstream commit 250cf3693060a5f803c5f1ddc082bb06b16112a9 ]
+[ Upstream commit bc7e0975093567f51be8e1bdf4aa5900a3cf0b1e ]
 
-... or we risk stealing final mntput from sync umount - raising mnt_count
-after umount(2) has verified that victim is not busy, but before it
-has set MNT_SYNC_UMOUNT; in that case __legitimize_mnt() doesn't see
-that it's safe to quietly undo mnt_count increment and leaves dropping
-the reference to caller, where it'll be a full-blown mntput().
+btrfs_prelim_ref() calls the old and new reference variables in the
+incorrect order. This causes a NULL pointer dereference because oldref
+is passed as NULL to trace_btrfs_prelim_ref_insert().
 
-Check under mount_lock is needed; leaving the current one done before
-taking that makes no sense - it's nowhere near common enough to bother
-with.
+Note, trace_btrfs_prelim_ref_insert() is being called with newref as
+oldref (and oldref as NULL) on purpose in order to print out
+the values of newref.
 
-Reviewed-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+To reproduce:
+echo 1 > /sys/kernel/debug/tracing/events/btrfs/btrfs_prelim_ref_insert/enable
+
+Perform some writeback operations.
+
+Backtrace:
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 115949067 P4D 115949067 PUD 11594a067 PMD 0
+ Oops: Oops: 0000 [#1] SMP NOPTI
+ CPU: 1 UID: 0 PID: 1188 Comm: fsstress Not tainted 6.15.0-rc2-tester+ #47 PREEMPT(voluntary)  7ca2cef72d5e9c600f0c7718adb6462de8149622
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:trace_event_raw_event_btrfs__prelim_ref+0x72/0x130
+ Code: e8 43 81 9f ff 48 85 c0 74 78 4d 85 e4 0f 84 8f 00 00 00 49 8b 94 24 c0 06 00 00 48 8b 0a 48 89 48 08 48 8b 52 08 48 89 50 10 <49> 8b 55 18 48 89 50 18 49 8b 55 20 48 89 50 20 41 0f b6 55 28 88
+ RSP: 0018:ffffce44820077a0 EFLAGS: 00010286
+ RAX: ffff8c6b403f9014 RBX: ffff8c6b55825730 RCX: 304994edf9cf506b
+ RDX: d8b11eb7f0fdb699 RSI: ffff8c6b403f9010 RDI: ffff8c6b403f9010
+ RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000010
+ R10: 00000000ffffffff R11: 0000000000000000 R12: ffff8c6b4e8fb000
+ R13: 0000000000000000 R14: ffffce44820077a8 R15: ffff8c6b4abd1540
+ FS:  00007f4dc6813740(0000) GS:ffff8c6c1d378000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000018 CR3: 000000010eb42000 CR4: 0000000000750ef0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  prelim_ref_insert+0x1c1/0x270
+  find_parent_nodes+0x12a6/0x1ee0
+  ? __entry_text_end+0x101f06/0x101f09
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  btrfs_is_data_extent_shared+0x167/0x640
+  ? fiemap_process_hole+0xd0/0x2c0
+  extent_fiemap+0xa5c/0xbc0
+  ? __entry_text_end+0x101f05/0x101f09
+  btrfs_fiemap+0x7e/0xd0
+  do_vfs_ioctl+0x425/0x9d0
+  __x64_sys_ioctl+0x75/0xc0
+
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/namespace.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ include/trace/events/btrfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 57166cc7e5117..42e33d3ad05d8 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -632,12 +632,8 @@ int __legitimize_mnt(struct vfsmount *bastard, unsigned seq)
- 	smp_mb();			// see mntput_no_expire()
- 	if (likely(!read_seqretry(&mount_lock, seq)))
- 		return 0;
--	if (bastard->mnt_flags & MNT_SYNC_UMOUNT) {
--		mnt_add_count(mnt, -1);
--		return 1;
--	}
- 	lock_mount_hash();
--	if (unlikely(bastard->mnt_flags & MNT_DOOMED)) {
-+	if (unlikely(bastard->mnt_flags & (MNT_SYNC_UMOUNT | MNT_DOOMED))) {
- 		mnt_add_count(mnt, -1);
- 		unlock_mount_hash();
- 		return 1;
+diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
+index 9271b5dfae4c4..a5f77b685c55f 100644
+--- a/include/trace/events/btrfs.h
++++ b/include/trace/events/btrfs.h
+@@ -1788,7 +1788,7 @@ DECLARE_EVENT_CLASS(btrfs__prelim_ref,
+ 	TP_PROTO(const struct btrfs_fs_info *fs_info,
+ 		 const struct prelim_ref *oldref,
+ 		 const struct prelim_ref *newref, u64 tree_size),
+-	TP_ARGS(fs_info, newref, oldref, tree_size),
++	TP_ARGS(fs_info, oldref, newref, tree_size),
+ 
+ 	TP_STRUCT__entry_btrfs(
+ 		__field(	u64,  root_id		)
 -- 
 2.39.5
 
