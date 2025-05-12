@@ -1,268 +1,419 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2074.outbound.protection.outlook.com [40.107.223.74])
+Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8525024EF6D;
-	Mon, 12 May 2025 21:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747086934; cv=fail; b=A0in/yLDlq4gD6/bvlDs88bqlI2MrEFFAsnRCQyf/KnwDG7Xn0se8liwQCTwkJ+XLbjw1PMJg/2JzXN9YXwZ04Oucw1b2QzectgKBIvdwzQ0gWF6gi0HZUbgwhztMTkaQUsfKJ+fWD5RMQxxK730nzj3fRS65OkQ+sE5iGi1QzU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747086934; c=relaxed/simple;
-	bh=z4wiO0U8+oYhDMil6CvibPh+v949rIG/xUSru6e/bfo=;
-	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
-	 Content-Type:MIME-Version; b=gVD/Na3Vw7Z3I7SJyfIefJ5o9Hl1bAwp9kYxVZO0XQ+17lpH1oupabt5KuBxTJqIHlX/f2EUQkyS2G7q+gPfHitTjNpqgiO0QbsgbePFUes46SlI9Poj9Jv+jqyEfuy0vYvBGHQebhnqTK0+XTUcfgjK9E5FMEo/7RsNuXYKB2c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g5rTT+9w; arc=fail smtp.client-ip=40.107.223.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A04239E76;
+	Mon, 12 May 2025 21:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747087034; cv=none; b=JMx7VxP/7pRJ78OwuNzZxCfOCSxXbxXIsCShpBfeM0XNv+8aDyrjtcCtg3kjKAo5DXKkm9yb8G7csGD7zNKKzhyLLPgQHbGXNJ7FPX5lpxiItLnEBGJ/Pe+d6S0WN3gf4yJrBo/xzcCBmXNh4xyqFT4gBB+Ojdw/YYg0uuQ5C/4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747087034; c=relaxed/simple;
+	bh=TTEjiDIx0M3k0rOBfp2JZvnY4jSXSd3HJ1fUDPc7GEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WqP3AyFZHWIinkyKwfCFsQj8BKrRNr1Tl4Y+JkDpLmRP8cB5sXg86zAjtmgLO2101ETZ6R/g2kton1AOkYBE9wz40N+seT6ow2rFqA9QTxd6hK7MDRgo2hovvJSptdIyTjVWBzFmjGh+wAitKtJwejjyuVa6HqRJHQyO7iWLo8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=cPw8tsPD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n27djTRK; arc=none smtp.client-ip=202.12.124.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g5rTT+9w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x0FhfJJ80GcaZYRwbvZ40UOnrLMIeGggqmHxdFu0mWFYmLJBfwo0ZgSkHtPae2s1BEShADVZ5WjD9UCzW3dhc/XzohK7TK1Gc0Kaw+yRaZKvZ472ZnpOxeZTnpez4WGIMct5LB8BdYNQFGDXcJFpSsau+Gg4LDkB+kON49eHibyrTi2CFFkHFjy280BFzaYB7GENsj9YkKobxr4ZqoYEajWmGBq+Q2ycJypEGGvKYSDdbxaGVSCXDv7AYkL5HQnPqzrsBvj7lrQ0lw/jGvSIqn5aQWa1VebjBGmLhVkF7bhSr0UdGpXcZVYhWypQ73+IDtmwLoux8u9V3j2vnHUvQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uLYL00mVQTXO+8MhmgIAg+AZUppo4xX48gUYePXUuDo=;
- b=JkF2tjI19ExJHW7haxToBZREVGG3gpqJpPHbxVOeVSy1A41hdY4D22iN6bonEHgP8Lc8XF7aZBW+2MUa+q9j0ub56kXu14D+ajf3WS2fTzWOrXHmONW14AWgEY5rv/2zfEfBqSU/YqKBJw17O7fQ17aRU/lODrYRlJGe4tmJ+rHNnKmynhakA4LeluodYMMLGbjrh4+Y6Mk4CLkIf1daZOoWAjWGgMs0C4LgRGvDmZGQh0Owubvkm08xaVm1elkDm4JxhJIdpKa69SJzw1elewsoCTAusPq7Cy/XZTBGtLEbGPHHRbQ9uIHib16gtkGHcpRpVamwfGWv0LbRZ/o81w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uLYL00mVQTXO+8MhmgIAg+AZUppo4xX48gUYePXUuDo=;
- b=g5rTT+9wPVhImedj79INwLI8/Se4EWgO0eB/fySrbb9ebX1HFVYjGKvXjpC2mgawvjC0btcQZDruDz6gEpNARDq4RKPPrunPzc5X0EFRvmtSTSqLxfRNgHg7dj6M8cacwWV5/H06+PUl6TjfGFU5CvEGYnjn/Yy5WeOsLWv6yUE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by CYYPR12MB8870.namprd12.prod.outlook.com (2603:10b6:930:bb::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
- 2025 21:55:30 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 21:55:30 +0000
-Message-ID: <ed6cf930-bb1d-d082-a1c7-f5699ec46565@amd.com>
-Date: Mon, 12 May 2025 16:55:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-US
-To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
- pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, shuah@kernel.org, prsampat@amd.com
-Cc: pgonda@google.com, nikunj@amd.com, pankaj.gupta@amd.com,
- michael.roth@amd.com, sraithal@amd.com, linux-kernel@vger.kernel.org,
- x86@kernel.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-coco@lists.linux.dev
-References: <20250512210410.10172-1-Ashish.Kalra@amd.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v2] KVM: SEV: Disable SEV-SNP support on initialization
- failure
-In-Reply-To: <20250512210410.10172-1-Ashish.Kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0067.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:2c1::17) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="cPw8tsPD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n27djTRK"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailflow.stl.internal (Postfix) with ESMTP id DCE6A1D401EB;
+	Mon, 12 May 2025 17:57:07 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Mon, 12 May 2025 17:57:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1747087027;
+	 x=1747094227; bh=3yt3TExMZdemejbW/an7dry873DpxH0sXY/XVImjyjc=; b=
+	cPw8tsPD2enXXBDrLyMvZnelQ14bX6p9QXtAWC2BlF9EGKjR7Zn+cpNvkDIV2ZY9
+	WV2aNLZ6i/xYy7QoyU/kxD1ibeFnp2OsnqGsh9aOfxHxmPKhDA8j1wJhdff4nesL
+	7KD42ebF16tBFbTM1BMbOvQ7M38ERs8Mp5yXQafSc0WH+Gr6Ww4covsm/cJA4idV
+	4sDQ3fF8Ftq7EUZSfWQw079KeDOVQVcPT1ykOYwVwVvRji2J5qJQxQ6bs++i8k4Z
+	JjB4m+qIqZDa+MZ9iSrERnYry2gpU0n+BSVZxL/5RjKNa6sHbwPzpgmvS+f0dR/K
+	acYfxVFB8CkqxKjP2KkCLg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747087027; x=
+	1747094227; bh=3yt3TExMZdemejbW/an7dry873DpxH0sXY/XVImjyjc=; b=n
+	27djTRK+gDNbEGN2SGoPjNVdiEAIR61rvLi3Lh+HR1o61ZAyRLr8LnKsJe4ukv18
+	3yk+B7uucIkiGpXvFyHwVZ6cuD2MrRn1QdjsWWDvUolTYpYQJ8KtjfS0L/h0yUBi
+	Y0BuG6Srcu3q6sZMrR4kMhGcrT7cvBEvEXD+MVxpIF2xddiVBUDejogGP5BpNA1+
+	bAP4CkWvPKJpr0vKuJD47spf3c2wGpQExBrR0XBygYbhfnCZySSU/HZmDduTUiyI
+	YiETZ4ghhYc3bGDAyD9o69mraR08xCGmtJYfRIYcurUU70GyiEmnAy1h6yBhmMDL
+	LjmAzvuxyxbsAne1bOaTg==
+X-ME-Sender: <xms:sW4iaEPjTOLqb58AQIyuxeAAXUNm4yuUNAnRJuy4IzmEjgQ45pcnzg>
+    <xme:sW4iaK8RpVI-zTVffxZCYxT_AU8YaWJoAD6X7NlcjJLxIQypaCq0jrqUJUedf7q5i
+    cldTU7w8BSUQDR6Ir8>
+X-ME-Received: <xmr:sW4iaLQZ4IRcKB9tYsENBFGnrCSvlxqv_FV28hoZJnCPPMA2rZdda88XsAdtWEq4-WDmJkO_335FwNWE3rhM3h31RcLqcQWviw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddvgedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
+    houggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeff
+    tdegfeevfefguedtveevlefgleekuedvfeeggfefheefieejhedulefhjeekgfenucffoh
+    hmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrth
+    gvtghhrdhsvgdpnhgspghrtghpthhtohepgedupdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopeguvghmohhnshhinhhguhhrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheptg
+    hoshhmihhnrdhtrghnihhslhgrvhesrghnrghlohhgrdgtohhmpdhrtghpthhtohepmhgt
+    hhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhulhhivg
+    hnrdhmrghsshhothestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopegtrghtrghl
+    ihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:sW4iaMsVVvkn2eII4tz6GJqrCpg0NOogXqTMGhG1HKvvgvbWBsfuZg>
+    <xmx:sW4iaMdto979bVKs6UAI_DU1R_C5NJnuAwfJ3SCrt_XU7l8n9dI9pw>
+    <xmx:sW4iaA0kkeaoWqxrRVCCeeHCP-kiZA9XeCS01rOaEUzAh13swIsWHg>
+    <xmx:sW4iaA-ZyYaovvZ7OxhAyb3Mkr-D7cHkvyB1wwN6yseMpxs6jDc91g>
+    <xmx:s24iaOjjLVWgRyYm3EFtAjkQ5mYcWyoybNlNOMlCB3rY35IScf47vprJ>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 12 May 2025 17:57:04 -0400 (EDT)
+Date: Mon, 12 May 2025 23:57:02 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Julien Massot <julien.massot@collabora.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	=?utf-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4=?= Prado <nfraprado@collabora.com>,
+	Taniya Das <quic_tdas@quicinc.com>, Liu Ying <victor.liu@nxp.com>,
+	Ross Burton <ross.burton@arm.com>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	Eric Biggers <ebiggers@google.com>,	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,	Dongcheng Yan <dongcheng.yan@intel.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 00/19] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+Message-ID: <20250512215702.GA2702778@ragnatech.se>
+References: <20250512212832.3674722-1-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CYYPR12MB8870:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf04216d-21ac-440e-076c-08dd919fb619
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R0VuZW5lL0pySFNNbjhCS0JmbGhZcVFnN0VJbTd1bVVoUHV0ZUozWUpBa2to?=
- =?utf-8?B?Q0FJRmZKV2N3S0J3VnNMTWF4RUk3L0N1R0lCMmMrWlRsRWFqSzhmV2cwa01q?=
- =?utf-8?B?bFo5LytjN3g2S3ZLOVllTG95OXlUNWRIREFiU1pOMXVWVVAzS3RML2I2dVhn?=
- =?utf-8?B?N3hxbkNhR2FuUElQeHNZZUpoTFE4cGI3QUlPa3R2ZnN2VzNZUElHbDdDRW1D?=
- =?utf-8?B?MWw3THhQV2FGR29WRUROWFRXQThoN1JUSjZ5MXNCaktXeWQyNkZzV2Y3clMw?=
- =?utf-8?B?RzNQaXhUTWtKaWJPaU1HVDU5djhacHlvWElFUTJPaGZjSTJBRit5WlIrYk9C?=
- =?utf-8?B?SDU5QVYzRVVSdG0vL1d6M1NuYWZsbU5JR2NZdWdWT050TGNIUmN6MU9EQmNl?=
- =?utf-8?B?ajRaT1g3eXNwUGgzRXdrVC9DdGVEcVJKaHAyYzlndk0yck1IbnZqRDNEdzBG?=
- =?utf-8?B?b0VWQzRtV281N2dYakI5d09QSXdvc3FVTkpuRlJ0Z1Z0d3JUd2lRbUpFRjNP?=
- =?utf-8?B?ZFNsY2VPamJDaWtjOE9oSHJkWjNpeW8wdVMxWVozSGV4ZEh5ck95UzV1MGxK?=
- =?utf-8?B?a2wyVmRxVzJLMGxhNCs4WFcyS3FKcjd1dW04UXhrRlpWeFY3c2p1eGU0WURP?=
- =?utf-8?B?VzIyVlZwSWpzNWgxaG5wWGlkc0IyVlU4WmJpdWZpdDVYK252TWg1dW9rdnN5?=
- =?utf-8?B?dUVReU1UMUxyVmdkcE43ZmdUYzk5NFAvN0JjeWpUT3VWemZ0eWN4czdLVVNm?=
- =?utf-8?B?blJXTUdRbEJicEJ2a285OEtQR2NGQTByVDFobk10M0o4R0RYbGFIVG91Yklh?=
- =?utf-8?B?dkpGQ2luUnF0aFljcDlJdmlZUE14T1haWE10alRZalAwYmdmSCtrV21JYzZt?=
- =?utf-8?B?bmZmOFdhMmtqTjFjWEJiTGJkT1ZWUlZTZXppd3pMR2RnaHloeloyOEl6VEJI?=
- =?utf-8?B?TFpmbHlVNGRGanNoMHJxUjlwSUZ5RGNPUTk5Zmc3cTdmMm5tb25RS0RWdWVQ?=
- =?utf-8?B?dGtoaWdQTzNEM2lyU2pVMm83cGVKUC80ZnA4YURmRG1xRk9IQzNaalBiWE5M?=
- =?utf-8?B?YWZTR25oK0dkNlZkWSsyUDlRQ3ZkU2htVkdrZ2pKTk9oTjlrU3dvWVNaSStJ?=
- =?utf-8?B?UTEvN0NHWnE1UWxCVHVRTVhHRUlTNkZ3RWdBR2hpOCtnTkFjWHlYbWpkcHpi?=
- =?utf-8?B?TTRFL21CanQvZFdPVUZJMERrV2ZjcEdIM0J1dmZ3cjZiOWo0NzZOWEozR1l3?=
- =?utf-8?B?YnFxK3J1OWo0azBSeWFoYW1lTGhXbmFZdDdyUU9XdXRQNjJUZ0RUeDNEaW5t?=
- =?utf-8?B?QU1uaGpvNVBJaWp6TE5uNHZwUWc2eXpiQjVudEZkeHpXT0RtZE16KzFXRjBQ?=
- =?utf-8?B?RzFjL0tIdmloOE9jM2xlVXRnWTdLRHAxb0FKYU4zUCs4WWI5N2JZSllMYytm?=
- =?utf-8?B?Z1RRUnhoRzMxMmtEMDBsRTgxRFdQWFJ5VmlmQXNzR1diTTI2NzZaL0J2T2Fh?=
- =?utf-8?B?MVNHSWFIOXBPZTI2TjB4dzBpeEpIUzNZYjRxdW9BVHhWbnk3QWlnL1BRdTZv?=
- =?utf-8?B?L1F5WTRQcFEvQlR1eUUrQVVZQ3poODJWMVVvZXNrdXkxU2UrRDY2Q3BsbVkr?=
- =?utf-8?B?WFh4S0NHUFg3c0c3UWlXV3JTZWpLSzNFY0cvNldPVmVCS1MrVDJ5dEtzUURz?=
- =?utf-8?B?emFPQ2tvaUdlekhnbnU4TDMrN0ZSM2tCeEJlT2hRZWcvcnVYOEV6cFJiVDNx?=
- =?utf-8?B?bGgrT090OGJibFljUDE4MDhGbDIxV3B6R1UxMUpHSVRUWW13RC9ieDJMclFZ?=
- =?utf-8?B?Nmd6TXVCR1BxdVFnSTllVkNaYm5GWTA4cmwyMkdNS0wrb0xHdGRaU0wwOUVh?=
- =?utf-8?B?NHFvazZ1UHdmaWFGUWRhYjV3RDIvcjNaWEhzaExzd1FVajNoUXlQMzNEdDVX?=
- =?utf-8?Q?h8rnhaxCRFw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L2JFSmhDMDdzL1c1ME15YW1zTUlSUWJXQVdxQWF3dUJMSDNlK1lHQnR2RXFx?=
- =?utf-8?B?eEl5UFBRNVlZQ1dsbmMweGtsalM5a05Kbm8yRlNSSzUvSTJGdlJuRHNpUksx?=
- =?utf-8?B?dVNVcTJjNnBZZVN2MytmTGsrTHVrSHRwZGtHaURQNlBiTktyUnE0Um54ZjIr?=
- =?utf-8?B?Q1BJVkR1WEk4L0JwOXRXd2NNd0ZqWHMvS3R4TVZ6My81K3hFU0tTaGIyNXZV?=
- =?utf-8?B?bzR5SU5WaTR2WDdQcklHQmhaYTdSdXQ1VnptUm9kR2p4K3dnNk1QdTh6OWFF?=
- =?utf-8?B?LzJ3THNoZzZuQjQ4a2pnbzJqQ1N5T1dBN0pPeHZEUllCQWlkRy9ySVYrTTRq?=
- =?utf-8?B?SDVhQmdjM1NKaDlybUJNaXluUWIyTDZrRlFnZlBoTUtJR09mZUVuek4yY1lD?=
- =?utf-8?B?QzRtQllEemxHTUh5L05UZnRIMWlXamo0b3NNVDUvZm1vbDBHcXlSUENJVHBJ?=
- =?utf-8?B?Q3JMdTVka1hFaHhYWW14UjRHQnZ5S0NkTVM5UCsvcjUvL0NXQ2lwVFYyTWpK?=
- =?utf-8?B?cm1EbXhyRGVMVDc0c0tjMGlOcWUzQ1BWYkxaWjBOL2RJeDZwYks3SXZXckp6?=
- =?utf-8?B?eitzYU0wWFNQT1hvNlZpR0NCdEI4OGsxV0Z6ZG5wSTE2Y0JrWTNRbDVVWXNw?=
- =?utf-8?B?aStpaFRpUjJxbGx6WEFRK2cvamlKK0U3ejExcWVoWE9wb0UyTXBHYmhsdFBR?=
- =?utf-8?B?OXF6azhlVTErWit0bldnT3ZLQUJWUFF6TVRGajdMVDNub0p4YjVyZTlVbWRC?=
- =?utf-8?B?UGJXalhkdG1yRlVKbk45WlRqaVkzTmZEQkdKY2hOVnZuYlBFV3hSM01hM3lR?=
- =?utf-8?B?L0FQWVluZ1p5S3Q0TjVjckJmMmRuOUluMDFacjNJdkZobzdtR00walNnWTNS?=
- =?utf-8?B?Q3BCbjE4QUVFK0U4SGVOWDh5a1dwQnlTMVF5cWh4Q3NrN2Z6UnpqQ0tCbFJR?=
- =?utf-8?B?Rlp6QVpDM2dsUUZKdHdBaGhxVWhBOGR1Y2VaNkFiSkdVM2xqNVpCQXNDTG1t?=
- =?utf-8?B?VkozWkpud21YeXN0dDNEWkFvd1pmWVg2eC9lZWNzUUpja1RXazZENWVvZC9R?=
- =?utf-8?B?emZQajFQa1VqaHVYMWIwZFExLzlrcWNzalEyTWtWbHBYeXNyRlBsZ0ZNUWRY?=
- =?utf-8?B?S01JV2lZRTZlRkhEcEx6dFhwcWRUR3cxNzNWekZBUmw1bGdBL0hQUVV1MGlC?=
- =?utf-8?B?N2h6eWRxbGY4RkoxVnlIZUQwZlNoVUY1bmdmdzFYMG0zT0pHbVVCYmorOXVm?=
- =?utf-8?B?WFd5MktWb2wwWktxd0QzMXJhK3FNb2lTRjhUTUsrUllKZko5TFMrcVhFMFFm?=
- =?utf-8?B?c3hBZjc0ZzNrRTQrODZ6TlZ1RGZLR00zZzRZaStBZ2FBcHZyOTN5NWhhSUVB?=
- =?utf-8?B?TzlEVVRBSUpMcnNTRkNGc1dNck9YaWZGSC9FeWpKQlk0ZEc1UjJVeWVRbm1E?=
- =?utf-8?B?UGdSU2VYYWliTlNvRlNlU0NYZjJFSHlmYzJuVEc1S1hnWnlhRzUzK1N1TTZF?=
- =?utf-8?B?aVpxVW9YanZXMk5Ga2ZGZVA0VW5BKzdwempRcFVwVEtFeHNwRmIzYU56cS9P?=
- =?utf-8?B?bDdaSGNyVTV3aVNCSmx5dVYxSU5vbUxHUlZuVDRjZUpRZy9XeUJLRnEzMU81?=
- =?utf-8?B?S05NTTU1T2VZUkdFMDhGR3V1Zm1qd0tSbndxSEdSOVdLZ3RENlF1K3ZpMWo2?=
- =?utf-8?B?QnZ4NkF3U29UcWhjM3VOUWl5Z0xOMmJmcm5YeEk1M0ZGaTdmWUVRT3ozelIy?=
- =?utf-8?B?dy9OUktvbjY3cDltcWh5RE1MRlV1Q2xiU2NnSU41emRCVm0xd0Z0QXhSeExF?=
- =?utf-8?B?STVXdi9xNnJ3bGNyTWd4c3IxOVFWWEJMcHBxNCsvWmU2Rno1dEdaVktPRUNk?=
- =?utf-8?B?aWs1R2JicXVZcmRuRlVkREpJSVFJanNEOUExVmJKUlRrUHlWT0tFcmlpTWQy?=
- =?utf-8?B?R0VLeWJVRTVLUldScWJ5eHpHWEloc25vZGxub3RqbkhkazNTVEJrZTd3TXNh?=
- =?utf-8?B?dkVnblRua3JQMW5PZHQ5Mjd1c1o0QnM5YjBlOWxwaHNkeFJsa3Z5R3I0MTlN?=
- =?utf-8?B?Rml1VVREREU1SGZyUjR0clo2WHpaN1czMFE1NVp4cXg5RzV0NGNieUtleS9S?=
- =?utf-8?Q?TNN1+o4T+6CMMBeRZ0MLRepep?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf04216d-21ac-440e-076c-08dd919fb619
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 21:55:29.9012
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DJHf5RBQnUfl5YVSsCraWulmDtJ7PasWPnL87Fs2O3WWx+zfEAv9sDBSGJXDuGcIGLdaJsiyOua+umK0plHx4g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8870
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512212832.3674722-1-demonsingur@gmail.com>
 
-On 5/12/25 16:04, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
+Hi Cosmin,
+
+Thanks for your work.
+
+On 2025-05-13 00:28:09 +0300, Cosmin Tanislav wrote:
+> This series adds new drivers for multiple Maxim GMSL2 and GMSL3 devices,
+> replacing the few GMSL2 drivers already in upstream, and introducing a
+> common framework that can be used to implement such GMSL chips, which
+> avoids code duplication while also adding support for previously
+> unsupported features.
 > 
-> During platform init, SNP initialization may fail for several reasons,
-> such as firmware command failures and incompatible versions. However,
-> the KVM capability may continue to advertise support for it.
+> While the normally acceptable and polite way would be to extend the
+> current mainline drivers, the choice was made here to add a totally new
+> set of drivers. The current drivers support only a small subset of the
+> possible features, and only a few devices, so the end result after
+> extending them would in any case be essentially fully rewritten, new
+> drivers.
 > 
-> The platform may have SNP enabled but if SNP_INIT fails then SNP is
-> not supported by KVM.
+> This series depends on:
+> https://lore.kernel.org/lkml/20250507121917.2364416-1-demonsingur@gmail.com
 > 
-> During KVM module initialization query the SNP platform status to obtain
-> the SNP initialization state and use it as an additional condition to
-> determine support for SEV-SNP.
+> The previous version is at:
+> https://lore.kernel.org/lkml/20250309084814.3114794-1-demonsingur@gmail.com
 > 
-> Co-developed-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Co-developed-by: Pratik R. Sampat <prsampat@amd.com>
-> Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-
-One comment below, otherwise:
-
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-
-> ---
->  arch/x86/kvm/svm/sev.c | 44 +++++++++++++++++++++++++++++++++---------
->  1 file changed, 35 insertions(+), 9 deletions(-)
+> The following deserializers are supported:
+>  * MAX96712 (already exists in staging)
+>  * MAX96714 (already exists)
+>  * MAX96714F (already exists)
+>  * MAX96714R (GMSL2)
+>  * MAX96716 (GMSL2)
+>  * MAX96724 (already exists as part of existing MAX96712 driver)
+>  * MAX96724F (GMSL2)
+>  * MAX96724R (GMSL2)
+>  * MAX9296A (GMSL2)
+>  * MAX96792A (GMSL3)
 > 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index dea9480b9ff6..f7d343ab9acd 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -2935,6 +2935,33 @@ void __init sev_set_cpu_caps(void)
->  	}
->  }
->  
-> +static bool is_sev_snp_initialized(void)
-> +{
-> +	struct sev_user_data_snp_status *status;
-> +	struct sev_data_snp_addr buf;
-> +	bool initialized = false;
-> +	int error, ret;
-> +
-> +	status = snp_alloc_firmware_page(GFP_KERNEL | __GFP_ZERO);
-> +	if (!status)
-> +		return false;
-> +
-> +	buf.address = __psp_pa(status);
-> +	ret = sev_do_cmd(SEV_CMD_SNP_PLATFORM_STATUS, &buf, &error);
+> The following serializers are supported:
+>  * MAX96717 (already exists)
+>  * MAX9295A (GMSL2)
+>  * MAX96793 (GMSL3)
+> 
+> Missing features:
+>  * The current TPG implementation makes use of the V4L2_CID_TEST_PATTERN
+>    V4L2 control. With V4L2 streams support added, we would like to hook
+>    up TPG using the internal pad feature which has not been accepted
+>    upstream yet. We decided to leave TPG out for the moment and add it
+>    back after internal pads have been accepted.
 
-You'll want to initialize error to 0 or you'll get a possible use of
-uninitialized variable.
+I only have access to remote system using these devices, that's the 
+reason the driver in staging only supports the TPG. So I can't test the 
+CSI-2 side of the driver without this, but I would love to do so when 
+the TPG feature works.
 
-Thanks,
-Tom
+I make regular use of the TPG to test capture pipelines as this is my 
+only video source on those systems. Please make sure the TPG is 
+functioning before removing the staging driver.
 
-> +	if (ret) {
-> +		pr_err("SEV: SNP_PLATFORM_STATUS failed ret=%d, fw_error=%d (%#x)\n",
-> +		       ret, error, error);
-> +		goto out;
-> +	}
-> +
-> +	initialized = !!status->state;
-> +
-> +out:
-> +	snp_free_firmware_page(status);
-> +
-> +	return initialized;
-> +}
-> +
->  void __init sev_hardware_setup(void)
->  {
->  	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
-> @@ -3039,6 +3066,14 @@ void __init sev_hardware_setup(void)
->  	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
->  
->  out:
-> +	if (sev_enabled) {
-> +		init_args.probe = true;
-> +		if (sev_platform_init(&init_args))
-> +			sev_supported = sev_es_supported = sev_snp_supported = false;
-> +		else if (sev_snp_supported)
-> +			sev_snp_supported = is_sev_snp_initialized();
-> +	}
-> +
->  	if (boot_cpu_has(X86_FEATURE_SEV))
->  		pr_info("SEV %s (ASIDs %u - %u)\n",
->  			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
-> @@ -3065,15 +3100,6 @@ void __init sev_hardware_setup(void)
->  	sev_supported_vmsa_features = 0;
->  	if (sev_es_debug_swap_enabled)
->  		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
-> -
-> -	if (!sev_enabled)
-> -		return;
-> -
-> -	/*
-> -	 * Do both SNP and SEV initialization at KVM module load.
-> -	 */
-> -	init_args.probe = true;
-> -	sev_platform_init(&init_args);
->  }
->  
->  void sev_hardware_unsetup(void)
+> 
+> Known backward compatibility breakages:
+>  * No default routing. Default routing has been intentionally ommitted
+>    as the devices support quite complex routing and it would be
+>    unfeasible to provide sane defaults for multi-link deserialziers.
+>    It is expected that userspace programs would set appropritate
+>    routing. 
+> 
+> The following list enumerates new features that are supported by the
+> common framework and their respective chip-specific drivers:
+>  * Full Streams API support. Most deserializers have support for more
+>    than one link, and more than one PHY. Streams support allows
+>    configuration of routing between these links and PHYs.
+> 
+>  * .get_frame_desc() support. Both the serializers and deserializers
+>    implement this to query and provide frame descriptor data. This is
+>    used in features explained in-depth below.
+> 
+>  * .get_mbus_config() support. The deserializers implement this to allow
+>    upstream devices to query the link frequency of its pads.
+> 
+>  * Address translation with I2C ATR for the serializers.
+> 
+>  * I2C ATR translation - some deserializers cannot do muxing since I2C
+>    communication channel masking is not available per-link, and the only
+>    other way to select links is to turn them off, causing link resets.
+>    For such cases, I2C ATR is used to change the address of the
+>    serializers at probe time.
+> 
+>  * Automatic GMSL link version negotiation between GMSL3, GMSL2 6Gbps, GMSL2
+>    3Gbps.
+> 
+>  * Automatic stream id selection for deserializers which need serializers to
+>    stream on unique stream ids.
+> 
+>  * Automatic VC remapping on the deserializers. VCs are picked so that
+>    if they were unique on the sink pad, they will end up as unique on
+>    the source pad they are routed to too, prioritizing using the same
+>    VC ID as the sink pad, to facilitate the possibility of using tunnel
+>    mode.
+> 
+>  * Automatic pixel mode / tunnel mode selection. Tunnel mode is used
+>    when VC IDs do not need to be changed and all hardware supports
+>    tunnel mode, otherwise, pixel mode is used. The serializers are
+>    automatically switched between the two by using a private API.
+> 
+>  * Automatic double mode selection. In pixel mode, double mode can be
+>    used to pack two pixels into a single data unit, optimizing bandwidth
+>    usage. The serializers are automatically set up to support the double
+>    modes determined by the deserializers using a private API.
+> 
+>  * Automatic data padding. In pixel mode, if the data being transferred
+>    uses two different BPPs, data needs to be padded. The serializers
+>    automatically set this up depending on the configured double mode
+>    settings and incoming data types.
+> 
+>  * Logging. Both the deserializers and serializers implement the V4L2
+>    .log_status() ops to allow debugging of the internal state and
+>    important chip status registers.
+> 
+>  * PHY modes. Deserializer chips commonly have more than a single PHY.
+>    The firmware ports are parsed to determine the modes in which to
+>    configure the PHYs (2x4, 4x2, 1x4+2x2, 2x2+1x4, and variations using
+>    fewer lanes).
+> 
+>  * Serializer pinctrl. Serializers implement pinctrl to allow setting
+>    configs which would otherwise be inaccessible through GPIO: TX/RX via
+>    GMSL link, pull-up & pull-down (with strength), open-drain &
+>    push-pull, slew rate, RCLK pin selection.
+> 
+> The drivers have been tested on the following hardware combinations, but
+> further testing is welcome to ensure no / minimal breakage:
+>  * Raspberry Pi 5 + MAX9296A + 2xMAX96717 + 2xIMX219
+>  * Raspberry Pi 5 + MAX96714 + 1xMAX96717 + 1xIMX219
+>  * Raspberry Pi 5 + MAX96716A + 2xMAX96717 + 2xIMX219
+>  * Raspberry Pi 5 + MAX96712 + 4xMAX96717 + 4xIMX219
+>  * Raspberry Pi 5 + MAX96724 + 4xMAX96717 + 4xIMX219
+>  * Raspberry Pi 5 + MAX96792A + 1xMAX96793 + 1xMAX96717 + 2xIMX219
+>  * Raspberry Pi 5 + MAX96792A + 2xMAX96717 + 2xIMX219
+>  * Renesas V4H + MAX96712 + 2xMAX96717 + 2xIMX219 
+> 
+> Analog Devices is taking responsibility for the maintenance of these
+> drivers and common framework, and plans to add support for new
+> broad-market chips on top of them.
+> 
+> Special thanks go to Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> for testing the drivers, helping debug and coming up with ideas /
+> implementations for various features.
+> 
+> V3:
+>  * dt-bindings: drop reflow text patches
+> 
+>  * dt-bindings: max96717: move pinctrl configuration into main file
+>  * dt-bindings: max96717: allow a single level of pins configuration
+>  * dt-bindings: max96717: use regex for matching pins nodes
+>  * dt-bindings: max96717: drop extra allOf in pinctrl configuration
+>  * dt-bindings: max96717: fix i2c-atr channel name regex
+>  * dt-bindings: max96717: limit pinctrl functions to gpio / rclkout
+>  * dt-bindings: max96717: limit pins for gpio / rclkout
+>  * dt-bindings: max96717: add description for bias-pull-up/down
+>  * dt-bindings: max96717: require pins and function properties
+>  * dt-bindings: max96717: turn single compatible strings into an enum
+> 
+>  * dt-bindings: max9296a: include indices in port descriptions
+>  * dt-bindings: max9296a: remove property-less schema from input ports
+>  * dt-bindings: max9296a: use ATR for MAX96716A too, removing MUX entirely
+> 
+>  * dt-bindings: max96712: include indices in port descriptions
+>  * dt-bindings: max96712: deprecate enable-gpios in favor of powerdown-gpios
+>  * dt-bindings: max96712: switch from MUX to ATR
+> 
+>  * dt-bindings: max96714: add support for MAX96714R
+> 
+>  * max_des: fix POC NULL check
+>  * max_des: remove index var in POC enable
+>  * max_des: fix writing empty remaps
+>  * max_des: skip mode setting in tunnel mode
+>  * max_des: remove a duplicate source->sd NULL check
+>  * max_des: set pipe tunnel mode even for disabled links
+> 
+>  * max_ser: apply TX ID changes irrespective of serializer ID
+> 
+>  * max9296a: fix typo in BACKTOP22
+>  * max9296a: make register macros more consistent
+>  * max9296a: switch MAX96716 from MUX to ATR
+>  * max9296a: deduplicate max9296a_phy_id() logic
+>  * max9296a: use proper PHY id in remaps
+>  * max9296a: fix DPLL reset clear
+>  * max9296a: limit MAX96714F to GMSL2 3Gbps
+>  * max9296a: add support for MAX96714R
+>  * max9296a: do not write GMSL3 link select registers in GMSL2 devices
+>  * max9296a: use field_prep when setting RX_RATE
+>  * max9296a: simplify setting SEL_STREAM for MAX96714
+>  * max9296a: max96716_set_pipe_phy -> max96716a_set_pipe_phy
+>  * max9296a: fix off-by-one in lane polarity when using
+>    polarity_on_physical_lanes
+> 
+>  * max96724: fix typo in BACKTOP22
+>  * max96724: switch from MUX to ATR
+>  * max96724: add support for powerdown GPIO
+>  * max96724: remove support for tunneling from MAX96712
+>  * max96724: only set tunnel-related bits when in tunnel mode
+>  * max96724: add support for MAX96724F/R
+>  * max96724: oneshot reset links after link selection
+> 
+>  * remove GMSL2 version defaults, set all supported versions explicitly
+>  * reorder GMSL versions to start from 0
+>  * add support for GMSL2 3Gbps
+>  * support GMSL version finding for devices using MUX / GATE
+>  * add support for deserializers which don't have individual control
+>    of each link's GMSL version
+>  * add support for deserializers that need unique stream ids across all
+>    serializers
+>  * select_link_version -> set_link_version
+>  * select_resets_link -> use_atr
+> 
+> V2:
+>  * add missing compatible for MAX96717F
+>  * fix embarrassing dt-bindings mistakes
+>  * move MAX9296A/MAX96716/MAX96792A to a separate file as they have two
+>    links / PHYs, and adding those conditionally seems impossible
+> 
+> Cosmin Tanislav (19):
+>   dt-bindings: media: i2c: max96717: add myself as maintainer
+>   dt-bindings: media: i2c: max96717: add support for I2C ATR
+>   dt-bindings: media: i2c: max96717: add support for pinctrl/pinconf
+>   dt-bindings: media: i2c: max96717: add support for MAX9295A
+>   dt-bindings: media: i2c: max96717: add support for MAX96793
+>   dt-bindings: media: i2c: max96712: add myself as maintainer
+>   dt-bindings: media: i2c: max96712: use pattern properties for ports
+>   dt-bindings: media: i2c: max96712: add support for I2C ATR
+>   dt-bindings: media: i2c: max96712: add support for POC supplies
+>   dt-bindings: media: i2c: max96712: deprecate enable-gpios
+>   dt-bindings: media: i2c: max96712: add support for MAX96724F/R
+>   dt-bindings: media: i2c: max96714: add myself as maintainer
+>   dt-bindings: media: i2c: max96714: add support for MAX96714R
+>   dt-bindings: media: i2c: add MAX9296A, MAX96716A, MAX96792A
+>   media: i2c: add Maxim GMSL2/3 serializer and deserializer drivers
+>   arm64: defconfig: disable deprecated MAX96712 driver
+>   staging: media: remove MAX96712 driver
+>   media: i2c: remove MAX96717 driver
+>   media: i2c: remove MAX96714 driver
+> 
+>  .../bindings/media/i2c/maxim,max9296a.yaml    |  242 ++
+>  .../bindings/media/i2c/maxim,max96712.yaml    |   80 +-
+>  .../bindings/media/i2c/maxim,max96714.yaml    |    6 +-
+>  .../bindings/media/i2c/maxim,max96717.yaml    |  160 +-
+>  MAINTAINERS                                   |   14 +-
+>  arch/arm64/configs/defconfig                  |    1 -
+>  drivers/media/i2c/Kconfig                     |   34 +-
+>  drivers/media/i2c/Makefile                    |    3 +-
+>  drivers/media/i2c/max96714.c                  | 1024 -------
+>  drivers/media/i2c/max96717.c                  | 1103 --------
+>  drivers/media/i2c/maxim-serdes/Kconfig        |   53 +
+>  drivers/media/i2c/maxim-serdes/Makefile       |    6 +
+>  drivers/media/i2c/maxim-serdes/max9296a.c     | 1143 ++++++++
+>  drivers/media/i2c/maxim-serdes/max96717.c     | 1501 ++++++++++
+>  drivers/media/i2c/maxim-serdes/max96724.c     |  968 +++++++
+>  drivers/media/i2c/maxim-serdes/max_des.c      | 2446 +++++++++++++++++
+>  drivers/media/i2c/maxim-serdes/max_des.h      |  137 +
+>  drivers/media/i2c/maxim-serdes/max_ser.c      | 1577 +++++++++++
+>  drivers/media/i2c/maxim-serdes/max_ser.h      |  129 +
+>  drivers/media/i2c/maxim-serdes/max_serdes.c   |  302 ++
+>  drivers/media/i2c/maxim-serdes/max_serdes.h   |   89 +
+>  drivers/staging/media/Kconfig                 |    2 -
+>  drivers/staging/media/Makefile                |    1 -
+>  drivers/staging/media/max96712/Kconfig        |   14 -
+>  drivers/staging/media/max96712/Makefile       |    2 -
+>  drivers/staging/media/max96712/max96712.c     |  487 ----
+>  26 files changed, 8829 insertions(+), 2695 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
+>  delete mode 100644 drivers/media/i2c/max96714.c
+>  delete mode 100644 drivers/media/i2c/max96717.c
+>  create mode 100644 drivers/media/i2c/maxim-serdes/Kconfig
+>  create mode 100644 drivers/media/i2c/maxim-serdes/Makefile
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max9296a.c
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max96717.c
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max96724.c
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max_des.c
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max_des.h
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max_ser.c
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max_ser.h
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max_serdes.c
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max_serdes.h
+>  delete mode 100644 drivers/staging/media/max96712/Kconfig
+>  delete mode 100644 drivers/staging/media/max96712/Makefile
+>  delete mode 100644 drivers/staging/media/max96712/max96712.c
+> 
+> -- 
+> 2.49.0
+> 
+
+-- 
+Kind Regards,
+Niklas Söderlund
