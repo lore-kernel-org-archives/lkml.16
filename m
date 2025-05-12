@@ -1,77 +1,81 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38ADF1D8A10
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3C61B4F2C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747036537; cv=none; b=Lk7gvuNYl0utLSLGt+Uig1rTNPWgSdg3PqFFGAwKizgS06OXES8SoliVoeo5Y/tdZL3pUrlVnTsAW4l48Z6m5lJZhtblpeZ5OGsW+0qrbgsDmwiKJt137OxYR6ucTcKw5A7gw8evNHbAZgJi3UY1HfGoPrkTNbTRNGa5X/DbE8c=
+	t=1747036539; cv=none; b=d1p2VDTF1xpNDQiwOV340eE4Mc8dlozoSgTc5uNZT2vBOBUVSFS/08/eY8nHRZXlF0L1TfblnQ43cq8cHmWjuCiJjfjdpxx7G0QLBGSLGAnGW1q/Cq64HNVYMOl89RWlZqNR6mJveWonbLb5iCKnAavNjAT2RaSpTqGz6YmPegQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747036537; c=relaxed/simple;
-	bh=7GONjaD7jFf6DraAUB8mWndfQEMMogoPdAMOxswMWYM=;
+	s=arc-20240116; t=1747036539; c=relaxed/simple;
+	bh=fJUgR/HLPO8JTzFAGV7CY/CYAAOXd9eka4BQQxF7ZXs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=me83gvN6c4YbOAxjOkasCh6Z6mrgl7Q9jfSqdIP4p3DjSTgLtHihMVy9gWIPofaDAKZZfzKi6pfyQxQCBwTRErNQS6BToRZ1d59xHKyOy/kOx2iR9W/xOJYKt4v7XEkYG31GoqFYIOGDUybt+W8nFkYv8aVs1AHWVDKahrSACsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eaUrtNBt; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJNOMMzQ8k6FB51kfFHDQfX58uMm/O40eOKn2elpPe5X+DKDoPlliZ/QH8WVch4JnJsoS8st4WY8iCgh1vBw68h+NOgFQQjwf5H9/QGmTAoK+yuunVmznKOlSKZQhwrhDJ6oLEKfNh7/2K8zwThCwrP8cdk8FocKO4OeNhMyY8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BAfku5qV; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eaUrtNBt"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a1d8c0966fso2401602f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 00:55:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BAfku5qV"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad2440926adso207718966b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 00:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747036534; x=1747641334; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1747036535; x=1747641335; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JVmeoRs8wht6ScX85zDxCRxMqcg4xq84fv5EF0eHPpo=;
-        b=eaUrtNBtAlkGznj3QUjgs82ayC9haBffhtS0lQhAfxWuDrzuOSOsqgDup6eTvmKNsf
-         pKE1L9++VvCAl7SjAaZaxPSZBJh7l9KvDdhGxm8fMcm4IVE58oXAExMfDYJeLxiTfpOv
-         PoaZB7g2KpAEy7+6xyFaGstD6+3QOnBTDJ7uCqZi27Yz5UnmLtWW8E9SfrXEyMrS8KVz
-         Eu3x/nqzzYMeI/0237a3pKIJHxeTrZyguff67cu3O3OmzT0GjxePTB8E5o1jb1teyi8L
-         h7bC+je84/PxyJQC2xbi5ZiJBc/qHXj66Nc9s4QcpR9iyJ8e8QIVaRaj3fApKn2cKEU2
-         v/4A==
+        bh=JOp5HvPXRqWLEWDc84tE16c57ZRsArDaDk9r+zf7A7M=;
+        b=BAfku5qVwobApjASLco57SmOlDotKSgCsJUeWbKykXk9IEZa4FziFFsI4rhMbHa81t
+         F7BM0eeo4gGS972J0wMT9zQ/UtBabujAOfC+c4wmLgOZZKTno6q0uFpTUoUwNZ0eXZe6
+         o50q36o+xm0KTVTIr6lgHsiqJdtpve6cxPzAhs/wljRRq7v1a2iV77CjwDI7ZF0bqXJv
+         MNbZpIVwsXeABEAhYXj4QY4x3Vj3KQ8E4sbLll+BE+iklRZaLIRf7gW5c8qdJw0TFrq3
+         WJFvZ+c1Hyl5sGq5RrRz94RimvkEmH0vM7555LEHGaD5kFrq7bDLUqYNsDMC0Roa2F/o
+         r4pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747036534; x=1747641334;
+        d=1e100.net; s=20230601; t=1747036535; x=1747641335;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JVmeoRs8wht6ScX85zDxCRxMqcg4xq84fv5EF0eHPpo=;
-        b=R65xvV+xMt/2DA6F30RAH8f8/StsYjtLxV0BB+ck/3ZOi3dKSf+TbYRZRewK6nRmLl
-         x217JkxffNM7Uylv5QBJflAxJAUTXIqDMQFzMZFmfRe85feNe1zdCYt5Q+RD17gIv8T2
-         AEzYRKgAxn4r5DRjTkySfGINEmP5ZErJ7duJNFibUu2XvDOGbMx2w9SuL3nlfJRM0jwz
-         ED5JN0KET0otW3zYjf3QC4VCJmMsiQhR0wskIKhe3eEqpMREgfTn4Od2opdRklXqSQbR
-         gbO570jsxhu5BWXEkCfKVOrW3BUAL3hpiGgKSpkRwopNjoa7zzRZJq8Yyj6AO1hdAVEM
-         Qaxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRfq5HY7LBYsubwsY1TvDSy9xVoofCMhj6g36UAXE2fN5gV5jE3bvtWSCwFPHxG4W4ZJrI2YC7whgdl9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCPmxQVFF0Fg2pG8onCKgV46uWrqJUj7FszFirbhC9eGNNFI4j
-	7EU2CB0shc1Ns8UcFQhwO4RWXnnLjUpuxOY5f0OO0T7mydM/N8EHKfWNlNbrRQ==
-X-Gm-Gg: ASbGncvGkQq+7TW7rfJbCz3m7Ur0aY+KYY1l4l9MpaEUi+OjdBl+v1uZYK/xkaRnXkT
-	0ms9orGVjuA6iSqLDfLs49SC/x2hbuki0xi7pfVbf4+NgHLF3YZA4gYCaZEs+U7zHfd0f8lcYsR
-	Krqcv9XwYr7iaybP8Qm7uH2Sid7vP9kTIySA0xFngxnvir7c1i6oxP42rR3PFfFyM3V3ExO92Hh
-	rHTRbBZUa5NTDXo0tUhJB2EirzZxHnwVeIApHdPIH7NcMU2kESdTon7iwS1nsqvKgPg0A9mxA0r
-	PzXcd1g/RnagX/n6ZleFJoZiO6+tvsQnq6XoXz8gg864mekpW7IDcXCbhsstsxY5TlVVI4gtakd
-	w9Q4RRHkuHxlJQUgp6ZkECr5FfU8=
-X-Google-Smtp-Source: AGHT+IHRngy7dyfSblPZg3kx1M0V69ixjtLKeGbM3AJ71FSYb+70+rHci10V2fws5C9DeqNnhr+dvQ==
-X-Received: by 2002:adf:e612:0:b0:3a1:f724:eb15 with SMTP id ffacd0b85a97d-3a1f724eb66mr7737749f8f.2.1747036534388;
-        Mon, 12 May 2025 00:55:34 -0700 (PDT)
-Received: from google.com (218.131.22.34.bc.googleusercontent.com. [34.22.131.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2f65sm11745987f8f.55.2025.05.12.00.55.33
+        bh=JOp5HvPXRqWLEWDc84tE16c57ZRsArDaDk9r+zf7A7M=;
+        b=uPAA9IQ4kZIDVl3/Nz/o4qxtWOTOF3TRIgr8kK322P82kvxWL/u8eV0MHVfNUkQilC
+         7J7ifv//MyUuE9r9bUFB8RlhRJPg9eU7x2Q2B0xBNS8t380b3UMtlpggT3uw3rs8Uv5e
+         Suoh6hOVtpc6+jVqQGCodbi7+Sxe4+0eYqRxRRR7MRoMmxcrX6+9Vt8ifMbAeY6yFzVj
+         SIHTe13gYTbO7Zd8b5V2U6zpKeUgsFgJjE9LkMgXVBflZN32NSWe6jSWq2TccpIZgofh
+         r9skNPCl3A8WLSdHmCDgGkjqPBo5v8LNGOlwxSYFq2FyjaR8di2Jg0Xy62REwWi8lxsI
+         w4lA==
+X-Forwarded-Encrypted: i=1; AJvYcCUM+pgCJUiS4efqLtfS34ZTuHSCmGZ9kOIKO5c7/qarB+XDj/HVWt7ZFCf96ogY4ikfShQWYn9s8euYSTI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvUXeIt+1Z5u5EP1yuJEYixTwIUAQ4eA0bunUE5PC+mZquexVc
+	EdIzPArA9GR6MLuD9inaArCAA9gWozHamdG+3OLT3+/nFuiKZZoKfc2XBE3reu8=
+X-Gm-Gg: ASbGncuLSs0VkkbqyhvN+k2PkqOaAtm3B0yJG6rzkpi32p/Y7w1BOIqEOwOevB03nUN
+	FyRKaaFSMc3TqCZ5XhCnS/VNMcjfR/TDoRYfMwIVFS20UIzKOJ6zugUC3ikZtcd0pi47LYGrw0D
+	qbN/jxP3TT+E1uLb3zokMEjMywbmK67JOgz/tj0EDbSB+ZLjFFpF+sE685MJaTxbSdfEZLFPtOz
+	q49V+lLL7xOo22IfbzW5KwJb31b59NhjoM8pbOjsyvueXneNV7Eiw5boLlNpev16I7kxVRESNEG
+	Py/tZ+GZdLSBHOqYyQSueH4HE4chcAT/cJpqmygbhUWVRo+E9ns2nEHIqA1xOMlv
+X-Google-Smtp-Source: AGHT+IFvoDlinLNh3mDfJ+hepM4FmTJpo2xjwMxO9D3tZ//HeBDx+B1skyuS2ATpup+T2haCVi/tYw==
+X-Received: by 2002:a17:907:8749:b0:ad2:d13:3c4d with SMTP id a640c23a62f3a-ad218e36fa5mr1110787566b.1.1747036535387;
+        Mon, 12 May 2025 00:55:35 -0700 (PDT)
+Received: from localhost (109-81-86-251.rct.o2.cz. [109.81.86.251])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad21934d4d0sm577088366b.73.2025.05.12.00.55.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 00:55:34 -0700 (PDT)
-Date: Mon, 12 May 2025 08:55:30 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
-	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
-	qperret@google.com, will@kernel.org, kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 05/24] tracing: Add events to trace remotes
-Message-ID: <aCGpchGnvyFpWk2y@google.com>
-References: <20250506164820.515876-1-vdonnefort@google.com>
- <20250506164820.515876-6-vdonnefort@google.com>
- <20250509154735.530d4a37@gandalf.local.home>
+        Mon, 12 May 2025 00:55:35 -0700 (PDT)
+Date: Mon, 12 May 2025 09:55:34 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>, Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH] MAINTAINERS: add kernel/fork.c to relevant sections
+Message-ID: <aCGpdr_6GXqmRNaU@tiehlicka>
+References: <20250508152825.151889-1-lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,48 +84,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250509154735.530d4a37@gandalf.local.home>
+In-Reply-To: <20250508152825.151889-1-lorenzo.stoakes@oracle.com>
 
-On Fri, May 09, 2025 at 03:47:35PM -0400, Steven Rostedt wrote:
-> On Tue,  6 May 2025 17:48:01 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
+On Thu 08-05-25 16:28:25, Lorenzo Stoakes wrote:
+> Currently kernel/fork.c both contains absolutely key logic relating to a
+> number of kernel subsystems and also has absolutely no assignment in
+> MAINTAINERS.
 > 
-> > diff --git a/include/linux/trace_remote_event.h b/include/linux/trace_remote_event.h
-> > new file mode 100644
-> > index 000000000000..621c5dff0664
-> > --- /dev/null
-> > +++ b/include/linux/trace_remote_event.h
-> > @@ -0,0 +1,23 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef _LINUX_TRACE_REMOTE_EVENTS_H
-> > +#define _LINUX_TRACE_REMOTE_EVENTS_H
-> > +
-> > +struct trace_remote;
-> > +struct trace_event_fields;
-> > +
-> > +struct remote_event_hdr {
-> > +	unsigned short	id;
-> > +};
-> > +
-> > +#define REMOTE_EVENT_NAME_MAX 29
+> Correct this by placing this file in relevant sections - mm core, exec,
+> scheduler and pidfd so people know who to contact when making changes here.
 > 
-> 29 is a particularly strange number. It's not even divisible by
-> sizeof(short). This will leave a hole in the remote_event structure.
+> scripts/get_maintainers.pl can perfectly well handle a file being in
+> multiple sections, so this functions correctly.
 > 
-> Should it be "30" to plug up that one byte space between name and "id"?
+> Intent is that we keep putting changes to kernel/fork.c through Andrew's
+> tree.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Ha yes 30 is what it should be!
-
-> 
-> -- Steve
-> 
-> > +struct remote_event {
-> > +	char				name[REMOTE_EVENT_NAME_MAX];
-> > +	unsigned short			id;
-> > +	bool				enabled;
-> > +	struct trace_remote		*remote;
-> > +	struct trace_event_fields	*fields;
-> > +	char				*print_fmt;
-> > +	void				(*print)(void *evt, struct trace_seq *seq);
-> > +};
+Acked-by: Michal Hocko <mhocko@suse.com>
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
