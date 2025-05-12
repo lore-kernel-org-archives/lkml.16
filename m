@@ -1,49 +1,83 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A3E2566DD;
-	Mon, 12 May 2025 17:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5A7254879;
+	Mon, 12 May 2025 17:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747072360; cv=none; b=rPW7lSnazwlsIrS6WRJGmM1kB9O/IaVL8ZBgWQm/Yk135Hkx7pIDuaZVweiCp1eVk+m1FeL+JFQn1HFvkHQcsAFd9VBBFCNBVhCktdk+k+s+i9vgZM9eI1vyvGyFm4k0RjWnjIiVYOStNwA5eNuL0knE8ykVPFTh4kyIt0UGqEM=
+	t=1747072403; cv=none; b=DwYdBiKhE9jcdY57l1I2HLrs0bFLFET3uT3OhvUQ5K8AVkolEr19i69ON21wUyNP/32ZSIKkzNWQMQY8g7yKHwIJmDpil3kVNOUEy+WIfBqC1hve01ERp2Rkwbe5WK957Pwo8xDZXkWLd5hVMHCoAXZtcBpUfW9cN0vrAKd2KIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747072360; c=relaxed/simple;
-	bh=Ux3QgRt2jF2R8Z9eyxbrWaJo9VJUnFD9cGtGgwY/b4Y=;
+	s=arc-20240116; t=1747072403; c=relaxed/simple;
+	bh=U0aycZU3nL8B3sPAjX2RrQuFxgX3wKcotQ348hOj6NU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gamh+/T3PPgPlOgizkeZeL714iHyYdEws1XfMtEHBNq7+N/nbgizUUpyMHDygfVV+tcG3ywJDf7ltD+bDd3ASYqttDvDnK6wZmNFomHAO5Af1HJdJRcBSDCsldny7SSyiJ4JemZqY0u388d6/9QPZww7HndvzHS8qTh1MSLwjEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SsjXZ0CO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=rj4rmhp83SB9x0axYPFaMn7WODk3Cbw8cRA+XX+/NBKrrn52IL1yIj8746GVSGJGly5mJ23ijObnCACthnIT9vvpu8dZzYjtAZP0gXzFJyqoD7NcN9a5qU2pwQXO5RGXnjcwjG/s5Sl6nyh6VOoYrNXTKsZWGbLUUHfOWtWkJgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bur.io; spf=pass smtp.mailfrom=bur.io; dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b=XVEuLeqw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W+p46fTM; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bur.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bur.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SsjXZ0CO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=P6m/gOuJsgKXMELNFkjuzd8wF5VtSouHA+k5dme7F2s=; b=SsjXZ0COxXLba30mLcB5h6BhV9
-	rCcdqsNgk88F5FwY3wTnzUvUIp4MeroDZ+XXoZIME13xXCnQIAPewBFpe1CPbN/p6mXsY9nnL0r9x
-	/vHX0UZeOiuyPi6/FyCRUYKPnMWD5gA/q8/BjB2LUppmgkcqxwUBzyFx8QhNq2TmtO1Wtc4pZysAJ
-	bqLa7Q981MPxK5hA2Ndis6V7pf0yhRSCC5B5bV9aiBNF9vv28c6GBg4oGeeBN78J7qn3ya/52tRDO
-	TG/JWWVVpAX2pNBsDCckdi6BZpe2gFyp+WvElkQMMP/qZtKgT5kMMQqjh1JaBWLm2R7BWG23OWL5l
-	WYx9GS2Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEXKJ-0000000A6aP-3bSn;
-	Mon, 12 May 2025 17:52:31 +0000
-Date: Mon, 12 May 2025 18:52:31 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, corbet@lwn.net
-Subject: Re: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
-Message-ID: <aCI1X3NZwuagNOqS@casper.infradead.org>
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-15-gourry@gourry.net>
- <aCIjMNooAzKaONod@casper.infradead.org>
- <aCIkF6RZJtU0m3Ia@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="XVEuLeqw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W+p46fTM"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 711001140121;
+	Mon, 12 May 2025 13:53:19 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Mon, 12 May 2025 13:53:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=cc:cc
+	:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1747072399; x=1747158799; bh=VXmW3ltCTa
+	H7AoKDzv6sYaMiQCFrnONwdydPYaY9q2c=; b=XVEuLeqwAdAa9UWRVW9DN+XLz7
+	OG/rntCzlyiNY7B5UkLjzuCGo5Ae6SBBZYFeZKIw4YIvueif2PUpKQiRlh4TnIoI
+	s+WQelYIEwUPm/mf63Z+Iw+lT48yehwVGRSEyxrMxDPZKer/ABrT8J6+8qa67Wni
+	VWqFgZhBNiufXvPdp3Zvz9qpXY09ndT0laIsI1a7apbv8rNlxejYbLOVK+UZgN/t
+	KOWUJPu2BChhpFrkgBs/T6LfJPoC7clP3CEsFgBrrgw3sMhXVIHZRsabwU8tYGZK
+	Yz0yzd9y8D7ImI6NSb3/tIsNaDxsMKM5eCVCMdLcZ2KjlqF93mJo8cyHBJXQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1747072399; x=1747158799; bh=VXmW3ltCTaH7AoKDzv6sYaMiQCFrnONwdyd
+	PYaY9q2c=; b=W+p46fTM0bbbYCL6IE5tZUS4Sby2PVJ2567PP7vDr1FmzwZnLem
+	ufaPhg5PGbVkgXZK5xO4a3EqDVgNfxze8pLdKl6hGzEYUDOUhB+7fcWmvAX+j5Kd
+	/1IYmspSXJwWOATj+/HHAbWsTStts5BP/5V0XBMfLD+0mL0ZcDhU2YMpTgfE7xQf
+	DBm66wvis6sMRB+E4w8TKV3YLE/sSJdCPl8cZIynu8pbrnbsK7Y7wTPpClYGuEzK
+	ZSjcxbWldLNal/BGVWstvzk8YvztLr1xKpClmtTYPnYuMuAz1dwIlcoNg4WDiqwc
+	0DrCiPVwrRtx3OM0xIFsOHX8Y1oaNfz3mSg==
+X-ME-Sender: <xms:jzUiaNdqmIcrl0NgcOFobAIJYgQWSGDYm4tOfHcx64Wzsf2-egcbog>
+    <xme:jzUiaLPDDOQpbZumzkQCR9zqFH2rh5HtqKt9ktPC6VIA0rwioO-ErosaAPpx4394Q
+    UMipDvuHe9JKpquHxs>
+X-ME-Received: <xmr:jzUiaGh9pisKB39VC99RJYkXQZChZGw0oLnO4jx_Y67_TD7tCkz7z9KnkwP-1ZkkREcQm5_1BTMhE-lM0mzB-3NW83U>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduleduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehorhhishcuuehurhhkohhvuceosghorhhishessghurhdrihhoqe
+    enucggtffrrghtthgvrhhnpeekvdekffejleelhfevhedvjeduhfejtdfhvdevieeiiedu
+    gfeugfdtjefgfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegsohhrihhssegsuhhrrdhiohdpnhgspghrtghpthhtohepiedpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepnhgvvghlgiesshhushgvrdgtohhmpdhrtghpth
+    htoheptghlmhesfhgsrdgtohhmpdhrtghpthhtohepjhhoshgvfhesthhogihitghprghn
+    uggrrdgtohhmpdhrtghpthhtohepughsthgvrhgsrgesshhushgvrdgtohhmpdhrtghpth
+    htoheplhhinhhugidqsghtrhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:jzUiaG9BUjsl6ItdiNpcNnibXb4JKL4wpaVkqfGCQXO-_FiIb2EO9w>
+    <xmx:jzUiaJtaZ_mXordzNyyCKBa-lNbjxkSNocN8pknvCO7o3HEViS4iLQ>
+    <xmx:jzUiaFFyM376utRw9PVERqSb5fE3Cc_9OSHt61-ymxLkj_qeTDk69g>
+    <xmx:jzUiaAME5gcrsSCw-Zm5QiR3uRWX1vUU1fuKPIo0QcU797fesxqeYg>
+    <xmx:jzUiaLGP3nPZdriNVJFipOjXfzCEBUVS65UtG7yS7VTpuROFU-O_r0n8>
+Feedback-ID: i083147f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 12 May 2025 13:53:18 -0400 (EDT)
+Date: Mon, 12 May 2025 10:53:53 -0700
+From: Boris Burkov <boris@bur.io>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: correct the assert for subpage case
+Message-ID: <20250512175353.GA3472716@zen.localdomain>
+References: <20250512132850.2973032-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,25 +86,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCIkF6RZJtU0m3Ia@gourry-fedora-PF4VCD3F>
+In-Reply-To: <20250512132850.2973032-1-neelx@suse.com>
 
-On Mon, May 12, 2025 at 12:38:47PM -0400, Gregory Price wrote:
-> On Mon, May 12, 2025 at 05:34:56PM +0100, Matthew Wilcox wrote:
-> > On Mon, May 12, 2025 at 12:21:31PM -0400, Gregory Price wrote:
-> > > Document some interesting interactions that occur when exposing CXL
-> > > memory capacity to page allocator.
-> > 
-> > We should not do this.  Asking the page allocator for memory (eg for
-> > slab) should never return memory on CXL.  There need to be special
-> > interfaces for clients that know they can tolerate the added latency.
-> > 
-> > NAK this concept, and NAK this specific document.  I have no comment on
-> > the previous documents.
+On Mon, May 12, 2025 at 03:28:50PM +0200, Daniel Vacek wrote:
+> The assert is only true in !subpage case. We can either fix it this way
+> or completely remove it.
 > 
-> This describes what presently exists, so i'm not sure of what value a
-> NAK here is.
+> This fixes and should be folded into:
+> 	btrfs: fix broken drop_caches on extent buffer folios
 > 
-> Feel free to submit patches that deletes the existing code if you want
-> it removed from the documentation.
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
 
-Who sneaked that in when?
+I would lean towards removing it, personally. But LGTM, thanks.
+
+Reviewed-by: Boris Burkov <boris@bur.io>
+
+> ---
+>  fs/btrfs/extent_io.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 80a8563a25add..3b3f73894ffe2 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -3411,7 +3411,7 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
+>  			continue;
+>  		}
+>  
+> -		ASSERT(!folio_test_private(folio));
+> +		ASSERT(!btrfs_meta_is_subpage(fs_info) && !folio_test_private(folio));
+>  		folio_put(folio);
+>  		eb->folios[i] = NULL;
+>  	}
+> -- 
+> 2.47.2
+> 
