@@ -1,140 +1,161 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4ED29CE6;
-	Mon, 12 May 2025 05:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E48529CE6
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 05:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747026926; cv=none; b=Ss+s1xMF55FOl1Nnc3jvUdty9E5Uzhbu622n0Gt25pP2bGzhVPoyMmfrufsnmShjZdcaq0V3JAN+fba0E1DkCdy6iPUqByAA3ccMw1upYX5XqxPz71TYZi4Gz1kveqaVfPOgJvTf9ZmS85Uso01WQvvM/dedyXcwwbNh+St5oXA=
+	t=1747026966; cv=none; b=lEcKbZ0oWsVfbyrNU7/QWfyxoof3IZy5FhjYAiUmiq1mFoCabdiKJV9SqqHY2TjksnvSo9DeyWOEyAadY6+SWt61iZhvKoJAmvEUSSAGLuR4Jl9Kypz+Baih/zkIU/5KDM1l9x96RL5lCDEB8xzN142P0EWyyIp0Aq51JAslzVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747026926; c=relaxed/simple;
-	bh=qxNCH0olhL2j0JT0LDPSEkUWY09CmuIKJJZkHxB5DXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c7DW50FPfEGiFQ2sX3MoNqWjohm7ZN7TVQUKCDttbFJaQs3QLtRUxjZqgqJKaMS9MBYck0uQ/qyS4dsL05or5UPV/1FAvz0YvZHvx+2alPHFK4YiGry1/3RE2d5BiUpsMsDRQyVfdC6GRIIPRocXBjEKIHo/vMT+DajlkymVKtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 41A0A68AA6; Mon, 12 May 2025 07:15:20 +0200 (CEST)
-Date: Mon, 12 May 2025 07:15:19 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
-	yukuai3@huawei.com, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
-Subject: Re: [PATCH RFC md-6.16 v3 11/19] md/md-llbitmap: implement bitmap
- IO
-Message-ID: <20250512051519.GA1555@lst.de>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com> <20250512011927.2809400-12-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1747026966; c=relaxed/simple;
+	bh=OYSpVeDaiPzMVPpqsHe3RuM+vsYQ0baXI8G6j2Q9jZI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P7rGoSgi7/6z1N9c6OEnfCm5RPq5cKadjSqtnWRTNGse0HzhNK2Y4I9gT1lhAfZGIwelUWiiiqfWmqJ1Gbyjt6P0hpjDz1fnuRVZkD3Nzre3O/JVC3YE3KKK5TzDxDBQJHLKoLx0RXsh8P8+ODaKMixRFwIIsfYNAstq5Hoel3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=egMpquSp; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="egMpquSp"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4769bbc21b0so47700521cf.2
+        for <linux-kernel@vger.kernel.org>; Sun, 11 May 2025 22:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1747026960; x=1747631760; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JB5Kuig9Ct+DdoXuLwf5DLRPBtpEPgDetACmtfHem3U=;
+        b=egMpquSpieKopgNwaRcCWNtgAHfh4GU2rDJ9Yd0fMGa9hrDcQBPxzTwuNifgxsgSwg
+         LMWGLBBss5ZLe/DlwmQsygRAWJzMCLh20roai2s036xc00da2RCAWhdhVi8p7mO5YkW9
+         8gNrZlIZxt3ipGFfec3z71ZXliIc3o2mvqi7BUHsqQKcoYw7TR4q23m/BPdVwasXOHmP
+         78x643lgoEIAbKuYDT+fUNl/ticrctnCyP/iE9iWNIiDdsuz+vg+uMrp4z2fiSz1kv09
+         UTVgUEC/uSqCiccEF3Gbd55NiHFZroFtfglfDcOaLDKqCm4feL7M/H8YVbGzldk0PYPL
+         I9iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747026960; x=1747631760;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JB5Kuig9Ct+DdoXuLwf5DLRPBtpEPgDetACmtfHem3U=;
+        b=fbSCsjlMGU5bUicwIIgUtFL6fvcqt/3i2YcbHmOhjNN0yovW1Gl9UamUrFVKmmGTqa
+         OdLwk72TrQKbfzJWWB2rV1wcUQ9xjGUvcZp8loW7Vf0HThqG/kdaKszLKFC1rloLg2LA
+         KV/vd18ur4rMILh2TUyq73DJXYTobtDxObhn4APjIAL2U+gpptNHJLecqqqV32BI0CKl
+         dkVgGV1oqkz1UpITtJzc6W7U+BSWsRfwVz+ohXNO6IQkvNq2mg0ASupj5BTFNg1qaI6j
+         2Ik3ebHSVWqYHftxN0nDOpWUd+IINRSDZDLBGrc64VVT9nbBGhsEnrmUQLk4dv8fbwMV
+         WHww==
+X-Forwarded-Encrypted: i=1; AJvYcCWg3/Ehn79Xl2P/LfTSrTd2DkzzwHi4HNSYw3+HHUTKYJ6ftEtAuU1jplhWDi4o3Ni+EUWBKYsDNB9TKXo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfTPIOPmwN6I2MD2/c0ILa1drpysqxe32SfljMvsmVRF8Xn/yx
+	RGZ3lMXMH8p9XEVLS+OOgn2YVCiMgkLGOSs6Kuu7cL5dgdhF+kPcYphQvPKhjlp/QJ7IcB54Gzp
+	YhCr1ZcaCq8EPiUBqo4oa2bzK40Zifq/SnKwerQ==
+X-Gm-Gg: ASbGncsfvLiXtthstw9zeICvhUCfIjL/GOo/a3n1R5V0CvWmqmZfm3cnYFg186045cQ
+	erM97zd94KkQsLdFzSBtSI2/Kq/4bsL9gQPmioXAwGBMxUizX62KZUybpqIx3HDbL6CBggDf2ed
+	83TVNONOCZdj/rFIGbOS7rX7UEO53ja5qo7rxKJ8bS6eZoskPPFG8O8DJPhXLIctRGpA==
+X-Google-Smtp-Source: AGHT+IHw9OYmUFFaVOjKTmrAU8Lic8B4Zm4GrzDVHIbfeJPeFTDZ1sW5Du4kJ5q/UG3UgPC6JAvrwG/k/V+7WBd9EPg=
+X-Received: by 2002:a05:622a:2cf:b0:477:6ee2:18cd with SMTP id
+ d75a77b69052e-49452714aa7mr173626351cf.5.1747026960004; Sun, 11 May 2025
+ 22:16:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512011927.2809400-12-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20240222125059.13331-3-hchauhan@ventanamicro.com> <20250512033118.1071577-1-dqfext@gmail.com>
+In-Reply-To: <20250512033118.1071577-1-dqfext@gmail.com>
+From: Himanshu Chauhan <hchauhan@ventanamicro.com>
+Date: Mon, 12 May 2025 10:45:49 +0530
+X-Gm-Features: AX0GCFuxSrzsFyhJa4BfWv6ZpNuyEseIibTzFbBBdKXCjiAlaHx5IZ2hKcU0NFw
+Message-ID: <CAPd4WewhGXdE0KUzrnLGgK9cDjz35TFvr_fqYHc5yVzKTFCdHQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] riscv: Introduce support for hardware break/watchpoints
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Charlie Jenkins <charlie@rivosinc.com>, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 09:19:19AM +0800, Yu Kuai wrote:
-> +static bool is_raid456(struct mddev *mddev)
-> +{
-> +	return (mddev->level == 4 || mddev->level == 5 || mddev->level == 6);
-> +}
+Hi Qingfang,
 
-This really should be in a common helper somewhere..
+Thanks for pointing it out! That explains the difference in behaviour.
+I will fix it.
 
-> +static int llbitmap_read(struct llbitmap *llbitmap, enum llbitmap_state *state,
-> +			 loff_t pos)
-> +{
-> +	pos += BITMAP_SB_SIZE;
-> +	*state = llbitmap->barrier[pos >> PAGE_SHIFT].data[offset_in_page(pos)];
-> +	return 0;
-> +}
+Regards
+Himanshu
 
-This always return 0, and could just return void.
-
-> +static void llbitmap_set_page_dirty(struct llbitmap *llbitmap, int idx, int offset)
-
-Overly long line.
-
-Also should the second and third argument be unsigned?
-
-> +	/*
-> +	 * if the bit is already dirty, or other page bytes is the same bit is
-> +	 * already BitDirty, then mark the whole bytes in the bit as dirty
-> +	 */
-> +	if (test_and_set_bit(bit, barrier->dirty)) {
-> +		infectious = true;
-> +	} else {
-> +		for (pos = bit * io_size; pos < (bit + 1) * io_size - 1;
-> +		     pos++) {
-> +			if (pos == offset)
-> +				continue;
-> +			if (barrier->data[pos] == BitDirty ||
-> +			    barrier->data[pos] == BitNeedSync) {
-> +				infectious = true;
-> +				break;
-> +			}
-> +		}
-> +
-> +	}
-> +	if (!infectious)
-> +		return;
-
-Mabe use a goto and/or a helper function containing the for loop to
-clean up the control flow here a bit?
-
-> +static int llbitmap_write(struct llbitmap *llbitmap, enum llbitmap_state state,
-> +			  loff_t pos)
-> +{
-> +	int idx;
-> +	int offset;
-
-Unsigned?
-
-> +
-> +	pos += BITMAP_SB_SIZE;
-> +	idx = pos >> PAGE_SHIFT;
-> +	offset = offset_in_page(pos);
-> +
-> +	llbitmap->barrier[idx].data[offset] = state;
-> +	if (state == BitDirty || state == BitNeedSync)
-> +		llbitmap_set_page_dirty(llbitmap, idx, offset);
-> +	return 0;
-
-and this could also be a void return.
-
-> +		sector = mddev->bitmap_info.offset + (idx << PAGE_SECTORS_SHIFT);
-
-Overly long line.
-
-> +			if (rdev->raid_disk < 0 || test_bit(Faulty, &rdev->flags))
-
-Same here.
-
-> +	int nr_pages = (llbitmap->chunks + BITMAP_SB_SIZE + PAGE_SIZE - 1) / PAGE_SIZE;
-
-Unsigned for the type, and DIV_ROUND_UP for the calculation.
-
-> +	struct page *page;
-> +	int i = 0;
-> +
-> +	llbitmap->nr_pages = nr_pages;
-> +	while (i < nr_pages) {
-> +		page = llbitmap_read_page(llbitmap, i);
-> +		if (IS_ERR(page)) {
-> +			llbitmap_free_pages(llbitmap);
-> +			return PTR_ERR(page);
-> +		}
-> +
-> +		if (percpu_ref_init(&llbitmap->barrier[i].active, active_release,
-> +				    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
-> +			__free_page(page);
-> +			return -ENOMEM;
-
-Doesn't this also need a llbitmap_free_pages for the error case?
-
+On Mon, May 12, 2025 at 9:01=E2=80=AFAM Qingfang Deng <dqfext@gmail.com> wr=
+ote:
+>
+> Hi, Himanshu and Charlie,
+>
+> > +static int arch_smp_setup_sbi_shmem(unsigned int cpu)
+> > +{
+> > +     struct sbi_dbtr_shmem_entry *dbtr_shmem;
+> > +     unsigned long shmem_pa;
+> > +     struct sbiret ret;
+> > +     int rc;
+> > +
+> > +     dbtr_shmem =3D per_cpu_ptr(sbi_dbtr_shmem, cpu);
+> > +     if (!dbtr_shmem) {
+> > +             pr_err("Invalid per-cpu shared memory for debug triggers\=
+n");
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     shmem_pa =3D __pa(dbtr_shmem);
+> > +
+> > +     ret =3D sbi_ecall(SBI_EXT_DBTR, SBI_EXT_DBTR_SETUP_SHMEM,
+> > +                     (!MEM_LO(shmem_pa) ? 0xFFFFFFFFUL : MEM_LO(shmem_=
+pa)),
+> > +                     (!MEM_HI(shmem_pa) ? 0xFFFFFFFFUL : MEM_HI(shmem_=
+pa)),
+> > +                      0, 0, 0, 0);
+> > +
+> > +     if (ret.error) {
+> > +             switch(ret.error) {
+> > +             case SBI_ERR_DENIED:
+> > +                     pr_warn("%s: Access denied for shared memory at %=
+lx\n",
+> > +                             __func__, shmem_pa);
+> > +                     rc =3D -EPERM;
+> > +                     break;
+> > +
+> > +             case SBI_ERR_INVALID_PARAM:
+> > +             case SBI_ERR_INVALID_ADDRESS:
+> > +                     pr_warn("%s: Invalid address parameter (%lu)\n",
+> > +                             __func__, ret.error);
+> > +                     rc =3D -EINVAL;
+> > +                     break;
+> > +
+> > +             case SBI_ERR_ALREADY_AVAILABLE:
+> > +                     pr_warn("%s: Shared memory is already set\n",
+> > +                             __func__);
+> > +                     rc =3D -EADDRINUSE;
+> > +                     break;
+> > +
+> > +             case SBI_ERR_FAILURE:
+> > +                     pr_err("%s: Internal sdtrig state error\n",
+> > +                            __func__);
+> > +                     rc =3D -ENXIO;
+> > +                     break;
+> > +
+> > +             default:
+> > +                     pr_warn("%s: Unknown error %lu\n", __func__, ret.=
+error);
+> > +                     rc =3D -ENXIO;
+> > +                     break;
+> > +             }
+> > +     }
+> > +
+> > +     pr_warn("CPU %d: HW Breakpoint shared memory registered.\n", cpu)=
+;
+>
+> This is printed unconditionally, even if there is an error above.
+>
+> > +
+> > +     return rc;
+>
+> If ret.error is 0, rc is uninitialized here, which may explain the error
+> that Charlie came across.
+>
+> Regards,
+>
+> -- Qingfang
