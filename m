@@ -1,215 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5725D29ACDE
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215D429B21F;
+	Mon, 12 May 2025 18:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073089; cv=none; b=haSO9rMS9/p9cmPU4UQXcw22MbJ6Eiq0BhuHmy3DkKgG5Wa0vcnXr2osfZxuRNAoYFR0BYGkyIZEYKbwYnFYz7FxSQUOpwh51APV0mtgoe+cHNqi1Z2v5jg4xRBRU9iT5PycBi+UCso36iv546J9tlnC0nbxCxeJyuOThcsdLK4=
+	t=1747073091; cv=none; b=jgNA8A7cTPLyTNu5j9ckdzJD/naAWMTc+4XyRWq5z+A/nWcFVUA9Hm1cLHbMZHHLdfhqlcNMb1e+hOyesOItV+F7sm9z7CeM88SxomOjjJ64jBhrCiTxaOWWJFI1DB17BE1o+tmxqqJbYq3dwSRBCVIOTheRZATaeyjLqkUe5Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073089; c=relaxed/simple;
-	bh=XPAu0owr6qLu2CRArDhyhARm8Q7J10RVyq9f44dogdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=joj2F02goQZAzHMDlBMg6PmTB3KJZeDj5zrCcCTb0e9d+elquLDOnA1dnxbU8WsHDW62Pe91JASeFecm7Sebi5nC03WTI09p1UuAJHaNbsba/4k4LOVnF4OFNTshVOE7ZKAripUVmyKGD+wCaxjreEWzG6OdN866zSMxBwIqpy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FuFnNH9m; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747073091; c=relaxed/simple;
+	bh=AESvUlPW8mv9wKVURiU6MMPiaUUCwGT2gGubYF9BAAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Iz9to8G5AlppIMhCXZNxmvlgOEnOxbqM13aptI31phU0yb2kkySAiNovZCw3nH3oiU1ZaEkfsBs8LZGbauFQACiBmq6KhgaOgZb9NMkBk0xh+hgR4WvKjKineCK5naGnw83IGNDcfaHYx07OktPUvKRQ5Y/xjNm87dVX56ocbA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwsM1eT3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FuFnNH9m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747073086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g9ERlWy//d3vXfM6qe6RwNpiSNHM8JyZPnWWfaO2iUE=;
-	b=FuFnNH9mitAxxCNeVHQZJfHr+0USpo/jPRcUy1kgWVf8fTWB+487LxQdlOK9fGTaWRptnV
-	ISQXpWB8BQt0Qh7ZbMVu/zM9Heb4Fo0lhOW3oncgT8Bc02DQnz7ubU3728iI5WlD5awzGf
-	Ri8VxvZMNEqHmNjW65eR9FgYaTcIpss=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-9fb_4R8jOiSlXgEcXCHh-w-1; Mon,
- 12 May 2025 14:04:44 -0400
-X-MC-Unique: 9fb_4R8jOiSlXgEcXCHh-w-1
-X-Mimecast-MFC-AGG-ID: 9fb_4R8jOiSlXgEcXCHh-w_1747073080
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6C0C18002A5;
-	Mon, 12 May 2025 18:04:39 +0000 (UTC)
-Received: from intellaptop.lan (unknown [10.22.80.5])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C18530001A1;
-	Mon, 12 May 2025 18:04:33 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sebastian Ott <sebott@redhat.com>,
-	Shusen Li <lishusen2@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Anup Patel <anup@brainfault.org>,
-	Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexander Potapenko <glider@google.com>,
-	kvmarm@lists.linux.dev,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	x86@kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	linux-riscv@lists.infradead.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	kvm-riscv@lists.infradead.org,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH v5 3/6] KVM: add kvm_lock_all_vcpus and kvm_trylock_all_vcpus
-Date: Mon, 12 May 2025 14:04:04 -0400
-Message-ID: <20250512180407.659015-4-mlevitsk@redhat.com>
-In-Reply-To: <20250512180407.659015-1-mlevitsk@redhat.com>
-References: <20250512180407.659015-1-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwsM1eT3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C564C4CEE7;
+	Mon, 12 May 2025 18:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747073091;
+	bh=AESvUlPW8mv9wKVURiU6MMPiaUUCwGT2gGubYF9BAAg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BwsM1eT3Fpb4JXg297t2vWY/GgVkD96ukqHKjeil16HKnUQgCSBHkCnzPMUAxnj6m
+	 CsRyZ99lmxB9f5yIDS8t9TKbb+KQZcsRF28SOcrvRJwqyRQRaa1cutOdqZno4LrLNN
+	 MzBFy5TNkZms1X6v71FOup1McLz39aj0so2r70w3vhnRMRYw2Gpetn889nkL8giTPc
+	 ob8iZSnMlR4qYtSvVZM5YUtLnHoMLxgJ1zSQ2xo1ABd8vFN/+EyKAc7CCn+Ix/e+Ry
+	 5i1NdX3iRM+t7dJmGGpHMRSREXjrKaCH+wt5JH+1fCM1eLMBG+hX9FpNyHbrzOFfbf
+	 x3K9sEl2FGbgg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Austin Zheng <Austin.Zheng@amd.com>,
+	Alvin Lee <alvin.lee2@amd.com>,
+	Ray Wu <ray.wu@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	austin.zheng@amd.com,
+	jun.lei@amd.com,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	dillon.varone@amd.com,
+	aurabindo.pillai@amd.com,
+	chenhuacai@kernel.org,
+	george.shen@amd.com,
+	rostrows@amd.com,
+	siqueira@igalia.com,
+	jerry.zuo@amd.com,
+	jiapeng.chong@linux.alibaba.com,
+	chris.park@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 10/11] drm/amd/display: Call FP Protect Before Mode Programming/Mode Support
+Date: Mon, 12 May 2025 14:04:25 -0400
+Message-Id: <20250512180426.437627-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250512180426.437627-1-sashal@kernel.org>
+References: <20250512180426.437627-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.28
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-In a few cases, usually in the initialization code, KVM locks all vCPUs
-of a VM to ensure that userspace doesn't do funny things while KVM performs
-an operation that affects the whole VM.
+From: Austin Zheng <Austin.Zheng@amd.com>
 
-Until now, all these operations were implemented using custom code,
-and all of them share the same problem:
+[ Upstream commit eba692ca3abca258b3214a6e4126afefad1822f0 ]
 
-Lockdep can't cope with simultaneous locking of a large number of locks of
-the same class.
+[Why]
+Memory allocation occurs within dml21_validate() for adding phantom planes.
+May cause kernel to be tainted due to usage of FP Start.
 
-However if these locks are taken while another lock is already held,
-which is luckily the case, it is possible to take advantage of little known
-_nest_lock feature of lockdep which allows in this case to have an
-unlimited number of locks of same class to be taken.
+[How]
+Move FP start from dml21_validate to before mode programming/mode support.
+Calculations requiring floating point are all done within mode programming
+or mode support.
 
-To implement this, create two functions:
-kvm_lock_all_vcpus() and kvm_trylock_all_vcpus()
-
-Both functions are needed because some code that will be replaced in
-the subsequent patches, uses mutex_trylock, instead of regular mutex_lock.
-
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+Reviewed-by: Alvin Lee <alvin.lee2@amd.com>
+Signed-off-by: Austin Zheng <Austin.Zheng@amd.com>
+Signed-off-by: Ray Wu <ray.wu@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+(cherry picked from commit fe3250f10819b411808ab9ae1d824c5fc9b59170)
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/kvm_host.h |  4 +++
- virt/kvm/kvm_main.c      | 59 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 63 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 1dedc421b3e3..a6140415c693 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1015,6 +1015,10 @@ static inline struct kvm_vcpu *kvm_get_vcpu_by_id(struct kvm *kvm, int id)
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
+index e3e4f40bd4123..dcbe327209d5d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
++++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
+@@ -221,7 +221,9 @@ static bool dml21_mode_check_and_programming(const struct dc *in_dc, struct dc_s
+ 	if (!result)
+ 		return false;
  
- void kvm_destroy_vcpus(struct kvm *kvm);
++	DC_FP_START();
+ 	result = dml2_build_mode_programming(mode_programming);
++	DC_FP_END();
+ 	if (!result)
+ 		return false;
  
-+int kvm_trylock_all_vcpus(struct kvm *kvm);
-+int kvm_lock_all_vcpus(struct kvm *kvm);
-+void kvm_unlock_all_vcpus(struct kvm *kvm);
-+
- void vcpu_load(struct kvm_vcpu *vcpu);
- void vcpu_put(struct kvm_vcpu *vcpu);
+@@ -271,7 +273,9 @@ static bool dml21_check_mode_support(const struct dc *in_dc, struct dc_state *co
+ 	mode_support->dml2_instance = dml_init->dml2_instance;
+ 	dml21_map_dc_state_into_dml_display_cfg(in_dc, context, dml_ctx);
+ 	dml_ctx->v21.mode_programming.dml2_instance->scratch.build_mode_programming_locals.mode_programming_params.programming = dml_ctx->v21.mode_programming.programming;
++	DC_FP_START();
+ 	is_supported = dml2_check_mode_supported(mode_support);
++	DC_FP_END();
+ 	if (!is_supported)
+ 		return false;
  
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 69782df3617f..d660a7da3baa 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1368,6 +1368,65 @@ static int kvm_vm_release(struct inode *inode, struct file *filp)
- 	return 0;
+@@ -282,16 +286,12 @@ bool dml21_validate(const struct dc *in_dc, struct dc_state *context, struct dml
+ {
+ 	bool out = false;
+ 
+-	DC_FP_START();
+-
+ 	/* Use dml_validate_only for fast_validate path */
+ 	if (fast_validate)
+ 		out = dml21_check_mode_support(in_dc, context, dml_ctx);
+ 	else
+ 		out = dml21_mode_check_and_programming(in_dc, context, dml_ctx);
+ 
+-	DC_FP_END();
+-
+ 	return out;
  }
  
-+int kvm_trylock_all_vcpus(struct kvm *kvm)
-+{
-+	struct kvm_vcpu *vcpu;
-+	unsigned long i, j;
-+
-+	lockdep_assert_held(&kvm->lock);
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm)
-+		if (!mutex_trylock_nest_lock(&vcpu->mutex, &kvm->lock))
-+			goto out_unlock;
-+	return 0;
-+
-+out_unlock:
-+	kvm_for_each_vcpu(j, vcpu, kvm) {
-+		if (i == j)
-+			break;
-+		mutex_unlock(&vcpu->mutex);
-+	}
-+	return -EINTR;
-+}
-+EXPORT_SYMBOL_GPL(kvm_trylock_all_vcpus);
-+
-+int kvm_lock_all_vcpus(struct kvm *kvm)
-+{
-+	struct kvm_vcpu *vcpu;
-+	unsigned long i, j;
-+	int r;
-+
-+	lockdep_assert_held(&kvm->lock);
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		r = mutex_lock_killable_nest_lock(&vcpu->mutex, &kvm->lock);
-+		if (r)
-+			goto out_unlock;
-+	}
-+	return 0;
-+
-+out_unlock:
-+	kvm_for_each_vcpu(j, vcpu, kvm) {
-+		if (i == j)
-+			break;
-+		mutex_unlock(&vcpu->mutex);
-+	}
-+	return r;
-+}
-+EXPORT_SYMBOL_GPL(kvm_lock_all_vcpus);
-+
-+void kvm_unlock_all_vcpus(struct kvm *kvm)
-+{
-+	struct kvm_vcpu *vcpu;
-+	unsigned long i;
-+
-+	lockdep_assert_held(&kvm->lock);
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm)
-+		mutex_unlock(&vcpu->mutex);
-+}
-+EXPORT_SYMBOL_GPL(kvm_unlock_all_vcpus);
-+
- /*
-  * Allocation size is twice as large as the actual dirty bitmap size.
-  * See kvm_vm_ioctl_get_dirty_log() why this is needed.
 -- 
-2.46.0
+2.39.5
 
