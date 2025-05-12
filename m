@@ -1,194 +1,149 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE21EDA11;
-	Mon, 12 May 2025 15:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206442309BD;
+	Mon, 12 May 2025 15:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747062716; cv=none; b=hfRd0XZUkNMqF2RYlUEv+jruF+GaLM06Pf7o1WfrncOT3IZ1L3YZ8zJNas40cM97z5AZLhxh17ObSiMqE6jfKULyzh0EygigYzGVdbpXFMGB5zOboPzV0xSjJlR6pAhWcxsg6A6aC1I+4QFokrBYQuRfYR2eNneKwCJB+wEpYEY=
+	t=1747062901; cv=none; b=t02bFxNlrBCCaP9QlDBDVXFuq1o/XOSKXe33ADwH2NagpiGHPP2u/wzZCBAUDSs8rMoXIQ23ILNo7iMGseRAGMMupSA4UwuFjspftFRFvCJ3UzzFhGnFJSGNDp353a0MkDypoSFHThoIHDpvQmso1/J4boTPORjb418NhiX6t4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747062716; c=relaxed/simple;
-	bh=oRZq7V38BDPzrnIKHLulsvxYYp+PkT3EdJDnzIgMVNQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=eITQrbsg+hu+Ye3fGniVEu+UENkJRQbL4pSKrc3VO9bIVVSCjIv63hLgCUpVdYRTJ0w41HkspF5E+pTsmXGUlgOJRv46YtRm7P3Y9M1MGAIL/XFbuLtsRc8llxTdDFa5l4e2IdRVGZwY3A7HxFEi5pp4oX9WXfKWJHcHS1+BNh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rnuUverq; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rnuUverq"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CD4kW1025877;
-	Mon, 12 May 2025 17:11:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	BsohuFHL0A1uGoWvntQ5+Cuy1yzn6J9UrbSwG2edDAA=; b=rnuUverqE269o+TQ
-	pLW8NzKc9m5dDDkRw+fVwCvwLK9Aw4KkSzKfPSEDSpoMdaa6/vDn9pF6CX7Kx4Y6
-	BokEFE2Ycmt6iokXnRg7lvVZ7A0TTIp3A5jbKjI4g6owBUKGynNHyfJMTbseNzGa
-	4YxoABtAZSUNcV1z3r2o5/Z1kjsdluS+oHSrAT5ObUIgr0vk2ipLSYEVvl+Vxewi
-	BZdFVyBwBTGXEIi9+srPgDi7Wa25O/3K+SUilx250eeAP6ROgacOH3eDoxKnKGL7
-	XbKOMz5tqaTVVIpZH3XaGM39OlvUQNj8EExDTEUfW5cf0qjZB2g7mOMslDCtzK80
-	BbR3Hw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46hv7kqvq0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 17:11:19 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0094F40045;
-	Mon, 12 May 2025 17:09:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 75DB7B20C2D;
-	Mon, 12 May 2025 17:08:25 +0200 (CEST)
-Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 May
- 2025 17:08:24 +0200
-Message-ID: <c01d0d72-e43c-4e10-b298-c8ed4f5d1942@foss.st.com>
-Date: Mon, 12 May 2025 17:08:13 +0200
+	s=arc-20240116; t=1747062901; c=relaxed/simple;
+	bh=BnEc1zNtUsHgqwROYJ/rnVLTNeyl7VmQjdeEg1woeC0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B02X/sqoyTuy+si4KfY0o3A8s4yK6Kx+EVX7ryrjp81X/JWWBJO/qn7j/jz0FDms7DcWkElqHrOC49yb1S9GHiSZYxsesddTdududqTmKEQkpEWly6ZxFeZ6XUdDi3l7dDPFY5iVjPjVVlLUEu6ekfxrYZDeKMbU3ewUAR72KL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c9376c4dbaso516502985a.0;
+        Mon, 12 May 2025 08:14:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747062897; x=1747667697;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y9At40kYnMv5OjbgLYZpSfMdVbkMIhmz1eV+sv254Vc=;
+        b=JDU7eTwNSh8Qx+RzKWNGdWaEobK2QkHRL7pQNgMYsLBDaDYDENPvERpZl1jyr4PoSk
+         lwEGkbCSmn4aG0hyiP6jdLV+Hh7nrjvEylpQo8vBF4UgII08G6+Ce8SMQRH82KffVCea
+         QrSAKDVL2VcndDlC2t0EX/5bUiHQk5ifn+1Brm07KUCiJDCrBw1r+0hvfw7mWkxibRh1
+         CeTCa5ckqQ5huX03XW/4O/5q27KmxFFQRhLrLeuChFLU5NDbZPuZgHL1d3CRJfmr2EED
+         Ija9ZwCg++2HRdVLFifCdgqES65hPEC/vnFyo5YjZruV1NRnkzonxyqE6hFtl/iHLDW2
+         aPhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOGcnJcetiolx7ZxQ9qYgD6NE+mS8JK3MHlrWPULj2gqJegkG8jSVyy2GyvzCaTUxS8nB1k7YwUEXXqiv/w2bM@vger.kernel.org, AJvYcCW5zgXzpuI3HwyngQkNaZk84CFMksf6U2EgS+E8qoG9eQpXQtOqNNCGuIa2Nd6kLFr6WfqTLd+NovhPj7+R@vger.kernel.org, AJvYcCXPlxMpiNIv6sgex9rSboo+7YgRf5kyLoxt0Ob2AERi5Spbpw5AGLhfWXXdJAS2j/Tk4dOHC/hXKtJr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRohmuvfYjAQFyTbbuVs/6Nhb0CGwCrwvd6gMsaamQNfp2gbhC
+	UWJTSX/TIR3XhcwlRzifFdScXSHWrHfx37LA1intncPmqSsAfdyzBnXsWxR0
+X-Gm-Gg: ASbGncv6EARP0FooTmcQC/8hqKjB3wOBRoGrp2KIJNbmDcWIzj4tyR+Q/G2kZH8N6Sz
+	U0X+i0onZeZXrz0z0sX7Ciwp3/F6VFpGoms0Ljs76iDCytcptUCv9NfnZyJeF46dvTw27o+hnc4
+	MIJif5nZH57B8oetF/kvfB0kK0Xo+fjhfEEn3pKjUymAoAbjsGELwygEh6NX+uL6qBr8duDNe93
+	j3Fo9bilJUNgogdN8gJcn7llNWwxhxcPlMlffM0y7Ti2oA3BJKoQdbsyngPVVG3Q6fY/Jm4cUfO
+	Q/DhwsWW6UuHb9Ri06sbXj9Fh9no+t5570JOpgViGGHCTfdEc8zgflVY1t7Sbj+XYX9fOvHEkOA
+	rjnNVNZOxDOGZNTOApQ==
+X-Google-Smtp-Source: AGHT+IGCU4TazPyGlYHXntDGp9gvp/tn5w40VOcKF15rr+FKZz+xcaZhnVhY/nygsxmNA61MuTuzRw==
+X-Received: by 2002:a05:620a:c55:b0:7c5:d71c:6a47 with SMTP id af79cd13be357-7cd0177177bmr1808380285a.8.1747062896533;
+        Mon, 12 May 2025 08:14:56 -0700 (PDT)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f6384asm561007885a.39.2025.05.12.08.14.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 08:14:55 -0700 (PDT)
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4775ccf3e56so68163721cf.0;
+        Mon, 12 May 2025 08:14:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVZ0bGo3ct9bwNB7UV13LcvM+YQQU0sd9u8h62t7XQABUw8vJxTe/2k0JOLS2jFtgnbFISm2vjkrM9lSDZUCBk5@vger.kernel.org, AJvYcCX2iJ6b6fZ0kz0FXiaQw0KZC5k/SpYxPMErm+WsMJvq4ibG2sfzlyOIanbIctFwcBWx8ju60KK/BJWJ@vger.kernel.org, AJvYcCXjeabKn5SCT6PZGL8HE08qJ8AmZrqAE0RWmIM3azPqXDQA3ddkXiu/kK2gOqHHi5n04gxrmIzS6UE/22gB@vger.kernel.org
+X-Received: by 2002:a05:622a:148:b0:494:7133:45b0 with SMTP id
+ d75a77b69052e-49471334901mr76495421cf.26.1747062894577; Mon, 12 May 2025
+ 08:14:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Christian Bruel <christian.bruel@foss.st.com>
-Subject: Re: [PATCH v8 2/9] PCI: stm32: Add PCIe host support for STM32MP25
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <cassel@kernel.org>, <johan+linaro@kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
- <20250423090119.4003700-3-christian.bruel@foss.st.com>
- <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
-Content-Language: en-US
-In-Reply-To: <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+ <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
+ <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com> <CAMuHMdUtEtZH0MuS7TA6RTa1-LB=K47sEGzo9BJM_RvfCRmRAw@mail.gmail.com>
+ <93425f2f-9496-4d18-ad7d-7e631a80e6cf@bootlin.com>
+In-Reply-To: <93425f2f-9496-4d18-ad7d-7e631a80e6cf@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 May 2025 17:14:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUMVFk+-3akj6nj+XCya9zj_FqkbnpOT1Wc4wSsgttiww@mail.gmail.com>
+X-Gm-Features: AX0GCFtPIYjaOgyBr7xzcZXg1KRRKApD3x2hik_4QOSEBr8W4afKgooAaU6rvBQ
+Message-ID: <CAMuHMdUMVFk+-3akj6nj+XCya9zj_FqkbnpOT1Wc4wSsgttiww@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Manivannan,
+Hi Thomas,
 
-On 4/30/25 09:30, Manivannan Sadhasivam wrote:
-> On Wed, Apr 23, 2025 at 11:01:12AM +0200, Christian Bruel wrote:
->> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
->> controller based on the DesignWare PCIe core.
->>
->> Supports MSI via GICv2m, Single Virtual Channel, Single Function
->>
->> Supports WAKE# GPIO.
->>
-> 
-> Mostly looks good. Just a couple of comments below.
-> 
->> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
->> ---
->>   drivers/pci/controller/dwc/Kconfig      |  12 +
->>   drivers/pci/controller/dwc/Makefile     |   1 +
->>   drivers/pci/controller/dwc/pcie-stm32.c | 368 ++++++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-stm32.h |  15 +
->>   4 files changed, 396 insertions(+)
->>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
->>   create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
->>
-> 
-> [...]
-> 
->> +static int stm32_pcie_probe(struct platform_device *pdev)
->> +{
->> +	struct stm32_pcie *stm32_pcie;
->> +	struct device *dev = &pdev->dev;
->> +	int ret;
->> +
->> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
->> +	if (!stm32_pcie)
->> +		return -ENOMEM;
->> +
->> +	stm32_pcie->pci.dev = dev;
->> +	stm32_pcie->pci.ops = &dw_pcie_ops;
->> +	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
->> +
->> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
->> +	if (IS_ERR(stm32_pcie->regmap))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
->> +				     "No syscfg specified\n");
->> +
->> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(stm32_pcie->clk))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
->> +				     "Failed to get PCIe clock source\n");
->> +
->> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
->> +	if (IS_ERR(stm32_pcie->rst))
->> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
->> +				     "Failed to get PCIe reset\n");
->> +
->> +	ret = stm32_pcie_parse_port(stm32_pcie);
->> +	if (ret)
->> +		return ret;
->> +
->> +	platform_set_drvdata(pdev, stm32_pcie);
->> +
->> +	ret = pm_runtime_set_active(dev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to activate runtime PM %d\n", ret);
-> 
-> Please use dev_err_probe() here and below.
+On Mon, 12 May 2025 at 17:01, Thomas Richard <thomas.richard@bootlin.com> wrote:
+> On 5/12/25 16:39, Geert Uytterhoeven wrote:
+> > On Mon, 12 May 2025 at 16:08, Thomas Richard <thomas.richard@bootlin.com> wrote:
+> >> On 5/9/25 11:07, Geert Uytterhoeven wrote:
+> >>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
+> >>>> Export all symbols and create header file for the GPIO forwarder library.
+> >>>> It will be used in the next changes.
+> >>>>
+> >>>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> >>
+> >> ...
+> >>
+> >>>> +
+> >>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
+> >>>> +                       unsigned long config);
+> >>>> +
+> >>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
+> >>>
+> >>> I would expect all of these to take gpiochip_fwd pointers instead of
+> >>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
+> >>> that does not correspond to a gpiochip_fwd object, causing a crash?
+> >>
+> >> Indeed nothing prevents from passing gpio_chip pointer which does not
+> >> correspond to a gpiochip_fwd object.
+> >> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
+> >> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
+> >>
+> >> I can keep GPIO operations as is, and create exported wrappers which
+> >> take a gpiochip_fwd pointer as parameter, for example:
+> >>
+> >> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
+> >>                               unsigned long *mask,
+> >>                               unsigned long *bits)
+> >> {
+> >>         struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
+> >>
+> >>         return gpio_fwd_get_multiple_locked(chip, mask, bits);
+> >> }
+> >> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
+> >>
+> >> So exported functions are gpiochip_fwd_*().
+> >
+> > That sounds fine to me.
+> >
+> > BTW, do you need to use these functions as gpio_chip callbacks?
+> > If that is the case, they do no need to take struct gpio_chip pointers.
+> >
+> I'm not sure to understand the question, or the idea behind the question.
 
-OK, will report this in the EP driver also.
+Do users of the forwarder library want to use these functions directly
+as callbacks in their own gpiochip?
+E.g. do they want to use:
 
-> 
->> +		return ret;
->> +	}
->> +
->> +	ret = devm_pm_runtime_enable(dev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to enable runtime PM %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	pm_runtime_get_noresume(dev);
->> +
-> 
-> I know that a lot of the controller drivers do this for no obvious reason. But
-> in this case, I believe you want to enable power domain or genpd before
-> registering the host bridge. Is that right? 
+    chip->get_multiple_rv = gpiochip_fwd_get_multiple;
 
-We call pm_runtime_enable() before stm32_add_pcie_port() and 
-dw_pcie_host_init(). This ensures that PCIe is active during the PERST# 
-sequence and before accessing the DWC registers.
+I hope my question is more clear now.
+Thanks!
 
- > And the fact that you are not
-> decrementing the runtime usage count means, you want to keep it ON all the time?
-> Beware that your system suspend/resume calls would never get executed.
+Gr{oetje,eeting}s,
 
-We do not support PM runtime autosuspend, so we must notify PM runtime 
-that PCIe is always active. Without invoking pm_runtime_get_noresume(), 
-PCIe would mistakenly be marked as suspended.
-The function stm32_pcie_suspend_noirq() is triggered when the system 
-transitions to Stop or Standby power states, (from /sys/power/state)
+                        Geert
 
-> 
-> Also in any case, you need to call this before devm_pm_runtime_enable().
-> Otherwise, PM core will suspend the parent and enable it during
-> pm_runtime_get_noresume(), which is redundant.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-OK, I will invert the calls.
-
-Thank you
-
-Christian
-
-> 
-> - Mani
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
