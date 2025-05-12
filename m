@@ -1,70 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2ADF268FD9;
-	Mon, 12 May 2025 23:42:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0925779D2;
+	Mon, 12 May 2025 23:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747093332; cv=none; b=tGdo5wdHVVOtLKe2/eQEUMlEvAn4cEOh2nGtd1RM6K+Brn1lnSIhk0YwyG/B9INFGa1TP5otGTL/kU9hzRsvAXxIrcSQa5Ud6CgaPn7aewcXm3HkKz7isT0IAcgbOI34a5QxFITOd0J7QmjdG7grfxlOTnKIcoSWVwFaXxjUgYw=
+	t=1747093633; cv=none; b=vDAbeGJ1noeu3rxK/GWBxmimekclp2fzl+lV2GKaE9ebOn/Pm2SHSzLBlYbumiV21FnXroPdprF0iIRXiQPeIbpIH0haC2XKpEEVVmFLvpej8B3fpiyxkDu+uT8mi7dCc8J9r2WoqxyOzQ2b2Qz6VrZLtetgPhS+xRUbqbMW5tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747093332; c=relaxed/simple;
-	bh=uB0Bc4rD+TwerQ3zQGH6pog9tQKgYejBcH2+E1XrBSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AKybHo+cYBJ0d6yu06rzDQKTlTLqfHueF+tpzDTjBtjeRatbXJ97YmE+pfWaPDBUkSwB559pgqJerxSFnX8OWBOiA5df0I8KcjsHLCa5V7cwF+Yhe28QgKmCB6iYEB2ctjaOlNYOS6djsfEBYPTGVd8dcVPTuICq0VxAS2Rio1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVNQ2vAj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747093633; c=relaxed/simple;
+	bh=7Zpo5c9qWjo1T46Pm/naZnA314vpTzFNCS+RqT/f1sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=CnzaQ04z5e+0KxNR6qm0LECeCy7SkfHIchBrlYxALtoSQSarkIDmMoItvOJQPYM2lMvVn4XSR8fOQDrImzed5jZeB2xVkHht+BAEzo+Pb0vbtQPWzUFrfBR2UGRuemHQN9CWzB54PBEN2KbTjbmYXLoIcSJO8FBsn+btkPzLuiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFF5XXF7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVNQ2vAj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8169C4CEEF;
-	Mon, 12 May 2025 23:42:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFF5XXF7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63499C4CEE7;
+	Mon, 12 May 2025 23:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747093331;
-	bh=uB0Bc4rD+TwerQ3zQGH6pog9tQKgYejBcH2+E1XrBSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hVNQ2vAjAv0FgF94fvYyc+GKqciyzuvouLYbrF9iY6tJFsMZcZYh5nhZfx3yPEZEF
-	 vC3Lft79wehcZeSzTvNoHBq2hEQNZVoJmno2VrhU8QAS4/X0BFspUcy1d2U5ha9S33
-	 2Niba2MDWTNX6KWOH82Jv2vZPm79tHimhEARt8lNULtqmc6rwV2e3y3rSLB3WJrb85
-	 Q0idzqGWaXgL3afyjCkKbfi9Zq3UH5nUUE4VqMGL7MtQY+swKJ1KMwbcQw2yvLc6oQ
-	 5RAj/bretvBHjO0M7axfqss2SeLgnks7teCSI7z7u4R72Icsq0vlAR6s18wuJQvIqL
-	 MFH3DoDNQ/dhg==
-Date: Tue, 13 May 2025 01:42:07 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, 
-	linux-i2c@vger.kernel.org, 
-	prashanth kumar burujukindi <prashanthkumar.burujukindi@microchip.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: microchip-corei2c: add smbus support
-Message-ID: <xgmyz5ztxcsy2jzo7dh6rw5gvzvngbjuj7o6kpcmyqmsqx5jzv@6aawywepqu3b>
-References: <20250430-preview-dormitory-85191523283d@spud>
- <3421bf4a-afa1-4b4c-8421-bad7187d3d8e@quicinc.com>
- <7q4gdh3jcbnsptmdv6fywnwqta5nekof4wtut35apw5wphhkio@veeu4ogcm44h>
- <20250506-bunny-puma-996aafbf3f56@spud>
- <4xyehpobtsyj2k5xlhupq7x6z7es7bvzek4zsf4roramy5h7kn@duxhfxd4gxsq>
- <20250508-unrefined-outhouse-3ff09d1e46b5@spud>
+	s=k20201202; t=1747093632;
+	bh=7Zpo5c9qWjo1T46Pm/naZnA314vpTzFNCS+RqT/f1sI=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=KFF5XXF7CyjOyoHzSsMD6uNKS/P8jAtGzsNilMLyFW+pOjfnW4leY6XDsfjldQzrd
+	 A9SvAvwQHAVmmila9TgHz1tOTtvaICs/8IIt0a9KqtuMRV3XB5Zs8NO3FvM3y3UP8+
+	 iZRDgX/C/kVwev74o6r5yWKqYHyu/aFfwQXlzmDnpP8b/+1TN5IOHABXeWb/+boTbi
+	 8+f84ohbp0KPYkLbCa9t5oWs1q9lZVwDOeLy1IRu86A6XWxg3asbf4w7Kl2oW3Js/z
+	 abySXkRxo4iLqhgBR6xVLLzpLrchyIsXAkEvrVP2fiox5zm1DAzBUozO2aqT+cV/NY
+	 iH/xAJNLnUAHg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 02A9ACE0857; Mon, 12 May 2025 16:47:12 -0700 (PDT)
+Date: Mon, 12 May 2025 16:47:11 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dmitry Vyukov <dvyukov@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-next@vger.kernel.org, linux-mm@kvack.org
+Subject: [BUG] sleeping function called from invalid context at
+ ./include/linux/sched/mm.h:321
+Message-ID: <a5c939c4-b123-4b2f-8a22-130e508cbcce@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508-unrefined-outhouse-3ff09d1e46b5@spud>
 
-Hi Conor,
+Hello!
 
-> > (No need to resendâ€”you can just reply to this mail with your
-> > updated commit log.)
-> 
-> I was just about to do this, but noticed you picked the patch up
-> already. Sorry for the delay there, I meant to do it yesterday but
-> crashed out early. I'd just have changed it to
-> "Add hardware support for the SMBUS commands smbus_quick, smbus_byte,
-> smbus_byte_data, smbus_word_data and smbus_block_data, replacing the
-> fallback to software emulation"
-> or similar. If you fancy rebasing, maybe use that?
+The next-20250512 release got the following while running either of the
+rcutorture TINY02 and SRCU-T scenarios with strict KCSAN enabled:
 
-Done! Thanks for following up!
+BUG: sleeping function called from invalid context at ./include/linux/sched/mm.h:321
 
-Andi
+This is the last line of this function:
+
+	static inline void might_alloc(gfp_t gfp_mask)
+	{
+		fs_reclaim_acquire(gfp_mask);
+		fs_reclaim_release(gfp_mask);
+
+		might_sleep_if(gfpflags_allow_blocking(gfp_mask));
+	}
+
+The reproducer is as follows:
+
+tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs TINY02 --kcsan --kmake-arg CC=clang
+
+I ran this on x86 with clang version 19.1.7 (CentOS 19.1.7-1.el9).
+
+See below for the full splat.  The TINY02 and SRCU-T scenarios are unique
+in setting both CONFIG_SMP=n and CONFIG_PROVE_LOCKING=y.
+
+Bisection converges here:
+
+c836e5a70c59 ("genirq/chip: Rework irq_set_msi_desc_off()")
+
+The commit reverts cleanly, but results in the following build error:
+
+kernel/irq/chip.c:98:26: error: call to undeclared function 'irq_get_desc_lock'
+
+Thoughts?
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+[    8.862165] BUG: sleeping function called from invalid context at ./include/linux/sched/mm.h:321 
+[    8.862706] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 1, name: swapper
+[    8.862706] preempt_count: 0, expected: 0
+[    8.862706] 1 lock held by swapper/1:
+[    8.862706]  #0: ffff99018127a1a0 (&dev->mutex){....}-{4:4}, at: __driver_attach+0x189/0x2f0 
+[    8.862706] irq event stamp: 83979
+[    8.862706] hardirqs last  enabled at (83978): [<ffffffff8b01a83d>] _raw_spin_unlock_irqrestore+0x3d/0x60
+[    8.862706] hardirqs last disabled at (83979): [<ffffffff8b01a616>] _raw_spin_lock_irqsave+0x56/0xb0
+[    8.862706] softirqs last  enabled at (83749): [<ffffffff896e22d8>] __irq_exit_rcu+0x58/0xc0
+[    8.862706] softirqs last disabled at (83740): [<ffffffff896e22d8>] __irq_exit_rcu+0x58/0xc0
+[    8.862706] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 6.15.0-rc5-next-20250508-00001-g3d99c237b0d4-dirty #4043 NONE
+[    8.862706] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[    8.862706] Call Trace:
+[    8.862706]  <TASK>
+[    8.862706]  dump_stack_lvl+0x77/0xb0
+[    8.862706]  dump_stack+0x19/0x24
+[    8.862706]  __might_resched+0x282/0x2a0
+[    8.862706]  __kmalloc_node_track_caller_noprof+0xa1/0x2a0
+[    8.862706]  ? _pcim_request_region+0x55/0x190
+[    8.862706]  ? __pfx_pcim_addr_resource_release+0x10/0x10
+[    8.862706]  __devres_alloc_node+0x4b/0xc0
+[    8.862706]  _pcim_request_region+0x55/0x190
+[    8.862706]  pcim_request_all_regions+0x37/0x260
+[    8.862706]  ahci_init_one+0x2f0/0x1750
+[    8.862706]  ? rpm_resume+0x48d/0xc30
+[    8.862706]  ? __pm_runtime_resume+0xa7/0xc0
+[    8.862706]  pci_device_probe+0xfc/0x1b0
+[    8.862706]  really_probe+0x1ba/0x500
+[    8.862706]  __driver_probe_device+0x137/0x1a0
+[    8.862706]  driver_probe_device+0x67/0x2d0
+[    8.862706]  __driver_attach+0x194/0x2f0
+[    8.862706]  ? __pfx___driver_attach+0x10/0x10
+[    8.862706]  bus_for_each_dev+0x17a/0x1d0
+[    8.862706]  driver_attach+0x30/0x40
+[    8.862706]  bus_add_driver+0x22a/0x380
+[    8.862706]  driver_register+0xcf/0x1c0
+[    8.862706]  __pci_register_driver+0xfc/0x120
+[    8.862706]  ? __pfx_ahci_pci_driver_init+0x10/0x10
+[    8.862706]  ahci_pci_driver_init+0x24/0x40
+[    8.862706]  ? __pfx_ahci_pci_driver_init+0x10/0x10
+[    8.862706]  do_one_initcall+0xfb/0x300
+[    8.862706]  ? prb_first_seq+0x1ba/0x1f0
+[    8.862706]  ? _prb_read_valid+0x627/0x660
+[    8.862706]  ? prb_read_valid+0x47/0x70
+[    8.862706]  ? console_unlock+0x179/0x1a0
+[    8.862706]  ? vprintk_emit+0x43d/0x480
+[    8.862706]  ? _printk+0x83/0xb0
+[    8.862706]  ? parse_args+0x24f/0x5a0
+[    8.862706]  do_initcall_level+0x91/0xf0
+[    8.862706]  do_initcalls+0x60/0xa0
+[    8.862706]  ? __pfx_kernel_init+0x10/0x10
+[    8.862706]  do_basic_setup+0x41/0x50
+[    8.862706]  kernel_init_freeable+0xb3/0x120
+[    8.862706]  kernel_init+0x20/0x200
+[    8.862706]  ret_from_fork+0x13e/0x1e0
+[    8.862706]  ? __pfx_kernel_init+0x10/0x10
+[    8.862706]  ret_from_fork_asm+0x19/0x30
+[    8.862706]  </TASK>
