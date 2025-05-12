@@ -1,104 +1,67 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914BB248F7C;
-	Mon, 12 May 2025 16:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC132253F1C;
+	Mon, 12 May 2025 16:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068865; cv=none; b=pLAurHB9rNK5luYV8osZa1XPXog2n+LKoPrrVLfmja3o2/OmgdTNwjIh4+0NiGpj64ZOdciVuCOlukjL2d4oRnUqppQ1E8r3lsVxVRNRMuiyt+P8l9b88lHHQ6avOGSqaFtadokJ3PsAhiJLISMs9o0oX/rpS3zASNen+M9nCBk=
+	t=1747068870; cv=none; b=nDHJ4RmK2VJ3+nf9eTEBBoUtV57y55ODVnSRux+8QTgmpHYIFG4kvsMGrFk0CUSABjIX68GGylAcbJg2VT+8g+/l1nJHtVYNZGsj3N2GfRmue1e1zAs1osEtghH/twkxToQuij4vzXfkyta1tUl+hysUHCMx8edmtM7EdEH53ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068865; c=relaxed/simple;
-	bh=2KmBHCbmJKX38taSww0MS32+kkvzaKJjLbRW42CGLAs=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=SwZg7okANNto0moFrvEzzALXjMA217QzXCdt3De7gZmpbwoA+7JvCHnF7QXM/r9TOiBxKR5GB8F0+YOvrwKXkduSGf4K1VIV3MBvce9X26+qFzurAltvT5VmCKiMAGEV6ofdYSb+V+Twsf42H+G8E8n5fBgy7gdZ6Mih20ZVIZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=M5CVNodR; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1747068870; c=relaxed/simple;
+	bh=v8YP76OSQkJ+jZugp5dkNzFbI7u4ptwVFaT/PQOaqs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j+nkeR2bDrLO0KE/kOC/PbP2yrpTxXYKxCgtdxCgIDS6HD9ZQ76KCEWB2+x2pLpca92UDeekolPJ+88P+Bb1fY70CSweA7rK3MZmfRFrub/1AyLjGnINGinoDCd0S/jOH8HwRL8ZDNLzLo1ZtC0VxhXfnv/dDTPgNo8IpuhEE8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHfa85kr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="M5CVNodR"
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout4.routing.net (Postfix) with ESMTP id 0890510086D;
-	Mon, 12 May 2025 16:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1747068855;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qaUgv+JLZay3Y2F+/Ogkx8/sFTrHyxh+hSqyOgzPIyM=;
-	b=M5CVNodRKZjir1J12a/+f4bPxrmlXKe+6XYTWLKNXH5uS1JBs6n50QRnLG3JXxJkWmz80B
-	2u2qGbDAMEYv/GIm9WD2mBhqQdAddXdqycGfZfZQii9rsyURYsDYJG2yvJchoXa47CMjhu
-	+FPtCj4pyNJBeIqwSAAQGyEYQ1ibYOA=
-Received: from webmail.hosting.de (unknown [134.0.26.148])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id CE4D51005DA;
-	Mon, 12 May 2025 16:54:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHfa85kr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B954BC4CEE7;
+	Mon, 12 May 2025 16:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747068870;
+	bh=v8YP76OSQkJ+jZugp5dkNzFbI7u4ptwVFaT/PQOaqs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZHfa85krTALDXckFn1ygz3B+HxjcEezmbPPlyheHYS7jESvlZPqQOJFyhpulS82IB
+	 SsvE1/XfeZbTyD8aRtz9Hav3hqWsgdnpTPqc/GxIx6tK8/0JH6l3E34N6A0A2aCPaj
+	 iZLQSUbrefiYpRE7l+aIRQphN78QPi3au0lLu7+APHIXcfCRAB8vPaf0VJWb8cuUHj
+	 sS5/cu+nf5wPf5nF5QUmmWbaINvN0XrkPwhQzB4iUe7zkLIo7BR+j8X+Tof23Yf61E
+	 9ALxd1OaQRq7NPkWU59GSrQ/FCvqsEv//btEZFH615+sRkAiYQ90nAvdTIIt1ZG7jG
+	 Yi0TXDfzIJZiw==
+Date: Mon, 12 May 2025 18:54:28 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	kernel@collabora.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: arm: rockchip: add RADXA ROCK 5T
+Message-ID: <20250512-bulky-olivine-catfish-d6bcea@kuoka>
+References: <20250509-add-rock5t-v1-0-cff1de74eced@collabora.com>
+ <20250509-add-rock5t-v1-1-cff1de74eced@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 12 May 2025 18:54:13 +0200
-From: "Frank Wunderlich (linux)" <linux@fw-web.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank
- Wunderlich <frank-w@public-files.de>, =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9C?=
- =?UTF-8?Q?NAL?= <arinc.unal@arinc9.com>, Landen Chao
- <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>, Sean Wang
- <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>, Lorenzo
- Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v1 08/14] arm64: dts: mediatek: mt7988: add basic
- ethernet-nodes
-In-Reply-To: <78abbdb9-70d8-4e53-8593-91735cde73ec@lunn.ch>
-References: <20250511141942.10284-1-linux@fw-web.de>
- <20250511141942.10284-9-linux@fw-web.de>
- <78abbdb9-70d8-4e53-8593-91735cde73ec@lunn.ch>
-Message-ID: <acc9ca84eadb1f78308f0c3e2b527406@fw-web.de>
-X-Sender: linux@fw-web.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mail-ID: 59e01210-9a66-4032-a58d-f1ce7445dcb7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250509-add-rock5t-v1-1-cff1de74eced@collabora.com>
 
-Am 2025-05-11 18:38, schrieb Andrew Lunn:
->> +			gmac0: mac@0 {
->> +				compatible = "mediatek,eth-mac";
->> +				reg = <0>;
->> +				phy-mode = "internal";
->> +
->> +				fixed-link {
->> +					speed = <10000>;
->> +					full-duplex;
->> +					pause;
->> +				};
+On Fri, May 09, 2025 at 02:31:41PM GMT, Nicolas Frattaroli wrote:
+> The RADXA ROCK 5T is a single board computer aimed at industrial use.
+> Its design is similar to the ROCK 5B+, but it does away with one of the
+> USB-C PD inputs, and uses one combination USB3/SATA/PCIe PHY for an
+> additional second 2.5G PCIe network card instead of USB3.
 > 
-> Does phy-mode internal and fixed-link used together make any sense?
-> Please could you explain this.
+> Link: https://radxa.com/products/rock5/5t/
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Hi,
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-the fixed link is used to bring up the mac and switch cpu port up with 
-the right settings.
-Of course we can hardcode it in driver for mt7988, but driver already 
-supports the generic
-definition via devicetree. So imho adding driver code for whats already 
-supported via devicetree
-does not make sense for me and devicetree shows the right settings 
-(speed,duplex,flow control) without digging in the driver code.
+Best regards,
+Krzysztof
 
-e.g. we could disable flow-control there (but it causes retransmitts) 
-without changing driver.
-
-Imho this is the cleanest way without adding unnecessary driver code and 
-SoC conditions and
-devicetree describes hardware ;).
-
-regards Frank
