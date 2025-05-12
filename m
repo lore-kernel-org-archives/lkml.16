@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34563297B90
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D60F2989B6
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747077098; cv=none; b=gew1+4+XxNes1Uw0zj36A2wB90oOvkR3Z/5tAiusg6oDMi867BzesdE9cOY//eXpWLlVTMwtIOCdQtfHfUK3XJhq/1xp4iwuazop57Wtoh5xFhs19Zu9ePdT1qJD8jvpAfz6COk0ldJT8SdwO9ogxGZqydDfqH/kkVwFCPsZHfA=
+	t=1747077099; cv=none; b=XBviLLQ19g/27y1TuzdRrkFnXEt2Qvyxnsl6omZTNrXjHsRf4xqKBQlzD3IQacGIPzOj3ZBqD2FAlYfnNKSNzB6sr0vnQNxOi1gqQVyi0lzFssdw9n42oy5YD1IZpu3PRzA5GoLBTIW4i5BEHZD/2RPI0EoSVRnqjFNlPuRPU0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747077098; c=relaxed/simple;
-	bh=IT9XlH23kMRDjTqP6nbxillnbIsmo5aqXnIcKYyC0J8=;
+	s=arc-20240116; t=1747077099; c=relaxed/simple;
+	bh=k2nJHzJI79JTiEUmZ2Lm7CSeKjm3kcKUtV1vGbAlOxA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DR29N7w8tiZwAdbZbjPcwLaflmkfPjS28fGXdq1yDrQqyhmeGKsdzx5YvJVdRb2mtu6KKhKgZkOJJwoiDNy0dKE+vkePZLd2yyZiJt4Tf0N+x4oNvouCkCPP6S2ooMQRA5mTxc92g+OiztnvGBtQ3Hkd8ilV2KwPy2mjHNCvxSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GrdBEEie; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=mi2mkBteT0SqGTvCciNrsLnr2tFnpFijVxyufv4/xAL+/GJYMQV660FYlh1vR7/Sn9l4w3ewKGBmITmggmQeO/mwjxv+pCwoGNl+buoF0FveFHniumqXvLPV9No8L4Tm/UiClZeVZ6kPpznJNA13p6g4i1LK8FU98G/a69dH58g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=24NcXgf2; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrdBEEie"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ea256f039so35761505e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:11:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="24NcXgf2"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a0b2e56da1so1851082f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747077094; x=1747681894; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747077096; x=1747681896; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tez2B6Dx36hKxJWfXYtYmnT1eeCqtp3xVkagTtM9zXQ=;
-        b=GrdBEEienyM11Tf5WfkYHG3VhIHrkmDdCPpFJCBF2nWz7cRJnxDmC2OI4LiN6yokNt
-         muPj2a6pGCw+qby0/Kqa9nTKIhta59nuAiMJdPB3tTrpgWEH97HN+f7FwhsIy0LJIiro
-         qThaIGuVO+G3Pl4DCv7g8lBXTo4DOpT8tegHx4v9Rz4h5JRGb8EpbgURcv7jnjcJr8cU
-         H/IZ/YE+5yZt03PZlT2YNwVfPEZcKPkywtpb6lfwKJLf4PF39UWVVDaPSVd8FmcQCnUn
-         /hwD66q4xovwBkmRszvMj05xxnY5agifH3MMggOEXGbYzgYtIqne2LmU+JH1KQT8qiYT
-         Bnxg==
+        bh=2A4QOYtd+e+YapxsnA4mVLLZLavidWLily5bwA/VPvU=;
+        b=24NcXgf2Yhi02ZD9tByE5DmymhLuZgiGgs6sMg0cwnyhfeYi5+eFnMunDr18BOYP8x
+         65vohHfD2HiAiqbTcEPVb0AaI2YolCUHuEr7s0p3u2WWzXvC0zFk6kC8OGx7F8l7hnZO
+         IEroOEkQ+03tW+7iUXE+c6xo08odB5gCk+jE4MPHrPjFEtfIjDqOa+85eKdCrh3DUcZa
+         I/iEP7qDVNmYGsUSPuq1ry1U1WG23Su+PypvzV0xJze8pjWm4N0I7vwTQHEp+Z0w9d0X
+         H7HI3Zt84UKXtAY2akYr9xOFnQy1TTXRl+S4+NzlrsDMG432Da6+dC64Nctvwgk2t1bF
+         lOAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747077094; x=1747681894;
+        d=1e100.net; s=20230601; t=1747077096; x=1747681896;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tez2B6Dx36hKxJWfXYtYmnT1eeCqtp3xVkagTtM9zXQ=;
-        b=Hy6jUznHsBOtpV0waDGHsHuWQh8YYRUeRNzVSrOus1n9/g9LsF2C1R9BINEwCkuhrq
-         LBvDUWzjRzBEoghy+bpebyZDH1moV+WpHn2LWoHA3nn3gTtRfF21FnohnsWlHwimVHpH
-         /XpJtdzPXxBXnW4MuExdJTBefs7r7hvtbwqjHEfQcYSj2SKRGtp+1mCC8BXqaPuVd5mc
-         TuXaSSFk/h1T0CjYLb+eusZMcmQUHaJ/SVnhj5TXKUFYua+PgqbZOzcVd4lKlpts0XlY
-         wHDXkAIS1Ptbsdsr+suhHa8J+xevysYqGuqujbzHF15S3T1olSANSRBl7p2kq7bldsJ+
-         0CgA==
-X-Gm-Message-State: AOJu0Ywzu26zYcfR/g7uO12kcgMtxzFAzS4AL9y7L4r2K8pVAZTxisnG
-	IyNdW4MYFHLmMU4TJwdZsIEf8tSibN/pWD8F7I2FJH22+1rt4UixLG+SqSyuS4/hhabQlG0SmV6
-	uSCnGb5tjhTEoTwsp+wB04UWkkCeRo00cc+jDmuYVHd7xd2pIlTaClWIIKDeHh8Gyl3oPPBHb5M
-	P+dvMvTTV66UmmBuvwowGV8dRpHGjQKQ==
-X-Google-Smtp-Source: AGHT+IGCI+eHbv4DUOM4UndVn2vwms3Eyzkvt8uC7GVyEEz2YxCexQ6Ik3N8j/O+v2ykKFoys4uS2Q90
-X-Received: from wmbbd12.prod.google.com ([2002:a05:600c:1f0c:b0:43b:b74b:9350])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:34d5:b0:441:b19c:96fe
- with SMTP id 5b1f17b1804b1-442d6d3e243mr140125965e9.10.1747077094561; Mon, 12
- May 2025 12:11:34 -0700 (PDT)
-Date: Mon, 12 May 2025 21:08:36 +0200
+        bh=2A4QOYtd+e+YapxsnA4mVLLZLavidWLily5bwA/VPvU=;
+        b=gI4rp5CdcgTIIROOv31NTqRwRvbZUvroDykfWwgRYo6E56NUGFkzPy33auKr1oCZ5a
+         QvuMijR6QuX8co7VSePOjDtPQOZJqDV4NfCBl50EXgKN4vE5L6tdOQ+nUMNyhWrHu4GJ
+         IO4vzww6nFqSnUvCJVYYybbtLwcER6rJKC/roerYpbX1zpl9ropv584hapmRPujpXiFz
+         RWaRxr39DbJmSfIZYjN3ZAdqyeVODHNNRpZFtHy38BWeNb0U2ilcxrL6dG1pQ83jXUSB
+         FiBzuaXTAcFwMdHy9SNq6l4JaUXtRU/CK1yDgtCXKPh6OPSPEMrIz4kNe6Cl7euiQaNp
+         1JUQ==
+X-Gm-Message-State: AOJu0YxjD79zJ596bEyKQJGOva+OFzmLvu8LiWLr/+48/lcEGJ43MXJc
+	nQtlhc24I0RZdy3/p8sVwf23id6wgo4ZOJz35E38peT9eiQ1Wd02ZWUMO1HWJ2QuOsx9UIqExAP
+	rlYnOVFw2n1n978zEG469en+MMydlTWYPdc3tRBCZyu8fdUgdnHJ/CuPVeZJItsm+2d1/8bqujX
+	kjXBFk1JtwjKDkk3KV4irG/G+WcOJDAw==
+X-Google-Smtp-Source: AGHT+IErwosD9vJ9JrYgrLx7V9RG6j5DmK6Fk3l/BmDVN9yfDorOHyQFkGdzbGclKBnt8rsqb/4LW6To
+X-Received: from wmbhh12.prod.google.com ([2002:a05:600c:530c:b0:440:626b:cdc])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:240d:b0:3a2:3b9:5c97
+ with SMTP id ffacd0b85a97d-3a203b95dfcmr5365332f8f.10.1747077096579; Mon, 12
+ May 2025 12:11:36 -0700 (PDT)
+Date: Mon, 12 May 2025 21:08:37 +0200
 In-Reply-To: <20250512190834.332684-23-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250512190834.332684-23-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7269; i=ardb@kernel.org;
- h=from:subject; bh=vgBLVpHUAk6O1vi3E1PwJCjzQ1f2dPW7uqfVkWdmNWQ=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPJ3cy0YUurzGvm2/wPt8WnibH2L5nWwP9ogvl6ZV9et
- 55qK5uOUhYGMQ4GWTFFFoHZf9/tPD1RqtZ5lizMHFYmkCEMXJwCMJGOxQz/VE9Oi0jgWKxp8EjA
- 2jJpno3ba+//1cobrDjczFuv3pePZGR4rvA3rK5R5GBBtZL3J2NZbabJiTve7JzMGf2/R7y4YzE vAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1194; i=ardb@kernel.org;
+ h=from:subject; bh=etgeXANbrFUuOBqj8tjP9eeHGfbZA0Naim5ziEeTbkU=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPJ3WL9V9YldTk75PhN3ZKf2BtO3vD1eEvn01X7nk5SU
+ d4e6Xamo5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEzENIyRYbUlq+7P21pvJ/Bq
+ MUd7Hvd7Od/uZ/+5tak7UtzPTNKtB6po5okQ/rjIvX/T6rpmpnu/maomGwYkzvk80/3c95Xc240 ZAA==
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250512190834.332684-24-ardb+git@google.com>
-Subject: [RFT PATCH v3 01/21] x86/sev: Separate MSR and GHCB based snp_cpuid()
- via a callback
+Message-ID: <20250512190834.332684-25-ardb+git@google.com>
+Subject: [RFT PATCH v3 02/21] x86/sev: Use MSR protocol for remapping SVSM
+ calling area
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, x86@kernel.org, 
@@ -78,233 +78,35 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-There are two distinct callers of snp_cpuid(): one where the MSR
-protocol is always used, and one where the GHCB page based interface is
-always used.
+As the preceding code comment already indicates, remapping the SVSM
+calling area occurs long before the GHCB page is configured, and so
+calling svsm_perform_call_protocol() is guaranteed to result in a call
+to svsm_perform_msr_protocol().
 
-The snp_cpuid() logic does not care about the distinction, which only
-matters at a lower level. But the fact that it supports both interfaces
-means that the GHCB page based logic is pulled into the early startup
-code where PA to VA conversions are problematic, given that it runs from
-the 1:1 mapping of memory.
-
-So keep snp_cpuid() itself in the startup code, but factor out the
-hypervisor calls via a callback, so that the GHCB page handling can be
-moved out.
-
-Code refactoring only - no functional change intended.
+So just call the latter directly. This allows most of the GHCB based API
+infrastructure to be moved out of the startup code in a subsequent
+patch.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/startup/sev-shared.c | 58 ++++----------------
- arch/x86/coco/sev/vc-shared.c      | 49 ++++++++++++++++-
- arch/x86/include/asm/sev.h         |  3 +-
- 3 files changed, 61 insertions(+), 49 deletions(-)
+ arch/x86/boot/startup/sev-startup.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
-index 7a706db87b93..408e064a80d9 100644
---- a/arch/x86/boot/startup/sev-shared.c
-+++ b/arch/x86/boot/startup/sev-shared.c
-@@ -342,44 +342,7 @@ static int __sev_cpuid_hv_msr(struct cpuid_leaf *leaf)
- 	return ret;
- }
+diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
+index 435853a55768..a1d5a5632d58 100644
+--- a/arch/x86/boot/startup/sev-startup.c
++++ b/arch/x86/boot/startup/sev-startup.c
+@@ -325,7 +325,9 @@ static __head void svsm_setup(struct cc_blob_sev_info *cc_info)
+ 	call.caa = svsm_get_caa();
+ 	call.rax = SVSM_CORE_CALL(SVSM_CORE_REMAP_CA);
+ 	call.rcx = pa;
+-	ret = svsm_perform_call_protocol(&call);
++	do {
++		ret = svsm_perform_msr_protocol(&call);
++	} while (ret == -EAGAIN);
+ 	if (ret)
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_SVSM_CA_REMAP_FAIL);
  
--static int __sev_cpuid_hv_ghcb(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
--{
--	u32 cr4 = native_read_cr4();
--	int ret;
--
--	ghcb_set_rax(ghcb, leaf->fn);
--	ghcb_set_rcx(ghcb, leaf->subfn);
--
--	if (cr4 & X86_CR4_OSXSAVE)
--		/* Safe to read xcr0 */
--		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
--	else
--		/* xgetbv will cause #UD - use reset value for xcr0 */
--		ghcb_set_xcr0(ghcb, 1);
--
--	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
--	if (ret != ES_OK)
--		return ret;
--
--	if (!(ghcb_rax_is_valid(ghcb) &&
--	      ghcb_rbx_is_valid(ghcb) &&
--	      ghcb_rcx_is_valid(ghcb) &&
--	      ghcb_rdx_is_valid(ghcb)))
--		return ES_VMM_ERROR;
- 
--	leaf->eax = ghcb->save.rax;
--	leaf->ebx = ghcb->save.rbx;
--	leaf->ecx = ghcb->save.rcx;
--	leaf->edx = ghcb->save.rdx;
--
--	return ES_OK;
--}
--
--static int sev_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
--{
--	return ghcb ? __sev_cpuid_hv_ghcb(ghcb, ctxt, leaf)
--		    : __sev_cpuid_hv_msr(leaf);
--}
- 
- /*
-  * This may be called early while still running on the initial identity
-@@ -484,21 +447,21 @@ snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
- 	return false;
- }
- 
--static void snp_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
-+static void snp_cpuid_hv_no_ghcb(void *ctx, struct cpuid_leaf *leaf)
- {
--	if (sev_cpuid_hv(ghcb, ctxt, leaf))
-+	if (__sev_cpuid_hv_msr(leaf))
- 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
- }
- 
- static int __head
--snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
--		      struct cpuid_leaf *leaf)
-+snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
-+		      void *ctx, struct cpuid_leaf *leaf)
- {
- 	struct cpuid_leaf leaf_hv = *leaf;
- 
- 	switch (leaf->fn) {
- 	case 0x1:
--		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
-+		cpuid_hv(ctx, &leaf_hv);
- 
- 		/* initial APIC ID */
- 		leaf->ebx = (leaf_hv.ebx & GENMASK(31, 24)) | (leaf->ebx & GENMASK(23, 0));
-@@ -517,7 +480,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- 		break;
- 	case 0xB:
- 		leaf_hv.subfn = 0;
--		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
-+		cpuid_hv(ctx, &leaf_hv);
- 
- 		/* extended APIC ID */
- 		leaf->edx = leaf_hv.edx;
-@@ -565,7 +528,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- 		}
- 		break;
- 	case 0x8000001E:
--		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
-+		cpuid_hv(ctx, &leaf_hv);
- 
- 		/* extended APIC ID */
- 		leaf->eax = leaf_hv.eax;
-@@ -587,7 +550,8 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
-  * should be treated as fatal by caller.
-  */
- int __head
--snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
-+snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
-+	  void *ctx, struct cpuid_leaf *leaf)
- {
- 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
- 
-@@ -621,7 +585,7 @@ snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
- 			return 0;
- 	}
- 
--	return snp_cpuid_postprocess(ghcb, ctxt, leaf);
-+	return snp_cpuid_postprocess(cpuid_hv, ctx, leaf);
- }
- 
- /*
-@@ -648,7 +612,7 @@ void __head do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
- 	leaf.fn = fn;
- 	leaf.subfn = subfn;
- 
--	ret = snp_cpuid(NULL, NULL, &leaf);
-+	ret = snp_cpuid(snp_cpuid_hv_no_ghcb, NULL, &leaf);
- 	if (!ret)
- 		goto cpuid_done;
- 
-diff --git a/arch/x86/coco/sev/vc-shared.c b/arch/x86/coco/sev/vc-shared.c
-index 2c0ab0fdc060..b4688f69102e 100644
---- a/arch/x86/coco/sev/vc-shared.c
-+++ b/arch/x86/coco/sev/vc-shared.c
-@@ -409,15 +409,62 @@ static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- 	return ret;
- }
- 
-+static int __sev_cpuid_hv_ghcb(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
-+{
-+	u32 cr4 = native_read_cr4();
-+	int ret;
-+
-+	ghcb_set_rax(ghcb, leaf->fn);
-+	ghcb_set_rcx(ghcb, leaf->subfn);
-+
-+	if (cr4 & X86_CR4_OSXSAVE)
-+		/* Safe to read xcr0 */
-+		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
-+	else
-+		/* xgetbv will cause #UD - use reset value for xcr0 */
-+		ghcb_set_xcr0(ghcb, 1);
-+
-+	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (!(ghcb_rax_is_valid(ghcb) &&
-+	      ghcb_rbx_is_valid(ghcb) &&
-+	      ghcb_rcx_is_valid(ghcb) &&
-+	      ghcb_rdx_is_valid(ghcb)))
-+		return ES_VMM_ERROR;
-+
-+	leaf->eax = ghcb->save.rax;
-+	leaf->ebx = ghcb->save.rbx;
-+	leaf->ecx = ghcb->save.rcx;
-+	leaf->edx = ghcb->save.rdx;
-+
-+	return ES_OK;
-+}
-+
-+struct cpuid_ctx {
-+	struct ghcb *ghcb;
-+	struct es_em_ctxt *ctxt;
-+};
-+
-+static void snp_cpuid_hv_ghcb(void *p, struct cpuid_leaf *leaf)
-+{
-+	struct cpuid_ctx *ctx = p;
-+
-+	if (__sev_cpuid_hv_ghcb(ctx->ghcb, ctx->ctxt, leaf))
-+		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
-+}
-+
- static int vc_handle_cpuid_snp(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
-+	struct cpuid_ctx ctx = { ghcb, ctxt };
- 	struct pt_regs *regs = ctxt->regs;
- 	struct cpuid_leaf leaf;
- 	int ret;
- 
- 	leaf.fn = regs->ax;
- 	leaf.subfn = regs->cx;
--	ret = snp_cpuid(ghcb, ctxt, &leaf);
-+	ret = snp_cpuid(snp_cpuid_hv_ghcb, &ctx, &leaf);
- 	if (!ret) {
- 		regs->ax = leaf.eax;
- 		regs->bx = leaf.ebx;
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 6158893786d6..f50a606be4f1 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -533,7 +533,8 @@ struct cpuid_leaf {
- 	u32 edx;
- };
- 
--int snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf);
-+int snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
-+	      void *ctx, struct cpuid_leaf *leaf);
- 
- void __noreturn sev_es_terminate(unsigned int set, unsigned int reason);
- enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
 -- 
 2.49.0.1045.g170613ef41-goog
 
