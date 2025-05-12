@@ -1,151 +1,119 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D361DDA1B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7B71D515A;
+	Mon, 12 May 2025 13:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058251; cv=none; b=WE1nkv9QvTARD9goVqrTXVq9OYAnbmcdVrdudytSNqAzmmAnl4mKBeoxw+vwz+YQGRMJ0ds7+Lz9G86MMnLp/fMZc4Wy5pC19eawgvRJElTV97FYirtTrfH+AAe6tK+hiYwnh6QiEFhGLlxLm/dIa7Q0PmZ548gzIqsciIbIric=
+	t=1747058278; cv=none; b=pVVZscLECSZuW4I+m80bJOC3WWkFv99PDzKLrY2JDBlZgTn9EeQXhWjnOVpe19YuBwNuIP68+tH9cnN/Qn783fMkoGkeHLdjVL5yreEKOv8J4uRy3DGtZMIjKnEXQhQvf4Jset+jZ6DCFXKm5gOOOF6HNUZBu4fVGJcH+/S65BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058251; c=relaxed/simple;
-	bh=7RAlISt8/E2mtYY1m8sG1WhEzq6hte6h11oIGnvZSlo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CvPc9PvwW4aAh0il/mS9VOW7uXWc+ASDpm9y32n2uvuf/RrqaBVZltZtb7phD1lylYhTMAKBicGd6GSCKa4LjGnQikwcHZMmcFobwLeTMpfmG8AyZv61o6oMwlQiMZoCYCX0fXqN/vTp0jZpX2jQLPesSOMjD3M0HwDlUA8Of1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da73fb0a23so54012015ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:57:28 -0700 (PDT)
+	s=arc-20240116; t=1747058278; c=relaxed/simple;
+	bh=Z6jMjE1t5RYVDM0B4EUWi7DiXy2a8XODml76LIEZWKI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F5jqYhS2TJ4WkIMl63BWDDonVVGgLmRf9q/Z/geW7O7zgBCDzd1kYPR07y3dS6+1GoY2hD1fS4G9z/rT+AHtX92JWf+kuZOLcca3jl5BioKOfAP0n2EPg6Knx/4SuA/h/twIZSBin7JWoe3hnX4ZR8/P+ISix96fkzQyYnDhyVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-878627ac2ddso1084691241.0;
+        Mon, 12 May 2025 06:57:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747058248; x=1747663048;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2qEldaJQrN1XLSdI/YZ+WwSugx3cmBfgPCd9rN1E+8Y=;
-        b=LRHcpvKvqMjCAHBPIxuWx7RXjmcrO0c1g1WEa7SBrTCbqmEiLbDcNqQpIF1u2L6jmP
-         tScgkrHkrpnaw1P1GQVx8D2VMtOoD6pIFioALoDCub8XSac/0Kku3sUktPFU0JNcmcSb
-         lgZ2QfmjqYIE1wzd3lrTXA/TbZPZZFeXU78+FSd736vTiflLW96s8apFQiz/yeyBzEat
-         0QVvRdeoMdd5RCyYZFlNUUEvZqBWbDymTvvVAhpheb/xQod8k7y2tDpsIite9rV+jQ0r
-         jw1411Q9mH5PHpbFscslUHA2OsFFISKwEzHkQgH7II9QRP/Ogcj/tQzHwWHUr9OSx6sO
-         TFjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVdl/qwsqEyquA/eFaqkUgbwZoMkXLTxaJ88ne04TVm6w2o+UrBt/disrSg6iIT1Y4uFc3mTcbPxUnutz4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYLWHBI4m8XlfkeJIBc71oKE76d6kNKXBlacQyDwh0BsKM3JK3
-	rLR/v04KEO5iJRdvcX8TAJojMiN4uF+zlzQI3HLr6tR3OH5lx34IK09dOvvhRGiMHZyLYPjhnlm
-	lzyXIaJU5A3rt0R1b9/ngNhCmZ8Ld70hEHqPFw01BvaulW+rLSvrhPKM=
-X-Google-Smtp-Source: AGHT+IH/Oyi5JeTmBjORfU3yO+4b8SgajjuQWgF+82RhcxjkDnIy4C73RhL8Jai9ANy2dzU1rGCya6P2yKiINqQrEMlUlHgC9wAH
+        d=1e100.net; s=20230601; t=1747058274; x=1747663074;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2kJi5+v3afPRHEEqTy/hNjhflaANAWOls6+TF20g+SQ=;
+        b=lBctvNbI5jgdKCyC5M5n6Wfp1XbXaOyYsRIgdght0MhUJZN+cnnuIDGVcU89v9XgB8
+         eSBXawIU7/V6LpwLJN7DyBq/vfwojtlREYnvZIlRyuqxXgX6s+podfbfAYjpjhC2gLgW
+         CG/Liy6Y0vjfumRbmCZECe7df2Et0wt+szN/QoGXzEGZWaan+4oyn5XKB12PmvUZ0jSR
+         5eo9kapTHEtuO6xBA5WTCIh/+u63OowmjQeVemwuf/vu4lxTEN/9d9DHa/DLmJRPpdh4
+         tKKAMstW1dMMggXG2vkKjGmjMWfsNCUYYpfk2nZ6ERMiVijUJx9bm6aKvYmjq8miMqXT
+         qj4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWuj2KSoA0eTfnCQ7igrvIFA/LpKm33kU7tmkB5O6WPx9gizVIX3XKYm60NLMo/JA5QsTmiGZXcHvmF@vger.kernel.org, AJvYcCX8zlx36eERRXAPZk+cyXCWbsckbTouSuA71oxzlFcfuV9e3yuHnVbrpKxtzQnEPV+TiilqeF4TRVsi2V5F@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGH3Me2KTVbOxXy8WTeu1BNTLKeWsCFL9MrN866AgVV023W0cN
+	fAEdZwyDFFZPO9rNFgnvO4cOxp1eYS73RTjIoknaEWOHfl8Gviutl6dXuItK
+X-Gm-Gg: ASbGncvFg/eP5z2mFxyrBw6OjTueIZESl8o4cTyQXk4NngHQ3jaeQ79Gtk9aXUqEEuS
+	x4nDmnvvGbKA0fUWUywZhFPDx1i9XZAzCSJrzQvANhXtf/sgg4DdRq1Lof2vB6To8NvmTkNHAh8
+	KYDWBpo1ZQFK1TdQxzI0SOEXXjGMqInFXfdm9+rhUG88HauxorYISCusfLQtHFdTV3fdtO4EfmX
+	hcuY8ex0VrqfcwUNJLgzNLqpGcn3Ja4YIHQRKbM/PewiIVXW7MY4h7Du6JrbUpAANwf/wtAZ8Wa
+	hYmR9IbAN3XURv0r5GMFwPjunDtu/PUd2AIcEBWQDEttHStw3rveUsAS3fYSr2y9IijtHx/SNgU
+	ALuoHhxeOwW5e/g==
+X-Google-Smtp-Source: AGHT+IEuJ1d1wpDqhMC5AsCDX4e67NWQSw+p0VO5xwhXEjcPTTdnjycA0Pt6mf9b8VIuvDENjgTQPA==
+X-Received: by 2002:a05:6102:4a8c:b0:4da:de8d:9e34 with SMTP id ada2fe7eead31-4deed3cb965mr11255480137.19.1747058273880;
+        Mon, 12 May 2025 06:57:53 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea85df68fsm5015662137.18.2025.05.12.06.57.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 06:57:53 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4def13d3f01so1168495137.1;
+        Mon, 12 May 2025 06:57:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUHZ8UMPKjUxYof72gG4QPaTMMUARvch+SAH2WvSunI8U7sl6YQUfLm3kt6WsHGqyCVbXmH05U61LL4@vger.kernel.org, AJvYcCUKMd1aC6GptDJmVkRoiWYqPcZlnaWk93aKEolVTR4NWVKN4pIJFU+KvQ0zHuaxcZr3qGKE1MP01SRmv4ZB@vger.kernel.org
+X-Received: by 2002:a05:6102:91a:b0:4dd:b32e:2d1a with SMTP id
+ ada2fe7eead31-4deed3e8831mr10308655137.25.1747058272979; Mon, 12 May 2025
+ 06:57:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:190e:b0:3d5:890b:d9df with SMTP id
- e9e14a558f8ab-3da7e20d8a3mr137789365ab.15.1747058248293; Mon, 12 May 2025
- 06:57:28 -0700 (PDT)
-Date: Mon, 12 May 2025 06:57:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6821fe48.050a0220.f2294.0065.GAE@google.com>
-Subject: [syzbot] [wireless?] WARNING in ieee80211_tdls_oper
-From: syzbot <syzbot+f73f203f8c9b19037380@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20250512-daily-saga-36a3a017dd42@spud> <20250512-sphere-plenty-8ce4cd772745@spud>
+In-Reply-To: <20250512-sphere-plenty-8ce4cd772745@spud>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 May 2025 15:57:41 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVwBqC3jHgwLJkLcNZo8W0Aw9ZfoXL1tRaL7B2EpKuWvg@mail.gmail.com>
+X-Gm-Features: AX0GCFuHkNC9VJcdMXT2KkXYhqqFctrazjyBihAGbpeEUZz4Xn1jYevzEdCrE40
+Message-ID: <CAMuHMdVwBqC3jHgwLJkLcNZo8W0Aw9ZfoXL1tRaL7B2EpKuWvg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] riscv: dts: renesas: add specific RZ/Five cache compatible
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>, Ben Zong-You Xie <ben717@andestech.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi Conor,
 
-syzbot found the following issue on:
+On Mon, 12 May 2025 at 15:48, Conor Dooley <conor@kernel.org> wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> When the binding was originally written, it was assumed that all
+> ax45mp-caches had the same properties etc. This has turned out to be
+> incorrect, as the QiLai SoC has a different number of cache-sets.
+>
+> Add a specific compatible for the RZ/Five for property enforcement and
+> in case there turns out to be additional differences between these
+> implementations of the cache controller.
+>
+> Acked-by: Ben Zong-You Xie <ben717@andestech.com>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 
-HEAD commit:    d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17814670580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91c351a0f6229e67
-dashboard link: https://syzkaller.appspot.com/bug?extid=f73f203f8c9b19037380
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1744c4d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a5e4f4580000
+Thanks for the update!
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-d76bb1eb.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/21f7d4121801/vmlinux-d76bb1eb.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/453c9d554035/bzImage-d76bb1eb.xz
+> --- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+> +++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+> @@ -143,7 +143,8 @@ plic: interrupt-controller@12c00000 {
+>         };
+>
+>         l2cache: cache-controller@13400000 {
+> -               compatible = "andestech,ax45mp-cache", "cache";
+> +               compatible = "renesas,r9a07g043f-ax45mp-cache", "andestech,ax45mp-cache",
+> +                            "cache";
+>                 reg = <0x0 0x13400000 0x0 0x100000>;
+>                 interrupts = <SOC_PERIPHERAL_IRQ(476) IRQ_TYPE_LEVEL_HIGH>;
+>                 cache-size = <0x40000>;
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f73f203f8c9b19037380@syzkaller.appspotmail.com
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.16 if there are no objections.
 
-mac80211_hwsim: wmediumd released netlink socket, switching to perfect channel medium
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5415 at net/mac80211/tdls.c:1461 ieee80211_tdls_oper+0x364/0x640 net/mac80211/tdls.c:1460
-Modules linked in:
-CPU: 0 UID: 0 PID: 5415 Comm: syz-executor228 Not tainted 6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:ieee80211_tdls_oper+0x364/0x640 net/mac80211/tdls.c:1460
-Code: 6f 01 00 00 e8 4d 83 d7 f6 eb 22 e8 46 83 d7 f6 4c 89 e2 eb 21 e8 3c 83 d7 f6 b8 bd ff ff ff e9 1c fe ff ff e8 2d 83 d7 f6 90 <0f> 0b 90 4c 8b 7c 24 08 48 8b 14 24 4d 8d a7 2a 1d 00 00 4c 89 e0
-RSP: 0018:ffffc9000d3d7380 EFLAGS: 00010293
-RAX: ffffffff8ae84d23 RBX: dffffc0000000000 RCX: ffff88801f6f4880
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff8880435d8187 R09: 1ffff110086bb030
-R10: dffffc0000000000 R11: ffffed10086bb031 R12: ffff888044381d2e
-R13: ffff888044380d80 R14: 1ffff110088702e4 R15: 0000000000000000
-FS:  000055556871b380(0000) GS:ffff88808d6cb000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fff650f3fe8 CR3: 000000001e235000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- rdev_tdls_oper net/wireless/rdev-ops.h:940 [inline]
- nl80211_tdls_oper+0x282/0x440 net/wireless/nl80211.c:12586
- genl_family_rcv_msg_doit+0x212/0x300 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x219/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f1c4a288aa9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff650f5058 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f1c4a288aa9
-RDX: 00000000000000c0 RSI: 0000200000000240 RDI: 0000000000000003
-RBP: 0000200000000240 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00002000000001c0
-R13: 00002000000001c8 R14: 00007fff650f508c R15: 0000200000000188
- </TASK>
+Gr{oetje,eeting}s,
 
+                        Geert
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
