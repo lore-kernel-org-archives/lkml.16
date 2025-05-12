@@ -1,124 +1,107 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE9A255F4F;
-	Mon, 12 May 2025 06:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D70255F4A
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747032238; cv=none; b=hK2MxO9o2bDNahUBk9LYMnibTOeE1P4rBHo8mkqQKoplgCJlS3Ir5eNGeT6luVkld1zivVePdXiUJTL6IBsz5FGhvMHtV07syc7X18xJCEoUpKYweAfOn3m0WUnLQCVzPidV3hXOO7TcY9cbFOq869zZc5BDQWB3xHP9B34ma34=
+	t=1747032265; cv=none; b=SaIYJzXMmGpDctcTzOAca7bLAuEe6cIoqU0HKicCPwBOcOyYi/Pq3AeEYIRHpklsr/RZXOx38uu/938K2rYNgy0BQIuAl3bds3HXlknTkWHMUOTSAbNE4m1xYo1GqwGNBcgnNYCGMYSu4UsM6v3+DQj2a5okOb8qoLOBK8Otxj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747032238; c=relaxed/simple;
-	bh=gCt5tZmmSwqyur/DE+455PZYL3EjaK9Mfdj9SUSmHtM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=tZ0V31sivp3mr+Rn4ggi10MI7wJAiu/9YvMhErYio+KifgkZzYjlUFNdrOyvVB01Y1HBkiJsbTvT+kdW8U9QMeYkh3jc9jUTzaVmIywOSfNYKt8TAYl7758wdEZbw3sQGe+Vd3Lk1NTvot1oCUzB1q0oP361RPC1cSG/IjI6gmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=J641JMr5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=i3Ly1Uik; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1747032265; c=relaxed/simple;
+	bh=6wn4OMVIx7dJN6XPNRemjiDxiT2owami0NgCrkbsKHA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NaasZ4vdJHZZtxT0E7/5QP8j4jOTC2ywQgRnz9/dTKqkMO+FuVi/KdmExGKI2eV0Ug+9PJgWkEPo3/m0NJNzyAkVlqyjD6y46Mn6P06UDrfenKcZg/m8lySIzcbtCLK+0s08qWvXWOg5WNq8sAX58RttZNt2Fgp8EGI/NixximE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=YOBsh37K; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="J641JMr5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i3Ly1Uik"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 3A390254011D;
-	Mon, 12 May 2025 02:43:54 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Mon, 12 May 2025 02:43:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1747032234;
-	 x=1747118634; bh=BSIocOw+TXBnqBucngWWomxUrtwVR6XyQakzrwOsw+c=; b=
-	J641JMr5YcPIFe8iBhYxK5MmhOnDE4eWtO81QOMa9m2lGujHOTbIRy4VDIr8zDeV
-	FbV+3fryN75KPeSbzTObiWPRS3pIf9egeihwPMWM8VPC8dJoQfCNVb6bL1Sx9BAh
-	dPLZzsqWMdH061ZTJewrQlKRye82gxzDos98YYTbicfRoqQbk4qnUGpG00h0YzRx
-	HCqJ7oilvYOq9isjtsI+W5OPl9UP49V64+fLlM++6XuCA5XDzK13Q462uCRT20s3
-	L0rJCPlM07WUIXhn8IV679zSpkAoNPoaVFvDrtgY8YmEjhiui81AIlLJv5yx1wcv
-	ggRzpabTEoRDbMc1yCMQMw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747032234; x=
-	1747118634; bh=BSIocOw+TXBnqBucngWWomxUrtwVR6XyQakzrwOsw+c=; b=i
-	3Ly1Uik57CKRZfELEQW+4vXaQy9otc2FfkGXUVjWwBGGxq4YKySkS7DJ/MORnign
-	5COCLaDSrt2srefs3s80BV1S4RWNhBZZxiXI5+w+816szRwVDRfRNo82/RfQB5MY
-	Ja4S3POrqsuP6pL5ZHzeqJv5mI/lRaOTPL5HZ3c9+1r1XWoz1lB0laW8aK9CQBd2
-	ipT78fVl2S6iMSqbxYqsMbTfnco3eckdyHSLZ6CKiFW1kfVKZ1RcXk/CxuZsoi8Q
-	WKhRsBRQKCzb4uzfAFZPOdEEIw71FkRnwLO3042ndHq+Lq99nJ8lyQbOQ1Qd3pn4
-	c/t5GXAXUG5LRD2Gcr+rw==
-X-ME-Sender: <xms:qZghaNgMBjzHyeEZ9L16EbsBLvZuWas9UR_X_b1hQFSpAiuMKWbcvA>
-    <xme:qZghaCCkM22aMm40Y__kkTMP4irVR3O6ifN_vT_qcr955wOzQ3agVGeK9GC3EXrmZ
-    yyBD97CvGVVvyVAL-8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtheekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeej
-    feekkeelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdprhgtphhtthhopehk
-    rhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrh
-    hnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhu
-    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
-    hugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:qZghaNH5UenF_83IJLNZ9ZsRUJi0R2CHgyQT5juWrh5EvxxnRLJlLw>
-    <xmx:qZghaCSQ6M1r45xHJYyq1hq_jm00h26S62NJOuHbyYi5qR5xIShvuQ>
-    <xmx:qZghaKx7-fLshdueNT16daH24NI4OgaW90VuZIq0sv3FCVBDDQURtQ>
-    <xmx:qZghaI7MzEQow_BLo57BdtcPSrlLdGHP-jLFXVyyeJlMDH6XByuZvw>
-    <xmx:qpghaE59Uuq-DdRZVDMChtc8oPxYwLDMoAr30P-M6uKR3JM3zInuFOfU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B93111C20067; Mon, 12 May 2025 02:43:53 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YOBsh37K"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54C6hsAv1535999
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Sun, 11 May 2025 23:43:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54C6hsAv1535999
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747032238;
+	bh=/Tp04FFyLZuYBUsTETYfaJln1buoXkSb8RpBpDNwre8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YOBsh37KwOS0JN3hkO3ilATDTulE+UKXqpubvq30QlgWktgmW7DLaV4YbM9fO9RqZ
+	 DakX5IjzfBZrSzfQvleheoeVsVIh6xsSncEb63mXpEuELBEAKz7qr0HakZTbUeX8gQ
+	 6PiQCV8mHU3a39mIpiimUzLj51Lm7lGKs90VFbloBcTnxoMSax3OS8L4Y7LoJi5/CG
+	 BdlGy30spQDqQ2YbF2pckTU5aCc4w3pD0FEMiouP8bEV8wZiERvAGsWJicUgwzQYG3
+	 usHs/e2+1/e6EjQ4DZNg5U5M7kqc0wH6DNd1ejp1s5vOPcHikfbiR6IQPHXQbrd9Em
+	 rNts7/dMnfJzQ==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org
+Cc: luto@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        peterz@infradead.org, brgerst@gmail.com
+Subject: [PATCH v4 0/2] x86: Allow variable-sized event frame
+Date: Sun, 11 May 2025 23:43:51 -0700
+Message-ID: <20250512064353.1535984-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T9798bf764b1c8a11
-Date: Mon, 12 May 2025 08:43:33 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>,
- "Stephen Rothwell" <sfr@canb.auug.org.au>
-Cc: ARM <linux-arm-kernel@lists.infradead.org>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- linux-next <linux-next@vger.kernel.org>
-Message-Id: <f52571c5-2d26-41cd-9266-21433423ba73@app.fastmail.com>
-In-Reply-To: <2006c4aa-7d4e-48de-9c27-46ddb359ac48@kernel.org>
-References: <20250512145955.617fd207@canb.auug.org.au>
- <2006c4aa-7d4e-48de-9c27-46ddb359ac48@kernel.org>
-Subject: Re: linux-next: duplicate patch in the dt-krzk tree
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025, at 08:34, Krzysztof Kozlowski wrote:
-> On 12/05/2025 06:59, Stephen Rothwell wrote:
->> Hi all,
->> 
->> The following commit is also in the arm-soc tree as a different commit
->> (but the same patch):
->> 
->>   b112d9ffaa65 ("ARM: dts: vt8500: use correct ohci/ehci node names")
->> 
->> This is commit
->> 
->>   7dc891191e64 ("ARM: dts: vt8500: use correct ohci/ehci node names")
->
-> I will drop mine, but I am surprised that this patch appeared in
-> arm-soc. soc@ was not Cced on the patchset.
+This was initially posted as part of the FRED patch series and turned
+down due to its unacceptable quality:
+  https://lore.kernel.org/lkml/20230410081438.1750-31-xin3.li@intel.com/
 
-My mistake. I think what happened was that patch 0/5 and 3/5
-(the one for spear) of the series were sent to soc@lists.linux.dev:
+Now comes another attempt to meet the bar.
 
-https://lore.kernel.org/soc/20250330193833.21970-7-wsa+renesas@sang-engineering.com/T/#t
 
-I had some problems with patchwork recently and picked up some of
-the missing bits through b4, which always applies the entire
-series. I made sure that the patch themselves were ok and I saw
-your Reviewed-by tag, but I didn't realize that I was not the
-recipient for patches 1, 2, 4 and 5.
+A FRED event frame could contain different amount of information for
+different event types, e.g., #MCE could push extra bytes of information,
+or perhaps even for different instances of the same event type. Thus
+the size of an event frame pushed by a FRED CPU is not fixed and the
+address of a pt_regs structure that is used to save the user level
+context of current task is not at a fixed offset from top of current
+task kernel stack.
 
-      Arnd
+This patch set adds a new field named 'user_pt_regs' in the thread_info
+structure to save the address of user level context pt_regs structure,
+thus to eliminate the need of any advance information of event frame
+size and allow a FRED CPU to push variable-sized event frame.
+
+With the above change, we can remove the padding space at top of the
+init stack because there is no user level context for init task.
+
+
+Link to v3: https://lore.kernel.org/lkml/20250321053735.2479875-1-xin@zytor.com/
+
+Change in v4:
+* Drop the patch that zaps TOP_OF_KERNEL_STACK_PADDING on x86_64
+  (Brian Gerst, hpa).
+
+Change in v3:
+* Replace "(struct pt_regs *)TOP_OF_INIT_STACK - 1" with
+  (struct pt_regs *)__top_init_kernel_stack (Brian Gerst).
+* Add declaration for __top_init_kernel_stack[] (Intel lkp).
+
+Change in v2:
+* Rebase on latest tip/master.
+
+
+Xin Li (Intel) (2):
+  x86/fred: Allow variable-sized event frame
+  x86: Remove the padding space at top of the init stack
+
+ arch/x86/entry/entry_fred.c        | 10 ++++++++++
+ arch/x86/include/asm/processor.h   | 28 ++++++++++++++++++++--------
+ arch/x86/include/asm/thread_info.h | 11 ++++++++---
+ arch/x86/kernel/process.c          | 22 ++++++++++++++++++++++
+ arch/x86/kernel/vmlinux.lds.S      |  7 +++++--
+ include/linux/thread_info.h        |  1 +
+ kernel/fork.c                      |  6 ++++++
+ 7 files changed, 72 insertions(+), 13 deletions(-)
+
+
+base-commit: 8e3f385164626dc6bbf000decf04aa98e943e07e
+-- 
+2.49.0
+
