@@ -1,321 +1,353 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2048.outbound.protection.outlook.com [40.107.102.48])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD29B171CD;
-	Mon, 12 May 2025 21:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747084831; cv=fail; b=XsNHX6GeW3ykGbB2d7TeWYRDzXZYqj/lBDy7YHce92GW29QaUW4mKcK+p7nc115Nf86wg1zMYqY8PfJq8aEfVEVimS2YsLMOGifTAwvWF3HkFUUz20M7TEfW37lj3KWXfCIAh3xR2h5VIi+GyPa/XBZQQI5PnzcxOs4gSWlMXIg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747084831; c=relaxed/simple;
-	bh=0aX7Gi3/bKT7Qzxlz/yzZpi0Dqz9VZLkw9gshzCWGCI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fZZ2+VGVIFZNNXiUFoKdSKRNEEcM5+4kN+aJRLxSqmDdQIcQV3kbwvJjtJ0aDS5c5JbMj8jhzIqaL9hcNfCzHHqLubelSkcCPPUla90nhdO2ECHN2RodDdS0RVDVVU8lYba/1IEFxhZ11TF2N3PrFujvK/Co08pKfUcCj/q8sdE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=P+thiCTq; arc=fail smtp.client-ip=40.107.102.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7F9298C0C;
+	Mon, 12 May 2025 21:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747084858; cv=none; b=IaafCXEwX5ad0Ei6T1jG7CScwY5Oq5u5BTuu6nxi5KGJ14r3PwxiuisRgwTd0Z8HE/HcjeNSKnxGw8s/sE6i9QoKdjCcKePidxW1l6qR2Wib50S7m2bqCs9v4v55VQQfQ0zfmLzttKlq+CNV8UNhg5KQ5p/m3oSJq6dsrqil1RI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747084858; c=relaxed/simple;
+	bh=0n+J3XWiTC/P1aJ+snuMzQvAm4ZMOQe1OgPN5jR9O+I=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Tkf21Tc7e0WIa8xl4U7oaEdaVMZ4HeudqFTTSO6UbWKqjUrtc+MoAerViVObUjDtv2jvteog6nmwkqf/5qh5zKVXiw864wWNslrhdVGqbpALOKwPxY0NiXSJO7Ssl/ZKz6FFtpyPSQSMIVCg1S3yhjt2g4VqT9F+yoaM99T0MB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmEZauUG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="P+thiCTq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sb2BBIZ7/2Z+Omjs2bzvbRsrvxz+serIEsp3R4wCJZdgQleTB75JxI4qXEz459v1ZUDSFsIIZO8leg9MNTQFbWRKGXFWjZyXu7SiwDRv0Rfzxb8AG8SIcbIKNnxocCjEet9WI92JXG7tb6LGGENiiUFo64/x/1NdtvnvEh7ZO6uiqa4O4VMFeDqmP5w+JDlFdnvP7DmeBbgOOnZajAzUiPOEpigDO2UADziOyXBDTNierRRvNyTmVj/br6JsyXwQFJ6+bfSHZoOoTj5GUKcU7tC9N730NP+FDrwph/A6iMqN6HYcoRhHFVLQ+BYXXobQPIWvV2VhHSYrLKYZANWDtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qO3WAFhY12eZbf0MbQXBnULfee43GwhG44cOnWZnUdw=;
- b=O8FeX1A93wy1G//M26RU6K+TBWQocPYc8geQqssUw/pDz1MAcw1xcHiTzwNjWMcuvNm9wW9rlrBh5hTq5rcTjpcFzTiFtaCpEni4KPuD4rCfK7AsDtMHAqDOQPnKlUctTuyheJWIVOwebOwzpnVzpfR+QBnPvVdLgI8uLpEgATM/v/gRYUZQZjW55ZcqYkK9BOj2vZ5PUcTYrom+FCqyf3TbVRWI1+saAv1vt59py5ySANwZQudnjMKalh8NifKFIK4W+VtQAEsIIac5MtxlVWG0E+bPTC/bjSryEOQ5uirvjROFjvgXAvl9h3DpdlEGKA0KKcRtHKr/shhoSBIJ/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qO3WAFhY12eZbf0MbQXBnULfee43GwhG44cOnWZnUdw=;
- b=P+thiCTqE8D5AwS66GYpyYhZzgzQsUoZa23XMZoFnIOOhx3zHwB0E/36rLbxQlBhk5CdLbOI67zj13hGnwzQozh8K2OlTsOF0ACfmyRsZlgqVOyQhJL5H6xrrqHvwDG6X4C6ux4eScYmLUC+91B2b9btQZQdvtnkPHGfF2fmSC0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL3PR12MB6426.namprd12.prod.outlook.com (2603:10b6:208:3b5::12)
- by SJ2PR12MB8977.namprd12.prod.outlook.com (2603:10b6:a03:539::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.25; Mon, 12 May
- 2025 21:20:27 +0000
-Received: from BL3PR12MB6426.namprd12.prod.outlook.com
- ([fe80::3e7f:241b:d574:95b4]) by BL3PR12MB6426.namprd12.prod.outlook.com
- ([fe80::3e7f:241b:d574:95b4%7]) with mapi id 15.20.8722.021; Mon, 12 May 2025
- 21:20:27 +0000
-Message-ID: <ec702d90-f6c0-479f-a62c-d09bf13fa13c@amd.com>
-Date: Mon, 12 May 2025 17:20:25 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13] platform/x86: Add AMD ISP platform config for OV05C10
-Content-Language: en-GB
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>,
- Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de,
- mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com,
- gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
-References: <20250509181220.1744783-1-pratap.nirujogi@amd.com>
- <6b649ebf-6f03-4050-18bb-788bbb3a664e@linux.intel.com>
- <7e46c769-7c5e-4a54-a216-c85c667446f9@amd.com>
- <d2bdc8a6-1907-77cd-43a2-fb28439bd37f@linux.intel.com>
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <d2bdc8a6-1907-77cd-43a2-fb28439bd37f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmEZauUG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64041C4CEE7;
+	Mon, 12 May 2025 21:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747084857;
+	bh=0n+J3XWiTC/P1aJ+snuMzQvAm4ZMOQe1OgPN5jR9O+I=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=HmEZauUGAxhb+Vohr1rCBYIsvRpapWLL/nz80yV72QJxcQOxA8JLHT5SWKlaPL4e4
+	 9S2nNNKtMcG10Fs8NYJ8dqtt4lrirO5XNuUe7EerPmAlkSNsG6X/NYqRKLMqfKJS5B
+	 ijI9t8XbmStKqVc2mUMh1js3fg3e3fbTKW4FNU6+CZSwvFIEXjmeNYgzGPAmMrLMy8
+	 IkAnEy/clnbp+x7orp74Q6uMhYnXUnbpyZY+Wq/IX0r3BTxX+VtBo2wL7WBspj19R0
+	 odvCrbODbxh3YNaUCoLYPVsHv9scbqWKKD3q6CIL8ID07UpjS5X2zsGfVX8k4Sxp9d
+	 l0MSrtacKdTPg==
+Date: Mon, 12 May 2025 16:20:55 -0500
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQBPR0101CA0251.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:66::15) To BL3PR12MB6426.namprd12.prod.outlook.com
- (2603:10b6:208:3b5::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB6426:EE_|SJ2PR12MB8977:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00ee30d2-a09c-4ab2-5036-08dd919ad0a3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bWlkVG51a0greDR4ZzhjZjRRVUdEVkYzRlRRSGRyY0MzK1Z1c3l2a3NQSUVG?=
- =?utf-8?B?TTVCam5Rc2ZnTHI2STJ2dmNCUjRKbCtoc1U5TWtiS05XUFpNZ1RZL2Rtd3BF?=
- =?utf-8?B?TXJ4Y0xHRW1XZXRWYVJHZnZBaVJZblBURHVBcnFKVEVNTFZJWmRjYkphZ01F?=
- =?utf-8?B?TllHUmdoaWVRMENaemRLVlpLb2xIYnZHS3dzS0w5NGprTVpUNkNwdzlyY0JX?=
- =?utf-8?B?Rkp1eFV1dXVRSE5CWllMUGtwNkJ3M0w3Q2I1czM4bVZ1OEh0TGtLaTNwb1lC?=
- =?utf-8?B?bUIwelF2T1VaWWxScmlObVRUcHMvL1E5enBMeVRGTGh1dFJvOC90MlM2VDBx?=
- =?utf-8?B?dEZ4UWtrT2ZIcExGZWVhMjlEY1VDK2ErWVhnVlhtako1aTBGMzNwYnhSVU5j?=
- =?utf-8?B?cmgxMUdDQzJ0YW53d3RyYUladEh5WDhoaHF4VHdIS1JCZ2xIZXF5QnlMY3ZO?=
- =?utf-8?B?YU9BRjRSWXBJdDFOQjBvWEYxZ2IzdDN6cktUVUNWM2hrbnd4cVZndFh5azc3?=
- =?utf-8?B?UVBJMmYraUhsamZhN3p5RVZMWVhwY2NOZjBvVklNUkR6ZkVYMmV5OUFKMS9M?=
- =?utf-8?B?SGJ1SEFHME16RnUxQlZOUFQvSTlhYnM5YU5NS09VSzhoS2Y3TTFMYzR5TlQ2?=
- =?utf-8?B?M3ZjNFZvQWplc1ZUSnIxMjRFOUVIUlcxczRqUFliVXE5VmxiTE85aVNBS1dw?=
- =?utf-8?B?cENwdkNYcDNaYVgvZ3FOMlJSbjZtbEhtQTdNZG5XWUlpdnovQmdvYTZSU3lZ?=
- =?utf-8?B?NXJlYmMwOWpIN21HL3ArVWs0NnpTd09BZDIwU3RHRzMrMUZLTHNQbkhvcnV0?=
- =?utf-8?B?MVFLYlJsTUJlSTExMGx0c25HNzQ5VHZFczZxSGJ3MGRvNEhCYnYrMk85Ukpo?=
- =?utf-8?B?RUFRTXlCT2pzbE44d0N1U05BcHdhZDVqelR1eUhlUDMwQytDWm1pd2d1NTNN?=
- =?utf-8?B?ZlQ4UGZyUE1ETlhjRlRXcjBVMVgxRU1Vemp1Y0JRTHlBWlV2Q0N0ZExPUHdF?=
- =?utf-8?B?MU9CZGVXcWRqNng1a3M5bS9LMFEzeVE5MFUrSDJDT3lhTWxaT2ZaaExKbUho?=
- =?utf-8?B?bGpJNWtQZEtIem4zVzBhcTR4Z3pPaTFJZlY4Q2tBWStWY3VnRlJQSFpWcHpm?=
- =?utf-8?B?V3JCNmpQUUU2ZmVVeEVxN01IZXpmVklndnpZNzdhU2RsdGp1TGNmcGRndzEw?=
- =?utf-8?B?R2dld2dqeEU0c2dwYVVxTU4yclNEVWRsTnlpTHhHK2xRS3N5SVBkN2RRYXpN?=
- =?utf-8?B?TUF3dUtLSHE2TVU3MHo3MGNqV3lma3FQUjdRN3lvTEUyVG1XS1VrMThlc0pO?=
- =?utf-8?B?WWlEVVR1dTgwbE4zcFlvaDRoNUVPRzQ2YTlnNk9iQ1VGdjBVMkp6cGdsV09U?=
- =?utf-8?B?UzI5Zzc1S2prZW5DcXhaWjFXT3VOWG1kTldEVWlDKzlwK2JHd05udE9ZaFQ3?=
- =?utf-8?B?a3M5UE1UckNKWG5PcFNmMHJiOUdVdENYWWV1UXQ4SUVwRzdMWEMvcFBkaWQx?=
- =?utf-8?B?N25najVRcFdnWkNzYjcrdTE4Uyt5by9wNDdJQ3VxZERNS2J6UUtRbVpoaHBa?=
- =?utf-8?B?WWd3T0VnazlHWUFLd1BJNlZSY1BvOVJ3QmFjeXY4b3Fvc0pqOUtnaFZrY2Vj?=
- =?utf-8?B?UmJ5R0kwMVg2bC9Wa0c1dTNOejNqbDdwSWtTZC9sRDhjWDgrVmxaTDNwTVJw?=
- =?utf-8?B?cWtrR3l6TkxnMFVnaFovK0NBMW00SEx4TSthNy84bDFFMm04OHBBRWZXZnFq?=
- =?utf-8?B?Qzc3eGFJajNUb0tpQkVHUkZuVGw3TlVKMDU5VnFUUGhiZkwyRjJ1L1BMT3pu?=
- =?utf-8?B?MXRRZlp1NlhHOXVOcXpOZjJqZTlHRTBQM3VoWmpwT1IrYytsbWtsUjJGbXBs?=
- =?utf-8?B?czlJOTZZbEJCM0hidnVBVnhyeXNFelovWVJ0d0NnOXRwenkwc2x3Z01nV2M0?=
- =?utf-8?Q?EitFCJ1Irmg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6426.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cUhoNWlpYU9zaU4wb3ZoWXBZM20ySWxZSE5HcTcyWlAvQituUGxHVHdCa0lp?=
- =?utf-8?B?U1p2QmhaTGFTblpKQk4wbTVGcVh1TEFudktoaVV2K0NZc2VweC9jMXpZelJ0?=
- =?utf-8?B?TGZSTkRxeElBc1hzWDlSMG9hLzFtSENFR3V6RXliMmVxejBCTVRxdUlMVldq?=
- =?utf-8?B?Tnc0MDQ0OXJqdjBLOVlYZVZxZ3JNY3NDQlMxY0tkMis1R29yNm0yNU5UeDdH?=
- =?utf-8?B?VE5hb3BnaGx2R3JidTNUeUNtV09OSk1hR0x6ZGRKZVpPUFJncE5VMzQ0eXFx?=
- =?utf-8?B?aEQxcHhPL01kVTdjbnpGM0FUbStodjhPME9lTjBOaEZxTE5aNWRTWS8zN0RC?=
- =?utf-8?B?bGlqRm1mTzZ6THlKamYxVHNmeDlTZjR0UXhMOHlTWVBNOWU2V3FXQTFYT0gy?=
- =?utf-8?B?TnRFb2kxMDgvWWRVMzY5QklmcGFrb3FsQXJoZ3RYcHhyc05kamh0bVdLbUZU?=
- =?utf-8?B?ejV4eTIwQzZRTkhmcUYrbDA2anF4dkpXcGphRlVXamtaZzRtVVp3dGREem1N?=
- =?utf-8?B?Tk1YaU9aem85VHJBRnRodElJT243SnMwNXp1T0NLUGJ0dGl5TW1SQnp1L3Fp?=
- =?utf-8?B?djU1enRGdzR3N3J1NjBuS3pCWE5jdUw3S2FmMndLQ1g2Z1NVOXorNkJGTHJn?=
- =?utf-8?B?c0dyNktLL2xQK2hUN2NxbDFsMWxCMVNCdmlSa21vMFAvWXRyeG43UmR1NTN3?=
- =?utf-8?B?Q09EZDJnVDZ5K3BGMmZKRVZoOXRYaWU0bThYU2R0Q0ZiYnkwR1pVVHpmYSt6?=
- =?utf-8?B?VWlIWGNUeVhneCtBOVo5QzEzM2xzK3NzN1BhSzkxZmg0SHJkT2F2bUFrTTI1?=
- =?utf-8?B?d0dGTk9UdWgvZm10NlhZeitqZG5ZREFYNlUxeTdMQzNONlJFa1BucU9HMW9T?=
- =?utf-8?B?Zm5jTCtnQlRZaDRTOFowQ3FlOUtXU3JVd2x0WldyN0s4L2tpWno2VXErMWkv?=
- =?utf-8?B?Ylo5cnh3VkRhelk1SFdBajJWbHNycUpPSWhOZll1clN1c1ljMnZpVi9Db0VV?=
- =?utf-8?B?N3JERW16UExQc0V3UTlBclR3RG91RTJQNUxPTWphc1JJYkNTUXJPWmZiR3J1?=
- =?utf-8?B?dnQ1OENJRzgwTFZOTTJFY09yQ2VhQ1VXY2xzS24wSE5sbldrOVBUWVdaUGph?=
- =?utf-8?B?Vnl2UzdwcE1SN1NCT3d2aktYYTd3cTYzZmFRUEJKWU5xSG8wTlN5cjFlRzRl?=
- =?utf-8?B?UnM1K29yOUhMem41dGpGdDVsQ0hEMkwwMktBQmtMVTA0M3JMVmdTcngycjQv?=
- =?utf-8?B?OE5rTDlFREZabVlQSFd6Q21kdUF2M2pMb2o5R2tZVWdidkxOMWhWWXZtR0R5?=
- =?utf-8?B?akdOU2ZOZXJ2WVJaOUVENnZHY3BkZWlTWWl0K3ZhRmVjTUtqYzRTSHJPOTd2?=
- =?utf-8?B?QlJyTjV3MzFTQndwcjNQUlBrL2ptVkg0Zlc2WnhSSUNObTdDNE5OUkZMbU1h?=
- =?utf-8?B?WGtSVlFjQ2tTcFdFU2M5UFlRZjVhZkhrRHBsUkhuRld3ckFIWUZqRTBXUWpR?=
- =?utf-8?B?WlpYR1dTd1hZeUNkMFpJWTZuYWRDTGVZbEZjcVhacWhxTzQ0VWdkVEhyc1VY?=
- =?utf-8?B?Z1hyYVN2UzdEcVdjVzBlNEtBckd0SlE2VDRDakxGSlBCejNkMnRsOXhsMERp?=
- =?utf-8?B?T1dZcXJSZUNXdFF0emJIOWRLanJDcXYyTHBLa00wNlJTM1BvY3JaTE5QK1E3?=
- =?utf-8?B?TnZGYVd4U3lsMzBLMmRnK1hZL0ZQZVIxd2pxZ2tSU0VKUnlMb3FUY1UxbXE4?=
- =?utf-8?B?emRLMG91SGVITHFwWUhUc0trMTViYWNYTHZIQUhtbGlJcXdQTVFGclpVanov?=
- =?utf-8?B?b3RrUC85MlQvVlVoNW1QazkwcXJoODVCTTIxZ0dRa0luUGRTWUttMVNCRUU3?=
- =?utf-8?B?ajVhTTZIeUxKSGRtMjd3Z3YvTVV0UGZjRTlBNmYyWmh5RVNZWDA2M04wbzFm?=
- =?utf-8?B?VXluY3pBUTQ5MlJ0Q3A5ckZLT3ZtTWdwbDFVZTVjZURHWkhPOXR5T3ZwK0RV?=
- =?utf-8?B?cXlycE9CM2c2a3hkV0xnaU9xLzh4eEx2VWd1aEx4VUJHdGpxWnVxTDI4Zk8w?=
- =?utf-8?B?NnNIVmc1TzlLNUx2WkpwUW9JcWpBSUpUYkRXZUkyUS9idFRNR2lYazBsKzM2?=
- =?utf-8?Q?toxrBxWSBj6C/w3DJJ2VG/3KP?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00ee30d2-a09c-4ab2-5036-08dd919ad0a3
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6426.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 21:20:26.9591
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fg6CIORxWCEV3xhrfLeHwlMR+F1T1AvDXw1gHGmShYSODpdB7eoImAK+VeNsD956jCIU0YnqaPG/ytuY37JWLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8977
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, conor+dt@kernel.org, 
+ krzk+dt@kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, heiko@sntech.de, 
+ linux-rockchip@lists.infradead.org, sfr@canb.auug.org.au
+To: chainsx@foxmail.com
+In-Reply-To: <tencent_9922367945B45D45C938B0B947EEFFCE1808@qq.com>
+References: <tencent_9922367945B45D45C938B0B947EEFFCE1808@qq.com>
+Message-Id: <174708481857.4125966.6823663224715045575.robh@kernel.org>
+Subject: Re: [PATCH v1 2/2] arm64: dts: rockchip: add DTs for Firefly
+ ROC-RK3588S-PC
+
+
+On Mon, 12 May 2025 21:21:11 +0800, chainsx@foxmail.com wrote:
+> From: Hsun Lai <chainsx@foxmail.com>
+> 
+> The Firefly ROC-RK3588S-PC is a SBC based on the Rockchip RK3588s SoC.
+> 
+> Link: https://wiki.t-firefly.com/en/Station-M3/index.html
+> 
+> The device contains the following hardware that is tested/working:
+>  - 32 or 64GB eMMC
+>  - SDMMC card slot
+>  - Realtek USB WiFi 5/BT
+>  - NVME 2242 socket
+>  - 4 or 8GB of RAM
+>  - RTL8211 GbE
+>  - USB 3.0 port
+>  - USB 2.0 port
+>  - HDMI port
+> 
+> Signed-off-by: Hsun Lai <chainsx@foxmail.com>
+> 
+> ---
+> 
+> Changes in v1:
+> - Add support for Firefly ROC-RK3588S-PC
+> 
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 911 ++++++++++++++++++
+>  2 files changed, 912 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
+> 
+
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: remotes/arm-soc/rockchip/dt64-12-gff7c417e54a8 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for tencent_9922367945B45D45C938B0B947EEFFCE1808@qq.com:
+
+arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: / (firefly,rk3588s-roc-pc): compatible: 'oneOf' conditional failed, one must be fixed:
+	['firefly,rk3588s-roc-pc', 'rockchip,rk3588s'] is too short
+	'vamrs,ficus' was expected
+	'vamrs,rock960' was expected
+	'amarula,vyasa-rk3288' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['anbernic,rg351m', 'anbernic,rg351v']
+	'firefly,rk3588s-roc-pc' is not one of ['anbernic,rg353p', 'anbernic,rg353ps', 'anbernic,rg353v', 'anbernic,rg353vs', 'anbernic,rg503', 'anbernic,rg-arc-d', 'anbernic,rg-arc-s']
+	'ariaboard,photonicat' was expected
+	'armsom,sige5' was expected
+	'armsom,sige7' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['armsom,w3']
+	'asus,rk3288-tinker' was expected
+	'asus,rk3288-tinker-s' was expected
+	'azw,beelink-a1' was expected
+	'bigtreetech,cb2-manta' was expected
+	'bigtreetech,pi2' was expected
+	'mundoreader,bq-curie2' was expected
+	'mundoreader,bq-edison2qc' was expected
+	'chipspark,popmetal-rk3288' was expected
+	'chipspark,rayeager-px2' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['coolpi,pi-cm5-evb']
+	'firefly,rk3588s-roc-pc' is not one of ['coolpi,pi-cm5-genbook']
+	'coolpi,pi-4b' was expected
+	'edgeble,neural-compute-module-2-io' was expected
+	'edgeble,neural-compute-module-6a-io' was expected
+	'elgin,rv1108-r1' was expected
+	'embedfire,lubancat-1' was expected
+	'embedfire,lubancat-2' was expected
+	'engicam,px30-core-ctouch2' was expected
+	'engicam,px30-core-ctouch2-of10' was expected
+	'engicam,px30-core-edimm2.2' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['mntre,reform2-rcore']
+	'firefly,rk3588s-roc-pc' is not one of ['firefly,itx-3588j']
+	'firefly,px30-jd4-core-mb' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['firefly,firefly-rk3288', 'firefly,firefly-rk3288-beta']
+	'firefly,firefly-rk3288-reload' was expected
+	'firefly,firefly-rk3399' was expected
+	'firefly,roc-rk3308-cc' was expected
+	'firefly,roc-rk3328-cc' was expected
+	'firefly,roc-rk3328-pc' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['firefly,roc-rk3399-pc', 'firefly,roc-rk3399-pc-mezzanine']
+	'firefly,rk3588s-roc-pc' is not one of ['firefly,roc-rk3399-pc-plus']
+	'firefly,roc-rk3576-pc' was expected
+	'firefly,rk3566-roc-pc' was expected
+	'firefly,rk3568-roc-pc' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['forlinx,ok3588-c']
+	'firefly,rk3588s-roc-pc' is not one of ['friendlyarm,nanopi-r2c', 'friendlyarm,nanopi-r2c-plus', 'friendlyarm,nanopi-r2s', 'friendlyarm,nanopi-r2s-plus']
+	'friendlyarm,nanopi-r3s' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['friendlyarm,nanopc-t4', 'friendlyarm,nanopi-m4', 'friendlyarm,nanopi-m4b', 'friendlyarm,nanopi-neo4', 'friendlyarm,nanopi-r4s', 'friendlyarm,nanopi-r4s-enterprise']
+	'firefly,rk3588s-roc-pc' is not one of ['friendlyarm,nanopi-r5c', 'friendlyarm,nanopi-r5s']
+	'firefly,rk3588s-roc-pc' is not one of ['friendlyarm,nanopi-r6c', 'friendlyarm,nanopi-r6s']
+	'firefly,rk3588s-roc-pc' is not one of ['friendlyarm,nanopc-t6', 'friendlyarm,nanopc-t6-lts']
+	'firefly,rk3588s-roc-pc' is not one of ['friendlyarm,cm3588-nas']
+	'gameforce,ace' was expected
+	'gameforce,chi' was expected
+	'geekbuying,geekbox' was expected
+	'geniatech,xpi-3128' was expected
+	'google,bob-rev13' was expected
+	'google,veyron-brain-rev0' was expected
+	'google,veyron-fievel-rev8' was expected
+	'google,gru-rev15' was expected
+	'google,veyron-jaq-rev5' was expected
+	'google,veyron-jerry-rev15' was expected
+	'google,kevin-rev15' was expected
+	'google,veyron-mickey-rev8' was expected
+	'google,veyron-mighty-rev5' was expected
+	'google,veyron-minnie-rev4' was expected
+	'google,veyron-pinky-rev2' was expected
+	'google,scarlet-rev15-sku0' was expected
+	'google,scarlet-rev15-sku7' was expected
+	'google,scarlet-rev15-sku2' was expected
+	'google,veyron-speedy-rev9' was expected
+	'google,veyron-tiger-rev8' was expected
+	'haochuangyi,h96-max-v58' was expected
+	'haoyu,marsboard-rk3066' was expected
+	'hardkernel,rk3326-odroid-go2' was expected
+	'hardkernel,rk3326-odroid-go2-v11' was expected
+	'hardkernel,rk3326-odroid-go3' was expected
+	'hardkernel,odroid-m1' was expected
+	'hardkernel,odroid-m1s' was expected
+	'hardkernel,odroid-m2' was expected
+	'hugsun,x99' was expected
+	'indiedroid,nova' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['khadas,edge', 'khadas,edge-captain', 'khadas,edge-v']
+	'khadas,edge2' was expected
+	'kobol,helios64' was expected
+	'mecer,xms6' was expected
+	'leez,p710' was expected
+	'lckfb,tspi-rk3566' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['lunzn,fastrhino-r66s', 'lunzn,fastrhino-r68s']
+	'mqmaker,miqi' was expected
+	'neardi,lba3368' was expected
+	'netxeon,r89' was expected
+	'openailab,eaidk-610' was expected
+	'xunlong,rk3399-orangepi' was expected
+	'phytec,rk3288-pcm-947' was expected
+	'pine64,pinebook-pro' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['pine64,pinenote-v1.1', 'pine64,pinenote-v1.2']
+	'pine64,pinephone-pro' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['pine64,pinetab2-v0.1', 'pine64,pinetab2-v2.0']
+	'pine64,rock64' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['pine64,rockpro64-v2.1', 'pine64,rockpro64-v2.0']
+	'firefly,rk3588s-roc-pc' is not one of ['pine64,quartz64-a', 'pine64,quartz64-b']
+	'pine64,quartzpro64' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['pine64,soquartz-blade', 'pine64,soquartz-cm4io', 'pine64,soquartz-model-a']
+	'firefly,rk3588s-roc-pc' is not one of ['powkiddy,rgb10max3', 'powkiddy,rgb20sx', 'powkiddy,rgb30', 'powkiddy,rk2023', 'powkiddy,x55']
+	'prt,mecsbc' was expected
+	'qnap,ts433' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['radxa,cm3-io']
+	'firefly,rk3588s-roc-pc' is not one of ['radxa,e25']
+	'radxa,e20c' was expected
+	'radxa,e52c' was expected
+	'radxa,rock' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['radxa,rockpi4a', 'radxa,rockpi4a-plus', 'radxa,rockpi4b', 'radxa,rockpi4b-plus', 'radxa,rockpi4c']
+	'radxa,rock-4c-plus' was expected
+	'radxa,rock-4d' was expected
+	'radxa,rock-4se' was expected
+	'radxa,rockpi-e' was expected
+	'radxa,rockpi-n8' was expected
+	'radxa,rockpi-n10' was expected
+	'radxa,rockpis' was expected
+	'radxa,rock2-square' was expected
+	'radxa,rock3a' was expected
+	'radxa,rock-3b' was expected
+	'radxa,rock-3c' was expected
+	'radxa,rock-5-itx' was expected
+	'radxa,rock-5a' was expected
+	'radxa,rock-5b' was expected
+	'radxa,rock-5c' was expected
+	'radxa,rock-s0' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['radxa,zero-3e', 'radxa,zero-3w']
+	'relfor,saib' was expected
+	'rikomagic,mk808' was expected
+	'rockchip,rk3036-kylin' was expected
+	'rockchip,px3-evb' was expected
+	'rockchip,px30-evb' was expected
+	'rockchip,px5-evb' was expected
+	'rockchip,r88' was expected
+	'rockchip,rk3036-evb' was expected
+	'rockchip,rk3128-evb' was expected
+	'rockchip,rk3228-evb' was expected
+	'rockchip,rk3229-evb' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['rockchip,rk3288-evb-act8846', 'rockchip,rk3288-evb-rk808']
+	'rockchip,rk3308-evb' was expected
+	'rockchip,rk3328-evb' was expected
+	'rockchip,rk3368-evb-act8846' was expected
+	'rockchip,rk3399-evb' was expected
+	'rockchip,rk3399-evb-ind' was expected
+	'rockchip,rk3399-sapphire' was expected
+	'rockchip,rk3399-sapphire-excavator' was expected
+	'rockchip,rk3566-box-demo' was expected
+	'rockchip,rk3568-evb1-v10' was expected
+	'rockchip,rk3576-evb1-v10' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['rockchip,rk3588-evb1-v10', 'rockchip,rk3588-evb2-v10']
+	'rockchip,rk3588s-evb1-v10' was expected
+	'rockchip,rv1108-evb' was expected
+	'rockchip,rk3588-toybrick-x0' was expected
+	'sinovoip,rk3308-bpi-p2pro' was expected
+	'sinovoip,rk3568-bpi-r2pro' was expected
+	'itead,sonoff-ihost' was expected
+	'tsd,px30-ringneck-haikou' was expected
+	'tsd,rk3368-lion-haikou' was expected
+	'tsd,rk3399-puma-haikou' was expected
+	'tsd,rk3588-jaguar' was expected
+	'tsd,rk3588-tiger-haikou' was expected
+	'tronsmart,orion-r68-meta' was expected
+	'turing,rk1' was expected
+	'wolfvision,rk3568-pf5' was expected
+	'firefly,rk3588s-roc-pc' is not one of ['xunlong,orangepi-3b-v1.1', 'xunlong,orangepi-3b-v2.1']
+	'firefly,rk3588s-roc-pc' is not one of ['xunlong,orangepi-5-max', 'xunlong,orangepi-5-plus', 'xunlong,orangepi-5-ultra']
+	'firefly,rk3588s-roc-pc' is not one of ['xunlong,orangepi-r1-plus', 'xunlong,orangepi-r1-plus-lts']
+	'firefly,rk3588s-roc-pc' is not one of ['xunlong,orangepi-5', 'xunlong,orangepi-5b']
+	'zkmagic,a95x-z2' was expected
+	'rockchip,rk3399' was expected
+	'rockchip,rk3288' was expected
+	'rockchip,rk3326' was expected
+	'rockchip,rk3566' was expected
+	'rockchip,rk3568' was expected
+	'rockchip,rk3576' was expected
+	'rockchip,rk3588' was expected
+	'armsom,lm7' was expected
+	'rockchip,rk3328' was expected
+	'bigtreetech,cb2' was expected
+	'rockchip,rk3066a' was expected
+	'rockchip,rk3188' was expected
+	'coolpi,pi-cm5' was expected
+	'edgeble,neural-compute-module-2' was expected
+	'rockchip,rk3588s' is not one of ['edgeble,neural-compute-module-6a', 'edgeble,neural-compute-module-6b']
+	'rockchip,rv1108' was expected
+	'engicam,px30-core' was expected
+	'firefly,icore-3588q' was expected
+	'firefly,core-3588j' was expected
+	'firefly,px30-jd4-core' was expected
+	'rockchip,rk3308' was expected
+	'forlinx,fet3588-c' was expected
+	'friendlyarm,cm3588' was expected
+	'rockchip,rk3368' was expected
+	'rockchip,rk3128' was expected
+	'google,bob-rev12' was expected
+	'google,veyron-brain' was expected
+	'google,veyron-fievel-rev7' was expected
+	'google,gru-rev14' was expected
+	'google,veyron-jaq-rev4' was expected
+	'google,veyron-jerry-rev14' was expected
+	'google,kevin-rev14' was expected
+	'google,veyron-mickey-rev7' was expected
+	'google,veyron-mighty-rev4' was expected
+	'google,veyron-minnie-rev3' was expected
+	'google,veyron-pinky' was expected
+	'google,scarlet-rev15' was expected
+	'google,scarlet-rev15-sku4' was expected
+	'google,veyron-speedy-rev8' was expected
+	'google,veyron-tiger-rev7' was expected
+	'rockchip,rk3229' was expected
+	'phytec,rk3288-phycore-som' was expected
+	'pine64,pinenote' was expected
+	'pine64,pinetab2' was expected
+	'pine64,rockpro64' was expected
+	'pine64,soquartz' was expected
+	'radxa,cm3' was expected
+	'radxa,cm3i' was expected
+	'rockchip,rk3528' was expected
+	'rockchip,rk3582' was expected
+	'radxa,rockpi4' was expected
+	'vamrs,rk3288-vmarc-som' was expected
+	'vamrs,rk3399pro-vmarc-som' was expected
+	'rockchip,rv1109' was expected
+	'rockchip,rk3036' was expected
+	'rockchip,px3' was expected
+	'rockchip,px30' was expected
+	'rockchip,px5' was expected
+	'rockchip,rk3228' was expected
+	'rockchip,rk3588s' is not one of ['rockchip,rv1126', 'rockchip,rv1109']
+	'tsd,rk3588-tiger' was expected
+	'xunlong,orangepi-3b' was expected
+	'rockchip,rk3318' was expected
+	from schema $id: http://devicetree.org/schemas/arm/rockchip.yaml#
+arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: /: failed to match any schema with compatible: ['firefly,rk3588s-roc-pc', 'rockchip,rk3588s']
+arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: /edp@fdec0000: failed to match any schema with compatible: ['rockchip,rk3588-edp']
+arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: leds: leds-gpio: {'rockchip,pins': [[3, 10, 0, 259], [1, 29, 0, 259], [3, 16, 0, 259]], 'phandle': 273} is not of type 'array'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
+arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: leds (gpio-leds): 'power', 'user', 'user1' do not match any of the regexes: '(^led-[0-9a-f]$|led)', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/leds/leds-gpio.yaml#
 
 
 
-On 5/12/2025 5:00 PM, Ilpo Järvinen wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> On Mon, 12 May 2025, Nirujogi, Pratap wrote:
-> 
->> Hi Ilpo,
->>
->> On 5/11/2025 6:54 PM, Ilpo Järvinen wrote:
->>> Caution: This message originated from an External Source. Use proper caution
->>> when opening attachments, clicking links, or responding.
->>>
->>>
->>> On Fri, 9 May 2025, Pratap Nirujogi wrote:
->>>
->>>> ISP device specific configuration is not available in ACPI. Add
->>>> swnode graph to configure the missing device properties for the
->>>> OV05C10 camera device supported on amdisp platform.
->>>>
->>>> Add support to create i2c-client dynamically when amdisp i2c
->>>> adapter is available.
->>>>
->>>> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
->>>> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
->>>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->>>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
->>>> ---
->>>> Changes v12 -> v13:
->>>>
->>>> * Add "struct amdisp_platform_info" to pass sensor specific
->>>> configuration and make the driver generic to support OV05C10
->>>> and other supported sensor modules in future.
->>>>
->>>> * Address cosmetic and other review comments.
->>>>
->>>>    drivers/platform/x86/amd/Kconfig    |  11 +
->>>>    drivers/platform/x86/amd/Makefile   |   1 +
->>>>    drivers/platform/x86/amd/amd_isp4.c | 309 ++++++++++++++++++++++++++++
->>>>    3 files changed, 321 insertions(+)
->>>>    create mode 100644 drivers/platform/x86/amd/amd_isp4.c
->>>>
->>>> diff --git a/drivers/platform/x86/amd/Kconfig
->>>> b/drivers/platform/x86/amd/Kconfig
->>>> index c3e086ea64fc..152a68a470e8 100644
->>>> --- a/drivers/platform/x86/amd/Kconfig
->>>> +++ b/drivers/platform/x86/amd/Kconfig
->>>> @@ -32,3 +32,14 @@ config AMD_WBRF
->>>>
->>>>           This mechanism will only be activated on platforms that advertise
->>>> a
->>>>           need for it.
->>>> +
->>>> +config AMD_ISP_PLATFORM
->>>> +     tristate "AMD ISP4 platform driver"
->>>> +     depends on I2C && X86_64 && ACPI
->>>> +     help
->>>> +       Platform driver for AMD platforms containing image signal
->>>> processor
->>>> +       gen 4. Provides camera sensor module board information to allow
->>>> +       sensor and V4L drivers to work properly.
->>>> +
->>>> +       This driver can also be built as a module.  If so, the module
->>>> +       will be called amd_isp4.
->>>> diff --git a/drivers/platform/x86/amd/Makefile
->>>> b/drivers/platform/x86/amd/Makefile
->>>> index c6c40bdcbded..b0e284b5d497 100644
->>>> --- a/drivers/platform/x86/amd/Makefile
->>>> +++ b/drivers/platform/x86/amd/Makefile
->>>> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)               += pmc/
->>>>    obj-$(CONFIG_AMD_HSMP)               += hsmp/
->>>>    obj-$(CONFIG_AMD_PMF)                += pmf/
->>>>    obj-$(CONFIG_AMD_WBRF)               += wbrf.o
->>>> +obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp4.o
->>>> diff --git a/drivers/platform/x86/amd/amd_isp4.c
->>>> b/drivers/platform/x86/amd/amd_isp4.c
->>>> new file mode 100644
->>>> index 000000000000..27939020634c
->>>> --- /dev/null
->>>> +++ b/drivers/platform/x86/amd/amd_isp4.c
->>>> @@ -0,0 +1,309 @@
->>>> +// SPDX-License-Identifier: GPL-2.0+
->>>> +/*
->>>> + * AMD ISP platform driver for sensor i2-client instantiation
->>>> + *
->>>> + * Copyright 2025 Advanced Micro Devices, Inc.
->>>> + */
->>>> +
->>>> +#include <linux/i2c.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/property.h>
->>>> +#include <linux/units.h>
->>>> +
->>>> +#define AMDISP_OV05C10_I2C_ADDR              0x10
->>>> +#define AMDISP_OV05C10_PLAT_NAME     "amdisp_ov05c10_platform"
->>>
->>> This is not used anywhere?
->>>
->> Thanks. Will remove it, its not used anymore.
->>
->>>> +#define AMDISP_OV05C10_HID           "OMNI5C10"
->>>> +#define AMDISP_OV05C10_REMOTE_EP_NAME        "ov05c10_isp_4_1_1"
->>>> +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
->>>> +
->>>> +/*
->>>> + * AMD ISP platform info definition to initialize sensor
->>>> + * specific platform configuration to prepare the amdisp
->>>> + * platform.
->>>> + */
->>>> +struct amdisp_platform_info {
->>>> +     struct i2c_board_info board_info;
->>>> +     const struct software_node **swnodes;
->>>> +};
->>>> +
->>>> +/*
->>>> + * AMD ISP platform definition to configure the device properties
->>>> + * missing in the ACPI table.
->>>> + */
->>>> +struct amdisp_platform {
->>>> +     const struct amdisp_platform_info *pinfo;
->>>> +     struct i2c_board_info board_info;
->>>> +     struct notifier_block i2c_nb;
->>>> +     struct i2c_client *i2c_dev;
->>>> +     struct mutex lock;      /* protects i2c client creation */
->>>
->>> Missing #include.
->>>
->> ok, will #include <linux/mutex.h>. I have not included some of these header
->> files seprately as they are already part of one or the other existing headers
->> in the patch.
-> 
-> We try to include what is used by the file itself but as there's no
-> ready to use tool to enforce it automatically, it largely depends on devs /
-> reviewers noticing what should be added. Whenever adding a call to
-> anything outside the .c file itself or use of non-local macro, it's good
-> to check if another #include needs to be added (but I understand devs, me
-> included, will often forget it).
-> 
-> There are a few obvious includes where the other one is not needed as the
-> path is practically guaranteed, typical examples: linux/xx.h including
-> asm/xx.h or uapi/linux/xx.h.
-> 
-> Relying intentionally on indirect includes creates very hard to track
-> dependencies making it complex to remove any header from another header
-> when the headerfile itself no longer needs that include. Build testing
-> will catch some resulting fallout from such removal but it's coverage is
-> not perfect.
-> 
-Thanks Ilpo for the detailed explanation and clarifying the significance 
-of avoiding the indirect includes. Its really helpful. Thanks.
 
-> --
->   i.
 
