@@ -1,208 +1,249 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561DB381BA
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF2D20326;
+	Mon, 12 May 2025 06:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747032538; cv=none; b=mZJEEhlL4+eVcsR337F7TEpzUifdoBSDkcAE50C22q6kVjgtqo6OWf/PMeitfqfzS1qjLtsZMNfGOkXEy2s7yzXGrqzlYtSo7WqeYEsC5Oro44yQvGRnY7LXvH6txAaz+sDqsQpZzqJgXfT/toI75NjHM9QMseLwSjkhlcbdCrU=
+	t=1747032628; cv=none; b=UkRJf5/8+dQ5aOvuA6Hv50Wk/B59a4GE1EQZ+0sItEnYCn7VQCgNzfJ91w+xTSWhAHOxD6lFm7HdZBO8NSJ5g5NeyToR9XfOmx555gkJ6rH5NpkfFwDbZLDOOk+pztsD5iiKcnYc1/vNwjMGUjPsx+L1pJForpJRClEqWRQq2Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747032538; c=relaxed/simple;
-	bh=3hWNywDm1rmDL3n5pqpD/ttJsvAhh/MKDQWNxinnzr8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=fcCiT6DAvWR9cFXinMGil26SxevwcNMYo6dvUjS4gyq5jllQtKfxqc6GokknjXgf6yu4yrtxvEsdtINbjcTn1FA3FgDbvbg6RlnrT2kX9PXcSCzsacly0fed6PBKmGdNFMQJhPLU2Hrx+a22QLVZwNBEvoTFSu3Ynm71qhS1eIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OgUgEmMS; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747032628; c=relaxed/simple;
+	bh=rpwMv2y5lJIMTCuyi92paGgTBZ+I6o4sAEGRlxKoMIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2CyAYuAGooVjbLYI1ul6vxIK3Y1zbf5rDcxdQ9XAivWVgDLbKvA+Ig7iLD4++VqTMbHpio7RebZ6y90mp7XkiTa/JcuQBMRldJND3lupo9AN7ZaqASlY2Zh8CqTszy3Hul8IwwSmhst9qUbb21lWR0dmKeMETa4FGpGJ2NHWBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WAWpT7mN; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OgUgEmMS"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250512064848euoutp0262e16b9ac82c0bf367a42f2831a92628~_tNQdk-QD0203602036euoutp02c
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:48:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250512064848euoutp0262e16b9ac82c0bf367a42f2831a92628~_tNQdk-QD0203602036euoutp02c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747032528;
-	bh=xk2dkJToJKLhJspcQw7pjNVsjfwwtKPzo+HUohnIT6M=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=OgUgEmMSNCxMAJbxUvdPOZfQTIFZvL+QDxB9S3nWErrYh1jqy5apScBOxr7grJKyQ
-	 lgy2so3X7k8FxN1AXf5s5nHOOJRKK5wAK1mQ/AsDYfGKYHlEHWx3F2oNur25pAOoKS
-	 kBzadlvILnNb59zJkptnRS6tXnz0/c5+eGXbz87Q=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250512064848eucas1p14e6a595306293484fdfe4be546ba48a0~_tNQNSiEw1439814398eucas1p1E;
-	Mon, 12 May 2025 06:48:48 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250512064847eusmtip1dc87bbb74bd18adbf01a8797b75f3e88~_tNPlHGIz0641506415eusmtip1O;
-	Mon, 12 May 2025 06:48:47 +0000 (GMT)
-Message-ID: <c00ec721-1193-4cfb-87ec-fd98f215720e@samsung.com>
-Date: Mon, 12 May 2025 08:48:47 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WAWpT7mN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747032628; x=1778568628;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rpwMv2y5lJIMTCuyi92paGgTBZ+I6o4sAEGRlxKoMIk=;
+  b=WAWpT7mNg7JO+KCUVi4jumtAB0ZnhQ0EKWwZd30j66xciMDu2OEZP5f4
+   6l/CWkqUKZMYZHVb6IoqMoFKNzAqHy0UYhpcyJ4npg/UF+lDcfVRsX68o
+   2tGVWVQbLlAAYm9AykJXBOrEPQ+AO0se4g4iHFp1Q5qEagfPhhSvjry5P
+   yPxHxZidRqQ5jP/OcsCbhFBlhQCPkCzm8/XsidsYEfUM3N0r6QhTP+i67
+   kYH+Accf7vRL2tSaXRcp54KZNlDy8WTzS7ffTabsOvhvzlUw8OFAKdfyh
+   7PeUGUlTCsfLAblixpwMG5LitLcIVrYCbooOwW+idvzSMlv75ofuFi6HF
+   w==;
+X-CSE-ConnectionGUID: Pq8jc8F+STmWFn/fuMVbVQ==
+X-CSE-MsgGUID: BsMPO52XTsqj9ePCYnyTYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="52626346"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="52626346"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 23:50:27 -0700
+X-CSE-ConnectionGUID: zTNUU3H2QJ+U/O/rAvYgXA==
+X-CSE-MsgGUID: N9xxRReTSjSo9U4ytmnxrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="142488645"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 23:50:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uEMzR-00000000q6E-1z14;
+	Mon, 12 May 2025 09:50:17 +0300
+Date: Mon, 12 May 2025 09:50:17 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 13/23] irqchip: Add driver for the RPMI system MSI
+ service group
+Message-ID: <aCGaKXOOWyM4JQMg@smile.fi.intel.com>
+References: <20250511133939.801777-1-apatel@ventanamicro.com>
+ <20250511133939.801777-14-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] cpufreq/sched: Move cpufreq-specific EAS checks
- to cpufreq
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
-	<linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Lukasz Luba
-	<lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas
-	Pandruvada <srinivas.pandruvada@linux.intel.com>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>, Ricardo Neri
-	<ricardo.neri-calderon@linux.intel.com>, Pierre Gondois
-	<pierre.gondois@arm.com>, Christian Loehle <christian.loehle@arm.com>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <CAJZ5v0j_fFk=EX0Z9_w1twQH-FpntHJvr4d0WSMBM6PevfEqNg@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250512064848eucas1p14e6a595306293484fdfe4be546ba48a0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0
-X-EPHeader: CA
-X-CMS-RootMailID: 20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0
-References: <2999205.e9J7NaK4W3@rjwysocki.net>
-	<CGME20250509234915eucas1p2846ecef88f268d78ab2e96d4a67002b0@eucas1p2.samsung.com>
-	<2317800.iZASKD2KPV@rjwysocki.net>
-	<1bf3df62-0641-459f-99fc-fd511e564b84@samsung.com>
-	<CAJZ5v0j_fFk=EX0Z9_w1twQH-FpntHJvr4d0WSMBM6PevfEqNg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250511133939.801777-14-apatel@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 10.05.2025 13:31, Rafael J. Wysocki wrote:
-> On Sat, May 10, 2025 at 1:49 AM Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->> On 06.05.2025 22:37, Rafael J. Wysocki wrote:
->>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>
->>> Doing cpufreq-specific EAS checks that require accessing policy
->>> internals directly from sched_is_eas_possible() is a bit unfortunate,
->>> so introduce cpufreq_ready_for_eas() in cpufreq, move those checks
->>> into that new function and make sched_is_eas_possible() call it.
->>>
->>> While at it, address a possible race between the EAS governor check
->>> and governor change by doing the former under the policy rwsem.
->>>
->>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
->>> Tested-by: Christian Loehle <christian.loehle@arm.com>
->>> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
->> In my tests I've noticed that this patch, merged as commit 4854649b1fb4
->> ("cpufreq/sched: Move cpufreq-specific EAS checks to cpufreq"), causes a
->> regression on ARM64 Amlogic Meson SoC based OdroidN2 board. The board
->> finally lockups. Reverting $subject on top of next-20250509 fixes this
->> issue. Here is the lockdep warning observed before the lockup:
-> Thanks for the report!
->
->> ======================================================
->> WARNING: possible circular locking dependency detected
->> 6.15.0-rc5-next-20250509-dirty #10335 Tainted: G         C
->> cpufreq: cpufreq_policy_online: CPU2: Running at unlisted initial
->> frequency: 999999 kHz, changing to: 1000000 kHz
->> ------------------------------------------------------
->> kworker/3:1/79 is trying to acquire lock:
->> ffff00000494b380 (&policy->rwsem){++++}-{4:4}, at:
->> cpufreq_ready_for_eas+0x60/0xbc
->>
->> but task is already holding lock:
->> ffff8000832887a0 (sched_domains_mutex){+.+.}-{4:4}, at:
->> partition_sched_domains+0x54/0x938
->>
->> which lock already depends on the new lock.
->>
->> the existing dependency chain (in reverse order) is:
->>
->> -> #2 (sched_domains_mutex){+.+.}-{4:4}:
->>          __mutex_lock+0xa8/0x598
->>          mutex_lock_nested+0x24/0x30
->>          partition_sched_domains+0x54/0x938
->>          rebuild_sched_domains_locked+0x2d4/0x900
->>          rebuild_sched_domains+0x2c/0x48
->>          rebuild_sched_domains_energy+0x3c/0x58
->>          rebuild_sd_workfn+0x10/0x1c
->>          process_one_work+0x208/0x604
->>          worker_thread+0x244/0x388
->>          kthread+0x150/0x228
->>          ret_from_fork+0x10/0x20
->>
->> -> #1 (cpuset_mutex){+.+.}-{4:4}:
->>          __mutex_lock+0xa8/0x598
->>          mutex_lock_nested+0x24/0x30
->>          cpuset_lock+0x1c/0x28
->>          __sched_setscheduler+0x31c/0x830
->>          sched_setattr_nocheck+0x18/0x24
->>          sugov_init+0x1b4/0x388
->>          cpufreq_init_governor.part.0+0x58/0xd4
->>          cpufreq_set_policy+0x2c8/0x3ec
->>          cpufreq_online+0x520/0xb20
->>          cpufreq_add_dev+0x80/0x98
->>          subsys_interface_register+0xfc/0x118
->>          cpufreq_register_driver+0x150/0x238
->>          dt_cpufreq_probe+0x148/0x488
->>          platform_probe+0x68/0xdc
->>          really_probe+0xbc/0x298
->>          __driver_probe_device+0x78/0x12c
->>          driver_probe_device+0xdc/0x164
->>          __device_attach_driver+0xb8/0x138
->>          bus_for_each_drv+0x80/0xdc
->>          __device_attach+0xa8/0x1b0
->>          device_initial_probe+0x14/0x20
->>          bus_probe_device+0xb0/0xb4
->>          deferred_probe_work_func+0x8c/0xc8
->>          process_one_work+0x208/0x604
->>          worker_thread+0x244/0x388
->>          kthread+0x150/0x228
->>          ret_from_fork+0x10/0x20
->>
->> -> #0 (&policy->rwsem){++++}-{4:4}:
->>          __lock_acquire+0x1408/0x2254
->>          lock_acquire+0x1c8/0x354
->>          down_read+0x60/0x180
->>          cpufreq_ready_for_eas+0x60/0xbc
->>          sched_is_eas_possible+0x144/0x170
->>          partition_sched_domains+0x504/0x938
->>          rebuild_sched_domains_locked+0x2d4/0x900
->>          rebuild_sched_domains+0x2c/0x48
->>          rebuild_sched_domains_energy+0x3c/0x58
->>          rebuild_sd_workfn+0x10/0x1c
->>          process_one_work+0x208/0x604
->>          worker_thread+0x244/0x388
->>          kthread+0x150/0x228
->>          ret_from_fork+0x10/0x20
->>
->> other info that might help us debug this:
->>
->> Chain exists of:
->>     &policy->rwsem --> cpuset_mutex --> sched_domains_mutex
->>
->>    Possible unsafe locking scenario:
->>
->>          CPU0                    CPU1
->>          ----                    ----
->>     lock(sched_domains_mutex);
->>                                  lock(cpuset_mutex);
->>                                  lock(sched_domains_mutex);
->>     rlock(&policy->rwsem);
->>
->>    *** DEADLOCK ***
-> Well, it turns out that trying to acquire policy->rwsem under
-> sched_domains_mutex is a bad idea.  It was added to
-> cpufreq_policy_is_good_for_eas() to address a theoretical race, so it
-> can be dropped safely.  A theoretical race is better than a real
-> deadlock.
->
-> Please test the attached patch.
+On Sun, May 11, 2025 at 07:09:29PM +0530, Anup Patel wrote:
+> The RPMI specification defines a system MSI service group which
+> allows application processors to receive MSIs upon system events
+> such as graceful shutdown/reboot request, CPU hotplug event, memory
+> hotplug event, etc.
+> 
+> Add an irqchip driver for the RISC-V RPMI system MSI service group
+> to directly receive system MSIs in Linux kernel.
 
-This fixed the observed issue. Thanks!
+...
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> +/*
+> + * Copyright (C) 2025 Ventana Micro Systems Inc.
+> + */
 
+It can occupy a single line instead of 3 LoCs.
 
-Best regards
+...
+
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/cpu.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/mailbox/riscv-rpmi-message.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/printk.h>
+> +#include <linux/smp.h>
+
++ types.h
+
+Actually this one is most clean, the rest of the patches where the new code
+is introduced has semi-random list of the inclusions, please, follow the IWYU
+principle.
+
+...
+
+> +static void rpmi_sysmsi_irq_mask(struct irq_data *d)
+> +{
+> +	struct rpmi_sysmsi_priv *priv = irq_data_get_irq_chip_data(d);
+> +	int ret;
+> +
+> +	ret = rpmi_sysmsi_set_msi_state(priv, d->hwirq, 0);
+
+Please, use the respective getter and the type:
+
+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+
+Ditto for all other similar cases.
+
+> +	if (ret) {
+> +		dev_warn(priv->dev, "Failed to mask hwirq %d (error %d)\n",
+> +			 (u32)d->hwirq, ret);
+
+No, this is wrong in two ways: usage of specified for signed value and
+passing the unsigned; using explicit casting to something unsigned.
+Instead ofa the explicit casting, find the best formatting specifier
+and use it.
+
+Ditto for  all your code.
+
+> +	}
+> +	irq_chip_mask_parent(d);
+> +}
+
+...
+
+> +static int rpmi_sysmsi_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rpmi_sysmsi_priv *priv;
+> +	int rc;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +	priv->dev = dev;
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	/* Setup mailbox client */
+> +	priv->client.dev		= priv->dev;
+> +	priv->client.rx_callback	= NULL;
+> +	priv->client.tx_block		= false;
+> +	priv->client.knows_txdone	= true;
+> +	priv->client.tx_tout		= 0;
+> +
+> +	/* Request mailbox channel */
+> +	priv->chan = mbox_request_channel(&priv->client, 0);
+> +	if (IS_ERR(priv->chan))
+> +		return PTR_ERR(priv->chan);
+> +
+> +	/* Get number of system MSIs */
+> +	rc = rpmi_sysmsi_get_num_msi(priv);
+> +	if (rc < 1) {
+> +		mbox_free_channel(priv->chan);
+> +		return dev_err_probe(dev, -ENODEV, "No system MSIs found\n");
+
+Can rc be negative holding an error code? If so, why does the code shadow that?
+
+> +	}
+> +	priv->nr_irqs = rc;
+> +
+> +	/* Set the device MSI domain if not available */
+> +	if (!dev_get_msi_domain(dev)) {
+> +		/*
+> +		 * The device MSI domain for OF devices is only set at the
+> +		 * time of populating/creating OF device. If the device MSI
+> +		 * domain is discovered later after the OF device is created
+> +		 * then we need to set it explicitly before using any platform
+> +		 * MSI functions.
+> +		 */
+> +		if (is_of_node(dev_fwnode(dev)))
+> +			of_msi_configure(dev, to_of_node(dev_fwnode(dev)));
+> +
+> +		if (!dev_get_msi_domain(dev))
+> +			return -EPROBE_DEFER;
+> +	}
+> +
+> +	if (!msi_create_device_irq_domain(dev, MSI_DEFAULT_DOMAIN,
+> +					  &rpmi_sysmsi_template,
+> +					  priv->nr_irqs, priv, priv))
+> +		return dev_err_probe(dev, -ENOMEM, "failed to create MSI irq domain\n");
+> +
+> +	dev_info(dev, "%d system MSIs registered\n", priv->nr_irqs);
+> +	return 0;
+> +}
+
+...
+
+> +/** RPMI system MSI service IDs */
+
+Why does this have a kernel-doc marker?
+
+> +enum rpmi_sysmsi_service_id {
+> +	RPMI_SYSMSI_SRV_ENABLE_NOTIFICATION = 0x01,
+> +	RPMI_SYSMSI_SRV_GET_ATTRIBUTES = 0x2,
+> +	RPMI_SYSMSI_SRV_GET_MSI_ATTRIBUTES = 0x3,
+> +	RPMI_SYSMSI_SRV_SET_MSI_STATE = 0x4,
+> +	RPMI_SYSMSI_SRV_GET_MSI_STATE = 0x5,
+> +	RPMI_SYSMSI_SRV_SET_MSI_TARGET = 0x6,
+> +	RPMI_SYSMSI_SRV_GET_MSI_TARGET = 0x7,
+
+Please, be consistent in the style of values.
+
+> +	RPMI_SYSMSI_SRV_ID_MAX_COUNT,
+
+No comma in the terminator entry.
+
+> +};
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+With Best Regards,
+Andy Shevchenko
+
 
