@@ -1,41 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C8F252908;
-	Mon, 12 May 2025 16:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DC225A2C7;
+	Mon, 12 May 2025 16:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068881; cv=none; b=otGlI6WnEV+YpCy6kDTAzv4ZZOGSp0au+kdaLSZj4iJ7Ygeu2MScwYU05k5Z8WOj75s7hpJli85RfdE149RU90E8pJXs0/10nTSmyRxo9ArzlPqjqJ9VoDWMFT28bCN5mDPnEpBKZO9kPj2uBUs6huh50QR4zqcqdUbxMFvf59Y=
+	t=1747068886; cv=none; b=gNNFWj6AnUW+n8BfJtVDLe9VdQp5Pv3F2eYbi+zyEMV2bBngfs1QdD2vv01wrQ3ElRcbntLhxMUUayv+C31Ct4MKEqHK8e5BSHm98GYrFIISHYM6Dj8dqWGgXg1SktidNW097xTIAXYJ1bttu4B0Bq20ekJyuBkWfxLxbGiiX54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068881; c=relaxed/simple;
-	bh=DOkieu2c/As5OFutbPhmnXPXloxqiulZTsFGw/r3wro=;
+	s=arc-20240116; t=1747068886; c=relaxed/simple;
+	bh=GHfBzMz6hvOT4FNqopeQP9A6JOY7MLEh312/qsRWIQc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=akwh1qmoyqNF9COid536zTNXlbOmacQ3X3fIMYxSICUQ5SB7XX4tL1QAv1QLrxWM0s6FBWT2LsKFw+VTlaeNzT6BtFUb/FowVhSD51ZSaFc9TIOO4P+ksJ7KZGHiW5u82Cs//XsjYyQ5Akc7of0BXim2ohDj07NCJEBOLyf8mcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJoJ5l++; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJoJ5l++"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC02CC4CEE7;
-	Mon, 12 May 2025 16:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747068880;
-	bh=DOkieu2c/As5OFutbPhmnXPXloxqiulZTsFGw/r3wro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vJoJ5l++Z+dcFY6SizXnpd6EHzB6naYhpvlSsblZ51SAuS6wfPtcPLCkRGQR0s4h8
-	 5v97FKgpO3NAs8jDNfdQWdsmDSYYLH/CF4l4rAOjzeQTZlcAAIm4LKRvCgKkwqZFtZ
-	 NfTlv9g9LbWEypPlT9nxKjw4zIJ/6T+RZP+BNaxqpY7SpQQpb+W8jMZH7Su0TcCCmt
-	 shXg7d08i3t/ttvGQEtWpA2bjIakKI0vlj47i8w6shFrdkl20vuTEmepWLuVI/YkRc
-	 vBuw0jNMChoLvzO2yxPGltjbQHgmfi1EDH4iAJ4/QjRr4+KCOT4yauk2ecxXOIIdaq
-	 1CEwRKbhN2i0w==
-Date: Mon, 12 May 2025 18:54:39 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vladimir.oltean@nxp.com
-Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: add bindings for QIXIS CPLD
-Message-ID: <20250512-festive-aquamarine-junglefowl-572f90@kuoka>
-References: <20250509152940.2004660-1-ioana.ciornei@nxp.com>
- <20250509152940.2004660-2-ioana.ciornei@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qaLWhraFrr2QZyd1mkAQStejcCw2GGOniGUG+Cie5HWijvECIklSw4E9wDuS9uoboGFB9N/JSCae7dhcIoiPbxh4v+5szCS8LUj4C6vkNzlyemRLh+WRepX8PiSf1OyJUrR6p/BK4kxr6Hc67mR9YQzedwPwZSaHAgFZLssBXOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F219FC4CEE7;
+	Mon, 12 May 2025 16:54:44 +0000 (UTC)
+Date: Mon, 12 May 2025 18:54:43 +0200
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Rajendra Nayak <quic_rjendra@quicinc.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Souradeep Chowdhury <quic_schowdhu@quicinc.com>, 
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alex Elder <elder@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
+	Bart Van Assche <bvanassche@acm.org>, Andy Gross <agross@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Georgi Djakov <djakov@kernel.org>, Loic Poulain <loic.poulain@oss.qualcomm.com>, 
+	Robert Foss <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Taniya Das <quic_tdas@quicinc.com>, Sibi Sankar <quic_sibis@quicinc.com>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Imran Shaik <quic_imrashai@quicinc.com>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, David Wronek <david@mainlining.org>, 
+	Jens Reidel <adrian@mainlining.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-scsi@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, linux-remoteproc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org, linux@mainlining.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 20/33] dt-bindings: i2c: qcom-cci: Add the SM7150
+ compatible
+Message-ID: <20250512-incredible-radiant-jackrabbit-d0c77b@kuoka>
+References: <20250422213137.80366-1-danila@jiaxyga.com>
+ <20250422213137.80366-4-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,71 +69,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250509152940.2004660-2-ioana.ciornei@nxp.com>
+In-Reply-To: <20250422213137.80366-4-danila@jiaxyga.com>
 
-On Fri, May 09, 2025 at 06:29:35PM GMT, Ioana Ciornei wrote:
-> This adds device tree bindings for the board management controller -
-
-"Add devicetree bindings...."
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-> QIXIS CPLD - found on some Layerscape based boards such as LX2162A-QDS,
-> LX2160AQDS, LS1028AQDS etc.
+On Wed, Apr 23, 2025 at 12:31:24AM GMT, Danila Tikhonov wrote:
+> Add the SM7150 CCI device string compatible.
 > 
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-...
-
-> +title: NXP's QIXIS CPLD board management controller
-> +
-> +maintainers:
-> +  - Ioana Ciornei <ioana.ciornei@nxp.com>
-> +
-> +description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +  The board management controller found on some Layerscape boards contains
-> +  different IP blocks like GPIO controllers, interrupt controllers, reg-muxes
-> +  etc. The QIXIS CPLD on these boards presents itself as an I2C device.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,ls1028a-qds-qixis-cpld
-> +      - fsl,lx2160a-qds-qixis-cpld
-> +      - fsl,lx2162a-qds-qixis-cpld
-
-I think my question why existing compatibles cannot work is still valid.
-If you responded to that and I missed reply, please point me, but I see
-I replied on 7th May and you sent it later - on 9th May.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  '^mux-controller(@[a-f0-9]+)?$':
-
-Either children have bus addressing or not. This should not be flexible,
-because rarely devices differ. If devices differ, then you need separate
-schema most likely.
-
-> +    $ref: /schemas/mux/reg-mux.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
