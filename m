@@ -1,67 +1,67 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8400F21C9E8;
-	Mon, 12 May 2025 14:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D03D218845;
+	Mon, 12 May 2025 14:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059796; cv=none; b=Rfyt7Mv5xUJhDqgqWoAV0/P0g0LjtymWd4xgZz8O0MwC8HHBvD8UTSVppM0MMdNe1/K0ehJJ6xF6WWx6xXdCpIo5WN4eUTZsi/IvbcAQpLRuYactuMK97aS7DrrZb0TuXM8iSZ0sFqMWbwGXa61OAiCZGId6/aC63ZcOdD7QCMY=
+	t=1747059804; cv=none; b=RCQujQs8c35ip7qwHoNI0nEAeULNkuN+gF0DGZfDI4sHWzAxzgwAOyBFiAUeM4SUwTJWRyd9tNstsOirSO702qr4LkG0Wey5cjPcPKbscPYAYRJwhQ6WlshrVyzNeZSYKR8A/oJzZ/dBlmEeeAeTORXhGmAZVRgz3PGyas6eEk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059796; c=relaxed/simple;
-	bh=ZLTORN5u7xcGbuKsv3Ru9a7w59Xjk8sOypfmX4XRREY=;
+	s=arc-20240116; t=1747059804; c=relaxed/simple;
+	bh=tPQCzLZn2R2UK9DRrnxinSUKssq3JGAVyBqb0dtvrEs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZrCgGqmAjP6Lff+NZVmg3/oKmZTh/2q+JjGiXsM02w2Weim8EK2LhGw0GIaxX+S5fvBDN2DcQ7hr+qBtnkwTjapqQwUAd+mZTNiqs7xyoaMDvqdq7m8snjufEJp5t6/HEXZtVOuYiIDdnNIjvTAgGGKEjI01RfykIufMstJ36Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipULPwnM; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:To:Cc; b=MJIk1GjKyUX+UC50morS6xx8kYSQv73bp0aEvBC/ibffaZoxGWcFHGpXbQlKHGM14oclHVNwhckRSTn4ycCeI/PnVwY0YUbGSm8mJWb8YIEI67g/V30UjNDYU6s0xFlqA/n3EBZsoXn/h21QSFPbr3P1y5EUa3pD+2eY5re19y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QPcpxdVk; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipULPwnM"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb5ec407b1so787115066b.1;
-        Mon, 12 May 2025 07:23:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPcpxdVk"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54e816aeca6so6355507e87.2;
+        Mon, 12 May 2025 07:23:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747059793; x=1747664593; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747059800; x=1747664600; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TjdqA5SphZm+l2ts69ztB+ZwZbqHkrkuYbQuDIwGCqA=;
-        b=ipULPwnMmdnzCMoF8BDGF+AcMIKvZ2fpHk+VIScUcZ+PlsMkSzpVJJkRfcm0zw370+
-         mCJ6TYZPufzR6LebcEz3V811sdYBphyw8kBJoH5o9U/Ag4jBVnvXZ9GRnpvPEpjPvxU4
-         wTWEWIpNCq3Vm93bzI1AOh21BKDDRDA7X0OYOQ98de+p8JDqaz0+1nW+PIH9U/PW9c6m
-         xcjsHwK5rWuQowEW3dV2Lk/NcoDkpyBXyG8VXl0oYr2Xaz1BAtqZ64Y/P79oHJ6pAnA1
-         SaTXsus49ZGjyK9CaCgj5oFPEtrnb94UqT2ia+zjf6X28xBsRH84LQbBRPmVu+1/0UU4
-         Qh4A==
+        bh=3gAHy2dqHD8XlNE+NQO8OdbzNGj6fStBzDiksNNBgM8=;
+        b=QPcpxdVkMdojOFVWdIht426iF93H/n2bHhFpVyAtCqtHE3naJoxu5rkr/PzsE1+V6r
+         f7dlJU5Y22wDM7WHZ0vyqUwMK6REcLKpfiEw+NSWLIjPzxQupDhIR/pzVVhMzggmnk9R
+         fO0KAjKrvi4eSNbeLiRYSRlLWuhYBpQ9ZdfugNOB+tJ9FmIk/Aeg2Xzq58LQASavhibL
+         W/Acs+/01K7N+99ggmzfeaakIptvAAHrdvisYCiCc27cBmhkGr5V4VuARveIU8ojTuI5
+         nVyxUSEOsAm0WyYlFJbjX10sPWl8f4VuKiavBzAcJbND8h/+CvlJSlA8N/z9f1gZHD0c
+         c71A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747059793; x=1747664593;
+        d=1e100.net; s=20230601; t=1747059800; x=1747664600;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TjdqA5SphZm+l2ts69ztB+ZwZbqHkrkuYbQuDIwGCqA=;
-        b=H1WaTxE35xP2C7BtXoZEX05llfTjDT5fehx8uBnxt9sL3ovaqb9lv6T1OiTHk+j/dp
-         KFQ4y57GqDW6PQjugnCCZAuWVBH1Jv7KHxzGjP7IPf0uUweMflIKmJiJnV+4tb9QYKOe
-         BVL+6FtiX8ASfcs9IJosZNT8ymV6GsQnQT8UmLDj66vTrHl0LqvtGoLMuhr4g1s6zZGc
-         TVy4w+6b3R9EgkvsN7LNkhugK+4qCX7xI0COZJRgyx69UTzzL4Fam4plKr9sZJduvXm4
-         Z+UgIsqH6cvAXF04ex+zi5OzmqXL4MYEz9g5e+Xzdq8HzRyFJPx2Ah0XSR81Zfme4VKO
-         anOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUqyo1uXYGToJJ8dVw1I4/uhhy5OHE63+qydFdFpj250EedAHtfmzdO5l7N2lFiYNktm++a+xik2FDpeCE@vger.kernel.org, AJvYcCV7KS7HYYhM+1egXkPUC156jAj12sHeyRQzWZair6bwWk4RyJyQPzge/OkndcR+X4X9edRJi9FyfOy/@vger.kernel.org, AJvYcCW13Dp2dPnLj/y3i5kyZMVt6IYsX6u60F53p0xWJMLw9bG47D7aM/qjhrNRQrEzqfBvmrfznLQY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCGdBsWAc3CdwKp/eYSHR1HRHh2P4YesmH1hRkqE8+JB8UEQ7X
-	1rz8haKSCaX7QoJk8rM72hggeSMp/OtlrcBCDIRr3nevWV/Wk+FM
-X-Gm-Gg: ASbGnctJ0GvJPELcXlwgOjAf6k3fGhPTrfEsHyTMbXdFKuapcwt76yl22WJX9a2qqt6
-	smhUueXQv2Sq2fN76M1p0cwIIPCooDH+TVTf4qFUvOxfCQmL6o5mQSC3GaFtHK79wKA5zkfbbBi
-	ZGVdZrkipB/lQNsYH1sXRANikiNXd4IbTa/4cecgg/ae539tpokEvJGedCn+yV05Uf7WjSRbwwg
-	1swE+10EG35kbNwybiWNtbzJLirJKbFwodNFfMsk4Ug5YUpXcOIgFOAMorn5r5RhkSuTzBz7ptD
-	opUZmVxBPkCB/z4XSMD44uZc/TcrkrlP6htkKg9GfBLzgipkzawzTYIB+jwN8513uw1s8XVTTMB
-	ITgn6TcjwxGuGCnQ=
-X-Google-Smtp-Source: AGHT+IHY89ib1m+RqAiIfHD1t0Lvi8Km0tjdoUyONCMCestwVPtVg38jm6cI4xiUm+sBXYxZlhwWDg==
-X-Received: by 2002:a17:907:7a8b:b0:ad2:3fa9:7513 with SMTP id a640c23a62f3a-ad23fa97742mr725361766b.46.1747059792642;
-        Mon, 12 May 2025 07:23:12 -0700 (PDT)
+        bh=3gAHy2dqHD8XlNE+NQO8OdbzNGj6fStBzDiksNNBgM8=;
+        b=mK70ZacLELqUVI0QyQxeoQNu59Yip5hEAoOyvxfJwtNOV3Pv+6qLgHq/3n6cIaBl+V
+         MA86CgLNzSyl6uGAwo/3/12OVibJllt0rXRI44XwwpjlPYYaPNIAxqMD5T6M5zZ0+1wi
+         f2zuf/jdkyi83q5MV2NyaR6SIwYClhHjqu+XSiYA9+uKxYuVW6BppkjgcsqmBwVQvcb4
+         d3umRTzFMz/VlzgbTEoDEVAa/zeZRd2eEAXgVH+FeYqfEWRt+5BWdoqCOEoetbsSE7oh
+         b5QsrTmsJaDRjp08u/WI8THHl4Z3v8ojkTv0R4S0Z3BbDpJbWrH0Q8opiMylNgigyWax
+         oihQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFo7G6npiTxgCkcFxdmFl4LVgE38XpiNuve6R4yI0ASyGIb3MQy3mJnGtcfOT8PzYVKuOwptWC@vger.kernel.org, AJvYcCUM9DGTX23dSRQmyuarg8iAYwukdpqJuTMJOGNjSz4Q85oB0VHYGiZ4I1BG0jErSOYsAe3za4Il3PW9@vger.kernel.org, AJvYcCXGsugjEdmUAcMp9dg77pMknKa3a0jrZhW0gtYZnmgIl8XgAGpkvoZ/j/DfH4MeYtUjBdaGhwc7mAmLymPp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2hNBgnr9cxVyX7BpHaQ1AiVvmBw4hTZ++LVkco5ZBHaxW6pZ2
+	tJnje4yQYf27YbErNBTAzUQk3aPYV+Uk3IxsofUez/XBsygnAx2jwsBJDA==
+X-Gm-Gg: ASbGncsUm+zA11cPuL1H3IXxZldIwNer5lNcsD1zcWAA4wYt0p5NdqiDM9myF2aPE2a
+	Nmz3hM2FrEccobj32GWtELr7RLFHMmlnDROUc2GlxLI7F68x0tPIClI6o9uBeL/5NtfaS5Ma/1w
+	a99JGzT6DlTEdzgVuMzKP+Z8mAPG+y0T0p4A1n4ELueGougBRdMyj89FOVpDqwXRjKX8bwT74gj
+	bjdGSZrPqDJkc7WZg2KdkijkqKMHtubQbJRDw6mpfRX0XjneWeoyaOT7BmxzAe+3I3AD7MDTOxq
+	3yVc4F3GanVN948Md86Xqulm7RyW4qskAGTWyVPINgvrjbids4O0pbIAojnPzpwtz1PHCCo3WII
+	2R+/T
+X-Google-Smtp-Source: AGHT+IGgwLVhY4Dppc9nKpM99+nmIcpUTBUiHOn5t/pN1WR9JabBYoC8Dok1NUb/mKsm5Hmdd7j+iA==
+X-Received: by 2002:a17:907:613:b0:ace:f078:e08b with SMTP id a640c23a62f3a-ad21916975fmr1032950066b.47.1747059789964;
+        Mon, 12 May 2025 07:23:09 -0700 (PDT)
 Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad2197be0c5sm619626866b.153.2025.05.12.07.23.11
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad2197be0c5sm619626866b.153.2025.05.12.07.23.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 07:23:12 -0700 (PDT)
+        Mon, 12 May 2025 07:23:09 -0700 (PDT)
 From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Mon, 12 May 2025 16:22:43 +0200
-Subject: [PATCH 7/7] pinctrl: armada-37xx: propagate error from
- armada_37xx_pmx_set_by_name()
+Date: Mon, 12 May 2025 16:22:41 +0200
+Subject: [PATCH 5/7] pinctrl: armada-37xx: propagate error from
+ armada_37xx_pmx_gpio_set_direction()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-pinctrl-a37xx-fixes-v1-7-d470fb1116a5@gmail.com>
+Message-Id: <20250512-pinctrl-a37xx-fixes-v1-5-d470fb1116a5@gmail.com>
 References: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
 In-Reply-To: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
 To: Andrew Lunn <andrew@lunn.ch>, 
@@ -83,32 +83,43 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  stable@vger.kernel.org, Imre Kaloz <kaloz@openwrt.org>
 X-Mailer: b4 0.14.2
 
-The regmap_update_bits() function can fail, so propagate its error
-up to the stack instead of silently ignoring that.
+The armada_37xx_gpio_direction_{in,out}put() functions can fail, so
+propagate their error values back to the stack instead of silently
+ignoring those.
 
 Cc: stable@vger.kernel.org
-Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
+Fixes: 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
 Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
 Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
 ---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 18c6c5026b26c294ee65e3deea02d2e852e10622..f35bf0cd98c97419ba0ab0291a23d4774a595d39 100644
+index 2e88a0399d1a205064b58890db6477e2202bf311..aed0069b085ced5867993e95e0244df7ccda556d 100644
 --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
 +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -358,9 +358,7 @@ static int armada_37xx_pmx_set_by_name(struct pinctrl_dev *pctldev,
+@@ -472,16 +472,17 @@ static int armada_37xx_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+ {
+ 	struct armada_37xx_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+ 	struct gpio_chip *chip = range->gc;
++	int ret;
  
- 	val = grp->val[func];
+ 	dev_dbg(info->dev, "gpio_direction for pin %u as %s-%d to %s\n",
+ 		offset, range->name, offset, input ? "input" : "output");
  
--	regmap_update_bits(info->regmap, reg, mask, val);
--
+ 	if (input)
+-		armada_37xx_gpio_direction_input(chip, offset);
++		ret = armada_37xx_gpio_direction_input(chip, offset);
+ 	else
+-		armada_37xx_gpio_direction_output(chip, offset, 0);
++		ret = armada_37xx_gpio_direction_output(chip, offset, 0);
+ 
 -	return 0;
-+	return regmap_update_bits(info->regmap, reg, mask, val);
++	return ret;
  }
  
- static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
+ static int armada_37xx_gpio_request_enable(struct pinctrl_dev *pctldev,
 
 -- 
 2.49.0
