@@ -1,258 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A38E1E1E13;
-	Mon, 12 May 2025 15:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747063039; cv=none; b=YqtHl7TVIFux65QRIe5YMR76jgopOxy2Z4OTwbsGs2Q7JuBayMDlimf3dTay62i300yvrZBc8R2vZVw+i3snh7f3VXMLaMp9UYvI48PYQHd8j2UxUtRYbxV/QjmeD/4do0tm/Tk1/7aYtatf7V9XU8x+Mwgv5Xk7byWy4yISfKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747063039; c=relaxed/simple;
-	bh=oAWdziEgI+nw9iP7oOY5IFlXRYz32SoF5DP1mhuHrP8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ExVe1iZB8UeIWV0qeNbCMOBTq4ayTFymig5UDCgAqqgyAsUS7ejr8X4uf1fDaYCaoTsQamqjSv/vYuUmv1eXDHuyiJbK1kksBqW+b33dWHNhZLHtopVtLcHBeU9cDDLJ4FOysEMcL63V1HLeo3Y0DASyiW5n2JmY6dvZlkueO4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2AA014BF;
-	Mon, 12 May 2025 08:17:04 -0700 (PDT)
-Received: from [10.57.90.222] (unknown [10.57.90.222])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12CC53F63F;
-	Mon, 12 May 2025 08:17:13 -0700 (PDT)
-Message-ID: <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
-Date: Mon, 12 May 2025 16:17:12 +0100
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405871E1E13
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747063088; cv=fail; b=oqQMGZWziGwDpGTIgHypRLHbOR+9VKThGy+L4y/cAnu7Iy/4xxikP9EL8i0D7sxvL63HoH/jZk2J9Gg6IE9sS0mMlowiexFgckUvSwiN3jHhMqgTh6wH7f3fGoq0Hw2n7szyO4Jgh2hbvtgLyqYh+ZNdPHhCiS6AvmQhfmdhRAY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747063088; c=relaxed/simple;
+	bh=CVw66ZCbHxwEzXZDunKRUZpx1oPf+9609xTgqzcavlI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pWAksU/s37xrwYALXdMuT8Ndsnl/10nzaWCMSih/L7BHPmSQAbLofhyXyLl7WpJdKAUhg1JY/ees3NddE/r7s+Z1nGSx7JD/HtPWWr7x8jK2GL5A55X9wkomQkU5UbKiX5OcWYCtlkg7ryfhvrwVCoeJF5bg1+Bm1hy+/kBtcuo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rwWgSNx0; arc=fail smtp.client-ip=40.107.236.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rwWgSNx0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NIf4xRKjWeRUx/VGGxi8C6lY39WZqrOKWVn9dsvE8wpNVoxTuIPwwhoRxEhoUp220DM9/GSHB6rgMBq+FoPgJJcNyFC+qvM+Rpn9Bh/cZLLHL82SfukdbSuQM/+cTIewUb7HY1ggQ8MVkQN55Dd+EByUHJ4jelfAUXY1gm2iHRZEerp0i0zkE4oB3VSYK2Wrcs6B+UXByNAvn5+FJV04pDJXPPivSrWYln+B1V7+06j8UoUzWj9vLvP0KKhULJfXgaRAKo2qyQi1J33S7NWbKBghkl/8l5zsCFghhjMLFt3+JQSb5E85a7DuxAC8RPLCUZEV4YkRjp4WIjSCHIhATA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ddzvfG8aLod7gwu3Xn35NNiTnYfQQbbRYWmiwPScr1k=;
+ b=Sebmvytun7EMZipK5Vw+7fWtztQ840Kq5dgxwIJC3B0vNOeRjK7G0/oAbtZyBz4n+UTQJ01CBWKOgh5j78/c9BfAAI3RQmmPQ36E1i0PQO2qCCmR28/eOBfUS9xOHFDf3fz/t7SOqEFfSY2ZZTI7aX4d5ZV63XPUwjPggWqNVv4zM91eyTvKSPR7fEUBPtxQqGuRqBogqftwdZPZ9cjXcdpfwI1CQOAPa9x/KMtLESllEBt3uu0IheRn6ei/ZDdu9poSNIWLLAuGr6OKi3zzHNJkc0TO3al58G7afJJjSfdCUf7HJyVRx0MoFw6dqhyK59bseatFrPxABA0SQbMd5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ddzvfG8aLod7gwu3Xn35NNiTnYfQQbbRYWmiwPScr1k=;
+ b=rwWgSNx0ap7ugsT8ctYUuplthDFgwysw2Gya6eSK8f+GVzmuP+y6EGDYYv9LinDWBRsZNUtH3Bu07ET/AKUEV6zR4sLG+EzEggFhNTPyRcsNuV4WD24Lm3qKa731OsWki/T9oYz1ai1xfr351wVdPI6O5eo/VcnD4n53rHwFpHnxXW6esZ6z3HGcCmDgVj4ZcemZbdqljDf/mnzbKGAcUmh2GsQ/qy8iW5xcPpPM+5r46SyjCQ2pBqenR1uevq9PUWqYY6O/6UXbG008iKyfDnw5t8DLGgr1eP/0pzzqh6Izi7wee5+DcRbKZ4nlgAlB92o2zU3TxQN3za0o47ILbw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by LV8PR12MB9619.namprd12.prod.outlook.com (2603:10b6:408:2a1::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
+ 2025 15:18:04 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%7]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 15:17:58 +0000
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH sched_ext/for-6.16 0/2] sched_ext: Extend usability of scx_bpf_select_cpu_and()
+Date: Mon, 12 May 2025 17:14:54 +0200
+Message-ID: <20250512151743.42988-1-arighi@nvidia.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZR0P278CA0140.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:40::19) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] binfmt_elf: Move brk for static PIE even if ASLR
- disabled
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Ali Saidi <alisaidi@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20250502001820.it.026-kees@kernel.org>
- <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
-In-Reply-To: <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|LV8PR12MB9619:EE_
+X-MS-Office365-Filtering-Correlation-Id: 533090fc-1b81-4bb8-8823-08dd91682dcb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cliojDVRr1ykK4T5Dolt9Pt5nRiBFFyJHiaB7KKSpA/60PeJ+SjH+LA65Wcz?=
+ =?us-ascii?Q?zJshmm0vcUQFCbVLMGauGMeXaCR2tFiJ9f24XONPMlXjvEgW1VAo818hJGjZ?=
+ =?us-ascii?Q?brF8Wv4L5Qm/Z/y34AHz+YLl50ECVfwMLInWKFBqdinv9HME00XRU84Kd7wo?=
+ =?us-ascii?Q?o5J+c+iVgPPOkfvVsP2Rcwutlp6rbFRN75EaKwGsZGq+fdivKyakPN8g8PY3?=
+ =?us-ascii?Q?n9+MtKkI6F2nxvYygIzvxQuEGcmdbyZh7YOjKK1ITYbo0tbluP29RacLY3Om?=
+ =?us-ascii?Q?FTkxqJiTyr9eMznRh3WfyEfzW6Es9aYSBsLHRAIs2SsnhuGbKeJG8o1MseGA?=
+ =?us-ascii?Q?JJ2YboFOad5OHblBxHlNIUnDcYdmXCs2EMpn9ELR7OFpudIPBboftyBUhrF0?=
+ =?us-ascii?Q?kpnebEV5ZWnf41YppcNQOpcgQxbwozrXAGktDtlags8bjsalTi0LoW/PX3uG?=
+ =?us-ascii?Q?MNraQj0/uMehmi4fF43cqVWBwkGaBtJetJk+wxI0FzBLASsP/pPciLpf/8Rf?=
+ =?us-ascii?Q?W9+0XDCsfjEnoN7+R9na6WFT0QbB7EHbfHob9YlsD+mUlUa3G+lzXmupTGJj?=
+ =?us-ascii?Q?bZhQfvikqUT+TBRjddYy6iMJwcQw2ItEqds7NUtJWfgMi0PZ7YTcYLFNxowT?=
+ =?us-ascii?Q?z9rKghDi9w5DXse11Hl3EBylkk+beyDd/xJxPSRifA5bqDNOV8o8HrN3MiUs?=
+ =?us-ascii?Q?Ug1d5jOKLQpTOwTrS8HnOpnqBx4bisKBo2M72u+mmLWvaGGNEWPfW6rB/lwj?=
+ =?us-ascii?Q?myfOXFT/LLC+n3OoHUJD7768gjzE6r9mfqYBQ/kMQrOi4/3kO5ywxdJeJpm9?=
+ =?us-ascii?Q?wLQuSICRLw1Y8AGg+ENmD31iibLAzFv0g2U1VJshfePygEZ3+s9/p7wJu6fC?=
+ =?us-ascii?Q?vyQt7Q9SLnpC8tfA3zNUfEv6FI6CxBk0S4O5LeUNzfY3SN7boCmOpvKTrWYa?=
+ =?us-ascii?Q?oGKDDn/byrJ6RLWWv0Ft75sULmyb6tfGle9m0d+JACj9jdB5jMLIzsgP+mat?=
+ =?us-ascii?Q?ZvkaBIlHYLERqB+svJgBCguCSNgtMuIJJag0gBdnH7makNR2v0hfwxE7lANR?=
+ =?us-ascii?Q?a73/4nPVC1ENdoAvCH3XelxxEJ9PniXrlYtjOEQQo2PPLs7zTdfLptK+h90f?=
+ =?us-ascii?Q?4gnxwNkBcCr+EAVnzS4aC+khLCeGp8sGMM4E73gLDwKnO/Bmyvwo43rvZi1t?=
+ =?us-ascii?Q?799VoUVTvYf/xaBaR15ef8PClzYTGAGC1iHuCe4QhNv/551hOKqIlFtHHzWo?=
+ =?us-ascii?Q?rLWDiimP8JR4OHqDQBA2Vv9cBTyvf7kC1YhDx0C535m6EDzAjLvojyCZ9z2u?=
+ =?us-ascii?Q?IEIOMeQo04du129REAMaBdoQ6/0oMjMBo8wMT0cIuHO90M6TuoL06IhPgCne?=
+ =?us-ascii?Q?i2iCFKfs/nxsus0vwhEhLSNCkyhKbkRqdwoHlq+xHsBNM2NjawZxIXqhHi/G?=
+ =?us-ascii?Q?G5/V4VNo/uA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?edFf4T64nNAoic9wwnf4bo6DaSgYUqTPCCLVHw4jJDlx9NsPRrL8DXc6CAH7?=
+ =?us-ascii?Q?sPQIrXHO3NmT+Ajw/R0+fUZbv/rJLc9rxq+fRbwDPPVsYYZZDrKAf1X/yHFH?=
+ =?us-ascii?Q?VJlatuMF0SrJUo6rBMD9GU5UW/cE0RXSs3NTdf9qZC3ur+5ShkOujGl5X2C9?=
+ =?us-ascii?Q?e6BJlpkvVkDzoXjIKIyVkw5RARZc9Z6mZgsiW0bq/IUtM5RcZQggFcJkaFB8?=
+ =?us-ascii?Q?r4eIQ30qRnO8k0F+HIWmzXIirPPct1jw2lXu7OsipKDQn1gG/QORbq6vZJU8?=
+ =?us-ascii?Q?D7/gtkq9MHI6fHE/+hDenBbOPM5dC3tqQSJX3ra1OEKKG3RawJXE/V/0zp/a?=
+ =?us-ascii?Q?IMJaugfpQ/dFAoSFtMvp1tQDPP7UVvElRHGIJaoJVACyC7/pcxIETyAjka1F?=
+ =?us-ascii?Q?YWm6uJYV1itOS9WikIWA+YkQP/qlKAgyFo5gWV8bTBUTl4Ze2vceyvDvVRay?=
+ =?us-ascii?Q?9veDm6tMjB3bQ7d8GZHNhyiurfUCqRnyiqJ9Bi81uJDmBBro7sfnRt44olye?=
+ =?us-ascii?Q?rXrqgdCr7lR6lEqMtJIKuaSn3aFfkyvgA9VEzJPYcJf6GdezcAVrqZpuc4sr?=
+ =?us-ascii?Q?rGXQsnITuzZ3H3+nMG1GM9yszU5CFcYqpGc0HQcQMIDAoESTb1p+QTEVLabv?=
+ =?us-ascii?Q?Z6NH6UwvYQIWQ3p0GxOHkw2wM0cxbnYBf4+3g+Ue8XLtl++3KDwQrLh/onxr?=
+ =?us-ascii?Q?P+U6Z20V+4kKO7D8HiQPOzCJ8KBKoMTZI7T8zXNPtq0CzHl0slbxnZX+AxwM?=
+ =?us-ascii?Q?JOOura8xdEPVcaHQ9zUbvRrmIpAX/4Rw2GnOH2WXRKqvSF0bXXY2+MsrDCOM?=
+ =?us-ascii?Q?GIdc6IlaWlZ2LBVf15MWE9gg2zKqmNU+95q0kOQ3lzTBNLHlpb7G0NRDJGGC?=
+ =?us-ascii?Q?0R/n3NQ4FH8U4jdBQSkZXfwRo4cvRCWosFI4jKSS3ZN1a8LsYWAvmpoQ3t0P?=
+ =?us-ascii?Q?eyLQiwnTkzVl+NKS72v7YBpkTaJZiugAmafbTeYYhUKRVtwpb5sbOO9IPYOZ?=
+ =?us-ascii?Q?mgm9M4ZmUbyDIbA8DlhE+aDQQ6yYvMe9xTNKdMd68ZAy6PhhoGOyFh/VbXaE?=
+ =?us-ascii?Q?ggMtBbJ27u+V8WAnhjc1xTLYpmr4xhhzydoJlqiLtcvLHSM5YdisgFJomsF0?=
+ =?us-ascii?Q?Ia70wa1ELvNUWDlOj0sHYM2JBpTxyFUgkA7kAq8MdxRadlw4ZGmctq2NNU7e?=
+ =?us-ascii?Q?hXs3mCmMZb8fW9Dz3TmpSIzqJFAINTO8zyYB8E7W5caBjlyIh8tGCyE3IGzj?=
+ =?us-ascii?Q?Sf280fz3urv0pCYjgH5UKeAnSJsLo8YGk3kPNd0Ob/M9zkMMgWo9KLYQMDi2?=
+ =?us-ascii?Q?J/JKemuYg20wFWe5+92stCOi1xp4raQOQAafDVy15AuzdZMK2qhspX8mekyR?=
+ =?us-ascii?Q?IQ1T1kyeVmU8mwj7OVa9pgYUh4ggIQDYvrHGir9/XyhXY6+2eI/WCmJx4uBi?=
+ =?us-ascii?Q?hpqeVeLKtwlauF0H9kB3nzioXhmvdxekDw7dxKtTYunRGD8EmWSJPXZhHkcf?=
+ =?us-ascii?Q?E76OxvT0jAa9zp/BFxcKVM0b3emKibkt0sMd++3+ax4zh5YIjwzd4GrQu5/3?=
+ =?us-ascii?Q?2rplgFLP5NuYwpfeGJwDLHvScUrCSCnpOUZeOaQ+?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 533090fc-1b81-4bb8-8823-08dd91682dcb
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 15:17:58.8304
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M1jYKOXmZqLXGuZXPcEUCH3VAJZLS8fiLKP7KA9q3jUyDBYGd6avMIlxmYtm38POLtMIMw8l6fGohQ3Lcigz4w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9619
 
-Hi Andrew,
+Many scx schedulers implement their own idle CPU selection policy, which
+may be invoked from different contexts, not just from ops.select_cpu().
 
+For example, some schedulers may need to trigger a proactive CPU wakeup
+from ops.enqueue() after enqueuing a task, while others may expose this
+functionality to user space, relying on a BPF test_run call to pick an idle
+CPU.
 
-On 02/05/2025 11:01, Ryan Roberts wrote:
-> On 02/05/2025 01:18, Kees Cook wrote:
->> In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
->> direct loader exec"), the brk was moved out of the mmap region when
->> loading static PIE binaries (ET_DYN without INTERP). The common case
->> for these binaries was testing new ELF loaders, so the brk needed to
->> be away from mmap to avoid colliding with stack, future mmaps (of the
->> loader-loaded binary), etc. But this was only done when ASLR was enabled,
->> in an attempt to minimize changes to memory layouts.
->>
->> After adding support to respect alignment requirements for static PIE
->> binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
->> for static PIE"), it became possible to have a large gap after the
->> final PT_LOAD segment and the top of the mmap region. This means that
->> future mmap allocations might go after the last PT_LOAD segment (where
->> brk might be if ASLR was disabled) instead of before them (where they
->> traditionally ended up).
->>
->> On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
->> a static PIE, has alignment requirements that leaves a gap large enough
->> after the last PT_LOAD segment to fit the vdso and vvar, but still leave
->> enough space for the brk (which immediately follows the last PT_LOAD
->> segment) to be allocated by the binary.
->>
->> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
->> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
->> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
->> ***[brk will go here at fffff7ffa000]***
->> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
->> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
->> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
->>
->> After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
->> implementation"), the arm64 vvar grew slightly, and suddenly the brk
->> collided with the allocation.
->>
->> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
->> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
->> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
->> ***[oops, no room any more, vvar is at fffff7ffa000!]***
->> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
->> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
->> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+To maintain a consistent selection policy, these schedulers often implement
+their own idle CPU selection logic, since the built-in one is only usable
+from ops.select_cpu(), leading to unnecessary code duplication and
+fragmentation.
 
-This change is fixing a pretty serious bug that appeared in v6.15-rc1 so I was
-hoping it would make it into the v6.15 final release. I'm guessing mm is the
-correct route in? But I don't currently see this in linus's tree or in any of
-your mm- staging branches. Is there still time to get this in?
+To address this, allow scx_bpf_select_cpu_and() to be used from any
+context. This gives scx schedulers the option to use the built-in idle CPU
+selection policy in a consistent way, potentially reducing code duplication
+and fragmentation.
 
-Thanks,
-Ryan
+Andrea Righi (2):
+      sched_ext: Make scx_kf_allowed_if_unlocked() available outside ext.c
+      sched_ext/idle: Make scx_bpf_select_cpu_and() usable from any context
 
-
->>
->> The solution is to unconditionally move the brk out of the mmap region
->> for static PIE binaries. Whether ASLR is enabled or not does not change if
->> there may be future mmap allocation collisions with a growing brk region.
->>
->> Update memory layout comments (with kernel-doc headings), consolidate
->> the setting of mm->brk to later (it isn't needed early), move static PIE
->> brk out of mmap unconditionally, and make sure brk(2) knows to base brk
->> position off of mm->start_brk not mm->end_data no matter what the cause of
->> moving it is (via current->brk_randomized).
->>
->> For the CONFIG_COMPAT_BRK case, though, leave the logic unchanged, as we
->> can never safely move the brk. These systems, however, are not using
->> specially aligned static PIE binaries.
->>
->> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
->> Closes: https://lore.kernel.org/lkml/f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com/
->> Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
->> Link: https://lore.kernel.org/r/20250425224502.work.520-kees@kernel.org
->> Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> It's a shame we can't figure out a universal solution that would work for
-> CONFIG_COMPAT_BRK too, but I can't think of anything. So as you say, let's worry
-> about that in the unlikely event that an issue is reported.
-> 
-> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-> Tested-by: Ryan Roberts <ryan.roberts@arm.com>
-> 
-> Thanks for sorting this out! Would be great to get it into v6.15.
-> 
->> ---
->>  v2: exclude CONFIG_COMPAT_BRK (ryan)
->>  v1: https://lore.kernel.org/all/20250425224502.work.520-kees@kernel.org/
->> ---
->>  fs/binfmt_elf.c | 71 ++++++++++++++++++++++++++++++++-----------------
->>  1 file changed, 47 insertions(+), 24 deletions(-)
->>
->> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
->> index 584fa89bc877..4c1ea6b52a53 100644
->> --- a/fs/binfmt_elf.c
->> +++ b/fs/binfmt_elf.c
->> @@ -830,6 +830,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
->>  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
->>  	struct elf_phdr *elf_property_phdata = NULL;
->>  	unsigned long elf_brk;
->> +	bool brk_moved = false;
->>  	int retval, i;
->>  	unsigned long elf_entry;
->>  	unsigned long e_entry;
->> @@ -1097,15 +1098,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
->>  			/* Calculate any requested alignment. */
->>  			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
->>  
->> -			/*
->> -			 * There are effectively two types of ET_DYN
->> -			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
->> -			 * and loaders (ET_DYN without PT_INTERP, since they
->> -			 * _are_ the ELF interpreter). The loaders must
->> -			 * be loaded away from programs since the program
->> -			 * may otherwise collide with the loader (especially
->> -			 * for ET_EXEC which does not have a randomized
->> -			 * position). For example to handle invocations of
->> +			/**
->> +			 * DOC: PIE handling
->> +			 *
->> +			 * There are effectively two types of ET_DYN ELF
->> +			 * binaries: programs (i.e. PIE: ET_DYN with
->> +			 * PT_INTERP) and loaders (i.e. static PIE: ET_DYN
->> +			 * without PT_INTERP, usually the ELF interpreter
->> +			 * itself). Loaders must be loaded away from programs
->> +			 * since the program may otherwise collide with the
->> +			 * loader (especially for ET_EXEC which does not have
->> +			 * a randomized position).
->> +			 *
->> +			 * For example, to handle invocations of
->>  			 * "./ld.so someprog" to test out a new version of
->>  			 * the loader, the subsequent program that the
->>  			 * loader loads must avoid the loader itself, so
->> @@ -1118,6 +1123,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
->>  			 * ELF_ET_DYN_BASE and loaders are loaded into the
->>  			 * independently randomized mmap region (0 load_bias
->>  			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
->> +			 *
->> +			 * See below for "brk" handling details, which is
->> +			 * also affected by program vs loader and ASLR.
->>  			 */
->>  			if (interpreter) {
->>  				/* On ET_DYN with PT_INTERP, we do the ASLR. */
->> @@ -1234,8 +1242,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
->>  	start_data += load_bias;
->>  	end_data += load_bias;
->>  
->> -	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
->> -
->>  	if (interpreter) {
->>  		elf_entry = load_elf_interp(interp_elf_ex,
->>  					    interpreter,
->> @@ -1291,27 +1297,44 @@ static int load_elf_binary(struct linux_binprm *bprm)
->>  	mm->end_data = end_data;
->>  	mm->start_stack = bprm->p;
->>  
->> -	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
->> +	/**
->> +	 * DOC: "brk" handling
->> +	 *
->> +	 * For architectures with ELF randomization, when executing a
->> +	 * loader directly (i.e. static PIE: ET_DYN without PT_INTERP),
->> +	 * move the brk area out of the mmap region and into the unused
->> +	 * ELF_ET_DYN_BASE region. Since "brk" grows up it may collide
->> +	 * early with the stack growing down or other regions being put
->> +	 * into the mmap region by the kernel (e.g. vdso).
->> +	 *
->> +	 * In the CONFIG_COMPAT_BRK case, though, everything is turned
->> +	 * off because we're not allowed to move the brk at all.
->> +	 */
->> +	if (!IS_ENABLED(CONFIG_COMPAT_BRK) &&
->> +	    IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
->> +	    elf_ex->e_type == ET_DYN && !interpreter) {
->> +		elf_brk = ELF_ET_DYN_BASE;
->> +		/* This counts as moving the brk, so let brk(2) know. */
->> +		brk_moved = true;
->> +	}
->> +	mm->start_brk = mm->brk = ELF_PAGEALIGN(elf_brk);
->> +
->> +	if ((current->flags & PF_RANDOMIZE) && snapshot_randomize_va_space > 1) {
->>  		/*
->> -		 * For architectures with ELF randomization, when executing
->> -		 * a loader directly (i.e. no interpreter listed in ELF
->> -		 * headers), move the brk area out of the mmap region
->> -		 * (since it grows up, and may collide early with the stack
->> -		 * growing down), and into the unused ELF_ET_DYN_BASE region.
->> +		 * If we didn't move the brk to ELF_ET_DYN_BASE (above),
->> +		 * leave a gap between .bss and brk.
->>  		 */
->> -		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
->> -		    elf_ex->e_type == ET_DYN && !interpreter) {
->> -			mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
->> -		} else {
->> -			/* Otherwise leave a gap between .bss and brk. */
->> +		if (!brk_moved)
->>  			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
->> -		}
->>  
->>  		mm->brk = mm->start_brk = arch_randomize_brk(mm);
->> +		brk_moved = true;
->> +	}
->> +
->>  #ifdef compat_brk_randomized
->> +	if (brk_moved)
->>  		current->brk_randomized = 1;
->>  #endif
->> -	}
->>  
->>  	if (current->personality & MMAP_PAGE_ZERO) {
->>  		/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
-> 
-
+ kernel/sched/ext.c      |  5 -----
+ kernel/sched/ext.h      |  5 +++++
+ kernel/sched/ext_idle.c | 23 +++++++++++++++++------
+ 3 files changed, 22 insertions(+), 11 deletions(-)
