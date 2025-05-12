@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B27255F47;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF6A2561BD;
 	Mon, 12 May 2025 06:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747032296; cv=none; b=eluvpBOpXau3aI91xcxVH2khMJxCbTsR24IDmhNU9lrNUeKhDLQHvWjKKoRldeghQnQsWxWhbIqAio1rJtbuDu3h/AVo/tqhCsOUnDtQWFZnfK8PYHTQu7M/rdoX+Es9QIOCi9cy9GihG6QPCrR851SiOYBLcYG3nAftNTBJqiI=
+	t=1747032296; cv=none; b=BrbLfkVDwRaZurT3slYvkEXpqD7OemlR5kcXl8WNxK7tlE37rkowZdsn4SFwIQL4Zcd4w5US8G0ui0/m+iTsDDVN5a8DmPUDiCFbxORUbYn8Y6RVM7YBMCeaL1/+i04IntgBbC7XCn3FjpgxpDnMWZ9KbHRfyXNkJmnu551JlKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747032296; c=relaxed/simple;
-	bh=TGqgcMl1R6pgeQfzt4WjqC7KVxHhDp7rrnLDLH77Ly4=;
+	bh=irdP3CzgURtsh6QuDJeADkTt5p41B+LOr+y+2gGkARU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QHxCqFrLA8MA9JMrK1i94jQtueqhFZpG8eMcLQh3SUkwotvtBeoCMcrac/Gm8XMNgJMl2OrVuDFwszR21860XXYIiiRsQOTh0/1psFDFh2rnxL98vioabmAjnFUnD0SZTulHufqn7d5CJ5Pxefi5Et2lzSJrwsFxifh0O+JovO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=ZXJowxYo2snmzl0eOe6zR4brFAH2iW+tAl6yvV43im2+2ffGGxYzCMdR47lJIq+vzD18wQ1290p6yfE5ZCYBayo49S4GRRQtKY5DhKeOT8OHHoaDu1K7ri9FJBoWe8moZx+SZSclc/V9ZLviVq6v9yiba/XafonnV1IK3wH65GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZwqpQ73t6z4f3jtJ;
-	Mon, 12 May 2025 14:44:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4Zwqps2DyNzKHMmf;
+	Mon, 12 May 2025 14:44:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 725881A07BB;
-	Mon, 12 May 2025 14:44:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 008541A1C69;
+	Mon, 12 May 2025 14:44:51 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgDHK2DXmCFoxF6sMA--.62010S8;
-	Mon, 12 May 2025 14:44:50 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgDHK2DXmCFoxF6sMA--.62010S11;
+	Mon, 12 May 2025 14:44:51 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-ext4@vger.kernel.org
 Cc: linux-fsdevel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	libaokun1@huawei.com,
 	yukuai3@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH v2 4/8] ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large folio
-Date: Mon, 12 May 2025 14:33:15 +0800
-Message-ID: <20250512063319.3539411-5-yi.zhang@huaweicloud.com>
+Subject: [PATCH v2 7/8] ext4: make online defragmentation support large folios
+Date: Mon, 12 May 2025 14:33:18 +0800
+Message-ID: <20250512063319.3539411-8-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.46.1
 In-Reply-To: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
 References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
@@ -49,11 +49,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHK2DXmCFoxF6sMA--.62010S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw4fJw17XFWxJrykKr4rZrb_yoWrWryrpF
-	WDCFy8Cry8uFyDuFs7Wr4UZry29a4jkFWUWr9I9FnYqa9Fq34xtF1Dt3W3AFyYy3yDGa10
-	vF15G3yDGa1Ut3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:gCh0CgDHK2DXmCFoxF6sMA--.62010S11
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr1fAryfKrW7WF4kJr13urg_yoW5XFW5pF
+	y7Crn8KrW8Jas7Wws7JF4DZrn5Kas3Wr4UGFWfAr9xZFyjyry0gry8ta1rAayaqrZ7Ww1F
+	vFWjkrnrX3ZrJ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
 	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
@@ -64,114 +64,71 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxZw4fJw17XFWxJrykKr4rZrb_yoWrWryrpF
 	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
 	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
 	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-	WIevJa73UjIFyTuYvjfUo73vUUUUU
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
+	daVFxhVjvjDU0xZFpf9x0JUljgxUUUUU=
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-jbd2_journal_blocks_per_page() returns the number of blocks in a single
-page. Rename it to jbd2_journal_blocks_per_folio() and make it returns
-the number of blocks in the largest folio, preparing for the calculation
-of journal credits blocks when allocating blocks within a large folio in
-the writeback path.
+move_extent_per_page() currently assumes that each folio is the size of
+PAGE_SIZE and only copies data for one page. ext4_move_extents() should
+call move_extent_per_page() for each page. To support larger folios,
+simply modify the calculations for the block start and end offsets
+within the folio based on the provided range of 'data_offset_in_page'
+and 'block_len_in_page'. This function will continue to handle PAGE_SIZE
+of data at a time and will not convert this function to manage an entire
+folio. Additionally, we use the source folio to copy data, so it doesn't
+matter if the source and dest folios are different in size.
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/ext4/ext4_jbd2.h  | 4 ++--
- fs/ext4/inode.c      | 6 +++---
- fs/jbd2/journal.c    | 7 ++++---
- include/linux/jbd2.h | 2 +-
- 4 files changed, 10 insertions(+), 9 deletions(-)
+ fs/ext4/move_extent.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 3221714d9901..63d17c5201b5 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -319,10 +319,10 @@ static inline int ext4_journal_ensure_credits(handle_t *handle, int credits,
- 				revoke_creds, 0);
- }
- 
--static inline int ext4_journal_blocks_per_page(struct inode *inode)
-+static inline int ext4_journal_blocks_per_folio(struct inode *inode)
- {
- 	if (EXT4_JOURNAL(inode) != NULL)
--		return jbd2_journal_blocks_per_page(inode);
-+		return jbd2_journal_blocks_per_folio(inode);
- 	return 0;
- }
- 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 573ae0b3be1d..ffbf444b56d4 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2361,7 +2361,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
-  */
- static int ext4_da_writepages_trans_blocks(struct inode *inode)
- {
--	int bpp = ext4_journal_blocks_per_page(inode);
-+	int bpp = ext4_journal_blocks_per_folio(inode);
- 
- 	return ext4_meta_trans_blocks(inode,
- 				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
-@@ -2439,7 +2439,7 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
- 	ext4_lblk_t lblk;
- 	struct buffer_head *head;
- 	handle_t *handle = NULL;
--	int bpp = ext4_journal_blocks_per_page(mpd->inode);
-+	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
- 
- 	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
- 		tag = PAGECACHE_TAG_TOWRITE;
-@@ -5831,7 +5831,7 @@ static int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
-  */
- int ext4_writepage_trans_blocks(struct inode *inode)
- {
--	int bpp = ext4_journal_blocks_per_page(inode);
-+	int bpp = ext4_journal_blocks_per_folio(inode);
- 	int ret;
- 
- 	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 743a1d7633cd..ecf31af7d2fb 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -83,7 +83,7 @@ EXPORT_SYMBOL(jbd2_log_wait_commit);
- EXPORT_SYMBOL(jbd2_journal_start_commit);
- EXPORT_SYMBOL(jbd2_journal_force_commit_nested);
- EXPORT_SYMBOL(jbd2_journal_wipe);
--EXPORT_SYMBOL(jbd2_journal_blocks_per_page);
-+EXPORT_SYMBOL(jbd2_journal_blocks_per_folio);
- EXPORT_SYMBOL(jbd2_journal_invalidate_folio);
- EXPORT_SYMBOL(jbd2_journal_try_to_free_buffers);
- EXPORT_SYMBOL(jbd2_journal_force_commit);
-@@ -2657,9 +2657,10 @@ void jbd2_journal_ack_err(journal_t *journal)
- 	write_unlock(&journal->j_state_lock);
- }
- 
--int jbd2_journal_blocks_per_page(struct inode *inode)
-+int jbd2_journal_blocks_per_folio(struct inode *inode)
- {
--	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
-+	return 1 << (PAGE_SHIFT + mapping_max_folio_order(inode->i_mapping) -
-+		     inode->i_sb->s_blocksize_bits);
- }
- 
- /*
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 023e8abdb99a..ebbcdab474d5 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1723,7 +1723,7 @@ static inline int tid_geq(tid_t x, tid_t y)
- 	return (difference >= 0);
- }
- 
--extern int jbd2_journal_blocks_per_page(struct inode *inode);
-+extern int jbd2_journal_blocks_per_folio(struct inode *inode);
- extern size_t journal_tag_bytes(journal_t *journal);
- 
- static inline int jbd2_journal_has_csum_v2or3(journal_t *journal)
+diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
+index 48649be64d6a..1f8493a56e8f 100644
+--- a/fs/ext4/move_extent.c
++++ b/fs/ext4/move_extent.c
+@@ -269,7 +269,7 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
+ 	unsigned int tmp_data_size, data_size, replaced_size;
+ 	int i, err2, jblocks, retries = 0;
+ 	int replaced_count = 0;
+-	int from = data_offset_in_page << orig_inode->i_blkbits;
++	int from;
+ 	int blocks_per_page = PAGE_SIZE >> orig_inode->i_blkbits;
+ 	struct super_block *sb = orig_inode->i_sb;
+ 	struct buffer_head *bh = NULL;
+@@ -323,11 +323,6 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
+ 	 * hold page's lock, if it is still the case data copy is not
+ 	 * necessary, just swap data blocks between orig and donor.
+ 	 */
+-
+-	VM_BUG_ON_FOLIO(folio_test_large(folio[0]), folio[0]);
+-	VM_BUG_ON_FOLIO(folio_test_large(folio[1]), folio[1]);
+-	VM_BUG_ON_FOLIO(folio_nr_pages(folio[0]) != folio_nr_pages(folio[1]), folio[1]);
+-
+ 	if (unwritten) {
+ 		ext4_double_down_write_data_sem(orig_inode, donor_inode);
+ 		/* If any of extents in range became initialized we have to
+@@ -360,6 +355,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
+ 		goto unlock_folios;
+ 	}
+ data_copy:
++	from = offset_in_folio(folio[0],
++			       orig_blk_offset << orig_inode->i_blkbits);
+ 	*err = mext_page_mkuptodate(folio[0], from, from + replaced_size);
+ 	if (*err)
+ 		goto unlock_folios;
+@@ -390,7 +387,7 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
+ 	if (!bh)
+ 		bh = create_empty_buffers(folio[0],
+ 				1 << orig_inode->i_blkbits, 0);
+-	for (i = 0; i < data_offset_in_page; i++)
++	for (i = 0; i < from >> orig_inode->i_blkbits; i++)
+ 		bh = bh->b_this_page;
+ 	for (i = 0; i < block_len_in_page; i++) {
+ 		*err = ext4_get_block(orig_inode, orig_blk_offset + i, bh, 0);
 -- 
 2.46.1
 
