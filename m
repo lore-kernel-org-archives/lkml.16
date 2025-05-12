@@ -1,125 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996821E503C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19EB1E503C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747061505; cv=none; b=noaxiKg9tc03KsdUsuwuRzId1V7OAJBWLIierpfsNH0TLYo7Hq0L6ZdYJzadK7J8OB7CnOsxOtMVBnDh/6Yl9vr2jVpOLtJimoCW4iGCuC13H51r9++1oUrWnHjb/SUIKc/MR97ChPj8WtWTOJg87IsRUUt/l8B/6S2bulYyD98=
+	t=1747061554; cv=none; b=NMLCrfkniwZvyFnbcPq1sk3dGBQc9qDYtDtAIlq0PKT3qkXX4VEu75jtslZiUfdrFT4WQCH/L8GHKnCD8y1Tr3ipOUyL+eXCO3ZiQyw62yHeLCbhmowtO9d3YuTJQTdYlIrAg3d7pKycaeU4JJ5jVo2woi+tjRBcpOhaZeHkfxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747061505; c=relaxed/simple;
-	bh=skKPBy1kNvIiJYBQKiVWoH27pofu9c5eyYPy/uPCdpQ=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=IE3kZ5xUZRHdEHWakwpnnrdvtTczdm987Cfh6bgWfwiAgvPAFrA22Vk0syc62KMKcprr2+KREXB2DEnPGoNvgy0vjmmQIUfgTBnvHZewKcLmUQ/9ZQQB9wcma/ym4/peCoNPvyXSAY24I+guIAWSH0aaQn3tKqtSWhjUoU+tHQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X0TxoF4r; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747061554; c=relaxed/simple;
+	bh=YxitOD7J5I/UtmC0dH1Zgo6JjFI+JvFFNRDPbpGHmgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GF40JfcZsBT62U5LU3w0X+/FPXdgreSjudU+LM4xNw4JT1Akn3nXPt7vTFWxZPYevE5zu8FSoFZegNsWihp66Ad36TTGR/EiAkdbd8y+K3CRM+j7W8YaQ6f6geN9izEsJQbFOg2MOsrl2vE/XbkpctYBxGYT0df4Ln697kctWa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=C+kdhAh6; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X0TxoF4r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747061502;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ymBHISBoRGTxFMCkiuee6KTKTNeCUMLWNl/W6hAI6Kw=;
-	b=X0TxoF4rflnr9K88PePZb5mqwiip//GiK5P3tm74VITwPf5/mfrvFLQqTABntrlLxG35bI
-	OtWE7jh/RAQY+qMnv7p+sL4cQKLEOvlxzGcJDHo1FyWUboW/+my8lYerR5OkH5WUJEUeuK
-	cM/ay5GOS/TpwOAjViCRNXkc3bFmhFM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-474-kDroPQX2Oc-xfnwc7e4WeQ-1; Mon,
- 12 May 2025 10:51:40 -0400
-X-MC-Unique: kDroPQX2Oc-xfnwc7e4WeQ-1
-X-Mimecast-MFC-AGG-ID: kDroPQX2Oc-xfnwc7e4WeQ_1747061498
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 653311955D7F;
-	Mon, 12 May 2025 14:51:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DFD7030001A1;
-	Mon, 12 May 2025 14:51:31 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <1069540.1746202908@warthog.procyon.org.uk>
-References: <1069540.1746202908@warthog.procyon.org.uk> <165f5d5b-34f2-40de-b0ec-8c1ca36babe8@lunn.ch> <0aa1b4a2-47b2-40a4-ae14-ce2dd457a1f7@lunn.ch> <1015189.1746187621@warthog.procyon.org.uk> <1021352.1746193306@warthog.procyon.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: dhowells@redhat.com, Eric Dumazet <edumazet@google.com>,
-    "David S. Miller" <davem@davemloft.net>,
-    Jakub Kicinski <kuba@kernel.org>,
-    David Hildenbrand <david@redhat.com>,
-    John Hubbard <jhubbard@nvidia.com>,
-    Christoph Hellwig <hch@infradead.org>, willy@infradead.org,
-    Christian Brauner <brauner@kernel.org>,
-    Al Viro <viro@zeniv.linux.org.uk>,
-    Miklos Szeredi <mszeredi@redhat.com>, torvalds@linux-foundation.org,
-    netdev@vger.kernel.org, linux-mm@kvack.org,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: AF_UNIX/zerocopy/pipe/vmsplice/splice vs FOLL_PIN
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="C+kdhAh6"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbee322ddaso8488478a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 07:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747061551; x=1747666351; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sL36AD5JIr2gOBFJxdoW/HqoISwrQ7JPwgG6VNc1uf0=;
+        b=C+kdhAh69DteB2BlK49StjkovVk5QGefpdiIDMppJH8Roh88hmkOLxPnR2DFzMTA49
+         px7Zge4kUxF1RoVICBL5j8NHQJAs6CpfCFF3r+fCpcrjp0YdQcZwNbgzLA07AACn8b6G
+         FT2bJSDP9JhssTniyiEShJ0+sBG+2wsGV8OwUsnnR8pM3k1GbXXjLs323ZTRvdZJTVpi
+         LYMkPqQ+4n/851xe2A47BY/MEZ+wcGNctxvI9pDXiJuYYxKK7yC0Pm5y/esfaeoAshbt
+         7VKFudT42eWaQhoI0x32XIDpW41zCvmYDEJfya8i5mu4WD/bqry2FSZQD07rtiAsSMVR
+         qyKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747061551; x=1747666351;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sL36AD5JIr2gOBFJxdoW/HqoISwrQ7JPwgG6VNc1uf0=;
+        b=mAZXKlRwsPo30F1C+nhRmm42EPgNNu+D5H8rhaqh47hUbKZHIx6v80adhlw3wHsG9B
+         9k8Ao5zEOZTu0vUIX/ScTs3ch5V4zchjMRIP4+dEOsmQeGYXoIMQnWnz+5eWE8VzTVz5
+         NutkqUinaoBP89cSgUVahiQI+T2bPxCoxJarGliOXdGMpttfyEwLxPjkQoBhyfEMHP9p
+         1K808Wt71S8VcHnrWG9P3gjO+Ssh53vRBK+SeNbDj6C7Owh52oapS/QJ2ywccGg44FoZ
+         KBgdQj3NcbQazaXnDnBvRqKb2cq+ls23Zr1/zWYOIjJVni7SsZB3hzHfOpj9ZgOtObRo
+         Z1xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUz7PZrLr4jGp7oL8CN+J0rT6kOjExESxfwW+suNfOO610lfAfOH/jXbj32xknY93yG/G1eO0jAd6hyx2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG3rBpzuhrlcTyC8OxmTl3b6CDQoG7QSvXb4vW8rBaSaiiY8Fy
+	fhx2+oOhEpl1+Tg2JKEnhKiJocPtWaGBQ5ELXNsxsEyUHq66GDd7PnaRmE2/ahs=
+X-Gm-Gg: ASbGncsz8UcRHg/uFqImvIuJD/OxeVbBGgYN6YuCiMcnC7Va/036cwt9qss/7E2HiyD
+	ULdQrbPUSxJaiJRwj7a7d23J2dS7RL6BWZvPP1lhklGznBrNfGtAKnjzS7GNTDn/edt1U668Hqy
+	HoBB54OFGj5SPxoyo07Jq96KCfpToVuaZh1fKFgyuUmcde3/2x6QjKMsk2yvpSo/4HS9rkdK2+z
+	g0WdwQFxlQchnyMpJQ9sO8ZbLy62dHvI9O13eVewryBFhBx/43UhGiqCFoPTc9yEYAsAaS1NC+d
+	xHveUsTgeBJbDuH9/J1e5SgQAvgAQpu3yZBUZSRJ5myCdn0WTl4EGA==
+X-Google-Smtp-Source: AGHT+IE/pkPyU+0I7L6tAz+2K5JYCY+Yzm4eb6rt65pfdv4WcrCBgFVGHp5u/6We4LlRpbOxpUQzww==
+X-Received: by 2002:a05:6402:510d:b0:5ee:497:89fc with SMTP id 4fb4d7f45d1cf-5fca081ad13mr11822462a12.33.1747061550973;
+        Mon, 12 May 2025 07:52:30 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fd0142152bsm3717001a12.19.2025.05.12.07.52.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 07:52:30 -0700 (PDT)
+Message-ID: <66feb171-f528-44e8-990a-ad0c85fa52fd@suse.com>
+Date: Mon, 12 May 2025 16:52:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2135906.1747061490.1@warthog.procyon.org.uk>
-Date: Mon, 12 May 2025 15:51:30 +0100
-Message-ID: <2135907.1747061490@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/6] modpost: Create modalias for builtin modules
+To: Alexey Gladkov <legion@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org
+References: <cover.1745591072.git.legion@kernel.org>
+ <20250509164237.2886508-5-legion@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250509164237.2886508-5-legion@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-I'm looking at how to make sendmsg() handle page pinning - and also working
-towards supporting the page refcount eventually being removed and only being
-available with certain memory types.
+On 5/9/25 18:42, Alexey Gladkov wrote:
+> For some modules, modalias is generated using the modpost utility and
+> the section is added to the module file.
+> 
+> When a module is added inside vmlinux, modpost does not generate
+> modalias for such modules and the information is lost.
+> 
+> As a result kmod (which uses modules.builtin.modinfo in userspace)
+> cannot determine that modalias is handled by a builtin kernel module.
+> 
+> $ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
+> pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
+> 
+> $ modinfo xhci_pci
+> name:           xhci_pci
+> filename:       (builtin)
+> license:        GPL
+> file:           drivers/usb/host/xhci-pci
+> description:    xHCI PCI Host Controller Driver
+> 
+> Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
+> modpost if the module is built separately.
+> 
+> To fix this it is necessary to generate the same modalias for vmlinux as
+> for the individual modules. Fortunately '.vmlinux.export.o' is already
+> generated from which '.modinfo' can be extracted in the same way as for
+> vmlinux.o.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Alexey Gladkov <legion@kernel.org>
 
-One of the outstanding issues is in sendmsg().  Analogously with DIO writes,
-sendmsg() should be pinning memory (FOLL_PIN/GUP) rather than simply getting
-refs on it before it attaches it to an sk_buff.  Without this, if memory is
-spliced into an AF_UNIX socket and then the process forks, that memory gets
-attached to the child process, and the child can alter the data, probably by
-accident, if the memory is on the stack or in the heap.
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 
-Further, kernel services can use MSG_SPLICE_PAGES to attach memory directly to
-an AF_UNIX pipe (though I'm not sure if anyone actually does this).
-
-(For writing to TCP/UDP with MSG_ZEROCOPY, MSG_SPLICE_PAGES or vmsplice, I
-think we're probably fine - assuming the loopback driver doesn't give the
-receiver the transmitter's buffers to use directly...  This may be a big
-'if'.)
-
-Now, this probably wouldn't be a problem, but for the fact that one can also
-splice this stuff back *out* of the socket.
-
-The same issues exist for pipes too.
-
-The question is what should happen here to a memory span for which the network
-layer or pipe driver is not allowed to take reference, but rather must call a
-destructor?  Particularly if, say, it's just a small part of a larger span.
-
-It seems reasonable that we should allow pinned memory spans to be queued in a
-socket or a pipe - that way, we only have to copy the data once in the event
-that the data is extracted with read(), recvmsg() or similar.  But if it's
-spliced out we then have all the fun of managing the lifetime - especially if
-it's a big transfer that gets split into bits.  In such a case, I wonder if we
-can just duplicate the memory at splice-out rather than trying to keep all the
-tracking intact.
-
-If the memory was copied in, then moving the pages should be fine - though the
-memory may not be of a ref'able type (which would be fun if bits of such a
-page get spliced to different places).
-
-I'm sure there is some app somewhere (fuse maybe?) where this would be a
-performance problem, though.
-
-And then there's vmsplice().  The same goes for vmsplice() to AF_UNIX or to a
-pipe.  That should also pin memory.  It may also be possible to vmsplice a
-pinned page into the target process's VM or a page from a memory span with
-some other type of destruction.  I don't suppose we can deprecate vmsplice()?
-
-David
-
+-- Petr
