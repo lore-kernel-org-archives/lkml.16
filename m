@@ -1,81 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8667F481DD;
-	Mon, 12 May 2025 07:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287F2D528;
+	Mon, 12 May 2025 07:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747034910; cv=none; b=iCXPMEYWJO8JsyLxFE4ClfDiM8iztFvFZ9UoYMNbSjz0TlyU8h5Kh1Nq6307lXD5ZEo/VOKGUW+KYaATLBGZuOWKU5R18tAgtLXzOK0/YITnLxZ0ghf4hOOJudTOhykSht1kfjg2GcE4ILwohcGOfQweNPGmcbrIuKPfvFaf8EI=
+	t=1747035045; cv=none; b=PT3HFUPafGbo0WNtn863OBQ3o098vdq8Od7bK9nf2MTVSaWmc3K2NxW+Fc9BucABLnPGxQQxtfmHasM2K4vQc7OCm09f7cPKAWQZQ5EQ3e2zbq7hMkFk5xk42Opw2D8Zsf+qkYHL2z96VaV0tbBKABV3cRy55RNBdi8d+al3bJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747034910; c=relaxed/simple;
-	bh=OpwhBIBLUR7KZYGf1JS5ByHHeMy5ALtXFWlVVlrs1UM=;
+	s=arc-20240116; t=1747035045; c=relaxed/simple;
+	bh=u4NoJq0BxC9RrjJ0WYKGghRiHQIO7pd2hT9ccDuugM4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKu6VgG4ShDitzuDggmta80ZyUxYYIfwCQRmJsb1FbnqQ8gvsTGeTYQHeHGZcy3FP+4ouDC4xgITcZbDvRfHDgnAOqnYtbocUWEFj13UhaGxtsZkezsgl1zlZDo9w/GuQo+jQflAsA0k0z7bldElSSoPSW7yeXeS/7sJ5eFWHNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lvUAUn66; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nI+zN6uDs5YNm+nyLpBmCABnoRKinCHGTEwXXhNEuNdE01DHZclLc0E+7PNlJlhBEFug1oieiJPl0biDyIpN7z7L3goFE6pTu3ayeaC8geZr5eiSef5RgN0HRliDXz1SG6I6IMnJsMFzlJOXHrtpD0DDoCTiqrmyUiq8I20uMPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=IO1fiNs0; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lvUAUn66"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747034909; x=1778570909;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OpwhBIBLUR7KZYGf1JS5ByHHeMy5ALtXFWlVVlrs1UM=;
-  b=lvUAUn66tcYJLEbyElPOhMToOgI7ekNstVe7B8vohOpB7CBE7BO5HG2Q
-   hsVevILU+a0S74Xz7kF6+BbOcUFymYX5k6cAOF5TDelv7m7aUpkn4e5Z7
-   2uI2pAvP3MkO9KGeXc97VQASh4jiyQugfTmPTMVhpQjWuFLlodnbdQK0S
-   Siw2LwbsSZqet+GKn8qDAz6irAbWk5VYjXUR46VXaLmLDuOdT7Ucb2qKl
-   P1o4SKQMMBbaewsho5N0y7wpYTtpX9ZwVG0Ngmp5qndYVa7c3npWaoVKS
-   ivTzGKyH9IFT6PTLmkBABUh78uV7lgOgrYsKk6c9MgQpVMtjtQAylM2hY
-   w==;
-X-CSE-ConnectionGUID: 5eXr2JAiSLmFt4W+KE9fFg==
-X-CSE-MsgGUID: 1WLns+zpRvaTk5QOGBo+1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48742597"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="48742597"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:28:28 -0700
-X-CSE-ConnectionGUID: 5/o3CDCpRq2+Y+cxe+xc2g==
-X-CSE-MsgGUID: d8OohKBWTZ+rtZbLD8aoLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="142246382"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 00:28:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uENaD-00000000qbV-3rOo;
-	Mon, 12 May 2025 10:28:17 +0300
-Date: Mon, 12 May 2025 10:28:17 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 20/23] mailbox/riscv-sbi-mpxy: Add ACPI support
-Message-ID: <aCGjEdNVH3ughITd@smile.fi.intel.com>
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-21-apatel@ventanamicro.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="IO1fiNs0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1747035040;
+	bh=u4NoJq0BxC9RrjJ0WYKGghRiHQIO7pd2hT9ccDuugM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IO1fiNs0X7hKCsp0a1l1aWfGNX7X5a8wv+633DWTFsDYbuH7fYCcmZcs6C8pE04x7
+	 DsCCwuJKztg7u2CUdE7Y953DiFdL2Npx294FguVYpZsYRWsVQvLTLRx5Ye2quRZbXK
+	 HMCyIl+TbtrgqaSVD2tKuD5otAl5IMbvYZyQWZZQ=
+Date: Mon, 12 May 2025 09:30:39 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: lschyi@chromium.org
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Sung-Chi Li <lschyi@google.com>
+Subject: Re: [PATCH v3 2/3] hwmon: (cros_ec) add PWM control over fans
+Message-ID: <ca2c10be-3dc4-45e1-b7fc-f8db29a1b6a0@t-8ch.de>
+References: <20250512-cros_ec_fan-v3-0-a9f2b255f0cd@chromium.org>
+ <20250512-cros_ec_fan-v3-2-a9f2b255f0cd@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,44 +43,192 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250511133939.801777-21-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250512-cros_ec_fan-v3-2-a9f2b255f0cd@chromium.org>
 
-On Sun, May 11, 2025 at 07:09:36PM +0530, Anup Patel wrote:
-> From: Sunil V L <sunilvl@ventanamicro.com>
+On 2025-05-12 15:11:56+0800, Sung-Chi Li via B4 Relay wrote:
+> From: Sung-Chi Li <lschyi@chromium.org>
 > 
-> Add ACPI support for the RISC-V SBI message proxy (MPXY) based
-> mailbox driver.
+> Newer EC firmware supports controlling fans through host commands, so
+> adding corresponding implementations for controlling these fans in the
+> driver for other kernel services and userspace to control them.
+> 
+> The driver will first probe the supported host command versions (get and
+> set of fan PWM values, get and set of fan control mode) to see if the
+> connected EC fulfills the requirements of controlling the fan, then
+> exposes corresponding sysfs nodes for userspace to control the fan with
+> corresponding read and write implementations.
+> As EC will automatically change the fan mode to auto when the device is
+> suspended, the power management hooks are added as well to keep the fan
+> control mode and fan PWM value consistent during suspend and resume. As
+> we need to access the hwmon device in the power management hook, update
+> the driver by storing the hwmon device in the driver data as well.
+> 
+> Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
+> ---
+>  Documentation/hwmon/cros_ec_hwmon.rst |   5 +-
+>  drivers/hwmon/cros_ec_hwmon.c         | 228 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 232 insertions(+), 1 deletion(-)
 
-...
+<snip>
 
-> -		if (is_of_node(dev_fwnode(dev)))
-> +		if (is_of_node(dev_fwnode(dev))) {
->  			of_msi_configure(dev, to_of_node(dev_fwnode(dev)));
-> +		} else {
+>  static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
+>  {
+>  	unsigned int offset;
+> @@ -73,7 +117,9 @@ static long cros_ec_hwmon_temp_to_millicelsius(u8 temp)
+>  static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>  			      u32 attr, int channel, long *val)
+>  {
+> +	u8 control_method;
+>  	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
+> +	u8 pwm_value;
+>  	int ret = -EOPNOTSUPP;
+>  	u16 speed;
+>  	u8 temp;
 
-You probably want to have this as
+Ordering again.
 
-		} else if (is_acpi_..._node()) { // you should decide if it is data, device or any type of ACPI node you match with
+This should be:
 
-> +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
-> +							      DOMAIN_BUS_PLATFORM_MSI);
-> +			dev_set_msi_domain(dev, msi_domain);
+struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
+int ret = -EOPNOTSUPP;
+u8 control_method;
+u8 pwm_value;
+u16 speed;
+u8 temp;
+
+or:
+
+struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
+u8 control_method, pwm_value, temp;
+int ret = -EOPNOTSUPP;
+u16 speed;
+
+<snip>
+
+> +static inline bool is_cros_ec_cmd_fulfilled(struct cros_ec_device *cros_ec,
+> +					    u16 cmd, u8 version)
+
+"fulfilled" -> "available" or "present"
+
+> +{
+> +	int ret;
+> +
+> +	ret = cros_ec_get_cmd_versions(cros_ec, cmd);
+> +	return ret >= 0 && (ret & EC_VER_MASK(version));
+> +}
+> +
+> +static bool cros_ec_hwmon_probe_fan_control_supported(struct cros_ec_device *cros_ec)
+> +{
+> +	if (!IS_ENABLED(CONFIG_PM))
+> +		return false;
+
+Why? This should generally work fine without CONFIG_PM.
+Only the suspend/resume callbacks are unnecessary in that case.
+
+> +
+> +	return is_cros_ec_cmd_fulfilled(cros_ec, EC_CMD_PWM_GET_FAN_DUTY, CROS_EC_HWMON_PWM_GET_FAN_DUTY_CMD_VERSION) &&
+> +	       is_cros_ec_cmd_fulfilled(cros_ec, EC_CMD_PWM_SET_FAN_DUTY, CROS_EC_HWMON_PWM_SET_FAN_DUTY_CMD_VERSION) &&
+> +	       is_cros_ec_cmd_fulfilled(cros_ec, EC_CMD_THERMAL_AUTO_FAN_CTRL, CROS_EC_HWMON_THERMAL_AUTO_FAN_CTRL_CMD_VERSION);
+> +}
+
+<snip>
+
+> +static int cros_ec_hwmon_suspend(struct platform_device *pdev, pm_message_t state)
+> +{
+> +	u8 control_method;
+> +	size_t i;
+> +	struct cros_ec_hwmon_priv *priv = platform_get_drvdata(pdev);
+> +	int ret;
+
+Ordering.
+
+> +
+> +	if (!priv->fan_control_supported)
+> +		return 0;
+> +
+> +	/* EC sets fan control to auto after suspended, store settings before suspending. */
+> +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
+> +		if (!(priv->usable_fans & BIT(i)))
+> +			continue;
+> +
+> +		ret = cros_ec_hwmon_read_pwm_enable(priv->cros_ec, i, &control_method);
+> +		if (ret) {
+> +			dev_warn(&pdev->dev, "failed to get mode setting for fan %zu: %d", i, ret);
+> +			continue;
 > +		}
->  	}
+> +
+> +		if (control_method != 1) {
+> +			priv->manual_fans &= ~BIT(i);
+> +			continue;
+> +		} else {
+> +			priv->manual_fans |= BIT(i);
+> +		}
+> +
+> +		ret = cros_ec_hwmon_read_pwm_value(
+> +			priv->cros_ec, i, &priv->manual_fan_pwm_values[i]);
+> +		/*
+> +		 * If failed for storing the value, invalidate the stored mode value by setting it
 
-...
+"If storing the value failed"
 
-> +#ifdef CONFIG_ACPI
-> +	if (!acpi_disabled)
+> +		 * to auto control. EC will automatically switch to auto mode for that fan after
+> +		 * suspended.
+> +		 */
+> +		if (ret) {
+> +			priv->manual_fans &= ~BIT(i);
+> +			dev_warn(&pdev->dev, "failed to get PWM setting for fan %zu: %d", i, ret);
 
-Hmm... Why do you need this check? What for?
+Print the warning first, so it's easier to follow the logic.
 
-> +		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
-> +#endif
+> +			continue;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cros_ec_hwmon_resume(struct platform_device *pdev)
+> +{
+> +	size_t i;
+> +	const struct cros_ec_hwmon_priv *priv = platform_get_drvdata(pdev);
+> +	int ret;
 
--- 
-With Best Regards,
-Andy Shevchenko
+Ordering.
 
+> +
+> +	if (!priv->fan_control_supported)
+> +		return 0;
+> +
+> +	/* EC sets fan control to auto after suspended, restore to settings before suspended. */
 
+"after suspend"
+
+> +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
+> +		if (!(priv->manual_fans & BIT(i)))
+> +			continue;
+> +
+> +		/*
+> +		 * Setting fan PWM value to EC will change the mode to manual for that fan in EC as
+> +		 * well, so we do not need to issue a separate fan mode to manual call.
+> +		 */
+> +		ret = cros_ec_hwmon_set_fan_pwm_val(
+> +			priv->cros_ec, i, priv->manual_fan_pwm_values[i]);
+
+You could rename "manual_fan_pwm_values" to "manual_fan_pwm" to save
+some linebreaks here and in _suspend().
+
+> +		if (ret)
+> +			dev_warn(&pdev->dev, "failed to restore settings for fan %zu: %d", i, ret);
+
+You can use %pe to print errors instead of %d:
+
+"%zu: %pe\n", i, ERR_PTR(ret);
+
+Also missing newline at the end of the message.
+
+> +	}
+> +
+> +	return 0;
+> +}
+
+<snip>
