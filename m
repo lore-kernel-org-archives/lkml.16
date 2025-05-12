@@ -1,178 +1,150 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E260B1BD9C8;
-	Mon, 12 May 2025 19:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA2C18DB14
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747078970; cv=none; b=aLRnD9nZgHYicXBuQ2DPej7BnnoU1o5qt00mmxyCS4ZgW8WHJjoIJjjicWgj7iS4LuZ9t7QAcwFfxQ45s3e4KZO9buPGSlqQL6BA1YzL0jYCD0AMzUL9d5kTf9WtBTG3hF/utXsh0BXMuzzcYURSMtW1DWcSJghKY3PVSdGGBMs=
+	t=1747079191; cv=none; b=VTeQ1sJNZFH9e0pM/hBim13dUpDt8EF7HmUiLQUmZNLCugmTFpxbJ+mfMBJb75e9P1srrCetN/wc3a0/zxdL5sUl1li3qJLlfPaS4KY9e/hRqKABWQhe2+HPjeOLvrFne+KNP8k5Uu++kSUw9TFy+UlRZEgSK4K3YWzvEd8m4fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747078970; c=relaxed/simple;
-	bh=zPb5+8or5zoOb+ewomGwUGQXBTSKvyDlnZuKLU6XRbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lpsmaZqmKsaPa61wpyr5S3EFFk12AQflLT0+efChpnhHyPcDMvA25OsNdLwyXu80/xrFSdc5UUazt/FBXWbGruL1fiZwhx3lGRKAr7Q1crBah2HQfYicf/KvMKlZSa+sBFhObVCtxr7VpA2tkcXaVLCKzdv9694IloJIJvIGUk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CCISf7ai; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747079191; c=relaxed/simple;
+	bh=kSZe5BRqz0dhczAp2bhd4QJpIEWetSdNut71QQAL5cA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=jjflJq7ZahNGU9/IlpYxv6ejhuvGSdDEwqe64iLvJHg/F4MCEXn2di7M0lezaWnUWCPLe/eQjoRntPGG7ju4VSaWrmS0evPbz6GKZ7Fax1DsMZ8RMF4N8uXx3FpKO/D/NgJUgM6AyMH2o8FK7PgZ5acCdfTa+GCKX4IyFivowEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uqn8VZgG; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCISf7ai"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so35433195e9.1;
-        Mon, 12 May 2025 12:42:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uqn8VZgG"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-72f3b4c0305so5354382b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747078967; x=1747683767; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q4Dt0G9oXD9O451YCJ8Zq0URpyG/3EkGmLwZSAm3O8U=;
-        b=CCISf7ai+fa+kYi7UF4XCMwN/RYI4yJLcGbQy4Kfp3jeMTFsOZa/soHesXqMZt9Dz1
-         mYDCRvpEUQPwybNfB5s3nvP3eJPSwFGU5bRJSmcdnS43PkQLnpP03ynyXSRFKoijeRXC
-         5lTNT4N8KeHWNyBnHel0wE88F2ietN8bjUTztEikCpM+YHh+wDyKUdG82Ez5y7yJA52m
-         KKsr/FwniaKkNj5Ya+u5XBU8Mpb/U21VWKDawK6bsPSuV9OJ0SmS5TkMkHKqLFUkkLl5
-         p40UhqGxajw9pcFZ0lDZYjMfwJ2f9jyRT5PB7muS714oSi/dU+78TG9NNpzI8hBkcfDd
-         TDxA==
+        d=google.com; s=20230601; t=1747079189; x=1747683989; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KCS6TCz2k4JMDGyXshw5mX//JzYJvJIRNOVd3LwESJQ=;
+        b=Uqn8VZgGmQKTVbioMwLrxxo91jT0JDRGYF8uomIapThqDR9s+Clkz6vULesP5GkTjX
+         tf45uJANXEUnkvpay+kXhNBo2BaQn2+065rHVJOFhqUVYUYWITp3MnQC3V1RYj3v/NiK
+         QpBYDT/89nb2v1elgEKnOo7wXOELzrm8FEUim7RoK3gwRmvUhKGLadRo4Idg5Tl140wR
+         vnT4ieo0HUSnY8Er8ci5WWH6C43wuxeXDC7Kw2wSWDjsJ0PvJtsBkNLmhzYUoFiyg0re
+         uz0OMMnU3uyUbV9bplMbrdkcyBPaITQGobaZWMYdnBceAZvV2E+5po4febkBidQOgkE8
+         Ag3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747078967; x=1747683767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q4Dt0G9oXD9O451YCJ8Zq0URpyG/3EkGmLwZSAm3O8U=;
-        b=Q2aAcnDICJrCvpiK2n2WPOl9ZhlXtcCSPBFdGdg/6XTZlPXrT1pjaCrfT1KOJ0QS8G
-         t6xBUKLo+VQ11rZyoJA6liokGwz0NovhQwrnlZaEaMfgubVrV+hkW7y9M+oTSqaBD/Mq
-         n4EdfHOoibiPRgrlyJjyqo58fkABkoYZBaw3ZtK6Fx2p/JRP3DUfPpw57Z9WMfbVkxdc
-         KinkbIFW1G+39fYskfsxYfxgMm9ZVxv2ZPykT3NzxFkDkIj/NSAQ3EDsJ1/cpsn9xRkz
-         zgJiaHp5VSfYqldaO34cXg5z8CmeuobtWCxV3x1nLe12fiZnWp+9wJ0LMK1toukeMFdo
-         2oIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8ciCqysvXZvkqsRdU/xDyD1AY534YMLmLtWQ4IkjIDlh3ZRlKRQl6ZWqQyJFQ5bzMlk95uRgcdME=@vger.kernel.org, AJvYcCUtiJ1r63u6/QcA4qKXmURGjwjpp1wwOAGMpQ2zNAvzktBj8mwp45/2R3BdpAtaIo+FIcpZbHl+ZcTZKQRTd5Nuu4o=@vger.kernel.org, AJvYcCW9FBgP24iFAfCZAiSULAkbGGHdeixYjcsCmS3v1dtO8Ngca+E4yPaICh4jPrBLq7iTSvi4sJZCDgYTksl+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeLkz2MivBVXxa/3ynUHUfWo9xugYIInAGBk70gYamd2gYgQlz
-	JsAL+GK/PjhPh4aJAQgR+PrOPb73pm+Njv9edTUST3q74QFvTvPVqutPfGWhqJSxxmg/EzQPk/3
-	T6wSmOaQvQnX3a0mLHLcU0xpqyJo=
-X-Gm-Gg: ASbGncsLztrWXtjmrGlT3lk7NhaJanLz/MfPz8IkxCwIAXBMqj3pTUV7rREJoXfK+Ih
-	/0KXaMxiAv3ui7m3/GK830XTUp4bEbZCctVPnuC9BxTF/AQ15qhubtOhs6tfKYQ7UMaSnXf56zI
-	9dWyo2Rw3nNFLEXim4UOPkzIM6upZg1UA=
-X-Google-Smtp-Source: AGHT+IEnDOcAJjQPlqs64TvxInLM28hddlRaQxKFEH0AgnAz3WmuNgy8ruM5Lgyg52c/yQqB6cUm8YmfHZeFNIE+ohI=
-X-Received: by 2002:adf:f7cf:0:b0:3a1:fc91:f784 with SMTP id
- ffacd0b85a97d-3a1fc91fafbmr7805795f8f.53.1747078967091; Mon, 12 May 2025
- 12:42:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747079189; x=1747683989;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KCS6TCz2k4JMDGyXshw5mX//JzYJvJIRNOVd3LwESJQ=;
+        b=RL53sML50MNR7xjMv4AUHX4pZ/EIZyPHygAq8/r0TZQR3v0I0iNgQ8McyiWU2usoeK
+         N/oORUHzxUR8MDsQ9jFhXKa0DGBN30kjEt2SO7sJ5PqCOWKiB5Rbz0W7nq9KJE8LnRgq
+         4Vt7QFdc0swTF0CzzbxQzgilzwqdcTY9jEIUAXxGfrHbsa2PvtHbjVZ5rt33ZdCQd4HQ
+         HjByio32PxS6KxyUqsBuWvuskyUZkxMiNgm4WKxmhA42Zx5V9zMzEAy0gGy/UxTsUJxE
+         F8zcKA6JyTVyAqbCqINPYID1yVzczAG/lPMJbdQSdJlqbeUsxsMgSlaU+7bJ2W8OKtNy
+         EaRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXO0CrhpZF/1aCMGWxkkHfSYYr2zizLzE4QAIFoM0cbjEmFbQp85fBGenLIirNEC9qjdvCPH7sBIjkE/LA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6TtfPfX0zz76Y5xfG1ZTq7WD9z96V/ksVDSHBQw4NBi7wEWjb
+	eJ0rnI8wrCow+dc/r1s6PyQpN6DOBkVQ1SZtlrBA4Y/Xr0BZdZLgWpZCwe//Pmw9wKf1LEk/DE9
+	/GT78aA==
+X-Google-Smtp-Source: AGHT+IEeTcRv9UOqhEhkvudchZcUoofJuCiliW2oNTTuFaFiCUkmau+51NAFjGXKNF1O3yPqn5kZoJtpPdAx
+X-Received: from pfht4.prod.google.com ([2002:a62:ea04:0:b0:740:4dd9:9ebf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2313:b0:73c:c11:b42e
+ with SMTP id d2e1a72fcca58-7423c0176f2mr19391272b3a.20.1747079189274; Mon, 12
+ May 2025 12:46:29 -0700 (PDT)
+Date: Mon, 12 May 2025 12:46:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250428184152.428908-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250428184152.428908-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWUpJHB_NsBqdvyD6=dDnZXQMr-=0aOpW0OutN9hSA5=A@mail.gmail.com>
- <CA+V-a8ukvn_K69h_COXS6JCqZbqXPQG1L9UAnm-gYQk7PTzb_g@mail.gmail.com> <CAMuHMdXws+KBurR+x=vpLBtgY5yBKabJRadgBU1oPMWTwi0vNA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXws+KBurR+x=vpLBtgY5yBKabJRadgBU1oPMWTwi0vNA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 12 May 2025 20:42:20 +0100
-X-Gm-Features: AX0GCFsEsYF_emCYyhO-zhjsjFvr5i5g6OB4StsZ6uIbaw6Gs9MA79gHD-vEhQI
-Message-ID: <CA+V-a8tA+dXMA-M7Dv=8-h7Q01wex_N1AtGPZoAzbOakO1fo_g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] clk: renesas: r9a09g057: Add clock and reset
- entries for GBETH0/1
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
+Message-ID: <20250512194622.33258-1-irogers@google.com>
+Subject: [PATCH v2 0/3] Metric related performance improvements
+From: Ian Rogers <irogers@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Xu Yang <xu.yang_2@nxp.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+The "PMU JSON event tests" have been running slowly, these changes
+target improving them with an improvement of the test running 8 to 10
+times faster.
 
-On Mon, May 12, 2025 at 7:56=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, 9 May 2025 at 15:29, Lad, Prabhakar <prabhakar.csengg@gmail.com> =
-wrote:
-> > On Thu, May 8, 2025 at 5:13=E2=80=AFPM Geert Uytterhoeven <geert@linux-=
-m68k.org> wrote:
-> > > On Mon, 28 Apr 2025 at 20:42, Prabhakar <prabhakar.csengg@gmail.com> =
-wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Add clock and reset entries for GBETH instances. Include core clock=
-s for
-> > > > PTP, sourced from PLLETH, and add PLLs, dividers, and static mux cl=
-ocks
-> > > > used as clock sources for the GBETH IP.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > ---
-> > > > v2->v3:
-> > > > - Used DEF_MOD_MUX_EXTERNAL() macro for external MUX clocks.
-> > > > - Renamed gbe0/1 external mux clock names
-> > >
-> > > Thanks for the update!
-> > >
-> > > > --- a/drivers/clk/renesas/r9a09g057-cpg.c
-> > > > +++ b/drivers/clk/renesas/r9a09g057-cpg.c
-> > > > @@ -78,6 +87,19 @@ static const struct clk_div_table dtable_2_64[] =
-=3D {
-> > > >         {0, 0},
-> > > >  };
-> > > >
-> > > > +static const struct clk_div_table dtable_2_100[] =3D {
-> > > > +       {0, 2},
-> > > > +       {1, 10},
-> > > > +       {2, 100},
-> > > > +       {0, 0},
-> > > > +};
-> > > > +
-> > > > +/* Mux clock tables */
-> > > > +static const char * const smux2_gbe0_rxclk[] =3D { ".plleth_gbe0",=
- "et0_rxclk" };
-> > > > +static const char * const smux2_gbe0_txclk[] =3D { ".plleth_gbe0",=
- "et0_txclk" };
-> > > > +static const char * const smux2_gbe1_rxclk[] =3D { ".plleth_gbe1",=
- "et1_rxclk" };
-> > > > +static const char * const smux2_gbe1_txclk[] =3D { ".plleth_gbe1",=
- "et1_txclk" };
-> > > > +
-> > > >  static const struct cpg_core_clk r9a09g057_core_clks[] __initconst=
- =3D {
-> > > >         /* External Clock Inputs */
-> > > >         DEF_INPUT("audio_extal", CLK_AUDIO_EXTAL),
-> > >
-> > > This patch starts to LGTM.  The only outstanding issue is how the
-> > > et*_[rt]xclk will be provided.  I have read your comments on v2,
-> > > and am eagerly awaiting the full patch set (CPG binding update, PHY
-> > > updates, ...) to get this all to work.
-> > >
-> > My intention here is to get these initial patches in so that we have
-> > Ethernet working on RZ/V2H (G3E/V2N) so that we have these boards on
-> > LAVA and tackle et*_[rt]xclk clocks for the next cycle as this will
-> > have to be discussed the -net maintainers. Are you OK with this
-> > approach.
->
-> You mean that (1) Ethernet works with just series
->   - "[PATCH v4 0/2] clk: renesas: Skip monitor checks for external
->      clocks and add clocks for GBETH"[1] and
->   - "[PATCH v2 0/2] arm64: dts: renesas: Add GBETH support to R9A09G057
->      SoC[2]"
-> applied, without any extra additions to define the et*_[rt]xclk clocks,
-> and (2) you see a clear path forward that can stay backwards compatible
-> with the DTS from [2]?
->
-Yes, the Ethernet works with just the series [1] and [2] applied,
-without any additional changes to define the et*_[rt]xclk clocks. I
-also confirm that there's a clear path forward which remains fully
-compatible with the DTS from [2].
+The first patch changes from searching through all aliases by name in
+a list to using a hashmap. Doing a fast hashmap__find means testing
+for having an event needn't load from disk if an event is already
+present.
 
-> If that is the case, then I think we can move forward with these series.
-Given that, I agree - we can move forward with these series.
+The second patch switch the fncache to use a hashmap rather than its
+own hashmap with a limited number of buckets. When there are many
+filename queries, such as with a test, there are many collisions with
+the previous fncache approach leading to linear searching of the
+entries.
 
->
-> [1] https://lore.kernel.org/20250509160121.331073-1-prabhakar.mahadev-lad=
-.rj@bp.renesas.com/
-> [2] https://lore.kernel.org/20250509153559.326603-1-prabhakar.mahadev-lad=
-.rj@bp.renesas.com/
->
->
-Cheers,
-Prabhakar
+The final patch adds a find function for metrics. Normally metrics can
+match by name and group, however, only name matching happens when one
+metric refers to another. As we test every "id" in a metric to see if
+it is a metric, the find function can dominate performance as it
+linearly searches all metrics. Add a find function for the metrics
+table so that a metric can be found by name with a binary search.
+
+Before these changes:
+```
+$ time perf test -v 10
+ 10: PMU JSON event tests                                            :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : Ok
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+ 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+
+real    0m18.499s
+user    0m18.150s
+sys     0m3.273s
+```
+
+After these changes:
+```
+$ time perf test -v 10
+ 10: PMU JSON event tests                                            :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : Ok
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+ 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+
+real    0m2.338s
+user    0m1.797s
+sys     0m2.186s
+```
+
+v2: Rebase on tmp.perf-tools-next.
+
+Ian Rogers (3):
+  perf fncache: Switch to using hashmap
+  perf pmu: Change aliases from list to hashmap
+  perf metricgroup: Binary search when resolving referred to metrics
+
+ tools/perf/builtin-stat.c                |   6 +-
+ tools/perf/pmu-events/empty-pmu-events.c |  66 ++++++++-
+ tools/perf/pmu-events/jevents.py         |  66 ++++++++-
+ tools/perf/pmu-events/pmu-events.h       |  23 +++-
+ tools/perf/tests/pmu-events.c            | 129 +++++++++--------
+ tools/perf/util/fncache.c                |  69 +++++-----
+ tools/perf/util/fncache.h                |   1 -
+ tools/perf/util/hwmon_pmu.c              |  43 +++---
+ tools/perf/util/metricgroup.c            | 102 ++++++--------
+ tools/perf/util/metricgroup.h            |   2 +-
+ tools/perf/util/pmu.c                    | 167 +++++++++++++++--------
+ tools/perf/util/pmu.h                    |   4 +-
+ tools/perf/util/srccode.c                |   4 +-
+ tools/perf/util/tool_pmu.c               |  17 +--
+ 14 files changed, 430 insertions(+), 269 deletions(-)
+
+-- 
+2.49.0.1045.g170613ef41-goog
+
