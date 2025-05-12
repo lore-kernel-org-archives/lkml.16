@@ -1,131 +1,113 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228E13FC2;
-	Mon, 12 May 2025 02:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABD08834
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747017079; cv=none; b=g9epfA0LpeKeump9STJyarY6Hfx+MP+sUpFRJ0A7wD2se74zxB0JPlZmzF2Vckfr2ZqCZO3iNLZywyh5GN3ux4X3K/XJxPXlpw9Y2aaJTnzQoaE8VaojISMKz3SejpfLuVhTGAS2Ay6FBS5qgjqmsH2Fz/FW7wPAiMwS8HlLmk4=
+	t=1747017150; cv=none; b=dLZBFpBSuLE75yjqkmqTIgR+q/QPJ6u0LYR1gJBwlhd6kOk44N1GOAmdcxyoA2Hi15erOHcw9RybzZOwiELAVls16xRVK5i0xlIhZuZd2QtmEzGxyxa0Gd9R8w404r6NSkcS5rUzj4X7DVUtYmufLPP6+mcNpNeZ620paSBDrcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747017079; c=relaxed/simple;
-	bh=y5PLBRoJK1+ORusmip2HSah/WsWVT44ZrYMSyb5l1Dg=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=V9x+73l91ODow9ur4oOwqPvzuE/aJlfeuPIOVk0feGXMQzgvqh305s07tFOr6tfNFhSXOkeXG+BMCGLxF0+yQrGu5iW6lF/yTrYjCRQHPDIeICZS7FhjMzznhxSFQF1G9ng5JKyCLR9FSNQKV2/VH9LLflSu7Oe/TIK3Wfv4J3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=fail (1024-bit key) header.d=126.com header.i=@126.com header.b=O9WjdJl9 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1747017150; c=relaxed/simple;
+	bh=ZTdg2sSQi0ffs1RvHu8BvvcVGRC3HE8ZGpgUqNo1bOg=;
+	h=From:To:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=lzLo27rTrih58374j2HZYGRsya/arIY25M1LPAMpJeYB1iXwniUHp+t9yxwJyErh59YSOf8ItII6NK83H+N3pqGXOH4sJWiqtGhT1qGG0HqiMG5nUmTF1Iw0cfJd41IxmCRbuFRoxDO5Nz5rq7ATn9kqOmGpeFBdVuteD/EUgxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=m2RG8j+g; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="O9WjdJl9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=0QMExuBa32/6fSfbL/oZA0XrI8wG2vulsg/XaDQxxW0=; b=O
-	9WjdJl9nTFDjGljbzSzr9nYPAnvTeO17/NBOAiILmMyFcM0pZTEnJlJwyiULt7kH
-	T+8IP+N/3jAfnuy7/G7ZiPdOaYskJ6TGB1hragJ2wvRquPaoD/2RPTcEA3B/zmZh
-	N6ZtzkpszFLri4rehZdDDnwjP/P+SAv8V1LfaoDY4M=
-Received: from sunliweis$126.com ( [113.57.237.75] ) by
- ajax-webmail-wmsvr-41-109 (Coremail) ; Mon, 12 May 2025 10:31:03 +0800
- (CST)
-Date: Mon, 12 May 2025 10:31:03 +0800 (CST)
-From: "Liwei Sun" <sunliweis@126.com>
-To: "Marcel Holtmann" <marcel@holtmann.org>,
-	"Luiz Augusto von Dentz" <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Bluetooth: btusb: Add new VID/PID 13d3/3584 for MT7922
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 126com
-X-NTES-SC: AL_Qu2fBfyauEgt5SiZbekfmUwWhOc+Xcuxufgk2Y5TP5F4jD3j2R8LU2RzJ0TH3NCFCSWdtyinehxLzftBeJBYQZ0pzjC+xsjcTIGABVjB1XB+sQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m2RG8j+g"
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250512023220epoutp035ec8a786bce6b66f8053e85c9d509429~_ptVGCIpp2201922019epoutp03f
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:32:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250512023220epoutp035ec8a786bce6b66f8053e85c9d509429~_ptVGCIpp2201922019epoutp03f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747017140;
+	bh=HVd3PQKx9PrYIr1S2MjQOwqL7uw5Z1zN7d+Gt9MXQSI=;
+	h=From:To:In-Reply-To:Subject:Date:References:From;
+	b=m2RG8j+gpeXX3neDFfy/vrfwE8R1TeZag8F5MxEYA70h+M6ZGAZMdeOCF0CX0wlAv
+	 dP21AgVVuEaguqMUHlFSxETzg6cWBPXa71W52UjM9XeSZ+8XRZv01puzlEet1ND6H2
+	 MukClJfllxS5V1XuAo374eFpi7Y7W6hvQoW+X5M0=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250512023220epcas1p38ef2deb78d3f631138f8b86c351d6bbf~_ptU2w5iA1239912399epcas1p3g;
+	Mon, 12 May 2025 02:32:20 +0000 (GMT)
+Received: from epcas1p1.samsung.com (unknown [182.195.36.224]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZwkCS0BxFz6B9mL; Mon, 12 May
+	2025 02:32:20 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250512023219epcas1p2409388bd504ff09e9b5775a2aa804cd0~_ptUPZ6ox1887618876epcas1p2q;
+	Mon, 12 May 2025 02:32:19 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250512023219epsmtrp1c11261ea91e9ae9e2dfd8bd12e83b8ce~_ptUOnnxm1564315643epsmtrp1z;
+	Mon, 12 May 2025 02:32:19 +0000 (GMT)
+X-AuditID: b6c32a28-460ee70000001e8a-c3-68215db32ad7
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C1.4A.07818.3BD51286; Mon, 12 May 2025 11:32:19 +0900 (KST)
+Received: from wkonkim01 (unknown [10.253.100.198]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250512023219epsmtip2d08680cc5b6fb3d4684ed4a92cfd37da~_ptT-tdiM1484314843epsmtip2H;
+	Mon, 12 May 2025 02:32:19 +0000 (GMT)
+From: =?UTF-8?B?6rmA7JuQ6rOkL1N5c3RlbSBEZXZpY2XqsJzrsJzqt7jro7ko66y07ISgKS9Fbmdp?=
+	=?UTF-8?B?bmVlci/sgrzshLHsoITsnpA=?= <wkon.kim@samsung.com>
+To: "'Bart Van Assche'" <bvanassche@acm.org>,
+	<James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <3b41510d-cd82-4c80-9651-ba9744f6ffc6@acm.org>
+Subject: RE: [PATCH] ufs: core: Print error value as hex format on
+ ufshcd_err_handler()
+Date: Mon, 12 May 2025 11:32:19 +0900
+Message-ID: <3b4d01dbc2e6$15423a10$3fc6ae30$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3fbcee73.2408.196c254dd8f.Coremail.sunliweis@126.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:bSkvCgD3H99nXSFoEoECAA--.20470W
-X-CM-SenderInfo: xvxqzxpzhl2qqrswhudrp/1tbiFgxLW2ghUkLLOAAFsl
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQKj/Hkc2gGrd+gl3yr8ZRpthH+1fQIhzdNLApfHxWmyGAYB0A==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWy7bCSvO7mWMUMg5OLRS2mffjJbLGxn8Pi
+	8q45bBbd13ewWSw//o/JgdXj8hVvj2mTTrF5fHx6i8Xj8ya5AJYoLpuU1JzMstQifbsEroy5
+	R54zFixjqrhy5A1rA+Mdxi5GTg4JAROJP1/ug9lCArsZJeZPt+hi5ACKS0hs+ZINYQpLHD5c
+	3MXIBVTxjFHiyp9vjCAOm8AERolJm2eCOSICOxklHu+7wApRBuS0P5vFAjKVU8Ba4kzvXGYQ
+	W1ggXOLEv6nsIDaLgKrEpa6vYDW8ApYSj6ftZ4KwBSVOznwCFmcW0JbofdjKCGHLS2x/O4cZ
+	4moFid2fjrKC2CICThJHli9jhagRkZjd2cY8gVFoFpJRs5CMmoVk1CwkLQsYWVYxSqYWFOem
+	5yYbFhjmpZbrFSfmFpfmpesl5+duYgRHhZbGDsZ335r0DzEycTAeYpTgYFYS4Z3KIJ8hxJuS
+	WFmVWpQfX1Sak1p8iFGag0VJnHelYUS6kEB6YklqdmpqQWoRTJaJg1OqgUn2u4Ayr76CmpS9
+	gQKX/nT/y1nfpr3vPnlAcOq5sOV+vdHp0mLtTIvlttVxu56fNO2FW/SjlOMrOW6W8z7Y+ktc
+	e8dDQ8vA9ACX4q5JJd5zf6w9rTjZpeysI5eh4aHzc3uDb3KcmLzHfM1U+W1Xl+ZV7nZ5X+Y4
+	+eftfdWhj86H3zzn1WzO/MJlfVTpA/G1X5+fLvhV/JXV4vK69rkTmm/s2DU3tXeOzhzruXJ+
+	X/xfLvmW63x5XYhhgqeer7fdykn+NZmNaxeszfx297jP7TX7ZUPqg2NE9hiFJzgfso00fPI9
+	0iugZRFv1csPTbkma99l/H943cVlt2K10Ay9GzNLy7IWvT684/TxTZZ6b+qVWIozEg21mIuK
+	EwERID3d+QIAAA==
+X-CMS-MailID: 20250512023219epcas1p2409388bd504ff09e9b5775a2aa804cd0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+cpgsPolicy: CPGSC10-711,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf
+References: <CGME20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf@epcas1p1.samsung.com>
+	<20250507020718.7446-1-wkon.kim@samsung.com>
+	<3b41510d-cd82-4c80-9651-ba9744f6ffc6@acm.org>
 
-QXBvbG9naWVzIGZvciB0aGlzIHJlLXNlbmQuIEl0IGFwcGVhcnMgbXkgcHJldmlvdXMgYXR0ZW1w
-dCB0byBzZW5kIHRoaXMgcGF0Y2ggZGlkIG5vdCBzdWNjZXNzZnVsbHkgcmVhY2ggdGhlIG1haWxp
-bmcgbGlzdHMgKGxpbnV4LWJsdWV0b290aEB2Z2VyLmtlcm5lbC5vcmcgYW5kIGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmcpLCBhbHRob3VnaCBzb21lIG1haW50YWluZXJzIG1heSBoYXZlIHJl
-Y2VpdmVkIGl0IGRpcmVjdGx5LgpJIGFtIHJlc2VuZGluZyBpdCBub3cgdG8gZW5zdXJlIGl0IGlz
-IHByb3Blcmx5IGRpc3RyaWJ1dGVkIHRvIHRoZSBsaXN0cyBmb3IgcmV2aWV3IGFuZCBkaXNjdXNz
-aW9uLgpJZiB0aGlzIG9uZSBzdGlsbCBmYWlscywgSSBtYXkgdHJ5IGFub3RoZXIgd2F5IHRvIHJl
-cG9ydCB0aGUgbmV3IGhhcmR3YXJlIElELgoKCkZyb20gNGJlZTJlYzU2NDhjNDhlYzVmZTYyYjIz
-MGNhZjI2OTg1Mzk4YjBlMCBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDEKRnJvbTogTGl3ZWkgU3Vu
-IDxzdW5saXdlaXNAMTI2LmNvbT4KRGF0ZTogVGh1LCAxIE1heSAyMDI1IDE3OjI3OjU5ICswODAw
-ClN1YmplY3Q6IFtQQVRDSF0gQmx1ZXRvb3RoOiBidHVzYjogQWRkIG5ldyBWSUQvUElEIDEzZDMv
-MzU4NCBmb3IgTVQ3OTIyCgpBIG5ldyB2YXJpYW50IG9mIE1UNzkyMiB3aXJlbGVzcyBkZXZpY2Ug
-aGFzIGJlZW4gaWRlbnRpZmllZC4KVGhlIGRldmljZSBpbnRyb2R1Y2VzIGl0c2VsZiBhcyBNRURJ
-QVRFSyBNVDc5MjIsCnNvIHRyZWF0IGl0IGFzIE1lZGlhVGVrIGRldmljZS4KV2l0aCB0aGlzIHBh
-dGNoLCBidHVzYiBkcml2ZXIgd29ya3MgYXMgZXhwZWN0ZWQ6ClsgICAgMy4xNTExNjJdIEJsdWV0
-b290aDogQ29yZSB2ZXIgMi4yMgpbICAgIDMuMTUxMTg1XSBCbHVldG9vdGg6IEhDSSBkZXZpY2Ug
-YW5kIGNvbm5lY3Rpb24gbWFuYWdlciBpbml0aWFsaXplZApbICAgIDMuMTUxMTg5XSBCbHVldG9v
-dGg6IEhDSSBzb2NrZXQgbGF5ZXIgaW5pdGlhbGl6ZWQKWyAgICAzLjE1MTE5MV0gQmx1ZXRvb3Ro
-OiBMMkNBUCBzb2NrZXQgbGF5ZXIgaW5pdGlhbGl6ZWQKWyAgICAzLjE1MTE5NF0gQmx1ZXRvb3Ro
-OiBTQ08gc29ja2V0IGxheWVyIGluaXRpYWxpemVkClsgICAgMy4yOTU3MThdIEJsdWV0b290aDog
-aGNpMDogSFcvU1cgVmVyc2lvbjogMHgwMDhhMDA4YSwgQnVpbGQgVGltZTogMjAyNDExMDYxNjM1
-MTIKWyAgICA0LjY3NjYzNF0gQmx1ZXRvb3RoOiBCTkVQIChFdGhlcm5ldCBFbXVsYXRpb24pIHZl
-ciAxLjMKWyAgICA0LjY3NjYzN10gQmx1ZXRvb3RoOiBCTkVQIGZpbHRlcnM6IHByb3RvY29sIG11
-bHRpY2FzdApbICAgIDQuNjc2NjQwXSBCbHVldG9vdGg6IEJORVAgc29ja2V0IGxheWVyIGluaXRp
-YWxpemVkClsgICAgNS41NjA0NTNdIEJsdWV0b290aDogaGNpMDogRGV2aWNlIHNldHVwIGluIDIz
-MjA2NjAgdXNlY3MKWyAgICA1LjU2MDQ1N10gQmx1ZXRvb3RoOiBoY2kwOiBIQ0kgRW5oYW5jZWQg
-U2V0dXAgU3luY2hyb25vdXMgQ29ubmVjdGlvbiBjb21tYW5kIGlzIGFkdmVydGlzZWQsIGJ1dCBu
-b3Qgc3VwcG9ydGVkLgpbICAgIDUuNjE5MTk3XSBCbHVldG9vdGg6IGhjaTA6IEFPU1AgZXh0ZW5z
-aW9ucyB2ZXJzaW9uIHYxLjAwClsgICAgNS42MTkyMDRdIEJsdWV0b290aDogaGNpMDogQU9TUCBx
-dWFsaXR5IHJlcG9ydCBpcyBzdXBwb3J0ZWQKWyAgICA1LjYxOTMwMV0gQmx1ZXRvb3RoOiBNR01U
-IHZlciAxLjIzClsgICAgNi43NDEyNDddIEJsdWV0b290aDogUkZDT01NIFRUWSBsYXllciBpbml0
-aWFsaXplZApbICAgIDYuNzQxMjU4XSBCbHVldG9vdGg6IFJGQ09NTSBzb2NrZXQgbGF5ZXIgaW5p
-dGlhbGl6ZWQKWyAgICA2Ljc0MTI2MV0gQmx1ZXRvb3RoOiBSRkNPTU0gdmVyIDEuMTEKCmxzcGNp
-IG91dHB1dDoKMDQ6MDAuMCBOZXR3b3JrIGNvbnRyb2xsZXI6IE1FRElBVEVLIENvcnAuIE1UNzky
-MiA4MDIuMTFheCBQQ0kgRXhwcmVzcyBXaXJlbGVzcyBOZXR3b3JrIEFkYXB0ZXIKClVTQiBpbmZv
-cm1hdGlvbjoKVDogIEJ1cz0wMSBMZXY9MDEgUHJudD0wMSBQb3J0PTA0IENudD0wMiBEZXYjPSAg
-MyBTcGQ9NDgwICBNeENoPSAwCkQ6ICBWZXI9IDIuMTAgQ2xzPWVmKG1pc2MgKSBTdWI9MDIgUHJv
-dD0wMSBNeFBTPTY0ICNDZmdzPSAgMQpQOiAgVmVuZG9yPTEzZDMgUHJvZElEPTM1ODQgUmV2PSAx
-LjAwClM6ICBNYW51ZmFjdHVyZXI9TWVkaWFUZWsgSW5jLgpTOiAgUHJvZHVjdD1XaXJlbGVzc19E
-ZXZpY2UKUzogIFNlcmlhbE51bWJlcj0wMDAwMDAwMDAKQzoqICNJZnM9IDMgQ2ZnIz0gMSBBdHI9
-ZTAgTXhQd3I9MTAwbUEKQTogIEZpcnN0SWYjPSAwIElmQ291bnQ9IDMgQ2xzPWUwKHdsY29uKSBT
-dWI9MDEgUHJvdD0wMQpJOiogSWYjPSAwIEFsdD0gMCAjRVBzPSAzIENscz1lMCh3bGNvbikgU3Vi
-PTAxIFByb3Q9MDEgRHJpdmVyPWJ0dXNiCkU6ICBBZD04MShJKSBBdHI9MDMoSW50LikgTXhQUz0g
-IDE2IEl2bD0xMjV1cwpFOiAgQWQ9ODIoSSkgQXRyPTAyKEJ1bGspIE14UFM9IDUxMiBJdmw9MG1z
-CkU6ICBBZD0wMihPKSBBdHI9MDIoQnVsaykgTXhQUz0gNTEyIEl2bD0wbXMKSToqIElmIz0gMSBB
-bHQ9IDAgI0VQcz0gMiBDbHM9ZTAod2xjb24pIFN1Yj0wMSBQcm90PTAxIERyaXZlcj1idHVzYgpF
-OiAgQWQ9ODMoSSkgQXRyPTAxKElzb2MpIE14UFM9ICAgMCBJdmw9MW1zCkU6ICBBZD0wMyhPKSBB
-dHI9MDEoSXNvYykgTXhQUz0gICAwIEl2bD0xbXMKSTogIElmIz0gMSBBbHQ9IDEgI0VQcz0gMiBD
-bHM9ZTAod2xjb24pIFN1Yj0wMSBQcm90PTAxIERyaXZlcj1idHVzYgpFOiAgQWQ9ODMoSSkgQXRy
-PTAxKElzb2MpIE14UFM9ICAgOSBJdmw9MW1zCkU6ICBBZD0wMyhPKSBBdHI9MDEoSXNvYykgTXhQ
-Uz0gICA5IEl2bD0xbXMKSTogIElmIz0gMSBBbHQ9IDIgI0VQcz0gMiBDbHM9ZTAod2xjb24pIFN1
-Yj0wMSBQcm90PTAxIERyaXZlcj1idHVzYgpFOiAgQWQ9ODMoSSkgQXRyPTAxKElzb2MpIE14UFM9
-ICAxNyBJdmw9MW1zCkU6ICBBZD0wMyhPKSBBdHI9MDEoSXNvYykgTXhQUz0gIDE3IEl2bD0xbXMK
-STogIElmIz0gMSBBbHQ9IDMgI0VQcz0gMiBDbHM9ZTAod2xjb24pIFN1Yj0wMSBQcm90PTAxIERy
-aXZlcj1idHVzYgpFOiAgQWQ9ODMoSSkgQXRyPTAxKElzb2MpIE14UFM9ICAyNSBJdmw9MW1zCkU6
-ICBBZD0wMyhPKSBBdHI9MDEoSXNvYykgTXhQUz0gIDI1IEl2bD0xbXMKSTogIElmIz0gMSBBbHQ9
-IDQgI0VQcz0gMiBDbHM9ZTAod2xjb24pIFN1Yj0wMSBQcm90PTAxIERyaXZlcj1idHVzYgpFOiAg
-QWQ9ODMoSSkgQXRyPTAxKElzb2MpIE14UFM9ICAzMyBJdmw9MW1zCkU6ICBBZD0wMyhPKSBBdHI9
-MDEoSXNvYykgTXhQUz0gIDMzIEl2bD0xbXMKSTogIElmIz0gMSBBbHQ9IDUgI0VQcz0gMiBDbHM9
-ZTAod2xjb24pIFN1Yj0wMSBQcm90PTAxIERyaXZlcj1idHVzYgpFOiAgQWQ9ODMoSSkgQXRyPTAx
-KElzb2MpIE14UFM9ICA0OSBJdmw9MW1zCkU6ICBBZD0wMyhPKSBBdHI9MDEoSXNvYykgTXhQUz0g
-IDQ5IEl2bD0xbXMKSTogIElmIz0gMSBBbHQ9IDYgI0VQcz0gMiBDbHM9ZTAod2xjb24pIFN1Yj0w
-MSBQcm90PTAxIERyaXZlcj1idHVzYgpFOiAgQWQ9ODMoSSkgQXRyPTAxKElzb2MpIE14UFM9ICA2
-MyBJdmw9MW1zCkU6ICBBZD0wMyhPKSBBdHI9MDEoSXNvYykgTXhQUz0gIDYzIEl2bD0xbXMKSTog
-IElmIz0gMiBBbHQ9IDAgI0VQcz0gMiBDbHM9ZTAod2xjb24pIFN1Yj0wMSBQcm90PTAxIERyaXZl
-cj1idHVzYgpFOiAgQWQ9OGEoSSkgQXRyPTAzKEludC4pIE14UFM9ICA2NCBJdmw9MTI1dXMKRTog
-IEFkPTBhKE8pIEF0cj0wMyhJbnQuKSBNeFBTPSAgNjQgSXZsPTEyNXVzCkk6KiBJZiM9IDIgQWx0
-PSAxICNFUHM9IDIgQ2xzPWUwKHdsY29uKSBTdWI9MDEgUHJvdD0wMSBEcml2ZXI9YnR1c2IKRTog
-IEFkPThhKEkpIEF0cj0wMyhJbnQuKSBNeFBTPSA1MTIgSXZsPTEyNXVzCgpTaWduZWQtb2ZmLWJ5
-OiBMaXdlaSBTdW4gPHN1bmxpd2Vpc0AxMjYuY29tPgotLS0KIGRyaXZlcnMvYmx1ZXRvb3RoL2J0
-dXNiLmMgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ibHVldG9vdGgvYnR1c2IuYyBiL2RyaXZlcnMvYmx1ZXRvb3RoL2J0dXNiLmMK
-aW5kZXggNTAxMmI1ZmY5MmM4Li45ODUwMjcyZTgzZWYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYmx1
-ZXRvb3RoL2J0dXNiLmMKKysrIGIvZHJpdmVycy9ibHVldG9vdGgvYnR1c2IuYwpAQCAtNjc4LDYg
-KzY3OCw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgdXNiX2RldmljZV9pZCBxdWlya3NfdGFibGVb
-XSA9IHsKIAkJCQkJCSAgICAgQlRVU0JfV0lERUJBTkRfU1BFRUNIIH0sCiAJeyBVU0JfREVWSUNF
-KDB4MTNkMywgMHgzNTY4KSwgLmRyaXZlcl9pbmZvID0gQlRVU0JfTUVESUFURUsgfAogCQkJCQkJ
-ICAgICBCVFVTQl9XSURFQkFORF9TUEVFQ0ggfSwKKwl7IFVTQl9ERVZJQ0UoMHgxM2QzLCAweDM1
-ODQpLCAuZHJpdmVyX2luZm8gPSBCVFVTQl9NRURJQVRFSyB8CisJCQkJCQkgICAgIEJUVVNCX1dJ
-REVCQU5EX1NQRUVDSCB9LAogCXsgVVNCX0RFVklDRSgweDEzZDMsIDB4MzYwNSksIC5kcml2ZXJf
-aW5mbyA9IEJUVVNCX01FRElBVEVLIHwKIAkJCQkJCSAgICAgQlRVU0JfV0lERUJBTkRfU1BFRUNI
-IH0sCiAJeyBVU0JfREVWSUNFKDB4MTNkMywgMHgzNjA3KSwgLmRyaXZlcl9pbmZvID0gQlRVU0Jf
-TUVESUFURUsgfAotLSAKMi40OS4wCgo=
+> On 5/6/25 7:07 PM, wkon-kim wrote:
+> > It is better to print saved_err and saved_uic_err in hex format.
+> > Integer format is hard to spot.
+> 
+> spot -> decode
+> 
+> Anyway:
+> 
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+
+
+Okay, I'll modify it.
+
+Thank you.
+Wonkon Kim
+
