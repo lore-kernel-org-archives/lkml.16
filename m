@@ -1,149 +1,140 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7C825C6EB
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC61924DFF1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747087230; cv=none; b=lI+pOsoOWMIK6sxVvIy7G0tgvl9nPfEY8FAHVzS+ql4WMwbIXo/TR2pbviBHLRNPsneOqeE+ir7ZcxgkO+UlM/UyWqrL5wN4FXdlMSqo9B4IOYMaukFFcq5VnTgqhSgoPqNT8brJT7RpAnAyeXT42KaG2hs3sZ79Gj67auQok3E=
+	t=1747087312; cv=none; b=C3TE4wjHZ8nMKnBfTT2V70S045lgDSP8M9msuzD5seTHEXjOK6O9KQke8zStTBnBj8BIpnMIvu+3VxSttwyoTGFgg0szxM+j/uiS+pReFNjy3Nlbb6QNO399JIKzl3XJXmJFmxqKN4rCWoTNKZ7vPsA0U3/fCOYHpeO7YL9NQLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747087230; c=relaxed/simple;
-	bh=diOLJiRZFSJh9VcRUsMpdMJALVTGuXugiuhkAFp4UEs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fMQYfdsF6sUTg742xwW0Q2HIpJfblgF6+esOAYunu9E0MSf8P4xVQzW1R2KWDWR/U+hFCEKOVDo++GasuM8gbG5WxhG5LTOHWBt7E7jkl3cNJFA6tEqh50Vj9FWFS4mUlAGW1r26bDMu6Xn3w94F0jfPjX6GjIoHA572MukFPmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z+3Kztxl; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747087312; c=relaxed/simple;
+	bh=rHfSaTbnyI9XoypCkJo/iUq/Y4OjgIW4d0dEWEOb4WQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qKOa0pCEgu+aAUm0TPbgdFJJv/5OYkxd/3zoWusrrq4rXgCF6S4Q/paFtiJXPXPca/gOWdeNyH/Upx0+G52OL2OfamUXH34pcLEwmjR7H+xjkJaMWFCa1ULiyB52gCJBtv00pMTvfVWZ57496Dp9c5D4PLiK3Lwc8fZaQOaCVA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ZtEZgBw0; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z+3Kztxl"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-740b3a18e26so4181149b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:00:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ZtEZgBw0"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70a338b1ce5so45981487b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747087228; x=1747692028; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5l00tHt9ZJ1/pub8XJ3X7haVxjAb2DQwjaiKyF9pcNQ=;
-        b=Z+3Kztxlktu/tR/kD48rbzqUgrI4TMHjIp7atnZrv9QKZjnO1+jOPb7fa46SaLxRga
-         HEQBk5CuzuzOFZz9Et3w05fpjEcKcemuYechcpBYxBXenDRbGDVf3j6/tvfqYiQJO5t4
-         3INkCnti8bcittkboT2cosiLU3vY6vJTtT4cb93yotAbTaCvsepzHYnxhIo9+PWdIehe
-         kGOAk0M02hVIBfRCyrcn9njBme9nUg6C+t/+5rZPKSnhGJ6l3945Ti4ZcQCGY6GjE8lM
-         V9kfdtruF/2RCpvY3uoMNyvMrEFBUSTIfjD7jfwgfiWVc5UTwdSupoKXpsIFL9N7xpju
-         KOBw==
+        d=paul-moore.com; s=google; t=1747087309; x=1747692109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XKie0IlRkp83iNNzrci+462IuBHk3Z5i8ViXJGbM2zI=;
+        b=ZtEZgBw0GmHrKBzqkZyUxP7mkbD8/w0vn//14mhD4T1atH4bDu2pDSP46+cDLmfAPY
+         ZI4MJ//OPOZlf9nwd4wVP5Xe8Y9DrKnmsgUmO1y68MZIRWaHL1OsGOFzAfK40sz+4giL
+         mgJU2jOZvRFhkXm2qSi4InNudvUCgsLge5YbBhD5zVY37468STGiJOe5PMmBfPgs3FxW
+         qmFU9FgvEhJSaasZbRMKjy7OW7qhraSdnYTu7f9vZWpqHvYGfQNyovl5kZLGZCp4+Y/l
+         Whx9hGFvjrUamAFiJYOBG/YNAlg4LRwGaGoUS9nVHsQ2aBtWZu8rv3q3DhcsN+Cpb7uK
+         IpZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747087228; x=1747692028;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5l00tHt9ZJ1/pub8XJ3X7haVxjAb2DQwjaiKyF9pcNQ=;
-        b=jNfxb0++ru1cLQ0flBRk7UP1XnyLLSS3bIz1WFOdlmuWJ+KeiZY3dlkdY0weeA+85l
-         liAwIw0dA3/MgXtVB25zsKpIufJP+XbTuEy03kvkOuXk/L7cuVtt1BQeptIYYHC3v7ZU
-         GjfUExQokP7G5IlluT7k4DCu7V8Y+Cw72dENCcY0JPUI0Qhk/jh2y+S4SxxnFPoqCFSz
-         HnJ/0NbZcWswVNWG4yWI0KNiOPF4rbbdxss0AN2cF+x9XOM2RbunqlmHTJQkgUFBDR1r
-         r+0H9iKF78pnVEtup3pgVwCPQ5GXWI7BaKy/hkVozHGYvNXF5w9icr4d7+Dw15cUm9CM
-         vyRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhtSfelBOuB1PLqVd1pFStAOWfZ2JkqWjy3zxkVcZfESZodfxZWaY+wSwaBeo7tmYrTQ/PDUbw1URwkcQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYqWYQFQr2cdV/yWqouIDROLcOd0bqZqQL+9zYD9c8KptUmJ2T
-	94kLc/PPuDI2jydy/0XIIVXkft/QMYwcFLLVUW0oQutFzAA2W3QbrCDfHW+Xrg==
-X-Gm-Gg: ASbGncvJlJ1HQpJzhH0Yrd0P1j/AONXHQXlfzn5zsg2/IVCRhnySng0plWZAxXONJsg
-	a9s2vjB2Q3qTdocVDYDx2SyWU7LaGHtkJpoB8E+Rh2xDNYlmLMj5qwYRyRpsePrCDNh1PIe4xka
-	Jz4kncUqPmOfO9u6CmPkzWuLnuVclumQ7pr0gJ4JGmmZ+/H3X/FmQ8BTBNAcrE0qTAes8lcZR6d
-	1U+1IbXbfvz89rczwO6rsRycuLZkH8VWeSuam/w9G8RA3Lbc5qa0ACtvuQYbXvOxi6k2YDARoIW
-	cG0vIHksJJ/3pZw9OhTx9sCEErHUYmFZkbKsxOYgLi553oGyY7oqusEEZjHOhE7dcRAUMZFiHRr
-	MXto7T+3eXqoMAOW1b4d3L1n5ZrlUGzlydrTqIeZgaeZGyFMQmw==
-X-Google-Smtp-Source: AGHT+IExj3eLQl26ZSvC2WJ+nSHOB4LhkmFdvTFL4ZsuUWO5eYrjUAy0qOg+cFqUIpnUOL1QIlRIzg==
-X-Received: by 2002:a05:6a00:802:b0:736:4110:5579 with SMTP id d2e1a72fcca58-7423bc02f2cmr18990453b3a.2.1747087227689;
-        Mon, 12 May 2025 15:00:27 -0700 (PDT)
-Received: from ?IPV6:2a00:79e0:2e14:7:464d:e081:1c2c:7358? ([2a00:79e0:2e14:7:464d:e081:1c2c:7358])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742377050bbsm6596858b3a.27.2025.05.12.15.00.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 15:00:27 -0700 (PDT)
-Message-ID: <cd4f50fd-e418-45e0-81d8-0d34a5431a28@google.com>
-Date: Mon, 12 May 2025 15:00:25 -0700
+        d=1e100.net; s=20230601; t=1747087309; x=1747692109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XKie0IlRkp83iNNzrci+462IuBHk3Z5i8ViXJGbM2zI=;
+        b=bsZYKeUXVWF9ZrXquSymir1HZB7nRF/PvHvHbs4mxC4mvFpQcrg/idkttfCzhONIOt
+         O+1/tynYfgx9nG/jRYFw1352HtUNIFG4r43EV13gfsTmWuAYs8b4RWqlkO1GB2/ReQ/K
+         00AQl5sdQrzD/xcgqWnGkdJyv6Bq0eDTpkVd8hHRdcAPzoPzr75XEONVuhkcmT9jnnwT
+         05skKogMFqFd34MvI+9naKOMWnwPThWCpE5LPF5sJz0xjVGb26IaYDFTH/Qm8MtP3muQ
+         FQ1VWRGG3dZUrG50WPWxAzTF8O+C6aYeiOlVHSlf9QJK/8Tk+6DKHLCPxmHatWQC8Vbm
+         yYsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhXwMhnP1j82mx09BVAg139sMfrY3mUoTUdDzYQT6NLaBArmTNopcs945gBawW6xMTPWLsAOacfIEmP9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjnJCwL1Ox6Mtno0+iQfeESRZBjUVrJrcULMLnAJbX6zy6zxd6
+	B/Z1Lp4tNWwSB9AIJBe5wGUFJBpWt/bfXHo670+GTv5fFx1/CgC9NJAAibBKmz4BhjVOmfWT4GG
+	2l4hizBl3PmxkoAtA+42gbJg120cIyGOPt2yHx3F/dinwT7U=
+X-Gm-Gg: ASbGncuylygz5IvKsrGYuLS1p+zQcd7R4XA/AnmvAP6jLOKIBgO0ltZwKSG6TPfwaRg
+	FPJ+U/c8dSpWMlC/GMxKrV3+ZNtE86ir4505Ao/dNgXmaNzZiOKEoKhDsOTbdmmynsyiltEsEzA
+	MGzzRqpQygOHx9Ida+xSllifrBp6x+V9H4
+X-Google-Smtp-Source: AGHT+IFOMIsPRB6N77R/jqBwaSjy0jmjto+6IHP1IR9XhbZIQXfDLlpLMX4TWO85MDI4QzsKiGldRFQrkRYAnblk9Us=
+X-Received: by 2002:a05:690c:4b0f:b0:706:ac56:825f with SMTP id
+ 00721157ae682-70a3f9ec8e0mr191260187b3.5.1747087309387; Mon, 12 May 2025
+ 15:01:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: typec: tcpm: Use configured PD revision for
- negotiation
-To: Cosmo Chou <chou.cosmo@gmail.com>, badhri@google.com,
- heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- cosmo.chou@quantatw.com, "kyletso@google.com" <Kyletso@google.com>,
- "rdbabiera@google.com" <rdbabiera@google.com>
-References: <20250508174756.1300942-1-chou.cosmo@gmail.com>
-Content-Language: en-US
-From: Amit Sunil Dhamne <amitsd@google.com>
-In-Reply-To: <20250508174756.1300942-1-chou.cosmo@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250321102422.640271-1-nik.borisov@suse.com> <CAHC9VhSpgzde_xRiu9FApg59w6sR1FUWW-Pf7Ya6XG9eFHwTqQ@mail.gmail.com>
+ <67f69600ed221_71fe2946f@dwillia2-xfh.jf.intel.com.notmuch> <68226ad551afd_29032945b@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <68226ad551afd_29032945b@dwillia2-xfh.jf.intel.com.notmuch>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 12 May 2025 18:01:38 -0400
+X-Gm-Features: AX0GCFtgJv-4_VcLPYA2b-6hwyHqoFeVQTahFrJ-tcQAIU0sDVq-uYd-lD9xr08
+Message-ID: <CAHC9VhSyz2MqMjnHFbTiMqYvhAFZf162ZabnSsyyCQEZj-V9=g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Allow individual features to be locked down
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Nikolay Borisov <nik.borisov@suse.com>, linux-security-module@vger.kernel.org, 
+	serge@hallyn.com, kees@kernel.org, linux-kernel@vger.kernel.org, 
+	kirill.shutemov@linux.intel.com, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Cosmo,
-
-Thanks for the patch!
-
-On 5/8/25 10:47 AM, Cosmo Chou wrote:
-> Initialize negotiated_rev and negotiated_rev_prime based on the port's
-> configured PD revision (rev_major) rather than always defaulting to
-> PD_MAX_REV. This ensures ports start PD communication using their
-> appropriate revision level.
+On Mon, May 12, 2025 at 5:41=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
+com> wrote:
+> Dan Williams wrote:
+> > Paul Moore wrote:
+> > > On Fri, Mar 21, 2025 at 6:24=E2=80=AFAM Nikolay Borisov <nik.borisov@=
+suse.com> wrote:
+> > > >
+> > > > This simple change allows usecases where someone might want to  loc=
+k only specific
+> > > > feature at a finer granularity than integrity/confidentiality level=
+s allows.
+> > > > The first likely user of this is the CoCo subsystem where certain f=
+eatures will be
+> > > > disabled.
+> > > >
+> > > > Nikolay Borisov (2):
+> > > >   lockdown: Switch implementation to using bitmap
+> > > >   lockdown/kunit: Introduce kunit tests
+> > >
+> > > Hi Nikolay,
+> > >
+> > > Thanks for the patches!  With the merge window opening in a few days,
+> > > it is too late to consider this for the upcoming merge window so
+> > > realistically this patchset is two weeks out and I'm hopeful we'll
+> > > have a dedicated Lockdown maintainer by then so I'm going to defer th=
+e
+> > > ultimate decision on acceptance to them.
+> >
+> > The patches in this thread proposed to selectively disable /dev/mem
+> > independent of all the other lockdown mitigations. That goal can be
+> > achieved with more precision with this proposed patch:
+> >
+> > http://lore.kernel.org/67f5b75c37143_71fe2949b@dwillia2-xfh.jf.intel.co=
+m.notmuch
 >
-> This allows proper communication with devices that require specific
-> PD revision levels, especially for the hardware designed for PD 1.0
-I didn't know PD1.0 is still used.
-> or 2.0 specifications.
+> Just wanted to circle back here and repair the damage I caused to the
+> momentum of this "lockdown feature bitmap" proposal. It turns out that
+> devmem maintainers are not looking to add yet more arch-specific hacks
+> [1].
 >
-> Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
-> ---
->   drivers/usb/typec/tcpm/tcpm.c | 18 ++++++++++++++----
->   1 file changed, 14 insertions(+), 4 deletions(-)
+>     "Restricting /dev/mem further is a good idea, but it would be nice
+>      if that could be done without adding yet another special case."
 >
-> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> index a99db4e025cd..5a58c21c4d14 100644
-> --- a/drivers/usb/typec/tcpm/tcpm.c
-> +++ b/drivers/usb/typec/tcpm/tcpm.c
-> @@ -4782,8 +4782,13 @@ static void run_state_machine(struct tcpm_port *port)
->   		typec_set_pwr_opmode(port->typec_port, opmode);
->   		port->pwr_opmode = TYPEC_PWR_MODE_USB;
->   		port->caps_count = 0;
-> -		port->negotiated_rev = PD_MAX_REV;
-> -		port->negotiated_rev_prime = PD_MAX_REV;
-> +		if (port->pd_rev.rev_major > 0 && port->pd_rev.rev_major <= PD_MAX_REV + 1) {
+> security_locked_down() is already plumbed into all the places that
+> confidential VMs may need to manage userspace access to confidential /
+> private memory.
+>
+> I considered registering a new "coco-LSM" to hook
+> security_locked_down(), but that immediately raises the next question of
+> how does userspace discover what is currently locked_down. So just teach
+> the native lockdown LSM how to be more fine-grained rather than
+> complicate the situation with a new LSM.
 
-For better readability, I'd prefer you use macros for the numerical 
-values and implement this logic as a switch case. This would make the 
-value difference between PD specification revision in PD Message header 
-vs PD max revision AMS transparent to the reader.
+Historically Linus has bristled at LSMs with alternative
+security_locked_down() implementations/security-models, therefore I'd
+probably give a nod to refining the existing Lockdown approach over a
+new LSM.
 
-Thanks,
+Related update, there are new Lockdown maintainers coming, there is
+just an issue of sorting out some email addresses first.  Hopefully
+we'll see something on-list soon.
 
-Amit
-
-> +			port->negotiated_rev = port->pd_rev.rev_major - 1;
-> +			port->negotiated_rev_prime = port->pd_rev.rev_major - 1;
-> +		} else {
-> +			port->negotiated_rev = PD_MAX_REV;
-> +			port->negotiated_rev_prime = PD_MAX_REV;
-> +		}
->   		port->message_id = 0;
->   		port->message_id_prime = 0;
->   		port->rx_msgid = -1;
-> @@ -5048,8 +5053,13 @@ static void run_state_machine(struct tcpm_port *port)
->   					      port->cc2 : port->cc1);
->   		typec_set_pwr_opmode(port->typec_port, opmode);
->   		port->pwr_opmode = TYPEC_PWR_MODE_USB;
-> -		port->negotiated_rev = PD_MAX_REV;
-> -		port->negotiated_rev_prime = PD_MAX_REV;
-> +		if (port->pd_rev.rev_major > 0 && port->pd_rev.rev_major <= PD_MAX_REV + 1) {
-> +			port->negotiated_rev = port->pd_rev.rev_major - 1;
-> +			port->negotiated_rev_prime = port->pd_rev.rev_major - 1;
-> +		} else {
-> +			port->negotiated_rev = PD_MAX_REV;
-> +			port->negotiated_rev_prime = PD_MAX_REV;
-> +		}
->   		port->message_id = 0;
->   		port->message_id_prime = 0;
->   		port->rx_msgid = -1;
+--=20
+paul-moore.com
