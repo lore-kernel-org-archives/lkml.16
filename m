@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14654258CEA
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBEE2920A8
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747054071; cv=none; b=Pob16keXN0LLf/Rf2+pCqOlesUf3q0Lej/IhdO3eUnX5WhkEl+l7n8P7pP+P9CxFSPaRpZT3naaNN0o4YbcEthgnLDTnB2Czyf2JdygulEesE+WvtE3wkIgwZ21U9/84X3hsYa6n9bqm711xiya8NYuepRtCBNhndaoRdnOyJc4=
+	t=1747054072; cv=none; b=mlmuvhea4zMqqpEklnHhmVdMsi1pFDnRMcvmYEYgvsyuLZIPR2ZlKzJAV53WH2jGRW0F3Vz9e0kaqUlZL8Tslf8YCvcL/38Z7JR/QvKLj0UtH4S2sclbADL172XVlnytJ+IGoaQ0YWbUKVNZ3c7rmzNxja3FLZ+ELkZ9PlZdOQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747054071; c=relaxed/simple;
-	bh=V1keSoVKR33dBQrRuFhe/vQPYp82UwEAETDkAyvChFc=;
+	s=arc-20240116; t=1747054072; c=relaxed/simple;
+	bh=CguizQ4yTMFm83+hGjc98jh2INAj50rnlcb59ypO+2Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fs2BddES1t77z4NJBiZQIekFGnXbkssUp+Tz1bOa6MJcUwf5W3qsTdviy/bAhhGIRK1yJ6Cd2JIgtFxNj/KALc63UzN7bFCo5C/7DCOqZedwuYj7xotaTiww+GRtJxcWhwfdQKPIz5dpx5BmjVGv7E8HWiw95CU5P2tNQuZ+yd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dYEgk0mr; arc=none smtp.client-ip=220.197.31.4
+	 MIME-Version; b=JuHCGIr18WS48FkBDzr3pQTVY/BzrsQ/fwe7An2X67h59OZwDDrmAivV3OYTU15PalNPQK3aENAUFI+Ar+ytVIOyEDh2wlG+tt7T9ti2FyFE5EZM2wDOFPnv14k6kCqnbfUvs89HYlG3vRBhYYWvO5HmoYC0OKNzzLqzopg2u4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YXxeFWMq; arc=none smtp.client-ip=117.135.210.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dYEgk0mr"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YXxeFWMq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=dB
-	S7SAsAp5FhUlU/3iHX21eFkYpu2uCNBgSKCpFIXoc=; b=dYEgk0mr8SQrs9C3Yb
-	mU0uQ95jeLLh/2SUuUKGtv75BEX7AbJnbBkDRE/oPkQv7kzOro8QdBRuEwi7ZRDV
-	MK0WAaFt3v94mYzWD9cHkgMgEyNW7ozuZYXnvGuevseJkpE5jSS+VO7kZ1i9PIxV
-	R0OE50jCrxiXCI7EeDADEoQvA=
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=ck
+	0Oa6Hq1RQ1X+FOIxxUqrsCrvgqpQ03ONEP831KWyU=; b=YXxeFWMqp2G21M7k8n
+	d0sl7XHelAhyRhuHaW0wKr/ikCC4CPKZirbQUsAnQ8kfPXyIFc0ezL2D9HsHxtq5
+	CdolXmRc83opYm5EFTrTTzE9zvgnZQ3Hu9P5DXL/O5CEBkxdtyYhQ1005lmsN4A5
+	4qhhrssf/ZGThy7Ldj2O08kbI=
 Received: from ProDesk.. (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgC3chWY7SFoQ+_OAQ--.62400S10;
-	Mon, 12 May 2025 20:46:29 +0800 (CST)
+	by gzsmtp3 (Coremail) with SMTP id PigvCgC3chWY7SFoQ+_OAQ--.62400S9;
+	Mon, 12 May 2025 20:46:28 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: dmitry.baryshkov@oss.qualcomm.com,
 	heiko@sntech.de
@@ -37,9 +37,9 @@ Cc: jonas@kwiboo.se,
 	linux-kernel@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v5 08/10] drm/rockchip: inno_hdmi: Simpify clk get/enable by devm_clk_get_enabled api
-Date: Mon, 12 May 2025 20:46:09 +0800
-Message-ID: <20250512124615.2848731-9-andyshrk@163.com>
+Subject: [PATCH v5 07/10] drm/rockchip: inno_hdmi: switch i2c registration to devm functions
+Date: Mon, 12 May 2025 20:46:08 +0800
+Message-ID: <20250512124615.2848731-8-andyshrk@163.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250512124615.2848731-1-andyshrk@163.com>
 References: <20250512124615.2848731-1-andyshrk@163.com>
@@ -50,17 +50,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgC3chWY7SFoQ+_OAQ--.62400S10
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF1fJr1UGF4fWr43Cry3Jwb_yoW5uw4kpr
-	y7AFWYqryxJF4jg34UZF4UJr1FyF4UGa47GrWxWan3AwnxXr15KFW0vryS9FWFyr95Za13
-	trWkXFy5Z3WUWF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j8nYwUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0g9LXmgh5MDHDwAAst
+X-CM-TRANSID:PigvCgC3chWY7SFoQ+_OAQ--.62400S9
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AFWfXryxWw4Utr43Ww47XFb_yoW8ZFyfpr
+	W7AF4YgrWxZF4vgr4DZF4kCF1ayay8GayxWFWIgwsakwnxWry5tFyrXryS9a45A3srXanr
+	tr4vq345uF1UKaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j3189UUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqA1LXmgh6hVM3wABsU
 
 From: Andy Yan <andy.yan@rock-chips.com>
 
-Make use of devm_clk_get_enabled() to replace devm_clk_get() and
-clk_prepare_enable(), which will make the cleanup of clk code simpler.
+Switch from i2c_add_adapter() to resource managed
+devm_i2c_add_adapter(), which will make the cleanup code more simpler.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
@@ -69,100 +69,51 @@ Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 Changes in v5:
 - Split from PATCH 9/10
 
- drivers/gpu/drm/rockchip/inno_hdmi.c | 50 +++++++---------------------
- 1 file changed, 12 insertions(+), 38 deletions(-)
+ drivers/gpu/drm/rockchip/inno_hdmi.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-index 776a2aa74e49c..1ab3ad4bde9ea 100644
+index f362803060796..776a2aa74e49c 100644
 --- a/drivers/gpu/drm/rockchip/inno_hdmi.c
 +++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-@@ -1269,53 +1269,34 @@ static int inno_hdmi_bind(struct device *dev, struct device *master,
- 	if (IS_ERR(hdmi->regs))
- 		return PTR_ERR(hdmi->regs);
+@@ -1230,10 +1230,9 @@ static struct i2c_adapter *inno_hdmi_i2c_adapter(struct inno_hdmi *hdmi)
+ 	strscpy(adap->name, "Inno HDMI", sizeof(adap->name));
+ 	i2c_set_adapdata(adap, hdmi);
  
--	hdmi->pclk = devm_clk_get(hdmi->dev, "pclk");
-+	hdmi->pclk = devm_clk_get_enabled(hdmi->dev, "pclk");
- 	if (IS_ERR(hdmi->pclk))
- 		return dev_err_probe(dev, PTR_ERR(hdmi->pclk), "Unable to get HDMI pclk\n");
- 
--	ret = clk_prepare_enable(hdmi->pclk);
--	if (ret)
--		return dev_err_probe(dev, ret, "Cannot enable HDMI pclk: %d\n", ret);
--
--	hdmi->refclk = devm_clk_get_optional(hdmi->dev, "ref");
--	if (IS_ERR(hdmi->refclk)) {
--		ret = dev_err_probe(dev, PTR_ERR(hdmi->refclk), "Unable to get HDMI refclk\n");
--		goto err_disable_pclk;
--	}
--
--	ret = clk_prepare_enable(hdmi->refclk);
--	if (ret) {
--		ret = dev_err_probe(dev, ret, "Cannot enable HDMI refclk: %d\n", ret);
--		goto err_disable_pclk;
--	}
-+	hdmi->refclk = devm_clk_get_optional_enabled(hdmi->dev, "ref");
-+	if (IS_ERR(hdmi->refclk))
-+		return dev_err_probe(dev, PTR_ERR(hdmi->refclk), "Unable to get HDMI refclk\n");
- 
- 	if (hdmi->variant->dev_type == RK3036_HDMI) {
- 		hdmi->grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
--		if (IS_ERR(hdmi->grf)) {
--			ret = dev_err_probe(dev, PTR_ERR(hdmi->grf),
--					    "Unable to get rockchip,grf\n");
--			goto err_disable_clk;
--		}
-+		if (IS_ERR(hdmi->grf))
-+			return dev_err_probe(dev,
-+					     PTR_ERR(hdmi->grf), "Unable to get rockchip,grf\n");
+-	ret = i2c_add_adapter(adap);
++	ret = devm_i2c_add_adapter(hdmi->dev, adap);
+ 	if (ret) {
+ 		dev_warn(hdmi->dev, "cannot add %s I2C adapter\n", adap->name);
+-		devm_kfree(hdmi->dev, i2c);
+ 		return ERR_PTR(ret);
  	}
  
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		ret = irq;
--		goto err_disable_clk;
--	}
-+	if (irq < 0)
-+		return irq;
- 
- 	inno_hdmi_init_hw(hdmi);
- 
- 	hdmi->ddc = inno_hdmi_i2c_adapter(hdmi);
--	if (IS_ERR(hdmi->ddc)) {
--		ret = PTR_ERR(hdmi->ddc);
--		hdmi->ddc = NULL;
--		goto err_disable_clk;
--	}
-+	if (IS_ERR(hdmi->ddc))
-+		return PTR_ERR(hdmi->ddc);
+@@ -1316,7 +1315,7 @@ static int inno_hdmi_bind(struct device *dev, struct device *master,
  
  	ret = inno_hdmi_register(drm, hdmi);
  	if (ret)
--		goto err_disable_clk;
-+		return ret;
+-		goto err_put_adapter;
++		goto err_disable_clk;
  
  	dev_set_drvdata(dev, hdmi);
  
-@@ -1329,10 +1310,6 @@ static int inno_hdmi_bind(struct device *dev, struct device *master,
+@@ -1330,8 +1329,6 @@ static int inno_hdmi_bind(struct device *dev, struct device *master,
  err_cleanup_hdmi:
  	hdmi->connector.funcs->destroy(&hdmi->connector);
  	hdmi->encoder.encoder.funcs->destroy(&hdmi->encoder.encoder);
--err_disable_clk:
--	clk_disable_unprepare(hdmi->refclk);
--err_disable_pclk:
--	clk_disable_unprepare(hdmi->pclk);
- 	return ret;
- }
- 
-@@ -1343,9 +1320,6 @@ static void inno_hdmi_unbind(struct device *dev, struct device *master,
- 
+-err_put_adapter:
+-	i2c_put_adapter(hdmi->ddc);
+ err_disable_clk:
+ 	clk_disable_unprepare(hdmi->refclk);
+ err_disable_pclk:
+@@ -1347,7 +1344,6 @@ static void inno_hdmi_unbind(struct device *dev, struct device *master,
  	hdmi->connector.funcs->destroy(&hdmi->connector);
  	hdmi->encoder.encoder.funcs->destroy(&hdmi->encoder.encoder);
--
--	clk_disable_unprepare(hdmi->refclk);
--	clk_disable_unprepare(hdmi->pclk);
- }
  
- static const struct component_ops inno_hdmi_ops = {
+-	i2c_put_adapter(hdmi->ddc);
+ 	clk_disable_unprepare(hdmi->refclk);
+ 	clk_disable_unprepare(hdmi->pclk);
+ }
 -- 
 2.43.0
 
