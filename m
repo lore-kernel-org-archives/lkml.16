@@ -1,80 +1,39 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B8C149C4A
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1032951AE
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057272; cv=none; b=GpUNHSRhkzZl/NtOPiSIOxE8IkESlhFbICeFOeE0tyz6jRwIpxQwITjsF/wq3B7DfupFCeL1oFHuk4E9OxOg2MFZgq6r8XEo+PWF1pHXKHR/t1QgvhOCpvFuh4qDDBq3dVGEBEyRXBFTOX66L9s9EO6NHezIqwKtGmGkOVfO1hc=
+	t=1747057276; cv=none; b=qy0/SPyL+PMksGGtlelTZiXxKybyWuzNkoRNoY+ZMA0WN0NK4vhoien/+yp+gC8+S8HsOjwqX/JW5UPZDzbK3vdhoiIR4x5ysnl2QlHeiaYR1DJydsrKLMmRuJVMrDMTIZOXc/1UK3ojUnbktFaVnkmyTSMF7N/OYg+Am/eQMYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057272; c=relaxed/simple;
-	bh=8ktmtIYpT6wwtdT0zYdkBhVaJ3gPszcgYgVw1aS/E5o=;
+	s=arc-20240116; t=1747057276; c=relaxed/simple;
+	bh=Fj1YnEmAnUyJ38wHvYld2l/KQQX9tZNAVl2z+GqAxso=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VPilQAX3tb8kh+obn9DXpbthQTEIlRXELNlisMg1lY4F14yujW6Yj/6vg5nZKJKgc0Cx4YMwLiti2Ln8r/1+Bu5mCjSb65G4SqejnESuDjjDSb7ej53MP/sg7YaiXjqI4xQOMeOVfxa2YnDjMKe4dsVZiI6/bjzFfTuUUPNd5YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lNK/UfBo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nJwxY6nI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lNK/UfBo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nJwxY6nI; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=Djj6rabhHVGeRIAgn32E2G7em4zuRlviVe9y4KaHQ+DSIYCRV311/mAwaqQWCUfnlmP6LER5hXZVVJc921k4N8gLOUW38YffnoZ1nGDHRUWwfmLOA8k1hdGgvr7CTim3G1OH8Nf6Dq0sVrGF6PyqwbV4BrJVcEjGb4229kMRVWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=FzO9mzHc; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lNK/UfBo";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nJwxY6nI";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lNK/UfBo";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nJwxY6nI"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 96FF521186;
-	Mon, 12 May 2025 13:41:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747057268; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
-	b=lNK/UfBo/xbhPN5pZ7VQCHQ9ClJ/Mqizxut2wWLXH6nVhELd5GnrllnQj/DWNsBmLW9Px3
-	aUL5cIVq9rr6hkmEwzpzmPLG8gIRsYcr7lO9LM4q6DfpgYbFFZZzHoSbqRall4gvMalYFt
-	lD+BeGQG6pOgn9deFHhKC6b+04t4AKI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747057268;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
-	b=nJwxY6nIODhzUIMNYfhvKp6oS+hmpJHRZwMuIjAju9LMe1cj/R8mEDM/ihrdLJIzq1qOLo
-	yp/TG0yo5GF/1+Cg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747057268; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
-	b=lNK/UfBo/xbhPN5pZ7VQCHQ9ClJ/Mqizxut2wWLXH6nVhELd5GnrllnQj/DWNsBmLW9Px3
-	aUL5cIVq9rr6hkmEwzpzmPLG8gIRsYcr7lO9LM4q6DfpgYbFFZZzHoSbqRall4gvMalYFt
-	lD+BeGQG6pOgn9deFHhKC6b+04t4AKI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747057268;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkc92dB4s/OAzbA2ymL5HCS5Yfyt+Sp+XYay4jTgCDc=;
-	b=nJwxY6nIODhzUIMNYfhvKp6oS+hmpJHRZwMuIjAju9LMe1cj/R8mEDM/ihrdLJIzq1qOLo
-	yp/TG0yo5GF/1+Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A575137D2;
-	Mon, 12 May 2025 13:41:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5amAHXT6IWgkLQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 12 May 2025 13:41:08 +0000
-Message-ID: <5c5ccea9-3ce4-40c5-94b4-796d4bc1f533@suse.cz>
-Date: Mon, 12 May 2025 15:41:08 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="FzO9mzHc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kj0xD8FPYRcjZw2mQNJ4IqSPTRwkMeeQixKqAC0S9kk=; b=FzO9mzHc2pYWwR3HJIdsbAr7wo
+	cJsZXLJWlMd82Z4n7H+UBE733uHKnv9t/O9hdsqGoY/8jgwvyWata8IchIoiMIklT1Bpb4WbSMSQK
+	TpfYKZ2JUnm2aImBdwzkiLVAQ2hc7NHz0jbXXmBozwe4aiQxEogkjd0NCQaGNi0CGeQVPckBP8WJr
+	jfDtuQ91m6EbErL83pk6E833LWDzkJ3qkPvbHA+Au18zvMVnr85MbyK+Xed8jVtDyQ1Wm3VX8mwio
+	pPhlMcMdw9NDZk0757/B7llu8F1lYaCWnsVc+H3U5EHJ5lhcoJkpPaiI49vRnEM4Y6m7KjMwXc14b
+	M0iMsWIA==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uETJb-0076X9-K9; Mon, 12 May 2025 15:40:52 +0200
+Message-ID: <bd1bfb32-1da3-4680-94f8-44e8008a80f9@igalia.com>
+Date: Mon, 12 May 2025 10:40:46 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,66 +41,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] mm: secretmem: convert to .mmap_prepare() hook
+Subject: Re: [PATCH v2 1/3] drm: Create an app info option for wedge events
+To: Krzysztof Karas <krzysztof.karas@intel.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
+ Raag Jadav <raag.jadav@intel.com>, rodrigo.vivi@intel.com,
+ jani.nikula@linux.intel.com, Xaver Hugl <xaver.hugl@gmail.com>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+References: <20250511224745.834446-1-andrealmeid@igalia.com>
+ <20250511224745.834446-2-andrealmeid@igalia.com>
+ <x3ep3offdy5on6hckumvpsvnlfnmjdfqjlcyv7hojitzsn5u3k@opnou6grp7ad>
 Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Wilcox <willy@infradead.org>
-References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
- <0f758474fa6a30197bdf25ba62f898a69d84eef3.1746792520.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <0f758474fa6a30197bdf25ba62f898a69d84eef3.1746792520.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid]
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <x3ep3offdy5on6hckumvpsvnlfnmjdfqjlcyv7hojitzsn5u3k@opnou6grp7ad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 5/9/25 14:13, Lorenzo Stoakes wrote:
-> Secretmem has a simple .mmap() hook which is easily converted to the new
-> .mmap_prepare() callback.
-> 
-> Importantly, it's a rare instance of an driver that manipulates a VMA which
-> is mergeable (that is, not a VM_SPECIAL mapping) while also adjusting VMA
-> flags which may adjust mergeability, meaning the retry merge logic might
-> impact whether or not the VMA is merged.
-> 
-> By using .mmap_prepare() there's no longer any need to retry the merge
-> later as we can simply set the correct flags from the start.
-> 
-> This change therefore allows us to remove the retry merge logic in a
-> subsequent commit.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+Hi Krzysztof,
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Thanks for the feedback.
+
+Em 12/05/2025 03:08, Krzysztof Karas escreveu:
+> Hi André,
+> 
+> [...]
+> 
+>> @@ -582,6 +584,14 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+>>   	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
+>>   		 "but recovered through reset" : "needs recovery");
+>>   
+>> +	if (info) {
+>> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
+>> +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
+>> +	} else {
+>> +		snprintf(pid_string, sizeof(pid_string), "%s", "PID=-1");
+>> +		snprintf(comm_string, sizeof(comm_string), "%s", "APP=none");
+> 
+> I think using PID=-1 and APP=none might be misleading, because
+> something did cause the wedge if we landed here. You could use
+> "PID=unknown" and "APP=unknown" or ensure these arrays are
+> zeroed and fill them only if "info" is available:
+> 
+> -     char *envp[] = { event_string, NULL };
+> +     char pid_string[15] = {}, comm_string[TASK_COMM_LEN] = {};
+> +     char *envp[] = { event_string, pid_string, comm_string, NULL };
+> 
+> [...]
+> 
+> +     if (info) {
+> +             snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
+> +             snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
+> +     }
+> 
+> Then, when printing the logs later you could check if they have
+> a value and only use them if they do (or handle that however
+> you would see fit :) ).
+> 
+
+That works for me, I will address this in my v3.
+Thanks!
+
+> Best Regards,
+> Krzysztof
 
