@@ -1,84 +1,75 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB7E245022;
-	Mon, 12 May 2025 18:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D379881720;
+	Mon, 12 May 2025 18:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747074372; cv=none; b=nqbqYBbLdNXqy2oMt/AGuKjn1SKDxIRbJpwxHHB88GPbjfuYQvPXNS8vgH6j+Q05pCTkTGlU9ukcdNTPuyPhvwRu79jJJHNOV5a2E9q3Oi3W8A7J2Nt9/hkIwXnI0VZLq9WZGiI6s3yS0+qoGs6nj7bEIHYpm3dZQex2+ofIpi4=
+	t=1747074440; cv=none; b=aESoIPDNrBzri3KfFi5RHUL8g0fEp9mE/bR4/nYBHVAme52TwXqKnmmAvstuqoOPeamEeAmPVYEaxQHkpUWO4/V2mCasp2MUFFHPwbaju2khq8DaOnAmTt0rwMFcsU/2KktCr+Q4RXQPwNlOSCccWSb/u/aGfKyqUrDSsV/Wyz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747074372; c=relaxed/simple;
-	bh=6Q2jz1G+bUKQsb4zfDpMbTExI9ep4BLneYtxWvwjmGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWIgoj+LtgXlys+78bwovQQmLhiZ7k9uq1mEv5Z7kD3UwGrsOxnNkKGeVf0fkeIwIYGBpUFrmypi+MaL5bpGlcYjUZZ462ywgkXnJZfO9uPaiRVFMzNy5U1ZQhtcJD4FWUYmfDTywVqU99zi9jEqfF6AdD/ux1dJ61f/rHrN5Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ia5WLQRL; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747074440; c=relaxed/simple;
+	bh=vJeFL2hITonOBzERtmPv8mt27uPMiROxNLKSwwV1ZZo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YyQO8WzBUz+M8P3dsN2n5k4Ts5q6kzFsuQRoriFdZueets6MRob1HtC9CcpHLJqr3pNviIZHmt/46q2q2B7JGfMEOmh//Hgp5HQYHjqVKpFFOACuuiR2FiK6G3+U90PYaDOx4sNBSR1RR/Zv7eMse3/I6p5FDX/AWdxsoOf4VEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkburK5L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ia5WLQRL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EXLzzby17OeuImZpl0bn8vKeJixwwGVwH6DpLX/u2w8=; b=ia5WLQRLlkGcUXx76Ce9kHz5C7
-	QBr15oHXn5J/+Z8KXVnNCHhaLafwmPZWLxE/n0KJ2c0LRePodPA7S/Sb/uYU+sAlOlqcmC3JyYJqJ
-	tKft6FbTuqZjJLtfu+k/f3h9li1b8JfvlUdne8dg94G7sZlQ3Ad1kf/QnJ5Dot5fitPAv34lln4Ah
-	Rkx8T/z9JyCzFewvg3zHC3LbKcMnRbRorRvgAMeRsuT1PbO3jYWJibaM5+e9a03VwLcIi8iVc16xP
-	XrUqduRgYDDRVcsNJMkdu3wXk0x5a5HgyVfHB2pJMcJ5eIfN1OshIFvrDeOP6WUGN6ITSNWJiBrGW
-	gOdrQMtQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEXqh-0000000A8Kq-3urV;
-	Mon, 12 May 2025 18:26:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 82F05300717; Mon, 12 May 2025 20:25:59 +0200 (CEST)
-Date: Mon, 12 May 2025 20:25:59 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	David Lechner <dlechner@baylibre.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
- conditional locking
-Message-ID: <20250512182559.GB25891@noisy.programming.kicks-ass.net>
-References: <20250507072145.3614298-1-dan.j.williams@intel.com>
- <20250507072145.3614298-2-dan.j.williams@intel.com>
- <20250507093224.GD4439@noisy.programming.kicks-ass.net>
- <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
- <20250508110043.GG4439@noisy.programming.kicks-ass.net>
- <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
- <20250509104028.GL4439@noisy.programming.kicks-ass.net>
- <681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
- <20250512105026.GP4439@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkburK5L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21431C4CEE7;
+	Mon, 12 May 2025 18:27:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747074440;
+	bh=vJeFL2hITonOBzERtmPv8mt27uPMiROxNLKSwwV1ZZo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NkburK5LfA9tq5Wj7VDYZlKPHKL/T2d7tJewUe6jYkoQay3k/vywbqjq6QyJisElJ
+	 oOFE1tOzsEFUdw9XGbqui+TZbSH04PeejJKdV8Wkr6t/NumlC+aLusir+ApCTmfE83
+	 1MQiWxbvmuCYE8A3ynSVPCCpByE7h4mro+EZdfkpGQbLa7SZRbEbtO4RhUlq4fmNHH
+	 A05j7vFMdJhiPXYKrTQVjXTzQsZ6EqPsFctnfg0j0RscsNnwN6dZ4qyReqRfOOCog6
+	 Q8x8ARqBbXycFEy+GTlrx0T08kVJGd5mixKxZtINAK7cXqy3PG2EOKKmesc1clWxFu
+	 Ityi0Kgj+5V7g==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [RFC PATCH 0/2] mm/damon: build-enable essential DAMON components by default
+Date: Mon, 12 May 2025 11:27:14 -0700
+Message-Id: <20250512182716.50245-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512105026.GP4439@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 12:50:26PM +0200, Peter Zijlstra wrote:
+As of this writing, a few major distros including Alma, Amazon, Android,
+CentOS, Debian, Fedora, and Oracle are build-enabling DAMON (set
+CONFIG_DAMON[1]).  Configuring DAMON is not very easy, since it is
+disabled by default, and there are multiple essential options that need
+to be manually turned on, one by one.  Make it easier, by grouping
+essential configurations to be enabled with one selection, and enabling
+build of the essential parts of DAMON by default.
 
-> +#define __GUARD_ERR(_ptr) \
-> +	({ long _rc = (__force unsigned long)(_ptr); \
-> +	   if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
-> +	   _rc; })
-> +
+Note that build-enabling DAMON does not introduce a real risk, since it
+makes no behavioral change by default.  It requires users to make
+explicit requests to do something.  Only one potential risk is making
+the size of the kernel a little bit larger.  On a configuration, it
+increases the resulting kernel package binary size by 337,685 bytes,
+which is about 0.1 % of the final package file.
 
->  #define DEFINE_GUARD(_name, _type, _lock, _unlock) \
-> -	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
-> +	DEFINE_CLASS(_name, _type, if (!__GUARD_ERR(_T)) { _unlock; }, ({ _lock; _T; }), _type _T); \
->  	DEFINE_CLASS_IS_GUARD(_name)
+[1] https://oracle.github.io/kconfigs/?config=UTS_RELEASE&config=DAMON
 
-GCC is 'stupid' and this generates atrocious code. I'll play with it.
+SeongJae Park (2):
+  mm/damon/Kconfig: defaults VADDR, PADDR, and SYSFS to DAMON
+  mm/damon/Kconfig: enable CONFIG_DAMON by default
+
+ mm/damon/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+
+base-commit: 399b2f61ec1add307a04f0d128a3de333c4d1daf
+-- 
+2.39.5
