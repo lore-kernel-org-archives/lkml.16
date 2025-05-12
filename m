@@ -1,138 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CFD258CC1;
-	Mon, 12 May 2025 18:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C532C2550CA;
+	Mon, 12 May 2025 18:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076302; cv=none; b=uRCQre4E0ZOokHaaUXAHV3OmbepLRJjuVSRx++dAHkyB/5BB4nNBF3eI2fglXrMYhzYbelhD0MdcgRYzphJ+LxBYeH8yeAC4dZb68UMpDKDEVhs3F/NsehlVNfLGs2r/wpPzOGRR4fOuk00qrIsKFeJj2BV5I0dNqpNhbasiLNw=
+	t=1747076310; cv=none; b=nnD8/EUETZXU7j2FrQFGclS4lx4tUTKR8s+7ytq2MEv8JFbmGI/VTx60eJ4qBJuZuUG2piswaFwuPJSdpIXaNIIEJxthCwp0XuJb+BavbBLa943Uz4FxbYdpyNM0rzK1SkKL1sdll/toA0PyrSZ5kiSdjfG71MaG7zV2BcdTPS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076302; c=relaxed/simple;
-	bh=DhqQMJeCz7KcqMO9pFZZ9SLZWQgVIgwsMsQ5GbkfyLE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ukXD/kkaQYHohT0n36KxMptRkRSxC63iUYeAdbzj0+KJS+iGAu7e67Nw1C1yi8bCfFHPwAh5mzbMCyGmrIQYZxjeas0mQVFHqaOoI/N5nLwfsAiMM7iy8IGTAmcukELMSB9/psho11gvBPPn5EOkVrUTilyt2/V9SUt4f9pfFUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aI81sbtS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747076310; c=relaxed/simple;
+	bh=YrFFTW2uoeyCJYK/IiPCjqT07YI/V1SpHoH5sAm3NlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YhNaU5W11zlocC1hGbc2fAzjJ+7luEAYN+WpLSZpJEdwOCrQ3p0pnFyS6Dxm527qbG2XBrz1tzOY/epsU/+6xZuc+M2chPZVduB72XljUVlqtNDTSE+1+8tfoBE5/Qf3/p3/KeKwPMbgn7fZgEoLhNNVoam9qmkSGJEwj3Gbk28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Sa7rQeR5; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aI81sbtS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB0B7C4CEE7;
-	Mon, 12 May 2025 18:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747076301;
-	bh=DhqQMJeCz7KcqMO9pFZZ9SLZWQgVIgwsMsQ5GbkfyLE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aI81sbtSYxp4ZUFqKIdL8tPZyBnf7zssH2SFPfSa0SIJFYJz67c0ycT734TIISYJe
-	 voB4FpdUmvI5jCKlBayoenOgfCh0jSLg/AQtcefz/t1E4haqPDpLhMyrjiLjBNS4GG
-	 aRepWJ37m/l4ofO8hKelcnK/eCIxAKN7wHLZB5E/Qqzj0qpEQYtOD09jXEQjBgOl88
-	 wLh1a26PSJGASXkDVEqp7SyG6BKdLBL3s43vQcnlMoxklJgpXywBNgz9D7yWtDO+QI
-	 9dvvjAQxE9RG1vETmpuf3+icNC0Gk6LEJ9jnJ3/ouoam8Eh/KDqBdrCOfkFAhTExxX
-	 MiuHB4kIAWDCQ==
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f2c45ecaffso51182266d6.2;
-        Mon, 12 May 2025 11:58:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUBKIhGX1yRAfu22fZbezZKUHwcGk8sTjaUp4ddS2cixJ1nyVqZvrkgrp/twEUjyII2RoDhbUSvTWmkJVsGzVxP@vger.kernel.org, AJvYcCUzwWfh96GGUe5Pnqcf8QtUf2aEp+DdMDWa9/pChQjAv9gyb8Ce0hIIviy4fpnddcoEReDeLVw7v0eyUZ2H@vger.kernel.org, AJvYcCV8ZHASOxLqmCqAbHP4Zk8wIuID+OpB7XPuNG9tGv9EaxexQ3hwXympBbAwhisTF+KdkCk=@vger.kernel.org, AJvYcCXK5xq8IOUjIOxgkwBsM8W137v7eBbR4G6jN2QnEwfiUh7TZ2TvdP8EJUU6xchKt+PH58RGF1VWpB/ZIVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKY9/ZLM1hGneUGBoM2iAYXlPigGT2HHggPZOHMiljDnjGfyHi
-	yx4VQnnxVj0qHqybxHXNmdOw8SSNZhzPGb5NLT1m1Bm38VZJC/cBk6GsC0wTJ7ISdu+YOWVMkWL
-	Ju16L73dvLddsh7m6c1zvuamL46E=
-X-Google-Smtp-Source: AGHT+IFyd6yL6raX/sTg46CKX63s6TNC5S7yKKUcNYsUtZqJrEQZJsF0fn7Rhu83nX52qQ9gtfsjefq2LxgweTQn6ss=
-X-Received: by 2002:a05:6214:f6d:b0:6e8:fee2:aae6 with SMTP id
- 6a1803df08f44-6f6e48151b9mr222853596d6.41.1747076300958; Mon, 12 May 2025
- 11:58:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sa7rQeR5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8CzbH5d57SrhSR667OO/7mNdtffIj/w4l1/Yw2mhnzo=; b=Sa7rQeR50MLRMDLLJ68qiRbq6g
+	hOgrVVto0aZVR3rp5+jQuNjI5huAa1RXWRN9MoujO2+my1FgaU/YQNIHNJ+DP4ReUQGjpy8CzWQvn
+	u389An4mmQB9SZt4kjM029dNZ+4lW8dC52qf3bHxJCA1Ye9wRyac1NzB05gwwQ18bM4ZoAbqhpssH
+	edvtHDrck5Xu7xSNzrHvoGmbrJATskIZV1aGsb4sEKC9tmM+08EY+DXTV0vXM9pnxzyJvZeQwZHa2
+	o4CkgemB8Hm4vfIDxZUaa+2IB65IIo4M1Z62dx2eOn5yOybTJcRQiAmqlpWVcGt0hWRLlC7//SIN/
+	iqt6uqUg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uEYLx-0000000GoLm-3R1G;
+	Mon, 12 May 2025 18:58:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 491F0300717; Mon, 12 May 2025 20:58:17 +0200 (CEST)
+Date: Mon, 12 May 2025 20:58:17 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
+ conditional locking
+Message-ID: <20250512185817.GA1808@noisy.programming.kicks-ass.net>
+References: <20250507072145.3614298-1-dan.j.williams@intel.com>
+ <20250507072145.3614298-2-dan.j.williams@intel.com>
+ <20250507093224.GD4439@noisy.programming.kicks-ass.net>
+ <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250508110043.GG4439@noisy.programming.kicks-ass.net>
+ <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250509104028.GL4439@noisy.programming.kicks-ass.net>
+ <681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
+ <20250512105026.GP4439@noisy.programming.kicks-ass.net>
+ <20250512182559.GB25891@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512174036.266796-1-tjmercier@google.com> <20250512174036.266796-5-tjmercier@google.com>
-In-Reply-To: <20250512174036.266796-5-tjmercier@google.com>
-From: Song Liu <song@kernel.org>
-Date: Mon, 12 May 2025 11:58:09 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6TUogokra2mJQG6jeuZ1_RZPwr4xGbBOUJZBUg9AqW3g@mail.gmail.com>
-X-Gm-Features: AX0GCFvByoV9AZSi2Y8neroJoSZ_eSUedTGCmZtmiP0XEcoch5fMWNH94wsBues
-Message-ID: <CAPhsuW6TUogokra2mJQG6jeuZ1_RZPwr4xGbBOUJZBUg9AqW3g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 4/5] selftests/bpf: Add test for dmabuf_iter
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512182559.GB25891@noisy.programming.kicks-ass.net>
 
-On Mon, May 12, 2025 at 10:41=E2=80=AFAM T.J. Mercier <tjmercier@google.com=
-> wrote:
-[...]
-> +
-> +static int udmabuf;
+On Mon, May 12, 2025 at 08:25:59PM +0200, Peter Zijlstra wrote:
+> On Mon, May 12, 2025 at 12:50:26PM +0200, Peter Zijlstra wrote:
+> 
+> > +#define __GUARD_ERR(_ptr) \
+> > +	({ long _rc = (__force unsigned long)(_ptr); \
+> > +	   if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
+> > +	   _rc; })
+> > +
+> 
+> >  #define DEFINE_GUARD(_name, _type, _lock, _unlock) \
+> > -	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
+> > +	DEFINE_CLASS(_name, _type, if (!__GUARD_ERR(_T)) { _unlock; }, ({ _lock; _T; }), _type _T); \
+> >  	DEFINE_CLASS_IS_GUARD(_name)
+> 
+> GCC is 'stupid' and this generates atrocious code. I'll play with it.
 
-static int udmabuf =3D -1;
+PRE:
+    bf9e:       48 85 db                test   %rbx,%rbx
+    bfa1:       74 1a                   je     bfbd <foo+0x5d>
+    bfa3:       48 81 fb 00 f0 ff ff    cmp    $0xfffffffffffff000,%rbx
+    bfaa:       77 11                   ja     bfbd <foo+0x5d>
 
-> +static const char udmabuf_test_buffer_name[DMA_BUF_NAME_LEN] =3D "udmabu=
-f_test_buffer_for_iter";
-> +static size_t udmabuf_test_buffer_size;
-> +static int sysheap_dmabuf;
+POST:
+    bf9e:       48 8d 43 ff             lea    -0x1(%rbx),%rax
+    bfa2:       48 3d ff ef ff ff       cmp    $0xffffffffffffefff,%rax
+    bfa8:       77 11                   ja     bfbb <foo+0x5b>
 
-static int sysheap_dmabuf =3D -1;
-
-> +static const char sysheap_test_buffer_name[DMA_BUF_NAME_LEN] =3D "syshea=
-p_test_buffer_for_iter";
-> +static size_t sysheap_test_buffer_size;
-> +
-> +static int create_udmabuf(void)
-> +{
-> +       struct udmabuf_create create;
-
-nit: zero initialize create to be future proof.
-
-> +       int dev_udmabuf, memfd, local_udmabuf;
-> +
-> +       udmabuf_test_buffer_size =3D 10 * getpagesize();
-
-[...]
-
-> +static void subtest_dmabuf_iter_check_default_iter(struct dmabuf_iter *s=
-kel)
-> +{
-> +       bool found_test_sysheap_dmabuf =3D false;
-> +       bool found_test_udmabuf =3D false;
-> +       struct DmabufInfo bufinfo;
-> +       size_t linesize =3D 0;
-> +       char *line =3D NULL;
-> +       FILE *iter_file;
-> +       int iter_fd, f =3D INODE;
-> +
-> +       iter_fd =3D bpf_iter_create(bpf_link__fd(skel->links.dmabuf_colle=
-ctor));
-> +       ASSERT_OK_FD(iter_fd, "iter_create");
-
-Should we check ASSERT_OK_FD() and exit early on
-failures?
-
-> +
-> +       iter_file =3D fdopen(iter_fd, "r");
-> +       ASSERT_OK_PTR(iter_file, "fdopen");
-
-Same here.
-[...]
-> +/*
-> + * Fields output by this iterator are delimited by newlines. Convert any
-> + * newlines in user-provided printed strings to spaces.
-> + */
-> +static void sanitize_string(char *src, size_t size)
-> +{
-> +       for (char *c =3D src; c && (size_t)(c - src) < size; ++c)
-
-Should this be:
-
-  for (char *c =3D src; *c && (size_t)(c - src) < size; ++c)
-
-?
-
-Thanks,
-Song
-
-[...]
+---
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -293,17 +293,18 @@ static inline class_##_name##_t class_##
+ #define __DEFINE_CLASS_IS_CONDITIONAL(_name, _is_cond)	\
+ static __maybe_unused const bool class_##_name##_is_conditional = _is_cond
+ 
+-#define __GUARD_ERR(_ptr) \
+-	({ long _rc = (__force unsigned long)(_ptr); \
+-	   if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
+-	   _rc; })
++#define __GUARD_IS_ERR(_ptr) \
++	({ unsigned long _rc = (__force unsigned long)(_ptr); \
++	   unlikely((_rc-1) >= -MAX_ERRNO-1); })
+ 
+ #define __DEFINE_GUARD_LOCK_PTR(_name, _exp) \
+ 	static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
+ 	{ void *_ptr = (void *)(__force unsigned long)*(_exp); \
+ 	  if (IS_ERR(_ptr)) { _ptr = NULL; } return _ptr; } \
+ 	static inline int class_##_name##_lock_err(class_##_name##_t *_T) \
+-	{ return __GUARD_ERR(*(_exp)); }
++	{ long _rc = (__force unsigned long)*(_exp); \
++	  if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
++	  return _rc; }
+ 
+ #define DEFINE_CLASS_IS_GUARD(_name) \
+ 	__DEFINE_CLASS_IS_CONDITIONAL(_name, false); \
+@@ -314,7 +315,7 @@ static __maybe_unused const bool class_#
+ 	__DEFINE_GUARD_LOCK_PTR(_name, _T)
+ 
+ #define DEFINE_GUARD(_name, _type, _lock, _unlock) \
+-	DEFINE_CLASS(_name, _type, if (!__GUARD_ERR(_T)) { _unlock; }, ({ _lock; _T; }), _type _T); \
++	DEFINE_CLASS(_name, _type, if (!__GUARD_IS_ERR(_T)) { _unlock; }, ({ _lock; _T; }), _type _T); \
+ 	DEFINE_CLASS_IS_GUARD(_name)
+ 
+ #define DEFINE_GUARD_COND_4(_name, _ext, _lock, _cond) \
+@@ -406,7 +407,7 @@ typedef struct {							\
+ 									\
+ static inline void class_##_name##_destructor(class_##_name##_t *_T)	\
+ {									\
+-	if (!__GUARD_ERR(_T->lock)) { _unlock; }			\
++	if (!__GUARD_IS_ERR(_T->lock)) { _unlock; }			\
+ }									\
+ 									\
+ __DEFINE_GUARD_LOCK_PTR(_name, &_T->lock)
