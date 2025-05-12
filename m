@@ -1,124 +1,131 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BF22580DB;
-	Mon, 12 May 2025 08:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD58255F48;
+	Mon, 12 May 2025 08:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037991; cv=none; b=dfFklgSymeft77MtgCj5q153C6WVnAw2U7Y0MkJ3mhfDhtr3CCkMAotY7yNZeUdcCrqSh3+2DYrbuHu+TvAI0BZeFiGucwCCR41ZEUmL3FcnRgkN1JO1BGbUfCqbAxSESxbpOrFc4PGc2lXQKgQGmHXHZMA8E50CjIPeui3kTs0=
+	t=1747038094; cv=none; b=BQKCoQbEIR5GZ2gpXDIe0ujtesqNTliB6p7gkxA+zVzs49Ke8/vKweDVZxJWVyfPy7jg7Yb1KGUSYC4RzAFG/rUzpy/DpWaTVCKl3OSe8913XX4/yp5ZRiAdRbDhxaS09g2ky8MZnu9vAr6UE1Rn/ZydNsLJycoIWQp0Fp5u26U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037991; c=relaxed/simple;
-	bh=jOmPHw3PxpWmkFBx5yjdgmw5MHCKuJi6JPgf/knFaTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZDwiNxPA4WKQTYlOPKToCUosEG+yKpSgsdx/7Q6r26NwuJ+gseB4ZDo8QevJysJXQTO8/bV589bhNnTNSjfi/F+yfHIm5QllZCXuaJwUEAR3Hqy3Vq+vLXBGKBzRzOR6n2Ok0vjanfsVqTmujS/zkI7o1pE5yQU1NW9pthW9/ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JcP35AC7; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747038094; c=relaxed/simple;
+	bh=V/9l1nA9GfnSVL4pLbqxHSUlldMYD8xVk/Us4dULE64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tw3AAZxSPtA33GroitQm8OstNLdFWidIPpcFRbbUNpD3LzUotktlNRrWeFscjV/lVdp3ZaymLTquWAZiO/Tb7faFofMLvLe33/QVABS0ERHsyT5iyR3g6AiRABRZW9hheouOQ7B/j8kCZpRT3jN0obTuCu6s7q8Pkf/e9PZVqn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkqoU/Sw; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JcP35AC7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5B00B43280;
-	Mon, 12 May 2025 08:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747037986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SJCWwWMnHakM0Z3fFPJDLj8fjIwn2K6+QB1baGulYEc=;
-	b=JcP35AC7cvlmoFIoGXOw1UKnJI3bYvWsi4unol/cpHkmvPSgpdvCsdEuwOMvcExQC02C9p
-	4b3E/cLEPGDASs8hGQpvKYG5/fWLVuzYOWf8B+QBRFmn9sX8e7c5aaB4ebIQw4F5LqaiQt
-	WMR3wW/z48LqumyhX4jke0rwihzQ/TESWYjspXl2dHOOzbNYfZSMPvDJcA9wkp2e/sDGoa
-	lLAQ6HCUd/9pZzRYAKzUKHPUodYGF/YZgn4jgAVN14mS/Wvhx/TnzZWNWJgvELMi2CtkDk
-	/4teA16FpJ3t0JQcnAW472HONr4UmualZPH5Xb62fLHUsrOGyDzy+gIV52GQFw==
-Date: Mon, 12 May 2025 10:19:42 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Jason Xing <kernelxing@tencent.com>, Richard Cochran
- <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, "Russell King (Oracle)"
- <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next v2] net: Add support for providing the PTP
- hardware source in tsinfo
-Message-ID: <20250512101942.4a5b80a1@kmaincent-XPS-13-7390>
-In-Reply-To: <20250508193645.78e1e4d9@kernel.org>
-References: <20250506-feature_ptp_source-v2-1-dec1c3181a7e@bootlin.com>
-	<20250508193645.78e1e4d9@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkqoU/Sw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747038093; x=1778574093;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V/9l1nA9GfnSVL4pLbqxHSUlldMYD8xVk/Us4dULE64=;
+  b=PkqoU/SwtBODwx2AkvqCJP82tN2MvIAdpqS3cUofRewi11E/N25mHIIJ
+   BFwYg3FMebk/TQE4wG/I9YUFh64VYsK+sVADkyZ7JPPryuFt/E3EqQsGC
+   CEWtheOaWg4021XacnsNmM7snWr7Zc04eyNlVRqnJFluJSBGGpALwJk0A
+   w6RVZyibwvWe1FnDS0y+VNUBRC0suFqvDv3LIFe2qYfGNx4C0Z0D4tvG/
+   YrK52C3GffwsPDH7rXENGyJcUBPw0Qnq+nyzQMkBUD1h6e4KAe9jwg2Mb
+   QXMxsvdYUIk4QF6QzfKzbfehvR7QgMcrjEyNqDdHLrv767OibLLQKDCTY
+   A==;
+X-CSE-ConnectionGUID: K0kmiKF3SqivXd9j8Njy1A==
+X-CSE-MsgGUID: 1ypWQp/OSyeq8CQjWGq+iw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48898141"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="48898141"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:21:31 -0700
+X-CSE-ConnectionGUID: YFe+8u00Q22/K4cwMjqcEw==
+X-CSE-MsgGUID: eF5E27aYRjSMlq+SxQ34CQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="174447579"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.245.156])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:21:28 -0700
+Date: Mon, 12 May 2025 10:21:21 +0200
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: laurent.pinchart@ideasonboard.com, tomi.valkeinen@ideasonboard.com, 
+	jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com, 
+	naush@raspberrypi.com, mchehab@kernel.org, hdegoede@redhat.com, 
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <urd3bng2yixuiny536imfoihhe6uyowynih7gkc4q6pkr6mijy@ggqlz5zu5isf>
+References: <20250310122305.209534-1-mehdi.djait@linux.intel.com>
+ <aB9M4jUsGA9YAkSm@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtjeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgri
- igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllhgvmhguvggsrhhuihhjnhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aB9M4jUsGA9YAkSm@kekkonen.localdomain>
 
-On Thu, 8 May 2025 19:36:45 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+Hi Sakari,
 
-> On Tue, 06 May 2025 14:18:45 +0200 Kory Maincent wrote:
-> > +  -
-> > +    name: ts-hwtstamp-source
-> > +    enum-name: hwtstamp-source
-> > +    header: linux/ethtool.h
-> > +    type: enum
-> > +    name-prefix: hwtstamp-source
-> > +    entries: [ netdev, phylib ] =20
->=20
-> You're missing value: 1, you should let YNL generate this to avoid
-> the discrepancies.
->=20
-> diff --git a/Documentation/netlink/specs/ethtool.yaml
-> b/Documentation/netlink/specs/ethtool.yaml index 20c6b2bf5def..3e2f470fb2=
-13
-> 100644 --- a/Documentation/netlink/specs/ethtool.yaml
-> +++ b/Documentation/netlink/specs/ethtool.yaml
-> @@ -99,12 +99,21 @@ uapi-header: linux/ethtool_netlink_generated.h
->      type: enum
->      entries: [ unknown, disabled, enabled ]
->    -
-> -    name: ts-hwtstamp-source
-> -    enum-name: hwtstamp-source
-> -    header: linux/ethtool.h
-> +    name: hwtstamp-source
-> +    name-prefix: hwtstamp-source-
->      type: enum
-> -    name-prefix: hwtstamp-source
+On Sat, May 10, 2025 at 12:56:02PM +0000, Sakari Ailus wrote:
+> Hi Mehdi,
+> 
+> On Mon, Mar 10, 2025 at 01:23:05PM +0100, Mehdi Djait wrote:
+> > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > platforms to retrieve a reference to the clock producer from firmware.
+> > 
+> > This helper behaves the same as clk_get_optional() except where there is
+> > no clock producer like ACPI-based platforms.
+> > 
+> > For ACPI-based platforms the function will read the "clock-frequency"
+> > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > indicated in the property.
+> > 
+> > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
 
-Should we keep the enum-name property as is is already use, or do you prefe=
-r to
-rename all its use to ethtool-hwtstamp-source?
+SNIP
 
-> -    entries: [ netdev, phylib ]
-> +    entries:
-> +      -
-> +        name: netdev
-> +        doc: |
-> +          Hardware timestamp comes from a MAC or a device
-> +          which has MAC and PHY integrated
-> +        value: 1
-> +      -
-> +        name: phylib
-> +        doc: |
-> +          Hardware timestamp comes from one PHY device
-> +          of the network topology
+> > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+> > +{
+> > +	struct clk_hw *clk_hw;
+> > +	struct clk *clk;
+> > +	u32 rate;
+> > +	int ret;
+> > +
+> > +	clk = devm_clk_get_optional(dev, id);
+> > +	if (clk)
+> > +		return clk;
+> > +
+> > +	if (!is_acpi_node(dev_fwnode(dev)))
+> > +		return ERR_PTR(-ENOENT);
+> > +
+> > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> > +	if (ret)
+> > +		return ERR_PTR(ret);
+> > +
+> > +	if (!id) {
+> > +		id = devm_kasprintf(dev, GFP_KERNEL, "clk-%s", dev_name(dev));
+> > +		if (!id)
+> > +			return ERR_PTR(-ENOMEM);
+> > +	}
+> > +
+> > +	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
+> 
+> devm_clk_hw_register_fixed_rate() is only available when COMMON_CLK is
+> enabled. You need #ifdefs here. In practice without CCF only
+> devm_clk_get_optional() is useful I guess.
+> 
 
-Oh ok, thanks for the pointers!
+I added a call to IS_REACHABLE(CONFIG_COMMON_CLK) in the v4 of this patch:
+https://lore.kernel.org/linux-media/20250321130329.342236-1-mehdi.djait@linux.intel.com/
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> Another question is then how commonly COMMON_CLK is enabled e.g. on x86
+> systems. At least Debian kernel has it. Presumably it's common elsewhere,
+> too.
+
+on Arch linux it is also enabled and Fedora also. I would also assume it
+is also enabled in the other linux distros.
+
+--
+Kind Regards
+Mehdi Djait
