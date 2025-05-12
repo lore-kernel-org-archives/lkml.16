@@ -1,75 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997F52288FB;
-	Mon, 12 May 2025 14:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776301DE8A6
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060462; cv=none; b=bzaHSc4aC+T5sYhUA1TVMzqeh//M1z2X+gmXY6hjsfEyxETO2GuCZa0jXsuYuQztMCm2HiUA8M6YwvzPMt/jN2ync/WuR7H4848rXUpIMM78WStrBRci9WK5AtLevd+HsrRmoHiXt1pMxF2+uxOBKSeGfM9hCDTf/N/OoKoODKw=
+	t=1747060503; cv=none; b=B82R9HknjRlB7iKMQ4FiIfUf8W+NlZUSBVzDqyDyf47rHX0Yvby9PP4tJPnZlCXpDZqT2LEhKCIQF4NlW1xl6knyQfiUuG9HsUsf++NmMyI3/z1MOXKVbEhyuCSklXW4x3s/LqBzL+H1eh4151L866YAqxqqx5uBR6XwRAJLlts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060462; c=relaxed/simple;
-	bh=VlIFsgYDVXWdTWkNJfheYZRoAUxvYsOa68ZD1Mj4cbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZLG021Todu4gT0Ndp4O8Z4A+RnvJMx8Mp/SSB4T5uEvMddxiJhmCEslumtitXSFwgDIrvZcMuBpRVa60nNU+wjifcqp3n0othXMk6dhoC5Mpw65Vhemc9p7awpVHdju3gJXVwHiMxYGaBcLY34+khcTn1DLcGSHDHy5bjkSHPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYd1ZyFH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747060503; c=relaxed/simple;
+	bh=xhv4pSNo/bP0y04upej6zvKi0Q8Y4CFivOjiBqrc04o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VftXQtwa/NDnJGt5iUMQARddffrvr4GHyKf8qFUNNVum464oXMzH9zQ4hog1b8uN+3hUzaMNA+ajzl73CseRqOQvDJaTGvINSwbRNUR/y8VGOLnotXTBlSHKZ65YWZj6WW6NNoZEX49CJZx2zcNBuGyQVThMP8EWcVf9GZ+2q64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UfV4s2uu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jPprHUwR; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYd1ZyFH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0172C4CEE7;
-	Mon, 12 May 2025 14:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747060462;
-	bh=VlIFsgYDVXWdTWkNJfheYZRoAUxvYsOa68ZD1Mj4cbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PYd1ZyFHU0tzsxlL6c95Cybu3vh8/CMQlfFAAC7pmbCskaRuQi4WJ/WN5senawLOq
-	 bwe+etRNUQctrmdOanCRtwZlbSe3sPow+BXXLolF08rGgicaFrwWOiMo1ddkH1gYFb
-	 pFugOoGuqxqnGQj5sqVYDUDgTsJFX7yeWRaa6u0+WL029FFuDY9K+rqFMmaELAqCyN
-	 +8CHlvMizgFvEVakuRn2dEqbpldt//UL5vsyTutct86XOoah5BlPhKaN+BgLALkDMk
-	 dC/j/ikfxCVTFUv9YYh8NBZLjVJFDYt047/l2SfzmFDLlg1gFioEyc93QVCDmXdKQC
-	 UiYQHP1Sqw6Ow==
-Date: Mon, 12 May 2025 15:34:16 +0100
-From: Simon Horman <horms@kernel.org>
-To: Lee Trager <lee@trager.us>
-Cc: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>, kernel-team@meta.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Su Hui <suhui@nfschina.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 4/5] eth: fbnic: Add mailbox support for PLDM
- updates
-Message-ID: <20250512143416.GN3339421@horms.kernel.org>
-References: <20250510002851.3247880-1-lee@trager.us>
- <20250510002851.3247880-5-lee@trager.us>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UfV4s2uu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jPprHUwR"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747060500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YN3sYYqWGZlKjkA6gYrQ6pElS4/hhWwv629F1RQvukY=;
+	b=UfV4s2uuq/z+B6gS8GmEjQaM/Q0ckAF+itZ4WtgikrFbrgn5p6yu5IEJMDC8RxLB7Q3SmA
+	ZXSfe/5Gs+/OmW+CFT1/FqLHhH2M1RW5UWttnFAXT5fWEeUoYN/+5FnkgycR+F+iewtaOg
+	xOI7w0m+FTsO2wVtg1oGgpbile/2c5SVIiUyP4zjWive7u6nbKpQB/fIPxrZZeqwpkntYi
+	RcbtGkJjX63liuBXYTQQiJn6ZkGH3BRheGvTanVPS6VmLk6ysUozCM4J6B4zhKHN4h4Qen
+	a0cfiSnMg3q0gMm9LGBQjWfscYhYpjAMQ40dkrmH9Q+dSEaIU6PlsACG70z7Lw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747060500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YN3sYYqWGZlKjkA6gYrQ6pElS4/hhWwv629F1RQvukY=;
+	b=jPprHUwRCrf3AUAZZXINoE6jX97SSMwFoXA9i6t1odHUBOSwC4Z/plitwsIx2iY1VKSIp2
+	IBsoCRO8oOdigeBA==
+To: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Sascha Bischoff
+ <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH 2/4] irqchip/gic-v3-its: Implement .msi_teardown() callback
+In-Reply-To: <20250511163520.1307654-3-maz@kernel.org>
+References: <20250511163520.1307654-1-maz@kernel.org>
+ <20250511163520.1307654-3-maz@kernel.org>
+Date: Mon, 12 May 2025 16:34:59 +0200
+Message-ID: <87ecwtlwx8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250510002851.3247880-5-lee@trager.us>
+Content-Type: text/plain
 
-On Fri, May 09, 2025 at 05:21:16PM -0700, Lee Trager wrote:
-> Add three new mailbox messages to support PLDM upgrades:
-> 
-> * FW_START_UPGRADE - Enables driver to request starting a firmware upgrade
->                      by specifying the component to be upgraded and its
-> 		     size.
-> * WRITE_CHUNK      - Allows firmware to request driver to send a chunk of
->                      data at the specified offset.
-> * FINISH_UPGRADE   - Allows firmware to cancel the upgrade process and
->                      return an error.
-> 
-> Signed-off-by: Lee Trager <lee@trager.us>
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+On Sun, May 11 2025 at 17:35, Marc Zyngier wrote:
+> We currently nuke the structure representing an endpoint device
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+How is we? We means nothing as you know :)
 
+> translating via an ITS on freeing the last LPI allocated for it.
+>
+> That's an unfortunate state of affair, as it is pretty common for
+> a driver to allocate a single MSI, do something clever, teardown
+> this MSI, and reallocate a whole bunch of them. The nvme driver
+> does exactly that, amongst others.
+>
+> What happens in that case is that the core code is buggy enough
+> to issue another .msi_prepare() call, even if it shouldn't.
+> This luckily cancels the above behaviour and hides the problem.
+>
+> In order to fix the core code, let's start by implementing the new
+
+s/let's//
+
+I really have to understand why everyone is so fond of "let's". It only
+makes limited sense when the patch is proposed, but in a change log it
+does not make sense at all.
+
+> .msi_teardown() callback. Nothing calls it yet, so a side effect
+> is that the its_dev structure will not be freed and that the DID
+> will stay mapped. Not a big deal, and this will be solved in the
+> following patch.
+
+Now I see why you added this incomprehensible condition into the core
+code. Bah.
+
+Why don't you add this callback once you changed the prepare muck, which
+introduces info::alloc_data?
+
+Thanks,
+
+        tglx
