@@ -1,54 +1,53 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CBE70805
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 10:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B65C25B674;
+	Mon, 12 May 2025 10:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747046481; cv=none; b=MDCD/1o9I4Fxumn88aTcAT5Zqwes3+ATzVVO0kxCkaW8tf3kHZQBOS+h5SsfnwZHemM9nPmKJwdlllw7cNoZnf35UV0B9gDomlT34pxSQQZ89ibeKPBYe3nn6zWSJrsU50iv9saQHJPBylF9qjCxrton07pTVA1SHcCVdBII0BI=
+	t=1747046580; cv=none; b=eUmFBBs2zl+IoyscyUqAeq9G6CPaC5eywsIUqiD/IH8pT4hbz+KysRFUuObEfDVuivdNSCQWf4mHXtmKUu08ckcd28BsR6AABB7MmKjQZ8bdlE9STO01qtN4/jkahGQ/7fUqFamdZBfzX7ovpr+gHcNbYnfMOsr2lZWaBNyf3Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747046481; c=relaxed/simple;
-	bh=Aje9AwAiS9Y0v5qCIExzN8qPlUb7TaDzqZQs1iuei7Q=;
+	s=arc-20240116; t=1747046580; c=relaxed/simple;
+	bh=6x1QLi7LcIsqD3IL8qJqmDDVfdxhcPb5ez1PwvD2gPc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxAvYZBXa5216KYaAzN0ZH/cmS9k0N+68VNxnBPtYxfT0cK0oTdtRcL9c9AeJkuo4hphu2kiOKEBMjOE8m6bb4sj4rMvWColNZA2xdkD4zfWG/C7GtA3zDs8wZJzu9ZgMD5ZBItj2wJhbNj1kZseJJQWkI7fvnOMHuZqqf43D8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3yS4oaai; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CyYKzGVg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=LsVbBnOJbkftma0aC6K8MvflaSL44yM2ppoyymEMvgzhQAjX9FjRyeCqhv/yYu5isE+38NIpQoZW2c6myaS18EhdVPbn9NC3A1bnsWbHpn1/ORaJRmyiHLrMFxEWfeh/6UNE5tDBIhRY0tL/z2MaMls1moytA6smZ6rNH6+eFHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIVEnHDg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3yS4oaai";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CyYKzGVg"
-Date: Mon, 12 May 2025 12:41:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747046477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N4m3rubZsWyVaGsaB5wPR32rb8iSG7t0JS0X/ho3mz8=;
-	b=3yS4oaai5zADwx5eafPWBcdKx4NchcV8GWSKIjBQZJa8/kjA0O31th1V7kf9CrwTM7D/lb
-	kj227/JpauI9UiCGEiytD0q3/NaHcnQwz2FCrv8ODHrAfj0OzQuMw8A0CFAfj9NfBHq4X6
-	corE8I31+hL81xycrsDBflD/v2N2gjLbUp5v6LCN0LV2ES08kKZZdCfqNIt1VzWdVFOmSl
-	EIBRxMGrfgy4eFX6uUA9ku92kznsVyP/+BJIQLe3MTKZgIweUERqKX5q2psxg12jTBUhID
-	EZstUouacGOhrBNSWqOGcVmYDw7Tml5PwXdHELaH1tpf0KKyk/JIHfSV65acSg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747046477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N4m3rubZsWyVaGsaB5wPR32rb8iSG7t0JS0X/ho3mz8=;
-	b=CyYKzGVgamNPXkL5lAjt2OXQ9P9Xsz23MbbjEajGMaiurgzotcwbaX/y/js/X8Za1ojWPm
-	fACyzURzCAAHQfAw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Leonardo Bras <leobras@redhat.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] local_lock: Minor improvements of
- local_trylock*() documentation
-Message-ID: <20250512104115.KcF7Ct_u@linutronix.de>
-References: <20250505170244.253170-1-leobras@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIVEnHDg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AECF8C4CEE7;
+	Mon, 12 May 2025 10:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747046580;
+	bh=6x1QLi7LcIsqD3IL8qJqmDDVfdxhcPb5ez1PwvD2gPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iIVEnHDgmreN03M4pVM94GM8M6XPKPEjCVjYIWFe12NeiDynEGP2x78sn6Q6FBYiJ
+	 f337hafcKQy9A0gTNaSjGN7pew+e3YOr9NXA6mBVxPfroE4f20DnNvPWqFsaNJFjbI
+	 zNAGMtgF0+biOs5OrNsYgzR+OdSY6Nx6k2z0pDBfmXl+Nil03X0xNbw68Mo5y9nBf+
+	 pGkWjZ5OG7sj3AKBwRdNEucgmFfPh2wa+FPfg1vcDbUwjF+gWkGiWaAigw5lqC0KuM
+	 sNl2x2E8PSvYYULuPiZcgzB0w+PpAZUjWfm9u/SmaIKxGfwVEZUqq2RUgrCKgW+OP9
+	 kceRFI8b3QJcw==
+Date: Mon, 12 May 2025 12:42:57 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+Cc: Michael Tretter <m.tretter@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Aradhya Bhatia <a-bhatia1@ti.com>, Rafa?? Mi??ecki <rafal@milecki.pl>, 
+	Junhao Xie <bigfoot@classfun.cn>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Kever Yang <kever.yang@rock-chips.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, 
+	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, Gaosheng Cui <cuigaosheng1@huawei.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Uwe Kleine-K??nig <u.kleine-koenig@baylibre.com>, 
+	Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] media: allegro-dvt: Add DT-bindings for the Gen 3 IP
+Message-ID: <20250512-fabulous-provocative-raven-ec3a81@kuoka>
+References: <20250511144752.504162-1-yassine.ouaissa@allegrodvt.com>
+ <20250511144752.504162-4-yassine.ouaissa@allegrodvt.com>
+ <595adbaa-15b4-4917-b3ad-9bac3e2333e2@kernel.org>
+ <knnumpmyq4ewvqcfor3vqynxbplynajdlmz3p6f2ywadvmz6wo@5uz53eubbkfg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,42 +56,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250505170244.253170-1-leobras@redhat.com>
+In-Reply-To: <knnumpmyq4ewvqcfor3vqynxbplynajdlmz3p6f2ywadvmz6wo@5uz53eubbkfg>
 
-On 2025-05-05 14:02:44 [-0300], Leonardo Bras wrote:
-> Fix local_trylock_init() documentation, as it was mentioning the non-try
-> helper instead, and use the opportunity to make clear the try_lock*() nee=
-ds
-> to receive a local_trylock_t variable as parameter.
->=20
-> Signed-off-by: Leonardo Bras <leobras@redhat.com>
-=E2=80=A6
-> --- a/include/linux/local_lock.h
-> +++ b/include/linux/local_lock.h
-> @@ -45,38 +45,38 @@
->  /**
->   * local_unlock_irqrestore - Release a per CPU local lock and restore
->   *			      interrupt flags
->   * @lock:	The lock variable
->   * @flags:      Interrupt flags to restore
->   */
->  #define local_unlock_irqrestore(lock, flags)			\
->  	__local_unlock_irqrestore(lock, flags)
-> =20
->  /**
-> - * local_lock_init - Runtime initialize a lock instance
-> + * local_trylock_init - Runtime initialize a local_trylock instance
+On Mon, May 12, 2025 at 08:23:11AM GMT, Yassine Ouaissa wrote:
+> issue fixed also, thanks.
+> > > +  significant advancements over its predecessors. This new decoder features
+> > > +  enhanced processing capabilities with improved throughput and reduced latency.
+> > > +
+> > > +  Communication between the host driver software and the MCU is implemented through
+> > > +  a specialized mailbox interface mechanism. This mailbox system provides a
+> > > +  structured channel for exchanging commands, parameters, and status information
+> > > +  between the host CPU and the MCU controlling the codec engines.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: allegrodvt,al300-vdec
+> > 
+> > Undocumented prefix.
+> > 
+> > What is the actual device name? al300? Can you have al300-adec? or
+> > al300-dec?
+> > 
+> > 
+> 
+> the device name is al300, the vdec is for decoder driver.
 
-If you replace "lock instance" please use local_trylock_t instead
-"local_trylock"
+So drop vdec. Compatible should reflect device name.
 
-Other than that,
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Best regards,
+Krzysztof
 
->   */
->  #define local_trylock_init(lock)	__local_trylock_init(lock)
-
-=E2=80=A6
-
-Sebastian
