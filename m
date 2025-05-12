@@ -1,110 +1,98 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1032951AE
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229EB294A10;
+	Mon, 12 May 2025 13:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747057276; cv=none; b=qy0/SPyL+PMksGGtlelTZiXxKybyWuzNkoRNoY+ZMA0WN0NK4vhoien/+yp+gC8+S8HsOjwqX/JW5UPZDzbK3vdhoiIR4x5ysnl2QlHeiaYR1DJydsrKLMmRuJVMrDMTIZOXc/1UK3ojUnbktFaVnkmyTSMF7N/OYg+Am/eQMYw=
+	t=1747057302; cv=none; b=TOSSYCRyg9AjdzsUIm17s5aRogIfCreBgZ4dTKZ2sBgtLUnsGYPp8VHDOTIPzFzL5lADfh/TGS8m/BHdjPvT8ObxfcG/pkavLMKDKqe5FFzzYY7AaLqv0hsuzjYikoz23W2fquOtC8MvmxE7reCIzZsteI87AsNXcYCt79R4uGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747057276; c=relaxed/simple;
-	bh=Fj1YnEmAnUyJ38wHvYld2l/KQQX9tZNAVl2z+GqAxso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Djj6rabhHVGeRIAgn32E2G7em4zuRlviVe9y4KaHQ+DSIYCRV311/mAwaqQWCUfnlmP6LER5hXZVVJc921k4N8gLOUW38YffnoZ1nGDHRUWwfmLOA8k1hdGgvr7CTim3G1OH8Nf6Dq0sVrGF6PyqwbV4BrJVcEjGb4229kMRVWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=FzO9mzHc; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="FzO9mzHc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kj0xD8FPYRcjZw2mQNJ4IqSPTRwkMeeQixKqAC0S9kk=; b=FzO9mzHc2pYWwR3HJIdsbAr7wo
-	cJsZXLJWlMd82Z4n7H+UBE733uHKnv9t/O9hdsqGoY/8jgwvyWata8IchIoiMIklT1Bpb4WbSMSQK
-	TpfYKZ2JUnm2aImBdwzkiLVAQ2hc7NHz0jbXXmBozwe4aiQxEogkjd0NCQaGNi0CGeQVPckBP8WJr
-	jfDtuQ91m6EbErL83pk6E833LWDzkJ3qkPvbHA+Au18zvMVnr85MbyK+Xed8jVtDyQ1Wm3VX8mwio
-	pPhlMcMdw9NDZk0757/B7llu8F1lYaCWnsVc+H3U5EHJ5lhcoJkpPaiI49vRnEM4Y6m7KjMwXc14b
-	M0iMsWIA==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uETJb-0076X9-K9; Mon, 12 May 2025 15:40:52 +0200
-Message-ID: <bd1bfb32-1da3-4680-94f8-44e8008a80f9@igalia.com>
-Date: Mon, 12 May 2025 10:40:46 -0300
+	s=arc-20240116; t=1747057302; c=relaxed/simple;
+	bh=MRkWQPYb0VD2RHdEFzP8GefKj7cVuZINANlg7F9SD9s=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=tXj2FiPpbf9ZK9ksVhcjmkoXYtpV5x2JPN4fDK7k0M1Q4Bo8lenwYTj24WBNdHn8wioIdoegld/f+KbbBZdbz/H4peQYj9yii98RDIllQVAgzHWKPRUlAl8nS4fdiTDwP5w1jeTM4o+6PzH1kj80cKOugJEYf7/GzjOPmqJLe74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zx13C586Dz4f3lCf;
+	Mon, 12 May 2025 21:41:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id DF7E01A0359;
+	Mon, 12 May 2025 21:41:37 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+Q+iFo693IMA--.57717S3;
+	Mon, 12 May 2025 21:41:37 +0800 (CST)
+Subject: Re: [PATCH RFC md-6.16 v3 00/19] md: introduce a new lockless bitmap
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
+ <20250512052118.GA1796@lst.de>
+ <6aeecf3e-2f24-7d30-8462-c8d30b197740@huaweicloud.com>
+ <20250512132750.GD31781@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <934fdd89-3963-98d5-b450-f36024aa47b2@huaweicloud.com>
+Date: Mon, 12 May 2025 21:41:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] drm: Create an app info option for wedge events
-To: Krzysztof Karas <krzysztof.karas@intel.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
- Raag Jadav <raag.jadav@intel.com>, rodrigo.vivi@intel.com,
- jani.nikula@linux.intel.com, Xaver Hugl <xaver.hugl@gmail.com>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-References: <20250511224745.834446-1-andrealmeid@igalia.com>
- <20250511224745.834446-2-andrealmeid@igalia.com>
- <x3ep3offdy5on6hckumvpsvnlfnmjdfqjlcyv7hojitzsn5u3k@opnou6grp7ad>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <x3ep3offdy5on6hckumvpsvnlfnmjdfqjlcyv7hojitzsn5u3k@opnou6grp7ad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20250512132750.GD31781@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnCl+Q+iFo693IMA--.57717S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7GryxAFWrWFWUWr4UXF1rtFb_yoWfWFgEvF
+	y3KFyxG39rZw4SvanFgF1DZrZ8Ww17ZFy5A395Gas3Jw4UGa4xGF4vk392qa45tFsakrs8
+	ZFWYqry5XwsxCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+	0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7VUbHa0JUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi Krzysztof,
+Hi,
 
-Thanks for the feedback.
-
-Em 12/05/2025 03:08, Krzysztof Karas escreveu:
-> Hi AndrÃ©,
+ÔÚ 2025/05/12 21:27, Christoph Hellwig Ð´µÀ:
+> On Mon, May 12, 2025 at 04:40:02PM +0800, Yu Kuai wrote:
+>> I don't have such plan for now, actually I tend to remove bitmap file,
+>> once llbitmap is ready with lightweight overhead, I expect perforamce
+>> can be better than old bitmap with bitmap file.
+>>
+>> If there are cases that llbitmap performace is still much worse than
+>> none bitmap, and bitmap file can reduce the gap, we'll probable think
+>> about bitmap file again.
 > 
-> [...]
-> 
->> @@ -582,6 +584,14 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
->>   	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
->>   		 "but recovered through reset" : "needs recovery");
->>   
->> +	if (info) {
->> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
->> +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
->> +	} else {
->> +		snprintf(pid_string, sizeof(pid_string), "%s", "PID=-1");
->> +		snprintf(comm_string, sizeof(comm_string), "%s", "APP=none");
-> 
-> I think using PID=-1 and APP=none might be misleading, because
-> something did cause the wedge if we landed here. You could use
-> "PID=unknown" and "APP=unknown" or ensure these arrays are
-> zeroed and fill them only if "info" is available:
-> 
-> -     char *envp[] = { event_string, NULL };
-> +     char pid_string[15] = {}, comm_string[TASK_COMM_LEN] = {};
-> +     char *envp[] = { event_string, pid_string, comm_string, NULL };
-> 
-> [...]
-> 
-> +     if (info) {
-> +             snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
-> +             snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
-> +     }
-> 
-> Then, when printing the logs later you could check if they have
-> a value and only use them if they do (or handle that however
-> you would see fit :) ).
+> I'd really love to see this replace the old code as soon as possible.
+> But can we simply drop support for users with the bitmap in a file
+> in the file system (no matter how much I dislike that use case..)?
 > 
 
-That works for me, I will address this in my v3.
-Thanks!
+Do you mean drop it now?
 
-> Best Regards,
-> Krzysztof
+AFAIK, bitmap file in a file system is problem the only case for now, I
+don't see any users pass in a raw disk in this case, because bitmap file
+is at most 128k by default.
+
+Thanks,
+Kuai
+
+> .
+> 
 
