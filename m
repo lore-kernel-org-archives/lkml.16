@@ -1,126 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFA424EF91;
-	Mon, 12 May 2025 08:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B61259C94;
+	Mon, 12 May 2025 08:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039809; cv=none; b=Q34yt2GW0BwvAeObM2F+tVThOxt3uv//+sJf7iCNoKQ2b1UQhhkUyz5obzwCLz/jEXFBqYcrInB6nA9XvIZ1XkBcbEFyU5Ja2ju3C/G/EugmcNKZzstloKhSD5IKiceLVZ9t9d5b0d7wsYqRy1ZNTC/mCIKeXPbbg7M0XmWhREM=
+	t=1747039823; cv=none; b=pjke1zeWa7+yEBdeCsf0/J8XPyx0WH4OWgrzK+0WH5AYxiS9EtEzgTIG059Q/6IHdLl0gxJke2HHkTpvsWPdM+pDbcl9GveQ7f6DQOE3JHL0JWA5W/NsKBVm5TtVm771U1Jb5KEvElmEN+ZkkeIWGcm5+lDEtteZuAMRYNVweb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747039809; c=relaxed/simple;
-	bh=Wz8p9IBCSNzc7KAdZKiVkwTrvDiVpvPKTzFAmF+ZtZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TVy3a/QY5v7IOh72OYaJmrIfHiOS5BuXGpT+JTNuxl71y8paC4sfwSPoWU7mZtGravEZCW/6s2pkurPElWGOq78mtQxBRkr48N7xx7sVIJJvXZ5Z5FmJWTYrK8DDq+YXJ2u/JiOloEEqQB670QVswBHSOQIjzSBpevEmhA/11zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbNlCfRq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747039823; c=relaxed/simple;
+	bh=XCYjdngT1XLIf0TkErxHKjyCJ8hAiIo1AZDc5hJ8qT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4KRPa58mrXOuMgAO4pBHOjcptlAiPcQUG5L3bKz1bHdeAIY82PnBZpDk7E6Jzr7tsbZt0Ubqm/uvbb9IbfPQlYhbyMKoqB80AOb9BrXEiZ/N06guekzsS4UTBPI1+1yri9A+O6B6Y2nh4pZuby8oMZMMNe4l13Px4x2tuj5Koo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KtmMfrV6; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbNlCfRq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4700BC4CEE7;
-	Mon, 12 May 2025 08:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747039808;
-	bh=Wz8p9IBCSNzc7KAdZKiVkwTrvDiVpvPKTzFAmF+ZtZo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NbNlCfRqW3ClHgzIvoLf6Rqbjgx2si2RQ9W4pMGAWKtjxSEzQNWnQbI4RdoiX4KvQ
-	 Dia1EAAy3/fdegu32OcJL2IMAT8NKmZlUVXnXiiELRM4HLiVSbMLf4I2/v+xCBPONb
-	 Rq/mbmmVIaGuUqyZCB9BGplGHZmKdksdH+9tYndHjlrJkzlJNm+Ms2X9Oeuq/5ikF5
-	 XnHmwgks4x407h3GZS3ZjuYe9z1efb2whJ7YMEGVuiaT9Yk31X8ofmSufWknMcJ9uW
-	 dztRqu8gnqvVtInsq8bwflxxRIrhJEN1vyg5GZ28uZwmPD56sspvwmuN6Ba5ySH36P
-	 7TISkASXwbSZA==
-Message-ID: <6133febc-ec73-4b9a-ba8d-69705a1f6242@kernel.org>
-Date: Mon, 12 May 2025 10:50:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KtmMfrV6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747039821; x=1778575821;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XCYjdngT1XLIf0TkErxHKjyCJ8hAiIo1AZDc5hJ8qT8=;
+  b=KtmMfrV6coSmrdABPVoLJT9XBGetktaZPTyzCIoHwql3T5QBwjZFYN6U
+   zd3/1qr8YabSWiB5hE4Z6MAgtxoYVFB0sOWtDcOY5mDY7JKGw6XKIdOo7
+   6ZPu6JgyXVYZOHk0APcwlpeLom4NFTYtqHAUU1X3k4QmerYKcuKqosTYC
+   uum3dGyDbcNlgiTbX5R/daOre+K/A3Hl6KSf+GZ/t6lC3Eo1/AN9mLrjn
+   5AwvOG79IwyNIVjbD1XDcguoNKF39QGyZOWJUTC5nmVL9twMmuxETzlgO
+   3MuvJ2O+dmkPOTkCoF1XEA98fy7/cK775zSKSmR/Bd6CaQ/N6mnVlz9F/
+   g==;
+X-CSE-ConnectionGUID: WRYLeokeSQWO1KH2GH1OLA==
+X-CSE-MsgGUID: UtHSi1KsRZ2GXxTRQpWYFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="74219686"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="74219686"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:50:20 -0700
+X-CSE-ConnectionGUID: T0hDIVuvRgaczn9d+CKH2g==
+X-CSE-MsgGUID: e7qCMwMlRvm7w98P/Qmyrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="142514433"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 01:50:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uEOrX-00000000rnG-3TQW;
+	Mon, 12 May 2025 11:50:15 +0300
+Date: Mon, 12 May 2025 11:50:15 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: lihua - <lihua@huaqin.corp-partner.google.com>
+Cc: dmitry.torokhov@gmail.com, hdegoede@redhat.com,
+	javier.carrasco.cruz@gmail.com, zack.rusin@broadcom.com,
+	namcao@linutronix.de, tglx@linutronix.de,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: gpio-keys - Detect long press events in sleep mode
+Message-ID: <aCG2Rx_99mP6JFi-@smile.fi.intel.com>
+References: <20250506055847.15389-1-lihua@huaqin.corp-partner.google.com>
+ <CAAkVrDM1TyM9VQ6rctF75EcLCRbimgJqbA2oH_RvJxC8ex6_vQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mfd: Remove node variables that are unused with
- CONFIG_OF=n
-To: Nathan Chancellor <nathan@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>
-Cc: Lee Jones <lee@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>,
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>,
- Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-References: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAkVrDM1TyM9VQ6rctF75EcLCRbimgJqbA2oH_RvJxC8ex6_vQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 08. 05. 25, 17:57, Nathan Chancellor wrote:
-> A recent cleanup introduced a few instances of -Wunused-variable in
-> configurations without CONFIG_OF because of_fwnode_handle() does not
-> reference its argument in that case:
-> 
->    drivers/mfd/twl4030-irq.c: In function 'twl4030_init_irq':
->    drivers/mfd/twl4030-irq.c:679:46: warning: unused variable 'node' [-Wunused-variable]
->      679 |         struct                  device_node *node = dev->of_node;
->          |                                              ^~~~
->    drivers/mfd/max8925-core.c: In function 'max8925_irq_init':
->    drivers/mfd/max8925-core.c:659:29: warning: unused variable 'node' [-Wunused-variable]
->      659 |         struct device_node *node = chip->dev->of_node;
->          |                             ^~~~
->    drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
->    drivers/mfd/88pm860x-core.c:576:29: warning: unused variable 'node' [-Wunused-variable]
->      576 |         struct device_node *node = i2c->dev.of_node;
->          |                             ^~~~
-> 
-> Use the value of these variables as the argument to of_fwnode_handle()
-> directly, clearing up the warnings.
+On Mon, May 12, 2025 at 03:57:17PM +0800, lihua - wrote:
 
-It's good on its own.
+First of all, do not top-post!
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+> Hello, All linux team members:
+>       Could you please review this modification as soon as possible?
 
-Though, I have a series to convert to dev_fwnode() in (I think) all the 
-cases.
+You even haven't waited for a full week...
 
-thanks,
+If it's an (important) fix, made it look so (Fixes: tag, Cc: stable@, etc).
+
+> On Tue, May 6, 2025 at 1:58 PM Hua Li
+> <lihua@huaqin.corp-partner.google.com> wrote:
+> >
+> > Previously, long pressing the gpio key could only detect short press
+> > events and could not report long press events in sleep mode, we need
+> > to recognize long press events in sleep mode and fix this issue.
+
 -- 
-js
-suse labs
+With Best Regards,
+Andy Shevchenko
+
+
