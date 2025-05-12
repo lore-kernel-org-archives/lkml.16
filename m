@@ -1,64 +1,110 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE45293743;
-	Mon, 12 May 2025 13:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4476F4C9F;
+	Mon, 12 May 2025 13:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056407; cv=none; b=FbIoWr+zLVYAJN73xexxnCRnvNO//5qM0S+8wNyvDBBOJRkq/SJD1UZHKAssvZW11+GqeLZQ9nZDRnzeawN5HwNx5wqGfgEYGJMttb65mMpdosBtCRWeI/dBe/dmMrg0E9Wxf3NAmLmGse7shTU2qGoq60XoTHwX1DdXKrISnSo=
+	t=1747056418; cv=none; b=DgwASnCQTzupq9aXyZaVECvmseoeEduaXcA+S02zKHja3UXbHjf8eL+YpEn1o+KL743ZKvAOm4UyqL3JshwCw1Ttez7Am2O4NJNDRDRe5flH851lG3l7LCcQM5VjebUWxk+k8NraSIp4fAiAGQR9GQs8atRTb4Pxl+pskdnpJhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056407; c=relaxed/simple;
-	bh=juaEZH1+tvcoScTwEGGK4KkT1GOC2QS3hb52NpKVXUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EkIK3yq3JYFdwKB6Tm+hxMUD+IfLVxXyzzWdr9JtKd4vpFMvMmwIFUkbQITlw6ZjdGMqB+mmkIomFMLpw/CFQmZnX5HdoQgLYPGsuqP0vzM060ki9sM34W17Hprp/cN3HxSTfYuULktYF2lqRI6PDglK1qnCqdDni5CnJ2mCHnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E8B6568B05; Mon, 12 May 2025 15:26:41 +0200 (CEST)
-Date: Mon, 12 May 2025 15:26:41 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>, xni@redhat.com, colyli@kernel.org,
-	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-	song@kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH RFC md-6.16 v3 15/19] md/md-llbitmap: implement APIs to
- dirty bits and clear bits
-Message-ID: <20250512132641.GC31781@lst.de>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com> <20250512011927.2809400-16-yukuai1@huaweicloud.com> <20250512051722.GA1667@lst.de> <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com>
+	s=arc-20240116; t=1747056418; c=relaxed/simple;
+	bh=5SYSxtirN3S0+dRopywjB9WAaqvLRtBwRqG/ATTUwMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PRSHODpFoORKWalGiiHZzLHdFvdW5/55TvvxCZ/9xNAWT9JcnTWH22vaRv3Vbn/DHdqSL+QoD6gSCSdxjhZJZRbW6pv7EfctnsJToyhCKLsM44P3zpqrXYzU65wpm3Er0Vezp0tMxdFjVCPQVShGFKQAaz3IqaeumcCon6yjkog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=MBXUqKSe; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="MBXUqKSe"
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id AD92A666D36;
+	Mon, 12 May 2025 15:26:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1747056414;
+	bh=5SYSxtirN3S0+dRopywjB9WAaqvLRtBwRqG/ATTUwMM=;
+	h=From:Subject:Date;
+	b=MBXUqKSeBe68Qa6GWehjFXth20CtjVIVKN546eRr9nDz+sZoHyPAtHDgACUPqoG2Y
+	 VmogAeGXvg3ymWjYmfa3NBfNg3nK7BKZuNvMCtRrnGSYsLQK6B7nTRZiQNfXEaqeq/
+	 FNrHnzidEm+gqA8Ej8pRa/H2ibirjZJ3tVgbkscGFbvpUxTJ8KGnHD70MknQTovYPG
+	 obx/AArd235ZvJrVBafSD7rK4/zB7eNxjpWfvlziBdwGvP5iqpkCgJyBvIF8ze6s7b
+	 UFHU9LKvrMDV/2F5QIsv2WtclQ7QRR97CpVEDCnFOi7Ds1LfNjqISk1q1fjcECStSk
+	 y+NhVxMAmf7jQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>,
+ Saravana Kannan <saravanak@google.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+Subject: [PATCH v1] ucsi_ccg: Disable async suspend in ucsi_ccg_probe()
+Date: Mon, 12 May 2025 15:26:53 +0200
+Message-ID: <6180608.lOV4Wx5bFT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddufeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhonhgrthhhrghnhhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepshgrrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhgvihhkkhhirdhkrhh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-On Mon, May 12, 2025 at 04:23:55PM +0800, Yu Kuai wrote:
->>> +	INIT_WORK_ONSTACK(&unplug_work.work, llbitmap_unplug_fn);
->>> +	queue_work(md_llbitmap_unplug_wq, &unplug_work.work);
->>> +	wait_for_completion(&done);
->>> +	destroy_work_on_stack(&unplug_work.work);
->>
->> Why is this deferring the work to a workqueue, but then synchronously
->> waits on it?
->
-> This is the same as old bitmap, by the fact that issue new IO and wait
-> for such IO to be done from submit_bio() context will deadlock.
->
-> 1) bitmap bio must be done before this bio can be issued;
-> 2) bitmap bio will be added to current->bio_list, and wait for this bio
-> to be issued;
->
-> Do you have a better sulution to this problem?
+From: Jon Hunter <jonathanh@nvidia.com>
 
-A bew block layer API that bypasses bio_list maybe?  I.e. export
-__submit_bio with a better name and a kerneldoc detailing the narrow
-use case.
+Commit aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending
+children") had triggered a suspend issue on Tegra boards because it had
+reordered the syspend of devices with async suspend enabled with respect
+to some other devices.  Specifically, the devices with async suspend
+enabled that have no children are now suspended before any other devices
+unless there are device links pointing to them as suppliers.
+
+The investigation that followed the failure report uncovered that async
+suspend was enabled for the cypd4226 device that was a Type-C controller
+with a dependency on USB PHY and it turned out that disabling async
+suspend for that device made the issue go away.  Since async suspend
+takes dependencies between parents and children into account as well
+as other dependencies between devices represented by device links, this
+means that the cypd4226 has a dependency on another device that is
+not represented in any form in the kernel (a "hidden" dependency), in
+which case async suspend should not be enabled for it.
+
+Accordingly, make ucsi_ccg_probe() disable async suspend for the
+devices handled by, which covers the cypd4226 device on the Tegra
+boards as well as other devices likely to have similar "hidden"
+dependencies.
+
+Fixes: aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending children")
+Closes: https://lore.kernel.org/linux-pm/c6cd714b-b0eb-42fc-b9b5-4f5f396fb4ec@nvidia.com/
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+Commit aa7a9275ab81 is in linux-next and it has not reached the mainline yet.
+
+Thanks!
+
+---
+ drivers/usb/typec/ucsi/ucsi_ccg.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/usb/typec/ucsi/ucsi_ccg.c
++++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+@@ -1483,6 +1483,8 @@
+ 
+ 	i2c_set_clientdata(client, uc);
+ 
++	device_disable_async_suspend(uc->dev);
++
+ 	pm_runtime_set_active(uc->dev);
+ 	pm_runtime_enable(uc->dev);
+ 	pm_runtime_use_autosuspend(uc->dev);
+
+
 
