@@ -1,87 +1,97 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1F02561B8;
-	Mon, 12 May 2025 08:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7852571D5;
+	Mon, 12 May 2025 08:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037283; cv=none; b=L++g5scJZs1qni1ZYKj9v1f4FIlQoW1sMmtDP5ugycT35HB0ELrpaPUbixHV0juABJISqkRdekGMPGLJSvsOUtHg2YvnZ9j+PqaX1RRMkT1yhuKRHDWFvsWvRuY2YXkoWRwRSdrcqTU5uCI1EFqZsfgiRJUvpqRCy9yi6iuw5mE=
+	t=1747037305; cv=none; b=Z2Lz+tF3cue09WIG4sW/VOQB+XOfGIEkThscHh91SK0z7+SApYt/fFAKQd8jjPTnU+RQzRewQ6dX1LFwLns8Er1UY3rFfqb6nj1v+WfMJXfJpbMtc6lkps+huRT5sLMrFgtHPjgyKFOPqnOCfAEfv0dZeQgXlNVZuXCqYUJG8S8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037283; c=relaxed/simple;
-	bh=A2stEFFTyjCo1kwOBEy50M2t1+vj64LTf8/SATGT/5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eMBupjwqaOPYEcV05jSZslpKkO+/e5XSonhDWtyRPhtDLd41eukcHzTWAJdirU2xpXcl4PyCQHAHfMHsl8GynCi5IIdxhxcBYFc13QyBIxLGttGn5gOgQAVMroIaC2iWy6PzkknQ3EJcp7oHpyPzAovGsnGGYrvNy8BTbruQDlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=XfcpP+8u; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XfcpP+8u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747037276;
-	bh=eDk/RBPxp7qiD91+5iU7Pf/RaVAHsmLMufawATiRJ9M=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XfcpP+8uvTFT9MKgwaHhvtTiEOiLlsmUNyIZ4AsgAL8+/slpQxUSUgb3jkmnMZXnG
-	 CnbpjbVTS/WGcWKRO0uywjrezEs7GUC5Jz9i8/YLOc+ky82qXnHkZg/pFYhkrRc7UG
-	 TTMVEyPdVfWe/wFHtHS0G4SF6/U2BfcubS/EUNjWLcFChXLqRGkq43IFSDtC6AC79m
-	 UalwWjhQH92efmw6ytzejKr7tLOAWo+YQf1VEWa2l3HkIxCKq++8en50MeyCH2fnA0
-	 A2WY7P3k41trmTLc/xd/OBkWfIXa7CjI1ULkMOhjFgqwtGgY/ESp7C9Vl3v2soflvc
-	 0BnPWNdNgRnwg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zwsfh1CnNz4wbr;
-	Mon, 12 May 2025 18:07:55 +1000 (AEST)
-Date: Mon, 12 May 2025 18:07:53 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Tejun Heo <tj@kernel.org>, Christian Brauner <brauner@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the cgroup tree
-Message-ID: <20250512180753.2e6a5249@canb.auug.org.au>
+	s=arc-20240116; t=1747037305; c=relaxed/simple;
+	bh=eF1yfF+FebAl2O4ISeOH9vYT5R/HY3HCYjCHSmtiBAU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l1H5U6znc/dEj7R1NpauXRMHVOUKlcXf/gffvOcVtJv5VH82Q1R3OU2KaREJ1DTCytagbYPKy6q16nc0K2ZCrINiPWWl5LRykvxLznCL/mnu3IZPICY8OsGp0XJTDNC5QpbpP5aZI2qu3odnBJRDVr3Qz211DoCOzW6+/lN8c3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zwsc31vLpz6L4wH;
+	Mon, 12 May 2025 16:05:39 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id A473F1402FC;
+	Mon, 12 May 2025 16:08:21 +0800 (CST)
+Received: from a2303103017.china.huawei.com (10.47.30.10) by
+ frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 12 May 2025 10:08:20 +0200
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: <devicetree@vger.kernel.org>
+CC: <robh@kernel.org>, <alireza.sanaee@huawei.com>,
+	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<krzk@kernel.org>, <dianders@chromium.org>, <catalin.marinas@arm.com>,
+	<suzuki.poulose@arm.com>, <mike.leach@linaro.org>, <james.clark@linaro.org>,
+	<linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
+	<gshan@redhat.com>, <ruanjinjie@huawei.com>, <saravanak@google.com>
+Subject: [PATCH v3 2/7] arch_topology: update CPU map to use the new API
+Date: Mon, 12 May 2025 09:07:10 +0100
+Message-ID: <20250512080715.82-3-alireza.sanaee@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250512080715.82-1-alireza.sanaee@huawei.com>
+References: <20250512080715.82-1-alireza.sanaee@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=GX3OkrjU5kcXB7.2hO8KI/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
---Sig_/=GX3OkrjU5kcXB7.2hO8KI/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Cleans up the cpu-map generation using the created API.
 
-Hi all,
+Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
+---
+ drivers/base/arch_topology.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-The following commit is also in the vfs-bauner tree as a different commit
-(but the same patch):
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 3ebe77566788..88970f13f684 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -518,23 +518,23 @@ core_initcall(free_raw_capacity);
+  */
+ static int __init get_cpu_for_node(struct device_node *node)
+ {
++	struct device_node *cpu_node __free(device_node) = NULL;
+ 	int cpu;
+-	struct device_node *cpu_node __free(device_node) =
+-		of_parse_phandle(node, "cpu", 0);
+ 
+-	if (!cpu_node)
+-		return -1;
++	cpu = of_cpu_phandle_to_id(node, &cpu_node, 0);
+ 
+-	cpu = of_cpu_node_to_id(cpu_node);
+ 	if (cpu >= 0)
+ 		topology_parse_cpu_capacity(cpu_node, cpu);
+-	else
++	else if (cpu == -ENODEV)
+ 		pr_info("CPU node for %pOF exist but the possible cpu range is :%*pbl\n",
+ 			cpu_node, cpumask_pr_args(cpu_possible_mask));
++	else
++		return -1;
+ 
+ 	return cpu;
+ }
+ 
++
+ static int __init parse_core(struct device_node *core, int package_id,
+ 			     int cluster_id, int core_id)
+ {
+-- 
+2.34.1
 
-  c8e7e056366a ("include/cgroup: separate {get,put}_cgroup_ns no-op case")
-
-This is comit
-
-  79fb8d8d93e4 ("include/cgroup: separate {get,put}_cgroup_ns no-op case")
-
-in the vfs-brauner tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/=GX3OkrjU5kcXB7.2hO8KI/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmghrFkACgkQAVBC80lX
-0Gy6bQf4/kA/eyiH/NaEpHpOfGljoUEGVqAmftNbnF1kauB6U4MVJWctwR8UkDwN
-GMjj8UucTMMinfZIYqe1yTsAM/xHMSzKSesHO2dyEI23xF+sJVXSicWY6FG3QLOB
-sV+bKuCfBjAqulwuom/Rgzo9YssmZryCdI8E6onrtVyIYVwLbxYqmLpDICMvLllK
-mxjkEfGpXp46HJbfMgfJV6VCmP/k8Lj+6staT69LjO1rufTbwDW4QWBlvVlVCj9u
-TXyjhhFNzHXDurc+1AxoZ0TeDDg1pn+GdC9EiHMfg+bbTC8YTkd0X2ePEfmF8/Oh
-+InS1+TBF5DhW6gwW4a7uv8RLJoN
-=db6c
------END PGP SIGNATURE-----
-
---Sig_/=GX3OkrjU5kcXB7.2hO8KI/--
