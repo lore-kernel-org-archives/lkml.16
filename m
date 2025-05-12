@@ -1,82 +1,125 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2391DDC1D;
-	Mon, 12 May 2025 14:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F501BD035
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060150; cv=none; b=DGu9ECVIYJGslZtYU6v6+hp/Z3WdElfnO91DQstJTvPnTZMf51ss68bQoCxQ1CVwBfjsh6Ep1OE4DV/NoKB/J9XTWJFKyaP6NLwbbwzHvEHqHykFF0J9+DczO/q9kZlO/HZIJcPRyrIE8+ugWLM+0g6FbjxDbQPppOrcN2fphvI=
+	t=1747060184; cv=none; b=iLLW08Wf2YOgUk/zZBFwBCRU8KegsIBtOQCGlWyu2D6yNOqyj2uGFxwMdaKjn/VcRYh+bgK5uy4hiuPfHO86rsJdnnKKun9Ar6tBfVv3+N/ZgmhU6DWM22SxY1vhcnuldht+sxh15lKDpcggTveH4QutBCLoFwE/4Mx7YV26TOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060150; c=relaxed/simple;
-	bh=EQWcS/1Q2TOvvOEH86bpJ/ZsO96dP1E/OzBIFXJkn3w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dZkvXq1NnHHQbAoCpyMmJgz8bcDGoKbwM4SyJw8FMPMrP2bdKJpc5/nsP9Qj1JkJ+RepOgN8OUZTWunsmGbZP1fdi8NnTHMYX8aekrrjTm4bEilPT1JXeyieoiAIPKL/0owBrRB7nlBPn93P3QDulPbI06O8Gwy4zhkrERVnenY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YI3VWCo7; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747060184; c=relaxed/simple;
+	bh=EcI0vp4wo0rPFoOwXHb46js93DbpKg70V1aJeQEW+rQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nso9y9M/5DJ+qfHm6nMKqvAXQywgVQDc1aaL1wh8SISwfEH6PxeB6It9YGIqBVHHoPst6Q+7KlC+dliPArnCeKUYAmezq0ysskyhPPVTYMBW08al+BxqcjcaV2L2kCfNaI5NfUr9otXBDPdDhX2XcprwT8a05JauzZ/EXMxc3zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4rinRmW/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hdgwawyo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YI3VWCo7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 23FA61FD4B;
-	Mon, 12 May 2025 14:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747060146;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4rinRmW/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hdgwawyo"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747060180;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+iBPnSaiAJcr5gZIUPTcjGQ3VrRVsTSrjfazWik3ev0=;
-	b=YI3VWCo7+gQZloxiq6EKTwvO+3/EHIZaNmTOJ9q8IwMbnu+JK02AqiM4lxyIo2dtLY6CR5
-	/OSwjW+tj6c9jnwLKf0DIQ6/9AMi8QW0linycY2Xu5Iti5PFaOwWMjxNKizXOEnfMvPc2i
-	ha48eoBK12uHadB4bNAYsiXe3IbanqEQfxpjW6BkFHGaleHjxjrbJo4zZKkDuR45YCEC16
-	ulhu259LARrYR9HD0i/175U3zoXPYayIwydD2NiPuFww3PCK8o2Mm3Db8BqAjZdWKX+x5y
-	oAN8hM1OCg7Ho2SmTrTaKMf0f2zuqT1szKu1pP9alUiPXOcbYGTEo3eHBF4YiA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Richard Weinberger <richard@nod.at>, 
- Vignesh Raghavendra <vigneshr@ti.com>, 
- Keguang Zhang <keguang.zhang@gmail.com>
-Cc: linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-In-Reply-To: <20250508-loongson1-nand-fix-v1-1-27b26234c62c@gmail.com>
-References: <20250508-loongson1-nand-fix-v1-1-27b26234c62c@gmail.com>
-Subject: Re: [PATCH] mtd: rawnand: loongson1: Fix inconsistent refcounting
- in ls1x_nand_chip_init()
-Message-Id: <174706014608.62075.16091315527360829377.b4-ty@bootlin.com>
-Date: Mon, 12 May 2025 16:29:06 +0200
+	bh=Bulm+OAY6G9mwFtOIOO/nNbm8lthx9J/UosG91L7fxY=;
+	b=4rinRmW/uHX018N9DTYr1SW3h7Gu25O2gbpdwtFNhPlVbNQvUwcr9VHWmVpF3nfsYzqqmc
+	KVce5f4CcEK9fIKVKT0LGr1vwauRVdMqo6Zeosa4WxKBPuKdxrWmxXQWRU53sNvP4Eg04H
+	bdMUpaO2SBM1JzYM/GpCWzXbxomu1h5XIHxQAIktWV1ZeTSoz1iq1xqYBBv+ZH1YyXah0c
+	ml30ow+kz8VjwD9/kmNpLQGMa5ssSvMRjk6UjPiYbiTCyp3Wx908+6gCvMd5QKcf9Kfrev
+	mFrJwvC8ijh/viUhHQRt3bhXB22TGZ6tSwCvbt5Szvg+Di3gbkrMvnnSP4OEEg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747060180;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bulm+OAY6G9mwFtOIOO/nNbm8lthx9J/UosG91L7fxY=;
+	b=hdgwawyoaz9LAbwRHhGPcvSIjfXofFwW37OX343vDtRGeIc57x8igVldAwumhSllL9Gpi1
+	3YktCIBb4sSGy1Bg==
+To: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Sascha Bischoff
+ <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>
+Subject: Re: [PATCH 1/4] genirq/msi: Add .msi_teardown() callback as the
+ reverse of .msi_prepare()
+In-Reply-To: <20250511163520.1307654-2-maz@kernel.org>
+References: <20250511163520.1307654-1-maz@kernel.org>
+ <20250511163520.1307654-2-maz@kernel.org>
+Date: Mon, 12 May 2025 16:29:39 +0200
+Message-ID: <87h61plx64.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehieffhfeulefgtdeltefgleevgffgheduledvheduudelgfehlefgheeivedvgeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrgeeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhop
- ehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehlihhnuhigqdhmihhpshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghguhgrnhhgrdiihhgrnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrnhdrtggrrhhpvghnthgvrheslhhinhgrrhhordhorhhg
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain
 
-On Thu, 08 May 2025 11:28:42 +0800, Keguang Zhang wrote:
-> As reported by Dan,
-> commit d2d10ede04b1 ("mtd: rawnand: Add Loongson-1 NAND Controller
-> Driver"), leads to the following Smatch static checker warning:
-> 
-> drivers/mtd/nand/raw/loongson1-nand-controller.c:730 ls1x_nand_chip_init()
-> warn: inconsistent refcounting 'chip_np->kobj.kref.refcount.refs.counter':
-> 
-> [...]
+On Sun, May 11 2025 at 17:35, Marc Zyngier wrote:
 
-Applied to nand/next, thanks!
+> While the MSI ops do have a .msi_prepare() callback that is
+> responsible for setting up the relevant (usually per-device)
+> allocation, we don't have a callback reversing this setup.
 
-[1/1] mtd: rawnand: loongson1: Fix inconsistent refcounting in ls1x_nand_chip_init()
-      commit: 615f8f5077fc8d399818bda2a18bcc89debeb7a8
+..., there is no callback reversing ...
 
-Patche(s) should be available on mtd/linux.git and will be
-part of the next PR (provided that no robot complains by then).
+> For this purpose, let's a .msi_teardown() callback. This is
 
-Kind regards,
-Miquèl
+'let's a ...' is not a sentence. Just say: add a .... calback.
 
+> reliying on the msi_domain_info structure having a non-NULL
+
+  ^^^^^ spell check is your friend.
+
+> alloc_data field.
+>
+> Nobody is populating this field yet, so there is no change
+
+No driver is ..
+
+>  
+> +static void msi_domain_ops_teardown(struct irq_domain *domain,
+> +				    msi_alloc_info_t *arg)
+
+No line break required.
+
+> +{
+> +}
+> +
+>  static void msi_domain_ops_set_desc(msi_alloc_info_t *arg,
+>  				    struct msi_desc *desc)
+>  {
+> @@ -821,6 +826,7 @@ static struct msi_domain_ops msi_domain_ops_default = {
+>  	.get_hwirq		= msi_domain_ops_get_hwirq,
+>  	.msi_init		= msi_domain_ops_init,
+>  	.msi_prepare		= msi_domain_ops_prepare,
+> +	.msi_teardown		= msi_domain_ops_teardown,
+>  	.set_desc		= msi_domain_ops_set_desc,
+>  };
+>  
+> @@ -842,6 +848,8 @@ static void msi_domain_update_dom_ops(struct msi_domain_info *info)
+>  		ops->msi_init = msi_domain_ops_default.msi_init;
+>  	if (ops->msi_prepare == NULL)
+>  		ops->msi_prepare = msi_domain_ops_default.msi_prepare;
+> +	if (ops->msi_teardown == NULL)
+> +		ops->msi_teardown = msi_domain_ops_default.msi_teardown;
+>  	if (ops->set_desc == NULL)
+>  		ops->set_desc = msi_domain_ops_default.set_desc;
+>  }
+> @@ -1088,6 +1096,10 @@ void msi_remove_device_irq_domain(struct device *dev, unsigned int domid)
+>  
+>  	dev->msi.data->__domains[domid].domain = NULL;
+>  	info = domain->host_data;
+> +
+> +	if (info->alloc_data)
+> +		info->ops->msi_teardown(domain, info->alloc_data);
+
+Hmm, that's weird.
+
+Why not call it unconditionally. The empty teardown() default callback
+does not care about @arg being NULL. No?
+
+Thanks,
+
+        tglx
