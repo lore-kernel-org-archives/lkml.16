@@ -1,388 +1,175 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D801A1E4110;
-	Mon, 12 May 2025 14:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83BB61E3DD0
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 14:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059258; cv=none; b=neZIAT/ERYz51GFwRow3u/35UvuIqhb1P6ezJQmpUhfr6A1hYNBFbbHka+ad4Ev8hLpXj3cfZ76UpwCxHqx1zAdNqBFiDu/e856AUeEpqIs5+njssX/VQ2i5+bpt1eF3bDpckpith8pZDc15pUnZ6pz5AgstH2LkvLcRH8aLAjA=
+	t=1747059268; cv=none; b=f2wS8tRPFWuqJY0lB0SMb3SFJ2c2jzB+hc6UUhIbQWyo9BPxwDLv8veDKiA3DttzOK6MXy8QohgvsbYbKW/3rRBG0aQkJ8GFQk5P9XEkTKlueFq1WxBWejoOVMeKnWKTNWwonMr9EjLNN6k7Vw9tJXTUabfgjOQjtSRo6jIrYjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059258; c=relaxed/simple;
-	bh=a4QaV8MjAB0gz1tyUrxaz0iEsgQJJ4GZ5hV8mrIRIK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ACOdsUay1gd+06IZ9QinjYuKMTEwp502wTgVz8P/pOHfU6zOHNpXSfzTCajA7H7pKKJCNFT17ci4HYURGpd87johADBY2tes8ELiQ3xboGir7a9DfVromuDcyOS+PW88pJplbJYeL8sqvD7JoOk0g8T5ckNbWRUlR1//q1+CYr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/BJgBpu; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/BJgBpu"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e740a09eae0so4051612276.1;
-        Mon, 12 May 2025 07:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747059255; x=1747664055; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nLMJ71c2dzKPX20nCpHU00lcLyc+0oXcOaqjf4y3tFU=;
-        b=Y/BJgBpudpfEbF4tIOLQiWUWxDD5TDxw/gIaWiwDsXmKASl+gS1JtMbl9Okr67Ogsf
-         /+lfdF+hNm4TrlomQ3gujLxLy+GDM/hg/09ihwA0xOFGoRpriFgsVHewVWPHTt8BtDcN
-         FyGPnACh1xkljGJENaa85yEIFOMlSfhImczkgyHcOluvymawtomvFHZ7kM7qBMrhjIu7
-         7UrDKOk2rUoYBCa+OixO+9iMxIwxDtSKxdIYwxXzCFsm+5g9h7qHJmx+KBRRZFLZ63Ry
-         pjcnhkLyL4XkzX+Fzn2kdLvI23EYFIhrxqrTDCi4QS9sDwBVghQ2oNfN/0z6m23mCXGW
-         eF1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747059255; x=1747664055;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nLMJ71c2dzKPX20nCpHU00lcLyc+0oXcOaqjf4y3tFU=;
-        b=JXDsfwpo/gL5QjtRyaGard64CBgw56T9KCJ9rpTZgrlpMwYx7FtQMVU8bSt953FQRD
-         uitP8OC5Z+nGOyr8OwYBbXG/MRZgp2VY4FIEJ329/S4J3TDSV4FScjfUSce5J50MW9fy
-         tSHusSCnoPlY0jtMwluLdnFKLYodItSUffgAeGGEHJQYVpfx1y55xnRJXLnWpJTHetXE
-         ZpE8Frd6PYkC1u+Uthl1TJCZZ+nODNK909/lBlYw5t+FKsig6P02ieCxgOZLbZZhitEr
-         PICoeOQXTpfc7he1t7YxwPjG5cMz9IyX1nZJ4xO77UPEtECQDMtSYI/BtmSTgIMbwjz7
-         g9pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnCgdlT2+7yhQeajMBSfRoMV+UkSdCPnqZWP1odZ0SrFV7YQKe6YFXDXa9lFkyBKTlzUDiDL4YLFBedNRk@vger.kernel.org, AJvYcCW2YUjd6aZiDXC7FSim2ZSNTHR8O993Fl+blhpEoZFiWoTI0ryy3xBBav2M005bi4xX0i92vmIl11tY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwznhM+xySiCFmydnMGa2PKlvkTu0QsdlUi0+wTGJXvUbaC+f4N
-	SGylT9NQ2xiSOQcNp7z3HMFtVO0Do/aO/A6UyniNzHniNM8VCWCI
-X-Gm-Gg: ASbGncusxSoun4qQfHMFg6SWlS7lIRNzHycY/q32hkrqV3p+z/roOI4u05dMzV0yp34
-	xQMsI2Z6TdxKlhXWYNAfjHNkjIHk3ISs0f094mGQ8DuyEFg29V6Fxx2NU0DC/EjFPpo2ZLnW4YI
-	uHmutJLH/pJhVJ3z+emeEQgC78HwXnjGlh57LXCHDOy8H/KcUJamgDD3VFTSJsO1PN2ULR/exuG
-	hIoRGKAq0Dly6+lia/qOkDr7ZNPsVs9CYK5xx215hevQwoQfgNf2O4hcocIQIfOxX8hV1t+hRO6
-	LEtCobzXI+42U7y0ZkisZahjNLCQgMjJ86ohkqQ6lvF2QUXOQQ==
-X-Google-Smtp-Source: AGHT+IHjDqzivQqgRJLVu4GNkjokOZb4ORWM1bq7SBTyXEQQYnYWJZR5erICaS3dhy7pWKIZzBJsWA==
-X-Received: by 2002:a05:6902:845:b0:e7a:f768:43d0 with SMTP id 3f1490d57ef6-e7af768440emr560169276.8.1747059254519;
-        Mon, 12 May 2025 07:14:14 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:3::])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e78fd651b3asm2113880276.40.2025.05.12.07.14.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 07:14:14 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	kernel_team@skhynix.com,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	gourry@gourry.net,
-	yunjeong.mun@sk.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	osalvador@suse.de,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
-Date: Mon, 12 May 2025 07:14:12 -0700
-Message-ID: <20250512141412.3792050-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <2e030edd-b3e4-4b79-9e1d-1be0c6b0d0b5@sk.com>
-References: 
+	s=arc-20240116; t=1747059268; c=relaxed/simple;
+	bh=Jsas9M9ixx08WlHN0IPKS3Fx+IQAwSBwk98sL8o8YJs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=pIhEPnwnVdGrZEv7C+RBzE/AtPYyaQ7iR7aiKkuSRKCYFv1I2SwTWio+JS0g/lrL/QS87hOGEUhR6uTN2sjYPtOSapzQ3qBZeu75pMMfQGGAdGqGzi9/6Z1X+7jORDR2lurLwmOymU2+Y5X8d/ohncMlsqry7fMPIP2dKkWFS4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F7D3150C;
+	Mon, 12 May 2025 07:14:13 -0700 (PDT)
+Received: from [10.57.90.222] (unknown [10.57.90.222])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F1693F673;
+	Mon, 12 May 2025 07:14:21 -0700 (PDT)
+Message-ID: <08f2e23f-f67e-4d41-ae0b-143df6731977@arm.com>
+Date: Mon, 12 May 2025 15:14:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Disable barrier batching in interrupt contexts
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Kevin Brodsky <kevin.brodsky@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ syzbot+5c0d9392e042f41d45c5@syzkaller.appspotmail.com
+References: <20250512102242.4156463-1-ryan.roberts@arm.com>
+ <aCH0TLRQslXHin5Q@arm.com> <7852c047-e8da-44d4-8220-68c2ebca5206@arm.com>
+In-Reply-To: <7852c047-e8da-44d4-8220-68c2ebca5206@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Honggyu, thank you for reviewing & testing my patch (again)!
-
-On Sun, 11 May 2025 21:56:20 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-
-> Hi Joshua,
+On 12/05/2025 14:53, Ryan Roberts wrote:
+> On 12/05/2025 14:14, Catalin Marinas wrote:
+>> On Mon, May 12, 2025 at 11:22:40AM +0100, Ryan Roberts wrote:
+>>> @@ -79,7 +83,9 @@ static inline void queue_pte_barriers(void)
+>>>  #define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+>>>  static inline void arch_enter_lazy_mmu_mode(void)
+>>>  {
+>>> -	VM_WARN_ON(in_interrupt());
+>>> +	if (in_interrupt())
+>>> +		return;
+>>> +
+>>>  	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
+>>
+>> I still get this warning trigger with some debugging enabled (more
+>> specifically, CONFIG_DEBUG_PAGEALLOC). Patch applied on top of the arm64
+>> for-kernelci.
 > 
-> Thanks for the update this patch and it looks good to me.
+> Thanks for the report...
 > 
-> I've applied your v8 patch with your fixup here together, then tested it in my
-> server, which has 8ch of DRAM with 4ch of CXL memory in each socket.
+> I'll admit I didn't explicitly test CONFIG_DEBUG_PAGEALLOC since I thought we
+> concluded when talking that the failure mode was the same as KFENCE in that it
+> was due to pte manipulations in the interrupt context.
 > 
-> I can confirm that it shows decent ratio with this auto weight configuration as
-> follows.
+> But that's not what this trace shows...
 > 
->    $ ls /sys/kernel/mm/mempolicy/weighted_interleave/
->    auto  node0  node1  node2  node3
+> The warning is basically saying we have nested lazy mmu mode regions, both in
+> task context, which is completely illegal as far as lazy mmu is concerned.
 > 
->    $ cat /sys/kernel/mm/mempolicy/weighted_interleave/*
->    true
->    3
->    3
->    2
->    2
+> Looks like the first nest is zap_pte_range(), which is batching with mmu_gather
+> and that allocates memory in tlb_next_batch(). And when CONFIG_DEBUG_PAGEALLOC
+> is enabled, it calls into the arch to make the allocated page valid in the
+> linear map. arm64 does that with apply_to_page_range(), which does a second lazy
+> mmu nest.
 > 
-> Hi Andrew,
+> I need to have a think about what the right fix is. Will get back to you shortly.
 > 
-> I'm not sure if Joshua is better to post v9, but if you want to fold and update,
-> then could you please add my tags as follows when you fold this change?
-> 
->    Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
->    Tested-by: Honggyu Kim <honggyu.kim@sk.com>
-> 
-> I added the same tags in v7 but not included in v8 somehow.
-> https://lore.kernel.org/linux-mm/5fdd7db9-96fb-49ea-9803-977158cb0132@sk.com
-
-I must have missed including these tags. Sorry about the confusion --
-hopefully we can incorporate them into v8!
-
 > Thanks,
-> Honggyu
+> Ryan
 > 
-> On 5/11/2025 11:58 AM, Joshua Hahn wrote:
-> > Hello Andrew,
-> > 
-> > I was hoping to fold this fixlet in with the patch this belongs to. It includes
-> > some wordsmithing changes, some code simplification/cleanups, and makes sure
-> > that the code behavior matches that of the ABI I described. I've kept the
-> > original message below as well, where Ying suggested the changes present in
-> > this fixlet.
-> > 
-> > Please let me know if this fixlet is too big, and you would rather prefer a
-> > new version instead. Thank you as always for your patience and support!
-> > Joshua
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> > index ec13382c606f..649c0e9b895c 100644
-> > --- a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> > +++ b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> > @@ -24,7 +24,7 @@ Description:	Weight configuration interface for nodeN
-> >   		empty string, ...) will return -EINVAL.
-> > 
-> >   		Changing the weight to a valid value will automatically
-> > -		update the system to manual mode as well.
-> > +		switch the system to manual mode as well.
-> > 
-> >   What:		/sys/kernel/mm/mempolicy/weighted_interleave/auto
-> >   Date:		May 2025
-> > diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
-> > index 3e8da8ba1146..0fe96f3ab3ef 100644
-> > --- a/include/linux/mempolicy.h
-> > +++ b/include/linux/mempolicy.h
-> > @@ -57,15 +57,6 @@ struct mempolicy {
-> >   	} w;
-> >   };
-> > 
-> > -/*
-> > - * A null weighted_interleave_state is interpted as having .mode = "auto",
-> > - * and .iw_table is interpreted as an array of 1s with length nr_node_ids.
-> > - */
-> > -struct weighted_interleave_state {
-> > -	bool mode_auto;
-> > -	u8 iw_table[];
-> > -};
-> > -
-> >   /*
-> >    * Support for managing mempolicy data objects (clone, copy, destroy)
-> >    * The default fast path of a NULL MPOL_DEFAULT policy is always inlined.
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index f542691b7123..0624d735a2e7 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -148,6 +148,14 @@ static struct mempolicy preferred_node_policy[MAX_NUMNODES];
-> >    */
-> >   static const int weightiness = 32;
-> > 
-> > +/*
-> > + * A null weighted_interleave_state is interpreted as having .mode="auto",
-> > + * and .iw_table is interpreted as an array of 1s with length nr_node_ids.
-> > + */
-> > +struct weighted_interleave_state {
-> > +	bool mode_auto;
-> > +	u8 iw_table[];
-> > +};
-> >   static struct weighted_interleave_state __rcu *wi_state;
-> >   static unsigned int *node_bw_table;
-> > 
-> > @@ -3561,9 +3569,8 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
-> >   	int i;
-> > 
-> >   	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
-> > -	if (count == 0 || sysfs_streq(buf, ""))
-> > -		weight = 0;
-> > -	else if (kstrtou8(buf, 0, &weight) || weight == 0)
-> > +	if (count == 0 || sysfs_streq(buf, "") ||
-> > +	    kstrtou8(buf, 0, &weight) || weight == 0)
-> >   		return -EINVAL;
-> > 
-> >   	new_wi_state = kzalloc(struct_size(new_wi_state, iw_table, nr_node_ids),
-> > @@ -3630,9 +3637,15 @@ static ssize_t weighted_interleave_auto_store(struct kobject *kobj,
-> >   	if (!input) {
-> >   		old_wi_state = rcu_dereference_protected(wi_state,
-> >   					lockdep_is_held(&wi_state_lock));
-> > -		if (old_wi_state)
-> > -			memcpy(new_wi_state->iw_table, old_wi_state->iw_table,
-> > -					nr_node_ids * sizeof(u8));
-> > +		if (!old_wi_state)
-> > +			goto update_wi_state;
-> > +		if (input == old_wi_state->mode_auto) {
-> > +			mutex_unlock(&wi_state_lock);
-> > +			return count;
-> > +		}
-> > +
-> > +		memcpy(new_wi_state->iw_table, old_wi_state->iw_table,
-> > +					       nr_node_ids * sizeof(u8));
-> >   		goto update_wi_state;
-> >   	}
-> > 
-> > @@ -3707,8 +3720,12 @@ static void wi_state_free(void)
-> >   	kfree(&wi_group->wi_kobj);
-> >   }
-> > 
-> > +static struct kobj_attribute wi_auto_attr =
-> > +	__ATTR(auto, 0664, weighted_interleave_auto_show,
-> > +			   weighted_interleave_auto_store);
-> > +
-> >   static void wi_cleanup(void) {
-> > -	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
-> > +	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
-> >   	sysfs_wi_node_delete_all();
-> >   	wi_state_free();
-> >   }
-> > @@ -3798,10 +3815,6 @@ static int wi_node_notifier(struct notifier_block *nb,
-> >   	return NOTIFY_OK;
-> >   }
-> > 
-> > -static struct kobj_attribute wi_auto_attr =
-> > -	__ATTR(auto, 0664, weighted_interleave_auto_show,
-> > -			   weighted_interleave_auto_store);
-> > -
-> >   static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-> >   {
-> >   	int nid, err;
-> > 
-> > 
-> > On Sat, 10 May 2025 11:51:50 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
-> > 
-> >> On Sat, 10 May 2025 13:25:32 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
-> >>
-> >> Hi Ying,
-> >> Thank you for reviewing my patch, as always!
-> >>
-> >>> Hi, Joshua,
-> >>>
-> >>> Thank you for updated version!  And sorry for late reply.
-> >>>
-> >>> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
-> >>
-> >> [...snip...]
-> >>
-> >>>> diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> >>>> index 0b7972de04e9..ec13382c606f 100644
-> >>>> --- a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> >>>> +++ b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
-> >>>> @@ -20,6 +20,35 @@ Description:	Weight configuration interface for nodeN
-> >>>>   		Minimum weight: 1
-> >>>>   		Maximum weight: 255
-> >>>>   
-> >>>> -		Writing an empty string or `0` will reset the weight to the
-> >>>> -		system default. The system default may be set by the kernel
-> >>>> -		or drivers at boot or during hotplug events.
-> >>>> +		Writing invalid values (i.e. any values not in [1,255],
-> >>>> +		empty string, ...) will return -EINVAL.
-> >>>> +
-> >>>> +		Changing the weight to a valid value will automatically
-> >>>> +		update the system to manual mode as well.
-> >>>
-> >>> s/update/switch/ ?
-> >>>
-> >>> But my English is poor, please keep your version if you think that it's
-> >>> better.
-> >>
-> >> I have no particular preference here, whatever will make it easiest for the
-> >> users to understand what is happening. I'll take your suggestion!
-> >>
-> >> [...snip...]
-> >>
-> >>>> +/*
-> >>>> + * A null weighted_interleave_state is interpted as having .mode = "auto",
-> >>>> + * and .iw_table is interpreted as an array of 1s with length nr_node_ids.
-> >>>> + */
-> >>>
-> >>> Better to move the comments to above "wi_state" definition?
-> >>>
-> >>>> +struct weighted_interleave_state {
-> >>>> +	bool mode_auto;
-> >>>> +	u8 iw_table[];
-> >>>> +};
-> >>>> +
-> >>>
-> >>> Why do you put the type definition in mempolicy.h instead of
-> >>> mempolicy.c?  I don't find other users except mempolicy.c.
-> >>
-> >> Good point, I'll move the definition to mempolicy.c and move the comment
-> >> to the wi_state definition as well.
-> >>
-> >> [...snip...]
-> >>
-> >>>> @@ -3450,31 +3555,104 @@ static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
-> >>>>   static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
-> >>>>   			  const char *buf, size_t count)
-> >>>>   {
-> >>>> +	struct weighted_interleave_state *new_wi_state, *old_wi_state = NULL;
-> >>>>   	struct iw_node_attr *node_attr;
-> >>>> -	u8 *new;
-> >>>> -	u8 *old;
-> >>>>   	u8 weight = 0;
-> >>>> +	int i;
-> >>>>   
-> >>>>   	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
-> >>>>   	if (count == 0 || sysfs_streq(buf, ""))
-> >>>>   		weight = 0;
-> >>>
-> >>> According to revised ABI, we should return -EINVAL here?
-> >>
-> >> Great catch, I completely ignored the ABI description that I wrote...
-> >> I'll go ahead and just return -EINVAL here!
-> >>
-> >> [...snip...]
-> >>
-> >>>> +static ssize_t weighted_interleave_auto_store(struct kobject *kobj,
-> >>>> +		struct kobj_attribute *attr, const char *buf, size_t count)
-> >>>> +{
-> >>>> +	struct weighted_interleave_state *new_wi_state, *old_wi_state = NULL;
-> >>>> +	unsigned int *bw;
-> >>>> +	bool input;
-> >>>> +	int i;
-> >>>> +
-> >>>> +	if (kstrtobool(buf, &input))
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	new_wi_state = kzalloc(struct_size(new_wi_state, iw_table, nr_node_ids),
-> >>>> +			       GFP_KERNEL);
-> >>>> +	if (!new_wi_state)
-> >>>> +		return -ENOMEM;
-> >>>> +	for (i = 0; i < nr_node_ids; i++)
-> >>>> +		new_wi_state->iw_table[i] = 1;
-> >>>> +
-> >>>> +	mutex_lock(&wi_state_lock);
-> >>>> +	if (!input) {
-> >>>
-> >>> If input == old_wi_state->mode_auto, we can return directly?
-> >>
-> >> Yes, that makes sense to me.
-> >>
-> >>>>   static void wi_cleanup(void) {
-> >>>> +	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
-> >>>
-> >>> Why not just
-> >>>
-> >>> 	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
-> >>>
-> >>> ?
-> >>
-> >> Also makes sense!!
-> >>
-> >>> ---
-> >>> Best Regards,
-> >>> Huang, Ying
-> >>
-> >> Thank you for your great feedback Ying, I'll make changes based on
-> >> your suggestions and shortly send up a v9. I hope you have a great day!
-> >> Joshua
-> >>
+>>
+>> Is it because the unmap code uses arch_enter_lazy_mmu_mode() already and
+>> __apply_to_page_range() via __kernel_map_pages() is attempting another
+>> nested call? I think it's still safe, we just drop the optimisation in
+>> the outer code and issue the barriers immediately. So maybe drop this
+>> warning as well but add a comment on how nesting works.
+
+Sorry Catalin, I completely missed this propsal on first read!
+
+Yes that's what is happening, yes it is still safe, and yes we just drop the
+optimization.
+
+But it's an ugly solution IMHO.
+
+The real problem is that arm64 has chosen to use apply_to_page_range() as part
+of it's implementation of __kernel_map_pages(), and apply_to_page_range()
+expects to be able to use lazy mmu.
+
+lazy mmu spec says "Nesting is not permitted and the mode cannot be used in
+interrupt context." Clearly neither of those things are true :)
+
+Looking at the powerpc lazy mmu implementation, I think it will do exactly what
+you are suggesting we do here, which is just terminate the optimization early.
+So I guess that's the most pragmatic approach. I'll re-send this patch. Sigh.
+
+Thanks,
+Ryan
+
+
+>>
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 6 PID: 1 at arch/arm64/include/asm/pgtable.h:89 __apply_to_page_range+0x85c/0x9f8
+>> Modules linked in: ip_tables x_tables ipv6
+>> CPU: 6 UID: 0 PID: 1 Comm: systemd Not tainted 6.15.0-rc5-00075-g676795fe9cf6 #1 PREEMPT 
+>> Hardware name: QEMU KVM Virtual Machine, BIOS 2024.08-4 10/25/2024
+>> pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> pc : __apply_to_page_range+0x85c/0x9f8
+>> lr : __apply_to_page_range+0x2b4/0x9f8
+>> sp : ffff80008009b3c0
+>> x29: ffff80008009b460 x28: ffff0000c43a3000 x27: ffff0001ff62b108
+>> x26: ffff0000c43a4000 x25: 0000000000000001 x24: 0010000000000001
+>> x23: ffffbf24c9c209c0 x22: ffff80008009b4d0 x21: ffffbf24c74a3b20
+>> x20: ffff0000c43a3000 x19: ffff0001ff609d18 x18: 0000000000000001
+>> x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000003
+>> x14: 0000000000000028 x13: ffffbf24c97c1000 x12: ffff0000c43a3fff
+>> x11: ffffbf24cacc9a70 x10: ffff0000c43a3fff x9 : ffff0001fffff018
+>> x8 : 0000000000000012 x7 : ffff0000c43a4000 x6 : ffff0000c43a4000
+>> x5 : ffffbf24c9c209c0 x4 : ffff0000c43a3fff x3 : ffff0001ff609000
+>> x2 : 0000000000000d18 x1 : ffff0000c03e8000 x0 : 0000000080000000
+>> Call trace:
+>>  __apply_to_page_range+0x85c/0x9f8 (P)
+>>  apply_to_page_range+0x14/0x20
+>>  set_memory_valid+0x5c/0xd8
+>>  __kernel_map_pages+0x84/0xc0
+>>  get_page_from_freelist+0x1110/0x1340
+>>  __alloc_frozen_pages_noprof+0x114/0x1178
+>>  alloc_pages_mpol+0xb8/0x1d0
+>>  alloc_frozen_pages_noprof+0x48/0xc0
+>>  alloc_pages_noprof+0x10/0x60
+>>  get_free_pages_noprof+0x14/0x90
+>>  __tlb_remove_folio_pages_size.isra.0+0xe4/0x140
+>>  __tlb_remove_folio_pages+0x10/0x20
+>>  unmap_page_range+0xa1c/0x14c0
+>>  unmap_single_vma.isra.0+0x48/0x90
+>>  unmap_vmas+0xe0/0x200
+>>  vms_clear_ptes+0xf4/0x140
+>>  vms_complete_munmap_vmas+0x7c/0x208
+>>  do_vmi_align_munmap+0x180/0x1a8
+>>  do_vmi_munmap+0xac/0x188
+>>  __vm_munmap+0xe0/0x1e0
+>>  __arm64_sys_munmap+0x20/0x38
+>>  invoke_syscall+0x48/0x104
+>>  el0_svc_common.constprop.0+0x40/0xe0
+>>  do_el0_svc+0x1c/0x28
+>>  el0_svc+0x4c/0x16c
+>>  el0t_64_sync_handler+0x10c/0x140
+>>  el0t_64_sync+0x198/0x19c
+>> irq event stamp: 281312
+>> hardirqs last  enabled at (281311): [<ffffbf24c780fd04>] bad_range+0x164/0x1c0
+>> hardirqs last disabled at (281312): [<ffffbf24c89c4550>] el1_dbg+0x24/0x98
+>> softirqs last  enabled at (281054): [<ffffbf24c752d99c>] handle_softirqs+0x4cc/0x518
+>> softirqs last disabled at (281019): [<ffffbf24c7450694>] __do_softirq+0x14/0x20
+>> ---[ end trace 0000000000000000 ]---
+>>
 > 
-> 
+
