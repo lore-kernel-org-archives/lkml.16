@@ -1,31 +1,32 @@
 Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0BBAD58
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34C213AA2A
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747055792; cv=none; b=D2gvE5WYjA8RahxGPDW0i599xbc+qLVQn4xypNWEiPUxuUaQPgMZVqXNyVe+3jukLnbL9Zb6KTmptYnGZdEtz88FDDw83b3P6CDGblEpPxjlrrBwSqed4azPdeQWzY32qWTSJUoMPg1NlE0J0QB13P3eG9Bw/+qzYjTdUAQcdB8=
+	t=1747055800; cv=none; b=IRztqD/OBuDAWuf/A48eXf9BXMyDQUJb/HzRk+08T+DuoEGIIcl/IwwScIZUYEkAeEiv/OwjqHeP/RSj/s49vJwelJjcVLR6FE0fxopNg9X6y3g7/RYfIOIpey5Cse7KiOlksDAEF524lAAQEgEbx+f6SRcBE7UOEKmpCuFecPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747055792; c=relaxed/simple;
-	bh=l/0gsrFoVPDA7ZtJpXzRTh0pyA35QHVBabd3tm5D8og=;
+	s=arc-20240116; t=1747055800; c=relaxed/simple;
+	bh=npsPbasiX6BxV75yq8Vwu4nA/tujBxHet+iO7F6Phbw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UHITL3HEzR1vu1A/LMQ7V9ZhHDrwOlhtfeYPuQmVZzsIG9Kg4wIpYnwSYAVJ6PoBsFdxfiPLQ8NQm+68drC/WSFkOuI+acH8et8XjPSYXL7O0gNkEpGXgSBU67f4yq+Vnk8+25ZC+033dc3RZNkL28RrqEttEJkV5FdeMt4YlZo=
+	 MIME-Version:Content-Type; b=ArYmvSdrKCC459v44/+gnRNtLC6YSyDEEHfMuop/Gw5aG80rarKPDCADHRRpfgFMXLr5bnsZtOv0Zcy+JrMT8TqkvmAxXL5JJDcts1BJpdWYEW+ULaUJNF4w6P+HfHZTr6HHvN9w5mJCxt46HGT04VDM+aJOz4Jk0C9HiVOUR8Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
 Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
 	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id 94EA95FAA7;
+	by mx1.emlix.com (Postfix) with ESMTPS id E0F615FABF;
 	Mon, 12 May 2025 15:16:15 +0200 (CEST)
 From: Rolf Eike Beer <eb@emlix.com>
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Jerry Snitselaar <jsnitsel@redhat.com>
 Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Bert Karwatzki <spasswolf@web.de>, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 4/6] iommu: make inclusion of riscv directory conditional
-Date: Mon, 12 May 2025 15:13:43 +0200
-Message-ID: <2235451.Icojqenx9y@devpool92.emlix.com>
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 3/6] iommu: make inclusion of amd directory conditional
+Date: Mon, 12 May 2025 15:12:52 +0200
+Message-ID: <1894970.atdPhlSkOF@devpool92.emlix.com>
 Organization: emlix GmbH
 In-Reply-To: <1926170.CQOukoFCf9@devpool92.emlix.com>
 References: <1926170.CQOukoFCf9@devpool92.emlix.com>
@@ -38,42 +39,41 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Nothing in there is active if CONFIG_RISCV_IOMMU is not enabled, so the who=
-le
+Nothing in there is active if CONFIG_AMD_IOMMU is not enabled, so the whole
 directory can depend on that switch as well.
 
-=46ixes: 5c0ebbd3c6c6 ("iommu/riscv: Add RISC-V IOMMU platform device drive=
-r")
+=46ixes: cbe94c6e1a7d ("iommu/amd: Move Kconfig and Makefile bits down into=
+ amd directory")
 Signed-off-by: Rolf Eike Beer <eb@emlix.com>
 Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 =2D--
- drivers/iommu/Makefile       | 3 ++-
- drivers/iommu/riscv/Makefile | 2 +-
+ drivers/iommu/Makefile     | 3 ++-
+ drivers/iommu/amd/Makefile | 2 +-
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index a486032d3e079..355294fa9033f 100644
+index 53f8000753985..a486032d3e079 100644
 =2D-- a/drivers/iommu/Makefile
 +++ b/drivers/iommu/Makefile
-@@ -1,7 +1,8 @@
+@@ -1,5 +1,6 @@
  # SPDX-License-Identifier: GPL-2.0
-=2Dobj-y +=3D arm/ iommufd/ riscv/
-+obj-y +=3D arm/ iommufd/
- obj-$(CONFIG_AMD_IOMMU) +=3D amd/
+=2Dobj-y +=3D amd/ arm/ iommufd/ riscv/
++obj-y +=3D arm/ iommufd/ riscv/
++obj-$(CONFIG_AMD_IOMMU) +=3D amd/
  obj-$(CONFIG_INTEL_IOMMU) +=3D intel/
-+obj-$(CONFIG_RISCV_IOMMU) +=3D riscv/
  obj-$(CONFIG_IOMMU_API) +=3D iommu.o
  obj-$(CONFIG_IOMMU_SUPPORT) +=3D iommu-pages.o
- obj-$(CONFIG_IOMMU_API) +=3D iommu-traces.o
-diff --git a/drivers/iommu/riscv/Makefile b/drivers/iommu/riscv/Makefile
-index f54c9ed17d41d..b5929f9f23e64 100644
-=2D-- a/drivers/iommu/riscv/Makefile
-+++ b/drivers/iommu/riscv/Makefile
+diff --git a/drivers/iommu/amd/Makefile b/drivers/iommu/amd/Makefile
+index 9de33b2d42f52..59c04a67f3982 100644
+=2D-- a/drivers/iommu/amd/Makefile
++++ b/drivers/iommu/amd/Makefile
 @@ -1,3 +1,3 @@
  # SPDX-License-Identifier: GPL-2.0-only
-=2Dobj-$(CONFIG_RISCV_IOMMU) +=3D iommu.o iommu-platform.o
-+obj-y +=3D iommu.o iommu-platform.o
- obj-$(CONFIG_RISCV_IOMMU_PCI) +=3D iommu-pci.o
+=2Dobj-$(CONFIG_AMD_IOMMU) +=3D iommu.o init.o quirks.o io_pgtable.o io_pgt=
+able_v2.o ppr.o pasid.o
++obj-y +=3D iommu.o init.o quirks.o io_pgtable.o io_pgtable_v2.o ppr.o pasi=
+d.o
+ obj-$(CONFIG_AMD_IOMMU_DEBUGFS) +=3D debugfs.o
 =2D-=20
 2.49.0
 
