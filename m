@@ -1,172 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642A529CB53
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 18:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE20E29DB92;
+	Mon, 12 May 2025 18:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073106; cv=none; b=AwkFGO74UaFdZzRjhqbp7xakCmNm+foWh8U4kUcwo3v5t1OYVk7Fz5SNUdtK6CAeHNStbwBdqUY8nmTQVnnPLHRp02qLl8ZlIkgpq7OQXimlqt295kbz8ULetnVMvz/q1uqIp4cpT4M8/kiid8ifTlEBf0c8nUSGgPa7K4Ss06k=
+	t=1747073106; cv=none; b=CToJZdFOdN2X723f0juaLot97rAe3RlVYjdPGxveaCDjndmpbPgttr/TaKXNrPx6JHNIznOVH9ifjppcWy3euUJ0BlhZwSHmwha7LIeBfix2n+ycx392yE4J6kAnmKWqkzy0v3ipPhC5rkxakwK3U7fDvj5UG8VTOOEvcBvQyN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747073106; c=relaxed/simple;
-	bh=GAuV9D2SSVmY1tEcwamQ8Io+RPWI39GoxyOm85OZ30Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BR0I4faqvbgPf57Rl9pV9WpJvBzWRotqqazV7IrbSz2KYk3sL0wAejtk/T/5tmskzmyRvuUYEM6hm+scGe594K25AaKlwFcuM1e0tyFs3S7IMs3HNEA5rWA5afbG/I2FDPCDdiHREoqb9xQuFZk4wGF+MZVZNh3AzP/yvBmV2Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N0Box8E7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=CUwTTRBoepiWy3eBVkjtl52xMaizXnQOALV0fmgcrHo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bG6U1Bcx0EI/fYxs7e8uFe0GbsPyc7+RrgOs4SJJAmaNN85c6aFHgIBDAbxnE4U9lyHo6p1l+bXYBcvN/ljQUy+DwHM1yLxeJ+n3PEOzQxRlhWPZT6aO5Pp1tbeAP38qkvOooM8FHwcOlGqbhaH2aGqd/aZ9SMocrwhbxxfuMx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAB63nsH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N0Box8E7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747073103;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fWaQ2unDnoX2epZ5aWfA8UXS6z4UogKfTjShB0NZNqU=;
-	b=N0Box8E7pu4pDJbavegpEYkXoRJhGEBzd4yvlFYNqVdbgiUB2cXTnfVP3ZzGGyB5qwq4j6
-	RWwjUK4v74SYQ1ueNQ2HOYtsQKuyvBbiSQXIU6iudaLzjB/e1n0AkCEHdjEGF/Meak+UHu
-	s1rQMLNO7Py0Kz1us1O2t2HEx/3Qk6Y=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-O_xTPgJeM7iHJqPcQlJ7xA-1; Mon,
- 12 May 2025 14:05:02 -0400
-X-MC-Unique: O_xTPgJeM7iHJqPcQlJ7xA-1
-X-Mimecast-MFC-AGG-ID: O_xTPgJeM7iHJqPcQlJ7xA_1747073098
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DC5941800446;
-	Mon, 12 May 2025 18:04:57 +0000 (UTC)
-Received: from intellaptop.lan (unknown [10.22.80.5])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A5D930001A1;
-	Mon, 12 May 2025 18:04:52 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sebastian Ott <sebott@redhat.com>,
-	Shusen Li <lishusen2@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Anup Patel <anup@brainfault.org>,
-	Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexander Potapenko <glider@google.com>,
-	kvmarm@lists.linux.dev,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	x86@kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	linux-riscv@lists.infradead.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	kvm-riscv@lists.infradead.org,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH v5 6/6] RISC-V: KVM: use kvm_trylock_all_vcpus when locking all vCPUs
-Date: Mon, 12 May 2025 14:04:07 -0400
-Message-ID: <20250512180407.659015-7-mlevitsk@redhat.com>
-In-Reply-To: <20250512180407.659015-1-mlevitsk@redhat.com>
-References: <20250512180407.659015-1-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAB63nsH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD05C4CEEF;
+	Mon, 12 May 2025 18:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747073106;
+	bh=CUwTTRBoepiWy3eBVkjtl52xMaizXnQOALV0fmgcrHo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RAB63nsHcTpOzKtm2P4jVzIJJ9bHeKAG2ycXy8HkEScyMbMrSCNRI7MQvueKz1v1U
+	 H79sVzfY39Fk9quxMMWnx8NmtYinU8oa+J2q6dwDKYX3wPrn4rThgGOoxJUjwL8W+E
+	 HUw1D8A2F+UweffjCsB5rBnupWCoogfSQ4pa/kFHlQQEltX5Hue9Obw5hGPOXfBZjy
+	 mQ18QZA1sYB/xuJZdNZC8bjE16n1JvmPzkpv9lmECm1AggAgfK0jLRvEZLPB6iZnTb
+	 G3ukswHoBnyWkldW0Qa7TXtkwrC22vN4iVV3/VjKbnudHV+5nudK568SUPWRvEW84X
+	 mBoyFNkPVI+JQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Jason Andryuk <jason.andryuk@amd.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	elder@kernel.org,
+	chenqiuji666@gmail.com,
+	gregkh@linuxfoundation.org,
+	xin.wang2@amd.com,
+	xen-devel@lists.xenproject.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 5/6] xenbus: Allow PVH dom0 a non-local xenstore
+Date: Mon, 12 May 2025 14:04:51 -0400
+Message-Id: <20250512180452.437844-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250512180452.437844-1-sashal@kernel.org>
+References: <20250512180452.437844-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.90
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Use kvm_trylock_all_vcpus instead of a custom implementation when locking
-all vCPUs of a VM.
+From: Jason Andryuk <jason.andryuk@amd.com>
 
-Compile tested only.
+[ Upstream commit 90989869baae47ee2aa3bcb6f6eb9fbbe4287958 ]
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
+currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
+xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
+late init path.
+
+Ideally we'd drop the use of xen_initial_domain() and just check for the
+event channel instead.  However, ARM has a xen,enhanced no-xenstore
+mode, where the event channel and PFN would both be 0.  Retain the
+xen_initial_domain() check, and use that for an additional check when
+the event channel is 0.
+
+Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
+chance that high bits are set for the 32bit event channel.
+
+Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+Change-Id: I5506da42e4c6b8e85079fefb2f193c8de17c7437
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Message-ID: <20250506204456.5220-1-jason.andryuk@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kvm/aia_device.c | 34 ++--------------------------------
- 1 file changed, 2 insertions(+), 32 deletions(-)
+ drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/kvm/aia_device.c b/arch/riscv/kvm/aia_device.c
-index 39cd26af5a69..6315821f0d69 100644
---- a/arch/riscv/kvm/aia_device.c
-+++ b/arch/riscv/kvm/aia_device.c
-@@ -12,36 +12,6 @@
- #include <linux/kvm_host.h>
- #include <linux/uaccess.h>
- 
--static void unlock_vcpus(struct kvm *kvm, int vcpu_lock_idx)
--{
--	struct kvm_vcpu *tmp_vcpu;
--
--	for (; vcpu_lock_idx >= 0; vcpu_lock_idx--) {
--		tmp_vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
--		mutex_unlock(&tmp_vcpu->mutex);
--	}
--}
--
--static void unlock_all_vcpus(struct kvm *kvm)
--{
--	unlock_vcpus(kvm, atomic_read(&kvm->online_vcpus) - 1);
--}
--
--static bool lock_all_vcpus(struct kvm *kvm)
--{
--	struct kvm_vcpu *tmp_vcpu;
--	unsigned long c;
--
--	kvm_for_each_vcpu(c, tmp_vcpu, kvm) {
--		if (!mutex_trylock(&tmp_vcpu->mutex)) {
--			unlock_vcpus(kvm, c - 1);
--			return false;
--		}
--	}
--
--	return true;
--}
--
- static int aia_create(struct kvm_device *dev, u32 type)
- {
- 	int ret;
-@@ -53,7 +23,7 @@ static int aia_create(struct kvm_device *dev, u32 type)
- 		return -EEXIST;
- 
- 	ret = -EBUSY;
--	if (!lock_all_vcpus(kvm))
-+	if (kvm_trylock_all_vcpus(kvm))
- 		return ret;
- 
- 	kvm_for_each_vcpu(i, vcpu, kvm) {
-@@ -65,7 +35,7 @@ static int aia_create(struct kvm_device *dev, u32 type)
- 	kvm->arch.aia.in_kernel = true;
- 
- out_unlock:
--	unlock_all_vcpus(kvm);
-+	kvm_unlock_all_vcpus(kvm);
- 	return ret;
- }
- 
+diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+index 25164d56c9d99..d3b6908110c6f 100644
+--- a/drivers/xen/xenbus/xenbus_probe.c
++++ b/drivers/xen/xenbus/xenbus_probe.c
+@@ -966,9 +966,15 @@ static int __init xenbus_init(void)
+ 	if (xen_pv_domain())
+ 		xen_store_domain_type = XS_PV;
+ 	if (xen_hvm_domain())
++	{
+ 		xen_store_domain_type = XS_HVM;
+-	if (xen_hvm_domain() && xen_initial_domain())
+-		xen_store_domain_type = XS_LOCAL;
++		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
++		if (err)
++			goto out_error;
++		xen_store_evtchn = (int)v;
++		if (!v && xen_initial_domain())
++			xen_store_domain_type = XS_LOCAL;
++	}
+ 	if (xen_pv_domain() && !xen_start_info->store_evtchn)
+ 		xen_store_domain_type = XS_LOCAL;
+ 	if (xen_pv_domain() && xen_start_info->store_evtchn)
+@@ -987,10 +993,6 @@ static int __init xenbus_init(void)
+ 		xen_store_interface = gfn_to_virt(xen_store_gfn);
+ 		break;
+ 	case XS_HVM:
+-		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
+-		if (err)
+-			goto out_error;
+-		xen_store_evtchn = (int)v;
+ 		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
+ 		if (err)
+ 			goto out_error;
 -- 
-2.46.0
+2.39.5
 
