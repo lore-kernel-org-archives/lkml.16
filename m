@@ -1,60 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DD381720;
-	Mon, 12 May 2025 13:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B08181720;
+	Mon, 12 May 2025 13:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058224; cv=none; b=n38aEBfO9L5Ee2KmD9vaZpqXVbEA6ShDADUGl1LP1VnRt9TAy3vhFep415xfY9aBej7RJJpWWVMdLBdy88vnuO1gZ4a78p3aT5Wf2Z0/IPPppxcJzXmIWo1cAIt14Ihv5fT9dDaor/ysd7r624AgMXtkjDMtPKhmp9jp1VPOuec=
+	t=1747058237; cv=none; b=Zc6emnNX6CDxPjVlciP/7PZGyKLj4dgO4/i9NtOFmaulXHBhJllaXMVsTtRo+FBBStAjC8gzdbAekJKOYEkMgvxQDwgpClPFGXrmbYtnpMjNr6fBfdunQD2Jo7y8dkZAQRNY9vVh2Jmb9yoiTaYIaWJDO9BkNm/bIO4RobfhIEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058224; c=relaxed/simple;
-	bh=G8AvTGDvjUqGmVdkJjxgWL171ZtkhUf5o1ad9gnZTfQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=auJHZ+ebMCvrkS5hMeYml+rUpcHxTSnAzYqYBcRH7Pog0qPXSOI4gu7sAJbRpklGT3nNzLKfmTaAl+ulouM/MkxPzOtn7y5j+Kgn6zh0ogwVhVvZE4BMWmaPCk1foIaVq7mmU8F8AYh4OpOBCcZpypLj31mwRkL+JrmOj/XL8Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTl6wDXp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTl6wDXp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E08BAC4CEE7;
-	Mon, 12 May 2025 13:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747058223;
-	bh=G8AvTGDvjUqGmVdkJjxgWL171ZtkhUf5o1ad9gnZTfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DTl6wDXpZQ4vWQTDNDze2zuklIsc31wMGtaMHWllCfkgpFtn7A+id2QcKT+4lp7rq
-	 dxyHvUoHMsgfXF7XZYg7PoA2Isjqp4S8hGH0nMsckAK4SQ//xABEpUvK6OqinQ6kxh
-	 1/rpNzxaVwxHGVRNqHB6QM1jdIGD9BLXoYV5K0/I7zfCcUn/rOJ8DHpWPn0KxcsqPh
-	 P1Qm/13O4r//RKPr0S3mCD9y8cFaO2dgZ2VeeEfyK0rRuFCEsgRm8p/qysJsP+FIUb
-	 QbVvWzwYXoFSyfG/3FMzH2iTyD2w4k+k1pOkhmI3O8eTozkMc7+zuwlDTpypACBc/B
-	 OD+vsyUtP/QQQ==
-Date: Mon, 12 May 2025 14:56:59 +0100
-From: Simon Horman <horms@kernel.org>
-To: Raju Rangoju <Raju.Rangoju@amd.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Shyam-sundar.S-k@amd.com
-Subject: Re: [PATCH net-next v3 5/5] amd-xgbe: add support for new pci device
- id 0x1641
-Message-ID: <20250512135659.GH3339421@horms.kernel.org>
-References: <20250509155325.720499-1-Raju.Rangoju@amd.com>
- <20250509155325.720499-6-Raju.Rangoju@amd.com>
+	s=arc-20240116; t=1747058237; c=relaxed/simple;
+	bh=95E/CVue/wnvQR6wyLlRe7BRcWn/8hmZomz62vWmJYk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CfYqUuiQ1vtiDhLcs/UVSImOEzKGBLL2viez1vSGtAhwYxQOBYcKzGujsQvv/svuCibfmPQzYnnQI03gYuP2ARY+oHvmNw1ZRaV9MRjxuoD3mhfTgl87izFs19NWUZHx+5fem9PMP++7xDbmU1XGRnuSleix4yD5E78ZN6lQT3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so509081239f.1;
+        Mon, 12 May 2025 06:57:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747058233; x=1747663033;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PgMxKbZ7K9g85ek1e//i/rL6U+/AzknhLB8CNs42xFw=;
+        b=wNgOgUMtHrTShdA+kk+EH8b2L+R2h9lw9jzTyIw96IulKAwxhDVxUfOZFNhCV68hht
+         gw+BHI4hiavpn5kBlY+3pezSVZfOaCbq36ruPPTmb950RmxO70BDL7MpoMObMIM6L7Sz
+         oNCRgSVOXG6iymn39LxM5vTX5fqd/XOjsRZVaLz+dBoCmn3wznhrTds8lX0n6ymN6DmO
+         X69QtBAorpwsLiHLWUxb0DYLwHcTJ5/roXUPPJeSYPDCxMfJ9Dqfs5kJaOqbp+d2MIhK
+         rz3oW5OYcwILE+prD1qTdBMPFU/Wa7x//IkPsH+CUp2TNLNDN35KKx238vNJTX73Ty/A
+         AewQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6NenJ+0E2Gmm3cb0ULklY6dSPDkYRhniKm0W+jmRkq/x7Sea6IsvH0u5C4qdHDLkp70YPBDYxyZRMXyrF@vger.kernel.org, AJvYcCVExqSEF8Y7TG8G1JN6cE+F9Sb8KIjqaIbje1kX5bW96u3CQAoSQvTrjuuNtrTADVMRkFFBqhOpk1g2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbwQI9O/WxasxlTM5Yr2L1r0rPr1KfSNq1X77Q9lZrwDv4kktu
+	EDb4RiCTtKXgDycgnhGOhCtmMvZjeUJ3KF8kXVPX9FrJL6xVt8y6KtRj3Cjs
+X-Gm-Gg: ASbGncvuGRwdkjNLipoQjLYXeWOhOzR4ZjWRd6VvUVGYxoIUHHfc22ZfxhRtHJOUuty
+	dlchSVlFEYdJ2FxFd6rv0c1MKdGr4YSd9Ah2i4L8bAcD8Af8ap5SunEUsqrUQ/msrNO4EJ1tBdU
+	2b9XdexdoVgKsW59pUQ3yY3yUIpwJZcAmOWGna2PmBofvPoANzfIqFy+q92jYPY+5b3R1cFKrTG
+	URCsgFT4qvGYDe92gSGCmewhU2Oax2vCJnEi6DXQHzRAi/jpb02f06qC0FDXZUfmzdXkx9Le72Y
+	y62KgpMD5ydZpP4fg2YTiNCKZnfAoMmZ4BTTNKFe82EuiY+Sf2SNvi92L63Qe0iomExEw6/249F
+	BZetqMOaHNKgzMA==
+X-Google-Smtp-Source: AGHT+IHHKXMBzWIsfg0NpAvduAh+Dl28F1SGQhwKRYXAOEdWLUO5pgmzvQJovXIJmFCTKw2UzHHrGg==
+X-Received: by 2002:a05:6602:1611:b0:85c:c7f9:9a1c with SMTP id ca18e2360f4ac-8676367055bmr1295544339f.13.1747058233244;
+        Mon, 12 May 2025 06:57:13 -0700 (PDT)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-867636e160asm177918139f.36.2025.05.12.06.57.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 06:57:12 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-85dac9729c3so453625939f.2;
+        Mon, 12 May 2025 06:57:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVlIOS94CInVKAMxKuhZptyuFW/wf1m49OQJDABreSk2TRVObqxmKX93xmFkJz2Lo3ICpL+PVVmgPoe@vger.kernel.org, AJvYcCWqNZrGhs373uIXuQtHFJ3sh0I/8GSdzheBO/sVKeTp8D/RF4K6SXSj6vmFA/FQkUw4Afvz539uVVln9HCA@vger.kernel.org
+X-Received: by 2002:a05:6102:3c9f:b0:4db:e01:f2db with SMTP id
+ ada2fe7eead31-4deed223b1amr11915712137.0.1747058222503; Mon, 12 May 2025
+ 06:57:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509155325.720499-6-Raju.Rangoju@amd.com>
+References: <20250512-daily-saga-36a3a017dd42@spud> <20250512-sevenfold-yeah-d40078a9249e@spud>
+In-Reply-To: <20250512-sevenfold-yeah-d40078a9249e@spud>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 May 2025 15:56:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUVH+wfdNpNBMdaG3D=z7WcTMmgW2sK_fAgiuJcvLaOig@mail.gmail.com>
+X-Gm-Features: AX0GCFum_LUMr8r2c59zTXaq3hHr3KqFC29268O1TVZJ_KjAKwGQIm8MscJpbNI
+Message-ID: <CAMuHMdUVH+wfdNpNBMdaG3D=z7WcTMmgW2sK_fAgiuJcvLaOig@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: cache: add specific RZ/Five
+ compatible to ax45mp
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>, Ben Zong-You Xie <ben717@andestech.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 09, 2025 at 09:23:25PM +0530, Raju Rangoju wrote:
-> Add support for new pci device id 0x1641 to register
-> Renoir device with PCIe.
-> 
-> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
-> ---
-> Changes since v2:
-> - use the correct device name Renoir instead of Crater
+On Mon, 12 May 2025 at 15:48, Conor Dooley <conor@kernel.org> wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> When the binding was originally written, it was assumed that all
+> ax45mp-caches had the same properties etc. This has turned out to be
+> incorrect, as the QiLai SoC has a different number of cache-sets.
+>
+> Add a specific compatible for the RZ/Five for property enforcement and
+> in case there turns out to be additional differences between these
+> implementations of the cache controller.
+>
+> Acked-by: Ben Zong-You Xie <ben717@andestech.com>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
