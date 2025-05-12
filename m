@@ -1,114 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F73246768;
-	Mon, 12 May 2025 16:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D1523909F;
+	Mon, 12 May 2025 16:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067655; cv=none; b=sqQ6yUkvOZW6K9uoR9AjXNCuTiKNiX1cj9wmWNDxfpYEI9/1GLGO5+B3XigQClQKK2dXwgzonltAo+DUWzlpqZ5uWH0vXY3dAx/j45muzuHqSBofuruG+sInwDbonazZdluzFWc7fO293Y8kFCnVniN/P2ajlsy/tBBks2th3Nw=
+	t=1747067706; cv=none; b=uw3ni/l158en/oAbUQn6gZyzagT3WaL9yHibhryYv6qU+RIaDTwIyOx/c/a+4Cdd5eawPlrYaMSq7KvFF/H/BD7zjzEVl4geh+UvMNmtHifzNeQFhjXiyPnAszUfkmLUdiLIVUzmFEzxjpM+WLZlibvuNr8M9cQowr6X+dKrO2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067655; c=relaxed/simple;
-	bh=Lk35CP8LZmPslpsnxWnA0SM9IdKc0rO8t7ScWnmdFIQ=;
+	s=arc-20240116; t=1747067706; c=relaxed/simple;
+	bh=TKJnnei2eVx16RcQeukNeEQclx9j9wUljzuhpWTdZ0Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egDWN2DWvE3OqM+V2cKgvh+Hpie1Q0notlRXLH8jDhT32ufui9ER5dOliun5VfiEGZY1BPH1gNScg15WXSO7CcVmf2kIxGgOew9T3nafDnJ/zDANoezqQINtgMOZ0t5jg1YeA9aQjsZTAgnZ/VyZr9qTsNsbCPbH9OCaUhvLH2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmcUDIuu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KhxIimE16ErlWNrzA0du+fzuoRLAGUx11UyVBavelYlwWO4jsYb9tCu5DoMzInYqMWshEQCc9PS4Fzw9uBEt4mlaiMP6ZNA3WodKDR0PWYgxZv1ZnXUXh+xTk7LP0I+Dnj7wqSciF4igKHbyo5iYdJI3h4vULlQOP3BojDh8pM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e+qN+1gK; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmcUDIuu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE71C4CEE7;
-	Mon, 12 May 2025 16:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747067655;
-	bh=Lk35CP8LZmPslpsnxWnA0SM9IdKc0rO8t7ScWnmdFIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CmcUDIuuOHPFo4k8FQ8G660Ixz6AEAHLKmXznOPhu0w0IXzB0oyIo5gjHB01vB9kf
-	 ZchRsFHHKQpLt/VVANRBPVZYqXRTnWqWPU2zcKLHTDYvIFv+ul1xY9uXlOi+LLHf8y
-	 xRxnBw/xgR9adwcF8zmQdxatg3PK6EFXJ2biKECNfwpjjj23ICfFDJN9koeofULoXz
-	 XuC8I/qBi3Yfm/PMN14RdTUPyyU3m7vlaL0agLpC8441DvNvEHz6qoA1JqeSwdPxhs
-	 54zCmta26CjV6GuGl2lZY0SkCTFwvn0gh9nwUYc65IV8w/jgTA5/JOjfAqwyjSQf2h
-	 SbTXqSvYG8BIw==
-Date: Mon, 12 May 2025 17:34:09 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Yunfei Dong <yunfei.dong@mediatek.com>
-Cc: =?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Nathan Hebert <nhebert@chromium.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Hsin-Yi Wang <hsinyi@chromium.org>,
-	Fritz Koenig <frkoenig@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH 01/14] dt-bindings: media: mediatek: vcodec: add decoder
- dt-bindings for mt8196
-Message-ID: <20250512-cilantro-aviation-4328d79e02b6@spud>
-References: <20250510075357.11761-1-yunfei.dong@mediatek.com>
- <20250510075357.11761-2-yunfei.dong@mediatek.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e+qN+1gK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=27z3nsnKNBs0/EpgHQUudDnqs7+MrF2uhYVPCFdQjFo=; b=e+qN+1gKLoTZsUNsKtD0WJD9Zk
+	HhEaRR6WfSmnUmgOWG54tLCgHJiJR6KH8DxlPm2k39RKK7Lj31xa/PKaW3x6Gs/ox1apv29xbpOew
+	wJ9imH6yysGjFaqx4OimJer+tTGgQQXnanEPF0zwCvmwjmCoFwvpnu9aE/yyuIyT+ycopfLSqUJGR
+	iMZ1Fo0izVj/3PTmFE6fYQ4yQoOfkpt/d/PiPCpaNv4t2Z+4Gd31frm6gWCQlihH1Tdskc7X8Gw/n
+	BsC+GpUtZSYwUnPYyrADFLgeTS4aYZkqKf4aC46IO+5qXpy8gNpwI7nbDb1ScKpBrT3vhGAl5jujx
+	5w4xhwtw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEW7E-0000000A2yE-1Xvs;
+	Mon, 12 May 2025 16:34:56 +0000
+Date: Mon, 12 May 2025 17:34:56 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, corbet@lwn.net
+Subject: Re: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
+Message-ID: <aCIjMNooAzKaONod@casper.infradead.org>
+References: <20250512162134.3596150-1-gourry@gourry.net>
+ <20250512162134.3596150-15-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sMtwU4b+uIOkGgh2"
-Content-Disposition: inline
-In-Reply-To: <20250510075357.11761-2-yunfei.dong@mediatek.com>
-
-
---sMtwU4b+uIOkGgh2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250512162134.3596150-15-gourry@gourry.net>
 
-On Sat, May 10, 2025 at 03:53:31PM +0800, Yunfei Dong wrote:
-> Add compatible for video decoder on MT8196 platform, which is a
-> lat + single core architecture.
+On Mon, May 12, 2025 at 12:21:31PM -0400, Gregory Price wrote:
+> Document some interesting interactions that occur when exposing CXL
+> memory capacity to page allocator.
 
-Please mention what makes this different from the existing devices since
-a fallback compatible is not permitted.
+We should not do this.  Asking the page allocator for memory (eg for
+slab) should never return memory on CXL.  There need to be special
+interfaces for clients that know they can tolerate the added latency.
 
->=20
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> ---
->  .../bindings/media/mediatek,vcodec-subdev-decoder.yaml           | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,vcodec-subd=
-ev-decoder.yaml b/Documentation/devicetree/bindings/media/mediatek,vcodec-s=
-ubdev-decoder.yaml
-> index bf8082d87ac0..74e1d88d3056 100644
-> --- a/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-deco=
-der.yaml
-> +++ b/Documentation/devicetree/bindings/media/mediatek,vcodec-subdev-deco=
-der.yaml
-> @@ -76,6 +76,7 @@ properties:
->        - mediatek,mt8186-vcodec-dec
->        - mediatek,mt8188-vcodec-dec
->        - mediatek,mt8195-vcodec-dec
-> +      - mediatek,mt8196-vcodec-dec
-> =20
->    reg:
->      minItems: 1
-> --=20
-> 2.46.0
->=20
->=20
-
---sMtwU4b+uIOkGgh2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCIjAQAKCRB4tDGHoIJi
-0k0QAQDsVpMhJhlm50bTaTI++/O1PIGlsmy6yib9ZYoDAbRqIgEA3qnCMVVPvuhw
-eIG5A1Me4vqECJW3lsXvK002oVvo+gg=
-=OPXB
------END PGP SIGNATURE-----
-
---sMtwU4b+uIOkGgh2--
+NAK this concept, and NAK this specific document.  I have no comment on
+the previous documents.
