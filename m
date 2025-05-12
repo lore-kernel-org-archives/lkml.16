@@ -1,138 +1,124 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E402628D857
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F7225B666;
+	Mon, 12 May 2025 13:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056147; cv=none; b=tu5a8R5Z27xlcCkBEKSNlbjkK+KHUV2oUos7+YFuSDA6cLYvcb/RoO6/KCKz84IZJGiTaWahQX2w5baP6bcmhT28fL+h8gNHse6F3T02IZeDYdamATzknlFzKOM+zOxoNpEKP9Er4/RXiMFdKQTi/qac/bYTsa+X0PrDDI+C1XM=
+	t=1747056155; cv=none; b=AxMFy2kd17slWhfXR4E+YHqNYQTK/U2PY8QPILKGPwrWtE8qtb59YJMQARUvgtD/1tltYeDPz+rr8EgJCSzVOLqcmm4BdqOhSU4tnjdH4gUZMjIY72aF6FrdCZUYtqLJqDbnrfz41n2qjFqWPtPtGE4ce5Q7pifavFkFFW6OD7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056147; c=relaxed/simple;
-	bh=devXGGTl4DFBk0hfDQYT+VXZS73W2OS2D90j3Cs28xw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CvCOvpNMKjLQoEu2WmWh41nGMJnt67ej09DM8tEE4wdF+pIO3Nw4jmZq4Aw73N+gqMvxU0jv/5t4Hs9w1kqLLVAXQuvqklQnjzcmjbSnag9G/Fh6GBs8DI+j0IwusCe/Xbj6hUVJvbG0oR0mCVSjEh2Ip9kZLPOs7NZp5bNUz1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K09Bq98w; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747056155; c=relaxed/simple;
+	bh=xEOqVBiS2myNs/lxNmVT+SBDww7wM+cJRrdyFiG0+Ck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Th85YwGAKhRoGzj7RkpSjQUpvIo7V5Z6jwtXhpjZbFBL5D8fXiFjQarljzFBU3UG2PEz6pqudoEUVPq+lVg/Yuk2DZdWo+XZQFRAK/s7XdWaHJq9qx5CBWjssoADCl53JWSDEQLUeFuef/IP4NEi2WMpyo8nAlxcupSjs7XLzM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KU0EdvTL; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K09Bq98w"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso43265961fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:22:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KU0EdvTL"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-524168b16d3so3435890e0c.0;
+        Mon, 12 May 2025 06:22:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747056144; x=1747660944; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NxfQxcq5BBu2nIwTspctDTWvHfOZ5xVRTcaBJjw0co0=;
-        b=K09Bq98w1EpFzFYcMrDpJMhtAbVkvZC4waLkje3yhkSzWqBf152/TBblOAy3HM+Tqp
-         F0Mf4nXYSpCEFmly6h5khPzF95pP4fqeYN0x42OvEV0gRsvHzMM42Bc9RjD1AvSrdgTJ
-         2t8E1PfJgkQfSwWBJDsluyYY6NwOxjOAMru/owWoTvY0GAHGr67Ym9zqzjM751L43CPa
-         sJvL4blFiFQdaNkt8+6P2yGxpBes+fpMv0grAw0MlYZqOtt3mz9iC8mGDg2qxlaZb//n
-         i5Ch/jUy60I9o9YdzGdKXR5gTRJNd5Z1b9K9nYDbvGwCadeSVuyx7GMLPRRx+N3/1e0M
-         VM/g==
+        d=gmail.com; s=20230601; t=1747056152; x=1747660952; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oWKRYvmLzREbM66W5hs7RHV/RuFzJd2V/m0RzeDoldQ=;
+        b=KU0EdvTL7bw2DHNjadP8LRk/o6+YH7Xbg/FAFOHKRhUBILtST6roVHXD1uCJT4IviU
+         pbL2xGLAWRYO7cYOzDlp+stPohjb+QGFymq9j/XOtPM0/8LtqQgCKYRwIjC3cYCZR7c5
+         8xdhDzs690GRB/khNM536+7PEFKqKkXWKrPsKAhNtmtLXY8bFTSoCvH8t/GPgUDbhQS8
+         sYV3NRjfedp9gtvLKWoqH40ZoZCq/qyLPYD8z/9CfrbJ6d7IV2OFXIMNe0rKFVw41bwL
+         pSVqyUfO6UvZWGALvE8zb23raNoI2weEOTvlu3r5I1lg3F2+j2/8inwt19eSy+3Y9sI6
+         BVng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747056144; x=1747660944;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NxfQxcq5BBu2nIwTspctDTWvHfOZ5xVRTcaBJjw0co0=;
-        b=Tt/OMJ3mbkdw3Nt/YQ8TGW1MsoY8sXudtQI5TpJ5MqCpbcKFSWVsXD4ZE3TzhvXbOQ
-         RMNmRE72VP16w2biSPIOaNqFjuLZOhT81/bITbpENAv5y/oQdOVUxId/8N4TbK05GDjb
-         +6hiBUJenwhhf+LC14kTWS8kwteu+kwiwxPpK3ftOLljmLisQwoxYCChJpjPBECZTSk1
-         t1sFqeYTQZGy2NLq8Z/P9BMHsgnvtc/4HyDlcel/lCBrJxI9PoG6v3PzZjtqEDphn808
-         Y2H3s5ZntZ55IiEY+ZaiZrIkr4aI68r6/Lvb6xt11IUFxD409N+CMb9IJ0wGwQckW+G/
-         QjaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUo35zxnvnF9JZhXZGDNJ8j8tfeHPETRRRA0fF9Qmo5TabGjT4p33QMxcOefzWzIQTgHj27TZxmL702hq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6oSs7I2wVjJp2tECUdtVQfk8sgoAN+lLzkdYz/vmEGuMx/naU
-	DCnMGbjdPQ6+/WbxOGm0jzurU5Ayk0FwVjJLUpEhf6AHkFcHh0jH/tYR4az9zW+RkZXXJZ6NUSN
-	vmJIMEaKoIUqN94Hb4steyMibEeO7wSLPVZB6
-X-Gm-Gg: ASbGncvTU0OsqaU7sZ5H87eQmvGVmUteCLaDDsTOEui7Kbfa2Wb0644DTgVAkwdXXsu
-	Jrbu56hvmXdpl+8EY6kEul8GrluCl+mcEHeZVkbHlOU7aIDBjKfHgcTpaKRYUMmwjrUiuoXaNRw
-	3qEQ24ftXugGt1KBWW87aFVovmy1W0gm8XROGhzMGjw7qAxVO9QR2Ym4+te/yhdoU=
-X-Google-Smtp-Source: AGHT+IHJ0J3uWkk7U0OJTsKkGCVoc1wLn6lNVuY2eD8aI4/X4UvTUJC7R+SKP6Y7Pq0muiFKVQNrWuLAUMwE86JkihM=
-X-Received: by 2002:a05:651c:a11:b0:30b:efa5:69c3 with SMTP id
- 38308e7fff4ca-326c45f2969mr53857651fa.22.1747056143763; Mon, 12 May 2025
- 06:22:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747056152; x=1747660952;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oWKRYvmLzREbM66W5hs7RHV/RuFzJd2V/m0RzeDoldQ=;
+        b=sA1betJIUYSyCVF0/CvMouo3tRiyH0/R4bejKLWBgjXLutLRF7QBOsMommIQ/x9abV
+         y4AiY3y/KG//R+rGoqKDoD1qm5NfGjRyXGJqE9lBgbTLqs+1Dj2fpX7RtSSWMHBKfVS7
+         JUFJwEOij/qeNl345ocIje5ju/vGXZ+iDl41ELa4fOhDBL0iU0wnkjTIUV2QNMXsSgvk
+         hAamvUwj608SwmkdS/E01opYRq+o60ljxdLK3RkBNvAvwxKk16ISVrtd18aCKXlbnja/
+         rlxquZiJU4nYQonrrm6jl5TID9OvDRguCC1Wd/4gEgUJDfO6bOl1PF5ZnO8mKbB3BPti
+         aGTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoBzCPzdxQZn/GHessxqf7lW2zGH1Ys29iBuIJP8rZqx37cjUdND+IsEk1cz3+B/JrU8v3NFg7zLxM@vger.kernel.org, AJvYcCXi2XGpTMMNNJLEWTgmoaE+QR5ode8hTjiwGJb7iNPH6FIji49o54xAvmCJLB+h5PlKQh3v5AHOBu+9@vger.kernel.org, AJvYcCXypSrSORvhHdF7dyllPbgvvP1juFIXW1gg59NpcMzf0XBDXBHK3i0GmWQ0ajMqfSJ3MvyJ9fXXbpOEnrP1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC/TEjFjYvw17PlHK1z/3HvNBUqqDpeRVJ9O1o/C1NiS9tDiff
+	6FC4vAd7/huvigvJ2limbjBvsmBlLABkR/p0RPfb2vSawBjJMExI
+X-Gm-Gg: ASbGncs/c/dKMunlkwvDSQYiG++UoE2uGx4Xc6I/YoUuCmMA5FRvypteH8QXCTozEIc
+	D3ouSmkdwllI61aYynon5ircUbXgrjPmtYwJ/gzWrwckSVTZ/ZYYGH7D41827RqP6LmmdY/invE
+	YaaobmL2olNRpZSxlvtWGHrYnTreBFMCyiNUH53mu/9LFzOXnsImjHGBn771CVk2iyzvANqA7Ux
+	3e8aybARFlA0M3Tjgzk1gdRIEtoVIXA2hLSwjCu/GkVPI5Ka8a3nux9sUYcG9RuPMURfg4nStn0
+	Ve/0lnUWkoljmXYTxKTct7T4WSBCoC9ApB7QJTpNAsjvameyyusLW8EmZxWq
+X-Google-Smtp-Source: AGHT+IHnixNiPLQjUOasfyjvBhuKYV/1baADFmo9aqX6ezYLpea3tEloflKvoMwLzGn2Vz5dPYaKuQ==
+X-Received: by 2002:a05:6122:3117:b0:520:5185:1c71 with SMTP id 71dfb90a1353d-52c53ca9ddbmr10836365e0c.7.1747056152432;
+        Mon, 12 May 2025 06:22:32 -0700 (PDT)
+Received: from localhost ([2804:30c:404b:a800:55e1:4221:1a82:c6cf])
+        by smtp.gmail.com with UTF8SMTPSA id a1e0cc1a2514c-879f6298361sm5134889241.32.2025.05.12.06.22.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 06:22:31 -0700 (PDT)
+Date: Mon, 12 May 2025 10:23:55 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v2 2/7] iio: adc: Add basic support for AD4170
+Message-ID: <aCH2a53ClLnhPDrG@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1745841276.git.marcelo.schmitt@analog.com>
+ <01ac3a81f9aa7f1fe48478ff60c0033dd02aefb1.1745841276.git.marcelo.schmitt@analog.com>
+ <aBSsa-QnloxBbBN8@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2025040820-REJECTED-6695@gregkh> <20250509072033.1335321-1-dvyukov@google.com>
- <2025050940-marrow-roundish-8b98@gregkh> <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
- <2025050924-marmalade-overfill-fc5a@gregkh> <CACT4Y+ZqToLK5R__x8O1ZctsG3wQtRn36JWF2MPRYqY+Zy_CUA@mail.gmail.com>
- <20250509121036.GA92783@mit.edu>
-In-Reply-To: <20250509121036.GA92783@mit.edu>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 12 May 2025 15:22:12 +0200
-X-Gm-Features: AX0GCFtzw9I9FmLNWVQ1hmmtOBCaQ8ajwJAZHoD_IV1RujUj26dE1DoyFijBsMM
-Message-ID: <CACT4Y+Z8ANddFCpNHvNqq6u6=s_aWoYPwu_1HmH19OWeLBi47A@mail.gmail.com>
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org, 
-	linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBSsa-QnloxBbBN8@smile.fi.intel.com>
 
-On Fri, 9 May 2025 at 14:10, Theodore Ts'o <tytso@mit.edu> wrote:
->
-> On Fri, May 09, 2025 at 10:03:13AM +0200, Dmitry Vyukov wrote:
-> >
-> > If we can't prove it does not have security impact in any context,
-> > then the safe default would be to say it's unsafe.
->
-> In that case *anything* could be unsafe.  You could have a context
-> where (a) you aren't using secure boot, (b) /dev/mem is enabled, (c)
-> /dev/mem is world writeable, etc.  In which case the mere existence of
-> /bin/bash would be "unsafe".  Yes, this is uncreasonable and unsane.
-> But that's because the "no security impact in any context" standard is
-> insane.
+...
+> 
+> > +#define AD4170_EXT_CLOCK_MHZ_MIN			(1 * MEGA)
+> > +#define AD4170_EXT_CLOCK_MHZ_MAX			(17 * MEGA)
+> 
+> Ditto. But are you sure that it's 17 and not 16?
 
-The official documented behavior is not unsafe. If a user made
-/dev/mem world-writable, then allowing any writes to it is not a bug
-nor a security issue. Let's not mix working-as-intended with bugs.
+The maximum external clock rates shown in the datasheet are 17 MHz.
+The minimum clock low/high times are 27.6 ns, resulting in roughly 18 MHz.
+So, the specifications indicate that 17 MHz clock would be okay to operate AD4170.
 
-> As far as many file system authors are concerned allowing automount by
-> defaullt is insane, and is apparently the fault of some Red Hat
-> product manager many years ago.
+...
+> ...
+> 
+> > +		nv = (u64)chan_info->input_range_uv * NANO;
+> > +		lshift = (pga >> 3 & 1);  /* handle cases 8 and 9 */
+> 
+> 		lshift = !!(pga & BIT(3));
+> 
+> ?
+> 
+> > +		rshift = precision_bits - bipolar + (pga & 0x7) - lshift;
+> 
+> GENMASK() ?
 
-This is not even about auto-mount. Let's say I am mounting a flash
-drive that you gave me, how do I ensure it's a safe image to mount?
-Removable media, portable drives, and some use cases related to
-mounting images stored in local files either deal with images with
-unknown origin, or can't provide 100% guarantee that the image wasn't
-tempered with.
+		rshift = precision_bits - bipolar + (pga & GENMASK(2, 0)) - lshift;
+?
 
+> ...
+> 
+> This was really hard to review and I am sure I missed something.
+> 
+> Please, split this to 3+ patches (basic + feature1 + feature2 + ...).
 
-> E2fsprogs and xfsprogs now ship with a udev rule which disables
-> automount by default.  If applied, mounting a maliciously fuzzed file
-> system requires root privileges.
->
-> Of course, distributions are free to change the default, just as they
-> are free to ship a system where root has a default password of
-> "password" or /bin/bash is setuid root.  It would be insane, but
-> product managers often do insane things in the name of user
-> convenience.  In those cases, I would invite that security researchers
-> file CVE's with the *product* as opposed to the upstream open source
-> project.
->
-> If companies want to assign me a chunk of headcount (say, 4 or 5 L4's
-> and L5's for 3 years working on thing but ext4 hardening, plus a
-> full-time L5 after that working exclusively to maintain the ext4
-> hardening featuers and fix random syzbot complaints), I know what I
-> could assign them to change the security assumptions that we have for
-> ext4.  It might require a
-> CONFIG_EXT4_SECURITY_IS_MORE_IMPORTANT_THAN_PERFORMANCE parameter to
-> enable all of the hardening features, but it is doable.
+Sorry about that. This part is so flexible that even basic ADC channel support
+becomes quite complex due to the dynamic setup configurations and possible
+combinations of input type (differential / pseudo-diff) and PGA. For v3, I split
+calib gain, offset, and samp freq into separate patches. The PGA, though, is
+harder to disentangle from the rest of the base driver.
 
-Question of resources for fixing is orthogonal to classification of an
-issue (if it's a bug or not, if it's a security issue or not).
-
-
-> But they aren't, so I consider it to be *obivous* that the industry
-> doesn't think is important --- just as Orange Book A1 certified OS's
-> was a total, complete, and abject commercial failure.  And note, we
-> don't assign CVE's based on the fact that se all OS's violate the
-> security trust model of Orange Book's A1.  :-)
->
->                                                 - Ted
+Thanks,
+Marcelo
