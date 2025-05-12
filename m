@@ -1,73 +1,73 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B30D299A97
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B617E299936
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747083297; cv=none; b=turb7+mLsa5edhrZQxdxrwaW4lw58pRZA3gZCZn2UDP39TNUyYL+DuGIeeb1TtvNyf+JYbwkAMM5N5I/w28WkDbzKtfWtkbYHWWyfItmJMVdda1qMZQEvXKMbV5Ed69SntBpzz1WWUNw4jAUt8r+bVvQkC/yYfBu5sPHmjMScHE=
+	t=1747083295; cv=none; b=M3OtNw0waWWW4F+Wz8KT1S8PZC2cxrI93Ipy6yx9syRUQKKz0pqMJr0ye3kjcN1FTjYn0HhJ0cvRwMci4GbgtTXMmSIB/RvzGMIYLpVIG2KUzNnItz+7v/a81eVKb7+YcI799Nir5fq228Fa37FtI+NLd5IvPdZ48Pp6fGRMEV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747083297; c=relaxed/simple;
-	bh=Y26Uhiax7G8sUEDMgjWq7ztl9VANn4jMjRayAOUnWFo=;
+	s=arc-20240116; t=1747083295; c=relaxed/simple;
+	bh=YEqQtTIL0+oionyh6+fMGZzuqqYWlpPwpOMahy3NfXg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gpf1fjcktOPlWGSr6ru4/VSGgBpGmPj6j23FJPJVxLqDwgZlizsJYoCMCj5F2xJLkBpnJGMxvviEQDc0wGL53f763+aIsz53iJXtXQDBajlTmTH+UaqGRmUFvFnzENsTqrFi69EA2DVgGK+tr069gcKqrk/w5o7BQwpdVRwk/eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Am0TAGUG; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=JiWcMsAN62u6C5Y6dNwGXITiyKSmZCbrIDg2ICnEuPpaRNaLnD2rpAlq3J2di2WMb78y9JAGfw/2aZpBT8CKoTJiFv9EmaSiLjK54WrrzOLgRYQd/OLA8slGLNe3ueqav+eaf9qz34Iv8K6JRMX9zS4OPRI0lhdJQw4lBcJslO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Me1iFlfe; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Am0TAGUG"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CIZvx2029694
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:54:54 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Me1iFlfe"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CCvkKr028425
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:54:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Yoy9PsLWgKeThBrkczbDdghhyIyxuR5eQn630g//EL0=; b=Am0TAGUGc/8STzRQ
-	ejdTYobEjMA5od74RS6o7VZM50f/NJvEZtPQ52pQWh/O6A7c+kgKKu/FxGqQbrat
-	jJHbpuoludIhTK2tUOqmrdhgJS6GX2z8dr9QLi9Q8Mx6ORRZP5dQjHJD6GcQvKqs
-	o1JS/LC0LOe4Fx0lI69ILBAZP/nmvL3tZ3z/VqjdYNlZ8Hqur8EnpBlXzXxYPnMW
-	NzdYVUuzGBS1qnjs5dj70Ekbog3x0yzji2mz/RVIG0eYO8vD3MdlorPqLN2f3xHt
-	jipGNTGfUDCgbcfp6eg6Nsf9HkZZKKOKPPdyRivBhoA+/WtvBKYy/8gFesPk6EtZ
-	LEGL1Q==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hvghdtv6-1
+	fn7Ezmt0B5GvhaM4fOargsOZNwFZXu65L4x1HKpS32s=; b=Me1iFlfethZTfjFD
+	iizQzJV2thU/Qh4IQtn1OruP3zZCgxMpeAARTtnC12FDIK66ncMINqdz8RzJDaLC
+	7BWN7xD5e57MZXyrHLoiqRBt8o2f1qA2fp3lurpPGLKP3y+XOLRVxEnuifi2ogb9
+	F7OQ9Pix4bT35/5akLCmklX3iqH7pb0c2a0VLW6O8CNw9+dhcdpd25/RNUVVak5n
+	JGOWyIHS0xIoZRxyMeWzAAVrGXkmXh3quIwZTJ8qmHtwIWUyzV3aemDgilzpaP59
+	dJ4fJqqh97HfxxqMSxD4/AMb9racAuqVIxL9zzEaufvjNgKGgRuDzQ8cSKCwIBKJ
+	S+SN+g==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hxvxdj0e-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:54:54 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-30ad109bc89so5330361a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:54:54 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 20:54:52 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-30c14d46b55so8056189a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 13:54:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747083294; x=1747688094;
+        d=1e100.net; s=20230601; t=1747083291; x=1747688091;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Yoy9PsLWgKeThBrkczbDdghhyIyxuR5eQn630g//EL0=;
-        b=C6/0YHE7MIDtia4SlU/abkezAcdaIgWxLt7VP3Ng955gA+r8h8VTznZ4ZxpUY3JSW7
-         w1efRSzWldqTF+PiXyfxKxhCvDl0P8EXAyBGyZVKRxW3kLB9uWVC7dP8lygVmj8pN7Or
-         kkg3wi/QbGweXWsCE64jgpM3ywwa7ARoGib/BNC/IchfbB6kNsq3rzVlbZ0F+abpWi/X
-         wdbkphM293WmgKX3W3pZMZp2tLtkwvoY37njNMKLhN3gxqHAGwjmlmPOHa7dAwOc4ab7
-         xB714EVtD02OVSA9/4JsjFeDUEpDcZUyIoBLBYM3/UzCtBhrz0OGun55E1IJA7CtGVdO
-         hRbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqoz2OfrJ7wmDcvBX/CSgaTSamLauFO8tJ88EIXc5nYcUQEAR9CdLqAmgkUq5WDglppGPykcru4E2uLjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaBwtWPJiNg4KuobJNdKQKvyJ2T1gmRGXrKcKQBVDLKCrEqPxS
-	F62qwl9duefggqKOdjpqfgNr7NeluVDQ/pNnoIzosWuHEnyxNuaVxb0rf4RJrWYcsyHU3lLn24L
-	nCsM/efNAJ7LmQbn5RZj8quz8z5m1P7f5JbUKafWkBkIeR+Rld7z5Vx3oyTCjItU=
-X-Gm-Gg: ASbGnctUd5Mez/yzpBFseZzENjUKf+hASOWvoP6vkrUZwNXaWjosVrty5Lsoy6CjAnv
-	lbKk78ukRznlH/JYvt51rF80NsCcy0AUDZbcBADNIZ5UyETsAgq0OxwQrm6YjaHTG8mU3NdpGMd
-	Rt19ag2VhITqyHJaLlvfT1ThC0bC0Ox9EPUuMth7XygAlBAd65ZfX+EJb+fReBKJbelkDFml7rH
-	aQmjvXhC0j5tipkSVPsMIh1Zj6mSgR+LD9AO9HPhOjVDPCnwYEZK49fm/kuBFz8wqc+VaFkIkJi
-	cXVuHtaSK3nnLe7Sdtg1LxhMiNfTxJII6iGAOyt72kD2a1sTRLdkFyx8LKy9WZJgqsQ=
-X-Received: by 2002:a17:90b:1b0b:b0:2fa:13d9:39c with SMTP id 98e67ed59e1d1-30c3cff61e0mr25897045a91.14.1747083293707;
-        Mon, 12 May 2025 13:54:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFtSgsc3fAzqEn4+5DUFx+rHn0Vq/09BHOt8ZUoac7ndBSRyefwtbPMB5PCX61w305SR4ts3g==
-X-Received: by 2002:a17:90b:1b0b:b0:2fa:13d9:39c with SMTP id 98e67ed59e1d1-30c3cff61e0mr25897015a91.14.1747083293346;
-        Mon, 12 May 2025 13:54:53 -0700 (PDT)
+        bh=fn7Ezmt0B5GvhaM4fOargsOZNwFZXu65L4x1HKpS32s=;
+        b=Q5sEpfY/g1c/6iYpWUyUebsCkCKctkQ7/CcD4o6Yd9oHpUE589HGhVmrG2zHZPEMvI
+         +tk2aKp0HwRmH5Baf7Hwa/t4S7fmXYwbLkAqKsokh/NbwaYXmSSU+4mbRUPLhgtmykhP
+         wXorrWVNsv9hemWeBBRlXf6vh0NiQWxXfL1ATJ2+vVpRiZ7mHihYks2mQqL4IdtxuGb4
+         vASfXlXm4tB2jmlFiIN69bznCNhgR/mDMKOTk2Gkwu/MHjYut8FfBCATK0URnLDKi6zp
+         w22psPTfb1eqd7B6RcRz6eufbChhHBbk47PuyIj1/W+lmoR4Nw427cWWbiWbOLuU1PAX
+         4jfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNnq6sDZXQnnbvlBoMGsKvoq2z++usbcc+UK7leo9efvdGeOx076HlHG16BwXv+vuUJOxcfden81ew4Oc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfJr6LfCR/4BvHicc5QO6Bhp9ks0I7RrmrfaVQyTOobqLnHwrR
+	BH3qovQy9tUCM+NHcOh9ZCe+i4UeUeNrc3u8+aaE9Oroxx5whE1HvbjGUu1eBPQtQWSiygll0Un
+	jBmr5N21qDBM1AQ5vV16cufR5V+ctePofcgbB/b71uUWjuO10ep9ga5OCFrGKHdk=
+X-Gm-Gg: ASbGncthTu5WNcDmjfGfJB/kaoilM1qBdIFmXZUhElHdO1Dlsg8HvLu1Lohc68gB/r1
+	9jXQZx0iUd4b7blG2VUC5iy7F2q7MNyS/MqorhtWnH9oM2s+ZDf5WOfSC8S3ANISJJ2hTBYnlKW
+	pzIF8lQs70KFU2GfzGuKO2+WuYrEAHy7jMGfOTLwdDL/Iyncs4gff4KHhCGHnXP+95cEwme513c
+	HEbTW/jMIHygJ1j0uYt9rO7JTEyoZEpXavXiB1CHQnUWqnKljsNjwE69cey4ckoBbEam0S+xCzn
+	Te4zAtIDLYJ94W6IjCaFwMNRclJhBQ5OY8ZyTzeK9TxOGSahCgblRR3k6UiWdQjZ8Ss=
+X-Received: by 2002:a17:90b:1b4a:b0:2fe:b8ba:62de with SMTP id 98e67ed59e1d1-30c3d646f35mr22587767a91.25.1747083291076;
+        Mon, 12 May 2025 13:54:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqvHjRcZCTGer9/g7B5Es9i6yJpPjvkO1E7zjSqOeaal6DUgNBFPKKBnvzJ4ABw6DNN1/SXg==
+X-Received: by 2002:a17:90b:1b4a:b0:2fe:b8ba:62de with SMTP id 98e67ed59e1d1-30c3d646f35mr22587737a91.25.1747083290670;
+        Mon, 12 May 2025 13:54:50 -0700 (PDT)
 Received: from hu-molvera-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39df09dbsm7084867a91.26.2025.05.12.13.54.52
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39df09dbsm7084867a91.26.2025.05.12.13.54.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 13:54:52 -0700 (PDT)
+        Mon, 12 May 2025 13:54:50 -0700 (PDT)
 From: Melody Olvera <melody.olvera@oss.qualcomm.com>
-Date: Mon, 12 May 2025 13:54:44 -0700
-Subject: [PATCH v5 4/4] arm64: dts: qcom: sm8750: Add LLCC node
+Date: Mon, 12 May 2025 13:54:42 -0700
+Subject: [PATCH v5 2/4] soc: qcom: llcc-qcom: Add support for LLCC V6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-sm8750_llcc_master-v5-4-d78dca6282a5@oss.qualcomm.com>
+Message-Id: <20250512-sm8750_llcc_master-v5-2-d78dca6282a5@oss.qualcomm.com>
 References: <20250512-sm8750_llcc_master-v5-0-d78dca6282a5@oss.qualcomm.com>
 In-Reply-To: <20250512-sm8750_llcc_master-v5-0-d78dca6282a5@oss.qualcomm.com>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -91,73 +91,344 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Melody Olvera <melody.olvera@oss.qualcomm.com>,
         Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747083286; l=1338;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747083286; l=10622;
  i=melody.olvera@oss.qualcomm.com; s=20241204; h=from:subject:message-id;
- bh=Y26Uhiax7G8sUEDMgjWq7ztl9VANn4jMjRayAOUnWFo=;
- b=yXbfnjFs8Zlj/HOkYoDoXpHHq7s2EfLz4FJyHF4GEOSsr06+W0/m/bX+cVuRZnhoUQbypY/Dz
- kPwXmcCR1+WBupZbPqz70X+qjxEmKc7Ja9WeXrMXqtjK8wDmqGqPe3+
+ bh=YEqQtTIL0+oionyh6+fMGZzuqqYWlpPwpOMahy3NfXg=;
+ b=t1pyIOjGpkISwnNgGPtOApFV0gW2Ug+mhDRKT+zdblDZUFs/OlnQ6h3l1a/r3NIJNDd+4OKsr
+ zHtn8eZ5SXTCJENj/roafmqz3i3xPK0u6Z0JtBAw3BdIMIEvSoKwotC
 X-Developer-Key: i=melody.olvera@oss.qualcomm.com; a=ed25519;
  pk=1DGLp3zVYsHAWipMaNZZTHR321e8xK52C9vuAoeca5c=
-X-Proofpoint-GUID: v-62NMNE7-bjfKAHs93BjYyrzIeOhr3G
-X-Proofpoint-ORIG-GUID: v-62NMNE7-bjfKAHs93BjYyrzIeOhr3G
-X-Authority-Analysis: v=2.4 cv=AMDybF65 c=1 sm=1 tr=0 ts=6822601e cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=Gx2GX35Bv4c8b2S2wRcA:9
- a=QEXdDO2ut3YA:10 a=uKXjsCUrEbL0IQVhDsJ9:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDIxNSBTYWx0ZWRfX2noMm1txVB2N
- 3nPcJOWLSPYsxVmKuOIeFUC7FdzC+X7EkGjwy9vxi5DOlNjWZW5jiOJAsAumB/UYbX0KTN8DXYi
- i++8EZaGZ4K+5rRkHmMHcDBEhlq6SVT7+fS/V4Ob2nQKLzdJFY9HLODoq1IcQlGHE38QxiyF18k
- gE7oOPR0m2q4MZHj++/CaDU1s43nQaiE4dAfnKbFGeczJVTXi2n1jgea1uVa03pf/9Exx5/n4t9
- 3o/vnHH4EUrzwk+0hyDRFrF9SIq62kTUR+1EzP6XvRdSvqOsRxhmw1iTHbv31POHGbCQgsfT2+l
- 98qgn39LRjyYC+lIjrzRaC65CmLppseAYfZ4kSVrAsJ3ekjCKPPn8SYhiE54fntqeQ8rPdHI4j2
- CXIr4PLe8MPf85gfoGbU6o73qMPT3ScJpC7UIzksLUK2fU7J8EDYhx9g/m/O/EM0VFRI8oJ+
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDIxNSBTYWx0ZWRfX1uHWNJyDYxHo
+ k1UztHy3lcxiv90tJ2ufIRYOaoTUch7QTaVbcehcYpx/KmxtUk+T3TBkS7gUTvePau0gpzkO/hL
+ uhSuX8rQJIVOk9un1DOW1xRNAFQ5ldLSZ7mzTvUdTdCrZ+l5ml8Occr4FtV3I5tHEnylWH6ME9Z
+ 6qaF05AOb5jXAAhJ7gxkA6Xy+Vym3Uq1p/56AbAlx21VMI2JTPe8dREjylSUV9IZJmneRBHI08u
+ 7xOknky4BNWDZMYgem9zjeFRA6O1k9bL79Hu2O32Qj0yWvncTWmnZPxanb58SYcsRFm8hDx3f6b
+ A/NYBLmpbDO5LCfJGSnrbbgPZG9CRWujFms/Wz7/to9MsG1UD/LDdJdFjJ0/YIWh60FvetjeixG
+ jnc9A7YaYw9P2v++/nWCHeHPZWLHZaccSw6zq9MjTQUYpIZUO8+B9Z4izHs7LwrccFYDCxIr
+X-Proofpoint-GUID: 4Gkc_cGV4tHhynl-DlQADnZC_D28qkqR
+X-Authority-Analysis: v=2.4 cv=WMV/XmsR c=1 sm=1 tr=0 ts=6822601c cx=c_pps
+ a=RP+M6JBNLl+fLTcSJhASfg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=M3llXpa7WoU5VenA65MA:9
+ a=QEXdDO2ut3YA:10 a=iS9zxrgQBfv6-_F4QbHw:22
+X-Proofpoint-ORIG-GUID: 4Gkc_cGV4tHhynl-DlQADnZC_D28qkqR
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 priorityscore=1501 adultscore=0 impostorscore=0
- phishscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=701 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505120215
+ clxscore=1015 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 impostorscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505120215
 
-Add LLCC node for SM8750 SoC.
+Add support for LLCC V6. V6 adds several additional usecase IDs,
+rearrages several registers and offsets, and supports slice IDs
+over 31, so add a new function for programming LLCC V6.
 
 Signed-off-by: Melody Olvera <melody.olvera@oss.qualcomm.com>
 Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/qcom/sm8750.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/soc/qcom/llcc-qcom.c | 224 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 220 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
-index 149d2ed17641a085d510f3a8eab5a96304787f0c..980ba1ca23c487b9225b73872889f02c2611e68e 100644
---- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
-@@ -3402,6 +3402,24 @@ gem_noc: interconnect@24100000 {
- 			#interconnect-cells = <2>;
- 		};
+diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+index 56823b6a2facc4345265e29b60da24a391e3707d..958f9e03f1d5e4946ca7ed340f05b8e01929794e 100644
+--- a/drivers/soc/qcom/llcc-qcom.c
++++ b/drivers/soc/qcom/llcc-qcom.c
+@@ -35,6 +35,11 @@
+ #define ATTR0_RES_WAYS_MASK           GENMASK(15, 0)
+ #define ATTR0_BONUS_WAYS_MASK         GENMASK(31, 16)
+ #define ATTR0_BONUS_WAYS_SHIFT        16
++#define ATTR2_PROBE_TARGET_WAYS_MASK  BIT(4)
++#define ATTR2_FIXED_SIZE_MASK         BIT(8)
++#define ATTR2_PRIORITY_MASK           GENMASK(14, 12)
++#define ATTR2_PARENT_SCID_MASK        GENMASK(21, 16)
++#define ATTR2_IN_A_GROUP_MASK         BIT(24)
+ #define LLCC_STATUS_READ_DELAY        100
  
-+		system-cache-controller@24800000 {
-+			compatible = "qcom,sm8750-llcc";
-+			reg = <0x0 0x24800000 0x0 0x200000>,
-+			      <0x0 0x25800000 0x0 0x200000>,
-+			      <0x0 0x24c00000 0x0 0x200000>,
-+			      <0x0 0x25c00000 0x0 0x200000>,
-+			      <0x0 0x26800000 0x0 0x200000>,
-+			      <0x0 0x26c00000 0x0 0x200000>;
-+			reg-names = "llcc0_base",
-+				    "llcc1_base",
-+				    "llcc2_base",
-+				    "llcc3_base",
-+				    "llcc_broadcast_base",
-+				    "llcc_broadcast_and_base";
+ #define CACHE_LINE_SIZE_SHIFT         6
+@@ -49,6 +54,10 @@
+ #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
+ #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
+ #define LLCC_TRP_ATTR2_CFGn(n)        (0x21100 + SZ_4 * n)
++#define LLCC_V6_TRP_ATTR0_CFGn(n)     (cfg->reg_offset[LLCC_TRP_ATTR0_CFG] + SZ_64 * (n))
++#define LLCC_V6_TRP_ATTR1_CFGn(n)     (cfg->reg_offset[LLCC_TRP_ATTR1_CFG] + SZ_64 * (n))
++#define LLCC_V6_TRP_ATTR2_CFGn(n)     (cfg->reg_offset[LLCC_TRP_ATTR2_CFG] + SZ_64 * (n))
++#define LLCC_V6_TRP_ATTR3_CFGn(n)     (cfg->reg_offset[LLCC_TRP_ATTR3_CFG] + SZ_64 * (n))
+ 
+ #define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21f00
+ #define LLCC_TRP_PCB_ACT              0x21f04
+@@ -66,6 +75,7 @@
+ #define LLCC_VERSION_2_0_0_0          0x02000000
+ #define LLCC_VERSION_2_1_0_0          0x02010000
+ #define LLCC_VERSION_4_1_0_0          0x04010000
++#define LLCC_VERSION_6_0_0_0          0X06000000
+ 
+ /**
+  * struct llcc_slice_config - Data associated with the llcc slice
+@@ -106,6 +116,7 @@
+  *              ovcap_en.
+  * @vict_prio: When current scid is under-capacity, allocate over other
+  *             lower-than victim priority-line threshold scid.
++ * @parent_slice_id: For grouped slices, specifies the slice id of the parent.
+  */
+ struct llcc_slice_config {
+ 	u32 usecase_id;
+@@ -130,6 +141,7 @@ struct llcc_slice_config {
+ 	bool ovcap_en;
+ 	bool ovcap_prio;
+ 	bool vict_prio;
++	u32 parent_slice_id;
+ };
+ 
+ struct qcom_llcc_config {
+@@ -153,6 +165,21 @@ struct qcom_sct_config {
+ enum llcc_reg_offset {
+ 	LLCC_COMMON_HW_INFO,
+ 	LLCC_COMMON_STATUS0,
++	LLCC_TRP_ATTR0_CFG,
++	LLCC_TRP_ATTR1_CFG,
++	LLCC_TRP_ATTR2_CFG,
++	LLCC_TRP_ATTR3_CFG,
++	LLCC_TRP_SID_DIS_CAP_ALLOC,
++	LLCC_TRP_ALGO_STALE_EN,
++	LLCC_TRP_ALGO_STALE_CAP_EN,
++	LLCC_TRP_ALGO_MRU0,
++	LLCC_TRP_ALGO_MRU1,
++	LLCC_TRP_ALGO_ALLOC0,
++	LLCC_TRP_ALGO_ALLOC1,
++	LLCC_TRP_ALGO_ALLOC2,
++	LLCC_TRP_ALGO_ALLOC3,
++	LLCC_TRP_WRS_EN,
++	LLCC_TRP_WRS_CACHEABLE_EN,
+ };
+ 
+ static const struct llcc_slice_config ipq5424_data[] =  {
+@@ -3161,6 +3188,33 @@ static const struct llcc_edac_reg_offset llcc_v2_1_edac_reg_offset = {
+ 	.drp_ecc_db_err_syn0 = 0x52120,
+ };
+ 
++static const struct llcc_edac_reg_offset llcc_v6_edac_reg_offset = {
++	.trp_ecc_error_status0 = 0x47448,
++	.trp_ecc_error_status1 = 0x47450,
++	.trp_ecc_sb_err_syn0 = 0x47490,
++	.trp_ecc_db_err_syn0 = 0x474d0,
++	.trp_ecc_error_cntr_clear = 0x47444,
++	.trp_interrupt_0_status = 0x47600,
++	.trp_interrupt_0_clear = 0x47604,
++	.trp_interrupt_0_enable = 0x47608,
 +
-+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+		};
++	/* LLCC Common registers */
++	.cmn_status0 = 0x6400c,
++	.cmn_interrupt_0_enable = 0x6401c,
++	.cmn_interrupt_2_enable = 0x6403c,
 +
- 		nsp_noc: interconnect@320c0000 {
- 			compatible = "qcom,sm8750-nsp-noc";
- 			reg = <0x0 0x320c0000 0x0 0x13080>;
++	/* LLCC DRP registers */
++	.drp_ecc_error_cfg = 0x80000,
++	.drp_ecc_error_cntr_clear = 0x80004,
++	.drp_interrupt_status = 0x80020,
++	.drp_interrupt_clear = 0x80028,
++	.drp_interrupt_enable = 0x8002c,
++	.drp_ecc_error_status0 = 0x820f4,
++	.drp_ecc_error_status1 = 0x820f8,
++	.drp_ecc_sb_err_syn0 = 0x820fc,
++	.drp_ecc_db_err_syn0 = 0x82120,
++};
++
+ /* LLCC register offset starting from v1.0.0 */
+ static const u32 llcc_v1_reg_offset[] = {
+ 	[LLCC_COMMON_HW_INFO]	= 0x00030000,
+@@ -3173,6 +3227,27 @@ static const u32 llcc_v2_1_reg_offset[] = {
+ 	[LLCC_COMMON_STATUS0]	= 0x0003400c,
+ };
+ 
++/* LLCC register offset starting from v6.0.0 */
++static const u32 llcc_v6_reg_offset[] = {
++	[LLCC_COMMON_HW_INFO]	        = 0x00064000,
++	[LLCC_COMMON_STATUS0]	        = 0x0006400c,
++	[LLCC_TRP_ATTR0_CFG]		= 0x00041000,
++	[LLCC_TRP_ATTR1_CFG]		= 0x00041008,
++	[LLCC_TRP_ATTR2_CFG]		= 0x00041010,
++	[LLCC_TRP_ATTR3_CFG]		= 0x00041014,
++	[LLCC_TRP_SID_DIS_CAP_ALLOC]	= 0x00042000,
++	[LLCC_TRP_ALGO_STALE_EN]	= 0x00042008,
++	[LLCC_TRP_ALGO_STALE_CAP_EN]	= 0x00042010,
++	[LLCC_TRP_ALGO_MRU0]		= 0x00042018,
++	[LLCC_TRP_ALGO_MRU1]		= 0x00042020,
++	[LLCC_TRP_ALGO_ALLOC0]		= 0x00042028,
++	[LLCC_TRP_ALGO_ALLOC1]		= 0x00042030,
++	[LLCC_TRP_ALGO_ALLOC2]		= 0x00042038,
++	[LLCC_TRP_ALGO_ALLOC3]		= 0x00042040,
++	[LLCC_TRP_WRS_EN]		= 0x00042080,
++	[LLCC_TRP_WRS_CACHEABLE_EN]	= 0x00042088,
++};
++
+ static const struct qcom_llcc_config qcs615_cfg[] = {
+ 	{
+ 		.sct_data	= qcs615_data,
+@@ -3869,6 +3944,139 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
+ 	return ret;
+ }
+ 
++static int _qcom_llcc_cfg_program_v6(const struct llcc_slice_config *config,
++				     const struct qcom_llcc_config *cfg)
++{
++	u32 stale_en, stale_cap_en, mru_uncap_en, mru_rollover;
++	u32 alloc_oneway_en, ovcap_en, ovcap_prio, vict_prio;
++	u32 attr0_cfg, attr1_cfg, attr2_cfg, attr3_cfg;
++	u32 attr0_val, attr1_val, attr2_val, attr3_val;
++	u32 slice_offset, reg_offset;
++	struct llcc_slice_desc *desc;
++	u32 wren, wr_cache_en;
++	int ret;
++
++	attr0_cfg = LLCC_V6_TRP_ATTR0_CFGn(config->slice_id);
++	attr1_cfg = LLCC_V6_TRP_ATTR1_CFGn(config->slice_id);
++	attr2_cfg = LLCC_V6_TRP_ATTR2_CFGn(config->slice_id);
++	attr3_cfg = LLCC_V6_TRP_ATTR3_CFGn(config->slice_id);
++
++	attr0_val = config->res_ways;
++	attr1_val = config->bonus_ways;
++	attr2_val = config->cache_mode;
++	attr2_val |= FIELD_PREP(ATTR2_PROBE_TARGET_WAYS_MASK, config->probe_target_ways);
++	attr2_val |= FIELD_PREP(ATTR2_FIXED_SIZE_MASK, config->fixed_size);
++	attr2_val |= FIELD_PREP(ATTR2_PRIORITY_MASK, config->priority);
++
++	if (config->parent_slice_id && config->fixed_size) {
++		attr2_val |= FIELD_PREP(ATTR2_PARENT_SCID_MASK, config->parent_slice_id);
++		attr2_val |= ATTR2_IN_A_GROUP_MASK;
++	}
++
++	attr3_val = MAX_CAP_TO_BYTES(config->max_cap);
++	attr3_val /= drv_data->num_banks;
++	attr3_val >>= CACHE_LINE_SIZE_SHIFT;
++
++	ret = regmap_write(drv_data->bcast_regmap, attr0_cfg, attr0_val);
++	if (ret)
++		return ret;
++
++	ret = regmap_write(drv_data->bcast_regmap, attr1_cfg, attr1_val);
++	if (ret)
++		return ret;
++
++	ret = regmap_write(drv_data->bcast_regmap, attr2_cfg, attr2_val);
++	if (ret)
++		return ret;
++
++	ret = regmap_write(drv_data->bcast_regmap, attr3_cfg, attr3_val);
++	if (ret)
++		return ret;
++
++	slice_offset = config->slice_id % 32;
++	reg_offset = (config->slice_id / 32) * 4;
++
++	wren = config->write_scid_en << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_WRS_EN] + reg_offset,
++				 BIT(slice_offset), wren);
++	if (ret)
++		return ret;
++
++	wr_cache_en = config->write_scid_cacheable_en << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_WRS_CACHEABLE_EN] + reg_offset,
++				 BIT(slice_offset), wr_cache_en);
++	if (ret)
++		return ret;
++
++	stale_en = config->stale_en << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_STALE_EN] + reg_offset,
++				 BIT(slice_offset), stale_en);
++	if (ret)
++		return ret;
++
++	stale_cap_en = config->stale_cap_en << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_STALE_CAP_EN] + reg_offset,
++				 BIT(slice_offset), stale_cap_en);
++	if (ret)
++		return ret;
++
++	mru_uncap_en = config->mru_uncap_en << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_MRU0] + reg_offset,
++				 BIT(slice_offset), mru_uncap_en);
++	if (ret)
++		return ret;
++
++	mru_rollover = config->mru_rollover << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_MRU1] + reg_offset,
++				 BIT(slice_offset), mru_rollover);
++	if (ret)
++		return ret;
++
++	alloc_oneway_en = config->alloc_oneway_en << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_ALLOC0] + reg_offset,
++				 BIT(slice_offset), alloc_oneway_en);
++	if (ret)
++		return ret;
++
++	ovcap_en = config->ovcap_en << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_ALLOC1] + reg_offset,
++				 BIT(slice_offset), ovcap_en);
++	if (ret)
++		return ret;
++
++	ovcap_prio = config->ovcap_prio << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_ALLOC2] + reg_offset,
++				 BIT(slice_offset), ovcap_prio);
++	if (ret)
++		return ret;
++
++	vict_prio = config->vict_prio << slice_offset;
++	ret = regmap_update_bits(drv_data->bcast_regmap,
++				 cfg->reg_offset[LLCC_TRP_ALGO_ALLOC3] + reg_offset,
++				 BIT(slice_offset), vict_prio);
++	if (ret)
++		return ret;
++
++	if (config->activate_on_init) {
++		desc = llcc_slice_getd(config->usecase_id);
++		if (PTR_ERR_OR_ZERO(desc))
++			return -EINVAL;
++
++		ret = llcc_slice_activate(desc);
++	}
++
++	return ret;
++}
++
+ static int qcom_llcc_cfg_program(struct platform_device *pdev,
+ 				 const struct qcom_llcc_config *cfg)
+ {
+@@ -3880,10 +4088,18 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev,
+ 	sz = drv_data->cfg_size;
+ 	llcc_table = drv_data->cfg;
+ 
+-	for (i = 0; i < sz; i++) {
+-		ret = _qcom_llcc_cfg_program(&llcc_table[i], cfg);
+-		if (ret)
+-			return ret;
++	if (drv_data->version >= LLCC_VERSION_6_0_0_0) {
++		for (i = 0; i < sz; i++) {
++			ret = _qcom_llcc_cfg_program_v6(&llcc_table[i], cfg);
++			if (ret)
++				return ret;
++		}
++	} else {
++		for (i = 0; i < sz; i++) {
++			ret = _qcom_llcc_cfg_program(&llcc_table[i], cfg);
++			if (ret)
++				return ret;
++		}
+ 	}
+ 
+ 	return ret;
 
 -- 
 2.48.1
