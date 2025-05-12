@@ -1,248 +1,564 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC96C186A
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747089347; cv=fail; b=kXm2eU1x3wGegXJlrS+rFpUBeAK+q5HaK/jOP1CwWiq7B7ChhW8vYEflcns4XsLTj+M070V27iAL7h0OQvf0/uAAkAnK++IpF3NjNiACQal6k4LZgrlHKGuaqeq+8ceayPbiXCkjI/ovdJC/JJWThUjaIyG9C4R535qThn7lg9Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747089347; c=relaxed/simple;
-	bh=rNZg6EF5Nqii+fV7fh07HomF52MYp50wcLnaKyy1Ado=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=DDe5W81HWfnI97BgmfmkbqTsYNvIQPltMG/ZnlwZ6GHFE+ELwZ19TauocAyQtfO+gryYRDw96wcMcTYhLFOFEPUNlQ2dJTAYRpmJAnZWcP9lbX7oOPdIAPC4DmwfywYSohF+Rl6iHZOycfe5v0N3ud+oQYgXnQc/3ChWNMbLl24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=GLb8xmQa; arc=fail smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="GLb8xmQa"
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CLZInY017661;
-	Mon, 12 May 2025 15:35:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=ZTjkxNtrhmFDJw0vqaLo2vwUw9lZcqYiF9UP5hqSRNA=; b=GLb8xmQag42G
-	L6XFDMKy879/VPXS2KRvSo3pPrJhwfaz5w3jRTKsTClLzWrBJEv3NgBQEKamjwb1
-	3WcBtfRiUxLsKGhBICNx1Ap1AmgXs4hxG8Qr/Qp7BkpjAB9UHbCWmnDTt4RA8t1R
-	t6bi4h+7OcKkxfWVaoG2hIWHBPG02egOxgH1kZ3OJ8jtl5trGcB4hxC0KjjZIQBk
-	JDDPwXO6rnrKcusQ03bK+aEgozsSB8OjWzsmZZdxVhl49ZSlSuBoZ0S6IMvZ5SBr
-	PXZnDoUvmUdvqVe5vWNkbN5PhAkFmiY8CGRMpu/iFnlTLJHWBHrpwpdaXeJdWDUF
-	B2/4kK/7Dg==
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2040.outbound.protection.outlook.com [104.47.74.40])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 46k59qqpjq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 15:35:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ehBI1lw/OMJo8YKZqfbiFPyCTHqLI04gfU/lJv8bbkTJ8ubmqsTQP5oE882kHCvDvkGBZOUkb9EXOsY99ciAV1h4kL4+riXCtWsgKWTddLmpW55SJLcwxJHpIrJADIgYaC4FV6WYHBgQD9ycp4AB6qJm+EeBspDf//5fK1jx2e3/j2FtuVRlE99B4urim1uZDjae2jT2QebJJrsglaXX2vhPK5U8CqBWtZXv/b/m0R6xZImT74V0kd9ilpjseffPQxaR8snoaSJTQKU5vGYtzhdWS6iszqK/JYi5JF7eCIjkhsUpOEN9BJZUxi1jPc0oYeiHx7zF3bGoB1VJbfwAAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZTjkxNtrhmFDJw0vqaLo2vwUw9lZcqYiF9UP5hqSRNA=;
- b=jaKztd5CWgDqqJKFekyPkunYpNPywC0+RPJE0Z2yYngizuPWPhkCaqafiBy2Kkjsger+fci0iryytXpXFFMYkBniqscRJGgGXDdw7mkWmF4GpH5tiU5LpEePhjj6BjKKmXskuDQLIrTxF2EOphJb1jf/EcvAyz2gYb92kXHUeZR0j/hm4ifg/pus3Ie4uUxKCF+7LqYczUaT/8a2QOcttmYpzZIIyMOTsPYw2cXQIFBObEXhk5aVGuoVi+7DcfpviOQqrURC21sRLoZs0fU+Xp5YjalQBNEy+5Prtg9CZ1CP45dPrO+eRu+6IB5cbizpdAawYCZ8FlRMkrP6oNNbKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com (2603:10b6:408:1ad::10)
- by CO1PR15MB5115.namprd15.prod.outlook.com (2603:10b6:303:ee::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Mon, 12 May
- 2025 22:35:32 +0000
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::595a:4648:51bc:d6e0]) by LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::595a:4648:51bc:d6e0%7]) with mapi id 15.20.8722.021; Mon, 12 May 2025
- 22:35:32 +0000
-Message-ID: <d3c8527f-ffaf-4463-a305-17ca21a06ce8@meta.com>
-Date: Mon, 12 May 2025 18:35:24 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: scheduler performance regression since v6.11
-From: Chris Mason <clm@meta.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        dietmar.eggemann@arm.com, vschneid@redhat.com
-References: <1e3c711f-8c96-4c39-bbe2-7742940d1d31@meta.com>
- <20250509194955.GA25798@noisy.programming.kicks-ass.net>
- <20250512180846.GA25891@noisy.programming.kicks-ass.net>
- <2f394a01-1cd9-4719-9394-647d8731cf3f@meta.com>
-Content-Language: en-US
-In-Reply-To: <2f394a01-1cd9-4719-9394-647d8731cf3f@meta.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR18CA0017.namprd18.prod.outlook.com
- (2603:10b6:208:23c::22) To LV3PR15MB6455.namprd15.prod.outlook.com
- (2603:10b6:408:1ad::10)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DAC429992B;
+	Mon, 12 May 2025 22:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747089603; cv=none; b=WrrNY1ubTVumyNE0oRT/hlA27M4PeKY+rs8hJgHK4JLQQHBBMISi3cWiO4azfrcIrTFgq7LNdNO1zx+GW2Z1FcI2iQ7uT1LL7xN1lk8V/opgXxu0IChVUO8O8ji+nRO6OJyRS/SEZvLwD0Gf0EIgRR06cf+0sKb1eL5UjC0KccU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747089603; c=relaxed/simple;
+	bh=5/NlNpOwwThFo9h5o52kA/iDUj+kYd+KqcU8pcuV3Kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mayoYfTBO9jjLE6qH7jIDnt3yQfFiq1ZHezkpdf3v3cN9sGwRcIo1eXDiOtz/vufzn/tRTyA7lkB1f5Rgh4puCCwuJmR08wJSn9H+ccNzlCvODW8D2YVPGOfjcc+/0Dk8aQMQQiHL5fsPb9YagqjXh77pUPK2QIuU38FcZco1ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 773C9150C;
+	Mon, 12 May 2025 15:39:47 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3FA73F63F;
+	Mon, 12 May 2025 15:39:55 -0700 (PDT)
+Date: Mon, 12 May 2025 23:39:44 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Aleksandr Shubin <privatesub2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Brandon Cheo Fusi
+ <fusibrandon13@gmail.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+Message-ID: <20250512233944.06bc1cb7@minigeek.lan>
+In-Reply-To: <20250427142500.151925-3-privatesub2@gmail.com>
+References: <20250427142500.151925-1-privatesub2@gmail.com>
+	<20250427142500.151925-3-privatesub2@gmail.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR15MB6455:EE_|CO1PR15MB5115:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5cf9bf9d-ae11-4e3b-ee19-08dd91a54e40
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q0VIRE5ldFlQSVJzNk9pUDY5aXhDSno5NHA5YTVieTlWWWluTzh6cWlkQkc4?=
- =?utf-8?B?Q1pQNWEzM0RLL1JWRHo5UlJSQTIwbXpWOUNhNlRmNEI2ZFZZVkg2d1BGN0Q1?=
- =?utf-8?B?T3lUOStsempUR1lqRlc1cGFNdEV3OGJsSmVwQ0V0ZEhLeHh0Wmh4dkpaMXlu?=
- =?utf-8?B?UUhQb1BWSm1GWmpSWk5tVEJ1UEFXVCtwZDJCRk1hVk1RL3lSN3krTVdmVVNB?=
- =?utf-8?B?NHpVK1hLY3lHYWVIYjBMNURxU1AwMWdyR2gzOVdOc1hwYzBtMU4yY3J1WUVW?=
- =?utf-8?B?R0MwYzRtd0FhTlZMYVVML2t3OUg3S3dxazJUOFcyWm5LRUNONDVrYzhpSnpt?=
- =?utf-8?B?d0xGaTY0RWdFRW4vUHRITEhVclhSQndIbjBKd3FDQm5LUHdoWFJpSE5LOC80?=
- =?utf-8?B?NTA2WWEyd1dZUVh1VWRzNWJuUU1WSTM4cHJWM04raHo5bkw5Qy9FMDlPNHpI?=
- =?utf-8?B?SmpDUUhlL29HaWcxUXI3ZmVCZlNkWlZpTUJLcHU2NkwwWGpNcGxubmxEb3NM?=
- =?utf-8?B?ZzErcERnN1VHYXdiMFBwMlFEaFNtYUt4QjZFQTcxMXJCb09qcG5pM3grN2Jx?=
- =?utf-8?B?RFRkSEJxWFBQUW9Sa2prc0FNT2tReUNFOHhjVml4OVY4WjRsY2J5bW91SjRW?=
- =?utf-8?B?SFFvYjFOV1UvVGc0aWJNZCtMQnFLS1dIYzY1bGtrRnJNcmMrd2F1dHp5MlMw?=
- =?utf-8?B?LzV1eE8vRmcyY0VSRlNHOUhra2lWRmpHVnhXSXFOakIxaXJqK3VReWprQ25S?=
- =?utf-8?B?MVVQcEE2S2lvbzJza1lnZGNBbHh6Vi9vRUtiaWhwbjdQc3VRT0hQcnhVVmhl?=
- =?utf-8?B?cmVKWTkyeWo4SGw3UXBsT1kxY0tTaGMybVRFQmR1V3U5VjlZNEE0b05ZVW55?=
- =?utf-8?B?dENuUTBJRCt4UWVmRGhZb1k1LzlaOGRtcndiYUR0OFlHTnhzc3FtbFlFMEln?=
- =?utf-8?B?dmZhaFFZQmRiMzNpOWk5ZmlZdnlYUCtndmNDNlB0a2Q5bE93azY1YnFUSlJu?=
- =?utf-8?B?T1k2UlBIM3B1V1RhZmZ1cUhSci9ZM2JXOTFqMitrNis5d01MOWdSa3kvMm94?=
- =?utf-8?B?Y3pVUmVxNUNTMmJCVW5kcUdqSElpN2hUNkVTOThTQzBQSzNyUTdHR1JQQ1VY?=
- =?utf-8?B?YXlwTEdiZ3dyV25CYWRPSTZ6cjlDMWJKRytvZHFONUdaaVgrTTBPN1IwaFJY?=
- =?utf-8?B?WUs5TXl2ek8wcUNCa3Vac3g3aS8wUW1oR0RrSXRrQVFXMjZwTGFGWlFKMWsr?=
- =?utf-8?B?d05xbFBkQUZOSGlrMkt3Y014RzFyb0k2dmcvcHp6aXdvNG12QlpRSWpnRUlz?=
- =?utf-8?B?NFNEOG1JRDhxWitwdCt1TjhWUEZLQnU0eHpZRXUzQUpLMkVpQnNzTkFXdDZW?=
- =?utf-8?B?UytYSFZIbGY5ZTd3Rng1bjhpRGJBbms3MXpTN2ZkQnZoeEtzYnkzNWc5dmla?=
- =?utf-8?B?R2hmc2d1Ymt0T3ZIcjVJYm5mNkcyYzZaUXJlTGQzWkgrMExVYjVOM1pnVXg4?=
- =?utf-8?B?Q21GbEVhaEZZR2UvVjJIaTBqUlJ0SG9mWHdZSWoxZkt5eHhhZktoZzdReHVH?=
- =?utf-8?B?UjFDajcxd1VRTWVVcXRFdVljSDVJSWlvM3F4TjcvYUxqRGQveU94bEZiRnQz?=
- =?utf-8?B?MjV3dXEyNHB3RHllNWE4SlJHZzlRS3B3K2E1WWhwV1krK1Z5ZHpnV3FpanJv?=
- =?utf-8?B?VWVVQWI1Q3JocElFUjI3SzBZbU9aT1JYcWJsYTdJNW1iSHFGMkVRYS9iOGsr?=
- =?utf-8?B?RFNjb2JhMi9yRjlNMTdQVTF6K1kzcGFtTUJCWEhCUit2dnBFOVF1dGo2amlB?=
- =?utf-8?B?R1ZPZ0lGNkEvWmt2cFVYczdzSUczbyswc3FSVm5mVmNZb1BPdHJvMU9BQXUy?=
- =?utf-8?B?SWtMNWtDT3BaUzFaQnZpWW93KzRIR1BUcnFZdTJxTUNDNEQxdCtub0RmZ2h5?=
- =?utf-8?Q?e/5yMzUk9Vs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR15MB6455.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aHdiVmdQWnBWd2FFN0VaZzdMeXlIY3hOcUZVWjBJdlkzY1l0T3k5bWVaSFA5?=
- =?utf-8?B?TVVLR2lXRmpmQ05QUTV5N0FJVCtlZ0VlZmdtUEo2aVY2bmFBU2lLTjM0UzFC?=
- =?utf-8?B?ZlIwYTBwUlhwTHYyUXZnK2plZ2FsWWlObnFXUWtMYU1zZnJkc3lOQ3g0UWZC?=
- =?utf-8?B?QWxzZ08zenNZbVIrUlNWNUxjK1NSa3h6UWVRbUpWWER1cnFvckFvNS9MMmpw?=
- =?utf-8?B?ZmlCOVJ2UUhsQkowSU9DbGZXcmVDenU3aDlYWE1SRjJnbTY4NForQ25jdWVV?=
- =?utf-8?B?Z0tLYkEwZ3pXTW04TXVPTXh2bVJxMFVOOXpDTytaazJyTkloMk8zeVd6bXQ5?=
- =?utf-8?B?UzZaeVUwUjFUYy9PRjd4bk1aMFlQTnlWNDVnc0laUE1VVWp3aklHM1czb0lO?=
- =?utf-8?B?TWhZSmJkOG80Z2U5VU4zcVFtZ0VZZ01CSmwyQzRWS1ZGdjVBeGN1NkR5WjYv?=
- =?utf-8?B?MHdIK0NEUjdPRFpZaE5MQ213b0Nab2RxMHI3OFJ3NVpObXpEZllzZDI4SFBZ?=
- =?utf-8?B?OGpvd2ZZQzZBRGNRK0s4YWN5cUhneFFLMVFBME0zMEhVSHZhQmhFTm5vQ1Ur?=
- =?utf-8?B?K1pCUFcvVUg3cDdIT0xLRktqSzFZNTRVQkNvdGNnSUNNSVg3STlzVzNwRTF3?=
- =?utf-8?B?dFZIZEhPcC9PV21CZnlxWmRDNG41YVZGUTRQZzdha0ZzZDI5aFlYU3NMcEJE?=
- =?utf-8?B?SW52VnhyVUhCWUthcUh0bDBWbEhiRlFFa1JRUXlFd3NUS3psWnJzSUhJSzJU?=
- =?utf-8?B?a1JtU3JKZ1JoNkg1eVl3QnFkdjdwUWV1YnBCUld1a2ZGNnVnVDNYWVgycUs1?=
- =?utf-8?B?ZHNyTEdybytFVHA5aXJRckNsSnpGY1NsSGo1a0dTYWsrd3JMdmlSOHdGakNv?=
- =?utf-8?B?THFyYjh6d25pRnVGMURPdkpWY1VnTU5NQW5SZkxpbDNLWnhhbzBIYlhVbTg2?=
- =?utf-8?B?RGR1WmhyanpHdkVrdVFCblFVRUxRci9ZM2s3THNKTzcycTl2Q3ZSRk93N0FW?=
- =?utf-8?B?SDRBTkkrNmxITzhreUlOTzhIRG5Ia2JIYkxCaDdpaWwwYm85ZzlhdVVweGtK?=
- =?utf-8?B?K1pVTHdNNmtxU2I3blBRcHNTaWNBS0lJRUFZMmsyWUt6MFN1ZkZQU01mRHFJ?=
- =?utf-8?B?eFZuL2xuQzJxNUFvZDNFT2lZbThKV0p4ZkovajViUndwaTQ2Nk5KRnFDSmk1?=
- =?utf-8?B?WDcwTWdUcTR2dDFoQXRJNmJ0UjN4alZCeEVVd3k1a1RkeE43bzRvMmgwZTFW?=
- =?utf-8?B?cENrRXRsYmtXYUxMMVp5QVkyWStyQnZIWm9DZ3JSc1VIYk5OekxhWi9ZYWpX?=
- =?utf-8?B?YzV5U01Ja1BKQXZpZjdtazBCU05COC9DOStVMktLbEhHZHppeWNrbDFsSnd3?=
- =?utf-8?B?UC9lQURDazZHREpBV01CZjl3N1BrTjFEV3lTL01ocEQvQm1TaFd3YkRreERZ?=
- =?utf-8?B?L25UQWNETmNJVHNvcWJQVkJWalUvRUJPKzEzREx6dnA5Sy8zN091dmFIVlYr?=
- =?utf-8?B?OE5ZRThiWnp0VHl0NHBTYzVrSDRFU3hZQU5uNzc0RjBqSjhSdTUrVzFTM0Jt?=
- =?utf-8?B?ZGNSOEJUeXVxd1l1WjNkUEt1N09kWkIrVi9kWEVvNUx6MkprenJsdEJHZHlF?=
- =?utf-8?B?bGk1anIvR2RabWZIZFAyZSs1U1JEeWUrY0w4ZlhMU2lhcXBzK0ZCWHFaSE1R?=
- =?utf-8?B?QlRsNGFBdlV6YU9mSWNDajM1emJ1N3pUcVkvYXhCZXFzYVlFZm1yaFBSS3Vw?=
- =?utf-8?B?K2pQZjlBUDlsSHcxRDN5cWJFS29xbVc0dGZyUjR2T2o4RzlSN20xb2F5OUdY?=
- =?utf-8?B?UktPWFJLZTd1dWlaUUFaRllEZEV0N3F2Um5qN29kWElrRVMySHFaUlhhdHpI?=
- =?utf-8?B?dCtxVEtQc0FUS05NN1BIQ1pCME12N05Sa25neWhXOVBkeTRYOWVOOXdrWG1m?=
- =?utf-8?B?dGllTVlQbElFeDZiZkY1V3VQTU9Wb0t0Rmx1UHVRTDdMM1RxTEhlRERDSmsx?=
- =?utf-8?B?MVBuSmNNOUZBVktNcUNhaTdrbHdvKzFRaHVlanUyQWlGdVE2S2hWcWJHcFJB?=
- =?utf-8?B?Q25IZHE1SGJjYzBldmVxdnZGam5NRWFLWlBQbXRwczEwOUFzQWUwU094UU92?=
- =?utf-8?Q?EmBc=3D?=
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cf9bf9d-ae11-4e3b-ee19-08dd91a54e40
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR15MB6455.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 22:35:32.6391
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VV3TYfSMZDM1aJPuDUGBEAlfUVRkC8Hpx6gW3qkgLrc8BUjcT+X/b99Dlm9p0JKc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR15MB5115
-X-Authority-Analysis: v=2.4 cv=T7SMT+KQ c=1 sm=1 tr=0 ts=682277b7 cx=c_pps a=ZeveGGZnxkNpWlA7A6AaFA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=JfrnYn6hAAAA:8 a=EkNm_tuz03YXDZq65usA:9 a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDIzMiBTYWx0ZWRfX53ZYqcWq/TLq v9mWQ5MaYoF2UPvYM/Q3yM71O1lbyeApkogbVw3QHneoSl2DFw9KOgD7fC822eDetGatq6HmU9b J2zmjotoT4kwTTI5OcYfsK1PGtW2QxfNAwkTgY/Jgxzin63mSguTAr2YuYtSxploRyVaRrw2Ksm
- nEBsf9dXuybkDcnDpt9lEv7vxReVvfLcrYaEMPpciMPp5y2z4ZGvkhICJK1VffVboA2L84q4Hv2 U8lRx28FBsMVhXO9drO+RrHCpMmPAnbiICP0GhAofxK8cEF8N8hxODt7VqWbhHkRtVAFNo5zYL9 w+xtoQBMltXzXRp4bvNBTqhODirBXzzYW5ofSiHLnU3HPgzrZyzEHO0XXHK8e0UdNMvhgNeWL9v
- zq09xnCENsx6z/W/qNeDNh5l1eyaaFWu97vAf8Th4VY6AQF2Ddqvh7popCqNyqkxY+4wmYC7
-X-Proofpoint-GUID: 1XU2o8h_v8wA-loHRJn_YkLCq_KqMNbq
-X-Proofpoint-ORIG-GUID: 1XU2o8h_v8wA-loHRJn_YkLCq_KqMNbq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, 27 Apr 2025 17:24:54 +0300
+Aleksandr Shubin <privatesub2@gmail.com> wrote:
 
+Hi Aleksandr,
 
-On 5/12/25 3:39 PM, Chris Mason wrote:
-> 
-> 
-> On 5/12/25 2:08 PM, Peter Zijlstra wrote:
->> On Fri, May 09, 2025 at 09:49:55PM +0200, Peter Zijlstra wrote:
->>> 152 729288bc6856 kernel/sched: Fix util_est accounting for DELAY_DEQUEUE
->>> 	average rps: 1936829.47
->>> 	average rps: 1950715.10
->>>
->>> 153 84d265281d6c sched/pelt: Use rq_clock_task() for hw_pressure
->>> 	average rps: 2176857.32
->>> 	average rps: 2223004.23
->>
->> So, a little more data on this.
->>
->> The result appears stable, but reverting 729288bc6856 on master does not
->> seem to cure things.
-> 
-> 729288bc6856 is in that section of commits where the regression was ~1/2
-> as bad.  (bad: 1.8M, good: 2M, middle ground: 1.9M) I get the same RPS
-> with and without it.
-> 
-> I called it "good" in my bisect run, but I'll take a second pass through
-> those potential suspects and see if the bad really starts there.
+thanks for your patience and persistence with this series! It seems
+like some people have some motivation now for getting mainline, so
+hopefully we can use this momentum now. Also the "new" Allwinner A523
+uses the same IP as the D1, just with all 16 channels.=20
 
-This commit drops us from 2M RPS down to 1.95M.  I did a bunch of runs
-on the surrounding commits and the drop was very reliable:
+> Allwinner's D1, T113-S3 and R329 SoCs have a quite different PWM
+> controllers with ones supported by pwm-sun4i driver.
+>=20
+> This patch adds a PWM controller driver for Allwinner's D1,
+> T113-S3 and R329 SoCs. The main difference between these SoCs
+> is the number of channels defined by the DT property.
+>=20
+> Co-developed-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
+> Signed-off-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
+> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+> ---
+>  drivers/pwm/Kconfig      |  10 ++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-sun20i.c | 379 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 390 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sun20i.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 4731d5b90d7e..230a5561385b 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -662,6 +662,16 @@ config PWM_SUN4I
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-sun4i.
+> =20
+> +config PWM_SUN20I
+> +	tristate "Allwinner D1/T113s/R329 PWM support"
+> +	depends on ARCH_SUNXI || COMPILE_TEST
+> +	depends on COMMON_CLK
+> +	help
+> +	  Generic PWM framework driver for Allwinner D1/T113s/R329 SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-sun20i.
+> +
+>  config PWM_SUNPLUS
+>  	tristate "Sunplus PWM support"
+>  	depends on ARCH_SUNPLUS || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 539e0def3f82..ef7515d2f974 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -61,6 +61,7 @@ obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
+>  obj-$(CONFIG_PWM_STM32_LP)	+=3D pwm-stm32-lp.o
+>  obj-$(CONFIG_PWM_STMPE)		+=3D pwm-stmpe.o
+>  obj-$(CONFIG_PWM_SUN4I)		+=3D pwm-sun4i.o
+> +obj-$(CONFIG_PWM_SUN20I)	+=3D pwm-sun20i.o
+>  obj-$(CONFIG_PWM_SUNPLUS)	+=3D pwm-sunplus.o
+>  obj-$(CONFIG_PWM_TEGRA)		+=3D pwm-tegra.o
+>  obj-$(CONFIG_PWM_TIECAP)	+=3D pwm-tiecap.o
+> diff --git a/drivers/pwm/pwm-sun20i.c b/drivers/pwm/pwm-sun20i.c
+> new file mode 100644
+> index 000000000000..22486617f1ef
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sun20i.c
+> @@ -0,0 +1,379 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PWM Controller Driver for sunxi platforms (D1, T113-S3 and R329)
+> + *
+> + * Limitations:
+> + * - When the parameters change, the current running period is not compl=
+eted
+> + *   and new settings are applied immediately.
+> + * - The PWM output goes to a HIGH-Z state when the channel is disabled.
+> + * - Changing the clock configuration (SUN20I_PWM_CLK_CFG)
+> + *   may cause a brief output glitch.
+> + *
+> + * Copyright (c) 2023 Aleksandr Shubin <privatesub2@gmail.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/reset.h>
+> +
+> +#define SUN20I_PWM_CLK_CFG(pair)		(0x20 + ((pair) * 0x4))
+> +#define SUN20I_PWM_CLK_CFG_SRC			GENMASK(8, 7)
+> +#define SUN20I_PWM_CLK_CFG_DIV_M		GENMASK(3, 0)
+> +#define SUN20I_PWM_CLK_DIV_M_MAX		8
+> +
+> +#define SUN20I_PWM_CLK_GATE			0x40
+> +#define SUN20I_PWM_CLK_GATE_BYPASS(chan)	BIT((chan) + 16)
+> +#define SUN20I_PWM_CLK_GATE_GATING(chan)	BIT(chan)
+> +
+> +#define SUN20I_PWM_ENABLE			0x80
+> +#define SUN20I_PWM_ENABLE_EN(chan)		BIT(chan)
+> +
+> +#define SUN20I_PWM_CTL(chan)			(0x100 + (chan) * 0x20)
+> +#define SUN20I_PWM_CTL_ACT_STA			BIT(8)
+> +#define SUN20I_PWM_CTL_PRESCAL_K		GENMASK(7, 0)
+> +#define SUN20I_PWM_CTL_PRESCAL_K_MAX		field_max(SUN20I_PWM_CTL_PRESCAL_K)
+> +
+> +#define SUN20I_PWM_PERIOD(chan)			(0x104 + (chan) * 0x20)
+> +#define SUN20I_PWM_PERIOD_ENTIRE_CYCLE		GENMASK(31, 16)
+> +#define SUN20I_PWM_PERIOD_ACT_CYCLE		GENMASK(15, 0)
+> +
+> +#define SUN20I_PWM_PCNTR_SIZE			BIT(16)
+> +
+> +/*
+> + * SUN20I_PWM_MAGIC is used to quickly compute the values of the clock d=
+ividers
+> + * div_m (SUN20I_PWM_CLK_CFG_DIV_M) & prescale_k (SUN20I_PWM_CTL_PRESCAL=
+_K)
+> + * without using a loop. These dividers limit the # of cycles in a period
+> + * to SUN20I_PWM_PCNTR_SIZE (65536) by applying a scaling factor of
+> + * 1/(div_m * (prescale_k + 1)) to the clock source.
+> + *
+> + * SUN20I_PWM_MAGIC is derived by solving for div_m and prescale_k
+> + * such that for a given requested period,
+> + *
+> + * i) div_m is minimized for any prescale_k =E2=89=A4 SUN20I_PWM_CTL_PRE=
+SCAL_K_MAX,
+> + * ii) prescale_k is minimized.
+> + *
+> + * The derivation proceeds as follows, with val =3D # of cycles for requ=
+ested
+> + * period:
+> + *
+> + * for a given value of div_m we want the smallest prescale_k such that
+> + *
+> + * (val >> div_m) // (prescale_k + 1) =E2=89=A4 65536 (=3D SUN20I_PWM_PC=
+NTR_SIZE)
+> + *
+> + * This is equivalent to:
+> + *
+> + * (val >> div_m) =E2=89=A4 65536 * (prescale_k + 1) + prescale_k
+> + * =E2=9F=BA (val >> div_m) =E2=89=A4 65537 * prescale_k + 65536
+> + * =E2=9F=BA (val >> div_m) - 65536 =E2=89=A4 65537 * prescale_k
+> + * =E2=9F=BA ((val >> div_m) - 65536) / 65537 =E2=89=A4 prescale_k
+> + *
+> + * As prescale_k is integer, this becomes
+> + *
+> + * ((val >> div_m) - 65536) // 65537 =E2=89=A4 prescale_k
+> + *
+> + * And is minimized at
+> + *
+> + * ((val >> div_m) - 65536) // 65537
+> + *
+> + * Now we pick the smallest div_m that satifies prescale_k =E2=89=A4 255
+> + * (i.e SUN20I_PWM_CTL_PRESCAL_K_MAX),
+> + *
+> + * ((val >> div_m) - 65536) // 65537 =E2=89=A4 255
+> + * =E2=9F=BA (val >> div_m) - 65536 =E2=89=A4 255 * 65537 + 65536
+> + * =E2=9F=BA val >> div_m =E2=89=A4 255 * 65537 + 2 * 65536
+> + * =E2=9F=BA val >> div_m < (255 * 65537 + 2 * 65536 + 1)
+> + * =E2=9F=BA div_m =3D fls((val) / (255 * 65537 + 2 * 65536 + 1))
+> + *
+> + * Suggested by Uwe Kleine-K=C3=B6nig
+> + */
+> +#define SUN20I_PWM_MAGIC			(255 * 65537 + 2 * 65536 + 1)
+> +#define SUN20I_PWM_DIV_CONST			65537
+> +
+> +struct sun20i_pwm_chip {
+> +	struct clk *clk_hosc, *clk_apb;
+> +	void __iomem *base;
+> +};
+> +
+> +static inline struct sun20i_pwm_chip *to_sun20i_pwm_chip(struct pwm_chip=
+ *chip)
+> +{
+> +	return pwmchip_get_drvdata(chip);
+> +}
+> +
+> +static inline u32 sun20i_pwm_readl(struct sun20i_pwm_chip *chip,
+> +				   unsigned long offset)
+> +{
+> +	return readl(chip->base + offset);
+> +}
+> +
+> +static inline void sun20i_pwm_writel(struct sun20i_pwm_chip *chip,
+> +				     u32 val, unsigned long offset)
+> +{
+> +	writel(val, chip->base + offset);
+> +}
+> +
+> +static int sun20i_pwm_get_state(struct pwm_chip *chip,
+> +				struct pwm_device *pwm,
+> +				struct pwm_state *state)
+> +{
+> +	struct sun20i_pwm_chip *sun20i_chip =3D to_sun20i_pwm_chip(chip);
+> +	u16 ent_cycle, act_cycle, prescale_k;
+> +	u64 clk_rate, tmp;
+> +	u8 div_m;
+> +	u32 val;
+> +
+> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm / 2=
+));
+> +	div_m =3D FIELD_GET(SUN20I_PWM_CLK_CFG_DIV_M, val);
+> +	if (div_m > SUN20I_PWM_CLK_DIV_M_MAX)
+> +		div_m =3D SUN20I_PWM_CLK_DIV_M_MAX;
+> +
+> +	/*
+> +	 * If CLK_CFG_SRC is 0, use the hosc clock;
+> +	 * otherwise (any nonzero value) use the APB clock.
+> +	 */
+> +	if (FIELD_GET(SUN20I_PWM_CLK_CFG_SRC, val) =3D=3D 0)
+> +		clk_rate =3D clk_get_rate(sun20i_chip->clk_hosc);
+> +	else
+> +		clk_rate =3D clk_get_rate(sun20i_chip->clk_apb);
+> +
+> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(pwm->hwpwm));
+> +	state->polarity =3D (SUN20I_PWM_CTL_ACT_STA & val) ?
+> +			   PWM_POLARITY_NORMAL : PWM_POLARITY_INVERSED;
+> +
+> +	prescale_k =3D FIELD_GET(SUN20I_PWM_CTL_PRESCAL_K, val) + 1;
+> +
+> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE);
+> +	state->enabled =3D (SUN20I_PWM_ENABLE_EN(pwm->hwpwm) & val) ? true : fa=
+lse;
+> +
+> +	val =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_PERIOD(pwm->hwpwm));
+> +	act_cycle =3D FIELD_GET(SUN20I_PWM_PERIOD_ACT_CYCLE, val);
+> +
+> +	ent_cycle =3D FIELD_GET(SUN20I_PWM_PERIOD_ENTIRE_CYCLE, val);
+> +
+> +	/*
+> +	 * The duration of the active phase should not be longer
+> +	 * than the duration of the period
+> +	 */
+> +	if (act_cycle > ent_cycle)
+> +		act_cycle =3D ent_cycle;
+> +
+> +	/*
+> +	 * We have act_cycle <=3D ent_cycle <=3D 0xffff, prescale_k <=3D 0x100,
+> +	 * div_m <=3D 8. So the multiplication fits into an u64 without
+> +	 * overflow.
+> +	 */
+> +	tmp =3D ((u64)(act_cycle) * prescale_k << div_m) * NSEC_PER_SEC;
+> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(tmp, clk_rate);
+> +	tmp =3D ((u64)(ent_cycle) * prescale_k << div_m) * NSEC_PER_SEC;
+> +	state->period =3D DIV_ROUND_UP_ULL(tmp, clk_rate);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sun20i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct sun20i_pwm_chip *sun20i_chip =3D to_sun20i_pwm_chip(chip);
+> +	u64 bus_rate, hosc_rate, val, ent_cycle, act_cycle;
+> +	u32 clk_gate, clk_cfg, pwm_en, ctl, reg_period;
+> +	u32 prescale_k, div_m;
+> +	bool use_bus_clk;
+> +
+> +	pwm_en =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE);
+> +	clk_gate =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_GATE);
+> +
+> +	if (!state->enabled) {
+> +		if (state->enabled !=3D pwm->state.enabled) {
+> +			clk_gate &=3D ~SUN20I_PWM_CLK_GATE_GATING(pwm->hwpwm);
+> +			pwm_en &=3D ~SUN20I_PWM_ENABLE_EN(pwm->hwpwm);
+> +			sun20i_pwm_writel(sun20i_chip, pwm_en, SUN20I_PWM_ENABLE);
+> +			sun20i_pwm_writel(sun20i_chip, clk_gate, SUN20I_PWM_CLK_GATE);
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	ctl =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(pwm->hwpwm));
+> +	clk_cfg =3D sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm=
+ / 2));
+> +	hosc_rate =3D clk_get_rate(sun20i_chip->clk_hosc);
+> +	bus_rate =3D clk_get_rate(sun20i_chip->clk_apb);
+> +	if (pwm_en & SUN20I_PWM_ENABLE_EN(pwm->hwpwm ^ 1)) {
+> +		/* If the neighbor channel is enabled, use the current clock settings =
+*/
+> +		use_bus_clk =3D FIELD_GET(SUN20I_PWM_CLK_CFG_SRC, clk_cfg) !=3D 0;
+> +		val =3D mul_u64_u64_div_u64(state->period,
+> +					  (use_bus_clk ? bus_rate : hosc_rate),
+> +					  NSEC_PER_SEC);
+> +
+> +		div_m =3D FIELD_GET(SUN20I_PWM_CLK_CFG_DIV_M, clk_cfg);
+> +	} else {
+> +		/*
+> +		 * Select the clock source based on the period.
+> +		 * Since bus_rate > hosc_rate, which means bus_rate
+> +		 * can provide a higher frequency than hosc_rate.
 
-commit 152e11f6df293e816a6a37c69757033cdc72667d
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Thu May 23 12:25:32 2024 +0200
+What does that mean, exactly? That we should prefer the faster clock?
+Because that's not what the code does, is it?
 
-    sched/fair: Implement delayed dequeue
+> +		 */
+> +		use_bus_clk =3D false;
+> +		val =3D mul_u64_u64_div_u64(state->period, hosc_rate, NSEC_PER_SEC);
+> +		/*
+> +		 * If the calculated value is =E2=89=A4 1, the period is too short
+> +		 * for proper PWM operation
+> +		 */
+> +		if (val <=3D 1) {
 
+So if I get the code correctly, it prefers HOSC over APB? Is that
+really the best way? Shouldn't it be the other way around: we use the
+faster clock, since this will not limit the sibling channel?
 
-e1459a50ba31, which was the next earliest commit is consistently fast.
+And another thing to consider are rounding errors due to integer
+division: certain period rates might be better achievable with one or
+the other source clock: 3 MHz works best as 24MHz/8, 3.125MHz as
+100MHz/32.
+So shall we calculate the values and compare the errors instead?
+Oh, and also we need to consider bypassing, I feel like this should be
+checked first.
 
+In any case I think there should be a comment describing the strategy
+and give some rationale, I think.
 
-If I take 54a58a787791 or 54a58a787791 and turn off the
-DELAY_DEQUEUE/ZERO features at run time, I don't get the performance
-back.  But, if I patch them such that DELAY_DEQUEUE/ZERO default off
+> +			use_bus_clk =3D true;
+> +			val =3D mul_u64_u64_div_u64(state->period, bus_rate, NSEC_PER_SEC);
+> +			if (val <=3D 1)
+> +				return -EINVAL;
+> +		}
+> +		div_m =3D fls(DIV_ROUND_DOWN_ULL(val, SUN20I_PWM_MAGIC));
+> +		if (div_m > SUN20I_PWM_CLK_DIV_M_MAX)
+> +			return -EINVAL;
+> +
+> +		/* Set up the CLK_DIV_M and clock CLK_SRC */
+> +		clk_cfg =3D FIELD_PREP(SUN20I_PWM_CLK_CFG_DIV_M, div_m);
+> +		clk_cfg |=3D FIELD_PREP(SUN20I_PWM_CLK_CFG_SRC, use_bus_clk);
+> +
+> +		sun20i_pwm_writel(sun20i_chip, clk_cfg, SUN20I_PWM_CLK_CFG(pwm->hwpwm =
+/ 2));
+> +	}
+> +
+> +	/* Calculate prescale_k and determine the number of cycles for a full P=
+WM period */
+> +	ent_cycle =3D val >> div_m;
+> +	prescale_k =3D DIV_ROUND_DOWN_ULL(ent_cycle, SUN20I_PWM_DIV_CONST);
+> +	if (prescale_k > SUN20I_PWM_CTL_PRESCAL_K_MAX)
+> +		prescale_k =3D SUN20I_PWM_CTL_PRESCAL_K_MAX;
+> +
+> +	do_div(ent_cycle, prescale_k + 1);
+> +
+> +	/* ent_cycle must not be zero */
+> +	if (ent_cycle =3D=3D 0)
+> +		return -EINVAL;
+> +
+> +	/* For N cycles, PPRx.PWM_ENTIRE_CYCLE =3D (N-1) */
+> +	reg_period =3D FIELD_PREP(SUN20I_PWM_PERIOD_ENTIRE_CYCLE, ent_cycle - 1=
+);
+> +
+> +	/* Calculate the active cycles (duty cycle) */
+> +	val =3D mul_u64_u64_div_u64(state->duty_cycle,
+> +				  (use_bus_clk ? bus_rate : hosc_rate),
+> +				  NSEC_PER_SEC);
+> +	act_cycle =3D val >> div_m;
+> +	do_div(act_cycle, prescale_k + 1);
+> +
+> +	/*
+> +	 * The formula of the output period and the duty-cycle for PWM are as f=
+ollows.
+> +	 * T period =3D PWM0_PRESCALE_K / PWM01_CLK * (PPR0.PWM_ENTIRE_CYCLE + =
+1)
+> +	 * T high-level =3D PWM0_PRESCALE_K / PWM01_CLK * PPR0.PWM_ACT_CYCLE
+> +	 * Duty-cycle =3D T high-level / T period
+> +	 */
+> +	reg_period |=3D FIELD_PREP(SUN20I_PWM_PERIOD_ACT_CYCLE, act_cycle);
+> +	sun20i_pwm_writel(sun20i_chip, reg_period, SUN20I_PWM_PERIOD(pwm->hwpwm=
+));
+> +
+> +	ctl =3D FIELD_PREP(SUN20I_PWM_CTL_PRESCAL_K, prescale_k);
+> +	if (state->polarity =3D=3D PWM_POLARITY_NORMAL)
+> +		ctl |=3D SUN20I_PWM_CTL_ACT_STA;
+> +
+> +	sun20i_pwm_writel(sun20i_chip, ctl, SUN20I_PWM_CTL(pwm->hwpwm));
+> +
+> +	if (state->enabled !=3D pwm->state.enabled) {
+> +		clk_gate &=3D ~SUN20I_PWM_CLK_GATE_BYPASS(pwm->hwpwm);
+> +		clk_gate |=3D SUN20I_PWM_CLK_GATE_GATING(pwm->hwpwm);
+> +		pwm_en |=3D SUN20I_PWM_ENABLE_EN(pwm->hwpwm);
+> +		sun20i_pwm_writel(sun20i_chip, pwm_en, SUN20I_PWM_ENABLE);
+> +		sun20i_pwm_writel(sun20i_chip, clk_gate, SUN20I_PWM_CLK_GATE);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops sun20i_pwm_ops =3D {
+> +	.apply =3D sun20i_pwm_apply,
+> +	.get_state =3D sun20i_pwm_get_state,
+> +};
+> +
+> +static const struct of_device_id sun20i_pwm_dt_ids[] =3D {
+> +	{ .compatible =3D "allwinner,sun20i-d1-pwm" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sun20i_pwm_dt_ids);
+> +
+> +static int sun20i_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct pwm_chip *chip;
+> +	struct sun20i_pwm_chip *sun20i_chip;
+> +	struct clk *clk_bus;
+> +	struct reset_control *rst;
+> +	u32 npwm;
+> +	int ret;
+> +
+> +	ret =3D of_property_read_u32(pdev->dev.of_node, "allwinner,npwms", &npw=
+m);
+> +	if (ret < 0)
+> +		npwm =3D 8; /* Default value */
+> +
+> +	if (npwm > 16) {
+> +		dev_info(&pdev->dev, "Limiting number of PWM lines from %u to 16", npw=
+m);
 
-diff --git a/kernel/sched/features.h b/kernel/sched/features.h
-index 7fdeb5576188c..94409e9831e97 100644
---- a/kernel/sched/features.h
-+++ b/kernel/sched/features.h
-@@ -37,8 +37,8 @@ SCHED_FEAT(CACHE_HOT_BUDDY, true)
-  *
-  * DELAY_ZERO clips the lag on dequeue (or wakeup) to 0.
-  */
--SCHED_FEAT(DELAY_DEQUEUE, true)
--SCHED_FEAT(DELAY_ZERO, true)
-+SCHED_FEAT(DELAY_DEQUEUE, false)
-+SCHED_FEAT(DELAY_ZERO, false)
+I don't think we should proceed if the firmware information is clearly
+wrong. Just bail out with -EINVAL or so here, so that gets fixed in the
+DT.
 
-It runs at 2M QPS again.  If I enable DELAY_QUEUE/ZERO, I go back to 1.95M
+> +		npwm =3D 16;
+> +	}
+> +
+> +	chip =3D devm_pwmchip_alloc(&pdev->dev, npwm, sizeof(*sun20i_chip));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	sun20i_chip =3D to_sun20i_pwm_chip(chip);
+> +
+> +	sun20i_chip->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(sun20i_chip->base))
+> +		return PTR_ERR(sun20i_chip->base);
+> +
+> +	clk_bus =3D devm_clk_get_enabled(&pdev->dev, "bus");
+> +	if (IS_ERR(clk_bus))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(clk_bus),
+> +				     "Failed to get bus clock\n");
+> +
+> +	sun20i_chip->clk_hosc =3D devm_clk_get_enabled(&pdev->dev, "hosc");
+> +	if (IS_ERR(sun20i_chip->clk_hosc))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_hosc),
+> +				     "Failed to get hosc clock\n");
+> +
+> +	ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->clk_hosc);
 
-This is roughly 1/2 of the total regression, v6.15 runs at 1.88M maybe
-1.85M on a bad run.
+Just ignoring for a bit that the 24 MHz oscillator is a fixed clock
+anyway, but why would we want exclusivity already at probe time? Isn't
+that too limiting, as no one might ever use any PWM channels, but it
+would still "belong to us"?
 
-Peter sent me a patch to try improving my ttwu_queue rate, I'll give
-that a shot in the morning.
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "Failed to get hosc exclusive rate\n");
+> +
+> +	sun20i_chip->clk_apb =3D devm_clk_get_enabled(&pdev->dev, "apb");
+> +	if (IS_ERR(sun20i_chip->clk_apb))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_apb),
+> +				     "Failed to get apb clock\n");
+> +
+> +	ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->clk_apb);
 
--chris
+Just for the records: APB is practically also a fixed clock, set up
+once in firmware and never changed, since it drives a lot of other
+peripherals.
+But same question as above, why do we lock its rate already here?
+
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "Failed to get apb exclusive rate\n");
+> +
+> +	if (clk_get_rate(sun20i_chip->clk_apb) <=3D clk_get_rate(sun20i_chip->c=
+lk_hosc))
+> +		dev_info(&pdev->dev, "APB clock must be greater than hosc clock");
+
+Why this check? Does the code make any assumptions about this relation?
+If yes, we must surely deny this and bail out.
+If not (and I feel we should handle it this way), we can just ignore
+this and not print anything.
+
+Cheers,
+Andre
+
+> +
+> +	rst =3D devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
+> +	if (IS_ERR(rst))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(rst),
+> +				     "Failed to get reset control\n");
+> +
+> +	chip->ops =3D &sun20i_pwm_ops;
+> +
+> +	ret =3D devm_pwmchip_add(&pdev->dev, chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to add PWM chip\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver sun20i_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "sun20i-pwm",
+> +		.of_match_table =3D sun20i_pwm_dt_ids,
+> +	},
+> +	.probe =3D sun20i_pwm_probe,
+> +};
+> +module_platform_driver(sun20i_pwm_driver);
+> +
+> +MODULE_AUTHOR("Aleksandr Shubin <privatesub2@gmail.com>");
+> +MODULE_DESCRIPTION("Allwinner sun20i PWM driver");
+> +MODULE_LICENSE("GPL");
+
