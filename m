@@ -1,101 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE6F22D4FF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B432286A1;
+	Mon, 12 May 2025 02:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747018082; cv=none; b=cs7SaSd5PveTjevJSuk5heanDywwBqHInntU4Jx1gncNEHIYtRtnoIzHJmZG295IgrTj6X1OsD8lxHv9wqZwkFwv1LhGUIYLTj9gSUPlG9/f4Zv3uyjxmoChGke9ROjdtZJchhmLthN9M9WnwPpFDSIf9iinMqQvXzLmrL1sdwc=
+	t=1747018184; cv=none; b=gLxusDKPu2m3HfqT35Bh8zRqQjdd+Ey6OAiEuEQnWo3tk2/U2tX33pLlXD25ZhGXGe8hfZm566gCEysOOUFdvZkCCGdqsW/4/oIEyhjeL+gVnEw5nA22Z1lEipwEwRBThZVM/9Lq+q36qI4U8tqOxV/JPxqlIufr6XgWzhN46fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747018082; c=relaxed/simple;
-	bh=YkcK6mn/altZN5LQp/Tf6R9mkFeK+cXtpkB7o19gGoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kbaVeIvos2wt8a2xGqWy/+avktDEmRVjTlC3XllpJRhEtZ49CB81NionuhHYCAuC1Y01TlXGP5ob54HWBN1JT7THGGBtKwd85wsfyuW2I/YS2kl1LbudfctdX8nhVRvMGlvUXducKB+tpc72yCHCDbuCDPwAIilYvxc+Sq5+KBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qncy88iB; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747018184; c=relaxed/simple;
+	bh=mwDaVLJo43XMRzWtd8E6mvuH9PdZzsSVzcw3BctI6JY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e1T3C8Lu1IOzPcrHmFo59HsUSNfEFB/0RIxrS5i8krpFh04de0oXY8VoQfYItHijyp94fCl0NqvL15NlXJabs/PbXTUms8T+X8cd5L91ASe6+XEDxjCOS2XoS2LH+FTnQzEyLOhOJiEkusBGlgguWiPIUk39kB6vJF2sxi2vwX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QHLSfwh2; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qncy88iB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747018081; x=1778554081;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=YkcK6mn/altZN5LQp/Tf6R9mkFeK+cXtpkB7o19gGoI=;
-  b=Qncy88iB/6mScX+F1NRUgyWo2KcACp3UTjbcrXm3HGP7Mvz35YxXCN5f
-   uI8j4+F+rxP0Q8UlCgr8kjjoUnpiPaZ9Rp8NaCVmr0ijzXuaGkO5TNjSR
-   CSsxDY8aKIrMnop0arMUl6GHZjJ8X4CkG1P9lBoK830jr2XTzvpmTAehY
-   pvN5mq/TJFVyPZuGOPyEU5kBwKxgDW0/xDumYbvPic9NKyQDZoWU9q4aU
-   M8sk19Si0Q4oQSBiMAkB7FnLHOpq+OWbRtS3n1PYNauTc9Xsvl5MacnpV
-   czOX6rpJwqvFS/QtHA67oxv726kcfA9uBXUuty6sQMOp6IADxNwU2RvTq
-   A==;
-X-CSE-ConnectionGUID: aOxsGQ1HSv+0T8M80FlKKw==
-X-CSE-MsgGUID: dqqLOFclSgKFx7sBNJ6TBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="51454937"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="51454937"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 19:48:00 -0700
-X-CSE-ConnectionGUID: SHZMynSlSH6XXrLOix3m9Q==
-X-CSE-MsgGUID: bsp7XzVSR1uMwfvLBW8yJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="137166684"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 19:47:59 -0700
-Message-ID: <e8608bf9-45d6-4627-9a1a-88be0ff55cd3@linux.intel.com>
-Date: Mon, 12 May 2025 10:43:24 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHLSfwh2"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30a89c31ae7so5211619a91.2;
+        Sun, 11 May 2025 19:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747018182; x=1747622982; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KOVCqhCb2rhEzHvQ465eix34/9MV0t+iGj2FJ15KRTk=;
+        b=QHLSfwh2p4IAim+5Ks3p4yfHSsrHmk9z/pHgh/MozMVboOLLL3nfBtPC6vwUx6BzU/
+         d5Pw1BlQRo/uPtMdJ91eWFZ2B1MC/+QM1SV4UlM+b10YW1roiPBElCBSuUfre6E7Dky/
+         bouqKnReCscAYx45YEeVkKTCyvAJNOVlhem6SHRhOS9RfWjhvsVVqdBaNLUg+/FOSs0k
+         eSoBnHj0qIPwjvvBJQUwC2rQVfyGfTXeh1cGrN5PubyaEg3oP3dhX+tVUipStunEVxap
+         lUI0t1vDvFL46AmWM6pxykWAl6l2TcxEeRjq6BNubhRHpW67fVBx5ycSjozNIca6UcGm
+         gL9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747018182; x=1747622982;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KOVCqhCb2rhEzHvQ465eix34/9MV0t+iGj2FJ15KRTk=;
+        b=rKxwUMJgCkVopMhyrwfjQl9gd3M1c5YieH289akFgji6DQQ73F1gvm3N/rCDJigOLP
+         zSGqNY0a8uFH1BEsug42+iVbHE89JTL3WJb4UimbqR5F2AtaWhcW6AYh/mqMOGfckCvG
+         VO01UgsiwWq8pYgan13jazaQA2WGBYQf0v/7mjV6OISCweZMonkyoNi9INHy9dtgY9Ia
+         shsKRzNNrFI7L0LVECDS7CBth2iwq4x/JWHCS8A8VRUwR1LzWYvr+PIkB3eCpQIIeO8e
+         VvBoDmpOD4hSpx5Y/gm0DQWtsLgTxvT6PBdv8DdigTpu01ua0wjeTxylV9NnNuim3Yx/
+         2K4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVtuhKaio+F3lL8jibjR4dJpi6VhfddkRfHVo9mYDcjlXnmSrljknrrhRlShydpBjlLsCQl3lNo3QujIA==@vger.kernel.org, AJvYcCXEwggeaYQxjWaaGwfSB0lo8iodFj3+EE2lpOuNxGBvfCxw2HjSEW+R/KOOVSkowH5zzwuAJOB+wTLvEHlxAf0Sp8tB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Hu8fhxk8H0d5ln7gAjSgNTVX8lkAhp2sR4rZwDWCOEHDfRZI
+	V7tY6g1jg71MeWF/9DkAawWe46l6QeeJeVb83lSaxlNiSIkmiEWOsDlIOgI6
+X-Gm-Gg: ASbGncs+kouvgVD31V2KgFE4istsA2BsSBtgK5CsapDNJvqgYhurM6B2W2bfzmtXSsH
+	ft3aqIbUangItXleXz8JuFgVDCeK6zwG0InQ5qsbtUddJm2Lh20R38mVLR0AH7bUeVezFlPlJ+j
+	PIV90ETD7kIsTS3AR7DwrD/7bUZiPJefEQMBNUUyjRlKUZXp50HqpdzGGhXpZ/RY6Y7xGZVRXSk
+	YH8zq4ydHsUdQpftbSgBeklvcXsOP+iZg81u/rp3SiHT5kgkuX2IEi8ZdC9Tz2fkRQhgp+UPmF5
+	55AkveW33KK9cTa3gcHHWU0aZO9ZK71XSvygxnYBsdZGySTSU8VPL3Q+PAM5xunnPIPMd5C4QIG
+	Cg1Lcj4goFet4+0zMTMcr7jM=
+X-Google-Smtp-Source: AGHT+IFZt6ExJpgBrtXPpabu/brET+rV4uesYHpgrf7bict2XP9UfZjBmjmHwm86BIXgSqze/T1M3w==
+X-Received: by 2002:a17:90a:c10b:b0:30c:540b:99e with SMTP id 98e67ed59e1d1-30c540b09e7mr11260942a91.13.1747018182233;
+        Sun, 11 May 2025 19:49:42 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.24])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b234af2c287sm3938761a12.41.2025.05.11.19.49.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 19:49:41 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: axboe@kernel.dk,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH v1 0/5] relayfs: misc changes
+Date: Mon, 12 May 2025 10:49:30 +0800
+Message-Id: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] iommu/vt-d: Fix ATS support check for integrated
- endpoints
-To: Wei Wang <wei.w.wang@intel.com>, dwmw2@infradead.org,
- kevin.tian@intel.com, yi.l.liu@intel.com, jroedel@suse.de,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-References: <20250509140021.4029303-1-wei.w.wang@intel.com>
- <20250509140021.4029303-4-wei.w.wang@intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20250509140021.4029303-4-wei.w.wang@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/9/25 22:00, Wei Wang wrote:
-> The VT-d spec states that "SATC reporting structure identifies devices
-> that have address translation cache and that is validated per requirements
-> described in the 'Device TLB in System-on-Chip (SoC) Integrated Devices'
+From: Jason Xing <kernelxing@tencent.com>
 
-This is a spec recommendation for hardware implementation of the trusted
-ATS. I recommend supporting it alongside HPT support in the mainline
-kernel.
+The series mostly focuss on the error counters which helps every user
+debug their own kernel module. More patches making the relayfs more
+robust and functional are around the corner :)
 
-This 1/3 and 2/3 look good to me. Thank you and I will queue them for
-next.
+---
+Note: this series is made on top of this unmerged commit[1]
+[1]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing@gmail.com/
 
-> section. It is recommended that system software enable ATC for this
-> device". It is possible for an integrated device to have PCI ATC
-> capability implemented but not validated per the requirements, and thus
-> not appear in the SATC structure as recommended for ATS enablement.
-> 
-> The current implementation checks ATS support for integrated endpoints in
-> two places. First, it verifies if the integrated endpoint device is listed
-> in SATC. If not, it proceeds to the second check that always returns true
-> for integrated devices. This could result in endpoint devices not
-> recommended in SATC presenting "supported = true" to the caller.
-> 
-> Add integrated_device_ats_supported() for the integrated device ATS check
-> in a single location, which improves readability. The above issue is
-> also fixed in the function via returning false in that case.
-> 
-> Signed-off-by: Wei Wang<wei.w.wang@intel.com>
-> ---
->   drivers/iommu/intel/iommu.c | 42 +++++++++++++++++++++++++------------
->   1 file changed, 29 insertions(+), 13 deletions(-)
+Jason Xing (5):
+  relayfs: support a counter tracking if per-cpu buffers is full
+  relayfs: introduce dump of relayfs statistics function
+  blktrace: use rbuf->stats.full as a drop indicator in relayfs
+  relayfs: support a counter tracking if data is too big to write
+  relayfs: uniformally use possible cpu iteration
 
-Thanks,
-baolu
+ include/linux/relay.h   | 22 ++++++++++++++-
+ kernel/relay.c          | 62 +++++++++++++++++++++++++++++++++++------
+ kernel/trace/blktrace.c | 23 ++-------------
+ 3 files changed, 76 insertions(+), 31 deletions(-)
+
+-- 
+2.43.5
+
