@@ -1,197 +1,219 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2065.outbound.protection.outlook.com [40.107.20.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EDF254B1A;
-	Mon, 12 May 2025 08:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037554; cv=fail; b=N7wG5IVGwC4R6lzuCcEw9fq4E8mZwXx19+/Hs9xqKnnqbHFD10K1VFddyjAolpAeAJnJa/cIqqw60Xh9iNhkVtZopnDXiZ6KMGpQKJl49eq6sjH3+9LBo9j/KmiIlYLLPUCbhyham5l4/6u6U0DrrkYtbNQ+0p8wUFRhp0EnWc4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037554; c=relaxed/simple;
-	bh=ZpVrTJa94gK45uFQFWVvvW8BLcNqeH2BjvMC5zFXOxk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dPoPHmV9S6DO+N1qa5fx6i60kpFiepjeb44hHZ4rGbi8jDwfL7A2j6iP6tk5UYUPUBCwCFWSDXBlEqkvuM8SnxvZGvlJvi+3HRclTHS/SxNnSg7NDvZFUCUO+XWj0+acQWs6FrtcpnyKz6+k1u7eNn0yWkH1sEpo4t23Bd5fthY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=VVHGOtQT; arc=fail smtp.client-ip=40.107.20.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D0D24BBFC
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 08:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747037681; cv=none; b=UhInaedvYFf+GGov0AlBWvmL9ewYgKinDnpDZklLmQiqOx4LDrLM2ZdOtT/7SKnhEs4ptW8RdwWypWgVDLbGnD7s79rADqNL9RltsYvQ+lWqxwXkqdEuq5OIrCXcMnJIjsC1wD35C0Ppj2M3Ap3R/WIOlErGZ5U/Rioo82VIIjI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747037681; c=relaxed/simple;
+	bh=ZTzMqrn1URom1KwjBf0pttZCkEBA9ZhKUjt81jZvKpI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uBhKuQktFjyIPh0ezgQQ8gEqG3BZVC7+FBi19pq5ACtUiSXv8rZIrIvkpn5oXdifnXNm55LAiGL5vEPLzraSoKiXbO/rxgi9FrRdWJv+Fve5wGWx96zKEMkDwGu/e+6BjXsGeTFmEBw+w8CEfQ4oCzZTBfr9y6pEVj2GcUHvFkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ar35yTb7; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="VVHGOtQT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xpMJKaR+CQwsxFglXRYbALH9woBUEqPJkAjrVTwlLtJwZOkZtMb/f6hY3E/1OrPjG0f+f7H9FdwHgFeRmgTz1I1YqoF3yH+Kcf+gSI0HEmcc4ZuSQsUJQG6jQBrg1ltUDcqPtC1gbhQqKuxRc3q2E/2VwQ3rFWx+/ZdvN5z60Qw9uqbfCDPDNIvQi2YyKM50puP5XWxMnqVCs0CYQL6lPcXwa7CH3S3K0b04VV4Kg2bILPJLYeXF3hULebdkJA2BVe7RAUM/otGHkpkj3l8dLsdV87lAmtUhsAeHGOQeRstLnNG1+9KFUAQOg6QG2tnceEtC8AT1lEhaZzOAD5GUkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QZ/5BOSTWAMa2WJIQ77i3kZR4bfrG91Ln+fJyAPWe/I=;
- b=a6qd42ylAy7FnK2Sksv+73kZ0FlQ6ehIobyfWEWDWgL22ksz8i7Pvtznvg+JY6Dr5KBMZ7tH9uUCMe452Prrl32qJImgmKNezfC19xluSu8JLnu4Mag7AW1yL6fnVopHCPhMeFhG1W2sDgcYcEEVvIfj0BT81DLIH0b9k88QGC8E/Jh1isF3WldCyfEDDcvUQu9S6ist3QoVpunxlU3vBHwOXdS1kvzZYDTdNm66s97X7wZ7/Tj0Ad/xRdXne9x6+ap2O5wB2fkQcQcGpW8XBIITJi5rjud0TI0bA286wuN1fVFfykaqraDfIwV+lbu2mHGWG5+KezsLTfDiBbAxNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QZ/5BOSTWAMa2WJIQ77i3kZR4bfrG91Ln+fJyAPWe/I=;
- b=VVHGOtQT/eqg8KJUSsz8Wnqpc/wkS8e/Datzn98Am76HxP9XVL8vJ9JTRSW+/OJNrkkQdpLOu7a8k/6zSjCtEDk2yxbbVOAS4BMsuaS1VR81QTSVeygoMJdGiS0top7FQUW7IUWDd0P6H9VpmwcYbppMz4pMFC5NPxCwuC2X0dg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by VI1PR04MB7087.eurprd04.prod.outlook.com (2603:10a6:800:12a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 08:12:26 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 08:12:26 +0000
-Message-ID: <e3339dfd-7d79-4d86-b522-d6b31976cd2e@cherry.de>
-Date: Mon, 12 May 2025 10:12:24 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v4 1/3] dt-bindings: vendor-prefixes: Add luckfox
- prefix
-To: John Clark <inindev@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Jonas Karlman <jonas@kwiboo.se>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
-References: <20250509122637.26674-1-inindev@gmail.com>
- <20250509122637.26674-2-inindev@gmail.com>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250509122637.26674-2-inindev@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: WA2P291CA0003.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1e::7) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ar35yTb7"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so47292085e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 01:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747037677; x=1747642477; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KUWtnXREtfU0bglSJPdPg3dSI06mpwAnzzgVNIScr4k=;
+        b=ar35yTb7To8DY9zWyhaj6CjMROYLdYrYlJZcHgm8BIoBZKjBvh9TZEgkQaroHM/MrB
+         0wf28gvakTOoSeYMpA6KMAbG08lbGK/ok2kSq9L1ZmyJh5KXFFlmffG9UELfgi7zB18U
+         jP0ErP40tITWcyfs3kIvcjv1BmmqBu8kTyM33P+c6cGRxbXKDOPAGGWPp5h6uRx3cHTR
+         31XQCxU138vYBdRT6Hm9wTWKs8uVODmvhntVgrSj6w4mpYbUxROsxbTkO9u26UyFwdNq
+         WgXQxFMF4ViuxbOgxtOkjQNkhJhJpamWjzsewC/ctHdizn8euM/TQ+GmPG+em6a4ObwO
+         c+ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747037677; x=1747642477;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUWtnXREtfU0bglSJPdPg3dSI06mpwAnzzgVNIScr4k=;
+        b=Q8dAUMTCtbACnXOr2rJu/HauNJ0z+F5PjroFcQMJBfe4jQcZHkkE336dR5zVPzxKZY
+         hqdPMTRYawVgeSoxZYZCRwHEWaxzrfV8PBao0HFi9jLKoFy3VEK4mgQI6pSjBAuxbQdW
+         kmr9f0dydhw94B64nWX/xTbviphVCRyGx9h/YGgZ+dSMy30qGb+5WthZ9S4F7dMmNnf1
+         1+02Vd8m/nsU5hndyBoL3rU2AyB5JuT9xO4kfcaEK1mPtkClVKx2xxqRwt/k5MvTt7WD
+         3ytu1VdWquOkDQLfyhWfNOMSXiyjGnwsJqwsdfDt/XInq7v3Yxs6AhN92l4a3lWkQu3l
+         /UdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5JiuDzEJVmI0XiGsaMvREYM6CIRlHEXwGL3eD48Jtooxt1S2/wcQe+9oCe06iBD7Z7WGKWqflJZj2WC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygKwyQXBEoXasRRBAmVjqcaEZiPSMjHyd1mf31HaamgLzptZ41
+	rrWHONPYF6WjohojDdjqbGOWWV6B7qu2jWH9usZuMXGZGEfnJ1/ANkYmC0W3m3E=
+X-Gm-Gg: ASbGncsASFv/ox8lQcFSMWBH4pcYDrH1H/LZXXHEp+ZfvCOfhqJJUGsTT0saGKeTS/o
+	aAJ0xZ9gjff28HS4bdSUUy8nP2wmJMbBau8fqgQGo29zr9+F47j/B0pcex0Zhkns7+rdoMO0aay
+	UaXI1qyQ/Qu4VT1aAD087DOD2KRyBnDk57Bou2z2zlhXEH/ZzGdZVWc9bBAMO194udiKBHopQDY
+	ZJTZNyhkjjX9LdUDdiBTvotx5ffxDgo7hWwXQkaJrSJXgnikd1DnGjdmyL7Ig/GzpIFjPcYflU5
+	FSTCI18qm1p5IJXg5mj3BY3sWmLB4wv4wVVuDNV7myPgxwOeXPTz3ZxLYxcGq+ypJJxOwJDPzjA
+	0JebuzGfmvtMGG0yDuP13
+X-Google-Smtp-Source: AGHT+IF5FdpyihNwkP+pz8qwsSi03YYChIIL/diT4CyeFnMpdYT9qUG8HkxnvNgaNA1vzLlpCGu/5Q==
+X-Received: by 2002:a05:6000:186f:b0:399:6dd9:9f40 with SMTP id ffacd0b85a97d-3a1f643acbemr9221007f8f.9.1747037676817;
+        Mon, 12 May 2025 01:14:36 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf43sm11626947f8f.70.2025.05.12.01.14.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 01:14:36 -0700 (PDT)
+Message-ID: <fe9d801b-007d-476d-97fe-96d0f3d218cd@rivosinc.com>
+Date: Mon, 12 May 2025 10:14:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|VI1PR04MB7087:EE_
-X-MS-Office365-Filtering-Correlation-Id: 965f9c39-7f4a-4773-b398-08dd912cbafc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MGxRd2NUd05xVXBZYXZnTXJKNjErQURPWU4zbTdBS3RJTFpMTXZ6cVB4cXRS?=
- =?utf-8?B?MGcyV1JqQ3FndmxJMXlPWWF1RDNTYWhpZWhRUDh4VDNxYzVMTVBYT2tkV3hJ?=
- =?utf-8?B?ODBkbUJJU0dNaHpzcDhuS1dHbzRuQ21ZQzgzUlJWbkdabW9xSWZQdUdTaFUy?=
- =?utf-8?B?ZVF2bCtHVXN5dlpjeGdYSS9nNklwMjJrVHo0VzBNVXFWSldpelBlcndZUHV4?=
- =?utf-8?B?Vm1BeDF2MmhGV3VSUStTSDN1QzVPNGlJUmNIRGg4blpWMmZTa1IrS3lWbVo0?=
- =?utf-8?B?ZmZ2Tkp1Vk1wUGllbDhjd0tqZit3YmlocEZPbGc0bkd3ZlordUhJdmhrNUha?=
- =?utf-8?B?QWc5bFdCMVBTMkgwWWlGM0h3YThOZGozR1U1blg2V1B6amNmSzBoOEdiRmRZ?=
- =?utf-8?B?WVp4Mno3Ymt2VUFPdUNncFNhQkRGdjRzWnA5K2x5VmI2eHVNTWZKMUhiUEhD?=
- =?utf-8?B?Z2s0K3FYYVNQUjVzSmpReHZ2aDZicWFqVW8rUUJTd3FpVWN4VnZvV0xDeVFE?=
- =?utf-8?B?QlRXUVIvWFNVNXdZT3BFVlQ4b2F3TU5GVWJSMVRJN21sdkg2YmV5WkFveEpL?=
- =?utf-8?B?dmdXL1gzcDhWbXBoWGlqcmluSVZDYnZVRGlzWUIyMTNMR05xajgwMVJSVlBi?=
- =?utf-8?B?Tmhua2VVS21zb21jdjFSNHZkbmFhVlQwU2ZoWHpjRzMrbUZtVEtqMjMzdFVX?=
- =?utf-8?B?a0dMMm5FSUREbDMvQmFSREwxQjI3eTdlV2c0QzA2d1VPazlCZXJjOVMwY0VT?=
- =?utf-8?B?aWZPbk5HeFdVWVRPak5tOEhPcFY2Z0FmOEE0TW5GT1lKS1lBZHRkUkcxRlNV?=
- =?utf-8?B?U2U4NVp1RDk4aWk4WS9WRGdqcUVlbG1IZ3JzaVRLRDVjQ3ZScTRwNVQyTFJW?=
- =?utf-8?B?bHlackxlMzU0M0RyTWlVd2RxNmo1WDc1L0xYaWp4UFB3OWtyYVB1NklsREJT?=
- =?utf-8?B?M2twVU9RWkliZ25CT2w4cnVrdXg2WVNmL0ZLaUhkeG1EcGxsQi8zSXFVQy9i?=
- =?utf-8?B?cXJLRjF3eU9hWU5yeFVtQjI3ckwyaEwxamxFZXpJcUZocjBIQ3lHZ0tPMDdl?=
- =?utf-8?B?MWErcHFROGw0N2lnNHJ2ZTJGMVZDeFpPOG1KY1FSYUVSV05UTXEvZlF6cEVC?=
- =?utf-8?B?c1lvT2g4ZEQxTlA5SnFtSFVFV0tmMmZBMTFaQmNVK0FhZ3hqWjNNU1NIb1Va?=
- =?utf-8?B?L3ZYcXZSVUtydC91NzJSWUZ5VGZUdGhXQi92S3VCdUJlOGJjeUJ2c2kya2xO?=
- =?utf-8?B?VFIydGdmeEtVdWRtaHFkL0RacFVEeU1EMnk0QU8zR2c5WU5abE1ieTFqNTFE?=
- =?utf-8?B?eHlUSHpnejg0ODVCTnBkZGpsNW9ZdXN5OTlHOVl1N2RYSnZmak1zVThqcTlK?=
- =?utf-8?B?dkZ1cmxNWDNPRDU0KzNSeGttRmtZS0lYZCtnTzVkdE9Qam82dEtXR0hhYkFo?=
- =?utf-8?B?WmRubm5LcDcyekZKc25QT2dYbkJBenVIVml3UWt5Q09KSHdXdzUvZ3ZjeFRH?=
- =?utf-8?B?NGpkUHF6U3VJOFRTcDBST1IwNlJETERCK0g3TDNNSjRoalpDdW95d3FQWmJz?=
- =?utf-8?B?N3FtUzRid0hoL0JsWWJ0bGhvMVkrcU1ZVFlya0g4Wk0zNlZmeENJVHdhRHJD?=
- =?utf-8?B?L0lyVkkvN0dTRkxEWXBiRjlSajFtOEZLVUpaMXZwczNVcExwRGlNWHp0ZnA4?=
- =?utf-8?B?NXhTOVpNbDdZMDc0NGF6ekJnWDYrUVlIdE9yR1kwMGFxN25QVEttcHhKWWdL?=
- =?utf-8?B?R1NVaEFMN3VzWDNNWnN5bFNmaEUwM2NxMjNQWVZkbkY2K0YrL1VhbnAzbklK?=
- =?utf-8?B?TXg2QlVaOXFoM3JHK0VhNVA4RVN5NjVPWFdRelhja3ZoeGtrNGw1Wk1RL0tl?=
- =?utf-8?B?dTFkTzFyQ2RpOGVoZEJqWHF2OUpWOU4rcTVLc3FDdE9OZndIV1VmUVlhS01Q?=
- =?utf-8?Q?H6uD/GyTK44=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TU1PdW53czkzbHg2ZEQ3WFVjcFBqK1pPWTVvOEhpdzFUMVZHeUNSRWRHSlgy?=
- =?utf-8?B?Zi9YK0pvdWFMUGpNTmNPNndYTE1pQjVGTlgwWWV3aVBzUUtjaDlXcTZ3QkVh?=
- =?utf-8?B?RTV5RlNFUXdGcG1peW9WYWErTTdNcUV6RHQyVnZtd2Z4MzhIS1ZSb1NHL1I5?=
- =?utf-8?B?emxUcjlObnppV0FVdG5yTVF5U1YrcVdFSHd3WDFRNmxmUEpLeWxQWVdhUm1B?=
- =?utf-8?B?REJvWEE3a2hLTzlSbWlxemk4c3ZVRFJ0VjcrbEdoYUZGZ3N6OWhmUk1KYzBk?=
- =?utf-8?B?aEx3SXdNNG0vcWZhL0xuTXF5ZGo1NENBVU9qL1EyUzhGMHE1SHR6cjhWQ29r?=
- =?utf-8?B?VUJ3NzFHMlphWmlBZUdHUzlSem5zL3p6cjhHZUNDSFdvSWlvQXBuTzdQMytT?=
- =?utf-8?B?WWtnbzY4SjZ0bFRLNGlyTmgwMllwK0pHT2NSRithV0VHL1hWYlJvR3AvT2Vo?=
- =?utf-8?B?d0VmR3RwbHlZeldzVkRqMXlESnIwK3dxUXF6MHdOWHE1dlNqVlRiREV1cFJl?=
- =?utf-8?B?NWp5SFUwc0hBTCt4RUc5TTd3d2xyR2w2cUpMdVhxQldReEE1TkNDdmducElX?=
- =?utf-8?B?MHNpS2hmd3FTVjZkaVpjUGlTbDBKMENnTHJaQW1MYkFVYjM2MnNUME1mYzhB?=
- =?utf-8?B?YUJOekVYeGp0VTExT2VudzJmbkE0YWhQejF2ck50YVJSS0Y4Zldna3pLNzRE?=
- =?utf-8?B?d0lRQjVSVkllc0twSFdkMjd6anZOZTVIcHZOc3gxK2dsWTNpbGFJaUMxbDU1?=
- =?utf-8?B?aGZ0cEk5bVNFd0lmVnA2VlNaRW9acWhnN09kckFmYUtZY0xmdGhQbThsUDZu?=
- =?utf-8?B?ZDRXQy9lQ2R5elFDbE4zRnFHZzNIU0NQc2xJNC9jR00rNjFxUlhScU4wWUV5?=
- =?utf-8?B?N3JJL3gyK0t3U0x3bW9wc1RodGtKRy9sTytoUWdhNDU1U0FHSmVwOFUrK09F?=
- =?utf-8?B?cGdhZzNkampqWU00cnhFT1M3Vy93enltOHZrelM5WWhkTTRXSmhzV1RyZUVD?=
- =?utf-8?B?TkMzRyttZ1Y4WVJjaDRvZjQ0YTVwVi90MGFZcy9BZXRwUkVtUFN6OVRFNW85?=
- =?utf-8?B?QXRkL2RpWmFoUDVaa281RDU1eU9FVjVDR2ExZVZqVjk2bHpraDZBSFhjMllI?=
- =?utf-8?B?YW9oTmRXVVhMdklqNHlIYVE2V3p6czRYdDRtaVpLdERnYm5rdDljd1Y0bUxi?=
- =?utf-8?B?V09uNyttYkZNTWk3a01yYUZYalJpc2FGdEQ5YzV6OEM0TE82WU9mZG1qekN1?=
- =?utf-8?B?bTRhTGxPVTdZZWxIbVM2d1Y4NDM1cGtSOWNYVndCR211NWVxSDFxTkd6QU9H?=
- =?utf-8?B?M2JSdW1Fa3FqaTdSaXl0Z0x1REQyRkNUK25aOE9CL1YzamZ6RTFzb0NPVTYx?=
- =?utf-8?B?NmhQYXJvYVpCZ2hwY2NZdkRCRlExQkFackk0cDVjU2VOajVVZTJlV2I5alM4?=
- =?utf-8?B?WUdxYlVOTi9ZcjFmcTZpc1pWdnN4c3Qwa0lPYk1JZU5NclEwOEhCNnBOVW1N?=
- =?utf-8?B?WTRKREZqM2kzTmwwRUNEeTVocERzUmduN0RWbmNnbDBzS2szNTU2TVVhNE9M?=
- =?utf-8?B?UDA0bFFUWWNNM1ZzbWlhNE5lRkxmVXRLOWluOVBqMGs2MzN6cFIrSXQxTUM1?=
- =?utf-8?B?akxzSkloK0s4dlZmOTRhVzVhM3QzdHpWeE1vQWErUVFmUDNKd0Y4WFlYVk4w?=
- =?utf-8?B?ZmhINDRrT0xPV2ZvcXJwcWxiNUZrZTdsU0NQVVFMQ0xza0tBeTFVRHZQanFJ?=
- =?utf-8?B?ZVN0dG5jUnN4d1VBemtyK1FDRkZMY3hrbWFhd2puNDIya2JxTVR1eGFlUW5Y?=
- =?utf-8?B?YTN1VGtDS3FhSnRqRXhMMGthQ1JtTGJWTXIrTlFId0cxNEdZYkdaZVVlWmQ4?=
- =?utf-8?B?VzBBUmx5Mkl0b0FVa2I3eHVuR014eHc0L2p3eXIzcE9GYnc3b3hsOFRzeC9Z?=
- =?utf-8?B?NDJyQjVaM1pGVnpISjhBS1c3TDBXSVJNZnZzSUEydWNLeVFIYTQ2Sy9VTlBo?=
- =?utf-8?B?Sm9qaWpWY3hCTnZGUjNxdVY1eGVMSzVLTDVpNnFLLzJoT3Z0ayt1cEwwU2Ur?=
- =?utf-8?B?OFh5WUhDUVlSSUZaTTRyQ3V5dk9XaENITzhZa2YzTFBqY2hKR3ZnQXp6VGhL?=
- =?utf-8?B?dUwwc2tWcVIwTzc5ZzNzendwYWdZWTJ5VnpLY3B4OHQyOEtHbWZSRTJjZ3Ur?=
- =?utf-8?B?ZVE9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 965f9c39-7f4a-4773-b398-08dd912cbafc
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 08:12:26.0524
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FXXtVKNFePjFjMz+VunmfkKlYfPp6YEXE+uLGoBRUjsieZczkd7jQHrzHr+mAZpqsqppj7QJ6A2MaSXuWGgUdeMRBKe445LCq0EF8n9gxFw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7087
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 04/14] riscv: sbi: add FWFT extension interface
+To: Atish Patra <atish.patra@linux.dev>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org
+Cc: Samuel Holland <samuel.holland@sifive.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
+References: <20250424173204.1948385-1-cleger@rivosinc.com>
+ <20250424173204.1948385-5-cleger@rivosinc.com>
+ <1c385a47-0a01-4be4-a34b-51a2f168e62d@linux.dev>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <1c385a47-0a01-4be4-a34b-51a2f168e62d@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi John,
 
-On 5/9/25 2:26 PM, John Clark wrote:
-> Add vendor prefix for Shenzhen Luckfox Technology Co., Ltd., which
-> produces development boards like the Luckfox Omni3576.
+
+On 09/05/2025 02:18, Atish Patra wrote:
+> On 4/24/25 10:31 AM, ClÃ©ment LÃ©ger wrote:
+>> This SBI extensions enables supervisor mode to control feature that are
+>> under M-mode control (For instance, Svadu menvcfg ADUE bit, Ssdbltrp
+>> DTE, etc). Add an interface to set local features for a specific cpu
+>> mask as well as for the online cpu mask.
+>>
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>> ---
+>>   arch/riscv/include/asm/sbi.h | 17 +++++++++++
+>>   arch/riscv/kernel/sbi.c      | 57 ++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 74 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+>> index 7ec249fea880..3bbef56bcefc 100644
+>> --- a/arch/riscv/include/asm/sbi.h
+>> +++ b/arch/riscv/include/asm/sbi.h
+>> @@ -503,6 +503,23 @@ int sbi_remote_hfence_vvma_asid(const struct
+>> cpumask *cpu_mask,
+>>                   unsigned long asid);
+>>   long sbi_probe_extension(int ext);
+>>   +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long
+>> flags);
+>> +int sbi_fwft_set_cpumask(const cpumask_t *mask, u32 feature,
+>> +             unsigned long value, unsigned long flags);
+>> +/**
+>> + * sbi_fwft_set_online_cpus() - Set a feature on all online cpus
+>> + * @feature: The feature to be set
+>> + * @value: The feature value to be set
+>> + * @flags: FWFT feature set flags
+>> + *
+>> + * Return: 0 on success, appropriate linux error code otherwise.
+>> + */
+>> +static inline int sbi_fwft_set_online_cpus(u32 feature, unsigned long
+>> value,
+>> +                       unsigned long flags)
+>> +{
+>> +    return sbi_fwft_set_cpumask(cpu_online_mask, feature, value, flags);
+>> +}
+>> +
+>>   /* Check if current SBI specification version is 0.1 or not */
+>>   static inline int sbi_spec_is_0_1(void)
+>>   {
+>> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+>> index 1d44c35305a9..d57e4dae7dac 100644
+>> --- a/arch/riscv/kernel/sbi.c
+>> +++ b/arch/riscv/kernel/sbi.c
+>> @@ -299,6 +299,63 @@ static int __sbi_rfence_v02(int fid, const struct
+>> cpumask *cpu_mask,
+>>       return 0;
+>>   }
+>>   +/**
+>> + * sbi_fwft_set() - Set a feature on the local hart
+>> + * @feature: The feature ID to be set
+>> + * @value: The feature value to be set
+>> + * @flags: FWFT feature set flags
+>> + *
+>> + * Return: 0 on success, appropriate linux error code otherwise.
+>> + */
+>> +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags)
+>> +{
+>> +    return -EOPNOTSUPP;
+>> +}
+>> +
+>> +struct fwft_set_req {
+>> +    u32 feature;
+>> +    unsigned long value;
+>> +    unsigned long flags;
+>> +    atomic_t error;
+>> +};
+>> +
+>> +static void cpu_sbi_fwft_set(void *arg)
+>> +{
+>> +    struct fwft_set_req *req = arg;
+>> +    int ret;
+>> +
+>> +    ret = sbi_fwft_set(req->feature, req->value, req->flags);
+>> +    if (ret)
+>> +        atomic_set(&req->error, ret);
 > 
-> Signed-off-by: John Clark <inindev@gmail.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->   1 file changed, 2 insertions(+)
+> What happens when cpuX executed first reported an error but cpuY
+> executed this function later and report success.
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 86f6a19b28ae..9391e0c31bb8 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -892,6 +892,8 @@ patternProperties:
->       description: Liebherr-Werk Nenzing GmbH
->     "^lxa,.*":
->       description: Linux Automation GmbH
-> +  "^luckfox,.*":
-> +    description: Shenzhen Luckfox Technology Co., Ltd.
+> The error will be masked in that case.
 
-Looking at the file, I think we order the vendor prefixes alphanumerically?
+We actually only set the bit if an error happened (consider it as a
+sticky error bit). So if CPUy reports success, it won't clear the bit.
 
-So this would be the wrong location for this new vendor prefix and 
-should rather be between lsi and lunzn?
+Thanks,
 
-Cheers,
-Quentin
+Clément
+
+> 
+>> +}
+>> +
+>> +/**
+>> + * sbi_fwft_set_cpumask() - Set a feature for the specified cpumask
+>> + * @mask: CPU mask of cpus that need the feature to be set
+>> + * @feature: The feature ID to be set
+>> + * @value: The feature value to be set
+>> + * @flags: FWFT feature set flags
+>> + *
+>> + * Return: 0 on success, appropriate linux error code otherwise.
+>> + */
+>> +int sbi_fwft_set_cpumask(const cpumask_t *mask, u32 feature,
+>> +                   unsigned long value, unsigned long flags)
+>> +{
+>> +    struct fwft_set_req req = {
+>> +        .feature = feature,
+>> +        .value = value,
+>> +        .flags = flags,
+>> +        .error = ATOMIC_INIT(0),
+>> +    };
+>> +
+>> +    if (feature & SBI_FWFT_GLOBAL_FEATURE_BIT)
+>> +        return -EINVAL;
+>> +
+>> +    on_each_cpu_mask(mask, cpu_sbi_fwft_set, &req, 1);
+>> +
+>> +    return atomic_read(&req.error);
+>> +}
+>> +
+>>   /**
+>>    * sbi_set_timer() - Program the timer for next timer event.
+>>    * @stime_value: The value after which next timer event should fire.
+> 
+
