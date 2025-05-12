@@ -1,69 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58CC29553F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2732957B4
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053296; cv=none; b=vAs4cbxRfU6Muto1iJGf4vcdvcL367gwou6fRkNQPJL70HEv7ZTaM0/YNw9woHDaCpJvXP5vnMfkiPzPAiAtMLZzONYEGYY4xveJr6PSShV/Sc0bOr/D3mx+4Er86nR3R8TPoWx9syt5gicd47dpsE6NFFthbQZdaNJku8ydpDg=
+	t=1747053298; cv=none; b=ElQti4626uv+gEcqKI8ZSBTNZmDsarBcMlOFFKcZjxGWsM5AglrkyRTgUOlUvbb17a9Ec+9GTBBrw5FJ4bMUB779KxiftjhdAB1s97j0NmM5pXbP0QrK9oSVsZDosFWDXi46tEP4QaHXnOX8I5hrYaFJopeB6+vfeFxufztr3Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747053296; c=relaxed/simple;
-	bh=pVi4R8RYxTF7t8uftAo4cDXigtBNE8xhnByzL6xMI50=;
+	s=arc-20240116; t=1747053298; c=relaxed/simple;
+	bh=QxylKRP8NbNllb6QGFTI6Ghh7iVl6iJ+RfT2+Ev9jeg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VBxHEueuP+Z95KzlITh0681e/fKYKgpn9geMiQlxeoLyavbpf7OxTmtDh/7hkbzNn6tRa1TCcDXDzlFaa++JzhNXgu/7awJa3ou+7KqlgGQCDO9JAmaFVtLR7RHA4Tl6Uxhexmx4zZ6oQ/ic/O25bK9/xN6UfedWwdKiGZKoVK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HIAIGOwF; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=qWKezeOgzuUOfQayvqzXhMJfi7hl6nwObUDuTrWRlrYg0aDn77NwBCPvQmwTlyJ7VajfMs6HheDbMruqtOcy2gBBiPQ9W0p/nBNv/Ve/B56+SVqpM/Sl80ojrnzuSHIsNBEb91Xvr1M0l/gqKdc326JHXZChyA9rP8MsHKA6pYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a63nv1Fu; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HIAIGOwF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a63nv1Fu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747053293;
+	s=mimecast20190719; t=1747053295;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=B7NNc3thH4gIlgL655OdyQ8soQ2dq/lJKbobAXK9pSA=;
-	b=HIAIGOwFvhbMghFDXhi34b7OPjVHwcYPaopgZyqU8XU8LdKNPag0rBjlA01K8qiXD4Pns1
-	M1399LkYIgRVm0mVUiX4da9aDrH95HRMZWdAK7GsluWl+udhkXyDQyI1DBNhv0ziMSDQOH
-	42JZ/hNR/SxEzcHLh4zIV7BFWkYQr8g=
+	bh=bC3rmCqfA5icmQmv1eGXLPySmScZgaTKRTiPQFcrNeg=;
+	b=a63nv1FuCkXs01OmgcbN629Q0IYbB4JMcxtBVxFFbH2/S9MZpYuzq376uA0b7g8X1mgWCE
+	/0BLBuG/H0wFkPniTEujmMA+NyYPm4l5vpbANEdKIHHsCkUlOQK28jAeanIn8zHXkDi/C8
+	5uPofxAVsFkD9B4Rm3wKdlOdaj1QodE=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-440-RcXie036M5C55hm8t9UgGQ-1; Mon, 12 May 2025 08:34:52 -0400
-X-MC-Unique: RcXie036M5C55hm8t9UgGQ-1
-X-Mimecast-MFC-AGG-ID: RcXie036M5C55hm8t9UgGQ_1747053291
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442d472cf84so19760815e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:52 -0700 (PDT)
+ us-mta-235-79D5tFSuML2YIB2ITO2Nyg-1; Mon, 12 May 2025 08:34:54 -0400
+X-MC-Unique: 79D5tFSuML2YIB2ITO2Nyg-1
+X-Mimecast-MFC-AGG-ID: 79D5tFSuML2YIB2ITO2Nyg_1747053293
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so17071195e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747053291; x=1747658091;
+        d=1e100.net; s=20230601; t=1747053293; x=1747658093;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B7NNc3thH4gIlgL655OdyQ8soQ2dq/lJKbobAXK9pSA=;
-        b=YOyd/m1Nt7nNNeAY5hGjvSLb07GDde3wWhSp3T3GlOPTSENnAAuuJ0i9KjXXs6wdWO
-         s4DfY84tkOQFLTruEq0YqLBIC7lWJSx6z99O6+xSe8w3mvXRlnEAGsiNYqVlMI3Z5XiC
-         6VkWbpmBskKR4K3tB+U9VWkQ8QMfRlbi2fF7kfkmPE2b+GAXuUaEDk2Pno/T30cIAA1s
-         yGN/VTmNIo2o9nkYlr/yto9+SrLQbAaWfUS3MMkS6e8PH2bJ+vmFfUCkPfayMoffYppG
-         PsiPHHgI1Ydg9EJqSvtCKpIfpj6am0EjBBOct9qatZ/JF+3FaWz/UJQA1kZ1dIThUjfJ
-         P+6A==
-X-Gm-Message-State: AOJu0Yy286YncmUlyJsvzr4kCcgobuaJQJpXFCRuq7rF8aIO8G0izj8g
-	IT+8WS1UBQDnZeHgO/rTJT3ycqHeVtxz9JxC6pn1L8aYZ9wvqz7BamqglOUogrGs6eo2ODd2qJ0
-	xSSdKCbroFnQUsYu/CsHsH4QlLZ0pq/jlBRKV7NeH3sBg4czcSPfNjWOuSl5quWL12XDRX9cvHS
-	tbF+h7DO+33ltQ+50nb67nwG0pEUPwmY4k6rzTpT0ONN46
-X-Gm-Gg: ASbGncvvKBg9iHa0KBi0u4AkR6MNNG9YXVBtIJ3WoEsTEe4s+zh4q5o3t/Mgqofsq5q
-	JWmnFOdqk8XduPf8Rye+LsZIwDIiI3HJdwJGnIPXoEFgSENssBRWJ57ojJd5vJ/K58invUqw0wL
-	SH1pp5UFzzs4eKfkep1UbT4KccbisCg9P+UYHe2jCr7qqKDtsiE2YeDdS8UzwvH7504JHcel2OQ
-	QtuP3oyF5Lbe0zYCA4/4y7ga/0sWe3O8v55ctSzhK82uq7Mj2q/Yd4JxP4VDoVdXBWshggx6Q28
-	DeYNwEgpe5ihKYkZHKqomRIBHORC1ultdxyKSm8rppiPRn6wb4vIk8aEuRKdMpf/HBqZhR9C
-X-Received: by 2002:a05:600c:6488:b0:43c:fffc:786c with SMTP id 5b1f17b1804b1-442d6d6ace2mr126162235e9.19.1747053291275;
-        Mon, 12 May 2025 05:34:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5jxWWVElGWxNHl3crVYv65IUanKXS9MQimx+SU1bSVoqMYrPVegNxma7hfxGl7cXYCgZC+g==
-X-Received: by 2002:a05:600c:6488:b0:43c:fffc:786c with SMTP id 5b1f17b1804b1-442d6d6ace2mr126161635e9.19.1747053290770;
-        Mon, 12 May 2025 05:34:50 -0700 (PDT)
+        bh=bC3rmCqfA5icmQmv1eGXLPySmScZgaTKRTiPQFcrNeg=;
+        b=ZFWJtLE2HsARjbN/uaaEsoLPYFrkrLuNRcOpA5FrreSFX7htI/swioI4nVbX9oaHKV
+         KUItfqa3130kvjVaC49a+VJ/7lbPt3YpzW0cMTYNn8tAhqd6OY9Pj3sQxDb41CF4MOr0
+         yQ6Xvy8oXuzitow0Ax+GSbnFHlYGiB27+bkQmolTX88v49WDWMepsU7sZhk6FMqkoYAw
+         oas0upNc0BJ1iPrFaWiqKNx79h6bvPiS0jqE7ZSRSwAU15SouK0I24pDfwG8m54p3Mv7
+         yTHMUNCBqFTur/dwMUn8/wd27Sl26DSpqKofggAm7mKE/X96oJdE6Zy/ez5XrqYwrgq6
+         RkeQ==
+X-Gm-Message-State: AOJu0YyQIh+uzGkFSkXEsjHqCv7yTF9g4QKHwTxQqbAzH4fTyypVJhL3
+	6a5hkZAgvvcXniXud4iNJfLBJCC88QCKtgl9hfPNednC32bgQ0OR94ye2OWzE5C9dCAXgiFLWBv
+	Gc6UDKbHdJ/M8FEk3qKb4IxFqJcWr3G75noZ5BbEPhy5e3y/1OPZfMXNxCjmp6LW6hm1vxGAJPI
+	ysnmtbQiJegHz7scOhb2EfVrIG+kg+NypBgJcDlYoGAVnZ
+X-Gm-Gg: ASbGnctgAjM3s6zxEbgUTNZhbQDLTgQVrxPRYCTWlj65nnZXul8lgpmaBP4nZdlvlEr
+	qJyYWRnRzNKQ44UxKuhe4PbaYSQm+0Dy2B3r97fr9IdlGSOIo+YprTDkNAsFx2nNQPy/7qwsxob
+	a00rziFlPtrzGoBUaLDPE/uiWptEdlSGOVu300I/z9ajXzOEzUuFMiQtzPyiZhjOeSLyYKnHLlk
+	013uYC23sEk4MnHdxkLm/aKDE6f4w6x7XkLn2pH5nduowiPSnvl2J7EXpX5DlOjfc6uGtsJPYnh
+	OmkoUOrIEm4KCbyjE2lTFvem3G34gyGvgh7u9IH5s/k7vxtf5olm57yAvxU09ckHdP8RGDgX
+X-Received: by 2002:a05:600c:c0c3:10b0:439:8878:5029 with SMTP id 5b1f17b1804b1-442d6d71e58mr72192025e9.2.1747053293137;
+        Mon, 12 May 2025 05:34:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGmemaQ8osM6LIu2Hwsj+bFw5CfMQg914aObUDJRDyOqNqUwk6qAxyXq65jxeriv3mY00DEQ==
+X-Received: by 2002:a05:600c:c0c3:10b0:439:8878:5029 with SMTP id 5b1f17b1804b1-442d6d71e58mr72191505e9.2.1747053292674;
+        Mon, 12 May 2025 05:34:52 -0700 (PDT)
 Received: from localhost (p200300d82f4a5800f1ae8e20d7f451b0.dip0.t-ipconnect.de. [2003:d8:2f4a:5800:f1ae:8e20:d7f4:51b0])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd3aeb79sm167091005e9.27.2025.05.12.05.34.49
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442d67d74b5sm125447555e9.2.2025.05.12.05.34.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 05:34:50 -0700 (PDT)
+        Mon, 12 May 2025 05:34:52 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -96,9 +96,9 @@ Cc: linux-mm@kvack.org,
 	Pedro Falcato <pfalcato@suse.de>,
 	Peter Xu <peterx@redhat.com>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 10/11] drm/i915: track_pfn() -> "pfnmap tracking"
-Date: Mon, 12 May 2025 14:34:23 +0200
-Message-ID: <20250512123424.637989-11-david@redhat.com>
+Subject: [PATCH v2 11/11] mm/io-mapping: track_pfn() -> "pfnmap tracking"
+Date: Mon, 12 May 2025 14:34:24 +0200
+Message-ID: <20250512123424.637989-12-david@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512123424.637989-1-david@redhat.com>
 References: <20250512123424.637989-1-david@redhat.com>
@@ -117,31 +117,22 @@ Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/gpu/drm/i915/i915_mm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/io-mapping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_mm.c b/drivers/gpu/drm/i915/i915_mm.c
-index 76e2801619f09..c33bd3d830699 100644
---- a/drivers/gpu/drm/i915/i915_mm.c
-+++ b/drivers/gpu/drm/i915/i915_mm.c
-@@ -100,7 +100,7 @@ int remap_io_mapping(struct vm_area_struct *vma,
- 
- 	GEM_BUG_ON((vma->vm_flags & EXPECTED_FLAGS) != EXPECTED_FLAGS);
- 
--	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
-+	/* We rely on prevalidation of the io-mapping to skip pfnmap tracking. */
- 	r.mm = vma->vm_mm;
- 	r.pfn = pfn;
- 	r.prot = __pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
-@@ -140,7 +140,7 @@ int remap_io_sg(struct vm_area_struct *vma,
- 	};
- 	int err;
+diff --git a/mm/io-mapping.c b/mm/io-mapping.c
+index f44a6a1347123..d3586e95c12c5 100644
+--- a/mm/io-mapping.c
++++ b/mm/io-mapping.c
+@@ -24,7 +24,7 @@ int io_mapping_map_user(struct io_mapping *iomap, struct vm_area_struct *vma,
+ 	pgprot_t remap_prot = __pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
+ 				       (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK));
  
 -	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
 +	/* We rely on prevalidation of the io-mapping to skip pfnmap tracking. */
- 	GEM_BUG_ON((vma->vm_flags & EXPECTED_FLAGS) != EXPECTED_FLAGS);
- 
- 	while (offset >= r.sgt.max >> PAGE_SHIFT) {
+ 	return remap_pfn_range_notrack(vma, addr, pfn, size, remap_prot);
+ }
+ EXPORT_SYMBOL_GPL(io_mapping_map_user);
 -- 
 2.49.0
 
