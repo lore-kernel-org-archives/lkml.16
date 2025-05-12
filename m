@@ -1,65 +1,137 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A29C296D2D
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF75C296D23;
+	Mon, 12 May 2025 17:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747070980; cv=none; b=Kb/mivOGdTBBRGuhe8fHl5+Ew5sB2xMUy/YTH809bwVPLSS+azDiCsDgh9MISNS+m11FStn7YAnOxD2is+UFhiYj9wGFik4BNxNB0yWBJzXB4l8r6UpxC8990WVBAtdI5rGNDCwag0p/VkFPmPbz9COOiuCeeBZwKopl0ioTYec=
+	t=1747070999; cv=none; b=QhqLKDjw8nY4TnWUyWx+Cp48B9S1OIzS6Ngn2IwPebmsUF3motMOni7VM/425YIFetGgrrCuTmZz5zJQmVRtX64nzu9Y5AtTVDttVgY7VqCSEKNugCzUIqryz4B+xcAlMdyYcqtw1ioVzlQxo2RAMx79RgekdkB6spLCczOGsmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747070980; c=relaxed/simple;
-	bh=FmkWTTqowPBRt4Tt9JwzPDGpASwEBtN70+Plymxc0bo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ue0t9D7AnpwfNuvn1cL6y8e9JHhAh36wdWCj5AIyGzqI/YED6ypGzddSgoZcO9QWaS833A/9Cy2h+ZrZ1aAlToyQgoQZx3GolcIFb6K8IUl5gZftbUmqBzSMXDhHjYY/MXaSIQLWZsL/Zf+0uejYyKOLWvw6X3WhoDDYCN0GNeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 1770B92009C; Mon, 12 May 2025 19:29:36 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 1165B92009B;
-	Mon, 12 May 2025 18:29:36 +0100 (BST)
-Date: Mon, 12 May 2025 18:29:35 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Borislav Petkov <bp@alien8.de>
-cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, 
-    linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>, 
-    Andrew Cooper <andrew.cooper3@citrix.com>, 
-    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    John Ogness <john.ogness@linutronix.de>, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
- CPUs
-In-Reply-To: <20250512134853.GGaCH8RUjJwgHq25qx@fat_crate.local>
-Message-ID: <alpine.DEB.2.21.2505121810040.46553@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk> <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com> <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
- <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk> <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local> <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk> <8C172B63-38E1-427B-8511-25ECE5B9E780@alien8.de> <alpine.DEB.2.21.2505121225000.46553@angie.orcam.me.uk>
- <20250512134853.GGaCH8RUjJwgHq25qx@fat_crate.local>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1747070999; c=relaxed/simple;
+	bh=ohP3qwU/g292m6VUOxkkeEfG4yKASr7Uz6QM0jrslJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtxvCG127PIrhEnx03aPrZ8SRuqy2m8ESlk96VzmD05vyfIDkq56B/MNxxXZrNDVEvBSz9vV7XPATC8ciytvFk0SkH4cQayDV753jhN9TNeglnnovG8zy6j48IQYaiVjkNY/OYnRTNRba7R1wyExvuQ3opob4XEc6rLLvyQqm7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCCPTbi7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCCPTbi7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFB6C4CEE7;
+	Mon, 12 May 2025 17:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747070999;
+	bh=ohP3qwU/g292m6VUOxkkeEfG4yKASr7Uz6QM0jrslJg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RCCPTbi7SjeUkqsta7xtU0G8ZJkwCEaeIhgmNOGdlIBXZTqqKIGTUahgIx8fY/T2+
+	 8W/EJzP0D+7cA+QqLG9BSmlnb/Mp4/8OQADhfnY1vg3kQCUiC23CdDl8ZBPC35i/OE
+	 whsVWKEpMii9g7p4cZ7xhUOC1MzOvwD3RS2cQADZIQAyRk1CzUAEiBbbNwsicjZZjV
+	 sKuqnKFB6sLK9+KqU9wECDoDraj2HHWFuEli+e2rDP/AEZy5+m+Jvhw6FadWPNWWbe
+	 4kbxza4L8O1gnhgBdL+cSs8TGhMcCoxsK2iQ4eR1wgHL2yhSINlX8f0ihGuVallwol
+	 toQ1zqJOvaa0Q==
+Date: Mon, 12 May 2025 12:29:57 -0500
+From: Rob Herring <robh@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 3/9] rust: device: Move property_present() to FwNode
+Message-ID: <20250512172957.GB3463681-robh@kernel.org>
+References: <20250504173154.488519-1-remo@buenzli.dev>
+ <20250504173154.488519-4-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250504173154.488519-4-remo@buenzli.dev>
 
-On Mon, 12 May 2025, Borislav Petkov wrote:
-
-> >  Would kernel.org git infrastructure be available for such a project?
+On Sun, May 04, 2025 at 07:31:48PM +0200, Remo Senekowitsch wrote:
+> The new FwNode abstraction will be used for accessing all device
+> properties, so it must have the property_present method.
 > 
-> as in hosting your repo there?
+> It's possible to duplicate the methods on the device itself, but since
+> some of the methods on Device would have different type sigatures as the
+> ones on FwNode, this would only lead to inconsistency and confusion.
+> Hence, remove the method from Device.
 > 
-> I don't see why not:
+> There aren't any users to update yet.
+
+But there is one going into 6.16 most likely with the cpufreq stuff[1] 
+which complicates merging.
+
+Rob
+
+[1] https://lore.kernel.org/all/f7e96b7da77ac217be5ccb09b9309da28fd96c90.1745218976.git.viresh.kumar@linaro.org/
+
 > 
-> https://korg.docs.kernel.org/accounts.html
-
- Thank you.  It seems it'll be tough for me though to fulfil the GPG key 
-trustability requirement.  While I've used PGP/GPG since 1995, I haven't 
-been active collecting signatures with my more recent keys/IDs and neither 
-I have appeared in public among Linux kernel developers often enough for 
-me to be identified by face over a video call.  Oh well...
-
-  Maciej
+> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> ---
+>  rust/kernel/device/mod.rs      | 7 -------
+>  rust/kernel/device/property.rs | 8 +++++++-
+>  2 files changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/rust/kernel/device/mod.rs b/rust/kernel/device/mod.rs
+> index b4b7056eb80f8..15d89cd45e871 100644
+> --- a/rust/kernel/device/mod.rs
+> +++ b/rust/kernel/device/mod.rs
+> @@ -6,7 +6,6 @@
+>  
+>  use crate::{
+>      bindings,
+> -    str::CStr,
+>      types::{ARef, Opaque},
+>  };
+>  use core::{fmt, marker::PhantomData, ptr};
+> @@ -200,12 +199,6 @@ pub fn fwnode(&self) -> Option<&property::FwNode> {
+>          // defined as a `#[repr(transparent)]` wrapper around `fwnode_handle`.
+>          Some(unsafe { &*fwnode_handle.cast() })
+>      }
+> -
+> -    /// Checks if property is present or not.
+> -    pub fn property_present(&self, name: &CStr) -> bool {
+> -        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
+> -        unsafe { bindings::device_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
+> -    }
+>  }
+>  
+>  // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
+> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+> index e75d55f5856cf..70593343bd811 100644
+> --- a/rust/kernel/device/property.rs
+> +++ b/rust/kernel/device/property.rs
+> @@ -6,7 +6,7 @@
+>  
+>  use core::ptr;
+>  
+> -use crate::{bindings, types::Opaque};
+> +use crate::{bindings, str::CStr, types::Opaque};
+>  
+>  /// A reference-counted fwnode_handle.
+>  ///
+> @@ -31,6 +31,12 @@ impl FwNode {
+>      pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
+>          self.0.get()
+>      }
+> +
+> +    /// Checks if property is present or not.
+> +    pub fn property_present(&self, name: &CStr) -> bool {
+> +        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
+> +        unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
+> +    }
+>  }
+>  
+>  // SAFETY: Instances of `FwNode` are always reference-counted.
+> -- 
+> 2.49.0
+> 
