@@ -1,67 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F315475E;
-	Mon, 12 May 2025 21:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3305475E;
+	Mon, 12 May 2025 21:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747085239; cv=none; b=XM9hsDoQRuIR476tasIasJUzFjZY/nBrSgjCNGWC+Jz1xbxjnbn9hpVY41+ZFuk5hotCuhEbcFWGMzik+z8r51de2fl/J16i/C6ufrSzT4Neb+Kr/E+fejrRHnqg9vWUojFhzsN4ceZdRVpLzFybMEFxoU18EsvkeaEcSdiJ2/8=
+	t=1747085316; cv=none; b=prZBkDyxcIrMp6kSDMtQmx7tGZk4t6hQRqLDj5CZbZQO385s+mLxfa4vmBzHwkoSWk6GWPsNKI9kLwMw3s+OzQu1douncIrUVa2lrE7zieoV4TVhYr3/1sB68jEpQ43zltBMwA0UMCtPnYXwvsPheGEfUD/nWZCRLYEq9lE9TnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747085239; c=relaxed/simple;
-	bh=MjwoJwDMlLUQ0bo4JY/L1ooY69zgG23YhBSme2DpFUM=;
+	s=arc-20240116; t=1747085316; c=relaxed/simple;
+	bh=tWxwEuhtSFJyCtZQ2QKs3oiKC16cbq70BmCdogS+GAc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/JCwhkJe2RMwdPWMq5tzR5vPBqGlDirQyyulWfpuQTMGy9I0kmbjDAcfIxJffW6Jd1PCtno8S92Jd0k6ynfZ0cY7KJ87OFwyGTavrX3bwYxexA7rHF01jz1oan9m4cng898R/DE00DmebQaCEJ24Szg6cQkjja2kJhuw+jhWAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fDBnXMvb; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZYC5PcBREnwQHHaySkc8pQjKZncplJHeoc4/OGB1mHQ9H/TwxXpEefSGELDlqwrY0VeAdWHBJv/s3UTxn+TzzmVnIk7XLa2EeGjM0gLsvJJRL2tiUIVBPmm6Egq7bhnF1/G7GgXq8ckG/i1m6Q5f3oqgtrjeKUWW2j3cW/AM9bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=vOSg6E9h; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fDBnXMvb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747085237; x=1778621237;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MjwoJwDMlLUQ0bo4JY/L1ooY69zgG23YhBSme2DpFUM=;
-  b=fDBnXMvbV35fPDnGVtA/SX5x8gSy/QPkDn1ez1giUjShLx2JFATskEKX
-   j8ufvfpvU6VDWWQIC3FSf8VcZtwOfK7VaC81SQaGYTiH9aPznq5vML2+U
-   N2qCpa/LY9TLF7CwriDn7kWR5ylcoFhh7kZP3oHBoTwRouhTtE4FKvx9K
-   y94AFtAOSu/vNpqBzLSWApnqwuXn92//zGJPE/StEr7XDwYbAOKAKSYp6
-   WEV+CjD4uBYfGrmLCfMw1Z6oMxpWZF0W7EUYMf2PSZ9rxGa3FOENPHQkd
-   TQYBv/iZcGlkMW+aZRA5XCeHKVIAxatm2XXrVgyouenDxriCSaKCbK41v
-   A==;
-X-CSE-ConnectionGUID: 66BwpoSfQZueXlXv1gPVqA==
-X-CSE-MsgGUID: DXH4lvgERgaEnXimNsEnwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="51555313"
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="51555313"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 14:27:16 -0700
-X-CSE-ConnectionGUID: EFmkp3ZhSKOT4e5wVN8G5g==
-X-CSE-MsgGUID: m8H7JVlgRC2iGeHO15JLtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="174636997"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 12 May 2025 14:27:13 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uEag2-000FR9-30;
-	Mon, 12 May 2025 21:27:10 +0000
-Date: Tue, 13 May 2025 05:26:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v6 2/2] thermal: Add support for Airoha EN7581 thermal
- sensor
-Message-ID: <202505130415.DDziIQRY-lkp@intel.com>
-References: <20250510172509.2547273-2-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vOSg6E9h"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=AfQpXa3tBlUEYjokNIxHFziqeEJgVAZbUffZzLdfAGE=; b=vOSg6E9hchsbTwy4bBgAN2i9am
+	RY+v8KoYMRNADVKOAGMzuZ9rejgNNyeCrYc99dHyX0+xDAWrGAY73O0jlz6QfxLektakpmcsKsE+3
+	Km3Jdlx7BihLma0y1eCeL4Wyh8fgYvm5LfGSnJ4k24DM4zi/x7O02cxiMYFh9I4mEe3k=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uEahF-00CNqq-On; Mon, 12 May 2025 23:28:25 +0200
+Date: Mon, 12 May 2025 23:28:25 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Imre Kaloz <kaloz@openwrt.org>
+Subject: Re: [PATCH 1/7] pinctrl: armada-37xx: use correct OUTPUT_VAL
+ register for GPIOs > 31
+Message-ID: <d5fa1e79-8204-464c-b12d-de8e59411146@lunn.ch>
+References: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
+ <20250512-pinctrl-a37xx-fixes-v1-1-d470fb1116a5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,68 +50,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250510172509.2547273-2-ansuelsmth@gmail.com>
+In-Reply-To: <20250512-pinctrl-a37xx-fixes-v1-1-d470fb1116a5@gmail.com>
 
-Hi Christian,
+On Mon, May 12, 2025 at 04:22:37PM +0200, Gabor Juhos wrote:
+> The controller has two consecutive OUTPUT_VAL registers and both
+> holds output value for 32 GPIOs. Due to a missing adjustment, the
+> current code always uses the first register while setting the
+> output value whereas it should use the second one for GPIOs > 31.
+> 
+> Add the missing armada_37xx_update_reg() call to adjust the register
+> according to the 'offset' parameter of the function to fix the issue.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 6702abb3bf23 ("pinctrl: armada-37xx: Fix direction_output() callback behavior")
+> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+> Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-[auto build test WARNING on rafael-pm/thermal]
-[also build test WARNING on linus/master v6.15-rc6 next-20250512]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/thermal-Add-support-for-Airoha-EN7581-thermal-sensor/20250511-012647
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal
-patch link:    https://lore.kernel.org/r/20250510172509.2547273-2-ansuelsmth%40gmail.com
-patch subject: [PATCH v6 2/2] thermal: Add support for Airoha EN7581 thermal sensor
-config: alpha-randconfig-r111-20250512 (https://download.01.org/0day-ci/archive/20250513/202505130415.DDziIQRY-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 12.4.0
-reproduce: (https://download.01.org/0day-ci/archive/20250513/202505130415.DDziIQRY-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505130415.DDziIQRY-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/thermal/airoha_thermal.c:317:9: sparse: sparse: statement expected after case label
-
-vim +317 drivers/thermal/airoha_thermal.c
-
-   297	
-   298	static irqreturn_t airoha_thermal_irq(int irq, void *data)
-   299	{
-   300		struct airoha_thermal_priv *priv = data;
-   301		enum thermal_notify_event event;
-   302		bool update = false;
-   303		u32 status;
-   304	
-   305		status = readl(priv->base + EN7581_TEMPMONINTSTS);
-   306		switch (status & (EN7581_HOFSINTSTS0 | EN7581_LOFSINTSTS0)) {
-   307		case EN7581_HOFSINTSTS0:
-   308			event = THERMAL_TRIP_VIOLATED;
-   309			update = true;
-   310			break;
-   311		case EN7581_LOFSINTSTS0:
-   312			event = THERMAL_EVENT_UNSPECIFIED;
-   313			update = true;
-   314			break;
-   315		/* Should be impossible as we enable only these interrupt */
-   316		default:
- > 317		}
-   318	
-   319		/* reset interrupt */
-   320		writel(status, priv->base + EN7581_TEMPMONINTSTS);
-   321	
-   322		if (update)
-   323			thermal_zone_device_update(priv->tz, event);
-   324	
-   325		return IRQ_HANDLED;
-   326	}
-   327	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+    Andrew
