@@ -1,48 +1,44 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8453C2550B4
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 06:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B37255F4D;
+	Mon, 12 May 2025 06:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747032266; cv=none; b=sTt3oYm5QJIVET4BwPgkU4mjia0n1p2unMNhiMY3N7Qcn2fKgnQQ+Oysj8D76z5biOaylvdxOHSrtfDkXtSO7XIOTfJzZOgoEoLF3mZ8uOnhh0w/5SKI0Z6OmMZSUZVtBvNvXsKUEhBbESFvzCKdS4SBzoim50bUyK4TmcizB1s=
+	t=1747032293; cv=none; b=shOEwBIjho7pHq5VEln+LuxXdKhtOBP78dGKm6R2FUREfR7tG2InCe8CXxXx0N2iG5Ygjy3W6tF0T/nXTMIdPKTAcz3gkstTMGBfMxF4TnmGKWoRIVvcj2MMWJZL2clEOMpD8wXp7H6CiYTIhP9CJ4FQ6M2EemPM4bN0mtkxR9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747032266; c=relaxed/simple;
-	bh=TOlDLnyxf9L2S02cRqAbkAVnP5T6+RozN6zFpGxKiPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q0lzGXnrLIi1NNRwBVRT93cWmOOOCUmwNZzJe1FM7Y/JYS52I/OEfgMj1kNsBdkV/RsW84nhn6gKMB6WAbs599i55nYQLi5iJ/JMldQ+HqBMuEPtQthnvMwOUkv3/i0g6PAl5KwWei0JtNblDisArhpl35JqVkoYFrnHO3yF3P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=SBqZnvSh; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SBqZnvSh"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54C6hsAw1535999
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 11 May 2025 23:43:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54C6hsAw1535999
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747032239;
-	bh=t7smHFhPZ2uf/GM0m8OocHrVY4Vvhn9Iy2JjGqsjIAE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SBqZnvShp4Mjqc0kGAdIbuTy9HfModC4TZAusPwVU66HFddQRJ85qEs0oyVHIsBJw
-	 iEKAsG2Rv9xl+9XlN8b/4digNl6xrsjNOf4jSZMtlz8EqOBvZVpGzSqtR9TyZMWdtw
-	 7UVEAuHTtSuzwPJZUHxjMSoBEETogfjEpHG0+/wlo2oeT6l/kj/SRD50hJIAuQBsPN
-	 q/14REikTHKTOhKxNo1jIDeXlfp9mc+bSA/3v0GWkNF7TthM4pP0R56OzvrsKGTl45
-	 pfBrkSUZBr7Ey6gm9QCRcsu/xx9rLZe26inlwqEjdXyFKrJ5tDWnQTNsg1vEfavlaU
-	 24ZxVFuuKKIeg==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org
-Cc: luto@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, brgerst@gmail.com
-Subject: [PATCH v4 1/2] x86/fred: Allow variable-sized event frame
-Date: Sun, 11 May 2025 23:43:52 -0700
-Message-ID: <20250512064353.1535984-2-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512064353.1535984-1-xin@zytor.com>
-References: <20250512064353.1535984-1-xin@zytor.com>
+	s=arc-20240116; t=1747032293; c=relaxed/simple;
+	bh=agzEP0Ii7gePZc/4QD422gAOStTFGlzcW5tFpG1BuGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZebYdgDywfSA8f63KSYEu4oQyCiw7qeZFHZyBssOG3l87zzGgKBPlVA28Yy0zdjm+5opB5rv/mvFcFP9WDwIcp50jjBLTybKzY17JwRyZF+VwMbGZD/jEg2b5dfwPbLtF3cwFROjyQl3j/QNRuID29SZiKw6mhASdgBB+oHUp60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4Zwqpn5L16zKHMm6;
+	Mon, 12 May 2025 14:44:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6A1331A1021;
+	Mon, 12 May 2025 14:44:48 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgDHK2DXmCFoxF6sMA--.62010S4;
+	Mon, 12 May 2025 14:44:46 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	libaokun1@huawei.com,
+	yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2 0/8] ext4: enable large folio for regular files
+Date: Mon, 12 May 2025 14:33:11 +0800
+Message-ID: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,190 +46,146 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHK2DXmCFoxF6sMA--.62010S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF4xuF48ZrWfXF1xCr18AFb_yoW7Cr4rpF
+	1akr4fKr4S9rW5C39rCr1YvF4Yka18Gr48Za4ft3y0vryUZF18urs2gF40k347Ary7Cryr
+	trWUJryUW3WYkrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUoWlkDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-A FRED event frame could contain different amount of information for
-different event types, or perhaps even for different instances of the
-same event type. Thus the size of an event frame pushed by a FRED CPU
-is not fixed and the address of the pt_regs structure that is used to
-save a user level context of current task is not at a fixed offset
-from top of current task kernel stack.
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Add a new field named 'user_pt_regs' in the thread_info structure to
-save the address of user level context pt_regs structure, thus to
-eliminate the need of any advance information of event frame size
-and allow a FRED CPU to push variable-sized event frame.
+Changes since v1:
+ - Rebase codes on 6.15-rc6.
+ - Drop the modifications in block_read_full_folio() which has supported
+   by commit b72e591f74de ("fs/buffer: remove batching from async
+   read").
+ - Fine-tuning patch 6 without modifying the logic.
 
-For IDT user level event delivery, a pt_regs structure is pushed by
-hardware and software _always_ at a fixed offset from top of current
-task kernel stack, so simply initialize user_pt_regs to point to the
-pt_regs structure no matter whether one is pushed or not.
+v1: https://lore.kernel.org/linux-ext4/20241125114419.903270-1-yi.zhang@huaweicloud.com/
 
-While for FRED user level event delivery, user_pt_regs is updated with
-a pt_regs structure pointer generated in asm_fred_entrypoint_user().
+Original Description:
 
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
+Since almost all of the code paths in ext4 have already been converted
+to use folios, there isn't much additional work required to support
+large folios. This series completes the remaining work and enables large
+folios for regular files on ext4, with the exception of fsverity,
+fscrypt, and data=journal mode.
 
-Change in v3A:
-* Add declaration for __top_init_kernel_stack[] (Intel lkp).
+Unlike my other series[1], which enables large folios by converting the
+buffered I/O path from the classic buffer_head to iomap, this solution
+is based on the original buffer_head, it primarily modifies the block
+offset and length calculations within a single folio in the buffer
+write, buffer read, zero range, writeback, and move extents paths to
+support large folios, doesn't do further code refactoring and
+optimization.
 
-Change in v3:
-* Replace "(struct pt_regs *)TOP_OF_INIT_STACK - 1" with
-  (struct pt_regs *)__top_init_kernel_stack (Brian Gerst).
----
- arch/x86/entry/entry_fred.c        | 10 ++++++++++
- arch/x86/include/asm/processor.h   | 12 ++++++------
- arch/x86/include/asm/thread_info.h | 11 ++++++++---
- arch/x86/kernel/process.c          | 22 ++++++++++++++++++++++
- include/linux/thread_info.h        |  1 +
- kernel/fork.c                      |  6 ++++++
- 6 files changed, 53 insertions(+), 9 deletions(-)
+This series have passed kvm-xfstests in auto mode several times, every
+thing looks fine, any comments are welcome.
 
-diff --git a/arch/x86/entry/entry_fred.c b/arch/x86/entry/entry_fred.c
-index f004a4dc74c2..a5f5bdd16ad8 100644
---- a/arch/x86/entry/entry_fred.c
-+++ b/arch/x86/entry/entry_fred.c
-@@ -228,6 +228,16 @@ __visible noinstr void fred_entry_from_user(struct pt_regs *regs)
- 	/* Invalidate orig_ax so that syscall_get_nr() works correctly */
- 	regs->orig_ax = -1;
- 
-+	/*
-+	 * A FRED event frame could contain different amount of information
-+	 * for different event types, or perhaps even for different instances
-+	 * of the same event type. Thus the size of an event frame pushed by
-+	 * a FRED CPU is not fixed and the address of the pt_regs structure
-+	 * that is used to save a user level context of current task is not
-+	 * at a fixed offset from top of current task stack.
-+	 */
-+	current->thread_info.user_pt_regs = regs;
-+
- 	switch (regs->fred_ss.type) {
- 	case EVENT_TYPE_EXTINT:
- 		return fred_extint(regs);
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 50d34698036d..42e5a6a41403 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -645,12 +645,12 @@ static __always_inline void prefetchw(const void *x)
- 
- #define task_top_of_stack(task) ((unsigned long)(task_pt_regs(task) + 1))
- 
--#define task_pt_regs(task) \
--({									\
--	unsigned long __ptr = (unsigned long)task_stack_page(task);	\
--	__ptr += THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;		\
--	((struct pt_regs *)__ptr) - 1;					\
--})
-+/*
-+ * Note, this can't be converted to an inline function as this header
-+ * file defines 'struct thread_struct' which is used in the task_struct
-+ * structure definition.
-+ */
-+#define task_pt_regs(task) ((task)->thread_info.user_pt_regs)
- 
- #ifdef CONFIG_X86_32
- #define INIT_THREAD  {							  \
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index 9282465eea21..07c6a6a92c65 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -56,6 +56,7 @@
-  */
- #ifndef __ASSEMBLER__
- struct task_struct;
-+struct pt_regs;
- #include <asm/cpufeature.h>
- #include <linux/atomic.h>
- 
-@@ -66,11 +67,15 @@ struct thread_info {
- #ifdef CONFIG_SMP
- 	u32			cpu;		/* current CPU */
- #endif
-+	struct pt_regs		*user_pt_regs;
- };
- 
--#define INIT_THREAD_INFO(tsk)			\
--{						\
--	.flags		= 0,			\
-+extern unsigned long __top_init_kernel_stack[];
-+
-+#define INIT_THREAD_INFO(tsk)						\
-+{									\
-+	.flags		= 0,						\
-+	.user_pt_regs	= (struct pt_regs *)__top_init_kernel_stack,	\
- }
- 
- #else /* !__ASSEMBLER__ */
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 4b668bc683c4..9823880ceaa0 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -104,6 +104,28 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
- 	return 0;
- }
- 
-+/*
-+ * Initialize thread_info.user_pt_regs for IDT event delivery.
-+ *
-+ * For IDT user level event delivery, a pt_regs structure is pushed by both
-+ * hardware and software and always resides at a fixed offset from top of
-+ * current task kernel stack, thus thread_info.user_pt_regs is a per-task
-+ * constant and NEVER changes after initialization.
-+ *
-+ * While for FRED user level event delivery, user_pt_regs is updated in
-+ * fred_entry_from_user() immediately after user level event delivery.
-+ *
-+ * Note: thread_info.user_pt_regs of the init task is initialized at build
-+ * time.
-+ */
-+void arch_init_user_pt_regs(struct task_struct *tsk)
-+{
-+	unsigned long top_of_stack = (unsigned long)task_stack_page(tsk) + THREAD_SIZE;
-+
-+	top_of_stack -= TOP_OF_KERNEL_STACK_PADDING;
-+	tsk->thread_info.user_pt_regs = (struct pt_regs *)top_of_stack - 1;
-+}
-+
- #ifdef CONFIG_X86_64
- void arch_release_task_struct(struct task_struct *tsk)
- {
-diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
-index dd925d84fa46..f95d38ed04d7 100644
---- a/include/linux/thread_info.h
-+++ b/include/linux/thread_info.h
-@@ -225,6 +225,7 @@ void arch_task_cache_init(void); /* for CONFIG_SH */
- void arch_release_task_struct(struct task_struct *tsk);
- int arch_dup_task_struct(struct task_struct *dst,
- 				struct task_struct *src);
-+void arch_init_user_pt_regs(struct task_struct *tsk);
- 
- #endif	/* __KERNEL__ */
- 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 1f5d8083eeb2..5b806e74f766 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1110,6 +1110,10 @@ int __weak arch_dup_task_struct(struct task_struct *dst,
- 	return 0;
- }
- 
-+void __weak arch_init_user_pt_regs(struct task_struct *tsk)
-+{
-+}
-+
- void set_task_stack_end_magic(struct task_struct *tsk)
- {
- 	unsigned long *stackend;
-@@ -1137,6 +1141,8 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
- 	if (err)
- 		goto free_tsk;
- 
-+	arch_init_user_pt_regs(tsk);
-+
- #ifdef CONFIG_THREAD_INFO_IN_TASK
- 	refcount_set(&tsk->stack_refcount, 1);
- #endif
+About performance:
+
+I used the same test script from my iomap series (need to drop the mount
+opts parameter MOUNT_OPT) [2], run fio tests on the same machine with
+Intel Xeon Gold 6240 CPU with 400GB system ram, 200GB ramdisk and 4TB
+nvme ssd disk. Both compared with the base and the IOMAP + large folio
+changes.
+
+ == buffer read ==
+
+                base          iomap+large folio base+large folio
+ type     bs    IOPS  BW(M/s) IOPS  BW(M/s)     IOPS   BW(M/s)
+ ----------------------------------------------------------------
+ hole     4K  | 576k  2253  | 762k  2975(+32%) | 747k  2918(+29%)
+ hole     64K | 48.7k 3043  | 77.8k 4860(+60%) | 76.3k 4767(+57%)
+ hole     1M  | 2960  2960  | 4942  4942(+67%) | 4737  4738(+60%)
+ ramdisk  4K  | 443k  1732  | 530k  2069(+19%) | 494k  1930(+11%)
+ ramdisk  64K | 34.5k 2156  | 45.6k 2850(+32%) | 41.3k 2584(+20%)
+ ramdisk  1M  | 2093  2093  | 2841  2841(+36%) | 2585  2586(+24%)
+ nvme     4K  | 339k  1323  | 364k  1425(+8%)  | 344k  1341(+1%)
+ nvme     64K | 23.6k 1471  | 25.2k 1574(+7%)  | 25.4k 1586(+8%)
+ nvme     1M  | 2012  2012  | 2153  2153(+7%)  | 2122  2122(+5%)
+
+
+ == buffer write ==
+
+ O: Overwrite; S: Sync; W: Writeback
+
+                     base         iomap+large folio    base+large folio
+ type    O S W bs    IOPS  BW     IOPS  BW(M/s)        IOPS  BW(M/s)
+ ----------------------------------------------------------------------
+ cache   N N N 4K  | 417k  1631 | 440k  1719 (+5%)   | 423k  1655 (+2%)
+ cache   N N N 64K | 33.4k 2088 | 81.5k 5092 (+144%) | 59.1k 3690 (+77%)
+ cache   N N N 1M  | 2143  2143 | 5716  5716 (+167%) | 3901  3901 (+82%)
+ cache   Y N N 4K  | 449k  1755 | 469k  1834 (+5%)   | 452k  1767 (+1%)
+ cache   Y N N 64K | 36.6k 2290 | 82.3k 5142 (+125%) | 67.2k 4200 (+83%)
+ cache   Y N N 1M  | 2352  2352 | 5577  5577 (+137%  | 4275  4276 (+82%)
+ ramdisk N N Y 4K  | 365k  1424 | 354k  1384 (-3%)   | 372k  1449 (+2%)
+ ramdisk N N Y 64K | 31.2k 1950 | 74.2k 4640 (+138%) | 56.4k 3528 (+81%)
+ ramdisk N N Y 1M  | 1968  1968 | 5201  5201 (+164%) | 3814  3814 (+94%)
+ ramdisk N Y N 4K  | 9984  39   | 12.9k 51   (+29%)  | 9871  39   (-1%)
+ ramdisk N Y N 64K | 5936  371  | 8960  560  (+51%)  | 6320  395  (+6%)
+ ramdisk N Y N 1M  | 1050  1050 | 1835  1835 (+75%)  | 1656  1657 (+58%)
+ ramdisk Y N Y 4K  | 411k  1609 | 443k  1731 (+8%)   | 441k  1723 (+7%)
+ ramdisk Y N Y 64K | 34.1k 2134 | 77.5k 4844 (+127%) | 66.4k 4151 (+95%)
+ ramdisk Y N Y 1M  | 2248  2248 | 5372  5372 (+139%) | 4209  4210 (+87%)
+ ramdisk Y Y N 4K  | 182k  711  | 186k  730  (+3%)   | 182k  711  (0%)
+ ramdisk Y Y N 64K | 18.7k 1170 | 34.7k 2171 (+86%)  | 31.5k 1969 (+68%)
+ ramdisk Y Y N 1M  | 1229  1229 | 2269  2269 (+85%)  | 1943  1944 (+58%)
+ nvme    N N Y 4K  | 373k  1458 | 387k  1512 (+4%)   | 399k  1559 (+7%)
+ nvme    N N Y 64K | 29.2k 1827 | 70.9k 4431 (+143%) | 54.3k 3390 (+86%)
+ nvme    N N Y 1M  | 1835  1835 | 4919  4919 (+168%) | 3658  3658 (+99%)
+ nvme    N Y N 4K  | 11.7k 46   | 11.7k 46   (0%)    | 11.5k 45   (-1%)
+ nvme    N Y N 64K | 6453  403  | 8661  541  (+34%)  | 7520  470  (+17%)
+ nvme    N Y N 1M  | 649   649  | 1351  1351 (+108%) | 885   886  (+37%)
+ nvme    Y N Y 4K  | 372k  1456 | 433k  1693 (+16%)  | 419k  1637 (+12%)
+ nvme    Y N Y 64K | 33.0k 2064 | 74.7k 4669 (+126%) | 64.1k 4010 (+94%)
+ nvme    Y N Y 1M  | 2131  2131 | 5273  5273 (+147%) | 4259  4260 (+100%)
+ nvme    Y Y N 4K  | 56.7k 222  | 56.4k 220  (-1%)   | 59.4k 232  (+5%)
+ nvme    Y Y N 64K | 13.4k 840  | 19.4k 1214 (+45%)  | 18.5k 1156 (+38%)
+ nvme    Y Y N 1M  | 714   714  | 1504  1504 (+111%) | 1319  1320 (+85%)
+
+[1] https://lore.kernel.org/linux-ext4/20241022111059.2566137-1-yi.zhang@huaweicloud.com/
+[2] https://lore.kernel.org/linux-ext4/3c01efe6-007a-4422-ad79-0bad3af281b1@huaweicloud.com/
+
+Thanks,
+Yi.
+
+Zhang Yi (8):
+  ext4: make ext4_mpage_readpages() support large folios
+  ext4: make regular file's buffered write path support large folios
+  ext4: make __ext4_block_zero_page_range() support large folio
+  ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large
+    folio
+  ext4: correct the journal credits calculations of allocating blocks
+  ext4: make the writeback path support large folios
+  ext4: make online defragmentation support large folios
+  ext4: enable large folio for regular file
+
+ fs/ext4/ext4.h        |  1 +
+ fs/ext4/ext4_jbd2.c   |  3 +-
+ fs/ext4/ext4_jbd2.h   |  4 +--
+ fs/ext4/extents.c     |  5 +--
+ fs/ext4/ialloc.c      |  3 ++
+ fs/ext4/inode.c       | 72 ++++++++++++++++++++++++++++++-------------
+ fs/ext4/move_extent.c | 11 +++----
+ fs/ext4/readpage.c    | 28 ++++++++++-------
+ fs/jbd2/journal.c     |  7 +++--
+ include/linux/jbd2.h  |  2 +-
+ 10 files changed, 88 insertions(+), 48 deletions(-)
+
 -- 
-2.49.0
+2.46.1
 
