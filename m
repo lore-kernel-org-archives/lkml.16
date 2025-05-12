@@ -1,126 +1,81 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D4E5674E;
-	Mon, 12 May 2025 13:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B678B291163;
+	Mon, 12 May 2025 13:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747056682; cv=none; b=tjoYhvachwrSAUvZjl5ddTqecAOQJnlHIIZM6kId2NRhCSl7B/IvIJjGNnIMTEdFgOJiyY1EkzpTisWMZMLDcPM3elNVjMb8UFN1cEQ4HNQQs4yZhTOCUwj8+AppIkwKKWgvz/XS+qio4uRHyAgjWfq8BU1GHlQP6nhZ1DIps2A=
+	t=1747056704; cv=none; b=ViKlQhoCRUV1hjW+xYSbUEohw+PXlnbIpqEdRySclA/mbI/1hnajUvLy2Cr6fZsXgBxOR3G4fAT6a/85NerX40suNjgKGWJDT57tpC2wjBoDLLcMQeSr77onSGJcI0jmU2/eBqgWMZvcnmmedps8FSxuiY7dUZyEMK8/g59/e08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747056682; c=relaxed/simple;
-	bh=+D0uSfQEm6iJVXyJgjFC6uTeK0qCXRUpY5ighloyhvo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZXTTIJRaIusEh9b+u+tJ48TTJ63a/+bEy/mID+oP8TMXMGftAKDS7D1ZvSSMEcXfqLiAa6Dv36UAjEzEdoBw00QMasFI/vhDAlGXPaRg+sWhZCq/DyHCzBlNEDv4qpUAdb09FVb9kBR0PpWYL1Q9UBLWZr714c8iqcjHnGcjsLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HhLTxl1L; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747056704; c=relaxed/simple;
+	bh=hglYuKmxN4zcQEW7/ROUv/QWojJ+3PZfbTHmGdPFU10=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s7aW4y3EYFh3YgJ/pu2TVEAWeEkh68mm2XSHBfOiJrXzn45ktwMlEn9DjNDIZeRRC/yV20/NxmLNKZNllcjMuIWSC1w3EZIFrZodfv5s6nTgoUT6/riR5wMzr+YKSq1Qc5oQtt43GMc+LL0hmrs7Gce0H+oGH7odEmJLTVyJUkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Co6n9zSv; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhLTxl1L"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso32996115e9.3;
-        Mon, 12 May 2025 06:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747056677; x=1747661477; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6zAuz1VS2so8ZTeS7KZCrx29zpgetdbyE48Jtj2DVGQ=;
-        b=HhLTxl1LmXuwQAGeQhWgMIIsSl+YvXFCl96JCCDAz3+z1ObxHbkuYXNpfW3KSGbKTL
-         pKZQ3Qxw7fs1Prq3rShOAcYt6QK3RGmin9DvRdT99BoudkU+IeOpc3zlIVwbOgaaQ89w
-         o7fnPwc2NGHT6QrRS+KG8G02YnYOl5p57UGs3qr4IqbbW+oAGl6QALiQQ53OGdh4xoc3
-         tu+dh3r4/PtElNIRKldn79Oy0ZVT9su/mJOl6SQTrSiAc0fQ5rj2aECxUXSroH+fnHus
-         lLWtnmMeHxyOn1lTMy3V9CtoxUovpwWP6cQUSgUffJQwbPtvSog0d9UoFwS9uI75IZ+B
-         igIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747056677; x=1747661477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6zAuz1VS2so8ZTeS7KZCrx29zpgetdbyE48Jtj2DVGQ=;
-        b=Y8Yfcy4A2ew5iI1XKau2Z73kKT0GGdfaSmQN9gfNga0hGbthslzHbBF8u6kBCKnSgD
-         LvypsoDNcb9c2XL0O4g/fcVq10fIWm52aFtR388cYvTES9hX6BKHuNVZfsI1o+6WaWFJ
-         xeFTB+u2T+NjXsFlaWlYRBSRt+Mue6bQ+Aewz+20OMyZtLAq2dk8+OXoOu/hC1GbTHj3
-         WvnERhSu6efdsBkw3oExAV77DSmmQVWya+FJdPLuwO5lz/Soj2iJtT6YcrT5eBIZrg/P
-         AUD+e0so+q4wUp1tzOsDaaLJD6WVN60XEz0S4fUepVh0CarJRLDNVxAqqvswMGr6VFPW
-         9Y+g==
-X-Forwarded-Encrypted: i=1; AJvYcCX+E7SWbPMsI2STe7BVdoLq2rdG2IvrUzXlCwUP1ih5lGZMjrfzKMAHbnwjLaba8+1cX2RzQRswywnN@vger.kernel.org, AJvYcCXqbMMrmuxWoFju1gygwBF4RSgZzVgCD1bsebmDpnbaoWLAHTrzBSCg9gyZZwvBBx/Fya6+pR2EfR/24w==@vger.kernel.org, AJvYcCXxVN70DQ+Uw12nhgPUVebqqlXVhYEbLROOIlDOgHAFI7XGUzBn2l5PZKLKYPsHvLghxAqw5WU3UJdCZjkQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCtO3pTQf4lsSuQ66WFHgiW9fgs3z4VvN+EIJVpDpa7gWgMWhO
-	QWYu0poF+0pDLw54nP5PBDg1wIxewQe09SKA+BOyteX3j20ZjM2r
-X-Gm-Gg: ASbGnctHog+YBR0ZZ8w2rS5IUJl05D7vugOM+jyzUPor0omJ8fn3quGMlS4ji3EY04w
-	85RJCJgduTzJkC9WJWUtyXZcbRowYNc3Uap2S5gnqgqfUNpxu64EF+82kR0zMQcRQ43ZdM8Kcqm
-	vIDwu2k2pZJM9E9XfyXYgZ9zC4feHK5NCTdX6tMmwlaCApbmyrmaxfsPg8ZSQz8Udlu6EqrqBnO
-	BECdtidc9b8VXEAktRrcHfFKGnXzMbKlQR/YnOK19kXP7o6eNlNdph8VxpbksliSyWUHLyP+ZL8
-	kaGEGDEKs+dEUmhfFvFc7ntqsjzwvw1MTMoDdDcsG4JqEwJOFg==
-X-Google-Smtp-Source: AGHT+IHexpS/kCUtu4cQjVf5ElozgT9OgpQAe3kO1bBidwu9RV+jz6FTarStflln3KUpQ38w46TfZQ==
-X-Received: by 2002:a05:600c:3586:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-442d9cacc19mr106241865e9.17.1747056676796;
-        Mon, 12 May 2025 06:31:16 -0700 (PDT)
-Received: from legfed1 ([2a00:79c0:632:2600:22ea:3d6a:5919:85f8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd34bd84sm167702805e9.22.2025.05.12.06.31.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 06:31:16 -0700 (PDT)
-Date: Mon, 12 May 2025 15:31:14 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: dimitri.fedrau@liebherr.com,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] pwm: mc33xs2410: add support for temperature sensors
-Message-ID: <20250512133114.GA6440@legfed1>
-References: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
- <1bd48694-9760-4e6b-9138-4651d42ff032@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Co6n9zSv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=O+V+RCvpoAaGRFT4GZBhiApWS5v7S4yG0iss69ry+Po=; b=Co6n9zSvwNUsxs6gnNNk3Jo6KX
+	xK5oFL4yQV10FygzxSVW0Lc9tRJk7exKi9G5xm2wAlQXL4BVmCeMdoc2Cw50s/XYPw5+hoEAz/Jh9
+	HMfEey7XQqTz+Yt9jo6VIYtS8bziHyuO67q8DSaFZWsJH5erR2/8vTPEi6flXiM1bPXC9uFZVfKsa
+	GrH7rIRVtUiGinhT8ZV/LUq+kDmXJRasTmq//5IT06hbOkOj8YJNbFyKazqHA5HpNekXp4+1z0wab
+	2/9t/z5auo5hpJXvVA5VzCyuO3NALLe3R8vDuGqhk4E0H3uFMcFJJSEewW296QKk7sEArOw/w1Vd1
+	YsgwY3Qw==;
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uETFV-0006NF-9J; Mon, 12 May 2025 15:31:17 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: robh@kernel.org, chainsx@foxmail.com
+Cc: chainsx@foxmail.com, conor+dt@kernel.org, krzk+dt@kernel.org,
+ sfr@canb.auug.org.au, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v1 0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
+Date: Mon, 12 May 2025 15:31:16 +0200
+Message-ID: <3612514.V25eIC5XRa@diego>
+In-Reply-To: <tencent_D5C17F39C684CD6491505763B23BACCE5106@qq.com>
+References: <tencent_D5C17F39C684CD6491505763B23BACCE5106@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1bd48694-9760-4e6b-9138-4651d42ff032@roeck-us.net>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi Guenter,
+Hi,
 
-Am Mon, May 12, 2025 at 06:04:33AM -0700 schrieb Guenter Roeck:
-> On 5/12/25 04:26, Dimitri Fedrau via B4 Relay wrote:
-> > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> > 
-> > The MC33XS2410 provides temperature sensors for the central die temperature
-> > and the four outputs. Additionally a common temperature warning threshold
-> > can be configured for the outputs. Add hwmon support for the sensors.
-> > 
-> > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> > ---
-> 
-> > +
-> > +static int mc33xs2410_hwmon_read_out_status(struct spi_device *spi,
-> > +					    int channel, u16 *val)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	/* Bits latches high */
-> > +	return mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
-> 
-> Is that double read of the same register needed ? If so, you'll probably
-> need a lock to prevent it from being executed from multiple threads at the
-> same time.
-> 
-> The comment "Bit latches high" doesn't really mean anything to me and doesn't
-> explain why the register needs to be read twice.
-> 
->
+Am Montag, 12. Mai 2025, 15:20:48 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ chainsx@foxmail.com:
+> From: Hsun Lai <chainsx@foxmail.com>
+>=20
+> This series add support for Firefly Station-M3/ROC-RK3588S-PC.
+>=20
+> Info of device can be found at:
+> https://wiki.t-firefly.com/en/Station-M3/index.html
+>=20
+> Changes in v1:
+> - Add support for Firefly ROC-RK3588S-PC
+>=20
+> Hsun Lai (2):
+>   dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
+>   arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
 
-All bits of the output status registers are latched high. In case there
-was overtemperature detected, the bit stays set until read once and cleared
-afterwards. So I need a second read to get the "realtime" status.
-Otherwise I might end up returning an false positive overtemperature
-warning. I don't think a lock is really necessary, since I'm only
-interested in the "realtime" status but not if there was a warning in
-the past. What do you think ?
+hmm, you seem to be using git-send-email, but your mails did not
+get in-reply-to headers. Normally git-send-email should detect the
+cover-letter + patches thing and tie them together to a mail thread
+when you send them with a "git send-email *.patch" or similar .
 
-Will improve the comment.
 
-Best regards
-Dimitri Fedrau
+Heiko
+
+
