@@ -1,133 +1,112 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1F021B9F8;
-	Mon, 12 May 2025 14:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3D819CC3A;
+	Mon, 12 May 2025 14:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060223; cv=none; b=pGhZfcffCn4NoIAdA8KwiO/gWOdog8sGhtqAjmHQgrFE/9C0cPUlQf4Cy6C55FJEt6pLzwtwEEiuxO4xPO2Pfou94phvdUG46lZ3PkdevcSMjtcK9WP0CTx7AWu/ST0d75QtFPHAHfawFLPEsdOFW46GgsraHKBhQVmrgUqNlFY=
+	t=1747060267; cv=none; b=Fuft9zyqbhjDOL56P+LQjfwDiNIXP8n2+bM19BbPyF0LYBohrwVDsxLAuwGUrmF62ak7bciieSrDBu2yh5RTHYaoLhqhkyBCA4VUPGuU7TADTEx0psz8lbuxIsqdG9D7jKqKe8F4i9sI/S2ZTl+zzLJjX3BtZfHiNIT1An7A97U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060223; c=relaxed/simple;
-	bh=dJLSXh6NRrH5GVSoNm8+zlgpZoDi2lHurrmrZhGWPo0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ug2f3B4XJhONaorznfr+JO3Hnl0OgqfcAPYVR+FoishP9PFtvAKsVHascat7mj1VkgS6orkR2L/9ExhJN1G/BWhTfH7LtbcDvqJ1dEeA9BkYxRU4qZ07KoWioy36PwbYGjYkhXy7x8UvBbBXqRCQtph3dqexq0yzLzM/BXbQB2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=igdHCSr5; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747060267; c=relaxed/simple;
+	bh=aUFomMuDIpryGPVNlZrH2Byy4M4unI3gVL2hG2PTGTQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=uIWfIpgd2YeBJdsDgvFOTxGqYBzeMHOW2zCsy18m4JstYEFLX46Zg5FpNlLsl4BRgyt4NQsVHIczSqmT0p704qE7tnCkpsL2RhJuMtfULCPBFstA6ggji8aTkmGXTNAzheG1MKd2c5hPJ/boyZjHmh1vh+nGy0M+YguQcwLohSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qzc4Qy2A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ypm/AoJg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="igdHCSr5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 999A441C93;
-	Mon, 12 May 2025 14:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747060218;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qzc4Qy2A";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ypm/AoJg"
+Date: Mon, 12 May 2025 14:31:02 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747060263;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7/Ui6oc5Nm+KkKzPZxG2CxXKG9UmNd43w4GiVI/YA3I=;
-	b=igdHCSr5lt6uEPkbP9bms8179TGIn+n4NhO03e7kSzvUIcXmIdYS4VTrDzsW3Guoa6D0S/
-	2B5q4fKplnv/PXqB6D90WwPdiD2EopmH373ZIip+wyuKthhCdficB8+QALLRyqvzIzVtnd
-	E139KHdhArmwwO/Hm9Km/P2Lclo4ca2FNlyydyDtrMJhItKitJPvDCOjjE5wTwPfWLb96l
-	Y4tayxl/RAPnND9+axz+gzLvqNnmYLjyF61bKxf4nd5zBSAn9KX9u79v6+lXGvGaR6QMgi
-	UL3KwZtEMrBayhJdb6OrQjzEI5xfK8aomNdIBQUHpPi72nNtkBKD2leJ5X9N8A==
-Message-ID: <b5b24b98-ae89-4d50-90cb-c2bbc38aafba@bootlin.com>
-Date: Mon, 12 May 2025 16:30:16 +0200
+	bh=PxiOpX6kqQSbYHlwI4xmpfbyUW4MGMUa7Tqd5TwcSvg=;
+	b=Qzc4Qy2ArLZMmE4Evs9zpbc7ZnNuB16xibXaKeJdAGgY8E+azK2ZWSECbb66jd4URdWVhi
+	aNyx9yHRxT7fOOBaCWUIVlXWDtFVbVPt3ig23Neq3IHHXQ4HPFUs/iLmxZ2+DcNBFH2oCQ
+	258xeOOOGaC+Xab9m3e60vLDA4IT/sUr46KbTLe6Ttqhh2nqa4KMuCxE/LNa1azRt8TCbO
+	ltuWZZEdZEkneWzjkPAk5hx1NQG5eZBo+U6d1IJOwj1NZXzwASvOQVxL7eNSysVZWTQFf1
+	LRwiR0eXDBEng3Zi/ZYJswUQsQejse8E1lsUnl2BM5+5PcRTPaJR7BGf8piIeQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747060263;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PxiOpX6kqQSbYHlwI4xmpfbyUW4MGMUa7Tqd5TwcSvg=;
+	b=ypm/AoJgPYUMsW2sUJVhSHKsAkN4Uam5xeBdcwkaRDAJZ8uOrWXTz6KH4Vf+bbDdL8TSN7
+	69a0MKoC5FcA2sAQ==
+From: "tip-bot2 for Jiaqing Zhao" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mtrr] x86/mtrr: Check if fixed-range MTRRs exist in
+ mtrr_save_fixed_ranges()
+Cc: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250509170633.3411169-2-jiaqing.zhao@linux.intel.com>
+References: <20250509170633.3411169-2-jiaqing.zhao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
- <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
- <aCIBoSi84NnwEA2s@smile.fi.intel.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <aCIBoSi84NnwEA2s@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <174706026285.406.13641034613218376274.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigq
- dhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
-X-GND-Sasl: thomas.richard@bootlin.com
 
-On 5/12/25 16:11, Andy Shevchenko wrote:
-> On Mon, May 12, 2025 at 04:08:35PM +0200, Thomas Richard wrote:
->> On 5/9/25 11:07, Geert Uytterhoeven wrote:
->>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
-> 
-> ...
-> 
->>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
->>>> +                       unsigned long config);
->>>> +
->>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
->>>
->>> I would expect all of these to take gpiochip_fwd pointers instead of
->>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
->>> that does not correspond to a gpiochip_fwd object, causing a crash?
->>
->> Indeed nothing prevents from passing gpio_chip pointer which does not
->> correspond to a gpiochip_fwd object.
->> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
->> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
->>
->> I can keep GPIO operations as is, and create exported wrappers which
->> take a gpiochip_fwd pointer as parameter, for example:
->>
->> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
->> 			      unsigned long *mask,
->> 			      unsigned long *bits)
->> {
->> 	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
->>
->> 	return gpio_fwd_get_multiple_locked(chip, mask, bits);
->> }
->> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
->>
->> So exported functions are gpiochip_fwd_*().
-> 
-> Sounds good for me. Let's wait for Geert's opinoin on this.
+The following commit has been merged into the x86/mtrr branch of tip:
 
-Regarding Geert's comment for patch 9/12, an other proposal for naming:
-As mentioned above, exported functions gpiochip_fwd_*() take a
-gpiochip_fwd as parameter.
+Commit-ID:     824c6384e8d9275d4ec7204f3f79a4ac6bc10379
+Gitweb:        https://git.kernel.org/tip/824c6384e8d9275d4ec7204f3f79a4ac6bc10379
+Author:        Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+AuthorDate:    Fri, 09 May 2025 17:06:33 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 12 May 2025 13:04:40 +02:00
 
-But for all functions corresponding to a GPIO operation add the gpio
-word, and for functions to add/remove GPIO descriptor add the desc word:
+x86/mtrr: Check if fixed-range MTRRs exist in mtrr_save_fixed_ranges()
 
-devm_gpiochip_fwd_alloc()
-gpiochip_fwd_register()
+When suspending, save_processor_state() calls mtrr_save_fixed_ranges()
+to save fixed-range MTRRs.
 
-gpiochip_fwd_desc_add()
-gpiochip_fwd_desc_free()
+On platforms without fixed-range MTRRs like the ACRN hypervisor which
+has removed fixed-range MTRR emulation, accessing these MSRs will
+trigger an unchecked MSR access error. Make sure fixed-range MTRRs are
+supported before access to prevent such error.
 
-gpiochip_fwd_get_gpiochip()
-gpiochip_fwd_get_data()
+Since mtrr_state.have_fixed is only set when MTRRs are present and
+enabled, checking the CPU feature flag in mtrr_save_fixed_ranges() is
+unnecessary.
 
-gpiochip_fwd_gpio_request()
-gpiochip_fwd_gpio_get_direction()
-gpiochip_fwd_gpio_direction_input()
-gpiochip_fwd_gpio_direction_output()
-gpiochip_fwd_gpio_get()
-gpiochip_fwd_gpio_set()
-gpiochip_fwd_gpio_set_multiple()
-gpiochip_fwd_gpio_get_multiple()
-gpiochip_fwd_gpio_set_config()
-gpiochip_fwd_gpio_to_irq()
+Fixes: 3ebad5905609 ("[PATCH] x86: Save and restore the fixed-range MTRRs of the BSP when suspending")
+Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/20250509170633.3411169-2-jiaqing.zhao@linux.intel.com
+---
+ arch/x86/kernel/cpu/mtrr/generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-
-Thomas
+diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
+index e2c6b47..8c18327 100644
+--- a/arch/x86/kernel/cpu/mtrr/generic.c
++++ b/arch/x86/kernel/cpu/mtrr/generic.c
+@@ -593,7 +593,7 @@ static void get_fixed_ranges(mtrr_type *frs)
+ 
+ void mtrr_save_fixed_ranges(void *info)
+ {
+-	if (boot_cpu_has(X86_FEATURE_MTRR))
++	if (mtrr_state.have_fixed)
+ 		get_fixed_ranges(mtrr_state.fixed_ranges);
+ }
+ 
