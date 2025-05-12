@@ -1,180 +1,148 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F9325A2DF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2968E24C083;
+	Mon, 12 May 2025 09:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041083; cv=none; b=gFWHWvx1tIkdsJlJRwkGU3EKrhLz0JKck+xnIambVlrEAmQlAjDC5abXth7ISJKS8N92ufeaYu4phz2UbR2ngJ5p0jfTK0e3vqoTheJEbLqlasm+KodFagfjud2+hqRcCVHtU58VM/kjiJ55jNr6LQFtgnpJxG4sl+nZW8sQ4Mc=
+	t=1747041110; cv=none; b=c0fRu9JKTxpnfXXJEN7ODRpZ+AGNqlBfAwVd6DmfDpcoiK0aJ7SWzsF9OcGPAhKMeAUqTiRrd4yxUcu92AxVGEJHqP2ioi9GhGHyBvfnCquIUYwmvjcm3Sqr0eN90fzW4bwNg9XsV23+S/P71eMqSes7LkcqzP6Eqdc99rFFJZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041083; c=relaxed/simple;
-	bh=lYVHLSFZ30uPD9HCKWzeRsxqM7TREbjRmxECdkqqcV4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QpZI5QE3EuJ08RCp8C4jmz8utIADA4qS6KNYc+ExODadmX31h40SEBAPk8cjiaTaBQWLPjWTDeVG8CrSYAz0OJVR/cO72DNkdriuhWcaTXtA6/YJ94m2ZGhgeCx+qu4ec6xWADii6HPhcRUDCVx/PeMcOnV2bW5eemKZqAp4zmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e7e0413c2so352929039f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 02:11:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747041080; x=1747645880;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8+uzMLrjggZhRqmqQSIictD5XwFtooJPv3otZj8Vyzk=;
-        b=lv0xRoJxFR4OkdU4zpm8bfjlpkUSudCGwen11qnxfDW5ITqa7CE1TubMPnS30yv5PZ
-         7VuXQfLQxfYAcBo4IjRWCF/L+1ptpl4F52mUjGsosPbfECfwzOE9/xt3Vy+/ZeVKjoE3
-         iIH4SbnfSUrlm5aw2Ckb0lfO2BoJt0ezZXJE54yXKpbihEGSfVrhlzQMXYMCknaW/g2t
-         1pv2hgINex2wvb6tlCIeq5WGNkfEEo1mSaHFQ8wQLZMpaOlc9FrDkztAEjnbILBi3MJz
-         AWuFNQ44Al+sMb9ePnSMhDRf6xgKHsOSOdLHhys4yyJCdKB/9NJqwNODhUUIfQwLsFMT
-         oc+w==
-X-Forwarded-Encrypted: i=1; AJvYcCV1kMe8d9GlgKmjorIBuGLHjRxarHvjS3ulsn3kF6q6WRYMFDRK1NxbA2yS60OhtLxYP1hKsZCjy34LS4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydZ5K7GVqXEoancWjsKVJbr5RhIlw7KoS53X82zPXIOkq50R7T
-	uzMgLr6++lLsexrFfueVV2yLaXLqVsURHfeIz7MeJHorQ03iPE3l4U2xV/BciAy/PDa2xyCm583
-	eEIeA/iV8LCdZfnUO080NpZILIs67wMHZiXmbM85KACsRkNHK/Lkec+k=
-X-Google-Smtp-Source: AGHT+IGMn4kHfoXlb0gHYMU6NGzwSXl9HDa5qUR8JrxhkCiq40wtClztX121VRsQGqdrm2gz/wLoGEWpUT+A2YxlmLMpznVphnxe
+	s=arc-20240116; t=1747041110; c=relaxed/simple;
+	bh=W46spw9rLIkWRcAuZ9b5EhRVf0rvSNjCOOC9DrpFxnU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nk5bnIxV+WLL+GmeHB5TSdTkomA25PVdLBVsqzNYtzc05OV6/HPzSzD3grIf+m4W0d9MQ/92Fw+HvP0monOUgapqxKhuyrWYfePhv1lcV4JmMYRzKW12J1c/nQxXo4UgKTDbGUodeMuAzZXRj2H8++FeTeofJ8hU1w9KzrKiyXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ifONiE2I; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ifONiE2I"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C5uGsO002574;
+	Mon, 12 May 2025 09:11:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=gygIZhYGtbWQoFQ9niyXbiOPG1NLlAASp9EPz500z
+	ec=; b=ifONiE2IgIxxo6gEjYWQXt0rpUdaOLzX/dDy+PSjp/V5PkJHLe7pYv032
+	o6qRgtJeWDEPc0162u4cUD63aIehZWBDM5Jw3UxNLAmlltQ5kjx8dRLKRVhr8nlq
+	/qGl7B9It7xps82nr9cCvSmwwZ/yWqot4oC9QIWBEmXcJZHudRwEuPrUjatwTxiG
+	DVSzSMOHXNLEGWNfPlTrX8Tk2A64XTKD9L5asaPg+MmAe6d11qR5Om4P9jGIuvS6
+	9b4xQM04rz9Tx85aC/78fETWEvy/csw3P4+hVlXshpjRZ1WcgINOVYmCWtCNVCBO
+	U0KSomUQvtAoDXXfxdvmVgKpy3xXw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jue6b81x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:11:17 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54C97wF3000615;
+	Mon, 12 May 2025 09:11:17 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jue6b81s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:11:17 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54C6iipa011552;
+	Mon, 12 May 2025 09:11:16 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jku24vnt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 09:11:16 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54C9BChu31261430
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 09:11:12 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F40920082;
+	Mon, 12 May 2025 09:11:12 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F0B3F20083;
+	Mon, 12 May 2025 09:11:08 +0000 (GMT)
+Received: from li-621bac4c-27c7-11b2-a85c-c2bf7c4b3c07.in.ibm.com (unknown [9.109.219.153])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 12 May 2025 09:11:08 +0000 (GMT)
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: gregkh@linuxfoundation.org
+Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        hbathini@linux.ibm.com, maddy@linux.ibm.com, venkat88@linux.ibm.com,
+        sfr@canb.auug.org.au, alexei.starovoitov@gmail.com,
+        daniel@iogearbox.net, mykolal@fb.com, yoong.siang.song@intel.com,
+        martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+        haoluo@google.com, jolsa@kernel.org, shuah@kernel.org
+Subject: [RESEND PATCH] selftests/bpf: Fix bpf selftest build error
+Date: Mon, 12 May 2025 14:41:07 +0530
+Message-ID: <20250512091108.2015615-1-skb99@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:29d3:b0:862:fe54:df4e with SMTP id
- ca18e2360f4ac-867635af384mr1265132339f.7.1747041080644; Mon, 12 May 2025
- 02:11:20 -0700 (PDT)
-Date: Mon, 12 May 2025 02:11:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6821bb38.050a0220.f2294.0056.GAE@google.com>
-Subject: [syzbot] [mm?] [ext4?] INFO: rcu detected stall in
- ext4_end_io_rsv_work (3)
-From: syzbot <syzbot+bb842a51b5abbae5a245@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 4bV_IKwmpq44jGri-7mCGdrmOMdB5Ij-
+X-Authority-Analysis: v=2.4 cv=TbmWtQQh c=1 sm=1 tr=0 ts=6821bb35 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=_H8_jCqrJ5XklwPHSncA:9
+X-Proofpoint-GUID: -c5vRGLYrBw1Zs22wB0noNegpfLUV2nE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA5NSBTYWx0ZWRfXwDxps1gLTnat M56O8HwreV4kftWVcPr0w2Hz2ThfQMyD4u0yD6DJvTLD0hfdNNK8KO97AyJloLhACF30AncRT79 kao8Mvupq4q48SYs6/WZkGbNPJDY06LUkefkETnsurSZcGby8e6KoePC2ydY4HngeJ2dPNg2mpH
+ 4K6B12U+S8r0mKVsI2PKjpgYlZOWdeypWm894kslpILASZnsGloEMRCJZEDDP3zBOU3+swxfKSS d0wKA8hgcIg1HSWrSx2QJ6OH0JM0lWmuKILlqoa2WYl3yZ9/AXqjB8eP60738ewicvopluHRQHU v4gnYlOADlKiL11xGfaUt3ZvsKiNJCUZ3A7UuzgifAuOcnTYVGTH0EJlyHGASuVGh+0ZguTwWDn
+ 8nC2wva5DVp6UKr2pbCGRqcIvAexEEgE95O2fqUkKRW2htJ2mab34Ht8gx/pcM3H5pU3PCnb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ adultscore=0 spamscore=0 mlxlogscore=904 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120095
 
-Hello,
+On linux-next, build for bpf selftest displays an error due to
+mismatch in the expected function signature of bpf_testmod_test_read
+and bpf_testmod_test_write.
 
-syzbot found the following issue on:
+Commit 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attribute::read/write()")
+changed the required type for struct bin_attribute to const struct bin_attribute.
 
-HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16c2a82f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b39cb28b0a399ed3
-dashboard link: https://syzkaller.appspot.com/bug?extid=bb842a51b5abbae5a245
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1050b8f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a169b3980000
+To resolve the error, update corresponding signature for the callback.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/1920aeaaff98/disk-707df337.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5a54d789a59a/vmlinux-707df337.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e40767312770/bzImage-707df337.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+bb842a51b5abbae5a245@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-rcu: 	0-...!: (3 ticks this GP) idle=1d3c/1/0x4000000000000000 softirq=14732/14732 fqs=0
-rcu: 	(detected by 1, t=10502 jiffies, g=6677, q=10638 ncpus=2)
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 3557 Comm: kworker/u8:8 Not tainted 6.15.0-rc5-syzkaller-00038-g707df3375124 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-Workqueue: ext4-rsv-conversion ext4_end_io_rsv_work
-RIP: 0010:__kasan_check_write+0x8/0x20 mm/kasan/shadow.c:37
-Code: f0 ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 0c 24 <89> f6 ba 01 00 00 00 e9 4c f0 ff ff 66 66 2e 0f 1f 84 00 00 00 00
-RSP: 0018:ffffc90000007da0 EFLAGS: 00000086
-RAX: 0000000000000000 RBX: ffff8880b8427840 RCX: ffffffff81985b4d
-RDX: 00000000ffffffff RSI: 0000000000000004 RDI: ffff8880b8427840
-RBP: 1ffff92000000fb6 R08: 4d4df099ab2b819a R09: 0000000000000001
-R10: 0000000000000002 R11: 0000000000000000 R12: ffff8880b8427848
-R13: ffff8880b8427850 R14: ffff888070874340 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8881249df000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055558c02f650 CR3: 000000000e180000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
- atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1300 [inline]
- queued_spin_lock include/asm-generic/qspinlock.h:111 [inline]
- do_raw_spin_lock+0x11d/0x2b0 kernel/locking/spinlock_debug.c:116
- __run_hrtimer kernel/time/hrtimer.c:1765 [inline]
- __hrtimer_run_queues+0x2bc/0xad0 kernel/time/hrtimer.c:1825
- hrtimer_interrupt+0x397/0x8e0 kernel/time/hrtimer.c:1887
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1038 [inline]
- __sysvec_apic_timer_interrupt+0x108/0x3f0 arch/x86/kernel/apic/apic.c:1055
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0x9f/0xc0 arch/x86/kernel/apic/apic.c:1049
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:folio_zone include/linux/mm.h:1967 [inline]
-RIP: 0010:zone_stat_mod_folio include/linux/vmstat.h:432 [inline]
-RIP: 0010:__folio_end_writeback+0x186/0xe60 mm/page-writeback.c:3068
-Code: 89 e2 be 15 00 00 00 48 89 df e8 05 0b 33 00 9c 5d 81 e5 00 02 00 00 31 ff 48 89 ee e8 73 50 c5 ff 48 85 ed 0f 85 90 07 00 00 <e8> f5 54 c5 ff 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03
-RSP: 0018:ffffc9000cea7950 EFLAGS: 00000293
-RAX: 0000000000000000 RBX: ffffea0001f6ec40 RCX: ffffffff81f5e1a4
-RDX: ffff888032bb2440 RSI: ffffffff81f5e1b2 RDI: 0000000000000007
-RBP: 0000000000000000 R08: 0000000000000007 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffff
-R13: 0000000000000001 R14: ffffffffffffffff R15: ffffea0001f6ec00
- folio_end_writeback+0x18f/0x560 mm/filemap.c:1648
- ext4_finish_bio+0x78f/0xa20 fs/ext4/page-io.c:144
- ext4_release_io_end+0x119/0x3a0 fs/ext4/page-io.c:159
- ext4_end_io_end+0x13e/0x4a0 fs/ext4/page-io.c:210
- ext4_do_flush_completed_IO fs/ext4/page-io.c:287 [inline]
- ext4_end_io_rsv_work+0x205/0x380 fs/ext4/page-io.c:302
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-rcu: rcu_preempt kthread timer wakeup didn't happen for 10501 jiffies! g6677 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-rcu: 	Possible timer handling issue on cpu=0 timer-softirq=4991
-rcu: rcu_preempt kthread starved for 10502 jiffies! g6677 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
-rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-rcu: RCU grace-period kthread stack dump:
-task:rcu_preempt     state:I stack:28728 pid:16    tgid:16    ppid:2      task_flags:0x208040 flags:0x00004000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x116f/0x5de0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0xe7/0x3a0 kernel/sched/core.c:6860
- schedule_timeout+0x123/0x290 kernel/time/sleep_timeout.c:99
- rcu_gp_fqs_loop+0x1ea/0xb00 kernel/rcu/tree.c:2046
- rcu_gp_kthread+0x270/0x380 kernel/rcu/tree.c:2248
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
+Fixes: 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attribute::read/write()")
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Closes: https://lore.kernel.org/all/e915da49-2b9a-4c4c-a34f-877f378129f6@linux.ibm.com/
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+[RESEND]:
+ - Added Fixes and Tested-by tag.
+ - Added Greg as receipent for driver-core tree.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Original patch: https://lore.kernel.org/all/20250509122348.649064-1-skb99@linux.ibm.com/
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+index 2e54b95ad898..194c442580ee 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+@@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
+ 
+ noinline ssize_t
+ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+-		      struct bin_attribute *bin_attr,
++		      const struct bin_attribute *bin_attr,
+ 		      char *buf, loff_t off, size_t len)
+ {
+ 	struct bpf_testmod_test_read_ctx ctx = {
+@@ -465,7 +465,7 @@ ALLOW_ERROR_INJECTION(bpf_testmod_test_read, ERRNO);
+ 
+ noinline ssize_t
+ bpf_testmod_test_write(struct file *file, struct kobject *kobj,
+-		      struct bin_attribute *bin_attr,
++		      const struct bin_attribute *bin_attr,
+ 		      char *buf, loff_t off, size_t len)
+ {
+ 	struct bpf_testmod_test_write_ctx ctx = {
+-- 
+2.43.5
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
