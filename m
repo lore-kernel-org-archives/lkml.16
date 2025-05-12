@@ -1,114 +1,202 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B202980BE
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F91298C03
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747077188; cv=none; b=AINxEiMttsVlE+VFXMfOvJDoAtWHMomeUFL7RKR9xcxWinrZiFpeCAVMifLAN1B9f2N4iaqQ8WZ1JF+IKqUkgv5/yt8e9sm55tOc5kK8EnCdq4WCJONyEeO86t8G5r98Oy+SV0Uiq0/Oiww0sATNYG0/OOsR4itQ/F3kIoLii30=
+	t=1747077226; cv=none; b=DUy8z+4QRG9N69AfEI4ObQSinef9oxQZ5MvhtkHEduw/anknJP+pZtLXxannkSefjcmOXVCQwppcRKok0dHNLbU6BAroi6h+qumoZfuBh2A3ZRS9EYrKoHk5DgGp1z3EVlVch4ISNRvxCrAlz9GK2NxFIA7Ciu6pKbcn17Va++U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747077188; c=relaxed/simple;
-	bh=x23mxA82De3cXdZgj34aQv76fZozL81umdIXokRJ4MM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XMg2/m1LsGekRhLRRXIVQGA85Gpjr+Hzkdpjdl5c0qGHnmyNe1W6xaEq2DcvOalITyMNPFb9sC/BlNNM7kZAf2oIHpLMhofjffabXVM5r9m5wAU3KSYftNJzxZeP5Vje+wdSytGCu809dg8pAu14DgoDJrKzZDETh+iJrQPrwRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GEWi9xep; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747077226; c=relaxed/simple;
+	bh=hOzShn0d1VpvoCf2Jm+K+rqtd4i4H7Bs81YA329/3dI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Rx3SD3R9LnrFc7PQ8e0rPBJldhUn6pw6Tuoy55OqDBXgEsUY7OSPV2npGrmO/jbt7xu05FRrSUHHxWlhimXLkiy1VimNN1fO4ihCnO6zk3hvC6LfGgY54aiADq+Ct6pDNZ3eV98fK1aKabq6t4XyLE5SA876o2asIOMec+x+lTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xnR/l2GV; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GEWi9xep"
-Date: Mon, 12 May 2025 12:12:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747077174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sqVwqlZm0Qlg6KxhYJj/U/iuxKDNt6d7QLnu+Tbwxmg=;
-	b=GEWi9xepBuUD84Xj6HySZwI1fUdZ1NMcdnQxSfPl28Sz4E2JabYfQWGfYtVKaSfs3gWfd7
-	vZzse9fB54pbGKa9+vqFt0R8nEldYEJgJ5Js2BD3+rLgFEvvnPZYyDi4aM+W4h8F978mTp
-	R2WWBjsuU51IuooEqJXc7vpYirmx8dM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
-Message-ID: <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
-References: <20250509232859.657525-1-shakeel.butt@linux.dev>
- <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xnR/l2GV"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1442e039eeso2962021a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747077224; x=1747682024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lJx9UOI4PMOst2OpE9us15li238FLNTl40Rp91/Ppb4=;
+        b=xnR/l2GVbfn4Q4Bw3GkXCKLRsEMupj/lIDncUadw54fADY8++5K46SQ+vs3gGtD5/2
+         fkRhCGMJucNuK6ixM/sg/IH150MKkwAw2H+nujd5XRvD61SWVfM3Gg0tI+aSlRvuZHym
+         yiXVRZF3Yp78buxdXCn1EwiJw/pSJpBX1ry3HFPjLZOvHzMlvAnC3Gxbd4D8pGHuHLgM
+         Xqn8Bu7S16RbtSuubmE3JusiR3USPhgYuIanDr6NJgt6vhwiJIanC6en2hGwHEfWqM3w
+         H5f6QDWAr6IJTMj18ZgLt0EKW/UlUpmYzTOWLN1jPSxLLJPlVkbQu8OwTWGTpKfjs4E2
+         21SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747077224; x=1747682024;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lJx9UOI4PMOst2OpE9us15li238FLNTl40Rp91/Ppb4=;
+        b=EH3VBuxhoKzOAHZYbxrV/0mQN2hdhhMT51SC+slsFQKPKqrdTJGULYFodqIktf2KBK
+         7cJ3l0/r9tWXBQFGncN1aNEJTkgagO23L7pW1+0odjBi8Spmd5XKcdE0rqFd7EkFHoFH
+         LArwWI/3JmYFgy3EEjWtqyf4z2q2AIzZMThNKQ9UjlfpczbmlkQvpW8kU0IBhHzjsDJi
+         y5tUOKulPG8jr0Lj7Y9ulCqgPebhsSmcXymALWn224JhJwbOUDk8bwu4XOx+yu1C/ckF
+         6wxwN+gumHFZKfaQ+0VW/6gg6AbibQ0KYzJaHyyB0IM+0wyOQbBcnkT71W6sC8vpuB8O
+         Lv8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVU5GP8qoH6UOmJE/hFV8E29y6u0JBJMdd18wWP5mhEPk+X6zzWc5AHv672GRQuTGU2Nvkt9YRVVMG5Czo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4ug+XCjlaavo2UV5Te5TSnD0BRc7aDK2L4Ra3YQXu7qLXoDyw
+	YeP+0Ag03mj9usSEnipfMNyDLFqa4XLvC9cd53zIAaWlCV0B5A7nY4hbRSgG8u7II0w/2EddVUj
+	WEA==
+X-Google-Smtp-Source: AGHT+IG/DheF6+DB5H/MuBZC30AE1eW2qEhr5QdZeTJGOjHWqmwrfunvk18P9rn5Ac2Y/Af/I9choRB0WCI=
+X-Received: from pjbqx15.prod.google.com ([2002:a17:90b:3e4f:b0:309:da3b:15d1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b4b:b0:308:6d7a:5d30
+ with SMTP id 98e67ed59e1d1-30c3d3e0a86mr24720902a91.18.1747077223739; Mon, 12
+ May 2025 12:13:43 -0700 (PDT)
+Date: Mon, 12 May 2025 12:13:42 -0700
+In-Reply-To: <20250313203702.575156-13-jon@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-13-jon@nutanix.com>
+Message-ID: <aCJIZgHi67_lze_v@google.com>
+Subject: Re: [RFC PATCH 12/18] KVM: x86/mmu: Introduce shadow_ux_mask
+From: Sean Christopherson <seanjc@google.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sergey Dyasli <sergey.dyasli@nutanix.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-I forgot to CC Tejun, so doing it now.
+On Thu, Mar 13, 2025, Jon Kohler wrote:
+> @@ -28,6 +28,7 @@ u64 __read_mostly shadow_host_writable_mask;
+>  u64 __read_mostly shadow_mmu_writable_mask;
+>  u64 __read_mostly shadow_nx_mask;
+>  u64 __read_mostly shadow_x_mask; /* mutual exclusive with nx_mask */
+> +u64 __read_mostly shadow_ux_mask;
+>  u64 __read_mostly shadow_user_mask;
+>  u64 __read_mostly shadow_accessed_mask;
+>  u64 __read_mostly shadow_dirty_mask;
+> @@ -313,8 +314,14 @@ u64 make_huge_page_split_spte(struct kvm *kvm, u64 h=
+uge_spte,
+>  		 * the page executable as the NX hugepage mitigation no longer
+>  		 * applies.
+>  		 */
+> -		if ((role.access & ACC_EXEC_MASK) && is_nx_huge_page_enabled(kvm))
+> +		if ((role.access & ACC_EXEC_MASK) && is_nx_huge_page_enabled(kvm)) {
 
-On Mon, May 12, 2025 at 05:56:09PM +0200, Vlastimil Babka wrote:
-> On 5/10/25 01:28, Shakeel Butt wrote:
-> > BPF programs can trigger memcg charged kernel allocations in nmi
-> > context. However memcg charging infra for kernel memory is not equipped
-> > to handle nmi context. This series adds support for kernel memory
-> > charging for nmi context.
-> > 
-> > The initial prototype tried to make memcg charging infra for kernel
-> > memory re-entrant against irq and nmi. However upon realizing that
-> > this_cpu_* operations are not safe on all architectures (Tejun), this
-> 
-> I assume it was an off-list discussion?
-> Could we avoid this for the architectures where these are safe, which should
-> be the major ones I hope?
+This is wrong, and probably so is every other chunk of KVM that looks at
+ACC_EXEC_MASK.  E.g. if a guest hugepage is executable for user but not sup=
+ervisor,
+KVM will fail to make the small child user-executable.
 
-Yes it was an off-list discussion. The discussion was more about the
-this_cpu_* ops vs atomic_* ops as on x86 this_cpu_* does not have lock
-prefix and how I should prefer this_cpu_* over atomic_* for my series on
-objcg charging without disabling irqs. Tejun pointed out this_cpu_* are
-not nmi safe for some archs and it would be better to handle nmi context
-separately. So, I am not that worried about optimizing for NMI context
-but your next comment on generic_atomic64_* ops is giving me headache.
+The bug in make_spte() is even worse, because KVM would let an MBEC-aware g=
+uest
+trigger the iTLB multi-hit #MC.
 
-> 
-> > series took a different approach targeting only nmi context. Since the
-> > number of stats that are updated in kernel memory charging path are 3,
-> > this series added special handling of those stats in nmi context rather
-> > than making all >100 memcg stats nmi safe.
-> 
-> Hmm so from patches 2 and 3 I see this relies on atomic64_add().
-> But AFAIU lib/atomic64.c has the generic fallback implementation for
-> architectures that don't know better, and that would be using the "void
-> generic_atomic64_##op" macro, which AFAICS is doing:
-> 
->         local_irq_save(flags);                                          \
->         arch_spin_lock(lock);                                           \
->         v->counter c_op a;                                              \
->         arch_spin_unlock(lock);                                         \
->         local_irq_restore(flags);                                       \
-> 
-> so in case of a nmi hitting after the spin_lock this can still deadlock?
-> 
-> Hm or is there some assumption that we only use these paths when already
-> in_nmi() and then another nmi can't come in that context?
-> 
-> But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
-> atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
-> irq_save+spin_lock. So can't we deadlock there?
+>  			child_spte =3D make_spte_executable(child_spte);
+> +			// TODO: For LKML: switch to vcpu->arch.pt_guest_exec_control? up
+> +			// for suggestions on how best to toggle this.
 
-I was actually assuming that atomic_* ops are safe against nmis for all
-archs. I looked at atomic_* ops in include/asm-generic/atomic.h and it
-is using arch_cmpxchg() for CONFIG_SMP and it seems like for archs with
-cmpxchg should be fine against nmi. I am not sure why atomic64_* are not
-using arch_cmpxchg() instead. I will dig more.
+No, it belongs in the role.
 
-I also have the followup series on objcg charging without irq almost
-ready. I will send it out as rfc soon.
+> +			if (enable_pt_guest_exec_control &&
+> +			    role.access & ACC_USER_EXEC_MASK)
+> +				child_spte |=3D shadow_ux_mask;
+> +		}
+>  	}
+> =20
+>  	return child_spte;
+> @@ -326,7 +333,7 @@ u64 make_nonleaf_spte(u64 *child_pt, bool ad_disabled=
+)
+>  	u64 spte =3D SPTE_MMU_PRESENT_MASK;
+> =20
+>  	spte |=3D __pa(child_pt) | shadow_present_mask | PT_WRITABLE_MASK |
+> -		shadow_user_mask | shadow_x_mask | shadow_me_value;
+> +		shadow_user_mask | shadow_x_mask | shadow_ux_mask | shadow_me_value;
+> =20
+>  	if (ad_disabled)
+>  		spte |=3D SPTE_TDP_AD_DISABLED;
+> @@ -420,7 +427,8 @@ void kvm_mmu_set_me_spte_mask(u64 me_value, u64 me_ma=
+sk)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_mmu_set_me_spte_mask);
+> =20
+> -void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
+> +void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only,
+> +			   bool has_guest_exec_ctrl)
+>  {
+>  	shadow_user_mask	=3D VMX_EPT_READABLE_MASK;
+>  	shadow_accessed_mask	=3D has_ad_bits ? VMX_EPT_ACCESS_BIT : 0ull;
+> @@ -428,8 +436,14 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool ha=
+s_exec_only)
+>  	shadow_nx_mask		=3D 0ull;
+>  	shadow_x_mask		=3D VMX_EPT_EXECUTABLE_MASK;
+>  	/* VMX_EPT_SUPPRESS_VE_BIT is needed for W or X violation. */
+> +	// For LKML Review:
+> +	// Do we need to modify shadow_present_mask in the MBEC case?
 
-Thanks a lot for awesome and insightful comments.
-Shakeel
+No, because MBEC bifurcates X, it doesn't change whether or not an EPTE can=
+ be
+X without being R.  From the SDM:
+
+  1. If the =E2=80=9Cmode-based execute control for EPT=E2=80=9D VM-executi=
+on control is 1,
+     setting bit 0 indicates also that software may also configure EPT
+     paging-structure entries in which bits 1:0 are both clear and in which=
+ bit 10
+     is set (indicating a translation that can be used to fetch instruction=
+s from a
+     supervisor-mode linear address or a user-mode linear address).
+
+>  	shadow_present_mask	=3D
+>  		(has_exec_only ? 0ull : VMX_EPT_READABLE_MASK) | VMX_EPT_SUPPRESS_VE_B=
+IT;
+> +
+> +	shadow_ux_mask		=3D
+> +		has_guest_exec_ctrl ? VMX_EPT_USER_EXECUTABLE_MASK : 0ull;
+
+This is EPT specific code, just call this what it is:
+
+	shadow_ux_mask		=3D has_mbec ? VMX_EPT_USER_EXECUTABLE_MASK : 0ull;
+> +
+>  	/*
+>  	 * EPT overrides the host MTRRs, and so KVM must program the desired
+>  	 * memtype directly into the SPTEs.  Note, this mask is just the mask
+> @@ -484,6 +498,7 @@ void kvm_mmu_reset_all_pte_masks(void)
+>  	shadow_dirty_mask	=3D PT_DIRTY_MASK;
+>  	shadow_nx_mask		=3D PT64_NX_MASK;
+>  	shadow_x_mask		=3D 0;
+> +	shadow_ux_mask		=3D 0;
+>  	shadow_present_mask	=3D PT_PRESENT_MASK;
+> =20
+>  	/*
+> diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+> index d9e22133b6d0..dc2f0dc9c46e 100644
+> --- a/arch/x86/kvm/mmu/spte.h
+> +++ b/arch/x86/kvm/mmu/spte.h
+> @@ -171,6 +171,7 @@ extern u64 __read_mostly shadow_mmu_writable_mask;
+>  extern u64 __read_mostly shadow_nx_mask;
+>  extern u64 __read_mostly shadow_x_mask; /* mutual exclusive with nx_mask=
+ */
+>  extern u64 __read_mostly shadow_user_mask;
+> +extern u64 __read_mostly shadow_ux_mask;
+>  extern u64 __read_mostly shadow_accessed_mask;
+>  extern u64 __read_mostly shadow_dirty_mask;
+>  extern u64 __read_mostly shadow_mmio_value;
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 0aadfa924045..d16e3f170258 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -8544,7 +8544,8 @@ __init int vmx_hardware_setup(void)
+> =20
+>  	if (enable_ept)
+>  		kvm_mmu_set_ept_masks(enable_ept_ad_bits,
+> -				      cpu_has_vmx_ept_execute_only());
+> +				      cpu_has_vmx_ept_execute_only(),
+> +				      enable_pt_guest_exec_control);
+
+Without the module param, just cpu_has_vmx_mbec().
