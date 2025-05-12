@@ -1,135 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D7D1DDC37;
-	Mon, 12 May 2025 22:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E151F1DDC37;
+	Mon, 12 May 2025 22:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747090064; cv=none; b=ch7I0V8DXsvmBdsSUSM4m0O9++/i63GJY9zkNpxz81a09NGxsmdIwTGghZYFDzwaQyToXov1JUAaRL8VPoKE199pttfH7c6EJ6AeBBxzI/K1EbQPbd5tXOiaSJPcsWzz3pvwosK3qgjs4al5svuUlUiwISpD8CmsQ1G1Erydpqs=
+	t=1747090148; cv=none; b=c72MmjIYutlWEBQC1gKOvsQbE2R5rUk6Cnsh8nxfld78etAu3D9OAQIRwJOrTNmjNClhyIb7rbM1baoaXf4VDPv1ww9eTLjhtEXej7UDCGbVBfam391MuynJL2kt647OCF7b0fncRBrOo89olgL8FhCVL0oiHDCNGejT79P4y0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747090064; c=relaxed/simple;
-	bh=/WDeTO1BzKYDL6uUG4viBsI/A++mqIRtzI8HsjPf29s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qa3IKxqH0+6AZQ3fv3ObTyMG7YfAazJWQgM7yMb0yuw/GOgMczdpymOLESLYV+yb0O2HDdGgYFIw1y3OOc9uJIsByVy1Pgl4IR3G9XJ7xaKjd/N34ILmEK59SFs+9B3HQYgYMkpi0L5F/gXqOL1M/ilb3QrNw4CR6XR0Q5WCCiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QD9ml4F+; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747090148; c=relaxed/simple;
+	bh=UiI1Jc8mCz25TVRMRgjQb9yc9oy0/KsT6mNqmrNzxq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oPC/8wHlFEvKI28gLLzDV7W29/iF0011U1q4rYSK9vEXD1yxoaptqubvlcQDICXrLfiONkP05jVsCo2gRDDIOVRRz0La1BWRzW2wR98Gn4u8g1rYz6l1Y30oPfQBlghaRk0a0deCppW9LHVqGLwO06maxbEHjAA4FlrUuQVd+Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZIXjqNm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QD9ml4F+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747090063; x=1778626063;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/WDeTO1BzKYDL6uUG4viBsI/A++mqIRtzI8HsjPf29s=;
-  b=QD9ml4F+LPB7vhh2jONduWnTtO422tnbVrSULMNA8VI/+qt0uVCLXvMx
-   gUhFge9DNFsS8WVF+kfi3b7xYDtInuumC7lgI7SM91kSsOgDT+JI2L7Pe
-   09vwt8TAS7C0NX6GTkkX11rZ/kykUWnSxYaad1pOrlkorx8gBee6F1J04
-   Sos+1/+Y3fO405OOyWapFGngqppkLHQICe5ldSWd9OrgBgTTCz7h3X0yA
-   NPKvl2JaBMxgF9bbC2MJKd9ice/ekzDjjvzILBHLUMDRKlpllCXSRW704
-   fcQgNVgDMct3w/4OY19qwZ8w229Fq02NM+7C7nuVSq1Iwy6hh8EcsUjDr
-   g==;
-X-CSE-ConnectionGUID: 8fxM68fISjit2o6qPncMlA==
-X-CSE-MsgGUID: z1xiHUnxSHCcCnQvqQ02pA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52563695"
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="52563695"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 15:47:43 -0700
-X-CSE-ConnectionGUID: 10MhjjqTRGGZHLtU/HjSgA==
-X-CSE-MsgGUID: LVtBGWCHSLajtKz44Qe+GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="137530913"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.233]) ([10.124.220.233])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 15:47:41 -0700
-Message-ID: <3be8c20d-d08c-4f77-b1e9-2647e7da50b4@intel.com>
-Date: Mon, 12 May 2025 15:47:39 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZIXjqNm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1584C4CEE7;
+	Mon, 12 May 2025 22:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747090147;
+	bh=UiI1Jc8mCz25TVRMRgjQb9yc9oy0/KsT6mNqmrNzxq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LZIXjqNm25u5KcSoEGcoEgDv5PWJevc/uX2C1Rr40FzY4H6k+oCMuXwulq5HOocnY
+	 6WsYG8DqepsIQ4R8mlNl07YaVqR3maBAbBIVe/qw9RmUs2Wg6TPzXcmT3zsckQJrMC
+	 /RFQo2KcSfbquLNp8lJzwx+SjYwNiwvQqAliJe55g6lHHPNUN9BOJeUSx7i0HKo9L8
+	 pk8gZ6YYuPiGyJVCSZtUHsbSdmYWKXmZUQDx0F8wEACAfUP60mHPPlbzuQmUKS6RBA
+	 UWUA2D1E1RgVnrKBWvjAfmnQZ9UC1lAY+Glt9PKj2iCZQQjjK9pS+I28oB8c6Z5298
+	 S5ns3sCqhpFKw==
+Date: Tue, 13 May 2025 00:49:03 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Chris Babroski <cbabroski@nvidia.com>
+Cc: kblaiech@nvidia.com, asmaa@nvidia.com, davthompson@nvidia.com, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] i2c-mlxbf: Add repeated start condition support
+Message-ID: <bfw2kpxfiy2ulc5fi32ytly6y4fzqer6hvsq443tw43m624qof@6wl5ayvfl7my>
+References: <20250506193059.321345-1-cbabroski@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/17] cxl: docs - access-coordinates doc fixups
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net,
- Randy Dunlap <rdunlap@infradead.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-3-gourry@gourry.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250512162134.3596150-3-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506193059.321345-1-cbabroski@nvidia.com>
 
+Hi Chris,
 
+both patches merged to i2c/i2c-host.
 
-On 5/12/25 9:21 AM, Gregory Price wrote:
-> Place the hierarchy diagram in access-coordinates.rst in a code block.
+Thanks,
+Andi
+
+On Tue, May 06, 2025 at 07:30:58PM +0000, Chris Babroski wrote:
+> Add support for SMBus repeated start conditions to the Mellanox I2C
+> driver. This support is specifically enabled for the
+> I2C_FUNC_SMBUS_WRITE_I2C_BLOCK implementation which is required for
+> communication with a specific I2C device on BlueField 3.
 > 
-> Fix a few grammar issues.
-> 
-> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-> Suggested-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Chris Babroski <cbabroski@nvidia.com>
+> Reviewed-by: Asmaa Mnebhi <asmaa@nvidia.com>
+> Reviewed-by: Khalil Blaiech <kblaiech@nvidia.com>
 > ---
->  .../cxl/linux/access-coordinates.rst          | 30 +++++++++----------
->  1 file changed, 15 insertions(+), 15 deletions(-)
+>  V3 -> V4: Split changes into two separate logical patches
+>  V2 -> V3: Cleaned up code and address review comments
+>  V1 -> V2: Removed default "Reviewed-by:" tags
 > 
-> diff --git a/Documentation/driver-api/cxl/linux/access-coordinates.rst b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> index b07950ea30c9..e408ecbc4038 100644
-> --- a/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> +++ b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> @@ -26,20 +26,20 @@ There can be multiple switches under an RP. There can be multiple RPs under
->  a CXL Host Bridge (HB). There can be multiple HBs under a CXL Fixed Memory
->  Window Structure (CFMWS).
+>  drivers/i2c/busses/i2c-mlxbf.c | 34 ++++++++++++++++++++++++++--------
+>  1 file changed, 26 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-mlxbf.c b/drivers/i2c/busses/i2c-mlxbf.c
+> index b3a73921ab69..0f5b6a00c1b6 100644
+> --- a/drivers/i2c/busses/i2c-mlxbf.c
+> +++ b/drivers/i2c/busses/i2c-mlxbf.c
+> @@ -222,7 +222,7 @@
 >  
-> -An example hierarchy:
-> +An example hierarchy::
+>  #define MLXBF_I2C_MASTER_ENABLE \
+>  	(MLXBF_I2C_MASTER_LOCK_BIT | MLXBF_I2C_MASTER_BUSY_BIT | \
+> -	 MLXBF_I2C_MASTER_START_BIT | MLXBF_I2C_MASTER_STOP_BIT)
+> +	 MLXBF_I2C_MASTER_START_BIT)
 >  
-> ->                CFMWS 0
-> ->                  |
-> ->         _________|_________
-> ->        |                   |
-> ->    ACPI0017-0          ACPI0017-1
-> -> GP0/HB0/ACPI0016-0   GP1/HB1/ACPI0016-1
-> ->    |          |        |           |
-> ->   RP0        RP1      RP2         RP3
-> ->    |          |        |           |
-> ->  SW 0       SW 1     SW 2        SW 3
-> ->  |   |      |   |    |   |       |   |
-> -> EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
-> +                CFMWS 0
-> +                  |
-> +         _________|_________
-> +        |                   |
-> +    ACPI0017-0          ACPI0017-1
-> + GP0/HB0/ACPI0016-0   GP1/HB1/ACPI0016-1
-> +    |          |        |           |
-> +   RP0        RP1      RP2         RP3
-> +    |          |        |           |
-> +  SW 0       SW 1     SW 2        SW 3
-> +  |   |      |   |    |   |       |   |
-> + EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
+>  #define MLXBF_I2C_MASTER_ENABLE_WRITE \
+>  	(MLXBF_I2C_MASTER_ENABLE | MLXBF_I2C_MASTER_CTL_WRITE_BIT)
+> @@ -336,6 +336,7 @@ enum {
+>  	MLXBF_I2C_F_SMBUS_BLOCK = BIT(5),
+>  	MLXBF_I2C_F_SMBUS_PEC = BIT(6),
+>  	MLXBF_I2C_F_SMBUS_PROCESS_CALL = BIT(7),
+> +	MLXBF_I2C_F_WRITE_WITHOUT_STOP = BIT(8),
+>  };
 >  
->  Computation for the example hierarchy:
+>  /* Mellanox BlueField chip type. */
+> @@ -694,16 +695,19 @@ static void mlxbf_i2c_smbus_read_data(struct mlxbf_i2c_priv *priv,
+>  }
 >  
-> @@ -82,8 +82,8 @@ this point all the bandwidths are aggregated per each host bridge, which is
->  also the index for the resulting xarray.
+>  static int mlxbf_i2c_smbus_enable(struct mlxbf_i2c_priv *priv, u8 slave,
+> -				  u8 len, u8 block_en, u8 pec_en, bool read)
+> +				  u8 len, u8 block_en, u8 pec_en, bool read,
+> +				  bool stop)
+>  {
+> -	u32 command;
+> +	u32 command = 0;
 >  
->  The next step is to take the min() of the per host bridge bandwidth and the
-> -bandwidth from the Generic Port (GP). The bandwidths for the GP is retrieved
-> -via ACPI tables SRAT/HMAT. The min bandwidth are aggregated under the same
-> +bandwidth from the Generic Port (GP). The bandwidths for the GP are retrieved
-> +via ACPI tables SRAT/HMAT. The minimum bandwidth are aggregated under the same
->  ACPI0017 device to form a new xarray.
+>  	/* Set Master GW control word. */
+> +	if (stop)
+> +		command |= MLXBF_I2C_MASTER_STOP_BIT;
+>  	if (read) {
+> -		command = MLXBF_I2C_MASTER_ENABLE_READ;
+> +		command |= MLXBF_I2C_MASTER_ENABLE_READ;
+>  		command |= rol32(len, MLXBF_I2C_MASTER_READ_SHIFT);
+>  	} else {
+> -		command = MLXBF_I2C_MASTER_ENABLE_WRITE;
+> +		command |= MLXBF_I2C_MASTER_ENABLE_WRITE;
+>  		command |= rol32(len, MLXBF_I2C_MASTER_WRITE_SHIFT);
+>  	}
+>  	command |= rol32(slave, MLXBF_I2C_MASTER_SLV_ADDR_SHIFT);
+> @@ -738,9 +742,11 @@ mlxbf_i2c_smbus_start_transaction(struct mlxbf_i2c_priv *priv,
+>  	u8 op_idx, data_idx, data_len, write_len, read_len;
+>  	struct mlxbf_i2c_smbus_operation *operation;
+>  	u8 read_en, write_en, block_en, pec_en;
+> -	u8 slave, flags, addr;
+> +	bool stop_after_write = true;
+> +	u8 slave, addr;
+>  	u8 *read_buf;
+>  	int ret = 0;
+> +	u32 flags;
 >  
->  Finally, the cxl_region_update_bandwidth() is called and the aggregated
-
+>  	if (request->operation_cnt > MLXBF_I2C_SMBUS_MAX_OP_CNT)
+>  		return -EINVAL;
+> @@ -799,7 +805,16 @@ mlxbf_i2c_smbus_start_transaction(struct mlxbf_i2c_priv *priv,
+>  			memcpy(data_desc + data_idx,
+>  			       operation->buffer, operation->length);
+>  			data_idx += operation->length;
+> +
+> +			/*
+> +			 * The stop condition can be skipped when writing on the bus
+> +			 * to implement a repeated start condition on the next read
+> +			 * as required for several SMBus and I2C operations.
+> +			 */
+> +			if (flags & MLXBF_I2C_F_WRITE_WITHOUT_STOP)
+> +				stop_after_write = false;
+>  		}
+> +
+>  		/*
+>  		 * We assume that read operations are performed only once per
+>  		 * SMBus transaction. *TBD* protect this statement so it won't
+> @@ -825,7 +840,7 @@ mlxbf_i2c_smbus_start_transaction(struct mlxbf_i2c_priv *priv,
+>  
+>  	if (write_en) {
+>  		ret = mlxbf_i2c_smbus_enable(priv, slave, write_len, block_en,
+> -					 pec_en, 0);
+> +					 pec_en, 0, stop_after_write);
+>  		if (ret)
+>  			goto out_unlock;
+>  	}
+> @@ -835,7 +850,7 @@ mlxbf_i2c_smbus_start_transaction(struct mlxbf_i2c_priv *priv,
+>  		mlxbf_i2c_smbus_write_data(priv, (const u8 *)&addr, 1,
+>  					   MLXBF_I2C_MASTER_DATA_DESC_ADDR, true);
+>  		ret = mlxbf_i2c_smbus_enable(priv, slave, read_len, block_en,
+> -					 pec_en, 1);
+> +					 pec_en, 1, true);
+>  		if (!ret) {
+>  			/* Get Master GW data descriptor. */
+>  			mlxbf_i2c_smbus_read_data(priv, data_desc, read_len + 1,
+> @@ -940,6 +955,9 @@ mlxbf_i2c_smbus_i2c_block_func(struct mlxbf_i2c_smbus_request *request,
+>  	request->operation[0].flags |= pec_check ? MLXBF_I2C_F_SMBUS_PEC : 0;
+>  	request->operation[0].buffer = command;
+>  
+> +	if (read)
+> +		request->operation[0].flags |= MLXBF_I2C_F_WRITE_WITHOUT_STOP;
+> +
+>  	/*
+>  	 * As specified in the standard, the max number of bytes to read/write
+>  	 * per block operation is 32 bytes. In Golan code, the controller can
+> 
+> base-commit: 0a9b9d17f3a781dea03baca01c835deaa07f7cc3
+> -- 
+> 2.43.2
+> 
