@@ -1,100 +1,81 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1B7259CB8;
-	Mon, 12 May 2025 08:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7320925A2AC;
+	Mon, 12 May 2025 08:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747039607; cv=none; b=CidgXhzMVtGpoKpTgsCLxCYFQL0sDNgIfsDHktDbsNjOS1KJ8DGnRA3lb0Z5TeTaXqhoPzAVYNH++fxf1BumneSHKX1X3Vojuey7AEQy5AEPPOviBeReJe323c746XsKFuu9TJFlUYqwgNk5aiXV4/rWj3uSEGH5M78Ke9D3yqc=
+	t=1747039609; cv=none; b=Bv4FzX4tiHOfE2608ryzxOHkvtokfW00yECFPkiNHUe2tGGTS16xUS5SJCpuf7u5h+96VYMJpYfgeEWYJWVr8HnaOpTerjCzNNwRrrSkKWOTMQvdPO9wzIIJS2k7circeOjw97BjdxXkZHvCV+QgRp/Rbf6bxpOpe2C2pU2Svx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747039607; c=relaxed/simple;
-	bh=7rbfKiTxV4TmgxsREEclgvq00JGTvcvzpLtxrb7oD+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VpXelDSqlDRtmdEf9ywPBDy1CsLDd0OuanTk92guqk7n6oyhn07HS7dpmDjiqMc7MRrvvI7E3dnx7ylperK+L4lt4NsLcVPd2WQG3g/PpAsqlV3txv+oFArB5HnRb2DIu+f7cdvWQGO74tPw6b+HgRw2MpOPyFIORMX/gjeBxS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bmWYvnwx; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747039609; c=relaxed/simple;
+	bh=5E/bA1eM2wU2BC0VCWGwxexEaGR0i3e1NdalK4z2Pfs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=qKToz5cXXF5+V8LgjEHaHjM1FwffL6IN6LO1nJw9AKT4eg8WPYs6iSoV/i9e1xV3njIotY5cDNVMST1+s8R9sHboyJGBT2Ui8ZqEN5IH1pgXnvYXiksC11bFLU7cZgGlY6tc2347Mk0a2ozORwnZSMd7DeZTQog0ZGWEN12SOjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Cpjqn/hY; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bmWYvnwx"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54C8jqc61586901
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 12 May 2025 01:46:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54C8jqc61586901
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747039562;
-	bh=r60JlXTos4KUiP7BNV4Mubm1J2LcZX1eO8iTOKbeekU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bmWYvnwxTU0pVJW4u5KvyhR8cTc1ILbP2oLLV6/74QxSidvlgisrmNIxqhqDAWxKZ
-	 TfRpxdQFxnaY6yhrR7m4LAqjzS1vvDMK3xmikiuu/o0qUX54thQc2j1Gjq2HQ4VNwr
-	 rQKjxAF2qcQOahokDI2/tvLM1hf8YVHZ+abqqiF51/1wliz8hXeqPJdAFOMveLB42B
-	 DSKDUbp1sv3q/sTl5Z8xcEzVErSlNqGYT1F1PLCScIypX4jxPqjgttEGM9q3tH7Gdv
-	 i3o5hUvLakD4MvXrM6mRnnF2KzfqtpiDMAQ8pAj28Y0O3oXTU0l3ue3PDx/tGmMrY1
-	 Snn6b8NY550AQ==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
-        rafael@kernel.org, lenb@kernel.org
-Subject: [PATCH v1 2/3] x86/xen/msr: Fix uninitialized symbol 'err'
-Date: Mon, 12 May 2025 01:45:51 -0700
-Message-ID: <20250512084552.1586883-3-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512084552.1586883-1-xin@zytor.com>
-References: <20250512084552.1586883-1-xin@zytor.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cpjqn/hY"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 523DD40E023F;
+	Mon, 12 May 2025 08:46:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id SKF5IAOxcAli; Mon, 12 May 2025 08:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747039599; bh=r4yiL2NeUjVIZT9U2eVGSesDcYIgjx9AlbTxXhhyCFI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Cpjqn/hYUk3g50RPTmdKe6Y9brQGhDLwfq277OQSG8zEXOXuVJ56UjP5KjOsjse51
+	 tJam1vlG77V6OMpwJ7hmXGJRR5gNRDeUt4hbBILM7QU91bkNptWJOPJW7WkWx1y6KS
+	 8n5DGbSs0e4DBxbHfmMjP81JBCy256J+OcIOV9xsS0ED6apa41dULHEeYz4v/zZtJl
+	 YZGtk5JVtkGmyjuvajZuGCC2o4hfpG4ZS+otH4TQzQ7z8Mn6J12yEYei+b6NpCnT6z
+	 pNK1orFZjtb5rC1VJNPXKDTN9LfPPbXrp3tDLE/3HVbTOtqNSJnK1J0elySRmh9MOf
+	 M1fpEIb8EEaL21awp+oUcknC0C+h5ns2gLsKUH5kz7srlnvyhr11V7NFMzvG/FoyVI
+	 X7wcHwvWmaSEHYujNFLVr3kGd3v4zaiq+NG3UIiehqgmy6GMspaDOb52MHxvQTbg86
+	 NCYpJHJ9sf/CU3eo5gCNq//NAxd/t0LkGV6DsfSdFZIfiac53qMbKZBKIfhBOUzKgj
+	 KGw/07LxcnpyBXUKIif/Dwe7GxY+zvNezo/y+0c5edizJKD6Wnvq/DbwkEIIR3tVE5
+	 fwODnHffjSxHH4DJL9y+GQyPlJ9kX1Oi3AyHHbc/1SHMAPSMvYWCgqBdw3WTOwQoS8
+	 A4VScONipcpSorRfULnP/UM0=
+Received: from [IPv6:::1] (unknown [IPv6:2a02:3038:204:a05a:7dcf:8efb:5016:7f05])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 387A440E023B;
+	Mon, 12 May 2025 08:46:28 +0000 (UTC)
+Date: Mon, 12 May 2025 10:46:22 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Bernhard Kaindl <bk@suse.de>,
+ Andi Kleen <ak@linux.intel.com>, Li Fei <fei1.li@intel.com>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_x86/mtrr=3A_Check_if_fixed-ra?=
+ =?US-ASCII?Q?nge_MTRR_exists_in_mtrr=5Fsave=5Ffixed=5Franges=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <0ec52e49-3996-48e2-a16b-5d7eb0a4c8a6@linux.intel.com>
+References: <20250509170633.3411169-2-jiaqing.zhao@linux.intel.com> <20250509173225.GDaB48KZvZSA9QLUaR@fat_crate.local> <0ec52e49-3996-48e2-a16b-5d7eb0a4c8a6@linux.intel.com>
+Message-ID: <FFB8ACEC-7208-40D0-8B57-EBB2A57DF65F@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-xen_read_msr_safe() currently passes an uninitialized argument err to
-xen_do_read_msr().  But as xen_do_read_msr() may not set the argument,
-xen_read_msr_safe() could return err with an unpredictable value.
+On May 12, 2025 10:31:23 AM GMT+02:00, Jiaqing Zhao <jiaqing=2Ezhao@linux=
+=2Eintel=2Ecom> wrote:
+>This fixes unchecked MSR access error on platform without fixed-range
+>MTRRs when doing ACPI S3 suspend=2E
 
-To ensure correctness, initialize err to 0 (representing success)
-in xen_read_msr_safe().
+Is this happening on hw which is shipping now and users will see it or is =
+this some new platform which is yet to see the light of day in the future?
 
-Because xen_read_msr_safe() is essentially a wrapper of xen_do_read_msr(),
-the latter should be responsible for initializing the value of *err to 0.
-Thus initialize *err to 0 in xen_do_read_msr().
-
-Fixes: 502ad6e5a619 ("x86/msr: Change the function type of native_read_msr_safe()")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/xen-devel/aBxNI_Q0-MhtBSZG@stanley.mountain/
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/xen/enlighten_pv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 3be38350f044..01f1d441347e 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1091,6 +1091,9 @@ static u64 xen_do_read_msr(u32 msr, int *err)
- {
- 	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
- 
-+	if (err)
-+		*err = 0;
-+
- 	if (pmu_msr_chk_emulated(msr, &val, true))
- 		return val;
- 
-@@ -1162,7 +1165,7 @@ static void xen_do_write_msr(u32 msr, u64 val, int *err)
- 
- static int xen_read_msr_safe(u32 msr, u64 *val)
- {
--	int err;
-+	int err = 0;
- 
- 	*val = xen_do_read_msr(msr, &err);
- 	return err;
--- 
-2.49.0
-
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
