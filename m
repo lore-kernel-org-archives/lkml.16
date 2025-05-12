@@ -1,82 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E965925A633;
-	Mon, 12 May 2025 23:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4AB1DFE8
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 23:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747092059; cv=none; b=OSbsIvZMbZ40b3x+2xtCQvuTHPbSY3+4KLNdKNqCaMIa0XqJVanxvORWDIaL8t6jSuWHrbT1v73bNCL8qw2H9sS6l1SYT+wwxoF+2NdXXOxXdRqd7MjaRNEQ4uhq5XLobM6E69i/0imjJ/I7T01x5AxgTTkwl+cgruon/YzqaUg=
+	t=1747092147; cv=none; b=dc5KI9/SD1tY2Dd8Z5yUkgPQDyJfhapuMofzi7qAUr7hy+Zf1JIzFJXk761mWRLc6YbFfsmjEylt/voXNWCj24vBwUd7R8wwljFoflV+PdDetwf6rTh7nQopz3e4XgUH6GC7dUFJYgQ8aJpMV867yzFqU1EL0iUMR1/WAe/kn7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747092059; c=relaxed/simple;
-	bh=72Gw75hLLReEVg4P1Uy5kzFmeadOnBEzQln3lvoXjCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjkaeSx5vYkYb3K9+9mY9aDyyy4Ra6uWQ9c7E1w270eEjCWIQBTn2T4H4kANEJVJ8PdHyFp6Iy0QHaVHpFlzr09CtJwMsAHvaztc71hChwnsbwLfOtKRxpH7AdmK4CZvwGPAsXgyrDrUacE3GSFOLYMmQUMiMKgpGUojJ8/LsTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceDZAcOK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ceDZAcOK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E6BC4CEE7;
-	Mon, 12 May 2025 23:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747092058;
-	bh=72Gw75hLLReEVg4P1Uy5kzFmeadOnBEzQln3lvoXjCU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ceDZAcOK3UByprrPu9caFvlFb1I6Toyf5eXaV5aZjaZtULt0KbQpcVt902Vud4Sj2
-	 m+zgvK6TUc3aAWvEQJl+mCZwL2Dcd1tVtKk5R01TIk6bYGRSU3PORMpLmvFd9QCgtr
-	 EBLBOtw0+QNk5YIbwYhivizHhlLP33W72DhiE3qxnOfSs/JI74YhjE7GIJ6CAOzIRt
-	 R6M+FS8WTbXzpB5tUEbCMLnsdqXlv2sRm0DM8mdFh3wndHcoFNIWLK9qGjq7ixPUuA
-	 MB7ycY3ZyUEcT2XdxeJ2RfTd/SaCYc8SngEkiuA/CNt54FP1F1BwGhGQyeaMRFzwzI
-	 YN+nvZogpM4Wg==
-Date: Tue, 13 May 2025 01:20:54 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com, 
-	p.zabel@pengutronix.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: i2c: Specify reset as optional
-Message-ID: <vua7cq4nu5piz67as7asrfklimflpj2hznnd6oadcy36bglunt@ljhzegmt2jry>
-References: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+	s=arc-20240116; t=1747092147; c=relaxed/simple;
+	bh=mVpt63udtk6/AFzIGNSEy4WNg2GM9eyFsu4e5iEmnVU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=d/+n83yx+Xx7mhaU67RMSv3yHdNEnMy2pGM8tdayBNHTc1PxdacjzVG/1hJf2t+0PGf8jBpBeVvtu4TJtWktdYxmf3KZpH5n3H2fcCMs8ApsJubDOZHJIwho+ITMVoxWkQ3GFgK2MhCOWE7B1ncJ4ax8faQmRz+ScTJarOljoGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da6f284ca5so105404415ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 16:22:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747092145; x=1747696945;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RRpdss/wPX8+GTs3i2u5ajN2oMTMbZjUVLxllbstDOI=;
+        b=aEBa75blEJIjylpYRSm1COH9KZDDDVqoL0jCIdT+Hbq+HgV3/E7MYWw09mTHbFrOjz
+         etECrBCvKYmiQWOU2XAdIfSTLDXQ0s6EX6pmQBejOtNI+9Emp0PFDcb4m1gwGpK1Iujg
+         zjMYSvDqVAFka/gfo35LXQ2leFb4gU3vjUCoTH5ZSxPnFsFHu1NIFJpySZEsuNYbrTYN
+         6UHEbs/aFree+vZ3HIO4NCe35/LjQ1Sjt7logWJTdKS81YMG4V7RjJNfjoBWpeIczzSL
+         rWxuYy4fFBe29F12BmoWhrAPL/dWYC5q7MQ0jc+j9OEEw3M4XyXw8bSwDqLwYgPUmpus
+         LqPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOPIpJBQZ8hfFVWcR4xzcfPEvciQew86aHiwOxfIhBY/oqiVWY/kxJf7HiZk1Y2uqV5UYb6nvlpOoes6A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ92qye/t2hfNR8jcRB3AIRFDUb6Jl+C0g/A4MWijRIPQhtUOv
+	QRu39pNRDo0ncfVzSf+qPqkxZjH1z1x0ALduUyE+aqJrbEO32AeC9aVV8g/66p6RiKtzDKSWcCn
+	6UaADH5T7WExvUXFWM7MT+IQzcPiIpv/ulmT4LYdMAWiKf0Nsi/K2Nkw=
+X-Google-Smtp-Source: AGHT+IGTMOugB4Utp3Gn6N3dI0Mzhp6j9VTw5k+IewZulu6M38eLTHh+hTnP/9clDE1JdNJMEcyHqwrFNm0G5F77Yj9hkeIY2q3Z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+X-Received: by 2002:a92:cd8f:0:b0:3d9:668c:a702 with SMTP id
+ e9e14a558f8ab-3da7e1eef9bmr167134355ab.9.1747092144754; Mon, 12 May 2025
+ 16:22:24 -0700 (PDT)
+Date: Mon, 12 May 2025 16:22:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682282b0.050a0220.f2294.00bc.GAE@google.com>
+Subject: [syzbot] [net?] KASAN: global-out-of-bounds Read in in_dev_finish_destroy
+From: syzbot <syzbot+dd3b9802ae13f63906d7@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Akhil,
+Hello,
 
-I am assuming you are going to send a v2 for patches 1 to 3 with
-the proposed changes?
+syzbot found the following issue on:
 
-Andi
+HEAD commit:    92a09c47464d Linux 6.15-rc5
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1238f8d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b39cb28b0a399ed3
+dashboard link: https://syzkaller.appspot.com/bug?extid=dd3b9802ae13f63906d7
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-On Tue, May 06, 2025 at 03:29:33PM +0530, Akhil R wrote:
-> Specify reset as optional in the description for controllers that has an
-> internal software reset available
-> 
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> index b57ae6963e62..19aefc022c8b 100644
-> --- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> @@ -97,7 +97,9 @@ properties:
->  
->    resets:
->      items:
-> -      - description: module reset
-> +      - description: |
-> +          Module reset. This property is optional for controllers in Tegra194 and later
-> +          chips where an internal software reset is available as an alternative.
->  
->    reset-names:
->      items:
-> -- 
-> 2.43.2
-> 
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-92a09c47.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9dd31988ea97/vmlinux-92a09c47.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4b4e78abb078/bzImage-92a09c47.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+dd3b9802ae13f63906d7@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: global-out-of-bounds in ref_tracker_free+0x562/0x830 lib/ref_tracker.c:244
+Read of size 1 at addr ffffffff9af9a490 by task kworker/u32:1/13
+
+CPU: 3 UID: 0 PID: 13 Comm: kworker/u32:1 Not tainted 6.15.0-rc5-syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: netns cleanup_net
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ ref_tracker_free+0x562/0x830 lib/ref_tracker.c:244
+ netdev_tracker_free include/linux/netdevice.h:4351 [inline]
+ netdev_put include/linux/netdevice.h:4368 [inline]
+ netdev_put include/linux/netdevice.h:4364 [inline]
+ in_dev_finish_destroy+0xae/0x1d0 net/ipv4/devinet.c:258
+ in_dev_put include/linux/inetdevice.h:290 [inline]
+ inet_rcu_free_ifa+0x93/0xb0 net/ipv4/devinet.c:228
+ rcu_do_batch kernel/rcu/tree.c:2568 [inline]
+ rcu_core+0x799/0x14e0 kernel/rcu/tree.c:2824
+ handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
+ __do_softirq kernel/softirq.c:613 [inline]
+ invoke_softirq kernel/softirq.c:453 [inline]
+ __irq_exit_rcu+0x109/0x170 kernel/softirq.c:680
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+ sysvec_apic_timer_interrupt+0xa4/0xc0 arch/x86/kernel/apic/apic.c:1049
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:lockdep_unregister_key+0xdd/0x130 kernel/locking/lockdep.c:6613
+Code: 48 89 ef e8 b5 fe ff ff 48 89 ef e8 cd e5 ff ff 89 c3 e8 f6 ee ff ff 9c 58 f6 c4 02 75 52 41 f7 c4 00 02 00 00 74 01 fb 84 db <75> 1b 5b 5d 41 5c e9 58 5d 0a 00 8b 05 06 83 ed 0e 31 db 85 c0 74
+RSP: 0018:ffffc90000107808 EFLAGS: 00000246
+RAX: 0000000000000046 RBX: 0000000000000000 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: ffffffff8dcd20c4 RDI: ffffffff8bf48260
+RBP: ffffffff972ac028 R08: 000000000000c64e R09: ffffffff95c54c5c
+R10: 0000000000000004 R11: 0000000000000000 R12: 0000000000000246
+R13: ffff88804eaa8000 R14: ffff88804eaa84c0 R15: 0000000000000001
+ __qdisc_destroy+0x11a/0x4a0 net/sched/sch_generic.c:1080
+ qdisc_put+0xab/0xe0 net/sched/sch_generic.c:1106
+ dev_shutdown+0x1d0/0x430 net/sched/sch_generic.c:1494
+ unregister_netdevice_many_notify+0xad1/0x26f0 net/core/dev.c:11969
+ unregister_netdevice_many net/core/dev.c:12046 [inline]
+ default_device_exit_batch+0x853/0xaf0 net/core/dev.c:12538
+ ops_exit_list+0x128/0x180 net/core/net_namespace.c:177
+ cleanup_net+0x5c1/0xb30 net/core/net_namespace.c:654
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+The buggy address belongs to the variable:
+ binder_devices+0x10/0x40
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1af9a
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea00006be688 ffffea00006be688 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffffffff9af9a380: 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
+ ffffffff9af9a400: 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
+>ffffffff9af9a480: 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
+                         ^
+ ffffffff9af9a500: 00 00 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
+ ffffffff9af9a580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9
+==================================================================
+----------------
+Code disassembly (best guess):
+   0:	48 89 ef             	mov    %rbp,%rdi
+   3:	e8 b5 fe ff ff       	call   0xfffffebd
+   8:	48 89 ef             	mov    %rbp,%rdi
+   b:	e8 cd e5 ff ff       	call   0xffffe5dd
+  10:	89 c3                	mov    %eax,%ebx
+  12:	e8 f6 ee ff ff       	call   0xffffef0d
+  17:	9c                   	pushf
+  18:	58                   	pop    %rax
+  19:	f6 c4 02             	test   $0x2,%ah
+  1c:	75 52                	jne    0x70
+  1e:	41 f7 c4 00 02 00 00 	test   $0x200,%r12d
+  25:	74 01                	je     0x28
+  27:	fb                   	sti
+  28:	84 db                	test   %bl,%bl
+* 2a:	75 1b                	jne    0x47 <-- trapping instruction
+  2c:	5b                   	pop    %rbx
+  2d:	5d                   	pop    %rbp
+  2e:	41 5c                	pop    %r12
+  30:	e9 58 5d 0a 00       	jmp    0xa5d8d
+  35:	8b 05 06 83 ed 0e    	mov    0xeed8306(%rip),%eax        # 0xeed8341
+  3b:	31 db                	xor    %ebx,%ebx
+  3d:	85 c0                	test   %eax,%eax
+  3f:	74                   	.byte 0x74
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
