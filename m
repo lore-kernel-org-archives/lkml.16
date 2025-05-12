@@ -1,138 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2732957B4
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA4329373F;
+	Mon, 12 May 2025 12:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053298; cv=none; b=ElQti4626uv+gEcqKI8ZSBTNZmDsarBcMlOFFKcZjxGWsM5AglrkyRTgUOlUvbb17a9Ec+9GTBBrw5FJ4bMUB779KxiftjhdAB1s97j0NmM5pXbP0QrK9oSVsZDosFWDXi46tEP4QaHXnOX8I5hrYaFJopeB6+vfeFxufztr3Xs=
+	t=1747053399; cv=none; b=XCf4ijiOXwa3ECQIyqJmS6s4BIVZb1grngGwgrWFeZej8li0rTI5MiG+tF6GcxaNZt+TbQqVAokS7GHttc7cIBqj2AJ7jcfauZ9cYuCAZyAVIWbgOxoqb1hZU4FL3wcXRRz4Tkdkm6fXgLA/kfT3QufWUBlEBwauRnuPRcSfS9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747053298; c=relaxed/simple;
-	bh=QxylKRP8NbNllb6QGFTI6Ghh7iVl6iJ+RfT2+Ev9jeg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qWKezeOgzuUOfQayvqzXhMJfi7hl6nwObUDuTrWRlrYg0aDn77NwBCPvQmwTlyJ7VajfMs6HheDbMruqtOcy2gBBiPQ9W0p/nBNv/Ve/B56+SVqpM/Sl80ojrnzuSHIsNBEb91Xvr1M0l/gqKdc326JHXZChyA9rP8MsHKA6pYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a63nv1Fu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a63nv1Fu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747053295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bC3rmCqfA5icmQmv1eGXLPySmScZgaTKRTiPQFcrNeg=;
-	b=a63nv1FuCkXs01OmgcbN629Q0IYbB4JMcxtBVxFFbH2/S9MZpYuzq376uA0b7g8X1mgWCE
-	/0BLBuG/H0wFkPniTEujmMA+NyYPm4l5vpbANEdKIHHsCkUlOQK28jAeanIn8zHXkDi/C8
-	5uPofxAVsFkD9B4Rm3wKdlOdaj1QodE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-235-79D5tFSuML2YIB2ITO2Nyg-1; Mon, 12 May 2025 08:34:54 -0400
-X-MC-Unique: 79D5tFSuML2YIB2ITO2Nyg-1
-X-Mimecast-MFC-AGG-ID: 79D5tFSuML2YIB2ITO2Nyg_1747053293
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so17071195e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747053293; x=1747658093;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bC3rmCqfA5icmQmv1eGXLPySmScZgaTKRTiPQFcrNeg=;
-        b=ZFWJtLE2HsARjbN/uaaEsoLPYFrkrLuNRcOpA5FrreSFX7htI/swioI4nVbX9oaHKV
-         KUItfqa3130kvjVaC49a+VJ/7lbPt3YpzW0cMTYNn8tAhqd6OY9Pj3sQxDb41CF4MOr0
-         yQ6Xvy8oXuzitow0Ax+GSbnFHlYGiB27+bkQmolTX88v49WDWMepsU7sZhk6FMqkoYAw
-         oas0upNc0BJ1iPrFaWiqKNx79h6bvPiS0jqE7ZSRSwAU15SouK0I24pDfwG8m54p3Mv7
-         yTHMUNCBqFTur/dwMUn8/wd27Sl26DSpqKofggAm7mKE/X96oJdE6Zy/ez5XrqYwrgq6
-         RkeQ==
-X-Gm-Message-State: AOJu0YyQIh+uzGkFSkXEsjHqCv7yTF9g4QKHwTxQqbAzH4fTyypVJhL3
-	6a5hkZAgvvcXniXud4iNJfLBJCC88QCKtgl9hfPNednC32bgQ0OR94ye2OWzE5C9dCAXgiFLWBv
-	Gc6UDKbHdJ/M8FEk3qKb4IxFqJcWr3G75noZ5BbEPhy5e3y/1OPZfMXNxCjmp6LW6hm1vxGAJPI
-	ysnmtbQiJegHz7scOhb2EfVrIG+kg+NypBgJcDlYoGAVnZ
-X-Gm-Gg: ASbGnctgAjM3s6zxEbgUTNZhbQDLTgQVrxPRYCTWlj65nnZXul8lgpmaBP4nZdlvlEr
-	qJyYWRnRzNKQ44UxKuhe4PbaYSQm+0Dy2B3r97fr9IdlGSOIo+YprTDkNAsFx2nNQPy/7qwsxob
-	a00rziFlPtrzGoBUaLDPE/uiWptEdlSGOVu300I/z9ajXzOEzUuFMiQtzPyiZhjOeSLyYKnHLlk
-	013uYC23sEk4MnHdxkLm/aKDE6f4w6x7XkLn2pH5nduowiPSnvl2J7EXpX5DlOjfc6uGtsJPYnh
-	OmkoUOrIEm4KCbyjE2lTFvem3G34gyGvgh7u9IH5s/k7vxtf5olm57yAvxU09ckHdP8RGDgX
-X-Received: by 2002:a05:600c:c0c3:10b0:439:8878:5029 with SMTP id 5b1f17b1804b1-442d6d71e58mr72192025e9.2.1747053293137;
-        Mon, 12 May 2025 05:34:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEGmemaQ8osM6LIu2Hwsj+bFw5CfMQg914aObUDJRDyOqNqUwk6qAxyXq65jxeriv3mY00DEQ==
-X-Received: by 2002:a05:600c:c0c3:10b0:439:8878:5029 with SMTP id 5b1f17b1804b1-442d6d71e58mr72191505e9.2.1747053292674;
-        Mon, 12 May 2025 05:34:52 -0700 (PDT)
-Received: from localhost (p200300d82f4a5800f1ae8e20d7f451b0.dip0.t-ipconnect.de. [2003:d8:2f4a:5800:f1ae:8e20:d7f4:51b0])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442d67d74b5sm125447555e9.2.2025.05.12.05.34.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 05:34:52 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	x86@kernel.org,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Peter Xu <peterx@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 11/11] mm/io-mapping: track_pfn() -> "pfnmap tracking"
-Date: Mon, 12 May 2025 14:34:24 +0200
-Message-ID: <20250512123424.637989-12-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512123424.637989-1-david@redhat.com>
-References: <20250512123424.637989-1-david@redhat.com>
+	s=arc-20240116; t=1747053399; c=relaxed/simple;
+	bh=g4nck2QMZGwAZ9w81HswNK6wCtGG7pe79Jg7VJ70KhQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBrX53pMjMXhfAxTeOIWmL2ygRMg0rW8QFAe4my5tiWMh93rlCaBUF2Ij3my3QaXl8dLoVjFxkl041btZKxuBVRGLgviN/SgOTd6NSTRUvJpH/0xtT8OaUMnsm8dROdF5oo9m2kQfoYrfbQfgnc162MMVKaNsJsp6DZ2i0F7Zlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-07-6821eb4fc11d
+Date: Mon, 12 May 2025 21:36:26 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net,
+	davem@davemloft.net, john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
+	vishal.moola@gmail.com
+Subject: Re: [RFC 00/19] Split netmem from struct page
+Message-ID: <20250512123626.GB45370@system.software.com>
+References: <20250509115126.63190-1-byungchul@sk.com>
+ <CAHS8izPFiytN_bM6cu2X8qbvyVTL6pFMeobW=qFwjgHbg5La9Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izPFiytN_bM6cu2X8qbvyVTL6pFMeobW=qFwjgHbg5La9Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsXC9ZZnoa7/a8UMg9OX5CzmrF/DZrH6R4XF
+	8gc7WC3mrNrGaPHl5212i8ULvzFbzDnfwmLx9Ngjdov7y56xWOxp385s0dvym9miaccKJosL
+	2/pYLS7vmsNmcW/Nf1aLYwvELL6dfsNosX7fDVaL3z/msDkIe2xZeZPJY+esu+weCzaVemxe
+	oeXRdeMSs8emVZ1sHps+TWL3uHNtD5vHiRm/WTx27vjM5PHx6S0Wj/f7rrJ5fN4kF8AbxWWT
+	kpqTWZZapG+XwJWx5ft99oKjvBUPv69nb2A8zdXFyMkhIWAi8eDlVXYYe+HP00wgNouAqsS+
+	TwvBbDYBdYkbN34yg9giApoSS/ZNZO1i5OJgFjjLLPH10zlWkISwgJnE8cs3GEFsXgELiWnT
+	24GGcnAICdRIbDmTDxEWlDg58wkLiM0MNPPPvEvMICXMAtISy/9xQITlJZq3zgZbxSkQKDGp
+	+z7YCaICyhIHth1ngjjzHLvE5z/pELakxMEVN1gmMArOQrJhFpINsxA2zEKyYQEjyypGocy8
+	stzEzBwTvYzKvMwKveT83E2MwEheVvsnegfjpwvBhxgFOBiVeHhPvFTMEGJNLCuuzD3EKMHB
+	rCTC27gdKMSbklhZlVqUH19UmpNafIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNTqoFR
+	x+LqkVKDxgeRRnLyHG7qPb4Sew6Vx1mJnszo3P6x4/HXprNJSz7e4z+2k/+70bO2masVG7vM
+	3045LHf2srUnV7zzPrNGrWlqiQf3v55zv2vjR9789uz4ubkaQf93lZ9oKWoytVTrDZN6+Hri
+	93CTkxcXOmqtDM7wqX/W5vctLHfVAZNT6ycpsRRnJBpqMRcVJwIA//ACmuACAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsXC5WfdrOv/WjHD4HWrsMWc9WvYLFb/qLBY
+	/mAHq8WcVdsYLb78vM1usXjhN2aLOedbWCyeHnvEbnF/2TMWiz3t25ktelt+M1s07VjBZHF4
+	7klWiwvb+lgtLu+aw2Zxb81/VotjC8Qsvp1+w2ixft8NVovfP+awOYh4bFl5k8lj56y77B4L
+	NpV6bF6h5dF14xKzx6ZVnWwemz5NYve4c20Pm8eJGb9ZPHbu+Mzk8fHpLRaP9/uusnksfvGB
+	yePzJrkAvigum5TUnMyy1CJ9uwSujC3f77MXHOWtePh9PXsD42muLkZODgkBE4mFP08zgdgs
+	AqoS+z4tBLPZBNQlbtz4yQxiiwhoSizZN5G1i5GLg1ngLLPE10/nWEESwgJmEscv32AEsXkF
+	LCSmTW9n72Lk4BASqJHYciYfIiwocXLmExYQmxlo5p95l5hBSpgFpCWW/+OACMtLNG+dDbaK
+	UyBQYlL3fbATRAWUJQ5sO840gZFvFpJJs5BMmoUwaRaSSQsYWVYximTmleUmZuaY6hVnZ1Tm
+	ZVboJefnbmIERuay2j8TdzB+uex+iFGAg1GJh/fES8UMIdbEsuLK3EOMEhzMSiK8jduBQrwp
+	iZVVqUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYz+tVElnb3lWzL2
+	vjZXrIn0LrTYvXtCu6/4EsP+ZbLG/xbtYCvtkSosYf57zdlPzOB1Lq9n15qvV6ccOXLwmIhY
+	dLcs64qCc1+MPHTKp3ZIflrwv3JDvGrXb+4Vph8d1H4fO/av+sfkQ+tO37t8N6Jj/fs3U//V
+	RF5m0/5ml/fm/fTtpjurT51XYinOSDTUYi4qTgQAYc+tCMgCAAA=
+X-CFilter-Loop: Reflected
 
-track_pfn() does not exist, let's simply refer to it as "pfnmap
-tracking".
+On Fri, May 09, 2025 at 07:09:16AM -0700, Mina Almasry wrote:
+> On Fri, May 9, 2025 at 4:51 AM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > The MM subsystem is trying to reduce struct page to a single pointer.
+> > The first step towards that is splitting struct page by its individual
+> > users, as has already been done with folio and slab.  This patchset does
+> > that for netmem which is used for page pools.
+> >
+> > Matthew Wilcox tried and stopped the same work, you can see in:
+> >
+> >    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infradead.org/
+> >
+> > Mina Almasry already has done a lot fo prerequisite works by luck, he
+> > said :).  I stacked my patches on the top of his work e.i. netmem.
+> >
+> > I focused on removing the page pool members in struct page this time,
+> > not moving the allocation code of page pool from net to mm.  It can be
+> > done later if needed.
+> >
+> > There are still a lot of works to do, to remove the dependency on struct
+> > page in the network subsystem.  I will continue to work on this after
+> > this base patchset is merged.
+> >
+> > This patchset is based on mm tree's mm-unstable branch.
+> >
+> 
+> This series largely looks good to me, but a couple of things:
+> 
+> - For deep changes like this to the page_pool, I think we need a
+> before/after run to Jesper's currently out-of-tree benchmark to see
+> any regressions:
+> https://lore.kernel.org/netdev/20250309084118.3080950-1-almasrymina@google.com/
 
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/io-mapping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure.  I will check it.
 
-diff --git a/mm/io-mapping.c b/mm/io-mapping.c
-index f44a6a1347123..d3586e95c12c5 100644
---- a/mm/io-mapping.c
-+++ b/mm/io-mapping.c
-@@ -24,7 +24,7 @@ int io_mapping_map_user(struct io_mapping *iomap, struct vm_area_struct *vma,
- 	pgprot_t remap_prot = __pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
- 				       (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK));
- 
--	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
-+	/* We rely on prevalidation of the io-mapping to skip pfnmap tracking. */
- 	return remap_pfn_range_notrack(vma, addr, pfn, size, remap_prot);
- }
- EXPORT_SYMBOL_GPL(io_mapping_map_user);
--- 
-2.49.0
+> - Also please CC Pavel on iterations related to netmem/net_iov, they
+> are reusing that in io_uring code for iouring rx rc as well.
 
+I will.  Thank you.
+
+	Byungchul
+
+> --
+> Thanks,
+> Mina
