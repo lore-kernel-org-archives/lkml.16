@@ -1,158 +1,230 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFDE4C9F;
-	Mon, 12 May 2025 03:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3ACC2F2;
+	Mon, 12 May 2025 03:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747019852; cv=none; b=YMB85wuAdX8E+0aaw44+zwD0Q7ReJEGCcG3jrAHRdvSQvC6qJvir8O+0V9sm3Q5w2K/ToMVyVe32/Y5rN2/dMJ4SgUXZBxQyvTlEEx9S7lIToxkm9UqYnZESK7u2Qa68rlHsvO/72Dc1Ey/2/kg+SgCBQGllzUWPXWp1HMj6NbE=
+	t=1747019970; cv=none; b=g2If08IEU+s8ctOdePVxUDyY6ts9trb25gzOtgLSE99afVIYBXyi3JTpm2255i576zPFKWif7sttDb0is2DsBhYnjb7Ze984Ref8r/oPg5fP5x1ZNANOx8SxJZ13n0tHKDfibuJJtcUaCdYqrcdzrBh1PqHNNMLoL+v4szOI8eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747019852; c=relaxed/simple;
-	bh=OZfWAnobhqdNFKhB9BPrKOzfKONXZNBxo3gQaRzOoZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IJzvrI9oCptI/MtGtuMmzpzIysMmMN9kfv9HvJ3Y/7LgzfCbUFJI8dYSG+R4GmGuCvtkPGm0QLB34Mk30M36Uv/257SQwCnzAxbE8I/i8R46HUiAH/NJukTQf0CgDb4JSJz0PvCwW4VUPUt4sENbqeCB7r15txkpcZISuvXl7iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RS+eBUsa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RS+eBUsa"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BMVidD027707;
-	Mon, 12 May 2025 03:17:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ei71nJhFIXa2GPr33EmRirerjA+BagoTAuqVGerbAsc=; b=RS+eBUsaYPaZmbSx
-	7jN9wxoDA5EI4kNgn0sBaBvEDlncitHht1Z2Ztu31JKdAYxz/ijdhtM0sBST76Ww
-	/4AV69pa3+DYG8U/U3fmZ8J7qR0Azqbe/86YXSgsdB7yunyxIYJscIEHzf8ofSlX
-	5jChBzrRLtACanjlSC8sAy6EtRwYfG11ta+yPE2rh7sENwEUNoRQvE98FADMxedp
-	cuUaxrblFEmRmriDyrbpDyqeDN1w4qlCM/NBYVo8tHn0P2ko7T1sLCuoL7wq1CKx
-	C06XC/UVNMLC3G3lCpq8+J2m/N5M6CE2Z/ierD1reh1TBSfdDKUheOLBmr/1Pp+L
-	0yH+TA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hvghb4ug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 03:17:26 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54C3HPQZ007225
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 03:17:25 GMT
-Received: from [10.239.132.205] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 11 May
- 2025 20:17:18 -0700
-Message-ID: <f70013d1-6273-4ec9-b860-0d88cfe6f181@quicinc.com>
-Date: Mon, 12 May 2025 11:17:16 +0800
+	s=arc-20240116; t=1747019970; c=relaxed/simple;
+	bh=OA4Hw06E2Cdb16C5vZkhnOCcZQj4egfXWOx3Iqw3nlk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bwAOXepv8Noe0k5d0puUKGoWfFlV3befTp8iYp9IN78BQ8SnqGCVOlFzBaFOE9DFyzPswPSd+RQKyP7f94vX7wFObJ0K26GW3SEZrC2BFJxpUMB+RoAt4ReMn+c/lV2x9NaMnWE93qZ5VTrATIbRvx4AGS4OZyU+d8tRkipo9C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C27nYk004464;
+	Mon, 12 May 2025 03:18:55 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46hws89991-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 12 May 2025 03:18:54 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Sun, 11 May 2025 20:18:53 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Sun, 11 May 2025 20:18:48 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, <john.fastabend@gmail.com>,
+        <andrii@kernel.org>, <martin.lau@linux.dev>, <song@kernel.org>,
+        <yhs@fb.com>, <kpsingh@kernel.org>, <sdf@google.com>,
+        <haoluo@google.com>, <jolsa@kernel.org>, <rostedt@goodmis.org>,
+        <mhiramat@kernel.org>, <laoar.shao@gmail.com>, <bpf@vger.kernel.org>
+Subject: [PATCH 6.1.y] bpf: support deferring bpf_link dealloc to after RCU grace period
+Date: Mon, 12 May 2025 11:18:47 +0800
+Message-ID: <20250512031847.3331135-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6] arm64: dts: qcom: qcs615: Add mproc node for
- SEMP2P
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Kyle Deng <quic_chunkaid@quicinc.com>
-References: <20250507-add_qcs615_remoteproc_support-v2-0-52ac6cb43a39@quicinc.com>
- <20250507-add_qcs615_remoteproc_support-v2-3-52ac6cb43a39@quicinc.com>
- <a8a1aa0e-f53d-4a77-9199-958878563b9f@oss.qualcomm.com>
- <53dd6e80-b0d1-4b1e-9354-851fa2473191@quicinc.com>
- <18993254-5fa2-44bf-845f-3b0bef29508d@oss.qualcomm.com>
-From: Lijuan Gao <quic_lijuang@quicinc.com>
-In-Reply-To: <18993254-5fa2-44bf-845f-3b0bef29508d@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: A-iLo1AcPI8ZS1AvQR1UqkfGtqqPG5vZ
-X-Proofpoint-ORIG-GUID: A-iLo1AcPI8ZS1AvQR1UqkfGtqqPG5vZ
-X-Authority-Analysis: v=2.4 cv=AMDybF65 c=1 sm=1 tr=0 ts=68216846 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=ElEvMR_8cTJwMRenlScA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAzMyBTYWx0ZWRfXxpPAssAqjm3Z
- T7qcZuJMWvrwluyFxU6GAil50Q6m9ycFAJHNENj5Rjqjgn/LE8bxeXWIBI7rewmkd/Nw34toPoX
- F4T2DviEmXrvgl9XaB7GrLheHDd0wooXthxZbnavXhFj3nGCWEouuwgu/59ExAwPGL/hpYYhFhX
- cn0DMSAtPjVKhiqacLpGDi8vd+Hkwa7+eZvM2A4ET7cDchLN8cUr2hG8qLwjLhMGiWbMSjZ39I3
- IwjKnbr4bxCTOT/Rrb09SXx/4ayCVN3q40OZZY26SQ3AcEpTJfbkYfShlRNpCAtFiqAZ0dNhaF3
- 6bD8vzFlEReXr3cijIKreaKqPSFreNuR1/VrIhOi7xsrsa/86n4l+Xz0Wi4WfnHGkpne7NEnD6r
- 4CN4aF8sg1t6HtwAkfj1Neuv57uMu1jw3KGmZUXjiCIID7ffIUHQo5YD++2Tl5muKXdvCEQS
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: dYoj7KhBQdfsw-CznJjOh4EvUqLC69iQ
+X-Proofpoint-GUID: dYoj7KhBQdfsw-CznJjOh4EvUqLC69iQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDAzMyBTYWx0ZWRfX6AXKM2FIPhlt OOb9cbfvvpb6LIEf2yGA5J+fKwr4sethcyhIVqiPCtGVENFLmWFVqOej4/Ui9ueDTRmNVZJ9H44 jZgEjKm8UWFUOc4pLo0g3MLtjfqZ+XjVGk5p2cylpxd2wsKV3/PN0Xyhc6qwGdS8MdtVnGPHnKD
+ 2il+SPuicbVf3OjRIjK+1wP4FWP0842LpiPSmbftzkl4+G2RYCjJZA97n1cRgLNyiNfosQ1o4Zu TSxVp7XA4KypMHgyMVGhUF8VL1Q4jzputCK18ZuSMXXiA6OJL1dD/oXB9S9YRFpAY6e7JtaGxPO uXIdePIdI7n+d7Ra4sdPxi/XFYKhEHTHrS2dk8cGcOiu38YjlkQ1Fg3YTHjCO/8ke8qNZq/r+CI
+ lCdZ8PlPe3pIl/XW496JvjqSZ9fFDKphjvqeZX1COJhJ3PF2eWsSmiGLxHAJsPSXoVJ+H5Lw
+X-Authority-Analysis: v=2.4 cv=Q+HS452a c=1 sm=1 tr=0 ts=6821689e cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=TqKKbRrxTIIqW3QnL98A:9 a=cQPPKAXgyycSBL8etih5:22
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Sensitive_Customer_Information: Yes
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-12_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 priorityscore=1501 adultscore=0 impostorscore=0
- phishscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=975 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0 spamscore=0
+ clxscore=1011 suspectscore=0 adultscore=0 malwarescore=0 impostorscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
  definitions=main-2505120033
 
+From: Andrii Nakryiko <andrii@kernel.org>
 
+commit 1a80dbcb2dbaf6e4c216e62e30fa7d3daa8001ce upstream.
 
-在 5/9/2025 4:53 PM, Konrad Dybcio 写道:
-> On 5/9/25 10:22 AM, Lijuan Gao wrote:
->>
->>
->> 在 5/8/2025 10:40 PM, Konrad Dybcio 写道:
->>> On 5/7/25 12:26 PM, Lijuan Gao wrote:
->>>> From: Kyle Deng <quic_chunkaid@quicinc.com>
->>>>
->>>> The Shared Memory Point to Point (SMP2P) protocol facilitates
->>>> communication of a single 32-bit value between two processors.
->>>> Add these two nodes for remoteproc enablement on QCS615 SoC.
->>>>
->>>> Signed-off-by: Kyle Deng <quic_chunkaid@quicinc.com>
->>>> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
->>>> ---
->>>>    arch/arm64/boot/dts/qcom/qcs615.dtsi | 43 ++++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 43 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
->>>> index 7c377f3402c1..53661e3a852e 100644
->>>> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
->>>> @@ -332,6 +332,49 @@ mc_virt: interconnect-2 {
->>>>            qcom,bcm-voters = <&apps_bcm_voter>;
->>>>        };
->>>>    +    smp2p-adsp {
->>>> +        compatible = "qcom,smp2p";
->>>> +        qcom,smem = <443>, <429>;
->>>> +        interrupts = <GIC_SPI 172 IRQ_TYPE_EDGE_RISING>;
->>>> +        mboxes = <&apss_shared 26>;
->>>
->>> 26 will poke at the SLPI instead
->>
->> SLPI has not been enabled in QCS615, so the sensor will be in ADSP.  And 26 is being used dowstream, so it should be correct.
-> 
-> Please check in with the relevant folks and leave a comment such as
-> 
-> /* On this platform, bit 26 (normally SLPI) is repurposed for ADSP */
-> 
-> if it's indeed correct
-> 
-> Konrad
+BPF link for some program types is passed as a "context" which can be
+used by those BPF programs to look up additional information. E.g., for
+multi-kprobes and multi-uprobes, link is used to fetch BPF cookie values.
 
-Yes, I have already confirmed the above information with the relevant 
-folks. I will add this comment in the next patch.
+Because of this runtime dependency, when bpf_link refcnt drops to zero
+there could still be active BPF programs running accessing link data.
 
+This patch adds generic support to defer bpf_link dealloc callback to
+after RCU GP, if requested. This is done by exposing two different
+deallocation callbacks, one synchronous and one deferred. If deferred
+one is provided, bpf_link_free() will schedule dealloc_deferred()
+callback to happen after RCU GP.
+
+BPF is using two flavors of RCU: "classic" non-sleepable one and RCU
+tasks trace one. The latter is used when sleepable BPF programs are
+used. bpf_link_free() accommodates that by checking underlying BPF
+program's sleepable flag, and goes either through normal RCU GP only for
+non-sleepable, or through RCU tasks trace GP *and* then normal RCU GP
+(taking into account rcu_trace_implies_rcu_gp() optimization), if BPF
+program is sleepable.
+
+We use this for multi-kprobe and multi-uprobe links, which dereference
+link during program run. We also preventively switch raw_tp link to use
+deferred dealloc callback, as upcoming changes in bpf-next tree expose
+raw_tp link data (specifically, cookie value) to BPF program at runtime
+as well.
+
+Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
+Reported-by: syzbot+981935d9485a560bfbcb@syzkaller.appspotmail.com
+Reported-by: syzbot+2cb5a6c573e98db598cc@syzkaller.appspotmail.com
+Reported-by: syzbot+62d8b26793e8a2bd0516@syzkaller.appspotmail.com
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: https://lore.kernel.org/r/20240328052426.3042617-2-andrii@kernel.org
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+[fixed conflicts due to missing commits 89ae89f53d20
+ ("bpf: Add multi uprobe link")]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ include/linux/bpf.h      | 16 +++++++++++++++-
+ kernel/bpf/syscall.c     | 35 ++++++++++++++++++++++++++++++++---
+ kernel/trace/bpf_trace.c |  2 +-
+ 3 files changed, 48 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index e9c1338851e3..1cf8c7037289 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1293,12 +1293,26 @@ struct bpf_link {
+ 	enum bpf_link_type type;
+ 	const struct bpf_link_ops *ops;
+ 	struct bpf_prog *prog;
+-	struct work_struct work;
++	/* rcu is used before freeing, work can be used to schedule that
++	 * RCU-based freeing before that, so they never overlap
++	 */
++	union {
++		struct rcu_head rcu;
++		struct work_struct work;
++	};
+ };
+ 
+ struct bpf_link_ops {
+ 	void (*release)(struct bpf_link *link);
++	/* deallocate link resources callback, called without RCU grace period
++	 * waiting
++	 */
+ 	void (*dealloc)(struct bpf_link *link);
++	/* deallocate link resources callback, called after RCU grace period;
++	 * if underlying BPF program is sleepable we go through tasks trace
++	 * RCU GP and then "classic" RCU GP
++	 */
++	void (*dealloc_deferred)(struct bpf_link *link);
+ 	int (*detach)(struct bpf_link *link);
+ 	int (*update_prog)(struct bpf_link *link, struct bpf_prog *new_prog,
+ 			   struct bpf_prog *old_prog);
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 27fdf1b2fc46..1cc9b28b065a 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2750,17 +2750,46 @@ void bpf_link_inc(struct bpf_link *link)
+ 	atomic64_inc(&link->refcnt);
+ }
+ 
++static void bpf_link_defer_dealloc_rcu_gp(struct rcu_head *rcu)
++{
++	struct bpf_link *link = container_of(rcu, struct bpf_link, rcu);
++
++	/* free bpf_link and its containing memory */
++	link->ops->dealloc_deferred(link);
++}
++
++static void bpf_link_defer_dealloc_mult_rcu_gp(struct rcu_head *rcu)
++{
++	if (rcu_trace_implies_rcu_gp())
++		bpf_link_defer_dealloc_rcu_gp(rcu);
++	else
++		call_rcu(rcu, bpf_link_defer_dealloc_rcu_gp);
++}
++
+ /* bpf_link_free is guaranteed to be called from process context */
+ static void bpf_link_free(struct bpf_link *link)
+ {
++	bool sleepable = false;
++
+ 	bpf_link_free_id(link->id);
+ 	if (link->prog) {
++		sleepable = link->prog->aux->sleepable;
+ 		/* detach BPF program, clean up used resources */
+ 		link->ops->release(link);
+ 		bpf_prog_put(link->prog);
+ 	}
+-	/* free bpf_link and its containing memory */
+-	link->ops->dealloc(link);
++	if (link->ops->dealloc_deferred) {
++		/* schedule BPF link deallocation; if underlying BPF program
++		 * is sleepable, we need to first wait for RCU tasks trace
++		 * sync, then go through "classic" RCU grace period
++		 */
++		if (sleepable)
++			call_rcu_tasks_trace(&link->rcu, bpf_link_defer_dealloc_mult_rcu_gp);
++		else
++			call_rcu(&link->rcu, bpf_link_defer_dealloc_rcu_gp);
++	}
++	if (link->ops->dealloc)
++		link->ops->dealloc(link);
+ }
+ 
+ static void bpf_link_put_deferred(struct work_struct *work)
+@@ -3246,7 +3275,7 @@ static int bpf_raw_tp_link_fill_link_info(const struct bpf_link *link,
+ 
+ static const struct bpf_link_ops bpf_raw_tp_link_lops = {
+ 	.release = bpf_raw_tp_link_release,
+-	.dealloc = bpf_raw_tp_link_dealloc,
++	.dealloc_deferred = bpf_raw_tp_link_dealloc,
+ 	.show_fdinfo = bpf_raw_tp_link_show_fdinfo,
+ 	.fill_link_info = bpf_raw_tp_link_fill_link_info,
+ };
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 7254c808b27c..989b6843069e 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2564,7 +2564,7 @@ static void bpf_kprobe_multi_link_dealloc(struct bpf_link *link)
+ 
+ static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
+ 	.release = bpf_kprobe_multi_link_release,
+-	.dealloc = bpf_kprobe_multi_link_dealloc,
++	.dealloc_deferred = bpf_kprobe_multi_link_dealloc,
+ };
+ 
+ static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
 -- 
-Thx and BRs
-Lijuan Gao
+2.34.1
 
