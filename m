@@ -1,240 +1,111 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E9014F117
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC04023C4E5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747076436; cv=none; b=seqm6qqYWYwoEPYs5p/DEtKLryS52us8o+U+4tgKsMmLBA2uttMM3+XZcah1UGLPuFQgkczLPEq0HAslsNpsXVlnarVwTaMEVLMwDOiIfVp/PMdvEYrbnj5H7uG+B4TIj40+3WG5e6SoXgO25gqwtG3wDl+ovoEzJs2IuaCHziE=
+	t=1747076523; cv=none; b=pMinsiLq7m3liO6l6tjU9iH3FbmQtq4RvMC0zsybFXSHDtixp9ag5YrsKYookjUve0nMn6IXZQIb+SGpfIIbq5liF99P0xXomkI+Qc+S7K573Z9kVaDhujo+MfRmziE7GskFbgD3p6HC7gfjQaUuo4+kmzJaX7+cfygoI/59gT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747076436; c=relaxed/simple;
-	bh=V5oZlFhSULyFEN6cKZyPDntJBnQj0ah5CDIMVOQ9yMs=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=G24SXRw6BOKon7QWTjhsIoEgZgzfE0t3ieAnnmzNzylV7WfpwhTlxmHtRUQMENinEWgGByKCp9Ho/HwN5Cl0E8Lb9e0LHsht2EEBtE+5BqRXSk+34pVvgURPSHLhFQEOzdMioYNzPOpbZNBXL10EXooS4GLZgThkxj6VH8UCD8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sLqVsP9d; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1747076523; c=relaxed/simple;
+	bh=Iw4FMLxMzOsRhPUzCitoDc187twmhNXKei/YG2KflGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9MyK2+QSwbjbEIPU7lpSAKLkv07e+RwbQPSVVC3Ymu8MUdI9NoK1bFVy/FT8L3IPfVizxtGcLnLSc9F0b6GlpDORnjkIoVZSoUG+vFQta/W2aM60/tAN0mqGU6wS7eG4e/jWZ3eIwX+u1dwEXG7GJlvsWz5RJfADdDYZxO0eV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fa++PwjA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLqVsP9d"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a96aca21eso4824804a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 12:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747076434; x=1747681234; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Rke1067ylbP1EKW6VeuH662EFzeOBQYV7CnDIC0MF2Y=;
-        b=sLqVsP9dDmohfcyiM/0mXpEgyNiAgUVMJxGbr6A3OaBYfGs3IEmtw+pXPYYAec+RTe
-         Fy3GOTlCSTJWxvRK4dPifSTklJUOC3xrJS69//Bl/wvMb+q9F28iGavA+GgNHPFkAJ6S
-         GyYwW6xnTBAY9B1m5CDyyUjy5QhPntp3z6LZrYNwZm9UN5gped6d+5y6rOihXGTwT/M3
-         vIpmXHifEL+4smL3WMDfdsIV4+nJYuOUyw1f3yrQfv0vfvgWUNjCCb/ET4oOcnROuxJg
-         RYzTiHWdjkvX54Nxl42KZGINQo2NbrbwzlGPfstA1NMJX0eheR+ykA5hAlLpyLNzfbF7
-         nIcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747076434; x=1747681234;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rke1067ylbP1EKW6VeuH662EFzeOBQYV7CnDIC0MF2Y=;
-        b=G1GLd779NdlJYsJ9DCzrNOQLv5NrgTTenMP8JGY+iQHPNUpDgASMmhaXH4nDAo1vNn
-         SzMJ0sgtRgeVtD9PtJMzBEvdzEQtwlxzvGDV/y1hBobpyPzxXhSV1hdlMywRnykixka5
-         MomXns+J0rVaMpfJqQrt4BOpLaTCB6gVMyz5rB/vTTMIcBUnoRfWBNHBYxxE99+Z8+vx
-         6Ys5WIJZkbNxuV+78XX6pb7zKXFtN+AEFR6FE0f1DOTMz5Tv3zuQ6xqk2CW/l5ThdFQy
-         NnA95MMxat9gosK9SPs3iXxLWIiBJhMeAr5i1BO6txtrgkLDG8PltooLLVDQAna6ryS6
-         Dg6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXHuDzoT8AU4CoPJ/Hn38RY0XInval6MON6+AXgJCjEVQKDsZBt2w9P6fo6ebTxGWS+UmiWDT4OQtSOixk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcmDSHINwMAvEqYicWyNoHXcCdgHwaTCKUWLlt7cvxAbkWC6U3
-	v3/RIMDaUXgHYtuUlYVO//fIc4DkRPnXtcWmBb8xNj/0GM8xZnr9yIumX4R40XfmIaWvmEhk9N5
-	+Gt9mBRhiLhvlG8JlCcVs9g==
-X-Google-Smtp-Source: AGHT+IE/F0kIiEs3Wgl8vKju/CGXel5grWlSH1aS62vRHCe/E9+XYzgShjCFqsTyp2zUtHZxFqIYjtDWc4wsuNwWgA==
-X-Received: from pjbpt8.prod.google.com ([2002:a17:90b:3d08:b0:2ea:5084:5297])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:1b4a:b0:301:1bce:c255 with SMTP id 98e67ed59e1d1-30c3d64626fmr21715875a91.27.1747076434325;
- Mon, 12 May 2025 12:00:34 -0700 (PDT)
-Date: Mon, 12 May 2025 12:00:31 -0700
-In-Reply-To: <aB10gNcmsw0TSrqh@yzhao56-desk.sh.intel.com> (message from Yan
- Zhao on Fri, 9 May 2025 11:20:32 +0800)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fa++PwjA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747076520;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kWaIpBAE+GNW2dWuVErPfYy1v7Zx0jvZfL8ijBtInX8=;
+	b=Fa++PwjAMTZYEUQON1vNuI6ctN2hBI6qTLZ6475mXbNiHurWeN5VT0dlX7Ps9MncN7Zix4
+	nUSJuG2R48Mpz36yJNhR+yrx55nOGFeMUtysddYkioeZ2qFJuqwzFHhOALexfjX3Ksavwo
+	v2kc226yBtsfWcXHD59iJGGAp7PNkkg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-pdvLv3UxNZ24d8YSQeBYyw-1; Mon,
+ 12 May 2025 15:01:56 -0400
+X-MC-Unique: pdvLv3UxNZ24d8YSQeBYyw-1
+X-Mimecast-MFC-AGG-ID: pdvLv3UxNZ24d8YSQeBYyw_1747076514
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 67EE318001CA;
+	Mon, 12 May 2025 19:01:54 +0000 (UTC)
+Received: from localhost (unknown [10.22.80.42])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6F1C31956095;
+	Mon, 12 May 2025 19:01:53 +0000 (UTC)
+Date: Mon, 12 May 2025 16:01:52 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <aCJFoCq7Pp_luu2M@uudg.org>
+References: <Z_bDWN2pAnijPAMR@uudg.org>
+ <20250410064844.wm4KbunL@linutronix.de>
+ <20250410075103.GV9833@noisy.programming.kicks-ass.net>
+ <20250410153205.u92eJDos@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <diqz7c2lr6wg.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: vannapurve@google.com, pbonzini@redhat.com, seanjc@google.com, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org, 
-	rick.p.edgecombe@intel.com, dave.hansen@intel.com, kirill.shutemov@intel.com, 
-	tabba@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, 
-	david@redhat.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
-	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, 
-	jun.miao@intel.com, ira.weiny@intel.com, isaku.yamahata@intel.com, 
-	xiaoyao.li@intel.com, binbin.wu@linux.intel.com, chao.p.peng@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410153205.u92eJDos@linutronix.de>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+On Thu, Apr 10, 2025 at 05:32:05PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-04-10 09:51:03 [+0200], Peter Zijlstra wrote:
+> > > I complained about this special RT case in put_task_struct() when it was
+> > > first got introduced. Couldn't we just just unconditionally do the RCU
+> > > put?
+> > 
+> > Yeah, please make it simpler, not more complex.
+> 
+> Just so we clear: simpler as in everyone does call_rcu() or RT does
+> always call_rcu() and everyone else __put_task_struct()? I mean we would
+> end up with one call chain I am just not sure how expensive it gets for
+> !RT.
 
->> <snip>
->>
->> Very likely because these operations simply don't fail.
->
-> I think they are intentionally designed to be no-fail.
->
-> e.g. in __iopt_area_unfill_domain(), no-fail is achieved by using a small backup
-> buffer allocated on stack in case of kmalloc() failure.
->
->
->> >
->> > That's why we rely on increasing folio ref count to reflect failure, which are
->> > due to unexpected SEAMCALL errors.
->>
->> TDX stack is adding a scenario where invalidation can fail, a cleaner
->> solution would be to propagate the result as an invalidation failure.
-> Not sure if linux kernel accepts unmap failure.
->
->> Another option is to notify guest_memfd out of band to convey the
->> ranges that failed invalidation.
-> Yes, this might be better. Something similar like holding folio ref count to
-> let guest_memfd know that a certain PFN cannot be re-assigned.
->
->> With in-place conversion supported, even if the refcount is raised for
->> such pages, they can still get used by the host if the guest_memfd is
->> unaware that the invalidation failed.
-> I thought guest_memfd should check if folio ref count is 0 (or a base count)
-> before conversion, splitting or re-assignment. Otherwise, why do you care if
-> TDX holds the ref count? :)
->
+Sebastian, I implemented the change where put_task_struct() unconditionally
+resorted to:
 
-IIUC the question here is how we should handle failures in unmapping of
-private memory, which should be a rare occurrence.
+	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
 
-I think there are two options here
+I submitted the kernels I built with that change and a pristine upstream
+kenrel to LTP and stress-ng and also ran 'perf bench all'. I built kernels
+with and without lockdep and extra debug. All kernels survived the tests
+without a scratch and I haven't observed differences in behaviors nor
+timings (for the tests that had that information).
 
-1. Fail on unmapping *private* memory
+What would be a good benchmark to compare the kernels with and without the
+put_task_struct() change? I would like to observe whether there is a
+penalty or added overhead with the change in place.
 
-2. Don't fail on unmapping *private* memory, instead tell the owner of
-   the memory that this memory is never to be used again.
+Best,
+Luis
 
-I think option 1 is better because it is more direct and provides timely
-feedback to the caller when the issue happens. There is also room to
-provide even more context about the address of the failure here.
+> Sebastian
+> 
+---end quoted text---
 
-It does seem like generally, unmapping memory does not support failing,
-but I think that is for shared memory (even in KVM MMU notifiers).
-Would it be possible to establish a new contract that for private pages,
-unmapping can fail?
-
-The kernel/KVM-internal functions for unmapping GFNs can be modified to
-return error when unmapping private memory. Specifically, when
-KVM_FILTER_PRIVATE [1] is set, then the unmapping function can return an
-error and if not then the caller should not expect failures.
-
-IIUC the only places where private memory is unmapped now is via
-guest_memfd's truncate and (future) convert operations, so guest_memfd
-can handle those failures or return failure to userspace.
-
-Option 2 is possible too - but seems a little awkward. For conversion
-the general steps are to (a) unmap pages from either host, guest or both
-page tables (b) change shareability status in guest_memfd. It seems
-awkward to first let step (a) pass even though there was an error, and
-then proceed to (b) only to check somewhere (via refcount or otherwise)
-that there was an issue and the conversion needs to fail.
-
-Currently for private to shared conversions, (will be posting this 1g
-page support series (with conversions) soon), I check refcounts == safe
-refcount for shared to private conversions before permitting conversions
-(error returned to userspace on failure).
-
-For private to shared conversions, there is no check. At conversion
-time, when splitting pages, I just spin in the kernel waiting for any
-speculative refcounts to drop to go away. The refcount check at
-conversion time is currently purely to ensure a safe merge process.
-
-It is possible to check all the refcounts of private pages (split or
-huge page) in the requested conversion range to handle unmapping
-failures, but that seems expensive to do for every conversion, for
-possibly many 4K pages, just to find a rare error case.
-
-Also, if we do this refcount check to find the error, there wouldn't be
-any way to tell if it were an error or if it was a speculative refcount,
-so guest_memfd would just have to return -EAGAIN for private to shared
-conversions. This would make conversions complicated to handle in
-userspace, since the userspace VMM doesn't know whether it should retry
-(for speculative refcounts) or it should give up because of the
-unmapping error. Returning a different error on unmapping failure would
-allow userspace to handle the two cases differently.
-
-Regarding Option 2, another way to indicate an error could be to mark
-the page as poisoned, but then again that would overlap/shadow true
-memory poisoning.
-
-In summary, I think Option 1 is best, which is that we return error
-within the kernel, and the caller (for now only guest_memfd unmaps
-private memory) should handle the error.
-
-[1] https://github.com/torvalds/linux/blob/627277ba7c2398dc4f95cc9be8222bb2d9477800/include/linux/kvm_host.h#L260
-
->
->> >
->> > > > Currently, guest_memfd can rely on page ref count to avoid re-assigning a PFN
->> > > > that fails to be unmapped.
->> > > >
->> > > >
->> > > > [1] https://lore.kernel.org/all/20250328153133.3504118-5-tabba@google.com/
->> > > >
->> > > >
->> > > > > >
->> > > > > >
->> > > > > > > Any guest_memfd range updates will result in invalidations/updates of
->> > > > > > > userspace, guest, IOMMU or any other page tables referring to
->> > > > > > > guest_memfd backed pfns. This story will become clearer once the
->> > > > > > > support for PFN range allocator for backing guest_memfd starts getting
->> > > > > > > discussed.
->> > > > > > Ok. It is indeed unclear right now to support such kind of memory.
->> > > > > >
->> > > > > > Up to now, we don't anticipate TDX will allow any mapping of VM_PFNMAP memory
->> > > > > > into private EPT until TDX connect.
->> > > > >
->> > > > > There is a plan to use VM_PFNMAP memory for all of guest_memfd
->> > > > > shared/private ranges orthogonal to TDX connect usecase. With TDX
->> > > > > connect/Sev TIO, major difference would be that guest_memfd private
->> > > > > ranges will be mapped into IOMMU page tables.
->> > > > >
->> > > > > Irrespective of whether/when VM_PFNMAP memory support lands, there
->> > > > > have been discussions on not using page structs for private memory
->> > > > > ranges altogether [1] even with hugetlb allocator, which will simplify
->> > > > > seamless merge/split story for private hugepages to support memory
->> > > > > conversion. So I think the general direction we should head towards is
->> > > > > not relying on refcounts for guest_memfd private ranges and/or page
->> > > > > structs altogether.
->> > > > It's fine to use PFN, but I wonder if there're counterparts of struct page to
->> > > > keep all necessary info.
->> > > >
->> > >
->> > > Story will become clearer once VM_PFNMAP'd memory support starts
->> > > getting discussed. In case of guest_memfd, there is flexibility to
->> > > store metadata for physical ranges within guest_memfd just like
->> > > shareability tracking.
->> > Ok.
->> >
->> > > >
->> > > > > I think the series [2] to work better with PFNMAP'd physical memory in
->> > > > > KVM is in the very right direction of not assuming page struct backed
->> > > > > memory ranges for guest_memfd as well.
->> > > > Note: Currently, VM_PFNMAP is usually used together with flag VM_IO. in KVM
->> > > > hva_to_pfn_remapped() only applies to "vma->vm_flags & (VM_IO | VM_PFNMAP)".
->> > > >
->> > > >
->> > > > > [1] https://lore.kernel.org/all/CAGtprH8akKUF=8+RkX_QMjp35C0bU1zxGi4v1Zm5AWCw=8V8AQ@mail.gmail.com/
->> > > > > [2] https://lore.kernel.org/linux-arm-kernel/20241010182427.1434605-1-seanjc@google.com/
->> > > > >
->> > > > > > And even in that scenario, the memory is only for private MMIO, so the backend
->> > > > > > driver is VFIO pci driver rather than guest_memfd.
->> > > > >
->> > > > > Not necessary. As I mentioned above guest_memfd ranges will be backed
->> > > > > by VM_PFNMAP memory.
->> > > > >
->> > > > > >
->> > > > > >
->> > > > > > > [1] https://elixir.bootlin.com/linux/v6.14.5/source/mm/memory.c#L6543
->> > >
