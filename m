@@ -1,164 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5924B241689
-	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A65242923
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 15:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065335; cv=none; b=tcxrIXMtpYXhlMjgYlKIVByLj9tw/tQEACWDWG6SXlgc574esU0i2c01LyNz4qbiHdUO1lgZtFiYQRmyASUgn8D4lXU4tOFpj9JEvf/J0Z2ExtgCAn86t06H1lhjE57VskjmWHcJy7dNicvTnEVsSvPaiEJKeQDvQV1mflBZX5I=
+	t=1747065373; cv=none; b=pVmC4SfdfQWbRJMhLFxLsicJq1exQjHJq7UDAtDDtspDvE/sUQSK1gTzOwNd4rsH4o07A7RaXjTgI8vFv/zJxiRGpTxeWNl0XaN6TKxBTJihwLFbE7jy1CIWy94Hxiyo36BlECFNkSoFE92erME94tnWCOfBvZF6ZgR648l1Qkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065335; c=relaxed/simple;
-	bh=9oH64TA/cPDc+bTwTS/UrRp0io3FdvKt4QRGJTRhPtY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N16PrK7wG5jYHa13eZKLCJN9xiTyGQAPmpyXPN/5ogQzDxpl7i9UFaHF/NEdBxmLLQafF0UZef2MfEALnrM89WJBTCQbRVyZiW35dVRnKkZ5SlvMnsbRrehH6/z63peYtrgarMiaE9GH1arRuO5Ocs6YflCsmiWnHcmmy0F6UXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/WYmqdu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747065373; c=relaxed/simple;
+	bh=f2jWGaOfJzxueHAb4yFdMaMw58Z+YVOXeRTOkExZLiI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mOcKV1PCqKEExYSmDWQZ1V26E0F9JYmUXTN7MsFHuYSRbGErNtFMRPCRPqwhDN5ItGBbtBowZbIzh40osXGFuvKa+4sHzP0xsFwI/1/zDKUx2AdueMPIPm2JL0jwqZFJx6iMB5RKR9G5BHpuha1uafcGdYPeOt9xR494GC2Yuq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KKMaIo2j; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=q3vtoZ/D; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KKMaIo2j; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=q3vtoZ/D; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/WYmqdu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DEAC4CEF1;
-	Mon, 12 May 2025 15:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747065334;
-	bh=9oH64TA/cPDc+bTwTS/UrRp0io3FdvKt4QRGJTRhPtY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=D/WYmqdulX8dzExpOzgURZMbBxBmPx9D3guBxSirAv77HZmH0H5KoD4qrTaIL89XA
-	 74Ntwz8YWVUEg5beI9p5zPUmfb/5nyLEIo9V10SJ1Bzaf58kpy46fZwwVZ/UGYWNAj
-	 UJJGcugWliGu7Wh0cfkx4yuXuZGerZk2M/+8PQCYmartSqxGOdPydM1SFqX5NCCD0u
-	 VGMJWe+WVcVk1LSRcbqh/cFoy37KYujwH2HofWu5+CqIcvuXTBXq9SxKswOU6FduYm
-	 etHb06T4uvTvNkqORaDtjKM6OvoulLHYKaQFpc687n2BWpvJOZUEi1e011yDpWKa9N
-	 C7vD0kxcnemwg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uEVV6-00EBVM-Gg;
-	Mon, 12 May 2025 16:55:32 +0100
-Date: Mon, 12 May 2025 16:55:31 +0100
-Message-ID: <86v7q5g6x8.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sascha Bischoff
- <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>
-Subject: Re: [PATCH 3/4] genirq/msi: Move prepare() call to per-device allocation
-In-Reply-To: <87jz6llxeg.ffs@tglx>
-References: <20250511163520.1307654-1-maz@kernel.org>
-	<20250511163520.1307654-4-maz@kernel.org>
-	<87jz6llxeg.ffs@tglx>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KKMaIo2j";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="q3vtoZ/D";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KKMaIo2j";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="q3vtoZ/D"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5FB3F21180;
+	Mon, 12 May 2025 15:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747065369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
+	b=KKMaIo2jKbpBGkx/fBNsQS+Z+VWI5kTkYrJ95CpK/fczbBsRUOv/rYInjEW9AJI4aoHvrs
+	lLG4L1aBQDT76uppQxClwIgM+FL/XJolkekRaTfzbGh62Y78KrotxQIshRcfWptXEDW236
+	X65jU5Iatd2FJ/CmTGr7VsiDW5yDjZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747065369;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
+	b=q3vtoZ/DRldVfOtcjsrqEFeV3/LXb691myGUPK/O6Fd8T2qHtzagR6dYbrz3pElKtNVUFM
+	7MKhYj+/BF0H8LAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747065369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
+	b=KKMaIo2jKbpBGkx/fBNsQS+Z+VWI5kTkYrJ95CpK/fczbBsRUOv/rYInjEW9AJI4aoHvrs
+	lLG4L1aBQDT76uppQxClwIgM+FL/XJolkekRaTfzbGh62Y78KrotxQIshRcfWptXEDW236
+	X65jU5Iatd2FJ/CmTGr7VsiDW5yDjZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747065369;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tnje18TSkZvQ01oa5Qf7ZCcFzYVyVvw2JPB7RKiqgcI=;
+	b=q3vtoZ/DRldVfOtcjsrqEFeV3/LXb691myGUPK/O6Fd8T2qHtzagR6dYbrz3pElKtNVUFM
+	7MKhYj+/BF0H8LAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4739B1397F;
+	Mon, 12 May 2025 15:56:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WZAPERkaImhdWQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 12 May 2025 15:56:09 +0000
+Message-ID: <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
+Date: Mon, 12 May 2025 17:56:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lpieralisi@kernel.org, sascha.bischoff@arm.com, timothy.hayes@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
+Content-Language: en-US
+To: Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org,
+ linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Meta kernel team <kernel-team@meta.com>
+References: <20250509232859.657525-1-shakeel.butt@linux.dev>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250509232859.657525-1-shakeel.butt@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.30
 
-On Mon, 12 May 2025 15:24:39 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On 5/10/25 01:28, Shakeel Butt wrote:
+> BPF programs can trigger memcg charged kernel allocations in nmi
+> context. However memcg charging infra for kernel memory is not equipped
+> to handle nmi context. This series adds support for kernel memory
+> charging for nmi context.
 > 
-> On Sun, May 11 2025 at 17:35, Marc Zyngier wrote:
-> > The current device MSI infrastructure is subtly broken, as it
-> > will issue an .msi_prepare() callback into the MSI controller
-> > driver every time it needs to allocate an MSI. That's pretty wrong,
-> > as the contract between the MSI controller and the core code is that
-> > .msi_prepare() is called exactly once per device.
-> 
-> That contract is nowhere written in stone.
+> The initial prototype tried to make memcg charging infra for kernel
+> memory re-entrant against irq and nmi. However upon realizing that
+> this_cpu_* operations are not safe on all architectures (Tejun), this
 
-It was *definitely* there the first place, and a baked in assumption
-since the ITS code was merged. You're welcome to come up with a new
-scheme, but the way the HW works requires this prepare phase to take
-place once per device.
+I assume it was an off-list discussion?
+Could we avoid this for the architectures where these are safe, which should
+be the major ones I hope?
 
-If we can't have that, maybe we should consider reverting the GICv3/v4
-code back to the pre-6.10 scheme that doesn't suffer from this issue.
+> series took a different approach targeting only nmi context. Since the
+> number of stats that are updated in kernel memory charging path are 3,
+> this series added special handling of those stats in nmi context rather
+> than making all >100 memcg stats nmi safe.
 
-> There are some MSI controller which get confused about that, but that's
-> a problem of said controllers
+Hmm so from patches 2 and 3 I see this relies on atomic64_add().
+But AFAIU lib/atomic64.c has the generic fallback implementation for
+architectures that don't know better, and that would be using the "void
+generic_atomic64_##op" macro, which AFAICS is doing:
 
-No. It's an infrastructure problem. This model worked before for a
-whole class of HW, until it was mutated into something else.
+        local_irq_save(flags);                                          \
+        arch_spin_lock(lock);                                           \
+        v->counter c_op a;                                              \
+        arch_spin_unlock(lock);                                         \
+        local_irq_restore(flags);                                       \
 
-> 
-> > diff --git a/include/linux/msi.h b/include/linux/msi.h
-> > index 0a44a2cba3105..68a8b2d03eba9 100644
-> > --- a/include/linux/msi.h
-> > +++ b/include/linux/msi.h
-> > @@ -513,12 +513,14 @@ struct msi_domain_info {
-> >   * @chip:	Interrupt chip for this domain
-> >   * @ops:	MSI domain ops
-> >   * @info:	MSI domain info data
-> > + * @arg:	MSI domain allocation data (arch specific)
-> 
-> arg is a horrible name. Can this please be alloc_info or such?
+so in case of a nmi hitting after the spin_lock this can still deadlock?
 
-Because that's the name every single function that takes it as a
-parameter uses? But sure, whatever name you want.
+Hm or is there some assumption that we only use these paths when already
+in_nmi() and then another nmi can't come in that context?
+
+But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
+atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
+irq_save+spin_lock. So can't we deadlock there?
 
 > 
-> > @@ -1025,6 +1026,7 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
-> >  	bundle->info.ops = &bundle->ops;
-> >  	bundle->info.data = domain_data;
-> >  	bundle->info.chip_data = chip_data;
-> > +	bundle->info.alloc_data = &bundle->arg;
-> >  
-> >  	pops = parent->msi_parent_ops;
-> >  	snprintf(bundle->name, sizeof(bundle->name), "%s%s-%s",
-> > @@ -1053,21 +1055,28 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
-> >  	msi_lock_descs(dev);
+> There will be a followup series which will make kernel memory charging
+> reentrant for irq and will be able to do without disabling irqs.
 > 
-> Please work against tip irq/msi which carries the guard() replacement
-> for msi_lock_descs(). This patch heavily conflicts with the queued
-> changes.
+> We ran network intensive workload on this series and have not seen any
+> significant performance differences with and without the series.
 > 
-> > +static int __populate_alloc_info(struct irq_domain *domain, struct device *dev,
-> > +				 unsigned int nirqs, msi_alloc_info_t *arg)
-> > +{
+> Shakeel Butt (4):
+>   memcg: add infra for nmi safe memcg stats
+>   memcg: add nmi-safe update for MEMCG_KMEM
+>   memcg: nmi-safe slab stats updates
+>   memcg: make objcg charging nmi safe
 > 
-> Why does this need double underscores?
+>  include/linux/memcontrol.h |  6 +++
+>  mm/memcontrol.c            | 87 +++++++++++++++++++++++++++++++++++---
+>  2 files changed, 88 insertions(+), 5 deletions(-)
+> 
 
-Because it doesn't look that out of place in this file?
-
-> 
-> > +	struct msi_domain_info *info = domain->host_data;
-> > +	int ret = 0;
-> > +
-> > +	/*
-> > +	 * If the caller has provided a template alloc info, use that. Once
-> > +	 * all users of msi_create_irq_domain() have been eliminated, this
-> > +	 * should be the only source of allocation information, and the
-> > +	 * prepare call below should be finally removed.
-> 
-> That's only a matter of decades :)
->
-> > +	 */
-> > +	if (info->alloc_data)
-> > +		*arg = *info->alloc_data;
-> > +	else
-> > +		ret = msi_domain_prepare_irqs(domain, dev, nirqs, arg);
-> > +
-> > +	return ret;
-> 
-> 	if (!info->alloc_data)
->         	return msi_domain_prepare_irqs(domain, dev, nirqs, arg);
-> 
-> 	*arg = *info->alloc_data;
->         return 0;
-> 
-> perhaps?
-
-Sure.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
