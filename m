@@ -1,121 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1B535953;
-	Mon, 12 May 2025 16:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C88735953;
+	Mon, 12 May 2025 16:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067595; cv=none; b=Tmmzy6RmCRigsSkK1gIBa0YxnGHVnZxkYI778SclJbg/hW3hrsH6zRJEqi1QFWGKyZypobEDhl0o6z81940nRggqiiiutuLYWVk/pz7XoKSMBzfZHbAbMQF0PYlzj3wgZYu8O8e1FSrlZhJ6Tt531LfqnxxUz3vIjtNYen/Q6PI=
+	t=1747067606; cv=none; b=Zw+U2WhFirGjsa9NRsEf6dNcZni5MK8HtPulvkPBMB53aKeU68ikNeAsgUinGZlRGYEm84+FAp61zqGog+6Wjg3PWNGwFu/8FNYzWa7fVXY/EJOc62IZIC0zGyt8RzZT7zsZSFkJDbQrgJA7PsrJ87FODkLe7fO91Ia73XXoZ00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067595; c=relaxed/simple;
-	bh=4CikMXK/hN7w+lsyH7sGVCGXe7QxbFqK2Gs+AVxST0w=;
+	s=arc-20240116; t=1747067606; c=relaxed/simple;
+	bh=kUGQH80AVrhfyjYADjSapWJYo4WQT0Hfu6z+RAxTtrM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MHTu7ZBNnHOsXWK8Pv2rPCQop3rKjAhx8QeEf9bhZokPcWoT6jNi5sN0iglb6NsO9kuEWOx7zr0ZMIQP7fFrJkVM+APS2NPLhjUbVaupdt2qjEzQw5/OX5AHQnezV/Dv4ZzOLLhrREqJ4MDnCINdO9otUukP7Z0bCh50WQA3G3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A9FC4CEE7;
-	Mon, 12 May 2025 16:33:09 +0000 (UTC)
-Date: Mon, 12 May 2025 17:33:06 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Will Deacon <will@kernel.org>,
-	=?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>,
-	yang@os.amperecomputing.com, corbet@lwn.net,
-	jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org,
-	akpm@linux-foundation.org, paulmck@kernel.org, mark.rutland@arm.com,
-	joey.gouly@arm.com, maz@kernel.org, james.morse@arm.com,
-	broonie@kernel.org, oliver.upton@linux.dev, baohua@kernel.org,
-	david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca,
-	nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
-	smostafa@google.com, kevin.tian@intel.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
-Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
-Message-ID: <aCIiwrA_MOeVhFre@arm.com>
-References: <20250428153514.55772-2-miko.lenczewski@arm.com>
- <20250428153514.55772-4-miko.lenczewski@arm.com>
- <20250506142508.GB1197@willie-the-truck>
- <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
- <20250509134904.GA5707@willie-the-truck>
- <aB4nqtMJuvvp7Vwm@arm.com>
- <015746d7-ca46-4978-a441-09fba781fdd4@arm.com>
- <4709ff5a-f89c-426e-ae95-f8356808f4f5@arm.com>
- <99079d56-428b-4bc4-b20a-dc10032f2a2f@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eV9EZxZJ103PXFcPqfDTMEGyeFejoRn+snjIoI/tjdcymTYOsfRHVyWNBasY74WeOypNBmgwzrDstSPYUafgNGDXkbye87a19dz/2iJTNlkVj801LRIflNn3XhrIcQhSBuZs6atThOKxpftMxd5C7o/h3sjl/iQVBw02Kh9k0Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NX3S+MH3; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NX3S+MH3"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-74019695377so3444183b3a.3;
+        Mon, 12 May 2025 09:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747067603; x=1747672403; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9pxnN/Jo3ePwIGeY3IKNLYP76fzUcGfkSoLqkEqCf8o=;
+        b=NX3S+MH3XSwG8zOE5Vz0zqFv2nmjoNwu0RKACt9s+Day83s6EezV0wlK3nBHSUtw7m
+         1AwHBaWmSu7/X4zxpfTEQllqz86mJCGkUIgXNhaCLxtOLWRsRJEITrmPRhIO4xRgR/Iw
+         HSSzclvwGFQdJTqrIgH1OIRl+O/PIzhaxDhdGcpw62iAY2Un0W/1s/S4/3AHLqKUSsib
+         IpDd7lemaJZVMymR5CWTvj35oP7PcpABlTrKFBmQ0isyXjrBDOU0DRKtVQKmqBPiQcEd
+         zurFl2mBvYFm9V4DZdGNk3j3jIw4mY/VEWJSBQGvSSh/yAgUKD/xA92ry1Ub4ANPYTqp
+         Y2ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747067603; x=1747672403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9pxnN/Jo3ePwIGeY3IKNLYP76fzUcGfkSoLqkEqCf8o=;
+        b=C4FKePSMNmUSUkaSf6411mn86tHUl4WdFDSJ1FLqDaLusGBDvW2eZdjPrGOCrZVPdg
+         SMmBaM2PMQ/N5viMz4kucp52j2fEMu4VsWHwYZrdcF3nKvV2kblXegnWpDjazA1CXsOZ
+         B7UeaFN58ck2hhUWfbMgePU7lhhPIGMhN6yV8qLAKRWDny3SHvhWLo+sFsni8kRD0U2h
+         EPVjKhKvTXAiLoo9ZykgMCsGIojdBa5BP36XyRbEU/QZ4fz2jc1ftHv6m2FkmRYD4tuN
+         6VMJ9IUIW5PqdokjaxpSAd1yAYD22NBOLsU5FXoO63VBALvx0pd5GlvmwufvWvGRu01E
+         tvQA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/HII7E6Y/ers2ywRavQop0n68gPehSdiwWaBIT5MUt6SsmpIXjjcEskOKNtIYyxDAN3TgzghtFxlVjaM1@vger.kernel.org, AJvYcCXxPA4ThXZTWr2w7Dt5+l0L34TmiUhtVatDwQnC2MQ/ywVGq7JKbiH8EmFmDAIq9fu5gYVzUkeWE1JHGA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXAF1XyKLd29lve9yVdwephxhxZyqf6W7juxvCArOTGuxhAo+x
+	lxInA8tQzEkg/MLmrFlKueuCawj9VEbXAGkBqzNpUNoMGKCwUcG/M1z76g==
+X-Gm-Gg: ASbGnctST9lWgk3IJ4vfrsw6J+8W8GGHXHQMGXdesJRyWJnMgQQ2aVn+J9VgJm3a8n5
+	rkyUiUsecAOsEzNqYIQpeFzwjn3qAve/jEWfrD7+phw0ozY1C9g4ZF6Tnv9J4ssoXpKaQG+SEwA
+	TZaQreiijo+6+fzObSvLHBClsYC1EaLDNkCU6lldDiML0n2DiYjK09pJWww6I+PA988QK6LShui
+	3UzMBc6Jcz9EQKdKp9xExcO/NYAEEuz+QkMeiAFnWb/Vy3aYKBZ4irb7Z0uqG7tLaT/tjkB0Vcq
+	gzkQcRyJiFhsjP48FC6MoLhWkHW+4+xIGEK4BWCJ+Rt/vbMHQe7g98sobs88vOQj
+X-Google-Smtp-Source: AGHT+IFjmAbwrOYag+kN/+vzM6kABryvuUOjAjD0uCEns0APGqDfpk59xG8VsWfMDkyxKTG4QuVksA==
+X-Received: by 2002:a05:6a20:149f:b0:215:df57:8fde with SMTP id adf61e73a8af0-215df579056mr2784370637.25.1747067603319;
+        Mon, 12 May 2025 09:33:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a405b9sm6436426b3a.142.2025.05.12.09.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 09:33:22 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 12 May 2025 09:33:21 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Wenliang Yan <wenliang202407@163.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, derek.lin@silergycorp.com,
+	miguel.lee@silergycorp.com, chris.ho@silergycorp.com,
+	eason.liao@silergycorp.com
+Subject: Re: [PATCH v7 1/4] hwmon:(ina238)Add ina238_config to save
+ configurations for different chips
+Message-ID: <5b673485-7a70-450e-a766-acd7b3da2078@roeck-us.net>
+References: <20250506053741.4837-1-wenliang202407@163.com>
+ <20250506053741.4837-2-wenliang202407@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <99079d56-428b-4bc4-b20a-dc10032f2a2f@arm.com>
+In-Reply-To: <20250506053741.4837-2-wenliang202407@163.com>
 
-On Mon, May 12, 2025 at 02:35:01PM +0100, Ryan Roberts wrote:
-> On 12/05/2025 14:24, Suzuki K Poulose wrote:
-> > On 12/05/2025 14:07, Ryan Roberts wrote:
-> >> On 09/05/2025 17:04, Catalin Marinas wrote:
-> >>> On Fri, May 09, 2025 at 02:49:05PM +0100, Will Deacon wrote:
-> >>>> I wonder if we could treat it like an erratum in some way instead? That
-> >>>> is, invert things so that CPUs which _don't_ have BBML2_NOABORT are
-> >>>> considered to have a "BBM_CONFLICT_ABORT" erratum (which we obviously
-> >>>> wouldn't shout about). Then we should be able to say:
-> >>>>
-> >>>>    - If any of the early CPUs don't have BBML2_NOABORT, then the erratum
-> >>>>      would be enabled and we wouln't elide BBM.
-> >>>>
-> >>>>    - If a late CPU doesn't have BBML2_NOABORT then it can't come online
-> >>>>      if the erratum isn't already enabled.
-> >>>>
-> >>>> Does that work? If not, then perhaps the cpufeature/cpuerrata code needs
-> >>>> some surgery for this.
-> >>>
-> >>> Ah, I should have read this thread in order. I think we can treat this
-> >>> as BBML2_NOABORT available as default based on ID regs and use the
-> >>> allow/deny-list as an erratum.
-> >>
-> >> Just to make sure I've understood all this, I think what you are both saying is
-> >> we can create a single capability called ARM64_HAS_NO_BBML2_NOABORT of type
-> >> ARM64_CPUCAP_LOCAL_CPU_ERRATUM. Each CPU will then check it has BBML2 and is in
-> >> the MIDR allow list; If any of those conditions are not met, the CPU is
-> >> considered to have ARM64_HAS_NO_BBML2_NOABORT.
-> > 
-> > I guess we need two caps.
-> > 
-> > 1. SYSTEM cap -> ARM64_HAS_BBML2. Based on the ID registers
-> > 2. An erratum -> ARM64_BBML2_ABORTS. Based on BBLM2==1 && !in_midr_list()
+On Tue, May 06, 2025 at 01:37:38AM -0400, Wenliang Yan wrote:
+> Add structure ina238_config to store proprietary properties for different
+> chips to meet different chip adaptations
 > 
-> I don't think we *need* two caps; I was suggesting to consider both of these
-> conditions for the single cap. You are suggesting to separate them. But I think
-> both approaches give the same result?
-> 
-> I'm easy either way, but keen to understand why 2 caps are preferred?
+> Signed-off-by: Wenliang Yan <wenliang202407@163.com>
 
-I guess it's easier to reason about than a single, negated property but
-the result should be identical. With two properties we can easily
-implement the idreg override like nobbml2 since this works on the
-sanitised ID regs. But we could also implement this differently, no need
-to rely on the ID regs.
+Applied.
 
-Stepping back a bit, we know that the MIDR allow-list implies
-BBML2_NOABORT (and at least BBML2 as in the ID regs). In theory, we need
-something like a SYSTEM_FEATURE which is the conjunction of all the
-early CPUs. However, such system-level cap is only checked after all the
-early CPUs booted _and_ only on the sanitised ID regs rather than MIDR.
-
-We need a LOCAL_CPU feature behaviour to be called on each CPU but still
-have the conjunction of early CPUs, more like the system one. It should
-be permitted for late CPUs to have but not optional if already enabled.
-
-So how about we introduce a WEAK_BOOT_CPU_FEATURE which gets enabled by
-the boot CPU if it has it _but_ cleared by any secondary early CPU if it
-doesn't (and never enabled by secondary CPUs). When the features are
-finalised, we know if all early CPUs had it. In combination with
-PERMITTED_FOR_LATE_CPU, we'd reject late CPUs that don't have it.
-
-I think if we can get the above, it would be the cleaner option than
-trying to bend our minds around double negations like !NO_BBLM2_NOABORT.
-
--- 
-Catalin
+Thanks,
+Guenter
