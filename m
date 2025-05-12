@@ -1,124 +1,134 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F44225FA31;
-	Mon, 12 May 2025 09:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACF6259C9B;
+	Mon, 12 May 2025 09:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747043763; cv=none; b=KtpXkz0/6X6fNVEX6/Kq/J9aHIE0qHcZ76eY7M5Er/1vIIS6oU6hfM3XuNG/U74LvTDCnMO0CJLAkLP3FIJaAzXN3Zikli5sEZwx0FqwT8W36YpM7wLy19rR9U+JLAvu5fRqgM/muZ6bY/cB070+DDIZwkUGnffJnWQja+eRf30=
+	t=1747043782; cv=none; b=Cx2u+jSrbc13pEnlBLFGfwIVawGA3wzol1x9st1RUf9V96WCrp0pzbRCO0kSJb0d3CYQqFYafV0LS1CP4a2aH3pM5tIqcbRU220uN/DuWE4l0hrrqxW+I0Whs3JonBUgIhBs91XfwKniHCy9tdCic+4FGGG2eLqimE7yhkJPNdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747043763; c=relaxed/simple;
-	bh=T09OpNp+FNllmJC9eYYpHGyRexTCIm6KmP6tjZc0pjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vbla/X9h3eZ2VztPQUDEabHycNfqGlFD6mT4R+jw80djOf8SYfoHRFxUity3nB1pyisPw+5KktxE6p05esfNzdxfWanS0uM/MXQi8WonnXG0M4eLGrcM5SMNdqn4ncmwd/RzQLxJuYqTADvmgQynPQfNKLhrczgfIesUw6sKfKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=R/ZrP73b; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1747043782; c=relaxed/simple;
+	bh=OlbebHoLu4LXG8M5DHLeD47dN2+hbpUNsw4GjMsaE6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pSO/9Xb4gJG7DGyFkBGp6pWzYZVHXLJDasXm7/263SX/zEUV+lFJlxWLdh3bs+nNF6+aoIE7WrXjjDa9IgdSZ6ju4mw/oZhhVZSkyxv2QSfDE4W59sjHRYbHlKSLj5hXNj0TG5A9eV2Bw03yneJL9DCBUCjnpW4Zza69lFcQQLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TTcIeneb; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="R/ZrP73b"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C5A4210272092;
-	Mon, 12 May 2025 11:55:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1747043758; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=a2idZBdlZFTg/YbhlRsED1K0jykkLCJPk4JtmA9TXLs=;
-	b=R/ZrP73b9jX4WIfnSjXMLZOANedt1Idj4lQHG5FCmsUb8MFIFCM27gAmun0KscjZ+TJx6S
-	aAwQXa88arCHeXUwX5DaNlJp6TJFPCIcmQmoqq0lfB//f4DvCewxJ2oHxPs9s/adDPFeac
-	LESUTyFscYisYvfV0xFGe23I71gW490iXMLj9NK3nenEW4gEpa7Ne5jhjHFXitGXE7dUU4
-	iqGQwtFZ8o0PO0H5DyTFqhEvAeY+cgxlbPGCbAVCIcOVukZ4c+xcvuES0ZLDVe0nmDVsvq
-	xeOuy58NFd7O+9L2ZsXsESKkbkHOT4+MGLsU9nXT6a7Y+LJ7V55EJPYS8Cp//g==
-Date: Mon, 12 May 2025 11:55:50 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, jonathanh@nvidia.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/569] 6.1.129-rc2 review
-Message-ID: <aCHFpvebEucllGq5@duo.ucw.cz>
-References: <20250220104545.805660879@linuxfoundation.org>
- <80ab673f-aa94-43e2-899a-0c5a22f3f1e0@gmail.com>
- <2025022221-revert-hubcap-f519@gregkh>
- <Z7mXDolRS+3nLAse@duo.ucw.cz>
- <2025022213-brewery-synergy-b4bf@gregkh>
- <aCG9kFjnZrMd4sy8@duo.ucw.cz>
- <2025051205-return-blame-ba79@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTcIeneb"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54b0d638e86so4772688e87.1;
+        Mon, 12 May 2025 02:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747043778; x=1747648578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n6xGlGBkE1m8gu0/rjDmatj+Hz4dtijC/JB0CSfGWno=;
+        b=TTcIenebahkJuRXSJryxpnnfBRwKKNCrTfi0Gr5gretwOgLHI0TQY/M15jpe3d0tNu
+         WCpixKQLwbmBlfuJImgxGu8iErNxQw/4Kt5UVEH8Th0eT4rkyhJI0YmVXsMUgnndIrRE
+         GUut89zCGWVvkUtMKHMYwTCKdH28DkdGCxd1h5A/DWKQ4x55sZIu7QZK/Mg16jT9D2LU
+         E7cyo305vb1gOJvitiMgCJIN5XIJHNB804ytz6DGnAfHt4OFZS+hJKiTUThp2VTYAaNp
+         x7KFrG1Ryx7wzCDhkXroWsHu/0wsTDMl+146ECFMTt/NNW4XzS7VEKqDSQKGRsV/HFDT
+         Qc1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747043778; x=1747648578;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n6xGlGBkE1m8gu0/rjDmatj+Hz4dtijC/JB0CSfGWno=;
+        b=VuSrbMLixtb3Dllzcy7tWvQ18vQLuJNWmT9rP1g4x+8Qd3nZbDZ466oslBAPnFtqq4
+         7u8G6lRYLoNOwrm8heOb9ScZMmbY7enXhiu6XzECSaRKBQ2SN2JGX09vT4DlE6y5zFJb
+         xvlLHdgYYdS2atQ1POMKi4D0weFJ5xHCkyouqBQwIxtHt33dHdkGMlKCcDjYp2POje0V
+         A96+IWWpdMXocfW6f9edyDrNfPYuS4JDGjV1yBr4UYfcdv8MAnZ+e7LFJ9WIbdWx2zXc
+         lKBBbF41qjS9muGeZuD5k22YhvXGDMUOSRwjXOzVba3b4EIMXOFNoitijMzsmLOfw9e4
+         Pdeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeBtZLGmY8xbajFdVLsYzKNnURciCK+CX54Nes1Fu5VE+2aRoydqXxnT/k+y0uWaVOhWmziDOjt0LzISDPaSA=@vger.kernel.org, AJvYcCVuHTimskuKtx2GyGyzQFC7KQM5e3lI437fTCCt10m9F0fn9JUGD78ye9d9t97jHsnsesLhC8YpU0cMZ4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBhDI5TmVj4K00/0sqy2QuA5BSkUr6ihdAFGWZ3idWCO3cRyZh
+	4CTOPPiKbOG+DciGCQzegXzi1zDt5zDyxV7vAxiiieO+FIjgSWlA
+X-Gm-Gg: ASbGnctSEotcwu4YhncrC6qG7KnZ0fCwvXA3OFeA5ZyiLQpTQymR5I0/ATXC8RKVDOa
+	8/lpMZaU3qIAHAyUge3iPBBLo/wqYvpi7EMxGFDtx78yN+dzrzjGFvf0935cB45FD2Nf3YzTEzU
+	fYmebDtOJOeWoVBcL5EZC+Ffd9JbaPTMmnTKK2kNPjS+P6daWdFEaWbZqBM40VvS3vgVj/I6gvV
+	B2DP5ZOG/4kP+PipMl5wbq/maLBj5URDCqlLlCMQbXX9K6nIpbqTEZfBgnI5dMw86W/Nfatjr7x
+	obJcYYIom17oc5zlLXEIk1rdqYE6CP00icfW1+fePAq+ZbKY7Oab3aK8fs8Qy7O2bTUppzgia/n
+	Okx+4VPEztUXcLJx2CEV2t/WHlfF1jC/uuXsjTsQ=
+X-Google-Smtp-Source: AGHT+IHVWWri4vLZs2whHIUJWvjl7yMbyBdtbTF5UREoIyZ4wrhRYZ7fIdThZCbA87BC5h9ImJP7aQ==
+X-Received: by 2002:a05:6512:4408:b0:545:944:aae1 with SMTP id 2adb3069b0e04-54fc67ad8bemr4406415e87.12.1747043777823;
+        Mon, 12 May 2025 02:56:17 -0700 (PDT)
+Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc644fa48sm1460449e87.1.2025.05.12.02.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 02:56:17 -0700 (PDT)
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+To: dakr@kernel.org,
+	lyude@redhat.com
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	linux-kernel@vger.kernel.org (open list),
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	airlied@redhat.com,
+	rust-for-linux@vger.kernel.org,
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
+	Petr Tesarik <petr@tesarici.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Sui Jingfeng <sui.jingfeng@linux.dev>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Subject: [RFC PATCH 0/2] scatterlist rust bindings
+Date: Mon, 12 May 2025 12:53:26 +0300
+Message-ID: <20250512095544.3334680-1-abdiel.janulgue@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2O7SBi5KcP6k6vqT"
-Content-Disposition: inline
-In-Reply-To: <2025051205-return-blame-ba79@gregkh>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+Here are the scatterlist bindings that has been brewing for a while in my
+local tree while working with Nova code. The bindings are used mostly to
+build the radix3 table from the GSP firmware which is loaded via dma.
+This interface can be used on top of existing kernel scatterlist objects
+or to allocate a new one from scratch.
+
+Some questions still need to be resolved, which mostly come from
+the DeviceSGTable::dma_map() function. Primarily, what if you call
+bindings::dma_map_sgtable() on an already mapped sg_table? From my
+experiments it doesn't seem to do anything and no indication is returned if
+the call succeeded or not. Should we save the "mapping info" to a list
+everytime we call DeviceSGTable::dma_map more than once?
+
+Hoping this initial submission will generate some discussion. I'd like to
+acknowledge valuable feedback from Danilo Krummrich and Lyude
+Paul in shaping this up.
+
+Abdiel Janulgue (2):
+  rust: add initial scatterlist bindings
+  samples: rust: add sample code for scatterlist bindings
+
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/scatterlist.c      |  25 +++
+ rust/kernel/lib.rs              |   1 +
+ rust/kernel/scatterlist.rs      | 275 ++++++++++++++++++++++++++++++++
+ samples/rust/rust_dma.rs        |  14 +-
+ 6 files changed, 316 insertions(+), 1 deletion(-)
+ create mode 100644 rust/helpers/scatterlist.c
+ create mode 100644 rust/kernel/scatterlist.rs
 
 
---2O7SBi5KcP6k6vqT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+base-commit: dd21715de3dfa6f6457432ce909e5f7eb142a7d2
+-- 
+2.43.0
 
-On Mon 2025-05-12 11:31:20, Greg Kroah-Hartman wrote:
-> On Mon, May 12, 2025 at 11:21:20AM +0200, Pavel Machek wrote:
-> > On Sat 2025-02-22 10:39:23, Greg Kroah-Hartman wrote:
-> > > On Sat, Feb 22, 2025 at 10:21:18AM +0100, Pavel Machek wrote:
-> > > > On Sat 2025-02-22 07:28:10, Greg Kroah-Hartman wrote:
-> > > > > On Fri, Feb 21, 2025 at 09:45:15AM -0800, Florian Fainelli wrote:
-> > > > > >=20
-> > > > > >=20
-> > > > > > On 2/20/2025 2:57 AM, Greg Kroah-Hartman wrote:
-> > > > > > > This is the start of the stable review cycle for the 6.1.129 =
-release.
-> > > > > > > There are 569 patches in this series, all will be posted as a=
- response
-> > > > > > > to this one.  If anyone has any issues with these being appli=
-ed, please
-> > > > > > > let me know.
-> > > > > > >=20
-> > > > > > > Responses should be made by Sat, 22 Feb 2025 10:44:04 +0000.
-> > > > > > > Anything received after that time might be too late.
-> > > > > >=20
-> > > > > > And yet there was a v6.1.29 tag created already?
-> > > > >=20
-> > > > > Sometimes I'm faster, which is usually the case for -rc2 and late=
-r, I go
-> > > > > off of the -rc1 date if the people that had problems with -rc1 ha=
-ve
-> > > > > reported that the newer -rc fixes their reported issues.
-> > > >=20
-> > > > Well, quoting time down to second then doing something completely
-> > > > different is quite confusing. Please fix your scripts.
-> > >=20
-> > > Patches gladly welcome :)
-> >=20
-> > It is not okay to send misleading emails just because script generated
-> > them.
->=20
-> *plonk*
-
-Yeah. Cooperation with you is wonderful and I'll gladly copy&paste
-=66rom the internet in case you don't have internet access and remove
-blank lanks for you next time you ask.
-
-BR,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---2O7SBi5KcP6k6vqT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaCHFpgAKCRAw5/Bqldv6
-8m7SAKC1gQ++k6DXs+0CokEuWs/nHR2xYwCfSuKLefx9tNtHUmrhTVmHZaulW30=
-=B+rO
------END PGP SIGNATURE-----
-
---2O7SBi5KcP6k6vqT--
