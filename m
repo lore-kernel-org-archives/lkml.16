@@ -1,1055 +1,125 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030F82AD0B;
-	Mon, 12 May 2025 16:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066631; cv=pass; b=aa0soI3Zs9OuEuRI9XG3azlVi0XBAkLknXANxk0m9rYyGi/hkJudWIdrMKrw0/OrEi0cmpFQNn1r1zL+D+8RmOYVnal+irhw7y/LmsYcjPymL2UqQeDBm1YixMFliwl6vWPKuN+uqQRYtfEkVTKMz3ymeqZ7HDw0D21vsg1tT8A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066631; c=relaxed/simple;
-	bh=dYSOxvTEXEHOA4t9s7BN5CWHTouDIApcTBTXU46fD70=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=mQuMQfLgTIESjailU/QIFW4Q3FJARmaj+tbMHf0tfqIEVN7V85ZpHgq025Km1r0uX25XGgDSrw+sekGot6a/Z0UFsSvBO1EmlHDPcWq0e+rOxmUckzBePYAMbm/5sL3JFtvC214acNlyC9ddBVfMVUTGvcGZ/az5icarShHaazs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=eSNyZJyb; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0880324678D;
+	Mon, 12 May 2025 16:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747066654; cv=none; b=T/M0zt4hY0s3m4sOReotQOz5agS1T8tF9/ZwfAziEAkAs7z6W3KcSBJM87D2uZdlYoEZXsVjuo9+4KdyP/QT5AQGHVfoHDEbUub6gjFJPwhCCf6kvdrAx5TNpZkVvIg6TmGiRRyjUJUP0BlSooh9lZ+BRcrzNdtd9iRjQ8pG1u0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747066654; c=relaxed/simple;
+	bh=bgp4i9EUIQbKNiJUfwhdvJH5H7aeG1dF49FUZ6vXukQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwfqi0z33hzqYF3NBAmOeys8OIT5G08xjFq4TzWe7AiDD8WLDKcGtfan7QtO7j/CGNA9f+kBlulbob3xQDWZJY+egFMMdGZPJUQSDviHoYm/YaJhwFG3StpQdIJU1+mRK7FJpecMH9589/PFy6H8dt2F4dfdpiCIWoJ7k2ozUGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HC4BzF2A; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="eSNyZJyb"
-ARC-Seal: i=1; a=rsa-sha256; t=1747066578; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dFXBcLO2a3cXjGLKb8rXRYzl1JIBlP+uGP8J//+w4KaVcvBEHX5H7YGLmjdCPd938F1BZgqXUUA0xwJGCHOBMXS6+aCtUspBraUr4nLhUg0D0IJes6EgQ/uV6hS/X0/u+ia+lMV29Ep+bgW8AK/hIWOA86zPumK83vpWUGej81Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747066578; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iW/jsPYEGswZlTIsBmYloK4kHEYNA1qJWUta8gi8JCg=; 
-	b=hnWI3lBIe16lziIz+7wWaDqM8XUU7WswvJbVoT95v5jVCYB9FnKs93h+JAnIFf95VUhptMBWADZj1BqhoS7G8graxgwRxTVOLWBOV3V+Mt3eJiT9yyPcLhT9whx1H8hLNMArUKQVE3k73Br+c+tY+y0Vs1UrYdcZIBfohUil++4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747066578;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=iW/jsPYEGswZlTIsBmYloK4kHEYNA1qJWUta8gi8JCg=;
-	b=eSNyZJybjxG2H7vHzoJluvekuXGE0b4X0TeCDLFb28G8WLAh3vM5wajMIstpwK1k
-	9CEFny++gQCv/2VJH3i9d0vu+3o6BLrJicmxBgvG5gldf7SLfTg99VTCNj1sSri2iCe
-	fOa6Tg9w6S7vk3pLc2HqptLfvGzwTn+cjj+K3Cw0=
-Received: by mx.zohomail.com with SMTPS id 1747066576287988.0027355214268;
-	Mon, 12 May 2025 09:16:16 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HC4BzF2A"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30a8cfa713fso4438022a91.1;
+        Mon, 12 May 2025 09:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747066652; x=1747671452; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9uvHjXCxcVfNXCFQY8QeQ7tL8pdwghSrCmXwREw/SuQ=;
+        b=HC4BzF2ARz6EHSEkiG2HQFYYeCKsW1DsHe6G/daon0LXrqHvdghi7mWPOzRkezFcqo
+         xZVwkC1jmjKLYuh1q0f2BQvu6LVSQkIo1NxqBG1yTJv20Jp/J3Q2Y7hTOrUJirFyXuum
+         d3otWC7c+/S8Xzmva3f+BwwNmadQAUYs/dYTEX18IgECWMYyFwS1mhJ6WVKfoAr54z8k
+         NSYERULa7HyhFrHPKcPdL7UGBmTahQnhN+MMdHzoa7D6kDhpXtBpX8P4W1zmNnlA2f2i
+         L9tZQRP/O8ssz1m29O2FHyRdDazYfJbcUVqQmk6l6zYG7J1enFBs110R/9yhgJa/46fB
+         RrQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747066652; x=1747671452;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9uvHjXCxcVfNXCFQY8QeQ7tL8pdwghSrCmXwREw/SuQ=;
+        b=N1hCmSfS8qwSIA7lHgUCIZI6ITC/BHiOQf2FEvqfqVft/TPAo3pBaO0dWHfd3qnRGJ
+         5HavAMjFuYlea09kG3khE3hAdUGlfiSct8dM6M0Fs89PnEMSppTwMLYMLMCUNM3KcS6B
+         u7uetERYI+oIR0rmd6pKbr7EX/dGsm/iYpUnMPJ9Jpq+qnz2hHfSrrWBk1Vt5ctigrPb
+         UwpDkrwtJNGNnBmELlz35URlXlGUET+LReR3GxMw6z3vO3eIskOs8ULn2QSbqr2+6lCa
+         J7HfQ3OAwBo04aWK7I1P6Sp3aKsLnOzrD3pZYtpzQ4IkTYNX38ESvkkzOFhbpApQWhvk
+         QAFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1FerOGgeWipFJSTXFIuxQkAS0rd+FIGjYMrE1eLlRArd7lKhNRDSugv3ZWfrDEvjX2GA8WenbIpLtbP8sptReAdoV@vger.kernel.org, AJvYcCXzhghijdqjHIDNhZAFwLuEEPsp2FXW64et+I0VzZbj77EryzxZ+h5dm+LwVIIJK5xB96I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw50V4I4FFBwic1sfbs8thgOhvtuoxxOmMKFRZ+5npJQXdhogVr
+	zXWfh6tqrxbtyY5wUg6vopxTKdM/49fvrDm+CwwLr/jRP/W95fXi2NHmoh7eT57a888X2GEyWvW
+	Z6ernKXZR8voD6OqmmJV2oneH3J0ZUG3W
+X-Gm-Gg: ASbGncsgNO2OXPMSSgGWrYLWaHQ6Lu/yssgG1yNTZLpb6T7GNktwyPBwe6tTKZpzUXo
+	FygYAjnScP7P1g7CXYx7GJXY/GyV0vDepL9iObR3eV2YDALFVg4HBb65O6JbQ9Cl9wPg+qAwOsx
+	Cs0ezEmIJET3XjcOla2IBXSg0W2yIXcJ8lW6v10VKiZtXpj5aZHFxSVjvS0Ww=
+X-Google-Smtp-Source: AGHT+IHeVbbq75QFEsdBwLdk0G775rWp2KMcd7S50ydlk0AYFnSK87YAytaVJ4OEH2EAwBERrs4xBteqdST6Ut18BBo=
+X-Received: by 2002:a17:90b:1a89:b0:2f9:c139:b61f with SMTP id
+ 98e67ed59e1d1-30c3cff4192mr24639689a91.14.1747066652101; Mon, 12 May 2025
+ 09:17:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [RFC v3 04/33] rust: drm/kms: Add drm_connector bindings
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250305230406.567126-5-lyude@redhat.com>
-Date: Mon, 12 May 2025 13:15:58 -0300
-Cc: dri-devel@lists.freedesktop.org,
- rust-for-linux@vger.kernel.org,
- Danilo Krummrich <dakr@kernel.org>,
- mcanal@igalia.com,
- Alice Ryhl <aliceryhl@google.com>,
- Maxime Ripard <mripard@kernel.org>,
- Simona Vetter <sima@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Asahi Lina <lina@asahilina.net>,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
- open list <linux-kernel@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250509164524.448387100@goodmis.org> <20250509165155.628873521@goodmis.org>
+ <CAEf4Bzb7MCv87ZEPXvH7APk9yvmtCWvuUO5ShEaLvz_DLfNqpw@mail.gmail.com> <20250510094149.7e91736d@gandalf.local.home>
+In-Reply-To: <20250510094149.7e91736d@gandalf.local.home>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 12 May 2025 09:17:19 -0700
+X-Gm-Features: AX0GCFvGFzGHwTHTkppy2G0wRc8r3BTb9Wt9Jz0r138tBIO0LakJqFig68Nag50
+Message-ID: <CAEf4BzYrz8-aBW0q7wwMOyO3v0ByLuFBRLtBQhSe1fesXwrPWw@mail.gmail.com>
+Subject: Re: [PATCH v8 12/18] unwind deferred: Use SRCU unwind_deferred_task_work()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C3E5A06F-59C0-41C6-830B-302AB5BB5C52@collabora.com>
-References: <20250305230406.567126-1-lyude@redhat.com>
- <20250305230406.567126-5-lyude@redhat.com>
-To: Lyude Paul <lyude@redhat.com>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-ZohoMailClient: External
 
+On Sat, May 10, 2025 at 6:41=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Fri, 9 May 2025 14:49:37 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > > @@ -133,13 +135,15 @@ static void unwind_deferred_task_work(struct ca=
+llback_head *head)
+> > >
+> > >         timestamp =3D info->timestamp;
+> > >
+> > > -       guard(mutex)(&callback_mutex);
+> > > -       list_for_each_entry(work, &callbacks, list) {
+> > > +       idx =3D srcu_read_lock(&unwind_srcu);
+> >
+> > nit: you could have used guard(srcu)(&unwind_srcu) ?
+>
+> Then it would be a scope_guard() as it is only needed for the list. I
+> prefer using guard() when it is most of the function that is being
+> protected. Here it's just the list and nothing else.
+>
+> One issue I have with guard() is that it tends to "leak". That is, if you
+> use it to protect only one thing and then add more after what you are
+> protecting, then the guard ends up protecting more than it needs to.
+>
 
+Yep, makes sense. I just noticed the use of guard() for mutex before,
+so assumes the same could be done for SRCU, but what you are saying
+makes sense, no problem.
 
-> On 5 Mar 2025, at 19:59, Lyude Paul <lyude@redhat.com> wrote:
->=20
-> We start off by introducing wrappers for the first important type of =
-mode
-> object: a DRM display connector. This introduces Connector<T:
-> DriverConnector> and ConnectorState<T: DriverConnectorState>. Both
-> DriverConnector and DriverConnectorState must be implemented by KMS
-> drivers, and a driver may have as many implementations of these two =
-traits
-> as it needs. This also introduces the general data pattern we'll be =
-using
-> for all of the core mode objects that can be used in atomic commits.
->=20
-> It's important to note that both Connector<T> and ConnectorState<T> =
-are
-> intended to be "subclassable". To explain what this means, we need to =
-look
-> at how a DRM driver normally uses objects like DRM connectors.
->=20
-> Typically, a driver in C will define its connectors like so:
->=20
-> struct foo_connector {
->  struct drm_connector base;
->  int bar;
-> }
->=20
-> Note that we have a drm_connector struct embedded in foo_connector, =
-but we
-> have data which comes after it which is defined by the driver. This is
-> important for a number of reasons: connectors can have their own =
-mutexes
-> and various other hardware-specific information that a driver may want
-> access to at any time. The same goes for drm_connector_state, where =
-drivers
-> will subclass this struct in the same way. It's worth noting as well =
-that
-> it isn't uncommon for a driver to have multiple types of connectors, =
-but
-> we'll handle in a later commit.
->=20
-> As a result, we've designed Connector<T> and ConnectorState<T> so that =
-for
-> both types: a DRM driver can add custom data into the T. As well, =
-there's
-> some basic limitations on how this data may be accessed:
->=20
-> * Data within the `DriverConnector` struct is pinned in order to allow
->  mutexes and other structs which need pinning to be stored within it. =
-As
->  well, it is impossible to get a direct mutable reference to the data
->  within DriverConnector - as there's no locks for doing so which would
->  cause a race condition.
-> * Data within the `DriverConnectorState` struct is currently not =
-pinned.
->  While it's not unheard of for a driver to put something like a mutex =
-in
->  its atomic states, (VKMS actually does this in some spots) this =
-quickly
->  complicates things especially with nonblocking modesets - and doesn't
->  really fit into the philosophy of an atomic state anyway. We may add
->  support for this in the future later if this does end up being =
-needed,
->  but for now we hold back in order to make it much easier for drivers =
-to
->  access private data within the atomic state.
->  As well, the functions we provide for converting to/from raw =
-connector
->  state pointers are notably different from many other rust types in =
-the
->  kernel. Instead of converting raw state pointers to raw =
-ConnectorState<T>
->  pointers, we allow for direct immutable and mutable references. The
->  reason for this is that it makes accessing private driver data in the
->  state much easier, and unlike Connector<T> - we can actually uphold
->  all of the required data aliasing rules thanks to states only being
->  mutable by a single thread before they've been swapped in.
->  Note that currently, we don't provide a way to access said private =
-data
->  for ConnectorState<T> since allowing direct access to a &mut
->  ConnectorState<T> could allow a caller to modify portions of
->  drm_connector_state which are meant to be invariant throughout the
-
-Invariant makes people think of [0]. Perhaps =E2=80=9Cconstant=E2=80=9D =
-or some other term?
-
->  lifetime of the connector state. We'll address this in the next few
->  commits when we introduce the global atomic state type.
->=20
-> And finally - we introduce the following internal traits for the crate =
-side
-> of things:
->=20
->  * AsRawConnector - any type which can spit out a *mut
->    bindings::drm_connector or be recovered from one
->  * AsRawConnectorState - any type which can return a reference to a
->    bindings::drm_connector_state
->  * private::AsRawConnectorState - just methods for AsRawConnectorState
->    that we don't want to be accessible to our users (since they could =
-be
->    used to introduce UB)
->  * FromRawConnectorState - any type which can be recovered from a raw
->    pointer to a bindings::drm_connector_state
->=20
-> The reason for having AsRawConnectorState and FromRawConnectorState as
-> separate traits unlike AsRawConnector is due to the fact that we'll
-> introduce objects later on which can be used as DRM connector states, =
-but
-> cannot be directly derived from a *mut bindings::drm_connector_state
-> because they hold additional state or have additional side-effects.
->=20
-> Likewise, we'll also have other objects which can be used as raw DRM
-> connectors - hence AsRawConnector.
->=20
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
->=20
-> ---
->=20
-> V3:
-> * Add safety comment to implementation of ModeObject
-> * Make AsRawConnector an unsafe trait, we need a guarantee that =
-as_raw()
->  always returns a valid pointer.
-> * Improve safety comments in atomic_duplicate_state_callback
-> * Improve safety comments in Connector::new()
-> * Switch to requiring a UnregisteredKmsDevice instead of a Device
->  This is in preparation for the static/dynamic connector split, which =
-we
->  may as well prepare for since we don't have any use for dynamic
->  connectors yet.
-> * Drop redundant Connector associated type in AsRawConnector trait
-> * Improve safety comments in FromRawConnectorState
-> * Introduce UnregisteredConnector type
-> * Don't have AsRawConnector be a supertrait of StaticModeObject. We =
-don't
->  want Unregistered mode object variants to be able to return a pointer =
-to
->  the DRM device since that would break the UnregisteredKmsDevice =
-pattern.
-> * Introduce an actual enum for connector types
->  I realized we actually could do this fairly easy by using
->  #[non_exhaustive], which should future-proof us against new connector
->  types being added someday (if that ever happens).
-> * Use addr_of_mut! for accessing fields we were using &mut for.
->  I think this is correct after going through some other rfl work?
->=20
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
-> rust/bindings/bindings_helper.h  |   1 +
-> rust/kernel/drm/kms.rs           |   2 +
-> rust/kernel/drm/kms/connector.rs | 616 +++++++++++++++++++++++++++++++
-> 3 files changed, 619 insertions(+)
-> create mode 100644 rust/kernel/drm/kms/connector.rs
->=20
-> diff --git a/rust/bindings/bindings_helper.h =
-b/rust/bindings/bindings_helper.h
-> index e1ed4f40c8e89..c41a3309223b2 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -9,6 +9,7 @@
-> #include <drm/drm_atomic.h>
-> #include <drm/drm_atomic_helper.h>
-> #include <drm/clients/drm_client_setup.h>
-> +#include <drm/drm_connector.h>
-> #include <drm/drm_device.h>
-> #include <drm/drm_drv.h>
-> #include <drm/drm_file.h>
-> diff --git a/rust/kernel/drm/kms.rs b/rust/kernel/drm/kms.rs
-> index 885bd5266a2d7..f10e9f83ccb78 100644
-> --- a/rust/kernel/drm/kms.rs
-> +++ b/rust/kernel/drm/kms.rs
-> @@ -2,6 +2,8 @@
->=20
-> //! KMS driver abstractions for rust.
->=20
-> +pub mod connector;
-> +
-> use crate::{
->     device,
->     drm::{device::Device, drv::Driver},
-> diff --git a/rust/kernel/drm/kms/connector.rs =
-b/rust/kernel/drm/kms/connector.rs
-> new file mode 100644
-> index 0000000000000..ed65c06ece627
-> --- /dev/null
-> +++ b/rust/kernel/drm/kms/connector.rs
-> @@ -0,0 +1,616 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> +
-> +//! DRM display connectors.
-> +//!
-> +//! C header: =
-[`include/drm/drm_connector.h`](srctree/include/drm/drm_connector.h)
-> +
-> +use super::{KmsDriver, ModeObject, RcModeObject};
-> +use crate::{
-> +    alloc::KBox,
-> +    bindings,
-> +    drm::{device::Device, kms::UnregisteredKmsDevice},
-> +    error::to_result,
-> +    init::Zeroable,
-> +    prelude::*,
-> +    private::Sealed,
-> +    types::{NotThreadSafe, Opaque},
-> +};
-> +use core::{
-> +    marker::*,
-> +    mem,
-> +    ops::*,
-> +    ptr::{addr_of_mut, null_mut},
-> +    stringify,
-> +};
-> +use macros::{paste, pin_data};
-> +
-> +/// A macro for generating our type ID enumerator.
-> +macro_rules! declare_conn_types {
-> +    ($( $oldname:ident as $newname:ident ),+) =3D> {
-> +        /// An enumerator for all possible [`Connector`] type IDs.
-> +        #[repr(i32)]
-> +        #[non_exhaustive]
-> +        #[derive(Copy, Clone, PartialEq, Eq)]
-> +        pub enum Type {
-> +            // Note: bindgen defaults the macro values to u32 and not =
-i32, but DRM takes them as an
-> +            // i32 - so just do the conversion here
-> +            $(
-> +                #[doc =3D concat!("The connector type ID for a ", =
-stringify!($newname), " connector.")]
-> +                $newname =3D =
-paste!(crate::bindings::[<DRM_MODE_CONNECTOR_ $oldname>]) as i32
-> +            ),+,
-> +
-> +            // 9PinDIN is special because of the 9, making it an =
-invalid ident. Just define it here
-> +            // manually since it's the only one
-> +
-> +            /// The connector type ID for a 9PinDIN connector.
-> +            _9PinDin =3D crate::bindings::DRM_MODE_CONNECTOR_9PinDIN =
-as i32
-> +        }
-> +    };
-> +}
-> +
-> +declare_conn_types! {
-> +    Unknown     as Unknown,
-> +    Composite   as Composite,
-> +    Component   as Component,
-> +    DisplayPort as DisplayPort,
-> +    VGA         as Vga,
-> +    DVII        as DviI,
-> +    DVID        as DviD,
-> +    DVIA        as DviA,
-> +    SVIDEO      as SVideo,
-> +    LVDS        as Lvds,
-> +    HDMIA       as HdmiA,
-> +    HDMIB       as HdmiB,
-> +    TV          as Tv,
-> +    eDP         as Edp,
-> +    VIRTUAL     as Virtual,
-> +    DSI         as Dsi,
-> +    DPI         as Dpi,
-> +    WRITEBACK   as Writeback,
-> +    SPI         as Spi,
-> +    USB         as Usb
-> +}
-> +
-> +/// The main trait for implementing the [`struct drm_connector`] API =
-for [`Connector`].
-> +///
-> +/// Any KMS driver should have at least one implementation of this =
-type, which allows them to create
-> +/// [`Connector`] objects. Additionally, a driver may store =
-driver-private data within the type that
-> +/// implements [`DriverConnector`] - and it will be made available =
-when using a fully typed
-> +/// [`Connector`] object.
-> +///
-> +/// # Invariants
-> +///
-> +/// - Any C FFI callbacks generated using this trait are guaranteed =
-that passed-in
-> +///   [`struct drm_connector`] pointers are contained within a =
-[`Connector<Self>`].
-> +/// - Any C FFI callbacks generated using this trait are guaranteed =
-that passed-in
-> +///   [`struct drm_connector_state`] pointers are contained within a
-> +///   [`ConnectorState<Self::State>`].
-> +///
-> +/// [`struct drm_connector`]: srctree/include/drm/drm_connector.h
-> +/// [`struct drm_connector_state`]: =
-srctree/include/drm/drm_connector.h
-> +#[vtable]
-> +pub trait DriverConnector: Send + Sync + Sized {
-> +    /// The generated C vtable for this [`DriverConnector`] =
-implementation
-> +    #[unique]
-> +    const OPS: &'static DriverConnectorOps =3D &DriverConnectorOps {
-> +        funcs: bindings::drm_connector_funcs {
-> +            dpms: None,
-> +            atomic_get_property: None,
-> +            atomic_set_property: None,
-> +            early_unregister: None,
-> +            late_register: None,
-> +            set_property: None,
-> +            reset: Some(connector_reset_callback::<Self::State>),
-> +            atomic_print_state: None,
-> +            atomic_destroy_state: =
-Some(atomic_destroy_state_callback::<Self::State>),
-> +            destroy: Some(connector_destroy_callback::<Self>),
-> +            force: None,
-> +            detect: None,
-> +            fill_modes: None,
-> +            debugfs_init: None,
-> +            oob_hotplug_event: None,
-> +            atomic_duplicate_state: =
-Some(atomic_duplicate_state_callback::<Self::State>),
-> +        },
-> +        helper_funcs: bindings::drm_connector_helper_funcs {
-> +            mode_valid: None,
-> +            atomic_check: None,
-> +            get_modes: None,
-> +            detect_ctx: None,
-> +            enable_hpd: None,
-> +            disable_hpd: None,
-> +            best_encoder: None,
-> +            atomic_commit: None,
-> +            mode_valid_ctx: None,
-> +            atomic_best_encoder: None,
-> +            prepare_writeback_job: None,
-> +            cleanup_writeback_job: None,
-> +        },
-> +    };
-> +
-> +    /// The type to pass to the `args` field of =
-[`UnregisteredConnector::new`].
-> +    ///
-> +    /// This type will be made available in in the `args` argument of =
-[`Self::new`]. Drivers which
-> +    /// don't need this can simply pass [`()`] here.
-> +    type Args;
-> +
-> +    /// The parent [`KmsDriver`] implementation.
-> +    type Driver: KmsDriver;
-> +
-> +    /// The [`DriverConnectorState`] implementation for this =
-[`DriverConnector`].
-> +    ///
-> +    /// See [`DriverConnectorState`] for more info.
-> +    type State: DriverConnectorState;
-> +
-> +    /// The constructor for creating a [`Connector`] using this =
-[`DriverConnector`] implementation.
-> +    ///
-> +    /// Drivers may use this to instantiate their [`DriverConnector`] =
-object.
-> +    fn new(device: &Device<Self::Driver>, args: Self::Args) -> impl =
-PinInit<Self, Error>;
-> +}
-> +
-> +/// The generated C vtable for a [`DriverConnector`].
-> +///
-> +/// This type is created internally by DRM.
-> +pub struct DriverConnectorOps {
-> +    funcs: bindings::drm_connector_funcs,
-> +    helper_funcs: bindings::drm_connector_helper_funcs,
-> +}
-> +
-> +/// The main interface for a [`struct drm_connector`].
-> +///
-> +/// This type is the main interface for dealing with DRM connectors. =
-In addition, it also allows
-> +/// immutable access to whatever private data is contained within an =
-implementor's
-> +/// [`DriverConnector`] type.
-> +///
-> +/// # Invariants
-> +///
-> +/// - The DRM C API and our interface guarantees that only the user =
-has mutable access to `state`,
-> +///   up until [`drm_atomic_helper_commit_hw_done`] is called. =
-Therefore, `connector` follows rust's
-> +///   data aliasing rules and does not need to be behind an =
-[`Opaque`] type.
-> +/// - `connector` and `inner` are initialized for as long as this =
-object is made available to users.
-> +/// - The data layout of this structure begins with [`struct =
-drm_connector`].
-> +/// - The atomic state for this type can always be assumed to be of =
-type
-> +///   [`ConnectorState<T::State>`].
-> +///
-> +/// [`struct drm_connector`]: srctree/include/drm/drm_connector.h
-> +/// [`drm_atomic_helper_commit_hw_done`]: =
-srctree/include/drm/drm_atomic_helper.h
-> +#[repr(C)]
-> +#[pin_data]
-> +pub struct Connector<T: DriverConnector> {
-> +    connector: Opaque<bindings::drm_connector>,
-> +    #[pin]
-> +    inner: T,
-> +    #[pin]
-> +    _p: PhantomPinned,
-> +}
-> +
-> +impl<T: DriverConnector> Sealed for Connector<T> {}
-> +
-> +// SAFETY: DRM expects this struct to be zero-initialized
-> +unsafe impl Zeroable for bindings::drm_connector {}
-> +
-> +impl<T: DriverConnector> Deref for Connector<T> {
-> +    type Target =3D T;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        &self.inner
-> +    }
-> +}
-> +
-> +/// A trait implemented by any type that acts as a [`struct =
-drm_connector`] interface.
-> +///
-> +/// This is implemented internally by DRM.
-> +///
-> +/// # Safety
-> +///
-> +/// [`as_raw()`] must always return a pointer to a valid initialized =
-[`struct drm_connector`].
-> +///
-> +/// [`as_raw()`]: AsRawConnector::as_raw()
-> +/// [`struct drm_connector`]: srctree/include/drm/drm_connector.h
-> +pub unsafe trait AsRawConnector {
-> +    /// Return the raw [`struct drm_connector`] for this DRM =
-connector.
-> +    ///
-> +    /// Drivers should never use this directly
-> +    ///
-> +    /// [`struct drm_Connector`]: srctree/include/drm/drm_connector.h
-> +    fn as_raw(&self) -> *mut bindings::drm_connector;
-> +
-> +    /// Convert a raw `bindings::drm_connector` pointer into an =
-object of this type.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers promise that `ptr` points to a valid instance of this =
-type.
-> +    unsafe fn from_raw<'a>(ptr: *mut bindings::drm_connector) -> &'a =
-Self;
-> +}
-> +
-> +/// A supertrait of [`AsRawConnector`] for [`struct drm_connector`] =
-interfaces that can perform
-> +/// modesets.
-> +///
-> +/// This is implemented internally by DRM.
-> +///
-> +/// # Safety
-> +///
-> +/// Any object implementing this trait must only be made directly =
-available to the user after
-> +/// [`create_objects`] has completed.
-> +///
-> +/// [`struct drm_connector`]: srctree/include/drm/drm_connector.h
-> +/// [`create_objects`]: KmsDriver::create_objects
-> +pub unsafe trait ModesettableConnector: AsRawConnector {
-> +    /// The type that should be returned for a plane state acquired =
-using this plane interface
-> +    type State: FromRawConnectorState;
-> +}
-> +
-> +// SAFETY: Our connector interfaces are guaranteed to be thread-safe
-> +unsafe impl<T: DriverConnector> Send for Connector<T> {}
-> +
-> +// SAFETY: Our connector interfaces are guaranteed to be thread-safe
-> +unsafe impl<T: DriverConnector> Sync for Connector<T> {}
-> +
-> +// SAFETY: We don't expose Connector<T> to users before `base` is =
-initialized in ::new(), so
-> +// `raw_mode_obj` always returns a valid pointer to a =
-bindings::drm_mode_object.
-> +unsafe impl<T: DriverConnector> ModeObject for Connector<T> {
-> +    type Driver =3D T::Driver;
-> +
-> +    fn drm_dev(&self) -> &Device<Self::Driver> {
-> +        // SAFETY: The parent device for a DRM connector will never =
-outlive the connector, and this
-> +        // pointer is invariant through the lifetime of the connector
-> +        unsafe { Device::borrow((*self.as_raw()).dev) }
-> +    }
-> +
-> +    fn raw_mode_obj(&self) -> *mut bindings::drm_mode_object {
-> +        // SAFETY: We don't expose DRM connectors to users before =
-`base` is initialized
-> +        unsafe { addr_of_mut!((*self.as_raw()).base) }
-
-You forgot to update to &raw mut here.
-
-> +    }
-> +}
-> +
-> +// SAFETY: DRM connectors are refcounted mode objects
-> +unsafe impl<T: DriverConnector> RcModeObject for Connector<T> {}
-> +
-> +// SAFETY:
-> +// * Via our type variants our data layout starts with =
-`drm_connector`
-> +// * Since we don't expose `Connector` to users before it has been =
-initialized, this and our data
-> +//   layout ensure that `as_raw()` always returns a valid pointer to =
-a `drm_connector`.
-> +unsafe impl<T: DriverConnector> AsRawConnector for Connector<T> {
-> +    fn as_raw(&self) -> *mut bindings::drm_connector {
-> +        self.connector.get()
-> +    }
-> +
-> +    unsafe fn from_raw<'a>(ptr: *mut bindings::drm_connector) -> &'a =
-Self {
-> +        // SAFETY: Our data layout starts with =
-`bindings::drm_connector`
-> +        unsafe { &*ptr.cast() }
-> +    }
-> +}
-> +
-> +// SAFETY: We only expose this object to users directly after =
-KmsDriver::create_objects has been
-> +// called.
-> +unsafe impl<T: DriverConnector> ModesettableConnector for =
-Connector<T> {
-> +    type State =3D ConnectorState<T::State>;
-> +}
-
-In light of your recent GEM patch[1] that dropped a trait whose only =
-member was
-an associated type, I wonder if the same can't be done here?
-
-Note, I'm not sure whether this is possible, or that it makes sense, I'm
-just saying that it's something worth investigating.
-
-> +
-> +/// A [`Connector`] that has not yet been registered with userspace.
-> +///
-> +/// KMS registration is single-threaded, so this object is not =
-thread-safe.
-> +///
-> +/// # Invariants
-> +///
-> +/// - This object can only exist before its respective KMS device has =
-been registered.
-> +/// - Otherwise, it inherits all invariants of [`Connector`] and has =
-an identical data layout.
-> +pub struct UnregisteredConnector<T: DriverConnector>(Connector<T>, =
-NotThreadSafe);
-> +
-> +// SAFETY: We share the invariants of `Connector`
-> +unsafe impl<T: DriverConnector> AsRawConnector for =
-UnregisteredConnector<T> {
-> +    fn as_raw(&self) -> *mut bindings::drm_connector {
-> +        self.0.as_raw()
-> +    }
-> +
-> +    unsafe fn from_raw<'a>(ptr: *mut bindings::drm_connector) -> &'a =
-Self {
-> +        // SAFETY: This is another from_raw() call, so this function =
-shares the same safety contract
-> +        let connector =3D unsafe { Connector::<T>::from_raw(ptr) };
-> +
-> +        // SAFETY: Our data layout is identical via our type =
-invariants.
-> +        unsafe { mem::transmute(connector) }
-> +    }
-> +}
-> +
-> +impl<T: DriverConnector> Deref for UnregisteredConnector<T> {
-> +    type Target =3D T;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        &self.0.inner
-> +    }
-> +}
-> +
-> +impl<T: DriverConnector> UnregisteredConnector<T> {
-> +    /// Construct a new [`UnregisteredConnector`].
-> +    ///
-> +    /// A driver may use this to create new [`UnregisteredConnector`] =
-objects.
-> +    ///
-> +    /// [`KmsDriver::create_objects`]: =
-kernel::drm::kms::KmsDriver::create_objects
-> +    pub fn new<'a>(
-> +        dev: &'a UnregisteredKmsDevice<'a, T::Driver>,
-> +        type_: Type,
-> +        args: T::Args,
-> +    ) -> Result<&'a Self> {
-> +        let new: Pin<KBox<Connector<T>>> =3D KBox::try_pin_init(
-> +            try_pin_init!(Connector::<T> {
-> +                connector: Opaque::new(bindings::drm_connector {
-> +                    helper_private: &T::OPS.helper_funcs,
-> +                    ..Default::default()
-> +                }),
-> +                inner <- T::new(dev, args),
-> +                _p: PhantomPinned
-> +            }),
-> +            GFP_KERNEL,
-> +        )?;
-> +
-> +        // SAFETY:
-> +        // - `dev` will hold a reference to the new connector, and =
-thus outlives us.
-> +        // - We just allocated `new` above
-> +        // - `new` starts with `drm_connector` via its type =
-invariants.
-> +        to_result(unsafe {
-> +            bindings::drm_connector_init(dev.as_raw(), new.as_raw(), =
-&T::OPS.funcs, type_ as i32)
-> +        })?;
-> +
-> +        // SAFETY: We don't move anything
-> +        let this =3D unsafe { Pin::into_inner_unchecked(new) };
-> +
-> +        // We'll re-assemble the box in connector_destroy_callback()
-> +        let this =3D KBox::into_raw(this);
-> +
-> +        // UnregisteredConnector has an equivalent data layout
-> +        let this: *mut Self =3D this.cast();
-> +
-> +        // SAFETY: We just allocated the connector above, so this =
-pointer must be valid
-> +        Ok(unsafe { &*this })
-> +    }
-> +}
-> +
-> +unsafe extern "C" fn connector_destroy_callback<T: DriverConnector>(
-> +    connector: *mut bindings::drm_connector,
-> +) {
-> +    // SAFETY: DRM guarantees that `connector` points to a valid =
-initialized `drm_connector`.
-> +    unsafe {
-> +        bindings::drm_connector_unregister(connector);
-> +        bindings::drm_connector_cleanup(connector);
-> +    };
-> +
-> +    // SAFETY:
-> +    // - We originally created the connector in a `Box`
-> +    // - We are guaranteed to hold the last remaining reference to =
-this connector
-> +    // - This cast is safe via `DriverConnector`s type invariants.
-> +    drop(unsafe { KBox::from_raw(connector as *mut Connector<T>) });
-> +}
-> +
-> +// SAFETY: DRM expects this struct to be zero-initialized
-> +unsafe impl Zeroable for bindings::drm_connector_state {}
-> +
-> +/// A trait implemented by any type which can produce a reference to =
-a
-> +/// [`struct drm_connector_state`].
-> +///
-> +/// This is implemented internally by DRM.
-> +///
-> +/// [`struct drm_connector_state`]: =
-srctree/include/drm/drm_connector.h
-> +pub trait AsRawConnectorState: private::AsRawConnectorState {
-> +    /// The type that represents this connector state's DRM =
-connector.
-> +    type Connector: AsRawConnector;
-> +}
-> +
-> +pub(super) mod private {
-> +    use super::*;
-> +
-> +    /// Trait for retrieving references to the base connector state =
-contained within any connector
-> +    /// state compatible type
-> +    #[allow(unreachable_pub)]
-> +    pub trait AsRawConnectorState {
-> +        /// Return an immutable reference to the raw connector state.
-> +        fn as_raw(&self) -> &bindings::drm_connector_state;
-
-I guess most people would expect as_raw() to return a pointer?
-
-Perhaps a change of name would be fitting here.
-
-> +
-> +        /// Get a mutable reference to the raw [`struct =
-drm_connector_state`] contained within this
-> +        /// type.
-> +        ///
-> +        ///
-> +        /// # Safety
-> +        ///
-> +        /// The caller promises this mutable reference will not be =
-used to modify any contents of
-> +        /// [`struct drm_connector_state`] which DRM would consider =
-to be static - like the
-> +        /// backpointer to the DRM connector that owns this state. =
-This also means the mutable
-> +        /// reference should never be exposed outside of this crate.
-> +        ///
-> +        /// [`struct drm_connector_state`]: =
-srctree/include/drm/drm_connector.h
-> +        unsafe fn as_raw_mut(&mut self) -> &mut =
-bindings::drm_connector_state;
-
-Same here
-
-> +    }
-> +}
-> +
-> +pub(super) use private::AsRawConnectorState as =
-AsRawConnectorStatePrivate;
-> +
-> +/// A trait implemented for any type which can be constructed =
-directly from a
-> +/// [`struct drm_connector_state`] pointer.
-> +///
-> +/// This is implemented internally by DRM.
-> +///
-> +/// [`struct drm_connector_state`]: =
-srctree/include/drm/drm_connector.h
-> +pub trait FromRawConnectorState: AsRawConnectorState {
-> +    /// Get an immutable reference to this type from the given raw =
-[`struct drm_connector_state`]
-> +    /// pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// - The caller guarantees `ptr` is contained within a valid =
-instance of `Self`.
-> +    /// - The caller guarantees that `ptr` cannot not be modified for =
-the lifetime of `'a`.
-> +    ///
-> +    /// [`struct drm_connector_state`]: =
-srctree/include/drm/drm_connector.h
-> +    unsafe fn from_raw<'a>(ptr: *const bindings::drm_connector_state) =
--> &'a Self;
-> +
-> +    /// Get a mutable reference to this type from the given raw =
-[`struct drm_connector_state`]
-> +    /// pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// - The caller guarantees that `ptr` is contained within a =
-valid instance of `Self`.
-> +    /// - The caller guarantees that `ptr` cannot have any other =
-references taken out for the
-> +    ///   lifetime of `'a`.
-> +    ///
-> +    /// [`struct drm_connector_state`]: =
-srctree/include/drm/drm_connector.h
-> +    unsafe fn from_raw_mut<'a>(ptr: *mut =
-bindings::drm_connector_state) -> &'a mut Self;
-> +}
-> +
-> +/// The main interface for a [`struct drm_connector_state`].
-> +///
-> +/// This type is the main interface for dealing with the atomic state =
-of DRM connectors. In
-> +/// addition, it allows access to whatever private data is contained =
-within an implementor's
-> +/// [`DriverConnectorState`] type.
-> +///
-> +/// # Invariants
-> +///
-> +/// - The DRM C API and our interface guarantees that only the user =
-has mutable access to `state`,
-> +///   up until [`drm_atomic_helper_commit_hw_done`] is called. =
-Therefore, `connector` follows rust's
-> +///   data aliasing rules and does not need to be behind an =
-[`Opaque`] type.
-> +/// - `state` and `inner` initialized for as long as this object is =
-exposed to users.
-> +/// - The data layout of this structure begins with [`struct =
-drm_connector_state`].
-> +/// - The connector for this atomic state can always be assumed to be =
-of type
-> +///   [`Connector<T::Connector>`].
-> +///
-> +/// [`struct drm_connector_state`]: =
-srctree/include/drm/drm_connector.h
-> +/// [`drm_atomic_helper_commit_hw_done`]: =
-srctree/include/drm/drm_atomic_helper.h
-> +#[derive(Default)]
-> +#[repr(C)]
-> +pub struct ConnectorState<T: DriverConnectorState> {
-> +    state: bindings::drm_connector_state,
-> +    inner: T,
-> +}
-> +
-> +/// The main trait for implementing the [`struct =
-drm_connector_state`] API for a [`Connector`].
-> +///
-> +/// A driver may store driver-private data within the implementor's =
-type, which will be available
-> +/// when using a full typed [`ConnectorState`] object.
-> +///
-> +/// # Invariants
-> +///
-> +/// - Any C FFI callbacks generated using this trait are guaranteed =
-that passed-in
-> +///   [`struct drm_connector`] pointers are contained within a =
-[`Connector<Self::Connector>`].
-> +/// - Any C FFI callbacks generated using this trait are guaranteed =
-that passed-in
-> +///   [`struct drm_connector_state`] pointers are contained within a =
-[`ConnectorState<Self>`].
-> +///
-> +/// [`struct drm_connector`]: srctree/include/drm_connector.h
-> +/// [`struct drm_connector_state`]: srctree/include/drm_connector.h
-> +pub trait DriverConnectorState: Clone + Default + Sized {
-> +    /// The parent [`DriverConnector`].
-> +    type Connector: DriverConnector;
-> +}
-> +
-> +impl<T: DriverConnectorState> Sealed for ConnectorState<T> {}
-> +
-> +impl<T: DriverConnectorState> AsRawConnectorState for =
-ConnectorState<T> {
-> +    type Connector =3D Connector<T::Connector>;
-> +}
-> +
-> +impl<T: DriverConnectorState> private::AsRawConnectorState for =
-ConnectorState<T> {
-> +    fn as_raw(&self) -> &bindings::drm_connector_state {
-> +        &self.state
-> +    }
-> +
-> +    unsafe fn as_raw_mut(&mut self) -> &mut =
-bindings::drm_connector_state {
-> +        &mut self.state
-> +    }
-> +}
-> +
-> +impl<T: DriverConnectorState> FromRawConnectorState for =
-ConnectorState<T> {
-> +    unsafe fn from_raw<'a>(ptr: *const bindings::drm_connector_state) =
--> &'a Self {
-> +        // Our data layout starts with =
-`bindings::drm_connector_state`.
-> +        let ptr: *const Self =3D ptr.cast();
-> +
-> +        // SAFETY:
-> +        // - Our safety contract requires that `ptr` be contained =
-within `Self`.
-> +        // - Our safety contract requires the caller ensure that it =
-is safe for us to take an
-> +        //   immutable reference.
-> +        unsafe { &*ptr }
-> +    }
-> +
-> +    unsafe fn from_raw_mut<'a>(ptr: *mut =
-bindings::drm_connector_state) -> &'a mut Self {
-> +        // Our data layout starts with =
-`bindings::drm_connector_state`.
-> +        let ptr: *mut Self =3D ptr.cast();
-> +
-> +        // SAFETY:
-> +        // - Our safety contract requires that `ptr` be contained =
-within `Self`.
-> +        // - Our safety contract requires the caller ensure it is =
-safe for us to take a mutable
-> +        //   reference.
-> +        unsafe { &mut *ptr }
-
-Perhaps move the & and &mut outside of the unsafe block?
-
-Taking a reference to something is not unsafe.
-
-> +    }
-> +}
-> +
-> +unsafe extern "C" fn atomic_duplicate_state_callback<T: =
-DriverConnectorState>(
-> +    connector: *mut bindings::drm_connector,
-> +) -> *mut bindings::drm_connector_state {
-> +    // SAFETY: DRM guarantees that `connector` points to a valid =
-initialized `drm_connector`.
-> +    let state =3D unsafe { (*connector).state };
-> +    if state.is_null() {
-> +        return null_mut();
-> +    }
-> +
-> +    // SAFETY:
-> +    // - We just verified that `state` is non-null
-> +    // - This cast is guaranteed to be safe via our type invariants.
-> +    let state =3D unsafe { ConnectorState::<T>::from_raw(state) };
-> +
-> +    let new =3D Box::try_init(
-> +        try_init!(ConnectorState::<T> {
-> +            state: bindings::drm_connector_state {
-> +                ..Default::default()
-> +            },
-> +            inner: state.inner.clone()
-> +        }),
-> +        GFP_KERNEL,
-> +    );
-> +
-> +    if let Ok(mut new) =3D new {
-> +        // SAFETY:
-> +        // - `new` provides a valid pointer to a newly allocated =
-`drm_plane_state` via type
-> +        //   invariants
-> +        // - This initializes `new` via memcpy()
-> +        unsafe {
-> +            =
-bindings::__drm_atomic_helper_connector_duplicate_state(connector, =
-new.as_raw_mut())
-> +        };
-> +
-> +        KBox::into_raw(new).cast()
-> +    } else {
-> +        null_mut()
-> +    }
-> +}
-> +
-> +unsafe extern "C" fn atomic_destroy_state_callback<T: =
-DriverConnectorState>(
-> +    _connector: *mut bindings::drm_connector,
-> +    connector_state: *mut bindings::drm_connector_state,
-> +) {
-> +    // SAFETY: DRM guarantees that `state` points to a valid instance =
-of `drm_connector_state`
-> +    unsafe { =
-bindings::__drm_atomic_helper_connector_destroy_state(connector_state) =
-};
-> +
-> +    // SAFETY:
-> +    // - DRM guarantees we are the only one with access to this =
-`drm_connector_state`
-> +    // - This cast is safe via our type invariants.
-> +    drop(unsafe { =
-KBox::from_raw(connector_state.cast::<ConnectorState<T>>()) });
-> +}
-> +
-> +unsafe extern "C" fn connector_reset_callback<T: =
-DriverConnectorState>(
-> +    connector: *mut bindings::drm_connector,
-> +) {
-> +    // SAFETY: DRM guarantees that `state` points to a valid instance =
-of `drm_connector_state`
-> +    let state =3D unsafe { (*connector).state };
-> +    if !state.is_null() {
-> +        // SAFETY:
-> +        // - We're guaranteed `connector` is `Connector<T>` via type =
-invariants
-> +        // - We're guaranteed `state` is `ConnectorState<T>` via type =
-invariants.
-> +        unsafe { atomic_destroy_state_callback::<T>(connector, state) =
-}
-> +
-> +        // SAFETY: No special requirements here, DRM expects this to =
-be NULL
-> +        unsafe { (*connector).state =3D null_mut() };
-> +    }
-> +
-> +    // Unfortunately, this is the best we can do at the moment as =
-this FFI callback was mistakenly
-> +    // presumed to be infallible :(
-> +    let new =3D KBox::new(ConnectorState::<T>::default(), =
-GFP_KERNEL).expect("Blame the API, sorry!");
-> +
-> +    // DRM takes ownership of the state from here, resets it, and =
-then assigns it to the connector
-> +    // SAFETY:
-> +    // - DRM guarantees that `connector` points to a valid instance =
-of `drm_connector`.
-> +    // - The cast to `drm_connector_state` is safe via =
-`ConnectorState`s type invariants.
-> +    unsafe { bindings::__drm_atomic_helper_connector_reset(connector, =
-Box::into_raw(new).cast()) };
-> +}
-> --=20
-> 2.48.1
->=20
-
-[0] https://doc.rust-lang.org/reference/subtyping.html#variance
-[1] =
-https://gitlab.freedesktop.org/lyudess/linux/-/commit/aaacc400c17a09cc879e=
-eab4ab1b98c6bbd0e82b#=
+> If anything, I would make the loop into its own function with the guard()
+> then it is more obvious. But for now, I think it's fine as is, unless
+> others prefer the switch.
+>
+> -- Steve
+>
+> >
+> > > +       list_for_each_entry_srcu(work, &callbacks, list,
+> > > +                                srcu_read_lock_held(&unwind_srcu)) {
+> > >                 if (task->unwind_mask & (1UL << work->bit)) {
+> > >                         work->func(work, &trace, timestamp);
+> > >                         clear_bit(work->bit, &current->unwind_mask);
+> > >                 }
+> > >         }
+> > > +       srcu_read_unlock(&unwind_srcu, idx);
+> > >  }
+> > >
