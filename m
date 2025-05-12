@@ -1,112 +1,138 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3D819CC3A;
-	Mon, 12 May 2025 14:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11B119CC3A;
+	Mon, 12 May 2025 14:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060267; cv=none; b=Fuft9zyqbhjDOL56P+LQjfwDiNIXP8n2+bM19BbPyF0LYBohrwVDsxLAuwGUrmF62ak7bciieSrDBu2yh5RTHYaoLhqhkyBCA4VUPGuU7TADTEx0psz8lbuxIsqdG9D7jKqKe8F4i9sI/S2ZTl+zzLJjX3BtZfHiNIT1An7A97U=
+	t=1747060273; cv=none; b=qMj4Twyvpk6jelZGH2yFb2yLDCI4xACNKVvDNljjS8V1VrDdlwOWTfGqdwfFbdkNqdSRV7DcqhRvrtQzX/p+2AN9zFhKz4UCkpO17uJMo/ZirH5f5QLoOlTB5hIBawrpb8KX4EXI9LtzgIK4Dtwofmt2h0+teWEiOi+/c48J2uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060267; c=relaxed/simple;
-	bh=aUFomMuDIpryGPVNlZrH2Byy4M4unI3gVL2hG2PTGTQ=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=uIWfIpgd2YeBJdsDgvFOTxGqYBzeMHOW2zCsy18m4JstYEFLX46Zg5FpNlLsl4BRgyt4NQsVHIczSqmT0p704qE7tnCkpsL2RhJuMtfULCPBFstA6ggji8aTkmGXTNAzheG1MKd2c5hPJ/boyZjHmh1vh+nGy0M+YguQcwLohSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qzc4Qy2A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ypm/AoJg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747060273; c=relaxed/simple;
+	bh=D22xfF7vCMy0iXUF0syExk/uQGvJjAMT981A7+9a/pA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bqFRBMQhMSpuAP6hgifV15XLVhGKmAmwHokPvT1DqVZdFj9Dn13KGlkEhSj/4AJEpoAH9GB+kCxgsNRDq65yiaXgVni9bFHvrVEcnVOoImHnhHo54J6b2LRv1jqyyN7t+M/So0WH5Gwd43bZff1Xn+YsoDmIHMSWLvC6ssmnP5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PC94YVJW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qzc4Qy2A";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ypm/AoJg"
-Date: Mon, 12 May 2025 14:31:02 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747060263;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PxiOpX6kqQSbYHlwI4xmpfbyUW4MGMUa7Tqd5TwcSvg=;
-	b=Qzc4Qy2ArLZMmE4Evs9zpbc7ZnNuB16xibXaKeJdAGgY8E+azK2ZWSECbb66jd4URdWVhi
-	aNyx9yHRxT7fOOBaCWUIVlXWDtFVbVPt3ig23Neq3IHHXQ4HPFUs/iLmxZ2+DcNBFH2oCQ
-	258xeOOOGaC+Xab9m3e60vLDA4IT/sUr46KbTLe6Ttqhh2nqa4KMuCxE/LNa1azRt8TCbO
-	ltuWZZEdZEkneWzjkPAk5hx1NQG5eZBo+U6d1IJOwj1NZXzwASvOQVxL7eNSysVZWTQFf1
-	LRwiR0eXDBEng3Zi/ZYJswUQsQejse8E1lsUnl2BM5+5PcRTPaJR7BGf8piIeQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747060263;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PxiOpX6kqQSbYHlwI4xmpfbyUW4MGMUa7Tqd5TwcSvg=;
-	b=ypm/AoJgPYUMsW2sUJVhSHKsAkN4Uam5xeBdcwkaRDAJZ8uOrWXTz6KH4Vf+bbDdL8TSN7
-	69a0MKoC5FcA2sAQ==
-From: "tip-bot2 for Jiaqing Zhao" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mtrr] x86/mtrr: Check if fixed-range MTRRs exist in
- mtrr_save_fixed_ranges()
-Cc: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250509170633.3411169-2-jiaqing.zhao@linux.intel.com>
-References: <20250509170633.3411169-2-jiaqing.zhao@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PC94YVJW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC39BC4CEE7;
+	Mon, 12 May 2025 14:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747060273;
+	bh=D22xfF7vCMy0iXUF0syExk/uQGvJjAMT981A7+9a/pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PC94YVJWtfERDpHpUjGuLpEBIiXd3JHOUCWKdwQmymUXdY9aQFiVmLgwaAUjoCn5V
+	 HI/MOBymy5XxT7KitVdJN/eVNbtVoSMk+4deNc5mLxsMr3XKrfEUA/UQZTsjUpi4pC
+	 X2G7EzJ1UUBkQPqfm38sB5kZDqub86EYtuCa8AvRKSiDOd0bu9SsDPh750VSW7j2GV
+	 UuEc1RVQ4Wx6SVHH15BCvl4rBhBNmk/uBgnXaNuni0Dnxiywm3NjAIwpjYfr39oO8T
+	 CxikRewOwS7NtIMKmleP+un7KX0qva5yxDZyPiQn1rptgQQaF14DyI+FtgsWl2hbkM
+	 4pc4hVm4l/f0A==
+Date: Mon, 12 May 2025 15:31:07 +0100
+From: Simon Horman <horms@kernel.org>
+To: Lee Trager <lee@trager.us>
+Cc: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>, kernel-team@meta.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Su Hui <suhui@nfschina.com>, Al Viro <viro@zeniv.linux.org.uk>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 5/5] eth: fbnic: Add devlink dev flash support
+Message-ID: <20250512143107.GJ3339421@horms.kernel.org>
+References: <20250510002851.3247880-1-lee@trager.us>
+ <20250510002851.3247880-6-lee@trager.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174706026285.406.13641034613218376274.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250510002851.3247880-6-lee@trager.us>
 
-The following commit has been merged into the x86/mtrr branch of tip:
+On Fri, May 09, 2025 at 05:21:17PM -0700, Lee Trager wrote:
+> Add support to update the CMRT and control firmware as well as the UEFI
+> driver on fbnic using devlink dev flash.
+> 
+> Make sure the shutdown / quiescence paths like suspend take the devlink
+> lock to prevent them from interrupting the FW flashing process.
+> 
+> Signed-off-by: Lee Trager <lee@trager.us>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-Commit-ID:     824c6384e8d9275d4ec7204f3f79a4ac6bc10379
-Gitweb:        https://git.kernel.org/tip/824c6384e8d9275d4ec7204f3f79a4ac6bc10379
-Author:        Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
-AuthorDate:    Fri, 09 May 2025 17:06:33 
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 12 May 2025 13:04:40 +02:00
+...
 
-x86/mtrr: Check if fixed-range MTRRs exist in mtrr_save_fixed_ranges()
+> diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
 
-When suspending, save_processor_state() calls mtrr_save_fixed_ranges()
-to save fixed-range MTRRs.
+...
 
-On platforms without fixed-range MTRRs like the ACRN hypervisor which
-has removed fixed-range MTRR emulation, accessing these MSRs will
-trigger an unchecked MSR access error. Make sure fixed-range MTRRs are
-supported before access to prevent such error.
+> @@ -109,8 +111,264 @@ static int fbnic_devlink_info_get(struct devlink *devlink,
+>  	return 0;
+>  }
+> 
+> +static bool
+> +fbnic_pldm_match_record(struct pldmfw *context, struct pldmfw_record *record)
+> +{
+> +	struct pldmfw_desc_tlv *desc;
+> +	u32 anti_rollback_ver = 0;
+> +	struct devlink *devlink;
+> +	struct fbnic_dev *fbd;
+> +	struct pci_dev *pdev;
+> +
+> +	/* First, use the standard PCI matching function */
+> +	if (!pldmfw_op_pci_match_record(context, record))
+> +		return -ENODEV;
 
-Since mtrr_state.have_fixed is only set when MTRRs are present and
-enabled, checking the CPU feature flag in mtrr_save_fixed_ranges() is
-unnecessary.
+Hi Lee,
 
-Fixes: 3ebad5905609 ("[PATCH] x86: Save and restore the fixed-range MTRRs of the BSP when suspending")
-Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250509170633.3411169-2-jiaqing.zhao@linux.intel.com
----
- arch/x86/kernel/cpu/mtrr/generic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The return type of this function is bool, but here a negative integer is
+being returned. Perhaps this should be:
 
-diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
-index e2c6b47..8c18327 100644
---- a/arch/x86/kernel/cpu/mtrr/generic.c
-+++ b/arch/x86/kernel/cpu/mtrr/generic.c
-@@ -593,7 +593,7 @@ static void get_fixed_ranges(mtrr_type *frs)
- 
- void mtrr_save_fixed_ranges(void *info)
- {
--	if (boot_cpu_has(X86_FEATURE_MTRR))
-+	if (mtrr_state.have_fixed)
- 		get_fixed_ranges(mtrr_state.fixed_ranges);
- }
- 
+		return false;
+
+Flagged by Smatch
+
+> +
+> +	pdev = to_pci_dev(context->dev);
+> +	fbd = pci_get_drvdata(pdev);
+> +	devlink = priv_to_devlink(fbd);
+> +
+> +	/* If PCI match is successful, check for vendor-specific descriptors */
+> +	list_for_each_entry(desc, &record->descs, entry) {
+> +		if (desc->type != PLDM_DESC_ID_VENDOR_DEFINED)
+> +			continue;
+> +
+> +		if (desc->size < 21 || desc->data[0] != 1 ||
+> +		    desc->data[1] != 15)
+> +			continue;
+> +
+> +		if (memcmp(desc->data + 2, "AntiRollbackVer", 15) != 0)
+> +			continue;
+> +
+> +		anti_rollback_ver = get_unaligned_le32(desc->data + 17);
+> +		break;
+> +	}
+> +
+> +	/* Compare versions and return error if they do not match */
+> +	if (anti_rollback_ver < fbd->fw_cap.anti_rollback_version) {
+> +		char buf[128];
+> +
+> +		snprintf(buf, sizeof(buf),
+> +			 "New firmware anti-rollback version (0x%x) is older than device version (0x%x)!",
+> +			 anti_rollback_ver, fbd->fw_cap.anti_rollback_version);
+> +		devlink_flash_update_status_notify(devlink, buf,
+> +						   "Anti-Rollback", 0, 0);
+> +
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+
+...
