@@ -1,148 +1,168 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2968E24C083;
-	Mon, 12 May 2025 09:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB84C19E82A
+	for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 09:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041110; cv=none; b=c0fRu9JKTxpnfXXJEN7ODRpZ+AGNqlBfAwVd6DmfDpcoiK0aJ7SWzsF9OcGPAhKMeAUqTiRrd4yxUcu92AxVGEJHqP2ioi9GhGHyBvfnCquIUYwmvjcm3Sqr0eN90fzW4bwNg9XsV23+S/P71eMqSes7LkcqzP6Eqdc99rFFJZg=
+	t=1747041270; cv=none; b=QQd3njoTAVaVq+/8FQI5Z8lP5N/p6Xe2iZktKqUeuOt/zqYMOVGYxuwXeBsvLrSzFHbMt3GfRQB3e/D7ZiKVBZucIyC8HgH1+FGeuEhr6VaCCQXd8y6OCjQNBMLJwMrZKuoUj/7pHmqXWGAwQuhQjMot+rqFUirlkgNvBcX3V0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041110; c=relaxed/simple;
-	bh=W46spw9rLIkWRcAuZ9b5EhRVf0rvSNjCOOC9DrpFxnU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nk5bnIxV+WLL+GmeHB5TSdTkomA25PVdLBVsqzNYtzc05OV6/HPzSzD3grIf+m4W0d9MQ/92Fw+HvP0monOUgapqxKhuyrWYfePhv1lcV4JmMYRzKW12J1c/nQxXo4UgKTDbGUodeMuAzZXRj2H8++FeTeofJ8hU1w9KzrKiyXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ifONiE2I; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747041270; c=relaxed/simple;
+	bh=y2AhjnGfkM5ZElWW4GYAPAGlFxNKYE2GMmB+j+7M/XI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LHle2ndaTwLiknx4ra2AALLGx/C1xtZuEcBe/Bmro81pBBYqs514u1TUDkRRLsHClhmB14GiTrrzLHIF2Q+sEWDTTx0qXbMfK7UU1NSJz3h4vziNm5JVsWFvSctaZMkwuc8gzWmrVMwb422yeCCHdSn85NUNTvB4IEe0+zed+Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TT+vIWCk; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ifONiE2I"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C5uGsO002574;
-	Mon, 12 May 2025 09:11:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=gygIZhYGtbWQoFQ9niyXbiOPG1NLlAASp9EPz500z
-	ec=; b=ifONiE2IgIxxo6gEjYWQXt0rpUdaOLzX/dDy+PSjp/V5PkJHLe7pYv032
-	o6qRgtJeWDEPc0162u4cUD63aIehZWBDM5Jw3UxNLAmlltQ5kjx8dRLKRVhr8nlq
-	/qGl7B9It7xps82nr9cCvSmwwZ/yWqot4oC9QIWBEmXcJZHudRwEuPrUjatwTxiG
-	DVSzSMOHXNLEGWNfPlTrX8Tk2A64XTKD9L5asaPg+MmAe6d11qR5Om4P9jGIuvS6
-	9b4xQM04rz9Tx85aC/78fETWEvy/csw3P4+hVlXshpjRZ1WcgINOVYmCWtCNVCBO
-	U0KSomUQvtAoDXXfxdvmVgKpy3xXw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jue6b81x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 09:11:17 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54C97wF3000615;
-	Mon, 12 May 2025 09:11:17 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jue6b81s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 09:11:17 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54C6iipa011552;
-	Mon, 12 May 2025 09:11:16 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jku24vnt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 09:11:16 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54C9BChu31261430
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 09:11:12 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8F40920082;
-	Mon, 12 May 2025 09:11:12 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F0B3F20083;
-	Mon, 12 May 2025 09:11:08 +0000 (GMT)
-Received: from li-621bac4c-27c7-11b2-a85c-c2bf7c4b3c07.in.ibm.com (unknown [9.109.219.153])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 12 May 2025 09:11:08 +0000 (GMT)
-From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-To: gregkh@linuxfoundation.org
-Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        hbathini@linux.ibm.com, maddy@linux.ibm.com, venkat88@linux.ibm.com,
-        sfr@canb.auug.org.au, alexei.starovoitov@gmail.com,
-        daniel@iogearbox.net, mykolal@fb.com, yoong.siang.song@intel.com,
-        martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
-        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-        haoluo@google.com, jolsa@kernel.org, shuah@kernel.org
-Subject: [RESEND PATCH] selftests/bpf: Fix bpf selftest build error
-Date: Mon, 12 May 2025 14:41:07 +0530
-Message-ID: <20250512091108.2015615-1-skb99@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TT+vIWCk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AF7FA43ACA;
+	Mon, 12 May 2025 09:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747041266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=71NJibszXJxK146D6odNbBLRQc8NbVhYjl6rwxOZ04M=;
+	b=TT+vIWCkvORfoZ7wpP5Ld2dJywaXLJFde9jPu4T4ot5GeKbXOoaGXeOcW3nMbjwS2uGWjw
+	wWugIFfLYq6iHNOoGca9vuCC7nWTRN+egl+bq+OzCdhW9EVw5fXKqylk6ZtqkPymxUKWAW
+	XigQXei5qasG7ngOpS2T88jzJl09+G7QHb3O8yGwSl8CJCVne03L2h7I8VEfs1cYNuwktF
+	Sdgi/EgBAK5PgLr12zMTtL2fV1xnmm8iPQ+bztMgGX6BHTaaL0IsuLEQbxDzsVI8PF8Bek
+	G7qbgAtylwmJStV1x5C7XC1BMdE18P/pKWNDC9VCbbm9awpbUUExl6Bb03sEFA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Bence =?utf-8?B?Q3PDs2vDoXM=?= <csokas.bence@prolan.hu>
+Cc: <linux-mtd@lists.infradead.org>,  <linux-kernel@vger.kernel.org>,
+  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>
+Subject: Re: [PATCH v3] mtd: Verify written data in paranoid mode
+In-Reply-To: <20250512084033.69718-1-csokas.bence@prolan.hu> ("Bence
+ =?utf-8?B?Q3PDs2vDoXMiJ3M=?=
+	message of "Mon, 12 May 2025 10:40:32 +0200")
+References: <20250512084033.69718-1-csokas.bence@prolan.hu>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 12 May 2025 11:14:25 +0200
+Message-ID: <87frhambri.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4bV_IKwmpq44jGri-7mCGdrmOMdB5Ij-
-X-Authority-Analysis: v=2.4 cv=TbmWtQQh c=1 sm=1 tr=0 ts=6821bb35 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=_H8_jCqrJ5XklwPHSncA:9
-X-Proofpoint-GUID: -c5vRGLYrBw1Zs22wB0noNegpfLUV2nE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA5NSBTYWx0ZWRfXwDxps1gLTnat M56O8HwreV4kftWVcPr0w2Hz2ThfQMyD4u0yD6DJvTLD0hfdNNK8KO97AyJloLhACF30AncRT79 kao8Mvupq4q48SYs6/WZkGbNPJDY06LUkefkETnsurSZcGby8e6KoePC2ydY4HngeJ2dPNg2mpH
- 4K6B12U+S8r0mKVsI2PKjpgYlZOWdeypWm894kslpILASZnsGloEMRCJZEDDP3zBOU3+swxfKSS d0wKA8hgcIg1HSWrSx2QJ6OH0JM0lWmuKILlqoa2WYl3yZ9/AXqjB8eP60738ewicvopluHRQHU v4gnYlOADlKiL11xGfaUt3ZvsKiNJCUZ3A7UuzgifAuOcnTYVGTH0EJlyHGASuVGh+0ZguTwWDn
- 8nC2wva5DVp6UKr2pbCGRqcIvAexEEgE95O2fqUkKRW2htJ2mab34Ht8gx/pcM3H5pU3PCnb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0
- adultscore=0 spamscore=0 mlxlogscore=904 bulkscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505120095
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftddtkeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheptghsohhkrghsrdgsvghntggvsehprhholhgrnhdrhhhupdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On linux-next, build for bpf selftest displays an error due to
-mismatch in the expected function signature of bpf_testmod_test_read
-and bpf_testmod_test_write.
+On 12/05/2025 at 10:40:32 +02, Bence Cs=C3=B3k=C3=A1s <csokas.bence@prolan.=
+hu> wrote:
 
-Commit 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attribute::read/write()")
-changed the required type for struct bin_attribute to const struct bin_attribute.
+> Add MTD_PARANOID config option for verifying all written data to prevent
+> silent bit errors being undetected, at the cost of some bandwidth overhea=
+d.
+>
+> Signed-off-by: Bence Cs=C3=B3k=C3=A1s <csokas.bence@prolan.hu>
+> ---
+>  drivers/mtd/Kconfig   | 14 ++++++++++++
+>  drivers/mtd/mtdcore.c | 51 +++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 63 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+> index 796a2eccbef0..e75f4a57df6a 100644
+> --- a/drivers/mtd/Kconfig
+> +++ b/drivers/mtd/Kconfig
+> @@ -206,6 +206,20 @@ config MTD_PARTITIONED_MASTER
+>  	  the parent of the partition device be the master device, rather than
+>  	  what lies behind the master.
+>=20=20
+> +config MTD_PARANOID
+> +	bool "Read back written data (paranoid mode)"
+> +	help
+> +	  This option makes the MTD core read back all data on a write and
+> +	  report an error if it doesn't match the written data. This can
+> +	  safeguard against silent bit errors resulting from a faulty Flash,
+> +	  controller oddities, bus noise etc.
+> +
+> +	  It is up to the layer above MTD (e.g. the filesystem) to handle
+> +	  this condition, for example by going read-only to prevent further
+> +	  data corruption, or to mark a certain region of Flash as bad.
+> +
+> +	  If you are unsure, select 'n'.
+> +
+>  source "drivers/mtd/chips/Kconfig"
+>=20=20
+>  source "drivers/mtd/maps/Kconfig"
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 5ba9a741f5ac..3f9874cd4126 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -1745,8 +1745,8 @@ int mtd_read_oob(struct mtd_info *mtd, loff_t from,=
+ struct mtd_oob_ops *ops)
+>  }
+>  EXPORT_SYMBOL_GPL(mtd_read_oob);
+>=20=20
+> -int mtd_write_oob(struct mtd_info *mtd, loff_t to,
+> -				struct mtd_oob_ops *ops)
+> +static int _mtd_write_oob(struct mtd_info *mtd, loff_t to,
+> +			  struct mtd_oob_ops *ops)
 
-To resolve the error, update corresponding signature for the callback.
+I don't like these '_' prefixes, they do not indicate much about the
+content of the function. I don't think we need an extra function for
+that, just include the check in mtd_write_oob?
 
-Fixes: 97d06802d10a ("sysfs: constify bin_attribute argument of bin_attribute::read/write()")
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Closes: https://lore.kernel.org/all/e915da49-2b9a-4c4c-a34f-877f378129f6@linux.ibm.com/
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
----
+>  {
+>  	struct mtd_info *master =3D mtd_get_master(mtd);
+>  	int ret;
+> @@ -1771,6 +1771,53 @@ int mtd_write_oob(struct mtd_info *mtd, loff_t to,
+>=20=20
+>  	return mtd_write_oob_std(mtd, to, ops);
+>  }
+> +
+> +static int _mtd_verify(struct mtd_info *mtd, loff_t to, size_t len, cons=
+t u8 *buf)
+> +{
+> +	struct device *dev =3D &mtd->dev;
+> +	u_char *verify_buf;
+> +	size_t r_retlen;
+> +	int ret;
+> +
+> +	verify_buf =3D devm_kmalloc(dev, len, GFP_KERNEL);
+> +	if (!verify_buf)
+> +		return -ENOMEM;
+> +
+> +	ret =3D mtd_read(mtd, to, len, &r_retlen, verify_buf);
+> +	if (ret < 0)
+> +		goto err;
+> +
+> +	if (len !=3D r_retlen) {
+> +		/* We shouldn't see short reads */
+> +		dev_err(dev, "Verify failed, written %zd but only read %zd",
+> +			len, r_retlen);
+> +		ret =3D -EIO;
+> +		goto err;
+> +	}
+> +
+> +	if (memcmp(verify_buf, buf, len)) {
+> +		dev_err(dev, "Verify failed, compare mismatch!");
+> +		ret =3D -EIO;
+> +	}
+> +
+> +err:
+> +	devm_kfree(dev, verify_buf);
+> +	return ret;
+> +}
+> +
+> +int mtd_write_oob(struct mtd_info *mtd, loff_t to,
+> +		  struct mtd_oob_ops *ops)
+> +{
+> +	int ret =3D _mtd_write_oob(mtd, to, ops);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (IS_ENABLED(CONFIG_MTD_PARANOID))
+> +		ret =3D _mtd_verify(mtd, to, ops->retlen, ops->datbuf);
 
-[RESEND]:
- - Added Fixes and Tested-by tag.
- - Added Greg as receipent for driver-core tree.
-
-Original patch: https://lore.kernel.org/all/20250509122348.649064-1-skb99@linux.ibm.com/
-
- tools/testing/selftests/bpf/test_kmods/bpf_testmod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index 2e54b95ad898..194c442580ee 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -385,7 +385,7 @@ int bpf_testmod_fentry_ok;
- 
- noinline ssize_t
- bpf_testmod_test_read(struct file *file, struct kobject *kobj,
--		      struct bin_attribute *bin_attr,
-+		      const struct bin_attribute *bin_attr,
- 		      char *buf, loff_t off, size_t len)
- {
- 	struct bpf_testmod_test_read_ctx ctx = {
-@@ -465,7 +465,7 @@ ALLOW_ERROR_INJECTION(bpf_testmod_test_read, ERRNO);
- 
- noinline ssize_t
- bpf_testmod_test_write(struct file *file, struct kobject *kobj,
--		      struct bin_attribute *bin_attr,
-+		      const struct bin_attribute *bin_attr,
- 		      char *buf, loff_t off, size_t len)
- {
- 	struct bpf_testmod_test_write_ctx ctx = {
--- 
-2.43.5
-
+Why _mtd_verify and not mtd_verify?
