@@ -1,181 +1,103 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFE029ACDC;
-	Mon, 12 May 2025 21:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C53299AA4;
+	Mon, 12 May 2025 21:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747085350; cv=none; b=PUVStSAIEhDeTCa0r/HL4hJUpWvEX35zb04XrIjE0JC/qVcur7HGbtMkohxRGpR/tJQ6BTt6bqpUkxmlZDb14wu9rN0c6nC/x6I156/CHnLSUr+/LnrPlLt2OchkD5AN8VyuydG6TqejtbND4maRdnYQFAfMnNOIhisIApNgcUE=
+	t=1747085351; cv=none; b=gDzKdUhlkLGi8E1wfx6sVJIzBPHzuz9ATH+ifXBWppTew/YbNkMTxSuIyFQsGEpqBHwA693zv4mDnOZXOmMQognFTm/+/RxYw4Gi/5s2s//MmVveLprvCQRTBrm7MR04W8NcxdCxnowgqAvcbC/3qR+4pwYXgwn3EWJFNqHfzNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747085350; c=relaxed/simple;
-	bh=WyGMjpUj8obLNMrXmKLMENsPQIYMOQWUtLABrhx5IJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HFkn5DansOE6UlmVmNcOsudhwF1VbtySb3wLdBqDZ0QUto51PqJU0ptHu7EBZmtXq5H8rjT9xg/G+4UztF2V9a3KtysSdxszaaKLQo2Z9A6KCI4UEI1O+FelNkVKGX7hiWseRUbTZ7o4oV/GFDoioQx9uEEu5r590brOd8tAH7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ycfgxwy5; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747085351; c=relaxed/simple;
+	bh=awwXn2TAbBoaYGo+e+KQV3s1Vl5rprM8b1Qcv70cHOc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LI04Uu38G4/utUrdlCvfaABq4wK0MmoI94UYCRCPIKSCryL5S9/VORuToj0iHTLFD26NOIVBbdxjEikrlrCCION1OsdBqkK9P+PAInmBaGP9FBqvZ8GFXXXHIq4zIB/5e+knIwUjd+1sbufTnFioRhkMca/Q8BWlUdmHa5+B5hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ke/5ibqI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ycfgxwy5"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad4d5bb4d0eso53419766b.1;
-        Mon, 12 May 2025 14:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747085347; x=1747690147; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I23kxN5qMcMgOaWczE+uWwEzlOhWFb9/1I34ITja72Y=;
-        b=Ycfgxwy54WrNMpFVs6tvFJCCBVtqZnDK35qVTf+8eZ9gp23AcxHkgLmz8O6F7pokbh
-         vz010GRAj/P7tMLCRS4f+CSNjSAtlMUKb9axvYzqWzkgYiOlAWwDSTRKIhItOY5VMJAW
-         LZzurI4SiH+Mk4vTlKUWxn0Xuoub4aO9GUF9NYRddh57pmdIi+bKPFua+L9EYykuKA6n
-         1so3Drynvf68cfOGFDlCBTzm/PmBsqke86nnQ6MvweATPi4bqm0eR1D4I0nUphym+pSG
-         kQS8p2LguOtrIfXtvcDVInHzPjhj7AgQqqm8BL8aJHY4zPTwtB1m1la9uHZXeV8Kxt3g
-         4dNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747085347; x=1747690147;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I23kxN5qMcMgOaWczE+uWwEzlOhWFb9/1I34ITja72Y=;
-        b=NDUOgNbfaX5QfoD7oUMe8lHcKP43Zu77OHm85YJmJLI2LHmpZeJmG/PedLmI+vRfSz
-         cbumq6F1TmwpKEmr6NeiuZTfCZnawLjsCSxzP5qwhoG0Uw/DxnVjIyQ+ph0lvp25b/In
-         5WrUj5kRK6xUV18Nl07hcciDvldZuemGsSUqbnqe1UTMPhpxnXkUFBYKGTu4b4QRZ+7Q
-         Grwa+dImGip+tLuKaI+VdmbTTUgfvbO7QHu8kNZb1DwGGZZXYoC3O3/cWFkjzKWAG+DD
-         jF5EW0vGME88gPz0aqXdpbL/zxxsjYgmqZIDEomY34v1Vvaj7nmr6bHgfwtoLHeXUUBp
-         gOJw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+GUtDQ0d5swDfXz8Kbi8tDbzJjQq1NJzZ3HWiIrFeQbr4VnootRnbDRqat1wuFJ61tgD8wsg7v0pO@vger.kernel.org, AJvYcCUYQ/KIEfL4IeeZlPEWoHGpkPRHY08aO47J3CdQN/BXjdYOBbmtPJLL1+l+nORVAMLEhVhioeK5CSJO3vhL@vger.kernel.org, AJvYcCWIrH7FkI04nOLs48P8TdoJo/RHqTEgcSjnOfaAuFQ+fad8JIUg5dfL1HbJK8ytSYozngUE+3yF4+7nvQM=@vger.kernel.org, AJvYcCXktSFhpuzYN+YDwKwZUIGuGbfDtju3XNTN9YokmyXyBATTJDp0W1LUFDOCYaZ/SZ5D0rVcYUzfe66z3w==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8l48RAOVA6e3ibjEOkH+mnDi0YnGtcDaSzV84fqQG6OCYFoxf
-	wgsCXMvHg+yqLUxsa4lBVuG19SpEhdJOQ06G+eSgqdiye3xmmhsP
-X-Gm-Gg: ASbGnctj3uCR9JVRB/dGbZvxQIidIphV279ORTEvIz8x/PvdFpwtM68D73iArov+GCy
-	r0BNgzOnM96LFAz6D3V8IGfoTl2aJ80cm16vkGjC0YkiHdOWyV8FFiwnFxxhvvSz4/Tw/NcLWzZ
-	tekZ3rw9WbwhbaezJmCT8F/ikRZ3ZW13hwgfX8r9aN/vCvf+Kte3cUyl0YwnN7JgfJcHmAjzjsj
-	uQf3Cyrfvt6K7JOIPoxsR82HrT8+ZS9IaTy7BLLHsZyg4LmwPvbkWmERv3DQM0CXgrZoZNaB0Be
-	iLTi5Xde85KBFEPoQK745vPxgcHWZ6W/S3ai57R1/7yGeFRk6byZybyDJxSUz5U=
-X-Google-Smtp-Source: AGHT+IE42f4BLApmux3jOg1v9yOr9Bg+zkJz218wqM9qOgB/ayDgOa+VoGiZd+V7j3Z0CtpmoqMeiQ==
-X-Received: by 2002:a17:906:4796:b0:acb:5583:6fe4 with SMTP id a640c23a62f3a-ad218e4b962mr1475270466b.6.1747085347019;
-        Mon, 12 May 2025 14:29:07 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.128.5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad23a5552a6sm472861466b.30.2025.05.12.14.29.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 14:29:06 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	Taniya Das <quic_tdas@quicinc.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Ross Burton <ross.burton@arm.com>,
-	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Zhi Mao <zhi.mao@mediatek.com>,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-staging@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v3 07/19] dt-bindings: media: i2c: max96712: use pattern properties for ports
-Date: Tue, 13 May 2025 00:28:16 +0300
-Message-ID: <20250512212832.3674722-8-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512212832.3674722-1-demonsingur@gmail.com>
-References: <20250512212832.3674722-1-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ke/5ibqI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DFB8C4CEF4;
+	Mon, 12 May 2025 21:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747085351;
+	bh=awwXn2TAbBoaYGo+e+KQV3s1Vl5rprM8b1Qcv70cHOc=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ke/5ibqIxWZIGCfnstPdWuLJxGt6VqLdV8S7+5X6WU/w7r27Y8KBN0COjW3baioVk
+	 Z7ENjzNHG5U01R5BRxaA1sHeFzAl7IU3HZqRJLanE357WZ/1v9Xl+EuH3Sjj/Uncsu
+	 cfWS7GCGlRjtItjKVGmZ9FxgnHU3wwOdQxwPODB9ZDx4tXbmq+os8i8+tk87wzqOUU
+	 URUdK2ggwfgWZmaDZy7x/0ASlyIVSctQL84AZ7xnpPSqsb5AOUB8TB8taFtY5SrpAN
+	 JuJrLtxl54sILH7N9vCsgjDREL5fljH1ko7dhcByEu+eew3wpW2FhFapjh79UCu06W
+	 IA/J6wAnJbXlQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 12 May 2025 23:28:55 +0200
+Subject: [PATCH] cpufreq/amd-pstate: Avoid shadowing ret in
+ amd_pstate_ut_check_driver()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250512-amd-pstate-ut-uninit-ret-v1-1-fcb4104f502e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIABZoImgC/x3MQQ4CIQxA0auQrqcJoKDOVSYuGqnahTiBYkwId
+ 5e4fIv/O1QuwhVW06HwR6q884RbDNyelB+MkqbBWx9scB7plXCvSsrYFFuWLIqFFY+R/IHcJcT
+ zCWa+F77L97/ermP8ACZKtfdqAAAA
+X-Change-ID: 20250512-amd-pstate-ut-uninit-ret-46a23a195687
+To: Huang Rui <ray.huang@amd.com>, 
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Perry Yuan <perry.yuan@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, kernel test robot <lkp@intel.com>, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1520; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=awwXn2TAbBoaYGo+e+KQV3s1Vl5rprM8b1Qcv70cHOc=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBlKGSq/J7pqtxw/uqaAVcJYSjhjpztfTHfd3ya2WcZbr
+ 18MOfqro5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAEyk8BbD/wIxRt+1yqsWee5c
+ UDw363DGh3tLEudPf/d6lp336xXzzm1h+F+4o8ZLzbf/I7dz6iz59F9RSl/fhIVwbDwh0R2p3tl
+ 2hQcA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-The MAX96712 and MAX96724 support up to 4 separate PHYs, depending on
-the selected PHY configuration. Use patternProperties to document this.
+Clang warns (or errors with CONFIG_WERROR=y):
 
-The input ports are all the same, use patternProperties for them.
+  drivers/cpufreq/amd-pstate-ut.c:262:6: error: variable 'ret' is uninitialized when used here [-Werror,-Wuninitialized]
+    262 |         if (ret)
+        |             ^~~
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+ret is declared at the top of the function and in the for loop so the
+initialization of ret is local to the loop. Remove the declaration in
+the for loop so that ret is always used initialized.
+
+Fixes: d26d16438bc5 ("amd-pstate-ut: Reset amd-pstate driver mode after running selftests")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505072226.g2QclhaR-lkp@intel.com/
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
- .../bindings/media/i2c/maxim,max96712.yaml    | 29 +++++++------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ drivers/cpufreq/amd-pstate-ut.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index efdece2b33b9..f712d7cfc35f 100644
---- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -40,27 +40,15 @@ properties:
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
+diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
+index 30835d0e4994..65f9d2bae2d3 100644
+--- a/drivers/cpufreq/amd-pstate-ut.c
++++ b/drivers/cpufreq/amd-pstate-ut.c
+@@ -246,7 +246,7 @@ static int amd_pstate_ut_check_driver(u32 index)
+ 	int ret;
  
--    properties:
--      port@0:
-+    patternProperties:
-+      '^port@[0-3]$':
-         $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 0
-+        description: GMSL Input ports 0-3
- 
--      port@1:
--        $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 1
--
--      port@2:
--        $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 2
--
--      port@3:
--        $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 3
--
--      port@4:
-+      '^port@[4-7]$':
-         $ref: /schemas/graph.yaml#/$defs/port-base
-         unevaluatedProperties: false
--        description: CSI-2 Output
-+        description: CSI-2 Output port 0-3
- 
-         properties:
-           endpoint:
-@@ -78,8 +66,11 @@ properties:
-               - data-lanes
-               - bus-type
- 
--    required:
--      - port@4
-+    anyOf:
-+      - required: [port@4]
-+      - required: [port@5]
-+      - required: [port@6]
-+      - required: [port@7]
- 
- required:
-   - compatible
+ 	for (mode1 = AMD_PSTATE_DISABLE; mode1 < AMD_PSTATE_MAX; mode1++) {
+-		int ret = amd_pstate_set_mode(mode1);
++		ret = amd_pstate_set_mode(mode1);
+ 		if (ret)
+ 			return ret;
+ 		for (mode2 = AMD_PSTATE_DISABLE; mode2 < AMD_PSTATE_MAX; mode2++) {
+
+---
+base-commit: b01fc4eca73cbd7946181255a95dbe64ff83bc5f
+change-id: 20250512-amd-pstate-ut-uninit-ret-46a23a195687
+
+Best regards,
 -- 
-2.49.0
+Nathan Chancellor <nathan@kernel.org>
 
