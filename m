@@ -1,104 +1,108 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286521C6FF4
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650465695;
+	Tue, 13 May 2025 23:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747178000; cv=none; b=qnoJGgnDQT6wNC9XZN2h7U17gAyVWC0+YSpmIGbpxecTfVlZ+1vuVUr7AzgAE5cWi4uZdSx8Nsamv/Y+i1c5w6nAU25aJgvWcnq5hSG343koZ0AYjPi1OP+rDXeKu6kpShv+JVx6dhVIHfL5XKuWLcKvJsQUVMiS0duP9YnMqWE=
+	t=1747178157; cv=none; b=Z3AD7EDHdWTAm59X5Exs7uedyPlVJasOyOPYYd0B/triqFJptxfhRabm3cMGc4VwNZ90mXSa2W0ALVD21IgX1ScyfAoEj/z8HFOVo5sUw32YkWZPuGc7+U/rCosxCDjrHXx0gK4GWVXeIa3j07ZGwJgU3udAk5xSaI7U6b6VaZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747178000; c=relaxed/simple;
-	bh=mkNoC9Ryjx5ogPibaruvHLv5BB0SKVa9LeUZetHB668=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mYVbCG7Xfqztb0+hKsMsAQ4e8vUbNZFmVhPkxY2JzQ1rcoI3wb6oy8KHH5MgoLtTJhiRSDdHbsf8gjG5Ac+vCvMlzQq1Nq3sg8GvTSRacGKZQ46rBLvzIqx81GvoBNCyyYA34HZeNRCErPN9ea7kkmvVuG7I4RO2tbSzGls2RCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=dZ2Q8r41; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1747178157; c=relaxed/simple;
+	bh=D1xptH/oUUu2Ir6TIND9ijE6bIO59tshllRcbOwV8RA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=USYzLQTLR4Y9V1HY8/F37OV6pHd+9Ki7H99kIsKfeb4KbxMZL/a+y/TtBcBjTs8B/tiau5qzYLM6tkiQtFI5+/jEbxhVvpJiH3xUBFAITIQvv3Mxy+x7J+9whXogu1SDDuS6IejzYq2CkXXmdwM0gKfLa8x40+H/5Hw/Jp0pJZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbyrfekk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="dZ2Q8r41"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70a2970cb70so50313537b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1747177998; x=1747782798; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JiQbN1KcgTdXz0K2nzgAi4Zdc8zBRkZfmeECcgv3ydc=;
-        b=dZ2Q8r41/H/WVPFxRkTvgt116JPUMWrXkKLKUm+HTy3Jc4ALAfb4M1xby7fRHPiFRu
-         0o++vToPt831qri85tV9CTMBZ4kVl/GUn8gj2lgwp3/enONWMsJZemHCMwi7ywYbP4On
-         g3006Ln7sZLiLe+acUSk3H+UkV0WfiqLH/KJTAHPT4GYvCYbhcCHIgbEJ6P7FVlyOI+C
-         mO/yVV3Of6Zzh1KJVouhYMkoQ+iJZ3Drt5swuHKTlhBKuLoc+cfjaI+QXY7DXyFrrSJS
-         DmNwBbW29pvpFxdajyc0a5sTSov05eciea0vMwARymoZOiWU+9otaF29R88sTJ3+o4wx
-         g9BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747177998; x=1747782798;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JiQbN1KcgTdXz0K2nzgAi4Zdc8zBRkZfmeECcgv3ydc=;
-        b=CBZREbMiiw9hQuHxSAfV/c+kk+CLWlFTPIdLPE+lGxtbkKxkvja8FAI0uzHu/qFfw/
-         Je+9F26pwyDcfo7Kv48DwZIaT4oxuifHWuJWLcWwpPgL+QEXlQIRuNfdcuMK009zP9bE
-         5Bq0qFWwQ3PmU7sCylC+qyTvIp/iwv5SvO+Yt56yBNEZUqa9yisyA60fGSYDuB6xjn8N
-         HKZN88bH+4C/xZfhtRaZQcTjandoP0GwA2fO3PFOEqyNEFwGjnHdPaKEHCiQKwvHw8kt
-         qo9AL1pUIYnmDZP6HEIxanN7MM8DSDnqtYtn8YBXsswtGaH36+TzaT5+M9CuPLwC7Q2b
-         QGOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlZ4KozDI20OfcBOBJ5TJTHrN4bDgxN3yOLnZdBRatIPuCWdvSSsk0uNcN2GWHPcCoZTqHgiV8CmODR1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/9Py38mREEOmAnwHzUTlEr4WHSbOx0KPLzt7J16Sd2G+bIEDb
-	R8EFb3zcAEN0CNFgeLwZtc3mTImH5oWmTv1cnnSYYHs9nJvxAqLbObmxMZK0YA8hk2zxi2+fYq4
-	+jjd8U7w0TQXurx5A6AT1piia0CpSWihQli2o/1MflwgZCDtaCA==
-X-Gm-Gg: ASbGnctyYP0sAnvJB3/iX7PgI+Mnp4w9Yi1AanXkyk52vS5SnVqN3bwdR7AqQ0NqY7m
-	D/ClldwpyAgf1tmtcD6XzgX6h5vkQ9OAUMRfsDTqrOk9J1wgYya40rxh/j1gpKLKoyxTWWd67s8
-	2Nho5D334WxE7bArCIphogwFLef7Nbhk2O
-X-Google-Smtp-Source: AGHT+IGLKVOpD4gMWPsE80wgsYXtnIT3oZdD49clxQKHdbkqN8XwpQ6PDL6R86iNciW5PD8VH5cUkNh1g8L2GtOCwBU=
-X-Received: by 2002:a05:690c:6a09:b0:709:1bf8:f7a6 with SMTP id
- 00721157ae682-70c7f2221cbmr21351427b3.28.1747177998122; Tue, 13 May 2025
- 16:13:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbyrfekk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71D25C4CEE4;
+	Tue, 13 May 2025 23:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747178155;
+	bh=D1xptH/oUUu2Ir6TIND9ijE6bIO59tshllRcbOwV8RA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=lbyrfekkL4E0T/hAUnBfDulhbb6usyNaJtme2vR2/ky2gRqD+ndeR3IniYfurhtZh
+	 lLhSVaSXdO0Ww+iGUxipKvrtqkP1qyTQvKzeiN1r0ijh5byJ/5sgY4jzOj2ESU/2dP
+	 ciDrdAQS849TJBCLZ99kl5mI33j18FhF80nfH6RDA9N4gcxqbNTKmow6aZU66sZ+8L
+	 +ovjKTewFSR1ErUBCCCu8DtURdLrjSH41VA2veimgDUTEznRiHJiWIJ0hHVgfvlfJj
+	 BKEfccUhY9NS1gJGonGxMd2/oWo4JXjvpkUcbSMmQF22CR5tUZt88pDqX+zZRKjnJx
+	 AZ1mLZBpGBQ4w==
+Date: Tue, 13 May 2025 16:15:52 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jann Horn <jannh@google.com>
+CC: Mateusz Guzik <mjguzik@gmail.com>, Kees Cook <keescook@chromium.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Eric Biederman <ebiederm@xmission.com>,
+ Jorge Merlino <jorge.merlino@canonical.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, John Johansen <john.johansen@canonical.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Eric Paris <eparis@parisplace.org>,
+ Richard Haines <richard_c_haines@btinternet.com>,
+ Casey Schaufler <casey@schaufler-ca.com>, Xin Long <lucien.xin@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Todd Kjos <tkjos@google.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>,
+ Prashanth Prahlad <pprahlad@redhat.com>, Micah Morton <mortonm@chromium.org>,
+ Fenghua Yu <fenghua.yu@intel.com>, Andrei Vagin <avagin@gmail.com>,
+ linux-kernel@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+ linux-hardening@vger.kernel.org, oleg@redhat.com
+Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAG48ez0aP8LaGppy6Yon7xcFbQa1=CM-HXSZChvXYV2VJZ8y7g@mail.gmail.com>
+References: <20221006082735.1321612-1-keescook@chromium.org> <20221006082735.1321612-2-keescook@chromium.org> <20221006090506.paqjf537cox7lqrq@wittgenstein> <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com> <86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org> <h65sagivix3zbrppthcobnysgnlrnql5shiu65xyg7ust6mc54@cliutza66zve> <D03AE210-6874-43B6-B917-80CD259AE2AC@kernel.org> <CAG48ez0aP8LaGppy6Yon7xcFbQa1=CM-HXSZChvXYV2VJZ8y7g@mail.gmail.com>
+Message-ID: <6C9B4DB6-0E73-471D-A278-39F61A825DB6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508140438.648533-2-alexjlzheng@tencent.com>
- <20250509032326.GJ2023217@ZenIV> <20250509043757.GL2023217@ZenIV>
-In-Reply-To: <20250509043757.GL2023217@ZenIV>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 13 May 2025 19:13:07 -0400
-X-Gm-Features: AX0GCFttm-rmrczbIyF2qWJ3ynZfRM2SOJV9UI_yLmpmO36LFSjrxOCcAum3iQY
-Message-ID: <CAHC9VhR7-R20Q7A8RGCAMvBxNyUXOcj-dHAcMi-GAyVsxQZ7aQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] securityfs: don't pin dentries twice, once is enough...
-To: linux-security-module@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>, alexjlzheng@gmail.com, jmorris@namei.org, 
-	serge@hallyn.com, greg@kroah.com, chrisw@osdl.org, 
-	linux-kernel@vger.kernel.org, Jinliang Zheng <alexjlzheng@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 12:38=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk> w=
-rote:
->
-> From 5c463d47c814e16adb6e997a05ca5625df41152d Mon Sep 17 00:00:00 2001
-> From: Al Viro <viro@zeniv.linux.org.uk>
-> Date: Thu, 8 May 2025 23:38:01 -0400
-> Subject: [PATCH 1/8] securityfs: don't pin dentries twice, once is enough=
-...
->
-> incidentally, securityfs_recursive_remove() is broken without that -
-> it leaks dentries, since simple_recursive_removal() does not expect
-> anything of that sort.  It could be worked around by dput() in
-> remove_one() callback, but it's easier to just drop that double-get
-> stuff.
->
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> ---
->  security/inode.c | 2 --
->  1 file changed, 2 deletions(-)
 
-Replying with a lore link to the associated discussion and warning so
-we have some record of it in the LSM patchwork.
 
-https://lore.kernel.org/linux-security-module/20250509044613.GT2023217@ZenI=
-V/
+On May 13, 2025 2:09:48 PM PDT, Jann Horn <jannh@google=2Ecom> wrote:
+>On Tue, May 13, 2025 at 10:57=E2=80=AFPM Kees Cook <kees@kernel=2Eorg> wr=
+ote:
+>> On May 13, 2025 6:05:45 AM PDT, Mateusz Guzik <mjguzik@gmail=2Ecom> wro=
+te:
+>> >Here is my proposal: *deny* exec of suid/sgid binaries if fs_struct is
+>> >shared=2E This will have to be checked for after the execing proc beco=
+mes
+>> >single-threaded ofc=2E
+>>
+>> Unfortunately the above Chrome helper is setuid and uses CLONE_FS=2E
+>
+>Chrome first launches a setuid helper, and then the setuid helper does
+>CLONE_FS=2E Mateusz's proposal would not impact this usecase=2E
+>
+>Mateusz is proposing to block the case where a process first does
+>CLONE_FS, and *then* one of the processes sharing the fs_struct does a
+>setuid execve()=2E Linux already downgrades such an execve() to be
+>non-setuid, which probably means anyone trying to do this will get
+>hard-to-understand problems=2E Mateusz' proposal would just turn this
+>hard-to-debug edgecase, which already doesn't really work, into a
+>clean error; I think that is a nice improvement even just from the
+>UAPI standpoint=2E
+>
+>If this change makes it possible to clean up the kernel code a bit, even =
+better=2E
+
+
+Ah! Okay, I appreciate the clarification=2E :) I'm game to try making it a=
+n error instead of silent downgrading=2E
+
+-Kees
+
 
 --=20
-paul-moore.com
+Kees Cook
+--=20
+Kees Cook
