@@ -1,121 +1,61 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D28F1E5B9C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FB9182BD;
+	Tue, 13 May 2025 05:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747115615; cv=none; b=nMRntJcX7w97OvqhJug2/SH7m6Luj7NN6vtQEN+XTlcyoHu22gxmMLCWMBvpAG2Evca0ocxnyCVBgxwtHI1Wd4nVer/6YRD6Z7grvCWsTFRPGAArmU7+GBbgjDzBMzdtRscKtugX/7Upe3g0vxvVmxyKToyKbrmcYwUxDr7RDTA=
+	t=1747115751; cv=none; b=d9qfxZMj9NUSSEdJu0b0oyG9HhNbUUEk3iYhm2k63dNfehG86yvaw6n1VXCAyPrhE5NBin9OT9V1I4G0v9Kw+NRL2bT9f2jaXpbwI1otK7rt3wPJwYRVozX2qM+KLsl3TWsFCJUpvADMO+3D3pUHPfpTwIfIZ8c0S5UpSatc1pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747115615; c=relaxed/simple;
-	bh=jB+1NSGMzo+MjMb56ZSc0FpCP8SLNObWRnq7yTjSBIg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=r8SMF5LQof3n30mn3GBAv6xZvuNm9kgmJyQUBYwg/zORHpQBm86cwaD55N1BWUiX7Q38znSZaf3noM5GYSqbBFk2OxkkhaPDR5QibNaK9spe2oOdwXSWaZR8knybGTGryhgi8+qwz9wgJXOytvlovDSlrag9lYNuyEkjg15c30M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XnNLc/hc; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747115751; c=relaxed/simple;
+	bh=RP49QrYotC4wtmWmzueEFIgQ7wUF7SzcF1AY4iJX48U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cBeopGT6bMj2ZXDQgcJpPmoi+qX5IH9MhGPCguH8whrDS/UU6Eg2CbcQbjNmGDoulrjtql9MYH+7Mj6AFRJJBDrcwrIBkZ+qGJ5oTQoKs1RgzngxRITAC0nN5kuQHXgIFiwBm5kh25kWnj5XHcEcGTPuRCBFUx8ZTiJLZ44u0BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dwsDLsD1; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnNLc/hc"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2317d94c9cdso4220145ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747115613; x=1747720413; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WNsyZBlrjZRlpcE1bXaf2I5YyPz0u8vhXL29PFihhZE=;
-        b=XnNLc/hcT9dbeG/bkJGmRuXl9pN7gZCWY0Gtvn8UaqKk4B8zY7LD1S7UXv8/FsnVUg
-         uwAg/+W4cWZLgfjyRvzvUblw76P1D6bsYtGQMhYZpvyPWtwo4QUV3VNfveUy1AXTjjas
-         NVXqkkve/nmfdnafou9oDzPrzKINWviu9WpnR6BrCwFEIsDvehp31rv5g7h1AQbsVkEn
-         hi/9uMqjN1KbKA0EplQLEqEEu6IWnC6cNYJmoUceoKrYFsXHMU36mc5RPtQou8odOB/7
-         4gFEVJ7fYQ8u2bnYSwpbXMRoqTGCC8YWBL/l/d+83TRMedbgJHIhfxN06wG/UoLN3MYX
-         JS4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747115613; x=1747720413;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WNsyZBlrjZRlpcE1bXaf2I5YyPz0u8vhXL29PFihhZE=;
-        b=UIUhF/c3VqqhLxMqak8eCu7AIuM5BpY9N+M0lzTaAD2GUt5cKTIZbDfiBvdmLb66qU
-         TzpEnO4CUa5Cljehlltt8nlRe9dlzTx1CL1Byw+BaYDcLpft6zDEHjZp0MJewKCn0Wo8
-         VVUQ/jmdNpKsm+3ZuzGSptq3ywMVGBd93VVpaLnC5IqwigvksAmutrsZbz4q79Iv59FK
-         JCGdjC8EQGKg0Y1w95JunIZwGaeX8VyXatP0jawOyqg9JubY/TPl4SIRRjjCrN2UtiZq
-         6z09Ue6QABSl6KUP7Wr4ZTKD1eBmWOgWaeuwEmOWeFCpvLe2iS/bna1ChC3grFB4W0DS
-         aYYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUau0byIDrSWx6h+X4iDNzF7yEqPR0ck6Z22/UFaf3LLLLF2OuBg+N/qO7y42wF2VZJS1NxFUaDHtNRkxg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUf8OUmBiSiW0IwRarHQWG6TGhovyAJQJ8vq0yD39VbycQKmxQ
-	08uSikVhBd13DC22+aECbBp8XJi+K/Pq6kU0zBJNNzVad0u9vSIjP05dDwA3YZrXFOTJRN9Pv2Q
-	j0GsNkCI8p1kAAh+6XS4m7HUgDCZet5MyVQ0=
-X-Gm-Gg: ASbGnct4OAX7+RXP6DRv0MUoNjGQ+UOgGqkY1Gm22H/OjvNQynGAnyIzvYKyXjYTSqN
-	oBsadopd0ubHu1W9NXeCPbAbB0OD326AmSmB7BkOkG+IXPjW5Iqx4pxvjdXtaqicTAUOOGepP/+
-	YDFdfPD67fm1PxNKO4Yrx38dvSIPj42dX7
-X-Google-Smtp-Source: AGHT+IHOc8SXBuOLE9/iyqL8gXXnTqSTPtRR21+XgLdQcc71oLOwLLZ8JwQ7FB8OxioyLwjXMjTZMux/mq3GQJqBjCY=
-X-Received: by 2002:a17:903:988:b0:220:c63b:d93c with SMTP id
- d9443c01a7336-22fc91aca1emr263133585ad.44.1747115613093; Mon, 12 May 2025
- 22:53:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dwsDLsD1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RP49QrYotC4wtmWmzueEFIgQ7wUF7SzcF1AY4iJX48U=; b=dwsDLsD18ZbLnYnRawGnxEDOop
+	yV3OyEngKbIJX9nuFRf8EJsTwRNMFhDlR77nzjuKHLDW3rA3BFHPpsrZpCh6LB8MtIIf47PVpNHJy
+	1RpYEfmu/Rfg6sXPYgo8sFwiGbZMuipR8JigjNG9UD8l2x+WvB0/m1es7gL7q2RyKFdUw97cVALII
+	//xn3RdI+TUIpRC1JLogKwS13XeJ22QHzmJ0HuSDkBnQrmMxHntxqcSIr2XoZ6aQCJIHUnmQUeaQ8
+	DnoTANN6y9uJmHROXNXF0mBubY9PJnyxkjtLQiLWeLxEkswc01Yp34WOS2ePRH6D7AUp83+92cO9q
+	0aWriOcQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEicH-0000000BRo0-14pW;
+	Tue, 13 May 2025 05:55:49 +0000
+Date: Mon, 12 May 2025 22:55:49 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Kevin Wolf <kwolf@redhat.com>
+Cc: Martin Wilck <mwilck@suse.com>, dm-devel@lists.linux.dev,
+	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
+	bmarzins@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+Message-ID: <aCLe5UT2kfzI96TQ@infradead.org>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Tanav Chinthapatla <tanavc01@gmail.com>
-Date: Tue, 13 May 2025 01:53:20 -0400
-X-Gm-Features: AX0GCFsHdIaazRy_QlZVSW3DrhT5qlEYmvBox6N8Eyt0rzr0kqKxYEMV0FvKf-0
-Message-ID: <CAPGyJDMv-N3HkdV4znQg=_i2owE2sbnRhzFem_Uv_15GjADBFQ@mail.gmail.com>
-Subject: [PATCH] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000808d9f0634fe0dbf"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCIRUwt5BueQmlMZ@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
---000000000000808d9f0634fe0dbf
-Content-Type: multipart/alternative; boundary="000000000000808d9d0634fe0dbd"
+On Mon, May 12, 2025 at 05:18:43PM +0200, Kevin Wolf wrote:
+> Yes, it's a bit unfortunate, but we have to work with what we have. QEMU
+> doesn't even necessarily know that it's dealing with a multipath device,
+> so it just has to blindly try the ioctl and see if it works.
 
---000000000000808d9d0634fe0dbd
-Content-Type: text/plain; charset="UTF-8"
+Why is qemu even using SG_IO to start with?
 
-Hi,
-
-This patch fixes a checkpatch style issue in the rtl8723bs driver by
-correcting spacing around a '+' operator.
-
-The patch is attached to this email.
-
-Thanks,
-Tanav Chinthapatla
-
---000000000000808d9d0634fe0dbd
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi,<div><br></div><div>This patch fixes a checkpatch style=
- issue in the rtl8723bs driver by correcting spacing around a &#39;+&#39; o=
-perator.=C2=A0</div><div><br></div><div>The patch is attached to this email=
-.</div><div><br>Thanks,<br>Tanav Chinthapatla<br></div></div>
-
---000000000000808d9d0634fe0dbd--
---000000000000808d9f0634fe0dbf
-Content-Type: application/octet-stream; 
-	name="0001-staging-rtl8723bs-fix-spacing-around-in-rtw_cmd.c.patch"
-Content-Disposition: attachment; 
-	filename="0001-staging-rtl8723bs-fix-spacing-around-in-rtw_cmd.c.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mam39x3s0>
-X-Attachment-Id: f_mam39x3s0
-
-RnJvbSAyNWFhMjRjN2NkZTdkZjU5MDE2NzRlYzA4MDkwOTkyYjE3YWZkNWI0IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBUYW5hdiBDaGludGhhcGF0bGEgPHRhbmF2YzAxQGdtYWlsLmNv
-bT4KRGF0ZTogVHVlLCAxMyBNYXkgMjAyNSAwMDoxNjoyOSAtMDUwMApTdWJqZWN0OiBbUEFUQ0hd
-IHN0YWdpbmc6IHJ0bDg3MjNiczogZml4IHNwYWNpbmcgYXJvdW5kICcrJyBpbiBydHdfY21kLmMK
-ClNpZ25lZC1vZmYtYnk6IFRhbmF2IENoaW50aGFwYXRsYSA8dGFuYXZjMDFAZ21haWwuY29tPgot
-LS0KIGRyaXZlcnMvc3RhZ2luZy9ydGw4NzIzYnMvY29yZS9ydHdfY21kLmMgfCAyICstCiAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL3N0YWdpbmcvcnRsODcyM2JzL2NvcmUvcnR3X2NtZC5jIGIvZHJpdmVycy9zdGFnaW5n
-L3J0bDg3MjNicy9jb3JlL3J0d19jbWQuYwppbmRleCAxYzllOGIwMWQuLjk4ZDg5ZTgzNiAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5nL3J0bDg3MjNicy9jb3JlL3J0d19jbWQuYworKysgYi9k
-cml2ZXJzL3N0YWdpbmcvcnRsODcyM2JzL2NvcmUvcnR3X2NtZC5jCkBAIC0xNjE5LDcgKzE2MTks
-NyBAQCBzdGF0aWMgdm9pZCBydHdfYnRpbmZvX2hkbChzdHJ1Y3QgYWRhcHRlciAqYWRhcHRlciwg
-dTggKmJ1ZiwgdTE2IGJ1Zl9sZW4pCiAJCWJ1ZlsxXSA9IDA7CiAJZWxzZSBpZiAoY21kX2lkeCA9
-PSBCVElORk9fQlRfQVVUT19SUFQpCiAJCWJ1ZlsxXSA9IDI7Ci0JaGFsX2J0Y29leF9CdEluZm9O
-b3RpZnkoYWRhcHRlciwgbGVuKzEsICZidWZbMV0pOworCWhhbF9idGNvZXhfQnRJbmZvTm90aWZ5
-KGFkYXB0ZXIsIGxlbiArIDEsICZidWZbMV0pOwogfQogCiB1OCBydHdfYzJoX3BhY2tldF93a19j
-bWQoc3RydWN0IGFkYXB0ZXIgKnBhZGFwdGVyLCB1OCAqcGJ1ZiwgdTE2IGxlbmd0aCkKLS0gCjIu
-MzQuMQoK
---000000000000808d9f0634fe0dbf--
