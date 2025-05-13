@@ -1,112 +1,93 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DF921C9F6;
-	Tue, 13 May 2025 09:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244C21DDA18
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128743; cv=none; b=Srzr99T2pXen4tlnUVq3xvKr1PvyTJkEwZmRg8IZsdJmvZCycU1jmVcSEqOxoBR1cixlBYr6/XiCtOQOdFfogMm3MbtSNmto2eqIZ0MNi5v6anjsRKg190n7d9V1zgWXj2L6fZFI8cKqZMItMQ4lBlAh+5sX8M3Gbwl8jr5wZb4=
+	t=1747128765; cv=none; b=LKQmjm61I/mDgtPXEwSO51ab8ws4BeVm/gJw55SuWupvEkn99UINA3duGoxScmPsUQDPXnvHJL+xxGwRPfa5rPU06n8RM2+eNwBjEkgR8G9T4AleLf9yMXumWBihsW5d2f+uyy7g0IWi8lez+B5nlMJijlZtu48mmqN/q58K4cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128743; c=relaxed/simple;
-	bh=nNrYIQy1skPi5qstR5qKheiozyvtxRrmAYWX6yKF368=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XCxSNaa+RFgoGEIruyaZurSbz/ZQatozTTl4ZbcZfLCybpKqXT+fllaTxXoXu55Fe4XAlEI8fnyQGlk9seLvsIGMd59BRwOMPhpM2skrc4Cir0zIR7IhK0NKUZKT+KpISKmdmV3uNHwV4U6B2OW2dNsPE2uD3mS8AM7lk6YOEc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZxWT34Bhhz4f3jMw;
-	Tue, 13 May 2025 17:31:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4C60A1A133A;
-	Tue, 13 May 2025 17:32:16 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKl+eESNoLyocMQ--.9820S3;
-	Tue, 13 May 2025 17:32:16 +0800 (CST)
-Subject: Re: [PATCH RFC md-6.16 v3 15/19] md/md-llbitmap: implement APIs to
- dirty bits and clear bits
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
- <20250512011927.2809400-16-yukuai1@huaweicloud.com>
- <20250512051722.GA1667@lst.de>
- <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com>
- <20250512132641.GC31781@lst.de> <20250512133048.GA32562@lst.de>
- <69dc5ab6-542d-dcc2-f4ec-0a6a8e49b937@huaweicloud.com>
- <03f64fc7-4e57-2f32-bffc-04836a9df790@huaweicloud.com>
- <20250513064803.GA1508@lst.de>
- <87a53ae0-c4d6-adff-8272-c49d63bf30db@huaweicloud.com>
- <20250513074304.GA2696@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d5ae7af0-dd73-7d6b-f520-c25e411f8f06@huaweicloud.com>
-Date: Tue, 13 May 2025 17:32:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747128765; c=relaxed/simple;
+	bh=NY6vJD4bfvHx2WAT2VVCtdPSXGmyW9DHyy+RXKVoSAc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G8Kfbi+USHCWS+ijS4jNjGlLIUH9Zu94vBVwIwKgWqqC2iyb9ySR3INGjMf/2D0LIP+TGYB/Dd/WDDpo+Ibr+9Q6+I81JE1qmX+lwNnHh3qyXJpkn8JQsvqPhON8/15himhml+1fl20KOpJjCS1ajvaOnbyt9mysZWxqQejpvM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oGrLbBdN; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oGrLbBdN"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso6969713e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747128760; x=1747733560; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NY6vJD4bfvHx2WAT2VVCtdPSXGmyW9DHyy+RXKVoSAc=;
+        b=oGrLbBdNe47+XhC7TJrOpYDGraecVQIUsdahLRDkYTEymSZekogcC9clY4rGX9O4EA
+         SyGRIJJh0KYEzI1izldRcXez2IEjVPslU2GReqr2wr+fOVx4IYJS/S9t5HG/akhS82Do
+         OPPrsCBOQ8AWpPhx4vm95xqFL46rh9IpaTOHLDlcr5XLQtVMbMLfPk3Mpws3ppXoRDLn
+         kLl3zs65IlT0EhhCNwSejQ+QcaMoACgv2iS9rYXXw641iq/Gd0Lamug30VZq+iv7jSWJ
+         04f1dt5xZOqCLOHc7oLR1Gn5xUpcIys2v40BmxnNdOPxK0mRaoPW96Q9nU+lt0KCCMYr
+         hzSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747128760; x=1747733560;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NY6vJD4bfvHx2WAT2VVCtdPSXGmyW9DHyy+RXKVoSAc=;
+        b=Qj7xPf1Vq/+EUhux7wW95kMv/0SEsOPEziMyjpgCer75n2NC/kx9dOTmTW0GWbLQIq
+         U8AWRKr2rlc4GVmN6MCOfB47zRrPteIqVgTXKN1uRm1hmaNOmUnXDrLd70x3KJKOwSyL
+         Aj1DlTVlpWXl+obgJ6PW7P6rtgCYmHXGiAM7BS504tu/bg1oUalXNsTNhTX4G8hhKODm
+         da1pciSNCHQ3E6/HMANVED8J9BmX3ZfUIvE6N/ci34Nev0dtisBH4KKuFKsI+kpQs5Jf
+         9YIoXpd0T4DuV0gX8mug433aiqV7+EkiyEQWFHn2CFvAc5Q879TOXH4OnLrYG0HsmMDl
+         CC8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVfqed3QMQXUzLSbL9YrQ2pxeAxQ4p2OVQMqm0VXmKxoL2M5o/NNkrAYGzoU+myuBPIiPEZrBZEiuFHiNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL2d6Xk+t6cUkA2OljCeU82IuvqCOhU3eMb9cgsAF5VlKDD8fg
+	CndYGDXEQhkrx0Sfv5oxjTJHMKMVcDxCIZgsukiTY/unU2urLnne0Zg/fdhAv1rq1J7RNI6UhZO
+	SChYZTL1lkJ9gd24wAlYm8KkO4mfE23mudNc+pw==
+X-Gm-Gg: ASbGnct1oiifHvbL53KvaGSjDqXdU+jACnbRDCR8UpLnXB0spWxtgTeVqN5P2jWLI+2
+	n61/d7LGE47YrbM1UBlrbBSgNkyiuBFD2LZHUucCnMVqbmtykVeDdtCZxTmso6l+lJjwF3YcggA
+	7XgjXl5dDrdZRakJHqvp0bX/r0CkSQs+x6zqkILrCLgck=
+X-Google-Smtp-Source: AGHT+IFnK4yMmep2oyTd3Pj8ao8ZioYGFRMefY/RBKYSi7PGi/PRviB7Soxar1b8q/3OFeF6n//VAYjpNJYFXydwDaU=
+X-Received: by 2002:a05:6512:ea4:b0:54f:c17a:9ec6 with SMTP id
+ 2adb3069b0e04-54fc67ed719mr5685544e87.55.1747128760174; Tue, 13 May 2025
+ 02:32:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250513074304.GA2696@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKl+eESNoLyocMQ--.9820S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr18CF4xJrW5ZFyxArW8JFb_yoWkZrb_ur
-	9a9ay7C3srGF1kAayIgFs0qFZ7Gw48Wa47Xa9YqF42g3s8Xa98uFWvy3sxua40yw40y3W3
-	Wr97Xw12k3ZF9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <cover.1745605382.git.Jonathan.Santos@analog.com> <f76579f8aa040125568c044c86761211a2e2f5ae.1745605382.git.Jonathan.Santos@analog.com>
+In-Reply-To: <f76579f8aa040125568c044c86761211a2e2f5ae.1745605382.git.Jonathan.Santos@analog.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 May 2025 11:32:29 +0200
+X-Gm-Features: AX0GCFup66n6QQY-S1ZUx_c9rDRe7cXgMWjG_C9fMa-KAt7hqRpUWdgbNpUpBRs
+Message-ID: <CACRpkdZG0h+0vDJZSt_UyukYXVTX2wLjK-JReqgutJJ8zJS_yg@mail.gmail.com>
+Subject: Re: [PATCH v6 01/11] dt-bindings: trigger-source: add generic GPIO
+ trigger source
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, andy@kernel.org, 
+	nuno.sa@analog.com, Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, 
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com, brgl@bgdev.pl, lgirdwood@gmail.com, 
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Apr 28, 2025 at 2:12=E2=80=AFAM Jonathan Santos
+<Jonathan.Santos@analog.com> wrote:
 
-ÔÚ 2025/05/13 15:43, Christoph Hellwig Ð´µÀ:
-> On Tue, May 13, 2025 at 03:14:03PM +0800, Yu Kuai wrote:
->> Yes, following change can work as well.
->>
->> Just wonder, if the array is created by another array, and which is
->> created by another array ...  In this case, the stack depth can be
->> huge. :(  This is super weird case, however, should we keep the old code
->> in this case?
-> 
-> Yeah, that's a good question.  Stacking multiple arrays using bitmaps
-> on top of each other is weird.  But what if other block remappers
-> starting to use this for other remapping and they are stacked?  That
-> seems much more likely unfotunately, so maybe we can't go down this
-> route after all, sorry for leading you to it.
+> Inspired by pwm-trigger, create a new binding for using a GPIO
+> line as a trigger source.
+>
+> Link: https://lore.kernel.org/linux-iio/20250207-dlech-mainline-spi-engin=
+e-offload-2-v8-3-e48a489be48c@baylibre.com/
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 
-I was thinking about record a stack dev depth in mddev to handle the
-weird case inside raid. Is there other stack device have the same
-problem? AFAIK, some dm targets like dm-crypt are using workqueue
-to handle all IO.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I'm still interested because this can improve first write latency.
-
-> 
-> So instead just write a comment documenting why you switch to a
-> different stack using the workqueue.
-
-Ok, I'll add comment if we keep using the workqueue.
-
-Thanks,
-Kuai
-
-> .
-> 
-
+Yours,
+Linus Walleij
