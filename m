@@ -1,102 +1,142 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D36841C7F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4B20C461;
+	Tue, 13 May 2025 22:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747175128; cv=none; b=VVuV7fTBujKgwAyEWNQhhCTQPGXjBsuXWg7FlpOgNc7F0OH+axQ1uITpMqYpqJNwFJVoqaO0fin9xOSQLQ8ZYnyVzHCOn852eyGDUuZqXRcZMaa3ssSp0SyDUCa9sEVvDmiEZ6Y9mpnESH8DqrU1HalA1sRvptOw3GBIt2mitQM=
+	t=1747175145; cv=none; b=B4W6i/gqrO2QucwRcHntEahYd3tXoaeXV97Hs0eu+fcX9LcJkpPs8XosPshY2+jxbeREOV5bQkniuggHS6KSRi45L+dEN2C22kD0MQhuBNB8sIbdzRyZPnudLlFLvOkftotVCvGygQuYnXpD5g08R37UhTrY1TGtydE2MNwp/KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747175128; c=relaxed/simple;
-	bh=n3iU2BApdmJsTejag+4lnZWV7hL0EVH63dlPQG7c/fM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=hImBlBmIBymo4a2Q9esq0Ryt7Fp3Rgl2d7HTPA2tBM4YysLapLk2e8dZD49vTrMdLM5LxlNSde9kVCOrkhxFWvfPdokp2spMoKLfG/l4TBVRx3FmBHRWKnZYt3ljW95eX3GHHk+kSjiiXS+DwNdD+sCt2YcDfSjstHScpcBcKC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=jRy0VsKl; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747175145; c=relaxed/simple;
+	bh=rf3JppW/78wO/r4B/y0eX4WT7rbL9KH6NSFoGLZ/3Fg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZF5qupP4w3u3CRCVHgBiSWy0sGOCg5I96L/jwyFVZ06Lc2xDpcc3b+mZ+lbqtT8YQpuvM48rFcO796Xzs/FDjTwdCZgKQtadkIEac77AfS4BrL1CQtXHw/rLrjDEIW9fqaNUSQ2x00cKPa8kCfuQlAM/imRYZlVM7gfBd9NEOk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W94iHPgP; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jRy0VsKl"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54DMOpTA2629221
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 13 May 2025 15:24:51 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54DMOpTA2629221
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747175093;
-	bh=7lqXvgutqBhxBiqB2WRmqV45ZUWRMix0kVNa0a5yjjE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=jRy0VsKlS3Nvf/A+ezlJoCBAkUunwHrhNiPzC26OWpSiO3GDjxRzVP+5usgYjAIWk
-	 4FbNyhxrRkEl/j9FrntXweVv7V7NhKgxIXbEFR4cSrHZghN5QHXW8xvOL1ahGOfAha
-	 yfsgN1IllT6qL/n3XTuX23ybYMKX3K7jJyvYgvx7mujkTK0PdIk4SJXKIbmmrS/DwM
-	 xGBftzkT6HDCYa7z4oqwVfxG6xNOgdX+bDVOKF/YLznkmBnGWkksg3pKNzqLjeTs18
-	 gcIkkwKjMEK8SmckOFvoI3Wrlf8chFeD3NCcX5NUHCT9kSfqob8w7uGl9BPhSJKEAH
-	 Hsq+1NLFpOPcQ==
-Date: Tue, 13 May 2025 15:24:51 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: =?ISO-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>, Xin Li <xin@zytor.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        virtualization@lists.linux.dev
-CC: Ajay Kaher <ajay.kaher@broadcom.com>,
-        Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_5/6=5D_x86/paravirt=3A_Switch_MSR_acce?=
- =?US-ASCII?Q?ss_pv=5Fops_functions_to_instruction_interfaces?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <6cc20ef6-d8e5-4c74-89d9-6a949c84b397@suse.com>
-References: <20250506092015.1849-1-jgross@suse.com> <20250506092015.1849-6-jgross@suse.com> <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com> <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com> <ff567466-a46a-4f66-935a-8fae1140c1a2@suse.com> <eb077393-ea95-4ac0-9479-980e227f7bff@zytor.com> <6cc20ef6-d8e5-4c74-89d9-6a949c84b397@suse.com>
-Message-ID: <DDA7C560-1BD9-40A6-8B93-28D5AC10EBB2@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W94iHPgP"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a108684f90so3753202f8f.1;
+        Tue, 13 May 2025 15:25:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747175142; x=1747779942; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wAwr1O0koPzIlKh8epOygSIaJtugVEfkRrBmy7awSbw=;
+        b=W94iHPgPJz/INngo0cRpnhtWyjCUrDSuU969bPC3SZCkg4QLlB4bUabuaMGw9vB2YL
+         rFZXONTEsy/ATGwR8a3B0C1vEeNvHQdu6JroeCBXsU5Axsfgc88XkaCZKDcvY/ycc/RS
+         FW0lA72pKufLy+rIikDlmaYdhGzy7r5mEIWSwrcoPdSGY3CAc7dZeGJ5Tg8PQEmiA/xx
+         rklBm4KvN6ZJZcwBc4ApKGCUMPIIR7URNvN1sIh8qcOLuQeKB2ogbGwcpJpMUDd6ZAhe
+         Czjl8Smd3cosAGUXYrCcLWJL2+zGsmVRDfRdlEGWfTMkZNr5WZnqbXJom2X7GdoQRfqP
+         FMxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747175142; x=1747779942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wAwr1O0koPzIlKh8epOygSIaJtugVEfkRrBmy7awSbw=;
+        b=PkFg+ktOKngMwKFbBoitHafYWlJUpYTexVzvdmIe7fym0XYQRysgR8drK3tGHn+XBe
+         zISSDcH5Yx/LX5leYlJkYoZI0nAbNcvOx2ahXcVeaOsCBQSJliW2iLHKBQHoVTI8z33w
+         W3FONirhkdjBnLQRStIRGhjUrGXTA9nhodz/+1XCFx2dtrGChhApDQXmbWlYpFt16pSC
+         s0kWcUnmzocM+iPjLA7eMXHy1zv3Jz06tdrvL7WdEd7JUQowbkHDtx/sI3yKTu4Ssq3v
+         vgZHwS1TMN+p1ivxQUzifg5n9p4WyczDqDLUxk1JrmJ5NYXNBiYSot0jMkF3jw1j82l4
+         Do+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUSTbNd9SGY1uEFZNzWEpoZPQWNDpjTtWUDQ7/p4g5TLcumPsuzF5zrV8Cp9QJPZgytaTA=@vger.kernel.org, AJvYcCUh8SmE56CWg0Z3wY61BPIIYPhoSZdT5n//iDeuBmGhndOVBEl40EmVXi5Q8pF2cGr00uSs+Pw2Og==@vger.kernel.org, AJvYcCXZ6RgE7ONlGdYLS4uKSjDapGRe43cntP+dD1960Vx55jSj24wb0/V+yxE3Ecp6fHylR/95tS6qjHbERopB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+2xpPKY9cXwGFyl/aEKVU05ACEJiOAjzQlYGCDp8BaDVkYP/P
+	p7HNUeWbidrjiXeRlSppAqKMPuWSyIkAWJF3cUkxmUeldO5kFlHaCvM8WU/sLq24YYvZH8xXmAZ
+	Kl6dd3lEAXDXF4jmSWsk5D2UUcPk=
+X-Gm-Gg: ASbGncvGrKpNRVcFWOOtilzbFfw0ERNRN4jL8Gt3CygJGqqqmbptKCFGH1UhHHHOBMF
+	DZSLVyAf/Bmjl5h3aOjsSXhwCTQ5i5l7qAN1GjUaPzq+KB5iv6gYPKOoCOxD8M9Plg+2WvLC3rC
+	pbpXQKd7H18KOwTOKgpw90dwPf/GhpJOzpGBRcb6GALe7WeHH7ZfzhHZNYZ1Bv8w==
+X-Google-Smtp-Source: AGHT+IGCSV1CW2V8g3e0buvKmCKp4+U6DS5ChJ8qy9B6coY/qGEWuanukGv1ONA7/0rEN2Xci8nFgq7f5PO+enTp454=
+X-Received: by 2002:a05:6000:430d:b0:3a0:b4f1:8bd1 with SMTP id
+ ffacd0b85a97d-3a3499532b6mr669366f8f.52.1747175141983; Tue, 13 May 2025
+ 15:25:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250509232859.657525-1-shakeel.butt@linux.dev> <20250509232859.657525-5-shakeel.butt@linux.dev>
+In-Reply-To: <20250509232859.657525-5-shakeel.butt@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 13 May 2025 15:25:31 -0700
+X-Gm-Features: AX0GCFu-xAuvef9BfHGE2CGCgnqITmOEvaYA7dWvW7qUfVnFWb0NhsjFDSFfKcA
+Message-ID: <CAADnVQ+8w7huzJFqqm40KVetnQC-SoFKSMjq2uJHEHuAkCR7YA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] memcg: make objcg charging nmi safe
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, 
+	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf <bpf@vger.kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, 
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Meta kernel team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On May 12, 2025 11:06:02 PM PDT, "J=C3=BCrgen Gro=C3=9F" <jgross@suse=2Ecom=
+On Fri, May 9, 2025 at 4:29=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.dev=
 > wrote:
->On 13=2E05=2E25 07:55, Xin Li wrote:
->> On 5/12/2025 4:24 AM, Juergen Gross wrote:
->>> Now with the mentioned patch really attached=2E :-)
->>>=20
->>=20
->> Does it allow patching with an instruction more than 6 bytes long?
->>=20
->> The immediate form MSR instructions are 9 bytes long=2E
 >
->Yes, shouldn't be a problem=2E
+> To enable memcg charged kernel memory allocations from nmi context,
+> consume_obj_stock() and refill_obj_stock() needs to be nmi safe. With
+> the simple in_nmi() check, take the slow path of the objcg charging
+> which handles the charging and memcg stats updates correctly for the nmi
+> context.
 >
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> ---
+>  mm/memcontrol.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 >
->Juergen
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index bba549c1f18c..6cfa3550f300 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2965,6 +2965,9 @@ static bool consume_obj_stock(struct obj_cgroup *ob=
+jcg, unsigned int nr_bytes,
+>         unsigned long flags;
+>         bool ret =3D false;
+>
+> +       if (unlikely(in_nmi()))
+> +               return ret;
+> +
+>         local_lock_irqsave(&obj_stock.lock, flags);
+>
+>         stock =3D this_cpu_ptr(&obj_stock);
+> @@ -3068,6 +3071,15 @@ static void refill_obj_stock(struct obj_cgroup *ob=
+jcg, unsigned int nr_bytes,
+>         unsigned long flags;
+>         unsigned int nr_pages =3D 0;
+>
+> +       if (unlikely(in_nmi())) {
+> +               if (pgdat)
+> +                       __mod_objcg_mlstate(objcg, pgdat, idx, nr_bytes);
+> +               nr_pages =3D nr_bytes >> PAGE_SHIFT;
+> +               nr_bytes =3D nr_bytes & (PAGE_SIZE - 1);
+> +               atomic_add(nr_bytes, &objcg->nr_charged_bytes);
+> +               goto out;
+> +       }
 
-However, it is more than that=2E The immediate instructions have a differe=
-nt interface, and it makes more sense to use the extra bytes to shuffle the=
- bits around for the legacy forms:
 
-Write:
+Now I see what I did incorrectly in my series and how this patch 4
+combined with patch 3 is doing accounting properly.
 
-    mov %rax,%rdx
-    shr $32,%rdx
-    wrmsr(ns)
+The only issue here and in other patches is that in_nmi() is
+an incomplete condition to check for.
+The reentrance is possible through kprobe or tracepoint.
+In PREEMP_RT we will be fully preemptible, but
+obj_stock.lock will be already taken by the current task.
+To fix it you need to use local_lock_is_locked(&obj_stock.lock)
+instead of in_nmi() or use local_trylock_irqsave(&obj_stock.lock).
 
-Read:
-
-    rdmsr
-    shl $32,%rdx
-    or %rdx,%rax
-
-For the write case, this also means that two separate trap points are need=
-ed=2E
-
-As far as Xen (the only user of pv msrs), note that it only paravirtualize=
-s a very small number of MSRs, and some of those are fairly performance sen=
-sitive, so not going through the Xen framework for MSRs known to be either =
-native or null on Xen would definitely be a win=2E
+local_trylock_irqsave() is cleaner and works today,
+while local_lock_is_locked() hasn't landed yet, but if we go
+is_locked route we can decouple reentrant obj_stock operation vs normal.
+Like the if (!local_lock_is_locked(&obj_stock.lock))
+can be done much higher up the stack from
+__memcg_slab_post_alloc_hook() the way I did in my series,
+and if locked it can do atomic_add()-style charging.
+So refill_obj_stock() and friends won't need to change.
