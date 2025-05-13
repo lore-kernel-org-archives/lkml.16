@@ -1,111 +1,74 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F611748F;
-	Tue, 13 May 2025 00:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FAF17BD6;
+	Tue, 13 May 2025 00:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747094812; cv=none; b=FngrpmsZRc4XomTaR1HejPASBWZ+hZWmG2iA+LcH8+9NWAAOVp1FPENJQWLXntg0bRBd5chCDdEfSle8gkhASjlABhCR/JsaTyuk9ZuucudCxmE9VzFgtqTUF0V68PlHx9HHPEjhb0cqxqXPw740sSEtKkZorqLUv0jyfUnQIeY=
+	t=1747094824; cv=none; b=ljZJg7dN/Sc6BJ+aNlB/dFzVrBmVI7bEqE9KX1QL6zIVGQEFybheyjTgqMjRA+AWrY6jgAlbTCBzHegSgnIEXTVuV8hHHzU4Y/dAqMmjDrMDXtJbELoIf29NLza4zSAzhBB8+wh8td9HaeKNNoLSoPlWOVZtdigBt0nM38do4mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747094812; c=relaxed/simple;
-	bh=fIQMfL27R2eiZcAc13UNwfxPlTqFgGPG/woEH18BNlo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oAO/unS6UYapf5tBxM1mxYKdnRpvMQqYHOM2fT1WwfwOrTI8kwdk3p2/gqp3EbYErfCTR/nfYZ/CUTKbVpYpZ9SWRhh5XJnmJ7AatvH8Trj9N6bSwk7hCxXDsQIRdF61kHri7Z4FyCu17v5sFkYkjeqH7npV+lHHZfZHBw/AsuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=N613c/VX; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747094824; c=relaxed/simple;
+	bh=U0boT/n71vP7m2xRZfDDdU6vloNdHhiy1bFvzu8kD1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sqjobfi3rbmAp4hkvixmTIMqNbzEF3jo7guK4h5naLOWorOACMC1gTag28HcO7m6mUuODdceT19JSDe+lGlRtCWOJu0edfKPr59HRh2HI4lMb7LR2WxmSrINfKX6j/1LDQjYC12ZiZfz3prMTKpCei2KEWj/w2X+HvVLYlmWCvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbUhmla1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N613c/VX"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54D06iwj2909250
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 19:06:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747094804;
-	bh=4JzKR+c58LONNtEqTsnKpQujX/d+p3CT73LvaneUQYI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=N613c/VX5X2i4EFsMDCVpkfH+TatXK44Uw7muS+8v6h+SldvLQB5F1504ddwUgRIH
-	 49sHnHuU/ufzbEH4NJJTObuaEgzYX7iR12waUm8NjMPgDn8UHSNy8hhuI9Oa37oWxz
-	 t/KYaZxYbG2EpcunmTfImf2w83Wpo8qOVNSeO3so=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54D06iBM012715
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 May 2025 19:06:44 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- May 2025 19:06:44 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 May 2025 19:06:44 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54D06hk6030575;
-	Mon, 12 May 2025 19:06:43 -0500
-Message-ID: <cd88db5d-a792-488a-98c0-678aed8e3559@ti.com>
-Date: Mon, 12 May 2025 19:06:43 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbUhmla1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22114C4CEE7;
+	Tue, 13 May 2025 00:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747094823;
+	bh=U0boT/n71vP7m2xRZfDDdU6vloNdHhiy1bFvzu8kD1o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TbUhmla1r+1amng13YDYQxxVW4K2CPGDNbhFUmJjdDt+G2SpDaiNHscmuBZCk5Hbb
+	 NGJXgG9LB01ZvnCxKVC9ZNIhBZHKli38hbKJlnQCRlcJ0Xne1gi4XVZKwijgBjEe1B
+	 JnTTL6LRXB+KQv0S2a9U6GAa8/9wjbQw4m99Xf9y3hFDWkEhTVLR8vwpgFruyTxwto
+	 d/s297Ye9I46pydQBPns+0ZfTDP4C1IGsKgrtCQ3tnUrQ2jx8lt9ypj60mWsUoe4pm
+	 TfBQaGsuSnI2Yvbfr8FSC17x/ruwWSsAIu2kiCMoF77hBdzE82PsEZ+rcAYksd1pp5
+	 opR9BGgAkOQbQ==
+Date: Mon, 12 May 2025 17:07:02 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
+ richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH v2] ptp: ocp: Limit SMA/signal/freq counts in show/store
+ functions
+Message-ID: <20250512170702.1f6d0c07@kernel.org>
+In-Reply-To: <CAMuE1bHL1-t_YD0B5v1LuY_b558U5qbseSYJXvnm734+Vb-v_w@mail.gmail.com>
+References: <20250508071901.135057-1-maimon.sagi@gmail.com>
+	<20250509150157.6cdf620c@kernel.org>
+	<CAMuE1bH-OB_gPY+fR+gVJSZG_+iPKSBQ5Bm02wevThH1VgSo3Q@mail.gmail.com>
+	<CAMuE1bESfcs92z-VowaQjgWG25UK6-fTzgDqFagOyK1yifH5Lg@mail.gmail.com>
+	<CAMuE1bHL1-t_YD0B5v1LuY_b558U5qbseSYJXvnm734+Vb-v_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/2] serial: 8250: Add PRUSS UART driver
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman
-	<khilman@baylibre.com>,
-        Jiri Slaby <jirislaby@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, Hari Nagalla
-	<hnagalla@ti.com>
-References: <20250501003113.1609342-1-jm@ti.com>
- <20250501003113.1609342-3-jm@ti.com> <aBSVeKoR0j4J0ruz@smile.fi.intel.com>
- <22de0384-974d-4170-8181-e43cc90aab9d@ti.com>
- <aB3qWWgWfs6fDTgg@smile.fi.intel.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <aB3qWWgWfs6fDTgg@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Sun, 11 May 2025 17:39:08 +0300 Sagi Maimon wrote:
+> > > > What do you mean by out-of-bounds access here. Is there any access =
+with
+> > > > index > 4 possible? Or just with index > 1 for Adva?
+>=20
+> The sysfs interface restricts indices to a maximum of 4; however,
+> since an array of 4 signals/frequencies is always created and fully
+> accessible via sysfs=E2=80=94regardless of the actual number initialized=
+=E2=80=94this
+> bug impacts any board that initializes fewer than 4
+> signals/frequencies.
 
-On 5/9/25 6:43 AM, Andy Shevchenko wrote:
-> On Thu, May 08, 2025 at 05:09:03PM -0500, Judith Mendez wrote:
->> On 5/2/25 4:50 AM, Andy Shevchenko wrote:
->>> On Wed, Apr 30, 2025 at 07:31:13PM -0500, Judith Mendez wrote:
+Right, but the bug is that user may write to registers which don't
+exist? Or something will crash? We need to give backporters more info
+about the impact of this bug. Can this crash the kernel?
 
-...
->>>> +	/* Old custom speed handling */
->>>> +	if (baud == 38400 && (port->flags & UPF_SPD_MASK) == UPF_SPD_CUST) {
->>>> +		quot = port->custom_divisor & UART_DIV_MAX;
->>>> +		if (port->custom_divisor & (1 << 16))
->>>> +			*frac = PRUSS_UART_MDR_13X_MODE;
->>>> +		else
->>>> +			*frac = PRUSS_UART_MDR_16X_MODE;
->>>> +
->>>> +		return quot;
->>>> +	}
->>>
->>> Why?! Please, try to avoid adding more drivers with this ugly hack.
->>
->> My understanding is that this is not a hack, for 38400 we need to pass
->> as custom baud. What is the alternative here?
-> 
-> BOTHER. The 38400 is a hack, you lie to the stakeholders that you are at 38.4,
-> while in real life it means anything.
-> 
->> I see other drivers are doing this as well, will look into this further
->> but not sure if there is a better solution for this.
-> 
-> BOTHER is the solution. Not perfect, but the existing one.
-
-
-Thanks for the hint, I have removed the hack from the driver and will be
-sending v1. thanks.
-
-~ Judith
-
-
+As for sysfs exposing 4 entries, I think it's controlled by what groups
+of attributes are added. So I think were possible we should create
+attribute groups with only 2 entries for Adva. Eg. copy
+fb_timecard_groups[] with just the correct entries, and in
+ptp_ocp_fb_board_init() add an if which selects the right array.
